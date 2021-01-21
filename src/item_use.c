@@ -194,6 +194,12 @@ void ItemUseOutOfBattle_Mail(u8 taskId)
     Task_FadeAndCloseBagMenu(taskId);
 }
 
+void ItemUseOutOfBattle_FormChangeItem(u8 taskId)
+{
+    gItemUseCB = ItemUseCB_FormChangeItem;
+    SetUpItemUseCallback(taskId);
+}
+
 void ItemUseOutOfBattle_Bike(u8 taskId)
 {
     s16* data = gTasks[taskId].data;

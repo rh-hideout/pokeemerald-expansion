@@ -60,6 +60,7 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task);
 void ItemUseCB_RareCandy(u8 taskId, TaskFunc task);
 void ItemUseCB_SacredAsh(u8 taskId, TaskFunc task);
 void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task);
+void ItemUseCB_FormChangeItem(u8 taskId, TaskFunc task);
 u8 GetItemEffectType(u16 item);
 void CB2_PartyMenuFromStartMenu(void);
 void CB2_ChooseMonToGiveItem(void);

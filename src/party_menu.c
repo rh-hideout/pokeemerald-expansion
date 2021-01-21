@@ -74,6 +74,8 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "constants/species.h"
+#include "rtc.h"
 
 #define PARTY_PAL_SELECTED     (1 << 0)
 #define PARTY_PAL_FAINTED      (1 << 1)
@@ -346,6 +348,7 @@ static void DisplayMonLearnedMove(u8, u16);
 static void UseSacredAsh(u8);
 static void Task_SacredAshLoop(u8);
 static void Task_SacredAshDisplayHPRestored(u8);
+static void TryChangeShayminForm(u8 taskId, TaskFunc task);
 static void GiveItemOrMailToSelectedMon(u8);
 static void DisplayItemMustBeRemovedFirstMessage(u8);
 static void Task_SwitchItemsFromBagYesNo(u8);
@@ -408,6 +411,9 @@ static bool8 SetUpFieldMove_Dive(void);
 // static const data
 #include "data/pokemon/tutor_learnsets.h"
 #include "data/party_menu.h"
+
+// Text string printed when changing the form of certain species like Shaymin and Giratina
+const u8 ChangedForm[] = _("{STR_VAR_1} transformed!{PAUSE_UNTIL_PRESS}");
 
 // code
 static void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCursorPos, u8 messageId, TaskFunc task, MainCallback callback)
@@ -5269,6 +5275,63 @@ void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task)
         FreePartyPointers();
     }
 }
+
+void ItemUseCB_FormChangeItem(u8 taskId, TaskFunc task)
+{
+    u16 item = gSpecialVar_ItemId;
+    switch (item)
+    {
+        case ITEM_GRACIDEA:
+            TryChangeShayminForm(taskId, task);
+            return;
+        default:
+            gPartyMenuUseExitCallback = FALSE;
+            PlaySE(SE_SELECT);
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = task;
+            return;
+    }
+}
+
+static void TryChangeShayminForm(u8 taskId, TaskFunc task)
+{
+#if defined SPECIES_SHAYMIN && defined SPECIES_SHAYMIN_SKY
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    u16 targetSpecies;
+
+    RtcCalcLocalTime();
+
+    if (species == SPECIES_SHAYMIN
+        && GetAilmentFromStatus(GetMonData(mon, MON_DATA_STATUS) != STATUS1_FREEZE)
+        && (gLocalTime.hours >= 12 && gLocalTime.hours < 24))
+    {
+        gPartyMenuUseExitCallback = TRUE;
+        PlaySE(SE_USE_ITEM);
+        PlayCry2(SPECIES_SHAYMIN_SKY, 0, 0x7D, 0xA);
+        targetSpecies = SPECIES_SHAYMIN_SKY;
+        SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
+        FreeAndDestroyMonIconSprite(&gSprites[sPartyMenuBoxes[gPartyMenu.slotId].monSpriteId]);
+        CreatePartyMonIconSpriteParameterized(targetSpecies, GetMonData(mon, MON_DATA_PERSONALITY), &sPartyMenuBoxes[gPartyMenu.slotId], 0, FALSE);
+        CalculateMonStats(mon);
+        GetMonNickname(mon, gStringVar1);
+        StringExpandPlaceholders(gStringVar4, ChangedForm);
+        DisplayPartyMenuMessage(gStringVar4, FALSE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+    }
+    else
+#endif
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        PlaySE(SE_SELECT);
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+        return;
+    }
+};
 
 u8 GetItemEffectType(u16 item)
 {
