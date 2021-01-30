@@ -7792,3 +7792,28 @@ BattleScript_AnnounceAirLockCloudNine::
 	waitmessage 0x40
 	call BattleScript_WeatherFormChanges
 	end3
+
+BattleScript_Pickpocket::
+	call BattleScript_AbilityPopUp
+	jumpifability BS_ATTACKER, ABILITY_STICKY_HOLD, BattleScript_PickpocketPrevented
+	swapattackerwithtarget
+	call BattleScript_ItemSteal
+	swapattackerwithtarget
+	activateitemeffects BS_TARGET
+	return
+
+BattleScript_PickpocketPrevented:
+	pause 0x20
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ITEMCANNOTBEREMOVED
+	waitmessage 0x40
+	return
+
+BattleScript_StickyBarbTransfer::
+	playanimation BS_TARGET, B_ANIM_ITEM_STEAL, NULL
+	printstring STRINGID_STICKYBARBTRANSFER
+	waitmessage 0x40
+	removeitem BS_TARGET
+	return
+	
