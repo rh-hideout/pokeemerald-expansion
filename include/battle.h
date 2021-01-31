@@ -148,6 +148,7 @@ struct ProtectStruct
 
 struct SpecialStatus
 {
+    u8 statFell:1;
     u8 statLowered:1;
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
@@ -542,6 +543,7 @@ struct BattleStruct
     u8 sameMoveTurns[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
     u16 moveEffect2; // For Knock Off
     u16 changedSpecies[PARTY_SIZE]; // For Zygarde or future forms when multiple mons can change into the same pokemon.
+    bool8 blunderPolicy;
 };
 
 #define GET_MOVE_TYPE(move, typeArg)                        \
@@ -613,6 +615,7 @@ struct BattleScripting
     u16 multihitMoveEffect;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
     bool8 fixedPopup;   // force ability popup to stick until manually called back
+    u8 switchCase;  // special switching conditions, eg. red card
 };
 
 // rom_80A5C6C

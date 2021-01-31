@@ -1520,6 +1520,7 @@ BattleScript_EffectPsychicTerrain:
 	waitanimation
 	printfromtable gTerrainStringIds
 	waitmessage 0x40
+	call BattleScript_TerrainSeedLoop
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTopsyTurvy:
@@ -1842,6 +1843,35 @@ BattleScript_EffectMagnetRise:
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTrickRoom:
+	attackcanceler
+	attackstring
+	ppreduce
+	setroom
+	attackanimation
+	waitanimation
+	printfromtable gRoomsStringIds
+	waitmessage 0x40
+	savetarget
+	setbyte gBattlerTarget, 0
+RoomServiceLoop:
+	copybyte sBATTLER, gBattlerTarget
+	jumpifnoholdeffect BS_TARGET, HOLD_EFFECT_ROOM_SERVICE, RoomServiceLoop_NextBattler
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPEED, MIN_STAT_STAGE, RoomServiceLoop_NextBattler
+	setstatchanger STAT_SPEED, 1, TRUE
+	statbuffchange 0, RoomServiceLoop_NextBattler
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0x2, RoomServiceLoop_NextBattler
+	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT, NULL
+	waitanimation
+	playstatchangeanimation BS_TARGET, BIT_SPEED, STAT_CHANGE_NEGATIVE
+	printstring STRINGID_USINGXTHEYOFZN
+	waitmessage 0x40
+	removeitem BS_TARGET
+RoomServiceLoop_NextBattler:
+	addbyte gBattlerTarget, 0x1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, RoomServiceLoop
+	restoretarget
+	goto BattleScript_MoveEnd
+	
 BattleScript_EffectWonderRoom:
 BattleScript_EffectMagicRoom:
 	attackcanceler
@@ -5562,16 +5592,27 @@ BattleScript_RoarSuccessSwitch::
 	waitstate
 	printstring STRINGID_PKMNWASDRAGGEDOUT
 	switchineffects BS_TARGET
+	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_RED_CARD, BattleScript_RoarSuccessSwitch_Ret
+	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	goto BattleScript_MoveEnd
+BattleScript_RoarSuccessSwitch_Ret:
+	swapattackerwithtarget	@ continuation of RedCardActivates
+	removeitem BS_TARGET
+	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
+	return
 
 BattleScript_RoarSuccessEndBattle::
 	call BattleScript_RoarSuccessRet
+	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	setoutcomeonteleport BS_ATTACKER
 	finishaction
 
 BattleScript_RoarSuccessRet:
+	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_HIT, BattleScript_RoarSuccessRet_Ret
+	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_RED_CARD, BattleScript_RoarSuccessRet_Ret
 	attackanimation
 	waitanimation
+BattleScript_RoarSuccessRet_Ret:
 	switchoutabilities BS_TARGET
 	returntoball BS_TARGET
 	waitstate
@@ -5615,6 +5656,21 @@ BattleScript_TargetItemStatRaise::
 	waitmessage 0x40
 	removeitem BS_TARGET
 BattleScript_TargetItemStatRaiseRemoveItemRet:
+	return
+	
+BattleScript_AttackerItemStatRaise::
+	copybyte sBATTLER, gBattlerAttacker
+	statbuffchange 0, BattleScript_AttackerItemStatRaiseRet
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0x2, BattleScript_AttackerItemStatRaiseRet
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, NULL
+	waitanimation
+	setgraphicalstatchangevalues
+	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	waitanimation
+	printstring STRINGID_USINGXTHEYOFZN
+	waitmessage 0x40
+	removeitem BS_ATTACKER
+BattleScript_AttackerItemStatRaiseRet:
 	return
 
 BattleScript_MistProtected::
@@ -6882,6 +6938,19 @@ BattleScript_SnowWarningActivates::
 	playanimation BS_BATTLER_0, B_ANIM_HAIL_CONTINUES, NULL
 	call BattleScript_WeatherFormChanges
 	end3
+	
+BattleScript_TerrainSeedLoop:	
+	savetarget
+	setbyte gBattlerTarget, 0
+TerrainSeedLoop:
+	copybyte sBATTLER, gBattlerTarget
+	doterrainseed BS_TARGET, TerrainSeedLoop_NextBattler
+	removeitem BS_TARGET
+TerrainSeedLoop_NextBattler:
+	addbyte gBattlerTarget, 0x1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, TerrainSeedLoop
+	restoretarget
+	return
 
 BattleScript_ElectricSurgeActivates::
 	pause 0x20
@@ -6889,6 +6958,7 @@ BattleScript_ElectricSurgeActivates::
 	printstring STRINGID_TERRAINBECOMESELECTRIC
 	waitstate
 	playanimation BS_SCRIPTING, B_ANIM_TERRAIN_ELECTRIC, NULL
+	call BattleScript_TerrainSeedLoop
 	end3
 
 BattleScript_MistySurgeActivates::
@@ -6897,6 +6967,7 @@ BattleScript_MistySurgeActivates::
 	printstring STRINGID_TERRAINBECOMESMISTY
 	waitstate
 	playanimation BS_SCRIPTING, B_ANIM_TERRAIN_MISTY, NULL
+	call BattleScript_TerrainSeedLoop
 	end3
 
 BattleScript_GrassySurgeActivates::
@@ -6905,6 +6976,7 @@ BattleScript_GrassySurgeActivates::
 	printstring STRINGID_TERRAINBECOMESGRASSY
 	waitstate
 	playanimation BS_SCRIPTING, B_ANIM_TERRAIN_GRASSY, NULL
+	call BattleScript_TerrainSeedLoop
 	end3
 
 BattleScript_PsychicSurgeActivates::
@@ -6913,6 +6985,7 @@ BattleScript_PsychicSurgeActivates::
 	printstring STRINGID_TERRAINBECOMESPSYCHIC
 	waitstate
 	playanimation BS_SCRIPTING, B_ANIM_TERRAIN_PSYCHIC, NULL
+	call BattleScript_TerrainSeedLoop
 	end3
 
 BattleScript_BadDreamsActivates::
@@ -7623,6 +7696,20 @@ BattleScript_82DB85B::
 	call BattleScript_StatUp
 	removeitem BS_ATTACKER
 	end2
+	
+BattleScript_BerryStatRaiseRet::
+	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_BerryStatRaiseRet_AbilityPopup
+	goto BattleScript_BerryStatRaiseRet_Anim
+BattleScript_BerryStatRaiseRet_AbilityPopup:
+	call BattleScript_AbilityPopUp
+BattleScript_BerryStatRaiseRet_Anim:
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, NULL
+	statbuffchange STAT_BUFF_ALLOW_PTR, BattleScript_BerryStatRaiseRet_End
+BattleScript_BerryStatRaiseRet_End:
+	setbyte cMULTISTRING_CHOOSER, 0x4
+	call BattleScript_StatUp
+	removeitem BS_SCRIPTING
+	return
 
 BattleScript_BerryFocusEnergyEnd2::
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, NULL
@@ -7792,3 +7879,65 @@ BattleScript_AnnounceAirLockCloudNine::
 	waitmessage 0x40
 	call BattleScript_WeatherFormChanges
 	end3
+
+BattleScript_RedCardActivates::
+	jumpifcantswitch BS_ATTACKER, BattleScript_RedCardEnd
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, NULL
+	printstring STRINGID_REDCARDACTIVATE
+	waitmessage 0x40
+	swapattackerwithtarget	
+	jumpifstatus3 BS_EFFECT_BATTLER, STATUS3_ROOTED, BattleScript_RedCardIngrain
+	jumpifability BS_EFFECT_BATTLER, ABILITY_SUCTION_CUPS, BattleScript_RedCardSuctionCups
+	setbyte sSWITCH_CASE, B_SWITCH_RED_CARD
+	forcerandomswitch BattleScript_RedCardEnd
+	@ changes the current battle script. the rest happens in BattleScript_RoarSuccessSwitch_Ret, if switch is successful
+	return
+BattleScript_RedCardEnd:
+	return
+BattleScript_RedCardIngrain:
+	printstring STRINGID_PKMNANCHOREDITSELF
+	waitmessage 0x40
+	removeitem BS_SCRIPTING
+	swapattackerwithtarget
+	return
+BattleScript_RedCardSuctionCups:
+	printstring STRINGID_PKMNANCHORSITSELFWITH	
+	waitmessage 0x40
+	removeitem BS_SCRIPTING
+	swapattackerwithtarget
+	return
+
+BattleScript_EjectButtonActivates::
+	jumpifcantswitch BS_SCRIPTING, BattleScript_EjectButtonEnd
+	makevisible BS_ATTACKER
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, NULL
+	printstring STRINGID_EJECTBUTTONACTIVATE
+	waitmessage 0x40
+	removeitem BS_SCRIPTING
+	makeinvisible BS_SCRIPTING
+	openpartyscreen BS_SCRIPTING, BattleScript_EjectButtonEnd
+	switchoutabilities BS_SCRIPTING
+	waitstate
+	switchhandleorder BS_SCRIPTING 0x2
+	returntoball BS_SCRIPTING
+	getswitchedmondata BS_SCRIPTING
+	switchindataupdate BS_SCRIPTING
+	hpthresholds BS_SCRIPTING
+	printstring 0x3
+	switchinanim BS_SCRIPTING 0x1
+	waitstate
+	switchineffects BS_SCRIPTING
+BattleScript_EjectButtonEnd:
+	return
+
+BattleScript_EjectPackActivate_Ret::
+	goto BattleScript_EjectButtonActivates
+
+BattleScript_EjectPackActivate_End2::
+	call BattleScript_EjectPackActivate_Ret
+	end2
+
+BattleScript_EjectPackActivates::
+	jumpifcantswitch BS_SCRIPTING, BattleScript_EjectButtonEnd
+	goto BattleScript_EjectPackActivate_Ret
+	

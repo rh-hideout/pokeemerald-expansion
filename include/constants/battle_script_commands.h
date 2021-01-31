@@ -36,6 +36,7 @@
 #define sMULTIHIT_EFFECT gBattleScripting + 0x30
 #define sILLUSION_NICK_HACK gBattleScripting + 0x32
 #define sFIXED_ABILITY_POPUP gBattleScripting + 0x33
+#define sSWITCH_CASE gBattleScripting + 0x34
 
 #define cMULTISTRING_CHOOSER gBattleCommunication + 5
 
@@ -168,6 +169,9 @@
 #define VARIOUS_JUMP_IF_ABSENT                  101
 #define VARIOUS_DESTROY_ABILITY_POPUP           102
 #define VARIOUS_TOTEM_BOOST                     103
+#define VARIOUS_TERRAIN_SEED                    104
+#define VARIOUS_MAKE_INVISIBLE                  105
+
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
@@ -194,32 +198,35 @@
 #define STAT_CHANGE_CANT_PREVENT 	 0x8
 
 // cases for Cmd_moveend
-#define MOVEEND_PROTECT_LIKE_EFFECT 0
-#define MOVEEND_RAGE 1
-#define MOVEEND_DEFROST 2
-#define MOVEEND_SYNCHRONIZE_TARGET 3
-#define MOVEEND_ABILITIES 4
-#define MOVEEND_ABILITIES_ATTACKER 5
-#define MOVEEND_STATUS_IMMUNITY_ABILITIES 6
-#define MOVEEND_SYNCHRONIZE_ATTACKER 7
-#define MOVEEND_CHOICE_MOVE 8
-#define MOVEEND_CHANGED_ITEMS 9
-#define MOVEEND_ATTACKER_INVISIBLE 10
-#define MOVEEND_ATTACKER_VISIBLE 11
-#define MOVEEND_TARGET_VISIBLE 12
-#define MOVEEND_ITEM_EFFECTS_TARGET 13
-#define MOVEEND_MOVE_EFFECTS2 14
-#define MOVEEND_ITEM_EFFECTS_ALL 15
-#define MOVEEND_KINGSROCK_SHELLBELL 16
-#define MOVEEND_SUBSTITUTE 17
-#define MOVEEND_UPDATE_LAST_MOVES 18
-#define MOVEEND_MIRROR_MOVE 19
-#define MOVEEND_NEXT_TARGET 20
-#define MOVEEND_LIFE_ORB 21
-#define MOVEEND_DANCER 22
-#define MOVEEND_EMERGENCY_EXIT 23
-#define MOVEEND_CLEAR_BITS 24
-#define MOVEEND_COUNT 25
+#define MOVEEND_PROTECT_LIKE_EFFECT         0
+#define MOVEEND_RAGE                        1
+#define MOVEEND_DEFROST                     2
+#define MOVEEND_SYNCHRONIZE_TARGET          3
+#define MOVEEND_ABILITIES                   4
+#define MOVEEND_ABILITIES_ATTACKER          5
+#define MOVEEND_STATUS_IMMUNITY_ABILITIES   6
+#define MOVEEND_SYNCHRONIZE_ATTACKER        7
+#define MOVEEND_CHOICE_MOVE                 8
+#define MOVEEND_CHANGED_ITEMS               9
+#define MOVEEND_ATTACKER_INVISIBLE          10
+#define MOVEEND_ATTACKER_VISIBLE            11
+#define MOVEEND_TARGET_VISIBLE              12
+#define MOVEEND_ITEM_EFFECTS_TARGET         13
+#define MOVEEND_MOVE_EFFECTS2               14
+#define MOVEEND_ITEM_EFFECTS_ALL            15
+#define MOVEEND_KINGSROCK_SHELLBELL         16
+#define MOVEEND_SUBSTITUTE                  17
+#define MOVEEND_UPDATE_LAST_MOVES           18
+#define MOVEEND_MIRROR_MOVE                 19
+#define MOVEEND_NEXT_TARGET                 20
+#define MOVEEND_EJECT_BUTTON                21
+#define MOVEEND_RED_CARD                    22
+#define MOVEEND_EJECT_PACK                  23
+#define MOVEEND_LIFE_ORB                    24
+#define MOVEEND_DANCER                      25
+#define MOVEEND_EMERGENCY_EXIT              26
+#define MOVEEND_CLEAR_BITS                  27
+#define MOVEEND_COUNT                       28
 
 // stat flags for Cmd_playstatchangeanimation
 #define BIT_HP                      0x1
@@ -230,5 +237,10 @@
 #define BIT_SPDEF                   0x20
 #define BIT_ACC                     0x40
 #define BIT_EVASION                 0x80
+
+// switch cases
+#define B_SWITCH_NORMAL     0
+#define B_SWITCH_HIT        1   // dragon tail, circle throw
+#define B_SWITCH_RED_CARD   2
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

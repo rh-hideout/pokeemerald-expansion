@@ -209,6 +209,7 @@ extern const u8 BattleScript_SelectingNotAllowedMoveChoiceItem[];
 extern const u8 BattleScript_HangedOnMsg[];
 extern const u8 BattleScript_BerryConfuseHealEnd2[];
 extern const u8 BattleScript_BerryStatRaiseEnd2[];
+extern const u8 BattleScript_BerryStatRaiseRet[];
 extern const u8 BattleScript_BerryFocusEnergyEnd2[];
 extern const u8 BattleScript_ActionSelectionItemsCantBeUsed[];
 extern const u8 BattleScript_ArenaTurnBeginning[];
@@ -357,5 +358,11 @@ extern const u8 BattleScript_CottonDownActivates[];
 extern const u8 BattleScript_BallFetch[];
 extern const u8 BattleScript_SandSpitActivates[];
 extern const u8 BattleScript_PerishBodyActivates[];
+extern const u8 BattleScript_AttackerItemStatRaise[];
+extern const u8 BattleScript_RedCardActivates[];
+extern const u8 BattleScript_EjectButtonActivates[];
+extern const u8 BattleScript_EjectPackActivate_Ret[];
+extern const u8 BattleScript_EjectPackActivate_End2[];
+extern const u8 BattleScript_EjectPackActivates[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

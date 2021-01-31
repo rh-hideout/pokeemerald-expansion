@@ -5178,6 +5178,33 @@ static u8 RandomStatRaiseBerry(u32 battlerId, u32 itemId)
     return 0;
 }
 
+u8 TryHandleSeed(u8 battler, u32 terrainFlag, u8 statId, u16 itemId, bool32 execute)
+{
+    if (gFieldStatuses & terrainFlag && gBattleMons[battler].statStages[statId] < MAX_STAT_STAGE)
+    {
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATROSE);
+
+        gLastUsedItem = itemId; // for surge abilities
+        gEffectBattler = battler;
+        gBattleScripting.battler = battler;
+        SET_STATCHANGER(statId, 1, FALSE);
+        gBattleScripting.animArg1 = 0xE + statId;
+        gBattleScripting.animArg2 = 0;
+        if (execute)
+        {
+            BattleScriptExecute(BattleScript_BerryStatRaiseEnd2);
+        }
+        else
+        {
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_BerryStatRaiseRet;
+        }
+        return ITEM_STATS_CHANGE;
+    }
+    return 0;
+}
+
 static u8 ItemHealHp(u32 battlerId, u32 itemId, bool32 end2, bool32 percentHeal)
 {
     if (HasEnoughHpToEatBerry(battlerId, 2, itemId))
@@ -5403,6 +5430,54 @@ u8 ItemBattleEffects(u8 caseID, u8 battlerId, bool8 moveTurn)
                 gBattleScripting.battler = battlerId;
                 BattleScriptPushCursorAndCallback(BattleScript_AirBaloonMsgIn);
                 RecordItemEffectBattle(battlerId, HOLD_EFFECT_AIR_BALLOON);
+                break;
+            case HOLD_EFFECT_ROOM_SERVICE:
+                if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gBattleMons[battlerId].statStages[STAT_SPEED] > MIN_STAT_STAGE)
+                {
+                    PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPEED);
+                    PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATFELL);
+
+                    gEffectBattler = battlerId;
+                    SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+                    gBattleScripting.animArg1 = 0xE + STAT_SPEED;
+                    gBattleScripting.animArg2 = 0;
+                    BattleScriptExecute(BattleScript_BerryStatRaiseEnd2);
+                    effect = ITEM_STATS_CHANGE;
+                }
+            case HOLD_EFFECT_SEEDS:
+                switch (GetBattlerHoldEffectParam(battlerId))
+                {
+                case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
+                    effect = TryHandleSeed(battlerId, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF, gLastUsedItem, TRUE);
+                    break;
+                case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
+                    effect = TryHandleSeed(battlerId, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF, gLastUsedItem, TRUE);
+                    break;
+                case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
+                    effect = TryHandleSeed(battlerId, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF, gLastUsedItem, TRUE);
+                    break;
+                case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
+                    effect = TryHandleSeed(battlerId, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, gLastUsedItem, TRUE);
+                    break;
+                    
+                }
+                break;
+            case HOLD_EFFECT_EJECT_PACK:
+                if (gSpecialStatuses[battlerId].statFell)
+                {
+                    gSpecialStatuses[battlerId].statFell = FALSE;
+                    gActiveBattler = gBattleScripting.battler = battlerId;
+                    effect = ITEM_STATS_CHANGE;
+                    if (moveTurn)
+					{
+						BattleScriptPushCursor();
+						gBattlescriptCurrInstr = BattleScript_EjectPackActivate_Ret;
+					}
+					else
+                    {
+						BattleScriptExecute(BattleScript_EjectPackActivate_End2);
+                    }
+                }
                 break;
             }
 
@@ -5843,44 +5918,69 @@ u8 ItemBattleEffects(u8 caseID, u8 battlerId, bool8 moveTurn)
         }
         break;
     case ITEMEFFECT_KINGSROCK_SHELLBELL:
-        if (gBattleMoveDamage)
+        switch (atkHoldEffect)
         {
-            switch (atkHoldEffect)
+        case HOLD_EFFECT_FLINCH:
+            if (gBattleMoveDamage != 0  // need to have done damage
+                && !(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+                && TARGET_TURN_DAMAGED
+                && (Random() % 100) < atkHoldEffectParam
+                && gBattleMoves[gCurrentMove].flags & FLAG_KINGS_ROCK_AFFECTED
+                && gBattleMons[gBattlerTarget].hp)
             {
-            case HOLD_EFFECT_FLINCH:
-                if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
-                    && TARGET_TURN_DAMAGED
-                    && (Random() % 100) < atkHoldEffectParam
-                    && gBattleMoves[gCurrentMove].flags & FLAG_KINGS_ROCK_AFFECTED
-                    && gBattleMons[gBattlerTarget].hp)
-                {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-                    BattleScriptPushCursor();
-                    SetMoveEffect(FALSE, 0);
-                    BattleScriptPop();
-                }
-                break;
-            case HOLD_EFFECT_SHELL_BELL:
-                if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
-                    && gSpecialStatuses[gBattlerTarget].dmg != 0
-                    && gSpecialStatuses[gBattlerTarget].dmg != 0xFFFF
-                    && gBattlerAttacker != gBattlerTarget
-                    && gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP
-                    && gBattleMons[gBattlerAttacker].hp != 0)
-                {
-                    gLastUsedItem = atkItem;
-                    gPotentialItemEffectBattler = gBattlerAttacker;
-                    gBattleScripting.battler = gBattlerAttacker;
-                    gBattleMoveDamage = (gSpecialStatuses[gBattlerTarget].dmg / atkHoldEffectParam) * -1;
-                    if (gBattleMoveDamage == 0)
-                        gBattleMoveDamage = -1;
-                    gSpecialStatuses[gBattlerTarget].dmg = 0;
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_Ret;
-                    effect++;
-                }
-                break;
+                gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
+                BattleScriptPushCursor();
+                SetMoveEffect(FALSE, 0);
+                BattleScriptPop();
             }
+            break;
+        case HOLD_EFFECT_SHELL_BELL:
+            if (gBattleMoveDamage != 0  // need to have done damage
+                && !(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+                && gSpecialStatuses[gBattlerTarget].dmg != 0
+                && gSpecialStatuses[gBattlerTarget].dmg != 0xFFFF
+                && gBattlerAttacker != gBattlerTarget
+                && gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP
+                && gBattleMons[gBattlerAttacker].hp != 0)
+            {
+                gLastUsedItem = atkItem;
+                gPotentialItemEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerAttacker;
+                gBattleMoveDamage = (gSpecialStatuses[gBattlerTarget].dmg / atkHoldEffectParam) * -1;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = -1;
+                gSpecialStatuses[gBattlerTarget].dmg = 0;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_ItemHealHP_Ret;
+                effect++;
+            }
+            break;
+        case HOLD_EFFECT_THROAT_SPRAY:  // doesn't need to be a damaging move
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && gBattleMons[gBattlerAttacker].hp != 0
+             && gBattleMoves[gCurrentMove].flags & FLAG_SOUND
+             && gBattleMons[gBattlerAttacker].statStages[STAT_SPATK] < MAX_STAT_STAGE)
+            {
+                gLastUsedItem = atkItem;
+                gBattleScripting.statChanger = SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                effect = ITEM_STATS_CHANGE;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AttackerItemStatRaise;
+            }
+            break;
+        case HOLD_EFFECT_BLUNDER_POLICY:
+            if (gBattleStruct->blunderPolicy
+             && gBattleMons[gBattlerAttacker].hp != 0
+             && gBattleMons[gBattlerAttacker].statStages[STAT_SPEED] < MAX_STAT_STAGE)
+            {
+                gBattleStruct->blunderPolicy = FALSE;
+                gLastUsedItem = atkItem;
+                gBattleScripting.statChanger = SET_STATCHANGER(STAT_SPEED, 2, FALSE);
+                effect = ITEM_STATS_CHANGE;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AttackerItemStatRaise;
+            }
+            break;
         }
         break;
     case ITEMEFFECT_TARGET:
@@ -7951,4 +8051,67 @@ u8 GetBattleMoveSplit(u32 moveId)
         return SPLIT_PHYSICAL;
     else
         return SPLIT_SPECIAL;
+}
+
+bool32 IsBattlerAffectedByHazards(u8 battlerId, bool32 toxicSpikes)
+{
+    bool32 ret = TRUE;
+    u32 holdEffect = GetBattlerHoldEffect(gActiveBattler, TRUE);
+    if (toxicSpikes && holdEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS && !IS_BATTLER_OF_TYPE(battlerId, TYPE_POISON))
+    {
+        ret = FALSE;
+        RecordItemEffectBattle(battlerId, holdEffect);
+    }
+    else if (holdEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS)
+    {
+        ret = FALSE;
+        RecordItemEffectBattle(battlerId, holdEffect);
+    }
+    return ret;
+}
+
+bool32 TestSheerForceFlag(u8 battler, u16 move)
+{
+    if (GetBattlerAbility(battler) == ABILITY_SHEER_FORCE && gBattleMoves[move].flags & FLAG_SHEER_FORCE_BOOST)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void SortBattlersBySpeed(u8 *battlers, bool8 slowToFast)
+{
+    int i, j, currSpeed, currBattler;
+    u16 speeds[4] = {0};
+    
+    for (i = 0; i < gBattlersCount; i++)
+        speeds[i] = GetBattlerTotalSpeedStat(battlers[i]);
+
+    for (i = 1; i < gBattlersCount; i++)
+    {
+        currBattler = battlers[i];
+        currSpeed = speeds[i];
+        j = i - 1;
+
+        if (slowToFast)
+        {
+            while (j >= 0 && speeds[j] > currSpeed)
+            {
+                battlers[j + 1] = battlers[j];
+                speeds[j + 1] = speeds[j];
+                j = j - 1;
+            }
+        }
+        else
+        {
+            while (j >= 0 && speeds[j] < currSpeed)
+            {
+                battlers[j + 1] = battlers[j];
+                speeds[j + 1] = speeds[j];
+                j = j - 1;
+            }
+        }
+
+        battlers[j + 1] = currBattler;
+        speeds[j + 1] = currSpeed;
+    }
 }
