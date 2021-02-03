@@ -365,6 +365,176 @@ gBattleScriptsForMoveEffects:: @ 82D86A8
 	.4byte BattleScript_EffectFairyLock
 	.4byte BattleScript_EffectAllySwitch
 	.4byte BattleScript_EffectSleepHit
+	.4byte BattleScript_EffectJawLock
+	.4byte BattleScript_EffectNoRetreat
+	.4byte BattleScript_EffectTarShot
+	.4byte BattleScript_EffectDragonDarts
+	.4byte BattleScript_EffectPoltergeist
+	.4byte BattleScript_EffectOctolock
+	.4byte BattleScript_EffectClangorousSoul
+	.4byte BattleScript_EffectBoltBeak
+
+BattleScript_EffectClangorousSoul:
+	attackcanceler
+	attackstring
+	ppreduce
+	cutonethirdhpraisestats BattleScript_ButItFailed
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
+	attackanimation
+	waitanimation
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
+	call BattleScript_AllStatsUp
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectOctolock:
+	attackcanceler
+	jumpifsubstituteblocks BattleScript_ButItFailedAtkStringPpReduce
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	setoctolock BS_TARGET, BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_CANTESCAPEBECAUSEOFCURRENTMOVE
+	waitmessage 0x40
+	goto BattleScript_MoveEnd
+
+BattleScript_OctolockEndTurn::
+	playanimation BS_ATTACKER, B_ANIM_TURN_TRAP, 0
+	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_DEF, MIN_STAT_STAGE, BattleScript_OctolockLowerDef
+	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_SPDEF, MIN_STAT_STAGE, BattleScript_OctolockTryLowerSpDef
+	goto BattleScript_OctolockEnd2
+BattleScript_OctolockLowerDef:
+	playstatchangeanimation BS_ATTACKER, BIT_SPATK | BIT_SPDEF, STAT_CHANGE_NEGATIVE
+	jumpifability BS_TARGET, ABILITY_BIG_PECKS, BattleScript_OctolockTryLowerSpDef
+	setstatchanger STAT_DEF, 1, TRUE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_BUFF_ALLOW_PTR, BattleScript_OctolockTryLowerSpDef
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0x2, BattleScript_OctolockTryLowerSpDef
+	printfromtable gStatUpStringIds
+	waitmessage 0x40
+BattleScript_OctolockTryLowerSpDef::
+	setstatchanger STAT_SPDEF, 1, TRUE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_BUFF_ALLOW_PTR, BattleScript_OctolockEnd2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0x2, BattleScript_OctolockEnd2
+	printfromtable gStatUpStringIds
+	waitmessage 0x40
+BattleScript_OctolockEnd2::
+	end2
+
+BattleScript_EffectPoltergeist:
+	attackcanceler
+	attackstring
+	ppreduce
+	checkpoltergeist BS_TARGET, BattleScript_ButItFailed
+	printstring STRINGID_ABOUTTOUSEPOLTERGEIST
+	waitmessage 0x40
+	goto BattleScript_HitFromCritCalc
+
+BattleScript_EffectDragonDarts:
+	attackcanceler
+	attackstring
+	ppreduce
+	setmultihit 2
+BattleScript_DragonDartsLoop:
+	jumpifhalfword CMP_EQUAL, gChosenMove, MOVE_SLEEP_TALK, BattleScript_DragonDartsAccuracyCheck
+	jumpifstatus BS_ATTACKER, STATUS1_SLEEP, BattleScript_DragonDartsResult
+BattleScript_DragonDartsAccuracyCheck:
+	accuracycheck BattleScript_DragonDartsMoveMissed, ACC_CURR_MOVE
+	goto BattleScript_DragonDartsHit
+BattleScript_DragonDartsAccuracyCheck2::
+	movevaluescleanup
+	accuracycheck BattleScript_DragonDartsResult, ACC_CURR_MOVE
+	critcalc
+	damagecalc
+	adjustdamage
+	jumpifmovehadnoeffect BattleScript_DragonDartsResult
+	goto BattleScript_DragonDartsHitFromAnimation
+BattleScript_DragonDartsHit:
+	jumpifhasnohp BS_TARGET, BattleScript_DragonDartsResult
+	movevaluescleanup
+	critcalc
+	damagecalc
+	adjustdamage
+	jumpifmovehadnoeffect BattleScript_DragonDartsMoveMissed
+BattleScript_DragonDartsHitFromAnimation:
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage 0x40
+	resultmessage
+	waitmessage 0x40
+	multihitresultmessage
+	seteffectwithchance
+	printstring STRINGID_EMPTYSTRING3
+	waitmessage 0x1
+	moveendto MOVEEND_NEXT_TARGET
+	decrementmultihit BattleScript_DragonDartsTryNextTarget
+	goto BattleScript_DragonDartsResult
+BattleScript_DragonDartsMoveMissed:
+	jumpifbattletype BATTLE_TYPE_DOUBLE, BattleScript_DragonDartsTryNextTarget
+	goto BattleScript_DragonDartsResult
+BattleScript_DragonDartsTryNextTarget:
+	tryfaintmon BS_TARGET, FALSE, NULL
+	trynextdart BattleScript_DragonDartsHit
+	goto BattleScript_DragonDartsLoop
+BattleScript_DragonDartsResult:
+	resultmessage
+	waitmessage 0x40
+	tryfaintmon BS_TARGET, FALSE, NULL
+	moveendcase MOVEEND_SYNCHRONIZE_TARGET
+	moveendfrom MOVEEND_STATUS_IMMUNITY_ABILITIES
+	end
+	
+BattleScript_EffectTarShot:
+	attackcanceler
+	jumpifsubstituteblocks BattleScript_ButItFailedAtkStringPpReduce
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	setstatchanger STAT_SPEED, 1, TRUE
+	attackanimation
+	waitanimation
+	statbuffchange STAT_BUFF_ALLOW_PTR, BattleScript_TryTarShot
+	setgraphicalstatchangevalues
+	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	printfromtable gStatDownStringIds
+	waitmessage 0x40
+BattleScript_TryTarShot:
+	trytarshot BS_TARGET, BattleScript_MoveEnd
+	printstring STRINGID_PKMNBECAMEWEAKERTOFIRE
+	waitmessage 0x40
+	goto BattleScript_MoveEnd
+	
+BattleScript_EffectNoRetreat:
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	trynoretreat BS_TARGET, BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	call BattleScript_AllStatsUp
+	jumpifstatus2 BS_TARGET, STATUS2_ESCAPE_PREVENTION, BattleScript_MoveEnd
+	setmoveeffect MOVE_EFFECT_PREVENT_ESCAPE
+	seteffectprimary
+	printstring STRINGID_CANTESCAPEDUETOUSEDMOVE
+	waitmessage 0x40
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectJawLock:
+	setmoveeffect MOVE_EFFECT_TRAP_BOTH | MOVE_EFFECT_CERTAIN
+	goto BattleScript_EffectHit
+
+BattleScript_BothCanNoLongerEscape::
+	printstring STRINGID_BOTHCANNOLONGERESCAPE
+	waitmessage 0x40
+	return
 
 BattleScript_EffectSleepHit:
 	setmoveeffect MOVE_EFFECT_SLEEP
@@ -1321,7 +1491,7 @@ BattleScript_EffectSoak:
 	attackanimation
 	waitanimation
 	trysoak BattleScript_ButItFailed
-	printstring STRINGID_TRANSFORMEDINTOWATERTYPE
+	printstring STRINGID_TARGETCHANGEDTYPE
 	waitmessage 0x40
 	goto BattleScript_MoveEnd
 
@@ -2048,7 +2218,7 @@ BattleScript_EffectChangeTypeOnItem:
 BattleScript_EffectFusionCombo:
 BattleScript_EffectRevelationDance:
 BattleScript_EffectBelch:
-
+BattleScript_EffectBoltBeak:
 BattleScript_HitFromAtkCanceler::
 	attackcanceler
 BattleScript_HitFromAccCheck::

@@ -166,8 +166,14 @@
 #define VARIOUS_SET_LAST_USED_ITEM              99
 #define VARIOUS_PARALYZE_TYPE_IMMUNITY          100
 #define VARIOUS_JUMP_IF_ABSENT                  101
-#define VARIOUS_DESTROY_ABILITY_POPUP           102
-#define VARIOUS_TOTEM_BOOST                     103
+#define VARIOUS_TRY_NO_RETREAT                  102
+#define VARIOUS_TRY_TAR_SHOT                    103
+#define VARIOUS_TRY_NEXT_DART                   104
+#define VARIOUS_CHECK_POLTERGEIST               105
+#define VARIOUS_SET_OCTOLOCK                    106
+#define VARIOUS_CUT_1_3_HP_RAISE_STATS          107
+#define VARIOUS_DESTROY_ABILITY_POPUP           108
+#define VARIOUS_TOTEM_BOOST                     109
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
