@@ -432,7 +432,11 @@ const u8 gItemEffect_LumBerry[6] = {
 
 const u8 gItemEffect_SitrusBerry[7] = {
     [4] = ITEM4_HEAL_HP,
-    [6] = 30,
+#if I_SITRUS_BERRY_HEAL >= GEN_4
+    [6] = ITEM6_HEAL_QUARTER,
+#else
+    [6] = 30
+#endif
 };
 
 const u8 gItemEffect_PomegBerry[10] = {
