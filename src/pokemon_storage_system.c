@@ -41,6 +41,8 @@
 #include "constants/moves.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "constants/abilities.h"
+#include "constants/hold_effects.h"
 
 struct WallpaperTable
 {
@@ -713,6 +715,9 @@ static void sub_80D2A90(struct UnkStruct_2000020 *arg0, struct UnkStruct_2000028
 static void sub_80D2AA4(void);
 static void sub_80D2B88(struct UnkStruct_2000028 *unkStruct);
 static void sub_80D2C1C(struct UnkStruct_2000028 *unkStruct);
+void SetArceusFormPSS(struct BoxPokemon *boxMon);
+u16 GetArceusFormPSS(struct BoxPokemon *boxMon);
+void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 
 // static const rom data
 static const struct PSS_MenuStringPtrs gUnknown_085716C0[] =
@@ -6773,6 +6778,71 @@ static void sub_80CEBDC(void)
         sub_80CEB40();
 }
 
+void SetArceusFormPSS(struct BoxPokemon *boxMon)
+{
+#ifdef POKEMON_EXPANSION
+    u16 species = GetMonData(boxMon, MON_DATA_SPECIES);
+    u16 forme;
+    u8 abilityNum = GetMonData(boxMon, MON_DATA_ABILITY_NUM);
+    u16 ability = GetAbilityBySpecies(species, abilityNum);
+
+    if (GET_BASE_SPECIES_ID(species) == SPECIES_ARCEUS
+     && ability == ABILITY_MULTITYPE)
+    {
+        forme = GetArceusFormPSS(boxMon);
+        SetBoxMonData(boxMon, MON_DATA_SPECIES, &forme);
+        UpdateSpeciesSpritePSS(boxMon);
+    }
+#endif
+}
+
+u16 GetArceusFormPSS(struct BoxPokemon *boxMon)
+{
+    u16 item = GetMonData(boxMon, MON_DATA_HELD_ITEM, NULL);
+
+    switch (item)
+    {
+#if defined (ITEM_EXPANSION) && defined (POKEMON_EXPANSION)
+        case ITEM_FLAME_PLATE:
+            return SPECIES_ARCEUS_FIRE;
+        case ITEM_SPLASH_PLATE:
+            return SPECIES_ARCEUS_WATER;
+        case ITEM_ZAP_PLATE:
+            return SPECIES_ARCEUS_ELECTRIC;
+        case ITEM_MEADOW_PLATE:
+            return SPECIES_ARCEUS_GRASS;
+        case ITEM_ICICLE_PLATE:
+            return SPECIES_ARCEUS_ICE;
+        case ITEM_FIST_PLATE:
+            return SPECIES_ARCEUS_FIGHTING;
+        case ITEM_TOXIC_PLATE:
+            return SPECIES_ARCEUS_POISON;
+        case ITEM_EARTH_PLATE:
+            return SPECIES_ARCEUS_GROUND;
+        case ITEM_SKY_PLATE:
+            return SPECIES_ARCEUS_FLYING;
+        case ITEM_MIND_PLATE:
+            return SPECIES_ARCEUS_PSYCHIC;
+        case ITEM_INSECT_PLATE:
+            return SPECIES_ARCEUS_BUG;
+        case ITEM_STONE_PLATE:
+            return SPECIES_ARCEUS_ROCK;
+        case ITEM_SPOOKY_PLATE:
+            return SPECIES_ARCEUS_GHOST;
+        case ITEM_DRACO_PLATE:
+            return SPECIES_ARCEUS_DRAGON;
+        case ITEM_DREAD_PLATE:
+            return SPECIES_ARCEUS_DARK;
+        case ITEM_IRON_PLATE:
+            return SPECIES_ARCEUS_STEEL;
+        case ITEM_PIXIE_PLATE:
+            return SPECIES_ARCEUS_FAIRY;
+#endif
+        default:
+            return SPECIES_ARCEUS;
+    }
+}
+
 static void SetCursorMonData(void *pokemon, u8 mode)
 {
     u8 *txtPtr;
@@ -6859,6 +6929,11 @@ static void SetCursorMonData(void *pokemon, u8 mode)
     {
         if (sPSSData->cursorMonSpecies == SPECIES_NIDORAN_F || sPSSData->cursorMonSpecies == SPECIES_NIDORAN_M)
             gender = MON_GENDERLESS;
+
+    #ifdef POKEMON_EXPANSION
+        if (GET_BASE_SPECIES_ID(sPSSData->cursorMonSpecies) == SPECIES_ARCEUS)
+            SetArceusFormPSS(pokemon);
+    #endif
 
         StringCopyPadded(sPSSData->cursorMonNickText, sPSSData->cursorMonNick, CHAR_SPACE, 5);
 
@@ -9888,4 +9963,16 @@ static void sub_80D2C1C(struct UnkStruct_2000028 *unkStruct)
         Dma3FillLarge_(0, unkStruct->unk_04, unkStruct->unk_08, 16);
         unkStruct->unk_04 += 64;
     }
+}
+
+void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
+{
+    u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
+    u32 otId = GetBoxMonData(boxMon, MON_DATA_OT_ID);
+    u32 pid = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
+
+    // Update front sprite
+    sPSSData->cursorMonSpecies = species;
+    sPSSData->cursorMonPalette = GetMonSpritePalFromSpeciesAndPersonality(species, otId, pid);
+    LoadCursorMonGfx(species, pid);
 }
