@@ -8000,7 +8000,7 @@ const struct BattleMove gBattleMoves[MOVES_COUNT] =
 
     [MOVE_RETALIATE] =
     {
-        .effect = EFFECT_RETALITATE,
+        .effect = EFFECT_RETALIATE,
         .power = 70,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -10129,7 +10129,7 @@ const struct BattleMove gBattleMoves[MOVES_COUNT] =
     [MOVE_PSYCHIC_FANGS] =
     {
         .effect = EFFECT_BRICK_BREAK,
-        .power = 75,
+        .power = 85,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
         .pp = 15,
@@ -10673,7 +10673,7 @@ const struct BattleMove gBattleMoves[MOVES_COUNT] =
 
     [MOVE_STUFF_CHEEKS] =
     {
-        .effect = EFFECT_DEFENSE_UP_2,
+        .effect = EFFECT_PLACEHOLDER,   //TODO: Consume Berry + Defense Up 2
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -11234,7 +11234,7 @@ const struct BattleMove gBattleMoves[MOVES_COUNT] =
 
     [MOVE_TERRAIN_PULSE] =
     {
-        .effect = EFFECT_PLACEHOLDER,   //TODO
+        .effect = EFFECT_TERRAIN_PULSE,   //TODO
         .power = 50,
         .type = TYPE_NORMAL,
         .accuracy = 100,

@@ -252,7 +252,7 @@ gBattleScriptsForMoveEffects:: @ 82D86A8
 	.4byte BattleScript_EffectRound
 	.4byte BattleScript_EffectBrine
 	.4byte BattleScript_EffectVenoshock
-	.4byte BattleScript_EffectRetalitate
+	.4byte BattleScript_EffectRetaliate
 	.4byte BattleScript_EffectBulldoze
 	.4byte BattleScript_EffectFoulPlay
 	.4byte BattleScript_EffectPsyshock
@@ -367,6 +367,7 @@ gBattleScriptsForMoveEffects:: @ 82D86A8
 	.4byte BattleScript_EffectFairyLock
 	.4byte BattleScript_EffectAllySwitch
 	.4byte BattleScript_EffectSleepHit
+	.4byte BattleScript_EffectTerrainPulse
 
 BattleScript_EffectSleepHit:
 	setmoveeffect MOVE_EFFECT_SLEEP
@@ -2041,7 +2042,7 @@ BattleScript_EffectPayback:
 BattleScript_EffectRound:
 BattleScript_EffectBrine:
 BattleScript_EffectVenoshock:
-BattleScript_EffectRetalitate:
+BattleScript_EffectRetaliate:
 BattleScript_EffectFoulPlay:
 BattleScript_EffectPsyshock:
 BattleScript_EffectWeatherBall:
@@ -2051,6 +2052,7 @@ BattleScript_EffectChangeTypeOnItem:
 BattleScript_EffectFusionCombo:
 BattleScript_EffectRevelationDance:
 BattleScript_EffectBelch:
+BattleScript_EffectTerrainPulse:
 
 BattleScript_HitFromAtkCanceler::
 	attackcanceler

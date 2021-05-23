@@ -11056,7 +11056,23 @@ static void Cmd_setcharge(void)
 static void Cmd_callterrainattack(void) // nature power
 {
     gHitMarker &= ~(HITMARKER_ATTACKSTRING_PRINTED);
-    gCurrentMove = sNaturePowerMoves[gBattleTerrain];
+    if (VarGet(VAR_TERRAIN) & STATUS_TERRAIN_ANY)
+    {
+        if (VarGet(VAR_TERRAIN) & STATUS_FIELD_ELECTRIC_TERRAIN))
+            gCurrentMove = MOVE_THUNDERBOLT;
+        else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_GRASSY_TERRAIN))
+            gCurrentMove = MOVE_ENERGY_BALL;
+        else if ((VarGet(VAR_TERRAIN) & STATUS_FIELD_MISTY_TERRAIN))
+            gCurrentMove = MOVE_MOONBLAST;
+        else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_PSYCHIC_TERRAIN))
+            gCurrentMove = MOVE_PSYCHIC;
+        else
+            gCurrentMove = sNaturePowerMoves[gBattleTerrain];
+    }
+    else
+    {
+        gCurrentMove = sNaturePowerMoves[gBattleTerrain];
+    }
     gBattlerTarget = GetMoveTarget(gCurrentMove, 0);
     BattleScriptPush(gBattleScriptsForMoveEffects[gBattleMoves[gCurrentMove].effect]);
     gBattlescriptCurrInstr++;
@@ -11625,36 +11641,53 @@ static void Cmd_jumpifhasnohp(void)
 
 static void Cmd_getsecretpowereffect(void)
 {
-    switch (gBattleTerrain)
+    if (VarGet(VAR_TERRAIN) & STATUS_TERRAIN_ANY)
     {
-    case BATTLE_TERRAIN_GRASS:
-        gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-        break;
-    case BATTLE_TERRAIN_LONG_GRASS:
-        gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
-        break;
-    case BATTLE_TERRAIN_SAND:
-        gBattleScripting.moveEffect = MOVE_EFFECT_ACC_MINUS_1;
-        break;
-    case BATTLE_TERRAIN_UNDERWATER:
-        gBattleScripting.moveEffect = MOVE_EFFECT_DEF_MINUS_1;
-        break;
-    case BATTLE_TERRAIN_WATER:
-        gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_1;
-        break;
-    case BATTLE_TERRAIN_POND:
-        gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
-        break;
-    case BATTLE_TERRAIN_MOUNTAIN:
-        gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
-        break;
-    case BATTLE_TERRAIN_CAVE:
-        gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-        break;
-    default:
-        gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
-        break;
+        if (VarGet(VAR_TERRAIN) & STATUS_FIELD_ELECTRIC_TERRAIN))
+            gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
+        else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_GRASSY_TERRAIN))
+            gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
+        else if ((VarGet(VAR_TERRAIN) & STATUS_FIELD_MISTY_TERRAIN))
+            gBattleScripting.moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
+        else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_PSYCHIC_TERRAIN))
+            gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
+        else
+            gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
     }
+    else
+    {
+        switch (gBattleTerrain)
+        {
+            case BATTLE_TERRAIN_GRASS:
+                gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
+                break;
+            case BATTLE_TERRAIN_LONG_GRASS:
+                gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
+                break;
+            case BATTLE_TERRAIN_SAND:
+                gBattleScripting.moveEffect = MOVE_EFFECT_ACC_MINUS_1;
+                break;
+            case BATTLE_TERRAIN_UNDERWATER:
+                gBattleScripting.moveEffect = MOVE_EFFECT_DEF_MINUS_1;
+                break;
+            case BATTLE_TERRAIN_WATER:
+                gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_1;
+                break;
+            case BATTLE_TERRAIN_POND:
+                gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
+                break;
+            case BATTLE_TERRAIN_MOUNTAIN:
+                gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
+                break;
+            case BATTLE_TERRAIN_CAVE:
+                gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
+                break;
+            default:
+                gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
+                break;
+        }
+    }
+    
     gBattlescriptCurrInstr++;
 }
 
@@ -11875,11 +11908,26 @@ static void Cmd_tryrecycleitem(void)
 
 static void Cmd_settypetoterrain(void)
 {
-    if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, sTerrainToType[gBattleTerrain]))
+    u8 terrainType;
+    if (VarGet(VAR_TERRAIN) & STATUS_FIELD_ELECTRIC_TERRAIN)
+            && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ELECTRIC))
+        terrainType = TYPE_ELECTRIC;
+    else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_GRASSY_TERRAIN)
+            && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GRASS))
+        terrainType = TYPE_GRASS;
+    else if ((VarGet(VAR_TERRAIN) & STATUS_FIELD_MISTY_TERRAIN)
+            && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_FAIRY))
+        terrainType = TYPE_FAIRY;
+    else if (VarGet(VAR_TERRAIN) & STATUS_FIELD_PSYCHIC_TERRAIN)
+            && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_PSYCHIC))
+        terrainType = TYPE_PSYCHIC;
+    else
+        terrainType = sTerrainToType[gBattleTerrain];
+        
+    if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, terrainType))
     {
-        SET_BATTLER_TYPE(gBattlerAttacker, sTerrainToType[gBattleTerrain]);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, sTerrainToType[gBattleTerrain]);
-
+        SET_BATTLER_TYPE(gBattlerAttacker, terrainType);
+        PREPARE_TYPE_BUFFER(gBattleTextBuff1, terrainType);
         gBattlescriptCurrInstr += 5;
     }
     else
