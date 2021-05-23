@@ -256,13 +256,18 @@ struct AI_ThinkingStruct
 
 #define AI_MOVE_HISTORY_COUNT 3
 
+struct UsedMoves
+{
+    u16 moves[MAX_MON_MOVES];
+    u16 history[AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
+    u8 historyIndex;
+};
+
 struct BattleHistory
 {
+    struct UsedMoves usedMoves[MAX_BATTLERS_COUNT];
     u16 abilities[MAX_BATTLERS_COUNT];
     u8 itemEffects[MAX_BATTLERS_COUNT];
-    u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
-    u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
-    u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
     u16 trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
 };
