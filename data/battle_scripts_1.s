@@ -369,6 +369,16 @@ gBattleScriptsForMoveEffects:: @ 82D86A8
 	.4byte BattleScript_EffectSleepHit
 	.4byte BattleScript_EffectAttackerDefenseDownHit
 	.4byte BattleScript_EffectBodyPress
+	.4byte BattleScript_EffectPhotonGeyser
+	.4byte BattleScript_EffectShellSideArm
+
+BattleScript_EffectShellSideArm:
+	shellsidearmcheck
+	setmoveeffect MOVE_EFFECT_POISON
+	goto BattleScript_EffectHit
+
+BattleScript_EffectPhotonGeyser:
+	photongeysercheck
 
 BattleScript_EffectAttackerDefenseDownHit:
 	setmoveeffect MOVE_EFFECT_DEF_MINUS_1 | MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN
