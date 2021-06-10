@@ -9,6 +9,7 @@
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "battle_tv.h"
+#include "battle_z_move.h"
 #include "bg.h"
 #include "data.h"
 #include "frontier_util.h"
@@ -1578,18 +1579,26 @@ static void OpponentHandleChooseMove(void)
                 BtlController_EmitTwoReturnValues(1, 15, gBattlerTarget);
                 break;
             default:
-                if (gBattleMoves[moveInfo->moves[chosenMoveId]].target & (MOVE_TARGET_USER_OR_SELECTED | MOVE_TARGET_USER))
-                    gBattlerTarget = gActiveBattler;
-                if (gBattleMoves[moveInfo->moves[chosenMoveId]].target & MOVE_TARGET_BOTH)
                 {
-                    gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-                    if (gAbsentBattlerFlags & gBitTable[gBattlerTarget])
-                        gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+                    u16 chosenMove = moveInfo->moves[chosenMoveId];
+                        
+                    if (gBattleMoves[chosenMove].target & (MOVE_TARGET_USER_OR_SELECTED | MOVE_TARGET_USER))
+                        gBattlerTarget = gActiveBattler;
+                    if (gBattleMoves[chosenMove].target & MOVE_TARGET_BOTH)
+                    {
+                        gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+                        if (gAbsentBattlerFlags & gBitTable[gBattlerTarget])
+                            gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+                    }
+                    
+                    if (ShouldAIUseZMove(gActiveBattler, gBattlerTarget, chosenMove))
+                        QueueZMove(gActiveBattler, moveInfo->moves[chosenMoveId]);
+                    
+                    if (CanMegaEvolve(gActiveBattler)) // If opponent can mega evolve, do it.
+                        BtlController_EmitTwoReturnValues(1, 10, (chosenMoveId) | (RET_MEGA_EVOLUTION) | (gBattlerTarget << 8));
+                    else
+                        BtlController_EmitTwoReturnValues(1, 10, (chosenMoveId) | (gBattlerTarget << 8));
                 }
-                if (CanMegaEvolve(gActiveBattler)) // If opponent can mega evolve, do it.
-                    BtlController_EmitTwoReturnValues(1, 10, (chosenMoveId) | (RET_MEGA_EVOLUTION) | (gBattlerTarget << 8));
-                else
-                    BtlController_EmitTwoReturnValues(1, 10, (chosenMoveId) | (gBattlerTarget << 8));
                 break;
             }
             OpponentBufferExecCompleted();

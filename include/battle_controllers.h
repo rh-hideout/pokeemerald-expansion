@@ -113,6 +113,7 @@ struct ChooseMoveStruct
     u8 monType2;
     u8 monType3;
     struct MegaEvolutionData mega;
+    struct ZMoveData zmove;
 };
 
 enum
@@ -259,6 +260,8 @@ void Task_PlayerController_RestoreBgmAfterCry(u8 taskId);
 void ActionSelectionCreateCursorAt(u8 cursorPos, u8 unused);
 void ActionSelectionDestroyCursorAt(u8 cursorPos);
 void InitMoveSelectionsVarsAndStrings(void);
+void MoveSelectionCreateCursorAt(u8 cursorPos, u8 arg1);
+void MoveSelectionDestroyCursorAt(u8 cursorPosition);
 
 // recorded player controller
 void SetControllerToRecordedPlayer(void);
