@@ -369,6 +369,157 @@ gBattleScriptsForMoveEffects:: @ 82D86A8
 	.4byte BattleScript_EffectSleepHit
 	.4byte BattleScript_EffectAttackerDefenseDownHit
 	.4byte BattleScript_EffectBodyPress
+	.4byte BattleScript_EffectEvasionUpHit
+	.4byte BattleScript_EffectDoubleIronBash
+	.4byte BattleScript_EffectGlitzyGlow
+	.4byte BattleScript_EffectBaddyBad
+	.4byte BattleScript_EffectSappySeed
+	.4byte BattleScript_EffectFreezyFrost
+	.4byte BattleScript_EffectSparklySwirl
+
+BattleScript_EffectSparklySwirl:
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET, FALSE, NULL
+	healpartystatus
+	waitstate
+	updatestatusicon BS_ATTACKER_WITH_PARTNER
+	waitstate
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectFreezyFrost:
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET, FALSE, NULL
+	normalisebuffs
+	printstring STRINGID_STATCHANGESGONE
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectSappySeed:
+	jumpifstatus3 BS_TARGET, STATUS3_LEECHSEED, BattleScript_EffectHit
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET, FALSE, NULL
+	jumpifhasnohp BS_TARGET, BattleScript_MoveEnd
+	setseeded
+	printfromtable gLeechSeedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectBaddyBad:
+	jumpifsideaffecting BS_ATTACKER, SIDE_STATUS_REFLECT, BattleScript_EffectHit
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET, FALSE, NULL
+	setreflect
+	printfromtable gReflectLightScreenSafeguardStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectGlitzyGlow:
+	jumpifsideaffecting BS_ATTACKER, SIDE_STATUS_LIGHTSCREEN, BattleScript_EffectHit
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET, FALSE, NULL
+	setlightscreen
+	printfromtable gReflectLightScreenSafeguardStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectDoubleIronBash:
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	setmultihitcounter 2
+	initmultihitstring
+	sethword sMULTIHIT_EFFECT, MOVE_EFFECT_FLINCH
+	goto BattleScript_MultiHitLoop
+
+BattleScript_EffectEvasionUpHit:
+	setmoveeffect MOVE_EFFECT_EVS_PLUS_1 | MOVE_EFFECT_AFFECTS_USER
+	goto BattleScript_EffectHit
 
 BattleScript_EffectAttackerDefenseDownHit:
 	setmoveeffect MOVE_EFFECT_DEF_MINUS_1 | MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN
