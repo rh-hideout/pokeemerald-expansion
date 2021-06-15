@@ -2895,7 +2895,7 @@ void SetMoveEffect(bool32 primary, u32 certain)
 
                     for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; ; gBattleCommunication[MULTISTRING_CHOOSER]++)
                     {
-                        if (gBattleCommunication[MULTISTRING_CHOOSER] > 5)
+                        if (gBattleCommunication[MULTISTRING_CHOOSER] > 6)
                             break;
                         if (gTrappingMoves[gBattleCommunication[MULTISTRING_CHOOSER]] == gCurrentMove)
                             break;
@@ -3021,7 +3021,8 @@ void SetMoveEffect(bool32 primary, u32 certain)
                            | BATTLE_TYPE_LINK
                            | BATTLE_TYPE_RECORDED_LINK
                            | BATTLE_TYPE_SECRET_BASE))
-                        && (gWishFutureKnock.knockedOffMons[side] & gBitTable[gBattlerPartyIndexes[gBattlerAttacker]]))
+                         && (gWishFutureKnock.knockedOffMons[side] & gBitTable[gBattlerPartyIndexes[gBattlerAttacker]]
+                         || gWishFutureKnock.meltedItemMons[side] & gBitTable[gBattlerPartyIndexes[gBattlerAttacker]]))
                     {
                         gBattlescriptCurrInstr++;
                     }
@@ -4806,6 +4807,12 @@ static void Cmd_moveend(void)
                     gBattlescriptCurrInstr = BattleScript_BanefulBunkerEffect;
                     effect = 1;
                 }
+                else if (gProtectStructs[gBattlerTarget].beakBlastCharge)
+                {
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_BeakBlastBurn;
+                    effect = 1;
+                }
             }
             gBattleScripting.moveendState++;
             break;
@@ -5264,6 +5271,11 @@ static void Cmd_switchindataupdate(void)
     // check knocked off item
     i = GetBattlerSide(gActiveBattler);
     if (gWishFutureKnock.knockedOffMons[i] & gBitTable[gBattlerPartyIndexes[gActiveBattler]])
+    {
+        gBattleMons[gActiveBattler].item = 0;
+    }
+    // check melted items
+    if (gWishFutureKnock.meltedItemMons[i] & gBitTable[gBattlerPartyIndexes[gActiveBattler]])
     {
         gBattleMons[gActiveBattler].item = 0;
     }
@@ -7861,6 +7873,7 @@ static void Cmd_various(void)
             case MOVE_MIRROR_COAT:
             case MOVE_METAL_BURST:
             case MOVE_ME_FIRST:
+            case MOVE_BEAK_BLAST:
                 gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
                 break;
             default:
@@ -8422,6 +8435,201 @@ static void Cmd_various(void)
             gBattlescriptCurrInstr += 7;    // exit if loop failed (failsafe)
         }
         return;
+    case VARIOUS_TRY_SET_CORROSIVE_GAS:
+        if (gBattleMons[gActiveBattler].item != 0
+            && CanBattlerGetOrLoseItem(gActiveBattler, gBattleMons[gActiveBattler].item)
+            && !NoAliveMonsForEitherParty())
+        {
+            if (GetBattlerAbility(gActiveBattler) == ABILITY_STICKY_HOLD && IsBattlerAlive(gActiveBattler))
+            {
+                gBattlerAbility = gActiveBattler;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_StickyHoldActivates;
+            }
+            else
+            {   //Item is melted normally
+                u32 side = GetBattlerSide(gActiveBattler);
+
+                gLastUsedItem = gBattleMons[gActiveBattler].item;
+                gBattleMons[gActiveBattler].item = 0;
+                gBattleStruct->choicedMove[gActiveBattler] = 0;
+                gWishFutureKnock.meltedItemMons[side] |= gBitTable[gBattlerPartyIndexes[gActiveBattler]];
+
+                CheckSetUnburden(gActiveBattler);
+                gBattlescriptCurrInstr += 7;
+            }
+        }
+        else
+        {
+            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
+        }
+        return;
+    case VARIOUS_SET_BEAK_BLAST:    
+        gProtectStructs[gActiveBattler].beakBlastCharge = 1;
+        break;
+    case VARIOUS_SWAP_SIDE_STATUSES:
+        /* This code is a mess, but idk how to do it better without changing how Side Statuses and
+        Side timers work.
+        The problem is that not all side statuses are affected by Court Change*/
+
+        //todo: add pledge related effects
+        //todo: add gigamax related effects
+
+        //swap side status sides
+        bits = gSideStatuses[0];    //Stores sides status temp
+
+        //Reflect
+        if (gSideStatuses[1] & SIDE_STATUS_REFLECT)
+            gSideStatuses[0] |= SIDE_STATUS_REFLECT;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_REFLECT);
+        
+        if (bits & SIDE_STATUS_REFLECT)
+            gSideStatuses[1] |= SIDE_STATUS_REFLECT;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_REFLECT);
+
+        //Light screen
+        if (gSideStatuses[1] & SIDE_STATUS_LIGHTSCREEN)
+            gSideStatuses[0] |= SIDE_STATUS_LIGHTSCREEN;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_LIGHTSCREEN);
+
+        if (bits & SIDE_STATUS_LIGHTSCREEN)
+            gSideStatuses[1] |= SIDE_STATUS_LIGHTSCREEN;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_LIGHTSCREEN);
+        
+        //Safeguard
+        if (gSideStatuses[1] & SIDE_STATUS_SAFEGUARD)
+            gSideStatuses[0] |= SIDE_STATUS_SAFEGUARD;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_SAFEGUARD);
+
+        if (bits & SIDE_STATUS_SAFEGUARD)
+            gSideStatuses[1] |= SIDE_STATUS_SAFEGUARD;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_SAFEGUARD);
+
+        //Mist
+        if (gSideStatuses[1] & SIDE_STATUS_MIST)
+            gSideStatuses[0] |= SIDE_STATUS_MIST;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_MIST);
+
+        if (bits & SIDE_STATUS_MIST)
+            gSideStatuses[1] |= SIDE_STATUS_MIST;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_MIST);
+
+        //AuroraVeil
+        if (gSideStatuses[1] & SIDE_STATUS_AURORA_VEIL)
+            gSideStatuses[0] |= SIDE_STATUS_AURORA_VEIL;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_AURORA_VEIL);
+
+        if (bits & SIDE_STATUS_AURORA_VEIL)
+            gSideStatuses[1] |= SIDE_STATUS_AURORA_VEIL;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_AURORA_VEIL);
+
+        //Sticky Web
+        if (gSideStatuses[1] & SIDE_STATUS_STICKY_WEB)
+            gSideStatuses[0] |= SIDE_STATUS_STICKY_WEB;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_STICKY_WEB);
+            
+        if (bits & SIDE_STATUS_STICKY_WEB)
+            gSideStatuses[1] |= SIDE_STATUS_STICKY_WEB;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_STICKY_WEB);
+
+        //Spikes
+        if (gSideStatuses[1] & SIDE_STATUS_SPIKES)
+            gSideStatuses[0] |= SIDE_STATUS_SPIKES;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_SPIKES);
+        
+        if (bits & SIDE_STATUS_SPIKES)
+            gSideStatuses[1] |= SIDE_STATUS_SPIKES;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_SPIKES);
+
+        //Toxic Spikes
+        if (gSideStatuses[1] & SIDE_STATUS_TOXIC_SPIKES)
+            gSideStatuses[0] |= SIDE_STATUS_TOXIC_SPIKES;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_TOXIC_SPIKES);
+        
+        if (bits & SIDE_STATUS_TOXIC_SPIKES)
+            gSideStatuses[1] |= SIDE_STATUS_TOXIC_SPIKES;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_TOXIC_SPIKES);
+
+        //Stealth Rock
+        if (gSideStatuses[1] & SIDE_STATUS_STEALTH_ROCK)
+            gSideStatuses[0] |= SIDE_STATUS_STEALTH_ROCK;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_STEALTH_ROCK);
+        
+        if (bits & SIDE_STATUS_STEALTH_ROCK)
+            gSideStatuses[1] |= SIDE_STATUS_STEALTH_ROCK;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_STEALTH_ROCK);
+
+        //Tailwind
+        if (gSideStatuses[1] & SIDE_STATUS_TAILWIND)
+            gSideStatuses[0] |= SIDE_STATUS_TAILWIND;
+        else
+            gSideStatuses[0] &= ~(SIDE_STATUS_TAILWIND);
+
+        if (bits & SIDE_STATUS_TAILWIND)
+            gSideStatuses[1] |= SIDE_STATUS_TAILWIND;
+        else
+            gSideStatuses[1] &= ~(SIDE_STATUS_TAILWIND);
+
+       
+        //Swap affected status timers
+        bits = gSideTimers[0].reflectTimer; 
+        gSideTimers[0].reflectTimer = gSideTimers[1].reflectTimer;
+        gSideTimers[1].reflectTimer = bits;
+
+        bits = gSideTimers[0].lightscreenTimer; 
+        gSideTimers[0].lightscreenTimer = gSideTimers[1].lightscreenTimer;
+        gSideTimers[1].lightscreenTimer = bits;
+
+        bits = gSideTimers[0].mistTimer; 
+        gSideTimers[0].mistTimer = gSideTimers[1].mistTimer;
+        gSideTimers[1].mistTimer = bits;
+        
+        bits = gSideTimers[0].safeguardTimer; 
+        gSideTimers[0].safeguardTimer = gSideTimers[1].safeguardTimer;
+        gSideTimers[1].safeguardTimer = bits;
+
+        bits = gSideTimers[0].spikesAmount; 
+        gSideTimers[0].spikesAmount = gSideTimers[1].spikesAmount;
+        gSideTimers[1].spikesAmount = bits;
+
+        bits = gSideTimers[0].toxicSpikesAmount; 
+        gSideTimers[0].toxicSpikesAmount = gSideTimers[1].toxicSpikesAmount;
+        gSideTimers[1].toxicSpikesAmount = bits;
+
+        bits = gSideTimers[0].stealthRockAmount; 
+        gSideTimers[0].stealthRockAmount = gSideTimers[1].stealthRockAmount;
+        gSideTimers[1].stealthRockAmount = bits;
+
+        bits = gSideTimers[0].stickyWebAmount; 
+        gSideTimers[0].stickyWebAmount = gSideTimers[1].stickyWebAmount;
+        gSideTimers[1].stickyWebAmount = bits;
+
+        bits = gSideTimers[0].auroraVeilTimer; 
+        gSideTimers[0].auroraVeilTimer = gSideTimers[1].auroraVeilTimer;
+        gSideTimers[1].auroraVeilTimer = bits;
+
+        bits = gSideTimers[0].tailwindTimer; 
+        gSideTimers[0].tailwindTimer = gSideTimers[1].tailwindTimer;
+        gSideTimers[1].tailwindTimer = bits;
+        break;
     }
 
     gBattlescriptCurrInstr += 3;
@@ -11206,14 +11414,16 @@ static void Cmd_tryswapitems(void) // trick
         u8 sideAttacker = GetBattlerSide(gBattlerAttacker);
         u8 sideTarget = GetBattlerSide(gBattlerTarget);
 
-        // you can't swap items if they were knocked off in regular battles
+        // you can't swap items if they were knocked off or melted in regular battles
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_FRONTIER
                              | BATTLE_TYPE_SECRET_BASE
                              | BATTLE_TYPE_RECORDED_LINK))
             && (gWishFutureKnock.knockedOffMons[sideAttacker] & gBitTable[gBattlerPartyIndexes[gBattlerAttacker]]
-                || gWishFutureKnock.knockedOffMons[sideTarget] & gBitTable[gBattlerPartyIndexes[gBattlerTarget]]))
+                || gWishFutureKnock.knockedOffMons[sideTarget] & gBitTable[gBattlerPartyIndexes[gBattlerTarget]]
+                || gWishFutureKnock.meltedItemMons[sideTarget] & gBitTable[gBattlerPartyIndexes[gBattlerAttacker]]
+                || gWishFutureKnock.meltedItemMons[sideTarget] & gBitTable[gBattlerPartyIndexes[gBattlerTarget]]))
         {
             gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
         }

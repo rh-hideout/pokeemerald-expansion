@@ -1769,6 +1769,32 @@
 	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
 	.endm
 
+	.macro trysetcorrosivegas battler:req, ptr:req
+	various \battler, VARIOUS_TRY_SET_CORROSIVE_GAS
+	.4byte \ptr
+	.endm
+
+	.macro setbeakblast battler:req
+	various \battler, VARIOUS_SET_BEAK_BLAST
+	.endm
+
+	.macro swapsidestatuses
+	various BS_ATTACKER, VARIOUS_SWAP_SIDE_STATUSES
+	.endm
+
+	.macro setshelltrap battler:req
+	various \battler, VARIOUS_SET_SHELL_TRAP
+	.endm
+
+	.macro clearshelltrap battler:req
+	various \battler, VARIOUS_CLEAR_SHELL_TRAP
+	.endm
+
+	.macro checkshelltrap battler:req, ptr:req
+	various \battler, VARIOUS_CHECK_SHELL_TRAP
+	.4byte \ptr
+	.endm
+
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER \stat | \stages << 3 | \down << 7

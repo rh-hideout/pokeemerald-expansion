@@ -7210,6 +7210,24 @@ static u16 CalcMoveBasePower(u16 move, u8 battlerAtk, u8 battlerDef)
         if (gBattleMoves[gLastUsedMove].effect == EFFECT_FUSION_COMBO && move != gLastUsedMove)
             basePower *= 2;
         break;
+    case EFFECT_EXPANDING_FORCE:
+        if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+            basePower = 120;
+        break;
+    case EFFECT_RISING_VOLTAGE:
+        #ifdef ITEM_EXPANSION   //Air Baloon exception with item expansion branch
+        if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && !IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING)
+            && gBattleMons[battlerDef].item != ITEM_AIR_BALLOON && gBattleMons[battlerDef].ability != ABILITY_LEVITATE)
+        #else
+        if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && !IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING)
+            && gBattleMons[battlerDef].ability != ABILITY_LEVITATE)
+        #endif
+        basePower *= 2;
+        break;
+    case EFFECT_TERRAIN_PULSE:
+        if (gFieldStatuses & (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN))
+            basePower *= 2;
+        break; 
     }
 
     if (basePower == 0)

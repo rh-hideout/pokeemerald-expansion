@@ -369,5 +369,11 @@ extern const u8 BattleScript_JabocaRowapBerryActivates[];
 extern const u8 BattleScript_NotAffectedAbilityPopUp[];
 extern const u8 BattleScript_BattlerShookOffTaunt[];
 extern const u8 BattleScript_BattlerGotOverItsInfatuation[];
+extern const u8 BattleScript_MeltedItem[];
+extern const u8 BattleScript_BeakBlastSetUp[];
+extern const u8 BattleScript_BeakBlastBurn[];
+extern const u8 BattleScript_ShellTrapSetUp[];
+extern const u8 BattleScript_ShellTrapExplode[];
+extern const u8 BattleScript_EffectShellTrap[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

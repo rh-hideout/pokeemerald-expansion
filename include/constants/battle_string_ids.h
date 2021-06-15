@@ -570,8 +570,14 @@
 #define STRINGID_MICLEBERRYACTIVATES             566
 #define STRINGID_PKMNSHOOKOFFTHETAUNT            567
 #define STRINGID_PKMNGOTOVERITSINFATUATION       568
+#define STRINGID_PKMNINSNAPTRAP                  569
+#define STRINGID_METEORBEAMCHARGING              570
+#define STRINGID_ITEMMELTED                      571
+#define STRINGID_HEATUPBEAK                      572
+#define STRINGID_COURTCHANGE                     573
+#define STRINGID_PREPARESHELLTRAP                574
 
-#define BATTLESTRINGS_COUNT                      569
+#define BATTLESTRINGS_COUNT                      575
 
 // The below IDs are all indexes into battle message tables,
 // used to determine which of a set of messages to print.
@@ -622,6 +628,7 @@
 #define B_MSG_TURN1_PHANTOM_FORCE  8
 #define B_MSG_TURN1_GEOMANCY       9
 #define B_MSG_TURN1_FREEZE_SHOCK   10
+#define B_MSG_TURN1_METEOR_BEAM    11
 
 // gMoveWeatherChangeStringIds
 #define B_MSG_STARTED_RAIN      0

@@ -144,6 +144,8 @@ struct ProtectStruct
     u32 usedThroatChopPreventedMove:1;
     u32 micle:1;
     u32 custap:1;    // also quick claw
+    u32 beakBlastCharge:1;
+    u32 shellTrap:1;
     u32 physicalDmg;
     u32 specialDmg;
     u8 physicalBattlerId;
@@ -229,6 +231,7 @@ struct WishFutureKnock
     u8 wishMonId[MAX_BATTLERS_COUNT];
     u8 weatherDuration;
     u8 knockedOffMons[2]; // Each battler is represented by a bit. The array entry is dependent on the battler's side.
+    u8 meltedItemMons[2]; // Same as above 
 };
 
 struct AI_SavedBattleMon
