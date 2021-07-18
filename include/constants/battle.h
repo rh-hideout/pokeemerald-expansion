@@ -171,6 +171,7 @@
 #define STATUS3_LASER_FOCUS             (1 << 29)
 #define STATUS3_ELECTRIFIED             (1 << 30)
 #define STATUS3_POWER_TRICK             (1 << 31)
+#define STATUS3_SKY_DROPPED             (STATUS3_ON_AIR | STATUS3_UNDERGROUND)
 #define STATUS3_SEMI_INVULNERABLE       (STATUS3_UNDERGROUND | STATUS3_ON_AIR | STATUS3_UNDERWATER | STATUS3_PHANTOM_FORCE)
 
 #define HITMARKER_x10                   (1 << 4)
@@ -346,7 +347,8 @@
 #define MOVE_EFFECT_THROAT_CHOP         0x43
 #define MOVE_EFFECT_INCINERATE          0x44
 #define MOVE_EFFECT_BUG_BITE            0x45
-#define NUM_MOVE_EFFECTS                0x46
+#define MOVE_EFFECT_SKY_DROP            0x46
+#define NUM_MOVE_EFFECTS                0x47
 
 #define MOVE_EFFECT_AFFECTS_USER        0x4000
 #define MOVE_EFFECT_CERTAIN             0x8000

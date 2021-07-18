@@ -1893,4 +1893,17 @@
 	jumpifsideaffecting BS_TARGET, SIDE_STATUS_SAFEGUARD, \jumpptr
 	1:
 	.endm
+	
+	.macro jumpifunder200 battler:req, ptr:req
+	various \battler, VARIOUS_JUMP_IF_UNDER_200
+	.4byte \ptr
+	.endm
+	
+	.macro setskydrop
+	various 0, VARIOUS_SET_SKY_DROP
+	.endm
+	
+	.macro clearskydrop
+	various 0, VARIOUS_CLEAR_SKY_DROP
+	.endm
 
