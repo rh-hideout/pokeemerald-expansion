@@ -28,6 +28,7 @@ RustboroCity_Mart_Pokemart_Basic:
 	.2byte ITEM_X_SPEED
 	.2byte ITEM_X_ATTACK
 	.2byte ITEM_X_DEFENSE
+	.2byte ITEM_RARE_CANDY
 	.2byte ITEM_NONE
 	release
 	end
@@ -41,8 +42,8 @@ RustboroCity_Mart_EventScript_PokemartExpanded::
 	.align 2
 RustboroCity_Mart_Pokemart_Expanded:
 	.2byte ITEM_POKE_BALL
-	.2byte ITEM_TIMER_BALL
-	.2byte ITEM_REPEAT_BALL
+	.2byte ITEM_FAST_BALL
+	.2byte ITEM_FRIEND_BALL
 	.2byte ITEM_POTION
 	.2byte ITEM_SUPER_POTION
 	.2byte ITEM_ANTIDOTE
@@ -52,6 +53,12 @@ RustboroCity_Mart_Pokemart_Expanded:
 	.2byte ITEM_X_SPEED
 	.2byte ITEM_X_ATTACK
 	.2byte ITEM_X_DEFENSE
+	.2byte ITEM_RARE_CANDY
+	.2byte ITEM_POKE_DOLL
+	.2byte ITEM_IRON_BALL
+	.2byte ITEM_SILVER_POWDER
+	.2byte ITEM_SOOTHE_BELL
+	.2byte ITEM_SHARP_BEAK
 	.2byte ITEM_NONE
 	release
 	end

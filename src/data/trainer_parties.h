@@ -3208,40 +3208,54 @@ static const struct TrainerMon sParty_Roxanne1[] = {
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
     .lvl = 12,
-    .species = SPECIES_GEODUDE,
+    .species = SPECIES_NACLI,
     .heldItem = ITEM_NONE,
-    .moves = {MOVE_TACKLE, MOVE_DEFENSE_CURL, MOVE_ROCK_THROW, MOVE_ROCK_TOMB}
+    .moves = {MOVE_TACKLE, MOVE_HARDEN, MOVE_ROCK_THROW, MOVE_ROCK_POLISH}
     },
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
     .lvl = 12,
-    .species = SPECIES_GEODUDE,
+    .species = SPECIES_GEODUDE_ALOLAN,
     .heldItem = ITEM_NONE,
-    .moves = {MOVE_TACKLE, MOVE_DEFENSE_CURL, MOVE_ROCK_THROW, MOVE_ROCK_TOMB}
+    .moves = {MOVE_CHARGE, MOVE_DEFENSE_CURL, MOVE_SPARK, MOVE_ROCK_TOMB}
     },
     {
     .iv = TRAINER_PARTY_IVS(24, 24, 24, 24, 24, 24),
-    .lvl = 15,
-    .species = SPECIES_NOSEPASS,
+    .lvl = 13,
+    .species = SPECIES_AMAURA,
     .heldItem = ITEM_ORAN_BERRY,
+    .moves = {MOVE_POWDER_SNOW, MOVE_GROWL, MOVE_AURORA_VEIL, MOVE_ANCIENT_POWER}
+    },
+	{
+    .iv = TRAINER_PARTY_IVS(24, 24, 24, 24, 24, 24),
+    .lvl = 13,
+    .species = SPECIES_NOSEPASS,
+    .heldItem = ITEM_SITRUS_BERRY,
     .moves = {MOVE_BLOCK, MOVE_HARDEN, MOVE_TACKLE, MOVE_ROCK_TOMB}
-    }
+    },
 };
 
 static const struct TrainerMon sParty_Brawly1[] = {
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
     .lvl = 16,
-    .species = SPECIES_MACHOP,
-    .heldItem = ITEM_NONE,
-    .moves = {MOVE_KARATE_CHOP, MOVE_LOW_KICK, MOVE_SEISMIC_TOSS, MOVE_BULK_UP}
+    .species = SPECIES_SCRAGGY,
+    .heldItem = ITEM_WHITE_HERB,
+    .moves = {MOVE_FACADE, MOVE_LOW_KICK, MOVE_SAND_ATTACK, MOVE_COUNTER}
     },
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
-    .lvl = 16,
+    .lvl = 17,
     .species = SPECIES_MEDITITE,
-    .heldItem = ITEM_NONE,
-    .moves = {MOVE_FOCUS_PUNCH, MOVE_LIGHT_SCREEN, MOVE_REFLECT, MOVE_BULK_UP}
+    .heldItem = ITEM_KINGS_ROCK,
+    .moves = {MOVE_FORCE_PALM, MOVE_LIGHT_SCREEN, MOVE_REFLECT, MOVE_BULK_UP}
+    },
+	{
+    .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
+    .lvl = 18,
+    .species = SPECIES_PAWMOT,
+    .heldItem = ITEM_FIGHTING_GEM,
+    .moves = {MOVE_ARM_THRUST, MOVE_NUZZLE, MOVE_DIG, MOVE_SWEET_KISS}
     },
     {
     .iv = TRAINER_PARTY_IVS(24, 24, 24, 24, 24, 24),
@@ -3249,7 +3263,7 @@ static const struct TrainerMon sParty_Brawly1[] = {
     .species = SPECIES_MAKUHITA,
     .heldItem = ITEM_SITRUS_BERRY,
     .moves = {MOVE_ARM_THRUST, MOVE_VITAL_THROW, MOVE_REVERSAL, MOVE_BULK_UP}
-    }
+    },
 };
 
 static const struct TrainerMon sParty_Wattson1[] = {

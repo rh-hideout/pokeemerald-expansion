@@ -847,7 +847,7 @@ static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 {
-    [STRINGID_TIDYINGUPCOMPLETE - BATTLESTRINGS_TABLE_START] = sText_TidyingUpComplete,
+[STRINGID_TIDYINGUPCOMPLETE - BATTLESTRINGS_TABLE_START] = sText_TidyingUpComplete,
     [STRINGID_SUPERSWEETAROMAWAFTS - BATTLESTRINGS_TABLE_START] = sText_SupersweetAromaWafts,
     [STRINGID_SHEDITSTAIL - BATTLESTRINGS_TABLE_START] = sText_ShedItsTail,
     [STRINGID_ELECTROSHOTCHARGING - BATTLESTRINGS_TABLE_START] = sText_ElectroShotCharging,
@@ -1389,7 +1389,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNSURROUNDEDWITHVEILOFWATER - BATTLESTRINGS_TABLE_START] = sText_PkmnSurroundedWithVeilOfWater,
     [STRINGID_PKMNLEVITATEDONELECTROMAGNETISM - BATTLESTRINGS_TABLE_START] = sText_PkmnLevitatedOnElectromagnetism,
     [STRINGID_PKMNTWISTEDDIMENSIONS - BATTLESTRINGS_TABLE_START] = sText_PkmnTwistedDimensions,
-    [STRINGID_DIMENSIONSWERETWISTED - BATTLESTRINGS_TABLE_START] = sText_DimensionsWereTwisted,
+[STRINGID_DIMENSIONSWERETWISTED - BATTLESTRINGS_TABLE_START] = sText_DimensionsWereTwisted,
     [STRINGID_POINTEDSTONESFLOAT - BATTLESTRINGS_TABLE_START] = sText_PointedStonesFloat,
     [STRINGID_CLOAKEDINMYSTICALMOONLIGHT - BATTLESTRINGS_TABLE_START] = sText_CloakedInMysticalMoonlight,
     [STRINGID_TRAPPEDBYSWIRLINGMAGMA - BATTLESTRINGS_TABLE_START] = sText_TrappedBySwirlingMagma,
@@ -1398,11 +1398,11 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_SHAREDITSGUARD - BATTLESTRINGS_TABLE_START] = sText_SharedItsGuard,
     [STRINGID_SHAREDITSPOWER - BATTLESTRINGS_TABLE_START] = sText_SharedItsPower,
     [STRINGID_SWAPSDEFANDSPDEFOFALLPOKEMON - BATTLESTRINGS_TABLE_START] = sText_SwapsDefAndSpDefOfAllPkmn,
-    [STRINGID_BIZARREAREACREATED - BATTLESTRINGS_TABLE_START] = sText_BizzareAreaCreated,
+[STRINGID_BIZARREAREACREATED - BATTLESTRINGS_TABLE_START] = sText_BizzareAreaCreated,
     [STRINGID_BECAMENIMBLE - BATTLESTRINGS_TABLE_START] = sText_BecameNimble,
     [STRINGID_HURLEDINTOTHEAIR - BATTLESTRINGS_TABLE_START] = sText_HurledIntoTheAir,
     [STRINGID_HELDITEMSLOSEEFFECTS - BATTLESTRINGS_TABLE_START] = sText_HeldItemsLoseEffects,
-    [STRINGID_BIZARREARENACREATED - BATTLESTRINGS_TABLE_START] = sText_BizarreArenaCreated,
+[STRINGID_BIZARREARENACREATED - BATTLESTRINGS_TABLE_START] = sText_BizarreArenaCreated,
     [STRINGID_FELLSTRAIGHTDOWN - BATTLESTRINGS_TABLE_START] = sText_FellStraightDown,
     [STRINGID_TARGETCHANGEDTYPE  - BATTLESTRINGS_TABLE_START] = sText_TargetChangedType,
     [STRINGID_PKMNACQUIREDSIMPLE - BATTLESTRINGS_TABLE_START] = sText_PkmnAcquiredSimple,
@@ -1540,7 +1540,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ULTRABURSTCOMPLETED - BATTLESTRINGS_TABLE_START] = sText_UltraBurstCompleted,
     [STRINGID_TEAMGAINEDEXP - BATTLESTRINGS_TABLE_START] = sText_TeamGainedEXP,
     [STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP - BATTLESTRINGS_TABLE_START] = sText_TargetCoveredInStickyCandySyrup,
-    [STRINGID_ITEMWASUSEDUP - BATTLESTRINGS_TABLE_START] = sText_ItemWasUsedUp,
+[STRINGID_ITEMWASUSEDUP - BATTLESTRINGS_TABLE_START] = sText_ItemWasUsedUp,
     [STRINGID_ATTACKERLOSTITSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostItsType,
     [STRINGID_CLOAKEDINAHARSHLIGHT - BATTLESTRINGS_TABLE_START] = sText_PkmnIsCloakedInAHarshLight,
 };
@@ -2493,6 +2493,42 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .fgColor = 1,
         .shadowColor = 6,
     },
+	{ // 24 "type" super-effective
+	.fillValue = PIXEL_FILL(0xE),
+	.fontId = 7,
+	.x = 0,
+	.y = 1,
+	.letterSpacing = 0,
+	.lineSpacing = 0,
+	.speed = 0,
+	.fgColor = 4,
+	.bgColor = 14,
+	.shadowColor = 5,
+},
+	{ // 25 "type" not very effective
+	.fillValue = PIXEL_FILL(0xE),
+	.fontId = 7,
+	.x = 0,
+	.y = 1,
+	.letterSpacing = 0,
+	.lineSpacing = 0,
+	.speed = 0,
+	.fgColor = 1,
+	.bgColor = 14,
+	.shadowColor = 3,
+},
+	{ // 26 "type" no effect
+	.fillValue = PIXEL_FILL(0xE),
+	.fontId = 7,
+	.x = 0,
+	.y = 1,
+	.letterSpacing = 0,
+	.lineSpacing = 0,
+	.speed = 0,
+	.fgColor = 11,
+	.bgColor = 14,
+	.shadowColor = 11,
+},
 };
 
 static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
@@ -3645,16 +3681,16 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst)
 
             if (toCpy != NULL)
             {
-                if (DECAP_ENABLED)
+if (DECAP_ENABLED)
                 {
                     bool32 fixedCase = *src & PLACEHOLDER_FIXED_MASK;
 
                     if (fixedCase)
                         dst[dstID++] = CHAR_FIXED_CASE;
 
-                    while (*toCpy != EOS)
-                    {
-                        if (*toCpy == CHAR_FIXED_CASE)
+                while (*toCpy != EOS)
+                {
+                    if (*toCpy == CHAR_FIXED_CASE)
                             fixedCase = TRUE;
                         else if (*toCpy == CHAR_UNFIX_CASE)
                             fixedCase = FALSE;
