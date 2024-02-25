@@ -2542,7 +2542,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         ICON(Sizzlipede, 0),
         FOOTPRINT(Sizzlipede)
         LEARNSETS(Sizzlipede),
-        .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_CENTISKORCH}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 26, SPECIES_CENTISKORCH}),
     },
 
 #define CENTISKORCH_MISC_INFO                                                           \
@@ -2561,7 +2561,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,                                              \
         .growthRate = GROWTH_MEDIUM_FAST,                                               \
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),                                     \
-        .abilities = { ABILITY_FLASH_FIRE, ABILITY_WHITE_SMOKE, ABILITY_FLAME_BODY },   \
+        .abilities = { ABILITY_FLAME_BODY, ABILITY_WHITE_SMOKE, ABILITY_DROUGHT },   \
         .bodyColor = BODY_COLOR_RED,                                                    \
         .speciesName = _("Centiskorc"),                                                 \
         .cryId = CRY_CENTISKORCH,                                                       \
@@ -3509,9 +3509,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_SNOM
     [SPECIES_SNOM] =
     {
-        .baseHP        = 30,
+        .baseHP        = 40,
         .baseAttack    = 25,
-        .baseDefense   = 35,
+        .baseDefense   = 40,
         .baseSpeed     = 20,
         .baseSpAttack  = 45,
         .baseSpDefense = 30,
@@ -3525,7 +3525,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
-        .abilities = { ABILITY_SHIELD_DUST, ABILITY_NONE, ABILITY_ICE_SCALES },
+        .abilities = { ABILITY_ICE_SCALES, ABILITY_NONE, ABILITY_SHIELD_DUST },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Snom"),
         .cryId = CRY_SNOM,
@@ -3561,7 +3561,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .baseHP        = 70,
         .baseAttack    = 65,
         .baseDefense   = 60,
-        .baseSpeed     = 65,
+        .baseSpeed     = 75,
         .baseSpAttack  = 125,
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_ICE, TYPE_BUG),
@@ -3573,7 +3573,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
-        .abilities = { ABILITY_SHIELD_DUST, ABILITY_NONE, ABILITY_ICE_SCALES },
+        .abilities = { ABILITY_ICE_SCALES, ABILITY_NONE, ABILITY_SHIELD_DUST },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Frosmoth"),
         .cryId = CRY_FROSMOTH,

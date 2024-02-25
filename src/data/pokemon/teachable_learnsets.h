@@ -18610,7 +18610,6 @@ static const u16 sKricketotTeachableLearnset[] = {
 static const u16 sKricketuneTeachableLearnset[] = {
     MOVE_AERIAL_ACE,
     MOVE_ATTRACT,
-    MOVE_BULLET_SEED,
     MOVE_BRICK_BREAK,
     MOVE_CUT,
     MOVE_DOUBLE_TEAM,

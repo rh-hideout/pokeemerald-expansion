@@ -456,7 +456,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_AROMA_VEIL, ABILITY_GLUTTONY, ABILITY_THICK_FAT },
+        .abilities = { ABILITY_AROMA_VEIL, ABILITY_THICK_FAT, ABILITY_GLUTTONY },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Lechonk"),
         .cryId = CRY_LECHONK,
@@ -515,12 +515,12 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         OINKOLOGNE_MISC_INFO,
         .baseHP        = 110,
         .baseAttack    = 100,
-        .baseDefense   = 75,
+        .baseDefense   = 80,
         .baseSpeed     = 65,
         .baseSpAttack  = 59,
         .baseSpDefense = 80,
         .genderRatio = PERCENT_FEMALE(0),
-        .abilities = { ABILITY_LINGERING_AROMA, ABILITY_GLUTTONY, ABILITY_THICK_FAT },
+        .abilities = { ABILITY_LINGERING_AROMA, ABILITY_THICK_FAT, ABILITY_GLUTTONY },
         .cryId = CRY_OINKOLOGNE_MALE,
         .description = COMPOUND_STRING(
             "Oinkologne is proud of its fine,\n"
@@ -542,14 +542,14 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
     [SPECIES_OINKOLOGNE_FEMALE] =
     {
         OINKOLOGNE_MISC_INFO,
-        .baseHP        = 115,
+        .baseHP        = 120,
         .baseAttack    = 90,
         .baseDefense   = 70,
         .baseSpeed     = 65,
         .baseSpAttack  = 59,
         .baseSpDefense = 90,
         .genderRatio = PERCENT_FEMALE(100),
-        .abilities = { ABILITY_AROMA_VEIL, ABILITY_GLUTTONY, ABILITY_THICK_FAT },
+        .abilities = { ABILITY_AROMA_VEIL, ABILITY_THICK_FAT, ABILITY_GLUTTONY },
         .cryId = CRY_OINKOLOGNE_FEMALE,
         .description = COMPOUND_STRING(
             "This is a meticulous Pokémon that\n"
@@ -621,9 +621,9 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
 
     [SPECIES_SPIDOPS] =
     {
-        .baseHP        = 60,
-        .baseAttack    = 79,
-        .baseDefense   = 92,
+        .baseHP        = 70,
+        .baseAttack    = 84,
+        .baseDefense   = 100,
         .baseSpeed     = 35,
         .baseSpAttack  = 52,
         .baseSpDefense = 86,
@@ -1129,8 +1129,8 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .baseAttack    = 35,
         .baseDefense   = 45,
         .baseSpeed     = 30,
-        .baseSpAttack  = 58,
-        .baseSpDefense = 51,
+        .baseSpAttack  = 62,
+        .baseSpDefense = 55,
         .types = MON_TYPES(TYPE_GRASS, TYPE_NORMAL),
         .catchRate = 255,
         .expYield = 52,
@@ -1168,7 +1168,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         ICON(Smoliv, 1),
         //FOOTPRINT(Smoliv)
         LEARNSETS(Smoliv),
-        .evolutions = EVOLUTION({EVO_LEVEL, 25, SPECIES_DOLLIV}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_DOLLIV}),
     },
 
     [SPECIES_DOLLIV] =
@@ -1177,8 +1177,8 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .baseAttack    = 53,
         .baseDefense   = 60,
         .baseSpeed     = 33,
-        .baseSpAttack  = 78,
-        .baseSpDefense = 78,
+        .baseSpAttack  = 82,
+        .baseSpDefense = 82,
         .types = MON_TYPES(TYPE_GRASS, TYPE_NORMAL),
         .catchRate = 120,
         .expYield = 124,
@@ -1221,7 +1221,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
 
     [SPECIES_ARBOLIVA] =
     {
-        .baseHP        = 78,
+        .baseHP        = 82,
         .baseAttack    = 69,
         .baseDefense   = 90,
         .baseSpeed     = 39,
@@ -2723,7 +2723,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
 #if P_FAMILY_WIGLETT
     [SPECIES_WIGLETT] =
     {
-        .baseHP        = 10,
+        .baseHP        = 20,
         .baseAttack    = 55,
         .baseDefense   = 25,
         .baseSpeed     = 95,
@@ -2770,12 +2770,12 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
 
     [SPECIES_WUGTRIO] =
     {
-        .baseHP        = 35,
+        .baseHP        = 50,
         .baseAttack    = 100,
         .baseDefense   = 50,
-        .baseSpeed     = 120,
+        .baseSpeed     = 125,
         .baseSpAttack  = 50,
-        .baseSpDefense = 70,
+        .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_WATER),
         .catchRate = 50,
         .expYield = 149,
@@ -2785,7 +2785,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_3),
-        .abilities = { ABILITY_GOOEY, ABILITY_RATTLED, ABILITY_SAND_VEIL },
+        .abilities = { ABILITY_WATER_COMPACTION, ABILITY_STALWART, ABILITY_SAND_VEIL },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Wugtrio"),
         .cryId = CRY_WUGTRIO,
