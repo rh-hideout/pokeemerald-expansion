@@ -499,6 +499,7 @@ static const struct LevelUpMove sPichuLevelUpLearnset[] = {
 #endif //P_GEN_2_CROSS_EVOS
 
 static const struct LevelUpMove sPikachuLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_NUZZLE),
     LEVEL_UP_MOVE( 1, MOVE_NUZZLE),
     LEVEL_UP_MOVE( 1, MOVE_NASTY_PLOT),
     LEVEL_UP_MOVE( 1, MOVE_CHARM),
@@ -516,9 +517,10 @@ static const struct LevelUpMove sPikachuLevelUpLearnset[] = {
     LEVEL_UP_MOVE(24, MOVE_AGILITY),
     LEVEL_UP_MOVE(28, MOVE_IRON_TAIL),
     LEVEL_UP_MOVE(32, MOVE_DISCHARGE),
-    LEVEL_UP_MOVE(36, MOVE_THUNDERBOLT),
-    LEVEL_UP_MOVE(40, MOVE_LIGHT_SCREEN),
-    LEVEL_UP_MOVE(44, MOVE_THUNDER),
+    LEVEL_UP_MOVE(35, MOVE_ZIPPY_ZAP),
+    LEVEL_UP_MOVE(39, MOVE_THUNDERBOLT),
+    LEVEL_UP_MOVE(42, MOVE_LIGHT_SCREEN),
+    LEVEL_UP_MOVE(47, MOVE_THUNDER),
     LEVEL_UP_END
 };
 
@@ -10206,6 +10208,7 @@ static const struct LevelUpMove sInfernapeLevelUpLearnset[] = {
 #if P_FAMILY_PIPLUP
 static const struct LevelUpMove sPiplupLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_POUND),
+    LEVEL_UP_MOVE( 1, MOVE_EXO_BASH),
     LEVEL_UP_MOVE( 4, MOVE_GROWL),
     LEVEL_UP_MOVE( 7, MOVE_BUBBLE),
     LEVEL_UP_MOVE(11, MOVE_CHARM),
