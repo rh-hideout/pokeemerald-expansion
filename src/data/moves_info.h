@@ -20172,7 +20172,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "energy that lingers."),
         .effect = EFFECT_HIT,
         .power = 60,
-        .type = TYPE_ROCK,
+        .type = TYPE_GROUND,
         .accuracy = 90,
         .pp = 5,
         .target = MOVE_TARGET_SELECTED,
@@ -20180,7 +20180,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .makesContact = TRUE,
         .pulseMove = TRUE,
-        .argument = MAX_EFFECT_GRAVITY,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_GRAVITY,
+            .chance = 100
+        }),
         .mirrorMoveBanned = TRUE,
         .metronomeBanned = TRUE,
     },
@@ -20879,7 +20882,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .argument = MAX_EFFECT_SANDSTORM,
+        
     },
 
     [MOVE_MAX_QUAKE] =

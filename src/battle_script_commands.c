@@ -3219,6 +3219,10 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr++;
                 }
                 break;
+            case MOVE_EFFECT_GRAVITY:
+                // Testing adding field effects
+                BattleScriptPush(GET_MOVE_BATTLESCRIPT(MAX_EFFECT_GRAVITY));
+                break;
             case MOVE_EFFECT_HAPPY_HOUR:
                 if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && !gBattleStruct->moneyMultiplierMove)
                 {
@@ -15471,6 +15475,7 @@ static void Cmd_settelekinesis(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
+
 
 static void Cmd_swapstatstages(void)
 {
