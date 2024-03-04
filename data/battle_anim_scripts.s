@@ -876,6 +876,11 @@ gBattleAnims_Moves::
 	.4byte Move_UPPER_HAND
 	.4byte Move_MALIGNANT_CHAIN
 	.4byte Move_DOUBLE_EDGE
+	.4byte Move_SLEEP_POWDER
+	.4byte Move_STUN_SPORE
+	.4byte Move_ROCK_CLIMB
+	.4byte Move_MAX_STARFALL
+	.4byte Move_G_MAX_GRAVITAS
 @@@@ Z MOVES
 	.4byte Move_BREAKNECK_BLITZ
 	.4byte Move_ALL_OUT_PUMMELING

@@ -20049,6 +20049,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             .chance = 50,
         }),
     },
+
     [MOVE_EXO_BASH] =
     {
         .name = COMPOUND_STRING("Exo Bash"),
@@ -20066,6 +20067,122 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
         .skyBattleBanned = B_EXTRAPOLATED_MOVE_FLAGS,
+    },
+
+    [MOVE_FROST_SPORE] =
+    {
+        .name = COMPOUND_STRING("Frost Spore"),
+        .description = COMPOUND_STRING(
+            "Scatters a powder that may\n"
+            "frostbite the foe."),
+        .effect = EFFECT_FIXED_DAMAGE_ARG,
+        .power = 1,
+        .type = TYPE_GRASS,
+        .accuracy = 75,
+        .pp = 30,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
+        .magicCoatAffected = TRUE,
+        .powderMove = TRUE,
+        .argument = 0,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SWEET_SCENT},
+    },
+
+    [MOVE_CHILI_POWDER] =
+    {
+        .name = COMPOUND_STRING("Chili Powder"),
+        .description = COMPOUND_STRING(
+            "Scatters a powder that may\n"
+            "burn the foe."),
+        .effect = EFFECT_FIXED_DAMAGE_ARG,
+        .power = 1,
+        .type = TYPE_GRASS,
+        .accuracy = 75,
+        .pp = 30,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
+        .magicCoatAffected = TRUE,
+        .powderMove = TRUE,
+        .argument = 0,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SWEET_SCENT},
+    },
+
+    [MOVE_STONE_STORM] =
+    {
+        .name = COMPOUND_STRING("Stone Storm"),
+        .description = COMPOUND_STRING(
+            "A barrage of exploding\n"
+            "rocks that generates sand."),
+        .effect = EFFECT_HIT,
+        .power = 60,
+        .type = TYPE_ROCK,
+        .accuracy = 90,
+        .pp = 5,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .windMove = TRUE,
+        .argument = MAX_EFFECT_SANDSTORM,
+        .mirrorMoveBanned = TRUE,
+        .metronomeBanned = TRUE,
+    },
+
+    [MOVE_FLUTTER_FLARE] =
+    {
+        .name = COMPOUND_STRING("FlutterFlare"),
+        .description = sUTurnDescription,
+        .effect = EFFECT_HIT_ESCAPE,
+        .power = 70,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+
+    [MOVE_GRAVITY_WELL] =
+    {
+        .name = COMPOUND_STRING("Gravity Well"),
+        .description = COMPOUND_STRING(
+            "A surge of gravitational\n"
+            "energy that lingers."),
+        .effect = EFFECT_HIT,
+        .power = 60,
+        .type = TYPE_ROCK,
+        .accuracy = 90,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .pulseMove = TRUE,
+        .argument = MAX_EFFECT_GRAVITY,
+        .mirrorMoveBanned = TRUE,
+        .metronomeBanned = TRUE,
     },
 
     // Z-Moves
