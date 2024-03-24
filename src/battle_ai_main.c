@@ -4646,6 +4646,7 @@ static u32 AI_CalcMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
                         break;
                     }
                     break;
+                case MOVE_EFFECT_GRAVITY:
                 case MOVE_EFFECT_STEALTH_ROCK:
                 case MOVE_EFFECT_SPIKES:
                     if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
@@ -4816,6 +4817,7 @@ static s32 AI_SetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             switch (gMovesInfo[move].additionalEffects[i].moveEffect)
             {
                 case MOVE_EFFECT_STEALTH_ROCK:
+                case MOVE_EFFECT_GRAVITY:
                 case MOVE_EFFECT_SPIKES:
                     ADJUST_SCORE(DECENT_EFFECT);
                     break;

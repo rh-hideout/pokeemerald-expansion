@@ -2599,4 +2599,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
+
+    [ABILITY_COLD_HEART] =
+    {
+        .name = _("Cold Heart"),
+        .description = COMPOUND_STRING("Frostbites on contact."),
+        .aiRating = 4,
+    },
+    
 };

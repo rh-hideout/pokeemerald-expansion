@@ -2786,6 +2786,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         gBattlescriptCurrInstr++;
         return;
     case MOVE_EFFECT_STEALTH_ROCK:
+    case MOVE_EFFECT_GRAVITY:
     case MOVE_EFFECT_SPIKES:
     case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_STEAL_ITEM:
@@ -3219,10 +3220,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr++;
                 }
                 break;
-            case MOVE_EFFECT_GRAVITY:
-                // Testing adding field effects
-                BattleScriptPush(GET_MOVE_BATTLESCRIPT(MAX_EFFECT_GRAVITY));
-                break;
+            
             case MOVE_EFFECT_HAPPY_HOUR:
                 if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && !gBattleStruct->moneyMultiplierMove)
                 {
@@ -3695,6 +3693,68 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_StealthRockActivates;
                 }
                 break;
+            case MOVE_EFFECT_GRAVITY:
+                if (!(gFieldStatuses & STATUS_FIELD_GRAVITY)) 
+                {
+                    gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                    gFieldTimers.gravityTimer = 5;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectGravitySuccess;
+                }
+                break; 
+
+            case MOVE_EFFECT_GRASSY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_GRASSY_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break; 
+            case MOVE_EFFECT_MISTY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_MISTY_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;
+            case MOVE_EFFECT_ELECTRIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_ELECTRIC_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;
+            case MOVE_EFFECT_PSYCHIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_PSYCHIC_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;   
             case MOVE_EFFECT_SPIKES:
                 if (gSideTimers[GetBattlerSide(gEffectBattler)].spikesAmount < 3)
                 {
@@ -3812,7 +3872,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
                 }
-                else if (!(gStatuses3[gEffectBattler] & STATUS3_HEAL_BLOCK))
+                else if (!(gStatuses3[gEffectBattler] & STATUS3_HEAL_BLOCK)) 
                 {
                     gStatuses3[gEffectBattler] |= STATUS3_HEAL_BLOCK;
                     gDisableStructs[gEffectBattler].healBlockTimer = 2;

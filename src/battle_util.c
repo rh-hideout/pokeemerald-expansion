@@ -5459,6 +5459,22 @@ case ABILITY_HOSPITALITY:
                 effect++;
             }
             break;
+         case ABILITY_COLD_HEART:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && gBattleMons[gBattlerAttacker].hp != 0
+             && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+             && (IsMoveMakingContact(move, gBattlerAttacker))
+             && TARGET_TURN_DAMAGED
+             && CanBeFrozen(gBattlerAttacker)
+             && RandomWeighted(RNG_FROZEN, 2, 1))
+            {
+                gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_FROSTBITE;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
+                gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
+                effect++;
+            }
+            break;
         case ABILITY_CUTE_CHARM:
             if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
              && gBattleMons[gBattlerAttacker].hp != 0

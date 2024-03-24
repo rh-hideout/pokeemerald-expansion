@@ -399,8 +399,12 @@
 #define MOVE_EFFECT_SECRET_POWER        78
 #define MOVE_EFFECT_PSYCHIC_NOISE       79
 #define MOVE_EFFECT_GRAVITY             80
+#define MOVE_EFFECT_GRASSY_TERRAIN      81
+#define MOVE_EFFECT_MISTY_TERRAIN       82
+#define MOVE_EFFECT_ELECTRIC_TERRAIN    83
+#define MOVE_EFFECT_PSYCHIC_TERRAIN     84
 
-#define NUM_MOVE_EFFECTS                81
+#define NUM_MOVE_EFFECTS                85
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000
