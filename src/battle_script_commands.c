@@ -1059,35 +1059,35 @@ static const u16 sNaturePowerMoves[BATTLE_TERRAIN_COUNT] =
 
 static const struct PickupItem sPickupTable[] =
 {//   Item                      1+  11+  21+  31+  41+  51+  61+  71+  81+  91+   Levels
-    { ITEM_POTION,          {  35,   _,   _,   _,   _,   _,   _,   _,   _,   _, } },
+    { ITEM_ORAN_BERRY,      {  35,   _,   _,   _,   _,   _,   _,   _,   _,   _, } },
     { ITEM_TINY_MUSHROOM,   {  25,  10,   _,   _,   _,   _,   _,   _,   _,   _, } },
     { ITEM_REPEL,           {   8,  30,   _,   _,   _,   _,   _,   _,   _,   _, } },
-    { ITEM_SUPER_POTION,    {   8,  10,  30,   _,   _,   _,   _,   _,   _,   _, } },
-    { ITEM_POKE_DOLL,       {   8,  10,   9,  30,   _,   _,   _,   _,   _,   _, } },
+    { ITEM_LEAF_STONE,      {   8,  10,  30,   _,   _,   _,   _,   _,   _,   _, } },
+    { ITEM_GREAT_BALL,      {   8,  10,   9,  30,   _,   _,   _,   _,   _,   _, } },
     { ITEM_BIG_MUSHROOM,    {   3,  10,   9,   _,   _,   _,   _,   _,   _,   _, } },
-    { ITEM_SUPER_REPEL,     {   3,  10,   9,   9,  30,   _,   _,   _,   _,   _, } },
-    { ITEM_FULL_HEAL,       {   3,   3,   9,   8,   9,  30,   _,   _,   _,   _, } },
-    { ITEM_REVIVE,          {   3,   3,   3,   8,   8,   9,  30,   _,   _,   _, } },
-    { ITEM_HYPER_POTION,    {   3,   3,   3,   4,   8,   9,   8,  30,   _,   _, } },
-    { ITEM_ETHER,           {   1,   1,   3,   4,   4,   _,   _,   _,   _,   _, } },
-    { ITEM_MAX_REPEL,       {   _,   3,   3,   4,   4,   9,   8,   8,  30,   _, } },
+    { ITEM_LEPPA_BERRY,     {   3,  10,   9,   9,  30,   _,   _,   _,   _,   _, } },
+    { ITEM_SILK_SCARF,      {   3,   3,   9,   8,   9,  30,   _,   _,   _,   _, } },
+    { ITEM_DAWN_STONE,      {   3,   3,   3,   8,   8,   9,  30,   _,   _,   _, } },
+    { ITEM_SITRUS_BERRY,    {   3,   3,   3,   4,   8,   9,   8,  30,   _,   _, } },
+    { ITEM_FIRE_STONE,      {   1,   1,   3,   4,   4,   _,   _,   _,   _,   _, } },
+    { ITEM_WATER_STONE,     {   _,   3,   3,   4,   4,   9,   8,   8,  30,   _, } },
     { ITEM_MOON_STONE,      {   _,   3,   3,   4,   4,   4,   4,   5,   9,  10, } },
     { ITEM_SUN_STONE,       {   _,   3,   3,   4,   4,   4,   4,   5,   9,  10, } },
-    { ITEM_RARE_CANDY,      {   _,   1,   1,   1,   1,   4,   4,   5,   4,   5, } },
-    { ITEM_NUGGET,          {   _,   _,   3,   4,   4,   4,   4,   5,   4,   5, } },
-    { ITEM_MAX_POTION,      {   _,   _,   3,   4,   4,   4,   8,   8,   9,  30, } },
-    { ITEM_MAX_ETHER,       {   _,   _,   1,   1,   4,   4,   4,   _,   _,   _, } },
+    { ITEM_DUSK_STONE,      {   _,   1,   1,   1,   1,   4,   4,   5,   4,   5, } },
+    { ITEM_LUM_BERRY,       {   _,   _,   3,   4,   4,   4,   4,   5,   4,   5, } },
+    { ITEM_THUNDER_STONE,   {   _,   _,   3,   4,   4,   4,   8,   8,   9,  30, } },
+    { ITEM_ROCKY_HELMET,    {   _,   _,   1,   1,   4,   4,   4,   _,   _,   _, } },
     { ITEM_PP_UP,           {   _,   _,   1,   1,   1,   4,   4,   5,   4,   5, } },
     { ITEM_BIG_NUGGET,      {   _,   _,   1,   1,   1,   1,   4,   5,   4,   5, } },
-    { ITEM_DESTINY_KNOT,    {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
+    { ITEM_ICE_STONE,       {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
     { ITEM_LEFTOVERS,       {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
     { ITEM_MENTAL_HERB,     {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
     { ITEM_POWER_HERB,      {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
     { ITEM_WHITE_HERB,      {   _,   _,   1,   1,   1,   1,   1,   1,   1,   1, } },
-    { ITEM_BALM_MUSHROOM,   {   _,   _,   1,   4,   4,   4,   4,   5,   4,   5, } },
-    { ITEM_MAX_REVIVE,      {   _,   _,   _,   4,   4,   4,   4,   7,   9,   9, } },
-    { ITEM_ELIXIR,          {   _,   _,   _,   _,   1,   1,   4,   5,   4,   5, } },
-    { ITEM_MAX_ELIXIR,      {   _,   _,   _,   _,   _,   _,   1,   1,   4,   5, } },
+    { ITEM_ABILITY_CAPSULE, {   _,   _,   1,   4,   4,   4,   4,   5,   4,   5, } },
+    { ITEM_ABILITY_SHIELD,  {   _,   _,   _,   4,   4,   4,   4,   7,   9,   9, } },
+    { ITEM_ABILITY_PATCH,   {   _,   _,   _,   _,   1,   1,   4,   5,   4,   5, } },
+    { ITEM_BALM_MUSHROOM,   {   _,   _,   _,   _,   _,   _,   1,   1,   4,   5, } },
     { ITEM_BOTTLE_CAP,      {   _,   _,   _,   _,   _,   _,   _,   1,   1,   1, } },
 };
 
@@ -2793,6 +2793,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         gBattlescriptCurrInstr++;
         return;
     case MOVE_EFFECT_STEALTH_ROCK:
+    case MOVE_EFFECT_GRAVITY:
     case MOVE_EFFECT_SPIKES:
     case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_STEAL_ITEM:
@@ -3229,6 +3230,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr++;
                 }
                 break;
+            
             case MOVE_EFFECT_HAPPY_HOUR:
                 if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && !gBattleStruct->moneyMultiplierMove)
                 {
@@ -3703,6 +3705,68 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_StealthRockActivates;
                 }
                 break;
+            case MOVE_EFFECT_GRAVITY:
+                if (!(gFieldStatuses & STATUS_FIELD_GRAVITY)) 
+                {
+                    gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                    gFieldTimers.gravityTimer = 5;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectGravitySuccess;
+                }
+                break; 
+
+            case MOVE_EFFECT_GRASSY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_GRASSY_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break; 
+            case MOVE_EFFECT_MISTY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_MISTY_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;
+            case MOVE_EFFECT_ELECTRIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_ELECTRIC_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;
+            case MOVE_EFFECT_PSYCHIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)) 
+                {
+                    u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+                    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+                    gFieldStatuses |= STATUS_FIELD_PSYCHIC_TERRAIN;
+                    gFieldTimers.terrainTimer = (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5; 
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
+                }
+                break;   
             case MOVE_EFFECT_SPIKES:
                 if (gSideTimers[GetBattlerSide(gEffectBattler)].spikesAmount < 3)
                 {
@@ -3820,7 +3884,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
                 }
-                else if (!(gStatuses3[gEffectBattler] & STATUS3_HEAL_BLOCK))
+                else if (!(gStatuses3[gEffectBattler] & STATUS3_HEAL_BLOCK)) 
                 {
                     gStatuses3[gEffectBattler] |= STATUS3_HEAL_BLOCK;
                     gDisableStructs[gEffectBattler].healBlockTimer = 2;
@@ -15501,6 +15565,7 @@ static void Cmd_settelekinesis(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
+
 
 static void Cmd_swapstatstages(void)
 {

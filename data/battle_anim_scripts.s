@@ -875,6 +875,51 @@ gBattleAnims_Moves::
 	.4byte Move_PSYCHIC_NOISE
 	.4byte Move_UPPER_HAND
 	.4byte Move_MALIGNANT_CHAIN
+	.4byte Move_DOUBLE_EDGE 
+	.4byte Move_SLEEP_POWDER
+	.4byte Move_STUN_SPORE
+	.4byte Move_ROCK_CLIMB
+	.4byte Move_MAX_STARFALL
+	.4byte Move_G_MAX_GRAVITAS
+	.4byte Move_FRENZY_PLANT
+	.4byte Move_MAX_STARFALL
+	.4byte Move_FLASH
+	.4byte Move_MAX_MINDSTORM
+	.4byte Move_G_MAX_BEFUDDLE
+	.4byte Move_G_MAX_VOLT_CRASH
+	.4byte Move_G_MAX_GOLD_RUSH
+	.4byte Move_G_MAX_STEELSURGE
+	.4byte Move_G_MAX_FOAM_BURST
+	.4byte Move_G_MAX_MALODOR
+	.4byte Move_FLAMETHROWER
+	.4byte Move_AQUA_JET
+	.4byte Move_LEAF_BLADE
+	.4byte Move_QUICK_ATTACK
+	.4byte Move_SLUDGE_BOMB
+	.4byte Move_ACID_SPRAY
+	.4byte Move_FOUL_PLAY
+	.4byte Move_FLASH_CANNON
+	.4byte Move_SIGNAL_BEAM
+	.4byte Move_MUDDY_WATER
+	.4byte Move_ROCK_CLIMB
+	.4byte Move_G_MAX_SANDBLAST
+	.4byte Move_DISCHARGE
+	.4byte Move_ROCK_SMASH
+	.4byte Move_G_MAX_STONESURGE
+	.4byte Move_G_MAX_CENTIFERNO
+	.4byte Move_SEARING_SHOT
+	.4byte Move_CONFUSE_RAY
+	.4byte Move_OVERHEAT
+	.4byte Move_BODY_SLAM
+	.4byte Move_MAX_DARKNESS
+	.4byte Move_SING
+	.4byte Move_HURRICANE
+	.4byte Move_BOOMBURST
+	.4byte Move_DOUBLE_EDGE
+	.4byte Move_BOOMBURST
+	.4byte Move_FOCUS_ENERGY
+	.4byte Move_TRI_ATTACK
+
 @@@@ Z MOVES
 	.4byte Move_BREAKNECK_BLITZ
 	.4byte Move_ALL_OUT_PUMMELING
