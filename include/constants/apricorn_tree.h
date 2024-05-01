@@ -1,0 +1,20 @@
+#ifndef GUARD_CONSTANTS_APRICORN_TREE_H
+#define GUARD_CONSTANTS_APRICORN_TREE_H
+
+// Apricorns
+#define APRICORN_RED       0
+#define APRICORN_BLUE      1
+#define APRICORN_YELLOW    2
+#define APRICORN_GREEN     3
+#define APRICORN_PINK      4
+#define APRICORN_WHITE     5
+#define APRICORN_BLACK     6
+
+#define APRICORN_COUNT     7
+
+// Trees
+#define APRICORN_TREE_NONE 0
+
+#define APRICORN_TREE_COUNT 32
+
+#endif //GUARD_CONSTANTS_APRICORN_TREE_H
