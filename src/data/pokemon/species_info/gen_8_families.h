@@ -2345,7 +2345,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         FOOTPRINT(Dipplin)
         .levelUpLearnset = sDipplinLevelUpLearnset,
         .teachableLearnset = sDipplinTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_MOVE, MOVE_DRAGON_CHEER, SPECIES_HYDRAPPLE}),
+        .evolutions = EVOLUTION({EVO_MOVE, MOVE_DRAGON_PULSE, SPECIES_HYDRAPPLE}),
     },
 
     [SPECIES_HYDRAPPLE] =

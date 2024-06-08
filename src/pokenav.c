@@ -7,6 +7,7 @@
 #include "palette.h"
 #include "pokemon_storage_system.h"
 #include "pokenav.h"
+#include "event_data.h"
 
 #define LOOPED_TASK_DECODE_STATE(action) (action - 5)
 
@@ -204,6 +205,7 @@ const struct PokenavCallbacks PokenavMenuCallbacks[15] =
 };
 
 EWRAM_DATA u8 gNextLoopedTaskId = 0;
+EWRAM_DATA bool8 gSysPcFromPokenav = 0;
 EWRAM_DATA struct PokenavResources *gPokenavResources = NULL;
 
 // code
@@ -495,7 +497,11 @@ static void Task_Pokenav(u8 taskId)
             if (calledFromScript)
                 SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
             else
-                SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+                if (gSysPcFromPokenav)
+                    SetMainCallback2(CB2_ReturnToField);
+                else
+                    SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+
         }
         break;
     }

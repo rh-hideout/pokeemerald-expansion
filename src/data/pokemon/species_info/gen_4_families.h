@@ -5332,6 +5332,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .isMythical = TRUE,
         .levelUpLearnset = sPhioneLevelUpLearnset,
         .teachableLearnset = sPhioneTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_ITEM_HOLD, ITEM_PASSHO_BERRY, SPECIES_MANAPHY}),
     },
 
     [SPECIES_MANAPHY] =

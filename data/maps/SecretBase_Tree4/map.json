@@ -1,7 +1,6 @@
 {
   "id": "MAP_SECRET_BASE_TREE4",
   "name": "SecretBase_Tree4",
-  "shared_scripts_map": "SecretBase",
   "layout": "LAYOUT_SECRET_BASE_TREE4",
   "music": "MUS_FORTREE",
   "region_map_section": "MAPSEC_SECRET_BASE",
@@ -13,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_FRONTIER",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_F",
@@ -220,6 +219,11 @@
       "dest_warp_id": "WARP_ID_SECRET_BASE"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ],
+  "shared_scripts_map": "SecretBase"
 }
