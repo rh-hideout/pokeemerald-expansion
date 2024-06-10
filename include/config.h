@@ -78,4 +78,8 @@
 #define UNITS                        UNITS_IMPERIAL
 #define CHAR_DEC_SEPARATOR           CHAR_PERIOD // CHAR_PERIOD is used as a decimal separator only in the UK and the US. The rest of the world uses CHAR_COMMA.
 
+// Config to toggle using the new shop menu.
+// Set this to either TRUE or FALSE.
+#define MUDSKIP_SHOP_UI
+
 #endif // GUARD_CONFIG_H
