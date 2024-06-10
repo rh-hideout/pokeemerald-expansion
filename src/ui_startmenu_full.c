@@ -60,7 +60,7 @@
 // 12-hours clock.
 // User need to set this toggle with an unused scripting flag such as
 // FLAG_UNUSED_0x020 replacing the 0 to be able to use the clock modes.
-#define FLAG_CLOCK_MODE 0
+#define FLAG_CLOCK_MODE FLAG_CLOCK_0x020
 
 struct StartMenuResources
 {
@@ -182,11 +182,11 @@ static const struct WindowTemplate sStartMenuWindowTemplates[] =
 static const u32 sStartMenuTiles[] = INCBIN_U32("graphics/ui_startmenu_full/menu_tiles.4bpp.lz");
 static const u16 sStartMenuPalette[] = INCBIN_U16("graphics/ui_startmenu_full/menu.gbapal");
 
-//#if (FLAG_CLOCK_MODE != 0)
-//static const u32 sStartMenuTilemap[] = INCBIN_U32("graphics/ui_startmenu_full/menu_tilemap_alt.bin.lz");
-//#else
+#if (FLAG_CLOCK_MODE != 0)
+static const u32 sStartMenuTilemap[] = INCBIN_U32("graphics/ui_startmenu_full/menu_tilemap_alt.bin.lz");
+#else
 static const u32 sStartMenuTilemap[] = INCBIN_U32("graphics/ui_startmenu_full/menu_tilemap.bin.lz");
-//#endif
+#endif
 
 // Alternate Main Background for Female Player
 static const u32 sStartMenuTilesAlt[] = INCBIN_U32("graphics/ui_startmenu_full/menu_tiles_alt.4bpp.lz");
