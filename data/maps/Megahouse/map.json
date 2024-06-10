@@ -2,7 +2,7 @@
   "id": "MAP_MEGAHOUSE",
   "name": "Megahouse",
   "layout": "LAYOUT_MEGAHOUSE",
-  "music": "MUS_AGATE_VILLAGE",
+  "music": "MUS_GAME_CORNER",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

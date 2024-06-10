@@ -501,8 +501,7 @@ static void Task_Pokenav(u8 taskId)
                     SetMainCallback2(CB2_ReturnToField);
                 else
                     SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
-
-                SetMainCallback2(CB2_ReturnToFullScreenStartMenu);
+                    
         }
         break;
     }
