@@ -3463,6 +3463,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         FOOTPRINT(Carbink)
         .levelUpLearnset = sCarbinkLevelUpLearnset,
         .teachableLearnset = sCarbinkTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_ITEM, ITEM_DIANCITE, SPECIES_DIANCIE})
     },
 #endif //P_FAMILY_CARBINK
 
