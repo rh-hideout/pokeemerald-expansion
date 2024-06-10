@@ -3156,7 +3156,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sPetililLevelUpLearnset,
         .teachableLearnset = sPetililTeachableLearnset,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_SUN_STONE, SPECIES_LILLIGANT},
-                                {EVO_SPECIFIC_MAP, MAP_FALLARBOR_TOWN, SPECIES_LILLIGANT_HISUIAN}),
+                                {EVO_SPECIFIC_MAP, MAP_ROUTE114, SPECIES_LILLIGANT_HISUIAN}),
     },
 
     [SPECIES_LILLIGANT] =
