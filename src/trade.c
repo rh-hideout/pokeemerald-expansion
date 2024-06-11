@@ -3310,7 +3310,6 @@ static void BufferTradeSceneStrings(void)
 {
     u8 mpId;
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    const struct InGameTrade *ingameTrade;
 
     if (sTradeAnim->isLinkTrade)
     {
@@ -3323,9 +3322,9 @@ static void BufferTradeSceneStrings(void)
     }
     else
     {
-        ingameTrade = &sIngameTrades[gSpecialVar_0x8004];
-        StringCopy(gStringVar1, ingameTrade->otName);
-        StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
+        GetMonData(&gEnemyParty[0], MON_DATA_OT_NAME, gStringVar1);
+        GetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, name);
+        StringCopy_Nickname(gStringVar3, name);
         GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, name);
         StringCopy_Nickname(gStringVar2, name);
     }
