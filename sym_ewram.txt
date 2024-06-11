@@ -154,4 +154,3 @@
 	.include "src/pokedex_plus_hgss.o"
 	.include "src/ui_main_menu.o"
 	.include "src/ui_startmenu_full.o"
-	.include "src/tx_registered_items_menu.o"

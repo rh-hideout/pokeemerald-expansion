@@ -122,9 +122,6 @@
 #define NUM_FLAG_BYTES ROUND_BITS_TO_BYTES(FLAGS_COUNT)
 #define NUM_TRENDY_SAYING_BYTES ROUND_BITS_TO_BYTES(NUM_TRENDY_SAYINGS)
 
-//tx_registered_items_menu
-#define REGISTERED_ITEMS_MAX 10
-
 // This produces an error at compile-time if expr is zero.
 // It looks like file.c:line: size of array `id' is negative
 #define STATIC_ASSERT(expr, id) typedef char id[(expr) ? 1 : -1];
@@ -582,11 +579,6 @@ struct ItemSlot
     u16 quantity;
 };
 
-struct RegisteredItemSlot
-{
-    u16 itemId;
-};
-
 struct Pokeblock
 {
     u8 color;
@@ -996,7 +988,7 @@ struct SaveBlock1
     /*0x238*/ struct Pokemon playerParty[PARTY_SIZE];
     /*0x490*/ u32 money;
     /*0x494*/ u16 coins;
-    /*0x496*/ u16 registeredItemSelect; // registered for use with SELECT button
+    /*0x496*/ u16 registeredItem; // registered for use with SELECT button
     /*0x498*/ struct ItemSlot pcItems[PC_ITEMS_COUNT];
     /*0x560*/ struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
     /*0x5D8*/ struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
@@ -1068,21 +1060,26 @@ struct SaveBlock1
 #endif //FREE_ENIGMA_BERRY
 #if FREE_MYSTERY_GIFT == FALSE
     /*0x322C*/ struct MysteryGiftSave mysteryGift;
-    /*0x3598*/ u8 unused_3598[0x180];
-    /*0x3718*/ u32 trainerHillTimes[NUM_TRAINER_HILL_MODES];
-    /*0x3728*/ struct RamScript ramScript;
-    /*0x3B14*/ struct RecordMixingGift recordMixingGift;
-    /*0x3B24*/ u8 seen2[NUM_DEX_FLAG_BYTES];
-    /*0x3B58*/ LilycoveLady lilycoveLady;
-    /*0x3B98*/ struct TrainerNameRecord trainerNameRecords[20];
-    /*0x3C88*/ u8 registeredTexts[UNION_ROOM_KB_ROW_COUNT][21];
-    /*0x3D5A*/ u8 unused_3D5A[10];
-    /*0x3D64*/ struct TrainerHillSave trainerHill;
-    /*0x3D70*/ struct WaldaPhrase waldaPhrase;
-    // sizeof: 0x3D88
-                u8 registeredItemLastSelected:4; //max 16 items
-                u8 registeredItemListCount:4;
-                struct RegisteredItemSlot registeredItems[REGISTERED_ITEMS_MAX];
+#endif //FREE_MYSTERY_GIFT
+    /*0x3???*/ u8 dexSeen[NUM_DEX_FLAG_BYTES];
+    /*0x3???*/ u8 dexCaught[NUM_DEX_FLAG_BYTES];
+#if FREE_TRAINER_HILL == FALSE
+    /*0x3???*/ u32 trainerHillTimes[NUM_TRAINER_HILL_MODES];
+#endif //FREE_TRAINER_HILL
+#if FREE_MYSTERY_EVENT_BUFFERS == FALSE
+    /*0x3???*/ struct RamScript ramScript;
+#endif //FREE_MYSTERY_EVENT_BUFFERS
+    /*0x3???*/ struct RecordMixingGift recordMixingGift;
+    /*0x3???*/ LilycoveLady lilycoveLady;
+    /*0x3???*/ struct TrainerNameRecord trainerNameRecords[20];
+#if FREE_UNION_ROOM_CHAT == FALSE
+    /*0x3???*/ u8 registeredTexts[UNION_ROOM_KB_ROW_COUNT][21];
+#endif //FREE_UNION_ROOM_CHAT
+#if FREE_TRAINER_HILL == FALSE
+    /*0x3???*/ struct TrainerHillSave trainerHill;
+#endif //FREE_TRAINER_HILL
+    /*0x3???*/ struct WaldaPhrase waldaPhrase;
+    // sizeof: 0x3???
 };
 
 extern struct SaveBlock1* gSaveBlock1Ptr;

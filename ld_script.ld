@@ -363,8 +363,6 @@ SECTIONS {
         src/ui_startmenu_full.o(.text);
         src/new_shop.o(.text);
     } > ROM =0
-        src/tx_registered_items_menu.o(.text);
-    } =0
 
     script_data :
     ALIGN(4)
@@ -735,8 +733,6 @@ SECTIONS {
         src/ui_startmenu_full.o(.rodata);
         src/new_shop.o(.rodata);
     } > ROM =0
-        src/tx_registered_items_menu.o(.rodata);
-    } =0
 
     song_data :
     ALIGN(4)
