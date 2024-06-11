@@ -38,4 +38,8 @@ void DestroySwapLineSprites(u8 *spriteIds, u8 count);
 void SetSwapLineSpritesInvisibility(u8 *spriteIds, u8 count, bool8 invisible);
 void UpdateSwapLineSpritesPos(u8 *spriteIds, u8 count, s16 x, u16 y);
 
+//tx_registered_items_menu
+void CreateSwapLineSprites_RegisteredItemsMenu(u8 *spriteIds, u8 count);
+void LoadListMenuSwapLineGfx_RegisteredItemsMenu(void);
+
 #endif //GUARD_MENU_HELPERS_H
