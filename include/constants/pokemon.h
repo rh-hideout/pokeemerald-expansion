@@ -306,6 +306,7 @@
 #define MON_PIC_WIDTH 64
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
+#define EVOS_PER_MON 10
 
 // Most Pokémon have 2 frames (a default and an alternate for their animation).
 // There are 4 exceptions:

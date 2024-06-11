@@ -23,7 +23,6 @@
 #include "daycare.h"
 #include "wonder_trade.h"
 
-extern struct Evolution gEvolutionTable[][EVOS_PER_MON];
 
 // This file's functions.
 static u16 PickRandomSpecies(void);
@@ -697,12 +696,12 @@ void CreateWonderTradePokemon(void)
     {
         for (i = 0; i < EVOS_PER_MON; i++)
         {
-            if (gEvolutionTable[wonderTradeSpecies][i].method == EVO_TRADE_ITEM && Random() % 100 < 50)
+            if (gSpeciesInfo[wonderTradeSpecies].evolutions[i].method == EVO_TRADE_ITEM && Random() % 100 < 50)
             {
                 // 30% chance for the in coming Pokémon to hold the item they need to evolve if they need one
                 if (Random() % 100 <= 29)
                 {
-                    newHeldItem = gEvolutionTable[wonderTradeSpecies][i].param;
+                    newHeldItem = gSpeciesInfo[wonderTradeSpecies].evolutions[i].param;
                     SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, &newHeldItem);
                 }
             }
@@ -831,19 +830,19 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
 
     for (i = 0; i < 5; i++)
     {
-        switch (gEvolutionTable[partnerSpecies][i].method)
+        switch (gSpeciesInfo[partnerSpecies].evolutions[i].method)
         {
         case EVO_FRIENDSHIP:
             if ((partnerSpecies == SPECIES_PICHU || partnerSpecies == SPECIES_CLEFFA || partnerSpecies == SPECIES_IGGLYBUFF
               || partnerSpecies == SPECIES_TOGEPI || partnerSpecies == SPECIES_AZURILL || partnerSpecies == SPECIES_BUDEW
               || partnerSpecies == SPECIES_BUNEARY || partnerSpecies == SPECIES_SWOOBAT || partnerSpecies == SPECIES_SWADLOON)
               && partnerLevel >= 16)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             else if (partnerSpecies == SPECIES_MEOWTH_ALOLAN && partnerLevel >= 28)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             else if ((partnerSpecies == SPECIES_GOLBAT || partnerSpecies == SPECIES_CHANSEY
                    || partnerSpecies == SPECIES_MUNCHLAX) && partnerLevel >= 35)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL:
             if (partnerSpecies == SPECIES_SLOWPOKE && partnerLevel >= 37)
@@ -866,43 +865,43 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                 else
                     targetSpecies = SPECIES_TOXTRICITY_LOW_KEY;
             }
-            else if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            else if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_GT_DEF:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) > GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_EQ_DEF:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) == GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_LT_DEF:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) < GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_SILCOON:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel && (upperPersonality % 10) <= 4)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel && (upperPersonality % 10) <= 4)
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL_CASCOON:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel && (upperPersonality % 10) > 4)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel && (upperPersonality % 10) > 4)
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_BEAUTY:
             if (partnerLevel >= 30)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_ITEM:
             if (partnerSpecies == SPECIES_GLOOM && partnerLevel >= 36)
@@ -914,27 +913,27 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             }
             else if (partnerSpecies == SPECIES_WEEPINBELL && partnerLevel >= 36)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_VULPIX || partnerSpecies == SPECIES_GROWLITHE) && partnerLevel >= 32)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_SHELLDER || partnerSpecies == SPECIES_STARYU) && partnerLevel >= 43)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_NIDORINA || partnerSpecies == SPECIES_NIDORINO || partnerSpecies == SPECIES_EXEGGCUTE) && partnerLevel >= 26)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_JIGGLYPUFF || partnerSpecies == SPECIES_CLEFAIRY || partnerSpecies == SPECIES_SKITTY) && partnerLevel >= 38)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_LOMBRE || partnerSpecies == SPECIES_NUZLEAF) && partnerLevel >= 38)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if (partnerSpecies == SPECIES_POLIWHIRL && partnerLevel >= 44)
             {
@@ -945,11 +944,11 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             }
             else if (partnerSpecies == SPECIES_PIKACHU && partnerLevel >= 27)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if (partnerSpecies == SPECIES_SUNKERN && partnerLevel >= 15)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_MURKROW || partnerSpecies == SPECIES_MISDREAVUS
                    || partnerSpecies == SPECIES_MUNNA || partnerSpecies == SPECIES_DOUBLADE
@@ -957,7 +956,7 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                    || partnerSpecies == SPECIES_VULPIX_ALOLAN || partnerSpecies == SPECIES_SINISTEA_ANTIQUE)
                    && partnerLevel >= 25)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_PANSAGE || partnerSpecies == SPECIES_PANSEAR
                    || partnerSpecies == SPECIES_PANPOUR || partnerSpecies == SPECIES_COTTONEE
@@ -966,13 +965,13 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                    || partnerSpecies == SPECIES_FLOETTE_ORANGE_FLOWER || partnerSpecies == SPECIES_FLOETTE_BLUE_FLOWER
                    || partnerSpecies == SPECIES_FLOETTE_WHITE_FLOWER) && partnerLevel >= 15)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_EELEKTRIK || partnerSpecies == SPECIES_LAMPENT
                    || partnerSpecies == SPECIES_HELIOPTILE || partnerSpecies == SPECIES_CHARJABUG
                    || partnerSpecies == SPECIES_DARUMAKA_GALARIAN) && partnerLevel >= 35)
             {
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if (partnerSpecies == SPECIES_APPLIN && partnerLevel >= 30)
             {
@@ -991,28 +990,28 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             break;
         case EVO_ITEM_FEMALE:
             if (GetMonGender(mon) == MON_FEMALE && partnerSpecies == SPECIES_SNORUNT && partnerLevel >= 35)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_ITEM_MALE:
             if (GetMonGender(mon) == MON_MALE && partnerSpecies == SPECIES_KIRLIA && partnerLevel >= 35)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_MOVE:
-            if (MonKnowsMove(mon, gEvolutionTable[partnerSpecies][i].param))
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (MonKnowsMove(mon, gSpeciesInfo[partnerSpecies].evolutions[i].param))
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_FRIENDSHIP_MOVE_TYPE:
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
-                if (gBattleMoves[GetMonData(mon, MON_DATA_MOVE1 + j, NULL)].type == gEvolutionTable[partnerSpecies][i].param)
+                if (gMovesInfo[GetMonData(mon, MON_DATA_MOVE1 + j, NULL)].type == gSpeciesInfo[partnerSpecies].evolutions[i].param)
                 {
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
                     break;
                 }
             }
             break;
         case EVO_LEVEL_DARK_TYPE_MON_IN_PARTY:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 for (j = 0; j < PARTY_SIZE; j++)
                 {
@@ -1020,7 +1019,7 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                     if (gSpeciesInfo[currSpecies].types[0] == TYPE_DARK
                      || gSpeciesInfo[currSpecies].types[1] == TYPE_DARK)
                     {
-                        targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                        targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
                         break;
                     }
                 }
@@ -1029,45 +1028,45 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
         case EVO_LEVEL_RAIN:
             j = GetCurrentWeather();
             if (j == WEATHER_RAIN || j == WEATHER_RAIN_THUNDERSTORM || j == WEATHER_DOWNPOUR)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_MAPSEC:
-            if (gMapHeader.regionMapSectionId == gEvolutionTable[partnerSpecies][i].param)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (gMapHeader.regionMapSectionId == gSpeciesInfo[partnerSpecies].evolutions[i].param)
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_SPECIFIC_MAP:
-            if (currentMap == gEvolutionTable[partnerSpecies][i].param)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (currentMap == gSpeciesInfo[partnerSpecies].evolutions[i].param)
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_SPECIFIC_MON_IN_PARTY:
             for (j = 0; j < PARTY_SIZE; j++)
             {
-                if (GetMonData(&gPlayerParty[j], MON_DATA_SPECIES) == gEvolutionTable[partnerSpecies][i].param)
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                if (GetMonData(&gPlayerParty[j], MON_DATA_SPECIES) == gSpeciesInfo[partnerSpecies].evolutions[i].param)
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_TRADE:
-            targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_TRADE_ITEM:
-            if (gEvolutionTable[partnerSpecies][i].param == partnerHeldItem)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param == partnerHeldItem)
             {
                 partnerHeldItem = ITEM_NONE;
                 SetMonData(mon, MON_DATA_HELD_ITEM, &partnerHeldItem);
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         case EVO_TRADE_SPECIFIC_MON:
-            if (gEvolutionTable[partnerSpecies][i].param == playerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param == playerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL_FOG:
             j = GetCurrentWeather();
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel && (j == WEATHER_FOG_HORIZONTAL || j == WEATHER_FOG_DIAGONAL))
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel && (j == WEATHER_FOG_HORIZONTAL || j == WEATHER_FOG_DIAGONAL))
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL_NATURE_AMPED:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 u8 nature = GetNature(mon);
                 switch (nature)
@@ -1085,13 +1084,13 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                 case NATURE_RASH:
                 case NATURE_SASSY:
                 case NATURE_QUIRKY:
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
                     break;
                 }
             }
             break;
         case EVO_LEVEL_NATURE_LOW_KEY:
-            if (gEvolutionTable[partnerSpecies][i].param <= partnerLevel)
+            if (gSpeciesInfo[partnerSpecies].evolutions[i].param <= partnerLevel)
             {
                 u8 nature = GetNature(mon);
                 switch (nature)
@@ -1108,17 +1107,17 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                 case NATURE_CALM:
                 case NATURE_GENTLE:
                 case NATURE_CAREFUL:
-                    targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
                     break;
                 }
             }
             break;
         case EVO_ITEM_HOLD:
-            if (partnerHeldItem == gEvolutionTable[partnerSpecies][i].param)
+            if (partnerHeldItem == gSpeciesInfo[partnerSpecies].evolutions[i].param)
             {
                 partnerHeldItem = 0;
                 SetMonData(mon, MON_DATA_HELD_ITEM, &partnerHeldItem);
-                targetSpecies = gEvolutionTable[partnerSpecies][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             break;
         }
@@ -1165,14 +1164,14 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
 
     for (i = 0; i < 5; i++)
     {
-        switch (gEvolutionTable[species][i].method)
+        switch (gSpeciesInfo[species].evolutions[i].method)
         {
         case EVO_FRIENDSHIP:
             if ((species == SPECIES_PICHU || species == SPECIES_CLEFFA || species == SPECIES_IGGLYBUFF
               || species == SPECIES_TOGEPI || species == SPECIES_AZURILL) && level >= 16)
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             else if ((species == SPECIES_GOLBAT || species == SPECIES_CHANSEY) && level >= 35)
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL:
             if (species == SPECIES_SLOWPOKE && level >= 37)
@@ -1182,43 +1181,43 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                 else
                     targetSpecies = SPECIES_SLOWKING;
             }
-            else if (gEvolutionTable[species][i].param <= level)
+            else if (gSpeciesInfo[species].evolutions[i].param <= level)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_GT_DEF:
-            if (gEvolutionTable[species][i].param <= level)
+            if (gSpeciesInfo[species].evolutions[i].param <= level)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) > GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_EQ_DEF:
-            if (gEvolutionTable[species][i].param <= level)
+            if (gSpeciesInfo[species].evolutions[i].param <= level)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) == GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_ATK_LT_DEF:
-            if (gEvolutionTable[species][i].param <= level)
+            if (gSpeciesInfo[species].evolutions[i].param <= level)
             {
                 if (GetMonData(mon, MON_DATA_ATK, 0) < GetMonData(mon, MON_DATA_DEF, 0))
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             break;
         case EVO_LEVEL_SILCOON:
-            if (gEvolutionTable[species][i].param <= level && (upperPersonality % 10) <= 4)
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+            if (gSpeciesInfo[species].evolutions[i].param <= level && (upperPersonality % 10) <= 4)
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             break;
         case EVO_LEVEL_CASCOON:
-            if (gEvolutionTable[species][i].param <= level && (upperPersonality % 10) > 4)
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+            if (gSpeciesInfo[species].evolutions[i].param <= level && (upperPersonality % 10) > 4)
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             break;
         case EVO_BEAUTY:
             if (level >= 30)
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             break;
         case EVO_ITEM:
             if (species == SPECIES_GLOOM && level >= 36)
@@ -1230,27 +1229,27 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             }
             else if (species == SPECIES_WEEPINBELL && level >= 36)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if ((species == SPECIES_VULPIX || species == SPECIES_GROWLITHE) && level >= 32)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if ((species == SPECIES_SHELLDER || species == SPECIES_STARYU) && level >= 43)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if ((species == SPECIES_NIDORINA || species == SPECIES_NIDORINO || species == SPECIES_EXEGGCUTE) && level >= 26)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if ((species == SPECIES_JIGGLYPUFF || species == SPECIES_CLEFAIRY || species == SPECIES_SKITTY) && level >= 38)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if ((species == SPECIES_LOMBRE || species == SPECIES_NUZLEAF) && level >= 38)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if (species == SPECIES_POLIWHIRL && level >= 44)
             {
@@ -1261,25 +1260,25 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             }
             else if (species == SPECIES_PIKACHU && level >= 27)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if (species == SPECIES_SUNKERN && level >= 15)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             break;
         case EVO_TRADE_ITEM:
             if ((species == SPECIES_ONIX || species == SPECIES_SEADRA) && level >= 40)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if (species == SPECIES_SCYTHER && level >= 26)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if (species == SPECIES_PORYGON && level >= 21)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = gSpeciesInfo[species].evolutions[i].targetSpecies;
             }
             else if (species == SPECIES_CLAMPERL && level >= 22)
             {
@@ -1306,8 +1305,8 @@ static u32 GetEvolutionSpecies(u16 speciesId)
 
     for (i = 0; i < EVOS_PER_MON; i++)
     {
-        if (gEvolutionTable[speciesId][i].targetSpecies)
-            return gEvolutionTable[speciesId][i].targetSpecies;
+        if (gSpeciesInfo[speciesId].evolutions[i].targetSpecies)
+            return gSpeciesInfo[speciesId].evolutions[i].targetSpecies;
     }
     return SPECIES_NONE;
 }
@@ -1315,7 +1314,7 @@ static u32 GetEvolutionSpecies(u16 speciesId)
 static bool32 IsSpeciesFamilyMegaEvolutionCompatible(u16 species, u16 heldStone)
 {
     u32 i;
-    const struct FormChange *formChanges = gFormChangeTablePointers[species];
+    const struct FormChange *formChanges = gSpeciesInfo[species].formChangeTable;
     u16 nextEvo = GetEvolutionSpecies(species);
 
     for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
@@ -1373,7 +1372,7 @@ static u16 GetValidHeldItemForSpecies(u16 species)
     // Re-roll the item generated if it's a Mega Stone not compatible with the Pokémon that's being received.
     else if (itemHoldEffect == HOLD_EFFECT_MEGA_STONE && !IsSpeciesFamilyMegaEvolutionCompatible(species, item))
         goto ROLL;
-    else if (itemHoldEffect == HOLD_EFFECT_Z_CRYSTAL || itemHoldEffect == HOLD_EFFECT_MASK)
+    else if (itemHoldEffect == HOLD_EFFECT_Z_CRYSTAL) 
         goto ROLL;
 #else
     else if (sIsInvalidItem[item])
