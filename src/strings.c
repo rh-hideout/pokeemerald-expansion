@@ -767,6 +767,7 @@ const u8 gText_NormalTagMatch[] = _("NORMAL TAG MATCH");
 const u8 gText_VarietyTagMatch[] = _("VARIETY TAG MATCH");
 const u8 gText_UniqueTagMatch[] = _("UNIQUE TAG MATCH");
 const u8 gText_ExpertTagMatch[] = _("EXPERT TAG MATCH");
+const u8 gText_UseWonder[] = _("Wonder Trade");
 const u8 gText_TradeCenter[] = _("TRADE CENTER");
 const u8 gText_Colosseum[] = _("COLOSSEUM");
 const u8 gText_RecordCorner[] = _("RECORD CORNER");

@@ -1305,6 +1305,7 @@ extern const u8 gText_NormalTagMatch[];
 extern const u8 gText_VarietyTagMatch[];
 extern const u8 gText_UniqueTagMatch[];
 extern const u8 gText_ExpertTagMatch[];
+extern const u8 gText_UseWonder[];
 extern const u8 gText_TimeBoard[];
 extern const u8 gText_TimeCleared[];
 extern const u8 gText_XMinYDotZSec[];
