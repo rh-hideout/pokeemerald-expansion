@@ -673,6 +673,13 @@ Common_ShowEasyChatScreen::
 	fadescreen FADE_FROM_BLACK
 	return
 
+Common_OpenBag::
+	fadescreen FADE_TO_BLACK
+	closemessage
+	special Bag_ChooseFossil
+	waitstate
+	return
+
 Common_EventScript_ReadyPetalburgGymForBattle::
 	clearflag FLAG_HIDE_PETALBURG_GYM_GREETER
 	setflag FLAG_PETALBURG_MART_EXPANDED_ITEMS

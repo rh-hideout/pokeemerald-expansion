@@ -133,9 +133,11 @@
 #define BERRY_TREE_ROUTE_123_PECHA    87
 #define BERRY_TREE_ROUTE_123_SITRUS   88
 #define BERRY_TREE_ROUTE_123_RAWST    89
+#define BERRY_TREE_Littleroot_LIECHI  90
+#define BERRY_TREE_Littleroot_ENIGMA  91
 
 // Remainder are unused
 
-#define BERRY_TREES_COUNT 128
+#define BERRY_TREES_COUNT 130
 
 #endif // GUARD_CONSTANTS_BERRY_H

@@ -26,6 +26,20 @@ script Megahouse_MEGA_ITEM_EMPLOYEE {
 
 raw `
 
+EventScript_MegaMan::
+    lock
+    faceplayer
+    message gText_MegaMan
+    waitmessage
+    checkitem ITEM_MEGA_RING, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_HaveMegaRing
+    message gText_Hereisring
+    giveitem ITEM_MEGA_RING
+    playfanfare MUS_OBTAIN_ITEM
+    release
+    end
+
 Common_EventScript_PkmnCenterWonderLady::
     lock
     faceplayer
@@ -228,5 +242,20 @@ gText_ConnectingToGlobalNetwork::
 
 gText_GlobalPleaseComeAgain::
     .string "Please come again.$"
+
+Script_HaveMegaRing::
+    msgbox gText_HaveMegaRing
+    release
+    end
+
+gText_MegaMan::
+    .string "Hi! I am the MEGA MAN!\n"
+    .string "Here join me in this adventure!$"
+
+gText_HaveMegaRing::
+    .string "You already have a Mega Ring!$"
+
+gText_Hereisring::
+    .string "Here is your Mega Ring!$"
 
 `

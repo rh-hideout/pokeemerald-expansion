@@ -608,6 +608,16 @@ void CB2_ChooseBerry(void)
     GoToBagMenu(ITEMMENULOCATION_BERRY_TREE, BERRIES_POCKET, CB2_ReturnToFieldContinueScript);
 }
 
+void CB2_ChooseFossil(void)
+{
+    GoToBagMenu(ITEMMENULOCATION_FIELD, ITEMS_POCKET, CB2_ReturnToFieldContinueScript);
+}
+
+void Bag_ChooseFossil(void)
+{
+    SetMainCallback2(CB2_ChooseFossil);
+}
+
 // Choosing mulch to use
 void CB2_ChooseMulch(void)
 {
