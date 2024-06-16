@@ -34,6 +34,7 @@ EventScript_MegaMan::
     checkitem ITEM_MEGA_RING, 1
     compare VAR_RESULT, 1
     goto_if_eq Script_HaveMegaRing
+    waitmessage
     message gText_Hereisring
     giveitem ITEM_MEGA_RING
     playfanfare MUS_OBTAIN_ITEM
@@ -249,7 +250,7 @@ Script_HaveMegaRing::
     end
 
 gText_MegaMan::
-    .string "Hi! I am the MEGA MAN!\n"
+    .string "Hi! I am the MEGA MAN!\p"
     .string "Here join me in this adventure!$"
 
 gText_HaveMegaRing::
