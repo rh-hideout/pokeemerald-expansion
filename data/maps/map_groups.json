@@ -220,7 +220,8 @@
     "FortreeCity_House3",
     "FortreeCity_House4",
     "FortreeCity_House5",
-    "FortreeCity_DecorationShop"
+    "FortreeCity_DecorationShop",
+    "ZHouse"
   ],
   "gMapGroup_IndoorLilycove": [
     "LilycoveCity_CoveLilyMotel_1F",
@@ -430,7 +431,10 @@
     "TerraCave_Entrance",
     "TerraCave_End",
     "AlteringCave",
-    "MeteorFalls_StevensCave"
+    "MeteorFalls_StevensCave",
+    "UnownCavern1F",
+    "UnownCavern2F",
+    "UnownCavernB1F"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

@@ -151,7 +151,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "BERRY_TREE_ROUTE_111_RAZZ_1",
+      "trainer_sight_or_berry_tree_id": "BERRY_TREE_PETALBURG_RAZZ",
       "script": "BerryTreeScript",
       "flag": "0"
     },
@@ -164,7 +164,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "BERRY_TREE_ROUTE_115_KELPSY_1",
+      "trainer_sight_or_berry_tree_id": "BERRY_TREE_PETALBURG_KELPSY",
       "script": "BerryTreeScript",
       "flag": "0"
     },
@@ -177,7 +177,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "BERRY_TREE_ROUTE_116_PINAP_1",
+      "trainer_sight_or_berry_tree_id": "BERRY_TREE_PETALBURG_PINAP",
       "script": "BerryTreeScript",
       "flag": "0"
     },
@@ -190,7 +190,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "BERRY_TREE_ROUTE_117_WEPEAR_2",
+      "trainer_sight_or_berry_tree_id": "BERRY_TREE_PETALBURG_WEPEAR",
       "script": "BerryTreeScript",
       "flag": "0"
     }

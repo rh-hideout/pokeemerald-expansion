@@ -782,7 +782,7 @@ Script_havemap::
     end
 
 gText_Redtext::
-    .string ".........$"
+    .string ".........\p $"
 
 gText_havemap::
     .string "........?$"

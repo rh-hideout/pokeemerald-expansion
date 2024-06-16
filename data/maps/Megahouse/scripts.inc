@@ -493,7 +493,7 @@ gText_MegaMan::
 # 253 "data/maps/Megahouse/scripts.pory"
     .string "Hi! I am the MEGA MAN!\p"
 # 254 "data/maps/Megahouse/scripts.pory"
-    .string "Here join me in this adventure!$"
+    .string "Here join me in this adventure!\p $"
 # 255 "data/maps/Megahouse/scripts.pory"
 
 # 256 "data/maps/Megahouse/scripts.pory"

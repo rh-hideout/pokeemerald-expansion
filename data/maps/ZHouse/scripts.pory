@@ -1,0 +1,144 @@
+mapscripts ZHouse_MapScripts {
+
+}
+    
+script ZHouse_Fossil_ITEM_EMPLOYEE {
+    lock
+    faceplayer
+    message("How may I serve you?")
+    waitmessage
+    pokemart (FOSSILSANDMINTS_ITEMS)
+    msgbox("Please Come Again.")
+    release
+    end
+}
+
+script ZHouse_Z_ITEM_EMPLOYEE {
+    lock
+    faceplayer
+    message("How may I serve you?")
+    waitmessage
+    pokemart (Z_ITEMS)
+    msgbox("Please Come Again.")
+    release
+    end
+}
+
+raw `
+
+EventScript_ZMan::
+    lock
+    faceplayer
+    message gText_ZMan
+    waitmessage
+    checkitem ITEM_Z_POWER_RING, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_Havezring
+    waitmessage
+    message gText_Hereiszring
+    giveitem ITEM_Z_POWER_RING
+    playfanfare MUS_OBTAIN_ITEM
+    release
+    end
+
+.align 2
+FOSSILSANDMINTS_ITEMS::
+    .2byte ITEM_HELIX_FOSSIL
+    .2byte ITEM_DOME_FOSSIL
+    .2byte ITEM_OLD_AMBER
+    .2byte ITEM_ROOT_FOSSIL
+    .2byte ITEM_CLAW_FOSSIL
+    .2byte ITEM_ARMOR_FOSSIL
+    .2byte ITEM_SKULL_FOSSIL
+    .2byte ITEM_COVER_FOSSIL
+    .2byte ITEM_PLUME_FOSSIL
+    .2byte ITEM_JAW_FOSSIL
+    .2byte ITEM_SAIL_FOSSIL
+    .2byte ITEM_FOSSILIZED_BIRD
+    .2byte ITEM_FOSSILIZED_DINO
+    .2byte ITEM_FOSSILIZED_DRAKE
+    .2byte ITEM_FOSSILIZED_FISH
+    .2byte ITEM_LONELY_MINT
+    .2byte ITEM_ADAMANT_MINT
+    .2byte ITEM_NAUGHTY_MINT
+    .2byte ITEM_BRAVE_MINT
+    .2byte ITEM_BOLD_MINT
+    .2byte ITEM_IMPISH_MINT
+    .2byte ITEM_LAX_MINT
+    .2byte ITEM_RELAXED_MINT
+    .2byte ITEM_MODEST_MINT
+    .2byte ITEM_MILD_MINT
+    .2byte ITEM_RASH_MINT
+    .2byte ITEM_QUIET_MINT
+    .2byte ITEM_CALM_MINT
+    .2byte ITEM_GENTLE_MINT
+    .2byte ITEM_CAREFUL_MINT
+    .2byte ITEM_SASSY_MINT
+    .2byte ITEM_TIMID_MINT
+    .2byte ITEM_HASTY_MINT
+    .2byte ITEM_JOLLY_MINT
+    .2byte ITEM_NAIVE_MINT
+    .2byte ITEM_SERIOUS_MINT
+    .2byte ITEM_ABILITY_CAPSULE
+    .2byte ITEM_ABILITY_PATCH
+    .2byte ITEM_NONE
+    release
+    end
+
+.align 2
+Z_ITEMS::
+    .2byte ITEM_NORMALIUM_Z
+    .2byte ITEM_FIRIUM_Z
+    .2byte ITEM_WATERIUM_Z
+    .2byte ITEM_ELECTRIUM_Z
+    .2byte ITEM_GRASSIUM_Z
+    .2byte ITEM_ICIUM_Z
+    .2byte ITEM_FIGHTINIUM_Z
+    .2byte ITEM_POISONIUM_Z
+    .2byte ITEM_GROUNDIUM_Z
+    .2byte ITEM_FLYINIUM_Z
+    .2byte ITEM_PSYCHIUM_Z
+    .2byte ITEM_BUGINIUM_Z
+    .2byte ITEM_ROCKIUM_Z
+    .2byte ITEM_GHOSTIUM_Z
+    .2byte ITEM_DRAGONIUM_Z
+    .2byte ITEM_DARKINIUM_Z
+    .2byte ITEM_STEELIUM_Z
+    .2byte ITEM_FAIRIUM_Z
+    .2byte ITEM_PIKANIUM_Z
+    .2byte ITEM_EEVIUM_Z
+    .2byte ITEM_SNORLIUM_Z
+    .2byte ITEM_MEWNIUM_Z
+    .2byte ITEM_DECIDIUM_Z
+    .2byte ITEM_INCINIUM_Z
+    .2byte ITEM_PRIMARIUM_Z
+    .2byte ITEM_LYCANIUM_Z
+    .2byte ITEM_MIMIKIUM_Z
+    .2byte ITEM_KOMMONIUM_Z
+    .2byte ITEM_TAPUNIUM_Z
+    .2byte ITEM_SOLGANIUM_Z
+    .2byte ITEM_LUNALIUM_Z
+    .2byte ITEM_MARSHADIUM_Z
+    .2byte ITEM_ALORAICHIUM_Z
+    .2byte ITEM_PIKASHUNIUM_Z
+    .2byte ITEM_ULTRANECROZIUM_Z
+    .2byte ITEM_NONE
+    release
+    end
+
+Script_Havezring::
+    msgbox gText_Haveazring
+    release
+    end
+
+gText_ZMan::
+    .string "Hi! I am Zee the Z Move Man!\p"
+    .string "Here join me in this adventure!\p $"
+
+gText_Haveazring::
+    .string "You already have a Z-POWER RING!$"
+
+gText_Hereiszring::
+    .string "Here is your Z-Power Ring!$"
+
+`

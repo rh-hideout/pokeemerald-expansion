@@ -1092,3 +1092,11 @@ EventScript_End:
 	.include "data/text/birch_speech.inc"
 
 	.include "data/maps/Megahouse/scripts.inc"
+
+	.include "data/maps/UnownCavern1F/scripts.inc"
+
+	.include "data/maps/UnownCavern2F/scripts.inc"
+
+	.include "data/maps/UnownCavernB1F/scripts.inc"
+
+	.include "data/maps/ZHouse/scripts.inc"

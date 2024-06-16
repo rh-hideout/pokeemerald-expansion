@@ -180,6 +180,13 @@
       "elevation": 0,
       "dest_map": "MAP_FORTREE_CITY_DECORATION_SHOP",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 37,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_ZHOUSE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

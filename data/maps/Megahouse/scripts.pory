@@ -251,7 +251,7 @@ Script_HaveMegaRing::
 
 gText_MegaMan::
     .string "Hi! I am the MEGA MAN!\p"
-    .string "Here join me in this adventure!$"
+    .string "Here join me in this adventure!\p $"
 
 gText_HaveMegaRing::
     .string "You already have a Mega Ring!$"

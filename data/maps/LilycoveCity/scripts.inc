@@ -1567,7 +1567,7 @@ Script_havemap::
 # 784 "data/maps/LilycoveCity/scripts.pory"
 gText_Redtext::
 # 785 "data/maps/LilycoveCity/scripts.pory"
-    .string ".........$"
+    .string ".........\p $"
 # 786 "data/maps/LilycoveCity/scripts.pory"
 
 # 787 "data/maps/LilycoveCity/scripts.pory"

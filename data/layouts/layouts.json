@@ -4420,6 +4420,46 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/Megahouse/border.bin",
       "blockdata_filepath": "data/layouts/Megahouse/map.bin"
+    },
+    {
+      "id": "LAYOUT_UNOWN_CAVERN1F",
+      "name": "UnownCavern1F_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/UnownCavern1F/border.bin",
+      "blockdata_filepath": "data/layouts/UnownCavern1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_UNOWN_CAVERN2F",
+      "name": "UnownCavern2F_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/UnownCavern2F/border.bin",
+      "blockdata_filepath": "data/layouts/UnownCavern2F/map.bin"
+    },
+    {
+      "id": "LAYOUT_UNOWN_CAVERN_B1F",
+      "name": "UnownCavernB1F_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/UnownCavernB1F/border.bin",
+      "blockdata_filepath": "data/layouts/UnownCavernB1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_ZHOUSE",
+      "name": "ZHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/ZHouse/border.bin",
+      "blockdata_filepath": "data/layouts/ZHouse/map.bin"
     }
   ]
 }
