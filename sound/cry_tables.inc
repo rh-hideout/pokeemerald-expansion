@@ -2423,6 +2423,12 @@ gCryTable::
 .if P_FAMILY_PECHARUNT == TRUE
 	cry Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
+.if P_FAMILY_ALT_ABSOL == TRUE
+	cry CRY_ALTABSOL
+.endif @ P_FAMILY_ALT_ABSOL
+.if P_FAMILY_ALT_LAPRAS == TRUE
+	cry Cry_ALTLAPRAS
+.endif @ P_FAMILY_ALT_LAPRAS
 
 	.align 2
 gCryTable_Reverse::
@@ -4849,3 +4855,9 @@ gCryTable_Reverse::
 .if P_FAMILY_PECHARUNT == TRUE
 	cry_reverse Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
+.if P_FAMILY_ALT_ABSOL == TRUE
+	cry_reverse CRY_ALTABSOL
+.endif @ P_FAMILY_ALT_ABSOL
+.if P_FAMILY_ALT_LAPRAS == TRUE
+	cry_reverse Cry_ALTLAPRAS
+.endif @ P_FAMILY_ALT_LAPRAS

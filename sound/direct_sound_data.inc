@@ -6154,6 +6154,18 @@ Cry_Pecharunt::
 	.incbin "sound/direct_sound_samples/cries/pecharunt.bin"
 .endif @ P_FAMILY_PECHARUNT
 
+.if P_FAMILY_ALT_ABSOL == TRUE
+	.align 2
+CRY_ALTABSOL::
+	.incbin "sound/direct_sound_samples/cries/altabsol.bin"
+.endif @P_FAMILY_ALT_ABSOL
+
+.if P_FAMILY_ALT_LAPRAS == TRUE
+	.align 2
+Cry_ALTLAPRAS::
+	.incbin "sound/direct_sound_samples/cries/altlapras.bin"
+.endif @P_FAMILY_ALT_LAPRAS
+
 	.align 2
 DirectSoundWaveData_register_noise::
 	.incbin "sound/direct_sound_samples/register_noise.bin"

@@ -5479,6 +5479,49 @@ const u16 gEggMoves[] = {
         MOVE_ICICLE_SPEAR),
 #endif //P_FAMILY_FRIGIBAX
 
+#if P_FAMILY_ALT_ABSOL
+egg_moves(ALT_ABSOL,
+        MOVE_BATON_PASS,
+        MOVE_FEINT_ATTACK,
+        MOVE_DOUBLE_EDGE,
+        MOVE_MAGIC_COAT,
+        MOVE_CURSE,
+        MOVE_MEAN_LOOK,
+        MOVE_ZEN_HEADBUTT,
+        MOVE_PUNISHMENT,
+	    MOVE_DRAGON_TAIL,
+        MOVE_SUCKER_PUNCH,
+        MOVE_ASSURANCE,
+        MOVE_FIRE_FANG,
+        MOVE_THUNDER_FANG,
+        MOVE_ICE_FANG,
+        MOVE_DOUBLE_HIT,
+        MOVE_ASTONISH,
+        MOVE_EARTH_POWER,
+        MOVE_SCREECH,
+        MOVE_HEAD_SMASH,
+        MOVE_ASSURANCE,
+        MOVE_DARK_PULSE,
+        MOVE_ME_FIRST,
+        MOVE_MEGAHORN,
+        MOVE_HEX,
+        MOVE_PERISH_SONG,
+        MOVE_PLAY_ROUGH),
+#endif //P_FAMILY_ALT_ABSOL
+
+#if P_FAMILY_ALT_LAPRAS
+egg_moves(ALT_LAPRAS,
+        MOVE_AFTER_YOU,
+        MOVE_ANCIENTPOWER,
+        MOVE_COUNTER,
+        MOVE_CURSE,
+        MOVE_DOUBLE_KICK,
+        MOVE_FREEZE_DRY,
+        MOVE_FISSURE,
+        MOVE_HORN_DRILL,
+        MOVE_SPARKLING_ARIA),
+#endif //P_FAMILY_ALT_LAPRAS
+
     EGG_MOVES_TERMINATOR
 };
 
