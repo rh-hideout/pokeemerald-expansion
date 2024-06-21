@@ -13084,8 +13084,36 @@ const u8 gMonFootprint_QuestionMark[] = INCBIN_U8("graphics/pokemon/question_mar
     const u8 gMonFootprint_AltLapras[] = INCBIN_U8("graphics/pokemon/altlapras/footprint.1bpp");
 #endif //P_FOOTPRINTS
 #endif //P_FAMILY_ALT_LAPRAS
+#if P_FAMILY_ALT_RALTS
+    const u32 gMonFrontPic_AltRalts[] = INCBIN_U32("graphics/pokemon/altralts/anim_front.4bpp.lz");
+    const u32 gMonPalette_AltRalts[] = INCBIN_U32("graphics/pokemon/altralts/normal.gbapal.lz");
+    const u32 gMonBackPic_AltRalts[] = INCBIN_U32("graphics/pokemon/altralts/back.4bpp.lz");
+    const u32 gMonShinyPalette_AltRalts[] = INCBIN_U32("graphics/pokemon/altralts/shiny.gbapal.lz");
+    const u8 gMonIcon_AltRalts[] = INCBIN_U8("graphics/pokemon/altralts/icon.4bpp");
+#if P_FOOTPRINTS
+    const u8 gMonFootprint_AltRalts[] = INCBIN_U8("graphics/pokemon/altralts/footprint.1bpp");
+#endif //P_FOOTPRINTS
 
-    const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
+    const u32 gMonFrontPic_AltKirlia[] = INCBIN_U32("graphics/pokemon/altkirlia/anim_front.4bpp.lz");
+    const u32 gMonPalette_AltKirlia[] = INCBIN_U32("graphics/pokemon/altkirlia/normal.gbapal.lz");
+    const u32 gMonBackPic_AltKirlia[] = INCBIN_U32("graphics/pokemon/altkirlia/back.4bpp.lz");
+    const u32 gMonShinyPalette_AltKirlia[] = INCBIN_U32("graphics/pokemon/altkirlia/shiny.gbapal.lz");
+    const u8 gMonIcon_AltKirlia[] = INCBIN_U8("graphics/pokemon/altkirlia/icon.4bpp");
+#if P_FOOTPRINTS
+    const u8 gMonFootprint_AltKirlia[] = INCBIN_U8("graphics/pokemon/altkirlia/footprint.1bpp");
+#endif //P_FOOTPRINTS
+
+    const u32 gMonFrontPic_AltGardevoir[] = INCBIN_U32("graphics/pokemon/altgardevoir/anim_front.4bpp.lz");
+    const u32 gMonPalette_AltGardevoir[] = INCBIN_U32("graphics/pokemon/altgardevoir/normal.gbapal.lz");
+    const u32 gMonBackPic_AltGardevoir[] = INCBIN_U32("graphics/pokemon/altgardevoir/back.4bpp.lz");
+    const u32 gMonShinyPalette_AltGardevoir[] = INCBIN_U32("graphics/pokemon/altgardevoir/shiny.gbapal.lz");
+    const u8 gMonIcon_AltGardevoir[] = INCBIN_U8("graphics/pokemon/altgardevoir/icon.4bpp");
+#if P_FOOTPRINTS
+    const u8 gMonFootprint_AltGardevoir[] = INCBIN_U8("graphics/pokemon/altgardevoir/footprint.1bpp");
+#endif //P_FOOTPRINTS
+#endif //P_FAMILY_ALT_RALTS
+
+ const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
 

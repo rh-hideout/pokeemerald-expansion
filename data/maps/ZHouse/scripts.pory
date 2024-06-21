@@ -132,7 +132,7 @@ Script_Havezring::
     end
 
 gText_ZMan::
-    .string "Hi! I am Zee the Z Move Man!\p"
+    .string "Hi! I am Zeke the Z Move Man!\p"
     .string "Here join me in this adventure!\p $"
 
 gText_Haveazring::

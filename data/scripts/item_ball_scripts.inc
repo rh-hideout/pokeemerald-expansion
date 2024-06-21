@@ -6,3 +6,4 @@ Common_EventScript_Finditem::
 	callnative GetObjectEventTrainerRangeFromTemplate
 	finditem VAR_RESULT
 	end
+	

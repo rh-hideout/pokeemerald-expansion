@@ -945,3 +945,11 @@ u16 CountPartyAliveNonEggMons(void)
     aliveNonEggMonsCount += CountPartyAliveNonEggMonsExcept(PARTY_SIZE);
     return aliveNonEggMonsCount;
 }
+
+u16 ChooseRandomEggSpecies(void)
+{
+    static const u16 eggy_species[] = { SPECIES_VULPIX, SPECIES_RIOLU, SPECIES_SPRIGATITO, SPECIES_ZORUA, SPECIES_FENNEKIN };
+    u16 randomSpeciesidx = Random() % ARRAY_COUNT(eggy_species);
+    return eggy_species[randomSpeciesidx];
+}
+

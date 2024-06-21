@@ -6166,6 +6166,21 @@ Cry_ALTLAPRAS::
 	.incbin "sound/direct_sound_samples/cries/altlapras.bin"
 .endif @P_FAMILY_ALT_LAPRAS
 
+.if P_FAMILY_ALT_RALTS == TRUE
+	.align 2
+Cry_ALTRALTS::
+	.incbin "sound/direct_sound_samples/cries/altralts.bin"
+
+	.align 2
+Cry_ALTKIRLIA::
+	.incbin "sound/direct_sound_samples/cries/altkirlia.bin"
+
+	.align 2
+Cry_ALTGARDEVOIR::
+	.incbin "sound/direct_sound_samples/cries/altgardevoir.bin"
+.endif @P_FAMILY_ALT_RALTS
+
+
 	.align 2
 DirectSoundWaveData_register_noise::
 	.incbin "sound/direct_sound_samples/register_noise.bin"

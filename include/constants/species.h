@@ -1630,8 +1630,11 @@
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    1523
 #define SPECIES_ALT_ABSOL                               1524
 #define SPECIES_ALT_LAPRAS                              1525
+#define SPECIES_ALT_RALTS                               1526
+#define SPECIES_ALT_KIRLIA                              1527
+#define SPECIES_ALT_GARDEVOIR                           1528
 
-#define SPECIES_EGG SPECIES_ALT_LAPRAS + 1
+#define SPECIES_EGG SPECIES_ALT_GARDEVOIR + 1
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -164,7 +164,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .height = 25,
         .weight = 2200,
         .description = COMPOUND_STRING(
-            "People have feared riding it due to its poison.\n"
+            "People have feared riding it due to poison.\n"
             "It’s also known to have a cold personality.\n"
             "It is an Altered Pokémon that has changed\n"
             "types and evolved into something more."),
@@ -189,6 +189,168 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .levelUpLearnset = sAltLaprasLevelUpLearnset,
         .teachableLearnset = sAltLaprasTeachableLearnset,
 },
+
+#if P_FAMILY_ALT_RALTS
+ [SPECIES_ALT_RALTS] =
+    {
+        .baseHP        = 30,
+        .baseAttack    = 25,
+        .baseDefense   = 30,
+        .baseSpeed     = 40,
+        .baseSpAttack  = 45,
+        .baseSpDefense = 35,
+        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_DARK),
+        .catchRate = 235,
+        .expYield = 70,
+        .evYield_SpAttack = 1,
+        .genderRatio = MON_FEMALE,
+        .eggCycles = 20,
+        .friendship = 35,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_HUMAN_LIKE, EGG_GROUP_FIELD),
+        .abilities = { ABILITY_TRACE, ABILITY_BERSERK, ABILITY_SYNCHRONIZE },
+        .bodyColor = BODY_COLOR_BLACK,
+        .speciesName = _("Alt Ralts"),
+        .cryId = CRY_ALTRALTS,
+        .natDexNum = NATIONAL_DEX_ALT_RALTS,
+        .categoryName = _("Dark Spirit"),
+        .height = 4,
+        .weight = 66,
+        .description = COMPOUND_STRING(
+            "A twisted Pokémon that has the power to\n"
+            "alter emotions of people and Pokémon near.\n"
+            "It is an Altered Pokémon that has changed\n"
+            "types and evolved into something more."),
+        .pokemonScale = 457,
+        .pokemonOffset = -3,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_AltRalts,
+        .frontPicSize = MON_COORDS_SIZE(24, 40),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = sAnims_AltRalts,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE_SLOW,
+        .backPic = gMonBackPic_AltRalts,
+        .backPicSize = MON_COORDS_SIZE(32, 40),
+        .backPicYOffset = 13,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_AltRalts,
+        .shinyPalette = gMonShinyPalette_AltRalts,
+        .iconSprite = gMonIcon_AltRalts,
+        .iconPalIndex = 1,
+        FOOTPRINT(AltRalts)
+        .levelUpLearnset = sAltRaltsLevelUpLearnset,
+        .teachableLearnset = sAltRaltsTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_ALT_KIRLIA}),
+    },
+
+
+    [SPECIES_ALT_KIRLIA] =
+    {
+        .baseHP        = 50,
+        .baseAttack    = 35,
+        .baseDefense   = 45,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 70,
+        .baseSpDefense = 65,
+        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_DARK),
+        .catchRate = 120,
+        .expYield = 140,
+        .evYield_SpAttack = 2,
+        .genderRatio = MON_FEMALE,
+        .eggCycles = 20,
+        .friendship = 35,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_HUMAN_LIKE, EGG_GROUP_FIELD),
+        .abilities = { ABILITY_TRACE, ABILITY_BERSERK, ABILITY_SYNCHRONIZE },
+        .bodyColor = BODY_COLOR_BLACK,
+        .speciesName = _("Alt Kirlia"),
+        .cryId = CRY_ALTKIRLIA,
+        .natDexNum = NATIONAL_DEX_ALT_KIRLIA,
+        .categoryName = _("Dark Witch"),
+        .height = 8,
+        .weight = 202,
+        .description = COMPOUND_STRING(
+            "It has dark psychic power to create a\n"
+            "rip in the dimensions and see calamities.\n"
+            "It is an Altered Pokémon that has changed\n"
+            "types and evolved into something more."),
+        .pokemonScale = 354,
+        .pokemonOffset = 0,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_AltKirlia,
+        .frontPicSize = MON_COORDS_SIZE(32, 56),
+        .frontPicYOffset = 6,
+        .frontAnimFrames = sAnims_AltKirlia,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_AltKirlia,
+        .backPicSize = MON_COORDS_SIZE(48, 56),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_AltKirlia,
+        .shinyPalette = gMonShinyPalette_AltKirlia,
+        .iconSprite = gMonIcon_AltKirlia,
+        .iconPalIndex = 1,
+        FOOTPRINT(AltKirlia)
+        .levelUpLearnset = sAltKirliaLevelUpLearnset,
+        .teachableLearnset = sAltKirliaTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 48, SPECIES_ALT_GARDEVOIR}),
+    },
+
+
+    [SPECIES_ALT_GARDEVOIR] =
+    {
+        .baseHP        = 100,
+        .baseAttack    = 60,
+        .baseDefense   = 85,
+        .baseSpeed     = 95,
+        .baseSpAttack  = 140,
+        .baseSpDefense = 120,
+        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_DARK),
+        .catchRate = 45,
+        .expYield = 259,
+        .evYield_SpAttack = 3,
+        .genderRatio = MON_FEMALE,
+        .eggCycles = 20,
+        .friendship = 35,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_HUMAN_LIKE, EGG_GROUP_FIELD),
+        .abilities = { ABILITY_TRACE, ABILITY_BERSERK, ABILITY_QUEENLY_MAJESTY },
+        .bodyColor = BODY_COLOR_BLACK,
+        .speciesName = _("AltGardvir"),
+        .cryId = CRY_ALTGARDEVOIR,
+        .natDexNum = NATIONAL_DEX_ALT_GARDEVOIR,
+        .categoryName = _("Dark Queen"),
+        .height = 16,
+        .weight = 484,
+        .description = COMPOUND_STRING(
+            "It does not feel many emotions. But it\n"
+            "will destroy everything for their trainer.\n"
+            "It is an Altered Pokémon that has changed\n"
+            "types and evolved into something more."),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_AltGardevoir,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_AltGardevoir,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE_SLOW,
+        .backPic = gMonBackPic_AltGardevoir,
+        .backPicSize = MON_COORDS_SIZE(48, 56),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_AltGardevoir,
+        .shinyPalette = gMonShinyPalette_AltGardevoir,
+        .iconSprite = gMonIcon_AltGardevoir,
+        .iconPalIndex = 1,
+        FOOTPRINT(AltGardevoir)
+        .levelUpLearnset = sAltGardevoirLevelUpLearnset,
+        .teachableLearnset = sAltGardevoirTeachableLearnset,
+    },
+#endif //P_FAMILY_ALT_RALTS
 
     /*
     [SPECIES_NONE] =

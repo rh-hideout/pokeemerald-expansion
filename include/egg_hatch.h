@@ -6,5 +6,6 @@ bool8 CheckDaycareMonReceivedMail(void);
 void EggHatch(void);
 u8 GetEggCyclesToSubtract(void);
 u16 CountPartyAliveNonEggMons(void);
+u16 ChooseRandomEggSpecies(void);
 
 #endif // GUARD_EGG_HATCH_H

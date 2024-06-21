@@ -3105,7 +3105,7 @@
       "id": "LAYOUT_SCORCHED_SLAB",
       "name": "ScorchedSlab_Layout",
       "width": 15,
-      "height": 20,
+      "height": 25,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Cave",
       "border_filepath": "data/layouts/ScorchedSlab/border.bin",

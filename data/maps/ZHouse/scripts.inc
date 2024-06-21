@@ -255,7 +255,7 @@ Script_Havezring::
 # 134 "data/maps/ZHouse/scripts.pory"
 gText_ZMan::
 # 135 "data/maps/ZHouse/scripts.pory"
-    .string "Hi! I am Zee the Z Move Man!\p"
+    .string "Hi! I am Zeke the Z Move Man!\p"
 # 136 "data/maps/ZHouse/scripts.pory"
     .string "Here join me in this adventure!\p $"
 # 137 "data/maps/ZHouse/scripts.pory"

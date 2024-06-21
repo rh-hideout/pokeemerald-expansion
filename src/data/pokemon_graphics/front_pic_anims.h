@@ -10154,6 +10154,32 @@ static const union AnimCmd sAnim_AltLapras_1[] =
 };
 #endif //P_FAMILY_ALT_LAPRAS
 
+#if P_FAMILY_ALT_RALTS
+static const union AnimCmd sAnim_AltRalts_1[] =
+{
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(1, 25),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_AltKirlia_1[] =
+{
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 39),
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_AltGardevoir_1[] =
+{
+    ANIMCMD_FRAME(0, 30),
+    ANIMCMD_FRAME(1, 30),
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_END,
+};
+#endif //P_FAMILY_ALT_RALTS
+
 static const union AnimCmd sAnim_Egg_1[] =
 {
     ANIMCMD_FRAME(0, 6),
@@ -12833,5 +12859,10 @@ SINGLE_ANIMATION(AltAbsol);
 #if P_FAMILY_ALT_LAPRAS
 SINGLE_ANIMATION(AltLapras);
 #endif //P_FAMILY_ALT_LAPRAS
+#if P_FAMILY_ALT_RALTS
+SINGLE_ANIMATION(AltRalts);
+SINGLE_ANIMATION(AltKirlia);
+SINGLE_ANIMATION(AltGardevoir);
+#endif //P_FAMILY_ALT_RALTS
 
 SINGLE_ANIMATION(Egg);

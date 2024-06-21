@@ -2429,6 +2429,11 @@ gCryTable::
 .if P_FAMILY_ALT_LAPRAS == TRUE
 	cry Cry_ALTLAPRAS
 .endif @ P_FAMILY_ALT_LAPRAS
+.if P_FAMILY_ALT_RALTS == TRUE
+	cry Cry_ALTRALTS
+	cry Cry_ALTKIRLIA
+	cry Cry_ALTGARDEVOIR
+.endif @ P_FAMILY_ALT_RALTS
 
 	.align 2
 gCryTable_Reverse::
@@ -4861,3 +4866,8 @@ gCryTable_Reverse::
 .if P_FAMILY_ALT_LAPRAS == TRUE
 	cry_reverse Cry_ALTLAPRAS
 .endif @ P_FAMILY_ALT_LAPRAS
+.if P_FAMILY_ALT_RALTS == TRUE
+	cry_reverse Cry_ALTRALTS
+	cry_reverse Cry_ALTKIRLIA
+	cry_reverse Cry_ALTGARDEVOIR
+.endif @ P_FAMILY_ALT_RALTS

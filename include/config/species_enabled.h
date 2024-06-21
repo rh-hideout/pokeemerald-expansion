@@ -605,5 +605,6 @@
 #define P_FAMILY_PECHARUNT               P_GEN_9_POKEMON
 #define P_FAMILY_ALT_ABSOL               P_GEN_9_POKEMON
 #define P_FAMILY_ALT_LAPRAS              P_GEN_9_POKEMON
+#define P_FAMILY_ALT_RALTS               P_GEN_9_POKEMON
 
 #endif // GUARD_CONFIG_SPECIES_ENABLED_H

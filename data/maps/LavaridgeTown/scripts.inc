@@ -245,7 +245,8 @@ LavaridgeTown_EventScript_EggWoman::
 	playfanfare MUS_OBTAIN_ITEM
 	message LavaridgeTown_Text_ReceivedTheEgg
 	waitfanfare
-	giveegg SPECIES_WYNAUT
+	specialvar VAR_RESULT, ChooseRandomEggSpecies
+	giveegg VAR_RESULT
 	release
 	end
 
