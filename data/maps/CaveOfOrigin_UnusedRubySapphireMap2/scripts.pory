@@ -1,0 +1,47 @@
+raw `
+CaveOfOrigin_UnusedRubySapphireMap2_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, CaveOfOrigin_UnusedRubySapphireMap2_OnResume
+	.byte 0
+
+CaveOfOrigin_UnusedRubySapphireMap2_OnResume:
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, CaveOfOrigin_UnusedRubySapphireMap2_EventScript_TryRemoveYveltal
+	end
+
+CaveOfOrigin_UnusedRubySapphireMap2_EventScript_TryRemoveYveltal::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+CaveOfOrigin_UnusedRubySapphireMap2_EventScript_Yveltal::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_YVELTAL, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_YVELTAL, 50
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, CaveOfOrigin_UnusedRubySapphireMap2_EventScript_DefeatedYveltal
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, CaveOfOrigin_UnusedRubySapphireMap2_EventScript_RanFromYveltal
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, CaveOfOrigin_UnusedRubySapphireMap2_EventScript_RanFromYveltal
+    setflag FLAG_DEFEATED_YVELTAL
+    release
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap2_EventScript_DefeatedYveltal::
+    setflag FLAG_DEFEATED_YVELTAL
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap2_EventScript_RanFromYveltal::
+    setvar VAR_0x8004, SPECIES_YVELTAL
+    goto Common_EventScript_LegendaryFlewAway
+    end
+`

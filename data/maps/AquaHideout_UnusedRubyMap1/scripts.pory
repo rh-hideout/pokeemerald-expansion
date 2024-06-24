@@ -1,0 +1,87 @@
+raw `
+AquaHideout_UnusedRubyMap1_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, AquaHideout_UnusedRubyMap1_OnResume
+	.byte 0
+
+AquaHideout_UnusedRubyMap1_OnResume:
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, AquaHideout_UnusedRubyMap1_EventScript_TryRemoveZapdos
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, AquaHideout_UnusedRubyMap1_EventScript_TryRemoveZapdos_Galarian
+	end
+
+AquaHideout_UnusedRubyMap1_EventScript_TryRemoveZapdos::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+AquaHideout_UnusedRubyMap1_EventScript_TryRemoveZapdos_Galarian::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+AquaHideout_UnusedRubyMap1_EventScript_Zapdos::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_ZAPDOS, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_ZAPDOS, 40
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, AquaHideout_UnusedRubyMap1_EventScript_DefeatedZapdos
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdos
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdos
+    setflag FLAG_DEFEATED_ZAPDOS
+    release
+    end
+
+
+AquaHideout_UnusedRubyMap1_EventScript_DefeatedZapdos::
+    setflag FLAG_DEFEATED_ZAPDOS
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdos::
+    setvar VAR_0x8004, SPECIES_ZAPDOS
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+AquaHideout_UnusedRubyMap1_EventScript_Zapdos_Galarian::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_ZAPDOS_GALARIAN, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_ZAPDOS_GALARIAN, 40
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, AquaHideout_UnusedRubyMap1_EventScript_DefeatedZapdosG
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdosG
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdosG
+    setflag FLAG_DEFEATED_ZAPDOS_GALARIAN
+    release
+    end
+
+
+AquaHideout_UnusedRubyMap1_EventScript_DefeatedZapdosG::
+    setflag FLAG_DEFEATED_ZAPDOS_GALARIAN
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdosG::
+    setvar VAR_0x8004, SPECIES_ZAPDOS_GALARIAN
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+`

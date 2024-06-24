@@ -1,0 +1,47 @@
+raw `
+CaveOfOrigin_UnusedRubySapphireMap3_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, CaveOfOrigin_UnusedRubySapphireMap3_OnResume
+	.byte 0
+
+CaveOfOrigin_UnusedRubySapphireMap3_OnResume:
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, CaveOfOrigin_UnusedRubySapphireMap3_EventScript_TryRemoveXerneas
+	end
+
+CaveOfOrigin_UnusedRubySapphireMap3_EventScript_TryRemoveXerneas::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+CaveOfOrigin_UnusedRubySapphireMap3_EventScript_Xerneas::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_XERNEAS, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_XERNEAS, 50
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, CaveOfOrigin_UnusedRubySapphireMap3_EventScript_DefeatedXerneas
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, CaveOfOrigin_UnusedRubySapphireMap3_EventScript_RanFromXerneas
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, CaveOfOrigin_UnusedRubySapphireMap3_EventScript_RanFromXerneas
+    setflag FLAG_DEFEATED_YVELTAL
+    release
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap3_EventScript_DefeatedXerneas::
+    setflag FLAG_DEFEATED_XERNEAS
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap3_EventScript_RanFromXerneas::
+    setvar VAR_0x8004, SPECIES_XERNEAS
+    goto Common_EventScript_LegendaryFlewAway
+    end
+`

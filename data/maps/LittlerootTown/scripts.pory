@@ -1038,3 +1038,12 @@ script LittlerootTown_EventScript_MegaHouseSign {
     msgbox ("Mega House")
     releaseall
 }
+
+script LittlerootTown_EventScript_AnnouncementSign {
+    lockall
+    msgbox(format("GRAND OPENING!!!\p"
+    "Experience the Joys of Mega Evolution.\p"
+    "Located just South of town! \p"
+    "Surf your way over for a free gift!"))
+    releaseall
+}

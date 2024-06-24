@@ -2061,6 +2061,16 @@ LittlerootTown_EventScript_MegaHouseSign::
 	return
 
 
+LittlerootTown_EventScript_AnnouncementSign::
+# 1043 "data/maps/LittlerootTown/scripts.pory"
+	lockall
+# 1044 "data/maps/LittlerootTown/scripts.pory"
+	msgbox LittlerootTown_EventScript_AnnouncementSign_Text_0
+# 1048 "data/maps/LittlerootTown/scripts.pory"
+	releaseall
+	return
+
+
 LittlerootTown_EventScript_EncounterSign_Text_0:
 # 1027 "data/maps/LittlerootTown/scripts.pory"
 	.string "Welcome to Starter Hideaway!\p"
@@ -2073,3 +2083,10 @@ LittlerootTown_EventScript_EncounterSign_Text_0:
 LittlerootTown_EventScript_MegaHouseSign_Text_0:
 # 1038 "data/maps/LittlerootTown/scripts.pory"
 	.string "Mega House$"
+
+LittlerootTown_EventScript_AnnouncementSign_Text_0:
+# 1044 "data/maps/LittlerootTown/scripts.pory"
+	.string "GRAND OPENING!!!\p"
+	.string "Experience the Joys of Mega Evolution.\p"
+	.string "Located just South of town!\p"
+	.string "Surf your way over for a free gift!$"

@@ -1,0 +1,87 @@
+raw `
+CaveOfOrigin_UnusedRubySapphireMap1_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, CaveOfOrigin_UnusedRubySapphireMap1_OnResume
+	.byte 0
+
+CaveOfOrigin_UnusedRubySapphireMap1_OnResume:
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_TryRemoveArticuno
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_TryRemoveArticuno_Galarian
+	end
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_TryRemoveArticuno::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_TryRemoveArticuno_Galarian::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_Articuno::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_ARTICUNO, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_ARTICUNO, 40
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_DefeatedArticuno
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticuno
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticuno
+    setflag FLAG_DEFEATED_ARTICUNO
+    release
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_DefeatedArticuno::
+    setflag FLAG_DEFEATED_ARTICUNO
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticuno::
+    setvar VAR_0x8004, SPECIES_ARTICUNO
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_Articuno_Galarian::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_ARTICUNO_GALARIAN, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_ARTICUNO_GALARIAN, 40
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_DefeatedArticunoG
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticunoG
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticunoG
+    setflag FLAG_DEFEATED_ARTICUNO_GALARIAN
+    release
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_DefeatedArticunoG::
+    setflag FLAG_DEFEATED_ARTICUNO_GALARIAN
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticunoG::
+    setvar VAR_0x8004, SPECIES_ARTICUNO_GALARIAN
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+`

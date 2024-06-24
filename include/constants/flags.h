@@ -456,8 +456,8 @@
 #define FLAG_REMATCH_DRAKE                   0x1A8
 #define FLAG_REMATCH_WALLACE                 0x1A9
 
-#define FLAG_UNUSED_0x1AA                    0x1AA // Unused Flag
-#define FLAG_UNUSED_0x1AB                    0x1AB // Unused Flag
+#define FLAG_DEFEATED_VICTINI                 0x1AA //was Unused Flag
+#define FLAG_DEFEATED_CELEBI                 0x1AB // was Unused Flag
 
 #define FLAG_DEFEATED_DEOXYS                 0x1AC
 #define FLAG_BATTLED_DEOXYS                  0x1AD
@@ -506,18 +506,18 @@
 #define FLAG_ENABLE_TATE_AND_LIZA_MATCH_CALL 0x1D8
 #define FLAG_ENABLE_JUAN_MATCH_CALL          0x1D9
 
-#define FLAG_UNUSED_0x1DA                    0x1DA // Unused Flag
+#define FLAG_DEFEATED_REGIGIGAS              0x1DA // was an Unused Flag
 
 #define FLAG_SHOWN_MYSTIC_TICKET             0x1DB
 #define FLAG_DEFEATED_HO_OH                  0x1DC
 #define FLAG_DEFEATED_LUGIA                  0x1DD
 
-#define FLAG_UNUSED_0x1DE                    0x1DE // Unused Flag
-#define FLAG_UNUSED_0x1DF                    0x1DF // Unused Flag
-#define FLAG_UNUSED_0x1E0                    0x1E0 // Unused Flag
-#define FLAG_UNUSED_0x1E1                    0x1E1 // Unused Flag
-#define FLAG_UNUSED_0x1E2                    0x1E2 // Unused Flag
-#define FLAG_UNUSED_0x1E3                    0x1E3 // Unused Flag
+#define FLAG_DEFEATED_REGIELEKI              0x1DE // was Unused Flag
+#define FLAG_DEFEATED_REGIDRAGO              0x1DF // was Unused Flag
+#define FLAG_DEFEATED_MOLTRES                0x1E0 // was Unused Flag
+#define FLAG_DEFEATED_MOLTRES_GALARIAN       0x1E1 // was Unused Flag
+#define FLAG_DEFEATED_MEWTWO                 0x1E2 // was Unused Flag
+#define FLAG_DEFEATED_ARCEUS                 0x1E3 // was Unused Flag
 
 // Mystery Gift Flags (Unknown)
 #define FLAG_MYSTERY_GIFT_DONE               0x1E4
@@ -720,26 +720,26 @@
 #define FLAG_UNUSED_0x2A5  0x2A5 // Unused Flag
 #define FLAG_UNUSED_0x2A6  0x2A6 // Unused Flag
 #define FLAG_UNUSED_0x2A7  0x2A7 // Unused Flag
-#define FLAG_UNUSED_0x2A8  0x2A8 // Unused Flag
-#define FLAG_UNUSED_0x2A9  0x2A9 // Unused Flag
-#define FLAG_UNUSED_0x2AA  0x2AA // Unused Flag
-#define FLAG_UNUSED_0x2AB  0x2AB // Unused Flag
-#define FLAG_UNUSED_0x2AC  0x2AC // Unused Flag
-#define FLAG_UNUSED_0x2AD  0x2AD // Unused Flag
-#define FLAG_UNUSED_0x2AE  0x2AE // Unused Flag
-#define FLAG_UNUSED_0x2AF  0x2AF // Unused Flag
-#define FLAG_UNUSED_0x2B0  0x2B0 // Unused Flag
-#define FLAG_UNUSED_0x2B1  0x2B1 // Unused Flag
-#define FLAG_UNUSED_0x2B2  0x2B2 // Unused Flag
-#define FLAG_UNUSED_0x2B3  0x2B3 // Unused Flag
-#define FLAG_UNUSED_0x2B4  0x2B4 // Unused Flag
-#define FLAG_UNUSED_0x2B5  0x2B5 // Unused Flag
-#define FLAG_UNUSED_0x2B6  0x2B6 // Unused Flag
-#define FLAG_UNUSED_0x2B7  0x2B7 // Unused Flag
-#define FLAG_UNUSED_0x2B8  0x2B8 // Unused Flag
-#define FLAG_UNUSED_0x2B9  0x2B9 // Unused Flag
-#define FLAG_UNUSED_0x2BA  0x2BA // Unused Flag
-#define FLAG_UNUSED_0x2BB  0x2BB // Unused Flag
+#define FLAG_HIDE_ZAPDOS_GALARIAN 0x2A8 // was Unused Flag
+#define FLAG_DEFEATED_ZAPDOS_GALARIAN 0x2A9 // was Unused Flag
+#define FLAG_HIDE_ZAPDOS  0x2AA // was Unused Flag
+#define FLAG_DEFEATED_ZAPDOS 0x2AB // was Unused Flag
+#define FLAG_HIDE_XERNEAS 0x2AC // was Unused Flag
+#define FLAG_DEFEATED_XERNEAS  0x2AD // was Unused Flag
+#define FLAG_HIDE_YVELTAL  0x2AE // was Unused Flag
+#define FLAG_DEFEATED_YVELTAL  0x2AF // was Unused Flag
+#define FLAG_HIDE_ARTICUNO_GALARIAN  0x2B0 // was Unused Flag
+#define FLAG_HIDE_ARTICUNO  0x2B1 // was Unused Flag
+#define FLAG_DEFEATED_ARTICUNO_GALARIAN  0x2B2 // was Unused Flag
+#define FLAG_DEFEATED_ARTICUNO  0x2B3 // was Unused Flag
+#define FLAG_HIDE_VICTINI  0x2B4 // was Unused Flag
+#define FLAG_HIDE_CELEBI  0x2B5 // was Unused Flag
+#define FLAG_HIDE_ARCEUS  0x2B6 // was Unused Flag
+#define FLAG_HIDE_MEWTWO  0x2B7 // was Unused Flag
+#define FLAG_HIDE_MOLTRES_GALARIAN  0x2B8 // was Unused Flag
+#define FLAG_HIDE_MOLTRES  0x2B9 // was Unused Flag
+#define FLAG_HIDE_REGIDRAGO  0x2BA // was Unused Flag
+#define FLAG_HIDE_REGIGIELEKI  0x2BB // was Unused Flag
 
 // Event Flags
 #define FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG                      0x2BC
@@ -772,7 +772,7 @@
 #define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_INVISIBLE_NINJA_BOY   0x2D7
 #define FLAG_HIDE_PETALBURG_CITY_WALLYS_MOM                         0x2D8
 
-#define FLAG_UNUSED_0x2D9                                           0x2D9 // Unused Flag
+#define FLAG_HIDE_REGIGIGAS                                         0x2D9 // Was Unused Flag
 
 #define FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER                     0x2DA
 #define FLAG_HIDE_RUSTBORO_CITY_AQUA_GRUNT                          0x2DB
