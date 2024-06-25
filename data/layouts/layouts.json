@@ -1335,7 +1335,7 @@
       "id": "LAYOUT_GRANITE_CAVE_B2F",
       "name": "GraniteCave_B2F_Layout",
       "width": 32,
-      "height": 26,
+      "height": 27,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Cave",
       "border_filepath": "data/layouts/GraniteCave_B2F/border.bin",
@@ -4460,6 +4460,16 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/ZHouse/border.bin",
       "blockdata_filepath": "data/layouts/ZHouse/map.bin"
+    },
+    {
+      "id": "LAYOUT_BLACK_MARKET",
+      "name": "Black_Market_Layout",
+      "width": 15,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Shop",
+      "border_filepath": "data/layouts/Black_Market/border.bin",
+      "blockdata_filepath": "data/layouts/Black_Market/map.bin"
     }
   ]
 }

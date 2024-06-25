@@ -1,0 +1,87 @@
+raw `
+AquaHideout_UnusedRubyMap2_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, AquaHideout_UnusedRubyMap2_OnResume
+	.byte 0
+
+AquaHideout_UnusedRubyMap2_OnResume:
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, AquaHideout_UnusedRubyMap2_EventScript_TryRemoveMagearna
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, AquaHideout_UnusedRubyMap2_EventScript_TryRemoveMagearna_Original_Color
+	end
+
+AquaHideout_UnusedRubyMap2_EventScript_TryRemoveMagearna::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+AquaHideout_UnusedRubyMap2_EventScript_TryRemoveMagearna_Original_Color::
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	removeobject VAR_LAST_TALKED
+	return
+
+AquaHideout_UnusedRubyMap2_EventScript_Magearna::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_MAGEARNA, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_MAGEARNA, 20
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearna
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearna
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearna
+    setflag FLAG_DEFEATED_MAGEARNA
+    release
+    end
+
+
+AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearna::
+    setflag FLAG_DEFEATED_MAGEARNA
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearna::
+    setvar VAR_0x8004, SPECIES_MAGEARNA
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+AquaHideout_UnusedRubyMap2_EventScript_Magearna_Original_Color::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_MAGEARNA_ORIGINAL_COLOR, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_MAGEARNA_ORIGINAL_COLOR, 20
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearnao
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearnao
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearnao
+    setflag FLAG_DEFEATED_MAGEARNA_ORIGINAL_COLOR
+    release
+    end
+
+
+AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearnao::
+    setflag FLAG_DEFEATED_MAGEARNA_ORIGINAL_COLOR
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearnao::
+    setvar VAR_0x8004, SPECIES_MAGEARNA_ORIGINAL_COLOR
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+`

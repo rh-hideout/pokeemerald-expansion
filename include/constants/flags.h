@@ -714,12 +714,12 @@
 #define FLAG_UNUSED_0x29F  0x29F // Unused Flag
 #define FLAG_UNUSED_0x2A0  0x2A0 // Unused Flag
 #define FLAG_UNUSED_0x2A1  0x2A1 // Unused Flag
-#define FLAG_UNUSED_0x2A2  0x2A2 // Unused Flag
-#define FLAG_UNUSED_0x2A3  0x2A3 // Unused Flag
-#define FLAG_UNUSED_0x2A4  0x2A4 // Unused Flag
-#define FLAG_UNUSED_0x2A5  0x2A5 // Unused Flag
-#define FLAG_UNUSED_0x2A6  0x2A6 // Unused Flag
-#define FLAG_UNUSED_0x2A7  0x2A7 // Unused Flag
+#define FLAG_DEFEATED_GENESECT  0x2A2 // was Unused Flag
+#define FLAG_HIDE_GENESECT 0x2A3 // was Unused Flag
+#define FLAG_DEFEATED_MAGEARNA_ORIGINAL_COLOR  0x2A4 // was Unused Flag
+#define FLAG_HIDE_MAGEARNA_ORIGINAL_COLOR  0x2A5 // was Unused Flag
+#define FLAG_DEFEATED_MAGEARNA 0x2A6 // was Unused Flag
+#define FLAG_HIDE_MAGEARNA  0x2A7 // was Unused Flag
 #define FLAG_HIDE_ZAPDOS_GALARIAN 0x2A8 // was Unused Flag
 #define FLAG_DEFEATED_ZAPDOS_GALARIAN 0x2A9 // was Unused Flag
 #define FLAG_HIDE_ZAPDOS  0x2AA // was Unused Flag

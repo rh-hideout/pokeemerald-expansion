@@ -1100,3 +1100,5 @@ EventScript_End:
 	.include "data/maps/UnownCavernB1F/scripts.inc"
 
 	.include "data/maps/ZHouse/scripts.inc"
+
+	.include "data/maps/Black_Market/scripts.inc"

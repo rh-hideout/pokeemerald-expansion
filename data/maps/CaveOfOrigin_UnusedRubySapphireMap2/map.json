@@ -5,7 +5,7 @@
   "music": "MUS_CAVE_OF_ORIGIN",
   "region_map_section": "MAPSEC_CAVE_OF_ORIGIN",
   "requires_flash": true,
-  "weather": "WEATHER_FOG_HORIZONTAL",
+  "weather": "WEATHER_FOG_DIAGONAL",
   "map_type": "MAP_TYPE_UNDERGROUND",
   "allow_cycling": true,
   "allow_escaping": true,

@@ -14,15 +14,326 @@
   "battle_scene": "MAP_BATTLE_SCENE_MAGMA",
   "connections": 0,
   "object_events": [
-
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 12,
+      "y": 16,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "AquaHideout_UnusedRubyMap2_EventScript_Magearna",
+      "flag": "FLAG_HIDE_MAGEARNA"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 27,
+      "y": 10,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "AquaHideout_UnusedRubyMap2_EventScript_Magearna_Original_Color",
+      "flag": "FLAG_HIDE_MAGEARNA_ORIGINAL_COLOR"
+    }
   ],
   "warp_events": [
-
+    {
+      "x": 14,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_GRANITE_CAVE_B2F",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 21,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 14,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 43,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 41,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 38,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 16,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 21,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "8"
+    },
+    {
+      "x": 39,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "7"
+    },
+    {
+      "x": 29,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP3",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP3",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "12"
+    },
+    {
+      "x": 10,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 5,
+      "y": 12,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 5,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "15"
+    },
+    {
+      "x": 8,
+      "y": 12,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "14"
+    },
+    {
+      "x": 2,
+      "y": 12,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "17"
+    },
+    {
+      "x": 5,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "16"
+    },
+    {
+      "x": 8,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 2,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "20"
+    },
+    {
+      "x": 53,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "19"
+    },
+    {
+      "x": 59,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "22"
+    },
+    {
+      "x": 56,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "21"
+    },
+    {
+      "x": 53,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "24"
+    },
+    {
+      "x": 56,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "23"
+    },
+    {
+      "x": 59,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "26"
+    },
+    {
+      "x": 56,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "25"
+    },
+    {
+      "x": 53,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP3",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 59,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 56,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "30"
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "12"
+    },
+    {
+      "x": 53,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "32"
+    },
+    {
+      "x": 8,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "13"
+    },
+    {
+      "x": 34,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP3",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 59,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "35"
+    },
+    {
+      "x": 23,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 56,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "37"
+    },
+    {
+      "x": 2,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "38"
+    },
+    {
+      "x": 8,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 23,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_BLACK_MARKET",
+      "dest_warp_id": "0"
+    }
   ],
   "coord_events": [
 
   ],
   "bg_events": [
-
+    {
+      "type": "sign",
+      "x": 21,
+      "y": 2,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "NULL"
+    }
   ]
 }
