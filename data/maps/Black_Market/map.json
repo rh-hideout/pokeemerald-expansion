@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Script_Black_Market_BALL_ITEM_EMPLOYEE",
       "flag": "0"
     },
     {
@@ -184,7 +184,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL"
+      "script": "Black_Market_EventScript_Sign"
     }
   ]
 }
