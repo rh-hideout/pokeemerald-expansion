@@ -15017,7 +15017,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
     [MOVE_FLORAL_HEALING] =
     {
-        .name = HANDLE_EXPANDED_MOVE_NAME("FloralHealng", "Floral Healng"),
+        .name = HANDLE_EXPANDED_MOVE_NAME("FloralHealng", "Floral Healing"),
         .description = COMPOUND_STRING(
             "Restores an ally's HP.\n"
             "Heals more on grass."),
@@ -17350,7 +17350,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Deals better of physical and\n"
             "special damage. May poison."),
-        .effect = EFFECT_SHELL_SIDE_ARM,
+        .effect = EFFECT_HIT, // The effect is hardcoded to the move since SetShellSideArmCategory() can't be used with anything but Shell Side Arm because of the BP requirement
         .power = 90,
         .type = TYPE_POISON,
         .accuracy = 100,
@@ -17678,7 +17678,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
     [MOVE_JUNGLE_HEALING] =
     {
-        .name = HANDLE_EXPANDED_MOVE_NAME("JungleHealng", "Jungle Healng"),
+        .name = HANDLE_EXPANDED_MOVE_NAME("JungleHealng", "Jungle Healing"),
         .description = COMPOUND_STRING(
             "Heals HP and status of\n"
             "itself and allies in battle."),
@@ -20164,7 +20164,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     },
     [MOVE_OCEANIC_OPERETTA] =
     {
-        .name = COMPOUND_STRING("Oceaning Operetta"),
+        .name = COMPOUND_STRING("Oceanic Operetta"),
         .description = sNullDescription,
         .effect = EFFECT_HIT,
         .power = 195,

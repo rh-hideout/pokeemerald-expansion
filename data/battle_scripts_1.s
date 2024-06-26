@@ -719,10 +719,6 @@ BattleScript_FlingMissed:
 	ppreduce
 	goto BattleScript_MoveMissedPause
 
-BattleScript_EffectShellSideArm::
-	shellsidearmcheck
-	goto BattleScript_EffectHit
-
 BattleScript_EffectPhotonGeyser::
 	setphotongeysercategory
 	goto BattleScript_EffectHit
@@ -5411,7 +5407,7 @@ BattleScript_GiveExp::
 
 BattleScript_HandleFaintedMon::
 	setbyte sSHIFT_SWITCHED, 0
-	checkteamslost BattleScript_LinkHandleFaintedMonMultiple
+	checkteamslost BattleScript_HandleFaintedMonMultiple
 	jumpifbyte CMP_NOT_EQUAL, gBattleOutcome, 0, BattleScript_FaintedMonEnd
 	jumpifbattletype BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE, BattleScript_FaintedMonTryChoose
 	jumpifword CMP_NO_COMMON_BITS, gHitMarker, HITMARKER_PLAYER_FAINTED, BattleScript_FaintedMonTryChoose
@@ -5492,13 +5488,13 @@ BattleScript_FaintedMonShiftSwitched:
 	copybyte gBattlerTarget, sSAVED_BATTLER
 	goto BattleScript_FaintedMonSendOutNewEnd
 
-BattleScript_LinkHandleFaintedMonMultiple::
-	openpartyscreen BS_FAINTED_LINK_MULTIPLE_1, BattleScript_LinkHandleFaintedMonMultipleStart
-BattleScript_LinkHandleFaintedMonMultipleStart::
+BattleScript_HandleFaintedMonMultiple::
+	openpartyscreen BS_FAINTED_MULTIPLE_1, BattleScript_HandleFaintedMonMultipleStart
+BattleScript_HandleFaintedMonMultipleStart::
 	switchhandleorder BS_FAINTED, 0
-	openpartyscreen BS_FAINTED_LINK_MULTIPLE_2, BattleScript_LinkHandleFaintedMonMultipleEnd
+	openpartyscreen BS_FAINTED_MULTIPLE_2, BattleScript_HandleFaintedMonMultipleEnd
 	switchhandleorder BS_FAINTED, 0
-BattleScript_LinkHandleFaintedMonLoop::
+BattleScript_HandleFaintedMonLoop::
 	switchhandleorder BS_FAINTED, 3
 	drawpartystatussummary BS_FAINTED
 	getswitchedmondata BS_FAINTED
@@ -5510,9 +5506,10 @@ BattleScript_LinkHandleFaintedMonLoop::
 	hidepartystatussummary BS_FAINTED
 	switchinanim BS_FAINTED, FALSE
 	waitstate
-	switchineffects BS_FAINTED_LINK_MULTIPLE_1
-	jumpifbytenotequal gBattlerFainted, gBattlersCount, BattleScript_LinkHandleFaintedMonLoop
-BattleScript_LinkHandleFaintedMonMultipleEnd::
+	switchineffects BS_FAINTED_MULTIPLE_1
+	jumpifbytenotequal gBattlerFainted, gBattlersCount, BattleScript_HandleFaintedMonLoop
+BattleScript_HandleFaintedMonMultipleEnd::
+	switchineffects BS_FAINTED_MULTIPLE_2
 	end2
 
 BattleScript_LocalTrainerBattleWon::
@@ -5743,6 +5740,7 @@ BattleScript_DoSwitchOut::
 
 BattleScript_PursuitDmgOnSwitchOut::
 	pause B_WAIT_TIME_SHORT
+	orword gHitMarker, HITMARKER_OBEYS
 	attackstring
 	ppreduce
 	critcalc
@@ -5760,11 +5758,12 @@ BattleScript_PursuitDmgOnSwitchOut::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_TARGET
-	moveendfromto MOVEEND_ABILITIES, MOVEEND_CHOICE_MOVE
+	moveendfromto MOVEEND_ABILITIES, MOVEEND_ATTACKER_INVISIBLE @ MOVEEND_CHOICE_MOVE has to be included
 	jumpiffainted BS_TARGET, FALSE, BattleScript_PursuitDmgOnSwitchOutRet
 	setbyte sGIVEEXP_STATE, 0
 	getexp BS_TARGET
 BattleScript_PursuitDmgOnSwitchOutRet:
+	bicword gHitMarker, HITMARKER_OBEYS
 	return
 
 BattleScript_Pausex20::
@@ -8341,7 +8340,7 @@ BattleScript_ScriptingAbilityStatRaise::
 	call BattleScript_AbilityPopUp
 	copybyte sSAVED_DMG, gBattlerAttacker
 	copybyte gBattlerAttacker, sBATTLER
-	statbuffchange STAT_CHANGE_NOT_PROTECT_AFFECTED | MOVE_EFFECT_CERTAIN, NULL
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_NOT_PROTECT_AFFECTED | MOVE_EFFECT_CERTAIN, NULL
 	setgraphicalstatchangevalues
 	playanimation BS_SCRIPTING, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	waitanimation
