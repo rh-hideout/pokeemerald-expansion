@@ -27,7 +27,7 @@ Script_Black_Market_BALL_ITEM_EMPLOYEE::
 # 18 "data/maps/Black_Market/scripts.pory"
     waitmessage
 # 19 "data/maps/Black_Market/scripts.pory"
-    pokemart BM_BALL_ITEMS, 1
+    pokemart BM_BALL_ITEMS
 # 20 "data/maps/Black_Market/scripts.pory"
     msgbox Text_BMBALLEND
 # 21 "data/maps/Black_Market/scripts.pory"
@@ -41,57 +41,57 @@ Script_Black_Market_BALL_ITEM_EMPLOYEE::
 # 25 "data/maps/Black_Market/scripts.pory"
 BM_BALL_ITEMS:
 # 26 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_MASTER_BALL, 80000
+    .2byte ITEM_MASTER_BALL
 # 27 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_SAFARI_BALL, 300
+    .2byte ITEM_SAFARI_BALL
 # 28 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_CHERISH_BALL, 3000
+    .2byte ITEM_CHERISH_BALL
 # 29 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_LUXURY_BALL, 800
+    .2byte ITEM_LUXURY_BALL
 # 30 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_ABILITY_CAPSULE, 8000
+    .2byte ITEM_ABILITY_CAPSULE
 # 31 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_ABILITY_PATCH, 10000
+    .2byte ITEM_ABILITY_PATCH
 # 32 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_LURE, 400
+    .2byte ITEM_LURE
 # 33 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_SUPER_LURE, 700
+    .2byte ITEM_SUPER_LURE
 # 34 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_MAX_LURE, 900
+    .2byte ITEM_MAX_LURE
 # 35 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_HEART_SCALE, 500
+    .2byte ITEM_HEART_SCALE
 # 36 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_EVERSTONE, 3000
+    .2byte ITEM_EVERSTONE
 # 37 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_DOUSE_DRIVE, 1000
+    .2byte ITEM_DOUSE_DRIVE
 # 38 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_SHOCK_DRIVE, 1000
+    .2byte ITEM_SHOCK_DRIVE
 # 39 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_BURN_DRIVE, 1000
+    .2byte ITEM_BURN_DRIVE
 # 40 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_CHILL_DRIVE, 1000
+    .2byte ITEM_CHILL_DRIVE
 # 41 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_CHOICE_BAND, 8000
+    .2byte ITEM_CHOICE_BAND
 # 42 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_CHOICE_SPECS, 8000
+    .2byte ITEM_CHOICE_SPECS
 # 43 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_CHOICE_SCARF, 8000
+    .2byte ITEM_CHOICE_SCARF
 # 44 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_FLAME_ORB, 5000
+    .2byte ITEM_FLAME_ORB
 # 45 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_TOXIC_ORB, 5000
+    .2byte ITEM_TOXIC_ORB
 # 46 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_EXP_SHARE, 8000
+    .2byte ITEM_EXP_SHARE
 # 47 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_AMULET_COIN, 8000
+    .2byte ITEM_AMULET_COIN
 # 48 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_LUCKY_EGG, 8000
+    .2byte ITEM_LUCKY_EGG
 # 49 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_DESTINY_KNOT, 3000
+    .2byte ITEM_DESTINY_KNOT
 # 50 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_EVIOLITE, 8000
+    .2byte ITEM_EVIOLITE
 # 51 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_BERSERK_GENE, 5000
+    .2byte ITEM_BERSERK_GENE
 # 52 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_NONE
 # 53 "data/maps/Black_Market/scripts.pory"
