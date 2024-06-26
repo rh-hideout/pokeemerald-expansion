@@ -1149,10 +1149,10 @@
 
 	@ Opens the Pokemart system, offering the specified products for sale.
 	@ Products should be a list of .2byte item values preceded by an .align 2
-	.macro pokemart products:req, variable_prices=0
+	.macro pokemart products:req, useVariablePrices=FALSE
 	.byte 0x86
 	.4byte \products
-	.2byte \variable_prices
+	.2byte \useVariablePrices
 	.endm
 
 	@ Opens the Pokemart system and treats the list of items as decorations.
