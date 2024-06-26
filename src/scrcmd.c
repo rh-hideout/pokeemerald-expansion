@@ -1991,12 +1991,16 @@ bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 bool8 ScrCmd_pokemart(struct ScriptContext *ctx)
 {
     const void *ptr = (void *)ScriptReadWord(ctx);
-    u16 is_variable_mart = ScriptReadHalfword(ctx);
+    bool16 useVariablePrices = ScriptReadHalfword(ctx);
 
-    if(!is_variable_mart)
-        CreatePokemartMenu(ptr);
+    if (useVariablePrices)
+    {
+        NewShop_CreateVariablePokemartMenu(ptr);
+    }
     else
-        CreateVariablePokemartMenu(ptr);
+    {
+        NewShop_CreatePokemartMenu(ptr);
+    }
 
     ScriptContext_Stop();
     return TRUE;
