@@ -99,7 +99,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
                 block = block->next;
             }
             while (block != head);
-            Test_ExitWithResult(TEST_RESULT_ERROR, "%s: OOM allocating %d bytes", location, size);
+            Test_ExitWithResult(TEST_RESULT_ERROR, ":L%s: OOM allocating %d bytes", location, size);
 #endif
             return NULL;
         }

@@ -179,6 +179,7 @@ top:
         }
 
         MgbaPrintf_(":N%s", gTestRunnerState.test->name);
+        MgbaPrintf_(":L%s", gTestRunnerState.test->filename);
         gTestRunnerState.result = TEST_RESULT_PASS;
         gTestRunnerState.expectedResult = TEST_RESULT_PASS;
         gTestRunnerState.expectLeaks = FALSE;
