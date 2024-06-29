@@ -3420,7 +3420,11 @@ bool32 IsRecycleEncouragedItem(u32 item)
 static void IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statId, s32 *score, bool32 considerContrary)
 {
     u32 noOfHitsToFaint = NoOfHitsForTargetToFaintAI(battlerDef, battlerAtk);
-    u32 aiIsFaster = GetWhichBattlerFaster(battlerAtk, battlerDef, TRUE) == AI_IS_FASTER;
+    u32 aiIsFaster = GetWhichBattlerFasterArgs(battlerAtk, battlerDef, TRUE,
+                                              AI_DATA->abilities[battlerAtk], AI_DATA->abilities[battlerDef],
+                                              AI_DATA->holdEffects[battlerAtk], AI_DATA->holdEffects[battlerDef],
+                                              AI_DATA->speedStats[battlerAtk], AI_DATA->speedStats[battlerDef],
+                                              0, 0) == AI_IS_FASTER;
     u32 shouldSetUp = ((noOfHitsToFaint >= 2 && aiIsFaster) || (noOfHitsToFaint >= 3 && !aiIsFaster) || noOfHitsToFaint == UNKNOWN_NO_OF_HITS);
 
     if (considerContrary && AI_DATA->abilities[battlerAtk] == ABILITY_CONTRARY)

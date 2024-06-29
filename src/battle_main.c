@@ -5072,7 +5072,7 @@ s8 GetMovePriority(u32 battler, u16 move)
 s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMoves, u32 ability1, u32 ability2,
                               u32 holdEffectBattler1, u32 holdEffectBattler2, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2)
 {
-    u32 strikesFirst = 0;
+    s32 strikesFirst = 0;
 
     if (priority1 == priority2)
     {
@@ -5098,26 +5098,12 @@ s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMov
             strikesFirst = 1;
         else
         {
-            if (speedBattler1 == speedBattler2 && Random() & 1)
-            {
-                strikesFirst = 0; // same speeds, same priorities
-            }
+            if (speedBattler1 > speedBattler2)
+                strikesFirst = 1;
             else if (speedBattler1 < speedBattler2)
-            {
-                // battler2 has more speed
-                if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
-                    strikesFirst = 1;
-                else
-                    strikesFirst = -1;
-            }
-            else
-            {
-                // battler1 has more speed
-                if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
-                    strikesFirst = -1;
-                else
-                    strikesFirst = 1;
-            }
+                strikesFirst = -1;
+            if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
+                strikesFirst = -strikesFirst;
         }
     }
     else if (priority1 < priority2)
@@ -5140,6 +5126,7 @@ s32 GetWhichBattlerFaster(u32 battler1, u32 battler2, bool32 ignoreChosenMoves)
     u32 speedBattler2 = GetBattlerTotalSpeedStat(battler2);
     u32 holdEffectBattler2 = GetBattlerHoldEffect(battler2, TRUE);
     u32 ability2 = GetBattlerAbility(battler2);
+    s32 whichFaster;
 
     if (!ignoreChosenMoves)
     {
@@ -5149,8 +5136,18 @@ s32 GetWhichBattlerFaster(u32 battler1, u32 battler2, bool32 ignoreChosenMoves)
             priority2 = GetChosenMovePriority(battler2);
     }
 
-    return GetWhichBattlerFasterArgs(battler1, battler2, ignoreChosenMoves, ability1, ability2,
+    whichFaster = GetWhichBattlerFasterArgs(battler1, battler2, ignoreChosenMoves, ability1, ability2,
                                      holdEffectBattler1, holdEffectBattler2, speedBattler1, speedBattler2, priority1, priority2);
+
+    if (whichFaster == 0)
+    {
+        if (RandomWeighted(RNG_SPEED_TIE, 1, 1))
+            whichFaster = 1;
+        else
+            whichFaster = -1;
+    }
+
+    return whichFaster;
 }
 
 static void SetActionsAndBattlersTurnOrder(void)
