@@ -54,33 +54,31 @@ struct PaletteFadeControl
 
 extern struct PaletteFadeControl gPaletteFade;
 extern u32 gPlttBufferTransferPending;
-extern u8 ALIGNED(4) gPaletteDecompressionBuffer[];
 extern u16 ALIGNED(4) gPlttBufferUnfaded[PLTT_BUFFER_SIZE];
 extern u16 ALIGNED(4) gPlttBufferFaded[PLTT_BUFFER_SIZE];
 
-void LoadCompressedPalette(const u32 *src, u16 offset, u16 size);
-void LoadPalette(const void *src, u16 offset, u16 size);
-void FillPalette(u16 value, u16 offset, u16 size);
+void LoadCompressedPalette(const u32 *src, u32 offset, u32 size);
+void LoadPalette(const void *src, u32 offset, u32 size);
+void FillPalette(u32 value, u32 offset, u32 size);
 void TransferPlttBuffer(void);
-u8 UpdatePaletteFade(void);
+u32 UpdatePaletteFade(void);
 void ResetPaletteFade(void);
-bool8 BeginNormalPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, u16 blendColor);
-void PaletteStruct_ResetById(u16 id);
+bool32 BeginNormalPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, u32 blendColor);
 void ResetPaletteFadeControl(void);
 void InvertPlttBuffer(u32 selectedPalettes);
 void TintPlttBuffer(u32 selectedPalettes, s8 r, s8 g, s8 b);
 void UnfadePlttBuffer(u32 selectedPalettes);
-void BeginFastPaletteFade(u8 submode);
-void BeginHardwarePaletteFade(u8 blendCnt, u8 delay, u8 y, u8 targetY, u8 shouldResetBlendRegisters);
-void BlendPalettes(u32 selectedPalettes, u8 coeff, u16 color);
-void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u16 color);
+void BeginFastPaletteFade(u32 submode);
+void BeginHardwarePaletteFade(u32 blendCnt, u32 delay, u32 y, u32 targetY, u32 shouldResetBlendRegisters);
+void BlendPalettes(u32 selectedPalettes, u8 coeff, u32 color);
+void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 color);
 void BlendPalettesGradually(u32 selectedPalettes, s8 delay, u8 coeff, u8 coeffTarget, u16 color, u8 priority, u8 id);
-void TintPalette_GrayScale(u16 *palette, u16 count);
-void TintPalette_GrayScale2(u16 *palette, u16 count);
-void TintPalette_SepiaTone(u16 *palette, u16 count);
-void TintPalette_CustomTone(u16 *palette, u16 count, u16 rTone, u16 gTone, u16 bTone);
+void TintPalette_GrayScale(u16 *palette, u32 count);
+void TintPalette_GrayScale2(u16 *palette, u32 count);
+void TintPalette_SepiaTone(u16 *palette, u32 count);
+void TintPalette_CustomTone(u16 *palette, u32 count, u16 rTone, u16 gTone, u16 bTone);
 
-static inline void SetBackdropFromColor(u16 color)
+static inline void SetBackdropFromColor(u32 color)
 {
   FillPalette(color, 0, PLTT_SIZEOF(1));
 }
