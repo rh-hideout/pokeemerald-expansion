@@ -34,7 +34,7 @@ void ActivateTera(u32 battler)
     {
         FlagClear(B_FLAG_TERA_ORB_CHARGED);
     }
-    
+
     // Execute battle script.
     PREPARE_TYPE_BUFFER(gBattleTextBuff1, GetBattlerTeraType(battler));
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_TERASTALLIZATION))
@@ -67,13 +67,11 @@ bool32 CanTerastallize(u32 battler)
     if (!TESTING && !CheckBagHasItem(ITEM_TERA_ORB, 1))
         return FALSE;
 
-    if (!TESTING 
-     && !(B_FLAG_TERA_ORB_NO_COST != 0 && FlagGet(B_FLAG_TERA_ORB_NO_COST))
+    if (!TESTING
+     && FlagGet(B_FLAG_TERA_ORB_CHARGED) == FALSE
+     && FlagGet(B_FLAG_TERA_ORB_NO_COST) == FALSE
      && (battler == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT)))
-    {
-        if (B_FLAG_TERA_ORB_CHARGED != 0 && !FlagGet(B_FLAG_TERA_ORB_CHARGED))
-            return FALSE;
-    }
+        return FALSE;
 
     // Check if Trainer has already Terastallized.
     if (HasTrainerUsedGimmick(battler, GIMMICK_TERA))

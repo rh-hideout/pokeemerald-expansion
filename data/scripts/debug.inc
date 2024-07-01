@@ -138,14 +138,18 @@ Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
+	setflag FLAG_UNUSED_0x020
+	setflag FLAG_UNUSED_0x021
 	release
 	end
 
 Debug_EventScript_Script_2::
+	clearflag FLAG_UNUSED_0x020
 	release
 	end
 
 Debug_EventScript_Script_3::
+	clearflag FLAG_UNUSED_0x021
 	release
 	end
 
