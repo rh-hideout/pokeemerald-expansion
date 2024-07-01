@@ -17,6 +17,7 @@
 #include "battle_gimmick.h"
 #include "berry.h"
 #include "bg.h"
+#include "compatibility.h"
 #include "data.h"
 #include "debug.h"
 #include "decompress.h"
@@ -827,8 +828,8 @@ static void FindLinkBattleMaster(u8 numPlayers, u8 multiPlayerId)
 
 static void CB2_HandleStartBattle(void)
 {
-    u8 playerMultiplayerId;
-    u8 enemyMultiplayerId;
+    u32 playerMultiplayerId;
+    u32 enemyMultiplayerId;
 
     RunTasks();
     AnimateSprites();
@@ -911,7 +912,7 @@ static void CB2_HandleStartBattle(void)
         if (IsLinkTaskFinished())
         {
             // Send Pokémon 1-2
-            SendBlock(BitmaskAllOtherLinkPlayers(), gPlayerParty, sizeof(struct Pokemon) * 2);
+            SendExpansionMonsToVanilla(&gPlayerParty[0], SEND_BATTLE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -920,7 +921,7 @@ static void CB2_HandleStartBattle(void)
         {
             // Recv Pokémon 1-2
             ResetBlockReceivedFlags();
-            memcpy(gEnemyParty, gBlockRecvBuffer[enemyMultiplayerId], sizeof(struct Pokemon) * 2);
+            ReceiveVanillaMons(&gEnemyParty[0], gBlockRecvBuffer[enemyMultiplayerId], SEND_BATTLE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -928,7 +929,7 @@ static void CB2_HandleStartBattle(void)
         if (IsLinkTaskFinished())
         {
             // Send Pokémon 3-4
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gPlayerParty[2], sizeof(struct Pokemon) * 2);
+            SendExpansionMonsToVanilla(&gPlayerParty[2], SEND_BATTLE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -937,7 +938,7 @@ static void CB2_HandleStartBattle(void)
         {
             // Recv Pokémon 3-4
             ResetBlockReceivedFlags();
-            memcpy(&gEnemyParty[2], gBlockRecvBuffer[enemyMultiplayerId], sizeof(struct Pokemon) * 2);
+            ReceiveVanillaMons(&gEnemyParty[2], gBlockRecvBuffer[enemyMultiplayerId], SEND_BATTLE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -945,7 +946,7 @@ static void CB2_HandleStartBattle(void)
         if (IsLinkTaskFinished())
         {
             // Send Pokémon 5-6
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gPlayerParty[4], sizeof(struct Pokemon) * 2);
+            SendExpansionMonsToVanilla(&gPlayerParty[4], SEND_BATTLE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -954,7 +955,7 @@ static void CB2_HandleStartBattle(void)
         {
             // Recv Pokémon 5-6
             ResetBlockReceivedFlags();
-            memcpy(&gEnemyParty[4], gBlockRecvBuffer[enemyMultiplayerId], sizeof(struct Pokemon) * 2);
+            ReceiveVanillaMons(&gEnemyParty[4], gBlockRecvBuffer[enemyMultiplayerId], SEND_BATTLE);
 
             TryCorrectShedinjaLanguage(&gEnemyParty[0]);
             TryCorrectShedinjaLanguage(&gEnemyParty[1]);

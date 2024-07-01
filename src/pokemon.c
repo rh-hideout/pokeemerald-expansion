@@ -6926,7 +6926,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
         if (daysSinceFormChange == 0)
         {
             u16 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DAYS_PASSED, 0);
-            
+
             if (targetSpecies != SPECIES_NONE)
             {
                 SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);

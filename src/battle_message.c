@@ -6,6 +6,7 @@
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "battle_z_move.h"
+#include "compatibility.h"
 #include "data.h"
 #include "event_data.h"
 #include "frontier_util.h"
@@ -2759,31 +2760,46 @@ static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
-void BufferStringBattle(u16 stringID, u32 battler)
+static struct BattleMsgData *ReceiveMsgDataStruct(void *src)
 {
-    s32 i;
-    const u8 *stringPtr = NULL;
+    u32 i;
+    struct BattleMsgData *msgData = src;
 
-    gBattleMsgDataPtr = (struct BattleMsgData *)(&gBattleResources->bufferA[battler][4]);
-    gLastUsedItem = gBattleMsgDataPtr->lastItem;
-    gLastUsedAbility = gBattleMsgDataPtr->lastAbility;
-    gBattleScripting.battler = gBattleMsgDataPtr->scrActive;
-    gBattleStruct->scriptPartyIdx = gBattleMsgDataPtr->bakScriptPartyIdx;
-    gBattleStruct->hpScale = gBattleMsgDataPtr->hpScale;
-    gPotentialItemEffectBattler = gBattleMsgDataPtr->itemEffectBattler;
-    gBattleStruct->stringMoveType = gBattleMsgDataPtr->moveType;
+    // We need to convert from Vanilla to Expansion.
+    if (IsVanillaLinkInteraction())
+    {
+        struct VanillaBattleMsgData vanillaMsgData;
+
+        memcpy(&vanillaMsgData, src, sizeof(struct VanillaBattleMsgData));
+        ConvertBattleStruct(src, &vanillaMsgData, B_STRUCT_MSG_DATA, FALSE);
+    }
+
+    gLastUsedItem = msgData->lastItem;
+    gLastUsedAbility = msgData->lastAbility;
+    gBattleScripting.battler = msgData->scrActive;
+    gBattleStruct->scriptPartyIdx = msgData->bakScriptPartyIdx;
+    gBattleStruct->hpScale = msgData->hpScale;
+    gPotentialItemEffectBattler = msgData->itemEffectBattler;
+    gBattleStruct->stringMoveType = msgData->moveType;
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        sBattlerAbilities[i] = gBattleMsgDataPtr->abilities[i];
+        sBattlerAbilities[i] = msgData->abilities[i];
     }
     for (i = 0; i < TEXT_BUFF_ARRAY_COUNT; i++)
     {
-        gBattleTextBuff1[i] = gBattleMsgDataPtr->textBuffs[0][i];
-        gBattleTextBuff2[i] = gBattleMsgDataPtr->textBuffs[1][i];
-        gBattleTextBuff3[i] = gBattleMsgDataPtr->textBuffs[2][i];
+        gBattleTextBuff1[i] = msgData->textBuffs[0][i];
+        gBattleTextBuff2[i] = msgData->textBuffs[1][i];
+        gBattleTextBuff3[i] = msgData->textBuffs[2][i];
     }
+    return msgData;
+}
 
+void BufferStringBattle(u16 stringID, u32 battler)
+{
+    const u8 *stringPtr = NULL;
+
+    gBattleMsgDataPtr = ReceiveMsgDataStruct(&gBattleResources->bufferA[battler][4]);
     switch (stringID)
     {
     case STRINGID_INTROMSG: // first battle msg
