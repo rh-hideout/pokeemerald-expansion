@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_gfx_sfx_util.h"
+#include "battle_terrain.h"
 #include "bg.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -42,7 +43,7 @@
 #include "constants/event_objects.h"
 
 #if DEBUG_POKEMON_SPRITE_VISUALIZER == TRUE
-extern const struct BattleBackground sBattleTerrainTable[];
+extern const struct BattleTerrain gBattleTerrainInfo[BATTLE_TERRAIN_COUNT];
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow;
 extern const struct SpriteTemplate gSpriteTemplate_EnemyShadow;
 extern const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2];
@@ -384,19 +385,7 @@ const u8 gBattleBackgroundNames[][30] =
     [MAP_BATTLE_SCENE_KYOGRE]   = _("KYOGRE                  "),
     [MAP_BATTLE_SCENE_RAYQUAZA] = _("RAYQUAZA                "),
 };
-const u8 gBattleBackgroundTerrainNames[][26] =
-{
-    [BATTLE_TERRAIN_GRASS]      = _("NORMAL - GRASS           "),
-    [BATTLE_TERRAIN_LONG_GRASS] = _("NORMAL - LONG GRASS      "),
-    [BATTLE_TERRAIN_SAND]       = _("NORMAL - SAND            "),
-    [BATTLE_TERRAIN_UNDERWATER] = _("NORMAL - UNDERWATER      "),
-    [BATTLE_TERRAIN_WATER]      = _("NORMAL - WATER           "),
-    [BATTLE_TERRAIN_POND]       = _("NORMAL - POND            "),
-    [BATTLE_TERRAIN_MOUNTAIN]   = _("NORMAL - MOUNTAIN        "),
-    [BATTLE_TERRAIN_CAVE]       = _("NORMAL - CAVE            "),
-    [BATTLE_TERRAIN_BUILDING]   = _("NORMAL - BUILDING        "),
-    [BATTLE_TERRAIN_PLAIN]      = _("NORMAL - PLAIN           "),
-};
+
 //Function declarations
 static void PrintDigitChars(struct PokemonSpriteVisualizer *data);
 static void SetUpModifyArrows(struct PokemonSpriteVisualizer *data);
@@ -830,9 +819,9 @@ static void LoadBattleBg(u8 battleBgType, u8 battleTerrain)
     {
     default:
     case MAP_BATTLE_SCENE_NORMAL:
-        LZDecompressVram(sBattleTerrainTable[battleTerrain].tileset, (void*)(BG_CHAR_ADDR(2)));
-        LZDecompressVram(sBattleTerrainTable[battleTerrain].tilemap, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(sBattleTerrainTable[battleTerrain].palette, 0x20, 0x60);
+        LZDecompressVram(gBattleTerrainInfo[battleTerrain].background.tileset, (void*)(BG_CHAR_ADDR(2)));
+        LZDecompressVram(gBattleTerrainInfo[battleTerrain].background.tilemap, (void*)(BG_SCREEN_ADDR(26)));
+        LoadCompressedPalette(gBattleTerrainInfo[battleTerrain].background.palette, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GYM:
         LZDecompressVram(gBattleTerrainTiles_Building, (void*)(BG_CHAR_ADDR(2)));
@@ -908,7 +897,7 @@ static void PrintBattleBgName(u8 taskId)
     u8 text[30+1];
 
     if (data->battleBgType == 0)
-        StringCopy(text, gBattleBackgroundTerrainNames[data->battleTerrain]);
+        StringCopy(text, gBattleTerrainInfo[data->battleTerrain].name);
     else
         StringCopy(text, gBattleBackgroundNames[data->battleBgType]);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 24, 0, NULL);
