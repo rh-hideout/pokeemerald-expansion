@@ -1634,7 +1634,7 @@
 #define SPECIES_ALT_KIRLIA                              1527
 #define SPECIES_ALT_GARDEVOIR                           1528
 
-#define SPECIES_EGG SPECIES_ALT_GARDEVOIR + 1
+#define SPECIES_EGG (SPECIES_ALT_GARDEVOIR + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
