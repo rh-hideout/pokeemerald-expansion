@@ -558,3 +558,4 @@ gSpecials::
 	def_special CreateWonderTradePokemon
 	def_special ChooseRandomEggSpecies
 	def_special ChooseRandomEggSpeciesII
+	def_special ChooseRandomEggSpeciesIII

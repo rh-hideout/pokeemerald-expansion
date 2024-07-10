@@ -8993,3 +8993,8 @@ bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *object
     sprite->sActionFuncId = 1;
     return TRUE;
 }
+
+u16 GetObjectEventTrainerSightFlagByObjectEventId(u8 objEventId)
+{
+    return GetObjectEventTemplateByLocalIdAndMap(gObjectEvents[objEventId].localId, gObjectEvents[objEventId].mapNum, gObjectEvents[objEventId].mapGroup)->trainerType;
+}

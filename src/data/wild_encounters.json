@@ -13471,12 +13471,12 @@
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_FLABEBE_WHITE_FLOWER"
+                "species": "SPECIES_SKIDDO"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_ZYGARDE_10"
+                "species": "SPECIES_FLABEBE_WHITE_FLOWER"
               }
             ]
           }

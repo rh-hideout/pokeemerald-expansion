@@ -2823,38 +2823,34 @@ BALL_ITEMS::
 # 1412 "data/maps/SlateportCity/scripts.pory"
     .2byte ITEM_BEAST_BALL
 # 1413 "data/maps/SlateportCity/scripts.pory"
-    .2byte ITEM_CHERISH_BALL
-# 1414 "data/maps/SlateportCity/scripts.pory"
-    .2byte ITEM_MASTER_BALL
-# 1415 "data/maps/SlateportCity/scripts.pory"
     .2byte ITEM_NONE
-# 1416 "data/maps/SlateportCity/scripts.pory"
+# 1414 "data/maps/SlateportCity/scripts.pory"
     release
-# 1417 "data/maps/SlateportCity/scripts.pory"
+# 1415 "data/maps/SlateportCity/scripts.pory"
     end
 
 SLATEPORT_BALL_ITEM_EMPLOYEE::
-# 1421 "data/maps/SlateportCity/scripts.pory"
+# 1419 "data/maps/SlateportCity/scripts.pory"
 	lock
-# 1422 "data/maps/SlateportCity/scripts.pory"
+# 1420 "data/maps/SlateportCity/scripts.pory"
 	faceplayer
-# 1423 "data/maps/SlateportCity/scripts.pory"
+# 1421 "data/maps/SlateportCity/scripts.pory"
 	message SLATEPORT_BALL_ITEM_EMPLOYEE_Text_0
-# 1424 "data/maps/SlateportCity/scripts.pory"
+# 1422 "data/maps/SlateportCity/scripts.pory"
 	waitmessage
-# 1425 "data/maps/SlateportCity/scripts.pory"
+# 1423 "data/maps/SlateportCity/scripts.pory"
 	pokemart BALL_ITEMS
-# 1426 "data/maps/SlateportCity/scripts.pory"
+# 1424 "data/maps/SlateportCity/scripts.pory"
 	msgbox SLATEPORT_BALL_ITEM_EMPLOYEE_Text_1
-# 1427 "data/maps/SlateportCity/scripts.pory"
+# 1425 "data/maps/SlateportCity/scripts.pory"
 	release
 	end
 
 
 SLATEPORT_BALL_ITEM_EMPLOYEE_Text_0:
-# 1423 "data/maps/SlateportCity/scripts.pory"
+# 1421 "data/maps/SlateportCity/scripts.pory"
 	.string "How may I serve you?$"
 
 SLATEPORT_BALL_ITEM_EMPLOYEE_Text_1:
-# 1426 "data/maps/SlateportCity/scripts.pory"
+# 1424 "data/maps/SlateportCity/scripts.pory"
 	.string "Please Come Again.$"

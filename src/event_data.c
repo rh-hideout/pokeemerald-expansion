@@ -52,6 +52,16 @@ void ClearDailyFlags(void)
     memset(&gSaveBlock1Ptr->flags[DAILY_FLAGS_START / 8], 0, DAILY_FLAGS_SIZE);
 }
 
+void ClearDailyHiddenItemFlags(void)
+{
+    u32 i = 0;
+
+    for (i = FLAG_HIDDEN_ITEMS_START; i <= FLAG_HIDDEN_ITEMS_END; i++)
+    {
+        FlagClear(i);
+    }
+}
+
 void DisableNationalPokedex(void)
 {
     u16 *nationalDexVar = GetVarPointer(VAR_NATIONAL_DEX);

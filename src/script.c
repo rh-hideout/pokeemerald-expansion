@@ -5,6 +5,7 @@
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/map_scripts.h"
+#include "trainer_see.h"
 
 #define RAM_SCRIPT_MAGIC 51
 
@@ -505,4 +506,10 @@ void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize)
 void GetObjectEventTrainerRangeFromTemplate(void)
 {
     gSpecialVar_Result = gMapHeader.events->objectEvents[gSpecialVar_LastTalked - 1].trainerRange_berryTreeId;
+}
+
+bool8 LoadTrainerObjectScript(void)
+{
+    sGlobalScriptContext.scriptPtr = gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr;
+    return TRUE;
 }
