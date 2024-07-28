@@ -95,7 +95,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 50,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_GRASS, EGG_GROUP_FAIRY },
-       .abilities = { ABILITY_OVERGROW, ABILITY_TECHNICHAN, ABILITY_SHARPNESS },
+       .abilities = { ABILITY_OVERGROW, ABILITY_TECHNICIAN, ABILITY_SHARPNESS },
        .bodyColor = BODY_COLOR_GREEN,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -129,7 +129,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .shinyPalette = gMonShinyPalette_Maplage,
         .iconSprite = gMonIcon_Maplage,
         .iconPalIndex = 1,
-+       FOOTPRINT(Maplage)
+       FOOTPRINT(Maplage)
     },
 
     /* You may add any custom species below this point based on the following structure: */
