@@ -4691,9 +4691,8 @@ void Task_AbilityCapsule(u8 taskId)
     {
     case 0:
         // Can't use.
-        if (gSpeciesInfo[tSpecies].abilities[0] == gSpeciesInfo[tSpecies].abilities[1]
-            || gSpeciesInfo[tSpecies].abilities[1] == 0
-            || tAbilityNum > 1
+        if (gSpeciesInfo[tSpecies].abilities[tAbilityNum] == gSpeciesInfo[tSpecies].abilities[tAbilityNum ^ 1]
+            || gSpeciesInfo[tSpecies].abilities[tAbilityNum] == 0
             || !tSpecies)
         {
             gPartyMenuUseExitCallback = FALSE;
@@ -4774,6 +4773,13 @@ void Task_AbilityPatch(u8 taskId)
     static const u8 askText[] = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?");
     static const u8 doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
     s16 *data = gTasks[taskId].data;
+	
+	// Sanitize edge cases of mons having 2 normal/1 hidden or 1 normal/2 hidden, so you don't have to capsule them first
+	if (gSpeciesInfo[tSpecies].abilities[tAbilityNum] == 0
+		&& gSpeciesInfo[tSpecies].abilities[tAbilityNum ^ 1] != 0)
+	{
+		tAbilityNum = tAbilityNum ^ 1;
+	}
 
     switch (tState)
     {
@@ -4851,10 +4857,7 @@ void ItemUseCB_AbilityPatch(u8 taskId, TaskFunc task)
     tState = 0;
     tMonId = gPartyMenu.slotId;
     tSpecies = GetMonData(&gPlayerParty[tMonId], MON_DATA_SPECIES, NULL);
-    if (GetMonData(&gPlayerParty[tMonId], MON_DATA_ABILITY_NUM, NULL) == 2)
-        tAbilityNum = 0;
-    else
-        tAbilityNum = 2;
+    tAbilityNum = GetMonData(&gPlayerParty[tMonId], MON_DATA_ABILITY_NUM, NULL) ^ 2;
     SetWordTaskArg(taskId, tOldFunc, (uintptr_t)(gTasks[taskId].func));
     gTasks[taskId].func = Task_AbilityPatch;
 }
