@@ -22332,4 +22332,3 @@ static const struct LevelUpMove sMaplageLevelUpLearnset[] = {
    LEVEL_UP_MOVE(36, MOVE_STARSEED_BLAST),
    LEVEL_UP_END
 };
-#endif //P_FAMILY_MAPLAGE
