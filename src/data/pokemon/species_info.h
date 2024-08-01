@@ -129,8 +129,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .shinyPalette = gMonShinyPalette_Maplage,
        .iconSprite = gMonIcon_Maplage,
        .iconPalIndex = 1,
-       .levelUpLearnset = sMaplageLevelUpLearnset,
        FOOTPRINT(Maplage)
+       .levelUpLearnset = sMaplageLevelUpLearnset,
     },
 
     /* You may add any custom species below this point based on the following structure: */
