@@ -127,10 +127,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
        .palette = gMonPalette_Maplage,
        .shinyPalette = gMonShinyPalette_Maplage,
-        .iconSprite = gMonIcon_Maplage,
-        .iconPalIndex = 1,
-       FOOTPRINT(Maplage)
+       .iconSprite = gMonIcon_Maplage,
+       .iconPalIndex = 1,
        .levelUpLearnset = sMaplageLevelUpLearnset,
+       FOOTPRINT(Maplage)
     },
 
     /* You may add any custom species below this point based on the following structure: */
