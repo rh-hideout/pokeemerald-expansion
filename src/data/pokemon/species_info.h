@@ -130,7 +130,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .iconSprite = gMonIcon_Maplage,
         .iconPalIndex = 1,
        FOOTPRINT(Maplage)
-       .levelUpLearnset = sMewthreeLevelUpLearnset,
+       .levelUpLearnset = sMaplageLevelUpLearnset,
     },
 
     /* You may add any custom species below this point based on the following structure: */

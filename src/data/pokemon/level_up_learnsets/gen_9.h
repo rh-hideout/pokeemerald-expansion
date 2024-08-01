@@ -22314,7 +22314,7 @@ static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
-#if //P_FAMILY_MAPLAGE
+#if P_FAMILY_MAPLAGE
 
 static const struct LevelUpMove sMaplageLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_TACKLE),

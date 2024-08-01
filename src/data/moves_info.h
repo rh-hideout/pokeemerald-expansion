@@ -418,7 +418,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "A move that strikes the foe\n"
             "with wind. It always crits."),
-        .effect = EFFECT_HIT
+        .effect = EFFECT_HIT,
         .power = 60,
         .type = TYPE_FLYING,
         .accuracy = 90,
@@ -7345,7 +7345,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Splinters that hurt the foe."),
         .effect = EFFECT_HIT,
         .power = 65,
-        .type = TYPE_Grass,
+        .type = TYPE_GRASS,
         .accuracy = 100,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
@@ -19820,7 +19820,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Shoots 2 to 5 seeds in a row\n"
             "to strike the foe."),
         .effect = EFFECT_MULTI_HIT, 
-        .power = 30
+        .power = 30,
         .type = TYPE_FAIRY,
         .accuracy = 100,
         .pp = 30,
