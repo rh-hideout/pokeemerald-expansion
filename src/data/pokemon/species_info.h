@@ -102,7 +102,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .speciesName = _("Maplage"),
        .cryId = CRY_MAPLAGE,
        .natDexNum = NATIONAL_DEX_MAPLAGE,
-       .categoryName = _("New Species"),
+       .categoryName = _("Leaf"),
        .height = 15,
        .weight = 330,
        .description = COMPOUND_STRING(
@@ -116,11 +116,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .trainerOffset = -2,
        .frontPic = gMonFrontPic_Maplage,
        .frontPicSize = MON_COORDS_SIZE(64, 64),
-       .frontPicYOffset = 0,
+       .frontPicYOffset = 4,
        .frontAnimFrames = sAnims_Maplage,
        .frontAnimId = ANIM_GROW_VIBRATE,
        .frontAnimDelay = 15,
-       .enemyMonElevation = 6,
+       .enemyMonElevation = 0,
        .backPic = gMonBackPic_Maplage,
        .backPicSize = MON_COORDS_SIZE(64, 64),
        .backPicYOffset = 0,
@@ -130,6 +130,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .iconSprite = gMonIcon_Maplage,
         .iconPalIndex = 1,
        FOOTPRINT(Maplage)
+       .levelUpLearnset = sMewthreeLevelUpLearnset,
     },
 
     /* You may add any custom species below this point based on the following structure: */

@@ -875,6 +875,8 @@ gBattleAnims_Moves::
 	.4byte Move_PSYCHIC_NOISE
 	.4byte Move_UPPER_HAND
 	.4byte Move_MALIGNANT_CHAIN
+@@@@@@@@@@@@ GEN 8 @@@@@@@@@@@@
+    .4byte Move_STARSEED_BLAST
 @@@@ Z MOVES
 	.4byte Move_BREAKNECK_BLITZ
 	.4byte Move_ALL_OUT_PUMMELING
@@ -17842,6 +17844,32 @@ ElectroShotUnleash:
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 11, 0, RGB(31, 31, 22)
 	waitforvisualfinish
 	blendoff
+	end
+
+
+	Move_STARSEED_BLAST:
+	loadspritegfx ANIM_TAG_SEED
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 30, 1
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	waitforvisualfinish
 	end
 
 Move_TERA_BLAST::
