@@ -6791,60 +6791,6 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
 #endif //P_FAMILY_PECHARUNT
 
 #if P_FAMILY_MAPLAGE
-    {
-        [SPECIES_MAPLAGE] = 
-       .baseHP        = 50,
-       .baseAttack    = 50,
-       .baseDefense   = 45,
-       .baseSpeed     = 70,
-       .baseSpAttack  = 60,
-       .baseSpDefense = 45,
-       .types = { TYPE_GRASS, TYPE_FAIRY },
-       .catchRate = 3,
-       .expYield = 67,
-       .evYield_SpAttack  = 3,
-       .genderRatio = PERCENT_FEMALE(12.5),
-       .eggCycles = 120,
-       .friendship = 50,
-       .growthRate = GROWTH_MEDIUM_SLOW,
-       .eggGroups = { EGG_GROUP_GRASS, EGG_GROUP_FAIRY },
-       .abilities = { ABILITY_OVERGROW, ABILITY_TECHNICIAN, ABILITY_SHARPNESS, ABILITY_NONE },
-       .bodyColor = BODY_COLOR_GREEN,
-       .isLegendary = FALSE,
-       .allPerfectIVs = FALSE,
-      .speciesName = _("Maplage"),
-       .cryId = CRY_MAPLAGE,
-       .natDexNum = NATIONAL_DEX_MAPLAGE,
-       .categoryName = _("Leaf"),
-       .height = 15,
-       .weight = 330,
-       .description = COMPOUND_STRING(
-           "A docile and shy species, Maplage waft\n"
-           "into the air to escape attacks, not by\n"
-           "wind, but by an odd magical power.\n"
-           "test"),
-       .pokemonScale = 356,
-       .pokemonOffset = 16,
-       .trainerScale = 256,
-       .trainerOffset = -2,
-       .frontPic = gMonFrontPic_Maplage,
-       .frontPicSize = MON_COORDS_SIZE(64, 64),
-       .frontPicYOffset = 4,
-       .frontAnimFrames = sAnims_Maplage,
-       .frontAnimId = ANIM_GROW_VIBRATE,
-       .frontAnimDelay = 15,
-       .enemyMonElevation = 0,
-       .backPic = gMonBackPic_Maplage,
-       .backPicSize = MON_COORDS_SIZE(64, 64),
-       .backPicYOffset = 0,
-       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
-       .palette = gMonPalette_Maplage,
-       .shinyPalette = gMonShinyPalette_Maplage,
-       .iconSprite = gMonIcon_Maplage,
-       .iconPalIndex = 1,
-       FOOTPRINT(Maplage)
-       .levelUpLearnset = sMaplageLevelUpLearnset,
-    },
 
 #ifdef __INTELLISENSE__
 };

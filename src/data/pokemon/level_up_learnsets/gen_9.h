@@ -22313,8 +22313,6 @@ static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
     LEVEL_UP_END
 };
 #endif //P_FAMILY_PECHARUNT
-
-#if P_FAMILY_MAPLAGE
 static const struct LevelUpMove sMaplageLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_TACKLE),
    LEVEL_UP_MOVE( 1, MOVE_GROWL),
@@ -22331,4 +22329,3 @@ static const struct LevelUpMove sMaplageLevelUpLearnset[] = {
    LEVEL_UP_MOVE(36, MOVE_STARSEED_BLAST),
    LEVEL_UP_END
 };
-#endif //P_FAMILY_MAPLAGE
