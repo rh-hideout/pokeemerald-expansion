@@ -1,9 +1,7 @@
 #include "global.h"
 #include "rtc.h"
 #include "string_util.h"
-#include "strings.h"
 #include "text.h"
-#include "fake_rtc.h"
 
 // iwram bss
 static u16 sErrorStatus;
@@ -47,9 +45,6 @@ void RtcRestoreInterrupts(void)
 
 u32 ConvertBcdToBinary(u8 bcd)
 {
-    if (OW_USE_FAKE_RTC)
-        return bcd;
-
     if (bcd > 0x9F)
         return 0xFF;
 
@@ -93,22 +88,14 @@ u16 ConvertDateToDayCount(u8 year, u8 month, u8 day)
 
 u16 RtcGetDayCount(struct SiiRtcInfo *rtc)
 {
-    u8 year, month, day;
-
-    if (OW_USE_FAKE_RTC)
-        return rtc->day;
-
-    year = ConvertBcdToBinary(rtc->year);
-    month = ConvertBcdToBinary(rtc->month);
-    day = ConvertBcdToBinary(rtc->day);
+    u8 year = ConvertBcdToBinary(rtc->year);
+    u8 month = ConvertBcdToBinary(rtc->month);
+    u8 day = ConvertBcdToBinary(rtc->day);
     return ConvertDateToDayCount(year, month, day);
 }
 
 void RtcInit(void)
 {
-    if (OW_USE_FAKE_RTC)
-        return;
-
     sErrorStatus = 0;
 
     RtcDisableInterrupts();
@@ -133,14 +120,12 @@ void RtcInit(void)
 
 u16 RtcGetErrorStatus(void)
 {
-    return (OW_USE_FAKE_RTC) ? 0 : sErrorStatus;
+    return sErrorStatus;
 }
 
 void RtcGetInfo(struct SiiRtcInfo *rtc)
 {
-    if (OW_USE_FAKE_RTC)
-        FakeRtc_GetRawInfo(rtc);
-    else if (sErrorStatus & RTC_ERR_FLAG_MASK)
+    if (sErrorStatus & RTC_ERR_FLAG_MASK)
         *rtc = sRtcDummy;
     else
         RtcGetRawInfo(rtc);
@@ -172,9 +157,6 @@ u16 RtcCheckInfo(struct SiiRtcInfo *rtc)
     s32 year;
     s32 month;
     s32 value;
-
-    if (OW_USE_FAKE_RTC)
-        return 0;
 
     if (rtc->status & SIIRTCINFO_POWER)
         errorFlags |= RTC_ERR_POWER_FAILURE;
@@ -228,12 +210,6 @@ u16 RtcCheckInfo(struct SiiRtcInfo *rtc)
 
 void RtcReset(void)
 {
-    if (OW_USE_FAKE_RTC)
-    {
-        memset(FakeRtc_GetCurrentTime(), 0, sizeof(struct Time));
-        return;
-    }
-
     RtcDisableInterrupts();
     SiiRtcReset();
     RtcRestoreInterrupts();
@@ -387,34 +363,4 @@ u32 RtcGetMinuteCount(void)
 u32 RtcGetLocalDayCount(void)
 {
     return RtcGetDayCount(&sRtc);
-}
-
-void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24Hour)
-{
-    if (is24Hour)
-    {
-        txtPtr = ConvertIntToDecimalStringN(txtPtr, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
-        *txtPtr++ = CHAR_COLON;
-        txtPtr = ConvertIntToDecimalStringN(txtPtr, minute, STR_CONV_MODE_LEADING_ZEROS, 2);
-    }
-    else
-    {
-        if (hour == 0)
-            txtPtr = ConvertIntToDecimalStringN(txtPtr, 12, STR_CONV_MODE_LEADING_ZEROS, 2);
-        else if (hour < 13)
-            txtPtr = ConvertIntToDecimalStringN(txtPtr, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
-        else
-            txtPtr = ConvertIntToDecimalStringN(txtPtr, hour - 12, STR_CONV_MODE_LEADING_ZEROS, 2);
-
-        *txtPtr++ = CHAR_COLON;
-        txtPtr = ConvertIntToDecimalStringN(txtPtr, minute, STR_CONV_MODE_LEADING_ZEROS, 2);
-        txtPtr = StringAppend(txtPtr, gText_Space);
-        if (hour < 12)
-            txtPtr = StringAppend(txtPtr, gText_AM);
-        else
-            txtPtr = StringAppend(txtPtr, gText_PM);
-    }
-
-    *txtPtr++ = EOS;
-    *txtPtr = EOS;
 }

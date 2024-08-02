@@ -36,7 +36,6 @@
 #include "data.h"
 #include "battle.h" // to get rid of later
 #include "constants/rgb.h"
-#include "party_menu.h"
 
 #define GFXTAG_EGG       12345
 #define GFXTAG_EGG_SHARD 23456
@@ -378,7 +377,7 @@ static void AddHatchedMonToParty(u8 id)
     GetSetPokedexFlag(species, FLAG_SET_SEEN);
     GetSetPokedexFlag(species, FLAG_SET_CAUGHT);
 
-    GetMonNickname(mon, gStringVar1);
+    GetMonNickname2(mon, gStringVar1);
 
     // A met level of 0 is interpreted on the summary screen as "hatched at"
     metLevel = 0;
@@ -651,7 +650,7 @@ static void CB2_EggHatch(void)
         break;
     case 5:
         // "{mon} hatched from egg" message/fanfare
-        GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
+        GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
         StringExpandPlaceholders(gStringVar4, gText_HatchedFromEgg);
         EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 3, TEXT_SKIP_DRAW);
         PlayFanfare(MUS_EVOLVED);
@@ -669,7 +668,7 @@ static void CB2_EggHatch(void)
         break;
     case 8:
         // Ready the nickname prompt
-        GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
+        GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
         StringExpandPlaceholders(gStringVar4, gText_NicknameHatchPrompt);
         EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 2, 1);
         sEggHatchData->state++;
@@ -688,7 +687,7 @@ static void CB2_EggHatch(void)
         switch (Menu_ProcessInputNoWrapClearOnChoose())
         {
         case 0: // Yes
-            GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar3);
+            GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar3);
             species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gender = GetMonGender(&gPlayerParty[sEggHatchData->eggPartyId]);
             personality = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_PERSONALITY, 0);

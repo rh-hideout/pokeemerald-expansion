@@ -27,7 +27,7 @@ DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the opponent")
         MESSAGE("Foe Wobbuffet used Toxic Spikes!");
         MESSAGE("Wynaut used Court Change!");
         MESSAGE("Wynaut swapped the battle effects affecting each side!");
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("Go! Wynaut!");
         NONE_OF {
             MESSAGE("Wynaut is hurt by spikes!");
             MESSAGE("Pointed stones dug into Wynaut!");
@@ -63,7 +63,7 @@ DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the player")
         MESSAGE("Wobbuffet used Toxic Spikes!");
         MESSAGE("Foe Wynaut used Court Change!");
         MESSAGE("Foe Wynaut swapped the battle effects affecting each side!");
-        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("Go! Wobbuffet!");
         MESSAGE("Wobbuffet is hurt by spikes!");
         MESSAGE("Pointed stones dug into Wobbuffet!");
         MESSAGE("Wobbuffet was poisoned!");

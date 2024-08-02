@@ -252,67 +252,72 @@ static void FindMapsWithMon(u16 species)
     if (sPokedexAreaScreen->alteringCaveId >= NUM_ALTERING_CAVE_TABLES)
         sPokedexAreaScreen->alteringCaveId = 0;
 
-    sPokedexAreaScreen->numOverworldAreas = 0;
-    sPokedexAreaScreen->numSpecialAreas = 0;
-
-    // Check if this species should be hidden from the area map.
-    // This only applies to Wynaut, to hide the encounters on Mirage Island.
-    for (i = 0; i < ARRAY_COUNT(sSpeciesHiddenFromAreaScreen); i++)
+    roamer = &gSaveBlock1Ptr->roamer;
+    if (species != roamer->species)
     {
-        if (sSpeciesHiddenFromAreaScreen[i] == species)
-            return;
-    }
+        sPokedexAreaScreen->numOverworldAreas = 0;
+        sPokedexAreaScreen->numSpecialAreas = 0;
 
-    // Add Pokémon with special encounter circumstances (i.e. not listed
-    // in the regular wild encounter table) to the area map.
-    // This only applies to Feebas on Route 119, but it was clearly set
-    // up to allow handling others.
-    for (i = 0; sFeebasData[i][0] != NUM_SPECIES; i++)
-    {
-        if (species == sFeebasData[i][0])
+        // Check if this species should be hidden from the area map.
+        // This only applies to Wynaut, to hide the encounters on Mirage Island.
+        for (i = 0; i < ARRAY_COUNT(sSpeciesHiddenFromAreaScreen); i++)
         {
-            switch (sFeebasData[i][1])
+            if (sSpeciesHiddenFromAreaScreen[i] == species)
+                return;
+        }
+
+        // Add Pokémon with special encounter circumstances (i.e. not listed
+        // in the regular wild encounter table) to the area map.
+        // This only applies to Feebas on Route 119, but it was clearly set
+        // up to allow handling others.
+        for (i = 0; sFeebasData[i][0] != NUM_SPECIES; i++)
+        {
+            if (species == sFeebasData[i][0])
             {
-            case MAP_GROUP_TOWNS_AND_ROUTES:
-                SetAreaHasMon(sFeebasData[i][1], sFeebasData[i][2]);
-                break;
-            case MAP_GROUP_DUNGEONS:
-            case MAP_GROUP_SPECIAL_AREA:
-                SetSpecialMapHasMon(sFeebasData[i][1], sFeebasData[i][2]);
-                break;
+                switch (sFeebasData[i][1])
+                {
+                case MAP_GROUP_TOWNS_AND_ROUTES:
+                    SetAreaHasMon(sFeebasData[i][1], sFeebasData[i][2]);
+                    break;
+                case MAP_GROUP_DUNGEONS:
+                case MAP_GROUP_SPECIAL_AREA:
+                    SetSpecialMapHasMon(sFeebasData[i][1], sFeebasData[i][2]);
+                    break;
+                }
+            }
+        }
+
+        // Add regular species to the area map
+        for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(UNDEFINED); i++)
+        {
+            if (MapHasSpecies(&gWildMonHeaders[i], species))
+            {
+                switch (gWildMonHeaders[i].mapGroup)
+                {
+                case MAP_GROUP_TOWNS_AND_ROUTES:
+                    SetAreaHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
+                    break;
+                case MAP_GROUP_DUNGEONS:
+                case MAP_GROUP_SPECIAL_AREA:
+                    SetSpecialMapHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
+                    break;
+                }
             }
         }
     }
-
-    // Add regular species to the area map
-    for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(UNDEFINED); i++)
+    else
     {
-        if (MapHasSpecies(&gWildMonHeaders[i], species))
+        // This is the roamer's species, show where the roamer is currently
+        sPokedexAreaScreen->numSpecialAreas = 0;
+        if (roamer->active)
         {
-            switch (gWildMonHeaders[i].mapGroup)
-            {
-            case MAP_GROUP_TOWNS_AND_ROUTES:
-                SetAreaHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
-                break;
-            case MAP_GROUP_DUNGEONS:
-            case MAP_GROUP_SPECIAL_AREA:
-                SetSpecialMapHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
-                break;
-            }
+            GetRoamerLocation(&sPokedexAreaScreen->overworldAreasWithMons[0].mapGroup, &sPokedexAreaScreen->overworldAreasWithMons[0].mapNum);
+            sPokedexAreaScreen->overworldAreasWithMons[0].regionMapSectionId = Overworld_GetMapHeaderByGroupAndId(sPokedexAreaScreen->overworldAreasWithMons[0].mapGroup, sPokedexAreaScreen->overworldAreasWithMons[0].mapNum)->regionMapSectionId;
+            sPokedexAreaScreen->numOverworldAreas = 1;
         }
-    }
-
-    // Add roamers to the area map
-    for (i = 0; i < ROAMER_COUNT; i++)
-    {
-        roamer = &gSaveBlock1Ptr->roamer[i];
-        if (species == roamer->species && roamer->active)
+        else
         {
-            // This is a roamer's species, show where this roamer is currently
-            struct OverworldArea *roamerLocation = &sPokedexAreaScreen->overworldAreasWithMons[sPokedexAreaScreen->numOverworldAreas];
-            GetRoamerLocation(i, &roamerLocation->mapGroup, &roamerLocation->mapNum);
-            roamerLocation->regionMapSectionId = Overworld_GetMapHeaderByGroupAndId(roamerLocation->mapGroup, roamerLocation->mapNum)->regionMapSectionId;
-            sPokedexAreaScreen->numOverworldAreas++;
+            sPokedexAreaScreen->numOverworldAreas = 0;
         }
     }
 }

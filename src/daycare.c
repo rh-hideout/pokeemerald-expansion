@@ -43,6 +43,8 @@ EWRAM_DATA static u16 sHatchedEggFinalMoves[MAX_MON_MOVES] = {0};
 EWRAM_DATA static u16 sHatchedEggEggMoves[EGG_MOVES_ARRAY_COUNT] = {0};
 EWRAM_DATA static u16 sHatchedEggMotherMoves[MAX_MON_MOVES] = {0};
 
+#include "data/pokemon/egg_moves.h"
+
 static const struct WindowTemplate sDaycareLevelMenuWindowTemplate =
 {
     .bg = 0,
@@ -113,11 +115,11 @@ static const u8 *const sCompatibilityMessages[] =
 
 static const u8 sJapaneseEggNickname[] = _("タマゴ"); // "tamago" ("egg" in Japanese)
 
-u8 *GetMonNicknameVanilla(struct Pokemon *mon, u8 *dest)
+u8 *GetMonNickname2(struct Pokemon *mon, u8 *dest)
 {
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
     GetMonData(mon, MON_DATA_NICKNAME, nickname);
-    return StringCopyN(dest, nickname, VANILLA_POKEMON_NAME_LENGTH);
+    return StringCopy_Nickname(dest, nickname);
 }
 
 u8 *GetBoxMonNickname(struct BoxPokemon *mon, u8 *dest)
@@ -251,7 +253,7 @@ static void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycar
         u8 mailId;
 
         StringCopy(daycareMon->mail.otName, gSaveBlock2Ptr->playerName);
-        GetMonNicknameVanilla(mon, daycareMon->mail.monName);
+        GetMonNickname2(mon, daycareMon->mail.monName);
         StripExtCtrlCodes(daycareMon->mail.monName);
         daycareMon->mail.gameLanguage = GAME_LANGUAGE;
         daycareMon->mail.monLanguage = GetMonData(mon, MON_DATA_LANGUAGE);
@@ -451,7 +453,7 @@ static void ClearDaycareMonMail(struct DaycareMail *mail)
 
     for (i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
         mail->otName[i] = 0;
-    for (i = 0; i < VANILLA_POKEMON_NAME_LENGTH + 1; i++)
+    for (i = 0; i < POKEMON_NAME_LENGTH + 1; i++)
         mail->monName[i] = 0;
 
     ClearMail(&mail->message);
@@ -774,18 +776,29 @@ static void InheritAbility(struct Pokemon *egg, struct BoxPokemon *father, struc
 // the given array.
 static u8 GetEggMoves(struct Pokemon *pokemon, u16 *eggMoves)
 {
+    u16 eggMoveIdx;
     u16 numEggMoves;
     u16 species;
-    u32 i;
-    const u16 *eggMoveLearnset;
+    u16 i;
 
     numEggMoves = 0;
+    eggMoveIdx = 0;
     species = GetMonData(pokemon, MON_DATA_SPECIES);
-    eggMoveLearnset = GetSpeciesEggMoves(species);
-
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    for (i = 0; i < ARRAY_COUNT(gEggMoves) - 1; i++)
     {
-        eggMoves[i] = eggMoveLearnset[i];
+        if (gEggMoves[i] == species + EGG_MOVES_SPECIES_OFFSET)
+        {
+            eggMoveIdx = i + 1;
+            break;
+        }
+    }
+
+    for (i = 0; i < EGG_MOVES_ARRAY_COUNT; i++)
+    {
+        if (gEggMoves[eggMoveIdx + i] > EGG_MOVES_SPECIES_OFFSET)
+            break;
+
+        eggMoves[i] = gEggMoves[eggMoveIdx + i];
         numEggMoves++;
     }
 
@@ -794,16 +807,30 @@ static u8 GetEggMoves(struct Pokemon *pokemon, u16 *eggMoves)
 
 u8 GetEggMovesBySpecies(u16 species, u16 *eggMoves)
 {
+    u16 eggMoveIdx;
     u16 numEggMoves;
-    const u16 *eggMoveLearnset;
-    u32 i;
+    u16 i;
 
     numEggMoves = 0;
-    eggMoveLearnset = GetSpeciesEggMoves(species);
-
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    eggMoveIdx = 0;
+    for (i = 0; i < ARRAY_COUNT(gEggMoves) - 1; i++)
     {
-        eggMoves[i] = eggMoveLearnset[i];
+        if (gEggMoves[i] == species + EGG_MOVES_SPECIES_OFFSET)
+        {
+            eggMoveIdx = i + 1;
+            break;
+        }
+    }
+
+    for (i = 0; i < EGG_MOVES_ARRAY_COUNT; i++)
+    {
+        if (gEggMoves[eggMoveIdx + i] > EGG_MOVES_SPECIES_OFFSET)
+        {
+            // TODO: the curly braces around this if statement are required for a matching build.
+            break;
+        }
+
+        eggMoves[i] = gEggMoves[eggMoveIdx + i];
         numEggMoves++;
     }
 
@@ -812,15 +839,26 @@ u8 GetEggMovesBySpecies(u16 species, u16 *eggMoves)
 
 bool8 SpeciesCanLearnEggMove(u16 species, u16 move) //Move search PokedexPlus HGSS_Ui
 {
-    u32 i;
-    const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
-
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    u16 eggMoveIdx;
+    u16 i;
+    eggMoveIdx = 0;
+    for (i = 0; i < ARRAY_COUNT(gEggMoves) - 1; i++)
     {
-        if (eggMoveLearnset[i] == move)
-            return TRUE;
+        if (gEggMoves[i] == species + EGG_MOVES_SPECIES_OFFSET)
+        {
+            eggMoveIdx = i + 1;
+            break;
+        }
     }
 
+    for (i = 0; i < EGG_MOVES_ARRAY_COUNT; i++)
+    {
+        if (gEggMoves[eggMoveIdx + i] > EGG_MOVES_SPECIES_OFFSET)
+            return FALSE;
+
+        if (move == gEggMoves[eggMoveIdx + i])
+            return TRUE;
+    }
     return FALSE;
 }
 
@@ -1150,7 +1188,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
     }
 
     // Try to hatch Egg
-    if (++daycare->stepCounter == ((P_EGG_CYCLE_LENGTH >= GEN_8) ? 127 : 255))
+    if (++daycare->stepCounter == 255)
     {
         u32 eggCycles;
         u8 toSub = GetEggCyclesToSubtract();
@@ -1331,9 +1369,7 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
 
 static u8 GetDaycareCompatibilityScoreFromSave(void)
 {
-    // Changed to also store result for scripts
-    gSpecialVar_Result = GetDaycareCompatibilityScore(&gSaveBlock1Ptr->daycare);
-    return gSpecialVar_Result;
+    return GetDaycareCompatibilityScore(&gSaveBlock1Ptr->daycare);
 }
 
 void SetDaycareCompatibilityString(void)

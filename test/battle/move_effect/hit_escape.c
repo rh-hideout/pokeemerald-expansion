@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("U-turn switches the user out")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("Go! Wynaut!");
     }
 }
 
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("U-turn switches the user out if Wimp Out fails to activate")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         NOT ABILITY_POPUP(opponent);
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("Go for it, Wynaut!");
     }
 }
 
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("U-turn switches the user out after Ice Face activates")
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_ICE_FACE);
         MESSAGE("Foe Eiscue transformed!");
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("Go! Wynaut!");
     }
 }
 

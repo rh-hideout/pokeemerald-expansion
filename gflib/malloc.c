@@ -92,9 +92,9 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
                 {
                     const char *location = MemBlockLocation(block);
                     if (location)
-                        Test_MgbaPrintf("%s: %d bytes allocated", location, block->size);
+                        MgbaPrintf_("%s: %d bytes allocated", location, block->size);
                     else
-                        Test_MgbaPrintf("<unknown>: %d bytes allocated", block->size);
+                        MgbaPrintf_("<unknown>: %d bytes allocated", block->size);
                 }
                 block = block->next;
             }

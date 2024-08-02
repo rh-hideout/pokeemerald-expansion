@@ -77,7 +77,7 @@ DOUBLE_BATTLE_TEST("Intimidate doesn't activate on an empty field in a double ba
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         // Everyone faints.
 
-        SEND_IN_MESSAGE("Ekans");
+        MESSAGE("Go! Ekans!");
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
@@ -87,7 +87,7 @@ DOUBLE_BATTLE_TEST("Intimidate doesn't activate on an empty field in a double ba
             ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         }
-        SEND_IN_MESSAGE("Abra");
+        MESSAGE("Go! Abra!");
         MESSAGE("2 sent out Wynaut!");
         // Intimidate activates after all battlers have been brought out
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
@@ -113,9 +113,9 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button force the opponent to Attack")
         OPPONENT(SPECIES_HITMONTOP) { Moves(MOVE_TACKLE); }
     } WHEN {
         TURN {
-           MOVE(player, MOVE_QUICK_ATTACK);
-           MOVE(opponent, MOVE_TACKLE);
-           SEND_OUT(opponent, 1);
+               MOVE(player, MOVE_QUICK_ATTACK);
+               MOVE(opponent, MOVE_TACKLE);
+               SEND_OUT(opponent, 1);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
@@ -153,12 +153,12 @@ DOUBLE_BATTLE_TEST("Intimidate activates on an empty slot")
 
 
     } SCENE {
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("Wobbuffet, that's enough! Come back!");
+        MESSAGE("Go! Wynaut!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUNK_SHOT, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponentRight);
-        SWITCH_OUT_MESSAGE("Wynaut");
-        SEND_IN_MESSAGE("Hitmontop");
+        MESSAGE("Wynaut, that's enough! Come back!");
+        MESSAGE("Go! Hitmontop!");
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         NONE_OF {
             MESSAGE("Hitmontop's Intimidate cuts Foe Ralts's attack!");
@@ -243,23 +243,5 @@ DOUBLE_BATTLE_TEST("Intimidate is not going to trigger if a mon switches out thr
         MESSAGE("2 sent out Treecko!");
         MESSAGE("2 sent out Torchic!");
         NOT ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutralizing Gas")
-{
-    GIVEN {
-        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-    } WHEN {
-        TURN { SWITCH(player, 1); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
-        MESSAGE("Neutralizing Gas filled the area!");
-        SWITCH_OUT_MESSAGE("Weezing");
-        MESSAGE("The effects of Neutralizing Gas wore off!");
-        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
-        SEND_IN_MESSAGE("Wobbuffet");
     }
 }

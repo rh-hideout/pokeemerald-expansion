@@ -11,7 +11,6 @@
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "cable_club.h"
-#include "event_object_movement.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "palette.h"
@@ -1609,15 +1608,6 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         src = (u8 *)&battleMon;
         for (size = 0; size < sizeof(battleMon); size++)
             dst[size] = src[size];
-        #if TESTING
-        if (gTestRunnerEnabled)
-        {
-            u32 side = GetBattlerSide(battler);
-            u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                gBattleMons[battler].ability = gBattleStruct->overwrittenAbilities[battler] = TestRunner_Battle_GetForcedAbility(side, partyIndex);
-        }
-        #endif
         break;
     case REQUEST_SPECIES_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_SPECIES);
@@ -2095,22 +2085,7 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
         HandleLowHpMusicChange(&party[gBattlerPartyIndexes[battler]], battler);
 }
 
-// In normal singles, if follower pokemon is out, have it slide in instead of being thrown
-static bool8 ShouldDoSlideInAnim(void)
-{
-    struct ObjectEvent *followerObj = GetFollowerObject();
-    if (!followerObj || followerObj->invisible)
-        return FALSE;
-    if (gBattleTypeFlags & (
-        BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_FIRST_BATTLE |
-        BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
-        BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL)
-    )
-        return FALSE;
-    return TRUE;
-}
-
-void StartSendOutAnim(u32 battler, bool32 dontClearSubstituteBit, bool32 doSlideIn)
+void StartSendOutAnim(u32 battler, bool32 dontClearSubstituteBit)
 {
     u16 species;
     u32 side = GetBattlerSide(battler);
@@ -2141,7 +2116,7 @@ void StartSendOutAnim(u32 battler, bool32 dontClearSubstituteBit, bool32 doSlide
 
     gSprites[gBattleControllerData[battler]].data[1] = gBattlerSpriteIds[battler];
     gSprites[gBattleControllerData[battler]].data[2] = battler;
-    gSprites[gBattleControllerData[battler]].data[0] = DoPokeballSendOutAnimation(battler, 0, (side == B_SIDE_OPPONENT) ? POKEBALL_OPPONENT_SENDOUT : (doSlideIn ? POKEBALL_PLAYER_SLIDEIN : POKEBALL_PLAYER_SENDOUT));
+    gSprites[gBattleControllerData[battler]].data[0] = DoPokeballSendOutAnimation(battler, 0, (side == B_SIDE_OPPONENT) ? POKEBALL_OPPONENT_SENDOUT : POKEBALL_PLAYER_SENDOUT);
 }
 
 static void FreeMonSprite(u32 battler)
@@ -2465,7 +2440,7 @@ void BtlController_HandleSwitchInAnim(u32 battler, bool32 isPlayerSide, void (*c
     gBattlerPartyIndexes[battler] = gBattleResources->bufferA[battler][1];
     if (isPlayerSide)
         BattleLoadMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
-    StartSendOutAnim(battler, gBattleResources->bufferA[battler][2], FALSE);
+    StartSendOutAnim(battler, gBattleResources->bufferA[battler][2]);
     gBattlerControllerFuncs[battler] = controllerCallback;
 }
 
@@ -2961,17 +2936,17 @@ static void Task_StartSendOutAnim(u8 taskId)
         if (TwoMonsAtSendOut(battler))
         {
             gBattleResources->bufferA[battler][1] = gBattlerPartyIndexes[battler];
-            StartSendOutAnim(battler, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battler, FALSE);
 
             battlerPartner = battler ^ BIT_FLANK;
             gBattleResources->bufferA[battlerPartner][1] = gBattlerPartyIndexes[battlerPartner];
             BattleLoadMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[battlerPartner]], battlerPartner);
-            StartSendOutAnim(battlerPartner, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battlerPartner, FALSE);
         }
         else
         {
             gBattleResources->bufferA[battler][1] = gBattlerPartyIndexes[battler];
-            StartSendOutAnim(battler, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battler, FALSE);
         }
         gBattlerControllerFuncs[battler] = (void*)(GetWordTaskArg(taskId, tControllerFunc_1));
         DestroyTask(taskId);

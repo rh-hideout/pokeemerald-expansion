@@ -18,12 +18,12 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health")
     } SCENE {
         if (health == 75) {
             ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
-            MESSAGE("Wobbuffet drank down all the matcha that Poltchageist made!");
+            MESSAGE("Wobbuffet drank down all the matcha that Ptchageist made!");
             HP_BAR(playerRight, damage: -25);
         } else {
             NONE_OF {
                 ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
-                MESSAGE("Wobbuffet drank down all the matcha that Poltchageist made!");
+                MESSAGE("Wobbuffet drank down all the matcha that Ptchageist made!");
                 HP_BAR(playerRight, damage: -25);
             }
         }
@@ -41,10 +41,10 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in"
     } WHEN {
         TURN { SWITCH(playerLeft, 2); }
     } SCENE {
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Poltchageist");
+        MESSAGE("Wobbuffet, that's enough! Come back!");
+        MESSAGE("Go! Ptchageist!");
         ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
-        MESSAGE("Wobbuffet drank down all the matcha that Poltchageist made!");
+        MESSAGE("Wobbuffet drank down all the matcha that Ptchageist made!");
         HP_BAR(playerRight, damage: -25);
     }
 }
@@ -62,10 +62,10 @@ DOUBLE_BATTLE_TEST("Hospitality ignores Substitute")
         TURN { SWITCH(playerLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerRight);
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Poltchageist");
+        MESSAGE("Wobbuffet, that's enough! Come back!");
+        MESSAGE("Go! Ptchageist!");
         ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
-        MESSAGE("Wobbuffet drank down all the matcha that Poltchageist made!");
+        MESSAGE("Wobbuffet drank down all the matcha that Ptchageist made!");
     }
 }
 
@@ -85,7 +85,7 @@ DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the fiel
         MESSAGE("Wobbuffet fainted!");
         HP_BAR(playerRight);
         MESSAGE("Wobbuffet fainted!");
-        SEND_IN_MESSAGE("Poltchageist");
+        MESSAGE("Go! Ptchageist!");
         NOT ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
     }
 }

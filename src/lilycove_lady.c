@@ -49,7 +49,7 @@ void SetLilycoveLadyGfx(void)
     if (GetLilycoveLadyId() == LILYCOVE_LADY_CONTEST)
     {
         lilycoveLady = &gSaveBlock1Ptr->lilycoveLady;
-        VarSet(VAR_OBJ_GFX_ID_1, sContestLadyValues[lilycoveLady->contest.category].monGfxId);
+        VarSet(VAR_OBJ_GFX_ID_1, sContestLadyMonGfxId[lilycoveLady->contest.category]);
         gSpecialVar_Result = TRUE;
     }
     else
@@ -396,7 +396,7 @@ static u8 BufferQuizAuthorName(void)
     sQuizLadyPtr = &gSaveBlock1Ptr->lilycoveLady.quiz;
     if (sQuizLadyPtr->playerName[0] == EOS)
     {
-        StringCopy_PlayerName(gStringVar1, COMPOUND_STRING("Lady"));
+        StringCopy_PlayerName(gStringVar1, gText_QuizLady_Lady);
         authorNameId = QUIZ_AUTHOR_NAME_LADY;
     }
     else
@@ -695,15 +695,15 @@ bool8 GivePokeblockToContestLady(struct Pokeblock *pokeblock)
 static void BufferContestLadyCategoryAndMonName(u8 *category, u8 *nickname)
 {
     sContestLadyPtr = &gSaveBlock1Ptr->lilycoveLady.contest;
-    StringCopy(category, sContestLadyValues[sContestLadyPtr->category].categoryName);
-    StringCopy_Nickname(nickname, sContestLadyValues[sContestLadyPtr->category].monName);
+    StringCopy(category, sContestLadyCategoryNames[sContestLadyPtr->category]);
+    StringCopy_Nickname(nickname, sContestLadyMonNames[sContestLadyPtr->category]);
 }
 
 void BufferContestLadyMonName(u8 *category, u8 *nickname)
 {
     sContestLadyPtr = &gSaveBlock1Ptr->lilycoveLady.contest;
     *category = sContestLadyPtr->category;
-    StringCopy(nickname, sContestLadyValues[sContestLadyPtr->category].monName);
+    StringCopy(nickname, sContestLadyMonNames[sContestLadyPtr->category]);
 }
 
 void BufferContestLadyPlayerName(u8 *dest)
@@ -720,7 +720,7 @@ void BufferContestLadyLanguage(u8 *dest)
 
 void BufferContestName(u8 *dest, u8 category)
 {
-    StringCopy(dest, sContestLadyValues[category].contestName);
+    StringCopy(dest, sContestNames[category]);
 }
 
 // Used by the Contest Lady's TV show to determine how well she performed
@@ -775,7 +775,7 @@ void SetContestLadyGivenPokeblock(void)
 void GetContestLadyMonSpecies(void)
 {
     sContestLadyPtr = &gSaveBlock1Ptr->lilycoveLady.contest;
-    gSpecialVar_0x8005 = sContestLadyValues[sContestLadyPtr->category].monSpecies;
+    gSpecialVar_0x8005 = sContestLadyMonSpecies[sContestLadyPtr->category];
 }
 
 u8 GetContestLadyCategory(void)

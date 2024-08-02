@@ -34,7 +34,6 @@
 #include "text_window.h"
 #include "tv.h"
 #include "constants/decorations.h"
-#include "constants/event_objects.h"
 #include "constants/items.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/rgb.h"
@@ -217,8 +216,7 @@ static const struct ListMenuTemplate sShopBuyMenuListTemplate =
     .itemVerticalPadding = 0,
     .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
     .fontId = FONT_NARROW,
-    .cursorKind = CURSOR_BLACK_ARROW,
-    .textNarrowWidth = 84,
+    .cursorKind = CURSOR_BLACK_ARROW
 };
 
 static const struct BgTemplate sShopBuyMenuBgTemplates[] =
@@ -870,8 +868,7 @@ static void BuyMenuCollectObjectEventData(void)
         {
             u8 objEventId = GetObjectEventIdByXY(facingX - 4 + x, facingY - 2 + y);
 
-            // skip if invalid or an overworld pokemon that is not following the player
-            if (objEventId != OBJECT_EVENTS_COUNT && !(gObjectEvents[objEventId].active && gObjectEvents[objEventId].graphicsId >= OBJ_EVENT_GFX_MON_BASE && gObjectEvents[objEventId].localId != OBJ_EVENT_ID_FOLLOWER))
+            if (objEventId != OBJECT_EVENTS_COUNT)
             {
                 sShopData->viewportObjects[numObjects][OBJ_EVENT_ID] = objEventId;
                 sShopData->viewportObjects[numObjects][X_COORD] = x;
@@ -905,12 +902,7 @@ static void BuyMenuDrawObjectEvents(void)
     u8 i;
     u8 spriteId;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
-    u8 weatherTemp = gWeatherPtr->palProcessingState;
 
-    // This function runs during fadeout, so the weather palette processing state must be temporarily changed,
-    // so that time-blending will work properly
-    if (weatherTemp == WEATHER_PAL_STATE_SCREEN_FADING_OUT)
-        gWeatherPtr->palProcessingState = WEATHER_PAL_STATE_IDLE;
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (sShopData->viewportObjects[i][OBJ_EVENT_ID] == OBJECT_EVENTS_COUNT)
@@ -933,9 +925,6 @@ static void BuyMenuDrawObjectEvents(void)
 
         StartSpriteAnim(&gSprites[spriteId], sShopData->viewportObjects[i][ANIM_NUM]);
     }
-
-    gWeatherPtr->palProcessingState = weatherTemp; // restore weather state
-    CpuFastCopy(gPlttBufferFaded + 16*16, gPlttBufferUnfaded + 16*16, PLTT_BUFFER_SIZE);
 }
 
 static bool8 BuyMenuCheckIfObjectEventOverlapsMenuBg(s16 *object)
@@ -1035,7 +1024,7 @@ static void Task_BuyMenu(u8 taskId)
                 else
                 {
                     StringCopy(gStringVar1, gDecorations[itemId].name);
-                    ConvertIntToDecimalStringN(gStringVar2, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
+                    ConvertIntToDecimalStringN(gStringVar2, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, 6);
 
                     if (sMartInfo.martType == MART_TYPE_DECOR)
                         StringExpandPlaceholders(gStringVar4, gText_Var1IsItThatllBeVar2);
@@ -1097,7 +1086,7 @@ static void Task_BuyHowManyDialogueHandleInput(u8 taskId)
             PutWindowTilemap(WIN_ITEM_LIST);
             CopyItemName(tItemId, gStringVar1);
             ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
-            ConvertIntToDecimalStringN(gStringVar3, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
+            ConvertIntToDecimalStringN(gStringVar3, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, 6);
             BuyMenuDisplayMessage(taskId, gText_Var1AndYouWantedVar2, BuyMenuConfirmPurchase);
         }
         else if (JOY_NEW(B_BUTTON))
@@ -1226,7 +1215,7 @@ static void BuyMenuPrintItemQuantityAndPrice(u8 taskId)
     s16 *data = gTasks[taskId].data;
 
     FillWindowPixelBuffer(WIN_QUANTITY_PRICE, PIXEL_FILL(1));
-    PrintMoneyAmount(WIN_QUANTITY_PRICE, CalculateMoneyTextHorizontalPosition(sShopData->totalCost), 1, sShopData->totalCost, TEXT_SKIP_DRAW);
+    PrintMoneyAmount(WIN_QUANTITY_PRICE, 38, 1, sShopData->totalCost, TEXT_SKIP_DRAW);
     ConvertIntToDecimalStringN(gStringVar1, tItemCount, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
     BuyMenuPrint(WIN_QUANTITY_PRICE, gStringVar4, 0, 1, 0, COLORID_NORMAL);
