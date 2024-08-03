@@ -6843,6 +6843,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
     },
 #endif //P_FAMILY_PECHARUNT
 
+
 #ifdef __INTELLISENSE__
 };
 #endif

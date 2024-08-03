@@ -16900,59 +16900,35 @@ ElectroShotUnleash:
 	blendoff
 	end
 
-Move_IVY_CUDGEL::
-	loadspritegfx ANIM_TAG_IVY_CUDGEL_GRASS
-	loadspritegfx ANIM_TAG_WOOD_HAMMER
-	loadspritegfx ANIM_TAG_WOOD_HAMMER_HAMMER
-	loadspritegfx ANIM_TAG_IMPACT
-	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 2, 4
-	jumpifmovetypeequal TYPE_FIRE, IvyCudgelFire
-	jumpifmovetypeequal TYPE_ROCK, IvyCudgelRock
-	jumpifmovetypeequal TYPE_WATER, IvyCudgelWater
-	createsprite gIvyCudgelSpriteTemplate, ANIM_TARGET, 2
-	delay 60
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
-	delay 18
-	createvisualtask AnimTask_SquishTarget, 0x2
-	delay 6
-	call WoodHammerImpact
-	waitforvisualfinish
-	end
-IvyCudgelFire:
-	loadspritegfx ANIM_TAG_IVY_CUDGEL_FIRE
-	createsprite gIvyCudgelFireSpriteTemplate, ANIM_TARGET, 2
-	delay 60
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
-	delay 18
-	createvisualtask AnimTask_SquishTarget, 0x2
-	delay 6
-	call WoodHammerImpact
-	waitforvisualfinish
-	end
-IvyCudgelRock:
-	loadspritegfx ANIM_TAG_IVY_CUDGEL_ROCK
-	createsprite gIvyCudgelRockSpriteTemplate, ANIM_TARGET, 2
-	delay 60
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
-	delay 18
-	createvisualtask AnimTask_SquishTarget, 0x2
-	delay 6
-	call WoodHammerImpact
-	waitforvisualfinish
-	end
-IvyCudgelWater:
-	loadspritegfx ANIM_TAG_IVY_CUDGEL_WATER
-	createsprite gIvyCudgelWaterSpriteTemplate, ANIM_TARGET, 2
-	delay 60
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
-	delay 18
-	createvisualtask AnimTask_SquishTarget, 0x2
-	delay 6
-	call WoodHammerImpact
+
+	Move_STARSEED_BLAST:
+	loadspritegfx ANIM_TAG_SEED
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 30, 1
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
+	delay 5
+	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
 	waitforvisualfinish
 	end
 
+Move_TERA_BLAST::
+Move_AXE_KICK::
+Move_ORDER_UP::
 Move_SPICY_EXTRACT::
 	loadspritegfx ANIM_TAG_SMALL_EMBER
 	loadspritegfx ANIM_TAG_POISON_BUBBLE
