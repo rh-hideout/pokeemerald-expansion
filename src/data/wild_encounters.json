@@ -5692,9 +5692,9 @@
             "encounter_rate": 20,
             "mons": [
               {
-                "min_level": 30,
-                "max_level": 30,
-                "species": "SPECIES_WYNAUT"
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_MISSINGNO"
               },
               {
                 "min_level": 35,
@@ -5702,9 +5702,9 @@
                 "species": "SPECIES_WYNAUT"
               },
               {
-                "min_level": 25,
-                "max_level": 25,
-                "species": "SPECIES_WYNAUT"
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_MISSINGNO"
               },
               {
                 "min_level": 40,
@@ -5712,9 +5712,9 @@
                 "species": "SPECIES_WYNAUT"
               },
               {
-                "min_level": 20,
-                "max_level": 20,
-                "species": "SPECIES_WYNAUT"
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_MISSINGNO"
               },
               {
                 "min_level": 45,
@@ -5722,9 +5722,9 @@
                 "species": "SPECIES_WYNAUT"
               },
               {
-                "min_level": 15,
-                "max_level": 15,
-                "species": "SPECIES_WYNAUT"
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_MISSINGNO"
               },
               {
                 "min_level": 50,
@@ -5732,14 +5732,14 @@
                 "species": "SPECIES_WYNAUT"
               },
               {
-                "min_level": 10,
-                "max_level": 10,
-                "species": "SPECIES_WYNAUT"
-              },
-              {
                 "min_level": 5,
                 "max_level": 5,
-                "species": "SPECIES_WYNAUT"
+                "species": "SPECIES_MISSINGNO"
+              },
+              {
+                "min_level": 55,
+                "max_level": 55,
+                "species": "SPECIES_MISSINGNO"
               },
               {
                 "min_level": 10,
@@ -5764,12 +5764,12 @@
               {
                 "min_level": 10,
                 "max_level": 30,
-                "species": "SPECIES_WINGULL"
+                "species": "SPECIES_PIKIPEK"
               },
               {
                 "min_level": 15,
                 "max_level": 25,
-                "species": "SPECIES_PIKIPEK"
+                "species": "SPECIES_WINGULL"
               },
               {
                 "min_level": 25,
@@ -13546,6 +13546,75 @@
                 "min_level": 36,
                 "max_level": 36,
                 "species": "SPECIES_LANDORUS"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_LITTLEROOT_CAVE",
+          "base_label": "gLittlerootCave0",
+          "land_mons": {
+            "encounter_rate": 15,
+            "mons": [
+              {
+                "min_level": 24,
+                "max_level": 24,
+                "species": "SPECIES_ZIGZAGOON_GALARIAN"
+              },
+              {
+                "min_level": 24,
+                "max_level": 26,
+                "species": "SPECIES_ABRA"
+              },
+              {
+                "min_level": 25,
+                "max_level": 26,
+                "species": "SPECIES_SHROODLE"
+              },
+              {
+                "min_level": 25,
+                "max_level": 26,
+                "species": "SPECIES_PIKIPEK"
+              },
+              {
+                "min_level": 26,
+                "max_level": 26,
+                "species": "SPECIES_LINOONE"
+              },
+              {
+                "min_level": 26,
+                "max_level": 26,
+                "species": "SPECIES_MACHOP"
+              },
+              {
+                "min_level": 25,
+                "max_level": 27,
+                "species": "SPECIES_SPRIGATITO"
+              },
+              {
+                "min_level": 25,
+                "max_level": 25,
+                "species": "SPECIES_APPLIN"
+              },
+              {
+                "min_level": 26,
+                "max_level": 26,
+                "species": "SPECIES_CYNDAQUIL"
+              },
+              {
+                "min_level": 26,
+                "max_level": 26,
+                "species": "SPECIES_CHARMANDER"
+              },
+              {
+                "min_level": 27,
+                "max_level": 27,
+                "species": "SPECIES_COBALION"
+              },
+              {
+                "min_level": 25,
+                "max_level": 25,
+                "species": "SPECIES_TAPU_KOKO"
               }
             ]
           }

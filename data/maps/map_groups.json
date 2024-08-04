@@ -435,7 +435,8 @@
     "MeteorFalls_StevensCave",
     "UnownCavern1F",
     "UnownCavern2F",
-    "UnownCavernB1F"
+    "UnownCavernB1F",
+    "LittlerootCave"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

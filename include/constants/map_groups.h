@@ -406,6 +406,7 @@
 #define MAP_UNOWN_CAVERN1F                           (108 | (24 << 8))
 #define MAP_UNOWN_CAVERN2F                           (109 | (24 << 8))
 #define MAP_UNOWN_CAVERN_B1F                         (110 | (24 << 8))
+#define MAP_LITTLEROOT_CAVE                          (111 | (24 << 8))
 
 // gMapGroup_IndoorDynamic
 #define MAP_SECRET_BASE_RED_CAVE1    (0 | (25 << 8))

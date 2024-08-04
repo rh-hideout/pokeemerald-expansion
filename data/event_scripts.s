@@ -1102,3 +1102,5 @@ EventScript_End:
 	.include "data/maps/ZHouse/scripts.inc"
 
 	.include "data/maps/Black_Market/scripts.inc"
+
+	.include "data/maps/LittlerootCave/scripts.inc"

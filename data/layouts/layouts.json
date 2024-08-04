@@ -4470,6 +4470,16 @@
       "secondary_tileset": "gTileset_Shop",
       "border_filepath": "data/layouts/Black_Market/border.bin",
       "blockdata_filepath": "data/layouts/Black_Market/map.bin"
+    },
+    {
+      "id": "LAYOUT_LITTLEROOT_CAVE",
+      "name": "LittlerootCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/LittlerootCave/border.bin",
+      "blockdata_filepath": "data/layouts/LittlerootCave/map.bin"
     }
   ]
 }

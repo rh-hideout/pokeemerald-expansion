@@ -2434,6 +2434,9 @@ gCryTable::
 	cry Cry_ALTKIRLIA
 	cry Cry_ALTGARDEVOIR
 .endif @ P_FAMILY_ALT_RALTS
+.if P_FAMILY_MISSINGNO == TRUE
+	cry Cry_MISSINGNO
+.endif @ P_FAMILY_MISSINGNO
 
 	.align 2
 gCryTable_Reverse::
@@ -4871,3 +4874,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_ALTKIRLIA
 	cry_reverse Cry_ALTGARDEVOIR
 .endif @ P_FAMILY_ALT_RALTS
+.if P_FAMILY_MISSINGNO == TRUE
+	cry_reverse Cry_MISSINGNO
+.endif @ P_FAMILY_MISSINGNO

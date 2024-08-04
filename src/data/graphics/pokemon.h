@@ -13113,6 +13113,17 @@ const u8 gMonFootprint_QuestionMark[] = INCBIN_U8("graphics/pokemon/question_mar
 #endif //P_FOOTPRINTS
 #endif //P_FAMILY_ALT_RALTS
 
+#if P_FAMILY_MISSINGNO
+    const u32 gMonFrontPic_Missingno[] = INCBIN_U32("graphics/pokemon/missingno/anim_front.4bpp.lz");
+    const u32 gMonPalette_Missingno[] = INCBIN_U32("graphics/pokemon/missingno/normal.gbapal.lz");
+    const u32 gMonBackPic_Missingno[] = INCBIN_U32("graphics/pokemon/missingno/back.4bpp.lz");
+    const u32 gMonShinyPalette_Missingno[] = INCBIN_U32("graphics/pokemon/missingno/shiny.gbapal.lz");
+    const u8 gMonIcon_Missingno[] = INCBIN_U8("graphics/pokemon/missingno/icon.4bpp");
+#if P_FOOTPRINTS
+    const u8 gMonFootprint_Missingno[] = INCBIN_U8("graphics/pokemon/missingno/footprint.1bpp");
+#endif //P_FOOTPRINTS
+#endif //P_FAMILY_MISSINGNO
+
  const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");

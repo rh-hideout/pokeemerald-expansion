@@ -6180,6 +6180,11 @@ Cry_ALTGARDEVOIR::
 	.incbin "sound/direct_sound_samples/cries/altgardevoir.bin"
 .endif @P_FAMILY_ALT_RALTS
 
+.if P_FAMILY_MISSINGNO == TRUE
+	.align 2
+Cry_MISSINGNO::
+	.incbin "sound/direct_sound_samples/cries/missingno.bin"
+.endif @P_FAMILY_MISSINGNO
 
 	.align 2
 DirectSoundWaveData_register_noise::

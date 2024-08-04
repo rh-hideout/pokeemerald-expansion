@@ -10180,6 +10180,20 @@ static const union AnimCmd sAnim_AltGardevoir_1[] =
 };
 #endif //P_FAMILY_ALT_RALTS
 
+#if P_FAMILY_MISSINGNO
+static const union AnimCmd sAnim_Missingno_1[] =
+{
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 18),
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 10),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+#endif //P_FAMILY_MISSINGNO
+
 static const union AnimCmd sAnim_Egg_1[] =
 {
     ANIMCMD_FRAME(0, 6),
@@ -12864,5 +12878,8 @@ SINGLE_ANIMATION(AltRalts);
 SINGLE_ANIMATION(AltKirlia);
 SINGLE_ANIMATION(AltGardevoir);
 #endif //P_FAMILY_ALT_RALTS
+#if P_FAMILY_MISSINGNO
+SINGLE_ANIMATION(Missingno);
+#endif //P_FAMILY_MISSINGNO
 
 SINGLE_ANIMATION(Egg);

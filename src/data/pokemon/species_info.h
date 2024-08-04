@@ -144,8 +144,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .catchRate = 45,
         .expYield = 187,
         .evYield_HP = 2,
-        .itemCommon = ITEM_NEVER_MELT_ICE,
-        .itemRare = ITEM_POISON_BARB,
+        .itemCommon = ITEM_BLACK_SLUDGE,
+        .itemRare = ITEM_POISON_GEM,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 40,
         .friendship = STANDARD_FRIENDSHIP,
@@ -347,6 +347,64 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .teachableLearnset = sAltGardevoirTeachableLearnset,
     },
 #endif //P_FAMILY_ALT_RALTS
+
+#if P_FAMILY_MISSINGNO
+    [SPECIES_MISSINGNO] =
+    {
+        .baseHP        = 178,
+        .baseAttack    = 136,
+        .baseDefense   = 80,
+        .baseSpeed     = 46,
+        .baseSpAttack  = 85,
+        .baseSpDefense = 75,
+        .types = MON_TYPES(TYPE_FLYING, TYPE_GHOST),
+        .catchRate = 45,
+        .expYield = 300,
+        .evYield_Attack = 3,
+        .itemCommon = ITEM_ENIGMA_BERRY,
+        .itemRare = ITEM_LUXURY_BALL,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 120,
+        .friendship = 100,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+        .abilities = { ABILITY_SHADOW_TAG, ABILITY_NEUTRALIZING_GAS, ABILITY_AERILATE },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("MissingNo"),
+        .cryId = CRY_MISSINGNO,
+        .natDexNum = NATIONAL_DEX_MISSINGNO,
+        .categoryName = _("Glitch Bird"),
+        .height = 32,
+        .weight = 9999,
+        .description = COMPOUND_STRING(
+            "A Pokémon created from corrupted data.\n"
+            "It was capable of corrupting any system.\n"
+            "However as time went on it stabalized.\n"
+            "It’s subject to horror stories of old."),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Missingno,
+        .frontPicSize = MON_COORDS_SIZE(64, 48),
+        .frontPicYOffset = 13,
+        .frontAnimFrames = sAnims_Missingno,
+        .frontAnimId = ANIM_SHRINK_GROW,
+        .enemyMonElevation = 13,
+        .backPic = gMonBackPic_Missingno,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_H_VIBRATE,
+        .palette = gMonPalette_Missingno,
+        .shinyPalette = gMonShinyPalette_Missingno,
+        .iconSprite = gMonIcon_Missingno,
+        .iconPalIndex = 2,
+        FOOTPRINT(Missingno)
+        .isMythical = TRUE,
+        .levelUpLearnset = sMissingnoLevelUpLearnset,
+        .teachableLearnset = sMissingnoTeachableLearnset,
+    },
+#endif //P_FAMILY_MISSINGNO
 
     /*
     [SPECIES_NONE] =

@@ -1633,8 +1633,9 @@
 #define SPECIES_ALT_RALTS                               1526
 #define SPECIES_ALT_KIRLIA                              1527
 #define SPECIES_ALT_GARDEVOIR                           1528
+#define SPECIES_MISSINGNO                               1529
 
-#define SPECIES_EGG (SPECIES_ALT_GARDEVOIR + 1)
+#define SPECIES_EGG (SPECIES_MISSINGNO + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
