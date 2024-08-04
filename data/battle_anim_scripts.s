@@ -17423,7 +17423,7 @@ Move_LAST_RESPECTS::
 	restorebg
 	waitbgfadein
 	end
-	
+
 Move_TIDY_UP::
 	loadspritegfx ANIM_TAG_PINK_CLOUD
 	monbg ANIM_ATTACKER
@@ -17444,7 +17444,7 @@ Move_TIDY_UP::
 	clearmonbg ANIM_ATTACKER
 	blendoff
 	end
-	
+
 Move_KOWTOW_CLEAVE::
 	loadspritegfx ANIM_TAG_SLASH
 	loadspritegfx ANIM_TAG_CROSS_IMPACT
@@ -17738,7 +17738,7 @@ Move_HYDRO_STEAM::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 3, 9, 0, RGB_RED
 	waitforvisualfinish
 	end
-	
+
 Move_POUNCE::
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_TARGET
@@ -17844,8 +17844,75 @@ ElectroShotUnleash:
 	blendoff
 	end
 
-Move_TERA_BLAST::
+Move_IVY_CUDGEL::
+	loadspritegfx ANIM_TAG_IVY_CUDGEL_GRASS
+	loadspritegfx ANIM_TAG_WOOD_HAMMER
+	loadspritegfx ANIM_TAG_WOOD_HAMMER_HAMMER
+	loadspritegfx ANIM_TAG_IMPACT
+	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
+	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 2, 4
+	jumpifmovetypeequal TYPE_FIRE, IvyCudgelFire
+	jumpifmovetypeequal TYPE_ROCK, IvyCudgelRock
+	jumpifmovetypeequal TYPE_WATER, IvyCudgelWater
+	createsprite gIvyCudgelSpriteTemplate, ANIM_TARGET, 2
+	delay 60
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
+	delay 18
+	createvisualtask AnimTask_SquishTarget, 0x2
+	delay 6
+	call WoodHammerImpact
+	waitforvisualfinish
+	end
+IvyCudgelFire:
+	loadspritegfx ANIM_TAG_IVY_CUDGEL_FIRE
+	createsprite gIvyCudgelFireSpriteTemplate, ANIM_TARGET, 2
+	delay 60
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
+	delay 18
+	createvisualtask AnimTask_SquishTarget, 0x2
+	delay 6
+	call WoodHammerImpact
+	waitforvisualfinish
+	end
+IvyCudgelRock:
+	loadspritegfx ANIM_TAG_IVY_CUDGEL_ROCK
+	createsprite gIvyCudgelRockSpriteTemplate, ANIM_TARGET, 2
+	delay 60
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
+	delay 18
+	createvisualtask AnimTask_SquishTarget, 0x2
+	delay 6
+	call WoodHammerImpact
+	waitforvisualfinish
+	end
+IvyCudgelWater:
+	loadspritegfx ANIM_TAG_IVY_CUDGEL_WATER
+	createsprite gIvyCudgelWaterSpriteTemplate, ANIM_TARGET, 2
+	delay 60
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
+	delay 18
+	createvisualtask AnimTask_SquishTarget, 0x2
+	delay 6
+	call WoodHammerImpact
+	waitforvisualfinish
+	end
+
 Move_AXE_KICK::
+	loadspritegfx ANIM_TAG_HANDS_AND_FEET
+	loadspritegfx ANIM_TAG_IMPACT
+	playsewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, 0, 20, 0, 0, 4
+	delay 7
+	createsprite gAxeKickSpriteTemplate, ANIM_TARGET, 3
+	delay 2
+	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 1, 0, 0, ANIM_TARGET, 1
+	createvisualtask AnimTask_SquishTargetShort, 2
+	waitforvisualfinish
+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 1, 4
+	end
+
+Move_TERA_BLAST::
 Move_ORDER_UP::
 Move_SPICY_EXTRACT::
 Move_SPIN_OUT::
@@ -17875,7 +17942,6 @@ Move_MAGICAL_TORQUE::
 Move_PSYBLADE::
 Move_BLOOD_MOON::
 Move_MATCHA_GOTCHA::
-Move_IVY_CUDGEL::
 Move_TERA_STARSTORM::
 Move_FICKLE_BEAM::
 Move_THUNDERCLAP::

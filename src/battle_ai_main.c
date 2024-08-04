@@ -402,7 +402,7 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 ba
 {
     u32 accuracy;
     u32 abilityAtk = aiData->abilities[battlerAtk];
-    u32 abilityDef = aiData->abilities[battlerAtk];
+    u32 abilityDef = aiData->abilities[battlerDef];
     if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD || gMovesInfo[move].accuracy == 0) // Moves with accuracy 0 or no guard ability always hit.
         accuracy = 100;
     else
@@ -461,12 +461,20 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     aiData->weatherHasEffect = WEATHER_HAS_EFFECT;
     // get/assume all battler data and simulate AI damage
     battlersCount = gBattlersCount;
+
     for (battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
         if (!IsBattlerAlive(battlerAtk))
             continue;
 
         SetBattlerAiData(battlerAtk, aiData);
+    }
+
+    for (battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
+    {
+        if (!IsBattlerAlive(battlerAtk))
+            continue;
+
         SetBattlerAiMovesData(aiData, battlerAtk, battlersCount);
     }
 }
@@ -2644,7 +2652,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_UPPER_HAND:
-            if (predictedMove == MOVE_NONE || IS_MOVE_STATUS(predictedMove) || AI_WhoStrikesFirst(battlerAtk, battlerDef, move) == AI_IS_SLOWER || GetMovePriority(battlerDef, move) < 1 || GetMovePriority(battlerDef, move) > 3) // Opponent going first or not using priority move
+            if (predictedMove == MOVE_NONE || IS_MOVE_STATUS(predictedMove) || AI_WhoStrikesFirst(battlerAtk, battlerDef, move) == AI_IS_SLOWER || GetMovePriority(battlerDef, predictedMove) < 1 || GetMovePriority(battlerDef, predictedMove) > 3) // Opponent going first or not using priority move
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_PLACEHOLDER:

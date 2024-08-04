@@ -196,10 +196,10 @@ struct SpecialStatus
     u8 statLowered:1;
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
-    u8 traced:1;
     u8 faintedHasReplacement:1;
     u8 focusBanded:1;
     u8 focusSashed:1;
+    u8 unused:1;
     // End of byte
     u8 sturdied:1;
     u8 stormDrainRedirected:1;
@@ -628,7 +628,7 @@ struct BattleStruct
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
-    u8 switchInAbilitiesCounter;
+    u8 eventsBeforeFirstTurnState;
     u8 faintedActionsState;
     u8 faintedActionsBattlerId;
     u8 scriptPartyIdx; // for printing the nickname
@@ -672,7 +672,7 @@ struct BattleStruct
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
     u16 changedItems[MAX_BATTLERS_COUNT];
-    u8 switchInItemsCounter;
+    u8 switchInBattlerCounter;
     u8 arenaTurnCounter;
     u8 turnSideTracker;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
@@ -795,13 +795,12 @@ STATIC_ASSERT(sizeof(((struct BattleStruct *)0)->palaceFlags) * 8 >= MAX_BATTLER
 #define F_DYNAMIC_TYPE_IGNORE_PHYSICALITY  (1 << 6) // If set, the dynamic type's physicality won't be used for certain move effects.
 #define F_DYNAMIC_TYPE_SET                 (1 << 7) // Set for all dynamic types to distinguish a dynamic type of Normal (0) from no dynamic type.
 
-#define GET_MOVE_TYPE(move, typeArg)                                  \
-{                                                                     \
+#define GET_MOVE_TYPE(move, typeArg) do {                             \
     if (gBattleStruct->dynamicMoveType)                               \
         typeArg = gBattleStruct->dynamicMoveType & DYNAMIC_TYPE_MASK; \
     else                                                              \
-        typeArg = gMovesInfo[move].type;                            \
-}
+        typeArg = gMovesInfo[move].type;                              \
+} while(0)
 
 #define IS_MOVE_PHYSICAL(move)(GetBattleMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
 #define IS_MOVE_SPECIAL(move)(GetBattleMoveCategory(move) == DAMAGE_CATEGORY_SPECIAL)
