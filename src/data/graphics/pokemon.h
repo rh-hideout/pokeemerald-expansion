@@ -22001,6 +22001,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_PECHARUNT
 
+   const u32 gMonFrontPic_Maplage[] = INCBIN_U32("graphics/pokemon/maplage/front.4bpp.lz");
+   const u32 gMonBackPic_Maplage[] = INCBIN_U32("graphics/pokemon/maplage/back.4bpp.lz");
+   const u32 gMonPalette_Maplage[] = INCBIN_U32("graphics/pokemon/maplage/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Maplage[] = INCBIN_U32("graphics/pokemon/maplage/shiny.gbapal.lz");
+   const u8 gMonIcon_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/icon.4bpp");
+   const u8 gMonFootprint_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/footprint.1bpp");
+
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
