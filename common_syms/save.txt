@@ -1,0 +1,13 @@
+gLastWrittenSector
+gLastSaveCounter
+gLastKnownGoodSector
+gDamagedSaveSectors
+gSaveCounter
+gReadWriteSector
+gIncrementalSectorId
+gSaveUnusedVar
+gSaveFileStatus
+gGameContinueCallback
+gRamSaveSectorLocations
+gSaveUnusedVar2
+gSaveAttemptStatus

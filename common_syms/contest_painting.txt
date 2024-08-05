@@ -1,0 +1,4 @@
+gContestMonPixels
+gImageProcessingContext
+gContestPaintingWinner
+gContestPaintingMonPalette

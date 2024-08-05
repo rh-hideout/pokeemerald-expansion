@@ -1,0 +1,3 @@
+gApprenticePartyMovesData
+gApprenticeQuestionData
+gApprenticeFunc

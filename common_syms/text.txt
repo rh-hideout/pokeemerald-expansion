@@ -1,0 +1,4 @@
+gFonts
+gDisableTextPrinters
+gCurGlyph
+gTextFlags
