@@ -196,6 +196,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         FOOTPRINT(AltAbsol)
         .levelUpLearnset = sAltAbsolLevelUpLearnset,
         .teachableLearnset = sAltAbsolTeachableLearnset,
+        .eggMoveLearnset = sAltAbsolEggMoveLearnset,
     },
 
 [SPECIES_ALT_LAPRAS] =
@@ -250,6 +251,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         FOOTPRINT(AltLapras)
         .levelUpLearnset = sAltLaprasLevelUpLearnset,
         .teachableLearnset = sAltLaprasTeachableLearnset,
+        .eggMoveLearnset = sAltLaprasEggMoveLearnset,
 },
 
 #if P_FAMILY_ALT_RALTS
@@ -303,6 +305,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         FOOTPRINT(AltRalts)
         .levelUpLearnset = sAltRaltsLevelUpLearnset,
         .teachableLearnset = sAltRaltsTeachableLearnset,
+        .eggMoveLearnset = sAltRaltsEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_ALT_KIRLIA}),
     },
 
