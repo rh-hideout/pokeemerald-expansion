@@ -3011,7 +3011,7 @@ static void CursorCb_Switch(u8 taskId)
 
 static void CursorCb_FollowMe(u8 taskId)
 {
-        PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
+        PartyMenuRemoveWindow(&sPartyMenuIndernal->windowId[0]);
         PlaySE(SE_BALL_TRADE);
         if (FlagGet(FLAG_DISABLE_FOLLOWER)){
             DisplayPartyMenuStdMessage(PARTY_MSG_MON_FOLLOWING);
