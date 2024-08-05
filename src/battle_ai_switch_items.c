@@ -1372,6 +1372,12 @@ static s32 GetSwitchinWeatherImpact(void)
             if (weatherImpact == 0)
                 weatherImpact =1;
         }
+        if ((gBattleWeather & B_WEATHER_SUN) && ability == ABILITY_SUN_SOUL)
+        {
+            weatherImpact = maxHP / 16;
+            if (weatherImpact == 0)
+                weatherImpact =1;
+        }
     }
     return weatherImpact;
 }

@@ -403,8 +403,13 @@
 #define MOVE_EFFECT_MISTY_TERRAIN       82
 #define MOVE_EFFECT_ELECTRIC_TERRAIN    83
 #define MOVE_EFFECT_PSYCHIC_TERRAIN     84
+#define MOVE_EFFECT_SAND                85
+#define MOVE_EFFECT_SNOW                86
+#define MOVE_EFFECT_RAIN                87
+#define MOVE_EFFECT_SUN                 88
+#define MOVE_EFFECT_STEELSURGE          89
 
-#define NUM_MOVE_EFFECTS                85
+#define NUM_MOVE_EFFECTS                90
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

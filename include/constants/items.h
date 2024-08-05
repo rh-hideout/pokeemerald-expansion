@@ -502,6 +502,16 @@
 #define ITEM_ADAMANT_ORB 401
 #define ITEM_LUSTROUS_ORB 402
 #define ITEM_GRISEOUS_ORB 403
+#define ITEM_BARK_ARMOR 828
+#define ITEM_TOXIN_BOOSTER 829
+#define ITEM_FESTIVE_COAT 830
+#define ITEM_CURSED_TOY 831
+#define ITEM_MUSIC_BIRDBOX 832
+#define ITEM_BLADE_ARMOR 833
+#define ITEM_HOENN_SEACAKE 834
+#define ITEM_SPIRIT_CHIME 835
+#define ITEM_CAMO_CLOAK 836
+
 
 // Incenses
 #define ITEM_SEA_INCENSE 404
@@ -1001,7 +1011,7 @@
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 828
+#define ITEMS_COUNT 837
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

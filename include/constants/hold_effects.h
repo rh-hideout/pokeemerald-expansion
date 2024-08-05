@@ -161,6 +161,18 @@
 #define HOLD_EFFECT_LOADED_DICE         180
 #define HOLD_EFFECT_BOOSTER_ENERGY      181 // Not implemented.
 
+//Custom hold effects
+#define HOLD_EFFECT_BARK_ARMOR          185
+#define HOLD_EFFECT_TOXIN_BOOSTER       186
+#define HOLD_EFFECT_FESTIVE_COAT        187
+#define HOLD_EFFECT_CURSED_TOY          188
+#define HOLD_EFFECT_MUSIC_BIRDBOX       189
+#define HOLD_EFFECT_BLADE_ARMOR         190
+#define HOLD_EFFECT_HOENN_SEACAKE       191
+#define HOLD_EFFECT_SPIRIT_CHIME        192
+#define HOLD_EFFECT_CAMO_CLOAK          193
+
+
 // Gen2 hold effect
 #define HOLD_EFFECT_BERSERK_GENE        184
 

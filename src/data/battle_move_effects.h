@@ -2230,4 +2230,46 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
+    [EFFECT_FROSTBITE] =
+    {
+        .battleScript = BattleScript_EffectFrostbite,
+        .battleTvScore = 1,
+    },
+    [EFFECT_STEELSURGE] =
+    {
+        .battleScript = BattleScript_EffectShrapnel,
+        .battleTvScore = 0, // TODO: Assign points
+        .encourageEncore = TRUE,
+    },
+    [EFFECT_CURRENT_TYPE] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+    [EFFECT_STEEL_ROT] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+    [EFFECT_CONDUIT_BOMB] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+    [EFFECT_ADRENALINE] =
+    {
+        .battleScript = BattleScript_EffectAdrenaline,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
+    [EFFECT_SEASONAL] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+    [EFFECT_ELUDE] =
+    {
+        .battleScript = BattleScript_EffectElude,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

@@ -432,6 +432,13 @@ const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
     [ITEM_ADAMANT_ORB] = {gItemIcon_AdamantOrb, gItemIconPalette_AdamantOrb},
     [ITEM_LUSTROUS_ORB] = {gItemIcon_LustrousOrb, gItemIconPalette_LustrousOrb},
     [ITEM_GRISEOUS_ORB] = {gItemIcon_GriseousOrb, gItemIconPalette_GriseousOrb},
+    [ITEM_BARK_ARMOR] = {gItemIcon_AssaultVest, gItemIconPalette_AssaultVest},
+    [ITEM_FESTIVE_COAT] = {gItemIcon_AssaultVest, gItemIconPalette_AssaultVest},
+    [ITEM_CURSED_TOY] = {gItemIcon_PokeDoll, gItemIconPalette_PokeDoll},
+    [ITEM_MUSIC_BIRDBOX] = {gItemIcon_Electirizer, gItemIconPalette_Electirizer},
+    [ITEM_BLADE_ARMOR] = {gItemIcon_AssaultVest, gItemIconPalette_AssaultVest},
+    [ITEM_HOENN_SEACAKE] = {gItemIcon_LavaCookie, gItemIconPalette_LavaCookieAndLetter},
+    [ITEM_CAMO_CLOAK] = {gItemIcon_AssaultVest, gItemIconPalette_AssaultVest},
     // Incenses
     [ITEM_SEA_INCENSE] = {gItemIcon_SeaIncense, gItemIconPalette_SeaIncense},
     [ITEM_LAX_INCENSE] = {gItemIcon_LaxIncense, gItemIconPalette_LaxIncense},

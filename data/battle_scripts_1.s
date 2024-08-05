@@ -1285,6 +1285,35 @@ BattleScript_EffectPartingShotSwitch:
 BattleScript_PartingShotEnd:
 	end
 
+BattleScript_EffectElude::
+	attackcanceler
+	attackstring
+	ppreduce
+	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_DEF, MIN_STAT_STAGE, BattleScript_EffectEludeTryDef
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPDEF, MIN_STAT_STAGE, BattleScript_CantLowerMultipleStats
+BattleScript_EffectEludeTryDef:
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackanimation
+	waitanimation
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_DEF | BIT_SPDEF, STAT_CHANGE_NEGATIVE | STAT_CHANGE_MULTIPLE_STATS
+	playstatchangeanimation BS_TARGET, BIT_DEF, STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_DEF, 1, TRUE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_EffectEludeTrySpDef
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectEludeTrySpDef:
+	playstatchangeanimation BS_TARGET, BIT_SPDEF, STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_SPDEF, 1, TRUE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_EffectEludeSwitch
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectEludeSwitch:
+	moveendall
+	goto BattleScript_MoveSwitch
+BattleScript_EludeEnd:
+	end
+
 BattleScript_EffectPowder::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, NO_ACC_CALC_CHECK_LOCK_ON
@@ -4922,6 +4951,42 @@ BattleScript_AlreadyBurned::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+	BattleScript_EffectFrostbite::
+	attackcanceler
+	attackstring
+	ppreduce
+	jumpifsubstituteblocks BattleScript_ButItFailed
+	jumpifstatus BS_TARGET, STATUS1_FROSTBITE, BattleScript_AlreadyFrostbite
+	jumpiftype BS_TARGET, TYPE_ICE, BattleScript_NotAffected
+	jumpifability BS_TARGET, ABILITY_MAGMA_ARMOR, BattleScript_MagmaArmorPrevents
+	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_AbilityProtectsDoesntAffect
+	jumpifability BS_TARGET, ABILITY_PURIFYING_SALT, BattleScript_AbilityProtectsDoesntAffect
+	jumpifflowerveil BattleScript_FlowerVeilProtects
+	jumpifleafguardprotected BS_TARGET, BattleScript_AbilityProtectsDoesntAffect
+	jumpifshieldsdown BS_TARGET, BattleScript_AbilityProtectsDoesntAffect
+	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_ButItFailed
+	jumpifterrainaffected BS_TARGET, STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents
+	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
+	jumpifsafeguard BattleScript_SafeguardProtected
+	attackanimation
+	waitanimation
+	seteffectprimary MOVE_EFFECT_FROSTBITE
+	goto BattleScript_MoveEnd
+
+BattleScript_MagmaArmorPrevents::
+	call BattleScript_AbilityPopUp
+	copybyte gEffectBattler, gBattlerTarget
+	setbyte cMULTISTRING_CHOOSER, B_MSG_ABILITY_PREVENTS_MOVE_STATUS
+	call BattleScript_FSBPrevention
+	goto BattleScript_MoveEnd
+
+BattleScript_AlreadyFrostbite::
+	setalreadystatusedmoveattempt BS_ATTACKER
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNALREADYHASFROSTBITE
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectMemento::
 	attackcanceler
 	jumpifbyte CMP_EQUAL, cMISS_TYPE, B_MSG_PROTECTED, BattleScript_MementoTargetProtect
@@ -5441,6 +5506,32 @@ BattleScript_DragonDanceTrySpeed::
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_DragonDanceEnd::
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectAdrenaline::
+	attackcanceler
+	attackstring
+	ppreduce
+BattleScript_EffectAdrenalineFromStatUp::
+	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_SPATK, MAX_STAT_STAGE, BattleScript_AdrenalineDoMoveAnim
+	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_SPEED, MAX_STAT_STAGE, BattleScript_CantRaiseMultipleStats
+BattleScript_AdrenalineDoMoveAnim::
+	attackanimation
+	waitanimation
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_ATTACKER, BIT_SPATK | BIT_SPEED, 0
+	setstatchanger STAT_SPATK, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_AdrenalineTrySpeed
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_AdrenalineTrySpeed
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_AdrenalineTrySpeed::
+	setstatchanger STAT_SPEED, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_AdrenalineEnd
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_AdrenalineEnd
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_AdrenalineEnd::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectCamouflage::
@@ -7671,6 +7762,10 @@ BattleScript_RainDishActivates::
 	call BattleScript_AbilityHpHeal
 	end3
 
+BattleScript_SunSoulActivates::
+	call BattleScript_AbilityHpHeal
+	end3
+
 BattleScript_CheekPouchActivates::
 	copybyte sSAVED_BATTLER, gBattlerAttacker
 	copybyte gBattlerAttacker, gBattlerAbility
@@ -8177,6 +8272,12 @@ BattleScript_ItemNoStatLoss::
 BattleScript_BRNPrevention::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gBRNPreventionStringIds
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_FSBPrevention::
+	pause B_WAIT_TIME_SHORT
+	printfromtable gFSBPreventionStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -9597,6 +9698,14 @@ BattleScript_TargetAbilityStatRaiseRet_End:
 	copybyte gBattlerAttacker, sSAVED_BATTLER
 	return
 
+@@@ Custom MOVES @@@
+BattleScript_EffectDucknWeave::
+	pause B_WAIT_TIME_SHORTEST
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_DUCKNWEAVEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 @@@ MAX MOVES @@@
 BattleScript_EffectMaxMove::
 	attackcanceler
@@ -9849,6 +9958,17 @@ BattleScript_EffectStonesurge::
 BattleScript_EffectSteelsurge::
 	setsteelsurge BattleScript_MoveEnd
 	printfromtable gDmgHazardsStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectShrapnel::
+	attackcanceler
+	attackstring
+	ppreduce
+	setsteelsurge BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_SHARPSTEELFLOATS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 

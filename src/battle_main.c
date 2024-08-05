@@ -3553,6 +3553,9 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].banefulBunkered = FALSE;
     gProtectStructs[battler].quash = FALSE;
     gProtectStructs[battler].obstructed = FALSE;
+    gProtectStructs[battler].luminsphered = FALSE;
+    gProtectStructs[battler].barricaded = FALSE;
+    gProtectStructs[battler].sonarwalled = FALSE;
     gProtectStructs[battler].silkTrapped = FALSE;
     gProtectStructs[battler].burningBulwarked = FALSE;
     gProtectStructs[battler].endured = FALSE;
@@ -5937,6 +5940,12 @@ void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
     gBattleStruct->ateBoost[battlerAtk] = 0;
     gSpecialStatuses[battlerAtk].gemBoost = FALSE;
 
+//  PLACEHOLDER
+
+    if (holdEffect == HOLD_EFFECT_CAMO_CLOAK && (gBattleMons[battlerAtk].species == SPECIES_KECLEON) && (gMovesInfo[move].type == TYPE_NORMAL))
+    {
+        gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type1 | F_DYNAMIC_TYPE_SET;
+    }
     if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL)
     {
         if (WEATHER_HAS_EFFECT)
@@ -5953,6 +5962,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
                 gBattleStruct->dynamicMoveType = TYPE_NORMAL | F_DYNAMIC_TYPE_SET;
         }
     }
+    
     else if (gMovesInfo[move].effect == EFFECT_HIDDEN_POWER)
     {
         u8 typeBits  = ((gBattleMons[battlerAtk].hpIV & 1) << 0)
@@ -5989,6 +5999,12 @@ void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
     {
             gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type2 | F_DYNAMIC_TYPE_SET;
     }
+
+    else if (gMovesInfo[move].effect == EFFECT_CURRENT_TYPE)
+    {
+            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type1 | F_DYNAMIC_TYPE_SET;
+    }
+
     else if (gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
             && (gBattleMons[battlerAtk].species == SPECIES_OGERPON_WELLSPRING_MASK || gBattleMons[battlerAtk].species == SPECIES_OGERPON_WELLSPRING_MASK_TERA
              || gBattleMons[battlerAtk].species == SPECIES_OGERPON_HEARTHFLAME_MASK || gBattleMons[battlerAtk].species == SPECIES_OGERPON_HEARTHFLAME_MASK_TERA
@@ -5996,6 +6012,22 @@ void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
     {
         gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type2 | F_DYNAMIC_TYPE_SET;
     }
+    else if (gMovesInfo[move].effect == EFFECT_SEASONAL)
+    {
+        if  (gBattleMons[battlerAtk].species == SPECIES_SAWSBUCK)
+            gBattleStruct->dynamicMoveType = TYPE_NORMAL | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].species == SPECIES_SAWSBUCK_WINTER)
+            gBattleStruct->dynamicMoveType = TYPE_ICE | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].species == SPECIES_SAWSBUCK_AUTUMN)
+            gBattleStruct->dynamicMoveType = TYPE_FIRE | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].species == SPECIES_SAWSBUCK_SPRING)
+            gBattleStruct->dynamicMoveType = TYPE_FAIRY | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].species == SPECIES_SAWSBUCK_SUMMER)
+            gBattleStruct->dynamicMoveType = TYPE_GRASS | F_DYNAMIC_TYPE_SET;
+        else //failsafe
+                gBattleStruct->dynamicMoveType = TYPE_NORMAL | F_DYNAMIC_TYPE_SET;
+    }
+        
     else if (gMovesInfo[move].effect == EFFECT_NATURAL_GIFT)
     {
         if (ItemId_GetPocket(gBattleMons[battlerAtk].item) == POCKET_BERRIES)

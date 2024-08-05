@@ -919,6 +919,39 @@ gBattleAnims_Moves::
 	.4byte Move_BOOMBURST
 	.4byte Move_FOCUS_ENERGY
 	.4byte Move_TRI_ATTACK
+	.4byte Move_GLACIATE
+	.4byte Move_MAX_GEYSER
+	.4byte Move_FLAMETHROWER
+	.4byte Move_THUNDER_SHOCK
+	.4byte Move_SIGNAL_BEAM
+	.4byte Move_BRICK_BREAK
+	.4byte Move_MAX_OOZE
+	.4byte Move_STRING_SHOT
+	.4byte Move_G_MAX_FINALE
+	.4byte Move_HEAT_WAVE
+	.4byte Move_EMBER
+	.4byte Move_WATERFALL
+	.4byte Move_SCREECH
+	.4byte Move_SCALD
+	.4byte Move_BOUNCE
+	.4byte Move_DOUBLE_SLAP
+	.4byte Move_DOUBLE_EDGE
+	.4byte Move_FOUL_PLAY
+	.4byte Move_DOOM_DESIRE
+	.4byte Move_BULLDOZE
+	.4byte Move_EARTHQUAKE
+	.4byte Move_FLAME_CHARGE
+	.4byte Move_FLAME_WHEEL
+	.4byte Move_MAX_DARKNESS
+	.4byte Move_SUPERPOWER
+	.4byte Move_DOOM_DESIRE
+	.4byte Move_DOUBLE_EDGE
+	.4byte Move_METAL_CLAW
+	.4byte Move_VACUUM_WAVE
+	.4byte Move_FOCUS_BLAST
+	.4byte Move_SPIKES
+	.4byte Move_G_MAX_STEELSURGE
+
 
 @@@@ Z MOVES
 	.4byte Move_BREAKNECK_BLITZ

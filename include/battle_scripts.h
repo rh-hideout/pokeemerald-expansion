@@ -175,6 +175,7 @@ extern const u8 BattleScript_FlashFireBoost[];
 extern const u8 BattleScript_AbilityNoStatLoss[];
 extern const u8 BattleScript_ItemNoStatLoss[];
 extern const u8 BattleScript_BRNPrevention[];
+extern const u8 BattleScript_FSBPrevention[];
 extern const u8 BattleScript_PRLZPrevention[];
 extern const u8 BattleScript_PSNPrevention[];
 extern const u8 BattleScript_ObliviousPreventsAttraction[];
@@ -495,6 +496,9 @@ extern const u8 BattleScript_TheSwampDisappeared[];
 extern const u8 BattleScript_ItemRestoreHP_Party[];
 extern const u8 BattleScript_EffectPsychicNoise[];
 extern const u8 BattleScript_AromaVeilProtectsRet[];
+extern const u8 BattleScript_EffectDucknWeave[];
+extern const u8 BattleScript_SunSoulActivates[];
+extern const u8 BattleScript_IrritateActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -659,6 +663,7 @@ extern const u8 BattleScript_EffectHail[];
 extern const u8 BattleScript_EffectTorment[];
 extern const u8 BattleScript_EffectFlatter[];
 extern const u8 BattleScript_EffectWillOWisp[];
+extern const u8 BattleScript_EffectFrostbite[]; //custom
 extern const u8 BattleScript_EffectMemento[];
 extern const u8 BattleScript_EffectFocusPunch[];
 extern const u8 BattleScript_EffectFollowMe[];
@@ -691,6 +696,7 @@ extern const u8 BattleScript_EffectPlaceholder[];
 extern const u8 BattleScript_EffectWaterSport[];
 extern const u8 BattleScript_EffectCalmMind[];
 extern const u8 BattleScript_EffectDragonDance[];
+extern const u8 BattleScript_EffectAdrenaline[];
 extern const u8 BattleScript_EffectCamouflage[];
 extern const u8 BattleScript_EffectPledge[];
 extern const u8 BattleScript_EffectFling[];
@@ -824,5 +830,9 @@ extern const u8 BattleScript_EffectFilletAway[];
 extern const u8 BattleScript_EffectShedTail[];
 extern const u8 BattleScript_EffectUpperHand[];
 extern const u8 BattleScript_EffectTidyUp[];
+extern const u8 BattleScript_EffectDucknWeave[];
+extern const u8 BattleScript_EffectShrapnel[];
+extern const u8 BattleScript_EffectChemboost[];
+extern const u8 BattleScript_EffectElude[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

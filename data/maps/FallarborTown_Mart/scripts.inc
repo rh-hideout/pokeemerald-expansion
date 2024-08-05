@@ -13,7 +13,9 @@ FallarborTown_Mart_EventScript_Clerk::
 
 	.align 2
 FallarborTown_Mart_Pokemart:
+	.2byte ITEM_HEAL_BALL
 	.2byte ITEM_GREAT_BALL
+	.2byte ITEM_NET_BALL
 	.2byte ITEM_SUPER_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
@@ -25,6 +27,15 @@ FallarborTown_Mart_Pokemart:
 	.2byte ITEM_X_DEFENSE
 	.2byte ITEM_DIRE_HIT
 	.2byte ITEM_GUARD_SPEC
+	.2byte ITEM_WATER_STONE
+	.2byte ITEM_LEAF_STONE
+	.2byte ITEM_BLACK_AUGURITE
+	.2byte ITEM_SYRUPY_APPLE
+	.2byte ITEM_RAZOR_CLAW
+	.2byte ITEM_STRAWBERRY_SWEET
+	.2byte ITEM_BRIGHT_POWDER
+	.2byte ITEM_FOCUS_SASH
+	.2byte ITEM_HARD_STONE
 	.2byte ITEM_NONE
 	release
 	end

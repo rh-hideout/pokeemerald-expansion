@@ -2162,7 +2162,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
     [SPECIES_DEWPIDER] =
     {
         .baseHP        = 38,
-        .baseAttack    = 40,
+        .baseAttack    = 45,    //+5
         .baseDefense   = 52,
         .baseSpeed     = 27,
         .baseSpAttack  = 40,
@@ -2217,7 +2217,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
     [SPECIES_ARAQUANID] =
     {
         .baseHP        = 68,
-        .baseAttack    = 70,
+        .baseAttack    = 76,    //+6
         .baseDefense   = 92,
         .baseSpeed     = 42,
         .baseSpAttack  = 50,
@@ -2549,7 +2549,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS),
-        .abilities = { ABILITY_ILLUMINATE, ABILITY_EFFECT_SPORE, ABILITY_RAIN_DISH },
+        .abilities = { ABILITY_MISTY_SURGE, ABILITY_EFFECT_SPORE, ABILITY_RAIN_DISH },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Shiinotic"),
         .cryId = CRY_SHIINOTIC,

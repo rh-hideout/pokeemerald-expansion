@@ -1408,6 +1408,7 @@ bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, u32 holdEffect)
       || atkAbility == ABILITY_LEAF_GUARD
       || atkAbility == ABILITY_SOLAR_POWER
       || atkAbility == ABILITY_HARVEST
+      || atkAbility == ABILITY_SUN_SOUL
       || HasMoveEffect(battlerAtk, EFFECT_SOLAR_BEAM)
       || HasMoveEffect(battlerAtk, EFFECT_MORNING_SUN)
       || HasMoveEffect(battlerAtk, EFFECT_SYNTHESIS)
@@ -2015,6 +2016,7 @@ bool32 IsStatRaisingEffect(u32 effect)
     case EFFECT_GEOMANCY:
     case EFFECT_STOCKPILE:
     case EFFECT_VICTORY_DANCE:
+    case EFFECT_ADRENALINE:
         return TRUE;
     case EFFECT_CHARGE:
         return B_CHARGE_SPDEF_RAISE >= GEN_5;
@@ -2635,6 +2637,7 @@ bool32 ShouldPoisonSelf(u32 battler, u32 ability)
       || ability == ABILITY_MAGIC_GUARD
       || (ability == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
       || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+      || (ability == ABILITY_PRIDE && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
       || HasMoveEffect(battler, EFFECT_FACADE)
       || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT)))
         return TRUE;    // battler can be poisoned and has move/ability that synergizes with being poisoned
@@ -2736,6 +2739,7 @@ bool32 ShouldBurnSelf(u32 battler, u32 ability)
       || ability == ABILITY_MAGIC_GUARD
       || (ability == ABILITY_FLARE_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
       || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+      || (ability == ABILITY_PRIDE && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
       || HasMoveEffect(battler, EFFECT_FACADE)
       || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT)))
         return TRUE;

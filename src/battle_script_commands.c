@@ -1689,6 +1689,10 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
         if (gBattleMons[battlerDef].status2 & STATUS2_CONFUSION)
             calc = (calc * 50) / 100; // 1.5 tangled feet loss
         break;
+    case ABILITY_DUCK_N_WEAVE:
+        if (gLastMoves[battlerDef] != 0 && gLastMoves[battlerDef] != 0xFFFF && gMovesInfo[gLastMoves[battlerDef]].punchingMove && GetBattlerTurnOrderNum(battlerAtk) > GetBattlerTurnOrderNum(battlerDef))
+            calc = (calc * 90) / 100; // 1.1 sand veil loss;
+        break;
     }
 
     // Attacker's ally's ability
@@ -2011,7 +2015,7 @@ static void Cmd_adjustdamage(void)
         gBattleStruct->enduredDamage |= gBitTable[gBattlerTarget];
         goto END;
     }
-    if (GetBattlerAbility(gBattlerTarget) == ABILITY_ICE_FACE && IS_MOVE_PHYSICAL(gCurrentMove) && gBattleMons[gBattlerTarget].species == SPECIES_EISCUE)
+    if (GetBattlerAbility(gBattlerTarget) == ABILITY_ICE_FACE && (IS_MOVE_PHYSICAL(gCurrentMove) || IS_MOVE_SPECIAL(gCurrentMove)) && gBattleMons[gBattlerTarget].species == SPECIES_EISCUE)
     {
         // Damage deals typeless 0 HP.
         gMoveResultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
@@ -3551,6 +3555,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gProtectStructs[gBattlerTarget].kingsShielded = FALSE;
                     gProtectStructs[gBattlerTarget].banefulBunkered = FALSE;
                     gProtectStructs[gBattlerTarget].obstructed = FALSE;
+                    gProtectStructs[gBattlerTarget].luminsphered = FALSE;
+                    gProtectStructs[gBattlerTarget].barricaded = FALSE;
+                    gProtectStructs[gBattlerTarget].sonarwalled = FALSE;
                     gProtectStructs[gBattlerTarget].silkTrapped = FALSE;
                     gProtectStructs[gBattlerAttacker].burningBulwarked = FALSE;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -3705,6 +3712,14 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_StealthRockActivates;
                 }
                 break;
+            case MOVE_EFFECT_STEELSURGE:
+                if (!(gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_STEELSURGE))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SHARPSTEELFLOATS;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSteelsurge;
+                }
+                break;
             case MOVE_EFFECT_GRAVITY:
                 if (!(gFieldStatuses & STATUS_FIELD_GRAVITY)) 
                 {
@@ -3767,6 +3782,48 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
                 }
                 break;   
+            
+            case MOVE_EFFECT_SAND:
+                
+                if (TryChangeBattleWeather(gBattlerAttacker, ENUM_WEATHER_SANDSTORM, FALSE))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SANDSTORM;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetWeather;
+                }
+                break;
+
+            case MOVE_EFFECT_SNOW:
+                
+                if (TryChangeBattleWeather(gBattlerAttacker, ENUM_WEATHER_SNOW, FALSE))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SNOW;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetWeather;
+                }
+                break;
+
+            case MOVE_EFFECT_RAIN:
+                
+                if (TryChangeBattleWeather(gBattlerAttacker, ENUM_WEATHER_RAIN, FALSE))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_RAIN;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetWeather;
+                }
+                break;
+
+            case MOVE_EFFECT_SUN:
+                
+                if (TryChangeBattleWeather(gBattlerAttacker, ENUM_WEATHER_SUN, FALSE))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SUNLIGHT;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectSetWeather;
+                }
+                break;
+
+
             case MOVE_EFFECT_SPIKES:
                 if (gSideTimers[GetBattlerSide(gEffectBattler)].spikesAmount < 3)
                 {
@@ -5509,6 +5566,15 @@ static void Cmd_moveend(void)
                     gBattlescriptCurrInstr = BattleScript_BanefulBunkerEffect;
                     effect = 1;
                 }
+                else if (gProtectStructs[gBattlerTarget].luminsphered)
+                {
+                    gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS | MOVE_EFFECT_AFFECTS_USER;
+                    PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_LUMINSPHERE);
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_BanefulBunkerEffect;
+                    effect = 1;
+                }
                 else if (gProtectStructs[gBattlerTarget].obstructed && gMovesInfo[gCurrentMove].effect != EFFECT_SUCKER_PUNCH && gMovesInfo[gCurrentMove].effect != EFFECT_UPPER_HAND)
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
@@ -5526,7 +5592,18 @@ static void Cmd_moveend(void)
                     i = gBattlerAttacker;
                     gBattlerAttacker = gBattlerTarget;
                     gBattlerTarget = i; // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
-                    gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_2;
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_KingsShieldEffect;
+                    effect = 1;
+                }
+                else if (gProtectStructs[gBattlerTarget].sonarwalled)
+                {
+                    gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
+                    i = gBattlerAttacker;
+                    gBattlerAttacker = gBattlerTarget;
+                    gBattlerTarget = i; // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
+                    gBattleScripting.moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2;
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_KingsShieldEffect;
                     effect = 1;
@@ -5536,6 +5613,15 @@ static void Cmd_moveend(void)
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleScripting.moveEffect = MOVE_EFFECT_BURN | MOVE_EFFECT_AFFECTS_USER;
                     PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BURNING_BULWARK);
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_BanefulBunkerEffect;
+                    effect = 1;
+                }
+                else if (gProtectStructs[gBattlerTarget].barricaded)
+                {
+                    gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_STEALTH_ROCK;
+                    PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BARRICADE);
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_BanefulBunkerEffect;
                     effect = 1;
@@ -10169,6 +10255,7 @@ static void Cmd_various(void)
         }
         return;
     }
+    
     case VARIOUS_JUMP_IF_TEAM_HEALTHY:
     {
         VARIOUS_ARGS(const u8 *jumpInstr);
@@ -10901,6 +10988,21 @@ static void Cmd_setprotectlike(void)
             else if (gCurrentMove == MOVE_OBSTRUCT)
             {
                 gProtectStructs[gBattlerAttacker].obstructed = TRUE;
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
+            }
+            else if (gCurrentMove == MOVE_LUMINSPHERE)
+            {
+                gProtectStructs[gBattlerAttacker].luminsphered = TRUE;
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
+            }
+            else if (gCurrentMove == MOVE_BARRICADE)
+            {
+                gProtectStructs[gBattlerAttacker].barricaded = TRUE;
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
+            }
+            else if (gCurrentMove == MOVE_SONAR_WALL)
+            {
+                gProtectStructs[gBattlerAttacker].sonarwalled = TRUE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
             }
             else if (gCurrentMove == MOVE_MAX_GUARD)

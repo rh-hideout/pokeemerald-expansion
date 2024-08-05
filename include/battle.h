@@ -139,6 +139,9 @@ struct ProtectStruct
     u32 kingsShielded:1;
     u32 banefulBunkered:1;
     u32 obstructed:1;
+    u32 luminsphered:1;
+    u32 barricaded:1;
+    u32 sonarwalled:1;
     u32 endured:1;
     u32 noValidMoves:1;
     u32 helpingHand:1;
@@ -835,7 +838,10 @@ STATIC_ASSERT(sizeof(((struct BattleStruct *)0)->palaceFlags) * 8 >= MAX_BATTLER
                                         || gProtectStructs[battlerId].banefulBunkered                                  \
                                         || gProtectStructs[battlerId].burningBulwarked                                 \
                                         || gProtectStructs[battlerId].obstructed                                       \
-                                        || gProtectStructs[battlerId].silkTrapped)
+                                        || gProtectStructs[battlerId].silkTrapped                                      \
+                                        || gProtectStructs[battlerId].luminsphered                                     \
+                                        || gProtectStructs[battlerId].barricaded                                       \
+                                        || gProtectStructs[battlerId].sonarwalled)                                      
 
 #define GET_STAT_BUFF_ID(n)((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n)((n & 0xF8))

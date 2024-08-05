@@ -2606,5 +2606,100 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Frostbites on contact."),
         .aiRating = 4,
     },
-    
+    [ABILITY_DUCK_N_WEAVE] =
+    {
+        .name = _("Duck'n'Weave"),
+        .description = COMPOUND_STRING("Pkmn is more evasive after punching each turn."),
+        .aiRating = 4,
+    },
+    [ABILITY_SUN_SOUL] =
+    {
+        .name = _("Sun Soul"),
+        .description = COMPOUND_STRING("Slight HP recovery in sun."),
+        .aiRating = 3,
+    },
+    [ABILITY_CONUNDRUM] =
+    {
+        .name = _("Conundrum"),
+        .description = COMPOUND_STRING("Confuses on contact."),
+        .aiRating = 4,
+    },
+    [ABILITY_LOVER] =
+    {
+        .name = _("Lover"),
+        .description = COMPOUND_STRING("Take half damage from infactuated foes."),
+        .aiRating = 4,
+    },
+    [ABILITY_NOXIOUS_ARMOR] =
+    {
+        .name = _("Noxious Armor"),
+        .description = COMPOUND_STRING("Take half damage from poisoned foes."),
+        .aiRating = 4,
+    },
+    [ABILITY_DROWSY_AURA] =
+    {
+        .name = _("Drowsy Aura"),
+        .description = COMPOUND_STRING("Chance to sleep on contact."),
+        .aiRating = 4,
+    },
+    [ABILITY_BULLY] =
+    {
+        .name = _("Bully"),
+        .description = COMPOUND_STRING("Chance to reduce DEF when using a contact move."),
+        .aiRating = 4,
+    },
+    [ABILITY_SERENE_STRIKE] =
+    {
+        .name = _("Serene Strike"),
+        .description = COMPOUND_STRING("STAB power x1.75 and secondary effect chance x1.5."),
+        .aiRating = 5,
+    },
+    [ABILITY_PRIDE] =
+    {
+        .name = _("Erratic"),
+        .description = COMPOUND_STRING("Ups Sp.Attack if suffering."),
+        .aiRating = 6,
+    },
+    [ABILITY_ABSOLUTE_ZERO] =
+    {
+        .name = _("Absolute Zero"),
+        .description = COMPOUND_STRING("In snow, incoming damage is reduced."),
+        .aiRating = 4,
+    },
+    [ABILITY_BOUNTIFUL_BLOOM] =
+    {
+        .name = _("Bountiful Bloom"),
+        .description = COMPOUND_STRING("In rain, boosts users grass and ground type moves."),
+        .aiRating = 4,
+    },
+    [ABILITY_FOCUS_FLOOD] =
+    {
+        .name = _("Focus Flood"),
+        .description = COMPOUND_STRING("In rain, incoming damage is reduced."),
+        .aiRating = 4,
+    },
+    [ABILITY_HEAT_WAVE] =
+    {
+        .name = _("Heat Wave"),
+        .description = COMPOUND_STRING("In sun, user cannot be damaged by water type moves."),
+        .aiRating = 4,
+    },
+    [ABILITY_SUN_MAGE] =
+    {
+        .name = _("Sun Mage"),
+        .description = COMPOUND_STRING("In sun, user resists fire and boosts grass moves."),
+        .aiRating = 5,
+    },
+    [ABILITY_WIND_WALKER] =
+    {
+        .name = _("Wind Walker"),
+        .description = COMPOUND_STRING("Boost flying moves, x0dmg from ground but 2x dmg from electric."),
+        .aiRating = 5,
+    },
+    [ABILITY_ZEAL] =
+    {
+        .name = _("Zeal"),
+        .description = COMPOUND_STRING("Moving first boosts power."),
+        .aiRating = 5,
+    },
 };

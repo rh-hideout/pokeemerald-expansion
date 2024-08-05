@@ -367,7 +367,7 @@ const struct Trainer gTrainers[] = {
         .trainerPic = TRAINER_PIC_AQUA_ADMIN_M,
         .trainerName = _("MATT"),
         .items = {ITEM_SUPER_POTION, ITEM_NONE, ITEM_NONE, ITEM_NONE},
-        .doubleBattle = FALSE,
+        .doubleBattle = TRUE,
         .aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY,
         .party = TRAINER_PARTY(sParty_Matt),
     },

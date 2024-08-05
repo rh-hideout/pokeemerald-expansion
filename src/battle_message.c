@@ -107,6 +107,7 @@ static const u8 sText_PkmnBurnedBy[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_S
 static const u8 sText_PkmnHurtByBurn[] = _("{B_ATK_NAME_WITH_PREFIX} is hurt\nby its burn!");
 static const u8 sText_PkmnHurtByFrostbite[] = _("{B_ATK_NAME_WITH_PREFIX} is hurt\nby its frostbite!");
 static const u8 sText_PkmnAlreadyHasBurn[] = _("{B_DEF_NAME_WITH_PREFIX} already\nhas a burn.");
+static const u8 sText_PkmnAlreadyHasFrostbite[] = _("{B_DEF_NAME_WITH_PREFIX} already\nhas frostbite.");
 static const u8 sText_PkmnWasFrozen[] = _("{B_EFF_NAME_WITH_PREFIX} was\nfrozen solid!");
 static const u8 sText_PkmnFrozenBy[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY}\nfroze {B_EFF_NAME_WITH_PREFIX} solid!");
 static const u8 sText_PkmnIsFrozen[] = _("{B_ATK_NAME_WITH_PREFIX} is\nfrozen solid!");
@@ -296,6 +297,7 @@ static const u8 sText_PkmnPreventsStatLossWith[] = _("{B_SCR_ACTIVE_NAME_WITH_PR
 static const u8 sText_PkmnHurtsWith[] = _("{B_ATK_NAME_WITH_PREFIX} was hurt by\n{B_DEF_NAME_WITH_PREFIX}'s {B_BUFF1}!");
 static const u8 sText_PkmnTraced[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} TRACED\n{B_BUFF1}'s {B_BUFF2}!");
 static const u8 sText_PkmnsXPreventsBurns[] = _("{B_EFF_NAME_WITH_PREFIX}'s {B_EFF_ABILITY}\nprevents burns!");
+static const u8 sText_PkmnsXPreventsFrostbite[] = _("{B_EFF_NAME_WITH_PREFIX}'s {B_EFF_ABILITY}\nprevents frostbite!");
 static const u8 sText_PkmnsXBlocksY[] = _("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY}\nblocks {B_CURRENT_MOVE}!");
 static const u8 sText_PkmnsXBlocksY2[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY}\nblocks {B_CURRENT_MOVE}!");
 static const u8 sText_PkmnsXRestoredHPALittle2[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY}\nrestored its HP a little!");
@@ -844,6 +846,8 @@ static const u8 sText_AttackerLostItsType[] = _("{B_ATK_NAME_WITH_PREFIX} lost\n
 static const u8 sText_ShedItsTail[] = _("{B_ATK_NAME_WITH_PREFIX} shed its tail\nto create a decoy!");
 static const u8 sText_SupersweetAromaWafts[] = _("A supersweet aroma is wafting from\nthe syrup covering {B_ATK_NAME_WITH_PREFIX}!");
 static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
+static const u8 sText_DucknWeave[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY}\nmakes it harder to hit this turn.");
+static const u8 sText_PkmnMakesFireMiss[] = _("{B_DEF_NAME_WITH_PREFIX} makes FIRE\nmoves miss with {B_DEF_ABILITY}!");
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 {
@@ -1543,6 +1547,10 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 [STRINGID_ITEMWASUSEDUP - BATTLESTRINGS_TABLE_START] = sText_ItemWasUsedUp,
     [STRINGID_ATTACKERLOSTITSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostItsType,
     [STRINGID_CLOAKEDINAHARSHLIGHT - BATTLESTRINGS_TABLE_START] = sText_PkmnIsCloakedInAHarshLight,
+    [STRINGID_DUCKNWEAVEACTIVATES - BATTLESTRINGS_TABLE_START] = sText_DucknWeave,
+    [STRINGID_PKMNALREADYHASFROSTBITE - BATTLESTRINGS_TABLE_START] = sText_PkmnAlreadyHasFrostbite,
+    [STRINGID_PKMNSXPREVENTSFROSTBITE - BATTLESTRINGS_TABLE_START] = sText_PkmnsXPreventsFrostbite,
+    [STRINGID_PKMNMAKESFIREMISS - BATTLESTRINGS_TABLE_START] = sText_PkmnMakesFireMiss,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1650,7 +1658,8 @@ const u16 gMissStringIds[] =
     [B_MSG_PROTECTED]   = STRINGID_PKMNPROTECTEDITSELF,
     [B_MSG_AVOIDED_ATK] = STRINGID_PKMNAVOIDEDATTACK,
     [B_MSG_AVOIDED_DMG] = STRINGID_AVOIDEDDAMAGE,
-    [B_MSG_GROUND_MISS] = STRINGID_PKMNMAKESGROUNDMISS
+    [B_MSG_GROUND_MISS] = STRINGID_PKMNMAKESGROUNDMISS,
+    [B_MSG_FIRE_MISS]   = STRINGID_PKMNMAKESFIREMISS,
 };
 
 const u16 gNoEscapeStringIds[] =
@@ -1659,7 +1668,7 @@ const u16 gNoEscapeStringIds[] =
     [B_MSG_DONT_LEAVE_BIRCH]     = STRINGID_DONTLEAVEBIRCH,
     [B_MSG_PREVENTS_ESCAPE]      = STRINGID_PREVENTSESCAPE,
     [B_MSG_CANT_ESCAPE_2]        = STRINGID_CANTESCAPE2,
-    [B_MSG_ATTACKER_CANT_ESCAPE] = STRINGID_ATTACKERCANTESCAPE
+    [B_MSG_ATTACKER_CANT_ESCAPE] = STRINGID_ATTACKERCANTESCAPE,
 };
 
 const u16 gMoveWeatherChangeStringIds[] =
@@ -1974,6 +1983,13 @@ const u16 gBRNPreventionStringIds[] =
     [B_MSG_ABILITY_PREVENTS_MOVE_STATUS]    = STRINGID_PKMNSXPREVENTSBURNS,
     [B_MSG_ABILITY_PREVENTS_ABILITY_STATUS] = STRINGID_PKMNSXPREVENTSYSZ,
     [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY
+};
+
+const u16 gFSBPreventionStringIds[] = 
+{
+    [B_MSG_ABILITY_PREVENTS_MOVE_STATUS]    = STRINGID_PKMNSXPREVENTSFROSTBITE,
+    [B_MSG_ABILITY_PREVENTS_ABILITY_STATUS] = STRINGID_PKMNSXPREVENTSYSZ,
+    [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY 
 };
 
 const u16 gPRLZPreventionStringIds[] =

@@ -1317,7 +1317,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_GOSSIFLEUR
     [SPECIES_GOSSIFLEUR] =
     {
-        .baseHP        = 40,
+        .baseHP        = 50,    //+10
         .baseAttack    = 40,
         .baseDefense   = 60,
         .baseSpeed     = 10,
@@ -1850,7 +1850,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         FOOTPRINT(Rolycoly)
         .levelUpLearnset = sRolycolyLevelUpLearnset,
         .teachableLearnset = sRolycolyTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_CARKOL}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_CARKOL}),   //18
     },
 
     [SPECIES_CARKOL] =
@@ -1922,7 +1922,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL),
-        .abilities = { ABILITY_STEAM_ENGINE, ABILITY_FLAME_BODY, ABILITY_FLASH_FIRE },
+        .abilities = { ABILITY_STEAM_ENGINE, ABILITY_FLAME_BODY, ABILITY_MAGMA_ARMOR },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Coalossal"),
         .cryId = CRY_COALOSSAL,
@@ -2452,7 +2452,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         FOOTPRINT(Silicobra)
         .levelUpLearnset = sSilicobraLevelUpLearnset,
         .teachableLearnset = sSilicobraTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_SANDACONDA}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_SANDACONDA}),   //36
     },
 
     [SPECIES_SANDACONDA] =
@@ -4360,9 +4360,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_SNOM
     [SPECIES_SNOM] =
     {
-        .baseHP        = 30,
+        .baseHP        = 40, //+10
         .baseAttack    = 25,
-        .baseDefense   = 35,
+        .baseDefense   = 40, //+5
         .baseSpeed     = 20,
         .baseSpAttack  = 45,
         .baseSpDefense = 30,
@@ -4376,7 +4376,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
-        .abilities = { ABILITY_SHIELD_DUST, ABILITY_NONE, ABILITY_ICE_SCALES },
+        .abilities = { ABILITY_ICE_SCALES, ABILITY_NONE, ABILITY_SHIELD_DUST },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Snom"),
         .cryId = CRY_SNOM,
@@ -4409,7 +4409,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         FOOTPRINT(Snom)
         .levelUpLearnset = sSnomLevelUpLearnset,
         .teachableLearnset = sSnomTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_FRIENDSHIP_NIGHT, 0, SPECIES_FROSMOTH}),
+        .evolutions = EVOLUTION({EVO_FRIENDSHIP, 0, SPECIES_FROSMOTH}),
     },
 
     [SPECIES_FROSMOTH] =
@@ -4417,7 +4417,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .baseHP        = 70,
         .baseAttack    = 65,
         .baseDefense   = 60,
-        .baseSpeed     = 65,
+        .baseSpeed     = 75, //+10
         .baseSpAttack  = 125,
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_ICE, TYPE_BUG),
@@ -4429,7 +4429,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
-        .abilities = { ABILITY_SHIELD_DUST, ABILITY_NONE, ABILITY_ICE_SCALES },
+        .abilities = { ABILITY_ICE_SCALES, ABILITY_NONE, ABILITY_SHIELD_DUST },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Frosmoth"),
         .cryId = CRY_FROSMOTH,
@@ -4524,10 +4524,10 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_EISCUE_ICE_FACE] =
     {
         .baseHP        = 75,
-        .baseAttack    = 80,
+        .baseAttack    = 90,    //+10
         .baseDefense   = 110,
         .baseSpeed     = 50,
-        .baseSpAttack  = 65,
+        .baseSpAttack  = 85,    //+20 
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_ICE),
         .catchRate = 60,
@@ -4578,10 +4578,10 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_EISCUE_NOICE_FACE] =
     {
         .baseHP        = 75,
-        .baseAttack    = 80,
+        .baseAttack    = 90,    //+10
         .baseDefense   = 70,
         .baseSpeed     = 130,
-        .baseSpAttack  = 65,
+        .baseSpAttack  = 85,    //+20
         .baseSpDefense = 50,
         .types = MON_TYPES(TYPE_ICE),
         .catchRate = 60,

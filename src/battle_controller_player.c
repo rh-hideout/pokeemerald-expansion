@@ -1833,7 +1833,7 @@ static void MoveSelectionDisplayMoveTypeDoubles(u32 battler, u8 targetId)
 	txtPtr[0] = 1;
 	txtPtr++;
 
-	StringCopy(txtPtr, gTypeNames[gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].type]);
+    StringCopy(txtPtr, gTypesInfo[gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].type].name);
 	BattlePutTextOnWindow(gDisplayedStringBattle, TypeEffectiveness(moveInfo, battler, targetId));
 }
 
