@@ -79,8 +79,6 @@
 enum {
     MENU_SUMMARY,
     MENU_SWITCH,
-    MENU_FOLLOW_ME,
-    MENU_UNFOLLOW_ME,
     MENU_CANCEL1,
     MENU_ITEM,
     MENU_GIVE,
@@ -208,7 +206,7 @@ struct PartyMenuInternal
     u32 spriteIdCancelPokeball:7;
     u32 messageId:14;
     u8 windowId[3];
-    u8 actions[9];
+    u8 actions[8];
     u8 numActions;
     // In vanilla Emerald, only the first 0xB0 hwords (0x160 bytes) are actually used.
     // However, a full 0x100 hwords (0x200 bytes) are allocated.
@@ -476,7 +474,6 @@ static void BlitBitmapToPartyWindow_LeftColumn(u8, u8, u8, u8, u8, bool8);
 static void BlitBitmapToPartyWindow_RightColumn(u8, u8, u8, u8, u8, bool8);
 static void CursorCb_Summary(u8);
 static void CursorCb_Switch(u8);
-static void CursorCb_FollowMe(u8);
 static void CursorCb_Cancel1(u8);
 static void CursorCb_Item(u8);
 static void CursorCb_Give(u8);
@@ -2816,12 +2813,6 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     {
         if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH);
-        if (slotId == GetLeadMonIndex() && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER) && OW_FOLLOWERS_ENABLED == TRUE){
-        if (FlagGet(FLAG_DISABLE_FOLLOWER))
-        AppendToList(sPartyMenuInternal->numActions, MENU_FOLLOW_ME);
-        else
-        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_UNFOLLOW_ME);
-        }
         if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM)))
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL);
         else
@@ -3009,20 +3000,6 @@ static void CursorCb_Switch(u8 taskId)
     gTasks[taskId].func = Task_HandleChooseMonInput;
 }
 
-static void CursorCb_FollowMe(u8 taskId)
-{
-        PartyMenuRemoveWindow(&sPartyMenuIndernal->windowId[0]);
-        PlaySE(SE_BALL_TRADE);
-        if (FlagGet(FLAG_DISABLE_FOLLOWER)){
-            DisplayPartyMenuStdMessage(PARTY_MSG_MON_FOLLOWING);
-            FlagClear(FLAG_DISABLE_FOLLOWER);
-        }
-        else{
-            DisplayPartyMenuStdMessage(PARTY_MSG_MON_NOT_FOLLOWING);
-            FlagSet(FLAG_DISABLE_FOLLOWER);
-        }
-        gTasks[taskId].func = Task_CancelAfterAorBPress;
-}
 #define tSlot1Left     data[0]
 #define tSlot1Top      data[1]
 #define tSlot1Width    data[2]
