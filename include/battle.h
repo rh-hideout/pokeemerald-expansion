@@ -600,12 +600,10 @@ struct LostItem
     u16 stolen:1;
 };
 
-#if HQ_RANDOM == TRUE
 struct BattleVideo {
     u32 battleTypeFlags;
     rng_value_t rngSeed;
 };
-#endif
 
 struct BattleStruct
 {
@@ -682,12 +680,7 @@ struct BattleStruct
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
         struct LinkBattlerHeader linkBattlerHeader;
-
-        #if HQ_RANDOM == FALSE
-        u32 battleVideo[2];
-        #else
         struct BattleVideo battleVideo;
-        #endif
     } multiBuffer;
     u8 wishPerishSongState;
     u8 wishPerishSongBattlerId;

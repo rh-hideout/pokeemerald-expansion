@@ -1692,15 +1692,9 @@ static void CB2_HandleStartMultiBattle(void)
     case 8:
         if (IsLinkTaskFinished())
         {
-            #if HQ_RANDOM == TRUE
             struct BattleVideo *ptr = &gBattleStruct->multiBuffer.battleVideo;
             ptr->battleTypeFlags = gBattleTypeFlags;
             ptr->rngSeed = gRecordedBattleRngSeed;
-            #else
-            u32 *ptr = gBattleStruct->multiBuffer.battleVideo;
-            ptr[0] = gBattleTypeFlags;
-            ptr[1] = gRecordedBattleRngSeed; // UB: overwrites berry data
-            #endif
 
             SendBlock(BitmaskAllOtherLinkPlayers(), ptr, sizeof(gBattleStruct->multiBuffer.battleVideo));
             gBattleCommunication[MULTIUSE_STATE]++;

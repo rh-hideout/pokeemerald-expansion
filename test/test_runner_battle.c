@@ -35,20 +35,12 @@
 #define STATE gBattleTestRunnerState
 #define DATA gBattleTestRunnerState->data
 
-#if HQ_RANDOM == TRUE
 #define RNG_SEED_DEFAULT {0, 0, 0, 0}
 static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 {
     return (seed->a | seed->b | seed->c | seed->ctr) != 0;
 
 }
-#else
-#define RNG_SEED_DEFAULT 0x00000000
-static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
-{
-    return *seed != RNG_SEED_DEFAULT;
-}
-#endif
 #undef Q_4_12
 #define Q_4_12(n) (s32)((n) * 4096)
 
@@ -1357,17 +1349,13 @@ static void CB2_BattleTest_NextParameter(void)
 
 static inline rng_value_t MakeRngValue(const u16 seed)
 {
-    #if HQ_RANDOM == TRUE
-        int i;
-        rng_value_t result = {0, 0, seed, 1};
-        for (i = 0; i < 16; i++)
-        {
+    int i;
+    rng_value_t result = {0, 0, seed, 1};
+    for (i = 0; i < 16; i++)
+    {
             _SFC32_Next(&result);
-        }
-        return result;
-    #else
-        return ISO_RANDOMIZE1(seed);
-    #endif
+    }
+    return result;
 }
 static void CB2_BattleTest_NextTrial(void)
 {
