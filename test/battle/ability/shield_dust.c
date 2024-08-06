@@ -89,12 +89,14 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
     u16 move;
     PARAMETRIZE { move = MOVE_POWER_UP_PUNCH; }
     PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_VOLTAIC_CYCLONE; }
     PARAMETRIZE { move = MOVE_LEAF_STORM; }
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_RAPID_SPIN, MOVE_EFFECT_RAPID_SPIN) == TRUE);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_VOLTAIC_CYCLONE, MOVE_EFFECT_RAPID_SPIN) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -111,6 +113,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
         {
             case MOVE_POWER_UP_PUNCH:
             case MOVE_RAPID_SPIN:
+            case MOVE_VOLTAIC_CYCLONE:
             case MOVE_LEAF_STORM:
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;

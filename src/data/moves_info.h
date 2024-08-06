@@ -20714,6 +20714,31 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_ROCKET_PUNCH,
     },
 
+    [MOVE_VOLTAIC_CYCLONE] =
+    {
+        .name = COMPOUND_STRING("Voltaic Spin"),
+        .description = COMPOUND_STRING(
+            "Whips up an electric\n"
+            "cyclone to clear hazards."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_RAPID_SPIN,
+            .self = TRUE,
+        }
+        ),
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE_ONCE,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_VOLTAIC_CYCLONE,
+    },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
