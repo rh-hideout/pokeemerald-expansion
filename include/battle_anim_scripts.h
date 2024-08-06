@@ -849,6 +849,8 @@ extern const u8 Move_SUPERCELL_SLAM[];
 extern const u8 Move_PSYCHIC_NOISE[];
 extern const u8 Move_UPPER_HAND[];
 extern const u8 Move_MALIGNANT_CHAIN[];
+extern const u8 Move_STARSEED_BLAST[];
+extern const u8 Move_ROCKET_PUNCH[];
 extern const u8 Move_BREAKNECK_BLITZ[];
 extern const u8 Move_ALL_OUT_PUMMELING[];
 extern const u8 Move_SUPERSONIC_SKYSTRIKE[];
