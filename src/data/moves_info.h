@@ -20369,7 +20369,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .metronomeBanned = TRUE,
-        .battleAnimScript = Move_IVY_CUDGEL,
     },
 
     [MOVE_ELECTRO_SHOT] =
