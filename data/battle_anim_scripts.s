@@ -16900,8 +16900,7 @@ ElectroShotUnleash:
 	blendoff
 	end
 
-
-	Move_STARSEEDBLAST:
+Move_STARSEED_BLAST::
 	loadspritegfx ANIM_TAG_SEED
 	createsprite gBulletSeedSpriteTemplate, ANIM_TARGET, 2, 20, 0
 	delay 5
@@ -16927,7 +16926,7 @@ ElectroShotUnleash:
 	end
 
 
-	Move_ROCKET_PUNCH::
+Move_ROCKET_PUNCH::
 	loadspritegfx ANIM_TAG_IMPACT
 	loadspritegfx ANIM_TAG_HANDS_AND_FEET
 	loadspritegfx ANIM_TAG_EXPLOSION
@@ -16950,9 +16949,6 @@ ElectroShotUnleash:
 	call UnsetHighSpeedBg
 	end
 
-Move_TERA_BLAST::
-Move_AXE_KICK::
-Move_ORDER_UP::
 Move_SPICY_EXTRACT::
 	loadspritegfx ANIM_TAG_SMALL_EMBER
 	loadspritegfx ANIM_TAG_POISON_BUBBLE

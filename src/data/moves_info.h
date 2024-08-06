@@ -20669,9 +20669,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_MALIGNANT_CHAIN,
     },
     
-    [MOVE_STARSEEDBLAST] =
+    [MOVE_STARSEED_BLAST] =
     {
-        .name = COMPOUND_STRING("StarseedBlast"),
+        .name = COMPOUND_STRING("Starseed Blast"),
         .description = COMPOUND_STRING(
             "Shoots 2 to 5 seeds in a row\n"
             "to strike the foe."),
@@ -20688,6 +20688,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
+        .battleAnimScript = Move_STARSEED_BLAST,
     },
 
     [MOVE_ROCKET_PUNCH] =
@@ -20698,7 +20699,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Only works first turn."),
         .effect = EFFECT_FIRST_TURN_ONLY,
         .power = 45,
-        .type = TYPE_fighting,
+        .type = TYPE_FIGHTING,
         .accuracy = 100,
         .pp = 16,
         .target = MOVE_TARGET_SELECTED,
@@ -20711,7 +20712,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
-        .battleAnimScript = MOVE_ROCKET_PUNCH,
+        .battleAnimScript = Move_ROCKET_PUNCH,
     },
 
     // Z-Moves
