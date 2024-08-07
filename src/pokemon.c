@@ -353,6 +353,7 @@ static const u16 sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DEOXYS),
     HOENN_TO_NATIONAL(MAPLAGE),
     HOENN_TO_NATIONAL(ARACHNOTE),
+    HOENN_TO_NATIONAL(FUCKER),
 };
 
 const struct SpindaSpot gSpindaSpotGraphics[] =
