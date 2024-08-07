@@ -22008,6 +22008,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/icon.4bpp");
    const u8 gMonFootprint_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/footprint.1bpp");
 
+   const u32 gMonFrontPic_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/front.4bpp.lz");
+   const u32 gMonBackPic_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/back.4bpp.lz");
+   const u32 gMonPalette_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/shiny.gbapal.lz");
+   const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
+   const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
+
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");

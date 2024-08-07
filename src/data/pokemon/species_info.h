@@ -199,6 +199,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sMaplageLevelUpLearnset,
     },
 
+        [SPECIES_ARACHNOTE] =
+    { 
+       .baseHP        = 67,
+       .baseAttack    = 80,
+       .baseDefense   = 62,
+       .baseSpeed     = 101,
+       .baseSpAttack  = 107,
+       .baseSpDefense = 60,
+       .types = { TYPE_BUG, TYPE_NORMAL },
+       .catchRate = 3,
+       .expYield = 148,
+       .evYield_SpAttack  = 1,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 120,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_BUG, EGG_GROUP_NO_EGGS_DISCOVERED },
+       .abilities = { ABILITY_SOUNDPROOF, ABILITY_BOOMBOX, ABILITY_SWARM, ABILITY_UNNERVE },
+       .bodyColor = BODY_COLOR_WHITE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Arachnote"),
+       .natDexNum = NATIONAL_DEX_ARACHNOTE,
+       .categoryName = _("Otamatone"),
+       .height = 15,
+       .weight = 330,
+       .description = COMPOUND_STRING(
+           "A frequent night walker, it can be\n"
+           "picked up and squeezed to emit an\n"
+           "oddly melodic and soothing sound."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Arachnote,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Arachnote,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Arachnote,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Arachnote,
+       .shinyPalette = gMonShinyPalette_Arachnote,
+       .iconSprite = gMonIcon_Arachnote,
+       .iconPalIndex = 2,
+       FOOTPRINT(Arachnote)
+       .levelUpLearnset = sArachnoteLevelUpLearnset,
+    },
+
     /* You may add any custom species below this point based on the following structure: */
 
     /*
