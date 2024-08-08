@@ -174,8 +174,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .description = COMPOUND_STRING(
            "A docile and shy species, Maplage waft\n"
            "into the air to escape attacks, not by\n"
-           "wind, but by an odd magical power.\n"
-           "test"),
+           "wind, but by an odd magical power."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -262,21 +261,21 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .baseSpAttack  = 45,
        .baseSpDefense = 60,
        .types = { TYPE_FIGHTING, TYPE_FIGHTING },
-       .catchRate = 3,
+       .catchRate = 35,
        .expYield = 148,
-       .evYield_Attack  = 3,,
-       .genderRatio = PERCENT_FEMALE(50),
+       .evYield_Attack  = 3,
+       .genderRatio = PERCENT_FEMALE(12.5),
        .eggCycles = 120,
        .friendship = 50,
        .growthRate = GROWTH_MEDIUM_FAST,
        .eggGroups = {EGG_GROUP_FLYING, EGG_GROUP_WATER_2},
        .abilities = { ABILITY_IRON_FIST, ABILITY_NONE, ABILITY_SCRAPPY, ABILITY_SWIFT_SWIM },
-       .bodyColor = BODY_COLOR_WHITE,
+       .bodyColor = BODY_COLOR_BROWN,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
       .speciesName = _("Fucker"),
-       .natDexNum = NATIONAL_DEX_ARACHNOTE,
-       .categoryName = _("Fish Duck Brawler"),
+       .natDexNum = NATIONAL_DEX_FUCKER,
+       .categoryName = _("Fish Duck"),
        .height = 15,
        .weight = 330,
        .description = COMPOUND_STRING(
