@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Mortal Spin blows away Wrap, hazards and poisons foe")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
         MESSAGE("Wobbuffet got free of Foe Wobbuffet's Wrap!");
         MESSAGE("Wobbuffet blew away Stealth Rock!");
-        MESSAGE("Foe Wobbuffet was poisoned!");
+        MESSAGE("The opposing Wobbuffet was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
     }
 }

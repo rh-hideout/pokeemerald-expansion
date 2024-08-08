@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Sap Sipper blocks multi-hit grass type moves")
     } WHEN {
         TURN { MOVE(opponent, MOVE_BULLET_SEED); }
     } SCENE {
-        MESSAGE("Foe Shellder used Bullet Seed!");
+        MESSAGE("The opposing Shellder used Bullet Seed!");
         ABILITY_POPUP(player, ABILITY_SAP_SIPPER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Marill's Attack rose!");

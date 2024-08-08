@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect Pokémon with no types")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
         HP_BAR(opponent);
         MESSAGE("Arcanine burned itself out!");
-        MESSAGE("Foe Poliwrath used Reflect Type!");
+        MESSAGE("The opposing Poliwrath used Reflect Type!");
         MESSAGE("But it failed!");
     }
 }
@@ -166,10 +166,10 @@ SINGLE_BATTLE_TEST("Reflect Type defaults to Normal type for the user's types[0]
         TURN { MOVE(player, MOVE_REFLECT_TYPE); }
     } SCENE {
         // Turn 1
-        MESSAGE("Foe Arcanine used Burn Up!");
+        MESSAGE("The opposing Arcanine used Burn Up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, opponent);
         HP_BAR(player);
-        MESSAGE("Foe Arcanine burned itself out!");
+        MESSAGE("The opposing Arcanine burned itself out!");
         // Turn 2
         MESSAGE("Wobbuffet used Forest's Curse!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FORESTS_CURSE, player);

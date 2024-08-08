@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Guard Spec. sets Mist effect on the battlers side")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
         MESSAGE("Ally became shrouded in MIST!");
-        MESSAGE("Foe Wobbuffet used Growl!");
+        MESSAGE("The opposing Wobbuffet used Growl!");
         MESSAGE("Wobbuffet is protected by MIST!");
     }
 }

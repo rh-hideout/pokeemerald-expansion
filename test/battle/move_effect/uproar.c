@@ -20,9 +20,9 @@ DOUBLE_BATTLE_TEST("Uproar status causes sleeping pokemon to wake up during an a
         HP_BAR(opponentRight);
         MESSAGE("Wobbuffet woke up in the UPROAR!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
-        MESSAGE("Foe Voltorb woke up in the UPROAR!");
+        MESSAGE("The opposing Voltorb woke up in the UPROAR!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
-        MESSAGE("Foe Wobbuffet woke up in the UPROAR!");
+        MESSAGE("The opposing Wobbuffet woke up in the UPROAR!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
     }
 }

@@ -71,8 +71,10 @@
 #define B_TXT_DEF_TEAM2 0x3B // your/the opposing
 // #define B_TXT_SELECTION_NAME 0x3C - removed
 // #define B_TXT_SELECTION_NAME2 0x3D no Illusion check - removed
-
-// for B_TXT_BUFF1, B_TXT_BUFF2 and B_TXT_BUFF3
+#define B_TXT_ATK_NAME_WITH_PREFIX2 0x3E //lowercase
+#define B_TXT_DEF_NAME_WITH_PREFIX2 0x3F //lowercase
+#define B_TXT_EFF_NAME_WITH_PREFIX2 0x40 //lowercase
+#define B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX2 0x41 //lowercase
 
 #define B_BUFF_STRING                   0
 #define B_BUFF_NUMBER                   1

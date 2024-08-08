@@ -213,9 +213,9 @@ SINGLE_BATTLE_TEST("Opponent Pokemon can be further poisoned with Toxic spikes a
         STATUS_ICON(opponent, poison: TRUE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         if (item == ITEM_PECHA_BERRY) {
-            MESSAGE("Foe Wynaut's Pecha Berry cured poison!");
+            MESSAGE("The opposing Wynaut's Pecha Berry cured poison!");
         } else {
-            MESSAGE("Foe Wynaut's Lum Berry cured its poison problem!");
+            MESSAGE("The opposing Wynaut's Lum Berry cured its poison problem!");
         }
         STATUS_ICON(opponent, poison: FALSE);
         // 2nd switch-in
@@ -245,7 +245,7 @@ SINGLE_BATTLE_TEST("Player Pokemon can be further poisoned with Toxic spikes aft
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 2); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Toxic Spikes!");
+        MESSAGE("The opposing Wobbuffet used Toxic Spikes!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
         MESSAGE("Poison Spikes were scattered all around your team's feet!");
         // 1st switch-in

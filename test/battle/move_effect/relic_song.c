@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Relic Song is prevented by Soundproof")
         TURN { MOVE(player, MOVE_RELIC_SONG); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
-        MESSAGE("Foe Voltorb's Soundproof blocks Relic Song!");
+        MESSAGE("The opposing Voltorb's Soundproof blocks Relic Song!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
             HP_BAR(opponent);
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens aft
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
         HP_BAR(opponent);
-        MESSAGE("Foe Gossifleur fainted!");
+        MESSAGE("The opposing Gossifleur fainted!");
         ABILITY_POPUP(opponent, ABILITY_COTTON_DOWN);
         MESSAGE("Meloetta's Speed fell!");
         MESSAGE("Meloetta transformed!");

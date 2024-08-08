@@ -78,7 +78,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
         MESSAGE("Kadabra's Defense fell!");
         // Also check if second original target gets hit by Leer as this was once bugged
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Foe Wynaut's Defense fell!");
+        MESSAGE("The opposing Wynaut's Defense fell!");
     }
 }
 

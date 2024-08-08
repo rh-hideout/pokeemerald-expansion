@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Throat Chop prevents the usage of sound moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
         HP_BAR(opponent);
-        MESSAGE("Foe Wobbuffet can't use Hyper Voice due to Throat Chop!");
+        MESSAGE("The opposing Wobbuffet can't use Hyper Voice due to Throat Chop!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
         }
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Throat Chop won't work through a substitute")
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
         NONE_OF {
-            MESSAGE("Foe Wobbuffet can't use Hyper Voice due to Throat Chop!");
+            MESSAGE("The opposing Wobbuffet can't use Hyper Voice due to Throat Chop!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
     }

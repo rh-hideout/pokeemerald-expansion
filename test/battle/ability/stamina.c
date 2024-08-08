@@ -98,8 +98,8 @@ SINGLE_BATTLE_TEST("Stamina activates for every hit of a multi hit move")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
         HP_BAR(opponent);
-        STAMINA_STAT_RAISE(opponent, "Foe Mudbray's Defense rose!");
-        STAMINA_STAT_RAISE(opponent, "Foe Mudbray's Defense rose!");
+        STAMINA_STAT_RAISE(opponent, "The opposing Mudbray's Defense rose!");
+        STAMINA_STAT_RAISE(opponent, "The opposing Mudbray's Defense rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
     }

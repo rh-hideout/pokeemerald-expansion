@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Teatime causes the user to consume its Berry, ignoring HP re
     } WHEN {
         TURN { MOVE(opponent, MOVE_TEATIME); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Teatime!");
+        MESSAGE("The opposing Wobbuffet used Teatime!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         MESSAGE("Using Liechi Berry, the Attack of Foe Wobbuffet rose!");
     }
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Teatime causes other Pokemon to consume their Berry even if 
     } WHEN {
         TURN { MOVE(opponent, MOVE_TEATIME); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Teatime!");
+        MESSAGE("The opposing Wobbuffet used Teatime!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
     }
@@ -113,7 +113,7 @@ DOUBLE_BATTLE_TEST("Teatime causes all Pokémon to consume their berry")
         {
             MESSAGE("Wobbuffet used Teatime!");
         } else {
-            MESSAGE("Foe Wobbuffet used Teatime!");
+            MESSAGE("The opposing Wobbuffet used Teatime!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, user);
         MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Volt Absorb if it has been affected by Elec
             MOVE(opponent, MOVE_TEATIME);
         }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Teatime!");
+        MESSAGE("The opposing Wobbuffet used Teatime!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         if (shouldTriggerAbility)
         {
@@ -213,7 +213,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by El
             MOVE(opponent, MOVE_TEATIME);
         }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Teatime!");
+        MESSAGE("The opposing Wobbuffet used Teatime!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         if (shouldTriggerAbility)
         {
@@ -252,7 +252,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
             MOVE(opponent, MOVE_TEATIME);
         }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Teatime!");
+        MESSAGE("The opposing Wobbuffet used Teatime!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         if (shouldTriggerAbility)
         {

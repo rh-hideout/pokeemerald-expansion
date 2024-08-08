@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks")
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Ember!");
+        MESSAGE("The opposing Wobbuffet used Ember!");
         MESSAGE("Wobbuffet was defrosted!");
         STATUS_ICON(player, none: TRUE);
     }

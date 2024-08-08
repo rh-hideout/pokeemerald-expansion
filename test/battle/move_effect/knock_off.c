@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Wobbuffet's Sitrus Berry restored health!");
+            MESSAGE("The opposing Wobbuffet's Sitrus Berry restored health!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         MESSAGE("Wobbuffet knocked off Foe Wobbuffet's Sitrus Berry!");

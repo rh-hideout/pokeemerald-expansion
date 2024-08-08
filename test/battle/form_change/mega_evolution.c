@@ -27,9 +27,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - opponent fas
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
         MESSAGE("Venusaur's Venusaurite is reacting to 1's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Venusaur has Mega Evolved into Mega Venusaur!");
@@ -49,9 +49,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - player faste
         MESSAGE("Venusaur's Venusaurite is reacting to 1's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Venusaur has Mega Evolved into Mega Venusaur!");
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
     }
 }
 
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order")
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Gardevoir used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         ASSUME(player->speed == 205);
     }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Sableye used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         ASSUME(player->speed == 45);
     }
@@ -145,9 +145,9 @@ SINGLE_BATTLE_TEST("Regular Mega Evolution and Fervent Wish Mega Evolution can h
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
         MESSAGE("Rayquaza has Mega Evolved into Mega Rayquaza!");
 
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_RAYQUAZA_MEGA);
         EXPECT_EQ(opponent->species, SPECIES_GARDEVOIR_MEGA);

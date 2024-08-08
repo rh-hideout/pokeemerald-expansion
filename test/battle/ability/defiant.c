@@ -21,14 +21,14 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate")
         //1st mon Intimidate
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Foe Gyarados's Intimidate cuts Mankey's attack!");
+        MESSAGE("The opposing Gyarados's Intimidate cuts Mankey's attack!");
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Mankey's Attack sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Foe Gyarados's Intimidate cuts Primeape's attack!");
+        MESSAGE("The opposing Gyarados's Intimidate cuts Primeape's attack!");
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
@@ -38,14 +38,14 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate")
         //2nd mon Intimidate
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Foe Arbok's Intimidate cuts Mankey's attack!");
+        MESSAGE("The opposing Arbok's Intimidate cuts Mankey's attack!");
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Mankey's Attack sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Foe Arbok's Intimidate cuts Primeape's attack!");
+        MESSAGE("The opposing Arbok's Intimidate cuts Primeape's attack!");
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
@@ -83,14 +83,14 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate")
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Foe Mankey's Attack sharply rose!");
+            MESSAGE("The opposing Mankey's Attack sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("Gyarados's Intimidate cuts Foe Primeape's attack!");
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Foe Primeape's Attack sharply rose!");
+            MESSAGE("The opposing Primeape's Attack sharply rose!");
         }
 
         //2nd mon Intimidate
@@ -100,14 +100,14 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate")
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Foe Mankey's Attack sharply rose!");
+            MESSAGE("The opposing Mankey's Attack sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("Arbok's Intimidate cuts Foe Primeape's attack!");
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Foe Primeape's Attack sharply rose!");
+            MESSAGE("The opposing Primeape's Attack sharply rose!");
         }
     } FINALLY {
         // -2 from Intimidates and +4 from Defiants gets +2 total
@@ -225,7 +225,7 @@ DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally pokemon")
         MESSAGE("Mankey's Attack sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Foe Mankey's Speed fell!");
+        MESSAGE("The opposing Mankey's Speed fell!");
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);

@@ -97,11 +97,11 @@ SINGLE_BATTLE_TEST("Roost suppresses the user's Flying-typing this turn, then re
         MESSAGE("Skarmory used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Skarmory regained health!");
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
         MESSAGE("It's super effective!");
         // Turn 2: EQ has no effect because Roost expired
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
         MESSAGE("It doesn't affect Skarmory…");
         NOT HP_BAR(player);
@@ -242,10 +242,10 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
         MESSAGE("Kecleon used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, playerLeft);
         MESSAGE("Kecleon regained health!");
-        MESSAGE("Foe Pidgey used Gust!");
+        MESSAGE("The opposing Pidgey used Gust!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUST, opponentLeft);
         MESSAGE("Kecleon's Color Change made it the Flying type!");
-        MESSAGE("Foe Sandshrew used Earthquake!");
+        MESSAGE("The opposing Sandshrew used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentRight);
         MESSAGE("Kecleon's Color Change made it the Ground type!");
     }
@@ -264,7 +264,7 @@ SINGLE_BATTLE_TEST("Roost prevents a Flying-type user from being protected by De
         MESSAGE("Rayquaza used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Rayquaza regained health!");
-        MESSAGE("Foe Wobbuffet used Ice Beam!");
+        MESSAGE("The opposing Wobbuffet used Ice Beam!");
         NOT MESSAGE("The mysterious strong winds weakened the attack!");
     }
 }
@@ -283,10 +283,10 @@ SINGLE_BATTLE_TEST("Roost does not undo other type-changing effects at the end o
         MESSAGE("Swellow used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Swellow regained health!");
-        MESSAGE("Foe Wobbuffet used Soak!");
+        MESSAGE("The opposing Wobbuffet used Soak!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, opponent);
         MESSAGE("Swellow transformed into the Water type!");
-        MESSAGE("Foe Wobbuffet used Vine Whip!");
+        MESSAGE("The opposing Wobbuffet used Vine Whip!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VINE_WHIP, opponent);
         MESSAGE("It's super effective!");
     }
@@ -330,16 +330,16 @@ SINGLE_BATTLE_TEST("Roost's suppression prevents Reflect Type from copying any F
         MESSAGE("Swellow used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Swellow regained health!");
-        MESSAGE("Foe Wobbuffet used Reflect Type!");
+        MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
-        MESSAGE("Foe Wobbuffet's type changed to match the Swellow's!");
+        MESSAGE("The opposing Wobbuffet's type changed to match the Swellow's!");
         // Turn 2: EQ hits, Reflect Type on non-Roosted Normal/Flying
         MESSAGE("Swellow used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
         HP_BAR(opponent);
-        MESSAGE("Foe Wobbuffet used Reflect Type!");
+        MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
-        MESSAGE("Foe Wobbuffet's type changed to match the Swellow's!");
+        MESSAGE("The opposing Wobbuffet's type changed to match the Swellow's!");
         // Turn 3: EQ has no effect
         MESSAGE("Swellow used Earthquake!");
         MESSAGE("It doesn't affect Foe Wobbuffet…");
@@ -361,7 +361,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
         MESSAGE("Flygon used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Flygon regained health!");
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -380,7 +380,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
         MESSAGE("Wobbuffet used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet regained health!");
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -405,7 +405,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Magnet Rise
         MESSAGE("Wobbuffet used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet regained health!");
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -423,14 +423,14 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
         // Turn 1: Telekinesis
-        MESSAGE("Foe Wobbuffet used Telekinesis!");
+        MESSAGE("The opposing Wobbuffet used Telekinesis!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEKINESIS, opponent);
         MESSAGE("Wobbuffet was hurled into the air!");
         // Turn 2
         MESSAGE("Wobbuffet used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet regained health!");
-        MESSAGE("Foe Wobbuffet used Earthquake!");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
