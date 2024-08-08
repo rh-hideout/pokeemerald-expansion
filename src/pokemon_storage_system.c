@@ -130,6 +130,7 @@ enum {
     MENU_SUMMARY,
     MENU_RELEASE,
     MENU_MARK,
+    MENU_RENAME, // Rename Pokemon
     MENU_JUMP,
     MENU_WALLPAPER,
     MENU_NAME,
@@ -199,6 +200,7 @@ enum {
 enum {
     SCREEN_CHANGE_EXIT_BOX,
     SCREEN_CHANGE_SUMMARY_SCREEN,
+    SCREEN_CHANGE_RENAME_POKEMON,
     SCREEN_CHANGE_NAME_BOX,
     SCREEN_CHANGE_ITEM_FROM_BAG,
 };
@@ -615,6 +617,7 @@ static void Task_TakeItemForMoving(u8);
 static void Task_ShowMarkMenu(u8);
 static void Task_ShowMonSummary(u8);
 static void Task_ReleaseMon(u8);
+static void Task_RenameMon(u8);
 static void Task_ReshowPokeStorage(u8);
 static void Task_PokeStorageMain(u8);
 static void Task_JumpBox(u8);
@@ -687,7 +690,9 @@ static s8 RunCanReleaseMon(void);
 static void SaveMovingMon(void);
 static void LoadSavedMovingMon(void);
 static void InitSummaryScreenData(void);
+static void InitRenameScreenData(void);
 static void SetSelectionAfterSummaryScreen(void);
+static void SetSelectionAndNicknameAfterRenameScreen(void);
 static void SetMonMarkings(u8);
 static bool8 IsRemovingLastPartyMon(void);
 static bool8 CanPlaceMon(void);
@@ -2118,6 +2123,10 @@ static void Task_InitPokeStorage(u8 taskId)
                 // Return from naming box
                 LoadSavedMovingMon();
                 break;
+            case SCREEN_CHANGE_RENAME_POKEMON - 1:
+                // Return from naming mon
+                SetSelectionAndNicknameAfterRenameScreen();
+                break;
             case SCREEN_CHANGE_SUMMARY_SCREEN - 1:
                 // Return from summary screen
                 SetSelectionAfterSummaryScreen();
@@ -2700,6 +2709,10 @@ static void Task_OnSelectedMon(u8 taskId)
         case MENU_MARK:
             PlaySE(SE_SELECT);
             SetPokeStorageTask(Task_ShowMarkMenu);
+            break;
+        case MENU_RENAME:
+            PlaySE(SE_SELECT);
+            SetPokeStorageTask(Task_RenameMon);
             break;
         case MENU_TAKE:
             PlaySE(SE_SELECT);
@@ -3604,6 +3617,26 @@ static void Task_ShowMonSummary(u8 taskId)
     }
 }
 
+static void Task_RenameMon(u8 taskId)
+{
+    switch (sStorage->state)
+    {
+    case 0:
+        InitRenameScreenData();
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        sStorage->state++;
+        break;
+    case 1:
+        if (!UpdatePaletteFade())
+        {
+            sWhichToReshow = SCREEN_CHANGE_RENAME_POKEMON - 1;
+            sStorage->screenChangeType = SCREEN_CHANGE_RENAME_POKEMON;
+            SetPokeStorageTask(Task_ChangeScreen);
+        }
+        break;
+    }
+}
+
 static void Task_GiveItemFromBag(u8 taskId)
 {
     switch (sStorage->state)
@@ -3786,6 +3819,12 @@ static void Task_ChangeScreen(u8 taskId)
             ShowPokemonSummaryScreenHandleDeoxys(mode, boxMons, monIndex, maxMonIndex, CB2_ReturnToPokeStorage);
         else
             ShowPokemonSummaryScreen(mode, boxMons, monIndex, maxMonIndex, CB2_ReturnToPokeStorage);
+        break;
+    case SCREEN_CHANGE_RENAME_POKEMON:
+        boxMons = sStorage->summaryMon.box;
+        FreePokeStorageData();
+        GetBoxMonData(boxMons, MON_DATA_NICKNAME, gStringVar1);
+        DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar1, GetBoxMonData(boxMons, MON_DATA_SPECIES), GetBoxMonGender(boxMons), GetBoxMonData(boxMons, MON_DATA_PERSONALITY), CB2_ReturnToPokeStorage);
         break;
     case SCREEN_CHANGE_NAME_BOX:
         FreePokeStorageData();
@@ -6804,12 +6843,44 @@ static void InitSummaryScreenData(void)
     }
 }
 
+static void InitRenameScreenData(void)
+{
+    if (sIsMonBeingMoved)
+    {
+        SaveMovingMon();
+        sStorage->summaryMon.mon = &sSavedMovingMon;
+    }
+    else if (sCursorArea == CURSOR_AREA_IN_PARTY)
+        sStorage->summaryMon.mon = &gPlayerParty[sCursorPosition];
+    else
+        sStorage->summaryMon.box = GetBoxedMonPtr(StorageGetCurrentBox(), sCursorPosition);
+
+    gLastViewedMonIndex = sCursorPosition;
+}
+
 static void SetSelectionAfterSummaryScreen(void)
 {
     if (sIsMonBeingMoved)
         LoadSavedMovingMon();
     else
         sCursorPosition = gLastViewedMonIndex;
+}
+
+static void SetSelectionAndNicknameAfterRenameScreen(void)
+{
+    if (sIsMonBeingMoved)
+    {
+        SetMonData(&sSavedMovingMon, MON_DATA_NICKNAME, gStringVar1);
+        LoadSavedMovingMon();
+    }
+    else
+    {
+        sCursorPosition = gLastViewedMonIndex;
+        if (sCursorArea == CURSOR_AREA_IN_PARTY)
+            SetMonData(&gPlayerParty[sCursorPosition], MON_DATA_NICKNAME, gStringVar1);
+        if (sCursorArea == CURSOR_AREA_IN_BOX)
+            SetCurrentBoxMonData(sCursorPosition, MON_DATA_NICKNAME, gStringVar1);
+    }
 }
 
 s16 CompactPartySlots(void)
@@ -7771,6 +7842,9 @@ static bool8 SetMenuTexts_Mon(void)
             SetMenuText(MENU_STORE);
     }
 
+    #if P_CAN_RENAME_FROM_BOX
+    SetMenuText(MENU_RENAME);
+    #endif
     SetMenuText(MENU_MARK);
     SetMenuText(MENU_RELEASE);
     SetMenuText(MENU_CANCEL);
@@ -8046,6 +8120,7 @@ static const u8 *const sMenuTexts[] =
     [MENU_SUMMARY]    = gPCText_Summary,
     [MENU_RELEASE]    = gPCText_Release,
     [MENU_MARK]       = gPCText_Mark,
+    [MENU_RENAME]     = gPCText_Rename,
     [MENU_JUMP]       = gPCText_Jump,
     [MENU_WALLPAPER]  = gPCText_Wallpaper,
     [MENU_NAME]       = gPCText_Name,

@@ -38,6 +38,11 @@
 #define P_SHUCKLE_BERRY_JUICE       GEN_LATEST  // In Gen 2, Shuckle had a 1/16 chance of converting Berry that it's holding into Berry Juice. Enabling this will allow Shuckle to do this with an Oran Berry, which is the spiritual succesor of the Berry item.
 #define P_ARCEUS_UNIQUE_FORM_ICONS  GEN_LATEST  // Since Gen 9, Arceus additionally changes its icon to reflect its current form.
 
+// Optional party/box menu actions
+#define P_CAN_RENAME_FROM_PARTY          TRUE
+#define P_CAN_RENAME_FROM_BOX            TRUE
+#define P_CAN_RELEARN_FROM_PARTY         TRUE
+
 // Other settings
 #define P_CUSTOM_GENDER_DIFF_ICONS       TRUE        // If TRUE, will give more Pokémon custom icons for their female forms, i.e. Hippopotas and Hippowdon
 #define P_FOOTPRINTS                     TRUE        // If TRUE, Pokémon will have footprints (as was the case up to Gen 5 and in BDSP). Disabling this saves some ROM space.
