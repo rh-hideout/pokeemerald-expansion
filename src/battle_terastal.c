@@ -110,14 +110,14 @@ u32 GetBattlerTeraType(u32 battler)
 void ExpendTypeStellarBoost(u32 battler, u32 type)
 {
     if (type < 32 && gBattleMons[battler].species != SPECIES_TERAPAGOS_STELLAR) // avoid OOB access
-        gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] |= gBitTable[type];
+        gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] |= (1 << (type));
 }
 
 // Checks whether a type's Stellar boost has been expended.
 bool32 IsTypeStellarBoosted(u32 battler, u32 type)
 {
     if (type < 32) // avoid OOB access
-        return !(gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] & gBitTable[type]);
+        return !(gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] & (1 << (type)));
     else
         return FALSE;
 }
