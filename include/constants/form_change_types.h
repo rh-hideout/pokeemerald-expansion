@@ -134,4 +134,8 @@
 // param1: amount of days
 #define FORM_CHANGE_DAYS_PASSED                 23
 
+// Form change that activates when overworld weather changes.
+// param1: weather to check.
+#define FORM_CHANGE_OVERWORLD_WEATHER           24
+
 #endif // GUARD_CONSTANTS_FORM_CHANGE_TYPES_H
