@@ -15,18 +15,11 @@ jobs:
       GAME_VERSION: EMERALD
       GAME_REVISION: 0
       GAME_LANGUAGE: ENGLISH
-      MODERN: 0
       COMPARE: 0
       UNUSED_ERROR: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Checkout agbcc
-        uses: actions/checkout@v2
-        with:
-          path: agbcc
-          repository: pret/agbcc
 
       - name: Install binutils
         run: |
@@ -36,27 +29,13 @@ jobs:
         # gcc-arm-none-eabi is only needed for the modern build
         # as an alternative to dkP
 
-      - name: Install agbcc
-        run: |
-          ./build.sh
-          ./install.sh ../
-        working-directory: agbcc
-
-      - name: Agbcc
+      - name: ROM
         env:
-          MODERN: 0
-          COMPARE: 0
-        run: make -j${nproc} -O all
-
-      - name: Modern
-        env:
-          MODERN: 1
           COMPARE: 0
         run: make -j${nproc} -O all
 
       - name: Test
         env:
-          MODERN: 1
           TEST: 1
         run: |
           make -j${nproc} -O pokeemerald-test.elf

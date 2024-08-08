@@ -25,10 +25,8 @@ AS := $(PREFIX)as
 
 LD := $(PREFIX)ld
 
-# note: the makefile must be set up so MODERNCC is never called
-# if MODERN=0
-MODERNCC := $(PREFIX)gcc
-PATH_MODERNCC := PATH="$(PATH)" $(MODERNCC)
+ARMCC := $(PREFIX)gcc
+PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 
 ifeq ($(OS),Windows_NT)
 EXE := .exe
@@ -40,45 +38,20 @@ TITLE        := POKEMON EMER
 GAME_CODE    := BPEE
 MAKER_CODE   := 01
 REVISION     := 0
-MODERN       ?= 1
 TEST         ?= 0
 ANALYZE      ?= 0
 UNUSED_ERROR ?= 0
-
-ifeq (agbcc,$(MAKECMDGOALS))
-  MODERN := 0
-endif
 
 ifeq (check,$(MAKECMDGOALS))
   TEST := 1
 endif
 
-# use arm-none-eabi-cpp for macOS
-# as macOS's default compiler is clang
-# and clang's preprocessor will warn on \u
-# when preprocessing asm files, expecting a unicode literal
-# we can't unconditionally use arm-none-eabi-cpp
-# as installations which install binutils-arm-none-eabi
-# don't come with it
-ifneq ($(MODERN),1)
-  ifeq ($(shell uname -s),Darwin)
-    CPP := $(PREFIX)cpp
-  else
-    CPP := $(CC) -E
-  endif
-else
-  CPP := $(PREFIX)cpp
-endif
+CPP := $(PREFIX)cpp
 
-ROM_NAME := pokeemerald_agbcc.gba
+ROM_NAME := pokeemerald.gba
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
-OBJ_DIR_NAME := build/emerald
-
-MODERN_ROM_NAME := pokeemerald.gba
-MODERN_ELF_NAME := $(MODERN_ROM_NAME:.gba=.elf)
-MODERN_MAP_NAME := $(MODERN_ROM_NAME:.gba=.map)
-MODERN_OBJ_DIR_NAME := build/modern
+OBJ_DIR_NAME := build/modern
 
 SHELL := bash -o pipefail
 
@@ -86,14 +59,8 @@ ELF = $(ROM:.gba=.elf)
 MAP = $(ROM:.gba=.map)
 SYM = $(ROM:.gba=.sym)
 
-TEST_OBJ_DIR_NAME_MODERN := build/modern-test
-TEST_OBJ_DIR_NAME_AGBCC := build/test
+TEST_OBJ_DIR_NAME := build/modern-test
 
-ifeq ($(MODERN),0)
-TEST_OBJ_DIR_NAME := $(TEST_OBJ_DIR_NAME_AGBCC)
-else
-TEST_OBJ_DIR_NAME := $(TEST_OBJ_DIR_NAME_MODERN)
-endif
 TESTELF = $(ROM:.gba=-test.elf)
 HEADLESSELF = $(ROM:.gba=-test-headless.elf)
 
@@ -116,17 +83,9 @@ SONG_BUILDDIR = $(OBJ_DIR)/$(SONG_SUBDIR)
 MID_BUILDDIR = $(OBJ_DIR)/$(MID_SUBDIR)
 TEST_BUILDDIR = $(OBJ_DIR)/$(TEST_SUBDIR)
 
-ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=$(MODERN)
+ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=1
 
-ifeq ($(MODERN),0)
-CC1             := tools/agbcc/bin/agbcc$(EXE)
-override CFLAGS += -mthumb-interwork -Wimplicit -Wparentheses -Werror -O2 -fhex-asm -g
-ROM := $(ROM_NAME)
-OBJ_DIR := $(OBJ_DIR_NAME)
-LIBPATH := -L ../../tools/agbcc/lib
-LIB := $(LIBPATH) -lgcc -lc -L../../libagbsyscall -lagbsyscall
-else
-CC1              = $(shell $(PATH_MODERNCC) --print-prog-name=cc1) -quiet
+CC1              = $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
 override CFLAGS += -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
 ifeq ($(ANALYZE),1)
 override CFLAGS += -fanalyzer
@@ -137,11 +96,10 @@ ifneq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
 override CFLAGS += -Wno-error=unused-variable -Wno-error=unused-const-variable -Wno-error=unused-parameter -Wno-error=unused-function -Wno-error=unused-but-set-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-value -Wno-error=unused-local-typedefs
 endif
 endif
-ROM := $(MODERN_ROM_NAME)
-OBJ_DIR := $(MODERN_OBJ_DIR_NAME)
-LIBPATH := -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libc.a))"
+ROM := $(ROM_NAME)
+OBJ_DIR := $(OBJ_DIR_NAME)
+LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
 LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
-endif
 
 ifeq ($(TESTELF),$(MAKECMDGOALS))
   TEST := 1
@@ -151,10 +109,7 @@ ifeq ($(TEST),1)
 OBJ_DIR := $(TEST_OBJ_DIR_NAME)
 endif
 
-CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -DMODERN=$(MODERN) -DTESTING=$(TEST)
-ifneq ($(MODERN),1)
-CPPFLAGS += -I tools/agbcc/include -I tools/agbcc -nostdinc -undef
-endif
+CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST)
 
 SHA1 := $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
 GFX := tools/gbagfx/gbagfx$(EXE)
@@ -301,25 +256,16 @@ mostlyclean: tidynonmodern tidymodern tidycheck
 	rm -f $(AUTO_GEN_TARGETS)
 	@$(MAKE) clean -C libagbsyscall
 
-tidy: tidynonmodern tidymodern tidycheck
+tidy: tidymodern tidycheck
 
-tidynonmodern:
+tidymodern:
 	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
 	rm -rf $(OBJ_DIR_NAME)
 
-tidymodern:
-	rm -f $(MODERN_ROM_NAME) $(MODERN_ELF_NAME) $(MODERN_MAP_NAME)
-	rm -rf $(MODERN_OBJ_DIR_NAME)
-
 tidycheck:
 	rm -f $(TESTELF) $(HEADLESSELF)
-	rm -rf $(TEST_OBJ_DIR_NAME_MODERN)
-	rm -rf $(TEST_OBJ_DIR_NAME_AGBCC)
+	rm -rf $(TEST_OBJ_DIR_NAME)
 
-
-ifneq ($(MODERN),0)
-$(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
-endif
 
 include graphics_file_rules.mk
 include map_data_rules.mk
@@ -349,27 +295,11 @@ ifeq ($(COMPETITIVE_PARTY_SYNTAX),1)
 %.h: %.party tools ; $(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
 endif
 
-ifeq ($(MODERN),0)
-$(C_BUILDDIR)/libc.o: CC1 := tools/agbcc/bin/old_agbcc$(EXE)
-$(C_BUILDDIR)/libc.o: CFLAGS := -O2
-
-$(C_BUILDDIR)/siirtc.o: CFLAGS := -mthumb-interwork
-
-$(C_BUILDDIR)/agb_flash.o: CFLAGS := -O -mthumb-interwork
-$(C_BUILDDIR)/agb_flash_1m.o: CFLAGS := -O -mthumb-interwork
-$(C_BUILDDIR)/agb_flash_mx.o: CFLAGS := -O -mthumb-interwork
-
-$(C_BUILDDIR)/m4a.o: CC1 := tools/agbcc/bin/old_agbcc$(EXE)
-
-$(C_BUILDDIR)/record_mixing.o: CFLAGS += -ffreestanding
-$(C_BUILDDIR)/librfu_intr.o: CC1 := tools/agbcc/bin/agbcc_arm$(EXE)
-$(C_BUILDDIR)/librfu_intr.o: CFLAGS := -O2 -mthumb-interwork -quiet
-else
+$(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/pokedex_plus_hgss.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
 # Annoyingly we can't turn this on just for src/data/trainers.h
 $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret
-endif
 
 ifeq ($(DINFO),1)
 override CFLAGS += -g
@@ -488,13 +418,8 @@ $1: $2 $$(shell $(SCANINC) -I include -I tools/agbcc/include -I gflib $2)
 endef
 $(foreach src, $(TEST_SRCS), $(eval $(call TEST_DEP,$(patsubst $(TEST_SUBDIR)/%.c,$(TEST_BUILDDIR)/%.o,$(src)),$(src),$(patsubst $(TEST_SUBDIR)/%.c,%,$(src)))))
 
-ifeq ($(MODERN),0)
-LD_SCRIPT := ld_script.ld
-LD_SCRIPT_DEPS := $(OBJ_DIR)/sym_bss.ld $(OBJ_DIR)/sym_common.ld $(OBJ_DIR)/sym_ewram.ld
-else
 LD_SCRIPT := ld_script_modern.ld
 LD_SCRIPT_DEPS :=
-endif
 
 $(OBJ_DIR)/ld_script.ld: $(LD_SCRIPT) $(LD_SCRIPT_DEPS)
 	cd $(OBJ_DIR) && sed "s#tools/#../../tools/#g" ../../$(LD_SCRIPT) > ld_script.ld
@@ -541,7 +466,7 @@ check: $(TESTELF)
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
 
 libagbsyscall:
-	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=$(MODERN)
+	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
 ###################
 ### Symbol file ###
