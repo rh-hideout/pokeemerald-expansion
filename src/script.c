@@ -2,6 +2,8 @@
 #include "script.h"
 #include "event_data.h"
 #include "mystery_gift.h"
+#include "random.h"
+#include "trainer_see.h"
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/map_scripts.h"
@@ -12,6 +14,11 @@ enum {
     SCRIPT_MODE_STOPPED,
     SCRIPT_MODE_BYTECODE,
     SCRIPT_MODE_NATIVE,
+};
+
+enum {
+    SCRIPT_MUT_ALLOW,    // Mutating opcodes are allowed.
+    SCRIPT_MUT_REJECT,   // Mutating opcodes are rejected.
 };
 
 enum {
@@ -36,6 +43,8 @@ void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTable
     s32 i;
 
     ctx->mode = SCRIPT_MODE_STOPPED;
+    ctx->rejectMutating = FALSE;
+    ctx->isTrainerSee = FALSE;
     ctx->scriptPtr = NULL;
     ctx->stackDepth = 0;
     ctx->nativePtr = NULL;
@@ -278,7 +287,7 @@ void RunScriptImmediately(const u8 *ptr)
     while (RunScriptCommand(&sImmediateScriptContext) == TRUE);
 }
 
-u8 *MapHeaderGetScriptTable(u8 tag)
+const u8 *MapHeaderGetScriptTable(u8 tag)
 {
     const u8 *mapScripts = gMapHeader.mapScripts;
 
@@ -300,14 +309,14 @@ u8 *MapHeaderGetScriptTable(u8 tag)
 
 void MapHeaderRunScriptType(u8 tag)
 {
-    u8 *ptr = MapHeaderGetScriptTable(tag);
+    const u8 *ptr = MapHeaderGetScriptTable(tag);
     if (ptr)
         RunScriptImmediately(ptr);
 }
 
-u8 *MapHeaderCheckScriptTable(u8 tag)
+const u8 *MapHeaderCheckScriptTable(u8 tag)
 {
-    u8 *ptr = MapHeaderGetScriptTable(tag);
+    const u8 *ptr = MapHeaderGetScriptTable(tag);
 
     if (!ptr)
         return NULL;
@@ -329,7 +338,11 @@ u8 *MapHeaderCheckScriptTable(u8 tag)
 
         // Run map script if vars are equal
         if (VarGet(varIndex1) == VarGet(varIndex2))
-            return T2_READ_PTR(ptr);
+        {
+            const u8 *mapScript = T2_READ_PTR(ptr);
+            if (!Script_HasNoEffect(mapScript, 0))
+                return mapScript;
+        }
         ptr += 4;
     }
 }
@@ -361,7 +374,7 @@ void RunOnDiveWarpMapScript(void)
 
 bool8 TryRunOnFrameMapScript(void)
 {
-    u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_FRAME_TABLE);
+    const u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_FRAME_TABLE);
 
     if (!ptr)
         return FALSE;
@@ -372,7 +385,7 @@ bool8 TryRunOnFrameMapScript(void)
 
 void TryRunOnWarpIntoMapScript(void)
 {
-    u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE);
+    const u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE);
     if (ptr)
         RunScriptImmediately(ptr);
 }
@@ -500,4 +513,153 @@ void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize)
         scriptSize = sizeof(gSaveBlock1Ptr->ramScript.data.script);
     InitRamScript(script, scriptSize, MAP_GROUP(UNDEFINED), MAP_NUM(UNDEFINED), NO_OBJECT);
 #endif //FREE_MYSTERY_EVENT_BUFFERS
+}
+
+bool8 LoadTrainerObjectScript(void)
+{
+    sGlobalScriptContext.scriptPtr = gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr;
+    return TRUE;
+}
+
+static inline bool32 Script_IsMutatingCommand(ScrCmdFunc func)
+{
+    // In the first ROM mirror.
+    return (((uintptr_t)func) & 0x0E000000) == 0x08000000;
+}
+
+bool32 Script_IsMutatingVar(u32 varId)
+{
+    return !(SPECIAL_VARS_START <= varId && varId <= SPECIAL_VARS_END);
+}
+
+bool32 Script_IsMutatingSpecial(u32 specialId)
+{
+    extern const void *gSpecials[];
+    // Not in a ROM mirror.
+    return (((uintptr_t)gSpecials[specialId]) & 0x0E000000) == 0x08000000;
+}
+
+bool32 Script_IsMutatingNative(void (*func)(struct ScriptContext *))
+{
+    // Not in a ROM mirror.
+    return (((uintptr_t)func) & 0x0E000000) == 0x08000000;
+}
+
+// Analyzes the script and returns TRUE if the only mutations it will
+// execute are those affecting:
+// 1. The script context (e.g. goto, call, compare, loadword).
+// 2. The special vars (e.g. setvar, getpartysize, checkitem).
+// 3. The string vars (e.g. bufferspeciesname).
+//
+// Any other mutations, including ones that have an output the player
+// can see or hear cause Script_HasNoEffect to return FALSE.
+//
+// For example, given the following script:
+//
+//   EventScript_MaybePin:
+//     goto_if_set FLAG_TEMP_1, EventScript_MaybePin_End
+//     playse SE_PIN
+//     waitse
+//   EventScript_MaybePin_End:
+//     end
+//
+// Script_HasNoEffect(EventScript_MaybePin, 0) returns TRUE if
+// FLAG_TEMP_1 is set, and returns FALSE if FLAG_TEMP_1 is clear.
+//
+// It is important that any unknown opcodes are treated as having
+// mutations. To achieve this, we have instrumented any ScrCmd_*
+// functions which could potentially be non-mutating, and explicitly
+// marked them in gScriptCmdTable; additionally, we have manually marked
+// all the natives and specials which are definitely non-mutating.
+bool32 Script_HasNoEffect(const u8 *script, u32 flags)
+{
+    struct ScriptContext ctx;
+
+    // Backup gRngValue to support randomness.
+    rng_value_t rngValue = gRngValue;
+
+    InitScriptContext(&ctx, gScriptCmdTable, gScriptCmdTableEnd);
+    SetupBytecodeScript(&ctx, script);
+    ctx.rejectMutating = TRUE;
+    if (flags & SCRIPT_TRAINER_SEE)
+        ctx.isTrainerSee = TRUE;
+
+    while (TRUE)
+    {
+        u8 cmdCode;
+        ScrCmdFunc *func;
+
+        if (!ctx.scriptPtr)
+            break;
+
+        cmdCode = *ctx.scriptPtr;
+        ctx.scriptPtr++;
+        func = &ctx.cmdTable[cmdCode];
+
+        // Invalid script command.
+        if (func >= ctx.cmdTableEnd)
+            break;
+
+        if (Script_IsMutatingCommand(*func))
+            break;
+
+        // Possibly-not-mutating ScrCmd returning TRUE is overloaded to
+        // mean that the command would mutate.
+        if ((*func)(&ctx))
+            break;
+    }
+
+    gRngValue = rngValue;
+
+    return ctx.scriptPtr == NULL;
+}
+
+const u8 *Script_FindTrainerBattleCommand(const u8 *script)
+{
+    const u8 *trainerPtr = NULL;
+    struct ScriptContext ctx;
+
+    // Backup gRngValue to support randomness.
+    rng_value_t rngValue = gRngValue;
+
+    InitScriptContext(&ctx, gScriptCmdTable, gScriptCmdTableEnd);
+    SetupBytecodeScript(&ctx, script);
+    ctx.rejectMutating = TRUE;
+    ctx.isTrainerSee = TRUE;
+
+    while (TRUE)
+    {
+        u8 cmdCode;
+        ScrCmdFunc *func;
+
+        if (!ctx.scriptPtr)
+            break;
+
+        cmdCode = *ctx.scriptPtr;
+
+        if (cmdCode == 0x5c)
+        {
+            trainerPtr = ctx.scriptPtr;
+            break;
+        }
+
+        ctx.scriptPtr++;
+        func = &ctx.cmdTable[cmdCode];
+
+        // Invalid script command.
+        if (func >= ctx.cmdTableEnd)
+            break;
+
+        if (Script_IsMutatingCommand(*func))
+            break;
+
+        // Possibly-not-mutating ScrCmd returning TRUE is overloaded to
+        // mean that the command would mutate.
+        if ((*func)(&ctx))
+            break;
+    }
+
+    gRngValue = rngValue;
+
+    return trainerPtr;
 }

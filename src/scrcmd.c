@@ -125,23 +125,28 @@ bool8 ScrCmd_gotonative(struct ScriptContext *ctx)
 bool8 ScrCmd_special(struct ScriptContext *ctx)
 {
     u16 index = ScriptReadHalfword(ctx);
-
+    if (ctx->rejectMutating && Script_IsMutatingSpecial(index))
+        return TRUE;
     gSpecials[index]();
     return FALSE;
 }
 
 bool8 ScrCmd_specialvar(struct ScriptContext *ctx)
 {
-    u16 *var = GetVarPointer(ScriptReadHalfword(ctx));
-
-    *var = gSpecials[ScriptReadHalfword(ctx)]();
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *var = GetVarPointer(varId);
+    u32 index = ScriptReadHalfword(ctx);
+    if (ctx->rejectMutating && (Script_IsMutatingVar(varId) || Script_IsMutatingSpecial(index)))
+        return TRUE;
+    *var = gSpecials[index]();
     return FALSE;
 }
 
 bool8 ScrCmd_callnative(struct ScriptContext *ctx)
 {
     NativeFunc func = (NativeFunc)ScriptReadWord(ctx);
-
+    if (ctx->rejectMutating && Script_IsMutatingNative(func))
+        return TRUE;
     func(ctx);
     return FALSE;
 }
@@ -192,6 +197,13 @@ bool8 ScrCmd_call_if(struct ScriptContext *ctx)
     if (sScriptConditionTable[condition][ctx->comparisonResult] == 1)
         ScriptCall(ctx, ptr);
     return FALSE;
+}
+
+void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
+{
+    u8 condition = ScriptReadByte(ctx);
+    if (ctx->isTrainerSee && sScriptConditionTable[condition][ctx->comparisonResult] == 1)
+        StopScript(ctx);
 }
 
 bool8 ScrCmd_setvaddress(struct ScriptContext *ctx)
@@ -367,21 +379,30 @@ bool8 ScrCmd_copybyte(struct ScriptContext *ctx)
 
 bool8 ScrCmd_setvar(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr = ScriptReadHalfword(ctx);
     return FALSE;
 }
 
 bool8 ScrCmd_copyvar(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr = *GetVarPointer(ScriptReadHalfword(ctx));
     return FALSE;
 }
 
 bool8 ScrCmd_setorcopyvar(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr = VarGet(ScriptReadHalfword(ctx));
     return FALSE;
 }
@@ -472,14 +493,20 @@ bool8 ScrCmd_compare_var_to_var(struct ScriptContext *ctx)
 // in the contest scripts to `subvar VAR_*, 1`, else contests will break.
 bool8 ScrCmd_addvar(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr += ScriptReadHalfword(ctx);
     return FALSE;
 }
 
 bool8 ScrCmd_subvar(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr -= VarGet(ScriptReadHalfword(ctx));
     return FALSE;
 }
@@ -588,13 +615,15 @@ bool8 ScrCmd_checkdecor(struct ScriptContext *ctx)
 
 bool8 ScrCmd_setflag(struct ScriptContext *ctx)
 {
-    FlagSet(ScriptReadHalfword(ctx));
+    u32 flagId = ScriptReadHalfword(ctx);
+    FlagSet(flagId);
     return FALSE;
 }
 
 bool8 ScrCmd_clearflag(struct ScriptContext *ctx)
 {
-    FlagClear(ScriptReadHalfword(ctx));
+    u32 flagId = ScriptReadHalfword(ctx);
+    FlagClear(flagId);
     return FALSE;
 }
 
@@ -894,9 +923,12 @@ bool8 ScrCmd_setescapewarp(struct ScriptContext *ctx)
 
 bool8 ScrCmd_getplayerxy(struct ScriptContext *ctx)
 {
-    u16 *pX = GetVarPointer(ScriptReadHalfword(ctx));
-    u16 *pY = GetVarPointer(ScriptReadHalfword(ctx));
-
+    u32 varIdX = ScriptReadHalfword(ctx);
+    u32 varIdY = ScriptReadHalfword(ctx);
+    u16 *pX = GetVarPointer(varIdX);
+    u16 *pY = GetVarPointer(varIdY);
+    if (ctx->rejectMutating && (Script_IsMutatingVar(varIdX) || Script_IsMutatingVar(varIdY)))
+        return TRUE;
     *pX = gSaveBlock1Ptr->pos.x;
     *pY = gSaveBlock1Ptr->pos.y;
     return FALSE;
@@ -1236,6 +1268,10 @@ bool8 ScrCmd_turnvobject(struct ScriptContext *ctx)
 // The player is frozen after waiting for their current movement to finish.
 bool8 ScrCmd_lockall(struct ScriptContext *ctx)
 {
+    // As a special case, consider this non-mutating.
+    if (ctx->rejectMutating)
+        return FALSE;
+
     if (IsOverworldLinkActive())
     {
         return FALSE;
@@ -1252,6 +1288,10 @@ bool8 ScrCmd_lockall(struct ScriptContext *ctx)
 // The player and selected object are frozen after waiting for their current movement to finish.
 bool8 ScrCmd_lock(struct ScriptContext *ctx)
 {
+    // As a special case, consider this non-mutating.
+    if (ctx->rejectMutating)
+        return FALSE;
+
     if (IsOverworldLinkActive())
     {
         return FALSE;
@@ -1281,8 +1321,14 @@ bool8 ScrCmd_lock(struct ScriptContext *ctx)
 bool8 ScrCmd_releaseall(struct ScriptContext *ctx)
 {
     u8 playerObjectId;
-    struct ObjectEvent *followerObject = GetFollowerObject();
+    struct ObjectEvent *followerObject;
+
+    // As a special case, consider this non-mutating.
+    if (ctx->rejectMutating)
+        return FALSE;
+
     // Release follower from movement iff it exists and is in the shadowing state
+    followerObject = GetFollowerObject();
     if (followerObject && gSprites[followerObject->spriteId].data[1] == 0)
         ClearObjectEventMovement(followerObject, &gSprites[followerObject->spriteId]);
 
@@ -1297,8 +1343,14 @@ bool8 ScrCmd_releaseall(struct ScriptContext *ctx)
 bool8 ScrCmd_release(struct ScriptContext *ctx)
 {
     u8 playerObjectId;
-    struct ObjectEvent *followerObject = GetFollowerObject();
+    struct ObjectEvent *followerObject;
+
+    // As a special case, consider this non-mutating.
+    if (ctx->rejectMutating)
+        return FALSE;
+
     // Release follower from movement iff it exists and is in the shadowing state
+    followerObject = GetFollowerObject();
     if (followerObject && gSprites[followerObject->spriteId].data[1] == 0)
         ClearObjectEventMovement(followerObject, &gSprites[followerObject->spriteId]);
 
@@ -2291,7 +2343,10 @@ bool8 ScrCmd_showelevmenu(struct ScriptContext *ctx)
 
 bool8 ScrCmd_checkcoins(struct ScriptContext *ctx)
 {
-    u16 *ptr = GetVarPointer(ScriptReadHalfword(ctx));
+    u32 varId = ScriptReadHalfword(ctx);
+    u16 *ptr = GetVarPointer(varId);
+    if (ctx->rejectMutating && Script_IsMutatingVar(varId))
+        return TRUE;
     *ptr = GetCoins();
     return FALSE;
 }

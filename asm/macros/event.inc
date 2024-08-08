@@ -251,9 +251,20 @@
 	.endm
 
 	@ Calls the native C function stored at func.
-	.macro callnative func:req
+	@ mutating should be set to FALSE if the native cannot have a
+	@ mutating effect in the sense documented in Script_HasNoEffect.
+	@ If the native sometimes has a mutating effect when called with
+	@ its arguments, it must be treated as always having a mutating
+	@ effect and set to TRUE.
+	@ + ROM_SIZE references func through one of the ROM mirrors, it
+	@ will still function normally.
+	.macro callnative func:req, mutating=TRUE
 	.byte 0x23
+	.if \mutating
 	.4byte \func
+	.else
+	.4byte \func + ROM_SIZE
+	.endif
 	.endm
 
 	@ Replaces the script with the function stored at func. Execution returns to the bytecode script when func returns TRUE.
@@ -999,7 +1010,7 @@
 	.macro givemon species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, isShiny, ggMaxFactor, teraType
 	callnative ScrCmd_createmon
 	.byte 0
-	.byte 6	@ PARTY_SIZE - assign to first empty slot
+	.byte PARTY_SIZE @ assign to first empty slot
 	.set givemon_flags, 0
 	.2byte \species
 	.2byte \level
@@ -2183,7 +2194,7 @@
 	@ Sets VAR_RESULT to TRUE if stat can be hyper trained, or to
 	@ FALSE otherwise.
 	.macro canhypertrain stat:req, slot:req
-	callnative CanHyperTrain
+	callnative CanHyperTrain, mutating=FALSE
 	.byte \stat
 	.2byte \slot
 	.endm
@@ -2198,7 +2209,7 @@
 	@ Sets VAR_RESULT to TRUE if the Pokemon has the Gigantamax Factor,
 	@ or to FALSE otherwise.
 	.macro hasgigantamaxfactor slot:req
-	callnative HasGigantamaxFactor
+	callnative HasGigantamaxFactor, mutating=FALSE
 	.2byte \slot
 	.endm
 
@@ -2251,7 +2262,7 @@
 
 	@ Sets VAR_RESULT to the Pokémon in \slot's Tera Type
 	.macro checkteratype slot:req
-	callnative CheckTeraType
+	callnative CheckTeraType, mutating=FALSE
 	.2byte \slot
 	.endm
 
@@ -2278,7 +2289,7 @@
 
 	@ Buffers the nickname of the first alive party member.
 	.macro bufferlivemonnickname out:req
-	callnative BufferFirstLiveMonNickname
+	callnative BufferFirstLiveMonNickname, mutating=FALSE
 	.byte \out
 	.endm
 
@@ -2289,13 +2300,21 @@
 
 	@ Checks if Field move is being used by the current follower.
 	.macro isfollowerfieldmoveuser var:req
-	callnative IsFollowerFieldMoveUser
+	.if (\var >= SPECIAL_VARS_START && \var <= SPECIAL_VARS_END)
+	callnative IsFollowerFieldMoveUser, mutating=FALSE
+	.else
+	callnative IsFollowerFieldMoveUser, mutating=TRUE
+	.endif
 	.2byte \var
 	.endm
 
 	@ Saves the direction from where source object event would need to turn to to face the target into the specified var.
 	.macro getdirectiontoface var:req, sourceId:req, targetId:req
-	callnative GetDirectionToFaceScript
+	.if (\var >= SPECIAL_VARS_START && \var <= SPECIAL_VARS_END)
+	callnative GetDirectionToFaceScript, mutating=FALSE
+	.else
+	callnative GetDirectionToFaceScript, mutating=TRUE
+	.endif
 	.2byte \var
 	.byte \sourceId
 	.byte \targetId
@@ -2320,4 +2339,65 @@
 	@ When OW_USE_FAKE_RTC and OW_FLAG_PAUSE_TIME is assigned, this macro will resume the flow of time if paused, and stop the flow of time otherwise.
 	.macro togglefakertc
 	callnative Script_ToggleFakeRtc
+	.endm
+
+	@ Makes the trainer unable to see the player if executed.
+	@ This is a no-op if the player interacts with the trainer.
+	.macro cant_see_if, condition:req
+	callnative Script_EndTrainerCanSeeIf, mutating=FALSE
+	.byte \condition
+	.endm
+
+	.macro cant_see
+	cant_see_if_unset 0 @ flag 0 is always FALSE.
+	.endm
+
+	.macro cant_see_if_unset, flag:req
+	checkflag \flag
+	cant_see_if FALSE
+	.endm
+
+	.macro cant_see_if_set, flag:req
+	checkflag \flag
+	cant_see_if TRUE
+	.endm
+
+	.macro cant_see_if_trainerflag_unset, trainer:req
+	checktrainerflag \trainer
+	cant_see_if FALSE
+	.endm
+
+	.macro cant_see_if_trainerflag_set, trainer:req
+	checktrainerflag \trainer
+	cant_see_if TRUE
+	.endm
+
+	.macro cant_see_if_lt, a:req, b:req
+	compare \a, \b
+	cant_see_if 0
+	.endm
+
+	.macro cant_see_if_eq, a:req, b:req
+	compare \a, \b
+	cant_see_if 1
+	.endm
+
+	.macro cant_see_if_gt, a:req, b:req
+	compare \a, \b
+	cant_see_if 2
+	.endm
+
+	.macro cant_see_if_le, a:req, b:req
+	compare \a, \b
+	cant_see_if 3
+	.endm
+
+	.macro cant_see_if_ge, a:req, b:req
+	compare \a, \b
+	cant_see_if 4
+	.endm
+
+	.macro cant_see_if_ne, a:req, b:req
+	compare \a, \b
+	cant_see_if 5
 	.endm
