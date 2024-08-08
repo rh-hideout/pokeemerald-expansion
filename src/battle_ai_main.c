@@ -262,7 +262,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     // Ignore moves that aren't possible to use.
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gBitTable[i] & moveLimitations)
+        if ((1 << (i)) & moveLimitations)
             SET_SCORE(battler, i, 0);
     }
 
@@ -446,7 +446,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u3
             if (move != 0
              && move != 0xFFFF
              //&& gMovesInfo[move].power != 0  /* we want to get effectiveness and accuracy of status moves */
-             && !(aiData->moveLimitations[battlerAtk] & gBitTable[i]))
+             && !(aiData->moveLimitations[battlerAtk] & (1 << (i))))
             {
                 if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_RISKY)
                     dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, DMG_ROLL_HIGHEST);
@@ -506,12 +506,12 @@ static bool32 AI_SwitchMonIfSuitable(u32 battler, bool32 doubleBattle)
         if (doubleBattle)
         {
             u32 partner = BATTLE_PARTNER(battler);
-            if (AI_DATA->shouldSwitchMon & gBitTable[partner] && AI_DATA->monToSwitchId[partner] == monToSwitchId)
+            if (AI_DATA->shouldSwitchMon & (1 << (partner)) && AI_DATA->monToSwitchId[partner] == monToSwitchId)
             {
                 return FALSE;
             }
         }
-        AI_DATA->shouldSwitchMon |= gBitTable[battler];
+        AI_DATA->shouldSwitchMon |= (1 << (battler));
         AI_DATA->monToSwitchId[battler] = monToSwitchId;
         return TRUE;
     }

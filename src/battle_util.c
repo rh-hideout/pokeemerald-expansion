@@ -130,7 +130,7 @@ void HandleAction_UseMove(void)
     u16 moveTarget;
 
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    if (gBattleStruct->absentBattlerFlags & gBitTable[gBattlerAttacker] || !IsBattlerAlive(gBattlerAttacker))
+    if (gBattleStruct->absentBattlerFlags & (1 << (gBattlerAttacker)) || !IsBattlerAlive(gBattlerAttacker))
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
         return;
@@ -323,7 +323,7 @@ void HandleAction_UseMove(void)
                 gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         }
 
-        if (gAbsentBattlerFlags & gBitTable[gBattlerTarget]
+        if (gAbsentBattlerFlags & (1 << (gBattlerTarget))
             && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget))
         {
             gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerTarget)));
@@ -966,29 +966,29 @@ static void UNUSED MarkAllBattlersForControllerExec(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
         for (i = 0; i < gBattlersCount; i++)
-            gBattleControllerExecFlags |= gBitTable[i] << (32 - MAX_BATTLERS_COUNT);
+            gBattleControllerExecFlags |= (1 << (i)) << (32 - MAX_BATTLERS_COUNT);
     }
     else
     {
         for (i = 0; i < gBattlersCount; i++)
-            gBattleControllerExecFlags |= gBitTable[i];
+            gBattleControllerExecFlags |= (1 << (i));
     }
 }
 
 bool32 IsBattlerMarkedForControllerExec(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        return (gBattleControllerExecFlags & (gBitTable[battler] << 0x1C)) != 0;
+        return (gBattleControllerExecFlags & ((1 << (battler)) << 0x1C)) != 0;
     else
-        return (gBattleControllerExecFlags & (gBitTable[battler])) != 0;
+        return (gBattleControllerExecFlags & ((1 << (battler)))) != 0;
 }
 
 void MarkBattlerForControllerExec(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        gBattleControllerExecFlags |= gBitTable[battler] << (32 - MAX_BATTLERS_COUNT);
+        gBattleControllerExecFlags |= (1 << (battler)) << (32 - MAX_BATTLERS_COUNT);
     else
-        gBattleControllerExecFlags |= gBitTable[battler];
+        gBattleControllerExecFlags |= (1 << (battler));
 }
 
 void MarkBattlerReceivedLinkData(u32 battler)
@@ -996,7 +996,7 @@ void MarkBattlerReceivedLinkData(u32 battler)
     s32 i;
 
     for (i = 0; i < GetLinkPlayerCount(); i++)
-        gBattleControllerExecFlags |= gBitTable[battler] << (i << 2);
+        gBattleControllerExecFlags |= (1 << (battler)) << (i << 2);
 
     gBattleControllerExecFlags &= ~((1 << 28) << battler);
 }
@@ -1175,7 +1175,7 @@ void ResetSentPokesToOpponentValue(void)
     gSentPokesToOpponent[1] = 0;
 
     for (i = 0; i < gBattlersCount; i += 2)
-        bits |= gBitTable[gBattlerPartyIndexes[i]];
+        bits |= (1 << (gBattlerPartyIndexes[i]));
 
     for (i = 1; i < gBattlersCount; i += 2)
         gSentPokesToOpponent[(i & BIT_FLANK) >> 1] = bits;
@@ -1193,8 +1193,8 @@ void OpponentSwitchInResetSentPokesToOpponentValue(u32 battler)
 
         for (i = 0; i < gBattlersCount; i += 2)
         {
-            if (!(gAbsentBattlerFlags & gBitTable[i]))
-                bits |= gBitTable[gBattlerPartyIndexes[i]];
+            if (!(gAbsentBattlerFlags & (1 << (i))))
+                bits |= (1 << (gBattlerPartyIndexes[i]));
         }
         gSentPokesToOpponent[flank] = bits;
     }
@@ -1210,7 +1210,7 @@ void UpdateSentPokesToOpponentValue(u32 battler)
     {
         s32 i;
         for (i = 1; i < gBattlersCount; i++)
-            gSentPokesToOpponent[(i & BIT_FLANK) >> 1] |= gBitTable[gBattlerPartyIndexes[battler]];
+            gSentPokesToOpponent[(i & BIT_FLANK) >> 1] |= (1 << (gBattlerPartyIndexes[battler]));
     }
 }
 
@@ -1251,7 +1251,7 @@ bool32 IsBelchPreventingMove(u32 battler, u32 move)
     if (gMovesInfo[move].effect != EFFECT_BELCH)
         return FALSE;
 
-    return !(gBattleStruct->ateBerry[battler & BIT_SIDE] & gBitTable[gBattlerPartyIndexes[battler]]);
+    return !(gBattleStruct->ateBerry[battler & BIT_SIDE] & (1 << (gBattlerPartyIndexes[battler])));
 }
 
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
@@ -1516,55 +1516,55 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         moveEffect = gMovesInfo[move].effect;
         // No move
         if (check & MOVE_LIMITATION_ZEROMOVE && move == MOVE_NONE)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // No PP
         else if (check & MOVE_LIMITATION_PP && gBattleMons[battler].pp[i] == 0)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Placeholder
         else if (check & MOVE_LIMITATION_PLACEHOLDER && moveEffect == EFFECT_PLACEHOLDER)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Disable
         else if (check & MOVE_LIMITATION_DISABLED && move == gDisableStructs[battler].disabledMove)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Torment
         else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].status2 & STATUS2_TORMENT)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Taunt
         else if (check & MOVE_LIMITATION_TAUNT && gDisableStructs[battler].tauntTimer && IS_MOVE_STATUS(move))
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Imprison
         else if (check & MOVE_LIMITATION_IMPRISON && GetImprisonedMovesCount(battler, move))
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Encore
         else if (check & MOVE_LIMITATION_ENCORE && gDisableStructs[battler].encoreTimer && gDisableStructs[battler].encoredMove != move)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Choice Items
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Assault Vest
         else if (check & MOVE_LIMITATION_ASSAULT_VEST && holdEffect == HOLD_EFFECT_ASSAULT_VEST && IS_MOVE_STATUS(move) && gMovesInfo[move].effect != EFFECT_ME_FIRST)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Gravity
         else if (check & MOVE_LIMITATION_GRAVITY && IsGravityPreventingMove(move))
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Heal Block
         else if (check & MOVE_LIMITATION_HEAL_BLOCK && IsHealBlockPreventingMove(battler, move))
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Belch
         else if (check & MOVE_LIMITATION_BELCH && IsBelchPreventingMove(battler, move))
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Throat Chop
         else if (check & MOVE_LIMITATION_THROAT_CHOP && gDisableStructs[battler].throatChopTimer && gMovesInfo[move].soundMove)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Stuff Cheeks
         else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && ItemId_GetPocket(gBattleMons[battler].item) != POCKET_BERRIES)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Gorilla Tactics
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && gMovesInfo[move].cantUseTwice && move == gLastResultingMoves[battler])
-            unusableMoves |= gBitTable[i];
+            unusableMoves |= (1 << (i));
     }
     return unusableMoves;
 }
@@ -1706,10 +1706,10 @@ u8 DoFieldEndTurnEffects(void)
 {
     u8 effect = 0;
 
-    for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount && gAbsentBattlerFlags & gBitTable[gBattlerAttacker]; gBattlerAttacker++)
+    for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount && gAbsentBattlerFlags & (1 << (gBattlerAttacker)); gBattlerAttacker++)
     {
     }
-    for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount && gAbsentBattlerFlags & gBitTable[gBattlerTarget]; gBattlerTarget++)
+    for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount && gAbsentBattlerFlags & (1 << (gBattlerTarget)); gBattlerTarget++)
     {
     }
 
@@ -2373,7 +2373,7 @@ u8 DoBattlerEndTurnEffects(void)
     while (gBattleStruct->turnEffectsBattlerId < gBattlersCount && gBattleStruct->turnEffectsTracker <= ENDTURN_BATTLER_COUNT)
     {
         battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->turnEffectsBattlerId];
-        if (gAbsentBattlerFlags & gBitTable[battler])
+        if (gAbsentBattlerFlags & (1 << (battler)))
         {
             gBattleStruct->turnEffectsBattlerId++;
             continue;
@@ -3035,7 +3035,7 @@ bool32 HandleWishPerishSongOnTurnEnd(void)
 
             if (gWishFutureKnock.futureSightCounter[battler] != 0
              && --gWishFutureKnock.futureSightCounter[battler] == 0
-             && !(gAbsentBattlerFlags & gBitTable[battler]))
+             && !(gAbsentBattlerFlags & (1 << (battler))))
             {
                 struct Pokemon *party;
 
@@ -3076,7 +3076,7 @@ bool32 HandleWishPerishSongOnTurnEnd(void)
         while (gBattleStruct->wishPerishSongBattlerId < gBattlersCount)
         {
             battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->wishPerishSongBattlerId];
-            if (gAbsentBattlerFlags & gBitTable[battler])
+            if (gAbsentBattlerFlags & (1 << (battler)))
             {
                 gBattleStruct->wishPerishSongBattlerId++;
                 continue;
@@ -3142,8 +3142,8 @@ bool32 HandleFaintedMonActions(void)
             gBattleStruct->faintedActionsState++;
             for (i = 0; i < gBattlersCount; i++)
             {
-                if (gAbsentBattlerFlags & gBitTable[i] && !HasNoMonsToSwitch(i, PARTY_SIZE, PARTY_SIZE))
-                    gAbsentBattlerFlags &= ~(gBitTable[i]);
+                if (gAbsentBattlerFlags & (1 << (i)) && !HasNoMonsToSwitch(i, PARTY_SIZE, PARTY_SIZE))
+                    gAbsentBattlerFlags &= ~((1 << (i)));
             }
             // fall through
         case 1:
@@ -3151,8 +3151,8 @@ bool32 HandleFaintedMonActions(void)
             {
                 gBattlerFainted = gBattlerTarget = gBattleStruct->faintedActionsBattlerId;
                 if (gBattleMons[gBattleStruct->faintedActionsBattlerId].hp == 0
-                 && !(gBattleStruct->givenExpMons & gBitTable[gBattlerPartyIndexes[gBattleStruct->faintedActionsBattlerId]])
-                 && !(gAbsentBattlerFlags & gBitTable[gBattleStruct->faintedActionsBattlerId]))
+                 && !(gBattleStruct->givenExpMons & (1 << (gBattlerPartyIndexes[gBattleStruct->faintedActionsBattlerId])))
+                 && !(gAbsentBattlerFlags & (1 << (gBattleStruct->faintedActionsBattlerId))))
                 {
                     BattleScriptExecute(BattleScript_GiveExp);
                     gBattleStruct->faintedActionsState = 2;
@@ -3173,7 +3173,7 @@ bool32 HandleFaintedMonActions(void)
                 && !NoAliveMonsForEitherParty()
                 && gCurrentTurnActionNumber != gBattlersCount)
             {
-                gAbsentBattlerFlags |= gBitTable[gBattlerFainted];
+                gAbsentBattlerFlags |= (1 << (gBattlerFainted));
                 if (gBattleStruct->faintedActionsState != 1)
                     return FALSE;
             }
@@ -3195,7 +3195,7 @@ bool32 HandleFaintedMonActions(void)
             {
                 gBattlerFainted = gBattlerTarget = gBattleStruct->faintedActionsBattlerId;
                 if (gBattleMons[gBattleStruct->faintedActionsBattlerId].hp == 0
-                 && !(gAbsentBattlerFlags & gBitTable[gBattleStruct->faintedActionsBattlerId]))
+                 && !(gAbsentBattlerFlags & (1 << (gBattleStruct->faintedActionsBattlerId))))
                 {
                     BattleScriptExecute(BattleScript_HandleFaintedMon);
                     gBattleStruct->faintedActionsState = 5;
@@ -3501,7 +3501,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
                         gCurrentMove = MOVE_BIDE;
                         gBattleScripting.bideDmg = gBideDmg[gBattlerAttacker] * 2;
                         gBattlerTarget = gBideTarget[gBattlerAttacker];
-                        if (gAbsentBattlerFlags & gBitTable[gBattlerTarget])
+                        if (gAbsentBattlerFlags & (1 << (gBattlerTarget)))
                             gBattlerTarget = GetMoveTarget(MOVE_BIDE, MOVE_TARGET_SELECTED + 1);
                         gBattlescriptCurrInstr = BattleScript_BideAttack;
                     }
@@ -4686,11 +4686,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_SUPERSWEET_SYRUP:
             if (!gSpecialStatuses[battler].switchInAbilityDone
-                    && !(gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] & gBitTable[gBattlerPartyIndexes[battler]]))
+                    && !(gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] & (1 << (gBattlerPartyIndexes[battler]))))
             {
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] |= gBitTable[gBattlerPartyIndexes[battler]];
+                gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] |= (1 << (gBattlerPartyIndexes[battler]));
                 BattleScriptPushCursorAndCallback(BattleScript_SupersweetSyrupActivates);
                 effect++;
             }
@@ -4727,12 +4727,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_INTREPID_SWORD:
             if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && !(gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] & gBitTable[gBattlerPartyIndexes[battler]]))
+                 && !(gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] & (1 << (gBattlerPartyIndexes[battler]))))
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
                 if (B_INTREPID_SWORD == GEN_9)
-                    gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] |= gBitTable[gBattlerPartyIndexes[battler]];
+                    gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] |= (1 << (gBattlerPartyIndexes[battler]));
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_ATK, 1, FALSE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
@@ -4741,12 +4741,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_DAUNTLESS_SHIELD:
             if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && !(gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] & gBitTable[gBattlerPartyIndexes[battler]]))
+                 && !(gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] & (1 << (gBattlerPartyIndexes[battler]))))
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
                 if (B_DAUNTLESS_SHIELD == GEN_9)
-                    gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] |= gBitTable[gBattlerPartyIndexes[battler]];
+                    gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] |= (1 << (gBattlerPartyIndexes[battler]));
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_DEF, 1, FALSE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
@@ -4850,11 +4850,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_PALAFIN_HERO
-             && !(gBattleStruct->transformZeroToHero[side] & gBitTable[gBattlerPartyIndexes[battler]]))
+             && !(gBattleStruct->transformZeroToHero[side] & (1 << (gBattlerPartyIndexes[battler]))))
             {
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattlerAttacker = battler;
-                gBattleStruct->transformZeroToHero[side] |= gBitTable[gBattlerPartyIndexes[battler]];
+                gBattleStruct->transformZeroToHero[side] |= (1 << (gBattlerPartyIndexes[battler]));
                 BattleScriptPushCursorAndCallback(BattleScript_ZeroToHeroActivates);
                 effect++;
             }
@@ -5001,9 +5001,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     for (i = STAT_ATK; i < statsNum; i++)
                     {
                         if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN))
-                            validToLower |= gBitTable[i];
+                            validToLower |= (1 << (i));
                         if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
-                            validToRaise |= gBitTable[i];
+                            validToRaise |= (1 << (i));
                     }
 
                     if (validToLower != 0 || validToRaise != 0) // Can lower one stat, or can raise one stat
@@ -5014,16 +5014,16 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                             do
                             {
                                 i = (Random() % statsNum) + STAT_ATK;
-                            } while (!(validToRaise & gBitTable[i]));
+                            } while (!(validToRaise & (1 << (i))));
                             SET_STATCHANGER(i, 2, FALSE);
-                            validToLower &= ~(gBitTable[i]); // Can't lower the same stat as raising.
+                            validToLower &= ~((1 << (i))); // Can't lower the same stat as raising.
                         }
                         if (validToLower != 0) // Find stat to lower
                         {
                             do
                             {
                                 i = (Random() % statsNum) + STAT_ATK;
-                            } while (!(validToLower & gBitTable[i]));
+                            } while (!(validToLower & (1 << (i))));
                             SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
                         }
                         BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
@@ -7575,13 +7575,13 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                 effect = TryConsumeMirrorHerb(battler, TRUE);
                 break;
             case HOLD_EFFECT_BOOSTER_ENERGY:
-                if (!(gBattleStruct->boosterEnergyActivates & gBitTable[battler])
+                if (!(gBattleStruct->boosterEnergyActivates & (1 << (battler)))
                  && (((GetBattlerAbility(battler) == ABILITY_PROTOSYNTHESIS) && !(gBattleWeather & B_WEATHER_SUN))
                   || ((GetBattlerAbility(battler) == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))))
                 {
                     PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
                     gBattleScripting.battler = battler;
-                    gBattleStruct->boosterEnergyActivates |= gBitTable[battler];
+                    gBattleStruct->boosterEnergyActivates |= (1 << (battler));
                     BattleScriptExecute(BattleScript_BoosterEnergyEnd2);
                     effect = ITEM_EFFECT_OTHER;
                 }
@@ -7842,13 +7842,13 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                 effect = TryConsumeMirrorHerb(battler, TRUE);
                 break;
             case HOLD_EFFECT_BOOSTER_ENERGY:
-                if (!(gBattleStruct->boosterEnergyActivates & gBitTable[battler])
+                if (!(gBattleStruct->boosterEnergyActivates & (1 << (battler)))
                  && (((GetBattlerAbility(battler) == ABILITY_PROTOSYNTHESIS) && !(gBattleWeather & B_WEATHER_SUN))
                   || ((GetBattlerAbility(battler) == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))))
                 {
                     PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
                     gBattlerAbility = gBattleScripting.battler = battler;
-                    gBattleStruct->boosterEnergyActivates |= gBitTable[battler];
+                    gBattleStruct->boosterEnergyActivates |= (1 << (battler));
                     BattleScriptExecute(BattleScript_BoosterEnergyEnd2);
                     effect = ITEM_EFFECT_OTHER;
                 }
@@ -8225,7 +8225,7 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
 
     // Berry was successfully used on a Pokemon.
     if (effect && (gLastUsedItem >= FIRST_BERRY_INDEX && gLastUsedItem <= LAST_BERRY_INDEX))
-        gBattleStruct->ateBerry[battler & BIT_SIDE] |= gBitTable[gBattlerPartyIndexes[battler]];
+        gBattleStruct->ateBerry[battler & BIT_SIDE] |= (1 << (gBattlerPartyIndexes[battler]));
 
     return effect;
 }
@@ -8415,7 +8415,7 @@ u8 IsMonDisobedient(void)
     calc = (levelReferenced + obedienceLevel) * rnd >> 8;
     if (calc < obedienceLevel)
     {
-        calc = CheckMoveLimitations(gBattlerAttacker, gBitTable[gCurrMovePos], MOVE_LIMITATIONS_ALL);
+        calc = CheckMoveLimitations(gBattlerAttacker, (1 << (gCurrMovePos)), MOVE_LIMITATIONS_ALL);
         if (calc == ALL_MOVES_MASK) // all moves cannot be used
         {
             // Randomly select, then print a disobedient string
@@ -8429,7 +8429,7 @@ u8 IsMonDisobedient(void)
             do
             {
                 gCurrMovePos = gChosenMovePos = MOD(Random(), MAX_MON_MOVES);
-            } while (gBitTable[gCurrMovePos] & calc);
+            } while ((1 << (gCurrMovePos)) & calc);
 
             gCalledMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
             SetAtkCancellerForCalledMove();
@@ -8644,7 +8644,7 @@ bool32 IsBattlerAlive(u32 battler)
         return FALSE;
     else if (battler >= gBattlersCount)
         return FALSE;
-    else if (gAbsentBattlerFlags & gBitTable[battler])
+    else if (gAbsentBattlerFlags & (1 << (battler)))
         return FALSE;
     else
         return TRUE;
@@ -8717,12 +8717,12 @@ u32 GetMoveTargetCount(u32 move, u32 battlerAtk, u32 battlerDef)
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
     case MOVE_TARGET_BOTH:
-        return !(gAbsentBattlerFlags & gBitTable[battlerDef])
-             + !(gAbsentBattlerFlags & gBitTable[BATTLE_PARTNER(battlerDef)]);
+        return !(gAbsentBattlerFlags & (1 << (battlerDef)))
+             + !(gAbsentBattlerFlags & (1 << (BATTLE_PARTNER(battlerDef))));
     case MOVE_TARGET_FOES_AND_ALLY:
-        return !(gAbsentBattlerFlags & gBitTable[battlerDef])
-             + !(gAbsentBattlerFlags & gBitTable[BATTLE_PARTNER(battlerDef)])
-             + !(gAbsentBattlerFlags & gBitTable[BATTLE_PARTNER(battlerAtk)]);
+        return !(gAbsentBattlerFlags & (1 << (battlerDef)))
+             + !(gAbsentBattlerFlags & (1 << (BATTLE_PARTNER(battlerDef))))
+             + !(gAbsentBattlerFlags & (1 << (BATTLE_PARTNER(battlerAtk))));
     case MOVE_TARGET_OPPONENTS_FIELD:
         return 1;
     case MOVE_TARGET_DEPENDS:
@@ -9143,7 +9143,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
-        if (gBattleStruct->lastMoveFailed & gBitTable[battlerAtk])
+        if (gBattleStruct->lastMoveFailed & (1 << (battlerAtk)))
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_MAGNITUDE:
@@ -9298,7 +9298,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
     case ABILITY_PROTOSYNTHESIS:
         {
             u8 atkHighestStat = GetHighestStatId(battlerAtk);
-            if ((weather & B_WEATHER_SUN || gBattleStruct->boosterEnergyActivates & gBitTable[battlerAtk])
+            if ((weather & B_WEATHER_SUN || gBattleStruct->boosterEnergyActivates & (1 << (battlerAtk)))
             && ((IS_MOVE_PHYSICAL(move) && atkHighestStat == STAT_ATK) || (IS_MOVE_SPECIAL(move) && atkHighestStat == STAT_SPATK)))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
@@ -9306,7 +9306,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
     case ABILITY_QUARK_DRIVE:
         {
             u8 atkHighestStat = GetHighestStatId(battlerAtk);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & gBitTable[battlerAtk])
+            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & (1 << (battlerAtk)))
             && ((IS_MOVE_PHYSICAL(move) && atkHighestStat == STAT_ATK) || (IS_MOVE_SPECIAL(move) && atkHighestStat == STAT_SPATK)))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
@@ -9376,7 +9376,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
     case ABILITY_PROTOSYNTHESIS:
         {
             u8 defHighestStat = GetHighestStatId(battlerDef);
-            if ((weather & B_WEATHER_SUN || gBattleStruct->boosterEnergyActivates & gBitTable[battlerDef])
+            if ((weather & B_WEATHER_SUN || gBattleStruct->boosterEnergyActivates & (1 << (battlerDef)))
             && ((IS_MOVE_PHYSICAL(move) && defHighestStat == STAT_DEF) || (IS_MOVE_SPECIAL(move) && defHighestStat == STAT_SPDEF)))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
         }
@@ -9384,7 +9384,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
     case ABILITY_QUARK_DRIVE:
         {
             u8 defHighestStat = GetHighestStatId(battlerDef);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & gBitTable[battlerDef])
+            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & (1 << (battlerDef)))
             && ((IS_MOVE_PHYSICAL(move) && defHighestStat == STAT_DEF) || (IS_MOVE_SPECIAL(move) && defHighestStat == STAT_SPDEF)))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
         }
@@ -10350,7 +10350,7 @@ static inline void MulByTypeEffectiveness(uq4_12_t *modifier, u32 move, u32 move
             mod = UQ_4_12(1.0);
     }
 
-    if (gBattleStruct->distortedTypeMatchups & gBitTable[battlerDef] || (gBattleStruct->aiCalcInProgress && ShouldTeraShellDistortTypeMatchups(move, battlerDef)))
+    if (gBattleStruct->distortedTypeMatchups & (1 << (battlerDef)) || (gBattleStruct->aiCalcInProgress && ShouldTeraShellDistortTypeMatchups(move, battlerDef)))
     {
         mod = UQ_4_12(0.5);
         if (recordAbilities)
@@ -11260,7 +11260,7 @@ bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
            | BATTLE_TYPE_LINK
            | BATTLE_TYPE_RECORDED_LINK
            | BATTLE_TYPE_SECRET_BASE))
-        && (gWishFutureKnock.knockedOffMons[stealerSide] & gBitTable[gBattlerPartyIndexes[battlerStealing]]))
+        && (gWishFutureKnock.knockedOffMons[stealerSide] & (1 << (gBattlerPartyIndexes[battlerStealing]))))
     {
         return FALSE;
     }

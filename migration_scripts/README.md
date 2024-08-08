@@ -17,6 +17,15 @@ python3 migration_scripts/*.py ; #run the migration script
 
 `*` will need to be replaced with the name of the appropriate script.
 
+## 1.9.x to 1.10x+
+
+### gBitTable
+
+* Filepath [`migration_scripts/1.10/bit_table_remover`](1.10/bit_table_remover)
+* Introduced in [Remove gBitTable #5123](https://github.com/rh-hideout/pokeemerald-expansion/pull/5123)
+
+Replaces all usages of `gBitTable[x]` with `(1 << (x))` which are equivalent but the new one is faster for the GBA. Only necessary if new usages of `gBitTable[x]`has been introduced.
+
 ## 1.8.x to 1.9.x+
 
 ### Battle Anim Moves

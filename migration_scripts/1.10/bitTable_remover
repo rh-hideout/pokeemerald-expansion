@@ -1,0 +1,31 @@
+#! /bin/bash
+
+if [ $# -eq 0 ]; then
+    echo "usage: bitTable_remover <path to root of project>"
+fi
+
+pathToSearch=$1
+
+sourceFiles=$(grep -lrI "gBitTable\[" $pathToSearch | grep "\.c")
+sourceCount=$(grep -lrI "gBitTable\[" $pathToSearch | grep "\.c" | wc -l)
+headerFiles=$(grep -lrI "gBitTable\[" $pathToSearch | grep "\.h")
+headerCount=$(grep -lrI "gBitTable\[" $pathToSearch | grep "\.h" | wc -l)
+numFiles=$(( $sourceCount + $headerCount ))
+numFound=$(grep -nrI "gBitTable\[" $pathToSearch | grep "\.c" | wc -l)
+numFound=$(( $numFound + $(grep -nrI "gBitTable\[" $pathToSearch | grep "\.h" | wc -l) ))
+if [ $numFound -eq 0 ]; then
+    echo "No usages of gBitTable found, should be good to go!"
+else
+    echo "Found $numFound usages of gBitTable in $numFiles files, converting to bitshifts"
+fi
+for file in $sourceFiles
+do
+    echo "Converting $file"
+    python migration_scripts/1.10/bitTable_remover.py $file
+done
+
+for file in $headerFiles
+do
+    echo "Converting $file"
+    python migration_scripts/1.10/bitTable_remover.py $file
+done
