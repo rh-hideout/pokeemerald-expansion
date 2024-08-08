@@ -3820,6 +3820,83 @@ static void TryDoEventsBeforeFirstTurn(void)
                     SwapTurnOrder(i, j);
             }
         }
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_AURORA_VEIL;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_AURORA_VEIL;
+        gSideTimers[B_SIDE_PLAYER].auroraVeilTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].auroraVeilTimer = 2;
+        gSideTimers[B_SIDE_PLAYER].auroraVeilBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].auroraVeilBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_REFLECT;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_REFLECT;
+        gSideTimers[B_SIDE_PLAYER].reflectTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].reflectTimer = 2;
+        gSideTimers[B_SIDE_PLAYER].reflectBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].reflectBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_LIGHTSCREEN;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_LIGHTSCREEN;
+        gSideTimers[B_SIDE_PLAYER].lightscreenTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].lightscreenTimer = 2;
+        gSideTimers[B_SIDE_PLAYER].lightscreenBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].lightscreenBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideTimers[B_SIDE_PLAYER].mistTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].mistTimer = 2;
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_MIST;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_MIST;
+        gSideTimers[B_SIDE_PLAYER].mistBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].mistBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideTimers[B_SIDE_PLAYER].tailwindTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].tailwindTimer = 2;
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_TAILWIND;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_TAILWIND;
+        gSideTimers[B_SIDE_PLAYER].tailwindBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].tailwindBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_LUCKY_CHANT;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_LUCKY_CHANT;
+        gSideTimers[B_SIDE_PLAYER].luckyChantTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].luckyChantTimer = 2;
+        gSideTimers[B_SIDE_PLAYER].luckyChantBattlerId = B_POSITION_PLAYER_LEFT;
+        gSideTimers[B_SIDE_OPPONENT].luckyChantBattlerId = B_POSITION_OPPONENT_LEFT;
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_RAINBOW;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_RAINBOW;
+        gSideTimers[B_SIDE_PLAYER].rainbowTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].rainbowTimer = 2;
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_SEA_OF_FIRE;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_SEA_OF_FIRE;
+        gSideTimers[B_SIDE_PLAYER].seaOfFireTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer = 2;
+
+
+        gSideStatuses[B_SIDE_PLAYER] |= SIDE_STATUS_SWAMP;
+        gSideStatuses[B_SIDE_OPPONENT] |= SIDE_STATUS_SWAMP;
+        gSideTimers[B_SIDE_PLAYER].swampTimer = 2;
+        gSideTimers[B_SIDE_OPPONENT].swampTimer = 2;
+
+        gFieldStatuses |= STATUS_FIELD_MUDSPORT;
+        gFieldTimers.mudSportTimer = 2;
+
+        gFieldStatuses |= STATUS_FIELD_WATERSPORT;
+        gFieldTimers.waterSportTimer = 2;
+
+        gFieldStatuses |= STATUS_FIELD_WONDER_ROOM;
+        gFieldTimers.wonderRoomTimer = 2;
+
+        gFieldStatuses |= STATUS_FIELD_MAGIC_ROOM;
+        gFieldTimers.magicRoomTimer = 2;
+
+        // gFieldStatuses |= STATUS_FIELD_GRASSY_TERRAIN;
+        // gFieldTimers.terrainTimer = 2;
+
+        gBattleWeather |= B_WEATHER_SANDSTORM;
+        gWishFutureKnock.weatherDuration = 2;
+
         gBattleStruct->eventsBeforeFirstTurnState++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
@@ -3926,13 +4003,12 @@ static void TryDoEventsBeforeFirstTurn(void)
                 gBattleStruct->appearedInBattle |= gBitTable[gBattlerPartyIndexes[i]];
         }
 
-        *(&gBattleStruct->turnEffectsTracker) = 0;
+        *(&gBattleStruct->eventBlockCounter) = 0;
         *(&gBattleStruct->turnEffectsBattlerId) = 0;
-        *(&gBattleStruct->wishPerishSongState) = 0;
         *(&gBattleStruct->wishPerishSongBattlerId) = 0;
         gBattleScripting.moveendState = 0;
         gBattleStruct->faintedActionsState = 0;
-        gBattleStruct->turnCountersTracker = 0;
+        gBattleStruct->endTurnEventsCounter = 0;
         gMoveResultFlags = 0;
 
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
@@ -3967,11 +4043,10 @@ static void HandleEndTurn_ContinueBattle(void)
             if ((gBattleMons[i].status1 & STATUS1_SLEEP) && (gBattleMons[i].status2 & STATUS2_MULTIPLETURNS))
                 CancelMultiTurnMoves(i);
         }
-        gBattleStruct->turnEffectsTracker = 0;
+        gBattleStruct->eventBlockCounter = 0;
         gBattleStruct->turnEffectsBattlerId = 0;
-        gBattleStruct->wishPerishSongState = 0;
         gBattleStruct->wishPerishSongBattlerId = 0;
-        gBattleStruct->turnCountersTracker = 0;
+        gBattleStruct->endTurnEventsCounter = 0;
         gMoveResultFlags = 0;
     }
 }
@@ -3983,14 +4058,16 @@ void BattleTurnPassed(void)
     gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
 
     TurnValuesCleanUp(TRUE);
+
     if (gBattleOutcome == 0)
     {
-        if (DoFieldEndTurnEffects())
+        if (DoEndTurnEffects())
             return;
-        if (DoBattlerEndTurnEffects())
+        if (DoDynamaxTurnEnd())
             return;
     }
-    if (HandleWishPerishSongOnTurnEnd())
+
+    if (DoArenaTurnEnd())
         return;
     if (HandleFaintedMonActions())
         return;
@@ -4817,7 +4894,7 @@ s8 GetMovePriority(u32 battler, u16 move)
         return gMovesInfo[MOVE_MAX_GUARD].priority;
 
     if (ability == ABILITY_GALE_WINGS
-        && (B_GALE_WINGS < GEN_7 || BATTLER_MAX_HP(battler))
+        && (B_GALE_WINGS < GEN_7 || BattlerAtMaxHp(battler))
         && gMovesInfo[move].type == TYPE_FLYING)
     {
         priority++;

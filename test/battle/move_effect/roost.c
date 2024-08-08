@@ -306,8 +306,8 @@ SINGLE_BATTLE_TEST("Roost's effect is lifted after Grassy Terrain's healing")
         MESSAGE("Swellow used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Swellow regained health!");
-        MESSAGE("Swellow is healed by the grassy terrain!");
         HP_BAR(player);
+        MESSAGE("Swellow is healed by the grassy terrain!");
     }
 }
 

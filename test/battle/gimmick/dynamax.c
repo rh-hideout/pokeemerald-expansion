@@ -818,10 +818,10 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Max Overgrowth sets up Grassy Terrain")
     } SCENE {
         MESSAGE("Wobbuffet used Max Overgrowth!");
         MESSAGE("Grass grew to cover the battlefield!");
-        MESSAGE("Wobbuffet is healed by the grassy terrain!");
         HP_BAR(player, damage: -maxHP/16);
-        MESSAGE("Foe Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("Wobbuffet is healed by the grassy terrain!");
         HP_BAR(opponent, damage: -maxHP/16);
+        MESSAGE("Foe Wobbuffet is healed by the grassy terrain!");
     }
 }
 
