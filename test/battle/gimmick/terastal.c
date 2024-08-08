@@ -416,7 +416,6 @@ SINGLE_BATTLE_TEST("(TERA) Synchronoise uses a Terastallized Pokemon's Tera Type
 SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Terastallized Pokemon's Tera Type")
 {
     GIVEN {
-        ASSUME(P_GEN_7_POKEMON);
         PLAYER(SPECIES_ORICORIO) { TeraType(TYPE_NORMAL); }
         OPPONENT(SPECIES_GENGAR);
     } WHEN {
@@ -537,7 +536,6 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Stellar-type Pokemon's base typ
 SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Stellar-type Pokemon's base type")
 {
     GIVEN {
-        ASSUME(P_GEN_7_POKEMON);
         PLAYER(SPECIES_ORICORIO_SENSU) { TeraType(TYPE_STELLAR); }
         OPPONENT(SPECIES_GUMSHOOS);
     } WHEN {

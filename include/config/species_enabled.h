@@ -9,6 +9,12 @@
 // so Pikachu depends on the Gen 1 setting despite Pichu being the lowest member of the evolution tree.
 // Eg: If P_GEN_2_POKEMON is set to FALSE, all members of the Sneasel Family will be disabled
 // (Sneasel + Hisuian, Weavile and Sneasler).
+
+#if TESTING
+// Species enabled in tests:
+#include "config/test/species_enabled.h"
+#else
+// Species in the actual game:
 #define P_GEN_1_POKEMON                  TRUE // Generation 1 Pokémon (RGBY)
 #define P_GEN_2_POKEMON                  TRUE // Generation 2 Pokémon (GSC)
 #define P_GEN_3_POKEMON                  TRUE // Generation 3 Pokémon (RSE, FRLG)
@@ -592,7 +598,6 @@
 #define P_FAMILY_WALKING_WAKE            P_GEN_9_POKEMON
 #define P_FAMILY_IRON_LEAVES             P_GEN_9_POKEMON
 #define P_FAMILY_POLTCHAGEIST            P_GEN_9_POKEMON
-#define P_FAMILY_SINISTCHA               P_GEN_9_POKEMON
 #define P_FAMILY_OKIDOGI                 P_GEN_9_POKEMON
 #define P_FAMILY_MUNKIDORI               P_GEN_9_POKEMON
 #define P_FAMILY_FEZANDIPITI             P_GEN_9_POKEMON
@@ -603,5 +608,7 @@
 #define P_FAMILY_IRON_CROWN              P_GEN_9_POKEMON
 #define P_FAMILY_TERAPAGOS               P_GEN_9_POKEMON
 #define P_FAMILY_PECHARUNT               P_GEN_9_POKEMON
+
+#endif // TESTING
 
 #endif // GUARD_CONFIG_SPECIES_ENABLED_H
