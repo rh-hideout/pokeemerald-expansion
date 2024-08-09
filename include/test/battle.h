@@ -719,6 +719,7 @@ struct BattleTestRunnerState
     u8 checkProgressParameter;
     u8 checkProgressTrial;
     u8 checkProgressTurn;
+    u32 occurenceCounter;
 };
 
 extern const struct TestRunner gBattleTestRunner;

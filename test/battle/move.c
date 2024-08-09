@@ -82,55 +82,105 @@ SINGLE_BATTLE_TEST("Turn order is determined randomly if priority and Speed tie 
 
 DOUBLE_BATTLE_TEST("Turn order is determined randomly if priority and Speed tie [doubles]")
 {
-    struct BattlePokemon *order[4] = { NULL, NULL, NULL, NULL };
-    u32 a, b, c, d;
-
-    // TODO: Test all of these in a single PASSES_RANDOMLY pass rather
-    // than 24 PARAMETRIZEd passes.
-    PARAMETRIZE { a = 0; b = 1; c = 2; d = 3; }
-    PARAMETRIZE { a = 0; b = 1; c = 3; d = 2; }
-    PARAMETRIZE { a = 0; b = 2; c = 1; d = 3; }
-    PARAMETRIZE { a = 0; b = 2; c = 3; d = 1; }
-    PARAMETRIZE { a = 0; b = 3; c = 1; d = 2; }
-    PARAMETRIZE { a = 0; b = 3; c = 2; d = 1; }
-    PARAMETRIZE { a = 1; b = 0; c = 2; d = 3; }
-    PARAMETRIZE { a = 1; b = 0; c = 3; d = 2; }
-    PARAMETRIZE { a = 1; b = 2; c = 0; d = 3; }
-    PARAMETRIZE { a = 1; b = 2; c = 3; d = 0; }
-    PARAMETRIZE { a = 1; b = 3; c = 0; d = 2; }
-    PARAMETRIZE { a = 1; b = 3; c = 2; d = 0; }
-    PARAMETRIZE { a = 2; b = 0; c = 1; d = 3; }
-    PARAMETRIZE { a = 2; b = 0; c = 3; d = 1; }
-    PARAMETRIZE { a = 2; b = 1; c = 0; d = 3; }
-    PARAMETRIZE { a = 2; b = 1; c = 3; d = 0; }
-    PARAMETRIZE { a = 2; b = 3; c = 0; d = 1; }
-    PARAMETRIZE { a = 2; b = 3; c = 1; d = 0; }
-    PARAMETRIZE { a = 3; b = 0; c = 1; d = 2; }
-    PARAMETRIZE { a = 3; b = 0; c = 2; d = 1; }
-    PARAMETRIZE { a = 3; b = 1; c = 0; d = 2; }
-    PARAMETRIZE { a = 3; b = 1; c = 2; d = 0; }
-    PARAMETRIZE { a = 3; b = 2; c = 0; d = 1; }
-    PARAMETRIZE { a = 3; b = 2; c = 1; d = 0; }
-
-    order[a] = playerLeft;
-    order[b] = playerRight;
-    order[c] = opponentLeft;
-    order[d] = opponentRight;
+    u16 hpMon1, hpMon2;
 
     PASSES_RANDOMLY(1, 24, RNG_SPEED_TIE);
 
+    ASSUME(gMovesInfo[MOVE_ENDEAVOR].effect == EFFECT_ENDEAVOR);
+    ASSUME(gMovesInfo[MOVE_LIFE_DEW].effect == EFFECT_JUNGLE_HEALING);
+    ASSUME(gMovesInfo[MOVE_CRUSH_GRIP].effect == EFFECT_VARY_POWER_BASED_ON_HP);
+    ASSUME(gMovesInfo[MOVE_SUPER_FANG].effect == EFFECT_SUPER_FANG);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(480); HP(360); Defense(100); Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Attack(100); Speed(1); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPLASH); MOVE(playerRight, MOVE_SPLASH); MOVE(opponentLeft, MOVE_SPLASH); MOVE(opponentRight, MOVE_SPLASH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, order[0]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, order[1]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, order[2]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, order[3]);
+        TURN { MOVE(playerLeft, MOVE_ENDEAVOR, target: opponentLeft); MOVE(playerRight, MOVE_LIFE_DEW); MOVE(opponentLeft, MOVE_CRUSH_GRIP, target: playerLeft, WITH_RNG(RNG_DAMAGE_MODIFIER, 0)); MOVE(opponentRight, MOVE_SUPER_FANG, target: playerLeft); }
+    } THEN {
+        hpMon1 = playerLeft->hp;
+        hpMon2 = opponentLeft->hp;
+        switch (hpMon1*1000+hpMon2)
+        {
+            case 188360:
+                gBattleTestRunnerState->occurenceCounter += 1;
+                break;
+            case 189360:
+                gBattleTestRunnerState->occurenceCounter += 2;
+                break;
+            case 261360:
+                gBattleTestRunnerState->occurenceCounter += 4;
+                break;
+            case 235360:
+                gBattleTestRunnerState->occurenceCounter += 8;
+                break;
+            case 262360:
+                gBattleTestRunnerState->occurenceCounter += 16;
+                break;
+            case 202360:
+                gBattleTestRunnerState->occurenceCounter += 32;
+                break;
+            case 189378:
+                gBattleTestRunnerState->occurenceCounter += 64;
+                break;
+            case 189189:
+                gBattleTestRunnerState->occurenceCounter += 128;
+                break;
+            case 189480:
+                gBattleTestRunnerState->occurenceCounter += 256;
+                break;
+            case 188480:
+                gBattleTestRunnerState->occurenceCounter += 512;
+                break;
+            case 188240:
+                gBattleTestRunnerState->occurenceCounter += 1024;
+                break;
+            case 188188:
+                gBattleTestRunnerState->occurenceCounter += 2048;
+                break;
+            case 262262:
+                gBattleTestRunnerState->occurenceCounter += 4096;
+                break;
+            case 262142:
+                gBattleTestRunnerState->occurenceCounter += 8192;
+                break;
+            case 202403:
+                gBattleTestRunnerState->occurenceCounter += 16384;
+                break;
+            case 202202:
+                gBattleTestRunnerState->occurenceCounter += 32768;
+                break;
+            case 262283:
+                gBattleTestRunnerState->occurenceCounter += 65536;
+                break;
+            case 202283:
+                gBattleTestRunnerState->occurenceCounter += 131072;
+                break;
+            case 235180:
+                gBattleTestRunnerState->occurenceCounter += 262144;
+                break;
+            case 261180:
+                gBattleTestRunnerState->occurenceCounter += 524288;
+                break;
+            case 235235:
+                gBattleTestRunnerState->occurenceCounter += 1048576;
+                break;
+            case 235300:
+                gBattleTestRunnerState->occurenceCounter += 2097152;
+                break;
+            case 261141:
+                gBattleTestRunnerState->occurenceCounter += 4194304;
+                break;
+            case 261261:
+                gBattleTestRunnerState->occurenceCounter += 8388608;
+                break;
+        }
+        EXPECT_EQ(gBattleTestRunnerState->occurenceCounter, 16777215);
+        //  Any of the following pairs of hp values work:
+        //  (188, 360), (189, 360), (261, 360), (235, 360), (262, 360), (202, 360),
+        //  (189, 378), (189, 189), (189, 480), (188, 480), (188, 240), (188, 188),
+        //  (262, 262), (262, 142), (202, 403), (202, 202), (262, 283), (202, 283),
+        //  (235, 180), (261, 180), (235, 235), (235, 300), (261, 141), (261, 261)
     }
 }
 

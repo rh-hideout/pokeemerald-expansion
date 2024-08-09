@@ -188,6 +188,7 @@ static void BattleTest_SetUp(void *data)
         STATE->battlersCount = 4;
         break;
     }
+    STATE->occurenceCounter = 0;
 }
 
 static void PrintTestName(void)
