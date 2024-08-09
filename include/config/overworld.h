@@ -96,6 +96,8 @@
 #define OW_POPUP_BW_ALPHA_BLEND    FALSE                    // Enables alpha blending/transparency for the pop-ups. Mainly intended to be used with the black color option.
 
 // Pokémon Center
-#define OW_IGNORE_EGGS_ON_HEAL     GEN_LATEST               // In Gen 4+, the nurse in the Pokémon Center does not heal Eggs on healing machine.
+#define OW_IGNORE_EGGS_ON_HEAL                GEN_LATEST    // In Gen 4+, the nurse in the Pokémon Center does not heal Eggs on healing machine.
+#define OW_UNION_DISABLE_CHECK                FALSE         // When TRUE, the nurse does not inform the player if there is a trainer waiting in the Union Room or at Trainer Hill. Entering a Pokémon Center will be faster as a result.
+#define OW_UNION_CONNECTED_ONLY_CHECK         FALSE         // When TRUE, the Union Room check only occurs unless the Wireless Adapter is connected. This configwill have no effect is OW_UNION_DISABLE_CHECK is TRUE.
 
 #endif // GUARD_CONFIG_OVERWORLD_H

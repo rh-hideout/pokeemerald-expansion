@@ -247,6 +247,7 @@ bool8 IsWirelessAdapterConnected(void)
     SetWirelessCommType0_Internal();
     CloseLink();
     RestoreSerialTimer3IntrHandlers();
+    FlagSet(FLAG_NURSE_UNION_ROOM_REMINDER);
     return FALSE;
 }
 

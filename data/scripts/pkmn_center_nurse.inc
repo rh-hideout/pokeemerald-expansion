@@ -21,7 +21,11 @@ EventScript_PkmnCenterNurse_HealPkmn::
 	waitmessage
 	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
 	goto_if_unset FLAG_POKERUS_EXPLAINED, EventScript_PkmnCenterNurse_CheckPokerus
+.if OW_UNION_DISABLE_CHECK == TRUE
+	goto EventScript_PkmnCenterNurse_ReturnPkmn
+.else
 	goto EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom
+.endif
 	end
 
 EventScript_PkmnCenterNurse_IllTakeYourPkmn::
@@ -84,7 +88,11 @@ EventScript_PkmnCenterNurse_PlayerWaitingInUnionRoom::
 EventScript_PkmnCenterNurse_CheckPokerus::
 	specialvar VAR_RESULT, IsPokerusInParty
 	goto_if_eq VAR_RESULT, TRUE, EventScript_PkmnCenterNurse_ExplainPokerus
+.if OW_UNION_DISABLE_CHECK == TRUE
+	goto EventScript_PkmnCenterNurse_ReturnPkmn
+.else
 	goto_if_eq VAR_RESULT, FALSE, EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom
+.endif
 	end
 
 EventScript_PkmnCenterNurse_ExplainPokerus::

@@ -3377,6 +3377,9 @@ static void Task_InitUnionRoom(u8 taskId)
 
 bool16 BufferUnionRoomPlayerName(void)
 {
+    if (FlagGet(FLAG_NURSE_UNION_ROOM_REMINDER))
+        return FALSE;
+
     if (sUnionRoomPlayerName[0] != EOS)
     {
         StringCopy(gStringVar1, sUnionRoomPlayerName);
