@@ -6161,6 +6161,10 @@ Cry_Maplage::
 	.incbin "sound/direct_sound_samples/cries/maplage.bin"
 
 	.align 2
+Cry_Hazelnaut::
+	.incbin "sound/direct_sound_samples/cries/hazelnaut.bin"
+
+	.align 2
 Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 

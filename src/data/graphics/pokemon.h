@@ -22022,6 +22022,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Fucker[] = INCBIN_U8("graphics/pokemon/fucker/icon.4bpp");
    const u8 gMonFootprint_Fucker[] = INCBIN_U8("graphics/pokemon/fucker/footprint.1bpp");
 
+   const u32 gMonFrontPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/front.4bpp.lz");
+   const u32 gMonBackPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/back.4bpp.lz");
+   const u32 gMonPalette_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/shiny.gbapal.lz");
+   const u8 gMonIcon_Hazelnaut[] = INCBIN_U8("graphics/pokemon/hazelnaut/icon.4bpp");
+   const u8 gMonFootprint_Hazelnaut[] = INCBIN_U8("graphics/pokemon/hazelnaut/footprint.1bpp");
+
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");

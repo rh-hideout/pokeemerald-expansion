@@ -2429,6 +2429,8 @@ gCryTable::
     cry Cry_Arachnote
 
     cry Cry_Fucker
+
+	cry Cry_Hazelnaut
 .endif
 
 	.align 2
@@ -4862,4 +4864,6 @@ gCryTable_Reverse::
     cry_reverse Cry_Arachnote
 
     cry_reverse Cry_Fucker
+
+	cry_reverse Cry_Hazelnaut
 .endif

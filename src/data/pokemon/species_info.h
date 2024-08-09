@@ -161,7 +161,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 50,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_GRASS, EGG_GROUP_FAIRY },
-       .abilities = { ABILITY_OVERGROW, ABILITY_TECHNICIAN, ABILITY_SHARPNESS, ABILITY_NONE },
+       .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_TECHNICIAN, ABILITY_SHARPNESS },
        .bodyColor = BODY_COLOR_GREEN,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -169,8 +169,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_MAPLAGE,
        .natDexNum = NATIONAL_DEX_MAPLAGE,
        .categoryName = _("Leaf"),
-       .height = 15,
-       .weight = 330,
+       .height = 4,
+       .weight = 14,
        .description = COMPOUND_STRING(
            "A docile and shy species, Maplage waft\n"
            "into the air to escape attacks, not by\n"
@@ -196,6 +196,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Maplage)
        .levelUpLearnset = sMaplageLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_HAZELNAUT}),
+    },
+
+        [SPECIES_HAZELNAUT] =
+    { 
+       .baseHP        = 60,
+       .baseAttack    = 85,
+       .baseDefense   = 50,
+       .baseSpeed     = 100,
+       .baseSpAttack  = 80,
+       .baseSpDefense = 50,
+       .types = { TYPE_GRASS, TYPE_FAIRY },
+       .catchRate = 3,
+       .expYield = 97,
+       .evYield_SpAttack  = 3,
+       .genderRatio = PERCENT_FEMALE(12.5),
+       .eggCycles = 120,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_GRASS, EGG_GROUP_FAIRY },
+       .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_TECHNICIAN, ABILITY_SHARPNESS },
+       .bodyColor = BODY_COLOR_GREEN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Hazelnaut"),
+       .cryId = CRY_HAZELNAUT,
+       .natDexNum = NATIONAL_DEX_HAZELNAUT,
+       .categoryName = _("Squire"),
+       .height = 8,
+       .weight = 212,
+       .description = COMPOUND_STRING(
+           "It hones its blade against the bark of \n"
+           "the edge is pristine and sharp, Hazelnaut\n"
+           "can be seen quite frequently sparring with\n"
+           "one another."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Hazelnaut,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Hazelnaut,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Hazelnaut,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Hazelnaut,
+       .shinyPalette = gMonShinyPalette_Hazelnaut,
+       .iconSprite = gMonIcon_Hazelnaut,
+       .iconPalIndex = 1,
+       FOOTPRINT(Hazelnaut)
+       .levelUpLearnset = sHazelnautLevelUpLearnset,
     },
 
         [SPECIES_ARACHNOTE] =

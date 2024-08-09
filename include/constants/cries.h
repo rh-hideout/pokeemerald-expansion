@@ -2430,6 +2430,7 @@ enum {
     CRY_MAPLAGE,
     CRY_ARACHNOTE, 
     CRY_FUCKER,
+    CRY_HAZELNAUT,
     
     CRY_COUNT,
 };
