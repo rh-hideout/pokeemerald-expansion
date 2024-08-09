@@ -2426,7 +2426,11 @@ enum {
 #if P_FAMILY_PECHARUNT
     CRY_PECHARUNT,
 #endif //P_FAMILY_PECHARUNT
+
     CRY_MAPLAGE,
+    CRY_ARACHNOTE, 
+    CRY_FUCKER,
+    
     CRY_COUNT,
 };
 

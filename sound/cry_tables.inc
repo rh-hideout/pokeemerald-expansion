@@ -2425,6 +2425,10 @@ gCryTable::
 	cry Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
     cry Cry_Maplage
+
+    cry Cry_Arachnote
+
+    cry Cry_Fucker
 .endif
 
 	.align 2
@@ -4854,4 +4858,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
 	cry_reverse Cry_Maplage
+
+    cry_reverse Cry_Arachnote
+
+    cry_reverse Cry_Fucker
 .endif

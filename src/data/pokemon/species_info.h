@@ -221,6 +221,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
       .speciesName = _("Arachnote"),
+      .cryId = CRY_ARACHNOTE,
        .natDexNum = NATIONAL_DEX_ARACHNOTE,
        .categoryName = _("Otamatone"),
        .height = 15,
@@ -247,7 +248,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Arachnote,
        .shinyPalette = gMonShinyPalette_Arachnote,
        .iconSprite = gMonIcon_Arachnote,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Arachnote)
        .levelUpLearnset = sArachnoteLevelUpLearnset,
     },
@@ -274,10 +275,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
       .speciesName = _("Fucker"),
+      .cryId = CRY_FUCKER,
        .natDexNum = NATIONAL_DEX_FUCKER,
        .categoryName = _("Fish Duck"),
-       .height = 15,
-       .weight = 330,
+       .height = 8,
+       .weight = 212,
        .description = COMPOUND_STRING(
            "What the fuck is this? What would\n"
            "you even call this thing? A dish? A\n"
@@ -300,7 +302,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Fucker,
        .shinyPalette = gMonShinyPalette_Fucker,
        .iconSprite = gMonIcon_Fucker,
-       .iconPalIndex = 2,
+       .iconPalIndex = 5,
        FOOTPRINT(Fucker)
        .levelUpLearnset = sFuckerLevelUpLearnset,
     },

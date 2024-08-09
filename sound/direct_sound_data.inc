@@ -6154,11 +6154,20 @@ Cry_Terapagos::
 Cry_Pecharunt::
 	.incbin "sound/direct_sound_samples/cries/pecharunt.bin"
 .endif @ P_FAMILY_PECHARUNT
-.endif @ P_CRIES_ENABLED
+
 
 	.align 2
 Cry_Maplage::
 	.incbin "sound/direct_sound_samples/cries/maplage.bin"
+
+	.align 2
+Cry_Arachnote::
+	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
+
+	.align 2
+Cry_Fucker::
+	.incbin "sound/direct_sound_samples/cries/fucker.bin"
+.endif @ P_CRIES_ENABLED
 
 	.align 2
 DirectSoundWaveData_register_noise::
