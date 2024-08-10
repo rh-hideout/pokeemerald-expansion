@@ -252,6 +252,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Hazelnaut)
        .levelUpLearnset = sHazelnautLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_GINOCCHIO}),
+       },
+
+        [SPECIES_GINOCCHIO] =
+    { 
+       .baseHP        = 65,
+       .baseAttack    = 110,
+       .baseDefense   = 70,
+       .baseSpeed     = 115,
+       .baseSpAttack  = 110,
+       .baseSpDefense = 60,
+       .types = { TYPE_GRASS, TYPE_FAIRY },
+       .catchRate = 3,
+       .expYield = 157,
+       .evYield_SpAttack  = 3,
+       .genderRatio = PERCENT_FEMALE(12.5),
+       .eggCycles = 120,
+       .friendship = 76,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_GRASS, EGG_GROUP_FAIRY },
+       .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_TECHNICIAN, ABILITY_SKILL_LINK },
+       .bodyColor = BODY_COLOR_GREEN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Ginocchio"),
+       .cryId = CRY_GINOCCHIO,
+       .natDexNum = NATIONAL_DEX_GINOCCHIO,
+       .categoryName = _("Battlemaster"),
+       .height = 16,
+       .weight = 600,
+       .description = COMPOUND_STRING(
+           "Ginocchio are often seen wandering alone \n"
+           "and aimless like a hermit, appearing to be lost.\n"
+           "Its wooden skin allows it to easily lurk within\n"
+           "trees."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Ginocchio,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Ginocchio,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Ginocchio,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Ginocchio,
+       .shinyPalette = gMonShinyPalette_Ginocchio,
+       .iconSprite = gMonIcon_Ginocchio,
+       .iconPalIndex = 1,
+       FOOTPRINT(Ginocchio)
+       .levelUpLearnset = sGinocchioLevelUpLearnset,
     },
 
         [SPECIES_ARACHNOTE] =

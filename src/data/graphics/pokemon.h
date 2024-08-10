@@ -22029,6 +22029,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Hazelnaut[] = INCBIN_U8("graphics/pokemon/hazelnaut/icon.4bpp");
    const u8 gMonFootprint_Hazelnaut[] = INCBIN_U8("graphics/pokemon/hazelnaut/footprint.1bpp");
 
+   const u32 gMonFrontPic_Ginocchio[] = INCBIN_U32("graphics/pokemon/ginocchio/front.4bpp.lz");
+   const u32 gMonBackPic_Ginocchio[] = INCBIN_U32("graphics/pokemon/ginocchio/back.4bpp.lz");
+   const u32 gMonPalette_Ginocchio[] = INCBIN_U32("graphics/pokemon/ginocchio/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ginocchio[] = INCBIN_U32("graphics/pokemon/ginocchio/shiny.gbapal.lz");
+   const u8 gMonIcon_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/icon.4bpp");
+   const u8 gMonFootprint_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/footprint.1bpp");
+
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");

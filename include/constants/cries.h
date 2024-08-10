@@ -2431,6 +2431,7 @@ enum {
     CRY_ARACHNOTE, 
     CRY_FUCKER,
     CRY_HAZELNAUT,
+    CRY_GINOCCHIO,
     
     CRY_COUNT,
 };

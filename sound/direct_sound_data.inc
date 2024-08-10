@@ -6165,6 +6165,10 @@ Cry_Hazelnaut::
 	.incbin "sound/direct_sound_samples/cries/hazelnaut.bin"
 
 	.align 2
+Cry_Ginocchio::
+	.incbin "sound/direct_sound_samples/cries/ginocchio.bin"
+
+	.align 2
 Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
