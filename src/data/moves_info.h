@@ -20739,6 +20739,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_VOLTAIC_CYCLONE,
     },
+
     [MOVE_PUNCH_OUT] =
     {
         .name = COMPOUND_STRING("Punch-Out"),
@@ -20758,6 +20759,31 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_U_TURN,
+    },
+
+    [MOVE_PETRIFY] =
+    {
+        .name = COMPOUND_STRING("Petrify"),
+        .description = COMPOUND_STRING(
+            "Protects user and raises\n"
+            "Defense."),
+        .effect = EFFECT_PETRIFY,
+        .power = 0,
+        .type = TYPE_ROCK,
+        .accuracy = 0,
+        .pp = 10,
+        .target = MOVE_TARGET_USER,
+        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 4 : 3,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .metronomeBanned = TRUE,
+        .copycatBanned = TRUE,
+        .assistBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_HARDEN},
+        .battleAnimScript = Move_PROTECT,
     },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
