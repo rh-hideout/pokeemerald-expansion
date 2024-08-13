@@ -16964,6 +16964,32 @@ Move_ROCKET_PUNCH::
 	jumpretfalse UTurnVisible
 	createsprite gFlyBallAttackSpriteTemplate, ANIM_ATTACKER, 2, 20, TRUE
 
+	Move_FAEBLADE::
+	loadspritegfx ANIM_TAG_CUT @Cut
+	loadspritegfx ANIM_TAG_SWORD @Sword
+	loadspritegfx ANIM_TAG_HYDRO_PUMP @Blue Colour
+	loadspritegfx ANIM_TAG_PUNISHMENT_BLADES @Punishment Blade
+	monbg ANIM_ATTACKER
+	setalpha 12, 8
+	playsewithpan SE_M_SWORDS_DANCE, SOUND_PAN_ATTACKER
+	createsprite gSwordsDanceBladeSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0
+	delay 0x16
+	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, 0x2715, 0x2, 0x2, 0x7ff2, 0x10, 0x0, 0x0
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
+	delay 0x1
+	monbg ANIM_TARGET
+	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
+	createsprite gSacredSwordBladesTemplate, ANIM_TARGET, 1, 0x0, 0xa, 0x0, 0xFF00, 0xA
+	createsprite gSacredSwordCutTemplate, ANIM_ATTACKER, 2, 0x28, 0xffe0, 0x0
+	delay 0x5
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 10, 1
+	waitforvisualfinish
+	clearmonbg ANIM_TARGET
+	blendoff
+	waitforvisualfinish
+	end
+
 
 Move_SPICY_EXTRACT::
 	loadspritegfx ANIM_TAG_SMALL_EMBER

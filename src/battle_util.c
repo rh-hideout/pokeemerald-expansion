@@ -9739,6 +9739,19 @@ static inline u32 CalcDefenseStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 
         usesDefStat = FALSE;
     }
 
+    if (gMovesInfo[move].effect == EFFECT_FAEBLADE || IS_MOVE_SPECIAL(move)) // uses Special defense stat instead of defense
+    {
+        defStat = spDef;
+        defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+        usesDefStat = TRUE;
+    }
+    else // is special
+    {
+        defStat = def;
+        defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+        usesDefStat = FALSE;
+    }
+
     // Self-destruct / Explosion cut defense in half
     if (B_EXPLOSION_DEFENSE < GEN_5 && gMovesInfo[gCurrentMove].effect == EFFECT_EXPLOSION)
         defStat /= 2;

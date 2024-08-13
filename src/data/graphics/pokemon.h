@@ -22021,6 +22021,9 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/shiny.gbapal.lz");
    const u8 gMonIcon_Fucker[] = INCBIN_U8("graphics/pokemon/fucker/icon.4bpp");
    const u8 gMonFootprint_Fucker[] = INCBIN_U8("graphics/pokemon/fucker/footprint.1bpp");
+   const u32 gObjectEventPic_Fucker[] = INCBIN_COMP("graphics/pokemon/fucker/overworld.4bpp");
+   const u32 gOverworldPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/overworld_normal.gbapal.lz");
+   const u32 gShinyOverworldPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/overworld_shiny.gbapal.lz");
 
    const u32 gMonFrontPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/front.4bpp.lz");
    const u32 gMonBackPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/back.4bpp.lz");
@@ -22035,6 +22038,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Ginocchio[] = INCBIN_U32("graphics/pokemon/ginocchio/shiny.gbapal.lz");
    const u8 gMonIcon_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/icon.4bpp");
    const u8 gMonFootprint_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/footprint.1bpp");
+
+   const u32 gMonFrontPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/front.4bpp.lz");
+   const u32 gMonBackPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/back.4bpp.lz");
+   const u32 gMonPalette_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/shiny.gbapal.lz");
+   const u8 gMonIcon_Noxilium[] = INCBIN_U8("graphics/pokemon/noxilium/icon.4bpp");
+   const u8 gMonFootprint_Noxilium[] = INCBIN_U8("graphics/pokemon/noxilium/footprint.1bpp");
 
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
     const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");

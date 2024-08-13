@@ -2433,6 +2433,8 @@ gCryTable::
 	cry Cry_Hazelnaut
 
 	cry Cry_Ginocchio
+
+	cry Cry_Noxilium
 .endif
 
 	.align 2
@@ -4870,4 +4872,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Hazelnaut
 
 	cry_reverse Cry_Ginocchio
+
+	cry_reverse Cry_Noxilium
 .endif

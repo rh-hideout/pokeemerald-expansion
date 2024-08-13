@@ -899,6 +899,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
+    [EFFECT_FAEBLADE] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
     [EFFECT_FOCUS_PUNCH] =
     {
         .battleScript = BattleScript_EffectFocusPunch,

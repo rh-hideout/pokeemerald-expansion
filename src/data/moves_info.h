@@ -20785,6 +20785,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_HARDEN},
         .battleAnimScript = Move_PROTECT,
     },
+
+    [MOVE_FAEBLADE] =
+    {
+        .name = COMPOUND_STRING("Faeblade"),
+        .description = COMPOUND_STRING(
+            "Slashes the opponent\n"
+            "Uses Their Special Defense."),
+        .effect = EFFECT_FAEBLADE,
+        .power = 80,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .slicingMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_FAEBLADE,
+    },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

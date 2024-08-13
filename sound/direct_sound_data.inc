@@ -6175,6 +6175,10 @@ Cry_Arachnote::
 	.align 2
 Cry_Fucker::
 	.incbin "sound/direct_sound_samples/cries/fucker.bin"
+
+	.align 2
+Cry_Noxilium::
+	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
 .endif @ P_CRIES_ENABLED
 
 	.align 2

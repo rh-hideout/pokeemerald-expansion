@@ -855,6 +855,7 @@ extern const u8 Move_STARSEED_BLAST[];
 extern const u8 Move_ROCKET_PUNCH[];
 extern const u8 Move_VOLTAIC_CYCLONE[];
 extern const u8 Move_PUNCH_OUT[];
+extern const u8 Move_FAEBLADE[];
 
 // OTHER BULLSHIT
 extern const u8 Move_BREAKNECK_BLITZ[];
