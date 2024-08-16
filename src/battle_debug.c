@@ -2585,6 +2585,8 @@ static const u8 *const sHoldEffectNames[] =
     [HOLD_EFFECT_LOADED_DICE] = sText_HoldEffectLoadedDice,
     [HOLD_EFFECT_BOOSTER_ENERGY] = sText_HoldEffectBoosterEnergy,
     [HOLD_EFFECT_BERSERK_GENE] = sText_HoldEffectBerserkGene,
+    
+    
 };
 static const u8 *GetHoldEffectName(u16 holdEffect)
 {

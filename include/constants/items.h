@@ -503,6 +503,7 @@
 #define ITEM_LUSTROUS_ORB 402
 #define ITEM_GRISEOUS_ORB 403
 
+
 // Incenses
 #define ITEM_SEA_INCENSE 404
 #define ITEM_LAX_INCENSE 405
@@ -998,10 +999,13 @@
 #define ITEM_TWICE_SPICED_RADISH 826
 #define ITEM_POKESHI_DOLL 827
 
+// Cappricio
+#define ITEM_MOLUGANION 828
+
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 828
+#define ITEMS_COUNT 829
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

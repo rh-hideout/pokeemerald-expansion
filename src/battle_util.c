@@ -11503,6 +11503,7 @@ static void SetRandomMultiHitCounter()
         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
 }
 
+
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon)
 {
     gBattleMons[battler].level = GetMonData(mon, MON_DATA_LEVEL);
@@ -11833,4 +11834,6 @@ bool32 TargetFullyImmuneToCurrMove(u32 BattlerAtk, u32 battlerDef)
          || IsBattlerProtected(BattlerAtk, battlerDef, gCurrentMove)
          || IsSemiInvulnerable(battlerDef, gCurrentMove)
          || DoesCurrentTargetHaveAbilityImmunity());
+         
 }
+

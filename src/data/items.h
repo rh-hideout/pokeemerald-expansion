@@ -14070,4 +14070,20 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+    [ITEM_MOLUGANION] =
+    {
+        .name = _("Moluganion"),
+        .price = 500,
+        .holdEffect = HOLD_EFFECT_CURE_STATUS,
+        .description = COMPOUND_STRING(
+            "A mysterious book\n"
+            "that protects\n"
+            "Noxilium status."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 120,
+        .iconPic = gItemIcon_Moluganion,
+        .iconPalette = gItemIconPalette_Moluganion,
+    },
 };
