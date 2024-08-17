@@ -20807,6 +20807,77 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_FAEBLADE,
     },
+    
+    [MOVE_SPOOK_OUT] =
+    {
+        .name = COMPOUND_STRING("Spook Out"),
+        .description = COMPOUND_STRING(
+            "A 1st-turn, 1st-spooking\n"
+            "move that causes flinching."),
+        .priority = 3,
+        .soundMove = TRUE,
+        .ignoresSubstitute = TRUE,
+        .effect = EFFECT_FIRST_TURN_ONLY,
+        .power = 60,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = COMBO_STARTER_FAKE_OUT,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SPOOK_OUT,
+    },
+    
+    [MOVE_POWER_WASHER] =
+    {
+        .name = COMPOUND_STRING("Power Washer"),
+        .description = COMPOUND_STRING(
+            "Releases a powerful jet that\n"
+            "may reduce foe's Sp. Def."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 8,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = -1,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_1,
+            .chance = 50,
+        }),
+        .contestEffect = CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_POWER_WASHER,
+    },
+    
+    [MOVE_SLIP_TURN] =
+    {
+        .name = COMPOUND_STRING("Slip Turn"),
+        .description = sUTurnDescription,
+        .effect = EFFECT_HIT_ESCAPE,
+        .power = 70,
+        .type = TYPE_ICE,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_U_TURN,
+    },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

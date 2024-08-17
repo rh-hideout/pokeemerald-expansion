@@ -22015,6 +22015,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
+   const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
+   const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/shiny.gbapal.lz");
+   const u8 gMonIcon_Yuukiino[] = INCBIN_U8("graphics/pokemon/yuukiino/icon.4bpp");
+   const u8 gMonFootprint_Yuukiino[] = INCBIN_U8("graphics/pokemon/yuukiino/footprint.1bpp");
+
    const u32 gMonFrontPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/front.4bpp.lz");
    const u32 gMonBackPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/back.4bpp.lz");
    const u32 gMonPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/normal.gbapal.lz");

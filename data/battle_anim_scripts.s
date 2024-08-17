@@ -16990,6 +16990,99 @@ Move_ROCKET_PUNCH::
 	waitforvisualfinish
 	end
 
+    Move_SPOOK_OUT::
+	loadspritegfx ANIM_TAG_SWEAT_BEAD
+	loadspritegfx ANIM_TAG_GHOSTLY_SPIRIT
+	fadetobg BG_GHOST
+	playsewithpan SE_M_ENCORE, SOUND_PAN_ATTACKER
+	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 4, 6
+	delay 25
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 0, 1
+	playsewithpan SE_M_SKETCH, SOUND_PAN_TARGET
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 1, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 5, 1
+	createvisualtask AnimTask_StretchTargetUp, 3
+	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
+	createsprite gCurseGhostSpriteTemplate, ANIM_TARGET, 2
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 14, 1
+	waitforvisualfinish
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 1, 16, 0, RGB_BLACK
+	waitforvisualfinish
+	waitbgfadein
+	restorebg
+	waitforvisualfinish
+	end
+
+	Move_POWER_WASHER::
+	loadspritegfx ANIM_TAG_WATER_ORB
+	loadspritegfx ANIM_TAG_WATER_IMPACT
+	loadspritegfx ANIM_TAG_SMALL_BUBBLES
+	loadspritegfx ANIM_TAG_ICE_CRYSTALS
+	monbg ANIM_DEF_PARTNER
+	fadetobg BG_WATER
+	splitbgprio ANIM_TARGET
+	setalpha 12, 8
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 23, 1
+	delay 5
+	call WaterfallBubblesOnAttacker
+	delay 4
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 40, 1
+	delay 6
+	panse SE_M_HYDRO_PUMP, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
+	createvisualtask AnimTask_StartSinAnimTimer, 5, 100
+	call HydroPumpBeams
+	call HydroPumpBeams
+	call HydroPumpBeams
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 37, 1
+	call HydroPumpHitSplats
+	call HydroPumpBeams
+	call HydroPumpBeams
+	call HydroPumpHitSplats
+	call HydroPumpBeams
+	call HydroPumpBeams
+	call HydroPumpHitSplats
+	call HydroPumpBeams
+	call HydroPumpBeams
+	call HydroPumpHitSplats
+	call HydroPumpBeams
+	call HydroPumpBeams
+	call HydroPumpHitSplats
+	delay 10
+	delay 30
+	createsprite gWaterGunProjectileSpriteTemplate, ANIM_ATTACKER, 2, 20, 0, 0, 0, 40, -25
+	playsewithpan SE_M_BUBBLE, 192
+	delay 2
+	createsprite gWaterGunProjectileSpriteTemplate, ANIM_ATTACKER, 2, 20, 0, 5, 0, 40, -25
+	playsewithpan SE_M_BUBBLE, 192
+	delay 2
+	createsprite gWaterGunProjectileSpriteTemplate, ANIM_ATTACKER, 2, 20, 0, -5, 0, 40, -25
+	playsewithpan SE_M_BUBBLE, 192
+	delay 40
+	delay 20
+	call HydroPumpHitSplats
+	delay 25
+	restorebg
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	end
+
+Move_SLIP_TURN::
+	loadspritegfx ANIM_TAG_ROUND_SHADOW
+	loadspritegfx ANIM_TAG_IMPACT
+	monbg ANIM_DEF_PARTNER
+	playsewithpan SE_M_GUST, SOUND_PAN_ATTACKER
+	call ChillyReceptionSnowballs
+	call ChillyReceptionSnowballs
+	call ChillyReceptionSnowballs
+	call ChillyReceptionSnowballs
+	setalpha 12, 8
+	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
+	createsprite gFlyBallUpSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 13, 336
+	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_ATTACKER
+	createvisualtask AnimTask_CanBattlerSwitch, 1, ANIM_ATTACKER
+	jumpretfalse UTurnVisible
+	createsprite gFlyBallAttackSpriteTemplate, ANIM_ATTACKER, 2, 20, TRUE
 
 Move_SPICY_EXTRACT::
 	loadspritegfx ANIM_TAG_SMALL_EMBER
@@ -20049,6 +20142,8 @@ Move_RAPID_SPIN::
 	loadspritegfx ANIM_TAG_IMPACT
 	loadspritegfx ANIM_TAG_SPARK_2
 	loadspritegfx ANIM_TAG_RAPID_SPIN
+	loadspritegfx ANIM_TAG_SPARK_2              @yelow
+	loadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT      @charge
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	createvisualtask AnimTask_BlendColorCycle, 2, (F_PAL_BG | F_PAL_ATTACKER), -31, 1, 5, 5, RGB(31, 31, 20)

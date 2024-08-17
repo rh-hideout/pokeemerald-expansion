@@ -6173,6 +6173,10 @@ Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
 	.align 2
+Cry_Yuukiino::
+	.incbin "sound/direct_sound_samples/cries/yuukiino.bin"
+
+	.align 2
 Cry_Fucker::
 	.incbin "sound/direct_sound_samples/cries/fucker.bin"
 

@@ -1634,8 +1634,9 @@
 #define SPECIES_HAZELNAUT                               1527
 #define SPECIES_GINOCCHIO                               1528
 #define SPECIES_NOXILIUM                                1529
+#define SPECIES_YUUKIINO                                1530
 
-#define SPECIES_EGG (SPECIES_NOXILIUM + 1)
+#define SPECIES_EGG (SPECIES_YUUKIINO + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
