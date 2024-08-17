@@ -3628,6 +3628,20 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         }
+        case CANCELLER_RECOIL_SUPPORTIVE:
+        {
+            u32 supportiveBattler = IsAbilityOnField(ABILITY_SUPPORTIVE);
+            if (supportiveBattler && (gMovesInfo[gCurrentMove].recoil > 0
+                            || gMovesInfo[gCurrentMove].effect == EFFECT_MIND_BLOWN))
+            {
+                gBattleScripting.battler = supportiveBattler - 1;
+                gBattlescriptCurrInstr = BattleScript_SupportiveStopsRecoil;
+                gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+                effect = 1;
+            }
+            gBattleStruct->atkCancellerTracker++;
+            break;
+        }
         case CANCELLER_MULTIHIT_MOVES:
             if (gMovesInfo[gCurrentMove].effect == EFFECT_MULTI_HIT)
             {
@@ -9739,19 +9753,6 @@ static inline u32 CalcDefenseStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 
         usesDefStat = FALSE;
     }
 
-    if (gMovesInfo[move].effect == EFFECT_FAEBLADE || IS_MOVE_SPECIAL(move)) // uses Special defense stat instead of defense
-    {
-        defStat = spDef;
-        defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
-        usesDefStat = TRUE;
-    }
-    else // is special
-    {
-        defStat = def;
-        defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
-        usesDefStat = FALSE;
-    }
-
     // Self-destruct / Explosion cut defense in half
     if (B_EXPLOSION_DEFENSE < GEN_5 && gMovesInfo[gCurrentMove].effect == EFFECT_EXPLOSION)
         defStat /= 2;
@@ -11503,7 +11504,6 @@ static void SetRandomMultiHitCounter()
         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
 }
 
-
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon)
 {
     gBattleMons[battler].level = GetMonData(mon, MON_DATA_LEVEL);
@@ -11834,6 +11834,4 @@ bool32 TargetFullyImmuneToCurrMove(u32 BattlerAtk, u32 battlerDef)
          || IsBattlerProtected(BattlerAtk, battlerDef, gCurrentMove)
          || IsSemiInvulnerable(battlerDef, gCurrentMove)
          || DoesCurrentTargetHaveAbilityImmunity());
-         
 }
-
