@@ -2615,4 +2615,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 2,
         .breakable = TRUE,
     },
+
+    [ABILITY_SUPPORTIVE] =
+    {
+        .name = _("Supportive"),
+        .description = COMPOUND_STRING("Prevents recoil."),
+        .aiRating = 2,
+        .breakable = TRUE,
+    },
 };
