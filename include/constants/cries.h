@@ -2435,6 +2435,7 @@ enum {
     CRY_NOXILIUM,
     CRY_YUUKIINO,
     CRY_AQUADIIVA,
+    CRY_FORGOTNO,
     
     CRY_COUNT,
 };

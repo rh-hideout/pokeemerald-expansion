@@ -1636,8 +1636,9 @@
 #define SPECIES_NOXILIUM                                1529
 #define SPECIES_YUUKIINO                                1530
 #define SPECIES_AQUADIIVA                               1531
+#define SPECIES_FORGOTNO                                1532
 
-#define SPECIES_EGG (SPECIES_AQUADIIVA + 1)
+#define SPECIES_EGG (SPECIES_FORGOTNO + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

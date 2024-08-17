@@ -2439,6 +2439,8 @@ gCryTable::
 	cry Cry_Yuukiino
 
 	cry Cry_Aquadiiva
+
+	cry Cry_Forgotno
 .endif
 
 	.align 2
@@ -4882,4 +4884,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Yuukiino
 
 	cry_reverse Cry_Aquadiiva
+
+	cry_reverse Cry_Forgotno
 .endif

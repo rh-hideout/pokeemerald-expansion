@@ -359,6 +359,7 @@ static const u16 sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(ARACHNOTE),
     HOENN_TO_NATIONAL(FUCKER),
     HOENN_TO_NATIONAL(NOXILIUM),
+    HOENN_TO_NATIONAL(FORGOTNO),
 };
 
 const struct SpindaSpot gSpindaSpotGraphics[] =

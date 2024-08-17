@@ -438,7 +438,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 190,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_MINERAL },
-       .abilities = { ABILITY_NATURAL_CURE, ABILITY_IMMUNITY, ABILITY_PLUS, ABILITY_DAMP}, //Replace Damp with Supportive once coded
+       .abilities = { ABILITY_NATURAL_CURE, ABILITY_IMMUNITY, ABILITY_PLUS, ABILITY_SUPPORTIVE}, 
        .bodyColor = BODY_COLOR_BLUE,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -449,10 +449,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 15,
        .weight = 945,
        .description = COMPOUND_STRING(
-           "Their bodies seem to emanate a warmth that\n"
-           "always brightens the mood of anyone that see's\n"
-           "it.When excited, the water that makes up its\n"
-           "body glows with a soft blue light."),
+           "Their bodies emanate a warmth that\n"
+           "always brightens the mood of anyone\n"
+           "that sees it. When excited, the water\n"
+           "on its body shimmers with blue light."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -547,7 +547,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .baseSpAttack  = 110,
        .baseSpDefense = 60,
        .types = { TYPE_GHOST, TYPE_FLYING },
-       .catchRate = 45,
+       .catchRate = 55,
        .expYield = 183,
        .evYield_SpAttack  = 3,
        .genderRatio = PERCENT_FEMALE(50),
@@ -590,6 +590,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 5,
        FOOTPRINT(Noxilium)
        .levelUpLearnset = sNoxiliumLevelUpLearnset,
+    },
+    
+        [SPECIES_FORGOTNO] =
+    { 
+       .baseHP        = 33,
+       .baseAttack    = 136,
+       .baseDefense   = 0,
+       .baseSpeed     = 143,
+       .baseSpAttack  = 143,
+       .baseSpDefense = 91,
+       .types = { TYPE_STEEL, TYPE_MYSTERY },
+       .catchRate = 25,
+       .expYield = 111,
+       .evYield_SpAttack  = 3,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 120,
+       .friendship = 40,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .abilities = { ABILITY_KLUTZ, ABILITY_NONE, ABILITY_PUPPETEER, ABILITY_GALE_WINGS },
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Forgotno"),
+       .cryId = CRY_FORGOTNO,
+       .natDexNum = NATIONAL_DEX_FORGOTNO,
+       .categoryName = _("Garbage Data"),
+       .height = 28,
+       .weight = 197,
+       .description = COMPOUND_STRING(
+           "Barely considered a Pokémon, Forgotno are \n"
+           "found in secluded places where they slowly\n"
+           "cause the world around them to deteriorate \n"
+           "on a molecular level."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Forgotno,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Forgotno,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 2,
+       .backPic = gMonBackPic_Forgotno,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Forgotno,
+       .shinyPalette = gMonShinyPalette_Forgotno,
+       .iconSprite = gMonIcon_Forgotno,
+       .iconPalIndex = 5,
+       FOOTPRINT(Forgotno)
+       .levelUpLearnset = sForgotnoLevelUpLearnset,
+
     },
 
     /* You may add any custom species below this point based on the following structure: */

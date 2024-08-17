@@ -2623,4 +2623,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 2,
         .breakable = TRUE,
     },
+
+    [ABILITY_PUPPETEER] =
+    {
+        .name = _("Puppeteer"),
+        .description = COMPOUND_STRING("Ups Bug-type moves."),
+        .aiRating = 6,
+    },
 };

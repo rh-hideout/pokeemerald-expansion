@@ -6187,6 +6187,10 @@ Cry_Fucker::
 	.align 2
 Cry_Noxilium::
 	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
+
+	.align 2
+Cry_Forgotno::
+	.incbin "sound/direct_sound_samples/cries/forgotno.bin"
 .endif @ P_CRIES_ENABLED
 
 	.align 2
