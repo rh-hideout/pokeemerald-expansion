@@ -374,14 +374,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .baseSpAttack  = 90,
        .baseSpDefense = 140,
        .types = { TYPE_ICE, TYPE_ICE },
-       .catchRate = 50,
+       .catchRate = 80,
        .expYield = 88,
        .evYield_SpDefense  = 3,
        .genderRatio = PERCENT_FEMALE(100),
        .eggCycles = 120,
        .friendship = 10,
        .growthRate = GROWTH_MEDIUM_SLOW,
-       .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_FAIRY },
+       .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_MINERAL },
        .abilities = { ABILITY_OVERCOAT, ABILITY_OBLIVIOUS, ABILITY_MINUS, ABILITY_QUEENLY_MAJESTY },
        .bodyColor = BODY_COLOR_WHITE,
        .isLegendary = FALSE,
@@ -393,10 +393,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 14,
        .weight = 1117,
        .description = COMPOUND_STRING(
-           "Locked away in their chilling crystaline bodies\n"
-           "is a bitter black heart that trusts not a single\n"
-           "soul. Anything that approaches it too quickly may\n"
-           "get encased in a tomb of ice."),
+           "Locked away in their chilling crystaline \n"
+           "bodies is a bitter black heart that trusts\n"
+           "a single soul. Anything that approaches \n"
+           "it too quickly may get encased in ice."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -418,6 +418,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Yuukiino)
        .levelUpLearnset = sYuukiinoLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_FRIENDSHIP, 0, SPECIES_AQUADIIVA}),
+    },
+    
+        [SPECIES_AQUADIIVA] =
+    { 
+       .baseHP        = 80,
+       .baseAttack    = 62,
+       .baseDefense   = 88,
+       .baseSpeed     = 77,
+       .baseSpAttack  = 121,
+       .baseSpDefense = 112,
+       .types = { TYPE_WATER, TYPE_WATER },
+       .catchRate = 50,
+       .expYield = 180,
+       .evYield_SpDefense  = 3,
+       .genderRatio = PERCENT_FEMALE(100),
+       .eggCycles = 120,
+       .friendship = 190,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_MINERAL },
+       .abilities = { ABILITY_NATURAL_CURE, ABILITY_IMMUNITY, ABILITY_PLUS, ABILITY_DAMP}, //Replace Damp with Supportive once coded
+       .bodyColor = BODY_COLOR_BLUE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Aquadiiva"),
+       .cryId = CRY_AQUADIIVA,
+       .natDexNum = NATIONAL_DEX_AQUADIIVA,
+       .categoryName = _("Embracing"),
+       .height = 15,
+       .weight = 945,
+       .description = COMPOUND_STRING(
+           "Their bodies seem to emanate a warmth that\n"
+           "always brightens the mood of anyone that see's\n"
+           "it.When excited, the water that makes up its\n"
+           "body glows with a soft blue light."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Aquadiiva,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Aquadiiva,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Aquadiiva,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Aquadiiva,
+       .shinyPalette = gMonShinyPalette_Aquadiiva,
+       .iconSprite = gMonIcon_Aquadiiva,
+       .iconPalIndex = 2,
+       FOOTPRINT(Aquadiiva)
+       .levelUpLearnset = sAquadiivaLevelUpLearnset,
     },
 
         [SPECIES_FUCKER] =

@@ -2437,6 +2437,8 @@ gCryTable::
 	cry Cry_Noxilium
 
 	cry Cry_Yuukiino
+
+	cry Cry_Aquadiiva
 .endif
 
 	.align 2
@@ -4878,4 +4880,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Noxilium
 
 	cry_reverse Cry_Yuukiino
+
+	cry_reverse Cry_Aquadiiva
 .endif

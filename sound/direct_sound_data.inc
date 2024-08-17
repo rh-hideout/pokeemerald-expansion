@@ -6177,6 +6177,10 @@ Cry_Yuukiino::
 	.incbin "sound/direct_sound_samples/cries/yuukiino.bin"
 
 	.align 2
+Cry_Aquadiiva::
+	.incbin "sound/direct_sound_samples/cries/aquadiiva.bin"
+
+	.align 2
 Cry_Fucker::
 	.incbin "sound/direct_sound_samples/cries/fucker.bin"
 
