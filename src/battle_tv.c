@@ -120,6 +120,7 @@ static const u16 sPoints_RainMoves[] =
     MOVE_WATER_GUN, 3,
     MOVE_WATER_PULSE, 3,
     MOVE_WEATHER_BALL, 3,
+    MOVE_BOIL_OVER, 3,
     MOVE_THUNDER, 3,
     MOVE_SOLAR_BEAM, -4,
     MOVE_OVERHEAT, -4,
@@ -156,6 +157,7 @@ static const u16 sPoints_SunMoves[] =
     MOVE_MORNING_SUN, 3,
     MOVE_MOONLIGHT, 3,
     MOVE_WEATHER_BALL, 3,
+    MOVE_BOIL_OVER, 3,
     TABLE_END, 0
 };
 static const u16 sPoints_SandstormMoves[] =

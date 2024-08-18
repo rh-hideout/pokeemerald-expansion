@@ -859,6 +859,7 @@ extern const u8 Move_FAEBLADE[];
 extern const u8 Move_SPOOK_OUT[];
 extern const u8 Move_POWER_WASHER[];
 extern const u8 Move_SLIP_TURN[];
+extern const u8 Move_BOIL_OVER[];
 
 // OTHER BULLSHIT
 extern const u8 Move_BREAKNECK_BLITZ[];

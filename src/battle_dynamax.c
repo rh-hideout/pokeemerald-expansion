@@ -391,6 +391,7 @@ static u8 GetMaxPowerTier(u32 move)
         case EFFECT_PRESENT:
         case EFFECT_BEAT_UP:
         case EFFECT_WEATHER_BALL:
+        case EFFECT_BOIL_OVER:
         case EFFECT_FLING:
         case EFFECT_ELECTRO_BALL:
         case EFFECT_METAL_BURST:

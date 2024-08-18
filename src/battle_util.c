@@ -8932,6 +8932,12 @@ static inline u32 CalcMoveBasePower(u32 move, u32 battlerAtk, u32 battlerDef, u3
         if (weather & B_WEATHER_ANY)
             basePower *= 2;
         break;
+    case EFFECT_BOIL_OVER:
+        if (weather & B_WEATHER_RAIN)
+            basePower *= 2;
+        if (weather & B_WEATHER_SUN)
+            basePower *= 2;
+        break;
     case EFFECT_PURSUIT:
         if (gActionsByTurnOrder[GetBattlerTurnOrderNum(battlerDef)] == B_ACTION_SWITCH)
             basePower *= 2;

@@ -20878,6 +20878,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_U_TURN,
     },
+    
+    [MOVE_BOIL_OVER] =
+    {
+        .name = COMPOUND_STRING("Boil Over"),
+        .description = COMPOUND_STRING(
+            "The move's type and power\n"
+            "change with the weather."),
+        .effect = EFFECT_BOIL_OVER,
+        .power = 80,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .zMove = { .powerOverride = 160 },
+        .ballisticMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_HAIL, COMBO_STARTER_RAIN_DANCE, COMBO_STARTER_SANDSTORM, COMBO_STARTER_SUNNY_DAY},
+        .battleAnimScript = Move_WEATHER_BALL,
+    },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
