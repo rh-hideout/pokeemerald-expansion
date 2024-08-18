@@ -1599,58 +1599,86 @@ static void CloseSummaryScreen(u8 taskId)
     }
 }
 
-// Cycle summary page between stats, IVs and EVs
-static void ChangeSummaryState (s16 *taskData, u8 taskId)
+
+#define currentStat  taskData[3]
+#define STAT_STATS  0
+#define STAT_IVS    1
+#define STAT_EVS    2
+
+#define STATS_CORD_X    44
+#define STATS_CORD_Y    102
+
+#define STATS_STATS_BLOCK   169
+#define EVS_STATS_BLOCK     218
+#define IVS_STATS_BLOCK     (EVS_STATS_BLOCK + 3)
+#define STATS_BLANK_BLOCK   1241
+
+// Update skills page tilemap
+static void ChangeSummaryState(s16 *taskData, u8 taskId)
 {
-    switch (taskData[3])
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 3, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 4, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 5, STATS_CORD_Y, 1, 1, 2);
+    switch (currentStat)
     {
-        case 0:
-            taskData[3] = 1;
+        case STAT_STATS:
+            FillBgTilemapBufferRect(1, IVS_STATS_BLOCK, STATS_CORD_X, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, IVS_STATS_BLOCK + 1, STATS_CORD_X + 1, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, IVS_STATS_BLOCK + 2, STATS_CORD_X + 2, STATS_CORD_Y, 1, 1, 2);
+            taskData[3] = STAT_IVS;
             break;
-        case 1:
-            taskData[3] = 2;
+        case STAT_IVS:
+            FillBgTilemapBufferRect(1, EVS_STATS_BLOCK, STATS_CORD_X, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, EVS_STATS_BLOCK + 1, STATS_CORD_X + 1, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, EVS_STATS_BLOCK + 2, STATS_CORD_X + 2, STATS_CORD_Y, 1, 1, 2);
+            taskData[3] = STAT_EVS;
             break;
-        case 2:
-            taskData[3] = 0;
+        case STAT_EVS:
+            FillBgTilemapBufferRect(1, STATS_STATS_BLOCK, STATS_CORD_X, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 1, STATS_CORD_X + 1, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 2, STATS_CORD_X + 2, STATS_CORD_Y, 1, 1, 2);
+            FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 3, STATS_CORD_X + 3, STATS_CORD_Y, 1, 1, 2);
+            taskData[3] = STAT_STATS;
             break;
     }
+    CopyBgTilemapBufferToVram(1);
     gTasks[taskId].func = Task_HandleInput;
 }
 
+ static void Task_HandleInput(u8 taskId)
+ {
+    s16 *taskData = gTasks[taskId].data;
 
-static void Task_HandleInput(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
-    {
-        if (JOY_NEW(DPAD_UP))
-        {
-            data[3] = 0;
-            ChangeSummaryPokemon(taskId, -1);
-        }
-        else if (JOY_NEW(DPAD_DOWN))
-        {
-            data[3] = 0;
-            ChangeSummaryPokemon(taskId, 1);
-        }
-        else if ((JOY_NEW(DPAD_LEFT)) || GetLRKeysPressed() == MENU_L_PRESSED)
-        {
-            data[3] = 0;
-            ChangePage(taskId, -1);
-        }
-        else if ((JOY_NEW(DPAD_RIGHT)) || GetLRKeysPressed() == MENU_R_PRESSED)
-        {
-            data[3] = 0;
-            ChangePage(taskId, 1);
-        }
-        else if (JOY_NEW(A_BUTTON))
-        {
+     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
+     {
+         if (JOY_NEW(DPAD_UP))
+         {
+            currentStat = STAT_STATS;
+             ChangeSummaryPokemon(taskId, -1);
+         }
+         else if (JOY_NEW(DPAD_DOWN))
+         {
+            currentStat = STAT_STATS;
+             ChangeSummaryPokemon(taskId, 1);
+         }
+         else if ((JOY_NEW(DPAD_LEFT)) || GetLRKeysPressed() == MENU_L_PRESSED)
+         {
+            currentStat = STAT_STATS;
+             ChangePage(taskId, -1);
+         }
+         else if ((JOY_NEW(DPAD_RIGHT)) || GetLRKeysPressed() == MENU_R_PRESSED)
+         {
+            currentStat = STAT_STATS;
+             ChangePage(taskId, 1);
+         }
+         else if (JOY_NEW(A_BUTTON))
+         {
             if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
-            {
+             {
                 // Cycle through IVs/EVs/stats on pressing A
-                ChangeSummaryState(data, taskId);
-                BufferIvOrEvStats(data[3]);
+                PlaySE(SE_SELECT);
+                ChangeSummaryState(taskData, taskId);
+                BufferIvOrEvStats(currentStat);
             }
             else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
             {
@@ -1662,14 +1690,14 @@ static void Task_HandleInput(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 SwitchToMoveSelection(taskId);
-            }
-        }
-        else if (JOY_NEW(B_BUTTON))
-        {
-            StopPokemonAnimations();
-            PlaySE(SE_SELECT);
-            BeginCloseSummaryScreen(taskId);
-        }
+             }
+         }
+         else if (JOY_NEW(B_BUTTON))
+         {
+             StopPokemonAnimations();
+             PlaySE(SE_SELECT);
+             BeginCloseSummaryScreen(taskId);
+         }
     #if DEBUG_POKEMON_SPRITE_VISUALIZER == TRUE
         else if (JOY_NEW(SELECT_BUTTON) && !gMain.inBattle)
         {
@@ -3001,30 +3029,34 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Jam, 0, 17, 0, 1);
 }
 
-static void PutPageWindowTilemaps(u8 page)
-{
-    u8 i;
+ static void PutPageWindowTilemaps(u8 page)
+ {
+     u8 i;
 
-    ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE);
+    LZDecompressWram(gSummaryPage_Skills_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_SKILLS][1]);
+    CopyBgTilemapBufferToVram(1);
 
-    switch (page)
-    {
-    case PSS_PAGE_INFO:
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
-        PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_CANCEL);
-        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
-            PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
-        break;
-    case PSS_PAGE_SKILLS:
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
-        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
-        break;
+     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE);
+
+     switch (page)
+     {
+     case PSS_PAGE_INFO:
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
+         PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_CANCEL);
+         if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+             PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
+         break;
+     case PSS_PAGE_SKILLS:
+        PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_SWITCH);
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
+         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
+         break;
     case PSS_PAGE_BATTLE_MOVES:
         PutWindowTilemap(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
         if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
@@ -3057,23 +3089,25 @@ static void PutPageWindowTilemaps(u8 page)
     ScheduleBgCopyTilemapToVram(0);
 }
 
-static void ClearPageWindowTilemaps(u8 page)
-{
-    u8 i;
+ static void ClearPageWindowTilemaps(u8 page)
+ {
+     u8 i;
 
-    switch (page)
-    {
-    case PSS_PAGE_INFO:
-        ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_CANCEL);
-        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
-            ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
-        break;
-    case PSS_PAGE_SKILLS:
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
-        break;
+     switch (page)
+     {
+     case PSS_PAGE_INFO:
+         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_CANCEL);
+         if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+             ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
+         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
+         break;
+     case PSS_PAGE_SKILLS:
+        ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_SWITCH);
+         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
+         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
+         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
+        CopyBgTilemapBufferToVram(1);
+         break;
     case PSS_PAGE_BATTLE_MOVES:
         if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
         {
@@ -3534,7 +3568,6 @@ static void BufferIvOrEvStats(u8 mode)
 {
     u16 hp, hp2, atk, def, spA, spD, spe;
     u8 *currHPString = Alloc(20);
-    const s8 *natureMod = gNatureStatTable[sMonSummaryScreen->summary.nature];
 
     switch (mode)
     {
@@ -3578,14 +3611,14 @@ static void BufferIvOrEvStats(u8 mode)
     default:
         BufferStat(currHPString, 0, hp, 0, 3);
         BufferStat(gStringVar1, 0, hp2, 1, 3);
-        BufferStat(gStringVar2, natureMod[STAT_ATK - 1], atk, 2, 7);
-        BufferStat(gStringVar3, natureMod[STAT_DEF - 1], def, 3, 7);
+        BufferStat(gStringVar2, STAT_ATK, atk, 2, 7);
+        BufferStat(gStringVar3, STAT_DEF, def, 3, 7);
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsLeftColumnLayout);
         PrintLeftColumnStats();
 
-        BufferStat(gStringVar1, natureMod[STAT_SPATK - 1], spA, 0, 3);
-        BufferStat(gStringVar2, natureMod[STAT_SPDEF - 1], spD, 1, 3);
-        BufferStat(gStringVar3, natureMod[STAT_SPEED - 1], spe, 2, 3);
+        BufferStat(gStringVar1, STAT_SPATK, spA, 0, 3);
+        BufferStat(gStringVar2, STAT_SPDEF, spD, 1, 3);
+        BufferStat(gStringVar3, STAT_SPEED, spe, 2, 3);
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsRightColumnLayout);
         PrintRightColumnStats();
         break;
@@ -3633,14 +3666,24 @@ static void PrintLeftColumnStats(void)
     PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT), gStringVar4, 4, 1, 0, 0);
 }
 
-static void BufferRightColumnStats(void)
-{
-    DynamicPlaceholderTextUtil_Reset();
-    BufferStat(gStringVar1, STAT_SPATK, sMonSummaryScreen->summary.spatk, 0, 3);
-    BufferStat(gStringVar2, STAT_SPDEF, sMonSummaryScreen->summary.spdef, 1, 3);
-    BufferStat(gStringVar3, STAT_SPEED, sMonSummaryScreen->summary.speed, 2, 3);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsRightColumnLayout);
-}
+ static void BufferRightColumnStats(void)
+ {
+    // Reset to STATS graphics
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 3, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 4, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_BLANK_BLOCK, STATS_CORD_X + 5, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_STATS_BLOCK, STATS_CORD_X, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 1, STATS_CORD_X + 1, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 2, STATS_CORD_X + 2, STATS_CORD_Y, 1, 1, 2);
+    FillBgTilemapBufferRect(1, STATS_STATS_BLOCK + 3, STATS_CORD_X + 3, STATS_CORD_Y, 1, 1, 2);
+    CopyBgTilemapBufferToVram(1);
+
+     DynamicPlaceholderTextUtil_Reset();
+     BufferStat(gStringVar1, STAT_SPATK, sMonSummaryScreen->summary.spatk, 0, 3);
+     BufferStat(gStringVar2, STAT_SPDEF, sMonSummaryScreen->summary.spdef, 1, 3);
+     BufferStat(gStringVar3, STAT_SPEED, sMonSummaryScreen->summary.speed, 2, 3);
+     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsRightColumnLayout);
+ }
 
 static void PrintRightColumnStats(void)
 {

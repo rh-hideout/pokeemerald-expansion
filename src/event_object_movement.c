@@ -10615,6 +10615,7 @@ bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *object
 u16 GetObjectEventTrainerSightFlagByObjectEventId(u8 objEventId)
 {
     return GetObjectEventTemplateByLocalIdAndMap(gObjectEvents[objEventId].localId, gObjectEvents[objEventId].mapNum, gObjectEvents[objEventId].mapGroup)->trainerType;
+}
 // Get gfx data from daycare pokemon and store it in vars
 void GetDaycareGraphics(struct ScriptContext *ctx)
 {
