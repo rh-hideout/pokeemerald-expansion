@@ -2630,4 +2630,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Ups Bug-type moves."),
         .aiRating = 6,
     },
+
+    [ABILITY_OVEREAGER] =
+    {
+        .name = _("Overeager"),
+        .description = COMPOUND_STRING("Moves hit thrice."),
+        .aiRating = 10,
+    },
 };

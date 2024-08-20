@@ -1240,13 +1240,13 @@ static void Cmd_attackcanceler(void)
     }
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_OFF
-    && GetBattlerAbility(gBattlerAttacker) == ABILITY_PARENTAL_BOND
+    && (GetBattlerAbility(gBattlerAttacker) == ABILITY_PARENTAL_BOND || GetBattlerAbility(gBattlerAttacker) == ABILITY_OVEREAGER)
     && IsMoveAffectedByParentalBond(gCurrentMove, gBattlerAttacker)
     && !(gAbsentBattlerFlags & gBitTable[gBattlerTarget])
     && GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE)
     {
         gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_1ST_HIT;
-        gMultiHitCounter = 2;
+        gMultiHitCounter = GetBattlerAbility(gBattlerAttacker) == ABILITY_OVEREAGER ? 3 : 2;
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
         return;
     }
@@ -1417,6 +1417,12 @@ static void Cmd_attackcanceler(void)
         if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT)
         {
             gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_OFF; // No second hit if first hit was blocked
+            gSpecialStatuses[gBattlerAttacker].multiHitOn = 0;
+            gMultiHitCounter = 0;
+        } else if (GetBattlerAbility(gBattlerAttacker) == ABILITY_OVEREAGER // Only applies for Overeager
+            && gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT)
+        {
+            gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_OFF; // No third hit if second hit was blocked
             gSpecialStatuses[gBattlerAttacker].multiHitOn = 0;
             gMultiHitCounter = 0;
         }
@@ -1708,6 +1714,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             gBattlescriptCurrInstr = nextInstr;
     }
     else if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
+        || gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_3RD_HIT
         || (gSpecialStatuses[gBattlerAttacker].multiHitOn
         && (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE
         || !(gMovesInfo[move].effect == EFFECT_TRIPLE_KICK || gMovesInfo[move].effect == EFFECT_POPULATION_BOMB))))
@@ -2182,7 +2189,8 @@ static void Cmd_attackanimation(void)
     }
     else
     {
-        if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT) // No animation on second hit
+        if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
+            || gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_3RD_HIT) // No animation on second and third hits
         {
             gBattlescriptCurrInstr = cmd->nextInstr;
             return;
@@ -3206,7 +3214,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 break;
             case MOVE_EFFECT_PAYDAY:
                 // Don't scatter coins on the second hit of Parental Bond
-                if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && gSpecialStatuses[gBattlerAttacker].parentalBondState!= PARENTAL_BOND_2ND_HIT)
+                if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
+                    && gSpecialStatuses[gBattlerAttacker].parentalBondState!= PARENTAL_BOND_2ND_HIT
+                    && gSpecialStatuses[gBattlerAttacker].parentalBondState!= PARENTAL_BOND_3RD_HIT)
                 {
                     u16 payday = gPaydayMoney;
                     u16 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
@@ -3465,7 +3475,13 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 if (gBattleMoveDamage == 0)
                     gBattleMoveDamage = 1;
                 if (GetBattlerAbility(gEffectBattler) == ABILITY_PARENTAL_BOND)
+                {
                     gBattleMoveDamage *= 2;
+                }
+                else if (GetBattlerAbility(gEffectBattler) == ABILITY_OVEREAGER)
+                {
+                    gBattleMoveDamage *= 3;
+                }
 
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
                 gBattlescriptCurrInstr = BattleScript_MoveEffectRecoil;
@@ -13411,7 +13427,8 @@ static void Cmd_handlefurycutter(void)
             max = 5;
 
         if (gDisableStructs[gBattlerAttacker].furyCutterCounter < max
-            && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_2ND_HIT) // Don't increment counter on second hit
+            && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_2ND_HIT // Don't increment counter on second hit
+            && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_3RD_HIT) // Don't increment counter on third hit
             gDisableStructs[gBattlerAttacker].furyCutterCounter++;
 
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13446,7 +13463,8 @@ static void Cmd_presentdamagecalculation(void)
      * damage, the second strike will always deal damage too. This is a simple way
      * to replicate that effect.
      */
-    if (gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_2ND_HIT)
+    if (gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_2ND_HIT
+        && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_3RD_HIT)
     {
         if (rand < 102)
         {

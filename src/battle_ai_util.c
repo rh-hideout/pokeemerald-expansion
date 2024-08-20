@@ -620,14 +620,14 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             switch (gMovesInfo[move].effect)
             {
             case EFFECT_LEVEL_DAMAGE:
-                simDamage.expected = simDamage.minimum = gBattleMons[battlerAtk].level * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : 1);
+                simDamage.expected = simDamage.minimum = gBattleMons[battlerAtk].level * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : (aiData->abilities[battlerAtk] == ABILITY_OVEREAGER ? 3 : 1));
                 break;
             case EFFECT_PSYWAVE:
-                simDamage.expected = gBattleMons[battlerAtk].level * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : 1);
+                simDamage.expected = gBattleMons[battlerAtk].level * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : (aiData->abilities[battlerAtk] == ABILITY_OVEREAGER ? 3 : 1));
                 simDamage.minimum = simDamage.expected / 2;
                 break;
             case EFFECT_FIXED_DAMAGE_ARG:
-                simDamage.expected = simDamage.minimum = gMovesInfo[move].argument * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : 1);
+                simDamage.expected = simDamage.minimum = gMovesInfo[move].argument * (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND ? 2 : (aiData->abilities[battlerAtk] == ABILITY_OVEREAGER ? 3 : 1));
                 break;
             case EFFECT_MULTI_HIT:
                 if (move == MOVE_WATER_SHURIKEN && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_ASH)
@@ -659,7 +659,9 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             case EFFECT_SUPER_FANG:
                 simDamage.expected = simDamage.minimum = (aiData->abilities[battlerAtk] == ABILITY_PARENTAL_BOND
                     ? max(2, gBattleMons[battlerDef].hp * 3 / 4)
-                    : max(1, gBattleMons[battlerDef].hp / 2));
+                    : aiData->abilities[battlerAtk] == ABILITY_OVEREAGER
+                        ? max(3, gBattleMons[battlerDef].hp * 7 / 8)
+                        : max(1, gBattleMons[battlerDef].hp / 2));
                 break;
             case EFFECT_FINAL_GAMBIT:
                 simDamage.expected = simDamage.minimum = gBattleMons[battlerAtk].hp;

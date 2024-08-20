@@ -510,8 +510,9 @@
 #define NO_TARGET_OVERRIDE 0
 
 // Constants for Parental Bond
-#define PARENTAL_BOND_1ST_HIT 2
-#define PARENTAL_BOND_2ND_HIT 1
+#define PARENTAL_BOND_1ST_HIT 3
+#define PARENTAL_BOND_2ND_HIT 2
+#define PARENTAL_BOND_3RD_HIT 1 // Used for Overeager
 #define PARENTAL_BOND_OFF     0
 
 // Constants for if HandleScriptMegaPrimalBurst should handle Mega Evolution, Primal Reversion, or Ultra Burst.
