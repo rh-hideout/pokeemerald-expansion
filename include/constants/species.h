@@ -1637,8 +1637,12 @@
 #define SPECIES_YUUKIINO                                1530
 #define SPECIES_AQUADIIVA                               1531
 #define SPECIES_FORGOTNO                                1532
+#define SPECIES_HYDROIL                                 1533
+#define SPECIES_DUBSNAKE                                1534
+#define SPECIES_KUMATARO                                1535
+#define SPECIES_BEAREDAZE                               1536
 
-#define SPECIES_EGG (SPECIES_FORGOTNO + 1)
+#define SPECIES_EGG (SPECIES_BEAREDAZE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

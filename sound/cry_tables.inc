@@ -2441,6 +2441,14 @@ gCryTable::
 	cry Cry_Aquadiiva
 
 	cry Cry_Forgotno
+
+	cry Cry_Hydroil
+
+	cry Cry_Dubsnake
+
+	cry Cry_Kumataro
+
+	cry Cry_Bearedaze
 .endif
 
 	.align 2
@@ -4886,4 +4894,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Aquadiiva
 
 	cry_reverse Cry_Forgotno
+
+	cry_reverse Cry_Hydroil
+
+	cry_reverse Cry_Dubsnake
+
+	cry_reverse Cry_Kumataro
+
+	cry_reverse Cry_Bearedaze
 .endif

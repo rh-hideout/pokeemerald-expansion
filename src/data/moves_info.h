@@ -3154,9 +3154,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "An exhaust-gas attack\n"
             "that may also poison."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 30 : 20,
+        .power = 30,
         .type = TYPE_POISON,
-        .accuracy = 70,
+        .accuracy = 100,
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -20900,6 +20900,31 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_HAIL, COMBO_STARTER_RAIN_DANCE, COMBO_STARTER_SANDSTORM, COMBO_STARTER_SUNNY_DAY},
         .battleAnimScript = Move_WEATHER_BALL,
+    },
+
+    [MOVE_CRUSADER_CRASH] =
+    {
+        .name = COMPOUND_STRING("Crusader Crash"),
+        .description = COMPOUND_STRING(
+            "A rapid beatdown that always\n"
+            "crits, followed by a proud shout."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_FIGHTING,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .alwaysCriticalHit = TRUE,
+        .punchingMove = TRUE,
+        .metronomeBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_CRUSADER_CRASH,
     },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =

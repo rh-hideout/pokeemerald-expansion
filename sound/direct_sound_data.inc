@@ -6185,6 +6185,22 @@ Cry_Fucker::
 	.incbin "sound/direct_sound_samples/cries/fucker.bin"
 
 	.align 2
+Cry_Dubsnake::
+	.incbin "sound/direct_sound_samples/cries/dubsnake.bin"
+
+	.align 2
+Cry_Hydroil::
+	.incbin "sound/direct_sound_samples/cries/hydroil.bin"
+
+	.align 2
+Cry_Kumataro::
+	.incbin "sound/direct_sound_samples/cries/kumataro.bin"
+
+	.align 2
+Cry_Bearedaze::
+	.incbin "sound/direct_sound_samples/cries/bearedaze.bin"
+
+	.align 2
 Cry_Noxilium::
 	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
 
