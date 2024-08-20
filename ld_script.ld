@@ -981,6 +981,7 @@ SECTIONS {
         sound/songs/se_m_stat_decrease.o(.rodata);
         sound/songs/se_m_haze.o(.rodata);
         sound/songs/se_m_hyper_beam2.o(.rodata);
+        sound/songs/se_m_ora.o(.rodata);
         sound/songs/midi/se_rg_door.o(.rodata);
         sound/songs/midi/se_rg_card_flip.o(.rodata);
         sound/songs/midi/se_rg_card_flipping.o(.rodata);

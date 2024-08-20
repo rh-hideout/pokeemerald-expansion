@@ -4924,6 +4924,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(SE_M_STAT_DECREASE) \
     X(SE_M_HAZE) \
     X(SE_M_HYPER_BEAM2) \
+    X(SE_M_ORA) \
     X(SE_RG_DOOR) \
     X(SE_RG_CARD_FLIP) \
     X(SE_RG_CARD_FLIPPING) \

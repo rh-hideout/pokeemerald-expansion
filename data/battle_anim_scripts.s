@@ -17110,6 +17110,7 @@ Move_CRUSADER_CRASH::
 	setalpha 12, 8
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_TARGET
 	createsprite gFocusPunchFistSpriteTemplate, ANIM_TARGET, 2
+	playsewithpan SE_M_ORA, SOUND_PAN_TARGET
 	delay 10
 	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 2, -10, -8, ANIM_TARGET, 0
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 8, 0, 24, 1

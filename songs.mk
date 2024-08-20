@@ -1212,6 +1212,9 @@ $(MID_SUBDIR)/se_m_razor_wind.s: %.s: %.mid
 $(MID_SUBDIR)/se_m_razor_wind2.s: %.s: %.mid
 	$(MID) $< $@ -E -R$(STD_REVERB) -G128 -V090 -P4
 
+$(MID_SUBDIR)/se_m_ora.s: %.s: %.mid
+	$(MID) $< $@ -E -R$(STD_REVERB) -G128 -V090 -P4
+
 $(MID_SUBDIR)/se_m_swords_dance.s: %.s: %.mid
 	$(MID) $< $@ -E -R$(STD_REVERB) -G128 -V100 -P4
 

@@ -542,7 +542,8 @@
 #define PH_CURE_SOLO                606
 #define PH_NURSE_BLEND              607
 #define PH_NURSE_HELD               608
-#define PH_NURSE_SOLO               609
+#define PH_NURSE_SOLO               609 
+#define SE_M_ORA                    610 // SE_Crusader Crash last hit
 
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
