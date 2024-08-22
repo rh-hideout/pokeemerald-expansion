@@ -6173,12 +6173,20 @@ Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
 	.align 2
+Cry_Krackodemon::
+	.incbin "sound/direct_sound_samples/cries/krackodemon.bin"
+
+	.align 2
 Cry_Yuukiino::
 	.incbin "sound/direct_sound_samples/cries/yuukiino.bin"
 
 	.align 2
 Cry_Aquadiiva::
 	.incbin "sound/direct_sound_samples/cries/aquadiiva.bin"
+
+	.align 2
+Cry_Parmiausan::
+	.incbin "sound/direct_sound_samples/cries/parmiausan.bin"
 
 	.align 2
 Cry_Fucker::

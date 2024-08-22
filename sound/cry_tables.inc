@@ -2449,6 +2449,10 @@ gCryTable::
 	cry Cry_Kumataro
 
 	cry Cry_Bearedaze
+
+	cry Cry_Parmiausan
+
+	cry Cry_Krackodemon
 .endif
 
 	.align 2
@@ -4902,4 +4906,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Kumataro
 
 	cry_reverse Cry_Bearedaze
+
+	cry_reverse Cry_Parmiausan
+
+	cry_reverse Cry_Krackodemon
 .endif

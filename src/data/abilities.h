@@ -719,6 +719,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 3,
     },
 
+    [ABILITY_SHOWER_POWER] =
+    {
+        .name = _("Shower Power"),
+        .description = COMPOUND_STRING("Powers up in rain."),
+        .aiRating = 3,
+    },
+
     [ABILITY_QUICK_FEET] =
     {
         .name = _("Quick Feet"),

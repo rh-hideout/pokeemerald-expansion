@@ -22015,6 +22015,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Krackodemon[] = INCBIN_U32("graphics/pokemon/krackodemon/front.4bpp.lz");
+   const u32 gMonBackPic_Krackodemon[] = INCBIN_U32("graphics/pokemon/krackodemon/back.4bpp.lz");
+   const u32 gMonPalette_Krackodemon[] = INCBIN_U32("graphics/pokemon/krackodemon/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Krackodemon[] = INCBIN_U32("graphics/pokemon/krackodemon/shiny.gbapal.lz");
+   const u8 gMonIcon_Krackodemon[] = INCBIN_U8("graphics/pokemon/krackodemon/icon.4bpp");
+   const u8 gMonFootprint_Krackodemon[] = INCBIN_U8("graphics/pokemon/krackodemon/footprint.1bpp");
+
    const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
    const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
    const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");
@@ -22066,6 +22073,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/shiny.gbapal.lz");
    const u8 gMonIcon_Kumataro[] = INCBIN_U8("graphics/pokemon/kumataro/icon.4bpp");
    const u8 gMonFootprint_Kumataro[] = INCBIN_U8("graphics/pokemon/kumataro/footprint.1bpp");
+
+   const u32 gMonFrontPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/front.4bpp.lz");
+   const u32 gMonBackPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/back.4bpp.lz");
+   const u32 gMonPalette_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/shiny.gbapal.lz");
+   const u8 gMonIcon_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/icon.4bpp");
+   const u8 gMonFootprint_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/footprint.1bpp");
 
    const u32 gMonFrontPic_Bearedaze[] = INCBIN_U32("graphics/pokemon/bearedaze/front.4bpp.lz");
    const u32 gMonBackPic_Bearedaze[] = INCBIN_U32("graphics/pokemon/bearedaze/back.4bpp.lz");

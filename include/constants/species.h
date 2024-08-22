@@ -1641,8 +1641,10 @@
 #define SPECIES_DUBSNAKE                                1534
 #define SPECIES_KUMATARO                                1535
 #define SPECIES_BEAREDAZE                               1536
+#define SPECIES_PARMIAUSAN                              1537
+#define SPECIES_KRACKODEMON                             1538
 
-#define SPECIES_EGG (SPECIES_BEAREDAZE + 1)
+#define SPECIES_EGG (SPECIES_KRACKODEMON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

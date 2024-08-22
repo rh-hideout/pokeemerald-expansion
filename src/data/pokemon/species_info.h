@@ -364,7 +364,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Arachnote)
        .levelUpLearnset = sArachnoteLevelUpLearnset,
     },
-    
+
+        [SPECIES_KRACKODEMON] =
+    { 
+       .baseHP        = 109,
+       .baseAttack    = 73,
+       .baseDefense   = 64,
+       .baseSpeed     = 69,
+       .baseSpAttack  = 142,
+       .baseSpDefense = 90,
+       .types = { TYPE_ELECTRIC, TYPE_DARK },
+       .catchRate = 54,
+       .expYield = 148,
+       .evYield_SpAttack  = 1,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 120,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS },
+       .abilities = { ABILITY_CLOUD_NINE, ABILITY_LEVITATE, ABILITY_SHOWER_POWER, ABILITY_IRON_BARBS }, 
+       .bodyColor = BODY_COLOR_BLACK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Krackodemon"),
+      .cryId = CRY_KRACKODEMON,
+       .natDexNum = NATIONAL_DEX_KRACKODEMON,
+       .categoryName = _("Storm Cloud"),
+       .height = 31,
+       .weight = 6666,
+       .description = COMPOUND_STRING(
+           "It is unknown if Krackodemon cause storms\n"
+           "or merely wander into them. Researchers\n"
+           "cannot determine this even with assistance\n"
+           "from Cyclonian."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Krackodemon,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Krackodemon,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 4,
+       .backPic = gMonBackPic_Krackodemon,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Krackodemon,
+       .shinyPalette = gMonShinyPalette_Krackodemon,
+       .iconSprite = gMonIcon_Krackodemon,
+       .iconPalIndex = 0,
+       FOOTPRINT(Krackodemon)
+       .levelUpLearnset = sKrackodemonLevelUpLearnset,
+    },
         [SPECIES_YUUKIINO] =
     { 
        .baseHP        = 80,
@@ -474,6 +529,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Aquadiiva)
        .levelUpLearnset = sAquadiivaLevelUpLearnset,
+    },
+        [SPECIES_PARMIAUSAN] =
+    { 
+       .baseHP        = 115,
+       .baseAttack    = 80,
+       .baseDefense   = 72,
+       .baseSpeed     = 105,
+       .baseSpAttack  = 50,
+       .baseSpDefense = 72,
+       .types = { TYPE_NORMAL, TYPE_NORMAL },
+       .catchRate = 90,
+       .expYield = 106,
+       .evYield_HP  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 160,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FAIRY, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_AROMA_VEIL, ABILITY_PICKUP, ABILITY_UNAWARE, ABILITY_CUTE_CHARM}, 
+       .bodyColor = BODY_COLOR_YELLOW,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Parmiausan"),
+       .cryId = CRY_PARMIAUSAN,
+       .natDexNum = NATIONAL_DEX_PARMIAUSAN,
+       .categoryName = _("Parmesan"),
+       .height = 5,
+       .weight = 50,
+       .description = COMPOUND_STRING(
+           "Parmiausan's thick, high-quality skin can\n"
+           "be endlessly grated for cheese without it\n"
+           "feeling pain. This has lead to it being\n"
+           "hunted by cheese factories."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Parmiausan,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Parmiausan,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Parmiausan,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Parmiausan,
+       .shinyPalette = gMonShinyPalette_Parmiausan,
+       .iconSprite = gMonIcon_Parmiausan,
+       .iconPalIndex = 0,
+       FOOTPRINT(Parmiausan)
+       .levelUpLearnset = sParmiausanLevelUpLearnset,
     },
 
         [SPECIES_FUCKER] =
@@ -806,7 +915,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Kumataro,
        .shinyPalette = gMonShinyPalette_Kumataro,
        .iconSprite = gMonIcon_Kumataro,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Kumataro)
        .levelUpLearnset = sKumataroLevelUpLearnset,
     },
