@@ -1486,6 +1486,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
+    [EFFECT_SPATK_ACCURACY_UP] =
+    {
+        .battleScript = BattleScript_EffectSpAtkAccUp,
+        .battleTvScore = 0, // TODO: Assign points
+        .encourageEncore = TRUE,
+    },
+
     [EFFECT_ATTACK_SPATK_UP] =
     {
         .battleScript = BattleScript_EffectAttackSpAttackUp,
@@ -1630,6 +1637,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_HIT_ENEMY_HEAL_ALLY] =
     {
         .battleScript = BattleScript_EffectHitEnemyHealAlly,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_HIT_TAKE_UR_MEDS] =
+    {
+        .battleScript = BattleScript_EffectLightScreenPollenPuff,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1803,6 +1816,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_GEOMANCY] =
     {
         .battleScript = BattleScript_EffectGeomancy,
+        .battleTvScore = 0, // TODO: Assign points
+        .twoTurnEffect = TRUE,
+    },
+
+    [EFFECT_AWAKEN] =
+    {
+        .battleScript = BattleScript_EffectAwaken,
         .battleTvScore = 0, // TODO: Assign points
         .twoTurnEffect = TRUE,
     },
@@ -2026,6 +2046,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_COURT_CHANGE] =
     {
         .battleScript = BattleScript_EffectCourtChange,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_TURNABOUT] =
+    {
+        .battleScript = BattleScript_EffectTurnabout,
         .battleTvScore = 0, // TODO: Assign points
     },
 

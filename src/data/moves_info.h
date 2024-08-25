@@ -20767,7 +20767,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Protects user and raises\n"
             "Defense."),
-        .effect = EFFECT_PETRIFY,
+        .effect = EFFECT_PETRIFY, // THIS SHIT IS FUCKING BROKEN AND SHOULD NOT RAISE DEFENSE WHEN IT FAILS!! FIX IT BEFORE RELEASE -rex
         .power = 0,
         .type = TYPE_ROCK,
         .accuracy = 0,
@@ -20925,6 +20925,477 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_CRUSADER_CRASH,
+    },
+
+    [MOVE_SHADOW_SCALES] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("ShadowScales", "Shadow Scales"),
+        .description = COMPOUND_STRING(
+            "Shrouds the target with\n"
+            "dark scales. Drops Defense."),
+        .effect = EFFECT_HIT,
+        .power = 110,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .soundMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_CLANGING_SCALES,
+    },
+
+    [MOVE_MORE_GUN] =
+    {
+        .name = COMPOUND_STRING("More Gun"),
+        .description = COMPOUND_STRING(
+            "And if that don't work?\n"
+            "Use more gun. Hits 6 times."),
+        .effect = EFFECT_HIT,
+        .power = 16,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .strikeCount = 6,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SURGING_STRIKES,
+    },
+
+    [MOVE_TURNABOUT] =
+    {
+        .name = COMPOUND_STRING("Turnabout"),
+        .description = COMPOUND_STRING(
+            "Swaps the field effects\n"
+            "and stats on each side."),
+        .effect = EFFECT_TURNABOUT,
+        .power = 0,
+        .type = TYPE_GHOST,
+        .accuracy = 0,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .ignoresProtect = TRUE,
+        .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_COURT_CHANGE,
+    },
+
+    [MOVE_AWAKEN] =
+    {
+        .name = COMPOUND_STRING("Awaken"),
+        .description = COMPOUND_STRING(
+            "Raises Atk, Def and\n"
+            "Speed on the 2nd turn."),
+        .effect = EFFECT_AWAKEN,
+        .power = 0,
+        .type = TYPE_FIGHTING,
+        .accuracy = 0,
+        .pp = 10,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_ALL_STATS_UP_1 },
+        .sleepTalkBanned = TRUE,
+        .instructBanned = TRUE,
+        .skyBattleBanned = TRUE,
+        .argument = TWO_TURN_ARG(STRINGID_PKNMABSORBINGPOWER),
+        .contestEffect = CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_GEOMANCY,
+    },
+
+    [MOVE_PHASE_THROUGH] =
+    {
+        .name = COMPOUND_STRING("Phase Through"),
+        .description = sUTurnDescription,
+        .effect = EFFECT_HIT_ESCAPE,
+        .power = 60,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_U_TURN,
+    },
+
+    [MOVE_COLD_CUTTER] =
+    {
+        .name = COMPOUND_STRING("Cold Cutter"),
+        .description = COMPOUND_STRING(
+            "Slices with a freezing\n"
+            "blade; high crit ratio."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_ICE,
+        .accuracy = 100,
+        .criticalHitStage = 1,
+        .pp = 15,
+        .makesContact = TRUE,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .slicingMove = TRUE,
+        .battleAnimScript = Move_AQUA_CUTTER,
+    },
+
+    [MOVE_GAZER_BEAM] =
+    {
+        .name = COMPOUND_STRING("Gazer Beam"),
+        .description = COMPOUND_STRING(
+            "Super effective on Steel-\n"
+            "types. May inflict a burn."),
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
+        .power = 60,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = TYPE_STEEL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 30,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_FREEZE_DRY,
+    },
+
+    [MOVE_BRANDING_BLADE] =
+    {
+        .name = COMPOUND_STRING("Branding Blade"),
+        .description = COMPOUND_STRING(
+            "Brands and curses the target,\n"
+            "disabling their ability."),
+        .effect = EFFECT_HIT,
+        .power = 120,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .recoil = 33,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .zMove = { .powerOverride = 140 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_CORE_ENFORCER,
+        }),
+        .contestEffect = CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_CORE_ENFORCER,
+    },
+
+    [MOVE_MUD_MAELSTROM] =
+    {
+        .name = COMPOUND_STRING("Mud Maelstrom"),
+        .description = COMPOUND_STRING(
+            "Torrents the foe with mud\n"
+            "which may reduce Speed."),
+        .effect = EFFECT_HIT,
+        .power = 110,
+        .type = TYPE_GROUND,
+        .accuracy = 90,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .chance = 30,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SANDSTORM},
+        .battleAnimScript = Move_MUD_SHOT,
+    },
+
+    [MOVE_MEDDY_MEDS] =
+    {
+        .name = COMPOUND_STRING("Meddy Meds"),
+        .description = COMPOUND_STRING(
+            "Summons Light Screen on hit,\n"
+            "heals ally if targeted."),
+        .effect = EFFECT_HIT_TAKE_UR_MEDS,
+        .power = 100,
+        .type = TYPE_POISON,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS < GEN_8,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = Move_GLITZY_GLOW,
+    },
+
+    [MOVE_FRIGID_END] =
+    {
+        .name = COMPOUND_STRING("Frigid End"),
+        .description = COMPOUND_STRING(
+            "Slices with a frozen blade\n"
+            "that is also Ice-type."),
+        .effect = EFFECT_TWO_TYPED_MOVE,
+        .power = 105,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .zMove = { .powerOverride = 170 },
+        .argument = TYPE_ICE,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .slicingMove = TRUE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_FLYING_PRESS,
+    },
+
+    [MOVE_BEAM_BLADE] =
+    {
+        .name = COMPOUND_STRING("Beam Blade"),
+        .description = COMPOUND_STRING(
+            "Attacks with razor-sharp\n"
+            "darkness. High crit ratio."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_DARK,
+        .accuracy = 80,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .slicingMove = TRUE,
+        .criticalHitStage = 1,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_DARK_PULSE,
+    },
+
+    [MOVE_CALIBRATE] =
+    {
+        .name = COMPOUND_STRING("Calibrate"),
+        .description = COMPOUND_STRING(
+            "The user focuses its aim\n"
+            "to raise Sp. Atk and Acc."),
+        .effect = EFFECT_SPATK_ACCURACY_UP,
+        .power = 0,
+        .type = TYPE_STEEL,
+        .accuracy = 0,
+        .pp = 15,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_ATK_UP_1 },
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_HONE_CLAWS,
+    },
+
+    [MOVE_CHERRY_BOMB] =
+    {
+        .name = COMPOUND_STRING("Cherry Bomb"),
+        .description = COMPOUND_STRING(
+            "Tosses two explosive cherries\n"
+            "at the foe that may burn."),
+        .effect = EFFECT_HIT,
+        .power = 35,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .strikeCount = 2,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_DOUBLE_KICK,
+    },
+
+    [MOVE_CHILI_POWDER] =
+    {
+        .name = COMPOUND_STRING("Chili Powder"),
+        .description = COMPOUND_STRING(
+            "Scatters hot powder on the\n"
+            "foe to burn them."),
+        .effect = EFFECT_WILL_O_WISP,
+        .power = 0,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .magicCoatAffected = TRUE,
+        .powderMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SWEET_SCENT},
+        .battleAnimScript = Move_SLEEP_POWDER,
+    },
+
+    [MOVE_CLOBBER] =
+    {
+        .name = COMPOUND_STRING("Clobber"),
+        .description = COMPOUND_STRING(
+            "Playfully smacks the target\n"
+            "around without a care."),
+        .power = 40,
+        .effect = EFFECT_HIT,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 35,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_DEFENSE_CURL, COMBO_STARTER_HARDEN, COMBO_STARTER_LEER},
+        .battleAnimScript = Move_TACKLE,
+    },
+
+    [MOVE_EARTH_SHATTER] =
+    {
+        .name = COMPOUND_STRING("Earth Shatter"),
+        .description = COMPOUND_STRING(
+            "Erupts the ground below the\n"
+            "target, hurting the user."),
+        .effect = EFFECT_HIT,
+        .power = 120,
+        .type = TYPE_GROUND,
+        .accuracy = 100,
+        .recoil = 33,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY, COMBO_STARTER_HARDEN},
+        .battleAnimScript = Move_EARTH_POWER,
+    },
+
+    [MOVE_EXTINCTION] =
+    {
+        .name = COMPOUND_STRING("Extinction"),
+        .description = COMPOUND_STRING(
+            "Crushes the foe instantly\n"
+            "with a comically slow meteor."),
+        .effect = EFFECT_OHKO,
+        .power = 1,
+        .type = TYPE_DRAGON,
+        .accuracy = 30,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .damagesUnderground = TRUE,
+        .skyBattleBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_EARTHQUAKE},
+        .battleAnimScript = Move_FISSURE,
+    },
+
+    [MOVE_FRACTUS] =
+    {
+        .name = COMPOUND_STRING("Fractus"),
+        .description = COMPOUND_STRING(
+            "Destroys screens with\n"
+            "sharp blades of wind."),
+        .effect = EFFECT_BRICK_BREAK,
+        .power = 75,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .battleAnimScript = Move_BRICK_BREAK,
+    },
+
+    [MOVE_STICKY_TONGUE] =
+    {
+        .name = COMPOUND_STRING("Sticky Tongue"),
+        .description = COMPOUND_STRING(
+            "Eats the foe's held\n"
+            "item to prevent its use."),
+        .effect = EFFECT_KNOCK_OFF,
+        .power = 70,
+        .type = TYPE_POISON,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STICKY_TONGUE, // you have no fucking idea how much of a hassle this was to code -rex
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FAKE_OUT},
+        .battleAnimScript = Move_KNOCK_OFF,
     },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
