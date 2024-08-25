@@ -1643,8 +1643,15 @@
 #define SPECIES_BEAREDAZE                               1536
 #define SPECIES_PARMIAUSAN                              1537
 #define SPECIES_KRACKODEMON                             1538
+#define SPECIES_MAMMOUNT                                1539
+#define SPECIES_MOLTAMA                                 1540
+#define SPECIES_MOLTERRA                                1541
+#define SPECIES_MAMINI                                  1542
+#define SPECIES_KRISSY                                  1543
+#define SPECIES_BLUBBASTARD                             1544
+#define SPECIES_FLUBBSTER                               1545
 
-#define SPECIES_EGG (SPECIES_KRACKODEMON + 1)
+#define SPECIES_EGG (SPECIES_FLUBBSTER + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

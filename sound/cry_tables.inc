@@ -2453,6 +2453,20 @@ gCryTable::
 	cry Cry_Parmiausan
 
 	cry Cry_Krackodemon
+
+	cry Cry_Mammount
+
+	cry Cry_Moltama
+
+	cry Cry_Molterra
+
+	cry Cry_Mamini
+
+	cry Cry_Krissy
+
+	cry Cry_Blubbastard
+
+	cry Cry_Flubbster
 .endif
 
 	.align 2
@@ -4910,4 +4924,16 @@ gCryTable_Reverse::
 	cry_reverse Cry_Parmiausan
 
 	cry_reverse Cry_Krackodemon
+
+	cry_reverse Cry_Mammount
+
+	cry_reverse Cry_Moltama
+
+	cry_reverse Cry_Molterra
+
+	cry_reverse Cry_Mamini
+
+	cry_reverse Cry_Blubbastard
+
+	cry_reverse Cry_Flubbster
 .endif

@@ -9668,6 +9668,18 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
         break;
     }
 
+    switch (defAbility)
+    {
+    case ABILITY_SHAVED_ICE:
+        if (moveType == TYPE_FIRE || moveType == TYPE_ROCK || moveType == TYPE_FIGHTING || moveType == TYPE_STEEL)
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+            if (updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_SHAVED_ICE);
+        }
+        break;
+    }
+
     // ally's abilities
     if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
     {

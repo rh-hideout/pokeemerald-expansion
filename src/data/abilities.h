@@ -374,6 +374,14 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .breakable = TRUE,
     },
 
+    [ABILITY_SHAVED_ICE] =
+    {
+        .name = _("Shaved Ice"),
+        .description = COMPOUND_STRING("Ice weakness protection."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+
     [ABILITY_EARLY_BIRD] =
     {
         .name = _("Early Bird"),

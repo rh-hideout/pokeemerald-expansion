@@ -6173,8 +6173,20 @@ Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
 	.align 2
+Cry_Krissy::
+	.incbin "sound/direct_sound_samples/cries/krissy.bin"
+
+	.align 2
 Cry_Krackodemon::
 	.incbin "sound/direct_sound_samples/cries/krackodemon.bin"
+
+	.align 2
+Cry_Blubbastard::
+	.incbin "sound/direct_sound_samples/cries/blubbastard.bin"
+
+	.align 2
+Cry_Flubbster::
+	.incbin "sound/direct_sound_samples/cries/flubbster.bin"
 
 	.align 2
 Cry_Yuukiino::
@@ -6183,6 +6195,14 @@ Cry_Yuukiino::
 	.align 2
 Cry_Aquadiiva::
 	.incbin "sound/direct_sound_samples/cries/aquadiiva.bin"
+
+	.align 2
+Cry_Mamini::
+	.incbin "sound/direct_sound_samples/cries/mamini.bin"
+
+	.align 2
+Cry_Mammount::
+	.incbin "sound/direct_sound_samples/cries/mammount.bin"
 
 	.align 2
 Cry_Parmiausan::
@@ -6199,6 +6219,14 @@ Cry_Dubsnake::
 	.align 2
 Cry_Hydroil::
 	.incbin "sound/direct_sound_samples/cries/hydroil.bin"
+
+.align 2
+Cry_Moltama::
+	.incbin "sound/direct_sound_samples/cries/moltama.bin"
+
+	.align 2
+Cry_Molterra::
+	.incbin "sound/direct_sound_samples/cries/molterra.bin"
 
 	.align 2
 Cry_Kumataro::
