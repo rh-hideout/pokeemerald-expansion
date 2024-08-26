@@ -3101,6 +3101,17 @@ const struct SpriteTemplate gPsyshockSmokeSpriteTemplate =
     .callback = AnimSpriteOnMonPos,
 };
 
+const struct SpriteTemplate gChainBindingSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PURPLE_CHAIN,
+    .paletteTag = ANIM_TAG_PURPLE_CHAIN,
+    .oam = &gOamData_AffineNormal_ObjNormal_64x32,
+    .anims = sAnims_ConstrictBinding,
+    .images = NULL,
+    .affineAnims = sAffineAnims_ConstrictBinding,
+    .callback = AnimConstrictBinding,
+};
+
 // functions
 static void AnimGrassKnot(struct Sprite *sprite)
 {
@@ -6567,11 +6578,11 @@ void PrepareDoubleTeamAnim(u32 taskId, u32 animBattler, bool32 forAllySwitch)
             gSprites[spriteId].sBattlerFlank = (animBattler != ANIM_ATTACKER);
         else
             gSprites[spriteId].sBattlerFlank = (animBattler == ANIM_ATTACKER);
-        
+
         // correct direction on opponent side
         if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
             gSprites[spriteId].sBattlerFlank ^= 1;
-        
+
         gSprites[spriteId].callback = AnimDoubleTeam;
         task->tBlendSpritesCount++;
     }
@@ -6603,7 +6614,7 @@ static void ReloadBattlerSprites(u32 battler, struct Pokemon *party)
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
     // If battler has an indicator for a gimmick, hide the sprite until the move animation finishes.
     UpdateIndicatorVisibilityAndType(gHealthboxSpriteIds[battler], TRUE);
-    
+
     // Try to recreate shadow sprite
     if (gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteId < MAX_SPRITES)
     {
@@ -7229,6 +7240,14 @@ static const union AffineAnimCmd sCompressTargetHorizontallyAffineAnimCmds[] =
 	AFFINEANIMCMD_END,
 };
 
+static const union AffineAnimCmd sCompressTargetHorizontallyAffineAnimCmdsFast[] =
+{
+	AFFINEANIMCMD_FRAME(32, 0, 0, 16), //Compress
+	AFFINEANIMCMD_FRAME(0, 0, 0, 32),
+	AFFINEANIMCMD_FRAME(-32, 0, 0, 16),
+	AFFINEANIMCMD_END,
+};
+
 static void AnimTask_CompressTargetStep(u8 taskId)
 {
 	struct Task* task = &gTasks[taskId];
@@ -7242,6 +7261,14 @@ void AnimTask_CompressTargetHorizontally(u8 taskId)
 	struct Task* task = &gTasks[taskId];
 	u8 spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
 	PrepareAffineAnimInTaskData(task, spriteId, sCompressTargetHorizontallyAffineAnimCmds);
+	task->func = AnimTask_CompressTargetStep;
+}
+
+void AnimTask_CompressTargetHorizontallyFast(u8 taskId)
+{
+	struct Task* task = &gTasks[taskId];
+	u8 spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
+	PrepareAffineAnimInTaskData(task, spriteId, sCompressTargetHorizontallyAffineAnimCmdsFast);
 	task->func = AnimTask_CompressTargetStep;
 }
 
