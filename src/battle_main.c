@@ -5763,6 +5763,9 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
     case ABILITY_GALVANIZE:
         ateType = TYPE_ELECTRIC;
         break;
+    case ABILITY_DEGENERATE:
+        ateType = TYPE_DARK;
+        break;
     default:
         ateType = TYPE_NONE;
         break;

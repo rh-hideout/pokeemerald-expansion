@@ -1857,6 +1857,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_BOUNDARY] =
+    {
+        .name = _("Boundary"),
+        .description = COMPOUND_STRING("Greatly ups “supereffective”."),
+        .aiRating = 6,
+    },
+
     [ABILITY_INTREPID_SWORD] =
     {
     #if B_EXPANDED_ABILITY_NAMES == TRUE
@@ -2638,6 +2645,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 2,
         .breakable = TRUE,
     },
+    
 
     [ABILITY_PUPPETEER] =
     {
@@ -2652,4 +2660,49 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Moves hit thrice."),
         .aiRating = 10,
     },
+
+    [ABILITY_STOP_SIGN] =
+    {
+        .name = _("Stop Sign"),
+        .description = COMPOUND_STRING("Prevents self switch moves."),
+        .aiRating = 2,
+        .breakable = TRUE,
+    },
+
+    [ABILITY_MADMAN] =
+    {
+        .name = _("Madman"),
+        .description = COMPOUND_STRING("Contact moves confuse."),
+        .aiRating = 2,
+        .breakable = TRUE,
+    },
+
+    [ABILITY_BRAIN_POWER] =
+    {
+        .name = _("Brain Power"),
+        .description = COMPOUND_STRING("Raises Special Attack."),
+        .aiRating = 10,
+    },
+
+    [ABILITY_BIG_GUY] =
+    {
+        .name = _("Big Guy"),
+        .description = COMPOUND_STRING("Sets Gravity."),
+        .aiRating = 10,
+    },
+
+    [ABILITY_DEGENERATE] =
+    {
+        .name = _("Degenerate"),
+        .description = COMPOUND_STRING("Normal moves become Dark."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_BLADEMASTER] =
+    {
+        .name = _("Blademaster"),
+        .description = COMPOUND_STRING("Strengthens slicing moves.Raises Crit"),
+        .aiRating = 7,
+    },
+
 };
