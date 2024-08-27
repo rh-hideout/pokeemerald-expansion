@@ -7,7 +7,7 @@ EverGrandeCity_PokemonCenter_1F_MapScripts::
 	.byte 0
 
 EverGrandeCity_PokemonCenter_1F_OnTransition:
-	setrespawn HEAL_LOCATION_EVER_GRANDE_CITY
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	call_if_unset FLAG_MET_SCOTT_IN_EVERGRANDE, EverGrandeCity_PokemonCenter_1F_EventScript_TryShowScott
 	end
 

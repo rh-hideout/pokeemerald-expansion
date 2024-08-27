@@ -6,7 +6,7 @@ PacifidlogTown_PokemonCenter_1F_MapScripts::
 	.byte 0
 
 PacifidlogTown_PokemonCenter_1F_OnTransition:
-	setrespawn HEAL_LOCATION_PACIFIDLOG_TOWN
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	end
 
 PacifidlogTown_PokemonCenter_1F_EventScript_Nurse::

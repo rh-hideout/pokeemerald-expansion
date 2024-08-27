@@ -4,7 +4,7 @@
   "layout": "LAYOUT_GRANITE_CAVE_B1F",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_GRANITE_CAVE",
-  "requires_flash": true,
+  "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_UNDERGROUND",
   "allow_cycling": true,
@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
@@ -23,7 +23,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_POKE_BALL",
+      "trainer_sight_or_berry_tree_id": "ITEM_SACRED_ASH",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_GRANITE_CAVE_B1F_POKE_BALL"
     }
@@ -79,6 +79,10 @@
       "dest_warp_id": "4"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

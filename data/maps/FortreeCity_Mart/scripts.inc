@@ -15,14 +15,17 @@ FortreeCity_Mart_EventScript_Clerk::
 FortreeCity_Mart_Pokemart:
 	.2byte ITEM_GREAT_BALL
 	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_SUPER_POTION
-	.2byte ITEM_HYPER_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
 	.2byte ITEM_AWAKENING
-	.2byte ITEM_REVIVE
-	.2byte ITEM_SUPER_REPEL
-	.2byte ITEM_WOOD_MAIL
+	.2byte ITEM_FLAME_ORB
+	.2byte ITEM_TOXIC_ORB
+	.2byte ITEM_CHILAN_BERRY
+	.2byte ITEM_CHOPLE_BERRY
+	.2byte ITEM_RINDO_BERRY
+	.2byte ITEM_OCCA_BERRY
+	.2byte ITEM_COBA_BERRY
+	.2byte ITEM_CHARTI_BERRY
 	.2byte ITEM_NONE
 	release
 	end

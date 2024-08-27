@@ -432,9 +432,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "A 2-turn move that strikes\n"
             "the foe on the 2nd turn."),
-        .effect = EFFECT_TWO_TURNS_ATTACK,
+        .effect = EFFECT_HIT,
         .power = 80,
-        .type = TYPE_NORMAL,
+        .type = TYPE_FLYING,
         .accuracy = 100,
         .criticalHitStage = 1,
         .pp = 10,
@@ -3793,14 +3793,14 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
     [MOVE_FLASH] =
     {
-        .name = COMPOUND_STRING("Flash"),
+        .name = COMPOUND_STRING("Flash n Flee"),
         .description = COMPOUND_STRING(
             "Looses a powerful blast of\n"
             "light that cuts accuracy."),
-        .effect = EFFECT_ACCURACY_DOWN,
+        .effect = EFFECT_TELEPORT,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 100 : 70,
+        .accuracy = 100,
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -4016,7 +4016,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLINCH,
-            .chance = 30,
+            .chance = 20,
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -8055,7 +8055,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A powdery attack that may\n"
             "raise abilities."),
         .effect = EFFECT_HIT,
-        .power = 60,
+        .power = 90,
         .type = TYPE_BUG,
         .accuracy = 100,
         .pp = 5,
@@ -9947,7 +9947,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Attacks with an aura blast\n"
             "that cannot be evaded."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 80 : 90,
+        .power = 90,
         .type = TYPE_FIGHTING,
         .accuracy = 0,
         .pp = 20,
@@ -10213,9 +10213,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Tackles the foe with menace.\n"
             "May cause flinching."),
         .effect = EFFECT_HIT,
-        .power = 100,
+        .power = 110,
         .type = TYPE_DRAGON,
-        .accuracy = 75,
+        .accuracy = 80,
         .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -14734,7 +14734,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Immerses the foe in heated\n"
             "steam. May inflict a burn."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_HYDRO_STEAM,
         .power = 110,
         .type = TYPE_WATER,
         .accuracy = 95,
@@ -19438,7 +19438,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
         .argument = ARG_TRY_REMOVE_TERRAIN_HIT, // Remove the active field terrain if there is one.
-        .skyBattleBanned = B_EXTRAPOLATED_MOVE_FLAGS,
         .battleAnimScript = Move_ICE_SPINNER,
     },
 

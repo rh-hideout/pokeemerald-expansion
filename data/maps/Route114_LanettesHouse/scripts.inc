@@ -10,11 +10,20 @@ Route114_LanettesHouse_EventScript_Lanette::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_DOLL_LANETTE, Route114_LanettesHouse_EventScript_OfferAdvice
-	setflag FLAG_SYS_PC_LANETTE
 	msgbox Route114_LanettesHouse_Text_EverythingClutteredKeepThis, MSGBOX_DEFAULT
-	givedecoration DECOR_LOTAD_DOLL
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowNoRoomForDecor
+	giveitem ITEM_MAGNET
+	giveitem ITEM_METAL_COAT
+	giveitem ITEM_HARD_STONE
+	giveitem ITEM_NEVER_MELT_ICE
+	giveitem ITEM_SILK_SCARF
+	giveitem ITEM_TWISTED_SPOON
+	giveitem ITEM_SPELL_TAG
+	giveitem ITEM_SHARP_BEAK
+	giveitem ITEM_DRAGON_FANG
+	giveitem ITEM_POISON_BARB
+	giveitem ITEM_SILVER_POWDER
 	setflag FLAG_RECEIVED_DOLL_LANETTE
+	setflag FLAG_SYS_PC_LANETTE
 	release
 	end
 

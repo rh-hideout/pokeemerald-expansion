@@ -6,7 +6,7 @@ LilycoveCity_PokemonCenter_1F_MapScripts::
 	.byte 0
 
 LilycoveCity_PokemonCenter_1F_OnTransition:
-	setrespawn HEAL_LOCATION_LILYCOVE_CITY
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	goto LilycoveCity_PokemonCenter_1F_EventScript_SetLilycoveLadyGfx
 	end
 

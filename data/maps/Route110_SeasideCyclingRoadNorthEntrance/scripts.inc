@@ -12,7 +12,6 @@ Route110_SeasideCyclingRoadNorthEntrance_EventScript_BikeCheck::
 	lockall
 	specialvar VAR_RESULT, GetPlayerAvatarBike
 	goto_if_eq VAR_RESULT, 0, Route110_SeasideCyclingRoadNorthEntrance_EventScript_NoBike
-	setflag FLAG_SYS_CYCLING_ROAD
 	setvar VAR_TEMP_1, 1
 	releaseall
 	end
@@ -28,14 +27,7 @@ Route110_SeasideCyclingRoadNorthEntrance_EventScript_NoBike::
 Route110_SeasideCyclingRoadNorthEntrance_Movement_PushPlayerBackFromCounter:
 	walk_left
 	step_end
-
-Route110_SeasideCyclingRoadNorthEntrance_EventScript_ClearCyclingRoad::
-	lockall
-	clearflag FLAG_SYS_CYCLING_ROAD
-	setvar VAR_TEMP_1, 0
-	releaseall
-	end
-
+	
 Route110_SeasideCyclingRoadNorthEntrance_Text_GoAllOutOnCyclingRoad:
 	.string "On CYCLING ROAD, you can go all out\n"
 	.string "and cycle as fast as you'd like.\p"

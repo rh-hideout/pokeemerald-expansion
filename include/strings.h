@@ -3046,4 +3046,82 @@ extern const u8 gText_PlantBerry[];
 extern const u8 gText_AM[];
 extern const u8 gText_PM[];
 
+extern const u8 gText_Gen1[];
+extern const u8 gText_Gen2[];
+extern const u8 gText_Gen4[];
+extern const u8 gText_Gen5[];
+extern const u8 gText_Gen6[];
+extern const u8 gText_Gen7[];
+extern const u8 gText_Gen8[];
+
+extern const u8 gText_1Gen1[];
+extern const u8 gText_1Gen2[];
+extern const u8 gText_1Gen4[];
+extern const u8 gText_1Gen5[];
+extern const u8 gText_1Gen6[];
+extern const u8 gText_1Gen7[];
+extern const u8 gText_1Gen8[];
+
+extern const u8 gText_2Gen1[];
+extern const u8 gText_2Gen2[];
+extern const u8 gText_2Gen4[];
+extern const u8 gText_2Gen5[];
+extern const u8 gText_2Gen6[];
+extern const u8 gText_2Gen7[];
+extern const u8 gText_2Gen8[];
+
+extern const u8 gText_3Gen1[];
+extern const u8 gText_3Gen2[];
+extern const u8 gText_3Gen4[];
+extern const u8 gText_3Gen5[];
+extern const u8 gText_3Gen6[];
+extern const u8 gText_3Gen7[];
+extern const u8 gText_3Gen8[];
+
+extern const u8 gText_Generation1[];
+extern const u8 gText_Generation2[];
+extern const u8 gText_Generation3[];
+extern const u8 gText_Generation4[];
+extern const u8 gText_Generation5[];
+extern const u8 gText_Generation6[];
+extern const u8 gText_Generation7[];
+extern const u8 gText_Generation8[];
+
+extern const u8 gText_Mew[];
+extern const u8 gText_Mewtwo[];
+extern const u8 gText_Lugia[];
+extern const u8 gText_Hooh[];
+extern const u8 gText_Celebi[];
+extern const u8 gText_Latias[];
+extern const u8 gText_Latios[];
+extern const u8 gText_Jirachi[];
+extern const u8 gText_Heatran[];
+extern const u8 gText_Cresselia[];
+extern const u8 gText_ShayminS[];
+extern const u8 gText_Dialga[];
+extern const u8 gText_Palkia[];
+extern const u8 gText_Giratina[];
+extern const u8 gText_Reshiram[];
+extern const u8 gText_Zekrom[];
+extern const u8 gText_Kyurem[];
+extern const u8 gText_Genesect[];
+extern const u8 gText_TornadusT[];
+extern const u8 gText_LandorusT[];
+extern const u8 gText_ThundurusI[];
+extern const u8 gText_ThundurusT[];
+extern const u8 gText_Keldeo[];
+extern const u8 gText_Cobalion[];
+extern const u8 gText_Terrakion[];
+extern const u8 gText_Virizion[];
+extern const u8 gText_HoopaU[];
+extern const u8 gText_Volcanion[];
+extern const u8 gText_Magearna[];
+extern const u8 gText_Marshadow[];
+extern const u8 gText_Zeraora[];
+extern const u8 gText_Melmetal[];
+extern const u8 gText_Zarude[];
+extern const u8 gText_UrshifuR[];
+extern const u8 gText_UrshifuS[];
+extern const u8 gText_Eternatus[];
+
 #endif // GUARD_STRINGS_H

@@ -9,10 +9,10 @@
   "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,
-  "allow_running": false,
+  "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_GYM",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_BRAWLY",
@@ -29,21 +29,21 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
-      "x": 2,
-      "y": 18,
+      "x": 1,
+      "y": 9,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "DewfordTown_Gym_EventScript_Takao",
-      "flag": "0"
+      "flag": "FLAG_BADGE02_GET"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
-      "x": 15,
-      "y": 3,
+      "x": 9,
+      "y": 9,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -55,23 +55,23 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
-      "x": 12,
-      "y": 25,
+      "x": 8,
+      "y": 19,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "2",
+      "trainer_sight_or_berry_tree_id": "1",
       "script": "DewfordTown_Gym_EventScript_Laura",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MAN_2",
-      "x": 5,
-      "y": 24,
+      "x": 4,
+      "y": 25,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -81,16 +81,16 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
-      "x": 7,
-      "y": 8,
+      "x": 9,
+      "y": 6,
       "elevation": 1,
-      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "DewfordTown_Gym_EventScript_Cristian",
-      "flag": "0"
+      "flag": "FLAG_BADGE02_GET"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
@@ -101,22 +101,22 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "4",
       "script": "DewfordTown_Gym_EventScript_Lilith",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SAILOR",
-      "x": 14,
+      "x": 6,
       "y": 12,
       "elevation": 1,
-      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "2",
       "script": "DewfordTown_Gym_EventScript_Brenden",
-      "flag": "0"
+      "flag": "FLAG_BADGE02_GET"
     }
   ],
   "warp_events": [
@@ -135,24 +135,10 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+
+  ],
   "bg_events": [
-    {
-      "type": "sign",
-      "x": 4,
-      "y": 23,
-      "elevation": 3,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "DewfordTown_Gym_EventScript_LeftGymStatue"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 23,
-      "elevation": 3,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "DewfordTown_Gym_EventScript_RightGymStatue"
-    },
     {
       "type": "sign",
       "x": 4,
@@ -163,7 +149,7 @@
     },
     {
       "type": "sign",
-      "x": 7,
+      "x": 6,
       "y": 24,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",

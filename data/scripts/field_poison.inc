@@ -20,7 +20,7 @@ EventScript_FieldWhiteOut::
 	end
 
 EventScript_SetRespawnLavaridgePkmnCenter::
-	setrespawn HEAL_LOCATION_LAVARIDGE_TOWN
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	return
 
 EventScript_FrontierFieldWhiteOut::

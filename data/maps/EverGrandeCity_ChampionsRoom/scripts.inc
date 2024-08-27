@@ -50,6 +50,7 @@ EverGrandeCity_ChampionsRoom_EventScript_Wallace::
 
 EverGrandeCity_ChampionsRoom_EventScript_Defeated::
 	playse SE_DOOR
+	setflag FLAG_CHAMPION_DEFEATED
 	setmetatile 6, 1, METATILE_EliteFour_OpenDoorChampion_Frame, FALSE
 	setmetatile 6, 2, METATILE_EliteFour_OpenDoorChampion_Opening, FALSE
 	special DrawWholeMapView

@@ -18,8 +18,6 @@ ShoalCave_LowTideEntranceRoom_EventScript_SetLowTide::
 ShoalCave_LowTideEntranceRoom_EventScript_ShellBellExpert::
 	lock
 	faceplayer
-	dotimebasedevents
-	call_if_set FLAG_SYS_SHOAL_ITEM, ShoalCave_LowTideEntranceRoom_EventScript_ResetShoalItems
 	checkitem ITEM_SHOAL_SALT, 4
 	goto_if_eq VAR_RESULT, FALSE, ShoalCave_LowTideEntranceRoom_EventScript_NotEnoughShoalSaltOrShells
 	checkitem ITEM_SHOAL_SHELL, 4
@@ -33,9 +31,7 @@ ShoalCave_LowTideEntranceRoom_EventScript_ShellBellExpert::
 	removeitem ITEM_SHOAL_SALT, 4
 	removeitem ITEM_SHOAL_SHELL, 4
 	giveitem ITEM_SHELL_BELL
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull  @ Never FALSE, we already made sure there will be room in the bag.
 	msgbox ShoalCave_LowTideEntranceRoom_Text_ExplainShellBell, MSGBOX_DEFAULT
-	setflag FLAG_TEMP_2  @ Not read. Perhaps meant to stop him from re-explaining the Shell Bell if multiple are received in one sitting.
 	release
 	end
 

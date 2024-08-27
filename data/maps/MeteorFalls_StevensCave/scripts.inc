@@ -29,17 +29,13 @@ MeteorFalls_StevensCave_EventScript_Defeated::
 	end
 
 MeteorFalls_StevensCave_Text_ShouldKnowHowGoodIAmExpectWorst:
-	.string "STEVEN: Oh, wow, {PLAYER}{KUN}.\n"
-	.string "I'm amazed you knew where to find me.\p"
-	.string "Do you, uh…maybe think of me as\n"
-	.string "just a rock maniac?\p"
+	.string "???: Oh, wow, {PLAYER}.\n"
+	.string "I'm amazed you were able to find me.\p"
+	.string "Did you expect Steven?\p"
 	.string "No, that can't be right.\p"
-	.string "We battled alongside each other at\n"
-	.string "the SOOTOPOLIS SPACE CENTER.\p"
-	.string "You should have a very good idea\n"
-	.string "about how good I am.\p"
-	.string "Okay, {PLAYER}{KUN}, if you're going to mount\n"
-	.string "a serious challenge, expect the worst!$"
+	.string "I'm ShadowzLmao, the creator\n"
+	.string "of the ROMHack.\p"
+	.string "SHADOWZ: So, you're ready to battle?$"
 
 MeteorFalls_StevensCave_Text_StevenDefeat:
 	.string "You…\n"

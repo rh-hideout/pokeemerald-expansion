@@ -387,7 +387,6 @@ OldaleTown_Text_FinishedSketchingFootprints:
 
 OldaleTown_Text_MayLetsGoBack:
 	.string "MAY: {PLAYER}{KUN}!\n"
-	.string "Over here!\l"
 	.string "Let's hurry home!$"
 
 OldaleTown_Text_BrendanLetsGoBack:
@@ -399,3 +398,5 @@ OldaleTown_Text_TownSign:
 	.string "OLDALE TOWN\n"
 	.string "“Where things start off scarce.”$"
 
+OldaleTown_Text_DoneCandies:
+	.string "No more for you.$"

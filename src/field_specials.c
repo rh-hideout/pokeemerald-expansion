@@ -461,7 +461,7 @@ bool32 ShouldDoRoxanneCall(void)
 
 bool32 ShouldDoRivalRayquazaCall(void)
 {
-    if (FlagGet(FLAG_DEFEATED_MAGMA_SPACE_CENTER))
+    if (FlagGet(FLAG_DEFEATED_SPACE_CENTER))
     {
         switch (gMapHeader.mapType)
         {

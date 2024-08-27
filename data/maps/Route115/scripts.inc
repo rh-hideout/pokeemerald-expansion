@@ -42,8 +42,6 @@ Route115_EventScript_Timothy::
 Route115_EventScript_RegisterTimothy::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route115_Text_TimothyRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_TIMOTHY_1
 	release
 	end
 
@@ -51,6 +49,32 @@ Route115_EventScript_RematchTimothy::
 	trainerbattle_rematch TRAINER_TIMOTHY_1, Route115_Text_TimothyRematchIntro, Route115_Text_TimothyRematchDefeat
 	msgbox Route115_Text_TimothyPostRematch, MSGBOX_AUTOCLOSE
 	end
+
+Route115_EventScript_BerryMaster::
+	lock
+	faceplayer
+	goto_if_set FLAG_UNUSED_0x038, Route115_EventScript_BerryDone
+	msgbox Route115_Text_BerryMasterF, MSGBOX_DEFAULT
+	giveitem ITEM_FIGY_BERRY, 2
+	giveitem ITEM_WIKI_BERRY, 2
+	giveitem ITEM_MAGO_BERRY, 2
+	giveitem ITEM_AGUAV_BERRY, 2
+	giveitem ITEM_IAPAPA_BERRY, 2
+	setflag FLAG_UNUSED_0x038
+	release
+	end
+
+Route115_EventScript_BerryDone::	
+	msgbox Route115_Text_BerrysDone, MSGBOX_DEFAULT
+	release
+	end
+
+Route115_Text_BerrysDone::	
+	.string "Strong berries are quite expensive.$"
+
+Route115_Text_BerryMasterF:
+	.string "These berries are pretty useful.$"
+
 
 Route115_EventScript_Koichi::
 	trainerbattle_single TRAINER_KOICHI, Route115_Text_KoichiIntro, Route115_Text_KoichiDefeat
@@ -68,8 +92,6 @@ Route115_EventScript_Nob::
 Route115_EventScript_RegisterNob::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route115_Text_NobRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_NOB_1
 	release
 	end
 
@@ -89,8 +111,6 @@ Route115_EventScript_Cyndy::
 Route115_EventScript_RegisterCyndy::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route115_Text_CyndyRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_CYNDY_1
 	release
 	end
 

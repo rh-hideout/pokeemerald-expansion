@@ -88,7 +88,7 @@
     },
     {
       "x": 8,
-      "y": 7,
+      "y": 6,
       "elevation": 0,
       "dest_map": "MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY",
       "dest_warp_id": "0"
@@ -115,24 +115,10 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+
+  ],
   "bg_events": [
-    {
-      "type": "sign",
-      "x": 16,
-      "y": 15,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemartSign"
-    },
-    {
-      "type": "sign",
-      "x": 15,
-      "y": 7,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
-    },
     {
       "type": "sign",
       "x": 6,
@@ -140,14 +126,6 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "FallarborTown_EventScript_BattleTentSign"
-    },
-    {
-      "type": "sign",
-      "x": 16,
-      "y": 7,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
     },
     {
       "type": "sign",
@@ -159,14 +137,6 @@
     },
     {
       "type": "sign",
-      "x": 17,
-      "y": 15,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemartSign"
-    },
-    {
-      "type": "sign",
       "x": 3,
       "y": 7,
       "elevation": 0,
@@ -174,12 +144,12 @@
       "script": "FallarborTown_EventScript_MoveTutorSign"
     },
     {
-      "type": "hidden_item",
-      "x": 2,
-      "y": 15,
-      "elevation": 3,
-      "item": "ITEM_NUGGET",
-      "flag": "FLAG_HIDDEN_ITEM_FALLARBOR_TOWN_NUGGET"
+      "type": "sign",
+      "x": 8,
+      "y": 7,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "SlateportCity_EventScript_ClosedBattleTent"
     }
   ]
 }

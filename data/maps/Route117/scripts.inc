@@ -1,54 +1,28 @@
-.set LOCALID_DAYCARE_MAN, 3
-.set LOCALID_DAYCARE_MON_0, 25
-.set LOCALID_DAYCARE_MON_1, 26
 
 Route117_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, Route117_OnTransition
 	.byte 0
 
-Route117_OnTransition:
-	call Route117_EventScript_TryMoveDayCareMan
-	@ set flags for OW daycare mons
-	setflag FLAG_TEMP_1
-	setflag FLAG_TEMP_2
-	getdaycaregfx VAR_OBJ_GFX_ID_0, VAR_OBJ_GFX_ID_1, VAR_TEMP_0, VAR_TEMP_1
-	switch VAR_RESULT
-	case 2, Route117_EventScript_ShowDaycareMon1
-	case 1, Route117_EventScript_ShowDaycareMon0
+Route117_EventScript_Wifey::
+	lock
+	faceplayer
+	goto_if_set FLAG_CHOICE_SCARF, Route117_EventScript_Wifey2
+	msgbox Route117_Text_WifeyText
+	giveitem ITEM_CHOICE_SCARF
+	setflag FLAG_CHOICE_SCARF
+	release
 	end
 
-Route117_EventScript_ShowDaycareMon1:
-	@ set pokemon movement type based on compatibility
-	special SetDaycareCompatibilityString
-	call_if_eq VAR_RESULT, PARENTS_INCOMPATIBLE, Route117_EventScript_DaycareMonIncompatible
-	@ Don't do anything if PARENTS_LOW_COMPATIBILITY
-	call_if_eq VAR_RESULT, PARENTS_MED_COMPATIBILITY, Route117_EventScript_DaycareMonMedCompatibility
-	call_if_eq VAR_RESULT, PARENTS_MAX_COMPATIBILITY, Route117_EventScript_DaycareMonMaxCompatibility
-	clearflag FLAG_TEMP_2
-Route117_EventScript_ShowDaycareMon0:
-	clearflag FLAG_TEMP_1
+Route117_EventScript_Wifey2::
+	msgbox Route117_Text_Congrats
+	release
 	end
 
-Route117_EventScript_DaycareMonIncompatible: @ mons never face each other
-	setobjectmovementtype LOCALID_DAYCARE_MON_0, MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT
-	setobjectmovementtype LOCALID_DAYCARE_MON_1, MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT
-	return
+Route117_Text_Congrats:
+	.string "Well done and good luck!"
 
-Route117_EventScript_DaycareMonMedCompatibility: @ down and towards each other
-	setobjectmovementtype LOCALID_DAYCARE_MON_0, MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT
-	setobjectmovementtype LOCALID_DAYCARE_MON_1, MOVEMENT_TYPE_FACE_DOWN_AND_LEFT
-	return
-
-Route117_EventScript_DaycareMonMaxCompatibility: @ facing; walk in place
-	setobjectmovementtype LOCALID_DAYCARE_MON_0, MOVEMENT_TYPE_WALK_IN_PLACE_RIGHT
-	setobjectmovementtype LOCALID_DAYCARE_MON_1, MOVEMENT_TYPE_WALK_IN_PLACE_LEFT
-	return
-
-Route117_EventScript_TryMoveDayCareMan::
-	goto_if_unset FLAG_PENDING_DAYCARE_EGG, Route117_EventScript_StopMoveDayCareMan
-	setobjectxyperm LOCALID_DAYCARE_MAN, 47, 6
-Route117_EventScript_StopMoveDayCareMan::
-	return
+Route117_Text_WifeyText:
+	.string "Congrats on beating my husband.\n."
+	.string "Here, have this.$"
 
 Route117_EventScript_Woman::
 	msgbox Route117_Text_ArentTheseFlowersPretty, MSGBOX_NPC
@@ -84,8 +58,6 @@ Route117_EventScript_Isaac::
 
 Route117_EventScript_RegisterIsaac::
 	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route117_Text_IsaacRegister, MSGBOX_DEFAULT
 	register_matchcall TRAINER_ISAAC_1
 	release
 	end
@@ -106,7 +78,6 @@ Route117_EventScript_Lydia::
 Route117_EventScript_RegisterLydia::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route117_Text_LydiaRegister, MSGBOX_DEFAULT
 	register_matchcall TRAINER_LYDIA_1
 	release
 	end
@@ -125,9 +96,6 @@ Route117_EventScript_Dylan::
 	end
 
 Route117_EventScript_RegisterDylan::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route117_Text_DylanRegister, MSGBOX_DEFAULT
 	register_matchcall TRAINER_DYLAN_1
 	release
 	end
@@ -172,8 +140,6 @@ Route117_EventScript_Anna::
 	end
 
 Route117_EventScript_RegisterAnna::
-	msgbox Route117_Text_AnnaAndMegRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_ANNA_AND_MEG_1
 	release
 	end
 
@@ -239,5 +205,6 @@ Route117_Text_RouteSignMauville:
 	.string "{RIGHT_ARROW} MAUVILLE CITY$"
 
 Route117_Text_DayCareSign:
-	.string "POKéMON DAY CARE\n"
-	.string "“Let us raise your POKéMON.”$"
+	.string "POKéMON DAY CARE -\n"
+	.string "Closed for Renovations.$"
+

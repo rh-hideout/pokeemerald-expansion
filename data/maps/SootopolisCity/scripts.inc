@@ -529,7 +529,7 @@ SootopolisCity_EventScript_RayquazaSceneFromPokeCenter::
 	waitstate
 	clearflag FLAG_SYS_WEATHER_CTRL
 	setvar VAR_SKY_PILLAR_STATE, 3
-	clearflag FLAG_LEGENDARIES_IN_SOOTOPOLIS
+	clearflag FLAG_SOOTOPOLIS_LEGENDARIES
 	fadenewbgm MUS_SOOTOPOLIS
 	delay 120
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
@@ -582,7 +582,7 @@ SootopolisCity_EventScript_RayquazaSceneFromDive::
 	waitstate
 	clearflag FLAG_SYS_WEATHER_CTRL
 	setvar VAR_SKY_PILLAR_STATE, 2
-	clearflag FLAG_LEGENDARIES_IN_SOOTOPOLIS
+	clearflag FLAG_SOOTOPOLIS_LEGENDARIES
 	fadenewbgm MUS_SURF
 	delay 120
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
@@ -726,22 +726,8 @@ SootopolisCity_EventScript_KiriRayquaza::
 	release
 	end
 
-@ Gives 2 berries daily. First ranges from FIRST_KIRI_BERRY to LAST_KIRI_BERRY, second is always Figy or Iapapa
 SootopolisCity_EventScript_KiriGiveBerry::
-	dotimebasedevents
-	special GetPlayerBigGuyGirlString
-	goto_if_set FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY, SootopolisCity_EventScript_KiriReceivedBerry
 	msgbox SootopolisCity_Text_NameIsKiriHaveOneOfThese, MSGBOX_DEFAULT
-	random NUM_KIRI_BERRIES
-	addvar VAR_RESULT, NUM_KIRI_BERRIES_SKIPPED
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY
-	msgbox SootopolisCity_Text_GiveYouThisBerryToo, MSGBOX_DEFAULT
-	random 2
-	goto_if_eq VAR_RESULT, 0, SootopolisCity_EventScript_GiveFigyBerry
-	goto_if_eq VAR_RESULT, 1, SootopolisCity_EventScript_GiveIapapaBerry
 	end
 
 SootopolisCity_EventScript_GiveFigyBerry::

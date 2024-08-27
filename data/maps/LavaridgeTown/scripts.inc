@@ -9,7 +9,7 @@ LavaridgeTown_MapScripts::
 LavaridgeTown_OnTransition:
 	setflag FLAG_VISITED_LAVARIDGE_TOWN
 	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, LavaridgeTown_EventScript_ClearLavaridgeWhiteOut
-	call_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, LavaridgeTown_EventScript_ShowMtChimneyTrainers
+	call_if_set FLAG_DEFEATED_MT_CHIMNEY, LavaridgeTown_EventScript_ShowMtChimneyTrainers
 	call Common_EventScript_SetupRivalGfxId
 	call Common_EventScript_SetupRivalOnBikeGfxId
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 1, LavaridgeTown_EventScript_CheckSetRivalPos
@@ -64,7 +64,10 @@ LavaridgeTown_EventScript_MayGiveGoGoggles::
 	msgbox LavaridgeTown_Text_MayNiceBadgesTakeThis, MSGBOX_DEFAULT
 	giveitem ITEM_GO_GOGGLES
 	setflag FLAG_RECEIVED_GO_GOGGLES
-	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_MayExplainGoGoggles, MSGBOX_DEFAULT
+	giveitem ITEM_HM_SURF
+	setflag FLAG_RECEIVED_HM_SURF
+	msgbox LavaridgeTown_Text_ExplainSurf, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
@@ -72,7 +75,10 @@ LavaridgeTown_EventScript_BrendanGiveGoGoggles::
 	msgbox LavaridgeTown_Text_BrendanNiceBadgesTakeThis, MSGBOX_DEFAULT
 	giveitem ITEM_GO_GOGGLES
 	setflag FLAG_RECEIVED_GO_GOGGLES
-	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_BrendanExplainGoGoggles, MSGBOX_DEFAULT
+	giveitem ITEM_HM_SURF
+	setflag FLAG_RECEIVED_HM_SURF
+	msgbox LavaridgeTown_Text_ExplainSurf, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
@@ -245,7 +251,7 @@ LavaridgeTown_EventScript_EggWoman::
 	playfanfare MUS_OBTAIN_ITEM
 	message LavaridgeTown_Text_ReceivedTheEgg
 	waitfanfare
-	giveegg SPECIES_WYNAUT
+	giveegg SPECIES_COTTONEE
 	release
 	end
 
@@ -277,47 +283,35 @@ LavaridgeTown_EventScript_HerbShopSign::
 	end
 
 LavaridgeTown_Text_MayNiceBadgesTakeThis:
-	.string "MAY: {PLAYER}{KUN}! Long time no see!\p"
-	.string "Oh? While I visited the hot springs,\n"
-	.string "you got the LAVARIDGE GYM BADGE.\p"
-	.string "You must have collected\n"
-	.string "good POKéMON…\l"
-	.string "No, I believe you raised some.\p"
-	.string "I guess it would be okay for you to\n"
-	.string "have this.$"
-
-LavaridgeTown_Text_MayExplainGoGogglesChallengeDad:
-	.string "MAY: With those GO-GOGGLES, you'll\n"
-	.string "have no trouble getting through the\l"
-	.string "desert near ROUTE 111.\p"
-	.string "But, wow, {PLAYER}{KUN}…\n"
-	.string "Challenging GYMS…\p"
-	.string "You're trying hard because you don't\n"
-	.string "want to lose to me, I bet!\p"
-	.string "{PLAYER}{KUN}, I think I should challenge\n"
-	.string "your dad in PETALBURG GYM.\p"
-	.string "See you again!$"
-
-LavaridgeTown_Text_BrendanNiceBadgesTakeThis:
-	.string "BRENDAN: {PLAYER}, hey, it's been a while.\n"
+	.string "MAY: {PLAYER}, it's been a while.\n"
 	.string "How's it going?\p"
-	.string "Hmm…\n"
-	.string "That's a decent collection of BADGES.\p"
+	.string "You're doing pretty well so far.\p"
 	.string "All right, then.\n"
 	.string "You may as well have this.$"
 
-LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
+LavaridgeTown_Text_MayExplainGoGoggles:
+	.string "MAY: With those GO-GOGGLES, you'll\n"
+	.string "have no trouble getting through the\l"
+	.string "desert near ROUTE 111.\p"
+	.string "See you again!$"
+
+LavaridgeTown_Text_ExplainSurf:
+	.string "Since Flannery is the 5th gym leader,\n"
+	.string "I'll give you the HM for SURF.\l"
+	.string "Now you can check out Route 108\l"
+	.string "or go to Route 118 for Winona.$"
+
+LavaridgeTown_Text_BrendanNiceBadgesTakeThis:
+	.string "BRENDAN: {PLAYER}, it's been a while.\n"
+	.string "How's it going?\p"
+	.string "You're doing pretty well so far.\p"
+	.string "All right, then.\n"
+	.string "You may as well have this.$"
+
+LavaridgeTown_Text_BrendanExplainGoGoggles:
 	.string "BRENDAN: Keep those with you if you're\n"
 	.string "planning on going into that desert near\l"
 	.string "ROUTE 111.\p"
-	.string "There should be some POKéMON that\n"
-	.string "are exclusively desert-dwellers.\l"
-	.string "You might look around for those.\p"
-	.string "As for me…\n"
-	.string "I'm considering challenging NORMAN,\l"
-	.string "the GYM LEADER of PETALBURG.\p"
-	.string "Unlike you, {PLAYER}, your dad looks like\n"
-	.string "he really is tough.\p"
 	.string "See you around!$"
 
 LavaridgeTown_Text_HaveEggWillYouTakeIt:

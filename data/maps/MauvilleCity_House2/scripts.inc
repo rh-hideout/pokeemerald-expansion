@@ -24,9 +24,8 @@ MauvilleCity_House2_EventScript_AskToTradeForHarborMail::
 
 MauvilleCity_House2_EventScript_AcceptTrade::
 	msgbox MauvilleCity_House2_Text_IllTradeYouCoinCase, MSGBOX_DEFAULT
-	giveitem ITEM_COIN_CASE
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	removeitem ITEM_HARBOR_MAIL
+	giveitem ITEM_TM_ATTRACT
 	setflag FLAG_RECEIVED_COIN_CASE
 	goto MauvilleCity_House2_EventScript_ReceivedCoinCase
 	end
@@ -53,7 +52,7 @@ MauvilleCity_House2_Text_TradeHarborMailForCoinCase:
 
 MauvilleCity_House2_Text_IllTradeYouCoinCase:
 	.string "Oh, I'm so happy!\n"
-	.string "Okay, I'll trade you a COIN CASE!$"
+	.string "Okay, I'll trade you a TM!$"
 
 MauvilleCity_House2_Text_UseCoinCaseAtGameCorner:
 	.string "That COIN CASE can be used\n"

@@ -1,4 +1,4 @@
-.set LOCALID_STEVEN, 19
+.set LOCALID_STEVEN, 18
 
 Route118_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route118_OnTransition
@@ -198,7 +198,7 @@ Route118_EventScript_RematchRose::
 	trainerbattle_rematch TRAINER_ROSE_1, Route118_Text_RoseRematchIntro, Route118_Text_RoseRematchDefeat
 	msgbox Route118_Text_RosePostRematch, MSGBOX_AUTOCLOSE
 	end
-
+	
 Route118_EventScript_Barny::
 	trainerbattle_single TRAINER_BARNY, Route118_Text_BarnyIntro, Route118_Text_BarnyDefeat
 	msgbox Route118_Text_BarnyPostBattle, MSGBOX_AUTOCLOSE
@@ -210,24 +210,9 @@ Route118_EventScript_Wade::
 	end
 
 Route118_EventScript_Dalton::
-	trainerbattle_single TRAINER_DALTON_1, Route118_Text_DaltonIntro, Route118_Text_DaltonDefeat, Route118_EventScript_RegisterDalton
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route118_EventScript_RematchDalton
+	trainerbattle_single TRAINER_DALTON_1, Route118_Text_DaltonIntro, Route118_Text_DaltonDefeat
 	msgbox Route118_Text_DaltonPostBattle, MSGBOX_DEFAULT
 	release
-	end
-
-Route118_EventScript_RegisterDalton::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route118_Text_DaltonRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_DALTON_1
-	release
-	end
-
-Route118_EventScript_RematchDalton::
-	trainerbattle_rematch TRAINER_DALTON_1, Route118_Text_DaltonRematchIntro, Route118_Text_DaltonRematchDefeat
-	msgbox Route118_Text_DaltonPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route118_EventScript_Perry::
@@ -264,14 +249,11 @@ Route118_Text_StevenQuestions:
 	.string "again somewhere.$"
 
 Route118_Text_YouAgreeGoodRodIsGood:
-	.string "Hmm!\n"
 	.string "A GOOD ROD is really good!\p"
 	.string "Wouldn't you agree?$"
 
 Route118_Text_IdenticalMindsTakeThis:
-	.string "Hmm!\n"
-	.string "We're of identical minds!\p"
-	.string "Hmm!\n"
+	.string "We're of identical minds!\n"
 	.string "Take this GOOD ROD!$"
 
 Route118_Text_TryYourLuckFishing:
@@ -286,11 +268,11 @@ Route118_Text_TryCatchingMonWithGoodRod:
 	.string "with your GOOD ROD.$"
 
 Route118_Text_CanCrossRiversWithSurf:
-	.string "Even if there isn't a boat, you can\n"
-	.string "cross rivers and the sea if you have\l"
-	.string "a POKéMON that knows SURF.\p"
-	.string "POKéMON can be counted on to do so\n"
-	.string "much!$"
+	.string "Changing what people say in a decomp,\n"
+	.string "is much more tough than with HMA.\p"
+	.string "Henceforth I haven't added a lot\n"
+	.string "of dialogue to random NPCs.\l"
+	.string "If only it was easier$"
 
 Route118_Text_RouteSignMauville:
 	.string "ROUTE 118\n"

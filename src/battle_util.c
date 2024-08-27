@@ -2802,10 +2802,7 @@ u8 DoBattlerEndTurnEffects(void)
                     }
                     else
                     {
-                        if (B_SLEEP_TURNS >= GEN_5)
                             gBattleMons[battler].status1 |= ((Random() % 3) + 2);
-                        else
-                            gBattleMons[battler].status1 |= ((Random() % 4) + 3);
 
                         BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                         MarkBattlerForControllerExec(battler);
@@ -4901,21 +4898,21 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 effect++;
             }
             break;
-        case ABILITY_EMBODY_ASPECT_TEAL_MASK:
-        case ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK:
-        case ABILITY_EMBODY_ASPECT_WELLSPRING_MASK:
-        case ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK:
+        case ABILITY_EMBODY_ASPECT_TEAL:
+        case ABILITY_EMBODY_ASPECT_HEARTHFLAME:
+        case ABILITY_EMBODY_ASPECT_WELLSPRING:
+        case ABILITY_EMBODY_ASPECT_CORNERSTONE:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
                 u32 stat;
 
-                if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
+                if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_HEARTHFLAME)
                     stat = STAT_ATK;
-                else if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_WELLSPRING_MASK)
+                else if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_WELLSPRING)
                     stat = STAT_SPDEF;
-                else if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK)
+                else if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_CORNERSTONE)
                     stat = STAT_DEF;
-                else //ABILITY_EMBODY_ASPECT_TEAL_MASK
+                else //ABILITY_EMBODY_ASPECT_TEAL
                     stat = STAT_SPEED;
 
                 if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_EQUAL))

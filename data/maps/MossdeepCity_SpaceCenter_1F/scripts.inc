@@ -54,11 +54,8 @@ MossdeepCity_SpaceCenter_1F_EventScript_RocketLaunchCounter::
 	lock
 	faceplayer
 	goto_if_eq VAR_MOSSDEEP_CITY_STATE, 2, MossdeepCity_SpaceCenter_1F_EventScript_RocketLaunchCounterMagma
-	dotimebasedevents
-	specialvar VAR_RESULT, GetWeekCount
-	buffernumberstring STR_VAR_1, VAR_RESULT
-	call_if_eq VAR_RESULT, 0, MossdeepCity_SpaceCenter_1F_EventScript_NoLaunchesYet
-	call_if_ge VAR_RESULT, 1, MossdeepCity_SpaceCenter_1F_EventScript_ShowLaunchNumber
+	//call_if_eq VAR_RESULT, 0, MossdeepCity_SpaceCenter_1F_EventScript_NoLaunchesYet
+	//call_if_ge VAR_RESULT, 1, MossdeepCity_SpaceCenter_1F_EventScript_ShowLaunchNumber
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -74,12 +71,8 @@ MossdeepCity_SpaceCenter_1F_EventScript_ShowLaunchNumber::
 	return
 
 MossdeepCity_SpaceCenter_1F_EventScript_RocketLaunchCounterMagma::
-	dotimebasedevents
-	specialvar VAR_RESULT, GetWeekCount
-	buffernumberstring STR_VAR_1, VAR_RESULT
-	call_if_eq VAR_RESULT, 0, MossdeepCity_SpaceCenter_1F_EventScript_NoLaunchesYetMagma
-	call_if_ge VAR_RESULT, 1, MossdeepCity_SpaceCenter_1F_EventScript_ShowLaunchNumberMagma
-	closemessage
+	//call_if_eq VAR_RESULT, 0, MossdeepCity_SpaceCenter_1F_EventScript_NoLaunchesYetMagma
+	//call_if_ge VAR_RESULT, 1, MossdeepCity_SpaceCenter_1F_EventScript_ShowLaunchNumberMagma
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
 	release

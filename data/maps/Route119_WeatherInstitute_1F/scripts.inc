@@ -86,15 +86,12 @@ Route119_WeatherInstitute_1F_Text_Grunt1PostBattle:
 	.string "about what he's thinking?$"
 
 Route119_WeatherInstitute_1F_Text_Grunt4Intro:
-	.string "Huh?\n"
-	.string "What's a kid doing here?$"
+	.string "The weather here is so strange!$"
 
 Route119_WeatherInstitute_1F_Text_Grunt4Defeat:
-	.string "Huh?\n"
-	.string "I lost?!$"
+	.string "Huh? I lost?!$"
 
 Route119_WeatherInstitute_1F_Text_Grunt4PostBattle:
-	.string "Oh, no…\n"
 	.string "I'll catch an earful for losing to a kid…\p"
 	.string "I should just take a nap in the bed…$"
 

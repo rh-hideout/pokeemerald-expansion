@@ -1152,16 +1152,6 @@ static const u16 sSamurottFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_OSHAWOTT
 
-#if P_FAMILY_AUDINO
-static const u16 sAudinoFormSpeciesIdTable[] = {
-    SPECIES_AUDINO,
-#if P_MEGA_EVOLUTIONS
-    SPECIES_AUDINO_MEGA,
-#endif
-    FORM_SPECIES_END,
-};
-#endif //P_FAMILY_AUDINO
-
 #if P_FAMILY_PETILIL
 static const u16 sLilligantFormSpeciesIdTable[] = {
     SPECIES_LILLIGANT,

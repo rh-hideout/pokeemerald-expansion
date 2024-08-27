@@ -95,20 +95,7 @@ static u32 GetWaldaPhraseInputCase(u8 *inputPtr)
 
 u16 TryGetWallpaperWithWaldaPhrase(void)
 {
-    u16 backgroundClr, foregroundClr;
-    u8 patternId, iconId;
-    u16 trainerId = GetTrainerId(gSaveBlock2Ptr->playerTrainerId);
-    gSpecialVar_Result = TryCalculateWallpaper(&backgroundClr, &foregroundClr, &iconId, &patternId, trainerId, GetWaldaPhrasePtr());
-
-    if (gSpecialVar_Result)
-    {
-        SetWaldaWallpaperPatternId(patternId);
-        SetWaldaWallpaperIconId(iconId);
-        SetWaldaWallpaperColors(backgroundClr, foregroundClr);
-    }
-
-    SetWaldaWallpaperLockedOrUnlocked(gSpecialVar_Result);
-    return (bool8)gSpecialVar_Result;
+    return FALSE;
 }
 
 static u8 GetLetterTableId(u8 letter)

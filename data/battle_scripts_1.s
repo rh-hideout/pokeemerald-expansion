@@ -928,18 +928,9 @@ BattleScript_BothCanNoLongerEscape::
 	return
 
 BattleScript_EffectHyperspaceFury::
-	jumpifspecies BS_ATTACKER, SPECIES_HOOPA_UNBOUND, BattleScript_EffectHyperspaceFuryUnbound
+	jumpifspecies BS_ATTACKER, SPECIES_HOOPA_UNBOUND, BattleScript_EffectHit
 	jumpifspecies BS_ATTACKER, SPECIES_HOOPA_CONFINED, BattleScript_ButHoopaCantUseIt
 	goto BattleScript_PokemonCantUseTheMove
-
-BattleScript_EffectHyperspaceFuryUnbound::
-	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-	attackstring
-	pause B_WAIT_TIME_LONG
-	ppreduce
-	seteffectprimary MOVE_EFFECT_FEINT
-	goto BattleScript_HitFromCritCalc
 
 BattleScript_ButHoopaCantUseIt:
 	printstring STRINGID_BUTHOOPACANTUSEIT
@@ -7150,7 +7141,7 @@ BattleScript_TargetFormChangeWithStringNoPopup::
 
 BattleScript_BattlerFormChangeWithStringEnd3::
 	pause 5
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
 	handleformchange BS_SCRIPTING, 1
@@ -8010,7 +8001,7 @@ BattleScript_DeltaStreamActivates::
 	end3
 
 BattleScript_ProtosynthesisActivates::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_SUNLIGHTACTIVATEDABILITY
 	waitmessage B_WAIT_TIME_MED
 	printstring STRINGID_STATWASHEIGHTENED

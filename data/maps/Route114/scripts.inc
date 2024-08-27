@@ -22,15 +22,6 @@ Route114_OnFrame:
 Route114_EventScript_Man::
 	lock
 	faceplayer
-	dotimebasedevents
-	goto_if_set FLAG_DAILY_ROUTE_114_RECEIVED_BERRY, Route114_EventScript_ReceivedBerry
-	msgbox Route114_Text_LoveUsingBerryCrushShareBerry, MSGBOX_DEFAULT
-	random NUM_ROUTE_114_MAN_BERRIES
-	addvar VAR_RESULT, NUM_ROUTE_114_MAN_BERRIES_SKIPPED
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_DAILY_ROUTE_114_RECEIVED_BERRY
 	msgbox Route114_Text_TryBerryCrushWithFriends, MSGBOX_DEFAULT
 	release
 	end
@@ -84,6 +75,16 @@ Route114_EventScript_Lenny::
 	msgbox Route114_Text_LennyPostBattle, MSGBOX_AUTOCLOSE
 	end
 
+Route114_EventScript_MeteorBlocker::
+	lock
+	faceplayer
+	msgbox Route114_text_MeteorBlocker, MSGBOX_DEFAULT
+	release
+	end
+
+Route114_text_MeteorBlocker:
+	.string "Go fight Norman to unlock this area.$"
+
 Route114_EventScript_Lucas::
 	trainerbattle_single TRAINER_LUCAS_1, Route114_Text_LucasIntro, Route114_Text_LucasDefeat
 	msgbox Route114_Text_LucasPostBattle, MSGBOX_AUTOCLOSE
@@ -110,8 +111,6 @@ Route114_EventScript_Steve::
 Route114_EventScript_RegisterSteve::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route114_Text_SteveRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_STEVE_1
 	release
 	end
 
@@ -131,8 +130,6 @@ Route114_EventScript_Bernie::
 Route114_EventScript_RegisterBernie::
 	special PlayerFaceTrainerAfterBattle
 	waitmovement 0
-	msgbox Route114_Text_BernieRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_BERNIE_1
 	release
 	end
 
@@ -174,13 +171,12 @@ Route114_EventScript_Charlotte::
 Route114_EventScript_Kai::
 	trainerbattle_single TRAINER_KAI, Route114_Text_KaiIntro, Route114_Text_KaiDefeat
 	msgbox Route114_Text_KaiPostBattle, MSGBOX_AUTOCLOSE
+	release
 	end
 
 Route114_Text_AllMyMonDoesIsRoarTakeThis:
 	.string "All my POKéMON does is ROAR…\n"
-	.string "No one dares to come near me…\p"
-	.string "Sigh… If you would, please take\n"
-	.string "this TM away…$"
+	.string "Sigh… Please take this TM away.$"
 
 Route114_Text_ExplainRoar:
 	.string "TM05 contains ROAR.\n"
@@ -199,4 +195,25 @@ Route114_Text_FossilManiacsHouseSign:
 
 Route114_Text_LanettesHouse:
 	.string "LANETTE'S HOUSE$"
+
+Route114_Text_KaiIntro1:
+	.string "Too scared to fight me immediately?$"
+
+Route114_Text_KaiDefeat1:
+	.string "I take back what I said.\n"
+	.string "You're certainly smart.$"
+
+Route114_Text_KaiIntro2:
+	.string "Didn't want the KING's ROCK\n"
+	.string "by any chance, did you?\p"
+	.string "Well you can't have it.$"
+
+Route114_Text_KaiDefeat2:
+	.string "Fine, you win, you can have it.$"
+
+Route114_Text_KaiIntro3:
+	.string "Did you forget about me?$"
+
+Route114_Text_KaiDefeat3:
+	.string "Atleast you came back.$"
 

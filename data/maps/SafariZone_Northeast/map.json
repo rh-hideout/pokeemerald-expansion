@@ -143,8 +143,12 @@
       "flag": "FLAG_ITEM_SAFARI_ZONE_NORTH_EAST_NUGGET"
     }
   ],
-  "warp_events": [],
-  "coord_events": [],
+  "warp_events": [
+
+  ],
+  "coord_events": [
+
+  ],
   "bg_events": [
     {
       "type": "hidden_item",

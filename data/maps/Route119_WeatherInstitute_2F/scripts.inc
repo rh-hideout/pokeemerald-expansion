@@ -71,6 +71,7 @@ Route119_WeatherInstitute_2F_EventScript_ShellyDefeated::
 	fadedefaultbgm
 	fadescreen FADE_TO_BLACK
 	setflag FLAG_HIDE_ROUTE_119_TEAM_AQUA
+	setflag FLAG_WEATHER_INSTITUTE_BEATEN
 	setflag FLAG_HIDE_WEATHER_INSTITUTE_2F_AQUA_GRUNT_M
 	removeobject LOCALID_GRUNT_1
 	removeobject LOCALID_GRUNT_2
@@ -89,7 +90,7 @@ Route119_WeatherInstitute_2F_EventScript_ShellyDefeated::
 Route119_WeatherInstitute_2F_EventScript_ReceiveCastform::
 	msgbox Route119_WeatherInstitute_2F_Text_ThanksPleaseTakePokemon, MSGBOX_DEFAULT
 	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_CASTFORM_NORMAL
-	givemon SPECIES_CASTFORM_NORMAL, 25, ITEM_MYSTIC_WATER
+	givemon SPECIES_CASTFORM_NORMAL, 55
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, Route119_WeatherInstitute_2F_EventScript_ReceiveCastformParty
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, Route119_WeatherInstitute_2F_EventScript_ReceiveCastformPC
 	goto Common_EventScript_NoMoreRoomForPokemon

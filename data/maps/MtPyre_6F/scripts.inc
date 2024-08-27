@@ -10,10 +10,6 @@ MtPyre_6F_EventScript_Valerie::
 	end
 
 MtPyre_6F_EventScript_RegisterValerie::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox MtPyre_6F_Text_ValerieRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_VALERIE_1
 	release
 	end
 
@@ -37,12 +33,6 @@ MtPyre_6F_Text_ValerieDefeat:
 MtPyre_6F_Text_ValeriePostBattle:
 	.string "Perhaps the power is from the spirits\n"
 	.string "of POKéMON in fitful sleep here…$"
-
-MtPyre_6F_Text_ValerieRegister:
-	.string "Fufufu… I lost the match, but…\n"
-	.string "I have this little ability…\p"
-	.string "Without ever laying my hands on\n"
-	.string "your POKéNAV… Hiyah!$"
 
 MtPyre_6F_Text_ValerieRematchIntro:
 	.string "Behind you…\n"

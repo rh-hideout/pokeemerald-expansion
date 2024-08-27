@@ -1,9 +1,6 @@
 gText_Birch_Welcome::
-	.string "Hi! Sorry to keep you waiting!\p"
-	.string "Welcome to the world of POKéMON!\p"
 	.string "My name is BIRCH.\p"
-	.string "But everyone calls me the POKéMON\n"
-	.string "PROFESSOR.\p"
+	.string "But everyone calls me DADDY.\p"
 	.string "$"
 
 gText_Birch_Pokemon::
@@ -12,20 +9,12 @@ gText_Birch_Pokemon::
 	.string "$"
 
 gText_Birch_MainSpeech::
-	.string "This world is widely inhabited by\n"
-	.string "creatures known as POKéMON.\p"
-	.string "We humans live alongside POKéMON,\n"
-	.string "at times as friendly playmates, and\l"
-	.string "at times as cooperative workmates.\p"
-	.string "And sometimes, we band together\n"
-	.string "and battle others like us.\p"
-	.string "But despite our closeness, we don't\n"
-	.string "know everything about POKéMON.\p"
-	.string "In fact, there are many, many\n"
-	.string "secrets surrounding POKéMON.\p"
-	.string "To unravel POKéMON mysteries,\n"
-	.string "I've been undertaking research.\l"
-	.string "That's what I do.\p"
+	.string "Welcome to the world of Improved Emerald.\n"
+	.string "The goal is to be tougher than RR\l"
+	.string "and RnB.\p"
+	.string "Never heard? Too bad. Good luck!\p"
+	.string "Don't forget, women have tougher\n"
+	.string "battles they need to fight.\p"
 	.string "$"
 
 gText_Birch_AndYouAre::
@@ -36,26 +25,20 @@ gText_Birch_BoyOrGirl::
 	.string "Or are you a girl?$"
 
 gText_Birch_WhatsYourName::
-	.string "All right.\n"
 	.string "What's your name?$"
 
 gText_Birch_SoItsPlayer::
 	.string "So it's {PLAYER}{KUN}?$"
 
 gText_Birch_YourePlayer::
-	.string "Ah, okay!\p"
-	.string "You're {PLAYER}{KUN} who's moving to my\n"
-	.string "hometown of LITTLEROOT.\l"
 	.string "I get it now!\p"
+	.string "You like pain!\p"
 	.string "$"
 
 gText_Birch_AreYouReady::
-	.string "All right, are you ready?\p"
-	.string "Your very own adventure is about\n"
-	.string "to unfold.\p"
 	.string "Take courage, and leap into the\n"
-	.string "world of POKéMON where dreams,\l"
-	.string "adventure, and friendships await!\p"
-	.string "Well, I'll be expecting you later.\n"
-	.string "Come see me in my POKéMON LAB.\p"
+	.string "world of hell...\l"
+	.string "- I mean, Improved Emerald...\p"
+	.string "Oops. My mistake.\p"
+	.string "Hurry on over to Route 101.\p"
 	.string "$"

@@ -13,7 +13,7 @@ MauvilleCity_OnTransition:
 	setflag FLAG_SYS_TV_START
 	clearflag FLAG_MAUVILLE_GYM_BARRIERS_STATE
 	setvar VAR_MAUVILLE_GYM_STATE, 0
-	call_if_set FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON, MauvilleCity_EventScript_MoveWattsonBackToGym
+	call_if_set FLAG_GOT_THUNDERBOLT_FROM_WATTSON, MauvilleCity_EventScript_MoveWattsonBackToGym
 	end
 
 MauvilleCity_EventScript_MoveWattsonBackToGym::
@@ -161,7 +161,6 @@ MauvilleCity_EventScript_DefeatedWally::
 	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE
 	setflag FLAG_DEFEATED_WALLY_MAUVILLE
 	setvar VAR_WALLY_CALL_STEP_COUNTER, 0
-	setflag FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL
 	call_if_eq VAR_FACING, DIR_NORTH, MauvilleCity_EventScript_ScottApproachPlayerNorth
 	call_if_eq VAR_FACING, DIR_EAST, MauvilleCity_EventScript_ScottApproachPlayerEast
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown
@@ -209,6 +208,11 @@ MauvilleCity_EventScript_BattleWally::
 	applymovement LOCALID_WALLY, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox MauvilleCity_Text_ThankYouNotEnoughToBattle, MSGBOX_DEFAULT
+	giveitem ITEM_SHINY_STONE
+	giveitem ITEM_MOON_STONE
+	giveitem ITEM_LEAF_STONE
+	giveitem ITEM_DUSK_STONE
+	giveitem ITEM_FIRE_STONE
 	applymovement LOCALID_WALLY, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
 	msgbox MauvilleCity_Text_UncleNoNeedToBeDown, MSGBOX_DEFAULT
@@ -418,7 +422,7 @@ MauvilleCity_Movement_ScottExitEast:
 MauvilleCity_EventScript_Wattson::
 	lock
 	faceplayer
-	goto_if_set FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON, MauvilleCity_EventScript_ReceivedThunderbolt
+	goto_if_set FLAG_GOT_THUNDERBOLT_FROM_WATTSON, MauvilleCity_EventScript_ReceivedThunderbolt
 	goto_if_eq VAR_NEW_MAUVILLE_STATE, 2, MauvilleCity_EventScript_CompletedNewMauville
 	goto_if_set FLAG_GOT_BASEMENT_KEY_FROM_WATTSON, MauvilleCity_EventScript_BegunNewMauville
 	msgbox MauvilleCity_Text_WattsonNeedFavorTakeKey, MSGBOX_DEFAULT
@@ -438,7 +442,7 @@ MauvilleCity_EventScript_CompletedNewMauville::
 	msgbox MauvilleCity_Text_WattsonThanksTakeTM, MSGBOX_DEFAULT
 	giveitem ITEM_TM_THUNDERBOLT
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON
+	setflag FLAG_GOT_THUNDERBOLT_FROM_WATTSON
 	msgbox MauvilleCity_Text_WattsonYoungTakeCharge, MSGBOX_DEFAULT
 	release
 	end
@@ -448,20 +452,6 @@ MauvilleCity_EventScript_ReceivedThunderbolt::
 	release
 	end
 
-MauvilleCity_EventScript_RegisterWallyCall::
-	lockall
-	pokenavcall MauvilleCity_Text_WallyPokenavCall
-	waitmessage
-	delay 30
-	playfanfare MUS_REGISTER_MATCH_CALL
-	msgbox MauvilleCity_Text_RegisteredWally, MSGBOX_DEFAULT
-	waitfanfare
-	closemessage
-	delay 30
-	setflag FLAG_ENABLE_WALLY_MATCH_CALL
-	clearflag FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL
-	releaseall
-	end
 
 MauvilleCity_Text_UncleHesTooPeppy:
 	.string "UNCLE: It's because of POKéMON that\n"
@@ -529,7 +519,8 @@ MauvilleCity_Text_ThankYouNotEnoughToBattle:
 	.string "Being a TRAINER is tough, isn't it?\p"
 	.string "It's not enough just to have POKéMON\n"
 	.string "and make them battle. That isn't what\l"
-	.string "being a real TRAINER is about.$"
+	.string "being a real TRAINER is about.\p"
+	.string "Here, a gift from me to you.$"
 
 MauvilleCity_Text_UncleNoNeedToBeDown:
 	.string "UNCLE: WALLY, there's no need to be so\n"
@@ -550,15 +541,11 @@ MauvilleCity_Text_UncleVisitUsSometime:
 
 
 MauvilleCity_Text_WallyPokenavCall:
-	.string "… … … … … …\n"
-	.string "… … … … … Beep!\p"
 	.string "WALLY: Oh, hello, {PLAYER}!\p"
 	.string "I just wanted to tell you that\n"
 	.string "my uncle bought me a POKéNAV!\p"
 	.string "Now I can get in touch with you\n"
-	.string "anytime, {PLAYER}!\p"
-	.string "… … … … … …\n"
-	.string "… … … … … Click!$"
+	.string "anytime, {PLAYER}!$"
 
 MauvilleCity_Text_RegisteredWally:
 	.string "Registered WALLY\n"

@@ -123,6 +123,7 @@ DewfordTown_EventScript_FishingNotSoGood::
 	end
 
 DewfordTown_EventScript_SailToPetalburg::
+	setflag FLAG_HIDE_ROUTE_104_MR_BRINEY
 	call EventScript_BackupMrBrineyLocation
 	setobjectsubpriority LOCALID_BRINEY_DEWFORD, MAP_DEWFORD_TOWN, 0
 	setobjectsubpriority OBJ_EVENT_ID_PLAYER, MAP_DEWFORD_TOWN, 0
@@ -144,8 +145,6 @@ DewfordTown_EventScript_SailToPetalburg::
 	clearflag FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY
 	clearflag FLAG_HIDE_BRINEYS_HOUSE_PEEKO
 	clearflag FLAG_HIDE_ROUTE_104_MR_BRINEY_BOAT
-	setflag FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN
-	hideobjectat LOCALID_BOAT_DEWFORD, MAP_DEWFORD_TOWN
 	setvar VAR_BOARD_BRINEY_BOAT_STATE, 2
 	resetobjectsubpriority OBJ_EVENT_ID_PLAYER, MAP_DEWFORD_TOWN
 	warp MAP_ROUTE104_MR_BRINEYS_HOUSE, 5, 4
@@ -155,6 +154,7 @@ DewfordTown_EventScript_SailToPetalburg::
 	end
 
 DewfordTown_EventScript_SailToSlateport::
+	setflag FLAG_HIDE_ROUTE_109_MR_BRINEY_BOAT
 	call EventScript_BackupMrBrineyLocation
 	setobjectsubpriority LOCALID_BRINEY_DEWFORD, MAP_DEWFORD_TOWN, 0
 	setobjectsubpriority OBJ_EVENT_ID_PLAYER, MAP_DEWFORD_TOWN, 1

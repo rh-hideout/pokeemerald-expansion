@@ -6,7 +6,7 @@ FortreeCity_PokemonCenter_1F_MapScripts::
 	.byte 0
 
 FortreeCity_PokemonCenter_1F_OnTransition:
-	setrespawn HEAL_LOCATION_FORTREE_CITY
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	end
 
 FortreeCity_PokemonCenter_1F_EventScript_Nurse::

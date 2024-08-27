@@ -1,6 +1,6 @@
-.set LOCALID_BRIDGE_KECLEON, 30
-.set LOCALID_STEVEN, 31
-.set LOCALID_BRIDGE_KECLEON_SHADOW, 36  @ They use a second object which is identical to Kecleon but has a reflection palette tag for the bridge shadow
+.set LOCALID_BRIDGE_KECLEON, 23
+.set LOCALID_STEVEN, 24
+.set LOCALID_BRIDGE_KECLEON_SHADOW, 29  @ They use a second object which is identical to Kecleon but has a reflection palette tag for the bridge shadow
 
 Route120_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, Route120_OnResume
@@ -89,23 +89,7 @@ Route120_EventScript_SetRainyWeather::
 Route120_EventScript_BerryBeauty::
 	lock
 	faceplayer
-	dotimebasedevents
-	goto_if_set FLAG_DAILY_ROUTE_120_RECEIVED_BERRY, Route120_EventScript_ReceivedBerry
-	msgbox Route120_Text_BerriesExpressionOfLoveIsntIt, MSGBOX_YESNO
-	call_if_eq VAR_RESULT, YES, Route120_EventScript_BerryLove
-	call_if_eq VAR_RESULT, NO, Route120_EventScript_BerryNotLove
-	specialvar VAR_RESULT, GetPlayerTrainerIdOnesDigit
-	switch VAR_RESULT
-	case 0, Route120_EventScript_GiveFigyBerry
-	case 5, Route120_EventScript_GiveFigyBerry
-	case 1, Route120_EventScript_GiveWikiBerry
-	case 6, Route120_EventScript_GiveWikiBerry
-	case 2, Route120_EventScript_GiveMagoBerry
-	case 7, Route120_EventScript_GiveMagoBerry
-	case 3, Route120_EventScript_GiveAguavBerry
-	case 8, Route120_EventScript_GiveAguavBerry
-	case 4, Route120_EventScript_GiveIapapaBerry
-	case 9, Route120_EventScript_GiveIapapaBerry
+	release
 	end
 
 Route120_EventScript_GiveFigyBerry::

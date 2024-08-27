@@ -12,8 +12,10 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
-  "object_events": [],
+  "connections": 0,
+  "object_events": [
+
+  ],
   "warp_events": [
     {
       "x": 5,
@@ -28,22 +30,12 @@
       "elevation": 0,
       "dest_map": "MAP_EVER_GRANDE_CITY_GLACIAS_ROOM",
       "dest_warp_id": "0"
-    },
-    {
-      "x": 4,
-      "y": 12,
-      "elevation": 3,
-      "dest_map": "MAP_EVER_GRANDE_CITY_PHOEBES_ROOM",
-      "dest_warp_id": "1"
-    },
-    {
-      "x": 6,
-      "y": 12,
-      "elevation": 3,
-      "dest_map": "MAP_EVER_GRANDE_CITY_PHOEBES_ROOM",
-      "dest_warp_id": "1"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

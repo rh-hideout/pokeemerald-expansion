@@ -49,7 +49,7 @@ FallarborTown_CozmosHouse_EventScript_CozmosWife::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_TM_RETURN, FallarborTown_CozmosHouse_EventScript_CozmoIsHappy
-	goto_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, FallarborTown_CozmosHouse_EventScript_CozmoIsSad
+	goto_if_set FLAG_DEFEATED_MT_CHIMNEY, FallarborTown_CozmosHouse_EventScript_CozmoIsSad
 	msgbox FallarborTown_CozmosHouse_Text_CozmoWentToMeteorFalls, MSGBOX_DEFAULT
 	release
 	end
@@ -69,14 +69,9 @@ FallarborTown_CozmosHouse_Text_MeteoriteWillNeverBeMineNow:
 	.string "I never should have let myself be\l"
 	.string "conned into telling TEAM MAGMA where\l"
 	.string "you can find METEORITES…\p"
-	.string "That METEORITE from METEOR FALLS…\n"
 	.string "It's never going to be mine now…$"
 
 FallarborTown_CozmosHouse_Text_IsThatMeteoriteMayIHaveIt:
-	.string "Oh!\n"
-	.string "Hah?\p"
-	.string "That item…\p"
-	.string "Could it be?\p"
 	.string "Is it the METEORITE that TEAM MAGMA\n"
 	.string "took from METEOR FALLS?\p"
 	.string "Please, may I have it?\p"

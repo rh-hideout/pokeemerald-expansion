@@ -57,45 +57,15 @@ Route113_EventScript_Dillon::
 	end
 
 Route113_EventScript_Madeline::
-	trainerbattle_single TRAINER_MADELINE_1, Route113_Text_MadelineIntro, Route113_Text_MadelineDefeat, Route113_EventScript_RegisterMadeline
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route113_EventScript_RematchMadeline
+	trainerbattle_single TRAINER_MADELINE_1, Route113_Text_MadelineIntro, Route113_Text_MadelineDefeat
 	msgbox Route113_Text_MadelinePostBattle, MSGBOX_DEFAULT
 	release
 	end
 
-Route113_EventScript_RegisterMadeline::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route113_Text_MadelineRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_MADELINE_1
-	release
-	end
-
-Route113_EventScript_RematchMadeline::
-	trainerbattle_rematch TRAINER_MADELINE_1, Route113_Text_MadelineRematchIntro, Route113_Text_MadelineRematchDefeat
-	msgbox Route113_Text_MadelinePostRematch, MSGBOX_AUTOCLOSE
-	end
-
 Route113_EventScript_Lao::
-	trainerbattle_single TRAINER_LAO_1, Route113_Text_LaoIntro, Route113_Text_LaoDefeat, Route113_EventScript_RegisterLao
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route113_EventScript_RematchLao
+	trainerbattle_single TRAINER_LAO_1, Route113_Text_LaoIntro, Route113_Text_LaoDefeat
 	msgbox Route113_Text_LaoPostBattle, MSGBOX_DEFAULT
 	release
-	end
-
-Route113_EventScript_RegisterLao::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route113_Text_LaoRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_LAO_1
-	release
-	end
-
-Route113_EventScript_RematchLao::
-	trainerbattle_rematch TRAINER_LAO_1, Route113_Text_LaoRematchIntro, Route113_Text_LaoRematchDefeat
-	msgbox Route113_Text_LaoPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route113_EventScript_Lung::

@@ -151,7 +151,7 @@ SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGrunt::
 	applymovement LOCALID_FAMILIAR_GRUNT, Common_Movement_Delay48
 	waitmovement 0
 	msgbox SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_TM_THIEF
+	giveitem ITEM_TM_TORMENT
 	goto_if_eq VAR_RESULT, 0, SlateportCity_OceanicMuseum_1F_EventScript_NoRoomForThief
 	setflag FLAG_RECEIVED_TM_THIEF
 	msgbox SlateportCity_OceanicMuseum_1F_Text_HopeINeverSeeYouAgain, MSGBOX_DEFAULT
@@ -289,13 +289,12 @@ SlateportCity_OceanicMuseum_1F_Text_WantSeaPokemon:
 	.string "to hug.$"
 
 SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis:
-	.string "Aiyeeeh!\n"
 	.string "What are you doing here?\p"
 	.string "Me? I'm the TEAM AQUA member\n"
 	.string "you thumped before, remember?\l"
 	.string "Back in RUSTURF TUNNEL?\p"
 	.string "Here, take this!\n"
-	.string "You have to forgive me!$"
+	.string "You TORMENT me so much.$"
 
 SlateportCity_OceanicMuseum_1F_Text_HopeINeverSeeYouAgain:
 	.string "That TM, it suits you more than it\n"

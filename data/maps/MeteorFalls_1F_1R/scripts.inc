@@ -243,7 +243,6 @@ MeteorFalls_1F_1R_Text_WithThisMeteorite:
 	.string "MT. CHIMNEY will…$"
 
 MeteorFalls_1F_1R_Text_DontExpectMercyFromMagma:
-	.string "Heh?\p"
 	.string "I don't know who you are, but if you get\n"
 	.string "in the way of TEAM MAGMA, don't\l"
 	.string "expect any mercy!$"
@@ -254,15 +253,12 @@ MeteorFalls_1F_1R_Text_HoldItRightThereMagma:
 	.string "can have your way with the world!$"
 
 MeteorFalls_1F_1R_Text_BeSeeingYouTeamAqua:
-	.string "Hehehe!\n"
 	.string "Even TEAM AQUA joins us!\p"
 	.string "But it's too much trouble to deal with\n"
 	.string "you all…\p"
 	.string "Heh, it doesn't matter!\p"
 	.string "We've got the METEORITE, so off to\n"
-	.string "MT. CHIMNEY we go!\p"
-	.string "Hehehe! Be seeing you, you TEAM\n"
-	.string "AQUA dingbats!$"
+	.string "MT. CHIMNEY we go!$"
 
 MeteorFalls_1F_1R_Text_ArchieSeenYouBefore:
 	.string "ARCHIE: Didn't I see you before?\n"

@@ -87,15 +87,6 @@ SlateportCity_EventScript_ScottScene::
 	msgbox SlateportCity_Text_MaybeThisTrainer, MSGBOX_DEFAULT
 	applymovement LOCALID_SCOTT, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
-	msgbox SlateportCity_Text_LetsRegisterEachOther, MSGBOX_DEFAULT
-	closemessage
-	delay 30
-	playfanfare MUS_REGISTER_MATCH_CALL
-	msgbox SlateportCity_Text_RegisteredScott, MSGBOX_DEFAULT
-	waitfanfare
-	closemessage
-	delay 30
-	setflag FLAG_ENABLE_SCOTT_MATCH_CALL
 	msgbox SlateportCity_Text_KeepEyeOnTrainersBeSeeingYou, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_SCOTT, SlateportCity_Movement_ScottExit
@@ -148,12 +139,10 @@ SlateportCity_EventScript_EnergyGuru::
 
 	.align 2
 SlateportCity_Pokemart_EnergyGuru:
-	.2byte ITEM_PROTEIN
-	.2byte ITEM_IRON
-	.2byte ITEM_CARBOS
-	.2byte ITEM_ZINC
-	.2byte ITEM_CALCIUM
-	.2byte ITEM_HP_UP
+	.2byte ITEM_BIG_MALASADA
+	.2byte ITEM_IRON_BALL
+	.2byte ITEM_NORMAL_GEM
+	.2byte ITEM_CHILAN_BERRY
 	.2byte ITEM_NONE
 	release
 	end
@@ -279,6 +268,13 @@ SlateportCity_EventScript_Woman1AquaGone::
 	release
 	end
 
+SlateportCity_EventScript_ClosedBattleTent::
+	msgbox SlateportCity_Text_ClosedTentSign, MSGBOX_SIGN
+	end
+
+SlateportCity_Text_ClosedTentSign:
+	.string "The sign says 'CLOSED'$"
+
 SlateportCity_EventScript_BattleTentSign::
 	msgbox SlateportCity_Text_BattleTentSign, MSGBOX_SIGN
 	end
@@ -317,6 +313,20 @@ SlateportCity_EventScript_MarketSign::
 	msgbox SlateportCity_Text_MarketSign, MSGBOX_SIGN
 	end
 
+SlateportCity_EventScript_Route111Sign::
+	msgbox SlateportCity_Text_Route111Sign, MSGBOX_SIGN
+	end
+
+SlateportCity_EventScript_Route115Warp::
+	msgbox SlateportCity_Text_Route115Sign, MSGBOX_SIGN
+	end
+
+SlateportCity_Text_Route115Sign:
+	.string "To Route 115$"
+
+SlateportCity_Text_Route111Sign:
+	.string "To Route 111$"
+		
 SlateportCity_EventScript_HarborSign::
 	lockall
 	goto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_EventScript_HarborSignFerryComplete
@@ -502,22 +512,13 @@ SlateportCity_EventScript_AquaGrunt11::
 SlateportCity_EventScript_DollClerk::
 	lock
 	faceplayer
-	message gText_HowMayIServeYou
-	waitmessage
-	pokemartdecoration SlateportCity_PokemartDecor_Dolls
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	msgbox SlateporrtCity_Text_HowMayIServeYou, MSGBOX_DEFAULT
 	release
 	end
 
-	.align 2
-SlateportCity_PokemartDecor_Dolls:
-	.2byte DECOR_AZURILL_DOLL
-	.2byte DECOR_MARILL_DOLL
-	.2byte DECOR_SKITTY_DOLL
-	.2byte DECOR_NONE
-	release
-	end
-
+SlateporrtCity_Text_HowMayIServeYou:
+	.string "Sorry, I ran out of dolls.$"
+	
 SlateportCity_EventScript_ComeBackWithSecretPower::
 	msgbox gText_ComeBackWithSecretPower, MSGBOX_DEFAULT
 	release
@@ -528,29 +529,6 @@ SlateportCity_EventScript_DecorClerk::
 	faceplayer
 	goto_if_unset FLAG_RECEIVED_SECRET_POWER, SlateportCity_EventScript_ComeBackWithSecretPower
 	message gText_HowMayIServeYou
-	waitmessage
-	pokemartdecoration SlateportCity_PokemartDecor
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
-	release
-	end
-
-	.align 2
-SlateportCity_PokemartDecor:
-	.2byte DECOR_RED_BRICK
-	.2byte DECOR_BLUE_BRICK
-	.2byte DECOR_YELLOW_BRICK
-	.2byte DECOR_RED_BALLOON
-	.2byte DECOR_BLUE_BALLOON
-	.2byte DECOR_YELLOW_BALLOON
-	.2byte DECOR_C_LOW_NOTE_MAT
-	.2byte DECOR_D_NOTE_MAT
-	.2byte DECOR_E_NOTE_MAT
-	.2byte DECOR_F_NOTE_MAT
-	.2byte DECOR_G_NOTE_MAT
-	.2byte DECOR_A_NOTE_MAT
-	.2byte DECOR_B_NOTE_MAT
-	.2byte DECOR_C_HIGH_NOTE_MAT
-	.2byte DECOR_NONE
 	release
 	end
 
@@ -567,7 +545,6 @@ SlateportCity_EventScript_PowerTMClerk::
 	.align 2
 SlateportCity_Pokemart_PowerTMs:
 	.2byte ITEM_TM_HIDDEN_POWER
-	.2byte ITEM_TM_SECRET_POWER
 	.2byte ITEM_NONE
 	release
 	end
@@ -737,160 +714,9 @@ SlateportCity_EventScript_Man3::
 SlateportCity_EventScript_BerryPowderClerk::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_POWDER_JAR, SlateportCity_EventScript_ReceivedPowderJar
 	msgbox SlateportCity_Text_ExplainBerries, MSGBOX_DEFAULT
-	giveitem ITEM_POWDER_JAR
-	setflag FLAG_RECEIVED_POWDER_JAR
 	msgbox SlateportCity_Text_ExplainBerryPowder, MSGBOX_DEFAULT
 	release
-	end
-
-SlateportCity_EventScript_ReceivedPowderJar::
-	setvar VAR_0x8004, 1
-	specialvar VAR_RESULT, HasEnoughBerryPowder
-	goto_if_eq VAR_RESULT, FALSE, SlateportCity_EventScript_ExplainBerryPowder
-	msgbox SlateportCity_Text_BroughtMeSomeBerryPowder, MSGBOX_DEFAULT
-	special DisplayBerryPowderVendorMenu
-	goto SlateportCity_EventScript_ChooseBerryPowderItem
-	end
-
-SlateportCity_EventScript_ExplainBerryPowder::
-	msgbox SlateportCity_Text_ExplainBerryPowder, MSGBOX_DEFAULT
-	release
-	end
-
-SlateportCity_EventScript_ChooseBerryPowderItem::
-	message SlateportCity_Text_ExchangeWhatWithIt
-	waitmessage
-	setvar VAR_0x8004, SCROLL_MULTI_BERRY_POWDER_VENDOR
-	special ShowScrollableMultichoice
-	waitstate
-	switch VAR_RESULT
-	case 0, SlateportCity_EventScript_EnergyPowder
-	case 1, SlateportCity_EventScript_EnergyRoot
-	case 2, SlateportCity_EventScript_HealPowder
-	case 3, SlateportCity_EventScript_RevivalHerb
-	case 4, SlateportCity_EventScript_Protein
-	case 5, SlateportCity_EventScript_Iron
-	case 6, SlateportCity_EventScript_Carbos
-	case 7, SlateportCity_EventScript_Calcium
-	case 8, SlateportCity_EventScript_Zinc
-	case 9, SlateportCity_EventScript_HPUp
-	case 10, SlateportCity_EventScript_PPUp
-	case 11, SlateportCity_EventScript_CancelPowderItemSelect
-	case MULTI_B_PRESSED, SlateportCity_EventScript_CancelPowderItemSelect
-	end
-
-SlateportCity_EventScript_EnergyPowder::
-	bufferitemname STR_VAR_1, ITEM_ENERGY_POWDER
-	setvar VAR_0x8008, ITEM_ENERGY_POWDER
-	setvar VAR_0x8009, 50
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_EnergyRoot::
-	bufferitemname STR_VAR_1, ITEM_ENERGY_ROOT
-	setvar VAR_0x8008, ITEM_ENERGY_ROOT
-	setvar VAR_0x8009, 80
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_HealPowder::
-	bufferitemname STR_VAR_1, ITEM_HEAL_POWDER
-	setvar VAR_0x8008, ITEM_HEAL_POWDER
-	setvar VAR_0x8009, 50
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_RevivalHerb::
-	bufferitemname STR_VAR_1, ITEM_REVIVAL_HERB
-	setvar VAR_0x8008, ITEM_REVIVAL_HERB
-	setvar VAR_0x8009, 300
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_Protein::
-	bufferitemname STR_VAR_1, ITEM_PROTEIN
-	setvar VAR_0x8008, ITEM_PROTEIN
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_Iron::
-	bufferitemname STR_VAR_1, ITEM_IRON
-	setvar VAR_0x8008, ITEM_IRON
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_Carbos::
-	bufferitemname STR_VAR_1, ITEM_CARBOS
-	setvar VAR_0x8008, ITEM_CARBOS
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_Calcium::
-	bufferitemname STR_VAR_1, ITEM_CALCIUM
-	setvar VAR_0x8008, ITEM_CALCIUM
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_Zinc::
-	bufferitemname STR_VAR_1, ITEM_ZINC
-	setvar VAR_0x8008, ITEM_ZINC
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_HPUp::
-	bufferitemname STR_VAR_1, ITEM_HP_UP
-	setvar VAR_0x8008, ITEM_HP_UP
-	setvar VAR_0x8009, 1000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_PPUp::
-	bufferitemname STR_VAR_1, ITEM_PP_UP
-	setvar VAR_0x8008, ITEM_PP_UP
-	setvar VAR_0x8009, 3000
-	goto SlateportCity_EventScript_TryBuyBerryPowderItem
-	end
-
-SlateportCity_EventScript_CancelPowderItemSelect::
-	msgbox SlateportCity_Text_ComeBackToTradeBerryPowder, MSGBOX_DEFAULT
-	special RemoveBerryPowderVendorMenu
-	release
-	end
-
-SlateportCity_EventScript_TryBuyBerryPowderItem::
-	msgbox SlateportCity_Text_ExchangeBerryPowderForItem, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, SlateportCity_EventScript_ChooseBerryPowderItem
-	copyvar VAR_0x8004, VAR_0x8009
-	specialvar VAR_RESULT, HasEnoughBerryPowder
-	goto_if_eq VAR_RESULT, FALSE, SlateportCity_EventScript_NotEnoughBerryPowder
-	giveitem VAR_0x8008
-	goto_if_eq VAR_RESULT, FALSE, SlateportCity_EventScript_NoRoomForBerryPowderItem
-	copyvar VAR_0x8004, VAR_0x8009
-	special TakeBerryPowder
-	special PrintPlayerBerryPowderAmount
-	msgbox SlateportCity_Text_FineBerryPowderTradeSomethingElse, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, SlateportCity_EventScript_ChooseBerryPowderItem
-	msgbox SlateportCity_Text_WhenYouGetMoreBringItToMe, MSGBOX_DEFAULT
-	special RemoveBerryPowderVendorMenu
-	release
-	end
-
-SlateportCity_EventScript_NoRoomForBerryPowderItem::
-	msgbox gText_TheBagIsFull, MSGBOX_DEFAULT
-	special RemoveBerryPowderVendorMenu
-	release
-	end
-
-SlateportCity_EventScript_NotEnoughBerryPowder::
-	msgbox SlateportCity_Text_DontHaveEnoughBerryPowder, MSGBOX_DEFAULT
-	goto SlateportCity_EventScript_ChooseBerryPowderItem
 	end
 
 SlateportCity_EventScript_ScottBattleTentScene::
@@ -1354,32 +1180,16 @@ SlateportCity_Text_MaybeThisTrainer:
 	.string "SCOTT: Hmm…\n"
 	.string "Maybe, just maybe, this TRAINER…$"
 
-SlateportCity_Text_LetsRegisterEachOther:
-	.string "SCOTT: All right! I think you're going\n"
-	.string "to become a good friend.\p"
-	.string "So, let's register each other in our\n"
-	.string "POKéNAVS.\p"
-	.string "… … … … … …$"
-
-SlateportCity_Text_RegisteredScott:
-	.string "Registered this SCOTT person\n"
-	.string "in the POKéNAV.$"
-
 SlateportCity_Text_KeepEyeOnTrainersBeSeeingYou:
-	.string "SCOTT: What I'd like to do is tag along\n"
-	.string "with you, but I do want to keep an eye\l"
+	.string "SCOTT: I'd like to tag along with\n"
+	.string "you, but I do want to keep an eye\l"
 	.string "on the talents of other people, too.\p"
-	.string "So, I'll be off to roam other towns\n"
-	.string "a bit more.\p"
-	.string "Be seeing you, {PLAYER}{KUN}!$"
+	.string "See you later, {PLAYER}{KUN}!$"
 
 SlateportCity_Text_TakingBattleTentChallenge:
 	.string "SCOTT: Oh, hey!\n"
 	.string "If it isn't {PLAYER}{KUN}!\p"
 	.string "{PLAYER}{KUN}, let me guess--you're going\n"
 	.string "to take the BATTLE TENT challenge?\p"
-	.string "Yeah! That's a good idea!\n"
-	.string "That's a really great idea!\p"
-	.string "After all, a tough TRAINER is\n"
-	.string "the perfect fit for the BATTLE TENT!\p"
-	.string "Give it your best effort!$"
+	.string "That's too bad!\p"
+	.string "They recently outlawed Battle Tents.$"

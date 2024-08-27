@@ -2,7 +2,7 @@
 .set LOCALID_VICTORIA, 2
 .set LOCALID_VIVI, 3
 .set LOCALID_VICKY, 4
-.set LOCALID_ROCK_SMASH_MAN, 46
+.set LOCALID_ROCK_SMASH_MAN, 44
 
 @ Note: LOCALID_ROUTE111_PLAYER_FALLING is a local id for this map used elsewhere. It's defined in event_objects.h
 
@@ -14,14 +14,8 @@ Route111_MapScripts::
 	.byte 0
 
 Route111_OnLoad:
-	call_if_unset FLAG_REGI_DOORS_OPENED, Route111_EventScript_CloseDesertRuins
 	call_if_eq VAR_MIRAGE_TOWER_STATE, 1, Route111_EventScript_ShowTemporaryMirageTower
 	end
-
-Route111_EventScript_CloseDesertRuins::
-	setmetatile 29, 86, METATILE_General_RockWall_RockBase, TRUE
-	setmetatile 29, 87, METATILE_General_RockWall_SandBase, TRUE
-	return
 
 @ Show Mirage Tower just prior to disintegration. Mirage Tower is otherwise handled by the map layout
 Route111_EventScript_ShowTemporaryMirageTower::
@@ -46,7 +40,6 @@ Route111_EventScript_ShowTemporaryMirageTower::
 	return
 
 Route111_OnTransition:
-	setvar VAR_TRAINER_HILL_IS_ACTIVE, 0
 	special SetMirageTowerVisibility
 	call_if_unset FLAG_MIRAGE_TOWER_VISIBLE, Route111_EventScript_SetLayoutNoMirageTower
 	call_if_eq VAR_MIRAGE_TOWER_STATE, 1, Route111_EventScript_SetFallingPlayerGfx
@@ -73,7 +66,7 @@ Route111_EventScript_SetFallingPlayerGfxFemale::
 Route111_EventScript_CheckSetSandstorm::
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
 	goto_if_lt VAR_TEMP_1, 34, Route111_EventScript_EndCheckSetSandstorm
-	goto_if_gt VAR_TEMP_1, 107, Route111_EventScript_EndCheckSetSandstorm
+	goto_if_gt VAR_TEMP_1, 97, Route111_EventScript_EndCheckSetSandstorm
 	goto_if_gt VAR_TEMP_1, 72, Route111_EventScript_SetSandstorm
 	goto_if_gt VAR_TEMP_0, 2000, Route111_EventScript_EndCheckSetSandstorm
 	goto_if_lt VAR_TEMP_0, 8, Route111_EventScript_EndCheckSetSandstorm
@@ -142,28 +135,14 @@ Route111_EventScript_RootFossilDisappeared::
 	releaseall
 	end
 
-@ Unused
-Route111_Movement_PlayerFall::
-	lock_anim
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	step_end
-
 Route111_EventScript_Girl::
 	lock
 	faceplayer
-	dotimebasedevents
-	goto_if_set FLAG_DAILY_ROUTE_111_RECEIVED_BERRY, Route111_EventScript_ReceivedBerry
 	msgbox Route111_Text_WateredPlantsEveryDayTakeBerry, MSGBOX_DEFAULT
-	giveitem ITEM_RAZZ_BERRY
+	goto_if_set FLAG_ROUTE111_BERRY, Route111_EventScript_ReceivedBerry
+	giveitem ITEM_ORAN_BERRY
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_DAILY_ROUTE_111_RECEIVED_BERRY
-	special GetPlayerBigGuyGirlString
-	msgbox Route111_Text_GoingToTryToMakeDifferentColorBerries, MSGBOX_DEFAULT
+	setflag FLAG_ROUTE111_BERRY
 	release
 	end
 
@@ -172,11 +151,8 @@ Route111_EventScript_ReceivedBerry::
 	release
 	end
 
-@ Unused
-Route111_EventScript_ViciousSandstormTriggerUp::
-	lockall
-	setvar VAR_0x8004, 0
-	goto Route111_EventScript_ViciousSandstormTrigger
+Route111_EventScript_TeleportSetup::
+	setflag FLAG_R109_AZUTELE
 	end
 
 Route111_EventScript_ViciousSandstormTriggerDown::
@@ -188,13 +164,6 @@ Route111_EventScript_ViciousSandstormTriggerDown::
 Route111_EventScript_ViciousSandstormTriggerLeft::
 	lockall
 	setvar VAR_0x8004, 2
-	goto Route111_EventScript_ViciousSandstormTrigger
-	end
-
-@ Unused
-Route111_EventScript_ViciousSandstormTriggerRight::
-	lockall
-	setvar VAR_0x8004, 3
 	goto Route111_EventScript_ViciousSandstormTrigger
 	end
 
@@ -398,31 +367,6 @@ Route111_EventScript_Man1::
 
 Route111_EventScript_Man2::
 	msgbox Route111_Text_WinstrateFamilyDestroyedMe, MSGBOX_NPC
-	end
-
-Route111_EventScript_Hiker::
-	lock
-	faceplayer
-	goto_if_eq VAR_MIRAGE_TOWER_STATE, 3, Route111_EventScript_HikerMirageTowerGone
-	goto_if_eq VAR_MIRAGE_TOWER_STATE, 2, Route111_EventScript_HikerMirageTowerDisintegrated
-	goto_if_set FLAG_MIRAGE_TOWER_VISIBLE, Route111_EventScript_HikerMirageTowerVisible
-	msgbox Route111_Text_ShouldBeMirageTowerAroundHere, MSGBOX_DEFAULT
-	release
-	end
-
-Route111_EventScript_HikerMirageTowerGone::
-	msgbox Route111_Text_MirageTowerHasntBeenSeenSince, MSGBOX_DEFAULT
-	release
-	end
-
-Route111_EventScript_HikerMirageTowerDisintegrated::
-	msgbox Route111_Text_ThatWasShockingSandRainedDown, MSGBOX_DEFAULT
-	release
-	end
-
-Route111_EventScript_HikerMirageTowerVisible::
-	msgbox Route111_Text_MirageTowerClearlyVisible, MSGBOX_DEFAULT
-	release
 	end
 
 Route111_EventScript_RockSmashTipFatMan::
@@ -674,37 +618,6 @@ Route111_Text_TrainerTipsSpAtkSpDef:
 	.string "“SPECIAL ATTACK.”\p"
 	.string "Likewise, SP. DEF stands for “SPECIAL\n"
 	.string "DEFENSE.”$"
-
-Route111_Text_ShouldBeMirageTowerAroundHere:
-	.string "There should be a tower made of sand\n"
-	.string "around here somewhere.\p"
-	.string "But for some reason, it can be seen\n"
-	.string "sometimes, and sometimes not.\p"
-	.string "That's why I call it the MIRAGE TOWER.$"
-
-Route111_Text_MirageTowerClearlyVisible:
-	.string "I see it!\n"
-	.string "The tower of sand!\p"
-	.string "The sand tower they called a mirage\n"
-	.string "is clearly visible!\p"
-	.string "But it looks so fragile…\n"
-	.string "It could crumble away anytime…\p"
-	.string "I want to go inside it, but I can't\n"
-	.string "get my courage up for it…$"
-
-Route111_Text_ThatWasShockingSandRainedDown:
-	.string "Whoa…\n"
-	.string "That was shocking.\p"
-	.string "Sand rained down in chunks all of\n"
-	.string "a sudden.\p"
-	.string "What was it like inside?\n"
-	.string "Were there sandy ghosts and such?$"
-
-Route111_Text_MirageTowerHasntBeenSeenSince:
-	.string "Since I spoke to you, the tower of sand\n"
-	.string "hasn't been seen.\p"
-	.string "Perhaps it really was\n"
-	.string "the MIRAGE TOWER…$"
 
 Route111_Text_ClawFossilDisappeared:
 	.string "The CLAW FOSSIL disappeared into\n"

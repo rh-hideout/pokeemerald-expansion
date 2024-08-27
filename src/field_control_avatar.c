@@ -407,8 +407,6 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return Route110_TrickHousePuzzle_EventScript_Door;
     if (MetatileBehavior_IsRegionMap(metatileBehavior) == TRUE)
         return EventScript_RegionMap;
-    if (MetatileBehavior_IsRunningShoesManual(metatileBehavior) == TRUE)
-        return EventScript_RunningShoesManual;
     if (MetatileBehavior_IsPictureBookShelf(metatileBehavior) == TRUE)
         return EventScript_PictureBookShelf;
     if (MetatileBehavior_IsBookShelf(metatileBehavior) == TRUE)
@@ -591,26 +589,6 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
         if (ShouldDoBrailleRegicePuzzle() == TRUE)
         {
             ScriptContext_SetupScript(IslandCave_EventScript_OpenRegiEntrance);
-            return TRUE;
-        }
-        if (ShouldDoWallyCall() == TRUE)
-        {
-            ScriptContext_SetupScript(MauvilleCity_EventScript_RegisterWallyCall);
-            return TRUE;
-        }
-        if (ShouldDoScottFortreeCall() == TRUE)
-        {
-            ScriptContext_SetupScript(Route119_EventScript_ScottWonAtFortreeGymCall);
-            return TRUE;
-        }
-        if (ShouldDoScottBattleFrontierCall() == TRUE)
-        {
-            ScriptContext_SetupScript(LittlerootTown_ProfessorBirchsLab_EventScript_ScottAboardSSTidalCall);
-            return TRUE;
-        }
-        if (ShouldDoRoxanneCall() == TRUE)
-        {
-            ScriptContext_SetupScript(RustboroCity_Gym_EventScript_RegisterRoxanne);
             return TRUE;
         }
         if (ShouldDoRivalRayquazaCall() == TRUE)

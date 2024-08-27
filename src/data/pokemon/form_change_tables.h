@@ -1,3 +1,4 @@
+
 #if P_FAMILY_BULBASAUR
 static const struct FormChange sVenusaurFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
@@ -672,15 +673,6 @@ static const struct FormChange sArceusFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_ARCEUS
-
-#if P_FAMILY_AUDINO
-static const struct FormChange sAudinoFormChangeTable[] = {
-#if P_MEGA_EVOLUTIONS
-    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_AUDINO_MEGA, ITEM_AUDINITE},
-#endif
-    {FORM_CHANGE_TERMINATOR},
-};
-#endif //P_FAMILY_AUDINO
 
 #if P_FAMILY_DARUMAKA
 static const struct FormChange sDarmanitanFormChangeTable[] = {

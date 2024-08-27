@@ -12,32 +12,63 @@ Pic: Steven
 Gender: Male
 Music: Male
 
-Metang
-Brave Nature
-Level: 42
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Light Screen
-- Psychic
-- Reflect
-- Metal Claw
-
-Skarmory
-Impish Nature
-Level: 43
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
-- Toxic
-- Aerial Ace
-- Protect
-- Steel Wing
-
-Aggron
+Excadrill @ Assault Vest
+Ability: Mold Breaker
+Tera Type: Fire
+Level: 88
+EVs: 28 HP / 228 Atk / 252 SpD
 Adamant Nature
-Level: 44
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 SpA / 6 SpD
-- Thunder
-- Protect
-- Solar Beam
-- Dragon Claw
+- Earthquake
+- Rock Slide
+- Iron Head
+- Poison Jab 
+
+Heatran @ Air Balloon
+Ability: Flash Fire
+Level: 88
+EVs: 248 HP / 252 SpA / 8 SpD
+Modest Nature
+- Eruption
+- Earth Power
+- Substitute
+- Flash Cannon
+
+Baxcalibur @ Roseli Berry
+Ability: Thermal Exchange
+Level: 88
+EVs: 252 HP / 248 Atk / 8 Spe
+Adamant Nature
+- Ice Shard
+- High Horsepower
+- Iron Head
+- Dragon Dance
+
+Dialga @ Assault Vest
+Ability: Telepathy
+Level: 88
+EVs: 248 HP / 244 Def / 16 SpA
+Modest Nature
+- Draco Meteor
+- Earth Power
+- Flash Cannon
+- Thunderbolt
+
+Archaludon @ Assault Vest
+Ability: Stamina
+Level: 88
+EVs: 252 Def / 4 SpA / 252 SpD
+Calm Nature
+- Body Press
+- Meteor Beam
+- Flash Cannon
+- Draco Meteor
+
+Landorus (M) @ Life Orb
+Ability: Sheer Force
+Level: 88
+EVs: 96 HP / 252 SpA / 8 SpD / 152 Spe
+Timid Nature
+- Earth Power
+- Hurricane
+- Sandsear Storm
+- Sludge Bomb

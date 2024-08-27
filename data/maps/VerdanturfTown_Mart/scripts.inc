@@ -15,14 +15,12 @@ VerdanturfTown_Mart_EventScript_Clerk::
 VerdanturfTown_Mart_Pokemart:
 	.2byte ITEM_GREAT_BALL
 	.2byte ITEM_NEST_BALL
-	.2byte ITEM_SUPER_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
 	.2byte ITEM_AWAKENING
 	.2byte ITEM_BURN_HEAL
 	.2byte ITEM_ICE_HEAL
 	.2byte ITEM_REPEL
-	.2byte ITEM_X_SP_ATK
 	.2byte ITEM_FLUFFY_TAIL
 	.2byte ITEM_NONE
 	release
@@ -42,9 +40,7 @@ VerdanturfTown_Mart_EventScript_Lass::
 
 VerdanturfTown_Mart_Text_XSpecialIsCrucial:
 	.string "For any POKéMON match, X SPECIAL\n"
-	.string "is crucial.\p"
-	.string "It jacks up the power of some moves\n"
-	.string "even though it's only for one battle.$"
+	.string "is crucial.$"
 
 VerdanturfTown_Mart_Text_NoStrategyGuidesForBattleTent:
 	.string "They don't seem to sell any winning\n"

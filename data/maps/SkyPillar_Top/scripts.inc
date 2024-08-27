@@ -31,7 +31,7 @@ SkyPillar_Top_EventScript_TryShowRayquaza::
 	return
 
 SkyPillar_Top_EventScript_ShowRayquaza::
-	clearflag FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL
+	clearflag FLAG_HIDE_SKY_PILLAR_RAYQUAZA
 	return
 
 SkyPillar_Top_OnWarp:

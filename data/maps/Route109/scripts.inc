@@ -36,6 +36,7 @@ Route109_EventScript_EnterBoatWest::
 	end
 
 Route109_EventScript_DoSailToDewford::
+	setflag FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN
 	hideobjectat OBJ_EVENT_ID_PLAYER, MAP_ROUTE109
 	call Common_EventScript_PlayBrineysBoatMusic
 	applymovement LOCALID_BOAT_R109, Route109_Movement_SailToDewford
@@ -54,8 +55,6 @@ Route109_EventScript_DoSailToDewford::
 	applymovement LOCALID_BRINEY_DEWFORD, Route109_Movement_BrineyExitBoat
 	waitmovement 0
 	clearflag FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN
-	setflag FLAG_HIDE_ROUTE_109_MR_BRINEY_BOAT
-	hideobjectat LOCALID_BOAT_R109, MAP_ROUTE109
 	msgbox DewfordTown_Text_BrineyLandedInDewford, MSGBOX_DEFAULT
 	closemessage
 	copyvar VAR_BRINEY_LOCATION, VAR_0x8008

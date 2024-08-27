@@ -1,3 +1,4 @@
+
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -535,43 +536,23 @@ void AnimTask_StatsChange(u8 taskId)
 
     switch (gBattleSpritesDataPtr->animationData->animArg)
     {
-    case STAT_ANIM_PLUS1 + STAT_ATK:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_ATK;      break;
-    case STAT_ANIM_PLUS1 + STAT_DEF:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_DEF;      break;
-    case STAT_ANIM_PLUS1 + STAT_SPEED:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPEED;    break;
-    case STAT_ANIM_PLUS1 + STAT_SPATK:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPATK;    break;
-    case STAT_ANIM_PLUS1 + STAT_SPDEF:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPDEF;    break;
-    case STAT_ANIM_PLUS1 + STAT_ACC:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_ACC;      break;
-    case STAT_ANIM_PLUS1 + STAT_EVASION: goesDown = FALSE;  animStatId = STAT_ANIM_PAL_EVASION;  break;
-
-    case STAT_ANIM_MINUS1 + STAT_ATK:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_ATK;      break;
-    case STAT_ANIM_MINUS1 + STAT_DEF:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_DEF;      break;
-    case STAT_ANIM_MINUS1 + STAT_SPEED:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPEED;    break;
-    case STAT_ANIM_MINUS1 + STAT_SPATK:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPATK;    break;
-    case STAT_ANIM_MINUS1 + STAT_SPDEF:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPDEF;    break;
-    case STAT_ANIM_MINUS1 + STAT_ACC:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_ACC;      break;
-    case STAT_ANIM_MINUS1 + STAT_EVASION: goesDown = TRUE;  animStatId = STAT_ANIM_PAL_EVASION;  break;
-
-    case STAT_ANIM_PLUS2 + STAT_ATK:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_ATK;      sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_DEF:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_DEF;      sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_SPEED:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPEED;    sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_SPATK:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPATK;    sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_SPDEF:   goesDown = FALSE;  animStatId = STAT_ANIM_PAL_SPDEF;    sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_ACC:     goesDown = FALSE;  animStatId = STAT_ANIM_PAL_ACC;      sharply = TRUE;  break;
-    case STAT_ANIM_PLUS2 + STAT_EVASION: goesDown = FALSE;  animStatId = STAT_ANIM_PAL_EVASION;  sharply = TRUE;  break;
-
-    case STAT_ANIM_MINUS2 + STAT_ATK:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_ATK;      sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_DEF:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_DEF;      sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_SPEED:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPEED;    sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_SPATK:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPATK;    sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_SPDEF:   goesDown = TRUE;  animStatId = STAT_ANIM_PAL_SPDEF;    sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_ACC:     goesDown = TRUE;  animStatId = STAT_ANIM_PAL_ACC;      sharply = TRUE;  break;
-    case STAT_ANIM_MINUS2 + STAT_EVASION: goesDown = TRUE;  animStatId = STAT_ANIM_PAL_EVASION;  sharply = TRUE;  break;
-
-    case STAT_ANIM_MULTIPLE_PLUS1:  goesDown = FALSE;  animStatId = STAT_ANIM_PAL_MULTIPLE;  sharply = FALSE;  break;
-    case STAT_ANIM_MULTIPLE_PLUS2:  goesDown = FALSE;  animStatId = STAT_ANIM_PAL_MULTIPLE;  sharply = TRUE;   break;
-    case STAT_ANIM_MULTIPLE_MINUS1: goesDown = TRUE;   animStatId = STAT_ANIM_PAL_MULTIPLE;  sharply = FALSE;  break;
-    case STAT_ANIM_MULTIPLE_MINUS2: goesDown = TRUE;   animStatId = STAT_ANIM_PAL_MULTIPLE;  sharply = TRUE;   break;
-
+    case STAT_ANIM_PLUS1:  goesDown = FALSE;                 break;
+    case STAT_ANIM_PLUS2:  goesDown = FALSE; sharply = TRUE; break;
+    case STAT_ANIM_MINUS1: goesDown = TRUE;                  break;
+    case STAT_ANIM_MINUS2: goesDown = TRUE; sharply = TRUE;  break;
+    default:
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+    switch (gBattleSpritesDataPtr->animationData->animArg)
+    {
+    case STAT_ATK:        animStatId = STAT_ANIM_PAL_ATK;      break;
+    case STAT_DEF:        animStatId = STAT_ANIM_PAL_DEF;      break;
+    case STAT_SPEED:      animStatId = STAT_ANIM_PAL_SPEED;    break;
+    case STAT_SPATK:      animStatId = STAT_ANIM_PAL_SPATK;    break;
+    case STAT_SPDEF:      animStatId = STAT_ANIM_PAL_SPDEF;    break;
+    case STAT_ACC:        animStatId = STAT_ANIM_PAL_ACC;      break;
+    case STAT_EVASION:    animStatId = STAT_ANIM_PAL_EVASION;  break;
     default:
         DestroyAnimVisualTask(taskId);
         return;

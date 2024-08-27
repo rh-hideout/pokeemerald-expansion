@@ -1834,3 +1834,90 @@ const u8 gText_Fertilize[] = _("FERTILIZE");
 const u8 gText_PlantBerry[] = _("PLANT BERRY");
 const u8 gText_AM[] = _("AM");
 const u8 gText_PM[] = _("PM");
+
+//Starter Gift 
+const u8 gText_Gen1[] = _("KANTO,  Gen 1"); 
+const u8 gText_Gen2[] = _("JOHTO,  Gen 2");
+const u8 gText_Gen4[] = _("SINNOH, Gen 4");
+const u8 gText_Gen5[] = _("UNOVA,  Gen 5");
+const u8 gText_Gen6[] = _("KALOS,  Gen 6");
+const u8 gText_Gen7[] = _("ALOLA,  Gen 7");
+const u8 gText_Gen8[] = _("GALAR,  Gen 8");
+//Fire
+const u8 gText_1Gen1[] = _("CHARMANDER");
+const u8 gText_1Gen2[] = _("CYNDAQUIL");
+const u8 gText_1Gen4[] = _("CHIMCHAR");
+const u8 gText_1Gen5[] = _("TEPIG");
+const u8 gText_1Gen6[] = _("FENNEKIN");
+const u8 gText_1Gen7[] = _("LITTEN");
+const u8 gText_1Gen8[] = _("SCORBUNNY");
+//Water
+const u8 gText_2Gen1[] = _("SQUIRTLE");
+const u8 gText_2Gen2[] = _("TOTODILE");
+const u8 gText_2Gen4[] = _("PIPLUP");
+const u8 gText_2Gen5[] = _("OSHAWOTT");
+const u8 gText_2Gen6[] = _("FROAKIE");
+const u8 gText_2Gen7[] = _("POPPLIO");
+const u8 gText_2Gen8[] = _("SOBBLE");
+//Grass
+const u8 gText_3Gen1[] = _("BULBASAUR");
+const u8 gText_3Gen2[] = _("CHIKORITA");
+const u8 gText_3Gen4[] = _("TURTWIG");
+const u8 gText_3Gen5[] = _("SNIVY");
+const u8 gText_3Gen6[] = _("CHESPIN");
+const u8 gText_3Gen7[] = _("ROWLET");
+const u8 gText_3Gen8[] = _("GROOKEY");
+
+//Restricted Gift
+const u8 gText_Generation1[] = _("Generation 1");
+const u8 gText_Generation2[] = _("Generation 2");
+const u8 gText_Generation3[] = _("Generation 3");
+const u8 gText_Generation4[] = _("Generation 4");
+const u8 gText_Generation5[] = _("Generation 5");
+const u8 gText_Generation6[] = _("Generation 6");
+const u8 gText_Generation7[] = _("Generation 7");
+const u8 gText_Generation8[] = _("Generation 8");
+//Gen 1
+const u8 gText_Mew[] = _("Mew");
+const u8 gText_Mewtwo[] = _("Mewtwo");
+//Gen 2
+const u8 gText_Lugia[] = _("Lugia");
+const u8 gText_Hooh[] = _("Ho-Oh");
+const u8 gText_Celebi[] = _("Celebi");
+//Gen 3
+const u8 gText_Latias[] = _("Latias");
+const u8 gText_Latios[] = _("Latios");
+const u8 gText_Jirachi[] = _("Jirachi");
+//Gen 4
+const u8 gText_Heatran[] = _("Heatran");
+const u8 gText_Cresselia[] = _("Cresselia");
+const u8 gText_ShayminS[] = _("Shaymin Sky");
+const u8 gText_Dialga[] = _("Dialga");
+const u8 gText_Palkia[] = _("Palkia");
+const u8 gText_Giratina[] = _("Giratina");
+//Gen 5
+const u8 gText_Reshiram[] = _("Reshiram");
+const u8 gText_Zekrom[] = _("Zekrom");
+const u8 gText_Kyurem[] = _("Kyurem");
+const u8 gText_Genesect[] = _("Genesect");
+const u8 gText_TornadusT[] = _("Tornadus Therian");
+const u8 gText_LandorusT[] = _("Landorus Therian");
+const u8 gText_ThundurusI[] = _("Thundurus Incarnate");
+const u8 gText_ThundurusT[] = _("Thundurus Therian");
+const u8 gText_Keldeo[] = _("Keldeo");
+const u8 gText_Cobalion[] = _("Cobalion");
+const u8 gText_Terrakion[] = _("Terrakion");
+const u8 gText_Virizion[] = _("Virizion");
+//Gen 6
+const u8 gText_HoopaU[] = _("Hoopa Unbound");
+const u8 gText_Volcanion[] = _("Volcanion");
+//Gen 7
+const u8 gText_Magearna[] = _("Magearna");
+const u8 gText_Marshadow[] = _("Marshadow");
+const u8 gText_Zeraora[] = _("Zeraora");
+const u8 gText_Melmetal[] = _("Melmetal");
+//Gen 8
+const u8 gText_Zarude[] = _("Zarude");
+const u8 gText_UrshifuR[] = _("Urshifu Rapid");
+const u8 gText_UrshifuS[] = _("Urshifu Single");
+const u8 gText_Eternatus[] = _("Eternatus");

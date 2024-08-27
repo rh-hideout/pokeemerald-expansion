@@ -15,7 +15,7 @@ LilycoveCity_OnTransition:
 	end
 
 LilycoveCity_OnLoad:
-	call_if_unset FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, LilycoveCity_EventScript_SetWailmerMetatiles
+	call_if_unset FLAG_AQUA_HIDEOUT_BEATEN, LilycoveCity_EventScript_SetWailmerMetatiles
 	end
 
 LilycoveCity_EventScript_SetWailmerMetatiles::
@@ -36,14 +36,6 @@ LilycoveCity_EventScript_SetWailmerMetatiles::
 LilycoveCity_EventScript_BerryGentleman::
 	lock
 	faceplayer
-	dotimebasedevents
-	goto_if_set FLAG_DAILY_LILYCOVE_RECEIVED_BERRY, LilycoveCity_EventScript_ReceivedBerry
-	msgbox LilycoveCity_Text_BerrySuitsYou, MSGBOX_DEFAULT
-	random 10
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_DAILY_LILYCOVE_RECEIVED_BERRY
 	msgbox LilycoveCity_Text_BecauseYoureTrainer, MSGBOX_DEFAULT
 	release
 	end
@@ -77,7 +69,7 @@ LilycoveCity_EventScript_RichBoy::
 LilycoveCity_EventScript_Sailor2::
 	lock
 	faceplayer
-	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, LilycoveCity_EventScript_Sailor2AquaGone
+	goto_if_set FLAG_AQUA_HIDEOUT_BEATEN, LilycoveCity_EventScript_Sailor2AquaGone
 	msgbox LilycoveCity_Text_TeamAquaBeenTrainingWailmer, MSGBOX_DEFAULT
 	release
 	end
@@ -90,7 +82,7 @@ LilycoveCity_EventScript_Sailor2AquaGone::
 LilycoveCity_EventScript_Woman2::
 	lock
 	faceplayer
-	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, LilycoveCity_EventScript_Woman2AquaGone
+	goto_if_set FLAG_AQUA_HIDEOUT_BEATEN, LilycoveCity_EventScript_Woman2AquaGone
 	msgbox LilycoveCity_Text_SomeoneStoleMyPokemon, MSGBOX_DEFAULT
 	release
 	end
@@ -330,6 +322,7 @@ LilycoveCity_EventScript_DefeatedMay::
 	call_if_eq VAR_RESULT, FALSE, LilycoveCity_EventScript_MayCollectBadges
 	call_if_eq VAR_RESULT, TRUE, LilycoveCity_EventScript_MayPokemonLeague
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
+	setflag FLAG_LILYCOVE_RIVAL
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL
 	goto LilycoveCity_EventScript_RivalFlyAway
 	end
@@ -363,6 +356,7 @@ LilycoveCity_EventScript_DefeatedBrendan::
 	call_if_eq VAR_RESULT, TRUE, LilycoveCity_EventScript_BrendanPokemonLeague
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_SWABLU_DOLL
+	setflag FLAG_LILYCOVE_RIVAL
 	goto LilycoveCity_EventScript_RivalFlyAway
 	end
 

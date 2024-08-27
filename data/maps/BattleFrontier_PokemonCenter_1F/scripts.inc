@@ -6,7 +6,7 @@ BattleFrontier_PokemonCenter_1F_MapScripts::
 	.byte 0
 
 BattleFrontier_PokemonCenter_1F_OnTransition:
-	setrespawn HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST
+	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F
 	end
 
 BattleFrontier_PokemonCenter_1F_EventScript_Nurse::

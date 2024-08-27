@@ -110,16 +110,6 @@ const struct FollowerMsgInfoExtended gFollowerConditionalMessages[COND_MSG_COUNT
             MATCH_MAP(ROUTE112),
         },
     },
-    [COND_MSG_DAY_CARE] =
-    {
-        .text = sCondMsg08,
-        .script = EventScript_FollowerNostalgia,
-        .emotion = FOLLOWER_EMOTION_NEUTRAL,
-        .conditions =
-        {
-            MATCH_MAP(ROUTE117_POKEMON_DAY_CARE)
-        },
-    },
     [COND_MSG_MART] =
     {
         .text = (u8*)sShopTexts,

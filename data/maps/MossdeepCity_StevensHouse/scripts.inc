@@ -8,7 +8,7 @@ MossdeepCity_StevensHouse_MapScripts::
 	.byte 0
 
 MossdeepCity_StevensHouse_OnLoad:
-	call_if_unset FLAG_SYS_GAME_CLEAR, MossdeepCity_StevensHouse_EventScript_HideStevensNote
+	call_if_unset FLAG_DEFEATED_SPACE_CENTER, MossdeepCity_StevensHouse_EventScript_HideStevensNote
 	end
 
 MossdeepCity_StevensHouse_EventScript_HideStevensNote::
@@ -142,12 +142,6 @@ MossdeepCity_StevensHouse_EventScript_Letter::
 	lockall
 	msgbox MossdeepCity_StevensHouse_Text_LetterFromSteven, MSGBOX_DEFAULT
 	releaseall
-	end
-
-@ Unused, leftover from RS
-MossdeepCity_StevensHouse_EventScript_DiveItemBall::
-	finditem ITEM_HM_DIVE
-	setflag FLAG_RECEIVED_HM_DIVE
 	end
 
 MossdeepCity_StevensHouse_Text_YouveEarnedHMDive:

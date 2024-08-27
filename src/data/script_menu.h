@@ -783,6 +783,146 @@ static const struct MenuAction MultichoiceList_Exit[] =
     {gText_Exit},
 };
 
+static const struct MenuAction MultichoiceList_StarterGen[] = 
+{
+    {gText_Gen1},
+    {gText_Gen2},
+    {gText_Gen4},
+    {gText_Gen5},
+    {gText_Gen6},
+    {gText_Gen7},
+    {gText_Gen8},
+};
+
+static const struct MenuAction MultichoiceList_Generation[] = 
+{
+    {gText_Generation1},
+    {gText_Generation2},
+    {gText_Generation3},
+    {gText_Generation4},
+    {gText_Generation5},
+    {gText_Generation6},
+    {gText_Generation7},
+    {gText_Generation8},
+};
+
+static const struct MenuAction MultichoiceList_Gen1Starter[] =
+{
+    {gText_1Gen1},
+    {gText_2Gen1},
+    {gText_3Gen1},
+};
+
+static const struct MenuAction MultichoiceList_Gen2Starter[] =
+{
+    {gText_1Gen2},
+    {gText_2Gen2},
+    {gText_3Gen2},
+};
+
+static const struct MenuAction MultichoiceList_Gen4Starter[] =
+{
+    {gText_1Gen4},
+    {gText_2Gen4},
+    {gText_3Gen4},
+};
+
+static const struct MenuAction MultichoiceList_Gen5Starter[] =
+{
+    {gText_1Gen5},
+    {gText_2Gen5},
+    {gText_3Gen5},
+};
+
+static const struct MenuAction MultichoiceList_Gen6Starter[] =
+{
+    {gText_1Gen6},
+    {gText_2Gen6},
+    {gText_3Gen6},
+};
+
+static const struct MenuAction MultichoiceList_Gen7Starter[] =
+{
+    {gText_1Gen7},
+    {gText_2Gen7},
+    {gText_3Gen7},
+};
+
+static const struct MenuAction MultichoiceList_Gen8Starter[] =
+{
+    {gText_1Gen8},
+    {gText_2Gen8},
+    {gText_3Gen8},
+};
+
+static const struct MenuAction MultichoiceList_Gen1Restricted[] =
+{
+    {gText_Mew},
+    {gText_Mewtwo},
+};
+
+static const struct MenuAction MultichoiceList_Gen2Restricted[] =
+{
+    {gText_Lugia},
+    {gText_Hooh},
+    {gText_Celebi},
+};
+
+static const struct MenuAction MultichoiceList_Gen3Restricted[] =
+{
+    {gText_Latias},
+    {gText_Latios},
+    {gText_Jirachi},
+};
+
+static const struct MenuAction MultichoiceList_Gen4Restricted[] =
+{
+    {gText_Heatran},
+    {gText_Cresselia},
+    {gText_ShayminS},
+    {gText_Dialga},
+    {gText_Palkia},
+    {gText_Giratina},
+};
+
+static const struct MenuAction MultichoiceList_Gen5Restricted[] =
+{
+    {gText_Reshiram},
+    {gText_Zekrom},
+    {gText_Kyurem},
+    {gText_Genesect},
+    {gText_TornadusT},
+    {gText_LandorusT},
+    {gText_ThundurusI},
+    {gText_ThundurusT},
+    {gText_Keldeo},
+    {gText_Cobalion},
+    {gText_Terrakion},
+    {gText_Virizion},
+};
+
+static const struct MenuAction MultichoiceList_Gen6Restricted[] =
+{
+    {gText_HoopaU},
+    {gText_Volcanion},
+};
+
+static const struct MenuAction MultichoiceList_Gen7Restricted[] =
+{
+    {gText_Magearna},
+    {gText_Marshadow},
+    {gText_Zeraora},
+    {gText_Melmetal},
+};
+
+static const struct MenuAction MultichoiceList_Gen8Restricted[] =
+{
+    {gText_Zarude},
+    {gText_UrshifuR},
+    {gText_UrshifuS},
+    {gText_Eternatus},
+};
+
 struct MultichoiceListStruct
 {
     const struct MenuAction *list;
@@ -906,6 +1046,23 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_FALLARBOR_TENT_RULES]       = MULTICHOICE(MultichoiceList_FallarborTentRules),
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
     [MULTI_BERRY_PLOT]                 = MULTICHOICE(MultichoiceList_BerryPlot),
+    [MULTI_CHOICE_STARTER]             = MULTICHOICE(MultichoiceList_StarterGen),
+    [MULTI_CHOICE_STARTER_GEN_1]       = MULTICHOICE(MultichoiceList_Gen1Starter),
+    [MULTI_CHOICE_STARTER_GEN_2]       = MULTICHOICE(MultichoiceList_Gen2Starter),
+    [MULTI_CHOICE_STARTER_GEN_4]       = MULTICHOICE(MultichoiceList_Gen4Starter),
+    [MULTI_CHOICE_STARTER_GEN_5]       = MULTICHOICE(MultichoiceList_Gen5Starter),
+    [MULTI_CHOICE_STARTER_GEN_6]       = MULTICHOICE(MultichoiceList_Gen6Starter),
+    [MULTI_CHOICE_STARTER_GEN_7]       = MULTICHOICE(MultichoiceList_Gen7Starter),
+    [MULTI_CHOICE_STARTER_GEN_8]       = MULTICHOICE(MultichoiceList_Gen8Starter),
+    [MULTI_CHOICE_GENERATIONS]          = MULTICHOICE(MultichoiceList_Generation),
+    [MULTI_CHOICE_RESTRICTED_GEN_1]       = MULTICHOICE(MultichoiceList_Gen1Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_2]       = MULTICHOICE(MultichoiceList_Gen2Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_3]       = MULTICHOICE(MultichoiceList_Gen3Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_4]       = MULTICHOICE(MultichoiceList_Gen4Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_5]       = MULTICHOICE(MultichoiceList_Gen5Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_6]       = MULTICHOICE(MultichoiceList_Gen6Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_7]       = MULTICHOICE(MultichoiceList_Gen7Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_8]       = MULTICHOICE(MultichoiceList_Gen8Restricted),
 };
 
 const u8 *const gStdStrings[] =

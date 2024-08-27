@@ -309,10 +309,6 @@ Route119_Movement_ScottExit2:
 	walk_up
 	step_end
 
-Route119_EventScript_CyclingTriathleteM::
-	msgbox Route119_Text_TallGrassSnaresBikeTires, MSGBOX_NPC
-	end
-
 Route119_EventScript_RouteSignFortree::
 	msgbox Route119_Text_RouteSignFortree, MSGBOX_SIGN
 	end
@@ -585,12 +581,6 @@ Route119_Text_ThoughtFlyByCatchingBirdMons:
 	.string "called FLY!\p"
 	.string "I wish I'd known about that a long\n"
 	.string "time ago…$"
-
-Route119_Text_TallGrassSnaresBikeTires:
-	.string "Tch…\n"
-	.string "It's a no-go…\p"
-	.string "The tall grass snares BIKE tires.\n"
-	.string "There's no way you can cycle here.$"
 
 Route119_Text_CanYourMonMakeSecretBase:
 	.string "Can your POKéMON use its SECRET POWER\n"

@@ -1,5 +1,4 @@
-.set LOCALID_BRINEY, 11
-.set LOCALID_WANDAS_BF_OUTSIDE, 21
+.set LOCALID_WANDAS_BF_OUTSIDE, 16
 
 Route116_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route116_OnTransition
@@ -56,7 +55,7 @@ Route116_EventScript_DevonEmployee::
 
 Route116_EventScript_GiveRepeatBall::
 	setflag FLAG_MET_DEVON_EMPLOYEE
-	giveitem ITEM_REPEAT_BALL
+	giveitem ITEM_QUICK_BALL, 10
 	goto_if_eq VAR_RESULT, FALSE, Route116_EventScript_NoRoomForRepeatBall
 	msgbox Route116_Text_NewBallAvailableAtMart, MSGBOX_DEFAULT
 	closemessage
@@ -139,14 +138,18 @@ Route116_EventScript_Briney::
 	faceplayer
 	msgbox Route116_Text_ScoundrelMadeOffWithPeeko, MSGBOX_DEFAULT
 	setvar VAR_ROUTE116_STATE, 2
+	giveitem ITEM_DEVON_PARTS
+	clearflag FLAG_DEVON_GOODS_STOLEN
+	setflag FLAG_RECOVERED_DEVON_GOODS
+	setvar VAR_RUSTBORO_CITY_STATE, 4
+	setvar VAR_BRINEY_HOUSE_STATE, 1
+	setflag FLAG_HIDE_ROUTE_116_MR_BRINEY
+	setflag FLAG_BRINEY_R116
 	release
 	end
 
 Route116_EventScript_BrineyTrigger::
 	lockall
-	applymovement LOCALID_BRINEY, Common_Movement_WalkInPlaceFasterRight
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
 	msgbox Route116_Text_ScoundrelMadeOffWithPeeko, MSGBOX_DEFAULT
 	setvar VAR_ROUTE116_STATE, 2
 	releaseall
@@ -240,44 +243,9 @@ Route116_EventScript_Jose::
 	end
 
 Route116_EventScript_Jerry::
-	trainerbattle_single TRAINER_JERRY_1, Route116_Text_JerryIntro, Route116_Text_JerryDefeat, Route116_EventScript_TryRegisterJerryAfterBattle
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route116_EventScript_RematchJerry
-	setvar VAR_0x8004, TRAINER_JERRY_1
-	specialvar VAR_RESULT, IsTrainerRegistered
-	goto_if_eq VAR_RESULT, FALSE, Route116_EventScript_TryRegisterJerry
+	trainerbattle_single TRAINER_JERRY_1, Route116_Text_JerryIntro, Route116_Text_JerryDefeat
 	msgbox Route116_Text_JerryPostBattle, MSGBOX_DEFAULT
 	release
-	end
-
-Route116_EventScript_TryRegisterJerryAfterBattle::
-	goto_if_set FLAG_HAS_MATCH_CALL, Route116_EventScript_RegisterJerryAfterBattle
-	release
-	end
-
-Route116_EventScript_RegisterJerryAfterBattle::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route116_Text_JerryRegister2, MSGBOX_DEFAULT
-	register_matchcall TRAINER_JERRY_1
-	release
-	end
-
-Route116_EventScript_TryRegisterJerry::
-	goto_if_set FLAG_HAS_MATCH_CALL, Route116_EventScript_RegisterJerry
-	msgbox Route116_Text_JerryPostBattle, MSGBOX_DEFAULT
-	release
-	end
-
-Route116_EventScript_RegisterJerry::
-	msgbox Route116_Text_JerryRegister1, MSGBOX_DEFAULT
-	register_matchcall TRAINER_JERRY_1
-	release
-	end
-
-Route116_EventScript_RematchJerry::
-	trainerbattle_rematch TRAINER_JERRY_1, Route116_Text_JerryRematchIntro, Route116_Text_JerryRematchDefeat
-	msgbox Route116_Text_JerryPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route116_EventScript_Clark::
@@ -291,7 +259,7 @@ Route116_EventScript_Janice::
 	end
 
 Route116_EventScript_Karen::
-	trainerbattle_single TRAINER_KAREN_1, Route116_Text_KarenIntro, Route116_Text_KarenDefeat, Route116_EventScript_TryRegisterKarenAfterBattle
+	trainerbattle_double TRAINER_KAREN_1, Route116_Text_KarenIntro, Route116_Text_KarenDefeat, Route116_Text_KarenNotEnoughMons
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, Route116_EventScript_RematchKaren
 	setvar VAR_0x8004, TRAINER_KAREN_1
@@ -331,6 +299,9 @@ Route116_EventScript_RematchKaren::
 	msgbox Route116_Text_KarenPostRematch, MSGBOX_AUTOCLOSE
 	end
 
+Route116_Text_KarenNotEnoughMons:
+	.string "You need more pokemon.$"
+
 Route116_EventScript_Sarah::
 	trainerbattle_single TRAINER_SARAH, Route116_Text_SarahIntro, Route116_Text_SarahDefeat
 	msgbox Route116_Text_SarahPostBattle, MSGBOX_AUTOCLOSE
@@ -352,50 +323,31 @@ Route116_EventScript_Johnson::
 	end
 
 Route116_Text_ScoundrelMadeOffWithPeeko:
-	.string "Ohhh, what am I to do?\p"
 	.string "We were on our walk, PEEKO and I, when\n"
 	.string "we were jumped by an odd thug…\p"
-	.string "The scoundrel made off with my\n"
-	.string "darling PEEKO!\p"
-	.string "Wrrrooooooaaaar! PEEKO!$"
+	.string "The scoundrel tried to steel PEEKO\n"
+	.string "So I beat his Ass!$"
 
 Route116_Text_WantToDigTunnel:
 	.string "Nnn… Roar!\p"
 	.string "I want to dig that tunnel!$"
 
 Route116_Text_DiggingTunnelWhenGoonOrderedMeOut:
-	.string "Nnn… Roar!\n"
-	.string "What's going on?\p"
 	.string "I was digging the tunnel without any\n"
 	.string "tools when some goon ordered me out!\p"
 	.string "That tunnel's filled with POKéMON\n"
 	.string "that react badly to loud noises.\l"
-	.string "They could cause an uproar.\p"
-	.string "That's why we stopped using heavy\n"
-	.string "equipment for tunneling…\p"
-	.string "I'm worried that the goon will do\n"
-	.string "something stupid and startle the\l"
-	.string "POKéMON into an uproar.$"
+	.string "They could cause an uproar.\p$"
 
 Route116_Text_GoonHightailedItOutOfTunnel:
-	.string "Nnn… Roar!\p"
 	.string "That goofy goon hightailed it out of\n"
 	.string "the tunnel! I can go back to digging!$"
 
 Route116_Text_ThankYouTokenOfAppreciation:
-	.string "Oh! It's you!\p"
 	.string "You're that person who not only helped\n"
 	.string "me in PETALBURG WOODS, but also got\l"
 	.string "back my stolen package and then even\l"
 	.string "graciously delivered it to SLATEPORT!\p"
-	.string "CAPT. STERN informed us that the\n"
-	.string "package arrived, too!\p"
-	.string "I thank you very, very much!\p"
-	.string "Why, if I were a rain cloud, I would\n"
-	.string "shower you with gratitude and hail\l"
-	.string "you as a hero!\p"
-	.string "For you, the most wonderful TRAINER,\n"
-	.string "I bear good news!\p"
 	.string "Recently, our company developed\n"
 	.string "a new kind of POKé BALL.\p"
 	.string "As a token of our appreciation, this\n"
@@ -470,4 +422,3 @@ Route116_Text_TrainerTipsBagHasPockets:
 	.string "placed in the appropriate POCKETS.\p"
 	.string "No TRAINER can afford to be without\n"
 	.string "a BAG of their own.$"
-
