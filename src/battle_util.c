@@ -9394,6 +9394,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         if (gMovesInfo[move].slicingMove)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
+    case ABILITY_BALLER:
+        if (gMovesInfo[move].ballisticMove)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
     case ABILITY_BLADEMASTER:
         if (gMovesInfo[move].slicingMove)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));

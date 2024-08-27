@@ -2711,5 +2711,18 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Fairy/Normal weak to Dark."),
         .aiRating = 6,
     },
+    [ABILITY_SOUSAPHONE] =
+    {
+        .name = _("Sousaphone"),
+        .description = COMPOUND_STRING("Makes sound moves Steel."),
+        .aiRating = 5,
+    },
+
+    [ABILITY_BALLER] =
+    {
+        .name = _("Baller"),
+        .description = COMPOUND_STRING("Strengthens ball moves."),
+        .aiRating = 7,
+    },
 
 };

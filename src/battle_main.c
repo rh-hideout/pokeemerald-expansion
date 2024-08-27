@@ -5918,6 +5918,10 @@ if (gMovesInfo[move].effect == EFFECT_BOIL_OVER)
     {
         gBattleStruct->dynamicMoveType = TYPE_WATER | F_DYNAMIC_TYPE_SET;
     }
+    else if (gMovesInfo[move].soundMove && attackerAbility == ABILITY_SOUSAPHONE)
+    {
+        gBattleStruct->dynamicMoveType = TYPE_STEEL | F_DYNAMIC_TYPE_SET;
+    }
     else if (gMovesInfo[move].effect == EFFECT_AURA_WHEEL && gBattleMons[battlerAtk].species == SPECIES_MORPEKO_HANGRY)
     {
         gBattleStruct->dynamicMoveType = TYPE_DARK | F_DYNAMIC_TYPE_SET;
