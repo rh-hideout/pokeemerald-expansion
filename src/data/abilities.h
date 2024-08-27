@@ -2705,4 +2705,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 7,
     },
 
+    [ABILITY_DEGRADATION] =
+    {
+        .name = _("Degradation"),
+        .description = COMPOUND_STRING("Fairy/Normal weak to Dark."),
+        .aiRating = 6,
+    },
+
 };
