@@ -2701,7 +2701,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_BLADEMASTER] =
     {
         .name = _("Blademaster"),
-        .description = COMPOUND_STRING("Strengthens slicing moves.Raises Crit"),
+        .description = COMPOUND_STRING("Slice moves up + crits more."),
         .aiRating = 7,
     },
 
