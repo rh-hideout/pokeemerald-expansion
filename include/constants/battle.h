@@ -403,8 +403,9 @@
 #define MOVE_EFFECT_PSYCHIC_NOISE       78
 #define MOVE_EFFECT_TERA_BLAST          79
 #define MOVE_EFFECT_STICKY_TONGUE       80
+#define MOVE_EFFECT_LEECH_SEED          81
 
-#define NUM_MOVE_EFFECTS                81
+#define NUM_MOVE_EFFECTS                82
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

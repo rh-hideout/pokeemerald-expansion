@@ -3678,6 +3678,27 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
 
                 PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
             }
+            else if (gMovesInfo[gCurrentMove].effect == EFFECT_SHINE_STRIKE)
+            {
+                u32 ability = GetBattlerAbility(gBattlerAttacker);
+
+                if (ability == ABILITY_SKILL_LINK)
+                {
+                    gMultiHitCounter = 5;
+                }
+                else if (ability == ABILITY_BATTLE_BOND
+                && gCurrentMove == MOVE_WATER_SHURIKEN
+                && gBattleMons[gBattlerAttacker].species == SPECIES_GRENINJA_ASH)
+                {
+                    gMultiHitCounter = 3;
+                }
+                else
+                {
+                    SetRandomMultiHitCounter();
+                }
+
+                PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+            }
             else if (gMovesInfo[gCurrentMove].strikeCount > 1)
             {
                 if (gMovesInfo[gCurrentMove].effect == EFFECT_POPULATION_BOMB && GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_LOADED_DICE)
@@ -9574,6 +9595,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         && uq4_12_multiply_by_int_half_down(modifier, basePower) < 60
         && gMovesInfo[move].strikeCount < 2
         && gMovesInfo[move].effect != EFFECT_MULTI_HIT
+        && gMovesInfo[move].effect != EFFECT_SHINE_STRIKE
         && gMovesInfo[move].priority == 0)
     {
         return 60;
@@ -10472,14 +10494,16 @@ static inline void MulByTypeEffectiveness(uq4_12_t *modifier, u32 move, u32 move
         mod = UQ_4_12(1.0);
     if (gMovesInfo[move].effect == EFFECT_SUPER_EFFECTIVE_ON_ARG && defType == gMovesInfo[move].argument)
         mod = UQ_4_12(2.0);
+    if (gMovesInfo[move].effect == EFFECT_NEUTRAL_EFFECTIVE_ON_ARG && defType == gMovesInfo[move].argument)
+        mod = UQ_4_12(1.0);
+    if (gMovesInfo[move].effect == EFFECT_SHINE_STRIKE && defType == gMovesInfo[move].argument)
+        mod = UQ_4_12(1.0);
     if (moveType == TYPE_GROUND && defType == TYPE_FLYING && IsBattlerGrounded(battlerDef) && mod == UQ_4_12(0.0))
         mod = UQ_4_12(1.0);
     if (moveType == TYPE_STELLAR && GetActiveGimmick(battlerDef) == GIMMICK_TERA)
         mod = UQ_4_12(2.0);
     if (moveType == TYPE_DARK && (defType == TYPE_FAIRY || defType == TYPE_NORMAL) && abilityAtk == ABILITY_DEGRADATION)
         mod = UQ_4_12(2.0);
-    if (TYPE_STEEL && defType == TYPE_STEEL && gStatuses3[battlerDef] & EFFECT_NEUTRAL_EFFECTIVE_ON_ARG && mod == UQ_4_12(0.5))
-        mod = UQ_4_12(1.0);
 
     // B_WEATHER_STRONG_WINDS weakens Super Effective moves against Flying-type Pokémon
     if (gBattleWeather & B_WEATHER_STRONG_WINDS && WEATHER_HAS_EFFECT)
