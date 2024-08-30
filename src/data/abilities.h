@@ -2724,5 +2724,19 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Strengthens ball moves."),
         .aiRating = 7,
     },
+    
+    [ABILITY_TETANUS] =
+    {
+        .name = _("Tetanus"),
+        .description = COMPOUND_STRING("Badly poisons on contact."),
+        .aiRating = 4,
+    },
+    
+    [ABILITY_STRIKER] =
+    {
+        .name = _("Striker"),
+        .description = COMPOUND_STRING("Power Up kick moves."),
+        .aiRating = 4,
+    },
 
 };
