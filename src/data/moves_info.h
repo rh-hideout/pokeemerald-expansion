@@ -8373,8 +8373,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Bullet Seed"),
         .description = COMPOUND_STRING(
-            "Shoots 2 to 5 seeds in a row\n"
-            "to strike the foe."),
+            "Spits 2-5 seeds at the foe.\n"
+            "Each hit may seed them."),
         .effect = EFFECT_MULTI_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 25 : 10,
         .type = TYPE_GRASS,
@@ -8384,6 +8384,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .ballisticMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_LEECH_SEED,
+            .chance = 6,
+        }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -10097,8 +10101,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Seed Bomb"),
         .description = COMPOUND_STRING(
-            "A barrage of hard seeds\n"
-            "is fired at the foe."),
+            "Barrages the foe with hard\n"
+            "seeds. May seed the foe."),
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_GRASS,
@@ -10108,6 +10112,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .ballisticMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_LEECH_SEED,
+            .chance = 30,
+        }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -21480,8 +21488,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Villify"),
         .description = COMPOUND_STRING(
-            "Yells intense slurs at\n"
-            "the enemy.Making them Dark."),
+            "Yells intense slurs,\n"
+            "making the target Dark-Type."),
         .effect = EFFECT_SOAK,
         .power = 0,
         .type = TYPE_DARK,
@@ -21499,26 +21507,51 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_PARTING_SHOT,
     },
 
-    [MOVE_THOUSAND_FOLD] =
+    [MOVE_THOUSAND_FOLDS] = // 1000 folds (this note is for search ease! please keep it here -rex)
     {
-        .name = COMPOUND_STRING("1000 Fold"),
+        .name = COMPOUND_STRING("Thousand Folds"),
         .description = COMPOUND_STRING(
-            "Slams the foe with a hard\n"
-            "head. May cause flinching."),
-        .effect = EFFECT_NEUTRAL_EFFECTIVE_ON_ARG,//Might not be working 100%
-        .power = 80,
+            "A slice that tears through\n"
+            "defenses. Neutral vs Steel."),
+        .effect = EFFECT_NEUTRAL_EFFECTIVE_ON_ARG,
+        .power = 90,
         .type = TYPE_STEEL,
         .accuracy = 100,
-        .pp = 15,
+        .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .ignoresProtect = TRUE,
+        .argument = TYPE_STEEL,
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_IRON_HEAD,
+    },
+
+    [MOVE_SHINE_STRIKE] =
+    {
+        .name = COMPOUND_STRING("Shine Strike"),
+        .description = COMPOUND_STRING(
+            "Launches sharp spikes that\n"
+            "strike 2 to 5 times."),
+        .effect = EFFECT_SHINE_STRIKE,
+        .power = 25,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .argument = TYPE_STEEL,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SPIKE_CANNON,
     },
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
