@@ -2449,6 +2449,8 @@ enum {
     CRY_KRISSY,
     CRY_BLUBBASTARD,
     CRY_FLUBBSTER,
+    CRY_REVELOROS,
+    CRY_OUROBLACK,
     
     CRY_COUNT,
 };

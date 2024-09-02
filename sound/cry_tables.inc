@@ -2467,6 +2467,10 @@ gCryTable::
 	cry Cry_Blubbastard
 
 	cry Cry_Flubbster
+
+	cry Cry_Reveloros
+
+	cry Cry_Ouroblack
 .endif
 
 	.align 2
@@ -4936,4 +4940,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Blubbastard
 
 	cry_reverse Cry_Flubbster
+
+	cry_reverse Cry_Reveloros
+
+	cry_reverse Cry_Ouroblack
 .endif

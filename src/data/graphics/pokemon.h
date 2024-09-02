@@ -22130,6 +22130,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/icon.4bpp");
    const u8 gMonFootprint_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/front.4bpp.lz");
+   const u32 gMonBackPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/back.4bpp.lz");
+   const u32 gMonPalette_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/shiny.gbapal.lz");
+   const u8 gMonIcon_Ouroblack[] = INCBIN_U8("graphics/pokemon/ouroblack/icon.4bpp");
+   const u8 gMonFootprint_Ouroblack[] = INCBIN_U8("graphics/pokemon/ouroblack/footprint.1bpp");
+
+   const u32 gMonFrontPic_Reveloros[] = INCBIN_U32("graphics/pokemon/reveloros/front.4bpp.lz");
+   const u32 gMonBackPic_Reveloros[] = INCBIN_U32("graphics/pokemon/reveloros/back.4bpp.lz");
+   const u32 gMonPalette_Reveloros[] = INCBIN_U32("graphics/pokemon/reveloros/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Reveloros[] = INCBIN_U32("graphics/pokemon/reveloros/shiny.gbapal.lz");
+   const u8 gMonIcon_Reveloros[] = INCBIN_U8("graphics/pokemon/reveloros/icon.4bpp");
+   const u8 gMonFootprint_Reveloros[] = INCBIN_U8("graphics/pokemon/reveloros/footprint.1bpp");
+
    const u32 gMonFrontPic_Bearedaze[] = INCBIN_U32("graphics/pokemon/bearedaze/front.4bpp.lz");
    const u32 gMonBackPic_Bearedaze[] = INCBIN_U32("graphics/pokemon/bearedaze/back.4bpp.lz");
    const u32 gMonPalette_Bearedaze[] = INCBIN_U32("graphics/pokemon/bearedaze/normal.gbapal.lz");

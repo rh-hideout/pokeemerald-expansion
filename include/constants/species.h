@@ -1650,8 +1650,10 @@
 #define SPECIES_KRISSY                                  1543
 #define SPECIES_BLUBBASTARD                             1544
 #define SPECIES_FLUBBSTER                               1545
+#define SPECIES_REVELOROS                               1546
+#define SPECIES_OUROBLACK                               1547
 
-#define SPECIES_EGG (SPECIES_FLUBBSTER + 1)
+#define SPECIES_EGG (SPECIES_OUROBLACK + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

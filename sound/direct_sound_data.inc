@@ -6237,6 +6237,14 @@ Cry_Bearedaze::
 	.incbin "sound/direct_sound_samples/cries/bearedaze.bin"
 
 	.align 2
+Cry_Reveloros::
+	.incbin "sound/direct_sound_samples/cries/reveloros.bin"
+
+	.align 2
+Cry_Ouroblack::
+	.incbin "sound/direct_sound_samples/cries/ouroblack.bin"
+
+	.align 2
 Cry_Noxilium::
 	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
 
