@@ -3712,6 +3712,14 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                         gBattlescriptCurrInstr = BattleScript_SpikesActivates;
                 }
                 break;
+            case MOVE_EFFECT_LEECH_SEED:
+                if (!gStatuses3[gBattlerTarget] && STATUS3_LEECHSEED)
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectLeechSeed;
+                }
+                break;
             case MOVE_EFFECT_SYRUP_BOMB:
                 if (!(gStatuses4[gEffectBattler] & STATUS4_SYRUP_BOMB))
                 {
