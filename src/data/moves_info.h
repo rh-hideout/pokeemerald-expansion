@@ -21553,6 +21553,33 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_SPIKE_CANNON,
     },
+
+    [MOVE_HYPER_BEAM_D] = 
+    {
+        .name = COMPOUND_STRING("HYPER BEAM"),
+        .description = COMPOUND_STRING(
+            "A POWERFUL RAY OF LIGHT. NO\n"
+            "RECHARGE IF IT KO'S TARGET."),
+        .effect = EFFECT_HIT,
+        .power = 150,
+        .type = TYPE_NORMAL,
+        .accuracy = 90,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_RECHARGE_D,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_HYPER_BEAM,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

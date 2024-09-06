@@ -404,8 +404,9 @@
 #define MOVE_EFFECT_TERA_BLAST          79
 #define MOVE_EFFECT_STICKY_TONGUE       80
 #define MOVE_EFFECT_LEECH_SEED          81
+#define MOVE_EFFECT_RECHARGE_D          82
 
-#define NUM_MOVE_EFFECTS                82
+#define NUM_MOVE_EFFECTS                83
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000
