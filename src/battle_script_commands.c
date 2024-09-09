@@ -7554,9 +7554,9 @@ static void Cmd_switchineffects(void)
 
 static void Cmd_trainerslidein(void)
 {
-    CMD_ARGS(u8 battler);
+    CMD_ARGS(u8 position);
 
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    u32 battler = GetBattlerForBattleScript(cmd->position);
     BtlController_EmitTrainerSlide(battler, BUFFER_A);
     MarkBattlerForControllerExec(battler);
 
@@ -17473,6 +17473,23 @@ void BS_TryTarShot(void)
     else
     {
         gDisableStructs[gBattlerTarget].tarShot = TRUE;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_JumpIfBlockedBySoundproof(void)
+{
+    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    if (gMovesInfo[gCurrentMove].soundMove && GetBattlerAbility(battler) == ABILITY_SOUNDPROOF)
+    {
+        gLastUsedAbility = ABILITY_SOUNDPROOF;
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+        RecordAbilityBattle(battler, gLastUsedAbility);
+        gBattlerAbility = battler;
+    }
+    else
+    {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

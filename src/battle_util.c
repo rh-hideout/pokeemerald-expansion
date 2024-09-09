@@ -2332,6 +2332,7 @@ enum
     ENDTURN_DYNAMAX,
     ENDTURN_GMAX_MOVE_RESIDUAL_DAMAGE,
     ENDTURN_SEA_OF_FIRE_DAMAGE,
+    ENDTURN_ITEMS3,
     ENDTURN_BATTLER_COUNT
 };
 
@@ -2462,6 +2463,15 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_ITEMS2:  // item effects again
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, TRUE))
                 effect++;
+            gBattleStruct->turnEffectsTracker++;
+            break;
+        case ENDTURN_ITEMS3:  // berry effects
+            if (gItemsInfo[gBattleMons[battler].item].pocket == POCKET_BERRIES
+             || GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_RESTORE_HP)  // Edge case for Berry Juice
+            {
+                if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+                    effect++;
+            }
             gBattleStruct->turnEffectsTracker++;
             break;
         case ENDTURN_ORBS:
@@ -2895,9 +2905,11 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_ELECTRIFY:
             gStatuses4[battler] &= ~STATUS4_ELECTRIFIED;
             gBattleStruct->turnEffectsTracker++;
+            break;
         case ENDTURN_POWDER:
             gBattleMons[battler].status2 &= ~STATUS2_POWDER;
             gBattleStruct->turnEffectsTracker++;
+            break;
         case ENDTURN_THROAT_CHOP:
             if (gDisableStructs[battler].throatChopTimer && --gDisableStructs[battler].throatChopTimer == 0)
             {
@@ -3307,7 +3319,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
                 if (!RandomPercentage(RNG_FROZEN, 20))
                 {
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsFrozen;
-                    gHitMarker |= HITMARKER_NO_ATTACKSTRING;
+                    gHitMarker |= (HITMARKER_NO_ATTACKSTRING | HITMARKER_UNABLE_TO_USE_MOVE);
                 }
                 else // unfreeze
                 {
@@ -3562,6 +3574,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
                     gProtectStructs[gBattlerAttacker].powderSelfDmg = TRUE;
                     gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
                     gBattlescriptCurrInstr = BattleScript_MoveUsedPowder;
+                    gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
                     effect = 1;
                 }
             }
