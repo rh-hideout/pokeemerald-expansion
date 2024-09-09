@@ -8653,12 +8653,6 @@ BattleScript_ImposterActivates::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
-BattleScript_ShortFuseActivates::
-	call BattleScript_AbilityPopUp
-	seteffectprimary MOVE_EFFECT_RAGE
-	waitmessage B_WAIT_TIME_LONG
-	end3
-
 BattleScript_HurtAttacker:
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
 	healthbarupdate BS_ATTACKER

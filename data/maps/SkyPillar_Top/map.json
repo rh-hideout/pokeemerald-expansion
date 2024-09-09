@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_RAYQUAZA",
@@ -61,5 +61,7 @@
       "script": "SkyPillar_Top_EventScript_AwakenRayquaza"
     }
   ],
-  "bg_events": []
+  "bg_events": [
+
+  ]
 }

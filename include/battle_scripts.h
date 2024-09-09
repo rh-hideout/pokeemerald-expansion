@@ -299,7 +299,6 @@ extern const u8 BattleScript_SnowWarningActivatesSnow[];
 extern const u8 BattleScript_PickupActivates[];
 extern const u8 BattleScript_HarvestActivates[];
 extern const u8 BattleScript_ImposterActivates[];
-extern const u8 BattleScript_ShortFuseActivates[];
 extern const u8 BattleScript_SelectingNotAllowedMoveAssaultVest[];
 extern const u8 BattleScript_SelectingNotAllowedMoveAssaultVestInPalace[];
 extern const u8 BattleScript_SelectingNotAllowedPlaceholder[];
