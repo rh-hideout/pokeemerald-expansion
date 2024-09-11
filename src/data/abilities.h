@@ -2764,7 +2764,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         [ABILITY_TOXIC_GLUE] =
     {
         .name = _("Toxic Glue"),
-        .description = COMPOUND_STRING("PSN lowers SPEED."),
+        .description = COMPOUND_STRING("PSN traps foes."),
         .aiRating = 5,
     },
         [ABILITY_INSPIRE] =
@@ -2777,6 +2777,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Insectivore"),
         .description = COMPOUND_STRING("Strong against Bugs."),
+        .aiRating = 5,
+    },
+        [ABILITY_NEUROTOXIN] =
+    {
+        .name = _("Neurotoxin"),
+        .description = COMPOUND_STRING("PSN lowers SPEED."),
         .aiRating = 5,
     },
 

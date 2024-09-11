@@ -9237,7 +9237,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_ACCELGOR] =
     {
-        .baseHP        = 109
+        .baseHP        = 109,
         .baseAttack    = 40,
         .baseDefense   = 85,
         .baseSpeed     = 129,
