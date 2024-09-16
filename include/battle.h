@@ -115,17 +115,15 @@ struct DisableStruct
     u8 disableTimer:4;
     u8 encoreTimer:4;
     u8 perishSongTimer:4;
-    u8 furyCutterCounter;
     u8 rolloutTimer:4;
     u8 rolloutTimerStartValue:4;
-    u8 chargeTimer:4;
     u8 tauntTimer:4;
+    u8 furyCutterCounter;
     u8 battlerPreventingEscape;
     u8 battlerWithSureHit;
     u8 isFirstTurn;
-    u8 truantCounter:1;
-    u8 truantSwitchInHack:1;
     u8 mimickedMoves:4;
+    u8 chargeTimer:4;
     u8 rechargeTimer;
     u8 autotomizeCount;
     u8 slowStartTimer;
@@ -138,6 +136,8 @@ struct DisableStruct
     u8 wrapTurns;
     u8 tormentTimer:4; // used for G-Max Meltdown
     u8 usedMoves:4;
+    u8 truantCounter:1;
+    u8 truantSwitchInHack:1;
     u8 noRetreat:1;
     u8 tarShot:1;
     u8 octolock:1;
@@ -184,9 +184,9 @@ struct ProtectStruct
     u32 powderSelfDmg:1;
     u32 usedThroatChopPreventedMove:1;
     u32 statRaised:1;
-    u32 usedMicleBerry:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
+    u32 unused:1;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
     u16 statFell:1;
@@ -221,7 +221,7 @@ struct SpecialStatus
     u8 faintedHasReplacement:1;
     u8 focusBanded:1;
     u8 focusSashed:1;
-    u8 unused:1;
+    u8 unused:2;
     // End of byte
     u8 sturdied:1;
     u8 stormDrainRedirected:1;
@@ -801,6 +801,8 @@ struct BattleStruct
     u8 categoryOverride; // for Z-Moves and Max Moves
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 fickleBeamBoosted:1;
+    u8 obedienceResult:3;
+    u8 usedMicleBerry;
 };
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
