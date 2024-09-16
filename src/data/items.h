@@ -5180,7 +5180,7 @@ const struct Item gItemsInfo[] =
     [ITEM_RUSTED_SWORD] =
     {
         .name = HANDLE_EXPANDED_ITEM_NAME("RustedSword", "Rusted Sword"),
-        .price = 0,
+        .price = 1000,
         .description = COMPOUND_STRING(
             "A rusty sword. A\n"
             "hero used it to\n"
@@ -5195,7 +5195,7 @@ const struct Item gItemsInfo[] =
     [ITEM_RUSTED_SHIELD] =
     {
         .name = HANDLE_EXPANDED_ITEM_NAME("RustedShield", "Rusted Shield"),
-        .price = 0,
+        .price = 1000,
         .description = COMPOUND_STRING(
             "A rusty shield. A\n"
             "hero used it to\n"

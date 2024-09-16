@@ -2,7 +2,7 @@
   "id": "MAP_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
   "name": "AquaHideout_UnusedRubyMap2",
   "layout": "LAYOUT_AQUA_HIDEOUT_UNUSED_RUBY_MAP2",
-  "music": "MUS_AQUA_MAGMA_HIDEOUT",
+  "music": "MUS_RG_LAVENDER",
   "region_map_section": "MAPSEC_AQUA_HIDEOUT",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -333,7 +333,7 @@
       "y": 2,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL"
+      "script": "AHURM2_EventScript_Sign"
     }
   ]
 }

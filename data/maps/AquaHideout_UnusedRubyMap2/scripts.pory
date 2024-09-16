@@ -1,5 +1,15 @@
+mapscripts AquaHideout_UnusedRubyMap2_MapScripts {
+}
+
+script AHURM2_EventScript_Sign {
+    lockall
+    msgbox(format("BLACK MARKET\p"
+    "Do not use key items or pay the price!\p"))
+    releaseall
+}
+
+
 raw `
-AquaHideout_UnusedRubyMap2_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, AquaHideout_UnusedRubyMap2_OnResume
 	.byte 0
 

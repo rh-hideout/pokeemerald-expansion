@@ -41,6 +41,16 @@ Script_Black_Market_BERRY_BOY::
     release
     end
 
+Script_Black_Market_PLATE_PERSON::
+    lock
+    faceplayer
+    message Text_BMPLATEP
+    waitmessage
+    pokemart BM_PLATE_ITEMS
+    msgbox Text_BMPLATEEND
+    release
+    end
+
 .align 2
 BM_SHARD_ITEMS:
     .2byte ITEM_RED_SHARD
@@ -126,6 +136,8 @@ BM_BALL_ITEMS:
     .2byte ITEM_WELLSPRING_MASK
     .2byte ITEM_CORNERSTONE_MASK
     .2byte ITEM_HEARTHFLAME_MASK
+    .2byte ITEM_RUSTED_SWORD
+    .2byte ITEM_RUSTED_SHIELD
     .2byte ITEM_CHOICE_BAND
     .2byte ITEM_CHOICE_SPECS
     .2byte ITEM_CHOICE_SCARF
@@ -233,6 +245,68 @@ BM_BERRIES_ITEMS:
     release
     end
 
+.align 2
+BM_PLATE_ITEMS:
+    .2byte ITEM_FLAME_PLATE
+    .2byte ITEM_SPLASH_PLATE
+    .2byte ITEM_ZAP_PLATE
+    .2byte ITEM_MEADOW_PLATE
+    .2byte ITEM_ICICLE_PLATE
+    .2byte ITEM_FIST_PLATE
+    .2byte ITEM_TOXIC_PLATE
+    .2byte ITEM_EARTH_PLATE
+    .2byte ITEM_SKY_PLATE
+    .2byte ITEM_MIND_PLATE
+    .2byte ITEM_INSECT_PLATE
+    .2byte ITEM_STONE_PLATE
+    .2byte ITEM_SPOOKY_PLATE
+    .2byte ITEM_DRACO_PLATE
+    .2byte ITEM_DREAD_PLATE
+    .2byte ITEM_IRON_PLATE
+    .2byte ITEM_PIXIE_PLATE
+    .2byte ITEM_DOUSE_DRIVE
+    .2byte ITEM_SHOCK_DRIVE
+    .2byte ITEM_BURN_DRIVE
+    .2byte ITEM_CHILL_DRIVE
+    .2byte ITEM_FIRE_MEMORY
+    .2byte ITEM_WATER_MEMORY
+    .2byte ITEM_ELECTRIC_MEMORY
+    .2byte ITEM_GRASS_MEMORY
+    .2byte ITEM_ICE_MEMORY
+    .2byte ITEM_FIGHTING_MEMORY
+    .2byte ITEM_POISON_MEMORY
+    .2byte ITEM_GROUND_MEMORY
+    .2byte ITEM_FLYING_MEMORY
+    .2byte ITEM_PSYCHIC_MEMORY
+    .2byte ITEM_BUG_MEMORY
+    .2byte ITEM_ROCK_MEMORY
+    .2byte ITEM_GHOST_MEMORY
+    .2byte ITEM_DRAGON_MEMORY
+    .2byte ITEM_DARK_MEMORY
+    .2byte ITEM_STEEL_MEMORY
+    .2byte ITEM_FAIRY_MEMORY
+    .2byte ITEM_NORMAL_GEM
+    .2byte ITEM_FIRE_GEM
+    .2byte ITEM_WATER_GEM
+    .2byte ITEM_ELECTRIC_GEM
+    .2byte ITEM_GRASS_GEM
+    .2byte ITEM_ICE_GEM
+    .2byte ITEM_FIGHTING_GEM
+    .2byte ITEM_POISON_GEM
+    .2byte ITEM_GROUND_GEM
+    .2byte ITEM_FLYING_GEM
+    .2byte ITEM_PSYCHIC_GEM
+    .2byte ITEM_BUG_GEM
+    .2byte ITEM_ROCK_GEM
+    .2byte ITEM_GHOST_GEM
+    .2byte ITEM_DRAGON_GEM
+    .2byte ITEM_DARK_GEM
+    .2byte ITEM_STEEL_GEM
+    .2byte ITEM_FAIRY_GEM
+    .2byte ITEM_NONE
+    release
+    end
+
 Text_BMBALL:
     .string "I got some nice stuff from a Warehouse.\p"
     .string "How can I help you?$"
@@ -253,6 +327,13 @@ Text_BMBERRYBOY:
     .string "How can I help you?$"
 
 Text_BMBERRYEND:
+    .string "Please come again!$"
+
+Text_BMPLATEP:
+    .string "I got some museum quality stuff.\p"
+    .string "How can I help you?$"
+
+Text_BMPLATEEND:
     .string "Please come again!$"
 
 GatchaBegg_EventScript_EggWoman::
@@ -335,6 +416,36 @@ BlackMarket_EventScript_CandyMan::
     hidemoneybox
     release
     end
+
+EventScript_BirthIslandGift::
+    lock
+    faceplayer
+    message gText_BIRTHIStext
+    waitmessage
+    checkitem ITEM_AURORA_TICKET, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havebirthticket
+    waitmessage
+    message gText_Hereisbirthticket
+    giveitem ITEM_AURORA_TICKET
+    playfanfare MUS_OBTAIN_ITEM
+    setflag FLAG_ENABLE_SHIP_BIRTH_ISLAND
+    release
+    end
+
+Script_havebirthticket::
+    msgbox gText_havebirthticket
+    release
+    end
+
+gText_BIRTHIStext::
+    .string "Did you know there is aliens...\p $"
+
+gText_havebirthticket::
+    .string "Oh Wait! Did you find any?$"
+
+gText_Hereisbirthticket::
+    .string "Here you go! I hope you find some!$"
 
 
 BlackMarket_EventScript_BagIsFull::
