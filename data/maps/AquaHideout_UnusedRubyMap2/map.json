@@ -330,7 +330,7 @@
     {
       "type": "sign",
       "x": 21,
-      "y": 2,
+      "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "AHURM2_EventScript_Sign"

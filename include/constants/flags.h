@@ -43,7 +43,7 @@
 #define NUM_TEMP_FLAGS   (TEMP_FLAGS_END - TEMP_FLAGS_START + 1)
 
 #define FLAG_CLOCK_0x020    0x20 // not an Unused Flag
-#define FLAG_DYNAMAX_BATTLE    0x21 // not an Unused Flag
+#define FLAG_DYNAMAX_BATTLE    0x21 // was an Unused Flag
 #define FLAG_TERA_ORB_CHARGED   0x22 // was a Unused Flag
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag
 #define FLAG_UNUSED_0x024    0x24 // Unused Flag
