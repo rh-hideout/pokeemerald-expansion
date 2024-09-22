@@ -6173,6 +6173,10 @@ Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
 	.align 2
+Cry_Impfection::
+	.incbin "sound/direct_sound_samples/cries/impfection.bin"
+
+	.align 2
 Cry_Krissy::
 	.incbin "sound/direct_sound_samples/cries/krissy.bin"
 
@@ -6247,6 +6251,14 @@ Cry_Ouroblack::
 	.align 2
 Cry_Noxilium::
 	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
+
+	.align 2
+Cry_Dinomight::
+	.incbin "sound/direct_sound_samples/cries/dinomight.bin"
+
+	.align 2
+Cry_Cocken::
+	.incbin "sound/direct_sound_samples/cries/cocken.bin"
 
 	.align 2
 Cry_Forgotno::

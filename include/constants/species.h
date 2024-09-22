@@ -1652,8 +1652,12 @@
 #define SPECIES_FLUBBSTER                               1545
 #define SPECIES_REVELOROS                               1546
 #define SPECIES_OUROBLACK                               1547
+#define SPECIES_IMPFECTION                              1548
+#define SPECIES_DINOMIGHT                               1549
+#define SPECIES_COCKEN                                  1550
+#define SPECIES_COCKEN_MEGA                             1551
 
-#define SPECIES_EGG (SPECIES_OUROBLACK + 1)
+#define SPECIES_EGG (SPECIES_COCKEN_MEGA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

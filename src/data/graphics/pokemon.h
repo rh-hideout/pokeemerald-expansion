@@ -22015,6 +22015,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/front.4bpp.lz");
+   const u32 gMonBackPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/back.4bpp.lz");
+   const u32 gMonPalette_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/shiny.gbapal.lz");
+   const u8 gMonIcon_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/icon.4bpp");
+   const u8 gMonFootprint_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/footprint.1bpp");
+
    const u32 gMonFrontPic_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/front.4bpp.lz");
    const u32 gMonBackPic_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/back.4bpp.lz");
    const u32 gMonPalette_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/normal.gbapal.lz");
@@ -22101,6 +22108,26 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/shiny.gbapal.lz");
    const u8 gMonIcon_Noxilium[] = INCBIN_U8("graphics/pokemon/noxilium/icon.4bpp");
    const u8 gMonFootprint_Noxilium[] = INCBIN_U8("graphics/pokemon/noxilium/footprint.1bpp");
+
+   const u32 gMonFrontPic_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/front.4bpp.lz");
+   const u32 gMonBackPic_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/back.4bpp.lz");
+   const u32 gMonPalette_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/shiny.gbapal.lz");
+   const u8 gMonIcon_Dinomight[] = INCBIN_U8("graphics/pokemon/dinomight/icon.4bpp");
+   const u8 gMonFootprint_Dinomight[] = INCBIN_U8("graphics/pokemon/dinomight/footprint.1bpp");
+
+   const u32 gMonFrontPic_Cocken[] = INCBIN_U32("graphics/pokemon/cocken/front.4bpp.lz");
+   const u32 gMonBackPic_Cocken[] = INCBIN_U32("graphics/pokemon/cocken/back.4bpp.lz");
+   const u32 gMonPalette_Cocken[] = INCBIN_U32("graphics/pokemon/cocken/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cocken[] = INCBIN_U32("graphics/pokemon/cocken/shiny.gbapal.lz");
+   const u8 gMonIcon_Cocken[] = INCBIN_U8("graphics/pokemon/cocken/icon.4bpp");
+   const u8 gMonFootprint_Cocken[] = INCBIN_U8("graphics/pokemon/cocken/footprint.1bpp");
+
+    const u32 gMonFrontPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/front.4bpp.lz");
+    const u32 gMonPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_CockenMega[] = INCBIN_U8("graphics/pokemon/cocken/mega/icon.4bpp");
 
    const u32 gMonFrontPic_Moltama[] = INCBIN_U32("graphics/pokemon/moltama/front.4bpp.lz");
    const u32 gMonBackPic_Moltama[] = INCBIN_U32("graphics/pokemon/moltama/back.4bpp.lz");

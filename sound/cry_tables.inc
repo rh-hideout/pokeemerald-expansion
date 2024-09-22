@@ -2471,6 +2471,12 @@ gCryTable::
 	cry Cry_Reveloros
 
 	cry Cry_Ouroblack
+
+	cry Cry_Impfection
+
+	cry Cry_Dinomight
+
+	cry Cry_Cocken
 .endif
 
 	.align 2
@@ -4944,4 +4950,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Reveloros
 
 	cry_reverse Cry_Ouroblack
+
+	cry_reverse Cry_Impfection
+
+	cry_reverse Cry_Dinomight
+
+	cry_reverse Cry_Cocken
 .endif

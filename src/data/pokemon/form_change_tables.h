@@ -682,6 +682,7 @@ static const struct FormChange sAudinoFormChangeTable[] = {
 };
 #endif //P_FAMILY_AUDINO
 
+
 #if P_FAMILY_DARUMAKA
 static const struct FormChange sDarmanitanFormChangeTable[] = {
     {FORM_CHANGE_BATTLE_HP_PERCENT, SPECIES_DARMANITAN_STANDARD_MODE, ABILITY_ZEN_MODE, HP_HIGHER_THAN,   50},
@@ -1293,5 +1294,13 @@ static const struct FormChange sTerapagosFormChangeTable[] = {
 };
 #endif //P_FAMILY_TERAPAGOS
 
+#if P_FAMILY_DINOMIGHT
+static const struct FormChange sCockenFormChangeTable[] = {
+#if P_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE, SPECIES_COCKEN_MEGA, MOVE_ANCIENT_POWER},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_DINOMIGHT
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN
