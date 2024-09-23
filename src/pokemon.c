@@ -378,6 +378,7 @@ static const u16 sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DINOMIGHT),
     HOENN_TO_NATIONAL(COCKEN),
     HOENN_TO_NATIONAL(FORGOTNO),
+    HOENN_TO_NATIONAL(DOOMSAY),
 };
 
 const struct SpindaSpot gSpindaSpotGraphics[] =

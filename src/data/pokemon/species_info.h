@@ -1688,6 +1688,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Forgotno)
        .levelUpLearnset = sForgotnoLevelUpLearnset,
     },
+    
+        [SPECIES_DOOMSAY] =
+    { 
+       .baseHP        = 33,
+       .baseAttack    = 162,
+       .baseDefense   = 33,
+       .baseSpeed     = 100,
+       .baseSpAttack  = 100,
+       .baseSpDefense = 101,
+       .types = { TYPE_GHOST, TYPE_PSYCHIC },
+       .catchRate = 33,
+       .expYield = 90,
+       .evYield_SpAttack  = 3,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 120,
+       .friendship = 1,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .abilities = { ABILITY_KLUTZ, ABILITY_NONE, ABILITY_LEVITATE, ABILITY_BLADEMASTER },//Replace blademaster with Old school once ready
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Doomsay"),
+       .cryId = CRY_DOOMSAY,
+       .natDexNum = NATIONAL_DEX_DOOMSAY,
+       .categoryName = _("Devotion"),
+       .height = 18,
+       .weight = 800,
+       .description = COMPOUND_STRING(
+           "It is though that in life they used to \n"
+           "perform rituals, begging to go back to  \n"
+           "a long gone point in time.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Doomsay,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Doomsay,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 1,
+       .backPic = gMonBackPic_Doomsay,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Doomsay,
+       .shinyPalette = gMonShinyPalette_Doomsay,
+       .iconSprite = gMonIcon_Doomsay,
+       .iconPalIndex = 2,
+       FOOTPRINT(Doomsay)
+       .levelUpLearnset = sDoomsayLevelUpLearnset,
+    },
 
     /* You may add any custom species below this point based on the following structure: */
 

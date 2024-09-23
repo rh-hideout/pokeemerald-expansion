@@ -2454,6 +2454,7 @@ enum {
     CRY_IMPFECTION,
     CRY_DINOMIGHT,
     CRY_COCKEN,
+    CRY_DOOMSAY,
     
     CRY_COUNT,
 };

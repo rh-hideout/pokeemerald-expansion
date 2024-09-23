@@ -22185,6 +22185,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/icon.4bpp");
    const u8 gMonFootprint_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/footprint.1bpp");
 
+   const u32 gMonFrontPic_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/front.4bpp.lz");
+   const u32 gMonBackPic_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/back.4bpp.lz");
+   const u32 gMonPalette_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/shiny.gbapal.lz");
+   const u8 gMonIcon_Doomsay[] = INCBIN_U8("graphics/pokemon/doomsay/icon.4bpp");
+   const u8 gMonFootprint_Doomsay[] = INCBIN_U8("graphics/pokemon/doomsay/footprint.1bpp");
+
    const u32 gMonFrontPic_Hydroil[] = INCBIN_U32("graphics/pokemon/hydroil/front.4bpp.lz");
    const u32 gMonBackPic_Hydroil[] = INCBIN_U32("graphics/pokemon/hydroil/back.4bpp.lz");
    const u32 gMonPalette_Hydroil[] = INCBIN_U32("graphics/pokemon/hydroil/normal.gbapal.lz");

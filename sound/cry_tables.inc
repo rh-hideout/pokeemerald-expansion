@@ -2477,6 +2477,8 @@ gCryTable::
 	cry Cry_Dinomight
 
 	cry Cry_Cocken
+
+	cry Cry_Doomsay
 .endif
 
 	.align 2
@@ -4956,4 +4958,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Dinomight
 
 	cry_reverse Cry_Cocken
+
+	cry_reverse Cry_Doomsay
 .endif

@@ -6263,6 +6263,10 @@ Cry_Cocken::
 	.align 2
 Cry_Forgotno::
 	.incbin "sound/direct_sound_samples/cries/forgotno.bin"
+
+	.align 2
+Cry_Doomsay::
+	.incbin "sound/direct_sound_samples/cries/doomsay.bin"
 .endif @ P_CRIES_ENABLED
 
 	.align 2
