@@ -2479,6 +2479,10 @@ gCryTable::
 	cry Cry_Cocken
 
 	cry Cry_Doomsay
+
+	cry Cry_Buggy
+
+	cry Cry_Bugatti
 .endif
 
 	.align 2
@@ -4960,4 +4964,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Cocken
 
 	cry_reverse Cry_Doomsay
+
+	cry_reverse Cry_Buggy
+
+	cry_reverse Cry_Bugatti
 .endif

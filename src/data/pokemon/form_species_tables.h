@@ -2182,7 +2182,6 @@ static const u16 sTerapagosFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_TERAPAGOS
 
-#if P_FAMILY_DINOMIGHT
 static const u16 sCockenFormSpeciesIdTable[] = {
     SPECIES_COCKEN,
 #if P_MEGA_EVOLUTIONS
@@ -2190,4 +2189,3 @@ static const u16 sCockenFormSpeciesIdTable[] = {
 #endif
     FORM_SPECIES_END,
 };
-#endif //P_FAMILY_COCKEN  

@@ -2455,6 +2455,8 @@ enum {
     CRY_DINOMIGHT,
     CRY_COCKEN,
     CRY_DOOMSAY,
+    CRY_BUGGY,
+    CRY_BUGATTI,
     
     CRY_COUNT,
 };

@@ -22015,6 +22015,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/front.4bpp.lz");
+   const u32 gMonBackPic_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/back.4bpp.lz");
+   const u32 gMonPalette_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/shiny.gbapal.lz");
+   const u8 gMonIcon_Buggy[] = INCBIN_U8("graphics/pokemon/buggy/icon.4bpp");
+   const u8 gMonFootprint_Buggy[] = INCBIN_U8("graphics/pokemon/buggy/footprint.1bpp");
+
+   const u32 gMonFrontPic_Bugatti[] = INCBIN_U32("graphics/pokemon/bugatti/front.4bpp.lz");
+   const u32 gMonBackPic_Bugatti[] = INCBIN_U32("graphics/pokemon/bugatti/back.4bpp.lz");
+   const u32 gMonPalette_Bugatti[] = INCBIN_U32("graphics/pokemon/bugatti/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Bugatti[] = INCBIN_U32("graphics/pokemon/bugatti/shiny.gbapal.lz");
+   const u8 gMonIcon_Bugatti[] = INCBIN_U8("graphics/pokemon/bugatti/icon.4bpp");
+   const u8 gMonFootprint_Bugatti[] = INCBIN_U8("graphics/pokemon/bugatti/footprint.1bpp");
+
    const u32 gMonFrontPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/front.4bpp.lz");
    const u32 gMonBackPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/back.4bpp.lz");
    const u32 gMonPalette_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/normal.gbapal.lz");

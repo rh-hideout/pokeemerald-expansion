@@ -1294,13 +1294,12 @@ static const struct FormChange sTerapagosFormChangeTable[] = {
 };
 #endif //P_FAMILY_TERAPAGOS
 
-#if P_FAMILY_DINOMIGHT
+
 static const struct FormChange sCockenFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE, SPECIES_COCKEN_MEGA, MOVE_ANCIENT_POWER},
 #endif
     {FORM_CHANGE_TERMINATOR},
 };
-#endif //P_FAMILY_DINOMIGHT
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN
