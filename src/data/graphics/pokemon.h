@@ -22029,6 +22029,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Bugatti[] = INCBIN_U8("graphics/pokemon/bugatti/icon.4bpp");
    const u8 gMonFootprint_Bugatti[] = INCBIN_U8("graphics/pokemon/bugatti/footprint.1bpp");
 
+   const u32 gMonFrontPic_Bullepede[] = INCBIN_U32("graphics/pokemon/bullepede/front.4bpp.lz");
+   const u32 gMonBackPic_Bullepede[] = INCBIN_U32("graphics/pokemon/bullepede/back.4bpp.lz");
+   const u32 gMonPalette_Bullepede[] = INCBIN_U32("graphics/pokemon/bullepede/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Bullepede[] = INCBIN_U32("graphics/pokemon/bullepede/shiny.gbapal.lz");
+   const u8 gMonIcon_Bullepede[] = INCBIN_U8("graphics/pokemon/bullepede/icon.4bpp");
+   const u8 gMonFootprint_Bullepede[] = INCBIN_U8("graphics/pokemon/bullepede/footprint.1bpp");
+
    const u32 gMonFrontPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/front.4bpp.lz");
    const u32 gMonBackPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/back.4bpp.lz");
    const u32 gMonPalette_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/normal.gbapal.lz");

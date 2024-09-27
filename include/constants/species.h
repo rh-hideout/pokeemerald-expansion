@@ -1659,8 +1659,9 @@
 #define SPECIES_DOOMSAY                                 1552
 #define SPECIES_BUGGY                                   1553
 #define SPECIES_BUGATTI                                 1554
+#define SPECIES_BULLEPEDE                               1555
 
-#define SPECIES_EGG (SPECIES_BUGATTI + 1)
+#define SPECIES_EGG (SPECIES_BULLEPEDE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

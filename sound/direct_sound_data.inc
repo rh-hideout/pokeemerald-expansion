@@ -6177,6 +6177,10 @@ Cry_Bugatti::
 	.incbin "sound/direct_sound_samples/cries/bugatti.bin"
 
 	.align 2
+Cry_Bullepede::
+	.incbin "sound/direct_sound_samples/cries/bullepede.bin"
+
+	.align 2
 Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 

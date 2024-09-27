@@ -338,9 +338,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 5,
        .weight = 18,
        .description = COMPOUND_STRING(
-           "Buggy are drawn to towns and communicate\n"
-           "by flashing their lights. This, unfortunately,\n"
-           "attracts their major predator in Konekoth."),
+           "Buggy are drawn to towns and roads. They\n"
+           "communicate by flashing their lights,\n"
+           "though in doing this this they draw \n"
+           "out their main predator: Konekoth."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -362,7 +363,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Buggy)
        .levelUpLearnset = sBuggyLevelUpLearnset,
-       .evolutions = EVOLUTION({EVO_LEVEL, 27, SPECIES_BUGATTI}),
+       .evolutions = EVOLUTION({EVO_LEVEL, 27, SPECIES_BUGATTI},
+                               {EVO_ITEM, ITEM_METAL_COAT, SPECIES_BULLEPEDE}),                           
     },
 
         [SPECIES_BUGATTI] =
@@ -382,7 +384,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 50,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_BUG, EGG_GROUP_NONE },
-       .abilities = { ABILITY_SHIELD_DUST, ABILITY_LIGHTNING_ROD, ABILITY_STEELWORKER, ABILITY_EMERGENCY_EXIT },
+       .abilities = { ABILITY_RECKLESS, ABILITY_MOTOR_DRIVE, ABILITY_HEAVY_METAL, ABILITY_SPEED_BOOST },
        .bodyColor = BODY_COLOR_GRAY,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -394,7 +396,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 8043,
        .description = COMPOUND_STRING(
            "Though they are capable of driving\n"
-           "on all terrains, Buggati prefer to ram\n"
+           "on all terrains, Bugatti prefer to ram\n"
            "into anything that gets in its way."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
@@ -417,6 +419,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Bugatti)
        .levelUpLearnset = sBugattiLevelUpLearnset,
+    },
+
+        [SPECIES_BULLEPEDE] =
+    { 
+       .baseHP        = 100,
+       .baseAttack    = 95,
+       .baseDefense   = 75,
+       .baseSpeed     = 130,
+       .baseSpAttack  = 50,
+       .baseSpDefense = 50,
+       .types = { TYPE_BUG, TYPE_STEEL },
+       .catchRate = 53,
+       .expYield = 80,
+       .evYield_Attack  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 120,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_BUG, EGG_GROUP_NONE },
+       .abilities = { ABILITY_ROCK_HEAD, ABILITY_MOTOR_DRIVE, ABILITY_LIGHT_METAL, ABILITY_SPEED_BOOST },
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Bullepede"),
+      .cryId = CRY_BULLEPEDE,
+       .natDexNum = NATIONAL_DEX_BULLEPEDE,
+       .categoryName = _("Metro"),
+       .height = 148,
+       .weight = 30751,
+       .description = COMPOUND_STRING(
+           "They dig backwards using their tails \n"
+           "creating complex tunnels systems they\n"
+           "are free to charge through. They can\n"
+           "hit speeds of over 240 MPH."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Bullepede,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Bullepede,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Bullepede,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Bullepede,
+       .shinyPalette = gMonShinyPalette_Bullepede,
+       .iconSprite = gMonIcon_Bullepede,
+       .iconPalIndex = 2,
+       FOOTPRINT(Bullepede)
+       .levelUpLearnset = sBullepedeLevelUpLearnset,
     },
 
         [SPECIES_ARACHNOTE] =
