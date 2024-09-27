@@ -17127,7 +17127,7 @@ Move_CRUSADER_CRASH::
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 6, 5, 1, 0
 	delay 6
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
-	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -16, -15, 1, 
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -16, -15, 1, 0
 	delay 6
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 6, 5, 1, 0
@@ -17138,7 +17138,7 @@ Move_CRUSADER_CRASH::
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 7, 15, 1, 0
 	delay 6
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
-	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -9, -15, 1, 
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -9, -15, 1, 0
 	delay 6
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 12, 15, 1, 0
