@@ -9406,6 +9406,14 @@ BattleScript_AnnounceAirLockCloudNine::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_EffectClearWeather::
+	printstring STRINGID_WEATHERBECAMECLEAR
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_CheckPrimalWeather
+	setfieldweather ENUM_WEATHER_NONE
+	call BattleScript_ActivateWeatherAbilities
+	return
+
 BattleScript_ActivateTeraformZero::
 	call BattleScript_AbilityPopUp
 	waitmessage B_WAIT_TIME_LONG

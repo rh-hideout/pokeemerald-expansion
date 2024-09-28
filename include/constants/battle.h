@@ -405,8 +405,9 @@
 #define MOVE_EFFECT_STICKY_TONGUE       80
 #define MOVE_EFFECT_LEECH_SEED          81
 #define MOVE_EFFECT_RECHARGE_D          82
+#define MOVE_EFFECT_CLEAR_WEATHER       83
 
-#define NUM_MOVE_EFFECTS                83
+#define NUM_MOVE_EFFECTS                84
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

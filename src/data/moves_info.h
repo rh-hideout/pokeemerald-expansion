@@ -21583,6 +21583,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_HYPER_BEAM,
     },
 
+    [MOVE_CLOUD_BREAKER] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("Cloud Breaker"),
+        .description = COMPOUND_STRING(
+            "Clears the currently\n"
+            "active weather."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_FLYING,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = FALSE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_CLEAR_WEATHER,
+            .chance = 100,
+        }),
+        .battleAnimScript = Move_AEROBLAST,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

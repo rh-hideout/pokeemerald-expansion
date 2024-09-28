@@ -3722,6 +3722,13 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                         gBattlescriptCurrInstr = BattleScript_SpikesActivates;
                 }
                 break;
+            case MOVE_EFFECT_CLEAR_WEATHER:
+                if (gBattleWeather != B_WEATHER_NONE)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectClearWeather;
+                }
+                break;
             case MOVE_EFFECT_LEECH_SEED:
                 if (!gStatuses3[gBattlerTarget] && STATUS3_LEECHSEED)
                 {
