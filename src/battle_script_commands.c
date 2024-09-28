@@ -14434,7 +14434,7 @@ static void Cmd_setgastroacid(void)
         if (gBattleMons[gBattlerTarget].ability == ABILITY_NEUTRALIZING_GAS)
             gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
 
-        gStatuses3[gBattlerTarget] |= STATUS3_GASTRO_ACID;
+        gStatuses4[gBattlerTarget] |= STATUS4_GASTRO_ACID;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

@@ -170,7 +170,6 @@ enum
     LIST_STATUS3_YAWN,
     LIST_STATUS3_IMPRISONED_OTHERS,
     LIST_STATUS3_GRUDGE,
-    LIST_STATUS3_GASTRO_ACID,
     LIST_STATUS3_EMBARGO,
     LIST_STATUS3_UNDERWATER,
     LIST_STATUS3_SMACKED_DOWN,
@@ -191,6 +190,7 @@ enum
     LIST_STATUS4_SALT_CURE,
     LIST_STATUS4_SYRUP_BOMB,
     LIST_STATUS4_GLAIVE_RUSH,
+    LIST_STATUS4_GASTRO_ACID,
 };
 
 enum
@@ -578,7 +578,7 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {sText_Yawn, LIST_STATUS3_YAWN},
     {sText_ImprisonedOthers, LIST_STATUS3_IMPRISONED_OTHERS},
     {sText_Grudge, LIST_STATUS3_GRUDGE},
-    {sText_GastroAcid, LIST_STATUS3_GASTRO_ACID},
+
     {sText_Embargo, LIST_STATUS3_EMBARGO},
     {sText_Underwater, LIST_STATUS3_UNDERWATER},
     {sText_SmackedDown, LIST_STATUS3_SMACKED_DOWN},
@@ -599,6 +599,7 @@ static const struct ListMenuItem sStatus4ListItems[] =
     {sText_SaltCure, LIST_STATUS4_SALT_CURE},
     {sText_SyrupBomb, LIST_STATUS4_SYRUP_BOMB},
     {sText_GlaiveRush, LIST_STATUS4_GLAIVE_RUSH},
+    {sText_GastroAcid, LIST_STATUS4_GASTRO_ACID},
 };
 
 static const struct ListMenuItem sSideStatusListItems[] =

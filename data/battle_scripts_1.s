@@ -5193,11 +5193,21 @@ BattleScript_EffectIngrain::
 	attackstring
 	ppreduce
 	setuserstatus3 STATUS3_ROOTED, BattleScript_ButItFailed
+	jumpifmove MOVE_FARADAY_CAGE, BattleScript_EffectFaradayCage
 	attackanimation
 	waitanimation
 	printstring STRINGID_PKMNPLANTEDROOTS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_EffectFaradayCage::
+	setuserstatus3 STATUS3_FARADAY_CAGED, BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_PKMNPLANTEDROOTS
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 
 BattleScript_EffectMagicCoat::
 	attackcanceler

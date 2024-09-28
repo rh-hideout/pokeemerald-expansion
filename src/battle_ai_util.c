@@ -1243,7 +1243,7 @@ u32 AI_GetBattlerAbility(u32 battler)
     if (gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed)
         return gBattleMons[battler].ability;
 
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
+    if (gStatuses4[battler] & STATUS4_GASTRO_ACID)
         return ABILITY_NONE;
 
     if (IsNeutralizingGasOnField()
@@ -1308,7 +1308,7 @@ u32 AI_DecideHoldEffectForTurn(u32 battlerId)
         return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return HOLD_EFFECT_NONE;
-    if (AI_DATA->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses3[battlerId] & STATUS3_GASTRO_ACID))
+    if (AI_DATA->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses4[battlerId] & STATUS4_GASTRO_ACID))
         return HOLD_EFFECT_NONE;
 
     return holdEffect;

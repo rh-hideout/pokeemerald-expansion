@@ -21604,7 +21604,33 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         }),
         .battleAnimScript = Move_AEROBLAST,
     },
+        [MOVE_FARADAY_CAGE] =
+    {
+        .name = COMPOUND_STRING("Faraday Cage"),
+        .description = COMPOUND_STRING(
+            "Traps/grounds user. Heals\n"
+            "1/8 max HP per turn."),
+        .effect = EFFECT_INGRAIN,
+        .power = 0,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .skyBattleBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_INGRAIN,
+    },
 
+    //END OF CAPRICCIO MOVES
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
