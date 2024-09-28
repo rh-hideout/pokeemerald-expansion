@@ -8746,9 +8746,6 @@ BattleScript_PetrifyEffect::
 	seteffectsecondary
 	return
 
-BattleScript_PetrifyEnd::
-	return
-
 BattleScript_BanefulBunkerEffect::
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
 	bichalfword gMoveResultFlags, MOVE_RESULT_NO_EFFECT
