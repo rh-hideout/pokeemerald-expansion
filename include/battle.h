@@ -159,6 +159,7 @@ struct ProtectStruct
     u32 protected:1;
     u32 spikyShielded:1;
     u32 kingsShielded:1;
+    u32 petrified:1;
     u32 banefulBunkered:1;
     u32 obstructed:1;
     u32 endured:1;
@@ -853,6 +854,7 @@ STATIC_ASSERT(sizeof(((struct BattleStruct *)0)->palaceFlags) * 8 >= MAX_BATTLER
                                         || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_MAT_BLOCK            \
                                         || gProtectStructs[battlerId].spikyShielded                                    \
                                         || gProtectStructs[battlerId].kingsShielded                                    \
+                                        || gProtectStructs[battlerId].petrified                                        \
                                         || gProtectStructs[battlerId].banefulBunkered                                  \
                                         || gProtectStructs[battlerId].burningBulwarked                                 \
                                         || gProtectStructs[battlerId].obstructed                                       \

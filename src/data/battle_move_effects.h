@@ -573,14 +573,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .usesProtectCounter = TRUE,
     },
 
-    [EFFECT_PETRIFY] =
-    {
-        .battleScript = BattleScript_EffectPetrify,
-        .battleTvScore = 5,
-        .encourageEncore = TRUE,
-        .usesProtectCounter = TRUE,
-    },
-
     [EFFECT_SPIKES] =
     {
         .battleScript = BattleScript_EffectSpikes,

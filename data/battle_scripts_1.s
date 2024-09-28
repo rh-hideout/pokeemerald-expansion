@@ -4319,9 +4319,6 @@ BattleScript_EffectMatBlock::
 	jumpifnotfirstturn BattleScript_FailedFromAtkString
 	goto BattleScript_ProtectLikeAtkString
 
-BattleScript_EffectPetrify::
-	setstatchanger STAT_DEF, 1, FALSE
-	statbuffchange STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_MoveEnd
 BattleScript_EffectProtect::
 BattleScript_EffectEndure::
 	attackcanceler
@@ -8743,6 +8740,10 @@ BattleScript_KingsShieldEffect::
 	copybyte gBattlerTarget, gBattlerAttacker
 	copybyte gBattlerAttacker, sBATTLER
 	orhalfword gMoveResultFlags, MOVE_RESULT_MISSED
+	return
+
+BattleScript_PetrifyEffect::
+	seteffectsecondary
 	return
 
 BattleScript_BanefulBunkerEffect::
