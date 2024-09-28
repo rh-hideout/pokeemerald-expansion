@@ -8743,10 +8743,10 @@ BattleScript_KingsShieldEffect::
 	return
 
 BattleScript_PetrifyEffect::
-	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
-	bichalfword gMoveResultFlags, MOVE_RESULT_NO_EFFECT
 	seteffectsecondary
-	orhalfword gMoveResultFlags, MOVE_RESULT_MISSED
+	return
+
+BattleScript_PetrifyEnd::
 	return
 
 BattleScript_BanefulBunkerEffect::

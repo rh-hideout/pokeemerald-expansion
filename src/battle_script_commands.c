@@ -5499,6 +5499,18 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_PROTECT_LIKE_EFFECT:
+
+            if (gProtectStructs[gBattlerTarget].petrified)
+                {
+                    gProtectStructs[gBattlerTarget].petrified = FALSE;
+                    gProtectStructs[gBattlerTarget].protected = TRUE;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_DEF_PLUS_1;
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_PetrifyEffect;
+                    effect = 1;
+                }
+            gBattleScripting.moveendState++;
+            break;
             if (gProtectStructs[gBattlerAttacker].touchedProtectLike)
             {
                 if (gProtectStructs[gBattlerTarget].spikyShielded && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
@@ -5524,15 +5536,6 @@ static void Cmd_moveend(void)
                         gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_2;
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_KingsShieldEffect;
-                    effect = 1;
-                }
-                else if (gProtectStructs[gBattlerTarget].petrified)
-                {
-                    gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                    i = gBattlerTarget;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_DEF_PLUS_1;
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_PetrifyEffect;
                     effect = 1;
                 }
                 else if (gProtectStructs[gBattlerTarget].banefulBunkered)
