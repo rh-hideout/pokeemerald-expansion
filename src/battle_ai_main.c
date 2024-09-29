@@ -3754,6 +3754,22 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             break;
         }
         break;
+        {
+        case MOVE_PETRIFY:
+            if (aiData->abilities[battlerAtk] == ABILITY_STONEFLESH //Special logic for Aegislash
+             && gBattleMons[battlerAtk].species == SPECIES_GARGARRAMER_AWAKEN
+             && !IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]))
+            {
+                ADJUST_SCORE(GOOD_EFFECT);
+                break;
+            }
+            //fallthrough
+        default: // protect
+            ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+            break;
+        }
+    
+        
     case EFFECT_ENDURE:
         if (CanTargetFaintAi(battlerDef, battlerAtk))
         {
