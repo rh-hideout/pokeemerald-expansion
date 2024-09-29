@@ -1157,6 +1157,34 @@ static bool32 TryAegiFormChange(void)
     return TRUE;
 }
 
+static bool32 TryGargFormChange(void)
+{
+    // Only Gargarramer with Stoneflesh can transform, transformed mons cannot.
+    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STONEFLESH
+        || gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
+        return FALSE;
+
+    switch (gBattleMons[gBattlerAttacker].species)
+    {
+    default:
+        return FALSE;
+    case SPECIES_GARGARRAMER: // Shield -> Blade
+        if (IS_MOVE_STATUS(gCurrentMove))
+            return FALSE;
+        gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER_AWAKEN;
+        break;
+    case SPECIES_AEGISLASH_BLADE: // Blade -> Shield
+        if (gCurrentMove != MOVE_KINGS_SHIELD)
+            return FALSE;
+        gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER;
+        break;
+    }
+
+    BattleScriptPushCursor();
+    gBattlescriptCurrInstr = BattleScript_AttackerFormChange;
+    return TRUE;
+}
+
 bool32 ProteanTryChangeType(u32 battler, u32 ability, u32 move, u32 moveType)
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
@@ -1221,6 +1249,7 @@ static void Cmd_attackcanceler(void)
         return;
     if (AtkCanceller_UnableToUseMove(moveType))
         return;
+
 
     if (WEATHER_HAS_EFFECT && gMovesInfo[gCurrentMove].power)
     {

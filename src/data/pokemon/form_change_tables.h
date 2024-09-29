@@ -1301,5 +1301,12 @@ static const struct FormChange sCockenFormChangeTable[] = {
 #endif
     {FORM_CHANGE_TERMINATOR},
 };
+
+static const struct FormChange sGargarramerFormChangeTable[] = {
+    {FORM_CHANGE_BATTLE_SWITCH, SPECIES_GARGARRAMER},
+    {FORM_CHANGE_FAINT,         SPECIES_GARGARRAMER},
+    {FORM_CHANGE_END_BATTLE,    SPECIES_GARGARRAMER},
+    {FORM_CHANGE_TERMINATOR},
+};
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN

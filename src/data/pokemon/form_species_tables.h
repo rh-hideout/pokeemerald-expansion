@@ -2187,5 +2187,11 @@ static const u16 sCockenFormSpeciesIdTable[] = {
 #if P_MEGA_EVOLUTIONS
     SPECIES_COCKEN_MEGA,
 #endif
+};
+
+static const u16 sGargarramerFormSpeciesIdTable [] = {
+    SPECIES_GARGARRAMER,
+    SPECIES_GARGARRAMER_AWAKEN,
+    FORM_SPECIES_END,
     FORM_SPECIES_END,
 };

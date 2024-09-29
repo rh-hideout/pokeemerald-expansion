@@ -2485,6 +2485,8 @@ gCryTable::
 	cry Cry_Bugatti
 
 	cry Cry_Bullepede
+
+	cry Cry_Gargarramer
 .endif
 
 	.align 2
@@ -4972,4 +4974,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Bugatti
 
 	cry_reverse Cry_Bullepede
+
+	cry_reverse Cry_Gargarramer
 .endif

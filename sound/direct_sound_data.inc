@@ -6236,6 +6236,10 @@ Cry_Dubsnake::
 Cry_Hydroil::
 	.incbin "sound/direct_sound_samples/cries/hydroil.bin"
 
+	.align 2
+Cry_Gargarramer::
+	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
+
 .align 2
 Cry_Moltama::
 	.incbin "sound/direct_sound_samples/cries/moltama.bin"

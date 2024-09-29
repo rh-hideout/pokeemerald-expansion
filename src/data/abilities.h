@@ -2738,5 +2738,17 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Power Up kick moves."),
         .aiRating = 4,
     },
+    
+    [ABILITY_STONEFLESH] =
+    {
+        .name = _("Stoneflesh"),
+        .description = COMPOUND_STRING("Transforms as it battles."),
+        .aiRating = 10,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+        .cantBeOverwritten = TRUE,
+    },
 
 };

@@ -22220,6 +22220,19 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/icon.4bpp");
    const u8 gMonFootprint_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/footprint.1bpp");
 
+   const u32 gMonFrontPic_Gargarramer[] = INCBIN_U32("graphics/pokemon/gargarramer/front.4bpp.lz");
+   const u32 gMonBackPic_Gargarramer[] = INCBIN_U32("graphics/pokemon/gargarramer/back.4bpp.lz");
+   const u32 gMonPalette_Gargarramer[] = INCBIN_U32("graphics/pokemon/gargarramer/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Gargarramer[] = INCBIN_U32("graphics/pokemon/gargarramer/shiny.gbapal.lz");
+   const u8 gMonIcon_Gargarramer[] = INCBIN_U8("graphics/pokemon/gargarramer/icon.4bpp");
+   const u8 gMonFootprint_Gargarramer[] = INCBIN_U8("graphics/pokemon/gargarramer/footprint.1bpp");
+
+   const u32 gMonFrontPic_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/front.4bpp.lz");
+   const u32 gMonPalette_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/normal.gbapal.lz");
+   const u32 gMonBackPic_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/back.4bpp.lz");
+   const u32 gMonShinyPalette_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/shiny.gbapal.lz");
+   const u8 gMonIcon_GargarramerAwaken[] = INCBIN_U8("graphics/pokemon/gargarramer/awaken/icon.4bpp");
+
    const u32 gMonFrontPic_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/front.4bpp.lz");
    const u32 gMonBackPic_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/back.4bpp.lz");
    const u32 gMonPalette_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/normal.gbapal.lz");
