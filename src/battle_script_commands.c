@@ -1168,13 +1168,13 @@ static bool32 TryGargFormChange(void)
     {
     default:
         return FALSE;
-    case SPECIES_GARGARRAMER: // Shield -> Blade
+    case SPECIES_GARGARRAMER: // Sleep -> Awaken
         if (IS_MOVE_STATUS(gCurrentMove))
             return FALSE;
         gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER_AWAKEN;
         break;
-    case SPECIES_AEGISLASH_BLADE: // Blade -> Shield
-        if (gCurrentMove != MOVE_KINGS_SHIELD)
+    case SPECIES_GARGARRAMER_AWAKEN: // Awaken -> Sleep
+        if (gCurrentMove != MOVE_PETRIFY)
             return FALSE;
         gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER;
         break;
