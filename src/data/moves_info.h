@@ -21604,7 +21604,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         }),
         .battleAnimScript = Move_AEROBLAST,
     },
-        [MOVE_FARADAY_CAGE] =
+    
+    [MOVE_FARADAY_CAGE] =
     {
         .name = COMPOUND_STRING("Faraday Cage"),
         .description = COMPOUND_STRING(
@@ -21628,6 +21629,37 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_INGRAIN,
+    },
+
+    [MOVE_PHANTOM_FANG] =
+    {
+        .name = COMPOUND_STRING("Phantom Fang"),
+        .description = COMPOUND_STRING(
+            "May inflict Curse.\n"
+            "Lowers user's Speed."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .bitingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .self = TRUE,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_CURSE,
+            .chance = 20,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_LEER, COMBO_STARTER_SCARY_FACE},
+        .battleAnimScript = Move_BITE,
     },
 
     //END OF CAPRICCIO MOVES

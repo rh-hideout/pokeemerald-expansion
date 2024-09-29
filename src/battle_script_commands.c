@@ -3729,6 +3729,13 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_EffectClearWeather;
                 }
                 break;
+            case MOVE_EFFECT_CURSE:
+                if (!(gBattleMons[gBattlerTarget].status2 & STATUS2_CURSED))
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectPhantomFangCurse;
+                }
+                break;
             case MOVE_EFFECT_LEECH_SEED:
                 if (!gStatuses3[gBattlerTarget] && STATUS3_LEECHSEED)
                 {
