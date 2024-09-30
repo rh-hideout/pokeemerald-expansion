@@ -1132,51 +1132,41 @@ static bool32 NoTargetPresent(u8 battler, u32 move)
 static bool32 TryAegiFormChange(void)
 {
     // Only Aegislash with Stance Change can transform, transformed mons cannot.
-    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STANCE_CHANGE
-        || gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
+    if (gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
         return FALSE;
 
     switch (gBattleMons[gBattlerAttacker].species)
     {
     default:
         return FALSE;
+    
     case SPECIES_AEGISLASH_SHIELD: // Shield -> Blade
+        if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STANCE_CHANGE)
+            return FALSE;
         if (IS_MOVE_STATUS(gCurrentMove))
             return FALSE;
         gBattleMons[gBattlerAttacker].species = SPECIES_AEGISLASH_BLADE;
         break;
     case SPECIES_AEGISLASH_BLADE: // Blade -> Shield
+        if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STANCE_CHANGE)
+            return FALSE;
         if (gCurrentMove != MOVE_KINGS_SHIELD)
             return FALSE;
         gBattleMons[gBattlerAttacker].species = SPECIES_AEGISLASH_SHIELD;
         break;
-    }
-
-    BattleScriptPushCursor();
-    gBattlescriptCurrInstr = BattleScript_AttackerFormChange;
-    return TRUE;
-}
-
-static bool32 TryGargFormChange(void)
-{
-    // Only Gargarramer with Stoneflesh can transform, transformed mons cannot.
-    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STONEFLESH
-        || gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
-        return FALSE;
-
-    switch (gBattleMons[gBattlerAttacker].species)
-    {
-    default:
-        return FALSE;
-    case SPECIES_GARGARRAMER: // Sleep -> Awaken
+    case SPECIES_GARGARRAMER_ASLEEP: // Asleep -> Awakened
+        if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STONEFLESH)
+            return FALSE;
         if (IS_MOVE_STATUS(gCurrentMove))
             return FALSE;
         gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER_AWAKEN;
         break;
-    case SPECIES_GARGARRAMER_AWAKEN: // Awaken -> Sleep
+    case SPECIES_GARGARRAMER_AWAKEN: // Awakened -> Asleep
+        if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STONEFLESH)
+            return FALSE;
         if (gCurrentMove != MOVE_PETRIFY)
             return FALSE;
-        gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER;
+        gBattleMons[gBattlerAttacker].species = SPECIES_GARGARRAMER_ASLEEP;
         break;
     }
 

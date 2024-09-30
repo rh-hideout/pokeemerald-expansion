@@ -1629,6 +1629,8 @@
 #define SPECIES_URSHIFU_RAPID_STRIKE_STYLE_GIGANTAMAX   1522
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    1523
 #define SPECIES_MAPLAGE                                 1524
+
+//Capriccio
 #define SPECIES_ARACHNOTE                               1525
 #define SPECIES_FUCKER                                  1526
 #define SPECIES_HAZELNAUT                               1527
@@ -1660,7 +1662,8 @@
 #define SPECIES_BUGGY                                   1553
 #define SPECIES_BUGATTI                                 1554
 #define SPECIES_BULLEPEDE                               1555
-#define SPECIES_GARGARRAMER                             1556
+#define SPECIES_GARGARRAMER                             SPECIES_GARGARRAMER_ASLEEP
+#define SPECIES_GARGARRAMER_ASLEEP                      1556
 #define SPECIES_GARGARRAMER_AWAKEN                      1557
 
 #define SPECIES_EGG (SPECIES_GARGARRAMER_AWAKEN + 1)
