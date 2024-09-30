@@ -854,5 +854,6 @@ extern const u8 BattleScript_DamageToQuarterTargetHP[];
 extern const u8 BattleScript_EffectClearWeather[];
 extern const u8 BattleScript_EffectFaradayCage[];
 extern const u8 BattleScript_EffectPhantomFangCurse[];
+extern const u8 BattleScript_EffectSharpen[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

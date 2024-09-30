@@ -856,6 +856,7 @@ static const u8 sText_SupersweetAromaWafts[] = _("A supersweet aroma is wafting 
 static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
 static const u8 sText_WeatherBecameClear[] = _("The weather became clear!");
 static const u8 sText_PhantomFangCurse[] = _("{B_ATK_NAME_WITH_PREFIX} laid a CURSE\non {B_DEF_NAME_WITH_PREFIX}!");
+static const u8 sText_SharpenAlreadyPumped[] = _("{B_ATK_NAME_WITH_PREFIX} is already\npumped!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1567,6 +1568,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_CLOAKEDINAHARSHLIGHT - BATTLESTRINGS_TABLE_START] = sText_PkmnIsCloakedInAHarshLight,
     [STRINGID_WEATHERBECAMECLEAR - BATTLESTRINGS_TABLE_START] = sText_WeatherBecameClear,
     [STRINGID_PHANTOMFANGCURSE - BATTLESTRINGS_TABLE_START] = sText_PhantomFangCurse,
+    [STRINGID_SHARPENALREADYPUMPED - BATTLESTRINGS_TABLE_START] = sText_SharpenAlreadyPumped,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

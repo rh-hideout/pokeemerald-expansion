@@ -4063,7 +4063,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Reduces the polygon count\n"
             "and raises Attack."),
-        .effect = EFFECT_ATTACK_UP,
+        .effect = EFFECT_SHARPEN,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
