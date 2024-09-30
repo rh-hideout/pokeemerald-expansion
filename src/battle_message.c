@@ -855,6 +855,8 @@ static const u8 sText_PkmnTerastallizedInto[] = _("{B_ATK_NAME_WITH_PREFIX} tera
 static const u8 sText_SupersweetAromaWafts[] = _("A supersweet aroma is wafting from\nthe syrup covering {B_ATK_NAME_WITH_PREFIX}!");
 static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
 static const u8 sText_WeatherBecameClear[] = _("The weather became clear!");
+static const u8 sText_PhantomFangCurse[] = _("{B_ATK_NAME_WITH_PREFIX} laid a CURSE\non {B_DEF_NAME_WITH_PREFIX}!");
+
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 {
@@ -1564,6 +1566,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ATTACKERLOSTITSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostItsType,
     [STRINGID_CLOAKEDINAHARSHLIGHT - BATTLESTRINGS_TABLE_START] = sText_PkmnIsCloakedInAHarshLight,
     [STRINGID_WEATHERBECAMECLEAR - BATTLESTRINGS_TABLE_START] = sText_WeatherBecameClear,
+    [STRINGID_PHANTOMFANGCURSE - BATTLESTRINGS_TABLE_START] = sText_PhantomFangCurse,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

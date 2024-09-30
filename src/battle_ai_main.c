@@ -2192,7 +2192,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_GASTRO_ACID:
-            if (gStatuses3[battlerDef] & STATUS3_GASTRO_ACID
+            if (gStatuses4[battlerDef] & STATUS4_GASTRO_ACID
               || gAbilitiesInfo[aiData->abilities[battlerDef]].cantBeSuppressed)
                 ADJUST_SCORE(-10);
             break;
@@ -3748,6 +3748,14 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(GOOD_EFFECT);
                 break;
             }
+        case MOVE_PETRIFY:
+            if (aiData->abilities[battlerAtk] == ABILITY_STONEFLESH //Special logic for Gargarramer
+             && gBattleMons[battlerAtk].species == SPECIES_GARGARRAMER_AWAKEN
+             && !IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]))
+            {
+                ADJUST_SCORE(GOOD_EFFECT);
+                break;
+            }
             //fallthrough
         default: // protect
             ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
@@ -4165,7 +4173,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
         else if ((IsAbilityOfRating(aiData->abilities[battlerDef], 5) || gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating <= 0)
-        && (aiData->abilities[battlerDef] != aiData->abilities[battlerAtk] && !(gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)))
+        && (aiData->abilities[battlerDef] != aiData->abilities[battlerAtk] && !(gStatuses4[battlerDef] & STATUS4_GASTRO_ACID)))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_IMPRISON:

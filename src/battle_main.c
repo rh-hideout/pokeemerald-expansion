@@ -3150,9 +3150,9 @@ void SwitchInClearSetData(u32 battler)
     {
         gBattleMons[battler].status2 &= (STATUS2_CONFUSION | STATUS2_FOCUS_ENERGY_ANY | STATUS2_SUBSTITUTE | STATUS2_ESCAPE_PREVENTION | STATUS2_CURSED);
         gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
-                                       | STATUS3_GASTRO_ACID | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
+                                       | STATUS3_FARADAY_CAGED | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
                                        | STATUS3_AQUA_RING | STATUS3_POWER_TRICK);
-        gStatuses4[battler] &= (STATUS4_MUD_SPORT | STATUS4_WATER_SPORT | STATUS4_INFINITE_CONFUSION);
+        gStatuses4[battler] &= (STATUS4_MUD_SPORT | STATUS4_WATER_SPORT | STATUS4_INFINITE_CONFUSION | STATUS4_GASTRO_ACID);
         for (i = 0; i < gBattlersCount; i++)
         {
             if (GetBattlerSide(battler) != GetBattlerSide(i)
@@ -3279,8 +3279,8 @@ const u8* FaintClearSetData(u32 battler)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     gBattleMons[battler].status2 = 0;
-    gStatuses3[battler] &= STATUS3_GASTRO_ACID; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
-    gStatuses4[battler] = 0;
+    gStatuses3[battler] = 0;
+    gStatuses4[battler] &= STATUS4_GASTRO_ACID; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
 
     for (i = 0; i < gBattlersCount; i++)
     {

@@ -638,7 +638,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler, bool32 emitResult)
         chanceReducer = 5; // Reduce switchout probability by factor of 5 if setup
 
     //Check if ability is blocked
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID
+    if (gStatuses4[battler] & STATUS4_GASTRO_ACID
         ||IsNeutralizingGasOnField())
         return FALSE;
 

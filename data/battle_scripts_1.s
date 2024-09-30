@@ -4314,6 +4314,16 @@ BattleScript_DoGhostCurse::
 	tryfaintmon BS_ATTACKER
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectPhantomFangCurse::
+	cursetarget BattleScript_ButItFailed
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
+	setbyte sB_ANIM_TURN, 0
+	playanimation BS_TARGET, B_ANIM_CURSED
+	printstring STRINGID_PHANTOMFANGCURSE
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectMatBlock::
 	attackcanceler
 	jumpifnotfirstturn BattleScript_FailedFromAtkString
@@ -5193,11 +5203,21 @@ BattleScript_EffectIngrain::
 	attackstring
 	ppreduce
 	setuserstatus3 STATUS3_ROOTED, BattleScript_ButItFailed
+	jumpifmove MOVE_FARADAY_CAGE, BattleScript_EffectFaradayCage
 	attackanimation
 	waitanimation
 	printstring STRINGID_PKMNPLANTEDROOTS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_EffectFaradayCage::
+	setuserstatus3 STATUS3_FARADAY_CAGED, BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_PKMNPLANTEDROOTS
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 
 BattleScript_EffectMagicCoat::
 	attackcanceler

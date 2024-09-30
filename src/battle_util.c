@@ -2435,11 +2435,20 @@ u8 DoBattlerEndTurnEffects(void)
              && !BATTLER_MAX_HP(battler)
              && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)
              && IsBattlerAlive(battler))
-            {
-                gBattleMoveDamage = GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16);
-                BattleScriptExecute(BattleScript_IngrainTurnHeal);
-                effect++;
-            }
+             {
+                if (gStatuses3[battler] & STATUS3_FARADAY_CAGED)
+                {
+                    gBattleMoveDamage = GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 8);
+                    BattleScriptExecute(BattleScript_IngrainTurnHeal);
+                    effect++;
+                }
+                else
+                {
+                    gBattleMoveDamage = GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16);
+                    BattleScriptExecute(BattleScript_IngrainTurnHeal);
+                    effect++;
+                }
+             }
             gBattleStruct->turnEffectsTracker++;
             break;
         case ENDTURN_AQUA_RING:  // aqua ring
@@ -6447,7 +6456,7 @@ bool32 IsNeutralizingGasOnField(void)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (IsBattlerAlive(i) && gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !(gStatuses3[i] & STATUS3_GASTRO_ACID))
+        if (IsBattlerAlive(i) && gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !(gStatuses4[i] & STATUS4_GASTRO_ACID))
             return TRUE;
     }
 
@@ -6456,7 +6465,7 @@ bool32 IsNeutralizingGasOnField(void)
 
 bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability)
 {
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
+    if (gStatuses4[battler] & STATUS4_GASTRO_ACID)
         return FALSE;
 
     return (ability == ABILITY_MOLD_BREAKER || ability == ABILITY_TERAVOLT || ability == ABILITY_TURBOBLAZE
@@ -6482,7 +6491,7 @@ u32 GetBattlerAbility(u32 battler)
     {
         // Edge case: pokemon under the effect of gastro acid transforms into a pokemon with Comatose (Todo: verify how other unsuppressable abilities behave)
         if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED
-            && gStatuses3[battler] & STATUS3_GASTRO_ACID
+            && gStatuses4[battler] & STATUS4_GASTRO_ACID
             && gBattleMons[battler].ability == ABILITY_COMATOSE)
                 return ABILITY_NONE;
 
@@ -6492,7 +6501,7 @@ u32 GetBattlerAbility(u32 battler)
         return gBattleMons[battler].ability;
     }
 
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
+    if (gStatuses4[battler] & STATUS4_GASTRO_ACID)
         return ABILITY_NONE;
 
     if (IsNeutralizingGasOnField()

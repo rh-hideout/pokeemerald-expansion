@@ -1478,7 +1478,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Hydroil)
        .levelUpLearnset = sHydroilLevelUpLearnset,
     },
-        [SPECIES_GARGARRAMER] =
+        [SPECIES_GARGARRAMER_ASLEEP] =
     { 
        .baseHP        = 75,
        .baseAttack    = 45,

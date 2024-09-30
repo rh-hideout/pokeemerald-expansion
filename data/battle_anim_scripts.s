@@ -86,6 +86,7 @@ gBattleAnims_General::
 	.4byte General_TeraCharge               @ B_ANIM_TERA_CHARGE
 	.4byte General_TeraActivate             @ B_ANIM_TERA_ACTIVATE
 	.4byte General_SimpleHeal               @ B_ANIM_SIMPLE_HEAL
+	.4byte General_Curse					
 
 	.align 2
 gBattleAnims_Special::
@@ -27465,6 +27466,16 @@ General_SmokeballEscape:
 	invisible ANIM_ATTACKER
 	delay 0
 	blendoff
+	end
+
+General_Curse:
+	loadspritegfx ANIM_TAG_GHOSTLY_SPIRIT
+	monbg ANIM_DEF_PARTNER
+	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
+	createsprite gCurseGhostSpriteTemplate, ANIM_TARGET, 2
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 14, 1
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
 	end
 
 General_HangedOn:
