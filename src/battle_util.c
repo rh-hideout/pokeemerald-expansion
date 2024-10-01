@@ -8853,6 +8853,16 @@ static const u8 sFlailHpScaleToPowerTable[] =
     48, 20
 };
 
+static const u8 sDragonBurstHpScaleToPowerTable[] =
+{
+    1, 200,
+    4, 150,
+    9, 120,
+    16, 100,
+    32, 90,
+    48, 60
+};
+
 // format: min. weight (hectograms), base power
 static const u16 sWeightToDamageTable[] =
 {
@@ -8979,13 +8989,29 @@ static inline u32 CalcMoveBasePower(u32 move, u32 battlerAtk, u32 battlerDef, u3
         basePower = gBattleMons[battlerAtk].hp * basePower / gBattleMons[battlerAtk].maxHP;
         break;
     case EFFECT_FLAIL:
-        hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
-        for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
+        if (move == MOVE_DRAGON_BURST)
         {
-            if (hpFraction <= sFlailHpScaleToPowerTable[i])
-                break;
+            hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
+            for (i = 0; i < sizeof(sDragonBurstHpScaleToPowerTable); i += 2)
+            {
+                if (hpFraction <= sDragonBurstHpScaleToPowerTable[i])
+                    break;
+            }
+            basePower = sDragonBurstHpScaleToPowerTable[i + 1];
+            break;
         }
-        basePower = sFlailHpScaleToPowerTable[i + 1];
+        
+        else
+        {    
+            hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
+            for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
+            {
+                if (hpFraction <= sFlailHpScaleToPowerTable[i])
+                    break;
+            }
+            basePower = sFlailHpScaleToPowerTable[i + 1];
+            break;
+        }
         break;
     case EFFECT_RETURN:
         basePower = 10 * (gBattleMons[battlerAtk].friendship) / 25;
@@ -9620,7 +9646,7 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
     u8 atkStage;
     u32 atkStat;
     uq4_12_t modifier;
-    u16 atkBaseSpeciesId;
+    u16 atkBaseSpeciesId;   
 
     atkBaseSpeciesId = GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species);
 
@@ -9637,7 +9663,7 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
             atkStage = gBattleMons[battlerDef].statStages[STAT_SPATK];
         }
     }
-    else if (gMovesInfo[move].effect == EFFECT_BODY_PRESS)
+    else if ((gMovesInfo[move].effect == EFFECT_BODY_PRESS) || (move == MOVE_TOMBSTONER))
     {
         if (IS_MOVE_PHYSICAL(move))
         {

@@ -21685,8 +21685,50 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_U_TURN,
     },
 
+    [MOVE_DRAGON_BURST] =
+    {
+        .name = COMPOUND_STRING("Dragon Burst"),
+        .description = COMPOUND_STRING(
+            "Inflicts more damage when\n"
+            "the user's HP is down."),
+        .effect = EFFECT_FLAIL,
+        .power = 1,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .contestEffect = CONTEST_EFFECT_BETTER_WHEN_LATER,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_ENDURE},
+        .battleAnimScript = Move_FLAIL,
+    },
+    
+    [MOVE_TOMBSTONER] =
+    {
+        .name = COMPOUND_STRING("Tombstoner"),
+        .description = COMPOUND_STRING(
+            "The user faints, Uses\n"
+            "user's Def stat as Atk."),
+        .effect = EFFECT_EXPLOSION,
+        .power = 300,
+        .type = TYPE_ROCK,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_FOES_AND_ALLY,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .parentalBondBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_EXPLOSION,
+    },
+    // END OF CAPRICCIO MOVES
 
-    //END OF CAPRICCIO MOVES
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
