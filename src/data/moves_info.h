@@ -21662,6 +21662,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_BITE,
     },
 
+    [MOVE_BACKDRAFT] =
+    {
+        .name = COMPOUND_STRING("Backdraft"),
+        .description = COMPOUND_STRING(
+            "Sets a tailwind and\n"
+            "switches the user out."),
+        .effect = EFFECT_BACKDRAFT,
+        .power = 65,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_U_TURN,
+    },
+
+
     //END OF CAPRICCIO MOVES
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =

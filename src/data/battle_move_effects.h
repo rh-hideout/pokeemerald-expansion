@@ -2311,5 +2311,11 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectSharpen,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
+    },
+
+    [EFFECT_BACKDRAFT] =
+    {
+        .battleScript = BattleScript_EffectBackdraft,
+        .battleTvScore = 4,
     }
 };

@@ -2702,6 +2702,28 @@ BattleScript_EffectEmbargo::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectBackdraft::
+	call BattleScript_EffectHit_Ret
+	jumpifmovehadnoeffect BattleScript_MoveEnd
+	jumpifmovehadnoeffect BattleScript_MoveEnd
+	tryfaintmon BS_TARGET
+	moveendto MOVEEND_ATTACKER_VISIBLE
+	moveendfrom MOVEEND_TARGET_VISIBLE
+	jumpifbattleend BattleScript_HitEscapeEnd
+	jumpifbyte CMP_NOT_EQUAL, gBattleOutcome, 0, BattleScript_HitEscapeEnd
+	jumpifemergencyexited BS_TARGET, BattleScript_HitEscapeEnd
+	settailwind BattleScript_BackdraftAlreadyTailwind
+	printstring STRINGID_TAILWINDBLEW
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_TryTailwindAbilitiesLoop
+	goto BattleScript_MoveSwitch
+
+BattleScript_BackdraftAlreadyTailwind::
+	pause B_WAIT_TIME_SHORT	
+	printstring STRINGID_BACKDRAFTALREADYTAILWIND
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveSwitch
+
 BattleScript_EffectTailwind::
 	attackcanceler
 	attackstring

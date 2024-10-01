@@ -13226,8 +13226,17 @@ static void Cmd_settailwind(void)
     {
         gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
         gSideTimers[side].tailwindBattlerId = gBattlerAttacker;
-        gSideTimers[side].tailwindTimer = B_TAILWIND_TURNS >= GEN_5 ? 4 : 3;
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        
+        if (gMovesInfo[gChosenMoveByBattler[gBattlerAttacker]].effect == EFFECT_BACKDRAFT)
+        {
+            gSideTimers[side].tailwindTimer = 2;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        else
+        {
+            gSideTimers[side].tailwindTimer = B_TAILWIND_TURNS >= GEN_5 ? 4 : 3;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
     }
     else
     {
