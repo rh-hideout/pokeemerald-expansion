@@ -21691,7 +21691,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Inflicts more damage when\n"
             "the user's HP is down."),
-        .effect = EFFECT_FLAIL,
+        .effect = EFFECT_DRAGON_BURST,
         .power = 1,
         .type = TYPE_DRAGON,
         .accuracy = 100,
@@ -21712,7 +21712,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "The user faints, Uses\n"
             "user's Def stat as Atk."),
-        .effect = EFFECT_EXPLOSION,
+        .effect = EFFECT_TOMBSTONER,
         .power = 300,
         .type = TYPE_ROCK,
         .accuracy = 100,

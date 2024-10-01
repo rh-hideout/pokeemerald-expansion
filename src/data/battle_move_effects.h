@@ -2317,5 +2317,17 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectBackdraft,
         .battleTvScore = 4,
-    }
+    },
+
+    [EFFECT_DRAGON_BURST] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 2,
+    },
+
+    [EFFECT_TOMBSTONER] =
+    {
+        .battleScript = BattleScript_EffectExplosion,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

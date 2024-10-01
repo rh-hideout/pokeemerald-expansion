@@ -8989,30 +8989,26 @@ static inline u32 CalcMoveBasePower(u32 move, u32 battlerAtk, u32 battlerDef, u3
         basePower = gBattleMons[battlerAtk].hp * basePower / gBattleMons[battlerAtk].maxHP;
         break;
     case EFFECT_FLAIL:
-        if (move == MOVE_DRAGON_BURST)
+        hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
+        for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
         {
-            hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
-            for (i = 0; i < sizeof(sDragonBurstHpScaleToPowerTable); i += 2)
-            {
-                if (hpFraction <= sDragonBurstHpScaleToPowerTable[i])
-                    break;
-            }
-            basePower = sDragonBurstHpScaleToPowerTable[i + 1];
-            break;
+            if (hpFraction <= sFlailHpScaleToPowerTable[i])
+                break;
         }
-        
-        else
-        {    
-            hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
-            for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
-            {
-                if (hpFraction <= sFlailHpScaleToPowerTable[i])
-                    break;
-            }
-            basePower = sFlailHpScaleToPowerTable[i + 1];
-            break;
-        }
+        basePower = sFlailHpScaleToPowerTable[i + 1];
         break;
+    case EFFECT_DRAGON_BURST:
+        if (move == MOVE_DRAGON_BURST)
+    {
+        hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
+        for (i = 0; i < sizeof(sDragonBurstHpScaleToPowerTable); i += 2)
+        {
+            if (hpFraction <= sDragonBurstHpScaleToPowerTable[i])
+                break;
+        }
+        basePower = sDragonBurstHpScaleToPowerTable[i + 1];
+        break;
+    }
     case EFFECT_RETURN:
         basePower = 10 * (gBattleMons[battlerAtk].friendship) / 25;
         break;
@@ -9663,7 +9659,7 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
             atkStage = gBattleMons[battlerDef].statStages[STAT_SPATK];
         }
     }
-    else if ((gMovesInfo[move].effect == EFFECT_BODY_PRESS) || (move == MOVE_TOMBSTONER))
+    else if ((gMovesInfo[move].effect == EFFECT_BODY_PRESS) || (gMovesInfo[move].effect == EFFECT_TOMBSTONER))
     {
         if (IS_MOVE_PHYSICAL(move))
         {
