@@ -4063,7 +4063,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Reduces the polygon count\n"
             "and raises Attack."),
-        .effect = EFFECT_ATTACK_UP,
+        .effect = EFFECT_SHARPEN,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -21662,7 +21662,73 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_BITE,
     },
 
-    //END OF CAPRICCIO MOVES
+    [MOVE_BACKDRAFT] =
+    {
+        .name = COMPOUND_STRING("Backdraft"),
+        .description = COMPOUND_STRING(
+            "Sets a tailwind and\n"
+            "switches the user out."),
+        .effect = EFFECT_BACKDRAFT,
+        .power = 65,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .windMove = TRUE,
+        .makesContact = FALSE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_U_TURN,
+    },
+
+    [MOVE_DRAGON_BURST] =
+    {
+        .name = COMPOUND_STRING("Dragon Burst"),
+        .description = COMPOUND_STRING(
+            "Inflicts more damage when\n"
+            "the user's HP is down."),
+        .effect = EFFECT_DRAGON_BURST,
+        .power = 1,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .contestEffect = CONTEST_EFFECT_BETTER_WHEN_LATER,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_ENDURE},
+        .battleAnimScript = Move_FLAIL,
+    },
+    
+    [MOVE_TOMBSTONER] =
+    {
+        .name = COMPOUND_STRING("Tombstoner"),
+        .description = COMPOUND_STRING(
+            "The user faints, Uses\n"
+            "user's Def stat as Atk."),
+        .effect = EFFECT_TOMBSTONER,
+        .power = 300,
+        .type = TYPE_ROCK,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_FOES_AND_ALLY,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .parentalBondBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_EXPLOSION,
+    },
+    // END OF CAPRICCIO MOVES
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
@@ -23007,6 +23073,32 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .argument = MAX_EFFECT_BYPASS_PROTECT, //EFFECT TODO
         .battleAnimScript = Move_G_MAX_RAPID_FLOW,
+    },
+    
+    [MOVE_FRUIT_JUICE] =
+    {
+        .name = COMPOUND_STRING("Fruit Juice"),
+        .description = COMPOUND_STRING(
+            "Releases stockpiled power\n"
+            "Lowers target's Special Defense."),
+        .effect = EFFECT_FRUIT_JUICE,
+        .power = 120,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .mirrorMoveBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_STOCKPILE},
+        .battleAnimScript = Move_SPIT_UP,
     },
 
 };

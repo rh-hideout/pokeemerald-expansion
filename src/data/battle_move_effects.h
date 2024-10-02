@@ -2305,4 +2305,35 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
+
+    [EFFECT_SHARPEN] = 
+    {
+        .battleScript = BattleScript_EffectSharpen,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_BACKDRAFT] =
+    {
+        .battleScript = BattleScript_EffectBackdraft,
+        .battleTvScore = 4,
+    },
+
+    [EFFECT_DRAGON_BURST] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 2,
+    },
+
+    [EFFECT_TOMBSTONER] =
+    {
+        .battleScript = BattleScript_EffectExplosion,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+    [EFFECT_FRUIT_JUICE] =
+    {
+        .battleScript = BattleScript_EffectSpitUp,
+        .battleTvScore = 3,
+        .encourageEncore = TRUE,
+    },
 };
