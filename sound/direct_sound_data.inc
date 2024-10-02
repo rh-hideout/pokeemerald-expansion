@@ -6181,8 +6181,24 @@ Cry_Bullepede::
 	.incbin "sound/direct_sound_samples/cries/bullepede.bin"
 
 	.align 2
+Cry_Bandicute::
+	.incbin "sound/direct_sound_samples/cries/bandicute.bin"
+
+	.align 2
+Cry_Naughtycoot::
+	.incbin "sound/direct_sound_samples/cries/naughtycoot.bin"
+
+	.align 2
 Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
+
+	.align 2
+Cry_Dirtybis::
+	.incbin "sound/direct_sound_samples/cries/dirtybis.bin"
+
+	.align 2
+Cry_Ibask::
+	.incbin "sound/direct_sound_samples/cries/ibask.bin"
 
 	.align 2
 Cry_Impfection::

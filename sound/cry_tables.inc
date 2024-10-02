@@ -2487,6 +2487,14 @@ gCryTable::
 	cry Cry_Bullepede
 
 	cry Cry_Gargarramer
+
+	cry Cry_Bandicute
+
+	cry Cry_Naughtycoot
+
+	cry Cry_Ibask
+
+	cry Cry_Dirtybis
 .endif
 
 	.align 2
@@ -4976,4 +4984,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Bullepede
 
 	cry_reverse Cry_Gargarramer
+
+	cry_reverse Cry_Bandicute
+
+	cry_reverse Cry_Naughtycoot
+
+	cry_reverse Cry_Ibask
+
+	cry_reverse Cry_Dirtybis
 .endif
