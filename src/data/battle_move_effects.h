@@ -2330,4 +2330,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectExplosion,
         .battleTvScore = 0, // TODO: Assign points
     },
+    [EFFECT_FRUIT_JUICE] =
+    {
+        .battleScript = BattleScript_EffectSpitUp,
+        .battleTvScore = 3,
+        .encourageEncore = TRUE,
+    },
 };

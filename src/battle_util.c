@@ -9036,6 +9036,9 @@ static inline u32 CalcMoveBasePower(u32 move, u32 battlerAtk, u32 battlerDef, u3
     case EFFECT_SPIT_UP:
         basePower = 100 * gDisableStructs[battlerAtk].stockpileCounter;
         break;
+    case EFFECT_FRUIT_JUICE:
+        basePower = 120 * gDisableStructs[battlerAtk].stockpileCounter;
+        break;
     case EFFECT_REVENGE:
         if ((gProtectStructs[battlerAtk].physicalDmg
                 && gProtectStructs[battlerAtk].physicalBattlerId == battlerDef)

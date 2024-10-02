@@ -23074,5 +23074,31 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .argument = MAX_EFFECT_BYPASS_PROTECT, //EFFECT TODO
         .battleAnimScript = Move_G_MAX_RAPID_FLOW,
     },
+    
+    [MOVE_FRUIT_JUICE] =
+    {
+        .name = COMPOUND_STRING("Fruit Juice"),
+        .description = COMPOUND_STRING(
+            "Releases stockpiled power\n"
+            "Lowers target's Special Defense."),
+        .effect = EFFECT_FRUIT_JUICE,
+        .power = 120,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .mirrorMoveBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_STOCKPILE},
+        .battleAnimScript = Move_SPIT_UP,
+    },
 
 };
