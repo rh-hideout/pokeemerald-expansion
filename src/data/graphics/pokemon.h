@@ -22029,6 +22029,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/front.4bpp.lz");
+   const u32 gMonBackPic_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/back.4bpp.lz");
+   const u32 gMonPalette_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/shiny.gbapal.lz");
+   const u8 gMonIcon_Dirtybis[] = INCBIN_U8("graphics/pokemon/dirtybis/icon.4bpp");
+   const u8 gMonFootprint_Dirtybis[] = INCBIN_U8("graphics/pokemon/dirtybis/footprint.1bpp");
+
    const u32 gMonFrontPic_Ibask[] = INCBIN_U32("graphics/pokemon/ibask/front.4bpp.lz");
    const u32 gMonBackPic_Ibask[] = INCBIN_U32("graphics/pokemon/ibask/back.4bpp.lz");
    const u32 gMonPalette_Ibask[] = INCBIN_U32("graphics/pokemon/ibask/normal.gbapal.lz");

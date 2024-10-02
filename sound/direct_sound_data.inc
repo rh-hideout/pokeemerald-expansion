@@ -6193,6 +6193,10 @@ Cry_Arachnote::
 	.incbin "sound/direct_sound_samples/cries/arachnote.bin"
 
 	.align 2
+Cry_Dirtybis::
+	.incbin "sound/direct_sound_samples/cries/dirtybis.bin"
+
+	.align 2
 Cry_Ibask::
 	.incbin "sound/direct_sound_samples/cries/ibask.bin"
 

@@ -2493,6 +2493,8 @@ gCryTable::
 	cry Cry_Naughtycoot
 
 	cry Cry_Ibask
+
+	cry Cry_Dirtybis
 .endif
 
 	.align 2
@@ -4988,4 +4990,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Naughtycoot
 
 	cry_reverse Cry_Ibask
+
+	cry_reverse Cry_Dirtybis
 .endif

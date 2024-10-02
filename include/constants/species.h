@@ -1670,8 +1670,9 @@
 #define SPECIES_BANDICUTE                               1560
 #define SPECIES_NAUGHTYCOOT                             1561
 #define SPECIES_IBASK                                   1562
+#define SPECIES_DIRTYBIS                                1563
 
-#define SPECIES_EGG (SPECIES_IBASK + 1)
+#define SPECIES_EGG (SPECIES_DIRTYBIS + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

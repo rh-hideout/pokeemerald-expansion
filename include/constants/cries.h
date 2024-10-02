@@ -2462,6 +2462,7 @@ enum {
     CRY_BANDICUTE,
     CRY_NAUGHTYCOOT,
     CRY_IBASK,
+    CRY_DIRTYBIS,
     
     CRY_COUNT,
 };
