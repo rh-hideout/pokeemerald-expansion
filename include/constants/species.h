@@ -1665,8 +1665,13 @@
 #define SPECIES_GARGARRAMER                             SPECIES_GARGARRAMER_ASLEEP
 #define SPECIES_GARGARRAMER_ASLEEP                      1556
 #define SPECIES_GARGARRAMER_AWAKEN                      1557
+#define SPECIES_GARBLE                                  1558
+#define SPECIES_GAROOKIE                                1559
+#define SPECIES_BANDICUTE                               1560
+#define SPECIES_NAUGHTYCOOT                             1561
+#define SPECIES_IBASK                                   1562
 
-#define SPECIES_EGG (SPECIES_GARGARRAMER_AWAKEN + 1)
+#define SPECIES_EGG (SPECIES_IBASK + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
