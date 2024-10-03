@@ -373,9 +373,7 @@ struct BattlePokemon
     /*0x17*/ u32 abilityNum:2;
     /*0x18*/ s8 statStages[NUM_BATTLE_STATS];
     /*0x20*/ u16 ability;
-    /*0x22*/ u8 type1;
-    /*0x23*/ u8 type2;
-    /*0x24*/ u8 type3;
+    /*0x22*/ u8 types[3];
     /*0x25*/ u8 pp[MAX_MON_MOVES];
     /*0x29*/ u16 hp;
     /*0x2B*/ u8 level;
@@ -497,11 +495,17 @@ struct SpeciesInfo /*0xC4*/
             u32 isHisuianForm:1;
             u32 isPaldeanForm:1;
             u32 cannotBeTraded:1;
-            u32 allPerfectIVs:1;
+            u32 perfectIVCount:3;   // This species will always generate with the specified amount of perfect IVs.
             u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
             u32 tmIlliterate:1;     // This species will be unable to learn the universal moves.
             u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
-            u32 padding4:14;
+            u32 padding4:11;
+            // Shadow settings
+            s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
+            s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
+            u16 enemyShadowSize:3; // This determines the size of the shadow sprite used for an enemy Pokémon's front sprite during battle.
+            u16 suppressEnemyShadow:1; // If set to true, then a shadow will not be drawn beneath an enemy Pokémon's front sprite during battle.
+            u16 padding5:12;
             // Move Data
  /* 0x80 */ const struct LevelUpMove *levelUpLearnset;
  /* 0x84 */ const u16 *teachableLearnset;
@@ -859,7 +863,7 @@ u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit
 u8 *UseStatIncreaseItem(u16 itemId);
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
-u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem, struct Pokemon *tradePartner);
+u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(u16 nationalNum);
 u16 NationalToHoennOrder(u16 nationalNum);
@@ -943,6 +947,7 @@ const u8 *GetMoveName(u16 moveId);
 const u8 *GetMoveAnimationScript(u16 moveId);
 void UpdateDaysPassedSinceFormChange(u16 days);
 void TrySetDayLimitToFormChange(struct Pokemon *mon);
+u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler);
 u8 GetHeartGaugeSection(u16 heartVal, u16 heartMax);
 u8 GetReverseModeChance(struct BattlePokemon *mon);
 u8 ShdwCanMonGainEXP(struct Pokemon *mon);

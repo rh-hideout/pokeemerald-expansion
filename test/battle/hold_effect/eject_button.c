@@ -208,3 +208,27 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the incoming mon")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Speed(10); Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_DONDOZO) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Item(ITEM_EJECT_PACK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_MAKE_IT_RAIN); SEND_OUT(playerRight, 2); SEND_OUT(opponentRight, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAKE_IT_RAIN, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+        MESSAGE("Wobbuffet is switched out with the Eject Button!");
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+            MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+        }
+    }
+}

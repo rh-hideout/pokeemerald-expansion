@@ -314,18 +314,18 @@ const struct SpriteTemplate gStealthRockSpriteTemplate =
 
 static const union AffineAnimCmd sSpriteAffineAnim_CrushGripHandEnemyAttack[] =
 {
-	AFFINEANIMCMD_FRAME(0, 0, 96, 1), //180 degree turn
-	AFFINEANIMCMD_END
+    AFFINEANIMCMD_FRAME(0, 0, 96, 1), //180 degree turn
+    AFFINEANIMCMD_END
 };
 static const union AffineAnimCmd sSpriteAffineAnim_DoNothing[] =
 {
-	AFFINEANIMCMD_FRAME(0, 0, 0, 1), //Do nothing
-	AFFINEANIMCMD_END
+    AFFINEANIMCMD_FRAME(0, 0, 0, 1), //Do nothing
+    AFFINEANIMCMD_END
 };
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_CrushGripHand[] =
 {
-	sSpriteAffineAnim_DoNothing,
-	sSpriteAffineAnim_CrushGripHandEnemyAttack,
+    sSpriteAffineAnim_DoNothing,
+    sSpriteAffineAnim_CrushGripHandEnemyAttack,
 };
 const struct SpriteTemplate gCrushGripHandTemplate =
 {
@@ -347,6 +347,28 @@ const struct SpriteTemplate gSeedFlareGreenWavesTemplate =
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlyingSandCrescent
+};
+
+const struct SpriteTemplate gMakingItRainTemplate =
+{
+    .tileTag = ANIM_TAG_COIN,
+    .paletteTag = ANIM_TAG_COIN,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gCoinAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimFallingRock,
+};
+
+const struct SpriteTemplate gFallingSeedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SEED,
+    .paletteTag = ANIM_TAG_SEED,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimFallingRock,
 };
 
 static void AnimStealthRock(struct Sprite *sprite)
@@ -456,7 +478,14 @@ void AnimRockFragment(struct Sprite *sprite)
 // Swirls particle in vortex. Used for moves like Fire Spin or Sand Tomb
 void AnimParticleInVortex(struct Sprite *sprite)
 {
-    InitSpritePosToAnimBattler(gBattleAnimArgs[6], sprite, FALSE);
+    if (IsDoubleBattle() //got a little lazy here will fix later
+    && (gAnimMoveIndex == MOVE_BLEAKWIND_STORM
+     || gAnimMoveIndex == MOVE_SANDSEAR_STORM
+     || gAnimMoveIndex == MOVE_SPRINGTIDE_STORM
+     || gAnimMoveIndex == MOVE_WILDBOLT_STORM))
+        InitSpritePosToAnimTargetsCentre(sprite, FALSE);
+    else
+        InitSpritePosToAnimTarget(sprite, FALSE);
     sprite->data[0] = gBattleAnimArgs[3];
     sprite->data[1] = gBattleAnimArgs[2];
     sprite->data[2] = gBattleAnimArgs[4];

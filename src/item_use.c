@@ -430,45 +430,42 @@ static bool8 IsHiddenItemPresentAtCoords(const struct MapEvents *events, s16 x, 
 
 static bool8 IsHiddenItemPresentInConnection(const struct MapConnection *connection, int x, int y)
 {
+    s16 connectionX, connectionY;
+    struct MapHeader const *const connectionHeader = GetMapHeaderFromConnection(connection);
 
-    u16 localX, localY;
-    u32 localOffset;
-    s32 localLength;
-
-    struct MapHeader const *const mapHeader = GetMapHeaderFromConnection(connection);
-
+// To convert our x/y into coordinates that are relative to the connected map, we must:
+//  - Subtract the virtual offset used for the border buffer (MAP_OFFSET).
+//  - Subtract the horizontal offset between North/South connections, or the vertical offset for East/West
+//  - Account for map size. (0,0) is in the NW corner of our map, so when looking North/West we have to add the height/width of the connected map,
+//     and when looking South/East we have to subtract the height/width of our current map.
+#define localX (x - MAP_OFFSET)
+#define localY (y - MAP_OFFSET)
     switch (connection->direction)
     {
-    // same weird temp variable behavior seen in IsHiddenItemPresentAtCoords
     case CONNECTION_NORTH:
-        localOffset = connection->offset + MAP_OFFSET;
-        localX = x - localOffset;
-        localLength = mapHeader->mapLayout->height - MAP_OFFSET;
-        localY = localLength + y; // additions are reversed for some reason
+        connectionX = localX - connection->offset;
+        connectionY = connectionHeader->mapLayout->height + localY;
         break;
     case CONNECTION_SOUTH:
-        localOffset = connection->offset + MAP_OFFSET;
-        localX = x - localOffset;
-        localLength = gMapHeader.mapLayout->height + MAP_OFFSET;
-        localY = y - localLength;
+        connectionX = localX - connection->offset;
+        connectionY = localY - gMapHeader.mapLayout->height;
         break;
     case CONNECTION_WEST:
-        localLength = mapHeader->mapLayout->width - MAP_OFFSET;
-        localX = localLength + x; // additions are reversed for some reason
-        localOffset = connection->offset + MAP_OFFSET;
-        localY = y - localOffset;
+        connectionX = connectionHeader->mapLayout->width + localX;
+        connectionY = localY - connection->offset;
         break;
     case CONNECTION_EAST:
-        localLength = gMapHeader.mapLayout->width + MAP_OFFSET;
-        localX = x - localLength;
-        localOffset = connection->offset + MAP_OFFSET;
-        localY = y - localOffset;
+        connectionX = localX - gMapHeader.mapLayout->width;
+        connectionY = localY - connection->offset;
         break;
     default:
         return FALSE;
     }
-    return IsHiddenItemPresentAtCoords(mapHeader->events, localX, localY);
+    return IsHiddenItemPresentAtCoords(connectionHeader->events, connectionX, connectionY);
 }
+
+#undef localX
+#undef localY
 
 static void CheckForHiddenItemsInMapConnection(u8 taskId)
 {
@@ -1287,7 +1284,7 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     else
     {
         PlaySE(SE_SELECT);
-        if (!(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (ItemId_GetBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
+        if (!ItemId_GetImportance(gSpecialVar_ItemId) && !(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (ItemId_GetBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
             RemoveUsedItem();
         ScheduleBgCopyTilemapToVram(2);
         if (!InBattlePyramid())
@@ -1494,12 +1491,71 @@ void FieldUseFunc_VsSeeker(u8 taskId)
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].data[3]);
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 void Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker(u8 taskId)
 {
     Task_CloseCantUseKeyItemMessage(taskId);
+}
+
+static void Task_DisplayPokeFluteMessage(u8 taskId)
+{
+    if (WaitFanfare(FALSE))
+    {
+        if (gTasks[taskId].data[3] == 0)
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PokeFluteAwakenedMon, CloseItemMessage);
+        else
+            DisplayItemMessageOnField(taskId, gText_PokeFluteAwakenedMon, Task_CloseCantUseKeyItemMessage);
+    }
+}
+
+static void Task_PlayPokeFlute(u8 taskId)
+{
+    PlayFanfareByFanfareNum(FANFARE_RG_POKE_FLUTE);
+    gTasks[taskId].func = Task_DisplayPokeFluteMessage;
+}
+
+void ItemUseOutOfBattle_PokeFlute(u8 taskId)
+{
+    bool32 wokeSomeoneUp = FALSE;
+    u32 i;
+
+    for (i = 0; i < CalculatePlayerPartyCount(); i++)
+    {
+        if (!ExecuteTableBasedItemEffect(&gPlayerParty[i], ITEM_AWAKENING, i, 0))
+            wokeSomeoneUp = TRUE;
+    }
+
+    if (wokeSomeoneUp)
+    {
+        if (gTasks[taskId].data[3] == 0)
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PlayedPokeFlute, Task_PlayPokeFlute);
+        else
+            DisplayItemMessageOnField(taskId, gText_PlayedPokeFlute, Task_PlayPokeFlute);
+    }
+    else
+    {
+        if (gTasks[taskId].data[3] == 0)
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PlayedPokeFluteCatchy, CloseItemMessage);
+        else
+            DisplayItemMessageOnField(taskId, gText_PlayedPokeFluteCatchy, Task_CloseCantUseKeyItemMessage);
+    }
+}
+
+static void ItemUseOnFieldCB_TownMap(u8 taskId)
+{
+    LockPlayerFieldControls();
+    ScriptContext_SetupScript(EventScript_RegionMap);
+    DestroyTask(taskId);
+}
+
+void ItemUseOutOfBattle_TownMap(u8 taskId)
+{
+    sItemUseOnFieldCB = ItemUseOnFieldCB_TownMap;
+    gFieldCallback = FieldCB_UseItemOnField;
+    gBagMenu->newScreenCallback = CB2_ReturnToField;
+    Task_FadeAndCloseBagMenu(taskId);
 }
 
 #undef tUsingRegisteredKeyItem

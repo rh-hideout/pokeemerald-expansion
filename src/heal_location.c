@@ -34,9 +34,9 @@ u32 GetHealLocationIndexByWarpData(struct WarpData *warp)
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sHealLocations); i++)
     {
-        if (sHealLocations[i].group == warp->mapGroup 
-        && sHealLocations[i].map == warp->mapNum 
-        && sHealLocations[i].x == warp->x 
+        if (sHealLocations[i].group == warp->mapGroup
+        && sHealLocations[i].map == warp->mapNum
+        && sHealLocations[i].x == warp->x
         && sHealLocations[i].y == warp->y)
             return i + 1;
     }
@@ -89,7 +89,7 @@ void SetWhiteoutRespawnWarpAndHealerNPC(struct WarpData *warp)
     u32 healLocationId = GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation);
     u32 healNpcLocalId = GetHealNpcLocalId(healLocationId);
     struct HealLocation pkmCenterHealLocation;
-    
+
     if (!healNpcLocalId)
     {
         *(warp) = gSaveBlock1Ptr->lastHealLocation;

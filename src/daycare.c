@@ -3,7 +3,7 @@
 #include "battle.h"
 #include "daycare.h"
 #include "string_util.h"
-#include "level_caps.h"
+#include "caps.h"
 #include "mail.h"
 #include "pokemon_storage_system.h"
 #include "event_data.h"

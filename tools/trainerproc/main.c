@@ -432,12 +432,6 @@ static bool match_eol(struct Parser *p)
 }
 
 __attribute__((warn_unused_result))
-static bool match_empty_line(struct Parser *p)
-{
-    return match_eol(p);
-}
-
-__attribute__((warn_unused_result))
 static bool match_int(struct Parser *p, int *i)
 {
     assert(p && i);
@@ -461,6 +455,23 @@ static bool match_int(struct Parser *p, int *i)
 
     *p = p_;
     return true;
+}
+
+__attribute__((warn_unused_result))
+static bool match_empty_line(struct Parser *p)
+{
+    struct Parser p_ = *p;
+    if (match_exact(&p_, "# ")) {
+        int line;
+        if (match_int(&p_, &line)) {
+            struct Token t;
+            match_until_eol(&p_, &t);
+            p_.location.line = line - 1;
+            *p = p_;
+        }
+    }
+
+    return match_eol(p);
 }
 
 __attribute__((warn_unused_result))

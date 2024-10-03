@@ -2,6 +2,7 @@
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "event_data.h"
+#include "frontier_util.h"
 #include "battle.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
@@ -936,6 +937,7 @@ static void SetBattlePyramidData(void)
 
 static void SavePyramidChallenge(void)
 {
+    ClearEnemyPartyAfterChallenge();
     gSaveBlock2Ptr->frontier.challengeStatus = gSpecialVar_0x8005;
     VarSet(VAR_TEMP_CHALLENGE_STATUS, 0);
     gSaveBlock2Ptr->frontier.challengePaused = TRUE;
@@ -1081,7 +1083,7 @@ static void ShowPostBattleHintText(void)
             textIndex = sPyramidFloorTemplates[id].numTrainers;
             for (i = 0; i < MAX_PYRAMID_TRAINERS; i++)
             {
-                if (gBitTable[i] & gSaveBlock2Ptr->frontier.pyramidTrainerFlags)
+                if ((1u << i) & gSaveBlock2Ptr->frontier.pyramidTrainerFlags)
                     textIndex--;
             }
             i = 1;
@@ -1317,7 +1319,7 @@ u16 LocalIdToPyramidTrainerId(u8 localId)
 
 bool8 GetBattlePyramidTrainerFlag(u8 eventId)
 {
-    return gSaveBlock2Ptr->frontier.pyramidTrainerFlags & gBitTable[gObjectEvents[eventId].localId - 1];
+    return gSaveBlock2Ptr->frontier.pyramidTrainerFlags & ((1u << gObjectEvents[eventId].localId) - 1);
 }
 
 void MarkApproachingPyramidTrainersAsBattled(void)
@@ -1337,7 +1339,7 @@ static void MarkPyramidTrainerAsBattled(u16 trainerId)
     for (i = 0; i < MAX_PYRAMID_TRAINERS; i++)
     {
         if (gSaveBlock2Ptr->frontier.trainerIds[i] == trainerId)
-            gSaveBlock2Ptr->frontier.pyramidTrainerFlags |= gBitTable[i];
+            gSaveBlock2Ptr->frontier.pyramidTrainerFlags |= 1u << i;
     }
 
     gObjectEvents[gSelectedObjectEvent].movementType = MOVEMENT_TYPE_WANDER_AROUND;
@@ -1893,12 +1895,12 @@ static void SetPyramidObjectPositionsUniformly(u8 objType)
             {
                 if (bits & 1)
                 {
-                    if (!(gBitTable[squareId] & gSaveBlock2Ptr->frontier.pyramidRandoms[3]))
+                    if (!((1u << squareId) & gSaveBlock2Ptr->frontier.pyramidRandoms[3]))
                         bits |= 2;
                 }
                 else
                 {
-                    if (gBitTable[squareId] & gSaveBlock2Ptr->frontier.pyramidRandoms[3])
+                    if ((1u << squareId) & gSaveBlock2Ptr->frontier.pyramidRandoms[3])
                         bits |= 2;
                 }
                 if (++squareId >= NUM_PYRAMID_FLOOR_SQUARES)

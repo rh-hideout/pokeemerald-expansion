@@ -33,7 +33,7 @@ static void AnimSkyAttackBird_Step(struct Sprite *);
 static void AnimTask_AnimateGustTornadoPalette_Step(u8);
 static void AnimTask_LoadWindstormBackground_Step(u8 taskId);
 
-const struct SpriteTemplate gEllipticalGustCenteredSpriteTemplate = 
+const struct SpriteTemplate gEllipticalGustCenteredSpriteTemplate =
 {
     .tileTag = ANIM_TAG_GUST,
     .paletteTag = ANIM_TAG_GUST,
@@ -359,7 +359,10 @@ const struct SpriteTemplate gSkyAttackBirdSpriteTemplate =
 // same as AnimEllipticalGust but centered on targets
 static void AnimEllipticalGustCentered(struct Sprite *sprite)
 {
-    InitSpritePosToAnimTargetsCentre(sprite, FALSE);
+    if (IsDoubleBattle())
+        InitSpritePosToAnimTargetsCentre(sprite, FALSE);
+    else
+        InitSpritePosToAnimTarget(sprite, FALSE);
     sprite->y += 20;
     sprite->data[1] = 191;
     sprite->callback = AnimEllipticalGust_Step;
@@ -527,7 +530,7 @@ void AnimFlyBallAttack(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-	sprite->data[5] = gBattleAnimArgs[1]; // if sprite is to remain invisible
+    sprite->data[5] = gBattleAnimArgs[1]; // if sprite is to remain invisible
 
     InitAnimLinearTranslation(sprite);
     sprite->callback = AnimFlyBallAttack_Step;

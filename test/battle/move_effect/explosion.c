@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Explosion does not trigger Destiny Bond")
 DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt Absorb")
 {
     GIVEN {
-        PLAYER(SPECIES_GEODUDE_ALOLAN) { Ability(ABILITY_GALVANIZE); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }

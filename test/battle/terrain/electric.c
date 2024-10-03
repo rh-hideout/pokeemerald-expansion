@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Electric Terrain activates Electric Seed and Mimicry")
         ASSUME(gItemsInfo[ITEM_ELECTRIC_SEED].holdEffect == HOLD_EFFECT_SEEDS);
         ASSUME(gItemsInfo[ITEM_ELECTRIC_SEED].holdEffectParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIC_SEED); }
-        OPPONENT(SPECIES_STUNFISK_GALARIAN) { Ability(ABILITY_MIMICRY); }
+        OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
     } SCENE {
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Electric Terrain activates Electric Seed and Mimicry")
         ABILITY_POPUP(opponent);
         MESSAGE("Foe Stunfisk's type changed to Electric!");
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].type1, TYPE_ELECTRIC);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[0], TYPE_ELECTRIC);
     }
 }
 

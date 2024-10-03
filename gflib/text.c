@@ -932,8 +932,9 @@ bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
 {
     struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
 
-    if (subStruct->autoScrollDelay == 49)
+    if (subStruct->autoScrollDelay == NUM_FRAMES_AUTO_SCROLL_DELAY)
     {
+        subStruct->autoScrollDelay = 0;
         return TRUE;
     }
     else
@@ -943,21 +944,29 @@ bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
     }
 }
 
+void SetResultWithButtonPress(bool32 *result)
+{
+    if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        *result = TRUE;
+        PlaySE(SE_SELECT);
+    }
+}
+
 bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter)
 {
     bool32 result = FALSE;
-    if (gTextFlags.autoScroll != 0)
+    if (gTextFlags.autoScroll != 0 || AUTO_SCROLL_TEXT)
     {
         result = TextPrinterWaitAutoMode(textPrinter);
+
+        if (AUTO_SCROLL_TEXT)
+            SetResultWithButtonPress(&result);
     }
     else
     {
         TextPrinterDrawDownArrow(textPrinter);
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
-        {
-            result = TRUE;
-            PlaySE(SE_SELECT);
-        }
+        SetResultWithButtonPress(&result);
     }
     return result;
 }
@@ -965,17 +974,16 @@ bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter)
 bool32 TextPrinterWait(struct TextPrinter *textPrinter)
 {
     bool32 result = FALSE;
-    if (gTextFlags.autoScroll != 0)
+    if (gTextFlags.autoScroll != 0 || AUTO_SCROLL_TEXT)
     {
         result = TextPrinterWaitAutoMode(textPrinter);
+
+        if (AUTO_SCROLL_TEXT)
+            SetResultWithButtonPress(&result);
     }
     else
     {
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
-        {
-            result = TRUE;
-            PlaySE(SE_SELECT);
-        }
+        SetResultWithButtonPress(&result);
     }
     return result;
 }

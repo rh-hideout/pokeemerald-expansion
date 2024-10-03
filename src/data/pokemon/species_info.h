@@ -11,6 +11,14 @@
 #define FOOTPRINT(sprite)
 #endif
 
+#if B_ENEMY_MON_SHADOW_STYLE >= GEN_4
+#define SHADOW(x, y, size)  .enemyShadowXOffset = x, .enemyShadowYOffset = y, .enemyShadowSize = size,
+#define NO_SHADOW           .suppressEnemyShadow = TRUE,
+#else
+#define SHADOW(x, y, size)  .enemyShadowXOffset = 0, .enemyShadowYOffset = 0, .enemyShadowSize = 0,
+#define NO_SHADOW           .suppressEnemyShadow = FALSE,
+#endif
+
 #define SIZE_32x32 1
 #define SIZE_64x64 0
 
@@ -46,8 +54,30 @@
     .affineAnims = gDummySpriteAffineAnimTable,                                             \
 },                                                                                          \
     OVERWORLD_PAL(__VA_ARGS__)
+
+#define OVERWORLD_SET_ANIM(picTable, _size, shadow, _tracks, _anims, ...)                   \
+.overworldData = {                                                                          \
+    .tileTag = TAG_NONE,                                                                    \
+    .paletteTag = OBJ_EVENT_PAL_TAG_DYNAMIC,                                                \
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,                                         \
+    .size = (_size == SIZE_32x32 ? 512 : 2048),                                             \
+    .width = (_size == SIZE_32x32 ? 32 : 64),                                               \
+    .height = (_size == SIZE_32x32 ? 32 : 64),                                              \
+    .paletteSlot = PALSLOT_NPC_1,                                                           \
+    .shadowSize = shadow,                                                                   \
+    .inanimate = FALSE,                                                                     \
+    .compressed = COMP,                                                                     \
+    .tracks = _tracks,                                                                      \
+    .oam = (_size == SIZE_32x32 ? &gObjectEventBaseOam_32x32 : &gObjectEventBaseOam_64x64), \
+    .subspriteTables = (_size == SIZE_32x32 ? sOamTables_32x32 : sOamTables_64x64),         \
+    .anims = _anims,                                                                        \
+    .images = picTable,                                                                     \
+    .affineAnims = gDummySpriteAffineAnimTable,                                             \
+},                                                                                          \
+    OVERWORLD_PAL(__VA_ARGS__)
 #else
 #define OVERWORLD(picTable, _size, shadow, _tracks, ...)
+#define OVERWORLD_SET_ANIM(picTable, _size, shadow, _tracks, _anims, ...)
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 // Maximum value for a female Pokémon is 254 (MON_FEMALE) which is 100% female.
@@ -59,12 +89,6 @@
 
 #define FLIP    0
 #define NO_FLIP 1
-
-#if POKEMON_NAME_LENGTH >= 12
-#define HANDLE_EXPANDED_SPECIES_NAME(_name, ...) _(DEFAULT(_name, __VA_ARGS__))
-#else
-#define HANDLE_EXPANDED_SPECIES_NAME(_name, ...) _(_name)
-#endif
 
 const struct SpeciesInfo gSpeciesInfo[] =
 {
@@ -211,7 +235,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
                                 {EVO_ITEM, ITEM_MOOMOO_MILK, SPECIES_NONE}),
         //.formSpeciesIdTable = sNoneFormSpeciesIdTable,
         //.formChangeTable = sNoneFormChangeTable,
-        .allPerfectIVs = TRUE,
+        //.perfectIVCount = NUM_STATS,
     },
     */
 };

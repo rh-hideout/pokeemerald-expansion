@@ -2030,8 +2030,8 @@ static void InitDomeTrainers(void)
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPDEF, NULL);
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPEED, NULL);
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_MAX_HP, NULL);
-        monTypesBits |= gBitTable[gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[0]];
-        monTypesBits |= gBitTable[gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[1]];
+        monTypesBits |= 1u << gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[0];
+        monTypesBits |= 1u << gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[1];
     }
 
     // Count the number of types in the players party, to factor into the ranking
@@ -2062,8 +2062,8 @@ static void InitDomeTrainers(void)
             rankingScores[i] += statValues[STAT_SPDEF];
             rankingScores[i] += statValues[STAT_SPEED];
             rankingScores[i] += statValues[STAT_HP];
-            monTypesBits |= gBitTable[gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0]];
-            monTypesBits |= gBitTable[gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1]];
+            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0];
+            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1];
         }
 
         for (monTypesCount = 0, j = 0; j < 32; j++)
@@ -2136,7 +2136,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
 {
     int evs[NUM_STATS];
     int i;
-    
+
     for (i = 0; i < NUM_STATS; i++)
     {
         if (fmon->ev != NULL)
@@ -2144,7 +2144,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
         else
             evs[i] = 0;
     }
-    
+
     if (fmon->species == SPECIES_SHEDINJA)
     {
         stats[STAT_HP] = 1;
@@ -2199,7 +2199,7 @@ static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tou
     u8 fixedIv = GetDomeTrainerMonIvs(tournamentTrainerId); // BUG: Using the wrong ID. As a result, all Pokémon have ivs of 3.
     #endif
     u8 level = SetFacilityPtrsGetLevel();
-    
+
     CreateFacilityMon(&gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]],
                       level, fixedIv, otId, 0, &gEnemyParty[monPartyId]);
 }
@@ -2344,9 +2344,9 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
             while (i != DOME_BATTLE_PARTY_SIZE)
             {
                 u32 rand = Random() & FRONTIER_PARTY_SIZE;
-                if (rand != FRONTIER_PARTY_SIZE && !(selectedMonBits & gBitTable[rand]))
+                if (rand != FRONTIER_PARTY_SIZE && !(selectedMonBits & (1u << rand)))
                 {
-                    selectedMonBits |= gBitTable[rand];
+                    selectedMonBits |= 1u << rand;
                     i++;
                 }
             }
@@ -2376,7 +2376,7 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 
         for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
         {
-            selectedMonBits |= gBitTable[partyPositions[i]];
+            selectedMonBits |= 1u << partyPositions[i];
         }
     }
 
@@ -2593,6 +2593,7 @@ static void SetDomeOpponentGraphicsId(void)
 
 static void SaveDomeChallenge(void)
 {
+    ClearEnemyPartyAfterChallenge();
     gSaveBlock2Ptr->frontier.challengeStatus = gSpecialVar_0x8005;
     VarSet(VAR_TEMP_CHALLENGE_STATUS, 0);
     gSaveBlock2Ptr->frontier.challengePaused = TRUE;
@@ -4446,7 +4447,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                 else
                     allocatedArray[j] = 0;
             }
-            
+
             allocatedArray[NUM_STATS] += allocatedArray[STAT_HP];
             for (j = 0; j < NUM_NATURE_STATS; j++)
             {
@@ -5802,8 +5803,8 @@ static void InitRandomTourneyTreeResults(void)
             statSums[i] += statValues[STAT_SPDEF];
             statSums[i] += statValues[STAT_SPEED];
             statSums[i] += statValues[STAT_HP];
-            monTypesBits |= gBitTable[gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0]];
-            monTypesBits |= gBitTable[gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1]];
+            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0];
+            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1];
         }
 
         // Because GF hates temporary vars, trainerId acts like monTypesCount here.

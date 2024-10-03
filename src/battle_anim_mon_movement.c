@@ -487,11 +487,7 @@ static void ReverseVerticalDipDirection(struct Sprite *sprite)
 // arg 2: duration
 static void SlideMonToOriginalPos(struct Sprite *sprite)
 {
-    u32 monSpriteId;
-    if (!gBattleAnimArgs[0])
-        monSpriteId = gBattlerSpriteIds[gBattleAnimAttacker];
-    else
-        monSpriteId = gBattlerSpriteIds[gBattleAnimTarget];
+    u32 monSpriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
 
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[1] = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
@@ -554,15 +550,9 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
 // arg 4: duration
 static void SlideMonToOffset(struct Sprite *sprite)
 {
-    u8 battler;
-    u8 monSpriteId;
-    if (!gBattleAnimArgs[0])
-        battler = gBattleAnimAttacker;
-    else
-        battler = gBattleAnimTarget;
+    u8 monSpriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
 
-    monSpriteId = gBattlerSpriteIds[battler];
-    if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+    if (GetBattlerSide(gBattleAnimArgs[0]) != B_SIDE_PLAYER)
     {
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
         if (gBattleAnimArgs[3] == 1)
@@ -730,13 +720,13 @@ static void AnimTask_DuckDownHop_Step1(u8 taskId)
 {
     u8 spriteId;
 
-	spriteId = gTasks[taskId].data[0];
-	gTasks[taskId].data[12] += gTasks[taskId].data[5];
-	gSprites[spriteId].y2 = (gTasks[taskId].data[12] >> 8);
-	if (--gTasks[taskId].data[6] == 0)
-	{
+    spriteId = gTasks[taskId].data[0];
+    gTasks[taskId].data[12] += gTasks[taskId].data[5];
+    gSprites[spriteId].y2 = (gTasks[taskId].data[12] >> 8);
+    if (--gTasks[taskId].data[6] == 0)
+    {
         gTasks[taskId].func = AnimTask_DuckDownHop_Step2;
-	}
+    }
 }
 
 static void AnimTask_DuckDownHop_Step2(u8 taskId)
@@ -748,11 +738,11 @@ static void AnimTask_DuckDownHop_Step2(u8 taskId)
     }
     else
     {
-		spriteId = gTasks[taskId].data[0];
-		gTasks[taskId].data[11] += gTasks[taskId].data[1];
-		gSprites[spriteId].x2 = gTasks[taskId].data[11] >> 8;
-		gSprites[spriteId].y2 = Sin((u8)(gTasks[taskId].data[10] >> 8), gTasks[taskId].data[2]) + (gTasks[taskId].data[12] >> 8);
-		gTasks[taskId].data[10] += gTasks[taskId].data[7];
+        spriteId = gTasks[taskId].data[0];
+        gTasks[taskId].data[11] += gTasks[taskId].data[1];
+        gSprites[spriteId].x2 = gTasks[taskId].data[11] >> 8;
+        gSprites[spriteId].y2 = Sin((u8)(gTasks[taskId].data[10] >> 8), gTasks[taskId].data[2]) + (gTasks[taskId].data[12] >> 8);
+        gTasks[taskId].data[10] += gTasks[taskId].data[7];
         if (--gTasks[taskId].data[3] == 0)
         {
             DestroyAnimVisualTask(taskId);

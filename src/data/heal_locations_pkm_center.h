@@ -24,7 +24,7 @@ static const struct HealLocation sHealLocationsPokemonCenter[HEAL_LOCATION_COUNT
     },
     [HEAL_LOCATION_SLATEPORT_CITY - 1] =
     {
-        .group = MAP_GROUP(SLATEPORT_CITY_POKEMON_CENTER_1F), 
+        .group = MAP_GROUP(SLATEPORT_CITY_POKEMON_CENTER_1F),
         .map = MAP_NUM(SLATEPORT_CITY_POKEMON_CENTER_1F),
         DEFAULT_POKEMON_CENTER_COORDS,
     },

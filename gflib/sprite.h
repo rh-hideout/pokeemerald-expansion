@@ -331,5 +331,7 @@ u8 SpriteTileAllocBitmapOp(u16 bit, u8 op);
 void ClearSpriteCopyRequests(void);
 void ResetAffineAnimData(void);
 u32 GetSpanPerImage(u32 shape, u32 size);
+void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images);
+void SetSpriteOamFlipBits(struct Sprite *sprite, u8 hFlip, u8 vFlip);
 
 #endif //GUARD_SPRITE_H

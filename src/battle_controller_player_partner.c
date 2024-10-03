@@ -130,7 +130,7 @@ void SetControllerToPlayerPartner(u32 battler)
 
 static void PlayerPartnerBufferRunCommand(u32 battler)
 {
-    if (gBattleControllerExecFlags & gBitTable[battler])
+    if (gBattleControllerExecFlags & (1u << battler))
     {
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sPlayerPartnerBufferCommands))
             sPlayerPartnerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
@@ -283,7 +283,7 @@ static void PlayerPartnerBufferExecCompleted(u32 battler)
     }
     else
     {
-        gBattleControllerExecFlags &= ~gBitTable[battler];
+        gBattleControllerExecFlags &= ~(1u << battler);
     }
 }
 
@@ -374,7 +374,7 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
         if (gMovesInfo[moveInfo->moves[chosenMoveId]].target & MOVE_TARGET_BOTH)
         {
             gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-            if (gAbsentBattlerFlags & gBitTable[gBattlerTarget])
+            if (gAbsentBattlerFlags & (1u << gBattlerTarget))
                 gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
         }
         // If partner can and should use a gimmick (considering trainer data), do it
