@@ -589,7 +589,7 @@
 #define B_ANIM_SHADOW_SKY_CONTINUES     53
 #define B_ANIM_CALL_REVERSE_MODE        54
 
-#define NUM_B_ANIMS_GENERAL             53
+#define NUM_B_ANIMS_GENERAL             55
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -602,7 +602,7 @@
 #define B_ANIM_CRITICAL_CAPTURE_THROW   7
 #define B_ANIM_SECTION_UNLOCK           8
 
-#define NUM_B_ANIMS_SPECIAL             8
+#define NUM_B_ANIMS_SPECIAL             9
 
 // status animation table (sBattleAnims_StatusConditions)
 #define B_ANIM_STATUS_PSN               0

@@ -18670,11 +18670,11 @@ Move_SHADOW_HOLD::
 	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0x0, 0x10, 0x0
 	waitforvisualfinish
 	loopsewithpan SE_SHINY, SOUND_PAN_ATTACKER, 0x1c, 0x2
-	createsprite gSpiritShackleChainTemplate, ANIM_TARGET, 2, 0xfff0, 0xfff0
+	createsprite gChainBindingSpriteTemplate, ANIM_TARGET, 2, 0xfff0, 0xfff0
 	delay 0x4
-	createsprite gSpiritShackleChainTemplate, ANIM_TARGET, 2, 0xfff0, 0x0
+	createsprite gChainBindingSpriteTemplate, ANIM_TARGET, 2, 0xfff0, 0x0
 	delay 0x4
-	createsprite gSpiritShackleChainTemplate, ANIM_TARGET, 2, 0xfff0, 0x10
+	createsprite gChainBindingSpriteTemplate, ANIM_TARGET, 2, 0xfff0, 0x10
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0x10, 0x0, 0x0
 	waitforvisualfinish
@@ -28661,7 +28661,7 @@ gBattleAnimStatus_Nightmare::
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
-gBattleAnimStatus_Shadow:
+gBattleAnimStatus_Shadow::
 	loadspritegfx ANIM_TAG_SHADOW_PARTICLES
 	loopsewithpan SE_M_SACRED_FIRE2, SOUND_PAN_TARGET, 13, 6
 	call ShadowAuraEffect
@@ -28674,7 +28674,7 @@ gBattleAnimStatus_Shadow:
 	waitforvisualfinish
 	end
 
-gBattleAnimStatus_Reverse_Mode:
+gBattleAnimStatus_Reverse_Mode::
 	loadspritegfx ANIM_TAG_SHADOW_PARTICLES
 	loadspritegfx ANIM_TAG_REVERSE_PARTICLES
 	loopsewithpan SE_M_EMBER, SOUND_PAN_ATTACKER, 5, 2
@@ -28682,7 +28682,7 @@ gBattleAnimStatus_Reverse_Mode:
 	call ReverseAuraEffect
 	end
 
-gBattleAnimStatus_Enter_Reverse_Mode:
+gBattleAnimStatus_Enter_Reverse_Mode::
 	loadspritegfx ANIM_TAG_SHADOW_PARTICLES
 	loadspritegfx ANIM_TAG_REVERSE_PARTICLES
 	loopsewithpan SE_M_SACRED_FIRE2, SOUND_PAN_TARGET, 13, 6
@@ -28697,7 +28697,7 @@ gBattleAnimStatus_Enter_Reverse_Mode:
 	waitforvisualfinish
 	end
 
-gBattleAnimGeneral_Call_Reverse_Mode:
+gBattleAnimGeneral_Call_Reverse_Mode::
 	loadspritegfx ANIM_TAG_SHADOW_PARTICLES
 	loadspritegfx ANIM_TAG_REVERSE_PARTICLES
 	loadspritegfx ANIM_TAG_THIN_RING
@@ -29631,7 +29631,7 @@ gBattleAnimSpecial_LevelUp::
 
 @ TODOSHADOW Modify effect for shadow mon
 @ Healthbox blue flash effect on level up
-gBattleAnimSpecial_SectionUnlock:
+gBattleAnimSpecial_SectionUnlock::
 	playsewithpan SE_EXP_MAX, 0
 	createvisualtask AnimTask_LoadHealthboxPalsForLevelUp, 2
 	delay 0

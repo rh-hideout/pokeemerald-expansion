@@ -194,6 +194,9 @@ static const u8* const sBattleAnims_StatusConditions[NUM_B_ANIMS_STATUS] =
     [B_ANIM_STATUS_FRZ]         = gBattleAnimStatus_Freeze,
     [B_ANIM_STATUS_CURSED]      = gBattleAnimStatus_Curse,
     [B_ANIM_STATUS_NIGHTMARE]   = gBattleAnimStatus_Nightmare,
+    [B_ANIM_STATUS_SHADOW]      = gBattleAnimStatus_Shadow,
+    [B_ANIM_ENTER_REVERSE_MODE] = gBattleAnimStatus_Enter_Reverse_Mode,
+    [B_ANIM_STATUS_REVERSE_MODE] = gBattleAnimStatus_Reverse_Mode,
 };
 
 static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
@@ -251,6 +254,8 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_TERA_CHARGE]            = gBattleAnimGeneral_TeraCharge,
     [B_ANIM_TERA_ACTIVATE]          = gBattleAnimGeneral_TeraActivate,
     [B_ANIM_SIMPLE_HEAL]            = gBattleAnimGeneral_SimpleHeal,
+    [B_ANIM_SHADOW_SKY_CONTINUES]   = gBattleAnimGeneral_ShadowSky,
+    [B_ANIM_CALL_REVERSE_MODE]      = gBattleAnimGeneral_Call_Reverse_Mode,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
@@ -263,6 +268,7 @@ static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
     [B_ANIM_SUBSTITUTE_TO_MON]          = gBattleAnimSpecial_SubstituteToMon,
     [B_ANIM_MON_TO_SUBSTITUTE]          = gBattleAnimSpecial_MonToSubstitute,
     [B_ANIM_CRITICAL_CAPTURE_THROW]     = gBattleAnimSpecial_CriticalCaptureBallThrow,
+    [B_ANIM_SECTION_UNLOCK]             = gBattleAnimSpecial_SectionUnlock,
 };
 
 void ClearBattleAnimationVars(void)

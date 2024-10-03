@@ -11078,11 +11078,11 @@ static void Cmd_various(void)
                 {
                     if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
                     {
-                        if (gBattlerPartyIndexes[2] == battler && !(gAbsentBattlerFlags & gBitTable[2]))
+                        if (gBattlerPartyIndexes[2] == battler && !(gAbsentBattlerFlags & (1u << 2)))
                             battler = 2;
                         else
                         {
-                            if (!(gAbsentBattlerFlags & gBitTable[0]))
+                            if (!(gAbsentBattlerFlags & (1u << 0)))
                                 battler = 0;
                             else
                                 battler = 2;
