@@ -7633,6 +7633,12 @@ BattleScript_TargetPoisonHealed::
 	updatestatusicon BS_TARGET
 	return
 
+BattleScript_TargetPurged::
+	printstring STRINGID_TARGETPURGED
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_TARGET
+	return
+
 BattleScript_MoveEffectSleep::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gFellAsleepStringIds

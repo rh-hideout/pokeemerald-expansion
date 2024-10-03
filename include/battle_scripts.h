@@ -856,5 +856,6 @@ extern const u8 BattleScript_EffectFaradayCage[];
 extern const u8 BattleScript_EffectPhantomFangCurse[];
 extern const u8 BattleScript_EffectSharpen[];
 extern const u8 BattleScript_EffectBackdraft[];
+extern const u8 BattleScript_TargetPurged[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

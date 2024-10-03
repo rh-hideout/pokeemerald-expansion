@@ -21727,6 +21727,32 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_EXPLOSION,
     },
+
+    [MOVE_PURGE] =
+    {
+        .name = COMPOUND_STRING("Purge"),
+        .description = COMPOUND_STRING(
+            "Powerful against statused\n"
+            "foes, but also heals them."),
+        .effect = EFFECT_TRIPLE_POWER_ON_ARG_STATUS,
+        .power = 55,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = STATUS1_ANY,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_REMOVE_STATUS,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MON,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SMELLING_SALTS,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

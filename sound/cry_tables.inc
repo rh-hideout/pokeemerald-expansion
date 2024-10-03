@@ -4992,4 +4992,5 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ibask
 
 	cry_reverse Cry_Dirtybis
+	
 .endif
