@@ -7633,6 +7633,12 @@ BattleScript_TargetPoisonHealed::
 	updatestatusicon BS_TARGET
 	return
 
+BattleScript_TargetPurged::
+	printstring STRINGID_TARGETPURGED
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_TARGET
+	return
+
 BattleScript_MoveEffectSleep::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gFellAsleepStringIds
@@ -9059,6 +9065,17 @@ BattleScript_BerryCureChosenStatusRet::
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_SCRIPTING
 	removeitem BS_SCRIPTING
+	return
+
+BattleScript_MolganiumCureChosenStatusEnd2::
+	call BattleScript_MolganiumCureChosenStatusRet
+	end2
+
+BattleScript_MolganiumCureChosenStatusRet::
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	printfromtable gBerryEffectStringIds
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_SCRIPTING
 	return
 
 BattleScript_MentalHerbCureRet::

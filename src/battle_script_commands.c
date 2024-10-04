@@ -5856,6 +5856,9 @@ static void Cmd_moveend(void)
                     case STATUS1_PSN_ANY:
                         gBattlescriptCurrInstr = BattleScript_TargetPoisonHealed;
                         break;
+                    case STATUS1_ANY:
+                        gBattlescriptCurrInstr = BattleScript_TargetPurged;
+                        break;
                     }
                 }
                 break; // MOVE_EFFECT_REMOVE_STATUS

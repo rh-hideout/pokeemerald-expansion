@@ -2336,4 +2336,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 3,
         .encourageEncore = TRUE,
     },
+
+    [EFFECT_TRIPLE_POWER_ON_ARG_STATUS] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 1,
+    },  
 };

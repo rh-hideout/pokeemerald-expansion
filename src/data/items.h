@@ -14074,7 +14074,7 @@ const struct Item gItemsInfo[] =
     {
         .name = _("Moluganion"),
         .price = 500,
-        .holdEffect = HOLD_EFFECT_CURE_STATUS,
+        .holdEffect = HOLD_EFFECT_MOLUGANION,
         .description = COMPOUND_STRING(
             "A mysterious book\n"
             "that protects\n"

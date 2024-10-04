@@ -720,8 +720,9 @@
 #define STRINGID_PHANTOMFANGCURSE                     718
 #define STRINGID_SHARPENALREADYPUMPED                 719
 #define STRINGID_BACKDRAFTALREADYTAILWIND             720
+#define STRINGID_TARGETPURGED                         721  
 
-#define BATTLESTRINGS_COUNT                           721
+#define BATTLESTRINGS_COUNT                           722
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

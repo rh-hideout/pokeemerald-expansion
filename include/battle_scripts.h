@@ -519,6 +519,8 @@ extern const u8 BattleScript_Terastallization[];
 extern const u8 BattleScript_BoosterEnergyEnd2[];
 extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
+extern const u8 BattleScript_MolganiumCureChosenStatusEnd2[];
+extern const u8 BattleScript_MolganiumCureChosenStatusRet[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -856,5 +858,6 @@ extern const u8 BattleScript_EffectFaradayCage[];
 extern const u8 BattleScript_EffectPhantomFangCurse[];
 extern const u8 BattleScript_EffectSharpen[];
 extern const u8 BattleScript_EffectBackdraft[];
+extern const u8 BattleScript_TargetPurged[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
