@@ -7365,6 +7365,41 @@ static u8 ItemEffectMoveEnd(u32 battler, u16 holdEffect)
             effect = ITEM_STATUS_CHANGE;
         }
         break;
+    case HOLD_EFFECT_MOLUGANION:
+        if (gBattleMons[battler].species == SPECIES_NOXILIUM)
+        {
+            if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].status2 & STATUS2_CONFUSION) && !UnnerveOn(battler, gLastUsedItem))
+            {
+                if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+
+                if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+                {
+                    gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                }
+
+                if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+
+                if (gBattleMons[battler].status1 & STATUS1_BURN)
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+
+                if (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+
+                if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
+
+                gBattleMons[battler].status1 = 0;
+                RemoveConfusionStatus(battler);
+                BattleScriptPushCursor();
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PROBLEM;
+                gBattlescriptCurrInstr = BattleScript_MolganiumCureChosenStatusRet;
+                effect = ITEM_STATUS_CHANGE;
+            }
+        }
+        break;
     case HOLD_EFFECT_CRITICAL_UP: // lansat berry
         if (B_BERRIES_INSTANT >= GEN_4
             && !(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
@@ -7600,6 +7635,56 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                     RemoveConfusionStatus(battler);
                     BattleScriptExecute(BattleScript_BerryCureChosenStatusEnd2);
                     effect = ITEM_STATUS_CHANGE;
+                }
+                break;
+
+            case HOLD_EFFECT_MOLUGANION:
+                if (gBattleMons[battler].species == SPECIES_NOXILIUM)
+                {
+                    if (B_BERRIES_INSTANT >= GEN_4
+                        && (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].status2 & STATUS2_CONFUSION))
+                    {
+                        i = 0;
+                        if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+                        {
+                            gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_BURN)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
+                            i++;
+                        }
+                        if (i <= 1)
+                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PROBLEM;
+                        else
+                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
+                        gBattleMons[battler].status1 = 0;
+                        RemoveConfusionStatus(battler);
+                        BattleScriptExecute(BattleScript_MolganiumCureChosenStatusEnd2);
+                        effect = ITEM_STATUS_CHANGE;
+                    }
                 }
                 break;
             case HOLD_EFFECT_RESTORE_HP:
@@ -7912,6 +7997,55 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                     RemoveConfusionStatus(battler);
                     BattleScriptExecute(BattleScript_BerryCureChosenStatusEnd2);
                     effect = ITEM_STATUS_CHANGE;
+                }
+                break;
+            case HOLD_EFFECT_MOLUGANION:
+                if (gBattleMons[battler].species == SPECIES_NOXILIUM)
+                {
+                    if (B_BERRIES_INSTANT >= GEN_4
+                        && (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].status2 & STATUS2_CONFUSION))
+                    {
+                        i = 0;
+                        if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+                        {
+                            gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_BURN)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+                            i++;
+                        }
+                        if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+                        {
+                            StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
+                            i++;
+                        }
+                        if (i <= 1)
+                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PROBLEM;
+                        else
+                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
+                        gBattleMons[battler].status1 = 0;
+                        RemoveConfusionStatus(battler);
+                        BattleScriptExecute(BattleScript_MolganiumCureChosenStatusEnd2);
+                        effect = ITEM_STATUS_CHANGE;
+                    }
                 }
                 break;
             case HOLD_EFFECT_MENTAL_HERB:

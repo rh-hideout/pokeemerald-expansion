@@ -9067,6 +9067,17 @@ BattleScript_BerryCureChosenStatusRet::
 	removeitem BS_SCRIPTING
 	return
 
+BattleScript_MolganiumCureChosenStatusEnd2::
+	call BattleScript_MolganiumCureChosenStatusRet
+	end2
+
+BattleScript_MolganiumCureChosenStatusRet::
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	printfromtable gBerryEffectStringIds
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_SCRIPTING
+	return
+
 BattleScript_MentalHerbCureRet::
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
 	printfromtable gMentalHerbCureStringIds
