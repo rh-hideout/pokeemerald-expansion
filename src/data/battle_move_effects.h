@@ -2341,5 +2341,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
-    },  
+    },
+
+    [EFFECT_FINAL_HOUR] =
+    {
+        .battleScript = BattleScript_EffectFutureSight,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
 };

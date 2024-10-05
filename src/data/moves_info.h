@@ -21753,6 +21753,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_SMELLING_SALTS,
     },
+
+    [MOVE_FINAL_HOUR] =
+    {
+        .name = COMPOUND_STRING("Final Hour"),
+        .description = COMPOUND_STRING(
+            "Heightens inner power to\n"
+            "strike 3 turns later."),
+        .power = 200,
+        .effect = EFFECT_FINAL_HOUR,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_CALM_MIND, COMBO_STARTER_CONFUSION, COMBO_STARTER_KINESIS, COMBO_STARTER_PSYCHIC},
+        .battleAnimScript = Move_FUTURE_SIGHT,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
