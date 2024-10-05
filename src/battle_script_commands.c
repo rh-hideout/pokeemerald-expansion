@@ -13952,7 +13952,14 @@ static void Cmd_trysetfutureattack(void)
         gWishFutureKnock.futureSightMove[gBattlerTarget] = gCurrentMove;
         gWishFutureKnock.futureSightBattlerIndex[gBattlerTarget] = gBattlerAttacker;
         gWishFutureKnock.futureSightPartyIndex[gBattlerTarget] = gBattlerPartyIndexes[gBattlerAttacker];
-        gWishFutureKnock.futureSightCounter[gBattlerTarget] = 3;
+        if (gMovesInfo[gCurrentMove].effect == EFFECT_FINAL_HOUR)
+        {
+            gWishFutureKnock.futureSightCounter[gBattlerTarget] = 4;
+        }
+        else
+        {
+            gWishFutureKnock.futureSightCounter[gBattlerTarget] = 3;
+        }
 
         if (gCurrentMove == MOVE_DOOM_DESIRE)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
