@@ -2495,6 +2495,12 @@ gCryTable::
 	cry Cry_Ibask
 
 	cry Cry_Dirtybis
+
+	cry Cry_Apocamise
+
+	cry Cry_Venireal
+
+	cry Cry_Platylics
 .endif
 
 	.align 2
@@ -4993,4 +4999,9 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Dirtybis
 	
+	cry_reverse Cry_Apocamise
+
+	cry_reverse Cry_Venireal
+
+	cry_reverse Cry_Platylics
 .endif

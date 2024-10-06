@@ -6204,6 +6204,10 @@ Cry_Ibask::
 Cry_Impfection::
 	.incbin "sound/direct_sound_samples/cries/impfection.bin"
 
+.align 2
+Cry_Platylics::
+	.incbin "sound/direct_sound_samples/cries/platylics.bin"
+
 	.align 2
 Cry_Krissy::
 	.incbin "sound/direct_sound_samples/cries/krissy.bin"
@@ -6271,6 +6275,14 @@ Cry_Kumataro::
 	.align 2
 Cry_Bearedaze::
 	.incbin "sound/direct_sound_samples/cries/bearedaze.bin"
+
+	.align 2
+Cry_Apocamise::
+	.incbin "sound/direct_sound_samples/cries/apocamise.bin"
+
+	.align 2
+Cry_Venireal::
+	.incbin "sound/direct_sound_samples/cries/venireal.bin"
 
 	.align 2
 Cry_Reveloros::

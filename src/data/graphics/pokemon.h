@@ -22071,6 +22071,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/icon.4bpp");
    const u8 gMonFootprint_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/footprint.1bpp");
 
+   const u32 gMonFrontPic_Platylics[] = INCBIN_U32("graphics/pokemon/platylics/front.4bpp.lz");
+   const u32 gMonBackPic_Platylics[] = INCBIN_U32("graphics/pokemon/platylics/back.4bpp.lz");
+   const u32 gMonPalette_Platylics[] = INCBIN_U32("graphics/pokemon/platylics/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Platylics[] = INCBIN_U32("graphics/pokemon/platylics/shiny.gbapal.lz");
+   const u8 gMonIcon_Platylics[] = INCBIN_U8("graphics/pokemon/platylics/icon.4bpp");
+   const u8 gMonFootprint_Platylics[] = INCBIN_U8("graphics/pokemon/platylics/footprint.1bpp");
+
    const u32 gMonFrontPic_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/front.4bpp.lz");
    const u32 gMonBackPic_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/back.4bpp.lz");
    const u32 gMonPalette_Krissy[] = INCBIN_U32("graphics/pokemon/krissy/normal.gbapal.lz");
@@ -22198,6 +22205,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/shiny.gbapal.lz");
    const u8 gMonIcon_Kumataro[] = INCBIN_U8("graphics/pokemon/kumataro/icon.4bpp");
    const u8 gMonFootprint_Kumataro[] = INCBIN_U8("graphics/pokemon/kumataro/footprint.1bpp");
+
+   const u32 gMonFrontPic_Venireal[] = INCBIN_U32("graphics/pokemon/venireal/front.4bpp.lz");
+   const u32 gMonBackPic_Venireal[] = INCBIN_U32("graphics/pokemon/venireal/back.4bpp.lz");
+   const u32 gMonPalette_Venireal[] = INCBIN_U32("graphics/pokemon/venireal/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Venireal[] = INCBIN_U32("graphics/pokemon/venireal/shiny.gbapal.lz");
+   const u8 gMonIcon_Venireal[] = INCBIN_U8("graphics/pokemon/venireal/icon.4bpp");
+   const u8 gMonFootprint_Venireal[] = INCBIN_U8("graphics/pokemon/venireal/footprint.1bpp");
+
+   const u32 gMonFrontPic_Apocamise[] = INCBIN_U32("graphics/pokemon/apocamise/front.4bpp.lz");
+   const u32 gMonBackPic_Apocamise[] = INCBIN_U32("graphics/pokemon/apocamise/back.4bpp.lz");
+   const u32 gMonPalette_Apocamise[] = INCBIN_U32("graphics/pokemon/apocamise/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Apocamise[] = INCBIN_U32("graphics/pokemon/apocamise/shiny.gbapal.lz");
+   const u8 gMonIcon_Apocamise[] = INCBIN_U8("graphics/pokemon/apocamise/icon.4bpp");
+   const u8 gMonFootprint_Apocamise[] = INCBIN_U8("graphics/pokemon/apocamise/footprint.1bpp");
 
    const u32 gMonFrontPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/front.4bpp.lz");
    const u32 gMonBackPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/back.4bpp.lz");
