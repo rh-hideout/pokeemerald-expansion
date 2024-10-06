@@ -1671,8 +1671,11 @@
 #define SPECIES_NAUGHTYCOOT                             1561
 #define SPECIES_IBASK                                   1562
 #define SPECIES_DIRTYBIS                                1563
+#define SPECIES_APOCAMISE                               1564
+#define SPECIES_VENIREAL                                1565
+#define SPECIES_PLATYLICS                               1566
 
-#define SPECIES_EGG (SPECIES_DIRTYBIS + 1)
+#define SPECIES_EGG (SPECIES_PLATYLICS + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
