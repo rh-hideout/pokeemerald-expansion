@@ -266,6 +266,7 @@
 #define STATUS_FIELD_ION_DELUGE                     (1 << 10)
 #define STATUS_FIELD_FAIRY_LOCK                     (1 << 11)
 #define STATUS_FIELD_TERRAIN_PERMANENT              (1 << 12)   // Overworld thunderstorm generates electric terrain
+#define STATUS_FIELD_INVERSE_ROOM                   (1 << 13)
 
 #define STATUS_FIELD_TERRAIN_ANY        (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN)
 
@@ -541,5 +542,6 @@
 #define STARTING_STATUS_WONDER_ROOM         7
 #define STARTING_STATUS_TAILWIND_PLAYER     8
 #define STARTING_STATUS_TAILWIND_OPPONENT   9
+#define STARTING_STATUS_INVERSE_ROOM        10
 
 #endif // GUARD_CONSTANTS_BATTLE_H

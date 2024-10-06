@@ -2751,4 +2751,10 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeOverwritten = TRUE,
     },
 
+    [ABILITY_INVERSION] =
+    {
+        .name = _("Inversion"),
+        .description = COMPOUND_STRING("Sets Inverse Room on switch-in"),
+        .aiRating = 4,
+    },
 };

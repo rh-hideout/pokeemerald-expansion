@@ -859,6 +859,9 @@ static const u8 sText_PhantomFangCurse[] = _("{B_ATK_NAME_WITH_PREFIX} laid a CU
 static const u8 sText_SharpenAlreadyPumped[] = _("{B_ATK_NAME_WITH_PREFIX} is already\npumped!");
 static const u8 sText_BackdraftAlreadyTailwind[] = _("There is already a\nBackdraft!");
 static const u8 sText_TargetPurged[] = _("{B_DEF_NAME_WITH_PREFIX} was purged of\nits status ailment!");
+static const u8 sText_InvertedAreaCreated[] =_("An inverted area was created in which\ntype effectiveness is swapped!");
+static const u8 sText_InverseRoomEnds[] = _("Inverse Room wore off, and type\neffectiveness returned to normal!");
+static const u8 sText_TypesBecameInverted[] = _("Type effectiveness was\ninverted!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1573,6 +1576,9 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_SHARPENALREADYPUMPED - BATTLESTRINGS_TABLE_START] = sText_SharpenAlreadyPumped,
     [STRINGID_BACKDRAFTALREADYTAILWIND - BATTLESTRINGS_TABLE_START] = sText_BackdraftAlreadyTailwind,
     [STRINGID_TARGETPURGED - BATTLESTRINGS_TABLE_START] = sText_TargetPurged,
+    [STRINGID_INVERTEDAREACREATED - BATTLESTRINGS_TABLE_START] = sText_InvertedAreaCreated,
+    [STRINGID_INVERSEROOMENDS - BATTLESTRINGS_TABLE_START] = sText_InverseRoomEnds,
+    [STRINGID_TYPESBECAMEINVERTED - BATTLESTRINGS_TABLE_START] = sText_TypesBecameInverted,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1610,6 +1616,7 @@ const u16 gStartingStatusStringIds[B_MSG_STARTING_STATUS_COUNT] =
     [B_MSG_SET_TRICK_ROOM]          = STRINGID_DIMENSIONSWERETWISTED,
     [B_MSG_SET_MAGIC_ROOM]          = STRINGID_BIZARREARENACREATED,
     [B_MSG_SET_WONDER_ROOM]         = STRINGID_BIZARREAREACREATED,
+    [B_MSG_SET_INVERSE_ROOM]        = STRINGID_INVERTEDAREACREATED,
     [B_MSG_SET_TAILWIND_PLAYER]     = STRINGID_TAILWINDBLEW,
     [B_MSG_SET_TAILWIND_OPPONENT]   = STRINGID_TAILWINDBLEW,
 };
@@ -2055,9 +2062,10 @@ const u16 gCaughtMonStringIds[] =
 
 const u16 gRoomsStringIds[] =
 {
-    STRINGID_PKMNTWISTEDDIMENSIONS, STRINGID_TRICKROOMENDS,
-    STRINGID_SWAPSDEFANDSPDEFOFALLPOKEMON, STRINGID_WONDERROOMENDS,
-    STRINGID_HELDITEMSLOSEEFFECTS, STRINGID_MAGICROOMENDS,
+    STRINGID_PKMNTWISTEDDIMENSIONS, STRINGID_TRICKROOMENDS, // Trick Room
+    STRINGID_SWAPSDEFANDSPDEFOFALLPOKEMON, STRINGID_WONDERROOMENDS, // Wonder Room
+    STRINGID_HELDITEMSLOSEEFFECTS, STRINGID_MAGICROOMENDS, // Magic Room
+    STRINGID_INVERTEDAREACREATED, STRINGID_INVERSEROOMENDS, // Inverse Room
     STRINGID_EMPTYSTRING3
 };
 

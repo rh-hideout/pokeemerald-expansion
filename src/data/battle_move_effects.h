@@ -2349,4 +2349,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
+
+    [EFFECT_INVERSE_ROOM] =
+    {
+        .battleScript = BattleScript_EffectInverseRoom,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

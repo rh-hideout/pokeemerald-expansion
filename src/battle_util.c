@@ -1665,6 +1665,7 @@ enum
     ENDTURN_TRICK_ROOM,
     ENDTURN_WONDER_ROOM,
     ENDTURN_MAGIC_ROOM,
+    ENDTURN_INVERSE_ROOM,
     ENDTURN_ELECTRIC_TERRAIN,
     ENDTURN_MISTY_TERRAIN,
     ENDTURN_GRASSY_TERRAIN,
@@ -2107,6 +2108,15 @@ u8 DoFieldEndTurnEffects(void)
             {
                 gFieldStatuses &= ~STATUS_FIELD_MAGIC_ROOM;
                 BattleScriptExecute(BattleScript_MagicRoomEnds);
+                effect++;
+            }
+            gBattleStruct->turnCountersTracker++;
+            break;
+        case ENDTURN_INVERSE_ROOM:
+            if (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM && gFieldTimers.inverseRoomTimer > 0 && --gFieldTimers.inverseRoomTimer == 0)
+            {
+                gFieldStatuses &= ~STATUS_FIELD_INVERSE_ROOM;
+                BattleScriptExecute(BattleScript_InverseRoomEnds);
                 effect++;
             }
             gBattleStruct->turnCountersTracker++;
@@ -4242,6 +4252,18 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     effect = 1;
                 }
                 break;
+            case STARTING_STATUS_INVERSE_ROOM:
+                if (!(gFieldStatuses & STATUS_FIELD_INVERSE_ROOM))
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_WONDER_ROOM;
+                    gFieldStatuses |= STATUS_FIELD_WONDER_ROOM;
+                    gBattleScripting.animArg1 = B_ANIM_WONDER_ROOM;
+                    if (timerVal == 0)
+                        gFieldTimers.inverseRoomTimer = 0;    // infinite
+                    else
+                        gFieldTimers.inverseRoomTimer = 5;
+                    effect = 1;
+                }
             case STARTING_STATUS_TAILWIND_PLAYER:
                 if (!(gSideStatuses[B_SIDE_PLAYER] & SIDE_STATUS_TAILWIND))
                 {
@@ -4734,7 +4756,14 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_BIG_GUY:
             if (TryChangeBattleTerrain (battler, STATUS_FIELD_GRAVITY, &gFieldTimers.gravityTimer))
             {
-                BattleScriptPushCursorAndCallback(BattleScript_EffectGravity);
+                BattleScriptPushCursorAndCallback(BattleScript_BigGuyActivates);
+                effect++;
+            }
+            break;
+        case ABILITY_INVERSION:
+            if (TryChangeBattleTerrain (battler, STATUS_FIELD_INVERSE_ROOM, &gFieldTimers.inverseRoomTimer))
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_InversionActivates);
                 effect++;
             }
             break;
@@ -8868,7 +8897,7 @@ static bool32 IsBattlerGrounded2(u32 battler, bool32 considerInverse)
         return FALSE;
     if (GetBattlerAbility(battler) == ABILITY_LEVITATE)
         return FALSE;
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (!considerInverse || !FlagGet(B_FLAG_INVERSE_BATTLE)))
+    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (!considerInverse || (!FlagGet(B_FLAG_INVERSE_BATTLE)) || !(gFieldStatuses & STATUS_FIELD_INVERSE_ROOM)))
         return FALSE;
     return TRUE;
 }
@@ -10889,7 +10918,7 @@ uq4_12_t GetTypeEffectiveness(struct Pokemon *mon, u8 moveType)
 
 uq4_12_t GetTypeModifier(u32 atkType, u32 defType)
 {
-    if (B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE))
+    if ((B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE)) || (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM))
         return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
     return gTypeEffectivenessTable[atkType][defType];
 }
