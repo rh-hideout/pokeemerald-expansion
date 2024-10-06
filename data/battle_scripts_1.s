@@ -4037,6 +4037,14 @@ BattleScript_DoLeechSeed::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectLeechSeedPlanted::
+	setseeded
+	playanimation BS_TARGET, B_ANIM_LEECH_SEED_PLANTED
+	waitanimation
+	printfromtable gLeechSeedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectDoNothing::
 	attackcanceler
 	attackstring

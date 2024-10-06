@@ -863,5 +863,6 @@ extern const u8 BattleScript_EffectSharpen[];
 extern const u8 BattleScript_EffectBackdraft[];
 extern const u8 BattleScript_TargetPurged[];
 extern const u8 BattleScript_EffectInverseRoom[];
+extern const u8 BattleScript_EffectLeechSeedPlanted[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
