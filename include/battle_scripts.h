@@ -272,6 +272,7 @@ extern const u8 BattleScript_TailwindEnds[];
 extern const u8 BattleScript_TrickRoomEnds[];
 extern const u8 BattleScript_WonderRoomEnds[];
 extern const u8 BattleScript_MagicRoomEnds[];
+extern const u8 BattleScript_InverseRoomEnds[];
 extern const u8 BattleScript_TerrainEnds[];
 extern const u8 BattleScript_TerrainEnds_Ret[];
 extern const u8 BattleScript_GrassyTerrainEnds[];
@@ -521,6 +522,8 @@ extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
 extern const u8 BattleScript_MolganiumCureChosenStatusEnd2[];
 extern const u8 BattleScript_MolganiumCureChosenStatusRet[];
+extern const u8 BattleScript_InversionActivates[];
+extern const u8 BattleScript_BigGuyActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -859,5 +862,6 @@ extern const u8 BattleScript_EffectPhantomFangCurse[];
 extern const u8 BattleScript_EffectSharpen[];
 extern const u8 BattleScript_EffectBackdraft[];
 extern const u8 BattleScript_TargetPurged[];
+extern const u8 BattleScript_EffectInverseRoom[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

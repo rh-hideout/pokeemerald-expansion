@@ -720,9 +720,12 @@
 #define STRINGID_PHANTOMFANGCURSE                     718
 #define STRINGID_SHARPENALREADYPUMPED                 719
 #define STRINGID_BACKDRAFTALREADYTAILWIND             720
-#define STRINGID_TARGETPURGED                         721  
+#define STRINGID_TARGETPURGED                         721
+#define STRINGID_INVERTEDAREACREATED                  722  
+#define STRINGID_INVERSEROOMENDS                      723
+#define STRINGID_TYPESBECAMEINVERTED                  724
 
-#define BATTLESTRINGS_COUNT                           722
+#define BATTLESTRINGS_COUNT                           725
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -1006,7 +1009,8 @@
 #define B_MSG_SET_WONDER_ROOM       6
 #define B_MSG_SET_TAILWIND_PLAYER   7
 #define B_MSG_SET_TAILWIND_OPPONENT 8
-#define B_MSG_STARTING_STATUS_COUNT 9
+#define B_MSG_SET_INVERSE_ROOM      9
+#define B_MSG_STARTING_STATUS_COUNT 10
 
 
 // gWrappedStringIds

@@ -2667,6 +2667,7 @@ BattleScript_RoomServiceLoop_NextBattler:
 	restoretarget
 	return
 
+BattleScript_EffectInverseRoom::
 BattleScript_EffectWonderRoom::
 BattleScript_EffectMagicRoom::
 	attackcanceler
@@ -6178,6 +6179,11 @@ BattleScript_MagicRoomEnds::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
+BattleScript_InverseRoomEnds::
+	printstring STRINGID_INVERSEROOMENDS
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
 BattleScript_GrassyTerrainEnds::
 	call BattleScript_GrassyTerrainHeals_Ret
 	goto BattleScript_TerrainEnds
@@ -8244,6 +8250,20 @@ BattleScript_SnowWarningActivatesSnow::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_BigGuyActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_GRAVITYINTENSIFIED
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_InversionActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_TYPESBECAMEINVERTED
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_ActivateTerrainEffects:
 	savetarget
 	setbyte gBattlerTarget, 0
@@ -8284,6 +8304,7 @@ BattleScript_GrassySurgeActivates::
 	playanimation BS_SCRIPTING, B_ANIM_RESTORE_BG
 	call BattleScript_ActivateTerrainEffects
 	end3
+
 
 BattleScript_PsychicSurgeActivates::
 	pause B_WAIT_TIME_SHORT

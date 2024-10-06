@@ -21776,6 +21776,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_CALM_MIND, COMBO_STARTER_CONFUSION, COMBO_STARTER_KINESIS, COMBO_STARTER_PSYCHIC},
         .battleAnimScript = Move_FUTURE_SIGHT,
     },
+    [MOVE_INVERSE_ROOM] =
+    {
+        .name = COMPOUND_STRING("Inverse Room"),
+        .description = COMPOUND_STRING(
+            "Type effectiveness is\n"
+            "swapped for 5 turns."),
+        .effect = EFFECT_INVERSE_ROOM,
+        .power = 0,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 0,
+        .pp = 10,
+        .target = MOVE_TARGET_ALL_BATTLERS,
+        .priority = B_UPDATED_MOVE_DATA >= GEN_6 ? 0 : -7,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
+        .ignoresProtect = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_WONDER_ROOM,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
