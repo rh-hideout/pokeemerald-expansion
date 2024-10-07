@@ -2757,4 +2757,15 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Sets Inverse Room on switch-in"),
         .aiRating = 4,
     },
+    
+    [ABILITY_TRANSFUSION] =
+    {
+        .name = _("Transfusion"),
+        .description = COMPOUND_STRING("Type change on contact."),
+        .aiRating = 5,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
 };

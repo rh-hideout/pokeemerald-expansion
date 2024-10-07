@@ -14774,7 +14774,7 @@ static void Cmd_unused2(void)
 static void Cmd_switchoutabilities(void)
 {
     CMD_ARGS(u8 battler);
-
+    u32 i;
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     if (gBattleMons[battler].ability == ABILITY_NEUTRALIZING_GAS)
     {
@@ -14782,6 +14782,22 @@ static void Cmd_switchoutabilities(void)
         BattleScriptPush(gBattlescriptCurrInstr);
         gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
     }
+    else if (gBattleMons[battler].ability == ABILITY_TRANSFUSION)
+    {
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        {
+            if(IsBattlerAlive(i))
+            {
+                gBattleMons[i].type1 = gSpeciesInfo[gBattleMons[i].species].types[0];
+                gBattleMons[i].type2 = gSpeciesInfo[gBattleMons[i].species].types[1];
+                gBattleMons[i].type3 = TYPE_MYSTERY;
+            }
+        }
+        gBattleMons[battler].ability = ABILITY_NONE;
+        BattleScriptPush(gBattlescriptCurrInstr);
+        gBattlescriptCurrInstr = BattleScript_TransfusionExits;       
+    }
+
     else
     {
         switch (GetBattlerAbility(battler))
