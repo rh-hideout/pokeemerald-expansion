@@ -8608,6 +8608,12 @@ BattleScript_CursedBodyActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_TransfusionActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ATTACKERACQUIREDTYPE
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ATTACKERACQUIREDABILITY
@@ -9923,6 +9929,19 @@ BattleScript_NeutralizingGasExitsLoop:
 	switchinabilities BS_TARGET
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
+	restoretarget
+	return
+
+BattleScript_TransfusionExits::
+	savetarget
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_TRANSFUSIONOVER
+	waitmessage B_WAIT_TIME_LONG
+	setbyte gBattlerTarget, 0
+BattleScript_TransfusionExitsLoop::
+	switchinabilities BS_TARGET
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TransfusionExitsLoop
 	restoretarget
 	return
 
