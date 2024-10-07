@@ -862,8 +862,8 @@ static const u8 sText_TargetPurged[] = _("{B_DEF_NAME_WITH_PREFIX} was purged of
 static const u8 sText_InvertedAreaCreated[] =_("An inverted area was created in which\ntype effectiveness is swapped!");
 static const u8 sText_InverseRoomEnds[] = _("Inverse Room wore off, and type\neffectiveness returned to normal!");
 static const u8 sText_TypesBecameInverted[] = _("Type effectiveness was\ninverted!");
-static const u8 sText_AttackerAcquiredType[] = _("{B_ATK_NAME_WITH_PREFIX} acquired\n{B_DEF_NAME_WITH_PREFIX}'s type!");
-static const u8 sText_TransfusionOver[] = _("All types were changed\nback to normal!");
+static const u8 sText_AttackerAcquiredType[] = _("{B_ATK_NAME_WITH_PREFIX} acquired\n{B_DEF_NAME_WITH_PREFIX}'s primary type!");
+static const u8 sText_TransfusionOver[] = _("All types were reverted\nback to normal!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
