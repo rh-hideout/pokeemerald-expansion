@@ -6742,6 +6742,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_REMOVE_STATUS,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
         }),
         .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MON,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -13545,11 +13549,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_STEEL,
-        .accuracy = 85,
+        .accuracy = 100,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .chance = 30,
+        }),
         .zMove = { .powerOverride = 180 },
         .makesContact = TRUE,
         .strikeCount = 2,
