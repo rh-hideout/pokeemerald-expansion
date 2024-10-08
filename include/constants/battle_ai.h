@@ -48,8 +48,9 @@
 #define AI_FLAG_SMART_MON_CHOICES     (1 << 17)  // AI will make smarter decisions when choosing which mon to send out mid-battle and after a KO, which are separate decisions. Automatically included by AI_FLAG_SMART_SWITCHING.
 #define AI_FLAG_CONSERVATIVE          (1 << 18)  // AI assumes all moves will low roll damage.
 #define AI_FLAG_SEQUENCE_SWITCHING    (1 << 19)  // AI switches in mons in exactly party order, and never switches mid-battle.
+#define AI_FLAG_VANILLA_DOUBLE_TARGET (1 << 20)  // AI in vanilla pins down a mon with both mons if it faints to both of them. This flag restores this behavior.
 
-#define AI_FLAG_COUNT                       20
+#define AI_FLAG_COUNT                       21
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
 #define AI_FLAG_BASIC_TRAINER         (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)

@@ -33,7 +33,7 @@
 #define AI_ACTION_DO_NOT_ATTACK (1 << 3)
 
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi);
-static u32 ChooseMoveOrAction_Doubles(u32 battlerAi);
+static u32 ChooseMoveOrAction_Doubles(u32 battlerAi, u32 newTarget);
 static inline void BattleAI_DoAIProcessing(struct AI_ThinkingStruct *aiThink, u32 battlerAi, u32 battlerDef);
 static bool32 IsPinchBerryItemEffect(u32 holdEffect);
 
@@ -276,7 +276,7 @@ u32 BattleAI_ChooseMoveOrAction(void)
     if (!IsDoubleBattle())
         ret = ChooseMoveOrAction_Singles(sBattler_AI);
     else
-        ret = ChooseMoveOrAction_Doubles(sBattler_AI);
+        ret = ChooseMoveOrAction_Doubles(sBattler_AI, FALSE);
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetMovePriority
@@ -636,22 +636,25 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
     return consideredMoveArray[Random() % numOfBestMoves];
 }
 
-static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
+static u32 ChooseMoveOrAction_Doubles(u32 battlerAi, u32 newTarget)
 {
-    s32 i, j;
-    u32 flags;
-    s32 bestMovePointsForTarget[MAX_BATTLERS_COUNT];
-    u8 mostViableTargetsArray[MAX_BATTLERS_COUNT];
-    u8 actionOrMoveIndex[MAX_BATTLERS_COUNT];
-    s32 mostViableMovesScores[MAX_MON_MOVES];
-    u8 mostViableMovesIndices[MAX_MON_MOVES];
-    u32 mostViableTargetsNo;
-    u32 mostViableMovesNo;
-    s32 mostMovePoints;
+    s32 i = 0, j = 0;
+    u32 flags = 0;
+    s32 bestMovePointsForTarget[MAX_BATTLERS_COUNT] = {0};
+    u8 mostViableTargetsArray[MAX_BATTLERS_COUNT] = {0};
+    u8 actionOrMoveIndex[MAX_BATTLERS_COUNT] = {0};
+    s32 mostViableMovesScores[MAX_MON_MOVES] = {0};
+    u8 mostViableMovesIndices[MAX_MON_MOVES] = {0};
+    u32 mostViableTargetsNo = 0;
+    u32 mostViableMovesNo = 0;
+    s32 mostMovePoints = 0;
+    u32 partnerBattlerAi = BATTLE_PARTNER(battlerAi);
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if (i == battlerAi || gBattleMons[i].hp == 0)
+        if (i == battlerAi
+         || gBattleMons[i].hp == 0
+         || (newTarget && gBattleStruct->aiChosenTarget[partnerBattlerAi] == i))
         {
             actionOrMoveIndex[i] = 0xFF;
             bestMovePointsForTarget[i] = -1;
@@ -756,6 +759,23 @@ static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
 
     gBattlerTarget = mostViableTargetsArray[Random() % mostViableTargetsNo];
     gBattleStruct->aiChosenTarget[battlerAi] = gBattlerTarget;
+
+    if (AI_THINKING_STRUCT->aiFlags[battlerAi] & AI_FLAG_VANILLA_DOUBLE_TARGET
+     || AI_THINKING_STRUCT->aiFlags[partnerBattlerAi] & AI_FLAG_VANILLA_DOUBLE_TARGET)
+        return actionOrMoveIndex[gBattlerTarget];
+
+    u32 partnerTarget = gBattleStruct->aiChosenTarget[partnerBattlerAi];
+    if (!newTarget && gBattlerTarget == partnerTarget)
+    {
+        bool32 battlerAiFaintsTarget = CanAIFaintTarget(battlerAi, gBattlerTarget, 0);
+        bool32 partnerBattlerAiFaintsTarget = CanAIFaintTarget(partnerBattlerAi, gBattlerTarget, 0);
+
+        if (battlerAiFaintsTarget)
+            return ChooseMoveOrAction_Doubles(partnerBattlerAi, TRUE);
+        if (partnerBattlerAiFaintsTarget)
+            return ChooseMoveOrAction_Doubles(battlerAi, TRUE);
+    }
+
     return actionOrMoveIndex[gBattlerTarget];
 }
 

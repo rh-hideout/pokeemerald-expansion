@@ -162,3 +162,6 @@ AI always assumes it will roll the lowest possible result when comparing damage 
 
 ## `AI_FLAG_SEQUENCE_SWITCHING`
 AI will always switch out after a KO in exactly party order as defined in the trainer data (ie. slot 1, then 2, then 3, etc.). The AI will never switch out mid-battle unless forced to (Roar etc.). If the AI uses a move that requires a switch where it makes a decision about what to send in (U-Turn etc.), it will always switch out into the lowest available party index.
+
+## `AI_FLAG_VANILLA_DOUBLE_TARGET`
+In vanilla GEN3 games when both AI mons see kill on one opposing mon they will pin down that mon. This will restore the behavior.

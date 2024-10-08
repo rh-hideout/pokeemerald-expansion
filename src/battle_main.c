@@ -3927,6 +3927,7 @@ static void TryDoEventsBeforeFirstTurn(void)
 
         for (i = 0; i < gBattlersCount; i++)
         {
+            gBattleStruct->aiChosenTarget[i] = 0xFF;
             gBattleMons[i].status2 &= ~STATUS2_FLINCHED;
             // Record party slots of player's mons that appeared in battle
             if (!BattlerHasAi(i))
@@ -4037,7 +4038,10 @@ void BattleTurnPassed(void)
     }
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
         *(gBattleStruct->monToSwitchIntoId + i) = PARTY_SIZE;
+        gBattleStruct->aiChosenTarget[i] = 0xFF;
+    }
 
     *(&gBattleStruct->absentBattlerFlags) = gAbsentBattlerFlags;
     BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
