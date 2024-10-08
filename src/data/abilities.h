@@ -2768,4 +2768,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .failsOnImposter = TRUE,
     },
+
+    [ABILITY_OLD_SCHOOL] =
+    {
+        .name = _("Old School"),
+        .description = COMPOUND_STRING("High crit moves, Crit."),
+        .aiRating = 8,
+    },
 };

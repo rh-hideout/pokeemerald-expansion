@@ -1923,6 +1923,7 @@ s32 CalcCritChanceStageArgs(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
                     + 2 * BENEFITS_FROM_LEEK(battlerAtk, holdEffectAtk)
                     + 2 * (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS)
                     + (abilityAtk == ABILITY_BLADEMASTER && gMovesInfo[move].slicingMove == TRUE)
+                    + 3 * (abilityAtk == ABILITY_OLD_SCHOOL && gMovesInfo[move].criticalHitStage > 0)
                     + (abilityAtk == ABILITY_SUPER_LUCK)
                     + gBattleStruct->bonusCritStages[gBattlerAttacker];
 
