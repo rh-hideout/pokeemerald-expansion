@@ -5571,6 +5571,23 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 break;
             }
             break;
+        case ABILITY_TRANSFUSION:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && IsBattlerAlive(gBattlerAttacker)
+             && TARGET_TURN_DAMAGED
+             && gBattleMons[gBattlerAttacker].ability != ABILITY_TRANSFUSION
+             && !gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSuppressed
+             && !(gBattleMons[gBattlerAttacker].type1 == gSpeciesInfo[gBattleMons[gBattlerTarget].species].types[0])
+             && !(gBattleMons[gBattlerAttacker].type2 == gSpeciesInfo[gBattleMons[gBattlerTarget].species].types[1]))
+                {
+                    gBattleMons[gBattlerAttacker].type1 = gSpeciesInfo[gBattleMons[gBattlerTarget].species].types[0];
+                    gBattleMons[gBattlerAttacker].type2 = gSpeciesInfo[gBattleMons[gBattlerTarget].species].types[0];
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_TransfusionActivates;
+                    effect++;
+                    break;
+                }
+            break;
         case ABILITY_WANDERING_SPIRIT:
             if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
              && IsBattlerAlive(gBattlerAttacker)

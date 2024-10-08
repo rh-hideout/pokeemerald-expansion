@@ -524,6 +524,8 @@ extern const u8 BattleScript_MolganiumCureChosenStatusEnd2[];
 extern const u8 BattleScript_MolganiumCureChosenStatusRet[];
 extern const u8 BattleScript_InversionActivates[];
 extern const u8 BattleScript_BigGuyActivates[];
+extern const u8 BattleScript_TransfusionExits[];
+extern const u8 BattleScript_TransfusionActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -863,5 +865,6 @@ extern const u8 BattleScript_EffectSharpen[];
 extern const u8 BattleScript_EffectBackdraft[];
 extern const u8 BattleScript_TargetPurged[];
 extern const u8 BattleScript_EffectInverseRoom[];
+extern const u8 BattleScript_EffectLeechSeedPlanted[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

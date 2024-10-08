@@ -1561,13 +1561,23 @@ BattleScript_RototillerCheckAffected:
 	jumpifnotrototilleraffected BS_TARGET, BattleScript_RototillerNoEffect
 	setbyte sSTAT_ANIM_PLAYED, FALSE
 	playstatchangeanimation BS_TARGET, BIT_ATK | BIT_SPATK, 0
+	jumpifweatheraffected BS_ATTACKER, B_WEATHER_SANDSTORM, BattleScript_RototillerAtk2
 	setstatchanger STAT_ATK, 1, FALSE
+	goto BattleScript_RototillerAtk
+BattleScript_RototillerAtk2:
+		setstatchanger STAT_ATK, 2, FALSE
+BattleScript_RototillerAtk:
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_RototillerTrySpAtk
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_RototillerTrySpAtk
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RototillerTrySpAtk::
+	jumpifweatheraffected BS_ATTACKER, B_WEATHER_SANDSTORM, BattleScript_RototillerSpAtk2
 	setstatchanger STAT_SPATK, 1, FALSE
+	goto BattleScript_RototillerSpAtk
+BattleScript_RototillerSpAtk2:
+	setstatchanger STAT_SPATK, 2, FALSE
+BattleScript_RototillerSpAtk:
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_RototillerMoveTargetEnd
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_RototillerMoveTargetEnd
 	printfromtable gStatUpStringIds
@@ -1577,6 +1587,7 @@ BattleScript_RototillerMoveTargetEnd:
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_RototillerLoop
 	end
+
 
 BattleScript_RototillerCantRaiseMultipleStats:
 	copybyte gBattlerAttacker, gBattlerTarget
@@ -4032,6 +4043,14 @@ BattleScript_EffectLeechSeed::
 BattleScript_DoLeechSeed::
 	setseeded
 	attackanimation
+	waitanimation
+	printfromtable gLeechSeedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectLeechSeedPlanted::
+	setseeded
+	playanimation BS_TARGET, B_ANIM_LEECH_SEED_PLANTED
 	waitanimation
 	printfromtable gLeechSeedStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -8600,6 +8619,12 @@ BattleScript_CursedBodyActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_TransfusionActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ATTACKERACQUIREDTYPE
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ATTACKERACQUIREDABILITY
@@ -9915,6 +9940,19 @@ BattleScript_NeutralizingGasExitsLoop:
 	switchinabilities BS_TARGET
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
+	restoretarget
+	return
+
+BattleScript_TransfusionExits::
+	savetarget
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_TRANSFUSIONOVER
+	waitmessage B_WAIT_TIME_LONG
+	setbyte gBattlerTarget, 0
+BattleScript_TransfusionExitsLoop::
+	switchinabilities BS_TARGET
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TransfusionExitsLoop
 	restoretarget
 	return
 

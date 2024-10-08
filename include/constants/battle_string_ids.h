@@ -724,8 +724,10 @@
 #define STRINGID_INVERTEDAREACREATED                  722  
 #define STRINGID_INVERSEROOMENDS                      723
 #define STRINGID_TYPESBECAMEINVERTED                  724
+#define STRINGID_TRANSFUSIONOVER                      725
+#define STRINGID_ATTACKERACQUIREDTYPE                 726
 
-#define BATTLESTRINGS_COUNT                           725
+#define BATTLESTRINGS_COUNT                           727
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
