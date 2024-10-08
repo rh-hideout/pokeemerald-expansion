@@ -3597,6 +3597,23 @@ BattleScript_MoveMissedDoDamage::
 .endif
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectParalyzeIfMiss::
+	attackcanceler
+	accuracycheck BattleScript_MoveMissedDoParalysis, ACC_CURR_MOVE
+	typecalc
+	jumpifhalfword CMP_COMMON_BITS, gMoveResultFlags, MOVE_RESULT_DOESNT_AFFECT_FOE, BattleScript_MoveMissedDoParalysis
+	goto BattleScript_HitFromAtkString
+BattleScript_MoveMissedDoParalysis::
+	attackstring
+	ppreduce
+	pause B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	swapattackerwithtarget
+	seteffectprimary MOVE_EFFECT_PARALYSIS
+	swapattackerwithtarget
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectMist::
 	attackcanceler
 	attackstring

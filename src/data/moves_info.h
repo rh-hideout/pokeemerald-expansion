@@ -21784,6 +21784,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_CALM_MIND, COMBO_STARTER_CONFUSION, COMBO_STARTER_KINESIS, COMBO_STARTER_PSYCHIC},
         .battleAnimScript = Move_FUTURE_SIGHT,
     },
+
     [MOVE_INVERSE_ROOM] =
     {
         .name = COMPOUND_STRING("Inverse Room"),
@@ -21805,6 +21806,34 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_WONDER_ROOM,
+    },
+
+    [MOVE_CRASH_HOPPER] =
+    {
+        .name = COMPOUND_STRING("Crash Hopper"),
+        .description = COMPOUND_STRING(
+            "May paralyze the target.\n"
+            "Will paralyze self on miss."),
+        .effect = EFFECT_PARALYZE_IF_MISS,
+        .power = 100,
+        .type = TYPE_BUG,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_FOES_AND_ALLY,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 30,
+        }),
+        .makesContact = TRUE,
+        .gravityBanned = TRUE,
+        .kickingMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_CHARGE},
+        .battleAnimScript = Move_VOLT_TACKLE,
     },
     // END OF CAPRICCIO MOVES
 
