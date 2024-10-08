@@ -7714,6 +7714,12 @@ BattleScript_FlameOrb::
 	call BattleScript_MoveEffectBurn
 	end2
 
+BattleScript_MoluganionConfuse::
+	setbyte cMULTISTRING_CHOOSER, 0
+	copybyte gEffectBattler, gBattlerAttacker
+	call BattleScript_MoveEffectConfusion
+	end2
+
 BattleScript_MoveEffectPoison::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gGotPoisonedStringIds
@@ -9113,11 +9119,11 @@ BattleScript_BerryCureChosenStatusRet::
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_MolganiumCureChosenStatusEnd2::
-	call BattleScript_MolganiumCureChosenStatusRet
+BattleScript_MoluganionCureChosenStatusEnd2::
+	call BattleScript_MoluganionCureChosenStatusRet
 	end2
 
-BattleScript_MolganiumCureChosenStatusRet::
+BattleScript_MoluganionCureChosenStatusRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printfromtable gBerryEffectStringIds
 	waitmessage B_WAIT_TIME_LONG
