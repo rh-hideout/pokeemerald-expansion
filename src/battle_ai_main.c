@@ -2387,6 +2387,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
+        case EFFECT_FLAK_CANNON:
+            if (!CanFling(battlerAtk))
+            {
+                ADJUST_SCORE(-10);
+            }
+            break;
         case EFFECT_FLING:
             if (!CanFling(battlerAtk))
             {

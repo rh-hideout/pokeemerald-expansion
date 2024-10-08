@@ -868,5 +868,7 @@ extern const u8 BattleScript_TargetPurged[];
 extern const u8 BattleScript_EffectInverseRoom[];
 extern const u8 BattleScript_EffectLeechSeedPlanted[];
 extern const u8 BattleScript_EffectParalyzeIfMiss[];
+extern const u8 BattleScript_EffectFlakCannon[];
+extern const u8 BattleScript_EffectFrostbite[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

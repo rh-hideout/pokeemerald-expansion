@@ -736,6 +736,35 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 	setbyte BS_ATTACKER, BS_TARGET
 	goto BattleScript_ThrashConfuses
 
+BattleScript_EffectFlakCannon::
+	attackcanceler
+	jumpifcantfling BS_ATTACKER, BattleScript_FailedFromAtkString
+	setlastuseditem BS_ATTACKER
+	accuracycheck BattleScript_FlingMissed, ACC_CURR_MOVE
+	attackstring
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNSHOTITEM
+	waitmessage B_WAIT_TIME_SHORT
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	removeitem BS_ATTACKER
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_MED
+	resultmessage
+	waitmessage B_WAIT_TIME_MED
+	tryfaintmon BS_TARGET
+	trysymbiosis
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectFling::
 	attackcanceler
 	jumpifcantfling BS_ATTACKER, BattleScript_FailedFromAtkString
@@ -1542,6 +1571,27 @@ BattleScript_FlowerShieldMoveTargetEnd:
 	moveendto MOVEEND_NEXT_TARGET
 	jumpifnexttargetvalid BattleScript_FlowerShieldLoop
 	end
+
+BattleScript_EffectFrostbite::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
+	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_SPATK, MIN_STAT_STAGE, BattleScript_FrostbiteDoSpAtk
+	goto BattleScript_MoveEnd
+BattleScript_FrostbiteDoSpAtk:
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_SPATK, STAT_CHANGE_NEGATIVE
+	jumpifweatheraffected BS_ATTACKER, B_WEATHER_HAIL, BattleScript_FrostbiteSpAtkDrop2
+	setstatchanger STAT_SPATK, 1, TRUE
+	goto BattleScript_FrostbiteSpAtkDrop
+BattleScript_FrostbiteSpAtkDrop2:
+	setstatchanger STAT_SPATK, 2, TRUE
+BattleScript_FrostbiteSpAtkDrop:
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_MoveEnd
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_MoveEnd
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
 
 BattleScript_EffectRototiller::
 	attackcanceler
