@@ -7441,7 +7441,7 @@ static u8 ItemEffectMoveEnd(u32 battler, u16 holdEffect)
                 RemoveConfusionStatus(battler);
                 BattleScriptPushCursor();
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PROBLEM;
-                gBattlescriptCurrInstr = BattleScript_MolganiumCureChosenStatusRet;
+                gBattlescriptCurrInstr = BattleScript_MoluganionCureChosenStatusRet;
                 effect = ITEM_STATUS_CHANGE;
             }
         }
@@ -7728,7 +7728,7 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
                         gBattleMons[battler].status1 = 0;
                         RemoveConfusionStatus(battler);
-                        BattleScriptExecute(BattleScript_MolganiumCureChosenStatusEnd2);
+                        BattleScriptExecute(BattleScript_MoluganionCureChosenStatusEnd2);
                         effect = ITEM_STATUS_CHANGE;
                     }
                 }
@@ -8089,7 +8089,7 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
                         gBattleMons[battler].status1 = 0;
                         RemoveConfusionStatus(battler);
-                        BattleScriptExecute(BattleScript_MolganiumCureChosenStatusEnd2);
+                        BattleScriptExecute(BattleScript_MoluganionCureChosenStatusEnd2);
                         effect = ITEM_STATUS_CHANGE;
                     }
                 }
@@ -8483,11 +8483,21 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
                 PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
             }
             break;
+        case HOLD_EFFECT_MOLUGANION:
+            if ((CanBeConfused(battler)) && (gBattleMons[battler].species != SPECIES_NOXILIUM))
+            {
+                effect = ITEM_STATUS_CHANGE;
+                gBattleMons[battler].status2 = STATUS2_CONFUSION;
+                BattleScriptExecute(BattleScript_MoluganionConfuse);
+                RecordItemEffectBattle(battler, battlerHoldEffect);
+            }
+            break;
         }
 
         if (effect == ITEM_STATUS_CHANGE)
         {
             BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+            BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status2);
             MarkBattlerForControllerExec(battler);
         }
     }

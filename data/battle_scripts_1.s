@@ -3597,6 +3597,23 @@ BattleScript_MoveMissedDoDamage::
 .endif
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectParalyzeIfMiss::
+	attackcanceler
+	accuracycheck BattleScript_MoveMissedDoParalysis, ACC_CURR_MOVE
+	typecalc
+	jumpifhalfword CMP_COMMON_BITS, gMoveResultFlags, MOVE_RESULT_DOESNT_AFFECT_FOE, BattleScript_MoveMissedDoParalysis
+	goto BattleScript_HitFromAtkString
+BattleScript_MoveMissedDoParalysis::
+	attackstring
+	ppreduce
+	pause B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	swapattackerwithtarget
+	seteffectprimary MOVE_EFFECT_PARALYSIS
+	swapattackerwithtarget
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectMist::
 	attackcanceler
 	attackstring
@@ -7714,6 +7731,12 @@ BattleScript_FlameOrb::
 	call BattleScript_MoveEffectBurn
 	end2
 
+BattleScript_MoluganionConfuse::
+	setbyte cMULTISTRING_CHOOSER, 0
+	copybyte gEffectBattler, gBattlerAttacker
+	call BattleScript_MoveEffectConfusion
+	end2
+
 BattleScript_MoveEffectPoison::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gGotPoisonedStringIds
@@ -9113,11 +9136,11 @@ BattleScript_BerryCureChosenStatusRet::
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_MolganiumCureChosenStatusEnd2::
-	call BattleScript_MolganiumCureChosenStatusRet
+BattleScript_MoluganionCureChosenStatusEnd2::
+	call BattleScript_MoluganionCureChosenStatusRet
 	end2
 
-BattleScript_MolganiumCureChosenStatusRet::
+BattleScript_MoluganionCureChosenStatusRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printfromtable gBerryEffectStringIds
 	waitmessage B_WAIT_TIME_LONG

@@ -520,8 +520,9 @@ extern const u8 BattleScript_Terastallization[];
 extern const u8 BattleScript_BoosterEnergyEnd2[];
 extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
-extern const u8 BattleScript_MolganiumCureChosenStatusEnd2[];
-extern const u8 BattleScript_MolganiumCureChosenStatusRet[];
+extern const u8 BattleScript_MoluganionCureChosenStatusEnd2[];
+extern const u8 BattleScript_MoluganionCureChosenStatusRet[];
+extern const u8 BattleScript_MoluganionConfuse[];
 extern const u8 BattleScript_InversionActivates[];
 extern const u8 BattleScript_BigGuyActivates[];
 extern const u8 BattleScript_TransfusionExits[];
@@ -866,5 +867,6 @@ extern const u8 BattleScript_EffectBackdraft[];
 extern const u8 BattleScript_TargetPurged[];
 extern const u8 BattleScript_EffectInverseRoom[];
 extern const u8 BattleScript_EffectLeechSeedPlanted[];
+extern const u8 BattleScript_EffectParalyzeIfMiss[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
