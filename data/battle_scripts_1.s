@@ -736,6 +736,35 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 	setbyte BS_ATTACKER, BS_TARGET
 	goto BattleScript_ThrashConfuses
 
+BattleScript_EffectFlakCannon::
+	attackcanceler
+	jumpifcantfling BS_ATTACKER, BattleScript_FailedFromAtkString
+	setlastuseditem BS_ATTACKER
+	accuracycheck BattleScript_FlingMissed, ACC_CURR_MOVE
+	attackstring
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNSHOTITEM
+	waitmessage B_WAIT_TIME_SHORT
+	ppreduce
+	critcalc
+	damagecalc
+	adjustdamage
+	removeitem BS_ATTACKER
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	critmessage
+	waitmessage B_WAIT_TIME_MED
+	resultmessage
+	waitmessage B_WAIT_TIME_MED
+	tryfaintmon BS_TARGET
+	trysymbiosis
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectFling::
 	attackcanceler
 	jumpifcantfling BS_ATTACKER, BattleScript_FailedFromAtkString

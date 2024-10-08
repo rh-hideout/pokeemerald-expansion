@@ -1323,7 +1323,7 @@ static void Cmd_attackcanceler(void)
         && (!gBattleMoveEffects[gMovesInfo[gCurrentMove].effect].twoTurnEffect || (gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS)))
         || (IsMoveNotAllowedInSkyBattles(gCurrentMove)))
     {
-        if (gMovesInfo[gCurrentMove].effect == EFFECT_FLING) // Edge case for removing a mon's item when there is no target available after using Fling.
+        if ((gMovesInfo[gCurrentMove].effect == EFFECT_FLING) || (gMovesInfo[gCurrentMove].effect == EFFECT_FLAK_CANNON)) // Edge case for removing a mon's item when there is no target available after using Fling.
             gBattlescriptCurrInstr = BattleScript_FlingFailConsumeItem;
         else
             gBattlescriptCurrInstr = BattleScript_FailedFromAtkString;
@@ -6193,7 +6193,7 @@ static void Cmd_moveend(void)
         // 6. Pickpocket
         case MOVEEND_MAGICIAN:
             if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MAGICIAN
-              && gCurrentMove != MOVE_FLING && gCurrentMove != MOVE_NATURAL_GIFT
+              && gCurrentMove != MOVE_FLING && gCurrentMove != MOVE_NATURAL_GIFT && gCurrentMove != MOVE_FLAK_CANNON
               && gBattleMons[gBattlerAttacker].item == ITEM_NONE
               && gBattleMons[gBattlerTarget].item != ITEM_NONE
               && IsBattlerAlive(gBattlerAttacker)
@@ -8169,7 +8169,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_PACK
         && (B_SYMBIOSIS_GEMS < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
-        && gCurrentMove != MOVE_FLING //Fling and damage-reducing berries are handled separately.
+        && gCurrentMove != MOVE_FLING && gCurrentMove != MOVE_FLAK_CANNON //Fling and damage-reducing berries are handled separately.
         && !gSpecialStatuses[battler].berryReduced
         && SYMBIOSIS_CHECK(battler, BATTLE_PARTNER(battler)))
     {

@@ -21835,6 +21835,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_CHARGE},
         .battleAnimScript = Move_VOLT_TACKLE,
     },
+
+    [MOVE_FLAK_CANNON] =
+    {
+        .name = COMPOUND_STRING("Flak Cannon"),
+        .description = COMPOUND_STRING(
+            "Removes user's held item.\n"
+            "Will always critical hit."),
+        .effect = EFFECT_FLAK_CANNON,
+        .power = 105,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .alwaysCriticalHit = TRUE,
+        .parentalBondBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_FLASH_CANNON,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

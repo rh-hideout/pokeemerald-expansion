@@ -864,6 +864,7 @@ static const u8 sText_InverseRoomEnds[] = _("Inverse Room wore off, and type\nef
 static const u8 sText_TypesBecameInverted[] = _("Type effectiveness was\ninverted!");
 static const u8 sText_AttackerAcquiredType[] = _("{B_ATK_NAME_WITH_PREFIX} acquired\n{B_DEF_NAME_WITH_PREFIX}'s primary type!");
 static const u8 sText_TransfusionOver[] = _("All types were reverted\nback to normal!");
+static const u8 sText_PkmnShotItem[] = _("{B_ATK_NAME_WITH_PREFIX} shot the fragments\nof {B_LAST_ITEM}!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1583,6 +1584,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_TYPESBECAMEINVERTED - BATTLESTRINGS_TABLE_START] = sText_TypesBecameInverted,
     [STRINGID_ATTACKERACQUIREDTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerAcquiredType,
     [STRINGID_TRANSFUSIONOVER - BATTLESTRINGS_TABLE_START] = sText_TransfusionOver,
+    [STRINGID_PKMNSHOTITEM - BATTLESTRINGS_TABLE_START] = sText_PkmnShotItem,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
