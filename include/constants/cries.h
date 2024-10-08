@@ -2466,7 +2466,12 @@ enum {
     CRY_APOCAMISE,
     CRY_VENIREAL,
     CRY_PLATYLICS,
-    
+    CRY_BLUDUCK,
+    CRY_HYDUCK,
+    CRY_INDIGNIFLY,
+    CRY_FUSJAHL,
+    CRY_JAHL,
+
     CRY_COUNT,
 };
 

@@ -6204,6 +6204,14 @@ Cry_Ibask::
 Cry_Impfection::
 	.incbin "sound/direct_sound_samples/cries/impfection.bin"
 
+	.align 2
+Cry_Hyduck::
+	.incbin "sound/direct_sound_samples/cries/hyduck.bin"
+
+	.align 2
+Cry_Bluduck::
+	.incbin "sound/direct_sound_samples/cries/bluduck.bin"
+
 .align 2
 Cry_Platylics::
 	.incbin "sound/direct_sound_samples/cries/platylics.bin"
@@ -6293,8 +6301,20 @@ Cry_Ouroblack::
 	.incbin "sound/direct_sound_samples/cries/ouroblack.bin"
 
 	.align 2
+Cry_Jahl::
+	.incbin "sound/direct_sound_samples/cries/jahl.bin"
+
+	.align 2
+Cry_Fusjahl::
+	.incbin "sound/direct_sound_samples/cries/fusjahl.bin"
+
+	.align 2
 Cry_Noxilium::
 	.incbin "sound/direct_sound_samples/cries/noxilium.bin"
+
+	.align 2
+Cry_Indignifly::
+	.incbin "sound/direct_sound_samples/cries/indignifly.bin"
 
 	.align 2
 Cry_Dinomight::

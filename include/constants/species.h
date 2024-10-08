@@ -1674,8 +1674,13 @@
 #define SPECIES_APOCAMISE                               1564
 #define SPECIES_VENIREAL                                1565
 #define SPECIES_PLATYLICS                               1566
+#define SPECIES_BLUDUCK                                 1567
+#define SPECIES_HYDUCK                                  1568
+#define SPECIES_INDIGNIFLY                              1569
+#define SPECIES_FUSJAHL                                 1570
+#define SPECIES_JAHL                                    1571
 
-#define SPECIES_EGG (SPECIES_PLATYLICS + 1)
+#define SPECIES_EGG (SPECIES_JAHL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

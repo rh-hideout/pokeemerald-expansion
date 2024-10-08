@@ -2501,6 +2501,16 @@ gCryTable::
 	cry Cry_Venireal
 
 	cry Cry_Platylics
+
+	cry Cry_Bluduck
+
+	cry Cry_Hyduck
+
+	cry Cry_Indignifly
+
+	cry Cry_Fusjahl
+
+	cry Cry_Jahl
 .endif
 
 	.align 2
@@ -5004,4 +5014,14 @@ gCryTable_Reverse::
 	cry_reverse Cry_Venireal
 
 	cry_reverse Cry_Platylics
+
+	cry_reverse Cry_Bluduck
+
+	cry_reverse Cry_Hyduck
+
+	cry_reverse Cry_Indignifly
+
+	cry_reverse Cry_Fusjahl
+
+	cry_reverse Cry_Jahl
 .endif
