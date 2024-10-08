@@ -6265,6 +6265,14 @@ Cry_Hydroil::
 	.incbin "sound/direct_sound_samples/cries/hydroil.bin"
 
 	.align 2
+Cry_Jumblegore::
+	.incbin "sound/direct_sound_samples/cries/jumblegore.bin"
+
+	.align 2
+Cry_Jumblinart::
+	.incbin "sound/direct_sound_samples/cries/jumblinart.bin"
+
+	.align 2
 Cry_Gargarramer::
 	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
 

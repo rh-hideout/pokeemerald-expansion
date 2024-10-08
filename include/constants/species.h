@@ -1679,8 +1679,10 @@
 #define SPECIES_INDIGNIFLY                              1569
 #define SPECIES_FUSJAHL                                 1570
 #define SPECIES_JAHL                                    1571
+#define SPECIES_JUMBLEGORE                              1572
+#define SPECIES_JUMBLINART                              1573
 
-#define SPECIES_EGG (SPECIES_JAHL + 1)
+#define SPECIES_EGG (SPECIES_JUMBLINART + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

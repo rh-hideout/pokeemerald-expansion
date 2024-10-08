@@ -22304,6 +22304,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/icon.4bpp");
    const u8 gMonFootprint_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/footprint.1bpp");
 
+   const u32 gMonFrontPic_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/front.4bpp.lz");
+   const u32 gMonBackPic_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/back.4bpp.lz");
+   const u32 gMonPalette_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/shiny.gbapal.lz");
+   const u8 gMonIcon_Jumblegore[] = INCBIN_U8("graphics/pokemon/jumblegore/icon.4bpp");
+   const u8 gMonFootprint_Jumblegore[] = INCBIN_U8("graphics/pokemon/jumblegore/footprint.1bpp");
+
+   const u32 gMonFrontPic_Jumblinart[] = INCBIN_U32("graphics/pokemon/jumblinart/front.4bpp.lz");
+   const u32 gMonBackPic_Jumblinart[] = INCBIN_U32("graphics/pokemon/jumblinart/back.4bpp.lz");
+   const u32 gMonPalette_Jumblinart[] = INCBIN_U32("graphics/pokemon/jumblinart/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Jumblinart[] = INCBIN_U32("graphics/pokemon/jumblinart/shiny.gbapal.lz");
+   const u8 gMonIcon_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/icon.4bpp");
+   const u8 gMonFootprint_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/footprint.1bpp");
+
    const u32 gMonFrontPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/front.4bpp.lz");
    const u32 gMonBackPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/back.4bpp.lz");
    const u32 gMonPalette_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/normal.gbapal.lz");

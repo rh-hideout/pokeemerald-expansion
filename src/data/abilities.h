@@ -2772,7 +2772,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_OLD_SCHOOL] =
     {
         .name = _("Old School"),
-        .description = COMPOUND_STRING("High crit moves, Crit."),
+        .description = COMPOUND_STRING("High crit moves always crit."),
         .aiRating = 8,
     },
 };

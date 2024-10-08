@@ -23180,4 +23180,26 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_SPIT_UP,
     },
 
+    [MOVE_CARVING_BEAK] =
+    {
+        .name = COMPOUND_STRING("Carving Beak"),
+        .description = COMPOUND_STRING(
+            "Does double damage if the\n"
+            "foe is paralyzed."),
+        .effect = EFFECT_DOUBLE_POWER_ON_ARG_STATUS,
+        .power = 70,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .argument = STATUS1_PARALYSIS,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .battleAnimScript = Move_DRILL_PECK,
+    },
+
 };
