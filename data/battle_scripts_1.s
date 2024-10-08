@@ -1572,6 +1572,27 @@ BattleScript_FlowerShieldMoveTargetEnd:
 	jumpifnexttargetvalid BattleScript_FlowerShieldLoop
 	end
 
+BattleScript_EffectFrostbite::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
+	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_SPATK, MIN_STAT_STAGE, BattleScript_FrostbiteDoSpAtk
+	goto BattleScript_MoveEnd
+BattleScript_FrostbiteDoSpAtk:
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_SPATK, STAT_CHANGE_NEGATIVE
+	jumpifweatheraffected BS_ATTACKER, B_WEATHER_HAIL, BattleScript_FrostbiteSpAtkDrop2
+	setstatchanger STAT_SPATK, 1, TRUE
+	goto BattleScript_FrostbiteSpAtkDrop
+BattleScript_FrostbiteSpAtkDrop2:
+	setstatchanger STAT_SPATK, 2, TRUE
+BattleScript_FrostbiteSpAtkDrop:
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_MoveEnd
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_MoveEnd
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectRototiller::
 	attackcanceler
 	attackstring
