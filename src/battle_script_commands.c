@@ -12429,7 +12429,6 @@ void BS_TryGiveGem(void)
 
             validMoves++;
         }
-
         for (moveChecked = 0; moveChecked < validMoves; moveChecked++)
         {
             moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
@@ -12439,18 +12438,14 @@ void BS_TryGiveGem(void)
                 moveType = TYPE_GHOST;
             }
         }
-        do
+        while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
+
+        moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
+
+        if (moveType == TYPE_MYSTERY)
         {
-            while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
-
-            moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
-
-            if (moveType == TYPE_MYSTERY)
-            {
-                    moveType = TYPE_GHOST;
-            }
+                moveType = TYPE_GHOST;
         }
-        while (moveType == gBattleMons[gBattlerAttacker].type1 || moveType == gBattleMons[gBattlerAttacker].type2 || moveType == gBattleMons[gBattlerAttacker].type3);
         
         switch(moveType)
         {
