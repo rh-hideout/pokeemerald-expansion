@@ -354,6 +354,12 @@ struct SimulatedDamage
     s32 minimum;
 };
 
+struct MoveUIData
+{
+    u8 displayedMovePower[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
+    u8 displayedMoveAccuracy[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
+};
+
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
 struct AiLogicData
 {
@@ -436,6 +442,7 @@ struct BattleResources
     struct AiLogicData *aiData;
     struct AIPartyData *aiParty;
     struct BattleHistory *battleHistory;
+    struct MoveUIData *moveUIData;
     u8 bufferA[MAX_BATTLERS_COUNT][0x200];
     u8 bufferB[MAX_BATTLERS_COUNT][0x200];
     u8 transferBuffer[0x100];
@@ -445,6 +452,7 @@ struct BattleResources
 #define AI_DATA ((struct AiLogicData *)(gBattleResources->aiData))
 #define AI_PARTY ((struct AIPartyData *)(gBattleResources->aiParty))
 #define BATTLE_HISTORY ((struct BattleHistory *)(gBattleResources->battleHistory))
+#define MOVE_UI_DATA ((struct MoveUIData *)(gBattleResources->moveUIData))
 
 struct BattleResults
 {

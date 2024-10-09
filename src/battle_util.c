@@ -9544,6 +9544,48 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
     return uq4_12_multiply_by_int_half_down(modifier, basePower);
 }
 
+void SetMoveUIDataForTurn(struct MoveUIData *moveUIData)
+{
+    u32 battlerAtk, battlerDef, i, movePower, moveAccuracy, atkAbility, holdEffectAtk;
+
+    for (battlerAtk = 0; battlerAtk < gBattlersCount; battlerAtk++)
+    {
+        if (GetBattlerSide(battlerAtk) == B_SIDE_OPPONENT)
+            continue;
+        
+        atkAbility = GetBattlerAbility(battlerAtk);
+        holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
+        battlerDef = BATTLE_OPPOSITE(battlerAtk);
+        
+
+        for (i = 0; i < MAX_MON_MOVES; i++)
+        {
+            u32 move = gBattleMons[battlerAtk].moves[i];
+            u32 moveType = gMovesInfo[move].type;
+            u32 moveEffect = gMovesInfo[move].effect;
+
+            if (move == MOVE_NONE
+            ||  move == 0xFFFF
+            ||  moveEffect == EFFECT_KNOCK_OFF
+            ||  moveEffect == EFFECT_BRINE)
+                continue;
+
+
+            movePower = CalcMoveBasePowerAfterModifiers(move, battlerAtk, battlerDef, moveType, FALSE, atkAbility, ABILITY_NONE, holdEffectAtk, gBattleWeather);
+            moveAccuracy = GetTotalAccuracy(battlerAtk, battlerDef, move, atkAbility, ABILITY_NONE, holdEffectAtk, HOLD_EFFECT_NONE);
+
+            if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && moveEffect == EFFECT_EARTHQUAKE)
+                movePower /= 2;
+
+            if (moveAccuracy > 100)
+                moveAccuracy = 100;
+
+            moveUIData->displayedMovePower[battlerAtk][i] = movePower;
+            moveUIData->displayedMoveAccuracy[battlerAtk][i] = moveAccuracy;
+        }
+    }
+}
+
 static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 moveType, bool32 isCrit, bool32 updateFlags, u32 atkAbility, u32 defAbility, u32 holdEffectAtk)
 {
     u8 atkStage;
@@ -11663,7 +11705,6 @@ bool32 IsGen6ExpShareEnabled(void)
 
     return FlagGet(I_EXP_SHARE_FLAG);
 }
-
 
 bool32 MoveHasAdditionalEffect(u32 move, u32 moveEffect)
 {

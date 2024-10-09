@@ -1759,6 +1759,13 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     u16 pwr = gMovesInfo[move].power;
     u16 acc = gMovesInfo[move].accuracy;
     u8 cat = gMovesInfo[move].category;
+    u32 moveIndex = gMoveSelectionCursor[battler];
+
+    if (B_DYNAMIC_MOVE_DESCRIPTIONS)
+    {
+        pwr = gBattleResources->moveUIData->displayedMovePower[battler][moveIndex];
+        acc = gBattleResources->moveUIData->displayedMoveAccuracy[battler][moveIndex];
+    }
 
     u8 pwr_num[3], acc_num[3];
     u8 cat_desc[7] = _("CAT: ");

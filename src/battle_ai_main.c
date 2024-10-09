@@ -492,6 +492,10 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
         SetBattlerAiMovesData(aiData, battlerAtk, battlersCount);
     }
+
+    #if B_DYNAMIC_MOVE_DESCRIPTIONS == TRUE
+        SetMoveUIDataForTurn(MOVE_UI_DATA);
+    #endif
 }
 
 static bool32 AI_SwitchMonIfSuitable(u32 battler, bool32 doubleBattle)
