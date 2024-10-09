@@ -12411,6 +12411,25 @@ static void Cmd_tryconversiontypechange(void)
     }
 }
 
+void BS_TryGiveGem(void)
+{
+    NATIVE_ARGS(const u8 *failInstr);
+
+    if (gBattleMons[gBattlerAttacker].item == ITEM_NONE)
+    {
+        gBattleMons[gBattlerAttacker].item = ITEM_NORMAL_GEM;
+        BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+}
+
+
 static void Cmd_givepaydaymoney(void)
 {
     CMD_ARGS();

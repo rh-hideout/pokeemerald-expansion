@@ -5027,6 +5027,15 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     effect++;
                 }
                 break;
+            case ABILITY_JEWELRY:
+                if (gBattleMons[battler].item == ITEM_NONE
+                 && gBattleStruct->changedItems[battler] == ITEM_NONE
+                 && gBattleStruct->changedItems[battler] == ITEM_NONE)   // Will not inherit an item
+                 {
+                    BattleScriptPushCursorAndCallback(BattleScript_JewelryActivates);
+                    effect++;
+                 }
+                 break;
             case ABILITY_DRY_SKIN:
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
                     goto SOLAR_POWER_HP_DROP;

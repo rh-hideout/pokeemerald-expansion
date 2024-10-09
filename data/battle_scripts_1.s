@@ -8012,6 +8012,15 @@ BattleScript_CheekPouchActivates::
 	copybyte gBattlerAttacker, sSAVED_BATTLER
 	return
 
+BattleScript_JewelryActivates::
+	pause 5
+	trygivegem BattleScript_JewelryActivatesEnd
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_FOUNDAGEM
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_JewelryActivatesEnd:
+	end3
+
 BattleScript_HarvestActivates::
 	pause 5
 	tryrecycleitem BattleScript_HarvestActivatesEnd

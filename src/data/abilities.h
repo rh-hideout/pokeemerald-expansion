@@ -2775,4 +2775,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("High crit moves always crit."),
         .aiRating = 8,
     },
+
+    [ABILITY_JEWELRY] =
+    {
+        .name = _("JEWELRY"),
+        .description = COMPOUND_STRING("May find gems during battle."),
+        .aiRating = 5,
+    },
 };
