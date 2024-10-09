@@ -1670,6 +1670,10 @@
 	callnative BS_DamageToQuarterTargetHP
 	.endm
 
+	.macro trygivegem failInstr:req
+	callnative BS_TryGiveGem
+	.endm
+
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
 	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES

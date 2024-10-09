@@ -527,6 +527,7 @@ extern const u8 BattleScript_InversionActivates[];
 extern const u8 BattleScript_BigGuyActivates[];
 extern const u8 BattleScript_TransfusionExits[];
 extern const u8 BattleScript_TransfusionActivates[];
+extern const u8 BattleScript_JewelryActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
