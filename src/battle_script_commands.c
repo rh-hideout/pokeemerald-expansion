@@ -12415,9 +12415,108 @@ void BS_TryGiveGem(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
+    u8 validMoves = 0;
+    u8 moveChecked = 0;
+    u8 moveType = 0;
+    u16 gemType = 0;
+
     if (gBattleMons[gBattlerAttacker].item == ITEM_NONE)
     {
-        gBattleMons[gBattlerAttacker].item = ITEM_NORMAL_GEM;
+        while (validMoves < MAX_MON_MOVES)
+        {
+            if (gBattleMons[gBattlerAttacker].moves[validMoves] == MOVE_NONE)
+                break;
+
+            validMoves++;
+        }
+
+        for (moveChecked = 0; moveChecked < validMoves; moveChecked++)
+        {
+            moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
+
+            if (moveType == TYPE_MYSTERY)
+            {
+                moveType = TYPE_GHOST;
+            }
+            if (moveType != gBattleMons[gBattlerAttacker].type1
+                && moveType != gBattleMons[gBattlerAttacker].type2
+                && moveType != gBattleMons[gBattlerAttacker].type3)
+            {
+                break;
+            }
+        }
+        do
+        {
+            while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
+
+            moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
+
+            if (moveType == TYPE_MYSTERY)
+            {
+                    moveType = TYPE_GHOST;
+            }
+        }
+        while (moveType == gBattleMons[gBattlerAttacker].type1 || moveType == gBattleMons[gBattlerAttacker].type2 || moveType == gBattleMons[gBattlerAttacker].type3);
+        
+        switch(moveType)
+        {
+            case TYPE_NORMAL:
+                gemType = ITEM_NORMAL_GEM;
+                break;
+            case TYPE_FIGHTING:
+                gemType = ITEM_FIGHTING_GEM;
+                break;
+            case TYPE_FLYING:
+                gemType = ITEM_FLYING_GEM;
+                break;
+            case TYPE_POISON:
+                gemType = ITEM_POISON_GEM;
+                break;
+            case TYPE_GROUND:
+                gemType = ITEM_GROUND_GEM;
+                break;
+            case TYPE_ROCK:
+                gemType = ITEM_ROCK_GEM;
+                break;
+            case TYPE_BUG:
+                gemType = ITEM_BUG_GEM;
+                break;
+            case TYPE_GHOST:
+                gemType = ITEM_GHOST_GEM;
+                break;
+            case TYPE_STEEL:
+                gemType = ITEM_STEEL_GEM;
+                break;
+            case TYPE_FIRE:
+                gemType = ITEM_FIRE_GEM;
+                break;
+            case TYPE_WATER:
+                gemType = ITEM_WATER_GEM;
+                break;
+            case TYPE_GRASS:
+                gemType = ITEM_GRASS_GEM;
+                break;
+            case TYPE_ELECTRIC:
+                gemType = ITEM_ELECTRIC_GEM;
+                break;
+            case TYPE_PSYCHIC:
+                gemType = ITEM_PSYCHIC_GEM;
+                break;
+            case TYPE_ICE:
+                gemType = ITEM_ICE_GEM;
+                break;
+            case TYPE_DRAGON:
+                gemType = ITEM_DRAGON_GEM;
+                break;
+            case TYPE_DARK:
+                gemType = ITEM_DARK_GEM;
+                break;
+            case TYPE_FAIRY:
+                gemType = ITEM_FAIRY_GEM;
+                break;
+        }
+
+        gBattleMons[gBattlerAttacker].item = gemType;
         BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
         MarkBattlerForControllerExec(gBattlerAttacker);
 
