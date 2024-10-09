@@ -2338,3 +2338,21 @@
 	.macro hideitemdescription
 	callnative ScriptHideItemDescription
 	.endm
+
+	.macro increasedifficulty
+	callnative Script_IncreaseDifficulty
+	.endm
+
+	.macro decreasedifficulty
+	callnative Script_DecreaseDifficulty
+	.endm
+
+	.macro getdifficulty var:req
+	callnative ScrCmd_getdifficulty
+	.2byte \var
+	.endm
+
+	.macro setdifficulty difficulty:req
+	callnative ScrCmd_setdifficulty
+	.byte \difficulty
+	.endm
