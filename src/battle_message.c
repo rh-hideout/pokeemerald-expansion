@@ -865,7 +865,7 @@ static const u8 sText_TypesBecameInverted[] = _("Type effectiveness was\ninverte
 static const u8 sText_AttackerAcquiredType[] = _("{B_ATK_NAME_WITH_PREFIX} acquired\n{B_DEF_NAME_WITH_PREFIX}'s primary type!");
 static const u8 sText_TransfusionOver[] = _("All types were reverted\nback to normal!");
 static const u8 sText_PkmnShotItem[] = _("{B_ATK_NAME_WITH_PREFIX} shot the fragments\nof {B_LAST_ITEM}!");
-static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a gem!");
+static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a {B_BUFF1} Gem!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =

@@ -12438,12 +12438,6 @@ void BS_TryGiveGem(void)
             {
                 moveType = TYPE_GHOST;
             }
-            if (moveType != gBattleMons[gBattlerAttacker].type1
-                && moveType != gBattleMons[gBattlerAttacker].type2
-                && moveType != gBattleMons[gBattlerAttacker].type3)
-            {
-                break;
-            }
         }
         do
         {
@@ -12519,6 +12513,7 @@ void BS_TryGiveGem(void)
         gBattleMons[gBattlerAttacker].item = gemType;
         BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
         MarkBattlerForControllerExec(gBattlerAttacker);
+        PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
 
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
