@@ -1,6 +1,7 @@
 #include "global.h"
 #include "malloc.h"
 #include "battle.h"
+#include "battle_ai_util.h"
 #include "pokemon.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
@@ -2718,6 +2719,7 @@ void CreateAbilityPopUp(u8 battlerId, u32 ability, bool32 isDoubleBattle)
         LoadSpriteSheet(&sSpriteSheet_AbilityPopUp);
         LoadSpritePalette(&sSpritePalette_AbilityPopUp);
     }
+    RecordAbilityBattle(battlerId, ability);
     gBattleStruct->activeAbilityPopUps |= 1u << battlerId;
     battlerPosition = GetBattlerPosition(battlerId);
 
