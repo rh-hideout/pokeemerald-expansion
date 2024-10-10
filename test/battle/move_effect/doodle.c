@@ -17,8 +17,8 @@ DOUBLE_BATTLE_TEST("Doodle gives the target's ability to user and ally")
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft);  }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
-        MESSAGE("Wynaut copied Foe Torchic's Blaze!");
-        MESSAGE("Wynaut copied Foe Torchic's Blaze!");
+        MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+        MESSAGE("Wynaut copied the opposing Torchic's Ability!");
     } THEN {
         EXPECT(playerLeft->ability == ABILITY_BLAZE);
         EXPECT(playerRight->ability == ABILITY_BLAZE);
@@ -37,8 +37,8 @@ DOUBLE_BATTLE_TEST("Doodle can't copy a banned ability")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
         NONE_OF {
-            MESSAGE("Wynaut copied Foe Great Tusk's Protosynthesis!");
-            MESSAGE("Wynaut copied Foe Great Tusk's Protosynthesis!");
+            MESSAGE("Wynaut copied the opposing Great Tusk's Ability!");
+            MESSAGE("Wynaut copied the opposing Great Tusk's Ability!");
         }
     } THEN {
         EXPECT(playerLeft->ability != ABILITY_PROTOSYNTHESIS);

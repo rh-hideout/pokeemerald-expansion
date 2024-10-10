@@ -244,7 +244,7 @@ SINGLE_BATTLE_TEST("Crit Chance: Dire Hit increases a battler's critical hit cha
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, player);
-        MESSAGE("Wobbuffet used Dire Hit to get pumped!");
+        MESSAGE("Wobbuffet used the Dire Hit to get pumped!");
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("A critical hit!");
     }

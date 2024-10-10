@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a fainted party member for an oppon
     } WHEN {
         TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING); SEND_OUT(opponent, 1); }
     } SCENE {
-        MESSAGE("Foe Raichu used Revival Blessing!");
+        MESSAGE("The opposing Raichu used Revival Blessing!");
         MESSAGE("Pichu was revived and is ready to fight again!");
     }
 }
@@ -76,10 +76,10 @@ TO_DO_BATTLE_TEST("Revival Blessing cannot revive a partner's party member");
 //         TURN { MOVE(user, MOVE_REVIVAL_BLESSING); }
 //     } SCENE {
 //         if (user == opponentLeft) {
-//             MESSAGE("Foe Wobbuffet used Revival Blessing!");
+//             MESSAGE("The opposing Wobbuffet used Revival Blessing!");
 //             MESSAGE("But it failed!");
 //         } else {
-//             MESSAGE("Foe Wynaut used Revival Blessing!");
+//             MESSAGE("The opposing Wynaut used Revival Blessing!");
 //             MESSAGE("Wynaut was revived and is ready to fight again!");
 //         }
 //     }
@@ -101,8 +101,8 @@ TO_DO_BATTLE_TEST("Revived battlers still lose their turn");
 //                SEND_OUT(opponentLeft, 1); }
 //     } SCENE {
 //         MESSAGE("Wobbuffet used Tackle!");
-//         MESSAGE("Foe Wynaut fainted!");
-//         MESSAGE("Foe Wobbuffet used Revival Blessing!");
+//         MESSAGE("The opposing Wynaut fainted!");
+//         MESSAGE("The opposing Wobbuffet used Revival Blessing!");
 //         MESSAGE("Wynaut was revived and is ready to fight again!");
 //         NOT { MESSAGE("Wynaut used Celebrate!"); }
 //     }
