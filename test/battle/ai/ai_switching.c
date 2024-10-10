@@ -39,7 +39,7 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle")
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (all bad moves)")
 {
     u32 flags;
 
@@ -63,6 +63,29 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spot
         NONE_OF {
             MESSAGE("{PKMN} TRAINER LEAF withdrew Haunter!");
             MESSAGE("{PKMN} TRAINER LEAF sent out Raticate!");
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (Wonder Guard)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_SHEDINJA);
+        PLAYER(SPECIES_SHEDINJA);
+        // No moves to damage player.
+        OPPONENT(SPECIES_LINOONE) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_LINOONE) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+    } SCENE {
+        MESSAGE("{PKMN} TRAINER LEAF withdrew Linoone!");
+        MESSAGE("{PKMN} TRAINER LEAF sent out Gengar!");
+        NONE_OF {
+            MESSAGE("{PKMN} TRAINER LEAF withdrew Zigzagoon!");
+            MESSAGE("{PKMN} TRAINER LEAF sent out Gengar!");
         }
     }
 }

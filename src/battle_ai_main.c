@@ -496,89 +496,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     AI_DATA->aiCalcInProgress = FALSE;
 }
 
-static bool32 AI_SwitchMonIfSuitable(u32 battler, bool32 doubleBattle)
-{
-    u32 monToSwitchId = AI_DATA->mostSuitableMonId[battler];
-    if (monToSwitchId != PARTY_SIZE && IsValidForBattle(&GetBattlerParty(battler)[monToSwitchId]))
-    {
-        gBattleMoveDamage = monToSwitchId;
-        // Edge case: See if partner already chose to switch into the same mon
-        if (doubleBattle)
-        {
-            u32 partner = BATTLE_PARTNER(battler);
-            if (AI_DATA->shouldSwitchIfBadMoves & (1u << partner) && AI_DATA->monToSwitchId[partner] == monToSwitchId)
-            {
-                return FALSE;
-            }
-        }
-        AI_DATA->shouldSwitchIfBadMoves |= 1 << battler;
-        AI_DATA->monToSwitchId[battler] = monToSwitchId;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static bool32 AI_ShouldSwitchIfBadMoves(u32 battler, bool32 doubleBattle)
-{
-    u32 i, j;
-    // If can switch.
-    if (CountUsablePartyMons(battler) > 0
-        && !IsBattlerTrapped(battler, TRUE)
-        && !(gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_PALACE))
-        && AI_THINKING_STRUCT->aiFlags[battler] & (AI_FLAG_CHECK_VIABILITY | AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_PREFER_BATON_PASS)
-        && !(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SEQUENCE_SWITCHING))
-    {
-        // Consider switching if all moves are worthless to use.
-        if (GetTotalBaseStat(gBattleMons[battler].species) >= 310 // Mon is not weak.
-            && gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 2) // Mon has more than 50% of its HP
-        {
-            s32 cap = AI_THINKING_STRUCT->aiFlags[battler] & (AI_FLAG_CHECK_VIABILITY) ? 95 : 93;
-            if (doubleBattle)
-            {
-                for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-                {
-                    if (i != battler && IsBattlerAlive(i))
-                    {
-                        for (j = 0; j < MAX_MON_MOVES; j++)
-                        {
-                            if (gBattleStruct->aiFinalScore[battler][i][j] > cap)
-                                break;
-                        }
-                        if (j != MAX_MON_MOVES)
-                            break;
-                    }
-                }
-                if (i == MAX_BATTLERS_COUNT && AI_SwitchMonIfSuitable(battler, doubleBattle))
-                    return TRUE;
-            }
-            else
-            {
-                for (i = 0; i < MAX_MON_MOVES; i++)
-                {
-                    if (AI_THINKING_STRUCT->score[i] > cap)
-                        break;
-                }
-
-                if (i == MAX_MON_MOVES && AI_SwitchMonIfSuitable(battler, doubleBattle))
-                    return TRUE;
-            }
-
-        }
-
-        // Consider switching if your mon with truant is bodied by Protect spam.
-        // Or is using a double turn semi invulnerable move(such as Fly) and is faster.
-        if (AI_DATA->abilities[battler] == ABILITY_TRUANT
-            && IsTruantMonVulnerable(battler, gBattlerTarget)
-            && gDisableStructs[battler].truantCounter
-            && gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 2
-            && AI_SwitchMonIfSuitable(battler, doubleBattle))
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -608,10 +525,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
         return AI_CHOICE_FLEE;
     if (AI_THINKING_STRUCT->aiAction & AI_ACTION_WATCH)
         return AI_CHOICE_WATCH;
-
-    // Switch mon if there are no good moves to use.
-    if (AI_ShouldSwitchIfBadMoves(battlerAi, FALSE))
-        return AI_CHOICE_SWITCH;
 
     numOfBestMoves = 1;
     currentMoveArray[0] = AI_THINKING_STRUCT->score[0];
@@ -732,10 +645,6 @@ static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
             }
         }
     }
-
-    // Switch mon if all of the moves are bad to use against any of the target.
-    if (AI_ShouldSwitchIfBadMoves(battlerAi, TRUE))
-        return AI_CHOICE_SWITCH;
 
     mostMovePoints = bestMovePointsForTarget[0];
     mostViableTargetsArray[0] = 0;
