@@ -1525,7 +1525,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     u8 *partySize;
     struct Pokemon *party;
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
-    ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
+    ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d. Please enable it in include/config/test/pokemon.h", species);
     if (side == B_SIDE_PLAYER)
     {
         partySize = &DATA.playerPartySize;
