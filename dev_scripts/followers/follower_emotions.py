@@ -47,4 +47,4 @@ def export_messages(infile, outfile, n=None, indent=0, start=0):
 
 
 if __name__ == '__main__':
-    export_messages('emotions.txt', 'emotions.h', n=1, start=7)
+    export_messages('emotions.txt', 'emotions.h', n=4, start=42)
