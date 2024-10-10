@@ -180,7 +180,7 @@ static bool32 HasBadOdds(u32 battler, bool32 emitResult)
             && gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 4)))
     {
         // 50% chance to stay in regardless
-        if (!RandomPercentage(RNG_AI_SWITCH_HASBADODDS, 50))
+        if (RandomPercentage(RNG_AI_SWITCH_HASBADODDS, 50))
             return FALSE;
 
         // Switch mon out
@@ -203,7 +203,7 @@ static bool32 HasBadOdds(u32 battler, bool32 emitResult)
                 return FALSE;
 
             // 50% chance to stay in regardless
-            if (!RandomPercentage(RNG_AI_SWITCH_HASBADODDS, 50))
+            if (RandomPercentage(RNG_AI_SWITCH_HASBADODDS, 50))
                 return FALSE;
 
             // Switch mon out
@@ -462,15 +462,11 @@ static bool32 ShouldSwitchIfGameStatePrompt(u32 battler, bool32 emitResult)
     u16 holdEffect = AI_DATA->holdEffects[battler];
     u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
-    s32 moduloChance = 4; //25% Chance Default
-    s32 chanceReducer = 1; //No Reduce default. Increase to reduce
+    bool32 hasStatRaised = AnyStatIsRaised(battler);
     s32 firstId;
     s32 lastId;
     s32 i;
     struct Pokemon *party;
-
-    if (AnyStatIsRaised(battler))
-        chanceReducer = 5; // Reduce switchout probability by factor of 5 if setup
 
     //Perish Song
     if (gStatuses3[battler] & STATUS3_PERISH_SONG
@@ -567,28 +563,24 @@ static bool32 ShouldSwitchIfGameStatePrompt(u32 battler, bool32 emitResult)
             && !AiExpectsToFaintPlayer(battler))
         {
             //Toxic
-            moduloChance = 2; //50%
             if (((gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) >= STATUS1_TOXIC_TURN(2))
                 && gBattleMons[battler].hp >= (gBattleMons[battler].maxHP / 3)
-                && (Random() % (moduloChance*chanceReducer)) == 0)
+                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_BADLY_POISONED, 20) : RandomPercentage(RNG_AI_SWITCH_BADLY_POISONED, 50)))
                 switchMon = TRUE;
 
             //Cursed
-            moduloChance = 2; //50%
             if (gBattleMons[battler].status2 & STATUS2_CURSED
-                && (Random() % (moduloChance*chanceReducer)) == 0)
+                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_CURSED, 20) : RandomPercentage(RNG_AI_SWITCH_CURSED, 50)))
                 switchMon = TRUE;
 
             //Nightmare
-            moduloChance = 3; //33.3%
             if (gBattleMons[battler].status2 & STATUS2_NIGHTMARE
-                && (Random() % (moduloChance*chanceReducer)) == 0)
+                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, 15) : RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, 33)))
                 switchMon = TRUE;
 
             //Leech Seed
-            moduloChance = 4; //25%
             if (gStatuses3[battler] & STATUS3_LEECHSEED
-                && (Random() % (moduloChance*chanceReducer)) == 0)
+                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_SEEDED, 10) : RandomPercentage(RNG_AI_SWITCH_SEEDED, 25)))
                 switchMon = TRUE;
         }
 
@@ -606,7 +598,7 @@ static bool32 ShouldSwitchIfGameStatePrompt(u32 battler, bool32 emitResult)
             if (FindMonThatAbsorbsOpponentsMove(battler, FALSE)) // Switch if absorber found. Note: FindMonThatAbsorbsOpponentsMove already provides id of the mon to switch into to gBattleStruct->AI_monToSwitchIntoId.
                 switchMon = TRUE, monIdChosen = TRUE;
             if (!AI_OpponentCanFaintAiWithMod(battler, 0)
-                && AnyStatIsRaised(battler))
+                && hasStatRaised)
                 switchMon = FALSE;
             if (AiExpectsToFaintPlayer(battler)
                 && AI_IsSlower(battler, opposingBattler, 0)
