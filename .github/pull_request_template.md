@@ -20,6 +20,9 @@
 <!-- If your PR contains any unfinished features that are not considered merge-blocking, please list them here for clarity so no one can forget. -->
 <!-- If it doesn't apply, feel free to remove this section. -->
 
+## Please add your PR the changelog of the respective branch you're aiming to.
+<!-- If your PR has big factorizations as part of it, please also add them to the "REFACTORS" section of the changelog, as it's important to let downstream users know of potential changes to their code. -->
+
 ## **Discord contact info**
 <!--- formatted as name#numbers, e.g. Lunos#4026 -->
 <!--- Contributors must join https://discord.gg/6CzjAG6GZk -->
