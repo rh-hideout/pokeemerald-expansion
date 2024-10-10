@@ -8,6 +8,7 @@ ASSUMPTIONS
 
 DOUBLE_BATTLE_TEST("Uproar status causes sleeping pokemon to wake up during an attack")
 {
+    PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET); // test fails if we target soundproof mon
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }

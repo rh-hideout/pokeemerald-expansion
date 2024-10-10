@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("King's Shield, Silk Trap and Obstruct protect from damaging 
     u32 j;
     static const u16 protectMoves[][3] =
     {   // Move             Stat      Stages
-        {MOVE_KINGS_SHIELD, STAT_ATK,   1},
+        {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
         {MOVE_SILK_TRAP,    STAT_SPEED, 1},
         {MOVE_OBSTRUCT,     STAT_DEF,   2},
     };
@@ -99,7 +99,11 @@ SINGLE_BATTLE_TEST("King's Shield, Silk Trap and Obstruct protect from damaging 
                 NOT HP_BAR(opponent);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 if (statId == STAT_ATK) {
+                    #if B_KINGS_SHIELD_LOWER_ATK >= GEN_8
                     MESSAGE("Wobbuffet's Attack fell!");
+                    #else
+                    MESSAGE("Wobbuffet's Attack harshly fell!");
+                    #endif    
                 } else if (statId == STAT_SPEED) {
                     MESSAGE("Wobbuffet's Speed fell!");
                 } else if (statId == STAT_DEF) {
