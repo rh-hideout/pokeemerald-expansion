@@ -1734,7 +1734,8 @@ static u16 PackGraphicsId(const struct ObjectEventTemplate *template)
         if (template->script && template->script[0] == 0x7d)
         {
             form = T1_READ_16(&template->script[2]);
-            form = (form >> 10) & 0x1F;
+            //form = (form >> 10) & 0x1F;
+            form = (form >> OBJ_EVENT_GFX_SPECIES_BITS) & 0xf;
         }
         else if (template->trainerRange_berryTreeId)
         {
@@ -2872,9 +2873,6 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
-    if (graphicsId >= OBJ_EVENT_GFX_MON_BASE + SPECIES_SHINY_TAG)
-        graphicsId -= SPECIES_SHINY_TAG;
-    // graphicsId may contain mon form info
     if (graphicsId > OBJ_EVENT_GFX_SPECIES_MASK)
     {
         form = graphicsId >> OBJ_EVENT_GFX_SPECIES_BITS;

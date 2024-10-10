@@ -2003,7 +2003,6 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
     //Follower Sprite
     u16 graphicsId = (OBJ_EVENT_GFX_MON_BASE + species) & OBJ_EVENT_GFX_SPECIES_MASK;
     graphicsId |= data->isFemale << OBJ_EVENT_GFX_SPECIES_BITS;
-    graphicsId += data->isShiny ? SPECIES_SHINY_TAG : 0;
     data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
                                                         SpriteCB_Follower,
                                                         VISUALIZER_FOLLOWER_X,
