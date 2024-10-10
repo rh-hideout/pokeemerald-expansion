@@ -93,7 +93,13 @@
 #define MAX_STAT_STAGE    12
 
 // Shiny odds
-#define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
+// Actual probability is SHINY_ODDS/65536
+// If you change this directly, change GEN_3_SHINY_ODDS too. Otherwise you just need to change the P_BASE_SHINY_ODDS config.
+#if P_BASE_SHINY_ODDS >= GEN_6
+#define SHINY_ODDS 16
+#else
+#define SHINY_ODDS 8
+#endif
 
 // Ribbon IDs used by TV and Pokénav
 #define CHAMPION_RIBBON       0
