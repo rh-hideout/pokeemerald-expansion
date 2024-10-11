@@ -872,5 +872,6 @@ extern const u8 BattleScript_EffectLeechSeedPlanted[];
 extern const u8 BattleScript_EffectParalyzeIfMiss[];
 extern const u8 BattleScript_EffectFlakCannon[];
 extern const u8 BattleScript_EffectFrostbite[];
+extern const u8 BattleScript_EffectMirageVeil[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

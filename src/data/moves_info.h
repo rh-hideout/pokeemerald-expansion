@@ -22006,6 +22006,31 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_FRENZY_PLANT,
     },
 
+    [MOVE_MIRAGE_VEIL] =
+    {
+        .name = COMPOUND_STRING("Mirage Veil"),
+        .description = COMPOUND_STRING(
+            "Strengthens all attacks\n"
+            "only usable with sandstorm."),
+        .effect = EFFECT_MIRAGE_VEIL,
+        .power = 0,
+        .type = TYPE_GROUND,
+        .accuracy = 0,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SANDSTORM},
+        .battleAnimScript = Move_AURORA_VEIL,
+    },
+
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

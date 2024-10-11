@@ -3165,6 +3165,11 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, u32 moveEffect)
             && !(gSideStatuses[atkSide] & (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)))
             return TRUE;
         break;
+    case EFFECT_MIRAGE_VEIL:
+        // Use only in Sandstorm.
+        if ((AI_GetWeather(AI_DATA) & (B_WEATHER_SANDSTORM)))
+            return TRUE;
+        break;
     case EFFECT_REFLECT:
         // Use only if the player has a physical move and AI doesn't already have Reflect itself active.
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)

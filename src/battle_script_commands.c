@@ -8756,6 +8756,7 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
             DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOffReturn, MOVE_MIST);
             DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOffReturn, MOVE_AURORA_VEIL);
             DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOffReturn, MOVE_SAFEGUARD);
+            DEFOG_CLEAR(SIDE_STATUS_MIRAGE_VEIL, mirageVeilTimer, BattleScript_SideStatusWoreOffReturn, MOVE_MIRAGE_VEIL);
         }
         DEFOG_CLEAR(SIDE_STATUS_SPIKES, spikesAmount, BattleScript_SpikesDefog, 0);
         DEFOG_CLEAR(SIDE_STATUS_STEALTH_ROCK, stealthRockAmount, BattleScript_StealthRockDefog, 0);
@@ -8955,6 +8956,7 @@ static void CourtChangeSwapSideStatuses(void)
     COURTCHANGE_SWAP(SIDE_STATUS_RAINBOW, rainbowTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_SEA_OF_FIRE, seaOfFireTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_SWAMP, swampTimer, temp);
+    COURTCHANGE_SWAP(SIDE_STATUS_MIRAGE_VEIL, mirageVeilTimer, temp);
 
     // Change battler IDs of swapped effects. Needed for the correct string when they expire
     // E.g. "Foe's Reflect wore off!"
@@ -8966,6 +8968,7 @@ static void CourtChangeSwapSideStatuses(void)
     UPDATE_COURTCHANGED_BATTLER(tailwindBattlerId);
     UPDATE_COURTCHANGED_BATTLER(luckyChantBattlerId);
     UPDATE_COURTCHANGED_BATTLER(stickyWebBattlerId);
+    UPDATE_COURTCHANGED_BATTLER(mirageVeilBattlerId);
 
     // Track which side originally set the Sticky Web
     SWAP(sideTimerPlayer->stickyWebBattlerSide, sideTimerOpp->stickyWebBattlerSide, temp);
@@ -10284,6 +10287,32 @@ static void Cmd_various(void)
         }
         break;
     }
+    case VARIOUS_SET_MIRAGE_VEIL:
+    {
+        VARIOUS_ARGS();
+        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_MIRAGE_VEIL
+            || !(WEATHER_HAS_EFFECT && gBattleWeather & (B_WEATHER_SANDSTORM)))
+        {
+            gMoveResultFlags |= MOVE_RESULT_MISSED;
+            gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        }
+        else
+        {
+            gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_MIRAGE_VEIL;
+            if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
+                gSideTimers[GetBattlerSide(battler)].mirageVeilTimer = 8;
+            else
+                gSideTimers[GetBattlerSide(battler)].mirageVeilTimer = 5;
+            gSideTimers[GetBattlerSide(battler)].mirageVeilBattlerId = battler;
+
+            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
+                gBattleCommunication[MULTISTRING_CHOOSER] = 6;
+            else
+                gBattleCommunication[MULTISTRING_CHOOSER] = 6;
+        }
+        break;
+    }
+
     case VARIOUS_TRY_THIRD_TYPE:
     {
         VARIOUS_ARGS(const u8 *failInstr);
@@ -15266,14 +15295,17 @@ static void Cmd_removelightscreenreflect(void)
     if (!failed
      && (gSideTimers[side].reflectTimer
       || gSideTimers[side].lightscreenTimer
-      || gSideTimers[side].auroraVeilTimer))
+      || gSideTimers[side].auroraVeilTimer
+      || gSideTimers[side].mirageVeilTimer))
     {
         gSideStatuses[side] &= ~SIDE_STATUS_REFLECT;
         gSideStatuses[side] &= ~SIDE_STATUS_LIGHTSCREEN;
         gSideStatuses[side] &= ~SIDE_STATUS_AURORA_VEIL;
+        gSideStatuses[side] &= ~SIDE_STATUS_MIRAGE_VEIL;
         gSideTimers[side].reflectTimer = 0;
         gSideTimers[side].lightscreenTimer = 0;
         gSideTimers[side].auroraVeilTimer = 0;
+        gSideTimers[side].mirageVeilTimer = 0;
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 1;
     }

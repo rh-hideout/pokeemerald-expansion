@@ -867,6 +867,7 @@ static const u8 sText_TransfusionOver[] = _("All types were reverted\nback to no
 static const u8 sText_PkmnShotItem[] = _("{B_ATK_NAME_WITH_PREFIX} shot the fragments\nof {B_LAST_ITEM}!");
 static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a {B_BUFF1} Gem!");
 static const u8 sText_AttackerLostGrassType[] = _("{B_ATK_NAME_WITH_PREFIX} uprooted itself!");
+static const u8 sText_PkmnRaisedAtkPower[] = _("{B_ATK_PREFIX2}'s {B_CURRENT_MOVE}\nraised attack power!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1589,6 +1590,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNSHOTITEM - BATTLESTRINGS_TABLE_START] = sText_PkmnShotItem,
     [STRINGID_FOUNDAGEM - BATTLESTRINGS_TABLE_START] = sText_FoundAGem,
     [STRINGID_ATTACKERLOSTGRASSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostGrassType,
+    [STRINGID_PKMNRAISEDATKPOWER - BATTLESTRINGS_TABLE_START] = sText_PkmnRaisedAtkPower,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1775,6 +1777,7 @@ const u16 gReflectLightScreenSafeguardStringIds[] =
     [B_MSG_SET_LIGHTSCREEN_SINGLE] = STRINGID_PKMNRAISEDSPDEF,
     [B_MSG_SET_LIGHTSCREEN_DOUBLE] = STRINGID_PKMNRAISEDSPDEFALITTLE,
     [B_MSG_SET_SAFEGUARD]          = STRINGID_PKMNCOVEREDBYVEIL,
+    [B_MSG_SET_MIRAGE_VEIL]        = STRINGID_PKMNRAISEDATKPOWER,
 };
 
 const u16 gLeechSeedStringIds[] =

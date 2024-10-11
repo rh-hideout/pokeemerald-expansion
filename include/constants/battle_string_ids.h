@@ -729,8 +729,9 @@
 #define STRINGID_PKMNSHOTITEM                         727
 #define STRINGID_FOUNDAGEM                            728
 #define STRINGID_ATTACKERLOSTGRASSTYPE                729
+#define STRINGID_PKMNRAISEDATKPOWER                   730
 
-#define BATTLESTRINGS_COUNT                           730
+#define BATTLESTRINGS_COUNT                           731
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -811,6 +812,7 @@
 #define B_MSG_SET_LIGHTSCREEN_SINGLE 3
 #define B_MSG_SET_LIGHTSCREEN_DOUBLE 4
 #define B_MSG_SET_SAFEGUARD          5
+#define B_MSG_SET_MIRAGE_VEIL        6
 
 // gProtectLikeUsedStringIds
 #define B_MSG_PROTECTED_ITSELF 0
