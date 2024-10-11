@@ -2778,7 +2778,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_JEWELRY] =
     {
-        .name = _("JEWELRY"),
+        .name = _("Jewelry"),
         .description = COMPOUND_STRING("May find gems during battle."),
         .aiRating = 5,
     },

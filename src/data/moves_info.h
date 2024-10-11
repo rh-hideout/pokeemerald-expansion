@@ -21880,6 +21880,103 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_BLIZZARD,
     },
 
+    [MOVE_THUNDER_DROP] =
+    {
+        .name = COMPOUND_STRING("Thunder Drop"),
+        .description = COMPOUND_STRING(
+            "Takes the foe into the sky\n"
+            "then drops it the next turn."),
+        .effect = EFFECT_SKY_DROP,
+        .power = 100,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .gravityBanned = TRUE,
+        .sleepTalkBanned = TRUE,
+        .instructBanned = TRUE,
+        .assistBanned = TRUE,
+        .argument = TWO_TURN_ARG(STRINGID_PKMNTOOKTARGETHIGH, COMPRESS_BITS(STATUS3_ON_AIR)),
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SKY_DROP,
+    },
+
+    [MOVE_FRUIT_JUICE] =
+    {
+        .name = COMPOUND_STRING("Fruit Juice"),
+        .description = COMPOUND_STRING(
+            "Releases stockpiled power\n"
+            "Lowers target's Special Defense."),
+        .effect = EFFECT_FRUIT_JUICE,
+        .power = 120,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .mirrorMoveBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_STOCKPILE},
+        .battleAnimScript = Move_SPIT_UP,
+    },
+
+    [MOVE_CARVING_BEAK] =
+    {
+        .name = COMPOUND_STRING("Carving Beak"),
+        .description = COMPOUND_STRING(
+            "Does double damage if the\n"
+            "foe is paralyzed."),
+        .effect = EFFECT_DOUBLE_POWER_ON_ARG_STATUS,
+        .power = 70,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .argument = STATUS1_PARALYSIS,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .battleAnimScript = Move_DRILL_PECK,
+    },
+
+    [MOVE_QUICK_SAND] =
+    {
+        .name = COMPOUND_STRING("Quick Sand"),
+        .description = COMPOUND_STRING(
+            "An extremely fast attack\n"
+            "that always strikes first."),
+        .effect = EFFECT_HIT,
+        .power = 40,
+        .type = TYPE_GROUND,
+        .accuracy = 100,
+        .pp = 30,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 1,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_DOUBLE_TEAM},
+        .battleAnimScript = Move_MUD_SLAP,
+    },
+
+
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
@@ -23228,73 +23325,4 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_G_MAX_RAPID_FLOW,
     },
     
-    [MOVE_FRUIT_JUICE] =
-    {
-        .name = COMPOUND_STRING("Fruit Juice"),
-        .description = COMPOUND_STRING(
-            "Releases stockpiled power\n"
-            "Lowers target's Special Defense."),
-        .effect = EFFECT_FRUIT_JUICE,
-        .power = 120,
-        .type = TYPE_FAIRY,
-        .accuracy = 100,
-        .pp = 10,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_SPECIAL,
-        .mirrorMoveBanned = TRUE,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2,
-            .chance = 100,
-        }),
-        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
-        .contestCategory = CONTEST_CATEGORY_TOUGH,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {COMBO_STARTER_STOCKPILE},
-        .battleAnimScript = Move_SPIT_UP,
-    },
-
-    [MOVE_CARVING_BEAK] =
-    {
-        .name = COMPOUND_STRING("Carving Beak"),
-        .description = COMPOUND_STRING(
-            "Does double damage if the\n"
-            "foe is paralyzed."),
-        .effect = EFFECT_DOUBLE_POWER_ON_ARG_STATUS,
-        .power = 70,
-        .type = TYPE_FLYING,
-        .accuracy = 100,
-        .pp = 10,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_PHYSICAL,
-        .makesContact = TRUE,
-        .argument = STATUS1_PARALYSIS,
-        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
-        .contestCategory = CONTEST_CATEGORY_TOUGH,
-        .contestComboStarterId = 0,
-        .battleAnimScript = Move_DRILL_PECK,
-    },
-
-    [MOVE_QUICK_SAND] =
-    {
-        .name = COMPOUND_STRING("Quick Sand"),
-        .description = COMPOUND_STRING(
-            "An extremely fast attack\n"
-            "that always strikes first."),
-        .effect = EFFECT_HIT,
-        .power = 40,
-        .type = TYPE_GROUND,
-        .accuracy = 100,
-        .pp = 30,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 1,
-        .category = DAMAGE_CATEGORY_PHYSICAL,
-        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
-        .contestCategory = CONTEST_CATEGORY_COOL,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {COMBO_STARTER_DOUBLE_TEAM},
-        .battleAnimScript = Move_MUD_SLAP,
-    },
-
 };

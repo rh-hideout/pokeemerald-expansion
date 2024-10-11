@@ -696,6 +696,7 @@ BattleScript_EffectSkyDrop::
 	attackstring
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpiftargetally BattleScript_ButItFailed
+	jumpifmove MOVE_THUNDER_DROP, BattleScript_SkyDropWork  @ Thunder Drop bypasses weight limit
 	jumpifunder200 BS_TARGET, BattleScript_SkyDropWork
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_TARGETTOOHEAVY
