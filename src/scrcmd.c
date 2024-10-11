@@ -2478,3 +2478,19 @@ void ScriptSetDoubleBattleFlag(struct ScriptContext *ctx)
 {
     sIsScriptedWildDouble = TRUE;
 }
+
+bool8 ScrCmd_getdifficulty(struct ScriptContext *ctx)
+{
+    u16 *var = GetVarPointer(ScriptReadHalfword(ctx));
+
+    *var = GetCurrentDifficultyLevel();
+    return FALSE;
+}
+
+bool8 ScrCmd_setdifficulty(struct ScriptContext *ctx)
+{
+    u8 desiredDifficulty = ScriptReadByte(ctx);
+
+    Script_SetDifficulty(desiredDifficulty);
+    return FALSE;
+}

@@ -26,35 +26,35 @@
         .party = (const struct TrainerMon[])
         {
             {
-#line 9
-            .nickname = COMPOUND_STRING("Bubbles"),
-#line 9
-            .species = SPECIES_WOBBUFFET,
-#line 9
-            .gender = TRAINER_MON_FEMALE,
-#line 9
-            .heldItem = ITEM_ASSAULT_VEST,
-#line 14
-            .ev = TRAINER_PARTY_EVS(252, 0, 0, 252, 4, 0),
-#line 13
-            .iv = TRAINER_PARTY_IVS(25, 26, 27, 28, 29, 30),
-#line 12
-            .ability = ABILITY_TELEPATHY,
-#line 11
-            .lvl = 67,
-#line 17
-            .ball = ITEM_MASTER_BALL,
-#line 15
-            .friendship = 42,
 #line 10
-            .nature = NATURE_HASTY,
-#line 16
-            .isShiny = TRUE,
+            .nickname = COMPOUND_STRING("Bubbles"),
+#line 10
+            .species = SPECIES_WOBBUFFET,
+#line 10
+            .gender = TRAINER_MON_FEMALE,
+#line 10
+            .heldItem = ITEM_ASSAULT_VEST,
+#line 15
+            .ev = TRAINER_PARTY_EVS(252, 0, 0, 252, 4, 0),
+#line 14
+            .iv = TRAINER_PARTY_IVS(25, 26, 27, 28, 29, 30),
+#line 13
+            .ability = ABILITY_TELEPATHY,
+#line 12
+            .lvl = 67,
 #line 18
+            .ball = ITEM_MASTER_BALL,
+#line 16
+            .friendship = 42,
+#line 11
+            .nature = NATURE_HASTY,
+#line 17
+            .isShiny = TRUE,
+#line 19
             .dynamaxLevel = 5,
             .shouldUseDynamax = TRUE,
             .moves = {
-#line 19
+#line 20
                 MOVE_AIR_SLASH,
                 MOVE_BARRIER,
                 MOVE_SOLAR_BEAM,
@@ -62,25 +62,25 @@
             },
             },
             {
-#line 24
+#line 25
             .species = SPECIES_WOBBUFFET,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 27
+#line 28
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
-#line 26
+#line 27
             .ability = ABILITY_SHADOW_TAG,
-#line 25
+#line 26
             .lvl = 5,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-#line 29
+#line 30
             .species = SPECIES_WYNAUT,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 31
+#line 32
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
-#line 30
+#line 31
             .lvl = 5,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,

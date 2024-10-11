@@ -8,6 +8,8 @@
 
 #line 1 "src/data/trainers.party"
 
+[DIFFICULTY_NORMAL] =
+{
 #line 76
     [TRAINER_NONE] =
     {
@@ -42183,3 +42185,4 @@ F_TRAINER_FEMALE |
             },
         },
     },
+},
