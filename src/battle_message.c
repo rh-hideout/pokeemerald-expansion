@@ -866,6 +866,7 @@ static const u8 sText_AttackerAcquiredType[] = _("{B_ATK_NAME_WITH_PREFIX} acqui
 static const u8 sText_TransfusionOver[] = _("All types were reverted\nback to normal!");
 static const u8 sText_PkmnShotItem[] = _("{B_ATK_NAME_WITH_PREFIX} shot the fragments\nof {B_LAST_ITEM}!");
 static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a {B_BUFF1} Gem!");
+static const u8 sText_AttackerLostGrassType[] = _("{B_ATK_NAME_WITH_PREFIX} uprooted itself!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1587,6 +1588,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_TRANSFUSIONOVER - BATTLESTRINGS_TABLE_START] = sText_TransfusionOver,
     [STRINGID_PKMNSHOTITEM - BATTLESTRINGS_TABLE_START] = sText_PkmnShotItem,
     [STRINGID_FOUNDAGEM - BATTLESTRINGS_TABLE_START] = sText_FoundAGem,
+    [STRINGID_ATTACKERLOSTGRASSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostGrassType,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

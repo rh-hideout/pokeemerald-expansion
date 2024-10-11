@@ -3704,6 +3704,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     case TYPE_ELECTRIC: // Double Shot
                         gBattlescriptCurrInstr = BattleScript_RemoveElectricType;
                         break;
+                    case TYPE_GRASS: // Uproot
+                        gBattlescriptCurrInstr = BattleScript_RemoveGrassType;
+                        break;
                     default:
                         gBattlescriptCurrInstr = BattleScript_RemoveGenericType;
                         break;

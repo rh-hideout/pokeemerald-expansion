@@ -1203,6 +1203,11 @@ BattleScript_RemoveElectricType::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_RemoveGrassType::
+	printstring STRINGID_ATTACKERLOSTGRASSTYPE
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_RemoveGenericType::
 	printstring STRINGID_ATTACKERLOSTITSTYPE
 	waitmessage B_WAIT_TIME_LONG
