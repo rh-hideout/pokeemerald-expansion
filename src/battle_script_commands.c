@@ -12448,6 +12448,7 @@ void BS_TryGiveGem(void)
     NATIVE_ARGS(const u8 *failInstr);
 
     u8 validMoves = 0;
+    u8 isStatusMove = 0;
     u8 moveChecked = 0;
     u8 moveType = 0;
     u16 gemType = 0;
@@ -12463,21 +12464,41 @@ void BS_TryGiveGem(void)
         }
         for (moveChecked = 0; moveChecked < validMoves; moveChecked++)
         {
+            isStatusMove = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].category;
+
+            if (isStatusMove != DAMAGE_CATEGORY_STATUS)
+            {
+                break;
+            }
+        }
+        if (moveChecked != validMoves) // checking if all moves aren't status category 
+        {
+            do
+            {
+                while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
+
+                moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
+                isStatusMove = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].category;
+
+                if (moveType == TYPE_MYSTERY)
+                {
+                    if (IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
+                        moveType = TYPE_GHOST;
+                    else
+                        moveType = TYPE_NORMAL;
+                }
+            }
+            while (isStatusMove == DAMAGE_CATEGORY_STATUS);
+        }
+        else
+            while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
+
             moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
 
             if (moveType == TYPE_MYSTERY)
             {
-                moveType = TYPE_GHOST;
+                    moveType = TYPE_GHOST;
             }
-        }
-        while ((moveChecked = MOD(Random(), MAX_MON_MOVES)) >= validMoves);
-
-        moveType = gMovesInfo[gBattleMons[gBattlerAttacker].moves[moveChecked]].type;
-
-        if (moveType == TYPE_MYSTERY)
-        {
-                moveType = TYPE_GHOST;
-        }
         
         switch(moveType)
         {
