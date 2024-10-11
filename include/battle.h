@@ -283,6 +283,8 @@ struct SideTimer
     u8 rainbowTimer;
     u8 seaOfFireTimer;
     u8 swampTimer;
+    u8 mirageVeilTimer;
+    u8 mirageVeilBattlerId;
 };
 
 struct FieldTimer

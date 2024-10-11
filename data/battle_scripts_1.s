@@ -3524,6 +3524,13 @@ BattleScript_EffectAuroraVeil::
 	setauroraveil BS_ATTACKER
 	goto BattleScript_PrintReflectLightScreenSafeguardString
 
+BattleScript_EffectMirageVeil::
+	attackcanceler
+	attackstring
+	ppreduce
+	setmirageveil BS_ATTACKER
+	goto BattleScript_PrintReflectLightScreenSafeguardString
+
 BattleScript_EffectLightScreen::
 	attackcanceler
 	attackstring

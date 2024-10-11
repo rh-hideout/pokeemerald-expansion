@@ -211,6 +211,7 @@ enum
     LIST_SIDE_RAINBOW,
     LIST_SIDE_SEA_OF_FIRE,
     LIST_SIDE_SWAMP,
+    LIST_SIDE_MIRAGE_VEIL,
 };
 
 enum
@@ -1939,6 +1940,16 @@ static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus,
             sideTimer->auroraVeilBattlerId = data->battlerId;
         }
         return &sideTimer->auroraVeilTimer;
+    case LIST_SIDE_MIRAGE_VEIL:
+        if (changeStatus)
+        {
+            if (statusTrue)
+                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_MIRAGE_VEIL;
+            else
+                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_MIRAGE_VEIL;
+            sideTimer->auroraVeilBattlerId = data->battlerId;
+        }
+        return &sideTimer->mirageVeilTimer;
     case LIST_SIDE_LUCKY_CHANT:
         if (changeStatus)
         {
