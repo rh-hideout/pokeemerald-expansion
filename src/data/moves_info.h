@@ -23276,4 +23276,25 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_DRILL_PECK,
     },
 
+    [MOVE_QUICK_SAND] =
+    {
+        .name = COMPOUND_STRING("Quick Sand"),
+        .description = COMPOUND_STRING(
+            "An extremely fast attack\n"
+            "that always strikes first."),
+        .effect = EFFECT_HIT,
+        .power = 40,
+        .type = TYPE_GROUND,
+        .accuracy = 100,
+        .pp = 30,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 1,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_DOUBLE_TEAM},
+        .battleAnimScript = Move_MUD_SLAP,
+    },
+
 };
