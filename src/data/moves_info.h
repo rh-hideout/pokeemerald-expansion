@@ -21976,6 +21976,35 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_MUD_SLAP,
     },
 
+    [MOVE_UPROOT] =
+    {
+        .name = COMPOUND_STRING("Uproot"),
+        .description = COMPOUND_STRING(
+            "Increases user's Speed.\n"
+            "Removes Grass type."),
+        .effect = EFFECT_FAIL_IF_NOT_ARG_TYPE,
+        .power = 120,
+        .type = TYPE_GRASS,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = TYPE_GRASS,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_REMOVE_ARG_TYPE,
+            .self = TRUE,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_SPD_PLUS_1,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SUNNY_DAY},
+        .battleAnimScript = Move_FRENZY_PLANT,
+    },
 
     // END OF CAPRICCIO MOVES
 
