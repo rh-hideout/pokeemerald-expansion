@@ -21880,6 +21880,33 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_BLIZZARD,
     },
 
+    [MOVE_THUNDER_DROP] =
+    {
+        .name = COMPOUND_STRING("Thunder Drop"),
+        .description = COMPOUND_STRING(
+            "Takes the foe into the sky\n"
+            "then drops it the next turn."),
+        .effect = EFFECT_SKY_DROP,
+        .power = 100,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .gravityBanned = TRUE,
+        .sleepTalkBanned = TRUE,
+        .instructBanned = TRUE,
+        .assistBanned = TRUE,
+        .argument = TWO_TURN_ARG(STRINGID_PKMNTOOKTARGETHIGH, COMPRESS_BITS(STATUS3_ON_AIR)),
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_SKY_DROP,
+    },
+
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

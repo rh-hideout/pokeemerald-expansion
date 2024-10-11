@@ -360,7 +360,7 @@
 #define ABILITY_INVERSION   330
 #define ABILITY_TRANSFUSION 331
 #define ABILITY_OLD_SCHOOL 332
-#define ABILITY_JEWELRY 333
+#define ABILITY_JEWELRY 333 // TODO: Make Jewelry prioritize damaging moves when possible.
 
 #define ABILITIES_COUNT_GEN9 334
 
