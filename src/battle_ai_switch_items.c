@@ -881,7 +881,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j, NULL);
-                if (aiMove == MOVE_RAPID_SPIN || aiMove == MOVE_DEFOG || aiMove == MOVE_MORTAL_SPIN || aiMove == MOVE_TIDY_UP || aiMove == MOVE_VOLTAIC_CYCLONE)
+                if (aiMove == MOVE_RAPID_SPIN || aiMove == MOVE_DEFOG || aiMove == MOVE_WINGS_OF_CORRECTION || aiMove == MOVE_MORTAL_SPIN || aiMove == MOVE_TIDY_UP || aiMove == MOVE_VOLTAIC_CYCLONE)
                 {
                     // Have a mon that can clear the hazards, so switching out is okay
                     return TRUE;

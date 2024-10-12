@@ -3739,19 +3739,12 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 TryUpdateRoundTurnOrder(); // If another Pokémon uses Round before the user this turn, the user will use Round directly after it
                 gBattlescriptCurrInstr++;
                 break;
+            case MOVE_EFFECT_DAILY_DOSE:    
             case MOVE_EFFECT_DIRE_CLAW:
                 if (!gBattleMons[gEffectBattler].status1)
                 {
                     static const u8 sDireClawEffects[] = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP };
                     gBattleScripting.moveEffect = RandomElement(RNG_DIRE_CLAW, sDireClawEffects);
-                    SetMoveEffect(primary, certain);
-                }
-                break;
-            case MOVE_EFFECT_DAILY_DOSE:
-                if (!gBattleMons[gEffectBattler].status1)
-                {
-                    static const u8 sDireClawEffects[] = { MOVE_EFFECT_POISON, MOVE_EFFECT_TOXIC, MOVE_EFFECT_SLEEP };
-                    gBattleScripting.moveEffect = RandomElement(RNG_DAILY_DOSE, sDireClawEffects);
                     SetMoveEffect(primary, certain);
                 }
                 break;
