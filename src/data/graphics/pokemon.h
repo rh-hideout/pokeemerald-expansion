@@ -22290,6 +22290,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/icon.4bpp");
    const u8 gMonFootprint_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/footprint.1bpp");
 
+   const u32 gMonFrontPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/front.4bpp.lz");
+   const u32 gMonBackPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/back.4bpp.lz");
+   const u32 gMonPalette_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/shiny.gbapal.lz");
+   const u8 gMonIcon_Nyanonite[] = INCBIN_U8("graphics/pokemon/nyanonite/icon.4bpp");
+   const u8 gMonFootprint_Nyanonite[] = INCBIN_U8("graphics/pokemon/nyanonite/footprint.1bpp");
+
    const u32 gMonFrontPic_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/front.4bpp.lz");
    const u32 gMonBackPic_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/back.4bpp.lz");
    const u32 gMonPalette_Doomsay[] = INCBIN_U32("graphics/pokemon/doomsay/normal.gbapal.lz");

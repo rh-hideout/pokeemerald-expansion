@@ -410,8 +410,9 @@
 #define MOVE_EFFECT_RECHARGE_D          82
 #define MOVE_EFFECT_CLEAR_WEATHER       83
 #define MOVE_EFFECT_CURSE               84
+#define MOVE_EFFECT_DAILY_DOSE          85
 
-#define NUM_MOVE_EFFECTS                85
+#define NUM_MOVE_EFFECTS                86
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

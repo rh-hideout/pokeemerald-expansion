@@ -2797,6 +2797,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sApocamiseLevelUpLearnset,
     },
     
+        [SPECIES_NYANONITE] =
+    { 
+       .baseHP        = 95,
+       .baseAttack    = 111,
+       .baseDefense   = 85,
+       .baseSpeed     = 128,
+       .baseSpAttack  = 101,
+       .baseSpDefense = 80,
+       .types = { TYPE_FAIRY, TYPE_ROCK },
+       .catchRate = 3,
+       .expYield = 190,
+       .evYield_SpAttack  = 3,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 120,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .abilities = { ABILITY_DAZZLING, ABILITY_WEAK_ARMOR, ABILITY_JEWELRY, ABILITY_PIXILATE },
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Nyanonite"),
+       .cryId = CRY_NYANONITE,
+       .natDexNum = NATIONAL_DEX_NYANONITE,
+       .categoryName = _("Prismatic"),
+       .height = 1500,
+       .weight = 9999,
+       .description = COMPOUND_STRING(
+           "Nyanonite soars across the cosmos at \n"
+           "light speeds, leaving a beautiful \n"
+           "trail of rainbow dust whenever it.\n"
+           "flies around the sun."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Nyanonite,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Nyanonite,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 1,
+       .backPic = gMonBackPic_Nyanonite,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Nyanonite,
+       .shinyPalette = gMonShinyPalette_Nyanonite,
+       .iconSprite = gMonIcon_Nyanonite,
+       .iconPalIndex = 0,
+       FOOTPRINT(Nyanonite)
+       .levelUpLearnset = sNyanoniteLevelUpLearnset,
+    },
+    
         [SPECIES_FORGOTNO] =
     { 
        .baseHP        = 33,

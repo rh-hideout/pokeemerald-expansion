@@ -199,6 +199,7 @@ enum RandomTag
     RNG_AI_ABILITY,
     RNG_SHELL_SIDE_ARM,
     RNG_TETANUS,
+    RNG_DAILY_DOSE,
 };
 
 #define RandomWeighted(tag, ...) \

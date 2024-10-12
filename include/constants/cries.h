@@ -2473,6 +2473,7 @@ enum {
     CRY_JAHL,
     CRY_JUMBLEGORE,
     CRY_JUMBLINART,
+    CRY_NYANONITE,
 
     CRY_COUNT,
 };

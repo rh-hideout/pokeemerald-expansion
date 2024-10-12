@@ -1681,8 +1681,9 @@
 #define SPECIES_JAHL                                    1571
 #define SPECIES_JUMBLEGORE                              1572
 #define SPECIES_JUMBLINART                              1573
+#define SPECIES_NYANONITE                               1574
 
-#define SPECIES_EGG (SPECIES_JUMBLINART + 1)
+#define SPECIES_EGG (SPECIES_NYANONITE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

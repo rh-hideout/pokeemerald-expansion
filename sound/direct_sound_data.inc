@@ -6333,6 +6333,10 @@ Cry_Cocken::
 	.incbin "sound/direct_sound_samples/cries/cocken.bin"
 
 	.align 2
+Cry_Nyanonite::
+	.incbin "sound/direct_sound_samples/cries/nyanonite.bin"
+
+	.align 2
 Cry_Forgotno::
 	.incbin "sound/direct_sound_samples/cries/forgotno.bin"
 

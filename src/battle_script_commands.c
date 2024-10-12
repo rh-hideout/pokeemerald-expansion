@@ -3725,6 +3725,14 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     SetMoveEffect(primary, certain);
                 }
                 break;
+            case MOVE_EFFECT_DAILY_DOSE:
+                if (!gBattleMons[gEffectBattler].status1)
+                {
+                    static const u8 sDireClawEffects[] = { MOVE_EFFECT_POISON, MOVE_EFFECT_TOXIC, MOVE_EFFECT_SLEEP };
+                    gBattleScripting.moveEffect = RandomElement(RNG_DAILY_DOSE, sDireClawEffects);
+                    SetMoveEffect(primary, certain);
+                }
+                break;
             case MOVE_EFFECT_STEALTH_ROCK:
                 if (!(gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_STEALTH_ROCK))
                 {
