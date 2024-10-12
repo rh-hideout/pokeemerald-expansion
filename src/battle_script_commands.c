@@ -1102,6 +1102,28 @@ static const u8 sTerrainToType[BATTLE_TERRAIN_COUNT] =
     [BATTLE_TERRAIN_PLAIN]            = (B_CAMOUFLAGE_TYPES >= GEN_4 ? TYPE_GROUND : TYPE_NORMAL),
 };
 
+static const u16 sTypeToGemId[] = 
+{
+    [TYPE_NORMAL]                     = ITEM_NORMAL_GEM,
+    [TYPE_FIGHTING]                   = ITEM_FIGHTING_GEM,
+    [TYPE_FLYING]                     = ITEM_FLYING_GEM,
+    [TYPE_POISON]                     = ITEM_POISON_GEM,
+    [TYPE_GROUND]                     = ITEM_GROUND_GEM,
+    [TYPE_ROCK]                       = ITEM_ROCK_GEM,
+    [TYPE_BUG]                        = ITEM_BUG_GEM,
+    [TYPE_GHOST]                      = ITEM_GHOST_GEM,
+    [TYPE_STEEL]                      = ITEM_STEEL_GEM,
+    [TYPE_FIRE]                       = ITEM_FIRE_GEM,
+    [TYPE_WATER]                      = ITEM_WATER_GEM,
+    [TYPE_GRASS]                      = ITEM_GRASS_GEM,
+    [TYPE_ELECTRIC]                   = ITEM_ELECTRIC_GEM,
+    [TYPE_PSYCHIC]                    = ITEM_PSYCHIC_GEM,
+    [TYPE_ICE]                        = ITEM_ICE_GEM,
+    [TYPE_DRAGON]                     = ITEM_DRAGON_GEM,
+    [TYPE_DARK]                       = ITEM_DARK_GEM,
+    [TYPE_FAIRY]                      = ITEM_FAIRY_GEM,
+};
+
 static bool32 NoTargetPresent(u8 battler, u32 move)
 {
     if (!IsBattlerAlive(gBattlerTarget))
@@ -12451,6 +12473,7 @@ static void Cmd_tryconversiontypechange(void)
     }
 }
 
+
 void BS_TryGiveGem(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
@@ -12508,63 +12531,7 @@ void BS_TryGiveGem(void)
                     moveType = TYPE_GHOST;
             }
         
-        switch(moveType)
-        {
-            case TYPE_NORMAL:
-                gemType = ITEM_NORMAL_GEM;
-                break;
-            case TYPE_FIGHTING:
-                gemType = ITEM_FIGHTING_GEM;
-                break;
-            case TYPE_FLYING:
-                gemType = ITEM_FLYING_GEM;
-                break;
-            case TYPE_POISON:
-                gemType = ITEM_POISON_GEM;
-                break;
-            case TYPE_GROUND:
-                gemType = ITEM_GROUND_GEM;
-                break;
-            case TYPE_ROCK:
-                gemType = ITEM_ROCK_GEM;
-                break;
-            case TYPE_BUG:
-                gemType = ITEM_BUG_GEM;
-                break;
-            case TYPE_GHOST:
-                gemType = ITEM_GHOST_GEM;
-                break;
-            case TYPE_STEEL:
-                gemType = ITEM_STEEL_GEM;
-                break;
-            case TYPE_FIRE:
-                gemType = ITEM_FIRE_GEM;
-                break;
-            case TYPE_WATER:
-                gemType = ITEM_WATER_GEM;
-                break;
-            case TYPE_GRASS:
-                gemType = ITEM_GRASS_GEM;
-                break;
-            case TYPE_ELECTRIC:
-                gemType = ITEM_ELECTRIC_GEM;
-                break;
-            case TYPE_PSYCHIC:
-                gemType = ITEM_PSYCHIC_GEM;
-                break;
-            case TYPE_ICE:
-                gemType = ITEM_ICE_GEM;
-                break;
-            case TYPE_DRAGON:
-                gemType = ITEM_DRAGON_GEM;
-                break;
-            case TYPE_DARK:
-                gemType = ITEM_DARK_GEM;
-                break;
-            case TYPE_FAIRY:
-                gemType = ITEM_FAIRY_GEM;
-                break;
-        }
+        gemType = sTypeToGemId[moveType];
 
         gBattleMons[gBattlerAttacker].item = gemType;
         BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
