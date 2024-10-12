@@ -22104,6 +22104,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_SHADOW_BALL,
     },
 
+    [MOVE_WINGS_OF_CORRECTION] =
+    {
+        .name = COMPOUND_STRING("Wings Of Correction"),
+        .description = COMPOUND_STRING(
+            "Clears the battlefield.\n"
+            "Switches out opponent."),
+        .effect = EFFECT_WINGS_OF_CORRECTION,
+        .power = 150,
+        .type = TYPE_FLYING,
+        .accuracy = 0,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = -6,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresSubstitute = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_AEROBLAST,
+    },
+
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

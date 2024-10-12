@@ -873,5 +873,6 @@ extern const u8 BattleScript_EffectParalyzeIfMiss[];
 extern const u8 BattleScript_EffectFlakCannon[];
 extern const u8 BattleScript_EffectFrostbite[];
 extern const u8 BattleScript_EffectMirageVeil[];
+extern const u8 BattleScript_EffectWingsOfCorrection[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
