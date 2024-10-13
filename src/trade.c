@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_interface.h"
+#include "compatibility.h"
 #include "bg.h"
 #include "cable_club.h"
 #include "data.h"
@@ -263,7 +264,7 @@ static void VBlankCB_TradeMenu(void);
 static void CB2_TradeMenu(void);
 static void LoadTradeBgGfx(u8);
 static void SetActiveMenuOptions(void);
-static bool8 BufferTradeParties(void);
+static bool32 BufferTradeParties(void);
 static void CB1_UpdateLink(void);
 static void RunTradeMenuCallback(void);
 static void SetSelectedMon(u8);
@@ -1043,17 +1044,16 @@ static void Trade_Memcpy(void *dest, const void *src, u32 size)
         _dest[i] = _src[i];
 }
 
-static bool8 BufferTradeParties(void)
+static bool32 BufferTradeParties(void)
 {
-    u8 id = GetMultiplayerId();
+    u32 id = GetMultiplayerId();
     int i;
     struct Pokemon *mon;
 
     switch (sTradeMenu->bufferPartyState)
     {
     case 0:
-        // The parties are sent in pairs rather than all at once
-        Trade_Memcpy(gBlockSendBuffer, &gPlayerParty[0], 2 * sizeof(struct Pokemon));
+        SendExpansionMonsToVanilla(&gPlayerParty[0], SEND_TRADE);
         sTradeMenu->bufferPartyState++;
         sTradeMenu->timer = 0;
         break;
@@ -1079,13 +1079,13 @@ static bool8 BufferTradeParties(void)
     case 4:
         if (_GetBlockReceivedStatus() == 3)
         {
-            Trade_Memcpy(&gEnemyParty[0], gBlockRecvBuffer[id ^ 1], 2 * sizeof(struct Pokemon));
+            ReceiveVanillaMons(&gEnemyParty[0], gBlockRecvBuffer[id ^ 1], SEND_TRADE);
             TradeResetReceivedFlags();
             sTradeMenu->bufferPartyState++;
         }
         break;
     case 5:
-        Trade_Memcpy(gBlockSendBuffer, &gPlayerParty[2], 2 * sizeof(struct Pokemon));
+        SendExpansionMonsToVanilla(&gPlayerParty[2], SEND_TRADE);
         sTradeMenu->bufferPartyState++;
         break;
     case 7:
@@ -1096,13 +1096,13 @@ static bool8 BufferTradeParties(void)
     case 8:
         if (_GetBlockReceivedStatus() == 3)
         {
-            Trade_Memcpy(&gEnemyParty[2], gBlockRecvBuffer[id ^ 1],  2 * sizeof(struct Pokemon));
+            ReceiveVanillaMons(&gEnemyParty[2], gBlockRecvBuffer[id ^ 1], SEND_TRADE);
             TradeResetReceivedFlags();
             sTradeMenu->bufferPartyState++;
         }
         break;
     case 9:
-        Trade_Memcpy(gBlockSendBuffer, &gPlayerParty[4], 2 * sizeof(struct Pokemon));
+        SendExpansionMonsToVanilla(&gPlayerParty[4], SEND_TRADE);
         sTradeMenu->bufferPartyState++;
         break;
     case 11:
@@ -1113,7 +1113,7 @@ static bool8 BufferTradeParties(void)
     case 12:
         if (_GetBlockReceivedStatus() == 3)
         {
-            Trade_Memcpy(&gEnemyParty[4], gBlockRecvBuffer[id ^ 1], 2 * sizeof(struct Pokemon));
+            ReceiveVanillaMons(&gEnemyParty[4], gBlockRecvBuffer[id ^ 1], SEND_TRADE);
             TradeResetReceivedFlags();
             sTradeMenu->bufferPartyState++;
         }
