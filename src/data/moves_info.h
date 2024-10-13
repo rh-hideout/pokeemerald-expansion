@@ -22104,6 +22104,50 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_SHADOW_BALL,
     },
 
+    [MOVE_WINGS_OF_CORRECTION] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("WingsOfCorrection", "Wings Of Correction"),
+        .description = COMPOUND_STRING(
+            "Clears the battlefield.\n"
+            "Switches out opponent."),
+        .effect = EFFECT_WINGS_OF_CORRECTION,
+        .power = 150,
+        .type = TYPE_FLYING,
+        .accuracy = 0,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = -6,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresSubstitute = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_AEROBLAST,
+    },
+
+    [MOVE_MEME_PUNCH] =
+    {
+        .name = COMPOUND_STRING("Meme Punch"),
+        .description = COMPOUND_STRING(
+            "Raises the lowest stat\n"
+            "by 1, otherwise random boost."),
+        .effect = EFFECT_MEME_PUNCH,
+        .power = 60,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .punchingMove = TRUE,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_DIZZY_PUNCH,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

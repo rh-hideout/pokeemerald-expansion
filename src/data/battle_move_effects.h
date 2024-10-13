@@ -2381,4 +2381,18 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
+
+    [EFFECT_WINGS_OF_CORRECTION] =
+    {
+        .battleScript = BattleScript_EffectWingsOfCorrection,
+        .battleTvScore = 0, // TODO: Assign points
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_MEME_PUNCH] =
+    {
+        .battleScript = BattleScript_EffectMemePunch,
+        .battleTvScore = 0, // TODO: Assign points
+        .encourageEncore = TRUE,
+    },    
 };

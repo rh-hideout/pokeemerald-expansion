@@ -3739,19 +3739,12 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 TryUpdateRoundTurnOrder(); // If another Pokémon uses Round before the user this turn, the user will use Round directly after it
                 gBattlescriptCurrInstr++;
                 break;
+            case MOVE_EFFECT_DAILY_DOSE:    
             case MOVE_EFFECT_DIRE_CLAW:
                 if (!gBattleMons[gEffectBattler].status1)
                 {
                     static const u8 sDireClawEffects[] = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP };
                     gBattleScripting.moveEffect = RandomElement(RNG_DIRE_CLAW, sDireClawEffects);
-                    SetMoveEffect(primary, certain);
-                }
-                break;
-            case MOVE_EFFECT_DAILY_DOSE:
-                if (!gBattleMons[gEffectBattler].status1)
-                {
-                    static const u8 sDireClawEffects[] = { MOVE_EFFECT_POISON, MOVE_EFFECT_TOXIC, MOVE_EFFECT_SLEEP };
-                    gBattleScripting.moveEffect = RandomElement(RNG_DAILY_DOSE, sDireClawEffects);
                     SetMoveEffect(primary, certain);
                 }
                 break;
@@ -9391,6 +9384,56 @@ static void Cmd_various(void)
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         return;
+    }
+    case VARIOUS_MEMEPUNCHBOOST:
+    {
+        VARIOUS_ARGS(const u8 *failInstr);
+        u8 k = 0;
+        s8 minimum = 0;
+        u32 minimumStatId = 0;
+        s8 statStage[] = 
+        {
+         (gBattleMons[battler].statStages[STAT_ATK]),
+         (gBattleMons[battler].statStages[STAT_DEF]),
+         (gBattleMons[battler].statStages[STAT_SPEED]),
+         (gBattleMons[battler].statStages[STAT_SPATK]),
+         (gBattleMons[battler].statStages[STAT_SPDEF]),
+        };
+        s8 size = 5;
+
+        bits = 0;
+
+        minimum = statStage[0];
+
+        for (k = 0; k < size; k++) // get stat with lowest stage boosts
+        {
+            if (statStage[k] < minimum)
+            {
+                minimum = statStage[k];
+            }
+        }
+
+        for (i = STAT_ATK; i < STAT_ACC; i++)
+        {
+            if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
+            bits |= gBitTable[i];
+        }   
+        if (bits)
+        {
+            u32 statId;
+            do
+            {
+                statId = (Random() % (NUM_BATTLE_STATS - 3)) + 1;
+            } while (!(bits & gBitTable[statId]) || (gBattleMons[battler].statStages[statId] != minimum));
+
+            SET_STATCHANGER(statId, 1, FALSE);
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        return; 
     }
     case VARIOUS_CANCEL_MULTI_TURN_MOVES:
     {

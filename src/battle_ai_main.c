@@ -2076,6 +2076,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-9);
             break;
         case EFFECT_DEFOG:
+        case EFFECT_WINGS_OF_CORRECTION:
             if (gSideStatuses[GetBattlerSide(battlerDef)]
              & (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST | SIDE_STATUS_MIRAGE_VEIL)
               || gSideTimers[GetBattlerSide(battlerDef)].auroraVeilTimer != 0
@@ -3988,6 +3989,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         //     ADJUST_SCORE(GOOD_EFFECT);
         // break;
     case EFFECT_DEFOG:
+    case EFFECT_WINGS_OF_CORRECTION:
         if ((gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerAtk) != 0)
             || (gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)))
         {
@@ -4934,6 +4936,7 @@ static s32 AI_SetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
     case EFFECT_SNOWSCAPE:
     case EFFECT_GEOMANCY:
     case EFFECT_VICTORY_DANCE:
+    case EFFECT_MEME_PUNCH:
         ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_HIT:
