@@ -170,6 +170,7 @@ enum
     LIST_STATUS3_YAWN,
     LIST_STATUS3_IMPRISONED_OTHERS,
     LIST_STATUS3_GRUDGE,
+    LIST_STATUS3_FARADAY_CAGE,
     LIST_STATUS3_EMBARGO,
     LIST_STATUS3_UNDERWATER,
     LIST_STATUS3_SMACKED_DOWN,
@@ -344,6 +345,7 @@ static const u8 sText_ImprisonedOthers[] = _("Imprisoned Others");
 static const u8 sText_Grudge[] = _("Grudge");
 static const u8 sText_GastroAcid[] = _("Gastro Acid");
 static const u8 sText_Embargo[] = _("Embargo");
+static const u8 sText_FaradayCage[] = _("Faraday Cage");
 static const u8 sText_Underwater[] = _("Underwater");
 static const u8 sText_Trace[] = _("Trace");
 static const u8 sText_SmackedDown[] = _("Smacked Down");
@@ -579,7 +581,7 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {sText_Yawn, LIST_STATUS3_YAWN},
     {sText_ImprisonedOthers, LIST_STATUS3_IMPRISONED_OTHERS},
     {sText_Grudge, LIST_STATUS3_GRUDGE},
-
+    {sText_FaradayCage, LIST_STATUS3_FARADAY_CAGE},
     {sText_Embargo, LIST_STATUS3_EMBARGO},
     {sText_Underwater, LIST_STATUS3_UNDERWATER},
     {sText_SmackedDown, LIST_STATUS3_SMACKED_DOWN},

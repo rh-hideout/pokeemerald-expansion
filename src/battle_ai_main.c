@@ -857,6 +857,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_COUNTER:
         case EFFECT_MIRROR_COAT:
         case EFFECT_METAL_BURST:
+        case EFFECT_SOUL_CRUSHER:
             break;
         default:
             RETURN_SCORE_MINUS(10);
@@ -1510,6 +1511,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
                 ADJUST_SCORE(-10);
             break;
+        case EFFECT_SOUL_CRUSHER:
+            if ((!ShouldTryOHKO(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move)) 
+             && (gBattleMons[battlerDef].hp >= (gBattleMons[battlerDef].maxHP / 2)))
+                ADJUST_SCORE(-10);
+            else if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+                ADJUST_SCORE(-10);
         case EFFECT_MIST:
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_MIST
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -3565,6 +3572,12 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
         else if (gStatuses3[battlerAtk] & STATUS3_ALWAYS_HITS)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
+    case EFFECT_SOUL_CRUSHER:
+        if (gBattleMons[battlerDef].hp >= (gBattleMons[battlerDef].maxHP / 2))
+            break;
+        else if (gBattleMons[battlerDef].hp <= (gBattleMons[battlerDef].maxHP / 2))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_MEAN_LOOK:

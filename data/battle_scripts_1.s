@@ -3640,6 +3640,39 @@ BattleScript_KOFail::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectSoulCrusher::
+	attackcanceler
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	attackstring
+	ppreduce
+	typecalc
+	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
+	jumpifmorethanhalfHP BS_TARGET, BattleScript_HitFromCritCalc
+	tryKO BattleScript_KOFail
+	call BattleScript_Hit_RetFromAtkAnimation
+BattleScript_SoulCrusherHeal:
+	jumpifstatus3  BS_ATTACKER, STATUS3_HEAL_BLOCK, BattleScript_TrySoulCrusherBoost
+	setdrainedhp
+	manipulatedamage DMG_BIG_ROOT
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE
+	setbyte cMULTISTRING_CHOOSER, B_MSG_ABSORB
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
+	jumpifmovehadnoeffect BattleScript_TrySoulCrusherBoost
+	printfromtable gAbsorbDrainStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_TrySoulCrusherBoost
+
+BattleScript_TrySoulCrusherBoost::
+	tryfaintmon BS_TARGET
+	trysoulcrusherboost BS_ATTACKER, BattleScript_MoveEnd
+	setgraphicalstatchangevalues
+	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_MoveEnd
+	printstring STRINGID_ATTACKERSSTATROSE
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectSuperFang::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE

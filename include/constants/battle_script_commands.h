@@ -235,7 +235,8 @@
 #define VARIOUS_HIT_SWITCH_TARGET_FAILED             143
 #define VARIOUS_TRY_REVIVAL_BLESSING                 144
 #define VARIOUS_SET_MIRAGE_VEIL                      145
-#define VARIOUS_MEMEPUNCHBOOST                       146
+#define VARIOUS_MEME_PUNCH                           146
+#define VARIOUS_SOUL_CRUSHER                         147
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
