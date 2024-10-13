@@ -2301,6 +2301,11 @@
 	various \battler, VARIOUS_SET_MIRAGE_VEIL
 	.endm
 
+	.macro trymemepunchboost battler:req, failInstr:req
+	various \battler, VARIOUS_MEMEPUNCHBOOST
+	.4byte \failInstr
+	.endm
+
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7

@@ -1526,6 +1526,20 @@ BattleScript_EffectAcupressureTry:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectMemePunch::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MemePunchTryBoost
+
+BattleScript_MemePunchTryBoost::
+	trymemepunchboost BS_ATTACKER, BattleScript_MoveEnd
+	setgraphicalstatchangevalues
+	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_MoveEnd
+	printstring STRINGID_ATTACKERSSTATROSE
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+	
 BattleScript_MoveEffectFeint::
 	printstring STRINGID_FELLFORFEINT
 	waitmessage B_WAIT_TIME_LONG
