@@ -4936,6 +4936,7 @@ static s32 AI_SetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
     case EFFECT_SNOWSCAPE:
     case EFFECT_GEOMANCY:
     case EFFECT_VICTORY_DANCE:
+    case EFFECT_MEME_PUNCH:
         ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_HIT:
