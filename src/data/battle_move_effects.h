@@ -2394,5 +2394,11 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectMemePunch,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
-    },    
+    },
+
+    [EFFECT_SOUL_CRUSHER] =
+    {
+        .battleScript = BattleScript_EffectSoulCrusher,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

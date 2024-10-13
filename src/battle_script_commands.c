@@ -2587,7 +2587,10 @@ static void Cmd_resultmessage(void)
                 stringId = STRINGID_NOTVERYEFFECTIVE;
             break;
         case MOVE_RESULT_ONE_HIT_KO:
-            stringId = STRINGID_ONEHITKO;
+            if(gMovesInfo[gCurrentMove].effect == EFFECT_SOUL_CRUSHER)
+                stringId = STRINGID_SOULCRUSHED;
+            else
+                stringId = STRINGID_ONEHITKO;
             break;
         case MOVE_RESULT_FOE_ENDURED:
             stringId = STRINGID_PKMNENDUREDHIT;
@@ -9385,12 +9388,37 @@ static void Cmd_various(void)
         }
         return;
     }
-    case VARIOUS_MEMEPUNCHBOOST:
+    case VARIOUS_SOUL_CRUSHER:
+    {
+        VARIOUS_ARGS(const u8 *failInstr);
+        bits = 0;
+        for (i = STAT_ATK; i < STAT_ACC; i++)
+        {
+            if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
+                bits |= gBitTable[i];
+        }
+        if (bits)
+        {
+            u32 statId;
+            do
+            {
+                statId = (Random() % (NUM_BATTLE_STATS - 3)) + 1;
+            } while (!(bits & gBitTable[statId]));
+
+            SET_STATCHANGER(statId, 2, FALSE);
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }      
+        return;
+    }
+    case VARIOUS_MEME_PUNCH:
     {
         VARIOUS_ARGS(const u8 *failInstr);
         u8 k = 0;
         s8 minimum = 0;
-        u32 minimumStatId = 0;
         s8 statStage[] = 
         {
          (gBattleMons[battler].statStages[STAT_ATK]),
@@ -11769,8 +11797,10 @@ static void Cmd_setdrainedhp(void)
 {
     CMD_ARGS();
 
-    if (gMovesInfo[gCurrentMove].argument != 0)
+    if ((gMovesInfo[gCurrentMove].argument != 0) && (gMovesInfo[gCurrentMove].argument < 101))
         gBattleMoveDamage = (gHpDealt * gMovesInfo[gCurrentMove].argument / 100);
+    else if (gMovesInfo[gCurrentMove].argument == 101) // Soul Crusher full HP heal
+        gBattleMoveDamage = gBattleMons[gBattlerAttacker].maxHP;
     else
         gBattleMoveDamage = (gHpDealt / 2);
 
@@ -12515,7 +12545,6 @@ static void Cmd_tryconversiontypechange(void)
         }
     }
 }
-
 
 void BS_TryGiveGem(void)
 {

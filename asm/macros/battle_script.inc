@@ -1672,8 +1672,9 @@
 
 	.macro trygivegem failInstr:req
 	callnative BS_TryGiveGem
+	.4byte \failInstr
 	.endm
-
+		
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
 	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
@@ -2302,7 +2303,12 @@
 	.endm
 
 	.macro trymemepunchboost battler:req, failInstr:req
-	various \battler, VARIOUS_MEMEPUNCHBOOST
+	various \battler, VARIOUS_MEME_PUNCH
+	.4byte \failInstr
+	.endm
+
+	.macro trysoulcrusherboost battler:req, failInstr:req
+	various \battler, VARIOUS_SOUL_CRUSHER
 	.4byte \failInstr
 	.endm
 

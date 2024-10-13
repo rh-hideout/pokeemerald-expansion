@@ -875,5 +875,6 @@ extern const u8 BattleScript_EffectFrostbite[];
 extern const u8 BattleScript_EffectMirageVeil[];
 extern const u8 BattleScript_EffectWingsOfCorrection[];
 extern const u8 BattleScript_EffectMemePunch[];
+extern const u8 BattleScript_EffectSoulCrusher[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

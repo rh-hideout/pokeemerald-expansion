@@ -22148,6 +22148,30 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_DIZZY_PUNCH,
     },
+
+    [MOVE_SOUL_CRUSHER] =
+    {
+        .name = COMPOUND_STRING("Soul Crusher"),
+        .description = COMPOUND_STRING(
+            "Target's soul is crushed\n"
+            "if under half HP."),
+        .effect = EFFECT_SOUL_CRUSHER,
+        .power = 9,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = 101, // restores all the user's HP
+        .ignoresProtect = TRUE,
+        .ignoresSubstitute = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_RAIN_DANCE},
+        .battleAnimScript = Move_CRUSH_GRIP,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

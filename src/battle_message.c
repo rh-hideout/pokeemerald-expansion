@@ -868,6 +868,7 @@ static const u8 sText_PkmnShotItem[] = _("{B_ATK_NAME_WITH_PREFIX} shot the frag
 static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a {B_BUFF1} Gem!");
 static const u8 sText_AttackerLostGrassType[] = _("{B_ATK_NAME_WITH_PREFIX} uprooted itself!");
 static const u8 sText_PkmnRaisedAtkPower[] = _("{B_ATK_PREFIX2}'s {B_CURRENT_MOVE}\nraised attack power!");
+static const u8 sText_SoulCrushed[] = _("{B_ATK_NAME_WITH_PREFIX} crushes their soul,\nclaiming it for itself!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1591,6 +1592,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_FOUNDAGEM - BATTLESTRINGS_TABLE_START] = sText_FoundAGem,
     [STRINGID_ATTACKERLOSTGRASSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostGrassType,
     [STRINGID_PKMNRAISEDATKPOWER - BATTLESTRINGS_TABLE_START] = sText_PkmnRaisedAtkPower,
+    [STRINGID_SOULCRUSHED - BATTLESTRINGS_TABLE_START] = sText_SoulCrushed,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
