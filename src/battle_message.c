@@ -869,6 +869,7 @@ static const u8 sText_FoundAGem[] = _("{B_ATK_NAME_WITH_PREFIX} found a {B_BUFF1
 static const u8 sText_AttackerLostGrassType[] = _("{B_ATK_NAME_WITH_PREFIX} uprooted itself!");
 static const u8 sText_PkmnRaisedAtkPower[] = _("{B_ATK_PREFIX2}'s {B_CURRENT_MOVE}\nraised attack power!");
 static const u8 sText_SoulCrushed[] = _("{B_ATK_NAME_WITH_PREFIX} crushes their soul,\nclaiming it for itself!");
+static const u8 sText_TrickStabIllusionWoreOff[] = _("{B_ATK_NAME_WITH_PREFIX}'s Illusion wore off!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1593,6 +1594,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ATTACKERLOSTGRASSTYPE - BATTLESTRINGS_TABLE_START] = sText_AttackerLostGrassType,
     [STRINGID_PKMNRAISEDATKPOWER - BATTLESTRINGS_TABLE_START] = sText_PkmnRaisedAtkPower,
     [STRINGID_SOULCRUSHED - BATTLESTRINGS_TABLE_START] = sText_SoulCrushed,
+    [STRINGID_TRICKSTABILLUSIONWOREOFF - BATTLESTRINGS_TABLE_START] = sText_TrickStabIllusionWoreOff,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

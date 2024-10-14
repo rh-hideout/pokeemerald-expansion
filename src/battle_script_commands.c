@@ -1931,7 +1931,8 @@ s32 CalcCritChanceStageArgs(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     }
     else if (gStatuses3[battlerAtk] & STATUS3_LASER_FOCUS
         || gMovesInfo[move].alwaysCriticalHit
-        || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY))
+        || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
+        || (GetIllusionMonPtr(battlerAtk) != NULL && gMovesInfo[move].effect == EFFECT_TRICK_STAB))
     {
         critChance = -2;
     }
@@ -9275,6 +9276,18 @@ static void Cmd_various(void)
             gBattlescriptCurrInstr = cmd->nextInstr;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_IllusionOff;
+            return;
+        }
+        break;
+    }
+    case VARIOUS_TRY_TRICK_STAB_ILLUSION_OFF:
+    {
+        VARIOUS_ARGS();
+        if (GetIllusionMonPtr(battler) != NULL)
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_TrickStabIllusionOff;
             return;
         }
         break;

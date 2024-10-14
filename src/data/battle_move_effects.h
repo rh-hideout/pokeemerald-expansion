@@ -2401,4 +2401,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectSoulCrusher,
         .battleTvScore = 0, // TODO: Assign points
     },
+
+    [EFFECT_TRICK_STAB] =
+    {
+        .battleScript = BattleScript_EffectTrickStab,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

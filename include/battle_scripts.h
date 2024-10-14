@@ -529,6 +529,7 @@ extern const u8 BattleScript_TransfusionExits[];
 extern const u8 BattleScript_TransfusionActivates[];
 extern const u8 BattleScript_JewelryActivates[];
 extern const u8 BattleScript_RemoveGrassType[];
+extern const u8 BattleScript_TrickStabIllusionOff[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -876,5 +877,6 @@ extern const u8 BattleScript_EffectMirageVeil[];
 extern const u8 BattleScript_EffectWingsOfCorrection[];
 extern const u8 BattleScript_EffectMemePunch[];
 extern const u8 BattleScript_EffectSoulCrusher[];
+extern const u8 BattleScript_EffectTrickStab[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

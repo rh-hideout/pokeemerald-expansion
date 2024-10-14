@@ -2312,6 +2312,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro trytrickstabillusionoff battler:req
+	various \battler, VARIOUS_TRY_TRICK_STAB_ILLUSION_OFF
+	.endm
+
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
