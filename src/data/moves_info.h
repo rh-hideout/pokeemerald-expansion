@@ -22172,6 +22172,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_RAIN_DANCE},
         .battleAnimScript = Move_CRUSH_GRIP,
     },
+
+    [MOVE_TRICK_STAB] =
+    {
+        .name = COMPOUND_STRING("Trick Stab"),
+        .description = COMPOUND_STRING(
+            "Guaranteed critical\n"
+            "hit under Illusion."),
+        .effect = EFFECT_TRICK_STAB,
+        .power = 90,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .slicingMove = TRUE,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = COMBO_STARTER_POUND,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_NIGHT_SLASH,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

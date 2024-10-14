@@ -3592,6 +3592,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
           || HasHighCritRatioMove(battlerAtk))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
+    case EFFECT_TRICK_STAB:
+        if (GetIllusionMonPtr(battlerAtk) != NULL)
+            ADJUST_SCORE(GOOD_EFFECT);
+        break;
     case EFFECT_CONFUSE:
         IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
         break;

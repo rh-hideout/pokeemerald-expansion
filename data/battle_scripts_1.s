@@ -5778,6 +5778,23 @@ BattleScript_EffectCamouflage::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectTrickStab::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	trytrickstabillusionoff BS_ATTACKER
+	goto BattleScript_MoveEnd
+
+BattleScript_TrickStabIllusionOff::
+	spriteignore0hp TRUE
+	playanimation BS_ATTACKER, B_ANIM_ILLUSION_OFF
+	waitanimation
+	updatenick BS_TARGET
+	waitstate
+	spriteignore0hp FALSE
+	printstring STRINGID_TRICKSTABILLUSIONWOREOFF
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_FaintAttacker::
 	tryillusionoff BS_ATTACKER
 	tryactivategulpmissile
