@@ -1440,7 +1440,7 @@ static s32 GetSwitchinWeatherImpact(void)
         // Healing
         if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
         {
-            if (ability == ABILITY_DRY_SKIN)
+            if (ability == ABILITY_DRY_SKIN || ability == ABILITY_HYDROPHILE)
             {
                 weatherImpact = -(maxHP / 8);
                 if (weatherImpact == 0)

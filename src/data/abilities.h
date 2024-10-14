@@ -2782,4 +2782,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("May find gems during battle."),
         .aiRating = 5,
     },
+
+    [ABILITY_HYDROPHILE] =
+    {
+        .name = _("Hydrophile"),
+        .description = COMPOUND_STRING("Boosts Water-type moves."),
+        .aiRating = 8,
+    },
 };
