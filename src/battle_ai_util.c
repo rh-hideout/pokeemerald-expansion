@@ -430,6 +430,7 @@ bool32 IsDamageMoveUnusable(u32 move, u32 battlerAtk, u32 battlerDef)
         // Fallthrough
     case ABILITY_WATER_ABSORB:
     case ABILITY_DRY_SKIN:
+    case ABILITY_HYDROPHILE:
         if (moveType == TYPE_WATER)
             return TRUE;
         break;
@@ -1599,6 +1600,7 @@ bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, u32 holdEffect)
       || atkAbility == ABILITY_RAIN_DISH
       || atkAbility == ABILITY_SHOWER_POWER
       || atkAbility == ABILITY_DRY_SKIN
+      || atkAbility == ABILITY_HYDROPHILE
       || HasMoveEffect(battlerAtk, EFFECT_THUNDER)
       || HasMoveEffect(battlerAtk, EFFECT_WEATHER_BALL)
       || HasMoveEffect(battlerAtk, EFFECT_BOIL_OVER)
