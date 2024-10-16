@@ -1,11 +1,20 @@
 #include "global.h"
 #include "test/test.h"
+#include "battle.h"
 #include "battle_main.h"
+#include "battle_message.h"
+#include "battle_setup.h"
 #include "item.h"
+#include "malloc.h"
+#include "main_menu.h"
+#include "string_util.h"
 #include "text.h"
 #include "constants/abilities.h"
+#include "constants/battle.h"
+#include "constants/battle_string_ids.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "test/overworld_script.h"
 
 TEST("Move names fit on Pokemon Summary Screen")
 {
@@ -618,3 +627,182 @@ TEST("Type names fit on Pokedex Search Screen")
     }
     EXPECT_LE(GetStringWidth(fontId, gTypesInfo[type].name, 0), widthPx);
 }
+
+extern u16 sBattlerAbilities[MAX_BATTLERS_COUNT];
+//*
+TEST("Battle strings fit on the battle message window")
+{
+    u32 i, j, strWidth;
+    u32 start = BATTLESTRINGS_TABLE_START;
+    u32 end = BATTLESTRINGS_TABLE_START + 300;
+    const u32 fontId = FONT_NORMAL, widthPx = 208;
+    u32 battleStringId = 0;
+    u8 battleString[1000] = {0};
+
+    s32 sixDigitNines = 999999;
+    u8 nickname[POKEMON_NAME_LENGTH + 1] = _("MMMMMMMMMMMM");
+    u32 longMoveID = MOVE_STOMPING_TANTRUM;
+    u32 longAbilityID = ABILITY_SUPERSWEET_SYRUP; // 91 pixels.
+    u32 longStatName = STAT_EVASION;
+    u32 longTypeName = TYPE_ELECTRIC;
+    u32 longSpeciesName = SPECIES_SANDY_SHOCKS;   // 47 pixels
+    u32 longItemName = ITEM_UNREMARKABLE_TEACUP;
+
+    NewGameBirchSpeech_SetDefaultPlayerName(10);  // JOHNNY
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_WOBBUFFET, 100;
+        createmon 1, 0, SPECIES_WOBBUFFET, 100;
+    );
+    SetMonData(&gPlayerParty[0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, nickname);
+
+    for (i = start; i <= end; i++) // BATTLESTRINGS_COUNT
+    {
+        PARAMETRIZE_LABEL("%S", gBattleStringsTable[i - BATTLESTRINGS_TABLE_START]) { battleStringId = i - BATTLESTRINGS_TABLE_START; }
+    }
+    PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_EMPTYSTRING3);
+    PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+    PREPARE_STRING_BUFFER(gBattleTextBuff3, STRINGID_EMPTYSTRING3);
+    gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+    gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+    gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
+    gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
+    for (j = 0; j < MAX_BATTLERS_COUNT; j++)
+    {
+        sBattlerAbilities[j] = longAbilityID;
+    }
+
+    gTrainerBattleOpponent_A = 1;
+
+    // Add "The opposing " prefix to all messages.
+    gBattleTypeFlags |= BATTLE_TYPE_TRAINER;
+    gBattlerAttacker = 1;
+    gBattlerTarget = 1;
+    gBattleScripting.battler = 1;
+    gEffectBattler = 1;
+
+    gCurrentMove = longMoveID;
+    gLastUsedItem = longItemName;
+
+    gBattleMsgDataPtr = AllocZeroed(sizeof(struct BattleMsgData));
+    gBattleMsgDataPtr->currentMove = longMoveID;
+
+    switch (battleStringId + BATTLESTRINGS_TABLE_START)
+    {
+    case STRINGID_TRAINER1LOSETEXT:
+        // Out of current scope: testing all trainer lose messages.
+        break;
+    case STRINGID_PKMNGAINEDEXP:
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
+        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_ABOOSTED); // 'gained a boosted'
+        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, sixDigitNines);
+        break;
+    case STRINGID_PKMNGREWTOLV:
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 3, 100);
+        break;
+    case STRINGID_PKMNLEARNEDMOVE:
+    case STRINGID_TRYTOLEARNMOVE1:
+    case STRINGID_TRYTOLEARNMOVE2:
+    case STRINGID_TRYTOLEARNMOVE3:
+    case STRINGID_PKMNFORGOTMOVE:
+    case STRINGID_STOPLEARNINGMOVE:
+    case STRINGID_DIDNOTLEARNMOVE:
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff2, longMoveID);
+        break;
+    case STRINGID_PKMNLEARNEDMOVE2:
+    case STRINGID_TEAMSTOPPEDWORKING: // Unused
+    case STRINGID_FOESTOPPEDWORKING: // Unused
+    case STRINGID_PKMNHURTBY:
+    case STRINGID_PKMNFREEDFROM:
+    case STRINGID_PKMNMOVEWASDISABLED:
+    case STRINGID_PKMNSKETCHEDMOVE:
+    case STRINGID_PKMNGOTFREE:
+    case STRINGID_PKMNLOSTPPGRUDGE:
+    case STRINGID_PKMNSITEMRESTOREDPP:
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, longMoveID);
+        break;
+    case STRINGID_PLAYERGOTMONEY:
+    case STRINGID_PLAYERWHITEOUT2:
+    case STRINGID_PLAYERPICKEDUPMONEY:
+        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 6, sixDigitNines);
+        break;
+    case STRINGID_HITXTIMES:
+    case STRINGID_MAGNITUDESTRENGTH:
+        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 2, 99);
+        break;
+    case STRINGID_PKMNSTOCKPILED:
+    case STRINGID_PKMNPERISHCOUNTFELL:
+        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 1, 9);
+        break;
+    case STRINGID_PKMNMADESLEEP:
+    case STRINGID_PKMNPOISONEDBY:
+    case STRINGID_PKMNBURNEDBY:
+    case STRINGID_PKMNFROZENBY:
+    case STRINGID_PKMNWASPARALYZEDBY:
+        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, longAbilityID);
+        break;
+    case STRINGID_STATSWONTINCREASE:
+    case STRINGID_STATSWONTDECREASE:
+    case STRINGID_PKMNSXPREVENTSYLOSS:
+        StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
+        break;
+    case STRINGID_PKMNCHANGEDTYPE:
+    case STRINGID_PKMNCHANGEDTYPEWITH:
+        PREPARE_TYPE_BUFFER(gBattleTextBuff1, longTypeName);
+        break;
+    case STRINGID_PKMNTRANSFORMEDINTO:
+    case STRINGID_WILDPKMNFLED:
+        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, longSpeciesName)
+        break;
+    case STRINGID_PKMNATTACK:
+    case STRINGID_PKMNWISHCAMETRUE:
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 1, 0);
+        break;
+    case STRINGID_ENEMYABOUTTOSWITCHPKMN:
+        PREPARE_MON_NICK_BUFFER(gBattleTextBuff2, 1, 0);
+        break;
+    case STRINGID_PKMNHURTSWITH:
+    case STRINGID_PKMNCURIOUSABOUTX:
+    case STRINGID_PKMNENTHRALLEDBYX:
+    case STRINGID_PKMNIGNOREDX:
+        PREPARE_ITEM_BUFFER(gBattleTextBuff1, longItemName);
+        break;
+    case STRINGID_PKMNTRACED:
+        PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
+        PREPARE_ABILITY_BUFFER(gBattleTextBuff2, longAbilityID);
+        break;
+    case STRINGID_ATTACKERSSTATROSE:
+    case STRINGID_DEFENDERSSTATROSE:
+        StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
+        StringCopy(gBattleTextBuff2, sText_drastically);
+        StringAppend(gBattleTextBuff2, gText_StatRose);
+        break;
+    case STRINGID_ATTACKERSSTATFELL:
+    case STRINGID_DEFENDERSSTATFELL:
+        StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
+        StringCopy(gBattleTextBuff2, sText_severely);
+        StringAppend(gBattleTextBuff2, sText_StatFell);
+        break;
+    case STRINGID_PKMNSITEMCUREDPROBLEM:
+    case STRINGID_PKMNSXCUREDYPROBLEM:
+        StringCopy(gBattleTextBuff1, gText_Paralysis);
+        break;
+    default:
+        break;
+    }
+    memset(battleString, EOS, 1000);
+    BattleStringExpandPlaceholders(gBattleStringsTable[battleStringId], battleString);
+    DebugPrintf("Battle String ID %d: %S", battleStringId + BATTLESTRINGS_TABLE_START, battleString);
+    for (j = 1;; j++)
+    {
+        strWidth = GetStringLineWidth(fontId, battleString, 0, j);
+        if (strWidth == 0)
+            break;
+        EXPECT_LE(strWidth, widthPx);
+    }
+    Free(gBattleMsgDataPtr);
+}
+//*/

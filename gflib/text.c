@@ -1595,6 +1595,34 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
     return width;
 }
 
+s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum)
+{
+    u32 strWidth = 0, strLen, currLine;
+#ifndef NDEBUG
+    u8 strCopy[300];
+#endif
+
+    for (currLine = 1; currLine <= lineNum; currLine++)
+    {
+        strWidth = GetStringWidth(fontId, str, letterSpacing);
+        strLen = StringLineLength(str);
+    #ifndef NDEBUG
+        memset(strCopy, EOS, 300);
+        if (currLine == lineNum && strLen != 0)
+        {
+            StringCopyN(strCopy, str, strLen);
+            strWidth = GetStringWidth(fontId, strCopy, letterSpacing);
+            strLen = StringLineLength(strCopy);
+            StringAppend(strCopy, gText_EmptyString3);
+            DebugPrintf("  Line %d, len:%d, width:%d, \"%S\"", currLine, strLen, strWidth, strCopy);
+            //DebugPrintf("    width:%d, \"%S\"", strWidth, strCopy);
+        }
+    #endif
+        str += strLen + 1;
+    }
+    return strWidth;
+}
+
 u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
 {
     u8 shadowColor;
