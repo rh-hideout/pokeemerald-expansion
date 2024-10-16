@@ -6,6 +6,7 @@
 #include "main.h"
 #include "malloc.h"
 #include "random.h"
+#include "task.h"
 #include "test_runner.h"
 #include "test/test.h"
 
@@ -190,6 +191,7 @@ top:
         else
             gTestRunnerState.timeoutSeconds = UINT_MAX;
         InitHeap(gHeap, HEAP_SIZE);
+        ResetTasks();
         EnableInterrupts(INTR_FLAG_TIMER2);
         REG_TM2CNT_L = UINT16_MAX - (274 * 60); // Approx. 1 second.
         REG_TM2CNT_H = TIMER_ENABLE | TIMER_INTR_ENABLE | TIMER_1024CLK;
@@ -243,6 +245,7 @@ top:
         if (gTestRunnerState.result == TEST_RESULT_PASS
          && !gTestRunnerState.expectLeaks)
         {
+            int i;
             const struct MemBlock *head = HeapHead();
             const struct MemBlock *block = head;
             do
@@ -268,6 +271,15 @@ top:
                 block = block->next;
             }
             while (block != head);
+
+            for (i = 0; i < NUM_TASKS; i++)
+            {
+                if (gTasks[i].isActive)
+                {
+                    Test_MgbaPrintf("%p: task not freed", gTasks[i].func);
+                    gTestRunnerState.result = TEST_RESULT_FAIL;
+                }
+            }
         }
 
         if (gTestRunnerState.test->runner == &gAssumptionsRunner)
