@@ -15,18 +15,6 @@ EWRAM_DATA static volatile bool8 sRngLoopUnlocked;
 #define STREAM1 1
 #define STREAM2 29
 
-// A variant of SFC32 that lets you change the stream.
-// stream can be any odd number.
-static inline u32 _SFC32_Next_Stream(struct Sfc32State *state, const u8 stream)
-{
-    const u32 result = state->a + state->b + state->ctr;
-    state->ctr += stream;
-    state->a = state->b ^ (state->b >> 9);
-    state->b = state->c * 9;
-    state->c = result + ((state->c << 21) | (state->c >> 11));
-    return result;
-}
-
 static void SFC32_Seed(struct Sfc32State *state, u32 seed, u8 stream)
 {
     u32 i;

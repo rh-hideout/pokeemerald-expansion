@@ -253,6 +253,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sSceptileTeachableLearnset,
         .formSpeciesIdTable = sSceptileFormSpeciesIdTable,
         .formChangeTable = sSceptileFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_TREECKO
@@ -536,6 +537,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sBlazikenTeachableLearnset,
         .formSpeciesIdTable = sBlazikenFormSpeciesIdTable,
         .formChangeTable = sBlazikenFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_TORCHIC
@@ -790,6 +792,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sSwampertTeachableLearnset,
         .formSpeciesIdTable = sSwampertFormSpeciesIdTable,
         .formChangeTable = sSwampertFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MUDKIP
@@ -2607,6 +2610,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sGardevoirTeachableLearnset,
         .formSpeciesIdTable = sGardevoirFormSpeciesIdTable,
         .formChangeTable = sGardevoirFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 
@@ -2739,6 +2743,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sGalladeTeachableLearnset,
         .formSpeciesIdTable = sGalladeFormSpeciesIdTable,
         .formChangeTable = sGalladeFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_GEN_4_CROSS_EVOS
@@ -4128,6 +4133,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sSableyeEggMoveLearnset,
         .formSpeciesIdTable = sSableyeFormSpeciesIdTable,
         .formChangeTable = sSableyeFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SABLEYE
@@ -4262,6 +4268,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sMawileEggMoveLearnset,
         .formSpeciesIdTable = sMawileFormSpeciesIdTable,
         .formChangeTable = sMawileFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MAWILE
@@ -4520,6 +4527,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sAggronTeachableLearnset,
         .formSpeciesIdTable = sAggronFormSpeciesIdTable,
         .formChangeTable = sAggronFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_ARON
@@ -4726,6 +4734,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sMedichamTeachableLearnset,
         .formSpeciesIdTable = sMedichamFormSpeciesIdTable,
         .formChangeTable = sMedichamFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MEDITITE
@@ -4911,6 +4920,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sManectricTeachableLearnset,
         .formSpeciesIdTable = sManectricFormSpeciesIdTable,
         .formChangeTable = sManectricFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_ELECTRIKE
@@ -5760,6 +5770,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sSharpedoTeachableLearnset,
         .formSpeciesIdTable = sSharpedoFormSpeciesIdTable,
         .formChangeTable = sSharpedoFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_CARVANHA
@@ -6103,6 +6114,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sCameruptTeachableLearnset,
         .formSpeciesIdTable = sCameruptFormSpeciesIdTable,
         .formChangeTable = sCameruptFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_NUMEL
@@ -6902,6 +6914,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sAltariaTeachableLearnset,
         .formSpeciesIdTable = sAltariaFormSpeciesIdTable,
         .formChangeTable = sAltariaFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SWABLU
@@ -8131,6 +8144,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sCastformEggMoveLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 
     [SPECIES_CASTFORM_RAINY] =
@@ -8198,6 +8212,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sCastformEggMoveLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 
     [SPECIES_CASTFORM_SNOWY] =
@@ -8265,6 +8280,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sCastformEggMoveLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_FAMILY_CASTFORM
 
@@ -8531,6 +8547,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sBanetteTeachableLearnset,
         .formSpeciesIdTable = sBanetteFormSpeciesIdTable,
         .formChangeTable = sBanetteFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SHUPPET
@@ -9088,6 +9105,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .eggMoveLearnset = sAbsolEggMoveLearnset,
         .formSpeciesIdTable = sAbsolFormSpeciesIdTable,
         .formChangeTable = sAbsolFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_ABSOL
@@ -9286,6 +9304,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sGlalieTeachableLearnset,
         .formSpeciesIdTable = sGlalieFormSpeciesIdTable,
         .formChangeTable = sGlalieFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 
@@ -10094,6 +10113,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sSalamenceTeachableLearnset,
         .formSpeciesIdTable = sSalamenceFormSpeciesIdTable,
         .formChangeTable = sSalamenceFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -10411,6 +10431,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sMetagrossTeachableLearnset,
         .formSpeciesIdTable = sMetagrossFormSpeciesIdTable,
         .formChangeTable = sMetagrossFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_BELDUM
@@ -10761,6 +10782,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sLatiasTeachableLearnset,
         .formSpeciesIdTable = sLatiasFormSpeciesIdTable,
         .formChangeTable = sLatiasFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_LATIAS
@@ -10896,6 +10918,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sLatiosTeachableLearnset,
         .formSpeciesIdTable = sLatiosFormSpeciesIdTable,
         .formChangeTable = sLatiosFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_LATIOS
@@ -11031,6 +11054,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sKyogreTeachableLearnset,
         .formSpeciesIdTable = sKyogreFormSpeciesIdTable,
         .formChangeTable = sKyogreFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_PRIMAL_REVERSIONS
 #endif //P_FAMILY_KYOGRE
@@ -11166,6 +11190,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sGroudonTeachableLearnset,
         .formSpeciesIdTable = sGroudonFormSpeciesIdTable,
         .formChangeTable = sGroudonFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_PRIMAL_REVERSIONS
 #endif //P_FAMILY_GROUDON
@@ -11306,6 +11331,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sRayquazaTeachableLearnset,
         .formSpeciesIdTable = sRayquazaFormSpeciesIdTable,
         .formChangeTable = sRayquazaFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_RAYQUAZA
@@ -11518,6 +11544,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sDeoxysAttackTeachableLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysAttackFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 
     [SPECIES_DEOXYS_DEFENSE] =
@@ -11581,6 +11608,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sDeoxysDefenseTeachableLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysDefenseFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 
     [SPECIES_DEOXYS_SPEED] =
@@ -11644,6 +11672,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sDeoxysSpeedTeachableLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysSpeedFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_FAMILY_DEOXYS
 

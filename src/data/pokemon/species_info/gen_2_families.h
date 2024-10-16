@@ -1930,6 +1930,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .teachableLearnset = sAmpharosTeachableLearnset,
         .formSpeciesIdTable = sAmpharosFormSpeciesIdTable,
         .formChangeTable = sAmpharosFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MAREEP
@@ -3460,96 +3461,97 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #endif //P_FAMILY_MISDREAVUS
 
 #if P_FAMILY_UNOWN
-#define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset)   \
-    {                                                                                                   \
-        .baseHP        = 48,                                                                            \
-        .baseAttack    = 72,                                                                            \
-        .baseDefense   = 48,                                                                            \
-        .baseSpeed     = 48,                                                                            \
-        .baseSpAttack  = 72,                                                                            \
-        .baseSpDefense = 48,                                                                            \
-        .types = MON_TYPES(TYPE_PSYCHIC),                                                               \
-        .catchRate = 225,                                                                               \
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 118 : 61,                                         \
-        .evYield_Attack = 1,                                                                            \
-        .evYield_SpAttack = 1,                                                                          \
-        .genderRatio = MON_GENDERLESS,                                                                  \
-        .eggCycles = 40,                                                                                \
-        .friendship = STANDARD_FRIENDSHIP,                                                              \
-        .growthRate = GROWTH_MEDIUM_FAST,                                                               \
-        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),                                      \
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },                                  \
-        .bodyColor = BODY_COLOR_BLACK,                                                                  \
-        .noFlip = _noFlip,                                                                              \
-        .speciesName = _("Unown"),                                                                      \
-        .cryId = CRY_UNOWN,                                                                             \
-        .natDexNum = NATIONAL_DEX_UNOWN,                                                                \
-        .categoryName = _("Symbol"),                                                                    \
-        .height = 5,                                                                                    \
-        .weight = 50,                                                                                   \
-        .description = gUnownPokedexText,                                                               \
-        .pokemonScale = 411,                                                                            \
-        .pokemonOffset = 2,                                                                             \
-        .trainerScale = 256,                                                                            \
-        .trainerOffset = 0,                                                                             \
-        .frontPic = gMonFrontPic_Unown ##letter,                                                        \
-        .frontPicSize = MON_COORDS_SIZE(frontWidth, frontHeight),                                       \
-        .frontPicYOffset = 16,                                                                          \
-        .frontAnimFrames = sAnims_Unown,                                                                \
-        .frontAnimId = ANIM_ZIGZAG_FAST,                                                                \
-        .enemyMonElevation = 8,                                                                         \
-        .backPic = gMonBackPic_Unown ##letter,                                                          \
-        .backPicSize = MON_COORDS_SIZE(backWidth, backHeight),                                          \
-        .backPicYOffset = backYOffset,                                                                  \
-        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,                                                    \
-        .palette = gMonPalette_Unown,                                                                   \
-        .shinyPalette = gMonShinyPalette_Unown,                                                         \
-        .iconSprite = gMonIcon_Unown ##letter,                                                          \
-        .iconPalIndex = 0,                                                                              \
-        SHADOW(0, 3, SHADOW_SIZE_S)                                                                     \
-        FOOTPRINT(Unown)                                                                                \
-        OVERWORLD(                                                                                      \
-            sPicTable_Unown ##letter,                                                                   \
-            SIZE_32x32,                                                                                 \
-            SHADOW_SIZE_M,                                                                              \
-            TRACKS_NONE,                                                                                \
-            gOverworldPalette_Unown,                                                                    \
-            gShinyOverworldPalette_Unown,                                                               \
-        )                                                                                               \
-        .levelUpLearnset = sUnownLevelUpLearnset,                                                       \
-        .teachableLearnset = sUnownTeachableLearnset,                                                   \
-        .tmIlliterate = TRUE,                                                                           \
-        .formSpeciesIdTable = sUnownFormSpeciesIdTable,                                                 \
+#define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset, rzMode)   \
+    {                                                                                                           \
+        .baseHP        = 48,                                                                                    \
+        .baseAttack    = 72,                                                                                    \
+        .baseDefense   = 48,                                                                                    \
+        .baseSpeed     = 48,                                                                                    \
+        .baseSpAttack  = 72,                                                                                    \
+        .baseSpDefense = 48,                                                                                    \
+        .types = MON_TYPES(TYPE_PSYCHIC),                                                                       \
+        .catchRate = 225,                                                                                       \
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 118 : 61,                                                 \
+        .evYield_Attack = 1,                                                                                    \
+        .evYield_SpAttack = 1,                                                                                  \
+        .genderRatio = MON_GENDERLESS,                                                                          \
+        .eggCycles = 40,                                                                                        \
+        .friendship = STANDARD_FRIENDSHIP,                                                                      \
+        .growthRate = GROWTH_MEDIUM_FAST,                                                                       \
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),                                              \
+        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },                                          \
+        .bodyColor = BODY_COLOR_BLACK,                                                                          \
+        .noFlip = _noFlip,                                                                                      \
+        .speciesName = _("Unown"),                                                                              \
+        .cryId = CRY_UNOWN,                                                                                     \
+        .natDexNum = NATIONAL_DEX_UNOWN,                                                                        \
+        .categoryName = _("Symbol"),                                                                            \
+        .height = 5,                                                                                            \
+        .weight = 50,                                                                                           \
+        .description = gUnownPokedexText,                                                                       \
+        .pokemonScale = 411,                                                                                    \
+        .pokemonOffset = 2,                                                                                     \
+        .trainerScale = 256,                                                                                    \
+        .trainerOffset = 0,                                                                                     \
+        .frontPic = gMonFrontPic_Unown ##letter,                                                                \
+        .frontPicSize = MON_COORDS_SIZE(frontWidth, frontHeight),                                               \
+        .frontPicYOffset = 16,                                                                                  \
+        .frontAnimFrames = sAnims_Unown,                                                                        \
+        .frontAnimId = ANIM_ZIGZAG_FAST,                                                                        \
+        .enemyMonElevation = 8,                                                                                 \
+        .backPic = gMonBackPic_Unown ##letter,                                                                  \
+        .backPicSize = MON_COORDS_SIZE(backWidth, backHeight),                                                  \
+        .backPicYOffset = backYOffset,                                                                          \
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,                                                            \
+        .palette = gMonPalette_Unown,                                                                           \
+        .shinyPalette = gMonShinyPalette_Unown,                                                                 \
+        .iconSprite = gMonIcon_Unown ##letter,                                                                  \
+        .iconPalIndex = 0,                                                                                      \
+        SHADOW(0, 3, SHADOW_SIZE_S)                                                                             \
+        FOOTPRINT(Unown)                                                                                        \
+        OVERWORLD(                                                                                              \
+            sPicTable_Unown ##letter,                                                                           \
+            SIZE_32x32,                                                                                         \
+            SHADOW_SIZE_M,                                                                                      \
+            TRACKS_NONE,                                                                                        \
+            gOverworldPalette_Unown,                                                                            \
+            gShinyOverworldPalette_Unown,                                                                       \
+        )                                                                                                       \
+        .levelUpLearnset = sUnownLevelUpLearnset,                                                               \
+        .teachableLearnset = sUnownTeachableLearnset,                                                           \
+        .tmIlliterate = TRUE,                                                                                   \
+        .formSpeciesIdTable = sUnownFormSpeciesIdTable,                                                         \
+        .randomizerMode = rzMode,                                                                               \
     }
 
-    [SPECIES_UNOWN]             = UNOWN_MISC_INFO(A,               FALSE, 24, 40, 24, 48,  8 ),
-    [SPECIES_UNOWN_B]           = UNOWN_MISC_INFO(B,               TRUE,  24, 32, 40, 48,  9 ),
-    [SPECIES_UNOWN_C]           = UNOWN_MISC_INFO(C,               TRUE,  32, 32, 48, 56,  6 ),
-    [SPECIES_UNOWN_D]           = UNOWN_MISC_INFO(D,               TRUE,  32, 32, 40, 48,  8 ),
-    [SPECIES_UNOWN_E]           = UNOWN_MISC_INFO(E,               TRUE,  32, 32, 40, 48, 10 ),
-    [SPECIES_UNOWN_F]           = UNOWN_MISC_INFO(F,               TRUE,  32, 32, 48, 48, 10 ),
-    [SPECIES_UNOWN_G]           = UNOWN_MISC_INFO(G,               TRUE,  24, 40, 40, 56,  5 ),
-    [SPECIES_UNOWN_H]           = UNOWN_MISC_INFO(H,               TRUE,  32, 32, 48, 48,  8 ),
-    [SPECIES_UNOWN_I]           = UNOWN_MISC_INFO(I,               FALSE, 24, 32, 24, 56,  7 ),
-    [SPECIES_UNOWN_J]           = UNOWN_MISC_INFO(J,               TRUE,  24, 32, 32, 48,  9 ),
-    [SPECIES_UNOWN_K]           = UNOWN_MISC_INFO(K,               TRUE,  32, 32, 40, 56,  7 ),
-    [SPECIES_UNOWN_L]           = UNOWN_MISC_INFO(L,               TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_M]           = UNOWN_MISC_INFO(M,               FALSE, 32, 32, 48, 40, 13 ),
-    [SPECIES_UNOWN_N]           = UNOWN_MISC_INFO(N,               TRUE,  32, 24, 48, 40, 13 ),
-    [SPECIES_UNOWN_O]           = UNOWN_MISC_INFO(O,               FALSE, 32, 32, 48, 48,  8 ),
-    [SPECIES_UNOWN_P]           = UNOWN_MISC_INFO(P,               TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_Q]           = UNOWN_MISC_INFO(Q,               TRUE,  32, 24, 40, 40, 15 ),
-    [SPECIES_UNOWN_R]           = UNOWN_MISC_INFO(R,               TRUE,  24, 32, 32, 40, 12 ),
-    [SPECIES_UNOWN_S]           = UNOWN_MISC_INFO(S,               TRUE,  32, 40, 40, 56,  4 ),
-    [SPECIES_UNOWN_T]           = UNOWN_MISC_INFO(T,               FALSE, 24, 32, 32, 40, 13 ),
-    [SPECIES_UNOWN_U]           = UNOWN_MISC_INFO(U,               FALSE, 32, 32, 48, 40, 13 ),
-    [SPECIES_UNOWN_V]           = UNOWN_MISC_INFO(V,               TRUE,  32, 32, 40, 48, 11 ),
-    [SPECIES_UNOWN_W]           = UNOWN_MISC_INFO(W,               FALSE, 32, 32, 40, 40, 13 ),
-    [SPECIES_UNOWN_X]           = UNOWN_MISC_INFO(X,               FALSE, 24, 24, 40, 40, 15 ),
-    [SPECIES_UNOWN_Y]           = UNOWN_MISC_INFO(Y,               FALSE, 24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_Z]           = UNOWN_MISC_INFO(Z,               TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_EXCLAMATION] = UNOWN_MISC_INFO(ExclamationMark, FALSE, 24, 40, 24, 56,  6 ),
-    [SPECIES_UNOWN_QUESTION]    = UNOWN_MISC_INFO(QuestionMark,    TRUE,  24, 40, 32, 56,  6 ),
+    [SPECIES_UNOWN]             = UNOWN_MISC_INFO(A,               FALSE, 24, 40, 24, 48,  8,   MON_RANDOMIZER_NORMAL ),
+    [SPECIES_UNOWN_B]           = UNOWN_MISC_INFO(B,               TRUE,  24, 32, 40, 48,  9,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_C]           = UNOWN_MISC_INFO(C,               TRUE,  32, 32, 48, 56,  6,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_D]           = UNOWN_MISC_INFO(D,               TRUE,  32, 32, 40, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_E]           = UNOWN_MISC_INFO(E,               TRUE,  32, 32, 40, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_F]           = UNOWN_MISC_INFO(F,               TRUE,  32, 32, 48, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_G]           = UNOWN_MISC_INFO(G,               TRUE,  24, 40, 40, 56,  5,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_H]           = UNOWN_MISC_INFO(H,               TRUE,  32, 32, 48, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_I]           = UNOWN_MISC_INFO(I,               FALSE, 24, 32, 24, 56,  7,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_J]           = UNOWN_MISC_INFO(J,               TRUE,  24, 32, 32, 48,  9,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_K]           = UNOWN_MISC_INFO(K,               TRUE,  32, 32, 40, 56,  7,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_L]           = UNOWN_MISC_INFO(L,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_M]           = UNOWN_MISC_INFO(M,               FALSE, 32, 32, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_N]           = UNOWN_MISC_INFO(N,               TRUE,  32, 24, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_O]           = UNOWN_MISC_INFO(O,               FALSE, 32, 32, 48, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_P]           = UNOWN_MISC_INFO(P,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Q]           = UNOWN_MISC_INFO(Q,               TRUE,  32, 24, 40, 40, 15,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_R]           = UNOWN_MISC_INFO(R,               TRUE,  24, 32, 32, 40, 12,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_S]           = UNOWN_MISC_INFO(S,               TRUE,  32, 40, 40, 56,  4,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_T]           = UNOWN_MISC_INFO(T,               FALSE, 24, 32, 32, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_U]           = UNOWN_MISC_INFO(U,               FALSE, 32, 32, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_V]           = UNOWN_MISC_INFO(V,               TRUE,  32, 32, 40, 48, 11,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_W]           = UNOWN_MISC_INFO(W,               FALSE, 32, 32, 40, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_X]           = UNOWN_MISC_INFO(X,               FALSE, 24, 24, 40, 40, 15,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Y]           = UNOWN_MISC_INFO(Y,               FALSE, 24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Z]           = UNOWN_MISC_INFO(Z,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_EXCLAMATION] = UNOWN_MISC_INFO(ExclamationMark, FALSE, 24, 40, 24, 56,  6,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_QUESTION]    = UNOWN_MISC_INFO(QuestionMark,    TRUE,  24, 40, 32, 56,  6,  MON_RANDOMIZER_INVALID ),
 #endif //P_FAMILY_UNOWN
 
 #if P_FAMILY_WOBBUFFET
@@ -4093,6 +4095,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sDudunsparceLevelUpLearnset,
         .teachableLearnset = sDudunsparceTeachableLearnset,
         .formSpeciesIdTable = sDudunsparceFormSpeciesIdTable,
+        .randomizerMode = MON_RANDOMIZER_SPECIAL_FORM,
     },
 
     [SPECIES_DUDUNSPARCE_THREE_SEGMENT] =
@@ -4155,6 +4158,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sDudunsparceLevelUpLearnset,
         .teachableLearnset = sDudunsparceTeachableLearnset,
         .formSpeciesIdTable = sDudunsparceFormSpeciesIdTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
     },
 #endif //P_GEN_9_CROSS_EVOS
 #endif //P_FAMILY_DUNSPARCE
@@ -4845,6 +4849,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .eggMoveLearnset = sHeracrossEggMoveLearnset,
         .formSpeciesIdTable = sHeracrossFormSpeciesIdTable,
         .formChangeTable = sHeracrossFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_HERACROSS
@@ -6571,6 +6576,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .teachableLearnset = sHoundoomTeachableLearnset,
         .formSpeciesIdTable = sHoundoomFormSpeciesIdTable,
         .formChangeTable = sHoundoomFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_HOUNDOUR
@@ -7462,6 +7468,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .teachableLearnset = sTyranitarTeachableLearnset,
         .formSpeciesIdTable = sTyranitarFormSpeciesIdTable,
         .formChangeTable = sTyranitarFormChangeTable,
+        .randomizerMode = MON_RANDOMIZER_INVALID
     },
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_LARVITAR
