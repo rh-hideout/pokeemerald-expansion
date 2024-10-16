@@ -251,7 +251,7 @@ top:
                  || !(EWRAM_START <= (uintptr_t)block->next && (uintptr_t)block->next < EWRAM_END)
                  || (block->next <= block && block->next != head))
                 {
-                    Test_MgbaPrintf("gHeap corrupted block at 0x%p", block);
+                    Test_MgbaPrintf("gHeap corrupted block at %p", block);
                     gTestRunnerState.result = TEST_RESULT_ERROR;
                     break;
                 }
@@ -585,6 +585,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 p = va_arg(va, unsigned);
                 {
                     s32 n;
+                    i = MgbaPutchar_(i, '<');
+                    i = MgbaPutchar_(i, '0');
+                    i = MgbaPutchar_(i, 'x');
                     for (n = 0; n < 7; n++)
                     {
                         unsigned nybble = (p >> (24 - (4*n))) & 0xF;
@@ -593,6 +596,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                         else
                             i = MgbaPutchar_(i, 'a' + nybble - 10);
                     }
+                    i = MgbaPutchar_(i, '>');
                 }
                 break;
             case 'q':
