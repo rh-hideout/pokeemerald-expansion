@@ -788,7 +788,7 @@ void FieldEffectScript_LoadFadedPalette(u8 **script)
 {
     struct SpritePalette *palette = (struct SpritePalette *)FieldEffectScript_ReadWord(script);
     LoadSpritePalette(palette);
-    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(palette->tag));
+    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(palette->tag), TRUE);
     (*script) += 4;
 }
 
@@ -917,6 +917,7 @@ u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
     LoadSpritePalette(&sSpritePalette_NewGameBirch);
     return CreateSprite(&sSpriteTemplate_NewGameBirch, x, y, subpriority);
 }
+
 
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 {
@@ -1300,7 +1301,8 @@ static void CreateHofMonitorSprite(s16 taskId, s16 x, s16 y, bool8 isSmallMonito
     {
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_HofMonitorBig, x, y, 0);
         SetSubspriteTables(&gSprites[spriteId], &sSubspriteTable_HofMonitorBig);
-    } else
+    }
+    else
     {
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_HofMonitorSmall, x, y, 0);
     }
@@ -1609,6 +1611,7 @@ static bool8 EscalatorWarpOut_WaitForPlayer(struct Task *task)
     if (!ObjectEventIsMovementOverridden(objectEvent) || ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
         ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(GetPlayerFacingDirection()));
+        objectEvent->noShadow = TRUE; // hide shadow for cleaner movement
         task->tState++;
         task->data[2] = 0;
         task->data[3] = 0;
@@ -1730,6 +1733,7 @@ static bool8 EscalatorWarpIn_Init(struct Task *task)
     u8 behavior;
     CameraObjectFreeze();
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    objectEvent->noShadow = TRUE;
     ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(DIR_EAST));
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
@@ -1826,6 +1830,7 @@ static bool8 EscalatorWarpIn_End(struct Task *task)
 {
     struct ObjectEvent *objectEvent;
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    objectEvent->noShadow = FALSE;
     if (ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
         CameraObjectReset();
@@ -1978,6 +1983,7 @@ static bool8 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEven
     SetCameraPanningCallback(NULL);
     gPlayerAvatar.preventStep = TRUE;
     objectEvent->fixedPriority = 1;
+    objectEvent->noShadow = TRUE;
     task->data[1] = 1;
     task->data[0]++;
     if (objectEvent->localId == OBJ_EVENT_ID_PLAYER) // Hide follower before warping
@@ -2022,7 +2028,8 @@ static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEven
         {
             task->data[1] <<= 1;
         }
-    } else if (!(task->data[2] & 4) && (task->data[1] > 0))
+    }
+    else if (!(task->data[2] & 4) && (task->data[1] > 0))
     {
         task->data[1] >>= 1;
     }
@@ -2036,7 +2043,8 @@ static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEven
             {
                 task->data[3]++;
             }
-        } else
+        }
+        else
         {
             task->data[4] = 1;
         }
@@ -2172,6 +2180,7 @@ static bool8 LavaridgeGym1FWarpEffect_Init(struct Task *task, struct ObjectEvent
     CameraObjectFreeze();
     gPlayerAvatar.preventStep = TRUE;
     objectEvent->fixedPriority = 1;
+    objectEvent->noShadow = TRUE;
     task->data[0]++;
     if (objectEvent->localId == OBJ_EVENT_ID_PLAYER) // Hide follower before warping
         HideFollowerForFieldEffect();
@@ -2190,7 +2199,8 @@ static bool8 LavaridgeGym1FWarpEffect_AshPuff(struct Task *task, struct ObjectEv
             gFieldEffectArguments[3] = sprite->oam.priority;
             task->data[1] = FieldEffectStart(FLDEFF_ASH_PUFF);
             task->data[0]++;
-        } else
+        }
+        else
         {
             task->data[1]++;
             ObjectEventSetHeldMovement(objectEvent, GetWalkInPlaceFasterMovementAction(objectEvent->facingDirection));
@@ -2521,7 +2531,8 @@ static void TeleportWarpInFieldEffect_SpinEnter(struct Task *task)
             objectEvent->triggerGroundEffectsOnMove = TRUE;
             sprite->subspriteMode = task->data[14];
         }
-    } else
+    }
+    else
     {
         sprite->oam.priority = 1;
         if (sprite->subspriteMode != SUBSPRITES_OFF)
@@ -3292,7 +3303,7 @@ static void FlyOutFieldEffect_FlyOffWithBird(struct Task *task)
         struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
         ObjectEventClearHeldMovementIfActive(objectEvent);
         objectEvent->inanimate = FALSE;
-        objectEvent->hasShadow = FALSE;
+        objectEvent->noShadow = TRUE; // TODO: Make shadow smaller instead of disappearing completely ?
         SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, objectEvent->spriteId);
         CameraObjectFreeze();
         task->tState++;
@@ -3513,6 +3524,7 @@ static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
         ObjectEventTurn(objectEvent, DIR_WEST);
         StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
         objectEvent->invisible = FALSE;
+        objectEvent->noShadow = TRUE;
         task->tBirdSpriteId = CreateFlyBirdSprite();
         StartFlyBirdSwoopDown(task->tBirdSpriteId);
         SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, objectEvent->spriteId);

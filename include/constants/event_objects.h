@@ -242,6 +242,7 @@
 #define OBJ_EVENT_GFX_HOOH                       238
 #define OBJ_EVENT_GFX_POKE_BALL                  239
 #define OBJ_EVENT_GFX_OW_MON                     240
+#define OBJ_EVENT_GFX_LIGHT_SPRITE               OBJ_EVENT_GFX_QUINTY_PLUMP
 
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
@@ -307,6 +308,9 @@
 #define OBJ_KIND_CLONE  255 // Exclusive to FRLG
 
 // Special object event local ids
+// Used for link player OWs in CreateLinkPlayerSprite
+#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
+
 #define OBJ_EVENT_ID_PLAYER 0xFF
 #define OBJ_EVENT_ID_CAMERA 0x7F
 #define OBJ_EVENT_ID_FOLLOWER 0xFE
@@ -417,7 +421,10 @@
 #endif //OW_FOLLOWERS_POKEBALLS
 // Used as a placeholder follower graphic
 #define OBJ_EVENT_PAL_TAG_SUBSTITUTE              0x7611
-#define OBJ_EVENT_PAL_TAG_EMOTES                  0x8002
+#define OBJ_EVENT_PAL_TAG_LIGHT                   0x8001
+#define OBJ_EVENT_PAL_TAG_LIGHT_2                 0x8002
+#define OBJ_EVENT_PAL_TAG_EMOTES                  0x8003
+#define OBJ_EVENT_PAL_TAG_NEON_LIGHT              0x8004
 // Not a real OW palette tag; used for the white flash applied to followers
 #define OBJ_EVENT_PAL_TAG_WHITE                   (OBJ_EVENT_PAL_TAG_NONE - 1)
 #define OBJ_EVENT_PAL_TAG_NONE                    0x11FF

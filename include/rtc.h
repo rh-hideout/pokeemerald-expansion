@@ -18,7 +18,7 @@
 #define RTC_ERR_FLAG_MASK      0x0FF0
 
 //Morning and evening don't exist in Gen 3
-#if OW_TIMES_OF_DAY == GEN_3
+#if OW_TIMES_OF_DAY <= GEN_3
     #define MORNING_HOUR_BEGIN 0
     #define MORNING_HOUR_END   0
 
