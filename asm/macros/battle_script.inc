@@ -1674,6 +1674,15 @@
 	callnative BS_TryGiveGem
 	.4byte \failInstr
 	.endm
+
+	.macro trymop failInstr:req
+	callnative BS_TryMop
+	.4byte \failInstr
+	.endm
+
+	.macro mopfree
+	callnative BS_MopFree
+	.endm
 		
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req

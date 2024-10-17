@@ -14019,6 +14019,70 @@ static void Cmd_copyfoestats(void)
     gBattlescriptCurrInstr = cmd->nextInstr; // Has an unused jump ptr(possibly for a failed attempt) parameter.
 }
 
+void BS_TryMop(void)
+{
+    NATIVE_ARGS(const u8 *failInstr);
+
+    u8 atkSide = GetBattlerSide(gBattlerAttacker);
+
+    if (gSideStatuses[atkSide] & SIDE_STATUS_HAZARDS_ANY)
+    {
+        BattleScriptPush(gBattlescriptCurrInstr + 1);
+        gBattlescriptCurrInstr = BattleScript_MopAway;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->failInstr; 
+    }
+}
+
+void BS_MopFree(void)
+{
+    NATIVE_ARGS();
+    
+    u8 atkSide = GetBattlerSide(gBattlerAttacker);
+
+    if (gSideStatuses[atkSide] & SIDE_STATUS_SPIKES)
+    {
+        gSideStatuses[atkSide] &= ~SIDE_STATUS_SPIKES;
+        gSideTimers[atkSide].spikesAmount = 0;
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_SpikesFree;
+    }
+    else if (gSideStatuses[atkSide] & SIDE_STATUS_TOXIC_SPIKES)
+    {
+        gSideStatuses[atkSide] &= ~SIDE_STATUS_TOXIC_SPIKES;
+        gSideTimers[atkSide].toxicSpikesAmount = 0;
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_ToxicSpikesFree;
+    }
+    else if (gSideStatuses[atkSide] & SIDE_STATUS_STICKY_WEB)
+    {
+        gSideStatuses[atkSide] &= ~SIDE_STATUS_STICKY_WEB;
+        gSideTimers[atkSide].stickyWebAmount = 0;
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_StickyWebFree;
+    }
+    else if (gSideStatuses[atkSide] & SIDE_STATUS_STEALTH_ROCK)
+    {
+        gSideStatuses[atkSide] &= ~SIDE_STATUS_STEALTH_ROCK;
+        gSideTimers[atkSide].stealthRockAmount = 0;
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_StealthRockFree;
+    }
+    else if (gSideStatuses[atkSide] & SIDE_STATUS_STEELSURGE)
+    {
+        gSideStatuses[atkSide] &= ~SIDE_STATUS_STEELSURGE;
+        gSideTimers[atkSide].steelsurgeAmount = 0;
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_SteelsurgeFree;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }    
+}
+
 static void Cmd_rapidspinfree(void)
 {
     CMD_ARGS();

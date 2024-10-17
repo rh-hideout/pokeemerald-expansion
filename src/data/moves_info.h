@@ -22195,6 +22195,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_NIGHT_SLASH,
     },
+
+    [MOVE_MOP] =
+    {
+        .name = COMPOUND_STRING("Mop"),
+        .description = COMPOUND_STRING(
+            "Frees user from hazards;\n"
+            "increases accuracy."),
+        .effect = EFFECT_MOP,
+        .power = 0,
+        .type = TYPE_FAIRY,
+        .accuracy = 0,
+        .pp = 10,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_EVSN_UP_1 },
+        .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = COMBO_STARTER_LUCKY_CHANT,
+        .contestComboMoves = {COMBO_STARTER_HEAL_BELL},
+        .battleAnimScript = Move_LUCKY_CHANT,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
