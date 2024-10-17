@@ -247,6 +247,7 @@
 #define SIDE_STATUS_RAINBOW                 (1 << 24)
 #define SIDE_STATUS_SEA_OF_FIRE             (1 << 25)
 #define SIDE_STATUS_SWAMP                   (1 << 26)
+// Capriccio side statuses
 #define SIDE_STATUS_MIRAGE_VEIL             (1 << 27)
 
 #define SIDE_STATUS_HAZARDS_ANY    (SIDE_STATUS_SPIKES | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE)

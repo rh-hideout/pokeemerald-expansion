@@ -4024,6 +4024,12 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(DECENT_EFFECT);
         }
         break;
+    case EFFECT_MOP:
+        if ((gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerAtk) != 0))
+        {
+            ADJUST_SCORE(GOOD_EFFECT);
+        }
+        break;
     case EFFECT_TORMENT:
         break;
     case EFFECT_WILL_O_WISP:
@@ -4570,9 +4576,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SALT_CURE:
         if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_WATER) || IS_BATTLER_OF_TYPE(battlerDef, TYPE_STEEL))
             ADJUST_SCORE(DECENT_EFFECT);
-        break;
+        break; 
     } // move effect checks
-
+    
     // check move additional effects that are likely to happen
     for (i = 0; i < gMovesInfo[move].numAdditionalEffects; i++)
     {

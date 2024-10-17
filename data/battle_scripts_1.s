@@ -6903,6 +6903,27 @@ BattleScript_AllStatsUpSpDef::
 BattleScript_AllStatsUpRet::
 	return
 
+BattleScript_EffectMop::
+	attackcanceler
+	attackstring
+	ppreduce
+	trymop BattleScript_ButItFailed
+	setstatchanger STAT_ACC, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_MoveEnd
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_MopAccWontIncrease
+	goto BattleScript_StatUpDoAnim
+
+BattleScript_MopAway::
+	attackanimation
+	waitanimation	
+	mopfree
+	return
+
+BattleScript_MopAccWontIncrease::
+	printstring STRINGID_STATSWONTINCREASE
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_RapidSpinAway::
 	rapidspinfree
 	return
