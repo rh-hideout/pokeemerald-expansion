@@ -1,5 +1,9 @@
 # Pokeemerald-Expansion Changelogs
 
+## Unreleased changes
+- **[master branch](docs/changelogs/Unreleased/master.md)**
+- **[upcoming branch](docs/changelogs/Unreleased/upcoming.md)**
+
 ## 1.9.x
 - **[Version 1.9.2](docs/changelogs/1.9.x/1.9.2.md) - 🧹 Bugfix Release**
 - **[Version 1.9.1](docs/changelogs/1.9.x/1.9.1.md) - 🧹 Bugfix Release**
