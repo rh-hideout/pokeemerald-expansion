@@ -649,9 +649,8 @@
 	.byte \battler
 	.endm
 
-	.macro recordability battler:req
+	.macro unused70
 	.byte 0x70
-	.byte \battler
 	.endm
 
 	.macro buffermovetolearn
