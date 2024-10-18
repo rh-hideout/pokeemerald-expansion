@@ -1139,6 +1139,11 @@ void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp)
     }
 }
 
+#define IS_SKIPOVER_CHAR(char)  (char == CHAR_SPACE \
+                              || char == CHAR_PROMPT_SCROLL \
+                              || char == CHAR_PROMPT_CLEAR \
+                              || char == CHAR_NEWLINE)
+
 static s32 TryMessage(s32 i, s32 n, const u8 *string)
 {
     s32 j, k;
@@ -1151,35 +1156,31 @@ static s32 TryMessage(s32 i, s32 n, const u8 *string)
 
         event = &DATA.queuedEvents[i].as.message;
         // Test_MgbaPrintf("Looking for: %S Found: %S\n", event->pattern, string); // Useful for debugging.
-        for (j = k = 0; ; j++, k++)
+        j = 0; k = 0;
+        while (1)
         {
-            if (event->pattern[k] == CHAR_SPACE)
-            {
-                switch (string[j])
-                {
-                case CHAR_SPACE:
-                case CHAR_PROMPT_SCROLL:
-                case CHAR_PROMPT_CLEAR:
-                case CHAR_NEWLINE:
-                    j++;
-                    k++;
-                    break;
-                }
+            if (IS_SKIPOVER_CHAR(event->pattern[k])) {
+                k++;
+                continue;
             }
-            if (event->pattern[k] == EOS)
-            {
-                // Consume any trailing '\p'.
-                if (string[j] == CHAR_PROMPT_CLEAR)
-                    j++;
+            if (IS_SKIPOVER_CHAR(string[j])) {
+                j++;
+                continue;
+            }
+            if (string[j] == EXT_CTRL_CODE_BEGIN && string[j+1] <= EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW) {
+                j += 3;
+                continue;
             }
             if (string[j] != event->pattern[k])
             {
                 break;
             }
-            else if (string[j] == EOS)
+            if (string[j] == EOS || event->pattern[k] == EOS)
             {
                 return i;
             }
+            j++;
+            k++;
         }
     }
     return -1;
@@ -1545,9 +1546,14 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     (*partySize)++;
 
     CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
+    // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        data = MOVE_NONE;
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 20;
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+    }
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
@@ -2073,6 +2079,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
                 SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &gMovesInfo[ctx->move].pp);
                 *moveSlot = i;
                 *moveId = ctx->move;
+                INVALID_IF(gMovesInfo[ctx->move].pp == 0, "%S has 0 PP!", GetMoveName(ctx->move));
                 break;
             }
         }
