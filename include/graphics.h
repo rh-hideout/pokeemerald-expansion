@@ -3385,4 +3385,49 @@ extern const u32 gBattleIcons_Gfx2[];
 extern const u32 gBattleIcons_Pal1[];
 extern const u32 gBattleIcons_Pal2[];
 
+// Wonder Launcher Items
+// Icons
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_1[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_2[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_3[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_6[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_blank[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_blank2[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_medicine[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_revive[];
+extern const u32 gItemIcon_WonderLauncher_BattleStatItem_maxRevive[];
+// Palettes
+// X Items
+extern const u32 gItemIconPalette_WonderLauncher_XAttack[];
+extern const u32 gItemIconPalette_WonderLauncher_XDefend[];
+extern const u32 gItemIconPalette_WonderLauncher_XSpecialAttack[];
+extern const u32 gItemIconPalette_WonderLauncher_XSpecialDefense[];
+extern const u32 gItemIconPalette_WonderLauncher_XSpeed[];
+extern const u32 gItemIconPalette_WonderLauncher_XAccuracy[];
+extern const u32 gItemIconPalette_WonderLauncher_DireHit[];
+extern const u32 gItemIconPalette_WonderLauncher_GuardSpec[];
+// Battle Items
+extern const u32 gItemIconPalette_WonderLauncher_AbilityUrge[];
+extern const u32 gItemIconPalette_WonderLauncher_ResetUrge[];
+extern const u32 gItemIconPalette_WonderLauncher_ItemUrge[];
+extern const u32 gItemIconPalette_WonderLauncher_ItemDrop[];
+// Medicine
+extern const u32 gItemIconPalette_wonderLauncher_Potion[];
+extern const u32 gItemIconPalette_wonderLauncher_SuperPotion[];
+extern const u32 gItemIconPalette_wonderLauncher_HyperPotion[];
+extern const u32 gItemIconPalette_wonderLauncher_MaxPotion[];
+extern const u32 gItemIconPalette_wonderLauncher_FullRestore[];
+extern const u32 gItemIconPalette_wonderLauncher_Antidote[];
+extern const u32 gItemIconPalette_wonderLauncher_ParalyzeHeal[];
+extern const u32 gItemIconPalette_wonderLauncher_Awakening[];
+extern const u32 gItemIconPalette_wonderLauncher_BurnHeal[];
+extern const u32 gItemIconPalette_wonderLauncher_IceHeal[];
+extern const u32 gItemIconPalette_wonderLauncher_FullHeal[];
+extern const u32 gItemIconPalette_wonderLauncher_Revive[];
+extern const u32 gItemIconPalette_wonderLauncher_MaxRevive[];
+extern const u32 gItemIconPalette_wonderLauncher_Ether[];
+extern const u32 gItemIconPalette_wonderLauncher_MaxEther[];
+extern const u32 gItemIconPalette_wonderLauncher_Elixir[];
+extern const u32 gItemIconPalette_wonderLauncher_MaxElixir[];
+
 #endif //GUARD_GRAPHICS_H

@@ -238,7 +238,7 @@ SINGLE_BATTLE_TEST("Crit Chance: Dire Hit increases a battler's critical hit cha
     PASSES_RANDOMLY(1, 2, RNG_CRITICAL_HIT);
     GIVEN {
         ASSUME(B_CRIT_CHANCE >= GEN_7);
-        ASSUME(gItemsInfo[ITEM_DIRE_HIT].battleUsage == EFFECT_ITEM_SET_FOCUS_ENERGY);
+        ASSUME(gItemsInfo[ITEM_DIRE_HIT].battleUsage == EFFECT_ITEM_INCREASE_CRIT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

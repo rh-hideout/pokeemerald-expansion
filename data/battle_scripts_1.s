@@ -3507,7 +3507,7 @@ BattleScript_EffectFocusEnergy::
 	attackcanceler
 	attackstring
 	ppreduce
-	jumpifstatus2 BS_ATTACKER, STATUS2_FOCUS_ENERGY_ANY, BattleScript_ButItFailed
+	jumpifstatus4 BS_ATTACKER, STATUS4_CRIT_STAGE_RAISED, BattleScript_ButItFailed
 	setfocusenergy BS_TARGET
 	attackanimation
 	waitanimation
@@ -6165,6 +6165,31 @@ BattleScript_WeaknessPolicyRemoveItem:
 BattleScript_WeaknessPolicyEnd:
 	return
 
+BattleScript_WeaknessPolicyEnd2::
+	copybyte sBATTLER, gBattlerTarget
+	jumpifstat BS_TARGET, CMP_LESS_THAN, STAT_ATK, MAX_STAT_STAGE, BattleScript_WeaknessPolicyAtkEnd2
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPATK, MAX_STAT_STAGE, BattleScript_WeaknessPolicyEndEnd2
+BattleScript_WeaknessPolicyAtkEnd2:
+	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
+	waitanimation
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_ATK | BIT_SPATK, STAT_CHANGE_BY_TWO
+	setstatchanger STAT_ATK, 2, FALSE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_WeaknessPolicySpAtkEnd2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_WeaknessPolicySpAtkEnd2
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_WeaknessPolicySpAtkEnd2:
+	setstatchanger STAT_SPATK, 2, FALSE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_WeaknessPolicyRemoveItemEnd2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_WeaknessPolicyRemoveItemEnd2
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_WeaknessPolicyRemoveItemEnd2:
+	removeitem BS_TARGET
+BattleScript_WeaknessPolicyEndEnd2:
+	end2
+
 BattleScript_TargetItemStatRaise::
 	copybyte sBATTLER, gBattlerTarget
 	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet
@@ -6180,6 +6205,21 @@ BattleScript_TargetItemStatRaise::
 BattleScript_TargetItemStatRaiseRemoveItemRet:
 	return
 
+BattleScript_TargetItemStatRaiseEnd2::
+	copybyte sBATTLER, gBattlerTarget
+	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRetEnd2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRetEnd2
+	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
+	waitanimation
+	setgraphicalstatchangevalues
+	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	waitanimation
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+	removeitem BS_TARGET
+BattleScript_TargetItemStatRaiseRemoveItemRetEnd2:
+	end2
+
 BattleScript_AttackerItemStatRaise::
 	copybyte sBATTLER, gBattlerAttacker
 	statbuffchange MOVE_EFFECT_AFFECTS_USER, BattleScript_AttackerItemStatRaiseRet
@@ -6194,6 +6234,21 @@ BattleScript_AttackerItemStatRaise::
 	removeitem BS_ATTACKER
 BattleScript_AttackerItemStatRaiseRet:
 	return
+
+BattleScript_AttackerItemStatRaiseEnd2::
+	copybyte sBATTLER, gBattlerAttacker
+	statbuffchange MOVE_EFFECT_AFFECTS_USER, BattleScript_AttackerItemStatRaiseRetEnd2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0x2, BattleScript_AttackerItemStatRaiseRetEnd2
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
+	waitanimation
+	setgraphicalstatchangevalues
+	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	waitanimation
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+	removeitem BS_ATTACKER
+BattleScript_AttackerItemStatRaiseRetEnd2:
+	end2
 
 BattleScript_MistProtected::
 	pause B_WAIT_TIME_SHORT

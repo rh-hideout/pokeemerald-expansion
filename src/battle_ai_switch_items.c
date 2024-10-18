@@ -2340,9 +2340,9 @@ static bool32 ShouldUseItem(u32 battler)
                 break;
             shouldUse = TRUE;
             break;
-        case EFFECT_ITEM_SET_FOCUS_ENERGY:
+        case EFFECT_ITEM_INCREASE_CRIT:
             if (!gDisableStructs[battler].isFirstTurn
-                || gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY
+                || gStatuses4[battler] & STATUS4_CRIT_STAGE_RAISED
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
                 break;
             shouldUse = TRUE;

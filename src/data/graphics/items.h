@@ -2096,3 +2096,48 @@ const u32 gItemIconPalette_SwapSnack[] = INCBIN_U32("graphics/items/icon_palette
 
 const u32 gItemIcon_TwiceSpicedRadish[] = INCBIN_U32("graphics/items/icons/twice_spiced_radish.4bpp.lz");
 const u32 gItemIconPalette_TwiceSpicedRadish[] = INCBIN_U32("graphics/items/icon_palettes/twice_spiced_radish.gbapal.lz");
+
+// Wonder Launcher Items
+// Icons
+const u32 gItemIcon_WonderLauncher_BattleStatItem_1[] = INCBIN_U32("graphics/items/icons/wonderLauncher_1.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_2[] = INCBIN_U32("graphics/items/icons/wonderLauncher_2.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_3[] = INCBIN_U32("graphics/items/icons/wonderLauncher_3.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_6[] = INCBIN_U32("graphics/items/icons/wonderLauncher_6.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_blank[] = INCBIN_U32("graphics/items/icons/wonderLauncher_blank.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_blank2[] = INCBIN_U32("graphics/items/icons/wonderLauncher_blank2.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_medicine[] = INCBIN_U32("graphics/items/icons/wonderLauncher_medicine.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_revive[] = INCBIN_U32("graphics/items/icons/wonderLauncher_revive.4bpp.lz");
+const u32 gItemIcon_WonderLauncher_BattleStatItem_maxRevive[] = INCBIN_U32("graphics/items/icons/wonderLauncher_maxRevive.4bpp.lz");
+// Palettes
+// X Items
+const u32 gItemIconPalette_WonderLauncher_XAttack[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XAttack.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_XDefend[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XDefense.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_XSpecialAttack[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XSpAtk.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_XSpecialDefense[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XSpDef.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_XSpeed[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XSpeed.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_XAccuracy[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_XAccuracy.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_DireHit[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_DireHit.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_GuardSpec[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_GuardSpec.gbapal.lz");
+// Battle Items
+const u32 gItemIconPalette_WonderLauncher_AbilityUrge[]= INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_AbilityUrge.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_ResetUrge[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_ResetUrge.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_ItemUrge[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_ItemUrge.gbapal.lz");
+const u32 gItemIconPalette_WonderLauncher_ItemDrop[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_ItemDrop.gbapal.lz");
+// Medicine
+const u32 gItemIconPalette_wonderLauncher_Potion[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Potion.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_SuperPotion[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_SuperPotion.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_HyperPotion[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_HyperPotion.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_MaxPotion[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_MaxPotion.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_FullRestore[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_FullRestore.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_Antidote[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Antidote.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_ParalyzeHeal[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_ParalyzeHeal.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_Awakening[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Awakening.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_BurnHeal[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_BurnHeal.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_IceHeal[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_IceHeal.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_FullHeal[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_FullHeal.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_Revive[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Revive.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_MaxRevive[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_MaxRevive.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_Ether[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Ether.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_MaxEther[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_MaxEther.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_Elixir[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_Elixir.gbapal.lz");
+const u32 gItemIconPalette_wonderLauncher_MaxElixir[] = INCBIN_U32("graphics/items/icon_palettes/wonderLauncher_MaxElixir.gbapal.lz");

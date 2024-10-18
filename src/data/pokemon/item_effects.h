@@ -459,3 +459,19 @@ const u8 gItemEffect_TamatoBerry[10] = {
     [6] = ITEM6_SUBTRACT_EV,
     EV_BERRY_FRIENDSHIP_CHANGE,
 };
+
+const u8 gItemEffect_AbilityUrge[8] = {
+    [0] = ITEM0_ABILITY_URGE,
+};
+
+const u8 gItemEffect_ResetUrge[8] = {
+    [0] = ITEM0_RESET_URGE,
+};
+
+const u8 gItemEffect_ItemUrge[8] = {
+    [0] = ITEM0_ITEM_URGE,
+};
+
+const u8 gItemEffect_ItemDrop[8] = {
+    [0] = ITEM0_ITEM_DROP,
+};

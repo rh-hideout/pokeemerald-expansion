@@ -1961,8 +1961,9 @@ s32 CalcCritChanceStageArgs(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     }
     else
     {
-        critChance  = 2 * ((gBattleMons[battlerAtk].status2 & STATUS2_FOCUS_ENERGY) != 0)
-                    + 1 * ((gBattleMons[battlerAtk].status2 & STATUS2_DRAGON_CHEER) != 0)
+        critChance  = 1 * ((gStatuses4[battlerAtk] & STATUS4_CRIT_STAGE_1) != 0)
+                    + 2 * ((gStatuses4[battlerAtk] & STATUS4_CRIT_STAGE_2) != 0)
+                    + 3 * ((gStatuses4[battlerAtk] & STATUS4_CRIT_STAGE_3) != 0)
                     + gMovesInfo[move].criticalHitStage
                     + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
                     + 2 * (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS)
@@ -2031,7 +2032,7 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     if (bonusCritStage > 0)
         critChance = critChance * bonusCritStage;
 
-    if ((gBattleMons[battlerAtk].status2 & STATUS2_FOCUS_ENERGY_ANY) != 0)
+    if ((gBattleMons[battlerAtk].status2 & STATUS4_CRIT_STAGE_RAISED) != 0)
         critChance = critChance * focusEnergyScaler;
 
     if (holdEffectAtk == HOLD_EFFECT_SCOPE_LENS)
@@ -2869,7 +2870,7 @@ u8 GetBattlerTurnOrderNum(u8 battler)
     return i;
 }
 
-static void CheckSetUnburden(u8 battler)
+void CheckSetUnburden(u8 battler)
 {
     if (GetBattlerAbility(battler) == ABILITY_UNBURDEN)
     {
@@ -12586,19 +12587,19 @@ static void Cmd_setfocusenergy(void)
     u8 battler = GetBattlerForBattleScript(cmd->battler);
 
     if ((gMovesInfo[gCurrentMove].effect == EFFECT_DRAGON_CHEER && (!(IsDoubleBattle()) || (gAbsentBattlerFlags & (1u << battler))))
-         || gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
+     || gStatuses4[battler] & STATUS4_CRIT_STAGE_RAISED)
     {
         gMoveResultFlags |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FOCUS_ENERGY_FAILED;
     }
     else if (gMovesInfo[gCurrentMove].effect == EFFECT_DRAGON_CHEER && !IS_BATTLER_OF_TYPE(battler, TYPE_DRAGON))
     {
-        gBattleMons[battler].status2 |= STATUS2_DRAGON_CHEER;
+        gStatuses4[battler] |= STATUS4_CRIT_STAGE_1;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_GETTING_PUMPED;
     }
     else
     {
-        gBattleMons[battler].status2 |= STATUS2_FOCUS_ENERGY;
+        gStatuses4[battler] |= STATUS4_CRIT_STAGE_2;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_GETTING_PUMPED;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -17266,6 +17267,20 @@ void BS_RemoveWeather(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_JumpIfStatus4(void)
+{
+    NATIVE_ARGS(u8 battler, u32 flags, const u8* jumpInstr);
+
+    u8 battlerId = GetBattlerForBattleScript(cmd->battler);
+    u32 flags = cmd->flags;
+    const u8 *jumpInstr = cmd->jumpInstr;
+
+    if (gStatuses4[battlerId] & flags && gBattleMons[battlerId].hp != 0)
+        gBattlescriptCurrInstr = jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_ApplyTerastallization(void)
 {
     NATIVE_ARGS();
@@ -17355,6 +17370,33 @@ void BS_TeatimeTargets(void)
         gBattlescriptCurrInstr = cmd->failInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_ItemIncreaseCrit(void)
+{
+    NATIVE_ARGS(u8 battler);
+    u8 battler = GetBattlerForBattleScript(cmd->battler);
+    u16 stages = ItemId_GetHoldEffectParam(gLastUsedItem);
+
+    if (stages == STAT_STAGE_1)
+        gStatuses4[battler] |= STATUS4_CRIT_STAGE_1;
+    else if (stages == STAT_STAGE_2)
+        gStatuses4[battler] |= STATUS4_CRIT_STAGE_2;
+    else if (stages == STAT_STAGE_3)
+        gStatuses4[battler] |= STATUS4_CRIT_STAGE_3;
+
+    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_GETTING_PUMPED;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_ItemResetStatStages(void)
+{
+    NATIVE_ARGS(u8 battler);
+
+    u8 battlerId = GetBattlerForBattleScript(cmd->battler);
+    TryResetBattlerStatChanges(battlerId);
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryWindRiderPower(void)

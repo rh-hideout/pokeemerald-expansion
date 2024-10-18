@@ -978,6 +978,10 @@ u32 ItemId_GetFlingPower(u32 itemId)
     return gItemsInfo[SanitizeItemId(itemId)].flingPower;
 }
 
+bool8 ItemId_GetIsConsumable(u16 itemId)
+{
+    return gItemsInfo[SanitizeItemId(itemId)].isConsumable;
+}
 
 u32 GetItemStatus1Mask(u16 itemId)
 {

@@ -1184,8 +1184,8 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
         if (gBattleMons[gBattlerInMenuId].statStages[ItemId_GetEffect(itemId)[1]] == MAX_STAT_STAGE)
             cannotUse = TRUE;
         break;
-    case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (gBattleMons[gBattlerInMenuId].status2 & STATUS2_FOCUS_ENERGY_ANY)
+    case EFFECT_ITEM_INCREASE_CRIT:
+        if (gStatuses4[gBattlerInMenuId] & STATUS4_CRIT_STAGE_RAISED)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:

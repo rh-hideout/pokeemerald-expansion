@@ -481,9 +481,9 @@ void SetZEffect(void)
         break;
     }
     case Z_EFFECT_BOOST_CRITS:
-        if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_FOCUS_ENERGY_ANY))
+        if (!(gStatuses4[gBattlerAttacker] & STATUS4_CRIT_STAGE_RAISED))
         {
-            gBattleMons[gBattlerAttacker].status2 |= STATUS2_FOCUS_ENERGY;
+            gStatuses4[gBattlerAttacker] |= STATUS4_CRIT_STAGE_2;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_BOOST_CRITS;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;

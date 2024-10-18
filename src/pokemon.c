@@ -8,6 +8,7 @@
 #include "battle_message.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
+#include "battle_scripts.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "battle_z_move.h"
@@ -3722,6 +3723,60 @@ const u32 sExpCandyExperienceTable[] = {
     [EXP_30000 - 1] = 30000,
 };
 
+static u8 GetXItemStage(u16 itemId)
+{
+    return ItemId_GetHoldEffectParam(itemId);
+}
+
+/*
+static bool8 TryActivateAbilityUrge(u16 battler)
+{
+    u16 ability = gBattleMons[battler].ability;
+    gBattlerAttacker = battler; // cursed 
+    return AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0, 0);
+}
+
+static bool32 TryKnockOffItemScript(u32 battler)
+{
+    if (gBattleMons[battler].item != ITEM_NONE
+        && CanBattlerGetOrLoseItem(battler, gBattleMons[battler].item))
+    {
+        gLastUsedItem = gBattleMons[battler].item; // necessary? 
+        gBattleMons[battler].item = ITEM_NONE;
+        if (gBattleMons[battler].ability != ABILITY_GORILLA_TACTICS)
+            gBattleStruct->choicedMove[battler] = 0;
+        CheckSetUnburden(battler);
+        gBattlerAttacker = gBattleScripting.battler = battler; // I hate this
+        BattleScriptExecute(BattleScript_ItemDrop);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 TryActivateHeldItemEffect(u16 battler)
+{
+    u8 i;
+    u16 item; 
+    gBattleScripting.overrideActivationRequirements = TRUE;
+    gBattlerTarget = gBattlerAttacker = battler; // curseder
+    item = gBattleMons[battler].item;
+
+    if (!ItemId_GetIsConsumable(item))
+        return FALSE;
+    
+    for (i = 0; i < ITEMEFFECT_USE_LAST_ITEM; i++) // check all item effect cases until one is found that activates
+    {
+        if (ItemBattleEffects(i, battler, FALSE))
+        {
+            gBattleScripting.overrideActivationRequirements = FALSE;
+            return TRUE;
+        }
+    }
+    gBattleScripting.overrideActivationRequirements = FALSE;
+    return FALSE;
+}
+*/
+
 // Returns TRUE if the item has no effect on the Pokémon, FALSE otherwise
 bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
 {
@@ -3741,6 +3796,8 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
+    //u8 xItemStages;
+    //u8 critStage;
 
     // Determine the EV cap to use
     u32 maxAllowedEVs = !B_EV_ITEMS_CAP ? MAX_TOTAL_EVS : GetCurrentEVCap();
@@ -3773,7 +3830,6 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
         // Now handled in item battle scripts.
         case 0:
             break;
-
         // Handle ITEM1 effects (in-battle stat boosting effects)
         // Now handled in item battle scripts.
         case 1:
@@ -3781,7 +3837,6 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
         // Formerly used by the item effects of the X Sp. Atk and the X Accuracy
         case 2:
             break;
-
         // Handle ITEM3 effects (Guard Spec, Rare Candy, cure status)
         case 3:
             // Rare Candy / EXP Candy
@@ -4301,25 +4356,34 @@ u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit
     return offset;
 }
 
-static void BufferStatRoseMessage(s32 statIdx)
+static void BufferStatRoseMessage(s32 statIdx, u8 statStage)
 {
     gBattlerTarget = gBattlerInMenuId;
     StringCopy(gBattleTextBuff1, gStatNamesTable[sStatsToRaise[statIdx]]);
-    if (B_X_ITEMS_BUFF >= GEN_7)
+    switch (statStage)
     {
-        StringCopy(gBattleTextBuff2, gText_StatSharply);
+        case STAT_STAGE_1:
+            StringCopy(gBattleTextBuff2, gText_StatRose);
+            break;
+        case STAT_STAGE_2:
+            StringCopy(gBattleTextBuff2, gText_StatSharply);
+            break;
+        case STAT_STAGE_3:
+            StringCopy(gBattleTextBuff2, gText_StatDrastically);
+            break;
+        case STAT_STAGE_6:
+            StringCopy(gBattleTextBuff2, gText_StatImmensely);
+            break;
+    }
+    if (statStage != STAT_STAGE_1) 
         StringAppend(gBattleTextBuff2, gText_StatRose);
-    }
-    else
-    {
-        StringCopy(gBattleTextBuff2, gText_StatRose);
-    }
     BattleStringExpandPlaceholdersToDisplayedString(gText_DefendersStatRose);
 }
 
 u8 *UseStatIncreaseItem(u16 itemId)
 {
     const u8 *itemEffect;
+    u8 statStage;
 
     if (itemId == ITEM_ENIGMA_BERRY_E_READER)
     {
@@ -4345,25 +4409,27 @@ u8 *UseStatIncreaseItem(u16 itemId)
         BattleStringExpandPlaceholdersToDisplayedString(gText_PkmnGettingPumped);
     }
 
+    statStage = GetXItemStage(itemId);
+
     switch (itemEffect[1])
     {
         case ITEM1_X_ATTACK:
-            BufferStatRoseMessage(STAT_ATK);
+            BufferStatRoseMessage(STAT_ATK, statStage);
             break;
         case ITEM1_X_DEFENSE:
-            BufferStatRoseMessage(STAT_DEF);
+            BufferStatRoseMessage(STAT_DEF, statStage);
             break;
         case ITEM1_X_SPEED:
-            BufferStatRoseMessage(STAT_SPEED);
+            BufferStatRoseMessage(STAT_SPEED, statStage);
             break;
         case ITEM1_X_SPATK:
-            BufferStatRoseMessage(STAT_SPATK);
+            BufferStatRoseMessage(STAT_SPATK, statStage);
             break;
         case ITEM1_X_SPDEF:
-            BufferStatRoseMessage(STAT_SPDEF);
+            BufferStatRoseMessage(STAT_SPDEF, statStage);
             break;
         case ITEM1_X_ACCURACY:
-            BufferStatRoseMessage(STAT_ACC);
+            BufferStatRoseMessage(STAT_ACC, statStage);
             break;
     }
 
@@ -4373,6 +4439,28 @@ u8 *UseStatIncreaseItem(u16 itemId)
         BattleStringExpandPlaceholdersToDisplayedString(gText_PkmnShroudedInMist);
     }
 
+    return gDisplayedStringBattle;
+}
+
+const u8 *UseWonderLauncherItem(u16 itemId)
+{
+    switch (itemId)
+    {
+        case ITEM_WONDER_LAUNCHER_ABILITY_URGE:
+            BattleStringExpandPlaceholdersToDisplayedString(gText_ActivateAbilityUrge);
+            break;
+        case ITEM_WONDER_LAUNCHER_RESET_URGE:
+            BattleStringExpandPlaceholdersToDisplayedString(gText_ActivateResetUrge);
+            break;
+        case ITEM_WONDER_LAUNCHER_ITEM_URGE:
+            BattleStringExpandPlaceholdersToDisplayedString(gText_ActivateItemUrge);
+            break;
+        case ITEM_WONDER_LAUNCHER_ITEM_DROP:
+            BattleStringExpandPlaceholdersToDisplayedString(gText_ActivateItemDrop);
+            break;
+        default:
+            break;
+    }
     return gDisplayedStringBattle;
 }
 

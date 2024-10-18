@@ -1404,6 +1404,13 @@
 	.4byte \jumpInstr
 	.endm
 
+	.macro jumpifstatus4 battler:req, flags:req, jumpInstr:req
+	callnative BS_JumpIfStatus4
+	.byte \battler
+	.4byte \flags
+	.4byte \jumpInstr
+	.endm
+
 	.macro itemrestorehp jumpInstr:req, restoreBattlerInstr:req
 	callnative BS_ItemRestoreHP
 	.4byte \jumpInstr
@@ -1417,6 +1424,11 @@
 
 	.macro itemincreasestat
 	callnative BS_ItemIncreaseStat
+	.endm
+
+	.macro itemresetstatstages battler:req
+	callnative BS_ItemResetStatStages
+	.byte \battler
 	.endm
 
 	.macro itemrestorepp
@@ -1659,6 +1671,11 @@
 
 	.macro removeweather
 	callnative BS_RemoveWeather
+	.endm
+
+	.macro itemincreasecrit battler:req
+	callnative BS_ItemIncreaseCrit
+	.byte \battler
 	.endm
 
 	.macro applyterastallization

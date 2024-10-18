@@ -1395,7 +1395,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FOCUS_ENERGY:
-            if (gBattleMons[battlerAtk].status2 & STATUS2_FOCUS_ENERGY_ANY)
+            if (gStatuses4[battlerAtk] & STATUS4_CRIT_STAGE_RAISED)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_CONFUSE:
@@ -2729,7 +2729,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         }
         break;
     case EFFECT_DRAGON_CHEER:
-        if (gBattleMons[battlerAtkPartner].status2 & STATUS2_FOCUS_ENERGY_ANY || !HasDamagingMove(battlerAtkPartner))
+        if (gStatuses4[battlerAtkPartner] & STATUS4_CRIT_STAGE_RAISED || !HasDamagingMove(battlerAtkPartner))
             ADJUST_SCORE(-5);
         else if (atkPartnerHoldEffect == HOLD_EFFECT_SCOPE_LENS
               || IS_BATTLER_OF_TYPE(battlerAtkPartner, TYPE_DRAGON)

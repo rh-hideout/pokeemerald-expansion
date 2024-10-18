@@ -148,9 +148,8 @@
 #define STATUS2_NIGHTMARE             (1 << 27)
 #define STATUS2_CURSED                (1 << 28)
 #define STATUS2_FORESIGHT             (1 << 29)
-#define STATUS2_DRAGON_CHEER          (1 << 30)
-#define STATUS2_FOCUS_ENERGY          (1 << 31)
-#define STATUS2_FOCUS_ENERGY_ANY      (STATUS2_DRAGON_CHEER | STATUS2_FOCUS_ENERGY)
+#define STATUS2_UNUSED_30             (1 << 30)
+#define STATUS2_UNUSED_31             (1 << 31)
 
 #define STATUS3_LEECHSEED_BATTLER       (1 << 0 | 1 << 1) // The battler to receive HP from Leech Seed
 #define STATUS3_LEECHSEED               (1 << 2)
@@ -193,6 +192,10 @@
 #define STATUS4_SALT_CURE               (1 << 4)
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
+#define STATUS4_CRIT_STAGE_1            (1 << 7)    // Previously STATUS2_DRAGON_CHEER
+#define STATUS4_CRIT_STAGE_2            (1 << 8)    // Previously STATUS2_FOCUS_ENERGY
+#define STATUS4_CRIT_STAGE_3            (1 << 9)
+#define STATUS4_CRIT_STAGE_RAISED       (STATUS4_CRIT_STAGE_1 | STATUS4_CRIT_STAGE_2 | STATUS4_CRIT_STAGE_3) // Previously STATUS2_FOCUS_ENERGY_ANY
 
 #define HITMARKER_WAKE_UP_CLEAR         (1 << 4) // Cleared when waking up. Never set or checked.
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
