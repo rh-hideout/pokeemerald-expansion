@@ -22289,6 +22289,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Forgotno[] = INCBIN_U32("graphics/pokemon/forgotno/shiny.gbapal.lz");
    const u8 gMonIcon_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/icon.4bpp");
    const u8 gMonFootprint_Forgotno[] = INCBIN_U8("graphics/pokemon/forgotno/footprint.1bpp");
+   
+   const u32 gMonFrontPic_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/front.4bpp.lz");
+   const u32 gMonBackPic_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/back.4bpp.lz");
+   const u32 gMonPalette_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/shiny.gbapal.lz");
+   const u8 gMonIcon_Ignifatu[] = INCBIN_U8("graphics/pokemon/ignifatu/icon.4bpp");
+   const u8 gMonFootprint_Ignifatu[] = INCBIN_U8("graphics/pokemon/ignifatu/footprint.1bpp");
+
+   const u32 gMonFrontPic_Phantorney[] = INCBIN_U32("graphics/pokemon/phantorney/front.4bpp.lz");
+   const u32 gMonBackPic_Phantorney[] = INCBIN_U32("graphics/pokemon/phantorney/back.4bpp.lz");
+   const u32 gMonPalette_Phantorney[] = INCBIN_U32("graphics/pokemon/phantorney/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Phantorney[] = INCBIN_U32("graphics/pokemon/phantorney/shiny.gbapal.lz");
+   const u8 gMonIcon_Phantorney[] = INCBIN_U8("graphics/pokemon/phantorney/icon.4bpp");
+   const u8 gMonFootprint_Phantorney[] = INCBIN_U8("graphics/pokemon/phantorney/footprint.1bpp");
 
    const u32 gMonFrontPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/front.4bpp.lz");
    const u32 gMonBackPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/back.4bpp.lz");
@@ -22324,6 +22338,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Jumblinart[] = INCBIN_U32("graphics/pokemon/jumblinart/shiny.gbapal.lz");
    const u8 gMonIcon_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/icon.4bpp");
    const u8 gMonFootprint_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/footprint.1bpp");
+
+   const u32 gMonFrontPic_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/front.4bpp.lz");
+   const u32 gMonBackPic_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/back.4bpp.lz");
+   const u32 gMonPalette_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/shiny.gbapal.lz");
+   const u8 gMonIcon_Emeffyume[] = INCBIN_U8("graphics/pokemon/emeffyume/icon.4bpp");
+   const u8 gMonFootprint_Emeffyume[] = INCBIN_U8("graphics/pokemon/emeffyume/footprint.1bpp");
 
    const u32 gMonFrontPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/front.4bpp.lz");
    const u32 gMonBackPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/back.4bpp.lz");

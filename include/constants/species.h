@@ -1682,8 +1682,11 @@
 #define SPECIES_JUMBLEGORE                              1572
 #define SPECIES_JUMBLINART                              1573
 #define SPECIES_NYANONITE                               1574
+#define SPECIES_IGNIFATU                                1575
+#define SPECIES_EMEFFYUME                               1576
+#define SPECIES_PHANTORNEY                              1577
 
-#define SPECIES_EGG (SPECIES_NYANONITE + 1)
+#define SPECIES_EGG (SPECIES_PHANTORNEY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -6273,6 +6273,10 @@ Cry_Jumblinart::
 	.incbin "sound/direct_sound_samples/cries/jumblinart.bin"
 
 	.align 2
+Cry_Emeffyume::
+	.incbin "sound/direct_sound_samples/cries/emeffyume.bin"
+
+	.align 2
 Cry_Gargarramer::
 	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
 
@@ -6335,6 +6339,14 @@ Cry_Cocken::
 	.align 2
 Cry_Nyanonite::
 	.incbin "sound/direct_sound_samples/cries/nyanonite.bin"
+
+	.align 2
+Cry_Ignifatu::
+	.incbin "sound/direct_sound_samples/cries/ignifatu.bin"
+
+	.align 2
+Cry_Phantorney::
+	.incbin "sound/direct_sound_samples/cries/phantorney.bin"
 
 	.align 2
 Cry_Forgotno::

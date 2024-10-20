@@ -2517,6 +2517,12 @@ gCryTable::
 	cry Cry_Jumblinart
 
 	cry Cry_Nyanonite
+
+	cry Cry_Ignifatu
+
+	cry Cry_Emeffyume
+
+	cry Cry_Phantorney
 .endif
 
 	.align 2
@@ -5036,4 +5042,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Jumblinart
 
 	cry_reverse Cry_Nyanonite
+
+	cry_reverse Cry_Ignifatu
+
+	cry_reverse Cry_Emeffyume
+
+	cry_reverse Cry_Phantorney
 .endif
