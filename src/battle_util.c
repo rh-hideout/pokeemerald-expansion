@@ -2556,6 +2556,10 @@ u8 DoBattlerEndTurnEffects(void)
                         effect++;
                     }
                 }
+                else if (ability == ABILITY_TOXIC_BOOST)
+                {
+                    effect++;
+                }
                 else
                 {
                     gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 8;
@@ -2584,6 +2588,10 @@ u8 DoBattlerEndTurnEffects(void)
                         BattleScriptExecute(BattleScript_PoisonHealActivates);
                         effect++;
                     }
+                }
+                else if (ability == ABILITY_TOXIC_BOOST)
+                {
+                    effect++;
                 }
                 else
                 {
