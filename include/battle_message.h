@@ -239,6 +239,7 @@ enum
     TRAINER_SLIDE_Z_MOVE,
     TRAINER_SLIDE_BEFORE_FIRST_TURN,
     TRAINER_SLIDE_DYNAMAX,
+    //TRAINER_SLIDE_FLUX,
 };
 
 void BufferStringBattle(u16 stringID, u32 battler);

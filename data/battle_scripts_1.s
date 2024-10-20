@@ -1834,7 +1834,7 @@ BattleScript_EffectVenomDrench::
 	attackcanceler
 	attackstring
 	ppreduce
-	jumpifstatus BS_TARGET, STATUS1_PSN_ANY, BattleScript_EffectVenomDrenchCanBeUsed
+	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_EffectVenomDrenchCanBeUsed
 	goto BattleScript_ButItFailed
 BattleScript_EffectVenomDrenchCanBeUsed:
 	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_ATK, MIN_STAT_STAGE, BattleScript_VenomDrenchDoMoveAnim
@@ -2710,11 +2710,11 @@ BattleScript_EffectRoost::
 	goto BattleScript_PresentHealTarget
 
 BattleScript_EffectCaptivate::
-	setstatchanger STAT_SPATK, 2, TRUE
+	setstatchanger STAT_SPATK, 1, TRUE
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_FailedFromAtkString
-	jumpifoppositegenders BattleScript_CaptivateCheckAcc
-	goto BattleScript_FailedFromAtkString
+	goto BattleScript_CaptivateCheckAcc
+	
 BattleScript_CaptivateCheckAcc:
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	goto BattleScript_StatDownFromAttackString
@@ -8006,6 +8006,30 @@ BattleScript_ProtosynthesisActivates::
 BattleScript_QuarkDriveActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ELECTRICTERRAINACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3
+
+BattleScript_TerraformActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_GRASSYTERRAINACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3
+
+BattleScript_ProdigalActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PSYCHICTERRAINACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3
+
+BattleScript_MythicBloodActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_MISTYTERRAINACTIVATEDABILITY
 	waitmessage B_WAIT_TIME_MED
 	printstring STRINGID_STATWASHEIGHTENED
 	waitmessage B_WAIT_TIME_MED

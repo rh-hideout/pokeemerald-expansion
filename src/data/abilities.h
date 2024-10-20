@@ -2627,13 +2627,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_LOVER] =
     {
         .name = _("Lover"),
-        .description = COMPOUND_STRING("Take half damage from infactuated foes."),
+        .description = COMPOUND_STRING("If an enemy is in love, take half damage."),
         .aiRating = 4,
     },
     [ABILITY_NOXIOUS_ARMOR] =
     {
         .name = _("Noxious Armor"),
-        .description = COMPOUND_STRING("Take half damage from poisoned foes."),
+        .description = COMPOUND_STRING("If an enemy is poisoned, take half damage."),
         .aiRating = 4,
     },
     [ABILITY_DROWSY_AURA] =
@@ -2693,7 +2693,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_WIND_WALKER] =
     {
         .name = _("Wind Walker"),
-        .description = COMPOUND_STRING("Boost flying moves, x0dmg from ground but 2x dmg from electric."),
+        .description = COMPOUND_STRING("Flying dmg 1.5x, ground immune, 2x dmg from electric."),
         .aiRating = 5,
     },
     [ABILITY_ZEAL] =
@@ -2701,5 +2701,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Zeal"),
         .description = COMPOUND_STRING("Moving first boosts power."),
         .aiRating = 5,
+    },
+    [ABILITY_PETAL_RIDER] =
+    {
+        .name = _("Petal Rider"),
+        .description = COMPOUND_STRING("Faster on grassy terrain."),
+        .aiRating = 4,
     },
 };

@@ -834,5 +834,8 @@ extern const u8 BattleScript_EffectDucknWeave[];
 extern const u8 BattleScript_EffectShrapnel[];
 extern const u8 BattleScript_EffectChemboost[];
 extern const u8 BattleScript_EffectElude[];
+extern const u8 BattleScript_TerraformActivates[];
+extern const u8 BattleScript_ProdigalActivates[];
+extern const u8 BattleScript_MythicBloodActivates[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

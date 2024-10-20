@@ -997,12 +997,12 @@
 #define MOVE_VOLT_SPIN 933
 #define MOVE_STUN_BREAK 934
 #define MOVE_MOMENTOUS_BLOW 935
-#define MOVE_GIGATON_SLAM 936
-#define MOVE_VOLCANIC_STORM 937
-#define MOVE_COLOSSAL_BURST 938
+#define MOVE_PLACEHOLDER 936   //removed
+#define MOVE_VOLCANIC_CHARGE 937
+#define MOVE_COLOSSAL_FLARE 938
 #define MOVE_HARPOON_DIVE 939
 #define MOVE_TORRENTIAL_RUSH 940
-#define MOVE_AQUA_DRIFT 941 //wait on this one might not be needed or have a place (purge?)
+#define MOVE_MYTHIC_CLAW 941 
 #define MOVE_RAPIDFIRE_BURST 942
 #define MOVE_SNOWSEAR_STORM 943
 #define MOVE_GLACIAL_STING 944
@@ -1016,31 +1016,30 @@
 #define MOVE_CHEMBOOST 951                  
 #define MOVE_STEEL_ROT 952          //TEST
 #define MOVE_TOXIC_TUMBLE 953   //D
-#define MOVE_IONIC_PULSE 954                //WIP
+#define MOVE_IONIC_PULSE 954                //WIP ignores ground immunity
 #define MOVE_CONDUIT_BOMB 955       //TEST
 #define MOVE_LUMINSPHERE 956        //TEST
 #define MOVE_PETRIFY 957            //TEST
-#define MOVE_SWAMP_TIDE 958                 //WIP
-#define MOVE_PRISMATIC_JET 959              //WIP
+#define MOVE_SWAMP_TIDE 958                 //WIP mud sport effect
+#define MOVE_PRISMATIC_JET 959              //WIP safeguard
 #define MOVE_PSY_OUT 960        //D
 #define MOVE_PYROKENESIS 961    //D
-#define MOVE_PRISMATIC_PULSE 962            //WIP
+#define MOVE_PRISMATIC_PULSE 962            //WIP safeguard
 #define MOVE_DARK_BOLTS 963     //D
-#define MOVE_MAGNET_PUNCH 964               //WIP
+#define MOVE_MAGNET_PUNCH 964       //TEST
 #define MOVE_FLASH_FREEZE 965       //TEST
-#define MOVE_RESONANT_CRY 966               //WIP
-#define MOVE_FLURRY_STORM 967               //WIP
+#define MOVE_RESONANT_CRY 966               //WIP aurora veil
+#define MOVE_FLURRY_STORM 967               //WIP defog
 #define MOVE_CHLORO_DIVE 968    //D
-#define MOVE_PLACEHOLDER2 969                         //Purged
-#define MOVE_PRESSURE_POINT 970 //D
-#define MOVE_PLACEHOLDER 971                        //Purged        
-#define MOVE_ELUDE 972              //TEST
-#define MOVE_BARRICADE 973          //TEST
-#define MOVE_CHAMELEE 974           //TEST
-#define MOVE_SONAR_WALL 975         //TEST
+#define MOVE_PRESSURE_POINT 969 //D       
+#define MOVE_ELUDE 970              //TEST
+#define MOVE_BARRICADE 971          //TEST
+#define MOVE_CHAMELEE 972           //TEST
+#define MOVE_SONAR_WALL 973         //TEST
+#define MOVE_HYDROSHOT_FLURRY 974
 
 
-#define MOVES_COUNT_GEN9 976
+#define MOVES_COUNT_GEN9 975
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

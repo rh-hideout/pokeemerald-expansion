@@ -875,6 +875,7 @@ gBattleAnims_Moves::
 	.4byte Move_PSYCHIC_NOISE
 	.4byte Move_UPPER_HAND
 	.4byte Move_MALIGNANT_CHAIN
+@@@@ STAGE 1
 	.4byte Move_DOUBLE_EDGE 
 	.4byte Move_SLEEP_POWDER
 	.4byte Move_STUN_SPORE
@@ -910,6 +911,7 @@ gBattleAnims_Moves::
 	.4byte Move_SEARING_SHOT
 	.4byte Move_CONFUSE_RAY
 	.4byte Move_OVERHEAT
+	.4byte Move_SCALE_SHOT
 	.4byte Move_BODY_SLAM
 	.4byte Move_MAX_DARKNESS
 	.4byte Move_SING
@@ -927,11 +929,11 @@ gBattleAnims_Moves::
 	.4byte Move_BRICK_BREAK
 	.4byte Move_MAX_OOZE
 	.4byte Move_STRING_SHOT
-	.4byte Move_G_MAX_FINALE
 	.4byte Move_HEAT_WAVE
 	.4byte Move_EMBER
 	.4byte Move_WATERFALL
 	.4byte Move_SCREECH
+	@@@@@@@@@@@@ Stage 2 @@@@@@@@@@@@
 	.4byte Move_SCALD
 	.4byte Move_BOUNCE
 	.4byte Move_DOUBLE_SLAP
@@ -951,6 +953,60 @@ gBattleAnims_Moves::
 	.4byte Move_FOCUS_BLAST
 	.4byte Move_SPIKES
 	.4byte Move_G_MAX_STEELSURGE
+	.4byte Move_SLASH
+	.4byte Move_SYRUP_BOMB_YELLOW
+	.4byte Move_VINE_WHIP
+	.4byte Move_MAX_FLUTTERBY
+	.4byte Move_DARK_PULSE
+	.4byte Move_CHLOROBLAST
+	.4byte Move_PSYCHIC_NOISE
+	.4byte Move_MEAN_LOOK
+	.4byte Move_ACID
+	.4byte Move_MAX_QUAKE
+	.4byte Move_RAPID_SPIN
+	.4byte Move_THUNDER_CAGE
+	.4byte Move_MAX_KNUCKLE
+	.4byte Move_MAX_KNUCKLE
+	.4byte Move_MAX_FLARE
+	.4byte Move_MAX_STEELSPIKE
+	.4byte Move_WAVE_CRASH
+	.4byte Move_DOUBLE_EDGE
+	.4byte Move_WATERFALL
+	.4byte Move_VACUUM_WAVE
+	.4byte Move_BLIZZARD
+	.4byte Move_ICICLE_SPEAR
+	.4byte Move_HAZE
+	.4byte Move_BRAVE_BIRD
+	.4byte Move_G_MAX_CHI_STRIKE
+	.4byte Move_HEADBUTT
+	.4byte Move_LICK
+@@@@ Stage 3
+	.4byte Move_WICKED_BLOW
+	.4byte Move_CLANGOROUS_SOUL
+	.4byte Move_TOXIC
+	.4byte Move_ROLLOUT
+	.4byte Move_DISCHARGE
+	.4byte Move_MAGNET_BOMB
+	.4byte Move_FLASH
+	.4byte Move_MEAN_LOOK
+	.4byte Move_MUDDY_WATER
+	.4byte Move_TRI_ATTACK
+	.4byte Move_FOCUS_PUNCH
+	.4byte Move_MYSTICAL_FIRE
+	.4byte Move_SIGNAL_BEAM
+	.4byte Move_SPARK
+	.4byte Move_MACH_PUNCH
+	.4byte Move_MIST
+	.4byte Move_G_MAX_RESONANCE
+	.4byte Move_HAIL
+	.4byte Move_SKY_ATTACK
+	.4byte Move_POUND
+	.4byte Move_TICKLE
+	.4byte Move_POUND
+	.4byte Move_TAUNT
+	.4byte Move_DETECT
+	.4byte Move_SLASH
+	.4byte Move_HYPER_VOICE
 
 
 @@@@ Z MOVES

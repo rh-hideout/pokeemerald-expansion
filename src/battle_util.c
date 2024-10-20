@@ -4895,11 +4895,11 @@ case ABILITY_HOSPITALITY:
                     effect++;
                 }
                 break;
-            case ABILITY_HEALER:
+            case ABILITY_HEALER:    //buffed to 50%
                 gBattleScripting.battler = BATTLE_PARTNER(battler);
                 if (IsBattlerAlive(gBattleScripting.battler)
                     && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
-                    && (Random() % 100) < 30)
+                    && (Random() % 100) < 50)
                 {
                     BattleScriptPushCursorAndCallback(BattleScript_HealerActivates);
                     effect++;
@@ -6130,6 +6130,36 @@ case ABILITY_HOSPITALITY:
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptPushCursorAndCallback(BattleScript_QuarkDriveActivates);
+                effect++;
+            }
+            break;
+        case ABILITY_TERRAFORM:
+            if (!gDisableStructs[battler].terrainAbilityDone && IsBattlerTerrainAffected(battler, STATUS_FIELD_GRASSY_TERRAIN))
+            {
+                gDisableStructs[battler].terrainAbilityDone = TRUE;
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                gBattlerAbility = gBattleScripting.battler = battler;
+                BattleScriptPushCursorAndCallback(BattleScript_TerraformActivates);
+                effect++;
+            }
+            break;
+        case ABILITY_PRODIGAL:
+            if (!gDisableStructs[battler].terrainAbilityDone && IsBattlerTerrainAffected(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
+            {
+                gDisableStructs[battler].terrainAbilityDone = TRUE;
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                gBattlerAbility = gBattleScripting.battler = battler;
+                BattleScriptPushCursorAndCallback(BattleScript_ProdigalActivates);
+                effect++;
+            }
+            break;
+        case ABILITY_MYTHIC_BLOOD:
+            if (!gDisableStructs[battler].terrainAbilityDone && IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
+            {
+                gDisableStructs[battler].terrainAbilityDone = TRUE;
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                gBattlerAbility = gBattleScripting.battler = battler;
+                BattleScriptPushCursorAndCallback(BattleScript_MythicBloodActivates);
                 effect++;
             }
             break;
@@ -9415,7 +9445,7 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
     {
     case HOLD_EFFECT_THICK_CLUB:
         if ((atkBaseSpeciesId == SPECIES_CUBONE || atkBaseSpeciesId == SPECIES_MAROWAK) && IS_MOVE_PHYSICAL(move))
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case HOLD_EFFECT_DEEP_SEA_TOOTH:
         if (gBattleMons[battlerAtk].species == SPECIES_CLAMPERL && IS_MOVE_SPECIAL(move))
@@ -10106,9 +10136,11 @@ u32 abilityAtk = GetBattlerAbility(battlerAtk);
         mod = UQ_4_12(1.0);
     if (moveType == TYPE_FIRE && gDisableStructs[battlerDef].tarShot)
         mod = UQ_4_12(2.0);
-    if (gMovesInfo[move].effect == EFFECT_STEEL_ROT && defType == TYPE_STEEL)
+    if (gMovesInfo[move].effect == EFFECT_SUPER_EFFECTIVE_STEEL && defType == TYPE_STEEL)
         mod = UQ_4_12(2.0);
-    if (gMovesInfo[move].effect == EFFECT_CONDUIT_BOMB && defType == TYPE_STEEL)
+    if (gMovesInfo[move].effect == EFFECT_SUPER_EFFECTIVE_FAIRY && defType == TYPE_FAIRY)
+        mod = UQ_4_12(2.0);
+    if (gMovesInfo[move].effect == EFFECT_SUPER_EFFECTIVE_ELECTRIC && defType == TYPE_ELECTRIC)
         mod = UQ_4_12(2.0);
 
     // B_WEATHER_STRONG_WINDS weakens Super Effective moves against Flying-type Pokémon
