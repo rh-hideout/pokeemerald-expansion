@@ -748,7 +748,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 #define BATTLE_TEST_ARGS_SINGLE(_name, _type, ...) \
     struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *); \
-    __attribute__((section(".tests"))) static const struct Test CAT(sTest, __LINE__) = \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
     { \
         .name = _name, \
         .filename = __FILE__, \
@@ -766,7 +766,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 #define BATTLE_TEST_ARGS_DOUBLE(_name, _type, ...) \
     struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
-    __attribute__((section(".tests"))) static const struct Test CAT(sTest, __LINE__) = \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
     { \
         .name = _name, \
         .filename = __FILE__, \
