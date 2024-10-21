@@ -2477,6 +2477,7 @@ enum {
     CRY_IGNIFATU,
     CRY_EMEFFYUME,
     CRY_PHANTORNEY,
+    CRY_KOKAIJU,
 
     CRY_COUNT,
 };

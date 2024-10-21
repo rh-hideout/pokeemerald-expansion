@@ -2523,6 +2523,8 @@ gCryTable::
 	cry Cry_Emeffyume
 
 	cry Cry_Phantorney
+
+	cry Cry_Kokaiju
 .endif
 
 	.align 2
@@ -5048,4 +5050,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Emeffyume
 
 	cry_reverse Cry_Phantorney
+
+	cry_reverse Cry_Kokaiju
 .endif

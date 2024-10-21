@@ -6253,6 +6253,10 @@ Cry_Parmiausan::
 	.incbin "sound/direct_sound_samples/cries/parmiausan.bin"
 
 	.align 2
+Cry_Kokaiju::
+	.incbin "sound/direct_sound_samples/cries/kokaiju.bin"
+
+	.align 2
 Cry_Fucker::
 	.incbin "sound/direct_sound_samples/cries/fucker.bin"
 

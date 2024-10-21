@@ -22148,6 +22148,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Mammount[] = INCBIN_U8("graphics/pokemon/mammount/icon.4bpp");
    const u8 gMonFootprint_Mammount[] = INCBIN_U8("graphics/pokemon/mammount/footprint.1bpp");
 
+   const u32 gMonFrontPic_Kokaiju[] = INCBIN_U32("graphics/pokemon/kokaiju/front.4bpp.lz");
+   const u32 gMonBackPic_Kokaiju[] = INCBIN_U32("graphics/pokemon/kokaiju/back.4bpp.lz");
+   const u32 gMonPalette_Kokaiju[] = INCBIN_U32("graphics/pokemon/kokaiju/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Kokaiju[] = INCBIN_U32("graphics/pokemon/kokaiju/shiny.gbapal.lz");
+   const u8 gMonIcon_Kokaiju[] = INCBIN_U8("graphics/pokemon/kokaiju/icon.4bpp");
+   const u8 gMonFootprint_Kokaiju[] = INCBIN_U8("graphics/pokemon/kokaiju/footprint.1bpp");
+
    const u32 gMonFrontPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/front.4bpp.lz");
    const u32 gMonBackPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/back.4bpp.lz");
    const u32 gMonPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/normal.gbapal.lz");

@@ -1473,6 +1473,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Parmiausan)
        .levelUpLearnset = sParmiausanLevelUpLearnset,
     },
+        [SPECIES_KOKAIJU] =
+    { 
+       .baseHP        = 104,
+       .baseAttack    = 130,
+       .baseDefense   = 99,
+       .baseSpeed     = 70,
+       .baseSpAttack  = 80,
+       .baseSpDefense = 67,
+       .types = { TYPE_DARK, TYPE_FLYING },
+       .catchRate = 30,
+       .expYield = 145,
+       .evYield_HP  = 2,
+       .genderRatio = PERCENT_FEMALE(25),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FLYING, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_INFILTRATOR, ABILITY_DEFIANT, ABILITY_DRAGONS_MAW}, 
+       .bodyColor = BODY_COLOR_BLACK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Kokaiju"),
+       .cryId = CRY_KOKAIJU,
+       .natDexNum = NATIONAL_DEX_KOKAIJU,
+       .categoryName = _("Bladed Kaiju"),
+       .height = 67,
+       .weight = 2004,
+       .description = COMPOUND_STRING(
+           "A highly dangerous Pokémon, despite it's \n"
+           "brutal nature it prefers cutting down \n"
+           "opponents that are on equal footing \n"
+           "to it."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Kokaiju,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Kokaiju,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Kokaiju,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Kokaiju,
+       .shinyPalette = gMonShinyPalette_Kokaiju,
+       .iconSprite = gMonIcon_Kokaiju,
+       .iconPalIndex = 2,
+       FOOTPRINT(Kokaiju)
+       .levelUpLearnset = sKokaijuLevelUpLearnset,
+    },
 
         [SPECIES_FUCKER] =
     { 
