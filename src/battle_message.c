@@ -169,9 +169,9 @@ static const u8 sText_PkmnClamped[] = _("{B_ATK_NAME_WITH_PREFIX} clamped down o
 static const u8 sText_PkmnHurtBy[] = _("{B_ATK_NAME_WITH_PREFIX} is hurt by {B_BUFF1}!");
 static const u8 sText_PkmnFreedFrom[] = _("{B_ATK_NAME_WITH_PREFIX} was freed from {B_BUFF1}!");
 static const u8 sText_PkmnCrashed[] = _("{B_ATK_NAME_WITH_PREFIX} kept going and crashed!");
-const u8 gText_PkmnShroudedInMist[] = _("{B_ATK_TEAM1} team became\nshrouded in mist!");
+const u8 gText_PkmnShroudedInMist[] = _("{B_ATK_TEAM1} team became shrouded in mist!");
 static const u8 sText_PkmnProtectedByMist[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} is protected by the mist!");
-const u8 gText_PkmnGettingPumped[] = _("{B_DEF_NAME_WITH_PREFIX} is getting\npumped!");
+const u8 gText_PkmnGettingPumped[] = _("{B_DEF_NAME_WITH_PREFIX} is getting pumped!");
 static const u8 sText_PkmnHitWithRecoil[] = _("{B_ATK_NAME_WITH_PREFIX} was damaged by the recoil!");
 static const u8 sText_PkmnProtectedItself2[] = _("{B_ATK_NAME_WITH_PREFIX} protected itself!");
 static const u8 sText_PkmnBuffetedBySandstorm[] = _("{B_ATK_NAME_WITH_PREFIX} is buffeted by the sandstorm!");
@@ -312,7 +312,7 @@ static const u8 sText_PkmnsXCuredYProblem[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}
 static const u8 sText_ItSuckedLiquidOoze[] = _("{B_ATK_NAME_WITH_PREFIX} sucked up the liquid ooze!");
 static const u8 sText_PkmnTransformed[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} transformed!");
 static const u8 sText_PkmnsXTookAttack[] = _("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} took the attack!"); //In gen 5+ but without naming the ability
-const u8 gText_PkmnsXPreventsSwitching[] = _("{B_BUFF1} is preventing switching out\nwith its {B_LAST_ABILITY} Ability!\p");
+const u8 gText_PkmnsXPreventsSwitching[] = _("{B_BUFF1} is preventing switching out with its {B_LAST_ABILITY} Ability!\p");
 static const u8 sText_PreventedFromWorking[] = _("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevented {B_SCR_ACTIVE_NAME_WITH_PREFIX2}'s {B_BUFF1} from working!"); //unused
 static const u8 sText_PkmnsXMadeItIneffective[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY} made it ineffective!"); //not in gen 5+, ability popup
 static const u8 sText_PkmnsXPreventsFlinching[] = _("{B_EFF_NAME_WITH_PREFIX}'s {B_EFF_ABILITY} prevents flinching!"); //not in gen 5+, ability popup
@@ -325,7 +325,7 @@ const u8 gText_StatRose[] = _("rose!");
 static const u8 sText_StatHarshly[] = _("harshly ");
 const u8 sText_StatFell[] = _("fell!");
 static const u8 sText_AttackersStatRose[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}");
-const u8 gText_DefendersStatRose[] = _("{B_DEF_NAME_WITH_PREFIX}'s\n{B_BUFF1} {B_BUFF2}");
+const u8 gText_DefendersStatRose[] = _("{B_DEF_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}");
 static const u8 sText_UsingItemTheStatOfPkmnRose[] = _("Using {B_LAST_ITEM}, the {B_BUFF1} of {B_SCR_ACTIVE_NAME_WITH_PREFIX2} {B_BUFF2}"); //todo: update this, will require code changes
 static const u8 sText_AttackersStatFell[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}");
 static const u8 sText_DefendersStatFell[] = _("{B_DEF_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}");
@@ -581,31 +581,31 @@ static const u8 sText_PkmnSurroundedWithVeilOfWater[] = _("{B_ATK_NAME_WITH_PREF
 static const u8 sText_PkmnLevitatedOnElectromagnetism[] = _("{B_ATK_NAME_WITH_PREFIX} levitated with electromagnetism!");
 static const u8 sText_PkmnTwistedDimensions[] = _("{B_ATK_NAME_WITH_PREFIX} twisted the dimensions!");
 static const u8 sText_DimensionsWereTwisted[] = _("The dimensions were twisted!");
-static const u8 sText_PointedStonesFloat[] =_("Pointed stones float in the air\naround {B_DEF_TEAM2} team!");
-static const u8 sText_CloakedInMysticalMoonlight[] =_("{B_ATK_NAME_WITH_PREFIX} became\ncloaked in mystical moonlight!");
-static const u8 sText_TrappedBySwirlingMagma[] =_("{B_DEF_NAME_WITH_PREFIX} became\ntrapped by swirling magma!");
-static const u8 sText_VanishedInstantly[] =_("{B_ATK_NAME_WITH_PREFIX} vanished\ninstantly!");
-static const u8 sText_ProtectedTeam[] =_("{B_CURRENT_MOVE} protected\n{B_ATK_TEAM2} team!");
-static const u8 sText_SharedItsGuard[] =_("{B_ATK_NAME_WITH_PREFIX} shared its\nguard with the target!");
-static const u8 sText_SharedItsPower[] =_("{B_ATK_NAME_WITH_PREFIX} shared its\npower with the target!");
-static const u8 sText_SwapsDefAndSpDefOfAllPkmn[] =_("It created a bizarre area in which\nDefense and Sp. Def stats are swapped!");
-static const u8 sText_BizzareAreaCreated[] =_("A bizarre area was created in which\nDefense and Sp. Def stats are swapped!");
+static const u8 sText_PointedStonesFloat[] =_("Pointed stones float in the air around {B_DEF_TEAM2} team!");
+static const u8 sText_CloakedInMysticalMoonlight[] =_("{B_ATK_NAME_WITH_PREFIX} became cloaked in mystical moonlight!");
+static const u8 sText_TrappedBySwirlingMagma[] =_("{B_DEF_NAME_WITH_PREFIX} became trapped by swirling magma!");
+static const u8 sText_VanishedInstantly[] =_("{B_ATK_NAME_WITH_PREFIX} vanished instantly!");
+static const u8 sText_ProtectedTeam[] =_("{B_CURRENT_MOVE} protected {B_ATK_TEAM2} team!");
+static const u8 sText_SharedItsGuard[] =_("{B_ATK_NAME_WITH_PREFIX} shared its guard with the target!");
+static const u8 sText_SharedItsPower[] =_("{B_ATK_NAME_WITH_PREFIX} shared its power with the target!");
+static const u8 sText_SwapsDefAndSpDefOfAllPkmn[] =_("It created a bizarre area in which Defense and Sp. Def stats are swapped!");
+static const u8 sText_BizzareAreaCreated[] =_("A bizarre area was created in which Defense and Sp. Def stats are swapped!");
 static const u8 sText_BecameNimble[] =_("{B_ATK_NAME_WITH_PREFIX} became nimble!");
-static const u8 sText_HurledIntoTheAir[] =_("{B_DEF_NAME_WITH_PREFIX} was hurled\ninto the air!");
-static const u8 sText_HeldItemsLoseEffects[] =_("It created a bizarre area in which\nPokémon's held items lose their effects!");
-static const u8 sText_BizarreArenaCreated[] =_("A bizarre area was created in which\nPokémon's held items lose their effects!");
-static const u8 sText_FellStraightDown[] =_("{B_DEF_NAME_WITH_PREFIX} fell\nstraight down!");
-static const u8 sText_TargetChangedType[] =_("{B_DEF_NAME_WITH_PREFIX} transformed\ninto the {B_BUFF1} type!");
-static const u8 sText_PkmnAcquiredSimple[] =_("{B_DEF_NAME_WITH_PREFIX} acquired\nSimple!"); //shouldn't directly use the name
-static const u8 sText_KindOffer[] =_("{B_DEF_NAME_WITH_PREFIX}\ntook the kind offer!");
-static const u8 sText_ResetsTargetsStatLevels[] =_("{B_DEF_NAME_WITH_PREFIX}'s stat changes\nwere removed!");
-static const u8 sText_AllySwitchPosition[] =_("{B_ATK_NAME_WITH_PREFIX} and\n{B_SCR_ACTIVE_NAME_WITH_PREFIX2} switched places!");
+static const u8 sText_HurledIntoTheAir[] =_("{B_DEF_NAME_WITH_PREFIX} was hurled into the air!");
+static const u8 sText_HeldItemsLoseEffects[] =_("It created a bizarre area in which Pokémon's held items lose their effects!");
+static const u8 sText_BizarreArenaCreated[] =_("A bizarre area was created in which Pokémon's held items lose their effects!");
+static const u8 sText_FellStraightDown[] =_("{B_DEF_NAME_WITH_PREFIX} fell straight down!");
+static const u8 sText_TargetChangedType[] =_("{B_DEF_NAME_WITH_PREFIX} transformed into the {B_BUFF1} type!");
+static const u8 sText_PkmnAcquiredSimple[] =_("{B_DEF_NAME_WITH_PREFIX} acquired Simple!"); //shouldn't directly use the name
+static const u8 sText_KindOffer[] =_("{B_DEF_NAME_WITH_PREFIX} took the kind offer!");
+static const u8 sText_ResetsTargetsStatLevels[] =_("{B_DEF_NAME_WITH_PREFIX}'s stat changes were removed!");
+static const u8 sText_AllySwitchPosition[] =_("{B_ATK_NAME_WITH_PREFIX} and {B_SCR_ACTIVE_NAME_WITH_PREFIX2} switched places!");
 static const u8 sText_RestoreTargetsHealth[] =_("{B_DEF_NAME_WITH_PREFIX}'s HP was restored!");
-static const u8 sText_TookPkmnIntoTheSky[] =_("{B_ATK_NAME_WITH_PREFIX} took\n{B_DEF_NAME_WITH_PREFIX2} into the sky!");
-static const u8 sText_FreedFromSkyDrop[] =_("{B_DEF_NAME_WITH_PREFIX} was freed\nfrom the Sky Drop!");
-static const u8 sText_PostponeTargetMove[] =_("{B_DEF_NAME_WITH_PREFIX}'s move\nwas postponed!");
-static const u8 sText_ReflectTargetsType[] =_("{B_ATK_NAME_WITH_PREFIX} became the\nsame type as {B_DEF_NAME_WITH_PREFIX2}!");
-static const u8 sText_TransferHeldItem[] =_("{B_DEF_NAME_WITH_PREFIX} received {B_LAST_ITEM}\nfrom {B_ATK_NAME_WITH_PREFIX2}");
+static const u8 sText_TookPkmnIntoTheSky[] =_("{B_ATK_NAME_WITH_PREFIX} took {B_DEF_NAME_WITH_PREFIX2} into the sky!");
+static const u8 sText_FreedFromSkyDrop[] =_("{B_DEF_NAME_WITH_PREFIX} was freed from the Sky Drop!");
+static const u8 sText_PostponeTargetMove[] =_("{B_DEF_NAME_WITH_PREFIX}'s move was postponed!");
+static const u8 sText_ReflectTargetsType[] =_("{B_ATK_NAME_WITH_PREFIX} became the same type as {B_DEF_NAME_WITH_PREFIX2}!");
+static const u8 sText_TransferHeldItem[] =_("{B_DEF_NAME_WITH_PREFIX} received {B_LAST_ITEM} from {B_ATK_NAME_WITH_PREFIX2}");
 static const u8 sText_EmbargoEnds[] = _("{B_ATK_NAME_WITH_PREFIX} can use items again!");
 static const u8 sText_Electromagnetism[] = _("electromagnetism");
 static const u8 sText_BufferEnds[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} wore off!");
@@ -761,7 +761,7 @@ static const u8 sText_StickyBarbTransfer[] = _("The {B_LAST_ITEM} attached itsel
 static const u8 sText_PkmnBurnHealed[] = _("{B_DEF_NAME_WITH_PREFIX}'s burn was cured!");
 static const u8 sText_RedCardActivate[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} held up its Red Card against {B_ATK_NAME_WITH_PREFIX2}!");
 static const u8 sText_EjectButtonActivate[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} is switched out with the {B_LAST_ITEM}!");
-static const u8 sText_AttackerGotOverInfatuation[] =_("{B_ATK_NAME_WITH_PREFIX} got over\nits infatuation!");
+static const u8 sText_AttackerGotOverInfatuation[] =_("{B_ATK_NAME_WITH_PREFIX} got over its infatuation!");
 static const u8 sText_TormentedNoMore[] = _("{B_ATK_NAME_WITH_PREFIX} is no longer tormented!");
 static const u8 sText_HealBlockedNoMore[] = _("{B_ATK_NAME_WITH_PREFIX} is cured of its heal block!");
 static const u8 sText_AttackerBecameFullyCharged[] = _("{B_ATK_NAME_WITH_PREFIX} became fully charged due to its bond with its trainer!\p");
@@ -3163,7 +3163,8 @@ static void GetBattlerNick(u32 battler, u8 *dst)
         }                                                               \
     }                                                                   \
     GetBattlerNick(battler, text);                                      \
-    toCpy = text;
+    toCpy = text;                                                       \
+    dstWidth = GetStringLineWidth(fontId, dst, letterSpacing, lineNum, dstSize, FALSE);
 
 #define HANDLE_NICKNAME_STRING_LOWERCASE(battler)                       \
     if (GetBattlerSide(battler) != B_SIDE_PLAYER)                       \
@@ -3180,7 +3181,8 @@ static void GetBattlerNick(u32 battler, u8 *dst)
         }                                                               \
     }                                                                   \
     GetBattlerNick(battler, text);                                      \
-    toCpy = text;
+    toCpy = text;                                                       \
+    dstWidth = GetStringLineWidth(fontId, dst, letterSpacing, lineNum, dstSize, FALSE);
 
 static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text, u8 multiplayerId, u8 battler)
 {
