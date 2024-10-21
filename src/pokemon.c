@@ -3061,20 +3061,14 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             SET8(substruct3->metLocation);
             break;
         case MON_DATA_MET_LEVEL:
-        {
-            u8 metLevel = *data;
-            substruct3->metLevel = metLevel;
+            SET8(substruct3->metLevel);
             break;
-        }
         case MON_DATA_MET_GAME:
             SET8(substruct3->metGame);
             break;
         case MON_DATA_POKEBALL:
-        {
-            u8 pokeball = *data;
-            substruct0->pokeball = pokeball;
+            SET8(substruct0->pokeball);
             break;
-        }
         case MON_DATA_OT_GENDER:
             SET8(substruct3->otGender);
             break;
@@ -3162,7 +3156,8 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             break;
         case MON_DATA_IVS:
         {
-            u32 ivs = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
+            u32 ivs;
+            SET32(ivs);
             substruct3->hpIV = ivs & MAX_IV_MASK;
             substruct3->attackIV = (ivs >> 5) & MAX_IV_MASK;
             substruct3->defenseIV = (ivs >> 10) & MAX_IV_MASK;
@@ -3199,12 +3194,8 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             SET8(substruct3->gigantamaxFactor);
             break;
         case MON_DATA_TERA_TYPE:
-        {
-            u32 teraType;
-            SET8(teraType);
-            substruct0->teraType = teraType;
+            SET8(substruct0->teraType);
             break;
-        }
         case MON_DATA_EVOLUTION_TRACKER:
         {
             union EvolutionTracker evoTracker;
