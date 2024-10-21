@@ -33,6 +33,7 @@
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "randomizer.h"
 
 // In this file only the values normally associated with Battle Pike and Factory are swapped.
 // Note that this is *not* a bug, because they are properly swapped consistently in this file.
@@ -1766,18 +1767,39 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(UNDEFINED))
         {
+            u16 curSpecies;
+            #if RANDOMIZER_AVAILABLE == TRUE
+                u8 mapGroup, mapNum;
+                mapGroup = gWildMonHeaders[i].mapGroup;
+                mapNum = gWildMonHeaders[i].mapNum;
+            #endif
+
             numSpecies = 0;
             if (gWildMonHeaders[i].landMonsInfo)
             {
                 slot = GetLandEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].landMonsInfo->wildPokemon[slot].species;
+                curSpecies = gWildMonHeaders[i].landMonsInfo->wildPokemon[slot].species;
+
+                #if RANDOMIZER_AVAILABLE == TRUE
+                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
+                    WILD_AREA_LAND, slot);
+                #endif
+
+                species[numSpecies] = curSpecies;
                 numSpecies++;
             }
 
             if (gWildMonHeaders[i].waterMonsInfo)
             {
                 slot = GetWaterEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].waterMonsInfo->wildPokemon[slot].species;
+                curSpecies = gWildMonHeaders[i].waterMonsInfo->wildPokemon[slot].species;
+
+                #if RANDOMIZER_AVAILABLE == TRUE
+                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
+                    WILD_AREA_WATER, slot);
+                #endif
+
+                species[numSpecies] = curSpecies;
                 numSpecies++;
             }
 
@@ -1794,16 +1816,26 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
 static void PopulateSpeciesFromTrainerParty(int matchCallId, u8 *destStr)
 {
-    u16 trainerId;
+    u16 trainerId, species;
     const struct TrainerMon *party;
-    u8 monId;
+    u32 partySize;
     const u8 *speciesName;
 
     trainerId = GetLastBeatenRematchTrainerId(sMatchCallTrainers[matchCallId].trainerId);
     party = GetTrainerPartyFromId(trainerId);
-    monId = Random() % GetTrainerPartySizeFromId(trainerId);
-    if (party != NULL)
-        speciesName = GetSpeciesName(party[monId].species);
+    partySize = GetTrainerPartySizeFromId(trainerId);
+    if (party != NULL && partySize > 0)
+    {
+        u32 monId;
+        monId = Random() % partySize;
+        species = party[monId].species;
+
+        #if RANDOMIZER_AVAILABLE == TRUE
+            species = RandomizeTrainerMon(trainerId, monId, partySize, species);
+        #endif
+
+        speciesName = GetSpeciesName(species);
+    }
     else
         speciesName = GetSpeciesName(SPECIES_NONE);
 
