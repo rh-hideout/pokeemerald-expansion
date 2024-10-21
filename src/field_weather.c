@@ -246,11 +246,28 @@ void SetNextWeather(u8 weather)
     gWeatherPtr->finishStep = 0;
 }
 
+static void UpdateWeatherForms(void)
+{
+    s32 i;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &gPlayerParty[i];
+        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        u16 targetSpecies = GetOverworldWeatherSpecies(species);
+        if (species != targetSpecies)
+        {
+            SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
+            CalculateMonStats(mon);
+        }
+    }
+}
+
 void SetCurrentAndNextWeather(u8 weather)
 {
     PlayRainStoppingSoundEffect();
     gWeatherPtr->currWeather = weather;
     gWeatherPtr->nextWeather = weather;
+    UpdateWeatherForms();
 }
 
 void SetCurrentAndNextWeatherNoDelay(u8 weather)
@@ -260,6 +277,7 @@ void SetCurrentAndNextWeatherNoDelay(u8 weather)
     gWeatherPtr->nextWeather = weather;
     // Overrides the normal delay during screen fading.
     gWeatherPtr->readyForInit = TRUE;
+    UpdateWeatherForms();
 }
 
 static void Task_WeatherInit(u8 taskId)
@@ -287,6 +305,7 @@ static void Task_WeatherMain(u8 taskId)
             gWeatherPtr->palProcessingState = WEATHER_PAL_STATE_CHANGING_WEATHER;
             gWeatherPtr->currWeather = gWeatherPtr->nextWeather;
             gWeatherPtr->weatherChangeComplete = TRUE;
+            UpdateWeatherForms();
         }
     }
     else
