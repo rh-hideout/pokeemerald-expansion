@@ -780,6 +780,8 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target)
     if (!expectedAction->actionSet)
         return;
 
+    DATA.trial.lastActionTurn = gBattleResults.battleTurnCounter;
+
     if (!expectedAction->pass)
     {
         u32 i, expectedMoveId = 0, countExpected;
@@ -848,6 +850,8 @@ void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
 
     if (!expectedAction->actionSet)
         return;
+
+    DATA.trial.lastActionTurn = gBattleResults.battleTurnCounter;
 
     if (!expectedAction->pass)
     {
