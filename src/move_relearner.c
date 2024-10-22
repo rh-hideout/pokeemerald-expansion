@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "battle_util.h"
 #include "bg.h"
+#include "bw_summary_screen.h"
 #include "contest_effect.h"
 #include "data.h"
 #include "decompress.h"
@@ -661,7 +662,11 @@ static void DoMoveRelearnerMain(void)
     case MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN:
         if (!gPaletteFade.active)
         {
-            ShowSelectMovePokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, CB2_InitLearnMoveReturnFromSelectMove, GetCurrentSelectedMove());
+            if (BW_SUMMARY_SCREEN)
+                ShowSelectMovePokemonSummaryScreen_BW(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, CB2_InitLearnMoveReturnFromSelectMove, GetCurrentSelectedMove());
+            else
+                ShowSelectMovePokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, CB2_InitLearnMoveReturnFromSelectMove, GetCurrentSelectedMove());
+            
             FreeMoveRelearnerResources();
         }
         break;
