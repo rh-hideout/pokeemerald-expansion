@@ -6181,6 +6181,10 @@ Cry_Bullepede::
 	.incbin "sound/direct_sound_samples/cries/bullepede.bin"
 
 	.align 2
+Cry_Whipsicuffs::
+	.incbin "sound/direct_sound_samples/cries/whipsicuffs.bin"
+
+	.align 2
 Cry_Bandicute::
 	.incbin "sound/direct_sound_samples/cries/bandicute.bin"
 
@@ -6253,8 +6257,20 @@ Cry_Parmiausan::
 	.incbin "sound/direct_sound_samples/cries/parmiausan.bin"
 
 	.align 2
+Cry_Larvatrice::
+	.incbin "sound/direct_sound_samples/cries/larvatrice.bin"
+
+	.align 2
+Cry_Brashalisk::
+	.incbin "sound/direct_sound_samples/cries/brashalisk.bin"
+
+	.align 2
 Cry_Kokaiju::
 	.incbin "sound/direct_sound_samples/cries/kokaiju.bin"
+
+	.align 2
+Cry_Levititan::
+	.incbin "sound/direct_sound_samples/cries/levititan.bin"
 
 	.align 2
 Cry_Fucker::

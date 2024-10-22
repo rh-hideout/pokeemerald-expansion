@@ -2525,6 +2525,14 @@ gCryTable::
 	cry Cry_Phantorney
 
 	cry Cry_Kokaiju
+
+	cry Cry_Levititan
+
+	cry Cry_Brashalisk
+
+	cry Cry_Larvatrice
+
+	cry Cry_Whipsicuffs
 .endif
 
 	.align 2
@@ -5052,4 +5060,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Phantorney
 
 	cry_reverse Cry_Kokaiju
+
+	cry_reverse Cry_Levititan
+
+	cry_reverse Cry_Brashalisk
+
+	cry_reverse Cry_Larvatrice
+
+	cry_reverse Cry_Whipsicuffs
 .endif

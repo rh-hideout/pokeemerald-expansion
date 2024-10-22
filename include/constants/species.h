@@ -1628,9 +1628,9 @@
 #define SPECIES_URSHIFU_SINGLE_STRIKE_STYLE_GIGANTAMAX  1521
 #define SPECIES_URSHIFU_RAPID_STRIKE_STYLE_GIGANTAMAX   1522
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    1523
-#define SPECIES_MAPLAGE                                 1524
 
 //Capriccio
+#define SPECIES_MAPLAGE                                 1524
 #define SPECIES_ARACHNOTE                               1525
 #define SPECIES_FUCKER                                  1526
 #define SPECIES_HAZELNAUT                               1527
@@ -1686,8 +1686,12 @@
 #define SPECIES_EMEFFYUME                               1576
 #define SPECIES_PHANTORNEY                              1577
 #define SPECIES_KOKAIJU                                 1578
+#define SPECIES_LEVITITAN                               1579
+#define SPECIES_BRASHALISK                              1580
+#define SPECIES_LARVATRICE                              1581
+#define SPECIES_WHIPSICUFFS                             1582
 
-#define SPECIES_EGG (SPECIES_KOKAIJU + 1)
+#define SPECIES_EGG (SPECIES_WHIPSICUFFS + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
