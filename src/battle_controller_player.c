@@ -1755,10 +1755,33 @@ static void MoveSelectionDisplayMoveType(u32 battler)
 static void MoveSelectionDisplayMoveDescription(u32 battler)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct*)(&gBattleResources->bufferA[battler][4]);
-    u16 move = moveInfo->moves[gMoveSelectionCursor[battler]];
-    u16 pwr = gMovesInfo[move].power;
-    u16 acc = gMovesInfo[move].accuracy;
+    u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
+    u16 pwr = 0;
+    u16 acc = 0;
+    u32 battlerAtk = battler;
+    u32 battlerDef = BATTLE_OPPOSITE(battlerAtk);
+    u32 moveType = gMovesInfo[move].type;
+    u32 atkAbility = GetBattlerAbility(battlerAtk);
+    u32 holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
     u8 cat = gMovesInfo[move].category;
+    u32 moveEffect = gMovesInfo[move].effect;
+
+    if (B_DYNAMIC_MOVE_DESCRIPTIONS && move != MOVE_NONE && move != 0xFFFF && moveEffect != EFFECT_KNOCK_OFF && moveEffect != EFFECT_BRINE)
+    {
+        pwr = CalcMoveBasePowerAfterModifiers(move, battlerAtk, battlerDef, moveType, FALSE, atkAbility, 0, holdEffectAtk, gBattleWeather);
+        acc = GetTotalAccuracy(battlerAtk, battlerDef, move, atkAbility, 0, holdEffectAtk, HOLD_EFFECT_NONE);
+
+        if (acc > 100)
+            acc = 100;
+
+        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && moveEffect == EFFECT_EARTHQUAKE)
+            pwr /= 2;
+    }
+    else
+    {
+        pwr = gMovesInfo[move].power;
+        acc = gMovesInfo[move].accuracy;
+    }
 
     u8 pwr_num[3], acc_num[3];
     u8 cat_desc[7] = _("CAT: ");
