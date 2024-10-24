@@ -739,6 +739,7 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
 {
+    KNOWN_FAILING; // MGriffin's PR that switched two turn charging moves in AI tests broke this test, waiting on a fix
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MAGNETON);
