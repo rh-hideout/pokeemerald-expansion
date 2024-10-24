@@ -1,6 +1,7 @@
 #include "global.h"
 #include "item.h"
 #include "berry.h"
+#include "pokeball.h"
 #include "string_util.h"
 #include "text.h"
 #include "event_data.h"
@@ -166,11 +167,11 @@ bool8 HasAtLeastOneBerry(void)
 
 bool8 HasAtLeastOnePokeBall(void)
 {
-    u16 i;
+    u16 ballId;
 
-    for (i = FIRST_BALL; i <= LAST_BALL; i++)
+    for (ballId = BALL_POKE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasItem(i, 1) == TRUE)
+        if (CheckBagHasItem(ballId, 1) == TRUE)
             return TRUE;
     }
     return FALSE;
@@ -968,7 +969,7 @@ u8 ItemId_GetBattleUsage(u16 itemId)
         return gItemsInfo[item].battleUsage;
 }
 
-u8 ItemId_GetSecondaryId(u16 itemId)
+u32 ItemId_GetSecondaryId(u32 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].secondaryId;
 }

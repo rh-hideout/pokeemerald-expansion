@@ -88,7 +88,7 @@ Moves all information from `gItemIconTable` to `gItemsInfo`.
         .pocket = POCKET_POKE_BALLS,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
-        .secondaryId = ITEM_POKE_BALL - FIRST_BALL,
+        .secondaryId = BALL_POKE,
 +        .iconSprite = gItemIcon_PokeBall,
 +        .iconPalette = gItemIconPalette_PokeBall,
     },

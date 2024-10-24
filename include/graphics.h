@@ -7,6 +7,8 @@ extern const u32 gMessageBox_Gfx[];
 extern const u16 gMessageBox_Pal[];
 
 // pokeballs
+extern const u32 gBallGfx_Strange[];
+extern const u32 gBallPal_Strange[];
 extern const u32 gBallGfx_Poke[];
 extern const u32 gBallPal_Poke[];
 extern const u32 gBallGfx_Great[];
@@ -360,6 +362,8 @@ extern const u32 gRaySceneChasesAway_Light_Gfx[];
 extern const u32 gRaySceneChasesAway_Ring_Gfx[];
 
 // Poké Balls
+extern const u32 gItemIcon_StrangeBall[];
+extern const u32 gItemIconPalette_StrangeBall[];
 extern const u32 gItemIcon_PokeBall[];
 extern const u32 gItemIconPalette_PokeBall[];
 extern const u32 gItemIcon_GreatBall[];
