@@ -1954,7 +1954,7 @@ void *malloc_and_decompress(const void *src, u32 *size)
 
     ptr = Alloc(*size);
     if (ptr)
-        LZ77UnCompWram(src, ptr);
+        LZDecompressWram(src, ptr);
     return ptr;
 }
 
