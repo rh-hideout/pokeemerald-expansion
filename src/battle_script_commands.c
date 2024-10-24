@@ -1303,7 +1303,14 @@ static void Cmd_attackcanceler(void)
             return;
         case DISOBEYS_HITS_SELF:
             gBattlerTarget = gBattlerAttacker;
-            gBattleMoveDamage = CalculateMoveDamage(MOVE_NONE, gBattlerAttacker, gBattlerAttacker, TYPE_MYSTERY, 40, FALSE, FALSE, TRUE);
+            struct DamageCalculationData damageCalcData;
+            damageCalcData.battlerAtk = damageCalcData.battlerDef = gBattlerAttacker;
+            damageCalcData.move = MOVE_NONE;
+            damageCalcData.moveType = TYPE_MYSTERY;
+            damageCalcData.isCrit = FALSE;
+            damageCalcData.randomFactor = FALSE;
+            damageCalcData.updateFlags = TRUE;
+            gBattleMoveDamage = CalculateMoveDamage(&damageCalcData, 40);
             gBattlescriptCurrInstr = BattleScript_IgnoresAndHitsItself;
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
             gHitMarker |= HITMARKER_OBEYS;
@@ -2123,10 +2130,19 @@ static void Cmd_damagecalc(void)
 {
     CMD_ARGS();
 
-    u32 moveType = GetMoveType(gCurrentMove);
     if (gMovesInfo[gCurrentMove].effect == EFFECT_SHELL_SIDE_ARM)
         gBattleStruct->swapDamageCategory = (gBattleStruct->shellSideArmCategory[gBattlerAttacker][gBattlerTarget] != gMovesInfo[gCurrentMove].category);
-    gBattleMoveDamage = CalculateMoveDamage(gCurrentMove, gBattlerAttacker, gBattlerTarget, moveType, 0, gIsCriticalHit, TRUE, TRUE);
+
+    struct DamageCalculationData damageCalcData;
+    damageCalcData.battlerAtk = gBattlerAttacker;
+    damageCalcData.battlerDef = gBattlerTarget;
+    damageCalcData.move = gCurrentMove;
+    damageCalcData.moveType = GetMoveType(gCurrentMove);
+    damageCalcData.isCrit = gIsCriticalHit;
+    damageCalcData.randomFactor = TRUE;
+    damageCalcData.updateFlags = TRUE;
+
+    gBattleMoveDamage = CalculateMoveDamage(&damageCalcData, 0);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
