@@ -601,6 +601,12 @@ struct BattleGimmickData
     bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
 
+struct SleepClauseData
+{
+    bool8 effectExempt; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
+    u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
+};
+
 struct LostItem
 {
     u16 originalItem:15;
@@ -747,6 +753,7 @@ struct BattleStruct
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
+    struct SleepClauseData sleepClause;
     const u8 *trainerSlideMsg;
     bool8 trainerSlideLowHpMsgDone;
     enum BattleIntroStates introState:8;

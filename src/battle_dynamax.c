@@ -762,7 +762,7 @@ void BS_SetMaxMoveEffect(void)
         {
             static const u8 sSnoozeEffects[] = {TRUE, FALSE};
             if (!(gStatuses3[gBattlerTarget] & STATUS3_YAWN)
-                && CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget))
+                && CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget), TRUE)
                 && RandomElement(RNG_G_MAX_SNOOZE, sSnoozeEffects)) // 50% chance of success
             {
                 gStatuses3[gBattlerTarget] |= STATUS3_YAWN_TURN(2);
@@ -884,12 +884,15 @@ void BS_TrySetStatus1(void)
             }
             break;
         case STATUS1_SLEEP:
-            if (CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
+            if (CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget), TRUE))
             {
                 if (B_SLEEP_TURNS >= GEN_5)
                     gBattleMons[gBattlerTarget].status1 |=  STATUS1_SLEEP_TURN((Random() % 3) + 2);
                 else
                     gBattleMons[gBattlerTarget].status1 |=  STATUS1_SLEEP_TURN((Random() % 4) + 3);
+                
+                // Try to activate Sleep Clause when a mon is put to Sleep
+                TryActivateSleepClause(GetBattlerSide(gBattlerTarget), gBattlerPartyIndexes[gBattlerTarget]);    
                 gBattleCommunication[MULTISTRING_CHOOSER] = 4;
                 effect++;
             }

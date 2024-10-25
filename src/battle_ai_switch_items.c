@@ -563,7 +563,7 @@ static bool32 ShouldSwitchIfGameStatePrompt(u32 battler, bool32 emitResult)
     {
         //Yawn
         if (gStatuses3[battler] & STATUS3_YAWN
-            && CanBeSlept(battler, monAbility)
+            && CanBeSlept(battler, monAbility, TRUE)
             && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3)
         {
             switchMon = TRUE;

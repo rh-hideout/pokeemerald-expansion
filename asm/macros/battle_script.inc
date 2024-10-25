@@ -1669,6 +1669,12 @@
 	callnative BS_DamageToQuarterTargetHP
 	.endm
 
+	.macro jumpifsleepclause battler:req, jumpInstr:req
+	callnative BS_JumpIfSleepClause
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
 	.macro ficklebeamdamagecalculation
 	callnative BS_FickleBeamDamageCalculation
 	.endm

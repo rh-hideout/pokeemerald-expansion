@@ -278,7 +278,7 @@ bool32 MoveHasChargeTurnAdditionalEffect(u32 move);
 bool32 CanTargetPartner(u32 battlerAtk, u32 battlerDef);
 bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
 
-bool32 CanBeSlept(u32 battler, u32 ability);
+bool32 CanBeSlept(u32 battler, u32 ability, u32 isBlockedBySleepClause);
 bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 bool32 CanBeBurned(u32 battler, u32 ability);
 bool32 CanBeParalyzed(u32 battler, u32 ability);
@@ -300,5 +300,8 @@ bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon);
 bool8 IsMonBannedFromSkyBattles(u16 species);
 void RemoveBattlerType(u32 battler, u8 type);
 u32 GetMoveType(u32 move);
+void TryActivateSleepClause(u32 battlerSide, u32 indexInParty);
+void TryDeactivateSleepClause(u32 battlerSide, u32 indexInParty);
+bool8 IsSleepClauseActiveForSide(u32 battlerSide);
 
 #endif // GUARD_BATTLE_UTIL_H
