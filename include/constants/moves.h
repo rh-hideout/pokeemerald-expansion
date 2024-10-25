@@ -973,8 +973,9 @@
 #define MOVE_SOUL_CRUSHER 909
 #define MOVE_TRICK_STAB 910
 #define MOVE_MOP 911
+#define MOVE_BLACK_BOMB 912 // RTODO: AI scoring for this move.
 
-#define MOVES_COUNT_GEN9 912
+#define MOVES_COUNT_GEN9 913
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

@@ -2378,6 +2378,7 @@ enum
     ENDTURN_DYNAMAX,
     ENDTURN_GMAX_MOVE_RESIDUAL_DAMAGE,
     ENDTURN_SEA_OF_FIRE_DAMAGE,
+    ENDTURN_BURIED,
     ENDTURN_BATTLER_COUNT
 };
 
@@ -2920,6 +2921,19 @@ u8 DoBattlerEndTurnEffects(void)
                 }
             }
             gBattleStruct->turnEffectsTracker++;
+            break;
+        case ENDTURN_BURIED:
+            if (gStatuses4[battler] & STATUS4_BURIED)
+            {
+                if (gDisableStructs[battler].buriedTimer == 0 || --gDisableStructs[battler].buriedTimer == 0)
+                {
+                    gStatuses4[battler] &= ~STATUS4_BURIED;
+                    BattleScriptExecute(BattleScript_BufferEndTurn);
+                    PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_BURIED);
+                    effect++;
+                }
+            }
+            gBattleStruct->turnEffectsTracker++;    
             break;
         case ENDTURN_TELEKINESIS:
             if (gStatuses3[battler] & STATUS3_TELEKINESIS)
@@ -6678,6 +6692,8 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
         return FALSE;
     else if (gStatuses3[battler] & STATUS3_SKY_DROPPED)
         return FALSE;
+    else if (gStatuses4[battler] & STATUS4_BURIED)
+        return FALSE;
     else
         return TRUE;
 }
@@ -8961,6 +8977,8 @@ static bool32 IsBattlerGrounded2(u32 battler, bool32 considerInverse)
     if (B_ROOTED_GROUNDING >= GEN_4 && gStatuses3[battler] & STATUS3_ROOTED)
         return TRUE;
     if (gStatuses3[battler] & STATUS3_SMACKED_DOWN)
+        return TRUE;
+    if (gStatuses4[battler] & STATUS4_BURIED)
         return TRUE;
     if (gStatuses3[battler] & STATUS3_TELEKINESIS)
         return FALSE;

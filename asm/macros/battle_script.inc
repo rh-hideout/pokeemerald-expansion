@@ -2528,6 +2528,11 @@
 	.4byte \jumpInstr
 	.endm
 
+	.macro tryburyself battler:req, failInstr:req
+	various \battler, VARIOUS_TRY_BURY_SELF
+	.4byte \failInstr
+	.endm
+
 	@ Will jump to script pointer if the specified battler has or has not fainted.
 	.macro jumpiffainted battler:req, value:req, ptr:req
 	getbattlerfainted \battler

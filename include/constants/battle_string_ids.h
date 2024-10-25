@@ -732,8 +732,10 @@
 #define STRINGID_PKMNRAISEDATKPOWER                   730
 #define STRINGID_SOULCRUSHED                          731
 #define STRINGID_TRICKSTABILLUSIONWOREOFF             732
+#define STRINGID_ATTACKERWASBURIED                    733
+#define STRINGID_BURIED                               734
 
-#define BATTLESTRINGS_COUNT                           733
+#define BATTLESTRINGS_COUNT                           735
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

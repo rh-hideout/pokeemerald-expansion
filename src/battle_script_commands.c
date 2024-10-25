@@ -9200,6 +9200,22 @@ static void Cmd_various(void)
         }
         return;
     }
+    case VARIOUS_TRY_BURY_SELF:
+    {
+        VARIOUS_ARGS(const u8 *failInstr);
+
+        if (gStatuses4[battler] & STATUS4_BURIED)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else
+        {
+            gStatuses4[battler] |= STATUS4_BURIED;
+            gDisableStructs[battler].buriedTimer = 2;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        return;
+    }
     case VARIOUS_GET_STAT_VALUE:
     {
         VARIOUS_ARGS(u8 stat);
