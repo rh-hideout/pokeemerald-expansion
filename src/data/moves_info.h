@@ -22217,6 +22217,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_HEAL_BELL},
         .battleAnimScript = Move_LUCKY_CHANT,
     },
+
+    [MOVE_BLACK_BOMB] =
+    {
+        .name = COMPOUND_STRING("Black Bomb"),
+        .description = COMPOUND_STRING(
+            "Grounds and traps the user\n"
+            "for a turn when used."),
+        .effect = EFFECT_BLACK_BOMB,
+        .power = 110,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_BARRAGE,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

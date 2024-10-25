@@ -594,6 +594,7 @@ static const u8 sText_ReflectTargetsType[] =_("{B_ATK_NAME_WITH_PREFIX}'s type\n
 static const u8 sText_TransferHeldItem[] =_("{B_DEF_NAME_WITH_PREFIX} received {B_LAST_ITEM}\nfrom {B_ATK_NAME_WITH_PREFIX}");
 static const u8 sText_EmbargoEnds[] = _("{B_ATK_NAME_WITH_PREFIX} can\nuse items again!");
 static const u8 sText_Electromagnetism[] = _("electromagnetism");
+static const u8 sText_Buried[] = _("buried state");
 static const u8 sText_BufferEnds[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1}\nwore off!");
 static const u8 sText_ThroatChopEnds[] = _("{B_ATK_NAME_WITH_PREFIX} can\nuse sound-based moves again!");
 static const u8 sText_TelekinesisEnds[] = _("{B_ATK_NAME_WITH_PREFIX} was freed\nfrom the telekinesis!");
@@ -870,6 +871,7 @@ static const u8 sText_AttackerLostGrassType[] = _("{B_ATK_NAME_WITH_PREFIX} upro
 static const u8 sText_PkmnRaisedAtkPower[] = _("{B_ATK_PREFIX2}'s {B_CURRENT_MOVE}\nraised attack power!");
 static const u8 sText_SoulCrushed[] = _("{B_ATK_NAME_WITH_PREFIX} crushes their soul,\nclaiming it for itself!");
 static const u8 sText_TrickStabIllusionWoreOff[] = _("{B_ATK_NAME_WITH_PREFIX}'s Illusion wore off!");
+static const u8 sText_AttackerWasBuried[] = _("{B_ATK_NAME_WITH_PREFIX} was buried!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1595,6 +1597,8 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNRAISEDATKPOWER - BATTLESTRINGS_TABLE_START] = sText_PkmnRaisedAtkPower,
     [STRINGID_SOULCRUSHED - BATTLESTRINGS_TABLE_START] = sText_SoulCrushed,
     [STRINGID_TRICKSTABILLUSIONWOREOFF - BATTLESTRINGS_TABLE_START] = sText_TrickStabIllusionWoreOff,
+    [STRINGID_ATTACKERWASBURIED - BATTLESTRINGS_TABLE_START] = sText_AttackerWasBuried,
+    [STRINGID_BURIED - BATTLESTRINGS_TABLE_START] = sText_Buried,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
