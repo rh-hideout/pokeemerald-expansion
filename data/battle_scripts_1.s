@@ -3673,6 +3673,15 @@ BattleScript_TrySoulCrusherBoost::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectBlackBomb::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
+	tryburyself BS_ATTACKER, BattleScript_MoveEnd
+	printstring STRINGID_ATTACKERWASBURIED
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectSuperFang::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE

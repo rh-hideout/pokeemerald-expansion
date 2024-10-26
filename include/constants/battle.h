@@ -194,6 +194,8 @@
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 #define STATUS4_GASTRO_ACID             (1 << 7)
+#define STATUS4_BURIED                  (1 << 8)
+
 
 #define HITMARKER_WAKE_UP_CLEAR         (1 << 4) // Cleared when waking up. Never set or checked.
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
