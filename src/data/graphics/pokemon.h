@@ -22064,6 +22064,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Bullepede[] = INCBIN_U8("graphics/pokemon/bullepede/icon.4bpp");
    const u8 gMonFootprint_Bullepede[] = INCBIN_U8("graphics/pokemon/bullepede/footprint.1bpp");
 
+   const u32 gMonFrontPic_Whimple[] = INCBIN_U32("graphics/pokemon/whimple/front.4bpp.lz");
+   const u32 gMonBackPic_Whimple[] = INCBIN_U32("graphics/pokemon/whimple/back.4bpp.lz");
+   const u32 gMonPalette_Whimple[] = INCBIN_U32("graphics/pokemon/whimple/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Whimple[] = INCBIN_U32("graphics/pokemon/whimple/shiny.gbapal.lz");
+   const u8 gMonIcon_Whimple[] = INCBIN_U8("graphics/pokemon/whimple/icon.4bpp");
+   const u8 gMonFootprint_Whimple[] = INCBIN_U8("graphics/pokemon/whimple/footprint.1bpp");
+
+   const u32 gMonFrontPic_Whipscuffle[] = INCBIN_U32("graphics/pokemon/whipscuffle/front.4bpp.lz");
+   const u32 gMonBackPic_Whipscuffle[] = INCBIN_U32("graphics/pokemon/whipscuffle/back.4bpp.lz");
+   const u32 gMonPalette_Whipscuffle[] = INCBIN_U32("graphics/pokemon/whipscuffle/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Whipscuffle[] = INCBIN_U32("graphics/pokemon/whipscuffle/shiny.gbapal.lz");
+   const u8 gMonIcon_Whipscuffle[] = INCBIN_U8("graphics/pokemon/whipscuffle/icon.4bpp");
+   const u8 gMonFootprint_Whipscuffle[] = INCBIN_U8("graphics/pokemon/whipscuffle/footprint.1bpp");
+
    const u32 gMonFrontPic_Whipsicuffs[] = INCBIN_U32("graphics/pokemon/whipsicuffs/front.4bpp.lz");
    const u32 gMonBackPic_Whipsicuffs[] = INCBIN_U32("graphics/pokemon/whipsicuffs/back.4bpp.lz");
    const u32 gMonPalette_Whipsicuffs[] = INCBIN_U32("graphics/pokemon/whipsicuffs/normal.gbapal.lz");
@@ -22220,6 +22234,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Fusjahl[] = INCBIN_U32("graphics/pokemon/fusjahl/shiny.gbapal.lz");
    const u8 gMonIcon_Fusjahl[] = INCBIN_U8("graphics/pokemon/fusjahl/icon.4bpp");
    const u8 gMonFootprint_Fusjahl[] = INCBIN_U8("graphics/pokemon/fusjahl/footprint.1bpp");
+
+   const u32 gMonFrontPic_Epilate[] = INCBIN_U32("graphics/pokemon/epilate/front.4bpp.lz");
+   const u32 gMonBackPic_Epilate[] = INCBIN_U32("graphics/pokemon/epilate/back.4bpp.lz");
+   const u32 gMonPalette_Epilate[] = INCBIN_U32("graphics/pokemon/epilate/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Epilate[] = INCBIN_U32("graphics/pokemon/epilate/shiny.gbapal.lz");
+   const u8 gMonIcon_Epilate[] = INCBIN_U8("graphics/pokemon/epilate/icon.4bpp");
+   const u8 gMonFootprint_Epilate[] = INCBIN_U8("graphics/pokemon/epilate/footprint.1bpp");
+
+   const u32 gMonFrontPic_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/front.4bpp.lz");
+   const u32 gMonBackPic_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/back.4bpp.lz");
+   const u32 gMonPalette_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/shiny.gbapal.lz");
+   const u8 gMonIcon_Qrakenmark[] = INCBIN_U8("graphics/pokemon/qrakenmark/icon.4bpp");
+   const u8 gMonFootprint_Qrakenmark[] = INCBIN_U8("graphics/pokemon/qrakenmark/footprint.1bpp");
 
    const u32 gMonFrontPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/front.4bpp.lz");
    const u32 gMonBackPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/back.4bpp.lz");

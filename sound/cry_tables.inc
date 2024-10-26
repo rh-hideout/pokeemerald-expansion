@@ -2533,6 +2533,14 @@ gCryTable::
 	cry Cry_Larvatrice
 
 	cry Cry_Whipsicuffs
+
+	cry Cry_Whimple
+
+	cry Cry_Whipscuffle
+
+	cry Cry_Epilate
+
+	cry Cry_Qrakenmark
 .endif
 
 	.align 2
@@ -5068,4 +5076,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Larvatrice
 
 	cry_reverse Cry_Whipsicuffs
+
+	cry_reverse Cry_Whimple
+
+	cry_reverse Cry_Whipscuffle
+
+	cry_reverse Cry_Epilate
+
+	cry_reverse Cry_Qrakenmark
 .endif

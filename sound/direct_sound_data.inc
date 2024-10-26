@@ -6181,6 +6181,14 @@ Cry_Bullepede::
 	.incbin "sound/direct_sound_samples/cries/bullepede.bin"
 
 	.align 2
+Cry_Whimple::
+	.incbin "sound/direct_sound_samples/cries/whimple.bin"
+
+	.align 2
+Cry_Whipscuffle::
+	.incbin "sound/direct_sound_samples/cries/whipscuffle.bin"
+
+	.align 2
 Cry_Whipsicuffs::
 	.incbin "sound/direct_sound_samples/cries/whipsicuffs.bin"
 
@@ -6339,6 +6347,14 @@ Cry_Jahl::
 	.align 2
 Cry_Fusjahl::
 	.incbin "sound/direct_sound_samples/cries/fusjahl.bin"
+
+	.align 2
+Cry_Epilate::
+	.incbin "sound/direct_sound_samples/cries/epilate.bin"
+
+	.align 2
+Cry_Qrakenmark::
+	.incbin "sound/direct_sound_samples/cries/qrakenmark.bin"
 
 	.align 2
 Cry_Noxilium::
