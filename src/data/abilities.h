@@ -2789,4 +2789,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Boosts Water-type moves."),
         .aiRating = 8,
     },
+
+    [ABILITY_STORM_SHELTER] =
+    {
+        .name = _("Storm Shelter"),
+        .description = COMPOUND_STRING("Changes Immunity with weather"),
+        .aiRating = 10,
+    },
 };
