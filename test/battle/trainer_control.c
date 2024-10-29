@@ -25,9 +25,9 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
     EXPECT(!IsMonShiny(&testParty[1]));
     EXPECT(!IsMonShiny(&testParty[3]));
 
-    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_POKEBALL), ITEM_MASTER_BALL);
-    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_POKEBALL), ITEM_POKE_BALL);
-    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_POKEBALL), ITEM_DUSK_BALL);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_POKEBALL), BALL_MASTER);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_POKEBALL), BALL_POKE);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_POKEBALL), BALL_DUSK);
 
     EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
     EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPECIES), SPECIES_WOBBUFFET);

@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered when there is nothing to switc
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+            MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Eject Button is not activated by a Sheer Force boosted move"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+            MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
@@ -61,12 +61,12 @@ SINGLE_BATTLE_TEST("Eject Button will not activate under Substitute")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        MESSAGE("Foe Raichu made a SUBSTITUTE!");
+        MESSAGE("The opposing Raichu put in a substitute!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
-        MESSAGE("The SUBSTITUTE took damage for Foe Raichu!");
+        MESSAGE("The substitute took damage for the opposing Raichu!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Raichu is switched out with the Eject Button!");
+            MESSAGE("The opposing Raichu is switched out with the Eject Button!");
         }
     }
 }
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Eject Button is not blocked by trapping abilities or moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         MESSAGE("2 sent out Wobbuffet!");
     }
 }
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after the mon loses Eject Butt
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+            MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picke
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("Foe Sneasel stole Regieleki's Eject Button!");
+        MESSAGE("The opposing Sneasel stole Regieleki's Eject Button!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
 }
@@ -144,10 +144,10 @@ SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
-        MESSAGE("Foe Chansey was dragged out!");
+        MESSAGE("The opposing Chansey was dragged out!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Chansey is switched out with the Eject Button!");
+            MESSAGE("The opposing Chansey is switched out with the Eject Button!");
         }
     }
 }
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
     }
 }
 
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Eject Button is activated before Emergency Exit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Foe Golisopod is switched out with the Eject Button!");
+        MESSAGE("The opposing Golisopod is switched out with the Eject Button!");
     }
 }
 
@@ -201,10 +201,10 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-        MESSAGE("Foe Wobbuffet kept going and crashed!");
+        MESSAGE("The opposing Wobbuffet kept going and crashed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Foe Wobbuffet is switched out with the Eject Button!");
+            MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         }
     }
 }

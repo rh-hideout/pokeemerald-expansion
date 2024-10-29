@@ -650,11 +650,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .categoryName = _("Ninja"),
         .height = 15,
         .weight = 400,
-        .description = COMPOUND_STRING(
-            "It appears and vanishes with a ninja's\n"
-            "grace. It toys with its enemies using swift\n"
-            "movements, while slicing them with throwing\n"
-            "stars made of compressed water."),
+        .description = gGreninjaPokedexText,
         .pokemonScale = 268,
         .pokemonOffset = 2,
         .trainerScale = 271,
@@ -1500,24 +1496,26 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .trainerScale = 271,
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_Pyroar,
-        .frontPicFemale = gMonFrontPic_PyroarF,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_Pyroar,
         .frontAnimId = ANIM_V_SHAKE,
         .backPic = gMonBackPic_Pyroar,
-        .backPicFemale = gMonBackPic_PyroarF,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 3,
         .backAnimId = BACK_ANIM_H_STRETCH,
         .palette = gMonPalette_Pyroar,
         .shinyPalette = gMonShinyPalette_Pyroar,
         .iconSprite = gMonIcon_Pyroar,
-        .iconSpriteFemale = gMonIcon_PyroarF,
         .iconPalIndex = 2,
+#if P_GENDER_DIFFERENCES
+        .frontPicFemale = gMonFrontPic_PyroarF,
+        .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
+        .backPicFemale = gMonBackPic_PyroarF,
+        .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+        .iconSpriteFemale = gMonIcon_PyroarF,
         .iconPalIndexFemale = 2,
+#endif //P_GENDER_DIFFERENCES
         SHADOW(-2, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Pyroar)
         OVERWORLD(
@@ -1527,6 +1525,12 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             TRACKS_FOOT,
             gOverworldPalette_Pyroar,
             gShinyOverworldPalette_Pyroar
+        )
+        OVERWORLD_FEMALE(
+            sPicTable_PyroarF,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT
         )
         .levelUpLearnset = sPyroarLevelUpLearnset,
         .teachableLearnset = sPyroarTeachableLearnset,
@@ -1572,19 +1576,19 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .backPicSize = MON_COORDS_SIZE(64, 40),                                 \
         .backPicYOffset = 12,                                                   \
         .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,                              \
-        .palette = gMonPalette_Flabebe##Form##Flower,                           \
-        .shinyPalette = gMonShinyPalette_Flabebe##Form##Flower,                 \
-        .iconSprite = gMonIcon_Flabebe##Form##Flower,                           \
+        .palette = gMonPalette_Flabebe##Form,                                   \
+        .shinyPalette = gMonShinyPalette_Flabebe##Form,                         \
+        .iconSprite = gMonIcon_Flabebe##Form,                                   \
         .iconPalIndex = iconPal,                                                \
-        SHADOW(0, 11, SHADOW_SIZE_S)                                        \
+        SHADOW(0, 11, SHADOW_SIZE_S)                                            \
         FOOTPRINT(Flabebe)                                                      \
         OVERWORLD(                                                              \
-            sPicTable_Flabebe##Form##Flower,                                    \
+            sPicTable_Flabebe##Form,                                            \
             SIZE_32x32,                                                         \
             SHADOW_SIZE_M,                                                      \
             TRACKS_FOOT,                                                        \
-            gOverworldPalette_Flabebe##Form##Flower,                            \
-            gShinyOverworldPalette_Flabebe##Form##Flower                        \
+            gOverworldPalette_Flabebe##Form,                                    \
+            gShinyOverworldPalette_Flabebe##Form                                \
         )                                                                       \
         .levelUpLearnset = sFlabebeLevelUpLearnset,                             \
         .teachableLearnset = sFlabebeTeachableLearnset,                         \
@@ -1660,19 +1664,19 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .frontAnimFrames = sAnims_Floette,                                      \
         .frontAnimId = ANIM_V_SLIDE_WOBBLE,                                     \
         .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,                              \
-        .palette = gMonPalette_Floette ##form##Flower,                          \
-        .shinyPalette = gMonShinyPalette_Floette ##form##Flower,                \
-        .iconSprite = gMonIcon_Floette##form##Flower,                           \
+        .palette = gMonPalette_Floette ##form,                                  \
+        .shinyPalette = gMonShinyPalette_Floette ##form,                        \
+        .iconSprite = gMonIcon_Floette##form,                                   \
         .iconPalIndex = iconPal,                                                \
-        SHADOW(-3, 12, SHADOW_SIZE_S)                                       \
+        SHADOW(-3, 12, SHADOW_SIZE_S)                                           \
         FOOTPRINT(Floette)                                                      \
         OVERWORLD(                                                              \
-            sPicTable_Floette ##form##Flower,                                   \
+            sPicTable_Floette ##form,                                           \
             SIZE_32x32,                                                         \
             SHADOW_SIZE_M,                                                      \
             TRACKS_FOOT,                                                        \
-            gOverworldPalette_Floette ##form##Flower,                           \
-            gShinyOverworldPalette_Floette ##form##Flower                       \
+            gOverworldPalette_Floette ##form,                                   \
+            gShinyOverworldPalette_Floette ##form                               \
         )                                                                       \
         .formSpeciesIdTable = sFloetteFormSpeciesIdTable
 
@@ -1760,15 +1764,15 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "longer be found blooming anywhere. It's\n"
             "also thought to contain terrifying\n"
             "power."),
-        .frontPic = gMonFrontPic_FloetteEternalFlower,
+        .frontPic = gMonFrontPic_FloetteEternal,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 3,
         .enemyMonElevation = 4,
-        .backPic = gMonBackPic_FloetteEternalFlower,
+        .backPic = gMonBackPic_FloetteEternal,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 2,
-        .levelUpLearnset = sFloetteEternalFlowerLevelUpLearnset,
-        .teachableLearnset = sFloetteEternalFlowerTeachableLearnset,
+        .levelUpLearnset = sFloetteEternalLevelUpLearnset,
+        .teachableLearnset = sFloetteEternalTeachableLearnset,
     },
 
 #define FLORGES_MISC_INFO(Form, iconPal)                                        \
@@ -1808,19 +1812,19 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .backPicSize = MON_COORDS_SIZE(64, 48),                                 \
         .backPicYOffset = 9,                                                    \
         .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,                            \
-        .palette = gMonPalette_Florges##Form##Flower,                           \
-        .shinyPalette = gMonShinyPalette_Florges##Form##Flower,                 \
-        .iconSprite = gMonIcon_Florges##Form##Flower,                           \
+        .palette = gMonPalette_Florges##Form,                                   \
+        .shinyPalette = gMonShinyPalette_Florges##Form,                         \
+        .iconSprite = gMonIcon_Florges##Form,                                   \
         .iconPalIndex = iconPal,                                                \
-        SHADOW(-5, 15, SHADOW_SIZE_M)                                       \
+        SHADOW(-5, 15, SHADOW_SIZE_M)                                           \
         FOOTPRINT(Florges)                                                      \
         OVERWORLD(                                                              \
-            sPicTable_Florges ##Form##Flower,                                   \
+            sPicTable_Florges ##Form,                                           \
             SIZE_32x32,                                                         \
             SHADOW_SIZE_M,                                                      \
             TRACKS_FOOT,                                                        \
-            gOverworldPalette_Florges ##Form##Flower,                           \
-            gShinyOverworldPalette_Florges ##Form##Flower                       \
+            gOverworldPalette_Florges ##Form,                                   \
+            gShinyOverworldPalette_Florges ##Form                               \
         )                                                                       \
         .levelUpLearnset = sFlorgesLevelUpLearnset,                             \
         .teachableLearnset = sFlorgesTeachableLearnset,                         \
@@ -1830,8 +1834,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
     {
         FLORGES_MISC_INFO(Red, 0),
         .description = COMPOUND_STRING(
-            "This Pokémon creates an\n"
-            "impressive flower garden in its territory. It\n"
+            "This Pokémon creates an impressive\n"
+            "flower garden in its territory. It\n"
             "draws forth the power of the red\n"
             "flowers around its neck."),
     },
@@ -2299,31 +2303,31 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .pokemonOffset = 12,
         .trainerScale = 256,
         .trainerOffset = 0,
-        .frontPic = gMonFrontPic_MeowsticMale,
+        .frontPic = gMonFrontPic_MeowsticM,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 3,
         .frontAnimFrames = sAnims_Meowstic,
         .frontAnimId = ANIM_GROW_VIBRATE,
-        .backPic = gMonBackPic_MeowsticMale,
+        .backPic = gMonBackPic_MeowsticM,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 9,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_LARGE,
-        .palette = gMonPalette_MeowsticMale,
-        .shinyPalette = gMonShinyPalette_MeowsticMale,
-        .iconSprite = gMonIcon_MeowsticMale,
+        .palette = gMonPalette_MeowsticM,
+        .shinyPalette = gMonShinyPalette_MeowsticM,
+        .iconSprite = gMonIcon_MeowsticM,
         .iconPalIndex = 0,
         SHADOW(-2, 11, SHADOW_SIZE_S)
         FOOTPRINT(Meowstic)
         OVERWORLD(
-            sPicTable_MeowsticMale,
+            sPicTable_MeowsticM,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            gOverworldPalette_MeowsticMale,
-            gShinyOverworldPalette_MeowsticMale
+            gOverworldPalette_MeowsticM,
+            gShinyOverworldPalette_MeowsticM
         )
-        .levelUpLearnset = sMeowsticMaleLevelUpLearnset,
-        .teachableLearnset = sMeowsticMaleTeachableLearnset,
+        .levelUpLearnset = sMeowsticMLevelUpLearnset,
+        .teachableLearnset = sMeowsticMTeachableLearnset,
         .formSpeciesIdTable = sMeowsticFormSpeciesIdTable,
     },
 
@@ -2361,31 +2365,31 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .pokemonOffset = 12,
         .trainerScale = 256,
         .trainerOffset = 0,
-        .frontPic = gMonFrontPic_MeowsticFemale,
+        .frontPic = gMonFrontPic_MeowsticF,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 2,
         .frontAnimFrames = sAnims_Meowstic,
         .frontAnimId = ANIM_GROW_VIBRATE,
-        .backPic = gMonBackPic_MeowsticFemale,
+        .backPic = gMonBackPic_MeowsticF,
         .backPicSize = MON_COORDS_SIZE(48, 64),
         .backPicYOffset = 9,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_LARGE,
-        .palette = gMonPalette_MeowsticFemale,
-        .shinyPalette = gMonShinyPalette_MeowsticFemale,
-        .iconSprite = gMonIcon_MeowsticFemale,
+        .palette = gMonPalette_MeowsticF,
+        .shinyPalette = gMonShinyPalette_MeowsticF,
+        .iconSprite = gMonIcon_MeowsticF,
         .iconPalIndex = 0,
         SHADOW(-2, 12, SHADOW_SIZE_S)
         FOOTPRINT(Meowstic)
         OVERWORLD(
-            sPicTable_MeowsticFemale,
+            sPicTable_MeowsticF,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            gOverworldPalette_MeowsticFemale,
-            gShinyOverworldPalette_MeowsticFemale
+            gOverworldPalette_MeowsticF,
+            gShinyOverworldPalette_MeowsticF
         )
-        .levelUpLearnset = sMeowsticFemaleLevelUpLearnset,
-        .teachableLearnset = sMeowsticFemaleTeachableLearnset,
+        .levelUpLearnset = sMeowsticFLevelUpLearnset,
+        .teachableLearnset = sMeowsticFTeachableLearnset,
         .formSpeciesIdTable = sMeowsticFormSpeciesIdTable,
     },
 #endif //P_FAMILY_ESPURR
@@ -4217,32 +4221,32 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .pokemonOffset = 7,
         .trainerScale = 257,
         .trainerOffset = 0,
-        .frontPic = gMonFrontPic_SliggooHisuian,
+        .frontPic = gMonFrontPic_SliggooHisui,
         .frontPicSize = MON_COORDS_SIZE(48, 56),
         .frontPicYOffset = 7,
-        .frontAnimFrames = sAnims_SliggooHisuian,
+        .frontAnimFrames = sAnims_SliggooHisui,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_SliggooHisuian,
+        .backPic = gMonBackPic_SliggooHisui,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 1,
         //.backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_SliggooHisuian,
-        .shinyPalette = gMonShinyPalette_SliggooHisuian,
-        .iconSprite = gMonIcon_SliggooHisuian,
+        .palette = gMonPalette_SliggooHisui,
+        .shinyPalette = gMonShinyPalette_SliggooHisui,
+        .iconSprite = gMonIcon_SliggooHisui,
         .iconPalIndex = 2,
         SHADOW(2, 6, SHADOW_SIZE_M)
         FOOTPRINT(Sliggoo)
         OVERWORLD(
-            sPicTable_SliggooHisuian,
+            sPicTable_SliggooHisui,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            gOverworldPalette_SliggooHisuian,
-            gShinyOverworldPalette_SliggooHisuian
+            gOverworldPalette_SliggooHisui,
+            gShinyOverworldPalette_SliggooHisui
         )
         .isHisuianForm = TRUE,
-        .levelUpLearnset = sSliggooHisuianLevelUpLearnset,
-        .teachableLearnset = sSliggooHisuianTeachableLearnset,
+        .levelUpLearnset = sSliggooHisuiLevelUpLearnset,
+        .teachableLearnset = sSliggooHisuiTeachableLearnset,
         .formSpeciesIdTable = sSliggooFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL_RAIN, 50, SPECIES_GOODRA_HISUI},
                                 {EVO_LEVEL_FOG, 50, SPECIES_GOODRA_HISUI}),
@@ -4274,40 +4278,40 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .height = 17,
         .weight = 3341,
         .description = COMPOUND_STRING(
-            "It loathes solitude and is\n"
-            "extremely clingy-it will fume and run riot if\n"
+            "It loathes solitude and is extremely\n"
+            "clingy--it will fume and run riot if\n"
             "those dearest to it ever leave its\n"
             "side."),
         .pokemonScale = 261,
         .pokemonOffset = 1,
         .trainerScale = 334,
         .trainerOffset = 4,
-        .frontPic = gMonFrontPic_GoodraHisuian,
+        .frontPic = gMonFrontPic_GoodraHisui,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_GoodraHisuian,
+        .frontAnimFrames = sAnims_GoodraHisui,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_GoodraHisuian,
+        .backPic = gMonBackPic_GoodraHisui,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
         //.backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_GoodraHisuian,
-        .shinyPalette = gMonShinyPalette_GoodraHisuian,
-        .iconSprite = gMonIcon_GoodraHisuian,
+        .palette = gMonPalette_GoodraHisui,
+        .shinyPalette = gMonShinyPalette_GoodraHisui,
+        .iconSprite = gMonIcon_GoodraHisui,
         .iconPalIndex = 2,
         SHADOW(1, 12, SHADOW_SIZE_M)
         FOOTPRINT(Goodra)
         OVERWORLD(
-            sPicTable_GoodraHisuian,
+            sPicTable_GoodraHisui,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            gOverworldPalette_GoodraHisuian,
-            gShinyOverworldPalette_GoodraHisuian
+            gOverworldPalette_GoodraHisui,
+            gShinyOverworldPalette_GoodraHisui
         )
         .isHisuianForm = TRUE,
-        .levelUpLearnset = sGoodraHisuianLevelUpLearnset,
-        .teachableLearnset = sGoodraHisuianTeachableLearnset,
+        .levelUpLearnset = sGoodraHisuiLevelUpLearnset,
+        .teachableLearnset = sGoodraHisuiTeachableLearnset,
         .formSpeciesIdTable = sGoodraFormSpeciesIdTable,
     },
 #endif //P_HISUIAN_FORMS
@@ -5185,32 +5189,32 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .pokemonOffset = 1,
         .trainerScale = 334,
         .trainerOffset = 4,
-        .frontPic = gMonFrontPic_AvaluggHisuian,
+        .frontPic = gMonFrontPic_AvaluggHisui,
         .frontPicSize = MON_COORDS_SIZE(64, 48),
         .frontPicYOffset = 6,
-        .frontAnimFrames = sAnims_AvaluggHisuian,
+        .frontAnimFrames = sAnims_AvaluggHisui,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_AvaluggHisuian,
+        .backPic = gMonBackPic_AvaluggHisui,
         .backPicSize = MON_COORDS_SIZE(64, 32),
         .backPicYOffset = 16,
         //.backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_AvaluggHisuian,
-        .shinyPalette = gMonShinyPalette_AvaluggHisuian,
-        .iconSprite = gMonIcon_AvaluggHisuian,
+        .palette = gMonPalette_AvaluggHisui,
+        .shinyPalette = gMonShinyPalette_AvaluggHisui,
+        .iconSprite = gMonIcon_AvaluggHisui,
         .iconPalIndex = 5,
         SHADOW(2, -2, SHADOW_SIZE_L)
         FOOTPRINT(Avalugg)
         OVERWORLD(
-            sPicTable_AvaluggHisuian,
+            sPicTable_AvaluggHisui,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            gOverworldPalette_AvaluggHisuian,
-            gShinyOverworldPalette_AvaluggHisuian
+            gOverworldPalette_AvaluggHisui,
+            gShinyOverworldPalette_AvaluggHisui
         )
         .isHisuianForm = TRUE,
-        .levelUpLearnset = sAvaluggHisuianLevelUpLearnset,
-        .teachableLearnset = sAvaluggHisuianTeachableLearnset,
+        .levelUpLearnset = sAvaluggHisuiLevelUpLearnset,
+        .teachableLearnset = sAvaluggHisuiTeachableLearnset,
         .formSpeciesIdTable = sAvaluggFormSpeciesIdTable,
     },
 #endif //P_HISUIAN_FORMS
@@ -5316,9 +5320,9 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .weight = 850,
         .description = COMPOUND_STRING(
             "They fly around on moonless nights and\n"
-            "attack careless prey. The ultrasonic waves\n"
-            "it emits from its ears can reduce a large\n"
-            "boulder to pebbles."),
+            "attack careless prey. The ultrasonic\n"
+            "waves it emits from its ears can reduce\n"
+            "a large boulder to pebbles."),
         .pokemonScale = 268,
         .pokemonOffset = 2,
         .trainerScale = 271,

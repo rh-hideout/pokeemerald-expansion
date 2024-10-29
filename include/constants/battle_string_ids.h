@@ -716,20 +716,28 @@
 #define STRINGID_POKEFLUTECATCHY                      714
 #define STRINGID_POKEFLUTE                            715
 #define STRINGID_MONHEARINGFLUTEAWOKE                 716
-#define STRINGID_SHADOWPKMNNOTICE                     717
-#define STRINGID_TRAINERCALLTOMON                     718
-#define STRINGID_PKMNSTOREDEXP                        719
-#define STRINGID_PKMNHEARTGAUGEUPDATE                 720
-#define STRINGID_STARTEDSHADOW_SKY                    721
-#define STRINGID_SHADOW_SKYCONTINUES                  722
-#define STRINGID_SHADOW_SKYSTOPPED                    723
-#define STRINGID_SHADOW_SKYDAMAGE                     724
-#define STRINGID_REVERSEMODE_ENTER                    725
-#define STRINGID_REVERSEMODE_DAMAGE                   726
-#define STRINGID_REVERSEMODE_CALLED                   727
-#define STRINGID_GOTCHAPKMNCAUGHTTRAINER              728
+#define STRINGID_SUNLIGHTISHARSH                      717
+#define STRINGID_ITISHAILING                          718
+#define STRINGID_ITISSNOWING                          719
+#define STRINGID_ISCOVEREDWITHGRASS                   720
+#define STRINGID_MISTSWIRLSAROUND                     721
+#define STRINGID_ELECTRICCURRENTISRUNNING             722
+#define STRINGID_SEEMSWEIRD                           723
+#define STRINGID_WAGGLINGAFINGER                      724
+#define STRINGID_SHADOWPKMNNOTICE                     725
+#define STRINGID_TRAINERCALLTOMON                     726
+#define STRINGID_PKMNSTOREDEXP                        727
+#define STRINGID_PKMNHEARTGAUGEUPDATE                 728
+#define STRINGID_STARTEDSHADOW_SKY                    729
+#define STRINGID_SHADOW_SKYCONTINUES                  730
+#define STRINGID_SHADOW_SKYSTOPPED                    731
+#define STRINGID_SHADOW_SKYDAMAGE                     732
+#define STRINGID_REVERSEMODE_ENTER                    733
+#define STRINGID_REVERSEMODE_DAMAGE                   734
+#define STRINGID_REVERSEMODE_CALLED                   735
+#define STRINGID_GOTCHAPKMNCAUGHTTRAINER              736
 
-#define BATTLESTRINGS_COUNT                           729
+#define BATTLESTRINGS_COUNT                           737
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

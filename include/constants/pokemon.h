@@ -245,9 +245,9 @@
 #define F_SUMMARY_SCREEN_FLIP_SPRITE 0x80
 
 #define EVOLUTIONS_END                    0xFFFF // Not an actual evolution, used to mark the end of an evolution array.
-#define EVO_NONE                          0xFFFE // Not an actual evolution, used to generate offspring that can't evolve into the specified species, like regional forms.
 
 enum EvolutionMethods {
+    EVO_NONE,                            // Not an actual evolution, used to generate offspring that can't evolve into the specified species, like regional forms.
     EVO_FRIENDSHIP,                      // Pokémon levels up with friendship ≥ 220
     EVO_FRIENDSHIP_DAY,                  // Pokémon levels up during the day with friendship ≥ 220
     EVO_FRIENDSHIP_NIGHT,                // Pokémon levels up at night with friendship ≥ 220

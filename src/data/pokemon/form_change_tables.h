@@ -692,7 +692,7 @@ static const struct FormChange sDarmanitanFormChangeTable[] = {
 };
 
 #if P_GALARIAN_FORMS
-static const struct FormChange sDarmanitanGalarianFormChangeTable[] = {
+static const struct FormChange sDarmanitanGalarFormChangeTable[] = {
     {FORM_CHANGE_BATTLE_HP_PERCENT, SPECIES_DARMANITAN_GALAR_STANDARD, ABILITY_ZEN_MODE, HP_HIGHER_THAN,   50},
     {FORM_CHANGE_BATTLE_HP_PERCENT, SPECIES_DARMANITAN_GALAR_ZEN,      ABILITY_ZEN_MODE, HP_LOWER_EQ_THAN, 50},
     {FORM_CHANGE_FAINT,             SPECIES_DARMANITAN_GALAR_STANDARD},

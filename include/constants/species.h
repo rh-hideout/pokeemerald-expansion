@@ -1088,7 +1088,7 @@
 #define SPECIES_PIKACHU_UNOVA                           1018
 #define SPECIES_PIKACHU_KALOS                           1019
 #define SPECIES_PIKACHU_ALOLA                           1020
-#define SPECIES_PIKACHU_PARTNER_CAP                     1021
+#define SPECIES_PIKACHU_PARTNER                         1021
 #define SPECIES_PIKACHU_WORLD                           1022
 #define SPECIES_PICHU_SPIKY_EARED                       1023
 #define SPECIES_UNOWN_B                                 1024

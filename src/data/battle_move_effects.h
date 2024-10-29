@@ -1011,7 +1011,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_ERUPTION] =
+    [EFFECT_POWER_BASED_ON_USER_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
@@ -1144,7 +1144,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_VARY_POWER_BASED_ON_HP] =
+    [EFFECT_POWER_BASED_ON_TARGET_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
