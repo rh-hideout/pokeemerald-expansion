@@ -20861,8 +20861,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Shadow End"),
         .description = COMPOUND_STRING(
-            "A shadowy aura ram attack that\n"
-            "also rebounds on the user."),
+            "A shadowy aura ram attack\n"
+            "that rebounds on the user."),
         .effect = EFFECT_HIT,
         .power = 120,
         .type = TYPE_SHADOW,
@@ -20990,8 +20990,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Shadow Sky"),
         .description = COMPOUND_STRING(
-            "Darkness hurts all but Shadow\n"
-            "Pokémon for 5 turns."),
+            "Darkness hurts all but\n"
+            "Shadow {PKMN} for 5 turns."),
         .effect = EFFECT_SHADOW_SKY,
         .power = 0,
         .type = TYPE_SHADOW,
