@@ -454,6 +454,18 @@ bool32 IsDamageMoveUnusable(u32 move, u32 battlerAtk, u32 battlerDef)
         if (moveType == TYPE_GROUND)
             return TRUE;
         break;
+    case ABILITY_STORM_SHELTER:
+        if (moveType == TYPE_FIRE && gBattleWeather & B_WEATHER_SUN)
+            return TRUE;
+        if (moveType == TYPE_WATER && gBattleWeather & B_WEATHER_RAIN)
+            return TRUE;
+        if (moveType == TYPE_ROCK && gBattleWeather & B_WEATHER_SANDSTORM)
+            return TRUE;
+        if (moveType == TYPE_ICE && gBattleWeather & B_WEATHER_HAIL)
+            return TRUE;
+        if (moveType == TYPE_FLYING && gBattleWeather & B_WEATHER_STRONG_WINDS)
+            return TRUE;
+        break;
     }
 
     switch (gMovesInfo[move].effect)

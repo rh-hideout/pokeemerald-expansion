@@ -992,6 +992,18 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (moveType == TYPE_FIRE)
                     RETURN_SCORE_MINUS(20);
                 break;
+            case ABILITY_STORM_SHELTER:
+                if (moveType == TYPE_FIRE && gBattleWeather & B_WEATHER_SUN)
+                    RETURN_SCORE_MINUS(20);
+                if (moveType == TYPE_WATER && gBattleWeather & B_WEATHER_RAIN)
+                    RETURN_SCORE_MINUS(20);
+                if (moveType == TYPE_ROCK && gBattleWeather & B_WEATHER_SANDSTORM)
+                    RETURN_SCORE_MINUS(20);
+                if (moveType == TYPE_ICE && gBattleWeather & B_WEATHER_HAIL)
+                    RETURN_SCORE_MINUS(20);
+                if (moveType == TYPE_FLYING && gBattleWeather & B_WEATHER_STRONG_WINDS)
+                    RETURN_SCORE_MINUS(20);
+                break;
             case ABILITY_EARTH_EATER:
                 if (moveType == TYPE_GROUND)
                     RETURN_SCORE_MINUS(20);
@@ -2975,6 +2987,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     RETURN_SCORE_PLUS(DECENT_EFFECT);
                 }
                 break;
+
+                //GTODO storm shelter effect later potentialy
             }
         } // ability checks
 

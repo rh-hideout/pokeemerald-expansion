@@ -2796,5 +2796,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Heals both user and ally\nat the end of a turn."),
         .aiRating = 4,
     },
-    
+
+    [ABILITY_STORM_SHELTER] =
+    {
+        .name = _("Storm Shelter"),
+        .description = COMPOUND_STRING("Changes Immunity with weather"),
+        .aiRating = 10,
+    },
 };

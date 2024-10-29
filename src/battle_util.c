@@ -2431,6 +2431,7 @@ u8 DoBattlerEndTurnEffects(void)
                   && ability != ABILITY_SAND_FORCE
                   && ability != ABILITY_SAND_RUSH
                   && ability != ABILITY_OVERCOAT
+                  && ability != ABILITY_STORM_SHELTER
                   && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ROCK)
                   && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GROUND)
                   && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_STEEL)
@@ -2458,6 +2459,7 @@ u8 DoBattlerEndTurnEffects(void)
                   && ability != ABILITY_SNOW_CLOAK
                   && ability != ABILITY_OVERCOAT
                   && ability != ABILITY_ICE_BODY
+                  && ability != ABILITY_STORM_SHELTER
                   && !(gStatuses3[battler] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
                   && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES)
             {
@@ -10933,6 +10935,34 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
     {
         modifier = UQ_4_12(0.0);
     }
+
+
+    else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_ROCK && gBattleWeather & B_WEATHER_SANDSTORM)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+
+    else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_FIRE && gBattleWeather & B_WEATHER_SUN)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+
+    else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_ICE && gBattleWeather & B_WEATHER_HAIL)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+
+    else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_WATER && gBattleWeather & B_WEATHER_RAIN)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+
+    else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_FLYING && gBattleWeather & B_WEATHER_STRONG_WINDS)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+
+    
 
     // Thousand Arrows ignores type modifiers for flying mons
     if (!IsBattlerGrounded(battlerDef) && (gMovesInfo[move].ignoreTypeIfFlyingAndUngrounded)
