@@ -2546,6 +2546,8 @@ gCryTable::
 	cry Cry_Forgotno
 
 	cry Cry_Doomsay
+
+	cry Cry_Wattitude
 .endif
 
 	.align 2
@@ -5097,4 +5099,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Forgotno
 
 	cry_reverse Cry_Doomsay
+
+	cry_reverse Cry_Wattitude
 .endif

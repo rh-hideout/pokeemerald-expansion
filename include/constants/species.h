@@ -1696,8 +1696,9 @@
 #define SPECIES_QRAKENMARK                              1586
 #define SPECIES_WEATHERBANE                             1587
 #define SPECIES_EPIPHEROR                               1588
+#define SPECIES_WATTITUDE                               1589
 
-#define SPECIES_EGG (SPECIES_EPIPHEROR + 1)
+#define SPECIES_EGG (SPECIES_WATTITUDE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
