@@ -22148,6 +22148,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/icon.4bpp");
    const u8 gMonFootprint_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/footprint.1bpp");
 
+   const u32 gMonFrontPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/front.4bpp.lz");
+   const u32 gMonBackPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/back.4bpp.lz");
+   const u32 gMonPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/shiny.gbapal.lz");
+   const u8 gMonIcon_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/icon.4bpp");
+   const u8 gMonFootprint_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/footprint.1bpp");
+
    const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
    const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
    const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");

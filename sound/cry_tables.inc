@@ -2545,6 +2545,8 @@ gCryTable::
 	cry Cry_Weatherbane
 
 	cry Cry_Epipheror
+
+	cry Cry_Wattitude
 .endif
 
 	.align 2
@@ -5092,4 +5094,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Weatherbane
 
 	cry_reverse Cry_Epipheror
+
+	cry_reverse Cry_Wattitude
 .endif
