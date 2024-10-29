@@ -362,8 +362,9 @@
 #define ABILITY_OLD_SCHOOL 332
 #define ABILITY_JEWELRY 333
 #define ABILITY_HYDROPHILE 334
+#define ABILITY_DISPENSER 335 // RTODO: Add AI for switch-in healing, possibly partner healing.
 
-#define ABILITIES_COUNT_GEN9 335
+#define ABILITIES_COUNT_GEN9 336
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

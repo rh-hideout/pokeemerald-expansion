@@ -2789,4 +2789,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Boosts Water-type moves."),
         .aiRating = 8,
     },
+
+    [ABILITY_DISPENSER] =
+    {
+        .name = _("Dispenser"),
+        .description = COMPOUND_STRING("Heals both user and ally\nat the end of a turn."),
+        .aiRating = 4,
+    },
+    
 };
