@@ -8130,8 +8130,25 @@ BattleScript_AbilityHpHeal:
 	datahpupdate BS_ATTACKER
 	return
 
+BattleScript_AbilityHpHealPartner:
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNSXRESTOREDPARTNERHPALITTLE2
+	waitmessage B_WAIT_TIME_LONG
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
+	healthbarupdate BS_SCRIPTING
+	datahpupdate BS_SCRIPTING
+	return
+
 BattleScript_RainDishActivates::
 	call BattleScript_AbilityHpHeal
+	end3
+
+BattleScript_DispenserActivates::
+	call BattleScript_AbilityHpHeal
+	end3
+
+BattleScript_DispenserActivatesPartner::
+	call BattleScript_AbilityHpHealPartner
 	end3
 
 BattleScript_CheekPouchActivates::
