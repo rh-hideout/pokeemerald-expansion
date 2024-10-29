@@ -6168,7 +6168,7 @@ Cry_Hazelnaut::
 Cry_Ginocchio::
 	.incbin "sound/direct_sound_samples/cries/ginocchio.bin"
 
-.align 2
+	.align 2
 Cry_Buggy::
 	.incbin "sound/direct_sound_samples/cries/buggy.bin"
 
@@ -6224,7 +6224,7 @@ Cry_Hyduck::
 Cry_Bluduck::
 	.incbin "sound/direct_sound_samples/cries/bluduck.bin"
 
-.align 2
+	.align 2
 Cry_Platylics::
 	.incbin "sound/direct_sound_samples/cries/platylics.bin"
 
@@ -6316,7 +6316,7 @@ Cry_Emeffyume::
 Cry_Gargarramer::
 	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
 
-.align 2
+	.align 2
 Cry_Moltama::
 	.incbin "sound/direct_sound_samples/cries/moltama.bin"
 
