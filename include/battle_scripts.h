@@ -531,6 +531,8 @@ extern const u8 BattleScript_JewelryActivates[];
 extern const u8 BattleScript_RemoveGrassType[];
 extern const u8 BattleScript_TrickStabIllusionOff[];
 extern const u8 BattleScript_MopAway[];
+extern const u8 BattleScript_DispenserActivates[];
+extern const u8 BattleScript_DispenserActivatesPartner[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
