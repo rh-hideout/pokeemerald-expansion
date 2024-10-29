@@ -2424,61 +2424,12 @@ gCryTable::
 .if P_FAMILY_PECHARUNT == TRUE
 	cry Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
-    cry Cry_Maplage
-
-    cry Cry_Arachnote
-
-    cry Cry_Fucker
+    
+	cry Cry_Maplage
 
 	cry Cry_Hazelnaut
 
 	cry Cry_Ginocchio
-
-	cry Cry_Noxilium
-
-	cry Cry_Yuukiino
-
-	cry Cry_Aquadiiva
-
-	cry Cry_Forgotno
-
-	cry Cry_Hydroil
-
-	cry Cry_Dubsnake
-
-	cry Cry_Kumataro
-
-	cry Cry_Bearedaze
-
-	cry Cry_Parmiausan
-
-	cry Cry_Krackodemon
-
-	cry Cry_Mammount
-
-	cry Cry_Moltama
-
-	cry Cry_Molterra
-
-	cry Cry_Mamini
-
-	cry Cry_Krissy
-
-	cry Cry_Blubbastard
-
-	cry Cry_Flubbster
-
-	cry Cry_Reveloros
-
-	cry Cry_Ouroblack
-
-	cry Cry_Impfection
-
-	cry Cry_Dinomight
-
-	cry Cry_Cocken
-
-	cry Cry_Doomsay
 
 	cry Cry_Buggy
 
@@ -2486,65 +2437,115 @@ gCryTable::
 
 	cry Cry_Bullepede
 
-	cry Cry_Gargarramer
+	cry Cry_Whimple
+
+	cry Cry_Whipscuffle
+
+	cry Cry_Whipsicuffs
 
 	cry Cry_Bandicute
 
 	cry Cry_Naughtycoot
 
-	cry Cry_Ibask
+    cry Cry_Arachnote
 
 	cry Cry_Dirtybis
 
-	cry Cry_Apocamise
-
-	cry Cry_Venireal
-
-	cry Cry_Platylics
-
-	cry Cry_Bluduck
+	cry Cry_Ibask
+	
+	cry Cry_Impfection
 
 	cry Cry_Hyduck
 
-	cry Cry_Indignifly
+	cry Cry_Bluduck
 
-	cry Cry_Fusjahl
+	cry Cry_Platylics
 
-	cry Cry_Jahl
+	cry Cry_Krissy
 
-	cry Cry_Jumblegore
+	cry Cry_Krackodemon
 
-	cry Cry_Jumblinart
+	cry Cry_Blubbastard
 
-	cry Cry_Nyanonite
+	cry Cry_Flubbster
 
-	cry Cry_Ignifatu
+	cry Cry_Weatherbane
 
-	cry Cry_Emeffyume
+	cry Cry_Yuukiino
 
-	cry Cry_Phantorney
+	cry Cry_Aquadiiva
+
+	cry Cry_Mamini
+
+	cry Cry_Mammount
+
+	cry Cry_Parmiausan
+
+	cry Cry_Epipheror
+
+	cry Cry_Larvatrice
+
+	cry Cry_Brashalisk
 
 	cry Cry_Kokaiju
 
 	cry Cry_Levititan
 
-	cry Cry_Brashalisk
+    cry Cry_Fucker
 
-	cry Cry_Larvatrice
+	cry Cry_Dubsnake
 
-	cry Cry_Whipsicuffs
+	cry Cry_Hydroil
 
-	cry Cry_Whimple
+	cry Cry_Jumblegore
 
-	cry Cry_Whipscuffle
+	cry Cry_Jumblinart
+
+	cry Cry_Emeffyume
+
+	cry Cry_Gargarramer
+
+	cry Cry_Moltama
+
+	cry Cry_Molterra
+
+	cry Cry_Kumataro
+
+	cry Cry_Bearedaze
+
+	cry Cry_Apocamise
+
+	cry Cry_Venireal
+
+	cry Cry_Reveloros
+
+	cry Cry_Ouroblack
+
+	cry Cry_Jahl
+
+	cry Cry_Fusjahl
 
 	cry Cry_Epilate
 
 	cry Cry_Qrakenmark
 
-	cry Cry_Weatherbane
+	cry Cry_Noxilium
 
-	cry Cry_Epipheror
+	cry Cry_Indignifly
+
+	cry Cry_Dinomight
+
+	cry Cry_Cocken
+
+	cry Cry_Nyanonite
+
+	cry Cry_Ignifatu
+
+	cry Cry_Phantorney
+
+	cry Cry_Forgotno
+
+	cry Cry_Doomsay
 
 	cry Cry_Wattitude
 .endif
@@ -4975,59 +4976,13 @@ gCryTable_Reverse::
 .if P_FAMILY_PECHARUNT == TRUE
 	cry_reverse Cry_Pecharunt
 .endif @ P_FAMILY_PECHARUNT
+
+
 	cry_reverse Cry_Maplage
-
-    cry_reverse Cry_Arachnote
-
-    cry_reverse Cry_Fucker
 
 	cry_reverse Cry_Hazelnaut
 
 	cry_reverse Cry_Ginocchio
-
-	cry_reverse Cry_Noxilium
-
-	cry_reverse Cry_Yuukiino
-
-	cry_reverse Cry_Aquadiiva
-
-	cry_reverse Cry_Forgotno
-
-	cry_reverse Cry_Hydroil
-
-	cry_reverse Cry_Dubsnake
-
-	cry_reverse Cry_Kumataro
-
-	cry_reverse Cry_Bearedaze
-
-	cry_reverse Cry_Parmiausan
-
-	cry_reverse Cry_Krackodemon
-
-	cry_reverse Cry_Mammount
-
-	cry_reverse Cry_Moltama
-
-	cry_reverse Cry_Molterra
-
-	cry_reverse Cry_Mamini
-
-	cry_reverse Cry_Blubbastard
-
-	cry_reverse Cry_Flubbster
-
-	cry_reverse Cry_Reveloros
-
-	cry_reverse Cry_Ouroblack
-
-	cry_reverse Cry_Impfection
-
-	cry_reverse Cry_Dinomight
-
-	cry_reverse Cry_Cocken
-
-	cry_reverse Cry_Doomsay
 
 	cry_reverse Cry_Buggy
 
@@ -5035,65 +4990,115 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Bullepede
 
-	cry_reverse Cry_Gargarramer
+	cry_reverse Cry_Whimple
+
+	cry_reverse Cry_Whipscuffle
+
+	cry_reverse Cry_Whipsicuffs
 
 	cry_reverse Cry_Bandicute
 
 	cry_reverse Cry_Naughtycoot
 
-	cry_reverse Cry_Ibask
+    cry_reverse Cry_Arachnote
 
 	cry_reverse Cry_Dirtybis
+
+	cry_reverse Cry_Ibask
 	
-	cry_reverse Cry_Apocamise
-
-	cry_reverse Cry_Venireal
-
-	cry_reverse Cry_Platylics
-
-	cry_reverse Cry_Bluduck
+	cry_reverse Cry_Impfection
 
 	cry_reverse Cry_Hyduck
 
-	cry_reverse Cry_Indignifly
+	cry_reverse Cry_Bluduck
 
-	cry_reverse Cry_Fusjahl
+	cry_reverse Cry_Platylics
 
-	cry_reverse Cry_Jahl
+	cry_reverse Cry_Krissy
 
-	cry_reverse Cry_Jumblegore
+	cry_reverse Cry_Krackodemon
 
-	cry_reverse Cry_Jumblinart
+	cry_reverse Cry_Blubbastard
 
-	cry_reverse Cry_Nyanonite
+	cry_reverse Cry_Flubbster
 
-	cry_reverse Cry_Ignifatu
+	cry_reverse Cry_Weatherbane
 
-	cry_reverse Cry_Emeffyume
+	cry_reverse Cry_Yuukiino
 
-	cry_reverse Cry_Phantorney
+	cry_reverse Cry_Aquadiiva
+
+	cry_reverse Cry_Mamini
+
+	cry_reverse Cry_Mammount
+
+	cry_reverse Cry_Parmiausan
+
+	cry_reverse Cry_Epipheror
+
+	cry_reverse Cry_Larvatrice
+
+	cry_reverse Cry_Brashalisk
 
 	cry_reverse Cry_Kokaiju
 
 	cry_reverse Cry_Levititan
 
-	cry_reverse Cry_Brashalisk
+    cry_reverse Cry_Fucker
 
-	cry_reverse Cry_Larvatrice
+	cry_reverse Cry_Dubsnake
 
-	cry_reverse Cry_Whipsicuffs
+	cry_reverse Cry_Hydroil
 
-	cry_reverse Cry_Whimple
+	cry_reverse Cry_Jumblegore
 
-	cry_reverse Cry_Whipscuffle
+	cry_reverse Cry_Jumblinart
+
+	cry_reverse Cry_Emeffyume
+
+	cry_reverse Cry_Gargarramer
+
+	cry_reverse Cry_Moltama
+
+	cry_reverse Cry_Molterra
+
+	cry_reverse Cry_Kumataro
+
+	cry_reverse Cry_Bearedaze
+
+	cry_reverse Cry_Apocamise
+
+	cry_reverse Cry_Venireal
+
+	cry_reverse Cry_Reveloros
+
+	cry_reverse Cry_Ouroblack
+
+	cry_reverse Cry_Jahl
+
+	cry_reverse Cry_Fusjahl
 
 	cry_reverse Cry_Epilate
 
 	cry_reverse Cry_Qrakenmark
 
-	cry_reverse Cry_Weatherbane
+	cry_reverse Cry_Noxilium
 
-	cry_reverse Cry_Epipheror
+	cry_reverse Cry_Indignifly
+
+	cry_reverse Cry_Dinomight
+
+	cry_reverse Cry_Cocken
+
+	cry_reverse Cry_Nyanonite
+
+	cry_reverse Cry_Ignifatu
+
+	cry_reverse Cry_Phantorney
+
+	cry_reverse Cry_Forgotno
+
+	cry_reverse Cry_Doomsay
 
 	cry_reverse Cry_Wattitude
 .endif
