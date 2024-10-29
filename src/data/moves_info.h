@@ -22262,6 +22262,30 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
         .battleAnimScript = Move_HAMMER_ARM,
     },
+
+    [MOVE_SCARLET_CHANT] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("ScarletChant", "Scarlet Chant"),
+        .description = COMPOUND_STRING(
+            "A mysterious song plays,\n"
+            "raising the user's Sp. Atk."),
+        .effect = EFFECT_HIT,
+        .power = 65,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .soundMove = TRUE,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
+            .self = TRUE,
+            .chance = 100,
+        }),
+        .battleAnimScript = Move_HYPER_VOICE,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

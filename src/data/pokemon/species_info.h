@@ -1694,6 +1694,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Parmiausan)
        .levelUpLearnset = sParmiausanLevelUpLearnset,
+    },
+        [SPECIES_EPIPHEROR] =
+    { 
+       .baseHP        = 119,
+       .baseAttack    = 52,
+       .baseDefense   = 90,
+       .baseSpeed     = 110,
+       .baseSpAttack  = 92,
+       .baseSpDefense = 70,
+       .types = { TYPE_PSYCHIC, TYPE_PSYCHIC },
+       .catchRate = 35,
+       .expYield = 155,
+       .evYield_HP  = 3,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 30,
+       .friendship = 10,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_FOREWARN, ABILITY_FRISK, ABILITY_WONDER_SKIN, ABILITY_SOUNDPROOF}, //GTODO Replace soundproof with Concert when ability is finalized
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Epipheror"),
+       .cryId = CRY_EPIPHEROR,
+       .natDexNum = NATIONAL_DEX_EPIPHEROR,
+       .categoryName = _("Crimson"),
+       .height = 18,
+       .weight = 909,
+       .description = COMPOUND_STRING(
+           "Epipherors are always muttering seemingly \n"
+           "indecipherable gibberish, as if talking to \n"
+           "the wind. Sometimes this chatter controls \n"
+           "the minds of less intelligent Pokémon."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Epipheror,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Epipheror,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Epipheror,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Epipheror,
+       .shinyPalette = gMonShinyPalette_Epipheror,
+       .iconSprite = gMonIcon_Epipheror,
+       .iconPalIndex = 0,
+       FOOTPRINT(Epipheror)
+       .levelUpLearnset = sEpipherorLevelUpLearnset,
        },
         [SPECIES_LARVATRICE] =
     { 

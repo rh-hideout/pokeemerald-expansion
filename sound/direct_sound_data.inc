@@ -6269,6 +6269,10 @@ Cry_Parmiausan::
 	.incbin "sound/direct_sound_samples/cries/parmiausan.bin"
 
 	.align 2
+Cry_Epipheror::
+	.incbin "sound/direct_sound_samples/cries/epipheror.bin"
+
+	.align 2
 Cry_Larvatrice::
 	.incbin "sound/direct_sound_samples/cries/larvatrice.bin"
 

@@ -2543,6 +2543,8 @@ gCryTable::
 	cry Cry_Qrakenmark
 
 	cry Cry_Weatherbane
+
+	cry Cry_Epipheror
 .endif
 
 	.align 2
@@ -5088,4 +5090,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Qrakenmark
 
 	cry_reverse Cry_Weatherbane
+
+	cry_reverse Cry_Epipheror
 .endif

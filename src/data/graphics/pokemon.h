@@ -22176,6 +22176,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Mammount[] = INCBIN_U8("graphics/pokemon/mammount/icon.4bpp");
    const u8 gMonFootprint_Mammount[] = INCBIN_U8("graphics/pokemon/mammount/footprint.1bpp");
 
+   const u32 gMonFrontPic_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/front.4bpp.lz");
+   const u32 gMonBackPic_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/back.4bpp.lz");
+   const u32 gMonPalette_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/shiny.gbapal.lz");
+   const u8 gMonIcon_Epipheror[] = INCBIN_U8("graphics/pokemon/epipheror/icon.4bpp");
+   const u8 gMonFootprint_Epipheror[] = INCBIN_U8("graphics/pokemon/epipheror/footprint.1bpp");
+
    const u32 gMonFrontPic_Larvatrice[] = INCBIN_U32("graphics/pokemon/larvatrice/front.4bpp.lz");
    const u32 gMonBackPic_Larvatrice[] = INCBIN_U32("graphics/pokemon/larvatrice/back.4bpp.lz");
    const u32 gMonPalette_Larvatrice[] = INCBIN_U32("graphics/pokemon/larvatrice/normal.gbapal.lz");
