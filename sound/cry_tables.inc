@@ -2541,6 +2541,8 @@ gCryTable::
 	cry Cry_Epilate
 
 	cry Cry_Qrakenmark
+
+	cry Cry_Weatherbane
 .endif
 
 	.align 2
@@ -5084,4 +5086,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Epilate
 
 	cry_reverse Cry_Qrakenmark
+
+	cry_reverse Cry_Weatherbane
 .endif

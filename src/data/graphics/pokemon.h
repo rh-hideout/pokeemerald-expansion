@@ -22141,6 +22141,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Blubbastard[] = INCBIN_U8("graphics/pokemon/blubbastard/icon.4bpp");
    const u8 gMonFootprint_Blubbastard[] = INCBIN_U8("graphics/pokemon/blubbastard/footprint.1bpp");
 
+   const u32 gMonFrontPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/front.4bpp.lz");
+   const u32 gMonBackPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/back.4bpp.lz");
+   const u32 gMonPalette_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/shiny.gbapal.lz");
+   const u8 gMonIcon_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/icon.4bpp");
+   const u8 gMonFootprint_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/footprint.1bpp");
+
    const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
    const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
    const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");

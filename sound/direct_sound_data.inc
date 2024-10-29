@@ -6245,6 +6245,10 @@ Cry_Flubbster::
 	.incbin "sound/direct_sound_samples/cries/flubbster.bin"
 
 	.align 2
+Cry_Weatherbane::
+	.incbin "sound/direct_sound_samples/cries/weatherbane.bin"
+
+	.align 2
 Cry_Yuukiino::
 	.incbin "sound/direct_sound_samples/cries/yuukiino.bin"
 

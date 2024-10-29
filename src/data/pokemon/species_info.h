@@ -1362,6 +1362,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Blubbastard)
        .levelUpLearnset = sBlubbastardLevelUpLearnset,
     },
+
+        [SPECIES_WEATHERBANE] =
+    { 
+       .baseHP        = 80,
+       .baseAttack    = 64,
+       .baseDefense   = 112,
+       .baseSpeed     = 48,
+       .baseSpAttack  = 128,
+       .baseSpDefense = 96,
+       .types = { TYPE_STEEL, TYPE_FLYING },
+       .catchRate = 60,
+       .expYield = 212,
+       .evYield_Defense = 1,
+       .evYield_HP  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 1,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FLYING, EGG_GROUP_MINERAL },
+       .abilities = { ABILITY_STORM_SHELTER, ABILITY_NONE, ABILITY_IRON_BARBS, ABILITY_LIGHTNING_ROD },
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Weatherbane"),
+      .cryId = CRY_WEATHERBANE,
+       .natDexNum = NATIONAL_DEX_WEATHERBANE,
+       .categoryName = _("Stormbreak"),
+       .height = 9,
+       .weight = 32,
+       .description = COMPOUND_STRING(
+           "With one flap of its wings, it creates a\n"
+           "sonic boom powerful enough to disrupt weather\n"
+           "patterns firing its razor-sharp feathers along\n"
+           "the horizon."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Weatherbane,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Weatherbane,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Weatherbane,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Weatherbane,
+       .shinyPalette = gMonShinyPalette_Weatherbane,
+       .iconSprite = gMonIcon_Weatherbane,
+       .iconPalIndex = 0,
+       FOOTPRINT(Weatherbane)
+       .levelUpLearnset = sWeatherbaneLevelUpLearnset,
+    },
         [SPECIES_YUUKIINO] =
     { 
        .baseHP        = 80,

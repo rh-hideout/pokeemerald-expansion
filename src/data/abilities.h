@@ -2793,7 +2793,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_STORM_SHELTER] =
     {
         .name = _("Storm Shelter"),
-        .description = COMPOUND_STRING("Changes Immunity with weather"),
+        .description = COMPOUND_STRING("Weather-based type immunity."),
         .aiRating = 10,
     },
 };

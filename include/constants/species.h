@@ -1694,8 +1694,9 @@
 #define SPECIES_WHIPSCUFFLE                             1584
 #define SPECIES_EPILATE                                 1585
 #define SPECIES_QRAKENMARK                              1586
+#define SPECIES_WEATHERBANE                             1587
 
-#define SPECIES_EGG (SPECIES_QRAKENMARK + 1)
+#define SPECIES_EGG (SPECIES_WEATHERBANE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
