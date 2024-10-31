@@ -874,6 +874,7 @@ static const u8 sText_PkmnRaisedAtkPower[] = _("{B_ATK_PREFIX2}'s {B_CURRENT_MOV
 static const u8 sText_SoulCrushed[] = _("{B_ATK_NAME_WITH_PREFIX} crushes their soul,\nclaiming it for itself!");
 static const u8 sText_TrickStabIllusionWoreOff[] = _("{B_ATK_NAME_WITH_PREFIX}'s Illusion wore off!");
 static const u8 sText_AttackerWasBuried[] = _("{B_ATK_NAME_WITH_PREFIX} was buried!");
+static const u8 sText_EclipseActivates[] = _("{B_ATK_NAME_WITH_PREFIX}'s Eclipse blocked out\nthe harsh sunlight!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1603,6 +1604,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ATTACKERWASBURIED - BATTLESTRINGS_TABLE_START] = sText_AttackerWasBuried,
     [STRINGID_BURIED - BATTLESTRINGS_TABLE_START] = sText_Buried,
     [STRINGID_PKMNSXRESTOREDPARTNERHPALITTLE2 - BATTLESTRINGS_TABLE_START] = sText_PkmnsXRestoredPartnerHPALittle2,
+    [STRINGID_ECLIPSEACTIVATES - BATTLESTRINGS_TABLE_START] = sText_EclipseActivates,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

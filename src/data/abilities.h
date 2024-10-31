@@ -2803,4 +2803,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Weather-based type immunity."),
         .aiRating = 10,
     },
+
+    [ABILITY_ECLIPSE] =
+    {
+        .name = _("Eclipse"),
+        .description = COMPOUND_STRING("On switch-in, removes Sunny Day and\nDesolate Land for a stat boost."),
+        .aiRating = 5,
+    },
+
 };
