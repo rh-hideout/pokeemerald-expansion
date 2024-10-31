@@ -6912,6 +6912,26 @@ BattleScript_AllStatsUpSpDef::
 BattleScript_AllStatsUpRet::
 	return
 
+BattleScript_SharplyRaiseAtkSpAtk::
+	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_ATK, MAX_STAT_STAGE, BattleScript_SharplyRaiseAtkSpAtkDoAnim
+	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_SPATK, MAX_STAT_STAGE, BattleScript_SharplyRaiseAtkSpAtkEnd
+BattleScript_SharplyRaiseAtkSpAtkDoAnim::
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_EFFECT_BATTLER, BIT_ATK | BIT_SPATK, 0
+	setstatchanger STAT_ATK, 2, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_SharplyRaiseAtkSpAtkTrySpAtk
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_SharplyRaiseAtkSpAtkTrySpAtk
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SharplyRaiseAtkSpAtkTrySpAtk::
+	setstatchanger STAT_SPATK, 2, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_SharplyRaiseAtkSpAtkEnd
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_SharplyRaiseAtkSpAtkEnd
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SharplyRaiseAtkSpAtkEnd:
+	return
+
 BattleScript_EffectMop::
 	attackcanceler
 	attackstring
@@ -9783,6 +9803,24 @@ BattleScript_EffectClearWeather::
 	setfieldweather ENUM_WEATHER_NONE
 	call BattleScript_ActivateWeatherAbilities
 	return
+
+BattleScript_EclipseActivatesSun::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ECLIPSEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	setfieldweather ENUM_WEATHER_NONE
+	call BattleScript_SharplyRaiseAtkSpAtk
+	call BattleScript_ActivateWeatherAbilities	
+	end3
+
+BattleScript_EclipseActivatesPrimalSun::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ECLIPSEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	setfieldweather ENUM_WEATHER_NONE
+	call BattleScript_AllStatsUp
+	call BattleScript_ActivateWeatherAbilities
+	end3
 
 BattleScript_ActivateTeraformZero::
 	call BattleScript_AbilityPopUp

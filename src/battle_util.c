@@ -4035,7 +4035,8 @@ bool32 TryChangeBattleWeather(u32 battler, u32 weatherEnumId, bool32 viaAbility)
     if (gBattleWeather & B_WEATHER_PRIMAL_ANY
         && battlerAbility != ABILITY_DESOLATE_LAND
         && battlerAbility != ABILITY_PRIMORDIAL_SEA
-        && battlerAbility != ABILITY_DELTA_STREAM)
+        && battlerAbility != ABILITY_DELTA_STREAM
+        && battlerAbility != ABILITY_ECLIPSE)
     {
         return FALSE;
     }
@@ -4772,6 +4773,18 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_BlockedByPrimalWeatherEnd3);
+                effect++;
+            }
+            break;
+        case ABILITY_ECLIPSE:
+            if (gBattleWeather & B_WEATHER_SUN_PERMANENT || gBattleWeather & B_WEATHER_SUN_TEMPORARY)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_EclipseActivatesSun);
+                effect++;
+            }
+            else if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_EclipseActivatesPrimalSun);
                 effect++;
             }
             break;

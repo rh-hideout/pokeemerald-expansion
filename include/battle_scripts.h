@@ -533,6 +533,8 @@ extern const u8 BattleScript_TrickStabIllusionOff[];
 extern const u8 BattleScript_MopAway[];
 extern const u8 BattleScript_DispenserActivates[];
 extern const u8 BattleScript_DispenserActivatesPartner[];
+extern const u8 BattleScript_EclipseActivatesSun[];
+extern const u8 BattleScript_EclipseActivatesPrimalSun[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
