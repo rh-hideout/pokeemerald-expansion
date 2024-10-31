@@ -1697,8 +1697,9 @@
 #define SPECIES_WEATHERBANE                             1587
 #define SPECIES_EPIPHEROR                               1588
 #define SPECIES_WATTITUDE                               1589
+#define SPECIES_RENDALOPOD                              1590
 
-#define SPECIES_EGG (SPECIES_WATTITUDE + 1)
+#define SPECIES_EGG (SPECIES_RENDALOPOD + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

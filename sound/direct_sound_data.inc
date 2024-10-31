@@ -6353,6 +6353,10 @@ Cry_Ouroblack::
 	.incbin "sound/direct_sound_samples/cries/ouroblack.bin"
 
 	.align 2
+Cry_Rendalopod::
+	.incbin "sound/direct_sound_samples/cries/rendalopod.bin"
+
+	.align 2
 Cry_Jahl::
 	.incbin "sound/direct_sound_samples/cries/jahl.bin"
 

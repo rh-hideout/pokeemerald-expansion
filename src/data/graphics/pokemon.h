@@ -22242,6 +22242,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/icon.4bpp");
    const u8 gMonFootprint_Ginocchio[] = INCBIN_U8("graphics/pokemon/ginocchio/footprint.1bpp");
 
+   const u32 gMonFrontPic_Rendalopod[] = INCBIN_U32("graphics/pokemon/rendalopod/front.4bpp.lz");
+   const u32 gMonBackPic_Rendalopod[] = INCBIN_U32("graphics/pokemon/rendalopod/back.4bpp.lz");
+   const u32 gMonPalette_Rendalopod[] = INCBIN_U32("graphics/pokemon/rendalopod/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Rendalopod[] = INCBIN_U32("graphics/pokemon/rendalopod/shiny.gbapal.lz");
+   const u8 gMonIcon_Rendalopod[] = INCBIN_U8("graphics/pokemon/rendalopod/icon.4bpp");
+   const u8 gMonFootprint_Rendalopod[] = INCBIN_U8("graphics/pokemon/rendalopod/footprint.1bpp");
+
    const u32 gMonFrontPic_Jahl[] = INCBIN_U32("graphics/pokemon/jahl/front.4bpp.lz");
    const u32 gMonBackPic_Jahl[] = INCBIN_U32("graphics/pokemon/jahl/back.4bpp.lz");
    const u32 gMonPalette_Jahl[] = INCBIN_U32("graphics/pokemon/jahl/normal.gbapal.lz");

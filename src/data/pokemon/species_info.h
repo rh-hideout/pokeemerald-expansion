@@ -2083,7 +2083,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
             gShinyOverworldPalette_Fucker
         )
        .levelUpLearnset = sFuckerLevelUpLearnset,
-       },
+    },
+
+        [SPECIES_RENDALOPOD] =
+    { 
+       .baseHP        = 103,
+       .baseAttack    = 79,
+       .baseDefense   = 68,
+       .baseSpeed     = 65,
+       .baseSpAttack  = 115,
+       .baseSpDefense = 85,
+       .types = { TYPE_WATER, TYPE_ELECTRIC },
+       .catchRate = 65,
+       .expYield = 130,
+       .evYield_HP  = 3,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 25,
+       .friendship = 24,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_WATER_1 },
+       .abilities = { ABILITY_VOLT_ABSORB, ABILITY_SUCTION_CUPS, ABILITY_ADAPTABILITY, ABILITY_ANALYTIC },
+       .bodyColor = BODY_COLOR_BLUE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Rendalopod"),
+       .cryId = CRY_RENDALOPOD,
+       .natDexNum = NATIONAL_DEX_RENDALOPOD,
+       .categoryName = _("Monstrous"),
+       .height = 35,
+       .weight = 5489,
+       .description = COMPOUND_STRING(
+           "Rendalopods are solitary, deep sea\n"
+           "ambush predators that hunt using their\n"
+           "maws to stun prey before suppressing \n"
+           "them with their tentacles."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Rendalopod,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Rendalopod,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Rendalopod,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Rendalopod,
+       .shinyPalette = gMonShinyPalette_Rendalopod,
+       .iconSprite = gMonIcon_Rendalopod,
+       .iconPalIndex = 0,
+       FOOTPRINT(Rendalopod)
+       .levelUpLearnset = sRendalopodLevelUpLearnset,
+    },
 
         [SPECIES_JAHL] =
     { 
