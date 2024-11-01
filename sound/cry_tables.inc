@@ -2548,6 +2548,8 @@ gCryTable::
 	cry Cry_Doomsay
 
 	cry Cry_Wattitude
+
+	cry Cry_Rendalopod
 .endif
 
 	.align 2
@@ -5101,4 +5103,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Doomsay
 
 	cry_reverse Cry_Wattitude
+
+	cry_reverse Cry_Rendalopod
 .endif
