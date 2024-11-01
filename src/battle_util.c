@@ -2379,6 +2379,7 @@ enum
     ENDTURN_GMAX_MOVE_RESIDUAL_DAMAGE,
     ENDTURN_SEA_OF_FIRE_DAMAGE,
     ENDTURN_BURIED,
+    ENDTURN_TEMP_TRAPPED,
     ENDTURN_BATTLER_COUNT
 };
 
@@ -2932,6 +2933,19 @@ u8 DoBattlerEndTurnEffects(void)
                     gStatuses4[battler] &= ~STATUS4_BURIED;
                     BattleScriptExecute(BattleScript_BufferEndTurn);
                     PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_BURIED);
+                    effect++;
+                }
+            }
+            gBattleStruct->turnEffectsTracker++;    
+            break;
+        case ENDTURN_TEMP_TRAPPED:
+            if (gStatuses4[battler] & STATUS4_TEMP_TRAPPED)
+            {
+                if (gDisableStructs[battler].tempTrapTimer == 0 || --gDisableStructs[battler].tempTrapTimer == 0)
+                {
+                    gStatuses4[battler] &= ~STATUS4_TEMP_TRAPPED;
+                    BattleScriptExecute(BattleScript_BufferEndTurn);
+                    PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_TEMP_TRAPPED);
                     effect++;
                 }
             }
@@ -6251,7 +6265,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && RandomPercentage(RNG_BEAR_HUG, 30))
                     {
                         gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
                         gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -6271,7 +6285,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && RandomPercentage(RNG_BEAR_HUG, 30))
                     {
                         gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
                         gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -6292,7 +6306,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && RandomPercentage(RNG_BEAR_HUG, 30))
                     {
                         gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
                         gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -6312,7 +6326,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && RandomPercentage(RNG_BEAR_HUG, 30))
                     {
                         gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
                         gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -6397,7 +6411,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && IsMoveMakingContact(move, gBattlerAttacker))
                     {
                         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_BearHugGooeyActivates;
                         gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -6464,7 +6478,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16);
                         if (gBattleMoveDamage == 0)
                             gBattleMoveDamage = 1;
-                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].ability);
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_BearHugRoughSkinActivates;
                         effect++;
@@ -6975,6 +6989,8 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
     else if (gStatuses3[battler] & STATUS3_SKY_DROPPED)
         return FALSE;
     else if (gStatuses4[battler] & STATUS4_BURIED)
+        return FALSE;
+    else if (gStatuses4[battler] & STATUS4_TEMP_TRAPPED)
         return FALSE;
     else
         return TRUE;

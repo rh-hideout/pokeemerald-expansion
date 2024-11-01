@@ -740,8 +740,10 @@
 #define STRINGID_PKMNHURTSWITHREVERSE                 738
 #define STRINGID_PKMNSXINFATUATEDYREVERSE             739
 #define STRINGID_TARGETACQUIREDABILITY                740
+#define STRINGID_TARGETWASTRAPPED                     741
+#define STRINGID_TEMP_TRAPPED                         742
 
-#define BATTLESTRINGS_COUNT                           741
+#define BATTLESTRINGS_COUNT                           743
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

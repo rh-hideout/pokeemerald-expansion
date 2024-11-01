@@ -195,6 +195,7 @@
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 #define STATUS4_GASTRO_ACID             (1 << 7)
 #define STATUS4_BURIED                  (1 << 8)
+#define STATUS4_TEMP_TRAPPED            (1 << 9)
 
 
 #define HITMARKER_WAKE_UP_CLEAR         (1 << 4) // Cleared when waking up. Never set or checked.

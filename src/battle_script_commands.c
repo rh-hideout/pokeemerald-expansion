@@ -9227,6 +9227,22 @@ static void Cmd_various(void)
         }
         return;
     }
+    case VARIOUS_TRY_TEMP_TRAP:
+    {
+        VARIOUS_ARGS(const u8 *failInstr);
+
+        if (gStatuses4[battler] & STATUS4_TEMP_TRAPPED)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else
+        {
+            gStatuses4[battler] |= STATUS4_TEMP_TRAPPED;
+            gDisableStructs[battler].tempTrapTimer = 2;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        return;        
+    }
     case VARIOUS_GET_STAT_VALUE:
     {
         VARIOUS_ARGS(u8 stat);

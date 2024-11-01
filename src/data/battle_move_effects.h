@@ -2420,4 +2420,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectBlackBomb,
         .battleTvScore = 0, // TODO: Assign points
     },
+    [EFFECT_TEMP_TRAP] =
+    {
+        .battleScript = BattleScript_EffectTempTrap,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

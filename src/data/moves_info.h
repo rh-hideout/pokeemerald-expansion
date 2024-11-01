@@ -22293,9 +22293,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "A rock-crushing attack\n"
             "that may lower Defense."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_TEMP_TRAP,
         .power = 80,
-        .type = TYPE_FIGHTING,
+        .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
@@ -22307,7 +22307,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
-        .battleAnimScript = Move_ROCK_SMASH,
+        .battleAnimScript = Move_CRUSH_GRIP,
     },
     // END OF CAPRICCIO MOVES
 
