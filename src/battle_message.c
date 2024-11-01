@@ -599,6 +599,7 @@ static const u8 sText_TransferHeldItem[] =_("{B_DEF_NAME_WITH_PREFIX} received {
 static const u8 sText_EmbargoEnds[] = _("{B_ATK_NAME_WITH_PREFIX} can\nuse items again!");
 static const u8 sText_Electromagnetism[] = _("electromagnetism");
 static const u8 sText_Buried[] = _("buried state");
+static const u8 sText_TempTrapped[] = _("trapped state");
 static const u8 sText_BufferEnds[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1}\nwore off!");
 static const u8 sText_ThroatChopEnds[] = _("{B_ATK_NAME_WITH_PREFIX} can\nuse sound-based moves again!");
 static const u8 sText_TelekinesisEnds[] = _("{B_ATK_NAME_WITH_PREFIX} was freed\nfrom the telekinesis!");
@@ -878,6 +879,7 @@ static const u8 sText_SoulCrushed[] = _("{B_ATK_NAME_WITH_PREFIX} crushes their 
 static const u8 sText_TrickStabIllusionWoreOff[] = _("{B_ATK_NAME_WITH_PREFIX}'s Illusion wore off!");
 static const u8 sText_AttackerWasBuried[] = _("{B_ATK_NAME_WITH_PREFIX} was buried!");
 static const u8 sText_EclipseActivates[] = _("{B_ATK_NAME_WITH_PREFIX}'s Eclipse blocked out\nthe harsh sunlight!");
+static const u8 sText_TargetWasTrapped[] = _("{B_DEF_NAME_WITH_PREFIX} was trapped!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1609,6 +1611,8 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_TRICKSTABILLUSIONWOREOFF - BATTLESTRINGS_TABLE_START] = sText_TrickStabIllusionWoreOff,
     [STRINGID_ATTACKERWASBURIED - BATTLESTRINGS_TABLE_START] = sText_AttackerWasBuried,
     [STRINGID_BURIED - BATTLESTRINGS_TABLE_START] = sText_Buried,
+    [STRINGID_TARGETWASTRAPPED - BATTLESTRINGS_TABLE_START] = sText_TargetWasTrapped,
+    [STRINGID_TEMP_TRAPPED - BATTLESTRINGS_TABLE_START] = sText_TempTrapped,
     [STRINGID_PKMNSXRESTOREDPARTNERHPALITTLE2 - BATTLESTRINGS_TABLE_START] = sText_PkmnsXRestoredPartnerHPALittle2,
     [STRINGID_ECLIPSEACTIVATES - BATTLESTRINGS_TABLE_START] = sText_EclipseActivates,
 };

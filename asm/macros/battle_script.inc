@@ -2533,6 +2533,11 @@
 	.4byte \failInstr
 	.endm
 
+	.macro trytemptrap battler:req, failInstr:req
+	various \battler, VARIOUS_TRY_TEMP_TRAP
+	.4byte \failInstr
+	.endm
+
 	@ Will jump to script pointer if the specified battler has or has not fainted.
 	.macro jumpiffainted battler:req, value:req, ptr:req
 	getbattlerfainted \battler

@@ -239,6 +239,7 @@
 #define VARIOUS_SOUL_CRUSHER                         147
 #define VARIOUS_TRY_TRICK_STAB_ILLUSION_OFF          148
 #define VARIOUS_TRY_BURY_SELF                        149
+#define VARIOUS_TRY_TEMP_TRAP                        150
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
