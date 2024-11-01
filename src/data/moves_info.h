@@ -22286,6 +22286,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         }),
         .battleAnimScript = Move_HYPER_VOICE,
     },
+
+    [MOVE_BEAR_HUG] =
+    {
+        .name = COMPOUND_STRING("Bear Hug"),
+        .description = COMPOUND_STRING(
+            "A rock-crushing attack\n"
+            "that may lower Defense."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_FIGHTING,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .argument = ARG_BEAR_HUG,
+        .contestEffect = CONTEST_EFFECT_BETTER_WITH_GOOD_CONDITION,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_ROCK_SMASH,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

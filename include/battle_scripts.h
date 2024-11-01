@@ -535,6 +535,11 @@ extern const u8 BattleScript_DispenserActivates[];
 extern const u8 BattleScript_DispenserActivatesPartner[];
 extern const u8 BattleScript_EclipseActivatesSun[];
 extern const u8 BattleScript_EclipseActivatesPrimalSun[];
+extern const u8 BattleScript_BearHugRoughSkinActivates[];
+extern const u8 BattleScript_BearHugCuteCharmActivates[];
+extern const u8 BattleScript_BearHugGooeyActivates[];
+extern const u8 BattleScript_BearHugMummyActivates[];
+extern const u8 BattleScript_BearHugRockyHelmetActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
