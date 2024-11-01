@@ -200,6 +200,7 @@ enum RandomTag
     RNG_SHELL_SIDE_ARM,
     RNG_TETANUS,
     RNG_DAILY_DOSE,
+    RNG_BEAR_HUG,
 };
 
 #define RandomWeighted(tag, ...) \

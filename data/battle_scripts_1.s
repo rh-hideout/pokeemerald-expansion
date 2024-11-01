@@ -8888,6 +8888,12 @@ BattleScript_MummyActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_BearHugMummyActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_TARGETACQUIREDABILITY
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_WanderingSpiritActivates::
 .if B_ABILITY_POP_UP == TRUE
 	setbyte sFIXED_ABILITY_POPUP, TRUE
@@ -9089,6 +9095,20 @@ BattleScript_RoughSkinActivates::
 	call BattleScript_HurtAttacker
 	return
 
+BattleScript_BearHugRoughSkinActivates::
+	call BattleScript_AbilityPopUp
+	call BattleScript_HurtTarget
+	return
+
+BattleScript_HurtTarget:
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	printstring STRINGID_PKMNHURTSWITHREVERSE
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_TARGET
+	return
+
 BattleScript_RockyHelmetActivates::
 	@ don't play the animation for a fainted mon
 	jumpifabsent BS_TARGET, BattleScript_RockyHelmetActivatesDmg
@@ -9096,6 +9116,15 @@ BattleScript_RockyHelmetActivates::
 	waitanimation
 BattleScript_RockyHelmetActivatesDmg:
 	call BattleScript_HurtAttacker
+	return
+
+BattleScript_BearHugRockyHelmetActivates::
+	@ don't play the animation for a fainted mon
+	jumpifabsent BS_ATTACKER, BattleScript_RockyHelmetActivatesDmg
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
+	waitanimation
+BattleScript_BearHugRockyHelmetActivatesDmg:
+	call BattleScript_HurtTarget
 	return
 
 BattleScript_SpikyShieldEffect::
@@ -9140,12 +9169,26 @@ BattleScript_CuteCharmActivates::
 	call BattleScript_TryDestinyKnotTarget
 	return
 
+BattleScript_BearHugCuteCharmActivates::
+	call BattleScript_AbilityPopUp
+	status2animation BS_TARGET, STATUS2_INFATUATION
+	printstring STRINGID_PKMNSXINFATUATEDYREVERSE
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_TryDestinyKnotAttacker
+	return
+
 BattleScript_GooeyActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
 	swapattackerwithtarget  @ for defiant, mirror armor
 	seteffectsecondary MOVE_EFFECT_SPD_MINUS_1
 	swapattackerwithtarget
+	return
+
+BattleScript_BearHugGooeyActivates::
+	waitstate
+	call BattleScript_AbilityPopUp
+	seteffectsecondary MOVE_EFFECT_SPD_MINUS_1
 	return
 
 BattleScript_AbilityStatusEffect::

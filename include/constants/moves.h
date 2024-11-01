@@ -976,8 +976,9 @@
 #define MOVE_BLACK_BOMB 912 // RTODO: AI scoring for this move.
 #define MOVE_METEOR_HAMMER 913
 #define MOVE_SCARLET_CHANT 914
+#define MOVE_BEAR_HUG 915
 
-#define MOVES_COUNT_GEN9 915
+#define MOVES_COUNT_GEN9 916
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

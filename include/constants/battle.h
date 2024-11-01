@@ -414,8 +414,10 @@
 #define MOVE_EFFECT_CLEAR_WEATHER       83
 #define MOVE_EFFECT_CURSE               84
 #define MOVE_EFFECT_DAILY_DOSE          85
+#define MOVE_EFFECT_BEAR_HUG_ABILITY    86
+#define MOVE_EFFECT_BEAR_HUG_ITEM       87
 
-#define NUM_MOVE_EFFECTS                86
+#define NUM_MOVE_EFFECTS                88
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000
