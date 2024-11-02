@@ -1698,8 +1698,11 @@
 #define SPECIES_EPIPHEROR                               1588
 #define SPECIES_WATTITUDE                               1589
 #define SPECIES_RENDALOPOD                              1590
+#define SPECIES_SPYCRAB                                 1591
+#define SPECIES_TURTURRET                               1592
+#define SPECIES_SKALLAXY                               1593
 
-#define SPECIES_EGG (SPECIES_RENDALOPOD + 1)
+#define SPECIES_EGG (SPECIES_SKALLAXY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

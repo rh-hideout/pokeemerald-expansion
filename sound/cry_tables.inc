@@ -2550,6 +2550,12 @@ gCryTable::
 	cry Cry_Wattitude
 
 	cry Cry_Rendalopod
+
+	cry Cry_Spycrab
+
+	cry Cry_Turturret
+
+	cry Cry_Skallaxy
 .endif
 
 	.align 2
@@ -5105,4 +5111,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Wattitude
 
 	cry_reverse Cry_Rendalopod
+
+	cry_reverse Cry_Spycrab
+
+	cry_reverse Cry_Turturret
+
+	cry_reverse Cry_Skallaxy
 .endif

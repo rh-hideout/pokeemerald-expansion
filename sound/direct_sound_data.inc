@@ -6213,6 +6213,14 @@ Cry_Ibask::
 	.incbin "sound/direct_sound_samples/cries/ibask.bin"
 
 	.align 2
+Cry_Turturret::
+	.incbin "sound/direct_sound_samples/cries/turturret.bin"
+
+	.align 2
+Cry_Spycrab::
+	.incbin "sound/direct_sound_samples/cries/spycrab.bin"
+
+	.align 2
 Cry_Impfection::
 	.incbin "sound/direct_sound_samples/cries/impfection.bin"
 
@@ -6319,6 +6327,10 @@ Cry_Emeffyume::
 	.align 2
 Cry_Gargarramer::
 	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
+
+	.align 2
+Cry_Skallaxy::
+	.incbin "sound/direct_sound_samples/cries/skallaxy.bin"
 
 	.align 2
 Cry_Moltama::

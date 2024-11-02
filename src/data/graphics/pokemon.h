@@ -22043,6 +22043,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Ibask[] = INCBIN_U8("graphics/pokemon/ibask/icon.4bpp");
    const u8 gMonFootprint_Ibask[] = INCBIN_U8("graphics/pokemon/ibask/footprint.1bpp");
 
+   const u32 gMonFrontPic_Turturret[] = INCBIN_U32("graphics/pokemon/turturret/front.4bpp.lz");
+   const u32 gMonBackPic_Turturret[] = INCBIN_U32("graphics/pokemon/turturret/back.4bpp.lz");
+   const u32 gMonPalette_Turturret[] = INCBIN_U32("graphics/pokemon/turturret/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Turturret[] = INCBIN_U32("graphics/pokemon/turturret/shiny.gbapal.lz");
+   const u8 gMonIcon_Turturret[] = INCBIN_U8("graphics/pokemon/turturret/icon.4bpp");
+   const u8 gMonFootprint_Turturret[] = INCBIN_U8("graphics/pokemon/turturret/footprint.1bpp");
+
+   const u32 gMonFrontPic_Spycrab[] = INCBIN_U32("graphics/pokemon/spycrab/front.4bpp.lz");
+   const u32 gMonBackPic_Spycrab[] = INCBIN_U32("graphics/pokemon/spycrab/back.4bpp.lz");
+   const u32 gMonPalette_Spycrab[] = INCBIN_U32("graphics/pokemon/spycrab/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Spycrab[] = INCBIN_U32("graphics/pokemon/spycrab/shiny.gbapal.lz");
+   const u8 gMonIcon_Spycrab[] = INCBIN_U8("graphics/pokemon/spycrab/icon.4bpp");
+   const u8 gMonFootprint_Spycrab[] = INCBIN_U8("graphics/pokemon/spycrab/footprint.1bpp");
+
    const u32 gMonFrontPic_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/front.4bpp.lz");
    const u32 gMonBackPic_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/back.4bpp.lz");
    const u32 gMonPalette_Buggy[] = INCBIN_U32("graphics/pokemon/buggy/normal.gbapal.lz");
@@ -22463,6 +22477,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonBackPic_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/back.4bpp.lz");
    const u32 gMonShinyPalette_GargarramerAwaken[] = INCBIN_U32("graphics/pokemon/gargarramer/awaken/shiny.gbapal.lz");
    const u8 gMonIcon_GargarramerAwaken[] = INCBIN_U8("graphics/pokemon/gargarramer/awaken/icon.4bpp");
+
+   const u32 gMonFrontPic_Skallaxy[] = INCBIN_U32("graphics/pokemon/skallaxy/front.4bpp.lz");
+   const u32 gMonBackPic_Skallaxy[] = INCBIN_U32("graphics/pokemon/skallaxy/back.4bpp.lz");
+   const u32 gMonPalette_Skallaxy[] = INCBIN_U32("graphics/pokemon/skallaxy/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Skallaxy[] = INCBIN_U32("graphics/pokemon/skallaxy/shiny.gbapal.lz");
+   const u8 gMonIcon_Skallaxy[] = INCBIN_U8("graphics/pokemon/skallaxy/icon.4bpp");
+   const u8 gMonFootprint_Skallaxy[] = INCBIN_U8("graphics/pokemon/skallaxy/footprint.1bpp");
 
    const u32 gMonFrontPic_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/front.4bpp.lz");
    const u32 gMonBackPic_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/back.4bpp.lz");
