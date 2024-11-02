@@ -3682,6 +3682,15 @@ BattleScript_EffectBlackBomb::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectTempTrap::
+	call BattleScript_EffectHit_Ret
+	tryfaintmon BS_TARGET
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
+	trytemptrap BS_TARGET, BattleScript_MoveEnd
+	printstring STRINGID_TARGETWASTRAPPED
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectSuperFang::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
@@ -8033,6 +8042,10 @@ BattleScript_AbilityRaisesDefenderStat::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_AbilityPopUpAttacker::
+	copybyte gBattlerAbility, gBattlerAttacker
+	goto BattleScript_AbilityPopUp
+
 BattleScript_AbilityPopUpTarget:
 	copybyte gBattlerAbility, gBattlerTarget
 BattleScript_AbilityPopUp:
@@ -8889,7 +8902,7 @@ BattleScript_MummyActivates::
 	return
 
 BattleScript_BearHugMummyActivates::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpAttacker
 	printstring STRINGID_TARGETACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -9096,7 +9109,7 @@ BattleScript_RoughSkinActivates::
 	return
 
 BattleScript_BearHugRoughSkinActivates::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpAttacker
 	call BattleScript_HurtTarget
 	return
 
@@ -9170,7 +9183,7 @@ BattleScript_CuteCharmActivates::
 	return
 
 BattleScript_BearHugCuteCharmActivates::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpAttacker
 	status2animation BS_TARGET, STATUS2_INFATUATION
 	printstring STRINGID_PKMNSXINFATUATEDYREVERSE
 	waitmessage B_WAIT_TIME_LONG
@@ -9187,7 +9200,7 @@ BattleScript_GooeyActivates::
 
 BattleScript_BearHugGooeyActivates::
 	waitstate
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpAttacker
 	seteffectsecondary MOVE_EFFECT_SPD_MINUS_1
 	return
 

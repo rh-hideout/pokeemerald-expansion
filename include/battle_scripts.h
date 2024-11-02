@@ -890,5 +890,6 @@ extern const u8 BattleScript_EffectSoulCrusher[];
 extern const u8 BattleScript_EffectTrickStab[];
 extern const u8 BattleScript_EffectMop[];
 extern const u8 BattleScript_EffectBlackBomb[];
+extern const u8 BattleScript_EffectTempTrap[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
