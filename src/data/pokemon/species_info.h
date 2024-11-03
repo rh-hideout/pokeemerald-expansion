@@ -805,7 +805,63 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Ibask)
        .levelUpLearnset = sIbaskLevelUpLearnset,
-       },
+    },
+
+        [SPECIES_TURTINI] =
+    { 
+       .baseHP        = 50,
+       .baseAttack    = 50,
+       .baseDefense   = 85,
+       .baseSpeed     = 30,
+       .baseSpAttack  = 75,
+       .baseSpDefense = 65,
+       .types = { TYPE_GROUND, TYPE_GROUND },
+       .catchRate = 75,
+       .expYield = 110,
+       .evYield_Attack  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 30,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_WATER_1, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_DISPENSER, ABILITY_NONE, ABILITY_GALVANIZE, ABILITY_SHELL_ARMOR },
+       .bodyColor = BODY_COLOR_BLUE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Turtini"),
+       .cryId = CRY_TURTINI,
+       .natDexNum = NATIONAL_DEX_TURTINI,
+       .categoryName = _("Sentry"),
+       .height = 3,
+       .weight = 222,
+       .description = COMPOUND_STRING(
+           "Turtini sit on the beaches they are\n"
+           "born on in large groups to keep \n"
+           "themselves from being picked off at \n"
+           "an early age."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Turtini,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Turtini,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Turtini,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Turtini,
+       .shinyPalette = gMonShinyPalette_Turtini,
+       .iconSprite = gMonIcon_Turtini,
+       .iconPalIndex = 2,
+       FOOTPRINT(Turtini)
+       .levelUpLearnset = sTurtiniLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_TURTURRET}),
+    },
 
         [SPECIES_TURTURRET] =
     { 
@@ -860,6 +916,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Turturret)
        .levelUpLearnset = sTurturretLevelUpLearnset,
+    },
+
+        [SPECIES_MIMIKRAB] =
+    { 
+       .baseHP        = 50,
+       .baseAttack    = 85,
+       .baseDefense   = 65,
+       .baseSpeed     = 75,
+       .baseSpAttack  = 30,
+       .baseSpDefense = 50,
+       .types = { TYPE_WATER, TYPE_WATER },
+       .catchRate = 75,
+       .expYield = 70,
+       .evYield_Attack  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 30,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_WATER_3, EGG_GROUP_NONE },
+       .abilities = { ABILITY_ILLUSION, ABILITY_NONE, ABILITY_ILLUMINATE, ABILITY_INFILTRATOR },
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Mimikrab"),
+       .cryId = CRY_MIMIKRAB,
+       .natDexNum = NATIONAL_DEX_MIMIKRAB,
+       .categoryName = _("Cloaking"),
+       .height = 2,
+       .weight = 148,
+       .description = COMPOUND_STRING(
+           "Mimikrab will attempt to paint their\n"
+           "normally gray shells red with berry\n"
+           "juice to try and mimic Poké Balls. \n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Mimikrab,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Mimikrab,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Mimikrab,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Mimikrab,
+       .shinyPalette = gMonShinyPalette_Mimikrab,
+       .iconSprite = gMonIcon_Mimikrab,
+       .iconPalIndex = 0,
+       FOOTPRINT(Mimikrab)
+       .levelUpLearnset = sMimikrabLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_SPYCRAB}),
     },
 
         [SPECIES_SPYCRAB] =
@@ -3240,6 +3351,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .formChangeTable = sGargarramerFormChangeTable,
     },
 
+        [SPECIES_BORKOSMOS] =
+    { 
+       .baseHP        = 45,
+       .baseAttack    = 62,
+       .baseDefense   = 48,
+       .baseSpeed     = 55,
+       .baseSpAttack  = 52,
+       .baseSpDefense = 65,
+       .types = { TYPE_FIRE, TYPE_FLYING },
+       .catchRate = 84,
+       .expYield = 70,
+       .evYield_Attack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 15,
+       .friendship = 40,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_AMORPHOUS, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_SOLAR_POWER, ABILITY_CLOUD_NINE, ABILITY_MAGIC_GUARD, ABILITY_CUTE_CHARM },
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Borkosmos"),
+      .cryId = CRY_BORKOSMOS,
+       .natDexNum = NATIONAL_DEX_BORKOSMOS,
+       .categoryName = _("Cosmic"),
+       .height = 7,
+       .weight = 115,
+       .description = COMPOUND_STRING(
+           "Borkosmos nests deeply in the clouds\n"
+           "of the sky, longingly staring at the \n"
+           "sun as it sets, waiting for the \n"
+           "opportunity."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Borkosmos,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Borkosmos,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Borkosmos,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Borkosmos,
+       .shinyPalette = gMonShinyPalette_Borkosmos,
+       .iconSprite = gMonIcon_Borkosmos,
+       .iconPalIndex = 2,
+       FOOTPRINT(Borkosmos)
+       .levelUpLearnset = sBorkosmosLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_ITEM, ITEM_SUN_STONE, SPECIES_SKALLAXY}),
+    },
+
         [SPECIES_SKALLAXY] =
     { 
        .baseHP        = 85,
@@ -3264,14 +3431,15 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .speciesName = _("Skallaxy"),
       .cryId = CRY_SKALLAXY,
        .natDexNum = NATIONAL_DEX_SKALLAXY,
-       .categoryName = _("Masquerade"),
+       .categoryName = _("Devourer"),
        .height = 34,
        .weight = 2213,
        .description = COMPOUND_STRING(
-           "It sculpts a mask out of dried mud.\n"
-           "The mud is hardened by a special \n"
-           "compound, so it can be used to \n"
-           "deliver powerful pecks."),
+           "Legends speak of the terrifying \n"
+           "devourer of the sun, Skällaxy. \n"
+           "It soars throughout the atmosphere, \n"
+           "never roosting until it feasts\n"
+           "upon the burning light of the sun."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,

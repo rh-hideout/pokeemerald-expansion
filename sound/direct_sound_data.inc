@@ -6213,8 +6213,16 @@ Cry_Ibask::
 	.incbin "sound/direct_sound_samples/cries/ibask.bin"
 
 	.align 2
+Cry_Turtini::
+	.incbin "sound/direct_sound_samples/cries/turtini.bin"
+
+	.align 2
 Cry_Turturret::
 	.incbin "sound/direct_sound_samples/cries/turturret.bin"
+
+	.align 2
+Cry_Mimikrab::
+	.incbin "sound/direct_sound_samples/cries/mimikrab.bin"
 
 	.align 2
 Cry_Spycrab::
@@ -6327,6 +6335,10 @@ Cry_Emeffyume::
 	.align 2
 Cry_Gargarramer::
 	.incbin "sound/direct_sound_samples/cries/gargarramer.bin"
+
+	.align 2
+Cry_Borkosmos::
+	.incbin "sound/direct_sound_samples/cries/borkosmos.bin"
 
 	.align 2
 Cry_Skallaxy::

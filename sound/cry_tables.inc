@@ -2556,6 +2556,12 @@ gCryTable::
 	cry Cry_Turturret
 
 	cry Cry_Skallaxy
+
+	cry Cry_Mimikrab
+
+	cry Cry_Turtini
+
+	cry Cry_Borkosmos
 .endif
 
 	.align 2
@@ -5117,4 +5123,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Turturret
 
 	cry_reverse Cry_Skallaxy
+
+	cry_reverse Cry_Mimikrab
+
+	cry_reverse Cry_Turtini
+
+	cry_reverse Cry_Borkosmos
 .endif
