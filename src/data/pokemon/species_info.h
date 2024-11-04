@@ -253,7 +253,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Hazelnaut)
        .levelUpLearnset = sHazelnautLevelUpLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_GINOCCHIO}),
-       },
+    },
 
         [SPECIES_GINOCCHIO] =
     { 
@@ -308,6 +308,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Ginocchio)
        .levelUpLearnset = sGinocchioLevelUpLearnset,
+    },
+
+        [SPECIES_LEMIRETHUN] =
+    { 
+       .baseHP        = 110,
+       .baseAttack    = 60,
+       .baseDefense   = 100,
+       .baseSpeed     = 45,
+       .baseSpAttack  = 125,
+       .baseSpDefense = 100,
+       .types = { TYPE_WATER, TYPE_GROUND },
+       .catchRate = 3,
+       .expYield = 157,
+       .evYield_SpAttack  = 3,
+       .genderRatio = PERCENT_FEMALE(12.5),
+       .eggCycles = 20,
+       .friendship = 76,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_AMORPHOUS, EGG_GROUP_NONE },
+       .abilities = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_STORM_DRAIN, ABILITY_SHEER_FORCE },
+       .bodyColor = BODY_COLOR_BLUE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Lemirethun"),
+       .cryId = CRY_LEMIRETHUN,
+       .natDexNum = NATIONAL_DEX_LEMIRETHUN,
+       .categoryName = _("Chaotic"),
+       .height = 15,
+       .weight = 3120,
+       .description = COMPOUND_STRING(
+           "Many folk tales speak of how this Pokémon \n"
+           "will flood villages in its rage and sadness.\n"
+           "However, with love, it can open its heart.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Lemirethun,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Lemirethun,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Lemirethun,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Lemirethun,
+       .shinyPalette = gMonShinyPalette_Lemirethun,
+       .iconSprite = gMonIcon_Lemirethun,
+       .iconPalIndex = 2,
+       FOOTPRINT(Lemirethun)
+       .levelUpLearnset = sLemirethunLevelUpLearnset,
     },
 
         [SPECIES_BUGGY] =
@@ -1667,9 +1721,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 8,
        .weight = 3,
        .description = COMPOUND_STRING(
-           "A zippy little trickster that can zoom across\n"
+           "A zippy little trickster that zooms across\n"
            "powerlines at light speeds, Wattitude enjoy\n"
-           "urban environments where they can hide inside\n"
+           "urban environments where they hide inside\n"
            "of electronics to jump out and scare people."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
@@ -1970,6 +2024,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Parmiausan)
        .levelUpLearnset = sParmiausanLevelUpLearnset,
     },
+
+        [SPECIES_GHARROSTE] =
+    { 
+       .baseHP        = 60,
+       .baseAttack    = 40,
+       .baseDefense   = 136,
+       .baseSpeed     = 115,
+       .baseSpAttack  = 30,
+       .baseSpDefense = 116,
+       .types = { TYPE_GHOST, TYPE_DARK },
+       .catchRate = 30,
+       .expYield = 151,
+       .evYield_Attack  = 2,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 15,
+       .friendship = 40,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_AMORPHOUS },
+       .abilities = { ABILITY_SHADOW_TAG, ABILITY_NONE, ABILITY_HUSTLE, ABILITY_SHEER_FORCE },
+       .bodyColor = BODY_COLOR_PURPLE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Gharroste"),
+      .cryId = CRY_GHARROSTE,
+       .natDexNum = NATIONAL_DEX_GHARROSTE,
+       .categoryName = _("Shroud"),
+       .height = 34,
+       .weight = 60,
+       .description = COMPOUND_STRING(
+           "Gharroste have evolved to be as \n"
+           "inefficient as possible at killing \n"
+           "prey instead, feeding on their energy\n"
+           "and suffering.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Gharroste,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Gharroste,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Gharroste,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Gharroste,
+       .shinyPalette = gMonShinyPalette_Gharroste,
+       .iconSprite = gMonIcon_Gharroste,
+       .iconPalIndex = 2,
+       FOOTPRINT(Gharroste)
+       .levelUpLearnset = sGharrosteLevelUpLearnset,
+    },
         [SPECIES_EPIPHEROR] =
     { 
        .baseHP        = 119,
@@ -1982,7 +2091,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .catchRate = 35,
        .expYield = 155,
        .evYield_HP  = 3,
-       .genderRatio = PERCENT_FEMALE(50),
+       .genderRatio = PERCENT_FEMALE(25),
        .eggCycles = 30,
        .friendship = 10,
        .growthRate = GROWTH_MEDIUM_SLOW,
@@ -2023,7 +2132,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Epipheror)
        .levelUpLearnset = sEpipherorLevelUpLearnset,
-       },
+    },
         [SPECIES_LARVATRICE] =
     { 
        .baseHP        = 43,
@@ -3428,7 +3537,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .bodyColor = BODY_COLOR_RED,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
-      .speciesName = _("Skallaxy"),
+      .speciesName = _("Skällaxy"),
       .cryId = CRY_SKALLAXY,
        .natDexNum = NATIONAL_DEX_SKALLAXY,
        .categoryName = _("Devourer"),
@@ -3436,10 +3545,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 2213,
        .description = COMPOUND_STRING(
            "Legends speak of the terrifying \n"
-           "devourer of the sun, Skällaxy. \n"
-           "It soars throughout the atmosphere, \n"
-           "never roosting until it feasts\n"
-           "upon the burning light of the sun."),
+           "devourer of the sun, Skällaxy. It \n"
+           "soars throughout the atmosphere, \n"
+           "never roosting until it feasts.\n"),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4055,6 +4163,64 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nyanonite)
        .levelUpLearnset = sNyanoniteLevelUpLearnset,
+       },
+    
+        [SPECIES_TERMAGNIUS] =
+    { 
+       .baseHP        = 99,
+       .baseAttack    = 130,
+       .baseDefense   = 106,
+       .baseSpeed     = 81,
+       .baseSpAttack  = 81,
+       .baseSpDefense = 103,
+       .types = { TYPE_MYSTERY, TYPE_MYSTERY },
+       .catchRate = 3,
+       .expYield = 210,
+       .evYield_SpDefense  = 1,
+       .evYield_Defense  = 1,
+       .evYield_HP  = 1,
+       .evYield_Attack  = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 30,
+       .friendship = 40,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_MINERAL },
+       .abilities = { ABILITY_CLOUD_NINE, ABILITY_SAND_FORCE, ABILITY_ECLIPSE, ABILITY_BOUNDARY },
+       .bodyColor = BODY_COLOR_BLACK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Termagnius"),
+       .cryId = CRY_TERMAGNIUS,
+       .natDexNum = NATIONAL_DEX_TERMAGNIUS,
+       .categoryName = _("Apocalypse"),
+       .height = 78,
+       .weight = 6666,
+       .description = COMPOUND_STRING(
+           "Heralded as the bringer of the end, it is \n"
+           "is said that Termagnius will break the cycle\n"
+           "of life, and then release Klassicopes to \n"
+           "create a new world."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Termagnius,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Termagnius,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 2,
+       .backPic = gMonBackPic_Termagnius,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Termagnius,
+       .shinyPalette = gMonShinyPalette_Termagnius,
+       .iconSprite = gMonIcon_Termagnius,
+       .iconPalIndex = 1,
+       FOOTPRINT(Termagnius)
+       .levelUpLearnset = sTermagniusLevelUpLearnset,
     },
     
         [SPECIES_FORGOTNO] =

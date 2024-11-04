@@ -6169,6 +6169,10 @@ Cry_Ginocchio::
 	.incbin "sound/direct_sound_samples/cries/ginocchio.bin"
 
 	.align 2
+Cry_Lemirethun::
+	.incbin "sound/direct_sound_samples/cries/lemirethun.bin"
+
+	.align 2
 Cry_Buggy::
 	.incbin "sound/direct_sound_samples/cries/buggy.bin"
 
@@ -6287,6 +6291,14 @@ Cry_Mammount::
 	.align 2
 Cry_Parmiausan::
 	.incbin "sound/direct_sound_samples/cries/parmiausan.bin"
+
+	.align 2
+Cry_Termagnius::
+	.incbin "sound/direct_sound_samples/cries/termagnius.bin"
+
+	.align 2
+Cry_Gharroste::
+	.incbin "sound/direct_sound_samples/cries/gharroste.bin"
 
 	.align 2
 Cry_Epipheror::

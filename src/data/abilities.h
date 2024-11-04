@@ -2736,7 +2736,14 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Striker"),
         .description = COMPOUND_STRING("Power Up kick moves."),
-        .aiRating = 4,
+        .aiRating = 9,
+    },
+    
+    [ABILITY_BEAM_BOOST] =
+    {
+        .name = _("Beam Boost"),
+        .description = COMPOUND_STRING("Power Up beam moves."),
+        .aiRating = 9,
     },
     
     [ABILITY_STONEFLESH] =

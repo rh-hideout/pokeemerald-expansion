@@ -1704,8 +1704,11 @@
 #define SPECIES_MIMIKRAB                                1594
 #define SPECIES_TURTINI                                 1595
 #define SPECIES_BORKOSMOS                               1596
+#define SPECIES_GHARROSTE                               1597
+#define SPECIES_TERMAGNIUS                              1598
+#define SPECIES_LEMIRETHUN                              1599
 
-#define SPECIES_EGG (SPECIES_BORKOSMOS + 1)
+#define SPECIES_EGG (SPECIES_LEMIRETHUN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

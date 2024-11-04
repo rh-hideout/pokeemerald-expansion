@@ -365,6 +365,7 @@
 #define ABILITY_DISPENSER 335 // RTODO: Add AI for switch-in healing, possibly partner healing.
 #define ABILITY_STORM_SHELTER 336
 #define ABILITY_ECLIPSE 337 // RTODO: Add AI for switch-in stat boost.
+#define ABILITY_BEAM_BOOST 338
 
 #define ABILITIES_COUNT_GEN9 338
 

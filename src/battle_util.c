@@ -10054,6 +10054,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         if (gMovesInfo[move].ballisticMove)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
+    case ABILITY_BEAM_BOOST:
+        if (gMovesInfo[move].beamMove)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
     case ABILITY_STRIKER:
         if (gMovesInfo[move].kickingMove)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
