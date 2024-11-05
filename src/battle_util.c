@@ -5219,6 +5219,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 BattleScriptPushCursorAndCallback(BattleScript_BadDreamsActivates);
                 effect++;
                 break;
+            case ABILITY_CONCERT:
+                BattleScriptPushCursorAndCallback(BattleScript_ConcertActivates);
+                effect++;
+                break;
             case ABILITY_SOLAR_POWER:
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
                 {
@@ -11137,6 +11141,8 @@ static inline void MulByTypeEffectiveness(uq4_12_t *modifier, u32 move, u32 move
     if (moveType == TYPE_STELLAR && GetActiveGimmick(battlerDef) == GIMMICK_TERA)
         mod = UQ_4_12(2.0);
     if (moveType == TYPE_DARK && (defType == TYPE_FAIRY || defType == TYPE_NORMAL) && abilityAtk == ABILITY_DEGRADATION)
+        mod = UQ_4_12(2.0);
+    if (moveType == TYPE_POISON && (defType == TYPE_WATER || defType == TYPE_GROUND || defType == TYPE_FLYING) && abilityAtk == ABILITY_POLLUTION)
         mod = UQ_4_12(2.0);
 
     // B_WEATHER_STRONG_WINDS weakens Super Effective moves against Flying-type Pokémon

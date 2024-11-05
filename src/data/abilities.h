@@ -2711,6 +2711,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Fairy/Normal weak to Dark."),
         .aiRating = 6,
     },
+
+    [ABILITY_POLLUTION] =
+    {
+        .name = _("Pollution"),
+        .description = COMPOUND_STRING("Water/Ground/Flying weak to Dark."),
+        .aiRating = 7,
+    },
     [ABILITY_SOUSAPHONE] =
     {
         .name = _("Sousaphone"),
@@ -2735,14 +2742,14 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_STRIKER] =
     {
         .name = _("Striker"),
-        .description = COMPOUND_STRING("Power Up kick moves."),
+        .description = COMPOUND_STRING("Powers up kicking moves and\nensures they land."),
         .aiRating = 9,
     },
     
     [ABILITY_BEAM_BOOST] =
     {
         .name = _("Beam Boost"),
-        .description = COMPOUND_STRING("Power Up beam moves."),
+        .description = COMPOUND_STRING("Powers up beam moves."),
         .aiRating = 9,
     },
     
@@ -2816,6 +2823,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Eclipse"),
         .description = COMPOUND_STRING("On switch-in, removes Sunny Day and\nDesolate Land for a stat boost."),
         .aiRating = 5,
+    },
+
+    [ABILITY_CONCERT] =
+    {
+        .name = _("Concert"),
+        .description = COMPOUND_STRING("Sings to damage others every turn."),
+        .aiRating = 7,
     },
 
 };

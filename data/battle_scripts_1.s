@@ -8631,6 +8631,42 @@ BattleScript_BadDreams_HidePopUp:
 	tryfaintmon BS_TARGET
 	goto BattleScript_BadDreamsIncrement
 
+BattleScript_ConcertActivates::
+	setbyte gBattlerTarget, 0
+BattleScript_ConcertLoop:
+	jumpiftargetally BattleScript_ConcertIncrement
+	jumpifability BS_TARGET, ABILITY_MAGIC_GUARD, BattleScript_ConcertIncrement
+	jumpifability BS_TARGET, ABILITY_SOUNDPROOF, BattleScript_ConcertIncrement
+	call BattleScript_Concert_Dmg
+	goto BattleScript_ConcertIncrement
+BattleScript_Concert_Dmg:
+	jumpifbyteequal sFIXED_ABILITY_POPUP, sZero, BattleScript_Concert_ShowPopUp
+BattleScript_Concert_DmgAfterPopUp:
+	printstring STRINGID_CONCERTDMG
+	waitmessage B_WAIT_TIME_LONG
+	dmg_1_8_targethp
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	jumpifhasnohp BS_TARGET, BattleScript_Concert_HidePopUp
+BattleScript_ConcertIncrement:
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_ConcertLoop
+	jumpifbyteequal sFIXED_ABILITY_POPUP, sZero, BattleScript_ConcertEnd
+	destroyabilitypopup
+	pause 15
+BattleScript_ConcertEnd:
+	end3
+BattleScript_Concert_ShowPopUp:
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	setbyte sFIXED_ABILITY_POPUP, TRUE
+	goto BattleScript_Concert_DmgAfterPopUp
+BattleScript_Concert_HidePopUp:
+	destroyabilitypopup
+	tryfaintmon BS_TARGET
+	goto BattleScript_ConcertIncrement
+
 BattleScript_TookAttack::
 	attackstring
 	pause B_WAIT_TIME_SHORT

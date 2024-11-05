@@ -1707,8 +1707,9 @@
 #define SPECIES_GHARROSTE                               1597
 #define SPECIES_TERMAGNIUS                              1598
 #define SPECIES_LEMIRETHUN                              1599
+#define SPECIES_CYCLONIAN                               1600
 
-#define SPECIES_EGG (SPECIES_LEMIRETHUN + 1)
+#define SPECIES_EGG (SPECIES_CYCLONIAN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -22176,6 +22176,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/icon.4bpp");
    const u8 gMonFootprint_Weatherbane[] = INCBIN_U8("graphics/pokemon/weatherbane/footprint.1bpp");
 
+   const u32 gMonFrontPic_Cyclonian[] = INCBIN_U32("graphics/pokemon/cyclonian/front.4bpp.lz");
+   const u32 gMonBackPic_Cyclonian[] = INCBIN_U32("graphics/pokemon/cyclonian/back.4bpp.lz");
+   const u32 gMonPalette_Cyclonian[] = INCBIN_U32("graphics/pokemon/cyclonian/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cyclonian[] = INCBIN_U32("graphics/pokemon/cyclonian/shiny.gbapal.lz");
+   const u8 gMonIcon_Cyclonian[] = INCBIN_U8("graphics/pokemon/cyclonian/icon.4bpp");
+   const u8 gMonFootprint_Cyclonian[] = INCBIN_U8("graphics/pokemon/cyclonian/footprint.1bpp");
+
    const u32 gMonFrontPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/front.4bpp.lz");
    const u32 gMonBackPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/back.4bpp.lz");
    const u32 gMonPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/normal.gbapal.lz");

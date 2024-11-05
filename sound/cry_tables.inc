@@ -2568,6 +2568,8 @@ gCryTable::
 	cry Cry_Termagnius
 
 	cry Cry_Lemirethun
+
+	cry Cry_Cyclonian
 .endif
 
 	.align 2
@@ -5141,4 +5143,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Termagnius
 
 	cry_reverse Cry_Lemirethun
+
+	cry_reverse Cry_Cyclonian
 .endif

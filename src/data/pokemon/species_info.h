@@ -1650,7 +1650,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .expYield = 212,
        .evYield_Defense = 1,
        .evYield_HP  = 1,
-       .genderRatio = PERCENT_FEMALE(50),
+       .genderRatio = PERCENT_FEMALE(25),
        .eggCycles = 20,
        .friendship = 60,
        .growthRate = GROWTH_MEDIUM_SLOW,
@@ -1691,6 +1691,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Weatherbane)
        .levelUpLearnset = sWeatherbaneLevelUpLearnset,
+    },
+
+        [SPECIES_CYCLONIAN] =
+    { 
+       .baseHP        = 64,
+       .baseAttack    = 96,
+       .baseDefense   = 48,
+       .baseSpeed     = 112,
+       .baseSpAttack  = 128,
+       .baseSpDefense = 80,
+       .types = { TYPE_STEEL, TYPE_FLYING },
+       .catchRate = 65,
+       .expYield = 140,
+       .evYield_SpAttack = 1,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(25),
+       .eggCycles = 20,
+       .friendship = 80,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_AMORPHOUS, EGG_GROUP_MINERAL },
+       .abilities = { ABILITY_BEAM_BOOST, ABILITY_NONE, ABILITY_SNIPER, ABILITY_COMPOUND_EYES },
+       .bodyColor = BODY_COLOR_WHITE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Cyclonian"),
+      .cryId = CRY_CYCLONIAN,
+       .natDexNum = NATIONAL_DEX_CYCLONIAN,
+       .categoryName = _("Chaser"),
+       .height = 12,
+       .weight = 32,
+       .description = COMPOUND_STRING(
+           "Aided by the drone it now inhabits, it\n"
+           "soars among the clouds to gaze at the \n"
+           "weather; darting in and out of storms \n"
+           "in order order to get the best picture."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Cyclonian,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Cyclonian,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Cyclonian,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Cyclonian,
+       .shinyPalette = gMonShinyPalette_Cyclonian,
+       .iconSprite = gMonIcon_Cyclonian,
+       .iconPalIndex = 0,
+       FOOTPRINT(Cyclonian)
+       .levelUpLearnset = sCyclonianLevelUpLearnset,
     },
 
         [SPECIES_WATTITUDE] =
@@ -2096,7 +2152,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 10,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
-       .abilities = { ABILITY_FOREWARN, ABILITY_FRISK, ABILITY_WONDER_SKIN, ABILITY_SOUNDPROOF}, //GTODO Replace soundproof with Concert when ability is finalized
+       .abilities = { ABILITY_FOREWARN, ABILITY_FRISK, ABILITY_WONDER_SKIN, ABILITY_CONCERT}, //GTODO Replace soundproof with Concert when ability is finalized
        .bodyColor = BODY_COLOR_RED,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,

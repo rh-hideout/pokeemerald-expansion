@@ -6269,6 +6269,10 @@ Cry_Weatherbane::
 	.incbin "sound/direct_sound_samples/cries/weatherbane.bin"
 
 	.align 2
+Cry_Cyclonian::
+	.incbin "sound/direct_sound_samples/cries/cyclonian.bin"
+
+	.align 2
 Cry_Wattitude::
 	.incbin "sound/direct_sound_samples/cries/wattitude.bin"
 
