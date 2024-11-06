@@ -2570,6 +2570,8 @@ gCryTable::
 	cry Cry_Lemirethun
 
 	cry Cry_Cyclonian
+
+	cry Cry_Shroomalice
 .endif
 
 	.align 2
@@ -5145,4 +5147,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Lemirethun
 
 	cry_reverse Cry_Cyclonian
+
+	cry_reverse Cry_Shroomalice
 .endif

@@ -22190,6 +22190,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/icon.4bpp");
    const u8 gMonFootprint_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/footprint.1bpp");
 
+   const u32 gMonFrontPic_Shroomalice[] = INCBIN_U32("graphics/pokemon/shroomalice/front.4bpp.lz");
+   const u32 gMonBackPic_Shroomalice[] = INCBIN_U32("graphics/pokemon/shroomalice/back.4bpp.lz");
+   const u32 gMonPalette_Shroomalice[] = INCBIN_U32("graphics/pokemon/shroomalice/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Shroomalice[] = INCBIN_U32("graphics/pokemon/shroomalice/shiny.gbapal.lz");
+   const u8 gMonIcon_Shroomalice[] = INCBIN_U8("graphics/pokemon/shroomalice/icon.4bpp");
+   const u8 gMonFootprint_Shroomalice[] = INCBIN_U8("graphics/pokemon/shroomalice/footprint.1bpp");
+
    const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
    const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
    const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");

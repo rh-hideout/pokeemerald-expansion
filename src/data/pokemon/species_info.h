@@ -1803,6 +1803,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Wattitude)
        .levelUpLearnset = sWattitudeLevelUpLearnset,
     },
+    
+        [SPECIES_SHROOMALICE] =
+    { 
+       .baseHP        = 95,
+       .baseAttack    = 25,
+       .baseDefense   = 75,
+       .baseSpeed     = 80,
+       .baseSpAttack  = 125,
+       .baseSpDefense = 75,
+       .types = { TYPE_GRASS, TYPE_PSYCHIC },
+       .catchRate = 47,
+       .expYield = 140,
+       .evYield_SpAttack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 25,
+       .friendship = 190,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_MONSTER},
+       .abilities = { ABILITY_EFFECT_SPORE, ABILITY_INFILTRATOR, ABILITY_BAD_DREAMS, ABILITY_UNNERVE}, 
+       .bodyColor = BODY_COLOR_PINK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Shroomalice"),
+       .cryId = CRY_SHROOMALICE,
+       .natDexNum = NATIONAL_DEX_SHROOMALICE,
+       .categoryName = _("Malicious"),
+       .height = 25,
+       .weight = 1002,
+       .description = COMPOUND_STRING(
+           "Shroomalice body is never in one \n"
+           "place. It uses portals to move around\n"
+           "or play with its prey before feeding.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Shroomalice,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Shroomalice,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Shroomalice,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Shroomalice,
+       .shinyPalette = gMonShinyPalette_Shroomalice,
+       .iconSprite = gMonIcon_Shroomalice,
+       .iconPalIndex = 1,
+       FOOTPRINT(Shroomalice)
+       .levelUpLearnset = sShroomaliceLevelUpLearnset,
+    },
         [SPECIES_YUUKIINO] =
     { 
        .baseHP        = 80,
@@ -1816,7 +1870,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .expYield = 88,
        .evYield_SpDefense  = 3,
        .genderRatio = PERCENT_FEMALE(100),
-       .eggCycles = 35,
+       .eggCycles = 20,
        .friendship = 10,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_MINERAL },
@@ -1872,7 +1926,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .expYield = 180,
        .evYield_SpDefense  = 3,
        .genderRatio = PERCENT_FEMALE(100),
-       .eggCycles = 35,
+       .eggCycles = 20,
        .friendship = 190,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_HUMAN_LIKE, EGG_GROUP_MINERAL },
@@ -1912,7 +1966,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Aquadiiva)
        .levelUpLearnset = sAquadiivaLevelUpLearnset,
-       },
+    },
     
         [SPECIES_MAMINI] =
     { 

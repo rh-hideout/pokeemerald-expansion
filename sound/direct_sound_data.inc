@@ -6281,6 +6281,10 @@ Cry_Yuukiino::
 	.incbin "sound/direct_sound_samples/cries/yuukiino.bin"
 
 	.align 2
+Cry_Shroomalice::
+	.incbin "sound/direct_sound_samples/cries/shroomalice.bin"
+
+	.align 2
 Cry_Aquadiiva::
 	.incbin "sound/direct_sound_samples/cries/aquadiiva.bin"
 
