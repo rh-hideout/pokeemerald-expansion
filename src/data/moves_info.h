@@ -20712,6 +20712,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_MALIGNANT_CHAIN,
     },
     
+    // CAPRICCIO MOVES START HERE
+
     [MOVE_STARSEED_BLAST] =
     {
         .name = COMPOUND_STRING("Starseed Blast"),
@@ -21108,7 +21110,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .slicingMove = TRUE,
-        .battleAnimScript = Move_AQUA_CUTTER,
+        .battleAnimScript = Move_COLD_CUTTER,
     },
 
     [MOVE_GAZER_BEAM] =
@@ -21375,7 +21377,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY, COMBO_STARTER_HARDEN},
-        .battleAnimScript = Move_EARTH_POWER,
+        .battleAnimScript = Move_EARTH_SHATTER,
     },
 
     [MOVE_EXTINCTION] =
@@ -22315,8 +22317,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Bear Hug"),
         .description = COMPOUND_STRING(
-            "A rock-crushing attack\n"
-            "that may lower Defense."),
+            "Hugs the target tightly.\n"
+            "User's contact effects occur."),
         .effect = EFFECT_TEMP_TRAP,
         .power = 80,
         .type = TYPE_NORMAL,

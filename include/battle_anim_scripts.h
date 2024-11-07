@@ -862,6 +862,8 @@ extern const u8 Move_SLIP_TURN[];
 extern const u8 Move_BOIL_OVER[];
 extern const u8 Move_CRUSADER_CRASH[];
 extern const u8 Move_CARVING_BEAK[];
+extern const u8 Move_EARTH_SHATTER[];
+extern const u8 Move_COLD_CUTTER[];
 
 // OTHER BULLSHIT
 extern const u8 Move_BREAKNECK_BLITZ[];
