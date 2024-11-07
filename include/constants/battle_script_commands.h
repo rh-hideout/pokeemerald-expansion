@@ -318,7 +318,7 @@
 #define MOVEEND_SAME_MOVE_TURNS                   36
 #define MOVEEND_SET_EVOLUTION_TRACKER             37
 #define MOVEEND_CLEAR_BITS                        38
-#define BEAR_HUG_END_ABILITIES_ATTACKER            39
+#define BEAR_HUG_END_ABILITIES_ATTACKER           39
 #define MOVEEND_COUNT                             40
 
 // switch cases
@@ -332,6 +332,6 @@
 #define ARG_TRY_REMOVE_TERRAIN_FAIL    2
 
 // Bear Hug Argument
-#define ARG_BEAR_HUG                   0
+#define ARG_BEAR_HUG                   900 // This number is arbitrary but I needed to set a value for Rocky Helmet to function correctly.
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

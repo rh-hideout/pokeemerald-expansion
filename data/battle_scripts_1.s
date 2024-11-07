@@ -9246,6 +9246,11 @@ BattleScript_AbilityStatusEffect::
 	seteffectsecondary
 	return
 
+BattleScript_AbilityStatusEffectNoPopUp::
+	waitstate
+	seteffectsecondary
+	return
+
 BattleScript_BattleBondActivatesOnMoveEndAttacker::
 	pause 5
 	copybyte gBattlerAbility, gBattlerAttacker

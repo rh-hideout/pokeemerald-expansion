@@ -5149,4 +5149,5 @@ gCryTable_Reverse::
 	cry_reverse Cry_Cyclonian
 
 	cry_reverse Cry_Shroomalice
+	
 .endif
