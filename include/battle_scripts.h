@@ -541,6 +541,7 @@ extern const u8 BattleScript_BearHugCuteCharmActivates[];
 extern const u8 BattleScript_BearHugGooeyActivates[];
 extern const u8 BattleScript_BearHugMummyActivates[];
 extern const u8 BattleScript_BearHugRockyHelmetActivates[];
+extern const u8 BattleScript_AbilityStatusEffectNoPopUp[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

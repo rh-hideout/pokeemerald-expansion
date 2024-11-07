@@ -2832,4 +2832,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 7,
     },
 
+    [ABILITY_HYDROTHERMAL] =
+    {
+        .name = _("Hydrothermal"),
+        .description = COMPOUND_STRING("Increased burn chance for Fire-type\n and Water-type moves."),
+        .aiRating = 4,
+    },
+
 };

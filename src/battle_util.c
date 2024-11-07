@@ -6248,6 +6248,27 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
                 effect++;
             }
+            break;
+        case ABILITY_HYDROTHERMAL:
+        {
+        if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+            && IsBattlerAlive(gBattlerTarget)
+            && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+            && CanBeBurned(gBattlerTarget, GetBattlerAbility(gBattlerTarget))
+            && ((gMovesInfo[gCurrentMove].type == TYPE_FIRE)
+            || (gMovesInfo[gCurrentMove].type == TYPE_WATER))
+            && (gMovesInfo[gCurrentMove].additionalEffects->moveEffect != MOVE_EFFECT_BURN)
+            && TARGET_TURN_DAMAGED // Need to actually hit the target
+            && RandomPercentage(RNG_HYDROTHERMAL, 10))
+            {
+                gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
+                BattleScriptPushCursor();
+                SetMoveEffect(FALSE, FALSE);
+                gBattlescriptCurrInstr = BattleScript_MoveEffectBurn;
+                effect++;
+            }
+        }
+            break;
         }
         break;
     case ABILITYEFFECT_BEAR_HUG_ATTACKER:
@@ -8587,24 +8608,27 @@ u8 ItemBattleEffects(u8 caseID, u32 battler, bool32 moveTurn)
             }
             break;
         case HOLD_EFFECT_ROCKY_HELMET:
-            if(gMovesInfo[gCurrentMove].argument == ARG_BEAR_HUG)
-            {
-                if (TARGET_TURN_DAMAGED
-                    && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
-                    && IsMoveMakingContact(gCurrentMove, gBattlerAttacker)
-                    && IsBattlerAlive(gBattlerTarget)
-                    && GetBattlerAbility(gBattlerTarget) != ABILITY_MAGIC_GUARD)
+                if (gMovesInfo[gCurrentMove].argument == ARG_BEAR_HUG)
                 {
-                    gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / 6;
-                    if (gBattleMoveDamage == 0)
-                        gBattleMoveDamage = 1;
-                    effect = ITEM_HP_CHANGE;
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_BearHugRockyHelmetActivates;
-                    PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
-                    RecordItemEffectBattle(battler, HOLD_EFFECT_ROCKY_HELMET);
-                }                
-            }
+                    if (TARGET_TURN_DAMAGED
+                        && gBattleMoveDamage != 0
+                        && !(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+                        && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
+                        && IsMoveMakingContact(gCurrentMove, gBattlerAttacker)
+                        && IsBattlerAlive(gBattlerTarget)
+                        && GetBattlerAbility(gBattlerTarget) != ABILITY_MAGIC_GUARD)
+                    {
+                        gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / 6;
+                        if (gBattleMoveDamage == 0)
+                            gBattleMoveDamage = 1;
+                        effect = ITEM_HP_CHANGE;
+                        BattleScriptPushCursor();
+                        gBattlescriptCurrInstr = BattleScript_BearHugRockyHelmetActivates;
+                        PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
+                        RecordItemEffectBattle(battler, HOLD_EFFECT_ROCKY_HELMET);
+                    }                
+                }
+                break;
         }
         break;
     case ITEMEFFECT_LIFEORB_SHELLBELL:
@@ -12387,16 +12411,17 @@ u32 CalcSecondaryEffectChance(u32 battler, u32 battlerAbility, const struct Addi
 {
     bool8 hasSereneGrace = (battlerAbility == ABILITY_SERENE_GRACE);
     bool8 hasRainbow = (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW) != 0;
+    bool8 hasHydrothermal = (battlerAbility == ABILITY_HYDROTHERMAL);
     u16 secondaryEffectChance = additionalEffect->chance;
 
+    if (hasHydrothermal && (gMovesInfo[gCurrentMove].type == TYPE_FIRE || TYPE_WATER) && additionalEffect->moveEffect == MOVE_EFFECT_BURN)
+        secondaryEffectChance += 10;
     if (hasRainbow && hasSereneGrace && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
         return secondaryEffectChance * 2;
-
     if (hasSereneGrace)
         secondaryEffectChance *= 2;
     if (hasRainbow && additionalEffect->moveEffect != MOVE_EFFECT_SECRET_POWER)
         secondaryEffectChance *= 2;
-
     return secondaryEffectChance;
 }
 
