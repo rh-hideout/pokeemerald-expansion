@@ -1709,8 +1709,15 @@
 #define SPECIES_LEMIRETHUN                              1599
 #define SPECIES_CYCLONIAN                               1600
 #define SPECIES_SHROOMALICE                             1601
+#define SPECIES_ONSENPURA                               1602
+#define SPECIES_HORNTUBA                                1603
+#define SPECIES_VIRTUITA                                1604
+#define SPECIES_STROLLGE                                1605
+#define SPECIES_DOOMTER                                 1606
+#define SPECIES_SPORESTOOL                              1607
+#define SPECIES_TOKOYAKI                                1608
 
-#define SPECIES_EGG (SPECIES_SHROOMALICE + 1)
+#define SPECIES_EGG (SPECIES_TOKOYAKI + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

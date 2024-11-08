@@ -6452,6 +6452,33 @@ Cry_Cyclonian::
 Cry_Shroomalice::
 	.incbin "sound/direct_sound_samples/cries/shroomalice.bin"
 
+	.align 2
+Cry_Onsenpura::
+	.incbin "sound/direct_sound_samples/cries/onsenpura.bin"
+
+.align 2
+Cry_Horntuba::
+	.incbin "sound/direct_sound_samples/cries/horntuba.bin"
+
+	.align 2
+Cry_Virtuita::
+	.incbin "sound/direct_sound_samples/cries/virtuita.bin"
+
+	.align 2
+Cry_Strollge::
+	.incbin "sound/direct_sound_samples/cries/strollge.bin"
+
+	.align 2
+Cry_Doomter::
+	.incbin "sound/direct_sound_samples/cries/doomter.bin"
+
+	.align 2
+Cry_Sporestool::
+	.incbin "sound/direct_sound_samples/cries/sporestool.bin"
+
+	.align 2
+Cry_Tokoyaki::
+	.incbin "sound/direct_sound_samples/cries/tokoyaki.bin"
 
 .endif @ P_CRIES_ENABLED
 

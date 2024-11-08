@@ -2572,6 +2572,20 @@ gCryTable::
 	cry Cry_Cyclonian
 
 	cry Cry_Shroomalice
+
+	cry Cry_Onsenpura
+
+	cry Cry_Horntuba
+
+	cry Cry_Virtuita
+
+	cry Cry_Strollge
+
+	cry Cry_Doomter
+
+	cry Cry_Sporestool
+
+	cry Cry_Tokoyaki
 .endif
 
 	.align 2
@@ -5150,4 +5164,17 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Shroomalice
 	
+	cry_reverse Cry_Onsenpura
+
+	cry_reverse Cry_Horntuba
+
+	cry_reverse Cry_Virtuita
+
+	cry_reverse Cry_Strollge
+
+	cry_reverse Cry_Doomter
+
+	cry_reverse Cry_Sporestool
+
+	cry_reverse Cry_Tokoyaki
 .endif
