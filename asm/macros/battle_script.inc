@@ -1683,6 +1683,10 @@
 	.macro mopfree
 	callnative BS_MopFree
 	.endm
+
+	.macro drumroll
+	callnative BS_Drumroll
+	.endm
 		
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
