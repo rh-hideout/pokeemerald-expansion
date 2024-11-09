@@ -2602,6 +2602,22 @@ gCryTable::
 	cry Cry_Hamstatic
 
 	cry Cry_Stowlet
+
+	cry Cry_Doubtlaw
+
+	cry Cry_Starhiro
+
+	cry Cry_Amalgum
+
+	cry Cry_Tamanaut
+
+	cry Cry_Klasicope
+
+	cry Cry_Essention
+
+	cry Cry_Frudge
+
+	cry Cry_Aquaos
 .endif
 
 	.align 2
@@ -5209,4 +5225,20 @@ gCryTable_Reverse::
 	cry_reverse Cry_Hamstatic
 
 	cry_reverse Cry_Stowlet
+
+	cry_reverse Cry_Doubtlaw
+
+	cry_reverse Cry_Starhiro
+
+	cry_reverse Cry_Amalgum
+
+	cry_reverse Cry_Tamanaut
+
+	cry_reverse Cry_Klasicope
+
+	cry_reverse Cry_Essention
+
+	cry_reverse Cry_Frudge
+
+	cry_reverse Cry_Aquaos
 .endif

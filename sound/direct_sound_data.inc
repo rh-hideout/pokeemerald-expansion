@@ -6512,6 +6512,38 @@ Cry_Hamstatic::
 Cry_Stowlet::
 	.incbin "sound/direct_sound_samples/cries/stowlet.bin"
 
+	.align 2
+Cry_Doubtlaw::
+	.incbin "sound/direct_sound_samples/cries/doubtlaw.bin"
+
+	.align 2
+Cry_Starhiro::
+	.incbin "sound/direct_sound_samples/cries/starhiro.bin"
+
+	.align 2
+Cry_Amalgum::
+	.incbin "sound/direct_sound_samples/cries/amalgum.bin"
+
+	.align 2
+Cry_Tamanaut::
+	.incbin "sound/direct_sound_samples/cries/tamanaut.bin"
+
+	.align 2
+Cry_Klasicope::
+	.incbin "sound/direct_sound_samples/cries/klasicope.bin"
+
+	.align 2
+Cry_Essention::
+	.incbin "sound/direct_sound_samples/cries/essention.bin"
+
+	.align 2
+Cry_Frudge::
+	.incbin "sound/direct_sound_samples/cries/frudge.bin"
+
+	.align 2
+Cry_Aquaos::
+	.incbin "sound/direct_sound_samples/cries/aquaos.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

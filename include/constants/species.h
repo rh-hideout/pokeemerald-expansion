@@ -1724,8 +1724,16 @@
 #define SPECIES_SPIRANHA                                1614
 #define SPECIES_HAMSTATIC                               1615
 #define SPECIES_STOWLET                                 1616
+#define SPECIES_DOUBTLAW                                1617
+#define SPECIES_STARHIRO                                1618
+#define SPECIES_AMALGUM                                 1619
+#define SPECIES_TAMANAUT                                1620
+#define SPECIES_KLASICOPE                               1621
+#define SPECIES_ESSENTION                               1622
+#define SPECIES_FRUDGE                                  1623
+#define SPECIES_AQUAOS                                  1624
 
-#define SPECIES_EGG (SPECIES_STOWLET + 1)
+#define SPECIES_EGG (SPECIES_AQUAOS + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
