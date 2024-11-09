@@ -979,8 +979,9 @@
 #define MOVE_BEAR_HUG 915 // RTODO: AI scoring for this move.
 #define MOVE_SUFFOCATE 916
 #define MOVE_THINK_FAST 917
+#define MOVE_DRUMROLL 918
 
-#define MOVES_COUNT_GEN9 918
+#define MOVES_COUNT_GEN9 919
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

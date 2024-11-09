@@ -202,6 +202,7 @@ enum RandomTag
     RNG_DAILY_DOSE,
     RNG_BEAR_HUG,
     RNG_HYDROTHERMAL,
+    RNG_DRUMROLL,
 };
 
 #define RandomWeighted(tag, ...) \

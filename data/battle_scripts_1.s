@@ -4200,6 +4200,16 @@ BattleScript_EffectMetronome::
 	setbyte sB_ANIM_TARGETS_HIT, 0
 	metronome
 
+BattleScript_EffectDrumroll::
+	attackcanceler
+	attackstring
+	pause B_WAIT_TIME_SHORT
+	attackanimation
+	waitanimation
+	setbyte sB_ANIM_TURN, 0
+	setbyte sB_ANIM_TARGETS_HIT, 0
+	drumroll
+
 BattleScript_EffectLeechSeed::
 	attackcanceler
 	attackstring
