@@ -1716,8 +1716,16 @@
 #define SPECIES_DOOMTER                                 1606
 #define SPECIES_SPORESTOOL                              1607
 #define SPECIES_TOKOYAKI                                1608
+#define SPECIES_AMPSTAR                                 1609
+#define SPECIES_STRIXNIGHT                              1610
+#define SPECIES_SELAGHAST                               1611
+#define SPECIES_KARKUTLASS                              1612
+#define SPECIES_GLUCURS                                 1613
+#define SPECIES_SPIRANHA                                1614
+#define SPECIES_HAMSTATIC                               1615
+#define SPECIES_STOWLET                                 1616
 
-#define SPECIES_EGG (SPECIES_TOKOYAKI + 1)
+#define SPECIES_EGG (SPECIES_STOWLET + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

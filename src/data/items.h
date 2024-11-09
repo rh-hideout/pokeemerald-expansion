@@ -6967,7 +6967,7 @@ const struct Item gItemsInfo[] =
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "raises the Atk and\n"
-            "Sp. Atk of Pikachu."),
+            "Sp. Atk of Ampstar."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,

@@ -2586,6 +2586,22 @@ gCryTable::
 	cry Cry_Sporestool
 
 	cry Cry_Tokoyaki
+
+	cry Cry_Ampstar
+
+	cry Cry_Strixnight
+
+	cry Cry_Selaghast
+
+	cry Cry_Karkutlass
+
+	cry Cry_Glucurs
+
+	cry Cry_Spiranha
+
+	cry Cry_Hamstatic
+
+	cry Cry_Stowlet
 .endif
 
 	.align 2
@@ -5177,4 +5193,20 @@ gCryTable_Reverse::
 	cry_reverse Cry_Sporestool
 
 	cry_reverse Cry_Tokoyaki
+
+	cry_reverse Cry_Ampstar
+
+	cry_reverse Cry_Strixnight
+
+	cry_reverse Cry_Selaghast
+
+	cry_reverse Cry_Karkutlass
+
+	cry_reverse Cry_Glucurs
+
+	cry_reverse Cry_Spiranha
+
+	cry_reverse Cry_Hamstatic
+
+	cry_reverse Cry_Stowlet
 .endif

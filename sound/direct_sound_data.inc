@@ -6480,6 +6480,38 @@ Cry_Sporestool::
 Cry_Tokoyaki::
 	.incbin "sound/direct_sound_samples/cries/tokoyaki.bin"
 
+	.align 2
+Cry_Ampstar::
+	.incbin "sound/direct_sound_samples/cries/ampstar.bin"
+
+	.align 2
+Cry_Strixnight::
+	.incbin "sound/direct_sound_samples/cries/strixnight.bin"
+
+	.align 2
+Cry_Selaghast::
+	.incbin "sound/direct_sound_samples/cries/selaghast.bin"
+
+	.align 2
+Cry_Karkutlass::
+	.incbin "sound/direct_sound_samples/cries/karkutlass.bin"
+
+	.align 2
+Cry_Glucurs::
+	.incbin "sound/direct_sound_samples/cries/glucurs.bin"
+
+	.align 2
+Cry_Spiranha::
+	.incbin "sound/direct_sound_samples/cries/spiranha.bin"
+
+	.align 2
+Cry_Hamstatic::
+	.incbin "sound/direct_sound_samples/cries/hamstatic.bin"
+
+	.align 2
+Cry_Stowlet::
+	.incbin "sound/direct_sound_samples/cries/stowlet.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2
