@@ -5363,6 +5363,12 @@ BattleScript_EffectWaterSport::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_EffectMudSportDamage::
+	settypebasedhalvers BattleScript_ButItFailed
+	printfromtable gSportsUsedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+	
 BattleScript_EffectTickle::
 	attackcanceler
 	attackstring

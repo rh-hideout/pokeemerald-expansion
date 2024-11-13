@@ -15609,7 +15609,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Heats up beak to attack.\n"
             "Burns foe on contact."),
         .effect = EFFECT_BEAK_BLAST,
-        .power = 100,
+        .power = 120,
         .type = TYPE_FLYING,
         .accuracy = 100,
         .pp = 15,
@@ -20319,32 +20319,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0}
     },
-    
-    [MOVE_TART_SPRAY] =
-    {
-        .name = COMPOUND_STRING("Tart Spray"),
-        .description = COMPOUND_STRING(
-            "Sprays a tart juice.\n"
-            "Lowers Evasion."),
-        .effect = EFFECT_HIT,
-        .power = 55,
-        .type = TYPE_POISON,
-        .accuracy = 90,
-        .pp = 20,
-        .target = MOVE_TARGET_BOTH,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_SPECIAL,
-        .ballisticMove = TRUE,
-    //    .additionalEffects = ADDITIONAL_EFFECTS({
-    //        .moveEffect = MOVE_EFFECT_SWEET_SCENT, //to do
-    //        .chance = 100,
-    //    }),
-        .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MONS,
-        .contestCategory = CONTEST_CATEGORY_SMART,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {0}
-    },
-    
+
     [MOVE_DAZZLE_DASH] =
     {
         .name = COMPOUND_STRING("Dazzle Dash"),
@@ -21849,9 +21824,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     },
 
 
-    [MOVE_GIGATON_SLAM] =
+    [MOVE_MOMENTOUS_BLOW] =
     {
-        .name = HANDLE_EXPANDED_MOVE_NAME("Gigaton Slam"),
+        .name = HANDLE_EXPANDED_MOVE_NAME("Momentous Blow"),
         .description = COMPOUND_STRING(
             "Swings a huge piece of earth. Can't\n"
             "be used twice in a row."),
@@ -22587,6 +22562,196 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0}
     },
 
+    [MOVE_POLLEN_BREEZE] =
+    {
+        .name = COMPOUND_STRING("Pollen Breeze"),
+        .description = COMPOUND_STRING(
+            "A pungent attack that\n"
+            "lowers the foe's Speed."),
+        .effect = EFFECT_HIT,
+        .power = 55,
+        .type = TYPE_GRASS,
+        .accuracy = 95,
+        .pp = 15,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .windMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_HAIL},
+    },
+
+    [MOVE_DRACONIC_BARRAGE] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("Draco Barrage"),
+        .description = COMPOUND_STRING(
+            "Mastering draconic energy,\n"
+            "strikes with 3 critical hits."),
+        .effect = EFFECT_HIT,
+        .power = 15,
+        .type = TYPE_DRAGON,
+        .accuracy = 95,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .alwaysCriticalHit = TRUE,
+        .punchingMove = TRUE,
+        .strikeCount = 3,
+        .metronomeBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+
+    [MOVE_DRACO_STREAM] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("Draco Stream"),
+        .description = COMPOUND_STRING(
+            "Hits with brutal, fierce winds.\n"
+            "May reset foe's stat changes."),
+        .effect = EFFECT_RAIN_ALWAYS_HIT,
+        .power = B_UPDATED_MOVE_DATA >= GEN_9 ? 100 : 95,
+        .type = TYPE_DRAGON,
+        .accuracy = 80,
+        .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 10 : 5,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .windMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_CLEAR_SMOG,      
+            .chance = 30,
+        }),
+    },
+
+    [MOVE_SPARKLY_SPRITZ] =
+    {
+        .name = COMPOUND_STRING("Sparkly Spritz"),
+        .description = COMPOUND_STRING(
+            "Weakens all attacks, but\n"
+            "only usable with Misty Terrain."),
+        .effect = EFFECT_AURORA_VEIL,                   //remember to edit for misty terrain
+        .power = 0,
+        .type = TYPE_FAIRY,
+        .accuracy = 0,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_HAIL},
+    },
+
+    [MOVE_INTIMIDATING_AURA] =          //make new effect so ghost types can be immune
+    {
+        .name = COMPOUND_STRING("IntimidatingAura"),
+        .description = COMPOUND_STRING(
+            "Draws attention to make\n"
+            "foes attack only the user."),
+        .effect = EFFECT_FOLLOW_ME,
+        .power = 0,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = B_UPDATED_MOVE_DATA >= GEN_6 ? 2 : 3,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .copycatBanned = TRUE,
+        .assistBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+
+    [MOVE_SPECTRAL_SWIPE] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("Spectral Swipe"),
+        .description = COMPOUND_STRING(
+            "Only works first turn.\n"
+            "May reset stat changes on foe"),
+        .effect = EFFECT_FIRST_TURN_ONLY,           
+        .power = 90,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 2,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_CLEAR_SMOG,      
+            .chance = 50,
+        }),
+        .argument = MOVE_FIRST_IMPRESSION,            //see if move flinches
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_FIRST,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+    [MOVE_FLURRY_STORM] =
+    {
+        .name = COMPOUND_STRING("Flurry Storm"),
+        .description = COMPOUND_STRING(
+            "Strikes the foe with a gust\n"
+            "of wind, applies defog."),
+        .effect = EFFECT_HIT,
+        .power = 50,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 35,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEFOG,
+            .chance = 100,
+        }),
+        .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_4) || (B_UPDATED_MOVE_FLAGS < GEN_3),
+        .damagesAirborneDoubleDamage = TRUE,
+        .windMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+    [MOVE_FREEZE_BURN] =
+    {
+        .name = COMPOUND_STRING("Freeze Burn"),
+        .description = COMPOUND_STRING(
+            "This move's power increases\n"
+            "under harsh sunlight."),
+        .effect = EFFECT_HYDRO_STEAM,
+        .power = 70,
+        .type = TYPE_ICE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .thawsUser = TRUE,
+    },
+
+    //bulag
 
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =

@@ -2708,4 +2708,118 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Faster on grassy terrain."),
         .aiRating = 4,
     },
+    [ABILITY_TERRAFORM] =
+    {
+        .name = _("Terrrafrom"),
+        .description = COMPOUND_STRING("Grass. Terr. ups best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_QUICK_WIT] =
+    {
+        .name = _("Quick Wit"),
+        .description = COMPOUND_STRING("Faster on Psy terrain."),
+        .aiRating = 4,
+    },
+    [ABILITY_PRODIGAL] =
+    {
+        .name = _("Terrrafrom"),
+        .description = COMPOUND_STRING("Psy. Terr. ups best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_MIST_GLIDER] =
+    {
+        .name = _("Mist Glider"),
+        .description = COMPOUND_STRING("Faster on Misty terrain."),
+        .aiRating = 4,
+    },
+    [ABILITY_MYTHIC_BLOOD] =
+    {
+        .name = _("Mythic Blood"),
+        .description = COMPOUND_STRING("Misty Terr. ups best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_VENOM_SURGE] =
+    {
+        .name = _("Venom Surge"),
+        .description = COMPOUND_STRING("Poison moves go first."),
+        .aiRating = 6,
+    },
+    [ABILITY_GRAVITY_SURGE] =
+    {
+        .name = _("Gravity Surge"),
+        .description = COMPOUND_STRING("Sets Gravity on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_MAGICAL_SURGE] =
+    {
+        .name = _("Magical Surge"),
+        .description = COMPOUND_STRING("Sets Magic Room on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_WONDER_SURGE] =
+    {
+        .name = _("Wonder Surge"),
+        .description = COMPOUND_STRING("Sets Wonder room on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_RESOLVE] =
+    {
+        .name = _("Resolve"),
+        .description = COMPOUND_STRING("Sets Misty on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_THICK_STEAM] =
+    {
+        .name = _("Thick Steam"),
+        .description = COMPOUND_STRING("Sets Mist when hit."),
+        .aiRating = 5,
+    },
+    [ABILITY_LUCKY_SPIRIT] =
+    {
+        .name = _("Lucky Spirit"),
+        .description = COMPOUND_STRING("Sets Lucky chant on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_BOOMBOX] =
+    {
+        .name = _("Boombox"),
+        .description = COMPOUND_STRING("Sets uproar on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_FILTHY_FORM] =
+    {
+        .name = _("Filthy Form"),
+        .description = COMPOUND_STRING("Sets Mud sport on entry."),
+        .aiRating = 5,
+    },
+    [ABILITY_ENDLESS_HUNGER] =
+    {
+        .name = _("Endless hunger"),
+        .description = COMPOUND_STRING("Slight recovery when holding berry"),
+        .aiRating = 3,
+    },
+    [ABILITY_DRAGONATE] =
+    {
+        .name = _("Dragonate"),
+        .description = COMPOUND_STRING("Normal moves become Dragon."),
+        .aiRating = 8,
+    },
+    [ABILITY_VENGEFUL] =
+    {
+        .name = _("Vengeful"),
+        .description = COMPOUND_STRING("Curses on contact."),
+        .aiRating = 4,
+    },
 };

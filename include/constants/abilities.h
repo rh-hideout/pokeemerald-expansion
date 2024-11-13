@@ -339,31 +339,47 @@
 #define ABILITY_POISON_PUPPETEER 310
 
 //Custom Abilities
-#define ABILITY_COLD_HEART 311
-#define ABILITY_DUCK_N_WEAVE 312
-#define ABILITY_SUN_SOUL 313
-#define ABILITY_CONUNDRUM 314
-#define ABILITY_LOVER 315
-#define ABILITY_NOXIOUS_ARMOR 316
-#define ABILITY_DROWSY_AURA 317
-#define ABILITY_BULLY 318
-#define ABILITY_SERENE_STRIKE 319
-#define ABILITY_PRIDE 320
-#define ABILITY_ABSOLUTE_ZERO 321
-#define ABILITY_BOUNTIFUL_BLOOM 322
-#define ABILITY_FOCUS_FLOOD 323
-#define ABILITY_HEAT_WAVE 324
-#define ABILITY_SUN_MAGE 325
-#define ABILITY_WIND_WALKER 326
-#define ABILITY_ZEAL 327
-#define ABILITY_PETAL_RIDER 328
-#define ABILITY_TERRAFORM 329
-#define ABILITY_QUICK_WIT 330
-#define ABILITY_PRODIGAL 331
-#define ABILITY_MIST_GLIDER 332
-#define ABILITY_MYTHIC_BLOOD 333
+#define ABILITY_COLD_HEART 311      //chance to freeze on contact
+#define ABILITY_DUCK_N_WEAVE 312    //dodge chance if punch move 1st per round
+#define ABILITY_SUN_SOUL 313        //Sun Rain Dish
+#define ABILITY_CONUNDRUM 314       //confusion on hit
+#define ABILITY_LOVER 315           //take less damage if enemy is in love
+#define ABILITY_NOXIOUS_ARMOR 316   //take less damage if enemy is poisoned
+#define ABILITY_DROWSY_AURA 317     //sleep on hit
+#define ABILITY_BULLY 318           //chance to reduce def on hit
+#define ABILITY_SERENE_STRIKE 319   //1/2 serene grace 1/2 adaptability
+#define ABILITY_PRIDE 320           //SpA guts
+#define ABILITY_ABSOLUTE_ZERO 321   //reduced inc damage in snow
+#define ABILITY_BOUNTIFUL_BLOOM 322 //boost grass/ground moves in rain
+#define ABILITY_FOCUS_FLOOD 323     //reduced inc damage in rain
+#define ABILITY_HEAT_WAVE 324       //cannot be dmg by water in sun
+#define ABILITY_SUN_MAGE 325        //in sun reduce inc fire dmg and boost grass moves
+#define ABILITY_WIND_WALKER 326     //flying stab, ground immunity, electric weakness
+#define ABILITY_ZEAL 327            //moving first boosts power
+#define ABILITY_PETAL_RIDER 328     //boost speed in grass terrain
+#define ABILITY_TERRAFORM 329       //boost highest stat in grass
+#define ABILITY_QUICK_WIT 330       //boost speed in psychic terrain
+#define ABILITY_PRODIGAL 331        //boost highest stat in psychic terrain
+#define ABILITY_MIST_GLIDER 332     //boost speed in misty
+#define ABILITY_MYTHIC_BLOOD 333    //boost highest stat in misty
 
-#define ABILITIES_COUNT_GEN9 334
+
+#define ABILITY_VENOM_SURGE 334     //gale wings for poison moves
+#define ABILITY_GRAVITY_SURGE 335   //sets gravity on entry
+#define ABILITY_MAGICAL_SURGE 336   //sets magic room on entry
+#define ABILITY_WONDER_SURGE 337    //sets wonder room on entry
+#define ABILITY_RESOLVE 338         //sets mist on entry
+#define ABILITY_THICK_STEAM 339     //sets mist on hit              HAVENT TRIED YET
+#define ABILITY_LUCKY_SPIRIT 340    //sets lucky chant on entry
+#define ABILITY_BOOMBOX 341         //sets uproar on entry          UNSURE HOW TO MAKE
+#define ABILITY_FILTHY_FORM 342     //sets mud sport on entry
+#define ABILITY_ENDLESS_HUNGER 343  //as long as holdng a berry recover hp per turn UNSURE HOW TO MAKE
+#define ABILITY_DRAGONATE 344       //pixelate for dragons
+#define ABILITY_VENGEFUL 345        //chance to ghost curse when hit with a contact move
+
+//remember to build the description doc for 328+
+
+#define ABILITIES_COUNT_GEN9 346
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

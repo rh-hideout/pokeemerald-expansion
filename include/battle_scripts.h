@@ -837,5 +837,6 @@ extern const u8 BattleScript_EffectElude[];
 extern const u8 BattleScript_TerraformActivates[];
 extern const u8 BattleScript_ProdigalActivates[];
 extern const u8 BattleScript_MythicBloodActivates[];
+extern const u8 BattleScript_EffectMudSportDamage[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

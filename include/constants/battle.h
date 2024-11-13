@@ -408,8 +408,10 @@
 #define MOVE_EFFECT_RAIN                87
 #define MOVE_EFFECT_SUN                 88
 #define MOVE_EFFECT_STEELSURGE          89
+#define MOVE_EFFECT_MUD_SPORT           90
+#define MOVE_EFFECT_DEFOG               91
 
-#define NUM_MOVE_EFFECTS                90
+#define NUM_MOVE_EFFECTS                92
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

@@ -929,7 +929,7 @@
 #define MOVE_LEAF_SHURIKEN 866
 #define MOVE_QUICK_STING 867
 #define MOVE_COMPOST_BLAST 868
-#define MOVE_TART_SPRAY 869 //may need to purge
+#define MOVE_PLACEHOLDER 869        //purged
 #define MOVE_DAZZLE_DASH 870
 #define MOVE_SMITE 871
 #define MOVE_DEPLETION_RAY 872
@@ -946,7 +946,7 @@
 #define MOVE_SCALE_RAIN 883
 #define MOVE_DRAGON_DASH 884
 #define MOVE_BLIGHT 885
-#define MOVE_WIND_FURY 886 //need to make
+#define MOVE_FREEZE_BURN 886 
 #define MOVE_BATTLE_CRY 887
 #define MOVE_ROUNDHOUSE 888
 #define MOVE_ECHO_BURN 889
@@ -997,7 +997,7 @@
 #define MOVE_VOLT_SPIN 933
 #define MOVE_STUN_BREAK 934
 #define MOVE_MOMENTOUS_BLOW 935
-#define MOVE_PLACEHOLDER 936   //removed
+#define MOVE_SPECTRAL_SWIPE 936      //TEST
 #define MOVE_VOLCANIC_CHARGE 937
 #define MOVE_COLOSSAL_FLARE 938
 #define MOVE_HARPOON_DIVE 939
@@ -1020,26 +1020,28 @@
 #define MOVE_CONDUIT_BOMB 955       //TEST
 #define MOVE_LUMINSPHERE 956        //TEST
 #define MOVE_PETRIFY 957            //TEST
-#define MOVE_SWAMP_TIDE 958                 //WIP mud sport effect
-#define MOVE_PRISMATIC_JET 959              //WIP safeguard
-#define MOVE_PSY_OUT 960        //D
-#define MOVE_PYROKENESIS 961    //D
-#define MOVE_PRISMATIC_PULSE 962            //WIP safeguard
-#define MOVE_DARK_BOLTS 963     //D
-#define MOVE_MAGNET_PUNCH 964       //TEST
-#define MOVE_FLASH_FREEZE 965       //TEST
-#define MOVE_RESONANT_CRY 966               //WIP aurora veil
-#define MOVE_FLURRY_STORM 967               //WIP defog
-#define MOVE_CHLORO_DIVE 968    //D
-#define MOVE_PRESSURE_POINT 969 //D       
-#define MOVE_ELUDE 970              //TEST
-#define MOVE_BARRICADE 971          //TEST
-#define MOVE_CHAMELEE 972           //TEST
-#define MOVE_SONAR_WALL 973         //TEST
-#define MOVE_HYDROSHOT_FLURRY 974
+#define MOVE_SWAMP_TIDE 958         //TEST
+#define MOVE_PSY_OUT 959        //D
+#define MOVE_PYROKENESIS 960    //D
+#define MOVE_DARK_BOLTS 961     //D
+#define MOVE_MAGNET_PUNCH 962       //TEST
+#define MOVE_FLASH_FREEZE 963       //TEST
+#define MOVE_RESONANT_CRY 964               //WIP lapras
+#define MOVE_FLURRY_STORM 965       //TEST
+#define MOVE_CHLORO_DIVE 966    //D
+#define MOVE_PRESSURE_POINT 967 //D       
+#define MOVE_ELUDE 968              //TEST
+#define MOVE_BARRICADE 969          //TEST
+#define MOVE_CHAMELEE 970           //TEST
+#define MOVE_SONAR_WALL 971         //TEST
+#define MOVE_HYDROSHOT_FLURRY 972
+#define MOVE_POLLEN_BREEZE 973      //TEST
+#define MOVE_DRACONIC_BARRAGE 974   //TEST
+#define MOVE_DRACO_STREAM 975       //TEST
+#define MOVE_SPARKLY_SPRITZ 976     //TEST
+#define MOVE_INTIMIDATING_AURA 977      //WIP follow me but ghosts immune
 
-
-#define MOVES_COUNT_GEN9 975
+#define MOVES_COUNT_GEN9 978
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

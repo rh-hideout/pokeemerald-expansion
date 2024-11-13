@@ -4527,6 +4527,61 @@ gFieldStatuses |= STATUS_FIELD_PSYCHIC_TERRAIN;
                 effect++;
             }
             break;
+        case ABILITY_GRAVITY_SURGE:
+            if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+                {
+                    gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                    gFieldTimers.gravityTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectGravitySuccess);
+                    effect++;
+                }
+                break; 
+        case ABILITY_MAGICAL_SURGE:
+            if (!(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
+                {
+                    gFieldStatuses |= STATUS_FIELD_MAGIC_ROOM;
+                    gFieldTimers.magicRoomTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectMagicRoom);
+                    effect++;
+                }
+                break; 
+        case ABILITY_WONDER_SURGE:
+            if (!(gFieldStatuses & STATUS_FIELD_WONDER_ROOM))
+                {
+                    gFieldStatuses |= STATUS_FIELD_WONDER_ROOM;
+                    gFieldTimers.wonderRoomTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectWonderRoom);
+                    effect++;
+                }
+                break; 
+        case ABILITY_RESOLVE:
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_MIST)) 
+                {
+                    gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_MIST;
+                    gSideTimers->mistTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectMist);
+                    effect++;
+                }
+                break; 
+        case ABILITY_LUCKY_SPIRIT:
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_LUCKY_CHANT)) 
+                {
+                    gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_LUCKY_CHANT;
+                    gSideTimers->luckyChantTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectLuckyChant);
+                    effect++;
+                }
+                break; 
+        case ABILITY_FILTHY_FORM:
+            if (!(gFieldStatuses & STATUS_FIELD_MUDSPORT))
+                {
+                    gFieldStatuses |= STATUS_FIELD_MUDSPORT;
+                    gFieldTimers.mudSportTimer = 5;
+                    BattleScriptPushCursorAndCallback(BattleScript_EffectMudSport);
+                    effect++;
+                }
+                break; 
+        
         case ABILITY_INTIMIDATE:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {

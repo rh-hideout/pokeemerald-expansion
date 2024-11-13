@@ -3729,8 +3729,28 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_EffectGravitySuccess;
                 }
                 break; 
+            case MOVE_EFFECT_MUD_SPORT:
+                if (!(gFieldStatuses & STATUS_FIELD_MUDSPORT)) 
+                {
+                    gFieldStatuses |= STATUS_FIELD_MUDSPORT;
+                    gFieldTimers.mudSportTimer = 5;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_EffectMudSportDamage;
+                }
+                break; 
 
-            case MOVE_EFFECT_GRASSY_TERRAIN:
+            case MOVE_EFFECT_DEFOG:
+                if (gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SCREEN_ANY
+                || gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_HAZARDS_ANY
+                || gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_HAZARDS_ANY
+                || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            {
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_DefogTryHazards;
+            }
+                break; 
+           
+       case MOVE_EFFECT_GRASSY_TERRAIN:
                 if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)) 
                 {
                     u16 atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
@@ -10067,26 +10087,39 @@ static void Cmd_various(void)
     case VARIOUS_SET_AURORA_VEIL:
     {
         VARIOUS_ARGS();
-        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL
-            || !(WEATHER_HAS_EFFECT && gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
-        {
-            gMoveResultFlags |= MOVE_RESULT_MISSED;
-            gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-        }
-        else
-        {
-            gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_AURORA_VEIL;
-            if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
-                gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 8;
-            else
-                gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 5;
-            gSideTimers[GetBattlerSide(battler)].auroraVeilBattlerId = battler;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
-                gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-            else
-                gBattleCommunication[MULTISTRING_CHOOSER] = 5;
+        if (gCurrentMove == MOVE_SPARKLY_SPRITZ)
+        {
+            if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL
+                || !(gFieldStatuses & (STATUS_FIELD_MISTY_TERRAIN)))
+            {
+                gMoveResultFlags |= MOVE_RESULT_MISSED;
+                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+                break;
+            }
         }
+        else 
+        {
+            if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL
+                || !(WEATHER_HAS_EFFECT && gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+            {
+                gMoveResultFlags |= MOVE_RESULT_MISSED;
+                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+                break;
+            }
+        }
+        
+        gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_AURORA_VEIL;
+        if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
+            gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 8;
+        else
+            gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 5;
+        gSideTimers[GetBattlerSide(battler)].auroraVeilBattlerId = battler;
+
+        if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
+            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
         break;
     }
     case VARIOUS_TRY_THIRD_TYPE:
