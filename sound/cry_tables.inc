@@ -2618,6 +2618,8 @@ gCryTable::
 	cry Cry_Frudge
 
 	cry Cry_Aquaos
+
+	cry Cry_Dredalisk
 .endif
 
 	.align 2
@@ -5241,4 +5243,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Frudge
 
 	cry_reverse Cry_Aquaos
+
+	cry_reverse Cry_Dredalisk
 .endif

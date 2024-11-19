@@ -6544,6 +6544,10 @@ Cry_Frudge::
 Cry_Aquaos::
 	.incbin "sound/direct_sound_samples/cries/aquaos.bin"
 
+	.align 2
+Cry_Dredalisk::
+	.incbin "sound/direct_sound_samples/cries/dredalisk.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

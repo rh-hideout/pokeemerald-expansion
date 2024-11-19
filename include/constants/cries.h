@@ -2524,6 +2524,7 @@ enum {
     CRY_ESSENTION,
     CRY_FRUDGE,
     CRY_AQUAOS,
+    CRY_DREDALISK,
 
     CRY_COUNT,
 };

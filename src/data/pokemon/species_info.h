@@ -5272,7 +5272,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Apocamise)
        .levelUpLearnset = sApocamiseLevelUpLearnset,
-       },
+    },
+        [SPECIES_DREDALISK] =
+    { 
+       .baseHP        = 66,
+       .baseAttack    = 108,
+       .baseDefense   = 70,
+       .baseSpeed     = 125,
+       .baseSpAttack  = 80,
+       .baseSpDefense = 61,
+       .types = { TYPE_GHOST, TYPE_DRAGON },
+       .catchRate = 30,
+       .expYield = 91,
+       .evYield_Attack  = 1,
+       .evYield_Speed  = 3,
+       .genderRatio = PERCENT_FEMALE(12.5),
+       .eggCycles = 25,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_FOREWARN, ABILITY_UNNERVE, ABILITY_ANGER_POINT, ABILITY_SHADOW_TAG}, //Replace Forewarn with suddenly once coded
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Dredalisk"),
+       .cryId = CRY_DREDALISK,
+       .natDexNum = NATIONAL_DEX_DREDALISK,
+       .categoryName = _("Red Demon"),
+       .height = 9,
+       .weight = 500,
+       .description = COMPOUND_STRING(
+           "This Pokémon often appears in rural areas\n"
+           "where it can prey on people without being\n"
+           "catalogued. It can greatly grow in size\n"
+           "upon being defeated. You cannot win."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Dredalisk,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Dredalisk,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Dredalisk,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Dredalisk,
+       .shinyPalette = gMonShinyPalette_Dredalisk,
+       .iconSprite = gMonIcon_Dredalisk,
+       .iconPalIndex = 2,
+       FOOTPRINT(Dredalisk)
+       .levelUpLearnset = sDredaliskLevelUpLearnset,
+    },
     
         [SPECIES_IGNIFATU] =
     { 
