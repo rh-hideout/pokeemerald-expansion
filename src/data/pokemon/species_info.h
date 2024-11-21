@@ -2409,7 +2409,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Starhiro,
        .shinyPalette = gMonShinyPalette_Starhiro,
        .iconSprite = gMonIcon_Starhiro,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Starhiro)
        .levelUpLearnset = sStarhiroLevelUpLearnset,
     },
@@ -5324,7 +5324,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Dredalisk,
        .shinyPalette = gMonShinyPalette_Dredalisk,
        .iconSprite = gMonIcon_Dredalisk,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Dredalisk)
        .levelUpLearnset = sDredaliskLevelUpLearnset,
     },
