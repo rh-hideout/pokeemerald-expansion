@@ -1938,8 +1938,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Growth"),
         .description = COMPOUND_STRING(
+        #if B_GROWTH_STAT_RAISE >= GEN_5
+            "Forces the body to grow,\n"
+            "raising Attack and Sp. Atk."),
+        #else
             "Forces the body to grow\n"
             "and heightens Sp. Atk."),
+        #endif
         .effect = B_GROWTH_STAT_RAISE >= GEN_5 ? EFFECT_GROWTH : EFFECT_SPECIAL_ATTACK_UP,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -4506,7 +4511,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = 30,
-        .target = MOVE_TARGET_USER,
+        .target = B_UPDATED_MOVE_DATA >= GEN_5 ? MOVE_TARGET_SELECTED : MOVE_TARGET_USER,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RECOVER_HP },

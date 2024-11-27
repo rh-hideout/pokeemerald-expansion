@@ -2869,7 +2869,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             switch (atkPartnerAbility)
             {
             case ABILITY_ANGER_POINT:
-                if (gMovesInfo[move].alwaysCriticalHit == TRUE 
+                if (gMovesInfo[move].alwaysCriticalHit == TRUE
                     && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
                     && AI_IsFaster(battlerAtk, battlerAtkPartner, move)
                     && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, 1))
@@ -3302,6 +3302,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_ABSORB:
         if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_BIG_ROOT && effectiveness >= AI_EFFECTIVENESS_x1)
             ADJUST_SCORE(DECENT_EFFECT);
+        break;
     case EFFECT_EXPLOSION:
     case EFFECT_MEMENTO:
         if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE && gBattleMons[battlerDef].statStages[STAT_EVASION] < 7)
@@ -3316,7 +3317,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_MIRROR_MOVE:
         if (predictedMove != MOVE_NONE)
-            return AI_CheckViability(battlerAtk, battlerDef, gLastMoves[battlerDef], score);
+            return AI_CheckViability(battlerAtk, battlerDef, predictedMove, score);
         break;
     case EFFECT_ATTACK_UP:
     case EFFECT_ATTACK_UP_USER_ALLY:
@@ -4065,7 +4066,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(DECENT_EFFECT); // Force 'em out next turn
             break;
         default:
-            if (move != MOVE_BESTOW && aiData->items[battlerAtk] == ITEM_NONE)
+            if (move != MOVE_BESTOW && aiData->items[battlerAtk] == ITEM_NONE && aiData->items[battlerDef] != ITEM_NONE)
             {
                 switch (aiData->holdEffects[battlerDef])
                 {

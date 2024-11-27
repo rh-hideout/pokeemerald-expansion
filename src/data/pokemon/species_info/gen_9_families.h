@@ -7242,7 +7242,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             TRACKS_FOOT,
             gOverworldPalette_Fezandipiti,
             gShinyOverworldPalette_Fezandipiti
-        )        
+        )
         .isLegendary = TRUE,
         .levelUpLearnset = sFezandipitiLevelUpLearnset,
         .teachableLearnset = sFezandipitiTeachableLearnset,

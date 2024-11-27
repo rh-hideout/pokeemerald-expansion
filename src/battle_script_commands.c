@@ -1401,6 +1401,7 @@ static void Cmd_attackcanceler(void)
         if ((gProtectStructs[gBattlerByTurnOrder[i]].stealMove) && gMovesInfo[gCurrentMove].snatchAffected)
         {
             gProtectStructs[gBattlerByTurnOrder[i]].stealMove = FALSE;
+            gBattleStruct->snatchedMoveIsUsed = TRUE;
             gBattleScripting.battler = gBattlerByTurnOrder[i];
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SnatchedMove;
@@ -5448,7 +5449,9 @@ static void Cmd_moveend(void)
         case MOVEEND_PROTECT_LIKE_EFFECT:
             if (gProtectStructs[gBattlerAttacker].touchedProtectLike)
             {
-                if (gProtectStructs[gBattlerTarget].spikyShielded && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
+                if (gProtectStructs[gBattlerTarget].spikyShielded
+                 && gMovesInfo[gCurrentMove].effect != EFFECT_COUNTER
+                 && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
@@ -5609,6 +5612,11 @@ static void Cmd_moveend(void)
                 gBattlescriptCurrInstr = BattleScript_MaxHp50Recoil;
                 effect = TRUE;
             }
+            gBattleScripting.moveendState++;
+            break;
+        case MOVEEND_ITEM_EFFECTS_ATTACKER:
+            if (ItemBattleEffects(ITEMEFFECT_MOVE_END, gBattlerAttacker, FALSE))
+                effect = TRUE;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_SYNCHRONIZE_TARGET: // target synchronize
@@ -5908,12 +5916,14 @@ static void Cmd_moveend(void)
                         gLastMoves[gBattlerAttacker] = gChosenMove;
                         RecordKnownMove(gBattlerAttacker, gChosenMove);
                         gLastResultingMoves[gBattlerAttacker] = gCurrentMove;
+                        GET_MOVE_TYPE(gCurrentMove, gLastUsedMoveType[gBattlerAttacker]);
                     }
                 }
                 else
                 {
                     gLastMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
                     gLastResultingMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
+                    gLastUsedMoveType[gBattlerAttacker] = 0;
                 }
 
                 if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))
@@ -6030,13 +6040,11 @@ static void Cmd_moveend(void)
                 gBattleScripting.multihitString[4]++;
                 if (gMultiHitCounter == 0)
                 {
-                    if (gMovesInfo[gCurrentMove].argument == MOVE_EFFECT_SCALE_SHOT && !NoAliveMonsForEitherParty())
-                    {
-                        BattleScriptPush(gBattlescriptCurrInstr + 1);
-                        gBattlescriptCurrInstr = BattleScript_DefDownSpeedUp;
-                    }
                     BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_MultiHitPrintStrings;
+                    if (gMovesInfo[gCurrentMove].argument == MOVE_EFFECT_SCALE_SHOT && !NoAliveMonsForEitherParty())
+                        gBattlescriptCurrInstr = BattleScript_ScaleShot;
+                    else
+                        gBattlescriptCurrInstr = BattleScript_MultiHitPrintStrings;
                     effect = TRUE;
                 }
                 else
@@ -6287,7 +6295,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_DANCER: // Special case because it's so annoying
-            if (gMovesInfo[gCurrentMove].danceMove)
+            if (gMovesInfo[gCurrentMove].danceMove && !gBattleStruct->snatchedMoveIsUsed)
             {
                 u32 battler, nextDancer = 0;
                 bool32 hasDancerTriggered = FALSE;
@@ -6431,6 +6439,7 @@ static void Cmd_moveend(void)
             gBattleStruct->swapDamageCategory = FALSE;
             gBattleStruct->categoryOverride = FALSE;
             gBattleStruct->bouncedMoveIsUsed = FALSE;
+            gBattleStruct->snatchedMoveIsUsed = FALSE;
             gBattleStruct->enduredDamage = 0;
             gBattleStruct->additionalEffectsCounter = 0;
             gBattleStruct->poisonPuppeteerConfusion = FALSE;
@@ -8770,12 +8779,15 @@ u32 GetHighestStatId(u32 battler)
     for (i = STAT_DEF; i < NUM_STATS; i++)
     {
         u16 *statVal = &gBattleMons[battler].attack + (i - 1);
-        if (*statVal > highestStat)
+        if (*statVal > highestStat && i != STAT_SPEED)
         {
             highestStat = *statVal;
             highestId = i;
         }
     }
+    if (gBattleMons[battler].speed > highestStat)
+        highestId = STAT_SPEED;
+    
     return highestId;
 }
 
@@ -8931,11 +8943,12 @@ static bool32 ChangeOrderTargetAfterAttacker(void)
     u8 data[MAX_BATTLERS_COUNT];
     u8 actionsData[MAX_BATTLERS_COUNT];
 
-    if (GetBattlerTurnOrderNum(gBattlerAttacker) > GetBattlerTurnOrderNum(gBattlerTarget)
-        || GetBattlerTurnOrderNum(gBattlerAttacker) + 1 == GetBattlerTurnOrderNum(gBattlerTarget))
+    if (GetBattlerTurnOrderNum(gBattlerAttacker) > GetBattlerTurnOrderNum(gBattlerTarget))
         return FALSE;
+    if (GetBattlerTurnOrderNum(gBattlerAttacker) + 1 == GetBattlerTurnOrderNum(gBattlerTarget))
+        return B_AFTER_YOU_TURN_ORDER >= GEN_8;
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         data[i] = gBattlerByTurnOrder[i];
         actionsData[i] = gActionsByTurnOrder[i];
@@ -8946,8 +8959,6 @@ static bool32 ChangeOrderTargetAfterAttacker(void)
         gActionsByTurnOrder[1] = actionsData[2];
         gBattlerByTurnOrder[2] = data[1];
         gActionsByTurnOrder[2] = actionsData[1];
-        gBattlerByTurnOrder[3] = data[3];
-        gActionsByTurnOrder[3] = actionsData[3];
     }
     else if (GetBattlerTurnOrderNum(gBattlerAttacker) == 0 && GetBattlerTurnOrderNum(gBattlerTarget) == 3)
     {
@@ -11538,7 +11549,7 @@ static void Cmd_stockpiletohpheal(void)
 
     const u8 *failInstr = cmd->failInstr;
 
-    if (gDisableStructs[gBattlerAttacker].stockpileCounter == 0)
+    if (gDisableStructs[gBattlerAttacker].stockpileCounter == 0 && !gBattleStruct->snatchedMoveIsUsed)
     {
         gBattlescriptCurrInstr = failInstr;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWALLOW_FAILED;
@@ -11554,14 +11565,22 @@ static void Cmd_stockpiletohpheal(void)
         }
         else
         {
-            gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / (1 << (3 - gDisableStructs[gBattlerAttacker].stockpileCounter));
+            if (gDisableStructs[gBattlerAttacker].stockpileCounter > 0)
+            {
+                gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / (1 << (3 - gDisableStructs[gBattlerAttacker].stockpileCounter));
+                gBattleScripting.animTurn = gDisableStructs[gBattlerAttacker].stockpileCounter;
+                gBattleStruct->moveEffect2 = MOVE_EFFECT_STOCKPILE_WORE_OFF;
+            }
+            else // Snatched move
+            {
+                gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
+                gBattleScripting.animTurn = 1;
+            }
 
             if (gBattleMoveDamage == 0)
                 gBattleMoveDamage = 1;
             gBattleMoveDamage *= -1;
 
-            gBattleScripting.animTurn = gDisableStructs[gBattlerAttacker].stockpileCounter;
-            gBattleStruct->moveEffect2 = MOVE_EFFECT_STOCKPILE_WORE_OFF;
             gBattlescriptCurrInstr = cmd->nextInstr;
             gBattlerTarget = gBattlerAttacker;
         }
@@ -12936,60 +12955,122 @@ static void Cmd_settypetorandomresistance(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gLastLandedMoves[gBattlerAttacker] == MOVE_NONE
-     || gLastLandedMoves[gBattlerAttacker] == MOVE_UNAVAILABLE)
+    // Before Gen 5 Conversion 2 only worked on a move the attacker was actually hit by.
+    // This changed later to the last move used by the selected target.
+    if (B_UPDATED_CONVERSION_2 < GEN_5)
     {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (gBattleMoveEffects[gMovesInfo[gLastLandedMoves[gBattlerAttacker]].effect].twoTurnEffect
-            && gBattleMons[gLastHitBy[gBattlerAttacker]].status2 & STATUS2_MULTIPLETURNS)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (gLastHitByType[gBattlerAttacker] == TYPE_STELLAR || gLastHitByType[gBattlerAttacker] == TYPE_MYSTERY)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
+        if (gLastLandedMoves[gBattlerAttacker] == MOVE_NONE
+         || gLastLandedMoves[gBattlerAttacker] == MOVE_UNAVAILABLE)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (gBattleMoveEffects[gMovesInfo[gLastLandedMoves[gBattlerAttacker]].effect].twoTurnEffect
+              && gBattleMons[gLastHitBy[gBattlerAttacker]].status2 & STATUS2_MULTIPLETURNS)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (gLastHitByType[gBattlerAttacker] == TYPE_STELLAR || gLastHitByType[gBattlerAttacker] == TYPE_MYSTERY)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else
+        {
+            u32 i, resistTypes = 0;
+            u32 hitByType = gLastHitByType[gBattlerAttacker];
+
+            for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
+            {
+                switch (GetTypeModifier(hitByType, i))
+                {
+                case UQ_4_12(0):
+                case UQ_4_12(0.5):
+                    resistTypes |= gBitTable[i];
+                    break;
+                }
+            }
+
+            while (resistTypes != 0)
+            {
+                i = Random() % NUMBER_OF_MON_TYPES;
+                if (resistTypes & gBitTable[i])
+                {
+                    if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
+                    {
+                        resistTypes &= ~(gBitTable[i]); // Type resists, but the user is already of this type.
+                    }
+                    else
+                    {
+                        SET_BATTLER_TYPE(gBattlerAttacker, i);
+                        PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
+                        gBattlescriptCurrInstr = cmd->nextInstr;
+                        return;
+                    }
+                }
+            }
+
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
     }
     else
     {
-        u32 i, resistTypes = 0;
-        u32 hitByType = gLastHitByType[gBattlerAttacker];
-
-        for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
+        if (gLastResultingMoves[gBattlerTarget] == MOVE_NONE
+         || gLastResultingMoves[gBattlerTarget] == MOVE_UNAVAILABLE
+         || gLastResultingMoves[gBattlerTarget] == MOVE_STRUGGLE)
         {
-            switch (GetTypeModifier(hitByType, i))
-            {
-            case UQ_4_12(0):
-            case UQ_4_12(0.5):
-                resistTypes |= gBitTable[i];
-                break;
-            }
+            gBattlescriptCurrInstr = cmd->failInstr;
         }
-
-        while (resistTypes != 0)
+        else if (IsSemiInvulnerable(gBattlerTarget, gCurrentMove))
         {
-            i = Random() % NUMBER_OF_MON_TYPES;
-            if (resistTypes & gBitTable[i])
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (gLastUsedMoveType[gBattlerTarget] == TYPE_NONE || gLastUsedMoveType[gBattlerTarget] == TYPE_STELLAR || gLastUsedMoveType[gBattlerTarget] == TYPE_MYSTERY)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else
+        {
+            u32 i, resistTypes = 0;
+
+            for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
             {
-                if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
+                switch (GetTypeModifier(gLastUsedMoveType[gBattlerTarget], i))
                 {
-                    resistTypes &= ~(gBitTable[i]); // Type resists, but the user is already of this type.
-                }
-                else
-                {
-                    SET_BATTLER_TYPE(gBattlerAttacker, i);
-                    PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
-                    gBattlescriptCurrInstr = cmd->nextInstr;
-                    return;
+                case UQ_4_12(0):
+                case UQ_4_12(0.5):
+                    resistTypes |= gBitTable[i];
+                    break;
                 }
             }
-        }
 
-        gBattlescriptCurrInstr = cmd->failInstr;
+            while (resistTypes != 0)
+            {
+                i = Random() % NUMBER_OF_MON_TYPES;
+                if (resistTypes & gBitTable[i])
+                {
+                    if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
+                    {
+                        resistTypes &= ~(gBitTable[i]); // Type resists, but the user is already of this type.
+                    }
+                    else
+                    {
+                        SET_BATTLER_TYPE(gBattlerAttacker, i);
+                        PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
+                        gBattlescriptCurrInstr = cmd->nextInstr;
+                        return;
+                    }
+                }
+            }
+
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
     }
 }
 
@@ -16194,7 +16275,7 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
         *expAmount = (*expAmount * 150) / 100;
     if (B_UNEVOLVED_EXP_MULTIPLIER >= GEN_6 && IsMonPastEvolutionLevel(&gPlayerParty[expGetterMonId]))
         *expAmount = (*expAmount * 4915) / 4096;
-    if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(expGetterMonId) >= AFFECTION_FOUR_HEARTS)
+    if (B_AFFECTION_MECHANICS == TRUE && GetMonAffectionHearts(&gPlayerParty[expGetterMonId]) >= AFFECTION_FOUR_HEARTS)
         *expAmount = (*expAmount * 4915) / 4096;
     if (CheckBagHasItem(ITEM_EXP_CHARM, 1)) //is also for other exp boosting Powers if/when implemented
         *expAmount = (*expAmount * 150) / 100;
@@ -17112,7 +17193,7 @@ void BS_TryActivateGulpMissile(void)
 void BS_TryQuash(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 i;
+    u32 i, j;
 
     // It's true if foe is faster, has a bigger priority, or switches
     if (GetBattlerTurnOrderNum(gBattlerAttacker) > GetBattlerTurnOrderNum(gBattlerTarget))
@@ -17123,20 +17204,18 @@ void BS_TryQuash(void)
 
     // If the above condition is not true, it means we are faster than the foe, so we can set the quash bit
     gProtectStructs[gBattlerTarget].quash = TRUE;
-    for (i = 0; i < gBattlersCount; i++)
+
+    // this implementation assumes turn order is correct when using Quash
+    i = GetBattlerTurnOrderNum(gBattlerTarget);
+    for (j = i + 1; j < gBattlersCount; j++)
     {
-        gBattlerByTurnOrder[i] = i;
-    }
-    for (i = 0; i < gBattlersCount - 1; i++)
-    {
-        s32 j;
-        for (j = i + 1; j < gBattlersCount; j++)
-        {
-            if (!gProtectStructs[i].quash
-             && !gProtectStructs[j].quash
-             && GetWhichBattlerFaster(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], FALSE) == -1)
-                SwapTurnOrder(i, j);
-        }
+        // Gen 7- config makes target go last so that the order of quash targets is kept for the correct turn order
+        // Gen 8+ config alters Turn Order of the target according to speed, dynamic speed should handle the rest
+        if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], FALSE) == -1)
+            SwapTurnOrder(i, j);
+        else
+            break;
+        i++;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
