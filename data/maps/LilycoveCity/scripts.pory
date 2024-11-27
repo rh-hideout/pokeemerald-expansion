@@ -790,4 +790,17 @@ gText_havemap::
 gText_Hereismap::
     .string "........!$"
 
+EventScript_BMHINT::
+	lock
+	faceplayer
+	message gText_BMHINT
+	waitmessage
+	release
+	end
+
+gText_BMHINT::
+    .string "Did you hear!\n"
+    .string "There is a cool black market!\p"
+    .string "It is located in Granite Cave!\n"
+    .string "Oh, Wait never mind$"
 `

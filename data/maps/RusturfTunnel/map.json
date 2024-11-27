@@ -166,6 +166,13 @@
       "elevation": 3,
       "dest_map": "MAP_ROUTE116",
       "dest_warp_id": "2"
+    },
+    {
+      "x": 24,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_RUSTURF_CAVERN",
+      "dest_warp_id": "5"
     }
   ],
   "coord_events": [

@@ -1580,3 +1580,31 @@ gText_havemap::
 gText_Hereismap::
 # 791 "data/maps/LilycoveCity/scripts.pory"
     .string "........!$"
+# 792 "data/maps/LilycoveCity/scripts.pory"
+
+# 793 "data/maps/LilycoveCity/scripts.pory"
+EventScript_BMHINT::
+# 794 "data/maps/LilycoveCity/scripts.pory"
+	lock
+# 795 "data/maps/LilycoveCity/scripts.pory"
+	faceplayer
+# 796 "data/maps/LilycoveCity/scripts.pory"
+	message gText_BMHINT
+# 797 "data/maps/LilycoveCity/scripts.pory"
+	waitmessage
+# 798 "data/maps/LilycoveCity/scripts.pory"
+	release
+# 799 "data/maps/LilycoveCity/scripts.pory"
+	end
+# 800 "data/maps/LilycoveCity/scripts.pory"
+
+# 801 "data/maps/LilycoveCity/scripts.pory"
+gText_BMHINT::
+# 802 "data/maps/LilycoveCity/scripts.pory"
+    .string "Did you hear!\n"
+# 803 "data/maps/LilycoveCity/scripts.pory"
+    .string "There is a cool black market!\p"
+# 804 "data/maps/LilycoveCity/scripts.pory"
+    .string "It is located in Granite Cave!\n"
+# 805 "data/maps/LilycoveCity/scripts.pory"
+    .string "Oh, Wait never mind$"

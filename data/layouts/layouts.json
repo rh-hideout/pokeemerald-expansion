@@ -4480,6 +4480,16 @@
       "secondary_tileset": "gTileset_Cave",
       "border_filepath": "data/layouts/LittlerootCave/border.bin",
       "blockdata_filepath": "data/layouts/LittlerootCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_RUSTURF_CAVERN",
+      "name": "RusturfCavern_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_RusturfTunnel",
+      "border_filepath": "data/layouts/RusturfCavern/border.bin",
+      "blockdata_filepath": "data/layouts/RusturfCavern/map.bin"
     }
   ]
 }

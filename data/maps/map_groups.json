@@ -436,7 +436,8 @@
     "UnownCavern1F",
     "UnownCavern2F",
     "UnownCavernB1F",
-    "LittlerootCave"
+    "LittlerootCave",
+    "RusturfCavern"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

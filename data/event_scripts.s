@@ -1106,3 +1106,5 @@ EventScript_End:
 	.include "data/maps/Black_Market/scripts.inc"
 
 	.include "data/maps/LittlerootCave/scripts.inc"
+
+	.include "data/maps/RusturfCavern/scripts.inc"
