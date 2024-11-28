@@ -193,6 +193,27 @@
       "elevation": 4,
       "dest_map": "MAP_VICTORY_ROAD_B1F",
       "dest_warp_id": "4"
+    },
+    {
+      "x": 10,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_PAST",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 39,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_FUTURE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_BEASTS",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

@@ -1120,3 +1120,9 @@ EventScript_End:
 	.include "data/maps/MtPyreCatacomb/scripts.inc"
 
 	.include "data/maps/GalarianCave/scripts.inc"
+
+	.include "data/maps/Victory_Road_Past/scripts.inc"
+
+	.include "data/maps/Victory_Road_Future/scripts.inc"
+
+	.include "data/maps/Victory_Road_Beasts/scripts.inc"

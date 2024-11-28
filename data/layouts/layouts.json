@@ -4550,6 +4550,36 @@
       "secondary_tileset": "gTileset_Cave",
       "border_filepath": "data/layouts/GalarianCave/border.bin",
       "blockdata_filepath": "data/layouts/GalarianCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_VICTORY_ROAD_PAST",
+      "name": "Victory_Road_Past_Layout",
+      "width": 40,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/Victory_Road_Past/border.bin",
+      "blockdata_filepath": "data/layouts/Victory_Road_Past/map.bin"
+    },
+    {
+      "id": "LAYOUT_VICTORY_ROAD_FUTURE",
+      "name": "Victory_Road_Future_Layout",
+      "width": 40,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/Victory_Road_Future/border.bin",
+      "blockdata_filepath": "data/layouts/Victory_Road_Future/map.bin"
+    },
+    {
+      "id": "LAYOUT_VICTORY_ROAD_BEASTS",
+      "name": "Victory_Road_Beasts_Layout",
+      "width": 40,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/Victory_Road_Beasts/border.bin",
+      "blockdata_filepath": "data/layouts/Victory_Road_Beasts/map.bin"
     }
   ]
 }

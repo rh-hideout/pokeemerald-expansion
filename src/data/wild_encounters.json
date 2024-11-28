@@ -2291,7 +2291,7 @@
               {
                 "min_level": 36,
                 "max_level": 36,
-                "species": "SPECIES_ARON"
+                "species": "SPECIES_GRENINJA_BATTLE_BOND"
               },
               {
                 "min_level": 36,
@@ -14163,6 +14163,213 @@
                 "min_level": 36,
                 "max_level": 36,
                 "species": "SPECIES_CALYREX"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_VICTORY_ROAD_PAST",
+          "base_label": "gVictory_Road_Past0",
+          "land_mons": {
+            "encounter_rate": 10,
+            "mons": [
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_GREAT_TUSK"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_SCREAM_TAIL"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_BRUTE_BONNET"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_FLUTTER_MANE"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_SLITHER_WING"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_SANDY_SHOCKS"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_ROARING_MOON"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_WALKING_WAKE"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_GOUGING_FIRE"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_RAGING_BOLT"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_KORAIDON"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_KORAIDON"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_VICTORY_ROAD_FUTURE",
+          "base_label": "gVictory_Road_Future0",
+          "land_mons": {
+            "encounter_rate": 10,
+            "mons": [
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_IRON_TREADS"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_IRON_BUNDLE"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_IRON_HANDS"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_IRON_JUGULIS"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_IRON_MOTH"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_IRON_THORNS"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_IRON_VALIANT"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_IRON_LEAVES"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_IRON_BOULDER"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_IRON_CROWN"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_MIRAIDON"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_MIRAIDON"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_VICTORY_ROAD_BEASTS",
+          "base_label": "gVictory_Road_Beasts0",
+          "land_mons": {
+            "encounter_rate": 10,
+            "mons": [
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_NIHILEGO"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_BUZZWOLE"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_PHEROMOSA"
+              },
+              {
+                "min_level": 40,
+                "max_level": 40,
+                "species": "SPECIES_XURKITREE"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_CELESTEELA"
+              },
+              {
+                "min_level": 42,
+                "max_level": 42,
+                "species": "SPECIES_KARTANA"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_STAKATAKA"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_BLACEPHALON"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_GUZZLORD"
+              },
+              {
+                "min_level": 44,
+                "max_level": 44,
+                "species": "SPECIES_COSMOEM"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_NECROZMA"
+              },
+              {
+                "min_level": 50,
+                "max_level": 50,
+                "species": "SPECIES_NECROZMA"
               }
             ]
           }

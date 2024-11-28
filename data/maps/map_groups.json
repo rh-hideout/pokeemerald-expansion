@@ -443,7 +443,10 @@
     "DewfordCave",
     "SlatecoveCave",
     "MtPyreCatacomb",
-    "GalarianCave"
+    "GalarianCave",
+    "Victory_Road_Past",
+    "Victory_Road_Future",
+    "Victory_Road_Beasts"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",
