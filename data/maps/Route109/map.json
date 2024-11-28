@@ -345,6 +345,13 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE109_SEASHORE_HOUSE",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 52,
+      "elevation": 0,
+      "dest_map": "MAP_SLATECOVE_CAVE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

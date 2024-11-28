@@ -710,8 +710,8 @@
 #define FLAG_UNUSED_0x29B  0x29B // Unused Flag
 #define FLAG_UNUSED_0x29C  0x29C // Unused Flag
 #define FLAG_UNUSED_0x29D  0x29D // Unused Flag
-#define FLAG_UNUSED_0x29E  0x29E // Unused Flag
-#define FLAG_UNUSED_0x29F  0x29F // Unused Flag
+#define FLAG_HIDE_JIRACHI  0x29E // was Unused Flag
+#define FLAG_DEFEATED_JIRACHI  0x29F // was Unused Flag
 #define FLAG_HIDE_PECHARUNT  0x2A0 // was Unused Flag
 #define FLAG_DEFEATED_PECHARUNT  0x2A1 // was Unused Flag
 #define FLAG_DEFEATED_GENESECT  0x2A2 // was Unused Flag

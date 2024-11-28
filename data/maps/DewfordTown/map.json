@@ -126,6 +126,13 @@
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_HOUSE2",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 10,
+      "y": 28,
+      "elevation": 0,
+      "dest_map": "MAP_DEWFORD_CAVE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

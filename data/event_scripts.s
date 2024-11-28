@@ -1108,3 +1108,15 @@ EventScript_End:
 	.include "data/maps/LittlerootCave/scripts.inc"
 
 	.include "data/maps/RusturfCavern/scripts.inc"
+
+	.include "data/maps/MeteorCave/scripts.inc"
+
+	.include "data/maps/PetalburgCave/scripts.inc"
+
+	.include "data/maps/DewfordCave/scripts.inc"
+
+	.include "data/maps/SlatecoveCave/scripts.inc"
+
+	.include "data/maps/MtPyreCatacomb/scripts.inc"
+
+	.include "data/maps/GalarianCave/scripts.inc"

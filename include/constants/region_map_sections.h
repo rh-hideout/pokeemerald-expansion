@@ -217,7 +217,13 @@
 #define MAPSEC_UNOWN_CAVERN                 0xD5
 #define MAPSEC_LITTLEROOT_CAVE              0xD6
 #define MAPSEC_RUSTURF_CAVERN               0xD7
-#define MAPSEC_NONE                         0xD8
+#define MAPSEC_METEOR_CAVE                  0xD8
+#define MAPSEC_PETALBURG_CAVE               0xD9
+#define MAPSEC_DEWFORD_CAVE                 0xDA
+#define MAPSEC_SLATECOVE_CAVE               0xDB
+#define MAPSEC_MT_PYRE_CATACOMB             0xDC
+#define MAPSEC_GALARIAN_CAVE                0xDD
+#define MAPSEC_NONE                         0xDE
 
 #define METLOC_SPECIAL_EGG                  0xFD
 #define METLOC_IN_GAME_TRADE                0xFE

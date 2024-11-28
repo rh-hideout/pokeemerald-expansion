@@ -4490,6 +4490,66 @@
       "secondary_tileset": "gTileset_RusturfTunnel",
       "border_filepath": "data/layouts/RusturfCavern/border.bin",
       "blockdata_filepath": "data/layouts/RusturfCavern/map.bin"
+    },
+    {
+      "id": "LAYOUT_METEOR_CAVE",
+      "name": "MeteorCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/MeteorCave/border.bin",
+      "blockdata_filepath": "data/layouts/MeteorCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_PETALBURG_CAVE",
+      "name": "PetalburgCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/PetalburgCave/border.bin",
+      "blockdata_filepath": "data/layouts/PetalburgCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_DEWFORD_CAVE",
+      "name": "DewfordCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/DewfordCave/border.bin",
+      "blockdata_filepath": "data/layouts/DewfordCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_SLATECOVE_CAVE",
+      "name": "SlatecoveCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/SlatecoveCave/border.bin",
+      "blockdata_filepath": "data/layouts/SlatecoveCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_MT_PYRE_CATACOMB",
+      "name": "MtPyreCatacomb_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/MtPyreCatacomb/border.bin",
+      "blockdata_filepath": "data/layouts/MtPyreCatacomb/map.bin"
+    },
+    {
+      "id": "LAYOUT_GALARIAN_CAVE",
+      "name": "GalarianCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/GalarianCave/border.bin",
+      "blockdata_filepath": "data/layouts/GalarianCave/map.bin"
     }
   ]
 }

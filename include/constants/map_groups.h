@@ -408,6 +408,12 @@
 #define MAP_UNOWN_CAVERN_B1F                         (110 | (24 << 8))
 #define MAP_LITTLEROOT_CAVE                          (111 | (24 << 8))
 #define MAP_RUSTURF_CAVERN                           (112 | (24 << 8))
+#define MAP_METEOR_CAVE                              (113 | (24 << 8))
+#define MAP_PETALBURG_CAVE                           (114 | (24 << 8))
+#define MAP_DEWFORD_CAVE                             (115 | (24 << 8))
+#define MAP_SLATECOVE_CAVE                           (116 | (24 << 8))
+#define MAP_MT_PYRE_CATACOMB                         (117 | (24 << 8))
+#define MAP_GALARIAN_CAVE                            (118 | (24 << 8))
 
 // gMapGroup_IndoorDynamic
 #define MAP_SECRET_BASE_RED_CAVE1    (0 | (25 << 8))

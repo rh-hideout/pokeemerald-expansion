@@ -437,7 +437,13 @@
     "UnownCavern2F",
     "UnownCavernB1F",
     "LittlerootCave",
-    "RusturfCavern"
+    "RusturfCavern",
+    "MeteorCave",
+    "PetalburgCave",
+    "DewfordCave",
+    "SlatecoveCave",
+    "MtPyreCatacomb",
+    "GalarianCave"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

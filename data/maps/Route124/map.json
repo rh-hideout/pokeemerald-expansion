@@ -204,6 +204,13 @@
       "elevation": 3,
       "dest_map": "MAP_ROUTE124_DIVING_TREASURE_HUNTERS_HOUSE",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 77,
+      "y": 41,
+      "elevation": 0,
+      "dest_map": "MAP_GALARIAN_CAVE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

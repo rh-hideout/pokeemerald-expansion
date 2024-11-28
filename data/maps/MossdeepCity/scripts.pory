@@ -9,6 +9,7 @@ raw `
 
 MossdeepCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MossdeepCity_OnTransition
+	map_script MAP_SCRIPT_ON_RESUME, Mossdeep_OnResume
 	.byte 0
 
 MossdeepCity_OnTransition:
@@ -462,4 +463,45 @@ Script_havemeteorite::
 
 gText_havemeteorite::
     .string "You have already recieved this item!\p $"
+
+Mossdeep_OnResume:
+    call_if_set FLAG_SYS_CTRL_OBJ_DELETE, Mossdeep_EventScript_TryRemoveJirachi
+    end
+
+Mossdeep_EventScript_TryRemoveJirachi::
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+    removeobject VAR_LAST_TALKED
+    return
+
+Mossdeep_EventScript_Jirachi::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_JIRACHI, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_JIRACHI, 35
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, Mossdeep_EventScript_DefeatedJirachi
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, Mossdeep_EventScript_RanFromJirachi
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, Mossdeep_EventScript_RanFromJirachi
+    setflag FLAG_DEFEATED_JIRACHI
+    release
+    end
+
+Mossdeep_EventScript_DefeatedJirachi::
+    setflag FLAG_DEFEATED_JIRACHI
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+Mossdeep_EventScript_RanFromJirachi::
+    setvar VAR_0x8004, SPECIES_JIRACHI
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
 `
