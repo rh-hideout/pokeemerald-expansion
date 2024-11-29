@@ -691,25 +691,25 @@
 #define FLAG_UNUSED_0x288  0x288 // Unused Flag
 #define FLAG_UNUSED_0x289  0x289 // Unused Flag
 #define FLAG_UNUSED_0x28A  0x28A // Unused Flag
-#define FLAG_UNUSED_0x28B  0x28B // Unused Flag
-#define FLAG_UNUSED_0x28C  0x28C // Unused Flag
-#define FLAG_UNUSED_0x28D  0x28D // Unused Flag
-#define FLAG_UNUSED_0x28E  0x28E // Unused Flag
+#define FLAG_DEFEATED_ETERNATUS  0x28B // was Unused Flag
+#define FLAG_HIDE_ETERNATUS  0x28C // was Unused Flag
+#define FLAG_DEFEATED_ZAMAZENTA  0x28D // was Unused Flag
+#define FLAG_HIDE_ZAMAZENTA  0x28E // was Unused Flag
 #define FLAG_UNUSED_0x28F  0x28F // Unused Flag
-#define FLAG_UNUSED_0x290  0x290 // Unused Flag
-#define FLAG_UNUSED_0x291  0x291 // Unused Flag
-#define FLAG_UNUSED_0x292  0x292 // Unused Flag
-#define FLAG_UNUSED_0x293  0x293 // Unused Flag
-#define FLAG_UNUSED_0x294  0x294 // Unused Flag
-#define FLAG_UNUSED_0x295  0x295 // Unused Flag
-#define FLAG_UNUSED_0x296  0x296 // Unused Flag
-#define FLAG_UNUSED_0x297  0x297 // Unused Flag
-#define FLAG_UNUSED_0x298  0x298 // Unused Flag
-#define FLAG_UNUSED_0x299  0x299 // Unused Flag
-#define FLAG_UNUSED_0x29A  0x29A // Unused Flag
-#define FLAG_UNUSED_0x29B  0x29B // Unused Flag
-#define FLAG_UNUSED_0x29C  0x29C // Unused Flag
-#define FLAG_UNUSED_0x29D  0x29D // Unused Flag
+#define FLAG_DEFEATED_ZACIAN  0x290 // was Unused Flag
+#define FLAG_HIDE_ZACIAN 0x291 // was Unused Flag
+#define FLAG_DEFEATED_DARKRAI  0x292 // was Unused Flag
+#define FLAG_HIDE_DARKRAI  0x293 // was Unused Flag
+#define FLAG_DEFEATED_CRESSELIA  0x294 // was Unused Flag
+#define FLAG_HIDE_CRESSELIA  0x295 // was Unused Flag
+#define FLAG_DEFEATED_HOOPA  0x296 // was Unused Flag
+#define FLAG_HIDE_HOOPA  0x297 // was Unused Flag
+#define FLAG_HIDE_GIRATINA  0x298 // was Unused Flag
+#define FLAG_DEFEATED_GIRATINA  0x299 // was Unused Flag
+#define FLAG_DEFEATED_PALKIA  0x29A // was Unused Flag
+#define FLAG_HIDE_PALKIA  0x29B // was Unused Flag
+#define FLAG_DEFEATED_DIALGA  0x29C // was Unused Flag
+#define FLAG_HIDE_DIALGA  0x29D // was Unused Flag
 #define FLAG_HIDE_JIRACHI  0x29E // was Unused Flag
 #define FLAG_DEFEATED_JIRACHI  0x29F // was Unused Flag
 #define FLAG_HIDE_PECHARUNT  0x2A0 // was Unused Flag

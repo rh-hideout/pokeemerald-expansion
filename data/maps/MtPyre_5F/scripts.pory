@@ -1,0 +1,70 @@
+
+raw `
+MtPyre_5F_MapScripts::
+map_script MAP_SCRIPT_ON_RESUME, MtPyre_5f_OnResume
+
+	.byte 0
+
+@ Seems like the scripts for the 4F and 5F were swapped
+
+MtPyre_4F_EventScript_Tasha::
+	trainerbattle_single TRAINER_TASHA, MtPyre_4F_Text_TashaIntro, MtPyre_4F_Text_TashaDefeat
+	msgbox MtPyre_4F_Text_TashaPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+MtPyre_4F_Text_TashaIntro:
+	.string "I love all things horrifying…\n"
+	.string "It's like a disease…\p"
+	.string "When I'm here…\n"
+	.string "I shiver with fear…$"
+
+MtPyre_4F_Text_TashaDefeat:
+	.string "Losing, I dislike…$"
+
+MtPyre_4F_Text_TashaPostBattle:
+	.string "I want to see dreadful things…\n"
+	.string "I can't leave…\p"
+	.string "Stay…\n"
+	.string "Won't you stay with me?$"
+
+MtPyre_5f_OnResume:
+    call_if_set FLAG_SYS_CTRL_OBJ_DELETE, MtPyre_5f_EventScript_TryRemoveDialga
+    end
+
+MtPyre_5f_EventScript_TryRemoveDialga::
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+    removeobject VAR_LAST_TALKED
+    return
+
+MtPyre_5f_EventScript_Dialga::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_DIALGA, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_DIALGA, 50
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, MtPyre_5f_EventScript_DefeatedDialga
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, MtPyre_5f_EventScript_RanFromDialga
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, MtPyre_5f_EventScript_RanFromDialga
+    setflag FLAG_DEFEATED_DIALGA
+    release
+    end
+
+MtPyre_5f_EventScript_DefeatedDialga::
+    setflag FLAG_DEFEATED_DIALGA
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+MtPyre_5f_EventScript_RanFromDialga::
+    setvar VAR_0x8004, SPECIES_DIALGA
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+`
