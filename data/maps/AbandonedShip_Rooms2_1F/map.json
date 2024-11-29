@@ -16,27 +16,27 @@
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_MAN_4",
-      "x": 7,
-      "y": 13,
+      "x": 6,
+      "y": 12,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "1",
+      "trainer_sight_or_berry_tree_id": "3",
       "script": "AbandonedShip_Rooms2_1F_EventScript_Dan",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_4",
-      "x": 6,
-      "y": 13,
+      "x": 2,
+      "y": 12,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "1",
+      "trainer_sight_or_berry_tree_id": "3",
       "script": "AbandonedShip_Rooms2_1F_EventScript_Kira",
       "flag": "0"
     },
@@ -78,6 +78,19 @@
       "trainer_sight_or_berry_tree_id": "3",
       "script": "AbandonedShip_Rooms2_1F_EventScript_Jani",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 4,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_RED_CARD",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_1F_RED_CARD"
     }
   ],
   "warp_events": [
@@ -86,21 +99,21 @@
       "y": 16,
       "elevation": 3,
       "dest_map": "MAP_ABANDONED_SHIP_CORRIDORS_1F",
-      "dest_warp_id": "7"
+      "dest_warp_id": "6"
     },
     {
       "x": 5,
       "y": 16,
       "elevation": 3,
       "dest_map": "MAP_ABANDONED_SHIP_CORRIDORS_1F",
-      "dest_warp_id": "7"
+      "dest_warp_id": "6"
     },
     {
       "x": 4,
       "y": 1,
       "elevation": 3,
       "dest_map": "MAP_ABANDONED_SHIP_CORRIDORS_1F",
-      "dest_warp_id": "10"
+      "dest_warp_id": "9"
     }
   ],
   "coord_events": [

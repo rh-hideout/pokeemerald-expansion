@@ -20,10 +20,6 @@ AbandonedShip_Corridors_B1F_EventScript_UnlockStorageRoom::
 	setmetatile 11, 4, METATILE_InsideShip_IntactDoor_Bottom_Unlocked, TRUE
 	return
 
-AbandonedShip_Corridors_B1F_EventScript_TuberM::
-	msgbox AbandonedShip_Corridors_B1F_Text_YayItsAShip, MSGBOX_NPC
-	end
-
 AbandonedShip_Corridors_B1F_EventScript_StorageRoomDoor::
 	lockall
 	goto_if_set FLAG_USED_STORAGE_KEY, AbandonedShip_Corridors_B1F_EventScript_DoorIsUnlocked
@@ -66,10 +62,6 @@ AbandonedShip_Corridors_B1F_Text_DuncanPostBattle:
 	.string "depths.\p"
 	.string "If a POKéMON knew how to go underwater,\n"
 	.string "we might make some progress…$"
-
-AbandonedShip_Corridors_B1F_Text_YayItsAShip:
-	.string "Yay!\n"
-	.string "It's a ship!$"
 
 AbandonedShip_Corridors_B1F_Text_DoorIsLocked:
 	.string "The door is locked.\p"

@@ -16,10 +16,10 @@
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_HEX_MANIAC",
-      "x": 6,
+      "x": 5,
       "y": 3,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -43,9 +43,9 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_PSYCHIC_M",
       "x": 10,
-      "y": 3,
+      "y": 2,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_ROTATE_CLOCKWISE",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",

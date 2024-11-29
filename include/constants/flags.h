@@ -72,7 +72,7 @@
 #define FLAG_GIFT_STARTER         0x3B // Used in Mossdeep for the gift starter
 #define FLAG_RESTRITCED_EXPLAINED 0x3C // Explains how restricted mons for e4 works
 #define FLAG_RESTRICTED_GIVEN     0x3D // Stops the player from getting too many mons
-#define FLAG_UNUSED_0x03E         0x3E // Unused Flag
+#define FLAG_FLIP_TURN            0x3E // Unused Flag
 #define FLAG_UNUSED_0x03F         0x3F // Unused Flag
 #define FLAG_UNUSED_0x040         0x40 // Unused Flag
 #define FLAG_UNUSED_0x041         0x41 // Unused Flag
@@ -1140,7 +1140,7 @@
 #define FLAG_ITEM_ROUTE_124_BLUE_SHARD                              0x445
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_WEST_TM_SOLAR_BEAM              0x446
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOR_MAIL               0x447
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_ESCAPE_ROPE              0x448
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_1F_RED_CARD                0x448
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_B1F_DIVE_BALL              0x449
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_TM_ICE_BEAM              0x44A
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_1F_REVIVE                  0x44B

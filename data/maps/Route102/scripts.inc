@@ -62,7 +62,7 @@ Route102_EventScript_Boy::
 	faceplayer
 	goto_if_set FLAG_SUNKERN_GIFT, Route102_EventScript_AlreadyDone
 	msgbox Route102_Text_HasCandyGivemon, MSGBOX_DEFAULT
-	givemon SPECIES_SUNKERN, 14
+	givemon SPECIES_SUNKERN, 4
 	giveitem ITEM_SUN_STONE
 	setflag FLAG_SUNKERN_GIFT
 	releaseall

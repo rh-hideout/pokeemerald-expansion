@@ -8,11 +8,11 @@
     F(CALM_MIND) \
     F(ROAR) \
     F(TOXIC) \
-    F(HAIL) \
+    F(FLIP_TURN) \
     F(BULK_UP) \
     F(BULLET_SEED) \
-    F(HIDDEN_POWER) \
-    F(SUNNY_DAY) \
+    F(U_TURN) \
+    F(WAVE_CRASH) \
     F(TAUNT) \
     F(ICE_BEAM) \
     F(BLIZZARD) \

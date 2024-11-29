@@ -129,6 +129,13 @@ Route119_WeatherInstitute_2F_EventScript_ReceivedCastformFanfare::
 Route119_WeatherInstitute_2F_EventScript_ExplainCastform::
 	msgbox Route119_WeatherInstitute_2F_Text_PokemonChangesWithWeather, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_CASTFORM
+	goto Route119_WeatherInstitute_2F_EventScript_FlipTurn
+	end
+
+Route119_WeatherInstitute_2F_EventScript_FlipTurn::
+	msgbox Route119_WeatherInstitute_2F_Text_ExplainFlipTurn, MSGBOX_DEFAULT
+	giveitem ITEM_TM_FLIP_TURN
+	setflag FLAG_FLIP_TURN
 	release
 	end
 
@@ -332,3 +339,6 @@ Route119_WeatherInstitute_2F_Text_NoAbnormalWeather:
 	.string "The occasional rainfall is a blessing,\n"
 	.string "really.$"
 
+Route119_WeatherInstitute_2F_Text_ExplainFlipTurn:
+	.string "This is TM 07, the TM for Flip Turn.\n"
+	.string "Shelly dropped this when she ran away.$"

@@ -15,19 +15,6 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
-      "x": 12,
-      "y": 5,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "AbandonedShip_Rooms_1F_EventScript_Gentleman",
-      "flag": "0"
-    },
-    {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 7,
       "y": 13,
@@ -36,7 +23,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_HARBOR_MAIL",
+      "trainer_sight_or_berry_tree_id": "ITEM_EJECT_BUTTON",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOR_MAIL"
     },
@@ -69,13 +56,6 @@
   ],
   "warp_events": [
     {
-      "x": 4,
-      "y": 1,
-      "elevation": 3,
-      "dest_map": "MAP_ABANDONED_SHIP_CORRIDORS_1F",
-      "dest_warp_id": "5"
-    },
-    {
       "x": 13,
       "y": 16,
       "elevation": 3,
@@ -87,7 +67,7 @@
       "y": 1,
       "elevation": 3,
       "dest_map": "MAP_ABANDONED_SHIP_CORRIDORS_1F",
-      "dest_warp_id": "6"
+      "dest_warp_id": "5"
     },
     {
       "x": 14,

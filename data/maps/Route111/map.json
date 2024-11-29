@@ -84,7 +84,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
-      "x": 20,
+      "x": 15,
       "y": 59,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",

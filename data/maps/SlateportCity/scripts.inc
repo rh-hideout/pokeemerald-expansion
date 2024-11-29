@@ -535,19 +535,13 @@ SlateportCity_EventScript_DecorClerk::
 SlateportCity_EventScript_PowerTMClerk::
 	lock
 	faceplayer
-	message gText_HowMayIServeYou
-	waitmessage
-	pokemart SlateportCity_Pokemart_PowerTMs
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	msgbox SlateportCity_Text_PowerTM_Clerk, MSGBOX_DEFAULT
 	release
 	end
 
-	.align 2
-SlateportCity_Pokemart_PowerTMs:
-	.2byte ITEM_TM_HIDDEN_POWER
-	.2byte ITEM_NONE
-	release
-	end
+SlateportCity_Text_PowerTM_Clerk:
+	.string "I can't sell anything to you\n"
+	.string "because I got nothin'.$"
 
 @ Scene with Capt Sterns interview and Team Aqua announcing plans to steal Submarine
 SlateportCity_EventScript_CaptStern::

@@ -2055,7 +2055,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_PASTEL_VEIL] =
     {
         .name = _("Pastel Veil"),
-        .description = COMPOUND_STRING("Protects team from poison."),
+        .description = COMPOUND_STRING("Protects team from poison/sleep."),
         .aiRating = 4,
         .breakable = TRUE,
     },
@@ -2478,7 +2478,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .breakable = TRUE,
     },
 
-    [ABILITY_EMBODY_ASPECT_TEAL] =
+    [ABILITY_EMBODY_ASPECT_TEAL_MASK] =
     {
     #if B_EXPANDED_ABILITY_NAMES == TRUE
         .name = _("Embody Aspect"),
@@ -2493,7 +2493,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .failsOnImposter = TRUE,
     },
 
-    [ABILITY_EMBODY_ASPECT_HEARTHFLAME] =
+    [ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK] =
     {
     #if B_EXPANDED_ABILITY_NAMES == TRUE
         .name = _("Embody Aspect"),
@@ -2508,7 +2508,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .failsOnImposter = TRUE,
     },
 
-    [ABILITY_EMBODY_ASPECT_WELLSPRING] =
+    [ABILITY_EMBODY_ASPECT_WELLSPRING_MASK] =
     {
     #if B_EXPANDED_ABILITY_NAMES == TRUE
         .name = _("Embody Aspect"),
@@ -2523,7 +2523,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .failsOnImposter = TRUE,
     },
 
-    [ABILITY_EMBODY_ASPECT_CORNERSTONE] =
+    [ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK] =
     {
     #if B_EXPANDED_ABILITY_NAMES == TRUE
         .name = _("Embody Aspect"),
@@ -2607,7 +2607,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
-    [ABILITY_EARTH_FORGE] =
+    [ABILITY_EARTH_SUMMON] =
     {
         .name = _("Earth Forge"),
         .description = COMPOUND_STRING("Normal moves become ground."),
@@ -2695,6 +2695,18 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Concerto"),
         .description = COMPOUND_STRING("Sound moves boosted."),
+        .aiRating = 8,
+    },
+    [ABILITY_REBEL_TACTICS] =
+    {
+        .name = _("Rebel Tactics"),
+        .description = COMPOUND_STRING("1.3x SpA, locked to 1 move."),
+        .aiRating = 8,
+    },
+    [ABILITY_GOLDEN_LUCK] =
+    {
+        .name = _("Golden Luck"),
+        .description = COMPOUND_STRING("+2 critical hit rate"),
         .aiRating = 8,
     },
 };

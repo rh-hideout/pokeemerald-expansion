@@ -36,7 +36,8 @@ void HealPlayerParty(void)
 {
     u32 i;
     for (i = 0; i < gPlayerPartyCount; i++)
-        HealPokemon(&gPlayerParty[i]);
+        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
+            HealPokemon(&gPlayerParty[i]);
     if (OW_PC_HEAL >= GEN_8)
         HealPlayerBoxes();
 
@@ -55,7 +56,7 @@ static void HealPlayerBoxes(void)
         for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             boxMon = &gPokemonStoragePtr->boxes[boxId][boxPosition];
-            if (GetBoxMonData(boxMon, MON_DATA_SANITY_HAS_SPECIES))
+            if (GetBoxMonData(boxMon, MON_DATA_SANITY_HAS_SPECIES) && GetMonData(&gPlayerParty[boxPosition], MON_DATA_HP) != 0)
                 HealBoxPokemon(boxMon);
         }
     }

@@ -758,11 +758,42 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Roselia
-Level: 26
+Cloyster @ White Herb
+Level: 63
+Ability: Skill Link
+- Spikes
+- Icicle Spear
+- Liquidation
+- Shell Smash
 
-Gloom
-Level: 26
+Eternatus @ Power Herb
+Level: 60
+- Meteor Beam
+- Dynamax Cannon
+- Flamethrower
+- Sludge Bomb
+
+Genesect @ Choice Band
+Level: 60
+- U-Turn
+- Bullet Punch
+- Extreme Speed
+- Fury Cutter
+
+Latios @ Latiosite
+Level: 60
+- Draco Meteor
+- Luster Purge
+- Charge Beam
+- Ice Beam
+
+Corviknight @ Leftovers
+Level: 63
+Ability: Mirror Armor
+- Bulk Up
+- Body Press
+- Power Trip
+- Brave Bird
 
 === TRAINER_ROSE_2 ===
 Name: ROSE
@@ -842,12 +873,45 @@ Music: Hiker
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Sandslash
-Level: 23
-- Dig
-- Slash
-- Sand Attack
-- Poison Sting
+Flamigo @ Berserk Gene
+Level: 63
+Ability: Tangled Feet
+- Roost
+- Close Combat
+- Brave Bird
+- Bulk Up
+
+Liepard @ ITEM_KINGS_ROCK
+Level: 63
+EVs: 252 Spe
+Ability: Pickup
+- Fling
+- Fake Out
+- Parting Shot
+
+
+Raticate Alola @ Aguav Berry 
+Level: 62
+Ability: Gluttony
+- Belly Drum
+- Quick Attack
+- Double Edge
+- Sucker Punch
+
+Moltres Galar @ Salac Berry
+Level: 63
+- Endure
+- Fiery Wrath
+- Safeguard
+- Air Slash
+
+Ariados @ Scope Lens
+Level: 63
+Ability: Sniper
+- Shadow Sneak
+- Swords Dance
+- Focus Energy
+- Sucker Punch
 
 === TRAINER_CHIP ===
 Name: CHIP
@@ -2185,12 +2249,16 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Diglett
+Ability: Arena Trap
 Level: 5
 - Dig
+- Smack Down
 
 Diglett
-Level: 5
+Ability: Arena Trap
+Level: 6
 - Dig
+- Smack Down
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -2619,12 +2687,13 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Pikachu @ Light Ball
-Level: 15
+Level: 4
+Ability: Lightning Rod
 - Thunderbolt
 - Bite
 
-Minccino @ Normal Gem
-Level: 15
+Minccino @ Scope Lens
+Level: 3
 Ability: Skill Link
 - Tail Slap
 
@@ -2754,11 +2823,17 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wailmer
-Level: 25
+Camerupt @ Cameruptite
+Level: 63
+- Eruption
+- Earth Power
+- Lava Plume
+- Flash Cannon
 
-Horsea
-Level: 25
+Golem Alola @ Life Orb
+Ability: Galvanize
+Level: 63
+- Explosion
 
 === TRAINER_MARK ===
 Name: MARK
@@ -2941,8 +3016,45 @@ Music: Swimmer
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Tentacruel
-Level: 26
+Clefable @ Life Orb
+Level: 63
+Ability: Magic Guard
+- Thunderbolt
+- Ice Beam
+- Moonlight
+- Moonblast
+
+Kangaskhan @ Kangaskhanite
+Level: 63 
+Ability: Scrappy
+- Fake Out
+- Seismic Toss
+- Chip Away
+- Crunch
+
+Slowbro-Galar @ Quick Claw
+Level: 63
+Ability: Quick Draw
+- Shell Side Arm
+- Psyshock
+- Shadow Ball
+- Power Gem
+
+Persian @ Scope Lens
+Level: 63
+Ability: Super Luck
+- Return
+- Fake Out
+- Crunch
+- Quick Attack
+
+Butterfree @ Wide Lens
+Level: 63
+Ability: Compound Eyes
+- Sleep Powder
+- Quiver Dance
+- Hurricane
+- Bug Buzz
 
 === TRAINER_MATTHEW ===
 Name: MATTHEW
@@ -2953,8 +3065,45 @@ Music: Swimmer
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Carvanha
-Level: 26
+Clefairy @ Eviolite
+Level: 62
+Ability: Friend Guard
+- Protect
+- Life Dew
+- Moonlight
+- Seismic Toss
+
+Pachirisu @ Leftovers
+Level: 62
+Ability: Friend Guard
+- Protect
+- Nuzzle
+- Super Fang
+- Charge Beam
+
+Slowbro-Galar @ Leftovers
+Level: 62
+Ability: Regenerator
+- Protect
+- Wish
+- Haze
+- Surf
+
+Gliscor @ Toxic Orb
+Level: 62
+Ability: Poison Heal
+- Protect
+- Earthquake
+- Facade
+- Swords Dance
+
+Sinistcha @ Heavy-Duty Boots
+Level: 62
+Ability: Hospitality
+- Protect
+- Life Dew
+- Matcha Gotcha
+- Strength Sap
 
 === TRAINER_DAVID ===
 Name: DAVID
@@ -3903,14 +4052,40 @@ Pic: Camper
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
-Sandshrew
-Level: 23
-- Dig
-- Sand Attack
-- Poison Sting
-- Slash
+Flygon @ Life Orb
+Level: 63
+Ability: Earth Eater
+- Earthquake
+- U-Turn
+- Dragon Dance
+- Dragon Rush
+
+Garchomp @ Bright Powder
+Level: 63
+Ability: Sand Veil
+- Breaking Swipe
+- Hone Claws
+- Stone Edge
+- Earthquake
+
+Stoutland @ Expert Belt
+Level: 63
+Ability: Sand Rush
+- Retaliate
+- Play Rough
+- Crunch
+- Close Combat
+
+Houndstone @ Spell Tag
+Level: 63
+Ability: Sand Rush
+- Last Respects
+- Play Rough
+- Close Combat
+- Crunch
+
 
 === TRAINER_BEAU ===
 Name: BEAU
@@ -3921,26 +4096,45 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Baltoy
-Level: 21
-- Rapid Spin
-- Mud Slap
-- Psybeam
-- Rock Tomb
+Gliscor @ Toxic Orb
+Level: 63
+Ability: Poison Heal
+- Knock Off
+- Stealth Rock
+- Earthquake
+- Roost
 
-Sandshrew
-Level: 21
-- Poison Sting
-- Sand Attack
-- Scratch
-- Dig
+Palossand @ Leftovers
+Level: 63
+Ability: Water Compaction
+- Shore Up
+- Scorching Sands
+- Shadow Ball
+- Toxic
 
-Baltoy
-Level: 21
+Heatran @ Leftovers
+Level: 63
+Ability: Flash Fire
+- Toxic
+- Magma Storm
+- Protect
+- Rest
+
+Donphan @ Eviolite
+Level: 63
+Ability:
 - Rapid Spin
-- Mud Slap
-- Psybeam
-- Rock Tomb
+- Earthquake
+- Recover
+- Fire Fang
+
+Cradily @ Leftovers
+Level: 63
+Ability:
+- Leech Seed
+- Substitute
+- Protect
+- Sludge Wave
 
 === TRAINER_LARRY ===
 Name: LARRY
@@ -4208,14 +4402,42 @@ Music: Suspicious
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wurmple
-Level: 27
+Vaporeon @ Mental Herb
+Level: 63
+Ability: Water Absorb
+- Aqua Ring
+- Wish
+- Baton Pass
+- Scald
 
-Cascoon
-Level: 27
+Ditto @ Quick Powder
+Level: 62
+Ability: Imposter
+- Transform
 
-Dustox
-Level: 27
+Octillery @ Wise Glasses
+Level: 59
+Ability: Mega Launcher
+- Origin Pulse
+- Dark Pulse
+- Dragon Pulse
+- Aura Sphere
+
+Cinderace @ Heavy-Duty Boots
+Ability: Libero
+Level: 62
+- Court Change
+- Pyro Ball
+- Sucker Punch
+- U-Turn
+
+Lopunny @ Lopunnite
+Level: 62
+Ability: Cute Charm
+- Power Up Punch
+- Return
+- Play Rough
+- Triple Axel
 
 === TRAINER_JEFFREY_1 ===
 Name: JEFFREY
@@ -4815,7 +5037,6 @@ Class: Elite Four
 Pic: Elite Four Sidney
 Gender: Male
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Check Viability
 Mugshot: Purple
@@ -4891,7 +5112,6 @@ Class: Elite Four
 Pic: Elite Four Phoebe
 Gender: Female
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 Mugshot: Green
@@ -4967,7 +5187,6 @@ Class: Elite Four
 Pic: Elite Four Glacia
 Gender: Female
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 Mugshot: Pink
@@ -5039,7 +5258,6 @@ Class: Elite Four
 Pic: Elite Four Drake
 Gender: Male
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 Mugshot: Blue
@@ -5120,23 +5338,24 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
 Rhyhorn @ Focus Sash
-Level: 17
+Level: 5
 Shiny: Yes
-- Stomp
+- Stealth Rock
 - Crunch
 - Bulldoze
 - Rock Tomb
 
 Omanyte @ Mystic Water
-Level: 17
+Level: 5
 Shiny: Yes
 - Bubble Beam
 - Bite
 - Coil
 - Rock Tomb
 
-Aron
-Level: 17
+Aron @ Berry Juice
+Level: 5
+Ability: Sturdy
 Shiny: Yes
 - Rest
 - Metal Claw
@@ -5144,20 +5363,14 @@ Shiny: Yes
 - Rock Tomb
 
 Magcargo @ Charcoal
-Level: 17
+Level: 5
+Ability: Magma Armor
 Shiny: Yes
 - Yawn
 - Echoed Voice
 - Fire Spin
 - Rock Tomb
 
-Crustle
-Level: 16
-Shiny: Yes
-- Rock Slide
-- Fury Cutter
-- Slash
-- Bulldoze
 
 === TRAINER_BRAWLY_1 ===
 Name: BRAWLY
@@ -5225,15 +5438,16 @@ Items: Super Potion / Super Potion
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
-Magneton @ Leftovers
+Galvantula @ Focus Sash
 Timid Nature
+Ability: Compound Eyes
 Level: 34
-EVs: 248 Def / 12 Spe
+EVs: 24 Spe
 Shiny: Yes
-- Thunderbolt
-- Spikes
-- Toxic
-- Explosion
+- Thunder
+- Sticky Web
+- Giga Drain
+- Volt Switch
 
 Electrode @ Life Orb
 Timid Nature
@@ -5254,15 +5468,15 @@ Shiny: Yes
 - Terrain Pulse
 - Leech Seed
 
-Lanturn @ Leftovers
-Modest Nature
+Magneton @ Leftovers
+Timid Nature
 Level: 34
-Ability: Rain Dish
+EVs: 248 Def / 12 Spe
 Shiny: Yes
-- Thunder
-- Protect
-- Substitute
-- Surf
+- Thunderbolt
+- Spikes
+- Toxic
+- Explosion
 
 Jolteon @ Sitrus Berry
 Timid Nature
@@ -5511,7 +5725,6 @@ Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Hyper Potion / Hyper Potion / Hyper Potion / Hyper Potion
 Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
@@ -5583,7 +5796,6 @@ Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Hyper Potion / Hyper Potion
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
@@ -5771,16 +5983,19 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Murkrow @ Eviolite
+Ability: Prankster
 Level: 18
 - Tailwind
 - Helping Hand
 
 Mudbray @ Soft Sand
+Ability: Stamina
 Level: 18
 - Bulldoze
 - Rock Slide
 
 Houndour @ Charcoal
+Ability: Flash Fire
 Level: 18
 - Ember
 - Bulldoze
@@ -5788,6 +6003,7 @@ Level: 18
 - Growl
 
 Mightyena
+Ability: Intimidate
 Level: 18
 - Growl
 - Bulldoze
@@ -6515,6 +6731,7 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Poochyena
+Ability: Intimidate
 Level: 4
 - Bite
 - Howl
@@ -6522,9 +6739,11 @@ Level: 4
 - Tackle
 
 Aipom
-Level: 4
+Ability: Technician
+Level: 3
 - Tail Slap
 - Tail Whip
+- Fake Out
 
 === TRAINER_BILLY ===
 Name: BILLY
@@ -6536,13 +6755,15 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Krabby
-Level: 5
+Ability: Hyper Cutter
+Level: 4
 - Bubble
 - Cut
 - Fury Cutter
 - Vise Grip
 
 Goldeen
+Ability: Lightning Rod
 Level: 5
 - Horn Attack
 - Peck
@@ -6566,12 +6787,14 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Graveler
-Level: 16
+Ability: Sturdy
+Level: 5
 - Rock Tomb
 - Magnitude
 
 Geodude
-Level: 16
+Ability: Sturdy
+Level: 5
 - Rock Tomb
 - Magnitude
 
@@ -6585,13 +6808,15 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Omanyte
-Level: 16
+Ability: Shell Armor
+Level: 5
 - Water Pulse
 - Rock Tomb
 - Bug Bite
 
 Anorith
-Level: 16
+Ability: Battle Armor
+Level: 4
 - Scratch
 - Rock Tomb
 - Bug Bite
@@ -6606,13 +6831,14 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Machoke @ Black Belt
-Level: 18
+Level: 6
+Ability: No Guard
 - Rock Smash
 - Karate Chop
 - Howl
 
 Hariyama @ Lum Berry
-Level: 16
+Level: 5
 Ability: Thick Fat
 - Rock Smash
 - Fire Punch
@@ -6834,20 +7060,23 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Yanma
-Level: 4
+Yanma @ Maranga Berry
+Ability: Speed Boost
+Level: 3
 - Bug Buzz
 - Aerial Ace
 
-Ledyba
-Level: 4
+Ledyba @ Jaboca Berry
+Ability: Iron Fist
+Level: 3
 - Mach Punch
 - Comet Punch
 - Protect
 - Bug Bite
 
-Sentret
-Level: 4
+Sentret @ Maranga Berry
+Ability: Skill Link
+Level: 3
 - Slam
 - Tail Slap
 - Bounce
@@ -7001,11 +7230,12 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Beartic
-Level: 15
+Level: 5
 - Ice Shard
 
 Corphish
-Level: 16
+Ability: Adaptability
+Level: 6
 - Cut
 - Bubble Beam
 - Bite
@@ -7641,11 +7871,17 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zigzagoon
-Level: 25
+Whimsicott @ Mental Herb
+Ability: Prankster
+Level: 63
+- After You
+- Tailwind
+- Helping Hand
 
-Electrike
-Level: 25
+Golem Alola @ Choice Band
+Ability: Galvanize
+Level: 63
+- Explosion
 
 === TRAINER_ISAIAH_1 ===
 Name: ISAIAH
@@ -7957,8 +8193,39 @@ Music: Cool
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wingull
-Level: 26
+Glimmora @ Focus Sash
+Level: 63
+Ability: Toxic Debris
+- Stealth Rock
+- Toxic Spikes
+- Endure
+
+Rattata @ Focus Sash
+Level: 1
+- Endeavor
+- Quick Attack
+- Protect
+
+Aron @ Shell Bell
+Level: 1
+Ability: Sturdy
+- Endeavor
+- Quick Attack
+- Protect
+
+Togedemaru @ Shell Bell
+Level: 1
+Ability: Sturdy
+- Endeavor
+- Quick Attack
+- Protect
+
+Probopass @ Berry Juice
+Level: 2
+Ability: Sturdy
+- Pain Split
+- Quick Attack
+- Protect
 
 === TRAINER_HUGH ===
 Name: HUGH
@@ -7984,8 +8251,21 @@ Music: Cool
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Swellow
-Level: 26
+Armarouge @ Weakness Policy
+Level: 63
+Ability: Flash Fire
+- Armor Cannon
+- Expanding Force
+- Dark Pulse
+- Aura Sphere
+
+Vileplume @ Loaded Dice
+Level: 63
+Ability: Stench
+- Bullet Seed
+- Sleep Powder
+- Helping Hand
+- Trailblaze
 
 === TRAINER_JARED ===
 Name: JARED
@@ -8099,13 +8379,42 @@ Pic: Bird Keeper
 Gender: Male
 Music: Cool
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Setup First Turn
 
-Taillow
-Level: 25
+Rattata-Alola @ Focus Sash
+Level: 1
+- Quick Attack
+- Endeavor
+- Odor Sleuth
 
-Swellow
-Level: 25
+Beedrill @ Beedrillite
+Level: 63
+- Fell Stinger
+- U-Turn
+- Poison Jab
+- Drill Run
+
+Tauros-Paldea-Blaze @ Liechi Berry
+Level: 63
+Ability: Cud Chew
+- Endure
+- Flame Charge
+- Close Combat
+- Bulldoze
+
+Omastar @ Focus Sash
+Level: 63
+Ability: Weak Armor
+- Shell Smash
+- Surf
+- Power Gem
+- Earth Power
+
+Meloetta @ Metronome
+Level: 63
+Ability: Scrappy
+- Echoed Voice
+- Psychic
 
 === TRAINER_ROBERT_2 ===
 Name: ROBERT
@@ -8841,6 +9150,8 @@ Level: 62
 Ability: Adaptability
 - Flip Turn
 - Aqua Jet
+- Crabhammer
+- Knock Off
 
 === TRAINER_KYLA ===
 Name: KYLA
@@ -8890,11 +9201,27 @@ Music: Swimmer
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Horsea
-Level: 25
+Volcanion @ Leftovers
+Level: 63
+- Steam Eruption
+- Eruption
+- Protect
+- Earth Power
 
-Marill
-Level: 25
+Palkia @ Lustrous Globe
+Level: 63
+- Draco Meteor
+- Surf
+- Protect
+- Aura Sphere
+
+Inteleon @ Scope Lens
+Level: 63
+Ability: Sniper
+- Ice Beam
+- Surf
+- Focus Energy
+- Dark Pulse
 
 === TRAINER_MISSY ===
 Name: MISSY
@@ -8908,24 +9235,31 @@ AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability /
 Jirachi @ Choice Specs
 Level: 54
 - Doom Desire
+- Future Sight
 
 Stonjourner @ Leftovers
 Level: 54
 Ability: Power Spot
 - U Turn
 - Healing Wish
+- Protect
+- Wish
 
 Charjabug @ Eviolite
 Level: 54
 Ability: Battery
 - U Turn
 - Healing Wish
+- Protect
+- Wish
 
 Perrserker @ Leftovers
 Level: 54
 Ability: Steely Spirit
 - U Turn
 - Healing Wish
+- Protect
+- Wish
 
 === TRAINER_ALICE ===
 Name: ALICE
@@ -9219,21 +9553,26 @@ Pic: Picnicker
 Gender: Female
 Music: Girl
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Ace Pokemon
 
-Sandshrew
-Level: 22
-- Dig
-- Sand Attack
-- Poison Sting
-- Slash
+Murkrow @ Toxic Orb
+Level: 1
+Ability: Prankster
+- Memento
+- Healing Wish
 
-Baltoy
-Level: 22
-- Rapid Spin
-- Mud Slap
-- Psybeam
-- Rock Tomb
+Muk Alola @ Leftovers
+Level: 63
+Ability: Power of Alchemy
+- Assist
+- Curse
+- Sucker Punch
+- Amnesia
+
+Blissey
+Level: 1
+- Wish
+- Drain Punch
 
 === TRAINER_BECKY ===
 Name: BECKY
@@ -9567,16 +9906,16 @@ Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Pachirisu @ Leftovers
-Level: 17
-Ability: Plus
+Level: 5
+Ability: Power Spot
 - Follow Me
 - Fake Out
 - Protect
 - Recover
 
 Pachirisu @ Assault Vest
-Level: 16
-Ability: Minus
+Level: 4
+Ability: Friend Guard
 - Shock Wave
 - Headbutt
 - Mega Drain
@@ -9961,8 +10300,21 @@ Items: Hyper Potion
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Absol
-Level: 27
+Victini @ Leftovers
+Level: 63
+Ability: Victory Star
+- U-Turn
+- Protect
+- V-Create
+- Gravity
+
+Hydrapple @ Assault Vest
+Level: 63
+Ability: Supersweet Syrup
+- Volt Switch
+- Draco Meteor
+- Giga Drain
+- Gravity
 
 === TRAINER_JONAS ===
 Name: JONAS
@@ -10771,8 +11123,21 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Pinsir
-Level: 27
+Lilligant-Hisui @ Clear Amulet
+Level: 63
+Ability: Hustle
+- Victory Dance
+- Leaf Blade
+- Axe Kick
+- Ice Spinner
+
+Dracozolt @ Ring Target
+Level: 63
+Ability: Hustle
+- Trick
+- Bolt Beak
+- Dragon Rush
+- Breaking Swipe
 
 === TRAINER_MITCHELL ===
 Name: MITCHELL
@@ -10809,21 +11174,6 @@ AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability /
 Loudred
 Level: 22
 
-Linoone
-Level: 22
-
-Aron
-Level: 22
-
-Mightyena
-Level: 22
-
-Swellow
-Level: 22
-
-Makuhita
-Level: 22
-
 === TRAINER_ISAAC_3 ===
 Name: ISAAC
 Class: Pkmn Breeder
@@ -10834,21 +11184,6 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Loudred
-Level: 25
-
-Linoone
-Level: 25
-
-Aron
-Level: 25
-
-Mightyena
-Level: 25
-
-Swellow
-Level: 25
-
-Hariyama
 Level: 25
 
 === TRAINER_ISAAC_4 ===
@@ -10863,21 +11198,6 @@ AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability /
 Loudred
 Level: 28
 
-Linoone
-Level: 28
-
-Aron
-Level: 28
-
-Mightyena
-Level: 28
-
-Swellow
-Level: 28
-
-Hariyama
-Level: 28
-
 === TRAINER_ISAAC_5 ===
 Name: ISAAC
 Class: Pkmn Breeder
@@ -10888,21 +11208,6 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Loudred
-Level: 31
-
-Linoone
-Level: 31
-
-Lairon
-Level: 31
-
-Mightyena
-Level: 31
-
-Swellow
-Level: 31
-
-Hariyama
 Level: 31
 
 === TRAINER_LYDIA_1 ===
@@ -10968,21 +11273,6 @@ AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability /
 Wingull
 Level: 22
 
-Shroomish
-Level: 22
-
-Marill
-Level: 22
-
-Roselia
-Level: 22
-
-Skitty
-Level: 22
-
-Goldeen
-Level: 22
-
 === TRAINER_LYDIA_3 ===
 Name: LYDIA
 Class: Pkmn Breeder
@@ -10993,21 +11283,6 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Pelipper
-Level: 25
-
-Breloom
-Level: 25
-
-Marill
-Level: 25
-
-Roselia
-Level: 25
-
-Delcatty
-Level: 25
-
-Goldeen
 Level: 25
 
 === TRAINER_LYDIA_4 ===
@@ -11022,21 +11297,6 @@ AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability /
 Pelipper
 Level: 28
 
-Breloom
-Level: 28
-
-Marill
-Level: 28
-
-Roselia
-Level: 28
-
-Delcatty
-Level: 28
-
-Goldeen
-Level: 28
-
 === TRAINER_LYDIA_5 ===
 Name: LYDIA
 Class: Pkmn Breeder
@@ -11047,21 +11307,6 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Pelipper
-Level: 31
-
-Breloom
-Level: 31
-
-Azumarill
-Level: 31
-
-Roselia
-Level: 31
-
-Delcatty
-Level: 31
-
-Seaking
 Level: 31
 
 === TRAINER_JACKSON_1 ===
@@ -11088,12 +11333,6 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Seedot
-Level: 28
-
-Nuzleaf
-Level: 28
-
-Lombre
 Level: 28
 
 === TRAINER_SEBASTIAN ===
@@ -11373,16 +11612,19 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Amaura
-Level: 16
+Ability: Refrigerate
+Level: 5
 - Ice Shard
 - Icicle Spear
 - Rock Tomb
 - Disarming Voice
 
 Geodude
-Level: 16
+Ability: Sturdy
+Level: 5
 - Magnitude
 - Rock Tomb
+- Brick Break
 
 === TRAINER_BRENDEN ===
 Name: BRENDEN
@@ -12056,6 +12298,7 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Cyndaquil
+Ability: Blaze
 Level: 4
 - Ember
 - Tackle
@@ -12064,8 +12307,9 @@ Level: 4
 
 Sudowoodo
 Level: 4
+Ability: Sturdy
 - Rock Tomb
-- Tackle
+- Reversal
 - Low Kick
 - Flail
 
@@ -12079,14 +12323,16 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Lombre
-Level: 15
+Ability: Own Tempo
+Level: 5
 - Giga Drain
 - Bubble Beam
 - Protect
 - Quick Attack
 
 Heracross
-Level: 14
+Ability: Swarm
+Level: 4
 - Rock Smash
 - Fury Cutter
 - Rock Slide
@@ -12322,14 +12568,16 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Snubbull
+Ability: Intimidate
 Level: 4
 - Charm
 - Bite
 - Tackle
 - Tail Whip
 
-Dunsparce
-Level: 4
+Dunsparce @ Eviolite
+Ability: Serene Grace
+Level: 3
 - Sizzly Slide
 - Defense Curl
 
@@ -12342,25 +12590,29 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Paras
+Paras @ Focus Sash
 Level: 5
 Ability: Effect Spore
 - Bug Buzz
+- Spore
 
 Paras
 Level: 5
 Ability: Effect Spore
 - Bug Buzz
+- Stun Spore
 
 Paras
 Level: 5
 Ability: Effect Spore
 - Bug Buzz
+- Stun Spore
 
 Paras
 Level: 5
 Ability: Effect Spore
 - Bug Buzz
+- Stun Spore
 
 === TRAINER_JOSE ===
 Name: JOSE
@@ -12372,14 +12624,16 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Growlithe
-Level: 15
+Ability: Intimidate
+Level: 5
 - Flame Charge
 - Bite
 - Howl
 - Growl
 
 Ponyta
-Level: 15
+Ability: Flame Body
+Level: 4
 - Flame Charge
 - Stomp
 - Bulldoze
@@ -12392,13 +12646,47 @@ Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
-Nincada
-Level: 28
+Annihilape @ Leftovers
+Ability: Defiant
+Level: 60
+- Final Gambit
+- Rage Fist
+- Bulk Up
+- Drain Punch
 
-Ninjask
-Level: 28
+Pawmot @ Leppa Berry
+Ability: Natural Cure
+Level: 63
+- Revival Blessing
+- Volt Switch
+- Double Shock
+- Knock Off
+
+Rabsca @ Heavy-Duty Boots
+Ability: Synchronize
+Level: 63
+- Revival Blessing
+- Struggle Bug
+- Future Sight
+- Light Screen
+
+Ho-oh @ Heavy-Duty Boots
+Ability: Regenerator
+Level: 62
+- Revival Blessing
+- Sacred Fire
+- Recover
+- Future Sight
+
+Basculegion @ Focus Sash
+Ability: Adaptability
+Level: 62
+- Last Respects
+- Crunch
+- Wave Crash
+- Trailblaze
 
 === TRAINER_GREG ===
 Name: GREG
@@ -12424,8 +12712,44 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Ninjask
-Level: 25
+Bombirdier @ Loaded Dice
+Level: 63
+Ability: Rocky Payload
+- Rock Blast
+- Dual Wingbeat
+- Knock Off
+- U-Turn
+
+Corviknight @ Leftovers
+Level: 63
+Ability: Mirror Armor
+- Bulk Up
+- Power Trip
+- Body Press
+- Roost
+
+Mr Mime @ Float Stone
+Level: 63
+Ability: Technician
+- Magical Leaf
+- Icy Wind
+- Charge Beam
+- Twin Beam
+
+Tauros Paldea Aqua @ Leftovers
+Level: 63
+Ability: Anger Point
+- Raging Bull
+- Amnesia
+- Drain Punch
+- Bulk Up
+
+Venusaur @ Venusaurite
+Level: 63
+- Leech Seed
+- Hyper Beam
+- Sludge Bomb
+- Synthesis
 
 === TRAINER_JAMES_1 ===
 Name: JAMES
@@ -12441,6 +12765,7 @@ Level: 5
 - Fury Cutter
 
 Shuckle
+Ability: Sturdy
 Level: 5
 - Fury Cutter
 
@@ -13736,19 +14061,40 @@ Music: Twins
 Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Roselia
-Level: 44
-- Growth
-- Stun Spore
-- Mega Drain
-- Leech Seed
+Zarude @ Sitrus Berry
+Level: 50
+- Protect
+- Jungle Healing
+- Knock Off
+- Bulk Up
 
-Graveler
-Level: 44
-- Defense Curl
-- Rollout
-- Mud Sport
-- Rock Throw
+Regigigas @ Leftovers
+Level: 50
+- Protect
+- Substitute
+- Return
+- Crunch
+
+Zarude @ Sitrus Berry
+Level: 50
+- Helping Hand
+- Jungle Healing
+- Knock Off
+- Power Whip
+
+Weezing-Galar @ Focus Sash
+Level: 50
+- Protect
+- Destiny Bond
+- Aromatic Mist
+- Recover
+
+Slaking @ Sitrus Berry
+Level: 50
+- Protect
+- Double Edge
+- Throat Chop
+- Zen Headbutt
 
 === TRAINER_MEL_AND_PAUL ===
 Name: MEL & PAUL
@@ -14073,12 +14419,13 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Magikarp @ Leppa Berry
+Ability: Rattled
 Level: 5
 - Bounce
 
 Magikarp @ Normal Gem
-Level: 5
-Ability: Huge Power
+Ability: Rattled
+Level: 6
 - Flail
 
 === TRAINER_HAILEY ===
@@ -14847,14 +15194,19 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wingull
-Level: 24
+Wyrdeer @ Mental Herb
+Ability: Intimidate
+Level: 63
+- Entrainment
+- Skill Swap
 
-Machop
-Level: 24
-
-Tentacool
-Level: 24
+Flamigo @ Luminous Moss
+Ability: Costar
+Level: 63
+- Air Slash
+- Water Pulse
+- Tailwind
+- Vacuum Wave
 
 === TRAINER_CAROLINA ===
 Name: CAROLINA
@@ -14866,14 +15218,21 @@ Items: Hyper Potion
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Manectric
-Level: 24
+Empoleon @ Adrenaline Orb
+Ability: Competitive
+Level: 63
+- Surf
+- Ice Beam
+- Vacuum Wave
+- Protect
 
-Swellow
-Level: 24
-
-Manectric
-Level: 24
+Lurantis @ Protective Pads
+Ability: Contrary
+Level: 63
+- Superpower
+- Hammer Arm
+- Petal Blizzard
+- Skitter Smack
 
 === TRAINER_ELIJAH ===
 Name: ELIJAH
@@ -15144,11 +15503,13 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Zangoose @ Silk Scarf
+Ability: Immunity
 Level: 18
 - Swords Dance
 - Facade
 
 Ambipom
+Ability: Technician
 Level: 18
 - Tackle
 - Tail Slap
@@ -15165,6 +15526,7 @@ Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Cottonee
+Ability: Prankster
 Level: 18
 - Tailwind
 - Stealth Rock
@@ -15172,11 +15534,15 @@ Level: 18
 - Sticky Web
 
 Azumarill
-Level: 18
+Ability: Huge Power
+Level: 17
 - Helping Hand
-- Aqua Tail
+- Aqua Jet
+- Facade
+- Brutal Swing
 
 Chansey
+Ability: Natural Cure
 Level: 18
 - Helping Hand
 - Soft Boiled
@@ -15321,8 +15687,21 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Goldeen
-Level: 26
+Dewgong @ Quick Claw
+Level: 63
+Ability: Thick Fat
+- Sheer Cold
+- Surf
+- Horn Drill
+- Fake Out
+
+Indeedee @ Terrain Extender
+Level: 63
+Ability: Psychic Surge
+- Expanding Force
+- Dazzling Gleam
+- Protect
+- Psychic Noise
 
 === TRAINER_LEONEL ===
 Name: LEONEL
@@ -17793,11 +18172,17 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wailmer
-Level: 34
+Camerupt @ Cameruptite
+Level: 63
+- Eruption
+- Earth Power
+- Lava Plume
+- Flash Cannon
 
-Horsea
-Level: 34
+Golem Alola @ Life Orb
+Ability: Galvanize
+Level: 63
+- Explosion
 
 === TRAINER_THALIA_3 ===
 Name: THALIA

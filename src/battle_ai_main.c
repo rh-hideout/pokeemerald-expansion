@@ -2546,7 +2546,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                                                              | MOVE_TARGET_FOES_AND_ALLY
                                                              | MOVE_TARGET_OPPONENTS_FIELD)
                       && instructedMove != MOVE_MIND_BLOWN && instructedMove != MOVE_STEEL_BEAM)
-                        ADJUST_SCORE(-10); //Don't force the enemy to attack you again unless it can kill itself with Mind Blown
+                        ADJUST_SCORE(-10); //Don't force the enemy to attack you again unless it can kill itself
                     else if (instructedMove != MOVE_MIND_BLOWN)
                         ADJUST_SCORE(-5); //Do something better
                 }
@@ -2867,6 +2867,15 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         {
             switch (atkPartnerAbility)
             {
+            case ABILITY_ANGER_POINT:
+                if (gMovesInfo[move].alwaysCriticalHit == TRUE 
+                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
+                    && AI_IsFaster(battlerAtk, battlerAtkPartner, move)
+                    && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, 1))
+                {
+                    RETURN_SCORE_PLUS(GOOD_EFFECT);
+                }
+                break;
             case ABILITY_VOLT_ABSORB:
                 if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
                 {
@@ -3137,6 +3146,10 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex);
+    
+    if ((AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_WEAKNESS_POLICY)
+        && AI_GetTypeEffectiveness(move, battlerAtk, partnerBattler) >= UQ_4_12(2.0))
+        return TRUE;
     return (IsDoubleBattle()
          && noOfHitsToFaintPartner != 0 // Immunity check
          && IsBattlerAlive(partnerBattler)
@@ -3851,6 +3864,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(WEAK_EFFECT);
             if (HasMoveWithType(battlerDef, TYPE_FIRE) || HasMoveWithType(BATTLE_PARTNER(battlerDef), TYPE_FIRE))
                 ADJUST_SCORE(WEAK_EFFECT);
+            if (HasMoveEffect(battlerDef, EFFECT_WEATHER_BALL))
+                ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
     case EFFECT_SUNNY_DAY:
@@ -4133,6 +4148,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SKILL_SWAP:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
+        else if (!IS_TARGETING_PARTNER(battlerAtk, battlerDef) && aiData->abilities[battlerAtk] == ABILITY_INTIMIDATE && aiData->abilities[battlerDef] == ABILITY_INTIMIDATE)
+            ADJUST_SCORE(GOOD_EFFECT);
         else if (gAbilitiesInfo[aiData->abilities[battlerDef]].aiRating > gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
@@ -4145,6 +4162,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_ENTRAINMENT:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
+        else if (!IS_TARGETING_PARTNER(battlerAtk, battlerDef) && aiData->abilities[battlerAtk] == ABILITY_INTIMIDATE)
+            ADJUST_SCORE(GOOD_EFFECT);
         else if ((IsAbilityOfRating(aiData->abilities[battlerDef], 5) || gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating <= 0)
         && (aiData->abilities[battlerDef] != aiData->abilities[battlerAtk] && !(gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)))
             ADJUST_SCORE(DECENT_EFFECT);

@@ -9,14 +9,6 @@ MtPyre_2F_SetHoleWarp:
 	setholewarp MAP_MT_PYRE_1F
 	end
 
-MtPyre_2F_EventScript_Woman::
-	msgbox MtPyre_2F_Text_MemoriesOfSkitty, MSGBOX_NPC
-	end
-
-MtPyre_2F_EventScript_PokefanM::
-	msgbox MtPyre_2F_Text_TumbledFromFloorAbove, MSGBOX_NPC
-	end
-
 MtPyre_2F_EventScript_Mark::
 	trainerbattle_single TRAINER_MARK, MtPyre_2F_Text_MarkIntro, MtPyre_2F_Text_MarkDefeat
 	msgbox MtPyre_2F_Text_MarkPostBattle, MSGBOX_AUTOCLOSE
@@ -41,16 +33,6 @@ MtPyre_2F_EventScript_Zander::
 	trainerbattle_single TRAINER_ZANDER, MtPyre_2F_Text_ZanderIntro, MtPyre_2F_Text_ZanderDefeat
 	msgbox MtPyre_2F_Text_ZanderPostBattle, MSGBOX_AUTOCLOSE
 	end
-
-MtPyre_2F_Text_MemoriesOfSkitty:
-	.string "Memories of my darling SKITTY…\n"
-	.string "My eyes overflow thinking about it.$"
-
-MtPyre_2F_Text_TumbledFromFloorAbove:
-	.string "Ooch, ouch… There are holes in the\n"
-	.string "ground here and there.\p"
-	.string "I didn't notice and took a tumble from\n"
-	.string "the floor above.$"
 
 MtPyre_2F_Text_MarkIntro:
 	.string "Hey! Are you searching for POKéMON?\n"

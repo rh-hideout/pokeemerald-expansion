@@ -29,14 +29,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
-      "x": 23,
-      "y": 10,
+      "x": 15,
+      "y": 14,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_DOWN_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 4,
       "movement_range_y": 3,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "5",
       "script": "AquaHideout_B2F_EventScript_Grunt4",
       "flag": "FLAG_HIDE_AQUA_HIDEOUT_GRUNTS"
     },
@@ -68,21 +68,21 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_F",
-      "x": 7,
-      "y": 5,
+      "x": 1,
+      "y": 4,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "5",
-      "script": "AquaHideout_B2F_EventScript_Grunt6",
+      "trainer_sight_or_berry_tree_id": "4",
+      "script": "AquaHideout_B2F_EventScript_Grunt5",
       "flag": "FLAG_HIDE_AQUA_HIDEOUT_GRUNTS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 13,
-      "y": 5,
+      "y": 3,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
@@ -116,8 +116,8 @@
       "dest_warp_id": "3"
     },
     {
-      "x": 31,
-      "y": 8,
+      "x": 19,
+      "y": 15,
       "elevation": 3,
       "dest_map": "MAP_AQUA_HIDEOUT_B2F",
       "dest_warp_id": "5"
@@ -137,8 +137,8 @@
       "dest_warp_id": "3"
     },
     {
-      "x": 18,
-      "y": 13,
+      "x": 16,
+      "y": 15,
       "elevation": 3,
       "dest_map": "MAP_AQUA_HIDEOUT_B2F",
       "dest_warp_id": "7"

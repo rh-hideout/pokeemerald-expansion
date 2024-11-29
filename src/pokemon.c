@@ -375,7 +375,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     {
         .name = COMPOUND_STRING("Hardy"),
         .statUp = STAT_ATK,
-        .statDown = STAT_ATK,
+        .statDown = STAT_HP,
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_HARDY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlHardy,
@@ -447,7 +447,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     {
         .name = COMPOUND_STRING("Docile"),
         .statUp = STAT_DEF,
-        .statDown = STAT_DEF,
+        .statDown = STAT_HP,
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_DOCILE, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDocileNaiveQuietQuirky,
@@ -519,7 +519,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     {
         .name = COMPOUND_STRING("Serious"),
         .statUp = STAT_SPEED,
-        .statDown = STAT_SPEED,
+        .statDown = STAT_HP,
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_SERIOUS, AFFINE_TURN_DOWN},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSerious,
@@ -591,7 +591,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     {
         .name = COMPOUND_STRING("Bashful"),
         .statUp = STAT_SPATK,
-        .statDown = STAT_SPATK,
+        .statDown = STAT_HP,
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_BASHFUL, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlBashful,
@@ -663,7 +663,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     {
         .name = COMPOUND_STRING("Quirky"),
         .statUp = STAT_SPDEF,
-        .statDown = STAT_SPDEF,
+        .statDown = STAT_HP,
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDocileNaiveQuietQuirky,
@@ -678,7 +678,27 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 
 #include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
+
+#if P_LVL_UP_LEARNSETS >= GEN_9
 #include "data/pokemon/level_up_learnsets/gen_9.h" // Scarlet/Violet
+#elif P_LVL_UP_LEARNSETS >= GEN_8
+#include "data/pokemon/level_up_learnsets/gen_8.h" // Sword/Shield
+#elif P_LVL_UP_LEARNSETS >= GEN_7
+#include "data/pokemon/level_up_learnsets/gen_7.h" // Ultra Sun/ Ultra Moon
+#elif P_LVL_UP_LEARNSETS >= GEN_6
+#include "data/pokemon/level_up_learnsets/gen_6.h" // Omega Ruby/Alpha Sapphire
+#elif P_LVL_UP_LEARNSETS >= GEN_5
+#include "data/pokemon/level_up_learnsets/gen_5.h" // Black 2/White 2
+#elif P_LVL_UP_LEARNSETS >= GEN_4
+#include "data/pokemon/level_up_learnsets/gen_4.h" // HeartGold/SoulSilver
+#elif P_LVL_UP_LEARNSETS >= GEN_3
+#include "data/pokemon/level_up_learnsets/gen_3.h" // Ruby/Sapphire/Emerald
+#elif P_LVL_UP_LEARNSETS >= GEN_2
+#include "data/pokemon/level_up_learnsets/gen_2.h" // Crystal
+#elif P_LVL_UP_LEARNSETS >= GEN_1
+#include "data/pokemon/level_up_learnsets/gen_1.h" // Yellow
+#endif
+
 #include "data/pokemon/teachable_learnsets.h"
 #include "data/pokemon/egg_moves.h"
 #include "data/pokemon/form_species_tables.h"
@@ -5178,111 +5198,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
-{
-    u8 evs[NUM_STATS];
-    u16 evIncrease = 0;
-    u16 totalEVs = 0;
-    u16 heldItem;
-    u8 holdEffect;
-    int i, multiplier;
-    u8 stat;
-    u8 bonus;
-
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[0].holdEffect;
-        else
-        #if FREE_ENIGMA_BERRY == FALSE
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            holdEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-    }
-    else
-    {
-        holdEffect = ItemId_GetHoldEffect(heldItem);
-    }
-
-    stat = ItemId_GetSecondaryId(heldItem);
-    bonus = ItemId_GetHoldEffectParam(heldItem);
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        evs[i] = GetMonData(mon, MON_DATA_HP_EV + i, 0);
-        totalEVs += evs[i];
-    }
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        if (totalEVs >= MAX_TOTAL_EVS)
-            break;
-
-        if (CheckPartyHasHadPokerus(mon, 0))
-            multiplier = 2;
-        else
-            multiplier = 1;
-
-        switch (i)
-        {
-        case STAT_HP:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_HP + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_HP * multiplier;
-            break;
-        case STAT_ATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Attack + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Attack * multiplier;
-            break;
-        case STAT_DEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Defense + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Defense * multiplier;
-            break;
-        case STAT_SPEED:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Speed + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Speed * multiplier;
-            break;
-        case STAT_SPATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpAttack + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpAttack * multiplier;
-            break;
-        case STAT_SPDEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpDefense * multiplier;
-            break;
-        }
-
-        if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
-            evIncrease *= 2;
-
-        if (totalEVs + (s16)evIncrease > MAX_TOTAL_EVS)
-            evIncrease = ((s16)evIncrease + MAX_TOTAL_EVS) - (totalEVs + evIncrease);
-
-        if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
-        {
-            int val1 = (s16)evIncrease + MAX_PER_STAT_EVS;
-            int val2 = evs[i] + evIncrease;
-            evIncrease = val1 - val2;
-        }
-
-        evs[i] += evIncrease;
-        totalEVs += evIncrease;
-        SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
-    }
-}
+void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies){}
 
 u16 GetMonEVCount(struct Pokemon *mon)
 {

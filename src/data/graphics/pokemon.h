@@ -5193,10 +5193,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonShinyPalette_WooperPaldean[] = INCBIN_U32("graphics/pokemon/wooper/wooper_paldean/shiny.gbapal.lz");
     const u8 gMonIcon_WooperPaldean[] = INCBIN_U8("graphics/pokemon/wooper/wooper_paldean/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_WooperPaldean[] = INCBIN_COMP("graphics/pokemon/wooper/wooper_paldean/overworld.4bpp");
+    const u32 gObjectEventPic_WooperPaldean[] = INCBIN_COMP("graphics/pokemon/wooper/wooper_paldean/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u32 gOverworldPalette_WooperPaldean[] = INCBIN_U32("graphics/pokemon/wooper/wooper_paldean/overworld_normal.gbapal.lz");
-    // const u32 gShinyOverworldPalette_WooperPaldean[] = INCBIN_U32("graphics/pokemon/wooper/wooper_paldean/overworld_shiny.gbapal.lz");
+    const u32 gOverworldPalette_WooperPaldean[] = INCBIN_U32("graphics/pokemon/wooper/wooper_paldean/overworld_normal.gbapal.lz");
+    const u32 gShinyOverworldPalette_WooperPaldean[] = INCBIN_U32("graphics/pokemon/wooper/wooper_paldean/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
@@ -5209,10 +5209,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u8 gMonFootprint_Clodsire[] = INCBIN_U8("graphics/pokemon/clodsire/footprint.1bpp");
 #endif //P_FOOTPRINTS
 #if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_Clodsire[] = INCBIN_COMP("graphics/pokemon/clodsire/overworld.4bpp");
+    const u32 gObjectEventPic_Clodsire[] = INCBIN_COMP("graphics/pokemon/clodsire/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u32 gOverworldPalette_Clodsire[] = INCBIN_U32("graphics/pokemon/clodsire/overworld_normal.gbapal.lz");
-    // const u32 gShinyOverworldPalette_Clodsire[] = INCBIN_U32("graphics/pokemon/clodsire/overworld_shiny.gbapal.lz");
+    const u32 gOverworldPalette_Clodsire[] = INCBIN_U32("graphics/pokemon/clodsire/overworld_normal.gbapal.lz");
+    const u32 gShinyOverworldPalette_Clodsire[] = INCBIN_U32("graphics/pokemon/clodsire/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_PALDEAN_FORMS
@@ -12202,6 +12202,17 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonShinyPalette_BasculinBlueStriped[] = INCBIN_U32("graphics/pokemon/basculin/blue_striped/shiny.gbapal.lz");
     const u8 gMonIcon_BasculinBlueStriped[] = INCBIN_U8("graphics/pokemon/basculin/blue_striped/icon.4bpp");
 
+#if OW_POKEMON_OBJECT_EVENTS
+    const u32 gObjectEventPic_BasculinRedStriped[] = INCBIN_COMP("graphics/pokemon/basculin/overworld.4bpp");
+    const u32 gObjectEventPic_BasculinBlueStriped[] = INCBIN_COMP("graphics/pokemon/basculin/blue_striped/overworld.4bpp");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    const u32 gOverworldPalette_BasculinRedStriped[] = INCBIN_U32("graphics/pokemon/basculin/overworld_normal.gbapal.lz");
+    const u32 gOverworldPalette_BasculinBlueStriped[] = INCBIN_U32("graphics/pokemon/basculin/blue_striped/overworld_normal.gbapal.lz");
+    const u32 gShinyOverworldPalette_BasculinRedStriped[] = INCBIN_U32("graphics/pokemon/basculin/overworld_shiny.gbapal.lz");
+    const u32 gShinyOverworldPalette_BasculinBlueStriped[] = INCBIN_U32("graphics/pokemon/basculin/blue_striped/overworld_shiny.gbapal.lz");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
+
 #if P_HISUIAN_FORMS
     const u32 gMonFrontPic_BasculinWhiteStriped[] = INCBIN_U32("graphics/pokemon/basculin/white_striped/anim_front.4bpp.lz");
     const u32 gMonPalette_BasculinWhiteStriped[] = INCBIN_U32("graphics/pokemon/basculin/white_striped/normal.gbapal.lz");
@@ -12210,15 +12221,9 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u8 gMonIcon_BasculinWhiteStriped[] = INCBIN_U8("graphics/pokemon/basculin/white_striped/icon.4bpp");
 
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_BasculinRedStriped[] = INCBIN_COMP("graphics/pokemon/basculin/overworld.4bpp");
-    const u32 gObjectEventPic_BasculinBlueStriped[] = INCBIN_COMP("graphics/pokemon/basculin/blue_striped/overworld.4bpp");
     const u32 gObjectEventPic_BasculinWhiteStriped[] = INCBIN_COMP("graphics/pokemon/basculin/white_striped/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u32 gOverworldPalette_BasculinRedStriped[] = INCBIN_U32("graphics/pokemon/basculin/overworld_normal.gbapal.lz");
-    const u32 gOverworldPalette_BasculinBlueStriped[] = INCBIN_U32("graphics/pokemon/basculin/blue_striped/overworld_normal.gbapal.lz");
     const u32 gOverworldPalette_BasculinWhiteStriped[] = INCBIN_U32("graphics/pokemon/basculin/white_striped/overworld_normal.gbapal.lz");
-    const u32 gShinyOverworldPalette_BasculinRedStriped[] = INCBIN_U32("graphics/pokemon/basculin/overworld_shiny.gbapal.lz");
-    const u32 gShinyOverworldPalette_BasculinBlueStriped[] = INCBIN_U32("graphics/pokemon/basculin/blue_striped/overworld_shiny.gbapal.lz");
     const u32 gShinyOverworldPalette_BasculinWhiteStriped[] = INCBIN_U32("graphics/pokemon/basculin/white_striped/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS

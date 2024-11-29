@@ -1,4 +1,5 @@
 .set LOCALID_MOM, 4
+.set LOCALID_PLAYER, 5
 
 LittlerootTown_MapScripts::
 	.byte 0
@@ -67,6 +68,7 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	msgbox OldaleTown_Text_ExplainCandies, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	giveitem ITEM_MAX_REPEL, 99
+	closemessage
 	return
 
 OldaleTown_Text_ExplainCandies:

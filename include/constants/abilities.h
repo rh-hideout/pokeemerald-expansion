@@ -326,10 +326,10 @@
 #define ABILITY_MYCELIUM_MIGHT            298
 #define ABILITY_HOSPITALITY               299
 #define ABILITY_MINDS_EYE                 300
-#define ABILITY_EMBODY_ASPECT_TEAL        301
-#define ABILITY_EMBODY_ASPECT_HEARTHFLAME 302
-#define ABILITY_EMBODY_ASPECT_WELLSPRING  303
-#define ABILITY_EMBODY_ASPECT_CORNERSTONE 304
+#define ABILITY_EMBODY_ASPECT_TEAL_MASK   301
+#define ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK 302
+#define ABILITY_EMBODY_ASPECT_WELLSPRING_MASK 303
+#define ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK 304
 #define ABILITY_TOXIC_CHAIN               305
 #define ABILITY_SUPERSWEET_SYRUP          306
 #define ABILITY_TERA_SHIFT                307
@@ -348,7 +348,7 @@ Infusion Abilities
         Fairy     - Pixilate
         Ice       - Glaciate
 */
-#define ABILITY_EARTH_FORGE               311  //Ground
+#define ABILITY_EARTH_SUMMON              311  //Ground
 #define ABILITY_AQUILATE                  312  //Water
 #define ABILITY_FERTILIZE                 313  //Grass
 #define ABILITY_TERRORIZE                 314  //Ghost
@@ -389,8 +389,10 @@ Flat Immunities
 
 #define ABILITY_BURNING_HEART             325 
 #define ABILITY_CONCERTO                  326
+#define ABILITY_REBEL_TACTICS             327
+#define ABILITY_GOLDEN_LUCK               328
 
-#define ABILITIES_COUNT_CUSTOM            327
+#define ABILITIES_COUNT_CUSTOM            329
 
 #define ABILITIES_COUNT ABILITIES_COUNT_CUSTOM
 

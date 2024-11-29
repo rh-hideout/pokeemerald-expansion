@@ -1911,7 +1911,8 @@ const struct Item gItemsInfo[] =
             "Raises the level\n"
             "of a Pokémon by\n"
             "one."),
-        .pocket = POCKET_ITEMS,
+        .pocket = POCKET_KEY_ITEMS,
+        .importance = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -7014,7 +7015,7 @@ const struct Item gItemsInfo[] =
     {
         .name = _("Lucky Punch"),
         .pluralName = _("Lucky Punches"),
-        .price = (I_PRICE >= GEN_7) ? 1000 : 10,
+        .price = 1000,
         .holdEffect = HOLD_EFFECT_LUCKY_PUNCH,
         .description = COMPOUND_STRING(
             "A hold item that\n"
@@ -7035,9 +7036,9 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 1000 : 10,
         .holdEffect = HOLD_EFFECT_METAL_POWDER,
         .description = COMPOUND_STRING(
-            "A hold item that\n"
-            "raises Ditto's\n"
-            "Defense."),
+            "An item to be held\n"
+            "by Ditto. It\n"
+            "boosts Defense."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
@@ -10483,19 +10484,18 @@ const struct Item gItemsInfo[] =
         .secondaryId = MOVE_TOXIC,
     },
 
-    [ITEM_TM_HAIL] =
+    [ITEM_TM_FLIP_TURN] =
     {
         .name = _("TM07"),
         .price = 3000,
         .description = COMPOUND_STRING(
-            "Creates a hailstorm\n"
-            "that damages all\n"
-            "types except Ice."),
+            "Attacks and rushes back to\n"
+            "switch with a party Pokémon."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
-        .secondaryId = MOVE_HAIL,
+        .secondaryId = MOVE_FLIP_TURN,
     },
 
     [ITEM_TM_BULK_UP] =
@@ -10528,14 +10528,14 @@ const struct Item gItemsInfo[] =
         .secondaryId = MOVE_BULLET_SEED,
     },
 
-    [ITEM_TM_HIDDEN_POWER] =
+    [ITEM_TM_U_TURN] =
     {
         .name = _("TM10"),
         .price = 3000,
         .description = COMPOUND_STRING(
-            "The attack power\n"
-            "varies among\n"
-            "different Pokémon."),
+            "Does damage and\n"
+            "then switches\n"
+            "out the user."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
@@ -10543,14 +10543,14 @@ const struct Item gItemsInfo[] =
         .secondaryId = MOVE_HIDDEN_POWER,
     },
 
-    [ITEM_TM_SUNNY_DAY] =
+    [ITEM_TM_WAVE_CRASH] =
     {
         .name = _("TM11"),
         .price = 2000,
         .description = COMPOUND_STRING(
-            "Raises the power of\n"
-            "Fire-type moves\n"
-            "for 5 turns."),
+            "A powerful slam shrouded"
+            "in water. The user takes\n"
+            "33% recoil damage."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
