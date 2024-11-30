@@ -4469,7 +4469,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggCycles = 22,
        .friendship = 44,
        .growthRate = GROWTH_MEDIUM_SLOW,
-       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_MONSTER },
+       .eggGroups = { EGG_GROUP_AMORPHOUS, EGG_GROUP_MINERAL },
        .abilities = { ABILITY_INSOMNIA, ABILITY_DAZZLING, ABILITY_SHADOW_TAG, ABILITY_MAGNET_PULL },
        .bodyColor = BODY_COLOR_WHITE,
        .isLegendary = FALSE,
@@ -4484,7 +4484,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
            "It is thought that Adentity feeds on the \n"
            "greed of humans and some species of \n"
            "Pokémon if it cannot obtain said greed,\n"
-           " it hunts their flesh."),
+           "it hunts their flesh."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
