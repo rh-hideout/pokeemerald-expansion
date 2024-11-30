@@ -2620,6 +2620,8 @@ gCryTable::
 	cry Cry_Aquaos
 
 	cry Cry_Dredalisk
+
+	cry Cry_Adentity
 .endif
 
 	.align 2
@@ -5245,4 +5247,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Aquaos
 
 	cry_reverse Cry_Dredalisk
+
+	cry_reverse Cry_Adentity
 .endif

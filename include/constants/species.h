@@ -1733,8 +1733,9 @@
 #define SPECIES_FRUDGE                                  1623
 #define SPECIES_AQUAOS                                  1624
 #define SPECIES_DREDALISK                               1625
+#define SPECIES_ADENTITY                                1626
 
-#define SPECIES_EGG (SPECIES_DREDALISK + 1)
+#define SPECIES_EGG (SPECIES_ADENTITY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

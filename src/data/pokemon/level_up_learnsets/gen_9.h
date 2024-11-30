@@ -23863,6 +23863,28 @@ static const struct LevelUpMove sJumblinartLevelUpLearnset[] = {
     LEVEL_UP_MOVE(66, MOVE_WATER_SPOUT),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sAdentityLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_ACID),
+    LEVEL_UP_MOVE( 1, MOVE_U_TURN), // replace with slip turn once added
+    LEVEL_UP_MOVE( 1, MOVE_CONVERSION),
+    LEVEL_UP_MOVE( 2, MOVE_CONVERSION_2),
+    LEVEL_UP_MOVE( 6, MOVE_WATER_GUN),
+    LEVEL_UP_MOVE(10, MOVE_ACID_SPRAY),
+    LEVEL_UP_MOVE(14, MOVE_CALM_MIND),
+    LEVEL_UP_MOVE(18, MOVE_PSYBEAM),
+    LEVEL_UP_MOVE(22, MOVE_SCALD),
+    LEVEL_UP_MOVE(26, MOVE_TOXIC_SPIKES),
+    LEVEL_UP_MOVE(30, MOVE_SHADOW_BALL),
+    LEVEL_UP_MOVE(35, MOVE_MOONBLAST),
+    LEVEL_UP_MOVE(39, MOVE_EXTRASENSORY),
+    LEVEL_UP_MOVE(44, MOVE_RECOVER),
+    LEVEL_UP_MOVE(48, MOVE_WRING_OUT),
+    LEVEL_UP_MOVE(52, MOVE_STEAM_ERUPTION),
+    LEVEL_UP_MOVE(57, MOVE_SYNCHRONOISE),
+    LEVEL_UP_MOVE(61, MOVE_POWER_WASHER), 
+    LEVEL_UP_MOVE(66, MOVE_WATER_SPOUT),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sEmeffyumeLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_ACID),
     LEVEL_UP_MOVE( 1, MOVE_U_TURN), // replace with slip turn once added

@@ -22661,6 +22661,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/icon.4bpp");
    const u8 gMonFootprint_Jumblinart[] = INCBIN_U8("graphics/pokemon/jumblinart/footprint.1bpp");
 
+   const u32 gMonFrontPic_Adentity[] = INCBIN_U32("graphics/pokemon/adentity/front.4bpp.lz");
+   const u32 gMonBackPic_Adentity[] = INCBIN_U32("graphics/pokemon/adentity/back.4bpp.lz");
+   const u32 gMonPalette_Adentity[] = INCBIN_U32("graphics/pokemon/adentity/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Adentity[] = INCBIN_U32("graphics/pokemon/adentity/shiny.gbapal.lz");
+   const u8 gMonIcon_Adentity[] = INCBIN_U8("graphics/pokemon/adentity/icon.4bpp");
+   const u8 gMonFootprint_Adentity[] = INCBIN_U8("graphics/pokemon/adentity/footprint.1bpp");
+
    const u32 gMonFrontPic_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/front.4bpp.lz");
    const u32 gMonBackPic_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/back.4bpp.lz");
    const u32 gMonPalette_Emeffyume[] = INCBIN_U32("graphics/pokemon/emeffyume/normal.gbapal.lz");
