@@ -1331,7 +1331,7 @@ static void Cmd_attackcanceler(void)
             gBattlescriptCurrInstr = BattleScript_FlingFailConsumeItem;
         else
             gBattlescriptCurrInstr = BattleScript_FailedFromAtkString;
-
+        gBattleStruct->noTargetPresent = TRUE;
         if (!gBattleMoveEffects[gMovesInfo[gCurrentMove].effect].twoTurnEffect || (gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
             CancelMultiTurnMoves(gBattlerAttacker);
         return;
@@ -1409,6 +1409,7 @@ static void Cmd_attackcanceler(void)
 
     if (gSpecialStatuses[gBattlerTarget].lightningRodRedirected)
     {
+        gMoveResultFlags |= MOVE_RESULT_ABSORBED;
         gSpecialStatuses[gBattlerTarget].lightningRodRedirected = FALSE;
         gLastUsedAbility = ABILITY_LIGHTNING_ROD;
         BattleScriptPushCursor();
@@ -1417,6 +1418,7 @@ static void Cmd_attackcanceler(void)
     }
     else if (gSpecialStatuses[gBattlerTarget].stormDrainRedirected)
     {
+        gMoveResultFlags |= MOVE_RESULT_ABSORBED;
         gSpecialStatuses[gBattlerTarget].stormDrainRedirected = FALSE;
         gLastUsedAbility = ABILITY_STORM_DRAIN;
         BattleScriptPushCursor();
@@ -1469,7 +1471,10 @@ static bool32 JumpIfMoveFailed(u8 adder, u16 move)
     {
         TrySetDestinyBondToHappen();
         if (AbilityBattleEffects(ABILITYEFFECT_ABSORBING, gBattlerTarget, 0, 0, move))
+        {
+            gMoveResultFlags |= MOVE_RESULT_ABSORBED;
             return TRUE;
+        }
     }
     gBattlescriptCurrInstr += adder;
     return FALSE;
@@ -5606,6 +5611,25 @@ static void Cmd_moveend(void)
                 gBattleScripting.moveendState++;
                 break;
             }
+            else if (gMovesInfo[gCurrentMove].effect == EFFECT_RECOIL_IF_MISS
+                  && gMoveResultFlags & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_ABSORBED)
+                  && !gBattleStruct->noTargetPresent
+                  && IsBattlerAlive(gBattlerAttacker))
+            {
+                if (B_RECOIL_IF_MISS_DMG >= GEN_5 || (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gMoveResultFlags & MOVE_RESULT_DOESNT_AFFECT_FOE))
+                    gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+                else if (B_RECOIL_IF_MISS_DMG == GEN_4 && (gBattleMons[gBattlerTarget].maxHP / 2) < gBattleMoveDamage)
+                    gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+                else
+                    gBattleMoveDamage /= 2;
+                gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_MoveEffectRecoilIfMiss;
+                effect = TRUE;
+            }
             else if (gMovesInfo[gCurrentMove].recoil > 0
                   && !(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
                   && IsBattlerAlive(gBattlerAttacker)
@@ -6483,6 +6507,7 @@ static void Cmd_moveend(void)
             gBattleStruct->distortedTypeMatchups = 0;
             gBattleStruct->redCardActivates = FALSE;
             gBattleStruct->usedMicleBerry &= ~(1u << gBattlerAttacker);
+            gBattleStruct->noTargetPresent = FALSE;
             if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
                 gBattleStruct->pledgeMove = FALSE;
             if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE)
@@ -11359,23 +11384,6 @@ static void Cmd_manipulatedamage(void)
     case DMG_CHANGE_SIGN:
         gBattleMoveDamage *= -1;
         break;
-    case DMG_RECOIL_FROM_MISS:
-        if (B_RECOIL_IF_MISS_DMG >= GEN_5)
-        {
-            gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-        }
-        else if (B_RECOIL_IF_MISS_DMG == GEN_4)
-        {
-            if ((gBattleMons[gBattlerTarget].maxHP / 2) < gBattleMoveDamage)
-                gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-        }
-        else
-        {
-            gBattleMoveDamage /= 2;
-        }
-        if (gBattleMoveDamage == 0)
-            gBattleMoveDamage = 1;
-        break;
     case DMG_DOUBLED:
         gBattleMoveDamage *= 2;
         break;
@@ -11392,9 +11400,6 @@ static void Cmd_manipulatedamage(void)
         break;
     case DMG_BIG_ROOT:
         gBattleMoveDamage = GetDrainedBigRootHp(gBattlerAttacker, gBattleMoveDamage);
-        break;
-    case DMG_RECOIL_FROM_IMMUNE:
-        gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
         break;
     }
 
