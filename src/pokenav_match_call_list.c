@@ -36,6 +36,8 @@ static u32 CB2_HandleCallExitInput(struct Pokenav_MatchCallMenu *);
 static u32 LoopedTask_BuildMatchCallList(s32);
 static bool32 ShouldDoNearbyMessage(void);
 
+static const u8 gText_CallCantBeMadeHere[] = _("A call can't be made from here.");
+
 #include "data/text/match_call_messages.h"
 
 static const u8 sMatchCallOptionsNoCheckPage[] =
@@ -261,7 +263,7 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
 bool32 IsRematchEntryRegistered(int rematchIndex)
 {
     if (rematchIndex < REMATCH_TABLE_ENTRIES)
-        return FlagGet(FLAG_MATCH_CALL_REGISTERED + rematchIndex);
+        return FlagGet(TRAINER_REGISTERED_FLAGS_START + rematchIndex);
 
     return FALSE;
 }

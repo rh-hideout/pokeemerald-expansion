@@ -27,14 +27,14 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch after a
         }
     } SCENE {
         if (aiSequenceSwitchingFlag) {
-            MESSAGE("{PKMN} TRAINER LEAF sent out Machoke!");
-            MESSAGE("{PKMN} TRAINER LEAF sent out Machamp!");
-            MESSAGE("{PKMN} TRAINER LEAF sent out Mankey!");
-            MESSAGE("{PKMN} TRAINER LEAF sent out Primeape!");
-            MESSAGE("{PKMN} TRAINER LEAF sent out Magnezone!");
+            MESSAGE(AI_TRAINER_NAME " sent out Machoke!");
+            MESSAGE(AI_TRAINER_NAME " sent out Machamp!");
+            MESSAGE(AI_TRAINER_NAME " sent out Mankey!");
+            MESSAGE(AI_TRAINER_NAME " sent out Primeape!");
+            MESSAGE(AI_TRAINER_NAME " sent out Magnezone!");
         }
         else {
-            MESSAGE("{PKMN} TRAINER LEAF sent out Magnezone!");
+            MESSAGE(AI_TRAINER_NAME " sent out Magnezone!");
         }
     }
 }
@@ -60,11 +60,11 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: Roar and Dragon Tail still fo
         TURN { MOVE(player, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        MESSAGE("Foe Bulbasaur was dragged out!");
+        MESSAGE("The opposing Bulbasaur was dragged out!");
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch into lowest party index after U-Turn, Parting Shot, and Baton Pass")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch into lowest party index after U-Turn, Parting Shot, Baton Pass, and Chilly Reception")
 {
     u32 j, aiSequenceSwitchingFlag = 0, move = MOVE_NONE;
 
@@ -72,6 +72,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch into lo
         MOVE_U_TURN,
         MOVE_PARTING_SHOT,
         MOVE_BATON_PASS,
+        MOVE_CHILLY_RECEPTION,
     };
 
     for (j = 0; j < ARRAY_COUNT(switchMoves); j++)
@@ -84,6 +85,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch into lo
         ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
         ASSUME(gMovesInfo[MOVE_PARTING_SHOT].effect == EFFECT_PARTING_SHOT);
         ASSUME(gMovesInfo[MOVE_BATON_PASS].effect == EFFECT_BATON_PASS);
+        ASSUME(gMovesInfo[MOVE_CHILLY_RECEPTION].effect == EFFECT_CHILLY_RECEPTION);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiSequenceSwitchingFlag);
         PLAYER(SPECIES_SWELLOW) { Level (50); }
         OPPONENT(SPECIES_MACHOP) { Level(1); Moves(move); }

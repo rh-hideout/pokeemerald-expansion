@@ -34,7 +34,10 @@ SINGLE_BATTLE_TEST("Comatose may be suppressed if pokemon transformed into a pok
     PARAMETRIZE { move = MOVE_THUNDER_WAVE; }
 
     GIVEN {
-        PLAYER(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); Speed(30); }
+        // FIXME: Explicit moves currently required here because Ditto
+        // expects to find Celebrate in slot 1 during the second turn
+        // (after transforming).
+        PLAYER(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); Speed(30); Moves(MOVE_CELEBRATE, MOVE_GASTRO_ACID, move); }
         OPPONENT(SPECIES_DITTO) { Speed(20); }
     } WHEN {
         TURN { MOVE(player, MOVE_GASTRO_ACID); MOVE(opponent, MOVE_TRANSFORM); }
@@ -42,8 +45,8 @@ SINGLE_BATTLE_TEST("Comatose may be suppressed if pokemon transformed into a pok
     } SCENE {
         MESSAGE("Komala is drowsing!");
         MESSAGE("Komala used Gastro Acid!");
-        MESSAGE("Foe Ditto used Transform!");
-        MESSAGE("Foe Ditto transformed into Komala!");
+        MESSAGE("The opposing Ditto used Transform!");
+        MESSAGE("The opposing Ditto transformed into Komala!");
 
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         if (move == MOVE_POISONPOWDER)      { STATUS_ICON(opponent, poison: TRUE); }

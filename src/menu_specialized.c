@@ -317,7 +317,7 @@ void MailboxMenu_Free(void)
 // filled with the graph color.
 //---------------------------------------
 
-#define SHIFT_RIGHT_ADJUSTED(n, s)(((n) >> (s)) + (((n) >> ((s) - 1)) & 1))
+#define SHIFT_RIGHT_ADJUSTED(n, s) (((n) >> (s)) + (((n) >> ((s) - 1)) & 1))
 
 void ConditionGraph_Init(struct ConditionGraph *graph)
 {
@@ -755,6 +755,9 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
     const struct MoveInfo *move;
     u8 buffer[32];
     const u8 *str;
+
+    if (B_SHOW_CATEGORY_ICON == TRUE)
+        MoveRelearnerShowHideCategoryIcon(chosenMove);
 
     FillWindowPixelBuffer(RELEARNERWIN_DESC_BATTLE, PIXEL_FILL(1));
     str = gText_MoveRelearnerBattleMoves;

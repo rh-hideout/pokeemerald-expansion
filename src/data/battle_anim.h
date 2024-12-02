@@ -1455,12 +1455,17 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_SyrupSplat, 0x400, ANIM_TAG_SYRUP_SPLAT_RED},
     {gBattleAnimSpriteGfx_SyrupSplat, 0x400, ANIM_TAG_SYRUP_SPLAT_YELLOW},
     {gBattleAnimSpriteGfx_IvyCudgel, 0x800, ANIM_TAG_IVY_CUDGEL_GRASS},
-    {NULL, 0x0, ANIM_TAG_IVY_CUDGEL_FIRE},
-    {NULL, 0x0, ANIM_TAG_IVY_CUDGEL_ROCK},
-    {NULL, 0x0, ANIM_TAG_IVY_CUDGEL_WATER},
+    {gBattleAnimSpriteGfx_IvyCudgel, 0x800, ANIM_TAG_IVY_CUDGEL_FIRE},
+    {gBattleAnimSpriteGfx_IvyCudgel, 0x800, ANIM_TAG_IVY_CUDGEL_ROCK},
+    {gBattleAnimSpriteGfx_IvyCudgel, 0x800, ANIM_TAG_IVY_CUDGEL_WATER},
     {gBattleAnimSpriteGfx_TeraCrystal, 0x800, ANIM_TAG_TERA_CRYSTAL},
     {gBattleAnimSpriteGfx_TeraShatter, 0x0180, ANIM_TAG_TERA_SHATTER},
     {gBattleAnimSpriteGfx_DreepyMissile, 0x200, ANIM_TAG_DREEPY_SHINY},
+    {gBattleAnimSpriteGfx_BloodMoon, 0x0800, ANIM_TAG_BLOOD_MOON},
+    {gBattleAnimSpriteGfx_RedExplosion, 0x0800, ANIM_TAG_RED_EXPLOSION},
+    {gBattleAnimSpriteGfx_Beam, 0x0800, ANIM_TAG_BEAM},
+    {gBattleAnimSpriteGfx_PurpleChain, 0x1000, ANIM_TAG_PURPLE_CHAIN},
+    {gBattleAnimSpriteGfx_PinkVioletOrb, 0x0080, ANIM_TAG_PINKVIO_ORB},
 };
 
 const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
@@ -1923,6 +1928,11 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_TeraCrystal, ANIM_TAG_TERA_CRYSTAL},
     {gBattleAnimSpritePal_TeraShatter, ANIM_TAG_TERA_SHATTER},
     {gBattleAnimSpritePal_DreepyMissileShiny, ANIM_TAG_DREEPY_SHINY},
+    {gBattleAnimSpritePal_BloodMoon, ANIM_TAG_BLOOD_MOON},
+    {gBattleAnimSpritePal_RedExplosion, ANIM_TAG_RED_EXPLOSION},
+    {gBattleAnimSpritePal_Beam, ANIM_TAG_BEAM},
+    {gBattleAnimSpritePal_PurpleChain, ANIM_TAG_PURPLE_CHAIN},
+    {gBattleAnimSpritePal_PinkVioletOrb, ANIM_TAG_PINKVIO_ORB},
 };
 
 const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
@@ -2010,4 +2020,5 @@ const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
     [BG_STEEL_BEAM_PLAYER]         = {gBattleAnimBgImage_Highspeed,               gBattleAnimBgPalette_SteelBeam,               gBattleAnimBgTilemap_HighspeedPlayer},
     [BG_CHLOROBLAST]               = {gBattleAnimBgImage_HydroCannon,             gBattleAnimBgPalette_Chloroblast,             gBattleAnimBgTilemap_HydroCannon},
     [BG_RAINBOW]                   = {gBattleAnimBgImage_Rainbow,                 gBattleAnimBGPalette_Rainbow,                 gBattleAnimBgTilemap_Rainbow},
+    [BG_SWAMP]                     = {gBattleAnimBgImage_Swamp,                   gBattleAnimBGPalette_Swamp,                   gBattleAnimBgTilemap_Swamp},
 };

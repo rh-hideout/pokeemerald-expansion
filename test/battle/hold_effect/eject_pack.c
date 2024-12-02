@@ -63,3 +63,25 @@ SINGLE_BATTLE_TEST("Eject Pack is triggered by self-inflicting stat decreases")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency Exit was activated on target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); };
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    } THEN {
+        EXPECT(player->species == SPECIES_WOBBUFFET);
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT(opponent->species == SPECIES_WYNAUT);
+    }
+}

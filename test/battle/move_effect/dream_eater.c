@@ -33,14 +33,14 @@ SINGLE_BATTLE_TEST("Dream Eater fails on awake targets")
         TURN { MOVE(player, MOVE_DREAM_EATER); }
     } SCENE {
         MESSAGE("Wobbuffet used Dream Eater!");
-        MESSAGE("Foe Wobbuffet wasn't affected!");
+        MESSAGE("The opposing Wobbuffet wasn't affected!");
     }
 }
 
 SINGLE_BATTLE_TEST("Dream Eater fails if Heal Block applies")
 {
-    ASSUME(B_HEAL_BLOCKING >= GEN_6);
     GIVEN {
+        ASSUME(B_HEAL_BLOCKING >= GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

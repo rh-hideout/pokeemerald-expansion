@@ -1798,7 +1798,7 @@
 	.4byte \text
 	.endm
 
-	@ Equivalent to fadescreen but copies gPlttBufferUnfaded to gPaletteDecompressionBuffer on the fade out
+	@ Equivalent to fadescreen but copies gPlttBufferUnfaded to gDecompressionBuffer on the fade out
 	@ and the reverse on the fade in, in effect saving gPlttBufferUnfaded to restore it.
 	.macro fadescreenswapbuffers mode:req
 	.byte 0xdc
@@ -2105,15 +2105,15 @@
 	@ The rest of the arguments are the stat change values to each stat.
 	@ For example, giving the first opponent +1 to atk and -2 to speed would be: settotemboost B_POSITION_OPPONENT_LEFT, 1, 0, -2
 	.macro settotemboost battler:req, atk=0,def=0,speed=0,spatk=0,spdef=0,acc=0,evas=0
-	setvar VAR_0x8000, \battler
-	setvar VAR_0x8001, \atk
-	setvar VAR_0x8002, \def
-	setvar VAR_0x8003, \speed
-	setvar VAR_0x8004, \spatk
-	setvar VAR_0x8005, \spdef
-	setvar VAR_0x8006, \acc
-	setvar VAR_0x8007, \evas
-	special SetTotemBoost
+	callnative ScriptSetTotemBoost
+	.2byte \battler
+	.2byte \atk
+	.2byte \def
+	.2byte \speed
+	.2byte \spatk
+	.2byte \spdef
+	.2byte \acc
+	.2byte \evas
 	.endm
 
 	@ useful totem boost macros
@@ -2321,3 +2321,112 @@
 	.macro togglefakertc
 	callnative Script_ToggleFakeRtc
 	.endm
+
+	@ ============================ @
+	@ ITEM DESCRIPTION HEADER MACROS
+	@ Used with OW_SHOW_ITEM_DESCRIPTIONS config
+	.macro showitemdescription
+	callnative ScriptShowItemDescription
+	.byte 0
+	.endm
+
+	.macro showberrydescription
+	callnative ScriptShowItemDescription
+	.byte 1
+	.endm
+
+	.macro hideitemdescription
+	callnative ScriptHideItemDescription
+	.endm
+
+	@ Remove all of specified item from the player's bag and return the number of removed items to VAR_RESULT
+	.macro removeallitem itemId:req
+	callnative ScrCmd_removeallitem
+	.2byte \itemId
+	.endm
+
+	@ Stores the position of the given object in destX and destY. Mode CURRENT_POSITION will take the object's current position. Mode TEMPLATE_POSITION will take the object's template position.
+	.macro getobjectxy localId:req, posType:req, destX:req, destY:req
+	callnative ScrCmd_getobjectxy
+	.2byte \localId
+	.2byte \posType
+	.2byte \destX
+	.2byte \destY
+	.endm
+
+	.macro getobjecttemplatexy localId:req, posType = TEMPLATE_POSITION, destX:req, destY:req
+	callnative ScrCmd_getobjectxy
+	.2byte \localId
+	.2byte \posType
+	.2byte \destX
+	.2byte \destY
+	.endm
+
+	.macro getobjectcurrentxy localId:req, posType = CURRENT_POSITION, destX:req, destY:req
+	callnative ScrCmd_getobjectxy
+	.2byte \localId
+	.2byte \posType
+	.2byte \destX
+	.2byte \destY
+	.endm
+
+	@ Return TRUE to dest if there is an object at the position x and y.
+	.macro checkobjectat x:req, y:req, dest = VAR_RESULT
+	callnative ScrCmd_checkobjectat
+	.2byte \x
+	.2byte \y
+	.2byte \dest
+	.endm
+
+	@ Returns the state of the Pokedex Seen Flag to VAR_RESULT for the Pokemon with speciesId
+	.macro getseenmon species:req
+	callnative Scrcmd_getsetpokedexflag
+	.2byte \species
+	.2byte FLAG_GET_SEEN
+	.endm
+
+	@ Returns the state of the Pokedex Caught Flag to VAR_RESULT for the Pokemon with speciesId
+	.macro getcaughtmon species:req
+	callnative Scrcmd_getsetpokedexflag
+	.2byte \species
+	.2byte FLAG_GET_CAUGHT
+	.endm
+
+	@ Sets the Pokedex Seen Flag for the Pokemon with speciesId
+	.macro setseenmon species:req
+	callnative Scrcmd_getsetpokedexflag
+	.2byte \species
+	.2byte FLAG_SET_SEEN
+	.endm
+
+	@ Sets the Pokedex Caught Flag for the Pokemon with speciesId
+	.macro setcaughtmon species:req
+	callnative Scrcmd_getsetpokedexflag
+	.2byte \species
+	.2byte FLAG_SET_CAUGHT
+	.endm
+
+	@ Check if the Player has speciesId in their party. OPEN_PARTY_SCREEN will have the player select a mon from their party. NO_PARTY_SCREEN will automatically check every mon in the player's party.
+	.macro checkspecies speciesId:req, mode=NO_PARTY_SCREEN
+	.if \mode == OPEN_PARTY_SCREEN
+		special ChoosePartyMon
+		waitstate
+		callnative Scrcmd_checkspecies_choose
+		.2byte \speciesId
+	.else
+		callnative Scrcmd_checkspecies
+		.2byte \speciesId
+	.endif
+	.endm
+
+	.macro checkspecies_choose speciesId:req
+	checkspecies \speciesId, OPEN_PARTY_SCREEN
+	.endm
+
+	@ Gets the facing direction of a given event object and stores it in the variable dest.
+	.macro getobjectfacingdirection localId:req, dest:req
+	callnative Scrcmd_getobjectfacingdirection
+	.2byte \localId
+	.2byte \dest
+	.endm
+

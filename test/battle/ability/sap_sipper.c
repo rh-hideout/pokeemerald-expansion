@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Sap Sipper does not increase Attack if already maxed")
 {
     GIVEN {
         PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); MOVE(opponent, MOVE_VINE_WHIP); }
     } SCENE {
@@ -67,14 +67,14 @@ SINGLE_BATTLE_TEST("Sap Sipper blocks multi-hit grass type moves")
     } WHEN {
         TURN { MOVE(opponent, MOVE_BULLET_SEED); }
     } SCENE {
-        MESSAGE("Foe Shellder used Bullet Seed!");
+        MESSAGE("The opposing Shellder used Bullet Seed!");
         ABILITY_POPUP(player, ABILITY_SAP_SIPPER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Marill's Attack rose!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
             HP_BAR(player);
-            MESSAGE("Hit 5 time(s)!");
+            MESSAGE("The Pokémon was hit 5 time(s)!");
         }
     }
 }

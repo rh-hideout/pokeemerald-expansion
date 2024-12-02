@@ -30,6 +30,7 @@
 #include "overworld.h"
 #include "party_menu.h"
 #include "pokeblock.h"
+#include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
@@ -44,6 +45,7 @@
 #include "strings.h"
 #include "task.h"
 #include "text.h"
+#include "tilesets.h"
 #include "tv.h"
 #include "wallclock.h"
 #include "window.h"
@@ -95,7 +97,7 @@ static EWRAM_DATA u8 sFrontierExchangeCorner_ItemIconWindowId = 0;
 static EWRAM_DATA u8 sPCBoxToSendMon = 0;
 static EWRAM_DATA u32 sBattleTowerMultiBattleTypeFlags = 0;
 
-struct ListMenuTemplate gScrollableMultichoice_ListMenuTemplate;
+COMMON_DATA struct ListMenuTemplate gScrollableMultichoice_ListMenuTemplate = {0};
 EWRAM_DATA u16 gScrollableMultichoice_ScrollOffset = 0;
 
 void TryLoseFansFromPlayTime(void);
@@ -271,7 +273,7 @@ u16 GetRecordedCyclingRoadResults(void)
 
 void UpdateCyclingRoadState(void)
 {
-    if (gLastUsedWarp.mapNum == MAP_NUM(ROUTE110_SEASIDE_CYCLING_ROAD_SOUTH_ENTRANCE) && gLastUsedWarp.mapGroup == MAP_GROUP(ROUTE110_SEASIDE_CYCLING_ROAD_SOUTH_ENTRANCE))
+    if (gLastUsedWarp.mapNum == MAP_NUM(ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE) && gLastUsedWarp.mapGroup == MAP_GROUP(ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE))
         return;
 
     if (VarGet(VAR_CYCLING_CHALLENGE_STATE) == 2 || VarGet(VAR_CYCLING_CHALLENGE_STATE) == 3)
@@ -969,6 +971,20 @@ void FieldShowRegionMap(void)
     SetMainCallback2(CB2_FieldShowRegionMap);
 }
 
+static bool32 IsBuildingPCTile(u32 tileId)
+{
+    return gMapHeader.mapLayout->primaryTileset == &gTileset_Building && (tileId == METATILE_Building_PC_On || tileId == METATILE_Building_PC_Off);
+}
+
+static bool32 IsPlayerHousePCTile(u32 tileId)
+{
+    return gMapHeader.mapLayout->secondaryTileset == &gTileset_BrendansMaysHouse
+        && (tileId == METATILE_BrendansMaysHouse_BrendanPC_On
+            || tileId == METATILE_BrendansMaysHouse_BrendanPC_Off
+            || tileId == METATILE_BrendansMaysHouse_MayPC_On
+            || tileId == METATILE_BrendansMaysHouse_MayPC_Off);
+}
+
 static bool8 IsPlayerInFrontOfPC(void)
 {
     s16 x, y;
@@ -977,12 +993,7 @@ static bool8 IsPlayerInFrontOfPC(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     tileInFront = MapGridGetMetatileIdAt(x, y);
 
-    return (tileInFront == METATILE_BrendansMaysHouse_BrendanPC_On
-         || tileInFront == METATILE_BrendansMaysHouse_BrendanPC_Off
-         || tileInFront == METATILE_BrendansMaysHouse_MayPC_On
-         || tileInFront == METATILE_BrendansMaysHouse_MayPC_Off
-         || tileInFront == METATILE_Building_PC_On
-         || tileInFront == METATILE_Building_PC_Off);
+    return IsBuildingPCTile(tileInFront) || IsPlayerHousePCTile(tileInFront);
 }
 
 // Task data for Task_PCTurnOnEffect and Task_LotteryCornerComputerEffect
@@ -3540,7 +3551,7 @@ bool32 IsTrainerRegistered(void)
     int index = GetRematchIdxByTrainerIdx(gSpecialVar_0x8004);
     if (index >= 0)
     {
-        if (FlagGet(FLAG_MATCH_CALL_REGISTERED + index) == TRUE)
+        if (FlagGet(TRAINER_REGISTERED_FLAGS_START + index) == TRUE)
             return TRUE;
     }
     return FALSE;
@@ -3877,14 +3888,14 @@ bool8 InPokemonCenter(void)
 #define FANCLUB_BITFIELD (gSaveBlock1Ptr->vars[VAR_FANCLUB_FAN_COUNTER - VARS_START])
 #define FANCLUB_COUNTER    0x007F
 
-#define GET_TRAINER_FAN_CLUB_FLAG(flag) (FANCLUB_BITFIELD >> (flag) & 1)
-#define SET_TRAINER_FAN_CLUB_FLAG(flag) (FANCLUB_BITFIELD |= 1 << (flag))
-#define FLIP_TRAINER_FAN_CLUB_FLAG(flag)(FANCLUB_BITFIELD ^= 1 << (flag))
+#define GET_TRAINER_FAN_CLUB_FLAG(flag)  (FANCLUB_BITFIELD >> (flag) & 1)
+#define SET_TRAINER_FAN_CLUB_FLAG(flag)  (FANCLUB_BITFIELD |= 1 << (flag))
+#define FLIP_TRAINER_FAN_CLUB_FLAG(flag) (FANCLUB_BITFIELD ^= 1 << (flag))
 
-#define GET_TRAINER_FAN_CLUB_COUNTER        (FANCLUB_BITFIELD & FANCLUB_COUNTER)
-#define SET_TRAINER_FAN_CLUB_COUNTER(count) (FANCLUB_BITFIELD = (FANCLUB_BITFIELD & ~FANCLUB_COUNTER) | (count))
-#define INCR_TRAINER_FAN_CLUB_COUNTER(count)(FANCLUB_BITFIELD += (count))
-#define CLEAR_TRAINER_FAN_CLUB_COUNTER      (FANCLUB_BITFIELD &= ~FANCLUB_COUNTER)
+#define GET_TRAINER_FAN_CLUB_COUNTER         (FANCLUB_BITFIELD & FANCLUB_COUNTER)
+#define SET_TRAINER_FAN_CLUB_COUNTER(count)  (FANCLUB_BITFIELD = (FANCLUB_BITFIELD & ~FANCLUB_COUNTER) | (count))
+#define INCR_TRAINER_FAN_CLUB_COUNTER(count) (FANCLUB_BITFIELD += (count))
+#define CLEAR_TRAINER_FAN_CLUB_COUNTER       (FANCLUB_BITFIELD &= ~FANCLUB_COUNTER)
 
 void ResetFanClub(void)
 {
@@ -4265,4 +4276,60 @@ void PreparePartyForSkyBattle(void)
     }
     VarSet(B_VAR_SKY_BATTLE,participatingPokemonSlot);
     CompactPartySlots();
+}
+
+void GetObjectPosition(u16* xPointer, u16* yPointer, u32 localId, u32 useTemplate)
+{
+    u32 objectId;
+    struct ObjectEvent* objEvent;
+
+    if (useTemplate)
+    {
+        const struct ObjectEventTemplate *objTemplate = FindObjectEventTemplateByLocalId(localId, gSaveBlock1Ptr->objectEventTemplates, gMapHeader.events->objectEventCount);
+        *xPointer = objTemplate->x;
+        *yPointer = objTemplate->y;
+        return;
+    }
+
+    objectId = GetObjectEventIdByLocalId(localId);
+    objEvent = &gObjectEvents[objectId];
+    *xPointer = objEvent->currentCoords.x - 7;
+    *yPointer = objEvent->currentCoords.y - 7;
+}
+
+bool32 CheckObjectAtXY(u32 x, u32 y)
+{
+    u32 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        if (!gObjectEvents[i].active)
+            continue;
+
+        if (gObjectEvents[i].currentCoords.x != x)
+            continue;
+
+        if (gObjectEvents[i].currentCoords.y != y)
+            continue;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 CheckPartyHasSpecies(u32 givenSpecies)
+{
+    u32 partyIndex;
+
+    for (partyIndex = 0; partyIndex < CalculatePlayerPartyCount(); partyIndex++)
+        if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES) == givenSpecies)
+            return TRUE;
+
+    return FALSE;
+}
+
+void UseBlankMessageToCancelPokemonPic(void)
+{
+    u8 t = EOS;
+    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    ScriptMenu_HidePokemonPic();
 }

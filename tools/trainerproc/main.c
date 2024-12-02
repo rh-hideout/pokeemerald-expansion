@@ -426,12 +426,6 @@ static bool match_eol(struct Parser *p)
 }
 
 __attribute__((warn_unused_result))
-static bool match_empty_line(struct Parser *p)
-{
-    return match_eol(p);
-}
-
-__attribute__((warn_unused_result))
 static bool match_int(struct Parser *p, int *i)
 {
     assert(p && i);
@@ -455,6 +449,23 @@ static bool match_int(struct Parser *p, int *i)
 
     *p = p_;
     return true;
+}
+
+__attribute__((warn_unused_result))
+static bool match_empty_line(struct Parser *p)
+{
+    struct Parser p_ = *p;
+    if (match_exact(&p_, "# ")) {
+        int line;
+        if (match_int(&p_, &line)) {
+            struct Token t;
+            match_until_eol(&p_, &t);
+            p_.location.line = line - 1;
+            *p = p_;
+        }
+    }
+
+    return match_eol(p);
 }
 
 __attribute__((warn_unused_result))
@@ -1534,6 +1545,7 @@ static void fprint_species(FILE *f, const char *prefix, struct String s)
         static const unsigned char *male = (unsigned char *)u8"♂";
         static const unsigned char *female = (unsigned char *)u8"♀";
         static const unsigned char *e_diacritic = (unsigned char *)u8"é";
+        static const unsigned char *right_single_quotation_mark = (unsigned char *)u8"’";
         for (int i = 0; i < s.string_n; i++)
         {
             unsigned char c = s.string[i];
@@ -1551,7 +1563,7 @@ static void fprint_species(FILE *f, const char *prefix, struct String s)
                 underscore = false;
                 fputc(c - 'a' + 'A', f);
             }
-            else if (c == '\'' || c == '%')
+            else if (c == '\'' || c == '%' || is_utf8_character(s, &i, right_single_quotation_mark))
             {
                 // Do nothing.
             }

@@ -33,7 +33,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/items.h"
-#include "level_caps.h"
+#include "caps.h"
 
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
@@ -1377,7 +1377,7 @@ u8 CreatePartyStatusSummarySprites(u8 battlerId, struct HpAndStatus *partyInfo, 
                     // fainted mon
                     gSprites[ballIconSpritesIds[i]].oam.tileNum += 3;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostPlayerMons & gBitTable[j])
+                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostPlayerMons & (1u << j))
                 {
                     // fainted arena mon
                     gSprites[ballIconSpritesIds[i]].oam.tileNum += 3;
@@ -1433,7 +1433,7 @@ u8 CreatePartyStatusSummarySprites(u8 battlerId, struct HpAndStatus *partyInfo, 
                      // fainted mon
                     gSprites[ballIconSpritesIds[PARTY_SIZE - 1 - var]].oam.tileNum += 3;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostOpponentMons & gBitTable[j])
+                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostOpponentMons & (1u << j))
                 {
                      // fainted arena mon
                     gSprites[ballIconSpritesIds[PARTY_SIZE - 1 - var]].oam.tileNum += 3;
@@ -2721,7 +2721,7 @@ void CreateAbilityPopUp(u8 battlerId, u32 ability, bool32 isDoubleBattle)
         LoadSpriteSheet(&sSpriteSheet_AbilityPopUp);
         LoadSpritePalette(&sSpritePalette_AbilityPopUp);
     }
-    gBattleStruct->activeAbilityPopUps |= gBitTable[battlerId];
+    gBattleStruct->activeAbilityPopUps |= 1u << battlerId;
     battlerPosition = GetBattlerPosition(battlerId);
 
     if (isDoubleBattle)
@@ -2812,7 +2812,7 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
                 ||(sprite->tRightToLeft && (sprite->x -= 4) <= sprite->tOriginalX - ABILITY_POP_UP_POS_X_SLIDE)
                )
             {
-                gBattleStruct->activeAbilityPopUps &= ~(gBitTable[sprite->tBattlerId]);
+                gBattleStruct->activeAbilityPopUps &= ~(1u << sprite->tBattlerId);
                 DestroySprite(sprite);
             }
         }
@@ -2826,7 +2826,7 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
 
 void DestroyAbilityPopUp(u8 battlerId)
 {
-    if (gBattleStruct->activeAbilityPopUps & gBitTable[battlerId])
+    if (gBattleStruct->activeAbilityPopUps & (1u << battlerId))
     {
         gSprites[gBattleStruct->abilityPopUpSpriteIds[battlerId][0]].tFrames = 0;
         gSprites[gBattleStruct->abilityPopUpSpriteIds[battlerId][1]].tFrames = 0;

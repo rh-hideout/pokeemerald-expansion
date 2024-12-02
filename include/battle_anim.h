@@ -194,7 +194,6 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 attributeId);
 bool8 IsBattlerSpritePresent(u8 battlerId);
 void ClearBattleAnimBg(u32 bgId);
 u8 GetAnimBattlerSpriteId(u8 wantedBattler);
-bool8 IsDoubleBattle(void);
 u8 GetBattleBgPaletteNum(void);
 u8 GetBattlerSpriteBGPriorityRank(u8 battlerId);
 void StoreSpriteCallbackInData6(struct Sprite *sprite, void (*spriteCallback)(struct Sprite *));
@@ -236,7 +235,6 @@ extern const union AffineAnimCmd *const gAffineAnims_SpinningBone[];
 
 // battle_anim_throw.c
 void TryShinyAnimation(u8 battler, struct Pokemon *mon);
-u8 ItemIdToBallId(u16 itemId);
 u8 AnimateBallOpenParticles(u8 x, u8 y, u8 priority, u8 subpriority, u8 ballId);
 u8 LaunchBallFadeMonTask(bool8 unFadeLater, u8 spritePalNum, u32 selectedPalettes, u8 ballId);
 bool32 IsCriticalCapture(void);
@@ -253,6 +251,7 @@ void AnimParticleBurst(struct Sprite *);
 void AnimPowerAbsorptionOrb(struct Sprite *sprite);
 void AnimNeedleArmSpike(struct Sprite *);
 void AnimTask_CompressTargetHorizontally(u8 taskId);
+void AnimTask_CompressTargetHorizontallyFast(u8 taskId);
 void AnimSporeParticle(struct Sprite *sprite);
 void AnimAbsorptionOrb(struct Sprite *sprite);
 void AnimPetalDanceSmallFlower(struct Sprite *sprite);
@@ -346,7 +345,6 @@ extern const union AnimCmd *const gAnims_WaterPulseBubble[];
 
 // battle_anim_flying.c
 void DestroyAnimSpriteAfterTimer(struct Sprite *sprite);
-void sub_810E2C8(struct Sprite *sprite);
 void AnimAirWaveCrescent(struct Sprite *sprite);
 void AnimFlyBallUp(struct Sprite *sprite);
 void AnimFlyBallAttack(struct Sprite *sprite);
@@ -556,5 +554,8 @@ void AnimDracoMeteorRock(struct Sprite *sprite);
 void CoreEnforcerLoadBeamTarget(struct Sprite *sprite);
 void SpriteCB_RandomCentredHits(struct Sprite *sprite);
 void InitSpritePosToAnimTargetsCentre(struct Sprite *sprite, bool32 respectMonPicOffsets);
+
+// battle_anim_bug.c
+void AnimTranslateStinger(struct Sprite *sprite);
 
 #endif // GUARD_BATTLE_ANIM_H

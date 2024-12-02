@@ -32,7 +32,7 @@ EWRAM_DATA struct Camera gCamera = {0};
 EWRAM_DATA static struct ConnectionFlags sMapConnectionFlags = {0};
 EWRAM_DATA static u32 UNUSED sFiller = 0; // without this, the next file won't align properly
 
-struct BackupMapLayout gBackupMapLayout;
+COMMON_DATA struct BackupMapLayout gBackupMapLayout = {0};
 
 static const struct ConnectionFlags sDummyConnectionFlags = {0};
 
@@ -141,7 +141,7 @@ static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader)
         for (i = 0; i < count; i++, connection++)
         {
             struct MapHeader const *cMap = GetMapHeaderFromConnection(connection);
-            u32 offset = connection->offset;
+            s32 offset = connection->offset;
             switch (connection->direction)
             {
             case CONNECTION_SOUTH:

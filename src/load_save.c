@@ -40,11 +40,11 @@ EWRAM_DATA struct LoadedSaveData gLoadedSaveData = {0};
 EWRAM_DATA u32 gLastEncryptionKey = 0;
 
 // IWRAM common
-bool32 gFlashMemoryPresent;
-struct SaveBlock1 *gSaveBlock1Ptr;
-struct SaveBlock2 *gSaveBlock2Ptr;
+COMMON_DATA bool32 gFlashMemoryPresent = 0;
+COMMON_DATA struct SaveBlock1 *gSaveBlock1Ptr = NULL;
+COMMON_DATA struct SaveBlock2 *gSaveBlock2Ptr = NULL;
 IWRAM_INIT struct SaveBlock3 *gSaveBlock3Ptr = &gSaveblock3;
-struct PokemonStorage *gPokemonStoragePtr;
+COMMON_DATA struct PokemonStorage *gPokemonStoragePtr = NULL;
 
 // code
 void CheckForFlashMemory(void)
@@ -211,7 +211,7 @@ void SaveObjectEvents(void)
         gSaveBlock1Ptr->objectEvents[i].graphicsId = (graphicsId >> 8) | (graphicsId << 8);
         gSaveBlock1Ptr->objectEvents[i].spriteId = 127; // magic number
         // To avoid crash on vanilla, save follower as inactive
-        if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER) 
+        if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER)
             gSaveBlock1Ptr->objectEvents[i].active = FALSE;
     }
 }
