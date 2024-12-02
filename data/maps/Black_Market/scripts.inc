@@ -475,737 +475,737 @@ BM_BERRIES_ITEMS:
 # 242 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_MARANGA_BERRY
 # 243 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_ENIGMA_BERRY_E_READER
+    .2byte ITEM_NONE
 # 244 "data/maps/Black_Market/scripts.pory"
-    .2byte ITEM_NONE
+    release
 # 245 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 246 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 247 "data/maps/Black_Market/scripts.pory"
-
-# 248 "data/maps/Black_Market/scripts.pory"
 .align 2
-# 249 "data/maps/Black_Market/scripts.pory"
+# 248 "data/maps/Black_Market/scripts.pory"
 BM_PLATE_ITEMS:
-# 250 "data/maps/Black_Market/scripts.pory"
+# 249 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FLAME_PLATE
-# 251 "data/maps/Black_Market/scripts.pory"
+# 250 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_SPLASH_PLATE
-# 252 "data/maps/Black_Market/scripts.pory"
+# 251 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ZAP_PLATE
-# 253 "data/maps/Black_Market/scripts.pory"
+# 252 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_MEADOW_PLATE
-# 254 "data/maps/Black_Market/scripts.pory"
+# 253 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ICICLE_PLATE
-# 255 "data/maps/Black_Market/scripts.pory"
+# 254 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FIST_PLATE
-# 256 "data/maps/Black_Market/scripts.pory"
+# 255 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_TOXIC_PLATE
-# 257 "data/maps/Black_Market/scripts.pory"
+# 256 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_EARTH_PLATE
-# 258 "data/maps/Black_Market/scripts.pory"
+# 257 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_SKY_PLATE
-# 259 "data/maps/Black_Market/scripts.pory"
+# 258 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_MIND_PLATE
-# 260 "data/maps/Black_Market/scripts.pory"
+# 259 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_INSECT_PLATE
-# 261 "data/maps/Black_Market/scripts.pory"
+# 260 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_STONE_PLATE
-# 262 "data/maps/Black_Market/scripts.pory"
+# 261 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_SPOOKY_PLATE
-# 263 "data/maps/Black_Market/scripts.pory"
+# 262 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DRACO_PLATE
-# 264 "data/maps/Black_Market/scripts.pory"
+# 263 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DREAD_PLATE
-# 265 "data/maps/Black_Market/scripts.pory"
+# 264 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_IRON_PLATE
-# 266 "data/maps/Black_Market/scripts.pory"
+# 265 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_PIXIE_PLATE
-# 267 "data/maps/Black_Market/scripts.pory"
+# 266 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DOUSE_DRIVE
-# 268 "data/maps/Black_Market/scripts.pory"
+# 267 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_SHOCK_DRIVE
-# 269 "data/maps/Black_Market/scripts.pory"
+# 268 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_BURN_DRIVE
-# 270 "data/maps/Black_Market/scripts.pory"
+# 269 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_CHILL_DRIVE
-# 271 "data/maps/Black_Market/scripts.pory"
+# 270 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FIRE_MEMORY
-# 272 "data/maps/Black_Market/scripts.pory"
+# 271 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_WATER_MEMORY
-# 273 "data/maps/Black_Market/scripts.pory"
+# 272 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ELECTRIC_MEMORY
-# 274 "data/maps/Black_Market/scripts.pory"
+# 273 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GRASS_MEMORY
-# 275 "data/maps/Black_Market/scripts.pory"
+# 274 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ICE_MEMORY
-# 276 "data/maps/Black_Market/scripts.pory"
+# 275 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FIGHTING_MEMORY
-# 277 "data/maps/Black_Market/scripts.pory"
+# 276 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_POISON_MEMORY
-# 278 "data/maps/Black_Market/scripts.pory"
+# 277 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GROUND_MEMORY
-# 279 "data/maps/Black_Market/scripts.pory"
+# 278 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FLYING_MEMORY
-# 280 "data/maps/Black_Market/scripts.pory"
+# 279 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_PSYCHIC_MEMORY
-# 281 "data/maps/Black_Market/scripts.pory"
+# 280 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_BUG_MEMORY
-# 282 "data/maps/Black_Market/scripts.pory"
+# 281 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ROCK_MEMORY
-# 283 "data/maps/Black_Market/scripts.pory"
+# 282 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GHOST_MEMORY
-# 284 "data/maps/Black_Market/scripts.pory"
+# 283 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DRAGON_MEMORY
-# 285 "data/maps/Black_Market/scripts.pory"
+# 284 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DARK_MEMORY
-# 286 "data/maps/Black_Market/scripts.pory"
+# 285 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_STEEL_MEMORY
-# 287 "data/maps/Black_Market/scripts.pory"
+# 286 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FAIRY_MEMORY
-# 288 "data/maps/Black_Market/scripts.pory"
+# 287 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_NORMAL_GEM
-# 289 "data/maps/Black_Market/scripts.pory"
+# 288 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FIRE_GEM
-# 290 "data/maps/Black_Market/scripts.pory"
+# 289 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_WATER_GEM
-# 291 "data/maps/Black_Market/scripts.pory"
+# 290 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ELECTRIC_GEM
-# 292 "data/maps/Black_Market/scripts.pory"
+# 291 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GRASS_GEM
-# 293 "data/maps/Black_Market/scripts.pory"
+# 292 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ICE_GEM
-# 294 "data/maps/Black_Market/scripts.pory"
+# 293 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FIGHTING_GEM
-# 295 "data/maps/Black_Market/scripts.pory"
+# 294 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_POISON_GEM
-# 296 "data/maps/Black_Market/scripts.pory"
+# 295 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GROUND_GEM
-# 297 "data/maps/Black_Market/scripts.pory"
+# 296 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FLYING_GEM
-# 298 "data/maps/Black_Market/scripts.pory"
+# 297 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_PSYCHIC_GEM
-# 299 "data/maps/Black_Market/scripts.pory"
+# 298 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_BUG_GEM
-# 300 "data/maps/Black_Market/scripts.pory"
+# 299 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_ROCK_GEM
-# 301 "data/maps/Black_Market/scripts.pory"
+# 300 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_GHOST_GEM
-# 302 "data/maps/Black_Market/scripts.pory"
+# 301 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DRAGON_GEM
-# 303 "data/maps/Black_Market/scripts.pory"
+# 302 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_DARK_GEM
-# 304 "data/maps/Black_Market/scripts.pory"
+# 303 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_STEEL_GEM
-# 305 "data/maps/Black_Market/scripts.pory"
+# 304 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_FAIRY_GEM
-# 306 "data/maps/Black_Market/scripts.pory"
+# 305 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_NONE
+# 306 "data/maps/Black_Market/scripts.pory"
+    release
 # 307 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 308 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 309 "data/maps/Black_Market/scripts.pory"
-
-# 310 "data/maps/Black_Market/scripts.pory"
 Text_BMBALL:
-# 311 "data/maps/Black_Market/scripts.pory"
+# 310 "data/maps/Black_Market/scripts.pory"
     .string "I got some nice stuff from a Warehouse.\p"
+# 311 "data/maps/Black_Market/scripts.pory"
+    .string "How can I help you?$"
 # 312 "data/maps/Black_Market/scripts.pory"
-    .string "How can I help you?$"
+
 # 313 "data/maps/Black_Market/scripts.pory"
-
-# 314 "data/maps/Black_Market/scripts.pory"
 Text_BMSHARD:
-# 315 "data/maps/Black_Market/scripts.pory"
+# 314 "data/maps/Black_Market/scripts.pory"
     .string "I got some nice stuff from a Ship.\p"
+# 315 "data/maps/Black_Market/scripts.pory"
+    .string "How can I help you?$"
 # 316 "data/maps/Black_Market/scripts.pory"
-    .string "How can I help you?$"
+
 # 317 "data/maps/Black_Market/scripts.pory"
-
-# 318 "data/maps/Black_Market/scripts.pory"
 Text_BMSHARDEND:
+# 318 "data/maps/Black_Market/scripts.pory"
+    .string "Please come again!$"
 # 319 "data/maps/Black_Market/scripts.pory"
-    .string "Please come again!$"
+
 # 320 "data/maps/Black_Market/scripts.pory"
-
-# 321 "data/maps/Black_Market/scripts.pory"
 Text_BMBALLEND:
+# 321 "data/maps/Black_Market/scripts.pory"
+    .string "Please come again!$"
 # 322 "data/maps/Black_Market/scripts.pory"
-    .string "Please come again!$"
+
 # 323 "data/maps/Black_Market/scripts.pory"
-
-# 324 "data/maps/Black_Market/scripts.pory"
 Text_BMBERRYBOY:
-# 325 "data/maps/Black_Market/scripts.pory"
+# 324 "data/maps/Black_Market/scripts.pory"
     .string "I am the Berry Masters Son. \p"
-# 326 "data/maps/Black_Market/scripts.pory"
+# 325 "data/maps/Black_Market/scripts.pory"
     .string "Please don't tell my dad. \p"
+# 326 "data/maps/Black_Market/scripts.pory"
+    .string "How can I help you?$"
 # 327 "data/maps/Black_Market/scripts.pory"
-    .string "How can I help you?$"
+
 # 328 "data/maps/Black_Market/scripts.pory"
-
-# 329 "data/maps/Black_Market/scripts.pory"
 Text_BMBERRYEND:
+# 329 "data/maps/Black_Market/scripts.pory"
+    .string "Please come again!$"
 # 330 "data/maps/Black_Market/scripts.pory"
-    .string "Please come again!$"
+
 # 331 "data/maps/Black_Market/scripts.pory"
-
-# 332 "data/maps/Black_Market/scripts.pory"
 Text_BMPLATEP:
-# 333 "data/maps/Black_Market/scripts.pory"
+# 332 "data/maps/Black_Market/scripts.pory"
     .string "I got some museum quality stuff.\p"
-# 334 "data/maps/Black_Market/scripts.pory"
+# 333 "data/maps/Black_Market/scripts.pory"
     .string "How can I help you?$"
+# 334 "data/maps/Black_Market/scripts.pory"
+
 # 335 "data/maps/Black_Market/scripts.pory"
-
-# 336 "data/maps/Black_Market/scripts.pory"
 Text_BMPLATEEND:
-# 337 "data/maps/Black_Market/scripts.pory"
+# 336 "data/maps/Black_Market/scripts.pory"
     .string "Please come again!$"
+# 337 "data/maps/Black_Market/scripts.pory"
+
 # 338 "data/maps/Black_Market/scripts.pory"
-
-# 339 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_EventScript_EggWoman::
-# 340 "data/maps/Black_Market/scripts.pory"
+# 339 "data/maps/Black_Market/scripts.pory"
     lock
-# 341 "data/maps/Black_Market/scripts.pory"
+# 340 "data/maps/Black_Market/scripts.pory"
     faceplayer
-# 342 "data/maps/Black_Market/scripts.pory"
+# 341 "data/maps/Black_Market/scripts.pory"
     showmoneybox 0, 0
-# 343 "data/maps/Black_Market/scripts.pory"
+# 342 "data/maps/Black_Market/scripts.pory"
     msgbox GatchaBegg_Text_EggsJust5000, MSGBOX_YESNO
-# 344 "data/maps/Black_Market/scripts.pory"
+# 343 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, NO, GatchaBegg_EventScript_DeclineEgg
-# 345 "data/maps/Black_Market/scripts.pory"
+# 344 "data/maps/Black_Market/scripts.pory"
     checkmoney 5000
-# 346 "data/maps/Black_Market/scripts.pory"
+# 345 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, FALSE, GatchaBegg_EventScript_NotEnoughMoney
-# 347 "data/maps/Black_Market/scripts.pory"
+# 346 "data/maps/Black_Market/scripts.pory"
     msgbox GatchaBegg_Text_ThankYouDear, MSGBOX_DEFAULT
-# 348 "data/maps/Black_Market/scripts.pory"
+# 347 "data/maps/Black_Market/scripts.pory"
     getpartysize
-# 349 "data/maps/Black_Market/scripts.pory"
+# 348 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, PARTY_SIZE, GatchaBegg_EventScript_NoRoomForEgg
-# 350 "data/maps/Black_Market/scripts.pory"
+# 349 "data/maps/Black_Market/scripts.pory"
     removemoney 5000
-# 351 "data/maps/Black_Market/scripts.pory"
+# 350 "data/maps/Black_Market/scripts.pory"
     updatemoneybox
-# 352 "data/maps/Black_Market/scripts.pory"
+# 351 "data/maps/Black_Market/scripts.pory"
     playfanfare MUS_OBTAIN_ITEM
-# 353 "data/maps/Black_Market/scripts.pory"
+# 352 "data/maps/Black_Market/scripts.pory"
     message GatchaBegg_Text_ReceivedTheEgg
-# 354 "data/maps/Black_Market/scripts.pory"
+# 353 "data/maps/Black_Market/scripts.pory"
     waitfanfare
-# 355 "data/maps/Black_Market/scripts.pory"
+# 354 "data/maps/Black_Market/scripts.pory"
     specialvar VAR_RESULT, ChooseRandomEggSpeciesIII
-# 356 "data/maps/Black_Market/scripts.pory"
+# 355 "data/maps/Black_Market/scripts.pory"
     giveegg VAR_RESULT
-# 357 "data/maps/Black_Market/scripts.pory"
+# 356 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
-# 358 "data/maps/Black_Market/scripts.pory"
+# 357 "data/maps/Black_Market/scripts.pory"
     release
-# 359 "data/maps/Black_Market/scripts.pory"
+# 358 "data/maps/Black_Market/scripts.pory"
     end
-# 360 "data/maps/Black_Market/scripts.pory"
+# 359 "data/maps/Black_Market/scripts.pory"
 
-# 361 "data/maps/Black_Market/scripts.pory"
+# 360 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_EggsJust5000:
-# 362 "data/maps/Black_Market/scripts.pory"
+# 361 "data/maps/Black_Market/scripts.pory"
     .string "Pokémon eggs that were locally taken.\n"
-# 363 "data/maps/Black_Market/scripts.pory"
+# 362 "data/maps/Black_Market/scripts.pory"
     .string "These ones were hand picked.\p"
-# 364 "data/maps/Black_Market/scripts.pory"
+# 363 "data/maps/Black_Market/scripts.pory"
     .string "Buy a hot one. It's just ¥5000.$"
+# 364 "data/maps/Black_Market/scripts.pory"
+
 # 365 "data/maps/Black_Market/scripts.pory"
 
 # 366 "data/maps/Black_Market/scripts.pory"
-
-# 367 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_EventScript_DeclineEgg::
-# 368 "data/maps/Black_Market/scripts.pory"
+# 367 "data/maps/Black_Market/scripts.pory"
     msgbox GatchaBegg_Text_OhFineThen, MSGBOX_DEFAULT
-# 369 "data/maps/Black_Market/scripts.pory"
+# 368 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
-# 370 "data/maps/Black_Market/scripts.pory"
+# 369 "data/maps/Black_Market/scripts.pory"
     release
-# 371 "data/maps/Black_Market/scripts.pory"
+# 370 "data/maps/Black_Market/scripts.pory"
     end
-# 372 "data/maps/Black_Market/scripts.pory"
+# 371 "data/maps/Black_Market/scripts.pory"
 
-# 373 "data/maps/Black_Market/scripts.pory"
+# 372 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_OhFineThen:
-# 374 "data/maps/Black_Market/scripts.pory"
+# 373 "data/maps/Black_Market/scripts.pory"
     .string "Oh, fine then. Scram!$"
+# 374 "data/maps/Black_Market/scripts.pory"
+
 # 375 "data/maps/Black_Market/scripts.pory"
 
 # 376 "data/maps/Black_Market/scripts.pory"
-
-# 377 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_EventScript_NotEnoughMoney::
-# 378 "data/maps/Black_Market/scripts.pory"
+# 377 "data/maps/Black_Market/scripts.pory"
     msgbox GatchaBegg_Text_YouveNotGotTheMoney, MSGBOX_DEFAULT
+# 378 "data/maps/Black_Market/scripts.pory"
+    hidemoneybox
 # 379 "data/maps/Black_Market/scripts.pory"
-    hidemoneybox
+    release
 # 380 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 381 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 382 "data/maps/Black_Market/scripts.pory"
-
-# 383 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_YouveNotGotTheMoney:
-# 384 "data/maps/Black_Market/scripts.pory"
+# 383 "data/maps/Black_Market/scripts.pory"
     .string "You know… You can't buy a thing if\n"
-# 385 "data/maps/Black_Market/scripts.pory"
+# 384 "data/maps/Black_Market/scripts.pory"
     .string "you've not got the money!$"
+# 385 "data/maps/Black_Market/scripts.pory"
+
 # 386 "data/maps/Black_Market/scripts.pory"
-
-# 387 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_ThankYouDear:
-# 388 "data/maps/Black_Market/scripts.pory"
+# 387 "data/maps/Black_Market/scripts.pory"
     .string "Thank you, dearie! Come Again!$"
+# 388 "data/maps/Black_Market/scripts.pory"
+
 # 389 "data/maps/Black_Market/scripts.pory"
-
-# 390 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_EventScript_NoRoomForEgg::
-# 391 "data/maps/Black_Market/scripts.pory"
+# 390 "data/maps/Black_Market/scripts.pory"
     msgbox GatchaBegg_Text_NoRoomForThisEgg, MSGBOX_DEFAULT
+# 391 "data/maps/Black_Market/scripts.pory"
+    hidemoneybox
 # 392 "data/maps/Black_Market/scripts.pory"
-    hidemoneybox
+    release
 # 393 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 394 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 395 "data/maps/Black_Market/scripts.pory"
-
-# 396 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_NoRoomForThisEgg:
-# 397 "data/maps/Black_Market/scripts.pory"
+# 396 "data/maps/Black_Market/scripts.pory"
     .string "Oh? You've too many POKéMON.\n"
-# 398 "data/maps/Black_Market/scripts.pory"
+# 397 "data/maps/Black_Market/scripts.pory"
     .string "There's no room for this EGG…$"
+# 398 "data/maps/Black_Market/scripts.pory"
+
 # 399 "data/maps/Black_Market/scripts.pory"
-
-# 400 "data/maps/Black_Market/scripts.pory"
 GatchaBegg_Text_ReceivedTheEgg:
-# 401 "data/maps/Black_Market/scripts.pory"
+# 400 "data/maps/Black_Market/scripts.pory"
     .string "{PLAYER} received the EGG.$"
+# 401 "data/maps/Black_Market/scripts.pory"
+
 # 402 "data/maps/Black_Market/scripts.pory"
-
-# 403 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_CandyMan::
+# 403 "data/maps/Black_Market/scripts.pory"
+    lock
 # 404 "data/maps/Black_Market/scripts.pory"
-    lock
+    faceplayer
 # 405 "data/maps/Black_Market/scripts.pory"
-    faceplayer
-# 406 "data/maps/Black_Market/scripts.pory"
     showmoneybox 0, 0
-# 407 "data/maps/Black_Market/scripts.pory"
+# 406 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_CandyJust5000, MSGBOX_YESNO
-# 408 "data/maps/Black_Market/scripts.pory"
+# 407 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_DeclineCandy
-# 409 "data/maps/Black_Market/scripts.pory"
+# 408 "data/maps/Black_Market/scripts.pory"
     checkmoney 5000
-# 410 "data/maps/Black_Market/scripts.pory"
+# 409 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, FALSE, BlackMarket_EventScript_NotEnoughMonies
-# 411 "data/maps/Black_Market/scripts.pory"
+# 410 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_ThankYouDear, MSGBOX_DEFAULT
-# 412 "data/maps/Black_Market/scripts.pory"
+# 411 "data/maps/Black_Market/scripts.pory"
     checkitemspace ITEM_RARE_CANDY
-# 413 "data/maps/Black_Market/scripts.pory"
+# 412 "data/maps/Black_Market/scripts.pory"
     call_if_eq VAR_RESULT, TRUE, BlackMarket_EventScript_RemoveMonies
-# 414 "data/maps/Black_Market/scripts.pory"
+# 413 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_RARE_CANDY
-# 415 "data/maps/Black_Market/scripts.pory"
+# 414 "data/maps/Black_Market/scripts.pory"
     goto_if_eq VAR_RESULT, FALSE, BlackMarket_EventScript_BagIsFull
-# 416 "data/maps/Black_Market/scripts.pory"
+# 415 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
+# 416 "data/maps/Black_Market/scripts.pory"
+    release
 # 417 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 418 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 419 "data/maps/Black_Market/scripts.pory"
-
-# 420 "data/maps/Black_Market/scripts.pory"
 EventScript_BirthIslandGift::
-# 421 "data/maps/Black_Market/scripts.pory"
+# 420 "data/maps/Black_Market/scripts.pory"
     lock
-# 422 "data/maps/Black_Market/scripts.pory"
+# 421 "data/maps/Black_Market/scripts.pory"
     faceplayer
-# 423 "data/maps/Black_Market/scripts.pory"
+# 422 "data/maps/Black_Market/scripts.pory"
     message gText_BIRTHIStext
+# 423 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 424 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 425 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_AURORA_TICKET, 1
-# 426 "data/maps/Black_Market/scripts.pory"
+# 425 "data/maps/Black_Market/scripts.pory"
     compare VAR_RESULT, 1
-# 427 "data/maps/Black_Market/scripts.pory"
+# 426 "data/maps/Black_Market/scripts.pory"
     goto_if_eq Script_havebirthticket
-# 428 "data/maps/Black_Market/scripts.pory"
+# 427 "data/maps/Black_Market/scripts.pory"
     waitmessage
-# 429 "data/maps/Black_Market/scripts.pory"
+# 428 "data/maps/Black_Market/scripts.pory"
     message gText_Hereisbirthticket
-# 430 "data/maps/Black_Market/scripts.pory"
+# 429 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_AURORA_TICKET
-# 431 "data/maps/Black_Market/scripts.pory"
+# 430 "data/maps/Black_Market/scripts.pory"
     playfanfare MUS_OBTAIN_ITEM
-# 432 "data/maps/Black_Market/scripts.pory"
+# 431 "data/maps/Black_Market/scripts.pory"
     setflag FLAG_ENABLE_SHIP_BIRTH_ISLAND
+# 432 "data/maps/Black_Market/scripts.pory"
+    release
 # 433 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 434 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 435 "data/maps/Black_Market/scripts.pory"
-
-# 436 "data/maps/Black_Market/scripts.pory"
 Script_havebirthticket::
-# 437 "data/maps/Black_Market/scripts.pory"
+# 436 "data/maps/Black_Market/scripts.pory"
     msgbox gText_havebirthticket
-# 438 "data/maps/Black_Market/scripts.pory"
+# 437 "data/maps/Black_Market/scripts.pory"
     release
-# 439 "data/maps/Black_Market/scripts.pory"
+# 438 "data/maps/Black_Market/scripts.pory"
     end
+# 439 "data/maps/Black_Market/scripts.pory"
+
 # 440 "data/maps/Black_Market/scripts.pory"
-
-# 441 "data/maps/Black_Market/scripts.pory"
 gText_BIRTHIStext::
-# 442 "data/maps/Black_Market/scripts.pory"
+# 441 "data/maps/Black_Market/scripts.pory"
     .string "Did you know there is aliens...\p $"
+# 442 "data/maps/Black_Market/scripts.pory"
+
 # 443 "data/maps/Black_Market/scripts.pory"
-
-# 444 "data/maps/Black_Market/scripts.pory"
 gText_havebirthticket::
-# 445 "data/maps/Black_Market/scripts.pory"
+# 444 "data/maps/Black_Market/scripts.pory"
     .string "Oh Wait! Did you find any?$"
-# 446 "data/maps/Black_Market/scripts.pory"
+# 445 "data/maps/Black_Market/scripts.pory"
 
-# 447 "data/maps/Black_Market/scripts.pory"
+# 446 "data/maps/Black_Market/scripts.pory"
 gText_Hereisbirthticket::
-# 448 "data/maps/Black_Market/scripts.pory"
+# 447 "data/maps/Black_Market/scripts.pory"
     .string "Here you go! I hope you find some!$"
+# 448 "data/maps/Black_Market/scripts.pory"
+
 # 449 "data/maps/Black_Market/scripts.pory"
 
 # 450 "data/maps/Black_Market/scripts.pory"
-
-# 451 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_BagIsFull::
-# 452 "data/maps/Black_Market/scripts.pory"
+# 451 "data/maps/Black_Market/scripts.pory"
     msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
-# 453 "data/maps/Black_Market/scripts.pory"
+# 452 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
-# 454 "data/maps/Black_Market/scripts.pory"
+# 453 "data/maps/Black_Market/scripts.pory"
     release
-# 455 "data/maps/Black_Market/scripts.pory"
+# 454 "data/maps/Black_Market/scripts.pory"
     end
+# 455 "data/maps/Black_Market/scripts.pory"
+
 # 456 "data/maps/Black_Market/scripts.pory"
 
 # 457 "data/maps/Black_Market/scripts.pory"
-
-# 458 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_RemoveMonies::
-# 459 "data/maps/Black_Market/scripts.pory"
+# 458 "data/maps/Black_Market/scripts.pory"
     removemoney 5000
-# 460 "data/maps/Black_Market/scripts.pory"
+# 459 "data/maps/Black_Market/scripts.pory"
     updatemoneybox
-# 461 "data/maps/Black_Market/scripts.pory"
+# 460 "data/maps/Black_Market/scripts.pory"
     return
+# 461 "data/maps/Black_Market/scripts.pory"
+
 # 462 "data/maps/Black_Market/scripts.pory"
 
 # 463 "data/maps/Black_Market/scripts.pory"
-
-# 464 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_DeclineCandy::
-# 465 "data/maps/Black_Market/scripts.pory"
+# 464 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_OhFineThen, MSGBOX_DEFAULT
-# 466 "data/maps/Black_Market/scripts.pory"
+# 465 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
-# 467 "data/maps/Black_Market/scripts.pory"
+# 466 "data/maps/Black_Market/scripts.pory"
     release
-# 468 "data/maps/Black_Market/scripts.pory"
+# 467 "data/maps/Black_Market/scripts.pory"
     end
+# 468 "data/maps/Black_Market/scripts.pory"
+
 # 469 "data/maps/Black_Market/scripts.pory"
 
 # 470 "data/maps/Black_Market/scripts.pory"
-
-# 471 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_NotEnoughMonies::
-# 472 "data/maps/Black_Market/scripts.pory"
+# 471 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_YouveNotGotTheMonies, MSGBOX_DEFAULT
-# 473 "data/maps/Black_Market/scripts.pory"
+# 472 "data/maps/Black_Market/scripts.pory"
     hidemoneybox
-# 474 "data/maps/Black_Market/scripts.pory"
+# 473 "data/maps/Black_Market/scripts.pory"
     release
-# 475 "data/maps/Black_Market/scripts.pory"
+# 474 "data/maps/Black_Market/scripts.pory"
     end
-# 476 "data/maps/Black_Market/scripts.pory"
+# 475 "data/maps/Black_Market/scripts.pory"
 
-# 477 "data/maps/Black_Market/scripts.pory"
+# 476 "data/maps/Black_Market/scripts.pory"
 BlackMarket_Text_CandyJust5000:
-# 478 "data/maps/Black_Market/scripts.pory"
+# 477 "data/maps/Black_Market/scripts.pory"
     .string "Want some Candy? It is a\n"
-# 479 "data/maps/Black_Market/scripts.pory"
+# 478 "data/maps/Black_Market/scripts.pory"
     .string "local specialty.\p"
-# 480 "data/maps/Black_Market/scripts.pory"
+# 479 "data/maps/Black_Market/scripts.pory"
     .string "Try one. It's just ¥5000.$"
+# 480 "data/maps/Black_Market/scripts.pory"
+
 # 481 "data/maps/Black_Market/scripts.pory"
 
 # 482 "data/maps/Black_Market/scripts.pory"
-
-# 483 "data/maps/Black_Market/scripts.pory"
 BlackMarket_Text_ThankYouDear:
-# 484 "data/maps/Black_Market/scripts.pory"
+# 483 "data/maps/Black_Market/scripts.pory"
     .string "Thank you, dearie!$"
+# 484 "data/maps/Black_Market/scripts.pory"
+
 # 485 "data/maps/Black_Market/scripts.pory"
 
 # 486 "data/maps/Black_Market/scripts.pory"
-
-# 487 "data/maps/Black_Market/scripts.pory"
 BlackMarket_Text_YouveNotGotTheMonies:
-# 488 "data/maps/Black_Market/scripts.pory"
+# 487 "data/maps/Black_Market/scripts.pory"
     .string "You know… You can't buy a thing if\n"
-# 489 "data/maps/Black_Market/scripts.pory"
+# 488 "data/maps/Black_Market/scripts.pory"
     .string "you've not got the money!$"
+# 489 "data/maps/Black_Market/scripts.pory"
+
 # 490 "data/maps/Black_Market/scripts.pory"
 
 # 491 "data/maps/Black_Market/scripts.pory"
-
-# 492 "data/maps/Black_Market/scripts.pory"
 BlackMarket_Text_OhFineThen:
-# 493 "data/maps/Black_Market/scripts.pory"
+# 492 "data/maps/Black_Market/scripts.pory"
     .string "Oh, fine then. Scram!$"
-# 494 "data/maps/Black_Market/scripts.pory"
+# 493 "data/maps/Black_Market/scripts.pory"
 
-# 495 "data/maps/Black_Market/scripts.pory"
+# 494 "data/maps/Black_Market/scripts.pory"
 EventScript_SHINYCHARMGift::
-# 496 "data/maps/Black_Market/scripts.pory"
+# 495 "data/maps/Black_Market/scripts.pory"
     lock
-# 497 "data/maps/Black_Market/scripts.pory"
+# 496 "data/maps/Black_Market/scripts.pory"
     faceplayer
-# 498 "data/maps/Black_Market/scripts.pory"
+# 497 "data/maps/Black_Market/scripts.pory"
     message gText_Charmtext
+# 498 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 499 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 500 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_SHINY_CHARM, 1
-# 501 "data/maps/Black_Market/scripts.pory"
+# 500 "data/maps/Black_Market/scripts.pory"
     compare VAR_RESULT, 1
-# 502 "data/maps/Black_Market/scripts.pory"
+# 501 "data/maps/Black_Market/scripts.pory"
     goto_if_eq Script_havecharm
-# 503 "data/maps/Black_Market/scripts.pory"
+# 502 "data/maps/Black_Market/scripts.pory"
     waitmessage
-# 504 "data/maps/Black_Market/scripts.pory"
+# 503 "data/maps/Black_Market/scripts.pory"
     message gText_Hereischarm
-# 505 "data/maps/Black_Market/scripts.pory"
+# 504 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_SHINY_CHARM
-# 506 "data/maps/Black_Market/scripts.pory"
+# 505 "data/maps/Black_Market/scripts.pory"
     release
-# 507 "data/maps/Black_Market/scripts.pory"
+# 506 "data/maps/Black_Market/scripts.pory"
     end
+# 507 "data/maps/Black_Market/scripts.pory"
+
 # 508 "data/maps/Black_Market/scripts.pory"
 
 # 509 "data/maps/Black_Market/scripts.pory"
-
-# 510 "data/maps/Black_Market/scripts.pory"
 Script_havecharm::
-# 511 "data/maps/Black_Market/scripts.pory"
+# 510 "data/maps/Black_Market/scripts.pory"
     msgbox gText_havecharm
-# 512 "data/maps/Black_Market/scripts.pory"
+# 511 "data/maps/Black_Market/scripts.pory"
     release
-# 513 "data/maps/Black_Market/scripts.pory"
+# 512 "data/maps/Black_Market/scripts.pory"
     end
+# 513 "data/maps/Black_Market/scripts.pory"
+
 # 514 "data/maps/Black_Market/scripts.pory"
 
 # 515 "data/maps/Black_Market/scripts.pory"
-
-# 516 "data/maps/Black_Market/scripts.pory"
 gText_Charmtext::
-# 517 "data/maps/Black_Market/scripts.pory"
+# 516 "data/maps/Black_Market/scripts.pory"
     .string "Hey I have a gift from Team Aqua!\p $"
+# 517 "data/maps/Black_Market/scripts.pory"
+
 # 518 "data/maps/Black_Market/scripts.pory"
 
 # 519 "data/maps/Black_Market/scripts.pory"
-
-# 520 "data/maps/Black_Market/scripts.pory"
 gText_havecharm::
-# 521 "data/maps/Black_Market/scripts.pory"
+# 520 "data/maps/Black_Market/scripts.pory"
     .string "Have I threatened you before?$"
+# 521 "data/maps/Black_Market/scripts.pory"
+
 # 522 "data/maps/Black_Market/scripts.pory"
 
 # 523 "data/maps/Black_Market/scripts.pory"
-
-# 524 "data/maps/Black_Market/scripts.pory"
 gText_Hereischarm::
-# 525 "data/maps/Black_Market/scripts.pory"
+# 524 "data/maps/Black_Market/scripts.pory"
     .string "Here! You better join our team!$"
+# 525 "data/maps/Black_Market/scripts.pory"
+
 # 526 "data/maps/Black_Market/scripts.pory"
-
-# 527 "data/maps/Black_Market/scripts.pory"
 EventScript_EXPCHARMGift::
+# 527 "data/maps/Black_Market/scripts.pory"
+    lock
 # 528 "data/maps/Black_Market/scripts.pory"
-    lock
+    faceplayer
 # 529 "data/maps/Black_Market/scripts.pory"
-    faceplayer
-# 530 "data/maps/Black_Market/scripts.pory"
     message gText_CharmEtext
+# 530 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 531 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 532 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_EXP_CHARM, 1
+# 532 "data/maps/Black_Market/scripts.pory"
+    compare VAR_RESULT, 1
 # 533 "data/maps/Black_Market/scripts.pory"
-    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
 # 534 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq Script_havecharm
+    waitmessage
 # 535 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 536 "data/maps/Black_Market/scripts.pory"
     message gText_Hereischarm
-# 537 "data/maps/Black_Market/scripts.pory"
+# 536 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_EXP_CHARM
+# 537 "data/maps/Black_Market/scripts.pory"
+    release
 # 538 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 539 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 540 "data/maps/Black_Market/scripts.pory"
-
-# 541 "data/maps/Black_Market/scripts.pory"
     gText_CharmEtext::
-# 542 "data/maps/Black_Market/scripts.pory"
+# 541 "data/maps/Black_Market/scripts.pory"
     .string "Hey I have a gift from Team Magma!\p $"
+# 542 "data/maps/Black_Market/scripts.pory"
+
 # 543 "data/maps/Black_Market/scripts.pory"
-
-# 544 "data/maps/Black_Market/scripts.pory"
 EventScript_EGGCHARMGift::
+# 544 "data/maps/Black_Market/scripts.pory"
+    lock
 # 545 "data/maps/Black_Market/scripts.pory"
-    lock
+    faceplayer
 # 546 "data/maps/Black_Market/scripts.pory"
-    faceplayer
-# 547 "data/maps/Black_Market/scripts.pory"
     message gText_CharmEggtext
+# 547 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 548 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 549 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_OVAL_CHARM, 1
+# 549 "data/maps/Black_Market/scripts.pory"
+    compare VAR_RESULT, 1
 # 550 "data/maps/Black_Market/scripts.pory"
-    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
 # 551 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq Script_havecharm
+    waitmessage
 # 552 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 553 "data/maps/Black_Market/scripts.pory"
     message gText_HereisEggcharm
-# 554 "data/maps/Black_Market/scripts.pory"
+# 553 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_OVAL_CHARM
+# 554 "data/maps/Black_Market/scripts.pory"
+    release
 # 555 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 556 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 557 "data/maps/Black_Market/scripts.pory"
-
-# 558 "data/maps/Black_Market/scripts.pory"
     gText_CharmEggtext::
+# 558 "data/maps/Black_Market/scripts.pory"
+    .string "Do I have an amazing gift for you!\p $"
 # 559 "data/maps/Black_Market/scripts.pory"
-    .string "Do I have an amazing gift for you!\p $"
+
 # 560 "data/maps/Black_Market/scripts.pory"
-
-# 561 "data/maps/Black_Market/scripts.pory"
     gText_HereisEggcharm::
-# 562 "data/maps/Black_Market/scripts.pory"
+# 561 "data/maps/Black_Market/scripts.pory"
     .string "Hope you use this charm wisely....\p $"
+# 562 "data/maps/Black_Market/scripts.pory"
+
 # 563 "data/maps/Black_Market/scripts.pory"
-
-# 564 "data/maps/Black_Market/scripts.pory"
 EventScript_CATCHCHARMGift::
+# 564 "data/maps/Black_Market/scripts.pory"
+    lock
 # 565 "data/maps/Black_Market/scripts.pory"
-    lock
+    faceplayer
 # 566 "data/maps/Black_Market/scripts.pory"
-    faceplayer
-# 567 "data/maps/Black_Market/scripts.pory"
     message gText_CharmCatchtext
+# 567 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 568 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 569 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_CATCHING_CHARM, 1
+# 569 "data/maps/Black_Market/scripts.pory"
+    compare VAR_RESULT, 1
 # 570 "data/maps/Black_Market/scripts.pory"
-    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
 # 571 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq Script_havecharm
+    waitmessage
 # 572 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 573 "data/maps/Black_Market/scripts.pory"
     message gText_HereisCatchcharm
-# 574 "data/maps/Black_Market/scripts.pory"
+# 573 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_CATCHING_CHARM
+# 574 "data/maps/Black_Market/scripts.pory"
+    release
 # 575 "data/maps/Black_Market/scripts.pory"
-    release
+    end
 # 576 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 577 "data/maps/Black_Market/scripts.pory"
-
-# 578 "data/maps/Black_Market/scripts.pory"
     gText_CharmCatchtext::
-# 579 "data/maps/Black_Market/scripts.pory"
+# 578 "data/maps/Black_Market/scripts.pory"
     .string "Do I have an amazing gift for you!\p $"
+# 579 "data/maps/Black_Market/scripts.pory"
+
 # 580 "data/maps/Black_Market/scripts.pory"
-
-# 581 "data/maps/Black_Market/scripts.pory"
     gText_HereisCatchcharm::
-# 582 "data/maps/Black_Market/scripts.pory"
+# 581 "data/maps/Black_Market/scripts.pory"
     .string "Hope you use this charm a lot....\p $"
+# 582 "data/maps/Black_Market/scripts.pory"
+
 # 583 "data/maps/Black_Market/scripts.pory"
-
-# 584 "data/maps/Black_Market/scripts.pory"
 EventScript_DBANDGift::
+# 584 "data/maps/Black_Market/scripts.pory"
+    lock
 # 585 "data/maps/Black_Market/scripts.pory"
-    lock
+    faceplayer
 # 586 "data/maps/Black_Market/scripts.pory"
-    faceplayer
-# 587 "data/maps/Black_Market/scripts.pory"
     message gText_DBANDtext
+# 587 "data/maps/Black_Market/scripts.pory"
+    waitmessage
 # 588 "data/maps/Black_Market/scripts.pory"
-    waitmessage
-# 589 "data/maps/Black_Market/scripts.pory"
     checkitem ITEM_DYNAMAX_BAND, 1
-# 590 "data/maps/Black_Market/scripts.pory"
+# 589 "data/maps/Black_Market/scripts.pory"
     compare VAR_RESULT, 1
-# 591 "data/maps/Black_Market/scripts.pory"
+# 590 "data/maps/Black_Market/scripts.pory"
     goto_if_eq Script_havecharm
-# 592 "data/maps/Black_Market/scripts.pory"
+# 591 "data/maps/Black_Market/scripts.pory"
     waitmessage
-# 593 "data/maps/Black_Market/scripts.pory"
+# 592 "data/maps/Black_Market/scripts.pory"
     message gText_DBANDcharm
-# 594 "data/maps/Black_Market/scripts.pory"
+# 593 "data/maps/Black_Market/scripts.pory"
     giveitem ITEM_DYNAMAX_BAND
-# 595 "data/maps/Black_Market/scripts.pory"
+# 594 "data/maps/Black_Market/scripts.pory"
     setflag FLAG_DYNAMAX_BATTLE
-# 596 "data/maps/Black_Market/scripts.pory"
+# 595 "data/maps/Black_Market/scripts.pory"
     release
-# 597 "data/maps/Black_Market/scripts.pory"
+# 596 "data/maps/Black_Market/scripts.pory"
     end
+# 597 "data/maps/Black_Market/scripts.pory"
+
 # 598 "data/maps/Black_Market/scripts.pory"
-
-# 599 "data/maps/Black_Market/scripts.pory"
 gText_DBANDtext::
-# 600 "data/maps/Black_Market/scripts.pory"
+# 599 "data/maps/Black_Market/scripts.pory"
     .string "First timers get a free gift!\p $"
+# 600 "data/maps/Black_Market/scripts.pory"
+
 # 601 "data/maps/Black_Market/scripts.pory"
-
-# 602 "data/maps/Black_Market/scripts.pory"
     gText_DBANDcharm::
-# 603 "data/maps/Black_Market/scripts.pory"
+# 602 "data/maps/Black_Market/scripts.pory"
     .string "Hope you use this band wisely....\p $"
-# 604 "data/maps/Black_Market/scripts.pory"
+# 603 "data/maps/Black_Market/scripts.pory"
 
-# 605 "data/maps/Black_Market/scripts.pory"
+# 604 "data/maps/Black_Market/scripts.pory"
 BlackMarket_EventScript_ReceiveMarshadow::
-# 606 "data/maps/Black_Market/scripts.pory"
+# 605 "data/maps/Black_Market/scripts.pory"
     lock
-# 607 "data/maps/Black_Market/scripts.pory"
+# 606 "data/maps/Black_Market/scripts.pory"
     faceplayer
-# 608 "data/maps/Black_Market/scripts.pory"
+# 607 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_ThanksPleaseTakePokemon, MSGBOX_DEFAULT
+# 608 "data/maps/Black_Market/scripts.pory"
+    setflag FLAG_FORCE_POKERUS
 # 609 "data/maps/Black_Market/scripts.pory"
     setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_MARSHADOW
 # 610 "data/maps/Black_Market/scripts.pory"
@@ -1217,208 +1217,226 @@ BlackMarket_EventScript_ReceiveMarshadow::
 # 613 "data/maps/Black_Market/scripts.pory"
     goto Common_EventScript_NoMoreRoomForPokemon
 # 614 "data/maps/Black_Market/scripts.pory"
-    end
+    clearflag FLAG_FORCE_POKERUS
 # 615 "data/maps/Black_Market/scripts.pory"
-
+    end
 # 616 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_ReceiveMarshadowParty::
+
 # 617 "data/maps/Black_Market/scripts.pory"
-    call BlackMarket_EventScript_ReceivedMarshadowFanfare
+BlackMarket_EventScript_ReceiveMarshadowParty::
 # 618 "data/maps/Black_Market/scripts.pory"
-    msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
-# 619 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_ExplainMarshadow
-# 620 "data/maps/Black_Market/scripts.pory"
-    call Common_EventScript_GetGiftMonPartySlot
-# 621 "data/maps/Black_Market/scripts.pory"
-    call Common_EventScript_NameReceivedPartyMon
-# 622 "data/maps/Black_Market/scripts.pory"
-    goto BlackMarket_EventScript_ExplainMarshadow
-# 623 "data/maps/Black_Market/scripts.pory"
-    end
-# 624 "data/maps/Black_Market/scripts.pory"
-
-# 625 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_ReceiveMarshadowPC::
-# 626 "data/maps/Black_Market/scripts.pory"
     call BlackMarket_EventScript_ReceivedMarshadowFanfare
-# 627 "data/maps/Black_Market/scripts.pory"
+# 619 "data/maps/Black_Market/scripts.pory"
     msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
-# 628 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_SendMarshadowToPC
-# 629 "data/maps/Black_Market/scripts.pory"
-    call Common_EventScript_NameReceivedBoxMon
-# 630 "data/maps/Black_Market/scripts.pory"
-    goto BlackMarket_EventScript_SendMarshadowToPC
-# 631 "data/maps/Black_Market/scripts.pory"
-    end
-# 632 "data/maps/Black_Market/scripts.pory"
-
-# 633 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_SendMarshadowToPC::
-# 634 "data/maps/Black_Market/scripts.pory"
-    call Common_EventScript_TransferredToPC
-# 635 "data/maps/Black_Market/scripts.pory"
+# 620 "data/maps/Black_Market/scripts.pory"
+    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_ExplainMarshadow
+# 621 "data/maps/Black_Market/scripts.pory"
+    call Common_EventScript_GetGiftMonPartySlot
+# 622 "data/maps/Black_Market/scripts.pory"
+    call Common_EventScript_NameReceivedPartyMon
+# 623 "data/maps/Black_Market/scripts.pory"
     goto BlackMarket_EventScript_ExplainMarshadow
+# 624 "data/maps/Black_Market/scripts.pory"
+    clearflag FLAG_FORCE_POKERUS
+# 625 "data/maps/Black_Market/scripts.pory"
+    end
+# 626 "data/maps/Black_Market/scripts.pory"
+
+# 627 "data/maps/Black_Market/scripts.pory"
+BlackMarket_EventScript_ReceiveMarshadowPC::
+# 628 "data/maps/Black_Market/scripts.pory"
+    call BlackMarket_EventScript_ReceivedMarshadowFanfare
+# 629 "data/maps/Black_Market/scripts.pory"
+    msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
+# 630 "data/maps/Black_Market/scripts.pory"
+    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_SendMarshadowToPC
+# 631 "data/maps/Black_Market/scripts.pory"
+    call Common_EventScript_NameReceivedBoxMon
+# 632 "data/maps/Black_Market/scripts.pory"
+    goto BlackMarket_EventScript_SendMarshadowToPC
+# 633 "data/maps/Black_Market/scripts.pory"
+    clearflag FLAG_FORCE_POKERUS
+# 634 "data/maps/Black_Market/scripts.pory"
+    end
+# 635 "data/maps/Black_Market/scripts.pory"
+
 # 636 "data/maps/Black_Market/scripts.pory"
-    end
+BlackMarket_EventScript_SendMarshadowToPC::
 # 637 "data/maps/Black_Market/scripts.pory"
-
+    call Common_EventScript_TransferredToPC
 # 638 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_ReceivedMarshadowFanfare::
+    goto BlackMarket_EventScript_ExplainMarshadow
 # 639 "data/maps/Black_Market/scripts.pory"
-    playfanfare MUS_OBTAIN_ITEM
+    clearflag FLAG_FORCE_POKERUS
 # 640 "data/maps/Black_Market/scripts.pory"
-    message BlackMarket_Text_PlayerReceivedMarshadow
+    end
 # 641 "data/maps/Black_Market/scripts.pory"
-    waitmessage
+
 # 642 "data/maps/Black_Market/scripts.pory"
-    waitfanfare
+BlackMarket_EventScript_ReceivedMarshadowFanfare::
 # 643 "data/maps/Black_Market/scripts.pory"
-    bufferspeciesname STR_VAR_1, SPECIES_MARSHADOW
+    playfanfare MUS_OBTAIN_ITEM
 # 644 "data/maps/Black_Market/scripts.pory"
-    return
+    message BlackMarket_Text_PlayerReceivedMarshadow
 # 645 "data/maps/Black_Market/scripts.pory"
-
+    waitmessage
 # 646 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_ExplainMarshadow::
+    waitfanfare
 # 647 "data/maps/Black_Market/scripts.pory"
-    msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
+    bufferspeciesname STR_VAR_1, SPECIES_MARSHADOW
 # 648 "data/maps/Black_Market/scripts.pory"
-    setflag FLAG_RECEIVED_MARSHADOW
+    clearflag FLAG_FORCE_POKERUS
 # 649 "data/maps/Black_Market/scripts.pory"
-    release
+    return
 # 650 "data/maps/Black_Market/scripts.pory"
-    end
+
 # 651 "data/maps/Black_Market/scripts.pory"
-
+BlackMarket_EventScript_ExplainMarshadow::
 # 652 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_HaveMarshadow::
-# 653 "data/maps/Black_Market/scripts.pory"
     msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
+# 653 "data/maps/Black_Market/scripts.pory"
+    setflag FLAG_RECEIVED_MARSHADOW
 # 654 "data/maps/Black_Market/scripts.pory"
-    release
+    clearflag FLAG_FORCE_POKERUS
 # 655 "data/maps/Black_Market/scripts.pory"
-    end
+    release
 # 656 "data/maps/Black_Market/scripts.pory"
-
+    end
 # 657 "data/maps/Black_Market/scripts.pory"
-BlackMarket_EventScript_HEXMANIAC::
+
 # 658 "data/maps/Black_Market/scripts.pory"
-    lock
+BlackMarket_EventScript_HaveMarshadow::
 # 659 "data/maps/Black_Market/scripts.pory"
-    faceplayer
+    msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
 # 660 "data/maps/Black_Market/scripts.pory"
-    goto_if_set FLAG_RECEIVED_MARSHADOW, BlackMarket_EventScript_HaveMarshadow
+    clearflag FLAG_FORCE_POKERUS
 # 661 "data/maps/Black_Market/scripts.pory"
-    goto BlackMarket_EventScript_ReceiveMarshadow
+    release
 # 662 "data/maps/Black_Market/scripts.pory"
     end
 # 663 "data/maps/Black_Market/scripts.pory"
 
 # 664 "data/maps/Black_Market/scripts.pory"
-BlackMarket_Text_PlayerReceivedMarshadow:
+BlackMarket_EventScript_HEXMANIAC::
 # 665 "data/maps/Black_Market/scripts.pory"
-    .string "{PLAYER} received MARSHADOW!$"
+    lock
 # 666 "data/maps/Black_Market/scripts.pory"
-
+    faceplayer
 # 667 "data/maps/Black_Market/scripts.pory"
-BlackMarket_Text_ThanksPleaseTakePokemon:
+    setflag FLAG_FORCE_POKERUS
 # 668 "data/maps/Black_Market/scripts.pory"
-    .string "Thanks for not snitching!\n"
+    goto_if_set FLAG_RECEIVED_MARSHADOW, BlackMarket_EventScript_HaveMarshadow
 # 669 "data/maps/Black_Market/scripts.pory"
-    .string "Thanks to you, we're safe!\p"
+    goto BlackMarket_EventScript_ReceiveMarshadow
 # 670 "data/maps/Black_Market/scripts.pory"
-    .string "It might be an odd way of welcoming you,\n"
+    clearflag FLAG_FORCE_POKERUS
 # 671 "data/maps/Black_Market/scripts.pory"
-    .string "but take this POKéMON.$"
+    end
 # 672 "data/maps/Black_Market/scripts.pory"
 
 # 673 "data/maps/Black_Market/scripts.pory"
-BlackMarket_Text_PokemonChanges:
+BlackMarket_Text_PlayerReceivedMarshadow:
 # 674 "data/maps/Black_Market/scripts.pory"
-    .string "That POKéMON hides according\n"
+    .string "{PLAYER} received MARSHADOW!$"
 # 675 "data/maps/Black_Market/scripts.pory"
-    .string "to the area conditions.\p"
+
 # 676 "data/maps/Black_Market/scripts.pory"
-    .string "There're plenty of them in the…\n"
+BlackMarket_Text_ThanksPleaseTakePokemon:
 # 677 "data/maps/Black_Market/scripts.pory"
-    .string "nevermind--go ahead and take it.$"
+    .string "Thanks for not snitching!\n"
 # 678 "data/maps/Black_Market/scripts.pory"
-
+    .string "Thanks to you, we're safe!\p"
 # 679 "data/maps/Black_Market/scripts.pory"
-EventScript_PanicingGuyGift::
+    .string "It might be an odd way of welcoming you,\n"
 # 680 "data/maps/Black_Market/scripts.pory"
-    lock
+    .string "but take this POKéMON.$"
 # 681 "data/maps/Black_Market/scripts.pory"
-    faceplayer
+
 # 682 "data/maps/Black_Market/scripts.pory"
-    message gText_Panicingtext
+BlackMarket_Text_PokemonChanges:
 # 683 "data/maps/Black_Market/scripts.pory"
-    waitmessage
+    .string "That POKéMON hides according\n"
 # 684 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_ROTOM_CATALOG, 1
+    .string "to the area conditions.\p"
 # 685 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_GRACIDEA, 1
+    .string "There're plenty of them in the…\n"
 # 686 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_REVEAL_GLASS, 1
+    .string "nevermind--go ahead and take it.$"
 # 687 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_DNA_SPLICERS, 1
+
 # 688 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_ZYGARDE_CUBE, 1
+EventScript_PanicingGuyGift::
 # 689 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_PRISON_BOTTLE, 1
+    lock
 # 690 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_N_SOLARIZER, 1
+    faceplayer
 # 691 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_N_LUNARIZER, 1
+    message gText_Panicingtext
 # 692 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_REINS_OF_UNITY, 1
-# 693 "data/maps/Black_Market/scripts.pory"
-    checkitem ITEM_TERA_ORB, 1
-# 694 "data/maps/Black_Market/scripts.pory"
-    compare VAR_RESULT, 1
-# 695 "data/maps/Black_Market/scripts.pory"
-    goto_if_eq Script_havecharm
-# 696 "data/maps/Black_Market/scripts.pory"
     waitmessage
+# 693 "data/maps/Black_Market/scripts.pory"
+    checkitem ITEM_ROTOM_CATALOG, 1
+# 694 "data/maps/Black_Market/scripts.pory"
+    checkitem ITEM_GRACIDEA, 1
+# 695 "data/maps/Black_Market/scripts.pory"
+    checkitem ITEM_REVEAL_GLASS, 1
+# 696 "data/maps/Black_Market/scripts.pory"
+    checkitem ITEM_DNA_SPLICERS, 1
 # 697 "data/maps/Black_Market/scripts.pory"
-    message gText_Hereiseverythings
+    checkitem ITEM_ZYGARDE_CUBE, 1
 # 698 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_ROTOM_CATALOG
+    checkitem ITEM_PRISON_BOTTLE, 1
 # 699 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_GRACIDEA
+    checkitem ITEM_N_SOLARIZER, 1
 # 700 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_REVEAL_GLASS
+    checkitem ITEM_N_LUNARIZER, 1
 # 701 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_DNA_SPLICERS
+    checkitem ITEM_REINS_OF_UNITY, 1
 # 702 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_ZYGARDE_CUBE
+    checkitem ITEM_TERA_ORB, 1
 # 703 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_PRISON_BOTTLE
+    compare VAR_RESULT, 1
 # 704 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_N_LUNARIZER
+    goto_if_eq Script_havecharm
 # 705 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_N_SOLARIZER
+    waitmessage
 # 706 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_REINS_OF_UNITY
+    message gText_Hereiseverythings
 # 707 "data/maps/Black_Market/scripts.pory"
-    giveitem ITEM_TERA_ORB
+    giveitem ITEM_ROTOM_CATALOG
 # 708 "data/maps/Black_Market/scripts.pory"
-    release
+    giveitem ITEM_GRACIDEA
 # 709 "data/maps/Black_Market/scripts.pory"
-    end
+    giveitem ITEM_REVEAL_GLASS
 # 710 "data/maps/Black_Market/scripts.pory"
-
+    giveitem ITEM_DNA_SPLICERS
 # 711 "data/maps/Black_Market/scripts.pory"
-    gText_Panicingtext::
+    giveitem ITEM_ZYGARDE_CUBE
 # 712 "data/maps/Black_Market/scripts.pory"
-    .string "I have very hot gifts for you!\p $"
+    giveitem ITEM_PRISON_BOTTLE
 # 713 "data/maps/Black_Market/scripts.pory"
-
+    giveitem ITEM_N_LUNARIZER
 # 714 "data/maps/Black_Market/scripts.pory"
-    gText_Hereiseverythings::
+    giveitem ITEM_N_SOLARIZER
 # 715 "data/maps/Black_Market/scripts.pory"
+    giveitem ITEM_REINS_OF_UNITY
+# 716 "data/maps/Black_Market/scripts.pory"
+    giveitem ITEM_TERA_ORB
+# 717 "data/maps/Black_Market/scripts.pory"
+    release
+# 718 "data/maps/Black_Market/scripts.pory"
+    end
+# 719 "data/maps/Black_Market/scripts.pory"
+
+# 720 "data/maps/Black_Market/scripts.pory"
+    gText_Panicingtext::
+# 721 "data/maps/Black_Market/scripts.pory"
+    .string "I have very hot gifts for you!\p $"
+# 722 "data/maps/Black_Market/scripts.pory"
+
+# 723 "data/maps/Black_Market/scripts.pory"
+    gText_Hereiseverythings::
+# 724 "data/maps/Black_Market/scripts.pory"
     .string "Hope you can keep the heat off..\p $"
 
 Black_Market_EventScript_Sign_Text_0:

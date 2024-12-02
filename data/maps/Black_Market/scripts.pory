@@ -240,7 +240,6 @@ BM_BERRIES_ITEMS:
     .2byte ITEM_ROWAP_BERRY
     .2byte ITEM_KEE_BERRY
     .2byte ITEM_MARANGA_BERRY
-    .2byte ITEM_ENIGMA_BERRY_E_READER
     .2byte ITEM_NONE
     release
     end
@@ -606,11 +605,13 @@ BlackMarket_EventScript_ReceiveMarshadow::
     lock
     faceplayer
     msgbox BlackMarket_Text_ThanksPleaseTakePokemon, MSGBOX_DEFAULT
+    setflag FLAG_FORCE_POKERUS
     setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_MARSHADOW
     givemon SPECIES_MARSHADOW, 20, item=ITEM_MARSHADIUM_Z, ball=ITEM_DUSK_BALL, nature=NATURE_JOLLY; 
     goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, BlackMarket_EventScript_ReceiveMarshadowParty
     goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, BlackMarket_EventScript_ReceiveMarshadowPC
     goto Common_EventScript_NoMoreRoomForPokemon
+    clearflag FLAG_FORCE_POKERUS
     end
 
 BlackMarket_EventScript_ReceiveMarshadowParty::
@@ -620,6 +621,7 @@ BlackMarket_EventScript_ReceiveMarshadowParty::
     call Common_EventScript_GetGiftMonPartySlot
     call Common_EventScript_NameReceivedPartyMon
     goto BlackMarket_EventScript_ExplainMarshadow
+    clearflag FLAG_FORCE_POKERUS
     end
 
 BlackMarket_EventScript_ReceiveMarshadowPC::
@@ -628,11 +630,13 @@ BlackMarket_EventScript_ReceiveMarshadowPC::
     goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_SendMarshadowToPC
     call Common_EventScript_NameReceivedBoxMon
     goto BlackMarket_EventScript_SendMarshadowToPC
+    clearflag FLAG_FORCE_POKERUS
     end
 
 BlackMarket_EventScript_SendMarshadowToPC::
     call Common_EventScript_TransferredToPC
     goto BlackMarket_EventScript_ExplainMarshadow
+    clearflag FLAG_FORCE_POKERUS
     end
 
 BlackMarket_EventScript_ReceivedMarshadowFanfare::
@@ -641,24 +645,29 @@ BlackMarket_EventScript_ReceivedMarshadowFanfare::
     waitmessage
     waitfanfare
     bufferspeciesname STR_VAR_1, SPECIES_MARSHADOW
+    clearflag FLAG_FORCE_POKERUS
     return
 
 BlackMarket_EventScript_ExplainMarshadow::
     msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
     setflag FLAG_RECEIVED_MARSHADOW
+    clearflag FLAG_FORCE_POKERUS
     release
     end
 
 BlackMarket_EventScript_HaveMarshadow::
     msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
+    clearflag FLAG_FORCE_POKERUS
     release
     end
 
 BlackMarket_EventScript_HEXMANIAC::
     lock
     faceplayer
+    setflag FLAG_FORCE_POKERUS
     goto_if_set FLAG_RECEIVED_MARSHADOW, BlackMarket_EventScript_HaveMarshadow
     goto BlackMarket_EventScript_ReceiveMarshadow
+    clearflag FLAG_FORCE_POKERUS
     end
 
 BlackMarket_Text_PlayerReceivedMarshadow:
