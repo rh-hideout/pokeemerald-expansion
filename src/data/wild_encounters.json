@@ -2614,9 +2614,9 @@
                 "species": "SPECIES_MAGMAR"
               },
               {
-                "min_level": 15,
-                "max_level": 16,
-                "species": "SPECIES_MACHOP"
+                "min_level": 14,
+                "max_level": 14,
+                "species": "SPECIES_TURTONATOR"
               },
               {
                 "min_level": 15,
@@ -2654,8 +2654,8 @@
                 "species": "SPECIES_GRIMER"
               },
               {
-                "min_level": 14,
-                "max_level": 14,
+                "min_level": 16,
+                "max_level": 16,
                 "species": "SPECIES_TURTONATOR"
               }
             ]
@@ -3756,7 +3756,7 @@
               {
                 "min_level": 25,
                 "max_level": 25,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_MARILL"
               },
               {
                 "min_level": 25,
@@ -3776,7 +3776,7 @@
               {
                 "min_level": 25,
                 "max_level": 27,
-                "species": "SPECIES_MARILL"
+                "species": "SPECIES_BRAIXEN"
               },
               {
                 "min_level": 26,
@@ -4579,7 +4579,7 @@
               {
                 "min_level": 22,
                 "max_level": 27,
-                "species": "SPECIES_SHUPPET"
+                "species": "SPECIES_CHIMECHO"
               },
               {
                 "min_level": 23,
@@ -4703,7 +4703,7 @@
               {
                 "min_level": 29,
                 "max_level": 29,
-                "species": "SPECIES_MORPEKO"
+                "species": "SPECIES_FLOETTE_ETERNAL_FLOWER"
               }
             ]
           }
