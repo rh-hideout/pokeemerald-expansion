@@ -517,41 +517,41 @@ static const u16 sIsValidSpecies[] = {
     SPECIES_ARCTOVISH,
     SPECIES_DURALUDON,
     SPECIES_DREEPY,
-    SPECIES_RATTATA_ALOLAN,
-    SPECIES_SANDSHREW_ALOLAN,
-    SPECIES_VULPIX_ALOLAN,
-    SPECIES_DIGLETT_ALOLAN,
-    SPECIES_MEOWTH_ALOLAN,
-    SPECIES_GEODUDE_ALOLAN,
-    SPECIES_GRIMER_ALOLAN,
-    SPECIES_MEOWTH_GALARIAN,
-    SPECIES_PONYTA_GALARIAN,
-    SPECIES_SLOWPOKE_GALARIAN,
-    SPECIES_FARFETCHD_GALARIAN,
-    SPECIES_MR_MIME_GALARIAN,
-    SPECIES_CORSOLA_GALARIAN,
-    SPECIES_ZIGZAGOON_GALARIAN,
-    SPECIES_DARUMAKA_GALARIAN,
-    SPECIES_YAMASK_GALARIAN,
-    SPECIES_STUNFISK_GALARIAN,
-    SPECIES_GROWLITHE_HISUIAN,
-    SPECIES_VOLTORB_HISUIAN,
-    SPECIES_QWILFISH_HISUIAN,
-    SPECIES_SNEASEL_HISUIAN,
-    SPECIES_ZORUA_HISUIAN,
-    SPECIES_BURMY_SANDY_CLOAK,
-    SPECIES_BURMY_TRASH_CLOAK,
-    SPECIES_SHELLOS_EAST_SEA,
+    SPECIES_RATTATA_ALOLA,
+    SPECIES_SANDSHREW_ALOLA,
+    SPECIES_VULPIX_ALOLA,
+    SPECIES_DIGLETT_ALOLA,
+    SPECIES_MEOWTH_ALOLA,
+    SPECIES_GEODUDE_ALOLA,
+    SPECIES_GRIMER_ALOLA,
+    SPECIES_MEOWTH_GALAR,
+    SPECIES_PONYTA_GALAR,
+    SPECIES_SLOWPOKE_GALAR,
+    SPECIES_FARFETCHD_GALAR,
+    SPECIES_MR_MIME_GALAR,
+    SPECIES_CORSOLA_GALAR,
+    SPECIES_ZIGZAGOON_GALAR,
+    SPECIES_DARUMAKA_GALAR,
+    SPECIES_YAMASK_GALAR,
+    SPECIES_STUNFISK_GALAR,
+    SPECIES_GROWLITHE_HISUI,
+    SPECIES_VOLTORB_HISUI,
+    SPECIES_QWILFISH_HISUI,
+    SPECIES_SNEASEL_HISUI,
+    SPECIES_ZORUA_HISUI,
+    SPECIES_BURMY_SANDY,
+    SPECIES_BURMY_TRASH,
+    SPECIES_SHELLOS_EAST,
     SPECIES_BASCULIN_BLUE_STRIPED,
     SPECIES_BASCULIN_WHITE_STRIPED,
     SPECIES_DEERLING_SUMMER,
     SPECIES_DEERLING_AUTUMN,
     SPECIES_DEERLING_WINTER,
-    SPECIES_FLABEBE_YELLOW_FLOWER,
-    SPECIES_FLABEBE_ORANGE_FLOWER,
-    SPECIES_FLABEBE_BLUE_FLOWER,
-    SPECIES_FLABEBE_WHITE_FLOWER,
-    SPECIES_MEOWSTIC_FEMALE,
+    SPECIES_FLABEBE_YELLOW,
+    SPECIES_FLABEBE_ORANGE,
+    SPECIES_FLABEBE_BLUE,
+    SPECIES_FLABEBE_WHITE,
+    SPECIES_MEOWSTIC_F,
     SPECIES_PUMPKABOO_SMALL,
     SPECIES_PUMPKABOO_LARGE,
     SPECIES_PUMPKABOO_SUPER,
@@ -566,7 +566,7 @@ static const u16 sIsValidSpecies[] = {
     SPECIES_MINIOR_METEOR_INDIGO,
     SPECIES_MINIOR_METEOR_VIOLET,
     SPECIES_SINISTEA_ANTIQUE,
-    SPECIES_INDEEDEE_FEMALE,
+    SPECIES_INDEEDEE_F,
     SPECIES_SPRIGATITO,
     SPECIES_FUECOCO,
     SPECIES_QUAXLY,
@@ -577,10 +577,10 @@ static const u16 sIsValidSpecies[] = {
     SPECIES_TANDEMAUS,
     SPECIES_FIDOUGH,
     SPECIES_SMOLIV,
-    SPECIES_SQUAWKABILLY_GREEN_PLUMAGE,
-    SPECIES_SQUAWKABILLY_BLUE_PLUMAGE,
-    SPECIES_SQUAWKABILLY_YELLOW_PLUMAGE,
-    SPECIES_SQUAWKABILLY_WHITE_PLUMAGE,
+    SPECIES_SQUAWKABILLY_GREEN,
+    SPECIES_SQUAWKABILLY_BLUE,
+    SPECIES_SQUAWKABILLY_YELLOW,
+    SPECIES_SQUAWKABILLY_WHITE,
     SPECIES_NACLI,
     SPECIES_CHARCADET,
     SPECIES_TADBULB,
@@ -841,7 +841,7 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
               || partnerSpecies == SPECIES_BUNEARY || partnerSpecies == SPECIES_SWOOBAT || partnerSpecies == SPECIES_SWADLOON)
               && partnerLevel >= 16)
                 targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
-            else if (partnerSpecies == SPECIES_MEOWTH_ALOLAN && partnerLevel >= 28)
+            else if (partnerSpecies == SPECIES_MEOWTH_ALOLA && partnerLevel >= 28)
                 targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             else if ((partnerSpecies == SPECIES_GOLBAT || partnerSpecies == SPECIES_CHANSEY
                    || partnerSpecies == SPECIES_MUNCHLAX) && partnerLevel >= 35)
@@ -955,8 +955,8 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             }
             else if ((partnerSpecies == SPECIES_MURKROW || partnerSpecies == SPECIES_MISDREAVUS
                    || partnerSpecies == SPECIES_MUNNA || partnerSpecies == SPECIES_DOUBLADE
-                   || partnerSpecies == SPECIES_SINISTEA || partnerSpecies == SPECIES_SANDSHREW_ALOLAN
-                   || partnerSpecies == SPECIES_VULPIX_ALOLAN || partnerSpecies == SPECIES_SINISTEA_ANTIQUE)
+                   || partnerSpecies == SPECIES_SINISTEA || partnerSpecies == SPECIES_SANDSHREW_ALOLA
+                   || partnerSpecies == SPECIES_VULPIX_ALOLA || partnerSpecies == SPECIES_SINISTEA_ANTIQUE)
                    && partnerLevel >= 25)
             {
                 targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
@@ -964,15 +964,15 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
             else if ((partnerSpecies == SPECIES_PANSAGE || partnerSpecies == SPECIES_PANSEAR
                    || partnerSpecies == SPECIES_PANPOUR || partnerSpecies == SPECIES_COTTONEE
                    || partnerSpecies == SPECIES_PETILIL || partnerSpecies == SPECIES_MINCCINO
-                   || partnerSpecies == SPECIES_FLOETTE || partnerSpecies == SPECIES_FLOETTE_YELLOW_FLOWER
-                   || partnerSpecies == SPECIES_FLOETTE_ORANGE_FLOWER || partnerSpecies == SPECIES_FLOETTE_BLUE_FLOWER
-                   || partnerSpecies == SPECIES_FLOETTE_WHITE_FLOWER) && partnerLevel >= 15)
+                   || partnerSpecies == SPECIES_FLOETTE || partnerSpecies == SPECIES_FLOETTE_YELLOW
+                   || partnerSpecies == SPECIES_FLOETTE_ORANGE || partnerSpecies == SPECIES_FLOETTE_BLUE
+                   || partnerSpecies == SPECIES_FLOETTE_WHITE) && partnerLevel >= 15)
             {
                 targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
             else if ((partnerSpecies == SPECIES_EELEKTRIK || partnerSpecies == SPECIES_LAMPENT
                    || partnerSpecies == SPECIES_HELIOPTILE || partnerSpecies == SPECIES_CHARJABUG
-                   || partnerSpecies == SPECIES_DARUMAKA_GALARIAN) && partnerLevel >= 35)
+                   || partnerSpecies == SPECIES_DARUMAKA_GALAR) && partnerLevel >= 35)
             {
                 targetSpecies = gSpeciesInfo[partnerSpecies].evolutions[i].targetSpecies;
             }
@@ -983,12 +983,12 @@ static u16 GetWonderTradeEvolutionTargetSpecies(struct Pokemon *mon)
                 else
                     targetSpecies = SPECIES_APPLETUN;
             }
-            else if (partnerSpecies == SPECIES_SLOWPOKE_GALARIAN && partnerLevel >= 37)
+            else if (partnerSpecies == SPECIES_SLOWPOKE_GALAR && partnerLevel >= 37)
             {
                 if ((Random() % 2) == 0)
-                    targetSpecies = SPECIES_SLOWBRO_GALARIAN;
+                    targetSpecies = SPECIES_SLOWBRO_GALAR;
                 else
-                    targetSpecies = SPECIES_SLOWKING_GALARIAN;
+                    targetSpecies = SPECIES_SLOWKING_GALAR;
             }
             break;
         case EVO_ITEM_FEMALE:

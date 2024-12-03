@@ -127,13 +127,13 @@ AquaHideout_UnusedRubyMap2_EventScript_Magearna_Original_Color::
 # 68 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
     waitse
 # 69 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
-    playmoncry SPECIES_MAGEARNA_ORIGINAL_COLOR, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_MAGEARNA_ORIGINAL, CRY_MODE_ENCOUNTER
 # 70 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
     delay 40
 # 71 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
     waitmoncry
 # 72 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
-    setwildbattle SPECIES_MAGEARNA_ORIGINAL_COLOR, 20
+    setwildbattle SPECIES_MAGEARNA_ORIGINAL, 20
 # 73 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
     setflag FLAG_SYS_CTRL_OBJ_DELETE
 # 74 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
@@ -175,7 +175,7 @@ AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearnao::
 # 92 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
 AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearnao::
 # 93 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
-    setvar VAR_0x8004, SPECIES_MAGEARNA_ORIGINAL_COLOR
+    setvar VAR_0x8004, SPECIES_MAGEARNA_ORIGINAL
 # 94 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"
     goto Common_EventScript_LegendaryFlewAway
 # 95 "data/maps/AquaHideout_UnusedRubyMap2/scripts.pory"

@@ -229,26 +229,6 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedSelectButton && UseRegisteredKeyItemOnField() == TRUE)
         return TRUE;
 
-    if (input->pressedRButton && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
-    {
-        ObjectEventClearHeldMovementIfActive(&gObjectEvents[gPlayerAvatar.objectEventId]);
-        if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
-        {
-            gPlayerAvatar.flags -= PLAYER_AVATAR_FLAG_MACH_BIKE;
-            gPlayerAvatar.flags += PLAYER_AVATAR_FLAG_ACRO_BIKE;
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE);
-            PlaySE(SE_BIKE_HOP);
-        }
-        else
-        {
-            gPlayerAvatar.flags -= PLAYER_AVATAR_FLAG_ACRO_BIKE;
-            gPlayerAvatar.flags += PLAYER_AVATAR_FLAG_MACH_BIKE;
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
-            PlaySE(SE_BIKE_BELL);
-        }
-    }
-
-#if DEBUG_OVERWORLD_MENU == TRUE && DEBUG_OVERWORLD_IN_MENU == FALSE
     if(input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {
         PlaySE(SE_WIN_OPEN);

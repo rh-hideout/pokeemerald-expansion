@@ -551,13 +551,13 @@ VictoryRoad_1F_EventScript_Moltres_Galarian::
 # 276 "data/maps/VictoryRoad_1F/scripts.pory"
     waitse
 # 277 "data/maps/VictoryRoad_1F/scripts.pory"
-    playmoncry SPECIES_MOLTRES_GALARIAN, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_MOLTRES_GALAR, CRY_MODE_ENCOUNTER
 # 278 "data/maps/VictoryRoad_1F/scripts.pory"
     delay 40
 # 279 "data/maps/VictoryRoad_1F/scripts.pory"
     waitmoncry
 # 280 "data/maps/VictoryRoad_1F/scripts.pory"
-    setwildbattle SPECIES_MOLTRES_GALARIAN, 40
+    setwildbattle SPECIES_MOLTRES_GALAR, 40
 # 281 "data/maps/VictoryRoad_1F/scripts.pory"
     setflag FLAG_SYS_CTRL_OBJ_DELETE
 # 282 "data/maps/VictoryRoad_1F/scripts.pory"
@@ -599,7 +599,7 @@ VictoryRoad_1F_EventScript_DefeatedMoltresG::
 # 300 "data/maps/VictoryRoad_1F/scripts.pory"
 VictoryRoad_1F_EventScript_RanFromMoltresG::
 # 301 "data/maps/VictoryRoad_1F/scripts.pory"
-    setvar VAR_0x8004, SPECIES_MOLTRES_GALARIAN
+    setvar VAR_0x8004, SPECIES_MOLTRES_GALAR
 # 302 "data/maps/VictoryRoad_1F/scripts.pory"
     goto Common_EventScript_LegendaryFlewAway
 # 303 "data/maps/VictoryRoad_1F/scripts.pory"

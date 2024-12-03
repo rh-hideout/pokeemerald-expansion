@@ -6540,7 +6540,7 @@ static const struct TrainerMon sParty_BrendanRoute110Torchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
     .lvl = 18,
-    .species = SPECIES_ZORUA_HISUIAN,
+    .species = SPECIES_ZORUA_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -6563,7 +6563,7 @@ static const struct TrainerMon sParty_BrendanRoute119Torchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
     .lvl = 31,
-    .species = SPECIES_ZOROARK_HISUIAN,
+    .species = SPECIES_ZOROARK_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
@@ -6699,7 +6699,7 @@ static const struct TrainerMon sParty_MayRoute110Torchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
     .lvl = 18,
-    .species = SPECIES_ZORUA_HISUIAN,
+    .species = SPECIES_ZORUA_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -6722,7 +6722,7 @@ static const struct TrainerMon sParty_MayRoute119Torchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
     .lvl = 31,
-    .species = SPECIES_ZOROARK_HISUIAN,
+    .species = SPECIES_ZOROARK_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
@@ -8544,7 +8544,7 @@ static const struct TrainerMon sParty_BrendanLilycoveTorchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
     .lvl = 34,
-    .species = SPECIES_ZOROARK_HISUIAN,
+    .species = SPECIES_ZOROARK_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(24, 24, 24, 24, 24, 24),
@@ -8628,7 +8628,7 @@ static const struct TrainerMon sParty_MayLilycoveTorchic[] = {
     {
     .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
     .lvl = 34,
-    .species = SPECIES_ZOROARK_HISUIAN,
+    .species = SPECIES_ZOROARK_HISUI,
     },
     {
     .iv = TRAINER_PARTY_IVS(24, 24, 24, 24, 24, 24),

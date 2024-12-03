@@ -115,13 +115,13 @@ CaveOfOrigin_UnusedRubySapphireMap1_EventScript_Articuno_Galarian::
 # 58 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
     waitse
 # 59 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
-    playmoncry SPECIES_ARTICUNO_GALARIAN, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_ARTICUNO_GALAR, CRY_MODE_ENCOUNTER
 # 60 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
     delay 40
 # 61 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
     waitmoncry
 # 62 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
-    setwildbattle SPECIES_ARTICUNO_GALARIAN, 40
+    setwildbattle SPECIES_ARTICUNO_GALAR, 40
 # 63 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
     setflag FLAG_SYS_CTRL_OBJ_DELETE
 # 64 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
@@ -163,7 +163,7 @@ CaveOfOrigin_UnusedRubySapphireMap1_EventScript_DefeatedArticunoG::
 # 82 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
 CaveOfOrigin_UnusedRubySapphireMap1_EventScript_RanFromArticunoG::
 # 83 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
-    setvar VAR_0x8004, SPECIES_ARTICUNO_GALARIAN
+    setvar VAR_0x8004, SPECIES_ARTICUNO_GALAR
 # 84 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"
     goto Common_EventScript_LegendaryFlewAway
 # 85 "data/maps/CaveOfOrigin_UnusedRubySapphireMap1/scripts.pory"

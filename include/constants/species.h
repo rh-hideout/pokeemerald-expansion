@@ -1644,7 +1644,7 @@
 #define SPECIES_ALT_GARDEVOIR                           1528
 #define SPECIES_MISSINGNO                               1529
 
-#define SPECIES_EGG (SPECIES_MISSINGNO + 1)                                     (SPECIES_MIMIKYU_BUSTED_TOTEM + 1)
+#define SPECIES_EGG (SPECIES_MISSINGNO + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

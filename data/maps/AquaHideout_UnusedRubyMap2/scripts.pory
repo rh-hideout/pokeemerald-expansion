@@ -66,10 +66,10 @@ AquaHideout_UnusedRubyMap2_EventScript_Magearna_Original_Color::
     lock
     faceplayer
     waitse
-    playmoncry SPECIES_MAGEARNA_ORIGINAL_COLOR, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_MAGEARNA_ORIGINAL, CRY_MODE_ENCOUNTER
     delay 40
     waitmoncry
-    setwildbattle SPECIES_MAGEARNA_ORIGINAL_COLOR, 20
+    setwildbattle SPECIES_MAGEARNA_ORIGINAL, 20
     setflag FLAG_SYS_CTRL_OBJ_DELETE
     special BattleSetup_StartLegendaryBattle
     waitstate
@@ -90,7 +90,7 @@ AquaHideout_UnusedRubyMap2_EventScript_DefeatedMagearnao::
 
 
 AquaHideout_UnusedRubyMap2_EventScript_RanFromMagearnao::
-    setvar VAR_0x8004, SPECIES_MAGEARNA_ORIGINAL_COLOR
+    setvar VAR_0x8004, SPECIES_MAGEARNA_ORIGINAL
     goto Common_EventScript_LegendaryFlewAway
     end
 

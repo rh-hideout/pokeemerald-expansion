@@ -274,10 +274,10 @@ VictoryRoad_1F_EventScript_Moltres_Galarian::
     lock
     faceplayer
     waitse
-    playmoncry SPECIES_MOLTRES_GALARIAN, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_MOLTRES_GALAR, CRY_MODE_ENCOUNTER
     delay 40
     waitmoncry
-    setwildbattle SPECIES_MOLTRES_GALARIAN, 40
+    setwildbattle SPECIES_MOLTRES_GALAR, 40
     setflag FLAG_SYS_CTRL_OBJ_DELETE
     special BattleSetup_StartLegendaryBattle
     waitstate
@@ -298,7 +298,7 @@ VictoryRoad_1F_EventScript_DefeatedMoltresG::
 
 
 VictoryRoad_1F_EventScript_RanFromMoltresG::
-    setvar VAR_0x8004, SPECIES_MOLTRES_GALARIAN
+    setvar VAR_0x8004, SPECIES_MOLTRES_GALAR
     goto Common_EventScript_LegendaryFlewAway
     end
 

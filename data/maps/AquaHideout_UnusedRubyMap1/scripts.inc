@@ -115,13 +115,13 @@ AquaHideout_UnusedRubyMap1_EventScript_Zapdos_Galarian::
 # 58 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
     waitse
 # 59 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
-    playmoncry SPECIES_ZAPDOS_GALARIAN, CRY_MODE_ENCOUNTER
+    playmoncry SPECIES_ZAPDOS_GALAR, CRY_MODE_ENCOUNTER
 # 60 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
     delay 40
 # 61 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
     waitmoncry
 # 62 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
-    setwildbattle SPECIES_ZAPDOS_GALARIAN, 40
+    setwildbattle SPECIES_ZAPDOS_GALAR, 40
 # 63 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
     setflag FLAG_SYS_CTRL_OBJ_DELETE
 # 64 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
@@ -163,7 +163,7 @@ AquaHideout_UnusedRubyMap1_EventScript_DefeatedZapdosG::
 # 82 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
 AquaHideout_UnusedRubyMap1_EventScript_RanFromZapdosG::
 # 83 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
-    setvar VAR_0x8004, SPECIES_ZAPDOS_GALARIAN
+    setvar VAR_0x8004, SPECIES_ZAPDOS_GALAR
 # 84 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
     goto Common_EventScript_LegendaryFlewAway
 # 85 "data/maps/AquaHideout_UnusedRubyMap1/scripts.pory"
