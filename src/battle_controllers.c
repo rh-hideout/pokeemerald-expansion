@@ -31,9 +31,9 @@ static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
 EWRAM_DATA struct UnusedControllerStruct gUnusedControllerStruct = {}; // Debug? Unused code that writes to it, never read
 
-void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler);
-u8 gBattleControllerData[MAX_BATTLERS_COUNT]; // Used by the battle controllers to store misc sprite/task IDs for each battler
-void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler); // Controller's buffer complete function for each battler
+COMMON_DATA void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0};
+COMMON_DATA u8 gBattleControllerData[MAX_BATTLERS_COUNT] = {0}; // Used by the battle controllers to store misc sprite/task IDs for each battler
+COMMON_DATA void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0}; // Controller's buffer complete function for each battler
 
 static void CreateTasksForSendRecvLinkBuffers(void);
 static void InitLinkBtlControllers(void);
@@ -176,7 +176,7 @@ static void InitSinglePlayerBtlControllers(void)
             gBattlerPartyIndexes[3] = 3;
         }
     }
-    else if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+    else if (!IsDoubleBattle())
     {
         gBattleMainFunc = BeginBattleIntro;
 
@@ -418,7 +418,7 @@ static void InitLinkBtlControllers(void)
     s32 i;
     u8 multiplayerId;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+    if (!IsDoubleBattle())
     {
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
@@ -443,7 +443,7 @@ static void InitLinkBtlControllers(void)
             gBattlersCount = 2;
         }
     }
-    else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+    else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && IsDoubleBattle())
     {
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
@@ -852,7 +852,7 @@ void TryReceiveLinkBattleData(void)
         DestroyTask_RfuIdle();
         for (i = 0; i < GetLinkPlayerCount(); i++)
         {
-            if (GetBlockReceivedStatus() & gBitTable[i])
+            if (GetBlockReceivedStatus() & (1 << (i)))
             {
                 ResetBlockReceivedFlag(i);
                 recvBuffer = (u8 *)gBlockRecvBuffer[i];
@@ -899,7 +899,7 @@ static void Task_HandleCopyReceivedLinkBuffersData(u8 taskId)
         switch (gLinkBattleRecvBuffer[gTasks[taskId].data[15] + 0])
         {
         case 0:
-            if (gBattleControllerExecFlags & gBitTable[battler])
+            if (gBattleControllerExecFlags & (1u << battler))
                 return;
 
             memcpy(gBattleResources->bufferA[battler], &gLinkBattleRecvBuffer[gTasks[taskId].data[15] + LINK_BUFF_DATA], blockSize);
@@ -918,7 +918,7 @@ static void Task_HandleCopyReceivedLinkBuffersData(u8 taskId)
             break;
         case 2:
             var = gLinkBattleRecvBuffer[gTasks[taskId].data[15] + LINK_BUFF_DATA];
-            gBattleControllerExecFlags &= ~(gBitTable[battler] << (var * 4));
+            gBattleControllerExecFlags &= ~(1u << (battler + var * 4));
             break;
         }
 

@@ -3328,7 +3328,7 @@ static void AnimSolarBeamSmallOrb(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && gAnimMoveIndex == MOVE_CORE_ENFORCER)
+    if (IsDoubleBattle() && gAnimMoveIndex == MOVE_CORE_ENFORCER)
     {
         CoreEnforcerLoadBeamTarget(sprite);
     }
@@ -5495,8 +5495,8 @@ static void AnimMilkBottle_Step2(struct Sprite *sprite, int unk1, int unk2)
 
 void AnimGrantingStars(struct Sprite *sprite)
 {
-    if (!gBattleAnimArgs[2])
-        SetSpriteCoordsToAnimAttackerCoords(sprite);
+    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[2], sprite, FALSE))
+        return;
 
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
     sprite->y += gBattleAnimArgs[1];
@@ -6616,12 +6616,29 @@ static void ReloadBattlerSprites(u32 battler, struct Pokemon *party)
     UpdateIndicatorVisibilityAndType(gHealthboxSpriteIds[battler], TRUE);
 
     // Try to recreate shadow sprite
-    if (gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteId < MAX_SPRITES)
+    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
-        DestroySprite(&gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteId]);
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteId = MAX_SPRITES;
-        CreateEnemyShadowSprite(battler);
-        SetBattlerShadowSpriteCallback(battler, GetMonData(mon, MON_DATA_SPECIES));
+        // Both of these *should* be true, but use an OR just to be certain
+        if (gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary < MAX_SPRITES
+            || gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary < MAX_SPRITES)
+        {
+            DestroySprite(&gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary]);
+            DestroySprite(&gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary]);
+            gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = MAX_SPRITES;
+            gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary = MAX_SPRITES;
+            CreateEnemyShadowSprite(battler);
+            SetBattlerShadowSpriteCallback(battler, GetMonData(mon, MON_DATA_SPECIES));
+        }
+    }
+    else
+    {
+        if (gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary < MAX_SPRITES)
+        {
+            DestroySprite(&gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary]);
+            gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = MAX_SPRITES;
+            CreateEnemyShadowSprite(battler);
+            SetBattlerShadowSpriteCallback(battler, GetMonData(mon, MON_DATA_SPECIES));
+        }
     }
 }
 

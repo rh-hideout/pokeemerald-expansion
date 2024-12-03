@@ -284,10 +284,12 @@
 // Whether Object Event is an OW pokemon
 #define IS_OW_MON_OBJ(obj) ((obj)->graphicsId >= OBJ_EVENT_GFX_MON_BASE)
 
-#define SHADOW_SIZE_S    0
-#define SHADOW_SIZE_M    1
-#define SHADOW_SIZE_L    2
-#define SHADOW_SIZE_NONE 3   // Originally SHADOW_SIZE_XL, which went unused due to shadowSize in ObjectEventGraphicsInfo being only 2 bits.
+#define SHADOW_SIZE_S       0
+#define SHADOW_SIZE_M       1
+#define SHADOW_SIZE_L       2
+#define SHADOW_SIZE_NONE    3   // Originally SHADOW_SIZE_XL, which went unused due to shadowSize in ObjectEventGraphicsInfo being only 2 bits.
+
+#define SHADOW_SIZE_XL_BATTLE_ONLY  SHADOW_SIZE_NONE    // Battle-only definition for XL shadow size.
 
 #define F_INANIMATE                        (1 << 6)
 #define F_DISABLE_REFLECTION_PALETTE_LOAD  (1 << 7)

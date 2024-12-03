@@ -17,8 +17,6 @@
 #include "util.h"
 #include "constants/battle_anim.h"
 
-#define IS_DOUBLE_BATTLE() ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
-
 extern const struct OamData gOamData_AffineNormal_ObjNormal_64x64;
 
 static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite);
@@ -118,11 +116,7 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
         }
         else
         {
-            if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
-                mon = &gEnemyParty[gBattlerPartyIndexes[battlerId]];
-            else
-                mon = &gPlayerParty[gBattlerPartyIndexes[battlerId]];
-
+            mon = GetPartyBattlerData(battlerId);
             illusionMon = GetIllusionMonPtr(battlerId);
             if (illusionMon != NULL)
                 mon = illusionMon;
@@ -663,12 +657,6 @@ static void UNUSED TranslateSpriteToBattleAttackerPos(struct Sprite *sprite)
 #undef sStartY
 #undef sTargetY
 
-static void UNUSED EndUnkPaletteAnim(struct Sprite *sprite)
-{
-    PaletteStruct_ResetById(sprite->data[5]);
-    DestroySpriteAndMatrix(sprite);
-}
-
 void RunStoredCallbackWhenAffineAnimEnds(struct Sprite *sprite)
 {
     if (sprite->affineAnimEnded)
@@ -872,11 +860,6 @@ bool8 IsBattlerSpritePresent(u8 battlerId)
         }
         return TRUE;
     }
-}
-
-bool8 IsDoubleBattle(void)
-{
-    return IS_DOUBLE_BATTLE();
 }
 
 #define BG_ANIM_PAL_1        8
@@ -2151,10 +2134,14 @@ s16 GetBattlerSpriteCoordAttr(u8 battlerId, u8 attr)
             species = SanitizeSpeciesId(species);
             if (species == SPECIES_UNOWN)
                 species = GetUnownSpeciesId(personality);
+
+        #if P_GENDER_DIFFERENCES
             if (gSpeciesInfo[species].backPicFemale != NULL && IsPersonalityFemale(species, personality))
                 size = gSpeciesInfo[species].backPicSizeFemale;
             else
+        #endif
                 size = gSpeciesInfo[species].backPicSize;
+
             y_offset = gSpeciesInfo[species].backPicYOffset;
         }
         else
@@ -2174,10 +2161,14 @@ s16 GetBattlerSpriteCoordAttr(u8 battlerId, u8 attr)
             species = SanitizeSpeciesId(species);
             if (species == SPECIES_UNOWN)
                 species = GetUnownSpeciesId(personality);
+
+        #if P_GENDER_DIFFERENCES
             if (gSpeciesInfo[species].frontPicFemale != NULL && IsPersonalityFemale(species, personality))
                 size = gSpeciesInfo[species].frontPicSizeFemale;
             else
+        #endif
                 size = gSpeciesInfo[species].frontPicSize;
+
             y_offset = gSpeciesInfo[species].frontPicYOffset;
         }
     }

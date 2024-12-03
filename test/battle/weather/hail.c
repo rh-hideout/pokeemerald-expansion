@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
     } WHEN {
         TURN {MOVE(player, MOVE_HAIL);}
     } SCENE {
-        MESSAGE("Foe Wobbuffet is pelted by HAIL!");
+        MESSAGE("The opposing Wobbuffet is buffeted by the hail!");
         HP_BAR(opponent, captureDamage: &hailDamage);
    } THEN { EXPECT_EQ(hailDamage, opponent->maxHP / 16); }
 }
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Hail damage does not affect Ice-type Pokémon")
     } WHEN {
         TURN {MOVE(player, MOVE_HAIL);}
     } SCENE {
-        NOT MESSAGE("Foe Glalie is pelted by HAIL!");
+        NOT MESSAGE("The opposing Glalie is buffeted by the hail!");
     }
 }
 
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active")
 DOUBLE_BATTLE_TEST("Hail deals damage based on turn order")
 {
     GIVEN {
-        PLAYER(SPECIES_GLALIE);
+        PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(3); }
