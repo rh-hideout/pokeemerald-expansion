@@ -2622,6 +2622,8 @@ gCryTable::
 	cry Cry_Dredalisk
 
 	cry Cry_Adentity
+
+	cry Cry_Coilspill
 .endif
 
 	.align 2
@@ -5249,4 +5251,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Dredalisk
 
 	cry_reverse Cry_Adentity
+
+	cry_reverse Cry_Coilspill
 .endif

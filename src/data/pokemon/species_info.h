@@ -4343,6 +4343,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Hydroil)
        .levelUpLearnset = sHydroilLevelUpLearnset,
     },
+        [SPECIES_COILSPILL] =
+    { 
+       .baseHP        = 92,
+       .baseAttack    = 82,
+       .baseDefense   = 62,
+       .baseSpeed     = 112,
+       .baseSpAttack  = 102,
+       .baseSpDefense = 72,
+       .types = { TYPE_ICE, TYPE_POISON },
+       .catchRate = 47,
+       .expYield = 200,
+       .evYield_Speed  = 2,
+       .evYield_SpAttack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 190,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_DRAGON, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_COMPETITIVE, ABILITY_ANGER_POINT, ABILITY_SNOW_WARNING, ABILITY_MERCILESS}, 
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Coilspill"),
+       .cryId = CRY_COILSPILL,
+       .natDexNum = NATIONAL_DEX_COILSPILL,
+       .categoryName = _("Symbiosis"),
+       .height = 31,
+       .weight = 3000,
+       .description = COMPOUND_STRING(
+           "Though both heads still fight each other\n"
+           "Coilspill's heads try to work together \n"
+           "more often then not, acheiving balance\n"
+           "when hunting."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Coilspill,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Coilspill,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Coilspill,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Coilspill,
+       .shinyPalette = gMonShinyPalette_Coilspill,
+       .iconSprite = gMonIcon_Coilspill,
+       .iconPalIndex = 2,
+       FOOTPRINT(Coilspill)
+       .levelUpLearnset = sCoilspillLevelUpLearnset,
+    },
 
         [SPECIES_JUMBLEGORE] =
     { 
@@ -5345,7 +5400,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggCycles = 25,
        .friendship = 50,
        .growthRate = GROWTH_MEDIUM_SLOW,
-       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS },
        .abilities = { ABILITY_FOREWARN, ABILITY_UNNERVE, ABILITY_ANGER_POINT, ABILITY_SHADOW_TAG}, //Replace Forewarn with suddenly once coded
        .bodyColor = BODY_COLOR_RED,
        .isLegendary = FALSE,

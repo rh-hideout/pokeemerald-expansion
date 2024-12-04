@@ -6552,6 +6552,10 @@ Cry_Dredalisk::
 Cry_Adentity::
 	.incbin "sound/direct_sound_samples/cries/adentity.bin"
 
+	.align 2
+Cry_Coilspill::
+	.incbin "sound/direct_sound_samples/cries/coilspill.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

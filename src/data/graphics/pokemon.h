@@ -22647,6 +22647,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/icon.4bpp");
    const u8 gMonFootprint_Hydroil[] = INCBIN_U8("graphics/pokemon/hydroil/footprint.1bpp");
 
+   const u32 gMonFrontPic_Coilspill[] = INCBIN_U32("graphics/pokemon/coilspill/front.4bpp.lz");
+   const u32 gMonBackPic_Coilspill[] = INCBIN_U32("graphics/pokemon/coilspill/back.4bpp.lz");
+   const u32 gMonPalette_Coilspill[] = INCBIN_U32("graphics/pokemon/coilspill/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Coilspill[] = INCBIN_U32("graphics/pokemon/coilspill/shiny.gbapal.lz");
+   const u8 gMonIcon_Coilspill[] = INCBIN_U8("graphics/pokemon/coilspill/icon.4bpp");
+   const u8 gMonFootprint_Coilspill[] = INCBIN_U8("graphics/pokemon/coilspill/footprint.1bpp");
+
    const u32 gMonFrontPic_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/front.4bpp.lz");
    const u32 gMonBackPic_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/back.4bpp.lz");
    const u32 gMonPalette_Jumblegore[] = INCBIN_U32("graphics/pokemon/jumblegore/normal.gbapal.lz");

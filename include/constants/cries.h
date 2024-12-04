@@ -2526,6 +2526,7 @@ enum {
     CRY_AQUAOS,
     CRY_DREDALISK,
     CRY_ADENTITY,
+    CRY_COILSPILL,
 
     CRY_COUNT,
 };
