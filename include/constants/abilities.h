@@ -365,21 +365,22 @@
 
 
 #define ABILITY_VENOM_SURGE 334     //gale wings for poison moves
-#define ABILITY_GRAVITY_SURGE 335   //sets gravity on entry
-#define ABILITY_MAGICAL_SURGE 336   //sets magic room on entry
-#define ABILITY_WONDER_SURGE 337    //sets wonder room on entry
-#define ABILITY_RESOLVE 338         //sets mist on entry
+#define ABILITY_GRAVITY_SURGE 335   //sets gravity on entry                                                     TEST
+#define ABILITY_MAGICAL_SURGE 336   //sets magic room on entry                                                  TEST
+#define ABILITY_WONDER_SURGE 337    //sets wonder room on entry                                                 TEST
+#define ABILITY_RESOLVE 338         //sets mist on entry                                                        TEST
 #define ABILITY_THICK_STEAM 339     //sets mist on hit              HAVENT TRIED YET
-#define ABILITY_LUCKY_SPIRIT 340    //sets lucky chant on entry
+#define ABILITY_LUCKY_SPIRIT 340    //sets lucky chant on entry                                                 TEST
 #define ABILITY_BOOMBOX 341         //sets uproar on entry          UNSURE HOW TO MAKE
-#define ABILITY_FILTHY_FORM 342     //sets mud sport on entry
+#define ABILITY_FILTHY_FORM 342     //sets mud sport on entry                                                   TEST
 #define ABILITY_ENDLESS_HUNGER 343  //as long as holdng a berry recover hp per turn UNSURE HOW TO MAKE
-#define ABILITY_DRAGONATE 344       //pixelate for dragons
+#define ABILITY_DRAGONATE 344       //pixelate for dragons                                                      DONE
 #define ABILITY_VENGEFUL 345        //chance to ghost curse when hit with a contact move
+#define ABILITY_TRICKSTER 346       //special intimidate                NEED A BATTLE SCRIPT FOR BATTLE_UTIL also build logic
 
 //remember to build the description doc for 328+
 
-#define ABILITIES_COUNT_GEN9 346
+#define ABILITIES_COUNT_GEN9 347
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

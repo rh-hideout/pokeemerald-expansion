@@ -1856,3 +1856,4 @@ const u8 gText_ExpShareOff[] = _("The Exp. Share has been turned off.{PAUSE_UNTI
 const u8 gText_BasePointsResetToZero[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
 const u8 gText_Fertilize[] = _("FERTILIZE");
 const u8 gText_PlantBerry[] = _("PLANT BERRY");
+const u8 gText_Moves_Menu[] = _("CHANGE MOVES");

@@ -85,6 +85,8 @@
 #define B_BUFF_NEGATIVE_FLAVOR          8
 #define B_BUFF_ABILITY                  9
 #define B_BUFF_ITEM                     10
+#define B_BUFF_POCKET                   11
+
 
 #define B_BUFF_PLACEHOLDER_BEGIN        0xFD
 #define B_BUFF_EOS                      0xFF
@@ -207,6 +209,15 @@
     textVar[1] = B_BUFF_MON_NICK;                               \
     textVar[2] = battler;                                       \
     textVar[3] = partyId;                                       \
+    textVar[4] = B_BUFF_EOS;                                    \
+}
+
+#define PREPARE_POCKET_BUFFER(textVar, item)                    \
+{                                                               \
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;                      \
+    textVar[1] = B_BUFF_POCKET;                                 \
+    textVar[2] = item;                                          \
+    textVar[3] = (item & 0xFF00) >> 8;                          \
     textVar[4] = B_BUFF_EOS;                                    \
 }
 

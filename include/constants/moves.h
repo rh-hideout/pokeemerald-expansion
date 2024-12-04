@@ -1040,8 +1040,27 @@
 #define MOVE_DRACO_STREAM 975       //TEST
 #define MOVE_SPARKLY_SPRITZ 976     //TEST
 #define MOVE_INTIMIDATING_AURA 977      //WIP follow me but ghosts immune
+#define MOVE_INFERNAL_BLAST 978
+#define MOVE_WHIMSICAL_STORM 979
+#define MOVE_SHELL_SWORD 980
+#define MOVE_SPLINTER_FIST 981 
+#define MOVE_CRIMSON_STORM 982      
+#define MOVE_MIST_SLASH 983         
+#define MOVE_THUNDER_SPEAR 984      
+#define MOVE_POISON_HORN 985        
+#define MOVE_WATER_ARROW 986        
+#define MOVE_GIANT_BLOOM 987        
+#define MOVE_MAGMA_PUNCH 988        
+#define MOVE_DUAL_CANNON 989        //NTM
+#define MOVE_GATOR_SLIDE 990        
+#define MOVE_TANGLE_ARROW 991       
+#define MOVE_WINDCHILL 992          
+//charge turn in snow
+//charge turn in sand
+//do defensive growth in sand
 
-#define MOVES_COUNT_GEN9 978
+
+#define MOVES_COUNT_GEN9 993
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

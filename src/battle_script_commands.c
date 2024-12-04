@@ -3749,6 +3749,21 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 gBattlescriptCurrInstr = BattleScript_DefogTryHazards;
             }
                 break; 
+
+        case MOVE_EFFECT_TYPE_DOT:
+        {
+            u8 side = GetBattlerSide(gBattlerTarget);
+            if (!(gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES))
+            {
+                gSideStatuses[side] |= SIDE_STATUS_DAMAGE_NON_TYPES;
+                gSideTimers[side].damageNonTypesTimer = 5; // damage is dealt for 4 turns, ends on 5th
+                gSideTimers[side].damageNonTypesType = gMovesInfo[gCurrentMove].type;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                ChooseDamageNonTypesString(gMovesInfo[gCurrentMove].type);
+                gBattlescriptCurrInstr = BattleScript_DamageNonTypesStarts;
+            }
+            break;
+        }
            
        case MOVE_EFFECT_GRASSY_TERRAIN:
                 if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)) 
@@ -4679,7 +4694,33 @@ static void Cmd_getexp(void)
             gBattleScripting.getexpState = 6; // we're done
         }
         break;
-    case 6: // increment instruction
+    case 6: // check if wild Pokémon has a hold item after fainting
+        if (gBattleStruct->wildVictorySong && gBattleMons[gBattlerFainted].item != ITEM_NONE)
+        {
+            PrepareStringBattle(STRINGID_PKMNDROPPEDITEM, gBattleStruct->expGetterBattlerId);
+            gBattleScripting.getexpState = 7; // add item to bag
+        }
+        else
+        {
+            gBattleScripting.getexpState = 8; // no hold item, end battle
+        }
+        break;
+    case 7: // add dropped item to bag if space available
+        if (CheckBagHasSpace(gBattleMons[gBattlerFainted].item, 1) == TRUE)
+        {
+            AddBagItem(gBattleMons[gBattlerFainted].item, 1);
+            PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerFainted].item);
+            PREPARE_POCKET_BUFFER(gBattleTextBuff2, gBattleMons[gBattlerFainted].item);
+            PrepareStringBattle(STRINGID_ADDEDTOBAG, gBattleStruct->expGetterBattlerId);
+            gBattleScripting.getexpState = 8;
+        }
+        else
+        {
+            PrepareStringBattle(STRINGID_BAGISFULL, gBattleStruct->expGetterBattlerId);
+            gBattleScripting.getexpState = 8;
+        }
+        break;
+    case 8: // increment instruction
         if (gBattleControllerExecFlags == 0)
         {
             // not sure why gf clears the item and ability here

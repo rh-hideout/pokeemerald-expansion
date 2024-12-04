@@ -454,6 +454,10 @@ static const u8 sText_SpAttack[] = _("Sp. Atk");
 static const u8 sText_SpDefense[] = _("Sp. Def");
 static const u8 sText_Accuracy[] = _("accuracy");
 static const u8 sText_Evasiveness[] = _("evasiveness");
+static const u8 sText_PkmnDroppedItem[] = _("Wild {B_OPPONENT_MON1_NAME} dropped an item!\p");
+static const u8 sText_AddedToBag[] = _("{B_PLAYER_NAME} put away the {B_BUFF1}\nin the {B_BUFF2} POCKET.\p");
+static const u8 sText_BagIsFull[] = _("Too bad! The BAG is full…\p");
+
 
 const u8 *const gStatNamesTable[NUM_BATTLE_STATS] =
 {
@@ -533,6 +537,7 @@ static const u8 sText_Trainer1WinText[];
 static const u8 sText_Trainer2WinText[];
 static const u8 sText_TwoInGameTrainersDefeated[];
 static const u8 sText_Trainer2LoseText[];
+
 
 // New battle strings.
 static const u8 sText_EnduredViaSturdy[] = _("{B_DEF_NAME_WITH_PREFIX} endured\nthe hit using {B_DEF_ABILITY}!");
@@ -848,6 +853,8 @@ static const u8 sText_SupersweetAromaWafts[] = _("A supersweet aroma is wafting 
 static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
 static const u8 sText_DucknWeave[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY}\nmakes it harder to hit this turn.");
 static const u8 sText_PkmnMakesFireMiss[] = _("{B_DEF_NAME_WITH_PREFIX} makes FIRE\nmoves miss with {B_DEF_ABILITY}!");
+static const u8 sText_HydroCannonCharging[] = _("{B_ATK_NAME_WITH_PREFIX} absorbed\nenergy!");
+static const u8 sText_BlastBurnCharging[] = _("{B_ATK_NAME_WITH_PREFIX} absorbed\nenergy!");
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 {
@@ -1367,6 +1374,9 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNBOXLANETTESPCFULL - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredLanettesPCBoxFull,
     [STRINGID_TRAINER1WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer1WinText,
     [STRINGID_TRAINER2WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer2WinText,
+    [STRINGID_PKMNDROPPEDITEM - BATTLESTRINGS_TABLE_START] = sText_PkmnDroppedItem,
+    [STRINGID_ADDEDTOBAG - BATTLESTRINGS_TABLE_START] = sText_AddedToBag,
+    [STRINGID_BAGISFULL - BATTLESTRINGS_TABLE_START] = sText_BagIsFull,
     [STRINGID_ENDUREDSTURDY - BATTLESTRINGS_TABLE_START] = sText_EnduredViaSturdy,
     [STRINGID_POWERHERB - BATTLESTRINGS_TABLE_START] = sText_PowerHerbActivation,
     [STRINGID_HURTBYITEM - BATTLESTRINGS_TABLE_START] = sText_HurtByItem,
@@ -1551,6 +1561,8 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNALREADYHASFROSTBITE - BATTLESTRINGS_TABLE_START] = sText_PkmnAlreadyHasFrostbite,
     [STRINGID_PKMNSXPREVENTSFROSTBITE - BATTLESTRINGS_TABLE_START] = sText_PkmnsXPreventsFrostbite,
     [STRINGID_PKMNMAKESFIREMISS - BATTLESTRINGS_TABLE_START] = sText_PkmnMakesFireMiss,
+    [STRINGID_HYDROCANNONISCHARGING - BATTLESTRINGS_TABLE_START] = sText_HydroCannonCharging,
+    [STRINGID_BLASTBURNISCHARGING - BATTLESTRINGS_TABLE_START] = sText_BlastBurnCharging,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -2520,6 +2532,18 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
 	.bgColor = 14,
 	.shadowColor = 11,
 },
+[B_WIN_MOVE_DESCRIPTION] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .letterSpacing = 0,
+        .lineSpacing = 0,
+        .speed = 0,
+        .fgColor = TEXT_DYNAMIC_COLOR_4,
+        .bgColor = TEXT_DYNAMIC_COLOR_5,
+        .shadowColor = TEXT_DYNAMIC_COLOR_6,
+    },
 };
 
 static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
@@ -2752,6 +2776,18 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .fgColor = 2,
         .bgColor = 1,
         .shadowColor = 3,
+    },
+    [B_WIN_MOVE_DESCRIPTION] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .letterSpacing = 0,
+        .lineSpacing = 0,
+        .speed = 0,
+        .fgColor = TEXT_DYNAMIC_COLOR_4,
+        .bgColor = TEXT_DYNAMIC_COLOR_5,
+        .shadowColor = TEXT_DYNAMIC_COLOR_6,
     },
 };
 
@@ -3872,6 +3908,11 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             {
                 CopyItemName(hword, dst);
             }
+            srcID += 3;
+            break;
+        case B_BUFF_POCKET:
+            hword = T1_READ_16(&src[srcID + 1]);
+            CopyPocketName(hword, dst);
             srcID += 3;
             break;
         }

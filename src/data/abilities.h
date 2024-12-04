@@ -2609,7 +2609,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_DUCK_N_WEAVE] =
     {
         .name = _("Duck'n'Weave"),
-        .description = COMPOUND_STRING("Pkmn is more evasive after punching each turn."),
+        .description = COMPOUND_STRING("More evasive after punching per turn."),
         .aiRating = 4,
     },
     [ABILITY_SUN_SOUL] =
@@ -2627,31 +2627,31 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_LOVER] =
     {
         .name = _("Lover"),
-        .description = COMPOUND_STRING("If an enemy is in love, take half damage."),
+        .description = COMPOUND_STRING("If enemy is in love, take 1/2 dmg."),
         .aiRating = 4,
     },
     [ABILITY_NOXIOUS_ARMOR] =
     {
         .name = _("Noxious Armor"),
-        .description = COMPOUND_STRING("If an enemy is poisoned, take half damage."),
+        .description = COMPOUND_STRING("If an enemy has psn, take 1/2 dmg."),
         .aiRating = 4,
     },
     [ABILITY_DROWSY_AURA] =
     {
         .name = _("Drowsy Aura"),
-        .description = COMPOUND_STRING("Chance to sleep on contact."),
+        .description = COMPOUND_STRING("May cause sleep on contact."),
         .aiRating = 4,
     },
     [ABILITY_BULLY] =
     {
         .name = _("Bully"),
-        .description = COMPOUND_STRING("Chance to reduce DEF when using a contact move."),
+        .description = COMPOUND_STRING("May -DEF using a contact move."),
         .aiRating = 4,
     },
     [ABILITY_SERENE_STRIKE] =
     {
         .name = _("Serene Strike"),
-        .description = COMPOUND_STRING("STAB power x1.75 and secondary effect chance x1.5."),
+        .description = COMPOUND_STRING("STAB x1.75, sec. effect chance x1.5."),
         .aiRating = 5,
     },
     [ABILITY_PRIDE] =
@@ -2663,37 +2663,37 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_ABSOLUTE_ZERO] =
     {
         .name = _("Absolute Zero"),
-        .description = COMPOUND_STRING("In snow, incoming damage is reduced."),
+        .description = COMPOUND_STRING("In snow, incoming dmg reduced."),
         .aiRating = 4,
     },
     [ABILITY_BOUNTIFUL_BLOOM] =
     {
         .name = _("Bountiful Bloom"),
-        .description = COMPOUND_STRING("In rain, boosts users grass and ground type moves."),
+        .description = COMPOUND_STRING("In rain, boosts grass/ground moves."),
         .aiRating = 4,
     },
     [ABILITY_FOCUS_FLOOD] =
     {
         .name = _("Focus Flood"),
-        .description = COMPOUND_STRING("In rain, incoming damage is reduced."),
+        .description = COMPOUND_STRING("In rain, incoming dmg reduced."),
         .aiRating = 4,
     },
     [ABILITY_HEAT_WAVE] =
     {
         .name = _("Heat Wave"),
-        .description = COMPOUND_STRING("In sun, user cannot be damaged by water type moves."),
+        .description = COMPOUND_STRING("In sun, cannot be dmg'd by water moves."),
         .aiRating = 4,
     },
     [ABILITY_SUN_MAGE] =
     {
         .name = _("Sun Mage"),
-        .description = COMPOUND_STRING("In sun, user resists fire and boosts grass moves."),
+        .description = COMPOUND_STRING("In sun, resists fire, boosts grass moves."),
         .aiRating = 5,
     },
     [ABILITY_WIND_WALKER] =
     {
         .name = _("Wind Walker"),
-        .description = COMPOUND_STRING("Flying dmg 1.5x, ground immune, 2x dmg from electric."),
+        .description = COMPOUND_STRING("Flying dmg 1.5x, ground x0, 2x dmg electric."),
         .aiRating = 5,
     },
     [ABILITY_ZEAL] =

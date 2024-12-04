@@ -42,6 +42,8 @@
 #include "level_caps.h"
 #include "constants/battle_move_effects.h"
 #include "event_data.h"
+#include "menu.h"
+#include "pokemon_summary_screen.h"
 
 static void PlayerBufferExecCompleted(u32 battler);
 static void PlayerHandleLoadMonSprite(u32 battler);
@@ -85,6 +87,7 @@ static void MoveSelectionDisplayPpNumber(u32 battler);
 static void MoveSelectionDisplayPpString(u32 battler);
 static void MoveSelectionDisplayMoveTypeDoubles(u32 battler, u8 targetId);
 static void MoveSelectionDisplayMoveType(u32 battler);
+static void MoveSelectionDisplayMoveDescription(u32 battler);      //possibly change to u32 battler if not working? for move desc in battle
 static void MoveSelectionDisplayMoveNames(u32 battler);
 static void HandleMoveSwitching(u32 battler);
 static void SwitchIn_HandleSoundAndEnd(u32 battler);
@@ -96,6 +99,7 @@ static void Task_SetControllerToWaitForString(u8);
 static void Task_GiveExpWithExpBar(u8);
 static void Task_UpdateLvlInHealthbox(u8);
 static void PrintLinkStandbyMsg(void);
+static void MoveSelectionDisplaySplitIcon(u32 battler);
 
 static void ReloadMoveNames(u32 battler);
 
@@ -190,6 +194,7 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
 
+static EWRAM_DATA bool8 sDescriptionSubmenu = 0;
 static EWRAM_DATA bool8 sAckBallUseBtn = FALSE;
 static EWRAM_DATA bool8 sBallSwapped = FALSE;
 
@@ -717,7 +722,7 @@ static void HandleInputChooseMove(u32 battler)
     else
         gPlayerDpadHoldFrames = 0;
 
-    if (JOY_NEW(A_BUTTON))
+    if (JOY_NEW(A_BUTTON) && !sDescriptionSubmenu)
     {
         PlaySE(SE_SELECT);
         if (moveInfo->moves[gMoveSelectionCursor[battler]] == MOVE_CURSE)
@@ -831,7 +836,7 @@ static void HandleInputChooseMove(u32 battler)
             break;
         }
     }
-    else if (JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)
+    else if ((JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)  && !sDescriptionSubmenu)
     {
         PlaySE(SE_SELECT);
         if (gBattleStruct->zmove.viewing)
@@ -860,6 +865,8 @@ static void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryChangeZIndicator(battler, gMoveSelectionCursor[battler]);
+            if (sDescriptionSubmenu)
+                MoveSelectionDisplayMoveDescription(battler);
         }
     }
     else if (JOY_NEW(DPAD_RIGHT) && !gBattleStruct->zmove.viewing)
@@ -874,6 +881,8 @@ static void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryChangeZIndicator(battler, gMoveSelectionCursor[battler]);
+            if (sDescriptionSubmenu)
+                MoveSelectionDisplayMoveDescription(battler);
         }
     }
     else if (JOY_NEW(DPAD_UP) && !gBattleStruct->zmove.viewing)
@@ -887,6 +896,8 @@ static void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryChangeZIndicator(battler, gMoveSelectionCursor[battler]);
+            if (sDescriptionSubmenu)
+                MoveSelectionDisplayMoveDescription(battler);
         }
     }
     else if (JOY_NEW(DPAD_DOWN) && !gBattleStruct->zmove.viewing)
@@ -901,9 +912,11 @@ static void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryChangeZIndicator(battler, gMoveSelectionCursor[battler]);
+            if (sDescriptionSubmenu)
+                MoveSelectionDisplayMoveDescription(battler);
         }
     }
-    else if (JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing)
+    else if (JOY_NEW(SELECT_BUTTON)  && !sDescriptionSubmenu && !gBattleStruct->zmove.viewing)
     {
         if (gNumberOfMovesToChoose > 1 && !(gBattleTypeFlags & BATTLE_TYPE_LINK))
         {
@@ -951,6 +964,24 @@ static void HandleInputChooseMove(u32 battler)
             ChangeDynamaxTriggerSprite(gBattleStruct->dynamax.triggerSpriteId, gBattleStruct->dynamax.playerSelect);
             PlaySE(SE_SELECT);
         }
+    }
+    if (sDescriptionSubmenu)
+    {
+        if (JOY_NEW(START_BUTTON) || JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
+        {
+            sDescriptionSubmenu = FALSE;
+            FillWindowPixelBuffer(B_WIN_MOVE_DESCRIPTION, PIXEL_FILL(0));
+            ClearStdWindowAndFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
+            CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_GFX);
+            PlaySE(SE_SELECT);
+            MoveSelectionDisplayPpNumber(battler);
+            MoveSelectionDisplayMoveType(battler);
+        }
+    }
+    else if (JOY_NEW(START_BUTTON)) //AdditionalBattleInfo
+    {
+        sDescriptionSubmenu = TRUE;
+        MoveSelectionDisplayMoveDescription(battler);
     }
 }
 
@@ -1759,6 +1790,48 @@ static void MoveSelectionDisplayPpNumber(u32 battler)
 
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_PP_REMAINING);
 }
+
+static void MoveSelectionDisplayMoveDescription(u32 battler)
+{
+    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]); 
+    u16 move = moveInfo->moves[gMoveSelectionCursor[battler]];
+    u16 pwr = gMovesInfo[move].power;         
+    u16 acc = gMovesInfo[move].accuracy;
+    s16 pri = gMovesInfo[move].priority;
+    u8 pwr_num[3], acc_num[3], pri_num[3], i;
+    u8 pwr_desc[7] = _("PWR: ");
+    u8 acc_desc[7] = _("ACC: ");
+    u8 pri_desc[7] = _("PRI: ");
+    u8 pwr_start[] = _("{CLEAR_TO 0x03}");
+    u8 acc_start[] = _("{CLEAR_TO 0x38}");
+    u8 pri_start[] = _("{CLEAR_TO 0x6D}");
+    LoadMessageBoxAndBorderGfx();
+    DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
+    if (pwr < 2)
+        StringCopy(pwr_num, gText_BattleSwitchWhich5);
+    else
+        ConvertIntToDecimalStringN(pwr_num, pwr, STR_CONV_MODE_LEFT_ALIGN, 3);
+    if (acc < 2)
+        StringCopy(acc_num, gText_BattleSwitchWhich5);
+    else
+        ConvertIntToDecimalStringN(acc_num, acc, STR_CONV_MODE_LEFT_ALIGN, 3);
+    ConvertIntToDecimalStringN(pri_num, pri, STR_CONV_MODE_LEFT_ALIGN, 2);
+    StringCopy(gDisplayedStringBattle, pwr_start);
+    StringAppend(gDisplayedStringBattle, pwr_desc);
+    StringAppend(gDisplayedStringBattle, pwr_num);
+    StringAppend(gDisplayedStringBattle, acc_start);
+    StringAppend(gDisplayedStringBattle, acc_desc);
+    StringAppend(gDisplayedStringBattle, acc_num);
+    StringAppend(gDisplayedStringBattle, pri_start);
+    StringAppend(gDisplayedStringBattle, pri_desc);
+    StringAppend(gDisplayedStringBattle, pri_num);
+    StringAppend(gDisplayedStringBattle, gText_NewLine);
+    StringAppend(gDisplayedStringBattle, gMovesInfo[move].description);
+    BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_DESCRIPTION);
+    CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_FULL);
+}
+
+
 static void MulModifier(u16 *modifier, u16 val)
 {
 	*modifier = UQ_4_12_TO_INT((*modifier * val) + UQ_4_12_ROUND);
@@ -1835,6 +1908,7 @@ static void MoveSelectionDisplayMoveTypeDoubles(u32 battler, u8 targetId)
 
     StringCopy(txtPtr, gTypesInfo[gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].type].name);
 	BattlePutTextOnWindow(gDisplayedStringBattle, TypeEffectiveness(moveInfo, battler, targetId));
+    MoveSelectionDisplaySplitIcon(battler);
 }
 
 static void MoveSelectionDisplayMoveType(u32 battler)
@@ -1867,6 +1941,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
 
     StringCopy(txtPtr, gTypesInfo[type].name);
     BattlePutTextOnWindow(gDisplayedStringBattle, TypeEffectiveness(moveInfo, battler, 1));
+    MoveSelectionDisplaySplitIcon(battler);    
 }
 
 void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
@@ -2429,3 +2504,17 @@ static void PlayerHandleBattleDebug(u32 battler)
     SetMainCallback2(CB2_BattleDebugMenu);
     gBattlerControllerFuncs[battler] = Controller_WaitForDebug;
 }
+static void MoveSelectionDisplaySplitIcon(u32 battler){
+	static const u16 sSplitIcons_Pal[] = INCBIN_U16("graphics/interface/split_icons_battle.gbapal");
+	static const u8 sSplitIcons_Gfx[] = INCBIN_U8("graphics/interface/split_icons_battle.4bpp");
+	int icon;
+
+	struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+	icon = gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].category;
+	LoadPalette(sSplitIcons_Pal, 10 * 0x10, 0x20);
+	BlitBitmapToWindow(B_WIN_DUMMY, sSplitIcons_Gfx + 0x80 * icon, 0, 0, 16, 16);
+	PutWindowTilemap(B_WIN_DUMMY);
+	CopyWindowToVram(B_WIN_DUMMY, 3);
+}
+
+

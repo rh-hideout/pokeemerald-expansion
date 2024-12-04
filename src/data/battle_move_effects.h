@@ -2246,16 +2246,16 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
-    [EFFECT_STEEL_ROT] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-    [EFFECT_CONDUIT_BOMB] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
+//    [EFFECT_STEEL_ROT] =
+//    {
+//        .battleScript = BattleScript_EffectHit,
+//        .battleTvScore = 0, // TODO: Assign points
+//    },
+//    [EFFECT_CONDUIT_BOMB] =
+//    {
+//        .battleScript = BattleScript_EffectHit,
+//        .battleTvScore = 0, // TODO: Assign points
+//    },
     [EFFECT_ADRENALINE] =
     {
         .battleScript = BattleScript_EffectAdrenaline,
@@ -2272,9 +2272,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectElude,
         .battleTvScore = 0, // TODO: Assign points
     },
-    [EFFECT_SUPER_EFFECTIVE] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
+//    [EFFECT_SUPER_EFFECTIVE] =
+//    {
+//        .battleScript = BattleScript_EffectHit,
+//        .battleTvScore = 0, // TODO: Assign points
+//    },
 };

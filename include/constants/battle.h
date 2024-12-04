@@ -410,8 +410,9 @@
 #define MOVE_EFFECT_STEELSURGE          89
 #define MOVE_EFFECT_MUD_SPORT           90
 #define MOVE_EFFECT_DEFOG               91
+#define MOVE_EFFECT_TYPE_DOT            92
 
-#define NUM_MOVE_EFFECTS                92
+#define NUM_MOVE_EFFECTS                93
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000
@@ -485,6 +486,7 @@
 #define B_WIN_VS_OUTCOME_DRAW    21
 #define B_WIN_VS_OUTCOME_LEFT    22
 #define B_WIN_VS_OUTCOME_RIGHT   23
+#define B_WIN_MOVE_DESCRIPTION   28
 
 // The following are duplicate id values for windows that Battle Arena uses differently.
 #define ARENA_WIN_PLAYER_NAME      15

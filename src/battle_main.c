@@ -5051,6 +5051,12 @@ s8 GetMovePriority(u32 battler, u16 move)
     {
         priority++;
     }
+    if (ability == ABILITY_VENOM_SURGE
+        && (B_GALE_WINGS= < GEN_7 || BATTLER_MAX_HP(battler))
+        && gMovesInfo[move].type == TYPE_POISON)
+    {
+        priority++;
+    }
     else if (ability == ABILITY_PRANKSTER && IS_MOVE_STATUS(move))
     {
         gProtectStructs[battler].pranksterElevated = 1;
@@ -6073,6 +6079,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
                  || (attackerAbility == ABILITY_REFRIGERATE && (ateType = TYPE_ICE))
                  || (attackerAbility == ABILITY_AERILATE && (ateType = TYPE_FLYING))
                  || ((attackerAbility == ABILITY_GALVANIZE) && (ateType = TYPE_ELECTRIC))
+                 || ((attackerAbility == ABILITY_DRAGONATE) && (ateType = TYPE_DRAGON))
                 )
              )
     {
