@@ -4286,7 +4286,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Dubsnake)
        .levelUpLearnset = sDubsnakeLevelUpLearnset,
-       .evolutions = EVOLUTION({EVO_MOVE, MOVE_FLAME_BURST, SPECIES_HYDROIL})
+       .evolutions = EVOLUTION({EVO_MOVE, MOVE_FLAME_BURST, SPECIES_HYDROIL},
+                               {EVO_ITEM, ITEM_FIRE_STONE, SPECIES_COILSPILL}),
     },
         [SPECIES_HYDROIL] =
     { 
@@ -4346,11 +4347,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
         [SPECIES_COILSPILL] =
     { 
        .baseHP        = 92,
-       .baseAttack    = 82,
-       .baseDefense   = 62,
+       .baseAttack    = 102,
+       .baseDefense   = 82,
        .baseSpeed     = 112,
-       .baseSpAttack  = 102,
-       .baseSpDefense = 72,
+       .baseSpAttack  = 72,
+       .baseSpDefense = 62,
        .types = { TYPE_ICE, TYPE_POISON },
        .catchRate = 47,
        .expYield = 200,
@@ -4361,21 +4362,21 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 190,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_DRAGON, EGG_GROUP_MONSTER },
-       .abilities = { ABILITY_COMPETITIVE, ABILITY_ANGER_POINT, ABILITY_SNOW_WARNING, ABILITY_MERCILESS}, 
+       .abilities = { ABILITY_DEFIANT, ABILITY_ANGER_POINT, ABILITY_SNOW_WARNING, ABILITY_CORROSION}, 
        .bodyColor = BODY_COLOR_GRAY,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
       .speciesName = _("Coilspill"),
        .cryId = CRY_COILSPILL,
        .natDexNum = NATIONAL_DEX_COILSPILL,
-       .categoryName = _("Symbiosis"),
-       .height = 31,
+       .categoryName = _("Incomplete"),
+       .height = 39,
        .weight = 3000,
        .description = COMPOUND_STRING(
-           "Though both heads still fight each other\n"
-           "Coilspill's heads try to work together \n"
-           "more often then not, acheiving balance\n"
-           "when hunting."),
+           "Coilspill are Dubsnake that did not have\n"
+           "enough energy to complete it's evolution \n"
+           "into Hydroil. It's innards were weakened\n"
+           "by the attempt."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4513,8 +4514,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .baseHP        = 75,
        .baseAttack    = 109,
        .baseDefense   = 31,
-       .baseSpeed     = 54,
-       .baseSpAttack  = 116,
+       .baseSpeed     = 61,
+       .baseSpAttack  = 129,
        .baseSpDefense = 136,
        .types = { TYPE_ELECTRIC, TYPE_GHOST },
        .catchRate = 45,
