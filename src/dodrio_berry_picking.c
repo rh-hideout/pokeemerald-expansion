@@ -4953,7 +4953,7 @@ static void Msg_WantToPlayAgain(void)
         AddTextPrinterParameterized(sGfx->windowIds[WIN_PLAY_AGAIN], FONT_NORMAL, gText_WantToPlayAgain, 0, 5, TEXT_SKIP_DRAW, NULL);
         AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_Yes, 8, 1, TEXT_SKIP_DRAW, NULL);
         AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_No, 8, 17, TEXT_SKIP_DRAW, NULL);
-        AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_SelectorArrow2, 0, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_SelectorArrow, 0, 1, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sGfx->windowIds[WIN_PLAY_AGAIN], COPYWIN_GFX);
         CopyWindowToVram(sGfx->windowIds[WIN_YES_NO], COPYWIN_GFX);
         sGfx->state++;
@@ -4976,7 +4976,7 @@ static void Msg_WantToPlayAgain(void)
         FillWindowPixelBuffer(sGfx->windowIds[WIN_YES_NO], PIXEL_FILL(1));
         AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_Yes, 8, 1, TEXT_SKIP_DRAW, NULL);
         AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_No, 8, 17, TEXT_SKIP_DRAW, NULL);
-        AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_SelectorArrow2, 0, ((y - 1) * 16) + 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sGfx->windowIds[WIN_YES_NO], FONT_NORMAL, gText_SelectorArrow, 0, ((y - 1) * 16) + 1, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sGfx->windowIds[WIN_YES_NO], COPYWIN_FULL);
 
         // Increment state only if A or B button have been pressed.
@@ -5067,7 +5067,7 @@ static void Msg_CommunicationStandby(void)
         break;
     case 1:
         FillWindowPixelBuffer(sGfx->windowIds[0], PIXEL_FILL(1));
-        AddTextPrinterParameterized(sGfx->windowIds[0], FONT_NORMAL, gText_CommunicationStandby3, 0, 5, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sGfx->windowIds[0], FONT_NORMAL, gText_CommunicationStandby, 0, 5, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sGfx->windowIds[0], COPYWIN_GFX);
         sGfx->state++;
         break;

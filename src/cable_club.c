@@ -48,8 +48,8 @@ static const struct WindowTemplate sWindowTemplate_LinkPlayerCount = {
 static const u8 *const sTrainerCardColorNames[] = {
     gText_BronzeCard,
     gText_CopperCard,
-    gText_SilverCard,
-    gText_GoldCard
+    gText_Silver,
+    gText_Gold
 };
 
 static void Task_LinkupStart(u8 taskId);

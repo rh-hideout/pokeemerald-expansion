@@ -1969,19 +1969,19 @@ static void BufferMovesString(u8 *str, u8 whichParty, u8 partyIdx)
                 moves[i] = GetMonData(&gEnemyParty[partyIdx], i + MON_DATA_MOVE1, NULL);
         }
 
-        StringCopy(str, sText_EmptyString);
+        StringCopy(str, gText_EmptyString);
 
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             if (moves[i] != MOVE_NONE)
                 StringAppend(str, GetMoveName(moves[i]));
 
-            StringAppend(str, sText_NewLine);
+            StringAppend(str, gText_NewLine);
         }
     }
     else
     {
-        StringCopy(str, sText_EmptyString);
+        StringCopy(str, gText_EmptyString);
         StringAppend(str, sText_FourQuestionMarks);
     }
 }
@@ -4658,7 +4658,7 @@ static void CB2_SaveAndEndTrade(void)
     {
     case 0:
         gMain.state++;
-        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby5);
+        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         break;
     case 1:
@@ -4973,7 +4973,7 @@ static void CB2_SaveAndEndWirelessTrade(void)
     {
     case 0:
         gMain.state = 1;
-        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby5);
+        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         break;
     case 1:

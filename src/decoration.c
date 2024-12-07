@@ -231,7 +231,7 @@ static const struct MenuAction sDecorationMainMenuActions[] =
         .func = { .void_u8 = DecorationMenuAction_PutAway },
     },
     {
-        .text = gText_Toss2,
+        .text = gMenuText_Toss,
         .func = { .void_u8 = DecorationMenuAction_Toss },
     },
     {
@@ -1340,14 +1340,7 @@ static void DecorationItemsMenuAction_AttemptPlace(u8 taskId)
         else
         {
             ConvertIntToDecimalStringN(gStringVar1, sDecorationContext.size, STR_CONV_MODE_RIGHT_ALIGN, 2);
-            if (sDecorationContext.isPlayerRoom == FALSE)
-            {
-                StringExpandPlaceholders(gStringVar4, gText_NoMoreDecorations);
-            }
-            else
-            {
-                StringExpandPlaceholders(gStringVar4, gText_NoMoreDecorations2);
-            }
+            StringExpandPlaceholders(gStringVar4, gText_NoMoreDecorations);
             DisplayItemMessageOnField(taskId, gStringVar4, ReturnToDecorationItemsAfterInvalidSelection);
         }
     }

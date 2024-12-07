@@ -27,29 +27,16 @@ const u8 gText_UnionRoomChatKeyboard_KLMNO[] = _("KLMNO");
 const u8 gText_UnionRoomChatKeyboard_PQRST[] = _("PQRST");
 const u8 gText_UnionRoomChatKeyboard_UVWXY[] = _("UVWXY");
 const u8 gText_UnionRoomChatKeyboard_Z[] = _("Z    ");
-const u8 gText_UnionRoomChatKeyboard_01234Upper[] = _("01234");
-const u8 gText_UnionRoomChatKeyboard_56789Upper[] = _("56789");
-const u8 gText_UnionRoomChatKeyboard_PunctuationUpper[] = _(".,!? ");
-const u8 gText_UnionRoomChatKeyboard_SymbolsUpper[] = _("-/&… ");
+const u8 gText_UnionRoomChatKeyboard_01234[] = _("01234");
+const u8 gText_UnionRoomChatKeyboard_56789[] = _("56789");
+const u8 gText_UnionRoomChatKeyboard_Punctuation[] = _(".,!? ");
+const u8 gText_UnionRoomChatKeyboard_Symbols[] = _("-/&… ");
 const u8 gText_UnionRoomChatKeyboard_abcde[] = _("abcde");
 const u8 gText_UnionRoomChatKeyboard_fghij[] = _("fghij");
 const u8 gText_UnionRoomChatKeyboard_klmno[] = _("klmno");
 const u8 gText_UnionRoomChatKeyboard_pqrst[] = _("pqrst");
 const u8 gText_UnionRoomChatKeyboard_uvwxy[] = _("uvwxy");
 const u8 gText_UnionRoomChatKeyboard_z[] = _("z    ");
-const u8 gText_UnionRoomChatKeyboard_01234Lower[] = _("01234");
-const u8 gText_UnionRoomChatKeyboard_56789Lower[] = _("56789");
-const u8 gText_UnionRoomChatKeyboard_PunctuationLower[] = _(".,!? ");
-const u8 gText_UnionRoomChatKeyboard_SymbolsLower[] = _("-/&… ");
-
-const u8 gText_EmptyTextInput1[] = _("");
-const u8 gText_EmptyTextInput2[] = _("");
-const u8 gText_EmptyTextInput3[] = _("");
-const u8 gText_EmptyTextInput4[] = _("");
-const u8 gText_EmptyTextInput5[] = _("");
-const u8 gText_EmptyTextInput6[] = _("");
-const u8 gText_EmptyTextInput7[] = _("");
-const u8 gText_EmptyTextInput8[] = _("");
 
 // Union Room Chat keyboard emojis
 const u8 gText_UnionRoomChatKeyboard_Emoji1[] = _("{EMOJI_MISCHIEVOUS}{EMOJI_HAPPY}{EMOJI_ANGRY}{EMOJI_SURPRISED}{EMOJI_BIGANGER}");

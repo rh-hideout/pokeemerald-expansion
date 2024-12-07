@@ -203,7 +203,7 @@ static const struct MenuAction sPlayerPCMenuActions[] =
 {
     [MENU_ITEMSTORAGE] = { COMPOUND_STRING("ITEM STORAGE"), {PlayerPC_ItemStorage} },
     [MENU_MAILBOX]     = { sText_Mailbox,                   {PlayerPC_Mailbox} },
-    [MENU_DECORATION]  = { COMPOUND_STRING("DECORATION"),   {PlayerPC_Decoration} },
+    [MENU_DECORATION]  = { gText_Decoration,                {PlayerPC_Decoration} },
     [MENU_TURNOFF]     = { COMPOUND_STRING("TURN OFF"),     {PlayerPC_TurnOff} }
 };
 
@@ -242,8 +242,8 @@ const struct MenuAction gMailboxMailOptions[] =
 {
     { COMPOUND_STRING("READ"),        {Mailbox_DoMailRead} },
     { COMPOUND_STRING("MOVE TO BAG"), {Mailbox_MoveToBag} },
-    { COMPOUND_STRING("GIVE"),        {Mailbox_Give} },
-    { gText_Cancel2,                  {Mailbox_Cancel} }
+    { gMenuText_Give,                 {Mailbox_Give} },
+    { gText_Cancel,                   {Mailbox_Cancel} }
 };
 
 static const struct WindowTemplate sWindowTemplates_MainMenus[] =
@@ -1004,7 +1004,7 @@ void ItemStorage_RefreshListMenu(void)
     }
 
     // Set up Cancel entry
-    StringCopy(&sItemStorageMenu->itemNames[i][0], gText_Cancel2);
+    StringCopy(&sItemStorageMenu->itemNames[i][0], gText_Cancel);
     sItemStorageMenu->listItems[i].name = &sItemStorageMenu->itemNames[i][0];
     sItemStorageMenu->listItems[i].id = LIST_CANCEL;
 
@@ -1098,7 +1098,7 @@ static void ItemStorage_DrawSwapArrow(u8 y, u8 b, u8 speed)
     if (b == 0xFF)
         FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, y, GetMenuCursorDimensionByFont(FONT_NORMAL, 0), GetMenuCursorDimensionByFont(FONT_NORMAL, 1));
     else
-        AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, y, 0, 0, sSwapArrowTextColors, speed, gText_SelectorArrow2);
+        AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, y, 0, 0, sSwapArrowTextColors, speed, gText_SelectorArrow);
 }
 
 static void ItemStorage_DrawItemIcon(u16 itemId)

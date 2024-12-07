@@ -25,6 +25,7 @@
 #include "recorded_battle.h"
 #include "reshow_battle_screen.h"
 #include "sound.h"
+#include "strings.h"
 #include "string_util.h"
 #include "task.h"
 #include "test_runner.h"
@@ -1714,7 +1715,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     u8 type;
     u32 speciesId;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
+    txtPtr = StringCopy(gDisplayedStringBattle, gText_TypeSlash);
     type = gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].type;
 
     if (moveInfo->moves[gMoveSelectionCursor[battler]] == MOVE_TERA_BLAST)
@@ -1771,11 +1772,11 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     LoadMessageBoxAndBorderGfx();
     DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
     if (pwr < 2)
-        StringCopy(pwr_num, gText_BattleSwitchWhich5);
+        StringCopy(pwr_num, gText_OneDash);
     else
         ConvertIntToDecimalStringN(pwr_num, pwr, STR_CONV_MODE_LEFT_ALIGN, 3);
     if (acc < 2)
-        StringCopy(acc_num, gText_BattleSwitchWhich5);
+        StringCopy(acc_num, gText_OneDash);
     else
         ConvertIntToDecimalStringN(acc_num, acc, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringCopy(gDisplayedStringBattle, cat_start);

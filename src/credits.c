@@ -15,6 +15,7 @@
 #include "constants/rgb.h"
 #include "trainer_pokemon_sprites.h"
 #include "starter_choose.h"
+#include "strings.h"
 #include "decompress.h"
 #include "intro_credits_graphics.h"
 #include "sound.h"

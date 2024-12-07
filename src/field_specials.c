@@ -155,7 +155,6 @@ static const u8 sText_Daughter[] = _("daughter");
 static const u8 sText_99TimesPlus[] = _("99 times +");
 static const u8 sText_1MinutePlus[] = _("1 minute +");
 static const u8 sText_SpaceSeconds[] = _(" seconds");
-static const u8 sText_SpaceTimes[] = _(" time(s)");
 
 void Special_ShowDiploma(void)
 {
@@ -200,7 +199,7 @@ static void DetermineCyclingRoadResults(u32 numFrames, u8 numBikeCollisions)
     if (numBikeCollisions < 100)
     {
         ConvertIntToDecimalStringN(gStringVar1, numBikeCollisions, STR_CONV_MODE_LEFT_ALIGN, 2);
-        StringAppend(gStringVar1, sText_SpaceTimes);
+        StringAppend(gStringVar1, gText_SpaceTimes);
     }
     else
     {
@@ -2517,7 +2516,7 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_BF_RECEPTIONIST] =
     {
-        gText_BattleTower2,
+        gText_BattleTower,
         gText_BattleDome,
         gText_BattlePalace,
         gText_BattleArena,

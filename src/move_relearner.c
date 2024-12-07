@@ -532,7 +532,7 @@ static void DoMoveRelearnerMain(void)
             {
                 if (GiveMoveToMon(&gPlayerParty[sMoveRelearnerStruct->partyMon], GetCurrentSelectedMove()) != MON_HAS_MAX_MOVES)
                 {
-                    PrintMessageWithPlaceholders(gText_MoveRelearnerPkmnLearnedMove);
+                    PrintMessageWithPlaceholders(gText_PkmnLearnedMove);
                     gSpecialVar_0x8004 = TRUE;
                     sMoveRelearnerStruct->state = MENU_STATE_PRINT_TEXT_THEN_FANFARE;
                 }
@@ -611,7 +611,7 @@ static void DoMoveRelearnerMain(void)
         break;
     case MENU_STATE_PRINT_STOP_TEACHING:
         StringCopy(gStringVar2, GetMoveName(GetCurrentSelectedMove()));
-        PrintMessageWithPlaceholders(gText_MoveRelearnerStopTryingToTeachMove);
+        PrintMessageWithPlaceholders(gText_StopLearningMove);
         sMoveRelearnerStruct->state++;
         break;
     case MENU_STATE_WAIT_FOR_STOP_TEACHING:

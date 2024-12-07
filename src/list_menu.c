@@ -660,7 +660,7 @@ static void ListMenuDrawCursor(struct ListMenu *list)
     switch (list->template.cursorKind)
     {
     case CURSOR_BLACK_ARROW:
-        ListMenuPrint(list, gText_SelectorArrow2, x, y);
+        ListMenuPrint(list, gText_SelectorArrow, x, y);
         break;
     case CURSOR_INVISIBLE:
         break;

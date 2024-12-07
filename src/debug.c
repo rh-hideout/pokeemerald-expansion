@@ -495,8 +495,6 @@ static const u8 sDebugText_True[] =          _("TRUE");
 static const u8 sDebugText_False[] =         _("FALSE");
 static const u8 sDebugText_Colored_True[] =  _("{COLOR GREEN}TRUE");
 static const u8 sDebugText_Colored_False[] = _("{COLOR RED}FALSE");
-static const u8 sDebugText_Dashes[] =        _("---");
-static const u8 sDebugText_Empty[] =         _("");
 static const u8 sDebugText_Continue[] =      _("Continue…{CLEAR_TO 110}{RIGHT_ARROW}");
 // Main Menu
 static const u8 sDebugText_Utilities[] =     _("Utilities…{CLEAR_TO 110}{RIGHT_ARROW}");
@@ -507,7 +505,6 @@ static const u8 sDebugText_FlagsVars[] =     _("Flags & Vars…{CLEAR_TO 110}{RI
 static const u8 sDebugText_Battle[] =        _("Battle Test{CLEAR_TO 110}{RIGHT_ARROW}");
 static const u8 sDebugText_Give[] =          _("Give X…{CLEAR_TO 110}{RIGHT_ARROW}");
 static const u8 sDebugText_Sound[] =         _("Sound…{CLEAR_TO 110}{RIGHT_ARROW}");
-static const u8 sDebugText_Cancel[] =        _("Cancel");
 // Script menu
 static const u8 sDebugText_Util_Script_1[] = _("Script 1");
 static const u8 sDebugText_Util_Script_2[] = _("Script 2");
@@ -708,7 +705,7 @@ static const struct ListMenuItem sDebugMenu_Items_Main[] =
     [DEBUG_MENU_ITEM_FLAGVAR]       = {sDebugText_FlagsVars,    DEBUG_MENU_ITEM_FLAGVAR},
     //[DEBUG_MENU_ITEM_BATTLE]        = {sDebugText_Battle,       DEBUG_MENU_ITEM_BATTLE},
     [DEBUG_MENU_ITEM_SOUND]         = {sDebugText_Sound,        DEBUG_MENU_ITEM_SOUND},
-    [DEBUG_MENU_ITEM_CANCEL]        = {sDebugText_Cancel,       DEBUG_MENU_ITEM_CANCEL},
+    [DEBUG_MENU_ITEM_CANCEL]        = {gText_Cancel,            DEBUG_MENU_ITEM_CANCEL},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
@@ -1381,7 +1378,7 @@ static void Debug_GenerateListMenuNames(u32 totalItems)
             }
             else
             {
-                StringCopy(&sDebugMenuListData->itemNames[i][0], sDebugText_Dashes);
+                StringCopy(&sDebugMenuListData->itemNames[i][0], gText_ThreeDashes);
             }
         }
         else

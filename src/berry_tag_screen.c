@@ -143,7 +143,7 @@ static const struct WindowTemplate sWindowTemplates[] =
 
 static const u8 *const sBerryFirmnessStrings[] =
 {
-    [BERRY_FIRMNESS_UNKNOWN]    = COMPOUND_STRING("???"),
+    [BERRY_FIRMNESS_UNKNOWN]    = gText_ThreeQuestionMarks,
     [BERRY_FIRMNESS_VERY_SOFT]  = COMPOUND_STRING("Very soft"),
     [BERRY_FIRMNESS_SOFT]       = COMPOUND_STRING("Soft"),
     [BERRY_FIRMNESS_HARD]       = COMPOUND_STRING("Hard"),
@@ -178,7 +178,6 @@ static const u8 sText_FirmSlash[] = _("FIRM /");
 static const u8 sText_Var1DotVar2[] = _("{STR_VAR_1}.{STR_VAR_2}”");
 static const u8 sText_NumberVar1Var2[] = _("{NO}{STR_VAR_1} {STR_VAR_2}");
 static const u8 sText_BerryTag[] = _("BERRY TAG");
-static const u8 sText_ThreeMarks[] = _("???");
 
 // code
 void DoBerryTagScreen(void)
@@ -438,7 +437,7 @@ static void PrintBerrySize(void)
     }
     else
     {
-        AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sText_ThreeMarks, 0x28, 1, 0, NULL);
+        AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, gText_ThreeQuestionMarks, 0x28, 1, 0, NULL);
     }
 }
 
@@ -449,7 +448,7 @@ static void PrintBerryFirmness(void)
     if (berry->firmness != 0)
         AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sBerryFirmnessStrings[berry->firmness], 0x28, 0x11, 0, NULL);
     else
-        AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sText_ThreeMarks, 0x28, 0x11, 0, NULL);
+        AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, gText_ThreeQuestionMarks, 0x28, 0x11, 0, NULL);
 }
 
 static void PrintBerryDescription1(void)

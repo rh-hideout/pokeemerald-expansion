@@ -2272,16 +2272,9 @@ static void CreateCancelConfirmWindows(bool8 chooseHalf)
         FillWindowPixelBuffer(cancelWindowId, PIXEL_FILL(0));
 
         // Branches are functionally identical. Second branch is never reached, Spin Trade wasnt fully implemented
-        if (gPartyMenu.menuType != PARTY_MENU_TYPE_SPIN_TRADE)
-        {
-            mainOffset = GetStringCenterAlignXOffset(FONT_SMALL, gText_Cancel, 48);
-            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, mainOffset + offset, 1, sFontColorTable[0], TEXT_SKIP_DRAW, gText_Cancel);
-        }
-        else
-        {
-            mainOffset = GetStringCenterAlignXOffset(FONT_SMALL, gText_Cancel2, 48);
-            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, mainOffset + offset, 1, sFontColorTable[0], TEXT_SKIP_DRAW, gText_Cancel2);
-        }
+        mainOffset = GetStringCenterAlignXOffset(FONT_SMALL, gText_Cancel, 48);
+        AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, mainOffset + offset, 1, sFontColorTable[0], TEXT_SKIP_DRAW, gText_Cancel);
+
         PutWindowTilemap(cancelWindowId);
         CopyWindowToVram(cancelWindowId, COPYWIN_GFX);
         ScheduleBgCopyTilemapToVram(0);
@@ -2466,7 +2459,7 @@ static void DisplayPartyPokemonLevelCheck(struct Pokemon *mon, struct PartyMenuB
 static void DisplayPartyPokemonLevel(u8 level, struct PartyMenuBox *menuBox)
 {
     ConvertIntToDecimalStringN(gStringVar2, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-    StringCopy(gStringVar1, gText_LevelSymbol);
+    StringCopy(gStringVar1, gText_Lv);
     StringAppend(gStringVar1, gStringVar2);
     DisplayPartyPokemonBarDetail(menuBox->windowId, gStringVar1, 0, &menuBox->infoRects->dimensions[4]);
 }
@@ -4535,27 +4528,27 @@ static void GetMedicineItemEffectMessage(u16 item, u32 statusCured)
         StringExpandPlaceholders(gStringVar4, gText_PkmnBecameHealthy);
         break;
     case ITEM_EFFECT_HP_EV:
-        StringCopy(gStringVar2, gText_HP3);
+        StringCopy(gStringVar2, gText_HP);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_ATK_EV:
-        StringCopy(gStringVar2, gText_Attack3);
+        StringCopy(gStringVar2, gText_Attack);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_DEF_EV:
-        StringCopy(gStringVar2, gText_Defense3);
+        StringCopy(gStringVar2, gText_Defense);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPEED_EV:
-        StringCopy(gStringVar2, gText_Speed2);
+        StringCopy(gStringVar2, gText_Speed);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPATK_EV:
-        StringCopy(gStringVar2, gText_SpAtk3);
+        StringCopy(gStringVar2, gText_SpAtk);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPDEF_EV:
-        StringCopy(gStringVar2, gText_SpDef3);
+        StringCopy(gStringVar2, gText_SpDef);
         StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_PP_UP:
@@ -5099,22 +5092,22 @@ static void ItemEffectToStatString(u8 effectType, u8 *dest)
     switch (effectType)
     {
     case ITEM_EFFECT_HP_EV:
-        StringCopy(dest, gText_HP3);
+        StringCopy(dest, gText_HP);
         break;
     case ITEM_EFFECT_ATK_EV:
-        StringCopy(dest, gText_Attack3);
+        StringCopy(dest, gText_Attack);
         break;
     case ITEM_EFFECT_DEF_EV:
-        StringCopy(dest, gText_Defense3);
+        StringCopy(dest, gText_Defense);
         break;
     case ITEM_EFFECT_SPEED_EV:
-        StringCopy(dest, gText_Speed2);
+        StringCopy(dest, gText_Speed);
         break;
     case ITEM_EFFECT_SPATK_EV:
-        StringCopy(dest, gText_SpAtk3);
+        StringCopy(dest, gText_SpAtk);
         break;
     case ITEM_EFFECT_SPDEF_EV:
-        StringCopy(dest, gText_SpDef3);
+        StringCopy(dest, gText_SpDef);
         break;
     }
 }
@@ -5347,7 +5340,7 @@ static void Task_LearnedMove(u8 taskId)
     }
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, GetMoveName(move[0]));
-    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove3);
+    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_DoLearnedMoveFanfareAfterText;
@@ -5467,7 +5460,7 @@ static void Task_PartyMenuReplaceMove(u8 taskId)
 static void StopLearningMovePrompt(u8 taskId)
 {
     StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
-    StringExpandPlaceholders(gStringVar4, gText_StopLearningMove2);
+    StringExpandPlaceholders(gStringVar4, gText_StopLearningMove);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_StopLearningMoveYesNo;
@@ -5799,7 +5792,7 @@ static void DisplayMonLearnedMove(u8 taskId, u16 move)
 {
     GetMonNickname(&gPlayerParty[gPartyMenu.slotId], gStringVar1);
     StringCopy(gStringVar2, GetMoveName(move));
-    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove3);
+    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gPartyMenu.data1 = move;

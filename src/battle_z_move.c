@@ -272,7 +272,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
         for (i = 0; i < MAX_MON_MOVES; ++i)
         {
             MoveSelectionDestroyCursorAt(i);
-            StringCopy(gDisplayedStringBattle, gText_EmptyString2);
+            StringCopy(gDisplayedStringBattle, gText_EmptyString);
             BattlePutTextOnWindow(gDisplayedStringBattle, i + 3);
         }
 
@@ -417,7 +417,7 @@ static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
     u8 *txtPtr, *end;
     u32 zMoveType = GetMoveType(zMove);
 
-    txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
+    txtPtr = StringCopy(gDisplayedStringBattle, gText_TypeSlash);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
     *(txtPtr)++ = EXT_CTRL_CODE_FONT;
     *(txtPtr)++ = FONT_NORMAL;

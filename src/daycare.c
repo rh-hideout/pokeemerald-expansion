@@ -1386,15 +1386,15 @@ static u8 *AppendGenderSymbol(u8 *name, u8 gender)
     if (gender == MON_MALE)
     {
         if (!NameHasGenderSymbol(name, MON_MALE))
-            return StringAppend(name, gText_MaleSymbol4);
+            return StringAppend(name, gText_MaleSymbol);
     }
     else if (gender == MON_FEMALE)
     {
         if (!NameHasGenderSymbol(name, MON_FEMALE))
-            return StringAppend(name, gText_FemaleSymbol4);
+            return StringAppend(name, gText_FemaleSymbol);
     }
 
-    return StringAppend(name, gText_GenderlessSymbol);
+    return StringAppend(name, gText_EmptyString); // genderless
 }
 
 static u8 *AppendMonGenderSymbol(u8 *name, struct BoxPokemon *boxMon)
@@ -1415,10 +1415,10 @@ static void UNUSED GetDaycareLevelMenuText(struct DayCare *daycare, u8 *dest)
     }
 
     StringCopy(dest, monNames[0]);
-    StringAppend(dest, gText_NewLine2);
+    StringAppend(dest, gText_NewLine);
     StringAppend(dest, monNames[1]);
-    StringAppend(dest, gText_NewLine2);
-    StringAppend(dest, gText_Exit4);
+    StringAppend(dest, gText_NewLine);
+    StringAppend(dest, gText_Exit);
 }
 
 static void UNUSED GetDaycareLevelMenuLevelText(struct DayCare *daycare, u8 *dest)
@@ -1434,7 +1434,7 @@ static void UNUSED GetDaycareLevelMenuLevelText(struct DayCare *daycare, u8 *des
         level = GetLevelAfterDaycareSteps(&daycare->mons[i].mon, daycare->mons[i].steps);
         ConvertIntToDecimalStringN(text, level, STR_CONV_MODE_LEFT_ALIGN, 3);
         StringAppend(dest, text);
-        StringAppend(dest, gText_NewLine2);
+        StringAppend(dest, gText_NewLine);
     }
 }
 

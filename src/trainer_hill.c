@@ -215,10 +215,10 @@ static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_
 // Unused.
 static const u8 *const sFloorStrings[] =
 {
-    gText_TrainerHill1F,
-    gText_TrainerHill2F,
-    gText_TrainerHill3F,
-    gText_TrainerHill4F,
+    gText_1F,
+    gText_2F,
+    gText_3F,
+    gText_4F,
 };
 
 static void (* const sHillFunctions[])(void) =

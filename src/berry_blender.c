@@ -264,12 +264,11 @@ static const u8 *const sBlenderOpponentsNames[] =
     [BLENDER_MISTER] = COMPOUND_STRING("MISTER"),
     [BLENDER_LADDIE] = COMPOUND_STRING("LADDIE"),
     [BLENDER_LASSIE] = COMPOUND_STRING("LASSIE"),
-    [BLENDER_MASTER] = COMPOUND_STRING("MASTER"),
+    [BLENDER_MASTER] = gText_Master,
     [BLENDER_DUDE]   = COMPOUND_STRING("DUDE"),
     [BLENDER_MISS]   = COMPOUND_STRING("MISS"),
 };
 
-static const u8 sText_CommunicationStandby[] = _("Communication standby…");
 static const u8 sText_WouldLikeToBlendAnotherBerry[] = _("Would you like to blend another BERRY?");
 static const u8 sText_RunOutOfBerriesForBlending[] = _("You've run out of BERRIES for\nblending in the BERRY BLENDER.\p");
 static const u8 sText_YourPokeblockCaseIsFull[] = _("Your {POKEBLOCK} CASE is full.\p");
@@ -277,17 +276,12 @@ static const u8 sText_HasNoBerriesToPut[] = _(" has no BERRIES to put in\nthe BE
 static const u8 sText_ApostropheSPokeblockCaseIsFull[] = _("'s {POKEBLOCK} CASE is full.\p");
 static const u8 sText_BlendingResults[] = _("RESULTS OF BLENDING");
 static const u8 sText_SpaceBerry[] = _(" BERRY");
-static const u8 sText_Time[] = _("Time:");
-static const u8 sText_Min[] = _(" min. ");
-static const u8 sText_Sec[] = _(" sec.");
 static const u8 sText_MaximumSpeed[] = _("MAXIMUM SPEED");
 static const u8 sText_RPM[] = _(" RPM");
 static const u8 sText_Dot[] = _(".");
-static const u8 sText_NewLine[] = _("\n");
 static const u8 sText_Ranking[] = _("RANKING");
 static const u8 sText_TheLevelIs[] = _("The level is ");
 static const u8 sText_TheFeelIs[] = _(", and the feel is ");
-static const u8 sText_Dot2[] = _(".");
 
 static const struct BgTemplate sBgTemplates[3] =
 {
@@ -1328,7 +1322,7 @@ static void CB2_StartBlenderLink(void)
         }
         break;
     case 5:
-        PrintMessage(&sBerryBlender->textState, sText_CommunicationStandby, 0);
+        PrintMessage(&sBerryBlender->textState, gText_CommunicationStandby, 0);
         sBerryBlender->mainState = 8;
         sBerryBlender->framesToWait = 0;
         break;
@@ -2728,7 +2722,7 @@ static void CB2_EndBlenderGame(void)
         sBerryBlender->gameEndState++;
         break;
     case 13:
-        if (PrintMessage(&sBerryBlender->textState, sText_CommunicationStandby, GetPlayerTextSpeedDelay()))
+        if (PrintMessage(&sBerryBlender->textState, gText_CommunicationStandby, GetPlayerTextSpeedDelay()))
         {
             SetMainCallback2(CB2_CheckPlayAgainLink);
             sBerryBlender->gameEndState = 0;
@@ -3508,16 +3502,16 @@ static bool8 PrintBlendingResults(void)
 
             xPos = GetStringRightAlignXOffset(FONT_NORMAL, sBerryBlender->stringVar, 0xA8);
             Blender_AddTextPrinter(WIN_RESULTS, sBerryBlender->stringVar, xPos, 0x51, TEXT_SKIP_DRAW, 3);
-            Blender_AddTextPrinter(WIN_RESULTS, sText_Time, 0, 0x61, TEXT_SKIP_DRAW, 3);
+            Blender_AddTextPrinter(WIN_RESULTS, gText_TimeColon, 0, 0x61, TEXT_SKIP_DRAW, 3);
 
             seconds = (sBerryBlender->gameFrameTime / 60) % 60;
             minutes = (sBerryBlender->gameFrameTime / (60 * 60));
 
             ConvertIntToDecimalStringN(sBerryBlender->stringVar, minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
-            txtPtr = StringAppend(sBerryBlender->stringVar, sText_Min);
+            txtPtr = StringAppend(sBerryBlender->stringVar, gText_SpaceMin);
 
             ConvertIntToDecimalStringN(txtPtr, seconds, STR_CONV_MODE_LEADING_ZEROS, 2);
-            StringAppend(sBerryBlender->stringVar, sText_Sec);
+            StringAppend(sBerryBlender->stringVar, gText_SpaceSec);
 
             xPos = GetStringRightAlignXOffset(FONT_NORMAL, sBerryBlender->stringVar, 0xA8);
             Blender_AddTextPrinter(WIN_RESULTS, sBerryBlender->stringVar, xPos, 0x61, TEXT_SKIP_DRAW, 3);
@@ -3580,7 +3574,7 @@ static void PrintMadePokeblockString(struct Pokeblock *pokeblock, u8 *dst)
     dst[0] = EOS;
     StringCopy(dst, gPokeblockNames[pokeblock->color]);
     StringAppend(dst, sText_WasMade);
-    StringAppend(dst, sText_NewLine);
+    StringAppend(dst, gText_NewLine);
 
     flavorLvl = GetHighestPokeblocksFlavorLevel(pokeblock);
     feel = GetPokeblocksFeel(pokeblock);
@@ -3593,7 +3587,7 @@ static void PrintMadePokeblockString(struct Pokeblock *pokeblock, u8 *dst)
     ConvertIntToDecimalStringN(text, feel, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringAppend(dst, text);
 
-    StringAppend(dst, sText_Dot2);
+    StringAppend(dst, sText_Dot);
     StringAppend(dst, sText_NewParagraph);
 }
 

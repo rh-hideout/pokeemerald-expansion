@@ -3930,7 +3930,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         TurnValuesCleanUp(FALSE);
         SpecialStatusesClear();
         *(&gBattleStruct->absentBattlerFlags) = gAbsentBattlerFlags;
-        BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
+        BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
         AssignUsableGimmicks();
         gBattleMainFunc = HandleTurnActionSelectionState;
         ResetSentPokesToOpponentValue();
@@ -4049,7 +4049,7 @@ void BattleTurnPassed(void)
         *(gBattleStruct->monToSwitchIntoId + i) = PARTY_SIZE;
 
     *(&gBattleStruct->absentBattlerFlags) = gAbsentBattlerFlags;
-    BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
+    BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(AI_DATA); // get assumed abilities, hold effects, etc of all battlers

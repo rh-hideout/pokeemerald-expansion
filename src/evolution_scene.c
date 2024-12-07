@@ -1222,7 +1222,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
             else
             {
                 PlayBGM(MUS_EVOLUTION);
-                DrawTextOnTradeWindow(0, gText_CommunicationStandby5, 1);
+                DrawTextOnTradeWindow(0, gText_CommunicationStandby, 1);
                 gTasks[taskId].tState++;
             }
         }

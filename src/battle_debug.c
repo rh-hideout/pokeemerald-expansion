@@ -406,7 +406,6 @@ static const u8 sText_ShowHP[] = _("Show HP");
 static const u8 sText_SubstituteHp[] = _("Substitute HP");
 static const u8 sText_InLove[] = _("In Love");
 static const u8 sText_Unknown[] = _("Unknown");
-static const u8 sText_EmptyString[] = _("");
 
 static const struct BitfieldInfo sStatus1Bitfield[] =
 {
@@ -656,15 +655,15 @@ static const struct ListMenuItem sVariousListItems[] =
 
 static const struct ListMenuItem sSecondaryListItems[] =
 {
-    {sText_EmptyString, 0},
-    {sText_EmptyString, 1},
-    {sText_EmptyString, 2},
-    {sText_EmptyString, 3},
-    {sText_EmptyString, 4},
-    {sText_EmptyString, 5},
-    {sText_EmptyString, 6},
-    {sText_EmptyString, 7},
-    {sText_EmptyString, 8},
+    {gText_EmptyString, 0},
+    {gText_EmptyString, 1},
+    {gText_EmptyString, 2},
+    {gText_EmptyString, 3},
+    {gText_EmptyString, 4},
+    {gText_EmptyString, 5},
+    {gText_EmptyString, 6},
+    {gText_EmptyString, 7},
+    {gText_EmptyString, 8},
 };
 
 

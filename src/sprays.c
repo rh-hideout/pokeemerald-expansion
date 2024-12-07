@@ -97,7 +97,7 @@ void DrawSprayMenu(void)
     }
 
     gSpecialVar_0x8003 = count;
-    menuItems[count].text = gText_Cancel2;
+    menuItems[count].text = gText_Cancel;
 
     DrawMultichoiceMenuInternal(18, yCoord, 0, FALSE, menuPos, menuItems, count+1);
 }

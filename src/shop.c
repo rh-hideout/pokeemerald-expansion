@@ -563,7 +563,7 @@ static void BuyMenuBuildListMenuTemplate(void)
     for (i = 0; i < sMartInfo.itemCount; i++)
         BuyMenuSetListEntry(&sListMenuItems[i], sMartInfo.itemList[i], sItemNames[i]);
 
-    StringCopy(sItemNames[i], gText_Cancel2);
+    StringCopy(sItemNames[i], gText_Cancel);
     sListMenuItems[i].name = sItemNames[i];
     sListMenuItems[i].id = LIST_CANCEL;
 
@@ -678,7 +678,7 @@ static void BuyMenuRemoveScrollIndicatorArrows(void)
 static void BuyMenuPrintCursor(u8 scrollIndicatorsTaskId, u8 colorSet)
 {
     u8 y = ListMenuGetYCoordForPrintingArrowCursor(scrollIndicatorsTaskId);
-    BuyMenuPrint(WIN_ITEM_LIST, gText_SelectorArrow2, 0, y, 0, colorSet);
+    BuyMenuPrint(WIN_ITEM_LIST, gText_SelectorArrow, 0, y, 0, colorSet);
 }
 
 static void BuyMenuAddItemIcon(u16 item, u8 iconSlot)
@@ -1025,7 +1025,7 @@ static void Task_BuyMenu(u8 taskId)
                     else if (ItemId_GetPocket(itemId) == POCKET_TM_HM)
                     {
                         StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-                        BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany2, Task_BuyHowManyDialogueInit);
+                        BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany, Task_BuyHowManyDialogueInit);
                     }
                     else
                     {

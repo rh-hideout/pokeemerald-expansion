@@ -642,15 +642,15 @@ static const u8 *const sActionStringTable[] =
     [PARTY_MSG_ALREADY_SURFING]        = gText_AlreadySurfing,
     [PARTY_MSG_CURRENT_TOO_FAST]       = gText_CurrentIsTooFast,
     [PARTY_MSG_ENJOY_CYCLING]          = gText_EnjoyCycling,
-    [PARTY_MSG_ALREADY_IN_USE]         = gText_InUseAlready_PM,
+    [PARTY_MSG_ALREADY_IN_USE]         = gText_InUseAlready,
     [PARTY_MSG_CANT_USE_HERE]          = gText_CantUseHere,
     [PARTY_MSG_NO_MON_FOR_BATTLE]      = gText_NoPokemonForBattle,
-    [PARTY_MSG_CHOOSE_MON_2]           = gText_ChoosePokemon2,
+    [PARTY_MSG_CHOOSE_MON_2]           = gText_ChoosePokemon,
     [PARTY_MSG_NOT_ENOUGH_HP]          = gText_NotEnoughHp,
     [PARTY_MSG_X_MONS_ARE_NEEDED]      = gText_PokemonAreNeeded,
     [PARTY_MSG_MONS_CANT_BE_SAME]      = gText_PokemonCantBeSame,
     [PARTY_MSG_NO_SAME_HOLD_ITEMS]     = gText_NoIdenticalHoldItems,
-    [PARTY_MSG_UNUSED]                 = gText_EmptyString2,
+    [PARTY_MSG_UNUSED]                 = gText_EmptyString,
     [PARTY_MSG_DO_WHAT_WITH_MON]       = gText_DoWhatWithPokemon,
     [PARTY_MSG_RESTORE_WHICH_MOVE]     = gText_RestoreWhichMove,
     [PARTY_MSG_BOOST_PP_WHICH_MOVE]    = gText_BoostPp,
@@ -669,7 +669,7 @@ static const u8 *const sDescriptionStringTable[] =
     [PARTYBOX_DESC_SECOND]     = gText_Second_PM,
     [PARTYBOX_DESC_THIRD]      = gText_Third_PM,
     [PARTYBOX_DESC_FOURTH]     = gText_Fourth,
-    [PARTYBOX_DESC_ABLE]       = gText_Able2,
+    [PARTYBOX_DESC_ABLE]       = gText_Able,
     [PARTYBOX_DESC_NOT_ABLE]   = gText_NotAble,
     [PARTYBOX_DESC_ABLE_2]     = gText_Able3,
     [PARTYBOX_DESC_NOT_ABLE_2] = gText_NotAble2,
@@ -686,32 +686,30 @@ static const u16 sUnusedData[] =
     0x0121, 0x013b, 0x000f, 0x0013, 0x0039, 0x0046, 0x0094, 0x00f9, 0x007f, 0x0123,
 };
 
-static const u8 sText_Trade4[] = _("TRADE");
-
 struct
 {
     const u8 *text;
     TaskFunc func;
 } static const sCursorOptions[MENU_FIELD_MOVES] =
 {
-    [MENU_SUMMARY] = {COMPOUND_STRING("SUMMARY"), CursorCb_Summary},
-    [MENU_SWITCH] = {COMPOUND_STRING("SWITCH"), CursorCb_Switch},
-    [MENU_CANCEL1] = {gText_Cancel2, CursorCb_Cancel1},
+    [MENU_SUMMARY] = {gText_Summary, CursorCb_Summary},
+    [MENU_SWITCH] = {gText_Switch, CursorCb_Switch},
+    [MENU_CANCEL1] = {gText_Cancel, CursorCb_Cancel1},
     [MENU_ITEM] = {COMPOUND_STRING("ITEM"), CursorCb_Item},
     [MENU_GIVE] = {gMenuText_Give, CursorCb_Give},
     [MENU_TAKE_ITEM] = {COMPOUND_STRING("TAKE"), CursorCb_TakeItem},
     [MENU_MAIL] = {COMPOUND_STRING("MAIL"), CursorCb_Mail},
     [MENU_TAKE_MAIL] = {COMPOUND_STRING("TAKE"), CursorCb_TakeMail},
     [MENU_READ] = {COMPOUND_STRING("READ"), CursorCb_Read},
-    [MENU_CANCEL2] = {gText_Cancel2, CursorCb_Cancel2},
+    [MENU_CANCEL2] = {gText_Cancel, CursorCb_Cancel2},
     [MENU_SHIFT] = {COMPOUND_STRING("SHIFT"), CursorCb_SendMon},
     [MENU_SEND_OUT] = {COMPOUND_STRING("SEND OUT"), CursorCb_SendMon},
     [MENU_ENTER] = {COMPOUND_STRING("ENTER"), CursorCb_Enter},
     [MENU_NO_ENTRY] = {COMPOUND_STRING("NO ENTRY"), CursorCb_NoEntry},
     [MENU_STORE] = {COMPOUND_STRING("STORE"), CursorCb_Store},
     [MENU_REGISTER] = {gText_Register, CursorCb_Register},
-    [MENU_TRADE1] = {sText_Trade4, CursorCb_Trade1},
-    [MENU_TRADE2] = {sText_Trade4, CursorCb_Trade2},
+    [MENU_TRADE1] = {gText_Trade, CursorCb_Trade1},
+    [MENU_TRADE2] = {gText_Trade, CursorCb_Trade2},
     [MENU_TOSS] = {gMenuText_Toss, CursorCb_Toss},
     [MENU_CATALOG_BULB] = {COMPOUND_STRING("Light bulb"), CursorCb_CatalogBulb},
     [MENU_CATALOG_OVEN] = {COMPOUND_STRING("Microwave oven"), CursorCb_CatalogOven},
@@ -1134,12 +1132,12 @@ const struct SpriteTemplate gSpriteTemplate_StatusIcons =
 
 static const u8 *const sUnused_StatStrings[] =
 {
-    gText_HP4,
-    gText_Attack3,
-    gText_Defense3,
-    gText_SpAtk4,
-    gText_SpDef4,
-    gText_Speed2
+    gText_HP,
+    gText_Attack,
+    gText_Defense,
+    gText_SpAtk,
+    gText_SpDef,
+    gText_Speed
 };
 
 #define ROTOM_BASE_MOVE  MOVE_THUNDER_SHOCK

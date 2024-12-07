@@ -3975,7 +3975,7 @@ static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *
     u8 trainerId[6];
 
     ConvertIntToDecimalStringN(gStringVar4, id + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-    StringAppend(gStringVar4, sText_Colon);
+    StringAppend(gStringVar4, gText_Colon);
     PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, UR_COLOR_DEFAULT);
     x += 18;
     activity = player->rfu.data.activity;

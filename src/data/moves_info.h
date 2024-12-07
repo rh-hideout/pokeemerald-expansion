@@ -28,8 +28,6 @@ const u8 gNotDoneYetDescription[] = _(
     "This move can't be used. Its\n"
     "effect is in development.");
 
-static const u8 sNullDescription[] = _("");
-
 static const u8 sMegaDrainDescription[] = _(
     "An attack that absorbs\n"
     "half the damage inflicted.");
@@ -114,8 +112,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 {
     [MOVE_NONE] =
     {
-        .name = COMPOUND_STRING("-"),
-        .description = COMPOUND_STRING(""),
+        .name = gText_OneDash,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -20119,7 +20117,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_BLAZING_TORQUE] =
     {
         .name = COMPOUND_STRING("Blazing Torque"),
-        .description = COMPOUND_STRING("---"),
+        .description = gText_ThreeDashes,
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_FIRE,
@@ -20148,7 +20146,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_WICKED_TORQUE] =
     {
         .name = COMPOUND_STRING("Wicked Torque"),
-        .description = COMPOUND_STRING("---"),
+        .description = gText_ThreeDashes,
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_DARK,
@@ -20177,7 +20175,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_NOXIOUS_TORQUE] =
     {
         .name = COMPOUND_STRING("Noxious Torque"),
-        .description = COMPOUND_STRING("---"),
+        .description = gText_ThreeDashes,
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_POISON,
@@ -20206,7 +20204,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_COMBAT_TORQUE] =
     {
         .name = COMPOUND_STRING("Combat Torque"),
-        .description = COMPOUND_STRING("---"),
+        .description = gText_ThreeDashes,
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_FIGHTING,
@@ -20235,7 +20233,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAGICAL_TORQUE] =
     {
         .name = COMPOUND_STRING("Magical Torque"),
-        .description = COMPOUND_STRING("---"),
+        .description = gText_ThreeDashes,
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_FAIRY,
@@ -20684,7 +20682,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_BREAKNECK_BLITZ] =
     {
         .name = COMPOUND_STRING("Breakneck Blitz"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_NORMAL,
@@ -20698,7 +20696,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_ALL_OUT_PUMMELING] =
     {
         .name = COMPOUND_STRING("All Out Pummeling"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_FIGHTING,
@@ -20712,7 +20710,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SUPERSONIC_SKYSTRIKE] =
     {
         .name = COMPOUND_STRING("Supersonic Skystrike"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_FLYING,
@@ -20726,7 +20724,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_ACID_DOWNPOUR] =
     {
         .name = COMPOUND_STRING("Acid Downpour"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_POISON,
@@ -20740,7 +20738,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_TECTONIC_RAGE] =
     {
         .name = COMPOUND_STRING("Tectonic Rage"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_GROUND,
@@ -20755,7 +20753,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_CONTINENTAL_CRUSH] =
     {
         .name = COMPOUND_STRING("Continental Crush"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_ROCK,
@@ -20769,7 +20767,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SAVAGE_SPIN_OUT] =
     {
         .name = COMPOUND_STRING("Savage Spin Out"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_BUG,
@@ -20783,7 +20781,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_NEVER_ENDING_NIGHTMARE] =
     {
         .name = COMPOUND_STRING("Never Ending Nightmare"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_GHOST,
@@ -20797,7 +20795,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_CORKSCREW_CRASH] =
     {
         .name = COMPOUND_STRING("Corkscrew Crash"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_STEEL,
@@ -20811,7 +20809,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_INFERNO_OVERDRIVE] =
     {
         .name = COMPOUND_STRING("Inferno Overdrive"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_FIRE,
@@ -20825,7 +20823,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_HYDRO_VORTEX] =
     {
         .name = COMPOUND_STRING("Hydro Vortex"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_WATER,
@@ -20839,7 +20837,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_BLOOM_DOOM] =
     {
         .name = COMPOUND_STRING("Bloom Doom"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_GRASS,
@@ -20853,7 +20851,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_GIGAVOLT_HAVOC] =
     {
         .name = COMPOUND_STRING("Gigavolt Havoc"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_ELECTRIC,
@@ -20867,7 +20865,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SHATTERED_PSYCHE] =
     {
         .name = COMPOUND_STRING("Shattered Psyche"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_PSYCHIC,
@@ -20881,7 +20879,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SUBZERO_SLAMMER] =
     {
         .name = COMPOUND_STRING("Subzero Slammer"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_ICE,
@@ -20895,7 +20893,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_DEVASTATING_DRAKE] =
     {
         .name = COMPOUND_STRING("Devastating Drake"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_DRAGON,
@@ -20909,7 +20907,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_BLACK_HOLE_ECLIPSE] =
     {
         .name = COMPOUND_STRING("Black Hole Eclipse"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_DARK,
@@ -20923,7 +20921,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_TWINKLE_TACKLE] =
     {
         .name = COMPOUND_STRING("Twinkle Tackle"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_FAIRY,
@@ -20937,7 +20935,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_CATASTROPIKA] =
     {
         .name = COMPOUND_STRING("Catastropika"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 210,
         .type = TYPE_ELECTRIC,
@@ -20951,7 +20949,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_10000000_VOLT_THUNDERBOLT] =
     {
         .name = COMPOUND_STRING("10,000,000 Volt Thunderbolt"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 195,
         .type = TYPE_ELECTRIC,
@@ -20966,7 +20964,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_STOKED_SPARKSURFER] =
     {
         .name = COMPOUND_STRING("Stoked Sparksurfer"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 175,
         .type = TYPE_ELECTRIC,
@@ -20984,7 +20982,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_EXTREME_EVOBOOST] =
     {
         .name = COMPOUND_STRING("Extreme Evoboost"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_EXTREME_EVOBOOST,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -20998,7 +20996,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_PULVERIZING_PANCAKE] =
     {
         .name = COMPOUND_STRING("Pulverizing Pancake"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 210,
         .type = TYPE_NORMAL,
@@ -21012,7 +21010,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_GENESIS_SUPERNOVA] =
     {
         .name = COMPOUND_STRING("Genesis Supernova"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT_SET_REMOVE_TERRAIN,
         .power = 185,
         .type = TYPE_PSYCHIC,
@@ -21027,7 +21025,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SINISTER_ARROW_RAID] =
     {
         .name = COMPOUND_STRING("Sinister Arrow Raid"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 180,
         .type = TYPE_GHOST,
@@ -21041,7 +21039,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MALICIOUS_MOONSAULT] =
     {
         .name = COMPOUND_STRING("Malicious Moonsault"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 180,
         .type = TYPE_DARK,
@@ -21055,7 +21053,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_OCEANIC_OPERETTA] =
     {
         .name = COMPOUND_STRING("Oceanic Operetta"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 195,
         .type = TYPE_WATER,
@@ -21069,7 +21067,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SPLINTERED_STORMSHARDS] =
     {
         .name = COMPOUND_STRING("Splintered Stormshards"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT_SET_REMOVE_TERRAIN,
         .power = 190,
         .type = TYPE_ROCK,
@@ -21084,7 +21082,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_LETS_SNUGGLE_FOREVER] =
     {
         .name = COMPOUND_STRING("Let's Snuggle Forever"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 190,
         .type = TYPE_FAIRY,
@@ -21098,7 +21096,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_CLANGOROUS_SOULBLAZE] =
     {
         .name = COMPOUND_STRING("Clangorous Soulblaze"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 185,
         .type = TYPE_DRAGON,
@@ -21119,7 +21117,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_GUARDIAN_OF_ALOLA] =
     {
         .name = COMPOUND_STRING("Guardian of Alola"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_GUARDIAN_OF_ALOLA,
         .power = 1,
         .type = TYPE_FAIRY,
@@ -21133,7 +21131,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SEARING_SUNRAZE_SMASH] =
     {
         .name = COMPOUND_STRING("Searing Sunraze Smash"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 200,
         .type = TYPE_STEEL,
@@ -21148,7 +21146,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MENACING_MOONRAZE_MAELSTROM] =
     {
         .name = COMPOUND_STRING("Menacing Moonraze Maelstrom"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 200,
         .type = TYPE_GHOST,
@@ -21163,7 +21161,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_LIGHT_THAT_BURNS_THE_SKY] =
     {
         .name = COMPOUND_STRING("Light That Burns The Sky"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_PHOTON_GEYSER,
         .power = 200,
         .type = TYPE_PSYCHIC,
@@ -21178,7 +21176,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_SOUL_STEALING_7_STAR_STRIKE] =
     {
         .name = COMPOUND_STRING("Soul Stealing 7 Star Strike"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_HIT,
         .power = 195,
         .type = TYPE_GHOST,
@@ -21193,7 +21191,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_GUARD] =
     {
         .name = COMPOUND_STRING("Max Guard"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -21208,7 +21206,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_FLARE] =
     {
         .name = COMPOUND_STRING("Max Flare"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_FIRE,
@@ -21224,7 +21222,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_FLUTTERBY] =
     {
         .name = COMPOUND_STRING("Max Flutterby"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_BUG,
@@ -21240,7 +21238,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_LIGHTNING] =
     {
         .name = COMPOUND_STRING("Max Lightning"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_ELECTRIC,
@@ -21256,7 +21254,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_STRIKE] =
     {
         .name = COMPOUND_STRING("Max Strike"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_NORMAL,
@@ -21272,7 +21270,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_KNUCKLE] =
     {
         .name = COMPOUND_STRING("Max Knuckle"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_FIGHTING,
@@ -21288,7 +21286,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_PHANTASM] =
     {
         .name = COMPOUND_STRING("Max Phantasm"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_GHOST,
@@ -21304,7 +21302,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_HAILSTORM] =
     {
         .name = COMPOUND_STRING("Max Hailstorm"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_ICE,
@@ -21320,7 +21318,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_OOZE] =
     {
         .name = COMPOUND_STRING("Max Ooze"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_POISON,
@@ -21336,7 +21334,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_GEYSER] =
     {
         .name = COMPOUND_STRING("Max Geyser"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_WATER,
@@ -21352,7 +21350,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_AIRSTREAM] =
     {
         .name = COMPOUND_STRING("Max Airstream"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_FLYING,
@@ -21368,7 +21366,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_STARFALL] =
     {
         .name = COMPOUND_STRING("Max Starfall"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_FAIRY,
@@ -21384,7 +21382,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_WYRMWIND] =
     {
         .name = COMPOUND_STRING("Max Wyrmwind"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_DRAGON,
@@ -21400,7 +21398,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_MINDSTORM] =
     {
         .name = COMPOUND_STRING("Max Mindstorm"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_PSYCHIC,
@@ -21416,7 +21414,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_ROCKFALL] =
     {
         .name = COMPOUND_STRING("Max Rockfall"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_ROCK,
@@ -21432,7 +21430,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_QUAKE] =
     {
         .name = COMPOUND_STRING("Max Quake"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_GROUND,
@@ -21449,7 +21447,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_DARKNESS] =
     {
         .name = COMPOUND_STRING("Max Darkness"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 1,
         .type = TYPE_DARK,
@@ -21465,7 +21463,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_OVERGROWTH] =
     {
         .name = COMPOUND_STRING("Max Overgrowth"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -21481,7 +21479,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_MAX_STEELSPIKE] =
     {
         .name = COMPOUND_STRING("Max Steelspike"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_STEEL,
@@ -21497,7 +21495,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_VINE_LASH] =
     {
         .name = COMPOUND_STRING("G-Max Vine Lash"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -21513,7 +21511,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_WILDFIRE] =
     {
         .name = COMPOUND_STRING("G-Max Wildfire"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FIRE,
@@ -21529,7 +21527,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_CANNONADE] =
     {
         .name = COMPOUND_STRING("G-Max Canonade"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,
@@ -21545,7 +21543,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_BEFUDDLE] =
     {
         .name = COMPOUND_STRING("G-Max Befuddle"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_BUG,
@@ -21561,7 +21559,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_VOLT_CRASH] =
     {
         .name = COMPOUND_STRING("G-Max Volt Crash"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_ELECTRIC,
@@ -21577,7 +21575,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_GOLD_RUSH] =
     {
         .name = COMPOUND_STRING("G-Max Gold Rush"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_NORMAL,
@@ -21593,7 +21591,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_CHI_STRIKE] =
     {
         .name = COMPOUND_STRING("G-Max Chi Strike"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FIGHTING,
@@ -21609,7 +21607,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_TERROR] =
     {
         .name = COMPOUND_STRING("G-Max Terror"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GHOST,
@@ -21625,7 +21623,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_FOAM_BURST] =
     {
         .name = COMPOUND_STRING("G-Max Foam Burst"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,
@@ -21641,7 +21639,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_RESONANCE] =
     {
         .name = COMPOUND_STRING("G-Max Resonance"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_ICE,
@@ -21657,7 +21655,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_CUDDLE] =
     {
         .name = COMPOUND_STRING("G-Max Cuddle"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_NORMAL,
@@ -21673,7 +21671,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_REPLENISH] =
     {
         .name = COMPOUND_STRING("G-Max Replenish"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_NORMAL,
@@ -21689,7 +21687,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_MALODOR] =
     {
         .name = COMPOUND_STRING("G-Max Malodor"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_POISON,
@@ -21705,7 +21703,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_MELTDOWN] =
     {
         .name = COMPOUND_STRING("G-Max Meltdown"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_STEEL,
@@ -21721,7 +21719,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_DRUM_SOLO] =
     {
         .name = COMPOUND_STRING("G-Max Drum Solo"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -21738,7 +21736,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_FIREBALL] =
     {
         .name = COMPOUND_STRING("G-Max Fireball"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FIRE,
@@ -21755,7 +21753,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_HYDROSNIPE] =
     {
         .name = COMPOUND_STRING("G-Max Hydrosnipe"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,
@@ -21772,7 +21770,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_WIND_RAGE] =
     {
         .name = COMPOUND_STRING("G-Max Wind Rage"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FLYING,
@@ -21788,7 +21786,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_GRAVITAS] =
     {
         .name = COMPOUND_STRING("G-Max Gravitas"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_PSYCHIC,
@@ -21804,7 +21802,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_STONESURGE] =
     {
         .name = COMPOUND_STRING("G-Max Stonesurge"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,
@@ -21820,7 +21818,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_VOLCALITH] =
     {
         .name = COMPOUND_STRING("G-Max Volcalith"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_ROCK,
@@ -21836,7 +21834,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_TARTNESS] =
     {
         .name = COMPOUND_STRING("G-Max Tartness"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -21852,7 +21850,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_SWEETNESS] =
     {
         .name = COMPOUND_STRING("G-Max Sweetness"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -21868,7 +21866,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_SANDBLAST] =
     {
         .name = COMPOUND_STRING("G-Max Sandblast"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GROUND,
@@ -21884,7 +21882,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_STUN_SHOCK] =
     {
         .name = COMPOUND_STRING("G-Max Stun Shock"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_ELECTRIC,
@@ -21900,7 +21898,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_CENTIFERNO] =
     {
         .name = COMPOUND_STRING("G-Max Centiferno"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FIRE,
@@ -21916,7 +21914,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_SMITE] =
     {
         .name = COMPOUND_STRING("G-Max Smite"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FAIRY,
@@ -21933,7 +21931,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_SNOOZE] =
     {
         .name = COMPOUND_STRING("G-Max Snooze"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_DARK,
@@ -21949,7 +21947,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_FINALE] =
     {
         .name = COMPOUND_STRING("G-Max Finale"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FAIRY,
@@ -21965,7 +21963,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_STEELSURGE] =
     {
         .name = COMPOUND_STRING("G-Max Steelsurge"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_STEEL,
@@ -21981,7 +21979,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_DEPLETION] =
     {
         .name = COMPOUND_STRING("G-Max Depletion"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_DRAGON,
@@ -21997,7 +21995,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_ONE_BLOW] =
     {
         .name = COMPOUND_STRING("G-Max One Blow"),
-        .description = sNullDescription,
+        .description = gText_EmptyString,
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_DARK,
@@ -22013,7 +22011,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     [MOVE_G_MAX_RAPID_FLOW] =
     {
         .name = COMPOUND_STRING("G-Max Rapid Flow"),
-        .description = sNullDescription,    //ANIM TODO
+        .description = gText_EmptyString,    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,

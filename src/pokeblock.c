@@ -132,7 +132,6 @@ static void TossPokeblock(u8);
 
 static const u8 sText_StowCase[] = _("Stow CASE.");
 static const u8 sText_LvVar1[] = _("{LV}{STR_VAR_1}");
-static const u8 sText_ThrowAwayVar1[] = _("Throw away this\n{STR_VAR_1}?");
 static const u8 sText_Var1ThrownAway[] = _("The {STR_VAR_1}\nwas thrown away.");
 
 EWRAM_DATA static struct PokeblockSavedData sSavedPokeblockData = {0};
@@ -222,10 +221,10 @@ static const struct MenuAction sPokeblockMenuActions[] =
 {
     [PKBL_USE_ON_FIELD]  = {gMenuText_Use, {PokeblockAction_UseOnField}},
     [PKBL_TOSS]          = {gMenuText_Toss, {PokeblockAction_Toss}},
-    [PKBL_CANCEL]        = {gText_Cancel2, {PokeblockAction_Cancel}},
+    [PKBL_CANCEL]        = {gText_Cancel, {PokeblockAction_Cancel}},
     [PKBL_USE_IN_BATTLE] = {gMenuText_Use, {PokeblockAction_UseInBattle}},
     [PKBL_USE_ON_FEEDER] = {gMenuText_Use, {PokeblockAction_UseOnPokeblockFeeder}},
-    [PKBL_GIVE_TO_LADY]  = {gMenuText_Give2, {PokeblockAction_GiveToContestLady}},
+    [PKBL_GIVE_TO_LADY]  = {gMenuText_Give, {PokeblockAction_GiveToContestLady}},
 };
 
 static const u8 sActionsOnField[] = {PKBL_USE_ON_FIELD, PKBL_TOSS, PKBL_CANCEL};
@@ -1208,7 +1207,7 @@ static void PokeblockAction_Toss(u8 taskId)
 
     ClearStdWindowAndFrameToTransparent(tWindowId, FALSE);
     StringCopy(gStringVar1, gPokeblockNames[gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId].color]);
-    StringExpandPlaceholders(gStringVar4, sText_ThrowAwayVar1);
+    StringExpandPlaceholders(gStringVar4, gText_ThrowAwayItem);
     DisplayMessageAndContinueTask(taskId, WIN_TOSS_MSG, 10, 13, FONT_NORMAL, GetPlayerTextSpeedDelay(), gStringVar4, CreateTossPokeblockYesNoMenu);
 }
 

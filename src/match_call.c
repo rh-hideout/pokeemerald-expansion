@@ -1812,7 +1812,7 @@ static void PopulateSpeciesFromTrainerParty(int matchCallId, u8 *destStr)
 
 static const u8 *const sBattleFrontierFacilityNames[NUM_FRONTIER_FACILITIES] =
 {
-    [FRONTIER_FACILITY_TOWER]   = gText_BattleTower2,
+    [FRONTIER_FACILITY_TOWER]   = gText_BattleTower,
     [FRONTIER_FACILITY_DOME]    = gText_BattleDome,
     [FRONTIER_FACILITY_PALACE]  = gText_BattlePalace,
     [FRONTIER_FACILITY_ARENA]   = gText_BattleArena,

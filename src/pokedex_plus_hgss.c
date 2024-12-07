@@ -130,7 +130,6 @@ static const u16 sSizeScreenSilhouette_Pal[] = INCBIN_U16("graphics/pokedex/size
 
 static const u8 sText_Stats_Buttons[] = _("{A_BUTTON}TOGGLE   {DPAD_UPDOWN}MOVES");
 static const u8 sText_Stats_Buttons_Decapped[] = _("{A_BUTTON}Toggle   {DPAD_UPDOWN}Moves");
-static const u8 sText_Stats_HP[] = _("HP");
 static const u8 sText_Stats_Attack[] = _("ATK");
 static const u8 sText_Stats_Defense[] = _("DEF");
 static const u8 sText_Stats_Speed[] = _("SPE");
@@ -142,13 +141,11 @@ static const u8 sText_Stats_EV_Plus3[] = _("{UP_ARROW_2}{UP_ARROW_2}{UP_ARROW_2}
 static const u8 sText_Stats_EvStr1Str2[] = _("{STR_VAR_1}{STR_VAR_2}");
 static const u8 sText_Stats_MoveSelectedMax[] = _("{STR_VAR_1} / {STR_VAR_2}");
 static const u8 sText_Stats_MoveLevel[] = _("LVL");
-static const u8 sText_Stats_Gender_0[] = _("♂");
 static const u8 sText_Stats_Gender_12_5[] = _("♀ 1/7 ♂"); //_("♀ 12.5 / 87.5 ♂");
 static const u8 sText_Stats_Gender_25[] = _("♀ 1/3 ♂");     //_("♀ 25 / 75 ♂");
 static const u8 sText_Stats_Gender_50[] = _("♀ 1/1 ♂");     //_("♀ 50 / 50 ♂");
 static const u8 sText_Stats_Gender_75[] = _("♀ 3/1 ♂");     //_("♀ 75 / 25 ♂");
 static const u8 sText_Stats_Gender_87_5[] = _("♀ 7/1 ♂");
-static const u8 sText_Stats_Gender_100[] = _("♀");
 static const u8 sText_Stats_CatchRate[] = _("CATCH{0x5B}: ");
 static const u8 sText_Stats_CatchRate_Legend[] = _("LEGENDARY");
 static const u8 sText_Stats_CatchRate_VeryHard[] = _("VERY HARD");
@@ -175,7 +172,6 @@ static const u8 sText_Stats_MEDIUM_SLOW[] = _("MED. SLOW");
 static const u8 sText_Stats_FAST[] = _("FAST");
 static const u8 sText_Stats_SLOW[] = _("SLOW");
 static const u8 sText_Stats_ContestHeart[] = _("H");
-static const u8 sText_Stats_Minus[] = _("-");
 static const u8 sText_Stats_eggGroup[] = _("EGG G1:");
 static const u8 sText_Stats_eggGroup_Groups[] = _("{STR_VAR_1}/{STR_VAR_2}");
 static const u8 sText_Stats_eggGroup_MONSTER[] = _("MONSTER");
@@ -192,8 +188,6 @@ static const u8 sText_Stats_eggGroup_AMORPHOUS[] = _("AMORPHOUS");
 static const u8 sText_Stats_eggGroup_WATER_2[] = _("WATER {CIRCLE_2}");
 static const u8 sText_Stats_eggGroup_DITTO[] = _("DITTO");
 static const u8 sText_Stats_eggGroup_DRAGON[] = _("DRAGON");
-static const u8 sText_Stats_eggGroup_NO_EGGS_DISCOVERED[] = _("---");
-static const u8 sText_Stats_eggGroup_UNKNOWN[] = _("???");
 static const u8 sText_Dex_SEEN[] = _("SEEN");
 static const u8 sText_Dex_OWN[] = _("OWN");
 
@@ -217,7 +211,6 @@ static const u8 sText_EVO_LEVEL_ATK_EQ_DEF[] = _("{LV}{UP_ARROW} to {STR_VAR_2},
 static const u8 sText_EVO_LEVEL_ATK_LT_DEF[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, Atk < Def");
 static const u8 sText_EVO_LEVEL_SILCOON[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, Silcoon persona");
 static const u8 sText_EVO_LEVEL_CASCOON[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, Cascoon persona");
-static const u8 sText_EVO_LEVEL_NINJASK[] = _("{LV}{UP_ARROW} to {STR_VAR_2}");
 static const u8 sText_EVO_LEVEL_SHEDINJA[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, party<6, 1x POKéBALL");
 static const u8 sText_EVO_BEAUTY[] = _("{LV}{UP_ARROW}, high beauty");
 static const u8 sText_EVO_LEVEL_FEMALE[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, is female");
@@ -235,7 +228,6 @@ static const u8 sText_EVO_LEVEL_RAIN[] = _("{LV}{UP_ARROW} to {STR_VAR_2} while 
 static const u8 sText_EVO_SPECIFIC_MON_IN_PARTY[] = _("{LV}{UP_ARROW} with {STR_VAR_2} in party");
 static const u8 sText_EVO_LEVEL_DARK_TYPE_MON_IN_PARTY[] = _("{LV}{UP_ARROW} with dark type in party");
 static const u8 sText_EVO_TRADE_SPECIFIC_MON[] = _("Traded for {STR_VAR_2}");
-static const u8 sText_EVO_SPECIFIC_MAP[] = _("{LV}{UP_ARROW} on {STR_VAR_2}");
 static const u8 sText_EVO_LEVEL_NATURE_AMPED[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, Amped natures");
 static const u8 sText_EVO_LEVEL_NATURE_LOW_KEY[] = _("{LV}{UP_ARROW} to {STR_VAR_2}, Low Key natures");
 static const u8 sText_EVO_CRITICAL_HITS[] = _("Land {STR_VAR_2} critical hits in\nsingle battle");
@@ -257,7 +249,6 @@ static const u8 sText_EVO_NONE[] = _("{STR_VAR_1} has no evolution.");
 static const u8 sText_FORMS_Buttons_PE[] = _("{A_BUTTON}FORM MODE  {START_BUTTON}EVOs");
 static const u8 sText_FORMS_Buttons_Decapped_PE[] = _("{START_BUTTON}Evos");
 static const u8 sText_FORMS_Buttons_Submenu_PE[] = _("{DPAD_NONE}FORMs {A_BUTTON}CHECK {START_BUTTON}EVOs");
-static const u8 sText_FORMS_Buttons_Submenu_Decapped_PE[] = _("{START_BUTTON}Evos");
 static const u8 sText_FORMS_NONE[] = _("{STR_VAR_1} has no alternate forms.");
 static const u8 sText_PlusSymbol[] = _("+");
 
@@ -1873,56 +1864,56 @@ static const struct SearchOptionText sDexOrderOptions[] =
 
 static const struct SearchOptionText sDexSearchNameOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC},
-    [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF},
-    [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI},
-    [NAME_JKL] = {gText_DexEmptyString, gText_DexSearchAlphaJKL},
-    [NAME_MNO] = {gText_DexEmptyString, gText_DexSearchAlphaMNO},
-    [NAME_PQR] = {gText_DexEmptyString, gText_DexSearchAlphaPQR},
-    [NAME_STU] = {gText_DexEmptyString, gText_DexSearchAlphaSTU},
-    [NAME_VWX] = {gText_DexEmptyString, gText_DexSearchAlphaVWX},
-    [NAME_YZ]  = {gText_DexEmptyString, gText_DexSearchAlphaYZ},
+    {gText_EmptyString, gText_DexSearchDontSpecify},
+    [NAME_ABC] = {gText_EmptyString, gText_DexSearchAlphaABC},
+    [NAME_DEF] = {gText_EmptyString, gText_DexSearchAlphaDEF},
+    [NAME_GHI] = {gText_EmptyString, gText_DexSearchAlphaGHI},
+    [NAME_JKL] = {gText_EmptyString, gText_DexSearchAlphaJKL},
+    [NAME_MNO] = {gText_EmptyString, gText_DexSearchAlphaMNO},
+    [NAME_PQR] = {gText_EmptyString, gText_DexSearchAlphaPQR},
+    [NAME_STU] = {gText_EmptyString, gText_DexSearchAlphaSTU},
+    [NAME_VWX] = {gText_EmptyString, gText_DexSearchAlphaVWX},
+    [NAME_YZ]  = {gText_EmptyString, gText_DexSearchAlphaYZ},
     {},
 };
 
 static const struct SearchOptionText sDexSearchColorOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    {gText_EmptyString, gText_DexSearchDontSpecify},
+    [BODY_COLOR_RED + 1]    = {gText_EmptyString, gText_DexSearchColorRed},
+    [BODY_COLOR_BLUE + 1]   = {gText_EmptyString, gText_DexSearchColorBlue},
+    [BODY_COLOR_YELLOW + 1] = {gText_EmptyString, gText_DexSearchColorYellow},
+    [BODY_COLOR_GREEN + 1]  = {gText_EmptyString, gText_DexSearchColorGreen},
+    [BODY_COLOR_BLACK + 1]  = {gText_EmptyString, gText_DexSearchColorBlack},
+    [BODY_COLOR_BROWN + 1]  = {gText_EmptyString, gText_DexSearchColorBrown},
+    [BODY_COLOR_PURPLE + 1] = {gText_EmptyString, gText_DexSearchColorPurple},
+    [BODY_COLOR_GRAY + 1]   = {gText_EmptyString, gText_DexSearchColorGray},
+    [BODY_COLOR_WHITE + 1]  = {gText_EmptyString, gText_DexSearchColorWhite},
+    [BODY_COLOR_PINK + 1]   = {gText_EmptyString, gText_DexSearchColorPink},
     {},
 };
 
 static const struct SearchOptionText sDexSearchTypeOptions[] =
 {
-    {gText_DexEmptyString, gTypesInfo[TYPE_NONE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_NORMAL].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FIGHTING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FLYING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_POISON].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GROUND].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ROCK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_BUG].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GHOST].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_STEEL].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FIRE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_WATER].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GRASS].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ELECTRIC].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_PSYCHIC].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ICE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_DRAGON].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_DARK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FAIRY].name},
+    {gText_EmptyString, gTypesInfo[TYPE_NONE].name},
+    {gText_EmptyString, gTypesInfo[TYPE_NORMAL].name},
+    {gText_EmptyString, gTypesInfo[TYPE_FIGHTING].name},
+    {gText_EmptyString, gTypesInfo[TYPE_FLYING].name},
+    {gText_EmptyString, gTypesInfo[TYPE_POISON].name},
+    {gText_EmptyString, gTypesInfo[TYPE_GROUND].name},
+    {gText_EmptyString, gTypesInfo[TYPE_ROCK].name},
+    {gText_EmptyString, gTypesInfo[TYPE_BUG].name},
+    {gText_EmptyString, gTypesInfo[TYPE_GHOST].name},
+    {gText_EmptyString, gTypesInfo[TYPE_STEEL].name},
+    {gText_EmptyString, gTypesInfo[TYPE_FIRE].name},
+    {gText_EmptyString, gTypesInfo[TYPE_WATER].name},
+    {gText_EmptyString, gTypesInfo[TYPE_GRASS].name},
+    {gText_EmptyString, gTypesInfo[TYPE_ELECTRIC].name},
+    {gText_EmptyString, gTypesInfo[TYPE_PSYCHIC].name},
+    {gText_EmptyString, gTypesInfo[TYPE_ICE].name},
+    {gText_EmptyString, gTypesInfo[TYPE_DRAGON].name},
+    {gText_EmptyString, gTypesInfo[TYPE_DARK].name},
+    {gText_EmptyString, gTypesInfo[TYPE_FAIRY].name},
     {},
 };
 
@@ -5320,7 +5311,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
         if (contest_effectValue != 0xFF)
             contest_jam = contest_effectValue / 10;
         ConvertIntToDecimalStringN(gStringVar1, contest_jam, STR_CONV_MODE_RIGHT_ALIGN, 1);
-        StringCopy(gStringVar2, sText_Stats_Minus);
+        StringCopy(gStringVar2, gText_OneDash);
         StringAppend(gStringVar2, gStringVar1);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar2,  moves_x + 119, moves_y);
     }
@@ -5352,7 +5343,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
     switch (sPokedexView->sPokemonStats.genderRatio)
     {
     case 0:
-        PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, sText_Stats_Gender_0, gender_x, gender_y);
+        PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, gText_MaleSymbol, gender_x, gender_y);
         break;
     case 31:
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, sText_Stats_Gender_12_5, gender_x, gender_y);
@@ -5370,7 +5361,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, sText_Stats_Gender_87_5, gender_x, gender_y);
         break;
     case 254:
-        PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, sText_Stats_Gender_100, gender_x, gender_y);
+        PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, gText_FemaleSymbol, gender_x, gender_y);
         break;
     default:
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, gText_ThreeDashes, gender_x, gender_y);
@@ -5432,7 +5423,7 @@ static void PrintStatsScreen_Left(u8 taskId)
     //Base stats
     if (gTasks[taskId].data[5] == 0)
     {
-        PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_HP, base_x, base_y + base_y_offset*base_i);
+        PrintStatsScreenTextSmall(WIN_STATS_LEFT, gText_HP, base_x, base_y + base_y_offset*base_i);
         ConvertIntToDecimalStringN(strBase, sPokedexView->sPokemonStats.baseHP, STR_CONV_MODE_RIGHT_ALIGN, 3);
         PrintStatsScreenTextSmall(WIN_STATS_LEFT, strBase, base_x+base_x_first_row, base_y + base_y_offset*base_i);
 
@@ -5471,7 +5462,7 @@ static void PrintStatsScreen_Left(u8 taskId)
                 differentEVs++;
                 column = PrintMonStatsToggle_DifferentEVsColumn(differentEVs);
                 base_i = PrintMonStatsToggle_DifferentEVsRow(differentEVs);
-                StringCopy(gStringVar1, sText_Stats_HP);
+                StringCopy(gStringVar1, gText_HP);
                 PrintMonStatsToggle_EV_Arrows(gStringVar2, EVs[0]);
                 StringExpandPlaceholders(gStringVar3, sText_Stats_EvStr1Str2);
                 PrintStatsScreenTextSmall(WIN_STATS_LEFT, gStringVar3, base_x + x_offset_column*column, base_y + base_y_offset*base_i);
@@ -5538,7 +5529,7 @@ static void PrintStatsScreen_Left(u8 taskId)
             //HP
             if (EVs[0] > 0)
             {
-                StringCopy(gStringVar1, sText_Stats_HP);
+                StringCopy(gStringVar1, gText_HP);
                 PrintMonStatsToggle_EV_Arrows(gStringVar2, EVs[0]);
                 StringExpandPlaceholders(gStringVar3, sText_Stats_EvStr1Str2);
                 PrintStatsScreenTextSmall(WIN_STATS_LEFT, gStringVar3, base_x + 29*column, base_y + base_y_offset*base_i);
@@ -5757,10 +5748,10 @@ static void PrintStatsScreen_Left(u8 taskId)
             StringCopy(gStringVar1, sText_Stats_eggGroup_DRAGON);
             break;
         case EGG_GROUP_NO_EGGS_DISCOVERED:
-            StringCopy(gStringVar1, sText_Stats_eggGroup_NO_EGGS_DISCOVERED);
+            StringCopy(gStringVar1, gText_ThreeDashes);
             break;
         default:
-            StringCopy(gStringVar1, sText_Stats_eggGroup_UNKNOWN);
+            StringCopy(gStringVar1, gText_ThreeQuestionMarks);
             break;
         }
         //Egg group 2
@@ -5811,10 +5802,10 @@ static void PrintStatsScreen_Left(u8 taskId)
                 StringCopy(gStringVar2, sText_Stats_eggGroup_DRAGON);
                 break;
             case EGG_GROUP_NO_EGGS_DISCOVERED:
-                StringCopy(gStringVar2, sText_Stats_eggGroup_NO_EGGS_DISCOVERED);
+                StringCopy(gStringVar2, gText_ThreeDashes);
                 break;
             default:
-                StringCopy(gStringVar2, sText_Stats_eggGroup_UNKNOWN);
+                StringCopy(gStringVar2, gText_ThreeQuestionMarks);
                 break;
             }
             StringExpandPlaceholders(gStringVar3, sText_Stats_eggGroup_Groups);
@@ -5941,7 +5932,7 @@ static void EvoFormsPage_PrintNavigationButtons(void)
                 if (!HGSS_DECAPPED)
                     AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Submenu_PE);
                 else
-                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Submenu_Decapped_PE);
+                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Decapped_PE);
             }
             else
             {
@@ -6501,7 +6492,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             break;
         case EVO_LEVEL_NINJASK:
             ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_LVL_DIGITS); //level
-            StringExpandPlaceholders(gStringVar4, sText_EVO_LEVEL_NINJASK );
+            StringExpandPlaceholders(gStringVar4, sText_EVO_LEVEL );
             break;
         case EVO_LEVEL_SHEDINJA:
             ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_LVL_DIGITS); //level
@@ -6581,7 +6572,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         case EVO_SPECIFIC_MAP:
             mapHeader = Overworld_GetMapHeaderByGroupAndId(evolutions[i].param >> 8, evolutions[i].param & 0xFF);
             GetMapName(gStringVar2, mapHeader->regionMapSectionId, 0);
-            StringExpandPlaceholders(gStringVar4, sText_EVO_SPECIFIC_MAP );
+            StringExpandPlaceholders(gStringVar4, sText_EVO_MAPSEC );
             break;
         case EVO_LEVEL_NATURE_AMPED:
             ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_LVL_DIGITS); //level

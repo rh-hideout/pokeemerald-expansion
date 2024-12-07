@@ -742,11 +742,11 @@ const u8 *const gContestEffectDescriptionPointers[] =
 
 const u8 *const gContestMoveTypeTextPointers[] =
 {
-    [CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("COOL"),
-    [CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("BEAUTY"),
-    [CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("CUTE"),
-    [CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("SMART"),
-    [CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("TOUGH"),
+    [CONTEST_CATEGORY_COOL]   = gText_Cool,
+    [CONTEST_CATEGORY_BEAUTY] = gText_Beauty,
+    [CONTEST_CATEGORY_CUTE]   = gText_Cute,
+    [CONTEST_CATEGORY_SMART]  = gText_Smart,
+    [CONTEST_CATEGORY_TOUGH]  = gText_Tough,
 };
 
 static const u8 *const sContestConditions[] =
@@ -765,7 +765,7 @@ static const u8 *const sInvalidContestMoveNames[] =
     [CONTEST_CATEGORY_CUTE]    = COMPOUND_STRING("CUTE Move"),
     [CONTEST_CATEGORY_SMART]   = COMPOUND_STRING("SMART Move"),
     [CONTEST_CATEGORY_TOUGH]   = COMPOUND_STRING("TOUGH Move"),
-    [CONTEST_CATEGORIES_COUNT] = COMPOUND_STRING("???"),
+    [CONTEST_CATEGORIES_COUNT] = gText_ThreeQuestionMarks,
 };
 
 // Takes the .attentionLevel of a contestant as an index.

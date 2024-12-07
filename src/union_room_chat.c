@@ -493,10 +493,10 @@ static const u8 *const sUnionRoomKeyboardText[UNION_ROOM_KB_PAGE_COUNT - 1][UNIO
         gText_UnionRoomChatKeyboard_PQRST,
         gText_UnionRoomChatKeyboard_UVWXY,
         gText_UnionRoomChatKeyboard_Z,
-        gText_UnionRoomChatKeyboard_01234Upper,
-        gText_UnionRoomChatKeyboard_56789Upper,
-        gText_UnionRoomChatKeyboard_PunctuationUpper,
-        gText_UnionRoomChatKeyboard_SymbolsUpper
+        gText_UnionRoomChatKeyboard_01234,
+        gText_UnionRoomChatKeyboard_56789,
+        gText_UnionRoomChatKeyboard_Punctuation,
+        gText_UnionRoomChatKeyboard_Symbols
     },
     [UNION_ROOM_KB_PAGE_LOWER] =
     {
@@ -506,10 +506,10 @@ static const u8 *const sUnionRoomKeyboardText[UNION_ROOM_KB_PAGE_COUNT - 1][UNIO
         gText_UnionRoomChatKeyboard_pqrst,
         gText_UnionRoomChatKeyboard_uvwxy,
         gText_UnionRoomChatKeyboard_z,
-        gText_UnionRoomChatKeyboard_01234Lower,
-        gText_UnionRoomChatKeyboard_56789Lower,
-        gText_UnionRoomChatKeyboard_PunctuationLower,
-        gText_UnionRoomChatKeyboard_SymbolsLower
+        gText_UnionRoomChatKeyboard_01234,
+        gText_UnionRoomChatKeyboard_56789,
+        gText_UnionRoomChatKeyboard_Punctuation,
+        gText_UnionRoomChatKeyboard_Symbols
     },
     [UNION_ROOM_KB_PAGE_EMOJI] =
     {
@@ -710,7 +710,7 @@ static const struct MessageWindowInfo sDisplayStdMessages[] = {
         .useWiderBox = TRUE
     },
     [STDMESSAGE_SAVING_NO_OFF] = {
-        .text = gText_SavingDontTurnOff_Chat,
+        .text = gText_SavingDontTurnOff2,
         .boxType = 2,
         .x = 0,
         .y = 1,
@@ -747,8 +747,8 @@ static const struct MenuAction sKeyboardPageTitleTexts[UNION_ROOM_KB_PAGE_COUNT 
     [UNION_ROOM_KB_PAGE_UPPER]    = {gText_Upper, {NULL}},
     [UNION_ROOM_KB_PAGE_LOWER]    = {gText_Lower, {NULL}},
     [UNION_ROOM_KB_PAGE_EMOJI]    = {gText_Symbols, {NULL}},
-    [UNION_ROOM_KB_PAGE_REGISTER] = {gText_Register2, {NULL}},
-    [UNION_ROOM_KB_PAGE_COUNT]    = {gText_Exit2, {NULL}},
+    [UNION_ROOM_KB_PAGE_REGISTER] = {gText_Register, {NULL}},
+    [UNION_ROOM_KB_PAGE_COUNT]    = {gText_Exit, {NULL}},
 };
 
 static const u16 sUnionRoomChatInterfacePal[] = INCBIN_U16("graphics/union_room_chat/interface.gbapal");
@@ -2018,7 +2018,7 @@ void InitUnionRoomChatRegisteredTexts(void)
 {
 #if FREE_UNION_ROOM_CHAT == FALSE
     StringCopy(gSaveBlock1Ptr->registeredTexts[0], gText_Hello);
-    StringCopy(gSaveBlock1Ptr->registeredTexts[1], gText_Pokemon2);
+    StringCopy(gSaveBlock1Ptr->registeredTexts[1], gText_Pokemon);
     StringCopy(gSaveBlock1Ptr->registeredTexts[2], gText_Trade);
     StringCopy(gSaveBlock1Ptr->registeredTexts[3], gText_Battle);
     StringCopy(gSaveBlock1Ptr->registeredTexts[4], gText_Lets);
