@@ -2624,6 +2624,12 @@ gCryTable::
 	cry Cry_Adentity
 
 	cry Cry_Coilspill
+
+	cry Cry_Regigigone
+
+	cry Cry_Regicide
+
+	cry Cry_Regishort
 .endif
 
 	.align 2
@@ -5253,4 +5259,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Adentity
 
 	cry_reverse Cry_Coilspill
+
+	cry_reverse Cry_Regigigone
+
+	cry_reverse Cry_Regicide
+
+	cry_reverse Cry_Regishort
 .endif

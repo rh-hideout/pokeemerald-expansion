@@ -22508,11 +22508,32 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Cocken[] = INCBIN_U8("graphics/pokemon/cocken/icon.4bpp");
    const u8 gMonFootprint_Cocken[] = INCBIN_U8("graphics/pokemon/cocken/footprint.1bpp");
 
-    const u32 gMonFrontPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/front.4bpp.lz");
-    const u32 gMonPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/normal.gbapal.lz");
-    const u32 gMonBackPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/back.4bpp.lz");
-    const u32 gMonShinyPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/shiny.gbapal.lz");
-    const u8 gMonIcon_CockenMega[] = INCBIN_U8("graphics/pokemon/cocken/mega/icon.4bpp");
+   const u32 gMonFrontPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/front.4bpp.lz");
+   const u32 gMonPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/normal.gbapal.lz");
+   const u32 gMonBackPic_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/back.4bpp.lz");
+   const u32 gMonShinyPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/shiny.gbapal.lz");
+   const u8 gMonIcon_CockenMega[] = INCBIN_U8("graphics/pokemon/cocken/mega/icon.4bpp");
+
+   const u32 gMonFrontPic_Regishort[] = INCBIN_U32("graphics/pokemon/regishort/front.4bpp.lz");
+   const u32 gMonBackPic_Regishort[] = INCBIN_U32("graphics/pokemon/regishort/back.4bpp.lz");
+   const u32 gMonPalette_Regishort[] = INCBIN_U32("graphics/pokemon/regishort/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Regishort[] = INCBIN_U32("graphics/pokemon/regishort/shiny.gbapal.lz");
+   const u8 gMonIcon_Regishort[] = INCBIN_U8("graphics/pokemon/regishort/icon.4bpp");
+   const u8 gMonFootprint_Regishort[] = INCBIN_U8("graphics/pokemon/regishort/footprint.1bpp");
+
+   const u32 gMonFrontPic_Regicide[] = INCBIN_U32("graphics/pokemon/regicide/front.4bpp.lz");
+   const u32 gMonBackPic_Regicide[] = INCBIN_U32("graphics/pokemon/regicide/back.4bpp.lz");
+   const u32 gMonPalette_Regicide[] = INCBIN_U32("graphics/pokemon/regicide/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Regicide[] = INCBIN_U32("graphics/pokemon/regicide/shiny.gbapal.lz");
+   const u8 gMonIcon_Regicide[] = INCBIN_U8("graphics/pokemon/regicide/icon.4bpp");
+   const u8 gMonFootprint_Regicide[] = INCBIN_U8("graphics/pokemon/regicide/footprint.1bpp");
+
+   const u32 gMonFrontPic_Regigigone[] = INCBIN_U32("graphics/pokemon/regigigone/front.4bpp.lz");
+   const u32 gMonBackPic_Regigigone[] = INCBIN_U32("graphics/pokemon/regigigone/back.4bpp.lz");
+   const u32 gMonPalette_Regigigone[] = INCBIN_U32("graphics/pokemon/regigigone/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Regigigone[] = INCBIN_U32("graphics/pokemon/regigigone/shiny.gbapal.lz");
+   const u8 gMonIcon_Regigigone[] = INCBIN_U8("graphics/pokemon/regigigone/icon.4bpp");
+   const u8 gMonFootprint_Regigigone[] = INCBIN_U8("graphics/pokemon/regigigone/footprint.1bpp");
 
    const u32 gMonFrontPic_Moltama[] = INCBIN_U32("graphics/pokemon/moltama/front.4bpp.lz");
    const u32 gMonBackPic_Moltama[] = INCBIN_U32("graphics/pokemon/moltama/back.4bpp.lz");

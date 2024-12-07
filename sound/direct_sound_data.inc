@@ -6556,6 +6556,18 @@ Cry_Adentity::
 Cry_Coilspill::
 	.incbin "sound/direct_sound_samples/cries/coilspill.bin"
 
+	.align 2
+Cry_Regigigone::
+	.incbin "sound/direct_sound_samples/cries/regigigone.bin"
+
+	.align 2
+Cry_Regicide::
+	.incbin "sound/direct_sound_samples/cries/regicide.bin"
+
+	.align 2
+Cry_Regishort::
+	.incbin "sound/direct_sound_samples/cries/regishort.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

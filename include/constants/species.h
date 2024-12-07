@@ -1735,8 +1735,11 @@
 #define SPECIES_DREDALISK                               1625
 #define SPECIES_ADENTITY                                1626
 #define SPECIES_COILSPILL                               1627
+#define SPECIES_REGIGIGONE                              1628
+#define SPECIES_REGICIDE                                1629
+#define SPECIES_REGISHORT                               1630
 
-#define SPECIES_EGG (SPECIES_COILSPILL + 1)
+#define SPECIES_EGG (SPECIES_REGISHORT + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

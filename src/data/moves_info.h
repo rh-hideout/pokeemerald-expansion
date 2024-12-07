@@ -22175,7 +22175,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Soul Crusher"),
         .description = COMPOUND_STRING(
-            "Target's soul is crushed\n"
+            "Targets soul is crushed\n"
             "if under half HP."),
         .effect = EFFECT_SOUL_CRUSHER,
         .power = 9,
@@ -22410,6 +22410,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
         .battleAnimScript = Move_METRONOME,
+    },
+
+    [MOVE_SPOOPERPOWER] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("Spooperpower"),
+        .description = COMPOUND_STRING(
+            "User's highest attack stat\n"
+            "determines its category."),
+        .effect = EFFECT_PHOTON_GEYSER,
+        .power = 100,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresTargetAbility = TRUE,
+        .metronomeBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_PHOTON_GEYSER,
     },
     // END OF CAPRICCIO MOVES
 
