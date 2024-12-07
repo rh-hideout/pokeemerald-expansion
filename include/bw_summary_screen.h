@@ -7,7 +7,7 @@
 #define BW_SUMMARY_SCREEN                           TRUE
 
 // constants
-#define BW_MAX_MOVE_DESCRIPTION_LENGTH              60      // this only needs to be updated if you use auto-formatting
+#define BW_MAX_MOVE_DESCRIPTION_LENGTH              90      // this only needs to be updated if you use auto-formatting
 #define BW_IV_EV_HIDDEN                             0       // don't show IVs and EVs
 #define BW_IV_EV_GRADED                             1       // show graded values for IVs and EVs
 #define BW_IV_EV_PRECISE                            2       // show precise values for IVs and EVs

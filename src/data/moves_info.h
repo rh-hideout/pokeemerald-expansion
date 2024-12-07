@@ -22417,7 +22417,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .name = HANDLE_EXPANDED_MOVE_NAME("Spooperpower"),
         .description = COMPOUND_STRING(
             "User's highest attack stat\n"
-            "determines its category."),
+            "determines category. Ignores\n"
+            "abilities."),
         .effect = EFFECT_PHOTON_GEYSER,
         .power = 100,
         .type = TYPE_GHOST,
