@@ -740,7 +740,7 @@ static u8 RotatingGate_CreateGate(u8 gateId, s16 deltaX, s16 deltaY)
 
     template.tileTag = gate->shape + ROTATING_GATE_TILE_TAG;
 
-    spriteId = CreateSprite(&template, 0, 0, 0x93);
+    spriteId = CreateSprite(&template, 0, 0, 0x93); // 0x93 is above shadows (0x94)
     if (spriteId == MAX_SPRITES)
         return MAX_SPRITES;
 
