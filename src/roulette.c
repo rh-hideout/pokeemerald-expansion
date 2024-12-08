@@ -3522,12 +3522,12 @@ static void CreateGridSprites(void)
     u8 i, j;
     u8 spriteId;
     struct SpriteSheet s;
-    LZ77UnCompWram(sSpriteSheet_Headers.data, gDecompressionBuffer);
+    LZDecompressWram(sSpriteSheet_Headers.data, gDecompressionBuffer);
     s.data = gDecompressionBuffer;
     s.size = sSpriteSheet_Headers.size;
     s.tag  = sSpriteSheet_Headers.tag;
     LoadSpriteSheet(&s);
-    LZ77UnCompWram(sSpriteSheet_GridIcons.data, gDecompressionBuffer);
+    LZDecompressWram(sSpriteSheet_GridIcons.data, gDecompressionBuffer);
     s.data = gDecompressionBuffer;
     s.size = sSpriteSheet_GridIcons.size;
     s.tag  = sSpriteSheet_GridIcons.tag;
@@ -3658,7 +3658,7 @@ static void CreateWheelIconSprites(void)
     u16 angle;
     struct SpriteSheet s;
 
-    LZ77UnCompWram(sSpriteSheet_WheelIcons.data, gDecompressionBuffer);
+    LZDecompressWram(sSpriteSheet_WheelIcons.data, gDecompressionBuffer);
     s.data = gDecompressionBuffer;
     s.size = sSpriteSheet_WheelIcons.size;
     s.tag  = sSpriteSheet_WheelIcons.tag;
@@ -3703,7 +3703,7 @@ static void CreateInterfaceSprites(void)
     for (i = 0; i < ARRAY_COUNT(sSpriteSheets_Interface) - 1; i++)
     {
         struct SpriteSheet s;
-        LZ77UnCompWram(sSpriteSheets_Interface[i].data, gDecompressionBuffer);
+        LZDecompressWram(sSpriteSheets_Interface[i].data, gDecompressionBuffer);
         s.data = gDecompressionBuffer;
         s.size = sSpriteSheets_Interface[i].size;
         s.tag  = sSpriteSheets_Interface[i].tag;
@@ -3851,7 +3851,7 @@ static void CreateWheelCenterSprite(void)
 {
     u8 spriteId;
     struct SpriteSheet s;
-    LZ77UnCompWram(sSpriteSheet_WheelCenter.data, gDecompressionBuffer);
+    LZDecompressWram(sSpriteSheet_WheelCenter.data, gDecompressionBuffer);
     s.data = gDecompressionBuffer;
     s.size = sSpriteSheet_WheelCenter.size;
     s.tag = sSpriteSheet_WheelCenter.tag;
