@@ -2630,6 +2630,16 @@ gCryTable::
 	cry Cry_Regicide
 
 	cry Cry_Regishort
+
+	cry Cry_Glaciun
+
+	cry Cry_Galvadeux
+
+	cry Cry_Pyrotrois
+
+	cry Cry_Sablini
+
+	cry Cry_Dawg
 .endif
 
 	.align 2
@@ -5265,4 +5275,14 @@ gCryTable_Reverse::
 	cry_reverse Cry_Regicide
 
 	cry_reverse Cry_Regishort
+
+	cry_reverse Cry_Glaciun
+
+	cry_reverse Cry_Galvadeux
+
+	cry_reverse Cry_Pyrotrois
+
+	cry_reverse Cry_Sablini
+
+	cry_reverse Cry_Dawg
 .endif

@@ -6568,6 +6568,26 @@ Cry_Regicide::
 Cry_Regishort::
 	.incbin "sound/direct_sound_samples/cries/regishort.bin"
 
+	.align 2
+Cry_Glaciun::
+	.incbin "sound/direct_sound_samples/cries/glaciun.bin"
+
+	.align 2
+Cry_Galvadeux::
+	.incbin "sound/direct_sound_samples/cries/galvadeux.bin"
+
+	.align 2
+Cry_Pyrotrois::
+	.incbin "sound/direct_sound_samples/cries/pyrotrois.bin"
+
+	.align 2
+Cry_Sablini::
+	.incbin "sound/direct_sound_samples/cries/sablini.bin"
+
+	.align 2
+Cry_Dawg::
+	.incbin "sound/direct_sound_samples/cries/dawg.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

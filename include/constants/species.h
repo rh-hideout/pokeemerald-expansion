@@ -1738,8 +1738,13 @@
 #define SPECIES_REGIGIGONE                              1628
 #define SPECIES_REGICIDE                                1629
 #define SPECIES_REGISHORT                               1630
+#define SPECIES_GLACIUN                                 1631
+#define SPECIES_GALVADEUX                               1632
+#define SPECIES_PYROTROIS                               1633
+#define SPECIES_SABLINI                                 1634
+#define SPECIES_DAWG                                    1635
 
-#define SPECIES_EGG (SPECIES_REGISHORT + 1)
+#define SPECIES_EGG (SPECIES_DAWG + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
