@@ -4,7 +4,7 @@ mapscripts Black_Market_MapScripts {
 script Black_Market_EventScript_Sign {
     lockall
     msgbox(format("EMPLOYEES ONLY!!!!\p"
-    "KEEP OUT WE MEAN IT!!!!\p"))
+    "KEEP OUT WE MEAN IT!!!!!!\p"))
     releaseall
 }
 
@@ -68,7 +68,6 @@ BM_SHARD_ITEMS:
     .2byte ITEM_YELLOW_NECTAR
     .2byte ITEM_PINK_NECTAR
     .2byte ITEM_PURPLE_NECTAR
-    .2byte ITEM_DYNAMAX_CANDY
     .2byte ITEM_LIGHT_BALL
     .2byte ITEM_LEEK
     .2byte ITEM_THICK_CLUB
@@ -109,9 +108,9 @@ BM_SHARD_ITEMS:
     .2byte ITEM_ADAMANT_CRYSTAL
     .2byte ITEM_GRISEOUS_CORE
     .2byte ITEM_LUSTROUS_GLOBE
-
-
-
+    .2byte ITEM_NONE
+    release
+    end
 
 .align 2
 BM_BALL_ITEMS:
