@@ -24533,7 +24533,7 @@ gBattleAnimMove_RazorLeaf::
 	end
 
 gBattleAnimMove_NaturePower::
-	@ No actual animation, uses the animation of a move from sNaturePowerMoves instead
+	@ No actual animation, uses the animation of a move from gBattleTerrainInfo.naturePower instead
 
 gBattleAnimMove_AncientPower::
 	loadspritegfx ANIM_TAG_ROCKS
