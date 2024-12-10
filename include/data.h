@@ -74,6 +74,7 @@ struct TrainerMon
     u8 padding1:1;
     u8 dynamaxLevel:4;
     u8 padding2:4;
+    u32 tags;
 };
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)
@@ -92,6 +93,9 @@ struct Trainer
              u8 startingStatus:6;    // this trainer starts a battle with a given status. see include/constants/battle.h for values
     /*0x1F*/ u8 mugshotColor;
     /*0x20*/ u8 partySize;
+    /*0x21*/ u8 poolSize;
+    /*0x22*/ u16 poolRuleIndex;
+    //  End of 32-bit alignment
 };
 
 struct TrainerClass
