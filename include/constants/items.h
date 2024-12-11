@@ -1001,11 +1001,13 @@
 
 // Cappricio
 #define ITEM_MOLUGANION 828
+#define ITEM_CURSED_FANG 829
+#define ITEM_CRIMSON_LENS 830
 
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 829
+#define ITEMS_COUNT 831
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

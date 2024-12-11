@@ -1743,8 +1743,11 @@
 #define SPECIES_PYROTROIS                               1633
 #define SPECIES_SABLINI                                 1634
 #define SPECIES_DAWG                                    1635
+#define SPECIES_TEMAWRIA                                1636
+#define SPECIES_RETWINA                                 1637
+#define SPECIES_WINKHULU                                1638
 
-#define SPECIES_EGG (SPECIES_DAWG + 1)
+#define SPECIES_EGG (SPECIES_WINKHULU + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

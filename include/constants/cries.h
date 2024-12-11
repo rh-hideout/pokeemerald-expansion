@@ -2535,6 +2535,9 @@ enum {
     CRY_PYROTROIS,
     CRY_SABLINI,
     CRY_DAWG,
+    CRY_TEMAWRIA,
+    CRY_RETWINA,
+    CRY_WINKHULU,
 
     CRY_COUNT,
 };

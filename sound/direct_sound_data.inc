@@ -6588,6 +6588,18 @@ Cry_Sablini::
 Cry_Dawg::
 	.incbin "sound/direct_sound_samples/cries/dawg.bin"
 
+	.align 2
+Cry_Temawria::
+	.incbin "sound/direct_sound_samples/cries/temawria.bin"
+
+	.align 2
+Cry_Retwina::
+	.incbin "sound/direct_sound_samples/cries/retwina.bin"
+
+	.align 2
+Cry_Winkhulu::
+	.incbin "sound/direct_sound_samples/cries/winkhulu.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

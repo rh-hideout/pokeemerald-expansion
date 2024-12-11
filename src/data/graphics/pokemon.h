@@ -22232,6 +22232,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Strollge[] = INCBIN_U8("graphics/pokemon/strollge/icon.4bpp");
    const u8 gMonFootprint_Strollge[] = INCBIN_U8("graphics/pokemon/strollge/footprint.1bpp");
 
+   const u32 gMonFrontPic_Winkhulu[] = INCBIN_U32("graphics/pokemon/winkhulu/front.4bpp.lz");
+   const u32 gMonBackPic_Winkhulu[] = INCBIN_U32("graphics/pokemon/winkhulu/back.4bpp.lz");
+   const u32 gMonPalette_Winkhulu[] = INCBIN_U32("graphics/pokemon/winkhulu/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Winkhulu[] = INCBIN_U32("graphics/pokemon/winkhulu/shiny.gbapal.lz");
+   const u8 gMonIcon_Winkhulu[] = INCBIN_U8("graphics/pokemon/winkhulu/icon.4bpp");
+   const u8 gMonFootprint_Winkhulu[] = INCBIN_U8("graphics/pokemon/winkhulu/footprint.1bpp");
+
+   const u32 gMonFrontPic_Temawria[] = INCBIN_U32("graphics/pokemon/temawria/front.4bpp.lz");
+   const u32 gMonBackPic_Temawria[] = INCBIN_U32("graphics/pokemon/temawria/back.4bpp.lz");
+   const u32 gMonPalette_Temawria[] = INCBIN_U32("graphics/pokemon/temawria/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Temawria[] = INCBIN_U32("graphics/pokemon/temawria/shiny.gbapal.lz");
+   const u8 gMonIcon_Temawria[] = INCBIN_U8("graphics/pokemon/temawria/icon.4bpp");
+   const u8 gMonFootprint_Temawria[] = INCBIN_U8("graphics/pokemon/temawria/footprint.1bpp");
+
+   const u32 gMonFrontPic_Retwina[] = INCBIN_U32("graphics/pokemon/retwina/front.4bpp.lz");
+   const u32 gMonBackPic_Retwina[] = INCBIN_U32("graphics/pokemon/retwina/back.4bpp.lz");
+   const u32 gMonPalette_Retwina[] = INCBIN_U32("graphics/pokemon/retwina/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Retwina[] = INCBIN_U32("graphics/pokemon/retwina/shiny.gbapal.lz");
+   const u8 gMonIcon_Retwina[] = INCBIN_U8("graphics/pokemon/retwina/icon.4bpp");
+   const u8 gMonFootprint_Retwina[] = INCBIN_U8("graphics/pokemon/retwina/footprint.1bpp");
+
    const u32 gMonFrontPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/front.4bpp.lz");
    const u32 gMonBackPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/back.4bpp.lz");
    const u32 gMonPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/normal.gbapal.lz");

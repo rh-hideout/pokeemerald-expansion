@@ -1112,6 +1112,8 @@ extern const u32 gItemIconPalette_LustrousOrb[];
 extern const u32 gItemIcon_GriseousOrb[];
 extern const u32 gItemIconPalette_GriseousOrb[];
 extern const u32 gItemIconPalette_Moluganion[];
+extern const u32 gItemIconPalette_CursedFang[];
+extern const u32 gItemIconPalette_CrimsonLens[];
 // Incenses
 extern const u32 gItemIcon_SeaIncense[];
 extern const u32 gItemIconPalette_SeaIncense[];
@@ -1694,6 +1696,8 @@ extern const u32 gItemIconPalette_LustrousGlobe[];
 extern const u32 gItemIcon_BerserkGene[];
 extern const u32 gItemIconPalette_BerserkGene[];
 extern const u32 gItemIcon_Moluganion[];
+extern const u32 gItemIcon_CursedFang[];
+extern const u32 gItemIcon_CrimsonLens[];
 
 extern const u32 gItemIcon_FairyFeather[];
 extern const u32 gItemIconPalette_FairyFeather[];

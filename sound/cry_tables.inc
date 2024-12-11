@@ -2640,6 +2640,12 @@ gCryTable::
 	cry Cry_Sablini
 
 	cry Cry_Dawg
+
+	cry Cry_Temawria
+
+	cry Cry_Retwina
+
+	cry Cry_Winkhulu
 .endif
 
 	.align 2
@@ -5285,4 +5291,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Sablini
 
 	cry_reverse Cry_Dawg
+
+	cry_reverse Cry_Temawria
+
+	cry_reverse Cry_Retwina
+
+	cry_reverse Cry_Winkhulu
 .endif

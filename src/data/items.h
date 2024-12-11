@@ -14070,10 +14070,11 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
     [ITEM_MOLUGANION] =
     {
         .name = _("Moluganion"),
-        .price = 500,
+        .price = 1500,
         .holdEffect = HOLD_EFFECT_MOLUGANION,
         .description = COMPOUND_STRING(
             "A mysterious book\n"
@@ -14085,5 +14086,41 @@ const struct Item gItemsInfo[] =
         .flingPower = 120,
         .iconPic = gItemIcon_Moluganion,
         .iconPalette = gItemIconPalette_Moluganion,
+    },
+
+    [ITEM_CURSED_FANG] =
+    {
+        .name = _("Cursed Fang"),
+        .price = 7500,
+        .holdEffect = HOLD_EFFECT_CURSED_FANG,
+        .description = COMPOUND_STRING(
+            "Item that boosts\n"
+            "Winkhulu's Attack.\n"
+            "or evolves it."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
+        .effect = gItemEffect_EvoItem,
+        .flingPower = 40,
+        .iconPic = gItemIcon_CursedFang,
+        .iconPalette = gItemIconPalette_CursedFang,
+    },
+
+    [ITEM_CRIMSON_LENS] =
+    {
+        .name = _("Crimson Lens"),
+        .price = 7500,
+        .holdEffect = HOLD_EFFECT_CRIMSON_LENS,
+        .description = COMPOUND_STRING(
+            "Item that boosts\n"
+            "Winkhulu's Sp.Atk.\n"
+            "or evolves it."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
+        .effect = gItemEffect_EvoItem,
+        .flingPower = 60,
+        .iconPic = gItemIcon_CrimsonLens,
+        .iconPalette = gItemIconPalette_CrimsonLens,
     },
 };
