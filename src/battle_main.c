@@ -5678,6 +5678,7 @@ static void TryEvolvePokemon(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
+        u32 currSpecies = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!(sTriedEvolving & (1u << i)))
         {
             u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_SPECIAL, i, NULL);
@@ -5688,6 +5689,12 @@ static void TryEvolvePokemon(void)
             {
                 gLeveledUpInBattle &= ~(1u << i);
                 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL);
+                // Tandemous' evolution doesn't call the evolution sequence
+                if (species != SPECIES_NONE)
+                {
+                    EvolveMon(&gPlayerParty[i], currSpecies, species);
+                    return;
+                }
             }
 
             if (species == SPECIES_NONE)
