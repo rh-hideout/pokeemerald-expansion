@@ -6600,6 +6600,34 @@ Cry_Retwina::
 Cry_Winkhulu::
 	.incbin "sound/direct_sound_samples/cries/winkhulu.bin"
 
+	.align 2
+Cry_Xeninter::
+	.incbin "sound/direct_sound_samples/cries/xeninter.bin"
+
+	.align 2
+Cry_Icehugger::
+	.incbin "sound/direct_sound_samples/cries/icehugger.bin"
+
+	.align 2
+Cry_Draklown::
+	.incbin "sound/direct_sound_samples/cries/draklown.bin"
+
+	.align 2
+Cry_Trickling::
+	.incbin "sound/direct_sound_samples/cries/trickling.bin"
+
+	.align 2
+Cry_Regirust::
+	.incbin "sound/direct_sound_samples/cries/regirust.bin"
+
+	.align 2
+Cry_Regimelt::
+	.incbin "sound/direct_sound_samples/cries/regimelt.bin"
+
+	.align 2
+Cry_Regirode::
+	.incbin "sound/direct_sound_samples/cries/regirode.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

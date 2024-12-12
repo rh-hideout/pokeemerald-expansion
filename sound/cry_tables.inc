@@ -2646,6 +2646,20 @@ gCryTable::
 	cry Cry_Retwina
 
 	cry Cry_Winkhulu
+
+	cry Cry_Xeninter
+
+	cry Cry_Icehugger
+
+	cry Cry_Draklown
+
+	cry Cry_Trickling
+
+	cry Cry_Regirust
+
+	cry Cry_Regimelt
+
+	cry Cry_Regirode
 .endif
 
 	.align 2
@@ -5297,4 +5311,18 @@ gCryTable_Reverse::
 	cry_reverse Cry_Retwina
 
 	cry_reverse Cry_Winkhulu
+
+	cry_reverse Cry_Xeninter
+
+	cry_reverse Cry_Icehugger
+
+	cry_reverse Cry_Draklown
+
+	cry_reverse Cry_Trickling
+
+	cry_reverse Cry_Regirust
+
+	cry_reverse Cry_Regimelt
+	
+	cry_reverse Cry_Regirode
 .endif
