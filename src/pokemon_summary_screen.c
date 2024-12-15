@@ -1712,9 +1712,15 @@ static void ChangeSummaryState(s16 *taskData, u8 taskId)
         }
         else if (JOY_NEW(A_BUTTON))
         {
-            if (sMonSummaryScreen->currPageIndex != PSS_PAGE_SKILLS)
+            if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
             {
-                if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+                 // Cycle through IVs/EVs/stats on pressing A
+                StopPokemonAnimations();
+                PlaySE(SE_SELECT);
+                ChangeSummaryState(taskData, taskId);
+                BufferIvOrEvStats(currentStat);
+            }
+                else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
                 {
                     if (ShouldShowRename())
                     {
@@ -1732,7 +1738,6 @@ static void ChangeSummaryState(s16 *taskData, u8 taskId)
                     SwitchToMoveSelection(taskId);
                 }
             }
-        }
         else if (JOY_NEW(B_BUTTON))
         {
             StopPokemonAnimations();

@@ -213,11 +213,11 @@ BM_SHARD_ITEMS:
 # 111 "data/maps/Black_Market/scripts.pory"
     .2byte ITEM_LUSTROUS_GLOBE
 # 112 "data/maps/Black_Market/scripts.pory"
-
+    .2byte ITEM_NONE
 # 113 "data/maps/Black_Market/scripts.pory"
-
+    release
 # 114 "data/maps/Black_Market/scripts.pory"
-
+    end
 # 115 "data/maps/Black_Market/scripts.pory"
 
 # 116 "data/maps/Black_Market/scripts.pory"
