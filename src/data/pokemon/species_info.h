@@ -4427,10 +4427,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 17,
        .weight = 1484,
        .description = COMPOUND_STRING(
-           "Fragmented by an incredible power, it\n"
-           "has had its slumber disturbed by a\n"
-           "mysterious portal that removed it\n"
-           "from its original chambers."),
+           "Pulled from another world, Regirode's it\n"
+           "body is made of rounded stones that\n"
+           "are too smooth to hold themselves\n"
+           "together without great effort from it."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4481,10 +4481,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 18,
        .weight = 863,
        .description = COMPOUND_STRING(
-           "Destroyed by intense heat, it has had\n"
-           "its slumber disturbed by a mysterious\n"
-           "portal that removed it from its original\n"
-           "chambers."),
+           "Pulled from another world, Regimelt\n"
+           "is in a constant war with itself.\n"
+           "It tries to freeze the endlessly\n"
+           "melting ice its body is made of."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4535,10 +4535,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 19,
        .weight = 1821,
        .description = COMPOUND_STRING(
-           "Ravaged by extreme oxidation, it has had\n"
-           "its slumber disturbed by a mysterious\n"
-           "portal that removed it from its original\n"
-           "chambers."),
+           "Pulled from another world, Regirust\n"
+           "can move in short bursts of speed,\n"
+           "but its corroded joints cry out with a\n"
+           "horrible metallic screech when it does."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4590,9 +4590,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 1450,
        .description = COMPOUND_STRING(
            "After the collapse of a distant region,\n"
-           "this Pokémon had nowhere else to release\n"
-           "it's violent electric currents, causing it\n"
-           "to short out very quickly."),
+           "Regishort let out one final burst of\n"
+           "electrical energy to escape its prison,\n"
+           "permanently burning itself out."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -4643,10 +4643,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 21,
        .weight = 1200,
        .description = COMPOUND_STRING(
-           "This Pokemon was slain after destroying\n"
-           "a whole village in a distant region.\n"
-           "It's said that it was released from its\n"
-           "chamber due to the collapse of said region."),
+           "Regicide was sealed away during the\n"
+           "collapse of a distant region as it\n"
+           "ravaged the countryside. It's said\n"
+           "that the region's collapse freed it."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,

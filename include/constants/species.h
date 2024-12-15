@@ -1746,13 +1746,13 @@
 #define SPECIES_TEMAWRIA                                1636
 #define SPECIES_RETWINA                                 1637
 #define SPECIES_WINKHULU                                1638
-#define SPECIES_XENINTER                                1640
-#define SPECIES_ICEHUGGER                               1641
-#define SPECIES_DRAKLOWN                                1642
-#define SPECIES_TRICKLING                               1643
-#define SPECIES_REGIRUST                                1644
-#define SPECIES_REGIMELT                                1645
-#define SPECIES_REGIRODE                                1646
+#define SPECIES_XENINTER                                1639
+#define SPECIES_ICEHUGGER                               1640
+#define SPECIES_DRAKLOWN                                1641
+#define SPECIES_TRICKLING                               1642
+#define SPECIES_REGIRUST                                1643
+#define SPECIES_REGIMELT                                1644
+#define SPECIES_REGIRODE                                1645
 
 #define SPECIES_EGG (SPECIES_REGIRODE + 1)
 
