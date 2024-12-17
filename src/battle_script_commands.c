@@ -5674,7 +5674,9 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_ABSORB:
-            if (gMovesInfo[gCurrentMove].effect == EFFECT_ABSORB)
+            if (gMovesInfo[gCurrentMove].effect == EFFECT_ABSORB
+             && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+             && TARGET_TURN_DAMAGED)
             {
                 if (gStatuses3[gBattlerAttacker] & STATUS3_HEAL_BLOCK && gMovesInfo[gCurrentMove].healingMove)
                 {

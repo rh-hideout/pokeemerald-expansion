@@ -125,4 +125,20 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
     }
 }
 
+SINGLE_BATTLE_TEST("Absorb does not drain any HP if user flinched")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
+            MESSAGE("The opposing Wobbuffet had its energy drained!");
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("Absorb recovers 50% of the damage dealt to a Substitute");
