@@ -606,6 +606,13 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 
             return FALSE;
 
+        case ABILITY_ZERO_TO_HERO:
+            //Zero to Hero only works on Palafin-Zero
+            if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO
+                 && AI_DATA->mostSuitableMonId[battler] != PARTY_SIZE)
+                break;
+            
+            return FALSE;
         default:
             return FALSE;
     }
