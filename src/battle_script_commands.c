@@ -451,7 +451,7 @@ static void Cmd_drawlvlupbox(void);
 static void Cmd_resetsentmonsvalue(void);
 static void Cmd_setatktoplayer0(void);
 static void Cmd_makevisible(void);
-static void Cmd_recordability(void);
+static void Cmd_unused70(void);
 static void Cmd_buffermovetolearn(void);
 static void Cmd_jumpifplayerran(void);
 static void Cmd_hpthresholds(void);
@@ -710,7 +710,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     Cmd_resetsentmonsvalue,                      //0x6D
     Cmd_setatktoplayer0,                         //0x6E
     Cmd_makevisible,                             //0x6F
-    Cmd_recordability,                           //0x70
+    Cmd_unused70,                           //0x70
     Cmd_buffermovetolearn,                       //0x71
     Cmd_jumpifplayerran,                         //0x72
     Cmd_hpthresholds,                            //0x73
@@ -8922,12 +8922,9 @@ static void Cmd_makevisible(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_recordability(void)
+static void Cmd_unused70(void)
 {
-    CMD_ARGS(u8 battler);
-
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    RecordAbilityBattle(battler, gBattleMons[battler].ability);
+    CMD_ARGS();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
