@@ -29,3 +29,102 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Wynaut
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== 1 ===
+Name: Test1
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Party Size: 1
+
+Wynaut
+
+Wobbuffet
+
+Eevee
+
+Mew
+
+=== 2 ===
+Name: Test1
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Party Size: 3
+
+Wynaut
+
+Wobbuffet
+Tags: Lead
+
+Eevee
+Tags: Ace
+
+Mew
+
+Oddish
+Tags: Ace
+
+Aron
+Tags: Lead
+
+=== 3 ===
+Name: Test1
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 3
+Pool Rules: Weather Doubles
+
+Wynaut
+Tags: Lead
+
+Wobbuffet
+Tags: Lead
+
+Vulpix
+Tags: Lead / Weather Setter
+
+Bulbasaur
+Tags: Lead / Weather Abuser
+
+Torkoal
+Tags: Lead / Weather Setter
+
+Cherrim
+Tags: Lead / Weather Abuser
+
+Mew
+Tags: Lead
+
+Aron
+Tags: Lead
+
+Oddish
+
+Eevee
+
+=== 4 ===
+Name: Test1
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Party Size: 2
+Pool Rules: Basic
+
+Wynaut
+Tags: Lead
+
+Wobbuffet
+Tags: Lead
+
+Eevee
+Tags: Lead
