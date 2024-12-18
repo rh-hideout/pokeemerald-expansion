@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "cable_club.h"
+#include "compatibility.h"
 #include "event_object_movement.h"
 #include "link.h"
 #include "link_rfu.h"
@@ -1064,6 +1065,26 @@ static void UNUSED BtlController_EmitPause(u32 battler, u32 bufferId, u8 toWait,
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, toWait * 3 + 2);
 }
 
+static void CopyDisableStruct(struct DisableStruct *disableStructPtr, void *dst)
+{
+    if (IsVanillaLinkInteraction())
+        ConvertBattleStruct(disableStructPtr, dst, B_STRUCT_DISABLE, TRUE);
+    else
+        memcpy(dst, disableStructPtr, sizeof(struct DisableStruct));
+}
+
+static struct DisableStruct *ReceiveDisableStruct(void *src)
+{
+    if (IsVanillaLinkInteraction())
+    {
+        struct VanillaDisableStruct vanillaDisStruct;
+        memcpy(&vanillaDisStruct, src, sizeof(struct VanillaDisableStruct));
+        ConvertBattleStruct(src, &vanillaDisStruct, B_STRUCT_DISABLE, FALSE);
+    }
+
+    return src;
+}
+
 void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, struct DisableStruct *disableStructPtr, u8 multihit)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_MOVEANIMATION;
@@ -1090,39 +1111,73 @@ void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 tur
     }
     gBattleResources->transferBuffer[14] = 0;
     gBattleResources->transferBuffer[15] = 0;
-    memcpy(&gBattleResources->transferBuffer[16], disableStructPtr, sizeof(struct DisableStruct));
+    CopyDisableStruct(disableStructPtr, &gBattleResources->transferBuffer[16]);
+
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 16 + sizeof(struct DisableStruct));
+}
+
+static void CopyMsgDataStruct(void *dst)
+{
+    u32 i;
+    if (IsVanillaLinkInteraction())
+    {
+        struct VanillaBattleMsgData *stringInfo = dst;
+        stringInfo->currentMove = gCurrentMove;
+        stringInfo->originallyUsedMove = gChosenMove;
+        stringInfo->lastItem = gLastUsedItem;
+        stringInfo->lastAbility = gLastUsedAbility;
+        stringInfo->scrActive = gBattleScripting.battler;
+        stringInfo->bakScriptPartyIdx = gBattleStruct->scriptPartyIdx;
+        stringInfo->hpScale = gBattleStruct->hpScale;
+        stringInfo->itemEffectBattler = gPotentialItemEffectBattler;
+        stringInfo->moveType = gMovesInfo[gCurrentMove].type;
+
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            stringInfo->abilities[i] = gBattleMons[i].ability;
+        for (i = 0; i < VANILLA_TEXT_BUFF_ARRAY_COUNT; i++)
+        {
+            stringInfo->textBuffs[0][i] = gBattleTextBuff1[i];
+            stringInfo->textBuffs[1][i] = gBattleTextBuff2[i];
+            stringInfo->textBuffs[2][i] = gBattleTextBuff3[i];
+        }
+        // If Expansion's message is larger than vanilla's buffer.
+        stringInfo->textBuffs[0][VANILLA_TEXT_BUFF_ARRAY_COUNT - 1] = EOS;
+        stringInfo->textBuffs[1][VANILLA_TEXT_BUFF_ARRAY_COUNT - 1] = EOS;
+        stringInfo->textBuffs[2][VANILLA_TEXT_BUFF_ARRAY_COUNT - 1] = EOS;
+    }
+    else
+    {
+        struct BattleMsgData *stringInfo = dst;
+
+        stringInfo->currentMove = gCurrentMove;
+        stringInfo->originallyUsedMove = gChosenMove;
+        stringInfo->lastItem = gLastUsedItem;
+        stringInfo->lastAbility = gLastUsedAbility;
+        stringInfo->scrActive = gBattleScripting.battler;
+        stringInfo->bakScriptPartyIdx = gBattleStruct->scriptPartyIdx;
+        stringInfo->hpScale = gBattleStruct->hpScale;
+        stringInfo->itemEffectBattler = gPotentialItemEffectBattler;
+        stringInfo->moveType = gMovesInfo[gCurrentMove].type;
+
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            stringInfo->abilities[i] = gBattleMons[i].ability;
+        for (i = 0; i < TEXT_BUFF_ARRAY_COUNT; i++)
+        {
+            stringInfo->textBuffs[0][i] = gBattleTextBuff1[i];
+            stringInfo->textBuffs[1][i] = gBattleTextBuff2[i];
+            stringInfo->textBuffs[2][i] = gBattleTextBuff3[i];
+        }
+    }
 }
 
 void BtlController_EmitPrintString(u32 battler, u32 bufferId, u16 stringID)
 {
-    s32 i;
-    struct BattleMsgData *stringInfo;
-
     gBattleResources->transferBuffer[0] = CONTROLLER_PRINTSTRING;
     gBattleResources->transferBuffer[1] = gBattleOutcome;
     gBattleResources->transferBuffer[2] = stringID;
     gBattleResources->transferBuffer[3] = (stringID & 0xFF00) >> 8;
 
-    stringInfo = (struct BattleMsgData *)(&gBattleResources->transferBuffer[4]);
-    stringInfo->currentMove = gCurrentMove;
-    stringInfo->originallyUsedMove = gChosenMove;
-    stringInfo->lastItem = gLastUsedItem;
-    stringInfo->lastAbility = gLastUsedAbility;
-    stringInfo->scrActive = gBattleScripting.battler;
-    stringInfo->bakScriptPartyIdx = gBattleStruct->scriptPartyIdx;
-    stringInfo->hpScale = gBattleStruct->hpScale;
-    stringInfo->itemEffectBattler = gPotentialItemEffectBattler;
-    stringInfo->moveType = gMovesInfo[gCurrentMove].type;
-
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-        stringInfo->abilities[i] = gBattleMons[i].ability;
-    for (i = 0; i < TEXT_BUFF_ARRAY_COUNT; i++)
-    {
-        stringInfo->textBuffs[0][i] = gBattleTextBuff1[i];
-        stringInfo->textBuffs[1][i] = gBattleTextBuff2[i];
-        stringInfo->textBuffs[2][i] = gBattleTextBuff3[i];
-    }
+    CopyMsgDataStruct(&gBattleResources->transferBuffer[4]);
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, sizeof(struct BattleMsgData) + 4);
 }
 
@@ -1509,10 +1564,10 @@ void BtlController_EmitSpriteInvisibility(u32 battler, u32 bufferId, bool8 isInv
 void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, struct DisableStruct* disableStructPtr, u16 argument)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_BATTLEANIMATION;
-    gBattleResources->transferBuffer[1] = animationId;
+    gBattleResources->transferBuffer[1] = IsVanillaLinkInteraction() ? BattleAnimIdToVanilla(animationId) : animationId;
     gBattleResources->transferBuffer[2] = argument;
     gBattleResources->transferBuffer[3] = (argument & 0xFF00) >> 8;
-    memcpy(&gBattleResources->transferBuffer[4], disableStructPtr, sizeof(struct DisableStruct));
+    CopyDisableStruct(disableStructPtr, &gBattleResources->transferBuffer[4]);
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4 + sizeof(struct DisableStruct));
 }
 
@@ -1607,18 +1662,30 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         GetMonData(&party[monId], MON_DATA_NICKNAME, nickname);
         StringCopy_Nickname(battleMon.nickname, nickname);
         GetMonData(&party[monId], MON_DATA_OT_NAME, battleMon.otName);
-        src = (u8 *)&battleMon;
-        for (size = 0; size < sizeof(battleMon); size++)
-            dst[size] = src[size];
-        #if TESTING
-        if (gTestRunnerEnabled)
+        if (IsVanillaLinkInteraction())
         {
-            u32 side = GetBattlerSide(battler);
-            u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                gBattleMons[battler].ability = gBattleStruct->overwrittenAbilities[battler] = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            struct VanillaBattlePokemon vanillaBattleMon;
+
+            ConvertBattleStruct(&battleMon, &vanillaBattleMon, B_STRUCT_BATTLE_MON, TRUE);
+            src = (u8 *)&vanillaBattleMon;
+            for (size = 0; size < sizeof(vanillaBattleMon); size++)
+                dst[size] = src[size];
         }
-        #endif
+        else
+        {
+            src = (u8 *)&battleMon;
+            for (size = 0; size < sizeof(battleMon); size++)
+                dst[size] = src[size];
+            #if TESTING
+            if (gTestRunnerEnabled)
+            {
+                u32 side = GetBattlerSide(battler);
+                u32 partyIndex = gBattlerPartyIndexes[battler];
+                if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
+                    gBattleMons[battler].ability = gBattleStruct->overwrittenAbilities[battler] = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            }
+            #endif
+        }
         break;
     case REQUEST_SPECIES_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_SPECIES);
@@ -2667,7 +2734,7 @@ void BtlController_HandleMoveAnimation(u32 battler, bool32 updateTvData)
         gAnimMoveDmg = gBattleResources->bufferA[battler][6] | (gBattleResources->bufferA[battler][7] << 8) | (gBattleResources->bufferA[battler][8] << 16) | (gBattleResources->bufferA[battler][9] << 24);
         gAnimFriendship = gBattleResources->bufferA[battler][10];
         gWeatherMoveAnim = gBattleResources->bufferA[battler][12] | (gBattleResources->bufferA[battler][13] << 8);
-        gAnimDisableStructPtr = (struct DisableStruct *)&gBattleResources->bufferA[battler][16];
+        gAnimDisableStructPtr = ReceiveDisableStruct(&gBattleResources->bufferA[battler][16]);
         gTransformedPersonalities[battler] = gAnimDisableStructPtr->transformedMonPersonality;
         gTransformedShininess[battler] = gAnimDisableStructPtr->transformedMonShininess;
         gBattleSpritesDataPtr->healthBoxesData[battler].animationState = 0;
@@ -2714,6 +2781,8 @@ void BtlController_HandleHealthBarUpdate(u32 battler, bool32 updateHpText)
     hpVal = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
     maxHP = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_MAX_HP);
     curHP = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_HP);
+
+    SoftReset(1);
 
     if (hpVal != INSTANT_HP_BAR_DROP)
     {
@@ -3056,7 +3125,9 @@ void BtlController_HandleBattleAnimation(u32 battler, bool32 ignoreSE, bool32 up
         u8 animationId = gBattleResources->bufferA[battler][1];
         u16 argument = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
 
-        gAnimDisableStructPtr = (struct DisableStruct *)&gBattleResources->bufferA[battler][4];
+        gAnimDisableStructPtr = ReceiveDisableStruct(&gBattleResources->bufferA[battler][4]);
+        if (IsVanillaLinkInteraction())
+            animationId = BattleAnimIdToExpansion(animationId);
 
         if (TryHandleLaunchBattleTableAnimation(battler, battler, battler, animationId, argument))
             BattleControllerComplete(battler);
