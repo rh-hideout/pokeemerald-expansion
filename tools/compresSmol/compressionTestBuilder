@@ -1,0 +1,38 @@
+#! /bin/sh
+
+echo '#include "global.h"'
+echo '#include "main.h"'
+echo '#include "malloc.h"'
+echo '#include "random.h"'
+echo '#include "sprite.h"'
+echo '#include "test/test.h"'
+
+for file in graphics/**/*.4bpp.lz; do
+    fileUncomp=${file::-3}
+    echo 'TEST("Compression test: '$fileUncomp'")'
+    echo "{"
+    echo '    static const u32 origFile[] = INCBIN_U32("'$fileUncomp'");'
+    echo '    static const u32 compFile[] = INCBIN_U32("'$file'");'
+    echo "    u32 imageSize = GetDecompressedDataSize(compFile);"
+    echo "    u32 *compBuffer = Alloc(imageSize);"
+    echo "    LZDecompressWram(compFile, compBuffer);"
+    echo ""
+    echo "    u32 val1 = 0;"
+    echo "    u32 val2 = 0;"
+    echo "    bool32 areEqual = TRUE;"
+    echo "    for (u32 i = 0; i < imageSize/4; i++)"
+    echo "    {"
+    echo "        val1 = origFile[i];"
+    echo "        val2 = compBuffer[i];"
+    echo "        if (val1 != val2)"
+    echo "        {"
+    echo "            areEqual = FALSE;"
+    echo "            break;"
+    echo "        }"
+    echo "    }"
+    echo ""
+    echo "    EXPECT_EQ(areEqual, TRUE);"
+    echo ""
+    echo "    Free(compBuffer);"
+    echo "}"
+done
