@@ -16,8 +16,9 @@
 
 #define MAX_TRAINER_AI_FLAGS 32
 #define MAX_TRAINER_ITEMS 4
-#define PARTY_SIZE 6
+#define PARTY_SIZE 255
 #define MAX_MON_MOVES 4
+#define MAX_MON_TAGS 8
 
 struct String
 {
@@ -82,6 +83,10 @@ struct Pokemon
     struct String moves[MAX_MON_MOVES];
     int moves_n;
     int move1_line;
+
+    struct String tags[MAX_MON_TAGS];
+    int tags_n;
+    int tags_line;
 };
 
 struct Trainer
@@ -123,6 +128,12 @@ struct Trainer
 
     struct String starting_status;
     int starting_status_line;
+
+    int party_size;
+    int party_size_line;
+
+    struct String pool_rules;
+    int pool_rules_line;
 };
 
 static bool is_empty_string(struct String s)
@@ -1195,6 +1206,21 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->starting_status_line = value.location.line;
             trainer->starting_status = token_string(&value);
         }
+        else if (is_literal_token(&key, "Party Size"))
+        {
+            if (trainer->party_size_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Party Size'");
+            trainer->party_size_line = value.location.line;
+            if (!token_int(p, &value, &trainer->party_size))
+                any_error = !show_parse_error(p);
+        }
+        else if (is_literal_token(&key, "Pool Rules"))
+        {
+            if (trainer->pool_rules_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Pool Rules'");
+            trainer->pool_rules_line = value.location.line;
+            trainer->pool_rules = token_string(&value);
+        }
         else
         {
             any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Double Battle', or 'AI'");
@@ -1361,6 +1387,14 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
                 pokemon->tera_type_line = value.location.line;
                 pokemon->tera_type = token_string(&value);
             }
+            else if (is_literal_token(&key, "Tags"))
+            {
+                if (pokemon->tags_line)
+                    any_error = !set_show_parse_error(p, key.location, "duplicate 'Tags'");
+                pokemon->tags_line = value.location.line;
+                if (!token_human_identifiers(p, &value, pokemon->tags, &pokemon->tags_n, MAX_MON_TAGS))
+                    any_error = !show_parse_error(p);
+            }
             else
             {
                 any_error = !set_show_parse_error(p, key.location, "expected one of 'EVs', 'IVs', 'Ability', 'Level', 'Ball', 'Happiness', 'Nature', 'Shiny', 'Dynamax Level', 'Gigantamax', or 'Tera Type'");
@@ -1422,6 +1456,11 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             if (!parse_pokemon_header(&p_, &nickname, &species, &gender, &item))
                 return false;
         }
+    }
+
+    if (trainer->party_size_line && trainer->party_size > trainer->pokemon_n)
+    {
+        set_show_parse_error(p, p->location, "partySize larger than supplied pool");
     }
 
     return !any_error;
@@ -1719,9 +1758,28 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, ",\n");
         }
 
-        fprintf(f, "        .partySize = %d,\n", trainer->pokemon_n);
-        fprintf(f, "        .party = (const struct TrainerMon[])\n");
-        fprintf(f, "        {\n");
+        if (!is_empty_string(trainer->pool_rules))
+        {
+            fprintf(f, "#line %d\n", trainer->pool_rules_line);
+            fprintf(f, "        .poolRuleIndex = ");
+            fprint_constant(f, "POOL_RULESET", trainer->pool_rules);
+            fprintf(f, ",\n");
+        }
+
+        if (trainer->party_size_line)
+        {
+            fprintf(f, "#line %d\n", trainer->party_size_line);
+            fprintf(f, "        .partySize = %d,\n", trainer->party_size);
+            fprintf(f, "        .poolSize = %d,\n", trainer->pokemon_n);
+            fprintf(f, "        .party = (const struct TrainerMon[])\n");
+            fprintf(f, "        {\n");
+        }
+        else
+        {
+            fprintf(f, "        .partySize = %d,\n", trainer->pokemon_n);
+            fprintf(f, "        .party = (const struct TrainerMon[])\n");
+            fprintf(f, "        {\n");
+        }
         for (int j = 0; j < trainer->pokemon_n; j++)
         {
             struct Pokemon *pokemon = &trainer->pokemon[j];
@@ -1854,6 +1912,19 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
                 fprintf(f, "#line %d\n", pokemon->tera_type_line);
                 fprintf(f, "            .teraType = ");
                 fprint_constant(f, "TYPE", pokemon->tera_type);
+                fprintf(f, ",\n");
+            }
+
+            if (pokemon->tags_line)
+            {
+                fprintf(f, "#line %d\n", pokemon->tags_line);
+                fprintf(f, "            .tags = ");
+                for (int i = 0; i < pokemon->tags_n; i++)
+                {
+                    if (i > 0)
+                        fprintf(f, " | ");
+                    fprint_constant(f, "MON_POOL_TAG", pokemon->tags[i]);
+                }
                 fprintf(f, ",\n");
             }
 
