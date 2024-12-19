@@ -60,7 +60,7 @@ u16 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 
     // Check for LZ77 header and read uncompressed size, or fallback if not compressed (zero size)
     if ((size = IsLZ77Data(template->images->data, TILE_SIZE_4BPP, sizeof(gDecompressionBuffer))) == 0)
-        return LoadSpriteSheetByTemplate(template, 0, offset);
+        return LoadSpriteSheetByTemplateWithOffset(template, 0, offset);
 
     LZ77UnCompWram(template->images->data, gDecompressionBuffer);
     myImage.data = gDecompressionBuffer;
@@ -68,7 +68,7 @@ u16 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     myTemplate.images = &myImage;
     myTemplate.tileTag = template->tileTag;
 
-    return LoadSpriteSheetByTemplate(&myTemplate, 0, offset);
+    return LoadSpriteSheetByTemplateWithOffset(&myTemplate, 0, offset);
 }
 
 void LoadCompressedSpriteSheetOverrideBuffer(const struct CompressedSpriteSheet *src, void *buffer)
