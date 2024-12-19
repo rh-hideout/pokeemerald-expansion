@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
     PARAMETRIZE {move = MOVE_GUST; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].power != 0);
-        ASSUME(gMovesInfo[MOVE_GUST].power != 0);
+        ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
+        ASSUME(!IS_MOVE_STATUS(MOVE_GUST));
         ASSUME(gMovesInfo[MOVE_GUST].category == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STAMINA); }

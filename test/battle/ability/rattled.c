@@ -4,13 +4,13 @@
 ASSUMPTIONS
 {
     ASSUME(gMovesInfo[MOVE_FURY_CUTTER].type == TYPE_BUG);
-    ASSUME(gMovesInfo[MOVE_FURY_CUTTER].power != 0);
+    ASSUME(!IS_MOVE_STATUS(MOVE_FURY_CUTTER));
     ASSUME(gMovesInfo[MOVE_FEINT_ATTACK].type == TYPE_DARK);
-    ASSUME(gMovesInfo[MOVE_FEINT_ATTACK].power != 0);
+    ASSUME(!IS_MOVE_STATUS(MOVE_FEINT_ATTACK));
     ASSUME(gMovesInfo[MOVE_SHADOW_PUNCH].type == TYPE_GHOST);
-    ASSUME(gMovesInfo[MOVE_SHADOW_PUNCH].power != 0);
+    ASSUME(!IS_MOVE_STATUS(MOVE_SHADOW_PUNCH));
     ASSUME(gMovesInfo[MOVE_TACKLE].type == TYPE_NORMAL);
-    ASSUME(gMovesInfo[MOVE_TACKLE].power != 0);
+    ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
 }
 
 SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost type move")
