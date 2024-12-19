@@ -97,6 +97,15 @@ struct TypePower
     u16 effect;
 };
 
+// If the sub type is used after the main type of the combo,
+// gCurrentMove is set to the main type when the combo is executed.
+struct PledgeCombo
+{
+    u8 mainType;
+    u8 subType;
+    const u8* battleScript; // Script to execute upon combining.
+};
+
 enum
 {
     CANCELLER_FLAGS,
