@@ -396,16 +396,10 @@ BattleScript_EffectHit_Pledge::
 	tryfaintmon BS_TARGET
 	return
 
-BattleScript_EffectSaltCure::
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	jumpiffainted BS_TARGET, TRUE, BattleScript_EffectSaltCure_End
-	jumpifsubstituteblocks BattleScript_EffectSaltCure_End
-	applysaltcure BS_TARGET
+BattleScript_MoveEffectSaltCure::
 	printstring STRINGID_TARGETISBEINGSALTCURED
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_EffectSaltCure_End:
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_SaltCureExtraDamage::
 	playanimation BS_TARGET, B_ANIM_SALT_CURE_DAMAGE, NULL
@@ -949,13 +943,10 @@ BattleScript_HyperspaceFuryRemoveProtect::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectPlasmaFists::
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	orword gFieldStatuses, STATUS_FIELD_ION_DELUGE
+BattleScript_MoveEffectIonDeluge::
 	printstring STRINGID_IONDELUGEON
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectSparklySwirl::
 	call BattleScript_EffectHit_Ret
@@ -966,41 +957,25 @@ BattleScript_EffectSparklySwirl::
 	waitstate
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectFreezyFrost::
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	normalisebuffs
+BattleScript_MoveEffectHaze::
 	printstring STRINGID_STATCHANGESGONE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
-BattleScript_EffectSappySeed::
-	jumpifstatus3 BS_TARGET, STATUS3_LEECHSEED, BattleScript_EffectHit
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	jumpifhasnohp BS_TARGET, BattleScript_MoveEnd
-	setseeded
-	printfromtable gLeechSeedStringIds
+BattleScript_MoveEffectLeechSeed::
+	printstring STRINGID_PKMNSEEDED
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectBaddyBad::
-	jumpifsideaffecting BS_ATTACKER, SIDE_STATUS_REFLECT, BattleScript_EffectHit
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	setreflect
+BattleScript_MoveEffectReflect::
 	printfromtable gReflectLightScreenSafeguardStringIds
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
-BattleScript_EffectGlitzyGlow::
-	jumpifsideaffecting BS_ATTACKER, SIDE_STATUS_LIGHTSCREEN, BattleScript_EffectHit
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	setlightscreen
+BattleScript_MoveEffectLightScreen::
 	printfromtable gReflectLightScreenSafeguardStringIds
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectStuffCheeks::
 	attackcanceler
@@ -4062,13 +4037,10 @@ BattleScript_EffectDestinyBond::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectEerieSpell::
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	eeriespellppreduce BattleScript_MoveEnd
+BattleScript_MoveEffectEerieSpell::
 	printstring STRINGID_PKMNREDUCEDPP
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectSpite::
 	attackcanceler
