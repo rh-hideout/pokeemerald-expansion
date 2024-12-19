@@ -2511,8 +2511,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-4);
             break;
         //TODO
-        //case EFFECT_PLASMA_FISTS:
-            //break;
         //case EFFECT_SHELL_TRAP:
             //break;
         //case EFFECT_BEAK_BLAST:

@@ -2900,7 +2900,8 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     bool32 statusChanged = FALSE;
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     u32 flags = 0;
-    u16 battlerAbility;
+    u32 battlerAbility;
+    u32 side;
     bool8 activateAfterFaint = FALSE;
 
     // NULL move effect
@@ -3984,6 +3985,72 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
                         gBattlescriptCurrInstr = BattleScript_StatUp;
                     }
+                }
+                break;
+            case MOVE_EFFECT_ION_DELUGE:
+                if (!(gFieldStatuses & STATUS_FIELD_ION_DELUGE))
+                {
+                    gFieldStatuses |= STATUS_FIELD_ION_DELUGE;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectIonDeluge;
+                }
+                break;
+            // TODO: The moves aromatherapy and heal bell need a refactor first
+            // case MOVE_EFFECT_AROMATHERAPY:
+            //     break;
+            case MOVE_EFFECT_HAZE:
+                for (i = 0; i < gBattlersCount; i++)
+                    TryResetBattlerStatChanges(i);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_MoveEffectHaze;
+                break;
+            case MOVE_EFFECT_LEECH_SEED:
+                if (!IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_GRASS) && !(gStatuses3[gBattlerTarget] & STATUS3_LEECHSEED))
+                {
+                    gStatuses3[gBattlerTarget] |= gBattlerAttacker;
+                    gStatuses3[gBattlerTarget] |= STATUS3_LEECHSEED;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectLeechSeed;
+                }
+                break;
+            case MOVE_EFFECT_REFLECT:
+                side = GetBattlerSide(gBattlerAttacker);
+                if (!(gSideStatuses[side] & SIDE_STATUS_REFLECT))
+                {
+                    gSideStatuses[side] |= SIDE_STATUS_REFLECT;
+                    if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
+                        gSideTimers[side].reflectTimer = 8;
+                    else
+                        gSideTimers[side].reflectTimer = 5;
+                    gSideTimers[side].reflectBattlerId = gBattlerAttacker;
+
+                    if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
+                    else
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_SINGLE;
+
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectReflect;
+                }
+                break;
+            case MOVE_EFFECT_LIGHT_SCREEN:
+                side = GetBattlerSide(gBattlerAttacker);
+                if (!(gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN))
+                {
+                    gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
+                    if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
+                        gSideTimers[side].lightscreenTimer = 8;
+                    else
+                        gSideTimers[side].lightscreenTimer = 5;
+                    gSideTimers[side].lightscreenBattlerId = gBattlerAttacker;
+
+                    if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
+                    else
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_SINGLE;
+
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectLightScreen;
                 }
                 break;
             }
