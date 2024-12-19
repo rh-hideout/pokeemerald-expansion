@@ -11577,19 +11577,19 @@ static void Cmd_setfieldweather(void)
 
     switch (weather)
     {
-    case ENUM_WEATHER_RAIN:
+    case BATTLE_WEATHER_RAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_RAIN;
         break;
-    case ENUM_WEATHER_SUN:
+    case BATTLE_WEATHER_SUN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SUNLIGHT;
         break;
-    case ENUM_WEATHER_SANDSTORM:
+    case BATTLE_WEATHER_SANDSTORM:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SANDSTORM;
         break;
-    case ENUM_WEATHER_HAIL:
+    case BATTLE_WEATHER_HAIL:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_HAIL;
         break;
-    case ENUM_WEATHER_SNOW:
+    case BATTLE_WEATHER_SNOW:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SNOW;
         break;
     }

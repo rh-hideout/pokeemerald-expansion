@@ -266,7 +266,7 @@ BattleScript_EffectChillyReception::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_RAIN_PRIMAL, BattleScript_EffectChillyReceptionBlockedByPrimalRain
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_STRONG_WINDS, BattleScript_EffectChillyReceptionBlockedByStrongWinds
 	call BattleScript_EffectChillyReceptionPlayAnimation
-	setfieldweather ENUM_WEATHER_SNOW
+	setfieldweather BATTLE_WEATHER_SNOW
 	call BattleScript_MoveWeatherChangeRet
 	goto BattleScript_MoveSwitch
 BattleScript_EffectChillyReceptionPlayAnimation:
@@ -4292,7 +4292,7 @@ BattleScript_EffectSandstorm::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SANDSTORM
+	setfieldweather BATTLE_WEATHER_SANDSTORM
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_EffectRollout::
@@ -4458,7 +4458,7 @@ BattleScript_EffectRainDance::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_RAIN
+	setfieldweather BATTLE_WEATHER_RAIN
 BattleScript_MoveWeatherChange::
 	attackanimation
 	waitanimation
@@ -4476,7 +4476,7 @@ BattleScript_EffectSunnyDay::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SUN
+	setfieldweather BATTLE_WEATHER_SUN
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_ExtremelyHarshSunlightWasNotLessened:
@@ -4835,7 +4835,7 @@ BattleScript_EffectHail::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_HAIL
+	setfieldweather BATTLE_WEATHER_HAIL
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_EffectTorment::
@@ -10069,7 +10069,7 @@ BattleScript_EffectSnow::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SNOW
+	setfieldweather BATTLE_WEATHER_SNOW
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_SleepClauseBlocked::
