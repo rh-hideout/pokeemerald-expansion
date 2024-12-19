@@ -26,6 +26,8 @@
 
 #define SKIP_OBJECT_EVENT_LOAD  1
 
+extern EWRAM_DATA bool8 gSkipShowMonAnim;
+
 struct InitialPlayerAvatarState
 {
     u8 transitionFlags;
