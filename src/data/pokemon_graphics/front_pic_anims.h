@@ -340,7 +340,17 @@ static const union AnimCmd sAnim_Pichu_1[] =
     ANIMCMD_END,
 };
 
-PLACEHOLDER_ANIM_SINGLE_FRAME(PichuSpikyEared);
+static const union AnimCmd sAnim_PichuSpikyEared_1[] =
+{
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 10),
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 10),
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(1, 10),
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
 #endif //P_GEN_2_CROSS_EVOS
 
 static const union AnimCmd sAnim_Pikachu_1[] =
