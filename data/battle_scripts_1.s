@@ -2791,6 +2791,10 @@ BattleScript_EffectHitEscape::
 	jumpifbattleend BattleScript_HitEscapeEnd
 	jumpifbyte CMP_NOT_EQUAL, gBattleOutcome, 0, BattleScript_HitEscapeEnd
 	jumpifemergencyexited BS_TARGET, BattleScript_HitEscapeEnd
+	jumpiffainted BS_TARGET, FALSE, BattleScript_HitEscapeSwitch
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_TARGET
+BattleScript_HitEscapeSwitch:
 	goto BattleScript_MoveSwitch
 BattleScript_HitEscapeEnd:
 	end
