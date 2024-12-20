@@ -139,7 +139,6 @@ MtChimney_Text_CookiesGone:
 
 MtChimney_EventScript_BagIsFull::
 	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
-	hidemoneybox
 	release
 	end
 

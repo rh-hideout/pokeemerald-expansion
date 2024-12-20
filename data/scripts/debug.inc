@@ -1,4 +1,3 @@
-.if DEBUG_OVERWORLD_MENU == TRUE
 Debug_MessageEnd:
 	waitmessage
 	waitbuttonpress
@@ -448,5 +447,3 @@ Debug_EventScript_EWRAMCounters::
 Debug_EventScript_EWRAMCounters_Text::
 	.string "Follower Steps: {STR_VAR_1}.\n"
 	.string "Fishing Chain: {STR_VAR_2}.$"
-
-.endif

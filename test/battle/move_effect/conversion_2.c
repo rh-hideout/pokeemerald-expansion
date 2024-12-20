@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
         MESSAGE("Wobbuffet used Ominous Wind!");
         // turn 1
         ONE_OF {
-         MESSAGE("Foe Wobbuffet transformed into the Normal type!");
-         MESSAGE("Foe Wobbuffet transformed into the Dark type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Normal type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Dark type!");
         }
     }
 }
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers Struggle to be Normal t
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Wobbuffet used Struggle!");
+        MESSAGE("The opposing Wobbuffet used Struggle!");
         // turn 2
         ONE_OF {
          MESSAGE("Wobbuffet transformed into the Steel type!");
@@ -56,8 +56,8 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
         MESSAGE("Wobbuffet used Ominous Wind!");
         // turn 1
         ONE_OF {
-         MESSAGE("Foe Wobbuffet transformed into the Normal type!");
-         MESSAGE("Foe Wobbuffet transformed into the Dark type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Normal type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Dark type!");
         }
     }
 }
@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers status moves (Gen 5+)")
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Wobbuffet used Curse!");
+        MESSAGE("The opposing Wobbuffet used Curse!");
         // turn 2
         ONE_OF {
          MESSAGE("Wobbuffet transformed into the Normal type!");
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers the type of moves calle
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Wobbuffet used Mirror Move!");
+        MESSAGE("The opposing Wobbuffet used Mirror Move!");
         // turn 2
         ONE_OF {
          MESSAGE("Wobbuffet transformed into the Normal type!");
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers dynamic type moves")
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Wobbuffet used Weather Ball!");
+        MESSAGE("The opposing Wobbuffet used Weather Ball!");
         // turn 2
         ONE_OF {
          MESSAGE("Wobbuffet transformed into the Steel type!");
@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by N
     } SCENE {
         // turn 1
         MESSAGE("Wobbuffet used Electrify!");
-        MESSAGE("Foe Wobbuffet used Pound!");
+        MESSAGE("The opposing Wobbuffet used Pound!");
         // turn 2
         ONE_OF {
          MESSAGE("Wobbuffet transformed into the Ground type!");
@@ -144,9 +144,9 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by N
         // turn 3
         MESSAGE("Wobbuffet used Water Gun!");
         ONE_OF {
-         MESSAGE("Foe Wobbuffet transformed into the Steel type!");
-         MESSAGE("Foe Wobbuffet transformed into the Rock type!");
-         MESSAGE("Foe Wobbuffet transformed into the Ghost type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Steel type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Rock type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Ghost type!");
         }
     }
 }
@@ -161,7 +161,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change fails targeting Struggle (Gen 5+)
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Wobbuffet used Struggle!");
+        MESSAGE("The opposing Wobbuffet used Struggle!");
         // turn 2
         MESSAGE("Wobbuffet used Conversion 2!");
         MESSAGE("But it failed!");
@@ -179,9 +179,9 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if the move used is of typeless damage (G
         TURN { MOVE(player, MOVE_CONVERSION_2); }
     } SCENE {
         // turn 1
-        MESSAGE("Foe Entei used Burn Up!");
+        MESSAGE("The opposing Entei used Burn Up!");
         // turn 2
-        MESSAGE("Foe Entei used Revelation Dance!");
+        MESSAGE("The opposing Entei used Revelation Dance!");
         // turn 3
         MESSAGE("Wobbuffet used Conversion 2!");
         MESSAGE("But it failed!");
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if the targeted move is Stellar Type")
         MESSAGE("Wobbuffet used Tera Blast!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         // turn 1
-        MESSAGE("Foe Wobbuffet used Conversion 2!");
+        MESSAGE("The opposing Wobbuffet used Conversion 2!");
         MESSAGE("But it failed!");
     }
 }

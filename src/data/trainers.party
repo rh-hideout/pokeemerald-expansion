@@ -889,7 +889,6 @@ Ability: Pickup
 - Fake Out
 - Parting Shot
 
-
 Raticate Alola @ Aguav Berry 
 Level: 62
 Ability: Gluttony
@@ -1275,24 +1274,28 @@ Level: 28
 Ability: Huge Power
 - Aqua Tail
 - Headbutt
+- Aqua Jet
 
 Azumarill @ Chesto Berry
 Level: 28
 Ability: Thick Fat
 - Rest
 - Aqua Tail
+- Aqua Jet
 
 Azumarill @ Wacan Berry
 Level: 28
 Ability: Sap Sipper
 - Aqua Tail
 - Recover
+- Aqua Jet
 
 Azumarill @ Focus Sash
 Level: 28
 Ability: Moody
 - Aqua Tail
 - Protect
+- Aqua Jet
 
 === TRAINER_SIMON ===
 Name: SIMON
@@ -1323,11 +1326,40 @@ Class: Tuber M
 Pic: Tuber M
 Gender: Male
 Music: Girl
-Double Battle: No
+Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Marill
-Level: 26
+Dusclops @ Eviolite
+Ability: Mummy
+Level: 63
+- Trick Room
+- Protect
+- Will o Wisp
+- Helping Hand
+
+Dialga @ Assault Vest
+Ability: Telepathy
+Level: 63
+- Roar of Time
+- Flash Cannon
+- Aura Sphere
+- Flamethrower
+
+Exploud @ Throat Spray
+Ability: Scrappy
+Level: 63
+- Boomburst
+- Hyper Voice
+- Surf
+- Flamethrower
+
+Tinkaton @ Clear Amulet
+Ability: Mold Breaker
+Level: 63
+- Gigaton Hammer
+- Protect
+- Fake Out
+- Knock Off
 
 === TRAINER_RICKY_2 ===
 Name: RICKY
@@ -2248,17 +2280,19 @@ Items: Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Diglett
-Ability: Arena Trap
+Diglett Alola
+Ability: Tangling Hair
 Level: 5
 - Dig
 - Smack Down
+- Metal Claw
 
 Diglett
 Ability: Arena Trap
 Level: 6
 - Dig
 - Smack Down
+- Sucker Punch
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -2696,6 +2730,7 @@ Minccino @ Scope Lens
 Level: 3
 Ability: Skill Link
 - Tail Slap
+- Quick Attack
 
 === TRAINER_MOLLIE ===
 Name: MOLLIE
@@ -3819,7 +3854,7 @@ Level: 54
 Ability: Scrappy
 - Explosion
 
-SPECIES_URSHIFU_SINGLE_STRIKE_STYLE @ Choice Scarf
+SPECIES_URSHIFU_SINGLE_STRIKE @ Choice Scarf
 Level: 54
 Ability: Unseen Fist
 - Explosion
@@ -3897,7 +3932,7 @@ Ability: Speed Boost
 - Air Slash
 - Protect
 
-SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE @ Life Orb
+SPECIES_DARMANITAN_GALAR @ Life Orb
 Level: 54
 - Ice Shard
 - Triple Axel
@@ -4086,7 +4121,6 @@ Ability: Sand Rush
 - Close Combat
 - Crunch
 
-
 === TRAINER_BEAU ===
 Name: BEAU
 Class: Camper
@@ -4255,16 +4289,19 @@ Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
 - Earthquake
+- Smack Down
 
 Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
 - Earthquake
+- Smack Down
 
 Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
 - Earthquake
+- Smack Down
 
 === TRAINER_TRAVIS ===
 Name: TRAVIS
@@ -4384,14 +4421,40 @@ Music: Suspicious
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wurmple
-Level: 24
+Tapu Koko @ Terrain Extender
+Level: 63
+- Volt Switch
+- Natures Madness
+- U-Turn
 
-Silcoon
-Level: 24
+Nihilego @ Power Herb
+Level: 63
+- Meteor Beam
+- Power Gem
+- Sludge Wave
+- Earth Power
 
-Beautifly
-Level: 24
+Iron Boulder @ Booster Energy
+Level: 63
+- Mighty Cleave
+- Psycho Cut
+- Earthquake
+- Swords Dance
+
+Iron Thorns @ Focus Sash
+Level: 63
+- Earthquake
+- Supercell Slam
+- Ice Fang
+- Dragon Dance
+
+Porygon Z @ Zoom Lens
+Ability: Analytic
+Level: 63
+- Blizzard
+- Thunder
+- Hydro Pump
+- Hyper Beam
 
 === TRAINER_TAYLOR ===
 Name: TAYLOR
@@ -5038,7 +5101,7 @@ Pic: Elite Four Sidney
 Gender: Male
 Music: Elite Four
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Check Viability
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 Mugshot: Purple
 
 Rillaboom @ Assault Vest
@@ -5063,7 +5126,7 @@ Shiny: Yes
 - Throat Chop
 - Flare Blitz
 
-Zacian Crowned Sword @ Rusted Sword
+Zacian Crowned @ Rusted Sword
 Adamant Nature
 Level: 96
 EVs: 248 HP / 108 Atk / 152 Spe
@@ -5316,7 +5379,7 @@ Shiny: Yes
 - Protect
 - Icy Wind
 
-Ogerpon Cornerstone Mask @ Cornerstone Mask
+Ogerpon Cornerstone @ Cornerstone Mask
 Adamant Nature
 Level: 99
 Tera Type: Rock
@@ -5370,7 +5433,6 @@ Shiny: Yes
 - Echoed Voice
 - Fire Spin
 - Rock Tomb
-
 
 === TRAINER_BRAWLY_1 ===
 Name: BRAWLY
@@ -5505,7 +5567,7 @@ Gender: Female
 Music: Female
 Items: Hyper Potion / Hyper Potion
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Arcanine-Hisui @ Life Orb
 Impish Nature
@@ -5578,7 +5640,7 @@ Gender: Male
 Music: Male
 Items: Hyper Potion / Hyper Potion
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Slaking @ Leftovers
 Jolly Nature
@@ -5726,7 +5788,7 @@ Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
 Double Battle: Yes
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Stakataka @ Leftovers
 Lonely Nature
@@ -5797,7 +5859,7 @@ Pic: Leader Juan
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Palafin @ Choice Scarf
 Adamant Nature
@@ -5868,17 +5930,19 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Kirlia @ Psychic Seed
+Indeedee F @ Terrain Extender
 Level: 21
 Ability: Psychic Surge
 - Dazzling Gleam
 - Expanding Force
+- Hyper Voice
+- Protect
 
 Kirlia @ Psychic Seed
 Level: 21
-Ability: Psychic Surge
 - Dazzling Gleam
 - Expanding Force
+- Protect
 
 === TRAINER_TED ===
 Name: TED
@@ -7154,7 +7218,7 @@ Shiny: Yes
 - Rock Slide
 - Shadow Claw
 
-Zamazenta Crowned Shield @ Rusted Shield
+Zamazenta Crowned @ Rusted Shield
 Impish Nature
 Level: 100
 Shiny: Yes
@@ -8379,7 +8443,7 @@ Pic: Bird Keeper
 Gender: Male
 Music: Cool
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Setup First Turn
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Force Setup First Turn
 
 Rattata-Alola @ Focus Sash
 Level: 1
@@ -8559,8 +8623,20 @@ Music: Girl
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Marill
-Level: 26
+Noivern @ Throat Spray
+Level: 63
+Ability: Punk Rock
+- Dragon Cheer
+- Tailwind
+- Draco Meteor
+- Hyper Voice
+
+Charjabug @ Eviolite
+Level: 63
+- Light Screen
+- Thunder Wave
+- Struggle Bug
+- Protect
 
 === TRAINER_LAO_1 ===
 Name: LAO
@@ -9090,7 +9166,7 @@ Level: 62
 - Dragon Pulse
 - Aura Sphere
 
-SPECIES_INDEEDEE_FEMALE @ Room Service
+SPECIES_INDEEDEE_F @ Room Service
 Level: 62
 - Expanding Force
 - Trick Room
@@ -10148,14 +10224,41 @@ Class: Sailor
 Pic: Sailor
 Gender: Male
 Music: Male
-Double Battle: No
+Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Spheal
-Level: 25
+Cetitan @ Sitrus Berry
+Ability: Slush Rush
+Level: 63
+- Ice Shard
+- Belly Drum
+- Heavy Slam
+- Knock Off
 
-Machoke
-Level: 25
+Ninetales Alola @ Light Clay
+Ability: Snow Warning
+Level: 63
+- Protect
+- Aurora Veil
+- Moonblast
+- Mist
+
+Articuno @ Never Melt Ice
+Ability: Snow Cloak
+Level: 63
+- Blizzard
+- Sheer Cold
+- Freeze Dry
+- Hyper Beam
+
+Avalugg Hisui @ Leftovers
+Ability: Ice Body
+Level: 63
+- Wide Guard
+- Body Press
+- Icy Wind
+- Mountain Gale
+
 
 === TRAINER_ERNEST_2 ===
 Name: ERNEST
@@ -10463,11 +10566,35 @@ Music: Suspicious
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zangoose
-Level: 18
+Sudowoodo @ Mental Herb
+Level: 42
+Ability: Sturdy
+- Stealth Rock
+- Spikes
+- Endeavor
+- Sucker Punch
 
-Seviper
-Level: 18
+Slaking @ Eject Pack
+Level: 42
+- Close Combat
+- Headlong Rush
+- Dragon Ascent
+- Take Down
+
+Archeops @ Iapapa Berry
+Level: 42
+- Double Edge
+- Stone Edge
+- Brave Bird
+- U-Turn
+
+Miltank @ Sitrus Berry
+Ability: Thick Fat
+Level: 42
+- Milk Drink
+- Defense Curl
+- Body Slam
+- Rollout
 
 === TRAINER_TABITHA_MOSSDEEP ===
 Name: TABITHA
@@ -10476,7 +10603,7 @@ Pic: Magma Admin
 Gender: Male
 Music: Magma
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Setup First Turn
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Force Setup First Turn
 
 Blacephalon @ Focus Sash
 Ability: Beast Boost
@@ -11258,8 +11385,21 @@ Music: Hiker
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Sandslash
-Level: 26
+Kingdra @ Scope Lens
+Level: 63
+Ability: Sniper
+- Draco Meteor
+- Hydro Pump
+- Ice Beam
+- Signal Beam
+
+Persian Alola @ Assault Vest
+Level: 63
+Ability: Fur Coat
+- Fake Out
+- Dark Pulse
+- Burning Jealousy
+- Snarl
 
 === TRAINER_LYDIA_2 ===
 Name: LYDIA
@@ -11531,16 +11671,19 @@ Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
 - Earthquake
+- Smack Down
 
 Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
+- Smack Down
 - Earthquake
 
 Excadrill @ Air Balloon
 Level: 52
 Ability: Sand Rush
 - Earthquake
+- Smack Down
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_5 ===
 Name: GRUNT
@@ -12697,11 +12840,42 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Volbeat
-Level: 25
+Espathra @ Clear Amulet
+Ability: Speed Boost
+Level: 63
+- Protect
+- Stored Power
+- Calm Mind
+- Dazzling Gleam
 
-Illumise
-Level: 25
+Emboar @ Life Orb
+Ability: Reckless
+Level: 63
+- Head Smash
+- Flare Blitz
+- Flame Charge
+- Reversal
+
+Dubwool @ Leftovers
+Ability: Fluffy
+- Cotton Guard
+- Last Resort
+- Zen Headbutt
+- Body Press
+
+Decidueye Hisui @ Leftovers
+Ability: Scrappy
+- Shadow Sneak
+- U-Turn
+- Triple Arrows
+- Bulk Up
+
+Electrode Hisui @ Choice Specs
+Ability: Static
+- Volt Switch
+- Energy Ball
+- Electro Ball
+- Hyper Beam
 
 === TRAINER_KENT ===
 Name: KENT
@@ -12979,12 +13153,14 @@ Level: 19
 Ability: Punk Rock
 - Uproar
 - Rollout
+- Echoed Voice
 
 Loudred @ Metronome
 Level: 19
 Ability: Punk Rock
 - Uproar
 - Rollout
+- Echoed Voice
 
 === TRAINER_ERIC ===
 Name: ERIC
@@ -13215,11 +13391,36 @@ Music: Girl
 Double Battle: Yes
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Volbeat
-Level: 25
+Gumshoos @ Red Card
+Ability: Stakeout
+Level: 63
+- Knock Off
+- Return
+- Last Resort
+- Fire Fang
 
-Illumise
-Level: 25
+Cyclizar @ Eject Button
+Ability: Regenerator
+- Draco Meteor
+- Breaking Swipe
+- Knock Off
+- Giga Impact
+
+Mabosstiff @ Red Card
+Ability: Stakeout
+Level: 63
+- Payback
+- Reversal
+- Body Slam
+- Play Rough
+
+Cloyster @ Red Card
+Ability: Skill Link
+Level: 63
+- Icicle Spear
+- Shell Smash
+- Surf
+- Rock Blast
 
 === TRAINER_KIRA_AND_DAN_2 ===
 Name: KIRA & DAN
@@ -14378,10 +14579,11 @@ Level: 21
 
 Azumarill @ Choice Scarf
 Level: 21
-Ability: Swift Swim
+Ability: Huge Power
 - Aqua Tail
 - Body Slam
 - Play Rough
+- Aqua Jet
 
 === TRAINER_SARAH ===
 Name: SARAH
@@ -14418,7 +14620,7 @@ Music: Hiker
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Magikarp @ Leppa Berry
+Magikarp @ Choice Band
 Ability: Rattled
 Level: 5
 - Bounce
@@ -17414,7 +17616,7 @@ Gender: Male
 Music: Male
 Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Landorus Therian @ Rocky Helmet
 Adamant Nature
@@ -17468,7 +17670,7 @@ Shiny: Yes
 - Lunge
 - Roost
 
-Zacian Crowned Sword @ Rusted Sword
+Zacian Crowned @ Rusted Sword
 Adamant Nature
 Level: 100
 EVs: 232 HP / 252 Atk / 4 Def / 20 Spe

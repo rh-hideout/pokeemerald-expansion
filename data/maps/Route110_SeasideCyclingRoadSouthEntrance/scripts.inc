@@ -1,6 +1,5 @@
 Route110_SeasideCyclingRoadSouthEntrance_MapScripts::
 	.byte 0
-	
 Route110_SeasideCyclingRoadSouthEntrance_EventScript_Clerk::
 	lock
 	faceplayer

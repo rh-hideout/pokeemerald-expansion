@@ -321,13 +321,13 @@ EverGrandeCity_EventScript_GiveZarude::
 	end
 
 EverGrandeCity_EventScript_GiveUrshifuR::
-	givemon SPECIES_URSHIFU_RAPID_STRIKE_STYLE, 95
+	givemon SPECIES_URSHIFU_RAPID_STRIKE, 95
 	setflag FLAG_RESTRICTED_GIVEN
 	releaseall
 	end
 
 EverGrandeCity_EventScript_GiveUrshifuS::
-	givemon SPECIES_URSHIFU_SINGLE_STRIKE_STYLE, 95
+	givemon SPECIES_URSHIFU_SINGLE_STRIKE, 95
 	setflag FLAG_RESTRICTED_GIVEN
 	releaseall
 	end
