@@ -2852,17 +2852,26 @@ static void CheckSetUnburden(u8 battler)
 void StealTargetItem(u8 battlerStealer, u8 battlerItem)
 {
     gLastUsedItem = gBattleMons[battlerItem].item;
-    gBattleMons[battlerItem].item = 0;
+    gBattleMons[battlerItem].item = ITEM_NONE;
 
-    RecordItemEffectBattle(battlerItem, 0);
-    RecordItemEffectBattle(battlerStealer, ItemId_GetHoldEffect(gLastUsedItem));
-    gBattleMons[battlerStealer].item = gLastUsedItem;
+    if (B_STEAL_WILD_ITEMS >= GEN_9
+     && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
+     && MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_STEAL_ITEM)
+     && battlerStealer == gBattlerAttacker) // ensure that Pickpocket isn't activating this
+    {
+        AddBagItem(gLastUsedItem, 1);
+    }
+    else
+    {
+        RecordItemEffectBattle(battlerStealer, ItemId_GetHoldEffect(gLastUsedItem));
+        gBattleMons[battlerStealer].item = gLastUsedItem;
+        gBattleResources->flags->flags[battlerStealer] &= ~RESOURCE_FLAG_UNBURDEN;
+        BtlController_EmitSetMonData(battlerStealer, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
+        MarkBattlerForControllerExec(battlerStealer);
+    }
 
+    RecordItemEffectBattle(battlerItem, ITEM_NONE);
     CheckSetUnburden(battlerItem);
-    gBattleResources->flags->flags[battlerStealer] &= ~RESOURCE_FLAG_UNBURDEN;
-
-    BtlController_EmitSetMonData(battlerStealer, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
-    MarkBattlerForControllerExec(battlerStealer);
 
     BtlController_EmitSetMonData(battlerItem, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[battlerItem].item);  // remove target item
     MarkBattlerForControllerExec(battlerItem);
@@ -3544,8 +3553,13 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     else
                     {
                         StealTargetItem(gBattlerAttacker, gBattlerTarget);  // Attacker steals target item
-                        gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
-                        gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+
+                        if (!(B_STEAL_WILD_ITEMS >= GEN_9
+                         && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
+                        {
+                            gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
+                            gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+                        }
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
                         gBattlescriptCurrInstr = BattleScript_ItemSteal;
                     }
@@ -8839,8 +8853,8 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
 
 static bool32 TryTidyUpClear(u32 battlerAtk, bool32 clear)
 {
-    s32 i;
-    u8 saveBattler = gBattlerAttacker;
+    u32 i;
+    u32 saveBattler = gBattlerAttacker;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
@@ -11920,7 +11934,10 @@ static void Cmd_statbuffchange(void)
     const u8 *ptrBefore = gBattlescriptCurrInstr;
     const u8 *failInstr = cmd->failInstr;
 
-    if (ChangeStatBuffs(GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger), GET_STAT_BUFF_ID(gBattleScripting.statChanger), flags, failInstr) == STAT_CHANGE_WORKED)
+    if (ChangeStatBuffs(GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger),
+                        GET_STAT_BUFF_ID(gBattleScripting.statChanger),
+                        flags,
+                        failInstr) == STAT_CHANGE_WORKED)
         gBattlescriptCurrInstr = cmd->nextInstr;
     else if (gBattlescriptCurrInstr == ptrBefore) // Prevent infinite looping.
         gBattlescriptCurrInstr = failInstr;
@@ -12638,7 +12655,10 @@ static void Cmd_setsubstitute(void)
 
         gBattleMons[gBattlerAttacker].status2 |= STATUS2_SUBSTITUTE;
         gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_WRAPPED;
-        gDisableStructs[gBattlerAttacker].substituteHP = gBattleMoveDamage;
+        if (factor == 2)
+            gDisableStructs[gBattlerAttacker].substituteHP = gBattleMoveDamage / 2;
+        else
+            gDisableStructs[gBattlerAttacker].substituteHP = gBattleMoveDamage;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SUBSTITUTE;
         gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE;
     }
