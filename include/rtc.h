@@ -89,6 +89,7 @@
 #define TIME_NIGHT             3
 
 extern struct Time gLocalTime;
+extern const s32 sNumDaysInMonths[12];
 
 void RtcDisableInterrupts(void);
 void RtcRestoreInterrupts(void);
