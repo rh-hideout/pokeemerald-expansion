@@ -7575,7 +7575,6 @@ BattleScript_AbilityPopUp:
 	showabilitypopup BS_ABILITY_BATTLER
 	pause 40
 	.endif
-	recordability BS_ABILITY_BATTLER
 	sethword sABILITY_OVERWRITE, 0
 	return
 
@@ -7584,7 +7583,6 @@ BattleScript_AbilityPopUpScripting:
 	showabilitypopup BS_SCRIPTING
 	pause 40
 	.endif
-	recordability BS_SCRIPTING
 	sethword sABILITY_OVERWRITE, 0
 	return
 
