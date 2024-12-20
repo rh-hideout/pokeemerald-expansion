@@ -5413,7 +5413,9 @@ static void AnimMilkBottle_Step1(struct Sprite *sprite)
                     sprite->data[6]++;
             }
             else if (sprite->data[7] > 0)
+            {
                 sprite->data[7]--;
+            }
 
             SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(sprite->data[6], sprite->data[7]));
             if (sprite->data[6] == 16 && sprite->data[7] == 0)
