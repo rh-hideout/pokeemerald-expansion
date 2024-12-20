@@ -54,13 +54,13 @@ MtChimney_EventScript_Maxie::
 	msgbox MtChimney_Text_MaxieYouHaventSeenLastOfMagma, MSGBOX_DEFAULT
 	closemessage
 	delay 30
-	fadescreenswapbuffers FADE_TO_BLACK
+	fadescreen FADE_TO_BLACK
 	removeobject LOCALID_MAXIE
 	removeobject LOCALID_MAGMA_GRUNT_1
 	removeobject LOCALID_TABITHA
 	removeobject LOCALID_MAGMA_GRUNT_2
 	setflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
-	fadescreenswapbuffers FADE_FROM_BLACK
+	fadescreen FADE_FROM_BLACK
 	setobjectxyperm LOCALID_ARCHIE, 10, 12
 	addobject LOCALID_ARCHIE
 	call_if_eq VAR_FACING, DIR_EAST, MtChimney_EventScript_ArchieApproachPlayerEast
