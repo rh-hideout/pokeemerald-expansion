@@ -21689,6 +21689,24 @@ Move_PSYCHIC::
 	call UnsetPsychicBg
 	end
 
+Move_THINK_FAST::
+	loadspritegfx ANIM_TAG_SPARKLE_4
+	call SetPsychicBackground
+	monbg ANIM_TARGET
+	splitbgprio ANIM_TARGET
+	setalpha 8, 8
+	playsewithpan SE_M_DETECT, SOUND_PAN_ATTACKER
+	createsprite gSpinningSparkleSpriteTemplate, ANIM_ATTACKER, 13, 24, -16
+	waitforvisualfinish
+	createvisualtask AnimTask_StretchTargetUp, 3
+	loopsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET, 5, 3
+	waitforvisualfinish
+	delay 1
+	clearmonbg ANIM_TARGET
+	blendoff
+	call UnsetPsychicBg
+	end
+
 Move_FUTURE_SIGHT::
 	goto FutureSight
 FutureSightContinue:
@@ -22181,6 +22199,17 @@ MudSlapMud:
 	createsprite gMudSlapMudSpriteTemplate, ANIM_TARGET, 2, 15, 15, 20, -20, -10
 	delay 2
 	return
+
+Move_QUICK_SAND::
+	loadspritegfx ANIM_TAG_MUD_SAND
+	loadspritegfx ANIM_TAG_DIRT_MOUND
+	createsprite gDirtMoundSpriteTemplate, ANIM_ATTACKER, 1, 0, 0, 60
+	createsprite gDirtMoundSpriteTemplate, ANIM_ATTACKER, 1, 0, 1, 60
+	createsprite gVerticalDipSpriteTemplate, ANIM_ATTACKER, 2, 10, 1, ANIM_ATTACKER
+	call DigThrowDirt
+	call Move_MUD_SLAP
+	waitforvisualfinish
+	end
 
 Move_DRAGON_RAGE::
 	loadspritegfx ANIM_TAG_SMALL_EMBER
