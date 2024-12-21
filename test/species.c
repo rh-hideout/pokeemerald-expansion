@@ -101,7 +101,7 @@ TEST("No species has two evolutions that use the evolution tracker")
     u32 i;
     u32 species = SPECIES_NONE;
     u32 evolutionTrackerEvolutions;
-    bool32 hasGenderBasedRecoil;
+    bool32 hasRecoilEvo;
     const struct Evolution *evolutions;
 
     for (i = 0; i < NUM_SPECIES; i++)
@@ -110,7 +110,7 @@ TEST("No species has two evolutions that use the evolution tracker")
     }
 
     evolutionTrackerEvolutions = 0;
-    hasGenderBasedRecoil = FALSE;
+    hasRecoilEvo = FALSE;
     evolutions = GetSpeciesEvolutions(species);
 
     for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
@@ -120,13 +120,12 @@ TEST("No species has two evolutions that use the evolution tracker")
         )
             evolutionTrackerEvolutions++;
 
-        if (evolutions[i].method == EVO_RECOIL_DAMAGE_MALE
-         || evolutions[i].method == EVO_RECOIL_DAMAGE_FEMALE)
+        if (evolutions[i].method == EVO_RECOIL_DAMAGE)
         {
             // Special handling for these since they can be combined as the evolution tracker field is used for the same purpose
-            if (!hasGenderBasedRecoil)
+            if (!hasRecoilEvo)
             {
-                hasGenderBasedRecoil = TRUE;
+                hasRecoilEvo = TRUE;
                 evolutionTrackerEvolutions++;
             }
         }

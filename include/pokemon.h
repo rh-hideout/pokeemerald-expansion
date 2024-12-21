@@ -342,11 +342,18 @@ struct BattlePokemon
     /*0x5A*/ bool8 isShiny;
 };
 
+struct EvolutionParam
+{
+    u16 condition;
+    u16 arg;
+};
+
 struct Evolution
 {
     u16 method;
     u16 param;
     u16 targetSpecies;
+    const struct EvolutionParam *params;
 };
 
 struct SpeciesInfo /*0xC4*/
