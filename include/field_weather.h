@@ -45,7 +45,8 @@ struct Weather
     s8 targetColorMapIndex;
     u8 colorMapStepDelay;
     u8 colorMapStepCounter;
-    u16 fadeDestColor;
+    u16 fadeDestColor:15;
+    u16 noShadows:1; // Certain weathers require blend coeffs that do not work nice with shadows
     u8 palProcessingState;
     u8 fadeScreenCounter;
     bool8 readyForInit;
@@ -150,8 +151,8 @@ void ApplyWeatherColorMapIfIdle(s8 colorMapIndex);
 void ApplyWeatherColorMapIfIdle_Gradual(u8 colorMapIndex, u8 targetColorMapIndex, u8 colorMapStepDelay);
 void FadeScreen(u8 mode, s8 delay);
 bool8 IsWeatherNotFadingIn(void);
-void UpdateSpritePaletteWithWeather(u8 spritePaletteIndex);
-void ApplyWeatherColorMapToPal(u8 paletteIndex);
+void UpdateSpritePaletteWithWeather(u8 spritePaletteIndex, bool8 allowFog);
+void ApplyWeatherColorMapToPals(u8 startPalIndex, u8 numPalettes);
 void LoadCustomWeatherSpritePalette(const u16 *palette);
 void ResetDroughtWeatherPaletteLoading(void);
 bool8 LoadDroughtWeatherPalettes(void);
@@ -192,6 +193,7 @@ void Thunderstorm_Main(void);
 void Thunderstorm_InitAll(void);
 bool8 Thunderstorm_Finish(void);
 void FogHorizontal_InitVars(void);
+u8 UpdateShadowColor(u16 color);
 void FogHorizontal_Main(void);
 void FogHorizontal_InitAll(void);
 bool8 FogHorizontal_Finish(void);
