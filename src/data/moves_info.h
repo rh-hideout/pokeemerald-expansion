@@ -21995,7 +21995,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_DOUBLE_TEAM},
-        .battleAnimScript = Move_MUD_SLAP,
+        .battleAnimScript = Move_QUICK_SAND,
     },
 
     [MOVE_UPROOT] =
@@ -22379,7 +22379,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_DOUBLE_TEAM},
-        .battleAnimScript = Move_PSYWAVE,
+        .battleAnimScript = Move_THINK_FAST,
     },
 
     [MOVE_DRUMROLL] =
