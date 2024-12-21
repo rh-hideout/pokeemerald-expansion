@@ -6628,6 +6628,22 @@ Cry_Regimelt::
 Cry_Regirode::
 	.incbin "sound/direct_sound_samples/cries/regirode.bin"
 
+	.align 2
+Cry_Camerex::
+	.incbin "sound/direct_sound_samples/cries/camerex.bin"
+
+	.align 2
+Cry_Shaikle::
+	.incbin "sound/direct_sound_samples/cries/shaikle.bin"
+
+	.align 2
+Cry_Zillichina::
+	.incbin "sound/direct_sound_samples/cries/zillichina.bin"
+
+	.align 2
+Cry_Drattel::
+	.incbin "sound/direct_sound_samples/cries/drattel.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

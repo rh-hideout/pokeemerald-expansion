@@ -1753,8 +1753,12 @@
 #define SPECIES_REGIRUST                                1643
 #define SPECIES_REGIMELT                                1644
 #define SPECIES_REGIRODE                                1645
+#define SPECIES_CAMEREX                                 1646
+#define SPECIES_SHAIKLE                                 1647
+#define SPECIES_ZILLICHINA                              1648
+#define SPECIES_DRATTEL                                 1649
 
-#define SPECIES_EGG (SPECIES_REGIRODE + 1)
+#define SPECIES_EGG (SPECIES_DRATTEL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

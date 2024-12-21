@@ -2660,6 +2660,14 @@ gCryTable::
 	cry Cry_Regimelt
 
 	cry Cry_Regirode
+
+	cry Cry_Camerex
+
+	cry Cry_Shaikle
+
+	cry Cry_Zillichina
+
+	cry Cry_Drattel
 .endif
 
 	.align 2
@@ -5325,4 +5333,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Regimelt
 	
 	cry_reverse Cry_Regirode
+
+	cry_reverse Cry_Camerex
+
+	cry_reverse Cry_Shaikle
+
+	cry_reverse Cry_Zillichina
+
+	cry_reverse Cry_Drattel
 .endif
