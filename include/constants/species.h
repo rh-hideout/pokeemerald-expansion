@@ -1757,8 +1757,15 @@
 #define SPECIES_SHAIKLE                                 1647
 #define SPECIES_ZILLICHINA                              1648
 #define SPECIES_DRATTEL                                 1649
+#define SPECIES_MANTASM                                 1650
+#define SPECIES_JUNKGEIST                               1651
+#define SPECIES_POLTIRE                                 1652
+#define SPECIES_BARABYSS                                1653
+#define SPECIES_SEAMAN                                  1654
+#define SPECIES_TSEMANI                                 1655
+#define SPECIES_SERPOTINE                               1656
 
-#define SPECIES_EGG (SPECIES_DRATTEL + 1)
+#define SPECIES_EGG (SPECIES_SERPOTINE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -6644,6 +6644,34 @@ Cry_Zillichina::
 Cry_Drattel::
 	.incbin "sound/direct_sound_samples/cries/drattel.bin"
 
+	.align 2
+Cry_Mantasm::
+	.incbin "sound/direct_sound_samples/cries/mantasm.bin"
+
+	.align 2
+Cry_Junkgeist::
+	.incbin "sound/direct_sound_samples/cries/junkgeist.bin"
+
+	.align 2
+Cry_Poltire::
+	.incbin "sound/direct_sound_samples/cries/poltire.bin"
+
+	.align 2
+Cry_Barabyss::
+	.incbin "sound/direct_sound_samples/cries/barabyss.bin"
+
+	.align 2
+Cry_Seaman::
+	.incbin "sound/direct_sound_samples/cries/seaman.bin"
+
+	.align 2
+Cry_Tsemani::
+	.incbin "sound/direct_sound_samples/cries/tsemani.bin"
+
+	.align 2
+Cry_Serpotine::
+	.incbin "sound/direct_sound_samples/cries/serpotine.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

@@ -2668,6 +2668,20 @@ gCryTable::
 	cry Cry_Zillichina
 
 	cry Cry_Drattel
+
+	cry Cry_Mantasm
+
+	cry Cry_Junkgeist
+
+	cry Cry_Poltire
+
+	cry Cry_Barabyss
+
+	cry Cry_Seaman
+
+	cry Cry_Tsemani
+
+	cry Cry_Serpotine
 .endif
 
 	.align 2
@@ -5341,4 +5355,18 @@ gCryTable_Reverse::
 	cry_reverse Cry_Zillichina
 
 	cry_reverse Cry_Drattel
+
+	cry_reverse Cry_Mantasm
+
+	cry_reverse Cry_Junkgeist
+
+	cry_reverse Cry_Poltire
+
+	cry_reverse Cry_Barabyss
+
+	cry_reverse Cry_Seaman
+
+	cry_reverse Cry_Tsemani
+
+	cry_reverse Cry_Serpotine
 .endif
