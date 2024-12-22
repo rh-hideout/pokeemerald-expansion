@@ -21974,7 +21974,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestEffect = CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
-        .battleAnimScript = Move_DRILL_PECK,
+        .battleAnimScript = Move_CARVING_BEAK,
     },
 
     [MOVE_QUICK_SAND] =
