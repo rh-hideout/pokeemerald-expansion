@@ -5948,12 +5948,15 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
                         | ((GetMonData(mon, MON_DATA_SPDEF_IV) & 1) << 5);
             }
 
-            // Subtract 6 instead of 1 below because 5 types are excluded (TYPE_NONE, TYPE_NORMAL, TYPE_MYSTERY, TYPE_FAIRY and TYPE_STELLAR)
-            // The final + 2 skips past TYPE_NONE and Normal.
-            moveType = ((NUMBER_OF_MON_TYPES - 6) * typeBits) / 63 + 2;
-            if (moveType >= TYPE_MYSTERY)
-                moveType++;
-            return ((moveType | F_DYNAMIC_TYPE_IGNORE_PHYSICALITY) & 0x3F);
+            u32 hpTypes[NUMBER_OF_MON_TYPES] = {0};
+            u32 i, hpTypeCount = 0;
+            for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
+            {
+                if (gTypesInfo[i].isHiddenPowerType)
+                    hpTypes[hpTypeCount++] = i;
+            }
+            moveType = ((hpTypeCount - 1) * typeBits) / 63;
+            return ((hpTypes[moveType] | F_DYNAMIC_TYPE_IGNORE_PHYSICALITY) & 0x3F);
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
