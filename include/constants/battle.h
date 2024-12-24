@@ -423,21 +423,34 @@
 #define BATTLE_TERRAIN_CAVE             7
 #define BATTLE_TERRAIN_BUILDING         8
 #define BATTLE_TERRAIN_PLAIN            9
+#define BATTLE_TERRAIN_FRONTIER        10
+#define BATTLE_TERRAIN_GYM             11
+#define BATTLE_TERRAIN_LEADER          12
+#define BATTLE_TERRAIN_MAGMA           13
+#define BATTLE_TERRAIN_AQUA            14
+#define BATTLE_TERRAIN_SIDNEY          15
+#define BATTLE_TERRAIN_PHOEBE          16
+#define BATTLE_TERRAIN_GLACIA          17
+#define BATTLE_TERRAIN_DRAKE           18
+#define BATTLE_TERRAIN_CHAMPION        19
+#define BATTLE_TERRAIN_GROUDON         20
+#define BATTLE_TERRAIN_KYOGRE          21
+#define BATTLE_TERRAIN_RAYQUAZA        22
 // New battle terrains are used for Secret Power but not fully implemented.
-#define BATTLE_TERRAIN_SOARING          10
-#define BATTLE_TERRAIN_SKY_PILLAR       11
-#define BATTLE_TERRAIN_BURIAL_GROUND    12
-#define BATTLE_TERRAIN_PUDDLE           13
-#define BATTLE_TERRAIN_MARSH            14
-#define BATTLE_TERRAIN_SWAMP            15
-#define BATTLE_TERRAIN_SNOW             16
-#define BATTLE_TERRAIN_ICE              17
-#define BATTLE_TERRAIN_VOLCANO          18
-#define BATTLE_TERRAIN_DISTORTION_WORLD 19
-#define BATTLE_TERRAIN_SPACE            20
-#define BATTLE_TERRAIN_ULTRA_SPACE      21
+#define BATTLE_TERRAIN_SOARING          23
+#define BATTLE_TERRAIN_SKY_PILLAR       24
+#define BATTLE_TERRAIN_BURIAL_GROUND    25
+#define BATTLE_TERRAIN_PUDDLE           26
+#define BATTLE_TERRAIN_MARSH            27
+#define BATTLE_TERRAIN_SWAMP            28
+#define BATTLE_TERRAIN_SNOW             29
+#define BATTLE_TERRAIN_ICE              30
+#define BATTLE_TERRAIN_VOLCANO          31
+#define BATTLE_TERRAIN_DISTORTION_WORLD 32
+#define BATTLE_TERRAIN_SPACE            33
+#define BATTLE_TERRAIN_ULTRA_SPACE      34
 
-#define BATTLE_TERRAIN_COUNT            22
+#define BATTLE_TERRAIN_COUNT            35
 
 #define B_WAIT_TIME_LONG        (B_WAIT_TIME_MULTIPLIER * 4)
 #define B_WAIT_TIME_MED         (B_WAIT_TIME_MULTIPLIER * 3)
