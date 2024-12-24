@@ -443,7 +443,7 @@ void CopyToWindowPixelBuffer(u32 windowId, const void *src, u16 size, u16 tileOf
     if (size != 0)
         CpuCopy16(src, gWindows[windowId].tileData + (32 * tileOffset), size);
     else
-        LZ77UnCompWram(src, gWindows[windowId].tileData + (32 * tileOffset));
+        LZDecompressWram(src, gWindows[windowId].tileData + (32 * tileOffset));
 }
 
 // Sets all pixels within the window to the fillValue color.
