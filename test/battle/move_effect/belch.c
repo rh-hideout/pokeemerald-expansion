@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_BELCH].effect == EFFECT_BELCH);
-    ASSUME(gMovesInfo[MOVE_MUD_SHOT].type == TYPE_GROUND);
+    ASSUME(GetMoveEffect(MOVE_BELCH) == EFFECT_BELCH);
+    ASSUME(GetMoveType(MOVE_MUD_SHOT) == TYPE_GROUND);
     ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
     ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].holdEffectParam == TYPE_GROUND);
     ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].pocket == POCKET_BERRIES);

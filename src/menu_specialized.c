@@ -10,6 +10,7 @@
 #include "international_string_util.h"
 #include "menu.h"
 #include "menu_specialized.h"
+#include "move.h"
 #include "move_relearner.h"
 #include "palette.h"
 #include "player_pc.h"
@@ -809,13 +810,7 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
         str = buffer;
     }
     AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NORMAL, str, 106, 41, TEXT_SKIP_DRAW, NULL);
-
-    if (move->effect != EFFECT_PLACEHOLDER)
-        str = gMovesInfo[chosenMove].description;
-    else
-        str = gNotDoneYetDescription;
-
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NARROW, str, 0, 65, 0, NULL);
+    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NARROW, GetMoveDescription(chosenMove), 0, 65, 0, NULL);
 }
 
 static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)

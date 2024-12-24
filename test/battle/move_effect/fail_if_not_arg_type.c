@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Burn Up user loses its Fire-type")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_BURN_UP].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_FIRE || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_FIRE);
         ASSUME(gSpeciesInfo[SPECIES_CYNDAQUIL].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_CYNDAQUIL].types[1] == TYPE_FIRE);
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Burn Up user loses its Fire-type")
 SINGLE_BATTLE_TEST("Burn Up fails if the user isn't a Fire-type")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_BURN_UP].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_FIRE || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_FIRE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Burn Up fails if the user isn't a Fire-type")
 SINGLE_BATTLE_TEST("Burn Up user loses its Fire-type if enemy faints")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_BURN_UP].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_FIRE || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_FIRE);
         ASSUME(gSpeciesInfo[SPECIES_CYNDAQUIL].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_CYNDAQUIL].types[1] == TYPE_FIRE);
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Burn Up user loses its Fire-type if enemy faints")
 SINGLE_BATTLE_TEST("Double Shock user loses its Electric-type")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DOUBLE_SHOCK].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_SHOCK) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_DOUBLE_SHOCK, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_ELECTRIC) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ELECTRIC || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ELECTRIC);
         ASSUME(gSpeciesInfo[SPECIES_PIKACHU].types[0] == TYPE_ELECTRIC || gSpeciesInfo[SPECIES_PIKACHU].types[1] == TYPE_ELECTRIC);
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Double Shock user loses its Electric-type")
 SINGLE_BATTLE_TEST("Double Shock fails if the user isn't an Electric-type")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DOUBLE_SHOCK].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_SHOCK) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_DOUBLE_SHOCK, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_ELECTRIC) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ELECTRIC || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Double Shock fails if the user isn't an Electric-type")
 SINGLE_BATTLE_TEST("Double Shock user loses its Electric-type if enemy faints")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DOUBLE_SHOCK].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_SHOCK) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_DOUBLE_SHOCK, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_ELECTRIC) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ELECTRIC || gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ELECTRIC);
         ASSUME(gSpeciesInfo[SPECIES_PIKACHU].types[0] == TYPE_ELECTRIC || gSpeciesInfo[SPECIES_PIKACHU].types[1] == TYPE_ELECTRIC);

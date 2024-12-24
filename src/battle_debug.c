@@ -1982,7 +1982,7 @@ static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus,
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_DAMAGE_NON_TYPES;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
-            sideTimer->damageNonTypesType = gMovesInfo[gCurrentMove].type;
+            sideTimer->damageNonTypesType = GetMoveType(gCurrentMove);
         }
         return &sideTimer->damageNonTypesTimer;
     case LIST_SIDE_RAINBOW:

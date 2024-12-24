@@ -3,7 +3,7 @@
 
 ASSUMPTIONS 
 {
-    ASSUME(gMovesInfo[MOVE_DESTINY_BOND].effect == EFFECT_DESTINY_BOND);
+    ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
 }
 
 SINGLE_BATTLE_TEST("Destiny Bond faints the opposing mon if it fainted from the attack")

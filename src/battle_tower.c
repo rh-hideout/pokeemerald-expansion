@@ -1590,7 +1590,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
             move = MOVE_FRUSTRATION;
 
         SetMonMoveSlot(dst, move, j);
-        if (gMovesInfo[move].effect == EFFECT_FRUSTRATION)
+        if (GetMoveEffect(move) == EFFECT_FRUSTRATION)
             friendship = 0;  // Frustration is more powerful the lower the pokemon's friendship is.
     }
 
@@ -1783,7 +1783,7 @@ static void UNUSED Unused_CreateApprenticeMons(u16 trainerId, u8 firstMonId)
         friendship = MAX_FRIENDSHIP;
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            if (gMovesInfo[apprentice->party[i].moves[j]].effect == EFFECT_FRUSTRATION)
+            if (GetMoveEffect(apprentice->party[i].moves[j]) == EFFECT_FRUSTRATION)
                 friendship = 0;
         }
         SetMonData(&gEnemyParty[firstMonId + i], MON_DATA_FRIENDSHIP, &friendship);

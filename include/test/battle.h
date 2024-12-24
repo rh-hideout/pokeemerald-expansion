@@ -29,7 +29,7 @@
  *
  *   ASSUMPTIONS
  *   {
- *       ASSUME(gMovesInfo[MOVE_STUN_SPORE].effect == EFFECT_PARALYZE);
+ *       ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYZE);
  *   }
  *
  *   SINGLE_BATTLE_TEST("Stun Spore inflicts paralysis")
@@ -87,7 +87,7 @@
  *   SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
  *   {
  *       GIVEN {
- *           ASSUME(gMovesInfo[MOVE_STUN_SPORE].powderMove);
+ *           ASSUME(IsPowderMove(MOVE_STUN_SPORE));
  *           ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
  *           PLAYER(SPECIES_ODDISH); // 1.
  *           OPPONENT(SPECIES_ODDISH); // 2.
@@ -129,7 +129,7 @@
  *        PARAMETRIZE { raiseAttack = FALSE; }
  *        PARAMETRIZE { raiseAttack = TRUE; }
  *        GIVEN {
- *            ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+ *            ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
  *            PLAYER(SPECIES_WOBBUFFET);
  *            OPPONENT(SPECIES_WOBBUFFET);
  *        } WHEN {
@@ -176,7 +176,7 @@
  * Pokémon we can observe the damage of a physical attack with and
  * without the burn. To document that this test assumes the attack is
  * physical we can use:
- *     ASSUME(gMovesInfo[MOVE_WHATEVER].category == DAMAGE_CATEGORY_PHYSICAL);
+ *     ASSUME(GetMoveCategory(MOVE_WHATEVER) == DAMAGE_CATEGORY_PHYSICAL);
  *
  * ASSUMPTIONS
  * Should be placed immediately after any #includes and contain any
@@ -186,7 +186,7 @@
  * move_effect_poison_hit.c should be:
  *     ASSUMPTIONS
  *     {
- *         ASSUME(gMovesInfo[MOVE_POISON_STING].effect == EFFECT_POISON_HIT);
+ *         ASSUME(GetMoveEffect(MOVE_POISON_STING) == EFFECT_POISON_HIT);
  *     }
  *
  * SINGLE_BATTLE_TEST(name, results...) and DOUBLE_BATTLE_TEST(name, results...)
@@ -228,7 +228,7 @@
  *         PARAMETRIZE { hp = 99; }
  *         PARAMETRIZE { hp = 33; }
  *         GIVEN {
- *             ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
+ *             ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
  *             PLAYER(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); MaxHP(99); HP(hp); }
  *             OPPONENT(SPECIES_WOBBUFFET);
  *         } WHEN {
@@ -265,7 +265,7 @@
  *
  * If the tag is not provided, runs the test 50 times and computes an
  * approximate pass ratio.
- *     PASSES_RANDOMLY(gMovesInfo[move].accuracy, 100);
+ *     PASSES_RANDOMLY(GetMoveAccuracy(move), 100);
  * Note that this mode of PASSES_RANDOMLY makes the tests run very
  * slowly and should be avoided where possible. If the mechanic you are
  * testing is missing its tag, you should add it.

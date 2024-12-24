@@ -3,20 +3,20 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_RAZOR_WIND].effect == EFFECT_TWO_TURNS_ATTACK);
-    ASSUME(gMovesInfo[MOVE_SKULL_BASH].effect == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveEffect(MOVE_RAZOR_WIND) == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveEffect(MOVE_SKULL_BASH) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME(MoveHasAdditionalEffectSelf(MOVE_SKULL_BASH, MOVE_EFFECT_DEF_PLUS_1) == TRUE);
-    ASSUME(gMovesInfo[MOVE_SKY_ATTACK].effect == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveEffect(MOVE_SKY_ATTACK) == EFFECT_TWO_TURNS_ATTACK);
 
     // Solar Beam - check for sun
-    ASSUME(gMovesInfo[MOVE_SOLAR_BEAM].effect == EFFECT_SOLAR_BEAM);
-    ASSUME(gMovesInfo[MOVE_SOLAR_BLADE].argument.twoTurnAttack.status == B_WEATHER_SUN);
-    ASSUME(gMovesInfo[MOVE_SOLAR_BLADE].effect == EFFECT_SOLAR_BEAM);
-    ASSUME(gMovesInfo[MOVE_SOLAR_BLADE].argument.twoTurnAttack.status == B_WEATHER_SUN);
+    ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
+    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_SOLAR_BLADE) == B_WEATHER_SUN);
+    ASSUME(GetMoveEffect(MOVE_SOLAR_BLADE) == EFFECT_SOLAR_BEAM);
+    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_SOLAR_BLADE) == B_WEATHER_SUN);
 
     // Electro shot - check for rain
-    ASSUME(gMovesInfo[MOVE_ELECTRO_SHOT].argument.twoTurnAttack.status == B_WEATHER_RAIN);
-    ASSUME(gMovesInfo[MOVE_ELECTRO_SHOT].effect == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == B_WEATHER_RAIN);
+    ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME(MoveHasAdditionalEffectSelf(MOVE_ELECTRO_SHOT, MOVE_EFFECT_SP_ATK_PLUS_1) == TRUE);
 }
 

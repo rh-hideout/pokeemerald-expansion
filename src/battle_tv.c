@@ -774,7 +774,7 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    if (gMovesInfo[move].effect == EFFECT_EXPLOSION)
+    if (GetMoveEffect(move) == EFFECT_EXPLOSION)
     {
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
@@ -782,10 +782,11 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide ^ BIT_SIDE].explosion = TRUE;
     }
 
-    AddMovePoints(PTS_REFLECT,      move, gMovesInfo[move].power, 0);
-    AddMovePoints(PTS_LIGHT_SCREEN, move, gMovesInfo[move].power, 0);
-    AddMovePoints(PTS_WATER_SPORT,  move, 0,                        0);
-    AddMovePoints(PTS_MUD_SPORT,    move, 0,                        0);
+    u32 movePower = GetMovePower(move);
+    AddMovePoints(PTS_REFLECT,      move, movePower, 0);
+    AddMovePoints(PTS_LIGHT_SCREEN, move, movePower, 0);
+    AddMovePoints(PTS_WATER_SPORT,  move, 0,         0);
+    AddMovePoints(PTS_MUD_SPORT,    move, 0,         0);
 }
 
 void BattleTv_SetDataBasedOnAnimation(u8 animationId)
@@ -928,10 +929,10 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     {
     case PTS_MOVE_EFFECT: // arg1 -> move slot, arg2 -> move
     {
-        u8 baseFromEffect = gBattleMoveEffects[gMovesInfo[arg2].effect].battleTvScore;
+        u8 baseFromEffect = gBattleMoveEffects[GetMoveEffect(arg2)].battleTvScore;
 
         // Various cases to add/remove points
-        if (gMovesInfo[arg2].recoil > 0)
+        if (GetMoveRecoil(arg2) > 0)
             baseFromEffect++; // Recoil moves
         if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_RAPID_SPIN))
             baseFromEffect++;
@@ -1006,7 +1007,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
 #define power arg2
     case PTS_WATER_SPORT:
         // If used fire move during Water Sport
-        if (tvPtr->pos[defSide][0].waterSportMonId != -(tvPtr->pos[defSide][1].waterSportMonId) && gMovesInfo[move].type == TYPE_FIRE)
+        if (tvPtr->pos[defSide][0].waterSportMonId != -(tvPtr->pos[defSide][1].waterSportMonId) && GetMoveType(move) == TYPE_FIRE)
         {
             if (tvPtr->pos[defSide][0].waterSportMonId != 0)
             {
@@ -1022,7 +1023,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         break;
     case PTS_MUD_SPORT:
         // If used Electric move during Mud Sport
-        if (tvPtr->pos[defSide][0].mudSportMonId != -(tvPtr->pos[defSide][1].mudSportMonId) && gMovesInfo[move].type == TYPE_ELECTRIC)
+        if (tvPtr->pos[defSide][0].mudSportMonId != -(tvPtr->pos[defSide][1].mudSportMonId) && GetMoveType(move) == TYPE_ELECTRIC)
         {
             if (tvPtr->pos[defSide][0].mudSportMonId != 0)
             {
@@ -1254,7 +1255,7 @@ static void TrySetBattleSeminarShow(void)
             damageCalcData.battlerAtk = gBattlerAttacker;
             damageCalcData.battlerDef = gBattlerTarget;
             damageCalcData.move = gCurrentMove;
-            damageCalcData.moveType = gMovesInfo[gCurrentMove].type;
+            damageCalcData.moveType = GetMoveType(gCurrentMove);
             damageCalcData.isCrit = FALSE;
             damageCalcData.randomFactor = FALSE;
             damageCalcData.updateFlags = FALSE;

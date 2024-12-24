@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_DRAGON_DARTS].effect == EFFECT_DRAGON_DARTS);
+    ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
     ASSUME(gSpeciesInfo[SPECIES_CLEFAIRY].types[0] == TYPE_FAIRY || gSpeciesInfo[SPECIES_CLEFAIRY].types[1] == TYPE_FAIRY);
 }
 
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the left ally twice if the target is a 
 DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and right ally has Volt Absorb")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -116,7 +116,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and righ
 DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and left ally has Volt Absorb")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
@@ -135,7 +135,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and lef
 DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and right ally has Motor Drive")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -154,7 +154,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and righ
 DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and left ally has Motor Drive")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
@@ -174,7 +174,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and lef
 DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target is in a semi-invulnerable turn")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLY].effect == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

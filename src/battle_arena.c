@@ -362,18 +362,19 @@ void BattleArena_AddMindPoints(u8 battler)
 //    - Fake Out subtracts 1 point
 // All status moves give 0 points, with the following exceptions:
 //    - Protect, Detect, and Endure subtract 1 point
+    u32 effect = GetMoveEffect(gCurrentMove);
 
-    if (gMovesInfo[gCurrentMove].effect == EFFECT_FIRST_TURN_ONLY
-     || gMovesInfo[gCurrentMove].effect == EFFECT_PROTECT
-     || gMovesInfo[gCurrentMove].effect == EFFECT_ENDURE)
+    if (effect == EFFECT_FIRST_TURN_ONLY
+     || effect == EFFECT_PROTECT
+     || effect == EFFECT_ENDURE)
     {
         gBattleStruct->arenaMindPoints[battler]--;
     }
     else if (!IS_MOVE_STATUS(gCurrentMove)
-          && gMovesInfo[gCurrentMove].effect != EFFECT_COUNTER
-          && gMovesInfo[gCurrentMove].effect != EFFECT_MIRROR_COAT
-          && gMovesInfo[gCurrentMove].effect != EFFECT_METAL_BURST
-          && gMovesInfo[gCurrentMove].effect != EFFECT_BIDE)
+          && effect != EFFECT_COUNTER
+          && effect != EFFECT_MIRROR_COAT
+          && effect != EFFECT_METAL_BURST
+          && effect != EFFECT_BIDE)
     {
         gBattleStruct->arenaMindPoints[battler]++;
     }

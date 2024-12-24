@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_PURSUIT].effect == EFFECT_PURSUIT);
+    ASSUME(GetMoveEffect(MOVE_PURSUIT) == EFFECT_PURSUIT);
 }
 
 SINGLE_BATTLE_TEST("Pursuit attacks a switching foe")
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
     PARAMETRIZE { move = MOVE_U_TURN; }
     PARAMETRIZE { move = MOVE_PARTING_SHOT; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_VOLT_SWITCH].effect == EFFECT_HIT_ESCAPE);
-        ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
-        ASSUME(gMovesInfo[MOVE_PARTING_SHOT].effect == EFFECT_PARTING_SHOT);
+        ASSUME(GetMoveEffect(MOVE_VOLT_SWITCH) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_WYNAUT);
@@ -51,9 +51,9 @@ DOUBLE_BATTLE_TEST("Pursuit doesn't attack a foe using Teleport / Baton Pass to 
     PARAMETRIZE { move = MOVE_TELEPORT; }
     PARAMETRIZE { move = MOVE_BATON_PASS; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_QUASH].effect == EFFECT_QUASH);
-        ASSUME(gMovesInfo[MOVE_TELEPORT].effect == EFFECT_TELEPORT);
-        ASSUME(gMovesInfo[MOVE_BATON_PASS].effect == EFFECT_BATON_PASS);
+        ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
+        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_NIDOKING);
         PLAYER(SPECIES_ZIGZAGOON);
@@ -115,8 +115,8 @@ SINGLE_BATTLE_TEST("Pursuit ignores accuracy checks when attacking a switching t
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SAND_ATTACK].effect == EFFECT_ACCURACY_DOWN);
-        ASSUME(gMovesInfo[MOVE_HAIL].effect == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         PLAYER(SPECIES_GLACEON) { Ability(ABILITY_SNOW_CLOAK); }
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -340,7 +340,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage")
 DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but isn't affected by Follow Me")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOLLOW_ME].effect == EFFECT_FOLLOW_ME);
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CLEFABLE);
         PLAYER(SPECIES_ZIGZAGOON);
@@ -422,7 +422,7 @@ SINGLE_BATTLE_TEST("Pursuit user terastalizes before attacking a switching foe a
 DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against immune target")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_DONPHAN);
         PLAYER(SPECIES_HELIOLISK);
         PLAYER(SPECIES_ZIGZAGOON);
@@ -441,7 +441,7 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against immune target")
 DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against target with Volt Absorb")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         PLAYER(SPECIES_HELIOLISK);
         PLAYER(SPECIES_ZIGZAGOON);

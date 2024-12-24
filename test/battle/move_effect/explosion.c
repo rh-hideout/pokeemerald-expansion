@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_EXPLOSION].effect == EFFECT_EXPLOSION);
+    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
 }
 
 SINGLE_BATTLE_TEST("Explosion causes the user to faint")
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it misses")
 SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EXPLOSION].type == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_EXPLOSION) == TYPE_NORMAL);
         ASSUME(gSpeciesInfo[SPECIES_GASTLY].types[0] == TYPE_GHOST);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);

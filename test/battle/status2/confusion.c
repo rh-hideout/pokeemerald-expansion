@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Confusion adds a 50/33% chance to hit self with 40 power")
 {
     s16 damage[2];
 
-    ASSUME(gMovesInfo[MOVE_TACKLE].power == 40);
+    ASSUME(GetMovePower(MOVE_TACKLE) == 40);
 
     PASSES_RANDOMLY(B_CONFUSION_SELF_DMG_CHANCE >= GEN_7 ? 33 : 50, 100, RNG_CONFUSION);
     GIVEN {

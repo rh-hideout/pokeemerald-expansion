@@ -240,7 +240,7 @@ bool32 IsMoveBlockedByMaxGuard(u32 move)
 bool32 IsMoveBlockedByDynamax(u32 move)
 {
     // TODO: Certain moves are banned in raids.
-    switch (gMovesInfo[move].effect)
+    switch (GetMoveEffect(move))
     {
         case EFFECT_HEAT_CRASH:
         case EFFECT_LOW_KICK:
@@ -282,7 +282,7 @@ u16 GetMaxMove(u32 battler, u32 baseMove)
 {
     u32 moveType;
     SetTypeBeforeUsingMove(baseMove, battler);
-    moveType = GetMoveType(baseMove);
+    moveType = GetBattleMoveType(baseMove);
 
     if (baseMove == MOVE_NONE) // for move display
     {
@@ -292,7 +292,7 @@ u16 GetMaxMove(u32 battler, u32 baseMove)
     {
         return MOVE_STRUGGLE;
     }
-    else if (gMovesInfo[baseMove].category == DAMAGE_CATEGORY_STATUS)
+    else if (GetMoveCategory(baseMove) == DAMAGE_CATEGORY_STATUS)
     {
         return MOVE_MAX_GUARD;
     }
@@ -320,7 +320,7 @@ u8 GetMaxMovePower(u32 move)
 {
     u8 tier;
     // G-Max Drum Solo, G-Max Hydrosnipe, and G-Max Fireball always have 160 base power.
-    if (gMovesInfo[GetMaxMove(gBattlerAttacker, move)].argument.maxEffect == MAX_EFFECT_FIXED_POWER)
+    if (GetMoveMaxEffect(GetMaxMove(gBattlerAttacker, move)) == MAX_EFFECT_FIXED_POWER)
         return 160;
 
     // Exceptions to all other rules below:
@@ -333,8 +333,9 @@ u8 GetMaxMovePower(u32 move)
     }
 
     tier = GetMaxPowerTier(move);
-    if (gMovesInfo[move].type == TYPE_FIGHTING
-     || gMovesInfo[move].type == TYPE_POISON
+    u32 moveType = GetMoveType(move);
+    if (moveType == TYPE_FIGHTING
+     || moveType == TYPE_POISON
      || move == MOVE_MULTI_ATTACK)
     {
         switch (tier)
@@ -369,9 +370,10 @@ u8 GetMaxMovePower(u32 move)
 
 static u8 GetMaxPowerTier(u32 move)
 {
-    if (gMovesInfo[move].strikeCount >= 2 && gMovesInfo[move].strikeCount <= 5)
+    u32 strikeCount = GetMoveStrikeCount(move);
+    if (strikeCount >= 2 && strikeCount <= 5)
     {
-        switch(gMovesInfo[move].power)
+        switch(GetMovePower(move))
         {
             case 0 ... 25:  return MAX_POWER_TIER_2;
             case 26 ... 30: return MAX_POWER_TIER_3;
@@ -382,7 +384,7 @@ static u8 GetMaxPowerTier(u32 move)
         }
     }
 
-    switch (gMovesInfo[move].effect)
+    switch (GetMoveEffect(move))
     {
         case EFFECT_BIDE:
         case EFFECT_SUPER_FANG:
@@ -418,7 +420,7 @@ static u8 GetMaxPowerTier(u32 move)
         case EFFECT_LOW_KICK:
             return MAX_POWER_TIER_7;
         case EFFECT_MULTI_HIT:
-            switch(gMovesInfo[move].power)
+            switch(GetMovePower(move))
             {
                 case 0 ... 15:    return MAX_POWER_TIER_1;
                 case 16 ... 18:   return MAX_POWER_TIER_2;
@@ -428,7 +430,7 @@ static u8 GetMaxPowerTier(u32 move)
             }
     }
 
-    switch (gMovesInfo[move].power)
+    switch (GetMovePower(move))
     {
         case 0 ... 40:    return MAX_POWER_TIER_1;
         case 45 ... 50:   return MAX_POWER_TIER_2;
@@ -470,7 +472,7 @@ void ChooseDamageNonTypesString(u8 type)
 // Returns the status effect that should be applied by a G-Max Move.
 static u32 GetMaxMoveStatusEffect(u32 move)
 {
-    u8 maxEffect = gMovesInfo[move].argument.maxEffect;
+    u8 maxEffect = GetMoveMaxEffect(move);
     switch (maxEffect)
     {
         // Status 1
@@ -522,7 +524,7 @@ void BS_SetMaxMoveEffect(void)
 {
     NATIVE_ARGS();
     u16 effect = 0;
-    u8 maxEffect = gMovesInfo[gCurrentMove].argument.maxEffect;
+    u8 maxEffect = GetMoveMaxEffect(gCurrentMove);
 
     // Don't continue if the move didn't land.
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
@@ -541,7 +543,7 @@ void BS_SetMaxMoveEffect(void)
             if (!NoAliveMonsForEitherParty())
             {
                 // Max Effects are ordered by stat ID.
-                SET_STATCHANGER(gMovesInfo[gCurrentMove].argument.maxEffect, 1, FALSE);
+                SET_STATCHANGER(maxEffect, 1, FALSE);
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
                 gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
                 effect++;
@@ -569,7 +571,7 @@ void BS_SetMaxMoveEffect(void)
                         break;
                     default:
                         // Max Effects are ordered by stat ID.
-                        statId = gMovesInfo[gCurrentMove].argument.maxEffect - MAX_EFFECT_LOWER_ATTACK + 1;
+                        statId = maxEffect - MAX_EFFECT_LOWER_ATTACK + 1;
                         break;
                 }
                 SET_STATCHANGER(statId, stage, TRUE);
@@ -618,7 +620,7 @@ void BS_SetMaxMoveEffect(void)
         case MAX_EFFECT_PSYCHIC_TERRAIN:
         {
             u32 statusFlag = 0;
-            switch (gMovesInfo[gCurrentMove].argument.moveProperty)
+            switch (GetMoveEffectArg_MoveProperty(gCurrentMove))
             {
                 case MAX_EFFECT_MISTY_TERRAIN:
                     statusFlag = STATUS_FIELD_MISTY_TERRAIN;
@@ -659,11 +661,12 @@ void BS_SetMaxMoveEffect(void)
             u8 side = GetBattlerSide(gBattlerTarget);
             if (!(gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES))
             {
+                u32 moveType = GetMoveType(gCurrentMove);
                 gSideStatuses[side] |= SIDE_STATUS_DAMAGE_NON_TYPES;
                 gSideTimers[side].damageNonTypesTimer = 5; // damage is dealt for 4 turns, ends on 5th
-                gSideTimers[side].damageNonTypesType = gMovesInfo[gCurrentMove].type;
+                gSideTimers[side].damageNonTypesType = moveType;
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
-                ChooseDamageNonTypesString(gMovesInfo[gCurrentMove].type);
+                ChooseDamageNonTypesString(moveType);
                 gBattlescriptCurrInstr = BattleScript_DamageNonTypesStarts;
                 effect++;
             }

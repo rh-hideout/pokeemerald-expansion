@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_CURSE].effect == EFFECT_CURSE);
+    ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
 }
 
 SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when used by non-Ghost-types")

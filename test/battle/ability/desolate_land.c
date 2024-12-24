@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(!IS_MOVE_STATUS(MOVE_WATER_GUN));
-    ASSUME(gMovesInfo[MOVE_WATER_GUN].type == TYPE_WATER);
+    ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
 }
 
 SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
@@ -33,8 +33,8 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
 {
     GIVEN {
         ASSUME(!IS_MOVE_STATUS(MOVE_SURF));
-        ASSUME(gMovesInfo[MOVE_SURF].type == TYPE_WATER);
-        ASSUME(gMovesInfo[MOVE_SURF].target == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
+        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}

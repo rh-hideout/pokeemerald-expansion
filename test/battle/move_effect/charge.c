@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(!IS_MOVE_STATUS(MOVE_THUNDERBOLT));
-    ASSUME(gMovesInfo[MOVE_THUNDERBOLT].type == TYPE_ELECTRIC);
+    ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
 }
 
 SINGLE_BATTLE_TEST("Charge doubles the damage of the next Electric move of the user")
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Charge's effect does not stack with Electromorphosis or Wind
     PARAMETRIZE { species = SPECIES_TADBULB; ability = ABILITY_ELECTROMORPHOSIS; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_AIR_CUTTER].windMove == TRUE);
+        ASSUME(IsWindMove(MOVE_AIR_CUTTER));
         PLAYER(species) { Ability(ability);  }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Charge's effect is removed regardless if the next move is El
     s16 chargedUpDamage = 0;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].type != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_TACKLE) != TYPE_ELECTRIC);
         ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

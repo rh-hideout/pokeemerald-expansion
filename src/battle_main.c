@@ -1906,8 +1906,9 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 
     for (j = 0; j < MAX_MON_MOVES; ++j)
     {
+        u32 pp = GetMovePP(partyEntry->moves[j]);
         SetMonData(mon, MON_DATA_MOVE1 + j, &partyEntry->moves[j]);
-        SetMonData(mon, MON_DATA_PP1 + j, &gMovesInfo[partyEntry->moves[j]].pp);
+        SetMonData(mon, MON_DATA_PP1 + j, &pp);
     }
 }
 
@@ -3134,10 +3135,11 @@ static void BattleStartClearSetData(void)
 void SwitchInClearSetData(u32 battler)
 {
     s32 i;
+    u32 effect = GetMoveEffect(gCurrentMove);
     struct DisableStruct disableStructCopy = gDisableStructs[battler];
 
     ClearIllusionMon(battler);
-    if (gMovesInfo[gCurrentMove].effect != EFFECT_BATON_PASS)
+    if (effect != EFFECT_BATON_PASS)
     {
         for (i = 0; i < NUM_BATTLE_STATS; i++)
             gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
@@ -3152,7 +3154,7 @@ void SwitchInClearSetData(u32 battler)
             }
         }
     }
-    if (gMovesInfo[gCurrentMove].effect == EFFECT_BATON_PASS)
+    if (effect == EFFECT_BATON_PASS)
     {
         gBattleMons[battler].status2 &= (STATUS2_CONFUSION | STATUS2_FOCUS_ENERGY_ANY | STATUS2_SUBSTITUTE | STATUS2_ESCAPE_PREVENTION | STATUS2_CURSED);
         gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
@@ -3194,7 +3196,7 @@ void SwitchInClearSetData(u32 battler)
 
     memset(&gDisableStructs[battler], 0, sizeof(struct DisableStruct));
 
-    if (gMovesInfo[gCurrentMove].effect == EFFECT_BATON_PASS)
+    if (effect == EFFECT_BATON_PASS)
     {
         gDisableStructs[battler].substituteHP = disableStructCopy.substituteHP;
         gDisableStructs[battler].battlerWithSureHit = disableStructCopy.battlerWithSureHit;
@@ -3202,7 +3204,7 @@ void SwitchInClearSetData(u32 battler)
         gDisableStructs[battler].battlerPreventingEscape = disableStructCopy.battlerPreventingEscape;
         gDisableStructs[battler].embargoTimer = disableStructCopy.embargoTimer;
     }
-    else if (gMovesInfo[gCurrentMove].effect == EFFECT_SHED_TAIL)
+    else if (effect == EFFECT_SHED_TAIL)
     {
         gBattleMons[battler].status2 |= STATUS2_SUBSTITUTE;
         gDisableStructs[battler].substituteHP = disableStructCopy.substituteHP;
@@ -4849,10 +4851,10 @@ s8 GetChosenMovePriority(u32 battler)
     else
         move = gBattleMons[battler].moves[*(gBattleStruct->chosenMovePositions + battler)];
 
-    return GetMovePriority(battler, move);
+    return GetBattleMovePriority(battler, move);
 }
 
-s8 GetMovePriority(u32 battler, u16 move)
+s8 GetBattleMovePriority(u32 battler, u16 move)
 {
     s8 priority;
     u16 ability = GetBattlerAbility(battler);
@@ -4860,15 +4862,15 @@ s8 GetMovePriority(u32 battler, u16 move)
     if (GetActiveGimmick(battler) == GIMMICK_Z_MOVE && !IS_MOVE_STATUS(move))
         move = GetUsableZMove(battler, move);
 
-    priority = gMovesInfo[move].priority;
+    priority = GetMovePriority(move);
 
     // Max Guard check
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gMovesInfo[move].category == DAMAGE_CATEGORY_STATUS)
-        return gMovesInfo[MOVE_MAX_GUARD].priority;
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
+        return GetMovePriority(MOVE_MAX_GUARD);
 
     if (ability == ABILITY_GALE_WINGS
         && (B_GALE_WINGS < GEN_7 || IsBattlerAtMaxHp(battler))
-        && gMovesInfo[move].type == TYPE_FLYING)
+        && GetMoveType(move) == TYPE_FLYING)
     {
         priority++;
     }
@@ -4877,7 +4879,7 @@ s8 GetMovePriority(u32 battler, u16 move)
         gProtectStructs[battler].pranksterElevated = 1;
         priority++;
     }
-    else if (gMovesInfo[move].effect == EFFECT_GRASSY_GLIDE && gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerGrounded(battler) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    else if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerGrounded(battler) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         priority++;
     }
@@ -5257,7 +5259,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             {
                 gBattleStruct->focusPunchBattlers |= 1u << battlers[i];
                 gBattlerAttacker = battlers[i];
-                switch (gMovesInfo[gChosenMoveByBattler[gBattlerAttacker]].effect)
+                switch (GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]))
                 {
                 case EFFECT_FOCUS_PUNCH:
                     BattleScriptExecute(BattleScript_FocusPunchSetUp);
@@ -5809,7 +5811,7 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
 {
     u32 ateType;
 
-    switch (gMovesInfo[move].effect)
+    switch (GetMoveEffect(move))
     {
     case EFFECT_TERA_BLAST:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
@@ -5861,8 +5863,8 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
 // NULL can be passed to ateBoost to avoid applying ate-ability boosts when opening the summary screen in-battle.
 u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
 {
-    u32 moveType = gMovesInfo[move].type;
-    u32 moveEffect = gMovesInfo[move].effect;
+    u32 moveType = GetMoveType(move);
+    u32 moveEffect = GetMoveEffect(move);
     u32 species, heldItem, holdEffect, ability, type1, type2, type3;
 
     if (move == MOVE_STRUGGLE)
@@ -5957,7 +5959,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
-        if (holdEffect == gMovesInfo[move].argument.holdEffect)
+        if (holdEffect == GetMoveEffectArg_HoldEffect(move))
             return ItemId_GetSecondaryId(heldItem);
         break;
     case EFFECT_REVELATION_DANCE:
@@ -6065,7 +6067,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
             *ateBoost = TRUE;
         return TYPE_NORMAL;
     }
-    else if (gMovesInfo[move].soundMove && ability == ABILITY_LIQUID_VOICE)
+    else if (IsSoundMove(move) && ability == ABILITY_LIQUID_VOICE)
     {
         return TYPE_WATER;
     }
@@ -6094,13 +6096,13 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
     if (moveType != TYPE_NONE)
         gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
 
-    moveType = GetMoveType(move);
+    moveType = GetBattleMoveType(move);
     if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL)
         || gStatuses4[battler] & STATUS4_ELECTRIFIED)
         gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
 
     // Check if a gem should activate.
-    if (holdEffect == HOLD_EFFECT_GEMS && GetMoveType(move) == ItemId_GetSecondaryId(heldItem))
+    if (holdEffect == HOLD_EFFECT_GEMS && GetBattleMoveType(move) == ItemId_GetSecondaryId(heldItem))
     {
         gSpecialStatuses[battler].gemParam = GetBattlerHoldEffectParam(battler);
         gSpecialStatuses[battler].gemBoost = TRUE;

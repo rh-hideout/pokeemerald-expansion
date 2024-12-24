@@ -1525,8 +1525,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifargument argument:req, jumpInstr:req
-	callnative BS_JumpIfArgument
+	.macro jumpifmovepropertyargument argument:req, jumpInstr:req
+	callnative BS_JumpIfMovePropertyArgument
 	.byte \argument
 	.4byte \jumpInstr
 	.endm

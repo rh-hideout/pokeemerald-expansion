@@ -2230,7 +2230,7 @@ static void Cmd_jumpifmovetypeequal(void)
 {
     const u8 *type = sBattleAnimScriptPtr + 1;
     sBattleAnimScriptPtr += 2;
-    if (*type != GetMoveType(gCurrentMove))
+    if (*type != GetBattleMoveType(gCurrentMove))
         sBattleAnimScriptPtr += 4;
     else
         sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);

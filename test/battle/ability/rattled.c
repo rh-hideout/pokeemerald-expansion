@@ -3,13 +3,13 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_FURY_CUTTER].type == TYPE_BUG);
+    ASSUME(GetMoveType(MOVE_FURY_CUTTER) == TYPE_BUG);
     ASSUME(!IS_MOVE_STATUS(MOVE_FURY_CUTTER));
-    ASSUME(gMovesInfo[MOVE_FEINT_ATTACK].type == TYPE_DARK);
+    ASSUME(GetMoveType(MOVE_FEINT_ATTACK) == TYPE_DARK);
     ASSUME(!IS_MOVE_STATUS(MOVE_FEINT_ATTACK));
-    ASSUME(gMovesInfo[MOVE_SHADOW_PUNCH].type == TYPE_GHOST);
+    ASSUME(GetMoveType(MOVE_SHADOW_PUNCH) == TYPE_GHOST);
     ASSUME(!IS_MOVE_STATUS(MOVE_SHADOW_PUNCH));
-    ASSUME(gMovesInfo[MOVE_TACKLE].type == TYPE_NORMAL);
+    ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
     ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
 }
 
@@ -73,8 +73,8 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate")
 SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn") // Specific test here, because of #3124
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
-        ASSUME(gMovesInfo[MOVE_U_TURN].type == TYPE_BUG);
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveType(MOVE_U_TURN) == TYPE_BUG);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }

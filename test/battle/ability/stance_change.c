@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Stance Change doesn't change Aegislash to Shield if King's S
 {
     KNOWN_FAILING; // Currently does change form
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SLEEP_TALK].effect == EFFECT_SLEEP_TALK);
+        ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
         PLAYER(SPECIES_AEGISLASH_BLADE) { Moves(MOVE_KINGS_SHIELD, MOVE_SLEEP_TALK); Status1(STATUS1_SLEEP_TURN(3)); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

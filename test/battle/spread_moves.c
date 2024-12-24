@@ -36,8 +36,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: No damage will be dealt to a mon in an invulne
     PARAMETRIZE { attackingMove = MOVE_HYPER_VOICE; invulMove = MOVE_DIVE; }
     PARAMETRIZE { attackingMove = MOVE_LAVA_PLUME;  invulMove = MOVE_DIVE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HYPER_VOICE].target == MOVE_TARGET_BOTH);
-        ASSUME(gMovesInfo[MOVE_LAVA_PLUME].target == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ZAPDOS);
@@ -172,8 +172,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and Lightning Rod (left)")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DISCHARGE].target == MOVE_TARGET_FOES_AND_ALLY);
-        ASSUME(gMovesInfo[MOVE_DISCHARGE].type == TYPE_ELECTRIC);
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MIMIKYU);
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
@@ -191,8 +191,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (reft)")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DISCHARGE].target == MOVE_TARGET_FOES_AND_ALLY);
-        ASSUME(gMovesInfo[MOVE_DISCHARGE].type == TYPE_ELECTRIC);
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MIMIKYU);
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); HP(1); }
@@ -210,8 +210,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and L
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanilla games)")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EARTHQUAKE].target == MOVE_TARGET_FOES_AND_ALLY);
-        ASSUME(gMovesInfo[MOVE_EARTHQUAKE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EISCUE);
         OPPONENT(SPECIES_MIMIKYU);
@@ -229,7 +229,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanil
 DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HYPER_VOICE].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CHILAN_BERRY); }
@@ -249,7 +249,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
 DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EXPLOSION].target == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_MISDREAVUS) { Speed(30); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CHILAN_BERRY); }
@@ -270,8 +270,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
 DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject Button")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_RAZOR_LEAF].target == MOVE_TARGET_BOTH);
-        ASSUME(gMovesInfo[MOVE_RAZOR_LEAF].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
         OPPONENT(SPECIES_MIMIKYU) { Speed(20); Item(ITEM_EJECT_BUTTON); }
@@ -290,7 +290,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
 DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HYPER_VOICE].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(20); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
@@ -310,7 +310,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
 DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs one protecting mon")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HYPER_VOICE].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -327,7 +327,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs one protecting mon")
 DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both opposing mons")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PRECIPICE_BLADES].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_GOLEM);
@@ -345,7 +345,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both opposing mons"
 DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both player mons")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PRECIPICE_BLADES].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_GOLEM);
         PLAYER(SPECIES_ONIX);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -363,7 +363,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both player mons")
 DOUBLE_BATTLE_TEST("Spread Moves: Not very effective Message on both opposing mons")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PRECIPICE_BLADES].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_CHIKORITA);
@@ -381,7 +381,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective Message on both opposing mo
 DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PRECIPICE_BLADES].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_CHIKORITA);
         PLAYER(SPECIES_TREECKO);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -399,7 +399,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons
 DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect message on both opposing mons")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PRECIPICE_BLADES].target == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIDGEY);

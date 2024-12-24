@@ -17,11 +17,11 @@ SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack",
     PARAMETRIZE { move = MOVE_THUNDER_SHOCK; ability = ABILITY_TRANSISTOR; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].type != TYPE_ELECTRIC);
-        ASSUME(gMovesInfo[MOVE_WILD_CHARGE].type == TYPE_ELECTRIC);
-        ASSUME(gMovesInfo[MOVE_THUNDER_SHOCK].type == TYPE_ELECTRIC);
-        ASSUME(gMovesInfo[MOVE_WILD_CHARGE].category == DAMAGE_CATEGORY_PHYSICAL);
-        ASSUME(gMovesInfo[MOVE_THUNDER_SHOCK].category == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveType(MOVE_TACKLE) != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_WILD_CHARGE) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
+        ASSUME(GetMoveCategory(MOVE_WILD_CHARGE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_THUNDER_SHOCK) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_REGIELEKI) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Transistor is blocked by neutralizing gas", s16 damage)
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_THUNDER_SHOCK].type == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         PLAYER(SPECIES_REGIELEKI) { Ability(ABILITY_TRANSISTOR); }
         OPPONENT(SPECIES_KOFFING) { Ability(ability); }
     } WHEN {

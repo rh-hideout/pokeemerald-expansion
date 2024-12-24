@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_HOLD_HANDS].effect == EFFECT_HOLD_HANDS);
+    ASSUME(GetMoveEffect(MOVE_HOLD_HANDS) == EFFECT_HOLD_HANDS);
 }
 
 DOUBLE_BATTLE_TEST("Hold Hands is blocked by Crafty Shield")
