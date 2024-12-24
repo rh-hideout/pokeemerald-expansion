@@ -17443,8 +17443,7 @@ static void TryUpdateEvolutionTracker(u32 evolutionMethod, u32 upAmount, u16 use
                         if (evolutions[i].param == usedMove)
                             SetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]], MON_DATA_EVOLUTION_TRACKER, &val);
                         break;
-                    case EVO_RECOIL_DAMAGE_MALE:
-                    case EVO_RECOIL_DAMAGE_FEMALE:
+                    case EVO_RECOIL_DAMAGE:
                         if (gBattleMons[gBattlerAttacker].hp == 0)
                             val = 0;
                         SetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]], MON_DATA_EVOLUTION_TRACKER, &val);
@@ -17464,18 +17463,7 @@ static void TryUpdateEvolutionTracker(u32 evolutionMethod, u32 upAmount, u16 use
 void BS_TryUpdateRecoilTracker(void)
 {
     NATIVE_ARGS();
-    u8 gender = GetMonGender(&gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]]);
-
-    switch(gender)
-    {
-        case MON_MALE:
-            TryUpdateEvolutionTracker(EVO_RECOIL_DAMAGE_MALE, gBattleStruct->moveDamage[gBattlerAttacker], MOVE_NONE);
-            break;
-        case MON_FEMALE:
-            TryUpdateEvolutionTracker(EVO_RECOIL_DAMAGE_FEMALE, gBattleStruct->moveDamage[gBattlerAttacker], MOVE_NONE);
-            break;
-    }
-
+    TryUpdateEvolutionTracker(EVO_RECOIL_DAMAGE, gBattleStruct->moveDamage[gBattlerAttacker], MOVE_NONE);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
