@@ -347,7 +347,8 @@ BattleScript_EffectPledge::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectCombinedPledge_Water::
-	call BattleScript_EffectHit_Pledge
+	call BattleScript_EffectHit_RetFromAccCheck
+	tryfaintmon BS_TARGET
 	setpledgestatus BS_ATTACKER, SIDE_STATUS_RAINBOW
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_ARAINBOWAPPEAREDONSIDE
@@ -362,7 +363,8 @@ BattleScript_TheRainbowDisappeared::
 	end2
 
 BattleScript_EffectCombinedPledge_Fire::
-	call BattleScript_EffectHit_Pledge
+	call BattleScript_EffectHit_RetFromAccCheck
+	tryfaintmon BS_TARGET
 	setpledgestatus BS_TARGET, SIDE_STATUS_SEA_OF_FIRE
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SEAOFFIREENVELOPEDSIDE
@@ -382,7 +384,8 @@ BattleScript_TheSeaOfFireDisappeared::
 	end2
 
 BattleScript_EffectCombinedPledge_Grass::
-	call BattleScript_EffectHit_Pledge
+	call BattleScript_EffectHit_RetFromAccCheck
+	tryfaintmon BS_TARGET
 	setpledgestatus BS_TARGET, SIDE_STATUS_SWAMP
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SWAMPENVELOPEDSIDE
@@ -396,12 +399,10 @@ BattleScript_TheSwampDisappeared::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
-BattleScript_EffectHit_Pledge::
+BattleScript_TwoMovesBecomeOne::
 	pause B_WAIT_TIME_MED
 	printstring STRINGID_THETWOMOVESBECOMEONE
 	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_EffectHit_RetFromAccCheck
-	tryfaintmon BS_TARGET
 	return
 
 BattleScript_EffectSaltCure::

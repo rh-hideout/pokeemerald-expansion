@@ -507,6 +507,7 @@ extern const u8 BattleScript_SelectingNotAllowedCurrentMoveInPalace[];
 extern const u8 BattleScript_SaltCureExtraDamage[];
 extern const u8 BattleScript_SyrupBombEndTurn[];
 extern const u8 BattleScript_SyrupBombActivates[];
+extern const u8 BattleScript_TwoMovesBecomeOne[];
 extern const u8 BattleScript_EffectCombinedPledge_Water[];
 extern const u8 BattleScript_EffectCombinedPledge_Fire[];
 extern const u8 BattleScript_EffectCombinedPledge_Grass[];

@@ -3510,10 +3510,12 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
         case CANCELLER_POWDER_STATUS:
             if (gBattleMons[gBattlerAttacker].status2 & STATUS2_POWDER)
             {
-                u32 partnerMove = gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].moves[gBattleStruct->chosenMovePositions[BATTLE_PARTNER(gBattlerAttacker)]];
+                u32 userEffect = gMovesInfo[gCurrentMove].effect;
+                u32 partnerEffect = gMovesInfo[gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].moves[gBattleStruct->chosenMovePositions[BATTLE_PARTNER(gBattlerAttacker)]]].effect;
+                u32 partnerMoveType = gMovesInfo[gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].moves[gBattleStruct->chosenMovePositions[BATTLE_PARTNER(gBattlerAttacker)]]].type;
                 if ((moveType == TYPE_FIRE && !gBattleStruct->pledgeMove)
-                 || (gCurrentMove == MOVE_FIRE_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE)
-                 || (gCurrentMove == MOVE_GRASS_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE && gBattleStruct->pledgeMove))
+                 || (userEffect == EFFECT_PLEDGE && moveType == TYPE_FIRE && partnerEffect == EFFECT_PLEDGE && partnerMoveType == TYPE_GRASS)
+                 || (userEffect == EFFECT_PLEDGE && moveType == TYPE_GRASS && partnerEffect == EFFECT_PLEDGE && partnerMoveType == TYPE_FIRE && gBattleStruct->pledgeMove))
                 {
                     gProtectStructs[gBattlerAttacker].powderSelfDmg = TRUE;
                     if (GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD

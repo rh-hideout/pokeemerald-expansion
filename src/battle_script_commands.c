@@ -17107,12 +17107,22 @@ void BS_TryRelicSong(void)
     }
 }
 
+static const struct PledgeCombo sPledgeCombos[] =
+{
+    // Dominant,  Passive,    Script to execute
+    { TYPE_GRASS, TYPE_WATER, BattleScript_EffectCombinedPledge_Grass },
+    { TYPE_WATER, TYPE_FIRE,  BattleScript_EffectCombinedPledge_Water },
+    { TYPE_FIRE,  TYPE_GRASS, BattleScript_EffectCombinedPledge_Fire },
+};
+
 void BS_SetPledge(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
 
+    u32 moveType = gMovesInfo[gCurrentMove].type;
     u32 partner = BATTLE_PARTNER(gBattlerAttacker);
     u32 partnerMove = gBattleMons[partner].moves[gBattleStruct->chosenMovePositions[partner]];
+    u32 partnerMoveType = gMovesInfo[partnerMove].type;
     u32 i = 0;
     u32 k = 0;
 
@@ -17121,23 +17131,21 @@ void BS_SetPledge(void)
         PrepareStringBattle(STRINGID_USEDMOVE, gBattlerAttacker);
         gHitMarker |= HITMARKER_ATTACKSTRING_PRINTED;
 
-        if ((gCurrentMove == MOVE_GRASS_PLEDGE && partnerMove == MOVE_WATER_PLEDGE)
-         || (gCurrentMove == MOVE_WATER_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE))
+        for (i = 0; i < ARRAY_COUNT(sPledgeCombos); i++)
         {
-            gCurrentMove = MOVE_GRASS_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Grass;
-        }
-        else if ((gCurrentMove == MOVE_FIRE_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE)
-              || (gCurrentMove == MOVE_GRASS_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE))
-        {
-            gCurrentMove = MOVE_FIRE_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Fire;
-        }
-        else if ((gCurrentMove == MOVE_WATER_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE)
-              || (gCurrentMove == MOVE_FIRE_PLEDGE && partnerMove == MOVE_WATER_PLEDGE))
-        {
-            gCurrentMove = MOVE_WATER_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Water;
+            if (moveType == sPledgeCombos[i].mainType && partnerMoveType == sPledgeCombos[i].subType)
+            {
+                BattleScriptPush(sPledgeCombos[i].battleScript);
+                gBattlescriptCurrInstr = BattleScript_TwoMovesBecomeOne;
+                break;
+            }
+            else if (moveType == sPledgeCombos[i].subType && partnerMoveType == sPledgeCombos[i].mainType)
+            {
+                gCurrentMove = partnerMove;
+                BattleScriptPush(sPledgeCombos[i].battleScript);
+                gBattlescriptCurrInstr = BattleScript_TwoMovesBecomeOne;
+                break;
+            }
         }
 
         gBattleCommunication[MSG_DISPLAY] = 0;
@@ -17147,7 +17155,7 @@ void BS_SetPledge(void)
           && IsBattlerAlive(partner)
           && GetBattlerTurnOrderNum(gBattlerAttacker) < GetBattlerTurnOrderNum(partner)
           && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-          && gCurrentMove != partnerMove
+          && moveType != partnerMoveType
           && gMovesInfo[partnerMove].effect == EFFECT_PLEDGE)
     {
         u32 currPledgeUser = 0;
