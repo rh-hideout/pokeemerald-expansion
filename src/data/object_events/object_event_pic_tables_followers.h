@@ -19,9 +19,9 @@ static const struct SpriteFrameImage sPicTable_VenusaurF[] = {
 };
 #endif //P_GENDER_DIFFERENCES
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_VenusaurMega[] = {
+static const struct SpriteFrameImage sPicTable_VenusaurMega[] = {
     overworld_ascending_frames(gObjectEventPic_VenusaurMega, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
 /*static const struct SpriteFrameImage sPicTable_VenusaurGmax[] = {
@@ -41,12 +41,12 @@ static const struct SpriteFrameImage sPicTable_Charizard[] = {
     overworld_ascending_frames(gObjectEventPic_Charizard, 4, 4),
 };
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_CharizardMegaX[] = {
+static const struct SpriteFrameImage sPicTable_CharizardMegaX[] = {
     overworld_ascending_frames(gObjectEventPic_CharizardMegaX, 4, 4),
 };
 static const struct SpriteFrameImage sPicTable_CharizardMegaY[] = {
     overworld_ascending_frames(gObjectEventPic_CharizardMegaY, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
 /*static const struct SpriteFrameImage sPicTable_CharizardGmax[] = {
@@ -66,9 +66,9 @@ static const struct SpriteFrameImage sPicTable_Blastoise[] = {
     overworld_ascending_frames(gObjectEventPic_Blastoise, 4, 4),
 };
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_BlastoiseMega[] = {
+static const struct SpriteFrameImage sPicTable_BlastoiseMega[] = {
     overworld_ascending_frames(gObjectEventPic_BlastoiseMega, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
 /*static const struct SpriteFrameImage sPicTable_BlastoiseGmax[] = {
@@ -110,9 +110,9 @@ static const struct SpriteFrameImage sPicTable_Beedrill[] = {
     overworld_ascending_frames(gObjectEventPic_Beedrill, 4, 4),
 };
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_BeedrillMega[] = {
+static const struct SpriteFrameImage sPicTable_BeedrillMega[] = {
     overworld_ascending_frames(gObjectEventPic_BeedrillMega, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_WEEDLE
 
@@ -127,9 +127,9 @@ static const struct SpriteFrameImage sPicTable_Pidgeot[] = {
     overworld_ascending_frames(gObjectEventPic_Pidgeot, 4, 4),
 };
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_PidgeotMega[] = {
+static const struct SpriteFrameImage sPicTable_PidgeotMega[] = {
     overworld_ascending_frames(gObjectEventPic_PidgeotMega, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_PIDGEY
 
@@ -548,9 +548,9 @@ static const struct SpriteFrameImage sPicTable_AlakazamF[] = {
 };
 #endif //P_GENDER_DIFFERENCES
 #if P_MEGA_EVOLUTIONS
-/*static const struct SpriteFrameImage sPicTable_AlakazamMega[] = {
+static const struct SpriteFrameImage sPicTable_AlakazamMega[] = {
     overworld_ascending_frames(gObjectEventPic_AlakazamMega, 4, 4),
-};*/
+};
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_ABRA
 
