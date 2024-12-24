@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_FIELD_WEATHER_H
 #define GUARD_CONSTANTS_FIELD_WEATHER_H
 
+#include "config/overworld.h"
+
 #define MAX_RAIN_SPRITES             24
 #define NUM_CLOUD_SPRITES            3
 #define NUM_FOG_HORIZONTAL_SPRITES   20
@@ -21,5 +23,7 @@
 #define FADE_TO_BLACK    1
 #define FADE_FROM_WHITE  2
 #define FADE_TO_WHITE    3
+
+#define BASE_SHADOW_INTENSITY (16 - OW_SHADOW_INTENSITY)
 
 #endif // GUARD_CONSTANTS_FIELD_WEATHER_H
