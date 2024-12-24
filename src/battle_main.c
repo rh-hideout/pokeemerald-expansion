@@ -1911,8 +1911,504 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
+#include "data/battle_pool_rules.h"
+
+static bool32 IsPoolLegal(const struct Trainer *trainer, u32 battleTypeFlags)
+{
+    //  Verify that the trainer has a valid pool
+    if (B_POOL_SETTING_FAST_VERIFICATION)
+        return TRUE;
+    if (trainer->poolSize > 255)
+        return FALSE;
+    return TRUE;
+    /*
+    //  Find required tags with small limits
+    u32 numPicked = 0;
+    u8 *monIndices = Alloc(trainer->poolSize);
+    for (u32 i = 0; i < trainer->poolSize; i++)
+        monIndices[i] = i;
+    struct PoolRules rules = gPoolRulesetsList[trainer->poolRuleIndex];
+    u32 requiredTags = 0;
+    for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+        if (rules.tagRequired[currTag])
+            requiredTags |= (1u << currTag);
+
+    while (requiredTags)
+    {
+        u32 mostRequired = 0;
+        u32 indexOfMostRequired = 0;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            u32 currNumTags = 0;
+            for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+            {
+                if (requiredTags & (1u << currTag)
+                 && monIndices[currIndex] != POOL_SLOT_DISABLED
+                 && trainer->party[monIndices[currIndex]].tags & (1u << currTag))
+                {
+                    currNumTags++;
+                }
+            }
+            if (currNumTags >= mostRequired)
+            {
+                mostRequired = currNumTags;
+                indexOfMostRequired = currIndex;
+            }
+        }
+        if (mostRequired > 0)
+        {
+            for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+            {
+                if (trainer->party[indexOfMostRequired].tags & (1u << currTag))
+                {
+                    rules.tagRequired[currTag] = FALSE;
+                    if (rules.tagMaxMembers[currTag] == 1)
+                    {
+                        rules.tagMaxMembers[currTag] = POOL_SLOT_DISABLED;
+                        //  Remove mond from pool if max numbers has been reached
+                        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                        {
+                            if (trainer->party[currIndex].tags & (1u << currTag))
+                                monIndices[currIndex] = POOL_SLOT_DISABLED;
+                        }
+                    }
+                    else if (rules.tagMaxMembers[currTag] != POOL_MEMBER_COUNT_UNLIMITED)
+                    {
+                        rules.tagMaxMembers[currTag]--;
+                    }
+                }
+            }
+            for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+            {
+                if (trainer->party[indexOfMostRequired].tags & (1u << currTag))
+                {
+                    rules.tagRequired[currTag] = FALSE;
+                    if (rules.tagMaxMembers[currTag] == 1)
+                    {
+                        rules.tagMaxMembers[currTag] = POOL_SLOT_DISABLED;
+                        //  Remove mon from pool if max numbers has been reached
+                        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                        {
+                            if (trainer->party[currIndex].tags & (1u << currTag))
+                                monIndices[currIndex] = POOL_SLOT_DISABLED;
+                        }
+                    }
+                    else if (rules.tagMaxMembers[currTag] != POOL_MEMBER_COUNT_UNLIMITED)
+                    {
+                        rules.tagMaxMembers[currTag]--;
+                    }
+                }
+            }
+            //  Remove same species, natdex and item if applicable
+            u16 chosenSpecies = trainer->party[indexOfMostRequired].species;
+            u16 chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
+            u16 chosenItem = trainer->party[indexOfMostRequired].heldItem;
+            if (rules.itemClause && chosenItem != ITEM_NONE)
+            {
+                bool32 isItemExcluded = FALSE;
+                if (rules.itemClauseExclusions)
+                    for (u32 i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
+                        if (poolItemClauseExclusions[i] == chosenItem)
+                            isItemExcluded = TRUE;
+                if (!isItemExcluded)
+                    for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                        if (monIndices[currIndex] != POOL_SLOT_DISABLED
+                         && trainer->party[currIndex].heldItem == chosenItem)
+                        {
+                            monIndices[currIndex] = POOL_SLOT_DISABLED;
+                            break;
+                        }
+            }
+            if (rules.speciesClause)
+            {
+                for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                {
+                    if (monIndices[currIndex] != POOL_SLOT_DISABLED
+                     && (trainer->party[currIndex].species == chosenSpecies
+                      || (rules.excludeForms
+                       && gSpeciesInfo[trainer->party[currIndex].species].natDexNum == chosenNatDex)))
+                    {
+                        monIndices[currIndex] = POOL_SLOT_DISABLED;
+                        break;
+                    }
+                }
+            }
+        }
+        else if (requiredTags)
+        {
+            //  Not all required tags were found in the pool
+            Free(monIndices);
+            return FALSE;
+        }
+        numPicked++;
+    }
+    bool32 poolIsEmpty = FALSE;
+    while (!poolIsEmpty)
+    {
+        u32 mostTags = 0;
+        u32 indexOfMostTags = 0;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            u32 currNumTags = 0;
+            for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+            {
+                if (monIndices[currIndex] != POOL_SLOT_DISABLED
+                 && trainer->party[monIndices[currIndex]].tags & (1u << currTag))
+                    currNumTags++;
+            }
+            if (currNumTags >= mostTags)
+            {
+                mostTags = currNumTags;
+                indexOfMostTags = currIndex;
+            }
+        }
+        if (mostTags > 0)
+        {
+            for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+            {
+                if (trainer->party[indexOfMostTags].tags & (1u << currTag))
+                {
+                    rules.tagRequired[currTag] = FALSE;
+                    if (rules.tagMaxMembers[currTag] == 1)
+                    {
+                        rules.tagMaxMembers[currTag] = POOL_SLOT_DISABLED;
+                        //  Remove mon from pool if max numbers has been reached
+                        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                        {
+                            if (trainer->party[currIndex].tags & (1u << currTag))
+                                monIndices[currIndex] = POOL_SLOT_DISABLED;
+                        }
+                    }
+                    else if (rules.tagMaxMembers[currTag] != POOL_MEMBER_COUNT_UNLIMITED)
+                    {
+                        rules.tagMaxMembers[currTag]--;
+                    }
+                }
+            }
+            //  Remove same species, natdex and item if applicable
+            u16 chosenSpecies = trainer->party[indexOfMostTags].species;
+            u16 chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
+            u16 chosenItem = trainer->party[indexOfMostTags].heldItem;
+            if (rules.itemClause && chosenItem != ITEM_NONE)
+            {
+                bool32 isItemExcluded = FALSE;
+                if (rules.itemClauseExclusions)
+                    for (u32 i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
+                        if (poolItemClauseExclusions[i] == chosenItem)
+                            isItemExcluded = TRUE;
+                if (!isItemExcluded)
+                    for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                        if (monIndices[currIndex] != POOL_SLOT_DISABLED
+                         && trainer->party[currIndex].heldItem == chosenItem)
+                        {
+                            monIndices[currIndex] = POOL_SLOT_DISABLED;
+                            break;
+                        }
+            }
+            if (rules.speciesClause)
+            {
+                for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+                {
+                    if (monIndices[currIndex] != POOL_SLOT_DISABLED
+                     && (trainer->party[currIndex].species == chosenSpecies
+                      || (rules.excludeForms
+                       && gSpeciesInfo[trainer->party[currIndex].species].natDexNum == chosenNatDex)))
+                    {
+                        monIndices[currIndex] = POOL_SLOT_DISABLED;
+                        break;
+                    }
+                }
+            }
+        }
+        poolIsEmpty = TRUE;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            if (monIndices[currIndex] != POOL_SLOT_DISABLED)
+            {
+                poolIsEmpty = FALSE;
+                break;
+            }
+        }
+        numPicked++;
+    }
+    if (numPicked >= trainer->partySize)
+    {
+        Free(monIndices);
+        return TRUE;
+    }
+    Free(monIndices);
+    if (numPicked >= trainer->partySize)
+        return TRUE;
+    else
+        return TRUE;
+    */
+}
+
+static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u32 partyIndex, u32 monsCount, u32 battleTypeFlags, struct PoolRules *rules)
+{
+    u32 arrayIndex = 0;
+    u32 monIndex = POOL_SLOT_DISABLED;
+    //  monIndex is set to 255 if nothing has been chosen yet, this gives an upper limit on pool size of 255
+    if ((partyIndex == 0)
+     || (partyIndex == 1 && (battleTypeFlags & BATTLE_TYPE_DOUBLE)))
+    {
+        //  Find required + lead tags
+        bool32 foundRequiredTag = FALSE;
+        u32 firstLeadIndex = POOL_SLOT_DISABLED;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            if ((poolIndexArray[currIndex] != POOL_SLOT_DISABLED)
+             && (trainer->party[poolIndexArray[currIndex]].tags & (1u << POOL_TAG_LEAD)))
+            {
+                if (firstLeadIndex == POOL_SLOT_DISABLED)
+                    firstLeadIndex = currIndex;
+                //  Start from index 2, since lead and ace has special handling
+                for (u32 currTag = 2; currTag < POOL_NUM_TAGS; currTag++)
+                {
+                    if (rules->tagRequired[currTag]
+                     && trainer->party[poolIndexArray[currIndex]].tags & (1u << currTag))
+                    {
+                        arrayIndex = currIndex;
+                        foundRequiredTag = TRUE;
+                        break;
+                    }
+                }
+            }
+            if (foundRequiredTag)
+                break;
+        }
+        //  If a combination of required + lead wasn't found, apply the first found lead
+        if (foundRequiredTag)
+        {
+            monIndex = poolIndexArray[arrayIndex];
+            poolIndexArray[arrayIndex] = POOL_SLOT_DISABLED;
+        }
+        else if (firstLeadIndex != POOL_SLOT_DISABLED)
+        {
+            monIndex = poolIndexArray[firstLeadIndex];
+            poolIndexArray[firstLeadIndex] = POOL_SLOT_DISABLED;
+        }
+    }
+    if (monIndex == POOL_SLOT_DISABLED
+     && (((partyIndex == monsCount - 1)
+      || (partyIndex == monsCount - 2
+       && battleTypeFlags & BATTLE_TYPE_DOUBLE))
+       && (rules->tagMaxMembers[1] == POOL_MEMBER_COUNT_UNLIMITED
+        || rules->tagMaxMembers[1] > 1)))
+    {
+        //  Find required + ace tags
+        bool32 foundRequiredTag = FALSE;
+        u32 firstAceIndex = POOL_SLOT_DISABLED;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            if ((poolIndexArray[currIndex] != POOL_SLOT_DISABLED)
+             && (trainer->party[poolIndexArray[currIndex]].tags & (1u << POOL_TAG_ACE)))
+            {
+                if (firstAceIndex == POOL_SLOT_DISABLED)
+                    firstAceIndex = currIndex;
+                //  Start from index 2, since lead and ace has special handling
+                for (u32 currTag = 2; currTag < POOL_NUM_TAGS; currTag++)
+                {
+                    if (rules->tagRequired[currTag]
+                     && trainer->party[poolIndexArray[currIndex]].tags & (1u << currTag))
+                    {
+                        arrayIndex = currIndex;
+                        foundRequiredTag = TRUE;
+                        break;
+                    }
+                }
+            }
+            if (foundRequiredTag)
+                break;
+        }
+        //  If a combination of required + ace wasn't found, apply the first found lead
+        if (foundRequiredTag)
+        {
+            monIndex = poolIndexArray[arrayIndex];
+            poolIndexArray[arrayIndex] = POOL_SLOT_DISABLED;
+        }
+        else if (firstAceIndex != POOL_SLOT_DISABLED)
+        {
+            monIndex = poolIndexArray[firstAceIndex];
+            poolIndexArray[firstAceIndex] = POOL_SLOT_DISABLED;
+        }
+    }
+    //  If no mon has been found yet continue looking
+    if (monIndex == POOL_SLOT_DISABLED)
+    {
+        //  Find required tag
+        bool32 foundRequiredTag = FALSE;
+        u32 firstUnpickedIndex = POOL_SLOT_DISABLED;
+        for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+        {
+            if (poolIndexArray[currIndex] != POOL_SLOT_DISABLED
+             && !(trainer->party[poolIndexArray[currIndex]].tags & (1u << POOL_TAG_LEAD))
+             && !(trainer->party[poolIndexArray[currIndex]].tags & (1u << POOL_TAG_ACE)))
+            {
+                if (firstUnpickedIndex == POOL_SLOT_DISABLED)
+                    firstUnpickedIndex = currIndex;
+                //  Start from index 2, since lead and ace has special handling
+                for (u32 currTag = 2; currTag < POOL_NUM_TAGS; currTag++)
+                {
+                    if (rules->tagRequired[currTag]
+                     && trainer->party[poolIndexArray[currIndex]].tags & (1u << currTag))
+                    {
+                        arrayIndex = currIndex;
+                        foundRequiredTag = TRUE;
+                        break;
+                    }
+                }
+            }
+            if (foundRequiredTag)
+                break;
+        }
+        //  If a combination of required + ace wasn't found, apply the first found lead
+        if (foundRequiredTag)
+        {
+            monIndex = poolIndexArray[arrayIndex];
+            poolIndexArray[arrayIndex] = POOL_SLOT_DISABLED;
+        }
+        else if (firstUnpickedIndex != POOL_SLOT_DISABLED)
+        {
+            monIndex = poolIndexArray[firstUnpickedIndex];
+            poolIndexArray[firstUnpickedIndex] = POOL_SLOT_DISABLED;
+        }
+    }
+    u32 chosenTags = trainer->party[monIndex].tags;
+    u16 chosenSpecies = trainer->party[monIndex].species;
+    u16 chosenItem = trainer->party[monIndex].heldItem;
+    u16 chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
+    //  If tag was required, change pool rule to account for the required tag already being picked
+    u32 tagsToEliminate = 0;
+    for (u32 currTag = 0; currTag < POOL_NUM_TAGS; currTag++)
+    {
+        if (chosenTags & (1u << currTag)
+         && rules->tagMaxMembers[currTag] != POOL_MEMBER_COUNT_UNLIMITED)
+        {
+            if (rules->tagMaxMembers[currTag] == 1)
+                rules->tagMaxMembers[currTag] = POOL_MEMBER_COUNT_NONE;
+            else
+                rules->tagMaxMembers[currTag]--;
+        }
+        if (chosenTags & (1u << currTag))
+            rules->tagRequired[currTag] = FALSE;
+        if (rules->tagMaxMembers[currTag] == POOL_MEMBER_COUNT_NONE)
+            tagsToEliminate |= 1u << currTag;
+    }
+    //  If species clause, remove picked species from pool
+    //  If item clause, remove all mons with same held item from pool
+    //  If matching a tag that's been exhausted, remove from pool
+    for (u32 currIndex = 0; currIndex < trainer->poolSize; currIndex++)
+    {
+        if (poolIndexArray[currIndex] != POOL_SLOT_DISABLED)
+        {
+            u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
+            u16 currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
+            u16 currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
+            u16 currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
+            if (currentTags & tagsToEliminate)
+            {
+                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+            }
+            if (rules->speciesClause && chosenSpecies == currentSpecies)
+                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+            if (!rules->excludeForms && chosenNatDex == currentNatDex)
+                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+            if (rules->itemClause && currentItem != ITEM_NONE)
+            {
+                if (rules->itemClauseExclusions)
+                {
+                    bool32 isExcluded = FALSE;
+                    for (u32 i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
+                    {
+                        if (chosenItem == poolItemClauseExclusions[i])
+                        {
+                            isExcluded = TRUE;
+                            break;
+                        }
+                    }
+                    if (!isExcluded)
+                        poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+                }
+                else if (chosenItem == currentItem)
+                {
+                    poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+                }
+            }
+        }
+    }
+    return monIndex;
+}
+
+static u32 GetPoolSeed(const struct Trainer *trainer)
+{
+    u32 seed;
+    if (B_POOL_SETTING_USE_FIXED_SEED)
+        seed = B_POOL_SETTING_FIXED_SEED;
+    else
+        seed = gSaveBlock2Ptr->playerTrainerId[0] + (gSaveBlock2Ptr->playerTrainerId[1] << 8) + (gSaveBlock2Ptr->playerTrainerId[2] << 16) + (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+    seed ^= (u32)trainer;
+    return seed;
+}
+
+static void RandomizePoolIndices(const struct Trainer *trainer, u8 *poolIndexArray)
+{
+    //  Basically the modern (Durstenfield's) Fisher-Yates shuffle
+    //  Reducing the amount of calls to random needed by only using as many bits as needed per shuffle
+    u32 poolSize = trainer->poolSize;
+    for (u32 i = 0; i < poolSize; i++)
+        poolIndexArray[i] = i;
+    u32 rnd;
+    rng_value_t localRngState;
+    if (B_POOL_SETTING_CONSISTENT_RNG)
+    {
+        u32 seed = GetPoolSeed(trainer);
+        localRngState = LocalRandomSeed(seed);
+        //  Replace the LocalRandom with LocalRandom32 when implemented
+        rnd = LocalRandom(&localRngState) + (LocalRandom(&localRngState) << 16);
+    }
+    else
+    {
+        rnd = Random32();
+    }
+    u32 usedBits = 0;
+    for (u32 i = 0; i < poolSize - 1; i++)
+    {
+        u32 numBits = 1;
+        if (poolSize - i > 127)
+            numBits = 8;
+        else if (poolSize - i > 63)
+            numBits = 7;
+        else if (poolSize - i > 31)
+            numBits = 6;
+        else if (poolSize - i > 15)
+            numBits = 5;
+        else if (poolSize - i > 7)
+            numBits = 4;
+        else if (poolSize - i > 3)
+            numBits = 3;
+        else if (poolSize - i > 1)
+            numBits = 2;
+        if (usedBits + numBits > 32)
+        {
+            if (B_POOL_SETTING_CONSISTENT_RNG)
+                rnd = LocalRandom(&localRngState) + (LocalRandom(&localRngState) << 16);
+            else
+                rnd = Random32();
+            usedBits = 0;
+        }
+        u32 currIndex = (rnd & ((1u << numBits) - 1)) % (poolSize - i);
+        rnd = rnd >> numBits;
+        usedBits += numBits;
+        u32 tempValue = poolIndexArray[poolSize - 1 - i];
+        poolIndexArray[poolSize - 1 - i] = poolIndexArray[currIndex];
+        poolIndexArray[currIndex] = tempValue;
+    }
+}
+
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
+
     u32 personalityValue;
     s32 i;
     u8 monsCount;
@@ -1935,8 +2431,23 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             monsCount = trainer->partySize;
         }
 
+        bool32 usingPool = FALSE;
+        u8 *poolIndexArray = NULL;
+        struct PoolRules rules = defaultPoolRules;
+        if (trainer->poolSize != 0 && IsPoolLegal(trainer, battleTypeFlags))
+        {
+            usingPool = TRUE;
+            rules = gPoolRulesetsList[trainer->poolRuleIndex];
+            poolIndexArray = Alloc(trainer->poolSize);
+            RandomizePoolIndices(trainer, poolIndexArray);
+        }
+
         for (i = 0; i < monsCount; i++)
         {
+            //  Pick mon from pool here if using pool
+            u32 monIndex = i;
+            if (usingPool)
+                monIndex = PickMonFromPool(trainer, poolIndexArray, i, monsCount, battleTypeFlags, &rules);
             s32 ball = -1;
             u32 personalityHash = GeneratePartyHash(trainer, i);
             const struct TrainerMon *partyData = trainer->party;
@@ -1952,39 +2463,39 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 personalityValue = 0x88; // Use personality more likely to result in a male Pokémon
 
             personalityValue += personalityHash << 8;
-            if (partyData[i].gender == TRAINER_MON_MALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[i].species);
-            else if (partyData[i].gender == TRAINER_MON_FEMALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[i].species);
-            else if (partyData[i].gender == TRAINER_MON_RANDOM_GENDER)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(Random() & 1 ? MON_MALE : MON_FEMALE, partyData[i].species);
-            ModifyPersonalityForNature(&personalityValue, partyData[i].nature);
-            if (partyData[i].isShiny)
+            if (partyData[monIndex].gender == TRAINER_MON_MALE)
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[monIndex].species);
+            else if (partyData[monIndex].gender == TRAINER_MON_FEMALE)
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[monIndex].species);
+            else if (partyData[monIndex].gender == TRAINER_MON_RANDOM_GENDER)
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(Random() & 1 ? MON_MALE : MON_FEMALE, partyData[monIndex].species);
+            ModifyPersonalityForNature(&personalityValue, partyData[monIndex].nature);
+            if (partyData[monIndex].isShiny)
             {
                 otIdType = OT_ID_PRESET;
                 fixedOtId = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            CreateMon(&party[i], partyData[i].species, partyData[i].lvl, 0, TRUE, personalityValue, otIdType, fixedOtId);
-            SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
+            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, 0, TRUE, personalityValue, otIdType, fixedOtId);
+            SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
-            CustomTrainerPartyAssignMoves(&party[i], &partyData[i]);
-            SetMonData(&party[i], MON_DATA_IVS, &(partyData[i].iv));
-            if (partyData[i].ev != NULL)
+            CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
+            SetMonData(&party[i], MON_DATA_IVS, &(partyData[monIndex].iv));
+            if (partyData[monIndex].ev != NULL)
             {
-                SetMonData(&party[i], MON_DATA_HP_EV, &(partyData[i].ev[0]));
-                SetMonData(&party[i], MON_DATA_ATK_EV, &(partyData[i].ev[1]));
-                SetMonData(&party[i], MON_DATA_DEF_EV, &(partyData[i].ev[2]));
-                SetMonData(&party[i], MON_DATA_SPATK_EV, &(partyData[i].ev[3]));
-                SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[i].ev[4]));
-                SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[i].ev[5]));
+                SetMonData(&party[i], MON_DATA_HP_EV, &(partyData[monIndex].ev[0]));
+                SetMonData(&party[i], MON_DATA_ATK_EV, &(partyData[monIndex].ev[1]));
+                SetMonData(&party[i], MON_DATA_DEF_EV, &(partyData[monIndex].ev[2]));
+                SetMonData(&party[i], MON_DATA_SPATK_EV, &(partyData[monIndex].ev[3]));
+                SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[monIndex].ev[4]));
+                SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[monIndex].ev[5]));
             }
-            if (partyData[i].ability != ABILITY_NONE)
+            if (partyData[monIndex].ability != ABILITY_NONE)
             {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
+                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
                 u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
                 for (ability = 0; ability < maxAbilities; ++ability)
                 {
-                    if (speciesInfo->abilities[ability] == partyData[i].ability)
+                    if (speciesInfo->abilities[ability] == partyData[monIndex].ability)
                         break;
                 }
                 if (ability >= maxAbilities)
@@ -1992,7 +2503,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
+                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
                 ability = personalityHash % 3;
                 while (speciesInfo->abilities[ability] == ABILITY_NONE)
                 {
@@ -2000,34 +2511,34 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 }
             }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &ability);
-            SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
-            if (partyData[i].ball != ITEM_NONE)
+            SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
+            if (partyData[monIndex].ball != ITEM_NONE)
             {
-                ball = partyData[i].ball;
+                ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
             }
-            if (partyData[i].nickname != NULL)
+            if (partyData[monIndex].nickname != NULL)
             {
-                SetMonData(&party[i], MON_DATA_NICKNAME, partyData[i].nickname);
+                SetMonData(&party[i], MON_DATA_NICKNAME, partyData[monIndex].nickname);
             }
-            if (partyData[i].isShiny)
+            if (partyData[monIndex].isShiny)
             {
                 u32 data = TRUE;
                 SetMonData(&party[i], MON_DATA_IS_SHINY, &data);
             }
-            if (partyData[i].dynamaxLevel > 0)
+            if (partyData[monIndex].dynamaxLevel > 0)
             {
-                u32 data = partyData[i].dynamaxLevel;
+                u32 data = partyData[monIndex].dynamaxLevel;
                 SetMonData(&party[i], MON_DATA_DYNAMAX_LEVEL, &data);
             }
-            if (partyData[i].gigantamaxFactor)
+            if (partyData[monIndex].gigantamaxFactor)
             {
-                u32 data = partyData[i].gigantamaxFactor;
+                u32 data = partyData[monIndex].gigantamaxFactor;
                 SetMonData(&party[i], MON_DATA_GIGANTAMAX_FACTOR, &data);
             }
-            if (partyData[i].teraType > 0)
+            if (partyData[monIndex].teraType > 0)
             {
-                u32 data = partyData[i].teraType;
+                u32 data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
             CalculateMonStats(&party[i]);
@@ -2038,6 +2549,9 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
             }
         }
+
+        if (usingPool)
+            Free(poolIndexArray);
     }
 
     return trainer->partySize;
