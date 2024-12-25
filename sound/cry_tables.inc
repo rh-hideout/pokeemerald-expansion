@@ -2682,6 +2682,20 @@ gCryTable::
 	cry Cry_Tsemani
 
 	cry Cry_Serpotine
+
+	cry Cry_Jarumite
+
+	cry Cry_Warghork
+
+	cry Cry_Goblazer
+
+	cry Cry_Squithee
+
+	cry Cry_Cheesetah
+
+	cry Cry_Cheepouf
+
+	cry Cry_Faustival
 .endif
 
 	.align 2
@@ -5369,4 +5383,18 @@ gCryTable_Reverse::
 	cry_reverse Cry_Tsemani
 
 	cry_reverse Cry_Serpotine
+
+	cry_reverse Cry_Jarumite
+
+	cry_reverse Cry_Warghork
+
+	cry_reverse Cry_Goblazer
+
+	cry_reverse Cry_Squithee
+
+	cry_reverse Cry_Cheesetah
+
+	cry_reverse Cry_Cheepouf
+
+	cry_reverse Cry_Faustival
 .endif

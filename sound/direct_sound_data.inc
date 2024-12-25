@@ -6672,6 +6672,34 @@ Cry_Tsemani::
 Cry_Serpotine::
 	.incbin "sound/direct_sound_samples/cries/serpotine.bin"
 
+	.align 2
+Cry_Jarumite::
+	.incbin "sound/direct_sound_samples/cries/jarumite.bin"
+
+	.align 2
+Cry_Warghork::
+	.incbin "sound/direct_sound_samples/cries/warghork.bin"
+
+	.align 2
+Cry_Goblazer::
+	.incbin "sound/direct_sound_samples/cries/goblazer.bin"
+
+	.align 2
+Cry_Squithee::
+	.incbin "sound/direct_sound_samples/cries/squithee.bin"
+
+	.align 2
+Cry_Cheesetah::
+	.incbin "sound/direct_sound_samples/cries/cheesetah.bin"
+
+	.align 2
+Cry_Cheepouf::
+	.incbin "sound/direct_sound_samples/cries/cheepouf.bin"
+
+	.align 2
+Cry_Faustival::
+	.incbin "sound/direct_sound_samples/cries/faustival.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

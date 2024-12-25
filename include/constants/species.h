@@ -1764,8 +1764,15 @@
 #define SPECIES_SEAMAN                                  1654
 #define SPECIES_TSEMANI                                 1655
 #define SPECIES_SERPOTINE                               1656
+#define SPECIES_JARUMITE                                1657
+#define SPECIES_WARGHORK                                1658
+#define SPECIES_GOBLAZER                                1659
+#define SPECIES_SQUITHEE                                1660
+#define SPECIES_CHEESETAH                               1661
+#define SPECIES_CHEEPOUF                                1662
+#define SPECIES_FAUSTIVAL                               1663
 
-#define SPECIES_EGG (SPECIES_SERPOTINE + 1)
+#define SPECIES_EGG (SPECIES_FAUSTIVAL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
