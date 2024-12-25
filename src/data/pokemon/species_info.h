@@ -5702,7 +5702,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Faustival,
        .shinyPalette = gMonShinyPalette_Faustival,
        .iconSprite = gMonIcon_Faustival,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Faustival)
        .levelUpLearnset = sFaustivalLevelUpLearnset,
     },
