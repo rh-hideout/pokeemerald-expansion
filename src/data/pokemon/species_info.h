@@ -4009,7 +4009,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Mantasm,
        .shinyPalette = gMonShinyPalette_Mantasm,
        .iconSprite = gMonIcon_Mantasm,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Mantasm)
        .levelUpLearnset = sMantasmLevelUpLearnset,
     },
@@ -5681,9 +5681,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 25,
        .weight = 985,
        .description = COMPOUND_STRING(
-           "Faustival collects naughtyness and bends\n"
-           "it to its will. This increases it's power\n"
-           "everytime a naughty foe falls.\n"),
+           "If you encounter Faustival then it has\n"
+           "decided to make itself be known. Naturally\n"
+           "elusive tricksters, they feed on the\n"
+           "hearts of those who are wicked."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,

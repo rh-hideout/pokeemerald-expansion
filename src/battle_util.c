@@ -11168,6 +11168,8 @@ static inline void MulByTypeEffectiveness(uq4_12_t *modifier, u32 move, u32 move
         mod = UQ_4_12(1.0);
     if (gMovesInfo[move].effect == EFFECT_SHINE_STRIKE && defType == gMovesInfo[move].argument)
         mod = UQ_4_12(1.0);
+    if (gMovesInfo[move].effect == EFFECT_KINESIS && defType == TYPE_STEEL)
+        mod = UQ_4_12(2.0);
     if (moveType == TYPE_GROUND && defType == TYPE_FLYING && IsBattlerGrounded(battlerDef) && mod == UQ_4_12(0.0))
         mod = UQ_4_12(1.0);
     if (moveType == TYPE_STELLAR && GetActiveGimmick(battlerDef) == GIMMICK_TERA)

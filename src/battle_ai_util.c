@@ -731,7 +731,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 bool32 AI_IsDamagedByRecoil(u32 battler)
 {
     u32 ability = AI_DATA->abilities[battler];
-    if (ability == ABILITY_MAGIC_GUARD || ability == ABILITY_ROCK_HEAD)
+    if (ability == ABILITY_MAGIC_GUARD || ability == ABILITY_ROCK_HEAD || ability == ABILITY_SHELL_ARMOR|| ability == ABILITY_BATTLE_ARMOR)
         return FALSE;
     return TRUE;
 }
