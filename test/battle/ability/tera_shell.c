@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Tera Shell makes all moves against Terapagos not very effect
         TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         if (hp == 100) {
-            MESSAGE("Foe Wobbuffet used Tackle!");
+            MESSAGE("The opposing Wobbuffet used Tackle!");
             ABILITY_POPUP(player, ABILITY_TERA_SHELL);
             MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Tera Shell makes all hits of multi-hit moves against Terapag
     } WHEN {
         TURN { MOVE(opponent, MOVE_DOUBLE_HIT); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Double Hit!");
+        MESSAGE("The opposing Wobbuffet used Double Hit!");
         ABILITY_POPUP(player, ABILITY_TERA_SHELL);
         MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
@@ -92,8 +92,8 @@ DOUBLE_BATTLE_TEST("Tera Shell only makes the first hit against Terapagos from a
         MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIZZARD, opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("It's not very effective…");
         HP_BAR(playerRight);
+        MESSAGE("It's not very effective…");
         NOT MESSAGE("It's not very effective…");
     }
 }

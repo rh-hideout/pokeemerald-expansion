@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Dragon Darts strikes twice")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -35,7 +35,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes each opponent once in a double battle")
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target protects")
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -72,7 +72,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the right ally twice if the target is a
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -90,9 +90,86 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the left ally twice if the target is a 
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and right ally has Volt Absorb")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("The Pokémon was hit 2 time(s)!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and left ally has Volt Absorb")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("The Pokémon was hit 2 time(s)!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if electrified and right ally has Motor Drive")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("The Pokémon was hit 2 time(s)!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if electrified and left ally has Motor Drive")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_ELECTRIFY].effect == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("The Pokémon was hit 2 time(s)!");
+    }
+}
+
 
 DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target is in a semi-invulnerable turn")
 {
@@ -110,7 +187,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target is in a se
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -129,7 +206,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts is not effected by Wide Guard")
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -148,7 +225,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes hit the ally if the target fainted")
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -166,7 +243,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentLeft);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -184,6 +261,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses")
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }

@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain when hit by an attack")
     } WHEN {
         TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Tackle!");
         HP_BAR(player);
         ABILITY_POPUP(player);
         MESSAGE("Grass grew to cover the battlefield!");
@@ -19,7 +19,6 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain when hit by an attack")
 #define ABILITY_PARAM(n)(abilities[n] = (k == n) ? ABILITY_SEED_SOWER : ABILITY_HARVEST)
 #define MOVE_HIT(target, position)                      \
 {                                                       \
-    HP_BAR(target);                                     \
     if (abilities[position] == ABILITY_SEED_SOWER) {    \
         ABILITY_POPUP(target);                          \
         MESSAGE("Grass grew to cover the battlefield!");\
@@ -68,9 +67,13 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
         if (usedMove == MOVE_HYPER_VOICE) {
             if ((attacker & BIT_SIDE) == B_SIDE_OPPONENT) {
                 if (attacker == B_POSITION_OPPONENT_LEFT) {
+                    HP_BAR(playerLeft);
+                    HP_BAR(playerRight);
                     MOVE_HIT(playerLeft, B_POSITION_PLAYER_LEFT);
                     MOVE_HIT(playerRight, B_POSITION_PLAYER_RIGHT);
                 } else {
+                    HP_BAR(playerLeft);
+                    HP_BAR(playerRight);
                     MOVE_HIT(playerRight, B_POSITION_PLAYER_RIGHT);
                     MOVE_HIT(playerLeft, B_POSITION_PLAYER_LEFT);
                 }
@@ -80,9 +83,13 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
                 }
             } else {
                 if (attacker == B_POSITION_PLAYER_LEFT) {
+                    HP_BAR(opponentLeft);
+                    HP_BAR(opponentRight);
                     MOVE_HIT(opponentLeft, B_POSITION_OPPONENT_LEFT);
                     MOVE_HIT(opponentRight, B_POSITION_OPPONENT_RIGHT);
                 } else {
+                    HP_BAR(opponentLeft);
+                    HP_BAR(opponentRight);
                     MOVE_HIT(opponentRight, B_POSITION_OPPONENT_RIGHT);
                     MOVE_HIT(opponentLeft, B_POSITION_OPPONENT_LEFT);
                 }
@@ -94,24 +101,36 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
         } else { // SURF
             switch (attacker) {
             case B_POSITION_PLAYER_LEFT:
+                HP_BAR(opponentLeft);
+                HP_BAR(playerRight);
+                HP_BAR(opponentRight);
                 MOVE_HIT(opponentLeft, B_POSITION_OPPONENT_LEFT);
                 MOVE_HIT(playerRight, B_POSITION_PLAYER_RIGHT);
                 MOVE_HIT(opponentRight, B_POSITION_OPPONENT_RIGHT);
                 NOT HP_BAR(playerLeft);
                 break;
             case B_POSITION_OPPONENT_LEFT:
+                HP_BAR(playerLeft);
+                HP_BAR(playerRight);
+                HP_BAR(opponentRight);
                 MOVE_HIT(playerLeft, B_POSITION_PLAYER_LEFT);
                 MOVE_HIT(playerRight, B_POSITION_PLAYER_RIGHT);
                 MOVE_HIT(opponentRight, B_POSITION_OPPONENT_RIGHT);
                 NOT HP_BAR(opponentLeft);
                 break;
             case B_POSITION_PLAYER_RIGHT:
+                HP_BAR(playerLeft);
+                HP_BAR(opponentLeft);
+                HP_BAR(opponentRight);
                 MOVE_HIT(playerLeft, B_POSITION_PLAYER_LEFT);
                 MOVE_HIT(opponentLeft, B_POSITION_OPPONENT_LEFT);
                 MOVE_HIT(opponentRight, B_POSITION_OPPONENT_RIGHT);
                 NOT HP_BAR(playerRight);
                 break;
             case B_POSITION_OPPONENT_RIGHT:
+                HP_BAR(playerLeft);
+                HP_BAR(opponentLeft);
+                HP_BAR(playerRight);
                 MOVE_HIT(playerLeft, B_POSITION_PLAYER_LEFT);
                 MOVE_HIT(opponentLeft, B_POSITION_OPPONENT_LEFT);
                 MOVE_HIT(playerRight, B_POSITION_PLAYER_RIGHT);

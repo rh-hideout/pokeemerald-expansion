@@ -53,12 +53,12 @@ DOUBLE_BATTLE_TEST("Lava Plume inflicts burn to all adjacent battlers")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, playerLeft);
         HP_BAR(opponentLeft);
+        HP_BAR(playerRight);
+        HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
         STATUS_ICON(opponentLeft, burn: TRUE);
-        HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, playerRight);
         STATUS_ICON(playerRight, burn: TRUE);
-        HP_BAR(opponentRight);
         STATUS_ICON(opponentRight, burn: TRUE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
     }
@@ -94,9 +94,9 @@ DOUBLE_BATTLE_TEST("Matcha Gatcha can burn both targets")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
         HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
         STATUS_ICON(opponentLeft, burn: TRUE);
-        HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
         STATUS_ICON(opponentRight, burn: TRUE);
     }

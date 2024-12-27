@@ -23,12 +23,12 @@ SINGLE_BATTLE_TEST("Maranga Berry raises the holder's Sp. Def by one stage when 
         HP_BAR(opponent);
         if (move == MOVE_SWIFT) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Using Maranga Berry, the Sp. Def of Foe Wobbuffet rose!");
+            MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
         }
         else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-                MESSAGE("Using Maranga Berry, the Sp. Def of Foe Wobbuffet rose!");
+                MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
             }
         }
     } THEN {
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Maranga Berry raises the holder's Sp. Def by two stages with
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWIFT, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Using Maranga Berry, the Sp. Def of Foe Applin sharply rose!");
+        MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Applin sharply rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
     }
@@ -71,5 +71,21 @@ SINGLE_BATTLE_TEST("Maranga Berry doesn't trigger if the item hold user used a s
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Maranga Berry doesn't trigger if partner was hit")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_MARANGA_BERRY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+    } THEN {
+        EXPECT(opponentRight->item == ITEM_MARANGA_BERRY);
     }
 }

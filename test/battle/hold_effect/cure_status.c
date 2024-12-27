@@ -206,16 +206,16 @@ SINGLE_BATTLE_TEST("Opponent Pokemon can be further poisoned with Toxic spikes a
     } SCENE {
         MESSAGE("Wobbuffet used Toxic Spikes!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
-        MESSAGE("Poison Spikes were scattered all around the opposing team's feet!");
+        MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
         // 1st switch-in
         MESSAGE("2 sent out Wynaut!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         if (item == ITEM_PECHA_BERRY) {
-            MESSAGE("Foe Wynaut's Pecha Berry cured poison!");
+            MESSAGE("The opposing Wynaut's Pecha Berry cured its poison!");
         } else {
-            MESSAGE("Foe Wynaut's Lum Berry cured its poison problem!");
+            MESSAGE("The opposing Wynaut's Lum Berry cured its poison problem!");
         }
         STATUS_ICON(opponent, poison: FALSE);
         // 2nd switch-in
@@ -245,16 +245,16 @@ SINGLE_BATTLE_TEST("Player Pokemon can be further poisoned with Toxic spikes aft
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 2); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Toxic Spikes!");
+        MESSAGE("The opposing Wobbuffet used Toxic Spikes!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
-        MESSAGE("Poison Spikes were scattered all around your team's feet!");
+        MESSAGE("Poison spikes were scattered on the ground all around your team!");
         // 1st switch-in
         SEND_IN_MESSAGE("Wobbuffet");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         if (item == ITEM_PECHA_BERRY) {
-            MESSAGE("Wobbuffet's Pecha Berry cured poison!");
+            MESSAGE("Wobbuffet's Pecha Berry cured its poison!");
         } else {
             MESSAGE("Wobbuffet's Lum Berry cured its poison problem!");
         }
@@ -263,5 +263,32 @@ SINGLE_BATTLE_TEST("Player Pokemon can be further poisoned with Toxic spikes aft
         SEND_IN_MESSAGE("Wynaut");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Lum Berry correctly cures all battlers if multiple fainted the previous turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CATERPIE) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Status1(STATUS1_BURN); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Status1(STATUS1_PARALYSIS); }
+        OPPONENT(SPECIES_CATERPIE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION);
+               SEND_OUT(opponentRight, 3);
+               SEND_OUT(opponentLeft, 2);
+               SEND_OUT(playerRight, 3);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(playerRight->status1, STATUS1_NONE);
+        EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
+
     }
 }

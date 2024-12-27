@@ -4,17 +4,17 @@
 ASSUMPTIONS
 {
     ASSUME(gMovesInfo[MOVE_FLY].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_FLY].argument)) == STATUS3_ON_AIR);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_FLY].argument.twoTurnAttack.status) == STATUS3_ON_AIR);
     ASSUME(gMovesInfo[MOVE_DIG].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_DIG].argument)) == STATUS3_UNDERGROUND);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_DIG].argument.twoTurnAttack.status) == STATUS3_UNDERGROUND);
     ASSUME(gMovesInfo[MOVE_BOUNCE].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_BOUNCE].argument)) == STATUS3_ON_AIR);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_BOUNCE].argument.twoTurnAttack.status) == STATUS3_ON_AIR);
     ASSUME(gMovesInfo[MOVE_DIVE].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_DIVE].argument)) == STATUS3_UNDERWATER);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_DIVE].argument.twoTurnAttack.status) == STATUS3_UNDERWATER);
     ASSUME(gMovesInfo[MOVE_PHANTOM_FORCE].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_PHANTOM_FORCE].argument)) == STATUS3_PHANTOM_FORCE);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_PHANTOM_FORCE].argument.twoTurnAttack.status) == STATUS3_PHANTOM_FORCE);
     ASSUME(gMovesInfo[MOVE_SHADOW_FORCE].effect == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(UNCOMPRESS_BITS(HIHALF(gMovesInfo[MOVE_SHADOW_FORCE].argument)) == STATUS3_PHANTOM_FORCE);
+    ASSUME(UNCOMPRESS_BITS(gMovesInfo[MOVE_SHADOW_FORCE].argument.twoTurnAttack.status) == STATUS3_PHANTOM_FORCE);
 }
 
 SINGLE_BATTLE_TEST("Semi-invulnerable moves make the user semi-invulnerable turn 1, then strike turn 2")
@@ -94,8 +94,8 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves make the user semi-invulnerable turn
             ANIMATION(ANIM_TYPE_MOVE, move, player);
 
         // Aerial Ace cannot miss unless the target is semi-invulnerable
-        MESSAGE("Foe Wobbuffet used Aerial Ace!");
-        MESSAGE("Foe Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet used Aerial Ace!");
+        MESSAGE("The opposing Wobbuffet's attack missed!");
         // Attack turn
         switch (move)
         {

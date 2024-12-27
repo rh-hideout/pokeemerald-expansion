@@ -4,11 +4,10 @@
 ASSUMPTIONS
 {
     ASSUME(gMovesInfo[MOVE_TECHNO_BLAST].effect == EFFECT_CHANGE_TYPE_ON_ITEM);
-    ASSUME(gMovesInfo[MOVE_TECHNO_BLAST].argument == HOLD_EFFECT_DRIVE);
+    ASSUME(gMovesInfo[MOVE_TECHNO_BLAST].argument.holdEffect == HOLD_EFFECT_DRIVE);
 }
 
-
-SINGLE_BATTLE_TEST("Techno Blast changes the move type depending on the mask the user holds")
+SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user holds")
 {
     u16 species;
     u16 item;
@@ -29,3 +28,6 @@ SINGLE_BATTLE_TEST("Techno Blast changes the move type depending on the mask the
         MESSAGE("It's super effective!");
     }
 }
+
+TO_DO_BATTLE_TEST("Judgement changes type depending on the plate the user holds");
+TO_DO_BATTLE_TEST("Multi Attack changes type depending on the memory the user holds");

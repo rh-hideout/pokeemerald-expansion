@@ -24,7 +24,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ABSORB] =
     {
-        .battleScript = BattleScript_EffectAbsorb,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 4,
     },
 
@@ -421,6 +421,27 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_DO_NOTHING] =
     {
         .battleScript = BattleScript_EffectDoNothing,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_HOLD_HANDS] =
+    {
+        .battleScript = BattleScript_EffectHoldHands,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_CELEBRATE] =
+    {
+        .battleScript = BattleScript_EffectCelebrate,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_HAPPY_HOUR] =
+    {
+        .battleScript = BattleScript_EffectHappyHour,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
@@ -1011,7 +1032,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_ERUPTION] =
+    [EFFECT_POWER_BASED_ON_USER_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
@@ -1144,7 +1165,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_VARY_POWER_BASED_ON_HP] =
+    [EFFECT_POWER_BASED_ON_TARGET_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
@@ -2169,7 +2190,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FICKLE_BEAM] =
     {
-        .battleScript = BattleScript_EffectHit,
+        .battleScript = BattleScript_EffectFickleBeam,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2251,6 +2272,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     },
 
     [EFFECT_SHELL_SIDE_ARM] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_ORDER_UP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points

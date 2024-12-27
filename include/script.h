@@ -73,4 +73,7 @@ bool32 Script_IsMutatingNative(void (*func)(struct ScriptContext *));
 // srccmd.h
 void SetMovingNpcId(u16 npcId);
 
+extern u8 gMsgIsSignPost;
+extern u8 gMsgBoxIsCancelable;
+
 #endif // GUARD_SCRIPT_H

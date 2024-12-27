@@ -108,14 +108,14 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 1 a
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
         MESSAGE("Wobbuffet set a shell trap!");
-        MESSAGE("Foe Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Tackle!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wobbuffet used Shell Trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("Foe Wynaut used Celebrate!");
+        MESSAGE("The opposing Wynaut used Celebrate!");
     }
 }
 
@@ -132,8 +132,8 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 2 a
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
         MESSAGE("Wobbuffet set a shell trap!");
-        MESSAGE("Foe Wynaut used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wynaut used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Tackle!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wobbuffet used Shell Trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
@@ -157,12 +157,44 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 3 a
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
         MESSAGE("Wobbuffet set a shell trap!");
         MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("Foe Wynaut used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wynaut used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Tackle!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wobbuffet used Shell Trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Shell Trap targets correctly if one of the opponents has fainted")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_SHELL_TRAP].target == MOVE_TARGET_BOTH);
+        PLAYER(SPECIES_GRENINJA) { Speed(60); }
+        PLAYER(SPECIES_TURTONATOR) { Speed(10); }
+        OPPONENT(SPECIES_BLASTOISE) { Speed(120); }
+        OPPONENT(SPECIES_SCIZOR) { Speed(100); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
+            MOVE(playerRight, MOVE_SHELL_TRAP);
+        }
+        TURN {
+            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
+            MOVE(playerRight, MOVE_SHELL_TRAP);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
+        MESSAGE("The opposing Scizor fainted!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
     }
 }

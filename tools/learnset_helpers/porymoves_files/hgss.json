@@ -49305,7 +49305,7 @@
       "MOVE_STRING_SHOT"
     ]
   },
-  "WORMADAM_PLANT_CLOAK": {
+  "WORMADAM_PLANT": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -59645,7 +59645,7 @@
       "MOVE_ZEN_HEADBUTT"
     ]
   },
-  "WORMADAM_SANDY_CLOAK": {
+  "WORMADAM_SANDY": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -59749,7 +59749,7 @@
       "MOVE_UPROAR"
     ]
   },
-  "WORMADAM_TRASH_CLOAK": {
+  "WORMADAM_TRASH": {
     "LevelMoves": [
       {
         "Level": 1,

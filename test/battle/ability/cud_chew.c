@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Kee Berry effect again on the next tu
         ASSUME(gItemsInfo[ITEM_KEE_BERRY].holdEffect == HOLD_EFFECT_KEE_BERRY);
         ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TAUROS_PALDEAN_COMBAT_BREED) { Ability(ABILITY_CUD_CHEW); Item(ITEM_KEE_BERRY); }
+        OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { Ability(ABILITY_CUD_CHEW); Item(ITEM_KEE_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); }
         TURN { MOVE(player, MOVE_CELEBRATE);}
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
         ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffect == HOLD_EFFECT_RESTORE_HP);
         ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffectParam == 10);
         ASSUME(gMovesInfo[MOVE_DRAGON_RAGE].effect == EFFECT_FIXED_DAMAGE_ARG);
-        ASSUME(gMovesInfo[MOVE_DRAGON_RAGE].argument == 40);
+        ASSUME(gMovesInfo[MOVE_DRAGON_RAGE].argument.fixedDamage == 40);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TAUROS_PALDEAN_COMBAT_BREED) { MaxHP(60); HP(60); Ability(ABILITY_CUD_CHEW); Item(ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { MaxHP(60); HP(60); Ability(ABILITY_CUD_CHEW); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
         TURN { MOVE(player, MOVE_CELEBRATE);}

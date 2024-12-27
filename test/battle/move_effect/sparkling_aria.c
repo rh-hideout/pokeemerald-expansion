@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLING_ARIA, MOVE_EFFECT_REMOVE_STATUS) == TRUE);
-    ASSUME(gMovesInfo[MOVE_SPARKLING_ARIA].argument == STATUS1_BURN);
+    ASSUME(gMovesInfo[MOVE_SPARKLING_ARIA].argument.status == STATUS1_BURN);
     ASSUME(gMovesInfo[MOVE_SPARKLING_ARIA].soundMove == TRUE);
 }
 
@@ -18,8 +18,8 @@ DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SUBSTITUTE); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet's burn was healed.");
-        MESSAGE("Wobbuffet's burn was healed.");
-        MESSAGE("Foe Wynaut's burn was healed.");
+        MESSAGE("The opposing Wobbuffet's burn was cured!");
+        MESSAGE("Wobbuffet's burn was cured!");
+        MESSAGE("The opposing Wynaut's burn was cured!");
     }
 }

@@ -405,9 +405,18 @@
 #define ANIM_TAG_SYRUP_SHELL_YELLOW         (ANIM_SPRITES_START + 391)
 #define ANIM_TAG_SYRUP_SPLAT_RED            (ANIM_SPRITES_START + 392)
 #define ANIM_TAG_SYRUP_SPLAT_YELLOW         (ANIM_SPRITES_START + 393)
-#define ANIM_TAG_TERA_CRYSTAL               (ANIM_SPRITES_START + 394)
-#define ANIM_TAG_TERA_SHATTER               (ANIM_SPRITES_START + 395)
-#define ANIM_TAG_DREEPY_SHINY               (ANIM_SPRITES_START + 396)
+#define ANIM_TAG_IVY_CUDGEL_GRASS           (ANIM_SPRITES_START + 394)
+#define ANIM_TAG_IVY_CUDGEL_FIRE            (ANIM_SPRITES_START + 395)
+#define ANIM_TAG_IVY_CUDGEL_ROCK            (ANIM_SPRITES_START + 396)
+#define ANIM_TAG_IVY_CUDGEL_WATER           (ANIM_SPRITES_START + 397)
+#define ANIM_TAG_TERA_CRYSTAL               (ANIM_SPRITES_START + 398)
+#define ANIM_TAG_TERA_SHATTER               (ANIM_SPRITES_START + 399)
+#define ANIM_TAG_DREEPY_SHINY               (ANIM_SPRITES_START + 400)
+#define ANIM_TAG_BLOOD_MOON                 (ANIM_SPRITES_START + 401)
+#define ANIM_TAG_BEAM                       (ANIM_SPRITES_START + 402)
+#define ANIM_TAG_RED_EXPLOSION              (ANIM_SPRITES_START + 403)
+#define ANIM_TAG_PURPLE_CHAIN               (ANIM_SPRITES_START + 404)
+#define ANIM_TAG_PINKVIO_ORB                (ANIM_SPRITES_START + 405)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -519,8 +528,9 @@
 #define BG_STEEL_BEAM_PLAYER 79
 #define BG_CHLOROBLAST 80
 #define BG_RAINBOW 81
+#define BG_SWAMP 82
 
-// table ids for general animations (gBattleAnims_General)
+// table ids for general animations (sBattleAnims_General)
 #define B_ANIM_STATS_CHANGE             0
 #define B_ANIM_SUBSTITUTE_FADE          1
 #define B_ANIM_SUBSTITUTE_APPEAR        2
@@ -575,7 +585,9 @@
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
 
-// special animations table (gBattleAnims_Special)
+#define NUM_B_ANIMS_GENERAL             53
+
+// special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
 #define B_ANIM_SWITCH_OUT_PLAYER_MON    1
 #define B_ANIM_SWITCH_OUT_OPPONENT_MON  2
@@ -585,7 +597,9 @@
 #define B_ANIM_MON_TO_SUBSTITUTE        6
 #define B_ANIM_CRITICAL_CAPTURE_THROW   7
 
-// status animation table (gBattleAnims_StatusConditions)
+#define NUM_B_ANIMS_SPECIAL             8
+
+// status animation table (sBattleAnims_StatusConditions)
 #define B_ANIM_STATUS_PSN               0
 #define B_ANIM_STATUS_CONFUSION         1
 #define B_ANIM_STATUS_BRN               2
@@ -595,7 +609,8 @@
 #define B_ANIM_STATUS_FRZ               6
 #define B_ANIM_STATUS_CURSED            7
 #define B_ANIM_STATUS_NIGHTMARE         8
-#define B_ANIM_STATUS_WRAPPED           9 // does not actually exist
+
+#define NUM_B_ANIMS_STATUS              9
 
 // Tasks with return values often assign them to gBattleAnimArgs[7].
 #define ARG_RET_ID 7

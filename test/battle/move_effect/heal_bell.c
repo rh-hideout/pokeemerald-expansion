@@ -10,7 +10,7 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("Heal Bell cures the entire party")
 {
     u32 move;
-    
+
     PARAMETRIZE { move = MOVE_HEAL_BELL; }
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
 
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Heal Bell cures the entire party")
         int i;
 
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
-        NOT MESSAGE("Wobbuffet is hurt by poison!");
+        NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
         for (i = 0; i < 6; i++)
             EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_STATUS), STATUS1_NONE);
     }
@@ -39,10 +39,10 @@ DOUBLE_BATTLE_TEST("Heal Bell cures the entire party")
 DOUBLE_BATTLE_TEST("Heal Bell does not cure soundproof partners")
 {
     u32 ability;
-    
+
     PARAMETRIZE { ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; }
-    
+
     ASSUME(B_HEAL_BELL_SOUNDPROOF != GEN_5);
 
     GIVEN {
@@ -55,9 +55,9 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure soundproof partners")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, playerLeft);
         if (ability == ABILITY_SOUNDPROOF) {
-            MESSAGE("Exploud is hurt by poison!");
+            MESSAGE("Exploud was hurt by its poisoning!");
         } else {
-            NOT MESSAGE("Exploud is hurt by poison!");
+            NOT MESSAGE("Exploud was hurt by its poisoning!");
         }
     }
 }
@@ -65,10 +65,10 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure soundproof partners")
 SINGLE_BATTLE_TEST("Heal Bell cures inactive soundproof Pokemon")
 {
     u32 ability;
-    
+
     PARAMETRIZE { ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; }
-    
+
     ASSUME(B_HEAL_BELL_SOUNDPROOF >= GEN_5);
 
     GIVEN {
@@ -81,22 +81,21 @@ SINGLE_BATTLE_TEST("Heal Bell cures inactive soundproof Pokemon")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
         SEND_IN_MESSAGE("Exploud");
-        NOT MESSAGE("Exploud is hurt by poison!");
+        NOT MESSAGE("Exploud was hurt by its poisoning!");
     }
 }
 
 
 SINGLE_BATTLE_TEST("Heal Bell cures a soundproof user")
-{    
-    ASSUME(B_HEAL_BELL_SOUNDPROOF == GEN_5 || B_HEAL_BELL_SOUNDPROOF >= GEN_9);
-
+{
     GIVEN {
+        ASSUME(B_HEAL_BELL_SOUNDPROOF == GEN_5 || B_HEAL_BELL_SOUNDPROOF >= GEN_8);
         PLAYER(SPECIES_EXPLOUD) { Ability(ABILITY_SOUNDPROOF); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_HEAL_BELL, target: player); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
-        NOT MESSAGE("Exploud is hurt by poison!");
+        NOT MESSAGE("Exploud was hurt by its poisoning!");
     }
 }

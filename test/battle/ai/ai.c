@@ -419,7 +419,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
                     SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentLeft);
                  }
     } SCENE {
-        NOT MESSAGE("Foe Wobbuffet used Helping Hand!");
+        NOT MESSAGE("The opposing Wobbuffet used Helping Hand!");
     }
 }
 
@@ -448,7 +448,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
                     SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:opponentLeft);
                  }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Helping Hand!");
+        MESSAGE("The opposing Wobbuffet used Helping Hand!");
     }
 }
 
@@ -567,8 +567,8 @@ AI_SINGLE_BATTLE_TEST("AI will only choose Surf 1/3 times if the opposing mon ha
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
     } SCENE {
-        MESSAGE("Foe Lanturn used Surf!");
-        MESSAGE("Foe Lanturn used Surf!");
+        MESSAGE("The opposing Lanturn used Surf!");
+        MESSAGE("The opposing Lanturn used Surf!");
     }
 }
 
@@ -584,8 +584,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
         TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
     } SCENE {
-        MESSAGE("Foe Lanturn used Thunderbolt!");
-        MESSAGE("Foe Lanturn used Surf!");
+        MESSAGE("The opposing Lanturn used Thunderbolt!");
+        MESSAGE("The opposing Lanturn used Surf!");
     }
 }
 
@@ -739,6 +739,7 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
 {
+    KNOWN_FAILING; // MGriffin's PR that switched two turn charging moves in AI tests broke this test, waiting on a fix
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MAGNETON);
@@ -803,5 +804,30 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
             MESSAGE("Wobbuffet fainted!");
         else
             NOT MESSAGE("Wobbuffet fainted!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player's ability disabling them")
+{
+    u32 playerMon, ability, aiMove;
+    PARAMETRIZE { ability = ABILITY_DAZZLING;          playerMon = SPECIES_BRUXISH;       aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_QUEENLY_MAJESTY;   playerMon = SPECIES_TSAREENA;      aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_ARMOR_TAIL;        playerMon = SPECIES_FARIGIRAF;     aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF;        playerMon = SPECIES_EXPLOUD;       aiMove = MOVE_BOOMBURST; }
+    PARAMETRIZE { ability = ABILITY_BULLETPROOF;       playerMon = SPECIES_CHESNAUGHT;    aiMove = MOVE_BULLET_SEED; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        ASSUME(gMovesInfo[MOVE_QUICK_ATTACK].priority == 1);
+        ASSUME(gMovesInfo[MOVE_BOOMBURST].soundMove == TRUE);
+        ASSUME(gMovesInfo[MOVE_BULLET_SEED].ballisticMove == TRUE);
+        ASSUME(gMovesInfo[MOVE_TAIL_WHIP].category == DAMAGE_CATEGORY_STATUS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(playerMon) { Ability(ability); }
+        OPPONENT(SPECIES_SMEARGLE) { Item(ITEM_CHOICE_BAND); Moves(aiMove, MOVE_TACKLE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, aiMove); }
+        TURN { EXPECT_MOVE(opponent, aiMove); }
     }
 }

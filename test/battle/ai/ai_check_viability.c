@@ -37,7 +37,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Smelling Salt")
     GIVEN {
         ASSUME(B_UPDATED_MOVE_DATA >= GEN_6);
         ASSUME(gMovesInfo[MOVE_SMELLING_SALTS].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
-        ASSUME(gMovesInfo[MOVE_SMELLING_SALTS].argument == STATUS1_PARALYSIS);
+        ASSUME(gMovesInfo[MOVE_SMELLING_SALTS].argument.status == STATUS1_PARALYSIS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(60); Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_SMELLING_SALTS); }
@@ -59,7 +59,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
     GIVEN {
         ASSUME(B_UPDATED_MOVE_DATA >= GEN_6);
         ASSUME(gMovesInfo[MOVE_WAKE_UP_SLAP].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
-        ASSUME(gMovesInfo[MOVE_WAKE_UP_SLAP].argument == STATUS1_SLEEP);
+        ASSUME(gMovesInfo[MOVE_WAKE_UP_SLAP].argument.status == STATUS1_SLEEP);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MEGANIUM) { HP(35); Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_WAKE_UP_SLAP); }
@@ -167,7 +167,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, opponentMove); }
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
 
@@ -203,7 +203,7 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 
     GIVEN {
         ASSUME(gMovesInfo[MOVE_HEAL_BELL].effect == EFFECT_HEAL_BELL);
-        ASSUME(B_HEAL_BELL_SOUNDPROOF >= GEN_9);
+        ASSUME(B_HEAL_BELL_SOUNDPROOF >= GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -237,5 +237,20 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
             TURN { EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
         else
             TURN { EXPECT_MOVE(opponent, MOVE_HEAL_BELL); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI prioritizes Skill Swapping Contrary to allied mons that would benefit from it")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_SKILL_SWAP].effect == EFFECT_SKILL_SWAP);
+        ASSUME(gMovesInfo[MOVE_OVERHEAT].additionalEffects[0].moveEffect == MOVE_EFFECT_SP_ATK_MINUS_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_SPINDA) { Ability(ABILITY_CONTRARY); Speed(5); Moves(MOVE_SKILL_SWAP, MOVE_ENCORE, MOVE_FAKE_TEARS, MOVE_SWAGGER); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Speed(4); Moves (MOVE_OVERHEAT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SKILL_SWAP, target:opponentRight); EXPECT_MOVE(opponentRight, MOVE_OVERHEAT); }
     }
 }

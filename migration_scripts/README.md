@@ -11,7 +11,7 @@ These scripts exist to help developers make the transition between refactored sy
 All migration scripts require [`python3`](https://www.python.org/downloads/) to be installed. Migration scripts are executed by running the following commands from the root directory of a developer's project.
 
 ```bash
-chmod +x migration_scripts/*.py ; #give permision to make the script executable
+chmod +x migration_scripts/*.py ; #give permission to make the script executable
 python3 migration_scripts/*.py ; #run the migration script
 ```
 
@@ -88,7 +88,7 @@ Moves all information from `gItemIconTable` to `gItemsInfo`.
         .pocket = POCKET_POKE_BALLS,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
-        .secondaryId = ITEM_POKE_BALL - FIRST_BALL,
+        .secondaryId = BALL_POKE,
 +        .iconSprite = gItemIcon_PokeBall,
 +        .iconPalette = gItemIconPalette_PokeBall,
     },
@@ -334,5 +334,26 @@ Modifies all item ball scripts defined using to original Game Freak method to th
 +      "trainer_sight_or_berry_tree_id": "ITEM_POTION",
 +      "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_102_POTION"
+    },
+```
+
+### Facility Mons
+
+* Filepath [`migration_scripts/1.9/battle_frontier_convert_parties.py`](1.8/battle_frontier_convert_parties.py)
+* Introduced in [Adds battle frontier conversion script #5040](https://github.com/rh-hideout/pokeemerald-expansion/pull/5040)
+* Original refactor in [Customizable FrontierMon Sets #4313](https://github.com/rh-hideout/pokeemerald-expansion/pull/4313)
+
+Replaces itemTableId with heldItem and evSpread with ev.
+
+#### [src/data/battle_frontier/battle_frontier_mons.h](../src/data/battle_frontier/battle_frontier_mons.h)
+```diff
+    [FRONTIER_MON_SUNKERN] = {
+        .species = SPECIES_SUNKERN,
+        .moves = {MOVE_MEGA_DRAIN, MOVE_HELPING_HAND, MOVE_SUNNY_DAY, MOVE_LIGHT_SCREEN},
+-        .itemTableId = BATTLE_FRONTIER_ITEM_LAX_INCENSE,
++       .heldItem = ITEM_LAX_INCENSE,
+-        .evSpread = F_EV_SPREAD_SP_ATTACK | F_EV_SPREAD_HP,
++       .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
+        .nature = NATURE_RELAXED
     },
 ```

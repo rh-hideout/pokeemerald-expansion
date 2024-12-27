@@ -544,7 +544,6 @@ gSpecials::
 	def_special RemoveRecordsWindow
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType
-	def_special SetTotemBoost
 	def_special TrySpecialOverworldEvo
 	def_special GetNumberSprayStrength, mutating=0
 	def_special GetSprayId, mutating=0
@@ -564,3 +563,4 @@ gSpecials::
 	def_special Script_GetChosenMonDefensiveEVs, mutating=0
 	def_special Script_GetChosenMonOffensiveIVs, mutating=0
 	def_special Script_GetChosenMonDefensiveIVs, mutating=0
+	def_special UseBlankMessageToCancelPokemonPic
