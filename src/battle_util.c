@@ -5117,6 +5117,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             case ABILITY_DRY_SKIN:
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
                     goto SOLAR_POWER_HP_DROP;
+                break;
             // Dry Skin works similarly to Rain Dish in Rain
             case ABILITY_RAIN_DISH:
             case ABILITY_HYDROPHILE:
@@ -5579,6 +5580,19 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_TargetAbilityStatRaiseRet;
                 effect++;
+            }
+            break;
+            case ABILITY_SHORT_CIRCUIT:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && TARGET_TURN_DAMAGED
+             && IsBattlerAlive(battler)
+             && moveType == TYPE_WATER)
+            {
+                    BattleScriptPushCursorAndCallback(BattleScript_ShortCircuitActivates);
+                    gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 2;
+                    if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                    effect++;
             }
             break;
         case ABILITY_STAMINA:

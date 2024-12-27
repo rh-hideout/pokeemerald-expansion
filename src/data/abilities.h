@@ -2832,6 +2832,13 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 7,
     },
 
+    [ABILITY_SHORT_CIRCUIT] =
+    {
+        .name = _("Short Circuit"),
+        .description = COMPOUND_STRING("WARNING! Keep clear of Water-type\nattacks!"),
+        .aiRating = 11,
+    },
+
     [ABILITY_HYDROTHERMAL] =
     {
         .name = _("Hydrothermal"),

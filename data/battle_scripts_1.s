@@ -8231,6 +8231,16 @@ BattleScript_SolarPowerActivates::
 	tryfaintmon BS_ATTACKER
 	end3
 
+	BattleScript_ShortCircuitActivates::
+	orword gHitMarker, HITMARKER_PASSIVE_DAMAGE
+	call BattleScript_AbilityPopUp
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
+	printstring STRINGID_SOLARPOWERHPDROP
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
+	end3
+
 BattleScript_HealerActivates::
 	call BattleScript_AbilityPopUp
 	curestatus BS_SCRIPTING
