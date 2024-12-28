@@ -754,13 +754,21 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
                     LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
             }
             else if (state == 3)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+            }
             else if (state == 4)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(0)]);
+            }
             else if (state == 5)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(1)]);
+            }
             else
+            {
                 retVal = TRUE;
+            }
         }
         else
         {

@@ -5413,7 +5413,9 @@ static void AnimMilkBottle_Step1(struct Sprite *sprite)
                     sprite->data[6]++;
             }
             else if (sprite->data[7] > 0)
+            {
                 sprite->data[7]--;
+            }
 
             SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(sprite->data[6], sprite->data[7]));
             if (sprite->data[6] == 16 && sprite->data[7] == 0)
@@ -6734,6 +6736,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwapStructData(&gSpecialStatuses[battlerAtk], &gSpecialStatuses[battlerPartner], data, sizeof(struct SpecialStatus));
     SwapStructData(&gProtectStructs[battlerAtk], &gProtectStructs[battlerPartner], data, sizeof(struct ProtectStruct));
     SwapStructData(&gBattleSpritesDataPtr->battlerData[battlerAtk], &gBattleSpritesDataPtr->battlerData[battlerPartner], data, sizeof(struct BattleSpriteInfo));
+    SwapStructData(&gBattleStruct->illusion[battlerAtk], &gBattleStruct->illusion[battlerPartner], data, sizeof(struct Illusion));
 
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
@@ -6757,6 +6760,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
                     break;
             }
             SWAP(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], temp);
+            SWAP(gActionsByTurnOrder[i], gActionsByTurnOrder[j], temp);
             break;
         }
     }

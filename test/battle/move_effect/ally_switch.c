@@ -277,5 +277,21 @@ DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is be
     }
 }
 
+DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_ALLY_SWITCH].effect == EFFECT_ALLY_SWITCH);
+        PLAYER(SPECIES_HOOPA);
+        PLAYER(SPECIES_ZOROARK);
+        PLAYER(SPECIES_MAMOSWINE); // the third member here is required for zoroark
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+    } THEN {
+        EXPECT(&gPlayerParty[2] == gBattleStruct->illusion[0].mon);
+    }
+}
+
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Ally Switch fails if the user is in the middle of the field in a Triple Battle");

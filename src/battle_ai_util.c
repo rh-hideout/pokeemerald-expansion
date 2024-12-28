@@ -2378,7 +2378,7 @@ bool32 HasDamagingMove(u32 battlerId)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && gMovesInfo[moves[i]].power != 0)
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && !IS_MOVE_STATUS(moves[i]))
             return TRUE;
     }
 
@@ -2393,7 +2393,7 @@ bool32 HasDamagingMoveOfType(u32 battlerId, u32 type)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-          && gMovesInfo[moves[i]].type == type && gMovesInfo[moves[i]].power != 0)
+          && gMovesInfo[moves[i]].type == type && !IS_MOVE_STATUS(moves[i]))
             return TRUE;
     }
 

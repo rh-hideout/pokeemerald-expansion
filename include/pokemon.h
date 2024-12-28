@@ -564,8 +564,12 @@ struct MoveInfo
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
-// Just a hack to make a move boosted by Sheer Force despite having no secondary effects affected
-#define SHEER_FORCE_HACK { .moveEffect = 0, .chance = 100, }
+enum SheerForceBoost
+{
+    SHEER_FORCE_AUTO_BOOST, // This is the default state when a move has a move effect with a chance
+    SHEER_FORCE_BOOST,      // If a move effect doesn't have an effect with a chance this can force a boost
+    SHEER_FORCE_NO_BOOST,   // Prevents a Sheer Force boost
+};
 
 struct AdditionalEffect
 {
@@ -573,6 +577,8 @@ struct AdditionalEffect
     u8 self:1;
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
+    u8 sheerForceBoost:2; // Handles edge cases for Sheer Force
+    u8 padding:3;
     u8 chance; // 0% = effect certain, primary effect
 };
 
@@ -885,6 +891,7 @@ u16 GetFormChangeTargetSpecies(struct Pokemon *mon, u16 method, u32 arg);
 u16 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, u16 method, u32 arg);
 bool32 DoesSpeciesHaveFormChangeMethod(u16 species, u16 method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
+void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 bool32 SpeciesHasGenderDifferences(u16 species);
 bool32 TryFormChange(u32 monId, u32 side, u16 method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, u16 method);

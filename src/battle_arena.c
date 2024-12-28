@@ -360,7 +360,7 @@ void BattleArena_AddMindPoints(u8 battler)
 // All moves with power != 0 give 1 point, with the following exceptions:
 //    - Counter, Mirror Coat, and Bide give 0 points
 //    - Fake Out subtracts 1 point
-// All moves with power == 0 give 0 points, with the following exceptions:
+// All status moves give 0 points, with the following exceptions:
 //    - Protect, Detect, and Endure subtract 1 point
 
     if (gMovesInfo[gCurrentMove].effect == EFFECT_FIRST_TURN_ONLY
@@ -369,7 +369,7 @@ void BattleArena_AddMindPoints(u8 battler)
     {
         gBattleStruct->arenaMindPoints[battler]--;
     }
-    else if (gMovesInfo[gCurrentMove].power != 0
+    else if (!IS_MOVE_STATUS(gCurrentMove)
           && gMovesInfo[gCurrentMove].effect != EFFECT_COUNTER
           && gMovesInfo[gCurrentMove].effect != EFFECT_MIRROR_COAT
           && gMovesInfo[gCurrentMove].effect != EFFECT_METAL_BURST
