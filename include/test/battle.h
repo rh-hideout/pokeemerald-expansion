@@ -287,6 +287,16 @@
  *     GIVEN {
  *         FLAG_SET(FLAG_SYS_EXAMPLE_FLAG);
  *
+ * WITH_CONFIG(configTag, value)
+ * Runs the test with a specified config override. `configTag` must be
+ * of `enum GenConfigTag`
+ * Example:
+ *     GIVEN {
+ *         WITH_CONFIG(GEN_CONFIG_GALE_WINGS, GEN_6);
+ *     }
+ * The `value` may be inferred from a local variable, e.g. set by
+ * PARAMETRIZE.
+ *
  * PLAYER(species) and OPPONENT(species)
  * Adds the species to the player's or opponent's party respectively.
  * The Pokémon can be further customized with the following functions:
@@ -488,6 +498,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "data.h"
+#include "generational_changes.h"
 #include "item.h"
 #include "random.h"
 #include "recorded_battle.h"
@@ -742,7 +753,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 /* Test */
 
 #define TO_DO_BATTLE_TEST(_name) \
-    TEST("TODO: " _name) \
+    TEST(_name) \
     { \
         TO_DO; \
     }
@@ -822,6 +833,7 @@ struct moveWithPP {
 #define AI_LOG AILogScores(__LINE__)
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
+#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_SIDE_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT(species) for (OpenPokemon(__LINE__, B_SIDE_OPPONENT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -855,6 +867,7 @@ struct moveWithPP {
 #define Shadow(isShadow) Shadow_(__LINE__, shadow)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
+void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
 void ClearFlagAfterTest(void);
 void OpenPokemon(u32 sourceLine, u32 side, u32 species);
 void ClosePokemon(u32 sourceLine);

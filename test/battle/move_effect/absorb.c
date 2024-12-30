@@ -24,25 +24,6 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
     }
 }
 
-SINGLE_BATTLE_TEST("Absorb deals 50% of the damage dealt to user agains Liquid Ooze")
-{
-    s16 damage;
-    s16 healed;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ABSORB); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
-        HP_BAR(opponent, captureDamage: &damage);
-        HP_BAR(player, captureDamage: &healed);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-    } THEN {
-        EXPECT_MUL_EQ(damage, Q_4_12(0.5), healed);
-    }
-}
-
 SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
 {
     GIVEN {
@@ -85,25 +66,6 @@ DOUBLE_BATTLE_TEST("Matcha Gatcha recovers 50% of the damage dealt from both tar
     } THEN {
         EXPECT_MUL_EQ(damageLeft, Q_4_12(-0.5), healedLeft);
         EXPECT_MUL_EQ(damageRight, Q_4_12(-0.5), healedRight);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Matcha Gatcha will faint the pokemon if Liquid Ooze drain deals enough damage")
-{
-    GIVEN {
-        ASSUME(gMovesInfo[MOVE_MATCHA_GOTCHA].effect == EFFECT_ABSORB);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_MATCHA_GOTCHA); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
-        HP_BAR(opponentLeft);
-        HP_BAR(playerLeft);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 

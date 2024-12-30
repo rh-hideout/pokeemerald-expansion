@@ -117,3 +117,18 @@ SINGLE_BATTLE_TEST("Salt Cure residual damage does not inflict any damage agains
         }
     }
 }
+
+SINGLE_BATTLE_TEST("If Salt Cure faints the target, messages will be applied in the correct order")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(25); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SALT_CURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        MESSAGE("The opposing Wobbuffet is being salt cured!");
+        MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
+        MESSAGE("The opposing Wobbuffet fainted!");
+    }
+}

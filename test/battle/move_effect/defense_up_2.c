@@ -3,10 +3,10 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_HARDEN].effect == EFFECT_DEFENSE_UP);
+    ASSUME(gMovesInfo[MOVE_IRON_DEFENSE].effect == EFFECT_DEFENSE_UP_2);
 }
 
-SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
+SINGLE_BATTLE_TEST("Iron Defense raises Defense by 2 stages", s16 damage)
 {
     bool32 raiseDefense;
     PARAMETRIZE { raiseDefense = FALSE; }
@@ -16,17 +16,17 @@ SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        if (raiseDefense) TURN { MOVE(player, MOVE_HARDEN); }
+        if (raiseDefense) TURN { MOVE(player, MOVE_IRON_DEFENSE); }
         TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         if (raiseDefense) {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_IRON_DEFENSE, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Defense rose!");
+            MESSAGE("Wobbuffet's Defense sharply rose!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.5), results[0].damage);
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(2.0), results[0].damage);
     }
 }
