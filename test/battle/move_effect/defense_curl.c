@@ -3,10 +3,10 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_HARDEN].effect == EFFECT_DEFENSE_UP);
+    ASSUME(gMovesInfo[MOVE_DEFENSE_CURL].effect == EFFECT_DEFENSE_CURL);
 }
 
-SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
+SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
 {
     bool32 raiseDefense;
     PARAMETRIZE { raiseDefense = FALSE; }
@@ -16,11 +16,11 @@ SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        if (raiseDefense) TURN { MOVE(player, MOVE_HARDEN); }
+        if (raiseDefense) TURN { MOVE(player, MOVE_DEFENSE_CURL); }
         TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         if (raiseDefense) {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFENSE_CURL, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Wobbuffet's Defense rose!");
         }
@@ -30,3 +30,8 @@ SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.5), results[0].damage);
     }
 }
+
+TO_DO_BATTLE_TEST("Defense Curl doubles the power of Rollout and Ice Ball");
+TO_DO_BATTLE_TEST("Defense Curl's effect cannot be stacked");
+TO_DO_BATTLE_TEST("Defense Curl's effect is removed when switching out");
+TO_DO_BATTLE_TEST("Baton Pass doesn't pass Defense Curl's effect");
