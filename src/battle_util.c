@@ -3740,6 +3740,17 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         }
+        case CANCELLER_FOOD_UNNERVE:
+        {
+            u32 UnnerveBattler = IsAbilityOnField(ABILITY_UNNERVE);
+            if ((gMovesInfo[gCurrentMove].foodMove) && (gBattlerAttacker != gBattlerTarget))
+            {
+                if (effect != 0)
+                    gBattlescriptCurrInstr = BattleScript_UnnerveNoEating;
+            }
+            gBattleStruct->atkCancellerTracker++;
+            break;
+        }
         case CANCELLER_MULTIHIT_MOVES:
             if (gMovesInfo[gCurrentMove].effect == EFFECT_MULTI_HIT)
             {

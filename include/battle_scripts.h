@@ -177,6 +177,7 @@ extern const u8 BattleScript_TookAttack[];
 extern const u8 BattleScript_SturdyPreventsOHKO[];
 extern const u8 BattleScript_DampStopsExplosion[];
 extern const u8 BattleScript_SupportiveStopsRecoil[];
+extern const u8 BattleScript_UnnerveNoEating[];
 extern const u8 BattleScript_StopsignStopsPivoting[];
 extern const u8 BattleScript_MoveHPDrain_PPLoss[];
 extern const u8 BattleScript_MoveHPDrain[];

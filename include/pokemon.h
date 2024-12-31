@@ -496,6 +496,7 @@ struct MoveInfo
     u32 soundMove:1;
     u32 ballisticMove:1;
     u32 powderMove:1;
+    u32 foodMove:1;
     u32 danceMove:1;
     u32 windMove:1;
     u32 slicingMove:1; // end of word

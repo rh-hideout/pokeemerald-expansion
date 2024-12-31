@@ -8731,6 +8731,15 @@ BattleScript_StopsignStopsPivoting::
 	moveendcase MOVEEND_CLEAR_BITS
 	end
 
+BattleScript_UnnerveNoEating::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUpScripting
+	printstring STRINGID_UNNERVENOFOOD
+	pause B_WAIT_TIME_LONG
+	moveendto MOVEEND_NEXT_TARGET
+	moveendcase MOVEEND_CLEAR_BITS
+	end
+
 BattleScript_StormShelterActivates::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
