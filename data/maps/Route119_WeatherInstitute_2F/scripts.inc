@@ -135,7 +135,7 @@ Route119_WeatherInstitute_2F_EventScript_ExplainCastform::
 Route119_WeatherInstitute_2F_EventScript_FlipTurn::
 	msgbox Route119_WeatherInstitute_2F_Text_ExplainFlipTurn, MSGBOX_DEFAULT
 	giveitem ITEM_TM_FLIP_TURN
-	setflag FLAG_FLIP_TURN
+	setflag FLAG_GAVE_TM_FLIP_TURN
 	release
 	end
 

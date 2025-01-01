@@ -234,7 +234,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_TM_SANDSTORM",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_POLLEN_PUFF",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_111_TM_SANDSTORM"
     },
@@ -383,8 +383,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
-      "x": 31,
-      "y": 26,
+      "x": 16,
+      "y": 35,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT",
       "movement_range_x": 1,

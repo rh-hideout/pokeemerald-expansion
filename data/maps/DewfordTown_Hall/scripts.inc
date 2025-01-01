@@ -245,7 +245,6 @@ DewfordTown_Hall_Movement_SchoolKidWalkInPlaceRight:
 DewfordTown_Hall_EventScript_SludgeBombMan::
 	lock
 	faceplayer
-	call Common_EventScript_BufferTrendyPhrase
 	goto_if_set FLAG_RECEIVED_TM_SLUDGE_BOMB, DewfordTown_Hall_EventScript_ReceivedSludgeBomb
 	msgbox DewfordTown_Hall_Text_GiveYouSludgeBomb, MSGBOX_DEFAULT
 	giveitem ITEM_TM_SLUDGE_BOMB

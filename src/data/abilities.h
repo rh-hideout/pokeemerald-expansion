@@ -2280,7 +2280,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_EARTH_EATER] =
     {
         .name = _("Earth Eater"),
-        .description = COMPOUND_STRING("Eats ground to heal HP."),
+        .description = COMPOUND_STRING("Eats ground/sand to heal HP."),
         .aiRating = 7,
         .breakable = TRUE,
     },

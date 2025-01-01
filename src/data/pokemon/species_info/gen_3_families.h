@@ -9602,7 +9602,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 #if P_FAMILY_CLAMPERL
     [SPECIES_CLAMPERL] =
     {
-        .baseHP        = 35,
+        .baseHP        = 55,
         .baseAttack    = 64,
         .baseDefense   = 85,
         .baseSpeed     = 32,
@@ -9670,7 +9670,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 
     [SPECIES_HUNTAIL] =
     {
-        .baseHP        = 65,
+        .baseHP        = 75,
         .baseAttack    = 104,
         .baseDefense   = 105,
         .baseSpeed     = 52,
@@ -9681,7 +9681,8 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 170 : 178,
         .evYield_Attack = 1,
         .evYield_Defense = 1,
-        //.itemRare = ITEM_DEEP_SEA_TOOTH,
+        .itemCommon = ITEM_DEEP_SEA_SCALE,
+        .itemRare = ITEM_DEEP_SEA_TOOTH,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
@@ -9733,7 +9734,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 
     [SPECIES_GOREBYSS] =
     {
-        .baseHP        = 65,
+        .baseHP        = 75,
         .baseAttack    = 84,
         .baseDefense   = 105,
         .baseSpeed     = 52,

@@ -672,6 +672,18 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
+    [NATURE_NONE] = 
+    {
+        .name = COMPOUND_STRING("None"),
+        .statUp = STAT_HP,
+        .statDown = STAT_HP,
+        .backAnim = 0,
+        .pokeBlockAnim = {ANIM_HARDY, AFFINE_NONE},
+        .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlHardy,
+        .battlePalacePercents = PALACE_STYLE(61, 7, 61, 7), //32% support >= 50% HP, 32% support < 50% HP
+        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
+    },
 };
 
 #include "data/graphics/pokemon.h"
@@ -4667,6 +4679,7 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                     case NATURE_RASH:
                     case NATURE_SASSY:
                     case NATURE_QUIRKY:
+                    case NATURE_NONE:
                         targetSpecies = evolutions[i].targetSpecies;
                         break;
                     }

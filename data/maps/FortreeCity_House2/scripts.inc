@@ -18,7 +18,8 @@ FortreeCity_House2_EventScript_HiddenPowerGiver::
 	switch VAR_RESULT
 	case 0, FortreeCity_House2_EventScript_WrongGuess
 	setflag FLAG_MET_HIDDEN_POWER_GIVER
-	msgbox FortreeCity_House2_Text_ExplainHiddenPower, MSGBOX_DEFAULT
+	giveitem ITEM_TM_FLING
+	call FortreeCity_House2_EventScript_ExplainHiddenPower
 	release
 	end
 
@@ -57,9 +58,10 @@ FortreeCity_House2_Text_CorrectTryAgainWhichHand2:
 	.string "The right or left?$"
 
 FortreeCity_House2_Text_ExplainHiddenPower:
-	.string "Since IVs aren't used in this ROMHack,\n"
+	.string "IVs aren't used in this ROMHack,\n"
 	.string "Hidden Power doesn't work.\p"
-	.string "That's why I can't give it to you.$"
+	.string "Instead I'm giving you this.\p"
+	.string "I hope you still have a Big Nugget.$"
 
 FortreeCity_House2_Text_YouGuessedWrong:
 	.string "No, too bad.\n"

@@ -10937,8 +10937,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 #if P_FAMILY_ONIX
     [SPECIES_ONIX] =
     {
-        .baseHP        = 35,
-        .baseAttack    = 45,
+        .baseHP        = 45,
+        .baseAttack    = 50,
         .baseDefense   = 160,
         .baseSpeed     = 70,
         .baseSpAttack  = 30,
@@ -14631,9 +14631,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
     [SPECIES_JYNX] =
     {
-        .baseHP        = 65,
+        .baseHP        = 70,
         .baseAttack    = 50,
-        .baseDefense   = 35,
+        .baseDefense   = 45,
         .baseSpeed     = 95,
         .baseSpAttack  = 115,
         .baseSpDefense = 95,
@@ -14647,7 +14647,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_HUMAN_LIKE),
     #if P_UPDATED_ABILITIES >= GEN_4
-        .abilities = { ABILITY_OBLIVIOUS, ABILITY_FOREWARN, ABILITY_DRY_SKIN },
+        .abilities = { ABILITY_ICE_BODY, ABILITY_REFRIGERATE, ABILITY_THICK_FAT},
     #else
         .abilities = { ABILITY_OBLIVIOUS, ABILITY_NONE, ABILITY_DRY_SKIN },
     #endif

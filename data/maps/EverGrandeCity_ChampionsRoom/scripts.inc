@@ -51,6 +51,8 @@ EverGrandeCity_ChampionsRoom_EventScript_Wallace::
 EverGrandeCity_ChampionsRoom_EventScript_Defeated::
 	playse SE_DOOR
 	setflag FLAG_CHAMPION_DEFEATED
+	giveitem ITEM_TM_STEALTH_ROCK
+	msgbox EverGrandeCity_ChampionsRoom_Text_HeresYourTM
 	setmetatile 6, 1, METATILE_EliteFour_OpenDoorChampion_Frame, FALSE
 	setmetatile 6, 2, METATILE_EliteFour_OpenDoorChampion_Opening, FALSE
 	special DrawWholeMapView
@@ -66,6 +68,9 @@ EverGrandeCity_ChampionsRoom_EventScript_Defeated::
 	goto_if_eq VAR_RESULT, MALE, EverGrandeCity_ChampionsRoom_EventScript_MayAdvice
 	goto_if_eq VAR_RESULT, FEMALE, EverGrandeCity_ChampionsRoom_EventScript_BrendanAdvice
 	end
+
+EverGrandeCity_ChampionsRoom_Text_HeresYourTM:
+	.string "Here is a TM to commemorate this win.$"
 
 EverGrandeCity_ChampionsRoom_EventScript_PlayMayMusic::
 	playbgm MUS_ENCOUNTER_MAY, FALSE

@@ -4,9 +4,9 @@
 #define FOREACH_TM(F) \
     F(FOCUS_PUNCH) \
     F(DRAGON_CLAW) \
-    F(WATER_PULSE) \
+    F(SCALD) \
     F(CALM_MIND) \
-    F(ROAR) \
+    F(HOWL) \
     F(TOXIC) \
     F(FLIP_TURN) \
     F(BULK_UP) \
@@ -19,10 +19,10 @@
     F(HYPER_BEAM) \
     F(LIGHT_SCREEN) \
     F(PROTECT) \
-    F(RAIN_DANCE) \
+    F(FREEZE_DRY) \
     F(GIGA_DRAIN) \
     F(SAFEGUARD) \
-    F(FRUSTRATION) \
+    F(FLASH_CANNON) \
     F(SOLAR_BEAM) \
     F(IRON_TAIL) \
     F(THUNDERBOLT) \
@@ -33,26 +33,27 @@
     F(PSYCHIC) \
     F(SHADOW_BALL) \
     F(BRICK_BREAK) \
-    F(DOUBLE_TEAM) \
+    F(SCALE_SHOT) \
     F(REFLECT) \
-    F(SHOCK_WAVE) \
+    F(FLING) \
     F(FLAMETHROWER) \
     F(SLUDGE_BOMB) \
-    F(SANDSTORM) \
+    F(STEALTH_ROCK) \
     F(FIRE_BLAST) \
     F(ROCK_TOMB) \
-    F(AERIAL_ACE) \
+    F(ACROBATICS) \
     F(TORMENT) \
     F(FACADE) \
     F(SECRET_POWER) \
     F(REST) \
-    F(ATTRACT) \
-    F(THIEF) \
+    F(CHARGE_BEAM) \
+    F(STONE_EDGE) \
     F(STEEL_WING) \
-    F(SKILL_SWAP) \
-    F(SNATCH) \
-    F(OVERHEAT)
-
+    F(DRAIN_PUNCH) \
+    F(POLTERGEIST) \
+    F(OVERHEAT) \
+    F(POLLEN_PUFF)
+    
 #define FOREACH_HM(F) \
     F(CUT) \
     F(FLY) \

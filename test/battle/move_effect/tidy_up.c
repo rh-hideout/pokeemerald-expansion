@@ -99,3 +99,24 @@ AI_SINGLE_BATTLE_TEST("AI will try to remove hazards if slower then target even 
         TURN { EXPECT_MOVE(opponent, MOVE_TIDY_UP); }
     }
 }
+
+SINGLE_BATTLE_TEST("Tidy Up raises Attack and Speed by one after clearing hazards on opposing field")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STEALTH_ROCK); }
+        TURN { MOVE(player, MOVE_TIDY_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
+        MESSAGE("Tidying up complete!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Attack rose!");
+        MESSAGE("Wobbuffet's Speed rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}

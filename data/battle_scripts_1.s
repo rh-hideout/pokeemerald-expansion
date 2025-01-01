@@ -134,7 +134,11 @@ BattleScript_EffectTidyUp::
 	pause B_WAIT_TIME_MED
 	ppreduce
 	waitstate
+	saveattacker
+	savetarget
 	trytidyup FALSE, BattleScript_EffectTidyUpDoMoveAnimation
+	restoreattacker
+	restoretarget
 	goto BattleScript_EffectDragonDanceFromStatUp
 
 BattleScript_EffectTidyUpDoMoveAnimation::
@@ -143,6 +147,8 @@ BattleScript_EffectTidyUpDoMoveAnimation::
 	trytidyup TRUE, NULL
 	printstring STRINGID_TIDYINGUPCOMPLETE
 	waitmessage B_WAIT_TIME_LONG
+	restoreattacker
+	restoretarget
 	goto BattleScript_EffectDragonDanceFromStatUp
 
 BattleScript_EffectUpperHand::
@@ -864,7 +870,7 @@ BattleScript_EffectOctolock::
 	goto BattleScript_MoveEnd
 
 BattleScript_OctolockEndTurn::
-	playstatchangeanimation BS_ATTACKER, BIT_DEF | BIT_SPDEF, STAT_CHANGE_NEGATIVE
+	playstatchangeanimation BS_TARGET, BIT_DEF | BIT_SPDEF, STAT_CHANGE_NEGATIVE
 	setstatchanger STAT_DEF, 1, TRUE
 	statbuffchange STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_OctolockTryLowerSpDef
 	printfromtable gStatDownStringIds
@@ -2741,9 +2747,9 @@ BattleScript_GravityLoopDrop:
 	printstring STRINGID_GRAVITYGROUNDING
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_GravityLoopEnd:
-	moveendto MOVEEND_NEXT_TARGET
+	moveendcase MOVEEND_TARGET_VISIBLE
 	jumpifnexttargetvalid BattleScript_GravityLoop
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_EffectRoost::
 	attackcanceler
@@ -3413,7 +3419,7 @@ BattleScript_EffectOHKO::
 	attackcanceler
 	attackstring
 	ppreduce
-	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
+	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
 	typecalc
 	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
 	tryKO BattleScript_KOFail
@@ -6152,6 +6158,31 @@ BattleScript_WeaknessPolicySpAtk:
 BattleScript_WeaknessPolicyRemoveItem:
 	removeitem BS_TARGET
 BattleScript_WeaknessPolicyEnd:
+	return
+
+BattleScript_DirePolicy::
+	copybyte sBATTLER, gBattlerTarget
+	jumpifstat BS_TARGET, CMP_LESS_THAN, STAT_DEF, MAX_STAT_STAGE, BattleScript_DirePolicyDef
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPDEF, MAX_STAT_STAGE, BattleScript_DirePolicyEnd
+BattleScript_DirePolicyDef:
+	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
+	waitanimation
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_DEF | BIT_SPDEF, STAT_CHANGE_BY_TWO
+	setstatchanger STAT_DEF, 1, FALSE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_DirePolicySpDef
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_DirePolicySpDef
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_DirePolicySpDef:
+	setstatchanger STAT_SPDEF, 1, FALSE
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_DirePolicyRemoveItem
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_DirePolicyRemoveItem
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_DirePolicyRemoveItem:
+	removeitem BS_TARGET
+BattleScript_DirePolicyEnd:
 	return
 
 BattleScript_TargetItemStatRaise::
@@ -9095,7 +9126,7 @@ BattleScript_BerryStatRaiseEnd2::
 BattleScript_BerryStatRaiseEnd2_AbilityPopup:
 	call BattleScript_AbilityPopUp
 BattleScript_BerryStatRaiseEnd2_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerryStatRaiseEnd2_End
+	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_AFFECTS_USER, BattleScript_BerryStatRaiseEnd2_End
 	setgraphicalstatchangevalues
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
@@ -10079,6 +10110,10 @@ BattleScript_BerserkGeneRet_End:
 	end3
 
 BattleScript_BoosterEnergyEnd2::
+	call BattleScript_BoosterEnergyRet
+	end2
+
+BattleScript_BoosterEnergyRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_BOOSTERENERGYACTIVATES
@@ -10086,7 +10121,7 @@ BattleScript_BoosterEnergyEnd2::
 	printstring STRINGID_STATWASHEIGHTENED
 	waitmessage B_WAIT_TIME_MED
 	removeitem BS_SCRIPTING
-	end2
+	return
 
 BattleScript_EffectSnow::
 	attackcanceler

@@ -20398,7 +20398,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Gathers electricity, then\n"
             "fires a high-voltage shot."),
         .effect = EFFECT_TWO_TURNS_ATTACK,
-        .power = 130,
+        .power = 120,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
         .pp = 10,

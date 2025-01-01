@@ -36,9 +36,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_TM_SKILL_SWAP",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_FLASH_CANNON",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_MT_PYRE_EXTERIOR_TM_SKILL_SWAP"
+      "flag": "FLAG_ITEM_MT_PYRE_EXTERIOR_TM_FLASH_CANNON"
     }
   ],
   "warp_events": [

@@ -18880,7 +18880,7 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_LANDORUS
 
 #if P_FAMILY_ENAMORUS
-    const u32 gMonFrontPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/front.4bpp.lz");
+    const u32 gMonFrontPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/anim_front.4bpp.lz");
     const u32 gMonPalette_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/normal.gbapal.lz");
     const u32 gMonBackPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/back.4bpp.lz");
     const u32 gMonShinyPalette_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/shiny.gbapal.lz");

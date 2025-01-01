@@ -1160,6 +1160,7 @@ static s32 TryMessage(s32 i, s32 n, const u8 *string)
                 switch (string[j])
                 {
                 case CHAR_SPACE:
+                case CHAR_NBSP:
                 case CHAR_PROMPT_SCROLL:
                 case CHAR_PROMPT_CLEAR:
                 case CHAR_NEWLINE:

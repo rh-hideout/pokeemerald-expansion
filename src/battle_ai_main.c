@@ -433,7 +433,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u3
 
             if (move != 0
              && move != 0xFFFF
-             //&& gMovesInfo[move].power != 0  /* we want to get effectiveness and accuracy of status moves */
+             //&& !IS_MOVE_STATUS(gMovesInfo[move])  /* we want to get effectiveness and accuracy of status moves */
              && !(aiData->moveLimitations[battlerAtk] & (1u << moveIndex)))
             {
                 dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, rollType);
@@ -2606,8 +2606,8 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
         return score;
 
-    if (gMovesInfo[move].power == 0)
-        return score; // can't make anything faint with no power
+    if (IS_MOVE_STATUS(move))
+        return score; // status moves aren't accounted here
 
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, 0) && gMovesInfo[move].effect != EFFECT_EXPLOSION)
     {
@@ -3057,7 +3057,8 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex);
     
-    if ((AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_WEAKNESS_POLICY)
+    if (((AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_WEAKNESS_POLICY)
+        || (AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_DIRE_POLICY))
         && AI_GetTypeEffectiveness(move, battlerAtk, partnerBattler) >= UQ_4_12(2.0))
         return TRUE;
     return (IsDoubleBattle()
@@ -4926,7 +4927,7 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
 {
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef)
       || CountUsablePartyMons(battlerAtk) == 0
-      || gMovesInfo[move].power != 0
+      || !IS_MOVE_STATUS(move)
       || !HasMoveEffect(battlerAtk, EFFECT_BATON_PASS)
       || IsBattlerTrapped(battlerAtk, TRUE))
         return score;

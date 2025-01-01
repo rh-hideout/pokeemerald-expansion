@@ -1400,9 +1400,17 @@ void ItemUseOutOfBattle_ZygardeCube(u8 taskId)
 
 void ItemUseOutOfBattle_Fusion(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_Fusion;
-    gTasks[taskId].data[0] = FALSE;
-    SetUpItemUseCallback(taskId);
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        gItemUseCB = ItemUseCB_Fusion;
+        gTasks[taskId].data[0] = FALSE;
+        SetUpItemUseCallback(taskId);
+    }
+    else
+    {
+        // TODO: handle key items with callbacks to menus allow to be used by registering them.
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
 }
 
 void Task_UseHoneyOnField(u8 taskId)
@@ -1552,10 +1560,18 @@ static void ItemUseOnFieldCB_TownMap(u8 taskId)
 
 void ItemUseOutOfBattle_TownMap(u8 taskId)
 {
-    sItemUseOnFieldCB = ItemUseOnFieldCB_TownMap;
-    gFieldCallback = FieldCB_UseItemOnField;
-    gBagMenu->newScreenCallback = CB2_ReturnToField;
-    Task_FadeAndCloseBagMenu(taskId);
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_TownMap;
+        gFieldCallback = FieldCB_UseItemOnField;
+        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        Task_FadeAndCloseBagMenu(taskId);
+    }
+    else
+    {
+        // TODO: handle key items with callbacks to menus allow to be used by registering them.
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
 }
 
 #undef tUsingRegisteredKeyItem

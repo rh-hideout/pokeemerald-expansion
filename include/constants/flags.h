@@ -69,14 +69,14 @@
 #define FLAG_UNUSED_0x037         0x37 // Norman Gym Gift If Given
 #define FLAG_UNUSED_0x038         0x38 // Berry Master R115
 #define FLAG_UNUSED_0x039         0x39 // Petalburg Gifts
-#define FLAG_CHAMPION_DEFEATED    0x3A // Beaten the Game
+#define FLAG_CHAMPION_DEFEATED    0x3A // Beaten the Game (technically)
 #define FLAG_GIFT_STARTER         0x3B // Used in Mossdeep for the gift starter
 #define FLAG_RESTRITCED_EXPLAINED 0x3C // Explains how restricted mons for e4 works
 #define FLAG_RESTRICTED_GIVEN     0x3D // Stops the player from getting too many mons
-#define FLAG_FLIP_TURN            0x3E // Unused Flag
-#define FLAG_UNUSED_0x03F         0x3F // Unused Flag
-#define FLAG_UNUSED_0x040         0x40 // Unused Flag
-#define FLAG_UNUSED_0x041         0x41 // Unused Flag
+#define FLAG_BERRY_MASTER_BERRY   0x3E // Berry Master House
+#define FLAG_BERRY_WIFE_BERRY     0x3F // Berry Master House
+#define FLAG_GAVE_TM_FLIP_TURN    0x40 // Weather Institute
+#define FLAG_GAVE_STONE_EDGE      0x41 // Pacifidlog
 #define FLAG_UNUSED_0x042         0x42 // Unused Flag
 #define FLAG_UNUSED_0x043         0x43 // Unused Flag
 #define FLAG_UNUSED_0x044         0x44 // Unused Flag
@@ -187,7 +187,7 @@
 #define FLAG_RECEIVED_TM_SHOCK_WAVE          0xA7
 #define FLAG_RECEIVED_TM_OVERHEAT            0xA8
 #define FLAG_RECEIVED_TM_FACADE              0xA9
-#define FLAG_RECEIVED_TM_AERIAL_ACE          0xAA
+#define FLAG_RECEIVED_TM_ACROBATICS          0xAA
 #define FLAG_RECEIVED_TM_CALM_MIND           0xAB
 #define FLAG_RECEIVED_TM_WATER_PULSE         0xAC
 #define FLAG_HIDE_SECRET_BASE_TRAINER        0xAD
@@ -226,7 +226,7 @@
 #define FLAG_ENCOUNTERED_LATIAS_OR_LATIOS    0xCE
 #define FLAG_MET_ARCHIE_METEOR_FALLS         0xCF
 #define FLAG_GOT_BASEMENT_KEY_FROM_WATTSON   0xD0
-#define FLAG_GOT_THUNDERBOLT_FROM_WATTSON    0xD1
+#define FLAG_GOT_CHARGE_BEAM_FROM_WATTSON    0xD1
 #define FLAG_FAN_CLUB_STRENGTH_SHARED        0xD2 // Set when you rate the strength of another trainer in Lilycove's Trainer Fan Club.
 #define FLAG_DEFEATED_RIVAL_RUSTBORO         0xD3
 #define FLAG_RECEIVED_RED_OR_BLUE_ORB        0xD4
@@ -1122,7 +1122,7 @@
 #define FLAG_ITEM_AQUA_HIDEOUT_B1F_MAX_ELIXIR                       0x42F
 #define FLAG_ITEM_AQUA_HIDEOUT_B2F_NEST_BALL                        0x430
 #define FLAG_ITEM_MT_PYRE_EXTERIOR_MAX_POTION                       0x431
-#define FLAG_ITEM_MT_PYRE_EXTERIOR_TM_SKILL_SWAP                    0x432
+#define FLAG_ITEM_MT_PYRE_EXTERIOR_TM_FLASH_CANNON                    0x432
 #define FLAG_ITEM_NEW_MAUVILLE_ULTRA_BALL                           0x433
 #define FLAG_ITEM_NEW_MAUVILLE_ESCAPE_ROPE                          0x434
 #define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_6_LUXURY_BALL    0x435

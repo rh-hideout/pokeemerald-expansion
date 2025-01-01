@@ -549,25 +549,25 @@ EVs: 252 HP / 252 Def
 - Knock Off
 - Lunar Blessing
 
-Jellicent @ Heavy Duty Boots
+Suicune @ Leftovers
 Bold Nature
 Level: 76
 Ability: Water Absorb
 EVs: 252 HP / 252 Def
 - Scald
-- Strength Sap
-- Whirlpool
+- Calm Mind
+- Ice Beam
 - Lunar Blessing
 
-Tentacruel @ Black Sludge
+Lugia @ Heavy-Duty Boots
 Calm Nature
 Level: 76
-Ability: Rain Dish
-EVs: 220 HP / 36 Def / 252 SpD
-- Rapid Spin
-- Scald
-- Magic Coat
-- Protect
+Ability: Multiscale
+EVs: 252 HP / 252 SpD
+- Defog
+- Aeroblast
+- Roost
+- Whirlwind
 
 === TRAINER_ZANDER ===
 Name: ZANDER
@@ -621,7 +621,7 @@ EVs: 236 HP / 16 Def / 252 SpA / 4 SpD
 Dracovish @ Choice Band
 Adamant Nature
 Level: 58
-Ability: Swift Swim
+Ability: Strong Jaw
 EVs: 252 Atk / 4 SpD / 252 Spe
 - Fishious Rend
 - Bulldoze
@@ -630,6 +630,7 @@ EVs: 252 Atk / 4 SpD / 252 Spe
 
 Gyarados @ Gyaradosite
 Adamant Nature
+Ability: Intimidate
 Level: 58
 EVs: 244 HP / 4 Atk / 4 Def / 4 SpD / 252 Spe
 - Waterfall
@@ -3616,8 +3617,9 @@ Music: Intense
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Machop
-Level: 19
+Urshifu Rapid Strike
+Level: 50
+- Explosion
 
 === TRAINER_ATSUSHI ===
 Name: ATSUSHI
@@ -4407,10 +4409,47 @@ Pic: Bug Maniac
 Gender: Male
 Music: Suspicious
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
-Surskit
-Level: 26
+Shaymin-Sky @ Leftovers
+Level: 62
+Ability: Serene Grace
+- Substitute
+- Seed Flare
+- Leech Seed
+- Air Slash
+
+Lokix @ Heavy-Duty Boots
+Level: 63
+Ability: Tinted Lens
+- Knock Off
+- Sucker Punch
+- U-Turn
+- First Impression
+
+Swoobat @ Clear Amulet
+Level: 63
+Ability: Simple
+- Calm Mind
+- Charge Beam
+- Stored Power
+- Iron Defense
+
+Cursola @ Leftovers
+Level: 63
+Ability: Cursed Body
+- Strength Sap
+- Calm Mind
+- Shadow Ball
+- Scald
+
+Maushold @ Wide Lens
+Level: 63
+Ability: Technician
+- Population Bomb
+- Bite
+- Low Kick
+- Tidy Up
 
 === TRAINER_DONALD ===
 Name: DONALD
@@ -4487,8 +4526,8 @@ Ability: Mega Launcher
 - Aura Sphere
 
 Cinderace @ Heavy-Duty Boots
-Ability: Libero
 Level: 62
+Ability: Libero
 - Court Change
 - Pyro Ball
 - Sucker Punch
@@ -11446,8 +11485,42 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Pelipper
-Level: 31
+Phione @ Mystic Water
+Level: 63
+- Tail Glow
+- Rain Dance
+- Weather Ball
+- Hurricane
+
+Heatran @ Grassium Z
+Level: 63
+- Solar Beam
+- Magma Storm
+- Flash Cannon
+- Stealth Rock
+
+Dragonair @ Eviolite
+Level: 63
+Ability: Marvel Scale
+- Thunder Wave
+- Breaking Swipe
+- Whirlpool
+- Roost
+
+Delibird @ Heavy-Duty Boots
+Level: 63
+Ability: Refrigerate
+- Rapid Spin
+- Present
+- Drill Peck
+- Roost
+
+Mismagius @ Leftovers
+Level: 63
+- Hex
+- Will o Wisp
+- Hex
+- Charge Beam
 
 === TRAINER_JACKSON_1 ===
 Name: JACKSON
@@ -11459,7 +11532,7 @@ Items: Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Breloom
+Phione
 Level: 27
 
 === TRAINER_LORENZO ===
@@ -11551,13 +11624,38 @@ Gender: Female
 Music: Cool
 Items: Full Restore
 Double Battle: No
-AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Force Setup First Turn
 
-Gloom
-Level: 26
+Nidoking @ Life Orb
+Level: 63
+Ability: Rivalry
+- Poison Jab
+- Toxic Spikes
+- Earthquake
+- Thunderbolt
 
-Roselia
-Level: 26
+Arbok @ Leftovers
+Level: 63
+Ability: Shed Skin
+- Coil
+- Glare
+- Gunk Shot
+- Dig
+
+Moltres-Galar @ Life Orb 
+Level: 63
+- Air Slash
+- Fiery Wrath
+- Ancient Power
+- Agility
+
+Sharpedo @ Sharpedonite
+Level: 63
+Ability: Speed Boost
+- Liquidation
+- Crunch
+- Protect
+- Close Combat
 
 === TRAINER_JENNA ===
 Name: JENNA
@@ -12329,37 +12427,8 @@ Items: Super Potion / Super Potion
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Camerupt @ Cameruptite
-Ability: Solid Rock
-Level: 87
-EVs: 252 SpA
-Modest Nature
-- Eruption
-- Heat Wave
-- Earth Power
-- Flash Cannon
-
-Walking Wake @ Choice Specs
-Level: 87
-EVs: 252 SpA
-Modest Nature
-- Hydro Steam
-- Draco Meteor
-- Weather Ball
-- Snarl
-
-Ogerpon-Hearthflame @ Hearthflame Mask
-Level: 87
-Tera Type: Fire
-EVs: 252 HP / 252 Def / 4 SpD
-Impish Nature
-- Follow Me
-- Swords Dance
-- Ivy Cudgel
-- Power Whip
-
 Reshiram @ Life Orb
-Level: 87
+Level: 71
 EVs: 252 SpA
 Modest Nature
 - Solar Beam
@@ -12367,15 +12436,50 @@ Modest Nature
 - Draco Meteor
 - Focus Blast
 
-Scovillain @ Power Herb
-Ability: Chlorophyll
-Level: 87
-EVs: 252 SpA / 4 SpD / 252 Spe
-Modest Nature
-- Solar Beam
+Ho-oh @ Heavy-Duty Boots
+Level: 71
+Docile Nature
+- Sacred Fire
+- Defog
+- Roost
+- Whirlwind
+
+Chi Yu @ Choice Scarf
+Level: 71
+EVs: 252 SpA
+Timid Nature
+- Dark Pulse
+- Flamethrower
 - Overheat
-- Meteor Beam
-- Giga Drain
+- Solar Beam
+
+Walking Wake @ Choice Specs
+Level: 71
+EVs: 252 SpA
+Modest Nature
+- Hydro Steam
+- Draco Meteor
+- Weather Ball
+- Snarl
+
+Lilligant Hisui @ Life Orb
+Level: 71
+Adamant Nature
+Ability: Chlorophyll
+EVs: 252 Atk
+- Victory Dance
+- Solar Blade
+- Close Combat
+- Synthesis
+
+Charizard @ Charizardite Y
+Level: 71
+Modest Nature
+EVs: 252 SpA / 252 Spe
+- Flamethrower
+- Solar Beam
+- Air Slash
+- Growth
 
 === TRAINER_MAXIE_MT_CHIMNEY ===
 Name: MAXIE
@@ -13671,19 +13775,21 @@ Music: Suspicious
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Nincada
-Level: 28
-- Leech Life
-- Fury Swipes
-- Mind Reader
-- Dig
+Espathra @ Clear Amulet
+Level: 63
+Ability: Opportunist
+- Esper Wing
+- Stored Power
+- Mystical Fire
+- Dazzling Gleam
 
-Weezing
-Level: 28
-- Tackle
-- Self Destruct
-- Sludge
-- Smokescreen
+Flamigo @ Leftovers
+Level: 63
+Ability: Costar
+- Air Slash
+- Hyper Beam
+- Chilling Water
+- Aura Sphere
 
 === TRAINER_FLINT ===
 Name: FLINT
@@ -15930,11 +16036,20 @@ Music: Intense
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Meditite
-Level: 28
+Grimmsnarl @ Light Clay
+Level: 63
+Ability: Prankster
+- Flatter
+- Reflect
+- Light Screen
+- Parting Shot
 
-Makuhita
-Level: 28
+Tapu Lele @ Terrain Extender
+Level: 61
+- Aromatic Mist
+- Psych Up
+- Expanding Force
+- Moonblast
 
 === TRAINER_CALE ===
 Name: CALE
