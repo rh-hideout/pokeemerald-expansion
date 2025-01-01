@@ -2673,7 +2673,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         )
         .levelUpLearnset = sDipplinLevelUpLearnset,
         .teachableLearnset = sDipplinTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_MOVE, MOVE_DRAGON_CHEER, SPECIES_HYDRAPPLE}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_HYDRAPPLE, CONDITIONS({IF_KNOWS_MOVE, MOVE_DRAGON_CHEER})}),
     },
 
     [SPECIES_HYDRAPPLE] =
@@ -3288,8 +3288,31 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sToxelLevelUpLearnset,
         .teachableLearnset = sToxelTeachableLearnset,
         .eggMoveLearnset = sToxelEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL_NATURE_AMPED, 30, SPECIES_TOXTRICITY_AMPED},
-                                {EVO_LEVEL_NATURE_LOW_KEY, 30, SPECIES_TOXTRICITY_LOW_KEY}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_HARDY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_BRAVE})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_ADAMANT})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_NAUGHTY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_DOCILE})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_IMPISH})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_LAX})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_HASTY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_JOLLY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_NAIVE})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_RASH})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_SASSY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_AMPED, CONDITIONS({IF_NATURE, NATURE_QUIRKY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_LONELY})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_BOLD})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_RELAXED})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_TIMID})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_SERIOUS})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_MODEST})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_MILD})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_QUIET})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_BASHFUL})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_CALM})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_GENTLE})},
+                                {EVO_LEVEL, 30, SPECIES_TOXTRICITY_LOW_KEY, CONDITIONS({IF_NATURE, NATURE_CAREFUL})}),
     },
 
     [SPECIES_TOXTRICITY_AMPED] =
@@ -3772,7 +3795,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sClobbopusLevelUpLearnset,
         .teachableLearnset = sClobbopusTeachableLearnset,
         .eggMoveLearnset = sClobbopusEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_MOVE, MOVE_TAUNT, SPECIES_GRAPPLOCT}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_GRAPPLOCT, CONDITIONS({IF_KNOWS_MOVE, MOVE_TAUNT})}),
     },
 
     [SPECIES_GRAPPLOCT] =
@@ -5010,7 +5033,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sSnomLevelUpLearnset,
         .teachableLearnset = sSnomTeachableLearnset,
         .eggMoveLearnset = sSnomEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_FRIENDSHIP_NIGHT, 0, SPECIES_FROSMOTH}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_FROSMOTH, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD},{IF_TIME, TIME_NIGHT})}),
     },
 
     [SPECIES_FROSMOTH] =
