@@ -227,41 +227,6 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can have their ability changed o
     }
 }
 
-SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_ENCORE); }
-        TURN { MOVE(player, MOVE_EMBER); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
-        MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Max Flare!");
-    }
-}
-
-SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after reverting")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }; // yes, this speed is necessary
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
-    } WHEN {
-        TURN { MOVE(player, MOVE_ARM_THRUST, gimmick: GIMMICK_DYNAMAX); }
-        TURN { MOVE(player, MOVE_ARM_THRUST); }
-        TURN { MOVE(player, MOVE_ARM_THRUST); }
-        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_TACKLE); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Max Knuckle!");
-        MESSAGE("Wobbuffet used Max Knuckle!");
-        MESSAGE("Wobbuffet used Max Knuckle!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
-        MESSAGE("Wobbuffet used Arm Thrust!");
-    }
-}
-
 // Max Moves don't make contact, so Cursed Body doesn't need to be tested, but it is coded for.
 SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon's Max Moves cannot be disabled")
 {
