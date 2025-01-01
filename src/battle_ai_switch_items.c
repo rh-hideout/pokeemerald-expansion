@@ -917,7 +917,6 @@ bool32 ShouldSwitch(u32 battler)
     struct Pokemon *party;
     s32 i;
     s32 availableToSwitch;
-    bool32 hasAceMon = FALSE;
 
     if (gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_ESCAPE_PREVENTION))
         return FALSE;
@@ -966,7 +965,6 @@ bool32 ShouldSwitch(u32 battler)
             continue;
         if (IsAceMon(battler, i))
         {
-            hasAceMon = TRUE;
             continue;
         }
 
@@ -974,12 +972,7 @@ bool32 ShouldSwitch(u32 battler)
     }
 
     if (availableToSwitch == 0)
-    {
-        if (hasAceMon) // If the ace mon is the only available mon, use it
-            availableToSwitch++;
-        else
             return FALSE;
-    }
 
     // NOTE: The sequence of the below functions matter! Do not change unless you have carefully considered the outcome.
     // Since the order is sequencial, and some of these functions prompt switch to specific party members.
@@ -1771,7 +1764,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 {
     int revengeKillerId = PARTY_SIZE, slowRevengeKillerId = PARTY_SIZE, fastThreatenId = PARTY_SIZE, slowThreatenId = PARTY_SIZE, damageMonId = PARTY_SIZE;
     int batonPassId = PARTY_SIZE, typeMatchupId = PARTY_SIZE, typeMatchupEffectiveId = PARTY_SIZE, defensiveMonId = PARTY_SIZE, aceMonId = PARTY_SIZE, trapperId = PARTY_SIZE;
-    int i, j, aliveCount = 0, bits = 0;
+    int i, j, aliveCount = 0, bits = 0, aceMonCount = 0;
     s32 defensiveMonHitKOThreshold = 3; // 3HKO threshold that candidate defensive mons must exceed
     s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0;
     u32 aiMove, hitsToKOAI, maxHitsToKO = 0;
@@ -1794,6 +1787,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         else if (IsAceMon(battler, i))
         {
             aceMonId = i;
+            aceMonCount++;
             continue;
         }
         else
@@ -1940,7 +1934,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         else if (batonPassId != PARTY_SIZE)             return batonPassId;
     }
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch was used - switch to the mon.
-    if (aceMonId != PARTY_SIZE && IsSwitchOutEffect(gMovesInfo[gLastUsedMove].effect))
+    if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount && IsSwitchOutEffect(gMovesInfo[gLastUsedMove].effect))
         return aceMonId;
 
     return PARTY_SIZE;
@@ -2018,7 +2012,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, bool32 switchAfterMonKOd)
     // This all handled by the GetBestMonIntegrated function if the AI_FLAG_SMART_MON_CHOICES flag is set
     else
     {
-        s32 i, aliveCount = 0;
+        s32 i, aliveCount = 0, aceMonCount = 0;
         u32 invalidMons = 0, aceMonId = PARTY_SIZE;
         // Get invalid slots ids.
         for (i = firstId; i < lastId; i++)
@@ -2035,6 +2029,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, bool32 switchAfterMonKOd)
             else if (IsAceMon(battler, i)) // Save Ace Pokemon for last.
             {
                 aceMonId = i;
+                aceMonCount++;
                 invalidMons |= 1u << i;
             }
             else
@@ -2054,8 +2049,8 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, bool32 switchAfterMonKOd)
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
 
-        // If ace mon is the last available Pokemon and switch move was used - switch to the mon.
-        if (aceMonId != PARTY_SIZE)
+        // If ace mon is the last available Pokemon and U-Turn/Volt Switch was used - switch to the mon.
+        if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount && IsSwitchOutEffect(gMovesInfo[gLastUsedMove].effect))
             return aceMonId;
 
         return PARTY_SIZE;

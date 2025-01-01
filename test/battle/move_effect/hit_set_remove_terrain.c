@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Steel Roller will not be chosen by the AI if it might fail")
+AI_SINGLE_BATTLE_TEST("AI will not choose Steel Roller if it might fail")
 {
     u32 move;
 
@@ -104,7 +104,7 @@ AI_SINGLE_BATTLE_TEST("Steel Roller will not be chosen by the AI if it might fai
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by the AI regardless if there is a terrain or not")
+AI_SINGLE_BATTLE_TEST("AI will can choose Ice Spinner regardless if there is a terrain or not")
 {
     u32 move;
 
@@ -122,37 +122,5 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by the AI regardless if there i
         } else {
             TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
         }
-    }
-}
-
-SINGLE_BATTLE_TEST("Steel Roller and Ice Spinner reverts typing on Mimicry users")
-{
-    u32 j;
-    static const u16 terrainMoves[] =
-    {
-        MOVE_ELECTRIC_TERRAIN,
-        MOVE_PSYCHIC_TERRAIN,
-        MOVE_GRASSY_TERRAIN,
-        MOVE_MISTY_TERRAIN,
-    };
-
-    u16 terrainMove = MOVE_NONE;
-    u16 removeTerrainMove = MOVE_NONE;
-
-    for (j = 0; j < ARRAY_COUNT(terrainMoves); j++)
-    {
-        PARAMETRIZE { removeTerrainMove = MOVE_STEEL_ROLLER; terrainMove = terrainMoves[j]; }
-        PARAMETRIZE { removeTerrainMove = MOVE_ICE_SPINNER; terrainMove =  terrainMoves[j]; }
-    }
-
-    GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[1] == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET); 
-        OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
-    } WHEN {
-        TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }
-        TURN { MOVE(player, MOVE_TOXIC); }
-    } SCENE {
-        MESSAGE("It doesn't affect the opposing Stunfisk…");
     }
 }

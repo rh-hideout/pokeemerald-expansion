@@ -155,6 +155,7 @@
                                                // In Gen3, Effect Spore has a 10% chance to sleep, poison or paralyze, with an equal chance.
                                                // In Gen4, it's 30%. In Gen5+ it has 11% to sleep, 9% chance to poison and 10% chance to paralyze.
 #define B_PICKUP_WILD               GEN_LATEST // In Gen9+, Pickup allows its user to pickup its own used item at the end of the turn in wild battles.
+#define B_MAGIC_GUARD               GEN_LATEST // In Gen4+, Magic Guard ignores immobilization caused by paralysis
 
 // Item settings
 #define B_HP_BERRIES                GEN_LATEST // In Gen4+, berries which restore HP activate immediately after HP drops to half. In Gen3, the effect occurs at the end of the turn.
@@ -225,7 +226,8 @@
 
 // Interface settings
 #define B_ABILITY_POP_UP            TRUE  // In Gen5+, the Pokémon abilities are displayed in a pop-up, when they activate in battle.
-#define B_FAST_INTRO                TRUE  // If set to TRUE, battle intro texts print at the same time as animation of a Pokémon, as opposing to waiting for the animation to end.
+#define B_FAST_INTRO_PKMN_TEXT      TRUE  // If set to TRUE, battle intro texts print at the same time as animation of a Pokémon, as opposing to waiting for the animation to end.
+#define B_FAST_INTRO_NO_SLIDE       FALSE // If set to TRUE, the slide animation that happens at the beginning of the battle is skipped.
 #define B_FAST_HP_DRAIN             TRUE  // If set to TRUE, HP bars will move faster.
 #define B_FAST_EXP_GROW             TRUE  // If set to TRUE, EXP bars will move faster.
 #define B_SHOW_TARGETS              TRUE  // If set to TRUE, all available targets, for moves hitting 2 or 3 Pokémon, will be shown before selecting a move.
