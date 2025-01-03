@@ -3,6 +3,31 @@
 
 #include "move.h"
 
+struct BattlerSet
+{
+    u8 bitset;
+} PACKED;
+
+static inline void BattlerSetClear(struct BattlerSet *bs)
+{
+    bs->bitset = 0u;
+}
+
+static inline void BattlerSetAdd(struct BattlerSet *bs, u32 battler)
+{
+    bs->bitset |= 1u << battler;
+}
+
+static inline void BattlerSetRemove(struct BattlerSet *bs, u32 battler)
+{
+    bs->bitset &= ~(1u << battler);
+}
+
+static inline bool32 BattlerSetContains(struct BattlerSet *bs, u32 battler)
+{
+    return bs->bitset & (1u << battler);
+}
+
 #define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
 #define MOVE_LIMITATION_PP                      (1 << 1)
 #define MOVE_LIMITATION_DISABLED                (1 << 2)

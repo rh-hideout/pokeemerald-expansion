@@ -137,7 +137,7 @@ void HandleAction_UseMove(void)
 
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     if (gBattleStruct->absentBattlerFlags & (1u << gBattlerAttacker)
-     || gBattleStruct->commandingDondozo & (1u << gBattlerAttacker)
+     || BattlerSetContains(&gBattleStruct->commandingDondozo, gBattlerAttacker)
      || !IsBattlerAlive(gBattlerAttacker))
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
@@ -5242,7 +5242,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 SaveBattlerAttacker(gBattlerAttacker);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattlerAttacker = partner;
-                gBattleStruct->commandingDondozo |= 1u << battler;
+                BattlerSetAdd(&gBattleStruct->commandingDondozo, battler);
                 gBattleStruct->commanderActive[partner] = gBattleMons[battler].species;
                 gStatuses3[battler] |= STATUS3_COMMANDER;
                 if (gBattleMons[battler].status2 & STATUS2_CONFUSION

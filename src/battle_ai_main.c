@@ -734,7 +734,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move) && CanTargetFaintAi(battlerDef, battlerAtk))
         RETURN_SCORE_MINUS(10);
 
-    if (gBattleStruct->commandingDondozo & (1u << battlerDef))
+    if (BattlerSetContains(&gBattleStruct->commandingDondozo, battlerDef))
         RETURN_SCORE_MINUS(20);
 
     // check if negates type

@@ -814,7 +814,7 @@ struct BattleStruct
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     u8 boosterEnergyActivates;
     u8 categoryOverride; // for Z-Moves and Max Moves
-    u8 commandingDondozo;
+    struct BattlerSet commandingDondozo;
     u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 redCardActivates:1;
