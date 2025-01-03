@@ -11605,9 +11605,9 @@ static void Cmd_setfieldweather(void)
 {
     CMD_ARGS(u8 weather);
 
-    u8 weather = cmd->weather;
+    u8 battleWeatherId = cmd->weather;
 
-    if (!TryChangeBattleWeather(gBattlerAttacker, weather, FALSE))
+    if (!TryChangeBattleWeather(gBattlerAttacker, battleWeatherId, FALSE))
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_FAILED;
@@ -11615,21 +11615,21 @@ static void Cmd_setfieldweather(void)
         return;
     }
 
-    switch (weather)
+    switch (battleWeatherId)
     {
-    case ENUM_WEATHER_RAIN:
+    case BATTLE_WEATHER_RAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_RAIN;
         break;
-    case ENUM_WEATHER_SUN:
+    case BATTLE_WEATHER_SUN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SUNLIGHT;
         break;
-    case ENUM_WEATHER_SANDSTORM:
+    case BATTLE_WEATHER_SANDSTORM:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SANDSTORM;
         break;
-    case ENUM_WEATHER_HAIL:
+    case BATTLE_WEATHER_HAIL:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_HAIL;
         break;
-    case ENUM_WEATHER_SNOW:
+    case BATTLE_WEATHER_SNOW:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SNOW;
         break;
     }

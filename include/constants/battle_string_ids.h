@@ -784,13 +784,24 @@
 
 // gWeatherEndsStringIds
 #define B_MSG_WEATHER_END_RAIN         0
-#define B_MSG_WEATHER_END_SANDSTORM    1
-#define B_MSG_WEATHER_END_SUN          2
+#define B_MSG_WEATHER_END_SUN          1
+#define B_MSG_WEATHER_END_SANDSTORM    2
 #define B_MSG_WEATHER_END_HAIL         3
-#define B_MSG_WEATHER_END_STRONG_WINDS 4
-#define B_MSG_WEATHER_END_SNOW         5
-#define B_MSG_WEATHER_END_FOG          6
+#define B_MSG_WEATHER_END_SNOW         4
+#define B_MSG_WEATHER_END_FOG          5
+#define B_MSG_WEATHER_END_STRONG_WINDS 6
 #define B_MSG_WEATHER_END_COUNT        7
+
+// gWeatherTurnStringIds
+#define B_MSG_WEATHER_TURN_RAIN         0
+#define B_MSG_WEATHER_TURN_DOWNPOUR     1
+#define B_MSG_WEATHER_TURN_SUN          2
+#define B_MSG_WEATHER_TURN_SANDSTORM    3
+#define B_MSG_WEATHER_TURN_HAIL         4
+#define B_MSG_WEATHER_TURN_SNOW         5
+#define B_MSG_WEATHER_TURN_FOG          6
+#define B_MSG_WEATHER_TURN_STRONG_WINDS 7
+#define B_MSG_WEATHER_TURN_COUNT        8
 
 // gRainContinuesStringIds
 #define B_MSG_RAIN_CONTINUES     0

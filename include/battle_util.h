@@ -206,7 +206,7 @@ void TryClearRageAndFuryCutter(void);
 u32 AtkCanceller_MoveSuccessOrder(void);
 void SetAtkCancellerForCalledMove(void);
 bool32 HasNoMonsToSwitch(u32 battler, u8 r1, u8 r2);
-bool32 TryChangeBattleWeather(u32 battler, u32 weatherEnumId, bool32 viaAbility);
+bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbility);
 u32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef);
 u32 CanPartnerAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef);
 u32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, u32 moveType);

@@ -272,7 +272,7 @@ BattleScript_EffectChillyReception::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_RAIN_PRIMAL, BattleScript_EffectChillyReceptionBlockedByPrimalRain
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_STRONG_WINDS, BattleScript_EffectChillyReceptionBlockedByStrongWinds
 	call BattleScript_EffectChillyReceptionPlayAnimation
-	setfieldweather ENUM_WEATHER_SNOW
+	setfieldweather BATTLE_WEATHER_SNOW
 	call BattleScript_MoveWeatherChangeRet
 	goto BattleScript_MoveSwitch
 BattleScript_EffectChillyReceptionPlayAnimation:
@@ -4273,7 +4273,7 @@ BattleScript_EffectSandstorm::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SANDSTORM
+	setfieldweather BATTLE_WEATHER_SANDSTORM
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_EffectRollout::
@@ -4439,7 +4439,7 @@ BattleScript_EffectRainDance::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_RAIN
+	setfieldweather BATTLE_WEATHER_RAIN
 BattleScript_MoveWeatherChange::
 	attackanimation
 	waitanimation
@@ -4457,7 +4457,7 @@ BattleScript_EffectSunnyDay::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SUN
+	setfieldweather BATTLE_WEATHER_SUN
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_ExtremelyHarshSunlightWasNotLessened:
@@ -4816,7 +4816,7 @@ BattleScript_EffectHail::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_HAIL
+	setfieldweather BATTLE_WEATHER_HAIL
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_EffectTorment::
@@ -5822,20 +5822,18 @@ BattleScript_LearnedNewMove::
 BattleScript_LearnMoveReturn::
 	return
 
-BattleScript_RainContinuesOrEnds::
-	printfromtable gRainContinuesStringIds
-	waitmessage B_WAIT_TIME_LONG
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_RAIN_STOPPED, BattleScript_RainContinuesOrEndsEnd
-	playanimation BS_ATTACKER, B_ANIM_RAIN_CONTINUES
-BattleScript_RainContinuesOrEndsEnd::
-	call BattleScript_ActivateWeatherAbilities
-	end2
-
-BattleScript_DamagingWeatherContinues::
-	printfromtable gSandStormHailSnowContinuesStringIds
+BattleScript_WeatherContinues::
+	printfromtable gWeatherTurnStringIds
 	waitmessage B_WAIT_TIME_LONG
 	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
 	setbyte gBattleCommunication, 0
+	call BattleScript_ActivateWeatherAbilities
+	end2
+
+BattleScript_WeatherFaded::
+	printfromtable gWeatherEndsStringIds
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_ActivateWeatherAbilities
 	end2
 
 BattleScript_DamagingWeather::
@@ -5845,6 +5843,12 @@ BattleScript_DamagingWeather::
 	hitanimation BS_SCRIPTING
 	goto BattleScript_DoTurnDmg
 
+BattleScript_FogEnded_Ret::
+	printstring STRINGID_FOGLIFTED
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_ActivateWeatherAbilities
+	return
+
 BattleScript_IceBodyHeal::
 	call BattleScript_AbilityPopUpScripting
 	playanimation BS_SCRIPTING, B_ANIM_SIMPLE_HEAL
@@ -5852,42 +5856,6 @@ BattleScript_IceBodyHeal::
 	datahpupdate BS_SCRIPTING
 	printstring STRINGID_ICEBODYHPGAIN
 	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_SandStormHailSnowEnds::
-	printfromtable gSandStormHailSnowEndStringIds
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_ActivateWeatherAbilities
-	end2
-
-BattleScript_SunlightContinues::
-	printstring STRINGID_SUNLIGHTSTRONG
-	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_SUN_CONTINUES
-	call BattleScript_ActivateWeatherAbilities
-	end2
-
-BattleScript_SunlightFaded::
-	printstring STRINGID_SUNLIGHTFADED
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_ActivateWeatherAbilities
-	end2
-
-BattleScript_FogContinues::
-	printstring STRINGID_FOGISDEEP
-	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_FOG_CONTINUES
-	call BattleScript_ActivateWeatherAbilities
-	end2
-
-BattleScript_FogEnded_Ret::
-	printstring STRINGID_FOGLIFTED
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_ActivateWeatherAbilities
-	return
-
-BattleScript_FogEnded::
-	call BattleScript_FogEnded_Ret
 	end2
 
 BattleScript_OverworldStatusStarts::
@@ -10035,7 +10003,7 @@ BattleScript_EffectSnow::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-	setfieldweather ENUM_WEATHER_SNOW
+	setfieldweather BATTLE_WEATHER_SNOW
 	goto BattleScript_MoveWeatherChange
 
 BattleScript_SleepClauseBlocked::
