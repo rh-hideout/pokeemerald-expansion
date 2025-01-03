@@ -6,6 +6,7 @@
 
 ## Description
 <!--- Describe your changes in detail -->
+<!--- If you believe this PR qualifies as a "Big Feature" as defined in docs/team_procedures/schedule.md, please let a Maintainer know! -->
 
 ## Images
 <!-- Please provide with relevant GIFs or images to make it easier for reviewers to accept your PR quicker.-->
