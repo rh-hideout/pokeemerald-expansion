@@ -872,7 +872,7 @@ void CopyToBgTilemapBuffer(u32 bg, const void *src, u16 mode, u16 destOffset)
         if (mode != 0)
             CpuCopy16(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)), mode);
         else
-            LZ77UnCompWram(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)));
+            LZDecompressWram(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)));
     }
 }
 
