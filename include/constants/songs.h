@@ -93,7 +93,7 @@
 #define SE_THUNDER                  87 // SE_T_KAMI
 #define SE_THUNDER2                 88 // SE_T_KAMI2
 #define SE_ELEVATOR                 89 // SE_ELEBETA
-#define SE_LOW_HEALTH               90 // SE_HINSI
+#define SE_LOW_HEALTH_INFINITE      90 // SE_HINSI
 #define SE_EXP_MAX                  91 // SE_EXPMAX
 #define SE_ROULETTE_BALL            92 // SE_TAMAKORO
 #define SE_ROULETTE_BALL2           93 // SE_TAMAKORO_E
@@ -276,7 +276,9 @@
 #define SE_PIKE_CURTAIN_CLOSE       267 // SE_CURTAIN
 #define SE_PIKE_CURTAIN_OPEN        268 // SE_CURTAIN1
 #define SE_SUDOWOODO_SHAKE          269 // SE_USSOKI
-#define END_SE                      SE_SUDOWOODO_SHAKE
+// New Expansion SFX
+#define SE_LOW_HEALTH_SHORT         270
+#define END_SE                      SE_LOW_HEALTH_SHORT
 
 // Music
 #define START_MUS                   350
@@ -547,5 +549,11 @@
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
 #define MUS_NONE                    0xFFFF
+
+#if B_LOW_HEALTH_SOUND >= GEN_6
+#define SE_LOW_HEALTH SE_LOW_HEALTH_SHORT
+#else
+#define SE_LOW_HEALTH SE_LOW_HEALTH_INFINITE
+#endif
 
 #endif  // GUARD_CONSTANTS_SONGS_H
