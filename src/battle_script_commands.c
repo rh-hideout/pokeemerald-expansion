@@ -2124,12 +2124,12 @@ static void Cmd_adjustdamage(void)
             continue;
 
         if (DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove))
-            goto END;
+            continue;
 
         if (DoesDisguiseBlockMove(battlerDef, gCurrentMove))
         {
             gBattleStruct->enduredDamage |= 1u << battlerDef;
-            goto END;
+            continue;
         }
         if (GetBattlerAbility(battlerDef) == ABILITY_ICE_FACE && IsBattleMovePhysical(gCurrentMove) && gBattleMons[battlerDef].species == SPECIES_EISCUE)
         {
@@ -2139,10 +2139,10 @@ static void Cmd_adjustdamage(void)
             RecordAbilityBattle(gBattlerTarget, ABILITY_ICE_FACE);
             gBattleResources->flags->flags[battlerDef] |= RESOURCE_FLAG_ICE_FACE;
             // Form change will be done after attack animation in Cmd_resultmessage.
-            goto END;
+            continue;
         }
         if (gBattleMons[gBattlerTarget].hp > gBattleStruct->moveDamage[battlerDef])
-            goto END;
+            continue;
 
         holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
         param = GetBattlerHoldEffectParam(battlerDef);
@@ -2178,7 +2178,7 @@ static void Cmd_adjustdamage(void)
             && !gSpecialStatuses[battlerDef].focusSashed
             && (B_AFFECTION_MECHANICS == FALSE || !gSpecialStatuses[battlerDef].affectionEndured)
             && !gSpecialStatuses[battlerDef].sturdied)
-            goto END;
+            continue;
 
         // Handle reducing the dmg to 1 hp.
         gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
@@ -2204,10 +2204,6 @@ static void Cmd_adjustdamage(void)
         {
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
         }
-
-        END:
-        if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT) && gBattleStruct->moveDamage[battlerDef] >= 1)
-            gSpecialStatuses[gBattlerAttacker].damagedMons |= 1u << battlerDef;
     }
 
     if (calcSpreadMoveDamage)
@@ -2580,14 +2576,10 @@ static void Cmd_datahpupdate(void)
         {
             if (gDisableStructs[battler].substituteHP >= gBattleStruct->moveDamage[battler])
             {
-                if (gSpecialStatuses[battler].shellBellDmg == 0)
-                    gSpecialStatuses[battler].shellBellDmg = gBattleStruct->moveDamage[battler];
                 gDisableStructs[battler].substituteHP -= gBattleStruct->moveDamage[battler];
             }
             else
             {
-                if (gSpecialStatuses[battler].shellBellDmg == 0)
-                    gSpecialStatuses[battler].shellBellDmg = gDisableStructs[battler].substituteHP;
                 gBattleStruct->moveDamage[battler] = gDisableStructs[battler].substituteHP;
                 gDisableStructs[battler].substituteHP = 0;
             }
@@ -2653,10 +2645,6 @@ static void Cmd_datahpupdate(void)
                     gBattleMons[battler].hp = 0;
                 }
 
-                // Record damage for Shell Bell
-                if (gSpecialStatuses[battler].shellBellDmg == 0 && !(gHitMarker & HITMARKER_PASSIVE_DAMAGE))
-                    gSpecialStatuses[battler].shellBellDmg = gBattleStruct->moveDamage[battler];
-
                 u32 effect = GetMoveEffect(gCurrentMove);
 
                 // Note: While physicalDmg/specialDmg below are only distinguished between for Counter/Mirror Coat, they are
@@ -2700,13 +2688,7 @@ static void Cmd_datahpupdate(void)
             MarkBattlerForControllerExec(battler);
         }
     }
-    else
-    {
-        // MOVE_RESULT_NO_EFFECT was set
-        battler = GetBattlerForBattleScript(cmd->battler);
-        if (gSpecialStatuses[battler].shellBellDmg == 0)
-            gSpecialStatuses[battler].shellBellDmg = IGNORE_SHELL_BELL;
-    }
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -6996,7 +6978,6 @@ static void Cmd_moveend(void)
             gBattleStruct->ateBoost[gBattlerAttacker] = FALSE;
             gStatuses3[gBattlerAttacker] &= ~STATUS3_ME_FIRST;
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;
-            gSpecialStatuses[gBattlerAttacker].damagedMons = 0;
             gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = 0;
             gSpecialStatuses[gBattlerTarget].berryReduced = FALSE;
             gSpecialStatuses[gBattlerTarget].distortedTypeMatchups = FALSE;
@@ -13281,7 +13262,6 @@ static void Cmd_painsplitdmgcalc(void)
         gBattleStruct->moveDamage[gBattlerTarget] = GetNonDynamaxHP(gBattlerTarget) - hpDiff;
         gBattleStruct->moveDamage[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp - hpDiff;
 
-        gSpecialStatuses[gBattlerTarget].shellBellDmg = IGNORE_SHELL_BELL;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else

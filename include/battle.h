@@ -68,9 +68,6 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
-// Special indicator value for shellBellDmg in SpecialStatus
-#define IGNORE_SHELL_BELL 0xFFFF
-
 struct ResourceFlags
 {
     u32 flags[MAX_BATTLERS_COUNT];
@@ -200,7 +197,6 @@ struct ProtectStruct
 
 struct SpecialStatus
 {
-    s32 shellBellDmg;
     s32 physicalDmg;
     s32 specialDmg;
     u8 physicalBattlerId;
@@ -212,7 +208,8 @@ struct SpecialStatus
     u8 faintedHasReplacement:1;
     u8 focusBanded:1;
     u8 focusSashed:1;
-    u8 unused:2;
+    u8 emergencyExited:1;
+    u8 afterYou:1;
     // End of byte
     u8 sturdied:1;
     u8 stormDrainRedirected:1;
@@ -231,16 +228,13 @@ struct SpecialStatus
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
     u8 affectionEndured:1;
     // End of byte
-    u8 damagedMons:4; // Mons that have been damaged directly by using a move, includes substitute.
     u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    // End of byte
-    u8 emergencyExited:1;
-    u8 afterYou:1;
     u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
+    // End of byte
 };
 
 struct SideTimer
