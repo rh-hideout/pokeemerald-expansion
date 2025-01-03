@@ -727,8 +727,16 @@
 #define STRINGID_SUPEREFFECTIVETWOFOES                725
 #define STRINGID_NOTVERYEFFECTIVETWOFOES              726
 #define STRINGID_ITDOESNTAFFECTTWOFOES                727
+#define STRINGID_PKMNGOTFROSTBITEFROM                 728
+#define STRINGID_PKMNGREWDROWSY                       729
+#define STRINGID_PKMNGREWDROWSYFROM                   730
+#define STRINGID_PKMNISTOODROWSY                      731
+#define STRINGID_PKMNSITEMFOUGHTOFFDROWSINESS         732
+#define STRINGID_PKMNFOUGHTOFFDROWSINESS              733
+#define STRINGID_PKMNISALREADYDROWSY                  734
+#define STRINGID_PKMNISALREADYDROWSY2                 735
 
-#define BATTLESTRINGS_COUNT                           728
+#define BATTLESTRINGS_COUNT                           736
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

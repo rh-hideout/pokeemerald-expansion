@@ -951,7 +951,7 @@ u8 ItemId_GetBattleUsage(u16 itemId)
             case ITEM_EFFECT_HEAL_HP:
                 return EFFECT_ITEM_RESTORE_HP;
             case ITEM_EFFECT_CURE_POISON:
-            case ITEM_EFFECT_CURE_SLEEP:
+            case ITEM_EFFECT_CURE_SLEEP_DROWSY:
             case ITEM_EFFECT_CURE_BURN:
             case ITEM_EFFECT_CURE_FREEZE_FROSTBITE:
             case ITEM_EFFECT_CURE_PARALYSIS:
@@ -994,7 +994,7 @@ u32 GetItemStatus1Mask(u16 itemId)
         case ITEM3_POISON:
             return STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER;
         case ITEM3_SLEEP:
-            return STATUS1_SLEEP;
+            return STATUS1_SLEEP | STATUS1_DROWSY;
         case ITEM3_STATUS_ALL:
             return STATUS1_ANY | STATUS1_TOXIC_COUNTER;
     }

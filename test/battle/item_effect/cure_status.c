@@ -64,11 +64,14 @@ SINGLE_BATTLE_TEST("Antidote resets Toxic Counter")
     }
 }
 
-SINGLE_BATTLE_TEST("Awakening heals a battler from being asleep")
+SINGLE_BATTLE_TEST("Awakening heals a battler from being asleep or drowsy")
 {
+    u16 status;
+    PARAMETRIZE { status = STATUS1_SLEEP; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_AWAKENING].battleUsage == EFFECT_ITEM_CURE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_AWAKENING, partyIndex: 0); }
@@ -122,6 +125,7 @@ SINGLE_BATTLE_TEST("Full Heal heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FULL_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -145,6 +149,7 @@ SINGLE_BATTLE_TEST("Heal Powder heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_HEAL_POWDER].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -168,6 +173,7 @@ SINGLE_BATTLE_TEST("Pewter Crunchies heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_PEWTER_CRUNCHIES].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -191,6 +197,7 @@ SINGLE_BATTLE_TEST("Lava Cookies heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LAVA_COOKIE].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -214,6 +221,7 @@ SINGLE_BATTLE_TEST("Rage Candy Bar heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RAGE_CANDY_BAR].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -237,6 +245,7 @@ SINGLE_BATTLE_TEST("Old Gateu heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_OLD_GATEAU].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -260,6 +269,7 @@ SINGLE_BATTLE_TEST("Casteliacone heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CASTELIACONE].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -283,6 +293,7 @@ SINGLE_BATTLE_TEST("Lumiose Galette heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LUMIOSE_GALETTE].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -306,6 +317,7 @@ SINGLE_BATTLE_TEST("Shalour Sable heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SHALOUR_SABLE].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -329,6 +341,7 @@ SINGLE_BATTLE_TEST("Big Malasada heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BIG_MALASADA].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -352,6 +365,7 @@ SINGLE_BATTLE_TEST("Jubilife Muffin heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_JUBILIFE_MUFFIN].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }

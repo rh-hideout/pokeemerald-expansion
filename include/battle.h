@@ -155,6 +155,7 @@ struct ProtectStruct
     u32 bounceMove:1;
     u32 stealMove:1;
     u32 prlzImmobility:1;
+    u32 drsImmobility:1;
     u32 confusionSelfDmg:1;
     u32 targetAffected:1;
     u32 chargingTurn:1;

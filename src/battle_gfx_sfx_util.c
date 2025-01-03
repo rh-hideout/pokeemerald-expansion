@@ -468,7 +468,7 @@ void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isStatus2, u32 statu
             LaunchStatusAnimation(battler, B_ANIM_STATUS_PSN);
         else if (status == STATUS1_BURN)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_BRN);
-        else if (status & STATUS1_SLEEP)
+        else if (status & STATUS1_SLEEP || status == STATUS1_DROWSY)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_SLP);
         else if (status == STATUS1_PARALYSIS)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_PRZ);

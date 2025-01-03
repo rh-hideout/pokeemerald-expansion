@@ -2089,6 +2089,8 @@ u8 GetAilmentFromStatus(u32 status)
         return AILMENT_BRN;
     if (status & STATUS1_FROSTBITE)
         return AILMENT_FRB;
+    if (status & STATUS1_DROWSY)
+        return AILMENT_DRS;
     return AILMENT_NONE;
 }
 
@@ -4510,8 +4512,11 @@ static void GetMedicineItemEffectMessage(u16 item, u32 statusCured)
     case ITEM_EFFECT_CURE_POISON:
         StringExpandPlaceholders(gStringVar4, gText_PkmnCuredOfPoison);
         break;
-    case ITEM_EFFECT_CURE_SLEEP:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnWokeUp2);
+    case ITEM_EFFECT_CURE_SLEEP_DROWSY:
+        if (statusCured & STATUS1_SLEEP)
+            StringExpandPlaceholders(gStringVar4, gText_PkmnWokeUp2);
+        if (statusCured & STATUS1_DROWSY)
+            StringExpandPlaceholders(gStringVar4, gText_PkmnFoughtOffDrowsiness2);
         break;
     case ITEM_EFFECT_CURE_BURN:
         StringExpandPlaceholders(gStringVar4, gText_PkmnBurnHealed);
@@ -6618,7 +6623,7 @@ u8 GetItemEffectType(u16 item)
     if (statusCure || (itemEffect[0] >> 7))
     {
         if (statusCure == ITEM3_SLEEP)
-            return ITEM_EFFECT_CURE_SLEEP;
+            return ITEM_EFFECT_CURE_SLEEP_DROWSY;
         else if (statusCure == ITEM3_POISON)
             return ITEM_EFFECT_CURE_POISON;
         else if (statusCure == ITEM3_BURN)

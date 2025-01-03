@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_RELIC_SONG) == EFFECT_RELIC_SONG);
-    ASSUME(MoveHasAdditionalEffect(MOVE_RELIC_SONG, MOVE_EFFECT_SLEEP) == TRUE);
+    ASSUME(MoveHasAdditionalEffect(MOVE_RELIC_SONG, MOVE_EFFECT_SLEEP_OR_DROWSY) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Relic Song has a 10% chance to put the target to sleep")

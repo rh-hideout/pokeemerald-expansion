@@ -743,6 +743,7 @@ static void GetRoomInflictedStatus(void)
         gSpecialVar_Result = PIKE_STATUS_PARALYSIS;
         break;
     case STATUS1_SLEEP:
+    case STATUS1_DROWSY:
         gSpecialVar_Result = PIKE_STATUS_SLEEP;
         break;
     }
@@ -833,6 +834,7 @@ static bool8 DoesAbilityPreventStatus(struct Pokemon *mon, u32 status)
             ret = TRUE;
         break;
     case STATUS1_SLEEP:
+    case STATUS1_DROWSY:
         if (ability == ABILITY_INSOMNIA || ability == ABILITY_VITAL_SPIRIT)
             ret = TRUE;
         break;
@@ -870,6 +872,7 @@ static bool8 DoesTypePreventStatus(u16 species, u32 status)
             ret = TRUE;
         break;
     case STATUS1_SLEEP:
+    case STATUS1_DROWSY:
         break;
     }
     return ret;
@@ -912,7 +915,7 @@ static bool8 TryInflictRandomStatus(void)
         else if (rand < 80)
             sStatusFlags = STATUS1_PARALYSIS;
         else if (rand < 90)
-            sStatusFlags = STATUS1_SLEEP;
+            sStatusFlags = B_USE_DROWSY ? STATUS1_DROWSY : STATUS1_SLEEP;
         else
             sStatusFlags = STATUS1_BURN;
 
@@ -956,6 +959,7 @@ static bool8 TryInflictRandomStatus(void)
         break;
     case STATUS1_PARALYSIS:
     case STATUS1_SLEEP:
+    case STATUS1_DROWSY:
     case STATUS1_TOXIC_POISON:
     default:
         sStatusMon = PIKE_STATUSMON_KIRLIA;

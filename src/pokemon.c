@@ -996,6 +996,7 @@ static const u32 sCompressedStatuses[] =
     STATUS1_PARALYSIS,
     STATUS1_TOXIC_POISON,
     STATUS1_FROSTBITE,
+    STATUS1_DROWSY,
 };
 
 // Attempt to detect situations where the BoxPokemon struct is unable to
@@ -3856,7 +3857,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
             }
 
             // Cure status
-            if ((itemEffect[i] & ITEM3_SLEEP) && HealStatusConditions(mon, STATUS1_SLEEP, battlerId) == 0)
+            if ((itemEffect[i] & ITEM3_SLEEP) && HealStatusConditions(mon, STATUS1_SLEEP | STATUS1_DROWSY, battlerId) == 0)
                 retVal = FALSE;
             if ((itemEffect[i] & ITEM3_POISON) && HealStatusConditions(mon, STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER, battlerId) == 0)
                 retVal = FALSE;
@@ -4215,7 +4216,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battlerId)
         if (gMain.inBattle && battlerId != MAX_BATTLERS_COUNT)
         {
             gBattleMons[battlerId].status1 &= ~healMask;
-            if((healMask & STATUS1_SLEEP))
+            if((healMask & (STATUS1_SLEEP | STATUS1_DROWSY)))
             {
                 u32 i = 0;
                 u32 battlerSide = GetBattlerSide(battlerId);

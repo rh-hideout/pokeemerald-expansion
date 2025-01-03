@@ -414,6 +414,8 @@ const u8 gStatusConditionString_BurnJpn[] = _("やけど$$$$");
 const u8 gStatusConditionString_IceJpn[] = _("こおり$$$$");
 const u8 gStatusConditionString_ConfusionJpn[] = _("こんらん$$$");
 const u8 gStatusConditionString_LoveJpn[] = _("メロメロ$$$");
+const u8 gStatusConditionString_FrostbiteJpn[] = _("しもやけ$$$");
+const u8 gStatusConditionString_DrowsinessJpn[] = _("ねむけ$$$$");
 
 const u8 *const gStatusConditionStringsTable[][2] =
 {
@@ -423,7 +425,9 @@ const u8 *const gStatusConditionStringsTable[][2] =
     {gStatusConditionString_BurnJpn, gText_Burn},
     {gStatusConditionString_IceJpn, gText_Ice},
     {gStatusConditionString_ConfusionJpn, gText_Confusion},
-    {gStatusConditionString_LoveJpn, gText_Love}
+    {gStatusConditionString_LoveJpn, gText_Love},
+    {gStatusConditionString_FrostbiteJpn, gText_Frostbite},
+    {gStatusConditionString_DrowsinessJpn, gText_Drowsiness}
 };
 
 void CB2_InitBattle(void)
@@ -3346,6 +3350,7 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].bounceMove = FALSE;
     gProtectStructs[battler].stealMove = FALSE;
     gProtectStructs[battler].prlzImmobility = FALSE;
+    gProtectStructs[battler].drsImmobility = FALSE;
     gProtectStructs[battler].confusionSelfDmg = FALSE;
     gProtectStructs[battler].targetAffected = FALSE;
     gProtectStructs[battler].chargingTurn = FALSE;

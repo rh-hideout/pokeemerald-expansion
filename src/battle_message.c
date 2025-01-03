@@ -885,6 +885,14 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_SUPEREFFECTIVETWOFOES]                = COMPOUND_STRING("It's super effective on {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}!"),
     [STRINGID_NOTVERYEFFECTIVETWOFOES]              = COMPOUND_STRING("It's not very effective on {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}!"),
     [STRINGID_ITDOESNTAFFECTTWOFOES]                = COMPOUND_STRING("It doesn't affect {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}…"),
+    [STRINGID_PKMNGOTFROSTBITEFROM]                 = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} got frostbite from {B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1}!"),
+    [STRINGID_PKMNGREWDROWSY]                       = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} grew drowsy!"),
+    [STRINGID_PKMNGREWDROWSYFROM]                   = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} grew drowsy from {B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1}!"),
+    [STRINGID_PKMNISTOODROWSY]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is too drowsy to move!"),
+    [STRINGID_PKMNSITEMFOUGHTOFFDROWSINESS]         = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_LAST_ITEM} fought off its drowsiness!"),
+    [STRINGID_PKMNFOUGHTOFFDROWSINESS]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} fought off its drowsiness!"),
+    [STRINGID_PKMNISALREADYDROWSY]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is already drowsy."),
+    [STRINGID_PKMNISALREADYDROWSY2]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is already drowsy."),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1183,10 +1191,16 @@ const u16 gGotParalyzedStringIds[] =
     [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNWASPARALYZEDBY
 };
 
+const u16 gGrewDrowsyStringIds[] =
+{
+    [B_MSG_STATUSED]            = STRINGID_PKMNGREWDROWSY,
+    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNGREWDROWSYFROM
+};
+
 const u16 gFellAsleepStringIds[] =
 {
     [B_MSG_STATUSED]            = STRINGID_PKMNFELLASLEEP,
-    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNMADESLEEP,
+    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNMADESLEEP
 };
 
 const u16 gGotBurnedStringIds[] =
@@ -1197,7 +1211,8 @@ const u16 gGotBurnedStringIds[] =
 
 const u16 gGotFrostbiteStringIds[] =
 {
-    [B_MSG_STATUSED]            = STRINGID_PKMNGOTFROSTBITE
+    [B_MSG_STATUSED]            = STRINGID_PKMNGOTFROSTBITE,
+    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNGOTFROSTBITEFROM
 };
 
 const u16 gFrostbiteHealedStringIds[] =
@@ -1380,7 +1395,7 @@ const u16 gRoomsStringIds[] =
 
 const u16 gStatusConditionsStringIds[] =
 {
-    STRINGID_PKMNWASPOISONED, STRINGID_PKMNBADLYPOISONED, STRINGID_PKMNWASBURNED, STRINGID_PKMNWASPARALYZED, STRINGID_PKMNFELLASLEEP, STRINGID_PKMNGOTFROSTBITE
+    STRINGID_PKMNWASPOISONED, STRINGID_PKMNBADLYPOISONED, STRINGID_PKMNWASBURNED, STRINGID_PKMNWASPARALYZED, STRINGID_PKMNFELLASLEEP, STRINGID_PKMNGOTFROSTBITE, STRINGID_PKMNGREWDROWSY
 };
 
 const u16 gStatus2StringIds[] =
@@ -1434,6 +1449,8 @@ const u8 gText_Paralysis[] = _("paralysis");
 const u8 gText_Ice[] = _("ice");
 const u8 gText_Confusion[] = _("confusion");
 const u8 gText_Love[] = _("love");
+const u8 gText_Frostbite[] = _("frostbite");
+const u8 gText_Drowsiness[] = _("drowsiness");
 const u8 gText_SpaceAndSpace[] = _(" and ");
 const u8 gText_CommaSpace[] = _(", ");
 const u8 gText_Space2[] = _(" ");

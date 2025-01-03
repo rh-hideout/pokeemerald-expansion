@@ -11,6 +11,7 @@ DOUBLE_BATTLE_TEST("Healer cures adjacent ally's status condition 30% of the tim
     PARAMETRIZE { status = STATUS1_PARALYSIS; }
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status = STATUS1_DROWSY; }
     PASSES_RANDOMLY(30, 100, RNG_HEALER);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

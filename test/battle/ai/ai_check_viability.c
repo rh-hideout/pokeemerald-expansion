@@ -118,6 +118,7 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
 
     PARAMETRIZE { status1 = STATUS1_NONE; expectedMove = MOVE_BODY_SLAM; }
     PARAMETRIZE { status1 = STATUS1_SLEEP; expectedMove = MOVE_DREAM_EATER; }
+    PARAMETRIZE { status1 = STATUS1_DROWSY; expectedMove = MOVE_DREAM_EATER; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);

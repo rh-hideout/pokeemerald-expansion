@@ -132,6 +132,7 @@ TEST("Status1 round-trips through BoxPokemon")
     PARAMETRIZE { status1 = STATUS1_PARALYSIS; }
     PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status1 = STATUS1_FROSTBITE; }
+    PARAMETRIZE { status1 = STATUS1_DROWSY; }
     CreateMon(&mon1, SPECIES_WOBBUFFET, 100, 0, FALSE, 0, OT_ID_PRESET, 0);
     SetMonData(&mon1, MON_DATA_STATUS, &status1);
     BoxMonToMon(&mon1.box, &mon2);

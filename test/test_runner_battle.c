@@ -2719,6 +2719,8 @@ void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEve
         mask = STATUS1_TOXIC_POISON;
     else if (ctx.frostbite)
         mask = STATUS1_FROSTBITE;
+    else if (ctx.drowsy)
+        mask = STATUS1_DROWSY;
     else
         mask = ctx.status1;
 

@@ -4003,6 +4003,7 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     switch(GetMoveEffect(move))
     {
     case EFFECT_SLEEP:
+    case EFFECT_DROWSY:
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
     case EFFECT_POISON:
@@ -4089,6 +4090,7 @@ static bool32 IsDomeComboMoveEffect(u32 effect)
     // Inflicting sleep & related effects
     case EFFECT_SLEEP:
     case EFFECT_YAWN:
+    case EFFECT_DROWSY:
     case EFFECT_DREAM_EATER:
     case EFFECT_NIGHTMARE:
     case EFFECT_REST:

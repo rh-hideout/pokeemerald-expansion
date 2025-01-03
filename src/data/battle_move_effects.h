@@ -22,6 +22,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
+    [EFFECT_DROWSY] =
+    {
+        .battleScript = BattleScript_EffectDrowsy,
+        .battleTvScore = 1,
+    },
+
     [EFFECT_ABSORB] =
     {
         .battleScript = BattleScript_EffectHit,
