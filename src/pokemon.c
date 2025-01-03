@@ -6978,3 +6978,10 @@ u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler)
         return moveType;
     return gMovesInfo[move].type;
 }
+
+uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
+{
+    if (inverseMultiplier)
+        return UQ_4_12(1.0/(1.5 + 0.05 * dynamaxLevel));
+    return UQ_4_12(1.5 + 0.05 * dynamaxLevel);
+}

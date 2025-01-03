@@ -11067,7 +11067,7 @@ bool32 TryBattleFormChange(u32 battler, u32 method)
         TryToSetBattleFormChangeMoves(&party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
-        RecalcBattlerStats(battler, &party[monId]);
+        RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
     }
     else if (gBattleStruct->changedSpecies[side][monId] != SPECIES_NONE)
@@ -11092,7 +11092,7 @@ bool32 TryBattleFormChange(u32 battler, u32 method)
             // Reverts the original species
             TryToSetBattleFormChangeMoves(&party[monId], method);
             SetMonData(&party[monId], MON_DATA_SPECIES, &gBattleStruct->changedSpecies[side][monId]);
-            RecalcBattlerStats(battler, &party[monId]);
+            RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
             // Battler data is not updated with regular form's ability, not doing so could cause wrong ability activation.
             if (method == FORM_CHANGE_FAINT)
                 gBattleMons[battler].ability = abilityForm;
@@ -11680,11 +11680,28 @@ void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 }
 
-void RecalcBattlerStats(u32 battler, struct Pokemon *mon)
+void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing)
 {
+    u32 hp = GetMonData(mon, MON_DATA_HP);
+    u32 oldMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
     CalculateMonStats(mon);
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
-        ApplyDynamaxHPMultiplier(battler, mon);
+    {
+        ApplyDynamaxHPMultiplier(mon);
+        u32 newMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
+        if (!isDynamaxing)
+        {
+            if (newMaxHp > oldMaxHp) // restore hp gained from changing form, without this, dynamaxed form changes are calculated incorrectly
+            {
+                hp += (newMaxHp - oldMaxHp);
+                SetMonData(mon, MON_DATA_HP, &hp);
+            }
+            else
+            {
+                SetMonData(mon, MON_DATA_HP, &hp);
+            }
+        }
+    }
     CopyMonLevelAndBaseStatsToBattleMon(battler, mon);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
 }
