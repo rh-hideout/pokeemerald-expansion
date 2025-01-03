@@ -71,46 +71,46 @@
 // Special indicator value for shellBellDmg in SpecialStatus
 #define IGNORE_SHELL_BELL 0xFFFF
 
-struct ResourceFlags
-{
-    u32 flags[MAX_BATTLERS_COUNT];
-};
-
-#define RESOURCE_FLAG_FLASH_FIRE        0x1
-#define RESOURCE_FLAG_ROOST             0x2
-#define RESOURCE_FLAG_UNBURDEN          0x4
-#define RESOURCE_FLAG_UNUSED            0x8
-#define RESOURCE_FLAG_UNUSED_2          0x10
-#define RESOURCE_FLAG_EMERGENCY_EXIT    0x20
-#define RESOURCE_FLAG_NEUTRALIZING_GAS  0x40
-#define RESOURCE_FLAG_ICE_FACE          0x80
-
+// Is cleared when a battler leaves the field, either by switch out or dying. Can also be cleared anytime for a battler.
 struct DisableStruct
 {
     u32 transformedMonPersonality;
     bool8 transformedMonShininess;
     u16 disabledMove;
     u16 encoredMove;
+
     u8 protectUses:4;
     u8 stockpileCounter:4;
+    // End of word
+
     s8 stockpileDef;
     s8 stockpileSpDef;
     s8 stockpileBeforeDef;
     s8 stockpileBeforeSpDef;
     u8 substituteHP;
     u8 encoredMovePos;
+
     u8 disableTimer:4;
     u8 encoreTimer:4;
+    // End of word
+
     u8 perishSongTimer:4;
     u8 rolloutTimer:4;
+    // End of word
+
     u8 rolloutTimerStartValue:4;
     u8 tauntTimer:4;
+    // End of word
+
     u8 furyCutterCounter;
     u8 battlerPreventingEscape;
     u8 battlerWithSureHit;
     u8 isFirstTurn;
+
     u8 mimickedMoves:4;
     u8 chargeTimer:4;
+    // End of word
+
     u8 rechargeTimer;
     u8 autotomizeCount;
     u8 slowStartTimer;
@@ -121,8 +121,11 @@ struct DisableStruct
     u8 laserFocusTimer;
     u8 throatChopTimer;
     u8 wrapTurns;
+    u8 syrupBombTimer;
     u8 tormentTimer:4; // used for G-Max Meltdown
     u8 usedMoves:4;
+    // End of word
+
     u8 truantCounter:1;
     u8 truantSwitchInHack:1;
     u8 noRetreat:1;
@@ -131,17 +134,30 @@ struct DisableStruct
     u8 cudChew:1;
     u8 spikesDone:1;
     u8 toxicSpikesDone:1;
+    // End of word
+
     u8 stickyWebDone:1;
     u8 stealthRockDone:1;
-    u8 syrupBombTimer;
-    u8 syrupBombIsShiny:1;
-    u8 steelSurgeDone:1;
     u8 weatherAbilityDone:1;
     u8 terrainAbilityDone:1;
+    u8 syrupBombIsShiny:1;
+    u8 steelSurgeDone:1;
     u8 usedProteanLibero:1;
+    u8 flashFireBoosted:1;
+    // End of word
+
     u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
+
+    u8 roostActive:1;
+    u8 unbrudenActive:1;
+    u8 startEmergencyExit:1;
+    u8 neutralizingGas:1;
+    u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
+    u8 padding:3;
+    // End of word
 };
 
+// Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
     u32 protected:1;
@@ -195,9 +211,9 @@ struct ProtectStruct
     u32 specialDmg;
     u8 physicalBattlerId;
     u8 specialBattlerId;
-
 };
 
+// Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
     s32 shellBellDmg;
@@ -418,7 +434,6 @@ struct StatsArray
 struct BattleResources
 {
     struct SecretBase* secretBase;
-    struct ResourceFlags *flags;
     struct BattleScriptsStack* battleScriptsStack;
     struct BattleCallbacksStack* battleCallbackStack;
     struct StatsArray* beforeLvlUp;
