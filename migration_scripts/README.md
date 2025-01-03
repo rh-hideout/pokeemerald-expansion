@@ -17,6 +17,15 @@ python3 migration_scripts/*.py ; #run the migration script
 
 `*` will need to be replaced with the name of the appropriate script.
 
+## 1.9.x to 1.10.x+
+
+### Triple Metatile Layers
+
+* Filepath [`migration_scripts/1.10/triple_layer_converter.py`](1.10/triple_layer_converter.py)
+* Introduced in https://github.com/rh-hideout/pokeemerald-expansion/pull/5282
+
+With Triple Metatile Layers, developers have full control over all the BG layers in the overworld, as opposed to the default 2. This script needs to be run for all projects not currently using Triple Metatile Layers.
+
 ## 1.8.x to 1.9.x+
 
 ### Battle Anim Moves
