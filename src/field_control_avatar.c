@@ -265,7 +265,7 @@ static u16 GetPlayerCurMetatileBehavior(int runningState)
 static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatileBehavior, u8 direction)
 {
     const u8 *script = GetInteractionScript(position, metatileBehavior, direction);
-    if (script == NULL)
+    if (script == NULL || Script_HasNoEffect(script, 0))
         return FALSE;
 
     // Don't play interaction sound for certain scripts.
@@ -578,7 +578,7 @@ static bool8 TryStartCoordEventScript(struct MapPosition *position)
 {
     const u8 *script = GetCoordEventScriptAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
 
-    if (script == NULL)
+    if (script == NULL || Script_HasNoEffect(script, 0))
         return FALSE;
     ScriptContext_SetupScript(script);
     return TRUE;
