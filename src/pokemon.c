@@ -676,7 +676,6 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 };
 
 #include "data/graphics/pokemon.h"
-#include "data/pokemon_graphics/front_pic_anims.h"
 
 #include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
