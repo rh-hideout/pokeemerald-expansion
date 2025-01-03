@@ -144,4 +144,8 @@
 // param2: ability to check, optional
 #define FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY 25
 
+// Form change that activates when overworld weather changes.
+// param1: weather to check.
+#define FORM_CHANGE_OVERWORLD_WEATHER           26
+
 #endif // GUARD_CONSTANTS_FORM_CHANGE_TYPES_H
