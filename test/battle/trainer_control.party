@@ -29,3 +29,63 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Wynaut
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== 1 ===
+Name: Test2
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Difficulty: Normal
+
+Mewtwo
+Level: 5
+
+=== 1 ===
+Name: Test2
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Difficulty: HARD
+
+Yveltal
+Level: 99
+
+=== 2 ===
+Name: Test2
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Difficulty: Normal
+
+Mewtwo
+Level: 50
+
+=== 2 ===
+Name: Test2
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Difficulty: Easy
+
+Metapod
+Level: 1
+
+=== 2 ===
+Name: Test2
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: No
+Difficulty: Hard
+
+Arceus
+Level: 99

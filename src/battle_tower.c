@@ -699,7 +699,7 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
 #include "data/battle_frontier/battle_tent.h"
 
 #include "data/partner_parties.h"
-const struct Trainer gBattlePartners[] =
+const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 {
 #include "data/battle_partners.h"
 };
@@ -1355,6 +1355,7 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 u8 GetFrontierOpponentClass(u16 trainerId)
 {
     u8 trainerClass = 0;
+    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -1371,7 +1372,7 @@ u8 GetFrontierOpponentClass(u16 trainerId)
     }
     else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        trainerClass = gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass;
+        trainerClass = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass;
     }
     else if (trainerId < FRONTIER_TRAINERS_COUNT)
     {
@@ -1441,6 +1442,7 @@ static u8 GetFrontierTrainerFacilityClass(u16 trainerId)
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
 {
     s32 i = 0;
+    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
     if (trainerId == TRAINER_EREADER)
@@ -1457,8 +1459,8 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
     }
     else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        for (i = 0; gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
-            dst[i] = gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i];
+        for (i = 0; gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
+            dst[i] = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i];
     }
     else if (trainerId < FRONTIER_TRAINERS_COUNT)
     {
@@ -2965,6 +2967,7 @@ static void FillPartnerParty(u16 trainerId)
     u32 otID;
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
     s32 ball = -1;
+    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
@@ -2972,10 +2975,10 @@ static void FillPartnerParty(u16 trainerId)
         for (i = 0; i < 3; i++)
             ZeroMonData(&gPlayerParty[i + 3]);
 
-        for (i = 0; i < 3 && i < gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].partySize; i++)
+        for (i = 0; i < 3 && i < gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].partySize; i++)
         {
-            const struct TrainerMon *partyData = gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].party;
-            const u8 *partnerName = gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
+            const struct TrainerMon *partyData = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].party;
+            const u8 *partnerName = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
 
             for (k = 0; partnerName[k] != EOS && k < 3; k++)
             {
@@ -3046,9 +3049,9 @@ static void FillPartnerParty(u16 trainerId)
             }
             CalculateMonStats(&gPlayerParty[i + 3]);
 
-            StringCopy(trainerName, gBattlePartners[trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName);
+            StringCopy(trainerName, gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName);
             SetMonData(&gPlayerParty[i + 3], MON_DATA_OT_NAME, trainerName);
-            j = gBattlePartners[SanitizeTrainerId(trainerId - TRAINER_PARTNER(PARTNER_NONE))].encounterMusic_gender >> 7;
+            j = gBattlePartners[difficulty][SanitizeTrainerId(trainerId - TRAINER_PARTNER(PARTNER_NONE))].encounterMusic_gender >> 7;
             SetMonData(&gPlayerParty[i + 3], MON_DATA_OT_GENDER, &j);
         }
     }

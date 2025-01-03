@@ -5143,12 +5143,15 @@ s32 GetBattlerMultiplayerId(u16 id)
 
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId)
 {
+    u32 sanitizedTrainerId = SanitizeTrainerId(trainerOpponentId);
+    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
+
     if (InBattlePyramid())
         return GetTrainerEncounterMusicIdInBattlePyramid(trainerOpponentId);
     else if (InTrainerHillChallenge())
         return GetTrainerEncounterMusicIdInTrainerHill(trainerOpponentId);
     else
-        return gTrainers[SanitizeTrainerId(trainerOpponentId)].encounterMusic_gender & (F_TRAINER_FEMALE - 1);
+        return gTrainers[difficulty][sanitizedTrainerId].encounterMusic_gender & (F_TRAINER_FEMALE - 1);
 }
 
 u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex)
@@ -6088,7 +6091,7 @@ const u8 *GetTrainerPartnerName(void)
     {
         if (gPartnerTrainerId == TRAINER_PARTNER(PARTNER_STEVEN))
         {
-            return GetTrainerNameFromId(TRAINER_STEVEN);
+            return GetTrainerNameFromId(PARTNER_STEVEN);
         }
         else
         {

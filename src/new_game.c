@@ -46,6 +46,7 @@
 #include "union_room_chat.h"
 #include "constants/map_groups.h"
 #include "constants/items.h"
+#include "difficulty.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -207,6 +208,7 @@ void NewGameInitData(void)
     WipeTrainerNameRecords();
     ResetTrainerHillResults();
     ResetContestLinkResults();
+    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
     ResetDexNav();
 }
