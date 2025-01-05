@@ -2194,3 +2194,8 @@ static const u16 sGargarramerFormSpeciesIdTable [] = {
     SPECIES_GARGARRAMER_AWAKEN,
     FORM_SPECIES_END,
 };
+static const u16 sJerminFormSpeciesIdTable [] = {
+    SPECIES_JERMIN_SOLO,
+    SPECIES_JERMIN_SWARM,
+    FORM_SPECIES_END,
+};

@@ -2846,4 +2846,16 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 4,
     },
 
+    [ABILITY_SWARMING] =
+    {
+        .name = _("Swarming"),
+        .description = COMPOUND_STRING("Attracts weaker Jermin to help it once strong."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+        .cantBeOverwritten = TRUE,
+    },
+
 };

@@ -1771,8 +1771,13 @@
 #define SPECIES_CHEESETAH                               1661
 #define SPECIES_CHEEPOUF                                1662
 #define SPECIES_FAUSTIVAL                               1663
+#define SPECIES_JERMIN                                  SPECIES_JERMIN_SOLO
+#define SPECIES_JERMIN_SOLO                             1664
+#define SPECIES_JERMIN_SWARM                            1665
+#define SPECIES_SACCESTODA                              1666
+#define SPECIES_TARQUAIL                                1667
 
-#define SPECIES_EGG (SPECIES_FAUSTIVAL + 1)
+#define SPECIES_EGG (SPECIES_TARQUAIL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -6700,6 +6700,18 @@ Cry_Cheepouf::
 Cry_Faustival::
 	.incbin "sound/direct_sound_samples/cries/faustival.bin"
 
+	.align 2
+Cry_Jermin::
+	.incbin "sound/direct_sound_samples/cries/jermin.bin"
+	
+	.align 2
+Cry_Saccestoda::
+	.incbin "sound/direct_sound_samples/cries/saccestoda.bin"
+
+	.align 2
+Cry_Tarquail::
+	.incbin "sound/direct_sound_samples/cries/tarquail.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

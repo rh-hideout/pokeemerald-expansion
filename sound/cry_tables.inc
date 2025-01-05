@@ -2696,6 +2696,12 @@ gCryTable::
 	cry Cry_Cheepouf
 
 	cry Cry_Faustival
+
+	cry Cry_Jermin
+
+	cry Cry_Saccestoda
+
+	cry Cry_Tarquail
 .endif
 
 	.align 2
@@ -5397,4 +5403,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Cheepouf
 
 	cry_reverse Cry_Faustival
+
+	cry_reverse Cry_Jermin
+
+	cry_reverse Cry_Saccestoda
+
+	cry_reverse Cry_Tarquail
 .endif

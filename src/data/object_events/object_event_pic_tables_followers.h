@@ -4645,9 +4645,9 @@ static const struct SpriteFrameImage sPicTable_WishiwashiSolo[] = {
     overworld_ascending_frames(gObjectEventPic_WishiwashiSolo, 4, 4),
 };
 /*static const struct SpriteFrameImage sPicTable_WishiwashiSchool[] = {
-    overworld_ascending_frames(gObjectEventPic_WishiwashiSchool, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_School, 4, 4),
 };*/
-#endif //P_FAMILY_WISHIWASHI
+#endif //P_FAMILY_
 
 #if P_FAMILY_MAREANIE
 static const struct SpriteFrameImage sPicTable_Mareanie[] = {

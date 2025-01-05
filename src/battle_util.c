@@ -4897,6 +4897,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_SCHOOLING:
             if (gBattleMons[battler].level < 20)
                 break;
+        case ABILITY_SWARMING:
+            if (gBattleMons[battler].level < 30)
+                break;
         // Fallthrough
         case ABILITY_ZEN_MODE:
         case ABILITY_SHIELDS_DOWN:
@@ -5284,8 +5287,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 effect++;
                 break;
             }
-            case ABILITY_SCHOOLING:
-                if (gBattleMons[battler].level < 20)
+            case ABILITY_SWARMING:
+                if (gBattleMons[battler].level < 30)
                     break;
             // Fallthrough
             case ABILITY_ZEN_MODE:
