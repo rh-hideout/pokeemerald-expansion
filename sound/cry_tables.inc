@@ -2702,6 +2702,18 @@ gCryTable::
 	cry Cry_Saccestoda
 
 	cry Cry_Tarquail
+
+	cry Cry_Salezerker
+
+	cry Cry_Delava
+
+	cry Cry_Magmata
+
+	cry Cry_Gigapuddi
+
+	cry Cry_Empidae
+
+	cry Cry_Seraphill
 .endif
 
 	.align 2
@@ -5409,4 +5421,16 @@ gCryTable_Reverse::
 	cry_reverse Cry_Saccestoda
 
 	cry_reverse Cry_Tarquail
+
+	cry_reverse Cry_Salezerker
+
+	cry_reverse Cry_Delava
+
+	cry_reverse Cry_Magmata
+
+	cry_reverse Cry_Gigapuddi
+
+	cry_reverse Cry_Empidae
+
+	cry_reverse Cry_Seraphill
 .endif

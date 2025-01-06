@@ -6712,6 +6712,30 @@ Cry_Saccestoda::
 Cry_Tarquail::
 	.incbin "sound/direct_sound_samples/cries/tarquail.bin"
 
+	.align 2
+Cry_Salezerker::
+	.incbin "sound/direct_sound_samples/cries/salezerker.bin"
+
+	.align 2
+Cry_Delava::
+	.incbin "sound/direct_sound_samples/cries/delava.bin"
+
+	.align 2
+Cry_Magmata::
+	.incbin "sound/direct_sound_samples/cries/magmata.bin"
+
+	.align 2
+Cry_Gigapuddi::
+	.incbin "sound/direct_sound_samples/cries/gigapuddi.bin"
+
+	.align 2
+Cry_Empidae::
+	.incbin "sound/direct_sound_samples/cries/empidae.bin"
+
+	.align 2
+Cry_Seraphill::
+	.incbin "sound/direct_sound_samples/cries/seraphill.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

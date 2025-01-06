@@ -1776,8 +1776,14 @@
 #define SPECIES_JERMIN_SWARM                            1665
 #define SPECIES_SACCESTODA                              1666
 #define SPECIES_TARQUAIL                                1667
+#define SPECIES_SALEZERKER                              1668
+#define SPECIES_DELAVA                                  1669
+#define SPECIES_MAGMATA                                 1670
+#define SPECIES_GIGAPUDDI                               1671
+#define SPECIES_EMPIDAE                                 1672
+#define SPECIES_SERAPHILL                               1673
 
-#define SPECIES_EGG (SPECIES_TARQUAIL + 1)
+#define SPECIES_EGG (SPECIES_SERAPHILL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
