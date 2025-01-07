@@ -6736,6 +6736,18 @@ Cry_Empidae::
 Cry_Seraphill::
 	.incbin "sound/direct_sound_samples/cries/seraphill.bin"
 
+	.align 2
+Cry_Spenjbab::
+	.incbin "sound/direct_sound_samples/cries/spenjbab.bin"
+
+	.align 2
+Cry_Ranruu::
+	.incbin "sound/direct_sound_samples/cries/ranruu.bin"
+
+	.align 2
+Cry_Doomsday::
+	.incbin "sound/direct_sound_samples/cries/doomsday.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

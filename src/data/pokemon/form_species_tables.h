@@ -2199,3 +2199,8 @@ static const u16 sJerminFormSpeciesIdTable [] = {
     SPECIES_JERMIN_SWARM,
     FORM_SPECIES_END,
 };
+    static const u16 sDoomsdayFormSpeciesIdTable[] = {
+    SPECIES_DOOMSDAY_SEALED,
+    SPECIES_DOOMSDAY_REVENANT,
+    FORM_SPECIES_END,
+};

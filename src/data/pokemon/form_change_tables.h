@@ -1317,5 +1317,10 @@ static const struct FormChange sJerminFormChangeTable[] = {
     {FORM_CHANGE_END_BATTLE,        SPECIES_JERMIN_SOLO},
     {FORM_CHANGE_TERMINATOR},
 };
+static const struct FormChange sDoomsdayFormChangeTable[] = {
+    {FORM_CHANGE_ITEM_HOLD, SPECIES_DOOMSDAY_SEALED, ITEM_NONE},
+    {FORM_CHANGE_ITEM_HOLD, SPECIES_DOOMSDAY_REVENANT, ITEM_DARK_MEMORY},
+    {FORM_CHANGE_TERMINATOR},
+};
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN

@@ -2616,6 +2616,7 @@ u8 DoBattlerEndTurnEffects(void)
                 && IsBattlerAlive(battler))
             {
                 MAGIC_GUARD_CHECK;
+
                 gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
                 if (ability == ABILITY_HEATPROOF)
                 {
@@ -2627,6 +2628,18 @@ u8 DoBattlerEndTurnEffects(void)
                     gBattleMoveDamage = 1;
                 BattleScriptExecute(BattleScript_BurnTurnDmg);
                 effect++;
+                }
+                else if (ability == ABILITY_FLARE_HEAL)
+                {
+                    if (!BATTLER_MAX_HP(battler) && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK))
+                    {
+                        gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 8;
+                        if (gBattleMoveDamage == 0)
+                            gBattleMoveDamage = 1;
+                        gBattleMoveDamage *= -1;
+                        BattleScriptExecute(BattleScript_FlareHealActivates);
+                        effect++;
+                    }
             }
             gBattleStruct->turnEffectsTracker++;
             break;

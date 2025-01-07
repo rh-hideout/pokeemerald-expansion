@@ -2714,6 +2714,12 @@ gCryTable::
 	cry Cry_Empidae
 
 	cry Cry_Seraphill
+
+	cry Cry_Spenjbab
+
+	cry Cry_Ranruu
+
+	cry Cry_Doomsday
 .endif
 
 	.align 2
@@ -5433,4 +5439,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Empidae
 
 	cry_reverse Cry_Seraphill
+
+	cry_reverse Cry_Spenjbab
+
+	cry_reverse Cry_Ranruu
+
+	cry_reverse Cry_Doomsday
 .endif

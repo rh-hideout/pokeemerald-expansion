@@ -882,6 +882,7 @@ static const u8 sText_TrickStabIllusionWoreOff[] = _("{B_ATK_NAME_WITH_PREFIX}'s
 static const u8 sText_AttackerWasBuried[] = _("{B_ATK_NAME_WITH_PREFIX} was buried!");
 static const u8 sText_EclipseActivates[] = _("{B_ATK_NAME_WITH_PREFIX}'s Eclipse blocked out\nthe harsh sunlight!");
 static const u8 sText_TargetWasTrapped[] = _("{B_DEF_NAME_WITH_PREFIX} was trapped!");
+static const u8 sText_FlareHealHpUp[] = _("The burning healed {B_ATK_NAME_WITH_PREFIX}\na little bit!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1619,6 +1620,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_TEMP_TRAPPED - BATTLESTRINGS_TABLE_START] = sText_TempTrapped,
     [STRINGID_PKMNSXRESTOREDPARTNERHPALITTLE2 - BATTLESTRINGS_TABLE_START] = sText_PkmnsXRestoredPartnerHPALittle2,
     [STRINGID_ECLIPSEACTIVATES - BATTLESTRINGS_TABLE_START] = sText_EclipseActivates,
+    [STRINGID_FLAREHEALHPUP - BATTLESTRINGS_TABLE_START] = sText_FlareHealHpUp,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

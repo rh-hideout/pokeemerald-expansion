@@ -744,8 +744,9 @@
 #define STRINGID_TEMP_TRAPPED                         742
 #define STRINGID_CONCERTDMG                           743
 #define STRINGID_UNNERVENOFOOD                        744
+#define STRINGID_FLAREHEALHPUP                        745
 
-#define BATTLESTRINGS_COUNT                           745
+#define BATTLESTRINGS_COUNT                           746
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

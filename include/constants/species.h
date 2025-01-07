@@ -1782,8 +1782,13 @@
 #define SPECIES_GIGAPUDDI                               1671
 #define SPECIES_EMPIDAE                                 1672
 #define SPECIES_SERAPHILL                               1673
+#define SPECIES_SPENJBAB                                1674
+#define SPECIES_RANRUU                                  1675
+#define SPECIES_DOOMSDAY                                SPECIES_DOOMSDAY_SEALED
+#define SPECIES_DOOMSDAY_SEALED                         1676
+#define SPECIES_DOOMSDAY_REVENANT                       1677
 
-#define SPECIES_EGG (SPECIES_SERAPHILL + 1)
+#define SPECIES_EGG (SPECIES_DOOMSDAY_REVENANT + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

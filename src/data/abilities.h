@@ -2858,4 +2858,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeOverwritten = TRUE,
     },
 
+    [ABILITY_FLARE_HEAL] =
+    {
+        .name = _("Flare Heal"),
+        .description = COMPOUND_STRING("Restores HP if burned."),
+        .aiRating = 8,
+    },
+
 };
