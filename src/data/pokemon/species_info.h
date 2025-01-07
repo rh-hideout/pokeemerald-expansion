@@ -305,7 +305,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Ginocchio,
        .shinyPalette = gMonShinyPalette_Ginocchio,
        .iconSprite = gMonIcon_Ginocchio,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Ginocchio)
        .levelUpLearnset = sGinocchioLevelUpLearnset,
        },
@@ -7952,7 +7952,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Gigapuddi,
        .shinyPalette = gMonShinyPalette_Gigapuddi,
        .iconSprite = gMonIcon_Gigapuddi,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Gigapuddi)
        .levelUpLearnset = sGigapuddiLevelUpLearnset,
     },
