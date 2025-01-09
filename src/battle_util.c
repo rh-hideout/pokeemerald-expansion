@@ -2624,11 +2624,6 @@ u8 DoBattlerEndTurnEffects(void)
                         RecordAbilityBattle(battler, ABILITY_HEATPROOF);
                     gBattleMoveDamage /= 2;
                 }
-                if (gBattleMoveDamage == 0)
-                    gBattleMoveDamage = 1;
-                BattleScriptExecute(BattleScript_BurnTurnDmg);
-                effect++;
-                }
                 else if (ability == ABILITY_FLARE_HEAL)
                 {
                     if (!BATTLER_MAX_HP(battler) && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK))
@@ -2640,6 +2635,14 @@ u8 DoBattlerEndTurnEffects(void)
                         BattleScriptExecute(BattleScript_FlareHealActivates);
                         effect++;
                     }
+                }
+                else
+                {
+                    if (gBattleMoveDamage == 0)
+                        gBattleMoveDamage = 1;
+                    BattleScriptExecute(BattleScript_BurnTurnDmg);
+                    effect++;
+                }
             }
             gBattleStruct->turnEffectsTracker++;
             break;
@@ -3755,12 +3758,15 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
         }
         case CANCELLER_FOOD_UNNERVE:
         {
-            u32 UnnerveBattler = IsAbilityOnField(ABILITY_UNNERVE);
-            if ((gMovesInfo[gCurrentMove].foodMove) && (gBattlerAttacker != gBattlerTarget))
+            u32 unnerveBattler = IsAbilityOnField(ABILITY_UNNERVE);
+            if (unnerveBattler && (gMovesInfo[gCurrentMove].foodMove))
             {
-                if (effect != 0)
-                    gBattlescriptCurrInstr = BattleScript_UnnerveNoEating;
+                gBattleScripting.battler = unnerveBattler - 1;
+                effect = 1;
             }
+
+            if (effect != 0)
+                gBattlescriptCurrInstr = BattleScript_UnnerveNoEating;
             gBattleStruct->atkCancellerTracker++;
             break;
         }
