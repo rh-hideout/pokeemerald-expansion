@@ -8743,12 +8743,15 @@ BattleScript_StopsignStopsPivoting::
 	end
 
 BattleScript_UnnerveNoEating::
+	attackstring
+	ppreduce
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_UNNERVENOFOOD
 	pause B_WAIT_TIME_LONG
-	moveendto MOVEEND_NEXT_TARGET
-	moveendcase MOVEEND_CLEAR_BITS
+	cancelmultiturnmoves BS_ATTACKER
+	sethword gMoveResultFlags, MOVE_RESULT_FAILED
+	goto BattleScript_MoveEnd
 	end
 
 BattleScript_StormShelterActivates::
