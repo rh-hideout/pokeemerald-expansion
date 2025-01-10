@@ -2436,4 +2436,11 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectDrumroll,
         .battleTvScore = 1,
     },
+
+    [EFFECT_AMENSIA_D] =
+    {
+        .battleScript = BattleScript_EffectAmensiaD,
+        .battleTvScore = 1,
+        .encourageEncore = TRUE,
+    },
 };

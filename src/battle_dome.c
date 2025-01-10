@@ -4108,6 +4108,7 @@ static bool32 IsDomeComboMoveEffect(u32 effect)
     case EFFECT_BULK_UP:
     case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_FILLET_AWAY:
+    case EFFECT_AMENSIA_D:
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LOCK_ON:

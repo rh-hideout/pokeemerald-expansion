@@ -22441,6 +22441,84 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_PHOTON_GEYSER,
     },
+
+    [MOVE_DARKENING] =
+    {
+        .name = HANDLE_EXPANDED_MOVE_NAME("DARKENING"),
+        .description = COMPOUND_STRING(
+            "DOOMSDAY most powerful move,\n"
+            "DARKENING can drain most of\n"
+            "the life out of an opponent."),
+        .effect = EFFECT_ABSORB,
+        .power = 135,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .sketchBanned = TRUE,
+        .argument = 100, // restores 100% HP instead of 50% HP
+        .makesContact = TRUE,
+        .healingMove = B_HEAL_BLOCKING >= GEN_6,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_MOONGEIST_BEAM,
+    },
+
+    [MOVE_AMNESIA_D] =
+    {
+        .name = COMPOUND_STRING("AMNESIA"),
+        .description = COMPOUND_STRING(
+            "SHARPLY RAISES THE\n"
+            "USER'S SPECIAL STAT."),
+        .effect = EFFECT_AMENSIA_D,
+        .power = 0,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 0,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .sketchBanned = TRUE,
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE_ONCE,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = COMBO_STARTER_CALM_MIND,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_AMNESIA,
+    },
+
+    [MOVE_BLIZZARD_D] =
+    {
+        .name = COMPOUND_STRING("BLIZZARD"),
+        .description = COMPOUND_STRING(
+            "HITS THE FOE WITH AN ICY\n"
+            "STORM THAT MAY FREEZE IT."),
+        .effect = EFFECT_HIT,
+        .power = 120,
+        .type = TYPE_ICE,
+        .accuracy = 90,
+        .pp = 5,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .windMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+            .chance = 30,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_HAIL, COMBO_STARTER_POWDER_SNOW},
+        .battleAnimScript = Move_BLIZZARD,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
