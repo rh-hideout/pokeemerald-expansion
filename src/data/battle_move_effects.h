@@ -2443,4 +2443,5 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
+    
 };

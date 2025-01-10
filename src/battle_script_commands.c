@@ -3534,6 +3534,20 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_DefSpDefDown;
                 }
                 break;
+            case MOVE_EFFECT_PSYCHIC_D: // Psychic-D
+                if (!NoAliveMonsForEitherParty())
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_SpDefSpAtkDown;
+                }
+                break;
+            case MOVE_EFFECT_EVOCATION: // Evocation
+                if (!NoAliveMonsForEitherParty())
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_AtkSpAtkDown;
+                }
+                break;
             case MOVE_EFFECT_RECOIL_HP_25: // Struggle
                 gBattleMoveDamage = (gBattleMons[gEffectBattler].maxHP) / 4;
                 if (gBattleMoveDamage == 0)

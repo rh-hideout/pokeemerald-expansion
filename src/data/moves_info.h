@@ -22519,6 +22519,81 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_HAIL, COMBO_STARTER_POWDER_SNOW},
         .battleAnimScript = Move_BLIZZARD,
     },
+
+    [MOVE_PSYCHIC_D] =
+    {
+        .name = COMPOUND_STRING("PSYCHIC"),
+        .description = COMPOUND_STRING(
+            "A POWERFUL PSYCHIC ATTACK\n"
+            "THAT MAY LOWER SPECIAL."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PSYCHIC_D,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = COMBO_STARTER_PSYCHIC,
+        .contestComboMoves = {COMBO_STARTER_CALM_MIND, COMBO_STARTER_CONFUSION, COMBO_STARTER_KINESIS},
+        .battleAnimScript = Move_PSYCHIC,
+    },
+
+    [MOVE_BRAIN_DAMAGE] =
+    {
+        .name = COMPOUND_STRING("Brain Damage"),
+        .description = COMPOUND_STRING(
+            "A mind-numbing headbutt that\n"
+            "causes severe head trauma\n"
+            "to the user"),
+        .effect = EFFECT_HIT,
+        .power = 150,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 80,
+        .recoil = 50,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_HEAD_SMASH,
+    },
+
+    [MOVE_EVOCATION] =
+    {
+        .name = COMPOUND_STRING("Evocation"),
+        .description = COMPOUND_STRING(
+            "Does...something using their\n"
+            "higher offense, then lowers both"),
+        .effect = EFFECT_PHOTON_GEYSER,
+        .power = 120,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_EVOCATION,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_LOCK_ON, COMBO_STARTER_MIND_READER},
+        .battleAnimScript = Move_LUSTER_PURGE,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

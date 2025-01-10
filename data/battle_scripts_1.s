@@ -7305,6 +7305,44 @@ BattleScript_DefSpDefDownTrySpDef::
 BattleScript_DefSpDefDownRet::
 	return
 
+BattleScript_SpDefSpAtkDown::
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_TARGET, BIT_SPDEF | BIT_SPATK, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE | STAT_CHANGE_MULTIPLE_STATS
+	playstatchangeanimation BS_TARGET, BIT_SPATK, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_SPATK, 1, TRUE
+	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_SpDefSpAtkDownTryDef
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_SpDefSpAtkDownDownRet
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SpDefSpAtkDownTryDef:
+	playstatchangeanimation BS_TARGET, BIT_SPDEF, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_SPDEF, 1, TRUE
+	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_SpDefSpAtkDownDownRet
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_SpDefSpAtkDownDownRet
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SpDefSpAtkDownDownRet:
+	return
+
+BattleScript_AtkSpAtkDown::
+	setbyte sSTAT_ANIM_PLAYED, FALSE
+	playstatchangeanimation BS_ATTACKER, BIT_ATK | BIT_SPATK, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE | STAT_CHANGE_MULTIPLE_STATS
+	playstatchangeanimation BS_ATTACKER, BIT_SPATK, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_ATK, 1, TRUE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_AtkSpAtkDownDownTrySpDef
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_AtkSpAtkDownDownTrySpDef
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_AtkSpAtkDownDownTrySpDef::
+	playstatchangeanimation BS_ATTACKER, BIT_SPATK, STAT_CHANGE_CANT_PREVENT | STAT_CHANGE_NEGATIVE
+	setstatchanger STAT_SPATK, 1, TRUE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_AtkSpAtkDownDownRet
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_AtkSpAtkDownDownRet
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_AtkSpAtkDownDownRet::
+	return
+
 BattleScript_DefDownSpeedUp::
 	jumpifstat BS_ATTACKER, CMP_GREATER_THAN, STAT_DEF, MIN_STAT_STAGE, BattleScript_DefDownSpeedUpTryDef
 	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_SPEED, MAX_STAT_STAGE, BattleScript_DefDownSpeedUpRet
