@@ -964,9 +964,7 @@ bool32 ShouldSwitch(u32 battler)
         if (i == gBattleStruct->monToSwitchIntoId[battlerIn2])
             continue;
         if (IsAceMon(battler, i))
-        {
             continue;
-        }
 
         availableToSwitch++;
     }

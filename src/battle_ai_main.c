@@ -48,7 +48,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_PreferStrongestMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -66,7 +66,7 @@ static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
     [2] = AI_CheckViability,         // AI_FLAG_CHECK_VIABILITY
     [3] = AI_ForceSetupFirstTurn,    // AI_FLAG_FORCE_SETUP_FIRST_TURN
     [4] = AI_Risky,                  // AI_FLAG_RISKY
-    [5] = AI_PreferStrongestMove,    // AI_FLAG_PREFER_STRONGEST_MOVE
+    [5] = AI_TryTo2HKO,              // AI_FLAG_TRY_TO_2HKO
     [6] = AI_PreferBatonPass,        // AI_FLAG_PREFER_BATON_PASS
     [7] = AI_DoubleBattle,           // AI_FLAG_DOUBLE_BATTLE
     [8] = AI_HPAware,                // AI_FLAG_HP_AWARE
@@ -136,7 +136,7 @@ static u32 GetWildAiFlags(void)
     if (avgLevel >= 20)
         flags |= AI_FLAG_CHECK_VIABILITY;
     if (avgLevel >= 60)
-        flags |= AI_FLAG_PREFER_STRONGEST_MOVE;
+        flags |= AI_FLAG_TRY_TO_2HKO;
     if (avgLevel >= 80)
         flags |= AI_FLAG_HP_AWARE;
 
@@ -4897,7 +4897,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // Adds score bonus to best powered move
-static s32 AI_PreferStrongestMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
         return score;
