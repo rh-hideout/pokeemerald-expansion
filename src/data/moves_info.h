@@ -22594,6 +22594,32 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_LOCK_ON, COMBO_STARTER_MIND_READER},
         .battleAnimScript = Move_LUSTER_PURGE,
     },
+
+    [MOVE_MIRROR_CANNON] =
+    {
+        .name = COMPOUND_STRING("Mirror Cannon"),
+        .description = COMPOUND_STRING(
+            "Does...something using their\n"
+            "higher offense, then lowers both"),
+        .effect = EFFECT_HIT,
+        .power = 120,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ACC_MINUS_1,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_LOCK_ON, COMBO_STARTER_MIND_READER},
+        .battleAnimScript = Move_FLASH_CANNON,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves
