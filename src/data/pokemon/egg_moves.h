@@ -6322,3 +6322,4 @@ static const u16 sMantasmEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
     
 };
+
