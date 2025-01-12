@@ -22238,6 +22238,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Junkgeist[] = INCBIN_U8("graphics/pokemon/junkgeist/icon.4bpp");
    const u8 gMonFootprint_Junkgeist[] = INCBIN_U8("graphics/pokemon/junkgeist/footprint.1bpp");
 
+   const u32 gMonFrontPic_Foxcet[] = INCBIN_U32("graphics/pokemon/foxcet/front.4bpp.lz");
+   const u32 gMonBackPic_Foxcet[] = INCBIN_U32("graphics/pokemon/foxcet/back.4bpp.lz");
+   const u32 gMonPalette_Foxcet[] = INCBIN_U32("graphics/pokemon/foxcet/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Foxcet[] = INCBIN_U32("graphics/pokemon/foxcet/shiny.gbapal.lz");
+   const u8 gMonIcon_Foxcet[] = INCBIN_U8("graphics/pokemon/foxcet/icon.4bpp");
+   const u8 gMonFootprint_Foxcet[] = INCBIN_U8("graphics/pokemon/foxcet/footprint.1bpp");
+
    const u32 gMonFrontPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/front.4bpp.lz");
    const u32 gMonBackPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/back.4bpp.lz");
    const u32 gMonPalette_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/normal.gbapal.lz");

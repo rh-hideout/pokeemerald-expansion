@@ -2470,6 +2470,63 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sJunkgeistLevelUpLearnset,
     },
 
+        [SPECIES_FOXCET] =
+    { 
+       .baseHP        = 79,
+       .baseAttack    = 51,
+       .baseDefense   = 103,
+       .baseSpeed     = 105,
+       .baseSpAttack  = 98,
+       .baseSpDefense = 74,
+       .types = { TYPE_STEEL, TYPE_POISON },
+       .catchRate = 85,
+       .expYield = 90,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 1,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_AMORPHOUS },
+       .abilities = { ABILITY_POISON_POINT, ABILITY_STORM_DRAIN, ABILITY_LIQUID_OOZE, ABILITY_POLLUTION }, 
+       .bodyColor = BODY_COLOR_PURPLE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Foxcet"),
+      .cryId = CRY_FOXCET,
+       .natDexNum = NATIONAL_DEX_FOXCET,
+       .categoryName = _("Pipe"),
+       .height = 9,
+       .weight = 250,
+       .description = COMPOUND_STRING(
+           "Preferring the safety of tight spaces,\n"
+           "This urban Pokémon is often found\n"
+           "squeezing in through loose pipes and\n" 
+           "drains."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Foxcet,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Foxcet,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Foxcet,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Foxcet,
+       .shinyPalette = gMonShinyPalette_Foxcet,
+       .iconSprite = gMonIcon_Foxcet,
+       .iconPalIndex = 0,
+       FOOTPRINT(Foxcet)
+       .levelUpLearnset = sFoxcetLevelUpLearnset,
+       .teachableLearnset = sFoxcetTeachableLearnset,
+       .eggMoveLearnset = sFoxcetEggMoveLearnset,
+    },
+
         [SPECIES_WEATHERBANE] =
     { 
        .baseHP        = 80,
@@ -4291,6 +4348,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Mantasm)
        .levelUpLearnset = sMantasmLevelUpLearnset,
+       .teachableLearnset = sMantasmTeachableLearnset,
+       .eggMoveLearnset = sMantasmEggMoveLearnset,
     },
 
         [SPECIES_SPIRANHA] =

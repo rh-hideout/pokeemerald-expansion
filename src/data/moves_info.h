@@ -20848,7 +20848,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Slashes the opponent\n"
             "Uses Their Special Defense."),
         .effect = EFFECT_FAEBLADE,
-        .power = 80,
+        .power = 85,
         .type = TYPE_FAIRY,
         .accuracy = 100,
         .pp = 10,

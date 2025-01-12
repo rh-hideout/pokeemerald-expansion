@@ -6748,6 +6748,10 @@ Cry_Ranruu::
 Cry_Doomsday::
 	.incbin "sound/direct_sound_samples/cries/doomsday.bin"
 
+	.align 2
+Cry_Foxcet::
+	.incbin "sound/direct_sound_samples/cries/foxcet.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

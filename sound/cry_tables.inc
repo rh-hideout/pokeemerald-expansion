@@ -2720,6 +2720,8 @@ gCryTable::
 	cry Cry_Ranruu
 
 	cry Cry_Doomsday
+
+	cry Cry_Foxcet
 .endif
 
 	.align 2
@@ -5445,4 +5447,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ranruu
 
 	cry_reverse Cry_Doomsday
+
+	cry_reverse Cry_Foxcet
 .endif

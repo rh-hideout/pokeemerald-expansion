@@ -1787,8 +1787,9 @@
 #define SPECIES_DOOMSDAY                                SPECIES_DOOMSDAY_SEALED
 #define SPECIES_DOOMSDAY_SEALED                         1676
 #define SPECIES_DOOMSDAY_REVENANT                       1677
+#define SPECIES_FOXCET                                  1678
 
-#define SPECIES_EGG (SPECIES_DOOMSDAY_REVENANT + 1)
+#define SPECIES_EGG (SPECIES_FOXCET + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -2575,6 +2575,7 @@ enum {
     CRY_SPENJBAB,
     CRY_RANRUU,
     CRY_DOOMSDAY,
+    CRY_FOXCET,
 
     CRY_COUNT,
 };
