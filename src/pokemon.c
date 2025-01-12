@@ -3896,12 +3896,13 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
             // PP Up
             if (effectFlags & ITEM4_PP_UP)
             {
+                u32 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
                 effectFlags &= ~ITEM4_PP_UP;
-                dataUnsigned = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
-                temp1 = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+                dataUnsigned = (ppBonuses & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
+                temp1 = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), ppBonuses, moveIndex);
                 if (dataUnsigned <= 2 && temp1 > 4)
                 {
-                    dataUnsigned = GetMonData(mon, MON_DATA_PP_BONUSES, NULL) + gPPUpAddValues[moveIndex];
+                    dataUnsigned = ppBonuses + gPPUpAddValues[moveIndex];
                     SetMonData(mon, MON_DATA_PP_BONUSES, &dataUnsigned);
 
                     dataUnsigned = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), dataUnsigned, moveIndex) - temp1;
@@ -3986,9 +3987,12 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                         break;
 
                     case 2: // ITEM4_HEAL_HP
+                    {
+                        u32 currentHP = GetMonData(mon, MON_DATA_HP, NULL);
+                        u32 maxHP = GetMonData(mon, MON_DATA_MAX_HP, NULL);
                         // Check use validity.
-                        if ((effectFlags & (ITEM4_REVIVE >> 2) && GetMonData(mon, MON_DATA_HP, NULL) != 0)
-                              || (!(effectFlags & (ITEM4_REVIVE >> 2)) && GetMonData(mon, MON_DATA_HP, NULL) == 0))
+                        if ((effectFlags & (ITEM4_REVIVE >> 2) && currentHP != 0)
+                              || (!(effectFlags & (ITEM4_REVIVE >> 2)) && currentHP == 0))
                         {
                             itemEffectParam++;
                             break;
@@ -3999,10 +4003,10 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                         switch (dataUnsigned)
                         {
                         case ITEM6_HEAL_HP_FULL:
-                            dataUnsigned = GetMonData(mon, MON_DATA_MAX_HP, NULL) - GetMonData(mon, MON_DATA_HP, NULL);
+                            dataUnsigned = maxHP - currentHP;
                             break;
                         case ITEM6_HEAL_HP_HALF:
-                            dataUnsigned = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 2;
+                            dataUnsigned = maxHP / 2;
                             if (dataUnsigned == 0)
                                 dataUnsigned = 1;
                             break;
@@ -4010,39 +4014,40 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                             dataUnsigned = gBattleScripting.levelUpHP;
                             break;
                         case ITEM6_HEAL_HP_QUARTER:
-                            dataUnsigned = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 4;
+                            dataUnsigned = maxHP / 4;
                             if (dataUnsigned == 0)
                                 dataUnsigned = 1;
                             break;
                         }
 
                         // Only restore HP if not at max health
-                        if (GetMonData(mon, MON_DATA_MAX_HP, NULL) != GetMonData(mon, MON_DATA_HP, NULL))
+                        if (maxHP != currentHP)
                         {
                             // Restore HP
-                            dataUnsigned = GetMonData(mon, MON_DATA_HP, NULL) + dataUnsigned;
-                            if (dataUnsigned > GetMonData(mon, MON_DATA_MAX_HP, NULL))
-                                dataUnsigned = GetMonData(mon, MON_DATA_MAX_HP, NULL);
+                            dataUnsigned = currentHP + dataUnsigned;
+                            if (dataUnsigned > maxHP)
+                                dataUnsigned = maxHP;
                             SetMonData(mon, MON_DATA_HP, &dataUnsigned);
                             retVal = FALSE;
                         }
                         effectFlags &= ~(ITEM4_REVIVE >> 2);
                         break;
-
+                    }
                     case 3: // ITEM4_HEAL_PP
                         if (!(effectFlags & (ITEM4_HEAL_PP_ONE >> 3)))
                         {
                             // Heal PP for all moves
                             for (temp2 = 0; (signed)(temp2) < (signed)(MAX_MON_MOVES); temp2++)
                             {
-                                u16 moveId;
+                                u32 moveId, ppBonus;
                                 dataUnsigned = GetMonData(mon, MON_DATA_PP1 + temp2, NULL);
                                 moveId = GetMonData(mon, MON_DATA_MOVE1 + temp2, NULL);
-                                if (dataUnsigned != CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), temp2))
+                                ppBonus = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), temp2);
+                                if (dataUnsigned != ppBonus)
                                 {
                                     dataUnsigned += itemEffect[itemEffectParam];
-                                    if (dataUnsigned > CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), temp2))
-                                        dataUnsigned = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), temp2);
+                                    if (dataUnsigned > ppBonus)
+                                        dataUnsigned = ppBonus;
                                     SetMonData(mon, MON_DATA_PP1 + temp2, &dataUnsigned);
                                     retVal = FALSE;
                                 }
@@ -4055,11 +4060,12 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                             u16 moveId;
                             dataUnsigned = GetMonData(mon, MON_DATA_PP1 + moveIndex, NULL);
                             moveId = GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL);
-                            if (dataUnsigned != CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex))
+                            u32 ppBonus = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+                            if (dataUnsigned != ppBonus)
                             {
                                 dataUnsigned += itemEffect[itemEffectParam++];
-                                if (dataUnsigned > CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex))
-                                    dataUnsigned = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+                                if (dataUnsigned > ppBonus)
+                                    dataUnsigned = ppBonus;
                                 SetMonData(mon, MON_DATA_PP1 + moveIndex, &dataUnsigned);
                                 retVal = FALSE;
                             }
@@ -4169,13 +4175,15 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                         break;
 
                     case 4: // ITEM5_PP_MAX
-                        dataUnsigned = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
-                        temp2 = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+                    {
+                        u32 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
+                        dataUnsigned = (ppBonuses & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
+                        temp2 = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), ppBonuses, moveIndex);
 
                         // Check if 3 PP Ups have been applied already, and that the move has a total PP of at least 5 (excludes Sketch)
                         if (dataUnsigned < 3 && temp2 >= 5)
                         {
-                            dataUnsigned = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
+                            dataUnsigned = ppBonuses;
                             dataUnsigned &= gPPUpClearMask[moveIndex];
                             dataUnsigned += gPPUpAddValues[moveIndex] * 3; // Apply 3 PP Ups (max)
 
@@ -4186,7 +4194,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                             retVal = FALSE;
                         }
                         break;
-
+                    }
                     case 5: // ITEM5_FRIENDSHIP_LOW
                         // Changes to friendship are given differently depending on
                         // how much friendship the Pokémon already has.
