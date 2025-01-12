@@ -584,3 +584,24 @@ Debug_EventScript_FontTest::
 @Debug_EventScript_InflictStatus1_Close:
 @	releaseall
 @	end
+
+Debug_EventScript_TellTheTime::
+	msgbox Debug_EventScript_TellTheTime_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	return
+
+
+DebugEventScript_PrintTimeOfDay::
+	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	return
+
+
+Debug_EventScript_TellTheTime_Text_0:
+	.string "Time and Date:\p"
+	.string "{STR_VAR_1} {STR_VAR_2}:{STR_VAR_3}$"
+
+DebugEventScript_PrintWeekday_Text_0:
+	.string "Time of day: {STR_VAR_1}$"

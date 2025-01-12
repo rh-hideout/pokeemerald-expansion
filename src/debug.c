@@ -69,7 +69,6 @@
 #include "siirtc.h"
 #include "rtc.h"
 #include "fake_rtc.h"
-#include "constants/rtc.h"
 #include "save.h"
 
 // *******************************
@@ -110,11 +109,14 @@ enum UtilDebugMenu
 
 enum TimeSkipDebugMenu
 {
+    DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME,
+    DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY,
+    DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY,
+    DEBUG_TIME_SKIP_MENU_ITEM_WEEKDAYS,
     DEBUG_TIME_SKIP_MENU_ITEM_MORNING,
     DEBUG_TIME_SKIP_MENU_ITEM_DAY,
-    DEBUG_TIME_SKIP_MENU_ITEM_NOONTIME,
     DEBUG_TIME_SKIP_MENU_ITEM_EVENING,
-    DEBUG_TIME_SKIP_MENU_ITEM_NIGHT,
+    DEBUG_TIME_SKIP_MENU_ITEM_NIGHT, 
     DEBUG_TIME_SKIP_MENU_SUNDAY,
     DEBUG_TIME_SKIP_MENU_MONDAY,
     DEBUG_TIME_SKIP_MENU_TUESDAY,
@@ -393,6 +395,11 @@ static void DebugAction_Util_CheckEWRAMCounters(u8 taskId);
 static void DebugAction_Util_Steven_Multi(u8 taskId);
 static void DebugAction_Util_OpenTimeMenu(u8 taskId);
 
+static void DebugAction_TimeSkip_PrintTime(u8 taskId);
+static void DebugAction_TimeSkip_PrintTimeOfDay(u8 taskId);
+static void DebugAction_TimeSkip_TimesOfDay(u8 taskId);
+static void DebugAction_TimeSkip_Weekdays(u8 taskId);
+
 static void DebugAction_TimeSkip_Morning(u8 taskId);
 static void DebugAction_TimeSkip_Day(u8 taskId);
 static void DebugAction_TimeSkip_Evening(u8 taskId);
@@ -514,6 +521,8 @@ extern const u8 Debug_BoxFilledMessage[];
 extern const u8 Debug_ShowExpansionVersion[];
 extern const u8 Debug_EventScript_EWRAMCounters[];
 extern const u8 Debug_EventScript_Steven_Multi[];
+extern const u8 Debug_EventScript_TellTheTime[];
+extern const u8 DebugEventScript_PrintTimeOfDay[];
 
 extern const u8 Debug_BerryPestsDisabled[];
 extern const u8 Debug_BerryWeedsDisabled[];
@@ -537,6 +546,43 @@ static const u8 sDebugText_Util_WarpToMap_SelectMap[] =      _("Map: {STR_VAR_1}
 static const u8 sDebugText_Util_WarpToMap_SelectWarp[] =     _("Warp:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_3}{CLEAR_TO 90}");
 static const u8 sDebugText_Util_WarpToMap_SelMax[] =         _("{STR_VAR_1} / {STR_VAR_2}");
 static const u8 sDebugText_Util_Weather_ID[] =               _("Weather ID: {STR_VAR_3}\n{STR_VAR_1}\n{STR_VAR_2}");
+
+//Time Menu
+static const u8 sDebugText_TimeSkip_PrintTime[] = _("Print time");
+static const u8 sDebugText_TimeSkip_PrintTimeOfDay[] = _("Print time of day");
+static const u8 sDebugText_TimeSkip_TimesOfDay[] = _("Times of Day");
+static const u8 sDebugText_TimeSkip_Weekdays[] = _("Weekdays");
+
+static const u8 gText_Saturday[] = _("Saturday,");
+static const u8 gText_Sunday[] = _("Sunday,");
+static const u8 gText_Monday[] = _("Monday,");
+static const u8 gText_Tuesday[] = _("Tuesday,");
+static const u8 gText_Wednesday[] = _("Wednesday,");
+static const u8 gText_Thursday[] = _("Thursday,");
+static const u8 gText_Friday[] = _("Friday,");
+
+static const u8 *const gDayNameStringsTable[7] = {
+    gText_Sunday,
+    gText_Monday,
+    gText_Tuesday,
+    gText_Wednesday,
+    gText_Thursday,
+    gText_Friday,
+    gText_Saturday,
+};
+
+static const u8 sDebugText_TimeSkip_Morning[] = _("Morning");
+static const u8 sDebugText_TimeSkip_Day[] = _("Day");
+static const u8 sDebugText_TimeSkip_Evening[] = _("Evening");
+static const u8 sDebugText_TimeSkip_Night[] = _("Night");
+
+static const u8 sDebugText_TimeSkip_Sunday[] = _("Forward to Sunday");
+static const u8 sDebugText_TimeSkip_Monday[] = _("Forward to Monday");
+static const u8 sDebugText_TimeSkip_Tuesday[] = _("Forward to Tuesday");
+static const u8 sDebugText_TimeSkip_Wednesday[] = _("Forward to Wednesday");
+static const u8 sDebugText_TimeSkip_Thursday[] = _("Forward to Thursday");
+static const u8 sDebugText_TimeSkip_Friday[] = _("Forward to Friday");
+static const u8 sDebugText_TimeSkip_Saturday[] = _("Forward to Saturday");
 
 // Flags/Vars Menu
 static const u8 sDebugText_FlagsVars_Flag[] =                _("Flag: {STR_VAR_1}{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}");
@@ -586,6 +632,20 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
+// static const s32 sMintuesValues[] =
+// {
+//     1,  2,  3,  4,  5,  6,  
+//     7,  8,  9,  10, 11, 12, 
+//     13, 14, 15, 16, 17, 18, 
+//     19, 20, 21, 22, 23, 24, 
+//     25, 26, 27, 28, 29, 30, 
+//     31, 32, 33, 34, 35, 36,
+//     37, 38, 39, 40, 41, 42,
+//     43, 44, 45, 46, 47, 48,
+//     49, 50, 51, 52, 53, 54, 
+//     55, 56, 57, 58, 59,
+// };
+
 // *******************************
 // List Menu Items
 static const struct ListMenuItem sDebugMenu_Items_Main[] =
@@ -620,22 +680,35 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = {COMPOUND_STRING("Berry Functions…{CLEAR_TO 110}{RIGHT_ARROW}"),  DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS},
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = {COMPOUND_STRING("EWRAM Counters…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS},
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = {COMPOUND_STRING("Steven Multi"),                                 DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI},
-    [DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER]    = {COMPOUND_STRING("Time Skipper"),    DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER},
+    [DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER]    = {COMPOUND_STRING("Time Skipper"),                                 DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeSkip[] =
 {
-    [DEBUG_TIME_SKIP_MENU_ITEM_MORNING] = {COMPOUND_STRING("Morning"), DEBUG_TIME_SKIP_MENU_ITEM_MORNING},
-    [DEBUG_TIME_SKIP_MENU_ITEM_DAY]     = {COMPOUND_STRING("Noontime"), DEBUG_TIME_SKIP_MENU_ITEM_NOONTIME},
-    [DEBUG_TIME_SKIP_MENU_ITEM_EVENING] = {COMPOUND_STRING("Evening"), DEBUG_TIME_SKIP_MENU_ITEM_EVENING},
-    [DEBUG_TIME_SKIP_MENU_ITEM_NIGHT]   = {COMPOUND_STRING("Night"), DEBUG_TIME_SKIP_MENU_ITEM_NIGHT},
-    [DEBUG_TIME_SKIP_MENU_SUNDAY]       = {COMPOUND_STRING("Sunday"), DEBUG_TIME_SKIP_MENU_SUNDAY},
-    [DEBUG_TIME_SKIP_MENU_MONDAY]       = {COMPOUND_STRING("Monday"), DEBUG_TIME_SKIP_MENU_MONDAY},
-    [DEBUG_TIME_SKIP_MENU_TUESDAY]      = {COMPOUND_STRING("Tuesday"), DEBUG_TIME_SKIP_MENU_TUESDAY},
-    [DEBUG_TIME_SKIP_MENU_WEDNESDAY]    = {COMPOUND_STRING("Wednesday"), DEBUG_TIME_SKIP_MENU_WEDNESDAY},
-    [DEBUG_TIME_SKIP_MENU_THURSDAY]     = {COMPOUND_STRING("Thursday"), DEBUG_TIME_SKIP_MENU_THURSDAY},
-    [DEBUG_TIME_SKIP_MENU_FRIDAY]       = {COMPOUND_STRING("Friday"), DEBUG_TIME_SKIP_MENU_FRIDAY},
-    [DEBUG_TIME_SKIP_MENU_SATURDAY]     = {COMPOUND_STRING("Saturday"), DEBUG_TIME_SKIP_MENU_SATURDAY},
+    //TODO: CUSTOM TIME FORWARDER MENU
+    [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME] = {sDebugText_TimeSkip_PrintTime, DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME},
+    [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY] = {sDebugText_TimeSkip_PrintTimeOfDay, DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY},
+    [DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY] = {sDebugText_TimeSkip_TimesOfDay, DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY},
+    [DEBUG_TIME_SKIP_MENU_ITEM_WEEKDAYS] = {sDebugText_TimeSkip_Weekdays, DEBUG_TIME_SKIP_MENU_ITEM_WEEKDAYS},
+};
+
+static const struct ListMenuItem sDebugMenu_Items_TimeSkip_TimesOfDay[] =
+{
+    [DEBUG_TIME_SKIP_MENU_ITEM_MORNING] = {sDebugText_TimeSkip_Morning, DEBUG_TIME_SKIP_MENU_ITEM_MORNING},
+    [DEBUG_TIME_SKIP_MENU_ITEM_DAY] = {sDebugText_TimeSkip_Day, DEBUG_TIME_SKIP_MENU_ITEM_DAY},
+    [DEBUG_TIME_SKIP_MENU_ITEM_EVENING] = {sDebugText_TimeSkip_Evening, DEBUG_TIME_SKIP_MENU_ITEM_EVENING},
+    [DEBUG_TIME_SKIP_MENU_ITEM_NIGHT] = {sDebugText_TimeSkip_Night, DEBUG_TIME_SKIP_MENU_ITEM_NIGHT},
+};
+
+static const struct ListMenuItem sDebugMenu_Items_TimeSkip_Weekdays[] =
+{
+    [DEBUG_TIME_SKIP_MENU_SUNDAY] = {sDebugText_TimeSkip_Sunday, DEBUG_TIME_SKIP_MENU_SUNDAY},
+    [DEBUG_TIME_SKIP_MENU_MONDAY] = {sDebugText_TimeSkip_Monday, DEBUG_TIME_SKIP_MENU_MONDAY},
+    [DEBUG_TIME_SKIP_MENU_TUESDAY] = {sDebugText_TimeSkip_Tuesday, DEBUG_TIME_SKIP_MENU_TUESDAY},
+    [DEBUG_TIME_SKIP_MENU_WEDNESDAY] = {sDebugText_TimeSkip_Wednesday, DEBUG_TIME_SKIP_MENU_WEDNESDAY},
+    [DEBUG_TIME_SKIP_MENU_THURSDAY] = {sDebugText_TimeSkip_Thursday, DEBUG_TIME_SKIP_MENU_THURSDAY},
+    [DEBUG_TIME_SKIP_MENU_FRIDAY] = {sDebugText_TimeSkip_Friday, DEBUG_TIME_SKIP_MENU_FRIDAY},
+    [DEBUG_TIME_SKIP_MENU_SATURDAY] = {sDebugText_TimeSkip_Saturday, DEBUG_TIME_SKIP_MENU_SATURDAY},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_PCBag[] =
@@ -812,21 +885,6 @@ static void (*const sDebugMenu_Actions_Utilities[])(u8) =
     [DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER]    = DebugAction_Util_OpenTimeMenu,
 };
 
-static void (*const sDebugMenu_Actions_TimeMenu[])(u8) =
-{
-    [DEBUG_TIME_SKIP_MENU_ITEM_MORNING] = DebugAction_TimeSkip_Morning,
-    [DEBUG_TIME_SKIP_MENU_ITEM_NOONTIME] = DebugAction_TimeSkip_Noontime,
-    [DEBUG_TIME_SKIP_MENU_ITEM_EVENING] = DebugAction_TimeSkip_Evening,
-    [DEBUG_TIME_SKIP_MENU_ITEM_NIGHT] = DebugAction_TimeSkip_Night,
-    [DEBUG_TIME_SKIP_MENU_SUNDAY] = DebugAction_TimeSkip_Sunday,
-    [DEBUG_TIME_SKIP_MENU_MONDAY] = DebugAction_TimeSkip_Monday,
-    [DEBUG_TIME_SKIP_MENU_TUESDAY] = DebugAction_TimeSkip_Tuesday,
-    [DEBUG_TIME_SKIP_MENU_WEDNESDAY] = DebugAction_TimeSkip_Wednesday,
-    [DEBUG_TIME_SKIP_MENU_THURSDAY] = DebugAction_TimeSkip_Thursday,
-    [DEBUG_TIME_SKIP_MENU_FRIDAY] = DebugAction_TimeSkip_Friday,
-    [DEBUG_TIME_SKIP_MENU_SATURDAY] = DebugAction_TimeSkip_Saturday,
-};
-
 static void (*const sDebugMenu_Actions_PCBag[])(u8) =
 {
     [DEBUG_PCBAG_MENU_ITEM_ACCESS_PC]             = DebugAction_PCBag_AccessPC,
@@ -917,6 +975,34 @@ static void (*const sDebugMenu_Actions_BerryFunctions[])(u8) =
     [DEBUG_BERRY_FUNCTIONS_MENU_WEEDS]      = DebugAction_BerryFunctions_Weeds,
 };
 
+static void (*const sDebugMenu_Actions_TimeMenu[])(u8) =
+{
+    //TODO: TIME EDITING MENU
+    [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME] = DebugAction_TimeSkip_PrintTime,
+    [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY] = DebugAction_TimeSkip_PrintTimeOfDay,
+    [DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY] = DebugAction_TimeSkip_TimesOfDay,
+    [DEBUG_TIME_SKIP_MENU_ITEM_WEEKDAYS] = DebugAction_TimeSkip_Weekdays,
+};
+
+static void (*const sDebugMenu_Actions_TimeMenu_TimesOfDay[])(u8) =
+{
+    [DEBUG_TIME_SKIP_MENU_ITEM_MORNING] = DebugAction_TimeSkip_Morning,
+    [DEBUG_TIME_SKIP_MENU_ITEM_DAY] = DebugAction_TimeSkip_Day,
+    [DEBUG_TIME_SKIP_MENU_ITEM_EVENING] = DebugAction_TimeSkip_Evening,
+    [DEBUG_TIME_SKIP_MENU_ITEM_NIGHT] = DebugAction_TimeSkip_Night,
+};
+
+static void (*const sDebugMenu_Actions_TimeMenu_Weekdays[])(u8) =
+{
+    [DEBUG_TIME_SKIP_MENU_SUNDAY] = DebugAction_TimeSkip_Sunday,
+    [DEBUG_TIME_SKIP_MENU_MONDAY] = DebugAction_TimeSkip_Monday,
+    [DEBUG_TIME_SKIP_MENU_TUESDAY] = DebugAction_TimeSkip_Tuesday,
+    [DEBUG_TIME_SKIP_MENU_WEDNESDAY] = DebugAction_TimeSkip_Wednesday,
+    [DEBUG_TIME_SKIP_MENU_THURSDAY] = DebugAction_TimeSkip_Thursday,
+    [DEBUG_TIME_SKIP_MENU_FRIDAY] = DebugAction_TimeSkip_Friday,
+    [DEBUG_TIME_SKIP_MENU_SATURDAY] = DebugAction_TimeSkip_Saturday,
+};
+
 // *******************************
 // Windows
 static const struct WindowTemplate sDebugMenuWindowTemplateMain =
@@ -989,14 +1075,6 @@ static const struct ListMenuTemplate sDebugMenu_ListTemplate_Utilities =
     .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
     .totalItems = ARRAY_COUNT(sDebugMenu_Items_Utilities),
 };
-
-static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeSkip =
-{
-    .items = sDebugMenu_Items_TimeSkip,
-    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
-    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeSkip),
-};
-
 
 static const struct ListMenuTemplate sDebugMenu_ListTemplate_PCBag =
 {
@@ -1073,6 +1151,27 @@ static const struct ListMenuTemplate sDebugMenu_ListTemplate_BerryFunctions =
     .items = sDebugMenu_Items_BerryFunctions,
     .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
     .totalItems = ARRAY_COUNT(sDebugMenu_Items_BerryFunctions),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeSkip =
+{
+    .items = sDebugMenu_Items_TimeSkip,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeSkip),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeSkip_TimesOfDay =
+{
+    .items = sDebugMenu_Items_TimeSkip_TimesOfDay,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeSkip_TimesOfDay),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeSkip_Weekdays =
+{
+    .items = sDebugMenu_Items_TimeSkip_Weekdays,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeSkip_Weekdays),
 };
 
 // *******************************
@@ -1539,6 +1638,44 @@ static void DebugTask_HandleMenuInput_TimeSkip(u8 taskId)
     }
 }
 
+static void DebugTask_HandleMenuInput_TimeSkip_TimesOfDay(u8 taskId)
+{
+    void (*func)(u8);
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        if ((func = sDebugMenu_Actions_TimeMenu_TimesOfDay[input]) != NULL)
+            func(taskId);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        Debug_DestroyMenu(taskId);
+        Debug_ReShowMainMenu();
+    }
+}
+
+static void DebugTask_HandleMenuInput_TimeSkip_Weekdays(u8 taskId)
+{
+    void (*func)(u8);
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        if ((func = sDebugMenu_Actions_TimeMenu_Weekdays[input]) != NULL)
+            func(taskId);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        Debug_DestroyMenu(taskId);
+        Debug_ReShowMainMenu();
+    }
+}
+
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
 {
     void (*func)(u8);
@@ -1801,6 +1938,18 @@ static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
     Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
+}
+
+static void DebugAction_TimeSkip_TimesOfDay(u8 taskId)
+{
+    Debug_DestroyMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_TimesOfDay, sDebugMenu_ListTemplate_TimeSkip_TimesOfDay);
+}
+
+static void DebugAction_TimeSkip_Weekdays(u8 taskId)
+{
+    Debug_DestroyMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_Weekdays, sDebugMenu_ListTemplate_TimeSkip_TimesOfDay);
 }
 
 // *******************************
@@ -2228,6 +2377,49 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
         string = StringCopy(string, sText_Unreleased);
 }
 
+static void DebugAction_TimeSkip_PrintTime(u8 taskId)
+{
+    u32 convertedHours;
+
+    struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
+
+    if (rtc->hour < 12)
+    {
+        if (rtc->hour == 0)
+            convertedHours = 12;
+        else
+            convertedHours = rtc->hour;
+    }
+    else if (rtc->hour == 12)
+    {
+        convertedHours = 12;
+    }
+    else
+    {
+        convertedHours = rtc->hour - 12;
+    }
+ 
+    StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
+    ConvertIntToDecimalStringN(gStringVar2, convertedHours, STR_CONV_MODE_LEFT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar3, rtc->minute, STR_CONV_MODE_LEADING_ZEROS, 2);
+    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_TellTheTime);
+}
+
+static void DebugAction_TimeSkip_PrintTimeOfDay(u8 taskId){
+    switch(GetTimeOfDay())
+        {
+            case TIME_MORNING:
+                StringExpandPlaceholders(gStringVar1, sDebugText_TimeSkip_Morning);
+            case TIME_DAY:
+                StringExpandPlaceholders(gStringVar1, sDebugText_TimeSkip_Day);
+            case TIME_EVENING:
+                StringExpandPlaceholders(gStringVar1, sDebugText_TimeSkip_Evening);
+            case TIME_NIGHT:
+                StringExpandPlaceholders(gStringVar1, sDebugText_TimeSkip_Night);
+        }
+
+    Debug_DestroyMenu_Full_Script(taskId, DebugEventScript_PrintTimeOfDay);
+}
 // *******************************
 // Actions Scripts
 static void DebugAction_Util_Script_1(u8 taskId)
@@ -3636,25 +3828,33 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
 
 static void DebugAction_TimeSkip_Morning(u8 taskId)
 {
-    FakeRtc_ForwardTimeTo(8, 0, 0);
+    u32 MorningBegin = MORNING_HOUR_BEGIN;
+
+    FakeRtc_ForwardTimeTo(MorningBegin, 0, 0);
     DebugAction_DestroyExtraWindow(taskId);
 }
 
 static void DebugAction_TimeSkip_Day(u8 taskId)
 {
-    FakeRtc_ForwardTimeTo(14, 0, 0);
+    u32 DayBegin = DAY_HOUR_BEGIN;
+    
+    FakeRtc_ForwardTimeTo(DayBegin, 0, 0);
     DebugAction_DestroyExtraWindow(taskId);
 }
 
 static void DebugAction_TimeSkip_Evening(u8 taskId)
 {
-    FakeRtc_ForwardTimeTo(18, 0, 0);
+    u32 EveningBegin = EVENING_HOUR_BEGIN;
+    
+    FakeRtc_ForwardTimeTo(EveningBegin, 0, 0);
     DebugAction_DestroyExtraWindow(taskId);
 }
 
 static void DebugAction_TimeSkip_Night(u8 taskId)
 {
-    FakeRtc_ForwardTimeTo(22, 0, 0);
+    u32 NightBegin = NIGHT_HOUR_BEGIN;
+    
+    FakeRtc_ForwardTimeTo(NightBegin, 0, 0);
     DebugAction_DestroyExtraWindow(taskId);
 }
 
