@@ -589,18 +589,18 @@ Debug_EventScript_TellTheTime::
 	msgbox Debug_EventScript_TellTheTime_Text_0, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
-	return
+	end
 
 
-DebugEventScript_PrintTimeOfDay::
+Debug_EventScript_PrintTimeOfDay::
 	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
-	return
+	end
 
 
 Debug_EventScript_TellTheTime_Text_0:
-	.string "Time and Date:\p"
+	.string "Time and Date:\n"
 	.string "{STR_VAR_1} {STR_VAR_2}:{STR_VAR_3}$"
 
 DebugEventScript_PrintWeekday_Text_0:
