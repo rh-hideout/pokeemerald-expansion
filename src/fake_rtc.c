@@ -9,7 +9,7 @@
 #include "script.h"
 
 
-static void FakeRtc_CalcTimeDifference(struct SiiRtcInfo *result, struct Time *t1, struct SiiRtcInfo *t2);
+static void FakeRtc_CalcTimeDifference(struct Time *result, struct SiiRtcInfo *t1, struct Time *t2);
 
 void FakeRtc_Reset(void)
 {
@@ -64,41 +64,42 @@ void FakeRtc_AdvanceTimeBy(u32 days, u32 hours, u32 minutes, u32 seconds)
 
 void FakeRtc_ForwardTimeTo(u32 hour, u32 minute, u32 second)
 {
-    Script_ToggleFakeRtc();
-    struct SiiRtcInfo diff, target;
+    Script_PauseFakeRtc();
+    struct Time diff, target;
+    struct SiiRtcInfo *fakeRtc = FakeRtc_GetCurrentTime();
 
-    target.hour = hour;
-    target.minute = minute;
-    target.second = second;
+    target.hours = hour;
+    target.minutes = minute;
+    target.seconds = second;
 
-    FakeRtc_CalcTimeDifference(&diff, &gLocalTime, &target);
-    FakeRtc_AdvanceTimeBy(0, diff.hour, diff.minute, diff.second);
-    Script_ToggleFakeRtc();
+    FakeRtc_CalcTimeDifference(&diff, fakeRtc, &target);
+    FakeRtc_AdvanceTimeBy(0, diff.hours, diff.minutes, diff.seconds);
+    Script_ResumeFakeRtc();
 }
 
-void FakeRtc_CalcTimeDifference(struct SiiRtcInfo *result, struct Time *t1, struct SiiRtcInfo *t2)
+static void FakeRtc_CalcTimeDifference(struct Time *result, struct SiiRtcInfo *t1, struct Time *t2)
 {
-    result->second = t2->second - t1->seconds;
-    result->minute = t2->minute - t1->minutes;
-    result->hour = t2->hour - t1->hours;
-    result->day = t2->day - t1->days;
+    result->seconds = t2->seconds - t1->second;
+    result->minutes = t2->minutes - t1->minute;
+    result->hours = t2->hours - t1->hour;
+    result->days = t2->days - t1->day;
 
-    if (result->second < 0)
+    if (result->seconds < 0)
     {
-        result->second += SECONDS_PER_MINUTE;
-        --result->minute;
+        result->seconds += SECONDS_PER_MINUTE;
+        --result->minutes;
     }
 
-    if (result->minute < 0)
+    if (result->minutes < 0)
     {
-        result->minute += MINUTES_PER_HOUR;
-        --result->hour;
+        result->minutes += MINUTES_PER_HOUR;
+        --result->hours;
     }
 
-    if (result->hour < 0)
+    if (result->hours < 0)
     {
-        result->hour += HOURS_PER_DAY;
-        --result->day;
+        result->hours += HOURS_PER_DAY;
+        --result->days;
     }
 }
 

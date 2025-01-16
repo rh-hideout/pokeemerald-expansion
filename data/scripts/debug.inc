@@ -586,6 +586,7 @@ Debug_EventScript_FontTest::
 @	end
 
 Debug_EventScript_TellTheTime::
+	callnative DebugMenu_CalculateTime
 	msgbox Debug_EventScript_TellTheTime_Text_0, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
@@ -593,6 +594,7 @@ Debug_EventScript_TellTheTime::
 
 
 Debug_EventScript_PrintTimeOfDay::
+	callnative DebugMenu_CalculateTimeOfDay
 	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
