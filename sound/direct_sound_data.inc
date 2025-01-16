@@ -6456,7 +6456,7 @@ Cry_Shroomalice::
 Cry_Onsenpura::
 	.incbin "sound/direct_sound_samples/cries/onsenpura.bin"
 
-.align 2
+	.align 2
 Cry_Horntuba::
 	.incbin "sound/direct_sound_samples/cries/horntuba.bin"
 
@@ -6751,6 +6751,13 @@ Cry_Doomsday::
 	.align 2
 Cry_Foxcet::
 	.incbin "sound/direct_sound_samples/cries/foxcet.bin"
+
+	.align 2
+Cry_Skoxious::
+	.incbin "sound/direct_sound_samples/cries/skoxious.bin"
+
+Cry_Sanickel::
+	.incbin "sound/direct_sound_samples/cries/sanickel.bin"
 
 .endif @ P_CRIES_ENABLED
 

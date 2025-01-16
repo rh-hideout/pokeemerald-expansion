@@ -2576,6 +2576,8 @@ enum {
     CRY_RANRUU,
     CRY_DOOMSDAY,
     CRY_FOXCET,
+    CRY_SKOXIOUS,
+    CRY_SANICKEL,
 
     CRY_COUNT,
 };

@@ -22273,6 +22273,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Horntuba[] = INCBIN_U8("graphics/pokemon/horntuba/icon.4bpp");
    const u8 gMonFootprint_Horntuba[] = INCBIN_U8("graphics/pokemon/horntuba/footprint.1bpp");
 
+   const u32 gMonFrontPic_Sanickel[] = INCBIN_U32("graphics/pokemon/sanickel/front.4bpp.lz");
+   const u32 gMonBackPic_Sanickel[] = INCBIN_U32("graphics/pokemon/sanickel/back.4bpp.lz");
+   const u32 gMonPalette_Sanickel[] = INCBIN_U32("graphics/pokemon/sanickel/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sanickel[] = INCBIN_U32("graphics/pokemon/sanickel/shiny.gbapal.lz");
+   const u8 gMonIcon_Sanickel[] = INCBIN_U8("graphics/pokemon/sanickel/icon.4bpp");
+   const u8 gMonFootprint_Sanickel[] = INCBIN_U8("graphics/pokemon/sanickel/footprint.1bpp");
+
+   const u32 gMonFrontPic_Skoxious[] = INCBIN_U32("graphics/pokemon/skoxious/front.4bpp.lz");
+   const u32 gMonBackPic_Skoxious[] = INCBIN_U32("graphics/pokemon/skoxious/back.4bpp.lz");
+   const u32 gMonPalette_Skoxious[] = INCBIN_U32("graphics/pokemon/skoxious/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Skoxious[] = INCBIN_U32("graphics/pokemon/skoxious/shiny.gbapal.lz");
+   const u8 gMonIcon_Skoxious[] = INCBIN_U8("graphics/pokemon/skoxious/icon.4bpp");
+   const u8 gMonFootprint_Skoxious[] = INCBIN_U8("graphics/pokemon/skoxious/footprint.1bpp");
+
    const u32 gMonFrontPic_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/front.4bpp.lz");
    const u32 gMonBackPic_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/back.4bpp.lz");
    const u32 gMonPalette_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/normal.gbapal.lz");

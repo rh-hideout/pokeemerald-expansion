@@ -2722,6 +2722,10 @@ gCryTable::
 	cry Cry_Doomsday
 
 	cry Cry_Foxcet
+
+	cry Cry_Skoxious
+
+	cry Cry_Sanickel
 .endif
 
 	.align 2
@@ -5449,4 +5453,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Doomsday
 
 	cry_reverse Cry_Foxcet
+
+	cry_reverse Cry_Skoxious
+
+	cry_reverse Cry_Sanickel
 .endif
