@@ -24856,7 +24856,7 @@ static const struct LevelUpMove sBearedazeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(17, MOVE_MACH_PUNCH),
     LEVEL_UP_MOVE(24, MOVE_TAUNT),
     LEVEL_UP_MOVE(29, MOVE_BEAT_UP),
-    LEVEL_UP_MOVE(34, MOVE_DRAGON_TAIL),// Replace with Homerun Bat once done
+    LEVEL_UP_MOVE(34, MOVE_DRAGON_TAIL), // Replace with Homerun Bat once done
     LEVEL_UP_MOVE(34, MOVE_BODY_SLAM),
     LEVEL_UP_MOVE(40, MOVE_CIRCLE_THROW),
     LEVEL_UP_MOVE(44, MOVE_DRAIN_PUNCH),
@@ -24914,7 +24914,7 @@ static const struct LevelUpMove sEpilateLevelUpLearnset[] = {
     LEVEL_UP_MOVE(47, MOVE_SACRED_FIRE),
     LEVEL_UP_MOVE(51, MOVE_EXPLOSION),
     LEVEL_UP_MOVE(55, MOVE_AEROBLAST),
-    LEVEL_UP_MOVE(60, MOVE_EXPLOSION), //Replace with the holy duty replacement whenever done
+    LEVEL_UP_MOVE(60, MOVE_EXPLOSION), // Replace with the holy duty replacement whenever done
     LEVEL_UP_END
    };
 static const struct LevelUpMove sQrakenmarkLevelUpLearnset[] = {
@@ -25761,9 +25761,9 @@ static const struct LevelUpMove sForgotnoLevelUpLearnset[] = {
    LEVEL_UP_MOVE(45, MOVE_SWORDS_DANCE),
    LEVEL_UP_MOVE(47, MOVE_EARTHQUAKE),
    LEVEL_UP_MOVE(50, MOVE_BRAVE_BIRD), 
-   LEVEL_UP_MOVE(55, MOVE_HYPER_BEAM), 
-   LEVEL_UP_MOVE(60, MOVE_BLIZZARD),
-   LEVEL_UP_MOVE(64, MOVE_FISSURE), 
+   LEVEL_UP_MOVE(55, MOVE_BLIZZARD), 
+   LEVEL_UP_MOVE(60, MOVE_FISSURE),
+   LEVEL_UP_MOVE(64, MOVE_HYPER_BEAM_D), 
    LEVEL_UP_END
    };
 static const struct LevelUpMove sKlasicopeLevelUpLearnset[] = {
@@ -25871,8 +25871,8 @@ static const struct LevelUpMove sSabliniLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_NIGHT_SHADE),
    LEVEL_UP_MOVE( 1, MOVE_POISON_STING),
    LEVEL_UP_MOVE( 5, MOVE_SCRATCH),
-   LEVEL_UP_MOVE( 8, MOVE_CONFUSION),
-   LEVEL_UP_MOVE(12, MOVE_QUICK_ATTACK),
+   LEVEL_UP_MOVE( 9, MOVE_WING_ATTACK),
+   LEVEL_UP_MOVE(11, MOVE_DOUBLE_HIT), // Celebrating the public release date of Pokemon COPE and absolutely nothing else.
    LEVEL_UP_MOVE(18, MOVE_TWINEEDLE),
    LEVEL_UP_MOVE(22, MOVE_PSYBEAM),
    LEVEL_UP_MOVE(26, MOVE_MIMIC), 
@@ -25887,7 +25887,7 @@ static const struct LevelUpMove sSabliniLevelUpLearnset[] = {
    LEVEL_UP_END
    };
 static const struct LevelUpMove sDoomsdayLevelUpLearnset[] = {
-   LEVEL_UP_MOVE( 1, MOVE_RECOVER), 
+   LEVEL_UP_MOVE( 1, MOVE_SOFT_BOILED), 
    LEVEL_UP_MOVE( 1, MOVE_GUILLOTINE),
    LEVEL_UP_MOVE( 1, MOVE_HYPNOSIS),
    LEVEL_UP_MOVE( 1, MOVE_TELEPORT),
@@ -25903,7 +25903,7 @@ static const struct LevelUpMove sDoomsdayLevelUpLearnset[] = {
    LEVEL_UP_MOVE(29, MOVE_FOCUS_ENERGY),
    LEVEL_UP_MOVE(36, MOVE_ROCK_SLIDE),
    LEVEL_UP_MOVE(40, MOVE_BODY_SLAM), 
-   LEVEL_UP_MOVE(46, MOVE_EARTHQUAKE),
+   LEVEL_UP_MOVE(46, MOVE_RECOVER),
    LEVEL_UP_MOVE(50, MOVE_FIRE_BLAST),
    LEVEL_UP_MOVE(58, MOVE_THUNDER),
    LEVEL_UP_MOVE(66, MOVE_EARTHQUAKE),
