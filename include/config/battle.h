@@ -291,6 +291,9 @@
 #define B_ENEMY_THROW_BALLS_SOUND    GEN_LATEST  // In GEN_5+, enemy Trainer's Poké Balls make a sound when thrown to send out a Pokémon. This can only be used when B_ENEMY_THROW_BALLS is set to GEN_6 or later.
 #define B_PLAYER_THROW_BALLS_SOUND   GEN_LATEST  // In GEN_5+, the player's Poké Balls make a sound when thrown to send out a Pokémon.
 
+// Other sound config
+#define B_LOW_HEALTH_SOUND           GEN_LATEST  // In Gen6+, the low health "beeps" only play 4 times before stopping. Be sure to use SE_LOW_HEALTH_SHORT if you want to use it in charmap.
+
 #define SHOW_TYPES_NEVER    0
 #define SHOW_TYPES_ALWAYS   1
 #define SHOW_TYPES_CAUGHT   2
