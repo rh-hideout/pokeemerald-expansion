@@ -168,6 +168,7 @@
 #define HOLD_EFFECT_MOLUGANION          185
 #define HOLD_EFFECT_CURSED_FANG         186
 #define HOLD_EFFECT_CRIMSON_LENS        187
+#define HOLD_EFFECT_WHETSTONE           188
 
 #define HOLD_EFFECT_CHOICE(holdEffect)((holdEffect == HOLD_EFFECT_CHOICE_BAND || holdEffect == HOLD_EFFECT_CHOICE_SCARF || holdEffect == HOLD_EFFECT_CHOICE_SPECS))
 

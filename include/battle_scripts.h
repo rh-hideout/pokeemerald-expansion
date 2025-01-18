@@ -189,6 +189,7 @@ extern const u8 BattleScript_FlashFireBoost_PPLoss[];
 extern const u8 BattleScript_FlashFireBoost[];
 extern const u8 BattleScript_AbilityNoStatLoss[];
 extern const u8 BattleScript_ItemNoStatLoss[];
+extern const u8 BattleScript_ItemNoSpecificStatLoss[];
 extern const u8 BattleScript_ItemNoStatLossSpicyExtract[];
 extern const u8 BattleScript_BRNPrevention[];
 extern const u8 BattleScript_PRLZPrevention[];
