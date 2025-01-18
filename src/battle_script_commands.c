@@ -12083,16 +12083,26 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
         else if ((((battlerAbility == ABILITY_KEEN_EYE || battlerAbility == ABILITY_MINDS_EYE) && statId == STAT_ACC)
                 || (B_ILLUMINATE_EFFECT >= GEN_9 && battlerAbility == ABILITY_ILLUMINATE && statId == STAT_ACC)
                 || (battlerAbility == ABILITY_HYPER_CUTTER && statId == STAT_ATK)
+                || (battlerHoldEffect == HOLD_EFFECT_WHETSTONE && statId == STAT_ATK)
                 || (battlerAbility == ABILITY_BIG_PECKS && statId == STAT_DEF)))
         {
             if (flags == STAT_CHANGE_ALLOW_PTR)
             {
                 BattleScriptPush(BS_ptr);
                 gBattleScripting.battler = battler;
-                gBattlerAbility = battler;
-                gBattlescriptCurrInstr = BattleScript_AbilityNoSpecificStatLoss;
-                gLastUsedAbility = battlerAbility;
-                RecordAbilityBattle(battler, gLastUsedAbility);
+                if (battlerHoldEffect == HOLD_EFFECT_WHETSTONE)
+                {
+                    gLastUsedItem = gBattleMons[battler].item;
+                    gBattlescriptCurrInstr = BattleScript_ItemNoSpecificStatLoss;
+                    RecordItemEffectBattle(battler, HOLD_EFFECT_WHETSTONE);   
+                }
+                else
+                {
+                    gBattlerAbility = battler;
+                    gBattlescriptCurrInstr = BattleScript_AbilityNoSpecificStatLoss;
+                    gLastUsedAbility = battlerAbility;
+                    RecordAbilityBattle(battler, gLastUsedAbility);
+                }
             }
             return STAT_CHANGE_DIDNT_WORK;
         }

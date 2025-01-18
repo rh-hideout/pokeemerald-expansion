@@ -8904,6 +8904,12 @@ BattleScript_ItemNoStatLoss::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_ItemNoSpecificStatLoss::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNSITEMPREVENTSYLOSS
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_BRNPrevention::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gBRNPreventionStringIds

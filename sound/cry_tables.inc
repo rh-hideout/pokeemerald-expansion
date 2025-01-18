@@ -5457,4 +5457,5 @@ gCryTable_Reverse::
 	cry_reverse Cry_Skoxious
 
 	cry_reverse Cry_Sanickel
+	
 .endif
