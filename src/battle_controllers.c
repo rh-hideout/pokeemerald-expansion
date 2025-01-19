@@ -976,12 +976,12 @@ void BtlController_EmitLoadMonSprite(u32 battler, u32 bufferId)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitSwitchInAnim(u32 battler, u32 bufferId, u8 partyId, bool8 dontClearSubstituteBit)
+void BtlController_EmitSwitchInAnim(u32 battler, u32 bufferId, u8 partyId, bool8 dontClearTransform, bool8 dontClearSubstituteBit)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_SWITCHINANIM;
     gBattleResources->transferBuffer[1] = partyId;
-    gBattleResources->transferBuffer[2] = dontClearSubstituteBit;
-    gBattleResources->transferBuffer[3] = 5;
+    gBattleResources->transferBuffer[2] = dontClearTransform;
+    gBattleResources->transferBuffer[3] = dontClearSubstituteBit;
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
@@ -2111,13 +2111,13 @@ static bool8 ShouldDoSlideInAnim(void)
     return TRUE;
 }
 
-void StartSendOutAnim(u32 battler, bool32 dontClearSubstituteBit, bool32 doSlideIn)
+void StartSendOutAnim(u32 battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn)
 {
     u16 species;
     u32 side = GetBattlerSide(battler);
     struct Pokemon *party = GetBattlerParty(battler);
 
-    ClearTemporarySpeciesSpriteData(battler, dontClearSubstituteBit);
+    ClearTemporarySpeciesSpriteData(battler, dontClearTransform, dontClearSubstituteBit);
     gBattlerPartyIndexes[battler] = gBattleResources->bufferA[battler][1];
     species = GetIllusionMonSpecies(battler);
     if (species == SPECIES_NONE)
@@ -2462,11 +2462,11 @@ void BtlController_HandleLoadMonSprite(u32 battler, void (*controllerCallback)(u
 void BtlController_HandleSwitchInAnim(u32 battler, bool32 isPlayerSide, void (*controllerCallback)(u32 battler))
 {
     if (isPlayerSide)
-        ClearTemporarySpeciesSpriteData(battler, gBattleResources->bufferA[battler][2]);
+        ClearTemporarySpeciesSpriteData(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3]);
     gBattlerPartyIndexes[battler] = gBattleResources->bufferA[battler][1];
     if (isPlayerSide)
         BattleLoadMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
-    StartSendOutAnim(battler, gBattleResources->bufferA[battler][2], FALSE);
+    StartSendOutAnim(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3], FALSE);
     gBattlerControllerFuncs[battler] = controllerCallback;
 }
 
@@ -2965,17 +2965,17 @@ static void Task_StartSendOutAnim(u8 taskId)
         if (TwoMonsAtSendOut(battler))
         {
             gBattleResources->bufferA[battler][1] = gBattlerPartyIndexes[battler];
-            StartSendOutAnim(battler, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battler, FALSE, FALSE, ShouldDoSlideInAnim());
 
             battlerPartner = battler ^ BIT_FLANK;
             gBattleResources->bufferA[battlerPartner][1] = gBattlerPartyIndexes[battlerPartner];
             BattleLoadMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[battlerPartner]], battlerPartner);
-            StartSendOutAnim(battlerPartner, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battlerPartner, FALSE, FALSE, ShouldDoSlideInAnim());
         }
         else
         {
             gBattleResources->bufferA[battler][1] = gBattlerPartyIndexes[battler];
-            StartSendOutAnim(battler, FALSE, ShouldDoSlideInAnim());
+            StartSendOutAnim(battler, FALSE, FALSE, ShouldDoSlideInAnim());
         }
         gBattlerControllerFuncs[battler] = (void*)(GetWordTaskArg(taskId, tControllerFunc_1));
         DestroyTask(taskId);

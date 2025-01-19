@@ -69,4 +69,5 @@
         - [Version 0.9.0](changelogs/0.9.x/0.9.0.md)
 - [Team Procedures]()
     - [How to make an Expansion version](team_procedures/expansion_versions.md)
-    - [Scope Guidelines](scope.md)
+    - [Release Schedule and Process](team_procedures/schedule.md)
+    - [Scope Guidelines](team_procedures/scope.md)

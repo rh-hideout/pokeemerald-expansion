@@ -48,10 +48,22 @@ A pull request meets the scope criteria if:
 
 ## Discussion Required Categories
 
-Pull Requests that fall into this category should be brought up to maintainers, who will discuss and vote as to whether or not the feature is considered in scope. Considerations for acceptance may include invasiveness of implementation, popularity, ease of maintenance, etc.
+Pull Requests that fall into this category are not in scope by default and should be brought up to maintainers, who will discuss and vote as to whether or not the feature is considered in scope. Considerations for acceptance may include invasiveness of implementation, popularity, ease of maintenance, etc.
 
 1. **Developer Ease of Use**: Lowers barrier of entry for developers to use existing behavior  
 2. **Fangame Features**: Adds a popular feature from other fangames  
 3. **Popular Non-SS Features**: Exceptions can be made for uniquely popular or requested features (Drowsy, PLA Legend Plate, etc.)
 4. **External Program**: External programs like poryscript, porymoves, etc.
 
+## Workflow for Proposed Feature Scope Discussion
+For the contributor:
+- Make a thread for the feature on Discord
+- Describe how the feature fits into this scope document, and why you feel it should be considered
+- Optionally include either a draft PR or describe in some detail the proposed implementation. Non-mandatory, but implementation invasiveness, maintenance cost, etc. are major considerations, so use your judgement. The senate may ask for this information during discussion.
+
+For the senate:
+- Make a senate thread for the discussion
+- Make and pin a two-week voting poll
+- Discuss, conclude, and cast votes before the two-week deadline
+- Inform contributor as to the results and reasons in their thread
+- Amend this scope document if necessary
