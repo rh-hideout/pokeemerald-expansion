@@ -103,4 +103,3 @@ SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before the
         MESSAGE("But it failed!");
     }
 }
-

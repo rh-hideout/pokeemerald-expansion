@@ -3149,10 +3149,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .backAnimId = BACK_ANIM_SHAKE_FLASH_YELLOW,
         .palette = gMonPalette_Pikachu,
         .shinyPalette = gMonShinyPalette_Pikachu,
-        .iconSprite = gMonIcon_Pikachu,
+        .iconSprite = gMonIcon_PikachuPartner,
         .iconPalIndex = 2,
     #if P_CUSTOM_GENDER_DIFF_ICONS == TRUE
-        .iconSpriteFemale = gMonIcon_PikachuF,
+        .iconSpriteFemale = gMonIcon_PikachuPartnerF,
         .iconPalIndexFemale = 2,
     #endif
         FOOTPRINT(Pikachu)
@@ -5978,7 +5978,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Annihilape,
         .iconSprite = gMonIcon_Annihilape,
         .iconPalIndex = 0,
-        //FOOTPRINT(Annihilape)
+        FOOTPRINT(Annihilape)
         .levelUpLearnset = sAnnihilapeLevelUpLearnset,
         .teachableLearnset = sAnnihilapeTeachableLearnset,
     },
@@ -8071,7 +8071,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .palette = gMonPalette_SlowpokeGalarian,
         .shinyPalette = gMonShinyPalette_SlowpokeGalarian,
         .iconSprite = gMonIcon_SlowpokeGalarian,
-        .iconPalIndex = 1,
+        .iconPalIndex = 0,
         FOOTPRINT(Slowpoke)
         .isGalarianForm = TRUE,
         .levelUpLearnset = sSlowpokeGalarianLevelUpLearnset,
@@ -8183,7 +8183,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .palette = gMonPalette_SlowkingGalarian,
         .shinyPalette = gMonShinyPalette_SlowkingGalarian,
         .iconSprite = gMonIcon_SlowkingGalarian,
-        .iconPalIndex = 2,
+        .iconPalIndex = 0,
         FOOTPRINT(Slowking)
         .isGalarianForm = TRUE,
         .levelUpLearnset = sSlowkingGalarianLevelUpLearnset,
@@ -9230,7 +9230,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 #if P_UPDATED_ABILITIES >= GEN_7
 #define GENGAR_ABILITIES {ABILITY_CURSED_BODY, ABILITY_PRIDE}
 #else
-#define GENGAR_ABILITIES {ABILITY_LEVITATE, ABILITY_NONE}
+#define GENGAR_ABILITIES {ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE}
 #endif
 
     [SPECIES_GENGAR] =
@@ -9259,6 +9259,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = GENGAR_ABILITIES,
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Gengar"),
+        .cryId = CRY_GENGAR,
         .natDexNum = NATIONAL_DEX_GENGAR,
         .categoryName = _("Shadow"),
         .height = 15,
@@ -9313,6 +9314,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_SHADOW_TAG, ABILITY_SHADOW_TAG, ABILITY_SHADOW_TAG },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Gengar"),
+        .cryId = CRY_GENGAR_MEGA,
         .natDexNum = NATIONAL_DEX_GENGAR,
         .categoryName = _("Shadow"),
         .height = 14,
@@ -9369,6 +9371,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = GENGAR_ABILITIES,
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Gengar"),
+        .cryId = CRY_GENGAR,
         .natDexNum = NATIONAL_DEX_GENGAR,
         .categoryName = _("Shadow"),
         .height = 200,
@@ -12040,7 +12043,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpeed     = 90,
         .baseSpAttack  = 100,
         .baseSpDefense = 120,
+    #if P_UPDATED_TYPES >= GEN_6
         .types = MON_TYPES(TYPE_PSYCHIC, TYPE_FAIRY),
+    #else
+        .types = MON_TYPES(TYPE_PSYCHIC),
+    #endif
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 161 : 136,
         .evYield_SpDefense = 2,
@@ -12417,7 +12424,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Kleavor,
         .iconSprite = gMonIcon_Kleavor,
         .iconPalIndex = 2,
-        //FOOTPRINT(Kleavor)
+        FOOTPRINT(Kleavor)
         .levelUpLearnset = sKleavorLevelUpLearnset,
         .teachableLearnset = sKleavorTeachableLearnset,
     },
@@ -13738,8 +13745,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
         .palette = gMonPalette_Eevee,
         .shinyPalette = gMonShinyPalette_Eevee,
-        .iconSprite = gMonIcon_Eevee,
+        .iconSprite = gMonIcon_EeveePartner,
         .iconPalIndex = 2,
+    #if P_CUSTOM_GENDER_DIFF_ICONS == TRUE
+        .iconSpriteFemale = gMonIcon_EeveePartnerF,
+        .iconPalIndexFemale = 2,
+    #endif
         FOOTPRINT(Eevee)
         .cannotBeTraded = TRUE,
         .allPerfectIVs = TRUE,
