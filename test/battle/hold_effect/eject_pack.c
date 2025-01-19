@@ -85,3 +85,19 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency 
         EXPECT(opponent->species == SPECIES_WYNAUT);
     }
 }
+
+SINGLE_BATTLE_TEST("Eject Pack activates once intimidate mon switches in")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+    }
+}

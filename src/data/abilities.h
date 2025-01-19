@@ -2450,9 +2450,9 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Normal moves become steel."),
         .aiRating = 8,
     },
-    [ABILITY_MILLITARIZE] =
+    [ABILITY_MILITARIZE] =
     {
-        .name = _("Millitarize"),
+        .name = _("Militarize"),
         .description = COMPOUND_STRING("Normal moves become fighting."),
         .aiRating = 8,
     },
@@ -2508,6 +2508,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Golden Luck"),
         .description = COMPOUND_STRING("+2 critical hit rate"),
+        .aiRating = 8,
+    },
+    [ABILITY_VERSATILE] =
+    {
+        .name = _("Versatile"),
+        .description = COMPOUND_STRING("1.2x dmg on non-stab"),
         .aiRating = 8,
     },
 };

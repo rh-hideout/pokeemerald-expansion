@@ -16956,24 +16956,19 @@ static const u16 sBurmyTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWormadamPlantCloakTeachableLearnset[] = {
-    MOVE_ATTRACT,
+static const u16 sWormadamPlantTeachableLearnset[] = {
     MOVE_BULLET_SEED,
     MOVE_DIG,
-    MOVE_DOUBLE_TEAM,
     MOVE_FACADE,
     MOVE_FLASH,
     MOVE_GIGA_DRAIN,
     MOVE_HYPER_BEAM,
     MOVE_PROTECT,
     MOVE_PSYCHIC,
-    MOVE_RAIN_DANCE,
     MOVE_REST,
     MOVE_SAFEGUARD,
     MOVE_SHADOW_BALL,
-    MOVE_SKILL_SWAP,
     MOVE_SOLAR_BEAM,
-    MOVE_THIEF,
     MOVE_TOXIC,
     MOVE_DREAM_EATER,
     MOVE_ENDURE,

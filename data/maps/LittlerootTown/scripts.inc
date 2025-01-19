@@ -29,7 +29,7 @@ LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	msgbox LittlerootTown_Text_WaitPlayer, MSGBOX_DEFAULT
 	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachPlayer
 	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	call LittlerootTown_EventScript_GiveRunningShoes
 	applymovement LOCALID_MOM, LittlerootTown_Movement_MomReturnHome
 	waitmovement 0

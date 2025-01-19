@@ -20,14 +20,14 @@ Route119_EventScript_TryRemoveKecleon::
 Route119_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	call Common_EventScript_SetupRivalOnBikeGfxId
-	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 1, Route119_EventScript_MoveInstituteWorkersDownstairs
+	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 2, Route119_EventScript_MoveInstituteWorkersDownstairs
 	special SetRoute119Weather
 	end
 
 Route119_EventScript_MoveInstituteWorkersDownstairs::
 	setflag FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS
 	clearflag FLAG_HIDE_WEATHER_INSTITUTE_1F_WORKERS
-	setvar VAR_WEATHER_INSTITUTE_STATE, 2
+	setvar VAR_WEATHER_INSTITUTE_STATE, 3
 	return
 
 Route119_EventScript_RivalTrigger1::

@@ -77,7 +77,7 @@
 #define FLAG_BERRY_WIFE_BERRY     0x3F // Berry Master House
 #define FLAG_GAVE_TM_FLIP_TURN    0x40 // Weather Institute
 #define FLAG_GAVE_STONE_EDGE      0x41 // Pacifidlog
-#define FLAG_UNUSED_0x042         0x42 // Unused Flag
+#define FLAG_WTHR_INST_2_GRUNTS   0x42 // Unused Flag
 #define FLAG_UNUSED_0x043         0x43 // Unused Flag
 #define FLAG_UNUSED_0x044         0x44 // Unused Flag
 #define FLAG_UNUSED_0x045         0x45 // Unused Flag

@@ -17,9 +17,9 @@ Debug_CheatStart::
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	setvar VAR_BIRCH_LAB_STATE, 2
 	setvar VAR_ROUTE101_STATE, 3
-	givemon SPECIES_TREECKO, 20, ITEM_NONE
-	givemon SPECIES_TORCHIC, 20, ITEM_NONE
-	givemon SPECIES_MUDKIP, 20, ITEM_NONE
+	givemon SPECIES_TREECKO, 5, ITEM_NONE
+	givemon SPECIES_TORCHIC, 5, ITEM_NONE
+	givemon SPECIES_MUDKIP, 5, ITEM_NONE
 	setflag FLAG_SYS_POKEDEX_GET
 	special SetUnlockedPokedexFlags
 	setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
@@ -35,17 +35,6 @@ Debug_CheatStart::
 	setvar VAR_LITTLEROOT_RIVAL_STATE, 4 @ 4: Received Pokedex
 	setflag FLAG_RECEIVED_BIKE
 	additem ITEM_ACRO_BIKE
-	setvar VAR_BRINEY_HOUSE_STATE, 1
-	setvar VAR_ROUTE116_STATE, 2
-	setflag FLAG_HIDE_ROUTE_116_MR_BRINEY
-	setflag FLAG_BADGE01_GET
-	setflag FLAG_BADGE02_GET
-	setflag FLAG_BADGE03_GET
-	setflag FLAG_BADGE04_GET
-	setflag FLAG_BADGE05_GET
-	setflag FLAG_BADGE06_GET
-	setflag FLAG_BADGE07_GET
-	setflag FLAG_BADGE08_GET
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	setflag FLAG_VISITED_OLDALE_TOWN
 	setflag FLAG_VISITED_DEWFORD_TOWN
@@ -62,10 +51,6 @@ Debug_CheatStart::
 	setflag FLAG_VISITED_MOSSDEEP_CITY
 	setflag FLAG_VISITED_SOOTOPOLIS_CITY
 	setflag FLAG_VISITED_EVER_GRANDE_CITY
-	setflag FLAG_LANDMARK_POKEMON_LEAGUE
-	setflag FLAG_LANDMARK_BATTLE_FRONTIER
-	clearflag FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY
-	clearflag FLAG_HIDE_BRINEYS_HOUSE_PEEKO
 	release
 	end
 
@@ -196,12 +181,6 @@ Debug_PokemonStorageSize::
 	.string "{PKMN}Storage size: {STR_VAR_1}b/{STR_VAR_2}b.\n"
 	.string "Free space: {STR_VAR_3}b.$"
 
-Debug_CheckROMSpace::
-	callnative CheckROMSize
-	msgbox Debug_ROMSize, MSGBOX_DEFAULT
-	release
-	end
-
 Debug_ROMSize::
 	.string "ROM size: {STR_VAR_1}MB/32MB.\n"
 	.string "Free space: {STR_VAR_2}MB.$"
@@ -292,19 +271,6 @@ Debug_EventScript_InflictStatus1::
 	lockall
 	getpartysize
 	goto_if_eq VAR_RESULT, 0, Debug_NoPokemon
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Single, 0
-	dynmultipush Debug_EventScript_InflictStatus1_Text_PartyWide, 1
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 2
-	dynmultistack 0, 0, FALSE, 3 FALSE, 0, NULL
-	switch VAR_RESULT
-	case 0, Debug_EventScript_InflictStatus1_Single
-	case 1, Debug_EventScript_InflictStatus1_Party
-	case 2, Debug_EventScript_InflictStatus1_Close
-Debug_EventScript_InflictStatus1_Close:
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Single:
 	special ChoosePartyMon
 	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, Debug_EventScript_InflictStatus1_Close
@@ -314,22 +280,23 @@ Debug_EventScript_InflictStatus1_Single:
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Paralysis, 1
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Sleep, 2
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Burn, 3
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Freeze, 4
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Frostbite, 5
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 6
+	dynmultipush Debug_EventScript_InflictStatus1_Text_Frostbite, 4
+	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 5
 	dynmultistack 0, 0, FALSE, 7, FALSE, 0, NULL
 	switch VAR_RESULT
 	case 0, Debug_EventScript_InflictStatus1_Single_Poison
 	case 1, Debug_EventScript_InflictStatus1_Single_Paralysis
 	case 2, Debug_EventScript_InflictStatus1_Single_Sleep
 	case 3, Debug_EventScript_InflictStatus1_Single_Burn
-	case 4, Debug_EventScript_InflictStatus1_Single_Freeze
-	case 5, Debug_EventScript_InflictStatus1_Single_Frostbite
-	case 6, Debug_EventScript_InflictStatus1_Close
+	case 4, Debug_EventScript_InflictStatus1_Single_Frostbite
+	case 5, Debug_EventScript_InflictStatus1_Close
 	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
 	releaseall
 	end
-
+Debug_EventScript_InflictStatus1_Close:
+	releaseall
+	end
+	
 Debug_EventScript_InflictStatus1_Single_Poison:
 	setstatus1 STATUS1_POISON, VAR_0x8004
 	releaseall
@@ -350,64 +317,8 @@ Debug_EventScript_InflictStatus1_Single_Burn:
 	releaseall
 	end
 
-Debug_EventScript_InflictStatus1_Single_Freeze:
-	setstatus1 STATUS1_FREEZE, VAR_0x8004
-	releaseall
-	end
-
 Debug_EventScript_InflictStatus1_Single_Frostbite:
 	setstatus1 STATUS1_FROSTBITE, VAR_0x8004
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party:
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Poison, 0
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Paralysis, 1
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Sleep, 2
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Burn, 3
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Freeze, 4
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Frostbite, 5
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 6
-	dynmultistack 0, 0, FALSE, 7, FALSE, 0, NULL
-	switch VAR_RESULT
-	case 0, Debug_EventScript_InflictStatus1_Party_Poison
-	case 1, Debug_EventScript_InflictStatus1_Party_Paralysis
-	case 2, Debug_EventScript_InflictStatus1_Party_Sleep
-	case 3, Debug_EventScript_InflictStatus1_Party_Burn
-	case 4, Debug_EventScript_InflictStatus1_Party_Freeze
-	case 5, Debug_EventScript_InflictStatus1_Party_Frostbite
-	case 6, Debug_EventScript_InflictStatus1_Close
-	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Poison:
-	setstatus1 STATUS1_POISON, PARTY_SIZE
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Paralysis:
-	setstatus1 STATUS1_PARALYSIS, PARTY_SIZE
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Sleep:
-	setstatus1 STATUS1_SLEEP, PARTY_SIZE
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Burn:
-	setstatus1 STATUS1_BURN, PARTY_SIZE
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Freeze:
-	setstatus1 STATUS1_FREEZE, PARTY_SIZE
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Party_Frostbite:
-	setstatus1 STATUS1_FROSTBITE, PARTY_SIZE
 	releaseall
 	end
 

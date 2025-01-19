@@ -486,19 +486,34 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyStatIsRaised(battler);
-
+    u32 knownAbility = AI_DATA->abilities[opposingBattler] = AI_DecideKnownAbilityForTurn(opposingBattler);
+    u32 firstType = gSpeciesInfo[gBattleMons[battler].species].types[0];
+    u32 secondType = gSpeciesInfo[gBattleMons[battler].species].types[1];
+    bool8 arenaTrappable;
+    bool8 magnetPullable;
+    if (firstType == TYPE_FLYING || secondType == TYPE_FLYING || holdEffect == HOLD_EFFECT_AIR_BALLOON)
+        arenaTrappable = FALSE;
+    else
+        arenaTrappable = TRUE;
+    if (firstType == TYPE_STEEL || secondType == TYPE_STEEL)
+        magnetPullable = TRUE;
+    else
+        magnetPullable = FALSE;
     //Perish Song
-    if (gStatuses3[battler] & STATUS3_PERISH_SONG
-        && gDisableStructs[battler].perishSongTimer == 0
-        && monAbility != ABILITY_SOUNDPROOF)
+    if (gStatuses3[battler] & STATUS3_PERISH_SONG && !IsBattlerTrapped(battler, TRUE) && 
+        !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST) && monAbility != ABILITY_COMMANDER &&
+        (gDisableStructs[battler].perishSongTimer == 0 ||
+        (knownAbility == ABILITY_SHADOW_TAG && AI_DATA->abilities[battler] != ABILITY_SHADOW_TAG) ||
+        ((knownAbility == ABILITY_MAGNET_PULL || (knownAbility == ABILITY_TRACE && monAbility == ABILITY_MAGNET_PULL)) && magnetPullable) ||
+        ((knownAbility == ABILITY_ARENA_TRAP || (knownAbility == ABILITY_TRACE && monAbility == ABILITY_ARENA_TRAP ))&& arenaTrappable) ||
+        HasTrappingMoveEffect(opposingBattler)))
         switchMon = TRUE;
-
     if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_SWITCHING)
     {
         //Yawn
         if (gStatuses3[battler] & STATUS3_YAWN
             && CanBeSlept(battler, monAbility)
-            && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3)
+            && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
         {
             switchMon = TRUE;
 

@@ -94,14 +94,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_F",
-      "x": 19,
-      "y": 3,
+      "x": 17,
+      "y": 4,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "4",
+      "trainer_sight_or_berry_tree_id": "0",
       "script": "Route119_WeatherInstitute_2F_EventScript_Grunt5",
       "flag": "FLAG_HIDE_ROUTE_119_TEAM_AQUA"
     }
@@ -143,15 +143,6 @@
       "y": 10,
       "elevation": 0,
       "weather": "COORD_EVENT_WEATHER_RAIN"
-    },
-    {
-      "type": "trigger",
-      "x": 17,
-      "y": 2,
-      "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
-      "script": "NULL"
     }
   ],
   "bg_events": [

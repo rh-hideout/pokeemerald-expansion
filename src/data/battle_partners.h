@@ -168,8 +168,7 @@
             {
 #line 66
             .species = SPECIES_LANDORUS,
-#line 66
-            .gender = TRAINER_MON_MALE,
+            .gender = TRAINER_MON_RANDOM_GENDER,
 #line 66
             .heldItem = ITEM_LIFE_ORB,
 #line 69

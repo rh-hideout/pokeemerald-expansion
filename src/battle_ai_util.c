@@ -2393,7 +2393,7 @@ bool32 HasDamagingMoveOfType(u32 battlerId, u32 type)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-          && !IS_MOVE_STATUS(moves[i]].type == type && gMovesInfo[moves[i]))
+          && gMovesInfo[moves[i]].type == type && !IS_MOVE_STATUS(moves[i]))
             return TRUE;
     }
 

@@ -2,7 +2,6 @@
 .set LOCALID_GENTLEMAN, 2
 .set LOCALID_SCIENTIST, 3
 .set LOCALID_STEVEN, 4
-@ Grunt names numbered like their Trainer values (which are for the full Space Center)
 .set LOCALID_GRUNT_6, 5
 .set LOCALID_GRUNT_5, 6
 .set LOCALID_GRUNT_7, 7
@@ -45,22 +44,6 @@ MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGrunts::
 	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_Delay48
 	waitmovement 0
-	msgbox MossdeepCity_SpaceCenter_2F_Text_YoureOutnumberedTakeUsOn, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, MossdeepCity_SpaceCenter_2F_EventScript_BattleThreeMagmaGrunts
-	msgbox MossdeepCity_SpaceCenter_2F_Text_GoodAnswer, MSGBOX_DEFAULT
-	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, MossdeepCity_SpaceCenter_2F_Movement_PlayerExit
-	waitmovement 0
-	warp MAP_MOSSDEEP_CITY_SPACE_CENTER_1F, 13, 1
-	waitstate
-	releaseall
-	end
-
-MossdeepCity_SpaceCenter_2F_Movement_PlayerExit:
-	walk_up
-	step_end
-
-MossdeepCity_SpaceCenter_2F_EventScript_BattleThreeMagmaGrunts::
 	msgbox MossdeepCity_SpaceCenter_2F_Text_Grunt5Intro, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_GRUNT_SPACE_CENTER_5, MossdeepCity_SpaceCenter_2F_Text_Grunt5Defeat
 	applymovement LOCALID_GRUNT_5, MossdeepCity_SpaceCenter_2F_Movement_Grunt5Defeated
@@ -83,6 +66,10 @@ MossdeepCity_SpaceCenter_2F_EventScript_BattleThreeMagmaGrunts::
 	copyobjectxytoperm LOCALID_GRUNT_5
 	releaseall
 	end
+
+MossdeepCity_SpaceCenter_2F_Movement_PlayerExit:
+	walk_up
+	step_end
 
 MossdeepCity_SpaceCenter_2F_Movement_Grunt6Defeated:
 	lock_facing_direction

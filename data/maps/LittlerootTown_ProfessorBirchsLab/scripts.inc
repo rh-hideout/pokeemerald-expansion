@@ -107,6 +107,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter
 	closemessage
+	call Common_EventScript_OutOfCenterPartyHeal
 	clearflag FLAG_HIDE_ROUTE_101_BOY
 	setvar VAR_BIRCH_LAB_STATE, 3
 	end

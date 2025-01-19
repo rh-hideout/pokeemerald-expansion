@@ -356,7 +356,7 @@ Infusion Abilities
 #define ABILITY_DRAGONIZE                 316  //Dragon
 #define ABILITY_METALLICIZE               317  //Steel
 #define ABILITY_CRYSTALLIZE               318  //Rock
-#define ABILITY_MILLITARIZE               319  //Fighting
+#define ABILITY_MILITARIZE                319  //Fighting
 #define ABILITY_VENOMIZE                  320  //Poison
 #define ABILITY_COLONIZE                  321  //Bug
 #define ABILITY_FIRE                      322  //Fire
@@ -391,8 +391,9 @@ Flat Immunities
 #define ABILITY_CONCERTO                  326
 #define ABILITY_REBEL_TACTICS             327
 #define ABILITY_GOLDEN_LUCK               328
+#define ABILITY_VERSATILE                 329
 
-#define ABILITIES_COUNT_CUSTOM            329
+#define ABILITIES_COUNT_CUSTOM            330
 
 #define ABILITIES_COUNT ABILITIES_COUNT_CUSTOM
 
