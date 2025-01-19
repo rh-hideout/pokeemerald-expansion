@@ -21304,7 +21304,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Disturbs haunted ground.\n"
             "Lowers Speed."),
-        .effect = EFFECT_BULLDOZE,
+        .effect = EFFECT_EARTHQUAKE,
         .power = 60,
         .type = TYPE_GHOST,
         .accuracy = 100,
@@ -21322,6 +21322,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {0}
     },
+
 
     [MOVE_AFTERSHOCK] =
     {

@@ -10424,13 +10424,13 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
     else if (moveType == TYPE_WATER && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN | B_WEATHER_SUN_PERMANENT))
     {
         modifier = UQ_4_12(0.0);
-        if (recordAbilities && defAbility == ABILITY_HEAT_WAVE)
+        if (recordAbilities && defAbility == ABILITY_HEAT_SINK)
         {
-            gLastUsedAbility = ABILITY_HEAT_WAVE;
+            gLastUsedAbility = ABILITY_HEAT_SINK;
             gMoveResultFlags |= (MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE);
             gLastLandedMoves[battlerDef] = 0;
             gBattleCommunication[MISS_TYPE] = B_MSG_FIRE_MISS;
-            RecordAbilityBattle(battlerDef, ABILITY_HEAT_WAVE);
+            RecordAbilityBattle(battlerDef, ABILITY_HEAT_SINK);
         }
     }
     else if (moveType == TYPE_GROUND && !IsBattlerGrounded2(battlerDef, TRUE) && !(gMovesInfo[move].ignoreTypeIfFlyingAndUngrounded))
