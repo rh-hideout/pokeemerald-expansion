@@ -18,6 +18,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "test_runner.h"
+#include "test/battle.h"
 #include "constants/battle_anim.h"
 #include "constants/moves.h"
 
@@ -85,6 +86,7 @@ static void Cmd_stopsound(void);
 static void Cmd_createvisualtaskontargets(void);
 static void Cmd_createspriteontargets(void);
 static void Cmd_createspriteontargets_onpos(void);
+static void Cmd_jumpifmovetypeequal(void);
 static void RunAnimScriptCommand(void);
 static void Task_UpdateMonBg(u8 taskId);
 static void FlipBattlerBgTiles(void);
@@ -176,6 +178,7 @@ static void (* const sScriptCmdTable[])(void) =
     Cmd_createvisualtaskontargets,  // 0x30
     Cmd_createspriteontargets,      // 0x31
     Cmd_createspriteontargets_onpos, // 0x32
+    Cmd_jumpifmovetypeequal,  // 0x33
 };
 
 void ClearBattleAnimationVars(void)
@@ -239,6 +242,9 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         TestRunner_Battle_RecordAnimation(animType, animId);
         // Play Transform and Ally Switch even in Headless as these move animations also change mon data.
         if (gTestRunnerHeadless
+            #if TESTING // Because gBattleTestRunnerState is not seen outside of test env.
+             && !gBattleTestRunnerState->forceMoveAnim
+            #endif // TESTING
             && !(animType == ANIM_TYPE_MOVE && (animId == MOVE_TRANSFORM || animId == MOVE_ALLY_SWITCH)))
         {
             gAnimScriptCallback = Nop;
@@ -446,7 +452,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
     u32 i;
     u32 ignoredTgt = gBattlerAttacker;
     u32 target = GetBattlerMoveTargetType(gBattleAnimAttacker, gAnimMoveIndex);
-    
+
     switch (battlerAnimId)
     {
     case ANIM_ATTACKER:
@@ -458,7 +464,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
         ignoredTgt = gBattlerAttacker;
         break;
     }
-    
+
     switch (target)
     {
     case MOVE_TARGET_FOES_AND_ALLY:
@@ -2131,4 +2137,17 @@ static void Cmd_stopsound(void)
     m4aMPlayStop(&gMPlayInfo_SE1);
     m4aMPlayStop(&gMPlayInfo_SE2);
     sBattleAnimScriptPtr++;
+}
+
+static void Cmd_jumpifmovetypeequal(void)
+{
+    u8 moveType;
+    const u8 *type = sBattleAnimScriptPtr + 1;
+    sBattleAnimScriptPtr += 2;
+    GET_MOVE_TYPE(gCurrentMove, moveType);
+
+    if (*type != moveType)
+        sBattleAnimScriptPtr += 4;
+    else
+        sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);
 }
