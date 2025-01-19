@@ -5052,11 +5052,12 @@ s8 GetMovePriority(u32 battler, u16 move)
         priority++;
     }
     if (ability == ABILITY_VENOM_SURGE
-        && (B_GALE_WINGS= < GEN_7 || BATTLER_MAX_HP(battler))
+        && (BATTLER_MAX_HP(battler))
         && gMovesInfo[move].type == TYPE_POISON)
     {
         priority++;
     }
+    
     else if (ability == ABILITY_PRANKSTER && IS_MOVE_STATUS(move))
     {
         gProtectStructs[battler].pranksterElevated = 1;
@@ -5067,6 +5068,9 @@ s8 GetMovePriority(u32 battler, u16 move)
         priority++;
     }
     else if (ability == ABILITY_TRIAGE && IsHealingMove(move))
+        priority += 3;
+
+    else if (ability == ABILITY_SPINNER && gMovesInfo[move].spinmove)
         priority += 3;
 
     if (gProtectStructs[battler].quash)

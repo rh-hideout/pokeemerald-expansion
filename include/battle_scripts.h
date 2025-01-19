@@ -499,6 +499,7 @@ extern const u8 BattleScript_AromaVeilProtectsRet[];
 extern const u8 BattleScript_EffectDucknWeave[];
 extern const u8 BattleScript_SunSoulActivates[];
 extern const u8 BattleScript_IrritateActivates[];
+extern const u8 BattleScript_TricksterActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

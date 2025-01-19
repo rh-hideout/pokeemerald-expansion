@@ -4598,7 +4598,7 @@ gFieldStatuses |= STATUS_FIELD_PSYCHIC_TERRAIN;
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_SPATK, 1, TRUE);
-                BattleScriptPushCursorAndCallback(BattleScript_IntimidateActivates);    //need a battle script
+                BattleScriptPushCursorAndCallback(BattleScript_TricksterActivates);    
                 effect++;
             }
             break;
@@ -9038,6 +9038,11 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         if (gMovesInfo[move].punchingMove)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         break;
+
+    case ABILITY_KICKBOXER:
+        if (gMovesInfo[move].kickmove)
+           modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        break;
     
     case ABILITY_SHEER_FORCE:
         if (MoveIsAffectedBySheerForce(move))
@@ -9122,7 +9127,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         break;
     case ABILITY_NORMALIZE:
         if (moveType == TYPE_NORMAL && gBattleStruct->ateBoost[battlerAtk])
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case ABILITY_PUNK_ROCK:
         if (gMovesInfo[move].soundMove)

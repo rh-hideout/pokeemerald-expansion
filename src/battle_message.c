@@ -457,6 +457,7 @@ static const u8 sText_Evasiveness[] = _("evasiveness");
 static const u8 sText_PkmnDroppedItem[] = _("Wild {B_OPPONENT_MON1_NAME} dropped an item!\p");
 static const u8 sText_AddedToBag[] = _("{B_PLAYER_NAME} put away the {B_BUFF1}\nin the {B_BUFF2} POCKET.\p");
 static const u8 sText_BagIsFull[] = _("Too bad! The BAG is full…\p");
+static const u8 sText_PkmnCutsSpAttackWith[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY}\ncuts {B_DEF_NAME_WITH_PREFIX}'s Special attack!");
 
 
 const u8 *const gStatNamesTable[NUM_BATTLE_STATS] =
@@ -1563,6 +1564,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNMAKESFIREMISS - BATTLESTRINGS_TABLE_START] = sText_PkmnMakesFireMiss,
     [STRINGID_HYDROCANNONISCHARGING - BATTLESTRINGS_TABLE_START] = sText_HydroCannonCharging,
     [STRINGID_BLASTBURNISCHARGING - BATTLESTRINGS_TABLE_START] = sText_BlastBurnCharging,
+    [STRINGID_PKMNCUTSSPATTACKWITH - BATTLESTRINGS_TABLE_START] = sText_PkmnCutsSpAttackWith,
 };
 
 const u16 gTrainerUsedItemStringIds[] =

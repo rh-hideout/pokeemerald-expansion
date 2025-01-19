@@ -2678,9 +2678,9 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("In rain, incoming dmg reduced."),
         .aiRating = 4,
     },
-    [ABILITY_HEAT_WAVE] =
+    [ABILITY_HEAT_SINK] =
     {
-        .name = _("Heat Wave"),
+        .name = _("Heat Sink"),
         .description = COMPOUND_STRING("In sun, cannot be dmg'd by water moves."),
         .aiRating = 4,
     },
@@ -2822,4 +2822,30 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Curses on contact."),
         .aiRating = 4,
     },
+    [ABILITY_TRICKSTER] =
+    {
+        .name = _("Trickster"),
+        .description = COMPOUND_STRING("Lowers the foe's Sp.Atk."),
+        .aiRating = 7,
+    },
+    [ABILITY_KICKBOXER] =
+    {
+        .name = _("Kickboxer"),
+        .description = COMPOUND_STRING("Boosts kicking moves."),
+        .aiRating = 6,
+    },
+    [ABILITY_SPINNER] =
+    {
+        .name = _("Spinner"),
+        .description = COMPOUND_STRING("Spin moves go first."),
+        .aiRating = 6,
+    },
+    [ABILITY_ROYAL_COAT] =
+    {
+        .name = _("Royal Coat"),
+        .description = COMPOUND_STRING("Prevents added effects."),
+        .aiRating = 5,
+        .breakable = TRUE,
+    },
+
 };

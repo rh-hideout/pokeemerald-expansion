@@ -364,7 +364,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     #if P_UPDATED_ABILITIES >= GEN_9
         .abilities = { ABILITY_TORRENT, ABILITY_COMPETITIVE, ABILITY_DEFIANT },
     #else
-        .abilities = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_DEFIANT },
+        .abilities = { ABILITY_TORRENT, ABILITY_COMPETITIVE, ABILITY_DEFIANT },
     #endif
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Piplup"),

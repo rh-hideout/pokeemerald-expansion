@@ -352,7 +352,7 @@
 #define ABILITY_ABSOLUTE_ZERO 321   //reduced inc damage in snow
 #define ABILITY_BOUNTIFUL_BLOOM 322 //boost grass/ground moves in rain
 #define ABILITY_FOCUS_FLOOD 323     //reduced inc damage in rain
-#define ABILITY_HEAT_WAVE 324       //cannot be dmg by water in sun
+#define ABILITY_HEAT_SINK 324       //cannot be dmg by water in sun
 #define ABILITY_SUN_MAGE 325        //in sun reduce inc fire dmg and boost grass moves
 #define ABILITY_WIND_WALKER 326     //flying stab, ground immunity, electric weakness
 #define ABILITY_ZEAL 327            //moving first boosts power
@@ -377,10 +377,14 @@
 #define ABILITY_DRAGONATE 344       //pixelate for dragons                                                      DONE
 #define ABILITY_VENGEFUL 345        //chance to ghost curse when hit with a contact move
 #define ABILITY_TRICKSTER 346       //special intimidate                NEED A BATTLE SCRIPT FOR BATTLE_UTIL also build logic
+#define ABILITY_KICKBOXER 347
+#define ABILITY_SPINNER 348
+#define ABILITY_ROYAL_COAT 349      //shield dust reformated                NTM
 
+#define ABILITY_NORMALIZE_AURA 350  //neutralizing gas for delcatty NTM
 //remember to build the description doc for 328+
 
-#define ABILITIES_COUNT_GEN9 347
+#define ABILITIES_COUNT_GEN9 350
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

@@ -929,7 +929,7 @@
 #define MOVE_LEAF_SHURIKEN 866
 #define MOVE_QUICK_STING 867
 #define MOVE_COMPOST_BLAST 868
-#define MOVE_PLACEHOLDER 869        //purged
+#define MOVE_PSI_PUNCH 869        
 #define MOVE_DAZZLE_DASH 870
 #define MOVE_SMITE 871
 #define MOVE_DEPLETION_RAY 872
@@ -946,7 +946,7 @@
 #define MOVE_SCALE_RAIN 883
 #define MOVE_DRAGON_DASH 884
 #define MOVE_BLIGHT 885
-#define MOVE_FREEZE_BURN 886 
+#define MOVE_CYRO_FLARE 886 
 #define MOVE_BATTLE_CRY 887
 #define MOVE_ROUNDHOUSE 888
 #define MOVE_ECHO_BURN 889
@@ -1030,7 +1030,7 @@
 #define MOVE_FLURRY_STORM 965       //TEST
 #define MOVE_CHLORO_DIVE 966    //D
 #define MOVE_PRESSURE_POINT 967 //D       
-#define MOVE_ELUDE 968              //TEST
+#define MOVE_ELUDE 968              //DOES NOT WORK CRASHES GAME
 #define MOVE_BARRICADE 969          //TEST
 #define MOVE_CHAMELEE 970           //TEST
 #define MOVE_SONAR_WALL 971         //TEST
@@ -1050,17 +1050,19 @@
 #define MOVE_POISON_HORN 985        
 #define MOVE_WATER_ARROW 986        
 #define MOVE_GIANT_BLOOM 987        
-#define MOVE_MAGMA_PUNCH 988        
+#define MOVE_MAGMA_CANNON 988        
 #define MOVE_DUAL_CANNON 989        //NTM
 #define MOVE_GATOR_SLIDE 990        
 #define MOVE_TANGLE_ARROW 991       
-#define MOVE_WINDCHILL 992          
+#define MOVE_WINDCHILL 992 
+#define MOVE_BUZZ_BURST 993 
+#define MOVE_CYCLONE 994        
 //charge turn in snow
 //charge turn in sand
 //do defensive growth in sand
 
 
-#define MOVES_COUNT_GEN9 993
+#define MOVES_COUNT_GEN9 995
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 
