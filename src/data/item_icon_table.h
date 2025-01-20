@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
 {
     [ITEM_NONE] = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
@@ -883,3 +884,6 @@ const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
     // Return to field arrow
     [ITEMS_COUNT] = {gItemIcon_ReturnToFieldArrow, gItemIconPalette_ReturnToFieldArrow},
 };
+=======
+
+>>>>>>> a2685d0d087acd9e90fd9195b4bc398627dd4371
