@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPORE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("Foe Wynaut's Spore was bounced back by MAGIC COAT!");
-        MESSAGE("Foe Wynaut fell asleep!");
+        MESSAGE("Zigzagoon bounced the Spore back!");;
+        MESSAGE("The opposing Wynaut fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
     }
 }

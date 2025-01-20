@@ -36,6 +36,6 @@ SINGLE_BATTLE_TEST("Sonic Boom doesn't affect ghost types")
         TURN { MOVE(player, MOVE_SONIC_BOOM); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SONIC_BOOM, player);
-        MESSAGE("It doesn't affect Foe Gastly…");
+        MESSAGE("It doesn't affect the opposing Gastly…");
     }
 }

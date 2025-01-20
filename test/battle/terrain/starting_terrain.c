@@ -37,16 +37,16 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
                 MESSAGE("The battlefield got weird!");
                 break;
             case STARTING_STATUS_MISTY_TERRAIN:
-                MESSAGE("Mist swirled about the battlefield!");
+                MESSAGE("Mist swirled around the battlefield!");
                 break;
             case STARTING_STATUS_ELECTRIC_TERRAIN:
-                MESSAGE("An electric current runs across the battlefield!");
+                MESSAGE("An electric current is running across the battlefield!");
                 break;
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
-            MESSAGE("The weirdness disappeared from the battlefield.");
+            MESSAGE("The weirdness disappeared from the battlefield!");
             MESSAGE("The electricity disappeared from the battlefield.");
             MESSAGE("The mist disappeared from the battlefield.");
             MESSAGE("The grass disappeared from the battlefield.");
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
         TURN { ; }
     } SCENE {
         // Electric Terrain at battle's start
-        MESSAGE("An electric current runs across the battlefield!");
+        MESSAGE("An electric current is running across the battlefield!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
         // Player uses Grassy Terrain
         if (viaMove) {
@@ -95,13 +95,13 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
 
         // 5 turns
         MESSAGE("Tapu Bulu used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
 
         MESSAGE("Tapu Bulu used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
 
         MESSAGE("Tapu Bulu used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
 
         MESSAGE("The grass disappeared from the battlefield.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);

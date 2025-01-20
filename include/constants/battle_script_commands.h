@@ -191,47 +191,35 @@
 #define VARIOUS_EERIE_SPELL_PP_REDUCE                99
 #define VARIOUS_JUMP_IF_TEAM_HEALTHY                 100
 #define VARIOUS_TRY_HEAL_QUARTER_HP                  101
-#define VARIOUS_REMOVE_TERRAIN                       102
-#define VARIOUS_JUMP_IF_PRANKSTER_BLOCKED            103
-#define VARIOUS_TRY_TO_CLEAR_PRIMAL_WEATHER          104
-#define VARIOUS_GET_ROTOTILLER_TARGETS               105
-#define VARIOUS_JUMP_IF_NOT_ROTOTILLER_AFFECTED      106
-#define VARIOUS_TRY_ACTIVATE_BATTLE_BOND             107
-#define VARIOUS_CONSUME_BERRY                        108
-#define VARIOUS_JUMP_IF_CANT_REVERT_TO_PRIMAL        109
-#define VARIOUS_JUMP_IF_SPECIES                      110
-#define VARIOUS_UPDATE_ABILITY_POPUP                 111
-#define VARIOUS_JUMP_IF_WEATHER_AFFECTED             112
-#define VARIOUS_JUMP_IF_LEAF_GUARD_PROTECTED         113
-#define VARIOUS_SET_ATTACKER_STICKY_WEB_USER         114
-#define VARIOUS_TRY_NO_RETREAT                       115
-#define VARIOUS_TRY_TAR_SHOT                         116
-#define VARIOUS_CAN_TAR_SHOT_WORK                    117
-#define VARIOUS_CHECK_POLTERGEIST                    118
-#define VARIOUS_CUT_1_3_HP_RAISE_STATS               119
-#define VARIOUS_TRY_END_NEUTRALIZING_GAS             120
-#define VARIOUS_JUMP_IF_UNDER_200                    121
-#define VARIOUS_SET_SKY_DROP                         122
-#define VARIOUS_CLEAR_SKY_DROP                       123
-#define VARIOUS_SKY_DROP_YAWN                        124
-#define VARIOUS_CURE_CERTAIN_STATUSES                125
-#define VARIOUS_TRY_RESET_NEGATIVE_STAT_STAGES       126
-#define VARIOUS_JUMP_IF_LAST_USED_ITEM_BERRY         127
-#define VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT   128
-#define VARIOUS_SAVE_BATTLER_ITEM                    129
-#define VARIOUS_RESTORE_BATTLER_ITEM                 130
-#define VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM       131
-#define VARIOUS_SET_BEAK_BLAST                       132
-#define VARIOUS_SWAP_SIDE_STATUSES                   133
-#define VARIOUS_SWAP_STATS                           134
-#define VARIOUS_TEATIME_INVUL                        135
-#define VARIOUS_TEATIME_TARGETS                      136
-#define VARIOUS_TRY_WIND_RIDER_POWER                 137
-#define VARIOUS_ACTIVATE_WEATHER_CHANGE_ABILITIES    138
-#define VARIOUS_ACTIVATE_TERRAIN_CHANGE_ABILITIES    139
-#define VARIOUS_STORE_HEALING_WISH                   140
-#define VARIOUS_HIT_SWITCH_TARGET_FAILED             141
-#define VARIOUS_TRY_REVIVAL_BLESSING                 142
+#define VARIOUS_JUMP_IF_PRANKSTER_BLOCKED            102
+#define VARIOUS_TRY_TO_CLEAR_PRIMAL_WEATHER          103
+#define VARIOUS_GET_ROTOTILLER_TARGETS               104
+#define VARIOUS_JUMP_IF_NOT_ROTOTILLER_AFFECTED      105
+#define VARIOUS_TRY_ACTIVATE_BATTLE_BOND             106
+#define VARIOUS_CONSUME_BERRY                        107
+#define VARIOUS_JUMP_IF_CANT_REVERT_TO_PRIMAL        108
+#define VARIOUS_JUMP_IF_SPECIES                      109
+#define VARIOUS_UPDATE_ABILITY_POPUP                 110
+#define VARIOUS_JUMP_IF_WEATHER_AFFECTED             111
+#define VARIOUS_JUMP_IF_LEAF_GUARD_PROTECTED         112
+#define VARIOUS_SET_ATTACKER_STICKY_WEB_USER         113
+#define VARIOUS_TRY_NO_RETREAT                       114
+#define VARIOUS_CHECK_POLTERGEIST                    115
+#define VARIOUS_CUT_1_3_HP_RAISE_STATS               116
+#define VARIOUS_TRY_END_NEUTRALIZING_GAS             117
+#define VARIOUS_JUMP_IF_UNDER_200                    118
+#define VARIOUS_SET_SKY_DROP                         119
+#define VARIOUS_CLEAR_SKY_DROP                       120
+#define VARIOUS_SKY_DROP_YAWN                        121
+#define VARIOUS_CURE_CERTAIN_STATUSES                122
+#define VARIOUS_TRY_RESET_NEGATIVE_STAT_STAGES       123
+#define VARIOUS_JUMP_IF_LAST_USED_ITEM_BERRY         124
+#define VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT   125
+#define VARIOUS_SAVE_BATTLER_ITEM                    126
+#define VARIOUS_RESTORE_BATTLER_ITEM                 127
+#define VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM       128
+#define VARIOUS_SWAP_SIDE_STATUSES                   129
+#define VARIOUS_SWAP_STATS                           130
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
@@ -275,6 +263,7 @@ enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
     MOVEEND_PROTECT_LIKE_EFFECT,
+    MOVEEND_ABSORB,
     MOVEEND_RAGE,
     MOVEEND_SYNCHRONIZE_TARGET,
     MOVEEND_ABILITIES,
