@@ -5205,8 +5205,7 @@ static const union AnimCmd sAnim_DeoxysNormal_1[] =
 {
     ANIMCMD_FRAME(0, 16),
     ANIMCMD_FRAME(1, 16),
-    ANIMCMD_FRAME(0, 26),
-    ANIMCMD_FRAME(1, 16),
+    ANIMCMD_FRAME(1, 26),
     ANIMCMD_FRAME(0, 16),
     ANIMCMD_END,
 };

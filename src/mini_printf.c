@@ -36,7 +36,7 @@
 #include "gba/types.h"
 #include "gba/defines.h"
 #include "config/general.h"
-#include "characters.h"
+#include "constants/characters.h"
 #include "string_util.h"
 
 #ifndef NDEBUG
@@ -86,6 +86,8 @@ static inline char mini_pchar_decode(char encoded)
         ret = '('; // opening parentheses
     else if (encoded == CHAR_RIGHT_PAREN)
         ret = ')'; // closing parentheses
+    else if (encoded == CHAR_HYPHEN)
+        ret = '-'; // hyphen
     return ret;
 }
 
@@ -133,7 +135,31 @@ static s32 _putsEncoded(char *s, s32 len, void *buf)
         {
             break;
         }
-        *(b->pbuffer ++) = mini_pchar_decode(s[i]);
+        if (s[i] == CHAR_NEWLINE)
+        {
+            *(b->pbuffer ++) = '\\';
+            *(b->pbuffer ++) = 'n';
+        }
+        else if (s[i] == CHAR_PROMPT_SCROLL)
+        {
+            *(b->pbuffer ++) = '\\';
+            *(b->pbuffer ++) = 'l';
+        }
+        else if (s[i] == CHAR_PROMPT_CLEAR)
+        {
+            *(b->pbuffer ++) = '\\';
+            *(b->pbuffer ++) = 'p';
+        }
+        else if (s[i] == CHAR_ELLIPSIS)
+        {
+            *(b->pbuffer ++) = '.';
+            *(b->pbuffer ++) = '.';
+            *(b->pbuffer ++) = '.';
+        }
+        else
+        {
+            *(b->pbuffer ++) = mini_pchar_decode(s[i]);
+        }
     }
     *(b->pbuffer) = 0;
     return b->pbuffer - p0;
@@ -141,9 +167,9 @@ static s32 _putsEncoded(char *s, s32 len, void *buf)
 
 static s32 mini_strlen(const char *s)
 {
-	s32 len = 0;
-	while (s[len] != '\0') len++;
-	return len;
+    s32 len = 0;
+    while (s[len] != '\0') len++;
+    return len;
 }
 
 static s32 mini_itoa(s32 value, u32 radix, s32 uppercase, bool32 unsig, char *buffer)

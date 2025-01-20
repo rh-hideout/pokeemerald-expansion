@@ -155,11 +155,12 @@
 // Gen9 hold effects
 #define HOLD_EFFECT_ABILITY_SHIELD      175
 #define HOLD_EFFECT_CLEAR_AMULET        176
-#define HOLD_EFFECT_MIRROR_HERB         177 // Not implemented.
+#define HOLD_EFFECT_MIRROR_HERB         177
 #define HOLD_EFFECT_PUNCHING_GLOVE      178
 #define HOLD_EFFECT_COVERT_CLOAK        179
 #define HOLD_EFFECT_LOADED_DICE         180
-#define HOLD_EFFECT_BOOSTER_ENERGY      181 // Not implemented.
+#define HOLD_EFFECT_BOOSTER_ENERGY      181
+#define HOLD_EFFECT_OGERPON_MASK        182
 
 //Custom hold effects
 #define HOLD_EFFECT_BARK_ARMOR          185
