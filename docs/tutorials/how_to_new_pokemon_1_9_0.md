@@ -839,6 +839,24 @@ static const u16 sPecharuntTeachableLearnset[] = {
 #endif
 ```
 
+_NOTE: At the top of this file, you will probably see this warning:_
+```
+//
+// DO NOT MODIFY THIS FILE! It is auto-generated from tools/learnset_helpers/teachable.py`
+//
+```
+The expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves. 
+
+Ignore the warning shown above the first time you're adding your teachable moves (as otherwise the compiler will complain about the array not existing), but in the future (if you're using the learnset helper) simply edit what teachable moves your Pokémon can learn in one of the JSON files found in `tools/learnset_helpers/porymoves_files`. It doesn't really matter which one you add your new Pokémon to, as the tool pulls from all of the files in this folder.
+
+The learnset helper is useful if you plan on changing and/or increasing the available TMs and Tutor moves in your game. As an example, Bulbasaur learns Rage by TM in Red/Blue/Yellow, but in Emerald this TM does not exist. But since `tools/learnset_helpers/porymoves_files/rby.json` defines "MOVE_RAGE" as a TM move for Bulbasaur, that move would automatically be added to the `sBulbasaurTeachableLearnset` array if you were to add a Rage TM at any point.
+
+The learnset helper can be toggled on/off in `include/config/pokemon.h`:
+```
+// Learnset helper toggles
+#define P_LEARNSET_HELPER_TEACHABLE TRUE        // If TRUE, teachable_learnsets.h will be populated by tools/learnset_helpers/teachable.py using the included JSON files based on available TMs and tutors.
+```
+
 Once more, we need to register the learnset in `gSpeciesInfo`:
 
 ```diff

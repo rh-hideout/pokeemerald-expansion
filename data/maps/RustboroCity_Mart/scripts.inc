@@ -30,8 +30,7 @@ RustboroCity_Mart_Pokemart_Basic:
 	.2byte ITEM_X_DEFENSE
 	.2byte ITEM_RARE_CANDY
 	.2byte ITEM_NONE
-	release
-	end
+	pokemartlistend
 
 RustboroCity_Mart_EventScript_PokemartExpanded::
 	pokemart RustboroCity_Mart_Pokemart_Expanded
@@ -60,8 +59,7 @@ RustboroCity_Mart_Pokemart_Expanded:
 	.2byte ITEM_SOOTHE_BELL
 	.2byte ITEM_SHARP_BEAK
 	.2byte ITEM_NONE
-	release
-	end
+	pokemartlistend
 
 RustboroCity_Mart_EventScript_PokefanF::
 	msgbox RustboroCity_Mart_Text_BuyingHealsInCaseOfShroomish, MSGBOX_NPC

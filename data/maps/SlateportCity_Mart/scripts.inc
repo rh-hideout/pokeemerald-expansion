@@ -35,9 +35,7 @@ SlateportCity_Mart_Pokemart:
 	.2byte ITEM_IMPISH_MINT
 	.2byte ITEM_SERIOUS_MINT
 	.2byte ITEM_HARBOR_MAIL
-	.2byte ITEM_NONE
-	release
-	end
+	pokemartlistend
 
 SlateportCity_Mart_EventScript_BlackBelt::
 	msgbox SlateportCity_Mart_Text_SomeItemsOnlyAtMart, MSGBOX_NPC

@@ -37,8 +37,7 @@ FallarborTown_Mart_Pokemart:
 	.2byte ITEM_FOCUS_SASH
 	.2byte ITEM_HARD_STONE
 	.2byte ITEM_NONE
-	release
-	end
+	pokemartlistend
 
 FallarborTown_Mart_EventScript_Woman::
 	msgbox FallarborTown_Mart_Text_DecidingSkittyEvolve, MSGBOX_NPC

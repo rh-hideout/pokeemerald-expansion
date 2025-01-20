@@ -46,6 +46,8 @@ LV          = 34
 '='         = 35
 ';'         = 36
 V_D_ARROW   = 38
+NBSP        = 39
+'~'         = 39
 '¿'         = 51
 '¡'         = 52
 PK          = 53
@@ -465,6 +467,7 @@ FONT_SMALL_NARROW = FC 06 08
 FONT_NARROWER = FC 06 0A
 FONT_SMALL_NARROWER = FC 06 0B
 FONT_SHORT_NARROW = FC 06 0C
+FONT_SHORT_NARROWER = FC 06 0D
 
 @ colors
 

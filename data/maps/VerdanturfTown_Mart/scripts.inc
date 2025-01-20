@@ -43,8 +43,7 @@ VerdanturfTown_Mart_Pokemart:
 	.2byte ITEM_CAREFUL_MINT
 	.2byte ITEM_SASSY_MINT
 	.2byte ITEM_NONE
-	release
-	end
+	pokemartlistend
 
 VerdanturfTown_Mart_EventScript_Boy::
 	msgbox VerdanturfTown_Mart_Text_XSpecialIsCrucial, MSGBOX_NPC

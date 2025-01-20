@@ -14459,11 +14459,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_SHIELDON
 
 #if P_FAMILY_BURMY
-    const u32 gMonFrontPic_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/anim_front.4bpp.lz");
-    const u32 gMonPalette_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/normal.gbapal.lz");
-    const u32 gMonBackPic_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/back.4bpp.lz");
-    const u32 gMonShinyPalette_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/shiny.gbapal.lz");
-    const u8 gMonIcon_BurmyPlantCloak[] = INCBIN_U8("graphics/pokemon/burmy/icon.4bpp");
+    const u32 gMonFrontPic_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/anim_front.4bpp.lz");
+    const u32 gMonPalette_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/normal.gbapal.lz");
+    const u32 gMonBackPic_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/back.4bpp.lz");
+    const u32 gMonShinyPalette_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/shiny.gbapal.lz");
+    const u8 gMonIcon_BurmyPlant[] = INCBIN_U8("graphics/pokemon/burmy/icon.4bpp");
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Burmy[] = INCBIN_U8("graphics/pokemon/burmy/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -14481,24 +14481,24 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u8 gMonIcon_BurmyTrash[] = INCBIN_U8("graphics/pokemon/burmy/trash/icon.4bpp");
 
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_BurmyPlantCloak[] = INCBIN_COMP("graphics/pokemon/burmy/overworld.4bpp");
+    const u32 gObjectEventPic_BurmyPlant[] = INCBIN_COMP("graphics/pokemon/burmy/overworld.4bpp");
     const u32 gObjectEventPic_BurmySandy[] = INCBIN_COMP("graphics/pokemon/burmy/sandy/overworld.4bpp");
     const u32 gObjectEventPic_BurmyTrash[] = INCBIN_COMP("graphics/pokemon/burmy/trash/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u32 gOverworldPalette_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/overworld_normal.gbapal.lz");
+    const u32 gOverworldPalette_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/overworld_normal.gbapal.lz");
     const u32 gOverworldPalette_BurmySandy[] = INCBIN_U32("graphics/pokemon/burmy/sandy/overworld_normal.gbapal.lz");
     const u32 gOverworldPalette_BurmyTrash[] = INCBIN_U32("graphics/pokemon/burmy/trash/overworld_normal.gbapal.lz");
-    const u32 gShinyOverworldPalette_BurmyPlantCloak[] = INCBIN_U32("graphics/pokemon/burmy/overworld_shiny.gbapal.lz");
+    const u32 gShinyOverworldPalette_BurmyPlant[] = INCBIN_U32("graphics/pokemon/burmy/overworld_shiny.gbapal.lz");
     const u32 gShinyOverworldPalette_BurmySandy[] = INCBIN_U32("graphics/pokemon/burmy/sandy/overworld_shiny.gbapal.lz");
     const u32 gShinyOverworldPalette_BurmyTrash[] = INCBIN_U32("graphics/pokemon/burmy/trash/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
-    const u32 gMonFrontPic_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/anim_front.4bpp.lz");
-    const u32 gMonPalette_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/normal.gbapal.lz");
-    const u32 gMonBackPic_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/back.4bpp.lz");
-    const u32 gMonShinyPalette_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/shiny.gbapal.lz");
-    const u8 gMonIcon_WormadamPlantCloak[] = INCBIN_U8("graphics/pokemon/wormadam/icon.4bpp");
+    const u32 gMonFrontPic_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/anim_front.4bpp.lz");
+    const u32 gMonPalette_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/normal.gbapal.lz");
+    const u32 gMonBackPic_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/back.4bpp.lz");
+    const u32 gMonShinyPalette_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/shiny.gbapal.lz");
+    const u8 gMonIcon_WormadamPlant[] = INCBIN_U8("graphics/pokemon/wormadam/icon.4bpp");
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Wormadam[] = INCBIN_U8("graphics/pokemon/wormadam/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -14516,14 +14516,14 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u8 gMonIcon_WormadamTrash[] = INCBIN_U8("graphics/pokemon/wormadam/trash/icon.4bpp");
 
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_WormadamPlantCloak[] = INCBIN_COMP("graphics/pokemon/wormadam/overworld.4bpp");
+    const u32 gObjectEventPic_WormadamPlant[] = INCBIN_COMP("graphics/pokemon/wormadam/overworld.4bpp");
     const u32 gObjectEventPic_WormadamSandy[] = INCBIN_COMP("graphics/pokemon/wormadam/sandy/overworld.4bpp");
     const u32 gObjectEventPic_WormadamTrash[] = INCBIN_COMP("graphics/pokemon/wormadam/trash/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u32 gOverworldPalette_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/overworld_normal.gbapal.lz");
+    const u32 gOverworldPalette_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/overworld_normal.gbapal.lz");
     const u32 gOverworldPalette_WormadamSandy[] = INCBIN_U32("graphics/pokemon/wormadam/sandy/overworld_normal.gbapal.lz");
     const u32 gOverworldPalette_WormadamTrash[] = INCBIN_U32("graphics/pokemon/wormadam/trash/overworld_normal.gbapal.lz");
-    const u32 gShinyOverworldPalette_WormadamPlantCloak[] = INCBIN_U32("graphics/pokemon/wormadam/overworld_shiny.gbapal.lz");
+    const u32 gShinyOverworldPalette_WormadamPlant[] = INCBIN_U32("graphics/pokemon/wormadam/overworld_shiny.gbapal.lz");
     const u32 gShinyOverworldPalette_WormadamSandy[] = INCBIN_U32("graphics/pokemon/wormadam/sandy/overworld_shiny.gbapal.lz");
     const u32 gShinyOverworldPalette_WormadamTrash[] = INCBIN_U32("graphics/pokemon/wormadam/trash/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
@@ -18880,7 +18880,7 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_LANDORUS
 
 #if P_FAMILY_ENAMORUS
-    const u32 gMonFrontPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/front.4bpp.lz");
+    const u32 gMonFrontPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/anim_front.4bpp.lz");
     const u32 gMonPalette_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/normal.gbapal.lz");
     const u32 gMonBackPic_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/back.4bpp.lz");
     const u32 gMonShinyPalette_EnamorusIncarnate[] = INCBIN_U32("graphics/pokemon/enamorus/shiny.gbapal.lz");
