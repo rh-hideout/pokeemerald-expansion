@@ -67,3 +67,5 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
         HP_BAR(opponent, damage: opponentMaxHP / 4);
     }
 }
+
+TO_DO_BATTLE_TEST("Baton Pass passes Cursed status");

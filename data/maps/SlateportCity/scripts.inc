@@ -319,6 +319,7 @@ SlateportCity_Pokemart_EnergyGuru:
 # 160 "data/maps/SlateportCity/scripts.pory"
 	end
 # 161 "data/maps/SlateportCity/scripts.pory"
+	pokemartlistend
 
 # 162 "data/maps/SlateportCity/scripts.pory"
 SlateportCity_EventScript_EffortRibbonWoman::
@@ -1039,6 +1040,7 @@ SlateportCity_PokemartDecor_Dolls:
 # 520 "data/maps/SlateportCity/scripts.pory"
 	end
 # 521 "data/maps/SlateportCity/scripts.pory"
+	pokemartlistend
 
 # 522 "data/maps/SlateportCity/scripts.pory"
 SlateportCity_EventScript_ComeBackWithSecretPower::
@@ -1111,6 +1113,7 @@ SlateportCity_PokemartDecor:
 # 556 "data/maps/SlateportCity/scripts.pory"
 	end
 # 557 "data/maps/SlateportCity/scripts.pory"
+	pokemartlistend
 
 # 558 "data/maps/SlateportCity/scripts.pory"
 SlateportCity_EventScript_PowerTMClerk::
@@ -1147,6 +1150,7 @@ SlateportCity_Pokemart_PowerTMs:
 # 574 "data/maps/SlateportCity/scripts.pory"
 	end
 # 575 "data/maps/SlateportCity/scripts.pory"
+	pokemartlistend
 
 # 576 "data/maps/SlateportCity/scripts.pory"
 @ Scene with Capt Sterns interview and Team Aqua announcing plans to steal Submarine
