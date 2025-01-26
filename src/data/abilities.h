@@ -2865,4 +2865,16 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 8,
     },
 
+    [ABILITY_FROZEN_BUNKER] =
+    {
+        .name = _("Frozen Bunker"),
+        .description = COMPOUND_STRING("Breaks free when hit by a\nsupereffective move."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+        .cantBeOverwritten = TRUE,
+    },
+
 };

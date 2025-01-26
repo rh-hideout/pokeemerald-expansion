@@ -134,4 +134,8 @@
 // param1: amount of days
 #define FORM_CHANGE_DAYS_PASSED                 23
 
+// Form change that activates when hit by a Super-Effective move.
+// Primarily used for Arctiglobe's form change from 'encased' to 'freed'.
+#define FORM_CHANGE_HIT_BY_SUPER_EFFECTIVE_MOVE 24
+
 #endif // GUARD_CONSTANTS_FORM_CHANGE_TYPES_H

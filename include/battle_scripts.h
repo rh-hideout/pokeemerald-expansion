@@ -548,6 +548,7 @@ extern const u8 BattleScript_BearHugGooeyActivates[];
 extern const u8 BattleScript_BearHugMummyActivates[];
 extern const u8 BattleScript_BearHugRockyHelmetActivates[];
 extern const u8 BattleScript_AbilityStatusEffectNoPopUp[];
+extern const u8 BattleScript_FrozenBunkerFormChange[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
