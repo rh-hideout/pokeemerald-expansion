@@ -8901,11 +8901,18 @@ bool32 IsShieldsDownProtected(u32 battler)
             && GetFormIdFromFormSpeciesId(gBattleMons[battler].species) < GetFormIdFromFormSpeciesId(SPECIES_MINIOR_CORE_RED)); // Minior is not in core form
 }
 
+bool32 IsFrozenBunkerProtected(u32 battler)
+{
+    return (GetBattlerAbility(battler) == ABILITY_FROZEN_BUNKER
+            && GetFormIdFromFormSpeciesId(gBattleMons[battler].species) == GetFormIdFromFormSpeciesId(SPECIES_ARCTIGLOBE_ENCASED)); // Arctiglobe is in encased form
+}
+
 u32 IsAbilityStatusProtected(u32 battler)
 {
     return IsFlowerVeilProtected(battler)
         || IsLeafGuardProtected(battler)
-        || IsShieldsDownProtected(battler);
+        || IsShieldsDownProtected(battler)
+        || IsFrozenBunkerProtected(battler);
 }
 
 u32 GetHighestStatId(u32 battler)
@@ -9160,6 +9167,20 @@ static void Cmd_various(void)
     {
         VARIOUS_ARGS(const u8 *jumpInstr);
         if (IsShieldsDownProtected(battler))
+        {
+            gBattlerAbility = battler;
+            gBattlescriptCurrInstr = cmd->jumpInstr;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        return;
+    }
+    case VARIOUS_JUMP_IF_FROZEN_BUNKER_PROTECTED:
+    {
+        VARIOUS_ARGS(const u8 *jumpInstr);
+        if (IsFrozenBunkerProtected(battler))
         {
             gBattlerAbility = battler;
             gBattlescriptCurrInstr = cmd->jumpInstr;

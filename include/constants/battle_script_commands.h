@@ -240,6 +240,7 @@
 #define VARIOUS_TRY_TRICK_STAB_ILLUSION_OFF          148
 #define VARIOUS_TRY_BURY_SELF                        149
 #define VARIOUS_TRY_TEMP_TRAP                        150
+#define VARIOUS_JUMP_IF_FROZEN_BUNKER_PROTECTED      151
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0

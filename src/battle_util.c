@@ -6131,6 +6131,25 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
             }
             break;
+        case ABILITY_FROZEN_BUNKER:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+             && TARGET_TURN_DAMAGED
+             && gMoveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE
+             && IsBattlerAlive(battler)
+             && gBattleMons[gBattlerTarget].species != SPECIES_ARCTIGLOBE_FREED)
+             {
+                switch(gBattleMons[gBattlerTarget].species)
+                {
+                    case SPECIES_ARCTIGLOBE_ENCASED:
+                        TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_SUPER_EFFECTIVE_MOVE);
+                        BattleScriptPushCursor();
+                        gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+                        effect++;
+                        break;
+                }
+             }            
+            break;
         case ABILITY_SEED_SOWER:
             if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
@@ -10920,6 +10939,10 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(u32 move, u32 moveType, u32 
         if (IS_MOVE_SPECIAL(move))
             return UQ_4_12(0.5);
         break;
+    case ABILITY_FROZEN_BUNKER:
+        if ((typeEffectivenessModifier <= UQ_4_12(1.0)) && (gBattleMons[battlerDef].species = SPECIES_ARCTIGLOBE_ENCASED))
+            return UQ_4_12(0.5);
+        break;
     }
     return UQ_4_12(1.0);
 }
@@ -11769,6 +11792,9 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, u16 method)
                 case FORM_CHANGE_BATTLE_TERASTALLIZATION:
                     if (GetBattlerTeraType(battler) == formChanges[i].param1)
                         targetSpecies = formChanges[i].targetSpecies;
+                    break;
+                case FORM_CHANGE_HIT_BY_SUPER_EFFECTIVE_MOVE:
+                    targetSpecies = formChanges[i].targetSpecies;
                     break;
                 }
             }
