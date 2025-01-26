@@ -5993,6 +5993,63 @@ case ABILITY_HOSPITALITY:
             }
             break;
 
+        case ABILITY_COLD_HEART:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && IsBattlerAlive(gBattlerAttacker)
+             && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+             && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
+             && (IsMoveMakingContact(move, gBattlerAttacker))
+             && TARGET_TURN_DAMAGED
+             && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+             && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+            {
+                gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_FROSTBITE;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
+                gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
+                effect++;
+            }
+            break;
+
+        case ABILITY_CONUNDRUM:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && IsBattlerAlive(gBattlerAttacker)
+             && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+             && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
+             && (IsMoveMakingContact(move, gBattlerAttacker))
+             && TARGET_TURN_DAMAGED
+             && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+             && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+            {
+                gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CONFUSION;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
+                gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
+                effect++;
+            }
+            break;
+
+        case ABILITY_DROWSY_AURA:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+             && IsBattlerAlive(gBattlerAttacker)
+             && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+             && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
+             && (IsMoveMakingContact(move, gBattlerAttacker))
+             && TARGET_TURN_DAMAGED
+             && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+             && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+            {
+                gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_SLEEP;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_AbilityStatusEffect;
+                gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
+                effect++;
+            }
+            break;
+
         case ABILITY_CUTE_CHARM:
             if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
              && IsBattlerAlive(gBattlerAttacker)
@@ -8698,9 +8755,11 @@ u8 GetAttackerObedienceForAction()
             do
                 gCurrMovePos = gChosenMovePos = MOD(Random(), MAX_MON_MOVES);
             while ((1u << gCurrMovePos) & calc);
-        return DISOBEYS_RANDOM_MOVE;
+            return DISOBEYS_RANDOM_MOVE;
+        }
     }
     else
+    
     {
         obedienceLevel = levelReferenced - obedienceLevel;
 
@@ -8821,13 +8880,13 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
         return TRUE;
     else if (gProtectStructs[battlerDef].burningBulwarked)
         return TRUE;
-    else if (gProtectStructs[battler].luminsphered)
+    else if (gProtectStructs[battlerDef].luminsphered)
         return TRUE;
-    else if ((gProtectStructs[battler].obstructed || gProtectStructs[battler].silkTrapped || gProtectStructs[battler].sonarwalled) && !IS_MOVE_STATUS(move))
+    else if ((gProtectStructs[battlerDef].obstructed || gProtectStructs[battlerDef].silkTrapped || gProtectStructs[battlerDef].sonarwalled) && !IS_MOVE_STATUS(move))
         return TRUE;
-    else if (gProtectStructs[battler].spikyShielded)
+    else if (gProtectStructs[battlerDef].spikyShielded)
         return TRUE;
-    else if (gProtectStructs[battler].barricaded)
+    else if (gProtectStructs[battlerDef].barricaded)
         return TRUE;
     else if (gProtectStructs[battlerDef].kingsShielded && !IS_MOVE_STATUS(move))
         return TRUE;
@@ -9959,13 +10018,13 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             break;
         }
-        switch (holdEffectAtk)
-        {
-        case HOLD_EFFECT_HOENN_SEACAKE:
-            if ((gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CORSOLA || gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_LUVDISC))
-                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-            break;
-        }
+        // switch (holdEffectAtk)
+        // {
+        // case HOLD_EFFECT_HOENN_SEACAKE:
+        //     if ((gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CORSOLA || gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_LUVDISC))
+        //          modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+        //     break;
+        // }
     }
 
     // field abilities
@@ -10000,18 +10059,18 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
         if (IS_MOVE_SPECIAL(move) && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
-    case HOLD_EFFECT_TOXIN_BOOSTER:
-        if (gBattleMons[battlerAtk].type1 == TYPE_BUG || gBattleMons[battlerAtk].type2 == TYPE_BUG)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
-        break;
-    case HOLD_EFFECT_MUSIC_BIRDBOX:
-        if (gBattleMons[battlerAtk].species == SPECIES_CHATOT || gBattleMons[battlerAtk].species == SPECIES_SQUAWKABILLY)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.25));
-        break;
-    case HOLD_EFFECT_BLADE_ARMOR:
-        if ((atkBaseSpeciesId == SPECIES_MAWILE) && IS_MOVE_PHYSICAL(move))
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-        break;
+    // case HOLD_EFFECT_TOXIN_BOOSTER:
+    //     if (gBattleMons[battlerAtk].type1 == TYPE_BUG || gBattleMons[battlerAtk].type2 == TYPE_BUG)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    //     break;
+    // case HOLD_EFFECT_MUSIC_BIRDBOX:
+    //     if (gBattleMons[battlerAtk].species == SPECIES_CHATOT || gBattleMons[battlerAtk].species == SPECIES_SQUAWKABILLY)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.25));
+    //     break;
+    // case HOLD_EFFECT_BLADE_ARMOR:
+    //     if ((atkBaseSpeciesId == SPECIES_MAWILE) && IS_MOVE_PHYSICAL(move))
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    //     break;
     
     }
 
@@ -10186,26 +10245,27 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
          && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
-    case HOLD_EFFECT_BARK_ARMOR:
-        if (gBattleMons[battlerDef].species == SPECIES_SUDOWOODO && !usesDefStat)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-        break;
-    case HOLD_EFFECT_FESTIVE_COAT:
-        if (gBattleMons[battlerDef].species == SPECIES_DELIBIRD)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
-        break;
-    case HOLD_EFFECT_TOXIN_BOOSTER:
-        if (gBattleMons[battlerDef].type1 == TYPE_BUG || gBattleMons[battlerDef].type2 == TYPE_BUG)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
-        break;
-    case HOLD_EFFECT_BLADE_ARMOR:
-        if (gBattleMons[battlerDef].species == SPECIES_MAWILE)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-        break;
-    case HOLD_EFFECT_HOENN_SEACAKE:
-        if (gBattleMons[battlerDef].species == SPECIES_CORSOLA || gBattleMons[battlerDef].species == SPECIES_LUVDISC)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-        break;
+    //big edit
+    // case HOLD_EFFECT_BARK_ARMOR:
+    //     if (gBattleMons[battlerDef].species == SPECIES_SUDOWOODO && !usesDefStat)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    //     break;
+    // case HOLD_EFFECT_FESTIVE_COAT:
+    //     if (gBattleMons[battlerDef].species == SPECIES_DELIBIRD)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+    //     break;
+    // case HOLD_EFFECT_TOXIN_BOOSTER:
+    //     if (gBattleMons[battlerDef].type1 == TYPE_BUG || gBattleMons[battlerDef].type2 == TYPE_BUG)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    //     break;
+    // case HOLD_EFFECT_BLADE_ARMOR:
+    //     if (gBattleMons[battlerDef].species == SPECIES_MAWILE)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    //     break;
+    // case HOLD_EFFECT_HOENN_SEACAKE:
+    //     if (gBattleMons[battlerDef].species == SPECIES_CORSOLA || gBattleMons[battlerDef].species == SPECIES_LUVDISC)
+    //         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    //     break;
     }
 
 
@@ -10259,7 +10319,7 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageCalculationDa
     else if (!IS_BATTLER_OF_TYPE(battlerAtk, moveType) || move == MOVE_STRUGGLE || move == MOVE_NONE)
         return UQ_4_12(1.0);
 
-    return stab;
+    return (abilityAtk == ABILITY_ADAPTABILITY) ? UQ_4_12(2.0) : UQ_4_12(1.5);
 }
 
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
@@ -10493,26 +10553,26 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageCalculationData *da
             return (abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
         break;
-    case HOLD_EFFECT_BARK_ARMOR:
-        if (gBattleMons[battlerDef].species == SPECIES_SUDOWOODO && moveType == TYPE_GRASS)
-           return UQ_4_12(0.5);
-        break;
-    case HOLD_EFFECT_FESTIVE_COAT:
-        if (gBattleMons[battlerDef].species == SPECIES_DELIBIRD && moveType == TYPE_FIRE)
-           return UQ_4_12(0.5);
-        break;
-    case HOLD_EFFECT_CURSED_TOY:
-        if (gBattleMons[battlerDef].species == SPECIES_BANETTE && moveType == TYPE_DARK)
-           return UQ_4_12(0.0);
-        break;
-    case HOLD_EFFECT_MUSIC_BIRDBOX:
-        if ((gBattleMons[battlerDef].species == SPECIES_CHATOT || gBattleMons[battlerDef].species == SPECIES_SQUAWKABILLY) && moveType == TYPE_FIGHTING)
-           return UQ_4_12(0.5);
-        break;
-    case HOLD_EFFECT_SPIRIT_CHIME:
-        if (gBattleMons[battlerDef].species == SPECIES_BANETTE && moveType == TYPE_GHOST)
-           return UQ_4_12(0.0);
-        break;
+    // case HOLD_EFFECT_BARK_ARMOR:
+    //     if (gBattleMons[battlerDef].species == SPECIES_SUDOWOODO && moveType == TYPE_GRASS)
+    //        return UQ_4_12(0.5);
+    //     break;
+    // case HOLD_EFFECT_FESTIVE_COAT:
+    //     if (gBattleMons[battlerDef].species == SPECIES_DELIBIRD && moveType == TYPE_FIRE)
+    //        return UQ_4_12(0.5);
+    //     break;
+    // case HOLD_EFFECT_CURSED_TOY:
+    //     if (gBattleMons[battlerDef].species == SPECIES_BANETTE && moveType == TYPE_DARK)
+    //        return UQ_4_12(0.0);
+    //     break;
+    // case HOLD_EFFECT_MUSIC_BIRDBOX:
+    //     if ((gBattleMons[battlerDef].species == SPECIES_CHATOT || gBattleMons[battlerDef].species == SPECIES_SQUAWKABILLY) && moveType == TYPE_FIGHTING)
+    //        return UQ_4_12(0.5);
+    //     break;
+    // case HOLD_EFFECT_SPIRIT_CHIME:
+    //     if (gBattleMons[battlerDef].species == SPECIES_BANETTE && moveType == TYPE_GHOST)
+    //        return UQ_4_12(0.0);
+    //     break;
     }
     return UQ_4_12(1.0);
 }
@@ -10875,7 +10935,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
             RecordAbilityBattle(battlerDef, ABILITY_HEAT_SINK);
         }
     }
-    else if (moveType == TYPE_GROUND && !IsBattlerGrounded2(battlerDef, TRUE) && !(gMovesInfo[move].ignoreTypeIfFlyingAndUngrounded))
+    else if (moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(battlerDef, TRUE) && !(gMovesInfo[move].ignoreTypeIfFlyingAndUngrounded))
     {
         modifier = UQ_4_12(0.0);
         if (recordAbilities && defAbility == ABILITY_WIND_WALKER)
@@ -12036,18 +12096,18 @@ bool32 AreBattlersOfSameGender(u32 battler1, u32 battler2)
 u32 CalcSecondaryEffectChance(u32 battler, u32 battlerAbility, const struct AdditionalEffect *additionalEffect)
 {
     bool8 hasSereneGrace = (battlerAbility == ABILITY_SERENE_GRACE);
-    bool8 hasSereneStrike = (battlerAbility == ABILITY_SERENE_STRIKE);
+    //bool8 hasSereneStrike = (battlerAbility == ABILITY_SERENE_STRIKE);
     bool8 hasRainbow = (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW) != 0;
 
     u16 secondaryEffectChance = additionalEffect->chance;
 
-    if (hasRainbow && (hasSereneGrace || hasSereneStrike) && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
+    if (hasRainbow && (hasSereneGrace /*|| hasSereneStrike*/) && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
         return secondaryEffectChance * 2;
 
     if (hasSereneGrace)
         secondaryEffectChance *= 2;
-    else if (hasSereneStrike)
-        secondaryEffectChance *= 1.5;
+    // else if (hasSereneStrike)
+    //     secondaryEffectChance *= 1.5;
     if (hasRainbow && additionalEffect->moveEffect != MOVE_EFFECT_SECRET_POWER)
         secondaryEffectChance *= 2;
 

@@ -27,7 +27,7 @@
 #define P_PRIMAL_REVERSIONS              FALSE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              FALSE // Ultra Necrozma only.
 #define P_GIGANTAMAX_FORMS               FALSE
-#define P_TERA_FORMS                     FALSE
+#define P_TERA_FORMS                     TRUE
 //#define P_FLUX_STATE                     TRUE
 
 // Fusion forms

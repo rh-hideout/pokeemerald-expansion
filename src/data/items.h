@@ -7194,265 +7194,265 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_GriseousOrb,
     },
 
-    [ITEM_BARK_ARMOR] =
-    {
-        .name = _("Bark Armor"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_BARK_ARMOR,
-        .description = COMPOUND_STRING(
-            "Resists Grass and\n"
-            "raises the Sp. Def\n"
-            "for Sudowoodo 1.5x."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
+    // [ITEM_BARK_ARMOR] =
+    // {
+    //     .name = _("Bark Armor"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_BARK_ARMOR,
+    //     .description = COMPOUND_STRING(
+    //         "Resists Grass and\n"
+    //         "raises the Sp. Def\n"
+    //         "for Sudowoodo 1.5x."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
 
-    [ITEM_FESTIVE_COAT] =
-    {
-        .name = _("Festive Coat"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_FESTIVE_COAT,
-        .description = COMPOUND_STRING(
-            "Resists fire and\n"
-            "doubles the Def and\n"
-            "Sp. Def for Delibird."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_TOXIN_BOOSTER] =
-    {
-        .name = _("Toxin Booster"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_TOXIN_BOOSTER,
-        .description = COMPOUND_STRING(
-            "Slightly boosts\n"
-            "Atk, Def, Sp. Atk\n"
-            "and Sp. Def for bugs."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_CURSED_TOY] =
-    {
-        .name = _("Cursed Toy"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_CURSED_TOY,
-        .description = COMPOUND_STRING(
-            "Gives an immunity\n"
-            "to DARK type moves\n"
-            "for Banette."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_MUSIC_BIRDBOX] =
-    {
-        .name = _("Music Birdbox"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_MUSIC_BIRDBOX,
-        .description = COMPOUND_STRING(
-            "Resists fighting moves\n"
-            "and slightly boost\n"
-            "Chatot and Squawkabilly's\n"
-            "Atk and Sp. Atk."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 30,
-    },
-    [ITEM_BLADE_ARMOR] =
-    {
-        .name = _("Blade Armor"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_BLADE_ARMOR,
-        .description = COMPOUND_STRING(
-            "Boosts the attack\n"
-            "Def and Sp. Def for\n"
-            "Mawile by 50%."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_HOENN_SEACAKE] =
-    {
-        .name = _("Hoenn Seacake"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_HOENN_SEACAKE,
-        .description = COMPOUND_STRING(
-            "For Corsola or Luvdisc to\n"
-            "boost their Def and\n"
-            "Sp. Def. Also boost.\n"
-            "ally's attacks."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 30,
-    },
-    [ITEM_SPIRIT_CHIME] =
-    {
-        .name = _("Spirit Chime"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_SPIRIT_CHIME,
-        .description = COMPOUND_STRING(
-            "Grants Chimecho an\n"
-            "immunity to ghost\n"
-            "type moves."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_CAMO_CLOAK] =
-    {
-        .name = _("Camo Cloak"),
-        .price = 5000,
-        .holdEffect = HOLD_EFFECT_CAMO_CLOAK,
-        .description = COMPOUND_STRING(
-            "Changes normal moves\n"
-            "used by Kecleon to\n"
-            "match its current type."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
+    // [ITEM_FESTIVE_COAT] =
+    // {
+    //     .name = _("Festive Coat"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_FESTIVE_COAT,
+    //     .description = COMPOUND_STRING(
+    //         "Resists fire and\n"
+    //         "doubles the Def and\n"
+    //         "Sp. Def for Delibird."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_TOXIN_BOOSTER] =
+    // {
+    //     .name = _("Toxin Booster"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_TOXIN_BOOSTER,
+    //     .description = COMPOUND_STRING(
+    //         "Slightly boosts\n"
+    //         "Atk, Def, Sp. Atk\n"
+    //         "and Sp. Def for bugs."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_CURSED_TOY] =
+    // {
+    //     .name = _("Cursed Toy"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_CURSED_TOY,
+    //     .description = COMPOUND_STRING(
+    //         "Gives an immunity\n"
+    //         "to DARK type moves\n"
+    //         "for Banette."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_MUSIC_BIRDBOX] =
+    // {
+    //     .name = _("Music Birdbox"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_MUSIC_BIRDBOX,
+    //     .description = COMPOUND_STRING(
+    //         "Resists fighting moves\n"
+    //         "and slightly boost\n"
+    //         "Chatot and Squawkabilly's\n"
+    //         "Atk and Sp. Atk."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 30,
+    // },
+    // [ITEM_BLADE_ARMOR] =
+    // {
+    //     .name = _("Blade Armor"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_BLADE_ARMOR,
+    //     .description = COMPOUND_STRING(
+    //         "Boosts the attack\n"
+    //         "Def and Sp. Def for\n"
+    //         "Mawile by 50%."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_HOENN_SEACAKE] =
+    // {
+    //     .name = _("Hoenn Seacake"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_HOENN_SEACAKE,
+    //     .description = COMPOUND_STRING(
+    //         "For Corsola or Luvdisc to\n"
+    //         "boost their Def and\n"
+    //         "Sp. Def. Also boost.\n"
+    //         "ally's attacks."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 30,
+    // },
+    // [ITEM_SPIRIT_CHIME] =
+    // {
+    //     .name = _("Spirit Chime"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_SPIRIT_CHIME,
+    //     .description = COMPOUND_STRING(
+    //         "Grants Chimecho an\n"
+    //         "immunity to ghost\n"
+    //         "type moves."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_CAMO_CLOAK] =
+    // {
+    //     .name = _("Camo Cloak"),
+    //     .price = 5000,
+    //     .holdEffect = HOLD_EFFECT_CAMO_CLOAK,
+    //     .description = COMPOUND_STRING(
+    //         "Changes normal moves\n"
+    //         "used by Kecleon to\n"
+    //         "match its current type."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
 
-    [ITEM_BARK_ARMOR] =
-    {
-        .name = _("Bark Armor"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_BARK_ARMOR,
-        .description = COMPOUND_STRING(
-            "Resists Grass and\n"
-            "raises the Sp. Def\n"
-            "for Sudowoodo 1.5x."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
+    // [ITEM_BARK_ARMOR] =
+    // {
+    //     .name = _("Bark Armor"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_BARK_ARMOR,
+    //     .description = COMPOUND_STRING(
+    //         "Resists Grass and\n"
+    //         "raises the Sp. Def\n"
+    //         "for Sudowoodo 1.5x."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
 
-    [ITEM_FESTIVE_COAT] =
-    {
-        .name = _("Festive Coat"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_FESTIVE_COAT,
-        .description = COMPOUND_STRING(
-            "Resists fire and\n"
-            "doubles the Def and\n"
-            "Sp. Def for Delibird."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_TOXIN_BOOSTER] =
-    {
-        .name = _("Toxin Booster"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_TOXIN_BOOSTER,
-        .description = COMPOUND_STRING(
-            "Slightly boosts\n"
-            "Atk, Def, Sp. Atk\n"
-            "and Sp. Def for bugs."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_CURSED_TOY] =
-    {
-        .name = _("Cursed Toy"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_CURSED_TOY,
-        .description = COMPOUND_STRING(
-            "Gives an immunity\n"
-            "to DARK type moves\n"
-            "for Banette."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_MUSIC_BIRDBOX] =
-    {
-        .name = _("Music Birdbox"),
-        .price = 2000,
-        .holdEffect = HOLD_EFFECT_MUSIC_BIRDBOX,
-        .description = COMPOUND_STRING(
-            "Resists fighting moves\n"
-            "and slightly boost\n"
-            "Chatot and Squawkabilly's\n"
-            "Atk and Sp. Atk."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 30,
-    },
-    [ITEM_BLADE_ARMOR] =
-    {
-        .name = _("Blade Armor"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_BLADE_ARMOR,
-        .description = COMPOUND_STRING(
-            "Boosts the attack\n"
-            "Def and Sp. Def for\n"
-            "Mawile by 50%."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_HOENN_SEACAKE] =
-    {
-        .name = _("Hoenn Seacake"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_HOENN_SEACAKE,
-        .description = COMPOUND_STRING(
-            "For Corsola or Luvdisc to\n"
-            "boost their Def and\n"
-            "Sp. Def. Also boost.\n"
-            "ally's attacks."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 30,
-    },
-    [ITEM_SPIRIT_CHIME] =
-    {
-        .name = _("Spirit Chime"),
-        .price = 4000,
-        .holdEffect = HOLD_EFFECT_SPIRIT_CHIME,
-        .description = COMPOUND_STRING(
-            "Grants Chimecho an\n"
-            "immunity to ghost\n"
-            "type moves."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
-    [ITEM_CAMO_CLOAK] =
-    {
-        .name = _("Camo Cloak"),
-        .price = 5000,
-        .holdEffect = HOLD_EFFECT_CAMO_CLOAK,
-        .description = COMPOUND_STRING(
-            "Changes normal moves\n"
-            "used by Kecleon to\n"
-            "match its current type."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .flingPower = 60,
-    },
+    // [ITEM_FESTIVE_COAT] =
+    // {
+    //     .name = _("Festive Coat"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_FESTIVE_COAT,
+    //     .description = COMPOUND_STRING(
+    //         "Resists fire and\n"
+    //         "doubles the Def and\n"
+    //         "Sp. Def for Delibird."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_TOXIN_BOOSTER] =
+    // {
+    //     .name = _("Toxin Booster"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_TOXIN_BOOSTER,
+    //     .description = COMPOUND_STRING(
+    //         "Slightly boosts\n"
+    //         "Atk, Def, Sp. Atk\n"
+    //         "and Sp. Def for bugs."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_CURSED_TOY] =
+    // {
+    //     .name = _("Cursed Toy"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_CURSED_TOY,
+    //     .description = COMPOUND_STRING(
+    //         "Gives an immunity\n"
+    //         "to DARK type moves\n"
+    //         "for Banette."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_MUSIC_BIRDBOX] =
+    // {
+    //     .name = _("Music Birdbox"),
+    //     .price = 2000,
+    //     .holdEffect = HOLD_EFFECT_MUSIC_BIRDBOX,
+    //     .description = COMPOUND_STRING(
+    //         "Resists fighting moves\n"
+    //         "and slightly boost\n"
+    //         "Chatot and Squawkabilly's\n"
+    //         "Atk and Sp. Atk."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 30,
+    // },
+    // [ITEM_BLADE_ARMOR] =
+    // {
+    //     .name = _("Blade Armor"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_BLADE_ARMOR,
+    //     .description = COMPOUND_STRING(
+    //         "Boosts the attack\n"
+    //         "Def and Sp. Def for\n"
+    //         "Mawile by 50%."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_HOENN_SEACAKE] =
+    // {
+    //     .name = _("Hoenn Seacake"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_HOENN_SEACAKE,
+    //     .description = COMPOUND_STRING(
+    //         "For Corsola or Luvdisc to\n"
+    //         "boost their Def and\n"
+    //         "Sp. Def. Also boost.\n"
+    //         "ally's attacks."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 30,
+    // },
+    // [ITEM_SPIRIT_CHIME] =
+    // {
+    //     .name = _("Spirit Chime"),
+    //     .price = 4000,
+    //     .holdEffect = HOLD_EFFECT_SPIRIT_CHIME,
+    //     .description = COMPOUND_STRING(
+    //         "Grants Chimecho an\n"
+    //         "immunity to ghost\n"
+    //         "type moves."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
+    // [ITEM_CAMO_CLOAK] =
+    // {
+    //     .name = _("Camo Cloak"),
+    //     .price = 5000,
+    //     .holdEffect = HOLD_EFFECT_CAMO_CLOAK,
+    //     .description = COMPOUND_STRING(
+    //         "Changes normal moves\n"
+    //         "used by Kecleon to\n"
+    //         "match its current type."),
+    //     .pocket = POCKET_ITEMS,
+    //     .type = ITEM_USE_BAG_MENU,
+    //     .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    //     .flingPower = 60,
+    // },
 
 // Incenses
 

@@ -347,7 +347,7 @@
 #define ABILITY_NOXIOUS_ARMOR 316   //take less damage if enemy is poisoned
 #define ABILITY_DROWSY_AURA 317     //sleep on hit
 #define ABILITY_BULLY 318           //chance to reduce def on hit
-#define ABILITY_SERENE_STRIKE 319   //1/2 serene grace 1/2 adaptability
+#define ABILITY_PLACEHOLDER 319     //deleted serene strike
 #define ABILITY_PRIDE 320           //SpA guts
 #define ABILITY_ABSOLUTE_ZERO 321   //reduced inc damage in snow
 #define ABILITY_BOUNTIFUL_BLOOM 322 //boost grass/ground moves in rain

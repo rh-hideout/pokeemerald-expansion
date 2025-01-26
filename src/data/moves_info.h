@@ -23448,7 +23448,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
     [MOVE_HYDROSHOT_FLURRY] =
     {
-        .name = COMPOUND_STRING("Hydroshot", "Hydroshot Flurry"),
+        .name = COMPOUND_STRING("Hydroshot"),
         .description = COMPOUND_STRING(
             "Rapidfires precise water bolts,\n"
             "strikes with 3 critical hits."),

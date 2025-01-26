@@ -10661,7 +10661,7 @@ static void Cmd_various(void)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             else
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-        }
+        
         break;
     }
     case VARIOUS_TRY_THIRD_TYPE:
