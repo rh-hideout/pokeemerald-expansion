@@ -52,7 +52,7 @@
 #define FLAG_ROUTE109_TRAINERS    0x26 // R109 Trainers
 #define FLAG_MOVE_REMINDER_UNLOCK 0x27 // For when you find the move reminder in Fallarbor
 #define FLAG_WEATHER_INSTITUTE_BEATEN 0x28 // Used for the Level Cap
-#define FLAG_LILYCOVE_RIVAL       0x29 // Used for level caps - Kinda Unused
+#define FLAG_ROUTE_121_GRUNTS     0x29 // Blocks advancement pass 121 before Winona
 #define FLAG_ROUTE104_TREE1       0x2A // Route 104 Tree 1
 #define FLAG_ROUTE104_TREE2       0x2B // Route 104 Tree 2
 #define FLAG_ROUTE104_TREE3       0x2C // Route 104 Tree 3

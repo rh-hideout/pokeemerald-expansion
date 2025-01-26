@@ -329,9 +329,8 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         u32 move = gBattleResources->battleHistory->usedMoves[opposingBattler][i];
-        if (gMovesInfo[move].effect == EFFECT_PROTECT && move != MOVE_ENDURE)
-            return TRUE;
-        if (gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI)))
+        if ((gMovesInfo[move].effect == EFFECT_PROTECT && move != MOVE_ENDURE) || move == MOVE_SUBSTITUTE 
+            || (gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI))))
             return TRUE;
     }
     return FALSE;
@@ -340,9 +339,10 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
 // move checks
 bool32 IsAffectedByPowder(u32 battler, u32 ability, u32 holdEffect)
 {
-    if (ability == ABILITY_OVERCOAT
+    if ((ability == ABILITY_OVERCOAT
         || (B_POWDER_GRASS >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
         || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES)
+        && IsMoldBreakerTypeAbility(battler, ability))
         return FALSE;
     return TRUE;
 }
@@ -1377,9 +1377,7 @@ u32 AI_DecideHoldEffectForTurn(u32 battlerId)
     if (AI_THINKING_STRUCT->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
 
-    if (gStatuses3[battlerId] & STATUS3_EMBARGO)
-        return HOLD_EFFECT_NONE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+    if (gStatuses3[battlerId] & STATUS3_EMBARGO || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return HOLD_EFFECT_NONE;
     if (AI_DATA->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses3[battlerId] & STATUS3_GASTRO_ACID))
         return HOLD_EFFECT_NONE;
@@ -1464,6 +1462,7 @@ bool32 IsHazardMoveEffect(u32 moveEffect)
 {
     switch (moveEffect)
     {
+    case MAX_EFFECT_STEELSURGE:
     case EFFECT_SPIKES:
     case EFFECT_TOXIC_SPIKES:
     case EFFECT_STICKY_WEB:
@@ -1489,15 +1488,12 @@ bool32 IsMoveRedirectionPrevented(u32 move, u32 atkAbility)
 
 bool32 IsSemiInvulnerable(u32 battlerDef, u32 move)
 {
-    if (gStatuses3[battlerDef] & STATUS3_PHANTOM_FORCE)
+    if (gBattleStruct->commandingDondozo & (1u << battlerDef))
         return TRUE;
-    else if (gBattleStruct->commandingDondozo & (1u << battlerDef))
-        return TRUE;
-    else if (!gMovesInfo[move].damagesAirborne && gStatuses3[battlerDef] & STATUS3_ON_AIR)
-        return TRUE;
-    else if (!gMovesInfo[move].damagesUnderwater && gStatuses3[battlerDef] & STATUS3_UNDERWATER)
-        return TRUE;
-    else if (!gMovesInfo[move].damagesUnderground && gStatuses3[battlerDef] & STATUS3_UNDERGROUND)
+    else if ((!gMovesInfo[move].damagesAirborne && gStatuses3[battlerDef] & STATUS3_ON_AIR)
+            ||(!gMovesInfo[move].damagesUnderwater && gStatuses3[battlerDef] & STATUS3_UNDERWATER)
+            ||(!gMovesInfo[move].damagesUnderground && gStatuses3[battlerDef] & STATUS3_UNDERGROUND)
+            ||(gStatuses3[battlerDef] & STATUS3_PHANTOM_FORCE))
         return TRUE;
     else
         return FALSE;
@@ -1584,8 +1580,6 @@ bool32 ShouldSetSandstorm(u32 battler, u32 ability, u32 holdEffect)
       || ability == ABILITY_MAGIC_GUARD
       || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
       || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK)
-      || IS_BATTLER_OF_TYPE(battler, TYPE_STEEL)
-      || IS_BATTLER_OF_TYPE(battler, TYPE_GROUND)
       || HasMoveEffect(battler, EFFECT_SHORE_UP)
       || HasMoveEffect(battler, EFFECT_WEATHER_BALL))
     {
@@ -1607,7 +1601,6 @@ bool32 ShouldSetHail(u32 battler, u32 ability, u32 holdEffect)
       || ability == ABILITY_MAGIC_GUARD
       || ability == ABILITY_OVERCOAT
       || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
-      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
       || HasMoveEffect(battler, EFFECT_BLIZZARD)
       || HasMoveEffect(battler, EFFECT_AURORA_VEIL)
       || HasMoveEffect(battler, EFFECT_WEATHER_BALL))
@@ -2891,7 +2884,7 @@ bool32 IsBattlerIncapacitated(u32 battler, u32 ability)
     if ((gBattleMons[battler].status1 & STATUS1_FREEZE) && !HasThawingMove(battler))
         return TRUE;    // if battler has thawing move we assume they will definitely use it, and thus being frozen should be neglected
 
-    if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveEffect(battler, EFFECT_SLEEP_TALK))
         return TRUE;
 
     if (gBattleMons[battler].status2 & STATUS2_RECHARGE || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
@@ -2903,6 +2896,7 @@ bool32 IsBattlerIncapacitated(u32 battler, u32 ability)
 bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
 {
     if (!CanBeSlept(battlerDef, defAbility)
+      || HasMoveEffect(battlerDef, EFFECT_SLEEP_TALK)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || PartnerMoveEffectIsStatusSameTarget(BATTLE_PARTNER(battlerAtk), battlerDef, partnerMove))   // shouldn't try to sleep mon that partner is trying to make sleep
         return FALSE;
@@ -2990,7 +2984,7 @@ bool32 AI_CanGetFrostbite(u32 battler, u32 ability)
 bool32 ShouldBurnSelf(u32 battler, u32 ability)
 {
     if (CanBeBurned(battler, ability) && (
-     ability == ABILITY_QUICK_FEET
+      (ability == ABILITY_QUICK_FEET && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
       || ability == ABILITY_HEATPROOF
       || ability == ABILITY_MAGIC_GUARD
       || (ability == ABILITY_FLARE_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
@@ -3617,12 +3611,25 @@ static const u16 sRecycleEncouragedItems[] =
     ITEM_CHESTO_BERRY,
     ITEM_LUM_BERRY,
     ITEM_STARF_BERRY,
+    ITEM_SALAC_BERRY,
+    ITEM_LIECHI_BERRY,
     ITEM_SITRUS_BERRY,
     ITEM_MICLE_BERRY,
     ITEM_CUSTAP_BERRY,
     ITEM_MENTAL_HERB,
     ITEM_FOCUS_SASH,
-    // TODO expand this
+    ITEM_AGUAV_BERRY,
+    ITEM_FIGY_BERRY,
+    ITEM_IAPAPA_BERRY,
+    ITEM_MAGO_BERRY,
+    ITEM_WIKI_BERRY,
+    ITEM_MENTAL_HERB,
+    ITEM_POWER_HERB,
+    ITEM_BERRY_JUICE,
+    ITEM_WEAKNESS_POLICY,
+    ITEM_BLUNDER_POLICY,
+    ITEM_KEE_BERRY,
+    ITEM_MARANGA_BERRY,
 };
 
 // Its assumed that the berry is strategically given, so no need to check benefits of the berry
@@ -4015,6 +4022,7 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
     if (aiData->abilities[battlerDef] == ABILITY_MAGIC_BOUNCE
      || CountUsablePartyMons(battlerDef) == 0
      || (AI_DATA->speedStats[battlerAtk] > AI_DATA->speedStats[battlerDef] && HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_RAPID_SPIN))
+     || HasMoveEffect(battlerDef, EFFECT_MAGIC_COAT)
      || HasMoveEffect(battlerDef, EFFECT_DEFOG)
      || HasMoveEffect(battlerDef, EFFECT_TIDY_UP))
         return FALSE;

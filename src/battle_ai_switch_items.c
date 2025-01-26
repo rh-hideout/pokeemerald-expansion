@@ -338,7 +338,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
 
     if (!(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
-    if (HasSuperEffectiveMoveAgainstOpponents(battler, TRUE) && RandomPercentage(RNG_AI_SWITCH_ABSORBING, 66))
+    if (HasSuperEffectiveMoveAgainstOpponents(battler, TRUE) && RandomPercentage(RNG_AI_SWITCH_ABSORBING, 100))
         return FALSE;
 
     if (IsDoubleBattle())
@@ -381,6 +381,10 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     else if (gMovesInfo[predictedMove].type == TYPE_GROUND || (isOpposingBattlerChargingOrInvulnerable && gMovesInfo[incomingMove].type == TYPE_GROUND))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_EARTH_EATER;
+    }
+    else if (gMovesInfo[predictedMove].type == TYPE_BUG || (isOpposingBattlerChargingOrInvulnerable && gMovesInfo[incomingMove].type == TYPE_GROUND))
+    {
+        absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_FLY_TRAP;
     }
     else
     {
@@ -487,24 +491,15 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyStatIsRaised(battler);
     u32 knownAbility = AI_DATA->abilities[opposingBattler] = AI_DecideKnownAbilityForTurn(opposingBattler);
-    u32 firstType = gSpeciesInfo[gBattleMons[battler].species].types[0];
-    u32 secondType = gSpeciesInfo[gBattleMons[battler].species].types[1];
-    bool8 arenaTrappable;
-    bool8 magnetPullable;
-    if (firstType == TYPE_FLYING || secondType == TYPE_FLYING || holdEffect == HOLD_EFFECT_AIR_BALLOON)
+    bool8 arenaTrappable = TRUE;
+    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) || holdEffect == HOLD_EFFECT_AIR_BALLOON)
         arenaTrappable = FALSE;
-    else
-        arenaTrappable = TRUE;
-    if (firstType == TYPE_STEEL || secondType == TYPE_STEEL)
-        magnetPullable = TRUE;
-    else
-        magnetPullable = FALSE;
     //Perish Song
     if (gStatuses3[battler] & STATUS3_PERISH_SONG && !IsBattlerTrapped(battler, TRUE) && 
         !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST) && monAbility != ABILITY_COMMANDER &&
         (gDisableStructs[battler].perishSongTimer == 0 ||
         (knownAbility == ABILITY_SHADOW_TAG && AI_DATA->abilities[battler] != ABILITY_SHADOW_TAG) ||
-        ((knownAbility == ABILITY_MAGNET_PULL || (knownAbility == ABILITY_TRACE && monAbility == ABILITY_MAGNET_PULL)) && magnetPullable) ||
+        ((knownAbility == ABILITY_MAGNET_PULL || (knownAbility == ABILITY_TRACE && monAbility == ABILITY_MAGNET_PULL)) && IS_BATTLER_OF_TYPE(battler, TYPE_STEEL)) ||
         ((knownAbility == ABILITY_ARENA_TRAP || (knownAbility == ABILITY_TRACE && monAbility == ABILITY_ARENA_TRAP ))&& arenaTrappable) ||
         HasTrappingMoveEffect(opposingBattler)))
         switchMon = TRUE;
@@ -1265,15 +1260,10 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
 bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
 {
     // List that makes mon not grounded
-    if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
-         || (heldItemEffect == HOLD_EFFECT_AIR_BALLOON && ability != ABILITY_KLUTZ))
-    {
-        // List that overrides being off the ground
-        if ((heldItemEffect == HOLD_EFFECT_IRON_BALL && ability != ABILITY_KLUTZ) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
-            return TRUE;
-        else
-            return FALSE;
-    }
+    if (!(gFieldStatuses & STATUS_FIELD_GRAVITY) && !(heldItemEffect == HOLD_EFFECT_IRON_BALL && !(ability == ABILITY_KLUTZ || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
+        && (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
+        || (heldItemEffect == HOLD_EFFECT_AIR_BALLOON && ability != ABILITY_KLUTZ && !gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)))
+        return FALSE;
     else
         return TRUE;
 }
@@ -1391,13 +1381,7 @@ static s32 GetSwitchinWeatherImpact(void)
                     weatherImpact = -1;
             }
         }
-        if (((gBattleWeather & B_WEATHER_HAIL) || (gBattleWeather & B_WEATHER_SNOW)) && ability == ABILITY_ICE_BODY)
-        {
-            weatherImpact = -(maxHP / 16);
-            if (weatherImpact == 0)
-                weatherImpact = -1;
-        }
-        if (gBattleWeather & B_WEATHER_SANDSTORM && ability == ABILITY_EARTH_EATER)
+        if (((gBattleWeather & B_WEATHER_HAIL || gBattleWeather & B_WEATHER_SNOW) && ability == ABILITY_ICE_BODY) || (gBattleWeather & B_WEATHER_SANDSTORM && ability == ABILITY_EARTH_EATER))
         {
             weatherImpact = -(maxHP / 16);
             if (weatherImpact == 0)
@@ -1723,16 +1707,11 @@ static bool32 CanAbilityTrapOpponent(u16 ability, u32 opponent)
 {
     if ((B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(opponent, TYPE_GHOST)))
         return FALSE;
-    else if (ability == ABILITY_SHADOW_TAG)
-    {
-        if (B_SHADOW_TAG_ESCAPE >= GEN_4 && AI_DATA->abilities[opponent] == ABILITY_SHADOW_TAG) // Check if ability exists in species
-            return FALSE;
-        else
-            return TRUE;
-    }
-    else if (ability == ABILITY_ARENA_TRAP && IsBattlerGrounded(opponent))
+    else if (ability == ABILITY_SHADOW_TAG && !(B_SHADOW_TAG_ESCAPE >= GEN_4 && AI_DATA->abilities[opponent] == ABILITY_SHADOW_TAG))
         return TRUE;
-    else if (ability == ABILITY_MAGNET_PULL && IS_BATTLER_OF_TYPE(opponent, TYPE_STEEL))
+    else if (IsBattlerGrounded(opponent) && (ability == ABILITY_ARENA_TRAP || (AI_DATA->abilities[opponent] == ABILITY_ARENA_TRAP && ability == ABILITY_TRACE)))
+        return TRUE;
+    else if (IS_BATTLER_OF_TYPE(opponent, TYPE_STEEL) && (ability == ABILITY_MAGNET_PULL || (AI_DATA->abilities[opponent] == ABILITY_MAGNET_PULL && ability == ABILITY_TRACE)))
         return TRUE;
     else
         return FALSE;

@@ -580,22 +580,9 @@ void Script_SetStatus1(struct ScriptContext *ctx)
 {
     u32 status1 = VarGet(ScriptReadHalfword(ctx));
     u32 slot = VarGet(ScriptReadHalfword(ctx));
-
-    if (slot >= PARTY_SIZE)
-    {
-        u16 species;
-
-        for (slot = 0; slot < PARTY_SIZE; slot++)
-        {
-            species = GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-             && species != SPECIES_EGG
-             && GetMonData(&gPlayerParty[slot], MON_DATA_HP) != 0)
-                SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
-        }
-    }
-    else
-    {
+    u32 species = GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES);
+    if (!(status1 == STATUS1_BURN      && (gSpeciesInfo[species].types[0] == TYPE_FIRE     || gSpeciesInfo[species].types[1] == TYPE_FIRE)) &&
+        !(status1 == STATUS1_FROSTBITE && (gSpeciesInfo[species].types[0] == TYPE_ICE      || gSpeciesInfo[species].types[1] == TYPE_ICE)) &&  
+        !(status1 == STATUS1_PARALYSIS && (gSpeciesInfo[species].types[0] == TYPE_ELECTRIC || gSpeciesInfo[species].types[1] == TYPE_ELECTRIC)))
         SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
-    }
 }

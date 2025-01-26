@@ -4806,7 +4806,7 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect)
         && ShouldGetStatBadgeBoost(FLAG_BADGE03_GET, battler)
         && GetBattlerSide(battler) == B_SIDE_PLAYER)
     {
-        speed = (speed * 110) / 100;
+        speed = (speed * 100) / 100;
     }
 
     // item effects
@@ -4816,6 +4816,8 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect)
         speed /= 2;
     else if (holdEffect == HOLD_EFFECT_CHOICE_SCARF && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
         speed = (speed * 150) / 100;
+    else if (holdEffect == HOLD_EFFECT_FLOAT_STONE && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+        speed = (speed * 110) / 100;
     else if (holdEffect == HOLD_EFFECT_QUICK_POWDER && gBattleMons[battler].species == SPECIES_DITTO)
         speed *= 2;
 

@@ -17,6 +17,67 @@ Debug_CheatStart::
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	setvar VAR_BIRCH_LAB_STATE, 2
 	setvar VAR_ROUTE101_STATE, 3
+	setflag FLAG_BADGE01_GET
+	setflag FLAG_BADGE02_GET
+	setflag FLAG_BADGE03_GET
+	setflag FLAG_BADGE04_GET
+	setflag FLAG_BADGE05_GET
+	setflag FLAG_BADGE06_GET
+	setflag FLAG_BADGE07_GET
+	setflag FLAG_BADGE08_GET
+	giveitem ITEM_RARE_CANDY
+	giveitem ITEM_MAX_REPEL, 99
+	giveitem ITEM_TM_FOCUS_PUNCH
+	giveitem ITEM_TM_DRAGON_CLAW
+	giveitem ITEM_TM_SCALD
+	giveitem ITEM_TM_CALM_MIND
+	giveitem ITEM_TM_HOWL
+	giveitem ITEM_TM_TOXIC
+	giveitem ITEM_TM_FLIP_TURN
+	giveitem ITEM_TM_BULK_UP
+	giveitem ITEM_TM_BULLET_SEED
+	giveitem ITEM_TM_U_TURN
+	giveitem ITEM_TM_TAUNT
+	giveitem ITEM_TM_WAVE_CRASH
+	giveitem ITEM_TM_ICE_BEAM
+	giveitem ITEM_TM_BLIZZARD
+	giveitem ITEM_TM_HYPER_BEAM
+	giveitem ITEM_TM_LIGHT_SCREEN
+	giveitem ITEM_TM_PROTECT
+	giveitem ITEM_TM_FREEZE_DRY
+	giveitem ITEM_TM_GIGA_DRAIN
+	giveitem ITEM_TM_SAFEGUARD
+	giveitem ITEM_TM_FLASH_CANNON
+	giveitem ITEM_TM_SOLAR_BEAM
+	giveitem ITEM_TM_IRON_TAIL
+	giveitem ITEM_TM_THUNDERBOLT
+	giveitem ITEM_TM_THUNDER
+	giveitem ITEM_TM_EARTHQUAKE
+	giveitem ITEM_TM_RETURN
+	giveitem ITEM_TM_DIG
+	giveitem ITEM_TM_PSYCHIC
+	giveitem ITEM_TM_SHADOW_BALL
+	giveitem ITEM_TM_BRICK_BREAK
+	giveitem ITEM_TM_SCALE_SHOT
+	giveitem ITEM_TM_REFLECT
+	giveitem ITEM_TM_FLING
+	giveitem ITEM_TM_FLAMETHROWER
+	giveitem ITEM_TM_SLUDGE_BOMB
+	giveitem ITEM_TM_STEALTH_ROCK
+	giveitem ITEM_TM_FIRE_BLAST
+	giveitem ITEM_TM_ROCK_TOMB
+	giveitem ITEM_TM_ACROBATICS
+	giveitem ITEM_TM_TORMENT
+	giveitem ITEM_TM_FACADE
+	giveitem ITEM_TM_SECRET_POWER
+	giveitem ITEM_TM_REST
+	giveitem ITEM_TM_CHARGE_BEAM
+	giveitem ITEM_TM_STONE_EDGE
+	giveitem ITEM_TM_STEEL_WING
+	giveitem ITEM_TM_DRAIN_PUNCH
+	giveitem ITEM_TM_POLTERGEIST
+	giveitem ITEM_TM_OVERHEAT
+	giveitem ITEM_TM_POLLEN_PUFF
 	givemon SPECIES_TREECKO, 5, ITEM_NONE
 	givemon SPECIES_TORCHIC, 5, ITEM_NONE
 	givemon SPECIES_MUDKIP, 5, ITEM_NONE
@@ -296,6 +357,9 @@ Debug_EventScript_InflictStatus1::
 Debug_EventScript_InflictStatus1_Close:
 	releaseall
 	end
+
+Debug_EventScript_InflictStatus1_Text_Close:
+	.string "Close$"
 	
 Debug_EventScript_InflictStatus1_Single_Poison:
 	setstatus1 STATUS1_POISON, VAR_0x8004
@@ -322,15 +386,6 @@ Debug_EventScript_InflictStatus1_Single_Frostbite:
 	releaseall
 	end
 
-Debug_EventScript_InflictStatus1_Text_Single:
-	.string "Single$"
-
-Debug_EventScript_InflictStatus1_Text_PartyWide:
-	.string "Party-wide$"
-
-Debug_EventScript_InflictStatus1_Text_Close:
-	.string "Close$"
-
 Debug_EventScript_InflictStatus1_Text_Poison:
 	.string "Poison$"
 
@@ -342,9 +397,6 @@ Debug_EventScript_InflictStatus1_Text_Sleep:
 
 Debug_EventScript_InflictStatus1_Text_Burn:
 	.string "Burn$"
-
-Debug_EventScript_InflictStatus1_Text_Freeze:
-	.string "Freeze$"
 
 Debug_EventScript_InflictStatus1_Text_Frostbite:
 	.string "Frostbite$"
