@@ -2726,6 +2726,12 @@ gCryTable::
 	cry Cry_Skoxious
 
 	cry Cry_Sanickel
+
+	cry Cry_Carpedian
+
+	cry Cry_Arctiglobe
+
+	cry Cry_Fryzzle
 .endif
 
 	.align 2
@@ -5457,5 +5463,11 @@ gCryTable_Reverse::
 	cry_reverse Cry_Skoxious
 
 	cry_reverse Cry_Sanickel
+
+	cry_reverse Cry_Carpedian
 	
+	cry_reverse Cry_Arctiglobe
+
+	cry_reverse Cry_Fryzzle
+
 .endif

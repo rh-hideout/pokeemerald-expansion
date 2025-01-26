@@ -1790,8 +1790,13 @@
 #define SPECIES_FOXCET                                  1678
 #define SPECIES_SKOXIOUS                                1679
 #define SPECIES_SANICKEL                                1680
+#define SPECIES_CARPEDIAN                               1681
+#define SPECIES_ARCTIGLOBE                              SPECIES_ARCTIGLOBE_ENCASED
+#define SPECIES_ARCTIGLOBE_ENCASED                      1682
+#define SPECIES_ARCTIGLOBE_FREED                        1683
+#define SPECIES_FRYZZLE                                 1684
 
-#define SPECIES_EGG (SPECIES_SANICKEL + 1)
+#define SPECIES_EGG (SPECIES_FRYZZLE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

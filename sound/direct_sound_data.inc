@@ -6759,6 +6759,15 @@ Cry_Skoxious::
 Cry_Sanickel::
 	.incbin "sound/direct_sound_samples/cries/sanickel.bin"
 
+Cry_Carpedian::
+	.incbin "sound/direct_sound_samples/cries/carpedian.bin"
+
+Cry_Arctiglobe::
+	.incbin "sound/direct_sound_samples/cries/arctiglobe.bin"
+
+Cry_Fryzzle::
+	.incbin "sound/direct_sound_samples/cries/fryzzle.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2

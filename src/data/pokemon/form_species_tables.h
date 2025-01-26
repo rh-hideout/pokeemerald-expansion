@@ -2204,3 +2204,8 @@ static const u16 sJerminFormSpeciesIdTable [] = {
     SPECIES_DOOMSDAY_REVENANT,
     FORM_SPECIES_END,
 };
+    static const u16 sArctiglobeFormSpeciesIdTable[] = {
+    SPECIES_ARCTIGLOBE_ENCASED,
+    SPECIES_ARCTIGLOBE_FREED,
+    FORM_SPECIES_END,
+};
