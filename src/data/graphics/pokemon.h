@@ -22842,6 +22842,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Apocamise[] = INCBIN_U8("graphics/pokemon/apocamise/icon.4bpp");
    const u8 gMonFootprint_Apocamise[] = INCBIN_U8("graphics/pokemon/apocamise/footprint.1bpp");
 
+   const u32 gMonFrontPic_Crolord[] = INCBIN_U32("graphics/pokemon/crolord/front.4bpp.lz");
+   const u32 gMonBackPic_Crolord[] = INCBIN_U32("graphics/pokemon/crolord/back.4bpp.lz");
+   const u32 gMonPalette_Crolord[] = INCBIN_U32("graphics/pokemon/crolord/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Crolord[] = INCBIN_U32("graphics/pokemon/crolord/shiny.gbapal.lz");
+   const u8 gMonIcon_Crolord[] = INCBIN_U8("graphics/pokemon/crolord/icon.4bpp");
+   const u8 gMonFootprint_Crolord[] = INCBIN_U8("graphics/pokemon/crolord/footprint.1bpp");
+
    const u32 gMonFrontPic_Jarumite[] = INCBIN_U32("graphics/pokemon/jarumite/front.4bpp.lz");
    const u32 gMonBackPic_Jarumite[] = INCBIN_U32("graphics/pokemon/jarumite/back.4bpp.lz");
    const u32 gMonPalette_Jarumite[] = INCBIN_U32("graphics/pokemon/jarumite/normal.gbapal.lz");

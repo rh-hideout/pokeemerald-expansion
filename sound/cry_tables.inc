@@ -2732,6 +2732,8 @@ gCryTable::
 	cry Cry_Arctiglobe
 
 	cry Cry_Fryzzle
+
+	cry Cry_Crolord
 .endif
 
 	.align 2
@@ -5469,5 +5471,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Arctiglobe
 
 	cry_reverse Cry_Fryzzle
+
+	cry_reverse Cry_Crolord
 
 .endif

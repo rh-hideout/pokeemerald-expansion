@@ -1795,8 +1795,9 @@
 #define SPECIES_ARCTIGLOBE_ENCASED                      1682
 #define SPECIES_ARCTIGLOBE_FREED                        1683
 #define SPECIES_FRYZZLE                                 1684
+#define SPECIES_CROLORD                                 1685
 
-#define SPECIES_EGG (SPECIES_FRYZZLE + 1)
+#define SPECIES_EGG (SPECIES_CROLORD + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

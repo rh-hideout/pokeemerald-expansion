@@ -24028,6 +24028,32 @@ static const struct LevelUpMove sApocamiseLevelUpLearnset[] = {
     LEVEL_UP_MOVE(75, MOVE_FINAL_GAMBIT),
     LEVEL_UP_END
     };
+static const struct LevelUpMove sCrolordLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_PECK), 
+    LEVEL_UP_MOVE( 1, MOVE_GUILLOTINE),
+    LEVEL_UP_MOVE( 1, MOVE_ROCK_BLAST), // has brutal mauling on clodown. are we keeping it? -rex
+    LEVEL_UP_MOVE( 1, MOVE_LEER),
+    LEVEL_UP_MOVE( 6, MOVE_FEATHER_DANCE),
+    LEVEL_UP_MOVE( 9, MOVE_PLUCK),
+    LEVEL_UP_MOVE(13, MOVE_ODOR_SLEUTH), // foresight isn't a real move??? fix later -rex
+    LEVEL_UP_MOVE(17, MOVE_DISABLE),
+    LEVEL_UP_MOVE(20, MOVE_FLAME_BURST),
+    LEVEL_UP_MOVE(23, MOVE_OMINOUS_WIND),
+    LEVEL_UP_MOVE(26, MOVE_CURSE),
+    LEVEL_UP_MOVE(30, MOVE_MEMENTO),
+    LEVEL_UP_MOVE(34, MOVE_HEX),
+    LEVEL_UP_MOVE(38, MOVE_DRILL_PECK),
+    LEVEL_UP_MOVE(42, MOVE_SLASH),
+    LEVEL_UP_MOVE(46, MOVE_SPIRIT_SHACKLE),
+    LEVEL_UP_MOVE(49, MOVE_WILL_O_WISP),
+    LEVEL_UP_MOVE(52, MOVE_THRASH),
+    LEVEL_UP_MOVE(55, MOVE_BRAVE_BIRD),
+    LEVEL_UP_MOVE(58, MOVE_FREEZING_GLARE),
+    LEVEL_UP_MOVE(62, MOVE_BEAK_BLAST),
+    LEVEL_UP_MOVE(66, MOVE_AEROBLAST), 
+    LEVEL_UP_MOVE(70, MOVE_SKY_ATTACK), 
+    LEVEL_UP_END
+    };
 static const struct LevelUpMove sJarumiteLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_SCRATCH), 
     LEVEL_UP_MOVE( 1, MOVE_SCARY_FACE),
