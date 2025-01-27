@@ -20798,6 +20798,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = gBattleAnimMove_MalignantChain,
     },
 
+
+    //custom moves begin
+    
     [MOVE_EXO_BASH] =
     {
         .name = COMPOUND_STRING("Exo Bash"),
