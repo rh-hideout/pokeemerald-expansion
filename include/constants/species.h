@@ -1796,8 +1796,11 @@
 #define SPECIES_ARCTIGLOBE_FREED                        1683
 #define SPECIES_FRYZZLE                                 1684
 #define SPECIES_CROLORD                                 1685
+#define SPECIES_SPHARE                                  1686
+#define SPECIES_COSTRIKE                                1687
+#define SPECIES_THEFOREST                               1688
 
-#define SPECIES_EGG (SPECIES_CROLORD + 1)
+#define SPECIES_EGG (SPECIES_THEFOREST + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

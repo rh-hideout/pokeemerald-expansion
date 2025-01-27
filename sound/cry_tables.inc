@@ -2734,6 +2734,13 @@ gCryTable::
 	cry Cry_Fryzzle
 
 	cry Cry_Crolord
+
+	cry Cry_Sphare
+
+	cry Cry_Costrike
+
+	cry Cry_Theforest
+
 .endif
 
 	.align 2
@@ -5473,5 +5480,11 @@ gCryTable_Reverse::
 	cry_reverse Cry_Fryzzle
 
 	cry_reverse Cry_Crolord
+
+    cry_reverse Cry_Sphare
+
+    cry_reverse Cry_Costrike
+
+	cry_reverse Cry_Theforest
 
 .endif

@@ -22821,6 +22821,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Xeninter[] = INCBIN_U8("graphics/pokemon/xeninter/icon.4bpp");
    const u8 gMonFootprint_Xeninter[] = INCBIN_U8("graphics/pokemon/xeninter/footprint.1bpp");
 
+   const u32 gMonFrontPic_Sphare[] = INCBIN_U32("graphics/pokemon/sphare/front.4bpp.lz");
+   const u32 gMonBackPic_Sphare[] = INCBIN_U32("graphics/pokemon/sphare/back.4bpp.lz");
+   const u32 gMonPalette_Sphare[] = INCBIN_U32("graphics/pokemon/sphare/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sphare[] = INCBIN_U32("graphics/pokemon/sphare/shiny.gbapal.lz");
+   const u8 gMonIcon_Sphare[] = INCBIN_U8("graphics/pokemon/sphare/icon.4bpp");
+   const u8 gMonFootprint_Sphare[] = INCBIN_U8("graphics/pokemon/sphare/footprint.1bpp");
+
+   const u32 gMonFrontPic_Costrike[] = INCBIN_U32("graphics/pokemon/costrike/front.4bpp.lz");
+   const u32 gMonBackPic_Costrike[] = INCBIN_U32("graphics/pokemon/costrike/back.4bpp.lz");
+   const u32 gMonPalette_Costrike[] = INCBIN_U32("graphics/pokemon/costrike/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Costrike[] = INCBIN_U32("graphics/pokemon/costrike/shiny.gbapal.lz");
+   const u8 gMonIcon_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/icon.4bpp");
+   const u8 gMonFootprint_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/footprint.1bpp");
+
    const u32 gMonFrontPic_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/front.4bpp.lz");
    const u32 gMonBackPic_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/back.4bpp.lz");
    const u32 gMonPalette_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/normal.gbapal.lz");
@@ -23120,6 +23134,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Dubsnake[] = INCBIN_U32("graphics/pokemon/dubsnake/shiny.gbapal.lz");
    const u8 gMonIcon_Dubsnake[] = INCBIN_U8("graphics/pokemon/dubsnake/icon.4bpp");
    const u8 gMonFootprint_Dubsnake[] = INCBIN_U8("graphics/pokemon/dubsnake/footprint.1bpp");
+
+   const u32 gMonFrontPic_Theforest[] = INCBIN_U32("graphics/pokemon/theforest/front.4bpp.lz");
+   const u32 gMonBackPic_Theforest[] = INCBIN_U32("graphics/pokemon/theforest/back.4bpp.lz");
+   const u32 gMonPalette_Theforest[] = INCBIN_U32("graphics/pokemon/theforest/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Theforest[] = INCBIN_U32("graphics/pokemon/theforest/shiny.gbapal.lz");
+   const u8 gMonIcon_Theforest[] = INCBIN_U8("graphics/pokemon/theforest/icon.4bpp");
+   const u8 gMonFootprint_Theforest[] = INCBIN_U8("graphics/pokemon/theforest/footprint.1bpp");
 
    const u32 gMonFrontPic_Doomsday[] = INCBIN_U32("graphics/pokemon/doomsday/front.4bpp.lz");
    const u32 gMonBackPic_Doomsday[] = INCBIN_U32("graphics/pokemon/doomsday/back.4bpp.lz");

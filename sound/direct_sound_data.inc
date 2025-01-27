@@ -6756,21 +6756,39 @@ Cry_Foxcet::
 Cry_Skoxious::
 	.incbin "sound/direct_sound_samples/cries/skoxious.bin"
 
+	.align 2
 Cry_Sanickel::
 	.incbin "sound/direct_sound_samples/cries/sanickel.bin"
 
+	.align 2
 Cry_Carpedian::
 	.incbin "sound/direct_sound_samples/cries/carpedian.bin"
 
+	.align 2
 Cry_Arctiglobe::
 	.incbin "sound/direct_sound_samples/cries/arctiglobe.bin"
 
+	.align 2
 Cry_Fryzzle::
 	.incbin "sound/direct_sound_samples/cries/fryzzle.bin"
 
+	.align 2
 Cry_Crolord::
 	.incbin "sound/direct_sound_samples/cries/crolord.bin"
 
+	.align 2
+Cry_Sphare::
+	.incbin "sound/direct_sound_samples/cries/sphare.bin"
+
+	.align 2
+Cry_Costrike::
+	.incbin "sound/direct_sound_samples/cries/costrike.bin"
+
+	.align 2
+Cry_Theforest::
+	.incbin "sound/direct_sound_samples/cries/theforest.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
