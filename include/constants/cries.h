@@ -2581,6 +2581,7 @@ enum {
     CRY_CARPEDIAN,
     CRY_ARCTIGLOBE,
     CRY_FRYZZLE,
+    CRY_CROLORD,
     CRY_COUNT,
 };
 

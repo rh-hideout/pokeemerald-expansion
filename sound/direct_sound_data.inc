@@ -6768,6 +6768,9 @@ Cry_Arctiglobe::
 Cry_Fryzzle::
 	.incbin "sound/direct_sound_samples/cries/fryzzle.bin"
 
+Cry_Crolord::
+	.incbin "sound/direct_sound_samples/cries/crolord.bin"
+
 .endif @ P_CRIES_ENABLED
 
 	.align 2
