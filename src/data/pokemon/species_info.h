@@ -8073,7 +8073,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Crolord,
        .shinyPalette = gMonShinyPalette_Crolord,
        .iconSprite = gMonIcon_Crolord,
-       .iconPalIndex = 2,
+       .iconPalIndex = 1,
        FOOTPRINT(Crolord)
        .levelUpLearnset = sCrolordLevelUpLearnset,
     },
@@ -9125,7 +9125,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Theforest,
        .shinyPalette = gMonShinyPalette_Theforest,
        .iconSprite = gMonIcon_Theforest,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Theforest)
        .levelUpLearnset = sTheforestLevelUpLearnset,
     },
