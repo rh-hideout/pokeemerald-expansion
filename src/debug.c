@@ -576,7 +576,6 @@ static const u8 sDebugText_ItemID[] =                   _("Item ID: {STR_VAR_3}\
 static const u8 sDebugText_PokemonID[] =                _("Species: {STR_VAR_3}\n{STR_VAR_1}{CLEAR_TO 90}\n\n{STR_VAR_2}{CLEAR_TO 90}");
 static const u8 sDebugText_PokemonLevel[] =             _("Level:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}");
 static const u8 sDebugText_PokemonShiny[] =             _("Shiny:{CLEAR_TO 90}\n   {STR_VAR_2}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{CLEAR_TO 90}");
-static const u8 sDebugText_PokemonNature[] =            _("Nature ID: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}");
 static const u8 sDebugText_PokemonAbility[] =           _("Ability Num: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}");
 static const u8 sDebugText_PokemonTeraType[] =          _("Tera Type: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}");
 static const u8 sDebugText_PokemonDynamaxLevel[] =      _("Dmax Lvl:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}");
@@ -3156,6 +3155,16 @@ static void DebugAction_Give_Pokemon_SelectLevel(u8 taskId)
     }
 }
 
+static void Debug_Display_Nature(u32 natureId, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    ConvertIntToDecimalStringN(gStringVar3, natureId, STR_CONV_MODE_LEADING_ZEROS, 2);
+    StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
+    StringCopy(gStringVar1, gNaturesInfo[natureId].name);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Nature ID: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
 static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
 {
     static const u8 *txtStr;
@@ -3177,14 +3186,7 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
         sDebugMonData->isShiny = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
-
-        StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        StringCopy(gStringVar1, gNaturesInfo[0].name);
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonNature);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-
+        Debug_Display_Nature(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugAction_Give_Pokemon_SelectNature;
     }
     else if (JOY_NEW(B_BUTTON))
@@ -3214,12 +3216,7 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
                 gTasks[taskId].tInput = 0;
         }
 
-        StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        StringCopy(gStringVar1, gNaturesInfo[gTasks[taskId].tInput].name);
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonNature);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        Debug_Display_Nature(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     }
 
     if (JOY_NEW(A_BUTTON))
