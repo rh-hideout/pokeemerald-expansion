@@ -78,6 +78,7 @@ enum DebugMenu
     DEBUG_MENU_ITEM_PCBAG,
     DEBUG_MENU_ITEM_PARTY,
     DEBUG_MENU_ITEM_GIVE,
+    DEBUG_MENU_ITEM_PLAYER,
     DEBUG_MENU_ITEM_SCRIPTS,
     DEBUG_MENU_ITEM_FLAGVAR,
     //DEBUG_MENU_ITEM_BATTLE,
@@ -96,9 +97,6 @@ enum UtilDebugMenu
     DEBUG_UTIL_MENU_ITEM_CHECKWALLCLOCK,
     DEBUG_UTIL_MENU_ITEM_SETWALLCLOCK,
     DEBUG_UTIL_MENU_ITEM_WATCHCREDITS,
-    DEBUG_UTIL_MENU_ITEM_PLAYER_NAME,
-    DEBUG_UTIL_MENU_ITEM_PLAYER_GENDER,
-    DEBUG_UTIL_MENU_ITEM_PLAYER_ID,
     DEBUG_UTIL_MENU_ITEM_CHEAT,
     DEBUG_UTIL_MENU_ITEM_EXPANSION_VER,
     DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS,
@@ -271,6 +269,13 @@ enum BerryFunctionsMenu
     DEBUG_BERRY_FUNCTIONS_MENU_PESTS,
 };
 
+enum PlayerDebugMenu
+{
+    DEBUG_PLAYER_MENU_ITEM_PLAYER_NAME,
+    DEBUG_PLAYER_MENU_ITEM_PLAYER_GENDER,
+    DEBUG_PLAYER_MENU_ITEM_PLAYER_ID,
+};
+
 // *******************************
 // Constants
 #define DEBUG_MENU_FONT FONT_NORMAL
@@ -367,6 +372,7 @@ static void DebugAction_OpenScriptsMenu(u8 taskId);
 static void DebugAction_OpenFlagsVarsMenu(u8 taskId);
 static void DebugAction_OpenGiveMenu(u8 taskId);
 static void DebugAction_OpenSoundMenu(u8 taskId);
+static void DebugAction_OpenPlayerMenu(u8 taskId);
 
 static void DebugTask_HandleMenuInput_Main(u8 taskId);
 static void DebugTask_HandleMenuInput_Utilities(u8 taskId);
@@ -393,9 +399,6 @@ static void DebugAction_Util_FontTest(u8 taskId);
 static void DebugAction_Util_CheckWallClock(u8 taskId);
 static void DebugAction_Util_SetWallClock(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
-static void DebugAction_Util_Player_Name(u8 taskId);
-static void DebugAction_Util_Player_Gender(u8 taskId);
-static void DebugAction_Util_Player_Id(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
 static void DebugAction_Util_ExpansionVersion(u8 taskId);
 static void DebugAction_Util_BerryFunctions(u8 taskId);
@@ -488,6 +491,10 @@ static void DebugAction_BerryFunctions_Ready(u8 taskId);
 static void DebugAction_BerryFunctions_NextStage(u8 taskId);
 static void DebugAction_BerryFunctions_Pests(u8 taskId);
 static void DebugAction_BerryFunctions_Weeds(u8 taskId);
+
+static void DebugAction_Player_Name(u8 taskId);
+static void DebugAction_Player_Gender(u8 taskId);
+static void DebugAction_Player_Id(u8 taskId);
 
 extern const u8 Debug_FlagsNotSetOverworldConfigMessage[];
 extern const u8 Debug_FlagsNotSetBattleConfigMessage[];
@@ -620,6 +627,7 @@ static const struct ListMenuItem sDebugMenu_Items_Main[] =
     [DEBUG_MENU_ITEM_PCBAG]         = {COMPOUND_STRING("PC/Bag…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_MENU_ITEM_PCBAG},
     [DEBUG_MENU_ITEM_PARTY]         = {COMPOUND_STRING("Party…{CLEAR_TO 110}{RIGHT_ARROW}"),        DEBUG_MENU_ITEM_PARTY},
     [DEBUG_MENU_ITEM_GIVE]          = {COMPOUND_STRING("Give X…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_MENU_ITEM_GIVE},
+    [DEBUG_MENU_ITEM_PLAYER]        = {COMPOUND_STRING("Player…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_MENU_ITEM_PLAYER},
     [DEBUG_MENU_ITEM_SCRIPTS]       = {COMPOUND_STRING("Scripts…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_MENU_ITEM_SCRIPTS},
     [DEBUG_MENU_ITEM_FLAGVAR]       = {COMPOUND_STRING("Flags & Vars…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_MENU_ITEM_FLAGVAR},
     //[DEBUG_MENU_ITEM_BATTLE]        = {COMPOUND_STRING("Battle Test{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_MENU_ITEM_BATTLE},
@@ -638,9 +646,6 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
     [DEBUG_UTIL_MENU_ITEM_CHECKWALLCLOCK]  = {COMPOUND_STRING("Check wall clock…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_UTIL_MENU_ITEM_CHECKWALLCLOCK},
     [DEBUG_UTIL_MENU_ITEM_SETWALLCLOCK]    = {COMPOUND_STRING("Set wall clock…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_UTIL_MENU_ITEM_SETWALLCLOCK},
     [DEBUG_UTIL_MENU_ITEM_WATCHCREDITS]    = {COMPOUND_STRING("Watch credits…{CLEAR_TO 110}{RIGHT_ARROW}"),    DEBUG_UTIL_MENU_ITEM_WATCHCREDITS},
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_NAME]     = {COMPOUND_STRING("Player name"),                                  DEBUG_UTIL_MENU_ITEM_PLAYER_NAME},
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_GENDER]   = {COMPOUND_STRING("Toggle gender"),                                DEBUG_UTIL_MENU_ITEM_PLAYER_GENDER},
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_ID]       = {COMPOUND_STRING("New Trainer ID"),                               DEBUG_UTIL_MENU_ITEM_PLAYER_ID},
     [DEBUG_UTIL_MENU_ITEM_CHEAT]           = {COMPOUND_STRING("Cheat start"),                                  DEBUG_UTIL_MENU_ITEM_CHEAT},
     [DEBUG_UTIL_MENU_ITEM_EXPANSION_VER]   = {COMPOUND_STRING("Expansion Version"),                            DEBUG_UTIL_MENU_ITEM_EXPANSION_VER},
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = {COMPOUND_STRING("Berry Functions…{CLEAR_TO 110}{RIGHT_ARROW}"),  DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS},
@@ -813,6 +818,13 @@ static const struct ListMenuItem sDebugMenu_Items_BerryFunctions[] =
     [DEBUG_BERRY_FUNCTIONS_MENU_WEEDS]      = {COMPOUND_STRING("Give map trees weeds"), DEBUG_BERRY_FUNCTIONS_MENU_WEEDS},
 };
 
+static const struct ListMenuItem sDebugMenu_Items_Player[] =
+{
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_NAME]   = {COMPOUND_STRING("Player name"),    DEBUG_PLAYER_MENU_ITEM_PLAYER_NAME},
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_GENDER] = {COMPOUND_STRING("Toggle gender"),  DEBUG_PLAYER_MENU_ITEM_PLAYER_GENDER},
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_ID]     = {COMPOUND_STRING("New Trainer ID"), DEBUG_PLAYER_MENU_ITEM_PLAYER_ID},
+};
+
 // *******************************
 // Menu Actions
 static void (*const sDebugMenu_Actions_Main[])(u8) =
@@ -821,6 +833,7 @@ static void (*const sDebugMenu_Actions_Main[])(u8) =
     [DEBUG_MENU_ITEM_PCBAG]         = DebugAction_OpenPCBagMenu,
     [DEBUG_MENU_ITEM_PARTY]         = DebugAction_OpenPartyMenu,
     [DEBUG_MENU_ITEM_GIVE]          = DebugAction_OpenGiveMenu,
+    [DEBUG_MENU_ITEM_PLAYER]        = DebugAction_OpenPlayerMenu,
     [DEBUG_MENU_ITEM_SCRIPTS]       = DebugAction_OpenScriptsMenu,
     [DEBUG_MENU_ITEM_FLAGVAR]       = DebugAction_OpenFlagsVarsMenu,
     //[DEBUG_MENU_ITEM_BATTLE]        = DebugAction_OpenBattleMenu,
@@ -839,9 +852,6 @@ static void (*const sDebugMenu_Actions_Utilities[])(u8) =
     [DEBUG_UTIL_MENU_ITEM_CHECKWALLCLOCK]  = DebugAction_Util_CheckWallClock,
     [DEBUG_UTIL_MENU_ITEM_SETWALLCLOCK]    = DebugAction_Util_SetWallClock,
     [DEBUG_UTIL_MENU_ITEM_WATCHCREDITS]    = DebugAction_Util_WatchCredits,
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_NAME]     = DebugAction_Util_Player_Name,
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_GENDER]   = DebugAction_Util_Player_Gender,
-    [DEBUG_UTIL_MENU_ITEM_PLAYER_ID]       = DebugAction_Util_Player_Id,
     [DEBUG_UTIL_MENU_ITEM_CHEAT]           = DebugAction_Util_CheatStart,
     [DEBUG_UTIL_MENU_ITEM_EXPANSION_VER]   = DebugAction_Util_ExpansionVersion,
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = DebugAction_Util_BerryFunctions,
@@ -965,6 +975,13 @@ static void (*const sDebugMenu_Actions_TimeMenu_Weekdays[])(u8) =
     [DEBUG_TIME_MENU_ITEM_THURSDAY] = DebugAction_TimeMenu_ChangeWeekdays,
     [DEBUG_TIME_MENU_ITEM_FRIDAY] = DebugAction_TimeMenu_ChangeWeekdays,
     [DEBUG_TIME_MENU_ITEM_SATURDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+};
+
+static void (*const sDebugMenu_Actions_Player[])(u8) =
+{
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_NAME]   = DebugAction_Player_Name,
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_GENDER] = DebugAction_Player_Gender,
+    [DEBUG_PLAYER_MENU_ITEM_PLAYER_ID]     = DebugAction_Player_Id,
 };
 
 // *******************************
@@ -1136,6 +1153,13 @@ static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeMenu_Weekdays =
     .items = sDebugMenu_Items_TimeMenu_Weekdays,
     .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
     .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeMenu_Weekdays),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_Player =
+{
+    .items = sDebugMenu_Items_Player,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_Player),
 };
 
 // *******************************
@@ -1805,6 +1829,11 @@ static void DebugTask_HandleMenuInput_BerryFunctions(u8 taskId)
     DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_BerryFunctions, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
 }
 
+static void DebugTask_HandleMenuInput_Player(u8 taskId)
+{
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_Player, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
+}
+
 // *******************************
 // Open sub-menus
 static void DebugAction_OpenUtilitiesMenu(u8 taskId)
@@ -1878,6 +1907,12 @@ static void DebugAction_TimeMenu_Weekdays(u8 taskId)
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
     else
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_Weekdays, sDebugMenu_ListTemplate_TimeMenu_Weekdays);
+}
+
+static void DebugAction_OpenPlayerMenu(u8 taskId)
+{
+    Debug_DestroyMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_Player, sDebugMenu_ListTemplate_Player);
 }
 
 // *******************************
@@ -2251,12 +2286,12 @@ static void DebugAction_Util_WatchCredits(u8 taskId)
     SetMainCallback2(CB2_StartCreditsSequence);
 }
 
-static void DebugAction_Util_Player_Name(u8 taskId)
+static void DebugAction_Player_Name(u8 taskId)
 {
     DoNamingScreen(NAMING_SCREEN_PLAYER, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_ReturnToFieldContinueScript);
 }
 
-static void DebugAction_Util_Player_Gender(u8 taskId)
+static void DebugAction_Player_Gender(u8 taskId)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
         gSaveBlock2Ptr->playerGender = FEMALE;
@@ -2266,7 +2301,7 @@ static void DebugAction_Util_Player_Gender(u8 taskId)
     ScriptContext_Enable();
 }
 
-static void DebugAction_Util_Player_Id(u8 taskId)
+static void DebugAction_Player_Id(u8 taskId)
 {
     u32 trainerId = Random32();
     SetTrainerId(trainerId, gSaveBlock2Ptr->playerTrainerId);
