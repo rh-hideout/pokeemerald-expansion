@@ -22573,8 +22573,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Evocation"),
         .description = COMPOUND_STRING(
-            "Does...something using their\n"
-            "higher offense, then lowers both"),
+            "Does... Something using their\n"
+            "higher offense, then lowers both."),
         .effect = EFFECT_PHOTON_GEYSER,
         .power = 120,
         .type = TYPE_MYSTERY,
@@ -22599,8 +22599,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Mirror Cannon"),
         .description = COMPOUND_STRING(
-            "Does...something using their\n"
-            "higher offense, then lowers both"),
+            "Blindingly powerful shot,\n"
+            "lowers user's accuracy."),
         .effect = EFFECT_HIT,
         .power = 120,
         .type = TYPE_STEEL,
@@ -22619,6 +22619,30 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_LOCK_ON, COMBO_STARTER_MIND_READER},
         .battleAnimScript = Move_FLASH_CANNON,
+    },
+
+        [MOVE_STRATO_BLADE] =
+    {
+        .name = COMPOUND_STRING("Strato Blade"),
+        .description = COMPOUND_STRING(
+            "Hits like a soaring blade.\n"
+            "High critical-hit ratio."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .criticalHitStage = 1,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_AFFECTED_BY_PREV_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_AIR_CUTTER,
     },
     // END OF CAPRICCIO MOVES
 
