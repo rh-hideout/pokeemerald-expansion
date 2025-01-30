@@ -2299,6 +2299,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Flubbster)
        .levelUpLearnset = sFlubbsterLevelUpLearnset,
+       .teachableLearnset = sFlubbsterTeachableLearnset,
+       .eggMoveLearnset = sBlubbastardEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_WATER_STONE, SPECIES_BLUBBASTARD}),
     },
 
@@ -2355,6 +2357,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Blubbastard)
        .levelUpLearnset = sBlubbastardLevelUpLearnset,
+       .teachableLearnset = sBlubbastardTeachableLearnset,
+       .eggMoveLearnset = sBlubbastardEggMoveLearnset,
        },
 
         [SPECIES_POLTIRE] =
