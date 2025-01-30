@@ -6323,3 +6323,14 @@ static const u16 sMantasmEggMoveLearnset[] = {
     
 };
 
+static const u16 sArctiglobeEggMoveLearnset[] = {
+    MOVE_AUTOTOMIZE,
+    MOVE_MEDITATE,
+    MOVE_SMACK_DOWN,
+    MOVE_BIDE,
+    MOVE_IRON_DEFENSE,
+    MOVE_DARKEST_LARIAT,
+    MOVE_UNAVAILABLE,
+    
+};
+

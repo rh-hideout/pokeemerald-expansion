@@ -21454,9 +21454,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_FAKE_OUT},
         .battleAnimScript = Move_KNOCK_OFF,
     },
-    [MOVE_OW_THE_EDGE] =
+    [MOVE_EXTREME_EDGE] =
     {
-        .name = COMPOUND_STRING("Ow the Edge"),
+        .name = COMPOUND_STRING("Extreme Edge"),
         .description = COMPOUND_STRING(
             "A life-risking slash that\n"
             "also hurts the user. Edgy!"),

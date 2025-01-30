@@ -6701,6 +6701,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Arctiglobe)
        .levelUpLearnset = sArctiglobeLevelUpLearnset,
+       .teachableLearnset = sArctiglobeTeachableLearnset,
+       .eggMoveLearnset = sArctiglobeEggMoveLearnset,
        .formSpeciesIdTable = sArctiglobeFormSpeciesIdTable,
        .formChangeTable = sArctiglobeFormChangeTable,
     },
@@ -6758,6 +6760,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Arctiglobe)
        .levelUpLearnset = sArctiglobeLevelUpLearnset,
+       .teachableLearnset = sArctiglobeTeachableLearnset,
+       .eggMoveLearnset = sArctiglobeEggMoveLearnset,
        .formSpeciesIdTable = sArctiglobeFormSpeciesIdTable,
        .formChangeTable = sArctiglobeFormChangeTable,
     },
