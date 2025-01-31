@@ -2299,7 +2299,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Flubbster)
        .levelUpLearnset = sFlubbsterLevelUpLearnset,
-       .teachableLearnset = sFlubbsterTeachableLearnset,
+       .teachableLearnset = sBlubbastardTeachableLearnset,
        .eggMoveLearnset = sBlubbastardEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_WATER_STONE, SPECIES_BLUBBASTARD}),
     },

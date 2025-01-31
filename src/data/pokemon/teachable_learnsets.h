@@ -35839,10 +35839,6 @@ static const u16 sPecharuntTeachableLearnset[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
-static const u16 sFlubbsterTeachableLearnset[] = {
-    MOVE_PROTECT,
-    MOVE_UNAVAILABLE,
-};
 static const u16 sBlubbastardTeachableLearnset[] = {
     MOVE_PROTECT,
     MOVE_UNAVAILABLE,
