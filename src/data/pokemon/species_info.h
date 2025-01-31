@@ -9113,8 +9113,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 1878,
        .weight = 8643,
        .description = COMPOUND_STRING(
-           "\n"
-           "Something is wrong.\n"),
+           "Throughout all ancient folklore\n"
+           "there are countless whispers\n"
+           "of bamboo that isn't bamboo\n"
+           "and berries that aren't berries\n"),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
