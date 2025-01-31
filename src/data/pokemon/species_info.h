@@ -2299,6 +2299,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Flubbster)
        .levelUpLearnset = sFlubbsterLevelUpLearnset,
+       .teachableLearnset = sFlubbsterTeachableLearnset,
+       .eggMoveLearnset = sBlubbastardEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_WATER_STONE, SPECIES_BLUBBASTARD}),
     },
 
@@ -2355,6 +2357,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Blubbastard)
        .levelUpLearnset = sBlubbastardLevelUpLearnset,
+       .teachableLearnset = sBlubbastardTeachableLearnset,
+       .eggMoveLearnset = sBlubbastardEggMoveLearnset,
        },
 
         [SPECIES_POLTIRE] =
@@ -6701,6 +6705,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Arctiglobe)
        .levelUpLearnset = sArctiglobeLevelUpLearnset,
+       .teachableLearnset = sArctiglobeTeachableLearnset,
+       .eggMoveLearnset = sArctiglobeEggMoveLearnset,
        .formSpeciesIdTable = sArctiglobeFormSpeciesIdTable,
        .formChangeTable = sArctiglobeFormChangeTable,
     },
@@ -6758,6 +6764,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Arctiglobe)
        .levelUpLearnset = sArctiglobeLevelUpLearnset,
+       .teachableLearnset = sArctiglobeTeachableLearnset,
+       .eggMoveLearnset = sArctiglobeEggMoveLearnset,
        .formSpeciesIdTable = sArctiglobeFormSpeciesIdTable,
        .formChangeTable = sArctiglobeFormChangeTable,
     },
@@ -8073,7 +8081,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Crolord,
        .shinyPalette = gMonShinyPalette_Crolord,
        .iconSprite = gMonIcon_Crolord,
-       .iconPalIndex = 2,
+       .iconPalIndex = 1,
        FOOTPRINT(Crolord)
        .levelUpLearnset = sCrolordLevelUpLearnset,
     },
@@ -9127,7 +9135,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Theforest,
        .shinyPalette = gMonShinyPalette_Theforest,
        .iconSprite = gMonIcon_Theforest,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Theforest)
        .levelUpLearnset = sTheforestLevelUpLearnset,
     },
