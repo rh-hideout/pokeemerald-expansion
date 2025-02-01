@@ -638,7 +638,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Lemirethun,
        .shinyPalette = gMonShinyPalette_Lemirethun,
        .iconSprite = gMonIcon_Lemirethun,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Lemirethun)
        .levelUpLearnset = sLemirethunLevelUpLearnset,
     },
