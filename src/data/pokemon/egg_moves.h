@@ -6304,7 +6304,7 @@ static const u16 sFrigibaxEggMoveLearnset[] = {
 
 static const u16 sBlubbastardEggMoveLearnset[] = {
     MOVE_AEROBLAST,
-    MOVE_DRAGON_DANCE,
+    MOVE_DESTINY_BOND,
     MOVE_ENCORE,
     MOVE_SPACIAL_REND,
     MOVE_BELLY_DRUM,
