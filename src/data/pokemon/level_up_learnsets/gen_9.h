@@ -6919,8 +6919,9 @@ static const struct LevelUpMove sTorchicLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
     LEVEL_UP_MOVE( 1, MOVE_GROWL),
     LEVEL_UP_MOVE( 3, MOVE_QUICK_ATTACK),
-    LEVEL_UP_MOVE( 4, MOVE_DOUBLE_KICK),
+    LEVEL_UP_MOVE( 4, MOVE_PLUCK),
     LEVEL_UP_MOVE( 5, MOVE_EMBER),
+    LEVEL_UP_MOVE( 7, MOVE_DOUBLE_KICK),
     LEVEL_UP_MOVE( 9, MOVE_FLAME_CHARGE),
     LEVEL_UP_MOVE(12, MOVE_DETECT),
     LEVEL_UP_MOVE(15, MOVE_SAND_ATTACK),
@@ -11972,10 +11973,10 @@ static const struct LevelUpMove sMusharnaLevelUpLearnset[] = {
 
 #if P_FAMILY_PIDOVE
 static const struct LevelUpMove sPidoveLevelUpLearnset[] = {
-    LEVEL_UP_MOVE( 1, MOVE_GUST),
     LEVEL_UP_MOVE( 1, MOVE_GROWL),
-    LEVEL_UP_MOVE( 4, MOVE_LEER),
-    LEVEL_UP_MOVE( 4, MOVE_DUAL_WINGBEAT),
+    LEVEL_UP_MOVE( 3, MOVE_LEER),
+    LEVEL_UP_MOVE( 4, MOVE_PLUCK),
+    LEVEL_UP_MOVE( 5, MOVE_DUAL_WINGBEAT),
     LEVEL_UP_MOVE( 5, MOVE_QUICK_ATTACK),
     LEVEL_UP_MOVE(12, MOVE_TAUNT),
     LEVEL_UP_MOVE(16, MOVE_AIR_CUTTER),
@@ -15145,10 +15146,11 @@ static const struct LevelUpMove sDiggersbyLevelUpLearnset[] = {
 
 #if P_FAMILY_FLETCHLING
 static const struct LevelUpMove sFletchlingLevelUpLearnset[] = {
-    LEVEL_UP_MOVE( 1, MOVE_GROWL),
     LEVEL_UP_MOVE( 1, MOVE_PECK),
-    LEVEL_UP_MOVE( 5, MOVE_QUICK_ATTACK),
-    LEVEL_UP_MOVE( 5, MOVE_EMBER),
+    LEVEL_UP_MOVE( 1, MOVE_GROWL),
+    LEVEL_UP_MOVE( 3, MOVE_QUICK_ATTACK),
+    LEVEL_UP_MOVE( 4, MOVE_EMBER),
+    LEVEL_UP_MOVE( 5, MOVE_PLUCK),
     LEVEL_UP_MOVE(15, MOVE_FLAIL),
     LEVEL_UP_MOVE(20, MOVE_ACROBATICS),
     LEVEL_UP_MOVE(25, MOVE_AGILITY),
@@ -16662,7 +16664,10 @@ static const struct LevelUpMove sPrimarinaLevelUpLearnset[] = {
 #if P_FAMILY_PIKIPEK
 static const struct LevelUpMove sPikipekLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_PECK),
+    LEVEL_UP_MOVE( 2, MOVE_TACKLE),
     LEVEL_UP_MOVE( 3, MOVE_GROWL),
+    LEVEL_UP_MOVE( 4, MOVE_PLUCK),
+    LEVEL_UP_MOVE( 5, MOVE_GUST),
     LEVEL_UP_MOVE( 7, MOVE_ECHOED_VOICE),
     LEVEL_UP_MOVE( 9, MOVE_ROCK_SMASH),
     LEVEL_UP_MOVE(13, MOVE_SUPERSONIC),

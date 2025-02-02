@@ -979,10 +979,14 @@ s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32
     if (AI_DATA->holdEffects[battlerAtk] != HOLD_EFFECT_PROTECTIVE_PADS && atkAbility != ABILITY_LONG_REACH
         && (AI_DATA->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET
         || defAbility == ABILITY_IRON_BARBS || defAbility == ABILITY_ROUGH_SKIN))
-    {
-        if (gMovesInfo[move1].makesContact && !gMovesInfo[move2].makesContact)
+    { 
+        if ((gMovesInfo[move1].makesContact && 
+            (gMovesInfo[move2].punchingMove && AI_DATA->holdEffects[battlerAtk] == HOLD_EFFECT_PUNCHING_GLOVE))
+            && !gMovesInfo[move2].makesContact)
             return -1;
-        if (gMovesInfo[move2].makesContact && !gMovesInfo[move1].makesContact)
+        if ((gMovesInfo[move2].makesContact && 
+            (gMovesInfo[move1].punchingMove && AI_DATA->holdEffects[battlerAtk] == HOLD_EFFECT_PUNCHING_GLOVE))
+            && !gMovesInfo[move1].makesContact)
             return 1;
     }
 
