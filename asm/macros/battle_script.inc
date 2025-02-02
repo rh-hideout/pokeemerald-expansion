@@ -1721,11 +1721,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryhitswitchtarget failInstr:req
-	callnative BS_TryHitSwitchTarget
-	.4byte \failInstr
-	.endm
-
 	.macro setmagiccoattarget
 	callnative BS_SetMagicCoatTarget
 	.endm

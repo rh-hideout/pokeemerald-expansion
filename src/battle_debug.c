@@ -220,7 +220,7 @@ enum
     LIST_AI_CHECK_VIABILITY,
     LIST_AI_SETUP_FIRST_TURN,
     LIST_AI_RISKY,
-    LIST_AI_PREFER_STRONGEST_MOVE,
+    LIST_AI_TRY_TO_2HKO,
     LIST_AI_PREFER_BATON_PASS,
     LIST_AI_DOUBLE_BATTLE,
     LIST_AI_HP_AWARE,
@@ -385,7 +385,7 @@ static const u8 sText_TryToFaint[] = _("Try to Faint");
 static const u8 sText_CheckViability[] = _("Check Viability");
 static const u8 sText_SetUpFirstTurn[] = _("Setup First Turn");
 static const u8 sText_Risky[] = _("Risky");
-static const u8 sText_PreferStrongestMove[] = _("Prefer Strongest Move");
+static const u8 sText_TryTo2HKO[] = _("Try to 2HKO");
 static const u8 sText_PreferBatonPass[] = _("Prefer Baton Pass");
 static const u8 sText_DoubleBattle[] = _("Double Battle");
 static const u8 sText_HpAware[] = _("HP Aware");
@@ -628,7 +628,7 @@ static const struct ListMenuItem sAIListItems[] =
     {sText_CheckViability, LIST_AI_CHECK_VIABILITY},
     {sText_SetUpFirstTurn, LIST_AI_SETUP_FIRST_TURN},
     {sText_Risky, LIST_AI_RISKY},
-    {sText_PreferStrongestMove, LIST_AI_PREFER_STRONGEST_MOVE},
+    {sText_TryTo2HKO, LIST_AI_TRY_TO_2HKO},
     {sText_PreferBatonPass, LIST_AI_PREFER_BATON_PASS},
     {sText_DoubleBattle, LIST_AI_DOUBLE_BATTLE},
     {sText_HpAware, LIST_AI_HP_AWARE},

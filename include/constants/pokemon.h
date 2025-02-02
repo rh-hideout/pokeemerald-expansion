@@ -46,32 +46,32 @@
 #define EGG_GROUPS_PER_MON            2
 
 // Pokémon natures
-#define NATURE_HARDY    0
-#define NATURE_LONELY   1
-#define NATURE_BRAVE    2
-#define NATURE_ADAMANT  3
-#define NATURE_NAUGHTY  4
-#define NATURE_BOLD     5
-#define NATURE_DOCILE   6
-#define NATURE_RELAXED  7
-#define NATURE_IMPISH   8
-#define NATURE_LAX      9
-#define NATURE_TIMID    10
-#define NATURE_HASTY    11
-#define NATURE_SERIOUS  12
-#define NATURE_JOLLY    13
-#define NATURE_NAIVE    14
-#define NATURE_MODEST   15
-#define NATURE_MILD     16
-#define NATURE_QUIET    17
-#define NATURE_BASHFUL  18
-#define NATURE_RASH     19
-#define NATURE_CALM     20
-#define NATURE_GENTLE   21
-#define NATURE_SASSY    22
-#define NATURE_CAREFUL  23
-#define NATURE_QUIRKY   24
-#define NATURE_NONE     25
+#define NATURE_NONE     0 // Neutral
+#define NATURE_HARDY    1 // +Atk
+#define NATURE_LONELY   2 // +Atk -Def
+#define NATURE_BRAVE    3 // +Atk -Speed
+#define NATURE_ADAMANT  4 // +Atk -SpAtk
+#define NATURE_NAUGHTY  5 // +Atk -SpDef
+#define NATURE_BOLD     6 // +Def -Atk
+#define NATURE_DOCILE   7 // +Def
+#define NATURE_RELAXED  8 // +Def -Speed
+#define NATURE_IMPISH   9 // +Def -SpAtk
+#define NATURE_LAX      10 // +Def -SpDef
+#define NATURE_TIMID    11// +Speed -Atk
+#define NATURE_HASTY    12 // +Speed -Def
+#define NATURE_SERIOUS  13 // +Speed
+#define NATURE_JOLLY    14 // +Speed -SpAtk
+#define NATURE_NAIVE    15 // +Speed - SpDef
+#define NATURE_MODEST   16 // +SpAtk -Atk
+#define NATURE_MILD     17 // +SpAtk -Def
+#define NATURE_QUIET    18 // +SpAtk -Speed
+#define NATURE_BASHFUL  19 // +SpAtk
+#define NATURE_RASH     20 // +SpAtk -SpDef
+#define NATURE_CALM     21 // +SpDef -Atk
+#define NATURE_GENTLE   22 // +SpDef -Def
+#define NATURE_SASSY    23 // +SpDef -Speed
+#define NATURE_CAREFUL  24 // +SpDef -SpAtk
+#define NATURE_QUIRKY   25 // +SpDef
 #define NUM_NATURES     26
 
 // Pokémon Stats
@@ -170,6 +170,7 @@
 #define LEVEL_UP_MOVE_END  0xFFFF
 
 #define MAX_LEVEL_UP_MOVES       20
+#define MAX_RELEARNER_MOVES      max(MAX_LEVEL_UP_MOVES, 25)
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
