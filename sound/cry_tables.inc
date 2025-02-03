@@ -2741,6 +2741,10 @@ gCryTable::
 
 	cry Cry_Theforest
 
+	cry Cry_Clobber
+
+	cry Cry_Lober
+
 .endif
 
 	.align 2
@@ -5486,5 +5490,9 @@ gCryTable_Reverse::
     cry_reverse Cry_Costrike
 
 	cry_reverse Cry_Theforest
+
+	cry_reverse Cry_Clobber
+
+	cry_reverse Cry_Lober
 
 .endif

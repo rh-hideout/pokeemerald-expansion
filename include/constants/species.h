@@ -1799,8 +1799,10 @@
 #define SPECIES_SPHARE                                  1686
 #define SPECIES_COSTRIKE                                1687
 #define SPECIES_THEFOREST                               1688
+#define SPECIES_CLOBBER                                 1689
+#define SPECIES_LOBER                                   1690
 
-#define SPECIES_EGG (SPECIES_THEFOREST + 1)
+#define SPECIES_EGG (SPECIES_LOBER + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

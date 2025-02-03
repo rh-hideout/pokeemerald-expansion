@@ -2585,6 +2585,8 @@ enum {
     CRY_SPHARE,
     CRY_COSTRIKE,
     CRY_THEFOREST,
+    CRY_CLOBBER,
+    CRY_LOBER,
     CRY_COUNT,
 };
 

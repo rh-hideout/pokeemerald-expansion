@@ -25116,6 +25116,14 @@ static const struct LevelUpMove sJahlLevelUpLearnset[] = {
    LEVEL_UP_MOVE(60, MOVE_FISSURE),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sLoberLevelUpLearnset[] = { 
+   LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sClobberLevelUpLearnset[] = { 
+   LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sSpiranhaLevelUpLearnset[] = { 
    LEVEL_UP_MOVE( 1, MOVE_CHARM),
    LEVEL_UP_MOVE( 1, MOVE_DOUBLE_SLAP),

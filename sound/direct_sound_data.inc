@@ -6789,6 +6789,15 @@ Cry_Theforest::
 	.incbin "sound/direct_sound_samples/cries/theforest.bin"
 
 	.align 2
+Cry_Clobber::
+	.incbin "sound/direct_sound_samples/cries/clobber.bin"
+
+	.align 2
+Cry_Lober::
+	.incbin "sound/direct_sound_samples/cries/lober.bin"
+
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

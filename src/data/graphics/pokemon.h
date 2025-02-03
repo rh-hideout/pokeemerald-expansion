@@ -22556,6 +22556,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Lemirethun[] = INCBIN_U8("graphics/pokemon/lemirethun/icon.4bpp");
    const u8 gMonFootprint_Lemirethun[] = INCBIN_U8("graphics/pokemon/lemirethun/footprint.1bpp");
 
+   const u32 gMonFrontPic_Lober[] = INCBIN_U32("graphics/pokemon/lober/front.4bpp.lz");
+   const u32 gMonBackPic_Lober[] = INCBIN_U32("graphics/pokemon/lober/back.4bpp.lz");
+   const u32 gMonPalette_Lober[] = INCBIN_U32("graphics/pokemon/lober/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Lober[] = INCBIN_U32("graphics/pokemon/lober/shiny.gbapal.lz");
+   const u8 gMonIcon_Lober[] = INCBIN_U8("graphics/pokemon/lober/icon.4bpp");
+   const u8 gMonFootprint_Lober[] = INCBIN_U8("graphics/pokemon/lober/footprint.1bpp");
+
+   const u32 gMonFrontPic_Clobber[] = INCBIN_U32("graphics/pokemon/clobber/front.4bpp.lz");
+   const u32 gMonBackPic_Clobber[] = INCBIN_U32("graphics/pokemon/clobber/back.4bpp.lz");
+   const u32 gMonPalette_Clobber[] = INCBIN_U32("graphics/pokemon/clobber/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Clobber[] = INCBIN_U32("graphics/pokemon/clobber/shiny.gbapal.lz");
+   const u8 gMonIcon_Clobber[] = INCBIN_U8("graphics/pokemon/clobber/icon.4bpp");
+   const u8 gMonFootprint_Clobber[] = INCBIN_U8("graphics/pokemon/clobber/footprint.1bpp");
+
    const u32 gMonFrontPic_Spiranha[] = INCBIN_U32("graphics/pokemon/spiranha/front.4bpp.lz");
    const u32 gMonBackPic_Spiranha[] = INCBIN_U32("graphics/pokemon/spiranha/back.4bpp.lz");
    const u32 gMonPalette_Spiranha[] = INCBIN_U32("graphics/pokemon/spiranha/normal.gbapal.lz");
