@@ -8777,7 +8777,7 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
     bool32 isProtected = FALSE;
 
     if ((IsZMove(move) || IsMaxMove(move))
-        && (!gProtectStructs[battlerDef].maxGuarded || GetMoveMaxEffect(move) == MAX_EFFECT_BYPASS_PROTECT))
+        && (!gProtectStructs[battlerDef].maxGuarded || MoveIgnoresProtect(move)))
         isProtected = FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
     else if (gProtectStructs[battlerDef].maxGuarded && IsMoveBlockedByMaxGuard(move))
         isProtected = TRUE;
