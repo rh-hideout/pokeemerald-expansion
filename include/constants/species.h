@@ -1801,8 +1801,11 @@
 #define SPECIES_THEFOREST                               1688
 #define SPECIES_CLOBBER                                 1689
 #define SPECIES_LOBER                                   1690
+#define SPECIES_LUNABBIT                                1691
+#define SPECIES_LEPOOZE                                 1692
+#define SPECIES_FLUBUNNY                                1693
 
-#define SPECIES_EGG (SPECIES_LOBER + 1)
+#define SPECIES_EGG (SPECIES_FLUBUNNY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

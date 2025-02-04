@@ -23621,6 +23621,18 @@ static const struct LevelUpMove sWattitudeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(55, MOVE_WAVE_CRASH),
     LEVEL_UP_END
      };
+static const struct LevelUpMove sFlubunnyLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_MOONBLAST), 
+    LEVEL_UP_END
+     };
+static const struct LevelUpMove sLepoozeLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_MOONBLAST), 
+    LEVEL_UP_END
+     };
+static const struct LevelUpMove sLunabbitLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_MOONBLAST), 
+    LEVEL_UP_END
+    };
 static const struct LevelUpMove sCamerexLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_BITE), 
     LEVEL_UP_MOVE( 1, MOVE_CHARGE),

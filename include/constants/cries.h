@@ -2587,6 +2587,9 @@ enum {
     CRY_THEFOREST,
     CRY_CLOBBER,
     CRY_LOBER,
+    CRY_LUNABBIT,
+    CRY_LEPOOZE,
+    CRY_FLUBUNNY,
     CRY_COUNT,
 };
 

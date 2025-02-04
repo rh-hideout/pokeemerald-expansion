@@ -2745,6 +2745,12 @@ gCryTable::
 
 	cry Cry_Lober
 
+	cry Cry_Lunabbit
+
+	cry Cry_Lepooze
+
+	cry Cry_Flubunny
+
 .endif
 
 	.align 2
@@ -5494,5 +5500,11 @@ gCryTable_Reverse::
 	cry_reverse Cry_Clobber
 
 	cry_reverse Cry_Lober
+
+	cry_reverse Cry_Lunabbit
+
+	cry_reverse Cry_Lepooze
+
+	cry_reverse Cry_Flubunny
 
 .endif

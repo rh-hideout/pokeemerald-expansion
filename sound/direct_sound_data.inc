@@ -6796,6 +6796,17 @@ Cry_Clobber::
 Cry_Lober::
 	.incbin "sound/direct_sound_samples/cries/lober.bin"
 
+	.align 2
+Cry_Lunabbit::
+	.incbin "sound/direct_sound_samples/cries/lunabbit.bin"
+
+	.align 2
+Cry_Lepooze::
+	.incbin "sound/direct_sound_samples/cries/lepooze.bin"
+
+	.align 2
+Cry_Flubunny::
+	.incbin "sound/direct_sound_samples/cries/flubunny.bin"
 
 	.align 2
 .endif @ P_CRIES_ENABLED
