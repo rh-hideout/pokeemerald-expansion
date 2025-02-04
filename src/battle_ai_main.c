@@ -893,10 +893,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // target ability checks
         if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
         {
-            if (CanAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[battlerDef]))
+            if (CanAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[battlerDef], FALSE))
                 RETURN_SCORE_MINUS(20);
 
-            if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType))
+            if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, FALSE))
                 RETURN_SCORE_MINUS(20);
 
             switch (aiData->abilities[battlerDef])
@@ -997,9 +997,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             // target partner ability checks & not attacking partner
             if (isDoubleBattle)
             {
-                if (CanPartnerAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[BATTLE_PARTNER(battlerDef)]))
-                    RETURN_SCORE_MINUS(20);
-
                 switch (aiData->abilities[BATTLE_PARTNER(battlerDef)])
                 {
                 case ABILITY_LIGHTNING_ROD:

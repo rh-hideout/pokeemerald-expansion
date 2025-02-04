@@ -4229,67 +4229,93 @@ static void ChooseStatBoostAnimation(u32 battler)
 #undef ANIM_STAT_ACC
 #undef ANIM_STAT_EVASION
 
-u32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef)
+bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef, bool32 runScript)
 {
-    enum MoveBlocked effect = MOVE_BLOCKED_BY_NO_ABILITY;
-
+    const u8 *battleScriptBlocksMove = NULL;
+    u32 atkPriority = AI_DATA->aiCalcInProgress ? GetBattleMovePriority(battlerAtk, move) : GetChosenMovePriority(battlerAtk);
+    u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
+    u32 battlerAbility = battlerDef;
+    
     switch (abilityDef)
     {
     case ABILITY_SOUNDPROOF:
-        if (IsSoundMove(move) && !(GetBattlerMoveTargetType(battlerAtk, move) & MOVE_TARGET_USER))
-            effect = MOVE_BLOCKED_BY_SOUNDPROOF_OR_BULLETPROOF;
+        if (IsSoundMove(move) && !(moveTarget & MOVE_TARGET_USER))
+        {
+            if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+                gHitMarker |= HITMARKER_NO_PPDEDUCT;
+            battleScriptBlocksMove = BattleScript_SoundproofProtected;
+        }
         break;
     case ABILITY_BULLETPROOF:
         if (IsBallisticMove(move))
-            effect = MOVE_BLOCKED_BY_SOUNDPROOF_OR_BULLETPROOF;
+        {
+            if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+                gHitMarker |= HITMARKER_NO_PPDEDUCT;
+            battleScriptBlocksMove = BattleScript_SoundproofProtected;
+        }
         break;
     case ABILITY_DAZZLING:
     case ABILITY_QUEENLY_MAJESTY:
     case ABILITY_ARMOR_TAIL:
-        if (GetBattlerSide(battlerAtk) != GetBattlerSide(battlerDef))
+        if (!IsAlly(battlerAtk, battlerDef))
         {
-            u32 priority = AI_DATA->aiCalcInProgress ? GetBattleMovePriority(battlerAtk, move) : GetChosenMovePriority(battlerAtk);
-            if (priority > 0)
-                effect = MOVE_BLOCKED_BY_DAZZLING;
+            if (atkPriority > 0)
+            {
+                if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+                    gHitMarker |= HITMARKER_NO_PPDEDUCT;
+                battleScriptBlocksMove = BattleScript_DazzlingProtected;
+            }
         }
         break;
     case ABILITY_GOOD_AS_GOLD:
         if (IsBattleMoveStatus(move))
         {
-            u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
             if (!(moveTarget & MOVE_TARGET_OPPONENTS_FIELD) && !(moveTarget & MOVE_TARGET_ALL_BATTLERS))
-                effect = MOVE_BLOCKED_BY_GOOD_AS_GOLD;
+                battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
         }
         break;
     }
 
-    if (!effect)
-        effect = CanPartnerAbilityBlockMove(battlerAtk, battlerDef, move, GetBattlerAbility(BATTLE_PARTNER(battlerDef)));
 
-    return effect;
-}
-
-u32 CanPartnerAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef)
-{
-    switch (abilityDef)
+    // Check def partner ability
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerDef)))
     {
-    case ABILITY_DAZZLING:
-    case ABILITY_QUEENLY_MAJESTY:
-    case ABILITY_ARMOR_TAIL:
-        if (GetBattlerSide(battlerAtk) != GetBattlerSide(battlerDef))
+        switch (GetBattlerAbility(BATTLE_PARTNER(battlerDef)))
         {
-            s32 priority = AI_DATA->aiCalcInProgress ? GetBattleMovePriority(battlerAtk, move) : GetChosenMovePriority(battlerAtk);
-            if (priority > 0)
-                return MOVE_BLOCKED_BY_PARTNER_DAZZLING;
+        case ABILITY_DAZZLING:
+        case ABILITY_QUEENLY_MAJESTY:
+        case ABILITY_ARMOR_TAIL:
+            if (!IsAlly(battlerAtk, battlerDef))
+            {
+                if (atkPriority > 0)
+                {
+                    if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+                        gHitMarker |= HITMARKER_NO_PPDEDUCT;
+                    battlerAbility = BATTLE_PARTNER(battlerDef);
+                    battleScriptBlocksMove = BattleScript_DazzlingProtected;
+                }
+            }
+            break;
         }
-        break;
     }
-    return MOVE_BLOCKED_BY_NO_ABILITY;
+    
+    if (battleScriptBlocksMove == NULL)
+        return FALSE;
+    
+    if (runScript)
+    {
+        gBattleScripting.battler = gBattlerAbility = battlerAbility;
+        gBattlescriptCurrInstr = battleScriptBlocksMove;
+    }
+    return TRUE;
 }
 
-u32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, u32 moveType)
+u32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, u32 moveType, bool32 runScript)
 {
     enum MoveAbsorbed effect = MOVE_ABSORBED_BY_NO_ABILITY;
+    const u8 *battleScript = NULL;
+    u32 statId = 0;
+    u32 statAmount = 1;
 
     switch (abilityDef)
     {
@@ -4311,32 +4337,129 @@ u32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 mov
         break;
     case ABILITY_MOTOR_DRIVE:
         if (moveType == TYPE_ELECTRIC && GetMoveTarget(move) != MOVE_TARGET_ALL_BATTLERS) // Potential bug in singles (might be solved with simu hp reudction)
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statId = STAT_SPEED;
+        }
         break;
     case ABILITY_LIGHTNING_ROD:
         if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && moveType == TYPE_ELECTRIC && GetMoveTarget(move) != MOVE_TARGET_ALL_BATTLERS) // Potential bug in singles (might be solved with simu hp reudction)
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statId = STAT_SPATK;
+        }
         break;
     case ABILITY_STORM_DRAIN:
         if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && moveType == TYPE_WATER)
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statId = STAT_SPATK;
+        }
         break;
     case ABILITY_SAP_SIPPER:
         if (moveType == TYPE_GRASS)
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statId = STAT_ATK;
+        }
         break;
     case ABILITY_WELL_BAKED_BODY:
         if (moveType == TYPE_FIRE)
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statAmount = 2;
+            statId = STAT_DEF;
+        }
         break;
     case ABILITY_WIND_RIDER:
         if (IsWindMove(move) && !(GetBattlerMoveTargetType(battlerAtk, move) & MOVE_TARGET_USER))
+        {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
+            statId = STAT_ATK;
+        }
         break;
     case ABILITY_FLASH_FIRE:
         if (moveType == TYPE_FIRE && (B_FLASH_FIRE_FROZEN >= GEN_5 || !(gBattleMons[battlerDef].status1 & STATUS1_FREEZE)))
             effect = MOVE_ABSORBED_BY_BOOST_FLASH_FIRE;
         break;
+    }
+    
+    if (effect == MOVE_ABSORBED_BY_NO_ABILITY || !runScript)
+        return effect;
+    
+    switch (effect)
+    {
+    default:
+        return FALSE;
+    case MOVE_ABSORBED_BY_DRAIN_HP_ABILITY:
+        gBattleStruct->pledgeMove = FALSE;
+        if (IsBattlerAtMaxHp(battlerDef) || (B_HEAL_BLOCKING >= GEN_5 && gStatuses3[battlerDef] & STATUS3_HEAL_BLOCK))
+        {
+            if ((gProtectStructs[battlerAtk].notFirstStrike))
+                battleScript = BattleScript_MonMadeMoveUseless;
+            else
+                battleScript = BattleScript_MonMadeMoveUseless_PPLoss;
+        }
+        else
+        {
+            if (gProtectStructs[battlerAtk].notFirstStrike)
+                battleScript = BattleScript_MoveHPDrain;
+            else
+                battleScript = BattleScript_MoveHPDrain_PPLoss;
+
+            gBattleStruct->moveDamage[battlerDef] = GetNonDynamaxMaxHP(battlerDef) / 4;
+            if (gBattleStruct->moveDamage[battlerDef] == 0)
+                gBattleStruct->moveDamage[battlerDef] = 1;
+            gBattleStruct->moveDamage[battlerDef] *= -1;
+        }
+        break;
+    case MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY:
+        gBattleStruct->pledgeMove = FALSE;
+        if (!CompareStat(battlerDef, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            if ((gProtectStructs[battlerAtk].notFirstStrike))
+                battleScript = BattleScript_MonMadeMoveUseless;
+            else
+                battleScript = BattleScript_MonMadeMoveUseless_PPLoss;
+        }
+        else
+        {
+            if (gProtectStructs[battlerAtk].notFirstStrike)
+                battleScript = BattleScript_MoveStatDrain;
+            else
+                battleScript = BattleScript_MoveStatDrain_PPLoss;
+
+            SET_STATCHANGER(statId, statAmount, FALSE);
+            if (B_ABSORBING_ABILITY_STRING < GEN_5)
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+        }
+        break;
+    case MOVE_ABSORBED_BY_BOOST_FLASH_FIRE:
+        gBattleStruct->pledgeMove = FALSE;
+        if (!gDisableStructs[battlerDef].flashFireBoosted)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_BOOST;
+            if (gProtectStructs[battlerAtk].notFirstStrike)
+                battleScript = BattleScript_FlashFireBoost;
+            else
+                battleScript = BattleScript_FlashFireBoost_PPLoss;
+            gDisableStructs[battlerDef].flashFireBoosted = TRUE;
+        }
+        else
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_NO_BOOST;
+            if (gProtectStructs[battlerAtk].notFirstStrike)
+                battleScript = BattleScript_FlashFireBoost;
+            else
+                battleScript = BattleScript_FlashFireBoost_PPLoss;
+        }
+        break;
+    }
+
+    if (battleScript != NULL)
+    {
+        gMultiHitCounter = 0;   // Prevent multi-hit moves from hitting more than once after move has been absorbed.
+        gBattlescriptCurrInstr = battleScript;
     }
 
     return effect;
@@ -5470,153 +5593,35 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_WOULD_BLOCK:
-        effect = CanAbilityBlockMove(gBattlerAttacker, battler, move, gLastUsedAbility);
+        effect = CanAbilityBlockMove(gBattlerAttacker, battler, move, gLastUsedAbility, FALSE);
         if (effect && gLastUsedAbility != 0xFFFF)
             RecordAbilityBattle(battler, gLastUsedAbility);
-        break;
+        return effect;
     case ABILITYEFFECT_MOVES_BLOCK:
+        effect = CanAbilityBlockMove(gBattlerAttacker, battler, move, gLastUsedAbility, TRUE);
+        
+        // prankster check
+        if (effect == 0
+          && GetChosenMovePriority(gBattlerAttacker) > 0
+         && BlocksPrankster(move, gBattlerAttacker, gBattlerTarget, TRUE)
+         && !(IsBattleMoveStatus(move) && (gLastUsedAbility == ABILITY_MAGIC_BOUNCE || gProtectStructs[gBattlerTarget].bounceMove)))
         {
-            effect = CanAbilityBlockMove(gBattlerAttacker, battler, move, gLastUsedAbility);
-            const u8 * battleScriptBlocksMove = NULL;
-            switch (effect)
-            {
-            case MOVE_BLOCKED_BY_SOUNDPROOF_OR_BULLETPROOF:
-                if (gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS)
-                    gHitMarker |= HITMARKER_NO_PPDEDUCT;
-                battleScriptBlocksMove = BattleScript_SoundproofProtected;
-                break;
-            case MOVE_BLOCKED_BY_DAZZLING:
-            case MOVE_BLOCKED_BY_PARTNER_DAZZLING:
-                if (effect == MOVE_BLOCKED_BY_PARTNER_DAZZLING)
-                    gBattleScripting.battler = BATTLE_PARTNER(battler);
-                else
-                    gBattleScripting.battler = battler;
-                if (gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS)
-                    gHitMarker |= HITMARKER_NO_PPDEDUCT;
-                battleScriptBlocksMove = BattleScript_DazzlingProtected;
-                break;
-            case MOVE_BLOCKED_BY_GOOD_AS_GOLD:
-                battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
-                break;
-            default:
-                if (GetChosenMovePriority(gBattlerAttacker) > 0
-                 && BlocksPrankster(move, gBattlerAttacker, gBattlerTarget, TRUE)
-                 && !(IsBattleMoveStatus(move) && (gLastUsedAbility == ABILITY_MAGIC_BOUNCE || gProtectStructs[gBattlerTarget].bounceMove)))
-                {
-                    if (!IsDoubleBattle()
-                    || !(GetBattlerMoveTargetType(gBattlerAttacker, move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY)))
-                        CancelMultiTurnMoves(gBattlerAttacker); // Don't cancel moves that can hit two targets bc one target might not be protected
-                    gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
-                    battleScriptBlocksMove = BattleScript_DarkTypePreventsPrankster;
-                    effect = 1;
-                }
-            }
-            if (effect)
-                gBattlescriptCurrInstr = battleScriptBlocksMove;
+            if (!IsDoubleBattle()
+            || !(GetBattlerMoveTargetType(gBattlerAttacker, move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY)))
+                CancelMultiTurnMoves(gBattlerAttacker); // Don't cancel moves that can hit two targets bc one target might not be protected
+            gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
+            gBattlescriptCurrInstr = BattleScript_DarkTypePreventsPrankster;
+            effect = 1;
         }
         break;
     case ABILITYEFFECT_WOULD_ABSORB:
-        effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType);
+        effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType, FALSE);
         gBattleStruct->pledgeMove = FALSE;
         if (effect && gLastUsedAbility != 0xFFFF)
             RecordAbilityBattle(battler, gLastUsedAbility);
         return effect;
     case ABILITYEFFECT_ABSORBING:
-        {
-            u32 statId = 0;
-            u32 statAmount = 1;
-            effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType);
-            if (effect)
-            {
-                switch(gLastUsedAbility)
-                {
-                case ABILITY_MOTOR_DRIVE:
-                    statId = STAT_SPEED;
-                    break;
-                case ABILITY_LIGHTNING_ROD:
-                case ABILITY_STORM_DRAIN:
-                    statId = STAT_SPATK;
-                    break;
-                case ABILITY_SAP_SIPPER:
-                case ABILITY_WIND_RIDER:
-                    statId = STAT_ATK;
-                    break;
-                case ABILITY_WELL_BAKED_BODY:
-                    statAmount = 2;
-                    statId = STAT_DEF;
-                    break;
-                }
-            }
-            switch (effect)
-            {
-            case MOVE_ABSORBED_BY_DRAIN_HP_ABILITY:
-                gBattleStruct->pledgeMove = FALSE;
-                if (IsBattlerAtMaxHp(battler) || (B_HEAL_BLOCKING >= GEN_5 && gStatuses3[battler] & STATUS3_HEAL_BLOCK))
-                {
-                    if ((gProtectStructs[gBattlerAttacker].notFirstStrike))
-                        gBattlescriptCurrInstr = BattleScript_MonMadeMoveUseless;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_MonMadeMoveUseless_PPLoss;
-                }
-                else
-                {
-                    if (gProtectStructs[gBattlerAttacker].notFirstStrike)
-                        gBattlescriptCurrInstr = BattleScript_MoveHPDrain;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_MoveHPDrain_PPLoss;
-
-                    gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
-                    if (gBattleStruct->moveDamage[battler] == 0)
-                        gBattleStruct->moveDamage[battler] = 1;
-                    gBattleStruct->moveDamage[battler] *= -1;
-                }
-                break;
-            case MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY:
-                gBattleStruct->pledgeMove = FALSE;
-                if (!CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
-                {
-                    if ((gProtectStructs[gBattlerAttacker].notFirstStrike))
-                        gBattlescriptCurrInstr = BattleScript_MonMadeMoveUseless;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_MonMadeMoveUseless_PPLoss;
-                }
-                else
-                {
-                    if (gProtectStructs[gBattlerAttacker].notFirstStrike)
-                        gBattlescriptCurrInstr = BattleScript_MoveStatDrain;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_MoveStatDrain_PPLoss;
-
-                    SET_STATCHANGER(statId, statAmount, FALSE);
-                    if (B_ABSORBING_ABILITY_STRING < GEN_5)
-                        PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
-                }
-                break;
-            case MOVE_ABSORBED_BY_BOOST_FLASH_FIRE:
-                gBattleStruct->pledgeMove = FALSE;
-                if (!gDisableStructs[battler].flashFireBoosted)
-                {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_BOOST;
-                    if (gProtectStructs[gBattlerAttacker].notFirstStrike)
-                        gBattlescriptCurrInstr = BattleScript_FlashFireBoost;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_FlashFireBoost_PPLoss;
-                    gDisableStructs[battler].flashFireBoosted = TRUE;
-                }
-                else
-                {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_NO_BOOST;
-                    if (gProtectStructs[gBattlerAttacker].notFirstStrike)
-                        gBattlescriptCurrInstr = BattleScript_FlashFireBoost;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_FlashFireBoost_PPLoss;
-                }
-                break;
-            }
-            if (effect)
-                gMultiHitCounter = 0; // Prevent multi-hit moves from hitting more than once after move has been absorbed.
-
-        }
+        effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType, TRUE);
         break;
     case ABILITYEFFECT_MOVE_END: // Think contact abilities.
         switch (gLastUsedAbility)
