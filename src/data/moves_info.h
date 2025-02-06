@@ -22644,6 +22644,38 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_AIR_CUTTER,
     },
+
+    [MOVE_BRUTAL_PUNISHMENT] =
+    {
+        .name = COMPOUND_STRING("Brutal Punishment"),
+        .description = COMPOUND_STRING(
+            "Raises Attack and Sp.Atk. The\n"
+            "Type is based on its form."),
+        .effect = EFFECT_BRUTAL_PUNISHMENT,
+        .power = 90,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ATK_PLUS_1,
+            .self = TRUE,
+            .chance = 100,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
+            .self = TRUE,
+            .chance = 100,
+        }),
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_FIRST,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = Move_PLAY_ROUGH,
+    },
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

@@ -6809,6 +6809,10 @@ Cry_Flubunny::
 	.incbin "sound/direct_sound_samples/cries/flubunny.bin"
 
 	.align 2
+Cry_Disbeary::
+	.incbin "sound/direct_sound_samples/cries/disbeary.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

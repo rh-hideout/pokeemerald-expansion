@@ -419,8 +419,9 @@
 #define MOVE_EFFECT_BEAR_HUG_ITEM       87
 #define MOVE_EFFECT_PSYCHIC_D           88
 #define MOVE_EFFECT_EVOCATION           89
+#define MOVE_EFFECT_BRUTAL_PUNISHMENT   90
 
-#define NUM_MOVE_EFFECTS                90
+#define NUM_MOVE_EFFECTS                91
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

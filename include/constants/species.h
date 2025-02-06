@@ -1804,8 +1804,11 @@
 #define SPECIES_LUNABBIT                                1691
 #define SPECIES_LEPOOZE                                 1692
 #define SPECIES_FLUBUNNY                                1693
+#define SPECIES_DISBEARY                                SPECIES_DISBEARY_NICE
+#define SPECIES_DISBEARY_NICE                           1694
+#define SPECIES_DISBEARY_EBIL                           1695
 
-#define SPECIES_EGG (SPECIES_FLUBUNNY + 1)
+#define SPECIES_EGG (SPECIES_DISBEARY_EBIL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

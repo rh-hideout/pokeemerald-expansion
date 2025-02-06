@@ -2877,4 +2877,15 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeOverwritten = TRUE,
     },
 
+    [ABILITY_TEMPERAMENTAL] =
+    {
+        .name = _("Temperamental"),
+        .description = COMPOUND_STRING("Changes form each turn."),
+        .aiRating = 2,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+
 };

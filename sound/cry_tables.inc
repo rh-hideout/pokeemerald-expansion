@@ -2751,6 +2751,8 @@ gCryTable::
 
 	cry Cry_Flubunny
 
+	cry Cry_Disbeary
+
 .endif
 
 	.align 2
@@ -5506,5 +5508,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Lepooze
 
 	cry_reverse Cry_Flubunny
+
+	cry_reverse Cry_Disbeary
 
 .endif

@@ -872,6 +872,12 @@ BattleScript_EffectAuraWheel:: @ Aura Wheel can only be used by Morpeko
 	jumpifspecies BS_ATTACKER, SPECIES_MORPEKO_HANGRY, BattleScript_EffectHit
 	goto BattleScript_PokemonCantUseTheMove
 
+BattleScript_EffectBrutalPunishment:: @ Brutal Punishment can only be used by Disbeary
+	jumpifspecies BS_ATTACKER, SPECIES_DISBEARY_NICE, BattleScript_EffectHit
+	jumpifspecies BS_ATTACKER, SPECIES_DISBEARY_EBIL, BattleScript_EffectHit
+	goto BattleScript_PokemonCantUseTheMove
+	
+
 BattleScript_EffectClangorousSoul::
 	attackcanceler
 	attackstring

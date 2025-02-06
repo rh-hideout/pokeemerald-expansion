@@ -2209,3 +2209,8 @@ static const u16 sJerminFormSpeciesIdTable [] = {
     SPECIES_ARCTIGLOBE_FREED,
     FORM_SPECIES_END,
 };
+static const u16 sDisbearyFormSpeciesIdTable[] = {
+    SPECIES_DISBEARY_NICE,
+    SPECIES_DISBEARY_EBIL,
+    FORM_SPECIES_END,
+};

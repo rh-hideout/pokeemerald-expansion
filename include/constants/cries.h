@@ -2590,6 +2590,7 @@ enum {
     CRY_LUNABBIT,
     CRY_LEPOOZE,
     CRY_FLUBUNNY,
+    CRY_DISBEARY,
     CRY_COUNT,
 };
 

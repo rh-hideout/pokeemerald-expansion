@@ -5926,7 +5926,7 @@ if (gMovesInfo[move].effect == EFFECT_BOIL_OVER)
     {
         gBattleStruct->dynamicMoveType = TYPE_STEEL | F_DYNAMIC_TYPE_SET;
     }
-    else if (gMovesInfo[move].effect == EFFECT_AURA_WHEEL && gBattleMons[battlerAtk].species == SPECIES_MORPEKO_HANGRY)
+    else if (gMovesInfo[move].effect == EFFECT_BRUTAL_PUNISHMENT && gBattleMons[battlerAtk].species == SPECIES_DISBEARY_EBIL)
     {
         gBattleStruct->dynamicMoveType = TYPE_DARK | F_DYNAMIC_TYPE_SET;
     }
