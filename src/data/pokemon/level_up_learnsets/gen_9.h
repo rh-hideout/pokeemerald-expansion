@@ -23529,6 +23529,21 @@ static const struct LevelUpMove sWattitudeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(55, MOVE_WAVE_CRASH),
     LEVEL_UP_END
      };
+static const struct LevelUpMove sTadpoisonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_ACID), 
+    LEVEL_UP_MOVE( 1, MOVE_DRAGON_PULSE), 
+    LEVEL_UP_END
+    };
+static const struct LevelUpMove sBretkhelmLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_ACID), 
+    LEVEL_UP_MOVE( 1, MOVE_DRAGON_PULSE), 
+    LEVEL_UP_END
+    };
+static const struct LevelUpMove sBerfgoyleLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_ACID), 
+    LEVEL_UP_MOVE( 1, MOVE_DRAGON_PULSE), 
+    LEVEL_UP_END
+    };
 static const struct LevelUpMove sFlubunnyLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_MOONBLAST), 
     LEVEL_UP_END

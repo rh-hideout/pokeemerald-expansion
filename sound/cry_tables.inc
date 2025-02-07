@@ -2753,6 +2753,12 @@ gCryTable::
 
 	cry Cry_Disbeary
 
+	cry Cry_Berfgoyle
+
+	cry Cry_Bretkhelm
+
+	cry Cry_Tadpoison
+
 .endif
 
 	.align 2
@@ -5510,5 +5516,11 @@ gCryTable_Reverse::
 	cry_reverse Cry_Flubunny
 
 	cry_reverse Cry_Disbeary
+
+	cry_reverse Cry_Berfgoyle
+
+	cry_reverse Cry_Bretkhelm
+
+	cry_reverse Cry_Tadpoison
 
 .endif

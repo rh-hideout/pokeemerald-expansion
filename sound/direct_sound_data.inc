@@ -6813,6 +6813,18 @@ Cry_Disbeary::
 	.incbin "sound/direct_sound_samples/cries/disbeary.bin"
 
 	.align 2
+Cry_Berfgoyle::
+	.incbin "sound/direct_sound_samples/cries/berfgoyle.bin"
+
+	.align 2
+Cry_Bretkhelm::
+	.incbin "sound/direct_sound_samples/cries/bretkhelm.bin"
+
+	.align 2
+Cry_Tadpoison::
+	.incbin "sound/direct_sound_samples/cries/tadpoison.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

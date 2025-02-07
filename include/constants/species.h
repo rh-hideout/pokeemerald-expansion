@@ -1807,8 +1807,11 @@
 #define SPECIES_DISBEARY                                SPECIES_DISBEARY_NICE
 #define SPECIES_DISBEARY_NICE                           1694
 #define SPECIES_DISBEARY_EBIL                           1695
+#define SPECIES_BERFGOYLE                               1696
+#define SPECIES_BRETKHELM                               1697
+#define SPECIES_TADPOISON                               1698
 
-#define SPECIES_EGG (SPECIES_DISBEARY_EBIL + 1)
+#define SPECIES_EGG (SPECIES_TADPOISON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

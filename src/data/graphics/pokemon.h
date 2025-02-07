@@ -22363,6 +22363,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/icon.4bpp");
    const u8 gMonFootprint_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/footprint.1bpp");
 
+   const u32 gMonFrontPic_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/front.4bpp.lz");
+   const u32 gMonBackPic_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/back.4bpp.lz");
+   const u32 gMonPalette_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/shiny.gbapal.lz");
+   const u8 gMonIcon_Tadpoison[] = INCBIN_U8("graphics/pokemon/tadpoison/icon.4bpp");
+   const u8 gMonFootprint_Tadpoison[] = INCBIN_U8("graphics/pokemon/tadpoison/footprint.1bpp");
+
+   const u32 gMonFrontPic_Bretkhelm[] = INCBIN_U32("graphics/pokemon/bretkhelm/front.4bpp.lz");
+   const u32 gMonBackPic_Bretkhelm[] = INCBIN_U32("graphics/pokemon/bretkhelm/back.4bpp.lz");
+   const u32 gMonPalette_Bretkhelm[] = INCBIN_U32("graphics/pokemon/bretkhelm/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Bretkhelm[] = INCBIN_U32("graphics/pokemon/bretkhelm/shiny.gbapal.lz");
+   const u8 gMonIcon_Bretkhelm[] = INCBIN_U8("graphics/pokemon/bretkhelm/icon.4bpp");
+   const u8 gMonFootprint_Bretkhelm[] = INCBIN_U8("graphics/pokemon/bretkhelm/footprint.1bpp");
+
+   const u32 gMonFrontPic_Berfgoyle[] = INCBIN_U32("graphics/pokemon/berfgoyle/front.4bpp.lz");
+   const u32 gMonBackPic_Berfgoyle[] = INCBIN_U32("graphics/pokemon/berfgoyle/back.4bpp.lz");
+   const u32 gMonPalette_Berfgoyle[] = INCBIN_U32("graphics/pokemon/berfgoyle/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Berfgoyle[] = INCBIN_U32("graphics/pokemon/berfgoyle/shiny.gbapal.lz");
+   const u8 gMonIcon_Berfgoyle[] = INCBIN_U8("graphics/pokemon/berfgoyle/icon.4bpp");
+   const u8 gMonFootprint_Berfgoyle[] = INCBIN_U8("graphics/pokemon/berfgoyle/footprint.1bpp");
+
    const u32 gMonFrontPic_Flubunny[] = INCBIN_U32("graphics/pokemon/flubunny/front.4bpp.lz");
    const u32 gMonBackPic_Flubunny[] = INCBIN_U32("graphics/pokemon/flubunny/back.4bpp.lz");
    const u32 gMonPalette_Flubunny[] = INCBIN_U32("graphics/pokemon/flubunny/normal.gbapal.lz");
