@@ -2759,6 +2759,8 @@ gCryTable::
 
 	cry Cry_Tadpoison
 
+	cry Cry_Afloof
+
 .endif
 
 	.align 2
@@ -5522,5 +5524,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Bretkhelm
 
 	cry_reverse Cry_Tadpoison
+
+	cry_reverse Cry_Afloof
 
 .endif

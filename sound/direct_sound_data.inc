@@ -6825,6 +6825,10 @@ Cry_Tadpoison::
 	.incbin "sound/direct_sound_samples/cries/tadpoison.bin"
 
 	.align 2
+Cry_Afloof::
+	.incbin "sound/direct_sound_samples/cries/afloof.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

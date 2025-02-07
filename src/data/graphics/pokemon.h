@@ -22127,6 +22127,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Whipsicuffs[] = INCBIN_U8("graphics/pokemon/whipsicuffs/icon.4bpp");
    const u8 gMonFootprint_Whipsicuffs[] = INCBIN_U8("graphics/pokemon/whipsicuffs/footprint.1bpp");
 
+   const u32 gMonFrontPic_Afloof[] = INCBIN_U32("graphics/pokemon/afloof/front.4bpp.lz");
+   const u32 gMonBackPic_Afloof[] = INCBIN_U32("graphics/pokemon/afloof/back.4bpp.lz");
+   const u32 gMonPalette_Afloof[] = INCBIN_U32("graphics/pokemon/afloof/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Afloof[] = INCBIN_U32("graphics/pokemon/afloof/shiny.gbapal.lz");
+   const u8 gMonIcon_Afloof[] = INCBIN_U8("graphics/pokemon/afloof/icon.4bpp");
+   const u8 gMonFootprint_Afloof[] = INCBIN_U8("graphics/pokemon/afloof/footprint.1bpp");
+
    const u32 gMonFrontPic_Disbeary[] = INCBIN_U32("graphics/pokemon/disbeary/front.4bpp.lz");
    const u32 gMonBackPic_Disbeary[] = INCBIN_U32("graphics/pokemon/disbeary/back.4bpp.lz");
    const u32 gMonPalette_Disbeary[] = INCBIN_U32("graphics/pokemon/disbeary/normal.gbapal.lz");

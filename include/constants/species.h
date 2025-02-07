@@ -1810,8 +1810,9 @@
 #define SPECIES_BERFGOYLE                               1696
 #define SPECIES_BRETKHELM                               1697
 #define SPECIES_TADPOISON                               1698
+#define SPECIES_AFLOOF                                  1699
 
-#define SPECIES_EGG (SPECIES_TADPOISON + 1)
+#define SPECIES_EGG (SPECIES_AFLOOF + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

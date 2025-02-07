@@ -22529,6 +22529,10 @@ static const struct LevelUpMove sWhipsicuffsLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sAfloofLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_BRUTAL_PUNISHMENT),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sDisbearyLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_BRUTAL_PUNISHMENT),
    LEVEL_UP_END

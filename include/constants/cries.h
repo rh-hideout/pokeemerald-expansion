@@ -2594,6 +2594,7 @@ enum {
     CRY_BERFGOYLE,
     CRY_BRETKHELM,
     CRY_TADPOISON,
+    CRY_AFLOOF,
     CRY_COUNT,
 };
 
