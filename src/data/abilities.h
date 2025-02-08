@@ -2888,4 +2888,16 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .failsOnImposter = TRUE,
     },
 
+    [ABILITY_PALLETE_SWAP] =
+    {
+        .name = _("Pallete Swap"),
+        .description = COMPOUND_STRING("Changes type to its Paint."),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+        .cantBeOverwritten = TRUE,
+    },
+
 };

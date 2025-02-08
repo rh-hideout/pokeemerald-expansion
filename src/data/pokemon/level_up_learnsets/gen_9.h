@@ -25007,6 +25007,10 @@ static const struct LevelUpMove sQrakenmarkLevelUpLearnset[] = {
     LEVEL_UP_MOVE(55, MOVE_DARK_VOID),
     LEVEL_UP_MOVE(60, MOVE_WATER_SPOUT),
     LEVEL_UP_END
+    };
+static const struct LevelUpMove sUlmiraintLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_RAPID_SPIN), 
+   LEVEL_UP_END
    };
 static const struct LevelUpMove sNoxiliumLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_MAGIC_COAT), 

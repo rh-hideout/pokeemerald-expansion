@@ -1811,8 +1811,24 @@
 #define SPECIES_BRETKHELM                               1697
 #define SPECIES_TADPOISON                               1698
 #define SPECIES_AFLOOF                                  1699
+#define SPECIES_ULMIRAINT                               SPECIES_ULMIRAINT_NORMAL
+#define SPECIES_ULMIRAINT_NORMAL                        1700
+#define SPECIES_ULMIRAINT_GRASS                         1701
+#define SPECIES_ULMIRAINT_DARK                          1702
+#define SPECIES_ULMIRAINT_STEEL                         1703
+#define SPECIES_ULMIRAINT_DRAGON                        1704
+#define SPECIES_ULMIRAINT_ICE                           1705
+#define SPECIES_ULMIRAINT_GHOST                         1706
+#define SPECIES_ULMIRAINT_PSYCHIC                       1707
+#define SPECIES_ULMIRAINT_POISON                        1708
+#define SPECIES_ULMIRAINT_FIGHTING                      1709
+#define SPECIES_ULMIRAINT_FAIRY                         1710
+#define SPECIES_ULMIRAINT_GROUND                        1711
+#define SPECIES_ULMIRAINT_ROCK                          1712
+#define SPECIES_ULMIRAINT_FLYING                        1713
+#define SPECIES_ULMIRAINT_BUG                           1714
 
-#define SPECIES_EGG (SPECIES_AFLOOF + 1)
+#define SPECIES_EGG (SPECIES_ULMIRAINT_BUG + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

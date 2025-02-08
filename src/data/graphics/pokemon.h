@@ -22716,6 +22716,97 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Qrakenmark[] = INCBIN_U8("graphics/pokemon/qrakenmark/icon.4bpp");
    const u8 gMonFootprint_Qrakenmark[] = INCBIN_U8("graphics/pokemon/qrakenmark/footprint.1bpp");
 
+   const u32 gMonFrontPic_Ulmiraint[] = INCBIN_U32("graphics/pokemon/ulmiraint/front.4bpp.lz");
+   const u32 gMonBackPic_Ulmiraint[] = INCBIN_U32("graphics/pokemon/ulmiraint/back.4bpp.lz");
+   const u32 gMonPalette_Ulmiraint[] = INCBIN_U32("graphics/pokemon/ulmiraint/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ulmiraint[] = INCBIN_U32("graphics/pokemon/ulmiraint/shiny.gbapal.lz");
+   const u8 gMonIcon_Ulmiraint[] = INCBIN_U8("graphics/pokemon/ulmiraint/icon.4bpp");
+   const u8 gMonFootprint_Ulmiraint[] = INCBIN_U8("graphics/pokemon/ulmiraint/footprint.1bpp");
+
+   const u32 gMonFrontPic_UlmiraintGrass[] = INCBIN_U32("graphics/pokemon/ulmiraint/grass/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintGrass[] = INCBIN_U32("graphics/pokemon/ulmiraint/grass/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintGrass[] = INCBIN_U32("graphics/pokemon/ulmiraint/grass/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintGrass[] = INCBIN_U32("graphics/pokemon/ulmiraint/grass/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintGrass[] = INCBIN_U8("graphics/pokemon/ulmiraint/grass/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintDark[] = INCBIN_U32("graphics/pokemon/ulmiraint/dark/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintDark[] = INCBIN_U32("graphics/pokemon/ulmiraint/dark/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintDark[] = INCBIN_U32("graphics/pokemon/ulmiraint/dark/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintDark[] = INCBIN_U32("graphics/pokemon/ulmiraint/dark/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintDark[] = INCBIN_U8("graphics/pokemon/ulmiraint/dark/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintSteel[] = INCBIN_U32("graphics/pokemon/ulmiraint/steel/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintSteel[] = INCBIN_U32("graphics/pokemon/ulmiraint/steel/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintSteel[] = INCBIN_U32("graphics/pokemon/ulmiraint/steel/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintSteel[] = INCBIN_U32("graphics/pokemon/ulmiraint/steel/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintSteel[] = INCBIN_U8("graphics/pokemon/ulmiraint/steel/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintDragon[] = INCBIN_U32("graphics/pokemon/ulmiraint/dragon/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintDragon[] = INCBIN_U32("graphics/pokemon/ulmiraint/dragon/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintDragon[] = INCBIN_U32("graphics/pokemon/ulmiraint/dragon/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintDragon[] = INCBIN_U32("graphics/pokemon/ulmiraint/dragon/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintDragon[] = INCBIN_U8("graphics/pokemon/ulmiraint/dragon/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintIce[] = INCBIN_U32("graphics/pokemon/ulmiraint/ice/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintIce[] = INCBIN_U32("graphics/pokemon/ulmiraint/ice/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintIce[] = INCBIN_U32("graphics/pokemon/ulmiraint/ice/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintIce[] = INCBIN_U32("graphics/pokemon/ulmiraint/ice/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintIce[] = INCBIN_U8("graphics/pokemon/ulmiraint/ice/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintGhost[] = INCBIN_U32("graphics/pokemon/ulmiraint/ghost/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintGhost[] = INCBIN_U32("graphics/pokemon/ulmiraint/ghost/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintGhost[] = INCBIN_U32("graphics/pokemon/ulmiraint/ghost/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintGhost[] = INCBIN_U32("graphics/pokemon/ulmiraint/ghost/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintGhost[] = INCBIN_U8("graphics/pokemon/ulmiraint/ghost/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintPsychic[] = INCBIN_U32("graphics/pokemon/ulmiraint/psychic/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintPsychic[] = INCBIN_U32("graphics/pokemon/ulmiraint/psychic/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintPsychic[] = INCBIN_U32("graphics/pokemon/ulmiraint/psychic/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintPsychic[] = INCBIN_U32("graphics/pokemon/ulmiraint/psychic/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintPsychic[] = INCBIN_U8("graphics/pokemon/ulmiraint/psychic/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintPoison[] = INCBIN_U32("graphics/pokemon/ulmiraint/poison/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintPoison[] = INCBIN_U32("graphics/pokemon/ulmiraint/poison/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintPoison[] = INCBIN_U32("graphics/pokemon/ulmiraint/poison/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintPoison[] = INCBIN_U32("graphics/pokemon/ulmiraint/poison/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintPoison[] = INCBIN_U8("graphics/pokemon/ulmiraint/poison/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintFighting[] = INCBIN_U32("graphics/pokemon/ulmiraint/fighting/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintFighting[] = INCBIN_U32("graphics/pokemon/ulmiraint/fighting/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintFighting[] = INCBIN_U32("graphics/pokemon/ulmiraint/fighting/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintFighting[] = INCBIN_U32("graphics/pokemon/ulmiraint/fighting/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintFighting[] = INCBIN_U8("graphics/pokemon/ulmiraint/fighting/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintFairy[] = INCBIN_U32("graphics/pokemon/ulmiraint/fairy/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintFairy[] = INCBIN_U32("graphics/pokemon/ulmiraint/fairy/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintFairy[] = INCBIN_U32("graphics/pokemon/ulmiraint/fairy/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintFairy[] = INCBIN_U32("graphics/pokemon/ulmiraint/fairy/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintFairy[] = INCBIN_U8("graphics/pokemon/ulmiraint/fairy/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintGround[] = INCBIN_U32("graphics/pokemon/ulmiraint/ground/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintGround[] = INCBIN_U32("graphics/pokemon/ulmiraint/ground/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintGround[] = INCBIN_U32("graphics/pokemon/ulmiraint/ground/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintGround[] = INCBIN_U32("graphics/pokemon/ulmiraint/ground/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintGround[] = INCBIN_U8("graphics/pokemon/ulmiraint/ground/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintRock[] = INCBIN_U32("graphics/pokemon/ulmiraint/rock/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintRock[] = INCBIN_U32("graphics/pokemon/ulmiraint/rock/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintRock[] = INCBIN_U32("graphics/pokemon/ulmiraint/rock/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintRock[] = INCBIN_U32("graphics/pokemon/ulmiraint/rock/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintRock[] = INCBIN_U8("graphics/pokemon/ulmiraint/rock/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintFlying[] = INCBIN_U32("graphics/pokemon/ulmiraint/flying/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintFlying[] = INCBIN_U32("graphics/pokemon/ulmiraint/flying/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintFlying[] = INCBIN_U32("graphics/pokemon/ulmiraint/flying/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintFlying[] = INCBIN_U32("graphics/pokemon/ulmiraint/flying/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintFlying[] = INCBIN_U8("graphics/pokemon/ulmiraint/flying/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintBug[] = INCBIN_U32("graphics/pokemon/ulmiraint/bug/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintBug[] = INCBIN_U32("graphics/pokemon/ulmiraint/bug/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintBug[] = INCBIN_U32("graphics/pokemon/ulmiraint/bug/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintBug[] = INCBIN_U32("graphics/pokemon/ulmiraint/bug/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintBug[] = INCBIN_U8("graphics/pokemon/ulmiraint/bug/icon.4bpp");
+
    const u32 gMonFrontPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/front.4bpp.lz");
    const u32 gMonBackPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/back.4bpp.lz");
    const u32 gMonPalette_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/normal.gbapal.lz");

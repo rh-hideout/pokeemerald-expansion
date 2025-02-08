@@ -2150,6 +2150,7 @@ BattleScript_EffectSoak::
 	ppreduce
 	jumpifability BS_TARGET, ABILITY_MULTITYPE, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_RKS_SYSTEM, BattleScript_ButItFailed
+	jumpifability BS_TARGET, ABILITY_PALLETE_SWAP, BattleScript_ButItFailed
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	attackanimation
 	waitanimation

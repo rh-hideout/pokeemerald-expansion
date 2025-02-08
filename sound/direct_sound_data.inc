@@ -6829,6 +6829,10 @@ Cry_Afloof::
 	.incbin "sound/direct_sound_samples/cries/afloof.bin"
 
 	.align 2
+Cry_Ulmiraint::
+	.incbin "sound/direct_sound_samples/cries/ulmiraint.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
