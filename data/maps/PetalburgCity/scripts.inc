@@ -31,8 +31,8 @@ PetalburgCity_EventScript_Boy::
 	msgbox PetalburgCity_Text_WaterReflection, MSGBOX_DEFAULT
 	closemessage
 	goto_if_set FLAG_UNUSED_0x039, PetalburgCity_EventScript_BoyDone
-	giveitem ITEM_ORAN_BERRY, 5
-	giveitem ITEM_POTION, 5
+	giveitem ITEM_ORAN_BERRY, 3
+	giveitem ITEM_POTION, 3
 	setflag FLAG_UNUSED_0x039
 	applymovement LOCALID_BOY, Common_Movement_FaceOriginalDirection
 	waitmovement 0

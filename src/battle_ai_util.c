@@ -4025,7 +4025,7 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
 {
     if (aiData->abilities[battlerDef] == ABILITY_MAGIC_BOUNCE
      || CountUsablePartyMons(battlerDef) == 0
-     || (AI_DATA->speedStats[battlerAtk] > AI_DATA->speedStats[battlerDef] && HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_RAPID_SPIN))
+     || (AI_DATA->speedStats[battlerAtk] > AI_DATA->speedStats[battlerDef] && HasMoveWithAdditionalEffect(battlerDef, EFFECT_RAPID_SPIN))
      || HasMoveEffect(battlerDef, EFFECT_MAGIC_COAT)
      || HasMoveEffect(battlerDef, EFFECT_DEFOG)
      || HasMoveEffect(battlerDef, EFFECT_TIDY_UP))

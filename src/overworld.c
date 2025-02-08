@@ -369,7 +369,7 @@ void DoWhiteOut(void)
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
     SetWarpDestinationToLastHealLocation();
-    NewGameInitData();
+    WarpIntoMap();
 }
 
 void Overworld_ResetStateAfterFly(void)

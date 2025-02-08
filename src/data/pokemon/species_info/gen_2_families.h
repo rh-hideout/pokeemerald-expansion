@@ -1010,9 +1010,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 
     [SPECIES_LEDIAN] =
     {
-        .baseHP        = 65,
+        .baseHP        = 60,
         .baseAttack    = 85,
-        .baseDefense   = 55,
+        .baseDefense   = 50,
         .baseSpeed     = 85,
         .baseSpAttack  = 55,
         .baseSpDefense = 110,
