@@ -1827,8 +1827,11 @@
 #define SPECIES_ULMIRAINT_ROCK                          1712
 #define SPECIES_ULMIRAINT_FLYING                        1713
 #define SPECIES_ULMIRAINT_BUG                           1714
+#define SPECIES_ULMIRAINT_ELECTRIC                      1715
+#define SPECIES_ULMIRAINT_WATER                         1716
+#define SPECIES_ULMIRAINT_FIRE                          1717
 
-#define SPECIES_EGG (SPECIES_ULMIRAINT_BUG + 1)
+#define SPECIES_EGG (SPECIES_ULMIRAINT_FIRE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

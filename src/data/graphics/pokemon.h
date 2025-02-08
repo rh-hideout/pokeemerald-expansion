@@ -22807,6 +22807,24 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_UlmiraintBug[] = INCBIN_U32("graphics/pokemon/ulmiraint/bug/shiny.gbapal.lz");
    const u8 gMonIcon_UlmiraintBug[] = INCBIN_U8("graphics/pokemon/ulmiraint/bug/icon.4bpp");
 
+   const u32 gMonFrontPic_UlmiraintElectric[] = INCBIN_U32("graphics/pokemon/ulmiraint/electric/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintElectric[] = INCBIN_U32("graphics/pokemon/ulmiraint/electric/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintElectric[] = INCBIN_U32("graphics/pokemon/ulmiraint/electric/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintElectric[] = INCBIN_U32("graphics/pokemon/ulmiraint/electric/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintElectric[] = INCBIN_U8("graphics/pokemon/ulmiraint/electric/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintWater[] = INCBIN_U32("graphics/pokemon/ulmiraint/water/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintWater[] = INCBIN_U32("graphics/pokemon/ulmiraint/water/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintWater[] = INCBIN_U32("graphics/pokemon/ulmiraint/water/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintWater[] = INCBIN_U32("graphics/pokemon/ulmiraint/water/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintWater[] = INCBIN_U8("graphics/pokemon/ulmiraint/water/icon.4bpp");
+
+   const u32 gMonFrontPic_UlmiraintFire[] = INCBIN_U32("graphics/pokemon/ulmiraint/fire/front.4bpp.lz");
+   const u32 gMonPalette_UlmiraintFire[] = INCBIN_U32("graphics/pokemon/ulmiraint/fire/normal.gbapal.lz");
+   const u32 gMonBackPic_UlmiraintFire[] = INCBIN_U32("graphics/pokemon/ulmiraint/fire/back.4bpp.lz");
+   const u32 gMonShinyPalette_UlmiraintFire[] = INCBIN_U32("graphics/pokemon/ulmiraint/fire/shiny.gbapal.lz");
+   const u8 gMonIcon_UlmiraintFire[] = INCBIN_U8("graphics/pokemon/ulmiraint/fire/icon.4bpp");
+
    const u32 gMonFrontPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/front.4bpp.lz");
    const u32 gMonBackPic_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/back.4bpp.lz");
    const u32 gMonPalette_Noxilium[] = INCBIN_U32("graphics/pokemon/noxilium/normal.gbapal.lz");
