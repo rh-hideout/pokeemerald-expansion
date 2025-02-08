@@ -7844,8 +7844,8 @@ static void SpriteCB_MindBlownBall(struct Sprite *sprite)
     sprite->data[3] = gBattleAnimArgs[2];
     sprite->data[4] = sprite->x << 4;
     sprite->data[5] = sprite->y << 4;
-    sprite->data[6] = ((oldPosX - sprite->x) << 4) / (gBattleAnimArgs[0] << 1);
-    sprite->data[7] = ((oldPosY - sprite->y) << 4) / (gBattleAnimArgs[0] << 1);
+    sprite->data[6] = SAFE_DIV((oldPosX - sprite->x) << 4, gBattleAnimArgs[0] << 1);
+    sprite->data[7] = SAFE_DIV((oldPosY - sprite->y) << 4, gBattleAnimArgs[0] << 1);
     sprite->callback = AnimMindBlownBallStep;
 }
 static void AnimMindBlownBallStep(struct Sprite *sprite)

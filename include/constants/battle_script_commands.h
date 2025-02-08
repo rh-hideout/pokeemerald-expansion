@@ -153,7 +153,6 @@ enum CmdVarious
     VARIOUS_TRY_THIRD_TYPE,
     VARIOUS_ACUPRESSURE,
     VARIOUS_SET_POWDER,
-    VARIOUS_SPECTRAL_THIEF,
     VARIOUS_GRAVITY_ON_AIRBORNE_MONS,
     VARIOUS_CHECK_IF_GRASSY_TERRAIN_HEALS,
     VARIOUS_JUMP_IF_ROAR_FAILS,
@@ -276,6 +275,7 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_TARGET,
     MOVEEND_MOVE_EFFECTS2,
     MOVEEND_ITEM_EFFECTS_ALL,
+    MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
     MOVEEND_NUM_HITS,
     MOVEEND_SUBSTITUTE,
@@ -286,6 +286,7 @@ enum MoveEndEffects
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_RECOIL,
+    MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
