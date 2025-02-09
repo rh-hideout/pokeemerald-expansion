@@ -136,7 +136,7 @@ RustboroCity_DevonCorp_2F_Text_WhatToWorkOnNext:
 script RustboroCity_DevonCorp_2F_EventScript_FossilScientist{
 	lock
 	faceplayer
-	goto_if_set(FLAG_BADGE04_GET,RustboroCity_DevonCorp_2F_EventScript_FossilScientist2)
+	goto_if_set(FLAG_BADGE05_GET,RustboroCity_DevonCorp_2F_EventScript_FossilScientist2)
 	msgbox(RustboroCity_DevonCorp_2F_Text_FossilRessurectionDevice, MSGBOX_NPC)
 	end
 }

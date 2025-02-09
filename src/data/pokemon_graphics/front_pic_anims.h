@@ -2845,7 +2845,7 @@ static const union AnimCmd sAnim_Quagsire_1[] =
 
 #if P_PALDEAN_FORMS
 PLACEHOLDER_ANIM_SINGLE_FRAME(WooperPaldea);
-PLACEHOLDER_ANIM_SINGLE_FRAME(Clodsire);
+PLACEHOLDER_ANIM_TWO_FRAMES(Clodsire);
 #endif //P_PALDEAN_FORMS
 #endif //P_FAMILY_WOOPER
 
@@ -9737,7 +9737,14 @@ PLACEHOLDER_ANIM_SINGLE_FRAME(Arctovish);
 #endif //P_FAMILY_ARCTOVISH
 
 #if P_FAMILY_DURALUDON
-PLACEHOLDER_ANIM_SINGLE_FRAME(Duraludon);
+static const union AnimCmd sAnim_Duraludon_1[] =
+{
+
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_FRAME(1, 60),
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_END,
+};
 
 #if P_GIGANTAMAX_FORMS
 PLACEHOLDER_ANIM_SINGLE_FRAME(DuraludonGmax);

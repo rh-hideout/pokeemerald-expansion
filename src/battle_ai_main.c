@@ -48,7 +48,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_PreferStrongestMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -66,7 +66,7 @@ static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
     [2] = AI_CheckViability,         // AI_FLAG_CHECK_VIABILITY
     [3] = AI_ForceSetupFirstTurn,    // AI_FLAG_FORCE_SETUP_FIRST_TURN
     [4] = AI_Risky,                  // AI_FLAG_RISKY
-    [5] = AI_PreferStrongestMove,    // AI_FLAG_PREFER_STRONGEST_MOVE
+    [5] = AI_TryTo2HKO,              // AI_FLAG_TRY_TO_2HKO
     [6] = AI_PreferBatonPass,        // AI_FLAG_PREFER_BATON_PASS
     [7] = AI_DoubleBattle,           // AI_FLAG_DOUBLE_BATTLE
     [8] = AI_HPAware,                // AI_FLAG_HP_AWARE
@@ -136,7 +136,7 @@ static u32 GetWildAiFlags(void)
     if (avgLevel >= 20)
         flags |= AI_FLAG_CHECK_VIABILITY;
     if (avgLevel >= 60)
-        flags |= AI_FLAG_PREFER_STRONGEST_MOVE;
+        flags |= AI_FLAG_TRY_TO_2HKO;
     if (avgLevel >= 80)
         flags |= AI_FLAG_HP_AWARE;
 
@@ -2952,7 +2952,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_ENTRAINMENT:
                 if (partnerHasBadAbility && IsAbilityOfRating(aiData->abilities[battlerAtk], 0))
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    RETURN_SCORE_PLUS(DECENT_EFFECT);
                 }
                 break;
             case EFFECT_SOAK:
@@ -3502,7 +3502,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_LEECH_SEED:
         if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)
           || gStatuses3[battlerDef] & STATUS3_LEECHSEED
-          || HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_RAPID_SPIN)
+          || HasMoveEffect(battlerDef, EFFECT_RAPID_SPIN)
           || aiData->abilities[battlerDef] == ABILITY_LIQUID_OOZE
           || aiData->abilities[battlerDef] == ABILITY_MAGIC_GUARD)
             break;
@@ -3668,7 +3668,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_STEALTH_ROCK:
     case EFFECT_STICKY_WEB:
     case EFFECT_TOXIC_SPIKES:
-        if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
+        if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData))
         {
             if (gDisableStructs[battlerAtk].isFirstTurn)
                 ADJUST_SCORE(BEST_EFFECT);
@@ -4061,9 +4061,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_ENTRAINMENT:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if ((IsAbilityOfRating(aiData->abilities[battlerDef], 5) || gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating <= 0)
-        && (aiData->abilities[battlerDef] != aiData->abilities[battlerAtk] && !(gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)))
-            ADJUST_SCORE(DECENT_EFFECT);
+        if (aiData->abilities[battlerDef] != aiData->abilities[battlerAtk] && !(gStatuses3[battlerDef] & STATUS3_GASTRO_ACID))
+        {
+            if (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating <= 0)
+                ADJUST_SCORE(DECENT_EFFECT);
+            else if (IsAbilityOfRating(aiData->abilities[battlerDef], 5) && gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating <= 3)
+                ADJUST_SCORE(WEAK_EFFECT);
+        }
         break;
     case EFFECT_IMPRISON:
         if (predictedMove != MOVE_NONE && HasMove(battlerAtk, predictedMove))
@@ -4414,6 +4418,12 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
          || gBattleMons[BATTLE_PARTNER(battlerAtk)].status1 & STATUS1_ANY)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
+    case EFFECT_RAPID_SPIN:
+        if ((gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerAtk) != 0)
+         || (gStatuses3[battlerAtk] & STATUS3_LEECHSEED || gBattleMons[battlerAtk].status2 & STATUS2_WRAPPED))
+            ADJUST_SCORE(GOOD_EFFECT);
+        break;
+
     } // move effect checks
 
     // check move additional effects that are likely to happen
@@ -4455,11 +4465,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 case MOVE_EFFECT_EVS_PLUS_1:
                 case MOVE_EFFECT_EVS_PLUS_2:
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_EVASION));
-                    break;
-                case MOVE_EFFECT_RAPID_SPIN:
-                    if ((gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerAtk) != 0)
-                    || (gStatuses3[battlerAtk] & STATUS3_LEECHSEED || gBattleMons[battlerAtk].status2 & STATUS2_WRAPPED))
-                        ADJUST_SCORE(GOOD_EFFECT);
                     break;
                 }
             }
@@ -4655,7 +4660,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                     }
                     break;
                 case MOVE_EFFECT_WRAP:
-                    if (!HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
+                    if (!HasMoveEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
                         ADJUST_SCORE(BEST_EFFECT);
                     break;
                 case MOVE_EFFECT_SALT_CURE:
@@ -4897,7 +4902,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // Adds score bonus to best powered move
-static s32 AI_PreferStrongestMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
         return score;

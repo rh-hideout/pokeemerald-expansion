@@ -807,7 +807,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j, NULL);
-                if (MoveHasAdditionalEffectSelf(aiMove, MOVE_EFFECT_RAPID_SPIN)
+                if (gMovesInfo[aiMove].effect == EFFECT_RAPID_SPIN
                  || (B_DEFOG_EFFECT_CLEARING >= GEN_6 && gMovesInfo[aiMove].effect == EFFECT_DEFOG)
                  || gMovesInfo[aiMove].effect == EFFECT_TIDY_UP)
                 {
@@ -964,9 +964,7 @@ bool32 ShouldSwitch(u32 battler)
         if (i == gBattleStruct->monToSwitchIntoId[battlerIn2])
             continue;
         if (IsAceMon(battler, i))
-        {
             continue;
-        }
 
         availableToSwitch++;
     }

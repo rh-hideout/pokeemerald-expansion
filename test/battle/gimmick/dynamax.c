@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax increases HP and max HP by 1.5x", u16 hp)
     u32 dynamax;
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
-    GIVEN { // TODO: Dynamax level
+    GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -25,6 +25,49 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax increases HP and max HP by 1.5x", u16 hp)
     }
 }
 
+SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax Level increases HP and max HP multipliers by 0.05 for each level", u16 hp)
+{
+    u32 dynamax, level;
+    PARAMETRIZE { dynamax = GIMMICK_NONE; level = 0; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 0; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 1; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 2; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 3; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 4; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 5; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 6; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 7; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 8; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 9; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; level = 10; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { DynamaxLevel(level); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE, gimmick: dynamax); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        if (dynamax) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+            MESSAGE("Wobbuffet used Max Strike!");
+        }
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+    } THEN {
+        results[i].hp = player->hp;
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.5), results[1].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.55), results[2].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.6), results[3].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.65), results[4].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.7), results[5].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.75), results[6].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.8), results[7].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.85), results[8].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.9), results[9].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(1.95), results[10].hp);
+        EXPECT_MUL_EQ(results[0].hp, Q_4_12(2.0), results[11].hp);
+    }
+}
+
 SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax expires after three turns", u16 hp)
 {
     u32 dynamax;
@@ -38,8 +81,8 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax expires after three turns", u16 hp)
         TURN { MOVE(player, MOVE_TACKLE); }                     // 2nd max move
         TURN { MOVE(player, MOVE_TACKLE); }                     // 3rd max move
     } SCENE {
-        int i;
-        for (i = 0; i < DYNAMAX_TURNS_COUNT; ++i) {
+        int j;
+        for (j = 0; j < DYNAMAX_TURNS_COUNT; ++j) {
             if (dynamax)
                 MESSAGE("Wobbuffet used Max Strike!");
             else
@@ -52,6 +95,49 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax expires after three turns", u16 hp)
         results[i].hp = player->hp;
     } FINALLY {
         EXPECT_EQ(results[0].hp, results[1].hp);
+    }
+}
+
+SINGLE_BATTLE_TEST("(DYNAMAX) Dynamax expires after three turns and correctly converts HP according to Dynamax Level")
+{
+    u32 dynamaxLevel, dynamax;
+    u16 capturedHP, finalHP;
+    s16 capturedDamage;
+    PARAMETRIZE { dynamaxLevel = 0; dynamax = GIMMICK_NONE; }
+    PARAMETRIZE { dynamaxLevel = 0; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 1; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 2; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 3; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 4; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 5; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 6; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 7; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 8; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 9; dynamax = GIMMICK_DYNAMAX; }
+    PARAMETRIZE { dynamaxLevel = 10; dynamax = GIMMICK_DYNAMAX; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { DynamaxLevel(dynamaxLevel); HP(200); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: dynamax); }
+        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+        TURN { }
+    } SCENE {
+        if (dynamax)
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        if (dynamax)
+            HP_BAR(player, captureHP: &capturedHP);
+        else
+            HP_BAR(player, captureDamage: &capturedDamage);
+        if (dynamax)
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+    } THEN {
+        finalHP = player->hp;
+        if (dynamax)
+            EXPECT_MUL_EQ(finalHP, GetDynamaxLevelHPMultiplier(dynamaxLevel, FALSE), capturedHP);
+        EXPECT_LE(finalHP, 200);
+        EXPECT_GE(finalHP, 200 - capturedDamage);
     }
 }
 
@@ -311,6 +397,47 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon lose their substitutes")
     }
 }
 
+SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon that changes forms does not gain HP")
+{
+    u16 capturedHP, finalHP;
+    GIVEN {
+        PLAYER(SPECIES_GRENINJA_BATTLE_BOND) { Ability(ABILITY_BATTLE_BOND); HP(100); Speed(100); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); Speed(1000); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        HP_BAR(player, captureHP: &capturedHP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+    } THEN {
+        finalHP = player->hp;
+        EXPECT_EQ(capturedHP, finalHP);
+    }
+}
+
+SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon that changes forms does not gain HP unless the new form gains Max HP")
+{
+    u32 hp = 1, maxHP = 200;
+    u32 species;
+    PARAMETRIZE { species = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
+    PARAMETRIZE { species = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
+    GIVEN {
+        PLAYER(species) { Ability(ABILITY_POWER_CONSTRUCT); HP(hp); MaxHP(maxHP); DynamaxLevel(0); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+    } THEN {
+        EXPECT_MUL_EQ(maxHP - hp, GetDynamaxLevelHPMultiplier(0, FALSE), player->maxHP - player->hp);
+    }
+}
+
 SINGLE_BATTLE_TEST("(DYNAMAX) Max Moves deal 1/4 damage through protect", s16 damage)
 {
     bool32 protected;
@@ -331,7 +458,6 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Max Moves deal 1/4 damage through protect", s16 da
     }
 }
 
-//  This test will fail if it's the first test a thread runs
 SINGLE_BATTLE_TEST("(DYNAMAX) Max Moves don't bypass Max Guard")
 {
     GIVEN {
@@ -1076,7 +1202,22 @@ DOUBLE_BATTLE_TEST("(DYNAMAX) G-Max Terror traps both opponents")
     }
 }
 
-TO_DO_BATTLE_TEST("(DYNAMAX) Baton Pass passes G-Max Terror's escape prevention effect");
+SINGLE_BATTLE_TEST("(DYNAMAX) Baton Pass passes G-Max Terror's escape prevention effect")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_G_MAX_TERROR].argument == MAX_EFFECT_MEAN_LOOK);
+        PLAYER(SPECIES_GENGAR) { GigantamaxFactor(TRUE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_LICK, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_TERROR, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
+    } THEN {
+        EXPECT(opponent->status2 & STATUS2_ESCAPE_PREVENTION);
+    }
+}
 
 DOUBLE_BATTLE_TEST("(DYNAMAX) G-Max Meltdown torments both opponents for 3 turns")
 {
@@ -1409,7 +1550,6 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Moxie clones can be triggered by Max Moves faintin
     }
 }
 
-//  This test will fail if it's the first test a thread runs
 SINGLE_BATTLE_TEST("(DYNAMAX) Max Attacks prints a message when hitting into Max Guard")
 {
     GIVEN {
