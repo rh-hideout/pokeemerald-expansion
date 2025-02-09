@@ -1567,7 +1567,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 {
     u8 ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     u16 move;
-    u32 personality = 0, ability, friendship, j;
+    u32 personality, ability, friendship, j;
 
     if (fmon->gender == TRAINER_MON_MALE)
     {

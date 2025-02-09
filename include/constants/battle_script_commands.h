@@ -286,7 +286,6 @@ enum MoveEndEffects
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_RECOIL,
-    MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack

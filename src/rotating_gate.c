@@ -3,7 +3,6 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
-#include "rotating_gate.h"
 #include "sound.h"
 #include "sprite.h"
 #include "constants/songs.h"
@@ -940,7 +939,7 @@ void RotatingGate_InitPuzzle(void)
     }
 }
 
-void RotatingGatePuzzleCameraUpdate(s16 deltaX, s16 deltaY)
+void RotatingGatePuzzleCameraUpdate(u16 deltaX, u16 deltaY)
 {
     if (GetCurrentMapRotatingGatePuzzleType())
     {
@@ -959,7 +958,7 @@ void RotatingGate_InitPuzzleAndGraphics(void)
     }
 }
 
-bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
+bool8 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
 {
     s32 i;
 
@@ -997,7 +996,7 @@ bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
     return FALSE;
 }
 
-bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
+bool8 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
 {
     s32 i;
 

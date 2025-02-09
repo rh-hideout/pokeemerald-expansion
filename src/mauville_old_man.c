@@ -24,7 +24,7 @@
 #include "constants/mauville_old_man.h"
 
 static void InitGiddyTaleList(void);
-static void StartBardSong(bool8 useNewSongLyrics);
+static void StartBardSong(bool8 useTemporaryLyrics);
 static void Task_BardSong(u8 taskId);
 static void StorytellerSetup(void);
 static void Storyteller_ResetFlag(void);
@@ -33,11 +33,11 @@ static u8 sSelectedStory;
 
 COMMON_DATA struct BardSong gBardSong = {0};
 
-static EWRAM_DATA u16 sUnusedPitchTableIndex = 0;
+static EWRAM_DATA u16 sUnknownBardRelated = 0;
 static EWRAM_DATA struct MauvilleManStoryteller * sStorytellerPtr = NULL;
 static EWRAM_DATA u8 sStorytellerWindowId = 0;
 
-static const u16 sDefaultBardSongLyrics[NUM_BARD_SONG_WORDS] = {
+static const u16 sDefaultBardSongLyrics[BARD_SONG_LENGTH] = {
     EC_WORD_SHAKE,
     EC_WORD_IT,
     EC_WORD_DO,
@@ -79,7 +79,7 @@ static void SetupBard(void)
     bard->id = MAUVILLE_MAN_BARD;
     bard->hasChangedSong = FALSE;
     bard->language = gGameLanguage;
-    for (i = 0; i < NUM_BARD_SONG_WORDS; i++)
+    for (i = 0; i < BARD_SONG_LENGTH; i++)
         bard->songLyrics[i] = sDefaultBardSongLyrics[i];
 }
 
@@ -163,33 +163,24 @@ void SaveBardSongLyrics(void)
     for (i = 0; i < TRAINER_ID_LENGTH; i++)
         bard->playerTrainerId[i] = gSaveBlock2Ptr->playerTrainerId[i];
 
-    for (i = 0; i < NUM_BARD_SONG_WORDS; i++)
-        bard->songLyrics[i] = bard->newSongLyrics[i];
+    for (i = 0; i < BARD_SONG_LENGTH; i++)
+        bard->songLyrics[i] = bard->temporaryLyrics[i];
 
     bard->hasChangedSong = TRUE;
 }
 
-// Copies lyrics into gStringVar4.
-// gSpecialVar_0x8004 is used in these functions to indicate which song should be played.
-// If it's set to 0 the Bard's current song should be played, otherwise the new user-provided song should be played.
-// Its set in the scripts right before 'PlayBardSong' is called.
+// Copies lyrics into gStringVar4
 static void PrepareSongText(void)
 {
     struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
-    u16 * lyrics = !gSpecialVar_0x8004 ? bard->songLyrics : bard->newSongLyrics;
+    u16 * lyrics = gSpecialVar_0x8004 == 0 ? bard->songLyrics : bard->temporaryLyrics;
     u8 *wordEnd = gStringVar4;
     u8 *str = wordEnd;
-    u16 paragraphNum;
+    u16 lineNum;
 
-    // Easy chat "words" aren't strictly single words, e.g. EC_WORD_MATCH_UP is the string "MATCH UP".
-    // The bard song needs to know when it's at the end of an easy chat word and not just at a space in
-    // the middle of one, so the loop below will replace spaces in each easy chat word with CHAR_BARD_WORD_DELIMIT.
-    // When it comes time to print the song's text all the CHAR_BARD_WORD_DELIMIT will get replaced with CHAR_SPACE.
-    //
-    // The song text will be displayed in two paragraphs, each containing 3 easy chat words (2 on the first line and 1 on the second).
-    for (paragraphNum = 0; paragraphNum < 2; paragraphNum++)
+    // Put three words on each line
+    for (lineNum = 0; lineNum < 2; lineNum++)
     {
-        // Line 1, 1st word
         wordEnd = CopyEasyChatWord(wordEnd, *(lyrics++));
         while (wordEnd != str)
         {
@@ -201,7 +192,6 @@ static void PrepareSongText(void)
         str++;
         *(wordEnd++) = CHAR_SPACE;
 
-        // Line 1, 2nd word
         wordEnd = CopyEasyChatWord(wordEnd, *(lyrics++));
         while (wordEnd != str)
         {
@@ -213,7 +203,6 @@ static void PrepareSongText(void)
         str++;
         *(wordEnd++) = CHAR_NEWLINE;
 
-        // Line 2, 1st word
         wordEnd = CopyEasyChatWord(wordEnd, *(lyrics++));
         while (wordEnd != str)
         {
@@ -222,10 +211,8 @@ static void PrepareSongText(void)
             str++;
         }
 
-        if (paragraphNum == 0)
+        if (lineNum == 0)
         {
-            // Erase the 1st paragraph for displaying the 2nd.
-            // The == 0 check assumes there are only 2 paragraphs.
             *(wordEnd++) = EXT_CTRL_CODE_BEGIN;
             *(wordEnd++) = EXT_CTRL_CODE_FILL_WINDOW;
         }
@@ -430,19 +417,17 @@ enum {
 #define tWordState          data[1]
 #define tDelay              data[2]
 #define tCharIndex          data[3]
-#define tLyricsIndex        data[4]
-#define tUseNewSongLyrics   data[5]
+#define tCurrWord           data[4]
+#define tUseTemporaryLyrics data[5]
 
-// Takes a 16-bit easy chat word value and returns a value 0-4 (i.e. a value less than NUM_BARD_PITCH_TABLES_PER_SIZE).
-// The relationship between the easy chat word and the chosen pitch table is essentially arbitrary.
-// This value will be used twice; once for an unused variable, and again to select a pitch table in CalcWordSounds.
-#define WORD_TO_PITCH_TABLE_INDEX(a) ( MOD(a, (NUM_BARD_PITCH_TABLES_PER_SIZE-1)) + (((a) >> 3) & 1) )
+#define MACRO1(a) (((a) & 3) + (((a) / 8) & 1))
+#define MACRO2(a) (((a) % 4) + (((a) / 8) & 1))
 
-static void StartBardSong(bool8 useNewSongLyrics)
+static void StartBardSong(bool8 useTemporaryLyrics)
 {
     u8 taskId = CreateTask(Task_BardSong, 80);
 
-    gTasks[taskId].tUseNewSongLyrics = useNewSongLyrics;
+    gTasks[taskId].tUseTemporaryLyrics = useTemporaryLyrics;
 }
 
 static void EnableTextPrinters(void)
@@ -463,18 +448,6 @@ static void DrawSongTextWindow(const u8 *str)
     CopyWindowToVram(0, COPYWIN_FULL);
 }
 
-#define BARD_SONG_BASE_VOLUME 0x100
-#define BARD_SONG_BASE_PITCH  0x200
-
-enum {
-    SOUND_STATE_START,
-    SOUND_STATE_PLAY,
-    SOUND_STATE_SET_BASE,
-    SOUND_STATE_END,
-    SOUND_STATE_WAIT,
-};
-
-// Sing one frame of the bard's song. 'task' is a pointer to Task_BardSong, which handles changing the states in here.
 static void BardSing(struct Task *task, struct BardSong *song)
 {
     switch (task->tState)
@@ -486,73 +459,62 @@ static void BardSing(struct Task *task, struct BardSong *song)
         s32 i;
 
         // Copy lyrics
-        if (!gSpecialVar_0x8004)
+        if (gSpecialVar_0x8004 == 0)
             lyrics = bard->songLyrics;
         else
-            lyrics = bard->newSongLyrics;
-
-        for (i = 0; i < NUM_BARD_SONG_WORDS; i++)
+            lyrics = bard->temporaryLyrics;
+        for (i = 0; i < BARD_SONG_LENGTH; i++)
             song->lyrics[i] = lyrics[i];
-
-        song->lyricsIndex = 0;
-        break;
+        song->currWord = 0;
     }
+        break;
+    case BARD_STATE_WAIT_BGM:
+        break;
     case BARD_STATE_GET_WORD:
     {
-        u16 easyChatWord = song->lyrics[song->lyricsIndex];
-        song->soundTemplates = GetWordSoundTemplates(easyChatWord);
-        CalcWordSounds(song, WORD_TO_PITCH_TABLE_INDEX(easyChatWord));
-        song->lyricsIndex++;
-        if (song->soundTemplates[0].songId != PHONEME_ID_NONE)
+        u16 word = song->lyrics[song->currWord];
+        song->sound = GetWordSounds(word);
+        GetWordPhonemes(song, MACRO1(word));
+        song->currWord++;
+        if (song->sound->songLengthId != 0xFF)
         {
-            // Word has valid sounds, begin playing.
-            song->state = SOUND_STATE_START;
+            song->state = 0;
         }
         else
         {
-            // Word has no valid sounds, skip to the end.
-            song->state = SOUND_STATE_END;
-            song->timer = 2;
+            song->state = 3;
+            song->phonemeTimer = 2;
         }
         break;
     }
     case BARD_STATE_HANDLE_WORD:
     case BARD_STATE_WAIT_WORD:
     {
-        const struct BardSoundTemplate *template = &song->soundTemplates[song->soundIndex];
+        const struct BardSound *sound = &song->sound[song->currPhoneme];
 
         switch (song->state)
         {
-        case SOUND_STATE_START:
-            song->timer = song->sounds[song->soundIndex].length;
-            if (template->songId < NUM_PHONEME_SONGS)
+        case 0:
+            song->phonemeTimer = song->phonemes[song->currPhoneme].length;
+            if (sound->songLengthId <= 50)
             {
-                // Phoneme "songs" come in triplets of PH_*_BLEND, PH_*_HELD, and PH_*_SOLO.
-                // The division then multiplication by 3 below is rounding any value from one of these triplets to a PH_*_HELD.
-                // This means the actual song files for any phoneme other than PH_*_HELD won't be played here, and the only difference
-                // when specifying a PH_*_BLEND or PH_*_SOLO in the songId will be the length of the sound, determined by 'sPhonemeLengths'.
-                u8 phonemeTripletId = template->songId / 3;
-                m4aSongNumStart((FIRST_PHONEME_SONG + 1) + phonemeTripletId * 3);
+                u8 num = sound->songLengthId / 3;
+                m4aSongNumStart(PH_TRAP_HELD + 3 * num);
             }
-            song->state = SOUND_STATE_SET_BASE;
-            song->timer--;
+            song->state = 2;
+            song->phonemeTimer--;
             break;
-        case SOUND_STATE_SET_BASE:
-            song->state = SOUND_STATE_PLAY;
-            if (template->songId < NUM_PHONEME_SONGS)
+        case 2:
+            song->state = 1;
+            if (sound->songLengthId <= 50)
             {
-                // Adjust the song volume for the current phoneme.
-                // In practice no phonemes use this, so volume here will always be BARD_SONG_BASE_VOLUME.
-                song->volume = BARD_SONG_BASE_VOLUME + template->volume * 16;
+                song->volume = 0x100 + sound->volume * 16;
                 m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, song->volume);
-
-                // Adjust the song pitch for the current phoneme.
-                song->pitch = BARD_SONG_BASE_PITCH + song->sounds[song->soundIndex].pitch;
+                song->pitch = 0x200 + song->phonemes[song->currPhoneme].pitch;
                 m4aMPlayPitchControl(&gMPlayInfo_SE2, TRACKS_ALL, song->pitch);
             }
             break;
-        case SOUND_STATE_PLAY:
-            // Modulate the volume and pitch to make it sound a little more like singing.
+        case 1:
             if (song->voiceInflection > 10)
                 song->volume -= 2;
             if (song->voiceInflection & 1)
@@ -562,37 +524,33 @@ static void BardSing(struct Task *task, struct BardSong *song)
             m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, song->volume);
             m4aMPlayPitchControl(&gMPlayInfo_SE2, TRACKS_ALL, song->pitch);
             song->voiceInflection++;
-
-            song->timer--;
-            if (song->timer == 0)
+            song->phonemeTimer--;
+            if (song->phonemeTimer == 0)
             {
-                if (++song->soundIndex != MAX_BARD_SOUNDS_PER_WORD && song->soundTemplates[song->soundIndex].songId != PHONEME_ID_NONE)
+                song->currPhoneme++;
+                if (song->currPhoneme != 6 && song->sound[song->currPhoneme].songLengthId != 0xFF)
                 {
-                    // There are more sounds to play for this word, return to the start.
-                    song->state = SOUND_STATE_START;
+                    song->state = 0;
                 }
                 else
                 {
-                    // We've reached the final sound for this word, stop playing.
-                    song->state = SOUND_STATE_END;
-                    song->timer = 2;
+                    song->state = 3;
+                    song->phonemeTimer = 2;
                 }
             }
             break;
-        case SOUND_STATE_END:
-            // Delay, then stop playing the phoneme.
-            if (--song->timer == 0)
+        case 3:
+            song->phonemeTimer--;
+            if (song->phonemeTimer == 0)
             {
                 m4aMPlayStop(&gMPlayInfo_SE2);
-                song->state = SOUND_STATE_WAIT; // We'll remain stuck at this sound state until Task_BardSong changes states from HANDLE_WORD/WAIT_WORD
+                song->state = 4;
             }
             break;
         }
-        break;
     }
+        break;
     case BARD_STATE_PAUSE:
-    case BARD_STATE_WAIT_BGM:
-        // Non-singing states.
         break;
     }
 }
@@ -611,7 +569,7 @@ static void Task_BardSong(u8 taskId)
         task->tWordState = 0;
         task->tDelay = 0;
         task->tCharIndex = 0;
-        task->tLyricsIndex = 0;
+        task->tCurrWord = 0;
         FadeOutBGMTemporarily(4);
         task->tState = BARD_STATE_WAIT_BGM;
         break;
@@ -635,17 +593,15 @@ static void Task_BardSong(u8 taskId)
             wordLen++;
         }
 
-        // sUnusedPitchTableIndex is never read. For debugging perhaps, or one of the other languages.
-        if (!task->tUseNewSongLyrics)
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->songLyrics[task->tLyricsIndex]);
+        if (!task->tUseTemporaryLyrics)
+            sUnknownBardRelated = MACRO2(bard->songLyrics[task->tCurrWord]);
         else
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->newSongLyrics[task->tLyricsIndex]);
+            sUnknownBardRelated = MACRO2(bard->temporaryLyrics[task->tCurrWord]);
 
         gBardSong.length /= wordLen;
         if (gBardSong.length <= 0)
             gBardSong.length = 1;
-
-        task->tLyricsIndex++;
+        task->tCurrWord++;
 
         if (task->tDelay == 0)
         {
@@ -677,7 +633,7 @@ static void Task_BardSong(u8 taskId)
         }
         else if (gStringVar4[task->tCharIndex] == CHAR_SPACE)
         {
-            // End of easy chat word, move on to the next one.
+            // Handle space
             EnableTextPrinters();
             task->tCharIndex++;
             task->tState = BARD_STATE_GET_WORD;
@@ -693,16 +649,14 @@ static void Task_BardSong(u8 taskId)
         else if (gStringVar4[task->tCharIndex] == EXT_CTRL_CODE_BEGIN)
         {
             // Handle ctrl code
-            // The only expected ctrl codes are those for clearing the end of the paragraph,
-            // so this assumes there's a new word coming and does a short delay before the next paragraph.
             task->tCharIndex += 2;  // skip over control codes
             task->tState = BARD_STATE_GET_WORD;
             task->tDelay = 8;
         }
         else if (gStringVar4[task->tCharIndex] == CHAR_BARD_WORD_DELIMIT)
         {
-            // Space within the current easy chat word (see PrepareSongText), just replace it with a real space.
-            gStringVar4[task->tCharIndex] = CHAR_SPACE;
+            // Handle word boundary
+            gStringVar4[task->tCharIndex] = CHAR_SPACE;  // Replace with a real space
             EnableTextPrinters();
             task->tCharIndex++;
             task->tDelay = 0;

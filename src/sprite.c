@@ -5,6 +5,8 @@
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
+#define OAM_MATRIX_COUNT 32
+
 #define sAnchorX data[6]
 #define sAnchorY data[7]
 

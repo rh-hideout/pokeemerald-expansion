@@ -67,7 +67,7 @@ AI will generally behave more recklessly. This AI enables the following behaviou
 * Switch offensively mid battle rather than defensively (if using `AI_FLAG_SMART_MON_CHOICES`)
 * Prioritize Explosion moves
 
-## `AI_FLAG_TRY_TO_2HKO`
+## `AI_FLAG_PREFER_STRONGEST_MOVE`
 Adds score bonus to any move the AI has that either OHKOs or 2HKOs the player.
 
 Keep in mind that this is a weaker form of `AI_FLAG_TRY_TO_FAINT` at scoring OHKOs as it does not take into account who is attacking first, it does however handle 2HKOs.

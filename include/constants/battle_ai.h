@@ -31,7 +31,7 @@
 #define AI_FLAG_CHECK_VIABILITY       (1 << 2)  // AI damaging moves and move effects to determine the best available move in the current situation.
 #define AI_FLAG_FORCE_SETUP_FIRST_TURN      (1 << 3) // AI will prioritize using setup moves on the first turn at the expensve of all else. AI_FLAG_CHECK_VIABILITY will instead do this when the AI determines it makes sense.
 #define AI_FLAG_RISKY                 (1 << 4)  // AI will generally behave more recklessly, prioritizing damage over accuracy, explosions, etc.
-#define AI_FLAG_TRY_TO_2HKO           (1 << 5)  // AI adds score bonus to any move the AI has that either OHKOs or 2HKOs the player.
+#define AI_FLAG_PREFER_STRONGEST_MOVE (1 << 5)  // AI adds score bonus to any move the AI has that either OHKOs or 2HKOs the player.
 #define AI_FLAG_PREFER_BATON_PASS     (1 << 6)  // AI prefers raising its own stats and setting for / using Baton Pass.
 #define AI_FLAG_DOUBLE_BATTLE         (1 << 7)  // Automatically set for double battles, handles AI behaviour with partner.
 #define AI_FLAG_HP_AWARE              (1 << 8)  // AI will favour certain move effects based on how much remaining HP it and the player's mon have.

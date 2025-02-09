@@ -3269,19 +3269,16 @@ static u16 GetMoveEffectSymbolTileOffset(u16 move, u8 contestant)
 
     switch (gContestEffects[gMovesInfo[move].contestEffect].effectType)
     {
-    case CONTEST_EFFECT_TYPE_APPEAL:
-    case CONTEST_EFFECT_TYPE_AVOID_STARTLE:
-    case CONTEST_EFFECT_TYPE_UNKNOWN:
+    case 0:
+    case 1:
+    case 8:
         offset = 0x9082;
         break;
-    case CONTEST_EFFECT_TYPE_STARTLE_MON:
-    case CONTEST_EFFECT_TYPE_STARTLE_MONS:
+    case 2:
+    case 3:
         offset = 0x9088;
         break;
     default:
-    //case CONTEST_EFFECT_TYPE_WORSEN:
-    //case CONTEST_EFFECT_TYPE_SPECIAL_APPEAL:
-    //case CONTEST_EFFECT_TYPE_TURN_ORDER:
         offset = 0x9086;
         break;
     }

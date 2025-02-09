@@ -43,8 +43,6 @@
 #define RUN_OVERWORLD_SCRIPT(...) RunScriptImmediately(OVERWORLD_SCRIPT(__VA_ARGS__))
 
 // Make overworld script macros available.
-asm(".include \"constants/gba_constants.inc\"\n"
-    ".include \"asm/macros/asm.inc\"\n"
-    ".include \"asm/macros/event.inc\"\n");
+asm(".include \"asm/macros/event.inc\"\n");
 
 #endif
