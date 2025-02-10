@@ -36199,6 +36199,9 @@ static const u16 sUlmiraintTeachableLearnset[] = {
     MOVE_WORRY_SEED,
     MOVE_BEAT_UP,
     MOVE_GRAVITY,
+    MOVE_AURA_SPHERE,
+    MOVE_ENDEAVOR,
+    MOVE_MIRROR_CANNON,
     MOVE_PROTECT,
     
     MOVE_UNAVAILABLE,
