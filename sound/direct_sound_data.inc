@@ -6833,6 +6833,10 @@ Cry_Ulmiraint::
 	.incbin "sound/direct_sound_samples/cries/ulmiraint.bin"
 
 	.align 2
+Cry_Cofferule::
+	.incbin "sound/direct_sound_samples/cries/cofferule.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

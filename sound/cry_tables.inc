@@ -2763,6 +2763,8 @@ gCryTable::
 
 	cry Cry_Ulmiraint
 
+	cry Cry_Cofferule
+
 .endif
 
 	.align 2
@@ -5530,5 +5532,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Afloof
 
 	cry_reverse Cry_Ulmiraint
+
+	cry_reverse Cry_Cofferule
 
 .endif

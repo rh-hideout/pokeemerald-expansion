@@ -23272,6 +23272,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_ArctiglobeFreed[] = INCBIN_U32("graphics/pokemon/arctiglobe/freed/shiny.gbapal.lz");
    const u8 gMonIcon_ArctiglobeFreed[] = INCBIN_U8("graphics/pokemon/arctiglobe/freed/icon.4bpp");
 
+   const u32 gMonFrontPic_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/front.4bpp.lz");
+   const u32 gMonBackPic_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/back.4bpp.lz");
+   const u32 gMonPalette_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/shiny.gbapal.lz");
+   const u8 gMonIcon_Cofferule[] = INCBIN_U8("graphics/pokemon/cofferule/icon.4bpp");
+   const u8 gMonFootprint_Cofferule[] = INCBIN_U8("graphics/pokemon/cofferule/footprint.1bpp");
+
    const u32 gMonFrontPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/front.4bpp.lz");
    const u32 gMonBackPic_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/back.4bpp.lz");
    const u32 gMonPalette_Garookie[] = INCBIN_U32("graphics/pokemon/garookie/normal.gbapal.lz");

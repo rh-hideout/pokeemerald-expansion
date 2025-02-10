@@ -24748,6 +24748,10 @@ static const struct LevelUpMove sArctiglobeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(60, MOVE_SHEER_COLD),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sCofferuleLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_PETRIFY),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sGarookieLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
     LEVEL_UP_MOVE( 1, MOVE_GROWL),
