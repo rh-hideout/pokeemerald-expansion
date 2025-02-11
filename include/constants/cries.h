@@ -2597,6 +2597,7 @@ enum {
     CRY_AFLOOF,
     CRY_ULMIRAINT,
     CRY_COFFERULE,
+    CRY_SABSUTE,
     CRY_COUNT,
 };
 

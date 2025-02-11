@@ -23076,6 +23076,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/icon.4bpp");
    const u8 gMonFootprint_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/footprint.1bpp");
 
+   const u32 gMonFrontPic_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/front.4bpp.lz");
+   const u32 gMonBackPic_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/back.4bpp.lz");
+   const u32 gMonPalette_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/shiny.gbapal.lz");
+   const u8 gMonIcon_Sabsute[] = INCBIN_U8("graphics/pokemon/sabsute/icon.4bpp");
+   const u8 gMonFootprint_Sabsute[] = INCBIN_U8("graphics/pokemon/sabsute/footprint.1bpp");
+
    const u32 gMonFrontPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/front.4bpp.lz");
    const u32 gMonBackPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/back.4bpp.lz");
    const u32 gMonPalette_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/normal.gbapal.lz");

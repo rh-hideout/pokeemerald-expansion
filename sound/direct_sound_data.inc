@@ -6837,6 +6837,10 @@ Cry_Cofferule::
 	.incbin "sound/direct_sound_samples/cries/cofferule.bin"
 
 	.align 2
+Cry_Sabsute::
+	.incbin "sound/direct_sound_samples/cries/sabsute.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

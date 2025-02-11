@@ -2765,6 +2765,8 @@ gCryTable::
 
 	cry Cry_Cofferule
 
+	cry Cry_Sabsute
+
 .endif
 
 	.align 2
@@ -5534,5 +5536,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ulmiraint
 
 	cry_reverse Cry_Cofferule
+
+	cry_reverse Cry_Sabsute
 
 .endif

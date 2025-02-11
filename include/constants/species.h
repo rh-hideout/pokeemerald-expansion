@@ -1831,8 +1831,9 @@
 #define SPECIES_ULMIRAINT_WATER                         1716
 #define SPECIES_ULMIRAINT_FIRE                          1717
 #define SPECIES_COFFERULE                               1718
+#define SPECIES_SABSUTE                                 1719
 
-#define SPECIES_EGG (SPECIES_COFFERULE + 1)
+#define SPECIES_EGG (SPECIES_SABSUTE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
