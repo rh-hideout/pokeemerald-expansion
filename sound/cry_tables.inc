@@ -2767,6 +2767,10 @@ gCryTable::
 
 	cry Cry_Sabsute
 
+	cry Cry_Dollghost
+
+	cry Cry_Knitten
+
 .endif
 
 	.align 2
@@ -5538,5 +5542,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Cofferule
 
 	cry_reverse Cry_Sabsute
+
+	cry_reverse Cry_Dollghost
+
+	cry_reverse Cry_Knitten
 
 .endif

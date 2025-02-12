@@ -23076,12 +23076,26 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/icon.4bpp");
    const u8 gMonFootprint_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/footprint.1bpp");
 
+   const u32 gMonFrontPic_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/front.4bpp.lz");
+   const u32 gMonBackPic_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/back.4bpp.lz");
+   const u32 gMonPalette_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/shiny.gbapal.lz");
+   const u8 gMonIcon_Knitten[] = INCBIN_U8("graphics/pokemon/knitten/icon.4bpp");
+   const u8 gMonFootprint_Knitten[] = INCBIN_U8("graphics/pokemon/knitten/footprint.1bpp");
+
    const u32 gMonFrontPic_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/front.4bpp.lz");
    const u32 gMonBackPic_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/back.4bpp.lz");
    const u32 gMonPalette_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/normal.gbapal.lz");
    const u32 gMonShinyPalette_Sabsute[] = INCBIN_U32("graphics/pokemon/sabsute/shiny.gbapal.lz");
    const u8 gMonIcon_Sabsute[] = INCBIN_U8("graphics/pokemon/sabsute/icon.4bpp");
    const u8 gMonFootprint_Sabsute[] = INCBIN_U8("graphics/pokemon/sabsute/footprint.1bpp");
+
+   const u32 gMonFrontPic_Dollghost[] = INCBIN_U32("graphics/pokemon/dollghost/front.4bpp.lz");
+   const u32 gMonBackPic_Dollghost[] = INCBIN_U32("graphics/pokemon/dollghost/back.4bpp.lz");
+   const u32 gMonPalette_Dollghost[] = INCBIN_U32("graphics/pokemon/dollghost/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Dollghost[] = INCBIN_U32("graphics/pokemon/dollghost/shiny.gbapal.lz");
+   const u8 gMonIcon_Dollghost[] = INCBIN_U8("graphics/pokemon/dollghost/icon.4bpp");
+   const u8 gMonFootprint_Dollghost[] = INCBIN_U8("graphics/pokemon/dollghost/footprint.1bpp");
 
    const u32 gMonFrontPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/front.4bpp.lz");
    const u32 gMonBackPic_Parmiausan[] = INCBIN_U32("graphics/pokemon/parmiausan/back.4bpp.lz");

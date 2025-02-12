@@ -24931,8 +24931,16 @@ static const struct LevelUpMove sBearedazeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(55, MOVE_SUPERPOWER),
     LEVEL_UP_MOVE(60, MOVE_DYNAMIC_PUNCH),
    LEVEL_UP_END
-};
+   };
+static const struct LevelUpMove sKnittenLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_BEAR_HUG),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sSabsuteLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_BEAR_HUG),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sDollghostLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_BEAR_HUG),
    LEVEL_UP_END
    };

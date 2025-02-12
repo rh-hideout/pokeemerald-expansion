@@ -4297,7 +4297,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Yuukiino)
        .levelUpLearnset = sYuukiinoLevelUpLearnset,
-       .evolutions = EVOLUTION({EVO_FRIENDSHIP, 0, SPECIES_AQUADIIVA}),
+       .evolutions = EVOLUTION({EVO_FRIENDSHIP, 200, SPECIES_AQUADIIVA}),
     },
     
         [SPECIES_AQUADIIVA] =
@@ -4467,6 +4467,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Mammount)
        .levelUpLearnset = sMammountLevelUpLearnset, 
     },
+        [SPECIES_KNITTEN] =
+    { 
+       .baseHP        = 35,
+       .baseAttack    = 25,
+       .baseDefense   = 100,
+       .baseSpeed     = 5,
+       .baseSpAttack  = 25,
+       .baseSpDefense = 100,
+       .types = { TYPE_NORMAL, TYPE_NORMAL },
+       .catchRate = 140,
+       .expYield = 70,
+       .evYield_HP  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_TANGLED_FEET, ABILITY_NONE, ABILITY_TANGLING_HAIR, ABILITY_IRON_BARBS}, 
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Knitten"),
+       .cryId = CRY_KNITTEN,
+       .natDexNum = NATIONAL_DEX_KNITTEN,
+       .categoryName = _("Sewn"),
+       .height = 1,
+       .weight = 1,
+       .description = COMPOUND_STRING(
+           "Even if it's body falls apart, it can\n"
+           "use it's needle-like legs to sew itself\n"
+           "back into it's spherical shape.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Knitten,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Knitten,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Knitten,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Knitten,
+       .shinyPalette = gMonShinyPalette_Knitten,
+       .iconSprite = gMonIcon_Knitten,
+       .iconPalIndex = 0,
+       FOOTPRINT(Knitten)
+       .levelUpLearnset = sKnittenLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_FRIENDSHIP, 150, SPECIES_SABSUTE},
+        {EVO_ITEM, ITEM_MOON_STONE, SPECIES_DOLLGHOST})
+    },
         [SPECIES_SABSUTE] =
     { 
        .baseHP        = 100,
@@ -4519,6 +4574,60 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Sabsute)
        .levelUpLearnset = sSabsuteLevelUpLearnset,
+    },
+        [SPECIES_DOLLGHOST] =
+    { 
+       .baseHP        = 65,
+       .baseAttack    = 60,
+       .baseDefense   = 140,
+       .baseSpeed     = 35,
+       .baseSpAttack  = 60,
+       .baseSpDefense = 140,
+       .types = { TYPE_NORMAL, TYPE_GHOST },
+       .catchRate = 90,
+       .expYield = 106,
+       .evYield_HP  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_RUN_AWAY, ABILITY_UNAWARE}, 
+       .bodyColor = BODY_COLOR_GREEN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Dollghost"),
+       .cryId = CRY_DOLLGHOST,
+       .natDexNum = NATIONAL_DEX_DOLLGHOST,
+       .categoryName = _("Possesed"),
+       .height = 3,
+       .weight = 10,
+       .description = COMPOUND_STRING(
+           "This Pokémon roams around graveyards. It\n"
+           "was once a Poké doll, rumored to be\n"
+           "possessed by the spirit of the child\n"
+           "who owned it long ago."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Dollghost,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Dollghost,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Dollghost,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Dollghost,
+       .shinyPalette = gMonShinyPalette_Dollghost,
+       .iconSprite = gMonIcon_Dollghost,
+       .iconPalIndex = 0,
+       FOOTPRINT(Dollghost)
+       .levelUpLearnset = sDollghostLevelUpLearnset,
     },
         [SPECIES_PARMIAUSAN] =
     { 

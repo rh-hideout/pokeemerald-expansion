@@ -6841,6 +6841,14 @@ Cry_Sabsute::
 	.incbin "sound/direct_sound_samples/cries/sabsute.bin"
 
 	.align 2
+Cry_Dollghost::
+	.incbin "sound/direct_sound_samples/cries/dollghost.bin"
+
+	.align 2
+Cry_Knitten::
+	.incbin "sound/direct_sound_samples/cries/knitten.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
