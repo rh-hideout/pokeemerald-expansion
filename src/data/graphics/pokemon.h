@@ -12345,7 +12345,7 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     // const u32 gOverworldPalette_DarmanitanZenMode[] = INCBIN_U32("graphics/pokemon/darmanitan/zen_mode/overworld_normal.gbapal.lz");
     // const u32 gShinyOverworldPalette_DarmanitanZenMode[] = INCBIN_U32("graphics/pokemon/darmanitan/zen_mode/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //OW_POKEMON_OBJECT_EVENTSZEN_MOD
 
 #if P_GALARIAN_FORMS
     const u32 gMonFrontPic_DarumakaGalarian[] = INCBIN_U32("graphics/pokemon/darumaka/galarian/front.4bpp.lz");
@@ -22509,6 +22509,19 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Onsenpura[] = INCBIN_U32("graphics/pokemon/onsenpura/shiny.gbapal.lz");
    const u8 gMonIcon_Onsenpura[] = INCBIN_U8("graphics/pokemon/onsenpura/icon.4bpp");
    const u8 gMonFootprint_Onsenpura[] = INCBIN_U8("graphics/pokemon/onsenpura/footprint.1bpp");
+
+   const u32 gMonFrontPic_Simionach[] = INCBIN_U32("graphics/pokemon/simionach/front.4bpp.lz");
+   const u32 gMonBackPic_Simionach[] = INCBIN_U32("graphics/pokemon/simionach/back.4bpp.lz");
+   const u32 gMonPalette_Simionach[] = INCBIN_U32("graphics/pokemon/simionach/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Simionach[] = INCBIN_U32("graphics/pokemon/simionach/shiny.gbapal.lz");
+   const u8 gMonIcon_Simionach[] = INCBIN_U8("graphics/pokemon/simionach/icon.4bpp");
+   const u8 gMonFootprint_Simionach[] = INCBIN_U8("graphics/pokemon/simionach/footprint.1bpp");
+
+   const u32 gMonFrontPic_SimionachZen[] = INCBIN_U32("graphics/pokemon/simionach/zen/front.4bpp.lz");
+   const u32 gMonPalette_SimionachZen[] = INCBIN_U32("graphics/pokemon/simionach/zen/normal.gbapal.lz");
+   const u32 gMonBackPic_SimionachZen[] = INCBIN_U32("graphics/pokemon/simionach/zen/back.4bpp.lz");
+   const u32 gMonShinyPalette_SimionachZen[] = INCBIN_U32("graphics/pokemon/simionach/zen/shiny.gbapal.lz");
+   const u8 gMonIcon_SimionachZen[] = INCBIN_U8("graphics/pokemon/simionach/zen/icon.4bpp");
 
    const u32 gMonFrontPic_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/front.4bpp.lz");
    const u32 gMonBackPic_Epipheror[] = INCBIN_U32("graphics/pokemon/epipheror/back.4bpp.lz");

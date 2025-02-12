@@ -6849,6 +6849,11 @@ Cry_Knitten::
 	.incbin "sound/direct_sound_samples/cries/knitten.bin"
 
 	.align 2
+Cry_Simionach::
+	.incbin "sound/direct_sound_samples/cries/simionach.bin"
+
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

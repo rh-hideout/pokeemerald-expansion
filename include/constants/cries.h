@@ -2600,6 +2600,7 @@ enum {
     CRY_SABSUTE,
     CRY_DOLLGHOST,
     CRY_KNITTEN,
+    CRY_SIMIONACH,
     CRY_COUNT,
 };
 

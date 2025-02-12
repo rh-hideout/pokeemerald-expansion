@@ -2900,4 +2900,15 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeOverwritten = TRUE,
     },
 
+    [ABILITY_ZEN_MONKEY] =
+    {
+        .name = _("Zen Monke"),
+        .description = COMPOUND_STRING("Transforms once hurt."),
+        .aiRating = -1,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+    },
+
 };

@@ -1834,8 +1834,11 @@
 #define SPECIES_SABSUTE                                 1719
 #define SPECIES_DOLLGHOST                               1720
 #define SPECIES_KNITTEN                                 1721
+#define SPECIES_SIMIONACH                               SPECIES_SIMIONACH_UNFOCUSED
+#define SPECIES_SIMIONACH_UNFOCUSED                     1722
+#define SPECIES_SIMIONACH_ZEN                           1723
 
-#define SPECIES_EGG (SPECIES_KNITTEN + 1)
+#define SPECIES_EGG (SPECIES_SIMIONACH_ZEN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

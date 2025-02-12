@@ -2235,3 +2235,8 @@ static const u16 sUlmiraintFormSpeciesIdTable[] = {
     SPECIES_ULMIRAINT_FIRE,
     FORM_SPECIES_END,
 };
+static const u16 sSimionachFormSpeciesIdTable[] = {
+    SPECIES_SIMIONACH_UNFOCUSED,
+    SPECIES_SIMIONACH_ZEN,
+    FORM_SPECIES_END,
+};

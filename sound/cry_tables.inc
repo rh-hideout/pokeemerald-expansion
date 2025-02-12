@@ -2771,6 +2771,8 @@ gCryTable::
 
 	cry Cry_Knitten
 
+	cry Cry_Simionach
+
 .endif
 
 	.align 2
@@ -5546,5 +5548,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Dollghost
 
 	cry_reverse Cry_Knitten
+
+	cry_reverse Cry_Simionach
 
 .endif
