@@ -4571,7 +4571,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Sabsute,
        .shinyPalette = gMonShinyPalette_Sabsute,
        .iconSprite = gMonIcon_Sabsute,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Sabsute)
        .levelUpLearnset = sSabsuteLevelUpLearnset,
     },
@@ -4896,7 +4896,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Simionach,
        .shinyPalette = gMonShinyPalette_Simionach,
        .iconSprite = gMonIcon_Simionach,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Simionach)
        .levelUpLearnset = sSimionachLevelUpLearnset,
        .formSpeciesIdTable = sSimionachFormSpeciesIdTable,
@@ -4952,7 +4952,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_SimionachZen,
        .shinyPalette = gMonShinyPalette_SimionachZen,
        .iconSprite = gMonIcon_SimionachZen,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Simionach)
        .levelUpLearnset = sSimionachLevelUpLearnset,
        .formSpeciesIdTable = sSimionachFormSpeciesIdTable,
@@ -4975,7 +4975,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 10,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
-       .abilities = { ABILITY_FOREWARN, ABILITY_FRISK, ABILITY_WONDER_SKIN, ABILITY_CONCERT}, //GTODO Replace soundproof with Concert when ability is finalized
+       .abilities = { ABILITY_FOREWARN, ABILITY_FRISK, ABILITY_WONDER_SKIN, ABILITY_CONCERT}, //GTODO DONE
        .bodyColor = BODY_COLOR_RED,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -9501,7 +9501,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Icehugger,
        .shinyPalette = gMonShinyPalette_Icehugger,
        .iconSprite = gMonIcon_Icehugger,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Icehugger)
        .levelUpLearnset = sIcehuggerLevelUpLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_MOON_STONE, SPECIES_XENINTER}),
