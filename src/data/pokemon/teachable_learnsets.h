@@ -36330,7 +36330,6 @@ static const u16 sNoxiliumTeachableLearnset[] = {
     MOVE_ICE_BEAM,
     MOVE_BLIZZARD,
     MOVE_HYPER_BEAM,
-    MOVE_LIGHT_SCREEN, //???
     MOVE_PROTECT,
     MOVE_RAIN_DANCE,
     MOVE_SAFEGUARD,
@@ -36342,17 +36341,16 @@ static const u16 sNoxiliumTeachableLearnset[] = {
     MOVE_PSYCHIC,
     MOVE_SHADOW_BALL,
     MOVE_DOUBLE_TEAM,
-    MOVE_BRICK_BREAK, //???
-    MOVE_REFLECT, //???
+    MOVE_BRICK_BREAK, 
     MOVE_SANDSTORM,
     MOVE_AERIAL_ACE,
     MOVE_TORMENT,
     MOVE_FACADE,
     MOVE_SECRET_POWER,
     MOVE_REST,
-    MOVE_SKILL_SWAP, //???
+    MOVE_SKILL_SWAP, 
     MOVE_SNATCH,
-    MOVE_ENERGY_BALL,//???
+    MOVE_ENERGY_BALL,
     MOVE_SLEEP_TALK,
     MOVE_POWER_GEM,
     MOVE_DARK_PULSE,
@@ -36372,7 +36370,7 @@ static const u16 sNoxiliumTeachableLearnset[] = {
     MOVE_CURSE,
     MOVE_FROSTBITE,
     MOVE_CUT,
-    MOVE_STRENGTH, //???
+    MOVE_STRENGTH,
     MOVE_FLY,
     MOVE_UNAVAILABLE,
 };
