@@ -6324,6 +6324,17 @@ static const u16 sFoxcetEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sFuckerEggMoveLearnset[] = {
+    MOVE_LIQUIDATION,
+    MOVE_BULLET_PUNCH,
+    MOVE_BRAVE_BIRD,
+    MOVE_AQUA_JET,
+    MOVE_PARTING_SHOT,
+    MOVE_PLAY_ROUGH,
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sMantasmEggMoveLearnset[] = {
     MOVE_HEAD_SMASH,
     MOVE_PHANTOM_FORCE,
@@ -6342,6 +6353,17 @@ static const u16 sArctiglobeEggMoveLearnset[] = {
     MOVE_BIDE,
     MOVE_IRON_DEFENSE,
     MOVE_DARKEST_LARIAT,
+    MOVE_UNAVAILABLE,
+    
+};
+
+static const u16 sNoxiliumEggMoveLearnset[] = {
+    MOVE_ENCORE, // For now.
+    MOVE_FEINT,
+    MOVE_FOLLOW_ME,
+    MOVE_BONEMERANG,
+    MOVE_FAIRY_LOCK,
+    MOVE_SKULL_BASH,
     MOVE_UNAVAILABLE,
     
 };

@@ -5291,6 +5291,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
             gShinyOverworldPalette_Fucker
         )
        .levelUpLearnset = sFuckerLevelUpLearnset,
+       .teachableLearnset = sFuckerTeachableLearnset,
+       .eggMoveLearnset = sNoxiliumEggMoveLearnset,
     },
         [SPECIES_MANTASM] =
     { 
@@ -7196,6 +7198,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 5,
        FOOTPRINT(Noxilium)
        .levelUpLearnset = sNoxiliumLevelUpLearnset,
+       .teachableLearnset = sNoxiliumTeachableLearnset,
+       .eggMoveLearnset = sNoxiliumEggMoveLearnset,
     },
 
         [SPECIES_INDIGNIFLY] =
