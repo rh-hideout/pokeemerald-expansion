@@ -6857,6 +6857,10 @@ Cry_Guertenity::
 	.incbin "sound/direct_sound_samples/cries/guertenity.bin"
 
 	.align 2
+Cry_Emojinn::
+	.incbin "sound/direct_sound_samples/cries/emojinn.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

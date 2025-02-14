@@ -2602,6 +2602,7 @@ enum {
     CRY_KNITTEN,
     CRY_SIMIONACH,
     CRY_GUERTENITY,
+    CRY_EMOJINN,
     CRY_COUNT,
 };
 

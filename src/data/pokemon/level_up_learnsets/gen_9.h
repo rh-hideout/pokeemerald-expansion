@@ -23914,6 +23914,10 @@ static const struct LevelUpMove sCostrikeLevelUpLearnset[] = {
    LEVEL_UP_MOVE(60, MOVE_EARTH_POWER),
    LEVEL_UP_MOVE(63, MOVE_FOCUS_BLAST),
    LEVEL_UP_END
+};
+static const struct LevelUpMove sEmojinnLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_PHOTON_GEYSER), 
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sKumataroLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 0, MOVE_CRUSADER_CRASH), 

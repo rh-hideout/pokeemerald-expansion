@@ -23040,6 +23040,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/icon.4bpp");
    const u8 gMonFootprint_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/footprint.1bpp");
 
+   const u32 gMonFrontPic_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/front.4bpp.lz");
+   const u32 gMonBackPic_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/back.4bpp.lz");
+   const u32 gMonPalette_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/shiny.gbapal.lz");
+   const u8 gMonIcon_Emojinn[] = INCBIN_U8("graphics/pokemon/emojinn/icon.4bpp");
+   const u8 gMonFootprint_Emojinn[] = INCBIN_U8("graphics/pokemon/emojinn/footprint.1bpp");
+
    const u32 gMonFrontPic_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/front.4bpp.lz");
    const u32 gMonBackPic_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/back.4bpp.lz");
    const u32 gMonPalette_Kumataro[] = INCBIN_U32("graphics/pokemon/kumataro/normal.gbapal.lz");

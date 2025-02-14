@@ -2775,6 +2775,8 @@ gCryTable::
 
 	cry Cry_Guertenity
 
+	cry Cry_Emojinn
+
 .endif
 
 	.align 2
@@ -5554,5 +5556,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Simionach
 
 	cry_reverse Cry_Guertenity
+
+	cry_reverse Cry_Emojinn
 
 .endif
