@@ -2601,6 +2601,7 @@ enum {
     CRY_DOLLGHOST,
     CRY_KNITTEN,
     CRY_SIMIONACH,
+    CRY_GUERTENITY,
     CRY_COUNT,
 };
 

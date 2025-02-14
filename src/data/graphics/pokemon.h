@@ -22558,6 +22558,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/icon.4bpp");
    const u8 gMonFootprint_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/front.4bpp.lz");
+   const u32 gMonBackPic_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/back.4bpp.lz");
+   const u32 gMonPalette_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/shiny.gbapal.lz");
+   const u8 gMonIcon_Guertenity[] = INCBIN_U8("graphics/pokemon/guertenity/icon.4bpp");
+   const u8 gMonFootprint_Guertenity[] = INCBIN_U8("graphics/pokemon/guertenity/footprint.1bpp");
+
    const u32 gMonFrontPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/front.4bpp.lz");
    const u32 gMonBackPic_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/back.4bpp.lz");
    const u32 gMonPalette_Fucker[] = INCBIN_U32("graphics/pokemon/fucker/normal.gbapal.lz");

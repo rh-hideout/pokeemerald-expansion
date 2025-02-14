@@ -1837,8 +1837,9 @@
 #define SPECIES_SIMIONACH                               SPECIES_SIMIONACH_UNFOCUSED
 #define SPECIES_SIMIONACH_UNFOCUSED                     1722
 #define SPECIES_SIMIONACH_ZEN                           1723
+#define SPECIES_GUERTENITY                              1724
 
-#define SPECIES_EGG (SPECIES_SIMIONACH_ZEN + 1)
+#define SPECIES_EGG (SPECIES_GUERTENITY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
