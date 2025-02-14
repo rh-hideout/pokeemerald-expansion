@@ -22275,7 +22275,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A swinging rock attack\n"
             "that also lowers Speed."),
         .effect = EFFECT_HIT,
-        .power = 95,
+        .power = 100,
         .type = TYPE_ROCK,
         .accuracy = 100,
         .pp = 10,
@@ -22299,8 +22299,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = HANDLE_EXPANDED_MOVE_NAME("ScarletChant", "Scarlet Chant"),
         .description = COMPOUND_STRING(
-            "A mysterious song plays,\n"
-            "raising the user's Sp. Atk."),
+            "An ominous, repeated chant.\n"
+            "Raises the user's Sp. Atk."),
         .effect = EFFECT_HIT,
         .power = 65,
         .type = TYPE_PSYCHIC,
@@ -22649,7 +22649,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Brutal Punishment"),
         .description = COMPOUND_STRING(
-            "Raises Attack and Sp.Atk. The\n"
+            "Raises Attack and Sp. Atk.\n"
             "Type is based on its form."),
         .effect = EFFECT_BRUTAL_PUNISHMENT,
         .power = 90,
@@ -22671,6 +22671,32 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0},
         .battleAnimScript = Move_PLAY_ROUGH,
     },
+
+    [MOVE_ASSIMILATE] =
+    {
+        .name = COMPOUND_STRING("Assimilate"),
+        .description = COMPOUND_STRING(
+            "Drains the target's water.\n"
+            "Doubles in power if hit."),
+        .effect = EFFECT_ABSORB,
+        .power = 60,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = -4,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
+        .makesContact = TRUE,
+        .healingMove = B_HEAL_BLOCKING >= GEN_6,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_GROWTH},
+        .battleAnimScript = Move_GIGA_DRAIN,
+    },
+
+    
     // END OF CAPRICCIO MOVES
 
     // Z-Moves

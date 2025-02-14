@@ -6364,6 +6364,14 @@ static const u16 sNoxiliumEggMoveLearnset[] = {
     MOVE_BONEMERANG,
     MOVE_FAIRY_LOCK,
     MOVE_SKULL_BASH,
+};
+static const u16 sGuertenityEggMoveLearnset[] = {
+    MOVE_DESTINY_BOND,
+    MOVE_GUILLOTINE,
+    MOVE_LEAF_STORM,
+    MOVE_PHANTOM_FORCE,
+    MOVE_SPIRIT_SHACKLE,
+    MOVE_TOXIC_SPIKES,
     MOVE_UNAVAILABLE,
     
 };
