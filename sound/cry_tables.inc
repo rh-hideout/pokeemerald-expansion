@@ -2777,6 +2777,8 @@ gCryTable::
 
 	cry Cry_Emojinn
 
+	cry Cry_Loituma
+
 .endif
 
 	.align 2
@@ -5558,5 +5560,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Guertenity
 
 	cry_reverse Cry_Emojinn
+
+	cry_reverse Cry_Loituma
 
 .endif

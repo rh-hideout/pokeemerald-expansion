@@ -25706,6 +25706,10 @@ static const struct LevelUpMove sRanruuLevelUpLearnset[] = {
    LEVEL_UP_MOVE(64, MOVE_FISSURE), 
    LEVEL_UP_END
 };
+static const struct LevelUpMove sLoitumaLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_LEAF_TORNADO), 
+   LEVEL_UP_END
+};
 static const struct LevelUpMove sIgnifatuLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_RAGE), 
    LEVEL_UP_MOVE( 1, MOVE_BRAIN_DAMAGE), 

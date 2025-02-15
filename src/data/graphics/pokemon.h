@@ -23165,6 +23165,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Ranruu[] = INCBIN_U32("graphics/pokemon/ranruu/shiny.gbapal.lz");
    const u8 gMonIcon_Ranruu[] = INCBIN_U8("graphics/pokemon/ranruu/icon.4bpp");
    const u8 gMonFootprint_Ranruu[] = INCBIN_U8("graphics/pokemon/ranruu/footprint.1bpp");
+
+   const u32 gMonFrontPic_Loituma[] = INCBIN_U32("graphics/pokemon/loituma/front.4bpp.lz");
+   const u32 gMonBackPic_Loituma[] = INCBIN_U32("graphics/pokemon/loituma/back.4bpp.lz");
+   const u32 gMonPalette_Loituma[] = INCBIN_U32("graphics/pokemon/loituma/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Loituma[] = INCBIN_U32("graphics/pokemon/loituma/shiny.gbapal.lz");
+   const u8 gMonIcon_Loituma[] = INCBIN_U8("graphics/pokemon/loituma/icon.4bpp");
+   const u8 gMonFootprint_Loituma[] = INCBIN_U8("graphics/pokemon/loituma/footprint.1bpp");
    
    const u32 gMonFrontPic_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/front.4bpp.lz");
    const u32 gMonBackPic_Ignifatu[] = INCBIN_U32("graphics/pokemon/ignifatu/back.4bpp.lz");

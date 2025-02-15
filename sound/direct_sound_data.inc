@@ -6861,6 +6861,10 @@ Cry_Emojinn::
 	.incbin "sound/direct_sound_samples/cries/emojinn.bin"
 
 	.align 2
+Cry_Loituma::
+	.incbin "sound/direct_sound_samples/cries/loituma.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
