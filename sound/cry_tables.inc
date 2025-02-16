@@ -2789,6 +2789,8 @@ gCryTable::
 
 	cry Cry_Fractyvern
 
+	cry Cry_Moyalith
+
 .endif
 
 	.align 2
@@ -5582,5 +5584,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Oryugami
 
 	cry_reverse Cry_Fractyvern
+	
+	cry_reverse Cry_Moyalith
 
 .endif

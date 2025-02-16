@@ -22914,6 +22914,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_CockenMega[] = INCBIN_U32("graphics/pokemon/cocken/mega/shiny.gbapal.lz");
    const u8 gMonIcon_CockenMega[] = INCBIN_U8("graphics/pokemon/cocken/mega/icon.4bpp");
 
+   const u32 gMonFrontPic_Moyalith[] = INCBIN_U32("graphics/pokemon/moyalith/front.4bpp.lz");
+   const u32 gMonBackPic_Moyalith[] = INCBIN_U32("graphics/pokemon/moyalith/back.4bpp.lz");
+   const u32 gMonPalette_Moyalith[] = INCBIN_U32("graphics/pokemon/moyalith/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Moyalith[] = INCBIN_U32("graphics/pokemon/moyalith/shiny.gbapal.lz");
+   const u8 gMonIcon_Moyalith[] = INCBIN_U8("graphics/pokemon/moyalith/icon.4bpp");
+   const u8 gMonFootprint_Moyalith[] = INCBIN_U8("graphics/pokemon/moyalith/footprint.1bpp");
+
    const u32 gMonFrontPic_Regirode[] = INCBIN_U32("graphics/pokemon/regirode/front.4bpp.lz");
    const u32 gMonBackPic_Regirode[] = INCBIN_U32("graphics/pokemon/regirode/back.4bpp.lz");
    const u32 gMonPalette_Regirode[] = INCBIN_U32("graphics/pokemon/regirode/normal.gbapal.lz");

@@ -7708,7 +7708,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sCockenLevelUpLearnset,
     },
 
-    [SPECIES_COCKEN_MEGA] =
+        [SPECIES_COCKEN_MEGA] =
     { 
        .baseHP        = 130,
        .baseAttack    = 100,
@@ -7764,6 +7764,63 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .formChangeTable = sCockenFormChangeTable,
        .levelUpLearnset = sCockenLevelUpLearnset,
        },
+       [SPECIES_MOYALITH] =
+    { 
+      .baseHP        = 160,
+      .baseAttack    = 65,
+      .baseDefense   = 130,
+      .baseSpeed     = 0,
+      .baseSpAttack  = 65,
+      .baseSpDefense = 80,
+      .types = { TYPE_ROCK, TYPE_ROCK },
+      .catchRate = 18,
+      .expYield = 220,
+      .evYield_HP  = 2,
+      .evYield_Defense  = 1,
+      .genderRatio = MON_GENDERLESS,
+      .eggCycles = 25,
+      .friendship = 100,
+      .growthRate = GROWTH_MEDIUM_SLOW,
+      .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
+      .abilities = { ABILITY_PRESSURE, ABILITY_NONE, ABILITY_STALL, ABILITY_BIG_GUY}, 
+      .bodyColor = BODY_COLOR_BROWN,
+      .isLegendary = FALSE,
+      .allPerfectIVs = FALSE,
+      .speciesName = _("Moyalith"),
+      .cryId = CRY_MOYALITH,
+      .natDexNum = NATIONAL_DEX_MOYALITH,
+      .categoryName = _("Monolithic"),
+      .height = 46, ////// YOU'RE A BIG GUY
+      .weight = 9999, //////////////////// FORYOU
+      .description = COMPOUND_STRING(
+          "An utterly massive Pokémon. Moyalith is\n"
+          "never seen moving, but miraculously, it\n"
+          "manages to change location every once\n"
+          "in a while without anybody noticing."),
+      .pokemonScale = 356,
+      .pokemonOffset = 16,
+      .trainerScale = 256,
+      .trainerOffset = -2,
+      .frontPic = gMonFrontPic_Moyalith,
+      .frontPicSize = MON_COORDS_SIZE(64, 64),
+      .frontPicYOffset = 4,
+      .frontAnimFrames = sAnims_Moyalith,
+      .frontAnimId = ANIM_GROW_VIBRATE,
+      .frontAnimDelay = 15,
+      .enemyMonElevation = 0,
+      .backPic = gMonBackPic_Moyalith,
+      .backPicSize = MON_COORDS_SIZE(64, 64),
+      .backPicYOffset = 4,
+      .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+      .palette = gMonPalette_Moyalith,
+      .shinyPalette = gMonShinyPalette_Moyalith,
+      .iconSprite = gMonIcon_Moyalith,
+      .iconPalIndex = 1,
+      FOOTPRINT(Moyalith)
+      .levelUpLearnset = sMoyalithLevelUpLearnset,
+      .teachableLearnset = sMoyalithTeachableLearnset,
+      .eggMoveLearnset = sMoyalithEggMoveLearnset,
+    },
         [SPECIES_REGIRODE] =
     { 
        .baseHP        = 80,

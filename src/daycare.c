@@ -986,6 +986,7 @@ static const struct {
     { SPECIES_TOWHORSE, ITEM_ORAN_BERRY, MOVE_LICK },
     { SPECIES_ORYUGAMI, ITEM_SHARP_BEAK, MOVE_DRILL_PECK },
     { SPECIES_FRACTYVERN, ITEM_TWISTED_SPOON, MOVE_PSYCHO_BOOST },
+    { SPECIES_MOYALITH, ITEM_KINGS_ROCK , MOVE_PRECIPICE_BLADES },  /// sorry
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)

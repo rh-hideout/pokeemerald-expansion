@@ -6885,6 +6885,10 @@ Cry_Fractyvern::
 	.incbin "sound/direct_sound_samples/cries/fractyvern.bin"
 
 	.align 2
+Cry_Moyalith::
+	.incbin "sound/direct_sound_samples/cries/moyalith.bin"	
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

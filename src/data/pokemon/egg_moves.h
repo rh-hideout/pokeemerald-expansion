@@ -6389,6 +6389,17 @@ static const u16 sNoxiliumEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 
 };
+
+static const u16 sMoyalithEggMoveLearnset[] = {
+    MOVE_ROCK_POLISH,
+    MOVE_AMNESIA,
+    MOVE_WISH,
+    MOVE_POWER_TRICK,
+    MOVE_WIDE_GUARD,
+    MOVE_HEAVY_SLAM,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sGuertenityEggMoveLearnset[] = {
     MOVE_DESTINY_BOND,
     MOVE_GUILLOTINE,
