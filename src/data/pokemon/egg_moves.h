@@ -6329,8 +6329,8 @@ static const u16 sFuckerEggMoveLearnset[] = {
     MOVE_BULLET_PUNCH,
     MOVE_BRAVE_BIRD,
     MOVE_AQUA_JET,
-    MOVE_PARTING_SHOT,
-    MOVE_PLAY_ROUGH,
+    MOVE_REVERSAL,
+    MOVE_KARATE_CHOP,
     MOVE_UNAVAILABLE,
     
 };
@@ -6344,7 +6344,7 @@ static const u16 sMantasmEggMoveLearnset[] = {
     MOVE_SWITCHEROO,
     MOVE_UNAVAILABLE,
     
-}; 
+};
 
 static const u16 sOryugamiEggMoveLearnset[] = {
     MOVE_TAIL_SLAP,
@@ -6353,7 +6353,7 @@ static const u16 sOryugamiEggMoveLearnset[] = {
     MOVE_LAST_RESORT,
     MOVE_GIGA_IMPACT,
     MOVE_SELF_DESTRUCT,
-    MOVE_NIGHT_SLASH, //// WAS THE OW THE EDGE, PROBABLY TO CHANGE TO EXTREME EDGE
+    MOVE_EXTREME_EDGE,
     MOVE_DRAGON_RUSH,
     MOVE_UNAVAILABLE,
     
