@@ -1843,8 +1843,9 @@
 #define SPECIES_TOWHORSE                                1727
 #define SPECIES_CANVELLIA                               1728
 #define SPECIES_FABRINNIAL                              1729
+#define SPECIES_ORYUGAMI                                1730
 
-#define SPECIES_EGG (SPECIES_FABRINNIAL + 1)
+#define SPECIES_EGG (SPECIES_ORYUGAMI + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

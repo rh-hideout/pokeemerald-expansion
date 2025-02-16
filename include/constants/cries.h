@@ -2607,6 +2607,7 @@ enum {
     CRY_TOWHORSE,
     CRY_CANVELLIA,
     CRY_FABRINNIAL,
+    CRY_ORYUGAMI,
     CRY_COUNT,
 };
 

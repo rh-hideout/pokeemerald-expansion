@@ -2785,6 +2785,8 @@ gCryTable::
 
 	cry Cry_Fabrinnial
 
+	cry Cry_Oryugami
+
 .endif
 
 	.align 2
@@ -5574,5 +5576,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Canvellia
 	
 	cry_reverse Cry_Fabrinnial
+
+	cry_reverse Cry_Oryugami
 
 .endif

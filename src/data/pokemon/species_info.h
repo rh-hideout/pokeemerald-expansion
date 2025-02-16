@@ -5466,7 +5466,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggMoveLearnset = sNoxiliumEggMoveLearnset,
     },
 
-        [SPECIES_MANTASM] =
+    [SPECIES_MANTASM] =
     { 
        .baseHP        = 109,
        .baseAttack    = 106,
@@ -5521,6 +5521,64 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .teachableLearnset = sMantasmTeachableLearnset,
        .eggMoveLearnset = sMantasmEggMoveLearnset,
     },
+
+    [SPECIES_ORYUGAMI] =
+    { 
+       .baseHP        = 83,
+       .baseAttack    = 113,
+       .baseDefense   = 47,
+       .baseSpeed     = 115,
+       .baseSpAttack  = 84,
+       .baseSpDefense = 47,
+       .types = { TYPE_NORMAL, TYPE_DRAGON },
+       .catchRate = 53,
+       .expYield = 148,
+       .evYield_Speed  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_FIELD },
+       .abilities = { ABILITY_NORMALIZE, ABILITY_ADAPTABILITY, ABILITY_SUPER_LUCK, ABILITY_TRACE}, 
+       .bodyColor = BODY_COLOR_WHITE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+       .speciesName = _("Oryugami"),
+       .cryId = CRY_ORYUGAMI,
+       .natDexNum = NATIONAL_DEX_ORYUGAMI,
+       .categoryName = _("Aerodynamic"), 
+       .height = 14,
+       .weight = 60,
+       .description = COMPOUND_STRING(
+           "Proud of their resistance to windage loss,\n"
+           "flocks of Oryugami will undergo flight\n" 
+           "competitions among each other to see\n"
+           "who can stay in the air the longest."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Oryugami,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Oryugami,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 4,
+       .backPic = gMonBackPic_Oryugami,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Oryugami,
+       .shinyPalette = gMonShinyPalette_Oryugami,
+       .iconSprite = gMonIcon_Oryugami,
+       .iconPalIndex = 1,
+       FOOTPRINT(Oryugami)
+       .levelUpLearnset = sOryugamiLevelUpLearnset,
+       .teachableLearnset = sOryugamiTeachableLearnset,
+       .eggMoveLearnset = sOryugamiEggMoveLearnset,
+    },
+
         [SPECIES_TOWHORSE] =
     { 
        .baseHP        = 100,
@@ -5532,7 +5590,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .types = { TYPE_ROCK, TYPE_FIGHTING },
        .catchRate = 55,
        .expYield = 186,
-       .evYield_HP  = 2,
+       .evYield_Defense  = 2,
        .genderRatio = PERCENT_FEMALE(50),
        .eggCycles = 25,
        .friendship = 100,
@@ -5577,6 +5635,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .teachableLearnset = sTowhorseTeachableLearnset,
        .eggMoveLearnset = sTowhorseEggMoveLearnset,
     },
+
         [SPECIES_LOBER] =
     { 
        .baseHP        = 59,

@@ -6877,6 +6877,10 @@ Cry_Fabrinnial::
 	.incbin "sound/direct_sound_samples/cries/fabrinnial.bin"
 
 	.align 2
+Cry_Oryugami::
+	.incbin "sound/direct_sound_samples/cries/oryugami.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

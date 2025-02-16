@@ -6344,6 +6344,19 @@ static const u16 sMantasmEggMoveLearnset[] = {
     MOVE_SWITCHEROO,
     MOVE_UNAVAILABLE,
     
+}; 
+
+static const u16 sOryugamiEggMoveLearnset[] = {
+    MOVE_TAIL_SLAP,
+    MOVE_BACKDRAFT,
+    MOVE_FLAIL,
+    MOVE_LAST_RESORT,
+    MOVE_GIGA_IMPACT,
+    MOVE_SELF_DESTRUCT,
+    MOVE_NIGHT_SLASH, //// WAS THE OW THE EDGE, PROBABLY TO CHANGE TO EXTREME EDGE
+    MOVE_DRAGON_RUSH,
+    MOVE_UNAVAILABLE,
+    
 };
 
 static const u16 sTowhorseEggMoveLearnset[] = {
