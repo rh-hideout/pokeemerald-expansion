@@ -24478,7 +24478,7 @@ static const struct LevelUpMove sFabrinnialLevelUpLearnset[] = {
     LEVEL_UP_MOVE(50, MOVE_HYDRO_PUMP),
     LEVEL_UP_MOVE(54, MOVE_SEED_FLARE),
     LEVEL_UP_END 
-    },
+    };
 static const struct LevelUpMove sCanvelliaLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_ABSORB),
     LEVEL_UP_MOVE( 1, MOVE_FLOWER_SHIELD),
