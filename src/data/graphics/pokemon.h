@@ -22558,6 +22558,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/icon.4bpp");
    const u8 gMonFootprint_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/front.4bpp.lz");
+   const u32 gMonBackPic_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/back.4bpp.lz");
+   const u32 gMonPalette_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/shiny.gbapal.lz");
+   const u8 gMonIcon_Fabrinnial[] = INCBIN_U8("graphics/pokemon/fabrinnial/icon.4bpp");
+   const u8 gMonFootprint_Fabrinnial[] = INCBIN_U8("graphics/pokemon/fabrinnial/footprint.1bpp");
+   
+   const u32 gMonFrontPic_Canvellia[] = INCBIN_U32("graphics/pokemon/canvellia/front.4bpp.lz");
+   const u32 gMonBackPic_Canvellia[] = INCBIN_U32("graphics/pokemon/canvellia/back.4bpp.lz");
+   const u32 gMonPalette_Canvellia[] = INCBIN_U32("graphics/pokemon/canvellia/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Canvellia[] = INCBIN_U32("graphics/pokemon/canvellia/shiny.gbapal.lz");
+   const u8 gMonIcon_Canvellia[] = INCBIN_U8("graphics/pokemon/canvellia/icon.4bpp");
+   const u8 gMonFootprint_Canvellia[] = INCBIN_U8("graphics/pokemon/canvellia/footprint.1bpp");
+
    const u32 gMonFrontPic_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/front.4bpp.lz");
    const u32 gMonBackPic_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/back.4bpp.lz");
    const u32 gMonPalette_Guertenity[] = INCBIN_U32("graphics/pokemon/guertenity/normal.gbapal.lz");

@@ -2781,6 +2781,10 @@ gCryTable::
 	
 	cry Cry_Towhorse
 
+	cry Cry_Canvellia
+
+	cry Cry_Fabrinnial
+
 .endif
 
 	.align 2
@@ -5566,5 +5570,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Loituma
 
 	cry_reverse Cry_Towhorse
+
+	cry_reverse Cry_Canvellia
+	
+	cry_reverse Cry_Fabrinnial
 
 .endif

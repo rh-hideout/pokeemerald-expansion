@@ -6869,6 +6869,14 @@ Cry_Towhorse::
 	.incbin "sound/direct_sound_samples/cries/towhorse.bin"
 
 	.align 2
+Cry_Canvellia::
+	.incbin "sound/direct_sound_samples/cries/canvellia.bin"
+
+	.align 2
+Cry_Fabrinnial::
+	.incbin "sound/direct_sound_samples/cries/fabrinnial.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
