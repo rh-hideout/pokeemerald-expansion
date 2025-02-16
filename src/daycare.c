@@ -983,6 +983,7 @@ static const struct {
     { SPECIES_FUCKER, ITEM_LUCKY_PUNCH, MOVE_CROSS_CHOP },
     { SPECIES_GARGARRAMER, ITEM_HARD_STONE, MOVE_PETRIFY },
     { SPECIES_GUERTENITY, ITEM_POKE_DOLL, MOVE_GLARE },
+    { SPECIES_TOWHORSE, ITEM_ORAN_BERRY, MOVE_LICK },
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)

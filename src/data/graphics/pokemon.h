@@ -22582,6 +22582,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Mantasm[] = INCBIN_U8("graphics/pokemon/mantasm/icon.4bpp");
    const u8 gMonFootprint_Mantasm[] = INCBIN_U8("graphics/pokemon/mantasm/footprint.1bpp");
 
+   const u32 gMonFrontPic_Towhorse[] = INCBIN_U32("graphics/pokemon/towhorse/front.4bpp.lz");
+   const u32 gMonBackPic_Towhorse[] = INCBIN_U32("graphics/pokemon/towhorse/back.4bpp.lz");
+   const u32 gMonPalette_Towhorse[] = INCBIN_U32("graphics/pokemon/towhorse/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Towhorse[] = INCBIN_U32("graphics/pokemon/towhorse/shiny.gbapal.lz");
+   const u8 gMonIcon_Towhorse[] = INCBIN_U8("graphics/pokemon/towhorse/icon.4bpp");
+   const u8 gMonFootprint_Towhorse[] = INCBIN_U8("graphics/pokemon/towhorse/footprint.1bpp");
+
    const u32 gMonFrontPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/front.4bpp.lz");
    const u32 gMonBackPic_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/back.4bpp.lz");
    const u32 gMonPalette_Hazelnaut[] = INCBIN_U32("graphics/pokemon/hazelnaut/normal.gbapal.lz");

@@ -6346,6 +6346,17 @@ static const u16 sMantasmEggMoveLearnset[] = {
     
 };
 
+static const u16 sTowhorseEggMoveLearnset[] = {
+    MOVE_HIGH_JUMP_KICK,
+    MOVE_EXTREME_SPEED,
+    MOVE_TWINEEDLE, // Placeholder
+    MOVE_POWER_TRIP, // Placeholder
+    MOVE_BITE, // Placeholder
+    MOVE_CRUNCH, // Placeholder
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sArctiglobeEggMoveLearnset[] = {
     MOVE_AUTOTOMIZE,
     MOVE_MEDITATE,
@@ -6364,6 +6375,8 @@ static const u16 sNoxiliumEggMoveLearnset[] = {
     MOVE_BONEMERANG,
     MOVE_FAIRY_LOCK,
     MOVE_SKULL_BASH,
+    MOVE_UNAVAILABLE,
+
 };
 static const u16 sGuertenityEggMoveLearnset[] = {
     MOVE_DESTINY_BOND,

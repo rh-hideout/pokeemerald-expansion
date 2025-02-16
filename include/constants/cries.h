@@ -2604,6 +2604,7 @@ enum {
     CRY_GUERTENITY,
     CRY_EMOJINN,
     CRY_LOITUMA,
+    CRY_TOWHORSE,
     CRY_COUNT,
 };
 

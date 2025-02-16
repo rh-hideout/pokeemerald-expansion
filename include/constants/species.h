@@ -1840,8 +1840,10 @@
 #define SPECIES_GUERTENITY                              1724
 #define SPECIES_EMOJINN                                 1725
 #define SPECIES_LOITUMA                                 1726
+#define SPECIES_TOWHORSE                                1727
 
-#define SPECIES_EGG (SPECIES_LOITUMA + 1)
+
+#define SPECIES_EGG (SPECIES_TOWHORSE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
