@@ -23515,6 +23515,10 @@ static const struct LevelUpMove sRetwinaLevelUpLearnset[] = {
    LEVEL_UP_MOVE(91, MOVE_STEEL_BEAM),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sFractyvernLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_DRACO_METEOR),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sWattitudeLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 0, MOVE_CRABHAMMER), 
     LEVEL_UP_MOVE( 1, MOVE_CRABHAMMER),

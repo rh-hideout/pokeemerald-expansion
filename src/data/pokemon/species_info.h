@@ -970,7 +970,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Whipsicuffs,
        .shinyPalette = gMonShinyPalette_Whipsicuffs,
        .iconSprite = gMonIcon_Whipsicuffs,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Whipsicuffs)
        .levelUpLearnset = sWhipsicuffsLevelUpLearnset,
     },
@@ -2753,7 +2753,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Weatherbane,
        .shinyPalette = gMonShinyPalette_Weatherbane,
        .iconSprite = gMonIcon_Weatherbane,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Weatherbane)
        .levelUpLearnset = sWeatherbaneLevelUpLearnset,
     },
@@ -3475,6 +3475,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Retwina)
        .levelUpLearnset = sRetwinaLevelUpLearnset,
+    },
+
+        [SPECIES_FRACTYVERN] =
+    { 
+       .baseHP        = 77,
+       .baseAttack    = 65,
+       .baseDefense   = 70,
+       .baseSpeed     = 110,
+       .baseSpAttack  = 128,
+       .baseSpDefense = 70,
+       .types = { TYPE_DRAGON, TYPE_PSYCHIC },
+       .catchRate = 30,
+       .expYield = 151,
+       .evYield_SpAttack = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 25,
+       .friendship = 20,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .abilities = { ABILITY_STATIC, ABILITY_MADMAN, ABILITY_LEVITATE, ABILITY_BERSERK },
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Fractyvern"),
+      .cryId = CRY_FRACTYVERN,
+       .natDexNum = NATIONAL_DEX_FRACTYVERN,
+       .categoryName = _("Psychodrake"),
+       .height = 30,
+       .weight = 600,
+       .description = COMPOUND_STRING(
+           "The radar on its head periodically\n"
+           "call for Hooklings to do tasks for it.\n"
+           "Touching it will fry your brain, but\n"
+           "attacking it will harm Fractyvern badly."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Fractyvern,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Fractyvern,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Fractyvern,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Fractyvern,
+       .shinyPalette = gMonShinyPalette_Fractyvern,
+       .iconSprite = gMonIcon_Fractyvern,
+       .iconPalIndex = 0,
+       FOOTPRINT(Fractyvern)
+       .levelUpLearnset = sFractyvernLevelUpLearnset,
     },
 
         [SPECIES_WATTITUDE] =
@@ -5572,7 +5627,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Oryugami,
        .shinyPalette = gMonShinyPalette_Oryugami,
        .iconSprite = gMonIcon_Oryugami,
-       .iconPalIndex = 1,
+       .iconPalIndex = 0,
        FOOTPRINT(Oryugami)
        .levelUpLearnset = sOryugamiLevelUpLearnset,
        .teachableLearnset = sOryugamiTeachableLearnset,

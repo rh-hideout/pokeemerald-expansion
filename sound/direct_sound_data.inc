@@ -6881,6 +6881,10 @@ Cry_Oryugami::
 	.incbin "sound/direct_sound_samples/cries/oryugami.bin"
 
 	.align 2
+Cry_Fractyvern::
+	.incbin "sound/direct_sound_samples/cries/fractyvern.bin"
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2

@@ -6351,10 +6351,8 @@ static const u16 sOryugamiEggMoveLearnset[] = {
     MOVE_BACKDRAFT,
     MOVE_FLAIL,
     MOVE_LAST_RESORT,
-    MOVE_GIGA_IMPACT,
     MOVE_SELF_DESTRUCT,
     MOVE_EXTREME_EDGE,
-    MOVE_DRAGON_RUSH,
     MOVE_UNAVAILABLE,
     
 };
