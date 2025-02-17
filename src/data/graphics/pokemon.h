@@ -22362,6 +22362,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Retwina[] = INCBIN_U32("graphics/pokemon/retwina/shiny.gbapal.lz");
    const u8 gMonIcon_Retwina[] = INCBIN_U8("graphics/pokemon/retwina/icon.4bpp");
    const u8 gMonFootprint_Retwina[] = INCBIN_U8("graphics/pokemon/retwina/footprint.1bpp");
+
+   const u32 gMonFrontPic_Hookling[] = INCBIN_U32("graphics/pokemon/hookling/front.4bpp.lz");
+   const u32 gMonBackPic_Hookling[] = INCBIN_U32("graphics/pokemon/hookling/back.4bpp.lz");
+   const u32 gMonPalette_Hookling[] = INCBIN_U32("graphics/pokemon/hookling/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Hookling[] = INCBIN_U32("graphics/pokemon/hookling/shiny.gbapal.lz");
+   const u8 gMonIcon_Hookling[] = INCBIN_U8("graphics/pokemon/hookling/icon.4bpp");
+   const u8 gMonFootprint_Hookling[] = INCBIN_U8("graphics/pokemon/hookling/footprint.1bpp");
    
    const u32 gMonFrontPic_Fractyvern[] = INCBIN_U32("graphics/pokemon/fractyvern/front.4bpp.lz");
    const u32 gMonBackPic_Fractyvern[] = INCBIN_U32("graphics/pokemon/fractyvern/back.4bpp.lz");

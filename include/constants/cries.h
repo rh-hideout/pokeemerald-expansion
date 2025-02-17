@@ -2610,6 +2610,7 @@ enum {
     CRY_ORYUGAMI,
     CRY_FRACTYVERN,
     CRY_MOYALITH,
+    CRY_HOOKLING,
     CRY_COUNT,
 };
 
