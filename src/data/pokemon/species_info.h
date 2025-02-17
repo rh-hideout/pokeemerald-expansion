@@ -3562,7 +3562,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 600,
        .description = COMPOUND_STRING(
            "Fractyvern were once a guardian highly\n"
-           "revered for its power.  However, they\n"
+           "revered for their power. However, they\n"
            "all eventually go berserk from brain\n"
            "shocks. Its radar can wipe out memories."),
        .pokemonScale = 356,
