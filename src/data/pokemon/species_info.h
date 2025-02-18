@@ -3477,6 +3477,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sRetwinaLevelUpLearnset,
     },
 
+        [SPECIES_HOOKLING] =
+    { 
+       .baseHP        = 45,
+       .baseAttack    = 55,
+       .baseDefense   = 50,
+       .baseSpeed     = 75,
+       .baseSpAttack  = 55,
+       .baseSpDefense = 50,
+       .types = { TYPE_DRAGON, TYPE_DRAGON },
+       .catchRate = 90,
+       .expYield = 50,
+       .evYield_SpAttack = 1,
+       .genderRatio = PERCENT_FEMALE(87.5),
+       .eggCycles = 25,
+       .friendship = 20,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_DRAGON, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_QUICK_FEET, ABILITY_STENCH, ABILITY_SAP_SIPPER, ABILITY_MARVEL_SCALE },
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Hookling"),
+      .cryId = CRY_HOOKLING,
+       .natDexNum = NATIONAL_DEX_HOOKLING,
+       .categoryName = _("Hook-Tail"),
+       .height = 5,
+       .weight = 17,
+       .description = COMPOUND_STRING(
+           "Because of their limited intelligence,\n"
+           "they must travel in groups to survive \n"
+           "as they cannot think for themselves.\n"
+           "Harsh chirping sounds irritate them. "),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Hookling,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Hookling,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Hookling,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Hookling,
+       .shinyPalette = gMonShinyPalette_Hookling,
+       .iconSprite = gMonIcon_Hookling,
+       .iconPalIndex = 0,
+       FOOTPRINT(Hookling)
+       .levelUpLearnset = sHooklingLevelUpLearnset,
+       .evolutions = EVOLUTION({EVO_ITEM_HOLD, ITEM_DRAGON_SCALE, SPECIES_FRACTYVERN}),
+    },
+
         [SPECIES_FRACTYVERN] =
     { 
        .baseHP        = 77,
@@ -3489,11 +3545,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .catchRate = 30,
        .expYield = 151,
        .evYield_SpAttack = 1,
-       .genderRatio = MON_GENDERLESS,
+       .genderRatio = PERCENT_FEMALE(87.5),
        .eggCycles = 25,
        .friendship = 20,
        .growthRate = GROWTH_MEDIUM_SLOW,
-       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .eggGroups = { EGG_GROUP_DRAGON, EGG_GROUP_MONSTER },
        .abilities = { ABILITY_STATIC, ABILITY_MADMAN, ABILITY_LEVITATE, ABILITY_BERSERK },
        .bodyColor = BODY_COLOR_RED,
        .isLegendary = FALSE,
@@ -3505,10 +3561,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 30,
        .weight = 600,
        .description = COMPOUND_STRING(
-           "The radar on its head periodically\n"
-           "call for Hooklings to do tasks for it.\n"
-           "Touching it will fry your brain, but\n"
-           "attacking it will harm Fractyvern badly."),
+           "Fractyvern were once a guardian highly\n"
+           "revered for their power. However, they\n"
+           "all eventually go berserk from brain\n"
+           "shocks. Its radar can wipe out memories."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -5229,7 +5285,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Brashalisk)
        .levelUpLearnset = sBrashaliskLevelUpLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_KOKAIJU},
-                               {EVO_ITEM_NIGHT, ITEM_SHARP_BEAK, SPECIES_LEVITITAN}),
+                               {EVO_ITEM_HOLD, ITEM_SHARP_BEAK, SPECIES_LEVITITAN}),
     },
         [SPECIES_KOKAIJU] =
     { 
