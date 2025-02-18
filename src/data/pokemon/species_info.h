@@ -2443,8 +2443,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .cryId = CRY_FLUBBSTER,
        .natDexNum = NATIONAL_DEX_FLUBBSTER,
        .categoryName = _("Deflated"),
-       .height = 108,
-       .weight = 7003,
+       .height = 18,
+       .weight = 703,
        .description = COMPOUND_STRING(
            "The noises Flubbster creates are filled\n"
            "with anguish, for it did not ask to be\n"
@@ -3061,8 +3061,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .cryId = CRY_FRYZZLE,
        .natDexNum = NATIONAL_DEX_FRYZZLE,
        .categoryName = _("Small Fry"),
-       .height = 33,
-       .weight = 4262,
+       .height = 12,
+       .weight = 944,
        .description = COMPOUND_STRING(
            "Fryzzle spontaneously electrocutes itself\n"
            "when startled. It discharges approximately\n"
@@ -3668,8 +3668,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .cryId = CRY_TADPOISON,
        .natDexNum = NATIONAL_DEX_TADPOISON,
        .categoryName = _("Tadpole"),
-       .height = 10,
-       .weight = 366,
+       .height = 6,
+       .weight = 22,
        .description = COMPOUND_STRING(
            "Seen rarely in swamps, Tadpoison use\n"
            "their tails to swim quickly and splash\n"
@@ -3724,7 +3724,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .natDexNum = NATIONAL_DEX_BRETKHELM,
        .categoryName = _("Poison"),
        .height = 10,
-       .weight = 366,
+       .weight = 660,
        .description = COMPOUND_STRING(
            "Upon first evolving into Bretkhelm they\n"
            "spend many days learning to hop using\n"
@@ -3778,8 +3778,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .cryId = CRY_BERFGOYLE,
        .natDexNum = NATIONAL_DEX_BERFGOYLE,
        .categoryName = _("Slimy"),
-       .height = 10,
-       .weight = 366,
+       .height = 16,
+       .weight = 1200,
        .description = COMPOUND_STRING(
            "The floors of some swamps are stained a\n"
            "dark purple Berfgoyle bile. They bathe\n"
@@ -5421,8 +5421,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_FABRINNIAL,
        .natDexNum = NATIONAL_DEX_FABRINNIAL,
        .categoryName = _("Yearning"),
-       .height = 4,
-       .weight = 71,
+       .height = 7,
+       .weight = 279,
        .description = COMPOUND_STRING(
            "Fabrinnial is both the pot and\n"
            "the flower. When the rose wilts\n"
@@ -5478,8 +5478,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_CANVELLIA,
        .natDexNum = NATIONAL_DEX_CANVELLIA,
        .categoryName = _("Fluttering"),
-       .height = 8,
-       .weight = 152,
+       .height = 11,
+       .weight = 641,
        .description = COMPOUND_STRING(
            "Canvellia evolves as the vase\n"
            "and rose unify into one body.\n"
@@ -9097,8 +9097,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_ARCTIGLOBE,
        .natDexNum = NATIONAL_DEX_ARCTIGLOBE,
        .categoryName = _("Encased"),
-       .height = 13,
-       .weight = 589,
+       .height = 31,
+       .weight = 9995,
        .description = COMPOUND_STRING(
            "An ancient being that was sealed away in\n"
            "an ice age. It stares at the world with\n"
@@ -9156,8 +9156,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_ARCTIGLOBE,
        .natDexNum = NATIONAL_DEX_ARCTIGLOBE,
        .categoryName = _("Encased"),
-       .height = 13,
-       .weight = 589,
+       .height = 28,
+       .weight = 7775,
        .description = COMPOUND_STRING(
            "An ancient being that was sealed away in\n"
            "an ice age. It stares at the world with\n"
