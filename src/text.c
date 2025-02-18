@@ -427,6 +427,13 @@ void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor)
 
     u16 *current = sFontHalfRowLookupTable;
 
+    if (fgColor == sLastTextFgColor
+     && bgColor == sLastTextBgColor
+     && shadowColor == sLastTextShadowColor)
+    {
+        return;
+    }
+
     sLastTextBgColor = bgColor;
     sLastTextFgColor = fgColor;
     sLastTextShadowColor = shadowColor;
