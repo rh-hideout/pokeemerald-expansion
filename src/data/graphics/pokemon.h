@@ -22008,6 +22008,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/icon.4bpp");
    const u8 gMonFootprint_Maplage[] = INCBIN_U8("graphics/pokemon/maplage/footprint.1bpp");
 
+   const u32 gMonFrontPic_Mogumole[] = INCBIN_U32("graphics/pokemon/mogumole/front.4bpp.lz");
+   const u32 gMonBackPic_Mogumole[] = INCBIN_U32("graphics/pokemon/mogumole/back.4bpp.lz");
+   const u32 gMonPalette_Mogumole[] = INCBIN_U32("graphics/pokemon/mogumole/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Mogumole[] = INCBIN_U32("graphics/pokemon/mogumole/shiny.gbapal.lz");
+   const u8 gMonIcon_Mogumole[] = INCBIN_U8("graphics/pokemon/mogumole/icon.4bpp");
+   const u8 gMonFootprint_Mogumole[] = INCBIN_U8("graphics/pokemon/mogumole/footprint.1bpp");
+
    const u32 gMonFrontPic_Bandicute[] = INCBIN_U32("graphics/pokemon/bandicute/front.4bpp.lz");
    const u32 gMonBackPic_Bandicute[] = INCBIN_U32("graphics/pokemon/bandicute/back.4bpp.lz");
    const u32 gMonPalette_Bandicute[] = INCBIN_U32("graphics/pokemon/bandicute/normal.gbapal.lz");

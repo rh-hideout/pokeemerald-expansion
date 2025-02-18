@@ -2797,6 +2797,8 @@ gCryTable::
 
 	cry Cry_Cirnumiru
 
+	cry Cry_Mogumole
+
 .endif
 
 	.align 2
@@ -5598,5 +5600,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Hookling
 
 	cry_reverse Cry_Cirnumiru
+
+	cry_reverse Cry_Mogumole
 
 .endif

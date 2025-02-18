@@ -1849,8 +1849,9 @@
 #define SPECIES_GANGLYTHON                              1733
 #define SPECIES_HOOKLING                                1734
 #define SPECIES_CIRNUMIRU                               1735
+#define SPECIES_MOGUMOLE                                1736
 
-#define SPECIES_EGG (SPECIES_CIRNUMIRU + 1)
+#define SPECIES_EGG (SPECIES_MOGUMOLE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

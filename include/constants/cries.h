@@ -2613,6 +2613,7 @@ enum {
     CRY_GANGLYTHON,
     CRY_HOOKLING,
     CRY_CIRNUMIRU,
+    CRY_MOGUMOLE,
     CRY_COUNT,
 };
 

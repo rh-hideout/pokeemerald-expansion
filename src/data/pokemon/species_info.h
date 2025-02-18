@@ -1863,7 +1863,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Strixnight)
        .levelUpLearnset = sStrixnightLevelUpLearnset,
     },
-
+    [SPECIES_MOGUMOLE] =
+    { 
+       .baseHP        = 73,
+       .baseAttack    = 111,
+       .baseDefense   = 70,
+       .baseSpeed     = 100,
+       .baseSpAttack  = 70,
+       .baseSpDefense = 70,
+       .types = { TYPE_GROUND, TYPE_DRAGON },
+       .catchRate = 53,
+       .expYield = 155,
+       .evYield_Attack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_DRAGON },
+       .abilities = { ABILITY_HUSTLE, ABILITY_RATTLED, ABILITY_SAND_RUSH, ABILITY_SUPER_LUCK }, 
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Mogumole"),
+       .cryId = CRY_MOGUMOLE,
+       .natDexNum = NATIONAL_DEX_MOGUMOLE,
+       .categoryName = _("Mole"),
+       .height = 7,
+       .weight = 201,
+       .description = COMPOUND_STRING(
+           "According to legend, they spend three \n"
+           "years of their lives digging tunnels \n"
+           "before they can truly be considered \n"
+           "dragons."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Mogumole,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Mogumole,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 4,
+       .backPic = gMonBackPic_Mogumole,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Mogumole,
+       .shinyPalette = gMonShinyPalette_Mogumole,
+       .iconSprite = gMonIcon_Mogumole,
+       .iconPalIndex = 2,
+       FOOTPRINT(Mogumole)
+       .levelUpLearnset = sMogumoleLevelUpLearnset,
+       .teachableLearnset = sMogumoleTeachableLearnset,
+       .eggMoveLearnset = sMogumoleEggMoveLearnset,
+    },
         [SPECIES_BANDICUTE] =
     { 
        .baseHP        = 70,
@@ -5395,7 +5450,6 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Levititan)
        .levelUpLearnset = sLevititanLevelUpLearnset,
     },
-
     [SPECIES_FABRINNIAL] =
     { 
        .baseHP        = 42,

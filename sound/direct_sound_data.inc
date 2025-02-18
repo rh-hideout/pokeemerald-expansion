@@ -6900,6 +6900,10 @@ Cry_Hookling::
 Cry_Cirnumiru::
 	.incbin "sound/direct_sound_samples/cries/cirnumiru.bin"
 
+	.align 2	
+Cry_Mogumole::
+	.incbin "sound/direct_sound_samples/cries/mogumole.bin"
+
 	.align 2
 .endif @ P_CRIES_ENABLED
 
