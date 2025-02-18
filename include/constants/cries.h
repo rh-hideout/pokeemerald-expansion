@@ -2612,6 +2612,7 @@ enum {
     CRY_MOYALITH,
     CRY_GANGLYTHON,
     CRY_HOOKLING,
+    CRY_CIRNUMIRU,
     CRY_COUNT,
 };
 

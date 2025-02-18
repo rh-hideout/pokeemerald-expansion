@@ -23264,6 +23264,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Phantorney[] = INCBIN_U8("graphics/pokemon/phantorney/icon.4bpp");
    const u8 gMonFootprint_Phantorney[] = INCBIN_U8("graphics/pokemon/phantorney/footprint.1bpp");
 
+   const u32 gMonFrontPic_Cirnumiru[] = INCBIN_U32("graphics/pokemon/cirnumiru/front.4bpp.lz");
+   const u32 gMonBackPic_Cirnumiru[] = INCBIN_U32("graphics/pokemon/cirnumiru/back.4bpp.lz");
+   const u32 gMonPalette_Cirnumiru[] = INCBIN_U32("graphics/pokemon/cirnumiru/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cirnumiru[] = INCBIN_U32("graphics/pokemon/cirnumiru/shiny.gbapal.lz");
+   const u8 gMonIcon_Cirnumiru[] = INCBIN_U8("graphics/pokemon/cirnumiru/icon.4bpp");
+   const u8 gMonFootprint_Cirnumiru[] = INCBIN_U8("graphics/pokemon/cirnumiru/footprint.1bpp");
+
    const u32 gMonFrontPic_Seraphill[] = INCBIN_U32("graphics/pokemon/seraphill/front.4bpp.lz");
    const u32 gMonBackPic_Seraphill[] = INCBIN_U32("graphics/pokemon/seraphill/back.4bpp.lz");
    const u32 gMonPalette_Seraphill[] = INCBIN_U32("graphics/pokemon/seraphill/normal.gbapal.lz");

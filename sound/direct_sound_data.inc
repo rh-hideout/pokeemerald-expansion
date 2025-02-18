@@ -6896,6 +6896,10 @@ Cry_Ganglython::
 Cry_Hookling::
 	.incbin "sound/direct_sound_samples/cries/hookling.bin"	
 
+	.align 2	
+Cry_Cirnumiru::
+	.incbin "sound/direct_sound_samples/cries/cirnumiru.bin"
+
 	.align 2
 .endif @ P_CRIES_ENABLED
 

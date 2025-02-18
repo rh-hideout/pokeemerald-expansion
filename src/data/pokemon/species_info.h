@@ -11213,6 +11213,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sPhantorneyLevelUpLearnset,
     },
     
+        [SPECIES_CIRNUMIRU] =
+    { 
+       .baseHP        = 73,
+       .baseAttack    = 71,
+       .baseDefense   = 73,
+       .baseSpeed     = 113,
+       .baseSpAttack  = 109,
+       .baseSpDefense = 131,
+       .types = { TYPE_ICE, TYPE_FAIRY },
+       .catchRate = 3,
+       .expYield = 187,
+       .evYield_SpDefense  = 3,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 120,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+       .abilities = { ABILITY_BEAST_BOOST, ABILITY_NONE, ABILITY_LIQUID_VOICE, ABILITY_SNOW_WARNING },
+       .bodyColor = BODY_COLOR_WHITE,
+       .isLegendary = TRUE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Cirnumiru"),
+       .cryId = CRY_CIRNUMIRU,
+       .natDexNum = NATIONAL_DEX_CIRNUMIRU,
+       .categoryName = _("Lactose"),
+       .height = 11,
+       .weight = 6,
+       .description = COMPOUND_STRING(
+           "The bodies of Cirnumiru have a very\n"
+           "similar consistency to milk. They\n"
+           "enjoy playing pranks on people by\n"
+           "jumping at them nine times."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Cirnumiru,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Cirnumiru,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 1,
+       .backPic = gMonBackPic_Cirnumiru,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Cirnumiru,
+       .shinyPalette = gMonShinyPalette_Cirnumiru,
+       .iconSprite = gMonIcon_Cirnumiru,
+       .iconPalIndex = 0,
+       FOOTPRINT(Cirnumiru)
+       .levelUpLearnset = sCirnumiruLevelUpLearnset,
+    },
+    
         [SPECIES_SERAPHILL] =
     { 
        .baseHP        = 83,

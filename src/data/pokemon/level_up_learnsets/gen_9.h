@@ -25987,6 +25987,10 @@ static const struct LevelUpMove sPhantorneyLevelUpLearnset[] = {
    LEVEL_UP_MOVE(73, MOVE_TURNABOUT),
    LEVEL_UP_END
 };
+static const struct LevelUpMove sCirnumiruLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_BLIZZARD), 
+   LEVEL_UP_END
+};
 static const struct LevelUpMove sSeraphillLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_MIRACLE_EYE), 
    LEVEL_UP_MOVE( 1, MOVE_RAPID_SPIN), 
