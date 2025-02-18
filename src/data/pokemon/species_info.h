@@ -4684,7 +4684,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Dollghost)
        .levelUpLearnset = sDollghostLevelUpLearnset,
     },
-        [SPECIES_PARMIAUSAN] =
+    [SPECIES_PARMIAUSAN] =
     { 
        .baseHP        = 115,
        .baseAttack    = 80,
@@ -4738,7 +4738,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Parmiausan)
        .levelUpLearnset = sParmiausanLevelUpLearnset,
     },
-
+    [SPECIES_GANGLYTHON] =
+    { 
+       .baseHP        = 70,
+       .baseAttack    = 103,
+       .baseDefense   = 48,
+       .baseSpeed     = 135,
+       .baseSpAttack  = 31,
+       .baseSpDefense = 62,
+       .types = { TYPE_PSYCHIC, TYPE_BUG },
+       .catchRate = 55,
+       .expYield = 94,
+       .evYield_Speed  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_NONE },
+       .abilities = { ABILITY_BRAIN_POWER, ABILITY_NONE, ABILITY_OWN_TEMPO, ABILITY_TRANSFUSION}, 
+       .bodyColor = BODY_COLOR_PINK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Ganglython"),
+       .cryId = CRY_GANGLYTHON,
+       .natDexNum = NATIONAL_DEX_GANGLYTHON,
+       .categoryName = _("Neuron Worm"),
+       .height = 19,
+       .weight = 1062,
+       .description = COMPOUND_STRING(
+           "A vicious parasite. Despite its grisly\n"
+           "behaviors, a Ganglython can be easily\n" 
+           "pacified once it has a brain.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Ganglython,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Ganglython,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Ganglython,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Ganglython,
+       .shinyPalette = gMonShinyPalette_Ganglython,
+       .iconSprite = gMonIcon_Ganglython,
+       .iconPalIndex = 1,
+       FOOTPRINT(Ganglython)
+       .levelUpLearnset = sGanglythonLevelUpLearnset,
+       .teachableLearnset = sGanglythonTeachableLearnset,
+       .eggMoveLearnset = sGanglythonEggMoveLearnset,
+    },
         [SPECIES_GHARROSTE] =
     { 
        .baseHP        = 60,

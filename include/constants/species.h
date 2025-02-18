@@ -1846,8 +1846,9 @@
 #define SPECIES_ORYUGAMI                                1730
 #define SPECIES_FRACTYVERN                              1731
 #define SPECIES_MOYALITH                                1732
+#define SPECIES_GANGLYTHON                              1733
 
-#define SPECIES_EGG (SPECIES_MOYALITH + 1)
+#define SPECIES_EGG (SPECIES_GANGLYTHON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

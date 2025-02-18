@@ -6324,6 +6324,16 @@ static const u16 sFoxcetEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sGanglythonEggMoveLearnset[] = {
+    MOVE_ANCIENT_POWER,
+    MOVE_MOONBLAST,
+    MOVE_HEAL_BLOCK,
+    MOVE_LUSTER_PURGE,
+    MOVE_POWER_SPLIT,
+    MOVE_SYNCHRONOISE,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sFuckerEggMoveLearnset[] = {
     MOVE_LIQUIDATION,
     MOVE_BULLET_PUNCH,

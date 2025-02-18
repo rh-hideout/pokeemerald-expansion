@@ -23173,6 +23173,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/icon.4bpp");
    const u8 gMonFootprint_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/front.4bpp.lz");
+   const u32 gMonBackPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/back.4bpp.lz");
+   const u32 gMonPalette_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/shiny.gbapal.lz");
+   const u8 gMonIcon_Ganglython[] = INCBIN_U8("graphics/pokemon/ganglython/icon.4bpp");
+   const u8 gMonFootprint_Ganglython[] = INCBIN_U8("graphics/pokemon/ganglython/footprint.1bpp");
+
    const u32 gMonFrontPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/front.4bpp.lz");
    const u32 gMonBackPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/back.4bpp.lz");
    const u32 gMonPalette_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/normal.gbapal.lz");

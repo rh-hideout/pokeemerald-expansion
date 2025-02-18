@@ -6889,6 +6889,10 @@ Cry_Moyalith::
 	.incbin "sound/direct_sound_samples/cries/moyalith.bin"	
 
 	.align 2
+Cry_Ganglython::
+	.incbin "sound/direct_sound_samples/cries/ganglython.bin"	
+
+	.align 2
 .endif @ P_CRIES_ENABLED
 
 	.align 2
