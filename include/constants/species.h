@@ -1850,8 +1850,10 @@
 #define SPECIES_HOOKLING                                1734
 #define SPECIES_CIRNUMIRU                               1735
 #define SPECIES_MOGUMOLE                                1736
+#define SPECIES_TRIDERLING                              1737
+#define SPECIES_TARANTAGON                              1738
 
-#define SPECIES_EGG (SPECIES_MOGUMOLE + 1)
+#define SPECIES_EGG (SPECIES_TARANTAGON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

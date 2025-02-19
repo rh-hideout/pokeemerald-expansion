@@ -6904,6 +6904,14 @@ Cry_Cirnumiru::
 Cry_Mogumole::
 	.incbin "sound/direct_sound_samples/cries/mogumole.bin"
 
+	.align 2	
+Cry_Triderling::
+	.incbin "sound/direct_sound_samples/cries/triderling.bin"
+
+	.align 2	
+Cry_Tarantagon::
+	.incbin "sound/direct_sound_samples/cries/tarantagon.bin"
+
 	.align 2
 .endif @ P_CRIES_ENABLED
 

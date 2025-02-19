@@ -2799,6 +2799,10 @@ gCryTable::
 
 	cry Cry_Mogumole
 
+	cry Cry_Triderling
+
+	cry Cry_Tarantagon
+
 .endif
 
 	.align 2
@@ -5602,5 +5606,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Cirnumiru
 
 	cry_reverse Cry_Mogumole
+
+	cry_reverse Cry_Triderling
+
+	cry_reverse Cry_Tarantagon
 
 .endif

@@ -22223,6 +22223,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Krackodemon[] = INCBIN_U8("graphics/pokemon/krackodemon/icon.4bpp");
    const u8 gMonFootprint_Krackodemon[] = INCBIN_U8("graphics/pokemon/krackodemon/footprint.1bpp");
 
+   const u32 gMonFrontPic_Triderling[] = INCBIN_U32("graphics/pokemon/triderling/front.4bpp.lz");
+   const u32 gMonBackPic_Triderling[] = INCBIN_U32("graphics/pokemon/triderling/back.4bpp.lz");
+   const u32 gMonPalette_Triderling[] = INCBIN_U32("graphics/pokemon/triderling/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Triderling[] = INCBIN_U32("graphics/pokemon/triderling/shiny.gbapal.lz");
+   const u8 gMonIcon_Triderling[] = INCBIN_U8("graphics/pokemon/triderling/icon.4bpp");
+   const u8 gMonFootprint_Triderling[] = INCBIN_U8("graphics/pokemon/triderling/footprint.1bpp");
+
+   const u32 gMonFrontPic_Tarantagon[] = INCBIN_U32("graphics/pokemon/tarantagon/front.4bpp.lz");
+   const u32 gMonBackPic_Tarantagon[] = INCBIN_U32("graphics/pokemon/tarantagon/back.4bpp.lz");
+   const u32 gMonPalette_Tarantagon[] = INCBIN_U32("graphics/pokemon/tarantagon/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Tarantagon[] = INCBIN_U32("graphics/pokemon/tarantagon/shiny.gbapal.lz");
+   const u8 gMonIcon_Tarantagon[] = INCBIN_U8("graphics/pokemon/tarantagon/icon.4bpp");
+   const u8 gMonFootprint_Tarantagon[] = INCBIN_U8("graphics/pokemon/tarantagon/footprint.1bpp");
+
    const u32 gMonFrontPic_Cheepouf[] = INCBIN_U32("graphics/pokemon/cheepouf/front.4bpp.lz");
    const u32 gMonBackPic_Cheepouf[] = INCBIN_U32("graphics/pokemon/cheepouf/back.4bpp.lz");
    const u32 gMonPalette_Cheepouf[] = INCBIN_U32("graphics/pokemon/cheepouf/normal.gbapal.lz");
