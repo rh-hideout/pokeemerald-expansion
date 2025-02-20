@@ -24208,7 +24208,7 @@ static const struct LevelUpMove sTsemaniLevelUpLearnset[] = {
     LEVEL_UP_MOVE(76, MOVE_EXTINCTION),
     LEVEL_UP_END
     };
-static const struct LevelUpMove sDredaliskLevelUpLearnset[] = {
+static const struct LevelUpMove sDredgodLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_SCRATCH), 
     LEVEL_UP_MOVE( 1, MOVE_SCARY_FACE),
     LEVEL_UP_MOVE( 1, MOVE_PURSUIT),
@@ -24960,11 +24960,39 @@ static const struct LevelUpMove sArctiglobeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(54, MOVE_BLACK_BOMB),
     LEVEL_UP_MOVE(57, MOVE_SELF_DESTRUCT),
     LEVEL_UP_MOVE(60, MOVE_SHEER_COLD),
-   LEVEL_UP_END
+    LEVEL_UP_END
+   };
+static const struct LevelUpMove sVriskeletonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_LEER),
+    LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
+    LEVEL_UP_MOVE( 4, MOVE_PURSUIT),
+    LEVEL_UP_MOVE( 6, MOVE_HOLD_BACK),
+    LEVEL_UP_MOVE( 8, MOVE_SCARY_FACE),
+    LEVEL_UP_MOVE(11, MOVE_BEAT_UP),
+    LEVEL_UP_MOVE(14, MOVE_DISABLE),
+    LEVEL_UP_MOVE(17, MOVE_DETECT),
+    LEVEL_UP_MOVE(20, MOVE_BONE_CLUB),
+    LEVEL_UP_MOVE(22, MOVE_ENDURE),
+    LEVEL_UP_MOVE(25, MOVE_BRUTAL_SWING),
+    LEVEL_UP_MOVE(28, MOVE_BONE_CLUB),
+    LEVEL_UP_MOVE(31, MOVE_ME_FIRST),
+    LEVEL_UP_MOVE(35, MOVE_KNOCK_OFF),
+    LEVEL_UP_MOVE(38, MOVE_AGILITY),
+    LEVEL_UP_MOVE(41, MOVE_SPIRIT_BREAK),
+    LEVEL_UP_MOVE(44, MOVE_REVERSAL),
+    LEVEL_UP_MOVE(47, MOVE_SHADOW_BONE),
+    LEVEL_UP_MOVE(51, MOVE_SWITCHEROO),
+    LEVEL_UP_MOVE(54, MOVE_BONE_RUSH),
+    LEVEL_UP_MOVE(58, MOVE_BEAM_BLADE),
+    LEVEL_UP_MOVE(61, MOVE_MEMENTO),
+    LEVEL_UP_MOVE(64, MOVE_DYNAMAX_CANNON),
+    LEVEL_UP_MOVE(69, MOVE_NO_RETREAT),
+    LEVEL_UP_MOVE(99, MOVE_SPLASH),
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sCofferuleLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_PETRIFY),
-   LEVEL_UP_END
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sGarookieLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
@@ -24983,7 +25011,7 @@ static const struct LevelUpMove sGarookieLevelUpLearnset[] = {
     LEVEL_UP_MOVE(41, MOVE_MOONLIGHT),
     LEVEL_UP_MOVE(45, MOVE_STONE_EDGE),
     LEVEL_UP_MOVE(48, MOVE_HEAD_SMASH),
-   LEVEL_UP_END
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sGarbleLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_ASTONISH),

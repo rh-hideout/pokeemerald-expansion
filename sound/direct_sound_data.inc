@@ -6545,8 +6545,8 @@ Cry_Aquaos::
 	.incbin "sound/direct_sound_samples/cries/aquaos.bin"
 
 	.align 2
-Cry_Dredalisk::
-	.incbin "sound/direct_sound_samples/cries/dredalisk.bin"
+Cry_Dredgod::
+	.incbin "sound/direct_sound_samples/cries/dredgod.bin"
 
 	.align 2
 Cry_Adentity::
@@ -6911,6 +6911,10 @@ Cry_Triderling::
 	.align 2	
 Cry_Tarantagon::
 	.incbin "sound/direct_sound_samples/cries/tarantagon.bin"
+
+	.align 2	
+Cry_Vriskeleton::
+	.incbin "sound/direct_sound_samples/cries/vriskeleton.bin"
 
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -6409,6 +6409,17 @@ static const u16 sArctiglobeEggMoveLearnset[] = {
     
 };
 
+static const u16 sVriskeletonEggMoveLearnset[] = {
+    MOVE_SPIKE_CANNON,
+    MOVE_BLAST_BURN,
+    MOVE_HYDRO_CANNON,
+    MOVE_PARTING_SHOT,
+    MOVE_MOONBLAST,
+    MOVE_MOONGEIST_BEAM,
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sNoxiliumEggMoveLearnset[] = {
     MOVE_ENCORE, // For now.
     MOVE_FEINT,

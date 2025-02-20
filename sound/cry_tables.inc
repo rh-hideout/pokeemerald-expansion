@@ -2619,7 +2619,7 @@ gCryTable::
 
 	cry Cry_Aquaos
 
-	cry Cry_Dredalisk
+	cry Cry_Dredgod
 
 	cry Cry_Adentity
 
@@ -2802,6 +2802,8 @@ gCryTable::
 	cry Cry_Triderling
 
 	cry Cry_Tarantagon
+
+	cry Cry_Vriskeleton
 
 .endif
 
@@ -5427,7 +5429,7 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Aquaos
 
-	cry_reverse Cry_Dredalisk
+	cry_reverse Cry_Dredgod
 
 	cry_reverse Cry_Adentity
 
@@ -5610,5 +5612,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Triderling
 
 	cry_reverse Cry_Tarantagon
+
+	cry_reverse Cry_Vriskeleton
 
 .endif

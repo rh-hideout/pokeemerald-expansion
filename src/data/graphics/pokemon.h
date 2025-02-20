@@ -23166,12 +23166,12 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Tsemani[] = INCBIN_U8("graphics/pokemon/tsemani/icon.4bpp");
    const u8 gMonFootprint_Tsemani[] = INCBIN_U8("graphics/pokemon/tsemani/footprint.1bpp");
    
-   const u32 gMonFrontPic_Dredalisk[] = INCBIN_U32("graphics/pokemon/dredalisk/front.4bpp.lz");
-   const u32 gMonBackPic_Dredalisk[] = INCBIN_U32("graphics/pokemon/dredalisk/back.4bpp.lz");
-   const u32 gMonPalette_Dredalisk[] = INCBIN_U32("graphics/pokemon/dredalisk/normal.gbapal.lz");
-   const u32 gMonShinyPalette_Dredalisk[] = INCBIN_U32("graphics/pokemon/dredalisk/shiny.gbapal.lz");
-   const u8 gMonIcon_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/icon.4bpp");
-   const u8 gMonFootprint_Dredalisk[] = INCBIN_U8("graphics/pokemon/dredalisk/footprint.1bpp");
+   const u32 gMonFrontPic_Dredgod[] = INCBIN_U32("graphics/pokemon/dredgod/front.4bpp.lz");
+   const u32 gMonBackPic_Dredgod[] = INCBIN_U32("graphics/pokemon/dredgod/back.4bpp.lz");
+   const u32 gMonPalette_Dredgod[] = INCBIN_U32("graphics/pokemon/dredgod/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Dredgod[] = INCBIN_U32("graphics/pokemon/dredgod/shiny.gbapal.lz");
+   const u8 gMonIcon_Dredgod[] = INCBIN_U8("graphics/pokemon/dredgod/icon.4bpp");
+   const u8 gMonFootprint_Dredgod[] = INCBIN_U8("graphics/pokemon/dredgod/footprint.1bpp");
 
    const u32 gMonFrontPic_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/front.4bpp.lz");
    const u32 gMonBackPic_Knitten[] = INCBIN_U32("graphics/pokemon/knitten/back.4bpp.lz");
@@ -23410,6 +23410,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonBackPic_ArctiglobeFreed[] = INCBIN_U32("graphics/pokemon/arctiglobe/freed/back.4bpp.lz");
    const u32 gMonShinyPalette_ArctiglobeFreed[] = INCBIN_U32("graphics/pokemon/arctiglobe/freed/shiny.gbapal.lz");
    const u8 gMonIcon_ArctiglobeFreed[] = INCBIN_U8("graphics/pokemon/arctiglobe/freed/icon.4bpp");
+
+   const u32 gMonFrontPic_Vriskeleton[] = INCBIN_U32("graphics/pokemon/vriskeleton/front.4bpp.lz");
+   const u32 gMonBackPic_Vriskeleton[] = INCBIN_U32("graphics/pokemon/vriskeleton/back.4bpp.lz");
+   const u32 gMonPalette_Vriskeleton[] = INCBIN_U32("graphics/pokemon/vriskeleton/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Vriskeleton[] = INCBIN_U32("graphics/pokemon/vriskeleton/shiny.gbapal.lz");
+   const u8 gMonIcon_Vriskeleton[] = INCBIN_U8("graphics/pokemon/vriskeleton/icon.4bpp");
+   const u8 gMonFootprint_Vriskeleton[] = INCBIN_U8("graphics/pokemon/vriskeleton/footprint.1bpp");
 
    const u32 gMonFrontPic_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/front.4bpp.lz");
    const u32 gMonBackPic_Cofferule[] = INCBIN_U32("graphics/pokemon/cofferule/back.4bpp.lz");

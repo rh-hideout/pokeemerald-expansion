@@ -9358,6 +9358,63 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .formSpeciesIdTable = sArctiglobeFormSpeciesIdTable,
        .formChangeTable = sArctiglobeFormChangeTable,
     },
+        [SPECIES_VRISKELETON] =
+    { 
+       .baseHP        = 48,
+       .baseAttack    = 118,
+       .baseDefense   = 58,
+       .baseSpeed     = 118,
+       .baseSpAttack  = 128,
+       .baseSpDefense = 48,
+       .types = { TYPE_DARK, TYPE_DARK },
+       .catchRate = 45,
+       .expYield = 130,
+       .evYield_SpAttack = 2,
+       .evYield_Speed = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_AMORPHOUS, EGG_GROUP_HUMAN_LIKE },
+       .abilities = { ABILITY_MOLD_BREAKER, ABILITY_SUPER_LUCK, ABILITY_DEGENERATE, ABILITY_TRUANT },     ////// BONE ZONE OVER MOLD BREAKER  
+       .bodyColor = BODY_COLOR_WHITE,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Vriskeleton"),
+       .cryId = CRY_VRISKELETON,
+       .natDexNum = NATIONAL_DEX_VRISKELETON,
+       .categoryName = _("Megalovania"),
+       .height = 13,
+       .weight = 400,
+       .description = COMPOUND_STRING(
+           "Vriskeleton is deceptively strong, but\n"
+           "usually chooses to laze around rather\n" 
+           "than fight. If you engage one near a\n"
+           "cliff, you’re going to have a bad time."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Vriskeleton,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Vriskeleton,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Vriskeleton,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Vriskeleton,
+       .shinyPalette = gMonShinyPalette_Vriskeleton,
+       .iconSprite = gMonIcon_Vriskeleton,
+       .iconPalIndex = 0,
+       FOOTPRINT(Vriskeleton)
+       .levelUpLearnset = sVriskeletonLevelUpLearnset,
+       .teachableLearnset = sVriskeletonTeachableLearnset,
+       .eggMoveLearnset = sVriskeletonEggMoveLearnset,
+    },
         [SPECIES_COFFERULE] =
     { 
        .baseHP        = 126,
@@ -9386,7 +9443,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 11,
        .weight = 3238,
        .description = COMPOUND_STRING(
-           "Slow in movement, this Pokemon's\n"
+           "Slow in movement, Cofferule's\n"
            "subordinate hands act independently\n"
            "to fetch food to feed it. Everything\n"
            "it eats suffers an unknown fate."),
@@ -10945,7 +11002,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Tsemani)
        .levelUpLearnset = sTsemaniLevelUpLearnset,
     },
-        [SPECIES_DREDALISK] =
+        [SPECIES_DREDGOD] =
     { 
        .baseHP        = 66,
        .baseAttack    = 108,
@@ -10968,8 +11025,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
       .speciesName = _("Dredgod"),
-       .cryId = CRY_DREDALISK,
-       .natDexNum = NATIONAL_DEX_DREDALISK,
+       .cryId = CRY_DREDGOD,
+       .natDexNum = NATIONAL_DEX_DREDGOD,
        .categoryName = _("Red Demon"),
        .height = 9,
        .weight = 500,
@@ -10982,23 +11039,23 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .pokemonOffset = 16,
        .trainerScale = 256,
        .trainerOffset = -2,
-       .frontPic = gMonFrontPic_Dredalisk,
+       .frontPic = gMonFrontPic_Dredgod,
        .frontPicSize = MON_COORDS_SIZE(64, 64),
        .frontPicYOffset = 4,
-       .frontAnimFrames = sAnims_Dredalisk,
+       .frontAnimFrames = sAnims_Dredgod,
        .frontAnimId = ANIM_GROW_VIBRATE,
        .frontAnimDelay = 15,
        .enemyMonElevation = 0,
-       .backPic = gMonBackPic_Dredalisk,
+       .backPic = gMonBackPic_Dredgod,
        .backPicSize = MON_COORDS_SIZE(64, 64),
        .backPicYOffset = 4,
        .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
-       .palette = gMonPalette_Dredalisk,
-       .shinyPalette = gMonShinyPalette_Dredalisk,
-       .iconSprite = gMonIcon_Dredalisk,
+       .palette = gMonPalette_Dredgod,
+       .shinyPalette = gMonShinyPalette_Dredgod,
+       .iconSprite = gMonIcon_Dredgod,
        .iconPalIndex = 0,
-       FOOTPRINT(Dredalisk)
-       .levelUpLearnset = sDredaliskLevelUpLearnset,
+       FOOTPRINT(Dredgod)
+       .levelUpLearnset = sDredgodLevelUpLearnset,
     },
     
         [SPECIES_RANRUU] =
