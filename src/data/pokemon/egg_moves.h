@@ -6415,6 +6415,7 @@ static const u16 sVriskeletonEggMoveLearnset[] = {
     MOVE_HYDRO_CANNON,
     MOVE_PARTING_SHOT,
     MOVE_MOONBLAST,
+    MOVE_TECHNO_BLAST,
     MOVE_MOONGEIST_BEAM,
     MOVE_UNAVAILABLE,
     
