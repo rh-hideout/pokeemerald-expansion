@@ -11167,7 +11167,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Tsemani)
        .levelUpLearnset = sTsemaniLevelUpLearnset,
     },
-        [SPECIES_DREDGOD] =
+        [SPECIES_DREDALISK] =
     { 
        .baseHP        = 66,
        .baseAttack    = 108,
