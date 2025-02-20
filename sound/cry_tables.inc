@@ -2802,6 +2802,12 @@ gCryTable::
 	cry Cry_Triderling
 
 	cry Cry_Tarantagon
+	
+	cry Cry_Konekoth
+	
+	cry Cry_Grumpoon
+	
+	cry Cry_Larvitty
 
 	cry Cry_Vriskeleton
 
@@ -5612,6 +5618,12 @@ gCryTable_Reverse::
 	cry_reverse Cry_Triderling
 
 	cry_reverse Cry_Tarantagon
+	
+	cry_reverse Cry_Konekoth
+	
+	cry_reverse Cry_Grumpoon
+	
+	cry_reverse Cry_Larvitty
 
 	cry_reverse Cry_Vriskeleton
 

@@ -1852,7 +1852,10 @@
 #define SPECIES_MOGUMOLE                                1736
 #define SPECIES_TRIDERLING                              1737
 #define SPECIES_TARANTAGON                              1738
-#define SPECIES_VRISKELETON                             1739
+#define SPECIES_KONEKOTH                                1739
+#define SPECIES_GRUMPOON                                1740
+#define SPECIES_LARVITTY                                1741
+#define SPECIES_VRISKELETON                             1742
 
 #define SPECIES_EGG (SPECIES_VRISKELETON + 1)
 
