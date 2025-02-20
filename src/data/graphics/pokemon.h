@@ -22168,6 +22168,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Ampstar[] = INCBIN_U8("graphics/pokemon/ampstar/icon.4bpp");
    const u8 gMonFootprint_Ampstar[] = INCBIN_U8("graphics/pokemon/ampstar/footprint.1bpp");
 
+   const u32 gMonFrontPic_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/front.4bpp.lz");
+   const u32 gMonBackPic_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/back.4bpp.lz");
+   const u32 gMonPalette_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/shiny.gbapal.lz");
+   const u8 gMonIcon_Larvitty[] = INCBIN_U8("graphics/pokemon/larvitty/icon.4bpp");
+   const u8 gMonFootprint_Larvitty[] = INCBIN_U8("graphics/pokemon/larvitty/footprint.1bpp");
+
+   const u32 gMonFrontPic_Grumpoon[] = INCBIN_U32("graphics/pokemon/grumpoon/front.4bpp.lz");
+   const u32 gMonBackPic_Grumpoon[] = INCBIN_U32("graphics/pokemon/grumpoon/back.4bpp.lz");
+   const u32 gMonPalette_Grumpoon[] = INCBIN_U32("graphics/pokemon/grumpoon/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Grumpoon[] = INCBIN_U32("graphics/pokemon/grumpoon/shiny.gbapal.lz");
+   const u8 gMonIcon_Grumpoon[] = INCBIN_U8("graphics/pokemon/grumpoon/icon.4bpp");
+   const u8 gMonFootprint_Grumpoon[] = INCBIN_U8("graphics/pokemon/grumpoon/footprint.1bpp");
+
+   const u32 gMonFrontPic_Konekoth[] = INCBIN_U32("graphics/pokemon/konekoth/front.4bpp.lz");
+   const u32 gMonBackPic_Konekoth[] = INCBIN_U32("graphics/pokemon/konekoth/back.4bpp.lz");
+   const u32 gMonPalette_Konekoth[] = INCBIN_U32("graphics/pokemon/konekoth/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Konekoth[] = INCBIN_U32("graphics/pokemon/konekoth/shiny.gbapal.lz");
+   const u8 gMonIcon_Konekoth[] = INCBIN_U8("graphics/pokemon/konekoth/icon.4bpp");
+   const u8 gMonFootprint_Konekoth[] = INCBIN_U8("graphics/pokemon/konekoth/footprint.1bpp");
+
    const u32 gMonFrontPic_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/front.4bpp.lz");
    const u32 gMonBackPic_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/back.4bpp.lz");
    const u32 gMonPalette_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/normal.gbapal.lz");

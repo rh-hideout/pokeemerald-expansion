@@ -22581,6 +22581,18 @@ static const struct LevelUpMove sAmpstarLevelUpLearnset[] = {
    LEVEL_UP_MOVE(60, MOVE_GIGA_IMPACT),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sLarvittyLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_FIRST_IMPRESSION),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sGrumpoonLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_FIRST_IMPRESSION),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sKonekothLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_FIRST_IMPRESSION),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sJerminLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 0, MOVE_REVELATION_DANCE),
    LEVEL_UP_MOVE( 1, MOVE_FOLLOW_ME), 
