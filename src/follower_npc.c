@@ -869,6 +869,7 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
         CalculateFollowerNPCEscalatorTrajectoryUp(task);
         gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
         gPlayerAvatar.preventStep = TRUE;
+        ObjectEventClearHeldMovementIfActive(follower);
         ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
         if (task->data[2] == 0x6b)
             task->data[0] = 4;
