@@ -2283,7 +2283,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
            "Fungnet caps have an extremely strong\n"
            "magnetic pull, which they can control at\n"
            "a whim. It is said that metallic fibers\n"
-           "fused with their spores are amazingly strong."),
+           "fused with their spores are very strong."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
