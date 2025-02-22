@@ -22029,6 +22029,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/icon.4bpp");
    const u8 gMonFootprint_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/footprint.1bpp");
 
+   const u32 gMonFrontPic_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/front.4bpp.lz");
+   const u32 gMonBackPic_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/back.4bpp.lz");
+   const u32 gMonPalette_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/shiny.gbapal.lz");
+   const u8 gMonIcon_Shroomag[] = INCBIN_U8("graphics/pokemon/shroomag/icon.4bpp");
+   const u8 gMonFootprint_Shroomag[] = INCBIN_U8("graphics/pokemon/shroomag/footprint.1bpp");
+
+   const u32 gMonFrontPic_Fungnet[] = INCBIN_U32("graphics/pokemon/fungnet/front.4bpp.lz");
+   const u32 gMonBackPic_Fungnet[] = INCBIN_U32("graphics/pokemon/fungnet/back.4bpp.lz");
+   const u32 gMonPalette_Fungnet[] = INCBIN_U32("graphics/pokemon/fungnet/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Fungnet[] = INCBIN_U32("graphics/pokemon/fungnet/shiny.gbapal.lz");
+   const u8 gMonIcon_Fungnet[] = INCBIN_U8("graphics/pokemon/fungnet/icon.4bpp");
+   const u8 gMonFootprint_Fungnet[] = INCBIN_U8("graphics/pokemon/fungnet/footprint.1bpp");
+
    const u32 gMonFrontPic_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/front.4bpp.lz");
    const u32 gMonBackPic_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/back.4bpp.lz");
    const u32 gMonPalette_Arachnote[] = INCBIN_U32("graphics/pokemon/arachnote/normal.gbapal.lz");

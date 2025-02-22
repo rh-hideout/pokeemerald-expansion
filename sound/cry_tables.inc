@@ -2810,6 +2810,10 @@ gCryTable::
 	cry Cry_Larvitty
 
 	cry Cry_Vriskeleton
+	
+	cry Cry_Shroomag
+
+	cry Cry_Fungnet
 
 .endif
 
@@ -5626,5 +5630,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Larvitty
 
 	cry_reverse Cry_Vriskeleton
+	
+	cry_reverse Cry_Shroomag
+
+	cry_reverse Cry_Fungnet
 
 .endif

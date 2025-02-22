@@ -6926,6 +6926,14 @@ Cry_Larvitty::
 	.align 2	
 Cry_Vriskeleton::
 	.incbin "sound/direct_sound_samples/cries/vriskeleton.bin"
+
+	.align 2	
+Cry_Shroomag::
+	.incbin "sound/direct_sound_samples/cries/shroomag.bin"
+
+	.align 2	
+Cry_Fungnet::
+	.incbin "sound/direct_sound_samples/cries/fungnet.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

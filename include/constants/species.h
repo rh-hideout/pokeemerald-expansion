@@ -1856,6 +1856,8 @@
 #define SPECIES_GRUMPOON                                1740
 #define SPECIES_LARVITTY                                1741
 #define SPECIES_VRISKELETON                             1742
+#define SPECIES_SHROOMAG                                1743
+#define SPECIES_FUNGNET                                 1744
 
 #define SPECIES_EGG (SPECIES_VRISKELETON + 1)
 
