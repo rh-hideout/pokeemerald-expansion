@@ -1859,7 +1859,7 @@
 #define SPECIES_SHROOMAG                                1743
 #define SPECIES_FUNGNET                                 1744
 
-#define SPECIES_EGG (SPECIES_VRISKELETON + 1)
+#define SPECIES_EGG (SPECIES_FUNGNET + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
