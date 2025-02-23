@@ -1,0 +1,7 @@
+mapscripts TestCamp_MapScripts {}
+
+script TestCamp_TestSign {
+    lockall
+    msgbox("'twas a cat!.")
+    releaseall
+}

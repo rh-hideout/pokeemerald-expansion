@@ -30,6 +30,7 @@ build/
 *.ddump
 .idea/
 porymap.*.cfg
+poryscript
 prefabs.json
 .vscode/
 *.a
