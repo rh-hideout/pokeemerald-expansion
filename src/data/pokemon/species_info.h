@@ -5189,7 +5189,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Dollghost)
        .levelUpLearnset = sDollghostLevelUpLearnset,
     },
-    [SPECIES_PARMIAUSAN] =
+        [SPECIES_PARMIAUSAN] =
     { 
        .baseHP        = 115,
        .baseAttack    = 80,
@@ -5243,7 +5243,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Parmiausan)
        .levelUpLearnset = sParmiausanLevelUpLearnset,
     },
-    [SPECIES_GANGLYTHON] =
+        [SPECIES_GANGLYTHON] =
     { 
        .baseHP        = 70,
        .baseAttack    = 103,
@@ -5351,7 +5351,119 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Gharroste)
        .levelUpLearnset = sGharrosteLevelUpLearnset,
-       },
+    },
+        [SPECIES_FLEURRIUM] =
+    {
+       .baseHP        = 35,
+       .baseAttack    = 80,
+       .baseDefense   = 30,
+       .baseSpeed     = 80,
+       .baseSpAttack  = 50,
+       .baseSpDefense = 20,
+       .types = { TYPE_STEEL, TYPE_GRASS },
+       .catchRate = 105,
+       .expYield = 57,
+       .evYield_Attack  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FLYING, EGG_GROUP_NONE },
+       .abilities = { ABILITY_SUPER_LUCK, ABILITY_IRON_BARBS, ABILITY_LEAF_GUARD, ABILITY_STAKEOUT },
+       .bodyColor = BODY_COLOR_GREEN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Fleurrium"),
+      .cryId = CRY_FLEURRIUM,
+       .natDexNum = NATIONAL_DEX_FLEURRIUM,
+       .categoryName = _("Sharp"),
+       .height = 2,
+       .weight = 15,
+       .description = COMPOUND_STRING(
+           "Despite their rough appearance, they\n"
+           "are known to be gentle. In the wild,\n"
+           "it's not uncommon to see tree marks\n"
+           "near its habitat."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Fleurrium,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Fleurrium,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Fleurrium,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Fleurrium,
+       .shinyPalette = gMonShinyPalette_Fleurrium,
+       .iconSprite = gMonIcon_Fleurrium,
+       .iconPalIndex = 1,
+       FOOTPRINT(Fleurrium)
+       .levelUpLearnset = sFleurriumLevelUpLearnset,
+       .teachableLearnset = sFleurriumTeachableLearnset,
+       .eggMoveLearnset = sCristaniumEggMoveLearnset,
+    },
+        [SPECIES_CRISTANIUM] =
+    {
+       .baseHP        = 50,
+       .baseAttack    = 111,
+       .baseDefense   = 69,
+       .baseSpeed     = 120,
+       .baseSpAttack  = 90,
+       .baseSpDefense = 65,
+       .types = { TYPE_STEEL, TYPE_GRASS },
+       .catchRate = 35,
+       .expYield = 145,
+       .evYield_Attack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FLYING, EGG_GROUP_NONE },
+       .abilities = { ABILITY_SUPER_LUCK, ABILITY_SNIPER, ABILITY_LEAF_GUARD, ABILITY_STAKEOUT },
+       .bodyColor = BODY_COLOR_GREEN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+       .speciesName = _("Cristanium"),
+       .cryId = CRY_CRISTANIUM,
+       .natDexNum = NATIONAL_DEX_CRISTANIUM,
+       .categoryName = _("Shining"),
+       .height = 7,
+       .weight = 201,
+       .description = COMPOUND_STRING(
+           "Cristanium seek out tall grasslands\n"
+           "to hide, where they wait days or\n"
+           "even weeks for possible prey that\n"
+           "roam."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Cristanium,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Cristanium,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Cristanium,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Cristanium,
+       .shinyPalette = gMonShinyPalette_Cristanium,
+       .iconSprite = gMonIcon_Cristanium,
+       .iconPalIndex = 1,
+       FOOTPRINT(Cristanium)
+       .levelUpLearnset = sCristaniumLevelUpLearnset,
+       .teachableLearnset = sCristaniumTeachableLearnset,
+       .eggMoveLearnset = sCristaniumEggMoveLearnset,
+    },
         [SPECIES_TOKOYAKI] =
     { 
        .baseHP        = 80,

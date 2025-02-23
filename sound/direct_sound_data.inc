@@ -6934,6 +6934,14 @@ Cry_Shroomag::
 	.align 2	
 Cry_Fungnet::
 	.incbin "sound/direct_sound_samples/cries/fungnet.bin"
+
+	.align 2	
+Cry_Fleurrium::
+	.incbin "sound/direct_sound_samples/cries/fleurrium.bin"
+
+	.align 2	
+Cry_Cristanium::
+	.incbin "sound/direct_sound_samples/cries/cristanium.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -2814,6 +2814,10 @@ gCryTable::
 	cry Cry_Shroomag
 
 	cry Cry_Fungnet
+	
+	cry Cry_Fleurrium
+
+	cry Cry_Cristanium
 
 .endif
 
@@ -5634,5 +5638,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Shroomag
 
 	cry_reverse Cry_Fungnet
+	
+	cry_reverse Cry_Fleurrium
+
+	cry_reverse Cry_Cristanium
 
 .endif

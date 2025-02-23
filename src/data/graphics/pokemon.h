@@ -22566,6 +22566,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Gharroste[] = INCBIN_U8("graphics/pokemon/gharroste/icon.4bpp");
    const u8 gMonFootprint_Gharroste[] = INCBIN_U8("graphics/pokemon/gharroste/footprint.1bpp");
 
+   const u32 gMonFrontPic_Fleurrium[] = INCBIN_U32("graphics/pokemon/fleurrium/front.4bpp.lz");
+   const u32 gMonBackPic_Fleurrium[] = INCBIN_U32("graphics/pokemon/fleurrium/back.4bpp.lz");
+   const u32 gMonPalette_Fleurrium[] = INCBIN_U32("graphics/pokemon/fleurrium/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Fleurrium[] = INCBIN_U32("graphics/pokemon/fleurrium/shiny.gbapal.lz");
+   const u8 gMonIcon_Fleurrium[] = INCBIN_U8("graphics/pokemon/fleurrium/icon.4bpp");
+   const u8 gMonFootprint_Fleurrium[] = INCBIN_U8("graphics/pokemon/fleurrium/footprint.1bpp");
+
+   const u32 gMonFrontPic_Cristanium[] = INCBIN_U32("graphics/pokemon/cristanium/front.4bpp.lz");
+   const u32 gMonBackPic_Cristanium[] = INCBIN_U32("graphics/pokemon/cristanium/back.4bpp.lz");
+   const u32 gMonPalette_Cristanium[] = INCBIN_U32("graphics/pokemon/cristanium/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cristanium[] = INCBIN_U32("graphics/pokemon/cristanium/shiny.gbapal.lz");
+   const u8 gMonIcon_Cristanium[] = INCBIN_U8("graphics/pokemon/cristanium/icon.4bpp");
+   const u8 gMonFootprint_Cristanium[] = INCBIN_U8("graphics/pokemon/cristanium/footprint.1bpp");
+
    const u32 gMonFrontPic_Tokoyaki[] = INCBIN_U32("graphics/pokemon/tokoyaki/front.4bpp.lz");
    const u32 gMonBackPic_Tokoyaki[] = INCBIN_U32("graphics/pokemon/tokoyaki/back.4bpp.lz");
    const u32 gMonPalette_Tokoyaki[] = INCBIN_U32("graphics/pokemon/tokoyaki/normal.gbapal.lz");

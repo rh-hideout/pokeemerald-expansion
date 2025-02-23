@@ -6364,6 +6364,16 @@ static const u16 sGanglythonEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sCristaniumEggMoveLearnset[] = {
+    MOVE_QUICK_GUARD,
+    MOVE_MIRROR_MOVE,
+    MOVE_GRASS_WHISTLE,
+    MOVE_REVERSAL,
+    MOVE_FLYING_PRESS,
+    MOVE_WATER_SHURIKEN,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sFuckerEggMoveLearnset[] = {
     MOVE_LIQUIDATION,
     MOVE_BULLET_PUNCH,

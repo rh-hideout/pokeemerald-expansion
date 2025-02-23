@@ -1858,8 +1858,10 @@
 #define SPECIES_VRISKELETON                             1742
 #define SPECIES_SHROOMAG                                1743
 #define SPECIES_FUNGNET                                 1744
+#define SPECIES_FLEURRIUM                               1745
+#define SPECIES_CRISTANIUM                              1746
 
-#define SPECIES_EGG (SPECIES_FUNGNET + 1)
+#define SPECIES_EGG (SPECIES_CRISTANIUM + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
