@@ -2,11 +2,9 @@
 
 ## About and Features
 
-**pokeemerald-expansion** is a **ROM hack base** built on top of [pret's pokeemerald](https://github.com/pret/pokeemerald) decompilation project. **It is not a playable Pokémon game on its own.** 
+**pokeemerald-expansion** is a GBA ROM hack base that equips developers with a comprehensive toolkit for creating Pokémon ROM hacks. **pokeemerald-expansion** is build oon top of built on top of [pret's pokeemerald](https://github.com/pret/pokeemerald) decompilation project. **It is not a playable Pokémon game on its own.** 
 
-The **pokeemerald-expansion** project equips developers with a comprehensive toolkit for creating Pokémon ROM hacks. It offers a wide range of features from various [core series Pokémon games](https://bulbapedia.bulbagarden.net/wiki/Core_series), along with popular quality-of-life enhancements designed to streamline development and improve the player experience. A full list of those featues can be found in [`FEATURES.md`](FEATURES.md).
-
-**pokeemerald-expansion** provides everything you need to bring your vision to life.
+**pokeemerald-expansion** offers a wide range of features from various [core series Pokémon games](https://bulbapedia.bulbagarden.net/wiki/Core_series), along with popular quality-of-life enhancements designed to streamline development and improve the player experience. A full list of those featues can be found in [`FEATURES.md`](FEATURES.md).
 
 ## Credits and Contributors
 

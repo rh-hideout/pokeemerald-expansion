@@ -1,4 +1,5 @@
-MPORTANT*❗❗ Read through these to learn what features you can toggle**:
+# What features are included?
+- ***IMPORTANT*❗❗ Read through these to learn what features you can toggle**:
     - [Battle configurations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/config/battle.h)
     - [Pokémon configurations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/config/pokemon.h)
     - [Item configurations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/config/item.h)
