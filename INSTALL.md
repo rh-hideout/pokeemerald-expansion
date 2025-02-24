@@ -164,6 +164,7 @@ If you are on a version older than 1.6.2, you should target 1.6.2..
     * 1.8.3
     * 1.9.4
     * 1.10.3
+
 For example, if your version is 1.7.0, you should updat to 1.7.4.
 
 4. Pull the target version
