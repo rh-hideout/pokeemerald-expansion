@@ -107,6 +107,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/diegoisawesome"><img src="https://avatars.githubusercontent.com/u/73499227?v=4?s=100" width="100px;" alt="diegoisawesome"/><br /><sub><b>diegoisawesome</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=diegoisawesome" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DizzyEggg"><img src="https://avatars.githubusercontent.com/u/16259973?v=4?s=100" width="100px;" alt="dizzyeggg"/><br /><sub><b>dizzyeggg</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=DizzyEggg" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
