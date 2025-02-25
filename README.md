@@ -1,6 +1,6 @@
 # About pokeemerald-expansion
 
-[![](https://dcbadge.limes.pink/api/server/6CzjAG6GZk)](https://discord.gg/6CzjAG6GZk)
+[![](https://dcbadge.limes.pink/api/server/6CzjAG6GZk)](https://discord.gg/6CzjAG6GZk) [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/master)](CREDITS.md)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-226-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -54,4 +54,3 @@ If you are looking to [report a bug](CONTRIBUTING.md#Bug-Report), [open a pull r
 # [Community](https://discord.gg/6CzjAG6GZk)
 Our community uses the [Rom Hacking Hideout (RHH) Discord server](https://discord.gg/6CzjAG6GZk) to communicate and organize. Most of our discussions take place there, and we welcome anybody to join us!
 
-<!--- [here](https://github.com/rh-hideout/pokeemerald-expansion/wiki/Credits). --->
