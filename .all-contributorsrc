@@ -1198,6 +1198,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mrgriffin",
+      "name": "Martin Griffin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/838573?v=4",
+      "profile": "http://www.martin-griffin.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

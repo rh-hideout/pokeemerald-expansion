@@ -220,6 +220,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MissingNoL"><img src="https://avatars.githubusercontent.com/u/84547991?v=4?s=100" width="100px;" alt="missingnol"/><br /><sub><b>missingnol</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=MissingNoL" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/moostoet"><img src="https://avatars.githubusercontent.com/u/70690976?v=4?s=100" width="100px;" alt="moostoet"/><br /><sub><b>moostoet</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=moostoet" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mother-Of-Dragons"><img src="https://avatars.githubusercontent.com/u/31101124?v=4?s=100" width="100px;" alt="Avara"/><br /><sub><b>Avara</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Mother-Of-Dragons" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.martin-griffin.com/"><img src="https://avatars.githubusercontent.com/u/838573?v=4?s=100" width="100px;" alt="Martin Griffin"/><br /><sub><b>Martin Griffin</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=mrgriffin" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
