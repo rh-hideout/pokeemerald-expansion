@@ -252,6 +252,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Pokestia"><img src="https://avatars.githubusercontent.com/u/57683071?v=4?s=100" width="100px;" alt="pokestia"/><br /><sub><b>pokestia</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Pokestia" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/quocmanh94"><img src="https://avatars.githubusercontent.com/u/55793096?v=4?s=100" width="100px;" alt="Manh"/><br /><sub><b>Manh</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=quocmanh94" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rangi42"><img src="https://avatars.githubusercontent.com/u/35663410?v=4?s=100" width="100px;" alt="Rangi"/><br /><sub><b>Rangi</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Rangi42" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
