@@ -265,6 +265,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SarnPoke"><img src="https://avatars.githubusercontent.com/u/77281351?v=4?s=100" width="100px;" alt="sarnpoke"/><br /><sub><b>sarnpoke</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=SarnPoke" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SatoMew"><img src="https://avatars.githubusercontent.com/u/11246438?v=4?s=100" width="100px;" alt="SatoMew"/><br /><sub><b>SatoMew</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=SatoMew" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SBird1337"><img src="https://avatars.githubusercontent.com/u/3799173?v=4?s=100" width="100px;" alt="Philipp AUER"/><br /><sub><b>Philipp AUER</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=SBird1337" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Sceptillion"><img src="https://avatars.githubusercontent.com/u/189552226?v=4?s=100" width="100px;" alt="sceptillion"/><br /><sub><b>sceptillion</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Sceptillion" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
