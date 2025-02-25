@@ -1657,6 +1657,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Skyeward",
+      "name": "Mathew Arnold",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6289760?v=4",
+      "profile": "https://www.buried-things.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
