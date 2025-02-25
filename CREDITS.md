@@ -193,6 +193,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/laserXdolphin"><img src="https://avatars.githubusercontent.com/u/107103137?v=4?s=100" width="100px;" alt="laserxdolphin"/><br /><sub><b>laserxdolphin</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=laserXdolphin" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/fakuzatsu"><img src="https://avatars.githubusercontent.com/u/118256341?v=4?s=100" width="100px;" alt="Zatsu"/><br /><sub><b>Zatsu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=fakuzatsu" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://vriska.dev/"><img src="https://avatars.githubusercontent.com/u/8355305?v=4?s=100" width="100px;" alt="leo60228"/><br /><sub><b>leo60228</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=leo60228" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://cohost.org/lhea"><img src="https://avatars.githubusercontent.com/u/118140365?v=4?s=100" width="100px;" alt="Rachel"/><br /><sub><b>Rachel</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=lhearachel" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
