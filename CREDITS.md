@@ -111,6 +111,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/easyaspi314"><img src="https://avatars.githubusercontent.com/u/6258309?v=4?s=100" width="100px;" alt="easyaspi314"/><br /><sub><b>easyaspi314</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=easyaspi314" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/eatthepear"><img src="https://avatars.githubusercontent.com/u/65027979?v=4?s=100" width="100px;" alt="Justin Zhu"/><br /><sub><b>Justin Zhu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=eatthepear" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Edwearth"><img src="https://avatars.githubusercontent.com/u/32911096?v=4?s=100" width="100px;" alt="Edouard Veyrier"/><br /><sub><b>Edouard Veyrier</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Edwearth" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eemeliri"><img src="https://avatars.githubusercontent.com/u/20202697?v=4?s=100" width="100px;" alt="Rahtak"/><br /><sub><b>Rahtak</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Eemeliri" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
