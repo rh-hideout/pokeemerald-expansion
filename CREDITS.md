@@ -240,6 +240,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PhallenTree"><img src="https://avatars.githubusercontent.com/u/168426989?v=4?s=100" width="100px;" alt="PhallenTree"/><br /><sub><b>PhallenTree</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PhallenTree" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Phlosioneer"><img src="https://avatars.githubusercontent.com/u/4657718?v=4?s=100" width="100px;" alt="phlosioneer"/><br /><sub><b>phlosioneer</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Phlosioneer" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/phxGAMMA"><img src="https://avatars.githubusercontent.com/u/84661377?v=4?s=100" width="100px;" alt="phxgamma"/><br /><sub><b>phxgamma</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=phxGAMMA" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
