@@ -90,6 +90,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/BuffelSaft"><img src="https://avatars.githubusercontent.com/u/28769716?v=4?s=100" width="100px;" alt="buffelsaft"/><br /><sub><b>buffelsaft</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=BuffelSaft" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cafeei"><img src="https://avatars.githubusercontent.com/u/46283144?v=4?s=100" width="100px;" alt="Cafe"/><br /><sub><b>Cafe</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Cafeei" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/camthesaxman"><img src="https://avatars.githubusercontent.com/u/17279765?v=4?s=100" width="100px;" alt="camthesaxman"/><br /><sub><b>camthesaxman</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=camthesaxman" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
