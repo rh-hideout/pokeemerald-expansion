@@ -1244,6 +1244,11 @@ static void Cmd_attackcanceler(void)
         return;
     if (AbilityBattleEffects(ABILITYEFFECT_MOVES_BLOCK, gBattlerTarget, 0, 0, 0))
         return;
+    if (IS_MOVE_STATUS(gCurrentMove)
+     && !(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) & (MOVE_TARGET_ALL_BATTLERS | MOVE_TARGET_USER))
+     && AbilityBattleEffects(ABILITYEFFECT_ABSORBING, gBattlerTarget, 0, 0, gCurrentMove))
+        return;
+
     if (!gBattleMons[gBattlerAttacker].pp[gCurrMovePos] && gCurrentMove != MOVE_STRUGGLE
      && !(gHitMarker & (HITMARKER_ALLOW_NO_PP | HITMARKER_NO_ATTACKSTRING | HITMARKER_NO_PPDEDUCT))
      && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
