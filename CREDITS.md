@@ -235,6 +235,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nullableVoidPtr"><img src="https://avatars.githubusercontent.com/u/30564701?v=4?s=100" width="100px;" alt="Avery"/><br /><sub><b>Avery</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=nullableVoidPtr" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PacFire"><img src="https://avatars.githubusercontent.com/u/108960850?v=4?s=100" width="100px;" alt="pacfire"/><br /><sub><b>pacfire</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PacFire" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PALPATlNE"><img src="https://avatars.githubusercontent.com/u/44039565?v=4?s=100" width="100px;" alt="The Long Dong of the Law"/><br /><sub><b>The Long Dong of the Law</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PALPATlNE" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Pawkkie"><img src="https://avatars.githubusercontent.com/u/61265402?v=4?s=100" width="100px;" alt="pawkkie"/><br /><sub><b>pawkkie</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Pawkkie" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
