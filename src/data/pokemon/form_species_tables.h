@@ -2240,3 +2240,8 @@ static const u16 sSimionachFormSpeciesIdTable[] = {
     SPECIES_SIMIONACH_ZEN,
     FORM_SPECIES_END,
 };
+static const u16 sVanitwinFormSpeciesIdTable[] = {
+    SPECIES_VANITWIN_MALE,
+    SPECIES_VANITWIN_FEMALE,
+    FORM_SPECIES_END,
+};

@@ -6942,6 +6942,10 @@ Cry_Fleurrium::
 	.align 2	
 Cry_Cristanium::
 	.incbin "sound/direct_sound_samples/cries/cristanium.bin"
+
+	.align 2	
+Cry_Vanitwin::
+	.incbin "sound/direct_sound_samples/cries/vanitwin.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

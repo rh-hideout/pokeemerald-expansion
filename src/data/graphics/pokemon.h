@@ -22971,6 +22971,19 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Indignifly[] = INCBIN_U8("graphics/pokemon/indignifly/icon.4bpp");
    const u8 gMonFootprint_Indignifly[] = INCBIN_U8("graphics/pokemon/indignifly/footprint.1bpp");
 
+   const u32 gMonFrontPic_Vanitwin[] = INCBIN_U32("graphics/pokemon/vanitwin/front.4bpp.lz");
+   const u32 gMonBackPic_Vanitwin[] = INCBIN_U32("graphics/pokemon/vanitwin/back.4bpp.lz");
+   const u32 gMonPalette_Vanitwin[] = INCBIN_U32("graphics/pokemon/vanitwin/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Vanitwin[] = INCBIN_U32("graphics/pokemon/vanitwin/shiny.gbapal.lz");
+   const u8 gMonIcon_Vanitwin[] = INCBIN_U8("graphics/pokemon/vanitwin/icon.4bpp");
+   const u8 gMonFootprint_Vanitwin[] = INCBIN_U8("graphics/pokemon/vanitwin/footprint.1bpp");
+
+   const u32 gMonFrontPic_VanitwinFemale[] = INCBIN_U32("graphics/pokemon/vanitwin/female/front.4bpp.lz");
+    const u32 gMonPalette_VanitwinFemale[] = INCBIN_U32("graphics/pokemon/vanitwin/female/normal.gbapal.lz");
+    const u32 gMonBackPic_VanitwinFemale[] = INCBIN_U32("graphics/pokemon/vanitwin/female/back.4bpp.lz");
+    const u32 gMonShinyPalette_VanitwinFemale[] = INCBIN_U32("graphics/pokemon/vanitwin/female/shiny.gbapal.lz");
+    const u8 gMonIcon_VanitwinFemale[] = INCBIN_U8("graphics/pokemon/vanitwin/female/icon.4bpp");
+
    const u32 gMonFrontPic_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/front.4bpp.lz");
    const u32 gMonBackPic_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/back.4bpp.lz");
    const u32 gMonPalette_Dinomight[] = INCBIN_U32("graphics/pokemon/dinomight/normal.gbapal.lz");
@@ -23536,11 +23549,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Doomsday[] = INCBIN_U8("graphics/pokemon/doomsday/icon.4bpp");
    const u8 gMonFootprint_Doomsday[] = INCBIN_U8("graphics/pokemon/doomsday/footprint.1bpp");
 
-    const u32 gMonFrontPic_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/front.4bpp.lz");
-    const u32 gMonPalette_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/normal.gbapal.lz");
-    const u32 gMonBackPic_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/back.4bpp.lz");
-    const u32 gMonShinyPalette_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/shiny.gbapal.lz");
-    const u8 gMonIcon_DoomsdayRevenant[] = INCBIN_U8("graphics/pokemon/doomsday/revenant/icon.4bpp");
+   const u32 gMonFrontPic_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/front.4bpp.lz");
+   const u32 gMonPalette_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/normal.gbapal.lz");
+   const u32 gMonBackPic_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/back.4bpp.lz");
+   const u32 gMonShinyPalette_DoomsdayRevenant[] = INCBIN_U32("graphics/pokemon/doomsday/revenant/shiny.gbapal.lz");
+   const u8 gMonIcon_DoomsdayRevenant[] = INCBIN_U8("graphics/pokemon/doomsday/revenant/icon.4bpp");
 
    const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
    const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");

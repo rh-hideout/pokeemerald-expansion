@@ -2624,6 +2624,7 @@ enum {
     CRY_FUNGNET,
     CRY_FLEURRIUM,
     CRY_CRISTANIUM,
+    CRY_VANITWIN,
     CRY_COUNT,
 };
 

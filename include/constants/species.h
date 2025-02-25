@@ -1768,8 +1768,8 @@
 #define SPECIES_WARGHORK                                1658
 #define SPECIES_GOBLAZER                                1659
 #define SPECIES_SQUITHEE                                1660
-#define SPECIES_CHEESETAH                               1661
-#define SPECIES_CHEEPOUF                                1662
+#define SPECIES_CAMELODUCTOR                            1661
+#define SPECIES_CATOBIRRAFE                             1662
 #define SPECIES_FAUSTIVAL                               1663
 #define SPECIES_JERMIN                                  SPECIES_JERMIN_SOLO
 #define SPECIES_JERMIN_SOLO                             1664
@@ -1860,8 +1860,11 @@
 #define SPECIES_FUNGNET                                 1744
 #define SPECIES_FLEURRIUM                               1745
 #define SPECIES_CRISTANIUM                              1746
+#define SPECIES_VANITWIN                                SPECIES_VANITWIN_MALE
+#define SPECIES_VANITWIN_MALE                           1747
+#define SPECIES_VANITWIN_FEMALE                         1748
 
-#define SPECIES_EGG (SPECIES_CRISTANIUM + 1)
+#define SPECIES_EGG (SPECIES_VANITWIN_FEMALE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
