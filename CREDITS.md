@@ -125,6 +125,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Fontbane"><img src="https://avatars.githubusercontent.com/u/36677462?v=4?s=100" width="100px;" alt="AJ Fontaine"/><br /><sub><b>AJ Fontaine</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Fontbane" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/froggestspirit"><img src="https://avatars.githubusercontent.com/u/3465711?v=4?s=100" width="100px;" alt="rek"/><br /><sub><b>rek</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=froggestspirit" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
