@@ -335,6 +335,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Xavion3"><img src="https://avatars.githubusercontent.com/u/3487253?v=4?s=100" width="100px;" alt="xavion3"/><br /><sub><b>xavion3</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Xavion3" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/xenonnsmb"><img src="https://avatars.githubusercontent.com/u/11357889?v=4?s=100" width="100px;" alt="xenonnsmb"/><br /><sub><b>xenonnsmb</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=xenonnsmb" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Xhyzi"><img src="https://avatars.githubusercontent.com/u/43137399?v=4?s=100" width="100px;" alt="Xhyzi"/><br /><sub><b>Xhyzi</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Xhyzi" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YamaArashi"><img src="https://avatars.githubusercontent.com/u/103294969?v=4?s=100" width="100px;" alt="山嵐"/><br /><sub><b>山嵐</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=YamaArashi" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
