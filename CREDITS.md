@@ -116,6 +116,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/EternalCode"><img src="https://avatars.githubusercontent.com/u/6186099?v=4?s=100" width="100px;" alt="eternalcode"/><br /><sub><b>eternalcode</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=EternalCode" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ExMingYan"><img src="https://avatars.githubusercontent.com/u/56014327?v=4?s=100" width="100px;" alt="明雅"/><br /><sub><b>明雅</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ExMingYan" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
