@@ -233,6 +233,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nullableVoidPtr"><img src="https://avatars.githubusercontent.com/u/30564701?v=4?s=100" width="100px;" alt="Avery"/><br /><sub><b>Avery</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=nullableVoidPtr" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/PacFire"><img src="https://avatars.githubusercontent.com/u/108960850?v=4?s=100" width="100px;" alt="pacfire"/><br /><sub><b>pacfire</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PacFire" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
