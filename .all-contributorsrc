@@ -1450,6 +1450,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rayrobdod",
+      "name": "Raymond Dodge",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11641215?v=4",
+      "profile": "https://rayrobdod.name/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
