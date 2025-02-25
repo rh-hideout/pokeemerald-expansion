@@ -98,6 +98,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/citrusbolt"><img src="https://avatars.githubusercontent.com/u/32605812?v=4?s=100" width="100px;" alt="citrusbolt"/><br /><sub><b>citrusbolt</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=citrusbolt" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cmy2008"><img src="https://avatars.githubusercontent.com/u/65344456?v=4?s=100" width="100px;" alt="Cuite_Piglin"/><br /><sub><b>Cuite_Piglin</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=cmy2008" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
