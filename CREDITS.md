@@ -260,6 +260,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/RevoSucks"><img src="https://avatars.githubusercontent.com/u/11638236?v=4?s=100" width="100px;" alt="Revo"/><br /><sub><b>Revo</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=RevoSucks" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/roukaour"><img src="https://avatars.githubusercontent.com/u/1761576?v=4?s=100" width="100px;" alt="Remy Oukaour"/><br /><sub><b>Remy Oukaour</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=roukaour" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>

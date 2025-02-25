@@ -1468,6 +1468,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "roukaour",
+      "name": "Remy Oukaour",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1761576?v=4",
+      "profile": "https://github.com/roukaour",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
