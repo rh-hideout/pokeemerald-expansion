@@ -1270,6 +1270,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "nullableVoidPtr",
+      "name": "Avery",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30564701?v=4",
+      "profile": "https://github.com/nullableVoidPtr",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

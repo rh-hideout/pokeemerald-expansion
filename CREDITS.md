@@ -231,6 +231,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Nopinou"><img src="https://avatars.githubusercontent.com/u/140268269?v=4?s=100" width="100px;" alt="nopinou"/><br /><sub><b>nopinou</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Nopinou" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/NTx86"><img src="https://avatars.githubusercontent.com/u/44070272?v=4?s=100" width="100px;" alt="NT_x86"/><br /><sub><b>NT_x86</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=NTx86" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nullableVoidPtr"><img src="https://avatars.githubusercontent.com/u/30564701?v=4?s=100" width="100px;" alt="Avery"/><br /><sub><b>Avery</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=nullableVoidPtr" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
