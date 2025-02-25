@@ -225,6 +225,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/NamNguyenUTSA"><img src="https://avatars.githubusercontent.com/u/47985283?v=4?s=100" width="100px;" alt="namnguyenutsa"/><br /><sub><b>namnguyenutsa</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=NamNguyenUTSA" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nashalexander"><img src="https://avatars.githubusercontent.com/u/41334074?v=4?s=100" width="100px;" alt="Alex Nash"/><br /><sub><b>Alex Nash</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=nashalexander" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nescioquid"><img src="https://avatars.githubusercontent.com/u/34481132?v=4?s=100" width="100px;" alt="nescioquid"/><br /><sub><b>nescioquid</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=nescioquid" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
