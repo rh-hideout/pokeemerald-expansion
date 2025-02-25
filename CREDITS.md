@@ -128,6 +128,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/froggestspirit"><img src="https://avatars.githubusercontent.com/u/3465711?v=4?s=100" width="100px;" alt="rek"/><br /><sub><b>rek</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=froggestspirit" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/gabrielcowley"><img src="https://avatars.githubusercontent.com/u/6616877?v=4?s=100" width="100px;" alt="Gabriel Cowley"/><br /><sub><b>Gabriel Cowley</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=gabrielcowley" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Galaxeeh"><img src="https://avatars.githubusercontent.com/u/154106034?v=4?s=100" width="100px;" alt="galaxeeh"/><br /><sub><b>galaxeeh</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Galaxeeh" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Gamer2020"><img src="https://avatars.githubusercontent.com/u/6243575?v=4?s=100" width="100px;" alt="gamer2020"/><br /><sub><b>gamer2020</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Gamer2020" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
