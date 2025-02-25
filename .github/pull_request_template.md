@@ -21,6 +21,8 @@
 <!-- Use their GitHub tag if they have one (or add "@/" at the start if they don't). Be sure to start the line using @ so the automatic changelog can properly detect the collaborators. -->
 <!-- Eg.: "@Lunos for sprites, @/Masuda for support" -->
 <!-- If it doesn't apply, feel free to remove this section. -->
+<!-- Make sure you and your collaborators are added to `CREDITS.md` by tagging the bot on GitHub. EVERY contribution matters! -->
+<!-- https://allcontributors.org/docs/en/bot/usage -->
 
 ## Feature(s) this PR does NOT handle:
 <!-- If your PR contains any unfinished features that are not considered merge-blocking, please list them here for clarity so no one can forget. -->
