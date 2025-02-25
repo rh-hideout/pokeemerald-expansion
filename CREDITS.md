@@ -323,6 +323,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/W1serV1ser"><img src="https://avatars.githubusercontent.com/u/32078876?v=4?s=100" width="100px;" alt="w1serv1ser"/><br /><sub><b>w1serv1ser</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=W1serV1ser" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/walkingeyerobot"><img src="https://avatars.githubusercontent.com/u/91612?v=4?s=100" width="100px;" alt="walkingeyerobot"/><br /><sub><b>walkingeyerobot</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=walkingeyerobot" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
