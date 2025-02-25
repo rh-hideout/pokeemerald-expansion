@@ -314,6 +314,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ThirdLemon"><img src="https://avatars.githubusercontent.com/u/44011465?v=4?s=100" width="100px;" alt="Lemon Rush"/><br /><sub><b>Lemon Rush</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ThirdLemon" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://tustin2121.github.io/"><img src="https://avatars.githubusercontent.com/u/794812?v=4?s=100" width="100px;" alt="tustin2121"/><br /><sub><b>tustin2121</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=tustin2121" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
