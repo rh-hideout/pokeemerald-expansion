@@ -1,20 +1,3 @@
-## Mega Evolution Overworld Sprite Credits:
-- [princess-phoenix](https://www.deviantart.com/princess-phoenix)
-- [larryturbo](https://www.deviantart.com/larryturbo)
-- [kidkatt](https://www.deviantart.com/kidkatt)
-
-## Wiki Credits List
-
-## List of Maintainers
-
-- **UltimaSoul**
-- **ghoulslash**
-- **DizzyEggg**
-- **AsparagusEduardo**
-- **ExpoSeed**
-- **Pyredrid**
-- **MandL127**
-
 ## List of Credits
 - **DizzyEggg**: creating the original Egg repos
 - **ghoulslash**: totem boosts, z-moves, move animations, terrains, several item effects, abilities, and move effects.
@@ -32,15 +15,6 @@
 - **Syreldar**: testing, wrote an explanation post
 - **Pyredrid**: automating issue creation, code review and testing
 - **MandL27**: code review and testing, contributing features
-
-## Resources Used
-- [Sugimori Palettes and Sprites](https://www.pokecommunity.com/showthread.php?t=336945)
-- [DS Style Gen VI Sprites](https://www.pokecommunity.com/showthread.php?t=314422)
-- [Gen VII and Beyond Sprites](https://www.pokecommunity.com/showthread.php?t=368703)
-- Some icons ripped from [Pokemon Gaia](https://www.pokecommunity.com/showthread.php?t=326118)
-- [Data Files](https://www.pokecommunity.com/showthread.php?t=417909)
-- [Complete FireRed Upgrade](https://github.com/Skeli789/Complete-Fire-Red-Upgrade)
-- [pokeemerald](https://github.com/pret/pokeemerald/)
 
 ## Contributors ✨
 
@@ -316,7 +290,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ThirdLemon"><img src="https://avatars.githubusercontent.com/u/44011465?v=4?s=100" width="100px;" alt="Lemon Rush"/><br /><sub><b>Lemon Rush</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ThirdLemon" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://tustin2121.github.io/"><img src="https://avatars.githubusercontent.com/u/794812?v=4?s=100" width="100px;" alt="tustin2121"/><br /><sub><b>tustin2121</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=tustin2121" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/u8-Salem"><img src="https://avatars.githubusercontent.com/u/65783283?v=4?s=100" width="100px;" alt="Salem"/><br /><sub><b>Salem</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=u8-Salem" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ultima-soul"><img src="https://avatars.githubusercontent.com/u/33333039?v=4?s=100" width="100px;" alt="ultima-soul"/><br /><sub><b>ultima-soul</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ultima-soul" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ultima-soul"><img src="https://avatars.githubusercontent.com/u/33333039?v=4?s=100" width="100px;" alt="ultima-soul"/><br /><sub><b>ultima-soul</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ultima-soul" title="Code">💻</a> <a href="#design-ultima-soul" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ultimate-Bob"><img src="https://avatars.githubusercontent.com/u/39687914?v=4?s=100" width="100px;" alt="Ultimate_Bob"/><br /><sub><b>Ultimate_Bob</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Ultimate-Bob" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vblm12"><img src="https://avatars.githubusercontent.com/u/40840303?v=4?s=100" width="100px;" alt="vblm12"/><br /><sub><b>vblm12</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=vblm12" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/voloved"><img src="https://avatars.githubusercontent.com/u/36523934?v=4?s=100" width="100px;" alt="voloved"/><br /><sub><b>voloved</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=voloved" title="Code">💻</a></td>
@@ -358,5 +332,21 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Other Credits
+### Mega Evolution Overworld Sprite Credits:
+- [princess-phoenix](https://www.deviantart.com/princess-phoenix)
+- [larryturbo](https://www.deviantart.com/larryturbo)
+- [kidkatt](https://www.deviantart.com/kidkatt)
+
+## Resources
+- [Sugimori Palettes and Sprites](https://www.pokecommunity.com/showthread.php?t=336945)
+- [DS Style Gen VI Sprites](https://www.pokecommunity.com/showthread.php?t=314422)
+- [Gen VII and Beyond Sprites](https://www.pokecommunity.com/showthread.php?t=368703)
+- Some icons ripped from [Pokemon Gaia](https://www.pokecommunity.com/showthread.php?t=326118)
+- [Data Files](https://www.pokecommunity.com/showthread.php?t=417909)
+- [Complete FireRed Upgrade](https://github.com/Skeli789/Complete-Fire-Red-Upgrade)
+- [pokeemerald](https://github.com/pret/pokeemerald/)
+
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
