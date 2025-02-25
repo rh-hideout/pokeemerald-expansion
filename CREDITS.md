@@ -146,6 +146,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/hedara90"><img src="https://avatars.githubusercontent.com/u/149414898?v=4?s=100" width="100px;" alt="hedara90"/><br /><sub><b>hedara90</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=hedara90" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/hetoord"><img src="https://avatars.githubusercontent.com/u/4848211?v=4?s=100" width="100px;" alt="hetoord"/><br /><sub><b>hetoord</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=hetoord" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/hjk321"><img src="https://avatars.githubusercontent.com/u/37224753?v=4?s=100" width="100px;" alt="Hiram Anderson"/><br /><sub><b>Hiram Anderson</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=hjk321" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/HrPeanut"><img src="https://avatars.githubusercontent.com/u/2881350?v=4?s=100" width="100px;" alt="Anders Løvig"/><br /><sub><b>Anders Løvig</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=HrPeanut" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
