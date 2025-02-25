@@ -307,6 +307,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Zunawe"><img src="https://avatars.githubusercontent.com/u/21088150?v=4?s=100" width="100px;" alt="Bryce Wilson"/><br /><sub><b>Bryce Wilson</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=Zunawe" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Soul-8691"><img src="https://avatars.githubusercontent.com/u/42703201?v=4?s=100" width="100px;" alt="Soul-8691"/><br /><sub><b>Soul-8691</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=Soul-8691" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
