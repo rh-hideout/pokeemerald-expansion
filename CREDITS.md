@@ -63,6 +63,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/agsmgmaster64"><img src="https://avatars.githubusercontent.com/u/67435611?v=4?s=100" width="100px;" alt="agsmgmaster64"/><br /><sub><b>agsmgmaster64</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=agsmgmaster64" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AgustinGDLV"><img src="https://avatars.githubusercontent.com/u/103095241?v=4?s=100" width="100px;" alt="agustingdlv"/><br /><sub><b>agustingdlv</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AgustinGDLV" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AlexOn1ine"><img src="https://avatars.githubusercontent.com/u/93446519?v=4?s=100" width="100px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AlexOn1ine" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
