@@ -278,6 +278,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ShaeTsuPog"><img src="https://avatars.githubusercontent.com/u/85393060?v=4?s=100" width="100px;" alt="Shae"/><br /><sub><b>Shae</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ShaeTsuPog" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shinny456"><img src="https://avatars.githubusercontent.com/u/45926096?v=4?s=100" width="100px;" alt="shinny456"/><br /><sub><b>shinny456</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=shinny456" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
