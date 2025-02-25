@@ -1,0 +1,26 @@
+{
+  "projectName": "pokeemerald-expansion",
+  "projectOwner": "Expansion Senate",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "CREDITS.md",
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "aaaaaa123456789",
+      "name": "aaaaaa123456789",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6129020?v=4",
+      "profile": "https://github.com/aaaaaa123456789",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": true
+}
