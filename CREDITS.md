@@ -179,6 +179,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ketsuban"><img src="https://avatars.githubusercontent.com/u/5253816?v=4?s=100" width="100px;" alt="Thomas Winwood"/><br /><sub><b>Thomas Winwood</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ketsuban" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/khbsd"><img src="https://avatars.githubusercontent.com/u/26092020?v=4?s=100" width="100px;" alt="khbsd"/><br /><sub><b>khbsd</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=khbsd" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
