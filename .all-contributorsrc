@@ -145,6 +145,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "aronson",
+      "name": "aronson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1026348?v=4",
+      "profile": "https://pingas.org/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

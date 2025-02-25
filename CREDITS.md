@@ -71,6 +71,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/anrichtait"><img src="https://avatars.githubusercontent.com/u/123473450?v=4?s=100" width="100px;" alt="toon"/><br /><sub><b>toon</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=anrichtait" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://pingas.org/"><img src="https://avatars.githubusercontent.com/u/1026348?v=4?s=100" width="100px;" alt="aronson"/><br /><sub><b>aronson</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=aronson" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
