@@ -141,6 +141,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/grunt-lucas"><img src="https://avatars.githubusercontent.com/u/126085082?v=4?s=100" width="100px;" alt="grunt-lucas"/><br /><sub><b>grunt-lucas</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=grunt-lucas" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/gruxor"><img src="https://avatars.githubusercontent.com/u/95389790?v=4?s=100" width="100px;" alt="gruxor"/><br /><sub><b>gruxor</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=gruxor" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Gudf"><img src="https://avatars.githubusercontent.com/u/28691694?v=4?s=100" width="100px;" alt="gudf"/><br /><sub><b>gudf</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Gudf" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>

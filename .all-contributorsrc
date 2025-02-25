@@ -640,6 +640,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Gudf",
+      "name": "gudf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28691694?v=4",
+      "profile": "https://github.com/Gudf",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
