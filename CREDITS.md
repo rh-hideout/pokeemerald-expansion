@@ -65,6 +65,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AgustinGDLV"><img src="https://avatars.githubusercontent.com/u/103095241?v=4?s=100" width="100px;" alt="agustingdlv"/><br /><sub><b>agustingdlv</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AgustinGDLV" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AlexOn1ine"><img src="https://avatars.githubusercontent.com/u/93446519?v=4?s=100" width="100px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AlexOn1ine" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AmbientDinosaur"><img src="https://avatars.githubusercontent.com/u/66961099?v=4?s=100" width="100px;" alt="ambientdinosaur"/><br /><sub><b>ambientdinosaur</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AmbientDinosaur" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/amiosi"><img src="https://avatars.githubusercontent.com/u/44352097?v=4?s=100" width="100px;" alt="amiosi"/><br /><sub><b>amiosi</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=amiosi" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>

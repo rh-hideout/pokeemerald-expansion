@@ -109,6 +109,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "amiosi",
+      "name": "amiosi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44352097?v=4",
+      "profile": "https://github.com/amiosi",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
