@@ -289,6 +289,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/skolgrahd"><img src="https://avatars.githubusercontent.com/u/162426316?v=4?s=100" width="100px;" alt="skolgrahd"/><br /><sub><b>skolgrahd</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=skolgrahd" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.buried-things.com/"><img src="https://avatars.githubusercontent.com/u/6289760?v=4?s=100" width="100px;" alt="Mathew Arnold"/><br /><sub><b>Mathew Arnold</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Skyeward" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Slawter666"><img src="https://avatars.githubusercontent.com/u/38655737?v=4?s=100" width="100px;" alt="slawter666"/><br /><sub><b>slawter666</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Slawter666" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://nallapareddy.com/"><img src="https://avatars.githubusercontent.com/u/7838861?v=4?s=100" width="100px;" alt="Sahith Nallapareddy"/><br /><sub><b>Sahith Nallapareddy</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=snallapa" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>

@@ -1675,6 +1675,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "snallapa",
+      "name": "Sahith Nallapareddy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7838861?v=4",
+      "profile": "https://nallapareddy.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
