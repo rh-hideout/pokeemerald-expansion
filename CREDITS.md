@@ -246,6 +246,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PikalaxALT"><img src="https://avatars.githubusercontent.com/u/1895773?v=4?s=100" width="100px;" alt="pikalaxalt"/><br /><sub><b>pikalaxalt</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PikalaxALT" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://linktr.ee/pkmnsnfrn"><img src="https://avatars.githubusercontent.com/u/77138753?v=4?s=100" width="100px;" alt="psf"/><br /><sub><b>psf</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=pkmnsnfrn" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PlatinumMaster"><img src="https://avatars.githubusercontent.com/u/11727751?v=4?s=100" width="100px;" alt="platinummaster"/><br /><sub><b>platinummaster</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PlatinumMaster" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Pokabbie"><img src="https://avatars.githubusercontent.com/u/5558819?v=4?s=100" width="100px;" alt="Abbie Potter"/><br /><sub><b>Abbie Potter</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Pokabbie" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
