@@ -1738,6 +1738,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "StubbornOne",
+      "name": "stubbornone",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81517503?v=4",
+      "profile": "https://github.com/StubbornOne",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
