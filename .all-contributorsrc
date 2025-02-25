@@ -1630,6 +1630,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "SimplyBLGDev",
+      "name": "Simply BLG",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61010688?v=4",
+      "profile": "https://simplyblgdev.github.io/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
