@@ -1549,6 +1549,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "SethBarberee",
+      "name": "Seth Barberee",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13339630?v=4",
+      "profile": "https://github.com/SethBarberee",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
