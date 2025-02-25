@@ -105,6 +105,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://www.dragapult.xyz/"><img src="https://avatars.githubusercontent.com/u/21363715?v=4?s=100" width="100px;" alt="Damon Murdoch"/><br /><sub><b>Damon Murdoch</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=damon-murdoch" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Deokishisu"><img src="https://avatars.githubusercontent.com/u/6993375?v=4?s=100" width="100px;" alt="deokishisu"/><br /><sub><b>deokishisu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Deokishisu" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/diegoisawesome"><img src="https://avatars.githubusercontent.com/u/73499227?v=4?s=100" width="100px;" alt="diegoisawesome"/><br /><sub><b>diegoisawesome</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=diegoisawesome" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
