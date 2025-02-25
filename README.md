@@ -1,4 +1,6 @@
 # About pokeemerald-expansion
+
+[![](https://dcbadge.limes.pink/api/server/INVITE)](https://discord.gg/6CzjAG6GZk)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-226-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
