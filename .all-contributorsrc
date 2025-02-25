@@ -127,6 +127,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "AnonymousRandomPerson",
+      "name": "AnonymousRandomPerson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6516839?v=4",
+      "profile": "https://www.linkedin.com/in/chenghanngan/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
