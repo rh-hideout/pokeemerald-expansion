@@ -175,6 +175,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/karathan"><img src="https://avatars.githubusercontent.com/u/39331331?v=4?s=100" width="100px;" alt="karathan"/><br /><sub><b>karathan</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=karathan" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Kasenn"><img src="https://avatars.githubusercontent.com/u/115586266?v=4?s=100" width="100px;" alt="kasenn"/><br /><sub><b>kasenn</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Kasenn" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/katykat5099"><img src="https://avatars.githubusercontent.com/u/12654608?v=4?s=100" width="100px;" alt="Katy"/><br /><sub><b>Katy</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=katykat5099" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Kermalis"><img src="https://avatars.githubusercontent.com/u/29823718?v=4?s=100" width="100px;" alt="kermalis"/><br /><sub><b>kermalis</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Kermalis" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
