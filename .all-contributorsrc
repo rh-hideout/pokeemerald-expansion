@@ -1144,6 +1144,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "MercedesCL",
+      "name": "Mercy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/98864243?v=4",
+      "profile": "https://github.com/MercedesCL",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
