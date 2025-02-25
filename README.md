@@ -36,7 +36,7 @@ If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Paw
 
 ## 📥 [Installing **`pokeemerald-expansion`**](INSTALL.md)
 ## 🏗️ [Building **`pokeemerald-expansion`**](INSTALL.md#Building-pokeemerald-expansion)
-## 🚚 [Migrating from `**pokeemerald**`](INSTALL.md#Migrating-from-pokeemerald)
+## 🚚 [Migrating from **`pokeemerald`**](INSTALL.md#Migrating-from-pokeemerald)
 ## 🚀 [Updating **`pokeemerald-expansion`**](INSTALL.md#Updating-pokeemerald-expansion)
 
 # [Documentation](https://rh-hideout.github.io/pokeemerald-expansion/)
