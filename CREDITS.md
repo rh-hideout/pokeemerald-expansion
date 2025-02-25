@@ -281,6 +281,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/shinny456"><img src="https://avatars.githubusercontent.com/u/45926096?v=4?s=100" width="100px;" alt="shinny456"/><br /><sub><b>shinny456</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=shinny456" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ShinyDragonHunter"><img src="https://avatars.githubusercontent.com/u/32826900?v=4?s=100" width="100px;" alt="Josh"/><br /><sub><b>Josh</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ShinyDragonHunter" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://douevenknow.us/"><img src="https://avatars.githubusercontent.com/u/1224096?v=4?s=100" width="100px;" alt="Max Thomas"/><br /><sub><b>Max Thomas</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=shinyquagsire23" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://domoreaweso.me/"><img src="https://avatars.githubusercontent.com/u/6080951?v=4?s=100" width="100px;" alt="Sierra A."/><br /><sub><b>Sierra A.</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Sierraffinity" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
