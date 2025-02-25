@@ -532,6 +532,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "gabrielcowley",
+      "name": "Gabriel Cowley",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6616877?v=4",
+      "profile": "https://github.com/gabrielcowley",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
