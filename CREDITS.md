@@ -1,16 +1,14 @@
-## List of Credits
-- **mvit**: ability pop up and mega evo gfx
-- **Doesnt**: berries gfx, pokeball particles
-- **MrDollSteak**: Pokedex descriptions
-- **Avara**: item descriptions
-- **Kurausukun**: testing, small edits and fixes
-- **TheLaw**: move animations
-- **BreadCrumbs**: code review
-- **Syreldar**: testing, wrote an explanation post
-- **Pyredrid**: automating issue creation, code review and testing
-- **MandL27**: code review and testing, contributing features
+<!-- ## Old List of Credits -->
+<!-- - **mvit**: ability pop up and mega evo gfx -->
+<!-- - **Doesnt**: berries gfx, pokeball particles -->
+<!-- - **MrDollSteak**: Pokedex descriptions -->
+<!-- - **Avara**: item descriptions -->
+<!-- - **TheLaw**: move animations -->
+<!-- - **BreadCrumbs**: code review -->
+<!-- - **Syreldar**: testing, wrote an explanation post -->
+<!-- - **Pyredrid**: automating issue creation, code review and testing -->
 
-## Contributors ✨
+## Credits ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
