@@ -301,6 +301,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/StubbornOne"><img src="https://avatars.githubusercontent.com/u/81517503?v=4?s=100" width="100px;" alt="stubbornone"/><br /><sub><b>stubbornone</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=StubbornOne" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SubzeroEclipse"><img src="https://avatars.githubusercontent.com/u/115349505?v=4?s=100" width="100px;" alt="Eclipse"/><br /><sub><b>Eclipse</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=SubzeroEclipse" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/surskitty"><img src="https://avatars.githubusercontent.com/u/1383512?v=4?s=100" width="100px;" alt="surskitty"/><br /><sub><b>surskitty</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=surskitty" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/surtr-games"><img src="https://avatars.githubusercontent.com/u/37739874?v=4?s=100" width="100px;" alt="surtr-games"/><br /><sub><b>surtr-games</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=surtr-games" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
