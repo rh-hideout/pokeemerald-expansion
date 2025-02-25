@@ -1,9 +1,6 @@
 # About pokeemerald-expansion
 
-[![](https://dcbadge.limes.pink/api/server/6CzjAG6GZk)](https://discord.gg/6CzjAG6GZk) [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/master)](CREDITS.md)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-226-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![](https://dcbadge.limes.pink/api/server/6CzjAG6GZk)](https://discord.gg/6CzjAG6GZk) [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/upcoming)](CREDITS.md)
 
 ![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)
 ![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)

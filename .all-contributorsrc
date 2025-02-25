@@ -4,8 +4,7 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
-    "CREDITS.md",
-    "README.md"
+    "CREDITS.md"
   ],
   "imageSize": 100,
   "commit": true,
