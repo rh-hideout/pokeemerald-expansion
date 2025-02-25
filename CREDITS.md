@@ -272,6 +272,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Scyrous"><img src="https://avatars.githubusercontent.com/u/74797764?v=4?s=100" width="100px;" alt="scyrous"/><br /><sub><b>scyrous</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Scyrous" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/segabl"><img src="https://avatars.githubusercontent.com/u/4538631?v=4?s=100" width="100px;" alt="Sebastian Gabl (aka Hoppip)"/><br /><sub><b>Sebastian Gabl (aka Hoppip)</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=segabl" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SethBarberee"><img src="https://avatars.githubusercontent.com/u/13339630?v=4?s=100" width="100px;" alt="Seth Barberee"/><br /><sub><b>Seth Barberee</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=SethBarberee" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Sewef"><img src="https://avatars.githubusercontent.com/u/27089398?v=4?s=100" width="100px;" alt="sewef"/><br /><sub><b>sewef</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Sewef" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
