@@ -1945,6 +1945,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "WiserVisor",
+      "name": "wiservisor",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63819738?v=4",
+      "profile": "https://github.com/WiserVisor",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
