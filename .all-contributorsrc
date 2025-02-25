@@ -1522,6 +1522,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "scnorton",
+      "name": "Scott Norton",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17572426?v=4",
+      "profile": "https://github.com/scnorton",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
