@@ -103,6 +103,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/CyanSMP64"><img src="https://avatars.githubusercontent.com/u/48017633?v=4?s=100" width="100px;" alt="cyansmp64"/><br /><sub><b>cyansmp64</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=CyanSMP64" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/cynderquil"><img src="https://avatars.githubusercontent.com/u/15126835?v=4?s=100" width="100px;" alt="Tiff"/><br /><sub><b>Tiff</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=cynderquil" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.dragapult.xyz/"><img src="https://avatars.githubusercontent.com/u/21363715?v=4?s=100" width="100px;" alt="Damon Murdoch"/><br /><sub><b>Damon Murdoch</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=damon-murdoch" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Deokishisu"><img src="https://avatars.githubusercontent.com/u/6993375?v=4?s=100" width="100px;" alt="deokishisu"/><br /><sub><b>deokishisu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Deokishisu" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
