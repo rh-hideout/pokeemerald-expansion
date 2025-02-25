@@ -87,6 +87,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/BlueAnthem37510"><img src="https://avatars.githubusercontent.com/u/137793234?v=4?s=100" width="100px;" alt="blueanthem37510"/><br /><sub><b>blueanthem37510</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=BlueAnthem37510" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Brainface1"><img src="https://avatars.githubusercontent.com/u/40472418?v=4?s=100" width="100px;" alt="brain_face"/><br /><sub><b>brain_face</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Brainface1" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/BuffelSaft"><img src="https://avatars.githubusercontent.com/u/28769716?v=4?s=100" width="100px;" alt="buffelsaft"/><br /><sub><b>buffelsaft</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=BuffelSaft" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
