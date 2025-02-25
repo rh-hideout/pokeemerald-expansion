@@ -309,6 +309,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tertu-m"><img src="https://avatars.githubusercontent.com/u/836640?v=4?s=100" width="100px;" alt="tertu"/><br /><sub><b>tertu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=tertu-m" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TheJamesLJ"><img src="https://avatars.githubusercontent.com/u/14820644?v=4?s=100" width="100px;" alt="thejameslj"/><br /><sub><b>thejameslj</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=TheJamesLJ" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TheLastMudkip"><img src="https://avatars.githubusercontent.com/u/124942719?v=4?s=100" width="100px;" alt="thelastmudkip"/><br /><sub><b>thelastmudkip</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=TheLastMudkip" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/TheTrueSadfish"><img src="https://avatars.githubusercontent.com/u/73410747?v=4?s=100" width="100px;" alt="Sadfish the Sad"/><br /><sub><b>Sadfish the Sad</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=TheTrueSadfish" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
