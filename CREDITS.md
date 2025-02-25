@@ -188,6 +188,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Kurausukun"><img src="https://avatars.githubusercontent.com/u/9603817?v=4?s=100" width="100px;" alt="kurausukun"/><br /><sub><b>kurausukun</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Kurausukun" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Lactozilla"><img src="https://avatars.githubusercontent.com/u/16945067?v=4?s=100" width="100px;" alt="lactozilla"/><br /><sub><b>lactozilla</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Lactozilla" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
