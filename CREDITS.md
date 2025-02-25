@@ -74,6 +74,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://pingas.org/"><img src="https://avatars.githubusercontent.com/u/1026348?v=4?s=100" width="100px;" alt="aronson"/><br /><sub><b>aronson</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=aronson" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AsparagusEduardo"><img src="https://avatars.githubusercontent.com/u/2904965?v=4?s=100" width="100px;" alt="Eduardo Quezada"/><br /><sub><b>Eduardo Quezada</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AsparagusEduardo" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/atasro2"><img src="https://avatars.githubusercontent.com/u/16516292?v=4?s=100" width="100px;" alt="MCboy"/><br /><sub><b>MCboy</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=atasro2" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AZero13"><img src="https://avatars.githubusercontent.com/u/83477269?v=4?s=100" width="100px;" alt="AZero13"/><br /><sub><b>AZero13</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=AZero13" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
