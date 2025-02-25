@@ -1531,6 +1531,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Scyrous",
+      "name": "scyrous",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74797764?v=4",
+      "profile": "https://github.com/Scyrous",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
