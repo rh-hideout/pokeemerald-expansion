@@ -1,6 +1,6 @@
 # About pokeemerald-expansion
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-105-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-106-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)
