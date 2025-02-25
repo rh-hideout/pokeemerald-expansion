@@ -217,6 +217,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Bl4ckSh4rk",
+      "name": "BlackShark",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25778475?v=4",
+      "profile": "https://projectpokemon.org/home/profile/36419-blackshark/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
