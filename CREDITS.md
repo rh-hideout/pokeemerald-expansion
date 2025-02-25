@@ -328,6 +328,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/WhenGryphonsFly"><img src="https://avatars.githubusercontent.com/u/84215159?v=4?s=100" width="100px;" alt="whengryphonsfly"/><br /><sub><b>whengryphonsfly</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=WhenGryphonsFly" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/WillKolada"><img src="https://avatars.githubusercontent.com/u/57021938?v=4?s=100" width="100px;" alt="willkolada"/><br /><sub><b>willkolada</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=WillKolada" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/WiserVisor"><img src="https://avatars.githubusercontent.com/u/63819738?v=4?s=100" width="100px;" alt="wiservisor"/><br /><sub><b>wiservisor</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=WiserVisor" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/wiz1989"><img src="https://avatars.githubusercontent.com/u/80073265?v=4?s=100" width="100px;" alt="wiz1989"/><br /><sub><b>wiz1989</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=wiz1989" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
