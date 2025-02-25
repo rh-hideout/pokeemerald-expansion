@@ -161,6 +161,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jademalo"><img src="https://avatars.githubusercontent.com/u/386846?v=4?s=100" width="100px;" alt="Jademalo"/><br /><sub><b>Jademalo</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Jademalo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://jaizu.moe/"><img src="https://avatars.githubusercontent.com/u/18596778?v=4?s=100" width="100px;" alt="Jaizu"/><br /><sub><b>Jaizu</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Jaizu" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
