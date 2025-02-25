@@ -64,6 +64,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "AERDU",
+      "name": "aerdu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30103360?v=4",
+      "profile": "https://github.com/AERDU",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
