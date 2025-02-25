@@ -1360,6 +1360,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "pkmnsnfrn",
+      "name": "psf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/77138753?v=4",
+      "profile": "https://linktr.ee/pkmnsnfrn",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

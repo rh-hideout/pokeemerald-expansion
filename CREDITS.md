@@ -244,6 +244,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/phxGAMMA"><img src="https://avatars.githubusercontent.com/u/84661377?v=4?s=100" width="100px;" alt="phxgamma"/><br /><sub><b>phxgamma</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=phxGAMMA" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/pi1024e"><img src="https://avatars.githubusercontent.com/u/160074412?v=4?s=100" width="100px;" alt="pi1024e"/><br /><sub><b>pi1024e</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=pi1024e" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PikalaxALT"><img src="https://avatars.githubusercontent.com/u/1895773?v=4?s=100" width="100px;" alt="pikalaxalt"/><br /><sub><b>pikalaxalt</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=PikalaxALT" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://linktr.ee/pkmnsnfrn"><img src="https://avatars.githubusercontent.com/u/77138753?v=4?s=100" width="100px;" alt="psf"/><br /><sub><b>psf</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=pkmnsnfrn" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
