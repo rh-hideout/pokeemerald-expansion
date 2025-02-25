@@ -312,6 +312,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TheTrueSadfish"><img src="https://avatars.githubusercontent.com/u/73410747?v=4?s=100" width="100px;" alt="Sadfish the Sad"/><br /><sub><b>Sadfish the Sad</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=TheTrueSadfish" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TheXaman"><img src="https://avatars.githubusercontent.com/u/48356183?v=4?s=100" width="100px;" alt="thexaman"/><br /><sub><b>thexaman</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=TheXaman" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ThirdLemon"><img src="https://avatars.githubusercontent.com/u/44011465?v=4?s=100" width="100px;" alt="Lemon Rush"/><br /><sub><b>Lemon Rush</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ThirdLemon" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>

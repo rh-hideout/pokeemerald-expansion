@@ -1837,6 +1837,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ThirdLemon",
+      "name": "Lemon Rush",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44011465?v=4",
+      "profile": "https://github.com/ThirdLemon",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
