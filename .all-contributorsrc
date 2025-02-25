@@ -1234,6 +1234,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "nielsmittertreiner",
+      "name": "Niels Mittertreiner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25991043?v=4",
+      "profile": "https://nielsmittertreiner.net/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
