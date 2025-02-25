@@ -270,6 +270,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/scnorton"><img src="https://avatars.githubusercontent.com/u/17572426?v=4?s=100" width="100px;" alt="Scott Norton"/><br /><sub><b>Scott Norton</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=scnorton" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Scyrous"><img src="https://avatars.githubusercontent.com/u/74797764?v=4?s=100" width="100px;" alt="scyrous"/><br /><sub><b>scyrous</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Scyrous" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/segabl"><img src="https://avatars.githubusercontent.com/u/4538631?v=4?s=100" width="100px;" alt="Sebastian Gabl (aka Hoppip)"/><br /><sub><b>Sebastian Gabl (aka Hoppip)</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=segabl" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
