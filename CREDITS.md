@@ -217,6 +217,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MercedesCL"><img src="https://avatars.githubusercontent.com/u/98864243?v=4?s=100" width="100px;" alt="Mercy"/><br /><sub><b>Mercy</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=MercedesCL" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://mid-kid.root.sx/git/explore/repos"><img src="https://avatars.githubusercontent.com/u/1339276?v=4?s=100" width="100px;" alt="mid-kid"/><br /><sub><b>mid-kid</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=mid-kid" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Missingmew"><img src="https://avatars.githubusercontent.com/u/8605592?v=4?s=100" width="100px;" alt="missingmew"/><br /><sub><b>missingmew</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Missingmew" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MissingNoL"><img src="https://avatars.githubusercontent.com/u/84547991?v=4?s=100" width="100px;" alt="missingnol"/><br /><sub><b>missingnol</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=MissingNoL" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>

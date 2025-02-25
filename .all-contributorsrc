@@ -1171,6 +1171,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "MissingNoL",
+      "name": "missingnol",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84547991?v=4",
+      "profile": "https://github.com/MissingNoL",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
