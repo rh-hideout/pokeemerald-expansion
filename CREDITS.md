@@ -254,6 +254,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/quocmanh94"><img src="https://avatars.githubusercontent.com/u/55793096?v=4?s=100" width="100px;" alt="Manh"/><br /><sub><b>Manh</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=quocmanh94" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rangi42"><img src="https://avatars.githubusercontent.com/u/35663410?v=4?s=100" width="100px;" alt="Rangi"/><br /><sub><b>Rangi</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Rangi42" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/RapidNutcracker"><img src="https://avatars.githubusercontent.com/u/7872351?v=4?s=100" width="100px;" alt="Patrick Curran"/><br /><sub><b>Patrick Curran</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=RapidNutcracker" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ravepossum"><img src="https://avatars.githubusercontent.com/u/145081120?v=4?s=100" width="100px;" alt="RavePossum"/><br /><sub><b>RavePossum</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=ravepossum" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
