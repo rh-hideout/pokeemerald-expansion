@@ -121,6 +121,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Fayvira-DraGon"><img src="https://avatars.githubusercontent.com/u/46143024?v=4?s=100" width="100px;" alt="Fayvira"/><br /><sub><b>Fayvira</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Fayvira-DraGon" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/fdeblasio"><img src="https://avatars.githubusercontent.com/u/35279583?v=4?s=100" width="100px;" alt="Frank DeBlasio"/><br /><sub><b>Frank DeBlasio</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=fdeblasio" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Flametix"><img src="https://avatars.githubusercontent.com/u/44883711?v=4?s=100" width="100px;" alt="flametix"/><br /><sub><b>flametix</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Flametix" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Flash1Lucky"><img src="https://avatars.githubusercontent.com/u/99516581?v=4?s=100" width="100px;" alt="flash1lucky"/><br /><sub><b>flash1lucky</b></sub></a><br /><a href="https://github.com/Expansion Senate/pokeemerald-expansion/commits?author=Flash1Lucky" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
