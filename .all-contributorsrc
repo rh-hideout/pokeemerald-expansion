@@ -253,6 +253,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Brainface1",
+      "name": "brain_face",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40472418?v=4",
+      "profile": "https://github.com/Brainface1",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
