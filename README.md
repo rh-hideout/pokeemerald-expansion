@@ -1,8 +1,9 @@
 # About `pokeemerald-expansion`
 
-![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)
-![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)
-![Gif of Pikipek getting enough experience to jump from level 1 to 20](https://files.catbox.moe/k32wui.gif)
+![Gif that showcases functionality that is unique to pokeemerald-expansion](https://files.catbox.moe/77yk6s.gif)
+![Gif that showcases functionality that is unique to pokeemerald-expansion](https://files.catbox.moe/xl4eo2.gif)
+![Gif that showcases functionality that is unique to pokeemerald-expansion](https://files.catbox.moe/t9bjxo.gif)
+<!-- If you want to re-record or change these gifs, here are some notes that I used: https://files.catbox.moe/05001g.md -->
 
 **`pokeemerald-expansion`** is a GBA ROM hack base that equips developers with a comprehensive toolkit for creating Pokémon ROM hacks. **`pokeemerald-expansion`** is built on top of [pret's `pokeemerald`](https://github.com/pret/pokeemerald) decompilation project. **It is not a playable Pokémon game on its own.** 
 
