@@ -23298,6 +23298,13 @@ static const struct LevelUpMove sJunkgeistLevelUpLearnset[] = {
     LEVEL_UP_MOVE(60, MOVE_SPECTRAL_THIEF),
     LEVEL_UP_MOVE(66, MOVE_DOUBLE_IRON_BASH),  
     LEVEL_UP_END
+};
+static const struct LevelUpMove sYardsteinLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
+    LEVEL_UP_MOVE( 1, MOVE_CHARGE),
+    LEVEL_UP_MOVE( 1, MOVE_GRUDGE),
+    LEVEL_UP_MOVE( 1, MOVE_METAL_SOUND),
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sFoxcetLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_BANEFUL_BUNKER),

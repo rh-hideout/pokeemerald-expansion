@@ -3152,6 +3152,63 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggMoveLearnset = sFoxcetEggMoveLearnset,
     },
 
+        [SPECIES_YARDSTEIN] =
+    { 
+       .baseHP        = 73,
+       .baseAttack    = 118,
+       .baseDefense   = 118,
+       .baseSpeed     = 24,
+       .baseSpAttack  = 75,
+       .baseSpDefense = 70,
+       .types = { TYPE_STEEL, TYPE_GHOST },
+       .catchRate = 135,
+       .expYield = 118,
+       .evYield_Speed  = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 20,
+       .friendship = 1,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE},
+       .abilities = { ABILITY_SHORT_CIRCUIT, ABILITY_NONE, ABILITY_MOTOR_DRIVE, ABILITY_SCRAPPY }, 
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Yardstein"),
+      .cryId = CRY_YARDSTEIN,
+       .natDexNum = NATIONAL_DEX_YARDSTEIN,
+       .categoryName = _("Scrap"),
+       .height = 24,
+       .weight = 1465,
+       .description = COMPOUND_STRING(
+           "They construct bodies from scrap yet are\n"
+           "always unsatisfied with the results. They\n"
+           "seek out water types to send them back\n" 
+           "to their graves, giving them peace."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Yardstein,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Yardstein,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Yardstein,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Yardstein,
+       .shinyPalette = gMonShinyPalette_Yardstein,
+       .iconSprite = gMonIcon_Yardstein,
+       .iconPalIndex = 0,
+       FOOTPRINT(Yardstein)
+       .levelUpLearnset = sYardsteinLevelUpLearnset,
+       .teachableLearnset = sYardsteinTeachableLearnset,
+       .eggMoveLearnset = sYardsteinEggMoveLearnset,
+    },
+
         [SPECIES_WEATHERBANE] =
     { 
        .baseHP        = 80,

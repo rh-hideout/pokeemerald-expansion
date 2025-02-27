@@ -6946,6 +6946,10 @@ Cry_Cristanium::
 	.align 2	
 Cry_Vanitwin::
 	.incbin "sound/direct_sound_samples/cries/vanitwin.bin"
+
+	.align 2	
+Cry_Yardstein::
+	.incbin "sound/direct_sound_samples/cries/yardstein.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

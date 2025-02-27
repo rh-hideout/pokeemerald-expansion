@@ -36397,6 +36397,10 @@ static const u16 sFoxcetTeachableLearnset[] = {
     MOVE_DIVE,
     MOVE_UNAVAILABLE,
 };
+static const u16 sYardsteinTeachableLearnset[] = {
+    MOVE_PROTECT,
+    MOVE_UNAVAILABLE,
+};
 
 static const u16 sGanglythonTeachableLearnset[] = {
     MOVE_U_TURN,

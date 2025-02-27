@@ -22321,6 +22321,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Foxcet[] = INCBIN_U8("graphics/pokemon/foxcet/icon.4bpp");
    const u8 gMonFootprint_Foxcet[] = INCBIN_U8("graphics/pokemon/foxcet/footprint.1bpp");
 
+   const u32 gMonFrontPic_Yardstein[] = INCBIN_U32("graphics/pokemon/yardstein/front.4bpp.lz");
+   const u32 gMonBackPic_Yardstein[] = INCBIN_U32("graphics/pokemon/yardstein/back.4bpp.lz");
+   const u32 gMonPalette_Yardstein[] = INCBIN_U32("graphics/pokemon/yardstein/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Yardstein[] = INCBIN_U32("graphics/pokemon/yardstein/shiny.gbapal.lz");
+   const u8 gMonIcon_Yardstein[] = INCBIN_U8("graphics/pokemon/yardstein/icon.4bpp");
+   const u8 gMonFootprint_Yardstein[] = INCBIN_U8("graphics/pokemon/yardstein/footprint.1bpp");
+
    const u32 gMonFrontPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/front.4bpp.lz");
    const u32 gMonBackPic_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/back.4bpp.lz");
    const u32 gMonPalette_Weatherbane[] = INCBIN_U32("graphics/pokemon/weatherbane/normal.gbapal.lz");
