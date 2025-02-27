@@ -22203,6 +22203,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Konekoth[] = INCBIN_U8("graphics/pokemon/konekoth/icon.4bpp");
    const u8 gMonFootprint_Konekoth[] = INCBIN_U8("graphics/pokemon/konekoth/footprint.1bpp");
 
+   const u32 gMonFrontPic_Monkite[] = INCBIN_U32("graphics/pokemon/monkite/front.4bpp.lz");
+   const u32 gMonBackPic_Monkite[] = INCBIN_U32("graphics/pokemon/monkite/back.4bpp.lz");
+   const u32 gMonPalette_Monkite[] = INCBIN_U32("graphics/pokemon/monkite/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Monkite[] = INCBIN_U32("graphics/pokemon/monkite/shiny.gbapal.lz");
+   const u8 gMonIcon_Monkite[] = INCBIN_U8("graphics/pokemon/monkite/icon.4bpp");
+   const u8 gMonFootprint_Monkite[] = INCBIN_U8("graphics/pokemon/monkite/footprint.1bpp");
+
+   const u32 gMonFrontPic_Konglide[] = INCBIN_U32("graphics/pokemon/konglide/front.4bpp.lz");
+   const u32 gMonBackPic_Konglide[] = INCBIN_U32("graphics/pokemon/konglide/back.4bpp.lz");
+   const u32 gMonPalette_Konglide[] = INCBIN_U32("graphics/pokemon/konglide/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Konglide[] = INCBIN_U32("graphics/pokemon/konglide/shiny.gbapal.lz");
+   const u8 gMonIcon_Konglide[] = INCBIN_U8("graphics/pokemon/konglide/icon.4bpp");
+   const u8 gMonFootprint_Konglide[] = INCBIN_U8("graphics/pokemon/konglide/footprint.1bpp");
+
+   const u32 gMonFrontPic_Yokite[] = INCBIN_U32("graphics/pokemon/yokite/front.4bpp.lz");
+   const u32 gMonBackPic_Yokite[] = INCBIN_U32("graphics/pokemon/yokite/back.4bpp.lz");
+   const u32 gMonPalette_Yokite[] = INCBIN_U32("graphics/pokemon/yokite/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Yokite[] = INCBIN_U32("graphics/pokemon/yokite/shiny.gbapal.lz");
+   const u8 gMonIcon_Yokite[] = INCBIN_U8("graphics/pokemon/yokite/icon.4bpp");
+   const u8 gMonFootprint_Yokite[] = INCBIN_U8("graphics/pokemon/yokite/footprint.1bpp");
+
    const u32 gMonFrontPic_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/front.4bpp.lz");
    const u32 gMonBackPic_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/back.4bpp.lz");
    const u32 gMonPalette_Jermin[] = INCBIN_U32("graphics/pokemon/jermin/normal.gbapal.lz");

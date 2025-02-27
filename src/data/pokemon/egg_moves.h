@@ -6302,6 +6302,16 @@ static const u16 sFrigibaxEggMoveLearnset[] = {
 };
 #endif //P_FAMILY_FRIGIBAX
 
+static const u16 sYokiteEggMoveLearnset[] = {
+    MOVE_FINAL_GAMBIT,
+    MOVE_QUICK_GUARD,
+    MOVE_NATURAL_GIFT,
+    MOVE_FLAIL,
+    MOVE_POWER_TRIP,
+    MOVE_DRAIN_PUNCH,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sMogumoleEggMoveLearnset[] = {
     MOVE_CRUSH_CLAW,
     MOVE_RAPID_SPIN,

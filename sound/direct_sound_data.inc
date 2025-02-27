@@ -6950,6 +6950,18 @@ Cry_Vanitwin::
 	.align 2	
 Cry_Yardstein::
 	.incbin "sound/direct_sound_samples/cries/yardstein.bin"
+
+	.align 2	
+Cry_Monkite::
+	.incbin "sound/direct_sound_samples/cries/monkite.bin"
+
+	.align 2	
+Cry_Konglide::
+	.incbin "sound/direct_sound_samples/cries/konglide.bin"
+
+	.align 2	
+Cry_Yokite::
+	.incbin "sound/direct_sound_samples/cries/yokite.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

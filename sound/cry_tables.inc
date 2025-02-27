@@ -2823,6 +2823,12 @@ gCryTable::
 
 	cry Cry_Yardstein
 
+	cry Cry_Monkite
+
+	cry Cry_Konglide
+
+	cry Cry_Yokite
+
 .endif
 
 	.align 2
@@ -5650,5 +5656,11 @@ gCryTable_Reverse::
 	cry_reverse Cry_Vanitwin
 
 	cry_reverse Cry_Yardstein
+
+	cry_reverse Cry_Monkite
+
+	cry_reverse Cry_Konglide
+
+	cry_reverse Cry_Yokite
 
 .endif
