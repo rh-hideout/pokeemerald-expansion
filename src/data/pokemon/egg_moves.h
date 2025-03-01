@@ -6312,6 +6312,17 @@ static const u16 sYokiteEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sMogeriaEggMoveLearnset[] = {
+    MOVE_DECORATE,
+    MOVE_POLLEN_PUFF,
+    MOVE_ANCIENT_POWER,
+    MOVE_AGILITY,
+    MOVE_PERISH_SONG,
+    MOVE_SING,
+    MOVE_MORNING_SUN,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sMogumoleEggMoveLearnset[] = {
     MOVE_CRUSH_CLAW,
     MOVE_RAPID_SPIN,
@@ -6460,6 +6471,16 @@ static const u16 sVriskeletonEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
     
 };
+
+static const u16 sCofferuleEggMoveLearnset[] = {
+    MOVE_ROCK_POLISH,
+    MOVE_PUNISHMENT,
+    MOVE_ROCK_WRECKER,
+    MOVE_SHORE_UP,
+    MOVE_STUFF_CHEEKS,
+    MOVE_TOXIC_SPIKES,
+    MOVE_UNAVAILABLE,
+}; 
 
 static const u16 sNoxiliumEggMoveLearnset[] = {
     MOVE_ENCORE, // For now.

@@ -2831,6 +2831,10 @@ gCryTable::
 
 	cry Cry_Displacerk
 
+	cry Cry_Floribel
+
+	cry Cry_Mogeria
+
 .endif
 
 	.align 2
@@ -5666,5 +5670,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Yokite
 
 	cry_reverse Cry_Displacerk
+
+	cry_reverse Cry_Floribel
+
+	cry_reverse Cry_Mogeria
 
 .endif

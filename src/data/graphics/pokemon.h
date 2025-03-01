@@ -22182,6 +22182,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Ampstar[] = INCBIN_U8("graphics/pokemon/ampstar/icon.4bpp");
    const u8 gMonFootprint_Ampstar[] = INCBIN_U8("graphics/pokemon/ampstar/footprint.1bpp");
 
+   const u32 gMonFrontPic_Floribel[] = INCBIN_U32("graphics/pokemon/floribel/front.4bpp.lz");
+   const u32 gMonBackPic_Floribel[] = INCBIN_U32("graphics/pokemon/floribel/back.4bpp.lz");
+   const u32 gMonPalette_Floribel[] = INCBIN_U32("graphics/pokemon/floribel/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Floribel[] = INCBIN_U32("graphics/pokemon/floribel/shiny.gbapal.lz");
+   const u8 gMonIcon_Floribel[] = INCBIN_U8("graphics/pokemon/floribel/icon.4bpp");
+   const u8 gMonFootprint_Floribel[] = INCBIN_U8("graphics/pokemon/floribel/footprint.1bpp");
+
+   const u32 gMonFrontPic_Mogeria[] = INCBIN_U32("graphics/pokemon/mogeria/front.4bpp.lz");
+   const u32 gMonBackPic_Mogeria[] = INCBIN_U32("graphics/pokemon/mogeria/back.4bpp.lz");
+   const u32 gMonPalette_Mogeria[] = INCBIN_U32("graphics/pokemon/mogeria/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Mogeria[] = INCBIN_U32("graphics/pokemon/mogeria/shiny.gbapal.lz");
+   const u8 gMonIcon_Mogeria[] = INCBIN_U8("graphics/pokemon/mogeria/icon.4bpp");
+   const u8 gMonFootprint_Mogeria[] = INCBIN_U8("graphics/pokemon/mogeria/footprint.1bpp");
+
    const u32 gMonFrontPic_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/front.4bpp.lz");
    const u32 gMonBackPic_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/back.4bpp.lz");
    const u32 gMonPalette_Larvitty[] = INCBIN_U32("graphics/pokemon/larvitty/normal.gbapal.lz");

@@ -2630,6 +2630,8 @@ enum {
     CRY_KONGLIDE,
     CRY_YOKITE,
     CRY_DISPLACERK,
+    CRY_FLORIBEL,
+    CRY_MOGERIA,
     CRY_COUNT,
 };
 

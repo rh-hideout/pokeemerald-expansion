@@ -6966,6 +6966,14 @@ Cry_Yokite::
 	.align 2	
 Cry_Displacerk::
 	.incbin "sound/direct_sound_samples/cries/displacerk.bin"
+
+	.align 2	
+Cry_Floribel::
+	.incbin "sound/direct_sound_samples/cries/floribel.bin"
+
+	.align 2	
+Cry_Mogeria::
+	.incbin "sound/direct_sound_samples/cries/mogeria.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED
