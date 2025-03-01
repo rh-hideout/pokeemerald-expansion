@@ -1567,9 +1567,9 @@ void FreeAllSpritePalettes(void)
         sSpritePaletteTags[i] = TAG_NONE;
 }
 
-u8 LoadSpritePalette(const struct SpritePalette *palette)
+u32 LoadSpritePalette(const struct SpritePalette *palette)
 {
-    u8 index = IndexOfSpritePaletteTag(palette->tag);
+    u32 index = IndexOfSpritePaletteTag(palette->tag);
 
     if (index != 0xFF)
         return index;
@@ -1601,9 +1601,9 @@ void DoLoadSpritePalette(const u16 *src, u16 paletteOffset)
     LoadPalette(src, OBJ_PLTT_OFFSET + paletteOffset, PLTT_SIZE_4BPP);
 }
 
-u8 AllocSpritePalette(u16 tag)
+u32 AllocSpritePalette(u16 tag)
 {
-    u8 index = IndexOfSpritePaletteTag(TAG_NONE);
+    u32 index = IndexOfSpritePaletteTag(TAG_NONE);
     if (index == 0xFF)
     {
         return 0xFF;
@@ -1615,7 +1615,7 @@ u8 AllocSpritePalette(u16 tag)
     }
 }
 
-u8 IndexOfSpritePaletteTag(u16 tag)
+u32 IndexOfSpritePaletteTag(u16 tag)
 {
     u32 i;
     for (i = gReservedSpritePaletteCount; i < 16; i++)

@@ -7,6 +7,10 @@ Common_EventScript_PkmnCenterNurse::
 	end
 
 EventScript_PkmnCenterNurse_TakeAndHealPkmn::
+<<<<<<< HEAD
+=======
+	hidefollower 0
+>>>>>>> aea0800f009cba36c78bf47b1fc43d07d747c8ce
 	applymovement VAR_0x800B, Movement_PkmnCenterNurse_Turn
 	waitmovement 0
 	dofieldeffect FLDEFF_POKECENTER_HEAL

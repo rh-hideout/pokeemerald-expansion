@@ -6988,7 +6988,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .flingEffect = MOVE_EFFECT_PARALYSIS,
+    .flingEffect = MOVE_EFFECT_PARALYSIS,
         .iconPic = gItemIcon_LightBall,
         .iconPalette = gItemIconPalette_LightBall,
     },

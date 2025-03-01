@@ -141,6 +141,7 @@ void ClearObjectEventMovement(struct ObjectEvent *objectEvent, struct Sprite *sp
 void ObjectEventClearHeldMovement(struct ObjectEvent *);
 void ObjectEventClearHeldMovementIfActive(struct ObjectEvent *);
 struct Pokemon *GetFirstLiveMon(void);
+u16 GetOverworldWeatherSpecies(u16 species);
 void UpdateFollowingPokemon(void);
 void RemoveFollowingPokemon(void);
 struct ObjectEvent *GetFollowerObject(void);
@@ -177,6 +178,7 @@ u8 GetWalkInPlaceFastMovementAction(u32);
 u8 GetWalkInPlaceNormalMovementAction(u32);
 u8 GetWalkInPlaceSlowMovementAction(u32);
 u8 GetCollisionAtCoords(struct ObjectEvent *, s16 x, s16 y, u32 dir);
+u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, bool32 addCoords);
 void MoveCoords(u8 direction, s16 *x, s16 *y);
 bool8 ObjectEventIsHeldMovementActive(struct ObjectEvent *);
 u8 ObjectEventClearHeldMovementIfFinished(struct ObjectEvent *);
@@ -308,6 +310,7 @@ u8 GetJumpMovementAction(u32);
 u8 GetJump2MovementAction(u32);
 u8 CopySprite(struct Sprite *sprite, s16 x, s16 y, u8 subpriority);
 u8 CreateCopySpriteAt(struct Sprite *sprite, s16 x, s16 y, u8 subpriority);
+bool8 IsElevationMismatchAt(u8, s16, s16);
 
 u8 MovementType_WanderAround_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementType_WanderAround_Step1(struct ObjectEvent *, struct Sprite *);

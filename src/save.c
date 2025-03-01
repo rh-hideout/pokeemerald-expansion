@@ -7,6 +7,7 @@
 #include "decompress.h"
 #include "load_save.h"
 #include "overworld.h"
+#include "hall_of_fame.h"
 #include "pokemon_storage_system.h"
 #include "main.h"
 #include "trainer_hill.h"
@@ -716,7 +717,6 @@ u8 HandleSavingData(u8 saveType)
 {
     u8 i;
     u32 *backupVar = gTrainerHillVBlankCounter;
-    u8 *tempAddr;
 
     gTrainerHillVBlankCounter = NULL;
     UpdateSaveAddresses();
@@ -737,9 +737,12 @@ u8 HandleSavingData(u8 saveType)
         WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
 
         // Save the Hall of Fame
-        tempAddr = gDecompressionBuffer;
-        HandleWriteSectorNBytes(SECTOR_ID_HOF_1, tempAddr, SECTOR_DATA_SIZE);
-        HandleWriteSectorNBytes(SECTOR_ID_HOF_2, tempAddr + SECTOR_DATA_SIZE, SECTOR_DATA_SIZE);
+        if (gHoFSaveBuffer != NULL)
+        {
+            u8 *tempAddr = (void *) gHoFSaveBuffer;
+            HandleWriteSectorNBytes(SECTOR_ID_HOF_1, tempAddr, SECTOR_DATA_SIZE);
+            HandleWriteSectorNBytes(SECTOR_ID_HOF_2, tempAddr + SECTOR_DATA_SIZE, SECTOR_DATA_SIZE);
+        }
         break;
     case SAVE_NORMAL:
     default:
@@ -897,9 +900,17 @@ u8 LoadGameSave(u8 saveType)
         gGameContinueCallback = 0;
         break;
     case SAVE_HALL_OF_FAME:
-        status = TryLoadSaveSector(SECTOR_ID_HOF_1, gDecompressionBuffer, SECTOR_DATA_SIZE);
-        if (status == SAVE_STATUS_OK)
-            status = TryLoadSaveSector(SECTOR_ID_HOF_2, &gDecompressionBuffer[SECTOR_DATA_SIZE], SECTOR_DATA_SIZE);
+        if (gHoFSaveBuffer != NULL)
+        {
+            u8 *hofData = (u8 *) gHoFSaveBuffer;
+            status = TryLoadSaveSector(SECTOR_ID_HOF_1, hofData, SECTOR_DATA_SIZE);
+            if (status == SAVE_STATUS_OK)
+                status = TryLoadSaveSector(SECTOR_ID_HOF_2, &hofData[SECTOR_DATA_SIZE], SECTOR_DATA_SIZE);
+        }
+        else
+        {
+            status = SAVE_STATUS_ERROR;
+        }
         break;
     }
 

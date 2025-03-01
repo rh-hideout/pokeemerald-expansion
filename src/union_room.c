@@ -2464,18 +2464,19 @@ static void ScheduleFieldMessageAndExit(const u8 *src)
         StringExpandPlaceholders(gStringVar4, src);
 }
 
+#define PLAYER_LIST_BUFFER_SIZE (MAX_UNION_ROOM_LEADERS * sizeof(struct RfuPlayer))
+
+// Note: This probably could be alloced instead, but I'm not familiar enough with the union room system.
+static EWRAM_DATA ALIGNED(4) u8 sPlayerListBuffer[PLAYER_LIST_BUFFER_SIZE];
+
 static void CopyPlayerListToBuffer(struct WirelessLink_URoom *uroom)
 {
-    memcpy(&gDecompressionBuffer[sizeof(gDecompressionBuffer) - (MAX_UNION_ROOM_LEADERS * sizeof(struct RfuPlayer))],
-            uroom->playerList,
-            MAX_UNION_ROOM_LEADERS * sizeof(struct RfuPlayer));
+    memcpy(sPlayerListBuffer, uroom->playerList, PLAYER_LIST_BUFFER_SIZE);
 }
 
 static void CopyPlayerListFromBuffer(struct WirelessLink_URoom *uroom)
 {
-    memcpy(uroom->playerList,
-           &gDecompressionBuffer[sizeof(gDecompressionBuffer) - (MAX_UNION_ROOM_LEADERS * sizeof(struct RfuPlayer))],
-           MAX_UNION_ROOM_LEADERS * sizeof(struct RfuPlayer));
+    memcpy(uroom->playerList, sPlayerListBuffer, PLAYER_LIST_BUFFER_SIZE);
 }
 
 static void Task_RunUnionRoom(u8 taskId)

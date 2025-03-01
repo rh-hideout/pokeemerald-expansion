@@ -135,8 +135,8 @@ static const struct SpritePalette sSpritePalette_TeraIndicator = {sTeraIndicator
 
 static const struct OamData sOamData_GimmickIndicator =
 {
-    .shape = SPRITE_SHAPE(16x16),
-    .size = SPRITE_SIZE(16x16),
+    .shape = SPRITE_SHAPE(8x16),
+    .size = SPRITE_SIZE(8x16),
     .priority = 1,
 };
 

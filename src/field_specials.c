@@ -70,6 +70,7 @@
 #include "constants/metatile_labels.h"
 #include "palette.h"
 #include "battle_util.h"
+#include "naming_screen.h"
 
 #define TAG_ITEM_ICON 5500
 
@@ -148,6 +149,15 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer);
 #endif //FREE_LINK_BATTLE_RECORDS
 
+static const u8 sText_BigGuy[] = _("Big guy");
+static const u8 sText_BigGirl[] = _("Big girl");
+static const u8 sText_Son[] = _("son");
+static const u8 sText_Daughter[] = _("daughter");
+static const u8 sText_99TimesPlus[] = _("99 times +");
+static const u8 sText_1MinutePlus[] = _("1 minute +");
+static const u8 sText_SpaceSeconds[] = _(" seconds");
+static const u8 sText_SpaceTimes[] = _(" time(s)");
+
 void Special_ShowDiploma(void)
 {
     SetMainCallback2(CB2_ShowDiploma);
@@ -191,11 +201,11 @@ static void DetermineCyclingRoadResults(u32 numFrames, u8 numBikeCollisions)
     if (numBikeCollisions < 100)
     {
         ConvertIntToDecimalStringN(gStringVar1, numBikeCollisions, STR_CONV_MODE_LEFT_ALIGN, 2);
-        StringAppend(gStringVar1, gText_SpaceTimes);
+        StringAppend(gStringVar1, sText_SpaceTimes);
     }
     else
     {
-        StringCopy(gStringVar1, gText_99TimesPlus);
+        StringCopy(gStringVar1, sText_99TimesPlus);
     }
 
     if (numFrames < 3600)
@@ -203,11 +213,11 @@ static void DetermineCyclingRoadResults(u32 numFrames, u8 numBikeCollisions)
         ConvertIntToDecimalStringN(gStringVar2, numFrames / 60, STR_CONV_MODE_RIGHT_ALIGN, 2);
         gStringVar2[2] = CHAR_DEC_SEPARATOR;
         ConvertIntToDecimalStringN(&gStringVar2[3], ((numFrames % 60) * 100) / 60, STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringAppend(gStringVar2, gText_SpaceSeconds);
+        StringAppend(gStringVar2, sText_SpaceSeconds);
     }
     else
     {
-        StringCopy(gStringVar2, gText_1MinutePlus);
+        StringCopy(gStringVar2, sText_1MinutePlus);
     }
 
     result = 0;
@@ -916,17 +926,17 @@ u8 GetPlayerTrainerIdOnesDigit(void)
 void GetPlayerBigGuyGirlString(void)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
-        StringCopy(gStringVar1, gText_BigGuy);
+        StringCopy(gStringVar1, sText_BigGuy);
     else
-        StringCopy(gStringVar1, gText_BigGirl);
+        StringCopy(gStringVar1, sText_BigGirl);
 }
 
 void GetRivalSonDaughterString(void)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
-        StringCopy(gStringVar1, gText_Daughter);
+        StringCopy(gStringVar1, sText_Daughter);
     else
-        StringCopy(gStringVar1, gText_Son);
+        StringCopy(gStringVar1, sText_Son);
 }
 
 u8 GetBattleOutcome(void)
@@ -2421,89 +2431,89 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_GLASS_WORKSHOP_VENDOR] =
     {
-        gText_BlueFlute,
-        gText_YellowFlute,
-        gText_RedFlute,
-        gText_WhiteFlute,
-        gText_BlackFlute,
-        gText_PrettyChair,
-        gText_PrettyDesk,
+        COMPOUND_STRING("BLUE FLUTE"),
+        COMPOUND_STRING("YELLOW FLUTE"),
+        COMPOUND_STRING("RED FLUTE"),
+        COMPOUND_STRING("WHITE FLUTE"),
+        COMPOUND_STRING("BLACK FLUTE"),
+        COMPOUND_STRING("PRETTY CHAIR"),
+        COMPOUND_STRING("PRETTY DESK"),
         gText_Exit
     },
     [SCROLL_MULTI_POKEMON_FAN_CLUB_RATER] =
     {
-        gText_0Pts,
-        gText_10Pts,
-        gText_20Pts,
-        gText_30Pts,
-        gText_40Pts,
-        gText_50Pts,
-        gText_60Pts,
-        gText_70Pts,
-        gText_80Pts,
-        gText_90Pts,
-        gText_100Pts,
-        gText_QuestionMark
+        COMPOUND_STRING("0 pts"),
+        COMPOUND_STRING("10 pts"),
+        COMPOUND_STRING("20 pts"),
+        COMPOUND_STRING("30 pts"),
+        COMPOUND_STRING("40 pts"),
+        COMPOUND_STRING("50 pts"),
+        COMPOUND_STRING("60 pts"),
+        COMPOUND_STRING("70 pts"),
+        COMPOUND_STRING("80 pts"),
+        COMPOUND_STRING("90 pts"),
+        COMPOUND_STRING("100 pts"),
+        COMPOUND_STRING("?")
     },
     [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1] =
     {
-        gText_KissPoster16BP,
-        gText_KissCushion32BP,
-        gText_SmoochumDoll32BP,
-        gText_TogepiDoll48BP,
-        gText_MeowthDoll48BP,
-        gText_ClefairyDoll48BP,
-        gText_DittoDoll48BP,
-        gText_CyndaquilDoll80BP,
-        gText_ChikoritaDoll80BP,
-        gText_TotodileDoll80BP,
+        COMPOUND_STRING("KISS POSTER{CLEAR_TO 0x5E}16BP"),
+        COMPOUND_STRING("KISS CUSHION{CLEAR_TO 0x5E}32BP"),
+        COMPOUND_STRING("SMOOCHUM DOLL{CLEAR_TO 0x5E}32BP"),
+        COMPOUND_STRING("TOGEPI DOLL{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("MEOWTH DOLL{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("CLEFAIRY DOLL{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("DITTO DOLL{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("CYNDAQUIL DOLL{CLEAR_TO 0x5E}80BP"),
+        COMPOUND_STRING("CHIKORITA DOLL{CLEAR_TO 0x5E}80BP"),
+        COMPOUND_STRING("TOTODILE DOLL{CLEAR_TO 0x5E}80BP"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2] =
     {
-        gText_LaprasDoll128BP,
-        gText_SnorlaxDoll128BP,
-        gText_VenusaurDoll256BP,
-        gText_CharizardDoll256BP,
-        gText_BlastoiseDoll256BP,
+        COMPOUND_STRING("LAPRAS DOLL{CLEAR_TO 0x58}128BP"),
+        COMPOUND_STRING("SNORLAX DOLL{CLEAR_TO 0x58}128BP"),
+        COMPOUND_STRING("VENUSAUR DOLL{CLEAR_TO 0x58}256BP"),
+        COMPOUND_STRING("CHARIZARD DOLL{CLEAR_TO 0x58}256BP"),
+        COMPOUND_STRING("BLASTOISE DOLL{CLEAR_TO 0x58}256BP"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR] =
     {
-        gText_Protein1BP,
-        gText_Calcium1BP,
-        gText_Iron1BP,
-        gText_Zinc1BP,
-        gText_Carbos1BP,
-        gText_HpUp1BP,
+        COMPOUND_STRING("PROTEIN{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("CALCIUM{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("IRON{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("ZINC{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("CARBOS{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("HP UP{CLEAR_TO 0x64}1BP"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR] =
     {
-        gText_Leftovers48BP,
-        gText_WhiteHerb48BP,
-        gText_QuickClaw48BP,
-        gText_MentalHerb48BP,
-        gText_BrightPowder64BP,
-        gText_ChoiceBand64BP,
-        gText_KingsRock64BP,
-        gText_FocusBand64BP,
-        gText_ScopeLens64BP,
+        COMPOUND_STRING("LEFTOVERS{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("WHITE HERB{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("QUICK CLAW{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("MENTAL HERB{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("BRIGHTPOWDER{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("CHOICE BAND{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("KING'S ROCK{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("FOCUS BAND{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("SCOPE LENS{CLEAR_TO 0x5E}64BP"),
         gText_Exit
     },
     [SCROLL_MULTI_BERRY_POWDER_VENDOR] =
     {
-        gText_EnergyPowder50,
-        gText_EnergyRoot80,
-        gText_HealPowder50,
-        gText_RevivalHerb300,
-        gText_Protein1000,
-        gText_Iron1000,
-        gText_Carbos1000,
-        gText_Calcium1000,
-        gText_Zinc1000,
-        gText_HPUp1000,
-        gText_PPUp3000,
+        COMPOUND_STRING("ENERGYPOWDER{CLEAR_TO 114}{FONT_SMALL}50"),
+        COMPOUND_STRING("ENERGY ROOT{CLEAR_TO 114}{FONT_SMALL}80"),
+        COMPOUND_STRING("HEAL POWDER{CLEAR_TO 114}{FONT_SMALL}50"),
+        COMPOUND_STRING("REVIVAL HERB{CLEAR_TO 108}{FONT_SMALL}300"),
+        COMPOUND_STRING("PROTEIN{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("IRON{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("CARBOS{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("CALCIUM{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("ZINC{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("HP UP{CLEAR_TO 99}{FONT_SMALL}1,000"),
+        COMPOUND_STRING("PP UP{CLEAR_TO 99}{FONT_SMALL}3,000"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_RECEPTIONIST] =
@@ -2521,30 +2531,30 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_BF_MOVE_TUTOR_1] =
     {
-        gText_Softboiled16BP,
-        gText_SeismicToss24BP,
-        gText_DreamEater24BP,
-        gText_MegaPunch24BP,
-        gText_MegaKick48BP,
-        gText_BodySlam48BP,
-        gText_RockSlide48BP,
-        gText_Counter48BP,
-        gText_ThunderWave48BP,
-        gText_SwordsDance48BP,
+        COMPOUND_STRING("SOFTBOILED{CLEAR_TO 0x4E}16BP"),
+        COMPOUND_STRING("SEISMIC TOSS{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("DREAM EATER{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MEGA PUNCH{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MEGA KICK{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("BODY SLAM{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("ROCK SLIDE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("COUNTER{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("THUNDER WAVE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("SWORDS DANCE{CLEAR_TO 0x4E}48BP"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_MOVE_TUTOR_2] =
     {
-        gText_DefenseCurl16BP,
-        gText_Snore24BP,
-        gText_MudSlap24BP,
-        gText_Swift24BP,
-        gText_IcyWind24BP,
-        gText_Endure48BP,
-        gText_PsychUp48BP,
-        gText_IcePunch48BP,
-        gText_ThunderPunch48BP,
-        gText_FirePunch48BP,
+        COMPOUND_STRING("DEFENSE CURL{CLEAR_TO 0x4E}16BP"),
+        COMPOUND_STRING("SNORE{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MUD-SLAP{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("SWIFT{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("ICY WIND{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("ENDURE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("PSYCH UP{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("ICE PUNCH{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("THUNDERPUNCH{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("FIRE PUNCH{CLEAR_TO 0x4E}48BP"),
         gText_Exit
     },
     [SCROLL_MULTI_SS_TIDAL_DESTINATION] =
@@ -4334,4 +4344,18 @@ void UseBlankMessageToCancelPokemonPic(void)
     u8 t = EOS;
     AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
     ScriptMenu_HidePokemonPic();
+}
+
+void EnterCode(void)
+{
+    DoNamingScreen(NAMING_SCREEN_CODE, gStringVar2, 0, 0, 0, CB2_ReturnToFieldContinueScript);
+}
+
+void GetCodeFeedback(void)
+{
+    static const u8 sText_SampleCode[] = _("SampleCode");
+    if (!StringCompare(gStringVar2, sText_SampleCode))
+        gSpecialVar_Result = 1;
+    else
+        gSpecialVar_Result = 0;
 }

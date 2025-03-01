@@ -818,7 +818,7 @@ static void PrintDigitChars(struct BattleDebugMenu *data);
 static void SetUpModifyArrows(struct BattleDebugMenu *data);
 static void UpdateBattlerValue(struct BattleDebugMenu *data);
 static void UpdateMonData(struct BattleDebugMenu *data);
-static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
+static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
 static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 moveUp);
 static void SwitchToDebugView(u8 taskId);
 static void SwitchToDebugViewFromAiParty(u8 taskId);
@@ -1852,7 +1852,7 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
         charDigits[i] = valueDigits[i] + CHAR_0;
 }
 
-static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
+static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
 {
     struct SideTimer *sideTimer = &gSideTimers[GetBattlerSide(data->battlerId)];
 
@@ -1982,7 +1982,7 @@ static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus,
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_DAMAGE_NON_TYPES;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
-            sideTimer->damageNonTypesType = gMovesInfo[gCurrentMove].type;
+            sideTimer->damageNonTypesType = GetMoveType(gCurrentMove);
         }
         return &sideTimer->damageNonTypesTimer;
     case LIST_SIDE_RAINBOW:
