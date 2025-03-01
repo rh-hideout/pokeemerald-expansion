@@ -1067,7 +1067,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     [SPECIES_KRICKETUNE] =
     {
         .baseHP        = 79,
-        .baseAttack    = 95,
+        .baseAttack    = 85,
         .baseDefense   = 61,
         .baseSpeed     = 85,
         .baseSpAttack  = 95,
@@ -3787,12 +3787,12 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
 
     [SPECIES_GABITE] =
     {
-        .baseHP        = 68,
+        .baseHP        = 78,
         .baseAttack    = 90,
-        .baseDefense   = 65,
+        .baseDefense   = 75,
         .baseSpeed     = 82,
         .baseSpAttack  = 50,
-        .baseSpDefense = 55,
+        .baseSpDefense = 65,
         .types = MON_TYPES(TYPE_DRAGON, TYPE_GROUND),
         .catchRate = 45,
         .expYield = 144,

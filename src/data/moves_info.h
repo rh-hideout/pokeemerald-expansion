@@ -207,8 +207,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "2 to 5 times."),
         .effect = EFFECT_MULTI_HIT,
         .power = 18,
-        .type = TYPE_NORMAL,
-        .accuracy = 90,
+        .type = TYPE_FIGHTING,
+        .accuracy = 95,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -6252,7 +6252,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "An attack that may raise\n"
             "all stats."),
         .effect = EFFECT_HIT,
-        .power = 65,
+        .power = 60,
         .type = TYPE_ROCK,
         .accuracy = 100,
         .pp = 5,
@@ -8061,7 +8061,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A powdery attack that may\n"
             "raise abilities."),
         .effect = EFFECT_HIT,
-        .power = 65,
+        .power = 60,
         .type = TYPE_BUG,
         .accuracy = 100,
         .pp = 5,
@@ -11662,7 +11662,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A repulsive attack that may\n"
             "raise all stats."),
         .effect = EFFECT_HIT,
-        .power = 65,
+        .power = 60,
         .type = TYPE_GHOST,
         .accuracy = 100,
         .pp = 5,
@@ -13005,7 +13005,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "Resisting, the user attacks\n"
             "the foe. Lowers Sp. Atk."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 50 : 30,
+        .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 65 : 30,
         .type = TYPE_BUG,
         .accuracy = 100,
         .pp = 20,
@@ -15161,7 +15161,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Nuzzle"),
         .description = COMPOUND_STRING(
-            "Rubs its cheecks against\n"
+            "Rubs its cheeks against\n"
             "the foe, paralyzing it."),
         .effect = EFFECT_HIT,
         .power = 20,
@@ -16566,7 +16566,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Steals the target's stat\n"
             "boosts, then attacks."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_SPECTRAL_THIEF,
         .power = 90,
         .type = TYPE_GHOST,
         .accuracy = 100,
@@ -16577,9 +16577,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .ignoresSubstitute = TRUE,
         .makesContact = TRUE,
         .metronomeBanned = TRUE,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SPECTRAL_THIEF,
-        }),
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -16821,13 +16818,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS < GEN_8,
         .alwaysCriticalHit = TRUE,
         .metronomeBanned = TRUE,
-        #if B_UPDATED_MOVE_DATA >= GEN_8
-            .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_EVS_PLUS_1,
-            .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
-        }),
-        #endif
         .battleAnimScript = gBattleAnimMove_ZippyZap,
     },
 

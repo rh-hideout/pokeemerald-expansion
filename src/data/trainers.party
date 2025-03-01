@@ -5530,7 +5530,7 @@ Shiny: Yes
 === TRAINER_DRAKE ===
 Name: DRAKE
 Class: Elite Four
-Pic: Elite Four Drake
+Pic: Leaf
 Gender: Male
 Music: Elite Four
 Double Battle: No
@@ -5548,16 +5548,16 @@ Shiny: Yes
 - Grassy Glide
 - U Turn
 
-Hawlucha @ Grassy Seed
+Sneasler @ Grassy Seed
 Adamant Nature
 Level: 99
 Ability: Unburden
 EVs: 248 HP / 252 Atk / 8 Def
 Shiny: Yes
-- Acrobatics
+- Poison Jab
 - Close Combat
 - Swords Dance
-- Flying Press
+- Rock Slide
 
 Rayquaza Mega @ Eject Pack
 Adamant Nature
@@ -5569,27 +5569,27 @@ Shiny: Yes
 - Dragon Claw
 - Dragon Ascent
 
-Dragapult @ White Herb
+Comfey @ Grassy Seed
 Modest Nature
 Level: 99
-Ability: Infiltrator
-EVs: 160 HP / 252 SpA / 4 SpD / 92 Spe
+Ability: Triage
+EVs: 252 Def / 252 SpA / 4 SpD
 Shiny: Yes
-- Draco Meteor
-- Hex
-- Will O Wisp
-- Nasty Plot
+- Draining Kiss
+- Calm Mind
+- Floral Healing
+- Taunt
 
-Tornadus Incarnate @ Sitrus Berry
+Gogoat @ Sitrus Berry
 Quirky Nature
 Level: 99
-Ability: Prankster
+Ability: Grass Pelt
 EVs: 248 HP / 8 Def / 252 SpA
 Shiny: Yes
-- U Turn
-- Tailwind
-- Protect
-- Icy Wind
+- Fake Out
+- Helping Hand
+- Milk Drink
+- Horn Leech
 
 Ogerpon Cornerstone @ Cornerstone Mask
 Adamant Nature
@@ -12005,8 +12005,43 @@ Items: Full Restore
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Seedot
-Level: 28
+Honchkrow @ Scope Lens
+Level: 63
+Ability: Super Luck
+- Sucker Punch
+- Night Slash
+- Sky Attack
+- Foul Play
+
+Kricketune @ Silver Powder
+Level: 63
+Ability: Technician
+- Silver Wind
+- Trailblaze
+- Shock Wave
+- Round
+
+Golisopod @ Shell Bell
+Level: 63
+- Swords Dance
+- U-Turn
+- Razor Shell
+- Leech Life
+
+Pikachu PhD @ Light Ball
+Level: 63
+- Zippy Zap
+- Glitzy Glow
+- Brick Break
+- Agility
+
+Persian @ Scope Lens
+Level: 63
+Ability: Super Luck
+- Slash
+- Fake Out
+- Quick Attack
+- Knock Off 
 
 === TRAINER_SEBASTIAN ===
 Name: SEBASTIAN
@@ -12127,14 +12162,45 @@ Items: Full Restore
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Lotad
-Level: 28
+Gurdurr @ Eviolite
+Level: 63
+Ability: Iron Fist
+- Mach Punch
+- Drain Punch
+- Knock Off
+- Bulk Up
 
-Lombre
-Level: 28
+Trubbish @ Leppa Berry
+Level: 65
+Ability: Sticky Hold
+- Recycle
+- Rest
+- Curse
+- Amnesia
 
-Nuzleaf
-Level: 28
+Dragonite @ Leftovers
+Level: 62
+Ability: Multiscale
+- Roost
+- Dragon Dance
+- Fly
+- Protect
+
+Electrode @ Life Orb
+Level: 63
+Ability: Download
+- Volt Tackle
+- Thunderbolt
+- Charge Beam
+- Explosion
+
+Magnezone @ Zoom Lens
+Level: 63
+Ability: Analytic
+- Thunder
+- Gyro Ball
+- Charge Beam
+- Flash Cannon
 
 === TRAINER_SOPHIA ===
 Name: SOPHIA
