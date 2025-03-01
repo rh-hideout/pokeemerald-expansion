@@ -36880,6 +36880,11 @@ static const u16 sCristaniumTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sDisplacerkTeachableLearnset[] = {
+    MOVE_PROTECT,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sFuckerTeachableLearnset[] = {
     MOVE_LOW_KICK,
     MOVE_DOUBLE_KICK,

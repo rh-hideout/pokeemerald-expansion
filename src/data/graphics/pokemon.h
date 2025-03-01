@@ -22670,6 +22670,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/icon.4bpp");
    const u8 gMonFootprint_Levititan[] = INCBIN_U8("graphics/pokemon/levititan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Displacerk[] = INCBIN_U32("graphics/pokemon/displacerk/front.4bpp.lz");
+   const u32 gMonBackPic_Displacerk[] = INCBIN_U32("graphics/pokemon/displacerk/back.4bpp.lz");
+   const u32 gMonPalette_Displacerk[] = INCBIN_U32("graphics/pokemon/displacerk/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Displacerk[] = INCBIN_U32("graphics/pokemon/displacerk/shiny.gbapal.lz");
+   const u8 gMonIcon_Displacerk[] = INCBIN_U8("graphics/pokemon/displacerk/icon.4bpp");
+   const u8 gMonFootprint_Displacerk[] = INCBIN_U8("graphics/pokemon/displacerk/footprint.1bpp");
+
    const u32 gMonFrontPic_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/front.4bpp.lz");
    const u32 gMonBackPic_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/back.4bpp.lz");
    const u32 gMonPalette_Fabrinnial[] = INCBIN_U32("graphics/pokemon/fabrinnial/normal.gbapal.lz");

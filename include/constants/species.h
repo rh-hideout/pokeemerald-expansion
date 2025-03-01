@@ -1867,8 +1867,9 @@
 #define SPECIES_MONKITE                                 1750
 #define SPECIES_KONGLIDE                                1751
 #define SPECIES_YOKITE                                  1752
+#define SPECIES_DISPLACERK                              1753
 
-#define SPECIES_EGG (SPECIES_YOKITE + 1)
+#define SPECIES_EGG (SPECIES_DISPLACERK + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

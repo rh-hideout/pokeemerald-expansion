@@ -2911,4 +2911,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSuppressed = TRUE,
     },
 
+    [ABILITY_PHANTASMA] =
+    {
+        .name = _("Phantasma"),
+        .description = COMPOUND_STRING("Powers up Ghost type moves and Gives\n Ghost Immunities."),
+        .aiRating = 4,
+    },
+
 };

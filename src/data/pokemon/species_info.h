@@ -6187,6 +6187,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Levititan)
        .levelUpLearnset = sLevititanLevelUpLearnset,
     },
+        [SPECIES_DISPLACERK] =
+    { 
+       .baseHP        = 72,
+       .baseAttack    = 110,
+       .baseDefense   = 61,
+       .baseSpeed     = 115,
+       .baseSpAttack  = 62,
+       .baseSpDefense = 99,
+       .types = { TYPE_NORMAL, TYPE_FIRE },
+       .catchRate = 80,
+       .expYield = 100,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_MONSTER },
+       .abilities = { ABILITY_INNER_FOCUS, ABILITY_LONG_REACH, ABILITY_ILLUSION, ABILITY_PHANTASMA }, 
+       .bodyColor = BODY_COLOR_BLACK,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Displacerk"),
+       .cryId = CRY_DISPLACERK,
+       .natDexNum = NATIONAL_DEX_DISPLACERK,
+       .categoryName = _("Beast"),
+       .height = 14,
+       .weight = 500,
+       .description = COMPOUND_STRING(
+            "Displacerk refracts light around it to\n"
+            "camouflage in its shadowy surroundings.\n"
+            "Often, the last thing its prey can see\n"
+            "is the hostile blue of a blazing tail.\n"),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Displacerk,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Displacerk,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 4,
+       .backPic = gMonBackPic_Displacerk,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 4,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Displacerk,
+       .shinyPalette = gMonShinyPalette_Displacerk,
+       .iconSprite = gMonIcon_Displacerk,
+       .iconPalIndex = 0,
+       FOOTPRINT(Displacerk)
+       .levelUpLearnset = sDisplacerkLevelUpLearnset,
+       .teachableLearnset = sDisplacerkTeachableLearnset,
+       .eggMoveLearnset = sDisplacerkEggMoveLearnset,
+    },
     [SPECIES_FABRINNIAL] =
     { 
        .baseHP        = 42,
@@ -6439,7 +6495,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .friendship = 100,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_FLYING, EGG_GROUP_MONSTER },
-       .abilities = { ABILITY_INTIMIDATE, ABILITY_SHADOW_TAG, ABILITY_GUTS, ABILITY_LEVITATE}, //Replace shadow tag with Phantasma once added
+       .abilities = { ABILITY_INTIMIDATE, ABILITY_PHANTASMA, ABILITY_GUTS, ABILITY_LEVITATE}, //Replace shadow tag with Phantasma once added
        .bodyColor = BODY_COLOR_BLUE,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,

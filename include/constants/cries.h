@@ -2629,6 +2629,7 @@ enum {
     CRY_MONKITE,
     CRY_KONGLIDE,
     CRY_YOKITE,
+    CRY_DISPLACERK,
     CRY_COUNT,
 };
 

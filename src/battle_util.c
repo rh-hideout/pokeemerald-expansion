@@ -10118,6 +10118,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(u32 move, u32 battlerAtk, u32 
         if (moveType == TYPE_ROCK)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
+    case ABILITY_PHANTASMA:
+        if (moveType == TYPE_GHOST)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
     case ABILITY_PROTOSYNTHESIS:
         {
             u8 atkHighestStat = GetHighestStatId(battlerAtk);
@@ -11368,6 +11372,16 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
     }
 
     else if (defAbility == ABILITY_STORM_SHELTER && moveType == TYPE_FLYING && gBattleWeather & B_WEATHER_STRONG_WINDS)
+    {
+        modifier = UQ_4_12(0.0);
+
+    
+    }
+    else if (defAbility == ABILITY_PHANTASMA && moveType == TYPE_FIGHTING)
+    {
+        modifier = UQ_4_12(0.0);
+    }
+    else if (defAbility == ABILITY_PHANTASMA && moveType == TYPE_NORMAL)
     {
         modifier = UQ_4_12(0.0);
     }

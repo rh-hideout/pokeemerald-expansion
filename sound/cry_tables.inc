@@ -2829,6 +2829,8 @@ gCryTable::
 
 	cry Cry_Yokite
 
+	cry Cry_Displacerk
+
 .endif
 
 	.align 2
@@ -5662,5 +5664,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Konglide
 
 	cry_reverse Cry_Yokite
+
+	cry_reverse Cry_Displacerk
 
 .endif

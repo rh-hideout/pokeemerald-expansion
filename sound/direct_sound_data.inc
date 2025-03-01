@@ -6962,6 +6962,10 @@ Cry_Konglide::
 	.align 2	
 Cry_Yokite::
 	.incbin "sound/direct_sound_samples/cries/yokite.bin"
+
+	.align 2	
+Cry_Displacerk::
+	.incbin "sound/direct_sound_samples/cries/displacerk.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

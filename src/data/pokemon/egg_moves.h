@@ -6482,6 +6482,17 @@ static const u16 sMoyalithEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sDisplacerkEggMoveLearnset[] = {
+    MOVE_BATON_PASS,
+    MOVE_CAMOUFLAGE,
+    MOVE_CHARM,
+    MOVE_DISABLE,
+    MOVE_LICK,
+    MOVE_LAVA_PLUME,
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sGuertenityEggMoveLearnset[] = {
     MOVE_DESTINY_BOND,
     MOVE_GUILLOTINE,
