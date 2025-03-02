@@ -6974,6 +6974,14 @@ Cry_Floribel::
 	.align 2	
 Cry_Mogeria::
 	.incbin "sound/direct_sound_samples/cries/mogeria.bin"
+
+	.align 2	
+Cry_Juankey::
+	.incbin "sound/direct_sound_samples/cries/juankey.bin"
+
+	.align 2	
+Cry_Equuan::
+	.incbin "sound/direct_sound_samples/cries/equuan.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

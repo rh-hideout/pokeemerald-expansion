@@ -1870,8 +1870,10 @@
 #define SPECIES_DISPLACERK                              1753
 #define SPECIES_FLORIBEL                                1754
 #define SPECIES_MOGERIA                                 1755
+#define SPECIES_JUANKEY                                 1756
+#define SPECIES_EQUUAN                                  1757
 
-#define SPECIES_EGG (SPECIES_MOGERIA + 1)
+#define SPECIES_EGG (SPECIES_EQUUAN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

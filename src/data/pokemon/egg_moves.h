@@ -6333,6 +6333,16 @@ static const u16 sMogumoleEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sEquuanEggMoveLearnset[] = {
+    MOVE_ENDURE,
+    MOVE_CHARM,
+    MOVE_HEAD_CHARGE,
+    MOVE_REVERSAL,
+    MOVE_FLARE_BLITZ,
+    MOVE_CLOSE_COMBAT,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sFungnetEggMoveLearnset[] = {
     MOVE_AROMATHERAPY,
     MOVE_MOONLIGHT,

@@ -2835,6 +2835,10 @@ gCryTable::
 
 	cry Cry_Mogeria
 
+	cry Cry_Juankey
+
+	cry Cry_Equuan
+
 .endif
 
 	.align 2
@@ -5674,5 +5678,9 @@ gCryTable_Reverse::
 	cry_reverse Cry_Floribel
 
 	cry_reverse Cry_Mogeria
+
+	cry_reverse Cry_Juankey
+
+	cry_reverse Cry_Equuan
 
 .endif

@@ -22029,6 +22029,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/icon.4bpp");
    const u8 gMonFootprint_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/footprint.1bpp");
 
+   const u32 gMonFrontPic_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/front.4bpp.lz");
+   const u32 gMonBackPic_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/back.4bpp.lz");
+   const u32 gMonPalette_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/shiny.gbapal.lz");
+   const u8 gMonIcon_Juankey[] = INCBIN_U8("graphics/pokemon/juankey/icon.4bpp");
+   const u8 gMonFootprint_Juankey[] = INCBIN_U8("graphics/pokemon/juankey/footprint.1bpp");
+
+   const u32 gMonFrontPic_Equuan[] = INCBIN_U32("graphics/pokemon/equuan/front.4bpp.lz");
+   const u32 gMonBackPic_Equuan[] = INCBIN_U32("graphics/pokemon/equuan/back.4bpp.lz");
+   const u32 gMonPalette_Equuan[] = INCBIN_U32("graphics/pokemon/equuan/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Equuan[] = INCBIN_U32("graphics/pokemon/equuan/shiny.gbapal.lz");
+   const u8 gMonIcon_Equuan[] = INCBIN_U8("graphics/pokemon/equuan/icon.4bpp");
+   const u8 gMonFootprint_Equuan[] = INCBIN_U8("graphics/pokemon/equuan/footprint.1bpp");
+
    const u32 gMonFrontPic_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/front.4bpp.lz");
    const u32 gMonBackPic_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/back.4bpp.lz");
    const u32 gMonPalette_Shroomag[] = INCBIN_U32("graphics/pokemon/shroomag/normal.gbapal.lz");

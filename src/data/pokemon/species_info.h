@@ -2316,7 +2316,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        FOOTPRINT(Strixnight)
        .levelUpLearnset = sStrixnightLevelUpLearnset,
     },
-    [SPECIES_MOGUMOLE] =
+        [SPECIES_MOGUMOLE] =
     { 
        .baseHP        = 73,
        .baseAttack    = 111,
@@ -2482,6 +2482,120 @@ const struct SpeciesInfo gSpeciesInfo[] =
    FOOTPRINT(Naughtycoot)
    .levelUpLearnset = sNaughtycootLevelUpLearnset,
     },
+        [SPECIES_JUANKEY] =
+    { 
+       .baseHP        = 54,
+       .baseAttack    = 55,
+       .baseDefense   = 60,
+       .baseSpeed     = 90,
+       .baseSpAttack  = 20,
+       .baseSpDefense = 15,
+       .types = { TYPE_NORMAL, TYPE_NORMAL },
+       .catchRate = 138,
+       .expYield = 57,
+       .evYield_Speed  = 1,
+       .genderRatio = PERCENT_FEMALE(25),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_NONE },
+       .abilities = { ABILITY_RUN_AWAY, ABILITY_TANGLED_FEET, ABILITY_OBLIVIOUS, ABILITY_KLUTZ },
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Juankey"),
+      .cryId = CRY_JUANKEY,
+       .natDexNum = NATIONAL_DEX_JUANKEY,
+       .categoryName = _("Clumsy"),
+       .height = 12,
+       .weight = 822,
+       .description = COMPOUND_STRING(
+           "They like to roam in meadows where\n"
+           "rose bushes can be found. It is said\n" 
+           "that when a Juankey picks the right\n"
+           "rose, it evolves."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Juankey,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Juankey,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Juankey,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Juankey,
+       .shinyPalette = gMonShinyPalette_Juankey,
+       .iconSprite = gMonIcon_Juankey,
+       .iconPalIndex = 2,
+       FOOTPRINT(Juankey)
+       .levelUpLearnset = sJuankeyLevelUpLearnset,
+       .teachableLearnset = sJuankeyTeachableLearnset,
+       .eggMoveLearnset = sEquuanEggMoveLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_EQUUAN}),
+    },
+
+        [SPECIES_EQUUAN] = 
+    {    
+       .baseHP        = 75,
+       .baseAttack    = 100,
+       .baseDefense   = 65,
+       .baseSpeed     = 130,
+       .baseSpAttack  = 80,
+       .baseSpDefense = 80,
+       .types = { TYPE_NORMAL, TYPE_NORMAL },
+       .catchRate = 65,
+       .expYield = 134,
+       .evYield_Speed  = 3,
+       .genderRatio = PERCENT_FEMALE(25),
+       .eggCycles = 20,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_NONE },
+       .abilities = { ABILITY_CUTE_CHARM, ABILITY_QUICK_FEET, ABILITY_DAZZLING, ABILITY_STRIKER },
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+       .speciesName = _("Equuan"),
+       .cryId = CRY_EQUUAN,
+       .natDexNum = NATIONAL_DEX_EQUUAN,
+       .categoryName = _("Steed"),
+       .height = 21,
+       .weight = 1570,
+       .description = COMPOUND_STRING(
+           "A Pokémon heavily sought after by women,\n"
+           "Equuan can be found in unusually random\n"
+           "places, like on the balconies of houses\n"  
+           "or in the middle of the ocean."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Equuan,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Equuan,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Equuan,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Equuan,
+       .shinyPalette = gMonShinyPalette_Equuan,
+       .iconSprite = gMonIcon_Equuan,
+       .iconPalIndex = 2,
+       FOOTPRINT(Equuan)
+       .levelUpLearnset = sEquuanLevelUpLearnset,
+       .teachableLearnset = sEquuanTeachableLearnset,
+       .eggMoveLearnset = sEquuanEggMoveLearnset,
+    },
         [SPECIES_SHROOMAG] =
     { 
        .baseHP        = 58,
@@ -2539,7 +2653,6 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggMoveLearnset = sFungnetEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 29, SPECIES_FUNGNET}),
     },
-
         [SPECIES_FUNGNET] = 
     {    
        .baseHP        = 90,

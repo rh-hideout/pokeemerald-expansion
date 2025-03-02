@@ -2632,6 +2632,8 @@ enum {
     CRY_DISPLACERK,
     CRY_FLORIBEL,
     CRY_MOGERIA,
+    CRY_JUANKEY,
+    CRY_EQUUAN,
     CRY_COUNT,
 };
 
