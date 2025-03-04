@@ -830,7 +830,7 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
-    u8 padding3:1;
+    u8 noTargetPresent:1;
     u8 usedEjectItem;
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;

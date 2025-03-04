@@ -597,7 +597,7 @@ extern const u8 BattleScript_EffectOHKO[];
 extern const u8 BattleScript_EffectSuperFang[];
 extern const u8 BattleScript_EffectFixedDamageArg[];
 extern const u8 BattleScript_EffectHealBlock[];
-extern const u8 BattleScript_EffectRecoilIfMiss[];
+extern const u8 BattleScript_RecoilIfMiss[];
 extern const u8 BattleScript_EffectMist[];
 extern const u8 BattleScript_EffectFocusEnergy[];
 extern const u8 BattleScript_EffectConfuse[];
