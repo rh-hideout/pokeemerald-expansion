@@ -686,19 +686,26 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
                                                      effectivenessMultiplier, weather,
                                                      aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
                                                      aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+            nonCritDmg = ApplyModifiersAfterDmgRoll(nonCritDmg, &damageCalcData, effectivenessMultiplier,
+                                                    aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                    aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
             damageCalcData.isCrit = TRUE;
             s32 critDmg = CalculateMoveDamageVars(&damageCalcData, fixedBasePower,
                                                   effectivenessMultiplier, weather,
                                                   aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
                                                   aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
 
-            u32 critOdds = GetCritHitOdds(critChanceIndex);
-            // With critOdds getting closer to 1, dmg gets closer to critDmg.
-            simDamage.expected = GetDamageByRollType((critDmg + nonCritDmg * (critOdds - 1)) / critOdds, rollType);
-            if (critOdds == 1)
-                simDamage.minimum = LowestRollDmg(critDmg);
-            else
-                simDamage.minimum = LowestRollDmg(nonCritDmg);
+            simDamage.expected = GetDamageByRollType(critDmg, rollType);
+            simDamage.expected = ApplyModifiersAfterDmgRoll(simDamage.expected, &damageCalcData, effectivenessMultiplier,
+                                                            aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                            aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+            simDamage.minimum = (GetCritHitOdds(critChanceIndex) == 1) ? LowestRollDmg(critDmg) : LowestRollDmg(nonCritDmg);
+            simDamage.minimum = ApplyModifiersAfterDmgRoll(simDamage.minimum, &damageCalcData, effectivenessMultiplier,
+                                                           aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                           aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
         }
         else if (critChanceIndex == -2) // Guaranteed critical
         {
@@ -710,6 +717,14 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
             simDamage.expected = GetDamageByRollType(critDmg, rollType);
             simDamage.minimum = LowestRollDmg(critDmg);
+
+            simDamage.expected = ApplyModifiersAfterDmgRoll(simDamage.expected, &damageCalcData, effectivenessMultiplier,
+                                                            aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
+                                                            aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+
+            simDamage.minimum = ApplyModifiersAfterDmgRoll(simDamage.minimum, &damageCalcData, effectivenessMultiplier,
+                                                           aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                           aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
         }
         else
         {
@@ -718,10 +733,21 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             {
                 for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
                 {
-                    nonCritDmg += CalculateMoveDamageVars(&damageCalcData, fixedBasePower,
-                                                          effectivenessMultiplier, weather,
-                                                          aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
-                                                          aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+                    s32 oneTripleKickHit = CalculateMoveDamageVars(&damageCalcData, fixedBasePower,
+                                                                   effectivenessMultiplier, weather,
+                                                                   aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                                   aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+                    simDamage.expected = GetDamageByRollType(oneTripleKickHit, rollType);
+                    simDamage.minimum = LowestRollDmg(oneTripleKickHit);
+
+                    nonCritDmg += ApplyModifiersAfterDmgRoll(simDamage.expected, &damageCalcData, effectivenessMultiplier,
+                                                             aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+                    nonCritDmg += ApplyModifiersAfterDmgRoll(simDamage.minimum, &damageCalcData, effectivenessMultiplier,
+                                                             aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
                 }
             }
             else
@@ -730,9 +756,18 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
                                                      effectivenessMultiplier, weather,
                                                      aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
                                                      aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+                simDamage.expected = GetDamageByRollType(nonCritDmg, rollType);
+                simDamage.minimum = LowestRollDmg(nonCritDmg);
+
+                simDamage.expected = ApplyModifiersAfterDmgRoll(simDamage.expected, &damageCalcData, effectivenessMultiplier,
+                                                                aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                                aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
+
+                simDamage.minimum = ApplyModifiersAfterDmgRoll(simDamage.minimum, &damageCalcData, effectivenessMultiplier,
+                                                               aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                               aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
             }
-            simDamage.expected = GetDamageByRollType(nonCritDmg, rollType);
-            simDamage.minimum = LowestRollDmg(nonCritDmg);
         }
 
         if (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)
