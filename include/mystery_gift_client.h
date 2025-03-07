@@ -66,7 +66,7 @@ struct MysteryGiftClientCmd
 {
     u32 instr;
     u32 parameter;
-};
+} ALIGNED(512);
 
 struct MysteryGiftClient
 {

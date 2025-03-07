@@ -1,6 +1,8 @@
 #include "gba/gba.h"
 #include "gba/flash_internal.h"
 
+#pragma GCC optimize ("no-toplevel-reorder")
+
 static u8 sTimerNum;
 static u16 sTimerCount;
 static vu16 *sTimerReg;

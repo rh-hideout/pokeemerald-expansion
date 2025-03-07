@@ -38,6 +38,8 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+
 #define MAX_TIME (10 * 60 * 60) // Timer can go up to 9:59:59
 
 #define TAG_CRUSHER_BASE  1

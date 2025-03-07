@@ -32,10 +32,11 @@ jobs:
       - name: ROM
         env:
           COMPARE: 0
-        run: make -j${nproc} -O all
+        run: make LTO=1 -j${nproc} -O all
 
       - name: Test
         env:
           TEST: 1
         run: |
+          make clean # Required to purge LTO
           make -j${nproc} check
