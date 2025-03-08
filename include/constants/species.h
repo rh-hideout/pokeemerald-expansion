@@ -1876,8 +1876,10 @@
 #define SPECIES_IWIK                                    1759
 #define SPECIES_HYBROTAMUS                              1760
 #define SPECIES_COMMUTANT                               1761
+#define SPECIES_PASCAL                                  1762
+#define SPECIES_KOROKAMI                                1763
 
-#define SPECIES_EGG (SPECIES_COMMUTANT + 1)
+#define SPECIES_EGG (SPECIES_KOROKAMI + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -23354,6 +23354,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/icon.4bpp");
    const u8 gMonFootprint_Parmiausan[] = INCBIN_U8("graphics/pokemon/parmiausan/footprint.1bpp");
 
+   const u32 gMonFrontPic_Pascal[] = INCBIN_U32("graphics/pokemon/pascal/front.4bpp.lz");
+   const u32 gMonBackPic_Pascal[] = INCBIN_U32("graphics/pokemon/pascal/back.4bpp.lz");
+   const u32 gMonPalette_Pascal[] = INCBIN_U32("graphics/pokemon/pascal/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Pascal[] = INCBIN_U32("graphics/pokemon/pascal/shiny.gbapal.lz");
+   const u8 gMonIcon_Pascal[] = INCBIN_U8("graphics/pokemon/pascal/icon.4bpp");
+   const u8 gMonFootprint_Pascal[] = INCBIN_U8("graphics/pokemon/pascal/footprint.1bpp");
+
+   const u32 gMonFrontPic_Korokami[] = INCBIN_U32("graphics/pokemon/korokami/front.4bpp.lz");
+   const u32 gMonBackPic_Korokami[] = INCBIN_U32("graphics/pokemon/korokami/back.4bpp.lz");
+   const u32 gMonPalette_Korokami[] = INCBIN_U32("graphics/pokemon/korokami/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Korokami[] = INCBIN_U32("graphics/pokemon/korokami/shiny.gbapal.lz");
+   const u8 gMonIcon_Korokami[] = INCBIN_U8("graphics/pokemon/korokami/icon.4bpp");
+   const u8 gMonFootprint_Korokami[] = INCBIN_U8("graphics/pokemon/korokami/footprint.1bpp");
+
    const u32 gMonFrontPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/front.4bpp.lz");
    const u32 gMonBackPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/back.4bpp.lz");
    const u32 gMonPalette_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/normal.gbapal.lz");

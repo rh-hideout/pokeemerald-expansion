@@ -6406,6 +6406,16 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sKorokamiEggMoveLearnset[] = {
+    MOVE_SMELLING_SALTS,
+    MOVE_BONE_RUSH,
+    MOVE_STRUGGLE_BUG, ////BORE BITE
+    MOVE_SPOOK_OUT,
+    MOVE_SHADOW_BONE,
+    MOVE_MIND_READER,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sGanglythonEggMoveLearnset[] = {
     MOVE_ANCIENT_POWER,
     MOVE_MOONBLAST,

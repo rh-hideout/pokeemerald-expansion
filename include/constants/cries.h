@@ -2638,6 +2638,8 @@ enum {
     CRY_IWIK,
     CRY_HYBROTAMUS,
     CRY_COMMUTANT,
+    CRY_PASCAL,
+    CRY_KOROKAMI,
     CRY_COUNT,
 };
 

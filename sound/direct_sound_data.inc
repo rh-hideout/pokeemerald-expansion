@@ -6998,6 +6998,14 @@ Cry_Hybrotamus::
 	.align 2	
 Cry_Commutant::
 	.incbin "sound/direct_sound_samples/cries/commutant.bin"
+
+	.align 2	
+Cry_Pascal::
+	.incbin "sound/direct_sound_samples/cries/pascal.bin"
+
+	.align 2	
+Cry_Korokami::
+	.incbin "sound/direct_sound_samples/cries/korokami.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -2847,6 +2847,10 @@ gCryTable::
 
 	cry Cry_Commutant
 
+	cry Cry_Pascal
+
+	cry Cry_Korokami
+
 .endif
 
 	.align 2
@@ -5699,4 +5703,7 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Commutant
 
+	cry_reverse Cry_Pascal
+
+	cry_reverse Cry_Korokami
 .endif
