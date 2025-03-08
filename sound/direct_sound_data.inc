@@ -6982,6 +6982,22 @@ Cry_Juankey::
 	.align 2	
 Cry_Equuan::
 	.incbin "sound/direct_sound_samples/cries/equuan.bin"
+
+	.align 2	
+Cry_Kiwi::
+	.incbin "sound/direct_sound_samples/cries/kiwi.bin"
+
+	.align 2	
+Cry_Iwik::
+	.incbin "sound/direct_sound_samples/cries/iwik.bin"
+
+	.align 2	
+Cry_Hybrotamus::
+	.incbin "sound/direct_sound_samples/cries/hybrotamus.bin"
+
+	.align 2	
+Cry_Commutant::
+	.incbin "sound/direct_sound_samples/cries/commutant.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

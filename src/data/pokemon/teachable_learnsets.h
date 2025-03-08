@@ -36254,6 +36254,14 @@ static const u16 sMogeriaTeachableLearnset[] = {
     MOVE_STRENGTH,
     MOVE_UNAVAILABLE,
 };
+static const u16 sKiwiTeachableLearnset[] = {
+    MOVE_PROTECT,
+    MOVE_UNAVAILABLE,
+};
+static const u16 sIwikTeachableLearnset[] = {
+    MOVE_PROTECT,
+    MOVE_UNAVAILABLE,
+};
 static const u16 sMogumoleTeachableLearnset[] = {
     MOVE_MEGA_KICK,
     MOVE_DOUBLE_KICK,

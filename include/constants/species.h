@@ -1742,7 +1742,7 @@
 #define SPECIES_GALVADEUX                               1632
 #define SPECIES_PYROTROIS                               1633
 #define SPECIES_SABLINI                                 1634
-#define SPECIES_DAWG                                    1635
+#define SPECIES_BAMBUYA                                 1635
 #define SPECIES_TEMAWRIA                                1636
 #define SPECIES_RETWINA                                 1637
 #define SPECIES_WINKHULU                                1638
@@ -1872,8 +1872,12 @@
 #define SPECIES_MOGERIA                                 1755
 #define SPECIES_JUANKEY                                 1756
 #define SPECIES_EQUUAN                                  1757
+#define SPECIES_KIWI                                    1758
+#define SPECIES_IWIK                                    1759
+#define SPECIES_HYBROTAMUS                              1760
+#define SPECIES_COMMUTANT                               1761
 
-#define SPECIES_EGG (SPECIES_EQUUAN + 1)
+#define SPECIES_EGG (SPECIES_COMMUTANT + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

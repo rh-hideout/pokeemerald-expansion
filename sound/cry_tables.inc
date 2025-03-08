@@ -2839,6 +2839,14 @@ gCryTable::
 
 	cry Cry_Equuan
 
+	cry Cry_Kiwi
+
+	cry Cry_Iwik
+
+	cry Cry_Hybrotamus
+
+	cry Cry_Commutant
+
 .endif
 
 	.align 2
@@ -5682,5 +5690,13 @@ gCryTable_Reverse::
 	cry_reverse Cry_Juankey
 
 	cry_reverse Cry_Equuan
+
+	cry_reverse Cry_Kiwi
+
+	cry_reverse Cry_Iwik
+
+	cry_reverse Cry_Hybrotamus
+
+	cry_reverse Cry_Commutant
 
 .endif

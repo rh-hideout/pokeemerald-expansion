@@ -2634,6 +2634,10 @@ enum {
     CRY_MOGERIA,
     CRY_JUANKEY,
     CRY_EQUUAN,
+    CRY_KIWI,
+    CRY_IWIK,
+    CRY_HYBROTAMUS,
+    CRY_COMMUTANT,
     CRY_COUNT,
 };
 

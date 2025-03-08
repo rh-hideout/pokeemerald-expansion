@@ -2913,8 +2913,8 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_PHANTASMA] =
     {
-        .name = _("Phantasma"),
-        .description = COMPOUND_STRING("Powers up Ghost type moves and Gives\n Ghost Immunities."),
+        .name = _("Phantasmagoric"),
+        .description = COMPOUND_STRING("Powers up Ghost type moves and \nGives Ghost Immunities."),
         .aiRating = 4,
     },
 

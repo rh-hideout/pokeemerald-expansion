@@ -21821,7 +21821,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "swapped for 5 turns."),
         .effect = EFFECT_INVERSE_ROOM,
         .power = 0,
-        .type = TYPE_PSYCHIC,
+        .type = TYPE_MYSTERY,
         .accuracy = 0,
         .pp = 10,
         .target = MOVE_TARGET_ALL_BATTLERS,
