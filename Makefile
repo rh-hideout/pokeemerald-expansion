@@ -19,6 +19,8 @@ ANALYZE      ?= 0
 UNUSED_ERROR ?= 0
 # Adds -Og and -g flags, which optimize the build for debugging and include debug info respectively
 DEBUG        ?= 0
+# Adds -flto flag, which can increase link time but result in a more efficient binary (especially in audio processing)
+LTO        ?= 0
 
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
@@ -145,6 +147,12 @@ endif
 ifeq ($(NOOPT),1)
 override CFLAGS := $(filter-out -O1 -Og -O2,$(CFLAGS))
 override CFLAGS += -O0
+endif
+
+# Enable LTO if set
+ifeq ($(LTO),1)
+override CFLAGS += -flto -ffat-lto-objects
+override LDFLAGS += -flto
 endif
 
 # Variable filled out in other make files
