@@ -1687,6 +1687,14 @@
 	.macro drumroll
 	callnative BS_Drumroll
 	.endm
+
+	.macro trydetonatorexplosion
+	callnative BS_TryDetonatorExplosion
+	.endm
+
+	.macro setatkhptoone
+	callnative BS_SetAtkHPToOne
+	.endm
 		
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req

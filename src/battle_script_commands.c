@@ -11482,6 +11482,30 @@ static void Cmd_setatkhptozero(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_TryDetonatorExplosion(void)
+{
+    NATIVE_ARGS();
+
+    if (gBattleControllerExecFlags)
+        return;
+
+    gBattleMoveDamage = gBattleMons[gBattlerAttacker].hp;
+    BtlController_EmitHealthBarUpdate(gBattlerAttacker, BUFFER_A, gBattleMons[gBattlerAttacker].hp - 1);
+    MarkBattlerForControllerExec(gBattlerAttacker);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_SetAtkHPToOne(void)
+{
+    NATIVE_ARGS();
+
+    gBattleMons[gBattlerAttacker].hp = 1;
+    BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].hp), &gBattleMons[gBattlerAttacker].hp);
+    MarkBattlerForControllerExec(gBattlerAttacker);
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 static void Cmd_jumpifnexttargetvalid(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
