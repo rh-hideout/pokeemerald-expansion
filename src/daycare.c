@@ -1002,6 +1002,7 @@ static const struct {
     { SPECIES_EQUUAN, ITEM_LIGHT_BALL , MOVE_VOLT_TACKLE },  
     { SPECIES_IWIK, ITEM_MIRACLE_SEED , MOVE_JUNGLE_HEALING },
     { SPECIES_KOROKAMI, ITEM_LUXURY_BALL , MOVE_SPIRIT_BREAK },
+    { SPECIES_FLARHEA, ITEM_CHOICE_BAND , MOVE_HIGH_JUMP_KICK },
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)

@@ -6364,6 +6364,16 @@ static const u16 sFungnetEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sFlarheaEggMoveLearnset[] = {
+    MOVE_RAPID_SPIN,
+    MOVE_BATON_PASS,
+    MOVE_SOFT_BOILED,
+    MOVE_FLAIL,
+    MOVE_VOLT_TACKLE,
+    MOVE_INCINERATE,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sTarantagonEggMoveLearnset[] = {
     MOVE_OBSTRUCT,
     MOVE_AMNESIA,

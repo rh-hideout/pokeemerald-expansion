@@ -2851,6 +2851,10 @@ gCryTable::
 
 	cry Cry_Korokami
 
+	cry Cry_Burnugget
+
+	cry Cry_Flarhea
+
 .endif
 
 	.align 2
@@ -5706,4 +5710,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Pascal
 
 	cry_reverse Cry_Korokami
+
+	cry_reverse Cry_Burnugget
+
+	cry_reverse Cry_Flarhea
 .endif

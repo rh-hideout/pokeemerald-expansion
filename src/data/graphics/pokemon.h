@@ -22064,6 +22064,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/icon.4bpp");
    const u8 gMonFootprint_Arachnote[] = INCBIN_U8("graphics/pokemon/arachnote/footprint.1bpp");
 
+   const u32 gMonFrontPic_Burnugget[] = INCBIN_U32("graphics/pokemon/burnugget/front.4bpp.lz");
+   const u32 gMonBackPic_Burnugget[] = INCBIN_U32("graphics/pokemon/burnugget/back.4bpp.lz");
+   const u32 gMonPalette_Burnugget[] = INCBIN_U32("graphics/pokemon/burnugget/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Burnugget[] = INCBIN_U32("graphics/pokemon/burnugget/shiny.gbapal.lz");
+   const u8 gMonIcon_Burnugget[] = INCBIN_U8("graphics/pokemon/burnugget/icon.4bpp");
+   const u8 gMonFootprint_Burnugget[] = INCBIN_U8("graphics/pokemon/burnugget/footprint.1bpp");
+
+   const u32 gMonFrontPic_Flarhea[] = INCBIN_U32("graphics/pokemon/flarhea/front.4bpp.lz");
+   const u32 gMonBackPic_Flarhea[] = INCBIN_U32("graphics/pokemon/flarhea/back.4bpp.lz");
+   const u32 gMonPalette_Flarhea[] = INCBIN_U32("graphics/pokemon/flarhea/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Flarhea[] = INCBIN_U32("graphics/pokemon/flarhea/shiny.gbapal.lz");
+   const u8 gMonIcon_Flarhea[] = INCBIN_U8("graphics/pokemon/flarhea/icon.4bpp");
+   const u8 gMonFootprint_Flarhea[] = INCBIN_U8("graphics/pokemon/flarhea/footprint.1bpp");
+
    const u32 gMonFrontPic_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/front.4bpp.lz");
    const u32 gMonBackPic_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/back.4bpp.lz");
    const u32 gMonPalette_Dirtybis[] = INCBIN_U32("graphics/pokemon/dirtybis/normal.gbapal.lz");

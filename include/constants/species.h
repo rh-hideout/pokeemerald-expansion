@@ -1878,8 +1878,10 @@
 #define SPECIES_COMMUTANT                               1761
 #define SPECIES_PASCAL                                  1762
 #define SPECIES_KOROKAMI                                1763
+#define SPECIES_BURNUGGET                               1764
+#define SPECIES_FLARHEA                                 1765
 
-#define SPECIES_EGG (SPECIES_KOROKAMI + 1)
+#define SPECIES_EGG (SPECIES_FLARHEA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

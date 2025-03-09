@@ -2640,6 +2640,8 @@ enum {
     CRY_COMMUTANT,
     CRY_PASCAL,
     CRY_KOROKAMI,
+    CRY_BURNUGGET,
+    CRY_FLARHEA,
     CRY_COUNT,
 };
 

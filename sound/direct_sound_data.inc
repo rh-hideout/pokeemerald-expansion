@@ -7006,6 +7006,14 @@ Cry_Pascal::
 	.align 2	
 Cry_Korokami::
 	.incbin "sound/direct_sound_samples/cries/korokami.bin"
+
+	.align 2	
+Cry_Burnugget::
+	.incbin "sound/direct_sound_samples/cries/burnugget.bin"
+
+	.align 2	
+Cry_Flarhea::
+	.incbin "sound/direct_sound_samples/cries/flarhea.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED
