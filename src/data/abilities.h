@@ -2918,4 +2918,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 4,
     },
 
+    [ABILITY_DETONATOR] =
+    {
+        .name = _("Detonator"),
+        .description = COMPOUND_STRING("Exploding moves leave the user \nhanging on."),
+        .aiRating = 6,
+    },
+
 };

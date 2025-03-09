@@ -3220,6 +3220,7 @@ BattleScript_EffectExplosion::
 	attackcanceler
 	attackstring
 	ppreduce
+	jumpifability BS_ATTACKER, ABILITY_DETONATOR, BattleScript_OneHPAttackerForExplosion
 	tryexplosion
 	setatkhptozero
 	waitstate
@@ -3230,6 +3231,15 @@ BattleScript_EffectExplosion::
 BattleScript_FaintAttackerForExplosion::
 	tryfaintmon BS_ATTACKER
 	return
+
+BattleScript_OneHPAttackerForExplosion::
+	call BattleScript_AbilityPopUpAttacker
+	trydetonatorexplosion
+	setatkhptoone
+	waitstate
+	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
+	goto BattleScript_HitFromCritCalc	
 
 BattleScript_MaxHp50Recoil::
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
