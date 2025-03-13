@@ -7014,6 +7014,10 @@ Cry_Burnugget::
 	.align 2	
 Cry_Flarhea::
 	.incbin "sound/direct_sound_samples/cries/flarhea.bin"
+
+	.align 2	
+Cry_Vinebomb::
+	.incbin "sound/direct_sound_samples/cries/vinebomb.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

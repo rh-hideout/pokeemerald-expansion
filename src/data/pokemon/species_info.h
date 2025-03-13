@@ -3609,6 +3609,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .levelUpLearnset = sCameloductorLevelUpLearnset,
     },
 
+        [SPECIES_VINEBOMB] =
+    { 
+       .baseHP        = 70,
+       .baseAttack    = 115,
+       .baseDefense   = 80,
+       .baseSpeed     = 75,
+       .baseSpAttack  = 115,
+       .baseSpDefense = 70,
+       .types = { TYPE_GRASS, TYPE_FIRE },
+       .catchRate = 64,
+       .expYield = 168,
+       .evYield_SpAttack  = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = 50,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_FIELD, EGG_GROUP_NONE },
+       .abilities = { ABILITY_DETONATOR, ABILITY_AFTERMATH, ABILITY_CHLOROPHYL, ABILITY_POWER_SPOT }, 
+       .bodyColor = BODY_COLOR_RED,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Cameloductor"),
+      .cryId = CRY_CHEESETAH,
+       .natDexNum = NATIONAL_DEX_CAMELODUCTOR,
+       .categoryName = _("Ignition"),
+       .height = 46,
+       .weight = 4082,
+       .description = COMPOUND_STRING(
+           "A convenient Pokémon that collects\n"
+           "natural electricity in the savannah.\n"
+           "Since its quick to anger, people\n"
+           "annoy them to collect their energy."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Cheesetah,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Cheesetah,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 4,
+       .backPic = gMonBackPic_Cheesetah,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Cheesetah,
+       .shinyPalette = gMonShinyPalette_Cheesetah,
+       .iconSprite = gMonIcon_Cheesetah,
+       .iconPalIndex = 0,
+       FOOTPRINT(Cheesetah)
+       .levelUpLearnset = sCameloductorLevelUpLearnset,
+    },
+
         [SPECIES_FLUBBSTER] =
     { 
        .baseHP        = 105,
@@ -11050,7 +11105,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Garble,
        .shinyPalette = gMonShinyPalette_Garble,
        .iconSprite = gMonIcon_Garble,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Garble)
        .levelUpLearnset = sGarbleLevelUpLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_GARGARRAMER}),
@@ -11106,7 +11161,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Gargarramer,
        .shinyPalette = gMonShinyPalette_Gargarramer,
        .iconSprite = gMonIcon_Gargarramer,
-       .iconPalIndex = 4,
+       .iconPalIndex = 2,
        FOOTPRINT(Gargarramer)
        .levelUpLearnset = sGargarramerLevelUpLearnset,
        .formSpeciesIdTable = sGargarramerFormSpeciesIdTable,

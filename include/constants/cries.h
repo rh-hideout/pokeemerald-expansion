@@ -2642,6 +2642,7 @@ enum {
     CRY_KOROKAMI,
     CRY_BURNUGGET,
     CRY_FLARHEA,
+    CRY_VINEBOMB,
     CRY_COUNT,
 };
 

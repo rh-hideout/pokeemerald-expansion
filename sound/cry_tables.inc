@@ -2855,6 +2855,8 @@ gCryTable::
 
 	cry Cry_Flarhea
 
+	cry Cry_Vinebomb
+
 .endif
 
 	.align 2
@@ -5714,4 +5716,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Burnugget
 
 	cry_reverse Cry_Flarhea
+
+	cry_reverse Cry_Vinebomb
 .endif
