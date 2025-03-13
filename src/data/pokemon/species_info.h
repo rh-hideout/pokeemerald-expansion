@@ -3755,10 +3755,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 12,
        .weight = 324,
        .description = COMPOUND_STRING(
-           "Vinebomb will use both their\n"
-           "whip-like fuses to strap itself to its\n"
-           "opponents before detonating, usually\n"
-           "leaving no survivors other than itself."),
+           "Vinebomb uses its whip-like fuse to\n"
+           "fend off weaker foes. If it cannot win it\n"
+           "will strap itself to its foe and detonate\n"
+           "knowing it can survive its own explosion."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -3872,8 +3872,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 7003,
        .description = COMPOUND_STRING(
            "This cursed Pokémon oozes a mysterious\n"
-           "substance from its blowhole.It bears a deep\n"
-           "grudge with its maker."),
+           "substance from its blowhole. It bears a\n"
+           "deep grudge with its maker."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
