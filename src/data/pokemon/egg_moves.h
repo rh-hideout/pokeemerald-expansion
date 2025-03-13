@@ -6384,6 +6384,16 @@ static const u16 sTarantagonEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVinebombEggMoveLearnset[] = {
+    MOVE_MUD_BOMB,
+    MOVE_FLARE_BLITZ,
+    MOVE_SPIKE_CANNON,
+    MOVE_BOOMBURST,
+    MOVE_MAGNET_BOMB,
+    MOVE_SEED_FLARE,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sBlubbastardEggMoveLearnset[] = {
     MOVE_AEROBLAST,
     MOVE_DESTINY_BOND,

@@ -2643,6 +2643,8 @@ enum {
     CRY_BURNUGGET,
     CRY_FLARHEA,
     CRY_VINEBOMB,
+    CRY_RAMBOOM,
+    CRY_VINEDUP,
     CRY_COUNT,
 };
 

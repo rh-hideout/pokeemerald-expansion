@@ -22377,6 +22377,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Cheesetah[] = INCBIN_U8("graphics/pokemon/cheesetah/icon.4bpp");
    const u8 gMonFootprint_Cheesetah[] = INCBIN_U8("graphics/pokemon/cheesetah/footprint.1bpp");
 
+   const u32 gMonFrontPic_Vinedup[] = INCBIN_U32("graphics/pokemon/vinedup/front.4bpp.lz");
+   const u32 gMonBackPic_Vinedup[] = INCBIN_U32("graphics/pokemon/vinedup/back.4bpp.lz");
+   const u32 gMonPalette_Vinedup[] = INCBIN_U32("graphics/pokemon/vinedup/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Vinedup[] = INCBIN_U32("graphics/pokemon/vinedup/shiny.gbapal.lz");
+   const u8 gMonIcon_Vinedup[] = INCBIN_U8("graphics/pokemon/vinedup/icon.4bpp");
+   const u8 gMonFootprint_Vinedup[] = INCBIN_U8("graphics/pokemon/vinedup/footprint.1bpp");
+
+   const u32 gMonFrontPic_Ramboom[] = INCBIN_U32("graphics/pokemon/ramboom/front.4bpp.lz");
+   const u32 gMonBackPic_Ramboom[] = INCBIN_U32("graphics/pokemon/ramboom/back.4bpp.lz");
+   const u32 gMonPalette_Ramboom[] = INCBIN_U32("graphics/pokemon/ramboom/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ramboom[] = INCBIN_U32("graphics/pokemon/ramboom/shiny.gbapal.lz");
+   const u8 gMonIcon_Ramboom[] = INCBIN_U8("graphics/pokemon/ramboom/icon.4bpp");
+   const u8 gMonFootprint_Ramboom[] = INCBIN_U8("graphics/pokemon/ramboom/footprint.1bpp");
+
    const u32 gMonFrontPic_Vinebomb[] = INCBIN_U32("graphics/pokemon/vinebomb/front.4bpp.lz");
    const u32 gMonBackPic_Vinebomb[] = INCBIN_U32("graphics/pokemon/vinebomb/back.4bpp.lz");
    const u32 gMonPalette_Vinebomb[] = INCBIN_U32("graphics/pokemon/vinebomb/normal.gbapal.lz");

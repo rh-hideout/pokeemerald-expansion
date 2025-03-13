@@ -7018,6 +7018,14 @@ Cry_Flarhea::
 	.align 2	
 Cry_Vinebomb::
 	.incbin "sound/direct_sound_samples/cries/vinebomb.bin"
+
+	.align 2	
+Cry_Ramboom::
+	.incbin "sound/direct_sound_samples/cries/ramboom.bin"
+
+	.align 2	
+Cry_Vinedup::
+	.incbin "sound/direct_sound_samples/cries/vinedup.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

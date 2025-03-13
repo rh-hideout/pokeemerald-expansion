@@ -1881,8 +1881,10 @@
 #define SPECIES_BURNUGGET                               1764
 #define SPECIES_FLARHEA                                 1765
 #define SPECIES_VINEBOMB                                1766
+#define SPECIES_RAMBOOM                                 1767
+#define SPECIES_VINEDUP                                 1768
 
-#define SPECIES_EGG (SPECIES_VINEBOMB + 1)
+#define SPECIES_EGG (SPECIES_VINEDUP + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
