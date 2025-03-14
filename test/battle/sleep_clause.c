@@ -1518,7 +1518,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Reflection moves (ie. Magic Coat) fail if slee
         MESSAGE("The opposing Zigzagoon fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("The opposing Zigzagoon bounced the Spore back!"); // Should be MESSAGE("Zigzagoon bounced the Spore back!"); Issue #5579 https://github.com/rh-hideout/pokeemerald-expansion/issues/5579
+        MESSAGE("Zigzagoon bounced the Spore back!");
         MESSAGE("Sleep Clause kept the opposing Zigzagoon awake!");
     }
 }
