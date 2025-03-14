@@ -560,6 +560,7 @@ extern const u8 BattleScript_RemoveGenericType[];
 // dynamax and max raids
 extern const u8 BattleScript_DynamaxBegins[];
 extern const u8 BattleScript_DynamaxEnds[];
+extern const u8 BattleScript_DynamaxEnds_Ret[];
 extern const u8 BattleScript_MoveBlockedByDynamax[];
 
 // Battle move scripts

@@ -3391,9 +3391,6 @@ const u8* FaintClearSetData(u32 battler)
         }
     }
 
-    // Clear Dynamax data
-    UndoDynamax(battler);
-
     return result;
 }
 
