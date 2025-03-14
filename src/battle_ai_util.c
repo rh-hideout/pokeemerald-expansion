@@ -24,6 +24,32 @@
 #include "constants/items.h"
 
 // Functions
+static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
+{
+    u32 numOfTargets = 0;
+    u32 moveTargetType = GetBattlerMoveTargetType(battlerAtk, move);
+
+    if (!IsSpreadMove(moveTargetType))
+        return FALSE;
+
+    for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
+    {
+        if (battlerAtk == battlerDef)
+            continue;
+
+        if (moveTargetType == MOVE_TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
+            continue;
+
+        if (IsBattlerAlive(battlerDef) && !IsSemiInvulnerable(battlerDef, move)) 
+            numOfTargets++; 
+    }
+
+    if (numOfTargets > 1)
+        return TRUE;
+
+    return FALSE;
+}
+
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
@@ -564,13 +590,13 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
     switch (effect)
     {
     case EFFECT_LEVEL_DAMAGE:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level * (abilityAtk == ABILITY_PARENTAL_BOND ? 2 : 1);
+        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level;
         break;
     case EFFECT_PSYWAVE:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level * (abilityAtk == ABILITY_PARENTAL_BOND ? 2 : 1);
+        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level;
         break;
     case EFFECT_FIXED_DAMAGE_ARG:
-        median = maximum = minimum = GetMoveFixedDamage(move) * (abilityAtk == ABILITY_PARENTAL_BOND ? 2 : 1);
+        median = maximum = minimum = GetMoveFixedDamage(move);
         break;
     case EFFECT_MULTI_HIT:
         if (move == MOVE_WATER_SHURIKEN && gBattleMons[damageCalcData->battlerAtk].species == SPECIES_GRENINJA_ASH)
@@ -604,9 +630,7 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
         median = maximum = minimum = max(0, gBattleMons[damageCalcData->battlerDef].hp - gBattleMons[damageCalcData->battlerAtk].hp);
         break;
     case EFFECT_SUPER_FANG:
-        median = maximum = minimum = (abilityAtk == ABILITY_PARENTAL_BOND
-            ? max(2, gBattleMons[damageCalcData->battlerDef].hp * 3 / 4)
-            : max(1, gBattleMons[damageCalcData->battlerDef].hp / 2));
+        median = maximum = minimum = max(1, gBattleMons[damageCalcData->battlerDef].hp / 2);
         break;
     case EFFECT_FINAL_GAMBIT:
         median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].hp;
@@ -635,6 +659,17 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
         minimum *= strikeCount;
         maximum *= strikeCount;
     }
+    
+    if (abilityAtk == ABILITY_PARENTAL_BOND 
+        && !strikeCount
+        && effect != EFFECT_TRIPLE_KICK 
+        && effect != EFFECT_MULTI_HIT
+        && !AI_IsDoubleSpreadMove(damageCalcData->battlerAtk, move))
+    {
+        median  += median  / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
+        minimum += minimum / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
+        maximum += maximum / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
+    }    
 
     if (median == 0)
         median = 1;
