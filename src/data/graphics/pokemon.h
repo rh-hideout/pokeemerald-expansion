@@ -22601,6 +22601,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Lunabbit[] = INCBIN_U8("graphics/pokemon/lunabbit/icon.4bpp");
    const u8 gMonFootprint_Lunabbit[] = INCBIN_U8("graphics/pokemon/lunabbit/footprint.1bpp");
 
+   const u32 gMonFrontPic_Helmata[] = INCBIN_U32("graphics/pokemon/helmata/front.4bpp.lz");
+   const u32 gMonBackPic_Helmata[] = INCBIN_U32("graphics/pokemon/helmata/back.4bpp.lz");
+   const u32 gMonPalette_Helmata[] = INCBIN_U32("graphics/pokemon/helmata/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Helmata[] = INCBIN_U32("graphics/pokemon/helmata/shiny.gbapal.lz");
+   const u8 gMonIcon_Helmata[] = INCBIN_U8("graphics/pokemon/helmata/icon.4bpp");
+   const u8 gMonFootprint_Helmata[] = INCBIN_U8("graphics/pokemon/helmata/footprint.1bpp");
+
+   const u32 gMonFrontPic_Punkuyu[] = INCBIN_U32("graphics/pokemon/punkuyu/front.4bpp.lz");
+   const u32 gMonBackPic_Punkuyu[] = INCBIN_U32("graphics/pokemon/punkuyu/back.4bpp.lz");
+   const u32 gMonPalette_Punkuyu[] = INCBIN_U32("graphics/pokemon/punkuyu/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Punkuyu[] = INCBIN_U32("graphics/pokemon/punkuyu/shiny.gbapal.lz");
+   const u8 gMonIcon_Punkuyu[] = INCBIN_U8("graphics/pokemon/punkuyu/icon.4bpp");
+   const u8 gMonFootprint_Punkuyu[] = INCBIN_U8("graphics/pokemon/punkuyu/footprint.1bpp");
+
+   const u32 gMonFrontPic_Chamelee[] = INCBIN_U32("graphics/pokemon/chamelee/front.4bpp.lz");
+   const u32 gMonBackPic_Chamelee[] = INCBIN_U32("graphics/pokemon/chamelee/back.4bpp.lz");
+   const u32 gMonPalette_Chamelee[] = INCBIN_U32("graphics/pokemon/chamelee/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Chamelee[] = INCBIN_U32("graphics/pokemon/chamelee/shiny.gbapal.lz");
+   const u8 gMonIcon_Chamelee[] = INCBIN_U8("graphics/pokemon/chamelee/icon.4bpp");
+   const u8 gMonFootprint_Chamelee[] = INCBIN_U8("graphics/pokemon/chamelee/footprint.1bpp");
+
    const u32 gMonFrontPic_Camerex[] = INCBIN_U32("graphics/pokemon/camerex/front.4bpp.lz");
    const u32 gMonBackPic_Camerex[] = INCBIN_U32("graphics/pokemon/camerex/back.4bpp.lz");
    const u32 gMonPalette_Camerex[] = INCBIN_U32("graphics/pokemon/camerex/normal.gbapal.lz");

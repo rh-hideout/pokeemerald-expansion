@@ -1883,8 +1883,11 @@
 #define SPECIES_VINEBOMB                                1766
 #define SPECIES_RAMBOOM                                 1767
 #define SPECIES_VINEDUP                                 1768
+#define SPECIES_HELMATA                                 1769
+#define SPECIES_PUNKUYU                                 1770
+#define SPECIES_CHAMELEE                                1771
 
-#define SPECIES_EGG (SPECIES_VINEDUP + 1)
+#define SPECIES_EGG (SPECIES_CHAMELEE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -2861,6 +2861,12 @@ gCryTable::
 
 	cry Cry_Vinedup
 
+	cry Cry_Helmata
+
+	cry Cry_Punkuyu
+
+	cry Cry_Chamelee
+
 .endif
 
 	.align 2
@@ -5726,4 +5732,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ramboom
 
 	cry_reverse Cry_Vinedup
+
+	cry_reverse Cry_Helmata
+
+	cry_reverse Cry_Punkuyu
+
+	cry_reverse Cry_Chamelee
 .endif

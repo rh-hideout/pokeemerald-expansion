@@ -7026,6 +7026,18 @@ Cry_Ramboom::
 	.align 2	
 Cry_Vinedup::
 	.incbin "sound/direct_sound_samples/cries/vinedup.bin"
+
+	.align 2	
+Cry_Helmata::
+	.incbin "sound/direct_sound_samples/cries/helmata.bin"
+
+	.align 2	
+Cry_Punkuyu::
+	.incbin "sound/direct_sound_samples/cries/punkuyu.bin"
+
+	.align 2	
+Cry_Chamelee::
+	.incbin "sound/direct_sound_samples/cries/chamelee.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

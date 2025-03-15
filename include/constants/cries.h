@@ -2645,6 +2645,9 @@ enum {
     CRY_VINEBOMB,
     CRY_RAMBOOM,
     CRY_VINEDUP,
+    CRY_HELMATA,
+    CRY_PUNKUYU,
+    CRY_CHAMELEE,
     CRY_COUNT,
 };
 
