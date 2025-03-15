@@ -12,6 +12,7 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "dexnav.h"
 #include "event_data.h"
 #include "event_object_movement.h"
