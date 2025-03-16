@@ -2867,6 +2867,10 @@ gCryTable::
 
 	cry Cry_Chamelee
 
+	cry Cry_Bubbasaur
+
+	cry Cry_Bungaloon
+
 .endif
 
 	.align 2
@@ -5738,4 +5742,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Punkuyu
 
 	cry_reverse Cry_Chamelee
+
+	cry_reverse Cry_Bubbasaur
+
+	cry_reverse Cry_Bungaloon
 .endif

@@ -1886,8 +1886,10 @@
 #define SPECIES_HELMATA                                 1769
 #define SPECIES_PUNKUYU                                 1770
 #define SPECIES_CHAMELEE                                1771
+#define SPECIES_BUBBASAUR                               1772
+#define SPECIES_BUNGALOON                               1773
 
-#define SPECIES_EGG (SPECIES_CHAMELEE + 1)
+#define SPECIES_EGG (SPECIES_BUNGALOON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

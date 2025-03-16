@@ -1005,6 +1005,7 @@ static const struct {
     { SPECIES_FLARHEA, ITEM_CHOICE_BAND , MOVE_HIGH_JUMP_KICK },
     { SPECIES_VINEBOMB, ITEM_FLAME_ORB , MOVE_BURN_UP },
     { SPECIES_CHAMELEE, ITEM_EJECT_BUTTON , MOVE_PUNCH_OUT },
+    { SPECIES_BUNGALOON, ITEM_LUCKY_EGG , MOVE_BELLY_DRUM },
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)

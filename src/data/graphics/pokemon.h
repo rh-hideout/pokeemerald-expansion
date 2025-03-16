@@ -22552,6 +22552,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Fractyvern[] = INCBIN_U8("graphics/pokemon/fractyvern/icon.4bpp");
    const u8 gMonFootprint_Fractyvern[] = INCBIN_U8("graphics/pokemon/fractyvern/footprint.1bpp");
 
+   const u32 gMonFrontPic_Bubbasaur[] = INCBIN_U32("graphics/pokemon/bubbasaur/front.4bpp.lz");
+   const u32 gMonBackPic_Bubbasaur[] = INCBIN_U32("graphics/pokemon/bubbasaur/back.4bpp.lz");
+   const u32 gMonPalette_Bubbasaur[] = INCBIN_U32("graphics/pokemon/bubbasaur/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Bubbasaur[] = INCBIN_U32("graphics/pokemon/bubbasaur/shiny.gbapal.lz");
+   const u8 gMonIcon_Bubbasaur[] = INCBIN_U8("graphics/pokemon/bubbasaur/icon.4bpp");
+   const u8 gMonFootprint_Bubbasaur[] = INCBIN_U8("graphics/pokemon/bubbasaur/footprint.1bpp");
+   
+   const u32 gMonFrontPic_Bungaloon[] = INCBIN_U32("graphics/pokemon/bungaloon/front.4bpp.lz");
+   const u32 gMonBackPic_Bungaloon[] = INCBIN_U32("graphics/pokemon/bungaloon/back.4bpp.lz");
+   const u32 gMonPalette_Bungaloon[] = INCBIN_U32("graphics/pokemon/bungaloon/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Bungaloon[] = INCBIN_U32("graphics/pokemon/bungaloon/shiny.gbapal.lz");
+   const u8 gMonIcon_Bungaloon[] = INCBIN_U8("graphics/pokemon/bungaloon/icon.4bpp");
+   const u8 gMonFootprint_Bungaloon[] = INCBIN_U8("graphics/pokemon/bungaloon/footprint.1bpp");
+
    const u32 gMonFrontPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/front.4bpp.lz");
    const u32 gMonBackPic_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/back.4bpp.lz");
    const u32 gMonPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/normal.gbapal.lz");

@@ -7038,6 +7038,14 @@ Cry_Punkuyu::
 	.align 2	
 Cry_Chamelee::
 	.incbin "sound/direct_sound_samples/cries/chamelee.bin"
+
+	.align 2	
+Cry_Bubbasaur::
+	.incbin "sound/direct_sound_samples/cries/bubbasaur.bin"
+
+	.align 2	
+Cry_Bungaloon::
+	.incbin "sound/direct_sound_samples/cries/bungaloon.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

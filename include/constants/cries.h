@@ -2648,6 +2648,8 @@ enum {
     CRY_HELMATA,
     CRY_PUNKUYU,
     CRY_CHAMELEE,
+    CRY_BUBBASAUR,
+    CRY_BUNGALOON,
     CRY_COUNT,
 };
 
