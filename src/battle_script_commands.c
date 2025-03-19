@@ -14564,9 +14564,16 @@ static void Cmd_trymemento(void)
     {
         // Success, drop user's HP bar to 0
         gBattleMoveDamage = gBattleMons[gBattlerAttacker].hp;
-        BtlController_EmitHealthBarUpdate(gBattlerAttacker, BUFFER_A, INSTANT_HP_BAR_DROP);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        if (gBattleMons[gBattlerAttacker].ability == ABILITY_DETONATOR)
+        {
+            BtlController_EmitHealthBarUpdate(gBattlerAttacker, BUFFER_A, gBattleMons[gBattlerAttacker].hp - 1);
+            MarkBattlerForControllerExec(gBattlerAttacker);
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        else
+            BtlController_EmitHealthBarUpdate(gBattlerAttacker, BUFFER_A, INSTANT_HP_BAR_DROP);
+            MarkBattlerForControllerExec(gBattlerAttacker);
+            gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

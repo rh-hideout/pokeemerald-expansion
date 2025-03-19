@@ -2920,7 +2920,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_DETONATOR] =
     {
-        .name = _("Detonator"),
+        .name = _("Pressure Fuzed"),
         .description = COMPOUND_STRING("Exploding moves leave the user \nhanging on."),
         .aiRating = 6,
     },
