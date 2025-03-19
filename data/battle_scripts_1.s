@@ -5311,8 +5311,10 @@ BattleScript_EffectMemento::
 	jumpifbyte CMP_EQUAL, cMISS_TYPE, B_MSG_PROTECTED, BattleScript_MementoTargetProtect
 	attackstring
 	ppreduce
+	jumpifability BS_ATTACKER, ABILITY_DETONATOR, BattleScript_MementoDetonatorAbilityPopup
 	trymemento BattleScript_ButItFailed
 	setatkhptozero
+BattleScript_EffectMementoDetonatorChecked:
 	attackanimation
 	waitanimation
 	jumpifsubstituteblocks BattleScript_EffectMementoPrintNoEffect
@@ -5334,6 +5336,7 @@ BattleScript_EffectMementoTrySpAtk:
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectMementoTryFaint:
+	jumpifability BS_ATTACKER, ABILITY_DETONATOR, BattleScript_MoveEnd
 	tryfaintmon BS_ATTACKER
 	goto BattleScript_MoveEnd
 BattleScript_EffectMementoPrintNoEffect:
@@ -5351,8 +5354,17 @@ BattleScript_MementoTargetProtectEnd:
 	effectivenesssound
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
+	jumpifability BS_ATTACKER, ABILITY_DETONATOR, BattleScript_MoveEnd
 	tryfaintmon BS_ATTACKER
 	goto BattleScript_MoveEnd
+BattleScript_MementoSetHPToOne:
+	setatkhptoone
+	goto BattleScript_MoveEnd
+BattleScript_MementoDetonatorAbilityPopup:
+	call BattleScript_AbilityPopUpAttacker
+	trymemento BattleScript_ButItFailed
+	setatkhptoone
+	goto BattleScript_EffectMementoDetonatorChecked
 
 BattleScript_EffectFocusPunch::
 	attackcanceler
