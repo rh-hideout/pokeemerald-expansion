@@ -1,7 +1,10 @@
 #ifndef GUARD_WILD_ENCOUNTER_H
 #define GUARD_WILD_ENCOUNTER_H
 
+#include "rtc.h"
 #include "constants/wild_encounter.h"
+
+#define HEADER_NONE 0xFFFF
 
 struct WildPokemon
 {
@@ -16,15 +19,28 @@ struct WildPokemonInfo
     const struct WildPokemon *wildPokemon;
 };
 
+struct WildEncounterTypes
+{
+    const struct WildPokemonInfo *landMonsInfo;
+    const struct WildPokemonInfo *waterMonsInfo;
+    const struct WildPokemonInfo *rockSmashMonsInfo;
+    const struct WildPokemonInfo *fishingMonsInfo;
+    const struct WildPokemonInfo *hiddenMonsInfo;
+};
+
 struct WildPokemonHeader
 {
     u8 mapGroup;
     u8 mapNum;
-    const struct WildPokemonInfo *landMonsInfo;
-    const struct WildPokemonInfo *waterMonsInfo;
-    const struct WildPokemonInfo *rockSmashMonsInfo;
-    const struct WildPokemonInfo *hiddenMonsInfo;
-    const struct WildPokemonInfo *fishingMonsInfo;
+    const struct WildEncounterTypes encounterTypes[TIME_NIGHT + 1];
+};
+
+enum WildPokemonArea {
+    WILD_AREA_LAND,
+    WILD_AREA_WATER,
+    WILD_AREA_ROCKS,
+    WILD_AREA_FISHING,
+    WILD_AREA_HIDDEN
 };
 
 extern const struct WildPokemonHeader gWildMonHeaders[];
@@ -50,5 +66,6 @@ u8 ChooseWildMonIndex_Land(void);
 u8 ChooseWildMonIndex_WaterRock(void);
 u8 ChooseHiddenMonIndex(void);
 bool32 MapHasNoEncounterData(void);
+u8 GetTimeOfDayForEncounters(u32 headerId, u8 area);
 
 #endif // GUARD_WILD_ENCOUNTER_H
