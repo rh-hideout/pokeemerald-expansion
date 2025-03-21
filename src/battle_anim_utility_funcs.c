@@ -722,6 +722,10 @@ void AnimTask_BlendNonAttackerPalettes(u8 taskId)
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
 }
 
+// gBattleAnimArgs[0] - initial x
+// gBattleAnimArgs[1] - initial y
+// gBattleAnimArgs[2] - negative?
+// gBattleAnimArgs[3] - sentinel value to compare to
 void AnimTask_StartSlidingBg(u8 taskId)
 {
     u8 newTaskId;
