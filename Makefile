@@ -19,6 +19,8 @@ ANALYZE      ?= 0
 UNUSED_ERROR ?= 0
 # Adds -Og and -g flags, which optimize the build for debugging and include debug info respectively
 DEBUG        ?= 0
+# Adds -flto flag, which can increase link time but result in a more efficient binary (especially in audio processing)
+LTO        ?= 0
 
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
@@ -145,6 +147,12 @@ endif
 ifeq ($(NOOPT),1)
 override CFLAGS := $(filter-out -O1 -Og -O2,$(CFLAGS))
 override CFLAGS += -O0
+endif
+
+# Enable LTO if set
+ifeq ($(LTO),1)
+CFLAGS += -flto -ffat-lto-objects
+LDFLAGS += -flto
 endif
 
 # Variable filled out in other make files
@@ -443,7 +451,7 @@ libagbsyscall:
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
 # Elf from object files
-LDFLAGS = -Map ../../$(MAP)
+LDFLAGS += -Map ../../$(MAP)
 $(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
 	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ $(OBJS_REL) $(LIB) | cat
 	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ <objs> <libs> | cat"
