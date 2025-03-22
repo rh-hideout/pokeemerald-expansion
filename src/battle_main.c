@@ -24,6 +24,7 @@
 #include "dma3.h"
 #include "event_data.h"
 #include "evolution_scene.h"
+#include "frontier_util.h"
 #include "field_weather.h"
 #include "graphics.h"
 #include "gpu_regs.h"

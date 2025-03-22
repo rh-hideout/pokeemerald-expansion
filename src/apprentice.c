@@ -5,6 +5,7 @@
 #include "data.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "frontier_util.h"
 #include "field_player_avatar.h"
 #include "international_string_util.h"
 #include "item.h"
