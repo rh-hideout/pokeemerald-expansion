@@ -10100,3 +10100,15 @@ BattleScript_SleepClausePreventsEnd::
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+BattleScript_QuestionForfeitBattle::
+	printselectionstring STRINGID_QUESTIONFORFEITBATTLE
+	forfeityesnobox BS_ATTACKER
+	endselectionscript
+
+BattleScript_ForfeitBattleGaveMoney::
+	getmoneyreward
+	printstring STRINGID_FORFEITBATTLEGAVEMONEY
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
