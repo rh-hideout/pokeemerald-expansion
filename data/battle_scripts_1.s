@@ -7557,35 +7557,37 @@ BattleScript_MoodyEnd:
 	end3
 
 BattleScript_EmergencyExit::
+	.if B_ABILITY_POP_UP == TRUE
 	pause 5
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_LONG
-BattleScript_EmergencyExitNoPopUp::
-	playanimation BS_TARGET, B_ANIM_SLIDE_OFFSCREEN
+	.endif
+	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
-	openpartyscreen BS_TARGET, BattleScript_EmergencyExitRet
-	switchoutabilities BS_TARGET
+	openpartyscreen BS_SCRIPTING, BattleScript_EmergencyExitRet
+	switchoutabilities BS_SCRIPTING
 	waitstate
-	switchhandleorder BS_TARGET, 2
+	switchhandleorder BS_SCRIPTING, 2
 	returntoball BS_TARGET, FALSE
-	getswitchedmondata BS_TARGET
-	switchindataupdate BS_TARGET
-	hpthresholds BS_TARGET
+	getswitchedmondata BS_SCRIPTING
+	switchindataupdate BS_SCRIPTING
+	hpthresholds BS_SCRIPTING
 	printstring STRINGID_SWITCHINMON
-	switchinanim BS_TARGET, FALSE, TRUE
+	switchinanim BS_SCRIPTING, FALSE, TRUE
 	waitstate
-	switchineffects BS_TARGET
+	switchineffects BS_SCRIPTING
 BattleScript_EmergencyExitRet:
 	return
 
 BattleScript_EmergencyExitWild::
+	.if B_ABILITY_POP_UP == TRUE
 	pause 5
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_LONG
-BattleScript_EmergencyExitWildNoPopUp::
-	playanimation BS_TARGET, B_ANIM_SLIDE_OFFSCREEN
+	.endif
+	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
-	setoutcomeonteleport BS_TARGET
+	setoutcomeonteleport BS_SCRIPTING
 	finishaction
 	return
 

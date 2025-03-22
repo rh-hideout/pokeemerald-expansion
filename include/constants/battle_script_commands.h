@@ -271,6 +271,7 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_TARGET,
     MOVEEND_MOVE_EFFECTS2,
     MOVEEND_ITEM_EFFECTS_ALL,
+    MOVEEND_SYMBIOSIS,
     MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
     MOVEEND_NUM_HITS,
@@ -285,15 +286,16 @@ enum MoveEndEffects
     MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Eject Pack
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
-    MOVEEND_EJECT_ITEMS,
-    MOVEEND_WHITE_HERB,
+    MOVEEND_EJECT_BUTTON,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
-    MOVEEND_CHANGED_ITEMS,
-    MOVEEND_PICKPOCKET,
     MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_SYMBIOSIS,
+    MOVEEND_EJECT_PACK,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
+    MOVEEND_PICKPOCKET,
+    MOVEEND_WHITE_HERB,
+    MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
     MOVEEND_SET_EVOLUTION_TRACKER,
     MOVEEND_CLEAR_BITS,
