@@ -62,7 +62,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_MoneyLabel =
     .tag = MONEY_LABEL_TAG,
 };
 
-static const struct CompressedSpritePalette sSpritePalette_MoneyLabel =
+static const struct SpritePalette sSpritePalette_MoneyLabel =
 {
     .data = gShopMenu_Pal,
     .tag = MONEY_LABEL_TAG

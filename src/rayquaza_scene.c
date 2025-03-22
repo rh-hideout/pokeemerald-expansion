@@ -559,7 +559,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_DuoFight_Groudon =
     gRaySceneDuoFight_Groudon_Gfx, 0x3000, TAG_DUOFIGHT_GROUDON
 };
 
-static const struct CompressedSpritePalette sSpritePal_DuoFight_Groudon =
+static const struct SpritePalette sSpritePal_DuoFight_Groudon =
 {
     gRaySceneDuoFight_Groudon_Pal, TAG_DUOFIGHT_GROUDON
 };
@@ -710,7 +710,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_DuoFight_Kyogre =
     gRaySceneDuoFight_Kyogre_Gfx, 0xF00, TAG_DUOFIGHT_KYOGRE
 };
 
-static const struct CompressedSpritePalette sSpritePal_DuoFight_Kyogre =
+static const struct SpritePalette sSpritePal_DuoFight_Kyogre =
 {
     gRaySceneDuoFight_Kyogre_Pal, TAG_DUOFIGHT_KYOGRE
 };
@@ -832,7 +832,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_TakesFlight_Smoke =
     gRaySceneTakesFlight_Smoke_Gfx, 0x100, TAG_FLIGHT_SMOKE
 };
 
-static const struct CompressedSpritePalette sSpritePal_TakesFlight_Smoke =
+static const struct SpritePalette sSpritePal_TakesFlight_Smoke =
 {
     gRaySceneTakesFlight_Smoke_Pal, TAG_FLIGHT_SMOKE
 };
@@ -936,7 +936,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_Descends_RayquazaTail =
     gRaySceneDescends_RayquazaTail_Gfx, 0x200, TAG_DESCENDS_RAYQUAZA_TAIL
 };
 
-static const struct CompressedSpritePalette sSpritePal_Descends_Rayquaza =
+static const struct SpritePalette sSpritePal_Descends_Rayquaza =
 {
     gRaySceneTakesFlight_Rayquaza_Pal, TAG_DESCENDS_RAYQUAZA // "Takes flight" palette re-used here
 };
@@ -1170,22 +1170,22 @@ static const struct CompressedSpriteSheet sSpriteSheet_ChasesAway_KyogreSplash =
     gRaySceneChasesAway_KyogreSplash_Gfx, 0x300, TAG_CHASE_SPLASH
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Groudon =
+static const struct SpritePalette sSpritePal_ChasesAway_Groudon =
 {
     gRaySceneChasesAway_Groudon_Pal, TAG_CHASE_GROUDON
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Kyogre =
+static const struct SpritePalette sSpritePal_ChasesAway_Kyogre =
 {
     gRaySceneChasesAway_Kyogre_Pal, TAG_CHASE_KYOGRE
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Rayquaza =
+static const struct SpritePalette sSpritePal_ChasesAway_Rayquaza =
 {
     gRaySceneChasesAway_Rayquaza_Pal, TAG_CHASE_RAYQUAZA
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_KyogreSplash =
+static const struct SpritePalette sSpritePal_ChasesAway_KyogreSplash =
 {
     gRaySceneChasesAway_KyogreSplash_Pal, TAG_CHASE_SPLASH
 };

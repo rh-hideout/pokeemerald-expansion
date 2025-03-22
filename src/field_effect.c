@@ -903,11 +903,11 @@ u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buf
     // Allocate memory for buffer
     if (buffer == NULL)
     {
-        buffer = Alloc(TRAINER_PIC_SIZE + PLTT_SIZEOF(16));
+        buffer = Alloc(TRAINER_PIC_SIZE);
         alloced = TRUE;
     }
 
-    LoadCompressedSpritePaletteOverrideBuffer(&gTrainerSprites[trainerSpriteID].palette, buffer);
+    LoadCompressedSpritePalette(&gTrainerSprites[trainerSpriteID].palette);
     LoadCompressedSpriteSheetOverrideBuffer(&gTrainerSprites[trainerSpriteID].frontPic, buffer);
     if (alloced)
         Free(buffer);

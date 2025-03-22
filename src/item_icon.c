@@ -96,7 +96,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
     {
         u8 spriteId;
         struct SpriteSheet spriteSheet;
-        struct CompressedSpritePalette spritePalette;
+        struct SpritePalette spritePalette;
         struct SpriteTemplate *spriteTemplate;
 
         LZDecompressWram(GetItemIconPic(itemId), gItemIconDecompressionBuffer);
@@ -133,7 +133,7 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
     {
         u8 spriteId;
         struct SpriteSheet spriteSheet;
-        struct CompressedSpritePalette spritePalette;
+        struct SpritePalette spritePalette;
         struct SpriteTemplate *spriteTemplate;
 
         LZDecompressWram(GetItemIconPic(itemId), gItemIconDecompressionBuffer);

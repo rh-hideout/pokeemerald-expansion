@@ -178,13 +178,13 @@ const union AnimCmd *const sSpriteAnimTable_TypeIcons[] =
     [TYPE_STELLAR] =    sSpriteAnim_TypeIcon_Mystery,
 };
 
-const struct CompressedSpritePalette sTypeIconPal1 =
+const struct SpritePalette sTypeIconPal1 =
 {
     .data = gBattleIcons_Pal1,
     .tag = TYPE_ICON_TAG
 };
 
-const struct CompressedSpritePalette sTypeIconPal2 =
+const struct SpritePalette sTypeIconPal2 =
 {
     .data = gBattleIcons_Pal2,
     .tag = TYPE_ICON_TAG_2

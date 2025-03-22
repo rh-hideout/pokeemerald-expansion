@@ -19,7 +19,7 @@ static const struct CompressedSpriteSheet sSmokescreenImpactSpriteSheet =
     .data = gSmokescreenImpactTiles, .size = 0x180, .tag = TAG_SMOKESCREEN
 };
 
-static const struct CompressedSpritePalette sSmokescreenImpactSpritePalette =
+static const struct SpritePalette sSmokescreenImpactSpritePalette =
 {
     .data = gSmokescreenImpactPalette, .tag = TAG_SMOKESCREEN
 };

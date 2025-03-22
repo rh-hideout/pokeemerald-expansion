@@ -284,7 +284,7 @@ const struct CompressedSpriteSheet gPokeblockCase_SpriteSheet =
     gMenuPokeblockDevice_Gfx, 0x800, TAG_POKEBLOCK_CASE
 };
 
-const struct CompressedSpritePalette gPokeblockCase_SpritePal =
+const struct SpritePalette gPokeblockCase_SpritePal =
 {
     gMenuPokeblockDevice_Pal, TAG_POKEBLOCK_CASE
 };

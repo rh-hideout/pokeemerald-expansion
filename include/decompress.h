@@ -15,10 +15,9 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 u32 LoadCompressedSpriteSheetOverrideBuffer(const struct CompressedSpriteSheet *src, void *buffer);
 bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src);
 
-u32 LoadCompressedSpritePalette(const struct CompressedSpritePalette *src);
-u32 LoadCompressedSpritePaletteWithTag(const u32 *pal, u16 tag);
-void LoadCompressedSpritePaletteOverrideBuffer(const struct CompressedSpritePalette *src, void *buffer);
-bool8 LoadCompressedSpritePaletteUsingHeap(const struct CompressedSpritePalette *src);
+u32 LoadCompressedSpritePalette(const struct SpritePalette *src);
+u32 LoadCompressedSpritePaletteWithTag(const u16 *pal, u16 tag);
+bool8 LoadCompressedSpritePaletteUsingHeap(const struct SpritePalette *src);
 
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer);
 
