@@ -134,7 +134,7 @@ struct DexNavGUI
 EWRAM_DATA static struct DexNavSearch *sDexNavSearchDataPtr = NULL;
 EWRAM_DATA static struct DexNavGUI *sDexNavUiDataPtr = NULL;
 EWRAM_DATA static u8 *sBg1TilemapBuffer = NULL;
-EWRAM_DATA bool8 gDexNavBattle = FALSE;
+EWRAM_DATA u16 gDexNavSpecies = SPECIES_NONE;
 
 //// Function Declarations
 //GUI
@@ -807,11 +807,11 @@ static void LoadSearchIconData(void)
     LoadCompressedSpriteSheetUsingHeap(&sHiddenMonIconSpriteSheet);
 }
 
-static u8 GetSearchLevel(u16 dexNum)
+static u8 GetSearchLevel(u16 species)
 {
     u8 searchLevel;
 #if USE_DEXNAV_SEARCH_LEVELS == TRUE
-    searchLevel = gSaveBlock3Ptr->dexNavSearchLevels[dexNum];
+    searchLevel = gSaveBlock3Ptr->dexNavSearchLevels[species];
 #else
     searchLevel = 0;
 #endif
@@ -829,7 +829,7 @@ static void Task_SetUpDexNavSearch(u8 taskId)
     struct Task *task = &gTasks[taskId];
 
     u16 species = sDexNavSearchDataPtr->species;
-    u8 searchLevel = GetSearchLevel(SpeciesToNationalPokedexNum(species));
+    u8 searchLevel = GetSearchLevel(species);
 
     // init sprites
     sDexNavSearchDataPtr->iconSpriteId = MAX_SPRITES;
@@ -1110,7 +1110,7 @@ static void Task_DexNavSearch(u8 taskId)
 
     if (sDexNavSearchDataPtr->proximity < 1)
     {
-        gDexNavBattle = TRUE;
+        gDexNavSpecies = sDexNavSearchDataPtr->species;
         CreateDexNavWildMon(sDexNavSearchDataPtr->species, sDexNavSearchDataPtr->potential, sDexNavSearchDataPtr->monLevel,
                             sDexNavSearchDataPtr->abilityNum, sDexNavSearchDataPtr->heldItem, sDexNavSearchDataPtr->moves);
 
@@ -2143,7 +2143,7 @@ static void PrintCurrentSpeciesInfo(void)
     }
     else
     {
-        ConvertIntToDecimalStringN(gStringVar4, GetSearchLevel(dexNum), 0, 4);
+        ConvertIntToDecimalStringN(gStringVar4, GetSearchLevel(species), 0, 4);
         AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SEARCH_LEVEL_Y, sFontColor_Black, 0, gStringVar4);
     }
 
@@ -2666,11 +2666,11 @@ u32 CalculateDexNavShinyRolls(void)
     return chainBonus + rndBonus;
 }
 
-void TryIncrementSpeciesSearchLevel(u16 dexNum)
+void TryIncrementSpeciesSearchLevel()
 {
 #if USE_DEXNAV_SEARCH_LEVELS == TRUE
-    if (gMapHeader.regionMapSectionId != MAPSEC_BATTLE_FRONTIER && gSaveBlock3Ptr->dexNavSearchLevels[dexNum] < 255)
-        gSaveBlock3Ptr->dexNavSearchLevels[dexNum]++;
+    if (gMapHeader.regionMapSectionId != MAPSEC_BATTLE_FRONTIER && gSaveBlock3Ptr->dexNavSearchLevels[gDexNavSpecies] < 255)
+        gSaveBlock3Ptr->dexNavSearchLevels[gDexNavSpecies]++;
 #endif
 }
 
