@@ -2267,6 +2267,24 @@ bool32 HasMoveThatLowersOwnStats(u32 battlerId)
     return FALSE;
 }
 
+bool32 HasMoveTargetsFoesAndAllyOfType(u32 battler, u32 moveType)
+{
+    s32 i;
+    u32 aiMove;
+    u16 *moves = GetMovesArray(battler);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        aiMove = moves[i];
+        if (aiMove != MOVE_NONE && aiMove != MOVE_UNAVAILABLE)
+        {
+            if ((GetBattlerMoveTargetType(battler, aiMove) & MOVE_TARGET_FOES_AND_ALLY) 
+            && (gMovesInfo[SanitizeMoveId(aiMove)].type == moveType))
+                return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect)
 {
     s32 i;
@@ -3844,6 +3862,37 @@ bool32 IsAbilityOfRating(u32 ability, s8 rating)
     if (gAbilitiesInfo[ability].aiRating >= rating)
         return TRUE;
     return FALSE;
+}
+
+u32 TypeImmunityByAbility(u32 ability)
+{
+    switch (ability) {
+    case ABILITY_VOLT_ABSORB:
+        return TYPE_ELECTRIC;
+    case ABILITY_WATER_ABSORB:
+        return TYPE_WATER;
+    case ABILITY_FLASH_FIRE:
+    case ABILITY_WELL_BAKED_BODY:
+        return TYPE_FIRE;
+    case ABILITY_STORM_DRAIN:
+        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+            return TYPE_WATER;
+        else
+            return TYPE_NONE;
+    case ABILITY_MOTOR_DRIVE:
+    case ABILITY_LIGHTNING_ROD:
+        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+            return TYPE_ELECTRIC;
+        else
+            return TYPE_NONE;
+    case ABILITY_SAP_SIPPER:
+        return TYPE_GRASS;
+    case ABILITY_LEVITATE:
+    case ABILITY_EARTH_EATER:
+        return TYPE_GROUND;
+    default: 
+        return TYPE_NONE;
+    }
 }
 
 static const u16 sRecycleEncouragedItems[] =

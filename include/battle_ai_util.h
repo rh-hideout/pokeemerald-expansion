@@ -236,5 +236,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
+u32 TypeImmunityByAbility(u32 ability);
+bool32 HasMoveTargetsFoesAndAllyOfType(u32 battler, u32 moveType);
 
 #endif //GUARD_BATTLE_AI_UTIL_H

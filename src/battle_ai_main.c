@@ -3016,24 +3016,43 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_SKILL_SWAP:
                 if (aiData->abilities[battlerAtk] != aiData->abilities[BATTLE_PARTNER(battlerAtk)] && !attackerHasBadAbility)
                 {
-                    // Partner abilities
-                    if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_TRUANT)
-                    {
-                        ADJUST_SCORE(10);
-                    }
-                    else if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_INTIMIDATE)
-                    {
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    }
-                    // Active mon abilities
-                    if (aiData->abilities[battlerAtk] == ABILITY_COMPOUND_EYES
-                        && HasMoveWithLowAccuracy(battlerAtkPartner, FOE(battlerAtkPartner), 90, TRUE, atkPartnerAbility, aiData->abilities[FOE(battlerAtkPartner)], atkPartnerHoldEffect, aiData->holdEffects[FOE(battlerAtkPartner)]))
-                    {
-                        ADJUST_SCORE(GOOD_EFFECT);
-                    }
-                    else if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY && HasMoveThatLowersOwnStats(battlerAtkPartner))
-                    {
-                        ADJUST_SCORE(GOOD_EFFECT);
+                    
+                    // Do not Skill Swap your partner twice in a row.
+                    if (gMovesInfo[gLastMoves[battlerAtk]].effect == EFFECT_SKILL_SWAP)
+                        ADJUST_SCORE(NO_INCREASE);
+                    else {
+                        // Partner abilities
+
+                        // Can Skill Swap give the attacker a type immunity?
+                        u8 typeImmunity = TypeImmunityByAbility(atkPartnerAbility);
+                        if (typeImmunity != TYPE_NONE) {
+                            // Can this type immunity make a spread move more viable?
+                            if (HasMoveTargetsFoesAndAllyOfType(battlerAtk, typeImmunity))
+                                ADJUST_SCORE(BEST_EFFECT);
+                            
+                        }                        
+                        else if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_TRUANT)
+                            ADJUST_SCORE(10);
+                        else if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_INTIMIDATE)
+                            ADJUST_SCORE(DECENT_EFFECT);
+
+                        // Active mon abilities
+                        // Can Skill Swap give the partner a type immunity?
+                        typeImmunity = TypeImmunityByAbility(aiData->abilities[battlerAtk]);
+                        if (typeImmunity != TYPE_NONE) { 
+                            // Can this type immunity make a spread move more viable?
+                            if (HasMoveTargetsFoesAndAllyOfType(BATTLE_PARTNER(battlerAtk), TypeImmunityByAbility(aiData->abilities[battlerAtk])))
+                                ADJUST_SCORE(BEST_EFFECT);
+                        }
+                        else if (aiData->abilities[battlerAtk] == ABILITY_COMPOUND_EYES
+                            && HasMoveWithLowAccuracy(battlerAtkPartner, FOE(battlerAtkPartner), 90, TRUE, atkPartnerAbility, aiData->abilities[FOE(battlerAtkPartner)], atkPartnerHoldEffect, aiData->holdEffects[FOE(battlerAtkPartner)]))
+                        {
+                            ADJUST_SCORE(GOOD_EFFECT);
+                        }
+                        else if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY && HasMoveThatLowersOwnStats(battlerAtkPartner))
+                        {
+                            ADJUST_SCORE(GOOD_EFFECT);
+                        }
                     }
                     return score;
                 }
