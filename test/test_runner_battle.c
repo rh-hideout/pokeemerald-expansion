@@ -1347,6 +1347,7 @@ static void TearDownBattle(void)
 
 static void CB2_BattleTest_NextParameter(void)
 {
+    TestRunner_CheckMemory();
     if (++STATE->runParameter >= STATE->parameters)
     {
         SetMainCallback2(CB2_TestRunner);
