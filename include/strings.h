@@ -553,28 +553,15 @@ extern const u8 BattleFrontier_Lounge2_Text_PyramidKingSilverMons[];
 extern const u8 BattleFrontier_Lounge2_Text_PyramidKingGoldMons[];
 
 // Battle Frontier Nature Girl
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlHardy[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlLonely[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlBrave[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAdamant[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlNaughty[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlBold[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDocileNaiveQuietQuirky[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlRelaxed[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlImpish[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlLax[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlTimid[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlHasty[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSerious[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlJolly[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlModest[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlMild[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlBashful[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlRash[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlCalm[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlGentle[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSassy[];
-extern const u8 BattleFrontier_Lounge5_Text_NatureGirlCareful[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow[];
 
 // Battle Frontier Gambler
 extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleTowerSingle[];
@@ -1551,6 +1538,7 @@ extern const u8 gText_PkmnTransferredSomeonesPCBoxFull[];
 extern const u8 gText_PkmnTransferredLanettesPCBoxFull[];
 extern const u8 gText_PkmnTransferredSomeonesPC[];
 extern const u8 gText_PkmnTransferredLanettesPC[];
+extern const u8 gText_PkmnSentToPCAfterCatch[];
 
 // hall of fame
 extern const u8 gText_LeagueChamp[];
@@ -1584,6 +1572,7 @@ extern const u8 gDaycareText_PlayOther[];
 extern const u8 gText_ChoosePokemon[];
 extern const u8 gText_ChoosePokemonCancel[];
 extern const u8 gText_ChoosePokemonConfirm[];
+extern const u8 gText_SendWhichMonToPC[];
 extern const u8 gText_MoveToWhere[];
 extern const u8 gText_TeachWhichPokemon[];
 extern const u8 gText_UseOnWhichPokemon[];
@@ -2428,5 +2417,8 @@ extern const u8 gText_PlayerScurriedBackHome[];
 
 extern const u8 gText_Relearn[]; // move relearner from summary screen
 extern const u8 gText_Rename[]; // change nickname from summary screen
+
+// Switch Caught Mon into Party
+extern const u8 gText_CannotSendMonToBoxHM[];
 
 #endif // GUARD_STRINGS_H

@@ -66,12 +66,12 @@
 void EndDexNavSearch(u8 taskId);
 void Task_OpenDexNavFromStartMenu(u8 taskId);
 bool8 TryStartDexNavSearch(void);
-void TryIncrementSpeciesSearchLevel(u16 dexNum);
+void TryIncrementSpeciesSearchLevel(void);
 void ResetDexNavSearch(void);
 bool8 TryFindHiddenPokemon(void);
 u32 CalculateDexNavShinyRolls(void);
 void IncrementDexNavChain(void);
 
-extern bool8 gDexNavBattle;
+extern u16 gDexNavSpecies;
 
 #endif // GUARD_DEXNAV_H

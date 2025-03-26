@@ -5,13 +5,10 @@
 #define TRADE_PARTNER 1
 
 // In-game Trade IDs
-enum InGameTradeID
-{
-    INGAME_TRADE_SEEDOT,
-    INGAME_TRADE_PLUSLE,
-    INGAME_TRADE_HORSEA,
-    INGAME_TRADE_MEOWTH,
-};
+#define INGAME_TRADE_SEEDOT 0
+#define INGAME_TRADE_PLUSLE 1
+#define INGAME_TRADE_HORSEA 2
+#define INGAME_TRADE_MEOWTH 3
 
 // Return values for CanTradeSelectedMon and CanSpinTradeMon
 #define CAN_TRADE_MON              0

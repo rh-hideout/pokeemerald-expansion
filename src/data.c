@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "data.h"
 #include "graphics.h"
+#include "trainer_pools.h"
 #include "battle_transition.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
@@ -220,7 +221,7 @@ const union AnimCmd *const gAnims_MonPic[MAX_MON_PIC_FRAMES] =
     sAnim_MonPic_1,
 };
 
-const union AnimCmd *const sAnims_Trainer[] ={
+const union AnimCmd *const gAnims_Trainer[] ={
     sAnim_GeneralFrame0,
     sAnim_GeneralFrame0,
 };

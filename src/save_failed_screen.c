@@ -1,6 +1,7 @@
 #include "global.h"
 #include "text.h"
 #include "main.h"
+#include "malloc.h"
 #include "palette.h"
 #include "graphics.h"
 #include "gpu_regs.h"
@@ -171,6 +172,15 @@ static void VBlankCB(void)
     TransferPlttBuffer();
 }
 
+struct SaveFailedBuffers
+{
+    ALIGNED(4) u8 tilemapBuffer[BG_SCREEN_SIZE];
+    ALIGNED(4) u8 window1TileData[0x200];
+    ALIGNED(4) u8 window2TileData[0x200];
+};
+
+static EWRAM_DATA struct SaveFailedBuffers *sSaveFailedBuffers = NULL;
+
 static void CB2_SaveFailedScreen(void)
 {
     switch (gMain.state)
@@ -178,6 +188,7 @@ static void CB2_SaveFailedScreen(void)
     case 0:
     default:
         SetVBlankCallback(NULL);
+        sSaveFailedBuffers = Alloc(sizeof(*sSaveFailedBuffers));
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
         SetGpuReg(REG_OFFSET_BG3CNT, 0);
         SetGpuReg(REG_OFFSET_BG2CNT, 0);
@@ -200,14 +211,14 @@ static void CB2_SaveFailedScreen(void)
         LZ77UnCompVram(sSaveFailedClockGfx, (void *)(OBJ_VRAM0 + 0x20));
         ResetBgsAndClearDma3BusyFlags(0);
         InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
-        SetBgTilemapBuffer(0, (void *)&gDecompressionBuffer[0x2000]);
-        CpuFill32(0, &gDecompressionBuffer[0x2000], 0x800);
+        SetBgTilemapBuffer(0, sSaveFailedBuffers->tilemapBuffer);
+        CpuFill32(0, sSaveFailedBuffers->tilemapBuffer, BG_SCREEN_SIZE);
         LoadBgTiles(0, gTextWindowFrame1_Gfx, 0x120, 0x214);
         InitWindows(sDummyWindowTemplate);
         sWindowIds[TEXT_WIN_ID] = AddWindowWithoutTileMap(sWindowTemplate_Text);
-        SetWindowAttribute(sWindowIds[TEXT_WIN_ID], 7, (u32)&gDecompressionBuffer[0x2800]);
+        SetWindowAttribute(sWindowIds[TEXT_WIN_ID], 7, (u32)&sSaveFailedBuffers->window1TileData);
         sWindowIds[CLOCK_WIN_ID] = AddWindowWithoutTileMap(sWindowTemplate_Clock);
-        SetWindowAttribute(sWindowIds[CLOCK_WIN_ID], 7, (u32)&gDecompressionBuffer[0x3D00]);
+        SetWindowAttribute(sWindowIds[CLOCK_WIN_ID], 7, (u32)&sSaveFailedBuffers->window2TileData);
         DeactivateAllTextPrinters();
         ResetSpriteData();
         ResetTasks();
@@ -318,6 +329,7 @@ static void CB2_ReturnToTitleScreen(void)
 {
     if (!UpdatePaletteFade())
     {
+        TRY_FREE_AND_SET_NULL(sSaveFailedBuffers);
         if (gGameContinueCallback == NULL) // no callback exists, so do a soft reset.
         {
             DoSoftReset();

@@ -14,6 +14,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "constants/songs.h"
+#include "constants/map_types.h"
 
 struct FlashStruct
 {
@@ -153,8 +154,8 @@ void CB2_DoChangeMap(void)
 static bool8 TryDoMapTransition(void)
 {
     u8 i;
-    enum MapType fromType = GetLastUsedWarpMapType();
-    enum MapType toType = GetCurrentMapType();
+    u8 fromType = GetLastUsedWarpMapType();
+    u8 toType = GetCurrentMapType();
 
     for (i = 0; sTransitionTypes[i].fromType; i++)
     {

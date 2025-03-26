@@ -3521,17 +3521,10 @@ static void CreateGridSprites(void)
 {
     u8 i, j;
     u8 spriteId;
-    struct SpriteSheet s;
-    LZ77UnCompWram(sSpriteSheet_Headers.data, gDecompressionBuffer);
-    s.data = gDecompressionBuffer;
-    s.size = sSpriteSheet_Headers.size;
-    s.tag  = sSpriteSheet_Headers.tag;
-    LoadSpriteSheet(&s);
-    LZ77UnCompWram(sSpriteSheet_GridIcons.data, gDecompressionBuffer);
-    s.data = gDecompressionBuffer;
-    s.size = sSpriteSheet_GridIcons.size;
-    s.tag  = sSpriteSheet_GridIcons.tag;
-    LoadSpriteSheet(&s);
+
+    LoadCompressedSpriteSheet(&sSpriteSheet_Headers);
+    LoadCompressedSpriteSheet(&sSpriteSheet_GridIcons);
+
     for (i = 0; i < NUM_BOARD_COLORS; i++)
     {
         u8 y = i * 24;
@@ -3656,13 +3649,8 @@ static void CreateWheelIconSprites(void)
 {
     u8 i, j;
     u16 angle;
-    struct SpriteSheet s;
 
-    LZ77UnCompWram(sSpriteSheet_WheelIcons.data, gDecompressionBuffer);
-    s.data = gDecompressionBuffer;
-    s.size = sSpriteSheet_WheelIcons.size;
-    s.tag  = sSpriteSheet_WheelIcons.tag;
-    LoadSpriteSheet(&s);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WheelIcons);
 
     angle = 15;
     for (i = 0; i < NUM_BOARD_COLORS; i++)
@@ -3702,12 +3690,7 @@ static void CreateInterfaceSprites(void)
     u8 i;
     for (i = 0; i < ARRAY_COUNT(sSpriteSheets_Interface) - 1; i++)
     {
-        struct SpriteSheet s;
-        LZ77UnCompWram(sSpriteSheets_Interface[i].data, gDecompressionBuffer);
-        s.data = gDecompressionBuffer;
-        s.size = sSpriteSheets_Interface[i].size;
-        s.tag  = sSpriteSheets_Interface[i].tag;
-        LoadSpriteSheet(&s);
+        LoadCompressedSpriteSheet(&sSpriteSheets_Interface[i]);
     }
     sRoulette->spriteIds[SPR_CREDIT] = CreateSprite(&sSpriteTemplate_Credit, 208, 16, 4);
     gSprites[sRoulette->spriteIds[SPR_CREDIT]].animPaused = TRUE;
@@ -3850,12 +3833,9 @@ static void SpriteCB_GridSquare(struct Sprite *sprite)
 static void CreateWheelCenterSprite(void)
 {
     u8 spriteId;
-    struct SpriteSheet s;
-    LZ77UnCompWram(sSpriteSheet_WheelCenter.data, gDecompressionBuffer);
-    s.data = gDecompressionBuffer;
-    s.size = sSpriteSheet_WheelCenter.size;
-    s.tag = sSpriteSheet_WheelCenter.tag;
-    LoadSpriteSheet(&s);
+
+    LoadCompressedSpriteSheet(&sSpriteSheet_WheelCenter);
+
     // This sprite id isn't saved because it doesn't need to be referenced again
     // but by virtue of creation order it's SPR_WHEEL_CENTER
     spriteId = CreateSprite(&sSpriteTemplate_WheelCenter, 116, 80, 81);

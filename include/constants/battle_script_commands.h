@@ -2,7 +2,7 @@
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
 // The following correspond to the struct members of BattleScripting by adding their offset
-#define sPAINSPLIT_HP                (gBattleScripting + 0x00) // painSplitHp
+#define sUNUSED_0x00                 (gBattleScripting + 0x00) // unused_0x00
 #define sUNUSED_0x04                 (gBattleScripting + 0x04) // unused_0x04
 #define sMULTIHIT_STRING             (gBattleScripting + 0x08) // multihitString
 #define sEXP_CATCH                   (gBattleScripting + 0x0E) // expOnCatch
@@ -153,7 +153,6 @@ enum CmdVarious
     VARIOUS_TRY_THIRD_TYPE,
     VARIOUS_ACUPRESSURE,
     VARIOUS_SET_POWDER,
-    VARIOUS_SPECTRAL_THIEF,
     VARIOUS_GRAVITY_ON_AIRBORNE_MONS,
     VARIOUS_CHECK_IF_GRASSY_TERRAIN_HEALS,
     VARIOUS_JUMP_IF_ROAR_FAILS,
@@ -220,13 +219,11 @@ enum CmdVarious
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
-#define DMG_RECOIL_FROM_MISS    2
-#define DMG_DOUBLED             3
-#define DMG_1_8_TARGET_HP       4
-#define DMG_FULL_ATTACKER_HP    5
-#define DMG_CURR_ATTACKER_HP    6
-#define DMG_BIG_ROOT            7
-#define DMG_RECOIL_FROM_IMMUNE  8  // Used to calculate recoil for the Gen 4 version of Jump Kick
+#define DMG_DOUBLED             2
+#define DMG_1_8_TARGET_HP       3
+#define DMG_FULL_ATTACKER_HP    4
+#define DMG_CURR_ATTACKER_HP    5
+#define DMG_BIG_ROOT            6
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -274,6 +271,8 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_TARGET,
     MOVEEND_MOVE_EFFECTS2,
     MOVEEND_ITEM_EFFECTS_ALL,
+    MOVEEND_SYMBIOSIS,
+    MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
     MOVEEND_NUM_HITS,
     MOVEEND_SUBSTITUTE,
@@ -287,19 +286,18 @@ enum MoveEndEffects
     MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until opportunist
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
     MOVEEND_EJECT_ITEMS,
     MOVEEND_WHITE_HERB,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_PICKPOCKET,
-    MOVEEND_DANCER,
     MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_SYMBIOSIS,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_SAME_MOVE_TURNS,
-    MOVEEND_SET_EVOLUTION_TRACKER,
     MOVEEND_CLEAR_BITS,
+    MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
     MOVEEND_COUNT,
 };

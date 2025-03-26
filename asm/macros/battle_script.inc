@@ -1277,8 +1277,9 @@
 	.byte 0xef
 	.endm
 
-	.macro givecaughtmon
+	.macro givecaughtmon passInstr:req
 	.byte 0xf0
+	.4byte \passInstr
 	.endm
 
 	.macro trysetcaughtmondexflags failInstr:req
@@ -1290,9 +1291,8 @@
 	.byte 0xf2
 	.endm
 
-	.macro trygivecaughtmonnick successInstr:req
+	.macro trygivecaughtmonnick
 	.byte 0xf3
-	.4byte \successInstr
 	.endm
 
 	.macro subattackerhpbydmg
@@ -1555,13 +1555,43 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysetstatus1, ptr:req
-	callnative BS_TrySetStatus1
+	.macro trysetparalysis, ptr:req
+	callnative BS_TrySetParalysis
 	.4byte \ptr
 	.endm
 
-	.macro trysetstatus2, ptr:req
-	callnative BS_TrySetStatus2
+	.macro trysetpoison, ptr:req
+	callnative BS_TrySetPoison
+	.4byte \ptr
+	.endm
+
+	.macro trysetpoisonparalysis, ptr:req
+	callnative BS_TrySetPoisonParalyzis
+	.4byte \ptr
+	.endm
+
+	.macro tryseteffectspore, ptr:req
+	callnative BS_TrySetEffectSpore
+	.4byte \ptr
+	.endm
+
+	.macro trysetconfusion, ptr:req
+	callnative BS_TrySetConfusion
+	.4byte \ptr
+	.endm
+
+	.macro trysetinfatuation, ptr:req
+	callnative BS_TrySetInfatuation
+	.4byte \ptr
+	.endm
+
+	.macro trysetescapeprevention, ptr:req
+	callnative BS_TrySetEscapePrevention
+	.4byte \ptr
+	.endm
+
+	.macro trysettorment, ptr:req
+	callnative BS_TrySetTorment
 	.4byte \ptr
 	.endm
 
@@ -1582,6 +1612,11 @@
 	.macro jumpiftargetdynamaxed, ptr:req
 	callnative BS_JumpIfDynamaxed
 	.4byte \ptr
+	.endm
+
+	.macro undodynamax battler:req
+	callnative BS_UndoDynamax
+	.byte \battler
 	.endm
 
 	.macro trytrainerslidezmovemsg
@@ -1609,10 +1644,6 @@
 
 	.macro trytriggerstatusform
 	callnative BS_TryTriggerStatusForm
-	.endm
-
-	.macro setphotongeysercategory
-	callnative BS_SetPhotonGeyserCategory
 	.endm
 
 	.macro tryupperhand failInstr:req
@@ -1727,11 +1758,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryhitswitchtarget failInstr:req
-	callnative BS_TryHitSwitchTarget
-	.4byte \failInstr
-	.endm
-
 	.macro setmagiccoattarget
 	callnative BS_SetMagicCoatTarget
 	.endm
@@ -1762,6 +1788,15 @@
 	callnative BS_RemoveTerrain
 	.endm
 
+	.macro tryspectralthiefsteal jumpInstr:req
+	callnative BS_TrySpectralThiefSteal
+	.4byte \jumpInstr
+	.endm
+
+	.macro spectralthiefprintstats
+	callnative BS_SpectralThiefPrintStats
+	.endm
+
 	.macro setmoveresultflags flags:req
 	callnative BS_SetMoveResultFlags
 	.2byte \flags
@@ -1781,6 +1816,12 @@
 	.macro jumpifcriticalhit failInstr:req
 	callnative BS_JumpIfCriticalHit
 	.4byte \failInstr
+	.endm
+
+	.macro jumpifcangigantamax battler:req, jumpInstr:req
+	callnative BS_JumpIfCanGigantamax
+	.byte \battler
+	.4byte \jumpInstr
 	.endm
 
 @ various command changed to more readable macros
@@ -2078,10 +2119,6 @@
 	various \battler, VARIOUS_SET_POWDER
 	.endm
 
-	.macro spectralthiefprintstats
-	various BS_ATTACKER, VARIOUS_SPECTRAL_THIEF
-	.endm
-
 	.macro bringdownairbornebattler battler:req
 	various \battler, VARIOUS_GRAVITY_ON_AIRBORNE_MONS
 	.endm
@@ -2345,6 +2382,10 @@
 	.macro swapstats stat:req
 	callnative BS_SwapStats
 	.byte \stat
+	.endm
+
+	.macro restoresavedmove
+	callnative BS_RestoreSavedMove
 	.endm
 
 @ helpful macros

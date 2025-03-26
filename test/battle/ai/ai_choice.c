@@ -24,6 +24,8 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move onc
         PARAMETRIZE { ability = ABILITY_KLUTZ;   heldItem = choiceItems[j]; }
     }
 
+    PASSES_RANDOMLY(SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE, 100, RNG_AI_SWITCH_CHOICE_LOCKED);
+
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_YAWN) == DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
@@ -39,6 +41,20 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move onc
         else {
             TURN { EXPECT_SWITCH(opponent, 1); }
         }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Choiced Pokémon only consider their own status moves when determining if they should switch")
+{
+    GIVEN 
+    {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_RISKY | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(4); Moves(MOVE_TAIL_WHIP, MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(5); Moves(MOVE_TACKLE); Item(ITEM_CHOICE_BAND); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(5); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_TAIL_WHIP); }
+        TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_TAIL_WHIP); }
     }
 }
 

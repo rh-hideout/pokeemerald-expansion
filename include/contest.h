@@ -111,6 +111,7 @@ struct ContestPokemon
     u8 unused1:7;
     u32 personality;
     u32 otId;
+    u8 filter;
 };
 
 struct ContestTempSave

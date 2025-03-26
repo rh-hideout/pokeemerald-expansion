@@ -84,7 +84,7 @@ const u8 gFacilityClassToPicIndex[] =
     [FACILITY_CLASS_RS_MAY] = TRAINER_PIC_RS_MAY,
 };
 
-const enum TrainerClassID gFacilityClassToTrainerClass[] =
+const u8 gFacilityClassToTrainerClass[] =
 {
     [FACILITY_CLASS_HIKER] = TRAINER_CLASS_HIKER,
     [FACILITY_CLASS_AQUA_GRUNT_M] = TRAINER_CLASS_TEAM_AQUA,

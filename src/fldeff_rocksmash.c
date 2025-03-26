@@ -16,6 +16,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
+#include "constants/map_types.h"
 #include "constants/songs.h"
 
 static void Task_DoFieldMove_Init(u8 taskId);

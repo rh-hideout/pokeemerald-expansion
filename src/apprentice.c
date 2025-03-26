@@ -339,7 +339,7 @@ static u16 GetRandomAlternateMove(u8 monId)
     numLearnsetMoves = j;
     i = 0;
 
-    // i < 5 here is arbitrary, i isnt used and is only incremented when the selected move isnt in sValidApprenticeMoves
+    // i < 5 here is arbitrary, i isn't used and is only incremented when the selected move isn't valid (determined by the validApprenticeMove value)
     // This while loop contains 3 potential infinite loops, though none of them would occur in the base game
     while (i < 5)
     {
@@ -411,7 +411,7 @@ static u16 GetRandomAlternateMove(u8 monId)
 
         if (TrySetMove(monId, moveId))
         {
-            if (sValidApprenticeMoves[moveId])
+            if (gMovesInfo[moveId].validApprenticeMove)
                 break;
             i++;
         }
