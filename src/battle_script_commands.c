@@ -7250,12 +7250,6 @@ static void Cmd_moveend(void)
                 gBattleStruct->sameMoveTurns[gBattlerAttacker]++;
             gBattleScripting.moveendState++;
             break;
-        case MOVEEND_SET_EVOLUTION_TRACKER:
-            // If the Pokémon needs to keep track of move usage for its evolutions, do it
-            if (originallyUsedMove != MOVE_NONE)
-                TryUpdateEvolutionTracker(IF_USED_MOVE_X_TIMES, 1, originallyUsedMove);
-            gBattleScripting.moveendState++;
-            break;
         case MOVEEND_CLEAR_BITS: // Clear/Set bits for things like using a move for all targets and all hits.
             if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
                 gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
@@ -7264,7 +7258,7 @@ static void Cmd_moveend(void)
 
             // If the Pokémon needs to keep track of move usage for its evolutions, do it
             if (originallyUsedMove != MOVE_NONE)
-                TryUpdateEvolutionTracker(EVO_USE_MOVE_TWENTY_TIMES, 1, originallyUsedMove);
+                TryUpdateEvolutionTracker(IF_USED_MOVE_X_TIMES, 1, originallyUsedMove);
 
             if (B_RAMPAGE_CANCELLING >= GEN_5
               && MoveHasAdditionalEffectSelf(gCurrentMove, MOVE_EFFECT_THRASH)           // If we're rampaging
