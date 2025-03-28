@@ -478,10 +478,10 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
         return TRUE;
 
-    if (CanAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[battlerDef], ABILITY_CHECK_TRIGGER))
+    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
     switch (GetMoveEffect(move))
@@ -1142,8 +1142,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
 
     u32 predictedMove = AI_DATA->lastUsedMove[battler]; // TODO update for move prediction
 
-    s8 aiPriority = GetBattleMovePriority(battlerAI, moveConsidered);
-    s8 playerPriority = GetBattleMovePriority(battler, predictedMove);
+    s8 aiPriority = GetBattleMovePriority(battlerAI, abilityAI, moveConsidered);
+    s8 playerPriority = GetBattleMovePriority(battler, abilityPlayer, predictedMove);
 
     if (aiPriority > playerPriority)
         return AI_IS_FASTER;
