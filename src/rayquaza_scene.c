@@ -559,7 +559,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_DuoFight_Groudon =
     gRaySceneDuoFight_Groudon_Gfx, 0x3000, TAG_DUOFIGHT_GROUDON
 };
 
-static const struct CompressedSpritePalette sSpritePal_DuoFight_Groudon =
+static const struct SpritePalette sSpritePal_DuoFight_Groudon =
 {
     gRaySceneDuoFight_Groudon_Pal, TAG_DUOFIGHT_GROUDON
 };
@@ -710,7 +710,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_DuoFight_Kyogre =
     gRaySceneDuoFight_Kyogre_Gfx, 0xF00, TAG_DUOFIGHT_KYOGRE
 };
 
-static const struct CompressedSpritePalette sSpritePal_DuoFight_Kyogre =
+static const struct SpritePalette sSpritePal_DuoFight_Kyogre =
 {
     gRaySceneDuoFight_Kyogre_Pal, TAG_DUOFIGHT_KYOGRE
 };
@@ -832,7 +832,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_TakesFlight_Smoke =
     gRaySceneTakesFlight_Smoke_Gfx, 0x100, TAG_FLIGHT_SMOKE
 };
 
-static const struct CompressedSpritePalette sSpritePal_TakesFlight_Smoke =
+static const struct SpritePalette sSpritePal_TakesFlight_Smoke =
 {
     gRaySceneTakesFlight_Smoke_Pal, TAG_FLIGHT_SMOKE
 };
@@ -936,7 +936,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_Descends_RayquazaTail =
     gRaySceneDescends_RayquazaTail_Gfx, 0x200, TAG_DESCENDS_RAYQUAZA_TAIL
 };
 
-static const struct CompressedSpritePalette sSpritePal_Descends_Rayquaza =
+static const struct SpritePalette sSpritePal_Descends_Rayquaza =
 {
     gRaySceneTakesFlight_Rayquaza_Pal, TAG_DESCENDS_RAYQUAZA // "Takes flight" palette re-used here
 };
@@ -1170,22 +1170,22 @@ static const struct CompressedSpriteSheet sSpriteSheet_ChasesAway_KyogreSplash =
     gRaySceneChasesAway_KyogreSplash_Gfx, 0x300, TAG_CHASE_SPLASH
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Groudon =
+static const struct SpritePalette sSpritePal_ChasesAway_Groudon =
 {
     gRaySceneChasesAway_Groudon_Pal, TAG_CHASE_GROUDON
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Kyogre =
+static const struct SpritePalette sSpritePal_ChasesAway_Kyogre =
 {
     gRaySceneChasesAway_Kyogre_Pal, TAG_CHASE_KYOGRE
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_Rayquaza =
+static const struct SpritePalette sSpritePal_ChasesAway_Rayquaza =
 {
     gRaySceneChasesAway_Rayquaza_Pal, TAG_CHASE_RAYQUAZA
 };
 
-static const struct CompressedSpritePalette sSpritePal_ChasesAway_KyogreSplash =
+static const struct SpritePalette sSpritePal_ChasesAway_KyogreSplash =
 {
     gRaySceneChasesAway_KyogreSplash_Pal, TAG_CHASE_SPLASH
 };
@@ -1602,15 +1602,15 @@ static void LoadDuoFightSceneGfx(void)
     LZDecompressWram(gRaySceneDuoFight_Clouds2_Tilemap, sRayScene->tilemapBuffers[0]);
     LZDecompressWram(gRaySceneDuoFight_Clouds1_Tilemap, sRayScene->tilemapBuffers[1]);
     LZDecompressWram(gRaySceneDuoFight_Clouds3_Tilemap, sRayScene->tilemapBuffers[2]);
-    LoadCompressedPalette(gRaySceneDuoFight_Clouds_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(gRaySceneDuoFight_Clouds_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_Groudon);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_GroudonShoulder);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_GroudonClaw);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_Kyogre);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_KyogrePectoralFin);
     LoadCompressedSpriteSheet(&sSpriteSheet_DuoFight_KyogreDorsalFin);
-    LoadCompressedSpritePalette(&sSpritePal_DuoFight_Groudon);
-    LoadCompressedSpritePalette(&sSpritePal_DuoFight_Kyogre);
+    LoadSpritePalette(&sSpritePal_DuoFight_Groudon);
+    LoadSpritePalette(&sSpritePal_DuoFight_Kyogre);
 }
 
 static void Task_DuoFightAnim(u8 taskId)
@@ -2042,9 +2042,9 @@ static void LoadTakesFlightSceneGfx(void)
     LZDecompressWram(gRaySceneDuoFight_Clouds2_Tilemap, sRayScene->tilemapBuffers[0]);
     LZDecompressWram(gRaySceneTakesFlight_Bg_Tilemap, sRayScene->tilemapBuffers[1]);
     LZDecompressWram(gRaySceneTakesFlight_Rayquaza_Tilemap, sRayScene->tilemapBuffers[2]);
-    LoadCompressedPalette(gRaySceneTakesFlight_Rayquaza_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(gRaySceneTakesFlight_Rayquaza_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
     LoadCompressedSpriteSheet(&sSpriteSheet_TakesFlight_Smoke);
-    LoadCompressedSpritePalette(&sSpritePal_TakesFlight_Smoke);
+    LoadSpritePalette(&sSpritePal_TakesFlight_Smoke);
 }
 
 static void Task_RayTakesFlightAnim(u8 taskId)
@@ -2248,12 +2248,12 @@ static void LoadDescendsSceneGfx(void)
     CpuFastCopy(sRayScene->tilemapBuffers[3], sRayScene->tilemapBuffers[1], BG_SCREEN_SIZE);
     CpuFastFill16(0, &sRayScene->tilemapBuffers[1][0x100], 0x340);
 
-    LoadCompressedPalette(gRaySceneDescends_Bg_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(gRaySceneDescends_Bg_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
     gPlttBufferUnfaded[0] = RGB_WHITE;
     gPlttBufferFaded[0] = RGB_WHITE;
     LoadCompressedSpriteSheet(&sSpriteSheet_Descends_Rayquaza);
     LoadCompressedSpriteSheet(&sSpriteSheet_Descends_RayquazaTail);
-    LoadCompressedSpritePalette(&sSpritePal_Descends_Rayquaza);
+    LoadSpritePalette(&sSpritePal_Descends_Rayquaza);
 }
 
 // Draw ray of light emerging from the clouds
@@ -2497,7 +2497,7 @@ static void LoadChargesSceneGfx(void)
     LZDecompressWram(gRaySceneCharges_Rayquaza_Tilemap, sRayScene->tilemapBuffers[1]);
     LZDecompressWram(gRaySceneCharges_Streaks_Tilemap, sRayScene->tilemapBuffers[2]);
     LZDecompressWram(gRaySceneCharges_Bg_Tilemap, sRayScene->tilemapBuffers[3]);
-    LoadCompressedPalette(gRaySceneCharges_Bg_Pal, BG_PLTT_ID(0), 4 * PLTT_SIZE_4BPP);
+    LoadPalette(gRaySceneCharges_Bg_Pal, BG_PLTT_ID(0), 4 * PLTT_SIZE_4BPP);
 }
 
 #define tState          data[0]
@@ -2681,17 +2681,17 @@ static void LoadChasesAwaySceneGfx(void)
     LZDecompressWram(gRaySceneChasesAway_Bg_Tilemap, sRayScene->tilemapBuffers[1]);
     LZDecompressWram(gRaySceneChasesAway_Light_Tilemap, sRayScene->tilemapBuffers[0]);
     LZDecompressWram(gRaySceneChasesAway_Ring_Tilemap, sRayScene->tilemapBuffers[2]);
-    LoadCompressedPalette(gRaySceneChasesAway_Bg_Pal, BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
+    LoadPalette(gRaySceneChasesAway_Bg_Pal, BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_Groudon);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_GroudonTail);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_Kyogre);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_Rayquaza);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_RayquazaTail);
     LoadCompressedSpriteSheet(&sSpriteSheet_ChasesAway_KyogreSplash);
-    LoadCompressedSpritePalette(&sSpritePal_ChasesAway_Groudon);
-    LoadCompressedSpritePalette(&sSpritePal_ChasesAway_Kyogre);
-    LoadCompressedSpritePalette(&sSpritePal_ChasesAway_Rayquaza);
-    LoadCompressedSpritePalette(&sSpritePal_ChasesAway_KyogreSplash);
+    LoadSpritePalette(&sSpritePal_ChasesAway_Groudon);
+    LoadSpritePalette(&sSpritePal_ChasesAway_Kyogre);
+    LoadSpritePalette(&sSpritePal_ChasesAway_Rayquaza);
+    LoadSpritePalette(&sSpritePal_ChasesAway_KyogreSplash);
 }
 
 #define tState    data[0]
