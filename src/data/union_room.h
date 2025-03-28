@@ -867,7 +867,7 @@ static const struct WindowTemplate sWindowTemplate_TradingBoardRequestType = {
     .baseBlock = 0x0001
 };
 
-static const struct ListMenuItem sTradingBoardTypes[NUMBER_OF_MON_TYPES] = {
+static const struct ListMenuItem sTradingBoardTypes[NUMBER_OF_MON_TYPES - 2] = {
     { gTypesInfo[TYPE_NORMAL].name,   TYPE_NORMAL         },
     { gTypesInfo[TYPE_FIRE].name,     TYPE_FIRE           },
     { gTypesInfo[TYPE_WATER].name,    TYPE_WATER          },
