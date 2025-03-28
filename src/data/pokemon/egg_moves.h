@@ -6423,6 +6423,7 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_TOXIC_SPIKES,
     MOVE_WIDE_GUARD,
     MOVE_IRON_DEFENSE,
+    MOVE_FINAL GAMBIT,
     MOVE_UNAVAILABLE,
 };
 
@@ -6474,6 +6475,17 @@ static const u16 sCristaniumEggMoveLearnset[] = {
     MOVE_FLYING_PRESS,
     MOVE_WATER_SHURIKEN,
     MOVE_UNAVAILABLE,
+};
+
+static const u16 sVirtuitaEggMoveLearnset[] = {
+    MOVE_FIRE_SPIN,
+    MOVE_GRASS_WHISTLE,
+    MOVE_FAIRY_LOCK,
+    MOVE_SPIRIT_BREAK,
+    MOVE_BABY_DOLL_EYES,
+    MOVE_DECORATE,
+    MOVE_UNAVAILABLE,
+    
 };
 
 static const u16 sFuckerEggMoveLearnset[] = {

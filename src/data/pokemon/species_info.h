@@ -6065,6 +6065,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Virtuita)
        .levelUpLearnset = sVirtuitaLevelUpLearnset,
+       .teachableLearnset = sVirtuitaTeachableLearnset,
+       .eggMoveLearnset = sVirtuitaEggMoveLearnset,
     },
         [SPECIES_YUUKIINO] =
     { 
@@ -7619,7 +7621,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         )
        .levelUpLearnset = sFuckerLevelUpLearnset,
        .teachableLearnset = sFuckerTeachableLearnset,
-       .eggMoveLearnset = sNoxiliumEggMoveLearnset,
+       .eggMoveLearnset = sFuckerEggMoveLearnset,
     },
 
     [SPECIES_MANTASM] =
