@@ -382,7 +382,7 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     u32 ability, holdEffect;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
-    aiData->items[battler] = gBattleMons[battler].item;
+    aiData->items[battler] = AI_DecideItemForTurn(battler);
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->holdEffectParams[battler] = GetBattlerHoldEffectParam(battler);
     aiData->lastUsedMove[battler] = gLastMoves[battler];
@@ -1112,7 +1112,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_STUFF_CHEEKS:
-            if (ItemId_GetPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (ItemId_GetPocket(aiData->items[battlerAtk]) != POCKET_BERRIES)
                 return 0;   // cannot even select
             //fallthrough
         case EFFECT_DEFENSE_UP:
@@ -2323,7 +2323,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_NATURAL_GIFT:
-            if (!IsBattlerItemEnabled(battlerAtk) || GetPocketByItemId(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (GetPocketByItemId(aiData->items[battlerAtk]) != POCKET_BERRIES)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_GRASSY_TERRAIN:
@@ -2430,8 +2430,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_EMBARGO:
-            if (!IsBattlerItemEnabled(battlerAtk)
-              || gDisableStructs[battlerDef].embargoTimer != 0
+            if (gDisableStructs[battlerDef].embargoTimer != 0
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
@@ -2677,7 +2676,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     } // move effect checks
 
     // Choice items
-    if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]) && IsBattlerItemEnabled(battlerAtk))
+    if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]))
     {
         // Don't use user-target moves ie. Swords Dance, with exceptions
         if ((moveTarget & MOVE_TARGET_USER)

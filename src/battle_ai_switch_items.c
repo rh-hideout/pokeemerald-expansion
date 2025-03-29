@@ -452,7 +452,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     if (!(AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
     if (gBattleStruct->prevTurnSpecies[battler] != gBattleMons[battler].species) // AI mon has changed, player's behaviour no longer reliable; note to override this if using AI_FLAG_PREDICT_MOVE
-        return FALSE; 
+        return FALSE;
     if (HasSuperEffectiveMoveAgainstOpponents(battler, TRUE) && (RandomPercentage(RNG_AI_SWITCH_ABSORBING_STAY_IN, STAY_IN_ABSORBING_PERCENTAGE) || AI_DATA->aiSwitchPredictionInProgress))
         return FALSE;
     if (AreStatsRaised(battler))
@@ -675,7 +675,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 && !(gBattleMons[battler].status2 & STATUS2_FORESIGHT)
                 && !(gStatuses3[battler] & STATUS3_MIRACLE_EYED))
                 switchMon = FALSE;
-            
+
             if (switchMon)
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
         }
