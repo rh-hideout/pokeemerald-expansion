@@ -5072,7 +5072,7 @@ BattleScript_EffectBrickBreak::
 	attackstring
 	ppreduce
 	typecalc
-	removelightscreenreflect
+	removescreens
 	critcalc
 	damagecalc
 	adjustdamage
