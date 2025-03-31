@@ -10910,7 +10910,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         [SPECIES_BAMBUYA] =
     { 
        .baseHP        = 67,
-       .baseAttack    = 56,
+       .baseAttack    = 50,
        .baseDefense   = 111,
        .baseSpeed     = 103,
        .baseSpAttack  = 103,
@@ -10960,6 +10960,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Dawg)
        .levelUpLearnset = sBambuyaLevelUpLearnset,
+       .teachableLearnset = sBambuyaTeachableLearnset,
+       .eggMoveLearnset = sBambuyaEggMoveLearnset,
     },
 
         [SPECIES_JUMBLEGORE] =
@@ -11324,13 +11326,13 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .cryId = CRY_VRISKELETON,
        .natDexNum = NATIONAL_DEX_VRISKELETON,
        .categoryName = _("Megalovania"),
-       .height = 13,
-       .weight = 400,
+       .height = 19,
+       .weight = 4000,
        .description = COMPOUND_STRING(
-           "Vriskeleton is deceptively strong, but\n"
-           "usually chooses to laze around rather\n" 
-           "than fight. If you engage one near a\n"
-           "cliff, you’re going to have a bad time."),
+           "Vriskeletons are powerful, but instead\n"
+           "slumber deep within mountain caves.\n" 
+           "Those who are pursued by a Vriskeleton\n"
+           "will find their end fast approaching."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,

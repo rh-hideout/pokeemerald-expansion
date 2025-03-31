@@ -6423,7 +6423,7 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_TOXIC_SPIKES,
     MOVE_WIDE_GUARD,
     MOVE_IRON_DEFENSE,
-    MOVE_FINAL GAMBIT,
+    MOVE_FINAL_GAMBIT,
     MOVE_UNAVAILABLE,
 };
 
@@ -6474,6 +6474,16 @@ static const u16 sCristaniumEggMoveLearnset[] = {
     MOVE_REVERSAL,
     MOVE_FLYING_PRESS,
     MOVE_WATER_SHURIKEN,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sBambuyaEggMoveLearnset[] = {
+    MOVE_BATON_PASS,
+    MOVE_FLAIL,
+    MOVE_LUNAR_DANCE,
+    MOVE_AROMATHERAPY,
+    MOVE_TRI_ATTACK,
+    MOVE_NEEDLE_ARM,
     MOVE_UNAVAILABLE,
 };
 
