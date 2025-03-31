@@ -6565,10 +6565,21 @@ static const u16 sCofferuleEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 }; 
 
+static const u16 sUlmiraintEggMoveLearnset[] = {
+    MOVE_DESTINY_BOND, 
+    MOVE_LOCK_ON,
+    MOVE_NIGHTMARE,
+    MOVE_SPIKE_CANNON,
+    MOVE_WIDE_GUARD,
+    MOVE_INFERNO,
+    MOVE_UNAVAILABLE,
+
+};
+
 static const u16 sNoxiliumEggMoveLearnset[] = {
-    MOVE_ENCORE, // For now.
-    MOVE_FEINT,
-    MOVE_FOLLOW_ME,
+    MOVE_CLOSE_COMBAT, 
+    MOVE_WHIRLWIND,
+    MOVE_SHADOW_PUNCH,
     MOVE_BONEMERANG,
     MOVE_FAIRY_LOCK,
     MOVE_SKULL_BASH,
