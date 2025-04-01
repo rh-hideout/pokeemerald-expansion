@@ -69,9 +69,7 @@ u32 GetBestDmgFromBattler(u32 battler, u32 battlerTarget, enum DamageCalcContext
 bool32 CanTargetMoveFaintAi(u32 move, u32 battlerDef, u32 battlerAtk, u32 nHits);
 bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dmgMod);
 s32 AI_DecideKnownAbilityForTurn(u32 battlerId);
-u32 AI_DecideItemForTurn(u32 battler);
 u32 AI_DecideHoldEffectForTurn(u32 battlerId);
-bool32 IsBattlerItemEnabled(u32 battler);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, u32 atkAbility, u32 move);
 u32 AI_GetWeather(void);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);

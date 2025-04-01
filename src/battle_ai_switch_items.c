@@ -984,6 +984,17 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
     return FALSE;
 }
 
+static bool32 IsBattlerItemEnabled(u32 battler)
+{
+    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+        return FALSE;
+    if (gStatuses3[battler] & STATUS3_EMBARGO)
+        return FALSE;
+    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
+        return FALSE;
+    return TRUE;
+}
+
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
     u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);

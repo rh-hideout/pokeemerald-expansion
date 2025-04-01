@@ -1435,20 +1435,9 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
     return ABILITY_NONE; // Unknown.
 }
 
-u32 AI_DecideItemForTurn(u32 battler)
-{
-    if (IsBattlerItemEnabled(battler))
-        return ITEM_NONE;
-
-    return gBattleMons[battler].item;
-}
-
 u32 AI_DecideHoldEffectForTurn(u32 battlerId)
 {
-    u32 holdEffect = HOLD_EFFECT_NONE;
-
-    if (IsBattlerItemEnabled(battlerId))
-        return holdEffect;
+    u32 holdEffect;
 
     if (!IsAiBattlerAware(battlerId))
         holdEffect = AI_PARTY->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
@@ -1458,18 +1447,14 @@ u32 AI_DecideHoldEffectForTurn(u32 battlerId)
     if (AI_THINKING_STRUCT->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
 
-    return holdEffect;
-}
-
-bool32 IsBattlerItemEnabled(u32 battler)
-{
+    if (gStatuses3[battlerId] & STATUS3_EMBARGO)
+        return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-        return FALSE;
-    if (gStatuses3[battler] & STATUS3_EMBARGO)
-        return FALSE;
-    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
-        return FALSE;
-    return TRUE;
+        return HOLD_EFFECT_NONE;
+    if (AI_DATA->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses3[battlerId] & STATUS3_GASTRO_ACID))
+        return HOLD_EFFECT_NONE;
+
+    return holdEffect;
 }
 
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, u32 atkAbility, u32 move)

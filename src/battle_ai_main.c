@@ -382,7 +382,7 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     u32 ability, holdEffect;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
-    aiData->items[battler] = AI_DecideItemForTurn(battler);
+    aiData->items[battler] = gBattleMons[battler].item;
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->holdEffectParams[battler] = GetBattlerHoldEffectParam(battler);
     aiData->lastUsedMove[battler] = gLastMoves[battler];
