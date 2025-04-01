@@ -41,6 +41,10 @@
 #include "trainer_hill.h"
 #include "fldeff.h"
 
+#if OW_ENABLE_NPC_FOLLOWERS
+#include "follower_npc.h"
+#endif
+
 static void Task_ExitNonAnimDoor(u8);
 static void Task_ExitNonDoor(u8);
 static void Task_DoContestHallWarp(u8);
@@ -723,7 +727,7 @@ void Task_DoDoorWarp(u8 taskId)
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
                 SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); //Stop running
 
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0; //Just in case came out and when right back in
+            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; //Just in case came out and when right back in
             FreezeObjectEvents();
             PlayerGetDestCoords(x, y);
             PlaySE(GetDoorSoundEffect(*x, *y - 1));

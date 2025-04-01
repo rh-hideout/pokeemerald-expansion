@@ -14,6 +14,12 @@ enum FollowerNPCSpriteTypes
     FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER,
 };
 
+enum FollowerNPCDoorStairsStates
+{
+    FNPC_DOOR_NONE,
+    FNPC_DOOR_NEEDS_TO_EXIT
+};
+
 enum FollowerNPCSurfBlobStates
 {
     FNPC_SURF_BLOB_NONE,

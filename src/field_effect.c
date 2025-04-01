@@ -1432,7 +1432,7 @@ static void Task_UseFly(u8 taskId)
         {
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
             follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0; // In case the follower was still coming out of a door.
+            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
             taskState++;
         }
 #endif
@@ -2451,7 +2451,7 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
         {
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
             follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0; // In case the follower was still coming out of a door.
+            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
             task->tState++;
         }
     }

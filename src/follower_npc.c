@@ -134,7 +134,7 @@ void HideNPCFollower(void)
 void FollowerNPC_SetIndicatorToComeOutDoor(void)
 {
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
-        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 1;
+        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NEEDS_TO_EXIT;
 }
 
 void FollowerNPC_SetIndicatorToRecreateSurfBlob(void)
@@ -240,7 +240,7 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
     {
         gSaveBlock3Ptr->NPCfollower.warpEnd = 0;
 
-        if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == 1)
+        if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == FNPC_DOOR_NEEDS_TO_EXIT)
         {
             gPlayerAvatar.preventStep = TRUE;
             taskId = CreateTask(Task_FollowerNPCOutOfDoor, 1);
@@ -250,10 +250,6 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
             TryUpdateFollowerNPCSpriteUnderwater();
             ObjectEventClearHeldMovementIfFinished(follower);
             return;
-        }
-        else if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == 2)
-        {
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0;
         }
 
         follower->invisible = FALSE;
@@ -777,7 +773,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         break;
     case 4:
         FollowerNPC_HandleSprite();
-        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0;
+        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
         gPlayerAvatar.preventStep = FALSE; // Player can move again
         DestroyTask(taskId);
         break;
@@ -923,9 +919,9 @@ void FollowerNPC_HandleBike(void)
     if (gSaveBlock3Ptr->NPCfollower.currentSprite == FOLLOWER_NPC_SPRITE_INDEX_SURF) // Follower is surfing
         return; // Sprite will automatically be adjusted when they finish surfing
 
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && FollowerNPCCanBike() && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != 1) //Coming out door
+    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && FollowerNPCCanBike() && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE); // Mach Bike on
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE && FollowerNPCCanBike() && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != 1) //Coming out door
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE && FollowerNPCCanBike() && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE); // Acro Bike on
     else
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
@@ -1018,7 +1014,7 @@ void FollowerNPC_WarpSetEnd(void)
     gSaveBlock3Ptr->NPCfollower.warpEnd = 1;
     PlayerLogCoordinates(player);
 
-    toY = gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == 1 ? (player->currentCoords.y - 1) : player->currentCoords.y;
+    toY = gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
     MoveObjectEventToMapCoords(follower, player->currentCoords.x, toY);
 
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
@@ -1112,7 +1108,7 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
             gSaveBlock3Ptr->NPCfollower.flag = flag;
             gSaveBlock3Ptr->NPCfollower.flags = followerFlags;
             gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0;
+            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
             follower->localId = OBJ_EVENT_ID_NPC_FOLLOWER;
             FlagSet(flag);
 
