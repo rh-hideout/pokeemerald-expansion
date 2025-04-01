@@ -51,7 +51,7 @@ void FollowerNPC_HandleBike(void);
 void FollowerNPC_HandleSprite(void);
 void FollowerNPC_WarpSetEnd(void);
 void CreateFollowerNPCAvatar(void);
-void EscalatorMoveFollowerNPC(void);
+void EscalatorMoveFollowerNPC(u8 movementType);
 bool8 FollowerNPCCanBike(void);
 bool8 CheckFollowerNPCFlag(u16 flag);
 void FollowerNPCPositionFix(u8 offset);
