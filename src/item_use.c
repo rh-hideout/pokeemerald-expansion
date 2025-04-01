@@ -1083,7 +1083,7 @@ static void ItemUseOnFieldCB_EscapeRope(u8 taskId)
 bool8 CanUseDigOrEscapeRopeOnCurMap(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOW_ME_FLAG_CAN_LEAVE_ROUTE))
+    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 #endif
     if (gMapHeader.allowEscaping)

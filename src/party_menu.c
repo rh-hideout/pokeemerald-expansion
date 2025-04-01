@@ -4188,7 +4188,7 @@ static void FieldCallback_Surf(void)
 static bool8 SetUpFieldMove_Surf(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOW_ME_FLAG_CAN_SURF))
+    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_SURF))
         return FALSE;
 #endif
     if (PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE)
@@ -4211,7 +4211,7 @@ static void DisplayCantUseSurfMessage(void)
 static bool8 SetUpFieldMove_Fly(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOW_ME_FLAG_CAN_LEAVE_ROUTE))
+    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 #endif
     if (Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
@@ -4236,7 +4236,7 @@ static bool8 SetUpFieldMove_Waterfall(void)
     s16 x, y;
 
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOW_ME_FLAG_CAN_WATERFALL))
+    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_WATERFALL))
         return FALSE;
 #endif
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
@@ -4258,7 +4258,7 @@ static void FieldCallback_Dive(void)
 static bool8 SetUpFieldMove_Dive(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOW_ME_FLAG_CAN_DIVE))
+    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
         return FALSE;
 #endif
     gFieldEffectArguments[1] = TrySetDiveWarp();
