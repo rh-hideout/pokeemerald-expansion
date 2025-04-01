@@ -1,8 +1,8 @@
 {
-  "id": "MAP_SOOTOPOLIS_CITY_POKEMON_CENTER_2F",
-  "name": "SootopolisCity_PokemonCenter_2F",
-  "layout": "LAYOUT_POKEMON_CENTER_2F",
-  "music": "MUS_POKE_CENTER",
+  "id": "MAP_SOOTOPOLIS_CITY_POKEMON_CENTRE_2F",
+  "name": "SootopolisCity_PokemonCentre_2F",
+  "layout": "LAYOUT_POKEMON_CENTRE_2F",
+  "music": "MUS_POKE_CENTRE",
   "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -64,7 +64,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CableClub_EventScript_MysteryGiftMan",
-      "flag": "FLAG_HIDE_POKEMON_CENTER_2F_MYSTERY_GIFT_MAN"
+      "flag": "FLAG_HIDE_POKEMON_CENTRE_2F_MYSTERY_GIFT_MAN"
     }
   ],
   "warp_events": [
@@ -72,7 +72,7 @@
       "x": 1,
       "y": 6,
       "elevation": 4,
-      "dest_map": "MAP_SOOTOPOLIS_CITY_POKEMON_CENTER_1F",
+      "dest_map": "MAP_SOOTOPOLIS_CITY_POKEMON_CENTRE_1F",
       "dest_warp_id": "2"
     },
     {
@@ -86,7 +86,7 @@
       "x": 9,
       "y": 1,
       "elevation": 3,
-      "dest_map": "MAP_TRADE_CENTER",
+      "dest_map": "MAP_TRADE_CENTRE",
       "dest_warp_id": "0"
     }
   ],

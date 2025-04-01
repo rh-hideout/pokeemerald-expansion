@@ -1,8 +1,8 @@
 {
-  "id": "MAP_MAUVILLE_CITY_POKEMON_CENTER_1F",
-  "name": "MauvilleCity_PokemonCenter_1F",
-  "layout": "LAYOUT_POKEMON_CENTER_1F",
-  "music": "MUS_POKE_CENTER",
+  "id": "MAP_MAUVILLE_CITY_POKEMON_CENTRE_1F",
+  "name": "MauvilleCity_PokemonCentre_1F",
+  "layout": "LAYOUT_POKEMON_CENTRE_1F",
+  "music": "MUS_POKE_CENTRE",
   "region_map_section": "MAPSEC_MAUVILLE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "MauvilleCity_PokemonCenter_1F_EventScript_Nurse",
+      "script": "MauvilleCity_PokemonCentre_1F_EventScript_Nurse",
       "flag": "0"
     },
     {
@@ -37,7 +37,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "MauvilleCity_PokemonCenter_1F_EventScript_MauvilleOldMan",
+      "script": "MauvilleCity_PokemonCentre_1F_EventScript_MauvilleOldMan",
       "flag": "0"
     },
     {
@@ -50,7 +50,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "MauvilleCity_PokemonCenter_1F_EventScript_Woman1",
+      "script": "MauvilleCity_PokemonCentre_1F_EventScript_Woman1",
       "flag": "0"
     },
     {
@@ -63,7 +63,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "MauvilleCity_PokemonCenter_1F_EventScript_Woman2",
+      "script": "MauvilleCity_PokemonCentre_1F_EventScript_Woman2",
       "flag": "0"
     },
     {
@@ -76,7 +76,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "MauvilleCity_PokemonCenter_1F_EventScript_Youngster",
+      "script": "MauvilleCity_PokemonCentre_1F_EventScript_Youngster",
       "flag": "0"
     }
   ],
@@ -99,7 +99,7 @@
       "x": 1,
       "y": 6,
       "elevation": 4,
-      "dest_map": "MAP_MAUVILLE_CITY_POKEMON_CENTER_2F",
+      "dest_map": "MAP_MAUVILLE_CITY_POKEMON_CENTRE_2F",
       "dest_warp_id": "0"
     }
   ],

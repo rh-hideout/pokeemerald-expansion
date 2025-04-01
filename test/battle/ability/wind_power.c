@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
 
     GIVEN {
         PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
+        OPPONENT(SPECIES_WOBBUFFET) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralysed.
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT), MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_THUNDERBOLT), MOVE(opponent, move); }
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
+        PLAYER(SPECIES_WOBBUFFET) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralysed.
         OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_THUNDERBOLT), MOVE(player, move); }

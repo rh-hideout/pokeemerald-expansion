@@ -467,7 +467,7 @@ static void CameraPanningCB_PanAhead(void)
     InstallCameraPanAheadCallback();
     //  Old code kept for archival purposes
     //  The else condition could never run since gUnusedBikeCameraAheadPanback was never set to TRUE
-    //  So the behavior should not change
+    //  So the behaviour should not change
     /*
     u8 var;
 

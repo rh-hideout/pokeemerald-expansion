@@ -1198,7 +1198,7 @@ static void Cmd_attackcanceler(void)
 
     if (AbilityBattleEffects(ABILITYEFFECT_MOVES_BLOCK, gBattlerTarget, 0, 0, 0))
         return;
-    if (gMovesInfo[gCurrentMove].effect == EFFECT_PARALYZE && AbilityBattleEffects(ABILITYEFFECT_ABSORBING, gBattlerTarget, 0, 0, gCurrentMove))
+    if (gMovesInfo[gCurrentMove].effect == EFFECT_PARALYSE && AbilityBattleEffects(ABILITYEFFECT_ABSORBING, gBattlerTarget, 0, 0, gCurrentMove))
         return;
     if (IsMovePowderBlocked(gBattlerAttacker, gBattlerTarget, gCurrentMove))
         return;
@@ -3374,7 +3374,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 if (primary == FALSE && certain == FALSE && IS_BATTLER_OF_TYPE(gEffectBattler, moveType))
                     break;
             }
-            if (!CanParalyzeType(gBattleScripting.battler, gEffectBattler)
+            if (!CanParalyseType(gBattleScripting.battler, gEffectBattler)
                 && (gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
                 && (primary == TRUE || certain == TRUE))
             {
@@ -3384,9 +3384,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 2;
                 RESET_RETURN
             }
-            if (!CanParalyzeType(gBattleScripting.battler, gEffectBattler))
+            if (!CanParalyseType(gBattleScripting.battler, gEffectBattler))
                 break;
-            if (!CanBeParalyzed(gEffectBattler, GetBattlerAbility(gEffectBattler)))
+            if (!CanBeParalysed(gEffectBattler, GetBattlerAbility(gEffectBattler)))
                 break;
 
             statusChanged = TRUE;
@@ -4517,17 +4517,17 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_EffectTryReducePP;
                 }
                 break;
-            case MOVE_EFFECT_PARALYZE_SIDE:
+            case MOVE_EFFECT_PARALYSE_SIDE:
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
-                gBattlescriptCurrInstr = BattleScript_EffectParalyzeSide;
+                gBattlescriptCurrInstr = BattleScript_EffectParalyseSide;
                 break;
             case MOVE_EFFECT_POISON_SIDE:
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
                 gBattlescriptCurrInstr = BattleScript_EffectPoisonSide;
                 break;
-            case MOVE_EFFECT_POISON_PARALYZE_SIDE:
+            case MOVE_EFFECT_POISON_PARALYSE_SIDE:
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
-                gBattlescriptCurrInstr = BattleScript_EffectPoisonParalyzeSide;
+                gBattlescriptCurrInstr = BattleScript_EffectPoisonParalyseSide;
                 break;
             case MOVE_EFFECT_EFFECT_SPORE_SIDE:
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -6060,7 +6060,7 @@ static void Cmd_playstatchangeanimation(void)
             stats >>= 1, currStat++;
         }
 
-        if (changeableStatsCount > 1) // more than one stat, so the color is gray
+        if (changeableStatsCount > 1) // more than one stat, so the colour is grey
         {
             if (flags & STAT_CHANGE_BY_TWO)
                 statAnimId = STAT_ANIM_MULTIPLE_MINUS2;
@@ -6085,7 +6085,7 @@ static void Cmd_playstatchangeanimation(void)
             stats >>= 1, currStat++;
         }
 
-        if (changeableStatsCount > 1) // more than one stat, so the color is gray
+        if (changeableStatsCount > 1) // more than one stat, so the colour is grey
         {
             if (flags & STAT_CHANGE_BY_TWO)
                 statAnimId = STAT_ANIM_MULTIPLE_PLUS2;
@@ -9244,7 +9244,7 @@ static void DrawLevelUpWindow1(void)
     u16 currStats[NUM_STATS];
 
     GetMonLevelUpWindowStats(&gPlayerParty[gBattleStruct->expGetterMonId], currStats);
-    DrawLevelUpWindowPg1(B_WIN_LEVEL_UP_BOX, gBattleResources->beforeLvlUp->stats, currStats, TEXT_DYNAMIC_COLOR_5, TEXT_DYNAMIC_COLOR_4, TEXT_DYNAMIC_COLOR_6);
+    DrawLevelUpWindowPg1(B_WIN_LEVEL_UP_BOX, gBattleResources->beforeLvlUp->stats, currStats, TEXT_DYNAMIC_COLOUR_5, TEXT_DYNAMIC_COLOUR_4, TEXT_DYNAMIC_COLOUR_6);
 }
 
 static void DrawLevelUpWindow2(void)
@@ -9252,7 +9252,7 @@ static void DrawLevelUpWindow2(void)
     u16 currStats[NUM_STATS];
 
     GetMonLevelUpWindowStats(&gPlayerParty[gBattleStruct->expGetterMonId], currStats);
-    DrawLevelUpWindowPg2(B_WIN_LEVEL_UP_BOX, currStats, TEXT_DYNAMIC_COLOR_5, TEXT_DYNAMIC_COLOR_4, TEXT_DYNAMIC_COLOR_6);
+    DrawLevelUpWindowPg2(B_WIN_LEVEL_UP_BOX, currStats, TEXT_DYNAMIC_COLOUR_5, TEXT_DYNAMIC_COLOUR_4, TEXT_DYNAMIC_COLOUR_6);
 }
 
 static void InitLevelUpBanner(void)
@@ -9307,9 +9307,9 @@ static void DrawLevelUpBannerText(void)
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
     printerTemplate.unk = 0;
-    printerTemplate.fgColor = TEXT_COLOR_WHITE;
-    printerTemplate.bgColor = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.shadowColor = TEXT_COLOR_DARK_GRAY;
+    printerTemplate.fgColour = TEXT_COLOUR_WHITE;
+    printerTemplate.bgColour = TEXT_COLOUR_TRANSPARENT;
+    printerTemplate.shadowColour = TEXT_COLOUR_DARK_GREY;
 
     AddTextPrinter(&printerTemplate, TEXT_SKIP_DRAW, NULL);
 
@@ -9326,14 +9326,14 @@ static void DrawLevelUpBannerText(void)
     {
         if (monGender == MON_MALE)
         {
-            txtPtr = WriteColorChangeControlCode(txtPtr, 0, TEXT_DYNAMIC_COLOR_3);
-            txtPtr = WriteColorChangeControlCode(txtPtr, 1, TEXT_DYNAMIC_COLOR_4);
+            txtPtr = WriteColourChangeControlCode(txtPtr, 0, TEXT_DYNAMIC_COLOUR_3);
+            txtPtr = WriteColourChangeControlCode(txtPtr, 1, TEXT_DYNAMIC_COLOUR_4);
             *(txtPtr++) = CHAR_MALE;
         }
         else
         {
-            txtPtr = WriteColorChangeControlCode(txtPtr, 0, TEXT_DYNAMIC_COLOR_5);
-            txtPtr = WriteColorChangeControlCode(txtPtr, 1, TEXT_DYNAMIC_COLOR_6);
+            txtPtr = WriteColourChangeControlCode(txtPtr, 0, TEXT_DYNAMIC_COLOUR_5);
+            txtPtr = WriteColourChangeControlCode(txtPtr, 1, TEXT_DYNAMIC_COLOUR_6);
             *(txtPtr++) = CHAR_FEMALE;
         }
         *(txtPtr++) = EOS;
@@ -9558,9 +9558,9 @@ bool32 CanPoisonType(u8 battlerAttacker, u8 battlerTarget)
         || !IS_BATTLER_ANY_TYPE(battlerTarget, TYPE_POISON, TYPE_STEEL);
 }
 
-bool32 CanParalyzeType(u8 battlerAttacker, u8 battlerTarget)
+bool32 CanParalyseType(u8 battlerAttacker, u8 battlerTarget)
 {
-    return !(B_PARALYZE_ELECTRIC >= GEN_6 && IS_BATTLER_OF_TYPE(battlerTarget, TYPE_ELECTRIC));
+    return !(B_PARALYSE_ELECTRIC >= GEN_6 && IS_BATTLER_OF_TYPE(battlerTarget, TYPE_ELECTRIC));
 }
 
 bool32 CanUseLastResort(u8 battler)
@@ -10159,10 +10159,10 @@ static void Cmd_various(void)
             gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
-    case VARIOUS_PARALYZE_TYPE_IMMUNITY:
+    case VARIOUS_PARALYSE_TYPE_IMMUNITY:
     {
         VARIOUS_ARGS(u8 target, const u8 *failInstr);
-        if (!CanParalyzeType(battler, GetBattlerForBattleScript(cmd->target)))
+        if (!CanParalyseType(battler, GetBattlerForBattleScript(cmd->target)))
             gBattlescriptCurrInstr = cmd->failInstr;
         else
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -10346,10 +10346,10 @@ static void Cmd_various(void)
         }
         break;
     }
-    case VARIOUS_PALACE_FLAVOR_TEXT:
+    case VARIOUS_PALACE_FLAVOUR_TEXT:
     {
         VARIOUS_ARGS();
-        // Try and print end-of-turn Battle Palace flavor text (e.g. "A glint appears in mon's eyes")
+        // Try and print end-of-turn Battle Palace flavour text (e.g. "A glint appears in mon's eyes")
         gBattleCommunication[0] = FALSE; // whether or not msg should be printed
         gBattleScripting.battler = battler = gBattleCommunication[1];
         if (!(gBattleStruct->palaceFlags & (1u << battler))
@@ -10359,7 +10359,7 @@ static void Cmd_various(void)
         {
             gBattleStruct->palaceFlags |= 1u << battler;
             gBattleCommunication[0] = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = gNaturesInfo[GetNatureFromPersonality(gBattleMons[battler].personality)].battlePalaceFlavorText;
+            gBattleCommunication[MULTISTRING_CHOOSER] = gNaturesInfo[GetNatureFromPersonality(gBattleMons[battler].personality)].battlePalaceFlavourText;
         }
         break;
     }
@@ -11013,7 +11013,7 @@ static void Cmd_various(void)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 1;
             else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_BURN) && CanBeBurned(gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 2;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS) && CanBeParalyzed(gBattlerTarget, targetAbility))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS) && CanBeParalysed(gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 3;
             else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP) && CanBeSlept(gBattlerTarget, targetAbility, BLOCKED_BY_SLEEP_CLAUSE))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 4;
@@ -18557,7 +18557,7 @@ void BS_SwapStats(void)
 
 static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
 {
-    if (CanBeParalyzed(gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
+    if (CanBeParalysed(gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
     {
         gBattleMons[gBattlerTarget].status1 |= STATUS1_PARALYSIS;
         gBattleCommunication[MULTISTRING_CHOOSER] = 3;

@@ -196,14 +196,14 @@ const struct Tileset gTileset_Shop =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_PokemonCenter =
+const struct Tileset gTileset_PokemonCentre =
 {
     .isCompressed = TRUE,
     .isSecondary = TRUE,
-    .tiles = gTilesetTiles_PokemonCenter,
-    .palettes = gTilesetPalettes_PokemonCenter,
-    .metatiles = gMetatiles_PokemonCenter,
-    .metatileAttributes = gMetatileAttributes_PokemonCenter,
+    .tiles = gTilesetTiles_PokemonCentre,
+    .palettes = gTilesetPalettes_PokemonCentre,
+    .metatiles = gMetatiles_PokemonCentre,
+    .metatileAttributes = gMetatileAttributes_PokemonCentre,
     .callback = NULL,
 };
 
@@ -749,14 +749,14 @@ const struct Tileset gTileset_MossdeepGameCorner =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_IslandHarbor =
+const struct Tileset gTileset_IslandHarbour =
 {
     .isCompressed = TRUE,
     .isSecondary = TRUE,
-    .tiles = gTilesetTiles_IslandHarbor,
-    .palettes = gTilesetPalettes_IslandHarbor,
-    .metatiles = gMetatiles_IslandHarbor,
-    .metatileAttributes = gMetatileAttributes_IslandHarbor,
+    .tiles = gTilesetTiles_IslandHarbour,
+    .palettes = gTilesetPalettes_IslandHarbour,
+    .metatiles = gMetatiles_IslandHarbour,
+    .metatileAttributes = gMetatileAttributes_IslandHarbour,
     .callback = NULL,
 };
 

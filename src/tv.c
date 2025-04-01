@@ -41,7 +41,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/lilycove_lady.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
 #include "constants/region_map_sections.h"
@@ -859,7 +859,7 @@ static void SetTVMetatilesOnMap(int width, int height, u16 metatileId)
     {
         for (x = 0; x < width; x++)
         {
-            if (MapGridGetMetatileBehaviorAt(x, y) == MB_TELEVISION)
+            if (MapGridGetMetatileBehaviourAt(x, y) == MB_TELEVISION)
                 MapGridSetMetatileIdAt(x, y, metatileId | MAPGRID_COLLISION_MASK);
         }
     }
@@ -1283,7 +1283,7 @@ void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, u16 move, u16 speciesPlaye
     }
 }
 
-bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavor, u8 color, u8 sheen, u8 language)
+bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavour, u8 colour, u8 sheen, u8 language)
 {
     TVShow *show;
     u8 name[32];
@@ -1303,8 +1303,8 @@ bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavor, u8 colo
     StringCopy(name, partnersName);
     StripExtCtrlCodes(name);
     StringCopy(show->threeCheers.worstBlenderName, name);
-    show->threeCheers.flavor = flavor;
-    show->threeCheers.color = color;
+    show->threeCheers.flavour = flavour;
+    show->threeCheers.colour = colour;
     show->threeCheers.sheen = sheen;
     StorePlayerIdInNormalShow(show);
     show->threeCheers.language = gGameLanguage;
@@ -5313,7 +5313,7 @@ static void DoTVShow3CheersForPokeblocks(void)
             sTVShowState = 3;
         break;
     case 1:
-        switch (show->threeCheers.flavor)
+        switch (show->threeCheers.flavour)
         {
         case 0:
             StringCopy(gStringVar1, gText_Spicy2);
@@ -5351,7 +5351,7 @@ static void DoTVShow3CheersForPokeblocks(void)
         sTVShowState = 5;
         break;
     case 3:
-        switch (show->threeCheers.flavor)
+        switch (show->threeCheers.flavour)
         {
         case 0:
             StringCopy(gStringVar1, gText_Spicy2);

@@ -174,7 +174,7 @@ Also, *please follow the Pull Request template and feel free to discuss how the 
         - **Additional features**:
             - *Support for new evolution methods*.
             - *Dark Mode*.
-    - [Nature Colors](https://github.com/DizzyEggg/pokeemerald/tree/nature_color) in summary screen by @DizzyEggg
+    - [Nature Colours](https://github.com/DizzyEggg/pokeemerald/tree/nature_colour) in summary screen by @DizzyEggg
     - [Dynamic Multichoice](https://github.com/SBird1337/pokeemerald/tree/feature/dynmulti) by @SBird1337
     - [Saveblock Cleansing](https://github.com/ghoulslash/pokeemerald/tree/saveblock) by @ghoulslash
     - [Followers & Expanded IDs](https://github.com/aarant/pokeemerald/tree/followers-expanded-id) by @aarant

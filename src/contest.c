@@ -93,9 +93,9 @@ static void Task_ContestReturnToField(u8);
 static void FieldCB_ContestReturnToField(void);
 static bool8 IsPlayerLinkLeader(void);
 static void PrintContestantTrainerName(u8);
-static void PrintContestantTrainerNameWithColor(u8, u8);
+static void PrintContestantTrainerNameWithColour(u8, u8);
 static void PrintContestantMonName(u8);
-static void PrintContestantMonNameWithColor(u8, u8);
+static void PrintContestantMonNameWithColour(u8, u8);
 static u8 CreateJudgeSprite(void);
 static u8 CreateJudgeSpeechBubbleSprite(void);
 static u8 CreateContestantSprite(u16, bool8, u32, u32);
@@ -189,9 +189,9 @@ static void StripPlayerNameForLinkContest(u8 *);
 static void StripMonNameForLinkContest(u8 *, s32);
 static void SwapMoveDescAndContestTilemaps(void);
 
-// An index into a palette where the text color for each contestant is stored.
-// Contestant 0 will use palette color 10, contestant 1 will use color 11, etc.
-#define CONTESTANT_TEXT_COLOR_START 10
+// An index into a palette where the text colour for each contestant is stored.
+// Contestant 0 will use palette colour 10, contestant 1 will use colour 11, etc.
+#define CONTESTANT_TEXT_COLOUR_START 10
 
 enum {
 // The "{Pokémon Name} / {Trainer Name}" windows.
@@ -1179,7 +1179,7 @@ static void LoadContestPalettes(void)
     s32 i;
 
     LoadPalette(sText_Pal, BG_PLTT_ID(15), sizeof(sText_Pal));
-    SetBackdropFromColor(RGB_BLACK);
+    SetBackdropFromColour(RGB_BLACK);
     for (i = 10; i < 14; i++)
         LoadPalette(&gPlttBufferUnfaded[BG_PLTT_ID(15) + 1], BG_PLTT_ID(15) + i, PLTT_SIZEOF(1));
     FillPalette(RGB(31, 17, 31), BG_PLTT_ID(15) + 3, PLTT_SIZEOF(1));
@@ -1635,14 +1635,14 @@ static void Task_ShowMoveSelectScreen(u8 taskId)
             && eContestantStatus[gContestPlayerMonIndex].hasJudgesAttention)
         {
             // Highlight the text because it's a combo move
-            moveNameBuffer = StringCopy(moveName, gText_ColorLightShadowDarkGray);
+            moveNameBuffer = StringCopy(moveName, gText_ColourLightShadowDarkGrey);
         }
         else if (move != MOVE_NONE
                  && eContestantStatus[gContestPlayerMonIndex].prevMove == move
                  && GetMoveContestEffect(move) != CONTEST_EFFECT_REPETITION_NOT_BORING)
         {
-            // Gray the text because it's a repeated move
-            moveNameBuffer = StringCopy(moveName, gText_ColorBlue);
+            // Grey the text because it's a repeated move
+            moveNameBuffer = StringCopy(moveName, gText_ColourBlue);
         }
         moveNameBuffer = StringCopy(moveNameBuffer, GetMoveName(move));
 
@@ -3108,10 +3108,10 @@ static void DrawContestantWindowText(void)
     }
 }
 
-static u8 *Contest_CopyStringWithColor(const u8 *string, u8 color)
+static u8 *Contest_CopyStringWithColour(const u8 *string, u8 colour)
 {
-    u8 *ptr = StringCopy(gDisplayedStringBattle, gText_ColorTransparent);
-    ptr[-1] = color; // Overwrites the "{COLOR TRANSPARENT}" part of the string.
+    u8 *ptr = StringCopy(gDisplayedStringBattle, gText_ColourTransparent);
+    ptr[-1] = colour; // Overwrites the "{COLOUR TRANSPARENT}" part of the string.
     ptr = StringCopy(ptr, string);
 
     return ptr;
@@ -3119,17 +3119,17 @@ static u8 *Contest_CopyStringWithColor(const u8 *string, u8 color)
 
 static void PrintContestantTrainerName(u8 contestant)
 {
-    PrintContestantTrainerNameWithColor(contestant, contestant + CONTESTANT_TEXT_COLOR_START);
+    PrintContestantTrainerNameWithColour(contestant, contestant + CONTESTANT_TEXT_COLOUR_START);
 }
 
-static void PrintContestantTrainerNameWithColor(u8 contestant, u8 color)
+static void PrintContestantTrainerNameWithColour(u8 contestant, u8 colour)
 {
     u8 buffer[32];
     s32 offset;
 
     StringCopy(buffer, gText_Slash);
     StringAppend(buffer, gContestMons[contestant].trainerName);
-    Contest_CopyStringWithColor(buffer, color);
+    Contest_CopyStringWithColour(buffer, colour);
     offset = GetStringRightAlignXOffset(FONT_NARROW, gDisplayedStringBattle, 0x60);
     if (offset > 55)
         offset = 55;
@@ -3138,12 +3138,12 @@ static void PrintContestantTrainerNameWithColor(u8 contestant, u8 color)
 
 static void PrintContestantMonName(u8 contestant)
 {
-    PrintContestantMonNameWithColor(contestant, contestant + CONTESTANT_TEXT_COLOR_START);
+    PrintContestantMonNameWithColour(contestant, contestant + CONTESTANT_TEXT_COLOUR_START);
 }
 
-static void PrintContestantMonNameWithColor(u8 contestant, u8 color)
+static void PrintContestantMonNameWithColour(u8 contestant, u8 colour)
 {
-    Contest_CopyStringWithColor(gContestMons[contestant].nickname, color);
+    Contest_CopyStringWithColour(gContestMons[contestant].nickname, colour);
     Contest_PrintTextToBg0WindowAt(gContestantTurnOrder[contestant], gDisplayedStringBattle, 5, 1, GetFontIdToFit(gContestMons[contestant].nickname, FONT_NARROW, 0, 50));
 }
 
@@ -4129,7 +4129,7 @@ static void Task_FlashJudgeAttentionEye(u8 taskId)
 // Note: While the below task is run for the entire Appeals portion of the contest,
 //       because data[i * 4] is always 0xFF it never does anything
 //       If turned on by setting that data between 0 and 16, it blends
-//       an odd selection of palette colors (e.g. the text box, the appeal hearts
+//       an odd selection of palette colours (e.g. the text box, the appeal hearts
 //       for only one contestant, the heart outlines in the move selection box, etc)
 //       Given the similarities, it's possible this was an incorrect attempt
 //       at something similar to what CreateJudgeAttentionEyeTask does
@@ -4862,7 +4862,7 @@ static void Task_ApplauseOverflowAnimation(u8 taskId)
     {
         gTasks[taskId].data[0] = 0;
 
-        // Alternate between normal colors and white.
+        // Alternate between normal colours and white.
         if (gTasks[taskId].data[3] == 0)
             gTasks[taskId].data[4]++;
         else
@@ -5024,7 +5024,7 @@ static void Task_AnimateAudience(u8 taskId)
 #undef tFrame
 #undef tCycles
 
-#define tBlendColor       data[0]
+#define tBlendColour       data[0]
 #define tBlendCoeff       data[1]
 #define tBlendDir         data[2]
 #define tTargetBlendCoeff data[3]
@@ -5033,13 +5033,13 @@ static void Task_AnimateAudience(u8 taskId)
 static void BlendAudienceBackground(s8 excitementDir, s8 blendDir)
 {
     u8 taskId = CreateTask(Task_BlendAudienceBackground, 10);
-    u16 blendColor;
+    u16 blendColour;
     u8 blendCoeff;
     u8 targetBlendCoeff;
 
     if (excitementDir > 0)
     {
-        blendColor = RGB(30, 27, 8);
+        blendColour = RGB(30, 27, 8);
         if (blendDir > 0)
         {
             // Blend to yellow (amount depends on applause meter)
@@ -5055,7 +5055,7 @@ static void BlendAudienceBackground(s8 excitementDir, s8 blendDir)
     }
     else
     {
-        blendColor = RGB_BLACK;
+        blendColour = RGB_BLACK;
         if (blendDir > 0)
         {
             // Blend to black
@@ -5069,11 +5069,11 @@ static void BlendAudienceBackground(s8 excitementDir, s8 blendDir)
             targetBlendCoeff = 0;
         }
     }
-    gTasks[taskId].tBlendColor = blendColor;
+    gTasks[taskId].tBlendColour = blendColour;
     gTasks[taskId].tBlendCoeff = blendCoeff;
     gTasks[taskId].tBlendDir = blendDir;
     gTasks[taskId].tTargetBlendCoeff = targetBlendCoeff;
-    // Because this isn't set to TRUE here, the main task doesn't wait for the color blend
+    // Because this isn't set to TRUE here, the main task doesn't wait for the colour blend
     // Unclear if this was intentional or not (perhaps waiting added too much delay). In any case it does nothing now
     eContest.waitForAudienceBlend = FALSE;
 
@@ -5089,8 +5089,8 @@ static void Task_BlendAudienceBackground(u8 taskId)
         else
             gTasks[taskId].tBlendCoeff--;
 
-        BlendPalette(BG_PLTT_ID(1) + 1,  1, gTasks[taskId].tBlendCoeff, gTasks[taskId].tBlendColor);
-        BlendPalette(BG_PLTT_ID(1) + 10, 1, gTasks[taskId].tBlendCoeff, gTasks[taskId].tBlendColor);
+        BlendPalette(BG_PLTT_ID(1) + 1,  1, gTasks[taskId].tBlendCoeff, gTasks[taskId].tBlendColour);
+        BlendPalette(BG_PLTT_ID(1) + 10, 1, gTasks[taskId].tBlendCoeff, gTasks[taskId].tBlendColour);
 
         if (gTasks[taskId].tBlendCoeff == gTasks[taskId].tTargetBlendCoeff)
         {
@@ -5100,7 +5100,7 @@ static void Task_BlendAudienceBackground(u8 taskId)
     }
 }
 
-#undef tBlendColor
+#undef tBlendColour
 #undef tBlendCoeff
 #undef tTargetBlendCoeff
 #undef tBlendDelay
@@ -5513,9 +5513,9 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
     printerTemplate.unk = 0;
-    printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.fgColour = 15;
+    printerTemplate.bgColour = 0;
+    printerTemplate.shadowColour = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5536,9 +5536,9 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
     printerTemplate.unk = 0;
-    printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.fgColour = 15;
+    printerTemplate.bgColour = 0;
+    printerTemplate.shadowColour = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5560,9 +5560,9 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
     printerTemplate.unk = 0;
-    printerTemplate.fgColor = 1;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.fgColour = 1;
+    printerTemplate.bgColour = 0;
+    printerTemplate.shadowColour = 8;
 
     if (!b)
     {

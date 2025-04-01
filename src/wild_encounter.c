@@ -1,7 +1,7 @@
 #include "global.h"
 #include "wild_encounter.h"
 #include "pokemon.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "fieldmap.h"
 #include "random.h"
 #include "field_player_avatar.h"
@@ -105,8 +105,8 @@ static u16 GetFeebasFishingSpotId(s16 targetX, s16 targetY, u8 section)
     {
         for (x = 0; x < gMapHeader.mapLayout->width; x++)
         {
-            u8 behavior = MapGridGetMetatileBehaviorAt(x + MAP_OFFSET, y + MAP_OFFSET);
-            if (MetatileBehavior_IsSurfableAndNotWaterfall(behavior) == TRUE)
+            u8 behaviour = MapGridGetMetatileBehaviourAt(x + MAP_OFFSET, y + MAP_OFFSET);
+            if (MetatileBehaviour_IsSurfableAndNotWaterfall(behaviour) == TRUE)
             {
                 spotId++;
                 if (targetX == x && targetY == y)
@@ -619,7 +619,7 @@ static bool8 AreLegendariesInSootopolisPreventingEncounters(void)
     return FlagGet(FLAG_LEGENDARIES_IN_SOOTOPOLIS);
 }
 
-bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
+bool8 StandardWildEncounter(u16 curMetatileBehaviour, u16 prevMetatileBehaviour)
 {
     u16 headerId;
     struct Roamer *roamer;
@@ -633,7 +633,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
         {
             headerId = GetBattlePikeWildMonHeaderId();
-            if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+            if (prevMetatileBehaviour != curMetatileBehaviour && !AllowWildCheckOnNewMetatile())
                 return FALSE;
             else if (WildEncounterCheck(gBattlePikeWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
@@ -648,7 +648,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
             headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-            if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+            if (prevMetatileBehaviour != curMetatileBehaviour && !AllowWildCheckOnNewMetatile())
                 return FALSE;
             else if (WildEncounterCheck(gBattlePyramidWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
@@ -662,11 +662,11 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     }
     else
     {
-        if (MetatileBehavior_IsLandWildEncounter(curMetatileBehavior) == TRUE)
+        if (MetatileBehaviour_IsLandWildEncounter(curMetatileBehaviour) == TRUE)
         {
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
-            else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+            else if (prevMetatileBehaviour != curMetatileBehaviour && !AllowWildCheckOnNewMetatile())
                 return FALSE;
             else if (WildEncounterCheck(gWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
@@ -708,14 +708,14 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
             }
         }
-        else if (MetatileBehavior_IsWaterWildEncounter(curMetatileBehavior) == TRUE
-                 || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridgeOverWater(curMetatileBehavior) == TRUE))
+        else if (MetatileBehaviour_IsWaterWildEncounter(curMetatileBehaviour) == TRUE
+                 || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehaviour_IsBridgeOverWater(curMetatileBehaviour) == TRUE))
         {
             if (AreLegendariesInSootopolisPreventingEncounters() == TRUE)
                 return FALSE;
             else if (gWildMonHeaders[headerId].waterMonsInfo == NULL)
                 return FALSE;
-            else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+            else if (prevMetatileBehaviour != curMetatileBehaviour && !AllowWildCheckOnNewMetatile())
                 return FALSE;
             else if (WildEncounterCheck(gWildMonHeaders[headerId].waterMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
@@ -817,7 +817,7 @@ bool8 SweetScentWildEncounter(void)
     }
     else
     {
-        if (MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+        if (MetatileBehaviour_IsLandWildEncounter(MapGridGetMetatileBehaviourAt(x, y)) == TRUE)
         {
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
@@ -836,7 +836,7 @@ bool8 SweetScentWildEncounter(void)
             BattleSetup_StartWildBattle();
             return TRUE;
         }
-        else if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+        else if (MetatileBehaviour_IsWaterWildEncounter(MapGridGetMetatileBehaviourAt(x, y)) == TRUE)
         {
             if (AreLegendariesInSootopolisPreventingEncounters() == TRUE)
                 return FALSE;

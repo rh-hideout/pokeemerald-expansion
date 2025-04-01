@@ -117,7 +117,7 @@ public:
     Json(const V & v) : Json(array(v.begin(), v.end())) {}
 
     // This prevents Json(some_pointer) from accidentally producing a bool. Use
-    // Json(bool(some_pointer)) if that behavior is desired.
+    // Json(bool(some_pointer)) if that behaviour is desired.
     Json(void *) = delete;
 
     // Accessors

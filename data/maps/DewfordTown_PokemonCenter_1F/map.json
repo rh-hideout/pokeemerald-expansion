@@ -1,8 +1,8 @@
 {
-  "id": "MAP_DEWFORD_TOWN_POKEMON_CENTER_1F",
-  "name": "DewfordTown_PokemonCenter_1F",
-  "layout": "LAYOUT_POKEMON_CENTER_1F",
-  "music": "MUS_POKE_CENTER",
+  "id": "MAP_DEWFORD_TOWN_POKEMON_CENTRE_1F",
+  "name": "DewfordTown_PokemonCentre_1F",
+  "layout": "LAYOUT_POKEMON_CENTRE_1F",
+  "music": "MUS_POKE_CENTRE",
   "region_map_section": "MAPSEC_DEWFORD_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "DewfordTown_PokemonCenter_1F_EventScript_Nurse",
+      "script": "DewfordTown_PokemonCentre_1F_EventScript_Nurse",
       "flag": "0"
     },
     {
@@ -37,7 +37,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "DewfordTown_PokemonCenter_1F_EventScript_PokefanF",
+      "script": "DewfordTown_PokemonCentre_1F_EventScript_PokefanF",
       "flag": "0"
     },
     {
@@ -50,7 +50,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "DewfordTown_PokemonCenter_1F_EventScript_Man",
+      "script": "DewfordTown_PokemonCentre_1F_EventScript_Man",
       "flag": "0"
     }
   ],
@@ -73,7 +73,7 @@
       "x": 1,
       "y": 6,
       "elevation": 4,
-      "dest_map": "MAP_DEWFORD_TOWN_POKEMON_CENTER_2F",
+      "dest_map": "MAP_DEWFORD_TOWN_POKEMON_CENTRE_2F",
       "dest_warp_id": "0"
     }
   ],

@@ -3,7 +3,7 @@
 #include "field_door.h"
 #include "field_camera.h"
 #include "fieldmap.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "task.h"
 #include "constants/songs.h"
 #include "constants/metatile_labels.h"
@@ -41,12 +41,12 @@ static const u8 sDoorAnimTiles_LilycoveWooden[] = INCBIN_U8("graphics/door_anims
 static const u16 sDoorNullPalette5[16] = {};
 static const u8 sDoorAnimTiles_General[] = INCBIN_U8("graphics/door_anims/general.4bpp");
 static const u16 sDoorNullPalette6[16] = {};
-static const u8 sDoorAnimTiles_PokeCenter[] = INCBIN_U8("graphics/door_anims/poke_center.4bpp");
+static const u8 sDoorAnimTiles_PokeCentre[] = INCBIN_U8("graphics/door_anims/poke_centre.4bpp");
 static const u8 sDoorAnimTiles_Gym[] = INCBIN_U8("graphics/door_anims/gym.4bpp");
 static const u8 sDoorAnimTiles_PokeMart[] = INCBIN_U8("graphics/door_anims/poke_mart.4bpp");
 static const u8 sDoorAnimTiles_RustboroTan[] = INCBIN_U8("graphics/door_anims/rustboro_tan.4bpp");
 static const u16 sDoorNullPalette7[16] = {};
-static const u8 sDoorAnimTiles_RustboroGray[] = INCBIN_U8("graphics/door_anims/rustboro_gray.4bpp");
+static const u8 sDoorAnimTiles_RustboroGrey[] = INCBIN_U8("graphics/door_anims/rustboro_grey.4bpp");
 static const u16 sDoorNullPalette8[16] = {};
 static const u8 sDoorAnimTiles_Oldale[] = INCBIN_U8("graphics/door_anims/oldale.4bpp");
 static const u8 sFiller1[0x5900] = {};
@@ -82,7 +82,7 @@ static const u8 sDoorAnimTiles_LilycoveDeptStore[] = INCBIN_U8("graphics/door_an
 static const u16 sDoorNullPalette24[16] = {};
 static const u8 sDoorAnimTiles_SafariZone[] = INCBIN_U8("graphics/door_anims/safari_zone.4bpp");
 static const u16 sDoorNullPalette25[16] = {};
-static const u8 sDoorAnimTiles_MossdeepSpaceCenter[] = INCBIN_U8("graphics/door_anims/mossdeep_space_center.4bpp");
+static const u8 sDoorAnimTiles_MossdeepSpaceCentre[] = INCBIN_U8("graphics/door_anims/mossdeep_space_centre.4bpp");
 static const u16 sDoorNullPalette26[16] = {};
 static const u8 sDoorAnimTiles_CableClub[] = INCBIN_U8("graphics/door_anims/cable_club.4bpp");
 static const u16 sDoorNullPalette27[16] = {};
@@ -169,13 +169,13 @@ static const struct DoorAnimFrame sBigDoorCloseAnimFrames[] =
 };
 
 static const u8 sDoorAnimPalettes_General[] = {1, 1, 1, 1, 1, 1, 1, 1};
-static const u8 sDoorAnimPalettes_PokeCenter[] = {1, 1, 1, 1, 1, 1, 1, 1};
+static const u8 sDoorAnimPalettes_PokeCentre[] = {1, 1, 1, 1, 1, 1, 1, 1};
 static const u8 sDoorAnimPalettes_Gym[] = {5, 5, 5, 5, 5, 5, 5, 5};
 static const u8 sDoorAnimPalettes_PokeMart[] = {0, 0, 1, 1, 1, 1, 1, 1};
 static const u8 sDoorAnimPalettes_Littleroot[] = {10, 10, 6, 6, 6, 6, 6, 6};
 static const u8 sDoorAnimPalettes_BirchsLab[] = {8, 8, 8, 8, 8, 8, 8, 8};
 static const u8 sDoorAnimPalettes_RustboroTan[] = {11, 11, 11, 11, 11, 11, 11, 11};
-static const u8 sDoorAnimPalettes_RustboroGray[] = {10, 10, 10, 10, 10, 10, 10, 10};
+static const u8 sDoorAnimPalettes_RustboroGrey[] = {10, 10, 10, 10, 10, 10, 10, 10};
 static const u8 sDoorAnimPalettes_FallarborLightRoof[] = {7, 7, 7, 7, 7, 7, 7, 7};
 static const u8 sDoorAnimPalettes_Lilycove[] = {8, 8, 8, 8, 8, 8, 8, 8};
 static const u8 sDoorAnimPalettes_Oldale[] = {10, 10, 9, 9, 9, 9, 9, 9};
@@ -194,7 +194,7 @@ static const u8 sDoorAnimPalettes_PetalburgGym[] = {6, 6, 6, 6, 6, 6, 6, 6};
 static const u8 sDoorAnimPalettes_CyclingRoad[] = {7, 7, 7, 7, 7, 7, 7, 7};
 static const u8 sDoorAnimPalettes_LilycoveDeptStore[] = {5, 5, 5, 5, 5, 5, 5, 5};
 static const u8 sDoorAnimPalettes_SafariZone[] = {9, 9, 9, 9, 9, 9, 9, 9};
-static const u8 sDoorAnimPalettes_MossdeepSpaceCenter[] = {8, 8, 8, 8, 8, 8, 8, 8};
+static const u8 sDoorAnimPalettes_MossdeepSpaceCentre[] = {8, 8, 8, 8, 8, 8, 8, 8};
 static const u8 sDoorAnimPalettes_CableClub[] = {6, 6, 6, 6, 6, 6, 6, 6};
 static const u8 sDoorAnimPalettes_AbandonedShip[] = {7, 7, 7, 7, 7, 7, 7, 7};
 static const u8 sDoorAnimPalettes_FallarborDarkRoof[] = {11, 11, 7, 7, 7, 7, 7, 7};
@@ -223,13 +223,13 @@ static const u8 sDoorAnimPalettes_TrainerHillRoofElevator[] = {9, 9, 7, 7, 7, 7,
 static const struct DoorGraphics sDoorAnimGraphicsTable[] =
 {
     {METATILE_General_Door,                                 DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_General, sDoorAnimPalettes_General},
-    {METATILE_General_Door_PokeCenter,                      DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_PokeCenter, sDoorAnimPalettes_PokeCenter},
+    {METATILE_General_Door_PokeCentre,                      DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_PokeCentre, sDoorAnimPalettes_PokeCentre},
     {METATILE_General_Door_Gym,                             DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_Gym, sDoorAnimPalettes_Gym},
     {METATILE_General_Door_PokeMart,                        DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_PokeMart, sDoorAnimPalettes_PokeMart},
     {METATILE_Petalburg_Door_Littleroot,                    DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Littleroot, sDoorAnimPalettes_Littleroot},
     {METATILE_Petalburg_Door_BirchsLab,                     DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_BirchsLab, sDoorAnimPalettes_BirchsLab},
     {METATILE_Rustboro_Door_Tan,                            DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_RustboroTan, sDoorAnimPalettes_RustboroTan},
-    {METATILE_Rustboro_Door_Gray,                           DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_RustboroGray, sDoorAnimPalettes_RustboroGray},
+    {METATILE_Rustboro_Door_Grey,                           DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_RustboroGrey, sDoorAnimPalettes_RustboroGrey},
     {METATILE_Fallarbor_Door_LightRoof,                     DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_FallarborLightRoof, sDoorAnimPalettes_FallarborLightRoof},
     {METATILE_Petalburg_Door_Oldale,                        DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Oldale, sDoorAnimPalettes_Oldale},
     {METATILE_Mauville_Door,                                DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Mauville, sDoorAnimPalettes_Mauville},
@@ -248,8 +248,8 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
     {METATILE_Mauville_Door_CyclingRoad,                    DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_CyclingRoad, sDoorAnimPalettes_CyclingRoad},
     {METATILE_Lilycove_Door_DeptStore,                      DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_LilycoveDeptStore, sDoorAnimPalettes_LilycoveDeptStore},
     {METATILE_Lilycove_Door_SafariZone,                     DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_SafariZone, sDoorAnimPalettes_SafariZone},
-    {METATILE_Mossdeep_Door_SpaceCenter,                    DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_MossdeepSpaceCenter, sDoorAnimPalettes_MossdeepSpaceCenter},
-    {METATILE_PokemonCenter_Door_CableClub,                 DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_CableClub, sDoorAnimPalettes_CableClub},
+    {METATILE_Mossdeep_Door_SpaceCentre,                    DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_MossdeepSpaceCentre, sDoorAnimPalettes_MossdeepSpaceCentre},
+    {METATILE_PokemonCentre_Door_CableClub,                 DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_CableClub, sDoorAnimPalettes_CableClub},
     {METATILE_InsideShip_IntactDoor_Bottom_Unlocked,        DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_AbandonedShip, sDoorAnimPalettes_AbandonedShip},
     {METATILE_Fallarbor_Door_DarkRoof,                      DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_FallarborDarkRoof, sDoorAnimPalettes_FallarborDarkRoof},
     {METATILE_InsideShip_IntactDoor_Bottom_Interior,        DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_AbandonedShipRoom, sDoorAnimPalettes_AbandonedShipRoom},
@@ -512,19 +512,19 @@ static void UNUSED Debug_FieldAnimateDoorOpen(u32 x, u32 y)
 
 void FieldSetDoorOpened(u32 x, u32 y)
 {
-    if (MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
+    if (MetatileBehaviour_IsDoor(MapGridGetMetatileBehaviourAt(x, y)))
         DrawOpenedDoor(sDoorAnimGraphicsTable, x, y);
 }
 
 void FieldSetDoorClosed(u32 x, u32 y)
 {
-    if (MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
+    if (MetatileBehaviour_IsDoor(MapGridGetMetatileBehaviourAt(x, y)))
         DrawClosedDoor(sDoorAnimGraphicsTable, x, y);
 }
 
 s8 FieldAnimateDoorClose(u32 x, u32 y)
 {
-    if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
+    if (!MetatileBehaviour_IsDoor(MapGridGetMetatileBehaviourAt(x, y)))
         return -1;
     else
         return StartDoorCloseAnimation(sDoorAnimGraphicsTable, x, y);
@@ -532,7 +532,7 @@ s8 FieldAnimateDoorClose(u32 x, u32 y)
 
 s8 FieldAnimateDoorOpen(u32 x, u32 y)
 {
-    if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
+    if (!MetatileBehaviour_IsDoor(MapGridGetMetatileBehaviourAt(x, y)))
         return -1;
     else
         return StartDoorOpenAnimation(sDoorAnimGraphicsTable, x, y);

@@ -315,24 +315,24 @@ void HandleGbaToJascPaletteCommand(char *inputPath, char *outputPath, int argc U
 
 void HandleJascToGbaPaletteCommand(char *inputPath, char *outputPath, int argc, char **argv)
 {
-    int numColors = 0;
+    int numColours = 0;
 
     for (int i = 3; i < argc; i++)
     {
         char *option = argv[i];
 
-        if (strcmp(option, "-num_colors") == 0)
+        if (strcmp(option, "-num_colours") == 0)
         {
             if (i + 1 >= argc)
-                FATAL_ERROR("No number of colors following \"-num_colors\".\n");
+                FATAL_ERROR("No number of colours following \"-num_colours\".\n");
 
             i++;
 
-            if (!ParseNumber(argv[i], NULL, 10, &numColors))
-                FATAL_ERROR("Failed to parse number of colors.\n");
+            if (!ParseNumber(argv[i], NULL, 10, &numColours))
+                FATAL_ERROR("Failed to parse number of colours.\n");
 
-            if (numColors < 1)
-                FATAL_ERROR("Number of colors must be positive.\n");
+            if (numColours < 1)
+                FATAL_ERROR("Number of colours must be positive.\n");
         }
         else
         {
@@ -344,8 +344,8 @@ void HandleJascToGbaPaletteCommand(char *inputPath, char *outputPath, int argc, 
 
     ReadJascPalette(inputPath, &palette);
 
-    if (numColors != 0)
-        palette.numColors = numColors;
+    if (numColours != 0)
+        palette.numColours = numColours;
 
     WriteGbaPalette(outputPath, &palette);
 }

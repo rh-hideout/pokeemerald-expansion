@@ -398,7 +398,7 @@ static const struct SpriteSheet sSpriteSheet_WirelessIndicatorWindow =
     .tag = TAG_WIRELESS_INDICATOR_WINDOW
 };
 
-static const u8 sContestLinkTextColors[4] = {TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_6, TEXT_DYNAMIC_COLOR_5};
+static const u8 sContestLinkTextColours[4] = {TEXT_COLOUR_WHITE, TEXT_DYNAMIC_COLOUR_6, TEXT_DYNAMIC_COLOUR_5};
 
 
 static void InitContestResultsDisplay(void)
@@ -502,7 +502,7 @@ static void LoadContestMonName(u8 monIndex)
     struct ContestPokemon *mon = &gContestMons[monIndex];
     u8 *str = gDisplayedStringBattle;
     if (monIndex == gContestPlayerMonIndex)
-        str = StringCopy(gDisplayedStringBattle, gText_ColorDarkGray);
+        str = StringCopy(gDisplayedStringBattle, gText_ColourDarkGrey);
 
     StringCopy(str, mon->nickname);
     AddContestTextPrinterFitWidth(monIndex, gDisplayedStringBattle, 0, 49);
@@ -1167,7 +1167,7 @@ static s32 DrawResultsTextWindow(const u8 *text, u8 spriteId)
     if (tileWidth > DISPLAY_TILE_WIDTH)
         tileWidth = DISPLAY_TILE_WIDTH;
 
-    AddTextPrinterParameterized3(windowId, FONT_NORMAL, (tileWidth * 8 - strWidth) / 2, 1, sContestLinkTextColors, TEXT_SKIP_DRAW, text);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, (tileWidth * 8 - strWidth) / 2, 1, sContestLinkTextColours, TEXT_SKIP_DRAW, text);
     {
         s32 i;
         struct Sprite *sprite;
@@ -1930,9 +1930,9 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
     textPrinter.unk = 0;
-    textPrinter.fgColor = 1;
-    textPrinter.bgColor = 0;
-    textPrinter.shadowColor = 8;
+    textPrinter.fgColour = 1;
+    textPrinter.bgColour = 0;
+    textPrinter.shadowColour = 8;
     AddTextPrinter(&textPrinter, 0, NULL);
     PutWindowTilemap(windowId);
 }

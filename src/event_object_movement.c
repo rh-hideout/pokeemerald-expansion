@@ -22,7 +22,7 @@
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "mauville_old_man.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -50,7 +50,7 @@
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"
 #include "constants/species.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/trainer_types.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
@@ -126,7 +126,7 @@ static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, u
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
 static void UpdateObjectEventOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
-static void ObjectEventUpdateMetatileBehaviors(struct ObjectEvent *);
+static void ObjectEventUpdateMetatileBehaviours(struct ObjectEvent *);
 static void GetGroundEffectFlags_Reflection(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_TallGrassOnSpawn(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_LongGrassOnSpawn(struct ObjectEvent *, u32 *);
@@ -142,7 +142,7 @@ static void GetGroundEffectFlags_Ripple(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *, u32 *);
 static u8 ObjectEventGetNearbyReflectionType(struct ObjectEvent *);
-static u8 GetReflectionTypeByMetatileBehavior(u32);
+static u8 GetReflectionTypeByMetatileBehaviour(u32);
 static void InitObjectPriorityByElevation(struct Sprite *, u8);
 static void ObjectEventUpdateSubpriority(struct ObjectEvent *, struct Sprite *);
 static void DoTracksGroundEffect_None(struct ObjectEvent *, struct Sprite *, u8);
@@ -923,17 +923,17 @@ const u8 gTrainerFacingDirectionMovementTypes[] = {
 };
 
 bool8 (*const gOppositeDirectionBlockedMetatileFuncs[])(u8) = {
-    MetatileBehavior_IsSouthBlocked,
-    MetatileBehavior_IsNorthBlocked,
-    MetatileBehavior_IsWestBlocked,
-    MetatileBehavior_IsEastBlocked
+    MetatileBehaviour_IsSouthBlocked,
+    MetatileBehaviour_IsNorthBlocked,
+    MetatileBehaviour_IsWestBlocked,
+    MetatileBehaviour_IsEastBlocked
 };
 
 bool8 (*const gDirectionBlockedMetatileFuncs[])(u8) = {
-    MetatileBehavior_IsNorthBlocked,
-    MetatileBehavior_IsSouthBlocked,
-    MetatileBehavior_IsEastBlocked,
-    MetatileBehavior_IsWestBlocked
+    MetatileBehaviour_IsNorthBlocked,
+    MetatileBehaviour_IsSouthBlocked,
+    MetatileBehaviour_IsEastBlocked,
+    MetatileBehaviour_IsWestBlocked
 };
 
 static const struct Coords16 sDirectionToVectors[] = {
@@ -1707,10 +1707,10 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     if (OW_GFX_COMPRESS && sprite->usingSheet)
         sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
     GetMapCoordsFromSpritePos(objectEvent->currentCoords.x + cameraX, objectEvent->currentCoords.y + cameraY, &sprite->x, &sprite->y);
-    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->x += 8;
-    sprite->y += 16 + sprite->centerToCornerVecY;
+    sprite->y += 16 + sprite->centreToCornerVecY;
     sprite->coordOffsetEnabled = TRUE;
     sprite->sObjEventId = objectEventId;
     objectEvent->spriteId = spriteId;
@@ -1756,7 +1756,7 @@ u8 SpawnSpecialObjectEvent(struct ObjectEventTemplate *objectEventTemplate)
     return TrySpawnObjectEventTemplate(objectEventTemplate, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
 }
 
-u8 SpawnSpecialObjectEventParameterized(u16 graphicsId, u8 movementBehavior, u8 localId, s16 x, s16 y, u8 elevation)
+u8 SpawnSpecialObjectEventParameterized(u16 graphicsId, u8 movementBehaviour, u8 localId, s16 x, s16 y, u8 elevation)
 {
     struct ObjectEventTemplate objectEventTemplate;
 
@@ -1768,7 +1768,7 @@ u8 SpawnSpecialObjectEventParameterized(u16 graphicsId, u8 movementBehavior, u8 
     objectEventTemplate.x = x;
     objectEventTemplate.y = y;
     objectEventTemplate.elevation = elevation;
-    objectEventTemplate.movementType = movementBehavior;
+    objectEventTemplate.movementType = movementBehaviour;
     objectEventTemplate.movementRangeX = 0;
     objectEventTemplate.movementRangeY = 0;
     objectEventTemplate.trainerType = TRAINER_TYPE_NONE;
@@ -1908,9 +1908,9 @@ u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevati
     if (spriteId != MAX_SPRITES)
     {
         sprite = &gSprites[spriteId];
-        sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-        sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
-        sprite->y += sprite->centerToCornerVecY;
+        sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+        sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
+        sprite->y += sprite->centreToCornerVecY;
 
         sprite->coordOffsetEnabled = TRUE;
         sprite->sVirtualObjId = virtualObjId;
@@ -2086,7 +2086,7 @@ static void FollowerSetGraphics(struct ObjectEvent *objEvent, u32 species, bool3
     }
 }
 
-// Like FollowerSetGraphics, but does not recenter sprite on a metatile
+// Like FollowerSetGraphics, but does not recentre sprite on a metatile
 // Intended to be used for mid-movement form changes, etc.
 static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
 {
@@ -2102,7 +2102,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
         if (OW_LARGE_OW_SUPPORT && !OW_GFX_COMPRESS)
             ReallocSpriteTiles(sprite, graphicsInfo->images->size);
         // Add difference in Y vectors
-        sprite->y += -(graphicsInfo->height >> 1) - sprite->centerToCornerVecY;
+        sprite->y += -(graphicsInfo->height >> 1) - sprite->centreToCornerVecY;
     }
 
     if (OW_GFX_COMPRESS)
@@ -2114,8 +2114,8 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     sprite->anims = graphicsInfo->anims;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objEvent->inanimate = graphicsInfo->inanimate;
-    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
 
     if (graphicsInfo->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
     {
@@ -2254,8 +2254,8 @@ void RemoveFollowingPokemon(void)
 bool32 IsFollowerVisible(void)
 {
     return !(TestPlayerAvatarFlags(FOLLOWER_INVISIBLE_FLAGS)
-            || MetatileBehavior_IsSurfableWaterOrUnderwater(gObjectEvents[gPlayerAvatar.objectEventId].previousMetatileBehavior)
-            || MetatileBehavior_IsForcedMovementTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior));
+            || MetatileBehaviour_IsSurfableWaterOrUnderwater(gObjectEvents[gPlayerAvatar.objectEventId].previousMetatileBehaviour)
+            || MetatileBehaviour_IsForcedMovementTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehaviour));
 }
 
 static bool8 SpeciesHasType(u16 species, u8 type)
@@ -2273,32 +2273,32 @@ static void ObjectEventEmote(struct ObjectEvent *objEvent, u8 emotion)
     FieldEffectStart(FLDEFF_EMOTE);
 }
 
-// Find and return direction of metatile behavior within distance
-static u32 FindMetatileBehaviorWithinRange(s32 x, s32 y, u32 mb, u8 distance)
+// Find and return direction of metatile behaviour within distance
+static u32 FindMetatileBehaviourWithinRange(s32 x, s32 y, u32 mb, u8 distance)
 {
     s32 i;
 
     for (i = y + 1; i <= y + distance; i++)
     {
-        if (MapGridGetMetatileBehaviorAt(x, i) == mb)
+        if (MapGridGetMetatileBehaviourAt(x, i) == mb)
             return DIR_SOUTH;
     }
 
     for (i = y - 1; i >= y - distance; i--)
     {
-        if (MapGridGetMetatileBehaviorAt(x, i) == mb)
+        if (MapGridGetMetatileBehaviourAt(x, i) == mb)
             return DIR_NORTH;
     }
 
     for (i = x + 1; i <= x + distance; i++)
     {
-        if (MapGridGetMetatileBehaviorAt(i, y) == mb)
+        if (MapGridGetMetatileBehaviourAt(i, y) == mb)
             return DIR_EAST;
     }
 
     for (i = x - 1; i >= x - distance; i--)
     {
-        if (MapGridGetMetatileBehaviorAt(i, y) == mb)
+        if (MapGridGetMetatileBehaviourAt(i, y) == mb)
             return DIR_WEST;
     }
 
@@ -2334,8 +2334,8 @@ bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, u
         return (gSaveBlock1Ptr->location.mapGroup == cond->data.bytes[0] &&
                 gSaveBlock1Ptr->location.mapNum == cond->data.bytes[1]);
     case MSG_COND_ON_MB:
-        return (obj->currentMetatileBehavior == cond->data.bytes[0] ||
-                obj->currentMetatileBehavior == cond->data.bytes[1]);
+        return (obj->currentMetatileBehaviour == cond->data.bytes[0] ||
+                obj->currentMetatileBehaviour == cond->data.bytes[1]);
     case MSG_COND_WEATHER:
         multi = GetCurrentWeather();
         return (multi == cond->data.bytes[0] || multi == cond->data.bytes[1]);
@@ -2345,7 +2345,7 @@ bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, u
     // case MSG_COND_TIME_OF_DAY:
     //     break;
     case MSG_COND_NEAR_MB:
-        multi = FindMetatileBehaviorWithinRange(obj->currentCoords.x,
+        multi = FindMetatileBehaviourWithinRange(obj->currentCoords.x,
                                                 obj->currentCoords.y,
                                                 cond->data.bytes[0],
                                                 cond->data.bytes[1]);
@@ -2692,10 +2692,10 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
         if (OW_GFX_COMPRESS && sprite->usingSheet)
             sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
         GetMapCoordsFromSpritePos(x + objectEvent->currentCoords.x, y + objectEvent->currentCoords.y, &sprite->x, &sprite->y);
-        sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-        sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+        sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+        sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
         sprite->x += 8;
-        sprite->y += 16 + sprite->centerToCornerVecY;
+        sprite->y += 16 + sprite->centreToCornerVecY;
         sprite->images = graphicsInfo->images;
         if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
         {
@@ -2779,10 +2779,10 @@ static void ObjectEventSetGraphics(struct ObjectEvent *objectEvent, const struct
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objectEvent->inanimate = graphicsInfo->inanimate;
     SetSpritePosToMapCoords(objectEvent->currentCoords.x, objectEvent->currentCoords.y, &sprite->x, &sprite->y);
-    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->x += 8;
-    sprite->y += 16 + sprite->centerToCornerVecY;
+    sprite->y += 16 + sprite->centreToCornerVecY;
     if (objectEvent->trackedByCamera)
         CameraObjectReset();
 }
@@ -2839,10 +2839,10 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
     objectEvent->inanimate = graphicsInfo->inanimate;
     objectEvent->graphicsId = graphicsId;
     SetSpritePosToMapCoords(objectEvent->currentCoords.x, objectEvent->currentCoords.y, &sprite->x, &sprite->y);
-    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->x += 8;
-    sprite->y += 16 + sprite->centerToCornerVecY;
+    sprite->y += 16 + sprite->centreToCornerVecY;
     if (objectEvent->trackedByCamera)
         CameraObjectReset();
 }
@@ -3102,10 +3102,10 @@ void MoveObjectEventToMapCoords(struct ObjectEvent *objectEvent, s16 x, s16 y)
     graphicsInfo = GetObjectEventGraphicsInfo(objectEvent->graphicsId);
     SetObjectEventCoords(objectEvent, x, y);
     SetSpritePosToMapCoords(objectEvent->currentCoords.x, objectEvent->currentCoords.y, &sprite->x, &sprite->y);
-    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->centreToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centreToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->x += 8;
-    sprite->y += 16 + sprite->centerToCornerVecY;
+    sprite->y += 16 + sprite->centreToCornerVecY;
     ResetObjectEventFldEffData(objectEvent);
     if (objectEvent->trackedByCamera)
         CameraObjectReset();
@@ -5119,7 +5119,7 @@ bool8 MovementType_CopyPlayer_Step0(struct ObjectEvent *objectEvent, struct Spri
 
 bool8 MovementType_CopyPlayer_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (gObjectEvents[gPlayerAvatar.objectEventId].movementActionId == MOVEMENT_ACTION_NONE || gPlayerAvatar.tileTransitionState == T_TILE_CENTER)
+    if (gObjectEvents[gPlayerAvatar.objectEventId].movementActionId == MOVEMENT_ACTION_NONE || gPlayerAvatar.tileTransitionState == T_TILE_CENTRE)
         return FALSE;
 
     return gCopyPlayerMovementFuncs[PlayerGetCopyableMovement()](objectEvent, sprite, GetPlayerMovementDirection(), NULL);
@@ -5176,7 +5176,7 @@ bool8 CopyablePlayerMovement_WalkNormal(struct ObjectEvent *objectEvent, struct 
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkNormalMovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5195,7 +5195,7 @@ bool8 CopyablePlayerMovement_WalkFast(struct ObjectEvent *objectEvent, struct Sp
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFastMovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5214,7 +5214,7 @@ bool8 CopyablePlayerMovement_WalkFaster(struct ObjectEvent *objectEvent, struct 
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFasterMovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5233,7 +5233,7 @@ bool8 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprit
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetSlideMovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5264,7 +5264,7 @@ bool8 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpMovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5285,7 +5285,7 @@ bool8 CopyablePlayerMovement_Jump2(struct ObjectEvent *objectEvent, struct Sprit
     MoveCoordsInDirection(direction, &x, &y, 2, 2);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJump2MovementAction(direction));
 
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
 
     objectEvent->singleMovementActive = TRUE;
@@ -5587,7 +5587,7 @@ bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct 
     direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFastMovementAction(direction));
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5604,7 +5604,7 @@ bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct 
     direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFasterMovementAction(direction));
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5621,7 +5621,7 @@ bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Spr
     direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetSlideMovementAction(direction));
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5650,7 +5650,7 @@ bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct 
     direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpMovementAction(direction));
-    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
+    if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviourAt(x, y))))
         ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5677,10 +5677,10 @@ movement_type_def(MovementType_CopyPlayerInGrass, gMovementTypeFuncs_CopyPlayerI
 
 bool8 MovementType_CopyPlayerInGrass_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (gObjectEvents[gPlayerAvatar.objectEventId].movementActionId == MOVEMENT_ACTION_NONE || gPlayerAvatar.tileTransitionState == T_TILE_CENTER)
+    if (gObjectEvents[gPlayerAvatar.objectEventId].movementActionId == MOVEMENT_ACTION_NONE || gPlayerAvatar.tileTransitionState == T_TILE_CENTRE)
         return FALSE;
 
-    return gCopyPlayerMovementFuncs[PlayerGetCopyableMovement()](objectEvent, sprite, GetPlayerMovementDirection(), MetatileBehavior_IsPokeGrass);
+    return gCopyPlayerMovementFuncs[PlayerGetCopyableMovement()](objectEvent, sprite, GetPlayerMovementDirection(), MetatileBehaviour_IsPokeGrass);
 }
 
 void MovementType_TreeDisguise(struct Sprite *sprite)
@@ -6040,43 +6040,43 @@ u8 GetCollisionInDirection(struct ObjectEvent *objectEvent, u8 direction)
     return GetCollisionAtCoords(objectEvent, x, y, direction);
 }
 
-u8 GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, u8 dir, u8 currentBehavior, u8 nextBehavior, u8 collision)
+u8 GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, u8 dir, u8 currentBehaviour, u8 nextBehaviour, u8 collision)
 {
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
 
     // cant descend stairs into water
-    if (MetatileBehavior_IsSurfableFishableWater(nextBehavior))
+    if (MetatileBehaviour_IsSurfableFishableWater(nextBehaviour))
         return collision;
 
-    if (MetatileBehavior_IsSidewaysStairsLeftSide(nextBehavior))
+    if (MetatileBehaviour_IsSidewaysStairsLeftSide(nextBehaviour))
     {
         //moving ONTO left side stair
-        if (dir == DIR_WEST && currentBehavior != nextBehavior)
+        if (dir == DIR_WEST && currentBehaviour != nextBehaviour)
             return collision;   //moving onto top part of left-stair going left, so no diagonal
         else
             return COLLISION_SIDEWAYS_STAIRS_TO_LEFT; // move diagonally
     }
-    else if (MetatileBehavior_IsSidewaysStairsRightSide(nextBehavior))
+    else if (MetatileBehaviour_IsSidewaysStairsRightSide(nextBehaviour))
     {
         //moving ONTO right side stair
-        if (dir == DIR_EAST && currentBehavior != nextBehavior)
+        if (dir == DIR_EAST && currentBehaviour != nextBehaviour)
             return collision;   //moving onto top part of right-stair going right, so no diagonal
         else
             return COLLISION_SIDEWAYS_STAIRS_TO_RIGHT;
     }
-    else if (MetatileBehavior_IsSidewaysStairsLeftSideAny(currentBehavior))
+    else if (MetatileBehaviour_IsSidewaysStairsLeftSideAny(currentBehaviour))
     {
         //moving OFF of any left side stair
-        if (dir == DIR_WEST && nextBehavior != currentBehavior)
+        if (dir == DIR_WEST && nextBehaviour != currentBehaviour)
             return COLLISION_SIDEWAYS_STAIRS_TO_LEFT;   //moving off of left stairs onto non-stair -> move diagonal
         else
             return collision;   //moving off of left side stair to east -> move east
     }
-    else if (MetatileBehavior_IsSidewaysStairsRightSideAny(currentBehavior))
+    else if (MetatileBehaviour_IsSidewaysStairsRightSideAny(currentBehaviour))
     {
         //moving OFF of any right side stair
-        if (dir == DIR_EAST && nextBehavior != currentBehavior)
+        if (dir == DIR_EAST && nextBehaviour != currentBehaviour)
             return COLLISION_SIDEWAYS_STAIRS_TO_RIGHT;  //moving off right stair onto non-stair -> move diagonal
         else
             return collision;
@@ -6133,8 +6133,8 @@ static bool8 ObjectEventOnRightSideStair(struct ObjectEvent *objectEvent, s16 x,
 
 u8 GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u32 dir)
 {
-    u8 currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
-    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    u8 currentBehaviour = MapGridGetMetatileBehaviourAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+    u8 nextBehaviour = MapGridGetMetatileBehaviourAt(x, y);
     u8 collision;
 
     #if OW_FLAG_NO_COLLISION != 0
@@ -6145,29 +6145,29 @@ u8 GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u32 dir)
     objectEvent->directionOverwrite = DIR_NONE;
 
     //sideways stairs checks
-    if (MetatileBehavior_IsSidewaysStairsLeftSideTop(nextBehavior) && dir == DIR_EAST)
+    if (MetatileBehaviour_IsSidewaysStairsLeftSideTop(nextBehaviour) && dir == DIR_EAST)
         return COLLISION_IMPASSABLE;    //moving onto left-side top edge east from regular ground -> nope
-    else if (MetatileBehavior_IsSidewaysStairsRightSideTop(nextBehavior) && dir == DIR_WEST)
+    else if (MetatileBehaviour_IsSidewaysStairsRightSideTop(nextBehaviour) && dir == DIR_WEST)
         return COLLISION_IMPASSABLE;    //moving onto left-side top edge east from regular ground -> nope
-    else if (MetatileBehavior_IsSidewaysStairsRightSideBottom(nextBehavior) && (dir == DIR_EAST || dir == DIR_SOUTH))
+    else if (MetatileBehaviour_IsSidewaysStairsRightSideBottom(nextBehaviour) && (dir == DIR_EAST || dir == DIR_SOUTH))
         return COLLISION_IMPASSABLE;    //moving into right-side bottom edge from regular ground -> nah
-    else if (MetatileBehavior_IsSidewaysStairsLeftSideBottom(nextBehavior) && (dir == DIR_WEST || dir == DIR_SOUTH))
+    else if (MetatileBehaviour_IsSidewaysStairsLeftSideBottom(nextBehaviour) && (dir == DIR_WEST || dir == DIR_SOUTH))
         return COLLISION_IMPASSABLE;    //moving onto left-side bottom edge from regular ground -> nah
-    else if ((MetatileBehavior_IsSidewaysStairsLeftSideTop(currentBehavior) || MetatileBehavior_IsSidewaysStairsRightSideTop(currentBehavior))
+    else if ((MetatileBehaviour_IsSidewaysStairsLeftSideTop(currentBehaviour) || MetatileBehaviour_IsSidewaysStairsRightSideTop(currentBehaviour))
      && dir == DIR_NORTH)
         return COLLISION_IMPASSABLE;    //trying to move north off of top-most tile onto same level doesn't work
-    else if (!(MetatileBehavior_IsSidewaysStairsLeftSideTop(currentBehavior) || MetatileBehavior_IsSidewaysStairsRightSideTop(currentBehavior))
-     && dir == DIR_SOUTH && (MetatileBehavior_IsSidewaysStairsLeftSideTop(nextBehavior) || MetatileBehavior_IsSidewaysStairsRightSideTop(nextBehavior)))
+    else if (!(MetatileBehaviour_IsSidewaysStairsLeftSideTop(currentBehaviour) || MetatileBehaviour_IsSidewaysStairsRightSideTop(currentBehaviour))
+     && dir == DIR_SOUTH && (MetatileBehaviour_IsSidewaysStairsLeftSideTop(nextBehaviour) || MetatileBehaviour_IsSidewaysStairsRightSideTop(nextBehaviour)))
         return COLLISION_IMPASSABLE;    //trying to move south onto top stair tile at same level from non-stair -> no
-    else if (!(MetatileBehavior_IsSidewaysStairsLeftSideBottom(currentBehavior) || MetatileBehavior_IsSidewaysStairsRightSideBottom(currentBehavior))
-     && dir == DIR_NORTH && (MetatileBehavior_IsSidewaysStairsLeftSideBottom(nextBehavior) || MetatileBehavior_IsSidewaysStairsRightSideBottom(nextBehavior)))
+    else if (!(MetatileBehaviour_IsSidewaysStairsLeftSideBottom(currentBehaviour) || MetatileBehaviour_IsSidewaysStairsRightSideBottom(currentBehaviour))
+     && dir == DIR_NORTH && (MetatileBehaviour_IsSidewaysStairsLeftSideBottom(nextBehaviour) || MetatileBehaviour_IsSidewaysStairsRightSideBottom(nextBehaviour)))
         return COLLISION_IMPASSABLE;    //trying to move north onto top stair tile at same level from non-stair -> no
 
     // regular checks
     collision = GetVanillaCollision(objectEvent, x, y, dir);
 
     //sideways stairs direction change checks
-    collision = GetSidewaysStairsCollision(objectEvent, dir, currentBehavior, nextBehavior, collision);
+    collision = GetSidewaysStairsCollision(objectEvent, dir, currentBehaviour, nextBehaviour, collision);
     switch (collision)
     {
     case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
@@ -6228,8 +6228,8 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
 
 static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction)
 {
-    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
-        || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
+    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehaviour)
+        || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviourAt(x, y)))
         return TRUE;
 
     return FALSE;
@@ -7353,12 +7353,12 @@ bool8 MovementAction_WalkInPlaceSlowDown_Step0(struct ObjectEvent *objectEvent, 
     return MovementAction_WalkInPlaceSlow_Step1(objectEvent, sprite);
 }
 
-// Update sprite with a palette filled with a solid color
-static u8 LoadFillColorPalette(u16 color, u16 paletteTag, struct Sprite *sprite)
+// Update sprite with a palette filled with a solid colour
+static u8 LoadFillColourPalette(u16 colour, u16 paletteTag, struct Sprite *sprite)
 {
     u16 paletteData[16];
     struct SpritePalette dynamicPalette = {.tag = paletteTag, .data = paletteData};
-    CpuFill16(color, paletteData, PLTT_SIZE_4BPP);
+    CpuFill16(colour, paletteData, PLTT_SIZE_4BPP);
     return UpdateSpritePalette(&dynamicPalette, sprite);
 }
 
@@ -7475,10 +7475,10 @@ bool8 MovementAction_ExitPokeball_Step1(struct ObjectEvent *objectEvent, struct 
     else if (sprite->sDuration == animStepFrame)
     {
         FollowerSetGraphics(objectEvent, OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
-        LoadFillColorPalette(RGB_WHITE, OBJ_EVENT_PAL_TAG_WHITE, sprite);
+        LoadFillColourPalette(RGB_WHITE, OBJ_EVENT_PAL_TAG_WHITE, sprite);
         // Initialize affine animation
         sprite->affineAnims = sAffineAnims_PokeballFollower;
-        if (OW_LARGE_OW_SUPPORT && !IS_POW_OF_TWO(-sprite->centerToCornerVecX))
+        if (OW_LARGE_OW_SUPPORT && !IS_POW_OF_TWO(-sprite->centreToCornerVecX))
             return FALSE;
         sprite->affineAnims = sAffineAnims_PokeballFollower;
         sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
@@ -7521,11 +7521,11 @@ bool8 MovementAction_EnterPokeball_Step1(struct ObjectEvent *objectEvent, struct
     else if (sprite->sDuration == 11)
     {
         // Set palette to white & start affine
-        LoadFillColorPalette(RGB_WHITE, OBJ_EVENT_PAL_TAG_WHITE, sprite);
+        LoadFillColourPalette(RGB_WHITE, OBJ_EVENT_PAL_TAG_WHITE, sprite);
         sprite->subspriteTableNum = 0;
         // Only do affine if sprite width is power of 2
         // (effect looks weird on sprites composed of subsprites like 48x48, etc)
-        if (OW_LARGE_OW_SUPPORT && !IS_POW_OF_TWO(-sprite->centerToCornerVecX))
+        if (OW_LARGE_OW_SUPPORT && !IS_POW_OF_TWO(-sprite->centreToCornerVecX))
             return FALSE;
         sprite->affineAnims = sAffineAnims_PokeballFollower;
         sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
@@ -8464,7 +8464,7 @@ bool8 MovementAction_ClearAffineAnim_Step0(struct ObjectEvent *objectEvent, stru
 {
     FreeOamMatrix(sprite->oam.matrixNum);
     sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
-    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
     return TRUE;
 }
 
@@ -9249,13 +9249,13 @@ static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct S
     graphicsInfo = GetObjectEventGraphicsInfo(objectEvent->graphicsId);
     if (sprite->coordOffsetEnabled)
     {
-        x = sprite->x + sprite->x2 + sprite->centerToCornerVecX + gSpriteCoordOffsetX;
-        y = sprite->y + sprite->y2 + sprite->centerToCornerVecY + gSpriteCoordOffsetY;
+        x = sprite->x + sprite->x2 + sprite->centreToCornerVecX + gSpriteCoordOffsetX;
+        y = sprite->y + sprite->y2 + sprite->centreToCornerVecY + gSpriteCoordOffsetY;
     }
     else
     {
-        x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
-        y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
+        x = sprite->x + sprite->x2 + sprite->centreToCornerVecX;
+        y = sprite->y + sprite->y2 + sprite->centreToCornerVecY;
     }
     x2 = graphicsInfo->width;
     x2 += x;
@@ -9278,7 +9278,7 @@ static void UpdateObjectEventSpriteVisibility(struct ObjectEvent *objectEvent, s
 
 static void GetAllGroundEffectFlags_OnSpawn(struct ObjectEvent *objEvent, u32 *flags)
 {
-    ObjectEventUpdateMetatileBehaviors(objEvent);
+    ObjectEventUpdateMetatileBehaviours(objEvent);
     GetGroundEffectFlags_Reflection(objEvent, flags);
     GetGroundEffectFlags_TallGrassOnSpawn(objEvent, flags);
     GetGroundEffectFlags_LongGrassOnSpawn(objEvent, flags);
@@ -9290,7 +9290,7 @@ static void GetAllGroundEffectFlags_OnSpawn(struct ObjectEvent *objEvent, u32 *f
 
 static void GetAllGroundEffectFlags_OnBeginStep(struct ObjectEvent *objEvent, u32 *flags)
 {
-    ObjectEventUpdateMetatileBehaviors(objEvent);
+    ObjectEventUpdateMetatileBehaviours(objEvent);
     GetGroundEffectFlags_Reflection(objEvent, flags);
     GetGroundEffectFlags_TallGrassOnBeginStep(objEvent, flags);
     GetGroundEffectFlags_LongGrassOnBeginStep(objEvent, flags);
@@ -9304,7 +9304,7 @@ static void GetAllGroundEffectFlags_OnBeginStep(struct ObjectEvent *objEvent, u3
 
 static void GetAllGroundEffectFlags_OnFinishStep(struct ObjectEvent *objEvent, u32 *flags)
 {
-    ObjectEventUpdateMetatileBehaviors(objEvent);
+    ObjectEventUpdateMetatileBehaviours(objEvent);
     GetGroundEffectFlags_ShallowFlowingWater(objEvent, flags);
     GetGroundEffectFlags_SandHeap(objEvent, flags);
     GetGroundEffectFlags_Puddle(objEvent, flags);
@@ -9315,10 +9315,10 @@ static void GetAllGroundEffectFlags_OnFinishStep(struct ObjectEvent *objEvent, u
     GetGroundEffectFlags_JumpLanding(objEvent, flags);
 }
 
-static void ObjectEventUpdateMetatileBehaviors(struct ObjectEvent *objEvent)
+static void ObjectEventUpdateMetatileBehaviours(struct ObjectEvent *objEvent)
 {
-    objEvent->previousMetatileBehavior = MapGridGetMetatileBehaviorAt(objEvent->previousCoords.x, objEvent->previousCoords.y);
-    objEvent->currentMetatileBehavior = MapGridGetMetatileBehaviorAt(objEvent->currentCoords.x, objEvent->currentCoords.y);
+    objEvent->previousMetatileBehaviour = MapGridGetMetatileBehaviourAt(objEvent->previousCoords.x, objEvent->previousCoords.y);
+    objEvent->currentMetatileBehaviour = MapGridGetMetatileBehaviourAt(objEvent->currentCoords.x, objEvent->currentCoords.y);
 }
 
 static void GetGroundEffectFlags_Reflection(struct ObjectEvent *objEvent, u32 *flags)
@@ -9345,25 +9345,25 @@ static void GetGroundEffectFlags_Reflection(struct ObjectEvent *objEvent, u32 *f
 
 static void GetGroundEffectFlags_TallGrassOnSpawn(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsTallGrass(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsTallGrass(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_TALL_GRASS_ON_SPAWN;
 }
 
 static void GetGroundEffectFlags_TallGrassOnBeginStep(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsTallGrass(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsTallGrass(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_TALL_GRASS_ON_MOVE;
 }
 
 static void GetGroundEffectFlags_LongGrassOnSpawn(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsLongGrass(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsLongGrass(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_LONG_GRASS_ON_SPAWN;
 }
 
 static void GetGroundEffectFlags_LongGrassOnBeginStep(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsLongGrass(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsLongGrass(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_LONG_GRASS_ON_MOVE;
 }
 
@@ -9372,17 +9372,17 @@ static void GetGroundEffectFlags_Tracks(struct ObjectEvent *objEvent, u32 *flags
     if (objEvent->directionOverwrite)
         return;
 
-    if (MetatileBehavior_IsDeepSand(objEvent->previousMetatileBehavior))
+    if (MetatileBehaviour_IsDeepSand(objEvent->previousMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_DEEP_SAND;
-    else if (MetatileBehavior_IsSandOrDeepSand(objEvent->previousMetatileBehavior)
-             || MetatileBehavior_IsFootprints(objEvent->previousMetatileBehavior))
+    else if (MetatileBehaviour_IsSandOrDeepSand(objEvent->previousMetatileBehaviour)
+             || MetatileBehaviour_IsFootprints(objEvent->previousMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_SAND;
 }
 
 static void GetGroundEffectFlags_SandHeap(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsDeepSand(objEvent->currentMetatileBehavior)
-        && MetatileBehavior_IsDeepSand(objEvent->previousMetatileBehavior))
+    if (MetatileBehaviour_IsDeepSand(objEvent->currentMetatileBehaviour)
+        && MetatileBehaviour_IsDeepSand(objEvent->previousMetatileBehaviour))
     {
         if (!objEvent->inSandPile)
         {
@@ -9399,10 +9399,10 @@ static void GetGroundEffectFlags_SandHeap(struct ObjectEvent *objEvent, u32 *fla
 
 static void GetGroundEffectFlags_ShallowFlowingWater(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if ((MetatileBehavior_IsShallowFlowingWater(objEvent->currentMetatileBehavior)
-         && MetatileBehavior_IsShallowFlowingWater(objEvent->previousMetatileBehavior))
-        || (MetatileBehavior_IsPacifidlogLog(objEvent->currentMetatileBehavior)
-            && MetatileBehavior_IsPacifidlogLog(objEvent->previousMetatileBehavior)))
+    if ((MetatileBehaviour_IsShallowFlowingWater(objEvent->currentMetatileBehaviour)
+         && MetatileBehaviour_IsShallowFlowingWater(objEvent->previousMetatileBehaviour))
+        || (MetatileBehaviour_IsPacifidlogLog(objEvent->currentMetatileBehaviour)
+            && MetatileBehaviour_IsPacifidlogLog(objEvent->previousMetatileBehaviour)))
     {
         if (!objEvent->inShallowFlowingWater)
         {
@@ -9419,21 +9419,21 @@ static void GetGroundEffectFlags_ShallowFlowingWater(struct ObjectEvent *objEven
 
 static void GetGroundEffectFlags_Puddle(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsPuddle(objEvent->currentMetatileBehavior)
-        && MetatileBehavior_IsPuddle(objEvent->previousMetatileBehavior))
+    if (MetatileBehaviour_IsPuddle(objEvent->currentMetatileBehaviour)
+        && MetatileBehaviour_IsPuddle(objEvent->previousMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_PUDDLE;
 }
 
 static void GetGroundEffectFlags_Ripple(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_HasRipples(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_HasRipples(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_RIPPLES;
 }
 
 static void GetGroundEffectFlags_ShortGrass(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsShortGrass(objEvent->currentMetatileBehavior)
-        && MetatileBehavior_IsShortGrass(objEvent->previousMetatileBehavior))
+    if (MetatileBehaviour_IsShortGrass(objEvent->currentMetatileBehaviour)
+        && MetatileBehaviour_IsShortGrass(objEvent->previousMetatileBehaviour))
     {
         if (!objEvent->inShortGrass)
         {
@@ -9450,8 +9450,8 @@ static void GetGroundEffectFlags_ShortGrass(struct ObjectEvent *objEvent, u32 *f
 
 static void GetGroundEffectFlags_HotSprings(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsHotSprings(objEvent->currentMetatileBehavior)
-        && MetatileBehavior_IsHotSprings(objEvent->previousMetatileBehavior))
+    if (MetatileBehaviour_IsHotSprings(objEvent->currentMetatileBehaviour)
+        && MetatileBehaviour_IsHotSprings(objEvent->previousMetatileBehaviour))
     {
         if (!objEvent->inHotSprings)
         {
@@ -9468,7 +9468,7 @@ static void GetGroundEffectFlags_HotSprings(struct ObjectEvent *objEvent, u32 *f
 
 static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *objEvent, u32 *flags)
 {
-    if (MetatileBehavior_IsSeaweed(objEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsSeaweed(objEvent->currentMetatileBehaviour))
         *flags |= GROUND_EFFECT_FLAG_SEAWEED;
 }
 
@@ -9477,12 +9477,12 @@ static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *
     typedef bool8 (*MetatileFunc)(u8);
 
     static const MetatileFunc metatileFuncs[] = {
-        MetatileBehavior_IsTallGrass,
-        MetatileBehavior_IsLongGrass,
-        MetatileBehavior_IsPuddle,
-        MetatileBehavior_IsSurfableWaterOrUnderwater,
-        MetatileBehavior_IsShallowFlowingWater,
-        MetatileBehavior_IsATile,
+        MetatileBehaviour_IsTallGrass,
+        MetatileBehaviour_IsLongGrass,
+        MetatileBehaviour_IsPuddle,
+        MetatileBehaviour_IsSurfableWaterOrUnderwater,
+        MetatileBehaviour_IsShallowFlowingWater,
+        MetatileBehaviour_IsATile,
     };
 
     static const u32 jumpLandingFlags[] = {
@@ -9500,7 +9500,7 @@ static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *
 
         for (i = 0; i < ARRAY_COUNT(metatileFuncs); i++)
         {
-            if (metatileFuncs[i](objEvent->currentMetatileBehavior))
+            if (metatileFuncs[i](objEvent->currentMetatileBehaviour))
             {
                 *flags |= jumpLandingFlags[i];
                 return;
@@ -9510,8 +9510,8 @@ static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *
 }
 
 #define RETURN_REFLECTION_TYPE_AT(x, y)              \
-    b = MapGridGetMetatileBehaviorAt(x, y);          \
-    result = GetReflectionTypeByMetatileBehavior(b); \
+    b = MapGridGetMetatileBehaviourAt(x, y);          \
+    result = GetReflectionTypeByMetatileBehaviour(b); \
     if (result != REFL_TYPE_NONE)                    \
         return result;
 
@@ -9544,11 +9544,11 @@ static u8 ObjectEventGetNearbyReflectionType(struct ObjectEvent *objEvent)
 
 #undef RETURN_REFLECTION_TYPE_AT
 
-static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
+static u8 GetReflectionTypeByMetatileBehaviour(u32 behaviour)
 {
-    if (MetatileBehavior_IsIce(behavior))
+    if (MetatileBehaviour_IsIce(behaviour))
         return REFL_TYPE_ICE;
-    else if (MetatileBehavior_IsReflective(behavior))
+    else if (MetatileBehaviour_IsReflective(behaviour))
         return REFL_TYPE_WATER;
     else
         return REFL_TYPE_NONE;
@@ -9556,14 +9556,14 @@ static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
 
 u8 GetLedgeJumpDirection(s16 x, s16 y, u8 direction)
 {
-    static bool8 (*const ledgeBehaviorFuncs[])(u8) = {
-        [DIR_SOUTH - 1] = MetatileBehavior_IsJumpSouth,
-        [DIR_NORTH - 1] = MetatileBehavior_IsJumpNorth,
-        [DIR_WEST - 1]  = MetatileBehavior_IsJumpWest,
-        [DIR_EAST - 1]  = MetatileBehavior_IsJumpEast,
+    static bool8 (*const ledgeBehaviourFuncs[])(u8) = {
+        [DIR_SOUTH - 1] = MetatileBehaviour_IsJumpSouth,
+        [DIR_NORTH - 1] = MetatileBehaviour_IsJumpNorth,
+        [DIR_WEST - 1]  = MetatileBehaviour_IsJumpWest,
+        [DIR_EAST - 1]  = MetatileBehaviour_IsJumpEast,
     };
 
-    u8 behavior;
+    u8 behaviour;
     u8 index = direction;
 
     if (index == DIR_NONE)
@@ -9572,9 +9572,9 @@ u8 GetLedgeJumpDirection(s16 x, s16 y, u8 direction)
         index -= DIR_EAST;
 
     index--;
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    behaviour = MapGridGetMetatileBehaviourAt(x, y);
 
-    if (ledgeBehaviorFuncs[index](behavior) == TRUE)
+    if (ledgeBehaviourFuncs[index](behaviour) == TRUE)
         return index + 1;
 
     return DIR_NONE;
@@ -9585,10 +9585,10 @@ static void SetObjectEventSpriteOamTableForLongGrass(struct ObjectEvent *objEven
     if (objEvent->disableCoveringGroundEffects)
         return;
 
-    if (!MetatileBehavior_IsLongGrass(objEvent->currentMetatileBehavior))
+    if (!MetatileBehaviour_IsLongGrass(objEvent->currentMetatileBehaviour))
         return;
 
-    if (!MetatileBehavior_IsLongGrass(objEvent->previousMetatileBehavior))
+    if (!MetatileBehaviour_IsLongGrass(objEvent->previousMetatileBehaviour))
         return;
 
     sprite->subspriteTableNum = 4;
@@ -9682,7 +9682,7 @@ void ObjectEventUpdateElevation(struct ObjectEvent *objEvent, struct Sprite *spr
 
 void SetObjectSubpriorityByElevation(u8 elevation, struct Sprite *sprite, u8 subpriority)
 {
-    s32 tmp = sprite->centerToCornerVecY;
+    s32 tmp = sprite->centreToCornerVecY;
     u32 tmpa = *(u16 *)&sprite->y;
     u32 tmpb = *(u16 *)&gSpriteCoordOffsetY;
     s32 tmp2 = (tmpa - tmp) + tmpb;
@@ -9834,7 +9834,7 @@ static void DoTracksGroundEffect_FootprintsB(struct ObjectEvent *objEvent, struc
     gFieldEffectArguments[2] = 149;
     gFieldEffectArguments[3] = 2;
     gFieldEffectArguments[4] = objEvent->facingDirection;
-    gFieldEffectArguments[5] = objEvent->previousMetatileBehavior;
+    gFieldEffectArguments[5] = objEvent->previousMetatileBehaviour;
     FieldEffectStart(otherFootprintsA_FieldEffectData[isDeepSand]);
 }
 
@@ -9851,7 +9851,7 @@ static void DoTracksGroundEffect_FootprintsC(struct ObjectEvent *objEvent, struc
     gFieldEffectArguments[2] = 149;
     gFieldEffectArguments[3] = 2;
     gFieldEffectArguments[4] = objEvent->facingDirection;
-    gFieldEffectArguments[5] = objEvent->previousMetatileBehavior;
+    gFieldEffectArguments[5] = objEvent->previousMetatileBehaviour;
     FieldEffectStart(otherFootprintsB_FieldEffectData[isDeepSand]);
 }
 
@@ -9906,7 +9906,7 @@ static void DoTracksGroundEffect_SlitherTracks(struct ObjectEvent *objEvent, str
         gFieldEffectArguments[3] = 2;
         gFieldEffectArguments[4] =
         slitherTracks_Transitions[objEvent->previousMovementDirection][objEvent->facingDirection - 5];
-        gFieldEffectArguments[5] = objEvent->previousMetatileBehavior;
+        gFieldEffectArguments[5] = objEvent->previousMetatileBehaviour;
         FieldEffectStart(FLDEFF_TRACKS_SLITHER);
     }
 }
@@ -10588,17 +10588,17 @@ void UpdateObjectEventSpriteInvisibility(struct Sprite *sprite, bool8 invisible)
 
     if (sprite->coordOffsetEnabled)
     {
-        x = sprite->x + sprite->x2 + sprite->centerToCornerVecX + gSpriteCoordOffsetX;
-        y = sprite->y + sprite->y2 + sprite->centerToCornerVecY + gSpriteCoordOffsetY;
+        x = sprite->x + sprite->x2 + sprite->centreToCornerVecX + gSpriteCoordOffsetX;
+        y = sprite->y + sprite->y2 + sprite->centreToCornerVecY + gSpriteCoordOffsetY;
     }
     else
     {
-        x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
-        y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
+        x = sprite->x + sprite->x2 + sprite->centreToCornerVecX;
+        y = sprite->y + sprite->y2 + sprite->centreToCornerVecY;
     }
 
-    x2 = x - (sprite->centerToCornerVecX >> 1);
-    y2 = y - (sprite->centerToCornerVecY >> 1);
+    x2 = x - (sprite->centreToCornerVecX >> 1);
+    y2 = y - (sprite->centreToCornerVecY >> 1);
 
     if ((s16)x >= DISPLAY_WIDTH + 16 || x2 < -16)
         sprite->invisible = TRUE;

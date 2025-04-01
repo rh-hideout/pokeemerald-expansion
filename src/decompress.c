@@ -173,7 +173,7 @@ static void UNUSED StitchObjectsOn8x8Canvas(s32 object_size, s32 object_count, u
       This function appears to emulate behaviour found in the GB(C) versions regarding how the Pokemon images
       are stitched together to be displayed on the battle screen.
       Given "compacted" tiles, an object count and a bounding box/object size, place the tiles in such a way
-      that the result will have each object centered in a 8x8 tile canvas.
+      that the result will have each object centreed in a 8x8 tile canvas.
     */
     s32 i, j, k, l;
     u8 *src = src_tiles, *dest = dest_tiles;
@@ -185,7 +185,7 @@ static void UNUSED StitchObjectsOn8x8Canvas(s32 object_size, s32 object_count, u
         bottom_off = (object_size >> 1) + 4;
         for (l = 0; l < object_count; l++)
         {
-            // Clear all unused rows of tiles plus the half-tile required due to centering
+            // Clear all unused rows of tiles plus the half-tile required due to centreing
             for (j = 0; j < 8-object_size; j++)
             {
                 for (k = 0; k < 8; k++)

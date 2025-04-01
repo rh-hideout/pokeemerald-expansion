@@ -38,17 +38,17 @@ SINGLE_BATTLE_TEST("Tri Attack can inflict paralysis, burn or freeze")
 }
 
 #if B_USE_FROSTBITE == TRUE
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite electric/fire/ice types respectively")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/frostbite electric/fire/ice types respectively")
 #else
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze electric/fire/ice types respectively")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/freeze electric/fire/ice types respectively")
 #endif
 {
     u8 statusAnim;
     u16 species;
     u32 rng;
-    #if B_PARALYZE_ELECTRIC >= GEN_6
+    #if B_PARALYSE_ELECTRIC >= GEN_6
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; }
-    #endif // B_PARALYZE_ELECTRIC
+    #endif // B_PARALYSE_ELECTRIC
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_BRN; rng = MOVE_EFFECT_BURN; species = SPECIES_ARCANINE; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_FRZ; rng = MOVE_EFFECT_FREEZE_OR_FROSTBITE; species = SPECIES_GLALIE; }
     GIVEN {
@@ -74,9 +74,9 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze electric/fire/ice typ
 }
 
 #if B_USE_FROSTBITE == TRUE
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/frostbite pokemon with abilities preventing respective statuses")
 #else
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/freeze pokemon with abilities preventing respective statuses")
 #endif
 {
     u8 statusAnim;
@@ -113,9 +113,9 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze pokemon with abilitie
 }
 
 #if B_USE_FROSTBITE == TRUE
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite a mon which is already statused")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/frostbite a mon which is already statused")
 #else
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze a mon which is already statused")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyse/burn/freeze a mon which is already statused")
 #endif
 {
     u8 statusAnim;

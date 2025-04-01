@@ -127,7 +127,7 @@
 
 	.equ	mxv,	0x7F		@
 
-@ center value of PAN, BEND, TUNE
+@ centre value of PAN, BEND, TUNE
 
 	.equ	c_v,	0x40		@ -64 ~ +63
 

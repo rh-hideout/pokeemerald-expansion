@@ -3903,14 +3903,14 @@ static void CreatePokeJumpYesNoMenu(u16 left, u16 top, u8 cursorPos)
 // "Points" for jump score and "times" for number of jumps in a row
 static void PrintScoreSuffixes(void)
 {
-    u8 color[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+    u8 colour[] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY};
 
     PutWindowTilemap(WIN_POINTS);
     PutWindowTilemap(WIN_TIMES);
     FillWindowPixelBuffer(WIN_POINTS, 0);
     FillWindowPixelBuffer(WIN_TIMES, 0);
-    AddTextPrinterParameterized3(WIN_POINTS, FONT_SMALL, 0, 1, color, 0, gText_SpacePoints2);
-    AddTextPrinterParameterized3(WIN_TIMES, FONT_SMALL, 0, 1, color, 0, gText_SpaceTimes3);
+    AddTextPrinterParameterized3(WIN_POINTS, FONT_SMALL, 0, 1, colour, 0, gText_SpacePoints2);
+    AddTextPrinterParameterized3(WIN_TIMES, FONT_SMALL, 0, 1, colour, 0, gText_SpaceTimes3);
 }
 
 // The venusaurs in the background are actually an empty 256x512 bg with 3 pairs of venusaurs on it.
@@ -4124,15 +4124,15 @@ static void AddPlayerNameWindows(void)
     CopyBgTilemapBufferToVram(BG_INTERFACE);
 }
 
-static void PrintPokeJumpPlayerName(int multiplayerId, u8 bgColor, u8 fgColor, u8 shadow)
+static void PrintPokeJumpPlayerName(int multiplayerId, u8 bgColour, u8 fgColour, u8 shadow)
 {
     u32 x;
-    u8 colors[3] = {bgColor, fgColor, shadow};
+    u8 colours[3] = {bgColour, fgColour, shadow};
 
     FillWindowPixelBuffer(sPokemonJumpGfx->nameWindowIds[multiplayerId], 0);
     x = 64 - GetStringWidth(FONT_NORMAL, GetPokeJumpPlayerName(multiplayerId), -1);
     x /= 2;
-    AddTextPrinterParameterized3(sPokemonJumpGfx->nameWindowIds[multiplayerId], FONT_NORMAL, x, 1, colors, TEXT_SKIP_DRAW, GetPokeJumpPlayerName(multiplayerId));
+    AddTextPrinterParameterized3(sPokemonJumpGfx->nameWindowIds[multiplayerId], FONT_NORMAL, x, 1, colours, TEXT_SKIP_DRAW, GetPokeJumpPlayerName(multiplayerId));
     CopyWindowToVram(sPokemonJumpGfx->nameWindowIds[multiplayerId], COPYWIN_GFX);
 }
 
@@ -4143,7 +4143,7 @@ static void PrintPokeJumpPlayerNames(bool32 highlightSelf)
     if (!highlightSelf)
     {
         for (i = 0; i < playersCount; i++)
-            PrintPokeJumpPlayerName(i, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
+            PrintPokeJumpPlayerName(i, TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY);
     }
     else
     {
@@ -4152,9 +4152,9 @@ static void PrintPokeJumpPlayerNames(bool32 highlightSelf)
         for (i = 0; i < playersCount; i++)
         {
             if (multiplayerId != i)
-                PrintPokeJumpPlayerName(i, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
+                PrintPokeJumpPlayerName(i, TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY);
             else
-                PrintPokeJumpPlayerName(i, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_RED, TEXT_COLOR_LIGHT_RED);
+                PrintPokeJumpPlayerName(i, TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_RED, TEXT_COLOUR_LIGHT_RED);
         }
     }
 }
@@ -4506,7 +4506,7 @@ static void PrintRecordsText(u16 windowId, int width)
     LoadUserWindowBorderGfx_(windowId, 0x21D, BG_PLTT_ID(13));
     DrawTextBorderOuter(windowId, 0x21D, 13);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_PkmnJumpRecords, GetStringCenterAlignXOffset(FONT_NORMAL, gText_PkmnJumpRecords, width * 8), 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_PkmnJumpRecords, GetStringCentreAlignXOffset(FONT_NORMAL, gText_PkmnJumpRecords, width * 8), 1, TEXT_SKIP_DRAW, NULL);
     for (i = 0; i < ARRAY_COUNT(sRecordsTexts); i++)
     {
         AddTextPrinterParameterized(windowId, FONT_NORMAL, sRecordsTexts[i], 0, 25 + (i * 16), TEXT_SKIP_DRAW, NULL);

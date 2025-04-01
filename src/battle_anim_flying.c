@@ -10,7 +10,7 @@
 
 extern const struct SpriteTemplate gFlashingHitSplatSpriteTemplate;
 
-static void AnimEllipticalGustCentered(struct Sprite *sprite);
+static void AnimEllipticalGustCentreed(struct Sprite *sprite);
 static void AnimEllipticalGust_Step(struct Sprite *);
 static void AnimGustToTarget(struct Sprite *);
 static void AnimGustToTarget_Step(struct Sprite *);
@@ -33,7 +33,7 @@ static void AnimSkyAttackBird_Step(struct Sprite *);
 static void AnimTask_AnimateGustTornadoPalette_Step(u8);
 static void AnimTask_LoadWindstormBackground_Step(u8 taskId);
 
-const struct SpriteTemplate gEllipticalGustCenteredSpriteTemplate =
+const struct SpriteTemplate gEllipticalGustCentreedSpriteTemplate =
 {
     .tileTag = ANIM_TAG_GUST,
     .paletteTag = ANIM_TAG_GUST,
@@ -41,7 +41,7 @@ const struct SpriteTemplate gEllipticalGustCenteredSpriteTemplate =
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimEllipticalGustCentered,
+    .callback = AnimEllipticalGustCentreed,
 };
 
 const struct SpriteTemplate gEllipticalGustSpriteTemplate =
@@ -356,8 +356,8 @@ const struct SpriteTemplate gSkyAttackBirdSpriteTemplate =
     .callback = AnimSkyAttackBird,
 };
 
-// same as AnimEllipticalGust but centered on targets in a double battle
-static void AnimEllipticalGustCentered(struct Sprite *sprite)
+// same as AnimEllipticalGust but centreed on targets in a double battle
+static void AnimEllipticalGustCentreed(struct Sprite *sprite)
 {
     if (IsDoubleBattle())
         InitSpritePosToAnimTargetsCentre(sprite, FALSE);

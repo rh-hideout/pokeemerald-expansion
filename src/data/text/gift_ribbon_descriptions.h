@@ -28,10 +28,10 @@ const u8 gGiftRibbonDescriptionPart1_RedTower[] = _("RED TOWER Clear");
 const u8 gGiftRibbonDescriptionPart1_BlackironTower[] = _("BLACKIRON TOWER Clear");
 const u8 gGiftRibbonDescriptionPart1_FinalTower[] = _("FINAL TOWER Clear");
 const u8 gGiftRibbonDescriptionPart1_LegendMaking[] = _("Legend-making");
-const u8 gGiftRibbonDescriptionPart1_PokemonCenterTokyo[] = _("POKéMON CENTER TOKYO");
-const u8 gGiftRibbonDescriptionPart1_PokemonCenterOsaka[] = _("POKéMON CENTER OSAKA");
-const u8 gGiftRibbonDescriptionPart1_PokemonCenterNagoya[] = _("POKéMON CENTER NAGOYA");
-const u8 gGiftRibbonDescriptionPart1_PokemonCenterNY[] = _("POKéMON CENTER NY");
+const u8 gGiftRibbonDescriptionPart1_PokemonCentreTokyo[] = _("POKéMON CENTRE TOKYO");
+const u8 gGiftRibbonDescriptionPart1_PokemonCentreOsaka[] = _("POKéMON CENTRE OSAKA");
+const u8 gGiftRibbonDescriptionPart1_PokemonCentreNagoya[] = _("POKéMON CENTRE NAGOYA");
+const u8 gGiftRibbonDescriptionPart1_PokemonCentreNY[] = _("POKéMON CENTRE NY");
 const u8 gGiftRibbonDescriptionPart1_SummerHolidays[] = _("Summer Holidays RIBBON");
 const u8 gGiftRibbonDescriptionPart2_EmptyString[] = _("");
 const u8 gGiftRibbonDescriptionPart1_WinterHolidays[] = _("Winter Holidays RIBBON");
@@ -98,10 +98,10 @@ const u8 *const gGiftRibbonDescriptionPointers[MAX_GIFT_RIBBON][2] =
     {gGiftRibbonDescriptionPart1_BlackironTower,        gGiftRibbonDescriptionPart2_Commemorative},
     {gGiftRibbonDescriptionPart1_FinalTower,            gGiftRibbonDescriptionPart2_Commemorative},
     {gGiftRibbonDescriptionPart1_LegendMaking,          gGiftRibbonDescriptionPart2_Commemorative},
-    {gGiftRibbonDescriptionPart1_PokemonCenterTokyo,    gGiftRibbonDescriptionPart2_Commemorative},
-    {gGiftRibbonDescriptionPart1_PokemonCenterOsaka,    gGiftRibbonDescriptionPart2_Commemorative},
-    {gGiftRibbonDescriptionPart1_PokemonCenterNagoya,   gGiftRibbonDescriptionPart2_Commemorative},
-    {gGiftRibbonDescriptionPart1_PokemonCenterNY,       gGiftRibbonDescriptionPart2_Commemorative},
+    {gGiftRibbonDescriptionPart1_PokemonCentreTokyo,    gGiftRibbonDescriptionPart2_Commemorative},
+    {gGiftRibbonDescriptionPart1_PokemonCentreOsaka,    gGiftRibbonDescriptionPart2_Commemorative},
+    {gGiftRibbonDescriptionPart1_PokemonCentreNagoya,   gGiftRibbonDescriptionPart2_Commemorative},
+    {gGiftRibbonDescriptionPart1_PokemonCentreNY,       gGiftRibbonDescriptionPart2_Commemorative},
     {gGiftRibbonDescriptionPart1_SummerHolidays,        gGiftRibbonDescriptionPart2_EmptyString},
     {gGiftRibbonDescriptionPart1_WinterHolidays,        gGiftRibbonDescriptionPart2_EmptyString},
     {gGiftRibbonDescriptionPart1_SpringHolidays,        gGiftRibbonDescriptionPart2_EmptyString},

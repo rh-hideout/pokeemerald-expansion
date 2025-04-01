@@ -20,19 +20,19 @@ Automated testing follows the same pattern:
 3. Check the UI outputs in `SCENE`.
 
 ### Example 1
-As a concrete example, to manually test `EFFECT_PARALYZE`, e.g. the
+As a concrete example, to manually test `EFFECT_PARALYSE`, e.g. the
 effect of Stun Spore you might:
 1. Put a Wobbuffet that knows Stun Spore in your party.
 2. Battle a wild Wobbuffet.
 3. Use Stun Spore.
-4. Check that the Wobbuffet is paralyzed.
+4. Check that the Wobbuffet is paralysed.
 
 This can be translated to an automated test as follows:
 
 ```
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYZE);
+    ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYSE);
 }
 
 SINGLE_BATTLE_TEST("Stun Spore inflicts paralysis")
@@ -44,13 +44,13 @@ SINGLE_BATTLE_TEST("Stun Spore inflicts paralysis")
         TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-        MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!"); // 4
+        MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!"); // 4
         STATUS_ICON(opponent, paralysis: TRUE); // 4.
     }
 }
 ```
 
-The `ASSUMPTIONS` block documents that Stun Spore has `EFFECT_PARALYZE`.
+The `ASSUMPTIONS` block documents that Stun Spore has `EFFECT_PARALYSE`.
 If Stun Spore did not have that effect it would cause the tests in the file to be skipped. We write our tests like this so that hackers can change the effects of moves without causing tests to fail.
 
 `SINGLE_BATTLE_TEST` defines the name of the test. Related tests should start with the same prefix, e.g. Stun Spore tests should start with "Stun Spore", this allows just the Stun Spore-related tests to be run with:
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
 ```
 The `ASSUME` commands are documenting the reasons why Stun Spore does not affect Oddish, namely that Stun Spore is a powder move, and Oddish is a Grass-type. These `ASSUME` statements function similarly to the ones in `ASSUMPTIONS` but apply only to the one test.
 NOT inverts the meaning of a `SCENE` check, so applying it to `ANIMATION` requires that the Stun Spore animation does not play. `MESSAGE` checks that the message was shown.
-The checks in `SCENE` are ordered, so together this says "The doesn't affect message is shown, and the Stun Spore animation does not play at any time before that". Normally you would only test one or the other, or even better, just `NOT STATUS_ICON(opponent, paralysis: TRUE);` to say that Oddish was not paralyzed without specifying the exact outputs which led to that.
+The checks in `SCENE` are ordered, so together this says "The doesn't affect message is shown, and the Stun Spore animation does not play at any time before that". Normally you would only test one or the other, or even better, just `NOT STATUS_ICON(opponent, paralysis: TRUE);` to say that Oddish was not paralysed without specifying the exact outputs which led to that.
 
 ### Example 3
 As a final example, to test that Meditate works you might:
@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Blaze boosts Fire-type moves in a pinch", s16 damage)
 ```
 ### `PASSES_RANDOMLY`
 `PASSES_RANDOMLY(successes, trials, [tag])`
-Checks that the test passes successes/trials. If `tag` is provided, the test is run for each value that the tag can produce. For example, to check that Paralysis causes the turn to be skipped 25/100 times, we can write the following test that passes only if the Pokémon is fully paralyzed and specify that we expect it to pass 25/100 times when `RNG_PARALYSIS` varies:
+Checks that the test passes successes/trials. If `tag` is provided, the test is run for each value that the tag can produce. For example, to check that Paralysis causes the turn to be skipped 25/100 times, we can write the following test that passes only if the Pokémon is fully paralysed and specify that we expect it to pass 25/100 times when `RNG_PARALYSIS` varies:
 ```
 SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
 {
@@ -226,7 +226,7 @@ SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+        MESSAGE("Wobbuffet couldn't move because it's paralysed!");
     }
 }
 ```
@@ -467,7 +467,7 @@ Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
      ONE_OF {
          MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+         MESSAGE("Wobbuffet couldn't move because it's paralysed!");
      }
 ```
 
@@ -482,7 +482,7 @@ Causes the test to fail if one of the `SCENE` commands succeeds before the comma
      // Our Wobbuffet does not move before the foe's.
      NONE_OF {
          MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+         MESSAGE("Wobbuffet couldn't move because it's paralysed!");
      }
      MESSAGE("The opposing Wobbuffet used Celebrate!");
 ```
@@ -507,7 +507,7 @@ Refer to the party members defined in `GIVEN`, e.g.:
     ...
 }
 ```
-Contains code to run after the battle has finished. If the test is using `PARAMETRIZE` commands then `EXPECT` commands between the results should go here. Is also occasionally used to check the internal battle state when checking the behavior via a `SCENE` is too difficult, verbose, or error-prone.
+Contains code to run after the battle has finished. If the test is using `PARAMETRIZE` commands then `EXPECT` commands between the results should go here. Is also occasionally used to check the internal battle state when checking the behaviour via a `SCENE` is too difficult, verbose, or error-prone.
 
 ### `FINALLY`
 ```

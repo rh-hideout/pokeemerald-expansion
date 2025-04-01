@@ -19,7 +19,7 @@ enum {
     PALTAG_WEATHER_2
 };
 
-#define NUM_WEATHER_COLOR_MAPS 19
+#define NUM_WEATHER_COLOUR_MAPS 19
 
 struct Weather
 {
@@ -40,11 +40,11 @@ struct Weather
             struct Sprite *sandstormSprites2[NUM_SWIRL_SANDSTORM_SPRITES];
         } s2;
     } sprites;
-    s8 colorMapIndex;
-    s8 targetColorMapIndex;
-    u8 colorMapStepDelay;
-    u8 colorMapStepCounter;
-    u16 fadeDestColor;
+    s8 colourMapIndex;
+    s8 targetColourMapIndex;
+    u8 colourMapStepDelay;
+    u8 colourMapStepCounter;
+    u16 fadeDestColour;
     u8 palProcessingState;
     u8 fadeScreenCounter;
     bool8 readyForInit;
@@ -58,7 +58,7 @@ struct Weather
     u8 weatherGfxLoaded;
     bool8 weatherChangeComplete;
     u8 weatherPicSpritePalIndex;
-    u8 contrastColorMapSpritePalIndex;
+    u8 contrastColourMapSpritePalIndex;
     // Rain
     u16 rainSpriteVisibleCounter;
     u8 curRainSpriteIndex;
@@ -144,12 +144,12 @@ void StartWeather(void);
 void SetNextWeather(u8 weather);
 void SetCurrentAndNextWeather(u8 weather);
 void SetCurrentAndNextWeatherNoDelay(u8 weather);
-void ApplyWeatherColorMapIfIdle(s8 colorMapIndex);
-void ApplyWeatherColorMapIfIdle_Gradual(u8 colorMapIndex, u8 targetColorMapIndex, u8 colorMapStepDelay);
+void ApplyWeatherColourMapIfIdle(s8 colourMapIndex);
+void ApplyWeatherColourMapIfIdle_Gradual(u8 colourMapIndex, u8 targetColourMapIndex, u8 colourMapStepDelay);
 void FadeScreen(u8 mode, s8 delay);
 bool8 IsWeatherNotFadingIn(void);
 void UpdateSpritePaletteWithWeather(u8 spritePaletteIndex);
-void ApplyWeatherColorMapToPal(u8 paletteIndex);
+void ApplyWeatherColourMapToPal(u8 paletteIndex);
 void LoadCustomWeatherSpritePalette(const u16 *palette);
 void ResetDroughtWeatherPaletteLoading(void);
 bool8 LoadDroughtWeatherPalettes(void);

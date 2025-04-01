@@ -309,7 +309,7 @@ ContestHall_EventScript_GettingStartedWireless::
 	return
 
 ContestHall_EventScript_ShowContestMons::
-	call ContestHall_EventScript_ContestantWalkToCenter
+	call ContestHall_EventScript_ContestantWalkToCentre
 	call ContestHall_EventScript_ShowContestMonPic
 	call ContestHall_EventScript_AudienceHeartEmotes
 	call ContestHall_EventScript_AudienceReactToContestant
@@ -332,44 +332,44 @@ ContestHall_EventScript_WaitForLink::
 	waitstate
 	return
 
-ContestHall_EventScript_ContestantWalkToCenter::
-	goto_if_eq VAR_0x8006, 0, ContestHall_EventScript_Player1WalkToCenter
-	goto_if_eq VAR_0x8006, 1, ContestHall_EventScript_Player2WalkToCenter
-	goto_if_eq VAR_0x8006, 2, ContestHall_EventScript_Player3WalkToCenter
-	goto_if_eq VAR_0x8006, 3, ContestHall_EventScript_Player4WalkToCenter
+ContestHall_EventScript_ContestantWalkToCentre::
+	goto_if_eq VAR_0x8006, 0, ContestHall_EventScript_Player1WalkToCentre
+	goto_if_eq VAR_0x8006, 1, ContestHall_EventScript_Player2WalkToCentre
+	goto_if_eq VAR_0x8006, 2, ContestHall_EventScript_Player3WalkToCentre
+	goto_if_eq VAR_0x8006, 3, ContestHall_EventScript_Player4WalkToCentre
 	return
 
-ContestHall_EventScript_Player1WalkToCenter::
+ContestHall_EventScript_Player1WalkToCentre::
 	call ContestHall_EventScript_TryWaitForLink
 	lockall
-	applymovement LOCALID_CONTESTANT_1, ContestHall_Movement_Player1WalkToCenter
+	applymovement LOCALID_CONTESTANT_1, ContestHall_Movement_Player1WalkToCentre
 	waitmovement 0
 	releaseall
 	setvar VAR_0x800B, LOCALID_CONTESTANT_1
 	return
 
-ContestHall_EventScript_Player2WalkToCenter::
+ContestHall_EventScript_Player2WalkToCentre::
 	call ContestHall_EventScript_TryWaitForLink
 	lockall
-	applymovement LOCALID_CONTESTANT_2, ContestHall_Movement_Player2WalkToCenter
+	applymovement LOCALID_CONTESTANT_2, ContestHall_Movement_Player2WalkToCentre
 	waitmovement 0
 	releaseall
 	setvar VAR_0x800B, LOCALID_CONTESTANT_2
 	return
 
-ContestHall_EventScript_Player3WalkToCenter::
+ContestHall_EventScript_Player3WalkToCentre::
 	call ContestHall_EventScript_TryWaitForLink
 	lockall
-	applymovement LOCALID_CONTESTANT_3, ContestHall_Movement_Player3WalkToCenter
+	applymovement LOCALID_CONTESTANT_3, ContestHall_Movement_Player3WalkToCentre
 	waitmovement 0
 	releaseall
 	setvar VAR_0x800B, LOCALID_CONTESTANT_3
 	return
 
-ContestHall_EventScript_Player4WalkToCenter::
+ContestHall_EventScript_Player4WalkToCentre::
 	call ContestHall_EventScript_TryWaitForLink
 	lockall
-	applymovement LOCALID_CONTESTANT_4, ContestHall_Movement_Player4WalkToCenter
+	applymovement LOCALID_CONTESTANT_4, ContestHall_Movement_Player4WalkToCentre
 	waitmovement 0
 	releaseall
 	setvar VAR_0x800B, LOCALID_CONTESTANT_4
@@ -1288,7 +1288,7 @@ ContestHall_Movement_MCWalkInPlaceDown:
 	walk_in_place_faster_down
 	step_end
 
-ContestHall_Movement_Player1WalkToCenter:
+ContestHall_Movement_Player1WalkToCentre:
 	walk_up
 	walk_right
 	walk_right
@@ -1304,7 +1304,7 @@ ContestHall_Movement_Player1WalkBack:
 	walk_in_place_faster_up
 	step_end
 
-ContestHall_Movement_Player2WalkToCenter:
+ContestHall_Movement_Player2WalkToCentre:
 	walk_up
 	walk_right
 	walk_in_place_faster_up
@@ -1316,7 +1316,7 @@ ContestHall_Movement_Player2WalkBack:
 	walk_in_place_faster_up
 	step_end
 
-ContestHall_Movement_Player3WalkToCenter:
+ContestHall_Movement_Player3WalkToCentre:
 	walk_up
 	walk_left
 	walk_in_place_faster_up
@@ -1328,7 +1328,7 @@ ContestHall_Movement_Player3WalkBack:
 	walk_in_place_faster_up
 	step_end
 
-ContestHall_Movement_Player4WalkToCenter:
+ContestHall_Movement_Player4WalkToCentre:
 	walk_up
 	walk_left
 	walk_left
@@ -1525,7 +1525,7 @@ ContestHall_Text_SeenContestantsAudienceWillVote:
 	.string "contestants.\p"
 	.string "Now it's time for primary judging!\p"
 	.string "The audience will vote on their\n"
-	.string "favorite POKéMON contestants.\p"
+	.string "favourite POKéMON contestants.\p"
 	.string "Without any further ado, let the\n"
 	.string "voting begin!$"
 
@@ -1780,7 +1780,7 @@ ContestHall_Text_WeveSeenContestants:
 
 ContestHall_Text_AudienceWillVote:
 	.string "The audience will vote on their\n"
-	.string "favorite POKéMON contestants.$"
+	.string "favourite POKéMON contestants.$"
 
 ContestHall_Text_LetVotingBegin:
 	.string "Without any further ado,\n"

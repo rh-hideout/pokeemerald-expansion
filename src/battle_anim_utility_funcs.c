@@ -23,8 +23,8 @@ struct AnimStatsChangeData
 
 static EWRAM_DATA struct AnimStatsChangeData *sAnimStatsChangeData = {0};
 
-static void StartBlendAnimSpriteColor(u8, u32);
-static void AnimTask_BlendSpriteColor_Step2(u8);
+static void StartBlendAnimSpriteColour(u8, u32);
+static void AnimTask_BlendSpriteColour_Step2(u8);
 static void AnimTask_HardwarePaletteFade_Step(u8);
 static void AnimTask_TraceMonBlended_Step(u8);
 static void AnimMonTrace(struct Sprite *);
@@ -33,7 +33,7 @@ static void StatsChangeAnimation_Step1(u8);
 static void StatsChangeAnimation_Step2(u8);
 static void StatsChangeAnimation_Step3(u8);
 static void AnimTask_Flash_Step(u8);
-static void SetPalettesToColor(u32, u16);
+static void SetPalettesToColour(u32, u16);
 static void AnimTask_UpdateSlidingBg(u8);
 static void UpdateMonScrollingBgMask(u8);
 static void AnimTask_WaitAndRestoreVisibility(u8);
@@ -47,7 +47,7 @@ void AnimTask_BlendBattleAnimPal(u8 taskId)
                                     (gBattleAnimArgs[0] >>  8) & 1,
                                     (gBattleAnimArgs[0] >>  9) & 1,
                                     (gBattleAnimArgs[0] >> 10) & 1);
-    StartBlendAnimSpriteColor(taskId, selectedPalettes);
+    StartBlendAnimSpriteColour(taskId, selectedPalettes);
 }
 
 void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
@@ -98,7 +98,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
             selectedPalettes |= 0x10000 << GetSpritePalIdxByBattler(battler);
     }
 
-    StartBlendAnimSpriteColor(taskId, selectedPalettes);
+    StartBlendAnimSpriteColour(taskId, selectedPalettes);
 }
 
 void AnimTask_SetCamouflageBlend(u8 taskId)
@@ -139,17 +139,17 @@ void AnimTask_SetCamouflageBlend(u8 taskId)
         break;
     }
 
-    StartBlendAnimSpriteColor(taskId, selectedPalettes);
+    StartBlendAnimSpriteColour(taskId, selectedPalettes);
 }
 
 void AnimTask_BlendParticle(u8 taskId)
 {
     u8 paletteIndex = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
     u32 selectedPalettes = 1 << (paletteIndex + 16);
-    StartBlendAnimSpriteColor(taskId, selectedPalettes);
+    StartBlendAnimSpriteColour(taskId, selectedPalettes);
 }
 
-void StartBlendAnimSpriteColor(u8 taskId, u32 selectedPalettes)
+void StartBlendAnimSpriteColour(u8 taskId, u32 selectedPalettes)
 {
     gTasks[taskId].data[0] = selectedPalettes;
     gTasks[taskId].data[1] = selectedPalettes >> 16;
@@ -158,11 +158,11 @@ void StartBlendAnimSpriteColor(u8 taskId, u32 selectedPalettes)
     gTasks[taskId].data[4] = gBattleAnimArgs[3];
     gTasks[taskId].data[5] = gBattleAnimArgs[4];
     gTasks[taskId].data[10] = gBattleAnimArgs[2];
-    gTasks[taskId].func = AnimTask_BlendSpriteColor_Step2;
+    gTasks[taskId].func = AnimTask_BlendSpriteColour_Step2;
     gTasks[taskId].func(taskId);
 }
 
-static void AnimTask_BlendSpriteColor_Step2(u8 taskId)
+static void AnimTask_BlendSpriteColour_Step2(u8 taskId)
 {
     u32 selectedPalettes;
     u16 singlePaletteOffset = 0;
@@ -631,11 +631,11 @@ static void StatsChangeAnimation_Step3(u8 taskId)
 void AnimTask_Flash(u8 taskId)
 {
     u32 selectedPalettes = GetBattleMonSpritePalettesMask(1, 1, 1, 1);
-    SetPalettesToColor(selectedPalettes, RGB_BLACK);
+    SetPalettesToColour(selectedPalettes, RGB_BLACK);
     gTasks[taskId].data[14] = selectedPalettes >> 16;
 
     selectedPalettes = GetBattlePalettesMask(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE) & 0xFFFF;
-    SetPalettesToColor(selectedPalettes, RGB_WHITEALPHA);
+    SetPalettesToColour(selectedPalettes, RGB_WHITEALPHA);
     gTasks[taskId].data[15] = selectedPalettes;
 
     gTasks[taskId].data[0] = 0;
@@ -683,7 +683,7 @@ static void AnimTask_Flash_Step(u8 taskId)
     }
 }
 
-static void SetPalettesToColor(u32 selectedPalettes, u16 color)
+static void SetPalettesToColour(u32 selectedPalettes, u16 colour)
 {
     u16 i;
 
@@ -695,7 +695,7 @@ static void SetPalettesToColor(u32 selectedPalettes, u16 color)
             u16 paletteOffset = curOffset;
             while (curOffset < paletteOffset + 16)
             {
-                gPlttBufferFaded[curOffset] = color;
+                gPlttBufferFaded[curOffset] = colour;
                 curOffset++;
             }
         }
@@ -719,7 +719,7 @@ void AnimTask_BlendNonAttackerPalettes(u8 taskId)
     for (j = 5; j != 0; j--)
         gBattleAnimArgs[j] = gBattleAnimArgs[j - 1];
 
-    StartBlendAnimSpriteColor(taskId, selectedPalettes);
+    StartBlendAnimSpriteColour(taskId, selectedPalettes);
 }
 
 void AnimTask_StartSlidingBg(u8 taskId)

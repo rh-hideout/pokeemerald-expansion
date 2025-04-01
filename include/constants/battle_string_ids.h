@@ -53,10 +53,10 @@
 #define STRINGID_PKMNWASDEFROSTED                     52
 #define STRINGID_PKMNWASDEFROSTED2                    53
 #define STRINGID_PKMNWASDEFROSTEDBY                   54
-#define STRINGID_PKMNWASPARALYZED                     55
-#define STRINGID_PKMNWASPARALYZEDBY                   56
-#define STRINGID_PKMNISPARALYZED                      57
-#define STRINGID_PKMNISALREADYPARALYZED               58
+#define STRINGID_PKMNWASPARALYSED                     55
+#define STRINGID_PKMNWASPARALYSEDBY                   56
+#define STRINGID_PKMNISPARALYSED                      57
+#define STRINGID_PKMNISALREADYPARALYSED               58
 #define STRINGID_PKMNHEALEDPARALYSIS                  59
 #define STRINGID_PKMNDREAMEATEN                       60
 #define STRINGID_STATSWONTINCREASE                    61
@@ -162,7 +162,7 @@
 #define STRINGID_PKMNFORESAWATTACK                    161
 #define STRINGID_PKMNTOOKATTACK                       162
 #define STRINGID_PKMNATTACK                           163
-#define STRINGID_PKMNCENTERATTENTION                  164
+#define STRINGID_PKMNCENTREATTENTION                  164
 #define STRINGID_PKMNCHARGINGPOWER                    165
 #define STRINGID_NATUREPOWERTURNEDINTO                166
 #define STRINGID_PKMNSTATUSNORMAL                     167
@@ -939,7 +939,7 @@
 #define B_MSG_CANT_ESCAPE_2        3
 #define B_MSG_ATTACKER_CANT_ESCAPE 4
 
-// gGotPoisonedStringIds / gGotParalyzedStringIds / gFellAsleepStringIds
+// gGotPoisonedStringIds / gGotParalysedStringIds / gFellAsleepStringIds
 // gGotBurnedStringIds / gGotFrozenStringIds / gAttractUsedStringIds
 #define B_MSG_STATUSED            0
 #define B_MSG_STATUSED_BY_ABILITY 1
@@ -957,7 +957,7 @@
 #define B_MSG_FROSTBITE_HEALED         0
 #define B_MSG_FROSTBITE_HEALED_BY_MOVE 1
 
-// gBattlePalaceFlavorTextTable
+// gBattlePalaceFlavourTextTable
 #define B_MSG_GLINT_IN_EYE   0
 #define B_MSG_GETTING_IN_POS 1
 #define B_MSG_GROWL_DEEPLY   2

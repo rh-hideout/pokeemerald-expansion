@@ -1,5 +1,5 @@
 @ 'requests_effects' should be set to 1 if the command contains a call
-@ to 'Script_RequestEffects', which allows it to be analyzed with
+@ to 'Script_RequestEffects', which allows it to be analysed with
 @ 'RunScriptImmediatelyUntilEffect'.
 	.ifndef SCRIPT_CMD_TABLE_ENTRY_MACRO
 	.set SCRIPT_CMD_TABLE_ENTRY_MACRO, 1
@@ -221,7 +221,7 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_SETESCAPEWARP                 ScrCmd_setescapewarp,               requests_effects=1  @ 0xc4
 	script_cmd_table_entry SCR_OP_WAITMONCRY                    ScrCmd_waitmoncry,                  requests_effects=1  @ 0xc5
 	script_cmd_table_entry SCR_OP_BUFFERBOXNAME                 ScrCmd_bufferboxname,               requests_effects=1  @ 0xc6
-	script_cmd_table_entry SCR_OP_TEXTCOLOR                     ScrCmd_nop1,                        requests_effects=1  @ 0xc7
+	script_cmd_table_entry SCR_OP_TEXTCOLOUR                     ScrCmd_nop1,                        requests_effects=1  @ 0xc7
 	script_cmd_table_entry SCR_OP_LOADHELP                      ScrCmd_nop1,                        requests_effects=1  @ 0xc8
 	script_cmd_table_entry SCR_OP_UNLOADHELP                    ScrCmd_nop1,                        requests_effects=1  @ 0xc9
 	script_cmd_table_entry SCR_OP_SIGNMSG                       ScrCmd_nop1,                        requests_effects=1  @ 0xca

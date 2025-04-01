@@ -114,7 +114,7 @@
 // - NIGHT if Form change that activates at nighttime.
 #define FORM_CHANGE_TIME_OF_DAY                 18
 
-// Form change that depends on a multichoice (e.g. Rotom Catalog).
+// Form change that depends on a multichoice (e.g. Rotom Catalogue).
 // param1: multichoice list (starting at 0).
 #define FORM_CHANGE_ITEM_USE_MULTICHOICE        19
 

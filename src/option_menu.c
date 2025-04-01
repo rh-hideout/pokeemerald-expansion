@@ -387,8 +387,8 @@ static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
 
     if (style != 0)
     {
-        dst[2] = TEXT_COLOR_RED;
-        dst[5] = TEXT_COLOR_LIGHT_RED;
+        dst[2] = TEXT_COLOUR_RED;
+        dst[5] = TEXT_COLOUR_LIGHT_RED;
     }
 
     dst[i] = EOS;

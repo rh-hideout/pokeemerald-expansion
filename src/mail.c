@@ -51,7 +51,7 @@ struct MailGraphics
     const u8 *tiles;
     const u8 *tileMap;
     u32 unused;
-    u16 textColor;
+    u16 textColour;
     u16 textShadow;
 };
 
@@ -119,15 +119,15 @@ static const struct WindowTemplate sWindowTemplates[] = {
     DUMMY_WIN_TEMPLATE
 };
 
-static const u8 sTextColors[] = {
-    TEXT_COLOR_TRANSPARENT,
-    TEXT_DYNAMIC_COLOR_1,
-    TEXT_DYNAMIC_COLOR_2
+static const u8 sTextColours[] = {
+    TEXT_COLOUR_TRANSPARENT,
+    TEXT_DYNAMIC_COLOUR_1,
+    TEXT_DYNAMIC_COLOUR_2
 };
 
-// Background is alternating bars of a dark/light color.
+// Background is alternating bars of a dark/light colour.
 // Either blue or red depending on player's gender
-static const u16 sBgColors[GENDER_COUNT][2] = {
+static const u16 sBgColours[GENDER_COUNT][2] = {
     [MALE]   = { RGB(13, 22, 26), RGB(5, 13, 20) },
     [FEMALE] = { RGB(28, 15, 17), RGB(20, 6, 14) }
 };
@@ -138,15 +138,15 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Orange,
         .tileMap = gMailTilemap_Orange,
         .unused = 0x2C0,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
-    [ITEM_TO_MAIL(ITEM_HARBOR_MAIL)] = {
-        .palette = gMailPalette_Harbor,
-        .tiles = gMailTiles_Harbor,
-        .tileMap = gMailTilemap_Harbor,
+    [ITEM_TO_MAIL(ITEM_HARBOUR_MAIL)] = {
+        .palette = gMailPalette_Harbour,
+        .tiles = gMailTiles_Harbour,
+        .tileMap = gMailTilemap_Harbour,
         .unused = 0x2E0,
-        .textColor = RGB_WHITE,
+        .textColour = RGB_WHITE,
         .textShadow = RGB(17, 17, 17),
     },
     [ITEM_TO_MAIL(ITEM_GLITTER_MAIL)] = {
@@ -154,7 +154,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Glitter,
         .tileMap = gMailTilemap_Glitter,
         .unused = 0x400,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
     [ITEM_TO_MAIL(ITEM_MECH_MAIL)] = {
@@ -162,7 +162,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Mech,
         .tileMap = gMailTilemap_Mech,
         .unused = 0x1E0,
-        .textColor = RGB_WHITE,
+        .textColour = RGB_WHITE,
         .textShadow = RGB(17, 17, 17),
     },
     [ITEM_TO_MAIL(ITEM_WOOD_MAIL)] = {
@@ -170,7 +170,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Wood,
         .tileMap = gMailTilemap_Wood,
         .unused = 0x2E0,
-        .textColor = RGB_WHITE,
+        .textColour = RGB_WHITE,
         .textShadow = RGB(17, 17, 17),
     },
     [ITEM_TO_MAIL(ITEM_WAVE_MAIL)] = {
@@ -178,7 +178,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Wave,
         .tileMap = gMailTilemap_Wave,
         .unused = 0x300,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
     [ITEM_TO_MAIL(ITEM_BEAD_MAIL)] = {
@@ -186,7 +186,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Bead,
         .tileMap = gMailTilemap_Bead,
         .unused = 0x140,
-        .textColor = RGB_WHITE,
+        .textColour = RGB_WHITE,
         .textShadow = RGB(17, 17, 17),
     },
     [ITEM_TO_MAIL(ITEM_SHADOW_MAIL)] = {
@@ -194,7 +194,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Shadow,
         .tileMap = gMailTilemap_Shadow,
         .unused = 0x300,
-        .textColor = RGB_WHITE,
+        .textColour = RGB_WHITE,
         .textShadow = RGB(17, 17, 17),
     },
     [ITEM_TO_MAIL(ITEM_TROPIC_MAIL)] = {
@@ -202,7 +202,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Tropic,
         .tileMap = gMailTilemap_Tropic,
         .unused = 0x220,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
     [ITEM_TO_MAIL(ITEM_DREAM_MAIL)] = {
@@ -210,7 +210,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Dream,
         .tileMap = gMailTilemap_Dream,
         .unused = 0x340,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
     [ITEM_TO_MAIL(ITEM_FAB_MAIL)] = {
@@ -218,7 +218,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Fab,
         .tileMap = gMailTilemap_Fab,
         .unused = 0x2a0,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     },
     [ITEM_TO_MAIL(ITEM_RETRO_MAIL)] = {
@@ -226,7 +226,7 @@ static const struct MailGraphics sMailGraphics[] = {
         .tiles = gMailTiles_Retro,
         .tileMap = gMailTilemap_Retro,
         .unused = 0x520,
-        .textColor = RGB(10, 10, 10),
+        .textColour = RGB(10, 10, 10),
         .textShadow = RGB(25, 25, 25),
     }
 };
@@ -246,7 +246,7 @@ static const struct MailLayout sMailLayouts_Wide[] = {
         .wordsXPos = 4,
         .lines = sLineLayouts_Wide,
     },
-    [ITEM_TO_MAIL(ITEM_HARBOR_MAIL)] = {
+    [ITEM_TO_MAIL(ITEM_HARBOUR_MAIL)] = {
         .numLines = ARRAY_COUNT(sLineLayouts_Wide),
         .signatureYPos = 0,
         .signatureWidth = 0,
@@ -353,7 +353,7 @@ static const struct MailLayout sMailLayouts_Tall[] = {
         .wordsXPos = 30,
         .lines = sLineLayouts_Tall,
     },
-    [ITEM_TO_MAIL(ITEM_HARBOR_MAIL)] = {
+    [ITEM_TO_MAIL(ITEM_HARBOUR_MAIL)] = {
         .numLines = ARRAY_COUNT(sLineLayouts_Tall),
         .signatureYPos = 10,
         .signatureWidth = 96,
@@ -565,16 +565,16 @@ static bool8 MailReadBuildGraphics(void)
             break;
         case 12:
             LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-            gPlttBufferUnfaded[BG_PLTT_ID(15) + 10] = sMailGraphics[sMailRead->mailType].textColor;
-            gPlttBufferFaded[BG_PLTT_ID(15) + 10] = sMailGraphics[sMailRead->mailType].textColor;
+            gPlttBufferUnfaded[BG_PLTT_ID(15) + 10] = sMailGraphics[sMailRead->mailType].textColour;
+            gPlttBufferFaded[BG_PLTT_ID(15) + 10] = sMailGraphics[sMailRead->mailType].textColour;
             gPlttBufferUnfaded[BG_PLTT_ID(15) + 11] = sMailGraphics[sMailRead->mailType].textShadow;
             gPlttBufferFaded[BG_PLTT_ID(15) + 11] = sMailGraphics[sMailRead->mailType].textShadow;
 
             LoadPalette(sMailGraphics[sMailRead->mailType].palette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
-            gPlttBufferUnfaded[BG_PLTT_ID(0) + 10] = sBgColors[gSaveBlock2Ptr->playerGender][0];
-            gPlttBufferFaded[BG_PLTT_ID(0) + 10] = sBgColors[gSaveBlock2Ptr->playerGender][0];
-            gPlttBufferUnfaded[BG_PLTT_ID(0) + 11] = sBgColors[gSaveBlock2Ptr->playerGender][1];
-            gPlttBufferFaded[BG_PLTT_ID(0) + 11] = sBgColors[gSaveBlock2Ptr->playerGender][1];
+            gPlttBufferUnfaded[BG_PLTT_ID(0) + 10] = sBgColours[gSaveBlock2Ptr->playerGender][0];
+            gPlttBufferFaded[BG_PLTT_ID(0) + 10] = sBgColours[gSaveBlock2Ptr->playerGender][0];
+            gPlttBufferUnfaded[BG_PLTT_ID(0) + 11] = sBgColours[gSaveBlock2Ptr->playerGender][1];
+            gPlttBufferFaded[BG_PLTT_ID(0) + 11] = sBgColours[gSaveBlock2Ptr->playerGender][1];
             break;
         case 13:
             if (sMailRead->hasText)
@@ -685,14 +685,14 @@ static void PrintMailText(void)
         if (sMailRead->message[i][0] == EOS || sMailRead->message[i][0] == CHAR_SPACE)
             continue;
 
-        AddTextPrinterParameterized3(0, FONT_NORMAL, sMailRead->layout->lines[i].xOffset + sMailRead->layout->wordsXPos, y + sMailRead->layout->wordsYPos, sTextColors, 0, sMailRead->message[i]);
+        AddTextPrinterParameterized3(0, FONT_NORMAL, sMailRead->layout->lines[i].xOffset + sMailRead->layout->wordsXPos, y + sMailRead->layout->wordsYPos, sTextColours, 0, sMailRead->message[i]);
         y += sMailRead->layout->lines[i].height;
     }
     bufptr = StringCopy(signature, gText_FromSpace);
     StringCopy(bufptr, sMailRead->playerName);
-    box_x = GetStringCenterAlignXOffset(FONT_NORMAL, signature, sMailRead->signatureWidth) + 104;
+    box_x = GetStringCentreAlignXOffset(FONT_NORMAL, signature, sMailRead->signatureWidth) + 104;
     box_y = sMailRead->layout->signatureYPos + 88;
-    AddTextPrinterParameterized3(0, FONT_NORMAL, box_x, box_y, sTextColors, 0, signature);
+    AddTextPrinterParameterized3(0, FONT_NORMAL, box_x, box_y, sTextColours, 0, signature);
     CopyWindowToVram(0, COPYWIN_FULL);
     CopyWindowToVram(1, COPYWIN_FULL);
 }

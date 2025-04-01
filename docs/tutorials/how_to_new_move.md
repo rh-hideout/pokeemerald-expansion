@@ -31,7 +31,7 @@ Let's look at an example:
     .name = COMPOUND_STRING("Thunder Shock"),
     .description = COMPOUND_STRING(
         "An electrical attack that\n"
-        "may paralyze the foe."),
+        "may paralyse the foe."),
     .effect = EFFECT_HIT,
     .power = 40,
     .type = TYPE_ELECTRIC,

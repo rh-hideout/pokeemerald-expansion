@@ -720,7 +720,7 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both R
     }
 }
 
-DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Left Faster")
+DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralysed Both Left Faster")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Status1(STATUS1_PARALYSIS); }
@@ -730,8 +730,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-        MESSAGE("Wynaut couldn't move because it's paralyzed!");
+        MESSAGE("Wobbuffet couldn't move because it's paralysed!");
+        MESSAGE("Wynaut couldn't move because it's paralysed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -742,7 +742,7 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
     }
 }
 
-DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Right Faster")
+DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralysed Both Right Faster")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(30); Status1(STATUS1_PARALYSIS); }
@@ -752,8 +752,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
-        MESSAGE("Wynaut couldn't move because it's paralyzed!");
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+        MESSAGE("Wynaut couldn't move because it's paralysed!");
+        MESSAGE("Wobbuffet couldn't move because it's paralysed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);

@@ -254,7 +254,7 @@ Route118_Text_StevenQuestions:
 	.string "There are many, many kinds of POKéMON\n"
 	.string "in this wide world of ours.\p"
 	.string "If you wanted to raise only your\n"
-	.string "favorites, that's fine.\p"
+	.string "favourites, that's fine.\p"
 	.string "Perhaps you find it more fun to raise\n"
 	.string "all sorts of POKéMON.\p"
 	.string "As a TRAINER of POKéMON,\n"

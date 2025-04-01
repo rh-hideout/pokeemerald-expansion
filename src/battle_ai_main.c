@@ -1526,8 +1526,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_PARALYZE:
-            if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+        case EFFECT_PARALYSE:
+            if (!AI_CanParalyse(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SUBSTITUTE:
@@ -1868,7 +1868,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (gBattleMons[battlerAtk].status1 & STATUS1_FROSTBITE && !AI_CanGiveFrostbite(battlerAtk, battlerDef,
               aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
-            else if (gBattleMons[battlerAtk].status1 & STATUS1_PARALYSIS && !AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+            else if (gBattleMons[battlerAtk].status1 & STATUS1_PARALYSIS && !AI_CanParalyse(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             else if (gBattleMons[battlerAtk].status1 & STATUS1_SLEEP && !AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -2441,7 +2441,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(-10);
                     break;
                 case MOVE_EFFECT_PARALYSIS:
-                    if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+                    if (!AI_CanParalyse(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                         ADJUST_SCORE(-10);
                     break;
                 case MOVE_EFFECT_POISON:
@@ -3651,8 +3651,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_CONFUSE:
         IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
         break;
-    case EFFECT_PARALYZE:
-        IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
+    case EFFECT_PARALYSE:
+        IncreaseParalyseScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_SUBSTITUTE:
     case EFFECT_SHED_TAIL:
@@ -4255,7 +4255,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         else if (gBattleMons[battlerAtk].status1 & STATUS1_BURN)
             IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
         else if (gBattleMons[battlerAtk].status1 & STATUS1_PARALYSIS)
-            IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
+            IncreaseParalyseScore(battlerAtk, battlerDef, move, &score);
         else if (gBattleMons[battlerAtk].status1 & STATUS1_SLEEP)
             IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
         else if (gBattleMons[battlerAtk].status1 & STATUS1_FROSTBITE)
@@ -4445,7 +4445,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             score += ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move);
             break;
         case MOVE_EFFECT_PARALYSIS:
-            IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
+            IncreaseParalyseScore(battlerAtk, battlerDef, move, &score);
             break;
         case MOVE_EFFECT_POISON:
         case MOVE_EFFECT_TOXIC:
@@ -4928,7 +4928,7 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_EVASION_DOWN_2:
     case EFFECT_REFLECT:
     case EFFECT_POISON:
-    case EFFECT_PARALYZE:
+    case EFFECT_PARALYSE:
     case EFFECT_SUBSTITUTE:
     case EFFECT_LEECH_SEED:
     case EFFECT_MINIMIZE:

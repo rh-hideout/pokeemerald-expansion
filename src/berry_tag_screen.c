@@ -45,7 +45,7 @@ struct BerryTagScreenStruct
     u16 berryId;
     u16 currentSpriteBerryId;
     u8 berrySpriteId;
-    u8 flavorCircleIds[FLAVOR_COUNT];
+    u8 flavourCircleIds[FLAVOUR_COUNT];
     u16 gfxState;
 };
 
@@ -95,7 +95,7 @@ static const struct BgTemplate sBackgroundTemplates[] =
 
 static const u16 sFontPalette[] = INCBIN_U16("graphics/bag/berry_tag_screen.gbapal");
 
-static const u8 sTextColors[2][3] =
+static const u8 sTextColours[2][3] =
 {
     {0, 2, 3},
     {15, 14, 13}
@@ -159,8 +159,8 @@ static void HandleInitWindows(void);
 static void AddBerryTagTextToBg0(void);
 static void PrintAllBerryData(void);
 static void CreateBerrySprite(void);
-static void CreateFlavorCircleSprites(void);
-static void SetFlavorCirclesVisiblity(void);
+static void CreateFlavourCircleSprites(void);
+static void SetFlavourCirclesVisiblity(void);
 static void PrintBerryNumberAndName(void);
 static void PrintBerrySize(void);
 static void PrintBerryFirmness(void);
@@ -276,8 +276,8 @@ static bool8 InitBerryTagScreen(void)
         gMain.state++;
         break;
     case 12:
-        CreateFlavorCircleSprites();
-        SetFlavorCirclesVisiblity();
+        CreateFlavourCircleSprites();
+        SetFlavourCirclesVisiblity();
         gMain.state++;
         break;
     case 13:
@@ -386,16 +386,16 @@ static void HandleInitWindows(void)
     ScheduleBgCopyTilemapToVram(1);
 }
 
-static void PrintTextInBerryTagScreen(u8 windowId, const u8 *text, u8 x, u8 y, s32 speed, u8 colorStructId)
+static void PrintTextInBerryTagScreen(u8 windowId, const u8 *text, u8 x, u8 y, s32 speed, u8 colourStructId)
 {
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sTextColors[colorStructId], speed, text);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sTextColours[colourStructId], speed, text);
 }
 
 static void AddBerryTagTextToBg0(void)
 {
     memcpy(GetBgTilemapBuffer(0), sBerryTag->tilemapBuffers[2], sizeof(sBerryTag->tilemapBuffers[2]));
     FillWindowPixelBuffer(WIN_BERRY_TAG, PIXEL_FILL(15));
-    PrintTextInBerryTagScreen(WIN_BERRY_TAG, sText_BerryTag, GetStringCenterAlignXOffset(FONT_NORMAL, sText_BerryTag, 0x40), 1, 0, 1);
+    PrintTextInBerryTagScreen(WIN_BERRY_TAG, sText_BerryTag, GetStringCentreAlignXOffset(FONT_NORMAL, sText_BerryTag, 0x40), 1, 0, 1);
     PutWindowTilemap(WIN_BERRY_TAG);
     ScheduleBgCopyTilemapToVram(0);
 }
@@ -476,51 +476,51 @@ static void DestroyBerrySprite(void)
     DestroyBerryIconSprite(sBerryTag->berrySpriteId, sBerryTag->currentSpriteBerryId, TRUE);
 }
 
-static void CreateFlavorCircleSprites(void)
+static void CreateFlavourCircleSprites(void)
 {
-    sBerryTag->flavorCircleIds[FLAVOR_SPICY] = CreateBerryFlavorCircleSprite(64);
-    sBerryTag->flavorCircleIds[FLAVOR_DRY] = CreateBerryFlavorCircleSprite(104);
-    sBerryTag->flavorCircleIds[FLAVOR_SWEET] = CreateBerryFlavorCircleSprite(144);
-    sBerryTag->flavorCircleIds[FLAVOR_BITTER] = CreateBerryFlavorCircleSprite(184);
-    sBerryTag->flavorCircleIds[FLAVOR_SOUR] = CreateBerryFlavorCircleSprite(224);
+    sBerryTag->flavourCircleIds[FLAVOUR_SPICY] = CreateBerryFlavourCircleSprite(64);
+    sBerryTag->flavourCircleIds[FLAVOUR_DRY] = CreateBerryFlavourCircleSprite(104);
+    sBerryTag->flavourCircleIds[FLAVOUR_SWEET] = CreateBerryFlavourCircleSprite(144);
+    sBerryTag->flavourCircleIds[FLAVOUR_BITTER] = CreateBerryFlavourCircleSprite(184);
+    sBerryTag->flavourCircleIds[FLAVOUR_SOUR] = CreateBerryFlavourCircleSprite(224);
 }
 
-static void SetFlavorCirclesVisiblity(void)
+static void SetFlavourCirclesVisiblity(void)
 {
     const struct Berry *berry = GetBerryInfo(sBerryTag->berryId);
 
     if (berry->spicy)
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SPICY]].invisible = FALSE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SPICY]].invisible = FALSE;
     else
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SPICY]].invisible = TRUE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SPICY]].invisible = TRUE;
 
     if (berry->dry)
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_DRY]].invisible = FALSE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_DRY]].invisible = FALSE;
     else
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_DRY]].invisible = TRUE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_DRY]].invisible = TRUE;
 
     if (berry->sweet)
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SWEET]].invisible = FALSE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SWEET]].invisible = FALSE;
     else
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SWEET]].invisible = TRUE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SWEET]].invisible = TRUE;
 
     if (berry->bitter)
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_BITTER]].invisible = FALSE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_BITTER]].invisible = FALSE;
     else
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_BITTER]].invisible = TRUE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_BITTER]].invisible = TRUE;
 
     if (berry->sour)
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SOUR]].invisible = FALSE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SOUR]].invisible = FALSE;
     else
-        gSprites[sBerryTag->flavorCircleIds[FLAVOR_SOUR]].invisible = TRUE;
+        gSprites[sBerryTag->flavourCircleIds[FLAVOUR_SOUR]].invisible = TRUE;
 }
 
-static void DestroyFlavorCircleSprites(void)
+static void DestroyFlavourCircleSprites(void)
 {
     u16 i;
 
-    for (i = 0; i < FLAVOR_COUNT; i++)
-        DestroySprite(&gSprites[sBerryTag->flavorCircleIds[i]]);
+    for (i = 0; i < FLAVOUR_COUNT; i++)
+        DestroySprite(&gSprites[sBerryTag->flavourCircleIds[i]]);
 }
 
 static void PrepareToCloseBerryTagScreen(u8 taskId)
@@ -535,7 +535,7 @@ static void Task_CloseBerryTagScreen(u8 taskId)
     if (!gPaletteFade.active)
     {
         DestroyBerrySprite();
-        DestroyFlavorCircleSprites();
+        DestroyFlavourCircleSprites();
         Free(sBerryTag);
         FreeAllWindowBuffers();
         SetMainCallback2(CB2_ReturnToBagMenuPocket);
@@ -635,7 +635,7 @@ static void Task_DisplayAnotherBerry(u8 taskId)
             PrintBerryFirmness();
             break;
         case 9 * DISPLAY_SPEED:
-            SetFlavorCirclesVisiblity();
+            SetFlavourCirclesVisiblity();
             break;
         case 10 * DISPLAY_SPEED:
             FillWindowPixelBuffer(WIN_DESC, PIXEL_FILL(0));
@@ -662,7 +662,7 @@ static void Task_DisplayAnotherBerry(u8 taskId)
             PrintBerryDescription1();
             break;
         case 6 * DISPLAY_SPEED:
-            SetFlavorCirclesVisiblity();
+            SetFlavourCirclesVisiblity();
             break;
         case 7 * DISPLAY_SPEED:
             FillWindowPixelBuffer(WIN_SIZE_FIRM, PIXEL_FILL(0));
@@ -692,8 +692,8 @@ static void Task_DisplayAnotherBerry(u8 taskId)
         y = tBerryY;
 
     gSprites[sBerryTag->berrySpriteId].y2 = y;
-    for (i = 0; i < FLAVOR_COUNT; i++)
-        gSprites[sBerryTag->flavorCircleIds[i]].y2 = y;
+    for (i = 0; i < FLAVOUR_COUNT; i++)
+        gSprites[sBerryTag->flavourCircleIds[i]].y2 = y;
 
     ChangeBgY(1, 0x1000, tBgOp);
     ChangeBgY(2, 0x1000, tBgOp);

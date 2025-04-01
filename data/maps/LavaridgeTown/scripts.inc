@@ -352,7 +352,7 @@ LavaridgeTown_Text_AsYouWishThen:
 LavaridgeTown_Text_EverySoOftenEggFoundAtDayCare:
 	.string "Every so often, an EGG will be found at\n"
 	.string "the POKéMON DAY CARE.\p"
-	.string "Or at least that's how the rumor goes.$"
+	.string "Or at least that's how the rumour goes.$"
 
 LavaridgeTown_Text_HotSpringsNeverRunDry:
 	.string "We draw as much hot water as we need,\n"
@@ -395,7 +395,7 @@ LavaridgeTown_Text_HotSpringsClaims:
 
 LavaridgeTown_Text_TownSign:
 	.string "LAVARIDGE TOWN\p"
-	.string "“POKéMON CENTER HOT SPRINGS\n"
+	.string "“POKéMON CENTRE HOT SPRINGS\n"
 	.string "An excellent place for relaxing!”$"
 
 LavaridgeTown_Text_GymSign:

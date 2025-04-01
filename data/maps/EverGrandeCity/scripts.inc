@@ -28,7 +28,7 @@ EverGrandeCity_Text_EnteringVictoryRoad:
 
 EverGrandeCity_Text_EnteringPokemonLeague:
 	.string "ENTERING POKéMON LEAGUE\n"
-	.string "CENTER GATE$"
+	.string "CENTRE GATE$"
 
 EverGrandeCity_Text_CitySign:
 	.string "EVER GRANDE CITY\p"

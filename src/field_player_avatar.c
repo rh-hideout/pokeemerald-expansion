@@ -10,7 +10,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "menu.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "party_menu.h"
 #include "random.h"
@@ -45,8 +45,8 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *, u8);
 static void npc_clear_strange_bits(struct ObjectEvent *);
 static void MovePlayerAvatarUsingKeypadInput(u8, u16, u16);
 static void PlayerAllowForcedMovementIfMovingSameDirection();
-static bool8 TryDoMetatileBehaviorForcedMovement();
-static u8 GetForcedMovementByMetatileBehavior();
+static bool8 TryDoMetatileBehaviourForcedMovement();
+static u8 GetForcedMovementByMetatileBehaviour();
 
 static bool8 ForcedMovement_None(void);
 static bool8 ForcedMovement_Slip(void);
@@ -163,24 +163,24 @@ static u8 TrySpinPlayerForWarp(struct ObjectEvent *, s16 *);
 
 static bool8 (*const sForcedMovementTestFuncs[NUM_FORCED_MOVEMENTS])(u8) =
 {
-    MetatileBehavior_IsTrickHouseSlipperyFloor,
-    MetatileBehavior_IsIce_2,
-    MetatileBehavior_IsWalkSouth,
-    MetatileBehavior_IsWalkNorth,
-    MetatileBehavior_IsWalkWest,
-    MetatileBehavior_IsWalkEast,
-    MetatileBehavior_IsSouthwardCurrent,
-    MetatileBehavior_IsNorthwardCurrent,
-    MetatileBehavior_IsWestwardCurrent,
-    MetatileBehavior_IsEastwardCurrent,
-    MetatileBehavior_IsSlideSouth,
-    MetatileBehavior_IsSlideNorth,
-    MetatileBehavior_IsSlideWest,
-    MetatileBehavior_IsSlideEast,
-    MetatileBehavior_IsWaterfall,
-    MetatileBehavior_IsSecretBaseJumpMat,
-    MetatileBehavior_IsSecretBaseSpinMat,
-    MetatileBehavior_IsMuddySlope,
+    MetatileBehaviour_IsTrickHouseSlipperyFloor,
+    MetatileBehaviour_IsIce_2,
+    MetatileBehaviour_IsWalkSouth,
+    MetatileBehaviour_IsWalkNorth,
+    MetatileBehaviour_IsWalkWest,
+    MetatileBehaviour_IsWalkEast,
+    MetatileBehaviour_IsSouthwardCurrent,
+    MetatileBehaviour_IsNorthwardCurrent,
+    MetatileBehaviour_IsWestwardCurrent,
+    MetatileBehaviour_IsEastwardCurrent,
+    MetatileBehaviour_IsSlideSouth,
+    MetatileBehaviour_IsSlideNorth,
+    MetatileBehaviour_IsSlideWest,
+    MetatileBehaviour_IsSlideEast,
+    MetatileBehaviour_IsWaterfall,
+    MetatileBehaviour_IsSecretBaseJumpMat,
+    MetatileBehaviour_IsSecretBaseSpinMat,
+    MetatileBehaviour_IsMuddySlope,
 };
 
 // + 1 for ForcedMovement_None, which is excluded above
@@ -216,11 +216,11 @@ static void (*const sPlayerNotOnBikeFuncs[])(u8, u16) =
 
 static bool8 (*const sAcroBikeTrickMetatiles[NUM_ACRO_BIKE_COLLISIONS])(u8) =
 {
-    MetatileBehavior_IsBumpySlope,
-    MetatileBehavior_IsIsolatedVerticalRail,
-    MetatileBehavior_IsIsolatedHorizontalRail,
-    MetatileBehavior_IsVerticalRail,
-    MetatileBehavior_IsHorizontalRail,
+    MetatileBehaviour_IsBumpySlope,
+    MetatileBehaviour_IsIsolatedVerticalRail,
+    MetatileBehaviour_IsIsolatedHorizontalRail,
+    MetatileBehaviour_IsVerticalRail,
+    MetatileBehaviour_IsHorizontalRail,
 };
 
 static const u8 sAcroBikeTrickCollisionTypes[NUM_ACRO_BIKE_COLLISIONS] = {
@@ -243,12 +243,12 @@ static void (*const sPlayerAvatarTransitionFuncs[])(struct ObjectEvent *) =
     [PLAYER_AVATAR_STATE_WATERING]   = PlayerAvatarTransition_Dummy,
 };
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks[])(u8) =
+static bool8 (*const sArrowWarpMetatileBehaviourChecks[])(u8) =
 {
-    [DIR_SOUTH - 1] = MetatileBehavior_IsSouthArrowWarp,
-    [DIR_NORTH - 1] = MetatileBehavior_IsNorthArrowWarp,
-    [DIR_WEST - 1]  = MetatileBehavior_IsWestArrowWarp,
-    [DIR_EAST - 1]  = MetatileBehavior_IsEastArrowWarp,
+    [DIR_SOUTH - 1] = MetatileBehaviour_IsSouthArrowWarp,
+    [DIR_NORTH - 1] = MetatileBehaviour_IsNorthArrowWarp,
+    [DIR_WEST - 1]  = MetatileBehaviour_IsWestArrowWarp,
+    [DIR_EAST - 1]  = MetatileBehaviour_IsEastArrowWarp,
 };
 
 static const u8 sRivalAvatarGfxIds[][2] =
@@ -309,12 +309,12 @@ static const u8 sPlayerAvatarGfxToStateFlag[GENDER_COUNT][5][2] =
     }
 };
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks2[])(u8) =  //Duplicate of sArrowWarpMetatileBehaviorChecks
+static bool8 (*const sArrowWarpMetatileBehaviourChecks2[])(u8) =  //Duplicate of sArrowWarpMetatileBehaviourChecks
 {
-    [DIR_SOUTH - 1] = MetatileBehavior_IsSouthArrowWarp,
-    [DIR_NORTH - 1] = MetatileBehavior_IsNorthArrowWarp,
-    [DIR_WEST - 1]  = MetatileBehavior_IsWestArrowWarp,
-    [DIR_EAST - 1]  = MetatileBehavior_IsEastArrowWarp,
+    [DIR_SOUTH - 1] = MetatileBehaviour_IsSouthArrowWarp,
+    [DIR_NORTH - 1] = MetatileBehaviour_IsNorthArrowWarp,
+    [DIR_WEST - 1]  = MetatileBehaviour_IsWestArrowWarp,
+    [DIR_EAST - 1]  = MetatileBehaviour_IsEastArrowWarp,
 };
 
 static bool8 (*const sPushBoulderFuncs[])(struct Task *, struct ObjectEvent *, struct ObjectEvent *) =
@@ -359,7 +359,7 @@ void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys)
         {
             npc_clear_strange_bits(playerObjEvent);
             DoPlayerAvatarTransition();
-            if (TryDoMetatileBehaviorForcedMovement() == 0)
+            if (TryDoMetatileBehaviourForcedMovement() == 0)
             {
                 MovePlayerAvatarUsingKeypadInput(direction, newKeys, heldKeys);
                 PlayerAllowForcedMovementIfMovingSameDirection();
@@ -422,22 +422,22 @@ static void PlayerAllowForcedMovementIfMovingSameDirection(void)
         gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
 }
 
-static bool8 TryDoMetatileBehaviorForcedMovement(void)
+static bool8 TryDoMetatileBehaviourForcedMovement(void)
 {
-    return sForcedMovementFuncs[GetForcedMovementByMetatileBehavior()]();
+    return sForcedMovementFuncs[GetForcedMovementByMetatileBehaviour()]();
 }
 
-static u8 GetForcedMovementByMetatileBehavior(void)
+static u8 GetForcedMovementByMetatileBehaviour(void)
 {
     u8 i;
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_CONTROLLABLE))
     {
-        u8 metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
+        u8 metatileBehaviour = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehaviour;
 
         for (i = 0; i < NUM_FORCED_MOVEMENTS; i++)
         {
-            if (sForcedMovementTestFuncs[i](metatileBehavior))
+            if (sForcedMovementTestFuncs[i](metatileBehaviour))
                 return i + 1;
         }
     }
@@ -684,7 +684,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     }
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER) && (heldKeys & B_BUTTON) && FlagGet(FLAG_SYS_B_DASH)
-     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0)
+     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehaviour) == 0)
     {
         if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
             PlayerRunSlow(direction);
@@ -715,11 +715,11 @@ static u8 CheckForPlayerAvatarCollision(u8 direction)
 
     x = playerObjEvent->currentCoords.x;
     y = playerObjEvent->currentCoords.y;
-    if (IsDirectionalStairWarpMetatileBehavior(MapGridGetMetatileBehaviorAt(x, y), direction))
+    if (IsDirectionalStairWarpMetatileBehaviour(MapGridGetMetatileBehaviourAt(x, y), direction))
         return COLLISION_STAIR_WARP;
 
     MoveCoords(direction, &x, &y);
-    return CheckForObjectEventCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
+    return CheckForObjectEventCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviourAt(x, y));
 }
 
 static u8 CheckForPlayerAvatarStaticCollision(u8 direction)
@@ -730,10 +730,10 @@ static u8 CheckForPlayerAvatarStaticCollision(u8 direction)
     x = playerObjEvent->currentCoords.x;
     y = playerObjEvent->currentCoords.y;
     MoveCoords(direction, &x, &y);
-    return CheckForObjectEventStaticCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
+    return CheckForObjectEventStaticCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviourAt(x, y));
 }
 
-u8 CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction, u8 metatileBehavior)
+u8 CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction, u8 metatileBehaviour)
 {
     u8 collision = GetCollisionAtCoords(objectEvent, x, y, direction);
 
@@ -752,13 +752,13 @@ u8 CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u
     {
         if (CheckForRotatingGatePuzzleCollision(direction, x, y))
             return COLLISION_ROTATING_GATE;
-        CheckAcroBikeCollision(x, y, metatileBehavior, &collision);
+        CheckAcroBikeCollision(x, y, metatileBehaviour, &collision);
     }
 
     return collision;
 }
 
-static u8 CheckForObjectEventStaticCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction, u8 metatileBehavior)
+static u8 CheckForObjectEventStaticCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction, u8 metatileBehaviour)
 {
     u8 collision = GetCollisionAtCoords(objectEvent, x, y, direction);
 
@@ -766,7 +766,7 @@ static u8 CheckForObjectEventStaticCollision(struct ObjectEvent *objectEvent, s1
     {
         if (CheckForRotatingGatePuzzleCollisionWithoutAnimation(direction, x, y))
             return COLLISION_ROTATING_GATE;
-        CheckAcroBikeCollision(x, y, metatileBehavior, &collision);
+        CheckAcroBikeCollision(x, y, metatileBehaviour, &collision);
     }
     return collision;
 }
@@ -806,7 +806,7 @@ static bool8 TryPushBoulder(s16 x, s16 y, u8 direction)
             y = gObjectEvents[objectEventId].currentCoords.y;
             MoveCoords(direction, &x, &y);
             if (GetCollisionAtCoords(&gObjectEvents[objectEventId], x, y, direction) == COLLISION_NONE
-             && MetatileBehavior_IsNonAnimDoor(MapGridGetMetatileBehaviorAt(x, y)) == FALSE)
+             && MetatileBehaviour_IsNonAnimDoor(MapGridGetMetatileBehaviourAt(x, y)) == FALSE)
             {
                 StartStrengthAnim(objectEventId, direction);
                 return TRUE;
@@ -816,13 +816,13 @@ static bool8 TryPushBoulder(s16 x, s16 y, u8 direction)
     return FALSE;
 }
 
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, u8 *collision)
+static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehaviour, u8 *collision)
 {
     u8 i;
 
     for (i = 0; i < NUM_ACRO_BIKE_COLLISIONS; i++)
     {
-        if (sAcroBikeTrickMetatiles[i](metatileBehavior))
+        if (sAcroBikeTrickMetatiles[i](metatileBehaviour))
         {
             *collision = sAcroBikeTrickCollisionTypes[i];
             return;
@@ -956,7 +956,7 @@ void UpdatePlayerAvatarTransitionState(void)
         else
         {
             if (!PlayerAnimIsMultiFrameStationaryAndStateNotTurning())
-                gPlayerAvatar.tileTransitionState = T_TILE_CENTER;
+                gPlayerAvatar.tileTransitionState = T_TILE_CENTRE;
         }
     }
 }
@@ -1100,7 +1100,7 @@ void PlayerJumpLedge(u8 direction)
 // Stop player on current facing direction once they're done moving and if they're not currently Acro Biking on bumpy slope
 void PlayerFreeze(void)
 {
-    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTER || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
+    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTRE || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
     {
         if (IsPlayerNotUsingAcroBikeOnBumpySlope())
             PlayerForceSetHeldMovement(GetFaceDirectionMovementAction(gObjectEvents[gPlayerAvatar.objectEventId].facingDirection));
@@ -1177,16 +1177,16 @@ void PlayerEndWheelieWhileMoving(u8 direction)
 static void PlayCollisionSoundIfNotFacingWarp(u8 direction)
 {
     s16 x, y;
-    u8 metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
+    u8 metatileBehaviour = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehaviour;
 
-    if (!sArrowWarpMetatileBehaviorChecks[direction - 1](metatileBehavior))
+    if (!sArrowWarpMetatileBehaviourChecks[direction - 1](metatileBehaviour))
     {
         // Check if walking up into a door
         if (direction == DIR_NORTH)
         {
             PlayerGetDestCoords(&x, &y);
             MoveCoords(direction, &x, &y);
-            if (MetatileBehavior_IsWarpDoor(MapGridGetMetatileBehaviorAt(x, y)))
+            if (MetatileBehaviour_IsWarpDoor(MapGridGetMetatileBehaviourAt(x, y)))
                 return;
         }
         PlaySE(SE_WALL_HIT);
@@ -1374,7 +1374,7 @@ bool8 IsPlayerFacingSurfableFishableWater(void)
     MoveCoords(playerObjEvent->facingDirection, &x, &y);
     if (GetCollisionAtCoords(playerObjEvent, x, y, playerObjEvent->facingDirection) == COLLISION_ELEVATION_MISMATCH
      && PlayerGetElevation() == 3
-     && MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(x, y)))
+     && MetatileBehaviour_IsSurfableFishableWater(MapGridGetMetatileBehaviourAt(x, y)))
         return TRUE;
     else
         return FALSE;
@@ -1493,11 +1493,11 @@ static void HideShowWarpArrow(struct ObjectEvent *objectEvent)
     s16 x;
     s16 y;
     u8 direction;
-    u8 metatileBehavior = objectEvent->currentMetatileBehavior;
+    u8 metatileBehaviour = objectEvent->currentMetatileBehaviour;
 
     for (x = 0, direction = DIR_SOUTH; x < 4; x++, direction++)
     {
-        if (sArrowWarpMetatileBehaviorChecks2[x](metatileBehavior) && direction == objectEvent->movementDirection)
+        if (sArrowWarpMetatileBehaviourChecks2[x](metatileBehaviour) && direction == objectEvent->movementDirection)
         {
             // Show warp arrow if applicable
             x = objectEvent->currentCoords.x;
@@ -2035,7 +2035,7 @@ static bool32 Fishing_MonOnHook(struct Task *task)
 {
     AlignFishingAnimationFrames();
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PokemonOnHook, 1, 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PokemonOnHook, 1, 0, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     task->tStep = FISHING_START_ENCOUNTER;
     task->tFrameCounter = 0;
     return FALSE;
@@ -2060,7 +2060,7 @@ static bool32 Fishing_StartEncounter(struct Task *task)
                 SetSurfBlob_PlayerOffset(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId, FALSE, 0);
             gSprites[gPlayerAvatar.spriteId].x2 = 0;
             gSprites[gPlayerAvatar.spriteId].y2 = 0;
-            ClearDialogWindowAndFrame(0, TRUE);
+            ClearDialogueWindowAndFrame(0, TRUE);
             task->tFrameCounter++;
             return FALSE;
         }
@@ -2083,7 +2083,7 @@ static bool32 Fishing_NotEvenNibble(struct Task *task)
     AlignFishingAnimationFrames();
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFishingNoCatchDirectionAnimNum(GetPlayerFacingDirection()));
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_NotEvenANibble, 1, 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_NotEvenANibble, 1, 0, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     task->tStep = FISHING_NO_MON;
     return TRUE;
 }
@@ -2094,7 +2094,7 @@ static bool32 Fishing_GotAway(struct Task *task)
     AlignFishingAnimationFrames();
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFishingNoCatchDirectionAnimNum(GetPlayerFacingDirection()));
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_ItGotAway, 1, 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gText_ItGotAway, 1, 0, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     task->tStep = FISHING_NO_MON;
     return TRUE;
 }
@@ -2132,7 +2132,7 @@ static bool32 Fishing_EndNoMon(struct Task *task)
         gPlayerAvatar.preventStep = FALSE;
         UnlockPlayerFieldControls();
         UnfreezeObjectEvents();
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         RecordFishingAttemptForTV(FALSE);
         DestroyTask(FindTaskIdByFunc(Task_Fishing));
     }
@@ -2284,7 +2284,7 @@ static bool32 CheckTileQualification(s16 tile[], s16 player[], u32 facingDirecti
         return FALSE;
     else if (IsMetatileBlocking(tile[AXIS_X], tile[AXIS_Y], collison))
         return TRUE;
-    else if (MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(tile[AXIS_X], tile[AXIS_Y])))
+    else if (MetatileBehaviour_IsSurfableFishableWater(MapGridGetMetatileBehaviourAt(tile[AXIS_X], tile[AXIS_Y])))
         return FALSE;
     else if (IsMetatileLand(tile[AXIS_X], tile[AXIS_Y], collison))
         isTileLand[direction] = TRUE;
@@ -2585,10 +2585,10 @@ bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, u8 direction)
         switch (direction)
         {
         case DIR_NORTH:
-            return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x,y));
+            return MetatileBehaviour_IsRockStairs(MapGridGetMetatileBehaviourAt(x,y));
         case DIR_SOUTH:
             MoveCoords(DIR_SOUTH, &x, &y);
-            return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x,y));
+            return MetatileBehaviour_IsRockStairs(MapGridGetMetatileBehaviourAt(x,y));
         case DIR_WEST:
         case DIR_EAST:
         case DIR_NORTHEAST:

@@ -78,7 +78,7 @@ Item | BlundrPolicy | Blunder Policy
 Item | BlundrPolicies | Blunder Policies
 Item | UtltyUmbrlla | Utility Umbrella
 Item | CatchngCharm | Catching Charm
-Item | RotomCatalog | Rotom Catalog
+Item | RotomCatalogue | Rotom Catalogue
 Item | ReinsOfUnity | Reins of Unity
 Item | Dowsing MCHN | Dowsing Machine
 Item | AbilityShield | Ability Shield

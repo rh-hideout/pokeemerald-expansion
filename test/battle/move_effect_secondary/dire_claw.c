@@ -33,14 +33,14 @@ SINGLE_BATTLE_TEST("Dire Claw can inflict poison, paralysis or sleep")
     }
 }
 
-SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respectively")
+SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyse poison/electric types respectively")
 {
     u8 statusAnim;
     u16 species;
     u32 rng;
-    #if B_PARALYZE_ELECTRIC >= GEN_6
+    #if B_PARALYSE_ELECTRIC >= GEN_6
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; }
-    #endif // B_PARALYZE_ELECTRIC
+    #endif // B_PARALYSE_ELECTRIC
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = MOVE_EFFECT_POISON; species = SPECIES_ARBOK; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
     }
 }
 
-SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyse/cause to fall asleep pokemon with abilities preventing respective statuses")
 {
     u8 statusAnim;
     u16 species, ability;
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep pokemo
     }
 }
 
-SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep a mon which is already statused")
+SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyse/cause to fall asleep a mon which is already statused")
 {
     u8 statusAnim;
     u32 rng;

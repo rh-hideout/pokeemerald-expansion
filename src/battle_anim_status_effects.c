@@ -397,7 +397,7 @@ void AnimTask_FrozenIceCubeAttacker(u8 taskId)
 
 void AnimTask_CentredFrozenIceCube(u8 taskId)
 {
-    // same as AnimTask_FrozenIceCube but center position on target(s)
+    // same as AnimTask_FrozenIceCube but centre position on target(s)
     s16 x, y;
     u8 spriteId;
     u8 battler1 = gBattleAnimTarget;

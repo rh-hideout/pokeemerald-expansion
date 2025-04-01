@@ -2,7 +2,7 @@
 #define GUARD_CONFIG_CAPS_H
 
 // Level Cap Constants
-#define EXP_CAP_NONE                    0 // Regular behavior, no level caps are applied
+#define EXP_CAP_NONE                    0 // Regular behaviour, no level caps are applied
 #define EXP_CAP_HARD                    1 // Pokémon with a level >= the level cap cannot gain any experience
 #define EXP_CAP_SOFT                    2 // Pokémon with a level >= the level cap will gain reduced experience
 
@@ -19,7 +19,7 @@
 #define B_LEVEL_CAP_EXP_UP              FALSE // If set to true, mons under level cap will receive more experience
 
 // EV Cap Constants
-#define EV_CAP_NONE                     0 // Regular behavior, no EV caps are applied
+#define EV_CAP_NONE                     0 // Regular behaviour, no EV caps are applied
 #define EV_CAP_FLAG_LIST                1 // EV cap is chosen according to the first unset flag in `sEVCapFlagMap`
 #define EV_CAP_VARIABLE                 2 // EV cap is chosen according to the contents of the event variable specified by B_EV_CAP_VARIABLE
 #define EV_CAP_NO_GAIN                  3 // No EVs can be gained

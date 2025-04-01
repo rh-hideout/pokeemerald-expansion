@@ -39,7 +39,7 @@
 #define ANIM_TAG_LEER                       (ANIM_SPRITES_START + 27)
 #define ANIM_TAG_BLUE_BURST                 (ANIM_SPRITES_START + 28) // unused
 #define ANIM_TAG_SMALL_EMBER                (ANIM_SPRITES_START + 29)
-#define ANIM_TAG_GRAY_SMOKE                 (ANIM_SPRITES_START + 30)
+#define ANIM_TAG_GREY_SMOKE                 (ANIM_SPRITES_START + 30)
 #define ANIM_TAG_BLUE_STAR                  (ANIM_SPRITES_START + 31)
 #define ANIM_TAG_BUBBLE_BURST               (ANIM_SPRITES_START + 32)
 #define ANIM_TAG_FIRE                       (ANIM_SPRITES_START + 33)
@@ -178,7 +178,7 @@
 #define ANIM_TAG_GREEN_LIGHT_WALL           (ANIM_SPRITES_START + 166)
 #define ANIM_TAG_BLUE_LIGHT_WALL            (ANIM_SPRITES_START + 167)
 #define ANIM_TAG_RED_LIGHT_WALL             (ANIM_SPRITES_START + 168)
-#define ANIM_TAG_GRAY_LIGHT_WALL            (ANIM_SPRITES_START + 169)
+#define ANIM_TAG_GREY_LIGHT_WALL            (ANIM_SPRITES_START + 169)
 #define ANIM_TAG_ORANGE_LIGHT_WALL          (ANIM_SPRITES_START + 170)
 #define ANIM_TAG_BLACK_BALL_2               (ANIM_SPRITES_START + 171)
 #define ANIM_TAG_PURPLE_GAS_CLOUD           (ANIM_SPRITES_START + 172)
@@ -244,7 +244,7 @@
 #define ANIM_TAG_WISP_FIRE                  (ANIM_SPRITES_START + 232)
 #define ANIM_TAG_GOLD_STARS                 (ANIM_SPRITES_START + 233)
 #define ANIM_TAG_ECLIPSING_ORB              (ANIM_SPRITES_START + 234)
-#define ANIM_TAG_GRAY_ORB                   (ANIM_SPRITES_START + 235)
+#define ANIM_TAG_GREY_ORB                   (ANIM_SPRITES_START + 235)
 #define ANIM_TAG_BLUE_ORB                   (ANIM_SPRITES_START + 236)
 #define ANIM_TAG_RED_ORB_2                  (ANIM_SPRITES_START + 237)
 #define ANIM_TAG_PINK_PETAL                 (ANIM_SPRITES_START + 238)
@@ -312,7 +312,7 @@
 #define ANIM_TAG_TRUMP_CARD_PARTICLES       (ANIM_SPRITES_START + 299)
 #define ANIM_TAG_ACUPRESSURE                (ANIM_SPRITES_START + 300)
 #define ANIM_TAG_WRING_OUT                  (ANIM_SPRITES_START + 301)
-#define ANIM_TAG_COLORED_ORBS               (ANIM_SPRITES_START + 302)
+#define ANIM_TAG_COLOURED_ORBS               (ANIM_SPRITES_START + 302)
 #define ANIM_TAG_WORRY_SEED                 (ANIM_SPRITES_START + 303)
 #define ANIM_TAG_SMALL_CLOUD                (ANIM_SPRITES_START + 304)
 #define ANIM_TAG_ATTACK_ORDER               (ANIM_SPRITES_START + 305)
@@ -426,7 +426,7 @@
 #define ANIM_ATK_PARTNER      2
 #define ANIM_DEF_PARTNER      3
 
-// Below are used by AnimTask_ShakeMon2 and AnimTask_SetGrayscaleOrOriginalPal
+// Below are used by AnimTask_ShakeMon2 and AnimTask_SetGreyscaleOrOriginalPal
 #define ANIM_PLAYER_LEFT      (MAX_BATTLERS_COUNT + 0)
 #define ANIM_OPPONENT_LEFT    (MAX_BATTLERS_COUNT + 1)
 #define ANIM_PLAYER_RIGHT     (MAX_BATTLERS_COUNT + 2)

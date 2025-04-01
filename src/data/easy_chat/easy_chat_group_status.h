@@ -6,8 +6,8 @@ const u8 gEasyChatWord_Drizzle[] = _("DRIZZLE");
 const u8 gEasyChatWord_ArenaTrap[] = _("ARENA TRAP");
 const u8 gEasyChatWord_Intimidate[] = _("INTIMIDATE");
 const u8 gEasyChatWord_RockHead[] = _("ROCK HEAD");
-const u8 gEasyChatWord_Color[] = _("COLOR");
-const u8 gEasyChatWord_AltColor[] = _("ALT. COLOR");
+const u8 gEasyChatWord_Colour[] = _("COLOUR");
+const u8 gEasyChatWord_AltColour[] = _("ALT. COLOUR");
 const u8 gEasyChatWord_Rock[] = _("ROCK");
 const u8 gEasyChatWord_Beautiful[] = _("BEAUTIFUL");
 const u8 gEasyChatWord_Beauty[] = _("BEAUTY");
@@ -84,7 +84,7 @@ const u8 gEasyChatWord_Levitate[] = _("LEVITATE");
 const u8 gEasyChatWord_Plus[] = _("PLUS");
 const u8 gEasyChatWord_Pressure[] = _("PRESSURE");
 const u8 gEasyChatWord_LiquidOoze[] = _("LIQUID OOZE");
-const u8 gEasyChatWord_ColorChange[] = _("COLOR CHANGE");
+const u8 gEasyChatWord_ColourChange[] = _("COLOUR CHANGE");
 const u8 gEasyChatWord_Soundproof[] = _("SOUNDPROOF");
 const u8 gEasyChatWord_EffectSpore[] = _("EFFECT SPORE");
 const u8 gEasyChatWord_Pkrs[] = _("{PK}RS");
@@ -118,7 +118,7 @@ const struct EasyChatWordInfo gEasyChatGroup_Status[] = {
     [EC_INDEX(EC_WORD_STENCH)] =
     {
         .text = gEasyChatWord_Stench,
-        .alphabeticalOrder = EC_INDEX(EC_WORD_ALT_COLOR),
+        .alphabeticalOrder = EC_INDEX(EC_WORD_ALT_COLOUR),
         .enabled = TRUE,
     },
     [EC_INDEX(EC_WORD_THICK_FAT)] =
@@ -157,15 +157,15 @@ const struct EasyChatWordInfo gEasyChatGroup_Status[] = {
         .alphabeticalOrder = EC_INDEX(EC_WORD_BUG),
         .enabled = TRUE,
     },
-    [EC_INDEX(EC_WORD_COLOR)] =
+    [EC_INDEX(EC_WORD_COLOUR)] =
     {
-        .text = gEasyChatWord_Color,
+        .text = gEasyChatWord_Colour,
         .alphabeticalOrder = EC_INDEX(EC_WORD_CHLOROPHYLL),
         .enabled = TRUE,
     },
-    [EC_INDEX(EC_WORD_ALT_COLOR)] =
+    [EC_INDEX(EC_WORD_ALT_COLOUR)] =
     {
-        .text = gEasyChatWord_AltColor,
+        .text = gEasyChatWord_AltColour,
         .alphabeticalOrder = EC_INDEX(EC_WORD_CLEAR_BODY),
         .enabled = TRUE,
     },
@@ -178,13 +178,13 @@ const struct EasyChatWordInfo gEasyChatGroup_Status[] = {
     [EC_INDEX(EC_WORD_BEAUTIFUL)] =
     {
         .text = gEasyChatWord_Beautiful,
-        .alphabeticalOrder = EC_INDEX(EC_WORD_COLOR),
+        .alphabeticalOrder = EC_INDEX(EC_WORD_COLOUR),
         .enabled = TRUE,
     },
     [EC_INDEX(EC_WORD_BEAUTY)] =
     {
         .text = gEasyChatWord_Beauty,
-        .alphabeticalOrder = EC_INDEX(EC_WORD_COLOR_CHANGE),
+        .alphabeticalOrder = EC_INDEX(EC_WORD_COLOUR_CHANGE),
         .enabled = TRUE,
     },
     [EC_INDEX(EC_WORD_AIR_LOCK)] =
@@ -625,9 +625,9 @@ const struct EasyChatWordInfo gEasyChatGroup_Status[] = {
         .alphabeticalOrder = EC_INDEX(EC_WORD_SPEED_BOOST),
         .enabled = TRUE,
     },
-    [EC_INDEX(EC_WORD_COLOR_CHANGE)] =
+    [EC_INDEX(EC_WORD_COLOUR_CHANGE)] =
     {
-        .text = gEasyChatWord_ColorChange,
+        .text = gEasyChatWord_ColourChange,
         .alphabeticalOrder = EC_INDEX(EC_WORD_STATIC),
         .enabled = TRUE,
     },

@@ -982,10 +982,10 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Hydrosnipe has fixed power and ignores abilit
     }
 }
 
-DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyses both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYSE_SIDE));
         PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PICHU);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -996,23 +996,23 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
         MESSAGE("Pikachu used G-Max Volt Crash!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
         STATUS_ICON(opponentLeft, paralysis: TRUE);
-        MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+        MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentRight);
         STATUS_ICON(opponentRight, paralysis: TRUE);
-        MESSAGE("The opposing Wynaut is paralyzed, so it may be unable to move!");
+        MESSAGE("The opposing Wynaut is paralysed, so it may be unable to move!");
     }
 }
 
 // G-Max Stun Shock can apply different statuses to each opponent, but this isn't
 // compatible with the test RNG set-up.
-DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponents")
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyses or poisons both opponents")
 {
     u8 statusAnim;
     u32 rng;
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = STATUS1_PARALYSIS; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = STATUS1_POISON; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYSE_SIDE));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1030,7 +1030,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
         }
         else {
             STATUS_ICON(opponentLeft, paralysis: TRUE);
-            MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
         }
         // opponent right
         ANIMATION(ANIM_TYPE_STATUS, statusAnim, opponentRight);
@@ -1040,7 +1040,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
         }
         else {
             STATUS_ICON(opponentRight, paralysis: TRUE);
-            MESSAGE("The opposing Wynaut is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Wynaut is paralysed, so it may be unable to move!");
         }
     }
 }
@@ -1049,7 +1049,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock chooses statuses before considering immunities")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYSE_SIDE));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_GARBODOR);
@@ -1064,17 +1064,17 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock chooses statuses before considerin
             STATUS_ICON(opponentLeft, poison: TRUE);
             MESSAGE("The opposing Garbodor was poisoned!");
             STATUS_ICON(opponentLeft, paralysis: TRUE);
-            MESSAGE("The opposing Garbodor is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Garbodor is paralysed, so it may be unable to move!");
             // opponent right
             STATUS_ICON(opponentRight, poison: TRUE);
             MESSAGE("The opposing Trubbish was poisoned!");
             STATUS_ICON(opponentRight, paralysis: TRUE);
-            MESSAGE("The opposing Trubbish is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Trubbish is paralysed, so it may be unable to move!");
         }
     }
 }
 
-DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both opponents")
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyses, poisons, or sleeps both opponents")
 {
     u8 statusAnim;
     u32 rng;
@@ -1100,7 +1100,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
         }
         else if (statusAnim == B_ANIM_STATUS_PRZ) {
             STATUS_ICON(opponentLeft, paralysis: TRUE);
-            MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
         }
         else {
             STATUS_ICON(opponentLeft, sleep: TRUE);
@@ -1114,7 +1114,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
         }
         else if (statusAnim == B_ANIM_STATUS_PRZ) {
             STATUS_ICON(opponentRight, paralysis: TRUE);
-            MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
         }
         else {
             STATUS_ICON(opponentRight, sleep: TRUE);

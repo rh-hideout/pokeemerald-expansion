@@ -415,7 +415,7 @@ void CB2_InitLearnMove(void)
     CreateUISprites();
 
     sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerMenuSate.listOffset, sMoveRelearnerMenuSate.listRow);
-    SetBackdropFromColor(RGB_BLACK);
+    SetBackdropFromColour(RGB_BLACK);
     SetMainCallback2(CB2_MoveRelearnerMain);
 }
 
@@ -440,7 +440,7 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     CreateUISprites();
 
     sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerMenuSate.listOffset, sMoveRelearnerMenuSate.listRow);
-    SetBackdropFromColor(RGB_BLACK);
+    SetBackdropFromColour(RGB_BLACK);
     SetMainCallback2(CB2_MoveRelearnerMain);
 }
 

@@ -1477,8 +1477,8 @@ static void Cmd_goto(void)
     sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);
 }
 
-// Uses of this function that rely on a TRUE return are expecting inBattle to not be ticked as defined in contest behavior.
-// As a result, if misused, this function cannot reliably discern between field and contest status and could result in undefined behavior.
+// Uses of this function that rely on a TRUE return are expecting inBattle to not be ticked as defined in contest behaviour.
+// As a result, if misused, this function cannot reliably discern between field and contest status and could result in undefined behaviour.
 bool8 IsContest(void)
 {
     if (!gMain.inBattle)

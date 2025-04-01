@@ -166,7 +166,7 @@ static const u8 sWaveformTileDataNybbleMasks[] = {0xF0, 0x0F};
 
 // Waveform is blue in the middle (8) grading to white at peaks (15)
 // Split into two arrays for the two vertical slice halves
-static const u8 sWaveformColor[][16] =
+static const u8 sWaveformColour[][16] =
 {
     {
         15,      14,      13,      12,      11,      10,       9,       8,
@@ -413,7 +413,7 @@ static void DrawWaveformSegment(u8 position, u8 amplitude)
         {
             offset = sWaveformOffsets[PLAYHEAD_POS][y] + PLAY_START_POS * TILE_SIZE_4BPP;
             sCryWaveformWindowTiledata[offset] &= sWaveformTileDataNybbleMasks[nybble];
-            sCryWaveformWindowTiledata[offset] |= sWaveformColor[nybble][((y / 3) - 1) & 0x0F];
+            sCryWaveformWindowTiledata[offset] |= sWaveformColour[nybble][((y / 3) - 1) & 0x0F];
             y--;
         } while (y > sDexCryScreen->waveformPreviousY);
     }
@@ -424,7 +424,7 @@ static void DrawWaveformSegment(u8 position, u8 amplitude)
         {
             offset = sWaveformOffsets[PLAYHEAD_POS][y] + PLAY_START_POS * TILE_SIZE_4BPP;
             sCryWaveformWindowTiledata[offset] &= sWaveformTileDataNybbleMasks[nybble];
-            sCryWaveformWindowTiledata[offset] |= sWaveformColor[nybble][((y / 3) - 1) & 0x0F];
+            sCryWaveformWindowTiledata[offset] |= sWaveformColour[nybble][((y / 3) - 1) & 0x0F];
             y++;
         } while (y < sDexCryScreen->waveformPreviousY);
     }

@@ -933,21 +933,21 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_Antidote,
     },
 
-    [ITEM_PARALYZE_HEAL] =
+    [ITEM_PARALYSE_HEAL] =
     {
-        .name = _("Paralyze Heal"),
+        .name = _("Paralyse Heal"),
         .price = (I_PRICE == GEN_7) ? 300 : 200,
         .description = COMPOUND_STRING(
-            "Heals a paralyzed\n"
+            "Heals a paralysed\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
-        .effect = gItemEffect_ParalyzeHeal,
+        .effect = gItemEffect_ParalyseHeal,
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
-        .iconPalette = gItemIconPalette_ParalyzeHeal,
+        .iconPalette = gItemIconPalette_ParalyseHeal,
     },
 
     [ITEM_BURN_HEAL] =
@@ -3647,10 +3647,10 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_OrangeMail,
     },
 
-    [ITEM_HARBOR_MAIL] =
+    [ITEM_HARBOUR_MAIL] =
     {
-        .name = _("Harbor Mail"),
-        .pluralName = _("Harbor Mail"),
+        .name = _("Harbour Mail"),
+        .pluralName = _("Harbour Mail"),
         .price = 50,
         .description = COMPOUND_STRING(
             "A Wingull-print\n"
@@ -3659,9 +3659,9 @@ const struct Item gItemsInfo[] =
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
-        .secondaryId = ITEM_TO_MAIL(ITEM_HARBOR_MAIL),
-        .iconPic = gItemIcon_HarborMail,
-        .iconPalette = gItemIconPalette_HarborMail,
+        .secondaryId = ITEM_TO_MAIL(ITEM_HARBOUR_MAIL),
+        .iconPic = gItemIcon_HarbourMail,
+        .iconPalette = gItemIconPalette_HarbourMail,
     },
 
     [ITEM_GLITTER_MAIL] =
@@ -5222,7 +5222,7 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_RustedWeapons,
     },
 
-// Colored Orbs
+// Coloured Orbs
 
     [ITEM_RED_ORB] =
     {
@@ -9161,7 +9161,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
-        .effect = gItemEffect_ParalyzeHeal,
+        .effect = gItemEffect_ParalyseHeal,
         .flingPower = 10,
         .iconPic = gItemIcon_CheriBerry,
         .iconPalette = gItemIconPalette_CheriBerry,
@@ -10785,7 +10785,7 @@ const struct Item gItemsInfo[] =
         .description = COMPOUND_STRING(
             "Strikes the foe\n"
             "with a thunderbolt.\n"
-            "It may paralyze."),
+            "It may paralyse."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
@@ -11040,7 +11040,7 @@ const struct Item gItemsInfo[] =
         .description = COMPOUND_STRING(
             "Raises Attack when\n"
             "poisoned, burned,\n"
-            "or paralyzed."),
+            "or paralysed."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
@@ -11957,20 +11957,20 @@ const struct Item gItemsInfo[] =
 
 // Form-changing Key Items
 
-    [ITEM_ROTOM_CATALOG] =
+    [ITEM_ROTOM_CATALOGUE] =
     {
-        .name = _("Rotom Catalog"),
+        .name = _("Rotom Catalogue"),
         .price = 0,
         .importance = 1,
         .description = COMPOUND_STRING(
-            "A catalog full of\n"
+            "A catalogue full of\n"
             "devices liked by\n"
             "Rotom."),
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_RotomCatalog,
-        .iconPic = gItemIcon_RotomCatalog,
-        .iconPalette = gItemIconPalette_RotomCatalog,
+        .fieldUseFunc = ItemUseOutOfBattle_RotomCatalogue,
+        .iconPic = gItemIcon_RotomCatalogue,
+        .iconPalette = gItemIconPalette_RotomCatalogue,
     },
 
     [ITEM_GRACIDEA] =

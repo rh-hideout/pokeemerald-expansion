@@ -248,7 +248,7 @@ static EWRAM_DATA struct {
     bool8 isLinkTrade;
     u16 monSpecies[2];
     u16 cachedMapMusic;
-    u8 textColors[3];
+    u8 textColours[3];
     u8 filler_F9;
     bool8 isCableTrade;
     u8 wirelessWinLeft;
@@ -314,8 +314,8 @@ static void CB2_FreeTradeAnim(void);
 static void Task_InGameTrade(u8);
 static void CheckPartnersMonForRibbons(void);
 static void Task_AnimateWirelessSignal(u8);
-static void Task_OpenCenterWhiteColumn(u8);
-static void Task_CloseCenterWhiteColumn(u8);
+static void Task_OpenCentreWhiteColumn(u8);
+static void Task_CloseCentreWhiteColumn(u8);
 static void CB2_SaveAndEndWirelessTrade(void);
 
 #include "data/trade.h"
@@ -608,7 +608,7 @@ static void CB2_CreateTradeMenu(void)
         break;
     case 12:
         // Create player's name text sprites
-        xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gSaveBlock2Ptr->playerName, 120);
+        xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gSaveBlock2Ptr->playerName, 120);
         for (i = 0; i < NUM_PLAYER_NAME_SPRITES; i++)
         {
             temp = sSpriteTemplate_MenuText;
@@ -617,7 +617,7 @@ static void CB2_CreateTradeMenu(void)
         }
 
         // Create partner's name text sprites
-        xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gLinkPlayers[GetMultiplayerId() ^ 1].name, 120);
+        xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gLinkPlayers[GetMultiplayerId() ^ 1].name, 120);
         for (i = 0; i < NUM_PARTNER_NAME_SPRITES; i++)
         {
             temp = sSpriteTemplate_MenuText;
@@ -797,7 +797,7 @@ static void CB2_ReturnToTradeMenu(void)
         break;
     case 12:
         // Create player's name text sprites
-        xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gSaveBlock2Ptr->playerName, 120);
+        xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gSaveBlock2Ptr->playerName, 120);
         for (i = 0; i < NUM_PLAYER_NAME_SPRITES; i++)
         {
             temp = sSpriteTemplate_MenuText;
@@ -806,7 +806,7 @@ static void CB2_ReturnToTradeMenu(void)
         }
 
         // Create partner's name text sprites
-        xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gLinkPlayers[GetMultiplayerId() ^ 1].name, 120);
+        xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gLinkPlayers[GetMultiplayerId() ^ 1].name, 120);
         for (i = 0; i < NUM_PARTNER_NAME_SPRITES; i++)
         {
             temp = sSpriteTemplate_MenuText;
@@ -1885,7 +1885,7 @@ static void DrawSelectedMonScreen(u8 whichParty)
         // Re-display the selected Pokémon
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].invisible = FALSE;
 
-        // Move the selected Pokémon to the center
+        // Move the selected Pokémon to the centre
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].data[0] = 20;
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].data[2] = (sTradeMonSpriteCoords[selectedMonParty * PARTY_SIZE][0]
                                                                                   + sTradeMonSpriteCoords[selectedMonParty * PARTY_SIZE + 1][0]) / 2 * 8 + 14;
@@ -1920,9 +1920,9 @@ static void DrawSelectedMonScreen(u8 whichParty)
 
         // Print selected pokemon's name and moves
         nameStringWidth = GetMonNicknameWidth(nickname, selectedMonParty, partyIdx);
-        AddTextPrinterParameterized3((whichParty * 2) + 14, FONT_SMALL, (80 - nameStringWidth) / 2, 4, sTradeTextColors, 0, nickname);
+        AddTextPrinterParameterized3((whichParty * 2) + 14, FONT_SMALL, (80 - nameStringWidth) / 2, 4, sTradeTextColours, 0, nickname);
         BufferMovesString(movesString, selectedMonParty, partyIdx);
-        AddTextPrinterParameterized4((whichParty * 2) + 15, FONT_NORMAL, 0, 0, 0, 0, sTradeTextColors, 0, movesString);
+        AddTextPrinterParameterized4((whichParty * 2) + 15, FONT_NORMAL, 0, 0, 0, 0, sTradeTextColours, 0, movesString);
         PutWindowTilemap((whichParty * 2) + 14);
         CopyWindowToVram((whichParty * 2) + 14, COPYWIN_FULL);
         PutWindowTilemap((whichParty * 2) + 15);
@@ -1990,8 +1990,8 @@ static void PrintPartyMonNickname(u8 whichParty, u8 windowId, u8 *nickname)
 {
     u8 xPos;
     windowId += (whichParty * PARTY_SIZE) + 2;
-    xPos = GetStringCenterAlignXOffset(FONT_SMALL, nickname, 64);
-    AddTextPrinterParameterized3(windowId, FONT_SMALL, xPos, 4, sTradeTextColors, 0, nickname);
+    xPos = GetStringCentreAlignXOffset(FONT_SMALL, nickname, 64);
+    AddTextPrinterParameterized3(windowId, FONT_SMALL, xPos, 4, sTradeTextColours, 0, nickname);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -3143,7 +3143,7 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
                                       DISPCNT_OBJ_ON);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) |
                                      BGCNT_CHARBASE(1) |
-                                     BGCNT_16COLOR |
+                                     BGCNT_16COLOUR |
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_TXT512x256);
         LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 3 * PLTT_SIZE_4BPP);
@@ -3156,12 +3156,12 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
         SetGpuReg(REG_OFFSET_BG1VOFS, 348);
         SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(2) |
                                      BGCNT_CHARBASE(0) |
-                                     BGCNT_16COLOR |
+                                     BGCNT_16COLOUR |
                                      BGCNT_SCREENBASE(5) |
                                      BGCNT_TXT256x512);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) |
                                      BGCNT_CHARBASE(1) |
-                                     BGCNT_16COLOR |
+                                     BGCNT_16COLOUR |
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_TXT256x512);
 
@@ -3220,7 +3220,7 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
                                       DISPCNT_OBJ_ON);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(3) |
                                      BGCNT_CHARBASE(1) |
-                                     BGCNT_256COLOR |
+                                     BGCNT_256COLOUR |
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_AFF128x128);
         sTradeAnim->texX = 64;
@@ -3251,7 +3251,7 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
                                       DISPCNT_OBJ_ON);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(3) |
                                      BGCNT_CHARBASE(1) |
-                                     BGCNT_256COLOR |
+                                     BGCNT_256COLOUR |
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_AFF128x128);
         sTradeAnim->texX = 64;
@@ -3279,7 +3279,7 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) |
                                      BGCNT_CHARBASE(1) |
-                                     BGCNT_16COLOR |
+                                     BGCNT_16COLOUR |
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_TXT512x256);
         LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 3 * PLTT_SIZE_4BPP);
@@ -3374,7 +3374,7 @@ enum {
     STATE_PAN_TO_GBA,
     STATE_DESTROY_LINK_MON,
     STATE_LINK_MON_ARRIVED_DELAY,
-    STATE_MOVE_GBA_TO_CENTER,
+    STATE_MOVE_GBA_TO_CENTRE,
     STATE_GBA_FLASH_RECV,
     STATE_UNUSED,
     STATE_GBA_STOP_FLASH_RECV,
@@ -3605,7 +3605,7 @@ static bool8 DoTradeAnim_Cable(void)
         {
             gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].affineAnims = sAffineAnims_CrossingMonPics;
             gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-            CalcCenterToCornerVec(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
+            CalcCentreToCornerVec(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
             StartSpriteAffineAnim(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], 0);
         }
         else
@@ -3696,7 +3696,7 @@ static bool8 DoTradeAnim_Cable(void)
         if (++sTradeAnim->timer == 10)
             sTradeAnim->state++;
         break;
-    case STATE_MOVE_GBA_TO_CENTER:
+    case STATE_MOVE_GBA_TO_CENTRE:
         if (++sTradeAnim->bg1vofs > 348)
         {
             sTradeAnim->bg1vofs = 348;
@@ -4063,7 +4063,7 @@ static bool8 DoTradeAnim_Wireless(void)
             gSprites[sTradeAnim->connectionSpriteId1].data[1] = 1;
             gSprites[sTradeAnim->connectionSpriteId2].data[1] = 1;
             sTradeAnim->state++;
-            CreateTask(Task_OpenCenterWhiteColumn, 5);
+            CreateTask(Task_OpenCentreWhiteColumn, 5);
         }
         break;
     case STATE_CROSSING_BLEND_WHITE_1:
@@ -4083,7 +4083,7 @@ static bool8 DoTradeAnim_Wireless(void)
         {
             gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].affineAnims = sAffineAnims_CrossingMonPics;
             gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-            CalcCenterToCornerVec(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
+            CalcCentreToCornerVec(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
             StartSpriteAffineAnim(&gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]], 0);
         }
         else
@@ -4114,7 +4114,7 @@ static bool8 DoTradeAnim_Wireless(void)
             sTradeAnim->state++;
             gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].invisible = TRUE;
             gSprites[sTradeAnim->monSpriteIds[TRADE_PARTNER]].invisible = TRUE;
-            CreateTask(Task_CloseCenterWhiteColumn, 5);
+            CreateTask(Task_CloseCentreWhiteColumn, 5);
         }
         break;
     case STATE_CROSSING_LINK_MONS_EXIT:
@@ -4199,7 +4199,7 @@ static bool8 DoTradeAnim_Wireless(void)
         if (++sTradeAnim->timer == 10)
             sTradeAnim->state++;
         break;
-    case STATE_MOVE_GBA_TO_CENTER:
+    case STATE_MOVE_GBA_TO_CENTRE:
         if (++sTradeAnim->bg1vofs > 348)
         {
             sTradeAnim->bg1vofs = 348;
@@ -4851,10 +4851,10 @@ void LoadTradeAnimGfx(void)
 void DrawTextOnTradeWindow(u8 windowId, const u8 *str, u8 speed)
 {
     FillWindowPixelBuffer(windowId, PIXEL_FILL(15));
-    sTradeAnim->textColors[0] = TEXT_DYNAMIC_COLOR_6;
-    sTradeAnim->textColors[1] = TEXT_COLOR_WHITE;
-    sTradeAnim->textColors[2] = TEXT_COLOR_GREEN;
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 2, 0, 0, sTradeAnim->textColors, speed, str);
+    sTradeAnim->textColours[0] = TEXT_DYNAMIC_COLOUR_6;
+    sTradeAnim->textColours[1] = TEXT_COLOUR_WHITE;
+    sTradeAnim->textColours[2] = TEXT_COLOUR_GREEN;
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 2, 0, 0, sTradeAnim->textColours, speed, str);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
@@ -4901,7 +4901,7 @@ static void Task_AnimateWirelessSignal(u8 taskId)
 #undef tCounter
 #undef tSignalComingBack
 
-static void Task_OpenCenterWhiteColumn(u8 taskId)
+static void Task_OpenCentreWhiteColumn(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
@@ -4928,7 +4928,7 @@ static void Task_OpenCenterWhiteColumn(u8 taskId)
         DestroyTask(taskId);
 }
 
-static void Task_CloseCenterWhiteColumn(u8 taskId)
+static void Task_CloseCentreWhiteColumn(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 

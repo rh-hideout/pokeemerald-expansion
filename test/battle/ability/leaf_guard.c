@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
         ASSUME(GetMoveEffect(MOVE_HYPNOSIS) == EFFECT_SLEEP);
-        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYSE);
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
         PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); }
         OPPONENT(SPECIES_WOBBUFFET);

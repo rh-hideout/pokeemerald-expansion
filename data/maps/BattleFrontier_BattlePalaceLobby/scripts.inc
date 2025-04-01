@@ -325,7 +325,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_Beauty::
 	end
 
 BattleFrontier_BattlePalaceLobby_EventScript_Maniac::
-	msgbox BattleFrontier_BattlePalaceLobby_Text_WhatNatureFavorsChippingAway, MSGBOX_NPC
+	msgbox BattleFrontier_BattlePalaceLobby_Text_WhatNatureFavoursChippingAway, MSGBOX_NPC
 	end
 
 BattleFrontier_BattlePalaceLobby_EventScript_RulesBoard::
@@ -403,7 +403,7 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainSingleBattleChallenge:
 	.string "to their nature and battle on their own.\p"
 	.string "You must put your trust in your\n"
 	.string "POKéMON and watch over them.\p"
-	.string "If you achieve the honor of beating\n"
+	.string "If you achieve the honour of beating\n"
 	.string "seven TRAINERS in succession,\l"
 	.string "we will present you with Battle Points.\p"
 	.string "If you want to interrupt your\n"
@@ -540,9 +540,9 @@ BattleFrontier_BattlePalaceLobby_Text_MonDocileButTransforms:
 	.string "It becomes totally intimidating.\n"
 	.string "It's shocking, even.$"
 
-BattleFrontier_BattlePalaceLobby_Text_WhatNatureFavorsChippingAway:
+BattleFrontier_BattlePalaceLobby_Text_WhatNatureFavoursChippingAway:
 	.string "I wonder what sort of nature a POKéMON\n"
-	.string "would have if it favored enfeebling its\l"
+	.string "would have if it favoured enfeebling its\l"
 	.string "opponents and chipping away slowly.\p"
 	.string "I'd be surprised if it was a LAX nature.\p"
 	.string "But, nah, that can't be right.$"
@@ -573,7 +573,7 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainDoubleBattleChallenge:
 	.string "to their nature and battle on their own.\p"
 	.string "You must put your trust in your\n"
 	.string "POKéMON and watch over them.\p"
-	.string "If you achieve the honor of beating\n"
+	.string "If you achieve the honour of beating\n"
 	.string "seven TRAINERS in succession,\l"
 	.string "we will present you with Battle Points.\p"
 	.string "If you want to interrupt your\n"
@@ -586,7 +586,7 @@ BattleFrontier_BattlePalaceLobby_Text_ToDefeatMavenAnd7Trainers:
 	.string "and seven TRAINERS in a row…$"
 
 BattleFrontier_BattlePalaceLobby_Text_PresentYouWithBattlePoints:
-	.string "In honor of the bond you share with\n"
+	.string "In honour of the bond you share with\n"
 	.string "your POKéMON, we present you with\l"
 	.string "these Battle Point(s).$"
 
@@ -616,7 +616,7 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainRulesNature:
 	.string "Yet another may enjoy vexing or\n"
 	.string "confounding its foes.\p"
 	.string "Due to its nature, a POKéMON\n"
-	.string "will have favorite moves that it is good\l"
+	.string "will have favourite moves that it is good\l"
 	.string "at using.\p"
 	.string "It may also dislike certain moves that\n"
 	.string "it has trouble using.$"

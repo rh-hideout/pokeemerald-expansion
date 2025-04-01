@@ -12,7 +12,7 @@ enum {
     ITEMMENULOCATION_BERRY_TREE,
     ITEMMENULOCATION_BERRY_BLENDER_CRUSH,
     ITEMMENULOCATION_ITEMPC,
-    ITEMMENULOCATION_FAVOR_LADY,
+    ITEMMENULOCATION_FAVOUR_LADY,
     ITEMMENULOCATION_QUIZ_LADY,
     ITEMMENULOCATION_APPRENTICE,
     ITEMMENULOCATION_WALLY,
@@ -87,7 +87,7 @@ extern struct BagMenu *gBagMenu;
 extern u16 gSpecialVar_ItemId;
 
 void CB2_GoToItemDepositMenu(void);
-void FavorLadyOpenBagMenu(void);
+void FavourLadyOpenBagMenu(void);
 void QuizLadyOpenBagMenu(void);
 void ApprenticeOpenBagMenu(void);
 void CB2_BagMenuFromBattle(void);
@@ -109,6 +109,6 @@ void UpdatePocketItemList(u8 pocketId);
 void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, void ( *callback)(u8 taskId));
 void DisplayItemMessageOnField(u8 taskId, const u8 *src, TaskFunc callback);
 void CloseItemMessage(u8 taskId);
-void ItemMenu_RotomCatalog(u8 taskId);
+void ItemMenu_RotomCatalogue(u8 taskId);
 
 #endif //GUARD_ITEM_MENU_H

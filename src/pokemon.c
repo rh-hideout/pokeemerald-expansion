@@ -383,7 +383,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_HARDY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(61, 7, 61, 7), //32% support >= 50% HP, 32% support < 50% HP
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_LONELY] =
@@ -395,7 +395,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_LONELY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(20, 25, 84, 8), //55%,  8%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_BRAVE] =
@@ -407,7 +407,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_BRAVE, AFFINE_TURN_UP},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(70, 15, 32, 60), //15%, 8%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_ADAMANT] =
@@ -419,7 +419,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_ADAMANT, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(38, 31, 70, 15), //31%, 15%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_NAUGHTY] =
@@ -431,7 +431,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_NAUGHTY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(20, 70, 70, 22), //10%, 8%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_BOLD] =
@@ -443,7 +443,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_BOLD, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(30, 20, 32, 58), //50%, 10%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_DOCILE] =
@@ -455,7 +455,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_DOCILE, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_RANDOM,
     },
     [NATURE_RELAXED] =
@@ -467,7 +467,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_RELAXED, AFFINE_TURN_UP_AND_DOWN},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(25, 15, 75, 15), //60%, 10%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_IMPISH] =
@@ -479,7 +479,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_IMPISH, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(69, 6, 28, 55), //25%, 17%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_LAX] =
@@ -491,7 +491,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_LAX, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(35, 10, 29, 6), //55%, 65%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_TIMID] =
@@ -503,7 +503,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_TIMID, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(62, 10, 30, 20), //28%, 50%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_HASTY] =
@@ -515,7 +515,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_HASTY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(58, 37, 88, 6), //5%, 6%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_SERIOUS] =
@@ -527,7 +527,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_SERIOUS, AFFINE_TURN_DOWN},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(34, 11, 29, 11), //55%, 60%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_JOLLY] =
@@ -539,7 +539,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_JOLLY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(35, 5, 35, 60), //60%, 5%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_NAIVE] =
@@ -551,7 +551,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_NAIVE, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_RANDOM,
     },
     [NATURE_MODEST] =
@@ -563,7 +563,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_MODEST, AFFINE_TURN_DOWN_SLOW},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(35, 45, 34, 60), //20%, 6%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_MILD] =
@@ -575,7 +575,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_MILD, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(44, 50, 34, 6), //6%, 60%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_QUIET] =
@@ -587,7 +587,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_QUIET, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_BASHFUL] =
@@ -599,7 +599,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_BASHFUL, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(30, 58, 30, 58), //12%, 12%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_RASH] =
@@ -611,7 +611,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_RASH, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(30, 13, 27, 6), //57%, 67%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_CALM] =
@@ -623,7 +623,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_CALM, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
         .battlePalacePercents = PALACE_STYLE(40, 50, 25, 62), //10%, 13%
-        .battlePalaceFlavorText = B_MSG_GETTING_IN_POS,
+        .battlePalaceFlavourText = B_MSG_GETTING_IN_POS,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_GENTLE] =
@@ -635,7 +635,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_GENTLE, AFFINE_TURN_DOWN_SLIGHT},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(18, 70, 90, 5), //12%, 5%
-        .battlePalaceFlavorText = B_MSG_GLINT_IN_EYE,
+        .battlePalaceFlavourText = B_MSG_GLINT_IN_EYE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
     [NATURE_SASSY] =
@@ -647,7 +647,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_SASSY, AFFINE_TURN_UP_HIGH},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(88, 6, 22, 20), //6%, 58%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_CAREFUL] =
@@ -659,7 +659,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_CAREFUL, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow,
         .battlePalacePercents = PALACE_STYLE(42, 50, 42, 5), //8%, 53%
-        .battlePalaceFlavorText = B_MSG_GROWL_DEEPLY,
+        .battlePalaceFlavourText = B_MSG_GROWL_DEEPLY,
         .battlePalaceSmokescreen = PALACE_TARGET_WEAKER,
     },
     [NATURE_QUIRKY] =
@@ -671,7 +671,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
         .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
-        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceFlavourText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
 };
@@ -4988,12 +4988,12 @@ u16 HoennToNationalOrder(u16 hoennNum)
     return sHoennToNationalOrder[hoennNum - 1];
 }
 
-// Spots can be drawn on Spinda's color indexes 1, 2, or 3
-#define FIRST_SPOT_COLOR 1
-#define LAST_SPOT_COLOR  3
+// Spots can be drawn on Spinda's colour indexes 1, 2, or 3
+#define FIRST_SPOT_COLOUR 1
+#define LAST_SPOT_COLOUR  3
 
-// To draw a spot pixel, add 4 to the color index
-#define SPOT_COLOR_ADJUSTMENT 4
+// To draw a spot pixel, add 4 to the colour index
+#define SPOT_COLOUR_ADJUSTMENT 4
 /*
     The function below handles drawing the randomly-placed spots on Spinda's front sprite.
     Spinda has 4 spots, each with an entry in gSpindaSpotGraphics. Each entry contains
@@ -5009,9 +5009,9 @@ u16 HoennToNationalOrder(u16 hoennNum)
 
     The function then loops over the 16x16 spot image. For each bit in the spot's binary image, if
     the bit is set then it's part of the spot; try to draw it. A pixel is drawn on Spinda if the
-    pixel is between FIRST_SPOT_COLOR and LAST_SPOT_COLOR (so only colors 1, 2, or 3 on Spinda will
-    allow a spot to be drawn). These color indexes are Spinda's light brown body colors. To create
-    the spot it adds 4 to the color index, so Spinda's spots will be colors 5, 6, and 7.
+    pixel is between FIRST_SPOT_COLOUR and LAST_SPOT_COLOUR (so only colours 1, 2, or 3 on Spinda will
+    allow a spot to be drawn). These colour indexes are Spinda's light brown body colours. To create
+    the spot it adds 4 to the colour index, so Spinda's spots will be colours 5, 6, and 7.
 
     The above is done in TRY_DRAW_SPOT_PIXEL two different ways: one with << 4, and one without.
     This is because Spinda's sprite is a 4 bits per pixel image, but the pointer to Spinda's pixels
@@ -5019,12 +5019,12 @@ u16 HoennToNationalOrder(u16 hoennNum)
     of these pixels, so this is done every other time.
 */
 
-// Draw spot pixel if this is Spinda's body color
+// Draw spot pixel if this is Spinda's body colour
 #define TRY_DRAW_SPOT_PIXEL(pixels, shift) \
-    if (((*(pixels) & (0xF << (shift))) >= (FIRST_SPOT_COLOR << (shift))) \
-     && ((*(pixels) & (0xF << (shift))) <= (LAST_SPOT_COLOR << (shift)))) \
+    if (((*(pixels) & (0xF << (shift))) >= (FIRST_SPOT_COLOUR << (shift))) \
+     && ((*(pixels) & (0xF << (shift))) <= (LAST_SPOT_COLOUR << (shift)))) \
     { \
-        *(pixels) += (SPOT_COLOR_ADJUSTMENT << (shift)); \
+        *(pixels) += (SPOT_COLOUR_ADJUSTMENT << (shift)); \
     }
 
 
@@ -5068,12 +5068,12 @@ void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame)
                     /* of the two pixels is being considered for drawing */
                     if (column & 1)
                     {
-                        /* Draw spot pixel if this is Spinda's body color */
+                        /* Draw spot pixel if this is Spinda's body colour */
                         TRY_DRAW_SPOT_PIXEL(destPixels, 4);
                     }
                     else
                     {
-                        /* Draw spot pixel if this is Spinda's body color */
+                        /* Draw spot pixel if this is Spinda's body colour */
                         TRY_DRAW_SPOT_PIXEL(destPixels, 0);
                     }
                 }
@@ -5918,16 +5918,16 @@ bool8 IsMonSpriteNotFlipped(u16 species)
     return gSpeciesInfo[species].noFlip;
 }
 
-s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor)
+s8 GetMonFlavourRelation(struct Pokemon *mon, u8 flavour)
 {
     u8 nature = GetNature(mon);
-    return gPokeblockFlavorCompatibilityTable[nature * FLAVOR_COUNT + flavor];
+    return gPokeblockFlavourCompatibilityTable[nature * FLAVOUR_COUNT + flavour];
 }
 
-s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor)
+s8 GetFlavourRelationByPersonality(u32 personality, u8 flavour)
 {
     u8 nature = GetNatureFromPersonality(personality);
-    return gPokeblockFlavorCompatibilityTable[nature * FLAVOR_COUNT + flavor];
+    return gPokeblockFlavourCompatibilityTable[nature * FLAVOUR_COUNT + flavour];
 }
 
 bool8 IsTradedMon(struct Pokemon *mon)

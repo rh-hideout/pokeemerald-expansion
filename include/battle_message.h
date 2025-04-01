@@ -94,7 +94,7 @@
 #define B_BUFF_STAT                         5
 #define B_BUFF_SPECIES                      6
 #define B_BUFF_MON_NICK                     7
-#define B_BUFF_NEGATIVE_FLAVOR              8
+#define B_BUFF_NEGATIVE_FLAVOUR              8
 #define B_BUFF_ABILITY                      9
 #define B_BUFF_ITEM                         10
 #define B_BUFF_MON_NICK_WITH_PREFIX_LOWER   11 // lowercase prefix
@@ -102,11 +102,11 @@
 #define B_BUFF_PLACEHOLDER_BEGIN        0xFD
 #define B_BUFF_EOS                      0xFF
 
-#define PREPARE_FLAVOR_BUFFER(textVar, flavorId)                            \
+#define PREPARE_FLAVOUR_BUFFER(textVar, flavourId)                            \
 {                                                                           \
     textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;                                  \
-    textVar[1] = B_BUFF_NEGATIVE_FLAVOR;                                    \
-    textVar[2] = flavorId;                                                  \
+    textVar[1] = B_BUFF_NEGATIVE_FLAVOUR;                                    \
+    textVar[2] = flavourId;                                                  \
     textVar[3] = B_BUFF_EOS;                                                \
 }
 
@@ -276,7 +276,7 @@ extern const u8 gText_SafariZoneMenu[];
 extern const u8 gText_MoveInterfacePP[];
 extern const u8 gText_MoveInterfaceType[];
 extern const u8 gText_MoveInterfacePpType[];
-extern const u8 gText_MoveInterfaceDynamicColors[];
+extern const u8 gText_MoveInterfaceDynamicColours[];
 extern const u8 gText_WhichMoveToForget4[];
 extern const u8 gText_BattleYesNoChoice[];
 extern const u8 gText_BattleSwitchWhich[];

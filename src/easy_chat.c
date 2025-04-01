@@ -198,7 +198,7 @@ static void PrintWordSelectNextRowUp(void);
 static int GetLowerWindowScrollOffset(void);
 static void PrintWordSelectRowsPageDown(void);
 static void PrintWordSelectRowsPageUp(void);
-static void PrintEasyChatTextWithColors(u8, u8, const u8 *, u8, u8, u8, u8, u8, u8);
+static void PrintEasyChatTextWithColours(u8, u8, const u8 *, u8, u8, u8, u8, u8, u8);
 static void ResetLowerWindowScroll(void);
 static void PrintKeyboardGroupNames(void);
 static void PrintKeyboardAlphabet(void);
@@ -3946,9 +3946,9 @@ static void PrintTitle(void)
     if (!titleText)
         return;
 
-    xOffset = GetStringCenterAlignXOffset(FONT_NORMAL, titleText, 144);
+    xOffset = GetStringCentreAlignXOffset(FONT_NORMAL, titleText, 144);
     FillWindowPixelBuffer(WIN_TITLE, PIXEL_FILL(0));
-    PrintEasyChatTextWithColors(WIN_TITLE, FONT_NORMAL, titleText, xOffset, 1, TEXT_SKIP_DRAW, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
+    PrintEasyChatTextWithColours(WIN_TITLE, FONT_NORMAL, titleText, xOffset, 1, TEXT_SKIP_DRAW, TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY);
     PutWindowTilemap(WIN_TITLE);
     CopyWindowToVram(WIN_TITLE, COPYWIN_FULL);
 }
@@ -3958,13 +3958,13 @@ static void PrintEasyChatText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y,
     AddTextPrinterParameterized(windowId, fontId, str, x, y, speed, callback);
 }
 
-static void PrintEasyChatTextWithColors(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top, u8 speed, u8 bg, u8 fg, u8 shadow)
+static void PrintEasyChatTextWithColours(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top, u8 speed, u8 bg, u8 fg, u8 shadow)
 {
-    u8 color[3];
-    color[0] = bg;
-    color[1] = fg;
-    color[2] = shadow;
-    AddTextPrinterParameterized3(windowId, fontId, left, top, color, speed, str);
+    u8 colour[3];
+    colour[0] = bg;
+    colour[1] = fg;
+    colour[2] = shadow;
+    AddTextPrinterParameterized3(windowId, fontId, left, top, colour, speed, str);
 }
 
 static void PrintInitialInstructions(void)
@@ -4090,14 +4090,14 @@ static void PrintCurrentPhrase(void)
                 currentPhrase++;
                 if (!isQuizQuestion)
                 {
-                    str = WriteColorChangeControlCode(str, 0, 4);
+                    str = WriteColourChangeControlCode(str, 0, 4);
                     for (k = 0; k < 12; k++)
                     {
                         *str = CHAR_HYPHEN;
                         str++;
                     }
 
-                    str = WriteColorChangeControlCode(str, 0, 2);
+                    str = WriteColourChangeControlCode(str, 0, 2);
                 }
             }
 
@@ -4346,7 +4346,7 @@ static void PrintWordSelectText(u8 scrollOffset, u8 numRows)
                 if (!DummyWordCheck(easyChatWord))
                     PrintEasyChatText(WIN_INPUT_SELECT, FONT_NORMAL, sScreenControl->wordSelectPrintBuffer, (j * 13 + 3) * 8, y, TEXT_SKIP_DRAW, NULL);
                 else // Never reached
-                    PrintEasyChatTextWithColors(WIN_INPUT_SELECT, FONT_NORMAL, sScreenControl->wordSelectPrintBuffer, (j * 13 + 3) * 8, y, TEXT_SKIP_DRAW, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_RED, TEXT_COLOR_LIGHT_GRAY);
+                    PrintEasyChatTextWithColours(WIN_INPUT_SELECT, FONT_NORMAL, sScreenControl->wordSelectPrintBuffer, (j * 13 + 3) * 8, y, TEXT_SKIP_DRAW, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_RED, TEXT_COLOUR_LIGHT_GREY);
             }
         }
 

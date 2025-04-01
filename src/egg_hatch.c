@@ -60,7 +60,7 @@ struct EggHatchData
     u8 unused_9;
     u8 unused_A;
     u16 species;
-    u8 textColor[3];
+    u8 textColour[3];
 };
 
 extern const u32 gTradePlatform_Tilemap[];
@@ -918,10 +918,10 @@ static void CreateEggShardSprite(u8 x, u8 y, s16 velocityX, s16 velocityY, s16 a
 static void EggHatchPrintMessage(u8 windowId, u8 *string, u8 x, u8 y, u8 speed)
 {
     FillWindowPixelBuffer(windowId, PIXEL_FILL(15));
-    sEggHatchData->textColor[0] = 0;
-    sEggHatchData->textColor[1] = 5;
-    sEggHatchData->textColor[2] = 6;
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sEggHatchData->textColor, speed, string);
+    sEggHatchData->textColour[0] = 0;
+    sEggHatchData->textColour[1] = 5;
+    sEggHatchData->textColour[2] = 6;
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sEggHatchData->textColour, speed, string);
 }
 
 u8 GetEggCyclesToSubtract(void)

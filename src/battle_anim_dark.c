@@ -894,9 +894,9 @@ void AnimClawSlash(struct Sprite *sprite)
 // Makes the attacker metallic and shining.
 // Used by MOVE_HARDEN and MOVE_IRON_DEFENSE.
 // arg0: if true won't change battler's palette back
-// arg1: if true, use custom color
-// arg2: custom color
-// Custom color argument is used in MOVE_POISON_TAIL to make the mon turn purplish/pinkish as if became cloaked in poison.
+// arg1: if true, use custom colour
+// arg2: custom colour
+// Custom colour argument is used in MOVE_POISON_TAIL to make the mon turn purplish/pinkish as if became cloaked in poison.
 void AnimTask_MetallicShine(u8 taskId)
 {
     u16 species;
@@ -949,7 +949,7 @@ void AnimTask_MetallicShine(u8 taskId)
     paletteNum = 16 + gSprites[spriteId].oam.paletteNum;
 
     if (gBattleAnimArgs[1] == 0)
-        SetGrayscaleOrOriginalPalette(paletteNum, FALSE);
+        SetGreyscaleOrOriginalPalette(paletteNum, FALSE);
     else
         BlendPalette(BG_PLTT_ID(paletteNum), 16, 11, gBattleAnimArgs[2]);
 
@@ -979,7 +979,7 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
             spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
             paletteNum = 16 + gSprites[spriteId].oam.paletteNum;
             if (gTasks[taskId].data[1] == 0)
-                SetGrayscaleOrOriginalPalette(paletteNum, TRUE);
+                SetGreyscaleOrOriginalPalette(paletteNum, TRUE);
 
             DestroySprite(&gSprites[gTasks[taskId].data[0]]);
             GetBattleAnimBg1Data(&animBg);
@@ -1004,10 +1004,10 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
     }
 }
 
-// Changes battler's palette to either grayscale or original.
+// Changes battler's palette to either greyscale or original.
 // arg0: which battler
-// arg1: FALSE grayscale, TRUE original
-void AnimTask_SetGrayscaleOrOriginalPal(u8 taskId)
+// arg1: FALSE greyscale, TRUE original
+void AnimTask_SetGreyscaleOrOriginalPal(u8 taskId)
 {
     u8 spriteId;
     u8 battler;
@@ -1053,7 +1053,7 @@ void AnimTask_SetGrayscaleOrOriginalPal(u8 taskId)
     }
 
     if (spriteId != SPRITE_NONE)
-        SetGrayscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, gBattleAnimArgs[1]);
+        SetGreyscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, gBattleAnimArgs[1]);
 
     DestroyAnimVisualTask(taskId);
 }

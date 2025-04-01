@@ -1,14 +1,14 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Paralyze Heal heals a battler from being paralyzed")
+SINGLE_BATTLE_TEST("Paralyse Heal heals a battler from being paralysed")
 {
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_PARALYZE_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        ASSUME(gItemsInfo[ITEM_PARALYSE_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { USE_ITEM(player, ITEM_PARALYZE_HEAL, partyIndex: 0); }
+        TURN { USE_ITEM(player, ITEM_PARALYSE_HEAL, partyIndex: 0); }
     } SCENE {
         MESSAGE("Wobbuffet had its status healed!");
     } THEN {

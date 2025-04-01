@@ -974,7 +974,7 @@ Route110_TrickHousePuzzle5_Text_Mechadoll3Intro:
 Route110_TrickHousePuzzle5_Text_Mechadoll3Quiz1:
 	.string "MECHADOLL 3 QUIZ.\p"
 	.string "Which costs more?\n"
-	.string "Three HARBOR MAILS or one BURN HEAL?$"
+	.string "Three HARBOUR MAILS or one BURN HEAL?$"
 
 Route110_TrickHousePuzzle5_Text_Mechadoll3Quiz2:
 	.string "MECHADOLL 3 QUIZ.\p"

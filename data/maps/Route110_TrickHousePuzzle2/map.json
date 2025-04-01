@@ -75,9 +75,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_HARBOR_MAIL",
+      "trainer_sight_or_berry_tree_id": "ITEM_HARBOUR_MAIL",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOR_MAIL"
+      "flag": "FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOUR_MAIL"
     }
   ],
   "warp_events": [

@@ -30,6 +30,6 @@ void DestroyBerryIconSpritePtr(struct Sprite *sprite, u32 berryId, bool32 freePa
 
 void FreeBerryIconSpritePalette(u32 berryId); // Unused atm, because it's also handled by DestroyBerryIconSprite. Leaving it as it is, because it may still be useful in some custom cases.
 
-u8 CreateBerryFlavorCircleSprite(s16 x);
+u8 CreateBerryFlavourCircleSprite(s16 x);
 
 #endif // GUARD_ITEM_MENU_ICONS_H

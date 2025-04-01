@@ -75,7 +75,7 @@ s32 GetBgX(u32 bg);
 s32 ChangeBgY(u32 bg, s32 value, u8 op);
 s32 ChangeBgY_ScreenOff(u32 bg, s32 value, u8 op);
 s32 GetBgY(u32 bg);
-void SetBgAffine(u32 bg, s32 srcCenterX, s32 srcCenterY, s16 dispCenterX, s16 dispCenterY, s16 scaleX, s16 scaleY, u16 rotationAngle);
+void SetBgAffine(u32 bg, s32 srcCentreX, s32 srcCentreY, s16 dispCentreX, s16 dispCentreY, s16 scaleX, s16 scaleY, u16 rotationAngle);
 u8 Unused_AdjustBgMosaic(u8 val, u32 mode);
 void SetBgTilemapBuffer(u32 bg, void *tilemap);
 void UnsetBgTilemapBuffer(u32 bg);

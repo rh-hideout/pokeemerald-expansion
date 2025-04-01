@@ -369,7 +369,7 @@ const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest)
     return gStringVar4;
 }
 
-const u8 *GetMatchCallFlavorText(int index, int checkPageEntry)
+const u8 *GetMatchCallFlavourText(int index, int checkPageEntry)
 {
     int rematchId;
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
@@ -377,14 +377,14 @@ const u8 *GetMatchCallFlavorText(int index, int checkPageEntry)
     {
         rematchId = MatchCall_GetRematchTableIdx(state->matchCallEntries[index].headerId);
         if (rematchId == REMATCH_TABLE_ENTRIES)
-            return MatchCall_GetOverrideFlavorText(state->matchCallEntries[index].headerId, checkPageEntry);
+            return MatchCall_GetOverrideFlavourText(state->matchCallEntries[index].headerId, checkPageEntry);
     }
     else
     {
         rematchId = state->matchCallEntries[index].headerId;
     }
 
-    return gMatchCallFlavorTexts[rematchId][checkPageEntry];
+    return gMatchCallFlavourTexts[rematchId][checkPageEntry];
 }
 
 u16 GetMatchCallOptionCursorPos(void)

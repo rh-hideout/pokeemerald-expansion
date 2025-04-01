@@ -256,7 +256,7 @@
 	@ Calls the native C function stored at func.
 	@ 'callnative's should set 'requests_effects=1' if the native
 	@ contains a call to 'Script_RequestEffects', which allows them
-	@ to be analyzed by 'RunScriptImmediatelyUntilEffect'.
+	@ to be analysed by 'RunScriptImmediatelyUntilEffect'.
 	.macro callnative func:req, requests_effects=0
 	.byte SCR_OP_CALLNATIVE
 	.if \requests_effects == 0
@@ -402,7 +402,7 @@
 	@ It allows warp macros to either provide 1. a valid id for which warp location to use,
 	@ or 2. a pair of x/y coordinates to use. Both may be provided but at least one will be
 	@ ignored by SetPlayerCoordsFromWarp. If none are provided it will use dummy arguments,
-	@ and the warp will send the player to the center of the map.
+	@ and the warp will send the player to the centre of the map.
 	@ Examples of valid inputs for a warp command:
 	@ - warp MAP, x, y
 	@ - warp MAP, warpId
@@ -1659,9 +1659,9 @@
 	.endm
 
 	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
-	.macro textcolor color:req
-	.byte SCR_OP_TEXTCOLOR
-	.byte \color
+	.macro textcolour colour:req
+	.byte SCR_OP_TEXTCOLOUR
+	.byte \colour
 	.endm
 
 	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
@@ -1734,7 +1734,7 @@
 	.endm
 
 	@ For the rotating tile puzzles in Mossdeep Gym / Trick House Room 7. Moves the objects one rotation
-	@ on the colored puzzle specified by puzzleNumber.
+	@ on the coloured puzzle specified by puzzleNumber.
 	.macro moverotatingtileobjects puzzleNumber:req
 	.byte SCR_OP_MOVEROTATINGTILEOBJECTS
 	.2byte \puzzleNumber
@@ -2195,7 +2195,7 @@
 	.endm
 
 	@ Toggles the Gigantamax Factor for a Pokemon.
-	@ Fails for Melmetal (vanilla behavior).
+	@ Fails for Melmetal (vanilla behaviour).
 	@ Sets VAR_RESULT to TRUE if it succeeds, and FALSE otherwise.
 	.macro togglegigantamaxfactor slot:req
 	callnative ToggleGigantamaxFactor, requests_effects=1

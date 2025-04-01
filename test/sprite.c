@@ -135,13 +135,13 @@ static void UpdateOamCoords(void)
         {
             if (sprite->coordOffsetEnabled)
             {
-                sprite->oam.x = sprite->x + sprite->x2 + sprite->centerToCornerVecX + gSpriteCoordOffsetX;
-                sprite->oam.y = sprite->y + sprite->y2 + sprite->centerToCornerVecY + gSpriteCoordOffsetY;
+                sprite->oam.x = sprite->x + sprite->x2 + sprite->centreToCornerVecX + gSpriteCoordOffsetX;
+                sprite->oam.y = sprite->y + sprite->y2 + sprite->centreToCornerVecY + gSpriteCoordOffsetY;
             }
             else
             {
-                sprite->oam.x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
-                sprite->oam.y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
+                sprite->oam.x = sprite->x + sprite->x2 + sprite->centreToCornerVecX;
+                sprite->oam.y = sprite->y + sprite->y2 + sprite->centreToCornerVecY;
             }
         }
     }
@@ -210,7 +210,7 @@ static void SortSprites(void)
             // UB: If j equals 1, then j-- makes j equal 0.
             // Then, sSpriteOrder[-1] gets accessed below.
             // Although this doesn't result in a bug in the ROM,
-            // the behavior is undefined.
+            // the behaviour is undefined.
             j--;
 #ifdef UBFIX
             if (j == 0)

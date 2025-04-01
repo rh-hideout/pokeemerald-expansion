@@ -6,8 +6,8 @@ EventScript_BookShelf::
 	msgbox Text_BookShelf, MSGBOX_SIGN
 	end
 
-EventScript_PokemonCenterBookShelf::
-	msgbox Text_PokemonCenterBookShelf, MSGBOX_SIGN
+EventScript_PokemonCentreBookShelf::
+	msgbox Text_PokemonCentreBookShelf, MSGBOX_SIGN
 	end
 
 EventScript_Vase::

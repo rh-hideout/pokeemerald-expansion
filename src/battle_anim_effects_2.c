@@ -83,7 +83,7 @@ static void AnimPerishSongMusicNote_Step1(struct Sprite *);
 static void AnimPerishSongMusicNote_Step2(struct Sprite *);
 static void AnimGuardRing(struct Sprite *);
 static void AnimTask_Withdraw_Step(u8);
-static void AnimTask_GrowAndGrayscale_Step(u8);
+static void AnimTask_GrowAndGreyscale_Step(u8);
 static void AnimTask_Minimize_Step(u8);
 static void CreateMinimizeSprite(struct Task *, u8);
 static void ClonedMinizeSprite_Step(struct Sprite *);
@@ -1955,7 +1955,7 @@ static void AnimRazorWindTornado(struct Sprite *sprite)
     sprite->callback(sprite);
 }
 
-// Animates a single pincer line that extends towards the center of the target mon.
+// Animates a single pincer line that extends towards the centre of the target mon.
 // arg 0: invert
 static void AnimViceGripPincer(struct Sprite *sprite)
 {
@@ -1987,7 +1987,7 @@ static void AnimViceGripPincer_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-// Animates a single pincer line that extends towards the center of the target mon, and then back out.
+// Animates a single pincer line that extends towards the centre of the target mon, and then back out.
 // arg 0: animation id
 static void AnimGuillotinePincer(struct Sprite *sprite)
 {
@@ -2063,26 +2063,26 @@ static void AnimGuillotinePincer_Step3(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-// Scales up the target mon sprite, and sets the palette to grayscale.
+// Scales up the target mon sprite, and sets the palette to greyscale.
 // Used in MOVE_DISABLE.
 // No args.
-void AnimTask_GrowAndGrayscale(u8 taskId)
+void AnimTask_GrowAndGreyscale(u8 taskId)
 {
     u8 spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
     PrepareBattlerSpriteForRotScale(spriteId, ST_OAM_OBJ_BLEND);
     SetSpriteRotScale(spriteId, 0xD0, 0xD0, 0);
-    SetGrayscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, FALSE);
+    SetGreyscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, FALSE);
     gTasks[taskId].data[0] = 80;
-    gTasks[taskId].func = AnimTask_GrowAndGrayscale_Step;
+    gTasks[taskId].func = AnimTask_GrowAndGreyscale_Step;
 }
 
-static void AnimTask_GrowAndGrayscale_Step(u8 taskId)
+static void AnimTask_GrowAndGreyscale_Step(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
         u8 spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
         ResetSpriteRotScale(spriteId);
-        SetGrayscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, TRUE);
+        SetGreyscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, TRUE);
         DestroyAnimVisualTask(taskId);
     }
 }
@@ -2197,7 +2197,7 @@ static void CreateMinimizeSprite(struct Task *task, u8 taskId)
             gSprites[spriteId].callback = ClonedMinizeSprite_Step;
             SetSpriteRotScale(spriteId, task->data[4], task->data[4], 0);
             gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
-            CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
+            CalcCentreToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
         }
     }
 }
@@ -3786,7 +3786,7 @@ static void AnimPerishSongMusicNote2(struct Sprite *sprite)
     }
 
     if (++sprite->data[0] == sprite->data[1])
-        SetGrayscaleOrOriginalPalette(sprite->oam.paletteNum + 16, FALSE);
+        SetGreyscaleOrOriginalPalette(sprite->oam.paletteNum + 16, FALSE);
 
     if (sprite->data[0] == sprite->data[1] + 80)
         DestroyAnimSprite(sprite);

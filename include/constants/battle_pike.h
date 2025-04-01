@@ -15,7 +15,7 @@
 #define NUM_PIKE_ROOM_TYPES 9
 
 #define PIKE_ROOM_LEFT    0
-#define PIKE_ROOM_CENTER  1
+#define PIKE_ROOM_CENTRE  1
 #define PIKE_ROOM_RIGHT   2
 
 #define PIKE_HINT_NOSTALGIA  0

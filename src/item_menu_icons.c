@@ -528,8 +528,8 @@ void AddSwitchPocketRotatingBallSprite(s16 rotationDirection)
 
 static void UpdateSwitchPocketRotatingBallCoords(struct Sprite *sprite)
 {
-    sprite->centerToCornerVecX = sprite->data[1] - ((sprite->data[3] + 1) & 1);
-    sprite->centerToCornerVecY = sprite->data[1] - ((sprite->data[3] + 1) & 1);
+    sprite->centreToCornerVecX = sprite->data[1] - ((sprite->data[3] + 1) & 1);
+    sprite->centreToCornerVecY = sprite->data[1] - ((sprite->data[3] + 1) & 1);
 }
 
 static void SpriteCB_SwitchPocketRotatingBallInit(struct Sprite *sprite)
@@ -541,8 +541,8 @@ static void SpriteCB_SwitchPocketRotatingBallInit(struct Sprite *sprite)
         sprite->affineAnims = sRotatingBallAnimCmds_FullRotation;
 
     InitSpriteAffineAnim(sprite);
-    sprite->data[1] = sprite->centerToCornerVecX;
-    sprite->data[1] = sprite->centerToCornerVecY;
+    sprite->data[1] = sprite->centreToCornerVecX;
+    sprite->data[1] = sprite->centreToCornerVecY;
     UpdateSwitchPocketRotatingBallCoords(sprite);
     sprite->callback = SpriteCB_SwitchPocketRotatingBallContinue;
 }
@@ -715,7 +715,7 @@ void FreeBerryIconSpritePalette(u32 berryId)
     FreeSpritePaletteByTag(TAG_BERRY_PIC_PAL + berryId);
 }
 
-u8 CreateBerryFlavorCircleSprite(s16 x)
+u8 CreateBerryFlavourCircleSprite(s16 x)
 {
     return CreateSprite(&sBerryCheckCircleSpriteTemplate, x, 116, 0);
 }

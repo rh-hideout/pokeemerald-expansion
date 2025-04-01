@@ -264,11 +264,11 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
         MESSAGE("Wobbuffet used Thunder Wave!");
         ONE_OF {
             MESSAGE("The opposing Metang used Celebrate!");
-            MESSAGE("The opposing Metang couldn't move because it's paralyzed!");
+            MESSAGE("The opposing Metang couldn't move because it's paralysed!");
             MESSAGE("The opposing Solgaleo used Celebrate!");
-            MESSAGE("The opposing Solgaleo couldn't move because it's paralyzed!");
+            MESSAGE("The opposing Solgaleo couldn't move because it's paralysed!");
             MESSAGE("The opposing Torkoal used Celebrate!");
-            MESSAGE("The opposing Torkoal couldn't move because it's paralyzed!");
+            MESSAGE("The opposing Torkoal couldn't move because it's paralysed!");
         }
     }
 }

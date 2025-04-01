@@ -302,7 +302,7 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentUsesFairy::
 	return
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentHasNoMostCommonType::
-	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerHasNoClearFavorite, MSGBOX_DEFAULT
+	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerHasNoClearFavourite, MSGBOX_DEFAULT
 	return
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentStyle::
@@ -572,44 +572,44 @@ BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerSkilledInSteelType:
 	.string "The TRAINER is apparently skilled\n"
 	.string "in the handling of the STEEL type.$"
 
-BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerHasNoClearFavorite:
+BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerHasNoClearFavourite:
 	.string "The TRAINER appears to have no clear\n"
-	.string "favorites when it comes to type.$"
+	.string "favourites when it comes to type.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleSlowAndSteady:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be slow and steady.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleEndurance:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be one of endurance.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleHighRisk:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be high risk, high return.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleDependsOnFlow:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "depend on the battle's flow.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleTotalPreparation:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be one based on total preparation.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleWeakenFoe:
-	.string "The favorite battle style appears\n"
+	.string "The favourite battle style appears\n"
 	.string "to be weakening the foe to start.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleFlexible:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be flexibly adaptable to the situation.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleImpossibleToPredict:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be impossible to predict.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_StyleUnrestrained:
-	.string "The favorite battle style appears to\n"
+	.string "The favourite battle style appears to\n"
 	.string "be free-spirited and unrestrained.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_LikeToSwapMon:

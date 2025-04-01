@@ -609,7 +609,7 @@ static void AnimTask_LoadSandstormBackground_Step(u8 taskId)
 // arg 0: initial y pixel offset
 // arg 1: projectile speed
 // arg 2: y pixel drop
-// arg 3: ??? unknown (possibly a color bit)
+// arg 3: ??? unknown (possibly a colour bit)
 void AnimFlyingSandCrescent(struct Sprite *sprite)
 {
     if (sprite->data[0] == 0)

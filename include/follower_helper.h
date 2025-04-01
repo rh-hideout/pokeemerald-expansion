@@ -74,12 +74,12 @@ struct FollowerMsgInfoExtended
 #define MATCH_MAPSEC(mapsec) MATCH_U24(MSG_COND_MAPSEC, mapsec)
 #define MATCH_MAP_RAW(mapGroup, mapNum) MATCH_U8(MSG_COND_MAP, mapGroup, mapNum, 0)
 #define MATCH_MAP(map) MATCH_U8(MSG_COND_MAP, MAP_GROUP(map), MAP_NUM(map), 0)
-// Matches one of two metatile behaviors follower is standing on
+// Matches one of two metatile behaviours follower is standing on
 #define MATCH_ON_MB(mb1, mb2) MATCH_U8(MSG_COND_ON_MB, mb1, mb2, 0)
 #define MATCH_WEATHER(weather1, weather2) MATCH_U8(MSG_COND_WEATHER, weather1, weather2, 0)
 #define MATCH_MUSIC(song) MATCH_U24(MSG_COND_MUSIC, song)
 #define MATCH_TIME_OF_DAY(time) MATCH_U24(MSG_COND_TIME_OF_DAY, time)
-// Matches metatile behavior within a '+' shape of size `distance`
+// Matches metatile behaviour within a '+' shape of size `distance`
 #define MATCH_NEAR_MB(mb, distance) MATCH_U8(MSG_COND_NEAR_MB, mb, distance, 0)
 
 enum {

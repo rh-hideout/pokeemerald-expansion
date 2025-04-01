@@ -50,7 +50,7 @@ A pull request meets the scope criteria if:
 
 Pull Requests that fall into this category are not in scope by default and should be brought up to maintainers, who will discuss and vote as to whether or not the feature is considered in scope. Considerations for acceptance may include invasiveness of implementation, popularity, ease of maintenance, etc.
 
-1. **Developer Ease of Use**: Lowers barrier of entry for developers to use existing behavior  
+1. **Developer Ease of Use**: Lowers barrier of entry for developers to use existing behaviour  
 2. **Fangame Features**: Adds a popular feature from other fangames  
 3. **Popular Non-SS Features**: Exceptions can be made for uniquely popular or requested features (Drowsy, PLA Legend Plate, etc.)
 4. **External Program**: External programs like poryscript, porymoves, etc.

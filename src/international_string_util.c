@@ -9,9 +9,9 @@
 #include "window.h"
 
 
-int GetStringCenterAlignXOffset(int fontId, const u8 *str, int totalWidth)
+int GetStringCentreAlignXOffset(int fontId, const u8 *str, int totalWidth)
 {
-    return GetStringCenterAlignXOffsetWithLetterSpacing(fontId, str, totalWidth, 0);
+    return GetStringCentreAlignXOffsetWithLetterSpacing(fontId, str, totalWidth, 0);
 }
 
 int GetStringRightAlignXOffset(int fontId, const u8 *str, int totalWidth)
@@ -19,7 +19,7 @@ int GetStringRightAlignXOffset(int fontId, const u8 *str, int totalWidth)
     return GetStringWidthDifference(fontId, str, totalWidth, 0);
 }
 
-int GetStringCenterAlignXOffsetWithLetterSpacing(int fontId, const u8 *str, int totalWidth, int letterSpacing)
+int GetStringCentreAlignXOffsetWithLetterSpacing(int fontId, const u8 *str, int totalWidth, int letterSpacing)
 {
     return GetStringWidthDifference(fontId, str, totalWidth, letterSpacing) / 2;
 }
@@ -211,7 +211,7 @@ int GetNicknameLanguage(u8 *str)
         return LANGUAGE_ENGLISH;
 }
 
-// Used by Pokénav's Match Call to erase the previous trainer's flavor text when switching between their info pages.
+// Used by Pokénav's Match Call to erase the previous trainer's flavour text when switching between their info pages.
 void FillWindowTilesByRow(int windowId, int columnStart, int rowStart, int numFillTiles, int numRows)
 {
     u8 *windowTileData;

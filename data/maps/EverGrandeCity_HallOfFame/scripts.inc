@@ -25,7 +25,7 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	applymovement LOCALID_WALLACE, Common_Movement_WalkInPlaceFasterRight
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
-	msgbox EverGrandeCity_HallOfFame_Text_HereWeHonorLeagueChampions, MSGBOX_DEFAULT
+	msgbox EverGrandeCity_HallOfFame_Text_HereWeHonourLeagueChampions, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_WALLACE, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame2
 	applymovement OBJ_EVENT_ID_PLAYER, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame2
@@ -83,13 +83,13 @@ EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame2:
 	walk_up
 	step_end
 
-EverGrandeCity_HallOfFame_Text_HereWeHonorLeagueChampions:
+EverGrandeCity_HallOfFame_Text_HereWeHonourLeagueChampions:
 	.string "WALLACE: This room…\p"
 	.string "This is where we keep records of\n"
 	.string "POKéMON that prevailed through\l"
 	.string "harsh battles.\p"
 	.string "It is here that the LEAGUE CHAMPIONS\n"
-	.string "are honored.$"
+	.string "are honoured.$"
 
 EverGrandeCity_HallOfFame_Text_LetsRecordYouAndYourPartnersNames:
 	.string "WALLACE: Come on, let's record your\n"

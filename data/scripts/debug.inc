@@ -271,7 +271,7 @@ Debug_ExpansionVersion:
 	.string "pokeemerald-expansion {STR_VAR_1}$"
 
 Debug_EventScript_Steven_Multi::
-	call MossdeepCity_SpaceCenter_2F_EventScript_ChoosePartyForMultiBattle
+	call MossdeepCity_SpaceCentre_2F_EventScript_ChoosePartyForMultiBattle
 	release
 	end
 

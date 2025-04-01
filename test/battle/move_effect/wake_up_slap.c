@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffectArg_Status(MOVE_WAKE_UP_SLAP) == STATUS1_SLEEP);
 }
 
-SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralyzed pokemons behind substitutes or get increased power")
+SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralysed pokemons behind substitutes or get increased power")
 {
     u32 ability;
     PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }

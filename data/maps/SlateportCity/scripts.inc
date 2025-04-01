@@ -315,15 +315,15 @@ SlateportCity_EventScript_MarketSign::
 	msgbox SlateportCity_Text_MarketSign, MSGBOX_SIGN
 	end
 
-SlateportCity_EventScript_HarborSign::
+SlateportCity_EventScript_HarbourSign::
 	lockall
-	goto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_EventScript_HarborSignFerryComplete
-	msgbox SlateportCity_Text_HarborFerryUnderConstruction, MSGBOX_DEFAULT
+	goto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_EventScript_HarbourSignFerryComplete
+	msgbox SlateportCity_Text_HarbourFerryUnderConstruction, MSGBOX_DEFAULT
 	releaseall
 	end
 
-SlateportCity_EventScript_HarborSignFerryComplete::
-	msgbox SlateportCity_Text_HarborSign, MSGBOX_DEFAULT
+SlateportCity_EventScript_HarbourSignFerryComplete::
+	msgbox SlateportCity_Text_HarbourSign, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -605,19 +605,19 @@ SlateportCity_EventScript_CaptStern::
 	waitmovement 0
 	applymovement LOCALID_CAPT_STERN, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	msgbox SlateportCity_Text_FromHarborTryingToTakeSub, MSGBOX_DEFAULT
+	msgbox SlateportCity_Text_FromHarbourTryingToTakeSub, MSGBOX_DEFAULT
 	msgbox SlateportCity_Text_PleaseComeWithMe, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_CAPT_STERN, SlateportCity_Movement_SternEnterHarbor
-	applymovement OBJ_EVENT_ID_PLAYER, SlateportCity_Movement_PlayerEnterHarbor
+	applymovement LOCALID_CAPT_STERN, SlateportCity_Movement_SternEnterHarbour
+	applymovement OBJ_EVENT_ID_PLAYER, SlateportCity_Movement_PlayerEnterHarbour
 	waitmovement 0
 	removeobject LOCALID_CAPT_STERN
-	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_CAPTAIN_STERN
-	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_SUBMARINE_SHADOW
-	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_AQUA_GRUNT
-	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_ARCHIE
+	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOUR_CAPTAIN_STERN
+	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOUR_SUBMARINE_SHADOW
+	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOUR_AQUA_GRUNT
+	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOUR_ARCHIE
 	setvar VAR_SLATEPORT_CITY_STATE, 2
-	warp MAP_SLATEPORT_CITY_HARBOR, 11, 14
+	warp MAP_SLATEPORT_CITY_HARBOUR, 11, 14
 	waitstate
 	releaseall
 	end
@@ -678,7 +678,7 @@ SlateportCity_Movement_Unused:
 	walk_in_place_faster_up
 	step_end
 
-SlateportCity_Movement_SternEnterHarbor:
+SlateportCity_Movement_SternEnterHarbour:
 	walk_right
 	walk_up
 	walk_up
@@ -695,7 +695,7 @@ SlateportCity_Movement_SternWatchGabbyAndTyExit:
 	walk_left
 	step_end
 
-SlateportCity_Movement_PlayerEnterHarbor:
+SlateportCity_Movement_PlayerEnterHarbour:
 	walk_in_place_faster_right
 	delay_16
 	delay_16
@@ -1211,8 +1211,8 @@ SlateportCity_Text_SternWhatWasAllThat:
 	.string "a megaphone…\p"
 	.string "Where did it come from?$"
 
-SlateportCity_Text_FromHarborTryingToTakeSub:
-	.string "It's from the HARBOR!\p"
+SlateportCity_Text_FromHarbourTryingToTakeSub:
+	.string "It's from the HARBOUR!\p"
 	.string "The submarine!\n"
 	.string "They're trying to take it!$"
 
@@ -1239,7 +1239,7 @@ SlateportCity_Text_SternsShipyardFerryComplete:
 	.string "STERN'S SHIPYARD\p"
 	.string "“Boarding of the SLATEPORT-LILYCOVE\n"
 	.string "ferry S.S. TIDAL is handled at the\l"
-	.string "HARBOR.”$"
+	.string "HARBOUR.”$"
 
 SlateportCity_Text_PokemonFanClubSign:
 	.string "POKéMON FAN CLUB\n"
@@ -1259,15 +1259,15 @@ SlateportCity_Text_MarketSign:
 	.string "SLATEPORT MARKET\n"
 	.string "“Unique items found nowhere else!”$"
 
-SlateportCity_Text_HarborFerryUnderConstruction:
-	.string "SLATEPORT HARBOR\p"
+SlateportCity_Text_HarbourFerryUnderConstruction:
+	.string "SLATEPORT HARBOUR\p"
 	.string "“The ferry S.S. TIDAL is under\n"
 	.string "construction in the SHIPYARD.\p"
 	.string "“Service is scheduled to begin\n"
 	.string "shortly.”$"
 
-SlateportCity_Text_HarborSign:
-	.string "SLATEPORT HARBOR\p"
+SlateportCity_Text_HarbourSign:
+	.string "SLATEPORT HARBOUR\p"
 	.string "“Enjoy a delightful cruise on\n"
 	.string "the ferry S.S. TIDAL.”$"
 
@@ -1292,7 +1292,7 @@ SlateportCity_Text_ExplainBerries:
 
 SlateportCity_Text_ExplainBerryPowder:
 	.string "I recently had machines installed at\n"
-	.string "POKéMON CENTERS for crushing BERRIES.\p"
+	.string "POKéMON CENTRES for crushing BERRIES.\p"
 	.string "The BERRY CRUSH machines are at\n"
 	.string "the DIRECT CORNER upstairs.\p"
 	.string "Did you know?\p"

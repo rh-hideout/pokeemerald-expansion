@@ -57,7 +57,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Cheri"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 20,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -80,7 +80,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Chesto"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 80,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -103,7 +103,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Pecha"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 40,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -126,7 +126,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Rawst"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 32,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -149,7 +149,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Aspear"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 50,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -172,7 +172,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Leppa"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 28,
         .maxYield = YIELD_RATE(3, 5, 15, 22),
         .minYield = YIELD_RATE(2, 2, 2, 2),
@@ -195,11 +195,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Oran"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 35,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
-        .description1 = COMPOUND_STRING("A peculiar Berry with a mix of flavors."),
+        .description1 = COMPOUND_STRING("A peculiar Berry with a mix of flavours."),
         .description2 = COMPOUND_STRING("Berries grow in half a day."),
         .growthDuration = GROWTH_DURATION(12, 16, 24, 24, 16, 24),
         .spicy = 10,
@@ -218,11 +218,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Persim"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 47,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
-        .description1 = COMPOUND_STRING("Loves sunlight. The Berry's color"),
+        .description1 = COMPOUND_STRING("Loves sunlight. The Berry's colour"),
         .description2 = COMPOUND_STRING("grows vivid when exposed to the sun."),
         .growthDuration = GROWTH_DURATION(12, 16, 24, 24, 16, 24),
         .spicy = 10,
@@ -241,7 +241,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Lum"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 34,
         .maxYield = YIELD_RATE(2, 5, 20, 18),
         .minYield = YIELD_RATE(1, 2, 3, 2),
@@ -264,12 +264,12 @@ const struct Berry gBerries[] =
     {
         .name = _("Sitrus"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 95,
         .maxYield = YIELD_RATE(3, 5, 20, 27),
         .minYield = YIELD_RATE(2, 2, 3, 3),
         .description1 = COMPOUND_STRING("Closely related to Oran. The large"),
-        .description2 = COMPOUND_STRING("Berry has a well-rounded flavor."),
+        .description2 = COMPOUND_STRING("Berry has a well-rounded flavour."),
         .growthDuration = GROWTH_DURATION(24, 32, 48, 48, 32, 48),
         .spicy = 10,
         .dry = 10,
@@ -287,7 +287,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Figy"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 100,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -310,7 +310,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Wiki"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 115,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -333,7 +333,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Mago"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 126,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -356,7 +356,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Aguav"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 64,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -379,7 +379,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Iapapa"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 223,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -402,7 +402,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Razz"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 120,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -425,7 +425,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Bluk"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 108,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -448,7 +448,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Nanab"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 77,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -471,7 +471,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Wepear"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 74,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -494,7 +494,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Pinap"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 80,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -517,7 +517,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Pomeg"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 135,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -540,7 +540,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Kelpsy"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 150,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -563,7 +563,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Qualot"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 110,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -586,7 +586,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Hondew"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 162,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -609,7 +609,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Grepa"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 149,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -632,7 +632,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Tamato"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 200,
         .maxYield = YIELD_RATE(4, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -655,7 +655,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Cornn"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 75,
         .maxYield = YIELD_RATE(4, 10, 15, 15),
         .minYield = YIELD_RATE(2, 2, 3, 3),
@@ -678,12 +678,12 @@ const struct Berry gBerries[] =
     {
         .name = _("Magost"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 140,
         .maxYield = YIELD_RATE(4, 10, 15, 15),
         .minYield = YIELD_RATE(2, 2, 3, 3),
         .description1 = COMPOUND_STRING("A Berry that is widely said to have"),
-        .description2 = COMPOUND_STRING("a finely balanced flavor."),
+        .description2 = COMPOUND_STRING("a finely balanced flavour."),
         .growthDuration = GROWTH_DURATION(24, 24, 36, 24, 16, 24),
         .spicy = 0,
         .dry = 0,
@@ -701,7 +701,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Rabuta"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 226,
         .maxYield = YIELD_RATE(4, 10, 15, 15),
         .minYield = YIELD_RATE(2, 2, 3, 3),
@@ -724,7 +724,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Nomel"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 285,
         .maxYield = YIELD_RATE(4, 10, 15, 15),
         .minYield = YIELD_RATE(2, 2, 3, 3),
@@ -747,7 +747,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Spelon"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 133,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -770,7 +770,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Pamtre"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 244,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 3, 3, 3),
@@ -793,7 +793,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Watmel"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 250,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -816,7 +816,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Durin"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 280,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 3, 3, 3),
@@ -839,7 +839,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Belue"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 300,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -862,7 +862,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Chilan"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 34,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -885,7 +885,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Occa"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 90,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -908,7 +908,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Passho"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 33,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -931,7 +931,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Wacan"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 250,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -954,11 +954,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Rindo"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 156,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
-        .description1 = COMPOUND_STRING("This berry has a vegetable-like flavor,"),
+        .description1 = COMPOUND_STRING("This berry has a vegetable-like flavour,"),
         .description2 = COMPOUND_STRING("but is rich in health-promoting fiber."),
         .growthDuration = GROWTH_DURATION(84, 72, 108, 48, 32, 48),
         .spicy = 10,
@@ -977,12 +977,12 @@ const struct Berry gBerries[] =
     {
         .name = _("Yache"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 135,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
         .description1 = COMPOUND_STRING("This Berry has a refreshing dry and"),
-        .description2 = COMPOUND_STRING("sour flavor. Tastes better chilled."),
+        .description2 = COMPOUND_STRING("sour flavour. Tastes better chilled."),
         .growthDuration = GROWTH_DURATION(84, 72, 108, 48, 32, 48),
         .spicy = 0,
         .dry = 10,
@@ -1000,7 +1000,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Chople"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 77,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1023,12 +1023,12 @@ const struct Berry gBerries[] =
     {
         .name = _("Kebia"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 90,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
         .description1 = COMPOUND_STRING("Brilliant green on the outside, inside"),
-        .description2 = COMPOUND_STRING("it is packed with black-colored flesh."),
+        .description2 = COMPOUND_STRING("it is packed with black-coloured flesh."),
         .growthDuration = GROWTH_DURATION(84, 72, 108, 48, 32, 48),
         .spicy = 0,
         .dry = 15,
@@ -1046,7 +1046,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Shuca"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 42,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1069,7 +1069,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Coba"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 278,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1092,7 +1092,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Payapa"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 252,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1115,7 +1115,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Tanga"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 42,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1138,12 +1138,12 @@ const struct Berry gBerries[] =
     {
         .name = _("Charti"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 28,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
         .description1 = COMPOUND_STRING("Often used for pickles because of its"),
-        .description2 = COMPOUND_STRING("dry flavor. Sometimes eaten raw."),
+        .description2 = COMPOUND_STRING("dry flavour. Sometimes eaten raw."),
         .growthDuration = GROWTH_DURATION(84, 72, 108, 48, 32, 48),
         .spicy = 10,
         .dry = 20,
@@ -1161,7 +1161,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Kasib"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 144,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1184,7 +1184,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Haban"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 23,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1207,7 +1207,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Colbur"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 39,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1230,11 +1230,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Babiri"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 265,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
-        .description1 = COMPOUND_STRING("Very tough with a strong flavor. It"),
+        .description1 = COMPOUND_STRING("Very tough with a strong flavour. It"),
         .description2 = COMPOUND_STRING("was used to make medicine in the past."),
         .growthDuration = GROWTH_DURATION(84, 72, 108, 48, 32, 48),
         .spicy = 25,
@@ -1253,7 +1253,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Roseli"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 35,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1276,11 +1276,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Liechi"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 111,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
-        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumored to"),
+        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumoured to"),
         .description2 = COMPOUND_STRING("contain the power of the sea."),
         .growthDuration = GROWTH_DURATION(96, 96, 144, 96, 48, 72),
         .spicy = 40,
@@ -1299,11 +1299,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Ganlon"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 33,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
-        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumored to"),
+        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumoured to"),
         .description2 = COMPOUND_STRING("contain the power of the land."),
         .growthDuration = GROWTH_DURATION(96, 96, 144, 96, 48, 72),
         .spicy = 0,
@@ -1322,11 +1322,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Salac"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 95,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
-        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumored to"),
+        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumoured to"),
         .description2 = COMPOUND_STRING("contain the power of the sky."),
         .growthDuration = GROWTH_DURATION(96, 96, 144, 96, 48, 72),
         .spicy = 0,
@@ -1345,11 +1345,11 @@ const struct Berry gBerries[] =
     {
         .name = _("Petaya"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_PINK,
+        .colour = BERRY_COLOUR_PINK,
         .size = 237,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
-        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumored to"),
+        .description1 = COMPOUND_STRING("A mysterious Berry. It is rumoured to"),
         .description2 = COMPOUND_STRING("contain the power of all living things."),
         .growthDuration = GROWTH_DURATION(96, 96, 144, 96, 48, 72),
         .spicy = 40,
@@ -1368,7 +1368,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Apicot"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 75,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1391,7 +1391,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Lansat"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 97,
         .maxYield = YIELD_RATE(2, 5, 5, 7),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1414,7 +1414,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Starf"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 153,
         .maxYield = YIELD_RATE(2, 5, 5, 7),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1437,7 +1437,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Enigma"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 155,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1460,7 +1460,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Micle"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_GREEN,
+        .colour = BERRY_COLOUR_GREEN,
         .size = 41,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1483,7 +1483,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Custap"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_RED,
+        .colour = BERRY_COLOUR_RED,
         .size = 267,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1506,7 +1506,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Jaboca"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 33,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1529,7 +1529,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Rowap"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 52,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1552,7 +1552,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Kee"),
         .firmness = BERRY_FIRMNESS_UNKNOWN,
-        .color = BERRY_COLOR_YELLOW,
+        .colour = BERRY_COLOUR_YELLOW,
         .size = 0,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1575,7 +1575,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Marnga"), // "Maranga" is too long
         .firmness = BERRY_FIRMNESS_UNKNOWN,
-        .color = BERRY_COLOR_BLUE,
+        .colour = BERRY_COLOUR_BLUE,
         .size = 0,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1598,7 +1598,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Enigma"),
         .firmness = BERRY_FIRMNESS_UNKNOWN,
-        .color = BERRY_COLOR_PURPLE,
+        .colour = BERRY_COLOUR_PURPLE,
         .size = 0,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -2446,24 +2446,24 @@ static u16 GetBerryPestSpecies(u8 berryId)
 {
 #if OW_BERRY_PESTS == TRUE
     const struct Berry *berry = GetBerryInfo(berryId);
-    switch(berry->color)
+    switch(berry->colour)
     {
-        case BERRY_COLOR_RED:
+        case BERRY_COLOUR_RED:
             return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
             break;
-        case BERRY_COLOR_BLUE:
+        case BERRY_COLOUR_BLUE:
             return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
             break;
-        case BERRY_COLOR_PURPLE:
+        case BERRY_COLOUR_PURPLE:
             return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
             break;
-        case BERRY_COLOR_GREEN:
+        case BERRY_COLOUR_GREEN:
             return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
             break;
-        case BERRY_COLOR_YELLOW:
+        case BERRY_COLOUR_YELLOW:
             return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
             break;
-        case BERRY_COLOR_PINK:
+        case BERRY_COLOUR_PINK:
             return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
             break;
     }

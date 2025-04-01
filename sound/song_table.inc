@@ -357,7 +357,7 @@ gSongTable::
 	song mus_victory_wild, 0, 0
 	song mus_victory_gym_leader, 0, 0
 	song mus_victory_league, 0, 0
-	song mus_c_comm_center, 0, 0
+	song mus_c_comm_centre, 0, 0
 	song mus_gsc_pewter, 0, 0
 	song mus_c_vs_legend_beast, 0, 0
 	song mus_route101, 0, 0
@@ -401,7 +401,7 @@ gSongTable::
 	song mus_encounter_rich, 0, 0
 	song mus_verdanturf, 0, 0
 	song mus_rustboro, 0, 0
-	song mus_poke_center, 0, 0
+	song mus_poke_centre, 0, 0
 	song mus_route104, 0, 0
 	song mus_route119, 0, 0
 	song mus_cycling, 0, 0
@@ -516,7 +516,7 @@ gSongTable::
 	song mus_rg_pallet, 0, 0
 	song mus_rg_oak_lab, 0, 0
 	song mus_rg_oak, 0, 0
-	song mus_rg_poke_center, 0, 0
+	song mus_rg_poke_centre, 0, 0
 	song mus_rg_ss_anne, 0, 0
 	song mus_rg_surf, 0, 0
 	song mus_rg_poke_tower, 0, 0
@@ -541,7 +541,7 @@ gSongTable::
 	song mus_rg_new_game_exit, 0, 0
 	song mus_rg_poke_jump, 0, 0
 	song mus_rg_union_room, 0, 0
-	song mus_rg_net_center, 0, 0
+	song mus_rg_net_centre, 0, 0
 	song mus_rg_mystery_gift, 0, 0
 	song mus_rg_berry_pick, 0, 0
 	song mus_rg_sevii_cave, 0, 0

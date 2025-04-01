@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffectArg_Status(MOVE_SMELLING_SALTS) == STATUS1_PARALYSIS);
 }
 
-SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind substitutes or get increased power")
+SINGLE_BATTLE_TEST("Smelling Salts does not cure paralysed pokemons behind substitutes or get increased power")
 {
     u32 ability;
     PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind subst
     }
 }
 
-SINGLE_BATTLE_TEST("Smelling Salts get incread power vs. paralyzed targets")
+SINGLE_BATTLE_TEST("Smelling Salts get incread power vs. paralysed targets")
 {
     u32 status1;
     PARAMETRIZE { status1 = STATUS1_PARALYSIS; }

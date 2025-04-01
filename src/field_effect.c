@@ -17,7 +17,7 @@
 #include "malloc.h"
 #include "mirage_tower.h"
 #include "menu.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -34,7 +34,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
 #include "constants/flags.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/map_types.h"
@@ -46,13 +46,13 @@ EWRAM_DATA bool8 gSkipShowMonAnim = FALSE;
 
 // Static type declarations
 
-static void Task_PokecenterHeal(u8 taskId);
-static void PokecenterHealEffect_Init(struct Task *);
-static void PokecenterHealEffect_WaitForBallPlacement(struct Task *);
-static void PokecenterHealEffect_WaitForBallFlashing(struct Task *);
-static void PokecenterHealEffect_WaitForSoundAndEnd(struct Task *);
-static u8 CreatePokecenterMonitorSprite(s16, s16);
-static void SpriteCB_PokecenterMonitor(struct Sprite *);
+static void Task_PokecentreHeal(u8 taskId);
+static void PokecentreHealEffect_Init(struct Task *);
+static void PokecentreHealEffect_WaitForBallPlacement(struct Task *);
+static void PokecentreHealEffect_WaitForBallFlashing(struct Task *);
+static void PokecentreHealEffect_WaitForSoundAndEnd(struct Task *);
+static u8 CreatePokecentreMonitorSprite(s16, s16);
+static void SpriteCB_PokecentreMonitor(struct Sprite *);
 
 static void Task_HallOfFameRecord(u8 taskId);
 static void HallOfFameRecordEffect_Init(struct Task *);
@@ -258,8 +258,8 @@ static const u16 sNewGameBirch_Pal[16] = INCBIN_U16("graphics/birch_speech/birch
 
 static const u32 sPokeballGlow_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/pokeball_glow.gbapal");
-static const u32 sPokecenterMonitor0_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/0.4bpp");
-static const u32 sPokecenterMonitor1_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/1.4bpp");
+static const u32 sPokecentreMonitor0_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecentre_monitor/0.4bpp");
+static const u32 sPokecentreMonitor1_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecentre_monitor/1.4bpp");
 static const u32 sHofMonitorBig_Gfx[] = INCBIN_U32("graphics/field_effects/pics/hof_monitor_big.4bpp");
 static const u8 sHofMonitorSmall_Gfx[] = INCBIN_U8("graphics/field_effects/pics/hof_monitor_small.4bpp");
 static const u16 sHofMonitor_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/hof_monitor.gbapal");
@@ -399,10 +399,10 @@ static const struct SpriteFrameImage sPicTable_PokeballGlow[] =
     obj_frame_tiles(sPokeballGlow_Gfx)
 };
 
-static const struct SpriteFrameImage sPicTable_PokecenterMonitor[] =
+static const struct SpriteFrameImage sPicTable_PokecentreMonitor[] =
 {
-    obj_frame_tiles(sPokecenterMonitor0_Gfx),
-    obj_frame_tiles(sPokecenterMonitor1_Gfx)
+    obj_frame_tiles(sPokecentreMonitor0_Gfx),
+    obj_frame_tiles(sPokecentreMonitor1_Gfx)
 };
 
 static const struct SpriteFrameImage sPicTable_HofMonitorBig[] =
@@ -420,7 +420,7 @@ static const struct SpriteFrameImage sPicTable_HofMonitorSmall[] =
 [2 ][] <-3
    ^-- Origin
 */
-static const struct Subsprite sSubsprites_PokecenterMonitor[] =
+static const struct Subsprite sSubsprites_PokecentreMonitor[] =
 {
     {
         .x = -12,
@@ -456,7 +456,7 @@ static const struct Subsprite sSubsprites_PokecenterMonitor[] =
     }
 };
 
-static const struct SubspriteTable sSubspriteTable_PokecenterMonitor = subsprite_table(sSubsprites_PokecenterMonitor);
+static const struct SubspriteTable sSubspriteTable_PokecentreMonitor = subsprite_table(sSubsprites_PokecentreMonitor);
 
 /*
 [0_____][1_____]    24x16
@@ -520,7 +520,7 @@ static const union AnimCmd sAnim_Flicker[] =
     ANIMCMD_END
 };
 
-// Flicker on and off, for the Pokéballs / monitors during the PokéCenter heal effect
+// Flicker on and off, for the Pokéballs / monitors during the PokéCentre heal effect
 static const union AnimCmd *const sAnims_Flicker[] =
 {
     sAnim_Static,
@@ -543,15 +543,15 @@ static const struct SpriteTemplate sSpriteTemplate_PokeballGlow =
     .callback = SpriteCB_PokeballGlow
 };
 
-static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor =
+static const struct SpriteTemplate sSpriteTemplate_PokecentreMonitor =
 {
     .tileTag = TAG_NONE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_0,
     .oam = &sOam_16x16,
     .anims = sAnims_Flicker,
-    .images = sPicTable_PokecenterMonitor,
+    .images = sPicTable_PokecentreMonitor,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_PokecenterMonitor
+    .callback = SpriteCB_PokecentreMonitor
 };
 
 static const struct SpriteTemplate sSpriteTemplate_HofMonitorBig =
@@ -576,12 +576,12 @@ static const struct SpriteTemplate sSpriteTemplate_HofMonitorSmall =
     .callback = SpriteCB_HallOfFameMonitor
 };
 
-static void (*const sPokecenterHealEffectFuncs[])(struct Task *) =
+static void (*const sPokecentreHealEffectFuncs[])(struct Task *) =
 {
-    PokecenterHealEffect_Init,
-    PokecenterHealEffect_WaitForBallPlacement,
-    PokecenterHealEffect_WaitForBallFlashing,
-    PokecenterHealEffect_WaitForSoundAndEnd
+    PokecentreHealEffect_Init,
+    PokecentreHealEffect_WaitForBallPlacement,
+    PokecentreHealEffect_WaitForBallFlashing,
+    PokecentreHealEffect_WaitForSoundAndEnd
 };
 
 static void (*const sHallOfFameRecordEffectFuncs[])(struct Task *) =
@@ -970,45 +970,45 @@ void FreeResourcesAndDestroySprite(struct Sprite *sprite, u8 spriteId)
 void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 {
     int curRed, curGreen, curBlue;
-    u16 color = gPlttBufferUnfaded[i];
+    u16 colour = gPlttBufferUnfaded[i];
 
-    curRed   = (color & RGB_RED);
-    curGreen = (color & RGB_GREEN) >>  5;
-    curBlue  = (color & RGB_BLUE)  >> 10;
+    curRed   = (colour & RGB_RED);
+    curGreen = (colour & RGB_GREEN) >>  5;
+    curBlue  = (colour & RGB_BLUE)  >> 10;
 
     curRed   += (((0x1F - curRed)   * r) >> 4);
     curGreen += (((0x1F - curGreen) * g) >> 4);
     curBlue  += (((0x1F - curBlue)  * b) >> 4);
 
-    color  = curRed;
-    color |= (curGreen <<  5);
-    color |= (curBlue  << 10);
+    colour  = curRed;
+    colour |= (curGreen <<  5);
+    colour |= (curBlue  << 10);
 
-    gPlttBufferFaded[i] = color;
+    gPlttBufferFaded[i] = colour;
 }
 
 // r, g, b are between 0 and 16
 void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 {
     int curRed, curGreen, curBlue;
-    u16 color = gPlttBufferUnfaded[i];
+    u16 colour = gPlttBufferUnfaded[i];
 
-    curRed   = (color & RGB_RED);
-    curGreen = (color & RGB_GREEN) >>  5;
-    curBlue  = (color & RGB_BLUE)  >> 10;
+    curRed   = (colour & RGB_RED);
+    curGreen = (colour & RGB_GREEN) >>  5;
+    curBlue  = (colour & RGB_BLUE)  >> 10;
 
     curRed   -= ((curRed   * r) >> 4);
     curGreen -= ((curGreen * g) >> 4);
     curBlue  -= ((curBlue  * b) >> 4);
 
-    color  = curRed;
-    color |= (curGreen <<  5);
-    color |= (curBlue  << 10);
+    colour  = curRed;
+    colour |= (curGreen <<  5);
+    colour |= (curBlue  << 10);
 
-    gPlttBufferFaded[i] = color;
+    gPlttBufferFaded[i] = colour;
 }
 
-// Task data for Task_PokecenterHeal and Task_HallOfFameRecord
+// Task data for Task_PokecentreHeal and Task_HallOfFameRecord
 #define tState           data[0]
 #define tNumMons         data[1]
 #define tFirstBallX      data[2]
@@ -1030,13 +1030,13 @@ void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 // Sprite data for SpriteCB_PokeballGlow
 #define sEffectSpriteId data[0]
 
-bool8 FldEff_PokecenterHeal(void)
+bool8 FldEff_PokecentreHeal(void)
 {
     u32 nPokemon;
     struct Task *task;
 
     nPokemon = (OW_IGNORE_EGGS_ON_HEAL <= GEN_3) ? CalculatePlayerPartyCount() : CountPartyNonEggMons();
-    task = &gTasks[CreateTask(Task_PokecenterHeal, 0xff)];
+    task = &gTasks[CreateTask(Task_PokecentreHeal, 0xff)];
     task->tNumMons = nPokemon;
     task->tFirstBallX = 93;
     task->tFirstBallY = 36;
@@ -1045,21 +1045,21 @@ bool8 FldEff_PokecenterHeal(void)
     return FALSE;
 }
 
-static void Task_PokecenterHeal(u8 taskId)
+static void Task_PokecentreHeal(u8 taskId)
 {
     struct Task *task;
     task = &gTasks[taskId];
-    sPokecenterHealEffectFuncs[task->tState](task);
+    sPokecentreHealEffectFuncs[task->tState](task);
 }
 
-static void PokecenterHealEffect_Init(struct Task *task)
+static void PokecentreHealEffect_Init(struct Task *task)
 {
     task->tState++;
     task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, TRUE);
-    task->tMonitorSpriteId = CreatePokecenterMonitorSprite(task->tMonitorX, task->tMonitorY);
+    task->tMonitorSpriteId = CreatePokecentreMonitorSprite(task->tMonitorX, task->tMonitorY);
 }
 
-static void PokecenterHealEffect_WaitForBallPlacement(struct Task *task)
+static void PokecentreHealEffect_WaitForBallPlacement(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 1)
     {
@@ -1068,7 +1068,7 @@ static void PokecenterHealEffect_WaitForBallPlacement(struct Task *task)
     }
 }
 
-static void PokecenterHealEffect_WaitForBallFlashing(struct Task *task)
+static void PokecentreHealEffect_WaitForBallFlashing(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 4)
     {
@@ -1076,13 +1076,13 @@ static void PokecenterHealEffect_WaitForBallFlashing(struct Task *task)
     }
 }
 
-static void PokecenterHealEffect_WaitForSoundAndEnd(struct Task *task)
+static void PokecentreHealEffect_WaitForSoundAndEnd(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 6)
     {
         DestroySprite(&gSprites[task->tBallSpriteId]);
-        FieldEffectActiveListRemove(FLDEFF_POKECENTER_HEAL);
-        DestroyTask(FindTaskIdByFunc(Task_PokecenterHeal));
+        FieldEffectActiveListRemove(FLDEFF_POKECENTRE_HEAL);
+        DestroyTask(FindTaskIdByFunc(Task_PokecentreHeal));
     }
 }
 
@@ -1283,19 +1283,19 @@ static void SpriteCB_PokeballGlow(struct Sprite *sprite)
     }
 }
 
-static u8 CreatePokecenterMonitorSprite(s16 x, s16 y)
+static u8 CreatePokecentreMonitorSprite(s16 x, s16 y)
 {
     u8 spriteId;
     struct Sprite *sprite;
-    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor, x, y, 0);
+    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecentreMonitor, x, y, 0);
     sprite = &gSprites[spriteId];
     sprite->oam.priority = 2;
     sprite->invisible = TRUE;
-    SetSubspriteTables(sprite, &sSubspriteTable_PokecenterMonitor);
+    SetSubspriteTables(sprite, &sSubspriteTable_PokecentreMonitor);
     return spriteId;
 }
 
-static void SpriteCB_PokecenterMonitor(struct Sprite *sprite)
+static void SpriteCB_PokecentreMonitor(struct Sprite *sprite)
 {
     if (sprite->data[0] != 0)
     {
@@ -1491,10 +1491,10 @@ static bool8 FallWarpEffect_WaitWeather(struct Task *task)
 static bool8 FallWarpEffect_StartFall(struct Task *task)
 {
     struct Sprite *sprite;
-    s16 centerToCornerVecY;
+    s16 centreToCornerVecY;
     sprite = &gSprites[gPlayerAvatar.spriteId];
-    centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
-    sprite->y2 = -(sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY + centerToCornerVecY);
+    centreToCornerVecY = -(sprite->centreToCornerVecY << 1);
+    sprite->y2 = -(sprite->y + sprite->centreToCornerVecY + gSpriteCoordOffsetY + centreToCornerVecY);
     task->tFallOffset = 1;
     task->tTotalFall = 0;
     gObjectEvents[gPlayerAvatar.objectEventId].invisible = FALSE;
@@ -1591,12 +1591,12 @@ static void HideFollowerForFieldEffect(void)
     ObjectEventSetHeldMovement(followerObj, MOVEMENT_ACTION_ENTER_POKEBALL);
 }
 
-void StartEscalatorWarp(u8 metatileBehavior, u8 priority)
+void StartEscalatorWarp(u8 metatileBehaviour, u8 priority)
 {
     u8 taskId;
     taskId = CreateTask(Task_EscalatorWarpOut, priority);
     gTasks[taskId].tGoingUp = FALSE;
-    if (metatileBehavior == MB_UP_ESCALATOR)
+    if (metatileBehaviour == MB_UP_ESCALATOR)
     {
         gTasks[taskId].tGoingUp = TRUE;
     }
@@ -1744,27 +1744,27 @@ static bool8 EscalatorWarpIn_Init(struct Task *task)
     struct ObjectEvent *objectEvent;
     s16 x;
     s16 y;
-    u8 behavior;
+    u8 behaviour;
     CameraObjectFreeze();
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(DIR_EAST));
     PlayerGetDestCoords(&x, &y);
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    behaviour = MapGridGetMetatileBehaviourAt(x, y);
     task->tState++;
     task->data[1] = 16;
 
-    if (behavior == MB_DOWN_ESCALATOR)
+    if (behaviour == MB_DOWN_ESCALATOR)
     {
         // If dest is down escalator tile, player is riding up
-        behavior = TRUE;
+        behaviour = TRUE;
         task->tState = 3; // jump to EscalatorWarpIn_Up_Init
     }
     else // MB_UP_ESCALATOR
     {
         // If dest is up escalator tile, player is riding down
-        behavior = FALSE;
+        behaviour = FALSE;
     }
-    StartEscalator(behavior);
+    StartEscalator(behaviour);
     return TRUE;
 }
 
@@ -1915,7 +1915,7 @@ static bool8 WaterfallFieldEffect_ContinueRideOrEnd(struct Task *task, struct Ob
     if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
         return FALSE;
 
-    if (MetatileBehavior_IsWaterfall(objectEvent->currentMetatileBehavior))
+    if (MetatileBehaviour_IsWaterfall(objectEvent->currentMetatileBehaviour))
     {
         // Still ascending waterfall, back to WaterfallFieldEffect_RideUp
         task->tState = 3;
@@ -1971,7 +1971,7 @@ static bool8 DiveFieldEffect_TryWarp(struct Task *task)
     // Wait for show mon first
     if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
     {
-        TryDoDiveWarp(&mapPosition, gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior);
+        TryDoDiveWarp(&mapPosition, gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehaviour);
         DestroyTask(FindTaskIdByFunc(Task_UseDive));
         FieldEffectActiveListRemove(FLDEFF_USE_DIVE);
     }
@@ -2031,7 +2031,7 @@ static bool8 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectEv
 
 static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    s16 centerToCornerVecY;
+    s16 centreToCornerVecY;
     SetCameraPanning(0, task->data[1]);
     if (task->data[1] = -task->data[1], ++task->data[2] <= 17)
     {
@@ -2046,8 +2046,8 @@ static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEven
     }
     if (task->data[2] > 6)
     {
-        centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
-        if (sprite->y2 > -(sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY + centerToCornerVecY))
+        centreToCornerVecY = -(sprite->centreToCornerVecY << 1);
+        if (sprite->y2 > -(sprite->y + sprite->centreToCornerVecY + gSpriteCoordOffsetY + centreToCornerVecY))
         {
             sprite->y2 -= task->data[3];
             if (task->data[3] <= 7)
@@ -2512,12 +2512,12 @@ static void Task_TeleportWarpIn(u8 taskId)
 static void TeleportWarpInFieldEffect_Init(struct Task *task)
 {
     struct Sprite *sprite;
-    s16 centerToCornerVecY;
+    s16 centreToCornerVecY;
     if (IsWeatherNotFadingIn())
     {
         sprite = &gSprites[gPlayerAvatar.spriteId];
-        centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
-        sprite->y2 = -(sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY + centerToCornerVecY);
+        centreToCornerVecY = -(sprite->centreToCornerVecY << 1);
+        sprite->y2 = -(sprite->y + sprite->centreToCornerVecY + gSpriteCoordOffsetY + centreToCornerVecY);
         gObjectEvents[gPlayerAvatar.objectEventId].invisible = FALSE;
         task->data[0]++;
         task->data[1] = 8;
@@ -3419,7 +3419,7 @@ static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite)
             sprite->sAnimCompleted++;
             sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
             FreeOamMatrix(sprite->oam.matrixNum);
-            CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
+            CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
         }
     }
 }

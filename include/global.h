@@ -84,7 +84,7 @@
 // Extracts the lower 16 bits of a 32-bit number
 #define LOHALF(n) ((n) & 0xFFFF)
 
-// There are many quirks in the source code which have overarching behavioral differences from
+// There are many quirks in the source code which have overarching behavioural differences from
 // a number of other files. For example, diploma.c seems to declare rodata before each use while
 // other files declare out of order and must be at the beginning. There are also a number of
 // macros which differ from one file to the next due to the method of obtaining the result, such
@@ -621,7 +621,7 @@ struct ItemSlot
 
 struct Pokeblock
 {
-    u8 color;
+    u8 colour;
     u8 spicy;
     u8 dry;
     u8 sweet;
@@ -837,14 +837,14 @@ struct LilycoveLadyQuiz
     /*0x02D*/ u8 language;
 };
 
-struct LilycoveLadyFavor
+struct LilycoveLadyFavour
 {
     /*0x000*/ u8 id;
     /*0x001*/ u8 state;
     /*0x002*/ bool8 likedItem;
     /*0x003*/ u8 numItemsGiven;
     /*0x004*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
-    /*0x00C*/ u8 favorId;
+    /*0x00C*/ u8 favourId;
     /*0x00D*/ //u8 padding1;
     /*0x00E*/ u16 itemId;
     /*0x010*/ u16 bestItem;
@@ -867,7 +867,7 @@ struct LilycoveLadyContest
 typedef union // 3b58
 {
     struct LilycoveLadyQuiz quiz;
-    struct LilycoveLadyFavor favor;
+    struct LilycoveLadyFavour favour;
     struct LilycoveLadyContest contest;
     u8 id;
     u8 filler[0x40];
@@ -875,7 +875,7 @@ typedef union // 3b58
 
 struct WaldaPhrase
 {
-    u16 colors[2]; // Background, foreground.
+    u16 colours[2]; // Background, foreground.
     u8 text[16];
     u8 iconId;
     u8 patternId;

@@ -53,9 +53,9 @@ static void WindowFunc_DrawSignFrame(u8, u8, u8, u8, u8, u8);
 static inline void *GetWindowFunc_DialogueFrame(void);
 static void WindowFunc_DrawDialogueFrame(u8, u8, u8, u8, u8, u8);
 static void WindowFunc_ClearStdWindowAndFrame(u8, u8, u8, u8, u8, u8);
-static void WindowFunc_ClearDialogWindowAndFrame(u8, u8, u8, u8, u8, u8);
-static void WindowFunc_DrawDialogFrameWithCustomTileAndPalette(u8, u8, u8, u8, u8, u8);
-static void WindowFunc_ClearDialogWindowAndFrameNullPalette(u8, u8, u8, u8, u8, u8);
+static void WindowFunc_ClearDialogueWindowAndFrame(u8, u8, u8, u8, u8, u8);
+static void WindowFunc_DrawDialogueFrameWithCustomTileAndPalette(u8, u8, u8, u8, u8, u8);
+static void WindowFunc_ClearDialogueWindowAndFrameNullPalette(u8, u8, u8, u8, u8, u8);
 static void WindowFunc_DrawStdFrameWithCustomTileAndPalette(u8, u8, u8, u8, u8, u8);
 static void WindowFunc_ClearStdWindowAndFrameToTransparent(u8, u8, u8, u8, u8, u8);
 static void task_free_buf_after_copying_tile_data_to_vram(u8 taskId);
@@ -107,7 +107,7 @@ static const struct WindowTemplate sYesNo_WindowTemplates =
 };
 
 static const u16 sHofPC_TopBar_Pal[] = INCBIN_U16("graphics/interface/hof_pc_topbar.gbapal");
-static const u8 sTextColors[] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+static const u8 sTextColours[] = { TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY };
 
 // Table of move info icon offsets in graphics/interface/menu_info.png
 static const struct MenuInfoIcon sMenuInfoIcons[] =
@@ -170,7 +170,7 @@ u16 RunTextPrintersAndIsPrinter0Active(void)
     return IsTextPrinterActive(0);
 }
 
-u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 fgColor, u8 bgColor, u8 shadowColor)
+u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 fgColour, u8 bgColour, u8 shadowColour)
 {
     struct TextPrinterTemplate printer;
 
@@ -184,9 +184,9 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
     printer.unk = 0;
-    printer.fgColor = fgColor;
-    printer.bgColor = bgColor;
-    printer.shadowColor = shadowColor;
+    printer.fgColour = fgColour;
+    printer.bgColour = bgColour;
+    printer.shadowColour = shadowColour;
 
     gTextFlags.useAlternateDownArrow = 0;
     return AddTextPrinter(&printer, speed, callback);
@@ -196,19 +196,19 @@ void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
     void (*callback)(struct TextPrinterTemplate *, u16) = NULL;
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
 }
 
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, speed, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, speed, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
 }
 
 void LoadMessageBoxAndBorderGfx(void)
@@ -349,9 +349,9 @@ void DrawStdWindowFrame(u8 windowId, bool8 copyToVram)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
-void ClearDialogWindowAndFrame(u8 windowId, bool8 copyToVram)
+void ClearDialogueWindowAndFrame(u8 windowId, bool8 copyToVram)
 {
-    CallWindowFunction(windowId, WindowFunc_ClearDialogWindowAndFrame);
+    CallWindowFunction(windowId, WindowFunc_ClearDialogueWindowAndFrame);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     ClearWindowTilemap(windowId);
     if (copyToVram == TRUE)
@@ -534,7 +534,7 @@ static void WindowFunc_ClearStdWindowAndFrame(u8 bg, u8 tilemapLeft, u8 tilemapT
     FillBgTilemapBufferRect(bg, 0, tilemapLeft - 1, tilemapTop - 1, width + 2, height + 2, STD_WINDOW_PALETTE_NUM);
 }
 
-static void WindowFunc_ClearDialogWindowAndFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+static void WindowFunc_ClearDialogueWindowAndFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
     FillBgTilemapBufferRect(bg, 0, tilemapLeft - 3, tilemapTop - 1, width + 6, height + 2, STD_WINDOW_PALETTE_NUM);
 }
@@ -547,7 +547,7 @@ void SetStandardWindowBorderStyle(u8 windowId, bool8 copyToVram)
 void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram)
 {
     LoadMessageBoxGfx(windowId, DLG_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(DLG_WINDOW_PALETTE_NUM));
-    DrawDialogFrameWithCustomTileAndPalette(windowId, copyToVram, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM);
+    DrawDialogueFrameWithCustomTileAndPalette(windowId, copyToVram, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM);
 }
 
 void Menu_LoadStdPal(void)
@@ -565,11 +565,11 @@ static UNUSED const u16* Menu_GetStdPal(void)
     return gStandardMenuPalette;
 }
 
-static u16 UNUSED Menu_GetStdPalColor(u8 colorNum)
+static u16 UNUSED Menu_GetStdPalColour(u8 colourNum)
 {
-    if (colorNum > 15)
-        colorNum = 0;
-    return gStandardMenuPalette[colorNum];
+    if (colourNum > 15)
+        colourNum = 0;
+    return gStandardMenuPalette[colourNum];
 }
 
 void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback)
@@ -626,7 +626,7 @@ void RemoveStartMenuWindow(void)
     }
 }
 
-static u16 UNUSED GetDialogFrameBaseTileNum(void)
+static u16 UNUSED GetDialogueFrameBaseTileNum(void)
 {
     return DLG_WINDOW_BASE_TILE_NUM;
 }
@@ -665,7 +665,7 @@ void RemoveMapNamePopUpWindow(void)
 void AddTextPrinterWithCallbackForMessage(bool8 canSpeedUp, void (*callback)(struct TextPrinterTemplate *, u16))
 {
     gTextFlags.canABSpeedUpPrint = canSpeedUp;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
 }
 
 void EraseFieldMessageBox(bool8 copyToVram)
@@ -675,29 +675,29 @@ void EraseFieldMessageBox(bool8 copyToVram)
         CopyBgTilemapBufferToVram(0);
 }
 
-void DrawDialogFrameWithCustomTileAndPalette(u8 windowId, bool8 copyToVram, u16 tileNum, u8 paletteNum)
+void DrawDialogueFrameWithCustomTileAndPalette(u8 windowId, bool8 copyToVram, u16 tileNum, u8 paletteNum)
 {
     sTileNum = tileNum;
     sPaletteNum = paletteNum;
-    CallWindowFunction(windowId, WindowFunc_DrawDialogFrameWithCustomTileAndPalette);
+    CallWindowFunction(windowId, WindowFunc_DrawDialogueFrameWithCustomTileAndPalette);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     PutWindowTilemap(windowId);
     if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
-static void UNUSED DrawDialogFrameWithCustomTile(u8 windowId, bool8 copyToVram, u16 tileNum)
+static void UNUSED DrawDialogueFrameWithCustomTile(u8 windowId, bool8 copyToVram, u16 tileNum)
 {
     sTileNum = tileNum;
     sPaletteNum = GetWindowAttribute(windowId, WINDOW_PALETTE_NUM);
-    CallWindowFunction(windowId, WindowFunc_DrawDialogFrameWithCustomTileAndPalette);
+    CallWindowFunction(windowId, WindowFunc_DrawDialogueFrameWithCustomTileAndPalette);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     PutWindowTilemap(windowId);
     if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
-static void WindowFunc_DrawDialogFrameWithCustomTileAndPalette(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+static void WindowFunc_DrawDialogueFrameWithCustomTileAndPalette(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
     FillBgTilemapBufferRect(bg,
                             sTileNum + 1,
@@ -792,17 +792,17 @@ static void WindowFunc_DrawDialogFrameWithCustomTileAndPalette(u8 bg, u8 tilemap
                             sPaletteNum);
 }
 
-void ClearDialogWindowAndFrameToTransparent(u8 windowId, bool8 copyToVram)
+void ClearDialogueWindowAndFrameToTransparent(u8 windowId, bool8 copyToVram)
 {
     // The palette slot doesn't matter, since the tiles are transparent.
-    CallWindowFunction(windowId, WindowFunc_ClearDialogWindowAndFrameNullPalette);
+    CallWindowFunction(windowId, WindowFunc_ClearDialogueWindowAndFrameNullPalette);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
     ClearWindowTilemap(windowId);
     if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
-static void WindowFunc_ClearDialogWindowAndFrameNullPalette(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+static void WindowFunc_ClearDialogueWindowAndFrameNullPalette(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
     FillBgTilemapBufferRect(bg, 0, tilemapLeft - 3, tilemapTop - 1, width + 6, height + 2, 0);
 }
@@ -949,7 +949,7 @@ void HofPCTopBar_Print(const u8 *string, u8 left, bool8 copyToVram)
                   FONT_SMALL,
                   236 - (GetWindowAttribute(sHofPCTopBarWindowId, WINDOW_TILEMAP_LEFT) * 8) - left - width,
                   1,
-                  sTextColors,
+                  sTextColours,
                   0,
                   string);
         if (copyToVram)
@@ -959,22 +959,22 @@ void HofPCTopBar_Print(const u8 *string, u8 left, bool8 copyToVram)
 
 void HofPCTopBar_PrintPair(const u8 *string, const u8 *string2, bool8 noBg, u8 left, bool8 copyToVram)
 {
-    u8 color[3];
+    u8 colour[3];
     u16 width = 0;
 
     if (sHofPCTopBarWindowId != WINDOW_NONE)
     {
         if (noBg)
         {
-            color[0] = TEXT_COLOR_TRANSPARENT;
-            color[1] = TEXT_COLOR_WHITE;
-            color[2] = TEXT_COLOR_DARK_GRAY;
+            colour[0] = TEXT_COLOUR_TRANSPARENT;
+            colour[1] = TEXT_COLOUR_WHITE;
+            colour[2] = TEXT_COLOUR_DARK_GREY;
         }
         else
         {
-            color[0] = TEXT_DYNAMIC_COLOR_6;
-            color[1] = TEXT_COLOR_WHITE;
-            color[2] = TEXT_COLOR_DARK_GRAY;
+            colour[0] = TEXT_DYNAMIC_COLOUR_6;
+            colour[1] = TEXT_COLOUR_WHITE;
+            colour[2] = TEXT_COLOUR_DARK_GREY;
         }
         PutWindowTilemap(sHofPCTopBarWindowId);
         FillWindowPixelBuffer(sHofPCTopBarWindowId, PIXEL_FILL(15));
@@ -985,11 +985,11 @@ void HofPCTopBar_PrintPair(const u8 *string, const u8 *string2, bool8 noBg, u8 l
                       FONT_SMALL,
                       236 - (GetWindowAttribute(sHofPCTopBarWindowId, WINDOW_TILEMAP_LEFT) * 8) - left - width,
                       1,
-                      color,
+                      colour,
                       0,
                       string2);
         }
-        AddTextPrinterParameterized4(sHofPCTopBarWindowId, FONT_NORMAL, 4, 1, 0, 0, color, 0, string);
+        AddTextPrinterParameterized4(sHofPCTopBarWindowId, FONT_NORMAL, 4, 1, 0, 0, colour, 0, string);
         if (copyToVram)
             CopyWindowToVram(sHofPCTopBarWindowId, COPYWIN_FULL);
     }
@@ -1249,9 +1249,9 @@ void PrintMenuActionTexts(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpac
 
     printer.windowId = windowId;
     printer.fontId = fontId;
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(fontId, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
@@ -1314,9 +1314,9 @@ static void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId,
     printer.y = top;
     printer.currentX = printer.x;
     printer.currentY = printer.y;
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(fontId, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
@@ -1370,9 +1370,9 @@ void PrintMenuActionGrid(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth
 
     printer.windowId = windowId;
     printer.fontId = fontId;
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(fontId, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
@@ -1723,9 +1723,9 @@ void PrintMenuActionTextsInUpperLeftCorner(u8 windowId, u8 itemCount, const stru
 
     printer.windowId = windowId;
     printer.fontId = FONT_NORMAL;
-    printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
@@ -1757,9 +1757,9 @@ void CreateYesNoMenu(const struct WindowTemplate *window, u16 baseTileNum, u8 pa
     printer.y = 1;
     printer.currentX = printer.x;
     printer.currentY = printer.y;
-    printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
@@ -1788,9 +1788,9 @@ static void UNUSED PrintMenuActionGridTextNoSpacing(u8 windowId, u8 optionWidth,
 
     printer.windowId = windowId;
     printer.fontId = FONT_NORMAL;
-    printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOUR_SHADOW);
     printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
@@ -2042,7 +2042,7 @@ void BgDmaFill(u32 bg, u8 value, int offset, int size)
     RequestDma3Fill(value << 24 | value << 16 | value << 8 | value, VRAM + addr, size * temp, 1);
 }
 
-void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 left, u8 top, const u8 *color, s8 speed, const u8 *str)
+void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 left, u8 top, const u8 *colour, s8 speed, const u8 *str)
 {
     struct TextPrinterTemplate printer;
 
@@ -2056,14 +2056,14 @@ void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 left, u8 top, const
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     printer.unk = 0;
-    printer.fgColor = color[1];
-    printer.bgColor = color[0];
-    printer.shadowColor = color[2];
+    printer.fgColour = colour[1];
+    printer.bgColour = colour[0];
+    printer.shadowColour = colour[2];
 
     AddTextPrinter(&printer, speed, NULL);
 }
 
-void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const u8 *color, s8 speed, const u8 *str)
+void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const u8 *colour, s8 speed, const u8 *str)
 {
     struct TextPrinterTemplate printer;
 
@@ -2077,9 +2077,9 @@ void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
     printer.unk = 0;
-    printer.fgColor = color[1];
-    printer.bgColor = color[0];
-    printer.shadowColor = color[2];
+    printer.fgColour = colour[1];
+    printer.bgColour = colour[0];
+    printer.shadowColour = colour[2];
 
     AddTextPrinter(&printer, speed, NULL);
 }
@@ -2099,9 +2099,9 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left
     printer.lineSpacing = lineSpacing;
     printer.unk = 0;
 
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.fgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_FOREGROUND);
+    printer.bgColour = GetFontAttribute(fontId, FONTATTR_COLOUR_BACKGROUND);
+    printer.shadowColour = GetFontAttribute(fontId, FONTATTR_COLOUR_SHADOW);
 
     AddTextPrinter(&printer, speed, callback);
 }
@@ -2228,7 +2228,7 @@ void BlitMenuInfoIcon(u8 windowId, u8 iconId, u16 x, u16 y)
     BlitBitmapRectToWindow(windowId, &gMenuInfoElements_Gfx[sMenuInfoIcons[iconId].offset * 32], 0, 0, 128, 128, x, y, sMenuInfoIcons[iconId].width, sMenuInfoIcons[iconId].height);
 }
 
-void BufferSaveMenuText(u8 textId, u8 *dest, u8 color)
+void BufferSaveMenuText(u8 textId, u8 *dest, u8 colour)
 {
     s32 curFlag;
     s32 flagCount;
@@ -2236,11 +2236,11 @@ void BufferSaveMenuText(u8 textId, u8 *dest, u8 color)
     u8 *string = dest;
 
     *(string++) = EXT_CTRL_CODE_BEGIN;
-    *(string++) = EXT_CTRL_CODE_COLOR;
-    *(string++) = color;
+    *(string++) = EXT_CTRL_CODE_COLOUR;
+    *(string++) = colour;
     *(string++) = EXT_CTRL_CODE_BEGIN;
     *(string++) = EXT_CTRL_CODE_SHADOW;
-    *(string++) = color + 1;
+    *(string++) = colour + 1;
 
     switch (textId)
     {

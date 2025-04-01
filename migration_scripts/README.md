@@ -304,7 +304,7 @@ Updates egg moves to the refactored format. Only necessary if new species have b
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
         .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_CHLOROPHYLL },
-        .bodyColor = BODY_COLOR_GREEN,
+        .bodyColour = BODY_COLOUR_GREEN,
         .speciesName = _("Bulbasaur"),
         .cryId = CRY_BULBASAUR,
         .natDexNum = NATIONAL_DEX_BULBASAUR,

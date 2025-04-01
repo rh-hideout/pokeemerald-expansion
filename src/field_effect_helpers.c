@@ -6,7 +6,7 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "gpu_regs.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
@@ -99,8 +99,8 @@ static void LoadObjectReflectionPalette(struct ObjectEvent *objectEvent, struct 
         [BRIDGE_TYPE_POND_HIGH - 1] = 44
     };
     reflectionSprite->sReflectionVerticalOffset = 0;
-    if ((bridgeType = MetatileBehavior_GetBridgeType(objectEvent->previousMetatileBehavior))
-        || (bridgeType = MetatileBehavior_GetBridgeType(objectEvent->currentMetatileBehavior)))
+    if ((bridgeType = MetatileBehaviour_GetBridgeType(objectEvent->previousMetatileBehaviour))
+        || (bridgeType = MetatileBehaviour_GetBridgeType(objectEvent->currentMetatileBehaviour)))
     {
         reflectionSprite->sReflectionVerticalOffset = bridgeReflectionVerticalOffsets[bridgeType - 1];
         LoadObjectHighBridgeReflectionPalette(objectEvent, reflectionSprite);
@@ -177,7 +177,7 @@ static void LoadObjectRegularReflectionPalette(struct ObjectEvent *objectEvent, 
     sprite->oam.objMode = ST_OAM_OBJ_BLEND;
 }
 
-// When walking on a bridge high above water (Route 120), the reflection is a solid dark blue color.
+// When walking on a bridge high above water (Route 120), the reflection is a solid dark blue colour.
 // This is so the sprite blends in with the dark water metatile underneath the bridge.
 static void LoadObjectHighBridgeReflectionPalette(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
@@ -234,8 +234,8 @@ static void UpdateObjectReflectionSprite(struct Sprite *reflectionSprite)
     reflectionSprite->x = mainSprite->x;
     // sReflectionVerticalOffset is only set for high bridges
     reflectionSprite->y = mainSprite->y + GetReflectionVerticalOffset(objectEvent) + reflectionSprite->sReflectionVerticalOffset;
-    reflectionSprite->centerToCornerVecX = mainSprite->centerToCornerVecX;
-    reflectionSprite->centerToCornerVecY = mainSprite->centerToCornerVecY;
+    reflectionSprite->centreToCornerVecX = mainSprite->centreToCornerVecX;
+    reflectionSprite->centreToCornerVecY = mainSprite->centreToCornerVecY;
     reflectionSprite->x2 = mainSprite->x2;
     reflectionSprite->y2 = -mainSprite->y2;
     reflectionSprite->coordOffsetEnabled = mainSprite->coordOffsetEnabled;
@@ -378,15 +378,15 @@ void UpdateShadowFieldEffect(struct Sprite *sprite)
         sprite->x = linkedSprite->x;
         #if OW_LARGE_OW_SUPPORT
         // Read 'live' size from linked sprite
-        sprite->y = linkedSprite->y - linkedSprite->centerToCornerVecY - sprite->sYOffset;
+        sprite->y = linkedSprite->y - linkedSprite->centreToCornerVecY - sprite->sYOffset;
         #else
         sprite->y = linkedSprite->y + sprite->sYOffset;
         #endif
         sprite->invisible = linkedSprite->invisible;
         if (!objectEvent->active || !objectEvent->hasShadow
-         || MetatileBehavior_IsPokeGrass(objectEvent->currentMetatileBehavior)
-         || MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior)
-         || MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->previousMetatileBehavior))
+         || MetatileBehaviour_IsPokeGrass(objectEvent->currentMetatileBehaviour)
+         || MetatileBehaviour_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehaviour)
+         || MetatileBehaviour_IsSurfableWaterOrUnderwater(objectEvent->previousMetatileBehaviour))
         {
             FieldEffectStop(sprite, FLDEFF_SHADOW);
         }
@@ -435,7 +435,7 @@ u32 FldEff_TallGrass(void)
 
 void UpdateTallGrassFieldEffect(struct Sprite *sprite)
 {
-    u8 metatileBehavior;
+    u8 metatileBehaviour;
     u8 localId;
     u8 objectEventId;
     u8 mapNum = sprite->sCurrentMap >> 8;
@@ -450,10 +450,10 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
     localId = sprite->sLocalId;
     mapNum = sprite->sMapNum;
     mapGroup = sprite->sMapGroup;
-    metatileBehavior = MapGridGetMetatileBehaviorAt(sprite->sX, sprite->sY);
+    metatileBehaviour = MapGridGetMetatileBehaviourAt(sprite->sX, sprite->sY);
 
     if (TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId)
-     || !MetatileBehavior_IsTallGrass(metatileBehavior)
+     || !MetatileBehaviour_IsTallGrass(metatileBehaviour)
      || (sprite->sObjectMoved && sprite->animEnded))
     {
         FieldEffectStop(sprite, FLDEFF_TALL_GRASS);
@@ -466,13 +466,13 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
         && (objectEvent->previousCoords.x != sprite->sX || objectEvent->previousCoords.y != sprite->sY))
             sprite->sObjectMoved = TRUE;
 
-        // Metatile behavior var re-used as subpriority
-        metatileBehavior = 0;
+        // Metatile behaviour var re-used as subpriority
+        metatileBehaviour = 0;
         if (sprite->animCmdIndex == 0)
-            metatileBehavior = 4;
+            metatileBehaviour = 4;
 
         UpdateObjectEventSpriteInvisibility(sprite, FALSE);
-        UpdateGrassFieldEffectSubpriority(sprite, sprite->sElevation, metatileBehavior);
+        UpdateGrassFieldEffectSubpriority(sprite, sprite->sElevation, metatileBehaviour);
     }
 }
 
@@ -539,7 +539,7 @@ u32 FldEff_LongGrass(void)
 
 void UpdateLongGrassFieldEffect(struct Sprite *sprite)
 {
-    u8 metatileBehavior;
+    u8 metatileBehaviour;
     u8 localId;
     u8 objectEventId;
     u8 mapNum = sprite->sCurrentMap >> 8;
@@ -554,9 +554,9 @@ void UpdateLongGrassFieldEffect(struct Sprite *sprite)
     localId = sprite->sLocalId;
     mapNum = sprite->sMapNum;
     mapGroup = sprite->sMapGroup;
-    metatileBehavior = MapGridGetMetatileBehaviorAt(sprite->sX, sprite->sY);
+    metatileBehaviour = MapGridGetMetatileBehaviourAt(sprite->sX, sprite->sY);
     if (TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId)
-     || !MetatileBehavior_IsLongGrass(metatileBehavior)
+     || !MetatileBehaviour_IsLongGrass(metatileBehaviour)
      || (sprite->sObjectMoved && sprite->animEnded))
     {
         FieldEffectStop(sprite, FLDEFF_LONG_GRASS);
@@ -1851,14 +1851,14 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
             const struct ObjectEventGraphicsInfo UNUSED *graphicsInfo = GetObjectEventGraphicsInfo(objectEvent->graphicsId);
             struct Sprite *linkedSprite = &gSprites[objectEvent->spriteId];
 
-            xhi = sprite->x + sprite->centerToCornerVecX;
-            var = sprite->x - sprite->centerToCornerVecX;
+            xhi = sprite->x + sprite->centreToCornerVecX;
+            var = sprite->x - sprite->centreToCornerVecX;
             if (xhi < linkedSprite->x && var > linkedSprite->x)
             {
-                lyhi = linkedSprite->y + linkedSprite->centerToCornerVecY;
+                lyhi = linkedSprite->y + linkedSprite->centreToCornerVecY;
                 var = linkedSprite->y;
-                ylo = sprite->y - sprite->centerToCornerVecY;
-                yhi = ylo + linkedSprite->centerToCornerVecY;
+                ylo = sprite->y - sprite->centreToCornerVecY;
+                yhi = ylo + linkedSprite->centreToCornerVecY;
                 if ((lyhi < yhi || lyhi < ylo) && var > yhi && sprite->subpriority <= linkedSprite->subpriority)
                 {
                     sprite->subpriority = linkedSprite->subpriority + 2;

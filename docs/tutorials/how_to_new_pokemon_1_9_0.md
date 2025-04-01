@@ -1,7 +1,7 @@
 <!--1.9.x-->
 This is a modified version of [the original tutorial about adding new Pokémon species available in Pokeemerald's wiki](https://github.com/pret/pokeemerald/wiki/How-to-add-a-new-Pokémon-species).
 
-Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
+Despite the persistent rumours about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
 ## IMPORTANT: This tutorial applies to 1.9.x versions.
@@ -113,7 +113,7 @@ Now, to better understand Mewtwo, we also need to understand Mew. Let's look at 
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = { EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED },
         .abilities = { ABILITY_SYNCHRONIZE, ABILITY_NONE },
-        .bodyColor = BODY_COLOR_PINK,
+        .bodyColour = BODY_COLOUR_PINK,
         .isMythical = TRUE,
         .speciesName = _("Mew"),
         .cryId = CRY_MEW,
@@ -193,7 +193,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
 +       .growthRate = GROWTH_SLOW,
 +       .eggGroups = { EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED },
 +       .abilities = { ABILITY_INSOMNIA, ABILITY_NONE, ABILITY_NONE },
-+       .bodyColor = BODY_COLOR_PURPLE,
++       .bodyColour = BODY_COLOUR_PURPLE,
 +    },
  };
 ```
@@ -228,7 +228,7 @@ The `.` is the structure reference operator in C to refer to the member object o
         - Certain Pokémon such as Zygarde and Rockruff have different forms to add additional abilities. As such, they cannot be changed using an Ability Capsule (though the Zygarde Cube can change Zygarde's ability by changing them to their corresponding form)
     - The 3rd slot is for Hidden Abilities. If defined as `ABILITY_NONE`, it will default to Slot 1 (eg. Metapod doesn't have a Hidden Ability, but Caterpie and Butterfree do). Go [here](https://bulbapedia.bulbagarden.net/wiki/Ability#Hidden_Abilities) and [here](https://bulbapedia.bulbagarden.net/wiki/Ability_Patch) for more info.
         - If the array is defined as `{ABILITY_1, ABILITY_2}`, the Hidden Ability is set as `ABILITY_NONE`.
-- `bodyColor` is used in the Pokédex as a search filter.
+- `bodyColour` is used in the Pokédex as a search filter.
 - `noFlip` is used in to prevent front sprites from being flipped horizontally and cause weird issues, like Clawitzer's big claw changing sides.
 
 That's all the basic fields present in vanilla emerald, so now let's take a look at the new fields added by the expansion.
@@ -402,7 +402,7 @@ Now we can add the number and entry to our Mewthree:
 +       .height = 15,
 +       .weight = 330,
 +       .description = COMPOUND_STRING(
-+           "The rumors became true.\n"
++           "The rumours became true.\n"
 +           "This is Mew's final form.\n"
 +           "Its power level is over 9000.\n"
 +           "Has science gone too far?"),
@@ -477,10 +477,10 @@ We aren't copying Mewtwo's folder because he has those pesky Mega Evolutions tha
 ## 1. Edit the sprites
 Let's edit the sprites. Start your favourite image editor (I recommend Aseprite or its free alternative, Libresprite) and change `anim_front.png` and `back.png` to meet your expectations.
 
-__Make sure that you are using the indexed mode and you have limited yourself to 15 colors!__
+__Make sure that you are using the indexed mode and you have limited yourself to 15 colours!__
 
-Put the RGB values of your colors into `normal.pal` between the first and the last color and the RGB values for the shiny version into `shiny.pal`.
-Edit `footprint.png` using two colors in indexed mode, black and white.
+Put the RGB values of your colours into `normal.pal` between the first and the last colour and the RGB values for the shiny version into `shiny.pal`.
+Edit `footprint.png` using two colours in indexed mode, black and white.
 Finally, edit `icon.png`. Notice, that the icon will use one of 6 predefined palettes instead of `normal.pal`.
 
 ## 2. Add the sprites to the rom
@@ -601,7 +601,7 @@ Let's explain each of these:
 - `frontAnimFrames`:
     - We link our animation frame animations that we defined earlier here.
 - `frontAnimId`:
-    - Because you are limited to two frames, there are already [predefined front sprite animations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/pokemon_animation.h), describing translations, rotations, scalings or color changes.
+    - Because you are limited to two frames, there are already [predefined front sprite animations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/pokemon_animation.h), describing translations, rotations, scalings or colour changes.
 - `frontAnimDelay`:
     - Sets a delay in frame count between when the Pokémon appears and when the animation starts.
 - `enemyMonElevation`:
@@ -649,7 +649,7 @@ We're almost there just a bit left!
      {
         ...
         .abilities = { ABILITY_INSOMNIA, ABILITY_NONE, ABILITY_NONE },
-        .bodyColor = BODY_COLOR_PURPLE,
+        .bodyColour = BODY_COLOUR_PURPLE,
 +       .isLegendary = TRUE,
 +       .allPerfectIVs = TRUE,
     },

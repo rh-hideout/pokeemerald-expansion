@@ -292,7 +292,7 @@ static bool32 Display_HideKeyboardSwapMenu(u8 *state);
 static bool32 Display_SwitchPages(u8 *state);
 static bool32 Display_MoveKeyboardCursor(u8 *state);
 static bool32 Display_AskQuitChatting(u8 *state);
-static bool32 Display_DestroyYesNoDialog(u8 *state);
+static bool32 Display_DestroyYesNoDialogue(u8 *state);
 static bool32 Display_UpdateMessageBuffer(u8 *state);
 static bool32 Display_AskRegisterText(u8 *state);
 static bool32 Display_CancelRegister(u8 *state);
@@ -611,7 +611,7 @@ static const struct SubtaskInfo sDisplaySubtasks[] = {
     {CHATDISPLAY_FUNC_SWITCH_PAGES,             Display_SwitchPages},
     {CHATDISPLAY_FUNC_MOVE_KB_CURSOR,           Display_MoveKeyboardCursor},
     {CHATDISPLAY_FUNC_ASK_QUIT_CHATTING,        Display_AskQuitChatting},
-    {CHATDISPLAY_FUNC_DESTROY_YESNO,            Display_DestroyYesNoDialog},
+    {CHATDISPLAY_FUNC_DESTROY_YESNO,            Display_DestroyYesNoDialogue},
     {CHATDISPLAY_FUNC_UPDATE_MSG,               Display_UpdateMessageBuffer},
     {CHATDISPLAY_FUNC_ASK_REGISTER_TEXT,        Display_AskRegisterText},
     {CHATDISPLAY_FUNC_CANCEL_REGISTER,          Display_CancelRegister},
@@ -2376,7 +2376,7 @@ static bool32 Display_AskQuitChatting(u8 *state)
     return TRUE;
 }
 
-static bool32 Display_DestroyYesNoDialog(u8 *state)
+static bool32 Display_DestroyYesNoDialogue(u8 *state)
 {
     switch (*state)
     {
@@ -2535,15 +2535,15 @@ static bool32 Display_ScrollChat(u8 *state)
 {
     u16 row;
     u8 *str;
-    u8 colorIdx;
+    u8 colourIdx;
 
     switch (*state)
     {
     case 0:
         row = sDisplay->currLine;
         str = GetLastReceivedMessage();
-        colorIdx = GetReceivedPlayerIndex();
-        PrintChatMessage(row, str, colorIdx);
+        colourIdx = GetReceivedPlayerIndex();
+        PrintChatMessage(row, str, colourIdx);
         CopyWindowToVram(WIN_CHAT_HISTORY, COPYWIN_GFX);
         break;
     case 1:
@@ -2884,21 +2884,21 @@ static void FillTextEntryWindow(u16 x, u16 width, u8 fillValue)
     FillWindowPixelRect(WIN_TEXT_ENTRY, fillValue, x * 8, 1, width * 8, 14);
 }
 
-static void DrawTextEntryMessage(u16 x, u8 *str, u8 bgColor, u8 fgColor, u8 shadowColor)
+static void DrawTextEntryMessage(u16 x, u8 *str, u8 bgColour, u8 fgColour, u8 shadowColour)
 {
-    u8 color[3];
+    u8 colour[3];
     u8 strBuffer[35];
-    if (bgColor != TEXT_COLOR_TRANSPARENT)
-        FillTextEntryWindow(x, GetTextEntryCursorPosition() - x, bgColor);
+    if (bgColour != TEXT_COLOUR_TRANSPARENT)
+        FillTextEntryWindow(x, GetTextEntryCursorPosition() - x, bgColour);
 
-    color[0] = bgColor;
-    color[1] = fgColor;
-    color[2] = shadowColor;
+    colour[0] = bgColour;
+    colour[1] = fgColour;
+    colour[2] = shadowColour;
     strBuffer[0] = EXT_CTRL_CODE_BEGIN;
     strBuffer[1] = EXT_CTRL_CODE_MIN_LETTER_SPACING;
     strBuffer[2] = 8;
     StringCopy(&strBuffer[3], str);
-    AddTextPrinterParameterized3(WIN_TEXT_ENTRY, FONT_SHORT, x * 8, 1, color, TEXT_SKIP_DRAW, strBuffer);
+    AddTextPrinterParameterized3(WIN_TEXT_ENTRY, FONT_SHORT, x * 8, 1, colour, TEXT_SKIP_DRAW, strBuffer);
 }
 
 static void PrintCurrentKeyboardPage(void)
@@ -2907,15 +2907,15 @@ static void PrintCurrentKeyboardPage(void)
     int i;
     u16 left;
     u16 top;
-    u8 color[3];
+    u8 colour[3];
     u8 str[45];
     u8 *str2;
 
     FillWindowPixelBuffer(WIN_KEYBOARD, PIXEL_FILL(15));
     page = GetCurrentKeyboardPage();
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_5;
-    color[2] = TEXT_DYNAMIC_COLOR_4;
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_5;
+    colour[2] = TEXT_DYNAMIC_COLOUR_4;
     if (page != UNION_ROOM_KB_PAGE_REGISTER)
     {
         str[0] = EXT_CTRL_CODE_BEGIN;
@@ -2933,7 +2933,7 @@ static void PrintCurrentKeyboardPage(void)
                 return;
 
             StringCopy(&str[3], sUnionRoomKeyboardText[page][i]);
-            AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, color, TEXT_SKIP_DRAW, str);
+            AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, colour, TEXT_SKIP_DRAW, str);
         }
     }
     else
@@ -2944,7 +2944,7 @@ static void PrintCurrentKeyboardPage(void)
             str2 = GetRegisteredTextByRow(i);
             if (GetStringWidth(FONT_SMALL, str2, 0) <= 40)
             {
-                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, color, TEXT_SKIP_DRAW, str2);
+                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, colour, TEXT_SKIP_DRAW, str2);
             }
             else
             {
@@ -2955,8 +2955,8 @@ static void PrintCurrentKeyboardPage(void)
                     StringCopyN_Multibyte(str, str2, length);
                 } while (GetStringWidth(FONT_SMALL, str, 0) > 35);
 
-                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, color, TEXT_SKIP_DRAW, str);
-                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left + 35, top, color, TEXT_SKIP_DRAW, sText_Ellipsis);
+                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left, top, colour, TEXT_SKIP_DRAW, str);
+                AddTextPrinterParameterized3(WIN_KEYBOARD, FONT_SMALL, left + 35, top, colour, TEXT_SKIP_DRAW, sText_Ellipsis);
             }
         }
     }
@@ -3019,15 +3019,15 @@ static void HideKeyboardSwapMenu(void)
     ClearWindowTilemap(WIN_SWAP_MENU);
 }
 
-static void PrintChatMessage(u16 row, u8 *str, u8 colorIdx)
+static void PrintChatMessage(u16 row, u8 *str, u8 colourIdx)
 {
-    // colorIdx: 0 = gray, 1 = red, 2 = green, 3 = blue
-    u8 color[3];
-    color[0] = TEXT_COLOR_WHITE;
-    color[1] = colorIdx * 2 + 2;
-    color[2] = colorIdx * 2 + 3;
+    // colourIdx: 0 = grey, 1 = red, 2 = green, 3 = blue
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_WHITE;
+    colour[1] = colourIdx * 2 + 2;
+    colour[2] = colourIdx * 2 + 3;
     FillWindowPixelRect(WIN_CHAT_HISTORY, PIXEL_FILL(1), 0, row * 15, 168, 15);
-    AddTextPrinterParameterized3(WIN_CHAT_HISTORY, FONT_SHORT, 0, row * 15 + 1, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized3(WIN_CHAT_HISTORY, FONT_SHORT, 0, row * 15 + 1, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void ResetGpuBgState(void)

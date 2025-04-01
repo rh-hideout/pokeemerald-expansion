@@ -91,9 +91,9 @@ const u8 DecorDesc_PRETTY_FLOWERS[] = _(
     "A pot of cute\n"
         "flowers.");
 
-const u8 DecorDesc_COLORFUL_PLANT[] = _(
+const u8 DecorDesc_COLOURFUL_PLANT[] = _(
     "A large pot with\n"
-        "many colorful\n"
+        "many colourful\n"
         "flowers.");
 
 const u8 DecorDesc_BIG_PLANT[] = _(
@@ -106,17 +106,17 @@ const u8 DecorDesc_GORGEOUS_PLANT[] = _(
         "plant in a big pot.");
 
 const u8 DecorDesc_RED_BRICK[] = _(
-    "A red-colored brick.\n"
+    "A red-coloured brick.\n"
         "Decorations can be\n"
         "placed on top.");
 
 const u8 DecorDesc_YELLOW_BRICK[] = _(
-    "A yellow-colored\n"
+    "A yellow-coloured\n"
         "brick. Put some\n"
         "decorations on top.");
 
 const u8 DecorDesc_BLUE_BRICK[] = _(
-    "A blue-colored\n"
+    "A blue-coloured\n"
         "brick. Put some\n"
         "decorations on top.");
 
@@ -202,8 +202,8 @@ const u8 DecorDesc_GLASS_ORNAMENT[] = _(
         "at the ART MUSEUM.");
 
 const u8 DecorDesc_TV[] = _(
-    "A small, gray-\n"
-        "colored toy TV.");
+    "A small, grey-\n"
+        "coloured toy TV.");
 
 const u8 DecorDesc_ROUND_TV[] = _(
     "A toy TV modeled\n"

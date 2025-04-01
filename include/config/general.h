@@ -37,7 +37,7 @@
 // Uncomment to fix some identified minor bugs
 #define BUGFIX
 
-// Various undefined behavior bugs may or may not prevent compilation with
+// Various undefined behaviour bugs may or may not prevent compilation with
 // newer compilers. So always fix them when using a modern compiler.
 #if MODERN || defined(BUGFIX)
 #ifndef UBFIX
@@ -53,7 +53,7 @@
 #define POKEMON_EXPANSION
 #define ITEM_EXPANSION
 
-// Generation constants used in configs to define behavior.
+// Generation constants used in configs to define behaviour.
 #define GEN_1 0
 #define GEN_2 1
 #define GEN_3 2
@@ -69,7 +69,7 @@
 // General settings
 #define EXPANSION_INTRO              TRUE    // If TRUE, a custom RHH intro will play after the vanilla copyright screen.
 #define POKEDEX_PLUS_HGSS            FALSE   // If TRUE, enables the custom HGSS style Pokedex.
-#define SUMMARY_SCREEN_NATURE_COLORS TRUE    // If TRUE, nature-based stat boosts and reductions will be red and blue in the summary screen.
+#define SUMMARY_SCREEN_NATURE_COLOURS TRUE    // If TRUE, nature-based stat boosts and reductions will be red and blue in the summary screen.
 #define HQ_RANDOM                    TRUE    // If TRUE, replaces the default RNG with an implementation of SFC32 RNG. May break code that relies on RNG.
 #define COMPETITIVE_PARTY_SYNTAX     TRUE    // If TRUE, parties are defined in "competitive syntax".
 #define AUTO_SCROLL_TEXT             FALSE   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.

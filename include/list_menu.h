@@ -119,7 +119,7 @@ s32 ListMenuTestInput(struct ListMenuTemplate *template, u32 scrollOffset, u32 s
 void ListMenuGetCurrentItemArrayId(u8 listTaskId, u16 *arrayId);
 void ListMenuGetScrollAndRow(u8 listTaskId, u16 *scrollOffset, u16 *selectedRow);
 u16 ListMenuGetYCoordForPrintingArrowCursor(u8 listTaskId);
-void ListMenuOverrideSetColors(u8 cursorPal, u8 fillValue, u8 cursorShadowPal);
+void ListMenuOverrideSetColours(u8 cursorPal, u8 fillValue, u8 cursorShadowPal);
 void ListMenuDefaultCursorMoveFunc(s32 itemIndex, u8 onInit, struct ListMenu *list);
 s32 ListMenuGetUnkIndicatorsStructFields(u8 taskId, u8 field);
 void ListMenuSetUnkIndicatorsStructField(u8 taskId, u8 field, s32 value);

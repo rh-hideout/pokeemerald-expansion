@@ -25,7 +25,7 @@
 #include "malloc.h"
 #include "menu.h"
 #include "menu_helpers.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "move.h"
 #include "overworld.h"
 #include "palette.h"
@@ -225,10 +225,10 @@ static const struct WindowTemplate sDexNavGuiWindowTemplates[] =
 };
 
 //gui font
-static const u8 sFontColor_Black[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
-static const u8 sFontColor_White[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
+static const u8 sFontColour_Black[3] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY};
+static const u8 sFontColour_White[3] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY};
 //search window font
-static const u8 sSearchFontColor[3] = {0, 15, 13};
+static const u8 sSearchFontColour[3] = {0, 15, 13};
 
 static const struct OamData sNoDataIconOam =
 {
@@ -485,19 +485,19 @@ static void AddSearchWindowText(u16 species, u8 proximity, u8 searchLevel, bool8
     if (hidden)
     {
         StringCopy(gStringVar4, sText_ThreeQmarks);
-        AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_0, 0, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+        AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_0, 0, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
         return;
     }
     else
     {
         StringCopy(gStringVar1, GetSpeciesName(species));
-        AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_0, 0, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar1);
+        AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_0, 0, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar1);
     }
 
     //level - always present
     ConvertIntToDecimalStringN(gStringVar1, sDexNavSearchDataPtr->monLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringExpandPlaceholders(gStringVar4, sText_MonLevel);
-    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_1, 0, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, WINDOW_COL_1, 0, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
 
     if (proximity <= SNEAKING_PROXIMITY)
     {
@@ -507,21 +507,21 @@ static void AddSearchWindowText(u16 species, u8 proximity, u8 searchLevel, bool8
         {
             StringCopy(gStringVar1, GetMoveName(sDexNavSearchDataPtr->moves[0]));
             StringExpandPlaceholders(gStringVar4, sText_EggMove);
-            AddTextPrinterParameterized3(windowId, 0, WINDOW_MOVE_NAME_X, 0, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+            AddTextPrinterParameterized3(windowId, 0, WINDOW_MOVE_NAME_X, 0, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
         }
 
         if (searchLevel > 2)
         {
             // ability name
             StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, sDexNavSearchDataPtr->abilityNum)].name);
-            AddTextPrinterParameterized3(windowId, 0, WINDOW_COL_1 + 16, 12, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar1);
+            AddTextPrinterParameterized3(windowId, 0, WINDOW_COL_1 + 16, 12, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar1);
 
             // item name
             if (sDexNavSearchDataPtr->heldItem)
             {
                 CopyItemName(sDexNavSearchDataPtr->heldItem, gStringVar1);
                 StringExpandPlaceholders(gStringVar4, sText_HeldItem);
-                AddTextPrinterParameterized3(windowId, 0, WINDOW_COL_0, 12, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+                AddTextPrinterParameterized3(windowId, 0, WINDOW_COL_0, 12, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
             }
         }
     }
@@ -532,7 +532,7 @@ static void AddSearchWindowText(u16 species, u8 proximity, u8 searchLevel, bool8
         StringExpandPlaceholders(gStringVar4, sText_DexNavChainLong);
     else
         StringExpandPlaceholders(gStringVar4, sText_DexNavChain);
-    AddTextPrinterParameterized3(windowId, 0, SEARCH_ARROW_X - 16, 12, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized3(windowId, 0, SEARCH_ARROW_X - 16, 12, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
 
     CopyWindowToVram(sDexNavSearchDataPtr->windowId, 2);
 }
@@ -626,7 +626,7 @@ static bool8 DexNavPickTile(u8 environment, u8 areaX, u8 areaY, bool8 smallScan)
     {
         while (topX < botX)
         {
-            tileBehaviour = MapGridGetMetatileBehaviorAt(topX, topY);
+            tileBehaviour = MapGridGetMetatileBehaviourAt(topX, topY);
             //Check for objects
             nextIter = FALSE;
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
@@ -661,7 +661,7 @@ static bool8 DexNavPickTile(u8 environment, u8 areaX, u8 areaY, bool8 smallScan)
             switch (environment)
             {
             case ENCOUNTER_TYPE_LAND:
-                if (MetatileBehavior_IsLandWildEncounter(tileBehaviour))
+                if (MetatileBehaviour_IsLandWildEncounter(tileBehaviour))
                 {
                     if (currMapType == MAP_TYPE_UNDERGROUND)
                     {
@@ -681,7 +681,7 @@ static bool8 DexNavPickTile(u8 environment, u8 areaX, u8 areaY, bool8 smallScan)
                 }
                 break;
             case ENCOUNTER_TYPE_WATER:
-                if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehaviour))
+                if (MetatileBehaviour_IsSurfableWaterOrUnderwater(tileBehaviour))
                 {
                     u8 scale = 320 - (smallScan * 200) - (GetPlayerDistance(topX, topY) / 2);
                     if (IsElevationMismatchAt(gObjectEvents[gPlayerAvatar.spriteId].currentElevation, topX, topY))
@@ -730,7 +730,7 @@ static bool8 TryStartHiddenMonFieldEffect(u8 environment, u8 xSize, u8 ySize, bo
 
     if (DexNavPickTile(environment, xSize, ySize, smallScan))
     {
-        u8 metatileBehaviour = MapGridGetMetatileBehaviorAt(sDexNavSearchDataPtr->tileX, sDexNavSearchDataPtr->tileY);
+        u8 metatileBehaviour = MapGridGetMetatileBehaviourAt(sDexNavSearchDataPtr->tileX, sDexNavSearchDataPtr->tileY);
 
         switch (environment)
         {
@@ -741,24 +741,24 @@ static bool8 TryStartHiddenMonFieldEffect(u8 environment, u8 xSize, u8 ySize, bo
             }
             else if (IsMapTypeIndoors(currMapType))
             {
-                if (MetatileBehavior_IsTallGrass(metatileBehaviour)) //Grass in cave
+                if (MetatileBehaviour_IsTallGrass(metatileBehaviour)) //Grass in cave
                     fldEffId = FLDEFF_SHAKING_GRASS;
-                else if (MetatileBehavior_IsLongGrass(metatileBehaviour)) //Really tall grass
+                else if (MetatileBehaviour_IsLongGrass(metatileBehaviour)) //Really tall grass
                     fldEffId = FLDEFF_SHAKING_LONG_GRASS;
-                else if (MetatileBehavior_IsSandOrDeepSand(metatileBehaviour))
+                else if (MetatileBehaviour_IsSandOrDeepSand(metatileBehaviour))
                     fldEffId = FLDEFF_SAND_HOLE;
                 else
                     fldEffId = FLDEFF_CAVE_DUST;
             }
             else //outdoor, underwater
             {
-                if (MetatileBehavior_IsTallGrass(metatileBehaviour)) //Regular grass
+                if (MetatileBehaviour_IsTallGrass(metatileBehaviour)) //Regular grass
                     fldEffId = FLDEFF_SHAKING_GRASS;
-                else if (MetatileBehavior_IsLongGrass(metatileBehaviour)) //Really tall grass
+                else if (MetatileBehaviour_IsLongGrass(metatileBehaviour)) //Really tall grass
                     fldEffId = FLDEFF_SHAKING_LONG_GRASS;
-                else if (MetatileBehavior_IsSandOrDeepSand(metatileBehaviour)) //Desert Sand
+                else if (MetatileBehaviour_IsSandOrDeepSand(metatileBehaviour)) //Desert Sand
                     fldEffId = FLDEFF_SAND_HOLE;
-                else if (MetatileBehavior_IsMountain(metatileBehaviour)) //Rough Terrain
+                else if (MetatileBehaviour_IsMountain(metatileBehaviour)) //Rough Terrain
                     fldEffId = FLDEFF_CAVE_DUST;
                 else
                     fldEffId = FLDEFF_BERRY_TREE_GROWTH_SPARKLE; //default
@@ -959,7 +959,7 @@ static void DexNavUpdateDirectionArrow(void)
             str = sText_ArrowDown;  //player above
     }
 
-    AddTextPrinterParameterized3(windowId, 1, SEARCH_ARROW_X, SEARCH_ARROW_Y, sSearchFontColor, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized3(windowId, 1, SEARCH_ARROW_X, SEARCH_ARROW_Y, sSearchFontColour, TEXT_SKIP_DRAW, str);
     CopyWindowToVram(windowId, 2);
 }
 
@@ -2111,13 +2111,13 @@ static void PrintCurrentSpeciesInfo(void)
         species = SPECIES_NONE;
 
     // clear windows
-    FillWindowPixelBuffer(WINDOW_INFO, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    FillWindowPixelBuffer(WINDOW_INFO, PIXEL_FILL(TEXT_COLOUR_TRANSPARENT));
 
     //species name
     if (species == SPECIES_NONE)
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SPECIES_INFO_Y, sFontColor_Black, 0, sText_DexNav_NoInfo);
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SPECIES_INFO_Y, sFontColour_Black, 0, sText_DexNav_NoInfo);
     else
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SPECIES_INFO_Y, sFontColor_Black, 0, GetSpeciesName(species));
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SPECIES_INFO_Y, sFontColour_Black, 0, GetSpeciesName(species));
 
     //type icon(s)
     type1 = gSpeciesInfo[species].types[0];
@@ -2139,34 +2139,34 @@ static void PrintCurrentSpeciesInfo(void)
     //search level
     if (species == SPECIES_NONE)
     {
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SEARCH_LEVEL_Y, sFontColor_Black, 0, sText_DexNav_NoInfo);
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SEARCH_LEVEL_Y, sFontColour_Black, 0, sText_DexNav_NoInfo);
     }
     else
     {
         ConvertIntToDecimalStringN(gStringVar4, GetSearchLevel(species), 0, 4);
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SEARCH_LEVEL_Y, sFontColor_Black, 0, gStringVar4);
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SEARCH_LEVEL_Y, sFontColour_Black, 0, gStringVar4);
     }
 
     //hidden ability
     if (species == SPECIES_NONE)
     {
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, sText_DexNav_NoInfo);
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColour_Black, 0, sText_DexNav_NoInfo);
     }
     else if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
     {
         if (gSpeciesInfo[species].abilities[2] != ABILITY_NONE)
-            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, gAbilitiesInfo[gSpeciesInfo[species].abilities[2]].name);
+            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColour_Black, 0, gAbilitiesInfo[gSpeciesInfo[species].abilities[2]].name);
         else
-            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, gText_None);
+            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColour_Black, 0, gText_None);
     }
     else
     {
-        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, sText_DexNav_CaptureToSee);
+        AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColour_Black, 0, sText_DexNav_CaptureToSee);
     }
 
     //current chain
     ConvertIntToDecimalStringN(gStringVar1, gSaveBlock3Ptr->dexNavChain, STR_CONV_MODE_LEFT_ALIGN, 3);
-    AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, CHAIN_BONUS_Y, sFontColor_Black, 0, gStringVar1);
+    AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, CHAIN_BONUS_Y, sFontColour_Black, 0, gStringVar1);
 
     CopyWindowToVram(WINDOW_INFO, 3);
     PutWindowTilemap(WINDOW_INFO);
@@ -2177,23 +2177,23 @@ static void PrintMapName(void)
     GetMapName(gStringVar3, GetCurrentRegionMapSectionId(), 0);
     AddTextPrinterParameterized3(WINDOW_REGISTERED, 1, 108 +
                                  GetStringRightAlignXOffset(1, gStringVar3, MAP_NAME_LENGTH * GetFontAttribute(1, FONTATTR_MAX_LETTER_WIDTH)),
-                                 0, sFontColor_White, 0, gStringVar3);
+                                 0, sFontColour_White, 0, gStringVar3);
     CopyWindowToVram(WINDOW_REGISTERED, 3);
 }
 
 static void PrintSearchableSpecies(u16 species)
 {
-    FillWindowPixelBuffer(WINDOW_REGISTERED, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    FillWindowPixelBuffer(WINDOW_REGISTERED, PIXEL_FILL(TEXT_COLOUR_TRANSPARENT));
     PutWindowTilemap(WINDOW_REGISTERED);
     if (species == SPECIES_NONE)
     {
-        AddTextPrinterParameterized3(WINDOW_REGISTERED, 1, 0, 0, sFontColor_White, TEXT_SKIP_DRAW, sText_DexNav_PressRToRegister);
+        AddTextPrinterParameterized3(WINDOW_REGISTERED, 1, 0, 0, sFontColour_White, TEXT_SKIP_DRAW, sText_DexNav_PressRToRegister);
     }
     else
     {
         StringCopy(gStringVar1, GetSpeciesName(species));
         StringExpandPlaceholders(gStringVar4, sText_DexNav_SearchForRegisteredSpecies);
-        AddTextPrinterParameterized3(WINDOW_REGISTERED, 1, 0, 0, sFontColor_White, TEXT_SKIP_DRAW, gStringVar4);
+        AddTextPrinterParameterized3(WINDOW_REGISTERED, 1, 0, 0, sFontColour_White, TEXT_SKIP_DRAW, gStringVar4);
     }
 
     PrintMapName();
@@ -2631,11 +2631,11 @@ static void DrawSearchIcon(void)
 static void DrawHiddenSearchWindow(u8 width)
 {
     AddSearchWindow(width);
-    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, SPECIES_ICON_X + 4, 0, sSearchFontColor, TEXT_SKIP_DRAW, sText_ThreeQmarks);
+    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, SPECIES_ICON_X + 4, 0, sSearchFontColour, TEXT_SKIP_DRAW, sText_ThreeQmarks);
 
     ConvertIntToDecimalStringN(gStringVar1, sDexNavSearchDataPtr->searchLevel, STR_CONV_MODE_LEFT_ALIGN, 2);
     StringExpandPlaceholders(gStringVar4, sText_SearchLevel);
-    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, SPECIES_ICON_X + 4, 12, sSearchFontColor, TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized3(sDexNavSearchDataPtr->windowId, 0, SPECIES_ICON_X + 4, 12, sSearchFontColour, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(sDexNavSearchDataPtr->windowId, 2);
 }
 

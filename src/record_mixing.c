@@ -365,7 +365,7 @@ static void Task_RecordMixing_Main(u8 taskId)
             SetLinkWaitingForScript();
             if (gWirelessCommType != 0)
                 CreateTask(Task_ReturnToFieldRecordMixing, 10);
-            ClearDialogWindowAndFrame(0, TRUE);
+            ClearDialogueWindowAndFrame(0, TRUE);
             DestroyTask(taskId);
             ScriptContext_Enable();
         }

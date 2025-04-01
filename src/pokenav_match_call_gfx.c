@@ -1033,7 +1033,7 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     else
         StringCopy(mapName, gText_Unknown);
 
-    x = GetStringCenterAlignXOffset(FONT_NARROW, mapName, 88);
+    x = GetStringCentreAlignXOffset(FONT_NARROW, mapName, 88);
     FillWindowPixelBuffer(gfx->locWindowId, PIXEL_FILL(1));
     AddTextPrinterParameterized(gfx->locWindowId, FONT_NARROW, mapName, x, 1, 0, NULL);
 }

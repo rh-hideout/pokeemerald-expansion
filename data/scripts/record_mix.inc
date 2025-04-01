@@ -1,4 +1,4 @@
-@ Seems this was superseded by the Record Center, and the below scripts are now unused
+@ Seems this was superseded by the Record Centre, and the below scripts are now unused
 EventScript_MixRecordsPrompt::
 	lock
 	faceplayer

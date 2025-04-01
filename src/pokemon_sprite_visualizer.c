@@ -48,7 +48,7 @@ extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadowsSized;
 extern const struct SpriteTemplate gSpriteTemplate_EnemyShadow;
 extern const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2];
 extern const struct UCoords8 sBattlerCoords[][MAX_BATTLERS_COUNT] ;
-static const u16 sBgColor[] = {RGB_WHITE};
+static const u16 sBgColour[] = {RGB_WHITE};
 
 static struct PokemonSpriteVisualizer *GetStructPtr(u8 taskId)
 {
@@ -1257,7 +1257,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
         case 3:
             AllocateMonSpritesGfx();
 
-            LoadPalette(sBgColor, 0, 2);
+            LoadPalette(sBgColour, 0, 2);
             LoadMonIconPalette(SPECIES_BULBASAUR);
 
             SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);

@@ -31,7 +31,7 @@ LilycoveCity_DepartmentStore_2F_Pokemart1:
 	.2byte ITEM_ESCAPE_ROPE
 	.2byte ITEM_FULL_HEAL
 	.2byte ITEM_ANTIDOTE
-	.2byte ITEM_PARALYZE_HEAL
+	.2byte ITEM_PARALYSE_HEAL
 	.2byte ITEM_BURN_HEAL
 	.2byte ITEM_ICE_HEAL
 	.2byte ITEM_AWAKENING

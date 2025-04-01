@@ -128,13 +128,13 @@ enum {
 };
 
 enum {
-    MATCH_CHERRY,        // Cherry in center of first reel
+    MATCH_CHERRY,        // Cherry in centre of first reel
     MATCH_TOPBOT_CHERRY, // Cherry in top/bottom of first reel
     MATCH_REPLAY,
     MATCH_LOTAD,
     MATCH_AZURILL,
     MATCH_POWER,
-    MATCH_MIXED_7,       // First two 7's are same color; last is other color
+    MATCH_MIXED_7,       // First two 7's are same colour; last is other colour
     MATCH_RED_7,
     MATCH_BLUE_7,
     MATCH_NONE,
@@ -471,7 +471,7 @@ static u8 TrySelectBias_Special(void);
 static u16 ReelTimeSpeed(void);
 static u8 TrySelectBias_Regular(void);
 static void CheckMatch(void);
-static void CheckMatch_CenterRow(void);
+static void CheckMatch_CentreRow(void);
 static void CheckMatch_TopAndBottom(void);
 static void CheckMatch_Diagonals(void);
 static u8 GetMatchFromSymbols(u8, u8, u8);
@@ -806,7 +806,7 @@ static const struct WindowTemplate sWindowTemplate_InfoBox =
     .baseBlock = 1
 };
 
-static const u8 sColors_ReeltimeHelp[] = {TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
+static const u8 sColours_ReeltimeHelp[] = {TEXT_COLOUR_LIGHT_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY};
 
 static bool8 (*const sSlotTasks[])(struct Task *task) =
 {
@@ -1402,7 +1402,7 @@ static bool8 SlotTask_WaitMsg_Need3Coins(struct Task *task)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         sSlotMachine->state = SLOTTASK_BET_INPUT;
     }
     return FALSE;
@@ -1669,7 +1669,7 @@ static bool8 SlotTask_HandleQuitInput(struct Task *task)
     s8 input = Menu_ProcessInputNoWrapClearOnChoose();
     if (input == 0) // Chose to quit
     {
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         DarkenBetTiles(0);
         DarkenBetTiles(1);
         DarkenBetTiles(2);
@@ -1678,7 +1678,7 @@ static bool8 SlotTask_HandleQuitInput(struct Task *task)
     }
     else if (input == 1 || input == -1) // Chose not to quit
     {
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         sSlotMachine->state = SLOTTASK_BET_INPUT;
     }
     return FALSE;
@@ -1699,7 +1699,7 @@ static bool8 SlotTask_WaitMsg_MaxCoins(struct Task *task)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         sSlotMachine->state = SLOTTASK_BET_INPUT;
     }
     return FALSE;
@@ -1720,7 +1720,7 @@ static bool8 SlotTask_WaitMsg_NoMoreCoins(struct Task *task)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
-        ClearDialogWindowAndFrame(0, TRUE);
+        ClearDialogueWindowAndFrame(0, TRUE);
         sSlotMachine->state = SLOTTASK_END;
     }
     return FALSE;
@@ -1981,14 +1981,14 @@ static u16 ReelTimeSpeed(void)
 static void CheckMatch(void)
 {
     sSlotMachine->matches = 0;
-    CheckMatch_CenterRow();
+    CheckMatch_CentreRow();
     if (sSlotMachine->bet > 1)
         CheckMatch_TopAndBottom();
     if (sSlotMachine->bet > 2)
         CheckMatch_Diagonals();
 }
 
-static void CheckMatch_CenterRow(void)
+static void CheckMatch_CentreRow(void)
 {
     u8 sym1, sym2, sym3, match;
 
@@ -2289,7 +2289,7 @@ static bool8 ReelTask_Spin(struct Task *task)
 }
 
 // In ReelTime, the reel stops immediately. Otherwise, the game may manipulate
-// the results by stopping after at most 4 extra turns. The exact behavior
+// the results by stopping after at most 4 extra turns. The exact behaviour
 // differs depending on whether the machine has a bias.
 //
 // If the machine has a bias, it will try to match the bias symbol in each reel.
@@ -2384,7 +2384,7 @@ static bool8 DecideStop_Bias_Reel1(void)
 
 // The biasSymbol for subsequent reels is determined based on which of the bias
 // symbols can be found in reel 1. This really only matters when the machine is
-// biased toward 7's. It will try to match a 7 of the same color as reel 1.
+// biased toward 7's. It will try to match a 7 of the same colour as reel 1.
 static bool8 EitherSymbolAtPos_Reel1(s16 pos, u8 sym1, u8 sym2)
 {
     u8 sym = GetSymbol(LEFT_REEL, pos);
@@ -2416,7 +2416,7 @@ static bool8 BiasedTowardCherryOr7s(void)
         return FALSE;
 }
 
-// If a bias symbol appears in the center of reel 1 within the next 4 turns,
+// If a bias symbol appears in the centre of reel 1 within the next 4 turns,
 // stop there. That symbol becomes the biasSymbol for the subsequent reels.
 static bool8 DecideStop_Bias_Reel1_Bet1(u8 sym1, u8 sym2)
 {
@@ -2434,7 +2434,7 @@ static bool8 DecideStop_Bias_Reel1_Bet1(u8 sym1, u8 sym2)
     return FALSE;
 }
 
-// There is slightly different behavior depending on the machine's bias.
+// There is slightly different behaviour depending on the machine's bias.
 //
 // Bias toward cherry or 7s:
 //  - Check if a cherry or 7 is currently on screen. If so, stop immediately.
@@ -2531,7 +2531,7 @@ static bool8 DecideStop_Bias_Reel2_Bet1or2(void)
 // Checks whether it can match the bias symbol diagonally, and sometimes skews
 // toward this type of match rather than a match straight across.
 //
-// The behavior is different depending on where the bias symbol landed in
+// The behaviour is different depending on where the bias symbol landed in
 // reel 1:
 //
 // Landed in middle row:
@@ -2606,7 +2606,7 @@ static bool8 DecideStop_Bias_Reel2_Bet3(void)
     return FALSE;
 }
 
-// If the machine is biased toward mixed 7's, swap the color of the bias symbol
+// If the machine is biased toward mixed 7's, swap the colour of the bias symbol
 // from red 7 to blue 7, or vice versa.
 static bool8 DecideStop_Bias_Reel3(void)
 {
@@ -2683,9 +2683,9 @@ static void DecideStop_NoBias_Reel1(void)
     sSlotMachine->reelExtraTurns[0] = i;
 }
 
-// If the bias symbol is one of the 7's, switch to the opposite color and return
+// If the bias symbol is one of the 7's, switch to the opposite colour and return
 // true. Otherwise, return false.
-static bool8 IfSymbol7_SwitchColor(u8 *symbol)
+static bool8 IfSymbol7_SwitchColour(u8 *symbol)
 {
     if (*symbol == SYMBOL_7_RED)
     {
@@ -2704,9 +2704,9 @@ static bool8 IfSymbol7_SwitchColor(u8 *symbol)
 //
 // Otherwise, the machine tries to taunt the player if it is biased toward
 // straight 7's. This would only happen if the player did not stop near the
-// correct-color 7, so the machine couldn't force a match.
+// correct-colour 7, so the machine couldn't force a match.
 //
-// Instead, the machine now tries to line up the opposite-color 7, which is not
+// Instead, the machine now tries to line up the opposite-colour 7, which is not
 // a valid match.
 static void DecideStop_NoBias_Reel2(void)
 {
@@ -2720,9 +2720,9 @@ static void DecideStop_NoBias_Reel2(void)
 // If
 //  - The machine is biased toward straight 7's
 //  - The machine managed to match a 7 in the middle of reel 1
-//  - The machine could not line up a 7 of the same color in reel 2
+//  - The machine could not line up a 7 of the same colour in reel 2
 // Then
-//    The machine will try to line up a 7 of the opposite color in reel 2
+//    The machine will try to line up a 7 of the opposite colour in reel 2
 static void DecideStop_NoBias_Reel2_Bet1(void)
 {
     if (sSlotMachine->winnerRows[0] != 0 && sSlotMachine->machineBias & BIAS_STRAIGHT_7)
@@ -2731,7 +2731,7 @@ static void DecideStop_NoBias_Reel2_Bet1(void)
         // corresponds to a previous reel. That reel has already stopped and any
         // extra turns were applied.
         u8 reel1MiddleSym = GetSymbol(LEFT_REEL, 2 - sSlotMachine->reelExtraTurns[0]);
-        if (IfSymbol7_SwitchColor(&reel1MiddleSym))
+        if (IfSymbol7_SwitchColour(&reel1MiddleSym))
         {
             s16 i;
             for (i = 0; i <= MAX_EXTRA_TURNS; i++)
@@ -2754,15 +2754,15 @@ static void DecideStop_NoBias_Reel2_Bet1(void)
 // If
 //  - The machine is biased toward straight 7's
 //  - The machine managed to match a 7 anywhere in reel 1
-//  - The machine could not line up a 7 of the same color in reel 2
+//  - The machine could not line up a 7 of the same colour in reel 2
 // Then
-//    The machine will try to line up a 7 of the opposite color in reel 2
+//    The machine will try to line up a 7 of the opposite colour in reel 2
 static void DecideStop_NoBias_Reel2_Bet2(void)
 {
     if (sSlotMachine->winnerRows[0] != 0 && sSlotMachine->machineBias & BIAS_STRAIGHT_7)
     {
         u8 reel1BiasSym = GetSymbol(LEFT_REEL, sSlotMachine->winnerRows[0] - sSlotMachine->reelExtraTurns[0]);
-        if (IfSymbol7_SwitchColor(&reel1BiasSym))
+        if (IfSymbol7_SwitchColour(&reel1BiasSym))
         {
             s16 i;
             for (i = 0; i <= MAX_EXTRA_TURNS; i++)
@@ -2785,20 +2785,20 @@ static void DecideStop_NoBias_Reel2_Bet2(void)
 // If
 //  - The machine is biased toward straight 7's
 //  - The machine managed to match a 7 anywhere in reel 1
-//  - The machine could not line up a 7 of the same color in reel 2
+//  - The machine could not line up a 7 of the same colour in reel 2
 // Then
-//    The machine will try to line up a 7 of the opposite color in reel 2
+//    The machine will try to line up a 7 of the opposite colour in reel 2
 //
-// The way it tries to line up an opposite-color 7 differs depending on where
+// The way it tries to line up an opposite-colour 7 differs depending on where
 // the 7 is in reel 1:
 //
 // Middle row:
-//   Try to line up an opposite-color 7 in the middle of reel 2 within 4 turns.
+//   Try to line up an opposite-colour 7 in the middle of reel 2 within 4 turns.
 //
 // Top row:
-//  - First check for an opposite-color 7 in the top and middle rows of the
+//  - First check for an opposite-colour 7 in the top and middle rows of the
 //    current screen. If found, stop immediately.
-//  - Otherwise, check if an opposite-color 7 will enter the top row within 4
+//  - Otherwise, check if an opposite-colour 7 will enter the top row within 4
 //    turns.
 //     - If one enters in 1 or 2 turns, stop the reel when it gets to the middle
 //       row.
@@ -2806,19 +2806,19 @@ static void DecideStop_NoBias_Reel2_Bet2(void)
 //       row.
 //
 // Bottom row:
-//  - First check for an opposite-color 7 in the middle and bottom rows of the
+//  - First check for an opposite-colour 7 in the middle and bottom rows of the
 //    current screen. If found, stop immediately.
-//  - Otherwise, check if an opposite-color 7 will enter the bottom row within 4
+//  - Otherwise, check if an opposite-colour 7 will enter the bottom row within 4
 //    turns.
 //     - If one enters in 1 or 2 turns, stop the reel when it gets to the bottom
 //       row.
 //     - If one enters in 3 or 4 turns, stop the reel when it gets to the middle
 //       row.
 //
-// BUG: This procedure misses an opportunity to line up an opposite-color 7 in
+// BUG: This procedure misses an opportunity to line up an opposite-colour 7 in
 // one scenario, when:
 //  - There is a 7 in the bottom row of reel 1
-//  - And, you can get an opposite-color 7 in the middle row of reel 2 in 4
+//  - And, you can get an opposite-colour 7 in the middle row of reel 2 in 4
 //    turns
 static void DecideStop_NoBias_Reel2_Bet3(void)
 {
@@ -2836,9 +2836,9 @@ static void DecideStop_NoBias_Reel2_Bet3(void)
         }
 
         reel1BiasSym = GetSymbol(LEFT_REEL, sSlotMachine->winnerRows[0] - sSlotMachine->reelExtraTurns[0]);
-        if (IfSymbol7_SwitchColor(&reel1BiasSym))
+        if (IfSymbol7_SwitchColour(&reel1BiasSym))
         {
-            // Check current screen to see if there is already an opposite-color
+            // Check current screen to see if there is already an opposite-colour
             // 7 lined up for a match.
             j = 2;
             if (sSlotMachine->winnerRows[0] == 3)
@@ -2853,7 +2853,7 @@ static void DecideStop_NoBias_Reel2_Bet3(void)
                 }
             }
 
-            // Check if opposite-color 7 will appear in same row as reel 1 in
+            // Check if opposite-colour 7 will appear in same row as reel 1 in
             // over the next 4 turns
             for (j = 1; j <= MAX_EXTRA_TURNS; j++)
             {
@@ -2894,10 +2894,10 @@ static void DecideStop_NoBias_Reel2_Bet3(void)
     }
 }
 
-// Returns true if the reel 1 and reel 2 symbols are opposite-color 7's.
+// Returns true if the reel 1 and reel 2 symbols are opposite-colour 7's.
 //
 // Note that if true, this does not constitue a MATCH_MIXED_7, as the first two
-// reels are not the same color.
+// reels are not the same colour.
 static bool8 MismatchedSyms_77(u8 sym1, u8 sym2)
 {
     if ((sym1 == SYMBOL_7_RED && sym2 == SYMBOL_7_BLUE) || (sym1 == SYMBOL_7_BLUE && sym2 == SYMBOL_7_RED))
@@ -2950,7 +2950,7 @@ static void DecideStop_NoBias_Reel3(void)
 // If first two symbols are the same:
 //   Spin until you get a symbol that won't complete a match.
 //
-// Otherwise, if the first two symbols are opposite-color 7's:
+// Otherwise, if the first two symbols are opposite-colour 7's:
 //  - If the machine is biased toward straight 7's, then the player must have
 //    failed with this bias. The machine tries to taunt the player by turning
 //    up to 4 turns to complete a 7 mismatch (i.e., {7R, 7B, 7R} or
@@ -2975,7 +2975,7 @@ static void DecideStop_NoBias_Reel3_Bet1(void)
             i++;
         }
     }
-    // First two symbols are opposite-color 7's
+    // First two symbols are opposite-colour 7's
     else if (MismatchedSyms_77(sym1, sym2))
     {
         // If biased toward straight 7's, try to complete the 7 mismatch in 4
@@ -3009,9 +3009,9 @@ static void DecideStop_NoBias_Reel3_Bet1(void)
 //
 // There are up to two stages, depending on the first two matched symbols:
 //
-// 1. [Optional] If first two symbols are opposite-color 7's in the same row and
+// 1. [Optional] If first two symbols are opposite-colour 7's in the same row and
 //    the machine is biased toward straight 7's:
-//      Check if a 7 with the same color as reel 1 appears in the same row
+//      Check if a 7 with the same colour as reel 1 appears in the same row
 //      within 4 turns. If so, initially advance to that position.
 //
 // 2. Check rows. Keep advancing the reel a turn at a time as long as:
@@ -3037,7 +3037,7 @@ static void DecideStop_NoBias_Reel3_Bet2(void)
         sym1 = GetSymbol(LEFT_REEL, sSlotMachine->winnerRows[0] - sSlotMachine->reelExtraTurns[0]);
         sym2 = GetSymbol(MIDDLE_REEL, sSlotMachine->winnerRows[1] - sSlotMachine->reelExtraTurns[1]);
 
-        // If the first two 7's are opposite colors, see if you can line up a 7
+        // If the first two 7's are opposite colours, see if you can line up a 7
         // mismatch in the same row. If so, advance initially to that position.
         // More turns may be added further below.
         if (MismatchedSyms_77(sym1, sym2))
@@ -3094,9 +3094,9 @@ static void DecideStop_NoBias_Reel3_Bet2(void)
 // 1. Advance the reel as if 2 coins were bet: to mildly oversimplify, spin
 //    until there's no matches straight across in any rows.
 //
-// 2. [Optional] If you've lined up two opposite-color 7's diagonally and the
+// 2. [Optional] If you've lined up two opposite-colour 7's diagonally and the
 //    machine is biased toward straight 7's:
-//      Check if a 7 with the same color as reel 1 appears in the final diagonal
+//      Check if a 7 with the same colour as reel 1 appears in the final diagonal
 //      position within 4 turns. If so, advance to that position.
 //
 // 3. Check NWSE diagonal. Keep advancing the reel a turn at a time as long as:
@@ -3136,7 +3136,7 @@ static void DecideStop_NoBias_Reel3_Bet3(void)
         sym1 = GetSymbol(LEFT_REEL, sSlotMachine->winnerRows[0] - sSlotMachine->reelExtraTurns[0]);
         sym2 = GetSymbol(MIDDLE_REEL, sSlotMachine->winnerRows[1] - sSlotMachine->reelExtraTurns[1]);
 
-        // If the first two 7's are opposite colors, try advancing up to 4
+        // If the first two 7's are opposite colours, try advancing up to 4
         // additional turns to line up a diagonal 7 mismatch. More turns may be
         // added further below.
         if (MismatchedSyms_77(sym1, sym2))
@@ -3240,9 +3240,9 @@ static void DarkenBetTiles(u8 betVal)
 #define sFlashing        data[1]
 #define sNumFullFlashes  data[2]
 #define sDelayTimer      data[3]
-#define sColor           data[4]
-#define sColorIncr       data[5]
-#define sAtOriginalColor data[7]
+#define sColour           data[4]
+#define sColourIncr       data[5]
+#define sAtOriginalColour data[7]
 
 // Creates invisible sprites that flash the bet lines/numbers where a match occurs
 // 5 are created, 1 for each possible match line (3 rows, 2 diagonals)
@@ -3263,9 +3263,9 @@ static void FlashMatchLine(u8 matchLineId)
     sprite->sFlashing = TRUE;
     sprite->sNumFullFlashes = 4;
     sprite->sDelayTimer = 0;
-    sprite->sColor = 0;
-    sprite->sColorIncr = 2;
-    sprite->sAtOriginalColor = FALSE;
+    sprite->sColour = 0;
+    sprite->sColourIncr = 2;
+    sprite->sAtOriginalColour = FALSE;
 }
 
 // Match line flashes 4 times before the payout begins
@@ -3299,42 +3299,42 @@ static bool8 TryStopMatchLineFlashing(u8 spriteId)
     struct Sprite *sprite = &gSprites[spriteId];
     if (!sprite->sFlashing)
         return TRUE;
-    if (sprite->sAtOriginalColor)
+    if (sprite->sAtOriginalColour)
         sprite->sFlashing = FALSE;
 
-    return sprite->sAtOriginalColor;
+    return sprite->sAtOriginalColour;
 }
 
 static void SpriteCB_FlashMatchingLines(struct Sprite *sprite)
 {
-    s16 maxColorChange;
+    s16 maxColourChange;
     if (sprite->sFlashing)
     {
         if (!sprite->sDelayTimer--)
         {
-            sprite->sAtOriginalColor = FALSE;
+            sprite->sAtOriginalColour = FALSE;
             sprite->sDelayTimer = 1;
-            sprite->sColor += sprite->sColorIncr;
-            maxColorChange = 4;
+            sprite->sColour += sprite->sColourIncr;
+            maxColourChange = 4;
             if (sprite->sNumFullFlashes)
-                maxColorChange = 8;
-            if (sprite->sColor <= 0)
+                maxColourChange = 8;
+            if (sprite->sColour <= 0)
             {
-                // Returned to original color, reverse
-                sprite->sAtOriginalColor = TRUE;
-                sprite->sColorIncr = -sprite->sColorIncr;
+                // Returned to original colour, reverse
+                sprite->sAtOriginalColour = TRUE;
+                sprite->sColourIncr = -sprite->sColourIncr;
                 if (sprite->sNumFullFlashes)
                     sprite->sNumFullFlashes--;
             }
-            else if (sprite->sColor >= maxColorChange)
+            else if (sprite->sColour >= maxColourChange)
             {
                 // Reached peak darkness, reverse
-                sprite->sColorIncr = -sprite->sColorIncr;
+                sprite->sColourIncr = -sprite->sColourIncr;
             }
             if (sprite->sNumFullFlashes)
                 sprite->sDelayTimer <<= 1;
         }
-        MultiplyPaletteRGBComponents(sMatchLinePalOffsets[sprite->sMatchLineId], sprite->sColor, sprite->sColor, sprite->sColor);
+        MultiplyPaletteRGBComponents(sMatchLinePalOffsets[sprite->sMatchLineId], sprite->sColour, sprite->sColour, sprite->sColour);
     }
 }
 
@@ -3342,9 +3342,9 @@ static void SpriteCB_FlashMatchingLines(struct Sprite *sprite)
 #undef sFlashing
 #undef sNumFullFlashes
 #undef sDelayTimer
-#undef sColor
-#undef sColorIncr
-#undef sAtOriginalColor
+#undef sColour
+#undef sColourIncr
+#undef sAtOriginalColour
 
 #define sDelayTimer data[1]
 #define sFlashState data[2]
@@ -3929,7 +3929,7 @@ static void InfoBox_DrawWindow(struct Task *task)
 
 static void InfoBox_AddText(struct Task *task)
 {
-    AddTextPrinterParameterized3(1, FONT_NORMAL, 2, 5, sColors_ReeltimeHelp, 0, gText_ReelTimeHelp);
+    AddTextPrinterParameterized3(1, FONT_NORMAL, 2, 5, sColours_ReeltimeHelp, 0, gText_ReelTimeHelp);
     CopyWindowToVram(1, COPYWIN_FULL);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     task->tState++;
@@ -4403,7 +4403,7 @@ static void DestroyReelTimeBoltSprites(void)
 #undef sDelay
 
 #define sFlashPal   data[0]
-#define sColorIdx   data[5]
+#define sColourIdx   data[5]
 #define sDelayTimer data[6]
 #define sDelay      data[7]
 
@@ -4413,7 +4413,7 @@ static void CreateReelTimePikachuAuraSprites(void)
     u8 spriteId = CreateSprite(&sSpriteTemplate_ReelTimePikachuAura, 72, 80, 3);
     gSprites[spriteId].oam.priority = 1;
     gSprites[spriteId].sFlashPal = TRUE; // Only one of them needs to do the flashing, they share the palette
-    gSprites[spriteId].sColorIdx = 0;
+    gSprites[spriteId].sColourIdx = 0;
     gSprites[spriteId].sDelayTimer = 16;
     gSprites[spriteId].sDelay = 8;
     sSlotMachine->reelTimePikachuAuraSpriteIds[0] = spriteId;
@@ -4427,12 +4427,12 @@ static void CreateReelTimePikachuAuraSprites(void)
 
 static void SpriteCB_ReelTimePikachuAura(struct Sprite *sprite)
 {
-    u8 colors[] = {16, 0};
+    u8 colours[] = {16, 0};
     if (sprite->sFlashPal && --sprite->sDelayTimer <= 0)
     {
-        MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(PALTAG_PIKA_AURA)) + 3, colors[sprite->sColorIdx], colors[sprite->sColorIdx], colors[sprite->sColorIdx]);
-        ++sprite->sColorIdx;
-        sprite->sColorIdx &= 1;
+        MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(PALTAG_PIKA_AURA)) + 3, colours[sprite->sColourIdx], colours[sprite->sColourIdx], colours[sprite->sColourIdx]);
+        ++sprite->sColourIdx;
+        sprite->sColourIdx &= 1;
         sprite->sDelayTimer = sprite->sDelay;
     }
 }
@@ -4451,7 +4451,7 @@ static void DestroyReelTimePikachuAuraSprites(void)
 }
 
 #undef sFlashPal
-#undef sColorIdx
+#undef sColourIdx
 #undef sDelayTimer
 #undef sDelay
 
@@ -5094,7 +5094,7 @@ static void LoadSlotMachineReelOverlay(void)
     }
 }
 
-// For (un)shading the gray button at the bottom of a reel when A is pressed. The button is colored in quadrants
+// For (un)shading the grey button at the bottom of a reel when A is pressed. The button is coloured in quadrants
 static void SetReelButtonTilemap(s16 offset, u16 topLeft, u16 topRight, u16 bottomLeft, u16 bottomRight)
 {
     sReelButtonPress_Tilemap[0] = topLeft;
@@ -7847,7 +7847,7 @@ static const struct SpriteSheet sSlotMachineSpriteSheets[22] =
 
 static const u8 *const sReelBackground_Tilemap = gSlotMachineReelBackground_Tilemap;
 
-static const u16 sUnusedColors[] =
+static const u16 sUnusedColours[] =
 {
     RGB(27, 27, 27),
     RGB(8, 11, 26),
@@ -7889,7 +7889,7 @@ static const u8 sMatchLinePalOffsets[NUM_MATCH_LINES] = {
     [MATCH_MIDDLE_ROW] = BG_PLTT_ID(4) + 10,
     [MATCH_TOP_ROW]    = BG_PLTT_ID(4) + 11,
     [MATCH_BOTTOM_ROW] = BG_PLTT_ID(4) + 12,
-    [MATCH_NWSE_DIAG]  = BG_PLTT_ID(4) + 14, // Diag colors flipped for some reason
+    [MATCH_NWSE_DIAG]  = BG_PLTT_ID(4) + 14, // Diag colours flipped for some reason
     [MATCH_NESW_DIAG]  = BG_PLTT_ID(4) + 13  // Doesn't matter as both are identical
 };
 
@@ -7902,7 +7902,7 @@ static const u8 sBetToMatchLineIds[MAX_BET][2] =
 
 static const u8 sMatchLinesPerBet[MAX_BET] = { 1, 2, 2 };
 
-// Flashing lights at top of slot machine, brightest point inside light goes from toward center of machine, to middle, to toward edges
+// Flashing lights at top of slot machine, brightest point inside light goes from toward centre of machine, to middle, to toward edges
 static const u16 sFlashingLightsInside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_inside.gbapal");
 static const u16 sFlashingLightsMiddle_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_middle.gbapal");
 static const u16 sFlashingLightsOutside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_outside.gbapal");

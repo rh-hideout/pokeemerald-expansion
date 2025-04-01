@@ -30,7 +30,7 @@ TrainerHill_Elevator_EventScript_EnterElevator::
 	releaseall
 	applymovement LOCALID_ATTENDANT, TrainerHill_Elevator_Movement_AttendantFaceDown
 	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, TrainerHill_Elevator_Movement_PlayerMoveToCenterOfElevator
+	applymovement OBJ_EVENT_ID_PLAYER, TrainerHill_Elevator_Movement_PlayerMoveToCentreOfElevator
 	waitmovement 0
 	call TrainerHill_Elevator_EventScript_MoveElevator
 	delay 25
@@ -57,7 +57,7 @@ TrainerHill_Elevator_EventScript_MoveElevator::
 	waitstate
 	return
 
-TrainerHill_Elevator_Movement_PlayerMoveToCenterOfElevator:
+TrainerHill_Elevator_Movement_PlayerMoveToCentreOfElevator:
 	walk_up
 	walk_up
 	walk_right

@@ -609,6 +609,6 @@ Route119_Text_TrainerTipsDecoration:
 	.string "Up to sixteen decorations and\n"
 	.string "furniture items can be placed in\l"
 	.string "a SECRET BASE.\p"
-	.string "Pick your favorite items and create\n"
+	.string "Pick your favourite items and create\n"
 	.string "your very own SECRET BASE exactly the\l"
 	.string "way you want.$"

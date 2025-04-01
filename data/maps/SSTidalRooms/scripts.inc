@@ -22,7 +22,7 @@ SSTidalRooms_EventScript_Bed::
 	lockall
 	msgbox SSTidalRooms_Text_TakeRestOnBed, MSGBOX_DEFAULT
 	closemessage
-	call Common_EventScript_OutOfCenterPartyHeal
+	call Common_EventScript_OutOfCentrePartyHeal
 	call SSTidalRooms_EventScript_ProgessCruiseAfterBed
 	releaseall
 	end

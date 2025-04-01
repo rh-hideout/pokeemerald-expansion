@@ -185,19 +185,19 @@ SootopolisCity_OnFrame:
 	map_script_2 VAR_SKY_PILLAR_STATE, 1, SootopolisCity_EventScript_StartRayquazaScene
 	.2byte 0
 
-@ If not at PokeCenter, assumed to have arrived via Dive
+@ If not at PokeCentre, assumed to have arrived via Dive
 SootopolisCity_EventScript_StartLegendariesScene::
 	lockall
 	special StorePlayerCoordsInVars
 	goto_if_ne VAR_0x8004, 43, SootopolisCity_EventScript_LegendariesSceneFromDive
 	goto_if_ne VAR_0x8005, 32, SootopolisCity_EventScript_LegendariesSceneFromDive
-	goto SootopolisCity_EventScript_LegendariesSceneFromPokeCenter
+	goto SootopolisCity_EventScript_LegendariesSceneFromPokeCentre
 	end
 
-SootopolisCity_EventScript_LegendariesSceneFromPokeCenter::
+SootopolisCity_EventScript_LegendariesSceneFromPokeCentre::
 	delay 60
 	special SpawnCameraObject
-	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanToActionFromPokeCenter
+	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanToActionFromPokeCentre
 	waitmovement 0
 	special RemoveCameraObject
 	delay 60
@@ -256,7 +256,7 @@ SootopolisCity_EventScript_LegendariesSceneFromPokeCenter::
 	special SpawnCameraObject
 	applymovement LOCALID_KYOGRE, SootopolisCity_Movement_KyogreIdle
 	applymovement LOCALID_GROUDON, SootopolisCity_Movement_GroudonIdle
-	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanBackToPokeCenter
+	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanBackToPokeCentre
 	waitmovement 0
 	special RemoveCameraObject
 	setvar VAR_SOOTOPOLIS_CITY_STATE, 2
@@ -264,7 +264,7 @@ SootopolisCity_EventScript_LegendariesSceneFromPokeCenter::
 	releaseall
 	end
 
-SootopolisCity_Movement_PanToActionFromPokeCenter:
+SootopolisCity_Movement_PanToActionFromPokeCentre:
 	walk_slow_diag_southwest
 	walk_slow_diag_southwest
 	walk_slow_diag_southwest
@@ -279,7 +279,7 @@ SootopolisCity_Movement_PanToActionFromPokeCenter:
 	walk_slow_diag_southwest
 	step_end
 
-SootopolisCity_Movement_PanBackToPokeCenter:
+SootopolisCity_Movement_PanBackToPokeCentre:
 	walk_slow_diag_northeast
 	walk_slow_diag_northeast
 	walk_slow_diag_northeast
@@ -474,19 +474,19 @@ SootopolisCity_Movement_GroudonIdle:
 	walk_in_place_slow_right
 	step_end
 
-@ If not at PokeCenter, assumed to have arrived via Dive
+@ If not at PokeCentre, assumed to have arrived via Dive
 SootopolisCity_EventScript_StartRayquazaScene::
 	lockall
 	special StorePlayerCoordsInVars
 	goto_if_ne VAR_0x8004, 43, SootopolisCity_EventScript_RayquazaSceneFromDive
 	goto_if_ne VAR_0x8005, 32, SootopolisCity_EventScript_RayquazaSceneFromDive
-	goto SootopolisCity_EventScript_RayquazaSceneFromPokeCenter
+	goto SootopolisCity_EventScript_RayquazaSceneFromPokeCentre
 	end
 
-SootopolisCity_EventScript_RayquazaSceneFromPokeCenter::
+SootopolisCity_EventScript_RayquazaSceneFromPokeCentre::
 	delay 60
 	special SpawnCameraObject
-	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanToActionFromPokeCenter
+	applymovement OBJ_EVENT_ID_CAMERA, SootopolisCity_Movement_PanToActionFromPokeCentre
 	waitmovement 0
 	special RemoveCameraObject
 	delay 60
@@ -819,7 +819,7 @@ SootopolisCity_EventScript_Woman1Legendaries::
 	end
 
 SootopolisCity_EventScript_Woman1PostLegendaries::
-	msgbox SootopolisCity_Text_NightSkyFavoriteScenery, MSGBOX_DEFAULT
+	msgbox SootopolisCity_Text_NightSkyFavouriteScenery, MSGBOX_DEFAULT
 	release
 	end
 
@@ -1572,12 +1572,12 @@ SootopolisCity_Text_FearedWorstWhenPokemonFlewDown:
 	.string "When that third POKéMON flew down,\n"
 	.string "I feared the worst.$"
 
-SootopolisCity_Text_NightSkyFavoriteScenery:
+SootopolisCity_Text_NightSkyFavouriteScenery:
 	.string "A circle of a night sky framed by\n"
 	.string "the crater of a volcano…\p"
 	.string "And in that ring, stars flicker and\n"
 	.string "blink as if they were alive…\l"
-	.string "It's my favorite scenery.$"
+	.string "It's my favourite scenery.$"
 
 SootopolisCity_Text_WeatherWentWild:
 	.string "The weather was clear this morning,\n"

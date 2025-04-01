@@ -302,7 +302,7 @@ BattleFrontier_OutsideEast_Text_DidScottBringYouHere:
 BattleFrontier_OutsideEast_Text_BelieveInYouBuddy:
 	.string "ZIGG!\n"
 	.string "I believe in you, little buddy!\p"
-	.string "I'll make my little ZIGG any favorite\n"
+	.string "I'll make my little ZIGG any favourite\n"
 	.string "tasty treats you like if you win!$"
 
 BattleFrontier_OutsideEast_Text_ZigzagoonLooksVacant:

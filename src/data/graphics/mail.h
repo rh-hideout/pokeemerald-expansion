@@ -1,5 +1,5 @@
 const u16 gMailPalette_Orange[] = INCBIN_U16("graphics/mail/orange/palette.gbapal");
-const u16 gMailPalette_Harbor[] = INCBIN_U16("graphics/mail/harbor/palette.gbapal");
+const u16 gMailPalette_Harbour[] = INCBIN_U16("graphics/mail/harbour/palette.gbapal");
 const u16 gMailPalette_Glitter[] = INCBIN_U16("graphics/mail/glitter/palette.gbapal");
 const u16 gMailPalette_Mech[] = INCBIN_U16("graphics/mail/mech/palette.gbapal");
 const u16 gMailPalette_Wood[] = INCBIN_U16("graphics/mail/wood/palette.gbapal");
@@ -12,7 +12,7 @@ const u16 gMailPalette_Fab[] = INCBIN_U16("graphics/mail/fab/palette.gbapal");
 const u16 gMailPalette_Retro[] = INCBIN_U16("graphics/mail/retro/palette.gbapal");
 
 const u32 gMailTiles_Orange[] = INCBIN_U32("graphics/mail/orange/tiles.4bpp.lz");
-const u32 gMailTiles_Harbor[] = INCBIN_U32("graphics/mail/harbor/tiles.4bpp.lz");
+const u32 gMailTiles_Harbour[] = INCBIN_U32("graphics/mail/harbour/tiles.4bpp.lz");
 const u32 gMailTiles_Glitter[] = INCBIN_U32("graphics/mail/glitter/tiles.4bpp.lz");
 const u32 gMailTiles_Mech[] = INCBIN_U32("graphics/mail/mech/tiles.4bpp.lz");
 const u32 gMailTiles_Wood[] = INCBIN_U32("graphics/mail/wood/tiles.4bpp.lz");
@@ -25,7 +25,7 @@ const u32 gMailTiles_Fab[] = INCBIN_U32("graphics/mail/fab/tiles.4bpp.lz");
 const u32 gMailTiles_Retro[] = INCBIN_U32("graphics/mail/retro/tiles.4bpp.lz");
 
 const u32 gMailTilemap_Orange[] = INCBIN_U32("graphics/mail/orange/map.bin.lz");
-const u32 gMailTilemap_Harbor[] = INCBIN_U32("graphics/mail/harbor/map.bin.lz");
+const u32 gMailTilemap_Harbour[] = INCBIN_U32("graphics/mail/harbour/map.bin.lz");
 const u32 gMailTilemap_Glitter[] = INCBIN_U32("graphics/mail/glitter/map.bin.lz");
 const u32 gMailTilemap_Mech[] = INCBIN_U32("graphics/mail/mech/map.bin.lz");
 const u32 gMailTilemap_Wood[] = INCBIN_U32("graphics/mail/wood/map.bin.lz");

@@ -118,7 +118,7 @@ CableClub_Text_GotToLookAtTrainerCard:
 	.string "Score! Got to look at {STR_VAR_1}'s\n"
 	.string "TRAINER CARD!$"
 
-CableClub_Text_GotToLookAtColoredTrainerCard:
+CableClub_Text_GotToLookAtColouredTrainerCard:
 	.string "Score! Got to look at {STR_VAR_1}'s\n"
 	.string "TRAINER CARD!\p"
 	.string "It's a {STR_VAR_2} card!$"
@@ -127,7 +127,7 @@ BattleColosseum_2P_Text_TakePlaceStartBattle:
 	.string "Please take your place and start\n"
 	.string "your battle.$"
 
-TradeCenter_Text_TakeSeatStartTrade:
+TradeCentre_Text_TakeSeatStartTrade:
 	.string "Please take your seat and start\n"
 	.string "your trade.$"
 
@@ -421,7 +421,7 @@ CableClub_Text_FirstTimeRightThisWay:
 	.string "I'll show you how the Wireless\n"
 	.string "Communication System works.\p"
 	.string "First, I need to show you this\n"
-	.string "floor of our POKéMON CENTER.\p"
+	.string "floor of our POKéMON CENTRE.\p"
 	.string "Right this way, please.$"
 
 CableClub_Text_ExplainWirelessClubFirstTime:
@@ -449,7 +449,7 @@ CableClub_Text_ExplainWirelessClubFirstTime:
 CableClub_Text_AskAboutLinking:
 	.string "Hello, {PLAYER}!\p"
 	.string "It's me, TEALA, the POKéMON\n"
-	.string "CENTER 2F attendant.\p"
+	.string "CENTRE 2F attendant.\p"
 	.string "Is there something you needed to\n"
 	.string "ask me about linking?$"
 

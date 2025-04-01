@@ -235,7 +235,7 @@ FallarborTown_BattleTentLobby_EventScript_LittleBoy::
 	end
 
 FallarborTown_BattleTentLobby_EventScript_Lass::
-	msgbox FallarborTown_BattleTentLobby_Text_FallarborTentMyFavorite, MSGBOX_NPC
+	msgbox FallarborTown_BattleTentLobby_Text_FallarborTentMyFavourite, MSGBOX_NPC
 	end
 
 FallarborTown_BattleTentLobby_EventScript_Scott::
@@ -309,10 +309,10 @@ FallarborTown_BattleTentLobby_Text_MakeThinkImJustKid:
 	.string "Then, I'll shock them and grab\n"
 	.string "the title!$"
 
-FallarborTown_BattleTentLobby_Text_FallarborTentMyFavorite:
+FallarborTown_BattleTentLobby_Text_FallarborTentMyFavourite:
 	.string "You know how BATTLE TENTS offer\n"
 	.string "different events in different towns?\p"
-	.string "My favorite is definitely the BATTLE\n"
+	.string "My favourite is definitely the BATTLE\n"
 	.string "TENT in FALLARBOR TOWN.\p"
 	.string "I think it's fantastic how TRAINERS\n"
 	.string "try to win with all their faith in\l"

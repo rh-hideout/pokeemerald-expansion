@@ -271,8 +271,8 @@ static bool8 UpdateBlackWipe(s16 *, bool8, bool8);
 static void SetTrainerPicSlideDirection(s16, s16);
 static void IncrementTrainerPicState(s16);
 static s16 IsTrainerPicSlideDone(s16);
-static bool8 TransitionIntro_FadeToGray(struct Task *);
-static bool8 TransitionIntro_FadeFromGray(struct Task *);
+static bool8 TransitionIntro_FadeToGrey(struct Task *);
+static bool8 TransitionIntro_FadeFromGrey(struct Task *);
 static bool8 IsIntroTaskDone(void);
 static bool16 UpdateRectangularSpiralLine(const s16 * const *, struct RectangularSpiralLine *);
 static void SpriteCB_FldEffPokeballTrail(struct Sprite *);
@@ -739,8 +739,8 @@ static const s16 sAngledWipes_EndDelays[NUM_ANGLED_WIPES] = {8, 4, 2, 1, 1, 1, 0
 
 static const TransitionStateFunc sTransitionIntroFuncs[] =
 {
-    TransitionIntro_FadeToGray,
-    TransitionIntro_FadeFromGray
+    TransitionIntro_FadeToGrey,
+    TransitionIntro_FadeFromGrey
 };
 
 static const struct SpriteFrameImage sSpriteImage_Pokeball[] =
@@ -860,13 +860,13 @@ static const u16 sMugshotPal_Yellow[] = INCBIN_U16("graphics/battle_transitions/
 static const u16 sMugshotPal_Brendan[] = INCBIN_U16("graphics/battle_transitions/brendan_bg.gbapal");
 static const u16 sMugshotPal_May[] = INCBIN_U16("graphics/battle_transitions/may_bg.gbapal");
 
-static const u16 *const sOpponentMugshotsPals[MUGSHOT_COLOR_COUNT] =
+static const u16 *const sOpponentMugshotsPals[MUGSHOT_COLOUR_COUNT] =
 {
-    [MUGSHOT_COLOR_PURPLE] = sMugshotPal_Purple,
-    [MUGSHOT_COLOR_GREEN]  = sMugshotPal_Green,
-    [MUGSHOT_COLOR_PINK]   = sMugshotPal_Pink,
-    [MUGSHOT_COLOR_BLUE]   = sMugshotPal_Blue,
-    [MUGSHOT_COLOR_YELLOW] = sMugshotPal_Yellow
+    [MUGSHOT_COLOUR_PURPLE] = sMugshotPal_Purple,
+    [MUGSHOT_COLOUR_GREEN]  = sMugshotPal_Green,
+    [MUGSHOT_COLOUR_PINK]   = sMugshotPal_Pink,
+    [MUGSHOT_COLOUR_BLUE]   = sMugshotPal_Blue,
+    [MUGSHOT_COLOUR_YELLOW] = sMugshotPal_Yellow
 };
 
 static const u16 *const sPlayerMugshotsPals[GENDER_COUNT] =
@@ -2260,15 +2260,15 @@ static bool8 Mugshot_SetGfx(struct Task *task)
     s16 i, j;
     u16 *tilemap, *tileset;
     const u16 *mugshotsMap = sMugshotsTilemap;
-    u8 mugshotColor = GetTrainerMugshotColorFromId(TRAINER_BATTLE_PARAM.opponentA);
+    u8 mugshotColour = GetTrainerMugshotColourFromId(TRAINER_BATTLE_PARAM.opponentA);
 
     GetBg0TilesDst(&tilemap, &tileset);
     CpuSet(sEliteFour_Tileset, tileset, 0xF0);
 
-    if (mugshotColor >= ARRAY_COUNT(sOpponentMugshotsPals))
-        mugshotColor = MUGSHOT_COLOR_PURPLE;
+    if (mugshotColour >= ARRAY_COUNT(sOpponentMugshotsPals))
+        mugshotColour = MUGSHOT_COLOUR_PURPLE;
 
-    LoadPalette(sOpponentMugshotsPals[mugshotColor], 0xF0, 0x20);
+    LoadPalette(sOpponentMugshotsPals[mugshotColour], 0xF0, 0x20);
     LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
 
     for (i = 0; i < 20; i++)
@@ -2552,8 +2552,8 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
     opponentSprite->oam.size = SPRITE_SIZE(64x32);
     playerSprite->oam.size = SPRITE_SIZE(64x32);
 
-    CalcCenterToCornerVec(opponentSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
-    CalcCenterToCornerVec(playerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+    CalcCentreToCornerVec(opponentSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+    CalcCentreToCornerVec(playerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
 
     opponentRotationScales = gTrainerSprites[trainerPicId].mugshotRotation;
 
@@ -3878,23 +3878,23 @@ static void VBlankCB_AngledWipes(void)
 // Transition intro
 //-----------------------------------
 
-#define tFadeToGrayDelay       data[1]
-#define tFadeFromGrayDelay     data[2]
+#define tFadeToGreyDelay       data[1]
+#define tFadeFromGreyDelay     data[2]
 #define tNumFades              data[3]
-#define tFadeToGrayIncrement   data[4]
-#define tFadeFromGrayIncrement data[5]
+#define tFadeToGreyIncrement   data[4]
+#define tFadeFromGreyIncrement data[5]
 #define tDelayTimer            data[6]
 #define tBlend                 data[7]
 
-static void CreateIntroTask(s16 fadeToGrayDelay, s16 fadeFromGrayDelay, s16 numFades, s16 fadeToGrayIncrement, s16 fadeFromGrayIncrement)
+static void CreateIntroTask(s16 fadeToGreyDelay, s16 fadeFromGreyDelay, s16 numFades, s16 fadeToGreyIncrement, s16 fadeFromGreyIncrement)
 {
     u8 taskId = CreateTask(Task_BattleTransition_Intro, 3);
-    gTasks[taskId].tFadeToGrayDelay = fadeToGrayDelay;
-    gTasks[taskId].tFadeFromGrayDelay = fadeFromGrayDelay;
+    gTasks[taskId].tFadeToGreyDelay = fadeToGreyDelay;
+    gTasks[taskId].tFadeFromGreyDelay = fadeFromGreyDelay;
     gTasks[taskId].tNumFades = numFades;
-    gTasks[taskId].tFadeToGrayIncrement = fadeToGrayIncrement;
-    gTasks[taskId].tFadeFromGrayIncrement = fadeFromGrayIncrement;
-    gTasks[taskId].tDelayTimer = fadeToGrayDelay;
+    gTasks[taskId].tFadeToGreyIncrement = fadeToGreyIncrement;
+    gTasks[taskId].tFadeFromGreyIncrement = fadeFromGreyIncrement;
+    gTasks[taskId].tDelayTimer = fadeToGreyDelay;
 }
 
 static bool8 IsIntroTaskDone(void)
@@ -3910,31 +3910,31 @@ void Task_BattleTransition_Intro(u8 taskId)
     while (sTransitionIntroFuncs[gTasks[taskId].tState](&gTasks[taskId]));
 }
 
-static bool8 TransitionIntro_FadeToGray(struct Task *task)
+static bool8 TransitionIntro_FadeToGrey(struct Task *task)
 {
     if (task->tDelayTimer == 0 || --task->tDelayTimer == 0)
     {
-        task->tDelayTimer = task->tFadeToGrayDelay;
-        task->tBlend += task->tFadeToGrayIncrement;
+        task->tDelayTimer = task->tFadeToGreyDelay;
+        task->tBlend += task->tFadeToGreyIncrement;
         if (task->tBlend > 16)
             task->tBlend = 16;
         BlendPalettes(PALETTES_ALL, task->tBlend, RGB(11, 11, 11));
     }
     if (task->tBlend >= 16)
     {
-        // Fade to gray complete, start fade back
+        // Fade to grey complete, start fade back
         task->tState++;
-        task->tDelayTimer = task->tFadeFromGrayDelay;
+        task->tDelayTimer = task->tFadeFromGreyDelay;
     }
     return FALSE;
 }
 
-static bool8 TransitionIntro_FadeFromGray(struct Task *task)
+static bool8 TransitionIntro_FadeFromGrey(struct Task *task)
 {
     if (task->tDelayTimer == 0 || --task->tDelayTimer == 0)
     {
-        task->tDelayTimer = task->tFadeFromGrayDelay;
-        task->tBlend -= task->tFadeFromGrayIncrement;
+        task->tDelayTimer = task->tFadeFromGreyDelay;
+        task->tBlend -= task->tFadeFromGreyIncrement;
         if (task->tBlend < 0)
             task->tBlend = 0;
         BlendPalettes(PALETTES_ALL, task->tBlend, RGB(11, 11, 11));
@@ -3948,19 +3948,19 @@ static bool8 TransitionIntro_FadeFromGray(struct Task *task)
         }
         else
         {
-            // Fade from gray complete, start new fade
-            task->tDelayTimer = task->tFadeToGrayDelay;
+            // Fade from grey complete, start new fade
+            task->tDelayTimer = task->tFadeToGreyDelay;
             task->tState = 0;
         }
     }
     return FALSE;
 }
 
-#undef tFadeToGrayDelay
-#undef tFadeFromGrayDelay
+#undef tFadeToGreyDelay
+#undef tFadeFromGreyDelay
 #undef tNumFades
-#undef tFadeToGrayIncrement
-#undef tFadeFromGrayIncrement
+#undef tFadeToGreyIncrement
+#undef tFadeFromGreyIncrement
 #undef tDelayTimer
 #undef tBlend
 
@@ -4012,7 +4012,7 @@ static void SetSinWave(s16 *array, s16 sinAdd, s16 index, s16 indexIncrementer, 
         array[i] = sinAdd + Sin(index & 0xFF, amplitude);
 }
 
-static void SetCircularMask(u16 *buffer, s16 centerX, s16 centerY, s16 radius)
+static void SetCircularMask(u16 *buffer, s16 centreX, s16 centreY, s16 radius)
 {
     s16 i;
 
@@ -4025,10 +4025,10 @@ static void SetCircularMask(u16 *buffer, s16 centerX, s16 centerY, s16 radius)
         sinResult = Sin(i, radius);
         cosResult = Cos(i, radius);
 
-        drawXLeft = centerX - sinResult;
-        drawX = centerX + sinResult;
-        drawYTop = centerY - cosResult;
-        drawYBott = centerY + cosResult;
+        drawXLeft = centreX - sinResult;
+        drawX = centreX + sinResult;
+        drawYTop = centreY - cosResult;
+        drawYBott = centreY + cosResult;
 
         if (drawXLeft < 0)
             drawXLeft = 0;
@@ -4044,8 +4044,8 @@ static void SetCircularMask(u16 *buffer, s16 centerX, s16 centerY, s16 radius)
         buffer[drawYBott] = drawX;
 
         cosResult = Cos(i + 1, radius);
-        drawYTopNext = centerY - cosResult;
-        drawYBottNext = centerY + cosResult;
+        drawYTopNext = centreY - cosResult;
+        drawYBottNext = centreY + cosResult;
 
         if (drawYTopNext < 0)
             drawYTopNext = 0;

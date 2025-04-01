@@ -1462,7 +1462,7 @@ Route111_Text_BrandenPostBattle:
 	.string "my sandwiches.$"
 
 Route111_Text_TyronIntro:
-	.string "This is my favorite kind of POKéMON!$"
+	.string "This is my favourite kind of POKéMON!$"
 
 Route111_Text_TyronDefeat:
 	.string "Wait!\n"
@@ -1669,7 +1669,7 @@ Route113_Text_LaoIntro:
 	.string "I challenge thee!$"
 
 Route113_Text_LaoDefeat:
-	.string "With honor I admit defeat!$"
+	.string "With honour I admit defeat!$"
 
 Route113_Text_LaoPostBattle:
 	.string "I must refine the art of concealment.\n"
@@ -1684,7 +1684,7 @@ Route113_Text_LaoRematchIntro:
 	.string "I challenge thee!$"
 
 Route113_Text_LaoRematchDefeat:
-	.string "With honor I admit defeat!$"
+	.string "With honour I admit defeat!$"
 
 Route113_Text_LaoPostRematch:
 	.string "My flawless concealment was let down\n"
@@ -3053,7 +3053,7 @@ Route120_Text_JenniferPostBattle:
 Route120_Text_ChipIntro:
 	.string "Who might you be?\p"
 	.string "Are you perhaps searching for ancient\n"
-	.string "ruins that are rumored to possibly\l"
+	.string "ruins that are rumoured to possibly\l"
 	.string "exist according to legend?$"
 
 Route120_Text_ChipDefeat:
@@ -3136,7 +3136,7 @@ Route120_Text_LeonelDefeat:
 
 Route120_Text_LeonelPostBattle:
 	.string "I think it's awesome you're so strong\n"
-	.string "battling with your favorite POKéMON.$"
+	.string "battling with your favourite POKéMON.$"
 
 Route121_Text_VanessaIntro:
 	.string "Will you play with my delightfully\n"
@@ -3323,7 +3323,7 @@ Route121_Text_PatDefeat:
 
 Route121_Text_PatPostBattle:
 	.string "I raise every POKéMON with the same\n"
-	.string "love and care--I don't pick favorites.$"
+	.string "love and care--I don't pick favourites.$"
 
 Route121_Text_MarcelIntro:
 	.string "My POKéMON have never tasted defeat!\n"
@@ -3342,7 +3342,7 @@ Route123_Text_WendyIntro:
 	.string "I'll be the test!$"
 
 Route123_Text_WendyDefeat:
-	.string "You passed with flying colors!$"
+	.string "You passed with flying colours!$"
 
 Route123_Text_WendyPostBattle:
 	.string "To best even me…\n"
@@ -3778,7 +3778,7 @@ Route124_Text_IsabellaDefeat:
 	.string "I am not crying!$"
 
 Route124_Text_IsabellaPostBattle:
-	.string "You can find pretty colored shards\n"
+	.string "You can find pretty coloured shards\n"
 	.string "of things around here.$"
 
 Route125_Text_NolenIntro:
@@ -4104,7 +4104,7 @@ Route127_Text_AidanPostBattle:
 	.string "There're lots of diving spots in\n"
 	.string "the sea around here.\p"
 	.string "You can spot them easily from the sky\n"
-	.string "because of their darker color.$"
+	.string "because of their darker colour.$"
 
 Route127_Text_KojiIntro:
 	.string "Run in your bare feet.\n"

@@ -112,7 +112,7 @@
 #define FLAG_RECEIVED_WAILMER_PAIL           0x5E
 #define FLAG_RECEIVED_POKEBLOCK_CASE         0x5F
 #define FLAG_RECEIVED_SECRET_POWER           0x60
-#define FLAG_MET_TEAM_AQUA_HARBOR            0x61
+#define FLAG_MET_TEAM_AQUA_HARBOUR            0x61
 #define FLAG_TV_EXPLAINED                    0x62
 #define FLAG_MAUVILLE_GYM_BARRIERS_STATE     0x63
 #define FLAG_MOSSDEEP_GYM_SWITCH_1           0x64 // Leftover from the RS version of Mossdeep Gym, functionally unused
@@ -134,7 +134,7 @@
 #define FLAG_SCOTT_CALL_BATTLE_FRONTIER      0x72 // Used in order to activate a phone call from Scott, inviting the player to the SS Tidal.
 #define FLAG_RECEIVED_METEORITE              0x73
 #define FLAG_ADVENTURE_STARTED               0x74 // RECEIVED Pokédex.
-#define FLAG_DEFEATED_MAGMA_SPACE_CENTER     0x75 // Set when Team Magma is defeated at Mossdeep's Space Center.
+#define FLAG_DEFEATED_MAGMA_SPACE_CENTRE     0x75 // Set when Team Magma is defeated at Mossdeep's Space Centre.
 #define FLAG_MET_HIDDEN_POWER_GIVER          0x76
 
 #define FLAG_CANCEL_BATTLE_ROOM_CHALLENGE    0x77
@@ -210,7 +210,7 @@
 #define FLAG_RECEIVED_POKENAV                0xBC
 #define FLAG_DELIVERED_STEVEN_LETTER         0xBD
 #define FLAG_DEFEATED_WALLY_MAUVILLE         0xBE
-#define FLAG_DEFEATED_GRUNT_SPACE_CENTER_1F  0xBF
+#define FLAG_DEFEATED_GRUNT_SPACE_CENTRE_1F  0xBF
 #define FLAG_RECEIVED_SUN_STONE_MOSSDEEP     0xC0
 #define FLAG_WALLY_SPEECH                    0xC1
 #define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1   0xC2 // Leftover from the RS version of Puzzle Room 7, functionally unused
@@ -224,7 +224,7 @@
 #define FLAG_RECEIVED_PINK_SCARF             0xCA
 #define FLAG_RECEIVED_GREEN_SCARF            0xCB
 #define FLAG_RECEIVED_YELLOW_SCARF           0xCC
-#define FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER    0xCD
+#define FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTRE    0xCD
 #define FLAG_ENCOUNTERED_LATIAS_OR_LATIOS    0xCE
 #define FLAG_MET_ARCHIE_METEOR_FALLS         0xCF
 #define FLAG_GOT_BASEMENT_KEY_FROM_WATTSON   0xD0
@@ -748,7 +748,7 @@
 // Event Flags
 #define FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG                      0x2BC
 #define FLAG_HIDE_APPRENTICE                                        0x2BD
-#define FLAG_HIDE_POKEMON_CENTER_2F_MYSTERY_GIFT_MAN                0x2BE
+#define FLAG_HIDE_POKEMON_CENTRE_2F_MYSTERY_GIFT_MAN                0x2BE
 #define FLAG_HIDE_UNION_ROOM_PLAYER_1                               0x2BF
 #define FLAG_HIDE_UNION_ROOM_PLAYER_2                               0x2C0
 #define FLAG_HIDE_UNION_ROOM_PLAYER_3                               0x2C1
@@ -785,7 +785,7 @@
 #define FLAG_HIDE_PLAYERS_HOUSE_DAD                                 0x2DE
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_SIBLING      0x2DF
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_SIBLING          0x2E0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_MAGMA_NOTE             0x2E1
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTRE_MAGMA_NOTE             0x2E1
 #define FLAG_HIDE_ROUTE_104_MR_BRINEY                               0x2E2
 #define FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY                           0x2E3
 #define FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN                            0x2E4
@@ -796,15 +796,15 @@
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_BRENDAN            0x2E9
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MAY                    0x2EA
 #define FLAG_HIDE_SAFARI_ZONE_SOUTH_EAST_EXPANSION                  0x2EB
-#define FLAG_HIDE_LILYCOVE_HARBOR_EVENT_TICKET_TAKER                0x2EC
+#define FLAG_HIDE_LILYCOVE_HARBOUR_EVENT_TICKET_TAKER                0x2EC
 #define FLAG_HIDE_SLATEPORT_CITY_SCOTT                              0x2ED
 #define FLAG_HIDE_ROUTE_101_ZIGZAGOON                               0x2EE
 #define FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY                           0x2EF
 #define FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE                       0x2F0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN              0x2F1
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTRE_1F_STEVEN              0x2F1
 #define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1          0x2F2
 #define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2          0x2F3
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_TEAM_MAGMA          0x2F4
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTRE_1F_TEAM_MAGMA          0x2F4
 #define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM               0x2F5
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_MOM                0x2F6
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MOM                    0x2F7
@@ -841,7 +841,7 @@
 #define FLAG_HIDE_FANCLUB_BOY                                       0x316
 #define FLAG_HIDE_FANCLUB_LITTLE_BOY                                0x317
 #define FLAG_HIDE_FANCLUB_LADY                                      0x318
-#define FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT               0x319
+#define FLAG_HIDE_EVER_GRANDE_POKEMON_CENTRE_1F_SCOTT               0x319
 #define FLAG_HIDE_LITTLEROOT_TOWN_RIVAL                             0x31A
 #define FLAG_HIDE_LITTLEROOT_TOWN_BIRCH                             0x31B
 #define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_1                          0x31C
@@ -889,14 +889,14 @@
 #define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA     0x346
 #define FLAG_HIDE_SOOTOPOLIS_CITY_MAN_1                             0x347
 #define FLAG_HIDE_SLATEPORT_CITY_CAPTAIN_STERN                      0x348
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_CAPTAIN_STERN               0x349
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_CAPTAIN_STERN               0x349
 #define FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO                         0x34A
 #define FLAG_HIDE_ROUTE_111_ROCK_SMASH_TIP_GUY                      0x34B
 #define FLAG_HIDE_RUSTBORO_CITY_SCIENTIST                           0x34C
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_AQUA_GRUNT                  0x34D
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_ARCHIE                      0x34E
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_AQUA_GRUNT                  0x34D
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_ARCHIE                      0x34E
 #define FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD                           0x34F
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SUBMARINE_SHADOW            0x350
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_SUBMARINE_SHADOW            0x350
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL          0x351
 #define FLAG_HIDE_MAGMA_HIDEOUT_4F_GROUDON_ASLEEP                   0x352
 #define FLAG_HIDE_ROUTE_119_RIVAL                                   0x353
@@ -908,10 +908,10 @@
 #define FLAG_HIDE_MAGMA_HIDEOUT_GRUNTS                              0x359
 #define FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY                       0x35A
 #define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE                     0x35B
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL                    0x35C
-#define FLAG_HIDE_LILYCOVE_HARBOR_SSTIDAL                           0x35D
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_TEAM_MAGMA          0x35E
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN              0x35F
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_SS_TIDAL                    0x35C
+#define FLAG_HIDE_LILYCOVE_HARBOUR_SSTIDAL                           0x35D
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTRE_2F_TEAM_MAGMA          0x35E
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTRE_2F_STEVEN              0x35F
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1           0x360
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2           0x361
 #define FLAG_HIDE_PETALBURG_GYM_WALLY                               0x362
@@ -919,7 +919,7 @@
 #define FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN                           0x364
 #define FLAG_HIDE_SLATEPORT_CITY_STERNS_SHIPYARD_MR_BRINEY          0x365
 #define FLAG_HIDE_LANETTES_HOUSE_LANETTE                            0x366
-#define FLAG_HIDE_FALLARBOR_POKEMON_CENTER_LANETTE                  0x367
+#define FLAG_HIDE_FALLARBOR_POKEMON_CENTRE_LANETTE                  0x367
 #define FLAG_HIDE_TRICK_HOUSE_ENTRANCE_MAN                          0x368
 #define FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER_REPLACEMENT    0x369
 #define FLAG_HIDE_DESERT_UNDERPASS_FOSSIL                           0x36A
@@ -953,11 +953,11 @@
 #define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_2                          0x386
 #define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2                          0x387
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_3                          0x388
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS                     0x389
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOUR_PATRONS                     0x389
 #define FLAG_HIDE_ROUTE_104_WHITE_HERB_FLORIST                      0x38A
 #define FLAG_HIDE_FALLARBOR_AZURILL                                 0x38B
-#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_ATTENDANT                   0x38C
-#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_SAILOR                      0x38D
+#define FLAG_HIDE_LILYCOVE_HARBOUR_FERRY_ATTENDANT                   0x38C
+#define FLAG_HIDE_LILYCOVE_HARBOUR_FERRY_SAILOR                      0x38D
 #define FLAG_HIDE_SOUTHERN_ISLAND_EON_STONE                         0x38E
 #define FLAG_HIDE_SOUTHERN_ISLAND_UNCHOSEN_EON_DUO_MON              0x38F
 #define FLAG_HIDE_MAUVILLE_CITY_WATTSON                             0x390
@@ -1041,7 +1041,7 @@
 #define FLAG_HIDE_ROUTE_119_KECLEON_2                               0x3DE
 #define FLAG_HIDE_ROUTE_101_BOY                                     0x3DF
 #define FLAG_HIDE_WEATHER_INSTITUTE_2F_AQUA_GRUNT_M                 0x3E0
-#define FLAG_HIDE_LILYCOVE_POKEMON_CENTER_CONTEST_LADY_MON          0x3E1
+#define FLAG_HIDE_LILYCOVE_POKEMON_CENTRE_CONTEST_LADY_MON          0x3E1
 #define FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY                       0x3E2
 #define FLAG_HIDE_PETALBURG_CITY_SCOTT                              0x3E3
 #define FLAG_HIDE_SOOTOPOLIS_CITY_RAYQUAZA                          0x3E4
@@ -1111,7 +1111,7 @@
 #define FLAG_ITEM_PETALBURG_WOODS_ETHER                             0x422
 #define FLAG_ITEM_MAGMA_HIDEOUT_3F_3R_ECAPE_ROPE                    0x423
 #define FLAG_ITEM_TRICK_HOUSE_PUZZLE_1_ORANGE_MAIL                  0x424
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOR_MAIL                  0x425
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOUR_MAIL                  0x425
 #define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_WAVE_MAIL                    0x426
 #define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_SHADOW_MAIL                  0x427
 #define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_WOOD_MAIL                    0x428
@@ -1145,7 +1145,7 @@
 #define FLAG_ITEM_ROUTE_124_RED_SHARD                               0x444
 #define FLAG_ITEM_ROUTE_124_BLUE_SHARD                              0x445
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_WEST_TM_SOLAR_BEAM              0x446
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOR_MAIL               0x447
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOUR_MAIL               0x447
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_ESCAPE_ROPE              0x448
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_B1F_DIVE_BALL              0x449
 #define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_TM_ICE_BEAM              0x44A
@@ -1167,13 +1167,13 @@
 #define FLAG_ITEM_ROUTE_103_GUARD_SPEC                              0x45A
 #define FLAG_ITEM_ROUTE_104_X_ACCURACY                              0x45B
 #define FLAG_ITEM_MAUVILLE_CITY_X_SPEED                             0x45C
-#define FLAG_ITEM_PETALBURG_WOODS_PARALYZE_HEAL                     0x45D
+#define FLAG_ITEM_PETALBURG_WOODS_PARALYSE_HEAL                     0x45D
 #define FLAG_ITEM_ROUTE_115_GREAT_BALL                              0x45E
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_CALCIUM                         0x45F
 #define FLAG_ITEM_MT_PYRE_3F_SUPER_REPEL                            0x460
 #define FLAG_ITEM_ROUTE_118_HYPER_POTION                            0x461
 #define FLAG_ITEM_NEW_MAUVILLE_FULL_HEAL                            0x462
-#define FLAG_ITEM_NEW_MAUVILLE_PARALYZE_HEAL                        0x463
+#define FLAG_ITEM_NEW_MAUVILLE_PARALYSE_HEAL                        0x463
 #define FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL                      0x464
 #define FLAG_ITEM_OLD_MAGMA_HIDEOUT_B1F_MASTER_BALL                 0x465 // Unused Flag, leftover from the Ruby Magma hideout
 #define FLAG_ITEM_OLD_MAGMA_HIDEOUT_B1F_MAX_ELIXIR                  0x466 // Unused Flag, leftover from the Ruby Magma hideout

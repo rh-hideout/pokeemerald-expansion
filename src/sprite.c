@@ -116,7 +116,7 @@ const union AnimCmd * const gDummySpriteAnimTable[];
 const union AffineAnimCmd * const gDummySpriteAffineAnimTable[];
 const struct SpriteTemplate gDummySpriteTemplate;
 
-static const u8 sCenterToCornerVecTable[3][4][2] =
+static const u8 sCentreToCornerVecTable[3][4][2] =
 {
     {   // square
         {  -4,  -4 },
@@ -340,13 +340,13 @@ void BuildOamBuffer(void)
 
         if (sprite->coordOffsetEnabled)
         {
-            sprite->oam.x = sprite->x + sprite->x2 + sprite->centerToCornerVecX + gSpriteCoordOffsetX;
-            sprite->oam.y = sprite->y + sprite->y2 + sprite->centerToCornerVecY + gSpriteCoordOffsetY;
+            sprite->oam.x = sprite->x + sprite->x2 + sprite->centreToCornerVecX + gSpriteCoordOffsetX;
+            sprite->oam.y = sprite->y + sprite->y2 + sprite->centreToCornerVecY + gSpriteCoordOffsetY;
         }
         else
         {
-            sprite->oam.x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
-            sprite->oam.y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
+            sprite->oam.x = sprite->x + sprite->x2 + sprite->centreToCornerVecX;
+            sprite->oam.y = sprite->y + sprite->y2 + sprite->centreToCornerVecY;
         }
 
         y = sprite->oam.y;
@@ -489,7 +489,7 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
     sprite->x = x;
     sprite->y = y;
 
-    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
     if (template->tileTag == TAG_NONE)
     {
@@ -616,10 +616,10 @@ void ResetSprite(struct Sprite *sprite)
     *sprite = sDummySprite;
 }
 
-void CalcCenterToCornerVec(struct Sprite *sprite, u8 shape, u8 size, u8 affineMode)
+void CalcCentreToCornerVec(struct Sprite *sprite, u8 shape, u8 size, u8 affineMode)
 {
-    u8 x = sCenterToCornerVecTable[shape][size][0];
-    u8 y = sCenterToCornerVecTable[shape][size][1];
+    u8 x = sCentreToCornerVecTable[shape][size][0];
+    u8 y = sCentreToCornerVecTable[shape][size][1];
 
     if (affineMode & ST_OAM_AFFINE_DOUBLE_MASK)
     {
@@ -627,8 +627,8 @@ void CalcCenterToCornerVec(struct Sprite *sprite, u8 shape, u8 size, u8 affineMo
         y *= 2;
     }
 
-    sprite->centerToCornerVecX = x;
-    sprite->centerToCornerVecY = y;
+    sprite->centreToCornerVecX = x;
+    sprite->centreToCornerVecY = y;
 }
 
 s16 AllocSpriteTiles(u16 tileCount)
@@ -1425,7 +1425,7 @@ void InitSpriteAffineAnim(struct Sprite *sprite)
     u8 matrixNum = AllocOamMatrix();
     if (matrixNum != 0xFF)
     {
-        CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+        CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
         sprite->oam.matrixNum = matrixNum;
         sprite->affineAnimBeginning = TRUE;
         AffineAnimStateReset(matrixNum);
@@ -1692,8 +1692,8 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         subspriteCount = subspriteTable->subspriteCount;
         hFlip = ((s32)oam->matrixNum >> 3) & 1;
         vFlip = ((s32)oam->matrixNum >> 4) & 1;
-        baseX = oam->x - sprite->centerToCornerVecX;
-        baseY = oam->y - sprite->centerToCornerVecY;
+        baseX = oam->x - sprite->centreToCornerVecX;
+        baseY = oam->y - sprite->centreToCornerVecY;
 
         for (i = 0; i < subspriteCount; i++, (*oamIndex)++)
         {

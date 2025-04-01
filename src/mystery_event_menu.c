@@ -105,7 +105,7 @@ void CB2_InitMysteryEventMenu(void)
         BuildOamBuffer();
         RunTextPrinters();
         UpdatePaletteFade();
-        SetBackdropFromColor(RGB_BLACK);
+        SetBackdropFromColour(RGB_BLACK);
         SetMainCallback2(CB2_MysteryEventMenu);
     }
 }
@@ -308,13 +308,13 @@ static void CB2_MysteryEventMenu(void)
 
 static void PrintMysteryMenuText(u8 windowId, const u8 *text, u8 x, u8 y, s32 speed)
 {
-    u8 textColor[3];
+    u8 textColour[3];
     u8 letterSpacing = 0;
     u8 lineSpacing = 1;
-    textColor[0] = 1;
-    textColor[1] = 2;
-    textColor[2] = 3;
+    textColour[0] = 1;
+    textColour[1] = 2;
+    textColour[2] = 3;
 
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(textColor[0]));
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, letterSpacing, lineSpacing, textColor, speed, text);
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(textColour[0]));
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, letterSpacing, lineSpacing, textColour, speed, text);
 }

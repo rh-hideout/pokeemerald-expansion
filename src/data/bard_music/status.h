@@ -65,7 +65,7 @@ static const struct BardSoundTemplate sBardSoundTemplates_Status[][MAX_BARD_SOUN
         NULL_BARD_SOUND,
         NULL_BARD_SOUND,
     },
-    [EC_INDEX(EC_WORD_COLOR)] = {
+    [EC_INDEX(EC_WORD_COLOUR)] = {
         { .songId = PHONEME_ID(PH_STRUT_SOLO) },
         { .songId = PHONEME_ID(PH_NURSE_BLEND) },
         PREV_BARD_SOUND,
@@ -73,7 +73,7 @@ static const struct BardSoundTemplate sBardSoundTemplates_Status[][MAX_BARD_SOUN
         NULL_BARD_SOUND,
         NULL_BARD_SOUND,
     },
-    [EC_INDEX(EC_WORD_ALT_COLOR)] = {
+    [EC_INDEX(EC_WORD_ALT_COLOUR)] = {
         { .songId = PHONEME_ID(PH_THOUGHT_BLEND) },
         { .songId = PHONEME_ID(PH_NURSE_SOLO) },
         { .songId = PHONEME_ID(PH_TRAP_HELD) },
@@ -689,7 +689,7 @@ static const struct BardSoundTemplate sBardSoundTemplates_Status[][MAX_BARD_SOUN
         NULL_BARD_SOUND,
         NULL_BARD_SOUND,
     },
-    [EC_INDEX(EC_WORD_COLOR_CHANGE)] = {
+    [EC_INDEX(EC_WORD_COLOUR_CHANGE)] = {
         { .songId = PHONEME_ID(PH_LOT_SOLO) },
         { .songId = PHONEME_ID(PH_NURSE_BLEND) },
         { .songId = PHONEME_ID(PH_FACE_BLEND) },

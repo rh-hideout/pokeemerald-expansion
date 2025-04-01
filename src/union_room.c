@@ -174,15 +174,15 @@ enum {
     LG_STATE_SHUTDOWN = 23,
 };
 
-// Color types for PrintUnionRoomText
+// Colour types for PrintUnionRoomText
 enum {
-    UR_COLOR_DEFAULT,
-    UR_COLOR_RED,
-    UR_COLOR_GREEN,
-    UR_COLOR_WHITE,
-    UR_COLOR_CANCEL,
-    UR_COLOR_TRADE_BOARD_SELF,
-    UR_COLOR_TRADE_BOARD_OTHER,
+    UR_COLOUR_DEFAULT,
+    UR_COLOUR_RED,
+    UR_COLOUR_GREEN,
+    UR_COLOUR_WHITE,
+    UR_COLOUR_CANCEL,
+    UR_COLOUR_TRADE_BOARD_SELF,
+    UR_COLOUR_TRADE_BOARD_OTHER,
 };
 
 // Return values for HandlePlayerListUpdate
@@ -288,19 +288,19 @@ static void PrintNumPlayersWaitingForMsg(u8 windowId, u8 capacityCode, u8 string
     switch (capacityCode << 8)
     {
     case LINK_GROUP_CAPACITY(0, 2):
-        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[0][stringId - 1], 0, 1, UR_COLOR_DEFAULT);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[0][stringId - 1], 0, 1, UR_COLOUR_DEFAULT);
         break;
     case LINK_GROUP_CAPACITY(0, 4):
-        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[1][stringId - 1], 0, 1, UR_COLOR_DEFAULT);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[1][stringId - 1], 0, 1, UR_COLOUR_DEFAULT);
         break;
     case LINK_GROUP_CAPACITY(2, 5):
-        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[2][stringId - 1], 0, 1, UR_COLOR_DEFAULT);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[2][stringId - 1], 0, 1, UR_COLOUR_DEFAULT);
         break;
     case LINK_GROUP_CAPACITY(3, 5):
-        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[3][stringId - 1], 0, 1, UR_COLOR_DEFAULT);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[3][stringId - 1], 0, 1, UR_COLOUR_DEFAULT);
         break;
     case LINK_GROUP_CAPACITY(2, 4):
-        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[4][stringId - 1], 0, 1, UR_COLOR_DEFAULT);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sPlayersNeededOrModeTexts[4][stringId - 1], 0, 1, UR_COLOUR_DEFAULT);
         break;
     }
 
@@ -312,10 +312,10 @@ static void PrintPlayerNameAndIdOnWindow(u8 windowId)
     u8 text[30];
     u8 *txtPtr;
 
-    PrintUnionRoomText(windowId, FONT_NORMAL, gSaveBlock2Ptr->playerName, 0, 1, UR_COLOR_DEFAULT);
+    PrintUnionRoomText(windowId, FONT_NORMAL, gSaveBlock2Ptr->playerName, 0, 1, UR_COLOUR_DEFAULT);
     txtPtr = StringCopy(text, sText_ID);
     ConvertIntToDecimalStringN(txtPtr, ReadAsU16(gSaveBlock2Ptr->playerTrainerId), STR_CONV_MODE_LEADING_ZEROS, 5);
-    PrintUnionRoomText(windowId, FONT_NORMAL, text, 0, 17, UR_COLOR_DEFAULT);
+    PrintUnionRoomText(windowId, FONT_NORMAL, text, 0, 17, UR_COLOUR_DEFAULT);
 }
 
 static void GetAwaitingCommunicationText(u8 *dst, u8 activity)
@@ -430,7 +430,7 @@ static void Task_TryBecomeLinkLeader(u8 taskId)
         data->nPlayerModeWindowId = AddWindow(&sWindowTemplate_NumPlayerMode);
 
         FillWindowPixelBuffer(data->bButtonCancelWindowId, PIXEL_FILL(2));
-        PrintUnionRoomText(data->bButtonCancelWindowId, FONT_SMALL, sText_BButtonCancel, 8, 1, UR_COLOR_CANCEL);
+        PrintUnionRoomText(data->bButtonCancelWindowId, FONT_SMALL, sText_BButtonCancel, 8, 1, UR_COLOUR_CANCEL);
         PutWindowTilemap(data->bButtonCancelWindowId);
         CopyWindowToVram(data->bButtonCancelWindowId, COPYWIN_GFX);
 
@@ -863,20 +863,20 @@ static bool8 Leader_SetStateIfMemberListChanged(struct WirelessLink_Leader *data
 static void ItemPrintFunc_PossibleGroupMembers(u8 windowId, u32 id, u8 y)
 {
     struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
-    u8 colorIdx = UR_COLOR_DEFAULT;
+    u8 colourIdx = UR_COLOUR_DEFAULT;
 
     switch (data->playerList->players[id].groupScheduledAnim)
     {
     case UNION_ROOM_SPAWN_IN:
         if (data->playerList->players[id].newPlayerCountdown != 0)
-            colorIdx = UR_COLOR_GREEN;
+            colourIdx = UR_COLOUR_GREEN;
         break;
     case UNION_ROOM_SPAWN_OUT:
-        colorIdx = UR_COLOR_RED;
+        colourIdx = UR_COLOUR_RED;
         break;
     }
 
-    PrintGroupCandidateOnWindow(windowId, 0, y, &data->playerList->players[id], colorIdx, id);
+    PrintGroupCandidateOnWindow(windowId, 0, y, &data->playerList->players[id], colourIdx, id);
 }
 
 static u8 LeaderUpdateGroupMembership(struct RfuPlayerList *list)
@@ -1012,7 +1012,7 @@ static void Task_TryJoinLinkGroup(u8 taskId)
         data->playerNameAndIdWindowId = AddWindow(&sWindowTemplate_PlayerNameAndId);
 
         FillWindowPixelBuffer(data->bButtonCancelWindowId, PIXEL_FILL(2));
-        PrintUnionRoomText(data->bButtonCancelWindowId, FONT_SMALL, sText_ChooseJoinCancel, 8, 1, UR_COLOR_CANCEL);
+        PrintUnionRoomText(data->bButtonCancelWindowId, FONT_SMALL, sText_ChooseJoinCancel, 8, 1, UR_COLOUR_CANCEL);
         PutWindowTilemap(data->bButtonCancelWindowId);
         CopyWindowToVram(data->bButtonCancelWindowId, COPYWIN_GFX);
 
@@ -1375,26 +1375,26 @@ static bool32 IsPartnerActivityAcceptable(u32 activity, u32 linkGroup)
     return FALSE;
 }
 
-static u8 GetGroupListTextColor(struct WirelessLink_Group *data, u32 id)
+static u8 GetGroupListTextColour(struct WirelessLink_Group *data, u32 id)
 {
     if (data->playerList->players[id].groupScheduledAnim == UNION_ROOM_SPAWN_IN)
     {
         if (data->playerList->players[id].rfu.data.startedActivity)
-            return UR_COLOR_WHITE;
+            return UR_COLOUR_WHITE;
         else if (data->playerList->players[id].useRedText)
-            return UR_COLOR_RED;
+            return UR_COLOUR_RED;
         else if (data->playerList->players[id].newPlayerCountdown != 0)
-            return UR_COLOR_GREEN;
+            return UR_COLOUR_GREEN;
     }
-    return UR_COLOR_DEFAULT;
+    return UR_COLOUR_DEFAULT;
 }
 
 static void ListMenuItemPrintFunc_UnionRoomGroups(u8 windowId, u32 id, u8 y)
 {
     struct WirelessLink_Group *data = sWirelessLinkMain.group;
-    u8 colorId = GetGroupListTextColor(data, id);
+    u8 colourId = GetGroupListTextColour(data, id);
 
-    PrintGroupMemberOnWindow(windowId, 8, y, &data->playerList->players[id], colorId, id);
+    PrintGroupMemberOnWindow(windowId, 8, y, &data->playerList->players[id], colourId, id);
 }
 
 static u8 GetNewLeaderCandidate(void)
@@ -1695,7 +1695,7 @@ static void Task_StartActivity(u8 taskId)
     case ACTIVITY_TRADE:
         CreateTrainerCardInBuffer(gBlockSendBuffer, TRUE);
         CleanupOverworldWindowsAndTilemaps();
-        WarpForCableClubActivity(MAP_GROUP(TRADE_CENTER), MAP_NUM(TRADE_CENTER), 5, 8, USING_TRADE_CENTER);
+        WarpForCableClubActivity(MAP_GROUP(TRADE_CENTRE), MAP_NUM(TRADE_CENTRE), 5, 8, USING_TRADE_CENTRE);
         SetMainCallback2(CB2_TransitionToCableClub);
         break;
     case ACTIVITY_RECORD_CORNER:
@@ -3661,7 +3661,7 @@ static u8 CreateTradeBoardWindow(const struct WindowTemplate * template)
     u8 windowId = AddWindow(template);
     DrawStdWindowFrame(windowId, FALSE);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(15));
-    PrintUnionRoomText(windowId, FONT_NORMAL, sText_NameWantedOfferLv, 8, 1, UR_COLOR_TRADE_BOARD_OTHER);
+    PrintUnionRoomText(windowId, FONT_NORMAL, sText_NameWantedOfferLv, 8, 1, UR_COLOUR_TRADE_BOARD_OTHER);
     CopyWindowToVram(windowId, COPYWIN_GFX);
     PutWindowTilemap(windowId);
     return windowId;
@@ -3790,7 +3790,7 @@ static void JoinGroup_EnableScriptContexts(void)
     ScriptContext_Enable();
 }
 
-static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 colorIdx)
+static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 colourIdx)
 {
     struct TextPrinterTemplate printerTemplate;
 
@@ -3804,56 +3804,56 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     printerTemplate.unk = 0;
 
     gTextFlags.useAlternateDownArrow = FALSE;
-    switch (colorIdx)
+    switch (colourIdx)
     {
-    case UR_COLOR_DEFAULT:
+    case UR_COLOUR_DEFAULT:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_DARK_GRAY;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.fgColour = TEXT_COLOUR_DARK_GREY;
+        printerTemplate.bgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_GREY;
         break;
-    case UR_COLOR_RED:
+    case UR_COLOUR_RED:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_RED;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_RED;
+        printerTemplate.fgColour = TEXT_COLOUR_RED;
+        printerTemplate.bgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_RED;
         break;
-    case UR_COLOR_GREEN:
+    case UR_COLOUR_GREEN:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_GREEN;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GREEN;
+        printerTemplate.fgColour = TEXT_COLOUR_GREEN;
+        printerTemplate.bgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_GREEN;
         break;
-    case UR_COLOR_WHITE:
+    case UR_COLOUR_WHITE:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_WHITE;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.fgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.bgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_GREY;
         break;
-    case UR_COLOR_CANCEL:
+    case UR_COLOUR_CANCEL:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_WHITE;
-        printerTemplate.bgColor = TEXT_COLOR_DARK_GRAY;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.fgColour = TEXT_COLOUR_WHITE;
+        printerTemplate.bgColour = TEXT_COLOUR_DARK_GREY;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_GREY;
         break;
-    case UR_COLOR_TRADE_BOARD_SELF:
+    case UR_COLOUR_TRADE_BOARD_SELF:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_LIGHT_GREEN;
-        printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;
+        printerTemplate.fgColour = TEXT_COLOUR_LIGHT_GREEN;
+        printerTemplate.bgColour = TEXT_DYNAMIC_COLOUR_6;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_BLUE;
         break;
-    case UR_COLOR_TRADE_BOARD_OTHER:
+    case UR_COLOUR_TRADE_BOARD_OTHER:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_DYNAMIC_COLOR_5;
-        printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;
+        printerTemplate.fgColour = TEXT_DYNAMIC_COLOUR_5;
+        printerTemplate.bgColour = TEXT_DYNAMIC_COLOUR_6;
+        printerTemplate.shadowColour = TEXT_COLOUR_LIGHT_BLUE;
         break;
     }
 
@@ -3970,39 +3970,39 @@ static u8 TryAddIncomingPlayerToList(struct RfuPlayer *players, struct RfuIncomi
     return 0xFF;
 }
 
-static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colorIdx, u8 id)
+static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colourIdx, u8 id)
 {
     u8 activity;
     u8 trainerId[6];
 
     ConvertIntToDecimalStringN(gStringVar4, id + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
     StringAppend(gStringVar4, sText_Colon);
-    PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, UR_COLOR_DEFAULT);
+    PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, UR_COLOUR_DEFAULT);
     x += 18;
     activity = player->rfu.data.activity;
     if (player->groupScheduledAnim == UNION_ROOM_SPAWN_IN && !(activity & IN_UNION_ROOM))
     {
         CopyAndTranslatePlayerName(gStringVar4, player);
-        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, colourIdx);
         ConvertIntToDecimalStringN(trainerId, player->rfu.data.compatibility.playerTrainerId[0] | (player->rfu.data.compatibility.playerTrainerId[1] << 8), STR_CONV_MODE_LEADING_ZEROS, 5);
         StringCopy(gStringVar4, sText_ID);
         StringAppend(gStringVar4, trainerId);
-        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x88), y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x88), y, colourIdx);
     }
 }
 
-static void PrintGroupCandidateOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colorIdx, u8 id)
+static void PrintGroupCandidateOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colourIdx, u8 id)
 {
     u8 trainerId[6];
 
     if (player->groupScheduledAnim == UNION_ROOM_SPAWN_IN)
     {
         CopyAndTranslatePlayerName(gStringVar4, player);
-        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, x, y, colourIdx);
         ConvertIntToDecimalStringN(trainerId, player->rfu.data.compatibility.playerTrainerId[0] | (player->rfu.data.compatibility.playerTrainerId[1] << 8), STR_CONV_MODE_LEADING_ZEROS, 5);
         StringCopy(gStringVar4, sText_ID);
         StringAppend(gStringVar4, trainerId);
-        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x68), y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x68), y, colourIdx);
     }
 }
 
@@ -4017,7 +4017,7 @@ static bool32 IsPlayerFacingTradingBoard(void)
     if (y != 1 + MAP_OFFSET)
         return FALSE;
 
-    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTER || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
+    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTRE || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
         return TRUE;
 
     return FALSE;
@@ -4100,24 +4100,24 @@ static void ItemPrintFunc_EmptyList(u8 windowId, u32 itemId, u8 y)
 {
 }
 
-static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData * data, const u8 *playerName, u8 colorIdx)
+static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData * data, const u8 *playerName, u8 colourIdx)
 {
     u8 levelStr[4];
     u16 species = data->tradeSpecies;
     u8 type = data->tradeType;
     u8 level = data->tradeLevel;
 
-    PrintUnionRoomText(windowId, FONT_NORMAL, playerName, 8, y, colorIdx);
+    PrintUnionRoomText(windowId, FONT_NORMAL, playerName, 8, y, colourIdx);
     if (species == SPECIES_EGG)
     {
-        PrintUnionRoomText(windowId, FONT_NORMAL, sText_EggTrade, 68, y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, sText_EggTrade, 68, y, colourIdx);
     }
     else
     {
         BlitMenuInfoIcon(windowId, type + 1, 68, y);
-        PrintUnionRoomText(windowId, FONT_NORMAL, GetSpeciesName(species), 118, y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, GetSpeciesName(species), 118, y, colourIdx);
         ConvertIntToDecimalStringN(levelStr, level, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintUnionRoomText(windowId, FONT_NORMAL, levelStr, 198, y, colorIdx);
+        PrintUnionRoomText(windowId, FONT_NORMAL, levelStr, 198, y, colourIdx);
     }
 }
 
@@ -4132,7 +4132,7 @@ static void TradeBoardListMenuItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     {
         gameData = GetHostRfuGameData();
         if (gameData->tradeSpecies != SPECIES_NONE)
-            TradeBoardPrintItemInfo(windowId, y, gameData, gSaveBlock2Ptr->playerName, UR_COLOR_TRADE_BOARD_SELF);
+            TradeBoardPrintItemInfo(windowId, y, gameData, gSaveBlock2Ptr->playerName, UR_COLOUR_TRADE_BOARD_SELF);
     }
     else
     {
@@ -4145,7 +4145,7 @@ static void TradeBoardListMenuItemPrintFunc(u8 windowId, u32 itemId, u8 y)
             if (j == itemId + 1)
             {
                 CopyAndTranslatePlayerName(playerName, &leader->playerList->players[i]);
-                TradeBoardPrintItemInfo(windowId, y, &leader->playerList->players[i].rfu.data, playerName, UR_COLOR_TRADE_BOARD_OTHER);
+                TradeBoardPrintItemInfo(windowId, y, &leader->playerList->players[i].rfu.data, playerName, UR_COLOUR_TRADE_BOARD_OTHER);
                 break;
             }
         }
@@ -4456,8 +4456,8 @@ static void ViewURoomPartnerTrainerCard(u8 *unused, struct WirelessLink_URoom *d
 
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, trainerCard->playerName);
 
-    StringCopy(data->trainerCardColorStrBuffer, sCardColorTexts[trainerCard->stars]);
-    DynamicPlaceholderTextUtil_SetPlaceholderPtr(2, data->trainerCardColorStrBuffer);
+    StringCopy(data->trainerCardColourStrBuffer, sCardColourTexts[trainerCard->stars]);
+    DynamicPlaceholderTextUtil_SetPlaceholderPtr(2, data->trainerCardColourStrBuffer);
 
     ConvertIntToDecimalStringN(data->trainerCardStrBuffer[2], trainerCard->caughtMonsCount, STR_CONV_MODE_LEFT_ALIGN, 3);
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(3, data->trainerCardStrBuffer[2]);

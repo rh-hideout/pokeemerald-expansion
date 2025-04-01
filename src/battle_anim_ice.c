@@ -29,7 +29,7 @@ static void AnimSwirlingSnowball(struct Sprite *);
 static void AnimSwirlingSnowball_Step2(struct Sprite *);
 static void AnimSwirlingSnowball_End(struct Sprite *);
 static void AnimWiggleParticleTowardsTarget(struct Sprite *);
-static void AnimWaveFromCenterOfTarget(struct Sprite *);
+static void AnimWaveFromCentreOfTarget(struct Sprite *);
 static void InitSwirlingFogAnim(struct Sprite *);
 static void AnimSwirlingFogAnim(struct Sprite *);
 static void InitPoisonGasCloudAnim(struct Sprite *);
@@ -311,7 +311,7 @@ const struct SpriteTemplate gIceGroundSpikeSpriteTemplate =
     .anims = sAnims_IceGroundSpike,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimWaveFromCenterOfTarget,
+    .callback = AnimWaveFromCentreOfTarget,
 };
 
 static const union AnimCmd sAnim_Cloud[] =
@@ -957,7 +957,7 @@ static void AnimWiggleParticleTowardsTarget(struct Sprite *sprite)
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset
 // arg 2: ??? unknown boolean
-static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
+static void AnimWaveFromCentreOfTarget(struct Sprite *sprite)
 {
     if (sprite->data[0] == 0)
     {

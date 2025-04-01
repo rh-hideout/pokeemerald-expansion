@@ -569,7 +569,7 @@ ALIGNED(4) static const u8 sText_ItsCopperCard[] = _("It's a COPPER CARD!");
 ALIGNED(4) static const u8 sText_ItsSilverCard[] = _("It's a SILVER CARD!");
 ALIGNED(4) static const u8 sText_ItsGoldCard[] = _("It's a GOLD CARD!");
 
-static const u8 *const sCardColorTexts[] = {
+static const u8 *const sCardColourTexts[] = {
     sText_ItsNormalCard,
     sText_ItsBronzeCard,
     sText_ItsCopperCard,

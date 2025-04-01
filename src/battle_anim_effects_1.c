@@ -583,8 +583,8 @@ const union AffineAnimCmd *const gStockpileAbsorptionOrbAffineAnimTable[] = {
 
 const struct SpriteTemplate gStockpileAbsorptionOrbSpriteTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_ORB,
-    .paletteTag = ANIM_TAG_GRAY_ORB,
+    .tileTag = ANIM_TAG_GREY_ORB,
+    .paletteTag = ANIM_TAG_GREY_ORB,
     .oam = &gOamData_AffineDouble_ObjNormal_8x8,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
@@ -1324,7 +1324,7 @@ const struct SpriteTemplate gSilverWindSmallSparkSpriteTemplate =
     .callback = AnimFlyingParticle,
 };
 
-const u16 gMagicalLeafBlendColors[] =
+const u16 gMagicalLeafBlendColours[] =
 {
     RGB_RED,
     RGB(31, 19, 0),
@@ -2029,8 +2029,8 @@ const union AnimCmd *const gOctazookaAnimTable[] =
 
 const struct SpriteTemplate gOctazookaSmokeSpriteTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
-    .paletteTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
+    .paletteTag = ANIM_TAG_GREY_SMOKE,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
     .images = NULL,
@@ -2283,7 +2283,7 @@ const struct SpriteTemplate gWavyMusicNotesSpriteTemplate =
     .callback = AnimWavyMusicNotes,
 };
 
-const u16 gParticlesColorBlendTable[][6] =
+const u16 gParticlesColourBlendTable[][6] =
 {
     {ANIM_TAG_MUSIC_NOTES,     RGB_WHITE, RGB(31, 26, 28), RGB(31, 22, 26), RGB(31, 17, 24), RGB(31, 13, 22)},
     {ANIM_TAG_BENT_SPOON,      RGB_WHITE, RGB(25, 31, 26), RGB(20, 31, 21), RGB(15, 31, 16), RGB(10, 31, 12)},
@@ -3005,7 +3005,7 @@ const struct SpriteTemplate gIvyCudgelWaterSpriteTemplate =
     .callback = AnimWoodHammerHammer,
 };
 
-const struct SpriteTemplate gJudgmentGrayOutwardSpikesTemplate =
+const struct SpriteTemplate gJudgmentGreyOutwardSpikesTemplate =
 {
     .tileTag = ANIM_TAG_GREEN_SPIKE,
     .paletteTag = ANIM_TAG_GUST,
@@ -3016,7 +3016,7 @@ const struct SpriteTemplate gJudgmentGrayOutwardSpikesTemplate =
     .callback = AnimNeedleArmSpike
 };
 
-const struct SpriteTemplate gJudgmentGrayInwardOrbsTemplate =
+const struct SpriteTemplate gJudgmentGreyInwardOrbsTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
@@ -3095,7 +3095,7 @@ const struct SpriteTemplate gPsyshockOrbSpriteTemplate =
 
 const struct SpriteTemplate gPsyshockSmokeSpriteTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_WISP_FIRE,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -3291,7 +3291,7 @@ static void AnimMovePowderParticle_Step(struct Sprite *sprite)
     }
 }
 
-// Moves an energy orb towards the center of the mon.
+// Moves an energy orb towards the centre of the mon.
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset
 // arg 2: duration
@@ -5155,8 +5155,8 @@ void AnimTask_CycleMagicalLeafPal(u8 taskId)
         if (++task->data[9] >= 0)
         {
             task->data[9] = 0;
-            BlendPalette(task->data[8], 16, task->data[10], gMagicalLeafBlendColors[task->data[11]]);
-            BlendPalette(task->data[12], 16, task->data[10], gMagicalLeafBlendColors[task->data[11]]);
+            BlendPalette(task->data[8], 16, task->data[10], gMagicalLeafBlendColours[task->data[11]]);
+            BlendPalette(task->data[12], 16, task->data[10], gMagicalLeafBlendColours[task->data[11]]);
             if (++task->data[10] == 17)
             {
                 task->data[10] = 0;
@@ -6551,7 +6551,7 @@ static void AnimTask_MoonlightEndFade_Step(u8 taskId)
     case 0:
         if (++task->data[1] > 0)
         {
-            u16 color;
+            u16 colour;
             u16 bitmask;
             u16 r3;
             u16 i;
@@ -6568,11 +6568,11 @@ static void AnimTask_MoonlightEndFade_Step(u8 taskId)
                 red = task->data[4] >> 3;
                 green = task->data[5] >> 3;
                 blue = task->data[6] >> 3;
-                color = RGB(red, green, blue);
+                colour = RGB(red, green, blue);
             }
             else
             {
-                color = RGB(27, 29, 31);
+                colour = RGB(27, 29, 31);
                 task->data[0]++;
             }
 
@@ -6584,7 +6584,7 @@ static void AnimTask_MoonlightEndFade_Step(u8 taskId)
                 {
                     for (j = 1; j <= 15; j++)
                     {
-                        gPlttBufferFaded[r3 + j] = color;
+                        gPlttBufferFaded[r3 + j] = colour;
                     }
                 }
 
@@ -7053,22 +7053,22 @@ void AnimTask_MusicNotesRainbowBlend(u8 taskId)
     u16 j;
     u16 index;
 
-    index = IndexOfSpritePaletteTag(gParticlesColorBlendTable[0][0]);
+    index = IndexOfSpritePaletteTag(gParticlesColourBlendTable[0][0]);
     if (index != 0xFF)
     {
         index = OBJ_PLTT_ID(index);
-        for (i = 1; i < ARRAY_COUNT(gParticlesColorBlendTable[0]); i++)
-            gPlttBufferFaded[index + i] = gParticlesColorBlendTable[0][i];
+        for (i = 1; i < ARRAY_COUNT(gParticlesColourBlendTable[0]); i++)
+            gPlttBufferFaded[index + i] = gParticlesColourBlendTable[0][i];
     }
 
-    for (j = 1; j < ARRAY_COUNT(gParticlesColorBlendTable); j++)
+    for (j = 1; j < ARRAY_COUNT(gParticlesColourBlendTable); j++)
     {
-        index = AllocSpritePalette(gParticlesColorBlendTable[j][0]);
+        index = AllocSpritePalette(gParticlesColourBlendTable[j][0]);
         if (index != 0xFF)
         {
             index = OBJ_PLTT_ID(index);
-            for (i = 1; i < ARRAY_COUNT(gParticlesColorBlendTable[0]); i++)
-                gPlttBufferFaded[index + i] = gParticlesColorBlendTable[j][i];
+            for (i = 1; i < ARRAY_COUNT(gParticlesColourBlendTable[0]); i++)
+                gPlttBufferFaded[index + i] = gParticlesColourBlendTable[j][i];
         }
     }
     DestroyAnimVisualTask(taskId);
@@ -7078,8 +7078,8 @@ void AnimTask_MusicNotesRainbowBlend(u8 taskId)
 void AnimTask_MusicNotesClearRainbowBlend(u8 taskId)
 {
     u16 i;
-    for (i = 1; i < ARRAY_COUNT(gParticlesColorBlendTable); i++)
-        FreeSpritePaletteByTag(gParticlesColorBlendTable[i][0]);
+    for (i = 1; i < ARRAY_COUNT(gParticlesColourBlendTable); i++)
+        FreeSpritePaletteByTag(gParticlesColourBlendTable[i][0]);
 
     DestroyAnimVisualTask(taskId);
 }
@@ -7099,7 +7099,7 @@ static void AnimWavyMusicNotes(struct Sprite *sprite)
     u8 x, y;
     SetSpriteCoordsToAnimAttackerCoords(sprite);
     StartSpriteAnim(sprite, gBattleAnimArgs[0]);
-    if ((index = IndexOfSpritePaletteTag(gParticlesColorBlendTable[gBattleAnimArgs[1]][0])) != 0xFF)
+    if ((index = IndexOfSpritePaletteTag(gParticlesColourBlendTable[gBattleAnimArgs[1]][0])) != 0xFF)
         sprite->oam.paletteNum = index;
 
     sprite->sBlendTableIdx = gBattleAnimArgs[1];
@@ -7161,10 +7161,10 @@ static void AnimWavyMusicNotes_Step(struct Sprite *sprite)
         if (sprite->sBlendCycleTime && ++sprite->sBlendTimer > sprite->sBlendCycleTime)
         {
             sprite->sBlendTimer = 0;
-            if (++sprite->sBlendTableIdx > (int)ARRAY_COUNT(gParticlesColorBlendTable) - 1)
+            if (++sprite->sBlendTableIdx > (int)ARRAY_COUNT(gParticlesColourBlendTable) - 1)
                 sprite->sBlendTableIdx = 0;
 
-            index = IndexOfSpritePaletteTag(gParticlesColorBlendTable[sprite->sBlendTableIdx][0]);
+            index = IndexOfSpritePaletteTag(gParticlesColourBlendTable[sprite->sBlendTableIdx][0]);
             if (index != 0xFF)
                 sprite->oam.paletteNum = index;
         }
@@ -7234,7 +7234,7 @@ void AnimSlowFlyingMusicNotes(struct Sprite *sprite)
     SetSpriteCoordsToAnimAttackerCoords(sprite);
     sprite->y += 8;
     StartSpriteAnim(sprite, gBattleAnimArgs[1]);
-    index = IndexOfSpritePaletteTag(gParticlesColorBlendTable[gBattleAnimArgs[2]][0]);
+    index = IndexOfSpritePaletteTag(gParticlesColourBlendTable[gBattleAnimArgs[2]][0]);
     if (index != 0xFF)
         sprite->oam.paletteNum = index;
 
@@ -7450,7 +7450,7 @@ static void AnimRockPolishSparkle(struct Sprite *sprite)
     sprite->callback = RunStoredCallbackWhenAnimEnds;
 }
 
-// Moves a projectile towards the center of the target mon.  The sprite is rotated to look
+// Moves a projectile towards the centre of the target mon.  The sprite is rotated to look
 // like it's traveling along that path.
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset

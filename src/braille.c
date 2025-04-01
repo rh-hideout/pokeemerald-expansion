@@ -61,25 +61,25 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
             char_ = *textPrinter->printerTemplate.currentChar++;
             switch (char_)
             {
-            case EXT_CTRL_CODE_COLOR:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+            case EXT_CTRL_CODE_COLOUR:
+                textPrinter->printerTemplate.fgColour = *textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColour, textPrinter->printerTemplate.bgColour, textPrinter->printerTemplate.shadowColour);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_HIGHLIGHT:
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                textPrinter->printerTemplate.bgColour = *textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColour, textPrinter->printerTemplate.bgColour, textPrinter->printerTemplate.shadowColour);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_SHADOW:
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                textPrinter->printerTemplate.shadowColour = *textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColour, textPrinter->printerTemplate.bgColour, textPrinter->printerTemplate.shadowColour);
                 return RENDER_REPEAT;
-            case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
-                textPrinter->printerTemplate.bgColor = *++textPrinter->printerTemplate.currentChar;
-                textPrinter->printerTemplate.shadowColor = *++textPrinter->printerTemplate.currentChar;
+            case EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW:
+                textPrinter->printerTemplate.fgColour = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.bgColour = *++textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.shadowColour = *++textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
 
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColour, textPrinter->printerTemplate.bgColour, textPrinter->printerTemplate.shadowColour);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_PALETTE:
                 textPrinter->printerTemplate.currentChar++;
@@ -116,7 +116,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y + *textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_FILL_WINDOW:
-                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColour));
                 return RENDER_REPEAT;
             }
             break;
@@ -146,7 +146,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
     case RENDER_STATE_CLEAR:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
-            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColour));
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y;
             textPrinter->state = RENDER_STATE_HANDLE_CHAR;
@@ -166,12 +166,12 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
         {
             if (textPrinter->scrollDistance < sScrollDistances[gSaveBlock2Ptr->optionsTextSpeed])
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColour));
                 textPrinter->scrollDistance = 0;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, sScrollDistances[gSaveBlock2Ptr->optionsTextSpeed], PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, sScrollDistances[gSaveBlock2Ptr->optionsTextSpeed], PIXEL_FILL(textPrinter->printerTemplate.bgColour));
                 textPrinter->scrollDistance -= sScrollDistances[gSaveBlock2Ptr->optionsTextSpeed];
             }
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);

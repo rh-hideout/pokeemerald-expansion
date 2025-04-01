@@ -21,11 +21,11 @@
 #include "constants/rgb.h"
 
 enum {
-    COLORMODE_NORMAL,
-    COLORMODE_WHITE_LGRAY,
-    COLORMODE_RED,
-    COLORMODE_GREEN,
-    COLORMODE_WHITE_DGRAY,
+    COLOURMODE_NORMAL,
+    COLOURMODE_WHITE_LGREY,
+    COLOURMODE_RED,
+    COLOURMODE_GREEN,
+    COLOURMODE_WHITE_DGREY,
 };
 
 enum {
@@ -269,14 +269,14 @@ static void PrintHeaderTexts(void)
     FillWindowPixelBuffer(WIN_GROUP_COUNTS, PIXEL_FILL(0));
 
     // Print title
-    WCSS_AddTextPrinterParameterized(WIN_TITLE, FONT_NORMAL, sHeaderTexts[0], GetStringCenterAlignXOffset(FONT_NORMAL, sHeaderTexts[0], 0xC0), 6, COLORMODE_GREEN);
+    WCSS_AddTextPrinterParameterized(WIN_TITLE, FONT_NORMAL, sHeaderTexts[0], GetStringCentreAlignXOffset(FONT_NORMAL, sHeaderTexts[0], 0xC0), 6, COLOURMODE_GREEN);
 
     // Print label for each group (excluding total)
     for (i = 0; i < NUM_GROUPTYPES - 1; i++)
-        WCSS_AddTextPrinterParameterized(WIN_GROUP_NAMES, FONT_NORMAL, sHeaderTexts[i + 1], 0, 30 * i + 8, COLORMODE_WHITE_LGRAY);
+        WCSS_AddTextPrinterParameterized(WIN_GROUP_NAMES, FONT_NORMAL, sHeaderTexts[i + 1], 0, 30 * i + 8, COLOURMODE_WHITE_LGREY);
 
     // Print label for total
-    WCSS_AddTextPrinterParameterized(WIN_GROUP_NAMES, FONT_NORMAL, sHeaderTexts[i + 1], 0, 30 * i + 8, COLORMODE_RED);
+    WCSS_AddTextPrinterParameterized(WIN_GROUP_NAMES, FONT_NORMAL, sHeaderTexts[i + 1], 0, 30 * i + 8, COLOURMODE_RED);
 
     PutWindowTilemap(WIN_TITLE);
     CopyWindowToVram(WIN_TITLE, COPYWIN_GFX);
@@ -314,9 +314,9 @@ static void Task_WirelessCommunicationScreen(u8 taskId)
             {
                 ConvertIntToDecimalStringN(gStringVar4, sStatusScreen->groupCounts[i], STR_CONV_MODE_RIGHT_ALIGN, 2);
                 if (i != GROUPTYPE_TOTAL)
-                    WCSS_AddTextPrinterParameterized(WIN_GROUP_COUNTS, FONT_NORMAL, gStringVar4, 12, 30 * i + 8, COLORMODE_WHITE_LGRAY);
+                    WCSS_AddTextPrinterParameterized(WIN_GROUP_COUNTS, FONT_NORMAL, gStringVar4, 12, 30 * i + 8, COLOURMODE_WHITE_LGREY);
                 else
-                    WCSS_AddTextPrinterParameterized(WIN_GROUP_COUNTS, FONT_NORMAL, gStringVar4, 12, 98, COLORMODE_RED);
+                    WCSS_AddTextPrinterParameterized(WIN_GROUP_COUNTS, FONT_NORMAL, gStringVar4, 12, 98, COLOURMODE_RED);
             }
             PutWindowTilemap(WIN_GROUP_COUNTS);
             CopyWindowToVram(WIN_GROUP_COUNTS, COPYWIN_FULL);
@@ -347,38 +347,38 @@ static void Task_WirelessCommunicationScreen(u8 taskId)
 
 static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 mode)
 {
-    u8 color[3];
+    u8 colour[3];
 
     switch (mode)
     {
-    case COLORMODE_NORMAL:
-        color[0] = TEXT_COLOR_TRANSPARENT;
-        color[1] = TEXT_COLOR_DARK_GRAY;
-        color[2] = TEXT_COLOR_LIGHT_GRAY;
+    case COLOURMODE_NORMAL:
+        colour[0] = TEXT_COLOUR_TRANSPARENT;
+        colour[1] = TEXT_COLOUR_DARK_GREY;
+        colour[2] = TEXT_COLOUR_LIGHT_GREY;
         break;
-    case COLORMODE_WHITE_LGRAY:
-        color[0] = TEXT_COLOR_TRANSPARENT;
-        color[1] = TEXT_COLOR_WHITE;
-        color[2] = TEXT_COLOR_LIGHT_GRAY;
+    case COLOURMODE_WHITE_LGREY:
+        colour[0] = TEXT_COLOUR_TRANSPARENT;
+        colour[1] = TEXT_COLOUR_WHITE;
+        colour[2] = TEXT_COLOUR_LIGHT_GREY;
         break;
-    case COLORMODE_RED:
-        color[0] = TEXT_COLOR_TRANSPARENT;
-        color[1] = TEXT_COLOR_RED;
-        color[2] = TEXT_COLOR_LIGHT_RED;
+    case COLOURMODE_RED:
+        colour[0] = TEXT_COLOUR_TRANSPARENT;
+        colour[1] = TEXT_COLOUR_RED;
+        colour[2] = TEXT_COLOUR_LIGHT_RED;
         break;
-    case COLORMODE_GREEN:
-        color[0] = TEXT_COLOR_TRANSPARENT;
-        color[1] = TEXT_COLOR_LIGHT_GREEN;
-        color[2] = TEXT_COLOR_GREEN;
+    case COLOURMODE_GREEN:
+        colour[0] = TEXT_COLOUR_TRANSPARENT;
+        colour[1] = TEXT_COLOUR_LIGHT_GREEN;
+        colour[2] = TEXT_COLOUR_GREEN;
         break;
-    case COLORMODE_WHITE_DGRAY:
-        color[0] = TEXT_COLOR_TRANSPARENT;
-        color[1] = TEXT_COLOR_WHITE;
-        color[2] = TEXT_COLOR_DARK_GRAY;
+    case COLOURMODE_WHITE_DGREY:
+        colour[0] = TEXT_COLOUR_TRANSPARENT;
+        colour[1] = TEXT_COLOUR_WHITE;
+        colour[2] = TEXT_COLOUR_DARK_GREY;
         break;
     }
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static u32 CountPlayersInGroupAndGetActivity(struct RfuPlayer * player, u32 * groupCounts)

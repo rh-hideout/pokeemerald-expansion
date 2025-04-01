@@ -4,7 +4,7 @@
 #include "follower_helper.h"
 #include "constants/battle.h"
 #include "constants/followers.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/pokemon.h"
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"

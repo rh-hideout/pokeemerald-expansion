@@ -14,9 +14,9 @@
 #define MAPGRID_UNDEFINED   MAPGRID_METATILE_ID_MASK
 
 // Masks/shifts for metatile attributes
-// Metatile attributes consist of an 8 bit behavior value, 4 unused bits, and a 4 bit layer type value
+// Metatile attributes consist of an 8 bit behaviour value, 4 unused bits, and a 4 bit layer type value
 // This is the data stored in each data/tilesets/*/*/metatile_attributes.bin file
-#define METATILE_ATTR_BEHAVIOR_MASK 0x00FF // Bits 0-7
+#define METATILE_ATTR_BEHAVIOUR_MASK 0x00FF // Bits 0-7
 #define METATILE_ATTR_LAYER_MASK    0xF000 // Bits 12-15
 #define METATILE_ATTR_LAYER_SHIFT   12
 
@@ -215,8 +215,8 @@ struct ObjectEvent
     /*0x1B*/ u8 warpArrowSpriteId;
     /*0x1C*/ u8 movementActionId;
     /*0x1D*/ u8 trainerRange_berryTreeId;
-    /*0x1E*/ u8 currentMetatileBehavior;
-    /*0x1F*/ u8 previousMetatileBehavior;
+    /*0x1E*/ u8 currentMetatileBehaviour;
+    /*0x1F*/ u8 previousMetatileBehaviour;
     /*0x20*/ u8 previousMovementDirection:4;
              u8 directionOverwrite:4;
     /*0x21*/ u8 directionSequenceIndex;
@@ -316,7 +316,7 @@ enum
 {
     T_NOT_MOVING,
     T_TILE_TRANSITION,
-    T_TILE_CENTER, // player is on a frame in which they are centered on a tile during which the player either stops or keeps their momentum and keeps going, changing direction if necessary.
+    T_TILE_CENTRE, // player is on a frame in which they are centreed on a tile during which the player either stops or keeps their momentum and keeps going, changing direction if necessary.
 };
 
 struct PlayerAvatar
@@ -325,7 +325,7 @@ struct PlayerAvatar
     /*0x01*/ u8 transitionFlags; // used to be named bike, but its definitely not that. seems to be some transition flags
     /*0x02*/ u8 runningState:7; // this is a static running state. 00 is not moving, 01 is turn direction, 02 is moving.
              u8 creeping:1;
-    /*0x03*/ u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centered on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.
+    /*0x03*/ u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centreed on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.
     /*0x04*/ u8 spriteId;
     /*0x05*/ u8 objectEventId;
     /*0x06*/ bool8 preventStep;

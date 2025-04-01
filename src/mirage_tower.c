@@ -104,24 +104,24 @@ static const struct SpriteSheet sCeilingCrumbleSpriteSheets[] =
 
 static const struct MetatileCoords sInvisibleMirageTowerMetatiles[] =
 {
-    {18, 53, METATILE_Mauville_DeepSand_Center},
-    {19, 53, METATILE_Mauville_DeepSand_Center},
-    {20, 53, METATILE_Mauville_DeepSand_Center},
-    {18, 54, METATILE_Mauville_DeepSand_Center},
-    {19, 54, METATILE_Mauville_DeepSand_Center},
-    {20, 54, METATILE_Mauville_DeepSand_Center},
-    {18, 55, METATILE_Mauville_DeepSand_Center},
-    {19, 55, METATILE_Mauville_DeepSand_Center},
-    {20, 55, METATILE_Mauville_DeepSand_Center},
-    {18, 56, METATILE_Mauville_DeepSand_Center},
-    {19, 56, METATILE_Mauville_DeepSand_Center},
-    {20, 56, METATILE_Mauville_DeepSand_Center},
+    {18, 53, METATILE_Mauville_DeepSand_Centre},
+    {19, 53, METATILE_Mauville_DeepSand_Centre},
+    {20, 53, METATILE_Mauville_DeepSand_Centre},
+    {18, 54, METATILE_Mauville_DeepSand_Centre},
+    {19, 54, METATILE_Mauville_DeepSand_Centre},
+    {20, 54, METATILE_Mauville_DeepSand_Centre},
+    {18, 55, METATILE_Mauville_DeepSand_Centre},
+    {19, 55, METATILE_Mauville_DeepSand_Centre},
+    {20, 55, METATILE_Mauville_DeepSand_Centre},
+    {18, 56, METATILE_Mauville_DeepSand_Centre},
+    {19, 56, METATILE_Mauville_DeepSand_Centre},
+    {20, 56, METATILE_Mauville_DeepSand_Centre},
     {18, 57, METATILE_Mauville_DeepSand_BottomMid},
     {19, 57, METATILE_Mauville_DeepSand_BottomMid},
     {20, 57, METATILE_Mauville_DeepSand_BottomMid},
-    {18, 58, METATILE_General_SandPit_Center},
-    {19, 58, METATILE_General_SandPit_Center},
-    {20, 58, METATILE_General_SandPit_Center},
+    {18, 58, METATILE_General_SandPit_Centre},
+    {19, 58, METATILE_General_SandPit_Centre},
+    {20, 58, METATILE_General_SandPit_Centre},
 };
 
 static const union AnimCmd sAnim_FallingFossil[] =
@@ -164,9 +164,9 @@ static const struct SpriteTemplate sSpriteTemplate_FallingFossil =
 };
 
 const struct PulseBlendSettings gMirageTowerPulseBlendSettings = {
-    .blendColor = RGB(27, 25, 16),
+    .blendColour = RGB(27, 25, 16),
     .paletteOffset = BG_PLTT_ID(6) + 1,
-    .numColors = 15,
+    .numColours = 15,
     .delay = 5,
     .numFadeCycles = -1,
     .maxBlendCoeff = 11,
@@ -689,7 +689,7 @@ static void Task_FossilFallAndSink(u8 taskId)
             fossilTemplate.images = sFallingFossil->frameImage;
             LoadObjectEventPalette(sSpriteTemplate_FallingFossil.paletteTag);
             sFallingFossil->spriteId = CreateSprite(&fossilTemplate, 128, -16, 1);
-            gSprites[sFallingFossil->spriteId].centerToCornerVecX = 0;
+            gSprites[sFallingFossil->spriteId].centreToCornerVecX = 0;
             gSprites[sFallingFossil->spriteId].data[0] = gSprites[sFallingFossil->spriteId].x;
             gSprites[sFallingFossil->spriteId].data[1] = 1;
         }

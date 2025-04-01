@@ -46,7 +46,7 @@ BattleFrontier_OutsideWest_EventScript_FerryToSlateport::
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
 	msgbox BattleFrontier_OutsideWest_Text_PleaseBoardFerry, MSGBOX_DEFAULT
 	call BattleFrontier_OutsideWest_EventScript_BoardFerry
-	warp MAP_SLATEPORT_CITY_HARBOR, 8, 11
+	warp MAP_SLATEPORT_CITY_HARBOUR, 8, 11
 	waitstate
 	release
 	end
@@ -56,7 +56,7 @@ BattleFrontier_OutsideWest_EventScript_FerryToLilycove::
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
 	msgbox BattleFrontier_OutsideWest_Text_PleaseBoardFerry, MSGBOX_DEFAULT
 	call BattleFrontier_OutsideWest_EventScript_BoardFerry
-	warp MAP_LILYCOVE_CITY_HARBOR, 8, 11
+	warp MAP_LILYCOVE_CITY_HARBOUR, 8, 11
 	waitstate
 	release
 	end
@@ -517,7 +517,7 @@ BattleFrontier_OutsideWest_Text_FansOverThereUsedToBeTrainers:
 	.string "BATTLE DOME every day now.$"
 
 BattleFrontier_OutsideWest_Text_MonWithLongTailInFrontier:
-	.string "I heard a rumor that someone saw\n"
+	.string "I heard a rumour that someone saw\n"
 	.string "a POKéMON with an unusually long tail\l"
 	.string "somewhere in the BATTLE FRONTIER.\p"
 	.string "It must be adorable. I'm sure of it…\p"

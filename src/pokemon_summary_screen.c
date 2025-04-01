@@ -313,7 +313,7 @@ static void CreateSetStatusSprite(void);
 static void CreateMoveSelectorSprites(u8);
 static void SpriteCB_MoveSelector(struct Sprite *);
 static void DestroyMoveSelectorSprites(u8);
-static void SetMainMoveSelectorColor(u8);
+static void SetMainMoveSelectorColour(u8);
 static void KeepMoveSelectorVisible(u8);
 static void SummaryScreen_DestroyAnimDelayTask(void);
 static bool32 ShouldShowMoveRelearner(void);
@@ -328,8 +328,8 @@ static void WriteToStatsTilemapBuffer(u32 length, u32 block, u32 statsCoordX, u3
 void ExtractMonSkillStatsData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillIvData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillEvData(struct Pokemon *mon, struct PokeSummary *sum);
-static void PrintTextOnWindow(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId);
-static void PrintTextOnWindowWithFont(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId, u32 fontId);
+static void PrintTextOnWindow(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId);
+static void PrintTextOnWindowWithFont(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId, u32 fontId);
 static const u8 *GetLetterGrade(u32 stat);
 static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 templateId);
 static u8 IncrementSkillsStatsMode(u8 mode);
@@ -704,7 +704,7 @@ static const struct WindowTemplate sPageMovesTemplate[] = // This is used for bo
         .baseBlock = 617,
     },
 };
-static const u8 sTextColors[][3] =
+static const u8 sTextColours[][3] =
 {
     {0, 1, 2},
     {0, 3, 4},
@@ -742,8 +742,8 @@ static void (*const sTextPrinterTasks[])(u8 taskId) =
     [PSS_PAGE_CONTEST_MOVES] = Task_PrintContestMoves
 };
 
-static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
-static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
+static const u8 sMemoNatureTextColour[] = _("{COLOUR LIGHT_RED}{SHADOW GREEN}");
+static const u8 sMemoMiscTextColour[] = _("{COLOUR WHITE}{SHADOW DARK_GREY}"); // This is also affected by palettes, apparently
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0}/{DYNAMIC 1}\n{DYNAMIC 2}\n{DYNAMIC 3}");
 static const u8 sStatsLeftIVEVColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
 static const u8 sStatsRightColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
@@ -1094,7 +1094,7 @@ static const union AnimCmd sSpriteAnim_StatusPoison[] = {
     ANIMCMD_FRAME(0, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_StatusParalyzed[] = {
+static const union AnimCmd sSpriteAnim_StatusParalysed[] = {
     ANIMCMD_FRAME(4, 0, FALSE, FALSE),
     ANIMCMD_END
 };
@@ -1124,7 +1124,7 @@ static const union AnimCmd sSpriteAnim_StatusFrostbite[] = {
 };
 static const union AnimCmd *const sSpriteAnimTable_StatusCondition[] = {
     sSpriteAnim_StatusPoison,
-    sSpriteAnim_StatusParalyzed,
+    sSpriteAnim_StatusParalysed,
     sSpriteAnim_StatusSleep,
     sSpriteAnim_StatusFrozen,
     sSpriteAnim_StatusBurn,
@@ -2405,7 +2405,7 @@ static void CloseMoveSelectMode(u8 taskId)
 static void SwitchToMovePositionSwitchMode(u8 taskId)
 {
     sMonSummaryScreen->secondMoveIndex = sMonSummaryScreen->firstMoveIndex;
-    SetMainMoveSelectorColor(1);
+    SetMainMoveSelectorColour(1);
     CreateMoveSelectorSprites(SPRITE_ARR_ID_MOVE_SELECTOR2);
     gTasks[taskId].func = Task_HandleInput_MovePositionSwitch;
 }
@@ -2445,7 +2445,7 @@ static void ExitMovePositionSwitchMode(u8 taskId, bool8 swapMoves)
     u16 move;
 
     PlaySE(SE_SELECT);
-    SetMainMoveSelectorColor(0);
+    SetMainMoveSelectorColour(0);
     DestroyMoveSelectorSprites(SPRITE_ARR_ID_MOVE_SELECTOR2);
 
     if (swapMoves == TRUE)
@@ -3085,25 +3085,25 @@ static void ResetWindows(void)
         sMonSummaryScreen->windowIds[i] = WINDOW_NONE;
 }
 
-static void PrintTextOnWindowWithFont(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId, u32 fontId)
+static void PrintTextOnWindowWithFont(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId, u32 fontId)
 {
-    AddTextPrinterParameterized4(windowId, fontId, x, y, 0, lineSpacing, sTextColors[colorId], 0, string);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, 0, lineSpacing, sTextColours[colourId], 0, string);
 }
 
-static void PrintTextOnWindow(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId)
+static void PrintTextOnWindow(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId)
 {
-    PrintTextOnWindowWithFont(windowId, string, x, y, lineSpacing, colorId, FONT_NORMAL);
+    PrintTextOnWindowWithFont(windowId, string, x, y, lineSpacing, colourId, FONT_NORMAL);
 }
 
-static void PrintTextOnWindowToFitPx(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId, u32 width)
+static void PrintTextOnWindowToFitPx(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId, u32 width)
 {
     u32 fontId = GetFontIdToFit(string, FONT_NORMAL, 0, width);
-    PrintTextOnWindowWithFont(windowId, string, x, y, lineSpacing, colorId, fontId);
+    PrintTextOnWindowWithFont(windowId, string, x, y, lineSpacing, colourId, fontId);
 }
 
-static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId)
+static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colourId)
 {
-    PrintTextOnWindowToFitPx(windowId, string, x, y, lineSpacing, colorId, WindowWidthPx(windowId));
+    PrintTextOnWindowToFitPx(windowId, string, x, y, lineSpacing, colourId, WindowWidthPx(windowId));
 }
 
 static void PrintMonInfo(void)
@@ -3212,17 +3212,17 @@ static void PrintPageNamesAndStats(void)
 
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, gText_RentalPkmn, 0, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 0, 1, 0, 0);
-    statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_HP4, 42);
+    statsXPos = 6 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_HP4, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_HP4, statsXPos, 1, 0, 1);
-    statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Attack3, 42);
+    statsXPos = 6 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_Attack3, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_Attack3, statsXPos, 17, 0, 1);
-    statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Defense3, 42);
+    statsXPos = 6 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_Defense3, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_Defense3, statsXPos, 33, 0, 1);
-    statsXPos = 2 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_SpAtk4, 36);
+    statsXPos = 2 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_SpAtk4, 36);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT, gText_SpAtk4, statsXPos, 1, 0, 1);
-    statsXPos = 2 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_SpDef4, 36);
+    statsXPos = 2 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_SpDef4, 36);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT, gText_SpDef4, statsXPos, 17, 0, 1);
-    statsXPos = 2 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Speed2, 36);
+    statsXPos = 2 + GetStringCentreAlignXOffset(FONT_NORMAL, gText_Speed2, 36);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT, gText_Speed2, statsXPos, 33, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_ExpPoints, 6, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_NextLv, 6, 17, 0, 1);
@@ -3482,8 +3482,8 @@ static void BufferMonTrainerMemo(void)
     const u8 *text;
 
     DynamicPlaceholderTextUtil_Reset();
-    DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sMemoNatureTextColor);
-    DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, sMemoMiscTextColor);
+    DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sMemoNatureTextColour);
+    DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, sMemoMiscTextColour);
     BufferNatureString();
 
     if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || IsInGamePartnerMon() == TRUE)
@@ -3734,7 +3734,7 @@ static void PrintHeldItemName(void)
     }
 
     fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM]) - 8);
-    x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
+    x = GetStringCentreAlignXOffset(fontId, text, 72) + 6;
     PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM), text, x, 1, 0, 0, fontId);
 }
 
@@ -3754,18 +3754,18 @@ static void PrintRibbonCount(void)
         text = gStringVar4;
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, text, 70) + 6;
     PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), text, x, 1, 0, 0);
 }
 
 static void BufferStat(u8 *dst, u8 statIndex, u32 stat, u32 strId, u32 n)
 {
-    static const u8 sTextNatureDown[] = _("{COLOR}{08}");
-    static const u8 sTextNatureUp[] = _("{COLOR}{05}");
-    static const u8 sTextNatureNeutral[] = _("{COLOR}{01}");
+    static const u8 sTextNatureDown[] = _("{COLOUR}{08}");
+    static const u8 sTextNatureUp[] = _("{COLOUR}{05}");
+    static const u8 sTextNatureNeutral[] = _("{COLOUR}{01}");
     u8 *txtPtr;
 
-    if (statIndex == 0 || !SUMMARY_SCREEN_NATURE_COLORS || gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown)
+    if (statIndex == 0 || !SUMMARY_SCREEN_NATURE_COLOURS || gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown)
         txtPtr = StringCopy(dst, sTextNatureNeutral);
     else if (statIndex == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp)
         txtPtr = StringCopy(dst, sTextNatureUp);
@@ -3998,7 +3998,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
         PrintTextOnWindow(moveNameWindowId, gText_OneDash, 0, moveIndex * 16 + 1, 0, 1);
         text = gText_TwoDashes;
         ppState = 12;
-        x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 44);
+        x = GetStringCentreAlignXOffset(FONT_NORMAL, text, 44);
     }
 
     PrintTextOnWindow(ppValueWindowId, text, x, moveIndex * 16 + 1, 0, ppState);
@@ -4609,7 +4609,7 @@ static void DestroyMoveSelectorSprites(u8 firstArrayId)
         DestroySpriteInArray(firstArrayId + i);
 }
 
-static void SetMainMoveSelectorColor(u8 which)
+static void SetMainMoveSelectorColour(u8 which)
 {
     u8 i;
     u8 *spriteIds = &sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MOVE_SELECTOR1];

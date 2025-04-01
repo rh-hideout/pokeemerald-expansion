@@ -286,7 +286,7 @@
 #define MUS_VICTORY_WILD            353 // MUS_KACHI2
 #define MUS_VICTORY_GYM_LEADER      354 // MUS_KACHI3           // Also used in Frontier Brain victories.
 #define MUS_VICTORY_LEAGUE          355 // MUS_KACHI5
-#define MUS_C_COMM_CENTER           356 // MUS_PCC              // Unused, likely a test track.
+#define MUS_C_COMM_CENTRE           356 // MUS_PCC              // Unused, likely a test track.
 #define MUS_GSC_PEWTER              357 // MUS_NIBI             // Used in unused Contest Halls.
 #define MUS_C_VS_LEGEND_BEAST       358 // MUS_SUIKUN           // Unused, likely a test track.
 #define MUS_ROUTE101                359 // MUS_DOORO1           // Also used in Routes 102 and 103.
@@ -330,7 +330,7 @@
 #define MUS_ENCOUNTER_RICH          397 // MUS_TEST
 #define MUS_VERDANTURF              398 // MUS_GOMACHI0
 #define MUS_RUSTBORO                399 // MUS_GOTOWN           // Also used in Mauville City, Mossdeep City, Daycare, Weather Institute and several Route houses.
-#define MUS_POKE_CENTER             400 // MUS_POKECEN          // Also used in the Pokémon League's lobby.
+#define MUS_POKE_CENTRE             400 // MUS_POKECEN          // Also used in the Pokémon League's lobby.
 #define MUS_ROUTE104                401 // MUS_NEXTROAD         // Also used in Routes 105, 106, 107, 108, 109, 115 and 116.
 #define MUS_ROUTE119                402 // MUS_GRANROAD         // Also used in Routes 129, 130, 131, 132, 133, 134 and 118's east half.
 #define MUS_CYCLING                 403 // MUS_CYCLING
@@ -446,7 +446,7 @@
 #define MUS_RG_PALLET               512 // MUS_RG_MASARA
 #define MUS_RG_OAK_LAB              513 // MUS_RG_KENKYU
 #define MUS_RG_OAK                  514 // MUS_RG_OHKIDO
-#define MUS_RG_POKE_CENTER          515 // MUS_RG_POKECEN
+#define MUS_RG_POKE_CENTRE          515 // MUS_RG_POKECEN
 #define MUS_RG_SS_ANNE              516 // MUS_RG_SANTOAN
 #define MUS_RG_SURF                 517 // MUS_RG_NAMINORI
 #define MUS_RG_POKE_TOWER           518 // MUS_RG_P_TOWER
@@ -471,7 +471,7 @@
 #define MUS_RG_NEW_GAME_EXIT        537 // MUS_RG_SEIBETU
 #define MUS_RG_POKE_JUMP            538 // MUS_RG_JUMP
 #define MUS_RG_UNION_ROOM           539 // MUS_RG_UNION
-#define MUS_RG_NET_CENTER           540 // MUS_RG_NETWORK
+#define MUS_RG_NET_CENTRE           540 // MUS_RG_NETWORK
 #define MUS_RG_MYSTERY_GIFT         541 // MUS_RG_OKURIMONO
 #define MUS_RG_BERRY_PICK           542 // MUS_RG_KINOMIKUI
 #define MUS_RG_SEVII_CAVE           543 // MUS_RG_NANADUNGEON   // Identical to MUS_RG_MT_MOON.

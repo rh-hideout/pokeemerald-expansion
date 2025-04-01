@@ -31,7 +31,7 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_WaterSurfacing            @ FLDEFF_WATER_SURFACING
 	.4byte gFieldEffectScript_BerryTreeGrowthSparkle    @ FLDEFF_BERRY_TREE_GROWTH_SPARKLE
 	.4byte gFieldEffectScript_DeepSandFootprints        @ FLDEFF_DEEP_SAND_FOOTPRINTS
-	.4byte gFieldEffectScript_PokeCenterHeal            @ FLDEFF_POKECENTER_HEAL
+	.4byte gFieldEffectScript_PokeCentreHeal            @ FLDEFF_POKECENTRE_HEAL
 	.4byte gFieldEffectScript_UseSecretPowerTree        @ FLDEFF_USE_SECRET_POWER_TREE
 	.4byte gFieldEffectScript_UseSecretPowerShrub       @ FLDEFF_USE_SECRET_POWER_SHRUB
 	.4byte gFieldEffectScript_TreeDisguise              @ FLDEFF_TREE_DISGUISE
@@ -181,9 +181,9 @@ gFieldEffectScript_DeepSandFootprints::
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_DeepSandFootprints
 	field_eff_end
 
-gFieldEffectScript_PokeCenterHeal::
+gFieldEffectScript_PokeCentreHeal::
 	field_eff_loadfadedpal gSpritePalette_PokeballGlow
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_PokecenterHeal
+	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_PokecentreHeal
 	field_eff_end
 
 gFieldEffectScript_UseSecretPowerTree::

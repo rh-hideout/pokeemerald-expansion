@@ -148,7 +148,7 @@ static const struct BgTemplate sBgTemplates[3] =
     },
 };
 
-static const u8 sTextColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY};
+static const u8 sTextColours[] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY};
 
 static const struct OamData sOam_Hand =
 {
@@ -586,11 +586,11 @@ static void CreateStarterPokemonLabel(u8 selection)
     sStarterLabelWindowId = AddWindow(&winTemplate);
     FillWindowPixelBuffer(sStarterLabelWindowId, PIXEL_FILL(0));
 
-    width = GetStringCenterAlignXOffset(FONT_NARROW, categoryText, 0x68);
-    AddTextPrinterParameterized3(sStarterLabelWindowId, FONT_NARROW, width, 1, sTextColors, 0, categoryText);
+    width = GetStringCentreAlignXOffset(FONT_NARROW, categoryText, 0x68);
+    AddTextPrinterParameterized3(sStarterLabelWindowId, FONT_NARROW, width, 1, sTextColours, 0, categoryText);
 
-    width = GetStringCenterAlignXOffset(FONT_NORMAL, speciesName, 0x68);
-    AddTextPrinterParameterized3(sStarterLabelWindowId, FONT_NORMAL, width, 17, sTextColors, 0, speciesName);
+    width = GetStringCentreAlignXOffset(FONT_NORMAL, speciesName, 0x68);
+    AddTextPrinterParameterized3(sStarterLabelWindowId, FONT_NORMAL, width, 17, sTextColours, 0, speciesName);
 
     PutWindowTilemap(sStarterLabelWindowId);
     ScheduleBgCopyTilemapToVram(0);
@@ -655,7 +655,7 @@ static void SpriteCB_Pokeball(struct Sprite *sprite)
 
 static void SpriteCB_StarterPokemon(struct Sprite *sprite)
 {
-    // Move sprite to upper center of screen
+    // Move sprite to upper centre of screen
     if (sprite->x > STARTER_PKMN_POS_X)
         sprite->x -= 4;
     if (sprite->x < STARTER_PKMN_POS_X)

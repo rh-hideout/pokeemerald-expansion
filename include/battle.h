@@ -629,7 +629,7 @@ struct BattlerState
     u32 absentBattlerFlags:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
-    u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
+    u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralysed Pokémon.
     u32 activeAbilityPopUps:1;
     u32 lastMoveFailed:1; // For Stomping Tantrum
     u32 forcedSwitch:1;

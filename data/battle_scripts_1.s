@@ -3602,7 +3602,7 @@ BattleScript_EffectPoison::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectParalyze::
+BattleScript_EffectParalyse::
 	attackcanceler
 	attackstring
 	ppreduce
@@ -3615,10 +3615,10 @@ BattleScript_EffectParalyze::
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	typecalc
 	jumpifmovehadnoeffect BattleScript_ButItFailed
-	jumpifstatus BS_TARGET, STATUS1_PARALYSIS, BattleScript_AlreadyParalyzed
+	jumpifstatus BS_TARGET, STATUS1_PARALYSIS, BattleScript_AlreadyParalysed
 	jumpifelectricabilityaffected BS_TARGET, ABILITY_VOLT_ABSORB, BattleScript_VoltAbsorbHeal
 	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	tryparalyzetype BS_ATTACKER, BS_TARGET, BattleScript_NotAffected
+	tryparalysetype BS_ATTACKER, BS_TARGET, BattleScript_NotAffected
 	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_ButItFailed
 	jumpifterrainaffected BS_TARGET, STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents
 	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
@@ -3635,10 +3635,10 @@ BattleScript_VoltAbsorbHeal:
 	tryhealquarterhealth BS_TARGET BattleScript_MonMadeMoveUseless @ Check if max hp
 	goto BattleScript_MoveHPDrain
 
-BattleScript_AlreadyParalyzed:
+BattleScript_AlreadyParalysed:
 	setalreadystatusedmoveattempt BS_ATTACKER
 	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNISALREADYPARALYZED
+	printstring STRINGID_PKMNISALREADYPARALYSED
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -4548,7 +4548,7 @@ BattleScript_EffectFutureSight::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTeleport::
-.if B_TELEPORT_BEHAVIOR >= GEN_8
+.if B_TELEPORT_BEHAVIOUR >= GEN_8
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_EffectBatonPass
 	jumpifside BS_ATTACKER, B_SIDE_PLAYER, BattleScript_EffectBatonPass
 .else
@@ -4925,7 +4925,7 @@ BattleScript_EffectFollowMe::
 	setforcedtarget
 	attackanimation
 	waitanimation
-	printstring STRINGID_PKMNCENTERATTENTION
+	printstring STRINGID_PKMNCENTREATTENTION
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -7180,8 +7180,8 @@ BattleScript_FrostbiteHealedViaFireMove::
 	updatestatusicon BS_TARGET
 	return
 
-BattleScript_MoveUsedIsParalyzed::
-	printstring STRINGID_PKMNISPARALYZED
+BattleScript_MoveUsedIsParalysed::
+	printstring STRINGID_PKMNISPARALYSED
 	waitmessage B_WAIT_TIME_LONG
 	statusanimation BS_ATTACKER
 	cancelmultiturnmoves BS_ATTACKER
@@ -7423,7 +7423,7 @@ BattleScript_MoveEffectFreeze::
 
 BattleScript_MoveEffectParalysis::
 	statusanimation BS_EFFECT_BATTLER
-	printfromtable gGotParalyzedStringIds
+	printfromtable gGotParalysedStringIds
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_UpdateEffectStatusIconRet
 
@@ -8312,7 +8312,7 @@ BattleScript_StickyHoldActivates::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_ColorChangeActivates::
+BattleScript_ColourChangeActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNCHANGEDTYPEWITH
 	waitmessage B_WAIT_TIME_LONG
@@ -9042,16 +9042,16 @@ BattleScript_FlushMessageBox::
 	flushtextbox
 	return
 
-BattleScript_PalacePrintFlavorText::
+BattleScript_PalacePrintFlavourText::
 	setbyte gBattleCommunication + 1, 0
-BattleScript_PalaceTryBattlerFlavorText::
-	palaceflavortext BS_ATTACKER @ BS_ATTACKER here overwritten by gBattleCommunication + 1
-	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, TRUE, BattleScript_PalaceEndFlavorText
-	printfromtable gBattlePalaceFlavorTextTable
+BattleScript_PalaceTryBattlerFlavourText::
+	palaceflavourtext BS_ATTACKER @ BS_ATTACKER here overwritten by gBattleCommunication + 1
+	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, TRUE, BattleScript_PalaceEndFlavourText
+	printfromtable gBattlePalaceFlavourTextTable
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_PalaceEndFlavorText::
+BattleScript_PalaceEndFlavourText::
 	addbyte gBattleCommunication + 1, 1
-	jumpifbytenotequal gBattleCommunication + 1, gBattlersCount, BattleScript_PalaceTryBattlerFlavorText
+	jumpifbytenotequal gBattleCommunication + 1, gBattlersCount, BattleScript_PalaceTryBattlerFlavourText
 	setbyte gBattleCommunication, 0
 	setbyte gBattleCommunication + 1, 0
 	end2
@@ -9759,22 +9759,22 @@ BattleScript_EffectTryReducePP::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectParalyzeSide::
+BattleScript_EffectParalyseSide::
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
-BattleScript_ParalyzeSideLoop:
-	jumpifabsent BS_TARGET, BattleScript_ParalyzeSideIncrement
-	trysetparalysis BattleScript_ParalyzeSideIncrement
+BattleScript_ParalyseSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_ParalyseSideIncrement
+	trysetparalysis BattleScript_ParalyseSideIncrement
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
 	printfromtable gStatusConditionsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
-BattleScript_ParalyzeSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ParalyzeSideEnd
-	setallytonexttarget BattleScript_ParalyzeSideLoop
-BattleScript_ParalyzeSideEnd:
+BattleScript_ParalyseSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ParalyseSideEnd
+	setallytonexttarget BattleScript_ParalyseSideLoop
+BattleScript_ParalyseSideEnd:
 	restoretarget
 	goto BattleScript_MoveEnd
 
@@ -9797,22 +9797,22 @@ BattleScript_PoisonSideEnd:
 	restoretarget
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectPoisonParalyzeSide::
+BattleScript_EffectPoisonParalyseSide::
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
-BattleScript_PoisonParalyzeSideLoop:
-	jumpifabsent BS_TARGET, BattleScript_PoisonParalyzeSideIncrement
-	trysetpoisonparalysis BattleScript_PoisonParalyzeSideIncrement
+BattleScript_PoisonParalyseSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_PoisonParalyseSideIncrement
+	trysetpoisonparalysis BattleScript_PoisonParalyseSideIncrement
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
 	printfromtable gStatusConditionsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
-BattleScript_PoisonParalyzeSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonParalyzeSideEnd
-	setallytonexttarget BattleScript_PoisonParalyzeSideLoop
-BattleScript_PoisonParalyzeSideEnd:
+BattleScript_PoisonParalyseSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonParalyseSideEnd
+	setallytonexttarget BattleScript_PoisonParalyseSideLoop
+BattleScript_PoisonParalyseSideEnd:
 	restoretarget
 	goto BattleScript_MoveEnd
 

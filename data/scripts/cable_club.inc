@@ -11,11 +11,11 @@ CableClub_EventScript_HideOrShowMysteryGiftMan::
 	end
 
 CableClub_EventScript_ShowMysteryGiftMan::
-	clearflag FLAG_HIDE_POKEMON_CENTER_2F_MYSTERY_GIFT_MAN
+	clearflag FLAG_HIDE_POKEMON_CENTRE_2F_MYSTERY_GIFT_MAN
 	return
 
 CableClub_EventScript_HideMysteryGiftMan::
-	setflag FLAG_HIDE_POKEMON_CENTER_2F_MYSTERY_GIFT_MAN
+	setflag FLAG_HIDE_POKEMON_CENTRE_2F_MYSTERY_GIFT_MAN
 	return
 
 CableClub_EventScript_MysteryGiftMan::
@@ -52,7 +52,7 @@ CableClub_OnWarp:
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_SINGLE_BATTLE, CableClub_EventScript_CheckTurnAttendant
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_DOUBLE_BATTLE, CableClub_EventScript_CheckTurnAttendant
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_MULTI_BATTLE, CableClub_EventScript_CheckTurnAttendant
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTER, CableClub_EventScript_CheckTurnAttendant
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTRE, CableClub_EventScript_CheckTurnAttendant
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_RECORD_CORNER, CableClub_EventScript_CheckTurnAttendant
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_UNION_ROOM, CableClub_EventScript_CheckTurnAttendant
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_BERRY_CRUSH, CableClub_EventScript_CheckTurnAttendant
@@ -69,7 +69,7 @@ CableClub_OnLoad:
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_SINGLE_BATTLE, CableClub_EventScript_OnLoadFromColosseum
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_DOUBLE_BATTLE, CableClub_EventScript_OnLoadFromColosseum
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_MULTI_BATTLE, CableClub_EventScript_OnLoadFromColosseum
-	goto_if_eq VAR_CABLE_CLUB_STATE, USING_TRADE_CENTER, CableClub_EventScript_OnLoadFromTradeCenter
+	goto_if_eq VAR_CABLE_CLUB_STATE, USING_TRADE_CENTRE, CableClub_EventScript_OnLoadFromTradeCentre
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_RECORD_CORNER, CableClub_EventScript_OnLoadFromRecordCorner
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_UNION_ROOM, CableClub_EventScript_OnLoadFromUnionRoom
 	goto_if_eq VAR_CABLE_CLUB_STATE, USING_BERRY_CRUSH, CableClub_EventScript_OnLoadFromBerryCrush
@@ -80,7 +80,7 @@ CableClub_EventScript_OnLoadFromColosseum::
 	call CableClub_EventScript_OpenDirectCornerBarrier
 	end
 
-CableClub_EventScript_OnLoadFromTradeCenter::
+CableClub_EventScript_OnLoadFromTradeCentre::
 	call CableClub_EventScript_OpenDirectCornerBarrier
 	end
 
@@ -105,7 +105,7 @@ CableClub_OnFrame:
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_SINGLE_BATTLE, CableClub_EventScript_ExitLinkRoom
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_DOUBLE_BATTLE, CableClub_EventScript_ExitLinkRoom
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_MULTI_BATTLE, CableClub_EventScript_ExitLinkRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTER, CableClub_EventScript_ExitTradeCenter
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTRE, CableClub_EventScript_ExitTradeCentre
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_RECORD_CORNER, CableClub_EventScript_ExitRecordCorner
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_UNION_ROOM, CableClub_EventScript_ExitUnionRoom
 	map_script_2 VAR_CABLE_CLUB_STATE, USING_BERRY_CRUSH, CableClub_EventScript_ExitLinkRoom
@@ -144,9 +144,9 @@ CableClub_EventScript_CloseLinkAndExitLinkRoom::
 	waitmovement 0
 	return
 
-CableClub_EventScript_ExitTradeCenter::
+CableClub_EventScript_ExitTradeCentre::
 	lockall
-	call CableClub_EventScript_PlayerExitTradeCenter
+	call CableClub_EventScript_PlayerExitTradeCentre
 	call CableClub_EventScript_CloseDirectCornerBarrier
 	special DrawWholeMapView
 	playse SE_CLICK
@@ -154,7 +154,7 @@ CableClub_EventScript_ExitTradeCenter::
 	releaseall
 	end
 
-CableClub_EventScript_PlayerExitTradeCenter::
+CableClub_EventScript_PlayerExitTradeCentre::
 	special CloseLink
 	setvar VAR_CABLE_CLUB_STATE, 0
 	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom
@@ -260,7 +260,7 @@ CableClub_EventScript_SelectCableClubRoom::
 	goto_if_set FLAG_VISITED_MAUVILLE_CITY, CableClub_EventScript_CableClubUnlockedRecordCorner
 	multichoice 0, 0, MULTI_CABLE_CLUB_NO_RECORD_MIX, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TradeCenter
+	case 0, CableClub_EventScript_TradeCentre
 	case 1, CableClub_EventScript_Colosseum
 	case 2, CableClub_EventScript_AbortLink
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
@@ -269,7 +269,7 @@ CableClub_EventScript_SelectCableClubRoom::
 CableClub_EventScript_CableClubUnlockedRecordCorner::
 	multichoice 0, 0, MULTI_CABLE_CLUB_WITH_RECORD_MIX, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TradeCenter
+	case 0, CableClub_EventScript_TradeCentre
 	case 1, CableClub_EventScript_Colosseum
 	case 2, CableClub_EventScript_RecordCorner
 	case 3, CableClub_EventScript_AbortLink
@@ -412,7 +412,7 @@ CableClub_EventScript_ConfirmNumberAndRestart::
 	release
 	end
 
-CableClub_EventScript_TradeCenter::
+CableClub_EventScript_TradeCentre::
 	copyvar VAR_0x8007, VAR_LAST_TALKED
 	call CableClub_EventScript_CheckPartyTradeRequirements
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink
@@ -422,7 +422,7 @@ CableClub_EventScript_TradeCenter::
 	waitmessage
 	special TryTradeLinkup
 	waitstate
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterTradeCenter
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterTradeCentre
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady
 	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, CableClub_EventScript_AbortLinkDifferentSelections
 	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants
@@ -432,8 +432,8 @@ CableClub_EventScript_TradeCenter::
 	goto_if_eq VAR_RESULT, LINKUP_PARTNER_NOT_READY, CableClub_EventScript_AbortLinkOtherTrainerNotReady
 	end
 
-CableClub_EventScript_EnterTradeCenter::
-	setvar VAR_0x8004, USING_TRADE_CENTER
+CableClub_EventScript_EnterTradeCentre::
+	setvar VAR_0x8004, USING_TRADE_CENTRE
 	copyvar VAR_CABLE_CLUB_STATE, VAR_0x8004
 	messageautoscroll CableClub_Text_PleaseEnter
 	waitmessage
@@ -455,7 +455,7 @@ CableClub_EventScript_EnterTradeCenter::
 	waitdooranim
 	release
 	special SetCableClubWarp
-	setwarp MAP_TRADE_CENTER, 5, 8
+	setwarp MAP_TRADE_CENTRE, 5, 8
 	special DoCableClubWarp
 	waitstate
 	end
@@ -717,54 +717,54 @@ EventScript_BattleColosseum_4P_PlayerSpot3::
 EventScript_BattleColosseum_4P_CancelSpotTrigger::
 	end
 
-EventScript_TradeCenter_Chair0::
+EventScript_TradeCentre_Chair0::
 	setvar VAR_0x8005, 0
 	special PlayerEnteredTradeSeat
 	waitstate
 	end
 
-EventScript_TradeCenter_Chair1::
+EventScript_TradeCentre_Chair1::
 	setvar VAR_0x8005, 1
 	special PlayerEnteredTradeSeat
 	waitstate
 	end
 
 /* Never used */
-EventScript_TradeCenter_Chair2::
+EventScript_TradeCentre_Chair2::
 	setvar VAR_0x8005, 2
 	special PlayerEnteredTradeSeat
 	waitstate
 	end
 
 /* Never used */
-EventScript_TradeCenter_Chair3::
+EventScript_TradeCentre_Chair3::
 	setvar VAR_0x8005, 3
 	special PlayerEnteredTradeSeat
 	waitstate
 	end
 
-EventScript_RecordCenter_Spot0::
+EventScript_RecordCentre_Spot0::
 	setvar VAR_0x8005, 0
 	special RecordMixingPlayerSpotTriggered
 	waitstate
 	goto_if_ne VAR_TEMP_RECORD_MIX_GIFT_ITEM, ITEM_NONE, RecordCorner_EventScript_ReceivedGiftItem
 	end
 
-EventScript_RecordCenter_Spot1::
+EventScript_RecordCentre_Spot1::
 	setvar VAR_0x8005, 1
 	special RecordMixingPlayerSpotTriggered
 	waitstate
 	goto_if_ne VAR_TEMP_RECORD_MIX_GIFT_ITEM, ITEM_NONE, RecordCorner_EventScript_ReceivedGiftItem
 	end
 
-EventScript_RecordCenter_Spot2::
+EventScript_RecordCentre_Spot2::
 	setvar VAR_0x8005, 2
 	special RecordMixingPlayerSpotTriggered
 	waitstate
 	goto_if_ne VAR_TEMP_RECORD_MIX_GIFT_ITEM, ITEM_NONE, RecordCorner_EventScript_ReceivedGiftItem
 	end
 
-EventScript_RecordCenter_Spot3::
+EventScript_RecordCentre_Spot3::
 	setvar VAR_0x8005, 3
 	special RecordMixingPlayerSpotTriggered
 	waitstate
@@ -786,8 +786,8 @@ CableClub_EventScript_ReadTrainerCard::
 	waitstate
 	end
 
-CableClub_EventScript_ReadTrainerCardColored::
-	msgbox CableClub_Text_GotToLookAtColoredTrainerCard, MSGBOX_DEFAULT
+CableClub_EventScript_ReadTrainerCardColoured::
+	msgbox CableClub_Text_GotToLookAtColouredTrainerCard, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK
 	special Script_ShowLinkTrainerCard
 	waitstate
@@ -805,9 +805,9 @@ BattleColosseum_2P_EventScript_Attendant::
 	closemessage
 	end
 
-TradeCenter_EventScript_Attendant::
+TradeCentre_EventScript_Attendant::
 	special Script_FacePlayer
-	msgbox TradeCenter_Text_TakeSeatStartTrade, MSGBOX_DEFAULT
+	msgbox TradeCentre_Text_TakeSeatStartTrade, MSGBOX_DEFAULT
 	special Script_ClearHeldMovement
 	closemessage
 	end
@@ -1227,23 +1227,23 @@ CableClub_EventScript_AdapterNotConnected::
 	end
 
 CableClub_EventScript_OpenUnionRoomBarrier::
-	setmetatile 5, 2, METATILE_PokemonCenter_Floor_ShadowTop_Alt, FALSE
-	setmetatile 5, 3, METATILE_PokemonCenter_Floor_Plain_Alt, FALSE
+	setmetatile 5, 2, METATILE_PokemonCentre_Floor_ShadowTop_Alt, FALSE
+	setmetatile 5, 3, METATILE_PokemonCentre_Floor_Plain_Alt, FALSE
 	return
 
 CableClub_EventScript_CloseUnionRoomBarrier::
-	setmetatile 5, 2, METATILE_PokemonCenter_Floor_ShadowTop, TRUE
-	setmetatile 5, 3, METATILE_PokemonCenter_CounterBarrier, TRUE
+	setmetatile 5, 2, METATILE_PokemonCentre_Floor_ShadowTop, TRUE
+	setmetatile 5, 3, METATILE_PokemonCentre_CounterBarrier, TRUE
 	return
 
 CableClub_EventScript_OpenDirectCornerBarrier::
-	setmetatile 9, 2, METATILE_PokemonCenter_Floor_ShadowTop_Alt, FALSE
-	setmetatile 9, 3, METATILE_PokemonCenter_Floor_Plain_Alt, FALSE
+	setmetatile 9, 2, METATILE_PokemonCentre_Floor_ShadowTop_Alt, FALSE
+	setmetatile 9, 3, METATILE_PokemonCentre_Floor_Plain_Alt, FALSE
 	return
 
 CableClub_EventScript_CloseDirectCornerBarrier::
-	setmetatile 9, 2, METATILE_PokemonCenter_Floor_ShadowTop, TRUE
-	setmetatile 9, 3, METATILE_PokemonCenter_CounterBarrier, TRUE
+	setmetatile 9, 2, METATILE_PokemonCentre_Floor_ShadowTop, TRUE
+	setmetatile 9, 3, METATILE_PokemonCentre_CounterBarrier, TRUE
 	return
 
 EventScript_OpenMossdeepGameCornerBarrier::

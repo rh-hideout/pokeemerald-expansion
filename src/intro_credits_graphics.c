@@ -766,17 +766,17 @@ void SetIntroPart2BgCnt(u8 scenery)
     case 0:
         SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(6)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(7)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1)
                                    | BGCNT_CHARBASE(1)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(15)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
@@ -789,17 +789,17 @@ void SetIntroPart2BgCnt(u8 scenery)
     case 1:
         SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(6)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(7)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1)
                                    | BGCNT_CHARBASE(1)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(15)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
@@ -812,17 +812,17 @@ void SetIntroPart2BgCnt(u8 scenery)
     case 2:
         SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(6)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2)
                                    | BGCNT_CHARBASE(0)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(7)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1)
                                    | BGCNT_CHARBASE(1)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_SCREENBASE(15)
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
@@ -890,17 +890,17 @@ void SetCreditsSceneBgCnt(u8 scene)
 {
     SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
                                | BGCNT_CHARBASE(0)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_SCREENBASE(6)
                                | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2)
                                | BGCNT_CHARBASE(0)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_SCREENBASE(7)
                                | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1)
                                | BGCNT_CHARBASE(1)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_SCREENBASE(15)
                                | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
@@ -1068,7 +1068,7 @@ static void CreateMovingScenerySprites(bool8 hasVerticalMove, const struct Intro
     for(i = 0; i < numSprites; i++)
     {
         u8 sprite = CreateSprite(&sSpriteTemplate_MovingScenery, metadata[i].x, metadata[i].y, metadata[i].subpriority);
-        CalcCenterToCornerVec(&gSprites[sprite], metadata[i].shape, metadata[i].size, ST_OAM_AFFINE_OFF);
+        CalcCentreToCornerVec(&gSprites[sprite], metadata[i].shape, metadata[i].size, ST_OAM_AFFINE_OFF);
         gSprites[sprite].oam.priority = 3;
         gSprites[sprite].oam.shape = metadata[i].shape;
         gSprites[sprite].oam.size = metadata[i].size;

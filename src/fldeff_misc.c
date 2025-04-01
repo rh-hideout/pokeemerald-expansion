@@ -16,10 +16,10 @@
 #include "event_data.h"
 #include "event_scripts.h"
 #include "event_object_movement.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "string_util.h"
 #include "constants/field_effects.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/metatile_labels.h"
 #include "constants/songs.h"
 
@@ -554,9 +554,9 @@ bool8 SetUpFieldMove_SecretPower(void)
         return FALSE;
 
     GetXYCoordsOneStepInFrontOfPlayer(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
-    mb = MapGridGetMetatileBehaviorAt(gPlayerFacingPosition.x, gPlayerFacingPosition.y);
+    mb = MapGridGetMetatileBehaviourAt(gPlayerFacingPosition.x, gPlayerFacingPosition.y);
 
-    if (MetatileBehavior_IsSecretBaseCave(mb) == TRUE)
+    if (MetatileBehaviour_IsSecretBaseCave(mb) == TRUE)
     {
         SetCurrentSecretBase();
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
@@ -564,7 +564,7 @@ bool8 SetUpFieldMove_SecretPower(void)
         return TRUE;
     }
 
-    if (MetatileBehavior_IsSecretBaseTree(mb) == TRUE)
+    if (MetatileBehaviour_IsSecretBaseTree(mb) == TRUE)
     {
         SetCurrentSecretBase();
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
@@ -572,7 +572,7 @@ bool8 SetUpFieldMove_SecretPower(void)
         return TRUE;
     }
 
-    if (MetatileBehavior_IsSecretBaseShrub(mb) == TRUE)
+    if (MetatileBehaviour_IsSecretBaseShrub(mb) == TRUE)
     {
         SetCurrentSecretBase();
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
@@ -667,7 +667,7 @@ static void StartSecretBaseTreeFieldEffect(void)
 
 bool8 FldEff_SecretPowerTree(void)
 {
-    s16 mb = MapGridGetMetatileBehaviorAt(gPlayerFacingPosition.x, gPlayerFacingPosition.y) & 0xFFF;
+    s16 mb = MapGridGetMetatileBehaviourAt(gPlayerFacingPosition.x, gPlayerFacingPosition.y) & 0xFFF;
 
     if (mb == MB_SECRET_BASE_SPOT_TREE_LEFT)
         gFieldEffectArguments[7] = 0;

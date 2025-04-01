@@ -109,15 +109,15 @@ static const u8 sPartyMenuSpriteCoords[PARTY_LAYOUT_COUNT][PARTY_SIZE][4 * 2] =
 static const u32 sConfirmButton_Tilemap[] = INCBIN_U32("graphics/party_menu/confirm_button.bin");
 static const u32 sCancelButton_Tilemap[] = INCBIN_U32("graphics/party_menu/cancel_button.bin");
 
-// Text colors for BG, FG, and Shadow in that order
-static const u8 sFontColorTable[][3] =
+// Text colours for BG, FG, and Shadow in that order
+static const u8 sFontColourTable[][3] =
 {
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_DARK_GRAY},  // Default
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,      TEXT_COLOR_GREEN},      // Unused
-    {TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_2,  TEXT_DYNAMIC_COLOR_3},  // Gender symbol
-    {TEXT_COLOR_WHITE,       TEXT_COLOR_DARK_GRAY,  TEXT_COLOR_LIGHT_GRAY}, // Selection actions
-    {TEXT_COLOR_WHITE,       TEXT_COLOR_BLUE,       TEXT_COLOR_LIGHT_BLUE}, // Field moves
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,      TEXT_COLOR_DARK_GRAY},  // Unused
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_LIGHT_GREY, TEXT_COLOUR_DARK_GREY},  // Default
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE,      TEXT_COLOUR_GREEN},      // Unused
+    {TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_2,  TEXT_DYNAMIC_COLOUR_3},  // Gender symbol
+    {TEXT_COLOUR_WHITE,       TEXT_COLOUR_DARK_GREY,  TEXT_COLOUR_LIGHT_GREY}, // Selection actions
+    {TEXT_COLOUR_WHITE,       TEXT_COLOUR_BLUE,       TEXT_COLOUR_LIGHT_BLUE}, // Field moves
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE,      TEXT_COLOUR_DARK_GREY},  // Unused
 };
 
 static const struct WindowTemplate sSinglePartyMenuWindowTemplate[] =
@@ -526,7 +526,7 @@ static const struct WindowTemplate sMoveSelectWindowTemplate =
     .baseBlock = 0x2E9,
 };
 
-static const struct WindowTemplate sCatalogSelectWindowTemplate =
+static const struct WindowTemplate sCatalogueSelectWindowTemplate =
 {
     .bg = 2,
     .tilemapLeft = 17,
@@ -715,12 +715,12 @@ struct
     [MENU_TRADE1] = {sText_Trade4, CursorCb_Trade1},
     [MENU_TRADE2] = {sText_Trade4, CursorCb_Trade2},
     [MENU_TOSS] = {gMenuText_Toss, CursorCb_Toss},
-    [MENU_CATALOG_BULB] = {COMPOUND_STRING("Light bulb"), CursorCb_CatalogBulb},
-    [MENU_CATALOG_OVEN] = {COMPOUND_STRING("Microwave oven"), CursorCb_CatalogOven},
-    [MENU_CATALOG_WASHING] = {COMPOUND_STRING("Washing machine"), CursorCb_CatalogWashing},
-    [MENU_CATALOG_FRIDGE] = {COMPOUND_STRING("Refrigerator"), CursorCb_CatalogFridge},
-    [MENU_CATALOG_FAN] = {COMPOUND_STRING("Electric fan"), CursorCb_CatalogFan},
-    [MENU_CATALOG_MOWER] = {COMPOUND_STRING("Lawn mower"), CursorCb_CatalogMower},
+    [MENU_CATALOGUE_BULB] = {COMPOUND_STRING("Light bulb"), CursorCb_CatalogueBulb},
+    [MENU_CATALOGUE_OVEN] = {COMPOUND_STRING("Microwave oven"), CursorCb_CatalogueOven},
+    [MENU_CATALOGUE_WASHING] = {COMPOUND_STRING("Washing machine"), CursorCb_CatalogueWashing},
+    [MENU_CATALOGUE_FRIDGE] = {COMPOUND_STRING("Refrigerator"), CursorCb_CatalogueFridge},
+    [MENU_CATALOGUE_FAN] = {COMPOUND_STRING("Electric fan"), CursorCb_CatalogueFan},
+    [MENU_CATALOGUE_MOWER] = {COMPOUND_STRING("Lawn mower"), CursorCb_CatalogueMower},
     [MENU_CHANGE_FORM] = {COMPOUND_STRING("Change form"), CursorCb_ChangeForm},
     [MENU_CHANGE_ABILITY] = {COMPOUND_STRING("Change Ability"), CursorCb_ChangeAbility},
 };
@@ -738,7 +738,7 @@ static const u8 sPartyMenuAction_RegisterSummaryCancel[] = {MENU_REGISTER, MENU_
 static const u8 sPartyMenuAction_TradeSummaryCancel1[] = {MENU_TRADE1, MENU_SUMMARY, MENU_CANCEL1};
 static const u8 sPartyMenuAction_TradeSummaryCancel2[] = {MENU_TRADE2, MENU_SUMMARY, MENU_CANCEL1};
 static const u8 sPartyMenuAction_TakeItemTossCancel[] = {MENU_TAKE_ITEM, MENU_TOSS, MENU_CANCEL1};
-static const u8 sPartyMenuAction_RotomCatalog[] = {MENU_CATALOG_BULB, MENU_CATALOG_OVEN, MENU_CATALOG_WASHING, MENU_CATALOG_FRIDGE, MENU_CATALOG_FAN, MENU_CATALOG_MOWER, MENU_CANCEL1};
+static const u8 sPartyMenuAction_RotomCatalogue[] = {MENU_CATALOGUE_BULB, MENU_CATALOGUE_OVEN, MENU_CATALOGUE_WASHING, MENU_CATALOGUE_FRIDGE, MENU_CATALOGUE_FAN, MENU_CATALOGUE_MOWER, MENU_CANCEL1};
 static const u8 sPartyMenuAction_ZygardeCube[] = {MENU_CHANGE_FORM, MENU_CHANGE_ABILITY, MENU_CANCEL1};
 
 
@@ -759,7 +759,7 @@ static const u8 *const sPartyMenuActions[] =
     [ACTIONS_TRADE]         = sPartyMenuAction_TradeSummaryCancel1,
     [ACTIONS_SPIN_TRADE]    = sPartyMenuAction_TradeSummaryCancel2,
     [ACTIONS_TAKEITEM_TOSS] = sPartyMenuAction_TakeItemTossCancel,
-    [ACTIONS_ROTOM_CATALOG] = sPartyMenuAction_RotomCatalog,
+    [ACTIONS_ROTOM_CATALOGUE] = sPartyMenuAction_RotomCatalogue,
     [ACTIONS_ZYGARDE_CUBE]  = sPartyMenuAction_ZygardeCube,
 };
 
@@ -779,7 +779,7 @@ static const u8 sPartyMenuActionCounts[] =
     [ACTIONS_TRADE]         = ARRAY_COUNT(sPartyMenuAction_TradeSummaryCancel1),
     [ACTIONS_SPIN_TRADE]    = ARRAY_COUNT(sPartyMenuAction_TradeSummaryCancel2),
     [ACTIONS_TAKEITEM_TOSS] = ARRAY_COUNT(sPartyMenuAction_TakeItemTossCancel),
-    [ACTIONS_ROTOM_CATALOG] = ARRAY_COUNT(sPartyMenuAction_RotomCatalog),
+    [ACTIONS_ROTOM_CATALOGUE] = ARRAY_COUNT(sPartyMenuAction_RotomCatalogue),
     [ACTIONS_ZYGARDE_CUBE]  = ARRAY_COUNT(sPartyMenuAction_ZygardeCube),
 };
 
@@ -1059,7 +1059,7 @@ static const union AnimCmd sSpriteAnim_StatusPoison[] =
     ANIMCMD_END
 };
 
-static const union AnimCmd sSpriteAnim_StatusParalyzed[] =
+static const union AnimCmd sSpriteAnim_StatusParalysed[] =
 {
     ANIMCMD_FRAME(4, 0),
     ANIMCMD_END
@@ -1104,7 +1104,7 @@ static const union AnimCmd sSpriteAnim_StatusFrostbite[] =
 static const union AnimCmd *const sSpriteTemplate_StatusCondition[] =
 {
     sSpriteAnim_StatusPoison,
-    sSpriteAnim_StatusParalyzed,
+    sSpriteAnim_StatusParalysed,
     sSpriteAnim_StatusSleep,
     sSpriteAnim_StatusFrozen,
     sSpriteAnim_StatusBurn,

@@ -36,7 +36,7 @@
 #include "map_name_popup.h"
 #include "match_call.h"
 #include "menu.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "mirage_tower.h"
 #include "money.h"
 #include "new_game.h"
@@ -82,7 +82,7 @@ struct CableClubPlayer
     u8 movementMode;
     u8 facing;
     struct MapPosition pos;
-    u16 metatileBehavior;
+    u16 metatileBehaviour;
 };
 
 #define PLAYER_LINK_STATE_IDLE 0x80
@@ -177,7 +177,7 @@ static void FieldClearVBlankHBlankCallbacks(void);
 static void TransitionMapMusic(void);
 static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *, u16, u8);
 static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *, u8, u16, u8);
-static u16 GetCenterScreenMetatileBehavior(void);
+static u16 GetCentreScreenMetatileBehaviour(void);
 
 static void *sUnusedOverworldCallback;
 static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
@@ -652,7 +652,7 @@ static void SetPlayerCoordsFromWarp(void)
     }
     else
     {
-        // Invalid warpId and coords given. Put player in center of map.
+        // Invalid warpId and coords given. Put player in centre of map.
         gSaveBlock1Ptr->pos.x = gMapHeader.mapLayout->width / 2;
         gSaveBlock1Ptr->pos.y = gMapHeader.mapLayout->height / 2;
     }
@@ -862,7 +862,7 @@ if (I_VS_SEEKER_CHARGING != 0)
     LoadSecondaryTilesetPalette(gMapHeader.mapLayout);
 
     for (paletteIndex = NUM_PALS_IN_PRIMARY; paletteIndex < NUM_PALS_TOTAL; paletteIndex++)
-        ApplyWeatherColorMapToPal(paletteIndex);
+        ApplyWeatherColourMapToPal(paletteIndex);
 
     InitSecondaryTilesetAnimation();
     UpdateLocationHistoryForRoamer();
@@ -968,21 +968,21 @@ static struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
 {
     struct InitialPlayerAvatarState playerStruct;
     u8 mapType = GetCurrentMapType();
-    u16 metatileBehavior = GetCenterScreenMetatileBehavior();
-    u8 transitionFlags = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehavior, mapType);
+    u16 metatileBehaviour = GetCentreScreenMetatileBehaviour();
+    u8 transitionFlags = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehaviour, mapType);
     playerStruct.transitionFlags = transitionFlags;
-    playerStruct.direction = GetAdjustedInitialDirection(&sInitialPlayerAvatarState, transitionFlags, metatileBehavior, mapType);
+    playerStruct.direction = GetAdjustedInitialDirection(&sInitialPlayerAvatarState, transitionFlags, metatileBehaviour, mapType);
     sInitialPlayerAvatarState = playerStruct;
     return &sInitialPlayerAvatarState;
 }
 
-static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType)
+static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehaviour, u8 mapType)
 {
     if (mapType != MAP_TYPE_INDOOR && FlagGet(FLAG_SYS_CRUISE_MODE))
         return PLAYER_AVATAR_FLAG_ON_FOOT;
     else if (mapType == MAP_TYPE_UNDERWATER)
         return PLAYER_AVATAR_FLAG_UNDERWATER;
-    else if (MetatileBehavior_IsSurfableWaterOrUnderwater(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsSurfableWaterOrUnderwater(metatileBehaviour) == TRUE)
         return PLAYER_AVATAR_FLAG_SURFING;
     else if (Overworld_IsBikingAllowed() != TRUE)
         return PLAYER_AVATAR_FLAG_ON_FOOT;
@@ -994,38 +994,38 @@ static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *pla
         return PLAYER_AVATAR_FLAG_ACRO_BIKE;
 }
 
-static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehavior, u8 mapType)
+static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehaviour, u8 mapType)
 {
     if (FlagGet(FLAG_SYS_CRUISE_MODE) && mapType == MAP_TYPE_OCEAN_ROUTE)
         return DIR_EAST;
-    else if (MetatileBehavior_IsDeepSouthWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsDeepSouthWarp(metatileBehaviour) == TRUE)
         return DIR_NORTH;
-    else if (MetatileBehavior_IsNonAnimDoor(metatileBehavior) == TRUE || MetatileBehavior_IsDoor(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsNonAnimDoor(metatileBehaviour) == TRUE || MetatileBehaviour_IsDoor(metatileBehaviour) == TRUE)
         return DIR_SOUTH;
-    else if (MetatileBehavior_IsSouthArrowWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsSouthArrowWarp(metatileBehaviour) == TRUE)
         return DIR_NORTH;
-    else if (MetatileBehavior_IsNorthArrowWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsNorthArrowWarp(metatileBehaviour) == TRUE)
         return DIR_SOUTH;
-    else if (MetatileBehavior_IsWestArrowWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsWestArrowWarp(metatileBehaviour) == TRUE)
         return DIR_EAST;
-    else if (MetatileBehavior_IsEastArrowWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsEastArrowWarp(metatileBehaviour) == TRUE)
         return DIR_WEST;
-    else if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior) == TRUE || MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsDirectionalUpRightStairWarp(metatileBehaviour) == TRUE || MetatileBehaviour_IsDirectionalDownRightStairWarp(metatileBehaviour) == TRUE)
         return DIR_WEST;
-    else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior) == TRUE || MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsDirectionalUpLeftStairWarp(metatileBehaviour) == TRUE || MetatileBehaviour_IsDirectionalDownLeftStairWarp(metatileBehaviour) == TRUE)
         return DIR_EAST;
     else if ((playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER  && transitionFlags == PLAYER_AVATAR_FLAG_SURFING)
           || (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_SURFING && transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER))
         return playerStruct->direction;
-    else if (MetatileBehavior_IsLadder(metatileBehavior) == TRUE)
+    else if (MetatileBehaviour_IsLadder(metatileBehaviour) == TRUE)
         return playerStruct->direction;
     else
         return DIR_SOUTH;
 }
 
-static u16 GetCenterScreenMetatileBehavior(void)
+static u16 GetCentreScreenMetatileBehaviour(void)
 {
-    return MapGridGetMetatileBehaviorAt(gSaveBlock1Ptr->pos.x + MAP_OFFSET, gSaveBlock1Ptr->pos.y + MAP_OFFSET);
+    return MapGridGetMetatileBehaviourAt(gSaveBlock1Ptr->pos.x + MAP_OFFSET, gSaveBlock1Ptr->pos.y + MAP_OFFSET);
 }
 
 bool32 Overworld_IsBikingAllowed(void)
@@ -1137,16 +1137,16 @@ static bool16 IsInfiltratedWeatherInstitute(struct WarpData *warp)
         return FALSE;
 }
 
-static bool16 IsInflitratedSpaceCenter(struct WarpData *warp)
+static bool16 IsInflitratedSpaceCentre(struct WarpData *warp)
 {
     if (VarGet(VAR_MOSSDEEP_CITY_STATE) == 0)
         return FALSE;
     else if (VarGet(VAR_MOSSDEEP_CITY_STATE) > 2)
         return FALSE;
-    else if (warp->mapGroup != MAP_GROUP(MOSSDEEP_CITY_SPACE_CENTER_1F))
+    else if (warp->mapGroup != MAP_GROUP(MOSSDEEP_CITY_SPACE_CENTRE_1F))
         return FALSE;
-    else if (warp->mapNum == MAP_NUM(MOSSDEEP_CITY_SPACE_CENTER_1F)
-     || warp->mapNum == MAP_NUM(MOSSDEEP_CITY_SPACE_CENTER_2F))
+    else if (warp->mapNum == MAP_NUM(MOSSDEEP_CITY_SPACE_CENTRE_1F)
+     || warp->mapNum == MAP_NUM(MOSSDEEP_CITY_SPACE_CENTRE_2F))
         return TRUE;
     return FALSE;
 }
@@ -1157,7 +1157,7 @@ u16 GetLocationMusic(struct WarpData *warp)
         return MUS_NONE;
     else if (ShouldLegendaryMusicPlayAtLocation(warp) == TRUE)
         return MUS_ABNORMAL_WEATHER;
-    else if (IsInflitratedSpaceCenter(warp) == TRUE)
+    else if (IsInflitratedSpaceCentre(warp) == TRUE)
         return MUS_ENCOUNTER_MAGMA;
     else if (IsInfiltratedWeatherInstitute(warp) == TRUE)
         return MUS_MT_CHIMNEY;
@@ -1322,7 +1322,7 @@ static void PlayAmbientCry(void)
 
     PlayerGetDestCoords(&x, &y);
     if (sIsAmbientCryWaterMon == TRUE
-     && !MetatileBehavior_IsSurfableWaterOrUnderwater(MapGridGetMetatileBehaviorAt(x, y)))
+     && !MetatileBehaviour_IsSurfableWaterOrUnderwater(MapGridGetMetatileBehaviourAt(x, y)))
         return;
     pan = (Random() % 88) + 212;
     volume = (Random() % 30) + 50;
@@ -1637,7 +1637,7 @@ void CB2_WhiteOut(void)
         ScriptContext_Init();
         UnlockPlayerFieldControls();
         if (IsFRLGWhiteout())
-            gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
+            gFieldCallback = FieldCB_RushInjuredPokemonToCentre;
         else
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;
         state = 0;
@@ -1835,7 +1835,7 @@ void CB2_ContinueSavedGame(void)
 
 static void FieldClearVBlankHBlankCallbacks(void)
 {
-    if (UsedPokemonCenterWarp() == TRUE)
+    if (UsedPokemonCentreWarp() == TRUE)
         CloseLink();
 
     if (gWirelessCommType != 0)
@@ -2784,7 +2784,7 @@ static void LoadCableClubPlayer(s32 linkPlayerId, s32 myPlayerId, struct CableCl
     trainer->pos.x = x;
     trainer->pos.y = y;
     trainer->pos.elevation = GetLinkPlayerElevation(linkPlayerId);
-    trainer->metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    trainer->metatileBehaviour = MapGridGetMetatileBehaviourAt(x, y);
 }
 
 static bool32 IsCableClubPlayerUnfrozen(struct CableClubPlayer *player)
@@ -2817,7 +2817,7 @@ static bool32 PlayerIsAtSouthExit(struct CableClubPlayer *player)
 {
     if (player->movementMode != MOVEMENT_MODE_SCRIPTED && player->movementMode != MOVEMENT_MODE_FREE)
         return FALSE;
-    else if (!MetatileBehavior_IsSouthArrowWarp(player->metatileBehavior))
+    else if (!MetatileBehaviour_IsSouthArrowWarp(player->metatileBehaviour))
         return FALSE;
     else if (player->facing != DIR_SOUTH)
         return FALSE;
@@ -2845,13 +2845,13 @@ static const u8 *TryInteractWithPlayer(struct CableClubPlayer *player)
             return CableClub_EventScript_TooBusyToNotice;
         else if (sPlayerLinkStates[linkPlayerId] != PLAYER_LINK_STATE_IDLE)
             return CableClub_EventScript_TooBusyToNotice;
-        else if (!GetLinkTrainerCardColor(linkPlayerId))
+        else if (!GetLinkTrainerCardColour(linkPlayerId))
             return CableClub_EventScript_ReadTrainerCard;
         else
-            return CableClub_EventScript_ReadTrainerCardColored;
+            return CableClub_EventScript_ReadTrainerCardColoured;
     }
 
-    return GetInteractedLinkPlayerScript(&otherPlayerPos, player->metatileBehavior, player->facing);
+    return GetInteractedLinkPlayerScript(&otherPlayerPos, player->metatileBehaviour, player->facing);
 }
 
 // This returns which direction to force the player to look when one of
@@ -2866,21 +2866,21 @@ static u16 GetDirectionForEventScript(const u8 *script)
         return FACING_FORCED_RIGHT;
     else if (script == EventScript_BattleColosseum_4P_PlayerSpot3)
         return FACING_FORCED_LEFT;
-    else if (script == EventScript_RecordCenter_Spot0)
+    else if (script == EventScript_RecordCentre_Spot0)
         return FACING_FORCED_RIGHT;
-    else if (script == EventScript_RecordCenter_Spot1)
+    else if (script == EventScript_RecordCentre_Spot1)
         return FACING_FORCED_LEFT;
-    else if (script == EventScript_RecordCenter_Spot2)
+    else if (script == EventScript_RecordCentre_Spot2)
         return FACING_FORCED_RIGHT;
-    else if (script == EventScript_RecordCenter_Spot3)
+    else if (script == EventScript_RecordCentre_Spot3)
         return FACING_FORCED_LEFT;
     else if (script == EventScript_BattleColosseum_2P_PlayerSpot0)
         return FACING_FORCED_RIGHT;
     else if (script == EventScript_BattleColosseum_2P_PlayerSpot1)
         return FACING_FORCED_LEFT;
-    else if (script == EventScript_TradeCenter_Chair0)
+    else if (script == EventScript_TradeCentre_Chair0)
         return FACING_FORCED_RIGHT;
-    else if (script == EventScript_TradeCenter_Chair1)
+    else if (script == EventScript_TradeCentre_Chair1)
         return FACING_FORCED_LEFT;
     else
         return FACING_NONE;

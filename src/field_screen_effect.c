@@ -21,7 +21,7 @@
 #include "main.h"
 #include "menu.h"
 #include "mirage_tower.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "palette.h"
 #include "overworld.h"
 #include "scanline_effect.h"
@@ -269,16 +269,16 @@ void FieldCB_ReturnToFieldWirelessLink(void)
 static void SetUpWarpExitTask(void)
 {
     s16 x, y;
-    u8 behavior;
+    u8 behaviour;
     TaskFunc func;
 
     PlayerGetDestCoords(&x, &y);
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
-    if (MetatileBehavior_IsDoor(behavior) == TRUE)
+    behaviour = MapGridGetMetatileBehaviourAt(x, y);
+    if (MetatileBehaviour_IsDoor(behaviour) == TRUE)
         func = Task_ExitDoor;
-    else if (MetatileBehavior_IsDirectionalStairWarp(behavior) == TRUE && !gExitStairsMovementDisabled)
+    else if (MetatileBehaviour_IsDirectionalStairWarp(behaviour) == TRUE && !gExitStairsMovementDisabled)
         func = Task_ExitStairs;
-    else if (MetatileBehavior_IsNonAnimDoor(behavior) == TRUE)
+    else if (MetatileBehaviour_IsNonAnimDoor(behaviour) == TRUE)
         func = Task_ExitNonAnimDoor;
     else
         func = Task_ExitNonDoor;
@@ -542,10 +542,10 @@ void DoFallWarp(void)
     gFieldCallback = FieldCB_FallWarpExit;
 }
 
-void DoEscalatorWarp(u8 metatileBehavior)
+void DoEscalatorWarp(u8 metatileBehaviour)
 {
     LockPlayerFieldControls();
-    StartEscalatorWarp(metatileBehavior, 10);
+    StartEscalatorWarp(metatileBehaviour, 10);
 }
 
 void DoLavaridgeGymB1FWarp(void)
@@ -803,17 +803,17 @@ static void SetFlashScanlineEffectWindowBoundary(u16 *dest, u32 y, s32 left, s32
     }
 }
 
-static void SetFlashScanlineEffectWindowBoundaries(u16 *dest, s32 centerX, s32 centerY, s32 radius)
+static void SetFlashScanlineEffectWindowBoundaries(u16 *dest, s32 centreX, s32 centreY, s32 radius)
 {
     s32 r = radius;
     s32 v2 = radius;
     s32 v3 = 0;
     while (r >= v3)
     {
-        SetFlashScanlineEffectWindowBoundary(dest, centerY - v3, centerX - r, centerX + r);
-        SetFlashScanlineEffectWindowBoundary(dest, centerY + v3, centerX - r, centerX + r);
-        SetFlashScanlineEffectWindowBoundary(dest, centerY - r, centerX - v3, centerX + v3);
-        SetFlashScanlineEffectWindowBoundary(dest, centerY + r, centerX - v3, centerX + v3);
+        SetFlashScanlineEffectWindowBoundary(dest, centreY - v3, centreX - r, centreX + r);
+        SetFlashScanlineEffectWindowBoundary(dest, centreY + v3, centreX - r, centreX + r);
+        SetFlashScanlineEffectWindowBoundary(dest, centreY - r, centreX - v3, centreX + v3);
+        SetFlashScanlineEffectWindowBoundary(dest, centreY + r, centreX - v3, centreX + v3);
         v2 -= (v3 * 2) - 1;
         v3++;
         if (v2 < 0)
@@ -840,17 +840,17 @@ static void SetOrbFlashScanlineEffectWindowBoundary(u16 *dest, u32 y, s32 left, 
     }
 }
 
-static void SetOrbFlashScanlineEffectWindowBoundaries(u16 *dest, s32 centerX, s32 centerY, s32 radius)
+static void SetOrbFlashScanlineEffectWindowBoundaries(u16 *dest, s32 centreX, s32 centreY, s32 radius)
 {
     s32 r = radius;
     s32 v2 = radius;
     s32 v3 = 0;
     while (r >= v3)
     {
-        SetOrbFlashScanlineEffectWindowBoundary(dest, centerY - v3, centerX - r, centerX + r);
-        SetOrbFlashScanlineEffectWindowBoundary(dest, centerY + v3, centerX - r, centerX + r);
-        SetOrbFlashScanlineEffectWindowBoundary(dest, centerY - r, centerX - v3, centerX + v3);
-        SetOrbFlashScanlineEffectWindowBoundary(dest, centerY + r, centerX - v3, centerX + v3);
+        SetOrbFlashScanlineEffectWindowBoundary(dest, centreY - v3, centreX - r, centreX + r);
+        SetOrbFlashScanlineEffectWindowBoundary(dest, centreY + v3, centreX - r, centreX + r);
+        SetOrbFlashScanlineEffectWindowBoundary(dest, centreY - r, centreX - v3, centreX + v3);
+        SetOrbFlashScanlineEffectWindowBoundary(dest, centreY + r, centreX - v3, centreX + v3);
         v2 -= (v3 * 2) - 1;
         v3++;
         if (v2 < 0)
@@ -861,8 +861,8 @@ static void SetOrbFlashScanlineEffectWindowBoundaries(u16 *dest, s32 centerX, s3
     }
 }
 
-#define tFlashCenterX        data[1]
-#define tFlashCenterY        data[2]
+#define tFlashCentreX        data[1]
+#define tFlashCentreY        data[2]
 #define tCurFlashRadius      data[3]
 #define tDestFlashRadius     data[4]
 #define tFlashRadiusDelta    data[5]
@@ -875,11 +875,11 @@ static void UpdateFlashLevelEffect(u8 taskId)
     switch (tState)
     {
     case 0:
-        SetFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCenterX, tFlashCenterY, tCurFlashRadius);
+        SetFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCentreX, tFlashCentreY, tCurFlashRadius);
         tState = 1;
         break;
     case 1:
-        SetFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCenterX, tFlashCenterY, tCurFlashRadius);
+        SetFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCentreX, tFlashCentreY, tCurFlashRadius);
         tState = 0;
         tCurFlashRadius += tFlashRadiusDelta;
         if (tCurFlashRadius > tDestFlashRadius)
@@ -909,11 +909,11 @@ static void UpdateOrbFlashEffect(u8 taskId)
     switch (tState)
     {
     case 0:
-        SetOrbFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCenterX, tFlashCenterY, tCurFlashRadius);
+        SetOrbFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCentreX, tFlashCentreY, tCurFlashRadius);
         tState = 1;
         break;
     case 1:
-        SetOrbFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCenterX, tFlashCenterY, tCurFlashRadius);
+        SetOrbFlashScanlineEffectWindowBoundaries(gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer], tFlashCentreX, tFlashCentreY, tCurFlashRadius);
         tState = 0;
         tCurFlashRadius += tFlashRadiusDelta;
         if (tCurFlashRadius > tDestFlashRadius)
@@ -951,15 +951,15 @@ static void StartWaitForFlashUpdate(void)
         CreateTask(Task_WaitForFlashUpdate, 80);
 }
 
-static u8 StartUpdateFlashLevelEffect(s32 centerX, s32 centerY, s32 initialFlashRadius, s32 destFlashRadius, s32 clearScanlineEffect, u8 delta)
+static u8 StartUpdateFlashLevelEffect(s32 centreX, s32 centreY, s32 initialFlashRadius, s32 destFlashRadius, s32 clearScanlineEffect, u8 delta)
 {
     u8 taskId = CreateTask(UpdateFlashLevelEffect, 80);
     s16 *data = gTasks[taskId].data;
 
     tCurFlashRadius = initialFlashRadius;
     tDestFlashRadius = destFlashRadius;
-    tFlashCenterX = centerX;
-    tFlashCenterY = centerY;
+    tFlashCentreX = centreX;
+    tFlashCentreY = centreY;
     tClearScanlineEffect = clearScanlineEffect;
 
     if (initialFlashRadius < destFlashRadius)
@@ -970,15 +970,15 @@ static u8 StartUpdateFlashLevelEffect(s32 centerX, s32 centerY, s32 initialFlash
     return taskId;
 }
 
-static u8 StartUpdateOrbFlashEffect(s32 centerX, s32 centerY, s32 initialFlashRadius, s32 destFlashRadius, s32 clearScanlineEffect, u8 delta)
+static u8 StartUpdateOrbFlashEffect(s32 centreX, s32 centreY, s32 initialFlashRadius, s32 destFlashRadius, s32 clearScanlineEffect, u8 delta)
 {
     u8 taskId = CreateTask(UpdateOrbFlashEffect, 80);
     s16 *data = gTasks[taskId].data;
 
     tCurFlashRadius = initialFlashRadius;
     tDestFlashRadius = destFlashRadius;
-    tFlashCenterX = centerX;
-    tFlashCenterY = centerY;
+    tFlashCentreX = centreX;
+    tFlashCentreY = centreY;
     tClearScanlineEffect = clearScanlineEffect;
 
     if (initialFlashRadius < destFlashRadius)
@@ -1095,15 +1095,15 @@ void DoSpinExitWarp(void)
 static void LoadOrbEffectPalette(bool8 blueOrb)
 {
     int i;
-    u16 color[1];
+    u16 colour[1];
 
     if (!blueOrb)
-        color[0] = RGB_RED;
+        colour[0] = RGB_RED;
     else
-        color[0] = RGB_BLUE;
+        colour[0] = RGB_BLUE;
 
     for (i = 0; i < 16; i++)
-        LoadPalette(color, BG_PLTT_ID(15) + i, PLTT_SIZEOF(1));
+        LoadPalette(colour, BG_PLTT_ID(15) + i, PLTT_SIZEOF(1));
 }
 
 static bool8 UpdateOrbEffectBlend(u16 shakeDir)
@@ -1131,8 +1131,8 @@ static bool8 UpdateOrbEffectBlend(u16 shakeDir)
 }
 
 #define tBlueOrb     data[1]
-#define tCenterX     data[2]
-#define tCenterY     data[3]
+#define tCentreX     data[2]
+#define tCentreY     data[3]
 #define tShakeDelay  data[4]
 #define tShakeDir    data[5]
 #define tDispCnt     data[6]
@@ -1160,7 +1160,7 @@ static void Task_OrbEffect(u8 taskId)
         SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG3 | WINOUT_WIN01_OBJ);
         SetBgTilemapPalette(0, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT, 0xF);
         ScheduleBgCopyTilemapToVram(0);
-        SetOrbFlashScanlineEffectWindowBoundaries(&gScanlineEffectRegBuffers[0][0], tCenterX, tCenterY, 1);
+        SetOrbFlashScanlineEffectWindowBoundaries(&gScanlineEffectRegBuffers[0][0], tCentreX, tCentreY, 1);
         CpuFastSet(&gScanlineEffectRegBuffers[0], &gScanlineEffectRegBuffers[1], 480);
         ScanlineEffect_SetParams(sFlashEffectParams);
         tState = 1;
@@ -1168,7 +1168,7 @@ static void Task_OrbEffect(u8 taskId)
     case 1:
         BgDmaFill(0, PIXEL_FILL(1), 0, 1);
         LoadOrbEffectPalette(tBlueOrb);
-        StartUpdateOrbFlashEffect(tCenterX, tCenterY, 1, 160, 1, 2);
+        StartUpdateOrbFlashEffect(tCentreX, tCentreY, 1, 160, 1, 2);
         tState = 2;
         break;
     case 2:
@@ -1239,25 +1239,25 @@ void DoOrbEffect(void)
     if (gSpecialVar_Result == 0)
     {
         tBlueOrb = FALSE;
-        tCenterX = 104;
+        tCentreX = 104;
     }
     else if (gSpecialVar_Result == 1)
     {
         tBlueOrb = TRUE;
-        tCenterX = 136;
+        tCentreX = 136;
     }
     else if (gSpecialVar_Result == 2)
     {
         tBlueOrb = FALSE;
-        tCenterX = 120;
+        tCentreX = 120;
     }
     else
     {
         tBlueOrb = TRUE;
-        tCenterX = 120;
+        tCentreX = 120;
     }
 
-    tCenterY = 80;
+    tCentreY = 80;
 }
 
 void FadeOutOrbEffect(void)
@@ -1267,8 +1267,8 @@ void FadeOutOrbEffect(void)
 }
 
 #undef tBlueOrb
-#undef tCenterX
-#undef tCenterY
+#undef tCentreX
+#undef tCentreY
 #undef tShakeDelay
 #undef tShakeDir
 #undef tDispCnt
@@ -1303,7 +1303,7 @@ static const struct WindowTemplate sWindowTemplate_WhiteoutText =
     .baseBlock = 1,
 };
 
-static const u8 sWhiteoutTextColors[] = { TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+static const u8 sWhiteoutTextColours[] = { TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY };
 
 #define tState         data[0]
 #define tWindowId      data[1]
@@ -1319,7 +1319,7 @@ static bool32 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u32 x, u32
     case 0:
         FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
         StringExpandPlaceholders(gStringVar4, text);
-        AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 1, 0, sWhiteoutTextColors, 1, gStringVar4);
+        AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 1, 0, sWhiteoutTextColours, 1, gStringVar4);
         gTextFlags.canABSpeedUpPrint = FALSE;
         gTasks[taskId].tPrintState = 1;
         break;
@@ -1342,7 +1342,7 @@ enum {
     FRLG_WHITEOUT_HEAL_SCRIPT,
 };
 
-static void Task_RushInjuredPokemonToCenter(u8 taskId)
+static void Task_RushInjuredPokemonToCentre(u8 taskId)
 {
     u32 windowId;
 
@@ -1361,7 +1361,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         break;
     case FRLG_WHITEOUT_PRINT_MSG:
     {
-        const u8 *recoveryMessage = gTasks[taskId].tIsPlayerHouse == TRUE ? gText_PlayerScurriedBackHome : gText_PlayerScurriedToCenter;
+        const u8 *recoveryMessage = gTasks[taskId].tIsPlayerHouse == TRUE ? gText_PlayerScurriedBackHome : gText_PlayerScurriedToCentre;
         if (PrintWhiteOutRecoveryMessage(taskId, recoveryMessage, 2, 8))
         {
             ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
@@ -1390,34 +1390,34 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
     }
 }
 
-void FieldCB_RushInjuredPokemonToCenter(void)
+void FieldCB_RushInjuredPokemonToCentre(void)
 {
     u8 taskId;
 
     LockPlayerFieldControls();
     FillPalBufferBlack();
-    taskId = CreateTask(Task_RushInjuredPokemonToCenter, 10);
+    taskId = CreateTask(Task_RushInjuredPokemonToCentre, 10);
     gTasks[taskId].tState = FRLG_WHITEOUT_ENTER_MSG_SCREEN;
 }
 
-static void GetStairsMovementDirection(u32 metatileBehavior, s16 *speedX, s16 *speedY)
+static void GetStairsMovementDirection(u32 metatileBehaviour, s16 *speedX, s16 *speedY)
 {
-    if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+    if (MetatileBehaviour_IsDirectionalUpRightStairWarp(metatileBehaviour))
     {
         *speedX = 16;
         *speedY = -10;
     }
-    else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior))
+    else if (MetatileBehaviour_IsDirectionalUpLeftStairWarp(metatileBehaviour))
     {
         *speedX = -17;
         *speedY = -10;
     }
-    else if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+    else if (MetatileBehaviour_IsDirectionalDownRightStairWarp(metatileBehaviour))
     {
         *speedX = 17;
         *speedY = 3;
     }
-    else if (MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+    else if (MetatileBehaviour_IsDirectionalDownLeftStairWarp(metatileBehaviour))
     {
         *speedX = -17;
         *speedY = 3;
@@ -1452,19 +1452,19 @@ static bool8 WaitStairExitMovementFinished(s16 *speedX, s16 *speedY, s16 *offset
 static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer)
 {
     s16 x, y;
-    u32 metatileBehavior;
+    u32 metatileBehaviour;
     s32 direction;
     struct Sprite *sprite;
 
     PlayerGetDestCoords(&x, &y);
-    metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior) || MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+    metatileBehaviour = MapGridGetMetatileBehaviourAt(x, y);
+    if (MetatileBehaviour_IsDirectionalDownRightStairWarp(metatileBehaviour) || MetatileBehaviour_IsDirectionalUpRightStairWarp(metatileBehaviour))
         direction = DIR_WEST;
     else
         direction = DIR_EAST;
 
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceSlowMovementAction(direction));
-    GetStairsMovementDirection(metatileBehavior, speedX, speedY);
+    GetStairsMovementDirection(metatileBehaviour, speedX, speedY);
     *offsetX = *speedX * 16;
     *offsetY = *speedY * 16;
     *timer = 16;
@@ -1509,10 +1509,10 @@ static void Task_ExitStairs(u8 taskId)
     }
 }
 
-static void ForceStairsMovement(u32 metatileBehavior, s16 *speedX, s16 *speedY)
+static void ForceStairsMovement(u32 metatileBehaviour, s16 *speedX, s16 *speedY)
 {
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
-    GetStairsMovementDirection(metatileBehavior, speedX, speedY);
+    GetStairsMovementDirection(metatileBehaviour, speedX, speedY);
 }
 #undef tSpeedX
 #undef tSpeedY
@@ -1520,7 +1520,7 @@ static void ForceStairsMovement(u32 metatileBehavior, s16 *speedX, s16 *speedY)
 #undef tOffsetY
 #undef tTimer
 
-#define tMetatileBehavior data[1]
+#define tMetatileBehaviour data[1]
 #define tSpeedX           data[2]
 #define tSpeedY           data[3]
 #define tOffsetX          data[4]
@@ -1570,7 +1570,7 @@ static void Task_StairWarp(u8 taskId)
                 TryFadeOutOldMapMusic();
                 PlayRainStoppingSoundEffect();
                 playerSprite->oam.priority = 1;
-                ForceStairsMovement(tMetatileBehavior, &tSpeedX, &tSpeedY);
+                ForceStairsMovement(tMetatileBehaviour, &tSpeedX, &tSpeedY);
                 PlaySE(SE_EXIT);
                 tState++;
             }
@@ -1599,15 +1599,15 @@ static void Task_StairWarp(u8 taskId)
     }
 }
 
-void DoStairWarp(u16 metatileBehavior, u16 delay)
+void DoStairWarp(u16 metatileBehaviour, u16 delay)
 {
     u8 taskId = CreateTask(Task_StairWarp, 10);
-    gTasks[taskId].tMetatileBehavior = metatileBehavior;
+    gTasks[taskId].tMetatileBehaviour = metatileBehaviour;
     gTasks[taskId].tDelay = delay;
     Task_StairWarp(taskId);
 }
 
-#undef tMetatileBehavior
+#undef tMetatileBehaviour
 #undef tSpeedX
 #undef tSpeedY
 #undef tOffsetX
@@ -1615,20 +1615,20 @@ void DoStairWarp(u16 metatileBehavior, u16 delay)
 #undef tTimer
 #undef tDelay
 
-bool32 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection)
+bool32 IsDirectionalStairWarpMetatileBehaviour(u16 metatileBehaviour, u8 playerDirection)
 {
     if (playerDirection == DIR_WEST)
     {
-        if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior))
+        if (MetatileBehaviour_IsDirectionalUpLeftStairWarp(metatileBehaviour))
             return TRUE;
-        if (MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+        if (MetatileBehaviour_IsDirectionalDownLeftStairWarp(metatileBehaviour))
             return TRUE;
     }
     else if (playerDirection == DIR_EAST)
     {
-        if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+        if (MetatileBehaviour_IsDirectionalUpRightStairWarp(metatileBehaviour))
             return TRUE;
-        if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+        if (MetatileBehaviour_IsDirectionalDownRightStairWarp(metatileBehaviour))
             return TRUE;
     }
     return FALSE;

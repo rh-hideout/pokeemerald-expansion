@@ -104,7 +104,7 @@ u16 TryGetWallpaperWithWaldaPhrase(void)
     {
         SetWaldaWallpaperPatternId(patternId);
         SetWaldaWallpaperIconId(iconId);
-        SetWaldaWallpaperColors(backgroundClr, foregroundClr);
+        SetWaldaWallpaperColours(backgroundClr, foregroundClr);
     }
 
     SetWaldaWallpaperLockedOrUnlocked(gSpecialVar_Result);
@@ -129,10 +129,10 @@ static u8 GetLetterTableId(u8 letter)
 // Returns FALSE if no wallpaper was generated (Walda "didn't like" the phrase).
 // A 9-byte array is used to calculate the wallpaper's data.
 // The elements of this array are defined below.
-#define BG_COLOR_LO  data[0]
-#define BG_COLOR_HI  data[1]
-#define FG_COLOR_LO  data[2]
-#define FG_COLOR_HI  data[3]
+#define BG_COLOUR_LO  data[0]
+#define BG_COLOUR_HI  data[1]
+#define FG_COLOUR_LO  data[2]
+#define FG_COLOUR_HI  data[3]
 #define ICON_ID      data[4]
 #define PATTERN_ID   data[5]
 #define TID_CHECK_HI data[6]
@@ -180,16 +180,16 @@ static bool32 TryCalculateWallpaper(u16 *backgroundClr, u16 *foregroundClr, u8 *
     MaskWallpaperData(data, NUM_WALLPAPER_DATA_BYTES - 1, KEY >> 4);
 
     // Reject the results of any phrase that are 'incompatible' with the player's trainer id
-    if (TID_CHECK_HI != (BG_COLOR_LO ^ FG_COLOR_LO ^ ICON_ID ^ (trainerId >> 8)))
+    if (TID_CHECK_HI != (BG_COLOUR_LO ^ FG_COLOUR_LO ^ ICON_ID ^ (trainerId >> 8)))
         return FALSE;
-    if (TID_CHECK_LO != (BG_COLOR_HI ^ FG_COLOR_HI ^ PATTERN_ID ^ (trainerId & 0xFF)))
+    if (TID_CHECK_LO != (BG_COLOUR_HI ^ FG_COLOUR_HI ^ PATTERN_ID ^ (trainerId & 0xFF)))
         return FALSE;
 
     // Successful phrase, save resulting wallpaper
-    ptr = (u16 *) &BG_COLOR_LO;
+    ptr = (u16 *) &BG_COLOUR_LO;
     *backgroundClr = *ptr;
 
-    ptr = (u16 *) &FG_COLOR_LO;
+    ptr = (u16 *) &FG_COLOUR_LO;
     *foregroundClr = *ptr;
 
     *iconId = ICON_ID;

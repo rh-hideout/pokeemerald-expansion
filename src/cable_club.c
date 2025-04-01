@@ -45,7 +45,7 @@ static const struct WindowTemplate sWindowTemplate_LinkPlayerCount = {
     .baseBlock = 0x0125,
 };
 
-static const u8 *const sTrainerCardColorNames[] = {
+static const u8 *const sTrainerCardColourNames[] = {
     gText_BronzeCard,
     gText_CopperCard,
     gText_SilverCard,
@@ -99,7 +99,7 @@ static void PrintNumPlayersInLink(u16 windowId, u32 numPlayers)
     ConvertIntToDecimalStringN(gStringVar1, numPlayers, STR_CONV_MODE_LEFT_ALIGN, 1);
     SetStandardWindowBorderStyle(windowId, FALSE);
     StringExpandPlaceholders(gStringVar4, gText_NumPlayerLink);
-    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 88);
+    xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gStringVar4, 88);
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, xPos, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -743,7 +743,7 @@ u8 CreateTask_ReestablishCableClubLink(void)
         else
             gLinkType = LINKTYPE_BATTLE_TOWER_OPEN;
         break;
-    case USING_TRADE_CENTER:
+    case USING_TRADE_CENTRE:
         gLinkType = LINKTYPE_TRADE;
         break;
     case USING_RECORD_CORNER:
@@ -1199,8 +1199,8 @@ void Script_ShowLinkTrainerCard(void)
 }
 
 // Returns FALSE if the player has no stars. Returns TRUE otherwise, and puts the name of the
-// color into gStringVar2.
-bool32 GetLinkTrainerCardColor(u8 linkPlayerIndex)
+// colour into gStringVar2.
+bool32 GetLinkTrainerCardColour(u8 linkPlayerIndex)
 {
     u32 numStars;
 
@@ -1211,7 +1211,7 @@ bool32 GetLinkTrainerCardColor(u8 linkPlayerIndex)
     if (numStars == 0)
         return FALSE;
 
-    StringCopy(gStringVar2, sTrainerCardColorNames[numStars - 1]);
+    StringCopy(gStringVar2, sTrainerCardColourNames[numStars - 1]);
     return TRUE;
 }
 

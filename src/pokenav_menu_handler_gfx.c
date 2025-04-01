@@ -88,7 +88,7 @@ static void CreateMovingBgDotsTask(void);
 static void DestroyMovingDotsBgTask(void);
 static void Task_MoveBgDots(u8);
 static void CreateBgDotPurplePalTask(void);
-static void ChangeBgDotsColorToPurple(void);
+static void ChangeBgDotsColourToPurple(void);
 static void CreateBgDotLightBluePalTask(void);
 static bool32 IsTaskActive_UpdateBgDotsPalette(void);
 static void Task_UpdateBgDotsPalette(u8);
@@ -285,8 +285,8 @@ static const u8 *const sPageDescriptions[] =
     [POKENAV_MENUITEM_CONDITION_SEARCH_CANCEL] = COMPOUND_STRING("Return to the CONDITION menu.")
 };
 
-static const u8 sOptionDescTextColors[]  = {TEXT_COLOR_GREEN, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
-static const u8 sOptionDescTextColors2[] = {TEXT_COLOR_GREEN, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
+static const u8 sOptionDescTextColours[]  = {TEXT_COLOUR_GREEN, TEXT_COLOUR_BLUE, TEXT_COLOUR_LIGHT_GREEN};
+static const u8 sOptionDescTextColours2[] = {TEXT_COLOUR_GREEN, TEXT_COLOUR_BLUE, TEXT_COLOUR_LIGHT_GREEN};
 
 static const struct OamData sOamData_MenuOption =
 {
@@ -483,7 +483,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
         DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap, 0, 0, 1);
         CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3), sizeof(sPokenavBgDotsPal));
         if (GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION || GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION_SEARCH)
-            ChangeBgDotsColorToPurple();
+            ChangeBgDotsColourToPurple();
         return LT_INC_AND_PAUSE;
     case 3:
         if (FreeTempTileDataBuffersIfPossible())
@@ -1117,7 +1117,7 @@ static void SpriteCB_OptionZoom(struct Sprite * sprite)
             {
                 sprite->invisible = TRUE;
                 FreeOamMatrix(sprite->oam.matrixNum);
-                CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
+                CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
                 sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
                 sprite->oam.objMode = ST_OAM_OBJ_NORMAL;
                 sprite->callback = SpriteCallbackDummy;
@@ -1231,7 +1231,7 @@ static void PrintCurrentOptionDescription(void)
     const u8 *desc = sPageDescriptions[menuItem];
     u32 width = GetStringWidth(FONT_NORMAL, desc, -1);
     FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors, 0, desc);
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColours, 0, desc);
 }
 
 // Printed when Ribbons is selected if no PC/party mons have ribbons
@@ -1242,7 +1242,7 @@ static void PrintNoRibbonWinners(void)
     const u8 *s = gText_NoRibbonWinners;
     u32 width = GetStringWidth(FONT_NORMAL, s, -1);
     FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors2, 0, s);
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColours2, 0, s);
 }
 
 static bool32 IsDma3ManagerBusyWithBgCopy_(void)
@@ -1274,7 +1274,7 @@ static void CreateBgDotPurplePalTask(void)
     SetWordTaskArg(taskId, 3, (uintptr_t)(sPokenavBgDotsPal + 7));
 }
 
-static void ChangeBgDotsColorToPurple(void)
+static void ChangeBgDotsColourToPurple(void)
 {
     CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal + 7, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(2));
 }

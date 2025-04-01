@@ -265,7 +265,7 @@ LilycoveCity_PokemonTrainerFanClub_EventScript_LassOnlyNonFan::
 	end
 
 LilycoveCity_PokemonTrainerFanClub_EventScript_LassPlayerNotChampion::
-	msgbox LilycoveCity_PokemonTrainerFanClub_Text_MyFavoriteTrainerIsBrawly, MSGBOX_DEFAULT
+	msgbox LilycoveCity_PokemonTrainerFanClub_Text_MyFavouriteTrainerIsBrawly, MSGBOX_DEFAULT
 	release
 	end
 
@@ -643,8 +643,8 @@ LilycoveCity_PokemonTrainerFanClub_Text_NobodyUnderstandsBrawly:
 	.string "Even if I'm the only one, I'm going\n"
 	.string "to keep cheering for BRAWLY!$"
 
-LilycoveCity_PokemonTrainerFanClub_Text_MyFavoriteTrainerIsBrawly:
-	.string "Whatever anyone says, my favorite\n"
+LilycoveCity_PokemonTrainerFanClub_Text_MyFavouriteTrainerIsBrawly:
+	.string "Whatever anyone says, my favourite\n"
 	.string "TRAINER is DEWFORD's GYM LEADER\l"
 	.string "BRAWLY!$"
 
@@ -706,10 +706,10 @@ LilycoveCity_PokemonTrainerFanClub_Text_TrainerIsReallyCoolItsJustMe:
 	.string "{STR_VAR_1} really is cool, don't\n"
 	.string "you think so?\p"
 	.string "Even if it's just me, I'm going to keep\n"
-	.string "cheering my favorite TRAINER.$"
+	.string "cheering my favourite TRAINER.$"
 
 LilycoveCity_PokemonTrainerFanClub_Text_WishThereWasTrainerLikeThat:
-	.string "My favorite TRAINER is…\p"
+	.string "My favourite TRAINER is…\p"
 	.string "Cool…\p"
 	.string "Strong…\p"
 	.string "And really nice…\p"

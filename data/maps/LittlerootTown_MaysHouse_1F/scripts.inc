@@ -53,7 +53,7 @@ LittlerootTown_MaysHouse_1F_OnFrame:
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 3, LittlerootTown_MaysHouse_1F_EventScript_EnterHouseMovingIn
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 5, LittlerootTown_MaysHouse_1F_EventScript_GoUpstairsToSetClock
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 6, LittlerootTown_MaysHouse_1F_EventScript_PetalburgGymReport
-	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 1, LittlerootTown_MaysHouse_1F_EventScript_YoureNewNeighbor
+	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 1, LittlerootTown_MaysHouse_1F_EventScript_YoureNewNeighbour
 	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 3, PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV
 	.2byte 0
 
@@ -87,7 +87,7 @@ LittlerootTown_MaysHouse_1F_EventScript_PetalburgGymReport::
 	goto PlayersHouse_1F_EventScript_PetalburgGymReportFemale
 	end
 
-LittlerootTown_MaysHouse_1F_EventScript_YoureNewNeighbor::
+LittlerootTown_MaysHouse_1F_EventScript_YoureNewNeighbour::
 	lockall
 	playse SE_PIN
 	applymovement LOCALID_RIVAL_MOM, Common_Movement_ExclamationMark
@@ -98,7 +98,7 @@ LittlerootTown_MaysHouse_1F_EventScript_YoureNewNeighbor::
 	applymovement LOCALID_RIVAL_MOM, LittlerootTown_MaysHouse_1F_Movement_RivalMomApproach
 	waitmovement 0
 	special GetRivalSonDaughterString
-	msgbox RivalsHouse_1F_Text_OhYoureTheNewNeighbor, MSGBOX_DEFAULT
+	msgbox RivalsHouse_1F_Text_OhYoureTheNewNeighbour, MSGBOX_DEFAULT
 	setflag FLAG_MET_RIVAL_MOM
 	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 2
 	releaseall
@@ -320,12 +320,12 @@ LittlerootTown_MaysHouse_1F_Movement_MayGoUpstairs2:
 	walk_up
 	step_end
 
-RivalsHouse_1F_Text_OhYoureTheNewNeighbor:
+RivalsHouse_1F_Text_OhYoureTheNewNeighbour:
 	.string "Oh, hello. And you are?\p"
 	.string "… … … … … … … … …\n"
 	.string "… … … … … … … … …\p"
 	.string "Oh, you're {PLAYER}{KUN}, our new next-door\n"
-	.string "neighbor! Hi!\p"
+	.string "neighbour! Hi!\p"
 	.string "We have a {STR_VAR_1} about the same\n"
 	.string "age as you.\p"
 	.string "Our {STR_VAR_1} was excited about making\n"
@@ -391,10 +391,10 @@ RivalsHouse_1F_Text_BrendanWhoAreYou:
 	.string "Moved in next door, right?\p"
 	.string "I didn't know that you're a girl.\p"
 	.string "Dad, PROF. BIRCH, said that our new\n"
-	.string "next-door neighbor is a GYM LEADER's\l"
+	.string "next-door neighbour is a GYM LEADER's\l"
 	.string "kid, so I assumed you'd be a guy.\p"
 	.string "My name's BRENDAN.\n"
-	.string "So, hi, neighbor!\p"
+	.string "So, hi, neighbour!\p"
 	.string "Huh? Hey, {PLAYER}, don't you have\n"
 	.string "a POKéMON?\p"
 	.string "Do you want me to go catch you one?\p"
@@ -404,6 +404,6 @@ RivalsHouse_1F_Text_BrendanWhoAreYou:
 	.string "Some other time, okay?$"
 
 RivalsHouse_1F_Text_DoYouHavePokemon:
-	.string "Hi, neighbor!\p"
+	.string "Hi, neighbour!\p"
 	.string "Do you already have your\n"
 	.string "own POKéMON?$"

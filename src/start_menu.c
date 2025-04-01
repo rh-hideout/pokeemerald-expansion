@@ -90,8 +90,8 @@ EWRAM_DATA static u8 sNumStartMenuActions = 0;
 EWRAM_DATA static u8 sCurrentStartMenuActions[9] = {0};
 EWRAM_DATA static s8 sInitStartMenuData[2] = {0};
 
-EWRAM_DATA static u8 (*sSaveDialogCallback)(void) = NULL;
-EWRAM_DATA static u8 sSaveDialogTimer = 0;
+EWRAM_DATA static u8 (*sSaveDialogueCallback)(void) = NULL;
+EWRAM_DATA static u8 sSaveDialogueTimer = 0;
 EWRAM_DATA static bool8 sSavingComplete = FALSE;
 EWRAM_DATA static u8 sSaveInfoWindowId = 0;
 
@@ -119,7 +119,7 @@ static bool8 BattlePyramidRetireReturnCallback(void);
 static bool8 BattlePyramidRetireCallback(void);
 static bool8 HandleStartMenuInput(void);
 
-// Save dialog callbacks
+// Save dialogue callbacks
 static u8 SaveConfirmSaveCallback(void);
 static u8 SaveYesNoCallback(void);
 static u8 SaveConfirmInputCallback(void);
@@ -839,7 +839,7 @@ static bool8 StartMenuBattlePyramidRetireCallback(void)
 // Functionally unused
 void ShowBattlePyramidStartMenu(void)
 {
-    ClearDialogWindowAndFrameToTransparent(0, FALSE);
+    ClearDialogueWindowAndFrameToTransparent(0, FALSE);
     ScriptUnfreezeObjectEvents();
     CreateStartMenuTask(Task_ShowStartMenu);
     LockPlayerFieldControls();
@@ -875,13 +875,13 @@ static bool8 SaveCallback(void)
     case SAVE_IN_PROGRESS:
         return FALSE;
     case SAVE_CANCELED: // Back to start menu
-        ClearDialogWindowAndFrameToTransparent(0, FALSE);
+        ClearDialogueWindowAndFrameToTransparent(0, FALSE);
         InitStartMenu();
         gMenuCallback = HandleStartMenuInput;
         return FALSE;
     case SAVE_SUCCESS:
     case SAVE_ERROR:    // Close start menu
-        ClearDialogWindowAndFrameToTransparent(0, TRUE);
+        ClearDialogueWindowAndFrameToTransparent(0, TRUE);
         ScriptUnfreezeObjectEvents();
         UnlockPlayerFieldControls();
         SoftResetInBattlePyramid();
@@ -918,7 +918,7 @@ static bool8 BattlePyramidRetireCallback(void)
     case SAVE_IN_PROGRESS:
         return FALSE;
     case SAVE_CANCELED: // Yes (Retire from battle pyramid)
-        ClearDialogWindowAndFrameToTransparent(0, TRUE);
+        ClearDialogueWindowAndFrameToTransparent(0, TRUE);
         ScriptUnfreezeObjectEvents();
         UnlockPlayerFieldControls();
         ScriptContext_SetupScript(BattlePyramid_Retire);
@@ -931,7 +931,7 @@ static bool8 BattlePyramidRetireCallback(void)
 static void InitSave(void)
 {
     SaveMapView();
-    sSaveDialogCallback = SaveConfirmSaveCallback;
+    sSaveDialogueCallback = SaveConfirmSaveCallback;
     sSavingComplete = FALSE;
 }
 
@@ -944,7 +944,7 @@ static u8 RunSaveCallback(void)
     }
 
     sSavingComplete = FALSE;
-    return sSaveDialogCallback();
+    return sSaveDialogueCallback();
 }
 
 void SaveGame(void)
@@ -959,7 +959,7 @@ static void ShowSaveMessage(const u8 *message, u8 (*saveCallback)(void))
     LoadMessageBoxAndFrameGfx(0, TRUE);
     AddTextPrinterForMessage_2(TRUE);
     sSavingComplete = TRUE;
-    sSaveDialogCallback = saveCallback;
+    sSaveDialogueCallback = saveCallback;
 }
 
 static void SaveGameTask(u8 taskId)
@@ -985,7 +985,7 @@ static void SaveGameTask(u8 taskId)
 
 static void HideSaveMessageWindow(void)
 {
-    ClearDialogWindowAndFrame(0, TRUE);
+    ClearDialogueWindowAndFrame(0, TRUE);
 }
 
 static void HideSaveInfoWindow(void)
@@ -995,19 +995,19 @@ static void HideSaveInfoWindow(void)
 
 static void SaveStartTimer(void)
 {
-    sSaveDialogTimer = 60;
+    sSaveDialogueTimer = 60;
 }
 
 static bool8 SaveSuccesTimer(void)
 {
-    sSaveDialogTimer--;
+    sSaveDialogueTimer--;
 
     if (JOY_HELD(A_BUTTON))
     {
         PlaySE(SE_SELECT);
         return TRUE;
     }
-    if (sSaveDialogTimer == 0)
+    if (sSaveDialogueTimer == 0)
     {
         return TRUE;
     }
@@ -1017,9 +1017,9 @@ static bool8 SaveSuccesTimer(void)
 
 static bool8 SaveErrorTimer(void)
 {
-    if (sSaveDialogTimer != 0)
+    if (sSaveDialogueTimer != 0)
     {
-        sSaveDialogTimer--;
+        sSaveDialogueTimer--;
     }
     else if (JOY_HELD(A_BUTTON))
     {
@@ -1050,7 +1050,7 @@ static u8 SaveConfirmSaveCallback(void)
 static u8 SaveYesNoCallback(void)
 {
     DisplayYesNoMenuDefaultYes(); // Show Yes/No menu
-    sSaveDialogCallback = SaveConfirmInputCallback;
+    sSaveDialogueCallback = SaveConfirmInputCallback;
     return SAVE_IN_PROGRESS;
 }
 
@@ -1065,14 +1065,14 @@ static u8 SaveConfirmInputCallback(void)
         case SAVE_STATUS_CORRUPT:
             if (gDifferentSaveFile == FALSE)
             {
-                sSaveDialogCallback = SaveFileExistsCallback;
+                sSaveDialogueCallback = SaveFileExistsCallback;
                 return SAVE_IN_PROGRESS;
             }
 
-            sSaveDialogCallback = SaveSavingMessageCallback;
+            sSaveDialogueCallback = SaveSavingMessageCallback;
             return SAVE_IN_PROGRESS;
         default:
-            sSaveDialogCallback = SaveFileExistsCallback;
+            sSaveDialogueCallback = SaveFileExistsCallback;
             return SAVE_IN_PROGRESS;
         }
     case MENU_B_PRESSED:
@@ -1103,14 +1103,14 @@ static u8 SaveFileExistsCallback(void)
 static u8 SaveConfirmOverwriteDefaultNoCallback(void)
 {
     DisplayYesNoMenuWithDefault(1); // Show Yes/No menu (No selected as default)
-    sSaveDialogCallback = SaveOverwriteInputCallback;
+    sSaveDialogueCallback = SaveOverwriteInputCallback;
     return SAVE_IN_PROGRESS;
 }
 
 static u8 SaveConfirmOverwriteCallback(void)
 {
     DisplayYesNoMenuDefaultYes(); // Show Yes/No menu
-    sSaveDialogCallback = SaveOverwriteInputCallback;
+    sSaveDialogueCallback = SaveOverwriteInputCallback;
     return SAVE_IN_PROGRESS;
 }
 
@@ -1119,7 +1119,7 @@ static u8 SaveOverwriteInputCallback(void)
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0: // Yes
-        sSaveDialogCallback = SaveSavingMessageCallback;
+        sSaveDialogueCallback = SaveSavingMessageCallback;
         return SAVE_IN_PROGRESS;
     case MENU_B_PRESSED:
     case 1: // No
@@ -1168,7 +1168,7 @@ static u8 SaveSuccessCallback(void)
     if (!IsTextPrinterActive(0))
     {
         PlaySE(SE_SAVE);
-        sSaveDialogCallback = SaveReturnSuccessCallback;
+        sSaveDialogueCallback = SaveReturnSuccessCallback;
     }
 
     return SAVE_IN_PROGRESS;
@@ -1192,7 +1192,7 @@ static u8 SaveErrorCallback(void)
     if (!IsTextPrinterActive(0))
     {
         PlaySE(SE_BOO);
-        sSaveDialogCallback = SaveReturnErrorCallback;
+        sSaveDialogueCallback = SaveReturnErrorCallback;
     }
 
     return SAVE_IN_PROGRESS;
@@ -1213,7 +1213,7 @@ static u8 SaveReturnErrorCallback(void)
 
 static void InitBattlePyramidRetire(void)
 {
-    sSaveDialogCallback = BattlePyramidConfirmRetireCallback;
+    sSaveDialogueCallback = BattlePyramidConfirmRetireCallback;
     sSavingComplete = FALSE;
 }
 
@@ -1229,7 +1229,7 @@ static u8 BattlePyramidConfirmRetireCallback(void)
 static u8 BattlePyramidRetireYesNoCallback(void)
 {
     DisplayYesNoMenuWithDefault(1); // Show Yes/No menu (No selected as default)
-    sSaveDialogCallback = BattlePyramidRetireInputCallback;
+    sSaveDialogueCallback = BattlePyramidRetireInputCallback;
 
     return SAVE_IN_PROGRESS;
 }
@@ -1322,9 +1322,9 @@ static void Task_SaveAfterLinkBattle(u8 taskId)
                                         gText_SavingDontTurnOffPower,
                                         TEXT_SKIP_DRAW,
                                         NULL,
-                                        TEXT_COLOR_DARK_GRAY,
-                                        TEXT_COLOR_WHITE,
-                                        TEXT_COLOR_LIGHT_GRAY);
+                                        TEXT_COLOUR_DARK_GREY,
+                                        TEXT_COLOUR_WHITE,
+                                        TEXT_COLOUR_LIGHT_GREY);
             DrawTextBorderOuter(0, 8, 14);
             PutWindowTilemap(0);
             CopyWindowToVram(0, COPYWIN_FULL);
@@ -1387,7 +1387,7 @@ static void ShowSaveInfoWindow(void)
 {
     struct WindowTemplate saveInfoWindow = sSaveInfoWindowTemplate;
     u8 gender;
-    u8 color;
+    u8 colour;
     u32 xOffset;
     u32 yOffset;
 
@@ -1400,29 +1400,29 @@ static void ShowSaveInfoWindow(void)
     DrawStdWindowFrame(sSaveInfoWindowId, FALSE);
 
     gender = gSaveBlock2Ptr->playerGender;
-    color = TEXT_COLOR_RED;  // Red when female, blue when male.
+    colour = TEXT_COLOUR_RED;  // Red when female, blue when male.
 
     if (gender == MALE)
     {
-        color = TEXT_COLOR_BLUE;
+        colour = TEXT_COLOUR_BLUE;
     }
 
     // Print region name
     yOffset = 1;
-    BufferSaveMenuText(SAVE_MENU_LOCATION, gStringVar4, TEXT_COLOR_GREEN);
+    BufferSaveMenuText(SAVE_MENU_LOCATION, gStringVar4, TEXT_COLOUR_GREEN);
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gStringVar4, 0, yOffset, TEXT_SKIP_DRAW, NULL);
 
     // Print player name
     yOffset += 16;
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gText_SavingPlayer, 0, yOffset, TEXT_SKIP_DRAW, NULL);
-    BufferSaveMenuText(SAVE_MENU_NAME, gStringVar4, color);
+    BufferSaveMenuText(SAVE_MENU_NAME, gStringVar4, colour);
     xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x70);
     PrintPlayerNameOnWindow(sSaveInfoWindowId, gStringVar4, xOffset, yOffset);
 
     // Print badge count
     yOffset += 16;
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gText_SavingBadges, 0, yOffset, TEXT_SKIP_DRAW, NULL);
-    BufferSaveMenuText(SAVE_MENU_BADGES, gStringVar4, color);
+    BufferSaveMenuText(SAVE_MENU_BADGES, gStringVar4, colour);
     xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x70);
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gStringVar4, xOffset, yOffset, TEXT_SKIP_DRAW, NULL);
 
@@ -1431,7 +1431,7 @@ static void ShowSaveInfoWindow(void)
         // Print Pokédex count
         yOffset += 16;
         AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gText_SavingPokedex, 0, yOffset, TEXT_SKIP_DRAW, NULL);
-        BufferSaveMenuText(SAVE_MENU_CAUGHT, gStringVar4, color);
+        BufferSaveMenuText(SAVE_MENU_CAUGHT, gStringVar4, colour);
         xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x70);
         AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gStringVar4, xOffset, yOffset, TEXT_SKIP_DRAW, NULL);
     }
@@ -1439,7 +1439,7 @@ static void ShowSaveInfoWindow(void)
     // Print play time
     yOffset += 16;
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gText_SavingTime, 0, yOffset, TEXT_SKIP_DRAW, NULL);
-    BufferSaveMenuText(SAVE_MENU_PLAY_TIME, gStringVar4, color);
+    BufferSaveMenuText(SAVE_MENU_PLAY_TIME, gStringVar4, colour);
     xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0x70);
     AddTextPrinterParameterized(sSaveInfoWindowId, FONT_NORMAL, gStringVar4, xOffset, yOffset, TEXT_SKIP_DRAW, NULL);
 
@@ -1503,5 +1503,5 @@ void Script_ForceSaveGame(struct ScriptContext *ctx)
     SaveGame();
     ShowSaveInfoWindow();
     gMenuCallback = SaveCallback;
-    sSaveDialogCallback = SaveSavingMessageCallback;
+    sSaveDialogueCallback = SaveSavingMessageCallback;
 }

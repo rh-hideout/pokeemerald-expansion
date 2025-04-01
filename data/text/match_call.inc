@@ -1414,7 +1414,7 @@ MatchCall_BattleFrontierStreakText3::
 MatchCall_BattleFrontierStreakText4::
 	.string "Hey, {PLAYER}{KUN}.\n"
 	.string "{STR_VAR_1} here. What's up?\p"
-	.string "There's a rumor going around that\n"
+	.string "There's a rumour going around that\n"
 	.string "you strung together {STR_VAR_3} straight\l"
 	.string "wins at the {STR_VAR_2}.\p"
 	.string "I'd better step it up, too.\n"
@@ -1540,7 +1540,7 @@ MatchCall_BattleFrontierRecordStreakText3::
 MatchCall_BattleFrontierRecordStreakText4::
 	.string "Hey, {PLAYER}{KUN}.\n"
 	.string "{STR_VAR_1} here. What's up?\p"
-	.string "There's a rumor going around that\n"
+	.string "There's a rumour going around that\n"
 	.string "you strung together {STR_VAR_3} straight\l"
 	.string "wins at the {STR_VAR_2}.\p"
 	.string "I'd better step it up, too.\n"
@@ -2439,14 +2439,14 @@ MatchCall_Text_May13::
 	.string "MAY: Hi, {PLAYER}{KUN}!\p"
 	.string "How's it going?\n"
 	.string "Are you filling your POKéDEX?\p"
-	.string "I heard a rumor that there are\n"
+	.string "I heard a rumour that there are\n"
 	.string "super-ancient POKéMON out there.\l"
 	.string "And there are three of them!\p"
 	.string "I would love to see even one…$"
 
 MatchCall_Text_May14::
 	.string "MAY: {PLAYER}{KUN}!\n"
-	.string "I heard the rumors!\p"
+	.string "I heard the rumours!\p"
 	.string "You beat the SOOTOPOLIS GYM\n"
 	.string "LEADER?\p"
 	.string "That means you don't have far\n"
@@ -2566,14 +2566,14 @@ MatchCall_Text_Brendan13::
 	.string "BRENDAN: Hey there, {PLAYER}!\p"
 	.string "How's it going? Filling up your\n"
 	.string "POKéDEX successfully?\p"
-	.string "I heard a rumor that there are\n"
+	.string "I heard a rumour that there are\n"
 	.string "super-ancient POKéMON out there.\l"
 	.string "And not just one--three!\p"
 	.string "I'd love to catch even one…$"
 
 MatchCall_Text_Brendan14::
 	.string "BRENDAN: {PLAYER}!\n"
-	.string "I heard the rumors!\p"
+	.string "I heard the rumours!\p"
 	.string "You beat the SOOTOPOLIS GYM\n"
 	.string "LEADER? Awesome!\p"
 	.string "You're getting awful close now!$"
@@ -2806,7 +2806,7 @@ MatchCall_Text_Steven4::
 	.string "STEVEN: Hello?\n"
 	.string "{PLAYER}{KUN}?\p"
 	.string "I'm involved in a spot of trouble\n"
-	.string "at the SPACE CENTER.\p"
+	.string "at the SPACE CENTRE.\p"
 	.string "I'm sorry, but I can't talk now.\n"
 	.string "Bye!$"
 

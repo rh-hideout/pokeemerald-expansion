@@ -192,7 +192,7 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_AcceptHint::
 	pike_gethintroomid
 	switch VAR_RESULT
 	case PIKE_ROOM_LEFT, BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveLeftRoomHint
-	case PIKE_ROOM_CENTER, BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveCenterRoomHint
+	case PIKE_ROOM_CENTRE, BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveCentreRoomHint
 	case PIKE_ROOM_RIGHT, BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveRightRoomHint
 	end
 
@@ -200,8 +200,8 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveLeftRoomHint::
 	msgbox BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutLeftPath, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveHint
 
-BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveCenterRoomHint::
-	msgbox BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutCenterPath, MSGBOX_DEFAULT
+BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveCentreRoomHint::
+	msgbox BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutCentrePath, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveHint
 
 BattleFrontier_BattlePikeThreePathRoom_EventScript_GiveRightRoomHint::
@@ -333,9 +333,9 @@ BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutRightPath:
 	.string "Ah, let me see… There is something\n"
 	.string "about the path on the right…$"
 
-BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutCenterPath:
+BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutCentrePath:
 	.string "Ah, let me see… There is something\n"
-	.string "about the path in the center…$"
+	.string "about the path in the centre…$"
 
 BattleFrontier_BattlePikeThreePathRoom_Text_SomethingAboutLeftPath:
 	.string "Ah, let me see… There is something\n"

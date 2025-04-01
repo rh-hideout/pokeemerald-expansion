@@ -127,18 +127,18 @@
 #define OW_POPUP_BW_TIME_12_HR     1   // Use 12 hour (AM/PM) time
 #define OW_POPUP_BW_TIME_24_HR     2   // Use 24 hour time
 
-#define OW_POPUP_BW_COLOR_BLACK    0   // Black pop-up from B2
-#define OW_POPUP_BW_COLOR_WHITE    1   // White pop-up from W2
+#define OW_POPUP_BW_COLOUR_BLACK    0   // Black pop-up from B2
+#define OW_POPUP_BW_COLOUR_WHITE    1   // White pop-up from W2
 
 // Configuration
-#define OW_POPUP_BW_COLOR          OW_POPUP_BW_COLOR_BLACK  // B2W2 use different colors for their map pop-ups.
+#define OW_POPUP_BW_COLOUR          OW_POPUP_BW_COLOUR_BLACK  // B2W2 use different colours for their map pop-ups.
 #define OW_POPUP_BW_TIME_MODE      OW_POPUP_BW_TIME_NONE    // Determines what type of time is shown.
-#define OW_POPUP_BW_ALPHA_BLEND    FALSE                    // Enables alpha blending/transparency for the pop-ups. Mainly intended to be used with the black color option.
+#define OW_POPUP_BW_ALPHA_BLEND    FALSE                    // Enables alpha blending/transparency for the pop-ups. Mainly intended to be used with the black colour option.
 
-// Pokémon Center
-#define OW_IGNORE_EGGS_ON_HEAL           GEN_LATEST         // In Gen 4+, the nurse in the Pokémon Center does not heal Eggs on healing machine.
-#define OW_UNION_DISABLE_CHECK           FALSE              // When TRUE, the nurse does not inform the player if there is a trainer waiting in the Union Room. This speeds up the loading of the Pokémon Center.
-#define OW_FLAG_MOVE_UNION_ROOM_CHECK    0                  // If this flag is set, the game will only check if players are in the Union Room while healing Pokémon, and not when players enter the Pokémon Center. This speeds up the loading of the Pokémon Center. This is ignored if OW_UNION_DISABLE_CHECK is TRUE.
+// Pokémon Centre
+#define OW_IGNORE_EGGS_ON_HEAL           GEN_LATEST         // In Gen 4+, the nurse in the Pokémon Centre does not heal Eggs on healing machine.
+#define OW_UNION_DISABLE_CHECK           FALSE              // When TRUE, the nurse does not inform the player if there is a trainer waiting in the Union Room. This speeds up the loading of the Pokémon Centre.
+#define OW_FLAG_MOVE_UNION_ROOM_CHECK    0                  // If this flag is set, the game will only check if players are in the Union Room while healing Pokémon, and not when players enter the Pokémon Centre. This speeds up the loading of the Pokémon Centre. This is ignored if OW_UNION_DISABLE_CHECK is TRUE.
 
 // Berry Blender
 #define BERRY_BLENDER_THROW_ALL_BERRIES_AT_ONCE TRUE        // This is a small little addition, that basically speeds up the animation where all players' berries are thrown into the blender. Self-explanatory I hope!

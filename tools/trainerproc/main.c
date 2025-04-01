@@ -1781,8 +1781,8 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         if (!is_empty_string(trainer->mugshot))
         {
             fprintf(f, "#line %d\n", trainer->mugshot_line);
-            fprintf(f, "        .mugshotColor = ");
-            fprint_constant(f, "MUGSHOT_COLOR", trainer->mugshot);
+            fprintf(f, "        .mugshotColour = ");
+            fprint_constant(f, "MUGSHOT_COLOUR", trainer->mugshot);
             fprintf(f, ",\n");
         }
 

@@ -133,13 +133,13 @@ u16 MoveRotatingTileObjects(u8 puzzleNumber)
         if ((u8)((metatile - puzzleTileStart) / METATILE_ROW_WIDTH) >= 5)
             continue;
 
-        // Object is on a metatile in puzzle tile section, but not one of the currently rotating color
+        // Object is on a metatile in puzzle tile section, but not one of the currently rotating colour
         if ((u8)((metatile - puzzleTileStart) / METATILE_ROW_WIDTH) != puzzleNumber)
             continue;
 
         puzzleTileNum = (u8)((metatile - puzzleTileStart) % METATILE_ROW_WIDTH);
 
-        // First 4 puzzle tiles are the colored arrows
+        // First 4 puzzle tiles are the coloured arrows
         if (puzzleTileNum < 4)
         {
             s8 x = 0;
@@ -212,7 +212,7 @@ void TurnRotatingTileObjects(void)
         u16 metatile = MapGridGetMetatileIdAt(x, y);
 
         // NOTE: The following 2 assignments and if else could all be replaced with rotation = ROTATE_COUNTERCLOCKWISE
-        // For an object to be saved in sRotatingTilePuzzle->objects, it must have been on a colored arrow tile
+        // For an object to be saved in sRotatingTilePuzzle->objects, it must have been on a coloured arrow tile
         // After the first assignment, tileDifference will always be a number [0-3] representing which arrow tile the object is on now (0: right, 1: down, 2: left, 3: up)
         // prevPuzzleTileNum will similarly be a number [0-3] representing the arrow tile the object just moved from
         // All the puzzles are oriented counter-clockwise and can only move 1 step at a time, so the difference between the current tile and the previous tile will always either be -1 or 3 (0-1, 1-2, 2-3, 3-0)

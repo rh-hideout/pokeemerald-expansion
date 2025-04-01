@@ -38,7 +38,7 @@ struct PaletteFadeControl
     u8 delayCounter:6;
     u16 y:5; // blend coefficient
     u16 targetY:5; // target blend coefficient
-    u16 blendColor:15;
+    u16 blendColour:15;
     bool16 active:1;
     u16 multipurpose2:6;
     bool16 yDec:1; // whether blend coefficient is decreasing
@@ -63,24 +63,24 @@ void FillPalette(u32 value, u32 offset, u32 size);
 void TransferPlttBuffer(void);
 u32 UpdatePaletteFade(void);
 void ResetPaletteFade(void);
-bool32 BeginNormalPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, u32 blendColor);
+bool32 BeginNormalPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, u32 blendColour);
 void ResetPaletteFadeControl(void);
 void InvertPlttBuffer(u32 selectedPalettes);
 void TintPlttBuffer(u32 selectedPalettes, s8 r, s8 g, s8 b);
 void UnfadePlttBuffer(u32 selectedPalettes);
 void BeginFastPaletteFade(u32 submode);
 void BeginHardwarePaletteFade(u32 blendCnt, u32 delay, u32 y, u32 targetY, u32 shouldResetBlendRegisters);
-void BlendPalettes(u32 selectedPalettes, u8 coeff, u32 color);
-void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 color);
-void BlendPalettesGradually(u32 selectedPalettes, s8 delay, u8 coeff, u8 coeffTarget, u16 color, u8 priority, u8 id);
-void TintPalette_GrayScale(u16 *palette, u32 count);
-void TintPalette_GrayScale2(u16 *palette, u32 count);
+void BlendPalettes(u32 selectedPalettes, u8 coeff, u32 colour);
+void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 colour);
+void BlendPalettesGradually(u32 selectedPalettes, s8 delay, u8 coeff, u8 coeffTarget, u16 colour, u8 priority, u8 id);
+void TintPalette_GreyScale(u16 *palette, u32 count);
+void TintPalette_GreyScale2(u16 *palette, u32 count);
 void TintPalette_SepiaTone(u16 *palette, u32 count);
 void TintPalette_CustomTone(u16 *palette, u32 count, u16 rTone, u16 gTone, u16 bTone);
 
-static inline void SetBackdropFromColor(u32 color)
+static inline void SetBackdropFromColour(u32 colour)
 {
-  FillPalette(color, 0, PLTT_SIZEOF(1));
+  FillPalette(colour, 0, PLTT_SIZEOF(1));
 }
 
 static inline void SetBackdropFromPalette(const u16 *palette)

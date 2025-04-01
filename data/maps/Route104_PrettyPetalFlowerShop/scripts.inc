@@ -56,7 +56,7 @@ Route104_PrettyPetalFlowerShop_Pokemart_Plants:
 	.2byte DECOR_RED_PLANT
 	.2byte DECOR_TROPICAL_PLANT
 	.2byte DECOR_PRETTY_FLOWERS
-	.2byte DECOR_COLORFUL_PLANT
+	.2byte DECOR_COLOURFUL_PLANT
 	.2byte DECOR_BIG_PLANT
 	.2byte DECOR_GORGEOUS_PLANT
 	pokemartlistend

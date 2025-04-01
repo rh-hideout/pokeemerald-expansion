@@ -22406,16 +22406,16 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
-    const u32 gMonFrontPic_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/front.4bpp.lz");
-    const u32 gMonPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/normal.gbapal.lz");
-    const u32 gMonBackPic_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/back.4bpp.lz");
-    const u32 gMonShinyPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/shiny.gbapal.lz");
-    const u8 gMonIcon_MagearnaOriginal[] = INCBIN_U8("graphics/pokemon/magearna/original_color/icon.4bpp");
+    const u32 gMonFrontPic_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/front.4bpp.lz");
+    const u32 gMonPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/normal.gbapal.lz");
+    const u32 gMonBackPic_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/back.4bpp.lz");
+    const u32 gMonShinyPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/shiny.gbapal.lz");
+    const u8 gMonIcon_MagearnaOriginal[] = INCBIN_U8("graphics/pokemon/magearna/original_colour/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_MagearnaOriginal[] = INCBIN_COMP("graphics/pokemon/magearna/original_color/overworld.4bpp");
+    const u32 gObjectEventPic_MagearnaOriginal[] = INCBIN_COMP("graphics/pokemon/magearna/original_colour/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u32 gOverworldPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/overworld_normal.gbapal.lz");
-    const u32 gShinyOverworldPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_color/overworld_shiny.gbapal.lz");
+    const u32 gOverworldPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/overworld_normal.gbapal.lz");
+    const u32 gShinyOverworldPalette_MagearnaOriginal[] = INCBIN_U32("graphics/pokemon/magearna/original_colour/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_MAGEARNA

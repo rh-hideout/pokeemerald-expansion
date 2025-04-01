@@ -3,9 +3,9 @@
 
 struct PulseBlendSettings
 {
-    u16 blendColor;
+    u16 blendColour;
     u16 paletteOffset;
-    u8 numColors;
+    u8 numColours;
     u8 delay;
     u8 numFadeCycles;
     s8 maxBlendCoeff:4;
@@ -34,18 +34,18 @@ struct PulseBlend
 };
 
 
-#define FLASHUTIL_USE_EXISTING_COLOR (1 << 15)
+#define FLASHUTIL_USE_EXISTING_COLOUR (1 << 15)
 
 struct RouletteFlashSettings
 {
-    u16 color;
+    u16 colour;
     u16 paletteOffset;
-    u8 numColors;
+    u8 numColours;
     u8 delay;
     s8 unk6;      // Set but never used
     s8 numFadeCycles:5;
     s8 unk7_5:2;  // Set but never used
-    s8 colorDeltaDir:1;
+    s8 colourDeltaDir:1;
 };
 
 struct RouletteFlashPalette
@@ -54,7 +54,7 @@ struct RouletteFlashPalette
     bool8 available:1;
     u8 delayCounter;
     s8 fadeCycleCounter;
-    s8 colorDelta;
+    s8 colourDelta;
     struct RouletteFlashSettings settings;
 };
 

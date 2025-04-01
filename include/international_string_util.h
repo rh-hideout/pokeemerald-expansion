@@ -6,9 +6,9 @@
 
 void ConvertInternationalPlayerName(u8 *src);
 void TVShowConvertInternationalString(u8 *dest, const u8 *src, int language);
-int GetStringCenterAlignXOffset(int fontId, const u8 *str, int totalWidth);
+int GetStringCentreAlignXOffset(int fontId, const u8 *str, int totalWidth);
 int GetStringRightAlignXOffset(int fontId, const u8 *str, int totalWidth);
-int GetStringCenterAlignXOffsetWithLetterSpacing(int fontId, const u8 *str, int totalWidth, int letterSpacing);
+int GetStringCentreAlignXOffsetWithLetterSpacing(int fontId, const u8 *str, int totalWidth, int letterSpacing);
 int GetStringWidthDifference(int fontId, const u8 *str, int totalWidth, int letterSpacing);
 int GetMaxWidthInMenuTable(const struct MenuAction *actions, int numActions);
 int GetMaxWidthInSubsetOfMenuTable(const struct MenuAction *actions, const u8 *actionIds, int numActions);

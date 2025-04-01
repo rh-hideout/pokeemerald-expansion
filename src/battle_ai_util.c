@@ -863,7 +863,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                         return TRUE;
                     break;
                 case MOVE_EFFECT_PARALYSIS:
-                    if (AI_CanParalyze(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
+                    if (AI_CanParalyse(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
                         return TRUE;
                     break;
                 case MOVE_EFFECT_CONFUSION:
@@ -1440,7 +1440,7 @@ bool32 IsNonVolatileStatusMoveEffect(u32 moveEffect)
     case EFFECT_SLEEP:
     case EFFECT_TOXIC:
     case EFFECT_POISON:
-    case EFFECT_PARALYZE:
+    case EFFECT_PARALYSE:
     case EFFECT_WILL_O_WISP:
     case EFFECT_YAWN:
         return TRUE;
@@ -2408,7 +2408,7 @@ bool32 IsSwitchOutEffect(u32 effect)
     switch (effect)
     {
     case EFFECT_TELEPORT:
-        if (B_TELEPORT_BEHAVIOR >= GEN_8)
+        if (B_TELEPORT_BEHAVIOUR >= GEN_8)
             return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
@@ -3054,9 +3054,9 @@ bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u3
     return TRUE;
 }
 
-bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
+bool32 AI_CanParalyse(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
 {
-    if (!CanBeParalyzed(battlerDef, defAbility)
+    if (!CanBeParalysed(battlerDef, defAbility)
       || AI_DATA->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex] == UQ_4_12(0.0)
       || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
@@ -3444,7 +3444,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
      && (partnerEffect == EFFECT_SLEEP
        || partnerEffect == EFFECT_POISON
        || partnerEffect == EFFECT_TOXIC
-       || partnerEffect == EFFECT_PARALYZE
+       || partnerEffect == EFFECT_PARALYSE
        || partnerEffect == EFFECT_WILL_O_WISP
        || partnerEffect == EFFECT_YAWN))
         return TRUE;
@@ -3993,13 +3993,13 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     }
 }
 
-void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
+void IncreaseParalyseScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 {
     if (((AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
             || AI_DATA->holdEffects[battlerDef] == HOLD_EFFECT_CURE_PAR || AI_DATA->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
         return;
 
-    if (AI_CanParalyze(battlerAtk, battlerDef, AI_DATA->abilities[battlerDef], move, AI_DATA->partnerMove))
+    if (AI_CanParalyse(battlerAtk, battlerDef, AI_DATA->abilities[battlerDef], move, AI_DATA->partnerMove))
     {
         u32 atkSpeed = AI_DATA->speedStats[battlerAtk];
         u32 defSpeed = AI_DATA->speedStats[battlerDef];
@@ -4270,7 +4270,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
     if (HasMoveEffect(battlerDef, EFFECT_SLEEP)
      || HasMoveEffect(battlerDef, EFFECT_TOXIC)
      || HasMoveEffect(battlerDef, EFFECT_POISON)
-     || HasMoveEffect(battlerDef, EFFECT_PARALYZE)
+     || HasMoveEffect(battlerDef, EFFECT_PARALYSE)
      || HasMoveEffect(battlerDef, EFFECT_WILL_O_WISP)
      || HasMoveEffect(battlerDef, EFFECT_CONFUSE)
      || HasMoveEffect(battlerDef, EFFECT_LEECH_SEED))

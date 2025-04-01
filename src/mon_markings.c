@@ -523,7 +523,7 @@ static void CreateMonMarkingsMenuSprites(s16 x, s16 y, u16 baseTileTag, u16 base
         StartSpriteAnim(sMenu->textSprite, ANIM_TEXT);
         sMenu->textSprite->x = x + 32;
         sMenu->textSprite->y = y + 80;
-        CalcCenterToCornerVec(sMenu->textSprite, SPRITE_SHAPE(32x16), SPRITE_SIZE(32x16), ST_OAM_AFFINE_OFF);
+        CalcCentreToCornerVec(sMenu->textSprite, SPRITE_SHAPE(32x16), SPRITE_SIZE(32x16), ST_OAM_AFFINE_OFF);
     }
     else
     {

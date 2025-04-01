@@ -28,8 +28,8 @@ const u32 gDecorIconPalette_TropicalPlant[] = INCBIN_U32("graphics/decorations/t
 const u32 gDecorIcon_PrettyFlowers[] = INCBIN_U32("graphics/decorations/pretty_flowers.4bpp.lz");
 const u32 gDecorIconPalette_PrettyFlowers[] = INCBIN_U32("graphics/decorations/pretty_flowers.gbapal.lz");
 
-const u32 gDecorIcon_ColorfulPlant[] = INCBIN_U32("graphics/decorations/colorful_plant.4bpp.lz");
-const u32 gDecorIconPalette_ColorfulPlant[] = INCBIN_U32("graphics/decorations/colorful_plant.gbapal.lz");
+const u32 gDecorIcon_ColourfulPlant[] = INCBIN_U32("graphics/decorations/colourful_plant.4bpp.lz");
+const u32 gDecorIconPalette_ColourfulPlant[] = INCBIN_U32("graphics/decorations/colourful_plant.gbapal.lz");
 
 const u32 gDecorIcon_BigPlant[] = INCBIN_U32("graphics/decorations/big_plant.4bpp.lz");
 const u32 gDecorIconPalette_BigPlant[] = INCBIN_U32("graphics/decorations/big_plant.gbapal.lz");

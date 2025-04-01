@@ -5,7 +5,7 @@ const u8 gEasyChatWord_Sapphire[] = _("SAPPHIRE");
 const u8 gEasyChatWord_Evolve[] = _("EVOLVE");
 const u8 gEasyChatWord_Encyclopedia[] = _("ENCYCLOPEDIA");
 const u8 gEasyChatWord_Nature[] = _("NATURE");
-const u8 gEasyChatWord_Center[] = _("CENTER");
+const u8 gEasyChatWord_Centre[] = _("CENTRE");
 const u8 gEasyChatWord_Egg[] = _("EGG");
 const u8 gEasyChatWord_Link[] = _("LINK");
 const u8 gEasyChatWord_SpAbility[] = _("SP. ABILITY");
@@ -36,7 +36,7 @@ const struct EasyChatWordInfo gEasyChatGroup_Trainer[] = {
     [EC_INDEX(EC_WORD_GOTCHA)] =
     {
         .text = gEasyChatWord_Gotcha,
-        .alphabeticalOrder = EC_INDEX(EC_WORD_CENTER),
+        .alphabeticalOrder = EC_INDEX(EC_WORD_CENTRE),
         .enabled = TRUE,
     },
     [EC_INDEX(EC_WORD_TRADE)] =
@@ -69,9 +69,9 @@ const struct EasyChatWordInfo gEasyChatGroup_Trainer[] = {
         .alphabeticalOrder = EC_INDEX(EC_WORD_FLAME),
         .enabled = TRUE,
     },
-    [EC_INDEX(EC_WORD_CENTER)] =
+    [EC_INDEX(EC_WORD_CENTRE)] =
     {
-        .text = gEasyChatWord_Center,
+        .text = gEasyChatWord_Centre,
         .alphabeticalOrder = EC_INDEX(EC_WORD_GET),
         .enabled = TRUE,
     },

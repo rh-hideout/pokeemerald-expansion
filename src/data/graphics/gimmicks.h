@@ -95,7 +95,7 @@ static const u8 ALIGNED(4) sDarkIndicatorGfx[] = INCBIN_U8("graphics/battle_inte
 static const u8 ALIGNED(4) sFairyIndicatorGfx[] = INCBIN_U8("graphics/battle_interface/fairy_indicator.4bpp");
 static const u8 ALIGNED(4) sStellarIndicatorGfx[] = INCBIN_U8("graphics/battle_interface/stellar_indicator.4bpp");
 
-static const u16 sMiscIndicatorPal[] = INCBIN_U16("graphics/battle_interface/misc_indicator.gbapal"); // has room for more colors
+static const u16 sMiscIndicatorPal[] = INCBIN_U16("graphics/battle_interface/misc_indicator.gbapal"); // has room for more colours
 static const u16 sMegaIndicatorPal[] = INCBIN_U16("graphics/battle_interface/mega_indicator.gbapal");
 static const u16 sTeraIndicatorPal[] = INCBIN_U16("graphics/battle_interface/tera_indicator.gbapal");
 

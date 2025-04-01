@@ -44,14 +44,14 @@ void ReadPng(char *path, struct Image *image)
 	if (bit_depth != image->bitDepth)
 		FATAL_ERROR("\"%s\" has a bit depth of %d, but the expected bit depth is %d.\n", path, bit_depth, image->bitDepth);
 
-	int color_type = png_get_color_type(png_ptr, info_ptr);
+	int colour_type = png_get_colour_type(png_ptr, info_ptr);
 
-	if (color_type != PNG_COLOR_TYPE_GRAY && color_type != PNG_COLOR_TYPE_PALETTE)
-		FATAL_ERROR("\"%s\" has an unsupported color type.\n", path);
+	if (colour_type != PNG_COLOUR_TYPE_GREY && colour_type != PNG_COLOUR_TYPE_PALETTE)
+		FATAL_ERROR("\"%s\" has an unsupported colour type.\n", path);
 
-	// Check if the image has a palette so that we can tell if the colors need to be inverted later.
+	// Check if the image has a palette so that we can tell if the colours need to be inverted later.
 	// Don't read the palette because it's not needed for now.
-	image->hasPalette = (color_type == PNG_COLOR_TYPE_PALETTE);
+	image->hasPalette = (colour_type == PNG_COLOUR_TYPE_PALETTE);
 
 	image->width = png_get_image_width(png_ptr, info_ptr);
 	image->height = png_get_image_height(png_ptr, info_ptr);
@@ -84,20 +84,20 @@ void ReadPng(char *path, struct Image *image)
 
 void SetPngPalette(png_structp png_ptr, png_infop info_ptr, struct Palette *palette)
 {
-	png_colorp colors = malloc(palette->numColors * sizeof(png_color));
+	png_colourp colours = malloc(palette->numColours * sizeof(png_colour));
 
-	if (colors == NULL)
+	if (colours == NULL)
 		FATAL_ERROR("Failed to allocate PNG palette.\n");
 
-	for (int i = 0; i < palette->numColors; i++) {
-		colors[i].red = palette->colors[i].red;
-		colors[i].green = palette->colors[i].green;
-		colors[i].blue = palette->colors[i].blue;
+	for (int i = 0; i < palette->numColours; i++) {
+		colours[i].red = palette->colours[i].red;
+		colours[i].green = palette->colours[i].green;
+		colours[i].blue = palette->colours[i].blue;
 	}
 
-	png_set_PLTE(png_ptr, info_ptr, colors, palette->numColors);
+	png_set_PLTE(png_ptr, info_ptr, colours, palette->numColours);
 
-	free(colors);
+	free(colours);
 }
 
 void WritePng(char *path, struct Image *image)
@@ -125,10 +125,10 @@ void WritePng(char *path, struct Image *image)
 	if (setjmp(png_jmpbuf(png_ptr)))
 		FATAL_ERROR("Error writing header for \"%s\".\n", path);
 
-	int color_type = image->hasPalette ? PNG_COLOR_TYPE_PALETTE : PNG_COLOR_TYPE_GRAY;
+	int colour_type = image->hasPalette ? PNG_COLOUR_TYPE_PALETTE : PNG_COLOUR_TYPE_GREY;
 
 	png_set_IHDR(png_ptr, info_ptr, image->width, image->height,
-		image->bitDepth, color_type, PNG_INTERLACE_NONE,
+		image->bitDepth, colour_type, PNG_INTERLACE_NONE,
 		PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
 	if (image->hasPalette) {

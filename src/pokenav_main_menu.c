@@ -103,9 +103,9 @@ static const u8 *const sHelpBarTexts[HELPBAR_COUNT] =
     [HELPBAR_RIBBONS_CHECK]         = COMPOUND_STRING("{B_BUTTON}CANCEL"),
 };
 
-static const u8 sHelpBarTextColors[3] =
+static const u8 sHelpBarTextColours[3] =
 {
-    TEXT_COLOR_RED, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY
+    TEXT_COLOUR_RED, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY
 };
 
 static const struct CompressedSpriteSheet sSpinningPokenavSpriteSheet[] =
@@ -564,7 +564,7 @@ void PrintHelpBarText(u32 textId)
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
     DrawHelpBar(menu->helpBarWindowId);
-    AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, 0, 1, sHelpBarTextColors, 0, sHelpBarTexts[textId]);
+    AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, 0, 1, sHelpBarTextColours, 0, sHelpBarTexts[textId]);
 }
 
 bool32 WaitForHelpBar(void)

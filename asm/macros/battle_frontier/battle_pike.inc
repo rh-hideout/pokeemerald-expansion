@@ -102,7 +102,7 @@
 	special CallBattlePikeFunction
 	.endm
 
-	@ Get PIKE_ROOM_(LEFT/CENTER/RIGHT) for which room to give a hint about
+	@ Get PIKE_ROOM_(LEFT/CENTRE/RIGHT) for which room to give a hint about
 	.macro pike_gethintroomid
 	setvar VAR_0x8004, BATTLE_PIKE_FUNC_GET_HINT_ROOM_ID
 	special CallBattlePikeFunction

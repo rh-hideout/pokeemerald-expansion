@@ -364,7 +364,7 @@ static const struct WindowTemplate sWindowTemplates_ItemStorage[ITEMPC_WIN_COUNT
     }
 };
 
-static const u8 sSwapArrowTextColors[] = {TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_DARK_GRAY};
+static const u8 sSwapArrowTextColours[] = {TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY, TEXT_COLOUR_DARK_GREY};
 
 void NewGameInitPCItems(void)
 {
@@ -483,7 +483,7 @@ static void PlayerPC_Mailbox(u8 taskId)
         SetPlayerPCListCount(taskId);
         if (MailboxMenu_Alloc(gPlayerPCItemPageInfo.count) == TRUE)
         {
-            ClearDialogWindowAndFrame(0, FALSE);
+            ClearDialogueWindowAndFrame(0, FALSE);
             Mailbox_DrawMailboxMenu(taskId);
             gTasks[taskId].func = Mailbox_ProcessInput;
         }
@@ -648,7 +648,7 @@ static void ItemStorage_Enter(u8 taskId, bool8 toss)
     FreeAndReserveObjectSpritePalettes();
     LoadListMenuSwapLineGfx();
     CreateSwapLineSprites(sItemStorageMenu->swapLineSpriteIds, SWAP_LINE_LENGTH);
-    ClearDialogWindowAndFrame(0, FALSE);
+    ClearDialogueWindowAndFrame(0, FALSE);
     gTasks[taskId].func = ItemStorage_CreateListMenu;
 }
 
@@ -707,7 +707,7 @@ static void Mailbox_DrawMailboxMenu(u8 taskId)
 {
     u8 windowId = MailboxMenu_AddWindow(MAILBOXWIN_TITLE);
     MailboxMenu_AddWindow(MAILBOXWIN_LIST);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Mailbox, GetStringCenterAlignXOffset(FONT_NORMAL, sText_Mailbox, 0x40), 1, 0, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Mailbox, GetStringCentreAlignXOffset(FONT_NORMAL, sText_Mailbox, 0x40), 1, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].tListTaskId = MailboxMenu_CreateList(&gPlayerPCItemPageInfo);
     MailboxMenu_AddScrollArrows(&gPlayerPCItemPageInfo);
@@ -946,7 +946,7 @@ static void Mailbox_NoPokemonForMail(u8 taskId)
 static void Mailbox_Cancel(u8 taskId)
 {
     MailboxMenu_RemoveWindow(MAILBOXWIN_OPTIONS);
-    ClearDialogWindowAndFrame(0, FALSE);
+    ClearDialogueWindowAndFrame(0, FALSE);
     Mailbox_DrawMailboxMenu(taskId);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].func = Mailbox_ProcessInput;
@@ -1100,7 +1100,7 @@ static void ItemStorage_DrawSwapArrow(u8 y, u8 b, u8 speed)
     if (b == 0xFF)
         FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, y, GetMenuCursorDimensionByFont(FONT_NORMAL, 0), GetMenuCursorDimensionByFont(FONT_NORMAL, 1));
     else
-        AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, y, 0, 0, sSwapArrowTextColors, speed, gText_SelectorArrow2);
+        AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, y, 0, 0, sSwapArrowTextColours, speed, gText_SelectorArrow2);
 }
 
 static void ItemStorage_DrawItemIcon(u16 itemId)
@@ -1160,7 +1160,7 @@ static void ItemStorage_CreateListMenu(u8 taskId)
     text = sText_TossItem;
     if (!toss)
         text = sText_WithdrawItem;
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 104);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, text, 104);
     AddTextPrinterParameterized(sItemStorageMenu->windowIds[ITEMPC_WIN_TITLE], FONT_NORMAL, text, x, 1, 0, NULL);
     CopyWindowToVram(sItemStorageMenu->windowIds[ITEMPC_WIN_ICON], COPYWIN_GFX);
     ItemStorage_CompactList();
@@ -1356,7 +1356,7 @@ static void ItemStorage_PrintItemQuantity(u8 windowId, u16 value, u32 mode, u8 x
 {
     ConvertIntToDecimalStringN(gStringVar1, value, mode, n);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 48), y, 0, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, GetStringCentreAlignXOffset(FONT_NORMAL, gStringVar4, 48), y, 0, NULL);
 }
 
 // Start an item Withdraw/Toss

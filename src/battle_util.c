@@ -3486,7 +3486,7 @@ static void CancellerParalysed(u32 *effect)
         gProtectStructs[gBattlerAttacker].prlzImmobility = TRUE;
         // This is removed in FRLG and Emerald for some reason
         //CancelMultiTurnMoves(gBattlerAttacker);
-        gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
+        gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalysed;
         gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
         *effect = 1;
     }
@@ -5781,7 +5781,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 effect++;
             }
             break;
-        case ABILITY_COLOR_CHANGE:
+        case ABILITY_COLOUR_CHANGE:
             if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
              && move != MOVE_STRUGGLE
              && !IsBattleMoveStatus(move)
@@ -5794,7 +5794,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 SET_BATTLER_TYPE(battler, moveType);
                 PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
                 BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_ColorChangeActivates;
+                gBattlescriptCurrInstr = BattleScript_ColourChangeActivates;
                 effect++;
             }
             break;
@@ -5956,7 +5956,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 && IsBattlerAlive(gBattlerAttacker)
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                 && IsBattlerTurnDamaged(gBattlerTarget)
-                && CanBeParalyzed(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+                && CanBeParalysed(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
                 && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                 && IsMoveMakingContact(move, gBattlerAttacker))
                 {
@@ -6825,9 +6825,9 @@ bool32 CanBeBurned(u32 battler, u32 ability)
     return TRUE;
 }
 
-bool32 CanBeParalyzed(u32 battler, u32 ability)
+bool32 CanBeParalysed(u32 battler, u32 ability)
 {
-    if ((B_PARALYZE_ELECTRIC >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_ELECTRIC))
+    if ((B_PARALYSE_ELECTRIC >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_ELECTRIC))
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
       || ability == ABILITY_LIMBER
       || ability == ABILITY_COMATOSE
@@ -6904,12 +6904,12 @@ bool32 HasEnoughHpToEatBerry(u32 battler, u32 hpFraction, u32 itemId)
     return FALSE;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, enum ItemCaseId caseID)
+static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavourId, enum ItemCaseId caseID)
 {
     if (HasEnoughHpToEatBerry(battler, (B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2), itemId)
      && (B_HEAL_BLOCKING < GEN_5 || !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)))
     {
-        PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, flavorId);
+        PREPARE_FLAVOUR_BUFFER(gBattleTextBuff1, flavourId);
 
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / GetBattlerItemHoldEffectParam(battler, itemId);
         if (gBattleStruct->moveDamage[battler] == 0)
@@ -6924,7 +6924,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, e
         gBattleScripting.battler = battler;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
         {
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
+            if (GetFlavourRelationByPersonality(gBattleMons[battler].personality, flavourId) < 0)
                 BattleScriptExecute(BattleScript_BerryConfuseHealEnd2);
             else
                 BattleScriptExecute(BattleScript_ItemHealHP_RemoveItemEnd2);
@@ -6932,7 +6932,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, e
         else
         {
             BattleScriptPushCursor();
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
+            if (GetFlavourRelationByPersonality(gBattleMons[battler].personality, flavourId) < 0)
                 gBattlescriptCurrInstr = BattleScript_BerryConfuseHealRet;
             else
                 gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItemRet;
@@ -7374,23 +7374,23 @@ static u8 ItemEffectMoveEnd(u32 battler, u16 holdEffect)
         break;
     case HOLD_EFFECT_CONFUSE_SPICY:
         if (B_BERRIES_INSTANT >= GEN_4)
-            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, ITEMEFFECT_NONE);
+            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SPICY, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_CONFUSE_DRY:
         if (B_BERRIES_INSTANT >= GEN_4)
-            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_DRY, ITEMEFFECT_NONE);
+            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_DRY, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_CONFUSE_SWEET:
         if (B_BERRIES_INSTANT >= GEN_4)
-            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SWEET, ITEMEFFECT_NONE);
+            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SWEET, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_CONFUSE_BITTER:
         if (B_BERRIES_INSTANT >= GEN_4)
-            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_BITTER, ITEMEFFECT_NONE);
+            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_BITTER, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_CONFUSE_SOUR:
         if (B_BERRIES_INSTANT >= GEN_4)
-            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SOUR, ITEMEFFECT_NONE);
+            effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SOUR, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_ATTACK_UP:
         if (B_BERRIES_INSTANT >= GEN_4)
@@ -7675,23 +7675,23 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 if (B_BERRIES_INSTANT >= GEN_4)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SPICY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_DRY:
                 if (B_BERRIES_INSTANT >= GEN_4)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_DRY, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_DRY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SWEET:
                 if (B_BERRIES_INSTANT >= GEN_4)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SWEET, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SWEET, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_BITTER:
                 if (B_BERRIES_INSTANT >= GEN_4)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_BITTER, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_BITTER, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SOUR:
                 if (B_BERRIES_INSTANT >= GEN_4)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SOUR, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SOUR, caseID);
                 break;
             case HOLD_EFFECT_ATTACK_UP:
                 if (B_BERRIES_INSTANT >= GEN_4)
@@ -7924,23 +7924,23 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SPICY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_DRY:
                 if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_DRY, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_DRY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SWEET:
                 if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SWEET, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SWEET, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_BITTER:
                 if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_BITTER, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_BITTER, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SOUR:
                 if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SOUR, caseID);
+                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOUR_SOUR, caseID);
                 break;
             case HOLD_EFFECT_ATTACK_UP:
                 if (!moveTurn)

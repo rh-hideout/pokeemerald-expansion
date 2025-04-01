@@ -29,7 +29,7 @@ LilycoveCity_LilycoveMuseum_1F_EventScript_SawPaintings::
 	end
 
 LilycoveCity_LilycoveMuseum_1F_EventScript_NotInterested::
-	msgbox LilycoveCity_LilycoveMuseum_1F_Text_HonoredYoudVisitInSpiteOfThat, MSGBOX_SIGN
+	msgbox LilycoveCity_LilycoveMuseum_1F_Text_HonouredYoudVisitInSpiteOfThat, MSGBOX_SIGN
 	releaseall
 	end
 
@@ -185,9 +185,9 @@ LilycoveCity_LilycoveMuseum_1F_Text_HaveYouAnInterestInPaintings:
 	.string "Have you an interest in paintings,\n"
 	.string "too?$"
 
-LilycoveCity_LilycoveMuseum_1F_Text_HonoredYoudVisitInSpiteOfThat:
+LilycoveCity_LilycoveMuseum_1F_Text_HonouredYoudVisitInSpiteOfThat:
 	.string "I see…\p"
-	.string "I'm honored that you would visit\n"
+	.string "I'm honoured that you would visit\n"
 	.string "us in spite of that.$"
 
 LilycoveCity_LilycoveMuseum_1F_Text_ExcellentCanYouComeWithMe:
@@ -285,7 +285,7 @@ LilycoveCity_LilycoveMuseum_1F_Text_AimToSeeGreatPaintings:
 	.string "my artwork exhibited here.$"
 
 LilycoveCity_LilycoveMuseum_1F_Text_MuseumTouristDestination:
-	.string "The ART MUSEUM has become a favorite\n"
+	.string "The ART MUSEUM has become a favourite\n"
 	.string "tourist destination.\p"
 	.string "It's great for LILYCOVE…\n"
 	.string "No, great for the HOENN region!\p"

@@ -54,7 +54,7 @@ void ApplyBattlerVisualsForTeraAnim(u32 battler)
     BlendPalette(OBJ_PLTT_ID(battler), 16, 8, GetTeraTypeRGB(GetBattlerTeraType(battler)));
     CpuCopy32(gPlttBufferFaded + OBJ_PLTT_ID(battler), gPlttBufferUnfaded + OBJ_PLTT_ID(battler), PLTT_SIZEOF(16));
 
-    // We apply the animation behind a white screen, so restore the blended color here to avoid a pop
+    // We apply the animation behind a white screen, so restore the blended colour here to avoid a pop
     BlendPalette(OBJ_PLTT_ID(battler), 16, 16, RGB_WHITEALPHA);
 }
 

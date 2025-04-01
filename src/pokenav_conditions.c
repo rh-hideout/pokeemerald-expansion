@@ -342,10 +342,10 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     boxId = monListPtr->monData[listId].boxId;
     monId = monListPtr->monData[listId].monId;
     *(str++) = EXT_CTRL_CODE_BEGIN;
-    *(str++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(str++) = TEXT_COLOR_BLUE;
-    *(str++) = TEXT_COLOR_TRANSPARENT;
-    *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+    *(str++) = TEXT_COLOUR_BLUE;
+    *(str++) = TEXT_COLOUR_TRANSPARENT;
+    *(str++) = TEXT_COLOUR_LIGHT_BLUE;
 
     if (GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL))
         return StringCopyPadded(str, gText_EggNickname, CHAR_SPACE, POKEMON_NAME_LENGTH + 2);
@@ -384,29 +384,29 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
         break;
     case MON_MALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_COLOR;
-        *(str_++) = TEXT_COLOR_RED;
+        *(str_++) = EXT_CTRL_CODE_COLOUR;
+        *(str_++) = TEXT_COLOUR_RED;
         *(str_++) = EXT_CTRL_CODE_BEGIN;
         *(str_++) = EXT_CTRL_CODE_SHADOW;
-        *(str_++) = TEXT_COLOR_LIGHT_RED;
+        *(str_++) = TEXT_COLOUR_LIGHT_RED;
         *(str_++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_COLOR;
-        *(str_++) = TEXT_COLOR_GREEN;
+        *(str_++) = EXT_CTRL_CODE_COLOUR;
+        *(str_++) = TEXT_COLOUR_GREEN;
         *(str_++) = EXT_CTRL_CODE_BEGIN;
         *(str_++) = EXT_CTRL_CODE_SHADOW;
-        *(str_++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str_++) = TEXT_COLOUR_LIGHT_GREEN;
         *(str_++) = CHAR_FEMALE;
         break;
     }
 
     *(str_++) = EXT_CTRL_CODE_BEGIN;
-    *(str_++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(str_++) = TEXT_COLOR_BLUE;
-    *(str_++) = TEXT_COLOR_TRANSPARENT;
-    *(str_++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str_++) = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+    *(str_++) = TEXT_COLOUR_BLUE;
+    *(str_++) = TEXT_COLOUR_TRANSPARENT;
+    *(str_++) = TEXT_COLOUR_LIGHT_BLUE;
     *(str_++) = CHAR_SLASH;
     *(str_++) = CHAR_EXTRA_SYMBOL;
     *(str_++) = CHAR_LV_2;
@@ -436,10 +436,10 @@ static void CopyMonNameGenderLocation(s16 listId, u8 loadId)
         CopyConditionMonNameGender(menu->nameText[loadId], listId, FALSE);
         boxId = monListPtr->monData[listId].boxId;
         menu->locationText[loadId][0] = EXT_CTRL_CODE_BEGIN;
-        menu->locationText[loadId][1] = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-        menu->locationText[loadId][2] = TEXT_COLOR_BLUE;
-        menu->locationText[loadId][3] = TEXT_COLOR_TRANSPARENT;
-        menu->locationText[loadId][4] = TEXT_COLOR_LIGHT_BLUE;
+        menu->locationText[loadId][1] = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+        menu->locationText[loadId][2] = TEXT_COLOUR_BLUE;
+        menu->locationText[loadId][3] = TEXT_COLOUR_TRANSPARENT;
+        menu->locationText[loadId][4] = TEXT_COLOUR_LIGHT_BLUE;
         if (boxId == TOTAL_BOXES_COUNT)
             CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][5], gText_InParty, BOX_NAME_LENGTH);
         else
@@ -515,8 +515,8 @@ static void GetMonConditionGraphData(s16 listId, u8 loadId)
         for (i = 0; i < CONDITION_COUNT; i++)
         {
             menu->graph.conditions[loadId][i] = 0;
-            menu->graph.savedPositions[loadId][i].x = CONDITION_GRAPH_CENTER_X;
-            menu->graph.savedPositions[loadId][i].y = CONDITION_GRAPH_CENTER_Y;
+            menu->graph.savedPositions[loadId][i].x = CONDITION_GRAPH_CENTRE_X;
+            menu->graph.savedPositions[loadId][i].y = CONDITION_GRAPH_CENTRE_Y;
         }
     }
 }

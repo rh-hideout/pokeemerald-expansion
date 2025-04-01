@@ -732,7 +732,7 @@ void SetSpritePrimaryCoordsFromSecondaryCoords(struct Sprite *sprite)
 
 void InitSpritePosToAnimTarget(struct Sprite *sprite, bool8 respectMonPicOffsets)
 {
-    // Battle anim sprites are automatically created at the anim target's center, which
+    // Battle anim sprites are automatically created at the anim target's centre, which
     // is why there is no else clause for the "respectMonPicOffsets" check.
     if (!respectMonPicOffsets)
     {
@@ -1064,7 +1064,7 @@ void AnimTranslateLinear_WithFollowup(struct Sprite *sprite)
 // Functionally unused
 static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite)
 {
-    AnimSetCenterToCornerVecX(sprite);
+    AnimSetCentreToCornerVecX(sprite);
     if (AnimTranslateLinear(sprite))
         SetCallbackToStoredInData6(sprite);
 }
@@ -1220,7 +1220,7 @@ void PrepareBattlerSpriteForRotScale(u8 spriteId, u8 objMode)
     if (!IsContest() && !gSprites[spriteId].oam.affineMode)
         gSprites[spriteId].oam.matrixNum = gBattleSpritesDataPtr->healthBoxesData[battlerId].matrixNum;
     gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-    CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
+    CalcCentreToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
 }
 
 void ResetSpriteRotScale(u8 spriteId)
@@ -1229,7 +1229,7 @@ void ResetSpriteRotScale(u8 spriteId)
     gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
     gSprites[spriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
     gSprites[spriteId].affineAnimPaused = FALSE;
-    CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
+    CalcCentreToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
 }
 
 // Sets the sprite's y offset equal to the y displacement caused by the
@@ -1245,7 +1245,7 @@ void SetBattlerSpriteYOffsetFromRotation(u8 spriteId)
     gSprites[spriteId].y2 = c >> 3;
 }
 
-void TrySetSpriteRotScale(struct Sprite *sprite, bool8 recalcCenterVector, s16 xScale, s16 yScale, u16 rotation)
+void TrySetSpriteRotScale(struct Sprite *sprite, bool8 recalcCentreVector, s16 xScale, s16 yScale, u16 rotation)
 {
     int i;
     struct ObjAffineSrcData src;
@@ -1254,8 +1254,8 @@ void TrySetSpriteRotScale(struct Sprite *sprite, bool8 recalcCenterVector, s16 x
     if (sprite->oam.affineMode & 1)
     {
         sprite->affineAnimPaused = TRUE;
-        if (recalcCenterVector)
-            CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+        if (recalcCentreVector)
+            CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
         src.xScale = xScale;
         src.yScale = yScale;
         src.rotation = rotation;
@@ -1274,7 +1274,7 @@ void ResetSpriteRotScale_PreserveAffine(struct Sprite *sprite)
 {
     TrySetSpriteRotScale(sprite, TRUE, 0x100, 0x100, 0);
     sprite->affineAnimPaused = FALSE;
-    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 }
 
 static u16 ArcTan2_(s16 x, s16 y)
@@ -1288,26 +1288,26 @@ u16 ArcTan2Neg(s16 x, s16 y)
     return -var;
 }
 
-void SetGrayscaleOrOriginalPalette(u16 paletteNum, bool8 restoreOriginalColor)
+void SetGreyscaleOrOriginalPalette(u16 paletteNum, bool8 restoreOriginalColour)
 {
     int i;
-    struct PlttData *originalColor;
-    struct PlttData *destColor;
+    struct PlttData *originalColour;
+    struct PlttData *destColour;
     u16 average;
     u16 paletteOffset = PLTT_ID(paletteNum);
 
-    if (!restoreOriginalColor)
+    if (!restoreOriginalColour)
     {
         for (i = 0; i < 16; i++)
         {
-            originalColor = (struct PlttData *)&gPlttBufferUnfaded[paletteOffset + i];
-            average = originalColor->r + originalColor->g + originalColor->b;
+            originalColour = (struct PlttData *)&gPlttBufferUnfaded[paletteOffset + i];
+            average = originalColour->r + originalColour->g + originalColour->b;
             average /= 3;
 
-            destColor = (struct PlttData *)&gPlttBufferFaded[paletteOffset + i];
-            destColor->r = average;
-            destColor->g = average;
-            destColor->b = average;
+            destColour = (struct PlttData *)&gPlttBufferFaded[paletteOffset + i];
+            destColour->r = average;
+            destColour->g = average;
+            destColour->b = average;
         }
     }
     else
@@ -1631,10 +1631,10 @@ static void AnimTask_AlphaFadeIn_Step(u8 taskId)
     }
 }
 
-// Linearly blends a mon's sprite colors with a target color with increasing
-// strength, and then blends out to the original color.
+// Linearly blends a mon's sprite colours with a target colour with increasing
+// strength, and then blends out to the original colour.
 // arg 0: anim bank
-// arg 1: blend color
+// arg 1: blend colour
 // arg 2: target blend coefficient
 // arg 3: initial delay
 // arg 4: number of times to blend in and out
@@ -2252,8 +2252,8 @@ void AnimSpinningSparkle(struct Sprite *sprite)
 #define sTaskId     data[1]
 #define sSpriteId   data[2]
 
-// Slides attacker to right and back with a cloned trace of the specified color
-// arg0: Trace palette blend color
+// Slides attacker to right and back with a cloned trace of the specified colour
+// arg0: Trace palette blend colour
 // arg1: Trace palette blend coeff
 void AnimTask_AttackerPunchWithTrace(u8 taskId)
 {

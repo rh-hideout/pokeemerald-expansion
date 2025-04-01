@@ -817,7 +817,7 @@ Route110_Text_RideBikeAtFullSpeed:
 
 Route110_Text_HairStreamsBehindMe:
 	.string "How do you like the way my raven-\n"
-	.string "colored hair streams behind me?\p"
+	.string "coloured hair streams behind me?\p"
 	.string "I grew my hair out just for that.$"
 
 Route110_Text_YouGotBikeFromRydel:

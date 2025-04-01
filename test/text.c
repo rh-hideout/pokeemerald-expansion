@@ -702,7 +702,7 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNPOISONEDBY:
     case STRINGID_PKMNBURNEDBY:
     case STRINGID_PKMNFROZENBY:
-    case STRINGID_PKMNWASPARALYZEDBY:
+    case STRINGID_PKMNWASPARALYSEDBY:
     case STRINGID_CANACTFASTERTHANKSTO:
         PREPARE_ABILITY_BUFFER(gBattleTextBuff1, longAbilityID);
         break;

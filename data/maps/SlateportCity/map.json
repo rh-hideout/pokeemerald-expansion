@@ -491,7 +491,7 @@
       "x": 19,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_POKEMON_CENTER_1F",
+      "dest_map": "MAP_SLATEPORT_CITY_POKEMON_CENTRE_1F",
       "dest_warp_id": "0"
     },
     {
@@ -547,14 +547,14 @@
       "x": 28,
       "y": 12,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_HARBOR",
+      "dest_map": "MAP_SLATEPORT_CITY_HARBOUR",
       "dest_warp_id": "0"
     },
     {
       "x": 40,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_HARBOR",
+      "dest_map": "MAP_SLATEPORT_CITY_HARBOUR",
       "dest_warp_id": "2"
     },
     {
@@ -591,7 +591,7 @@
       "y": 19,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
+      "script": "Common_EventScript_ShowPokemonCentreSign"
     },
     {
       "type": "sign",
@@ -599,7 +599,7 @@
       "y": 19,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
+      "script": "Common_EventScript_ShowPokemonCentreSign"
     },
     {
       "type": "sign",
@@ -615,7 +615,7 @@
       "y": 12,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "SlateportCity_EventScript_HarborSign"
+      "script": "SlateportCity_EventScript_HarbourSign"
     },
     {
       "type": "sign",

@@ -40,7 +40,7 @@ static void AnimWaterSportDroplet_Step(struct Sprite *);
 static void AnimWaterPulseBubble_Step(struct Sprite *);
 static void AnimWaterPulseRingBubble(struct Sprite *);
 static void AnimWaterPulseRing_Step(struct Sprite *);
-static void AnimTask_RotateAuroraRingColors_Step(u8);
+static void AnimTask_RotateAuroraRingColours_Step(u8);
 static void AnimTask_RunSinAnimTimer(u8);
 static void AnimTask_CreateSurfWave_Step1(u8);
 static void AnimTask_CreateSurfWave_Step2(u8);
@@ -794,14 +794,14 @@ static void AnimAuroraBeamRings_Step(struct Sprite *sprite)
 }
 
 // Updates the palette on the rainbow rings used in Aurora Beam to make them appear to be rotating counterclockwise
-void AnimTask_RotateAuroraRingColors(u8 taskId)
+void AnimTask_RotateAuroraRingColours(u8 taskId)
 {
     gTasks[taskId].data[0] = gBattleAnimArgs[0];
     gTasks[taskId].data[2] = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_RAINBOW_RINGS));
-    gTasks[taskId].func = AnimTask_RotateAuroraRingColors_Step;
+    gTasks[taskId].func = AnimTask_RotateAuroraRingColours_Step;
 }
 
-static void AnimTask_RotateAuroraRingColors_Step(u8 taskId)
+static void AnimTask_RotateAuroraRingColours_Step(u8 taskId)
 {
     int i;
     u16 palIndex;

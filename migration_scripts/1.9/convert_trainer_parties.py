@@ -63,7 +63,7 @@ species_replacements = {
     "_ICE_RIDER": "-Ice",
     "_NOICE_FACE": "-Noice",
     "_ORIGIN": "-Origin",
-    "_ORIGINAL_COLOR": "-Original",
+    "_ORIGINAL_COLOUR": "-Original",
     "_PALDEAN": "-Paldea",
     "_PLUMAGE": "",
     "_POKE_BALL": "-Pokeball",
@@ -191,7 +191,7 @@ trainer_double_battle_definition   = re.compile(r'\.doubleBattle = (\w+)')
 trainer_ai_flags_definition        = re.compile(r'\.aiFlags = (.*)')
 trainer_ai_flag_definition         = re.compile(r'AI_FLAG_(\w+)')
 trainer_party_definition           = re.compile(r'\.party = TRAINER_PARTY\((\w+)\)')
-trainer_mugshot_definition         = re.compile(r'\.mugshotColor = MUGSHOT_COLOR_(\w+)')
+trainer_mugshot_definition         = re.compile(r'\.mugshotColour = MUGSHOT_COLOUR_(\w+)')
 trainer_starting_status_definition = re.compile(r'\.startingStatus = STARTING_STATUS_(\w+)')
 
 class_fixups = {
@@ -262,8 +262,8 @@ def convert_trainers(in_path, in_h, parties, out_party):
                 [ai_flags] = m.groups()
                 trainer.ai_flags = " / ".join(ai_flag.replace("_", " ").title() for ai_flag in trainer_ai_flag_definition.findall(ai_flags))
             elif m := trainer_mugshot_definition.search(line):
-                [color] = m.groups()
-                trainer.mugshot = color.title()
+                [colour] = m.groups()
+                trainer.mugshot = colour.title()
             elif m := trainer_starting_status_definition.search(line):
                 [starting_status] = m.groups()
                 trainer.starting_status = starting_status.replace("_", " ").title()

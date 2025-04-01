@@ -67,9 +67,9 @@ static u16 rfu_STC_setSendData_org(u8, u8, u8, const void *, u32);
 static void rfu_constructSendLLFrame(void);
 static u16 rfu_STC_NI_constructLLSF(u8, u8 **, struct NIComm *);
 static u16 rfu_STC_UNI_constructLLSF(u8, u8 **);
-static void rfu_STC_PARENT_analyzeRecvPacket(void);
-static void rfu_STC_CHILD_analyzeRecvPacket(void);
-static u16 rfu_STC_analyzeLLSF(u8, const u8 *, u16);
+static void rfu_STC_PARENT_analyseRecvPacket(void);
+static void rfu_STC_CHILD_analyseRecvPacket(void);
+static u16 rfu_STC_analyseLLSF(u8, const u8 *, u16);
 static void rfu_STC_UNI_receive(u8, const struct RfuLocalStruct *, const u8 *);
 static void rfu_STC_NI_receive_Receiver(u8, const struct RfuLocalStruct *, const u8 *);
 static void rfu_STC_NI_receive_Sender(u8, u8, const struct RfuLocalStruct *, UNUSED const u8 *);
@@ -1897,9 +1897,9 @@ static void rfu_CB_recvData(u8 reqCommand, u16 reqResult)
     {
         gRfuStatic->NIEndRecvFlag = 0;
         if (gRfuLinkStatus->parentChild == MODE_PARENT)
-            rfu_STC_PARENT_analyzeRecvPacket();
+            rfu_STC_PARENT_analyseRecvPacket();
         else
-            rfu_STC_CHILD_analyzeRecvPacket();
+            rfu_STC_CHILD_analyseRecvPacket();
         for (i = 0; i < RFU_CHILD_MAX; ++i)
         {
             slotStatusNI = gRfuSlotStatusNI[i];
@@ -1919,7 +1919,7 @@ static void rfu_CB_recvData(u8 reqCommand, u16 reqResult)
     rfu_STC_REQ_callback(reqCommand, reqResult);
 }
 
-static void rfu_STC_PARENT_analyzeRecvPacket(void)
+static void rfu_STC_PARENT_analyseRecvPacket(void)
 {
     u32 frames32;
     u8 bm_slot_id;
@@ -1943,20 +1943,20 @@ static void rfu_STC_PARENT_analyzeRecvPacket(void)
 
             do
             {
-                u8 analyzed_frames = rfu_STC_analyzeLLSF(bm_slot_id, packet_p, *frames_p);
+                u8 analysed_frames = rfu_STC_analyseLLSF(bm_slot_id, packet_p, *frames_p);
 
-                packet_p += analyzed_frames;
-                *frames_p -= analyzed_frames;
+                packet_p += analysed_frames;
+                *frames_p -= analysed_frames;
             } while (!(*frames_p & 0x80) && (*frames_p));
         }
     }
 }
 
-static void rfu_STC_CHILD_analyzeRecvPacket(void)
+static void rfu_STC_CHILD_analyseRecvPacket(void)
 {
     u16 frames_remaining;
     u8 *packet_p;
-    u16 analyzed_frames;
+    u16 analysed_frames;
 
     frames_remaining = *(u16 *)&gRfuFixed->STWIBuffer->rxPacketAlloc.rfuPacket8.data[4] & 0x7F;
     packet_p = &gRfuFixed->STWIBuffer->rxPacketAlloc.rfuPacket8.data[8];
@@ -1966,13 +1966,13 @@ static void rfu_STC_CHILD_analyzeRecvPacket(void)
     {
         if (frames_remaining == 0)
             break;
-        analyzed_frames = rfu_STC_analyzeLLSF(0, packet_p, frames_remaining);
-        packet_p += analyzed_frames;
-        frames_remaining -= analyzed_frames;
+        analysed_frames = rfu_STC_analyseLLSF(0, packet_p, frames_remaining);
+        packet_p += analysed_frames;
+        frames_remaining -= analysed_frames;
     } while (!(frames_remaining & 0x8000));
 }
 
-static u16 rfu_STC_analyzeLLSF(u8 slot_id, const u8 *src, u16 last_frame)
+static u16 rfu_STC_analyseLLSF(u8 slot_id, const u8 *src, u16 last_frame)
 {
     struct RfuLocalStruct llsf_NI;
     const struct LLSFStruct *llsf_p;

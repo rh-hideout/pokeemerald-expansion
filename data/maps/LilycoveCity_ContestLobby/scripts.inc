@@ -1004,7 +1004,7 @@ LilycoveCity_ContestLobby_Text_YourPokemonSpurredMeToPaint:
 LilycoveCity_ContestLobby_Text_ShouldITakePaintingToMuseum:
 	.string "What do you think? I'm confident in\n"
 	.string "what I've done, but do you like it?\p"
-	.string "A work of this caliber, it wouldn't look\n"
+	.string "A work of this calibre, it wouldn't look\n"
 	.string "out of place in an art museum.\p"
 	.string "Huh? An art museum really is looking\n"
 	.string "for paintings?\p"

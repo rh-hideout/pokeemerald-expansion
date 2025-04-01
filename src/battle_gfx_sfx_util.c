@@ -661,7 +661,7 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
     LoadPalette(buffer, BG_PLTT_ID(8) + BG_PLTT_ID(battler), PLTT_SIZE_4BPP);
     Free(buffer);
 
-    // transform's pink color
+    // transform's pink colour
     if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies != SPECIES_NONE)
     {
         BlendPalette(paletteOffset, 16, 6, RGB_WHITE);
@@ -1365,7 +1365,7 @@ void HideBattlerShadowSprite(u8 battler)
         gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
 }
 
-// Color the background tiles surrounding the action selection and move windows
+// Colour the background tiles surrounding the action selection and move windows
 void FillAroundBattleWindows(void)
 {
     u16 *vramPtr = (u16 *)(VRAM + 0x240);

@@ -472,7 +472,7 @@ bool32 ShouldDoRoxanneCall(void)
 
 bool32 ShouldDoRivalRayquazaCall(void)
 {
-    if (FlagGet(FLAG_DEFEATED_MAGMA_SPACE_CENTER))
+    if (FlagGet(FLAG_DEFEATED_MAGMA_SPACE_CENTRE))
     {
         switch (gMapHeader.mapType)
         {
@@ -1302,7 +1302,7 @@ void RemoveCameraObject(void)
 
 u8 GetPokeblockNameByMonNature(void)
 {
-    return CopyMonFavoritePokeblockName(GetNature(&gPlayerParty[GetLeadMonIndex()]), gStringVar1);
+    return CopyMonFavouritePokeblockName(GetNature(&gPlayerParty[GetLeadMonIndex()]), gStringVar1);
 }
 
 void GetSecretBaseNearbyMapName(void)
@@ -1924,10 +1924,10 @@ void ShowDeptStoreElevatorFloorSelect(void)
     sTutorMoveAndElevatorWindowId = AddWindow(&sWindowTemplate_ElevatorFloor);
     SetStandardWindowBorderStyle(sTutorMoveAndElevatorWindowId, FALSE);
 
-    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_ElevatorNowOn, 64);
+    xPos = GetStringCentreAlignXOffset(FONT_NORMAL, gText_ElevatorNowOn, 64);
     AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, gText_ElevatorNowOn, xPos, 1, TEXT_SKIP_DRAW, NULL);
 
-    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, sDeptStoreFloorNames[gSpecialVar_0x8005], 64);
+    xPos = GetStringCentreAlignXOffset(FONT_NORMAL, sDeptStoreFloorNames[gSpecialVar_0x8005], 64);
     AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sDeptStoreFloorNames[gSpecialVar_0x8005], xPos, 17, TEXT_SKIP_DRAW, NULL);
 
     PutWindowTilemap(sTutorMoveAndElevatorWindowId);
@@ -2039,27 +2039,27 @@ void BufferVarsForIVRater(void)
     }
 }
 
-bool8 UsedPokemonCenterWarp(void)
+bool8 UsedPokemonCentreWarp(void)
 {
-    static const u16 sPokemonCenters[] =
+    static const u16 sPokemonCentres[] =
     {
-        MAP_OLDALE_TOWN_POKEMON_CENTER_1F,
-        MAP_DEWFORD_TOWN_POKEMON_CENTER_1F,
-        MAP_LAVARIDGE_TOWN_POKEMON_CENTER_1F,
-        MAP_FALLARBOR_TOWN_POKEMON_CENTER_1F,
-        MAP_VERDANTURF_TOWN_POKEMON_CENTER_1F,
-        MAP_PACIFIDLOG_TOWN_POKEMON_CENTER_1F,
-        MAP_PETALBURG_CITY_POKEMON_CENTER_1F,
-        MAP_SLATEPORT_CITY_POKEMON_CENTER_1F,
-        MAP_MAUVILLE_CITY_POKEMON_CENTER_1F,
-        MAP_RUSTBORO_CITY_POKEMON_CENTER_1F,
-        MAP_FORTREE_CITY_POKEMON_CENTER_1F,
-        MAP_LILYCOVE_CITY_POKEMON_CENTER_1F,
-        MAP_MOSSDEEP_CITY_POKEMON_CENTER_1F,
-        MAP_SOOTOPOLIS_CITY_POKEMON_CENTER_1F,
-        MAP_EVER_GRANDE_CITY_POKEMON_CENTER_1F,
+        MAP_OLDALE_TOWN_POKEMON_CENTRE_1F,
+        MAP_DEWFORD_TOWN_POKEMON_CENTRE_1F,
+        MAP_LAVARIDGE_TOWN_POKEMON_CENTRE_1F,
+        MAP_FALLARBOR_TOWN_POKEMON_CENTRE_1F,
+        MAP_VERDANTURF_TOWN_POKEMON_CENTRE_1F,
+        MAP_PACIFIDLOG_TOWN_POKEMON_CENTRE_1F,
+        MAP_PETALBURG_CITY_POKEMON_CENTRE_1F,
+        MAP_SLATEPORT_CITY_POKEMON_CENTRE_1F,
+        MAP_MAUVILLE_CITY_POKEMON_CENTRE_1F,
+        MAP_RUSTBORO_CITY_POKEMON_CENTRE_1F,
+        MAP_FORTREE_CITY_POKEMON_CENTRE_1F,
+        MAP_LILYCOVE_CITY_POKEMON_CENTRE_1F,
+        MAP_MOSSDEEP_CITY_POKEMON_CENTRE_1F,
+        MAP_SOOTOPOLIS_CITY_POKEMON_CENTRE_1F,
+        MAP_EVER_GRANDE_CITY_POKEMON_CENTRE_1F,
         MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F,
-        MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F,
+        MAP_BATTLE_FRONTIER_POKEMON_CENTRE_1F,
         MAP_UNION_ROOM,
         MAP_UNDEFINED
     };
@@ -2067,9 +2067,9 @@ bool8 UsedPokemonCenterWarp(void)
     int i;
     u16 map = (gLastUsedWarp.mapGroup << 8) + gLastUsedWarp.mapNum;
 
-    for (i = 0; sPokemonCenters[i] != MAP_UNDEFINED; i++)
+    for (i = 0; sPokemonCentres[i] != MAP_UNDEFINED; i++)
     {
-        if (sPokemonCenters[i] == map)
+        if (sPokemonCentres[i] == map)
             return TRUE;
     }
 
@@ -2998,7 +2998,7 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
         switch (menu)
         {
         case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1:
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor1Descriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor1Descriptions[selection], 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             if (sFrontierExchangeCorner_Decor1[selection] == ITEM_LIST_END)
             {
                 ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Decor1[selection]);
@@ -3011,7 +3011,7 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
             }
             break;
         case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2:
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor2Descriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor2Descriptions[selection], 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             if (sFrontierExchangeCorner_Decor2[selection] == ITEM_LIST_END)
             {
                 ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Decor2[selection]);
@@ -3024,11 +3024,11 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
             }
             break;
         case SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR:
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_VitaminsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_VitaminsDescriptions[selection], 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Vitamins[selection]);
             break;
         case SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR:
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_HoldItemsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_HoldItemsDescriptions[selection], 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_HoldItems[selection]);
             break;
         }
@@ -3827,29 +3827,29 @@ void ResetHealLocationFromDewford(void)
         SetLastHealLocationWarp(HEAL_LOCATION_PETALBURG_CITY);
 }
 
-bool8 InPokemonCenter(void)
+bool8 InPokemonCentre(void)
 {
-    static const u16 sPokemonCenters[] =
+    static const u16 sPokemonCentres[] =
     {
-        MAP_OLDALE_TOWN_POKEMON_CENTER_1F,
-        MAP_DEWFORD_TOWN_POKEMON_CENTER_1F,
-        MAP_LAVARIDGE_TOWN_POKEMON_CENTER_1F,
-        MAP_FALLARBOR_TOWN_POKEMON_CENTER_1F,
-        MAP_VERDANTURF_TOWN_POKEMON_CENTER_1F,
-        MAP_PACIFIDLOG_TOWN_POKEMON_CENTER_1F,
-        MAP_PETALBURG_CITY_POKEMON_CENTER_1F,
-        MAP_SLATEPORT_CITY_POKEMON_CENTER_1F,
-        MAP_MAUVILLE_CITY_POKEMON_CENTER_1F,
-        MAP_RUSTBORO_CITY_POKEMON_CENTER_1F,
-        MAP_FORTREE_CITY_POKEMON_CENTER_1F,
-        MAP_LILYCOVE_CITY_POKEMON_CENTER_1F,
-        MAP_MOSSDEEP_CITY_POKEMON_CENTER_1F,
-        MAP_SOOTOPOLIS_CITY_POKEMON_CENTER_1F,
-        MAP_EVER_GRANDE_CITY_POKEMON_CENTER_1F,
+        MAP_OLDALE_TOWN_POKEMON_CENTRE_1F,
+        MAP_DEWFORD_TOWN_POKEMON_CENTRE_1F,
+        MAP_LAVARIDGE_TOWN_POKEMON_CENTRE_1F,
+        MAP_FALLARBOR_TOWN_POKEMON_CENTRE_1F,
+        MAP_VERDANTURF_TOWN_POKEMON_CENTRE_1F,
+        MAP_PACIFIDLOG_TOWN_POKEMON_CENTRE_1F,
+        MAP_PETALBURG_CITY_POKEMON_CENTRE_1F,
+        MAP_SLATEPORT_CITY_POKEMON_CENTRE_1F,
+        MAP_MAUVILLE_CITY_POKEMON_CENTRE_1F,
+        MAP_RUSTBORO_CITY_POKEMON_CENTRE_1F,
+        MAP_FORTREE_CITY_POKEMON_CENTRE_1F,
+        MAP_LILYCOVE_CITY_POKEMON_CENTRE_1F,
+        MAP_MOSSDEEP_CITY_POKEMON_CENTRE_1F,
+        MAP_SOOTOPOLIS_CITY_POKEMON_CENTRE_1F,
+        MAP_EVER_GRANDE_CITY_POKEMON_CENTRE_1F,
         MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F,
-        MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F,
+        MAP_BATTLE_FRONTIER_POKEMON_CENTRE_1F,
         MAP_BATTLE_COLOSSEUM_2P,
-        MAP_TRADE_CENTER,
+        MAP_TRADE_CENTRE,
         MAP_RECORD_CORNER,
         MAP_BATTLE_COLOSSEUM_4P,
         MAP_UNDEFINED
@@ -3858,9 +3858,9 @@ bool8 InPokemonCenter(void)
     int i;
     u16 map = (gSaveBlock1Ptr->location.mapGroup << 8) + gSaveBlock1Ptr->location.mapNum;
 
-    for (i = 0; sPokemonCenters[i] != MAP_UNDEFINED; i++)
+    for (i = 0; sPokemonCentres[i] != MAP_UNDEFINED; i++)
     {
-        if (sPokemonCenters[i] == map)
+        if (sPokemonCentres[i] == map)
             return TRUE;
     }
     return FALSE;

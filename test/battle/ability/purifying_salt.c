@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
         ASSUME(GetMoveEffect(MOVE_HYPNOSIS) == EFFECT_SLEEP);
-        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYSE);
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
         ASSUME(MoveHasAdditionalEffect(MOVE_POWDER_SNOW, MOVE_EFFECT_FREEZE_OR_FROSTBITE) == TRUE);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_PURIFYING_SALT); }

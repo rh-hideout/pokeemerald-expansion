@@ -71,9 +71,9 @@ static const struct WindowTemplate sWindowTemplates_MailboxMenu[MAILBOXWIN_COUNT
     }
 };
 
-static const u8 sPlayerNameTextColors[] =
+static const u8 sPlayerNameTextColours[] =
 {
-    TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY
+    TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY
 };
 
 static const u8 sEmptyItemName[] = _("");
@@ -255,7 +255,7 @@ static void MailboxMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     length = StringLength(buffer);
     if (length < PLAYER_NAME_LENGTH - 1)
         ConvertInternationalString(buffer, LANGUAGE_JAPANESE);
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 8, y, 0, 0, sPlayerNameTextColors, TEXT_SKIP_DRAW, buffer);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 8, y, 0, 0, sPlayerNameTextColours, TEXT_SKIP_DRAW, buffer);
 }
 
 u8 MailboxMenu_CreateList(struct PlayerPCItemPageStruct *page)
@@ -315,7 +315,7 @@ void MailboxMenu_Free(void)
 // conditions (Beauty, Tough, etc.).
 // It works by using scanlines to
 // selectively reveal a bg that has been
-// filled with the graph color.
+// filled with the graph colour.
 //---------------------------------------
 
 #define SHIFT_RIGHT_ADJUSTED(n, s) (((n) >> (s)) + (((n) >> ((s) - 1)) & 1))
@@ -335,8 +335,8 @@ void ConditionGraph_Init(struct ConditionGraph *graph)
         for (i = 0; i < CONDITION_GRAPH_LOAD_MAX; i++)
         {
             graph->conditions[i][j] = 0;
-            graph->savedPositions[i][j].x = CONDITION_GRAPH_CENTER_X;
-            graph->savedPositions[i][j].y = CONDITION_GRAPH_CENTER_Y;
+            graph->savedPositions[i][j].x = CONDITION_GRAPH_CENTRE_X;
+            graph->savedPositions[i][j].y = CONDITION_GRAPH_CENTRE_Y;
         }
 
         graph->curPositions[j].x = 0;
@@ -451,7 +451,7 @@ void ConditionGraph_InitWindow(u8 bg)
 
     // Set limits for graph data
     SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE( 0, DISPLAY_WIDTH)); // Right side horizontal
-    SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE( 0, CONDITION_GRAPH_CENTER_X)); // Left side horizontal
+    SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE( 0, CONDITION_GRAPH_CENTRE_X)); // Left side horizontal
     SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(CONDITION_GRAPH_TOP_Y, CONDITION_GRAPH_BOTTOM_Y)); // Right side vertical
     SetGpuReg(REG_OFFSET_WIN1V, WIN_RANGE(CONDITION_GRAPH_TOP_Y, CONDITION_GRAPH_BOTTOM_Y)); // Left side vertical
     SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR | WININ_WIN1_BG_ALL | WININ_WIN1_OBJ | WININ_WIN1_CLR);
@@ -513,7 +513,7 @@ static void ConditionGraph_CalcLine(struct ConditionGraph *graph, u16 *scanline,
         // Less readable than the other loops, but it has to be written this way to match.
         for (i = 0; i < height; overflowScanline[dir] = SHIFT_RIGHT_ADJUSTED(x, 10) + dir, x += xIncrement, overflowScanline += 2, i++)
         {
-            if (x >= (CONDITION_GRAPH_CENTER_X << 10))
+            if (x >= (CONDITION_GRAPH_CENTRE_X << 10))
                 break;
         }
 
@@ -534,9 +534,9 @@ static void ConditionGraph_CalcLine(struct ConditionGraph *graph, u16 *scanline,
         for (i = 0; i < height; i++)
         {
             scanline[dir] = SHIFT_RIGHT_ADJUSTED(x, 10) + dir;
-            if (x < (CONDITION_GRAPH_CENTER_X << 10))
+            if (x < (CONDITION_GRAPH_CENTRE_X << 10))
             {
-                scanline[dir] = CONDITION_GRAPH_CENTER_X;
+                scanline[dir] = CONDITION_GRAPH_CENTRE_X;
                 break;
             }
             x += xIncrement;
@@ -561,7 +561,7 @@ static void ConditionGraph_CalcLine(struct ConditionGraph *graph, u16 *scanline,
         overflowScanline += (top - CONDITION_GRAPH_TOP_Y) * 2;
         scanline[1] = pos1->x + 1;
         overflowScanline[0] = pos2->x;
-        overflowScanline[1] = CONDITION_GRAPH_CENTER_X;
+        overflowScanline[1] = CONDITION_GRAPH_CENTRE_X;
         return;
     }
 
@@ -600,7 +600,7 @@ static void ConditionGraph_CalcRightHalf(struct ConditionGraph *graph)
     }
 
     for (i = graph->curPositions[GRAPH_COOL].y; i <= graph->bottom; i++)
-        graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][0] = CONDITION_GRAPH_CENTER_X;
+        graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][0] = CONDITION_GRAPH_CENTRE_X;
 
     // Clear after new bottom
     bottom = max(graph->bottom, graph->curPositions[GRAPH_CUTE].y);
@@ -614,7 +614,7 @@ static void ConditionGraph_CalcRightHalf(struct ConditionGraph *graph)
     {
         if (graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][0] == 0
          && graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][1] != 0)
-            graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][0] = CONDITION_GRAPH_CENTER_X;
+            graph->scanlineRight[i - CONDITION_GRAPH_TOP_Y][0] = CONDITION_GRAPH_CENTRE_X;
     }
 }
 
@@ -646,7 +646,7 @@ static void ConditionGraph_CalcLeftHalf(struct ConditionGraph *graph)
     }
 
     for (i = graph->curPositions[GRAPH_COOL].y; i <= graph->bottom; i++)
-        graph->scanlineLeft[i - CONDITION_GRAPH_TOP_Y][1] = CONDITION_GRAPH_CENTER_X;
+        graph->scanlineLeft[i - CONDITION_GRAPH_TOP_Y][1] = CONDITION_GRAPH_CENTRE_X;
 
     // Clear after new bottom
     bottom = max(graph->bottom, graph->curPositions[GRAPH_SMART].y + 1);
@@ -674,8 +674,8 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
 
     // Cool is straight up-and-down (not angled), so no need for Sin
     lineLength = sConditionToLineLength[*(conditions++)];
-    positions[GRAPH_COOL].x = CONDITION_GRAPH_CENTER_X;
-    positions[GRAPH_COOL].y = CONDITION_GRAPH_CENTER_Y - lineLength;
+    positions[GRAPH_COOL].x = CONDITION_GRAPH_CENTRE_X;
+    positions[GRAPH_COOL].y = CONDITION_GRAPH_CENTRE_Y - lineLength;
 
     sinIdx = 64;
     posIdx = GRAPH_COOL;
@@ -689,8 +689,8 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
             sinIdx++;
 
         lineLength = sConditionToLineLength[*(conditions++)];
-        positions[posIdx].x = CONDITION_GRAPH_CENTER_X + ((lineLength * gSineTable[64 + sinIdx]) >> 8);
-        positions[posIdx].y = CONDITION_GRAPH_CENTER_Y - ((lineLength * gSineTable[sinIdx]) >> 8);
+        positions[posIdx].x = CONDITION_GRAPH_CENTRE_X + ((lineLength * gSineTable[64 + sinIdx]) >> 8);
+        positions[posIdx].y = CONDITION_GRAPH_CENTRE_Y - ((lineLength * gSineTable[sinIdx]) >> 8);
 
         if (posIdx <= GRAPH_CUTE && (lineLength != 32 || posIdx != GRAPH_CUTE))
             positions[posIdx].x++;
@@ -761,7 +761,7 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
 
     FillWindowPixelBuffer(RELEARNERWIN_DESC_BATTLE, PIXEL_FILL(1));
     str = gText_MoveRelearnerBattleMoves;
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, str, 128);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, str, 128);
     AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NORMAL, str, x, 1, TEXT_SKIP_DRAW, NULL);
 
     str = gText_MoveRelearnerPP;
@@ -819,7 +819,7 @@ static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)
     MoveRelearnerShowHideHearts(chosenMove);
     FillWindowPixelBuffer(RELEARNERWIN_DESC_CONTEST, PIXEL_FILL(1));
     str = gText_MoveRelearnerContestMovesTitle;
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, str, 128);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, str, 128);
     AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, x, 1, TEXT_SKIP_DRAW, NULL);
 
     str = gText_MoveRelearnerAppeal;
@@ -860,7 +860,7 @@ void MoveRelearnerPrintMessage(u8 *str)
     FillWindowPixelBuffer(RELEARNERWIN_MSG, PIXEL_FILL(1));
     gTextFlags.canABSpeedUpPrint = TRUE;
     speed = GetPlayerTextSpeedDelay();
-    AddTextPrinterParameterized2(RELEARNERWIN_MSG, FONT_NORMAL, str, speed, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, 3);
+    AddTextPrinterParameterized2(RELEARNERWIN_MSG, FONT_NORMAL, str, speed, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, 3);
 }
 
 bool16 MoveRelearnerRunTextPrinters(void)
@@ -910,10 +910,10 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     box = boxId;
     mon = monId;
     *(dst++) = EXT_CTRL_CODE_BEGIN;
-    *(dst++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(dst++) = TEXT_COLOR_BLUE;
-    *(dst++) = TEXT_COLOR_TRANSPARENT;
-    *(dst++) = TEXT_COLOR_LIGHT_BLUE;
+    *(dst++) = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+    *(dst++) = TEXT_COLOUR_BLUE;
+    *(dst++) = TEXT_COLOUR_TRANSPARENT;
+    *(dst++) = TEXT_COLOUR_LIGHT_BLUE;
     if (GetBoxOrPartyMonData(box, mon, MON_DATA_IS_EGG, NULL))
         return StringCopyPadded(dst, gText_EggNickname, 0, POKEMON_NAME_LENGTH + 2);
     GetBoxOrPartyMonData(box, mon, MON_DATA_NICKNAME, dst);
@@ -948,29 +948,29 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
         break;
     case MON_MALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_COLOR;
-        *(str++) = TEXT_COLOR_RED;
+        *(str++) = EXT_CTRL_CODE_COLOUR;
+        *(str++) = TEXT_COLOUR_RED;
         *(str++) = EXT_CTRL_CODE_BEGIN;
         *(str++) = EXT_CTRL_CODE_SHADOW;
-        *(str++) = TEXT_COLOR_LIGHT_RED;
+        *(str++) = TEXT_COLOUR_LIGHT_RED;
         *(str++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_COLOR;
-        *(str++) = TEXT_COLOR_GREEN;
+        *(str++) = EXT_CTRL_CODE_COLOUR;
+        *(str++) = TEXT_COLOUR_GREEN;
         *(str++) = EXT_CTRL_CODE_BEGIN;
         *(str++) = EXT_CTRL_CODE_SHADOW;
-        *(str++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str++) = TEXT_COLOUR_LIGHT_GREEN;
         *(str++) = CHAR_FEMALE;
         break;
     }
 
     *(str++) = EXT_CTRL_CODE_BEGIN;
-    *(str++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(str++) = TEXT_COLOR_BLUE;
-    *(str++) = TEXT_COLOR_TRANSPARENT;
-    *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+    *(str++) = TEXT_COLOUR_BLUE;
+    *(str++) = TEXT_COLOUR_TRANSPARENT;
+    *(str++) = TEXT_COLOUR_LIGHT_BLUE;
     *(str++) = CHAR_SLASH;
     *(str++) = CHAR_EXTRA_SYMBOL;
     *(str++) = CHAR_LV_2;
@@ -1012,10 +1012,10 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
     {
         GetConditionMenuMonString(nameDst, box, mon);
         locationDst[0] = EXT_CTRL_CODE_BEGIN;
-        locationDst[1] = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-        locationDst[2] = TEXT_COLOR_BLUE;
-        locationDst[3] = TEXT_COLOR_TRANSPARENT;
-        locationDst[4] = TEXT_COLOR_LIGHT_BLUE;
+        locationDst[1] = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+        locationDst[2] = TEXT_COLOUR_BLUE;
+        locationDst[3] = TEXT_COLOUR_TRANSPARENT;
+        locationDst[4] = TEXT_COLOUR_LIGHT_BLUE;
         if (box == TOTAL_BOXES_COUNT) // Party mon.
             BufferConditionMenuSpacedStringN(&locationDst[5], gText_InParty, BOX_NAME_LENGTH);
         else
@@ -1056,8 +1056,8 @@ void GetConditionMenuMonConditions(struct ConditionGraph *graph, u8 *numSparkles
         for (i = 0; i < CONDITION_COUNT; i++)
         {
             graph->conditions[id][i] = 0;
-            graph->savedPositions[id][i].x = CONDITION_GRAPH_CENTER_X;
-            graph->savedPositions[id][i].y = CONDITION_GRAPH_CENTER_Y;
+            graph->savedPositions[id][i].x = CONDITION_GRAPH_CENTRE_X;
+            graph->savedPositions[id][i].y = CONDITION_GRAPH_CENTRE_Y;
         }
     }
 }
@@ -1513,7 +1513,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
     u16 i, x;
     s16 statsDiff[NUM_STATS];
     u8 text[12];
-    u8 color[3];
+    u8 colour[3];
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(bgClr));
 
@@ -1524,9 +1524,9 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
     statsDiff[4] = statsAfter[STAT_SPDEF] - statsBefore[STAT_SPDEF];
     statsDiff[5] = statsAfter[STAT_SPEED] - statsBefore[STAT_SPEED];
 
-    color[0] = bgClr;
-    color[1] = fgClr;
-    color[2] = shadowClr;
+    colour[0] = bgClr;
+    colour[1] = fgClr;
+    colour[2] = shadowClr;
 
     for (i = 0; i < NUM_STATS; i++)
     {
@@ -1535,7 +1535,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
                                      FONT_NORMAL,
                                      0,
                                      15 * i,
-                                     color,
+                                     colour,
                                      TEXT_SKIP_DRAW,
                                      sLvlUpStatStrings[i]);
 
@@ -1544,7 +1544,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
                                      FONT_NORMAL,
                                      56,
                                      15 * i,
-                                     color,
+                                     colour,
                                      TEXT_SKIP_DRAW,
                                      text);
         if (abs(statsDiff[i]) <= 9)
@@ -1557,7 +1557,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
                                      FONT_NORMAL,
                                      56 + x,
                                      15 * i,
-                                     color,
+                                     colour,
                                      TEXT_SKIP_DRAW,
                                      text);
     }
@@ -1568,7 +1568,7 @@ void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 s
     u16 i, numDigits, x;
     s16 stats[NUM_STATS];
     u8 text[12];
-    u8 color[3];
+    u8 colour[3];
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(bgClr));
 
@@ -1579,9 +1579,9 @@ void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 s
     stats[4] = currStats[STAT_SPDEF];
     stats[5] = currStats[STAT_SPEED];
 
-    color[0] = bgClr;
-    color[1] = fgClr;
-    color[2] = shadowClr;
+    colour[0] = bgClr;
+    colour[1] = fgClr;
+    colour[2] = shadowClr;
 
     for (i = 0; i < NUM_STATS; i++)
     {
@@ -1599,7 +1599,7 @@ void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 s
                                      FONT_NORMAL,
                                      0,
                                      15 * i,
-                                     color,
+                                     colour,
                                      TEXT_SKIP_DRAW,
                                      sLvlUpStatStrings[i]);
 
@@ -1607,7 +1607,7 @@ void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 s
                                      FONT_NORMAL,
                                      56 + x,
                                      15 * i,
-                                     color,
+                                     colour,
                                      TEXT_SKIP_DRAW,
                                      text);
     }

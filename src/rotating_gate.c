@@ -798,8 +798,8 @@ static void RotatingGate_HideGatesOutsideViewport(struct Sprite *sprite)
     s16 x2, y2;
 
     sprite->invisible = FALSE;
-    x = sprite->x + sprite->x2 + sprite->centerToCornerVecX + gSpriteCoordOffsetX;
-    y = sprite->y + sprite->y2 + sprite->centerToCornerVecY + gSpriteCoordOffsetY;
+    x = sprite->x + sprite->x2 + sprite->centreToCornerVecX + gSpriteCoordOffsetX;
+    y = sprite->y + sprite->y2 + sprite->centreToCornerVecY + gSpriteCoordOffsetY;
 
     x2 = x + 64; // Dimensions of the rotating gate
     y2 = y + 64;
@@ -972,9 +972,9 @@ bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
 
         if (gateX - 2 <= x && x <= gateX + 1 && gateY - 2 <= y && y <= gateY + 1)
         {
-            s16 centerX = x - gateX + 2;
-            s16 centerY = y - gateY + 2;
-            u8 rotationInfo = RotatingGate_GetRotationInfo(direction, centerX, centerY);
+            s16 centreX = x - gateX + 2;
+            s16 centreY = y - gateY + 2;
+            u8 rotationInfo = RotatingGate_GetRotationInfo(direction, centreX, centreY);
 
             if (rotationInfo != GATE_ROT_NONE)
             {
@@ -1010,9 +1010,9 @@ bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, 
 
         if (gateX - 2 <= x && x <= gateX + 1 && gateY - 2 <= y && y <= gateY + 1)
         {
-            s16 centerX = x - gateX + 2;
-            s16 centerY = y - gateY + 2;
-            u8 rotationInfo = RotatingGate_GetRotationInfo(direction, centerX, centerY);
+            s16 centreX = x - gateX + 2;
+            s16 centreY = y - gateY + 2;
+            u8 rotationInfo = RotatingGate_GetRotationInfo(direction, centreX, centreY);
 
             if (rotationInfo != GATE_ROT_NONE)
             {

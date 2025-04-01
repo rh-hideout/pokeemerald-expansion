@@ -10,8 +10,8 @@ EverGrandeCity_PokemonLeague_2F_EventScript_Colosseum::
 	call CableClub_EventScript_Colosseum
 	end
 
-EverGrandeCity_PokemonLeague_2F_EventScript_TradeCenter::
-	call CableClub_EventScript_TradeCenter
+EverGrandeCity_PokemonLeague_2F_EventScript_TradeCentre::
+	call CableClub_EventScript_TradeCentre
 	end
 
 EverGrandeCity_PokemonLeague_2F_EventScript_RecordCorner::

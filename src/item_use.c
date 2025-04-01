@@ -26,7 +26,7 @@
 #include "main.h"
 #include "menu.h"
 #include "menu_helpers.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -192,7 +192,7 @@ static void DisplayCannotDismountBikeMessage(u8 taskId, bool8 isUsingRegisteredK
 
 static void Task_CloseCantUseKeyItemMessage(u8 taskId)
 {
-    ClearDialogWindowAndFrame(0, TRUE);
+    ClearDialogueWindowAndFrame(0, TRUE);
     DestroyTask(taskId);
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
@@ -254,10 +254,10 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
     s16 *data = gTasks[taskId].data;
     s16 coordsY;
     s16 coordsX;
-    u8 behavior;
+    u8 behaviour;
     PlayerGetDestCoords(&coordsX, &coordsY);
-    behavior = MapGridGetMetatileBehaviorAt(coordsX, coordsY);
-    if (FlagGet(FLAG_SYS_CYCLING_ROAD) == TRUE || MetatileBehavior_IsVerticalRail(behavior) == TRUE || MetatileBehavior_IsHorizontalRail(behavior) == TRUE || MetatileBehavior_IsIsolatedVerticalRail(behavior) == TRUE || MetatileBehavior_IsIsolatedHorizontalRail(behavior) == TRUE)
+    behaviour = MapGridGetMetatileBehaviourAt(coordsX, coordsY);
+    if (FlagGet(FLAG_SYS_CYCLING_ROAD) == TRUE || MetatileBehaviour_IsVerticalRail(behaviour) == TRUE || MetatileBehaviour_IsHorizontalRail(behaviour) == TRUE || MetatileBehaviour_IsIsolatedVerticalRail(behaviour) == TRUE || MetatileBehaviour_IsIsolatedHorizontalRail(behaviour) == TRUE)
     {
         DisplayCannotDismountBikeMessage(taskId, tUsingRegisteredKeyItem);
     }
@@ -289,12 +289,12 @@ static void ItemUseOnFieldCB_Bike(u8 taskId)
 static bool32 CanFish(void)
 {
     s16 x, y;
-    u16 tileBehavior;
+    u16 tileBehaviour;
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-    tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    tileBehaviour = MapGridGetMetatileBehaviourAt(x, y);
 
-    if (MetatileBehavior_IsWaterfall(tileBehavior))
+    if (MetatileBehaviour_IsWaterfall(tileBehaviour))
         return FALSE;
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
@@ -307,9 +307,9 @@ static bool32 CanFish(void)
     }
     else
     {
-        if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior) && MapGridGetCollisionAt(x, y) == 0)
+        if (MetatileBehaviour_IsSurfableWaterOrUnderwater(tileBehaviour) && MapGridGetCollisionAt(x, y) == 0)
             return TRUE;
-        if (MetatileBehavior_IsBridgeOverWaterNoEdge(tileBehavior) == TRUE)
+        if (MetatileBehaviour_IsBridgeOverWaterNoEdge(tileBehaviour) == TRUE)
             return TRUE;
     }
 
@@ -397,7 +397,7 @@ static void Task_UseItemfinder(u8 taskId)
 
 static void Task_CloseItemfinderMessage(u8 taskId)
 {
-    ClearDialogWindowAndFrame(0, TRUE);
+    ClearDialogueWindowAndFrame(0, TRUE);
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
     DestroyTask(taskId);
@@ -1402,11 +1402,11 @@ void ItemUseOutOfBattle_FormChange_ConsumedOnUse(u8 taskId)
     }
 }
 
-void ItemUseOutOfBattle_RotomCatalog(u8 taskId)
+void ItemUseOutOfBattle_RotomCatalogue(u8 taskId)
 {
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
-        gItemUseCB = ItemUseCB_RotomCatalog;
+        gItemUseCB = ItemUseCB_RotomCatalogue;
         gTasks[taskId].data[0] = TRUE;
         SetUpItemUseOnFieldCallback(taskId);
     }

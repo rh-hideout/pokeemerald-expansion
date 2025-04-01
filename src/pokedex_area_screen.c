@@ -23,7 +23,7 @@
 
 // There are two types of indicators for the area screen to show where a Pokémon can occur:
 // - Area glows, which highlight any of the maps in MAP_GROUP_TOWNS_AND_ROUTES that have the species.
-//   These are a tilemap with colored rectangular areas that blends in and out. The positions of the
+//   These are a tilemap with coloured rectangular areas that blends in and out. The positions of the
 //   rectangles is determined by the positions of the matching MAPSEC values on the region map layout.
 // - Area markers, which highlight any of the maps in MAP_GROUP_DUNGEONS or MAP_GROUP_SPECIAL_AREA that
 //   have the species. These are circular sprites that flash twice. The positions of the sprites is

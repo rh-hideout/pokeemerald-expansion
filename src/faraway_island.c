@@ -3,11 +3,11 @@
 #include "event_object_movement.h"
 #include "field_weather.h"
 #include "fieldmap.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "sprite.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 
 static u8 GetValidMewMoveDirection(u8);
 static bool8 ShouldMewMoveNorth(struct ObjectEvent *, u8);
@@ -275,7 +275,7 @@ static bool8 CanMewMoveToCoords(s16 x, s16 y)
         return FALSE;
     }
 
-    return MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y));
+    return MetatileBehaviour_IsPokeGrass(MapGridGetMetatileBehaviourAt(x, y));
 }
 
 // Last ditch effort to move, clear move candidates and try all directions again

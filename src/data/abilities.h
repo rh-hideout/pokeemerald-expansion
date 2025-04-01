@@ -73,7 +73,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_STATIC] =
     {
         .name = _("Static"),
-        .description = COMPOUND_STRING("Paralyzes on contact."),
+        .description = COMPOUND_STRING("Paralyses on contact."),
         .aiRating = 4,
     },
 
@@ -123,9 +123,9 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .breakable = TRUE,
     },
 
-    [ABILITY_COLOR_CHANGE] =
+    [ABILITY_COLOUR_CHANGE] =
     {
-        .name = _("Color Change"),
+        .name = _("Colour Change"),
         .description = COMPOUND_STRING("Changes type to foe's move."),
         .aiRating = 2,
     },
@@ -665,7 +665,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_DOWNLOAD] =
     {
         .name = _("Download"),
-        .description = COMPOUND_STRING("Adjusts power favorably."),
+        .description = COMPOUND_STRING("Adjusts power favourably."),
         .aiRating = 7,
     },
 

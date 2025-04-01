@@ -855,7 +855,7 @@ const struct SpriteTemplate gTechnoBlastWhiteSparkTemplate =
 };
 const struct SpriteTemplate gTechnoBlastWhiteSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_AIR_WAVE_2,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -886,7 +886,7 @@ const struct SpriteTemplate gTechnoBlastYellowSparkTemplate =
 };
 const struct SpriteTemplate gTechnoBlastYellowSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -937,7 +937,7 @@ const struct SpriteTemplate gTechnoBlastBlueSparkTemplate =
 };
 const struct SpriteTemplate gTechnoBlastBlueSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_WATER_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -978,7 +978,7 @@ const struct SpriteTemplate gTechnoBlastRedSparkTemplate =
 };
 const struct SpriteTemplate gTechnoBlastRedSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_JAGGED_MUSIC_NOTE,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -1019,7 +1019,7 @@ const struct SpriteTemplate gTechnoBlastIceSparkTemplate =
 };
 const struct SpriteTemplate gTechnoBlastIceSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_ICE_CHUNK,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -2318,7 +2318,7 @@ const struct SpriteTemplate gHighHorsepowerHorseshoeTemplate =
 //strength sap
 const struct SpriteTemplate gStrengthSapRedSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_RED_HEART,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -3169,7 +3169,7 @@ const struct SpriteTemplate gPrismaticLaserVioletRainTemplate =
 //spectral thief
 const struct SpriteTemplate gSpectralThiefBlackSmokeTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_SMOKE,
+    .tileTag = ANIM_TAG_GREY_SMOKE,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gOctazookaAnimTable,
@@ -3396,7 +3396,7 @@ const struct SpriteTemplate gNaturesMadnessPinkRingTemplate =
     .callback = AnimUproarRing
 };
 
-const struct SpriteTemplate gNaturesMadnessGrayRingTemplate =
+const struct SpriteTemplate gNaturesMadnessGreyRingTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
     .paletteTag = ANIM_TAG_ECLIPSING_ORB,
@@ -3926,7 +3926,7 @@ const struct SpriteTemplate gAuraWheelRedElectricityTemplate =
 };
 
 //breaking swipe
-const struct SpriteTemplate gBreakingSwipeCenteredElectricity =
+const struct SpriteTemplate gBreakingSwipeCentreedElectricity =
 {
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_SPARK_2,
@@ -7193,7 +7193,7 @@ const struct SpriteTemplate gSoulStealBlueStarSpriteTemplate =
     .affineAnims = gAffineAnims_Bite,
     .callback = AnimSoulStealingStar
 };
-const struct SpriteTemplate gSoulStealBlueParalyzeSpriteTemplate =
+const struct SpriteTemplate gSoulStealBlueParalyseSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
@@ -7829,9 +7829,9 @@ static void SpriteCB_MoongeistCharge(struct Sprite *sprite)
 
 //Spins a sprite towards the target, pausing in the middle.
 //Used in Mind Blown.
-//arg 0: duration step 1 (attacker -> center)
-//arg 1: duration step 2 (spin center)
-//arg 2: duration step 3 (center -> target)
+//arg 0: duration step 1 (attacker -> centre)
+//arg 1: duration step 2 (spin centre)
+//arg 2: duration step 3 (centre -> target)
 static void SpriteCB_MindBlownBall(struct Sprite *sprite)
 {
     s16 oldPosX = sprite->x;

@@ -370,7 +370,7 @@ gText_ApprenticePleaseTeach8::
 	.string "I'm delighted I met you, {PLAYER},\n"
 	.string "the big name in POKéMON circles!\p"
 	.string "Oh-oh-oh, I know!\n"
-	.string "May I ask a huge favor, {PLAYER}?\p"
+	.string "May I ask a huge favour, {PLAYER}?\p"
 	.string "Please take me in as your apprentice!\n"
 	.string "I want to learn from you!$"
 
@@ -1691,7 +1691,7 @@ gText_ApprenticeWhichMon8::
 	.string "I… I'm overjoyed!\p"
 	.string "Oh-oh-oh, I know!\n"
 	.string "I shouldn't pass up this opportunity!\p"
-	.string "May I ask a huge favor, {PLAYER}?\n"
+	.string "May I ask a huge favour, {PLAYER}?\n"
 	.string "Please choose a POKéMON for me!\p"
 	.string "Please decide which would be better,\n"
 	.string "{STR_VAR_1} or {STR_VAR_2}!$"

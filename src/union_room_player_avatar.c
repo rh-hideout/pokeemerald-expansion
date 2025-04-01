@@ -61,9 +61,9 @@ static const s16 sUnionRoomPlayerCoords[MAX_UNION_ROOM_LEADERS][2] = {
 // If there's a group of players interacting in the Union Room, the group
 // leader will be at one of the positions above and each member in the group
 // will be at one of the offsets from that position below. The leader will
-// be at the first offset (0,0), as they're at the center.
+// be at the first offset (0,0), as they're at the centre.
 static const s8 sUnionRoomGroupOffsets[MAX_RFU_PLAYERS][2] = {
-    { 0,  0}, // Center
+    { 0,  0}, // Centre
     { 1,  0}, // Left
     { 0, -1}, // Top
     {-1,  0}, // Right
@@ -79,7 +79,7 @@ static const u8 sOppositeFacingDirection[] = {
 };
 
 // Compare to sUnionRoomGroupOffsets, the direction each group member
-// needs to be facing in order to face the group leader in the center.
+// needs to be facing in order to face the group leader in the centre.
 static const u8 sMemberFacingDirections[MAX_RFU_PLAYERS] = {
     DIR_SOUTH, // Leader, but never read
     DIR_WEST,
@@ -123,7 +123,7 @@ static const u8 sMovement_UnionPlayerEnter[2] = {
 
 static bool32 IsPlayerStandingStill(void)
 {
-    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTER || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
+    if (gPlayerAvatar.tileTransitionState == T_TILE_CENTRE || gPlayerAvatar.tileTransitionState == T_NOT_MOVING)
         return TRUE;
     else
         return FALSE;

@@ -35,7 +35,7 @@ EventScript_PlayersHouseMovie::
 	end
 
 @ special InitRoamer is a junk call. Its input var (VAR_0x8004) hasn't been set, and
-@ It's called again when Mom actually asks for the color, overwriting
+@ It's called again when Mom actually asks for the colour, overwriting
 @ whatever it does here.
 EventScript_PlayersHouseLatiNewsFlash::
 	msgbox PlayersHouse_1F_Text_LatiEmergencyNewsFlash, MSGBOX_DEFAULT

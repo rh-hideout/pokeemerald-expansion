@@ -16,7 +16,7 @@ enum
     PBLOCK_CLR_BROWN,
     PBLOCK_CLR_LITE_BLUE,
     PBLOCK_CLR_OLIVE,
-    PBLOCK_CLR_GRAY,
+    PBLOCK_CLR_GREY,
     PBLOCK_CLR_BLACK,
     PBLOCK_CLR_WHITE,
     PBLOCK_CLR_GOLD,
@@ -24,7 +24,7 @@ enum
 
 enum
 {
-    PBLOCK_COLOR,
+    PBLOCK_COLOUR,
     PBLOCK_SPICY,
     PBLOCK_DRY,
     PBLOCK_SWEET,
@@ -51,7 +51,7 @@ void ChooseMonToGivePokeblock(struct Pokeblock *pokeblock, void (*callback)(void
 void PreparePokeblockFeedScene(void);
 
 // pokeblock
-extern const s8 gPokeblockFlavorCompatibilityTable[NUM_NATURES * FLAVOR_COUNT];
+extern const s8 gPokeblockFlavourCompatibilityTable[NUM_NATURES * FLAVOUR_COUNT];
 extern const u8 *const gPokeblockNames[];
 extern const struct CompressedSpriteSheet gPokeblockCase_SpriteSheet;
 extern const struct CompressedSpritePalette gPokeblockCase_SpritePal;
@@ -62,7 +62,7 @@ void OpenPokeblockCaseOnFeeder(void);
 void ResetPokeblockScrollPositions(void);
 u8 CreatePokeblockCaseSprite(s16 x, s16 y, u8 subpriority);
 void ClearPokeblocks(void);
-u8 GetHighestPokeblocksFlavorLevel(const struct Pokeblock *pokeblock);
+u8 GetHighestPokeblocksFlavourLevel(const struct Pokeblock *pokeblock);
 u8 GetPokeblocksFeel(const struct Pokeblock *pokeblock);
 s8 GetFirstFreePokeblockSlot(void);
 bool32 AddPokeblock(const struct Pokeblock *pokeblock);
@@ -70,7 +70,7 @@ bool32 TryClearPokeblock(u8 pkblId);
 s16 GetPokeblockData(const struct Pokeblock *pokeblock, u8 field);
 s16 PokeblockGetGain(u8 nature, const struct Pokeblock *pokeblock);
 void PokeblockCopyName(const struct Pokeblock *pokeblock, u8 *dest);
-bool8 CopyMonFavoritePokeblockName(u8 nature, u8 *dest);
-u8 GetPokeblocksFlavor(const struct Pokeblock *pokeblock);
+bool8 CopyMonFavouritePokeblockName(u8 nature, u8 *dest);
+u8 GetPokeblocksFlavour(const struct Pokeblock *pokeblock);
 
 #endif // GUARD_POKEBLOCK_H

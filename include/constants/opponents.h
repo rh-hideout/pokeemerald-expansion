@@ -25,7 +25,7 @@
 #define TRAINER_GRUNT_WEATHER_INST_3         19
 #define TRAINER_GRUNT_MUSEUM_1               20
 #define TRAINER_GRUNT_MUSEUM_2               21
-#define TRAINER_GRUNT_SPACE_CENTER_1         22
+#define TRAINER_GRUNT_SPACE_CENTRE_1         22
 #define TRAINER_GRUNT_MT_PYRE_1              23
 #define TRAINER_GRUNT_MT_PYRE_2              24
 #define TRAINER_GRUNT_MT_PYRE_3              25
@@ -119,7 +119,7 @@
 #define TRAINER_VALERIE_5                   113
 #define TRAINER_CINDY_1                     114
 #define TRAINER_DAPHNE                      115
-#define TRAINER_GRUNT_SPACE_CENTER_2        116
+#define TRAINER_GRUNT_SPACE_CENTRE_2        116
 #define TRAINER_CINDY_2                     117
 #define TRAINER_BRIANNA                     118
 #define TRAINER_NAOMI                       119
@@ -589,11 +589,11 @@
 #define TRAINER_KATHLEEN                    583
 #define TRAINER_CLIFFORD                    584
 #define TRAINER_NICHOLAS                    585
-#define TRAINER_GRUNT_SPACE_CENTER_3        586
-#define TRAINER_GRUNT_SPACE_CENTER_4        587
-#define TRAINER_GRUNT_SPACE_CENTER_5        588
-#define TRAINER_GRUNT_SPACE_CENTER_6        589
-#define TRAINER_GRUNT_SPACE_CENTER_7        590
+#define TRAINER_GRUNT_SPACE_CENTRE_3        586
+#define TRAINER_GRUNT_SPACE_CENTRE_4        587
+#define TRAINER_GRUNT_SPACE_CENTRE_5        588
+#define TRAINER_GRUNT_SPACE_CENTRE_6        589
+#define TRAINER_GRUNT_SPACE_CENTRE_7        590
 #define TRAINER_MACEY                       591
 #define TRAINER_BRENDAN_RUSTBORO_TREECKO    592
 #define TRAINER_BRENDAN_RUSTBORO_MUDKIP     593

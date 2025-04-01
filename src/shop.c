@@ -37,7 +37,7 @@
 #include "constants/decorations.h"
 #include "constants/event_objects.h"
 #include "constants/items.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
@@ -61,9 +61,9 @@ enum {
 };
 
 enum {
-    COLORID_NORMAL,      // Item descriptions, quantity in bag, and quantity/price
-    COLORID_ITEM_LIST,   // The text in the item list, and the cursor normally
-    COLORID_GRAY_CURSOR, // When the cursor has selected an item to purchase
+    COLOURID_NORMAL,      // Item descriptions, quantity in bag, and quantity/price
+    COLOURID_ITEM_LIST,   // The text in the item list, and the cursor normally
+    COLOURID_GREY_CURSOR, // When the cursor has selected an item to purchase
 };
 
 enum {
@@ -130,7 +130,7 @@ static void BuyMenuDecompressBgGraphics(void);
 static void BuyMenuSetListEntry(struct ListMenuItem *, u16, u8 *);
 static void BuyMenuAddItemIcon(u16, u8);
 static void BuyMenuRemoveItemIcon(u16, u8);
-static void BuyMenuPrint(u8 windowId, const u8 *text, u8 x, u8 y, s8 speed, u8 colorSet);
+static void BuyMenuPrint(u8 windowId, const u8 *text, u8 x, u8 y, s8 speed, u8 colourSet);
 static void BuyMenuDrawMapGraphics(void);
 static void BuyMenuCopyMenuBgToBg1TilemapBuffer(void);
 static void BuyMenuCollectObjectEventData(void);
@@ -332,11 +332,11 @@ static const struct WindowTemplate sShopBuyMenuYesNoWindowTemplates =
     .baseBlock = 0x020E,
 };
 
-static const u8 sShopBuyMenuTextColors[][3] =
+static const u8 sShopBuyMenuTextColours[][3] =
 {
-    [COLORID_NORMAL]      = {1, 2, 3},
-    [COLORID_ITEM_LIST]   = {0, 2, 3},
-    [COLORID_GRAY_CURSOR] = {0, 3, 2},
+    [COLOURID_NORMAL]      = {1, 2, 3},
+    [COLOURID_ITEM_LIST]   = {0, 2, 3},
+    [COLOURID_GREY_CURSOR] = {0, 3, 2},
 };
 
 static u8 CreateShopMenu(u8 martType)
@@ -616,7 +616,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
     }
 
     FillWindowPixelBuffer(WIN_ITEM_DESCRIPTION, PIXEL_FILL(0));
-    BuyMenuPrint(WIN_ITEM_DESCRIPTION, description, 3, 1, 0, COLORID_NORMAL);
+    BuyMenuPrint(WIN_ITEM_DESCRIPTION, description, 3, 1, 0, COLOURID_NORMAL);
 }
 
 static void BuyMenuPrintPriceInList(u8 windowId, u32 itemId, u8 y)
@@ -647,7 +647,7 @@ static void BuyMenuPrintPriceInList(u8 windowId, u32 itemId, u8 y)
         else
             StringExpandPlaceholders(gStringVar4, gText_PokedollarVar1);
         x = GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 120);
-        AddTextPrinterParameterized4(windowId, FONT_NARROW, x, y, 0, 0, sShopBuyMenuTextColors[COLORID_ITEM_LIST], TEXT_SKIP_DRAW, gStringVar4);
+        AddTextPrinterParameterized4(windowId, FONT_NARROW, x, y, 0, 0, sShopBuyMenuTextColours[COLOURID_ITEM_LIST], TEXT_SKIP_DRAW, gStringVar4);
     }
 }
 
@@ -676,10 +676,10 @@ static void BuyMenuRemoveScrollIndicatorArrows(void)
     }
 }
 
-static void BuyMenuPrintCursor(u8 scrollIndicatorsTaskId, u8 colorSet)
+static void BuyMenuPrintCursor(u8 scrollIndicatorsTaskId, u8 colourSet)
 {
     u8 y = ListMenuGetYCoordForPrintingArrowCursor(scrollIndicatorsTaskId);
-    BuyMenuPrint(WIN_ITEM_LIST, gText_SelectorArrow2, 0, y, 0, colorSet);
+    BuyMenuPrint(WIN_ITEM_LIST, gText_SelectorArrow2, 0, y, 0, colourSet);
 }
 
 static void BuyMenuAddItemIcon(u16 item, u8 iconSlot)
@@ -760,9 +760,9 @@ static void BuyMenuInitWindows(void)
     PutWindowTilemap(WIN_ITEM_DESCRIPTION);
 }
 
-static void BuyMenuPrint(u8 windowId, const u8 *text, u8 x, u8 y, s8 speed, u8 colorSet)
+static void BuyMenuPrint(u8 windowId, const u8 *text, u8 x, u8 y, s8 speed, u8 colourSet)
 {
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sShopBuyMenuTextColors[colorSet], speed, text);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sShopBuyMenuTextColours[colourSet], speed, text);
 }
 
 static void BuyMenuDisplayMessage(u8 taskId, const u8 *text, TaskFunc callback)
@@ -997,7 +997,7 @@ static void Task_BuyMenu(u8 taskId)
             tItemId = itemId;
             ClearWindowTilemap(WIN_ITEM_DESCRIPTION);
             BuyMenuRemoveScrollIndicatorArrows();
-            BuyMenuPrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
+            BuyMenuPrintCursor(tListTaskId, COLOURID_GREY_CURSOR);
 
             if (sMartInfo.martType == MART_TYPE_NORMAL)
                 sShopData->totalCost = (ItemId_GetPrice(itemId) >> IsPokeNewsActive(POKENEWS_SLATEPORT));
@@ -1061,7 +1061,7 @@ static void Task_BuyHowManyDialogueInit(u8 taskId)
     DrawStdFrameWithCustomTileAndPalette(WIN_QUANTITY_IN_BAG, FALSE, 1, 13);
     ConvertIntToDecimalStringN(gStringVar1, quantityInBag, STR_CONV_MODE_RIGHT_ALIGN, MAX_ITEM_DIGITS + 1);
     StringExpandPlaceholders(gStringVar4, gText_InBagVar1);
-    BuyMenuPrint(WIN_QUANTITY_IN_BAG, gStringVar4, 0, 1, 0, COLORID_NORMAL);
+    BuyMenuPrint(WIN_QUANTITY_IN_BAG, gStringVar4, 0, 1, 0, COLOURID_NORMAL);
     tItemCount = 1;
     DrawStdFrameWithCustomTileAndPalette(WIN_QUANTITY_PRICE, FALSE, 1, 13);
     BuyMenuPrintItemQuantityAndPrice(taskId);
@@ -1217,9 +1217,9 @@ static void BuyMenuReturnToItemList(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    ClearDialogWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
+    ClearDialogueWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
     RedrawListMenu(tListTaskId);
-    BuyMenuPrintCursor(tListTaskId, COLORID_ITEM_LIST);
+    BuyMenuPrintCursor(tListTaskId, COLOURID_ITEM_LIST);
     PutWindowTilemap(WIN_ITEM_LIST);
     PutWindowTilemap(WIN_ITEM_DESCRIPTION);
     ScheduleBgCopyTilemapToVram(0);
@@ -1235,7 +1235,7 @@ static void BuyMenuPrintItemQuantityAndPrice(u8 taskId)
     PrintMoneyAmount(WIN_QUANTITY_PRICE, CalculateMoneyTextHorizontalPosition(sShopData->totalCost), 1, sShopData->totalCost, TEXT_SKIP_DRAW);
     ConvertIntToDecimalStringN(gStringVar1, tItemCount, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    BuyMenuPrint(WIN_QUANTITY_PRICE, gStringVar4, 0, 1, 0, COLORID_NORMAL);
+    BuyMenuPrint(WIN_QUANTITY_PRICE, gStringVar4, 0, 1, 0, COLOURID_NORMAL);
 }
 
 static void ExitBuyMenu(u8 taskId)

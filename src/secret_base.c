@@ -23,7 +23,7 @@
 #include "map_name_popup.h"
 #include "menu.h"
 #include "menu_helpers.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "palette.h"
 #include "script.h"
@@ -40,7 +40,7 @@
 #include "constants/field_specials.h"
 #include "constants/items.h"
 #include "constants/map_types.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
 #include "constants/secret_bases.h"
@@ -267,27 +267,27 @@ void CheckPlayerHasSecretBase(void)
 static u8 GetSecretBaseTypeInFrontOfPlayer_(void)
 {
     s16 x, y;
-    s16 behavior;
+    s16 behaviour;
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-    behavior = MapGridGetMetatileBehaviorAt(x, y) & 0xFFF;
-    if (behavior == MB_SECRET_BASE_SPOT_RED_CAVE || behavior == MB_SECRET_BASE_SPOT_RED_CAVE_OPEN)
+    behaviour = MapGridGetMetatileBehaviourAt(x, y) & 0xFFF;
+    if (behaviour == MB_SECRET_BASE_SPOT_RED_CAVE || behaviour == MB_SECRET_BASE_SPOT_RED_CAVE_OPEN)
         return SECRET_BASE_RED_CAVE;
 
-    if (behavior == MB_SECRET_BASE_SPOT_BROWN_CAVE || behavior == MB_SECRET_BASE_SPOT_BROWN_CAVE_OPEN)
+    if (behaviour == MB_SECRET_BASE_SPOT_BROWN_CAVE || behaviour == MB_SECRET_BASE_SPOT_BROWN_CAVE_OPEN)
         return SECRET_BASE_BROWN_CAVE;
 
-    if (behavior == MB_SECRET_BASE_SPOT_BLUE_CAVE || behavior == MB_SECRET_BASE_SPOT_BLUE_CAVE_OPEN)
+    if (behaviour == MB_SECRET_BASE_SPOT_BLUE_CAVE || behaviour == MB_SECRET_BASE_SPOT_BLUE_CAVE_OPEN)
         return SECRET_BASE_BLUE_CAVE;
 
-    if (behavior == MB_SECRET_BASE_SPOT_YELLOW_CAVE || behavior == MB_SECRET_BASE_SPOT_YELLOW_CAVE_OPEN)
+    if (behaviour == MB_SECRET_BASE_SPOT_YELLOW_CAVE || behaviour == MB_SECRET_BASE_SPOT_YELLOW_CAVE_OPEN)
         return SECRET_BASE_YELLOW_CAVE;
 
-    if (behavior == MB_SECRET_BASE_SPOT_TREE_LEFT  || behavior == MB_SECRET_BASE_SPOT_TREE_LEFT_OPEN
-     || behavior == MB_SECRET_BASE_SPOT_TREE_RIGHT || behavior == MB_SECRET_BASE_SPOT_TREE_RIGHT_OPEN)
+    if (behaviour == MB_SECRET_BASE_SPOT_TREE_LEFT  || behaviour == MB_SECRET_BASE_SPOT_TREE_LEFT_OPEN
+     || behaviour == MB_SECRET_BASE_SPOT_TREE_RIGHT || behaviour == MB_SECRET_BASE_SPOT_TREE_RIGHT_OPEN)
         return SECRET_BASE_TREE;
 
-    if (behavior == MB_SECRET_BASE_SPOT_SHRUB || behavior == MB_SECRET_BASE_SPOT_SHRUB_OPEN)
+    if (behaviour == MB_SECRET_BASE_SPOT_SHRUB || behaviour == MB_SECRET_BASE_SPOT_SHRUB_OPEN)
         return SECRET_BASE_SHRUB;
 
     return 0;
@@ -555,7 +555,7 @@ void InitSecretBaseDecorationSprites(void)
     u8 *decorations;
     u8 *decorationPositions;
     u8 objectEventId;
-    u8 metatileBehavior;
+    u8 metatileBehaviour;
     u8 category;
     u8 permission;
     u8 numDecorations;
@@ -595,9 +595,9 @@ void InitSecretBaseDecorationSprites(void)
 
             gSpecialVar_0x8006 = decorationPositions[i] >> 4;
             gSpecialVar_0x8007 = decorationPositions[i] & 0xF;
-            metatileBehavior = MapGridGetMetatileBehaviorAt(gSpecialVar_0x8006 + MAP_OFFSET, gSpecialVar_0x8007 + MAP_OFFSET);
-            if (MetatileBehavior_HoldsSmallDecoration(metatileBehavior) == TRUE
-             || MetatileBehavior_HoldsLargeDecoration(metatileBehavior) == TRUE)
+            metatileBehaviour = MapGridGetMetatileBehaviourAt(gSpecialVar_0x8006 + MAP_OFFSET, gSpecialVar_0x8007 + MAP_OFFSET);
+            if (MetatileBehaviour_HoldsSmallDecoration(metatileBehaviour) == TRUE
+             || MetatileBehaviour_HoldsLargeDecoration(metatileBehaviour) == TRUE)
             {
                 gSpecialVar_Result = VAR_OBJ_GFX_ID_0 + (gMapHeader.events->objectEvents[objectEventId].graphicsId - OBJ_EVENT_GFX_VAR_0);
                 VarSet(gSpecialVar_Result, gDecorations[decorations[i]].tiles[0]);
@@ -922,7 +922,7 @@ static void Task_ShowSecretBaseRegistryMenu(u8 taskId)
     {
         tSelectedRow = 0;
         tScrollOffset = 0;
-        ClearDialogWindowAndFrame(0, FALSE);
+        ClearDialogueWindowAndFrame(0, FALSE);
         sRegistryMenu = AllocZeroed(sizeof(*sRegistryMenu));
         tMainWindowId = AddWindow(&sRegistryWindowTemplates[0]);
         BuildRegistryMenuItems(taskId);
@@ -1075,7 +1075,7 @@ static void ShowRegistryMenuDeleteYesNo(u8 taskId)
 void DeleteRegistry_Yes_Callback(u8 taskId)
 {
     u16 *data = (u16*) gTasks[taskId].data;
-    ClearDialogWindowAndFrame(0, FALSE);
+    ClearDialogueWindowAndFrame(0, FALSE);
     DestroyListMenuTask(tListTaskId, &tScrollOffset, &tSelectedRow);
     gSaveBlock1Ptr->secretBases[tSelectedBaseId].registryStatus = UNREGISTERED;
     BuildRegistryMenuItems(taskId);
@@ -1092,7 +1092,7 @@ static void DeleteRegistry_Yes(u8 taskId)
 static void DeleteRegistry_No(u8 taskId)
 {
     u16 *data = (u16*) gTasks[taskId].data;
-    ClearDialogWindowAndFrame(0, FALSE);
+    ClearDialogueWindowAndFrame(0, FALSE);
     DestroyListMenuTask(tListTaskId, &tScrollOffset, &tSelectedRow);
     FinalizeRegistryMenu(taskId);
     gTasks[taskId].func = HandleRegistryMenuInput;
@@ -1199,7 +1199,7 @@ void SecretBasePerStepCallback(u8 taskId)
 {
     s16 x;
     s16 y;
-    u8 behavior;
+    u8 behaviour;
     u16 tileId;
     s16 *data;
 
@@ -1224,7 +1224,7 @@ void SecretBasePerStepCallback(u8 taskId)
         tPlayerX = x;
         tPlayerY = y;
         VarSet(VAR_SECRET_BASE_STEP_COUNTER, VarGet(VAR_SECRET_BASE_STEP_COUNTER) + 1);
-        behavior = MapGridGetMetatileBehaviorAt(x, y);
+        behaviour = MapGridGetMetatileBehaviourAt(x, y);
         tileId = MapGridGetMetatileIdAt(x, y);
         if (tileId == METATILE_SecretBase_SolidBoard_Top || tileId == METATILE_SecretBase_SolidBoard_Bottom)
         {
@@ -1252,13 +1252,13 @@ void SecretBasePerStepCallback(u8 taskId)
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_TENT);
         }
-        else if ((behavior == MB_IMPASSABLE_NORTHEAST && tileId == METATILE_SecretBase_Stand_CornerRight)
-              || (behavior == MB_IMPASSABLE_NORTHWEST && MapGridGetMetatileIdAt(x, y) == METATILE_SecretBase_Stand_CornerLeft))
+        else if ((behaviour == MB_IMPASSABLE_NORTHEAST && tileId == METATILE_SecretBase_Stand_CornerRight)
+              || (behaviour == MB_IMPASSABLE_NORTHWEST && MapGridGetMetatileIdAt(x, y) == METATILE_SecretBase_Stand_CornerLeft))
         {
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_STAND);
         }
-        else if (behavior == MB_IMPASSABLE_WEST_AND_EAST && tileId == METATILE_SecretBase_Slide_StairLanding)
+        else if (behaviour == MB_IMPASSABLE_WEST_AND_EAST && tileId == METATILE_SecretBase_Slide_StairLanding)
         {
             if (sInFriendSecretBase == TRUE)
             {
@@ -1266,7 +1266,7 @@ void SecretBasePerStepCallback(u8 taskId)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_DECLINED_SLIDE);
             }
         }
-        else if (behavior == MB_SLIDE_SOUTH && tileId == METATILE_SecretBase_Slide_SlideTop)
+        else if (behaviour == MB_SLIDE_SOUTH && tileId == METATILE_SecretBase_Slide_SlideTop)
         {
             if (sInFriendSecretBase == TRUE)
             {
@@ -1274,12 +1274,12 @@ void SecretBasePerStepCallback(u8 taskId)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) ^ SECRET_BASE_DECLINED_SLIDE);
             }
         }
-        else if (MetatileBehavior_IsSecretBaseGlitterMat(behavior) == TRUE)
+        else if (MetatileBehaviour_IsSecretBaseGlitterMat(behaviour) == TRUE)
         {
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_GLITTER_MAT);
         }
-        else if (MetatileBehavior_IsSecretBaseBalloon(behavior) == TRUE)
+        else if (MetatileBehaviour_IsSecretBaseBalloon(behaviour) == TRUE)
         {
             PopSecretBaseBalloon(MapGridGetMetatileIdAt(x, y), x, y);
             if (sInFriendSecretBase == TRUE)
@@ -1297,23 +1297,23 @@ void SecretBasePerStepCallback(u8 taskId)
                 }
             }
         }
-        else if (MetatileBehavior_IsSecretBaseBreakableDoor(behavior) == TRUE)
+        else if (MetatileBehaviour_IsSecretBaseBreakableDoor(behaviour) == TRUE)
         {
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_BREAKABLE_DOOR);
 
             ShatterSecretBaseBreakableDoor(x, y);
         }
-        else if (MetatileBehavior_IsSecretBaseSoundMat(behavior) == TRUE){
+        else if (MetatileBehaviour_IsSecretBaseSoundMat(behaviour) == TRUE){
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_NOTE_MAT);
         }
-        else if (MetatileBehavior_IsSecretBaseJumpMat(behavior) == TRUE)
+        else if (MetatileBehaviour_IsSecretBaseJumpMat(behaviour) == TRUE)
         {
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_JUMP_MAT);
         }
-        else if (MetatileBehavior_IsSecretBaseSpinMat(behavior) == TRUE)
+        else if (MetatileBehaviour_IsSecretBaseSpinMat(behaviour) == TRUE)
         {
             if (sInFriendSecretBase == TRUE)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_SPIN_MAT);
@@ -1931,10 +1931,10 @@ void CheckInteractedWithFriendsFurnitureBottom(void)
         case METATILE_SecretBase_TropicalPlant_Base2:
         case METATILE_SecretBase_PrettyFlowers_Base1:
         case METATILE_SecretBase_PrettyFlowers_Base2:
-        case METATILE_SecretBase_ColorfulPlant_BaseLeft1:
-        case METATILE_SecretBase_ColorfulPlant_BaseRight1:
-        case METATILE_SecretBase_ColorfulPlant_BaseLeft2:
-        case METATILE_SecretBase_ColorfulPlant_BaseRight2:
+        case METATILE_SecretBase_ColourfulPlant_BaseLeft1:
+        case METATILE_SecretBase_ColourfulPlant_BaseRight1:
+        case METATILE_SecretBase_ColourfulPlant_BaseLeft2:
+        case METATILE_SecretBase_ColourfulPlant_BaseRight2:
         case METATILE_SecretBase_BigPlant_BaseLeft1:
         case METATILE_SecretBase_BigPlant_BaseRight1:
         case METATILE_SecretBase_BigPlant_BaseLeft2:
@@ -2002,13 +2002,13 @@ void CheckInteractedWithFriendsFurnitureMiddle(void)
         case METATILE_SecretBase_RaggedDesk_TopMid:
         case METATILE_SecretBase_ComfortDesk_TopMid:
         case METATILE_SecretBase_BrickDesk_TopMid:
-        case METATILE_SecretBase_BrickDesk_Center:
+        case METATILE_SecretBase_BrickDesk_Centre:
         case METATILE_SecretBase_CampDesk_TopMid:
-        case METATILE_SecretBase_CampDesk_Center:
+        case METATILE_SecretBase_CampDesk_Centre:
         case METATILE_SecretBase_HardDesk_TopMid:
-        case METATILE_SecretBase_HardDesk_Center:
+        case METATILE_SecretBase_HardDesk_Centre:
         case METATILE_SecretBase_PrettyDesk_TopMid:
-        case METATILE_SecretBase_PrettyDesk_Center:
+        case METATILE_SecretBase_PrettyDesk_Centre:
             if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_DESK);
             break;

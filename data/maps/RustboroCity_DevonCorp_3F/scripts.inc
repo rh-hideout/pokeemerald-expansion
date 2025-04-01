@@ -48,7 +48,7 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	applymovement LOCALID_DEVON_EMPLOYEE, RustboroCity_DevonCorp_3F_Movement_EmployeeFaceDesk
 	applymovement OBJ_EVENT_ID_PLAYER, RustboroCity_DevonCorp_3F_Movement_PlayerApproachDesk
 	waitmovement 0
-	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor, MSGBOX_DEFAULT
+	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavour, MSGBOX_DEFAULT
 	giveitem ITEM_LETTER
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneWantYouToHaveThis, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
@@ -59,7 +59,7 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	setflag FLAG_HIDE_RUSTBORO_CITY_POKEMON_SCHOOL_SCOTT
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneExplainPokenavRestUp, MSGBOX_DEFAULT
 	closemessage
-	call Common_EventScript_OutOfCenterPartyHeal
+	call Common_EventScript_OutOfCentrePartyHeal
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneGoWithCautionAndCare, MSGBOX_DEFAULT
 	setflag FLAG_HIDE_ROUTE_116_WANDAS_BOYFRIEND
 	clearflag FLAG_HIDE_RUSTURF_TUNNEL_WANDAS_BOYFRIEND
@@ -151,7 +151,7 @@ RustboroCity_DevonCorp_3F_Movement_PlayerApproachDesk:
 RustboroCity_DevonCorp_3F_EventScript_MrStone::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_EXP_SHARE, RustboroCity_DevonCorp_3F_EventScript_MrStoneAfterFavor
+	goto_if_set FLAG_RECEIVED_EXP_SHARE, RustboroCity_DevonCorp_3F_EventScript_MrStoneAfterFavour
 	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, RustboroCity_DevonCorp_3F_EventScript_GiveExpShare
 	msgbox RustboroCity_DevonCorp_3F_Text_CountingOnYou, MSGBOX_DEFAULT
 	closemessage
@@ -172,7 +172,7 @@ RustboroCity_DevonCorp_3F_EventScript_GiveExpShare::
 	release
 	end
 
-RustboroCity_DevonCorp_3F_EventScript_MrStoneAfterFavor::
+RustboroCity_DevonCorp_3F_EventScript_MrStoneAfterFavour::
 	msgbox RustboroCity_DevonCorp_3F_Text_NotFamiliarWithTrends, MSGBOX_DEFAULT
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
@@ -197,13 +197,13 @@ RustboroCity_DevonCorp_3F_EventScript_RareRocksDisplay::
 	msgbox RustboroCity_DevonCorp_3F_Text_RareRocksDisplay, MSGBOX_SIGN
 	end
 
-RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor:
+RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavour:
 	.string "I'm MR. STONE, the PRESIDENT of\n"
 	.string "the DEVON CORPORATION.\p"
 	.string "I'd just got word about you!\p"
 	.string "You saved our staff not just once,\n"
 	.string "but twice!\p"
-	.string "I have a favor to ask of an amazing\n"
+	.string "I have a favour to ask of an amazing\n"
 	.string "person like you.\p"
 	.string "I understand that you're delivering\n"
 	.string "a package to SLATEPORT's SHIPYARD.\p"
@@ -216,7 +216,7 @@ RustboroCity_DevonCorp_3F_Text_MrStoneWantYouToHaveThis:
 	.string "MR. STONE: Now, you should know that\n"
 	.string "I am a great PRESIDENT.\p"
 	.string "So, I'd never be so cheap as to ask\n"
-	.string "a favor for nothing in return.\p"
+	.string "a favour for nothing in return.\p"
 	.string "That's why I want you to have this!$"
 
 RustboroCity_DevonCorp_3F_Text_ReceivedPokenav:

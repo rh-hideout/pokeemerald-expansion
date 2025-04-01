@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         NONE_OF {
-            MESSAGE("The opposing Vivillon is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Vivillon is paralysed, so it may be unable to move!");
             MESSAGE("The opposing Vivillon was burned!");
             MESSAGE("The opposing Vivillon was poisoned!");
             MESSAGE("The opposing Vivillon flinched and couldn't move!");

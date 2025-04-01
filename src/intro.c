@@ -147,7 +147,7 @@ enum {
 */
 #define TIMER_BIG_DROP_START             76
 #define TIMER_LOGO_APPEAR               128
-#define TIMER_LOGO_LETTERS_COLOR        144
+#define TIMER_LOGO_LETTERS_COLOUR        144
 #define TIMER_BIG_DROP_FALLS            251
 #define TIMER_LOGO_BLEND_OUT            256
 #define TIMER_LOGO_DISAPPEAR            272
@@ -1095,7 +1095,7 @@ static u8 SetUpCopyrightScreen(void)
         SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0)
                                    | BGCNT_CHARBASE(0)
                                    | BGCNT_SCREENBASE(7)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_TXT256x256);
         EnableInterrupts(INTR_FLAG_VBLANK);
         SetVBlankCallback(VBlankCB_Intro);
@@ -1194,17 +1194,17 @@ void Task_Scene1_Load(u8 taskId)
     LZ77UnCompVram(sIntro1Bg3_Tilemap, (void *)(BG_SCREEN_ADDR(22)));
     DmaClear16(3, BG_SCREEN_ADDR(23), BG_SCREEN_SIZE);
     LoadPalette(sIntro1Bg_Pal, BG_PLTT_ID(0), sizeof(sIntro1Bg_Pal));
-    SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(22) | BGCNT_16COLOR | BGCNT_TXT256x512);
-    SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(20) | BGCNT_16COLOR | BGCNT_TXT256x512);
-    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(18) | BGCNT_16COLOR | BGCNT_TXT256x512);
-    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(16) | BGCNT_16COLOR | BGCNT_TXT256x512);
+    SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(22) | BGCNT_16COLOUR | BGCNT_TXT256x512);
+    SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(20) | BGCNT_16COLOUR | BGCNT_TXT256x512);
+    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(18) | BGCNT_16COLOUR | BGCNT_TXT256x512);
+    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(16) | BGCNT_16COLOUR | BGCNT_TXT256x512);
     LoadCompressedSpriteSheet(sSpriteSheet_WaterDropsAndLogo);
     LoadCompressedSpriteSheet(sSpriteSheet_FlygonSilhouette);
     LoadSpritePalettes(sSpritePalettes_Intro1);
     LoadCompressedSpriteSheet(sSpriteSheet_Sparkle);
     LoadSpritePalettes(sSpritePalette_Sparkle);
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(15) + 0], PLTT_SIZEOF(16 - 0));
-    CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(14) + 1], PLTT_SIZEOF(16 - 1) + 1); // Copying an extra half color?
+    CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(14) + 1], PLTT_SIZEOF(16 - 1) + 1); // Copying an extra half colour?
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(13) + 2], PLTT_SIZEOF(16 - 2));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(12) + 3], PLTT_SIZEOF(16 - 3));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(11) + 4], PLTT_SIZEOF(16 - 4));
@@ -1465,7 +1465,7 @@ static void Task_Scene2_BikeRide(u8 taskId)
     if (gTasks[taskId].tFlygonTimer < 512)
         gTasks[taskId].tFlygonTimer++;
 
-    // Alternate colors of the trees
+    // Alternate colours of the trees
     CycleSceneryPalette(0);
 }
 
@@ -1741,7 +1741,7 @@ static void Task_Scene3_Load(u8 taskId)
     ResetSpriteData();
     FreeAllSpritePalettes();
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_WHITEALPHA);
-    SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(8) | BGCNT_256COLOR | BGCNT_AFF256x256);
+    SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(8) | BGCNT_256COLOUR | BGCNT_AFF256x256);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG2_ON | DISPCNT_OBJ_ON);
     gTasks[taskId].func = Task_Scene3_SpinPokeball;
     gIntroFrameCounter = 0;
@@ -1810,13 +1810,13 @@ static void Task_Scene3_InitGroudonBg(u8 taskId)
     SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(0)
                                | BGCNT_CHARBASE(0)
                                | BGCNT_SCREENBASE(24)
-                               | BGCNT_256COLOR
+                               | BGCNT_256COLOUR
                                | BGCNT_WRAP
                                | BGCNT_AFF512x512);
     SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1)
                                | BGCNT_CHARBASE(1)
                                | BGCNT_SCREENBASE(28)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
                                 | DISPCNT_OBJ_1D_MAP
@@ -2343,17 +2343,17 @@ static void Task_Scene3_LoadClouds1(u8 taskId)
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0)
                                | BGCNT_CHARBASE(0)
                                | BGCNT_SCREENBASE(24)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_TXT512x256);
     SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0)
                                | BGCNT_CHARBASE(1)
                                | BGCNT_SCREENBASE(26)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_TXT512x256);
     SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2)
                                | BGCNT_CHARBASE(1)
                                | BGCNT_SCREENBASE(28)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
                                 | DISPCNT_OBJ_1D_MAP
@@ -2876,7 +2876,7 @@ static void SpriteCB_WaterDropHalf(struct Sprite *sprite)
         sprite->callback = SpriteCB_WaterDrop_Ripple;
         sprite->oam.shape = SPRITE_SHAPE(64x32);
         sprite->oam.size = SPRITE_SIZE(64x32);
-        CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
+        CalcCentreToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
     }
     else
     {
@@ -2998,7 +2998,7 @@ static void SpriteCB_WaterDrop_Fall(struct Sprite *sprite)
         sprite->callback = SpriteCB_WaterDrop_Ripple;
         sprite->oam.shape = SPRITE_SHAPE(64x32);
         sprite->oam.size = SPRITE_SIZE(64x32);
-        CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
+        CalcCentreToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
     }
 }
 
@@ -3022,7 +3022,7 @@ static void SpriteCB_WaterDropShort(struct Sprite *sprite)
         sprite->callback = SpriteCB_WaterDrop_Ripple;
         sprite->oam.shape = SPRITE_SHAPE(64x32);
         sprite->oam.size = SPRITE_SIZE(64x32);
-        CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
+        CalcCentreToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
     }
 }
 
@@ -3042,7 +3042,7 @@ static u8 CreateWaterDrop(s16 x, s16 y, u16 c, u16 d, u16 e, u8 fallImmediately)
     gSprites[spriteId].data[6] = c;
     gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     gSprites[spriteId].oam.matrixNum = d;
-    CalcCenterToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
+    CalcCentreToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
     StartSpriteAnim(&gSprites[spriteId], DROP_ANIM_REFLECTION);
     if (!fallImmediately)
         gSprites[spriteId].callback = SpriteCB_WaterDrop; // Do full anim, for 1st drop that slides along the leaf
@@ -3057,7 +3057,7 @@ static u8 CreateWaterDrop(s16 x, s16 y, u16 c, u16 d, u16 e, u8 fallImmediately)
     gSprites[spriteId].data[1] = d + 1;
     gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     gSprites[spriteId].oam.matrixNum = d + 1;
-    CalcCenterToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
+    CalcCentreToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
     gSprites[spriteId].callback = SpriteCB_WaterDropHalf;
 
     // Create water drop lower half
@@ -3067,7 +3067,7 @@ static u8 CreateWaterDrop(s16 x, s16 y, u16 c, u16 d, u16 e, u8 fallImmediately)
     StartSpriteAnim(&gSprites[spriteId], DROP_ANIM_LOWER_HALF);
     gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     gSprites[spriteId].oam.matrixNum = d + 2;
-    CalcCenterToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
+    CalcCentreToCornerVec(&gSprites[spriteId], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_ERASE);
     gSprites[spriteId].callback = SpriteCB_WaterDropHalf;
 
     SetOamMatrix(d, c + 32, 0, 0, c + 32);
@@ -3172,10 +3172,10 @@ static void SpriteCB_Flygon(struct Sprite *sprite)
 
 #define sTimer      data[1]
 #define sLetterId   data[2]
-#define sColorDelay data[3]
+#define sColourDelay data[3]
 #define sLetterX    data[3] // Re-used
 
-#define COLOR_CHANGES 9 // Number of stages for changing the letter color
+#define COLOUR_CHANGES 9 // Number of stages for changing the letter colour
 
 // For the letters in "Game Freak"
 // Also intended for the letters in "Presents", which is never shown
@@ -3197,19 +3197,19 @@ static void SpriteCB_LogoLetter(struct Sprite *sprite)
         }
         break;
     case 1:
-        if (gIntroFrameCounter == TIMER_LOGO_LETTERS_COLOR)
+        if (gIntroFrameCounter == TIMER_LOGO_LETTERS_COLOUR)
         {
-            // Initialize color fade
+            // Initialize colour fade
             sprite->sState++;
-            sprite->sTimer = COLOR_CHANGES;
-            sprite->sColorDelay = 2;
+            sprite->sTimer = COLOUR_CHANGES;
+            sprite->sColourDelay = 2;
         }
         break;
     case 2:
         // Fade letters to blue
-        if (sprite->sColorDelay == 0)
+        if (sprite->sColourDelay == 0)
         {
-            sprite->sColorDelay = 2;
+            sprite->sColourDelay = 2;
             if (sprite->sTimer != 0)
             {
                 CpuCopy16(&gIntroGameFreakTextFade_Pal[sprite->sTimer],      &gPlttBufferFaded[OBJ_PLTT_ID(1) + 15], PLTT_SIZEOF(1));
@@ -3227,19 +3227,19 @@ static void SpriteCB_LogoLetter(struct Sprite *sprite)
         }
         else
         {
-            sprite->sColorDelay--;
+            sprite->sColourDelay--;
         }
         break;
     case 3:
         // Fade letters back to white
-        if (sprite->sColorDelay != 0)
+        if (sprite->sColourDelay != 0)
         {
-            sprite->sColorDelay--;
+            sprite->sColourDelay--;
         }
         else
         {
-            sprite->sColorDelay = 2;
-            if (sprite->sTimer <= COLOR_CHANGES)
+            sprite->sColourDelay = 2;
+            if (sprite->sTimer <= COLOUR_CHANGES)
             {
                 CpuCopy16(&gIntroGameFreakTextFade_Pal[sprite->sTimer],      &gPlttBufferFaded[OBJ_PLTT_ID(1) + 15], PLTT_SIZEOF(1));
                 CpuCopy16(&gIntroGameFreakTextFade_Pal[sprite->sTimer + 16], &gPlttBufferFaded[OBJ_PLTT_ID(1) + 4], PLTT_SIZEOF(1));
@@ -3333,9 +3333,9 @@ static u8 CreateGameFreakLogoSprites(s16 x, s16 y, s16 unused)
 
 #undef sTimer
 #undef sLetterId
-#undef sColorDelay
+#undef sColourDelay
 #undef sLetterX
-#undef COLOR_CHANGES
+#undef COLOUR_CHANGES
 
 #define sScale   data[1]
 #define sRot     data[2]
@@ -3370,7 +3370,7 @@ static void SpriteCB_FlygonSilhouette(struct Sprite *sprite)
     default:
         sprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
         sprite->oam.matrixNum = 1;
-        CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        CalcCentreToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
         sprite->invisible = FALSE;
         sprite->sState = 1;
         sprite->sScale = 128;
@@ -3418,7 +3418,7 @@ static void SpriteCB_RayquazaOrb(struct Sprite *sprite)
         sprite->invisible = FALSE;
         sprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
         sprite->oam.matrixNum = 18;
-        CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
+        CalcCentreToCornerVec(sprite, SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
         sprite->data[1] = 0;
         sprite->sState = 1;
         //fall through

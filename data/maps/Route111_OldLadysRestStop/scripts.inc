@@ -17,7 +17,7 @@ Route111_OldLadysRestStop_EventScript_OldLady::
 Route111_OldLadysRestStop_EventScript_Rest::
 	msgbox Route111_OldLadysRestStop_Text_TakeYourTimeRestUp, MSGBOX_DEFAULT
 	closemessage
-	call Common_EventScript_OutOfCenterPartyHeal
+	call Common_EventScript_OutOfCentrePartyHeal
 	msgbox Route111_OldLadysRestStop_Text_StillTiredTakeAnotherRest, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, Route111_OldLadysRestStop_EventScript_Rest
 	goto_if_eq VAR_RESULT, NO, Route111_OldLadysRestStop_EventScript_DeclineRest

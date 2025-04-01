@@ -19,7 +19,7 @@ const u8 gItemEffect_Awakening[6] = {
     [3] = ITEM3_SLEEP,
 };
 
-const u8 gItemEffect_ParalyzeHeal[6] = {
+const u8 gItemEffect_ParalyseHeal[6] = {
     [3] = ITEM3_PARALYSIS,
 };
 

@@ -18,18 +18,18 @@
  * 2. Play the turns in WHEN.
  * 3. Check the UI outputs in SCENE.
  *
- * As a concrete example, to manually test EFFECT_PARALYZE, e.g. the
+ * As a concrete example, to manually test EFFECT_PARALYSE, e.g. the
  * effect of Stun Spore you might:
  * 1. Put a Wobbuffet that knows Stun Spore in your party.
  * 2. Battle a wild Wobbuffet.
  * 3. Use Stun Spore.
- * 4. Check that the Wobbuffet is paralyzed.
+ * 4. Check that the Wobbuffet is paralysed.
  *
  * This can be translated to an automated test as follows:
  *
  *   ASSUMPTIONS
  *   {
- *       ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYZE);
+ *       ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYSE);
  *   }
  *
  *   SINGLE_BATTLE_TEST("Stun Spore inflicts paralysis")
@@ -41,12 +41,12 @@
  *           TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.
  *       } SCENE {
  *           ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
- *           MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!"); // 4
+ *           MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!"); // 4
  *           STATUS_ICON(opponent, paralysis: TRUE); // 4.
  *       }
  *   }
  *
- * The ASSUMPTIONS block documents that Stun Spore has EFFECT_PARALYZE.
+ * The ASSUMPTIONS block documents that Stun Spore has EFFECT_PARALYSE.
  * If Stun Spore did not have that effect it would cause the tests in
  * the file to be skipped. We write our tests like this so that hackers
  * can change the effects of moves without causing tests to fail.
@@ -111,7 +111,7 @@
  * Spore animation does not play at any time before that". Normally you
  * would only test one or the other, or even better, just
  * NOT STATUS_ICON(opponent, paralysis: TRUE); to say that Oddish was
- * not paralyzed without specifying the exact outputs which led to that.
+ * not paralysed without specifying the exact outputs which led to that.
  *
  * As a final example, to test that Meditate works you might:
  * 1. Put a Wobbuffet that knows Meditate and Tackle in your party.
@@ -245,7 +245,7 @@
  * test is run for each value that the tag can produce. For example, to
  * check that Paralysis causes the turn to be skipped 25/100 times, we
  * can write the following test that passes only if the Pokémon is fully
- * paralyzed and specify that we expect it to pass 25/100 times when
+ * paralysed and specify that we expect it to pass 25/100 times when
  * RNG_PARALYSIS varies:
  *     SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
  *     {
@@ -256,7 +256,7 @@
  *         } WHEN {
  *             TURN { MOVE(player, MOVE_CELEBRATE); }
  *         } SCENE {
- *             MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+ *             MESSAGE("Wobbuffet is paralysed, so it may be unable to move!");
  *         }
  *     }
  * All BattleRandom calls involving tag will return the same number, so
@@ -450,7 +450,7 @@
  * Causes the test to fail unless one of the SCENE commands succeeds.
  *     ONE_OF {
  *         MESSAGE("Wobbuffet used Celebrate!");
- *         MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+ *         MESSAGE("Wobbuffet is paralysed, so it may be unable to move!");
  *     }
  *
  * NONE_OF
@@ -459,7 +459,7 @@
  *     // Our Wobbuffet does not move before the foe's.
  *     NONE_OF {
  *         MESSAGE("Wobbuffet used Celebrate!");
- *         MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+ *         MESSAGE("Wobbuffet is paralysed, so it may be unable to move!");
  *     }
  *     MESSAGE("The opposing Wobbuffet used Celebrate!");
  *
@@ -472,7 +472,7 @@
  * Contains code to run after the battle has finished. If the test is
  * PARAMETRIZEd then EXPECTs between the results should go here. Is also
  * occasionally used to check the internal battle state when checking
- * the behavior via a SCENE is too difficult, verbose, or error-prone.
+ * the behaviour via a SCENE is too difficult, verbose, or error-prone.
  *
  * FINALLY
  * Contains checks to run after all PARAMETERIZEs have run. Prefer to

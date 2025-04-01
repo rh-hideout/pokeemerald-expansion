@@ -89,8 +89,8 @@ const struct SpriteTemplate gMirrorCoatWallSpriteTemplate =
 
 const struct SpriteTemplate gBarrierWallSpriteTemplate =
 {
-    .tileTag = ANIM_TAG_GRAY_LIGHT_WALL,
-    .paletteTag = ANIM_TAG_GRAY_LIGHT_WALL,
+    .tileTag = ANIM_TAG_GREY_LIGHT_WALL,
+    .paletteTag = ANIM_TAG_GREY_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
@@ -643,7 +643,7 @@ static void AnimDefensiveWall_Step2(struct Sprite *sprite)
 
 static void AnimDefensiveWall_Step3(struct Sprite *sprite)
 {
-    u16 color;
+    u16 colour;
     u16 startOffset;
     int i;
 
@@ -651,12 +651,12 @@ static void AnimDefensiveWall_Step3(struct Sprite *sprite)
     {
         sprite->data[1] = 0;
         startOffset = sprite->data[0];
-        color = gPlttBufferFaded[startOffset + 8];
+        colour = gPlttBufferFaded[startOffset + 8];
 
         for (i = 8; i > 0; i--)
             gPlttBufferFaded[startOffset + i] = gPlttBufferFaded[startOffset + i - 1];
 
-        gPlttBufferFaded[startOffset + 1] = color;
+        gPlttBufferFaded[startOffset + 1] = colour;
 
         if (++sprite->data[2] == 16)
             sprite->callback = AnimDefensiveWall_Step4;
@@ -1291,7 +1291,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
     gSprites[spriteId].affineAnimPaused = 1;
     gSprites[spriteId].subpriority++;
     SetSpriteRotScale(spriteId, 256, 256, 0);
-    CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
+    CalcCentreToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
     task->data[13] = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
     task->data[14] = matrixNum;
     task->data[15] = spriteId;

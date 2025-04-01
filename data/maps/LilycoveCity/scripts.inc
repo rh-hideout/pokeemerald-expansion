@@ -171,15 +171,15 @@ LilycoveCity_EventScript_MuseumSignNoPaintings::
 	releaseall
 	end
 
-LilycoveCity_EventScript_HarborSign::
+LilycoveCity_EventScript_HarbourSign::
 	lockall
-	goto_if_set FLAG_SYS_GAME_CLEAR, LilycoveCity_EventScript_HarborSignFerryReady
-	msgbox LilycoveCity_Text_HarborSignUnderConstruction, MSGBOX_DEFAULT
+	goto_if_set FLAG_SYS_GAME_CLEAR, LilycoveCity_EventScript_HarbourSignFerryReady
+	msgbox LilycoveCity_Text_HarbourSignUnderConstruction, MSGBOX_DEFAULT
 	releaseall
 	end
 
-LilycoveCity_EventScript_HarborSignFerryReady::
-	msgbox LilycoveCity_Text_HarborSign, MSGBOX_DEFAULT
+LilycoveCity_EventScript_HarbourSignFerryReady::
+	msgbox LilycoveCity_Text_HarbourSign, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -690,15 +690,15 @@ LilycoveCity_Text_MuseumSignPlayersExhibit:
 	.string "“{PLAYER}'s POKéMON Collection\n"
 	.string "on exhibit!”$"
 
-LilycoveCity_Text_HarborSignUnderConstruction:
-	.string "LILYCOVE CITY HARBOR\p"
+LilycoveCity_Text_HarbourSignUnderConstruction:
+	.string "LILYCOVE CITY HARBOUR\p"
 	.string "“The ferry S.S. TIDAL is under\n"
 	.string "construction in SLATEPORT CITY.\p"
 	.string "“Service is scheduled to begin\n"
 	.string "shortly.”$"
 
-LilycoveCity_Text_HarborSign:
-	.string "LILYCOVE CITY HARBOR\p"
+LilycoveCity_Text_HarbourSign:
+	.string "LILYCOVE CITY HARBOUR\p"
 	.string "“Enjoy a delightful cruise on\n"
 	.string "the ferry S.S. TIDAL.”$"
 

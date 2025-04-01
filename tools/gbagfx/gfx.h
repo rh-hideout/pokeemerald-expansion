@@ -6,15 +6,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct Color {
+struct Colour {
 	unsigned char red;
 	unsigned char green;
 	unsigned char blue;
 };
 
 struct Palette {
-	struct Color colors[256];
-	int numColors;
+	struct Colour colours[256];
+	int numColours;
 };
 
 struct NonAffineTile {
@@ -50,10 +50,10 @@ enum NumTilesMode {
     NUM_TILES_ERROR,
 };
 
-void ReadTileImage(char *path, int tilesWidth, int metatileWidth, int metatileHeight, struct Image *image, bool invertColors);
-void WriteTileImage(char *path, enum NumTilesMode numTilesMode, int numTiles, int metatileWidth, int metatileHeight, struct Image *image, bool invertColors);
-void ReadPlainImage(char *path, int dataWidth, struct Image *image, bool invertColors);
-void WritePlainImage(char *path, int dataWidth, struct Image *image, bool invertColors);
+void ReadTileImage(char *path, int tilesWidth, int metatileWidth, int metatileHeight, struct Image *image, bool invertColours);
+void WriteTileImage(char *path, enum NumTilesMode numTilesMode, int numTiles, int metatileWidth, int metatileHeight, struct Image *image, bool invertColours);
+void ReadPlainImage(char *path, int dataWidth, struct Image *image, bool invertColours);
+void WritePlainImage(char *path, int dataWidth, struct Image *image, bool invertColours);
 void FreeImage(struct Image *image);
 void ReadGbaPalette(char *path, struct Palette *palette);
 void WriteGbaPalette(char *path, struct Palette *palette);

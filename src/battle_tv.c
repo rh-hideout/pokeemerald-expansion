@@ -571,11 +571,11 @@ void BattleTv_SetDataBasedOnString(u16 stringId)
         if (tvPtr->pos[atkSide][atkFlank].attractMonId != 0)
             AddMovePoints(PTS_STATUS, 0, tvPtr->pos[atkSide][atkFlank].attractMonId - 1, tvPtr->pos[atkSide][atkFlank].attractMoveSlot);
         break;
-    case STRINGID_PKMNWASPARALYZED:
+    case STRINGID_PKMNWASPARALYSED:
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].prlzMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].prlzMoveSlot = moveSlot;
         break;
-    case STRINGID_PKMNISPARALYZED:
+    case STRINGID_PKMNISPARALYSED:
         if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId != 0)
             AddMovePoints(PTS_STATUS, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMoveSlot);
         break;

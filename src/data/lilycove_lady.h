@@ -180,7 +180,7 @@ static const u16 sQuizLadyQuestion10[QUIZ_QUESTION_LEN] =
     EC_WORD_WHICH,
     EC_WORD_GOES,
     EC_WORD_WITH,
-    EC_WORD_CENTER,
+    EC_WORD_CENTRE,
     EC_WORD_QUES,
     EC_EMPTY_WORD,
     EC_WORD_POKEDEX,
@@ -326,8 +326,8 @@ static const u16 sQuizLadyPrizes[] =
     ITEM_PREMIER_BALL
 };
 
-// Favor Lady data
-static const u8 *const sFavorLadyRequests[] =
+// Favour Lady data
+static const u8 *const sFavourLadyRequests[] =
 {
     COMPOUND_STRING("slippery"),
     COMPOUND_STRING("roundish"),
@@ -337,13 +337,13 @@ static const u8 *const sFavorLadyRequests[] =
     COMPOUND_STRING("pointy"),
 };
 
-static const u16 sFavorLadyAcceptedItems_Slippery[] =
+static const u16 sFavourLadyAcceptedItems_Slippery[] =
 {
     ITEM_REPEL,
     ITEM_SUPER_REPEL,
     ITEM_MAX_REPEL,
     ITEM_ANTIDOTE,
-    ITEM_PARALYZE_HEAL,
+    ITEM_PARALYSE_HEAL,
     ITEM_BURN_HEAL,
     ITEM_BELUE_BERRY,
     ITEM_AWAKENING,
@@ -354,7 +354,7 @@ static const u16 sFavorLadyAcceptedItems_Slippery[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Roundish[] =
+static const u16 sFavourLadyAcceptedItems_Roundish[] =
 {
     ITEM_FLUFFY_TAIL,
     ITEM_PEARL,
@@ -375,7 +375,7 @@ static const u16 sFavorLadyAcceptedItems_Roundish[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Whamish[] =
+static const u16 sFavourLadyAcceptedItems_Whamish[] =
 {
     ITEM_REVIVAL_HERB,
     ITEM_POTION,
@@ -394,7 +394,7 @@ static const u16 sFavorLadyAcceptedItems_Whamish[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Shiny[] =
+static const u16 sFavourLadyAcceptedItems_Shiny[] =
 {
     ITEM_HEAL_POWDER,
     ITEM_X_SPEED,
@@ -419,7 +419,7 @@ static const u16 sFavorLadyAcceptedItems_Shiny[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Sticky[] =
+static const u16 sFavourLadyAcceptedItems_Sticky[] =
 {
     ITEM_ENERGY_ROOT,
     ITEM_FULL_RESTORE,
@@ -434,7 +434,7 @@ static const u16 sFavorLadyAcceptedItems_Sticky[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Pointy[] =
+static const u16 sFavourLadyAcceptedItems_Pointy[] =
 {
     ITEM_QUICK_CLAW,
     ITEM_POISON_BARB,
@@ -449,17 +449,17 @@ static const u16 sFavorLadyAcceptedItems_Pointy[] =
     ITEM_NONE
 };
 
-static const u16 *const sFavorLadyAcceptedItemLists[] =
+static const u16 *const sFavourLadyAcceptedItemLists[] =
 {
-    sFavorLadyAcceptedItems_Slippery,
-    sFavorLadyAcceptedItems_Roundish,
-    sFavorLadyAcceptedItems_Whamish,
-    sFavorLadyAcceptedItems_Shiny,
-    sFavorLadyAcceptedItems_Sticky,
-    sFavorLadyAcceptedItems_Pointy
+    sFavourLadyAcceptedItems_Slippery,
+    sFavourLadyAcceptedItems_Roundish,
+    sFavourLadyAcceptedItems_Whamish,
+    sFavourLadyAcceptedItems_Shiny,
+    sFavourLadyAcceptedItems_Sticky,
+    sFavourLadyAcceptedItems_Pointy
 };
 
-static const u16 sFavorLadyPrizes[] =
+static const u16 sFavourLadyPrizes[] =
 {
     ITEM_LUXURY_BALL,
     ITEM_NUGGET,

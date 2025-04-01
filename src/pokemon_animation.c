@@ -602,7 +602,7 @@ static void HandleStartAffineAnim(struct Sprite *sprite)
     else
         StartSpriteAffineAnim(sprite, 0);
 
-    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
     sprite->affineAnimPaused = TRUE;
 }
 
@@ -650,7 +650,7 @@ static u8 AddNewAnim(void)
 static void ResetSpriteAfterAnim(struct Sprite *sprite)
 {
     sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
-    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    CalcCentreToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
     if (sIsSummaryAnim == TRUE)
     {
@@ -1125,27 +1125,27 @@ static void Anim_CircleCounterclockwise(struct Sprite *sprite)
     sprite->callback = CircleCounterclockwise;
 }
 
-#define GlowColor(color, colorIncrement, speed)                         \
+#define GlowColour(colour, colourIncrement, speed)                         \
 {                                                                       \
     if (sprite->data[2] == 0)                                           \
         sprite->data[7] = OBJ_PLTT_ID(sprite->oam.paletteNum);          \
                                                                         \
     if (sprite->data[2] > 128)                                          \
     {                                                                   \
-        BlendPalette(sprite->data[7], 16, 0, (color));                  \
+        BlendPalette(sprite->data[7], 16, 0, (colour));                  \
         sprite->callback = WaitAnimEnd;                                 \
     }                                                                   \
     else                                                                \
     {                                                                   \
-        sprite->data[6] = Sin(sprite->data[2], (colorIncrement));       \
-        BlendPalette(sprite->data[7], 16, sprite->data[6], (color));    \
+        sprite->data[6] = Sin(sprite->data[2], (colourIncrement));       \
+        BlendPalette(sprite->data[7], 16, sprite->data[6], (colour));    \
     }                                                                   \
     sprite->data[2] += (speed);                                         \
 }
 
 static void Anim_GlowBlack(struct Sprite *sprite)
 {
-    GlowColor(RGB_BLACK, 16, 1);
+    GlowColour(RGB_BLACK, 16, 1);
 }
 
 static void Anim_HorizontalStretch(struct Sprite *sprite)
@@ -1591,27 +1591,27 @@ static void Anim_BounceRotateToSides(struct Sprite *sprite)
 
 static void Anim_GlowOrange(struct Sprite *sprite)
 {
-    GlowColor(RGB(31, 22, 0), 12, 2);
+    GlowColour(RGB(31, 22, 0), 12, 2);
 }
 
 static void Anim_GlowRed(struct Sprite *sprite)
 {
-    GlowColor(RGB_RED, 12, 2);
+    GlowColour(RGB_RED, 12, 2);
 }
 
 static void Anim_GlowBlue(struct Sprite *sprite)
 {
-    GlowColor(RGB_BLUE, 12, 2);
+    GlowColour(RGB_BLUE, 12, 2);
 }
 
 static void Anim_GlowYellow(struct Sprite *sprite)
 {
-    GlowColor(RGB_YELLOW, 12, 2);
+    GlowColour(RGB_YELLOW, 12, 2);
 }
 
 static void Anim_GlowPurple(struct Sprite *sprite)
 {
-    GlowColor(RGB_PURPLE, 12, 2);
+    GlowColour(RGB_PURPLE, 12, 2);
 }
 
 static void BackAndLunge_0(struct Sprite *sprite);
@@ -2185,7 +2185,7 @@ static void RotateUpSlamDown_2(struct Sprite *sprite);
 static void Anim_RotateUpSlamDown(struct Sprite *sprite)
 {
     HandleStartAffineAnim(sprite);
-    sprite->data[6] = -(14 * sprite->centerToCornerVecX / 10);
+    sprite->data[6] = -(14 * sprite->centreToCornerVecX / 10);
     sprite->data[7] = 128;
     sprite->callback = RotateUpSlamDown_0;
 }
@@ -4896,7 +4896,7 @@ enum {
 
 static void ShakeGlow_Blend(struct Sprite *sprite)
 {
-    static const u16 sColors[] =
+    static const u16 sColours[] =
     {
         [SHAKEGLOW_RED]   = RGB_RED,
         [SHAKEGLOW_GREEN] = RGB_GREEN,
@@ -4914,7 +4914,7 @@ static void ShakeGlow_Blend(struct Sprite *sprite)
     else
     {
         sprite->data[6] = Sin(sprite->data[2], 12);
-        BlendPalette(sprite->data[7], 16, sprite->data[6], sColors[sprite->data[1]]);
+        BlendPalette(sprite->data[7], 16, sprite->data[6], sColours[sprite->data[1]]);
     }
 }
 

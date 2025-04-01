@@ -24,15 +24,15 @@
 #include "event_data.h"
 #include "random.h"
 
-#define COLOR_DARK_GREEN RGB(7, 11, 6)
-#define COLOR_LIGHT_GREEN RGB(13, 20, 12)
+#define COLOUR_DARK_GREEN RGB(7, 11, 6)
+#define COLOUR_LIGHT_GREEN RGB(13, 20, 12)
 
 #define TAG_MON_BG 1001
 
 // Positions for the Pokémon images
 enum {
     POS_LEFT,
-    POS_CENTER,
+    POS_CENTRE,
     POS_RIGHT,
 };
 
@@ -66,7 +66,7 @@ struct CreditsData
 {
     u16 monToShow[NUM_MON_SLIDES]; // List of Pokémon species ids that will show during the credits
     u16 imgCounter; //how many mon images have been shown
-    u16 nextImgPos; //if the next image spawns left/center/right
+    u16 nextImgPos; //if the next image spawns left/centre/right
     u16 currShownMon; //index into monToShow
     u16 numMonToShow; //number of Pokémon to show, always NUM_MON_SLIDES after determine function
     u16 caughtMonIds[NATIONAL_DEX_COUNT]; //temporary location to hold a condensed array of all caught Pokémon
@@ -308,7 +308,7 @@ static const union AnimCmd sAnim_MonBg_Blue[] =
 static const union AnimCmd *const sAnims_MonBg[] =
 {
     [POS_LEFT]   = sAnim_MonBg_Yellow,
-    [POS_CENTER] = sAnim_MonBg_Red,
+    [POS_CENTRE] = sAnim_MonBg_Red,
     [POS_RIGHT]  = sAnim_MonBg_Blue,
 };
 
@@ -373,23 +373,23 @@ static void FreeCreditsBgsAndWindows(void)
 static void PrintCreditsText(const u8 *string, u8 y, bool8 isTitle)
 {
     u8 x;
-    u8 color[3];
+    u8 colour[3];
 
-    color[0] = TEXT_COLOR_TRANSPARENT;
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
 
     if (isTitle == TRUE)
     {
-        color[1] = TEXT_COLOR_LIGHT_GRAY;
-        color[2] = TEXT_COLOR_RED;
+        colour[1] = TEXT_COLOUR_LIGHT_GREY;
+        colour[2] = TEXT_COLOUR_RED;
     }
     else
     {
-        color[1] = TEXT_COLOR_WHITE;
-        color[2] = TEXT_COLOR_DARK_GRAY;
+        colour[1] = TEXT_COLOUR_WHITE;
+        colour[2] = TEXT_COLOUR_DARK_GREY;
     }
 
-    x = GetStringCenterAlignXOffsetWithLetterSpacing(FONT_NORMAL, string, DISPLAY_WIDTH, 1);
-    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 1, 0, color, TEXT_SKIP_DRAW, string);
+    x = GetStringCentreAlignXOffsetWithLetterSpacing(FONT_NORMAL, string, DISPLAY_WIDTH, 1);
+    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 1, 0, colour, TEXT_SKIP_DRAW, string);
 }
 
 #define tMainTaskId data[1]
@@ -575,7 +575,7 @@ static void Task_LoadShowMons(u8 taskId)
         SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
                                    | BGCNT_CHARBASE(0)
                                    | BGCNT_SCREENBASE(7)
-                                   | BGCNT_16COLOR
+                                   | BGCNT_16COLOUR
                                    | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
                                     | DISPCNT_OBJ_1D_MAP
@@ -625,7 +625,7 @@ static void Task_CreditsTheEnd3(u8 taskId)
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0)
                                | BGCNT_CHARBASE(0)
                                | BGCNT_SCREENBASE(7)
-                               | BGCNT_16COLOR
+                               | BGCNT_16COLOUR
                                | BGCNT_TXT256x256);
     EnableInterrupts(INTR_FLAG_VBLANK);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
@@ -761,9 +761,9 @@ static void Task_UpdatePage(u8 taskId)
                 gTasks[gTasks[taskId].tMainTaskId].tPrintedPage = TRUE;
 
                 if (gTasks[gTasks[taskId].tMainTaskId].tCurrentMode == MODE_BIKE_SCENE)
-                    BeginNormalPaletteFade(0x300, 0, 16, 0, COLOR_LIGHT_GREEN);
+                    BeginNormalPaletteFade(0x300, 0, 16, 0, COLOUR_LIGHT_GREEN);
                 else // MODE_SHOW_MONS
-                    BeginNormalPaletteFade(0x300, 0, 16, 0, COLOR_DARK_GREEN);
+                    BeginNormalPaletteFade(0x300, 0, 16, 0, COLOUR_DARK_GREEN);
                 return;
             }
 
@@ -794,9 +794,9 @@ static void Task_UpdatePage(u8 taskId)
         }
         gTasks[taskId].tState++;
         if (gTasks[gTasks[taskId].tMainTaskId].tCurrentMode == MODE_BIKE_SCENE)
-            BeginNormalPaletteFade(0x300, 0, 0, 16, COLOR_LIGHT_GREEN);
+            BeginNormalPaletteFade(0x300, 0, 0, 16, COLOUR_LIGHT_GREEN);
         else // MODE_SHOW_MONS
-            BeginNormalPaletteFade(0x300, 0, 0, 16, COLOR_DARK_GREEN);
+            BeginNormalPaletteFade(0x300, 0, 0, 16, COLOUR_DARK_GREEN);
         return;
     case 5:
         if (!gPaletteFade.active)
@@ -1450,7 +1450,7 @@ static void SpriteCB_CreditsMon(struct Sprite *sprite)
                 sprite->y++;
             sprite->x -= 2;
             break;
-        case POS_CENTER + 1:
+        case POS_CENTRE + 1:
             break;
         case POS_RIGHT + 1:
             if ((sprite->data[7] & 3) == 0)

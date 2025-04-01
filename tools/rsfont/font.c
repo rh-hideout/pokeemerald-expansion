@@ -100,13 +100,13 @@ void ConvertToTiles1Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 8) + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 1)
-                        FATAL_ERROR("More than 2 colors in 1 BPP font.\n");
+                    if (colour > 1)
+                        FATAL_ERROR("More than 2 colours in 1 BPP font.\n");
 
                     destRow <<= 1;
-                    destRow |= color;
+                    destRow |= colour;
                 }
 
                 dest[(glyph * 8) + i] = destRow;
@@ -127,13 +127,13 @@ void ConvertToTiles1Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 16) + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 1)
-                        FATAL_ERROR("More than 2 colors in 1 BPP font.\n");
+                    if (colour > 1)
+                        FATAL_ERROR("More than 2 colours in 1 BPP font.\n");
 
                     destRow <<= 1;
-                    destRow |= color;
+                    destRow |= colour;
                 }
 
                 dest[tile1Offset + i] = destRow;
@@ -147,13 +147,13 @@ void ConvertToTiles1Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 16) + 8 + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 1)
-                        FATAL_ERROR("More than 2 colors in 1 BPP font.\n");
+                    if (colour > 1)
+                        FATAL_ERROR("More than 2 colours in 1 BPP font.\n");
 
                     destRow <<= 1;
-                    destRow |= color;
+                    destRow |= colour;
                 }
 
                 dest[tile2Offset + i] = destRow;
@@ -269,13 +269,13 @@ void ConvertToTiles4Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 8) + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 2)
-                        FATAL_ERROR("More than 3 colors in 4 BPP font.\n");
+                    if (colour > 2)
+                        FATAL_ERROR("More than 3 colours in 4 BPP font.\n");
 
                     destRow >>= 4;
-                    destRow |= (table[color] << 28);
+                    destRow |= (table[colour] << 28);
                 }
 
                 dest[offset] = destRow & 0xFF;
@@ -310,13 +310,13 @@ void ConvertToTiles4Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 16) + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 2)
-                        FATAL_ERROR("More than 3 colors in 4 BPP font.\n");
+                    if (colour > 2)
+                        FATAL_ERROR("More than 3 colours in 4 BPP font.\n");
 
                     destRow >>= 4;
-                    destRow |= (table[color] << 28);
+                    destRow |= (table[colour] << 28);
                 }
 
                 dest[tile1Offset] = destRow & 0xFF;
@@ -335,13 +335,13 @@ void ConvertToTiles4Bpp(unsigned char *src, unsigned char *dest, int numGlyphs, 
                 {
                     int x = ((glyph % 16) * 8) + j;
                     int y = ((glyph / 16) * 16) + 8 + i;
-                    unsigned char color = src[(y * 128) + x];
+                    unsigned char colour = src[(y * 128) + x];
 
-                    if (color > 2)
-                        FATAL_ERROR("More than 3 colors in 4 BPP font.\n");
+                    if (colour > 2)
+                        FATAL_ERROR("More than 3 colours in 4 BPP font.\n");
 
                     destRow >>= 4;
-                    destRow |= (table[color] << 28);
+                    destRow |= (table[colour] << 28);
                 }
 
                 dest[tile2Offset] = destRow & 0xFF;
@@ -359,13 +359,13 @@ static void SetFontPalette(struct Image *image)
 {
     image->hasPalette = true;
 
-    image->palette.numColors = 3;
+    image->palette.numColours = 3;
 
-    for (int i = 0; i < image->palette.numColors; i++)
+    for (int i = 0; i < image->palette.numColours; i++)
     {
-        image->palette.colors[i].red = gFontPalette[i][0];
-        image->palette.colors[i].green = gFontPalette[i][1];
-        image->palette.colors[i].blue = gFontPalette[i][2];
+        image->palette.colours[i].red = gFontPalette[i][0];
+        image->palette.colours[i].green = gFontPalette[i][1];
+        image->palette.colours[i].blue = gFontPalette[i][2];
     }
 
     image->hasTransparency = false;

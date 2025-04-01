@@ -50,7 +50,7 @@ static void CB2_GoToClearSaveDataScreen(void);
 static void CB2_GoToResetRtcScreen(void);
 static void CB2_GoToBerryFixScreen(void);
 static void CB2_GoToCopyrightScreen(void);
-static void UpdateLegendaryMarkingColor(u8);
+static void UpdateLegendaryMarkingColour(u8);
 
 static void SpriteCB_VersionBannerLeft(struct Sprite *sprite);
 static void SpriteCB_VersionBannerRight(struct Sprite *sprite);
@@ -454,7 +454,7 @@ static void CreateCopyrightBanner(s16 x, s16 y)
 
 // Defines for SpriteCB_PokemonLogoShine
 enum {
-    SHINE_MODE_SINGLE_NO_BG_COLOR,
+    SHINE_MODE_SINGLE_NO_BG_COLOUR,
     SHINE_MODE_DOUBLE,
     SHINE_MODE_SINGLE,
 };
@@ -462,46 +462,46 @@ enum {
 #define SHINE_SPEED  4
 
 #define sMode     data[0]
-#define sBgColor  data[1]
+#define sBgColour  data[1]
 
 static void SpriteCB_PokemonLogoShine(struct Sprite *sprite)
 {
     if (sprite->x < DISPLAY_WIDTH + 32)
     {
-        // In any mode except SHINE_MODE_SINGLE_NO_BG_COLOR the background
-        // color will change, in addition to the shine sprite moving.
-        if (sprite->sMode != SHINE_MODE_SINGLE_NO_BG_COLOR)
+        // In any mode except SHINE_MODE_SINGLE_NO_BG_COLOUR the background
+        // colour will change, in addition to the shine sprite moving.
+        if (sprite->sMode != SHINE_MODE_SINGLE_NO_BG_COLOUR)
         {
-            u16 backgroundColor;
+            u16 backgroundColour;
 
             if (sprite->x < DISPLAY_WIDTH / 2)
             {
-                // Brighten background color
-                if (sprite->sBgColor < 31)
-                    sprite->sBgColor++;
-                if (sprite->sBgColor < 31)
-                    sprite->sBgColor++;
+                // Brighten background colour
+                if (sprite->sBgColour < 31)
+                    sprite->sBgColour++;
+                if (sprite->sBgColour < 31)
+                    sprite->sBgColour++;
             }
             else
             {
-                // Darken background color
-                if (sprite->sBgColor != 0)
-                    sprite->sBgColor--;
-                if (sprite->sBgColor != 0)
-                    sprite->sBgColor--;
+                // Darken background colour
+                if (sprite->sBgColour != 0)
+                    sprite->sBgColour--;
+                if (sprite->sBgColour != 0)
+                    sprite->sBgColour--;
             }
 
-            backgroundColor = _RGB(sprite->sBgColor, sprite->sBgColor, sprite->sBgColor);
+            backgroundColour = _RGB(sprite->sBgColour, sprite->sBgColour, sprite->sBgColour);
 
             // Flash the background green for 4 frames of movement.
-            // Otherwise use the updating color.
+            // Otherwise use the updating colour.
             if (sprite->x == DISPLAY_WIDTH / 2 + (3 * SHINE_SPEED)
              || sprite->x == DISPLAY_WIDTH / 2 + (4 * SHINE_SPEED)
              || sprite->x == DISPLAY_WIDTH / 2 + (5 * SHINE_SPEED)
              || sprite->x == DISPLAY_WIDTH / 2 + (6 * SHINE_SPEED))
                 gPlttBufferFaded[0] = RGB(24, 31, 12);
             else
-                gPlttBufferFaded[0] = backgroundColor;
+                gPlttBufferFaded[0] = backgroundColour;
         }
 
         sprite->x += SHINE_SPEED;
@@ -528,16 +528,16 @@ static void StartPokemonLogoShine(u8 mode)
 
     switch (mode)
     {
-    case SHINE_MODE_SINGLE_NO_BG_COLOR:
+    case SHINE_MODE_SINGLE_NO_BG_COLOUR:
     case SHINE_MODE_SINGLE:
         // Create one regular shine sprite.
-        // If mode is SHINE_MODE_SINGLE it will also change the background color.
+        // If mode is SHINE_MODE_SINGLE it will also change the background colour.
         spriteId = CreateSprite(&sPokemonLogoShineSpriteTemplate, 0, 68, 0);
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_WINDOW;
         gSprites[spriteId].sMode = mode;
         break;
     case SHINE_MODE_DOUBLE:
-        // Create an invisible sprite with mode set to update the background color
+        // Create an invisible sprite with mode set to update the background colour
         spriteId = CreateSprite(&sPokemonLogoShineSpriteTemplate, 0, 68, 0);
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_WINDOW;
         gSprites[spriteId].sMode = mode;
@@ -556,7 +556,7 @@ static void StartPokemonLogoShine(u8 mode)
 }
 
 #undef sMode
-#undef sBgColor
+#undef sBgColour
 
 static void VBlankCB(void)
 {
@@ -648,9 +648,9 @@ void CB2_InitTitleScreen(void)
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG2 | BLDCNT_EFFECT_LIGHTEN);
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
         SetGpuReg(REG_OFFSET_BLDY, 12);
-        SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(26) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(27) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(9) | BGCNT_256COLOR | BGCNT_AFF256x256);
+        SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(26) | BGCNT_16COLOUR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(27) | BGCNT_16COLOUR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(9) | BGCNT_256COLOUR | BGCNT_AFF256x256);
         EnableInterrupts(INTR_FLAG_VBLANK);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
                                     | DISPCNT_OBJ_1D_MAP
@@ -664,7 +664,7 @@ void CB2_InitTitleScreen(void)
     case 5:
         if (!UpdatePaletteFade())
         {
-            StartPokemonLogoShine(SHINE_MODE_SINGLE_NO_BG_COLOR);
+            StartPokemonLogoShine(SHINE_MODE_SINGLE_NO_BG_COLOUR);
             ScanlineEffect_InitWave(0, DISPLAY_HEIGHT, 4, 4, 0, SCANLINE_EFFECT_REG_BG1HOFS, TRUE);
             SetMainCallback2(MainCB2);
         }
@@ -812,7 +812,7 @@ static void Task_TitleScreenPhase3(u8 taskId)
             gBattle_BG1_Y = gTasks[taskId].tBg1Y / 2;
             gBattle_BG1_X = 0;
         }
-        UpdateLegendaryMarkingColor(gTasks[taskId].tCounter);
+        UpdateLegendaryMarkingColour(gTasks[taskId].tCounter);
         if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
         {
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITEALPHA);
@@ -854,16 +854,16 @@ static void CB2_GoToBerryFixScreen(void)
     }
 }
 
-static void UpdateLegendaryMarkingColor(u8 frameNum)
+static void UpdateLegendaryMarkingColour(u8 frameNum)
 {
-    if ((frameNum % 4) == 0) // Change color every 4th frame
+    if ((frameNum % 4) == 0) // Change colour every 4th frame
     {
         s32 intensity = Cos(frameNum, 128) + 128;
         s32 r = 31 - ((intensity * 32 - intensity) / 256);
         s32 g = 31 - (intensity * 22 / 256);
         s32 b = 12;
 
-        u16 color = RGB(r, g, b);
-        LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
+        u16 colour = RGB(r, g, b);
+        LoadPalette(&colour, BG_PLTT_ID(14) + 15, sizeof(colour));
    }
 }

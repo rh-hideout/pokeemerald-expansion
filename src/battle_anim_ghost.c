@@ -401,7 +401,7 @@ static void AnimConfuseRayBallSpiral_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-// Creates a large transparent clone of the attacker centered on their position which shrinks to original size
+// Creates a large transparent clone of the attacker centreed on their position which shrinks to original size
 void AnimTask_NightShadeClone(u8 taskId)
 {
     u8 spriteId;
@@ -460,9 +460,9 @@ static void AnimTask_NightShadeClone_Step2(u8 taskId)
 
 // Spins a sprite towards the target, pausing in the middle.
 // Used in Shadow Ball.
-// arg 0: duration step 1 (attacker -> center)
-// arg 1: duration step 2 (spin center)
-// arg 2: duration step 3 (center -> target)
+// arg 0: duration step 1 (attacker -> centre)
+// arg 1: duration step 2 (spin centre)
+// arg 2: duration step 3 (centre -> target)
 void AnimShadowBall(struct Sprite *sprite)
 {
     s16 oldPosX = sprite->x;

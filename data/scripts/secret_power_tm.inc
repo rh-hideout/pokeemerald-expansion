@@ -13,7 +13,7 @@ Route111_Text_ExplainSecretPower:
 	.string "Some vines should get free and drop\l"
 	.string "down, so you can climb the tree.\p"
 	.string "You'll find a lot of space for putting\n"
-	.string "your favorite things.\p"
+	.string "your favourite things.\p"
 	.string "It'll be your own secret room…\n"
 	.string "A SECRET BASE!\p"
 	.string "You should make one, too.\p"

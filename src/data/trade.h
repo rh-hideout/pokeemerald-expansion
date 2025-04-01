@@ -29,7 +29,7 @@ static const u16 sTradePartyBoxTilemap[] = INCBIN_U16("graphics/trade/party_box_
 static const u8 sTradeStripesBG2Tilemap[] = INCBIN_U8("graphics/trade/stripes_bg2_map.bin");
 static const u8 sTradeStripesBG3Tilemap[] = INCBIN_U8("graphics/trade/stripes_bg3_map.bin");
 static const u8 sText_EmptyString[] = _("");
-static const u8 sText_UnusedTextFormat[] = _("{COLOR WHITE}{HIGHLIGHT TRANSPARENT}{SHADOW DARK_GRAY}");
+static const u8 sText_UnusedTextFormat[] = _("{COLOUR WHITE}{HIGHLIGHT TRANSPARENT}{SHADOW DARK_GREY}");
 const u8 gText_MaleSymbol4[] = _("♂");
 const u8 gText_FemaleSymbol4[] = _("♀");
 const u8 gText_GenderlessSymbol[] = _("");
@@ -49,10 +49,10 @@ static const u8 sText_CancelTrade[] = _("Cancel trade?");
 static const u8 sJPText_PressBButtonToQuit[] = _("Bボタン　で　もどります");
 static const u8 sText_Summary2[] = _("SUMMARY");
 static const u8 sText_Trade2[] = _("TRADE");
-static const u8 sText_CommunicationStandby[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Communication standby…\nPlease wait.");
-static const u8 sText_TheTradeHasBeenCanceled[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}The trade has\nbeen canceled.");
+static const u8 sText_CommunicationStandby[] = _("{COLOUR DARK_GREY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GREY}Communication standby…\nPlease wait.");
+static const u8 sText_TheTradeHasBeenCanceled[] = _("{COLOUR DARK_GREY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GREY}The trade has\nbeen canceled.");
 static const u8 sText_OnlyPkmnForBattle[] = _("That's your only\nPOKéMON for battle.");
-static const u8 sText_WaitingForYourFriend[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Waiting for your friend\nto finish…");
+static const u8 sText_WaitingForYourFriend[] = _("{COLOUR DARK_GREY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GREY}Waiting for your friend\nto finish…");
 static const u8 sText_YourFriendWantsToTrade[] = _("Your friend wants\nto trade POKéMON.");
 
 static const struct OamData sOamData_MenuText =
@@ -389,11 +389,11 @@ static const u8 *const sMessages[] =
     [MSG_FRIENDS_MON_CANT_BE_TRADED] = gText_OtherTrainersPkmnCantBeTraded
 };
 
-static const u8 sTradeTextColors[] =
+static const u8 sTradeTextColours[] =
 {
-    TEXT_COLOR_TRANSPARENT, //bg color
-    TEXT_COLOR_WHITE,       //fg color
-    TEXT_COLOR_DARK_GRAY    //shadow color
+    TEXT_COLOUR_TRANSPARENT, //bg colour
+    TEXT_COLOUR_WHITE,       //fg colour
+    TEXT_COLOUR_DARK_GREY    //shadow colour
 };
 
 static const struct BgTemplate sBgTemplates[] =

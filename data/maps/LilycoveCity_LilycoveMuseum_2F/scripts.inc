@@ -135,7 +135,7 @@ LilycoveCity_LilycoveMuseum_2F_EventScript_NoRoomForGlassOrnament::
 	end
 
 LilycoveCity_LilycoveMuseum_2F_EventScript_ReceivedGlassOrnament::
-	msgbox LilycoveCity_LilycoveMuseum_2F_Text_HonorToHaveYouVisit, MSGBOX_NPC
+	msgbox LilycoveCity_LilycoveMuseum_2F_Text_HonourToHaveYouVisit, MSGBOX_NPC
 	releaseall
 	end
 
@@ -280,32 +280,32 @@ LilycoveCity_LilycoveMuseum_2F_Text_KeepThisForYou:
 	.string "I will keep this for you until we\n"
 	.string "meet again.$"
 
-LilycoveCity_LilycoveMuseum_2F_Text_HonorToHaveYouVisit:
+LilycoveCity_LilycoveMuseum_2F_Text_HonourToHaveYouVisit:
 	.string "Ah, so good to see you, {PLAYER}!\p"
-	.string "It's an honor to have you visit us\n"
+	.string "It's an honour to have you visit us\n"
 	.string "on your busy journeys.\p"
 	.string "Please, relax and do enjoy your\n"
 	.string "visit with us.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsPinkPictureFrame:
-	.string "It's a picture frame with pink-colored\n"
+	.string "It's a picture frame with pink-coloured\n"
 	.string "adornments.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsYellowPictureFrame:
 	.string "It's a picture frame with\n"
-	.string "yellow-colored adornments.$"
+	.string "yellow-coloured adornments.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsBluePictureFrame:
 	.string "It's a picture frame with\n"
-	.string "blue-colored adornments.$"
+	.string "blue-coloured adornments.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsRedPictureFrame:
 	.string "It's a picture frame with\n"
-	.string "red-colored adornments.$"
+	.string "red-coloured adornments.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsGreenPictureFrame:
 	.string "It's a picture frame with\n"
-	.string "green-colored adornments.$"
+	.string "green-coloured adornments.$"
 
 LilycoveCity_LilycoveMuseum_2F_Text_ItsPaintingOfPokemon:
 	.string "It's a painting of POKéMON.$"

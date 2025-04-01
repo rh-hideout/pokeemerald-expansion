@@ -374,7 +374,7 @@ BattleFrontier_ReceptionGate_Text_BattlePalaceInfo:
 
 BattleFrontier_ReceptionGate_Text_BattleArenaInfo:
 	.string "The BATTLE ARENA is the dojo-like\n"
-	.string "building at the center-right of\l"
+	.string "building at the centre-right of\l"
 	.string "the BATTLE FRONTIER.\p"
 	.string "An event called the Set KO Tourney\n"
 	.string "takes place at the BATTLE ARENA.$"
@@ -390,7 +390,7 @@ BattleFrontier_ReceptionGate_Text_BattleFactoryInfo:
 
 BattleFrontier_ReceptionGate_Text_BattlePikeInfo:
 	.string "The BATTLE PIKE is the building shaped\n"
-	.string "like a POKéMON at the center-left of\l"
+	.string "like a POKéMON at the centre-left of\l"
 	.string "the BATTLE FRONTIER.\p"
 	.string "An event called the Battle Choice\n"
 	.string "is conducted there.$"

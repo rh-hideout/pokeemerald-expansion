@@ -385,7 +385,7 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
             case EXT_CTRL_CODE_PAUSE_MUSIC:
             case EXT_CTRL_CODE_RESUME_MUSIC:
                 break;
-            case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
+            case EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW:
                 *dest++ = *src++;
             case EXT_CTRL_CODE_PLAY_BGM:
                 *dest++ = *src++;
@@ -622,15 +622,15 @@ u32 StringLength_Multibyte(const u8 *str)
     return length;
 }
 
-u8 *WriteColorChangeControlCode(u8 *dest, u32 colorType, u8 color)
+u8 *WriteColourChangeControlCode(u8 *dest, u32 colourType, u8 colour)
 {
     *dest = EXT_CTRL_CODE_BEGIN;
     dest++;
 
-    switch (colorType)
+    switch (colourType)
     {
     case 0:
-        *dest = EXT_CTRL_CODE_COLOR;
+        *dest = EXT_CTRL_CODE_COLOUR;
         dest++;
         break;
     case 1:
@@ -643,7 +643,7 @@ u8 *WriteColorChangeControlCode(u8 *dest, u32 colorType, u8 color)
         break;
     }
 
-    *dest = color;
+    *dest = colour;
     dest++;
     *dest = EOS;
     return dest;
@@ -682,10 +682,10 @@ u8 GetExtCtrlCodeLength(u8 code)
     static const u8 lengths[] =
     {
         [0]                                    = 1,
-        [EXT_CTRL_CODE_COLOR]                  = 2,
+        [EXT_CTRL_CODE_COLOUR]                  = 2,
         [EXT_CTRL_CODE_HIGHLIGHT]              = 2,
         [EXT_CTRL_CODE_SHADOW]                 = 2,
-        [EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW] = 4,
+        [EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW] = 4,
         [EXT_CTRL_CODE_PALETTE]                = 2,
         [EXT_CTRL_CODE_FONT]                   = 2,
         [EXT_CTRL_CODE_RESET_FONT]             = 1,

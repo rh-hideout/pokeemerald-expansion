@@ -101,7 +101,7 @@ static void AnimTask_AcidArmor_Step(u8);
 static void AnimTask_DeepInhale_Step(u8);
 static void AnimTask_SquishAndSweatDroplets_Step(u8);
 static void CreateSweatDroplets(u8, bool8);
-static void AnimTask_FacadeColorBlend_Step(u8);
+static void AnimTask_FacadeColourBlend_Step(u8);
 static void AnimTask_GlareEyeDots_Step(u8);
 static void GetGlareEyeDotCoords(s16, s16, s16, s16, u8, u8, s16 *, s16 *);
 static void AnimTask_BarrageBall_Step(u8);
@@ -902,7 +902,7 @@ const struct SpriteTemplate gFacadeSweatDropSpriteTemplate =
     .callback = AnimFacadeSweatDrop,
 };
 
-const u16 gFacadeBlendColors[] = {
+const u16 gFacadeBlendColours[] = {
     RGB(28, 25,  1),
     RGB(28, 21,  5),
     RGB(27, 18,  8),
@@ -1520,16 +1520,16 @@ void AnimTask_SetPsychicBackground(u8 taskId)
 static void SetPsychicBackground_Step(u8 taskId)
 {
     int i;
-    u16 lastColor;
+    u16 lastColour;
     u8 paletteIndex = GetBattleBgPaletteNum();
 
     if (++gTasks[taskId].data[5] == 4)
     {
-        lastColor = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 11];
+        lastColour = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 11];
         for (i = 10; i > 0; i--)
             gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + i + 1] = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + i];
 
-        gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 1] = lastColor;
+        gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 1] = lastColour;
         gTasks[taskId].data[5] = 0;
     }
 
@@ -1546,20 +1546,20 @@ void AnimTask_FadeScreenToWhite(u8 taskId)
 static void FadeScreenToWhite_Step(u8 taskId)
 {
     int i;
-    u16 lastColor;
+    u16 lastColour;
     u8 paletteIndex = GetBattleBgPaletteNum();
 
     if (++gTasks[taskId].data[5] == 4)
     {
-        lastColor = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 11];
+        lastColour = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 11];
         for (i = 10; i > 0; i--)
             gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + i + 1] = gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + i];
-        gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 1] = lastColor;
+        gPlttBufferFaded[BG_PLTT_ID(paletteIndex) + 1] = lastColour;
 
-        lastColor = gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + 11];
+        lastColour = gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + 11];
         for (i = 10; i > 0; i--)
             gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + i + 1] = gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + i];
-        gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + 1] = lastColor;
+        gPlttBufferUnfaded[BG_PLTT_ID(paletteIndex) + 1] = lastColour;
 
         gTasks[taskId].data[5] = 0;
     }
@@ -4060,10 +4060,10 @@ static void AnimFacadeSweatDrop(struct Sprite *sprite)
 #undef sTaskId
 #undef sActiveSpritesIdx
 
-// Blends the mon sprite's color with a rotating set of colors.
+// Blends the mon sprite's colour with a rotating set of colours.
 // arg 0: battler
 // arg 1: duration
-void AnimTask_FacadeColorBlend(u8 taskId)
+void AnimTask_FacadeColourBlend(u8 taskId)
 {
     u8 spriteId;
 
@@ -4071,14 +4071,14 @@ void AnimTask_FacadeColorBlend(u8 taskId)
     gTasks[taskId].data[1] = gBattleAnimArgs[1];
     spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
     gTasks[taskId].data[2] = OBJ_PLTT_ID(gSprites[spriteId].oam.paletteNum);
-    gTasks[taskId].func = AnimTask_FacadeColorBlend_Step;
+    gTasks[taskId].func = AnimTask_FacadeColourBlend_Step;
 }
 
-static void AnimTask_FacadeColorBlend_Step(u8 taskId)
+static void AnimTask_FacadeColourBlend_Step(u8 taskId)
 {
     if (gTasks[taskId].data[1])
     {
-        BlendPalette(gTasks[taskId].data[2], 16, 8, gFacadeBlendColors[gTasks[taskId].data[0]]);
+        BlendPalette(gTasks[taskId].data[2], 16, 8, gFacadeBlendColours[gTasks[taskId].data[0]]);
         if (++gTasks[taskId].data[0] > 23)
             gTasks[taskId].data[0] = 0;
 

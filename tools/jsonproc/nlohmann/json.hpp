@@ -149,7 +149,7 @@ Returns an ordering that is similar to Python:
 - discarded values are not comparable
 - binary is represented as a b"" string in python and directly comparable to a
   string; however, making a binary array directly comparable with a string would
-  be surprising behavior in a JSON file.
+  be surprising behaviour in a JSON file.
 
 @since version 1.0.0
 */
@@ -184,7 +184,7 @@ inline bool operator<(const value_t lhs, const value_t rhs) noexcept
  * Created by Evan Nemerson <evan@nemerson.com>
  *
  * To the extent possible under law, the author(s) have dedicated all
- * copyright and related and neighboring rights to this software to
+ * copyright and related and neighbouring rights to this software to
  * the public domain worldwide. This software is distributed without
  * any warranty.
  *
@@ -15850,7 +15850,7 @@ void grisu2(char* buf, int& len, int& decimal_exponent, FloatType value)
     JSON_ASSERT(std::isfinite(value));
     JSON_ASSERT(value > 0);
 
-    // If the neighbors (and boundaries) of 'value' are always computed for double-precision
+    // If the neighbours (and boundaries) of 'value' are always computed for double-precision
     // numbers, all float's can be recovered using strtod (and strtof). However, the resulting
     // decimal representations are not exactly "short".
     //
@@ -15863,7 +15863,7 @@ void grisu2(char* buf, int& len, int& decimal_exponent, FloatType value)
     // indicates that single precision floating-point numbers should be recovered using
     // 'std::strtof'.
     //
-    // NB: If the neighbors are computed for single-precision numbers, there is a single float
+    // NB: If the neighbours are computed for single-precision numbers, there is a single float
     //     (7.0385307e-26f) which can't be recovered using strtod. The resulting double precision
     //     value is off by 1 ulp.
 #if 0
@@ -21504,7 +21504,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                         const auto idx = json_pointer::array_index(last_path);
                         if (JSON_HEDLEY_UNLIKELY(idx > parent.size()))
                         {
-                            // avoid undefined behavior
+                            // avoid undefined behaviour
                             JSON_THROW(out_of_range::create(401, "array index " + std::to_string(idx) + " is out of range", parent));
                         }
 

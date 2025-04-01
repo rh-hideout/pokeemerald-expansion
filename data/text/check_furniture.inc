@@ -4,7 +4,7 @@ Text_PictureBookShelf:
 Text_BookShelf:
 	.string "It's filled with all sorts of books.$"
 
-Text_PokemonCenterBookShelf:
+Text_PokemonCentreBookShelf:
 	.string "POKéMON magazines!\n"
 	.string "POKéMON PAL…\p"
 	.string "POKéMON HANDBOOK…\n"

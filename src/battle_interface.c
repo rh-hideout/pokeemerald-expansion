@@ -583,8 +583,8 @@ static const struct SpriteTemplate sStatusSummaryBallsSpriteTemplates[2] =
     }
 };
 
-static const u8 sEmptyWhiteText_GrayHighlight[] = __("{COLOR WHITE}{HIGHLIGHT DARK_GRAY}              ");
-static const u8 sEmptyWhiteText_TransparentHighlight[] = __("{COLOR WHITE}{HIGHLIGHT TRANSPARENT}              ");
+static const u8 sEmptyWhiteText_GreyHighlight[] = __("{COLOUR WHITE}{HIGHLIGHT DARK_GREY}              ");
+static const u8 sEmptyWhiteText_TransparentHighlight[] = __("{COLOUR WHITE}{HIGHLIGHT TRANSPARENT}              ");
 
 enum
 {
@@ -595,7 +595,7 @@ enum
     PAL_STATUS_BRN
 };
 
-static const u16 sStatusIconColors[] =
+static const u16 sStatusIconColours[] =
 {
     [PAL_STATUS_PSN] = RGB(24, 12, 24),
     [PAL_STATUS_PAR] = RGB(23, 23, 3),
@@ -959,7 +959,7 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
     RemoveWindowOnHealthbox(windowId);
 }
 
-static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, u32 rightTile, u32 leftTile)
+static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColour, u32 rightTile, u32 leftTile)
 {
     u8 *windowTileData;
     u32 windowId, tilesCount, x;
@@ -972,7 +972,7 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     *txtPtr++ = CHAR_SLASH;
     txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, 4);
     // Print last 6 chars on the right window
-    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(txtPtr - 6, 0, 5, bgColor, &windowId);
+    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(txtPtr - 6, 0, 5, bgColour, &windowId);
     HpTextIntoHealthboxObject(objVram + rightTile, windowTileData, 4);
     RemoveWindowOnHealthbox(windowId);
     // Print the rest of the chars on the left window
@@ -982,7 +982,7 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
         x = 9, tilesCount = 3;
     else
         x = 6, tilesCount = 2, leftTile += 0x20;
-    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(text, x, 5, bgColor, &windowId);
+    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(text, x, 5, bgColour, &windowId);
     HpTextIntoHealthboxObject(objVram + leftTile, windowTileData, tilesCount);
     RemoveWindowOnHealthbox(windowId);
 }
@@ -1040,7 +1040,7 @@ static void UpdateOpponentHpTextSingles(u32 healthboxSpriteId, s16 value, u32 ma
     u32 var, i;
     u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
 
-    memcpy(text, sEmptyWhiteText_GrayHighlight, sizeof(sEmptyWhiteText_GrayHighlight));
+    memcpy(text, sEmptyWhiteText_GreyHighlight, sizeof(sEmptyWhiteText_GreyHighlight));
     if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
     {
         if (maxOrCurrent == HP_CURRENT)
@@ -1113,7 +1113,7 @@ static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
     u8 *barFontGfx;
     u8 i, var, nature, healthBarSpriteId;
 
-    memcpy(text, sEmptyWhiteText_GrayHighlight, sizeof(sEmptyWhiteText_GrayHighlight));
+    memcpy(text, sEmptyWhiteText_GreyHighlight, sizeof(sEmptyWhiteText_GreyHighlight));
     barFontGfx = &gMonSpritesGfxPtr->barFontGfx[0x520 + (GetBattlerPosition(gSprites[healthboxSpriteId].hMain_Battler) * 384)];
     var = 5;
     nature = GetNature(mon);
@@ -1862,7 +1862,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     pltAdder = PLTT_ID(gSprites[healthboxSpriteId].oam.paletteNum);
     pltAdder += battlerId + 12;
 
-    FillPalette(sStatusIconColors[statusPalId], OBJ_PLTT_OFFSET + pltAdder, PLTT_SIZEOF(1));
+    FillPalette(sStatusIconColours[statusPalId], OBJ_PLTT_OFFSET + pltAdder, PLTT_SIZEOF(1));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_OFFSET + pltAdder], (u16 *)OBJ_PLTT + pltAdder, PLTT_SIZEOF(1));
     CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder) * TILE_SIZE_4BPP), 96);
     if (WhichBattleCoords(battlerId) == 1 || GetBattlerSide(battlerId) == B_SIDE_OPPONENT)
@@ -2335,34 +2335,34 @@ u8 GetHPBarLevel(s16 hp, s16 maxhp)
     return result;
 }
 
-static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId, u32 fontId)
+static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *str, u32 x, u32 y, u32 bgColour, u32 *windowId, u32 fontId)
 {
     u16 winId;
-    u8 color[3];
+    u8 colour[3];
     struct WindowTemplate winTemplate = sHealthboxWindowTemplate;
 
     winId = AddWindow(&winTemplate);
-    FillWindowPixelBuffer(winId, PIXEL_FILL(bgColor));
+    FillWindowPixelBuffer(winId, PIXEL_FILL(bgColour));
 
-    color[0] = bgColor;
-    color[1] = 1;
-    color[2] = 3;
+    colour[0] = bgColour;
+    colour[1] = 1;
+    colour[2] = 3;
 
-    AddTextPrinterParameterized4(winId, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(winId, fontId, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
 
     *windowId = winId;
     return (u8 *)(GetWindowAttribute(winId, WINDOW_TILE_DATA));
 }
 
-static u8 *AddTextPrinterAndCreateWindowOnHealthbox(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId)
+static u8 *AddTextPrinterAndCreateWindowOnHealthbox(const u8 *str, u32 x, u32 y, u32 bgColour, u32 *windowId)
 {
-    return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColor, windowId, FONT_SMALL);
+    return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColour, windowId, FONT_SMALL);
 }
 
-static u8 *AddTextPrinterAndCreateWindowOnHealthboxToFit(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId, u32 width)
+static u8 *AddTextPrinterAndCreateWindowOnHealthboxToFit(const u8 *str, u32 x, u32 y, u32 bgColour, u32 *windowId, u32 width)
 {
     u32 fontId = GetFontIdToFit(str, FONT_SMALL, 0, width);
-    return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColor, windowId, fontId);
+    return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColour, windowId, fontId);
 }
 
 static void RemoveWindowOnHealthbox(u32 windowId)
@@ -2467,19 +2467,19 @@ static const s16 sAbilityPopUpCoordsSingles[MAX_BATTLERS_COUNT][2] =
 #define POPUP_WINDOW_WIDTH 8
 #define MAX_POPUP_STRING_WIDTH (POPUP_WINDOW_WIDTH * 8)
 
-static u8* AddTextPrinterAndCreateWindowOnAbilityPopUp(const u8 *str, u32 x, u32 y, u32 color1, u32 color2, u32 color3, u32 *windowId)
+static u8* AddTextPrinterAndCreateWindowOnAbilityPopUp(const u8 *str, u32 x, u32 y, u32 colour1, u32 colour2, u32 colour3, u32 *windowId)
 {
     u32 fontId;
-    u8 color[3] = {color1, color2, color3};
+    u8 colour[3] = {colour1, colour2, colour3};
     struct WindowTemplate winTemplate = {0};
     winTemplate.width = POPUP_WINDOW_WIDTH;
     winTemplate.height = 2;
 
     *windowId = AddWindow(&winTemplate);
-    FillWindowPixelBuffer(*windowId, PIXEL_FILL(color1));
+    FillWindowPixelBuffer(*windowId, PIXEL_FILL(colour1));
 
     fontId = GetFontIdToFit(str, FONT_SMALL, 0, 76);
-    AddTextPrinterParameterized4(*windowId, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(*windowId, fontId, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
     return (u8 *)(GetWindowAttribute(*windowId, WINDOW_TILE_DATA));
 }
 
@@ -2500,13 +2500,13 @@ static void TextIntoAbilityPopUp(void *dest, u8 *windowTileData, s32 xTileAmount
     }
 }
 
-static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x1, u32 x2, u32 y, u32 color1, u32 color2, u32 color3)
+static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x1, u32 x2, u32 y, u32 colour1, u32 colour2, u32 colour3)
 {
     u32 windowId;
     u8 *windowTileData;
     u16 width;
 
-    windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x1, y, color1, color2, color3, &windowId);
+    windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x1, y, colour1, colour2, colour3, &windowId);
     TextIntoAbilityPopUp(spriteTileData1, windowTileData, 8, (y == 0));
     RemoveWindow(windowId);
 
@@ -2514,7 +2514,7 @@ static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTi
 
     if (width > MAX_POPUP_STRING_WIDTH - 5)
     {
-        windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x2 - MAX_POPUP_STRING_WIDTH, y, color1, color2, color3, &windowId);
+        windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x2 - MAX_POPUP_STRING_WIDTH, y, colour1, colour2, colour3, &windowId);
         TextIntoAbilityPopUp(spriteTileData2, windowTileData, 3, (y == 0));
         RemoveWindow(windowId);
     }
@@ -3021,7 +3021,7 @@ void TryAddLastUsedBallItemSprites(void)
         gLastUsedBallMenuPresent = TRUE;
     }
     if (B_LAST_USED_BALL_CYCLE == TRUE)
-        ArrowsChangeColorLastBallCycle(0); //Default the arrows to be invisible
+        ArrowsChangeColourLastBallCycle(0); //Default the arrows to be invisible
 }
 
 static void DestroyLastUsedBallWinGfx(struct Sprite *sprite)
@@ -3148,7 +3148,7 @@ static void TryHideOrRestoreLastUsedBall(u8 caseId)
         break;
     }
     if (B_LAST_USED_BALL_CYCLE == TRUE)
-        ArrowsChangeColorLastBallCycle(0); //Default the arrows to be invisible
+        ArrowsChangeColourLastBallCycle(0); //Default the arrows to be invisible
 }
 
 void TryHideLastUsedBall(void)
@@ -3248,7 +3248,7 @@ void SwapBallToDisplay(bool32 sameBall)
     gTasks[taskId].sSameBall = sameBall;
 }
 
-void ArrowsChangeColorLastBallCycle(bool32 showArrows)
+void ArrowsChangeColourLastBallCycle(bool32 showArrows)
 {
 #if B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE
     u16 paletteNum = 16 + gSprites[gBattleStruct->ballSpriteIds[1]].oam.paletteNum;
@@ -3259,11 +3259,11 @@ void ArrowsChangeColorLastBallCycle(bool32 showArrows)
     if (gBattleStruct->ballSpriteIds[1] == MAX_SPRITES)
         return;
     paletteNum *= 16;
-    pltArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 9];  // Arrow color is in idx 9
+    pltArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 9];  // Arrow colour is in idx 9
     pltOutline = (struct PlttData *)&gPlttBufferFaded[paletteNum + 8];  // Arrow outline is in idx 8
     if (!showArrows) //Make invisible
     {
-        defaultPlttArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 13];  // Background color is idx 13
+        defaultPlttArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 13];  // Background colour is idx 13
         pltArrow->r = defaultPlttArrow->r;
         pltArrow->g = defaultPlttArrow->g;
         pltArrow->b = defaultPlttArrow->b;
@@ -3271,10 +3271,10 @@ void ArrowsChangeColorLastBallCycle(bool32 showArrows)
         pltOutline->g = defaultPlttArrow->g;
         pltOutline->b = defaultPlttArrow->b;
     }
-    else // Make gray
+    else // Make grey
     {
-        defaultPlttArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 11];  // Grey color is idx 11
-        defaultPlttOutline = (struct PlttData *)&gPlttBufferFaded[paletteNum + 10];  //Light grey color for outline is idx 10
+        defaultPlttArrow = (struct PlttData *)&gPlttBufferFaded[paletteNum + 11];  // Grey colour is idx 11
+        defaultPlttOutline = (struct PlttData *)&gPlttBufferFaded[paletteNum + 10];  //Light grey colour for outline is idx 10
         pltArrow->r = defaultPlttArrow->r;
         pltArrow->g = defaultPlttArrow->g;
         pltArrow->b = defaultPlttArrow->b;

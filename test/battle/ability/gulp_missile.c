@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage oppo
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if hit by a damaging move")
+SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyses the target if hit by a damaging move")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }

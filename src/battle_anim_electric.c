@@ -302,7 +302,7 @@ const struct SpriteTemplate gElectricChargingParticlesSpriteTemplate =
     .callback = SpriteCallbackDummy,
 };
 
-const struct SpriteTemplate gLightOfRuinGrayChargeTemplate =
+const struct SpriteTemplate gLightOfRuinGreyChargeTemplate =
 {
     .tileTag = ANIM_TAG_ELECTRIC_ORBS,
     .paletteTag = ANIM_TAG_GUST,
@@ -514,7 +514,7 @@ const struct SpriteTemplate gShockWaveProgressingBoltSpriteTemplate =
     .callback = AnimShockWaveProgressingBolt,
 };
 
-const struct SpriteTemplate gFlashCannonGrayChargeTemplate =
+const struct SpriteTemplate gFlashCannonGreyChargeTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
@@ -996,7 +996,7 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
             u8 spriteId;
             task->data[12] = 0;
             if (gAnimMoveIndex == MOVE_FLASH_CANNON || gAnimMoveIndex == MOVE_STEEL_BEAM)
-                spriteId = CreateSprite(&gLightOfRuinGrayChargeTemplate, task->data[14], task->data[15], 2);
+                spriteId = CreateSprite(&gLightOfRuinGreyChargeTemplate, task->data[14], task->data[15], 2);
             else
                 spriteId = CreateSprite(&gElectricChargingParticlesSpriteTemplate, task->data[14], task->data[15], 2);
 

@@ -462,7 +462,7 @@ static void Task_Sparkles_SprayAndFlash_End(u8 taskId)
         DestroyTask(taskId);
 }
 
-// Separate from EvolutionSparkles_SprayAndFlash for difference in fade color
+// Separate from EvolutionSparkles_SprayAndFlash for difference in fade colour
 u8 EvolutionSparkles_SprayAndFlash_Trade(u16 species)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlashTrade_Init, 0);

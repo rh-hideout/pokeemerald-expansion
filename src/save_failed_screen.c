@@ -147,12 +147,12 @@ static bool8 WipeSectors(u32);
 // Although this is a general text printer, it's only used in this file.
 static void SaveFailedScreenTextPrint(const u8 *text, u8 x, u8 y)
 {
-    u8 color[3];
+    u8 colour[3];
 
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(sWindowIds[TEXT_WIN_ID], FONT_NORMAL, x * 8, y * 8 + 1, 0, 0, color, 0, text);
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
+    AddTextPrinterParameterized4(sWindowIds[TEXT_WIN_ID], FONT_NORMAL, x * 8, y * 8 + 1, 0, 0, colour, 0, text);
 }
 
 void DoSaveFailedScreen(u8 saveType)
@@ -449,7 +449,7 @@ void CB2_FlashNotDetectedScreen(void)
     InitWindows(textWin);
     DrawStdFrameWithCustomTileAndPalette(0, TRUE, 0x214, 0xE);
     static const u8 saveFailedMessage[] =_(
-        "{COLOR RED}ERROR! {COLOR DARK_GRAY}Flash memory not detected!\n"
+        "{COLOUR RED}ERROR! {COLOUR DARK_GREY}Flash memory not detected!\n"
         "\n"
         "If playing on an emulator, set your\n"
         "save type setting to\n"

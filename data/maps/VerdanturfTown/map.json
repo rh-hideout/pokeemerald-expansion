@@ -97,7 +97,7 @@
       "x": 16,
       "y": 3,
       "elevation": 0,
-      "dest_map": "MAP_VERDANTURF_TOWN_POKEMON_CENTER_1F",
+      "dest_map": "MAP_VERDANTURF_TOWN_POKEMON_CENTRE_1F",
       "dest_warp_id": "0"
     },
     {
@@ -153,7 +153,7 @@
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
+      "script": "Common_EventScript_ShowPokemonCentreSign"
     },
     {
       "type": "sign",
@@ -177,7 +177,7 @@
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "Common_EventScript_ShowPokemonCenterSign"
+      "script": "Common_EventScript_ShowPokemonCentreSign"
     },
     {
       "type": "sign",

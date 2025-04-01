@@ -49,12 +49,12 @@ enum {
 #define CONDITION_GRAPH_TOP_Y  56
 #define CONDITION_GRAPH_BOTTOM_Y 121
 #define CONDITION_GRAPH_HEIGHT  (CONDITION_GRAPH_BOTTOM_Y - CONDITION_GRAPH_TOP_Y + 1)
-#define CONDITION_GRAPH_CENTER_X 155
-#define CONDITION_GRAPH_CENTER_Y ((CONDITION_GRAPH_BOTTOM_Y + CONDITION_GRAPH_TOP_Y) / 2 + 3)
+#define CONDITION_GRAPH_CENTRE_X 155
+#define CONDITION_GRAPH_CENTRE_Y ((CONDITION_GRAPH_BOTTOM_Y + CONDITION_GRAPH_TOP_Y) / 2 + 3)
 #define CONDITION_GRAPH_UPDATE_STEPS 10
 #define CONDITION_GRAPH_LOAD_MAX 4
 
-// Equivalent to flavor and contest values, but in a different order.
+// Equivalent to flavour and contest values, but in a different order.
 enum {
     CONDITION_COOL,
     CONDITION_TOUGH,

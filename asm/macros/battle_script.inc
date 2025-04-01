@@ -1851,8 +1851,8 @@
 	various BS_ATTACKER, VARIOUS_RESET_PLAYER_FAINTED
 	.endm
 
-	.macro palaceflavortext battler:req
-	various \battler, VARIOUS_PALACE_FLAVOR_TEXT
+	.macro palaceflavourtext battler:req
+	various \battler, VARIOUS_PALACE_FLAVOUR_TEXT
 	.endm
 
 	.macro arenajudgmentwindow
@@ -2188,8 +2188,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryparalyzetype attacker:req, target:req, failInstr:req
-	various \attacker, VARIOUS_PARALYZE_TYPE_IMMUNITY
+	.macro tryparalysetype attacker:req, target:req, failInstr:req
+	various \attacker, VARIOUS_PARALYSE_TYPE_IMMUNITY
 	.byte \target
 	.4byte \failInstr
 	.endm

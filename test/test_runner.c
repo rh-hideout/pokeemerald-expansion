@@ -309,22 +309,22 @@ top:
         }
         else
         {
-            const char *color;
+            const char *colour;
             const char *result;
 
             if (gTestRunnerState.result == gTestRunnerState.expectedResult)
             {
-                color = "\e[32m";
+                colour = "\e[32m";
                 Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
             }
             else if (gTestRunnerState.result != TEST_RESULT_ASSUMPTION_FAIL || gTestRunnerSkipIsFail)
             {
                 gTestRunnerState.exitCode = 1;
-                color = "\e[31m";
+                colour = "\e[31m";
             }
             else
             {
-                color = "";
+                colour = "";
             }
 
             switch (gTestRunnerState.result)
@@ -333,7 +333,7 @@ top:
                 if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL)
                 {
                     result = "KNOWN_FAILING";
-                    color = "\e[33m";
+                    colour = "\e[33m";
                 }
                 else
                 {
@@ -348,11 +348,11 @@ top:
                 break;
             case TEST_RESULT_ASSUMPTION_FAIL:
                 result = "ASSUMPTION_FAIL";
-                color = "\e[33m";
+                colour = "\e[33m";
                 break;
             case TEST_RESULT_TODO:
                 result = "TO_DO";
-                color = "\e[33m";
+                colour = "\e[33m";
                 break;
             case TEST_RESULT_INVALID:
                 result = "INVALID";
@@ -376,21 +376,21 @@ top:
                 if (gTestRunnerState.result != gTestRunnerState.expectedResult)
                 {
                     Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename, SourceLine(0));
-                    Test_MgbaPrintf(":U%s%s\e[0m", color, result);
+                    Test_MgbaPrintf(":U%s%s\e[0m", colour, result);
                 }
                 else
                 {
-                    Test_MgbaPrintf(":P%s%s\e[0m", color, result);
+                    Test_MgbaPrintf(":P%s%s\e[0m", colour, result);
                 }
             }
             else if (gTestRunnerState.result == TEST_RESULT_ASSUMPTION_FAIL)
-                Test_MgbaPrintf(":A%s%s\e[0m", color, result);
+                Test_MgbaPrintf(":A%s%s\e[0m", colour, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
-                Test_MgbaPrintf(":T%s%s\e[0m", color, result);
+                Test_MgbaPrintf(":T%s%s\e[0m", colour, result);
             else if (gTestRunnerState.expectedResult == gTestRunnerState.result)
-                Test_MgbaPrintf(":K%s%s\e[0m", color, result);
+                Test_MgbaPrintf(":K%s%s\e[0m", colour, result);
             else
-                Test_MgbaPrintf(":F%s%s\e[0m", color, result);
+                Test_MgbaPrintf(":F%s%s\e[0m", colour, result);
         }
 
         break;

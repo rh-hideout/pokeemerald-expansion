@@ -174,8 +174,8 @@
 #define CHAR_DYNAMIC           0xF7
 #define CHAR_KEYPAD_ICON       0xF8
 #define CHAR_EXTRA_SYMBOL      0xF9
-#define CHAR_PROMPT_SCROLL     0xFA // waits for button press and scrolls dialog
-#define CHAR_PROMPT_CLEAR      0xFB // waits for button press and clears dialog
+#define CHAR_PROMPT_SCROLL     0xFA // waits for button press and scrolls dialogue
+#define CHAR_PROMPT_CLEAR      0xFB // waits for button press and clears dialogue
 #define EXT_CTRL_CODE_BEGIN    0xFC // extended control code
 #define PLACEHOLDER_BEGIN      0xFD // string placeholder
 #define CHAR_NEWLINE           0xFE
@@ -208,10 +208,10 @@
 #define CHAR_NO            0x08
 #define CHAR_UNDERSCORE    0x09
 
-#define EXT_CTRL_CODE_COLOR                  0x01
+#define EXT_CTRL_CODE_COLOUR                  0x01
 #define EXT_CTRL_CODE_HIGHLIGHT              0x02
 #define EXT_CTRL_CODE_SHADOW                 0x03
-#define EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW 0x04
+#define EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW 0x04
 #define EXT_CTRL_CODE_PALETTE                0x05
 #define EXT_CTRL_CODE_FONT                   0x06
 #define EXT_CTRL_CODE_RESET_FONT             0x07
@@ -233,22 +233,22 @@
 #define EXT_CTRL_CODE_PAUSE_MUSIC            0x17
 #define EXT_CTRL_CODE_RESUME_MUSIC           0x18
 
-#define TEXT_COLOR_TRANSPARENT  0x0
-#define TEXT_COLOR_WHITE        0x1
-#define TEXT_COLOR_DARK_GRAY    0x2
-#define TEXT_COLOR_LIGHT_GRAY   0x3
-#define TEXT_COLOR_RED          0x4
-#define TEXT_COLOR_LIGHT_RED    0x5
-#define TEXT_COLOR_GREEN        0x6
-#define TEXT_COLOR_LIGHT_GREEN  0x7
-#define TEXT_COLOR_BLUE         0x8
-#define TEXT_COLOR_LIGHT_BLUE   0x9
-#define TEXT_DYNAMIC_COLOR_1    0xA // Usually white
-#define TEXT_DYNAMIC_COLOR_2    0xB // Usually white w/ tinge of green
-#define TEXT_DYNAMIC_COLOR_3    0xC // Usually white
-#define TEXT_DYNAMIC_COLOR_4    0xD // Usually aquamarine
-#define TEXT_DYNAMIC_COLOR_5    0xE // Usually blue-green
-#define TEXT_DYNAMIC_COLOR_6    0xF // Usually cerulean
+#define TEXT_COLOUR_TRANSPARENT  0x0
+#define TEXT_COLOUR_WHITE        0x1
+#define TEXT_COLOUR_DARK_GREY    0x2
+#define TEXT_COLOUR_LIGHT_GREY   0x3
+#define TEXT_COLOUR_RED          0x4
+#define TEXT_COLOUR_LIGHT_RED    0x5
+#define TEXT_COLOUR_GREEN        0x6
+#define TEXT_COLOUR_LIGHT_GREEN  0x7
+#define TEXT_COLOUR_BLUE         0x8
+#define TEXT_COLOUR_LIGHT_BLUE   0x9
+#define TEXT_DYNAMIC_COLOUR_1    0xA // Usually white
+#define TEXT_DYNAMIC_COLOUR_2    0xB // Usually white w/ tinge of green
+#define TEXT_DYNAMIC_COLOUR_3    0xC // Usually white
+#define TEXT_DYNAMIC_COLOUR_4    0xD // Usually aquamarine
+#define TEXT_DYNAMIC_COLOUR_5    0xE // Usually blue-green
+#define TEXT_DYNAMIC_COLOUR_6    0xF // Usually cerulean
 
 #define PLACEHOLDER_ID_UNKNOWN       0x0
 #define PLACEHOLDER_ID_PLAYER        0x1

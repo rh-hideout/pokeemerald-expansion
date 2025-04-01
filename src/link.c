@@ -160,7 +160,7 @@ static const u32 sWirelessLinkDisplayGfx[] = INCBIN_U32("graphics/link/wireless_
 static const u32 sWirelessLinkDisplayTilemap[] = INCBIN_U32("graphics/link/wireless_display.bin.lz");
 static const u16 sLinkTestDigitsPal[] = INCBIN_U16("graphics/link/test_digits.gbapal");
 static const u16 sLinkTestDigitsGfx[] = INCBIN_U16("graphics/link/test_digits.4bpp");
-static const u8 sUnusedTransparentWhite[] = _("{HIGHLIGHT TRANSPARENT}{COLOR WHITE}");
+static const u8 sUnusedTransparentWhite[] = _("{HIGHLIGHT TRANSPARENT}{COLOUR WHITE}");
 static const u16 sCommErrorBg_Gfx[] = INCBIN_U16("graphics/link/comm_error_bg.4bpp");
 static const struct BlockRequest sBlockRequests[] = {
     [BLOCK_REQ_SIZE_NONE] = {gBlockSendBuffer, 200},
@@ -221,7 +221,7 @@ static const struct WindowTemplate sLinkErrorWindowTemplates[] = {
     }, DUMMY_WIN_TEMPLATE
 };
 
-static const u8 sTextColors[] = { TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+static const u8 sTextColours[] = { TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY };
 static const u8 sUnusedData[] = {0x00, 0xFF, 0xFE, 0xFF, 0x00};
 
 bool8 IsWirelessAdapterConnected(void)
@@ -1563,7 +1563,7 @@ void CB2_LinkError(void)
     ResetSpriteData();
     FreeAllSpritePalettes();
     ResetPaletteFadeControl();
-    SetBackdropFromColor(RGB_BLACK);
+    SetBackdropFromColour(RGB_BLACK);
     ResetTasks();
     ScanlineEffect_Stop();
     if (gWirelessCommType)
@@ -1611,8 +1611,8 @@ static void ErrorMsg_MoveCloserToPartner(void)
     LoadPalette(sWirelessLinkDisplayPal, BG_PLTT_ID(0), sizeof(sWirelessLinkDisplayPal));
     FillWindowPixelBuffer(WIN_LINK_ERROR_TOP, PIXEL_FILL(0));
     FillWindowPixelBuffer(WIN_LINK_ERROR_BOTTOM, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 6, sTextColors, 0, gText_CommErrorEllipsis);
-    AddTextPrinterParameterized3(WIN_LINK_ERROR_BOTTOM, FONT_SHORT_COPY_1, 2, 1, sTextColors, 0, gText_MoveCloserToLinkPartner);
+    AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 6, sTextColours, 0, gText_CommErrorEllipsis);
+    AddTextPrinterParameterized3(WIN_LINK_ERROR_BOTTOM, FONT_SHORT_COPY_1, 2, 1, sTextColours, 0, gText_MoveCloserToLinkPartner);
     PutWindowTilemap(WIN_LINK_ERROR_TOP);
     PutWindowTilemap(WIN_LINK_ERROR_BOTTOM);
     CopyWindowToVram(WIN_LINK_ERROR_TOP, COPYWIN_NONE); // Does nothing
@@ -1624,7 +1624,7 @@ static void ErrorMsg_CheckConnections(void)
     LoadBgTiles(0, sCommErrorBg_Gfx, 0x20, 0);
     FillWindowPixelBuffer(WIN_LINK_ERROR_MID, PIXEL_FILL(0));
     FillWindowPixelBuffer(WIN_LINK_ERROR_BOTTOM, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(WIN_LINK_ERROR_MID, FONT_SHORT_COPY_1, 2, 0, sTextColors, 0, gText_CommErrorCheckConnections);
+    AddTextPrinterParameterized3(WIN_LINK_ERROR_MID, FONT_SHORT_COPY_1, 2, 0, sTextColours, 0, gText_CommErrorCheckConnections);
     PutWindowTilemap(WIN_LINK_ERROR_MID);
     PutWindowTilemap(WIN_LINK_ERROR_BOTTOM);
     CopyWindowToVram(WIN_LINK_ERROR_MID, COPYWIN_NONE); // Does nothing
@@ -1659,9 +1659,9 @@ static void CB2_PrintErrorMessage(void)
             break;
         case 130:
             if (gWirelessCommType == 2)
-                AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 20, sTextColors, 0, gText_ABtnTitleScreen);
+                AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 20, sTextColours, 0, gText_ABtnTitleScreen);
             else if (gWirelessCommType == 1)
-                AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 20, sTextColors, 0, gText_ABtnRegistrationCounter);
+                AddTextPrinterParameterized3(WIN_LINK_ERROR_TOP, FONT_SHORT_COPY_1, 2, 20, sTextColours, 0, gText_ABtnRegistrationCounter);
             break;
     }
     if (gMain.state == 160)

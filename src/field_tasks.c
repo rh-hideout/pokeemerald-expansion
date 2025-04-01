@@ -10,7 +10,7 @@
 #include "fieldmap.h"
 #include "item.h"
 #include "main.h"
-#include "metatile_behavior.h"
+#include "metatile_behaviour.h"
 #include "overworld.h"
 #include "script.h"
 #include "secret_base.h"
@@ -237,15 +237,15 @@ static void DummyPerStepCallback(u8 taskId)
 
 }
 
-static const struct PacifidlogMetatileOffsets *GetPacifidlogBridgeMetatileOffsets(const struct PacifidlogMetatileOffsets *offsets, u16 metatileBehavior)
+static const struct PacifidlogMetatileOffsets *GetPacifidlogBridgeMetatileOffsets(const struct PacifidlogMetatileOffsets *offsets, u16 metatileBehaviour)
 {
-    if (MetatileBehavior_IsPacifidlogVerticalLogTop(metatileBehavior))
+    if (MetatileBehaviour_IsPacifidlogVerticalLogTop(metatileBehaviour))
         return &offsets[0 * 2];
-    else if (MetatileBehavior_IsPacifidlogVerticalLogBottom(metatileBehavior))
+    else if (MetatileBehaviour_IsPacifidlogVerticalLogBottom(metatileBehaviour))
         return &offsets[1 * 2];
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogLeft(metatileBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogLeft(metatileBehaviour))
         return &offsets[2 * 2];
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogRight(metatileBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogRight(metatileBehaviour))
         return &offsets[3 * 2];
     else
         return NULL;
@@ -253,7 +253,7 @@ static const struct PacifidlogMetatileOffsets *GetPacifidlogBridgeMetatileOffset
 
 static void TrySetPacifidlogBridgeMetatiles(const struct PacifidlogMetatileOffsets *offsets, s16 x, s16 y, bool32 redrawMap)
 {
-    offsets = GetPacifidlogBridgeMetatileOffsets(offsets, MapGridGetMetatileBehaviorAt(x, y));
+    offsets = GetPacifidlogBridgeMetatileOffsets(offsets, MapGridGetMetatileBehaviourAt(x, y));
 
     // If offsets is NULL, position is not a log (don't set it)
     if (offsets)
@@ -288,27 +288,27 @@ static void TrySetLogBridgeFloating(s16 x, s16 y, bool32 redrawMap)
 // Otherwise it returns TRUE.
 static bool32 ShouldRaisePacifidlogLogs(s16 newX, s16 newY, s16 oldX, s16 oldY)
 {
-    u16 oldBehavior = MapGridGetMetatileBehaviorAt(oldX, oldY);
+    u16 oldBehaviour = MapGridGetMetatileBehaviourAt(oldX, oldY);
 
-    if (MetatileBehavior_IsPacifidlogVerticalLogTop(oldBehavior))
+    if (MetatileBehaviour_IsPacifidlogVerticalLogTop(oldBehaviour))
     {
         // Still on same one if moved from top to bottom
         if (newY > oldY)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogVerticalLogBottom(oldBehavior))
+    else if (MetatileBehaviour_IsPacifidlogVerticalLogBottom(oldBehaviour))
     {
         // Still on same one if moved from bottom to top
         if (newY < oldY)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogLeft(oldBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogLeft(oldBehaviour))
     {
         // Still on same one if moved from left to right
         if (newX > oldX)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogRight(oldBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogRight(oldBehaviour))
     {
         // Still on same one if moved from right to left
         if (newX < oldX)
@@ -321,33 +321,33 @@ static bool32 ShouldRaisePacifidlogLogs(s16 newX, s16 newY, s16 oldX, s16 oldY)
 
 // Returns FALSE if player has moved from one end of a log to the other (log should remain submerged).
 // Otherwise it returns TRUE.
-// This is the effectively the same as ShouldRaisePacifidlogLogs, as it swaps both the conditions and which position's behavior to check.
+// This is the effectively the same as ShouldRaisePacifidlogLogs, as it swaps both the conditions and which position's behaviour to check.
 // In effect the previous function asks "was the player's previous position not the other end of a log they're standing on?"
 // while this function asks "is the player's current position not the other end of a log they were previously standing on?"
 // and with the same positions both questions always have the same answer.
 static bool32 ShouldSinkPacifidlogLogs(s16 newX, s16 newY, s16 oldX, s16 oldY)
 {
-    u16 newBehavior = MapGridGetMetatileBehaviorAt(newX, newY);
+    u16 newBehaviour = MapGridGetMetatileBehaviourAt(newX, newY);
 
-    if (MetatileBehavior_IsPacifidlogVerticalLogTop(newBehavior))
+    if (MetatileBehaviour_IsPacifidlogVerticalLogTop(newBehaviour))
     {
         // Still on same one if moved from bottom to top
         if (newY < oldY)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogVerticalLogBottom(newBehavior))
+    else if (MetatileBehaviour_IsPacifidlogVerticalLogBottom(newBehaviour))
     {
         // Still on same one if moved from top to bottom
         if (newY > oldY)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogLeft(newBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogLeft(newBehaviour))
     {
         // Still on same one if moved from right to left
         if (newX < oldX)
             return FALSE;
     }
-    else if (MetatileBehavior_IsPacifidlogHorizontalLogRight(newBehavior))
+    else if (MetatileBehaviour_IsPacifidlogHorizontalLogRight(newBehaviour))
     {
         // Still on same one if moved from left to right
         if (newX > oldX)
@@ -419,7 +419,7 @@ static void PacifidlogBridgePerStepCallback(u8 taskId)
         tPrevY = y;
 
         // If player's new position is a log play the puddle SE
-        if (MetatileBehavior_IsPacifidlogLog(MapGridGetMetatileBehaviorAt(x, y)))
+        if (MetatileBehaviour_IsPacifidlogLog(MapGridGetMetatileBehaviourAt(x, y)))
             PlaySE(SE_PUDDLE);
         break;
     case 2:
@@ -504,7 +504,7 @@ static void FortreeBridgePerStepCallback(u8 taskId)
         tPrevY = y;
 
         // If player is already on bridge when callback is set then lower it immediately.
-        if (MetatileBehavior_IsFortreeBridge(MapGridGetMetatileBehaviorAt(x, y)))
+        if (MetatileBehaviour_IsFortreeBridge(MapGridGetMetatileBehaviourAt(x, y)))
         {
             TryLowerFortreeBridge(x, y);
             CurrentMapDrawMetatileAt(x, y);
@@ -519,8 +519,8 @@ static void FortreeBridgePerStepCallback(u8 taskId)
         if (x == prevX && y == prevY)
             break;
 
-        isFortreeBridgeCur = MetatileBehavior_IsFortreeBridge(MapGridGetMetatileBehaviorAt(x, y));
-        isFortreeBridgePrev = MetatileBehavior_IsFortreeBridge(MapGridGetMetatileBehaviorAt(prevX, prevY));
+        isFortreeBridgeCur = MetatileBehaviour_IsFortreeBridge(MapGridGetMetatileBehaviourAt(x, y));
+        isFortreeBridgePrev = MetatileBehaviour_IsFortreeBridge(MapGridGetMetatileBehaviourAt(prevX, prevY));
 
         // Make sure player isn't below bridge
         elevation = PlayerGetElevation();
@@ -659,7 +659,7 @@ void SetSootopolisGymCrackedIceMetatiles(void)
 static void SootopolisGymIcePerStepCallback(u8 taskId)
 {
     s16 x, y;
-    u16 tileBehavior;
+    u16 tileBehaviour;
     u16 *iceStepCount;
     s16 *data = gTasks[taskId].data;
     switch (tState)
@@ -678,9 +678,9 @@ static void SootopolisGymIcePerStepCallback(u8 taskId)
 
         tPrevX = x;
         tPrevY = y;
-        tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+        tileBehaviour = MapGridGetMetatileBehaviourAt(x, y);
         iceStepCount = GetVarPointer(VAR_ICE_STEP_COUNT);
-        if (MetatileBehavior_IsThinIce(tileBehavior) == TRUE)
+        if (MetatileBehaviour_IsThinIce(tileBehaviour) == TRUE)
         {
             // Thin ice, set it to cracked ice
             (*iceStepCount)++;
@@ -689,7 +689,7 @@ static void SootopolisGymIcePerStepCallback(u8 taskId)
             tIceX = x;
             tIceY = y;
         }
-        else if (MetatileBehavior_IsCrackedIce(tileBehavior) == TRUE)
+        else if (MetatileBehaviour_IsCrackedIce(tileBehaviour) == TRUE)
         {
             // Cracked ice, set it to broken ice
             *iceStepCount = 0;
@@ -758,7 +758,7 @@ static void AshGrassPerStepCallback(u8 taskId)
 
     tPrevX = x;
     tPrevY = y;
-    if (MetatileBehavior_IsAshGrass(MapGridGetMetatileBehaviorAt(x, y)))
+    if (MetatileBehaviour_IsAshGrass(MapGridGetMetatileBehaviourAt(x, y)))
     {
         // Remove ash from grass
         if (MapGridGetMetatileIdAt(x, y) == METATILE_Fallarbor_AshGrass)
@@ -801,10 +801,10 @@ static void SetCrackedFloorHoleMetatile(s16 x, s16 y)
 static void CrackedFloorPerStepCallback(u8 taskId)
 {
     s16 x, y;
-    u16 behavior;
+    u16 behaviour;
     s16 *data = gTasks[taskId].data;
     PlayerGetDestCoords(&x, &y);
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    behaviour = MapGridGetMetatileBehaviourAt(x, y);
 
     // Update up to 2 previous cracked floor spaces
     if (tFloor1Delay != 0 && (--tFloor1Delay) == 0)
@@ -812,7 +812,7 @@ static void CrackedFloorPerStepCallback(u8 taskId)
     if (tFloor2Delay != 0 && (--tFloor2Delay) == 0)
         SetCrackedFloorHoleMetatile(tFloor2X, tFloor2Y);
 
-    if (MetatileBehavior_IsCrackedFloorHole(behavior))
+    if (MetatileBehaviour_IsCrackedFloorHole(behaviour))
         VarSet(VAR_ICE_STEP_COUNT, 0); // this var does double duty
 
     // End if player hasn't moved
@@ -821,7 +821,7 @@ static void CrackedFloorPerStepCallback(u8 taskId)
 
     tPrevX = x;
     tPrevY = y;
-    if (MetatileBehavior_IsCrackedFloor(behavior))
+    if (MetatileBehaviour_IsCrackedFloor(behaviour))
     {
         if (GetPlayerSpeed() != PLAYER_SPEED_FASTEST)
             VarSet(VAR_ICE_STEP_COUNT, 0); // this var does double duty
@@ -917,7 +917,7 @@ static void Task_MuddySlope(u8 taskId)
 
         tPrevX = x;
         tPrevY = y;
-        if (MetatileBehavior_IsMuddySlope(MapGridGetMetatileBehaviorAt(x, y)))
+        if (MetatileBehaviour_IsMuddySlope(MapGridGetMetatileBehaviourAt(x, y)))
         {
             for (i = SLOPE_DATA_START; i <= SLOPE_DATA_END; i += SLOPE_DATA_SIZE)
             {

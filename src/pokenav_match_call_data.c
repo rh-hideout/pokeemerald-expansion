@@ -104,7 +104,7 @@ struct MatchCallCheckPageOverride {
     u16 idx;
     u16 facilityClass;
     u32 flag;
-    const u8 *flavorTexts[CHECK_PAGE_ENTRY_COUNT];
+    const u8 *flavourTexts[CHECK_PAGE_ENTRY_COUNT];
 };
 
 // Static RAM declarations
@@ -255,7 +255,7 @@ static const struct MatchCallStructNPC sStevenMatchCallHeader =
     .textData = sStevenTextScripts
 };
 
-static const u8 gText_MayBrendanMatchCallDesc[] = _("RAD NEIGHBOR");
+static const u8 gText_MayBrendanMatchCallDesc[] = _("RAD NEIGHBOUR");
 
 static const match_call_text_data_t sMayTextScripts[] = {
     { MatchCall_Text_May1,  0xFFFF,                              0xFFFF },
@@ -268,7 +268,7 @@ static const match_call_text_data_t sMayTextScripts[] = {
     { MatchCall_Text_May8,  FLAG_RECEIVED_CASTFORM,              0xFFFF },
     { MatchCall_Text_May9,  FLAG_RECEIVED_RED_OR_BLUE_ORB,       0xFFFF },
     { MatchCall_Text_May10, FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT, 0xFFFF },
-    { MatchCall_Text_May11, FLAG_MET_TEAM_AQUA_HARBOR,           0xFFFF },
+    { MatchCall_Text_May11, FLAG_MET_TEAM_AQUA_HARBOUR,           0xFFFF },
     { MatchCall_Text_May12, FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, 0xFFFF },
     { MatchCall_Text_May13, FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN, 0xFFFF },
     { MatchCall_Text_May14, FLAG_DEFEATED_SOOTOPOLIS_GYM,        0xFFFF },
@@ -297,7 +297,7 @@ static const match_call_text_data_t sBrendanTextScripts[] = {
     { MatchCall_Text_Brendan8,  FLAG_RECEIVED_CASTFORM,              0xFFFF },
     { MatchCall_Text_Brendan9,  FLAG_RECEIVED_RED_OR_BLUE_ORB,       0xFFFF },
     { MatchCall_Text_Brendan10, FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT, 0xFFFF },
-    { MatchCall_Text_Brendan11, FLAG_MET_TEAM_AQUA_HARBOR,           0xFFFF },
+    { MatchCall_Text_Brendan11, FLAG_MET_TEAM_AQUA_HARBOUR,           0xFFFF },
     { MatchCall_Text_Brendan12, FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, 0xFFFF },
     { MatchCall_Text_Brendan13, FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN, 0xFFFF },
     { MatchCall_Text_Brendan14, FLAG_DEFEATED_SOOTOPOLIS_GYM,        0xFFFF },
@@ -679,7 +679,7 @@ static const struct MatchCallCheckPageOverride sCheckPageOverrides[] = {
         .idx = MC_HEADER_STEVEN,
         .facilityClass = FACILITY_CLASS_STEVEN,
         .flag = 0xFFFF,
-        .flavorTexts = {
+        .flavourTexts = {
             [CHECK_PAGE_STRATEGY] = gText_MatchCallSteven_Strategy,
             [CHECK_PAGE_POKEMON]  = gText_MatchCallSteven_Pokemon,
             [CHECK_PAGE_INTRO_1]  = COMPOUND_STRING("I'd climb even waterfalls"),
@@ -690,7 +690,7 @@ static const struct MatchCallCheckPageOverride sCheckPageOverrides[] = {
         .idx = MC_HEADER_STEVEN,
         .facilityClass = FACILITY_CLASS_STEVEN,
         .flag = FLAG_DEFEATED_MOSSDEEP_GYM,
-        .flavorTexts = {
+        .flavourTexts = {
             [CHECK_PAGE_STRATEGY] = gText_MatchCallSteven_Strategy,
             [CHECK_PAGE_POKEMON]  = gText_MatchCallSteven_Pokemon,
             [CHECK_PAGE_INTRO_1]  = COMPOUND_STRING("I'm the strongest and most"),
@@ -701,13 +701,13 @@ static const struct MatchCallCheckPageOverride sCheckPageOverrides[] = {
         .idx = MC_HEADER_BRENDAN,
         .facilityClass = FACILITY_CLASS_BRENDAN,
         .flag = 0xFFFF,
-        .flavorTexts = MCFLAVOR(Brendan)
+        .flavourTexts = MCFLAVOUR(Brendan)
     },
     {
         .idx = MC_HEADER_MAY,
         .facilityClass = FACILITY_CLASS_MAY,
         .flag = 0xFFFF,
-        .flavorTexts = MCFLAVOR(May)
+        .flavourTexts = MCFLAVOUR(May)
     }
 };
 
@@ -1119,7 +1119,7 @@ static void MatchCall_GetNameAndDescByRematchIdx(u32 idx, const u8 **desc, const
     *name = trainer->trainerName;
 }
 
-const u8 *MatchCall_GetOverrideFlavorText(u32 idx, u32 offset)
+const u8 *MatchCall_GetOverrideFlavourText(u32 idx, u32 offset)
 {
     u32 i;
 
@@ -1130,7 +1130,7 @@ const u8 *MatchCall_GetOverrideFlavorText(u32 idx, u32 offset)
             for (; i + 1 < ARRAY_COUNT(sCheckPageOverrides) &&
                 sCheckPageOverrides[i + 1].idx == idx &&
                 FlagGet(sCheckPageOverrides[i + 1].flag); i++);
-            return sCheckPageOverrides[i].flavorTexts[offset];
+            return sCheckPageOverrides[i].flavourTexts[offset];
         }
     }
     return NULL;

@@ -2,7 +2,7 @@
 #define GUARD_MAIL_H
 
 #define IS_ITEM_MAIL(itemId) ((itemId == ITEM_ORANGE_MAIL           \
-                              || itemId == ITEM_HARBOR_MAIL         \
+                              || itemId == ITEM_HARBOUR_MAIL         \
                               || itemId == ITEM_GLITTER_MAIL        \
                               || itemId == ITEM_MECH_MAIL           \
                               || itemId == ITEM_WOOD_MAIL           \

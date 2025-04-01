@@ -34,7 +34,7 @@
  *
  *  For the region map in the pokenav, see pokenav_region_map.c
  *  For the region map in the pokedex, see pokdex_area_screen.c/pokedex_area_region_map.c
- *  For the region map that can be viewed on the wall of pokemon centers, see field_region_map.c
+ *  For the region map that can be viewed on the wall of pokemon centres, see field_region_map.c
  *
  */
 
@@ -343,7 +343,7 @@ static const u8 sMapHealLocations[][3] =
 static const u8 *const sEverGrandeCityNames[] =
 {
     gText_PokemonLeague,
-    gText_PokemonCenter
+    gText_PokemonCentre
 };
 
 static const struct MultiNameFlyDest sMultiNameFlyDestinations[] =
@@ -618,9 +618,9 @@ bool8 LoadRegionMapGfx(void)
     return TRUE;
 }
 
-void BlendRegionMap(u16 color, u32 coeff)
+void BlendRegionMap(u16 colour, u32 coeff)
 {
-    BlendPalettes(0x380, coeff, color);
+    BlendPalettes(0x380, coeff, colour);
     CpuCopy16(&gPlttBufferFaded[BG_PLTT_ID(7)], &gPlttBufferUnfaded[BG_PLTT_ID(7)], 3 * PLTT_SIZE_4BPP);
 }
 
@@ -1528,8 +1528,8 @@ static void SpriteCB_PlayerIconMapZoomed(struct Sprite *sprite)
 {
     sprite->x2 = -2 * sRegionMap->scrollX;
     sprite->y2 = -2 * sRegionMap->scrollY;
-    sprite->sY = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
-    sprite->sX = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
+    sprite->sY = sprite->y + sprite->y2 + sprite->centreToCornerVecY;
+    sprite->sX = sprite->x + sprite->x2 + sprite->centreToCornerVecX;
     if (sprite->sY < -8 || sprite->sY > DISPLAY_HEIGHT + 8 || sprite->sX < -8 || sprite->sX > DISPLAY_WIDTH + 8)
         sprite->sVisible = FALSE;
     else
@@ -1918,7 +1918,7 @@ static void TryCreateRedOutlineFlyDestIcons(void)
     }
 }
 
-// Flickers fly destination icon color (by hiding the fly icon sprite) if the cursor is currently on it
+// Flickers fly destination icon colour (by hiding the fly icon sprite) if the cursor is currently on it
 static void SpriteCB_FlyDestIcon(struct Sprite *sprite)
 {
     if (sFlyMap->regionMap.mapSecId == sprite->sIconMapSec)

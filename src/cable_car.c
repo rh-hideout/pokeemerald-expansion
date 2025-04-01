@@ -651,8 +651,8 @@ static void SpriteCB_HikerGoingUp(struct Sprite *sprite)
 {
     if (sprite->sTimer == 0)
     {
-        sprite->x += 2 * sprite->centerToCornerVecX;
-        sprite->y += 16 + sprite->centerToCornerVecY;
+        sprite->x += 2 * sprite->centreToCornerVecX;
+        sprite->y += 16 + sprite->centreToCornerVecY;
     }
 
     if (++sprite->sTimer >= sprite->sDelay)
@@ -683,7 +683,7 @@ static void SpriteCB_HikerGoingUp(struct Sprite *sprite)
 static void SpriteCB_HikerGoingDown(struct Sprite *sprite)
 {
     if (sprite->sTimer == 0)
-        sprite->y += 16 + sprite->centerToCornerVecY;
+        sprite->y += 16 + sprite->centreToCornerVecY;
 
     if (++sprite->sTimer >= sprite->sDelay)
     {
@@ -889,8 +889,8 @@ static void CreateCableCarSprites(void)
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].oam.priority = 2;
-            gSprites[spriteId].x2 = -gSprites[spriteId].centerToCornerVecX;
-            gSprites[spriteId].y2 = -gSprites[spriteId].centerToCornerVecY;
+            gSprites[spriteId].x2 = -gSprites[spriteId].centreToCornerVecX;
+            gSprites[spriteId].y2 = -gSprites[spriteId].centreToCornerVecY;
 
             // Randomly choose which direction the NPC is going
             if (!GOING_DOWN)

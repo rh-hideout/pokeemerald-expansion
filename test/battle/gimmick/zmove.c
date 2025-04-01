@@ -540,7 +540,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) 10,000,000 Volt Thunderbolt has an increased critic
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Stoked Sparksurfer paralyzes the target")
+SINGLE_BATTLE_TEST("(Z-MOVE) Stoked Sparksurfer paralyses the target")
 {
     GIVEN {
         ASSUME(GetMoveAdditionalEffectById(MOVE_STOKED_SPARKSURFER, 0)->moveEffect == MOVE_EFFECT_PARALYSIS);

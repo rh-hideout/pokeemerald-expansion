@@ -52,8 +52,8 @@ const u16 gMetatileAttributes_InsideBuilding[] = INCBIN_U16("data/tilesets/prima
 const u16 gMetatiles_Shop[] = INCBIN_U16("data/tilesets/secondary/shop/metatiles.bin");
 const u16 gMetatileAttributes_Shop[] = INCBIN_U16("data/tilesets/secondary/shop/metatile_attributes.bin");
 
-const u16 gMetatiles_PokemonCenter[] = INCBIN_U16("data/tilesets/secondary/pokemon_center/metatiles.bin");
-const u16 gMetatileAttributes_PokemonCenter[] = INCBIN_U16("data/tilesets/secondary/pokemon_center/metatile_attributes.bin");
+const u16 gMetatiles_PokemonCentre[] = INCBIN_U16("data/tilesets/secondary/pokemon_centre/metatiles.bin");
+const u16 gMetatileAttributes_PokemonCentre[] = INCBIN_U16("data/tilesets/secondary/pokemon_centre/metatile_attributes.bin");
 
 const u16 gMetatiles_Cave[] = INCBIN_U16("data/tilesets/secondary/cave/metatiles.bin");
 const u16 gMetatileAttributes_Cave[] = INCBIN_U16("data/tilesets/secondary/cave/metatile_attributes.bin");
@@ -187,8 +187,8 @@ const u16 gMetatileAttributes_MirageTower[] = INCBIN_U16("data/tilesets/secondar
 const u16 gMetatiles_MossdeepGameCorner[] = INCBIN_U16("data/tilesets/secondary/mossdeep_game_corner/metatiles.bin");
 const u16 gMetatileAttributes_MossdeepGameCorner[] = INCBIN_U16("data/tilesets/secondary/mossdeep_game_corner/metatile_attributes.bin");
 
-const u16 gMetatiles_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatiles.bin");
-const u16 gMetatileAttributes_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatile_attributes.bin");
+const u16 gMetatiles_IslandHarbour[] = INCBIN_U16("data/tilesets/secondary/island_harbour/metatiles.bin");
+const u16 gMetatileAttributes_IslandHarbour[] = INCBIN_U16("data/tilesets/secondary/island_harbour/metatile_attributes.bin");
 
 const u16 gMetatiles_TrainerHill[] = INCBIN_U16("data/tilesets/secondary/trainer_hill/metatiles.bin");
 const u16 gMetatileAttributes_TrainerHill[] = INCBIN_U16("data/tilesets/secondary/trainer_hill/metatile_attributes.bin");

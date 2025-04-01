@@ -35,9 +35,9 @@
 #define BALLS_PER_ROUND 6
 
 // "Board" is used in this file to refer to both the wheel and the bet selection grid
-#define NUM_BOARD_COLORS 3 // Rows on grid
+#define NUM_BOARD_COLOURS 3 // Rows on grid
 #define NUM_BOARD_POKES  4 // Columns on grid
-#define NUM_ROULETTE_SLOTS (NUM_BOARD_COLORS * NUM_BOARD_POKES)
+#define NUM_ROULETTE_SLOTS (NUM_BOARD_COLOURS * NUM_BOARD_POKES)
 
 // The degree change between each slot on the roulette wheel
 #define DEGREES_PER_SLOT (360 / NUM_ROULETTE_SLOTS)
@@ -100,18 +100,18 @@
 #define F_PURPLE_MAKUHITA (1 << SQU_PURPLE_MAKUHITA)
 
 // Flags for flashing selections on the roulette wheel
-#define F_FLASH_COLOR_O_WYNAUT   (1 << 0)
-#define F_FLASH_COLOR_G_AZURILL  (1 << 1)
-#define F_FLASH_COLOR_P_SKITTY   (1 << 2)
-#define F_FLASH_COLOR_O_MAKUHITA (1 << 3)
-#define F_FLASH_COLOR_G_WYNAUT   (1 << 4)
-#define F_FLASH_COLOR_P_AZURILL  (1 << 5)
-#define F_FLASH_COLOR_O_SKITTY   (1 << 6)
-#define F_FLASH_COLOR_G_MAKUHITA (1 << 7)
-#define F_FLASH_COLOR_P_WYNAUT   (1 << 8)
-#define F_FLASH_COLOR_O_AZURILL  (1 << 9)
-#define F_FLASH_COLOR_G_SKITTY   (1 << 10)
-#define F_FLASH_COLOR_P_MAKUHITA (1 << 11)
+#define F_FLASH_COLOUR_O_WYNAUT   (1 << 0)
+#define F_FLASH_COLOUR_G_AZURILL  (1 << 1)
+#define F_FLASH_COLOUR_P_SKITTY   (1 << 2)
+#define F_FLASH_COLOUR_O_MAKUHITA (1 << 3)
+#define F_FLASH_COLOUR_G_WYNAUT   (1 << 4)
+#define F_FLASH_COLOUR_P_AZURILL  (1 << 5)
+#define F_FLASH_COLOUR_O_SKITTY   (1 << 6)
+#define F_FLASH_COLOUR_G_MAKUHITA (1 << 7)
+#define F_FLASH_COLOUR_P_WYNAUT   (1 << 8)
+#define F_FLASH_COLOUR_O_AZURILL  (1 << 9)
+#define F_FLASH_COLOUR_G_SKITTY   (1 << 10)
+#define F_FLASH_COLOUR_P_MAKUHITA (1 << 11)
 #define F_FLASH_OUTER_EDGES      (1 << 12) // when the player wins
 #define FLASH_ICON               (NUM_ROULETTE_SLOTS + 1)
 #define FLASH_ICON_2             (FLASH_ICON + 1)
@@ -137,7 +137,7 @@
 #define GFXTAG_WHEEL_ICONS 0
 #define GFXTAG_HEADERS 4
 #define GFXTAG_GRID_ICONS 5
-#define GFXTAG_WHEEL_CENTER 6
+#define GFXTAG_WHEEL_CENTRE 6
 #define GFXTAG_CREDIT 7
 #define GFXTAG_CREDIT_DIGIT 8
 #define GFXTAG_MULTIPLIER 9
@@ -180,7 +180,7 @@ enum {
     SPR_WHEEL_BALL_4,
     SPR_WHEEL_BALL_5,
     SPR_WHEEL_BALL_6,
-    SPR_WHEEL_CENTER,
+    SPR_WHEEL_CENTRE,
     SPR_WHEEL_ICON_ORANGE_WYNAUT,
     SPR_WHEEL_ICON_GREEN_AZURILL,
     SPR_WHEEL_ICON_PURPLE_SKITTY,
@@ -219,9 +219,9 @@ enum {
     SPR_POKE_HEADER_2,
     SPR_POKE_HEADER_3,
     SPR_POKE_HEADER_4,
-    SPR_COLOR_HEADER_1,
-    SPR_COLOR_HEADER_2,
-    SPR_COLOR_HEADER_3,
+    SPR_COLOUR_HEADER_1,
+    SPR_COLOUR_HEADER_2,
+    SPR_COLOUR_HEADER_3,
     SPR_WIN_SLOT_CURSOR,
     SPR_GRID_BALL_1,
     SPR_GRID_BALL_2,
@@ -247,7 +247,7 @@ enum {
 #define SPR_CREDIT_DIGITS SPR_CREDIT_DIG_1
 #define SPR_GRID_ICONS SPR_GRID_ICON_ORANGE_WYNAUT
 #define SPR_POKE_HEADERS SPR_POKE_HEADER_1
-#define SPR_COLOR_HEADERS SPR_COLOR_HEADER_1
+#define SPR_COLOUR_HEADERS SPR_COLOUR_HEADER_1
 #define SPR_GRID_BALLS SPR_GRID_BALL_1
 
 struct Shroomish
@@ -316,7 +316,7 @@ static EWRAM_DATA struct Roulette
     u32 hitFlags;
     u8 hitSquares[BALLS_PER_ROUND];
     u8 pokeHits[NUM_BOARD_POKES];
-    u8 colorHits[NUM_BOARD_COLORS];
+    u8 colourHits[NUM_BOARD_COLOURS];
     u8 minBet;
     u8 curBallNum:4; // Never actually gets incremented, tracked with tBallNum instead
     u8 unk1:4; // Never read
@@ -343,7 +343,7 @@ static EWRAM_DATA struct Roulette
     f32 ballAngle;
     f32 ballAngleSpeed;
     f32 ballAngleAccel;
-    f32 ballDistToCenter;
+    f32 ballDistToCentre;
     f32 ballFallSpeed;
     f32 ballFallAccel;
     f32 varA0;
@@ -405,8 +405,8 @@ static void SetCreditDigits(u16);
 static void SetMultiplierSprite(u8);
 static void SetBallCounterNumLeft(u8);
 static void SpriteCB_GridSquare(struct Sprite *);
-static void CreateWheelCenterSprite(void);
-static void SpriteCB_WheelCenter(struct Sprite *);
+static void CreateWheelCentreSprite(void);
+static void SpriteCB_WheelCentre(struct Sprite *);
 static void CreateWheelBallSprites(void);
 static void HideWheelBalls(void);
 static void SpriteCB_RollBall_Start(struct Sprite *);
@@ -537,7 +537,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
     },
     [ROW_ORANGE] = {
         .spriteIdOffset = 16,
-        .baseMultiplier = NUM_BOARD_COLORS,
+        .baseMultiplier = NUM_BOARD_COLOURS,
         .column = 0,
         .row = 1,
         .x = 14,
@@ -546,7 +546,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 12,
         .flag = F_ORANGE_ROW,
         .inSelectionFlags = F_ORANGE_ROW | F_ORANGE_WYNAUT | F_ORANGE_AZURILL | F_ORANGE_SKITTY | F_ORANGE_MAKUHITA,
-        .flashFlags = F_FLASH_COLOR_O_WYNAUT | F_FLASH_COLOR_O_AZURILL | F_FLASH_COLOR_O_SKITTY | F_FLASH_COLOR_O_MAKUHITA,
+        .flashFlags = F_FLASH_COLOUR_O_WYNAUT | F_FLASH_COLOUR_O_AZURILL | F_FLASH_COLOUR_O_SKITTY | F_FLASH_COLOUR_O_MAKUHITA,
     },
     [SQU_ORANGE_WYNAUT] = {
         .spriteIdOffset = 0,
@@ -559,7 +559,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 3,
         .flag = F_ORANGE_WYNAUT,
         .inSelectionFlags = F_ORANGE_WYNAUT,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_O_WYNAUT,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_O_WYNAUT,
     },
     [SQU_ORANGE_AZURILL] = {
         .spriteIdOffset = 9,
@@ -572,7 +572,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 3,
         .flag = F_ORANGE_AZURILL,
         .inSelectionFlags = F_ORANGE_AZURILL,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_O_AZURILL,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_O_AZURILL,
     },
     [SQU_ORANGE_SKITTY] = {
         .spriteIdOffset = 6,
@@ -585,7 +585,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 3,
         .flag = F_ORANGE_SKITTY,
         .inSelectionFlags = F_ORANGE_SKITTY,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_O_SKITTY,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_O_SKITTY,
     },
     [SQU_ORANGE_MAKUHITA] = {
         .spriteIdOffset = 3,
@@ -598,11 +598,11 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 3,
         .flag = F_ORANGE_MAKUHITA,
         .inSelectionFlags = F_ORANGE_MAKUHITA,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_O_MAKUHITA,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_O_MAKUHITA,
     },
     [ROW_GREEN] = {
         .spriteIdOffset = 17,
-        .baseMultiplier = NUM_BOARD_COLORS,
+        .baseMultiplier = NUM_BOARD_COLOURS,
         .column = 0,
         .row = 2,
         .x = 14,
@@ -611,7 +611,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 15,
         .flag = F_GREEN_ROW,
         .inSelectionFlags = F_GREEN_ROW | F_GREEN_WYNAUT | F_GREEN_AZURILL | F_GREEN_SKITTY | F_GREEN_MAKUHITA,
-        .flashFlags = F_FLASH_COLOR_G_WYNAUT | F_FLASH_COLOR_G_AZURILL | F_FLASH_COLOR_G_SKITTY | F_FLASH_COLOR_G_MAKUHITA,
+        .flashFlags = F_FLASH_COLOUR_G_WYNAUT | F_FLASH_COLOUR_G_AZURILL | F_FLASH_COLOUR_G_SKITTY | F_FLASH_COLOUR_G_MAKUHITA,
     },
     [SQU_GREEN_WYNAUT] = {
         .spriteIdOffset = 4,
@@ -624,7 +624,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 6,
         .flag = F_GREEN_WYNAUT,
         .inSelectionFlags = F_GREEN_WYNAUT,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_G_WYNAUT,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_G_WYNAUT,
     },
     [SQU_GREEN_AZURILL] = {
         .spriteIdOffset = 1,
@@ -637,7 +637,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 6,
         .flag = F_GREEN_AZURILL,
         .inSelectionFlags = F_GREEN_AZURILL,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_G_AZURILL,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_G_AZURILL,
     },
     [SQU_GREEN_SKITTY] = {
         .spriteIdOffset = 10,
@@ -650,7 +650,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 6,
         .flag = F_GREEN_SKITTY,
         .inSelectionFlags = F_GREEN_SKITTY,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_G_SKITTY,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_G_SKITTY,
     },
     [SQU_GREEN_MAKUHITA] = {
         .spriteIdOffset = 7,
@@ -663,11 +663,11 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 6,
         .flag = F_GREEN_MAKUHITA,
         .inSelectionFlags = F_GREEN_MAKUHITA,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_G_MAKUHITA,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_G_MAKUHITA,
     },
     [ROW_PURPLE] = {
         .spriteIdOffset = 18,
-        .baseMultiplier = NUM_BOARD_COLORS,
+        .baseMultiplier = NUM_BOARD_COLOURS,
         .column = 0,
         .row = 3,
         .x = 14,
@@ -676,7 +676,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 18,
         .flag = F_PURPLE_ROW,
         .inSelectionFlags = F_PURPLE_ROW | F_PURPLE_WYNAUT | F_PURPLE_AZURILL | F_PURPLE_SKITTY | F_PURPLE_MAKUHITA,
-        .flashFlags = F_FLASH_COLOR_P_WYNAUT | F_FLASH_COLOR_P_AZURILL | F_FLASH_COLOR_P_SKITTY | F_FLASH_COLOR_P_MAKUHITA,
+        .flashFlags = F_FLASH_COLOUR_P_WYNAUT | F_FLASH_COLOUR_P_AZURILL | F_FLASH_COLOUR_P_SKITTY | F_FLASH_COLOUR_P_MAKUHITA,
     },
     [SQU_PURPLE_WYNAUT] = {
         .spriteIdOffset = 8,
@@ -689,7 +689,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 9,
         .flag = F_PURPLE_WYNAUT,
         .inSelectionFlags = F_PURPLE_WYNAUT,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_P_WYNAUT,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_P_WYNAUT,
     },
     [SQU_PURPLE_AZURILL] = {
         .spriteIdOffset = 5,
@@ -702,7 +702,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 9,
         .flag = F_PURPLE_AZURILL,
         .inSelectionFlags = F_PURPLE_AZURILL,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_P_AZURILL,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_P_AZURILL,
     },
     [SQU_PURPLE_SKITTY] = {
         .spriteIdOffset = 2,
@@ -715,7 +715,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 9,
         .flag = F_PURPLE_SKITTY,
         .inSelectionFlags = F_PURPLE_SKITTY,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_P_SKITTY,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_P_SKITTY,
     },
     [SQU_PURPLE_MAKUHITA] = {
         .spriteIdOffset = 11,
@@ -728,7 +728,7 @@ static const struct GridSelection sGridSelections[NUM_GRID_SELECTIONS + 1] =
         .tilemapOffset = 9,
         .flag = F_PURPLE_MAKUHITA,
         .inSelectionFlags = F_PURPLE_MAKUHITA,
-        .flashFlags = F_FLASH_ICON | F_FLASH_COLOR_P_MAKUHITA,
+        .flashFlags = F_FLASH_ICON | F_FLASH_COLOUR_P_MAKUHITA,
     },
 };
 
@@ -855,174 +855,174 @@ static const struct RouletteTable sRouletteTables[] =
     }
 };
 
-// Data to flash the color indicator for each slot on the roulette wheel
-static const struct RouletteFlashSettings sFlashData_Colors[NUM_ROULETTE_SLOTS + 1] =
+// Data to flash the colour indicator for each slot on the roulette wheel
+static const struct RouletteFlashSettings sFlashData_Colours[NUM_ROULETTE_SLOTS + 1] =
 {
-    { // F_FLASH_COLOR_O_WYNAUT
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_O_WYNAUT
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(0) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_G_AZURILL
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_G_AZURILL
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(0) + 10,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_P_SKITTY
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_P_SKITTY
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(1) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_O_MAKUHITA
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_O_MAKUHITA
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(5) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_G_WYNAUT
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_G_WYNAUT
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(5) + 10,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_P_AZURILL
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_P_AZURILL
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(6) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_O_SKITTY
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_O_SKITTY
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(7) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_G_MAKUHITA
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_G_MAKUHITA
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(7) + 10,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_P_WYNAUT
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_P_WYNAUT
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(8) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_O_AZURILL
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_O_AZURILL
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(9) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_G_SKITTY
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_G_SKITTY
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(9) + 10,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
-    { // F_FLASH_COLOR_P_MAKUHITA
-        .color = FLASHUTIL_USE_EXISTING_COLOR,
+    { // F_FLASH_COLOUR_P_MAKUHITA
+        .colour = FLASHUTIL_USE_EXISTING_COLOUR,
         .paletteOffset = BG_PLTT_ID(10) + 5,
-        .numColors = 1,
+        .numColours = 1,
         .delay = 1,
         .unk6 = -1,
         .numFadeCycles = 8,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
     { // F_FLASH_OUTER_EDGES
-        .color = RGB(22, 30, 29),
+        .colour = RGB(22, 30, 29),
         .paletteOffset = BG_PLTT_ID(2) + 8,
-        .numColors = 2,
+        .numColours = 2,
         .delay = 10,
         .unk6 = -1,
         .numFadeCycles = 14,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
 };
 
-// Data to flash any Pokémon icon (F_FLASH_ICON) on the roulette wheel. One entry for each color row
-// Each poke icon flashes with the tint of the row color it belongs to, so the Pokémon itself is irrelevant
-static const struct RouletteFlashSettings sFlashData_PokeIcons[NUM_BOARD_COLORS] =
+// Data to flash any Pokémon icon (F_FLASH_ICON) on the roulette wheel. One entry for each colour row
+// Each poke icon flashes with the tint of the row colour it belongs to, so the Pokémon itself is irrelevant
+static const struct RouletteFlashSettings sFlashData_PokeIcons[NUM_BOARD_COLOURS] =
 {
     [GET_ROW_IDX(ROW_ORANGE)] = {
-        .color = RGB(31, 31, 20),
+        .colour = RGB(31, 31, 20),
         .paletteOffset = OBJ_PLTT_ID(0) + 1,
-        .numColors = 5,
+        .numColours = 5,
         .delay = 30,
         .unk6 = -1,
         .numFadeCycles = 14,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
     [GET_ROW_IDX(ROW_GREEN)] = {
-        .color = RGB(27, 31, 31),
+        .colour = RGB(27, 31, 31),
         .paletteOffset = OBJ_PLTT_ID(0) + 6,
-        .numColors = 5,
+        .numColours = 5,
         .delay = 30,
         .unk6 = -1,
         .numFadeCycles = 14,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     },
     [GET_ROW_IDX(ROW_PURPLE)] = {
-        .color = RGB(31, 27, 31),
+        .colour = RGB(31, 27, 31),
         .paletteOffset = OBJ_PLTT_ID(0) + 11,
-        .numColors = 5,
+        .numColours = 5,
         .delay = 30,
         .unk6 = -1,
         .numFadeCycles = 14,
         .unk7_5 = -2,
-        .colorDeltaDir = 0,
+        .colourDeltaDir = 0,
     }
 };
 
@@ -1115,7 +1115,7 @@ static void FreeRoulette(void)
 static void InitRouletteTableData(void)
 {
     u8 i;
-    u16 bgColors[3] = {RGB(24, 4, 10), RGB(10, 19, 6), RGB(24, 4, 10)}; // 3rd is never used, same as 1st
+    u16 bgColours[3] = {RGB(24, 4, 10), RGB(10, 19, 6), RGB(24, 4, 10)}; // 3rd is never used, same as 1st
 
     sRoulette->tableId = (gSpecialVar_0x8004 & 1);
 
@@ -1129,17 +1129,17 @@ static void InitRouletteTableData(void)
 
     // Left table (with min bet of 1) has red background, other table has green
     if (sRoulette->minBet == 1)
-        gPlttBufferUnfaded[BG_PLTT_ID(0)] = gPlttBufferUnfaded[BG_PLTT_ID(5) + 1] = gPlttBufferFaded[BG_PLTT_ID(0)] = gPlttBufferFaded[BG_PLTT_ID(5) + 1] = bgColors[0];
+        gPlttBufferUnfaded[BG_PLTT_ID(0)] = gPlttBufferUnfaded[BG_PLTT_ID(5) + 1] = gPlttBufferFaded[BG_PLTT_ID(0)] = gPlttBufferFaded[BG_PLTT_ID(5) + 1] = bgColours[0];
     else
-        gPlttBufferUnfaded[BG_PLTT_ID(0)] = gPlttBufferUnfaded[BG_PLTT_ID(5) + 1] = gPlttBufferFaded[BG_PLTT_ID(0)] = gPlttBufferFaded[BG_PLTT_ID(5) + 1] = bgColors[1];
+        gPlttBufferUnfaded[BG_PLTT_ID(0)] = gPlttBufferUnfaded[BG_PLTT_ID(5) + 1] = gPlttBufferFaded[BG_PLTT_ID(0)] = gPlttBufferFaded[BG_PLTT_ID(5) + 1] = bgColours[1];
 
     RouletteFlash_Reset(&sRoulette->flashUtil);
 
-    // Init flash util for flashing the selected colors on the wheel
+    // Init flash util for flashing the selected colours on the wheel
     // + 1 for the additional entry to flash the outer edges on a win
     for (i = 0; i < NUM_ROULETTE_SLOTS + 1; i++)
     {
-        RouletteFlash_Add(&sRoulette->flashUtil, i, &sFlashData_Colors[i]);
+        RouletteFlash_Add(&sRoulette->flashUtil, i, &sFlashData_Colours[i]);
     }
 
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1209,7 +1209,7 @@ static void CB2_LoadRoulette(void)
     case 5:
         LoadOrFreeMiscSpritePalettesAndSheets(FALSE);
         CreateWheelBallSprites();
-        CreateWheelCenterSprite();
+        CreateWheelCentreSprite();
         CreateInterfaceSprites();
         CreateGridSprites();
         CreateGridBallSprites();
@@ -1449,7 +1449,7 @@ static void ProcessBetGridInput(u8 taskId)
         sRoulette->flashUtil.palettes[FLASH_ICON].available = sRoulette->flashUtil.palettes[FLASH_ICON_2].available = sRoulette->flashUtil.palettes[FLASH_ICON_3].available = FALSE;
         FlashSelectionOnWheel(gTasks[taskId].tSelectionId);
 
-        // Switch all the poke (column) headers to gray outlines
+        // Switch all the poke (column) headers to grey outlines
         for (i = 0; i < NUM_BOARD_POKES; i++)
         {
             gSprites[sRoulette->spriteIds[i + SPR_POKE_HEADERS]].oam.tileNum =
@@ -1664,7 +1664,7 @@ static void Task_InitBallRoll(u8 taskId)
     sRoulette->ballAngle = S16TOPOSFLOAT(startAngles[(rand & 1) + startAngleId]);
     sRoulette->ballAngleSpeed = S16TOPOSFLOAT(sRouletteTables[sRoulette->tableId].ballSpeed);
     sRoulette->ballAngleAccel = ((sRoulette->ballAngleSpeed * 0.5f) - sRoulette->ballAngleSpeed) / S16TOPOSFLOAT(sRoulette->ballTravelDistFast);
-    sRoulette->ballDistToCenter = 68.0f;
+    sRoulette->ballDistToCentre = 68.0f;
     sRoulette->ballFallAccel = 0.0f;
     sRoulette->ballFallSpeed = -(8.0f / S16TOPOSFLOAT(sRoulette->ballTravelDistFast));
     sRoulette->varA0 = 36.0f;
@@ -2050,8 +2050,8 @@ static void ResetHits(void)
     for (i = 0; i < NUM_BOARD_POKES; i++)
         sRoulette->pokeHits[i] = 0;
 
-    for (i = 0; i < NUM_BOARD_COLORS; i++)
-        sRoulette->colorHits[i] = 0;
+    for (i = 0; i < NUM_BOARD_COLOURS; i++)
+        sRoulette->colourHits[i] = 0;
 
     ShowHideGridBalls(TRUE, -1);
 }
@@ -2065,7 +2065,7 @@ static u8 RecordHit(u8 taskId, u8 slotId)
         F_SKITTY_COL | F_ORANGE_SKITTY | F_GREEN_SKITTY | F_PURPLE_SKITTY,
         F_MAKUHITA_COL | F_ORANGE_MAKUHITA | F_GREEN_MAKUHITA | F_PURPLE_MAKUHITA
     };
-    u32 rowFlags[NUM_BOARD_COLORS] = {
+    u32 rowFlags[NUM_BOARD_COLOURS] = {
         F_ORANGE_ROW | F_ORANGE_WYNAUT | F_ORANGE_AZURILL | F_ORANGE_SKITTY | F_ORANGE_MAKUHITA,
         F_GREEN_ROW | F_GREEN_WYNAUT | F_GREEN_AZURILL | F_GREEN_SKITTY | F_GREEN_MAKUHITA,
         F_PURPLE_ROW | F_PURPLE_WYNAUT | F_PURPLE_AZURILL | F_PURPLE_SKITTY | F_PURPLE_MAKUHITA
@@ -2081,16 +2081,16 @@ static u8 RecordHit(u8 taskId, u8 slotId)
     {
         if (sRouletteSlots[slotId].flag & columnFlags[i])
             sRoulette->pokeHits[i]++;
-        // If hit every color of a poke, set column completed
-        if (sRoulette->pokeHits[i] >= NUM_BOARD_COLORS)
+        // If hit every colour of a poke, set column completed
+        if (sRoulette->pokeHits[i] >= NUM_BOARD_COLOURS)
             sRoulette->hitFlags |= columnFlags[i];
     }
-    for (j = 0; j < NUM_BOARD_COLORS; j++)
+    for (j = 0; j < NUM_BOARD_COLOURS; j++)
     {
         if (sRouletteSlots[slotId].flag & rowFlags[j])
-            sRoulette->colorHits[j]++;
-        // If hit every poke of a color, set row completed
-        if (sRoulette->colorHits[j] >= NUM_BOARD_POKES)
+            sRoulette->colourHits[j]++;
+        // If hit every poke of a colour, set row completed
+        if (sRoulette->colourHits[j] >= NUM_BOARD_POKES)
             sRoulette->hitFlags |= rowFlags[j];
     }
     return sRouletteSlots[slotId].gridSquare;
@@ -2142,7 +2142,7 @@ static void FlashSelectionOnWheel(u8 selectionId)
     case ROW_ORANGE:
     case ROW_GREEN:
     case ROW_PURPLE:
-        // Flash colors of row selection
+        // Flash colours of row selection
         for (i = (selectionId + 1); i < (selectionId + 5); i++)
         {
             if (!(sRoulette->hitFlags & sGridSelections[i].flag))
@@ -2153,18 +2153,18 @@ static void FlashSelectionOnWheel(u8 selectionId)
     default:
     {
         // Selection is either a column or individual square
-        struct RouletteFlashSettings iconFlash[NUM_BOARD_COLORS];
+        struct RouletteFlashSettings iconFlash[NUM_BOARD_COLOURS];
         memcpy(iconFlash, sFlashData_PokeIcons, sizeof(iconFlash));
 
         if (selectionId >= COL_WYNAUT && selectionId <= COL_MAKUHITA)
-            numSelected = NUM_BOARD_COLORS; // Selection is full column
+            numSelected = NUM_BOARD_COLOURS; // Selection is full column
         else
             numSelected = 1;
 
         palOffset = GET_ROW_IDX(selectionId);
         switch (GET_COL(selectionId))
         {
-        // The specific color of the poke it references doesn't matter, because the icons of a poke share a palette
+        // The specific colour of the poke it references doesn't matter, because the icons of a poke share a palette
         // So it just uses the first sprite ID of each
         case COL_WYNAUT:
             palOffset = PLTT_ID(gSprites[sRoulette->spriteIds[SPR_WHEEL_ICON_ORANGE_WYNAUT]].oam.paletteNum);
@@ -2196,8 +2196,8 @@ static void FlashSelectionOnWheel(u8 selectionId)
         else
         {
             // Selection is full column, add entry in flash util for each unhit space's icon
-            // If there is only 1 unhit space, also add its flags so its color will flash as well
-            for (i = 0; i < NUM_BOARD_COLORS; i++)
+            // If there is only 1 unhit space, also add its flags so its colour will flash as well
+            for (i = 0; i < NUM_BOARD_COLOURS; i++)
             {
                 u8 columnSlotId = i * 5 + selectionId + 5;
                 if (!(sRoulette->hitFlags & sGridSelections[columnSlotId].flag))
@@ -2225,7 +2225,7 @@ static void DrawGridBackground(u8 selectionId)
     vu8 i, j;
     vu16 x, y;
     vu8 tilemapOffset;
-    u8 selectionIds[NUM_BOARD_POKES >= NUM_BOARD_COLORS ? NUM_BOARD_POKES + 1 : NUM_BOARD_COLORS + 1];
+    u8 selectionIds[NUM_BOARD_POKES >= NUM_BOARD_COLOURS ? NUM_BOARD_POKES + 1 : NUM_BOARD_COLOURS + 1];
     u8 numSquares;
     sRoulette->updateGridHighlight = TRUE;
     ShowHideGridIcons(FALSE, 0);
@@ -2241,14 +2241,14 @@ static void DrawGridBackground(u8 selectionId)
     case COL_AZURILL:
     case COL_SKITTY:
     case COL_MAKUHITA:
-        numSquares = NUM_BOARD_COLORS + 1; // For each poke column, 3 colors and a header
+        numSquares = NUM_BOARD_COLOURS + 1; // For each poke column, 3 colours and a header
         for (i = 0; i < numSquares; i++)
             selectionIds[i] = i * ROW_ORANGE + selectionId;
         break;
     case ROW_ORANGE:
     case ROW_GREEN:
     case ROW_PURPLE:
-        numSquares = NUM_BOARD_POKES + 1; // For each color row, 4 pokes and a header
+        numSquares = NUM_BOARD_POKES + 1; // For each colour row, 4 pokes and a header
         for (i = 0; i < numSquares; i++)
             selectionIds[i] = i + selectionId;
         break;
@@ -2283,16 +2283,16 @@ static u8 GetMultiplier(u8 selectionId)
 
     switch (sGridSelections[selectionId].baseMultiplier)
     {
-    case NUM_BOARD_COLORS:
+    case NUM_BOARD_COLOURS:
         selectionId = GET_ROW_IDX(selectionId);
-        // If already hit all pokes of this color, multiplier is 0
-        if (sRoulette->colorHits[selectionId] >= NUM_BOARD_POKES)
+        // If already hit all pokes of this colour, multiplier is 0
+        if (sRoulette->colourHits[selectionId] >= NUM_BOARD_POKES)
             return 0;
-        return multipliers[sRoulette->colorHits[selectionId] + 1];
+        return multipliers[sRoulette->colourHits[selectionId] + 1];
     case NUM_BOARD_POKES:
         selectionId = GET_COL_IDX(selectionId);
-        // If already hit all colors of this poke, multiplier is 0
-        if (sRoulette->pokeHits[selectionId] >= NUM_BOARD_COLORS)
+        // If already hit all colours of this poke, multiplier is 0
+        if (sRoulette->pokeHits[selectionId] >= NUM_BOARD_COLOURS)
             return 0;
         return multipliers[sRoulette->pokeHits[selectionId] + 2];
     case NUM_ROULETTE_SLOTS:
@@ -2631,7 +2631,7 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
     }
 };
 
-static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLORS] =
+static const struct SpriteTemplate sSpriteTemplates_ColourHeaders[NUM_BOARD_COLOURS] =
 {
     {
         .tileTag = GFXTAG_HEADERS,
@@ -3101,7 +3101,7 @@ static const struct SpriteTemplate sSpriteTemplate_Ball =
     .callback = SpriteCallbackDummy
 };
 
-static const struct OamData sOam_WheelCenter =
+static const struct OamData sOam_WheelCentre =
 {
     .y = 81,
     .affineMode = ST_OAM_AFFINE_DOUBLE,
@@ -3111,22 +3111,22 @@ static const struct OamData sOam_WheelCenter =
     .priority = 2,
 };
 
-static const struct CompressedSpriteSheet sSpriteSheet_WheelCenter =
+static const struct CompressedSpriteSheet sSpriteSheet_WheelCentre =
 {
-    .data = gRouletteCenter_Gfx,
+    .data = gRouletteCentre_Gfx,
     .size = 0x800,
-    .tag = GFXTAG_WHEEL_CENTER
+    .tag = GFXTAG_WHEEL_CENTRE
 };
 
-static const struct SpriteTemplate sSpriteTemplate_WheelCenter =
+static const struct SpriteTemplate sSpriteTemplate_WheelCentre =
 {
-    .tileTag = GFXTAG_WHEEL_CENTER,
+    .tileTag = GFXTAG_WHEEL_CENTRE,
     .paletteTag = PALTAG_BALL,
-    .oam = &sOam_WheelCenter,
+    .oam = &sOam_WheelCentre,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_WheelCenter
+    .callback = SpriteCB_WheelCentre
 };
 
 static const struct OamData sOam_Shroomish =
@@ -3525,7 +3525,7 @@ static void CreateGridSprites(void)
     LoadCompressedSpriteSheet(&sSpriteSheet_Headers);
     LoadCompressedSpriteSheet(&sSpriteSheet_GridIcons);
 
-    for (i = 0; i < NUM_BOARD_COLORS; i++)
+    for (i = 0; i < NUM_BOARD_COLOURS; i++)
     {
         u8 y = i * 24;
         for (j = 0; j < NUM_BOARD_POKES; j++)
@@ -3542,9 +3542,9 @@ static void CreateGridSprites(void)
         spriteId = sRoulette->spriteIds[i + SPR_POKE_HEADERS] = CreateSprite(&sSpriteTemplates_PokeHeaders[i], (i * 24) + 148, 70, 30);
         gSprites[spriteId].animPaused = TRUE;
     }
-    for (i = 0; i < ARRAY_COUNT(sSpriteTemplates_ColorHeaders); i++)
+    for (i = 0; i < ARRAY_COUNT(sSpriteTemplates_ColourHeaders); i++)
     {
-        spriteId = sRoulette->spriteIds[i + SPR_COLOR_HEADERS] = CreateSprite(&sSpriteTemplates_ColorHeaders[i], 126, (i * 24) + 92, 30);
+        spriteId = sRoulette->spriteIds[i + SPR_COLOUR_HEADERS] = CreateSprite(&sSpriteTemplates_ColourHeaders[i], 126, (i * 24) + 92, 30);
         gSprites[spriteId].animPaused = TRUE;
     }
 }
@@ -3653,7 +3653,7 @@ static void CreateWheelIconSprites(void)
     LoadCompressedSpriteSheet(&sSpriteSheet_WheelIcons);
 
     angle = 15;
-    for (i = 0; i < NUM_BOARD_COLORS; i++)
+    for (i = 0; i < NUM_BOARD_COLOURS; i++)
     {
         for (j = 0; j < NUM_BOARD_POKES; j++)
         {
@@ -3747,11 +3747,11 @@ static u8 GetMultiplierAnimId(u8 selectionId)
 
     switch (sGridSelections[selectionId].baseMultiplier)
     {
-    case NUM_BOARD_COLORS:
+    case NUM_BOARD_COLOURS:
         selectionId = GET_ROW_IDX(selectionId);
-        if (sRoulette->colorHits[selectionId] > 3)
+        if (sRoulette->colourHits[selectionId] > 3)
             return 0;
-        return animIds[sRoulette->colorHits[selectionId] + 1];
+        return animIds[sRoulette->colourHits[selectionId] + 1];
     case NUM_BOARD_POKES:
         selectionId = GET_COL_IDX(selectionId);
         if (sRoulette->pokeHits[selectionId] > 2)
@@ -3830,15 +3830,15 @@ static void SpriteCB_GridSquare(struct Sprite *sprite)
     sprite->x2 = sRoulette->gridX;
 }
 
-static void CreateWheelCenterSprite(void)
+static void CreateWheelCentreSprite(void)
 {
     u8 spriteId;
 
-    LoadCompressedSpriteSheet(&sSpriteSheet_WheelCenter);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WheelCentre);
 
     // This sprite id isn't saved because it doesn't need to be referenced again
-    // but by virtue of creation order it's SPR_WHEEL_CENTER
-    spriteId = CreateSprite(&sSpriteTemplate_WheelCenter, 116, 80, 81);
+    // but by virtue of creation order it's SPR_WHEEL_CENTRE
+    spriteId = CreateSprite(&sSpriteTemplate_WheelCentre, 116, 80, 81);
     gSprites[spriteId].data[0] = sRoulette->wheelAngle;
     gSprites[spriteId].data[1] = 0;
     gSprites[spriteId].animPaused = TRUE;
@@ -3846,7 +3846,7 @@ static void CreateWheelCenterSprite(void)
     gSprites[spriteId].coordOffsetEnabled = TRUE;
 }
 
-static void SpriteCB_WheelCenter(struct Sprite *sprite)
+static void SpriteCB_WheelCentre(struct Sprite *sprite)
 {
     u32 matrixNum = sprite->oam.matrixNum;
     struct OamMatrix *matrix = &gOamMatrices[0];
@@ -3892,7 +3892,7 @@ static void HideWheelBalls(void)
 #define sState            data[1]
 #define sSlotMidpointDist data[2]
 #define sBallAngle        data[3]
-#define sBallDistToCenter data[4]
+#define sBallDistToCentre data[4]
 #define sBallWheelAngle   data[6]
 
 #define LandBall()                                                                                  \
@@ -3901,7 +3901,7 @@ static void HideWheelBalls(void)
     sRoulette->ballRolling = FALSE;                                                                 \
     StartSpriteAnim(sprite, sprite->animCmdIndex + 3);                                              \
     UpdateSlotBelowBall(sprite);                                                                    \
-    sprite->sBallDistToCenter = 30;                                                                 \
+    sprite->sBallDistToCentre = 30;                                                                 \
     UpdateBallRelativeWheelAngle(sprite);                                                           \
     sprite->sBallWheelAngle = (sprite->sBallWheelAngle / DEGREES_PER_SLOT) * DEGREES_PER_SLOT + 15; \
     sprite->callback = SpriteCB_BallLandInSlot;                                                     \
@@ -3970,12 +3970,12 @@ static void UpdateBallPos(struct Sprite *sprite)
 
     sprite->sBallAngle = sRoulette->ballAngle;
     sRoulette->ballFallSpeed += sRoulette->ballFallAccel;
-    sRoulette->ballDistToCenter += sRoulette->ballFallSpeed;
-    sprite->sBallDistToCenter = sRoulette->ballDistToCenter;
+    sRoulette->ballDistToCentre += sRoulette->ballFallSpeed;
+    sprite->sBallDistToCentre = sRoulette->ballDistToCentre;
     sin = Sin2(sprite->sBallAngle);
     cos = Cos2(sprite->sBallAngle);
-    sprite->x2 =  sin * sprite->sBallDistToCenter >> 12;
-    sprite->y2 = -cos * sprite->sBallDistToCenter >> 12;
+    sprite->x2 =  sin * sprite->sBallDistToCentre >> 12;
+    sprite->y2 = -cos * sprite->sBallDistToCentre >> 12;
     if (IsSEPlaying())
     {
         m4aMPlayPanpotControl(&gMPlayInfo_SE1, TRACKS_ALL, sprite->x2);
@@ -3992,8 +3992,8 @@ static void SpriteCB_BallLandInSlot(struct Sprite *sprite)
         sprite->sBallAngle -= 360;
     sin = Sin2(sprite->sBallAngle);
     cos = Cos2(sprite->sBallAngle);
-    sprite->x2 =  sin * sprite->sBallDistToCenter >> 12;
-    sprite->y2 = -cos * sprite->sBallDistToCenter >> 12;
+    sprite->x2 =  sin * sprite->sBallDistToCentre >> 12;
+    sprite->y2 = -cos * sprite->sBallDistToCentre >> 12;
     sprite->y2 += gSpriteCoordOffsetY;
 }
 
@@ -4001,7 +4001,7 @@ static void SpriteCB_UnstickBall_ShroomishBallFall(struct Sprite *sprite)
 {
     UpdateBallPos(sprite);
     sprite->data[2]++;
-    if (sprite->sBallDistToCenter < -132 || sprite->sBallDistToCenter > 80)
+    if (sprite->sBallDistToCentre < -132 || sprite->sBallDistToCentre > 80)
         sprite->invisible = TRUE;
     else
         sprite->invisible = FALSE;
@@ -4010,7 +4010,7 @@ static void SpriteCB_UnstickBall_ShroomishBallFall(struct Sprite *sprite)
     {
         if (!sprite->sStuckOnWheelLeft)
         {
-            if (sRoulette->ballDistToCenter <= sRoulette->varA0 - 2.0f)
+            if (sRoulette->ballDistToCentre <= sRoulette->varA0 - 2.0f)
             {
                 LandBall()
                 sRoulette->ballFallAccel = sRoulette->ballFallSpeed = 0.0f;
@@ -4019,7 +4019,7 @@ static void SpriteCB_UnstickBall_ShroomishBallFall(struct Sprite *sprite)
         }
         else
         {
-            if (sRoulette->ballDistToCenter >= sRoulette->varA0 - 2.0f)
+            if (sRoulette->ballDistToCentre >= sRoulette->varA0 - 2.0f)
             {
                 LandBall()
                 sRoulette->ballFallAccel = sRoulette->ballFallSpeed = 0.0f;
@@ -4063,7 +4063,7 @@ static void SpriteCB_UnstickBall_Shroomish(struct Sprite *sprite)
     default:
         return;
     }
-    sRoulette->varA0 = sRoulette->ballDistToCenter;
+    sRoulette->varA0 = sRoulette->ballDistToCentre;
     sRoulette->ballFallSpeed = ballFallSpeed;
     sRoulette->ballFallAccel = -((ballFallSpeed * 2.0f) / ballFallDist + (2.0f / (ballFallDist * ballFallDist)));
     sRoulette->ballAngleSpeed = 0.0f;
@@ -4282,7 +4282,7 @@ static void SpriteCB_RollBall_Slow(struct Sprite *sprite)
 static void SpriteCB_RollBall_Medium(struct Sprite *sprite)
 {
     UpdateBallPos(sprite);
-    if (sRoulette->ballDistToCenter > 40.0f)
+    if (sRoulette->ballDistToCentre > 40.0f)
         return;
 
     sRoulette->ballFallSpeed = -(4.0f / (f32)(sRoulette->ballTravelDistSlow));
@@ -4297,7 +4297,7 @@ static void SpriteCB_RollBall_Medium(struct Sprite *sprite)
 static void SpriteCB_RollBall_Fast(struct Sprite *sprite)
 {
     UpdateBallPos(sprite);
-    if (sRoulette->ballDistToCenter > 60.0f)
+    if (sRoulette->ballDistToCentre > 60.0f)
         return;
 
     m4aSongNumStartOrChange(SE_ROULETTE_BALL2);

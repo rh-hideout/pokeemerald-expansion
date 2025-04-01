@@ -21,12 +21,12 @@ MossdeepCity_EventScript_PokefanF::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_HM_DIVE, MossdeepCity_EventScript_PokefanFMagmaGone
-	msgbox MossdeepCity_Text_SpaceCenterReceivedLetter, MSGBOX_DEFAULT
+	msgbox MossdeepCity_Text_SpaceCentreReceivedLetter, MSGBOX_DEFAULT
 	release
 	end
 
 MossdeepCity_EventScript_PokefanFMagmaGone::
-	msgbox MossdeepCity_Text_SpaceCenterLaunchingRockets, MSGBOX_DEFAULT
+	msgbox MossdeepCity_Text_SpaceCentreLaunchingRockets, MSGBOX_DEFAULT
 	release
 	end
 
@@ -56,7 +56,7 @@ MossdeepCity_EventScript_Girl::
 	end
 
 MossdeepCity_EventScript_Woman::
-	msgbox MossdeepCity_Text_SpecialSpaceCenterRock, MSGBOX_NPC
+	msgbox MossdeepCity_Text_SpecialSpaceCentreRock, MSGBOX_NPC
 	end
 
 MossdeepCity_EventScript_WhiteRock::
@@ -71,8 +71,8 @@ MossdeepCity_EventScript_CitySign::
 	msgbox MossdeepCity_Text_CitySign, MSGBOX_SIGN
 	end
 
-MossdeepCity_EventScript_SpaceCenterSign::
-	msgbox MossdeepCity_Text_SpaceCenterSign, MSGBOX_SIGN
+MossdeepCity_EventScript_SpaceCentreSign::
+	msgbox MossdeepCity_Text_SpaceCentreSign, MSGBOX_SIGN
 	end
 
 MossdeepCity_EventScript_VisitedMossdeep::
@@ -80,20 +80,20 @@ MossdeepCity_EventScript_VisitedMossdeep::
 	setvar VAR_TEMP_1, 1
 	end
 
-MossdeepCity_EventScript_TeamMagmaEnterSpaceCenter::
+MossdeepCity_EventScript_TeamMagmaEnterSpaceCentre::
 	lockall
-	applymovement LOCALID_MAXIE, MossdeepCity_Movement_MaxieGestureToSpaceCenter
+	applymovement LOCALID_MAXIE, MossdeepCity_Movement_MaxieGestureToSpaceCentre
 	waitmovement 0
-	applymovement LOCALID_GRUNT_1, MossdeepCity_Movement_GruntFaceSpaceCenter
-	applymovement LOCALID_GRUNT_2, MossdeepCity_Movement_GruntFaceSpaceCenter
-	applymovement LOCALID_GRUNT_3, MossdeepCity_Movement_GruntFaceSpaceCenter
-	applymovement LOCALID_GRUNT_4, MossdeepCity_Movement_GruntFaceSpaceCenter
+	applymovement LOCALID_GRUNT_1, MossdeepCity_Movement_GruntFaceSpaceCentre
+	applymovement LOCALID_GRUNT_2, MossdeepCity_Movement_GruntFaceSpaceCentre
+	applymovement LOCALID_GRUNT_3, MossdeepCity_Movement_GruntFaceSpaceCentre
+	applymovement LOCALID_GRUNT_4, MossdeepCity_Movement_GruntFaceSpaceCentre
 	waitmovement 0
-	applymovement LOCALID_MAXIE, MossdeepCity_Movement_MaxieEnterSpaceCenter
-	applymovement LOCALID_GRUNT_1, MossdeepCity_Movement_Grunt1EnterSpaceCenter
-	applymovement LOCALID_GRUNT_2, MossdeepCity_Movement_Grunt2EnterSpaceCenter
-	applymovement LOCALID_GRUNT_3, MossdeepCity_Movement_Grunt3EnterSpaceCenter
-	applymovement LOCALID_GRUNT_4, MossdeepCity_Movement_Grunt4EnterSpaceCenter
+	applymovement LOCALID_MAXIE, MossdeepCity_Movement_MaxieEnterSpaceCentre
+	applymovement LOCALID_GRUNT_1, MossdeepCity_Movement_Grunt1EnterSpaceCentre
+	applymovement LOCALID_GRUNT_2, MossdeepCity_Movement_Grunt2EnterSpaceCentre
+	applymovement LOCALID_GRUNT_3, MossdeepCity_Movement_Grunt3EnterSpaceCentre
+	applymovement LOCALID_GRUNT_4, MossdeepCity_Movement_Grunt4EnterSpaceCentre
 	waitmovement 0
 	removeobject LOCALID_MAXIE
 	removeobject LOCALID_GRUNT_1
@@ -106,7 +106,7 @@ MossdeepCity_EventScript_TeamMagmaEnterSpaceCenter::
 	releaseall
 	end
 
-MossdeepCity_Movement_MaxieGestureToSpaceCenter:
+MossdeepCity_Movement_MaxieGestureToSpaceCentre:
 	delay_16
 	face_right
 	delay_16
@@ -118,14 +118,14 @@ MossdeepCity_Movement_MaxieGestureToSpaceCenter:
 	delay_16
 	step_end
 
-MossdeepCity_Movement_GruntFaceSpaceCenter:
+MossdeepCity_Movement_GruntFaceSpaceCentre:
 	face_right
 	delay_16
 	delay_16
 	delay_16
 	step_end
 
-MossdeepCity_Movement_MaxieEnterSpaceCenter:
+MossdeepCity_Movement_MaxieEnterSpaceCentre:
 	walk_down
 	walk_right
 	walk_right
@@ -141,7 +141,7 @@ MossdeepCity_Movement_MaxieEnterSpaceCenter:
 	walk_right
 	step_end
 
-MossdeepCity_Movement_Grunt1EnterSpaceCenter:
+MossdeepCity_Movement_Grunt1EnterSpaceCentre:
 	delay_16
 	delay_8
 	walk_down
@@ -162,7 +162,7 @@ MossdeepCity_Movement_Grunt1EnterSpaceCenter:
 	walk_right
 	step_end
 
-MossdeepCity_Movement_Grunt2EnterSpaceCenter:
+MossdeepCity_Movement_Grunt2EnterSpaceCentre:
 	delay_16
 	delay_8
 	walk_down
@@ -182,7 +182,7 @@ MossdeepCity_Movement_Grunt2EnterSpaceCenter:
 	walk_right
 	step_end
 
-MossdeepCity_Movement_Grunt3EnterSpaceCenter:
+MossdeepCity_Movement_Grunt3EnterSpaceCentre:
 	delay_16
 	delay_8
 	walk_down
@@ -201,7 +201,7 @@ MossdeepCity_Movement_Grunt3EnterSpaceCenter:
 	walk_right
 	step_end
 
-MossdeepCity_Movement_Grunt4EnterSpaceCenter:
+MossdeepCity_Movement_Grunt4EnterSpaceCentre:
 	delay_16
 	delay_8
 	walk_right
@@ -337,14 +337,14 @@ MossdeepCity_Text_WailmerWatching:
 	.string "WAI, WAI, WAI…\p"
 	.string "WAILMER watching!$"
 
-MossdeepCity_Text_SpaceCenterReceivedLetter:
-	.string "The island's SPACE CENTER has been\n"
+MossdeepCity_Text_SpaceCentreReceivedLetter:
+	.string "The island's SPACE CENTRE has been\n"
 	.string "launching huge rockets.\p"
 	.string "There's been some kind of an uproar\n"
 	.string "over a letter they received recently.$"
 
-MossdeepCity_Text_SpaceCenterLaunchingRockets:
-	.string "The island's SPACE CENTER has been\n"
+MossdeepCity_Text_SpaceCentreLaunchingRockets:
+	.string "The island's SPACE CENTRE has been\n"
 	.string "launching huge rockets.$"
 
 MossdeepCity_Text_MossdeepTargetedByMagma:
@@ -355,7 +355,7 @@ MossdeepCity_Text_MossdeepTargetedByMagma:
 	.string "But MOSSDEEP here's been targeted\n"
 	.string "by that TEAM MAGMA.\p"
 	.string "If you want to know what they're up to,\n"
-	.string "go visit the SPACE CENTER.$"
+	.string "go visit the SPACE CENTRE.$"
 
 MossdeepCity_Text_FeelReliefOnLand:
 	.string "I'm a SAILOR, so the sea's obviously\n"
@@ -384,9 +384,9 @@ MossdeepCity_Text_SurfExhilarating:
 	.string "Now that's an exhilarating trip!\n"
 	.string "Wouldn't you agree, youngster?$"
 
-MossdeepCity_Text_SpecialSpaceCenterRock:
+MossdeepCity_Text_SpecialSpaceCentreRock:
 	.string "This rock has a special meaning to\n"
-	.string "the people at the SPACE CENTER.\p"
+	.string "the people at the SPACE CENTRE.\p"
 	.string "They put it here as their wish for\n"
 	.string "their rockets to fly safely.\p"
 	.string "When you make a wish, what do you use?\n"
@@ -406,8 +406,8 @@ MossdeepCity_Text_CitySign:
 	.string "MOSSDEEP CITY\n"
 	.string "“Our slogan: Cherish POKéMON!”$"
 
-MossdeepCity_Text_SpaceCenterSign:
-	.string "MOSSDEEP SPACE CENTER\n"
+MossdeepCity_Text_SpaceCentreSign:
+	.string "MOSSDEEP SPACE CENTRE\n"
 	.string "“The closest place to space.”$"
 
 MossdeepCity_Text_ScottSomethingWrongWithTown:
@@ -419,7 +419,7 @@ MossdeepCity_Text_ScottSomethingWrongWithTown:
 	.string "But there's something wrong about\n"
 	.string "this town.\p"
 	.string "People are going on about a warning\n"
-	.string "letter and the SPACE CENTER…\p"
+	.string "letter and the SPACE CENTRE…\p"
 	.string "I don't think it concerns me in any\n"
 	.string "way, though.$"
 

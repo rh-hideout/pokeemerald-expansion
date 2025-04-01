@@ -332,7 +332,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Thunder Punch"),
         .description = COMPOUND_STRING(
             "An electrified punch that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = 75,
         .type = TYPE_ELECTRIC,
@@ -1688,7 +1688,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Aurora Beam"),
         .description = COMPOUND_STRING(
-            "Fires a rainbow-colored\n"
+            "Fires a rainbow-coloured\n"
             "beam that may lower Attack."),
         .effect = EFFECT_HIT,
         .power = 65,
@@ -2082,8 +2082,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Stun Spore"),
         .description = COMPOUND_STRING(
             "Scatters a powder that may\n"
-            "paralyze the foe."),
-        .effect = EFFECT_PARALYZE,
+            "paralyse the foe."),
+        .effect = EFFECT_PARALYSE,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 75,
@@ -2240,7 +2240,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Thunder Shock"),
         .description = COMPOUND_STRING(
             "An electrical attack that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = 40,
         .type = TYPE_ELECTRIC,
@@ -2265,7 +2265,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Thunderbolt"),
         .description = COMPOUND_STRING(
             "A strong electrical attack\n"
-            "that may paralyze the foe."),
+            "that may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 90 : 95,
         .type = TYPE_ELECTRIC,
@@ -2291,8 +2291,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Thunder Wave"),
         .description = COMPOUND_STRING(
             "A weak jolt of electricity\n"
-            "that paralyzes the foe."),
-        .effect = EFFECT_PARALYZE,
+            "that paralyses the foe."),
+        .effect = EFFECT_PARALYSE,
         .power = 0,
         .type = TYPE_ELECTRIC,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_7 ? 90 : 100,
@@ -3213,7 +3213,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Lick"),
         .description = COMPOUND_STRING(
             "Licks with a long tongue to\n"
-            "injure. May also paralyze."),
+            "injure. May also paralyse."),
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 30 : 20,
         .type = TYPE_GHOST,
@@ -3612,7 +3612,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             .accuracy = 75,
         #endif
-        .effect = EFFECT_PARALYZE,
+        .effect = EFFECT_PARALYSE,
         .power = 0,
         .type = TYPE_NORMAL,
         .pp = 30,
@@ -5470,7 +5470,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Spark"),
         .description = COMPOUND_STRING(
             "An electrified tackle that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = 65,
         .type = TYPE_ELECTRIC,
@@ -6879,7 +6879,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Facade"),
         .description = COMPOUND_STRING(
             "Boosts Attack when burned,\n"
-            "paralyzed, or poisoned."),
+            "paralysed, or poisoned."),
         .effect = EFFECT_FACADE,
         .power = 70,
         .type = TYPE_NORMAL,
@@ -6932,7 +6932,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Smelling Salts"),
         .description = COMPOUND_STRING(
-            "Powerful against paralyzed\n"
+            "Powerful against paralysed\n"
             "foes, but also heals them."),
         .effect = EFFECT_DOUBLE_POWER_ON_ARG_STATUS,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 70 : 60,
@@ -8862,7 +8862,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Bounce"),
         .description = COMPOUND_STRING(
             "Bounces up, then down the\n"
-            "next turn. May paralyze."),
+            "next turn. May paralyse."),
         .effect = EFFECT_SEMI_INVULNERABLE,
         .power = 85,
         .type = TYPE_FLYING,
@@ -10211,7 +10211,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Force Palm"),
         .description = COMPOUND_STRING(
             "A shock wave attack that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = 60,
         .type = TYPE_FIGHTING,
@@ -10857,7 +10857,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Thunder Fang"),
         .description = COMPOUND_STRING(
             "May cause flinching or\n"
-            "leave the foe paralyzed."),
+            "leave the foe paralysed."),
         .effect = EFFECT_HIT,
         .power = 65,
         .type = TYPE_ELECTRIC,
@@ -11199,7 +11199,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Discharge"),
         .description = COMPOUND_STRING(
             "Zaps the foes with electri-\n"
-            "city. May paralyze them."),
+            "city. May paralyse them."),
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_ELECTRIC,
@@ -13965,7 +13965,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Bolt Strike"),
         .description = COMPOUND_STRING(
             "Strikes with a great amount\n"
-            "of lightning. May paralyze."),
+            "of lightning. May paralyse."),
         .effect = EFFECT_HIT,
         .power = 130,
         .type = TYPE_ELECTRIC,
@@ -14043,7 +14043,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Freeze Shock"),
         .description = COMPOUND_STRING(
             "A powerful 2-turn move that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_TWO_TURNS_ATTACK,
         .power = 140,
         .type = TYPE_ICE,
@@ -17122,7 +17122,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Splishy Splash"),
         .description = COMPOUND_STRING(
             "A huge electrified wave that\n"
-            "may paralyze the foe."),
+            "may paralyse the foe."),
         .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_WATER,
@@ -17215,7 +17215,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Buzzy Buzz"),
         .description = COMPOUND_STRING(
             "Shoots a jolt of electricity\n"
-            "that always paralyzes."),
+            "that always paralyses."),
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 60 : 90,
         .type = TYPE_ELECTRIC,
@@ -19028,7 +19028,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Dire Claw"),
         .description = COMPOUND_STRING(
             "High critical hit chance. May\n"
-            "paralyze, poison or drowse."),
+            "paralyse, poison or drowse."),
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_9 ? 80 : 60,
         .type = TYPE_POISON,
@@ -21987,7 +21987,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxVoltCrash,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_PARALYZE_SIDE,
+            .moveEffect = MOVE_EFFECT_PARALYSE_SIDE,
             .chance = 100,
             .sheerForceBoost = SHEER_FORCE_NO_BOOST,
         }),
@@ -22390,7 +22390,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxStunShock,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_POISON_PARALYZE_SIDE,
+            .moveEffect = MOVE_EFFECT_POISON_PARALYSE_SIDE,
             .chance = 100,
             .sheerForceBoost = SHEER_FORCE_NO_BOOST,
         }),

@@ -120,8 +120,8 @@ static const struct WindowTemplate sRibbonsMonListWindowTemplate =
     .baseBlock = 20
 };
 
-static const u8 sText_MaleSymbol[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_RED}{WHITE}{GREEN}♂{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
-static const u8 sText_FemaleSymbol[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_GREEN}{WHITE}{BLUE}♀{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
+static const u8 sText_MaleSymbol[] = _("{COLOUR_HIGHLIGHT_SHADOW}{LIGHT_RED}{WHITE}{GREEN}♂{COLOUR_HIGHLIGHT_SHADOW}{DARK_GREY}{WHITE}{LIGHT_GREY}");
+static const u8 sText_FemaleSymbol[] = _("{COLOUR_HIGHLIGHT_SHADOW}{LIGHT_GREEN}{WHITE}{BLUE}♀{COLOUR_HIGHLIGHT_SHADOW}{DARK_GREY}{WHITE}{LIGHT_GREY}");
 static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
 
 bool32 PokenavCallback_Init_MonRibbonList(void)
@@ -672,7 +672,7 @@ static void DrawListIndexNumber(s32 windowId, s32 index, s32 max)
     ptr = ConvertIntToDecimalStringN(ptr, index, STR_CONV_MODE_RIGHT_ALIGN, 3);
     *ptr++ = CHAR_SLASH;
     ConvertIntToDecimalStringN(ptr, max, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, strbuf, 56);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, strbuf, 56);
     AddTextPrinterParameterized(windowId, FONT_NORMAL, strbuf, x, 1, TEXT_SKIP_DRAW, NULL);
 }
 

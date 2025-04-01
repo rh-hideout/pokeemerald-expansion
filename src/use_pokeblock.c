@@ -43,7 +43,7 @@ enum {
 #define TAG_UP_DOWN     0
 #define TAG_CONDITION   1
 
-// At any one time, the currently selected mon and its two adjacent neighbors can be loaded
+// At any one time, the currently selected mon and its two adjacent neighbours can be loaded
 // IDs to refer to one of these 3 are called "load id" in this file
 #define NUM_SELECTIONS_LOADED 3
 
@@ -176,7 +176,7 @@ static const u32 sMonFrame_Gfx[] = INCBIN_U32("graphics/pokeblock/use_screen/mon
 static const u32 sMonFrame_Tilemap[] = INCBIN_U32("graphics/pokeblock/use_screen/mon_frame.bin.lz");
 static const u32 sGraphData_Tilemap[] = INCBIN_U32("graphics/pokeblock/use_screen/graph_data.bin.lz");
 
-// The condition/flavors aren't listed in their normal order in this file, they're listed as shown on the graph going counter-clockwise
+// The condition/flavours aren't listed in their normal order in this file, they're listed as shown on the graph going counter-clockwise
 // Normally they would go Cool/Spicy, Beauty/Dry, Cute/Sweet, Smart/Bitter, Tough/Sour (also graph order, but clockwise)
 static const u32 sConditionToMonData[CONDITION_COUNT] =
 {
@@ -187,20 +187,20 @@ static const u32 sConditionToMonData[CONDITION_COUNT] =
     [CONDITION_BEAUTY] = MON_DATA_BEAUTY
 };
 
-static const u8 sConditionToFlavor[CONDITION_COUNT] =
+static const u8 sConditionToFlavour[CONDITION_COUNT] =
 {
-    [CONDITION_COOL]   = FLAVOR_SPICY,
-    [CONDITION_TOUGH]  = FLAVOR_SOUR,
-    [CONDITION_SMART]  = FLAVOR_BITTER,
-    [CONDITION_CUTE]   = FLAVOR_SWEET,
-    [CONDITION_BEAUTY] = FLAVOR_DRY
+    [CONDITION_COOL]   = FLAVOUR_SPICY,
+    [CONDITION_TOUGH]  = FLAVOUR_SOUR,
+    [CONDITION_SMART]  = FLAVOUR_BITTER,
+    [CONDITION_CUTE]   = FLAVOUR_SWEET,
+    [CONDITION_BEAUTY] = FLAVOUR_DRY
 };
 
-static const u8 sNatureTextColors[] =
+static const u8 sNatureTextColours[] =
 {
-    TEXT_COLOR_TRANSPARENT,
-    TEXT_COLOR_BLUE,
-    TEXT_COLOR_WHITE
+    TEXT_COLOUR_TRANSPARENT,
+    TEXT_COLOUR_BLUE,
+    TEXT_COLOUR_WHITE
 };
 
 static const struct BgTemplate sBgTemplates[4] =
@@ -1038,7 +1038,7 @@ static void CalculateConditionEnhancements(void)
 
 static void CalculatePokeblockEffectiveness(struct Pokeblock *pokeblock, struct Pokemon *mon)
 {
-    s8 i, direction, flavor;
+    s8 i, direction, flavour;
 
     sInfo->pokeblockStatBoosts[CONDITION_COOL] = pokeblock->spicy;
     sInfo->pokeblockStatBoosts[CONDITION_TOUGH] = pokeblock->sour;
@@ -1061,9 +1061,9 @@ static void CalculatePokeblockEffectiveness(struct Pokeblock *pokeblock, struct 
         if (amount % 10 >= 5) // round to the nearest
             boost++;
 
-        flavor = GetMonFlavorRelation(mon, sConditionToFlavor[i]);
-        if (flavor == direction)
-            sInfo->pokeblockStatBoosts[i] += boost * flavor;
+        flavour = GetMonFlavourRelation(mon, sConditionToFlavour[i]);
+        if (flavour == direction)
+            sInfo->pokeblockStatBoosts[i] += boost * flavour;
     }
 }
 
@@ -1394,7 +1394,7 @@ static void UpdateMonInfoText(u16 loadId, bool8 firstPrint)
         nature = GetNature(&gPlayerParty[partyIndex]);
         str = StringCopy(sMenu->info.natureText, gText_NatureSlash);
         str = StringCopy(str, gNaturesInfo[nature].name);
-        AddTextPrinterParameterized3(WIN_NATURE, FONT_NORMAL, 2, 1, sNatureTextColors, 0, sMenu->info.natureText);
+        AddTextPrinterParameterized3(WIN_NATURE, FONT_NORMAL, 2, 1, sNatureTextColours, 0, sMenu->info.natureText);
     }
 
     if (firstPrint)

@@ -67,7 +67,7 @@ $(TILESETGFXDIR)/primary/building/tiles.4bpp: %.4bpp: %.png
 $(TILESETGFXDIR)/secondary/shop/tiles.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 502 -Wnum_tiles
 
-$(TILESETGFXDIR)/secondary/pokemon_center/tiles.4bpp: %.4bpp: %.png
+$(TILESETGFXDIR)/secondary/pokemon_centre/tiles.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 478 -Wnum_tiles
 
 $(TILESETGFXDIR)/secondary/cave/tiles.4bpp: %.4bpp: %.png
@@ -205,7 +205,7 @@ $(TILESETGFXDIR)/secondary/mirage_tower/tiles.4bpp: %.4bpp: %.png
 $(TILESETGFXDIR)/secondary/mossdeep_game_corner/tiles.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 95 -Wnum_tiles
 
-$(TILESETGFXDIR)/secondary/island_harbor/tiles.4bpp: %.4bpp: %.png
+$(TILESETGFXDIR)/secondary/island_harbour/tiles.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 503 -Wnum_tiles
 
 $(TILESETGFXDIR)/secondary/trainer_hill/tiles.4bpp: %.4bpp: %.png
@@ -276,7 +276,7 @@ $(FONTGFXDIR)/frlg_female.fwjpnfont: $(FONTGFXDIR)/japanese_frlg_female.png
 ### Miscellaneous ###
 
 $(TITLESCREENGFXDIR)/pokemon_logo.gbapal: %.gbapal: %.pal
-	$(GFX) $< $@ -num_colors 224
+	$(GFX) $< $@ -num_colours 224
 
 $(TITLESCREENGFXDIR)/emerald_version.8bpp: %.8bpp: %.png
 	$(GFX) $< $@ -mwidth 8 -mheight 4
@@ -331,7 +331,7 @@ $(UNUSEDGFXDIR)/redyellowgreen_frame.bin: $(UNUSEDGFXDIR)/red_frame.bin \
                                           $(UNUSEDGFXDIR)/blank_frame.bin
 	@cat $^ >$@
 
-$(UNUSEDGFXDIR)/color_frames.4bpp: %.4bpp: %.png
+$(UNUSEDGFXDIR)/colour_frames.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 353 -Wnum_tiles
 
 $(BATINTGFXDIR)/unused_window2bar.4bpp: %.4bpp: %.png
@@ -537,10 +537,10 @@ $(WALLPAPERGFXDIR)/polkadot/frame.4bpp: %.4bpp: %.png
 $(WALLPAPERGFXDIR)/polkadot/tiles.4bpp: $(WALLPAPERGFXDIR)/polkadot/frame.4bpp $(WALLPAPERGFXDIR)/polkadot/bg.4bpp
 	@cat $^ >$@
 
-$(WALLPAPERGFXDIR)/pokecenter/frame.4bpp: %.4bpp: %.png
+$(WALLPAPERGFXDIR)/pokecentre/frame.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 35 -Wnum_tiles
 
-$(WALLPAPERGFXDIR)/pokecenter/tiles.4bpp: $(WALLPAPERGFXDIR)/pokecenter/frame.4bpp $(WALLPAPERGFXDIR)/pokecenter/bg.4bpp
+$(WALLPAPERGFXDIR)/pokecentre/tiles.4bpp: $(WALLPAPERGFXDIR)/pokecentre/frame.4bpp $(WALLPAPERGFXDIR)/pokecentre/bg.4bpp
 	@cat $^ >$@
 
 $(WALLPAPERGFXDIR)/machine/frame.4bpp: %.4bpp: %.png
@@ -579,7 +579,7 @@ $(WALLPAPERGFXDIR)/block/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame1.4bpp $(WA
 $(WALLPAPERGFXDIR)/ribbon/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame1.4bpp $(WALLPAPERGFXDIR)/ribbon/bg.4bpp
 	@cat $^ >$@
 
-$(WALLPAPERGFXDIR)/pokecenter2/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame1.4bpp $(WALLPAPERGFXDIR)/pokecenter2/bg.4bpp
+$(WALLPAPERGFXDIR)/pokecentre2/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame1.4bpp $(WALLPAPERGFXDIR)/pokecentre2/bg.4bpp
 	@cat $^ >$@
 
 $(WALLPAPERGFXDIR)/frame/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame1.4bpp $(WALLPAPERGFXDIR)/frame/bg.4bpp
@@ -612,7 +612,7 @@ $(WALLPAPERGFXDIR)/whiscash/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame2.4bpp $
 $(INTERFACEGFXDIR)/outline_cursor.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 8 -Wnum_tiles
 
-$(BATTRANSGFXDIR)/frontier_logo_center.4bpp: %.4bpp: %.png
+$(BATTRANSGFXDIR)/frontier_logo_centre.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 43 -Wnum_tiles
 
 

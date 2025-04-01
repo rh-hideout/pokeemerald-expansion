@@ -228,7 +228,7 @@ enum
     CHECK_PAGE_ENTRY_COUNT
 };
 
-#define MCFLAVOR(name) {[CHECK_PAGE_STRATEGY] = gText_MatchCall##name##_Strategy, \
+#define MCFLAVOUR(name) {[CHECK_PAGE_STRATEGY] = gText_MatchCall##name##_Strategy, \
                         [CHECK_PAGE_POKEMON]  = gText_MatchCall##name##_Pokemon,  \
                         [CHECK_PAGE_INTRO_1]  = gText_MatchCall##name##_Intro1,   \
                         [CHECK_PAGE_INTRO_2]  = gText_MatchCall##name##_Intro2}
@@ -353,7 +353,7 @@ u32 MatchCall_GetRematchTableIdx(u32 idx);
 u32 GetTrainerIdxByRematchIdx(u32 rematchIdx);
 int MatchCall_GetOverrideFacilityClass(u32 idx);
 void MatchCall_GetMessage(u32 idx, u8 *dest);
-const u8 *MatchCall_GetOverrideFlavorText(u32 idx, u32 offset);
+const u8 *MatchCall_GetOverrideFlavourText(u32 idx, u32 offset);
 void MatchCall_GetNameAndDesc(u32 idx, const u8 **desc, const u8 **name);
 
 // pokenav_main_menu.c
@@ -417,7 +417,7 @@ u16 GetMatchCallMapSec(int);
 bool32 ShouldDrawRematchPokeballIcon(int index);
 void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset);
 int GetMatchCallTrainerPic(int index);
-const u8 *GetMatchCallFlavorText(int index, int textType);
+const u8 *GetMatchCallFlavourText(int index, int textType);
 const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest);
 u16 GetMatchCallOptionCursorPos(void);
 u16 GetMatchCallOptionId(int optionId);

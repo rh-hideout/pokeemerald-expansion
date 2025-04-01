@@ -287,7 +287,7 @@ const struct OamData gOamData_BattleSpritePlayerSide =
     .affineParam = 0,
 };
 
-static const s8 sCenterToCornerVecXs[8] ={-32, -16, -16, -32, -32};
+static const s8 sCentreToCornerVecXs[8] ={-32, -16, -16, -32, -32};
 
 #include "data/types_info.h"
 
@@ -2910,7 +2910,7 @@ void SpriteCB_PlayerMonSlideIn(struct Sprite *sprite)
 
 static void SpriteCB_TrainerThrowObject_Main(struct Sprite *sprite)
 {
-    AnimSetCenterToCornerVecX(sprite);
+    AnimSetCentreToCornerVecX(sprite);
     if (sprite->animEnded)
         sprite->callback = SpriteCB_Idle;
 }
@@ -2923,10 +2923,10 @@ void SpriteCB_TrainerThrowObject(struct Sprite *sprite)
     sprite->callback = SpriteCB_TrainerThrowObject_Main;
 }
 
-void AnimSetCenterToCornerVecX(struct Sprite *sprite)
+void AnimSetCentreToCornerVecX(struct Sprite *sprite)
 {
     if (sprite->animDelayCounter == 0)
-        sprite->centerToCornerVecX = sCenterToCornerVecXs[sprite->animCmdIndex];
+        sprite->centreToCornerVecX = sCentreToCornerVecXs[sprite->animCmdIndex];
 }
 
 void BeginBattleIntroDummy(void)
@@ -4007,7 +4007,7 @@ void BattleTurnPassed(void)
     gBattleMainFunc = HandleTurnActionSelectionState;
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        BattleScriptExecute(BattleScript_PalacePrintFlavorText);
+        BattleScriptExecute(BattleScript_PalacePrintFlavourText);
     else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaTurnCounter == 0)
         BattleScriptExecute(BattleScript_ArenaTurnBeginning);
     else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_LOW_HP)))

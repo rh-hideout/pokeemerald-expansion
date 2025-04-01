@@ -124,13 +124,13 @@ void SetVBlankHBlankCallbacksToNull(void)
 void DisplayMessageAndContinueTask(u8 taskId, u8 windowId, u16 tileNum, u8 paletteNum, u8 fontId, u8 textSpeed, const u8 *string, void *taskFunc)
 {
     sMessageWindowId = windowId;
-    DrawDialogFrameWithCustomTileAndPalette(windowId, TRUE, tileNum, paletteNum);
+    DrawDialogueFrameWithCustomTileAndPalette(windowId, TRUE, tileNum, paletteNum);
 
     if (string != gStringVar4)
         StringExpandPlaceholders(gStringVar4, string);
 
     gTextFlags.canABSpeedUpPrint = 1;
-    AddTextPrinterParameterized2(windowId, fontId, gStringVar4, textSpeed, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(windowId, fontId, gStringVar4, textSpeed, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     sMessageNextTask = taskFunc;
     gTasks[taskId].func = Task_ContinueTaskAfterMessagePrints;
 }
@@ -279,8 +279,8 @@ bool8 IsHoldingItemAllowed(u16 itemId)
 {
     // e-Reader Enigma Berry can't be held in link areas
     if (itemId == ITEM_ENIGMA_BERRY_E_READER
-     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(TRADE_CENTER)
-       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(TRADE_CENTER))
+     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(TRADE_CENTRE)
+       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(TRADE_CENTRE))
        || InUnionRoom() == TRUE))
         return FALSE;
     else

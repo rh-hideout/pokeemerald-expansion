@@ -757,7 +757,7 @@ BattleFrontier_BattlePikeRoomNormal_Text_BattleSomewhatToughTrainer:
 
 BattleFrontier_BattlePikeRoomNormal_Text_RestoreToFullHealth:
 	.string "How wonderful…\p"
-	.string "To honor your victory, your POKéMON\n"
+	.string "To honour your victory, your POKéMON\n"
 	.string "shall be restored to full health…$"
 
 BattleFrontier_BattlePikeRoomNormal_Text_EnjoyRestOfChallenge2:

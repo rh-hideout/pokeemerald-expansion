@@ -435,10 +435,10 @@ DYNAMIC  =   F7
 
 @ more text functions
 
-COLOR = FC 01 @ use a color listed below right after
+COLOUR = FC 01 @ use a colour listed below right after
 HIGHLIGHT = FC 02 @ same as fc 01
 SHADOW = FC 03 @ same as fc 01
-COLOR_HIGHLIGHT_SHADOW = FC 04 @ takes 3 bytes
+COLOUR_HIGHLIGHT_SHADOW = FC 04 @ takes 3 bytes
 PALETTE = FC 05 @ used in credits
 FONT = FC 06 @ Given a font id, or use font constants below instead
 RESET_FONT = FC 07
@@ -472,26 +472,26 @@ FONT_SMALL_NARROWER = FC 06 0B
 FONT_SHORT_NARROW = FC 06 0C
 FONT_SHORT_NARROWER = FC 06 0D
 
-@ colors
+@ colours
 
 TRANSPARENT = 00
 WHITE = 01
-DARK_GRAY = 02
-LIGHT_GRAY = 03
+DARK_GREY = 02
+LIGHT_GREY = 03
 RED = 04
 LIGHT_RED = 05
 GREEN = 06
 LIGHT_GREEN = 07
 BLUE = 08
 LIGHT_BLUE = 09
-@ these next colors can be set to anything arbitrary at runtime
-@ usually though they'll have the textbox border colors as described below
-DYNAMIC_COLOR1 = 0A @ white
-DYNAMIC_COLOR2 = 0B @ white with a tinge of green
-DYNAMIC_COLOR3 = 0C @ white 2
-DYNAMIC_COLOR4 = 0D @ aquamarine
-DYNAMIC_COLOR5 = 0E @ blue-green
-DYNAMIC_COLOR6 = 0F @ cerulean
+@ these next colours can be set to anything arbitrary at runtime
+@ usually though they'll have the textbox border colours as described below
+DYNAMIC_COLOUR1 = 0A @ white
+DYNAMIC_COLOUR2 = 0B @ white with a tinge of green
+DYNAMIC_COLOUR3 = 0C @ white 2
+DYNAMIC_COLOUR4 = 0D @ aquamarine
+DYNAMIC_COLOUR5 = 0E @ blue-green
+DYNAMIC_COLOUR6 = 0F @ cerulean
 
 @ sound and music
 
@@ -771,7 +771,7 @@ MUS_CAUGHT = 60 01
 MUS_VICTORY_WILD = 61 01
 MUS_VICTORY_GYM_LEADER = 62 01
 MUS_VICTORY_LEAGUE = 63 01
-MUS_C_COMM_CENTER = 64 01
+MUS_C_COMM_CENTRE = 64 01
 MUS_GSC_PEWTER = 65 01
 MUS_C_VS_LEGEND_BEAST = 66 01
 MUS_ROUTE101 = 67 01
@@ -815,7 +815,7 @@ MUS_LINK_CONTEST_P4 = 8C 01
 MUS_ENCOUNTER_RICH = 8D 01
 MUS_VERDANTURF = 8E 01
 MUS_RUSTBORO = 8F 01
-MUS_POKE_CENTER = 90 01
+MUS_POKE_CENTRE = 90 01
 MUS_ROUTE104 = 91 01
 MUS_ROUTE119 = 92 01
 MUS_CYCLING = 93 01
@@ -930,7 +930,7 @@ MUS_RG_VS_CHAMPION = FF 01
 MUS_RG_PALLET = 00 02
 MUS_RG_OAK_LAB = 01 02
 MUS_RG_OAK = 02 02
-MUS_RG_POKE_CENTER = 03 02
+MUS_RG_POKE_CENTRE = 03 02
 MUS_RG_SS_ANNE = 04 02
 MUS_RG_SURF = 05 02
 MUS_RG_POKE_TOWER = 06 02
@@ -955,7 +955,7 @@ MUS_RG_NEW_GAME_INTRO = 18 02
 MUS_RG_NEW_GAME_EXIT = 19 02
 MUS_RG_POKE_JUMP = 1A 02
 MUS_RG_UNION_ROOM = 1B 02
-MUS_RG_NET_CENTER = 1C 02
+MUS_RG_NET_CENTRE = 1C 02
 MUS_RG_MYSTERY_GIFT = 1D 02
 MUS_RG_BERRY_PICK = 1E 02
 MUS_RG_SEVII_CAVE = 1F 02

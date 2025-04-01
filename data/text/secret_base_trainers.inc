@@ -226,8 +226,8 @@ SecretBase_Text_Trainer8PreChampion:
 
 SecretBase_Text_Trainer4Intro:
 	.string "I found a spot I liked, and I did it up\n"
-	.string "with my favorite decorations.\p"
-	.string "I raise my favorite POKéMON and grow\n"
+	.string "with my favourite decorations.\p"
+	.string "I raise my favourite POKéMON and grow\n"
 	.string "stronger with it.\p"
 	.string "That's what I do.\n"
 	.string "Want to battle with me?$"
@@ -248,8 +248,8 @@ SecretBase_Text_Trainer4PostBattle:
 
 SecretBase_Text_Trainer4PreChampion:
 	.string "I found a spot I liked, and I did it up\n"
-	.string "with my favorite decorations.\p"
-	.string "I raise my favorite POKéMON and grow\n"
+	.string "with my favourite decorations.\p"
+	.string "I raise my favourite POKéMON and grow\n"
 	.string "stronger with it.\p"
 	.string "Every day is a great day.$"
 

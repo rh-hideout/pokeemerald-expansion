@@ -207,7 +207,7 @@ Route101_Movement_Unused2:
 	step_end
 
 Route101_EventScript_Youngster::
-	msgbox Route101_Text_TakeTiredPokemonToPokeCenter, MSGBOX_NPC
+	msgbox Route101_Text_TakeTiredPokemonToPokeCentre, MSGBOX_NPC
 	end
 
 Route101_EventScript_Boy::
@@ -284,10 +284,10 @@ Route101_Text_YouSavedMe:
 	.string "This is not the place to chat, so come\n"
 	.string "by my POKéMON LAB later, okay?$"
 
-Route101_Text_TakeTiredPokemonToPokeCenter:
+Route101_Text_TakeTiredPokemonToPokeCentre:
 	.string "If POKéMON get tired, take them to\n"
-	.string "a POKéMON CENTER.\p"
-	.string "There's a POKéMON CENTER in OLDALE\n"
+	.string "a POKéMON CENTRE.\p"
+	.string "There's a POKéMON CENTRE in OLDALE\n"
 	.string "TOWN right close by.$"
 
 Route101_Text_WildPokemonInTallGrass:

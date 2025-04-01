@@ -858,7 +858,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 414
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_1] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_1] =
     {
 #line 415
         .trainerName = _("GRUNT"),
@@ -5251,7 +5251,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 2156
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_2] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_2] =
     {
 #line 2157
         .trainerName = _("GRUNT"),
@@ -11396,7 +11396,7 @@ F_TRAINER_FEMALE |
 #line 4595
         .aiFlags = AI_FLAG_BASIC_TRAINER | AI_FLAG_FORCE_SETUP_FIRST_TURN,
 #line 4596
-        .mugshotColor = MUGSHOT_COLOR_PURPLE,
+        .mugshotColour = MUGSHOT_COLOUR_PURPLE,
         .partySize = 5,
         .party = (const struct TrainerMon[])
         {
@@ -11515,7 +11515,7 @@ F_TRAINER_FEMALE |
 #line 4646
         .aiFlags = AI_FLAG_BASIC_TRAINER,
 #line 4647
-        .mugshotColor = MUGSHOT_COLOR_GREEN,
+        .mugshotColour = MUGSHOT_COLOUR_GREEN,
         .partySize = 5,
         .party = (const struct TrainerMon[])
         {
@@ -11634,7 +11634,7 @@ F_TRAINER_FEMALE |
 #line 4697
         .aiFlags = AI_FLAG_BASIC_TRAINER,
 #line 4698
-        .mugshotColor = MUGSHOT_COLOR_PINK,
+        .mugshotColour = MUGSHOT_COLOUR_PINK,
         .partySize = 5,
         .party = (const struct TrainerMon[])
         {
@@ -11751,7 +11751,7 @@ F_TRAINER_FEMALE |
 #line 4748
         .aiFlags = AI_FLAG_BASIC_TRAINER,
 #line 4749
-        .mugshotColor = MUGSHOT_COLOR_BLUE,
+        .mugshotColour = MUGSHOT_COLOUR_BLUE,
         .partySize = 5,
         .party = (const struct TrainerMon[])
         {
@@ -15479,7 +15479,7 @@ F_TRAINER_FEMALE |
 #line 6251
         .aiFlags = AI_FLAG_BASIC_TRAINER,
 #line 6252
-        .mugshotColor = MUGSHOT_COLOR_YELLOW,
+        .mugshotColour = MUGSHOT_COLOUR_YELLOW,
         .partySize = 6,
         .party = (const struct TrainerMon[])
         {
@@ -26971,7 +26971,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 10763
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_3] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_3] =
     {
 #line 10764
         .trainerName = _("GRUNT"),
@@ -27016,7 +27016,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 10780
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_4] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_4] =
     {
 #line 10781
         .trainerName = _("GRUNT"),
@@ -27048,7 +27048,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 10793
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_5] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_5] =
     {
 #line 10794
         .trainerName = _("GRUNT"),
@@ -27080,7 +27080,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 10806
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_6] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_6] =
     {
 #line 10807
         .trainerName = _("GRUNT"),
@@ -27112,7 +27112,7 @@ F_TRAINER_FEMALE |
         },
     },
 #line 10819
-    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTER_7] =
+    [DIFFICULTY_NORMAL][TRAINER_GRUNT_SPACE_CENTRE_7] =
     {
 #line 10820
         .trainerName = _("GRUNT"),

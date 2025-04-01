@@ -75,8 +75,8 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_LeftRoomWarp::
 	goto BattleFrontier_BattlePikeThreePathRoom_EventScript_RoomWarp
 	end
 
-BattleFrontier_BattlePikeThreePathRoom_EventScript_CenterRoomWarp::
-	setvar VAR_0x8007, PIKE_ROOM_CENTER
+BattleFrontier_BattlePikeThreePathRoom_EventScript_CentreRoomWarp::
+	setvar VAR_0x8007, PIKE_ROOM_CENTRE
 	goto BattleFrontier_BattlePikeThreePathRoom_EventScript_RoomWarp
 	end
 

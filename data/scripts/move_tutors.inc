@@ -50,7 +50,7 @@ MoveTutor_EventScript_RolloutTaught::
 	release
 	end
 
-VerdanturfTown_PokemonCenter_1F_EventScript_FuryCutterTutor::
+VerdanturfTown_PokemonCentre_1F_EventScript_FuryCutterTutor::
 	lock
 	faceplayer
 	goto_if_set FLAG_MOVE_TUTOR_TAUGHT_FURY_CUTTER, MoveTutor_EventScript_FuryCutterTaught
@@ -206,7 +206,7 @@ MoveTutor_EventScript_DynamicPunchTaught::
 	release
 	end
 
-SootopolisCity_PokemonCenter_1F_EventScript_DoubleEdgeTutor::
+SootopolisCity_PokemonCentre_1F_EventScript_DoubleEdgeTutor::
 	lock
 	faceplayer
 	goto_if_set FLAG_MOVE_TUTOR_TAUGHT_DOUBLE_EDGE, MoveTutor_EventScript_DoubleEdgeTaught
@@ -232,7 +232,7 @@ MoveTutor_EventScript_DoubleEdgeTaught::
 	release
 	end
 
-PacifidlogTown_PokemonCenter_1F_EventScript_ExplosionTutor::
+PacifidlogTown_PokemonCentre_1F_EventScript_ExplosionTutor::
 	lock
 	faceplayer
 	goto_if_set FLAG_MOVE_TUTOR_TAUGHT_EXPLOSION, MoveTutor_EventScript_ExplosionTaught

@@ -125,7 +125,7 @@ SSTidalCorridor_EventScript_ExitLilycove::
 	setrespawn HEAL_LOCATION_LILYCOVE_CITY
 	msgbox SSTidalCorridor_Text_WeveArrived, MSGBOX_DEFAULT
 	call_if_set FLAG_RECEIVED_TM_SNATCH, SSTidalCorridor_EventScript_HideSnatchGiver
-	warp MAP_LILYCOVE_CITY_HARBOR, 8, 11
+	warp MAP_LILYCOVE_CITY_HARBOUR, 8, 11
 	waitstate
 	release
 	end
@@ -134,7 +134,7 @@ SSTidalCorridor_EventScript_ExitSlateport::
 	setrespawn HEAL_LOCATION_SLATEPORT_CITY
 	msgbox SSTidalCorridor_Text_WeveArrived, MSGBOX_DEFAULT
 	call_if_set FLAG_RECEIVED_TM_SNATCH, SSTidalCorridor_EventScript_HideSnatchGiver
-	warp MAP_SLATEPORT_CITY_HARBOR, 8, 11
+	warp MAP_SLATEPORT_CITY_HARBOUR, 8, 11
 	waitstate
 	release
 	end
@@ -316,7 +316,7 @@ SSTidalCorridor_Text_HorizonSpreadsBeyondPorthole:
 
 SSTidalCorridor_Text_BrineyWelcomeAboard:
 	.string "MR. BRINEY: Welcome aboard, {PLAYER}{KUN}!\p"
-	.string "They made me honorary captain of\n"
+	.string "They made me honourary captain of\n"
 	.string "the S.S. TIDAL!\p"
 	.string "You can call me CAPTAIN BRINEY now!\p"
 	.string "You know, I retired once before,\n"

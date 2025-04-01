@@ -411,7 +411,7 @@ static const u32 *const sPokeblocksPals[] =
     [PBLOCK_CLR_BROWN - 1]     = gPokeblockBrown_Pal,
     [PBLOCK_CLR_LITE_BLUE - 1] = gPokeblockLiteBlue_Pal,
     [PBLOCK_CLR_OLIVE - 1]     = gPokeblockOlive_Pal,
-    [PBLOCK_CLR_GRAY - 1]      = gPokeblockGray_Pal,
+    [PBLOCK_CLR_GREY - 1]      = gPokeblockGrey_Pal,
     [PBLOCK_CLR_BLACK - 1]     = gPokeblockBlack_Pal,
     [PBLOCK_CLR_WHITE - 1]     = gPokeblockWhite_Pal,
     [PBLOCK_CLR_GOLD - 1]      = gPokeblockGold_Pal
@@ -723,8 +723,8 @@ static void HandleInitWindows(void)
 
 static void SetPokeblockSpritePal(u8 pokeblockCaseId)
 {
-    u8 colorId = GetPokeblockData(&gSaveBlock1Ptr->pokeblocks[pokeblockCaseId], PBLOCK_COLOR);
-    sPokeblockSpritePal.data = sPokeblocksPals[colorId - 1];
+    u8 colourId = GetPokeblockData(&gSaveBlock1Ptr->pokeblocks[pokeblockCaseId], PBLOCK_COLOUR);
+    sPokeblockSpritePal.data = sPokeblocksPals[colourId - 1];
     sPokeblockSpritePal.tag = TAG_POKEBLOCK;
 }
 
@@ -803,7 +803,7 @@ static void Task_PrintAtePokeblockMessage(u8 taskId)
         StringExpandPlaceholders(gStringVar4, sText_Var1DisdainfullyAteVar2);
 
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     gTasks[taskId].func = Task_WaitForAtePokeblockMessage;
 }
 
@@ -852,7 +852,7 @@ static u8 CreateMonSprite(struct Pokemon *mon)
     {
         gSprites[spriteId].affineAnims = sSpriteAffineAnimTable_MonNoFlip;
         gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-        CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
+        CalcCentreToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
         sPokeblockFeed->noMonFlip = FALSE;
     }
 

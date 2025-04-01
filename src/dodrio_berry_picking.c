@@ -128,12 +128,12 @@ enum {
     INPUTSTATE_BAD_MISS,
 };
 
-// Colors for status bar squares
-// Colored gray when a berry is missed
+// Colours for status bar squares
+// Coloured grey when a berry is missed
 // Flash red when few yellow squares remain
 enum {
     STATUS_YELLOW,
-    STATUS_GRAY,
+    STATUS_GREY,
     STATUS_RED,
 };
 
@@ -238,7 +238,7 @@ struct DodrioGame
     /*0x0030*/ u8 ALIGNED(4) countdownEndDelay;
     /*0x0034*/ u8 ALIGNED(4) posToPlayerId[MAX_RFU_PLAYERS];
     /*0x003C*/ u8 ALIGNED(4) unused2; // Set to 0, never read
-    /*0x0040*/ u8 ALIGNED(4) numGraySquares;
+    /*0x0040*/ u8 ALIGNED(4) numGreySquares;
     /*0x0044*/ u8 ALIGNED(4) berryColStart;
     /*0x0048*/ u8 ALIGNED(4) berryColEnd;
     /*0x004A*/ u16 berryResults[MAX_RFU_PLAYERS][NUM_BERRY_IDS];
@@ -423,7 +423,7 @@ static void GfxIdle(void);
 
 // For each player, the array is a list of all the columns starting with the column to their left
 // Only the range of active columns is read from the array (dependent on the number of players),
-// so the arrays are spaced such that the numbers in the center are where the data that's read starts and end.
+// so the arrays are spaced such that the numbers in the centre are where the data that's read starts and end.
 static const u8 sActiveColumnMap[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][NUM_BERRY_COLUMNS] =
 {
     { // 1 player (never used), columns 4-6.
@@ -486,9 +486,9 @@ static const u8 sDodrioHeadToColumnMap[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
     },
 };
 
-// A table of player ids and their neighbor, dependent on the total number of players
-// {L, M, R}, where M is the player in question, L is their neighbor to the left, and R is their neighbor to the right
-static const u8 sDodrioNeighborMap[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
+// A table of player ids and their neighbour, dependent on the total number of players
+// {L, M, R}, where M is the player in question, L is their neighbour to the left, and R is their neighbour to the right
+static const u8 sDodrioNeighbourMap[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
 {
     { // 1 player (never used)
         {1, 0, 1},
@@ -520,7 +520,7 @@ static const u8 sDodrioNeighborMap[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
 #define x 9 // No player at this column. This may go out of bounds if this is returned
 
 // Takes the number of players and a column and returns the player id at that column.
-// Note that the assignment is somewhat arbitrary as players share neighboring columns.
+// Note that the assignment is somewhat arbitrary as players share neighbouring columns.
 ALIGNED(4)
 static const u8 sPlayerIdAtColumn[MAX_RFU_PLAYERS][NUM_BERRY_COLUMNS] =
 {
@@ -545,7 +545,7 @@ static const u8 sUnsharedColumns[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS] =
     {3, 5, 7},
     {2, 4, 6, 8},
 #ifndef BUGFIX
-    {1, 3, 5, 6, 9}, // BUG: Column 6 is shared, 7 is not. As a result, the player in column 7 will have their difficulty influenced by their neighbors
+    {1, 3, 5, 6, 9}, // BUG: Column 6 is shared, 7 is not. As a result, the player in column 7 will have their difficulty influenced by their neighbours
 #else
     {1, 3, 5, 7, 9},
 #endif
@@ -707,7 +707,7 @@ static void InitDodrioGame(struct DodrioGame * game)
     game->startGame = FALSE;
     game->berriesFalling = FALSE;
     game->countdownEndDelay = 0;
-    game->numGraySquares = 0;
+    game->numGreySquares = 0;
     game->unused2 = 0;
     game->allReadyToEnd = FALSE;
 
@@ -921,7 +921,7 @@ static void PlayGame_Leader(void)
     switch (sGame->state)
     {
     case 0:
-        if (sGame->numGraySquares < NUM_STATUS_SQUARES)
+        if (sGame->numGreySquares < NUM_STATUS_SQUARES)
         {
             if (sGame->inputState[0] == INPUTSTATE_NONE)
             {
@@ -967,7 +967,7 @@ static void PlayGame_Leader(void)
 
 static void PlayGame_Member(void)
 {
-    if (sGame->numGraySquares < NUM_STATUS_SQUARES)
+    if (sGame->numGreySquares < NUM_STATUS_SQUARES)
     {
         if (JOY_NEW(DPAD_UP))
         {
@@ -1482,7 +1482,7 @@ static void RecvLinkData_Gameplay(void)
                                                   &sGame->players[2].comm,
                                                   &sGame->players[3].comm,
                                                   &sGame->players[4].comm,
-                                                  &sGame->numGraySquares,
+                                                  &sGame->numGreySquares,
                                                   &sGame->berriesFalling,
                                                   &sGame->allReadyToEnd);
     sGame->clearRecvCmds = TRUE;
@@ -1559,7 +1559,7 @@ static void RecvLinkData_ReadyToEnd(void)
                                                   &sGame->players[2].comm,
                                                   &sGame->players[3].comm,
                                                   &sGame->players[4].comm,
-                                                  &sGame->numGraySquares,
+                                                  &sGame->numGreySquares,
                                                   &sGame->berriesFalling,
                                                   &sGame->allReadyToEnd);
     sGame->clearRecvCmds = TRUE;
@@ -1618,7 +1618,7 @@ static void SendLinkData_Leader(void)
                              &sGame->players[2].comm,
                              &sGame->players[3].comm,
                              &sGame->players[4].comm,
-                             sGame->numGraySquares,
+                             sGame->numGreySquares,
                              sGame->berriesFalling,
                              sGame->allReadyToEnd);
         break;
@@ -1629,7 +1629,7 @@ static void SendLinkData_Leader(void)
                              &sGame->players[2].comm,
                              &sGame->players[3].comm,
                              &sGame->players[4].comm,
-                             sGame->numGraySquares,
+                             sGame->numGreySquares,
                              sGame->berriesFalling,
                              sGame->allReadyToEnd);
         break;
@@ -1648,7 +1648,7 @@ static void RecvLinkData_Member(void)
                             &sGame->players[2].comm,
                             &sGame->players[3].comm,
                             &sGame->players[4].comm,
-                            &sGame->numGraySquares,
+                            &sGame->numGreySquares,
                             &sGame->berriesFalling,
                             &sGame->allReadyToEnd);
         break;
@@ -1660,7 +1660,7 @@ static void RecvLinkData_Member(void)
                             &sGame->players[2].comm,
                             &sGame->players[3].comm,
                             &sGame->players[4].comm,
-                            &sGame->numGraySquares,
+                            &sGame->numGreySquares,
                             &sGame->berriesFalling,
                             &sGame->allReadyToEnd);
         break;
@@ -1714,7 +1714,7 @@ static void HandleSound_Leader(void)
         }
     }
 
-    if (sGame->endSoundState == 0 && sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->endSoundState == 0 && sGame->numGreySquares >= NUM_STATUS_SQUARES)
     {
         // Ready to play game over sound
         StopMapMusic();
@@ -1773,7 +1773,7 @@ static void HandleSound_Member(void)
             sGame->playingSquishSound[i] = FALSE;
         }
     }
-    if (sGame->endSoundState == 0 && sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->endSoundState == 0 && sGame->numGreySquares >= NUM_STATUS_SQUARES)
     {
         // Ready to play game over sound
         StopMapMusic();
@@ -1878,7 +1878,7 @@ static void HandlePickBerries(void)
     u8 i, j, k, column;
 
     // Game is already over
-    if (sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->numGreySquares >= NUM_STATUS_SQUARES)
         return;
 
     for (i = 0; i < numPlayers; i++)
@@ -2072,12 +2072,12 @@ static void UpdateFallingBerries(void)
                     sGame->playingSquishSound[i] = TRUE;
                     PlaySE(SE_BALLOON_RED + game->player.berries.ids[i]);
                 }
-                if (sGame->numGraySquares < NUM_STATUS_SQUARES || otherBerryMissed == TRUE)
+                if (sGame->numGreySquares < NUM_STATUS_SQUARES || otherBerryMissed == TRUE)
                 {
                     otherBerryMissed = TRUE;
                     sGame->playingSquishSound[i] = FALSE;
-                    if (sGame->numGraySquares < NUM_STATUS_SQUARES)
-                        sGame->numGraySquares++;
+                    if (sGame->numGreySquares < NUM_STATUS_SQUARES)
+                        sGame->numGreySquares++;
 
                     IncrementBerryResult(BERRY_MISSED, i, 0);
                     UpdateBerriesPickedInRow(FALSE);
@@ -2119,7 +2119,7 @@ static void UpdateFallingBerries(void)
             // Berry has already hit the ground, wait and create a new berry
             if (++sGame->newBerryTimer[i] >= 20)
             {
-                if (sGame->numGraySquares < NUM_STATUS_SQUARES)
+                if (sGame->numGreySquares < NUM_STATUS_SQUARES)
                 {
                     sGame->newBerryTimer[i] = 0;
                     sGame->fallTimer[i] = 0;
@@ -2195,24 +2195,24 @@ static void SetAllDodrioDisabled(void)
 static void UpdateGame_Leader(void)
 {
     UpdateBerrySprites();
-    if (sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->numGreySquares >= NUM_STATUS_SQUARES)
         SetAllDodrioDisabled();
     else
         UpdateAllDodrioAnims();
 
-    UpdateStatusBarAnim(sGame->numGraySquares);
+    UpdateStatusBarAnim(sGame->numGreySquares);
 }
 
 // Identical to UpdateGame_Leader
 static void UpdateGame_Member(void)
 {
     UpdateBerrySprites();
-    if (sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->numGreySquares >= NUM_STATUS_SQUARES)
         SetAllDodrioDisabled();
     else
         UpdateAllDodrioAnims();
 
-    UpdateStatusBarAnim(sGame->numGraySquares);
+    UpdateStatusBarAnim(sGame->numGreySquares);
 }
 
 static void GetActiveBerryColumns(u8 numPlayers, u8 *start, u8 *end)
@@ -2272,9 +2272,9 @@ static void ResetReadyToStart(void)
 
 static bool32 ReadyToEndGame_Leader(void)
 {
-    if (sGame->numGraySquares >= NUM_STATUS_SQUARES && !sGame->berriesFalling)
+    if (sGame->numGreySquares >= NUM_STATUS_SQUARES && !sGame->berriesFalling)
     {
-        sGame->numGraySquares = NUM_STATUS_SQUARES;
+        sGame->numGreySquares = NUM_STATUS_SQUARES;
         if (sGame->allReadyToEnd)
             return TRUE;
     }
@@ -2286,11 +2286,11 @@ static bool32 ReadyToEndGame_Member(void)
 {
     u8 i, berryStart, berryEnd;
 
-    if (sGame->numGraySquares >= NUM_STATUS_SQUARES)
+    if (sGame->numGreySquares >= NUM_STATUS_SQUARES)
     {
         berryStart = sGame->berryColStart;
         berryEnd = sGame->berryColEnd;
-        sGame->numGraySquares = NUM_STATUS_SQUARES;
+        sGame->numGreySquares = NUM_STATUS_SQUARES;
         if (sGame->allReadyToEnd)
         {
             for (i = berryStart; i < berryEnd; i++)
@@ -2327,9 +2327,9 @@ static u8 GetNewBerryId(u8 playerId, u8 column)
 {
     u8 i, highestDifficulty;
     u8 numPlayersIdx = sGame->numPlayers - 1;
-    u8 leftPlayer = sDodrioNeighborMap[numPlayersIdx][playerId][0];
-    u8 middlePlayer = sDodrioNeighborMap[numPlayersIdx][playerId][1];
-    u8 rightPlayer = sDodrioNeighborMap[numPlayersIdx][playerId][2];
+    u8 leftPlayer = sDodrioNeighbourMap[numPlayersIdx][playerId][0];
+    u8 middlePlayer = sDodrioNeighbourMap[numPlayersIdx][playerId][1];
+    u8 rightPlayer = sDodrioNeighbourMap[numPlayersIdx][playerId][2];
 
     for (i = 0; sUnsharedColumns[numPlayersIdx][i] != 0; i++)
     {
@@ -2592,7 +2592,7 @@ static void ResetForPlayAgainPrompt(void)
     }
     sGame->endSoundState = 0;
     sGame->berriesPickedInRow = 0;
-    sGame->numGraySquares = 0;
+    sGame->numGreySquares = 0;
     UpdateAllDodrioAnims();
     UpdateBerrySprites();
 }
@@ -3014,7 +3014,7 @@ static void PrintRecordsText(u8 windowId, s32 width)
     LoadUserWindowBorderGfx_(windowId, 0x21D, BG_PLTT_ID(13));
     DrawTextBorderOuter(windowId, 0x21D, 13);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BerryPickingRecords, GetStringCenterAlignXOffset(FONT_NORMAL, gText_BerryPickingRecords, width * 8), 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BerryPickingRecords, GetStringCentreAlignXOffset(FONT_NORMAL, gText_BerryPickingRecords, width * 8), 1, TEXT_SKIP_DRAW, NULL);
     for (i = 0; i < NUM_RECORD_TYPES; i++)
     {
         ConvertIntToDecimalStringN(gStringVar1, recordNums[i], STR_CONV_MODE_LEFT_ALIGN, sRecordNumMaxDigits[i]);
@@ -3155,7 +3155,7 @@ struct GameStatePacket
     bool8 ateBerry_Player3:1;
     bool8 ateBerry_Player4:1;
     bool8 ateBerry_Player5:1;
-    u8 numGraySquares:5;
+    u8 numGreySquares:5;
     bool8 allReadyToEnd:1;
     bool8 berriesFalling:1;
     bool8 missedBerry_Player1:1;
@@ -3171,7 +3171,7 @@ static void SendPacket_GameState(struct DodrioGame_Player *player,
                                  struct DodrioGame_PlayerCommData *player3,
                                  struct DodrioGame_PlayerCommData *player4,
                                  struct DodrioGame_PlayerCommData *player5,
-                                 u8 numGraySquares,
+                                 u8 numGreySquares,
                                  bool32 berriesFalling,
                                  bool32 allReadyToEnd)
 {
@@ -3219,7 +3219,7 @@ static void SendPacket_GameState(struct DodrioGame_Player *player,
     packet.missedBerry_Player4 = player4->missedBerry;
     packet.missedBerry_Player5 = player5->missedBerry;
 
-    packet.numGraySquares = numGraySquares;
+    packet.numGreySquares = numGreySquares;
     packet.berriesFalling = berriesFalling;
     packet.allReadyToEnd = allReadyToEnd;
     Rfu_SendPacket(&packet);
@@ -3232,7 +3232,7 @@ static bool32 RecvPacket_GameState(u32 playerId,
                                    struct DodrioGame_PlayerCommData *player3,
                                    struct DodrioGame_PlayerCommData *player4,
                                    struct DodrioGame_PlayerCommData *player5,
-                                   u8 *numGraySquares,
+                                   u8 *numGreySquares,
                                    bool32 *berriesFalling,
                                    bool32 *allReadyToEnd)
 {
@@ -3289,7 +3289,7 @@ static bool32 RecvPacket_GameState(u32 playerId,
         player5->ateBerry = packet->ateBerry_Player5;
         player5->missedBerry = packet->missedBerry_Player5;
 
-        *numGraySquares = packet->numGraySquares;
+        *numGreySquares = packet->numGreySquares;
         *berriesFalling = packet->berriesFalling;
         *allReadyToEnd = packet->allReadyToEnd;
         return TRUE;
@@ -3541,8 +3541,8 @@ static const u8 sDodrioHeadToColumnMap_Duplicate[MAX_RFU_PLAYERS][MAX_RFU_PLAYER
     },
 };
 
-// Unused duplicate of sDodrioNeighborMap
-static const u8 sDodrioNeighborMap_Duplicate[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
+// Unused duplicate of sDodrioNeighbourMap
+static const u8 sDodrioNeighbourMap_Duplicate[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS][3] =
 {
     {
         {1, 0, 1},
@@ -3724,7 +3724,7 @@ static const union AnimCmd sAnims_StatusBar_Yellow[] =
     ANIMCMD_JUMP(0)
 };
 
-static const union AnimCmd sAnims_StatusBar_Gray[] =
+static const union AnimCmd sAnims_StatusBar_Grey[] =
 {
     ANIMCMD_FRAME(4, 20),
     ANIMCMD_JUMP(0)
@@ -3739,7 +3739,7 @@ static const union AnimCmd sAnims_StatusBar_Red[] =
 static const union AnimCmd *const sAnims_StatusBar[] =
 {
     [STATUS_YELLOW] = sAnims_StatusBar_Yellow,
-    [STATUS_GRAY]   = sAnims_StatusBar_Gray,
+    [STATUS_GREY]   = sAnims_StatusBar_Grey,
     [STATUS_RED]    = sAnims_StatusBar_Red
 };
 
@@ -4087,8 +4087,8 @@ static bool32 DoStatusBarIntro(void)
         return TRUE;
 }
 
-// The status bar at the top changes color depending on the game performance.
-// The squares start out yellow. For every berry missed, a square is colored gray.
+// The status bar at the top changes colour depending on the game performance.
+// The squares start out yellow. For every berry missed, a square is coloured grey.
 // If there are 4 or fewer yellow squares left they also flash red
 static void UpdateStatusBarAnim(u8 numEmpty)
 {
@@ -4096,9 +4096,9 @@ static void UpdateStatusBarAnim(u8 numEmpty)
 
     if (numEmpty > NUM_STATUS_SQUARES)
     {
-        // All squares gray
+        // All squares grey
         for (i = 0; i < NUM_STATUS_SQUARES; i++)
-            StartSpriteAnim(&gSprites[sStatusBar->spriteIds[i]], STATUS_GRAY);
+            StartSpriteAnim(&gSprites[sStatusBar->spriteIds[i]], STATUS_GREY);
     }
     else
     {
@@ -4124,9 +4124,9 @@ static void UpdateStatusBarAnim(u8 numEmpty)
             }
         }
 
-        // Set remaining squares gray
+        // Set remaining squares grey
         for (; i < NUM_STATUS_SQUARES; i++)
-            StartSpriteAnim(&gSprites[sStatusBar->spriteIds[i]], STATUS_GRAY);
+            StartSpriteAnim(&gSprites[sStatusBar->spriteIds[i]], STATUS_GREY);
     }
 }
 
@@ -4504,18 +4504,18 @@ struct WinCoords
 };
 
 enum {
-    COLORID_GRAY,
-    COLORID_RED,
-    COLORID_BLUE,
-    COLORID_GREEN, // Unused
+    COLOURID_GREY,
+    COLOURID_RED,
+    COLOURID_BLUE,
+    COLOURID_GREEN, // Unused
 };
 
-static const u8 sTextColorTable[][3] =
+static const u8 sTextColourTable[][3] =
 {
-    [COLORID_GRAY]  = {TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
-    [COLORID_RED]   = {TEXT_COLOR_WHITE, TEXT_COLOR_RED, TEXT_COLOR_LIGHT_RED},
-    [COLORID_BLUE]  = {TEXT_COLOR_WHITE, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_BLUE},
-    [COLORID_GREEN] = {TEXT_COLOR_WHITE, TEXT_COLOR_GREEN, TEXT_COLOR_LIGHT_GREEN},
+    [COLOURID_GREY]  = {TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY},
+    [COLOURID_RED]   = {TEXT_COLOUR_WHITE, TEXT_COLOUR_RED, TEXT_COLOUR_LIGHT_RED},
+    [COLOURID_BLUE]  = {TEXT_COLOUR_WHITE, TEXT_COLOUR_BLUE, TEXT_COLOUR_LIGHT_BLUE},
+    [COLOURID_GREEN] = {TEXT_COLOUR_WHITE, TEXT_COLOUR_GREEN, TEXT_COLOUR_LIGHT_GREEN},
 };
 
 static const struct WinCoords sNameWindowCoords_1Player[] = {{12, 6}};
@@ -4625,7 +4625,7 @@ static void LoadGfx(void)
 
 static void ShowNames(void)
 {
-    u8 i, numPlayers, playerId, colorsId, *name;
+    u8 i, numPlayers, playerId, coloursId, *name;
     u32 left;
     struct WindowTemplate window;
     const struct WinCoords *coords;
@@ -4642,7 +4642,7 @@ static void ShowNames(void)
         window.baseBlock = 0x13;
         for (i = 0; i < numPlayers; coords++, i++)
         {
-            colorsId = COLORID_GRAY;
+            coloursId = COLOURID_GREY;
             playerId = GetPlayerIdByPos(i);
             left = (56 - GetStringWidth(FONT_NORMAL, GetPlayerName(playerId), -1)) / 2u;
             window.tilemapLeft = coords->left;
@@ -4651,9 +4651,9 @@ static void ShowNames(void)
             ClearWindowTilemap(sGfx->windowIds[i]);
             FillWindowPixelBuffer(sGfx->windowIds[i], PIXEL_FILL(1));
             if (playerId == GetMultiplayerId())
-                colorsId = COLORID_BLUE;
+                coloursId = COLOURID_BLUE;
             name = GetPlayerName(playerId);
-            AddTextPrinterParameterized3(sGfx->windowIds[i], FONT_NORMAL, left, 1, sTextColorTable[colorsId], TEXT_SKIP_DRAW, name);
+            AddTextPrinterParameterized3(sGfx->windowIds[i], FONT_NORMAL, left, 1, sTextColourTable[coloursId], TEXT_SKIP_DRAW, name);
             CopyWindowToVram(sGfx->windowIds[i], COPYWIN_GFX);
             window.baseBlock += 0xE;
             DrawMessageWindow(&window);
@@ -4733,15 +4733,15 @@ static void PrintRankedScores(u8 numPlayers_)
     x = 216 - GetStringWidth(FONT_NORMAL, gText_SpacePoints, 0);
     for (i = 0; i < numPlayers; i++)
     {
-        u8 colorsId = COLORID_GRAY;
+        u8 coloursId = COLOURID_GREY;
         u8 playerId = playersByRanking[i];
         u32 points = scoreResults[playerId].score;
 
         AddTextPrinterParameterized(sGfx->windowIds[1], FONT_NORMAL, sRankingTexts[scoreResults[playerId].ranking], 8, sRankingYCoords[i], TEXT_SKIP_DRAW, NULL);
         if (playerId == GetMultiplayerId())
-            colorsId = COLORID_BLUE;
+            coloursId = COLOURID_BLUE;
         name = GetPlayerName(playerId);
-        AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, 28, sRankingYCoords[i], sTextColorTable[colorsId], TEXT_SKIP_DRAW, name);
+        AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, 28, sRankingYCoords[i], sTextColourTable[coloursId], TEXT_SKIP_DRAW, name);
         ConvertIntToDecimalStringN(numString, points, STR_CONV_MODE_LEFT_ALIGN, 7);
         numWidth = GetStringWidth(FONT_NORMAL, numString, -1);
         AddTextPrinterParameterized(sGfx->windowIds[1], FONT_NORMAL, numString, x - numWidth, sRankingYCoords[i], TEXT_SKIP_DRAW, NULL);
@@ -4780,12 +4780,12 @@ static void ShowResults(void)
         AddTextPrinterParameterized(sGfx->windowIds[1], FONT_NORMAL, gText_10P30P50P50P, 68, 17, TEXT_SKIP_DRAW, NULL);
         for (i = 0; i < numPlayers; i++)
         {
-            u8 colorsId = COLORID_GRAY;
+            u8 coloursId = COLOURID_GREY;
             if (i == GetMultiplayerId())
-                colorsId = COLORID_BLUE;
+                coloursId = COLOURID_BLUE;
 
             name = GetPlayerName(i);
-            AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, 0, sResultsYCoords[i], sTextColorTable[colorsId], TEXT_SKIP_DRAW, name);
+            AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, 0, sResultsYCoords[i], sTextColourTable[coloursId], TEXT_SKIP_DRAW, name);
             for (j = 0; j < 4; j++)
             {
                 u32 width;
@@ -4797,7 +4797,7 @@ static void ShowResults(void)
 
                 // If player got the most of a berry type, highlight their number in red
                 if (maxBerriesPicked == berriesPicked && maxBerriesPicked != 0)
-                    AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, sResultsXCoords[j] - width, sResultsYCoords[i], sTextColorTable[COLORID_RED], TEXT_SKIP_DRAW, gStringVar4);
+                    AddTextPrinterParameterized3(sGfx->windowIds[1], FONT_NORMAL, sResultsXCoords[j] - width, sResultsYCoords[i], sTextColourTable[COLOURID_RED], TEXT_SKIP_DRAW, gStringVar4);
                 else
                     AddTextPrinterParameterized(sGfx->windowIds[1], FONT_NORMAL, gStringVar4, sResultsXCoords[j] - width, sResultsYCoords[i], TEXT_SKIP_DRAW, NULL);
             }
@@ -5029,7 +5029,7 @@ static void Msg_SavingDontTurnOff(void)
     {
     case 0:
         DrawDialogueFrame(0, FALSE);
-        AddTextPrinterParameterized2(0, FONT_NORMAL, gText_SavingDontTurnOffPower, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+        AddTextPrinterParameterized2(0, FONT_NORMAL, gText_SavingDontTurnOffPower, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
         sGfx->state++;
         break;
     case 1:

@@ -1469,7 +1469,7 @@ BattleFrontier_BattleTowerMultiPartnerRoom_Text_AromaLadyMon2Ask::
 	.string "Would you care to be my partner?$"
 
 BattleFrontier_BattleTowerMultiPartnerRoom_Text_AromaLadyAccept::
-	.string "I'm honored by your acceptance.\n"
+	.string "I'm honoured by your acceptance.\n"
 	.string "I will go register right this instant.$"
 
 BattleFrontier_BattleTowerMultiPartnerRoom_Text_AromaLadyReject::

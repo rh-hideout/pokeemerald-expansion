@@ -305,7 +305,7 @@ static void PrintContestPaintingCaption(u8 contestType, bool8 isForArtist)
         StringExpandPlaceholders(gStringVar4, sMuseumCaptions[category]);
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 208);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, gStringVar4, 208);
     AddTextPrinterParameterized(sWindowId, FONT_NORMAL, gStringVar4, x, 1, 0, 0);
     CopyBgTilemapBufferToVram(1);
 }
@@ -314,8 +314,8 @@ static void InitContestPaintingBg(void)
 {
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     REG_IE |= INTR_FLAG_VBLANK;
-    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(12) | BGCNT_MOSAIC | BGCNT_16COLOR | BGCNT_TXT256x256);
-    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(10) | BGCNT_MOSAIC | BGCNT_16COLOR | BGCNT_TXT256x256);
+    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(12) | BGCNT_MOSAIC | BGCNT_16COLOUR | BGCNT_TXT256x256);
+    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(10) | BGCNT_MOSAIC | BGCNT_16COLOUR | BGCNT_TXT256x256);
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
     SetGpuReg(REG_OFFSET_BLDALPHA, 0);
     SetGpuReg(REG_OFFSET_BLDY, 0);
@@ -346,7 +346,7 @@ static void UpdateContestPaintingMosaicEffect(void)
     }
     else
     {
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(10) | BGCNT_MOSAIC | BGCNT_16COLOR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(10) | BGCNT_MOSAIC | BGCNT_16COLOUR | BGCNT_TXT256x256);
         sMosaicVal = sFadeCounter / 2;
         SetGpuReg(REG_OFFSET_MOSAIC, (sMosaicVal << 12) | (sMosaicVal << 8) | (sMosaicVal << 4) | (sMosaicVal << 0));
     }
@@ -385,7 +385,7 @@ static void InitContestMonPixels(u16 species, bool8 backPic)
 static void _InitContestMonPixels(u8 *spriteGfx, u16 *palette, u16 (*destPixels)[64][64])
 {
     u16 tileY, tileX, pixelY, pixelX;
-    u8 colorIndex;
+    u8 colourIndex;
 
     for (tileY = 0; tileY < 8; tileY++)
     {
@@ -395,16 +395,16 @@ static void _InitContestMonPixels(u8 *spriteGfx, u16 *palette, u16 (*destPixels)
             {
                 for (pixelX = 0; pixelX < 8; pixelX++)
                 {
-                    colorIndex = spriteGfx[32 * (tileY * 8 + tileX) + (pixelY << 2) + (pixelX >> 1)];
+                    colourIndex = spriteGfx[32 * (tileY * 8 + tileX) + (pixelY << 2) + (pixelX >> 1)];
                     if (pixelX & 1)
-                        colorIndex >>= 4;
+                        colourIndex >>= 4;
                     else
-                        colorIndex &= 0xF;
+                        colourIndex &= 0xF;
 
-                    if (colorIndex == 0) // transparent pixel
+                    if (colourIndex == 0) // transparent pixel
                         (*destPixels)[8 * tileY + pixelY][tileX * 8 + pixelX] = 0x8000;
                     else
-                        (*destPixels)[8 * tileY + pixelY][tileX * 8 + pixelX] = palette[colorIndex];
+                        (*destPixels)[8 * tileY + pixelY][tileX * 8 + pixelX] = palette[colourIndex];
                 }
             }
         }
@@ -529,7 +529,7 @@ static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
     switch (contestCategory)
     {
     case CONTEST_CATEGORY_COOL:
-        return IMAGE_EFFECT_OUTLINE_COLORED;
+        return IMAGE_EFFECT_OUTLINE_COLOURED;
     case CONTEST_CATEGORY_BEAUTY:
         return IMAGE_EFFECT_SHIMMER;
     case CONTEST_CATEGORY_CUTE:
@@ -537,7 +537,7 @@ static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
     case CONTEST_CATEGORY_SMART:
         return IMAGE_EFFECT_CHARCOAL;
     case CONTEST_CATEGORY_TOUGH:
-        return IMAGE_EFFECT_GRAYSCALE_LIGHT;
+        return IMAGE_EFFECT_GREYSCALE_LIGHT;
     }
 
     return contestCategory;
@@ -565,14 +565,14 @@ static void DoContestPaintingImageProcessing(u8 imageEffect)
     switch (imageEffect)
     {
     case IMAGE_EFFECT_CHARCOAL:
-    case IMAGE_EFFECT_GRAYSCALE_LIGHT:
-        gImageProcessingContext.quantizeEffect = QUANTIZE_EFFECT_GRAYSCALE;
+    case IMAGE_EFFECT_GREYSCALE_LIGHT:
+        gImageProcessingContext.quantizeEffect = QUANTIZE_EFFECT_GREYSCALE;
         break;
-    case IMAGE_EFFECT_OUTLINE_COLORED:
+    case IMAGE_EFFECT_OUTLINE_COLOURED:
     case IMAGE_EFFECT_SHIMMER:
     case IMAGE_EFFECT_POINTILLISM:
     default:
-        gImageProcessingContext.quantizeEffect = QUANTIZE_EFFECT_STANDARD_LIMITED_COLORS;
+        gImageProcessingContext.quantizeEffect = QUANTIZE_EFFECT_STANDARD_LIMITED_COLOURS;
         break;
     }
 

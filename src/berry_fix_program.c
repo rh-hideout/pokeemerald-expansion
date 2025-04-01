@@ -39,22 +39,22 @@ static const u8 sText_RubySapphire[] = _("Ruby/Sapphire");
 static const u8 sText_Emerald[] = _("Emerald");
 static const u8 sText_BerryProgramWillBeUpdatedPressA[] = _("The Berry Program on your POKéMON\n"
                                                             "Ruby/Sapphire Game Pak will be updated.\n"
-                                                            "{COLOR RED}{SHADOW LIGHT_RED}Press the A Button.");
+                                                            "{COLOUR RED}{SHADOW LIGHT_RED}Press the A Button.");
 static const u8 sText_EnsureGBAConnectionMatches[] = _("Please ensure the connection of your\n"
                                                        "Game Boy Advance system matches this.\n"
-                                                       "{COLOR RED}{SHADOW LIGHT_RED}YES: Press the A Button.\n"
+                                                       "{COLOUR RED}{SHADOW LIGHT_RED}YES: Press the A Button.\n"
                                                        "NO: Turn off the power and try again.");
 static const u8 sText_TurnOffPowerHoldingStartSelect[] = _("Please turn on the power of POKéMON\n"
                                                            "Ruby/Sapphire while holding START and\n"
                                                            "SELECT simultaneously. Then, ensure\n"
                                                            "the picture above appears.");
 static const u8 sText_TransmittingPleaseWait[] = _("Transmitting. Please wait.\n"
-                                                   "{COLOR RED}{SHADOW LIGHT_RED}Please do not turn off the power or\n"
+                                                   "{COLOUR RED}{SHADOW LIGHT_RED}Please do not turn off the power or\n"
                                                    "unplug the Game Boy Advance Game\nLink Cable.");
 static const u8 sText_PleaseFollowInstructionsOnScreen[] = _("Please follow the instructions on your\n"
                                                              "POKéMON Ruby/Sapphire screen.");
 static const u8 sText_TransmissionFailureTryAgain[] = _("Transmission failure.\n"
-                                                        "{COLOR RED}{SHADOW LIGHT_RED}Please try again.");
+                                                        "{COLOUR RED}{SHADOW LIGHT_RED}Please try again.");
 
 static const struct BgTemplate sBerryFixBgTemplates[] = {
     {
@@ -118,8 +118,8 @@ static const struct WindowTemplate sBerryFixWindowTemplates[] = {
 };
 
 static const u16 ALIGNED(4) sText_Pal[] = INCBIN_U16("graphics/berry_fix/text.gbapal");
-static const u8 sBerryProgramTextColors[] = {TEXT_DYNAMIC_COLOR_1, TEXT_DYNAMIC_COLOR_2, TEXT_DYNAMIC_COLOR_3};
-static const u8 sGameTitleTextColors[] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_1, TEXT_DYNAMIC_COLOR_4};
+static const u8 sBerryProgramTextColours[] = {TEXT_DYNAMIC_COLOUR_1, TEXT_DYNAMIC_COLOUR_2, TEXT_DYNAMIC_COLOUR_3};
+static const u8 sGameTitleTextColours[] = { TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_1, TEXT_DYNAMIC_COLOUR_4};
 
 enum {
     SCENE_ENSURE_CONNECT,
@@ -306,19 +306,19 @@ static void BerryFix_GpuSet(void)
 
     width = GetStringWidth(FONT_SMALL, sText_Emerald, 0);
     left = (120 - width) / 2;
-    AddTextPrinterParameterized3(WIN_GAME_NAMES, FONT_SMALL, left, 3, sGameTitleTextColors, TEXT_SKIP_DRAW, sText_Emerald);
+    AddTextPrinterParameterized3(WIN_GAME_NAMES, FONT_SMALL, left, 3, sGameTitleTextColours, TEXT_SKIP_DRAW, sText_Emerald);
 
     width = GetStringWidth(FONT_SMALL, sText_RubySapphire, 0);
     left = (120 - width) / 2 + 120;
-    AddTextPrinterParameterized3(WIN_GAME_NAMES, FONT_SMALL, left, 3, sGameTitleTextColors, TEXT_SKIP_DRAW, sText_RubySapphire);
+    AddTextPrinterParameterized3(WIN_GAME_NAMES, FONT_SMALL, left, 3, sGameTitleTextColours, TEXT_SKIP_DRAW, sText_RubySapphire);
 
     width = GetStringWidth(FONT_SMALL, sText_RubySapphire, 0);
     left = (112 - width) / 2;
-    AddTextPrinterParameterized3(WIN_TURN_OFF_TITLE, FONT_SMALL, left, 0, sGameTitleTextColors, TEXT_SKIP_DRAW, sText_RubySapphire);
+    AddTextPrinterParameterized3(WIN_TURN_OFF_TITLE, FONT_SMALL, left, 0, sGameTitleTextColours, TEXT_SKIP_DRAW, sText_RubySapphire);
 
     width = GetStringWidth(FONT_NORMAL, sText_BerryProgramUpdate, 0);
     left = (208 - width) / 2;
-    AddTextPrinterParameterized3(WIN_TITLE, FONT_NORMAL, left, 2, sBerryProgramTextColors, TEXT_SKIP_DRAW, sText_BerryProgramUpdate);
+    AddTextPrinterParameterized3(WIN_TITLE, FONT_NORMAL, left, 2, sBerryProgramTextColours, TEXT_SKIP_DRAW, sText_BerryProgramUpdate);
 
     CopyWindowToVram(WIN_GAME_NAMES, COPYWIN_GFX);
     CopyWindowToVram(WIN_TURN_OFF_TITLE, COPYWIN_GFX);
@@ -347,7 +347,7 @@ static void BerryFix_SetScene(int scene)
 {
     FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
     FillWindowPixelBuffer(WIN_MSG_BODY, PIXEL_FILL(10));
-    AddTextPrinterParameterized3(WIN_MSG_BODY, FONT_NORMAL, 0, 0, sBerryProgramTextColors, TEXT_SKIP_DRAW, sBerryProgramTexts[scene]);
+    AddTextPrinterParameterized3(WIN_MSG_BODY, FONT_NORMAL, 0, 0, sBerryProgramTextColours, TEXT_SKIP_DRAW, sBerryProgramTexts[scene]);
     PutWindowTilemap(WIN_MSG_BODY);
     CopyWindowToVram(WIN_MSG_BODY, COPYWIN_GFX);
     switch (scene)
@@ -368,7 +368,7 @@ static void BerryFix_SetScene(int scene)
     CopyBgTilemapBufferToVram(0);
     LZ77UnCompVram(sBerryFixGraphics[scene].gfx, (void *)BG_CHAR_ADDR(1));
     LZ77UnCompVram(sBerryFixGraphics[scene].tilemap, (void *)BG_SCREEN_ADDR(31));
-    // These palettes range in size from 32-48 colors, so the below is interpreting whatever
+    // These palettes range in size from 32-48 colours, so the below is interpreting whatever
     // follows the palette (by default, the corresponding tiles) as the remaining 80-96.
     CpuCopy32(sBerryFixGraphics[scene].palette, (void *)BG_PLTT, PLTT_SIZEOF(128));
     ShowBg(0);

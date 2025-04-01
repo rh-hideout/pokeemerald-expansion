@@ -411,7 +411,7 @@ Carvanha
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_1 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_1 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M
@@ -2153,7 +2153,7 @@ IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Take Down
 - Water Pulse
 
-=== TRAINER_GRUNT_SPACE_CENTER_2 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_2 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M
@@ -10760,7 +10760,7 @@ Wobbuffet
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_3 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_3 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt F
@@ -10777,7 +10777,7 @@ Poochyena
 Level: 31
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_4 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_4 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M
@@ -10790,7 +10790,7 @@ Baltoy
 Level: 32
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_5 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_5 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M
@@ -10803,7 +10803,7 @@ Zubat
 Level: 32
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_6 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_6 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M
@@ -10816,7 +10816,7 @@ Mightyena
 Level: 32
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_GRUNT_SPACE_CENTER_7 ===
+=== TRAINER_GRUNT_SPACE_CENTRE_7 ===
 Name: GRUNT
 Class: Team Magma
 Pic: Magma Grunt M

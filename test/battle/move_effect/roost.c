@@ -230,7 +230,7 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_KECLEON].types[0] != TYPE_FLYING);
         ASSUME(gSpeciesInfo[SPECIES_KECLEON].types[1] != TYPE_FLYING);
-        PLAYER(SPECIES_KECLEON) { Speed(40); HP(150); Ability(ABILITY_COLOR_CHANGE); }
+        PLAYER(SPECIES_KECLEON) { Speed(40); HP(150); Ability(ABILITY_COLOUR_CHANGE); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_PIDGEY) { Speed(30); }
         OPPONENT(SPECIES_SANDSHREW) { Speed(20); }
@@ -244,10 +244,10 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
         MESSAGE("Kecleon's HP was restored.");
         MESSAGE("The opposing Pidgey used Gust!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUST, opponentLeft);
-        MESSAGE("Kecleon's Color Change made it the Flying type!");
+        MESSAGE("Kecleon's Colour Change made it the Flying type!");
         MESSAGE("The opposing Sandshrew used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentRight);
-        MESSAGE("Kecleon's Color Change made it the Ground type!");
+        MESSAGE("Kecleon's Colour Change made it the Ground type!");
     }
 }
 

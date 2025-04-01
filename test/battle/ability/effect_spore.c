@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes paralysis 10% of the time")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Breloom's Effect Spore paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("The opposing Breloom's Effect Spore paralysed Wobbuffet, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }

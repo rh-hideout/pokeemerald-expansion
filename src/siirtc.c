@@ -398,7 +398,7 @@ static int WriteCommand(u8 value)
     }
 
     // Nothing uses the returned value from this function,
-    // so the undefined behavior is harmless in the vanilla game.
+    // so the undefined behaviour is harmless in the vanilla game.
 #ifdef UBFIX
     return 0;
 #endif
@@ -419,7 +419,7 @@ static int WriteData(u8 value)
     }
 
     // Nothing uses the returned value from this function,
-    // so the undefined behavior is harmless in the vanilla game.
+    // so the undefined behaviour is harmless in the vanilla game.
 #ifdef UBFIX
     return 0;
 #endif

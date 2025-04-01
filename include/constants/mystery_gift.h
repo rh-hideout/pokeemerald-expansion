@@ -37,7 +37,7 @@
 #define STAMP_SPECIES 0
 #define STAMP_ID      1
 
-// Number of different types/colors of Wonder Card and News backgrounds
+// Number of different types/colours of Wonder Card and News backgrounds
 #define NUM_WONDER_BGS 8
 
 #define MAX_WONDER_CARD_STAT 999

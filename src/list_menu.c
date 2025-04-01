@@ -597,20 +597,20 @@ static u8 ListMenuInitInternal(struct ListMenuTemplate *listMenuTemplate, u16 sc
 
 static void ListMenuPrint(struct ListMenu *list, const u8 *str, u8 x, u8 y)
 {
-    u8 colors[3];
+    u8 colours[3];
     if (gListMenuOverride.enabled)
     {
         u32 fontId = gListMenuOverride.fontId;
         if (list->template.textNarrowWidth)
             fontId = GetFontIdToFit(str, fontId, gListMenuOverride.lettersSpacing, list->template.textNarrowWidth);
-        colors[0] = gListMenuOverride.fillValue;
-        colors[1] = gListMenuOverride.cursorPal;
-        colors[2] = gListMenuOverride.cursorShadowPal;
+        colours[0] = gListMenuOverride.fillValue;
+        colours[1] = gListMenuOverride.cursorPal;
+        colours[2] = gListMenuOverride.cursorShadowPal;
         AddTextPrinterParameterized4(list->template.windowId,
                                      fontId,
                                      x, y,
                                      gListMenuOverride.lettersSpacing,
-                                     0, colors, TEXT_SKIP_DRAW, str);
+                                     0, colours, TEXT_SKIP_DRAW, str);
 
         gListMenuOverride.enabled = FALSE;
     }
@@ -619,14 +619,14 @@ static void ListMenuPrint(struct ListMenu *list, const u8 *str, u8 x, u8 y)
         u32 fontId = list->template.fontId;
         if (list->template.textNarrowWidth)
             fontId = GetFontIdToFit(str, fontId, list->template.lettersSpacing, list->template.textNarrowWidth);
-        colors[0] = list->template.fillValue;
-        colors[1] = list->template.cursorPal;
-        colors[2] = list->template.cursorShadowPal;
+        colours[0] = list->template.fillValue;
+        colours[1] = list->template.cursorPal;
+        colours[2] = list->template.cursorShadowPal;
         AddTextPrinterParameterized4(list->template.windowId,
                                      fontId,
                                      x, y,
                                      list->template.lettersSpacing,
-                                     0, colors, TEXT_SKIP_DRAW, str);
+                                     0, colours, TEXT_SKIP_DRAW, str);
     }
 }
 
@@ -901,7 +901,7 @@ static void ListMenuCallSelectionChangedCallback(struct ListMenu *list, u8 onIni
 }
 
 // unused
-void ListMenuOverrideSetColors(u8 cursorPal, u8 fillValue, u8 cursorShadowPal)
+void ListMenuOverrideSetColours(u8 cursorPal, u8 fillValue, u8 cursorShadowPal)
 {
     gListMenuOverride.cursorPal = cursorPal;
     gListMenuOverride.fillValue = fillValue;

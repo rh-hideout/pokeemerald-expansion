@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-AI_SINGLE_BATTLE_TEST("AI gets baited by Protect Switch tactics") // This behavior is to be fixed.
+AI_SINGLE_BATTLE_TEST("AI gets baited by Protect Switch tactics") // This behaviour is to be fixed.
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
@@ -123,7 +123,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send 
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
         ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
-        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOUR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }

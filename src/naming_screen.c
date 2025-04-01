@@ -349,7 +349,7 @@ static bool8 IsPageSwapAnimNotInProgress(void);
 static void TryStartButtonFlash(u8, bool8, bool8);
 static void Task_UpdateButtonFlash(u8);
 static u16 GetButtonPalOffset(u8);
-static void RestoreButtonColor(u8);
+static void RestoreButtonColour(u8);
 static void StartButtonFlash(struct Task *, u8, bool8);
 static void CreateSprites(void);
 static void CreateCursorSprite(void);
@@ -724,7 +724,7 @@ static UNUSED void DisplaySentToPCMessage(void)
     StringExpandPlaceholders(gStringVar4, sTransferredToPCMessages[stringToDisplay]);
     DrawDialogueFrame(0, FALSE);
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), 0, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
     CopyWindowToVram(0, COPYWIN_FULL);
 }
 
@@ -892,10 +892,10 @@ static bool8 PageSwapAnimState_Done(struct Task *task)
 #define tButtonId     data[0]
 #define tKeepFlashing data[1]
 #define tAllowFlash   data[2]
-#define tColor        data[3]
-#define tColorIncr    data[4]
-#define tColorDelay   data[5]
-#define tColorDelta   data[6]
+#define tColour        data[3]
+#define tColourIncr    data[4]
+#define tColourDelay   data[5]
+#define tColourDelta   data[6]
 
 static void CreateButtonFlashTask(void)
 {
@@ -919,7 +919,7 @@ static void TryStartButtonFlash(u8 button, bool8 keepFlashing, bool8 interruptCu
         return;
 
     if (task->tButtonId != BUTTON_COUNT)
-        RestoreButtonColor(task->tButtonId);
+        RestoreButtonColour(task->tButtonId);
 
     StartButtonFlash(task, button, keepFlashing);
 }
@@ -931,40 +931,40 @@ static void Task_UpdateButtonFlash(u8 taskId)
     if (task->tButtonId == BUTTON_COUNT || !task->tAllowFlash)
         return;
 
-    MultiplyInvertedPaletteRGBComponents(GetButtonPalOffset(task->tButtonId), task->tColor, task->tColor, task->tColor);
+    MultiplyInvertedPaletteRGBComponents(GetButtonPalOffset(task->tButtonId), task->tColour, task->tColour, task->tColour);
 
-    if (task->tColorDelay && --task->tColorDelay)
+    if (task->tColourDelay && --task->tColourDelay)
         return;
 
-    task->tColorDelay = 2;
-    if (task->tColorIncr >= 0)
+    task->tColourDelay = 2;
+    if (task->tColourIncr >= 0)
     {
-        if (task->tColor < 14)
+        if (task->tColour < 14)
         {
-            task->tColor += task->tColorIncr;
-            task->tColorDelta += task->tColorIncr;
+            task->tColour += task->tColourIncr;
+            task->tColourDelta += task->tColourIncr;
         }
         else
         {
-            task->tColor = 16;
-            task->tColorDelta++;
+            task->tColour = 16;
+            task->tColourDelta++;
         }
     }
     else
     {
-        task->tColor += task->tColorIncr;
-        task->tColorDelta += task->tColorIncr;
+        task->tColour += task->tColourIncr;
+        task->tColourDelta += task->tColourIncr;
     }
 
-    if (task->tColor == 16 && task->tColorDelta == 22)
+    if (task->tColour == 16 && task->tColourDelta == 22)
     {
-        task->tColorIncr = -4;
+        task->tColourIncr = -4;
     }
-    else if (task->tColor == 0)
+    else if (task->tColour == 0)
     {
         task->tAllowFlash = task->tKeepFlashing;
-        task->tColorIncr = 2;
-        task->tColorDelta = 0;
+        task->tColourIncr = 2;
+        task->tColourDelta = 0;
     }
 }
 
@@ -981,7 +981,7 @@ static u16 GetButtonPalOffset(u8 button)
     return palOffsets[button];
 }
 
-static void RestoreButtonColor(u8 button)
+static void RestoreButtonColour(u8 button)
 {
     u16 index = GetButtonPalOffset(button);
     gPlttBufferFaded[index] = gPlttBufferUnfaded[index];
@@ -992,14 +992,14 @@ static void StartButtonFlash(struct Task *task, u8 button, bool8 keepFlashing)
     task->tButtonId = button;
     task->tKeepFlashing = keepFlashing;
     task->tAllowFlash = TRUE;
-    task->tColor = 4;
-    task->tColorIncr = 2;
-    task->tColorDelay = 0;
-    task->tColorDelta = 4;
+    task->tColour = 4;
+    task->tColourIncr = 2;
+    task->tColourDelay = 0;
+    task->tColourDelta = 4;
 }
 
 #undef tButtonId
-#undef tColor
+#undef tColour
 
 // Sprite data for the the cursor
 #define sX          data[0]
@@ -1008,9 +1008,9 @@ static void StartButtonFlash(struct Task *task, u8 button, bool8 keepFlashing)
 #define sPrevY      data[3]
 #define sInvisible  data[4] & 0x00FF
 #define sFlashing   data[4] & 0xFF00
-#define sColor      data[5]
-#define sColorIncr  data[6]
-#define sColorDelay data[7]
+#define sColour      data[5]
+#define sColourIncr  data[6]
+#define sColourDelay data[7]
 
 static void SpriteCB_Cursor(struct Sprite *sprite)
 {
@@ -1027,24 +1027,24 @@ static void SpriteCB_Cursor(struct Sprite *sprite)
        || sprite->sX != sprite->sPrevX
        || sprite->sY != sprite->sPrevY)
     {
-        sprite->sColor = 0;
-        sprite->sColorIncr = 2;
-        sprite->sColorDelay = 2;
+        sprite->sColour = 0;
+        sprite->sColourIncr = 2;
+        sprite->sColourDelay = 2;
     }
 
-    sprite->sColorDelay--;
-    if (sprite->sColorDelay == 0)
+    sprite->sColourDelay--;
+    if (sprite->sColourDelay == 0)
     {
-        sprite->sColor += sprite->sColorIncr;
-        if (sprite->sColor == 16 || sprite->sColor == 0)
-            sprite->sColorIncr = -sprite->sColorIncr;
-        sprite->sColorDelay = 2;
+        sprite->sColour += sprite->sColourIncr;
+        if (sprite->sColour == 16 || sprite->sColour == 0)
+            sprite->sColourIncr = -sprite->sColourIncr;
+        sprite->sColourDelay = 2;
     }
 
     if (sprite->sFlashing)
     {
-        s8 gb = sprite->sColor;
-        s8 r = sprite->sColor >> 1;
+        s8 gb = sprite->sColour;
+        s8 r = sprite->sColour >> 1;
         u16 index = OBJ_PLTT_ID(IndexOfSpritePaletteTag(PALTAG_CURSOR)) + 1;
 
         MultiplyInvertedPaletteRGBComponents(index, r, gb, gb);
@@ -1116,8 +1116,8 @@ static void CreateCursorSprite(void)
     SetCursorInvisibility(TRUE);
     gSprites[sNamingScreen->cursorSpriteId].oam.priority = 1;
     gSprites[sNamingScreen->cursorSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-    gSprites[sNamingScreen->cursorSpriteId].sColorIncr = 1; // ? immediately overwritten
-    gSprites[sNamingScreen->cursorSpriteId].sColorIncr = 2;
+    gSprites[sNamingScreen->cursorSpriteId].sColourIncr = 1; // ? immediately overwritten
+    gSprites[sNamingScreen->cursorSpriteId].sColourIncr = 2;
     SetCursorPos(0, 0);
 }
 
@@ -1199,9 +1199,9 @@ static u8 GetCurrentPageColumnCount(void)
 #undef sPrevY
 #undef sInvisible
 #undef sFlashing
-#undef sColor
-#undef sColorIncr
-#undef sColorDelay
+#undef sColour
+#undef sColourIncr
+#undef sColourDelay
 
 static bool8 PageSwapSprite_Init(struct Sprite *);
 static bool8 PageSwapSprite_Idle(struct Sprite *);
@@ -1774,10 +1774,10 @@ static void DummyGenderIcon(void)
 
 }
 
-static const u8 sGenderColors[2][3] =
+static const u8 sGenderColours[2][3] =
 {
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_BLUE, TEXT_COLOR_BLUE},
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_RED, TEXT_COLOR_RED}
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_LIGHT_BLUE, TEXT_COLOUR_BLUE},
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_LIGHT_RED, TEXT_COLOUR_RED}
 };
 
 static void DrawGenderIcon(void)
@@ -1793,7 +1793,7 @@ static void DrawGenderIcon(void)
             StringCopy(text, gText_FemaleSymbol);
             isFemale = TRUE;
         }
-        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, (POKEMON_NAME_LENGTH * 4) + 64, 1, sGenderColors[isFemale], TEXT_SKIP_DRAW, text);
+        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, (POKEMON_NAME_LENGTH * 4) + 64, 1, sGenderColours[isFemale], TEXT_SKIP_DRAW, text);
     }
 }
 
@@ -1941,17 +1941,17 @@ static void DrawTextEntry(void)
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY]);
 }
 
-struct TextColor   // Needed because of alignment
+struct TextColour   // Needed because of alignment
 {
-    u8 colors[3][4];
+    u8 colours[3][4];
 };
 
-static const struct TextColor sTextColorStruct =
+static const struct TextColour sTextColourStruct =
 {
     {
-        {TEXT_DYNAMIC_COLOR_4, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-        {TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-        {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY}
+        {TEXT_DYNAMIC_COLOUR_4, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY},
+        {TEXT_DYNAMIC_COLOUR_5, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY},
+        {TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY}
     }
 };
 
@@ -1962,11 +1962,11 @@ static const u8 sFillValues[KBPAGE_COUNT] =
     [KEYBOARD_SYMBOLS]       = PIXEL_FILL(15)
 };
 
-static const u8 *const sKeyboardTextColors[KBPAGE_COUNT] =
+static const u8 *const sKeyboardTextColours[KBPAGE_COUNT] =
 {
-    [KEYBOARD_LETTERS_LOWER] = sTextColorStruct.colors[1],
-    [KEYBOARD_LETTERS_UPPER] = sTextColorStruct.colors[0],
-    [KEYBOARD_SYMBOLS]       = sTextColorStruct.colors[2]
+    [KEYBOARD_LETTERS_LOWER] = sTextColourStruct.colours[1],
+    [KEYBOARD_LETTERS_UPPER] = sTextColourStruct.colours[0],
+    [KEYBOARD_SYMBOLS]       = sTextColourStruct.colours[2]
 };
 
 static void PrintKeyboardKeys(u8 window, u8 page)
@@ -1976,7 +1976,7 @@ static void PrintKeyboardKeys(u8 window, u8 page)
     FillWindowPixelBuffer(window, sFillValues[page]);
 
     for (i = 0; i < KBROW_COUNT; i++)
-        AddTextPrinterParameterized3(window, FONT_NORMAL, 0, i * 16 + 1, sKeyboardTextColors[page], 0, sNamingScreenKeyboardText[page][i]);
+        AddTextPrinterParameterized3(window, FONT_NORMAL, 0, i * 16 + 1, sKeyboardTextColours[page], 0, sNamingScreenKeyboardText[page][i]);
 
     PutWindowTilemap(window);
 }
@@ -2019,10 +2019,10 @@ static void DrawKeyboardPageOnDeck(void)
 
 static void PrintControls(void)
 {
-    const u8 color[3] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+    const u8 colour[3] = { TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY };
 
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_BANNER], PIXEL_FILL(15));
-    AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, color, 0, gText_MoveOkBack);
+    AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, colour, 0, gText_MoveOkBack);
     PutWindowTilemap(sNamingScreen->windows[WIN_BANNER]);
     CopyWindowToVram(sNamingScreen->windows[WIN_BANNER], COPYWIN_FULL);
 }

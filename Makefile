@@ -13,8 +13,8 @@ BUILD_DIR := build
 COMPARE     ?= 0
 # Executes the Test Runner System that checks that all mechanics work as expected
 TEST         ?= 0
-# Enables -fanalyzer C flag to analyze in depth potential UBs
-ANALYZE      ?= 0
+# Enables -fanalyser C flag to analyse in depth potential UBs
+ANALYSE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
 UNUSED_ERROR ?= 0
 # Adds -Og and -g flags, which optimize the build for debugging and include debug info respectively
@@ -122,8 +122,8 @@ ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
 override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
-ifeq ($(ANALYZE),1)
-  override CFLAGS += -fanalyzer
+ifeq ($(ANALYSE),1)
+  override CFLAGS += -fanalyser
 endif
 # Only throw an error for unused elements if its RH-Hideout's repo
 ifeq ($(UNUSED_ERROR),0)

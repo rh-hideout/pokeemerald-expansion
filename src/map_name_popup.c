@@ -545,7 +545,7 @@ static void ShowMapNamePopUpWindow(void)
 
     mapDisplayHeader[0] = EXT_CTRL_CODE_BEGIN;
     mapDisplayHeader[1] = EXT_CTRL_CODE_HIGHLIGHT;
-    mapDisplayHeader[2] = TEXT_COLOR_TRANSPARENT;
+    mapDisplayHeader[2] = TEXT_COLOUR_TRANSPARENT;
 
     if (OW_POPUP_GENERATION == GEN_5)
     {
@@ -563,7 +563,7 @@ static void ShowMapNamePopUpWindow(void)
     }
     else
     {
-        x = GetStringCenterAlignXOffset(FONT_NARROW, withoutPrefixPtr, 80);
+        x = GetStringCentreAlignXOffset(FONT_NARROW, withoutPrefixPtr, 80);
         AddTextPrinterParameterized(GetMapNamePopUpWindowId(), FONT_NARROW, mapDisplayHeader, x, 3, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(GetMapNamePopUpWindowId(), COPYWIN_FULL);
     }
@@ -626,7 +626,7 @@ static void LoadMapNamePopUpWindowBg(void)
         {
             // add additional gen 5-style pop-up themes as cases here
             default: // MAPPOPUP_THEME_BW_DEFAULT
-                if (OW_POPUP_BW_COLOR == OW_POPUP_BW_COLOR_WHITE)
+                if (OW_POPUP_BW_COLOUR == OW_POPUP_BW_COLOUR_WHITE)
                     LoadPalette(sMapPopUpTilesPalette_BW_White, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_White));
                 else
                     LoadPalette(sMapPopUpTilesPalette_BW_Black, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_Black));

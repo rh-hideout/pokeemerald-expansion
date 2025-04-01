@@ -1,7 +1,7 @@
 {
-  "id": "MAP_TRADE_CENTER",
-  "name": "TradeCenter",
-  "layout": "LAYOUT_TRADE_CENTER",
+  "id": "MAP_TRADE_CENTRE",
+  "name": "TradeCentre",
+  "layout": "LAYOUT_TRADE_CENTRE",
   "music": "MUS_EVER_GRANDE",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "TradeCenter_EventScript_Attendant",
+      "script": "TradeCentre_EventScript_Attendant",
       "flag": "0"
     }
   ],
@@ -52,7 +52,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "EventScript_TradeCenter_Chair0"
+      "script": "EventScript_TradeCentre_Chair0"
     },
     {
       "type": "trigger",
@@ -61,7 +61,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "EventScript_TradeCenter_Chair1"
+      "script": "EventScript_TradeCentre_Chair1"
     }
   ],
   "bg_events": []

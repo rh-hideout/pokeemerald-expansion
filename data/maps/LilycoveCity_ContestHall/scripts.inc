@@ -417,7 +417,7 @@ LilycoveCity_ContestHall_Text_PokemonSmarterThanTrainers:
 LilycoveCity_ContestHall_Text_StillLoveSmartnessContests:
 	.string "When all's said and done, I still love\n"
 	.string "SMARTNESS CONTESTS.\p"
-	.string "That intellectual green color…\n"
+	.string "That intellectual green colour…\n"
 	.string "It's so… So… Cool.$"
 
 LilycoveCity_ContestHall_Text_AreYouEnteringBeautyContest:

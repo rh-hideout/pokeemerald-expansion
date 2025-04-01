@@ -20,7 +20,7 @@
 
 /*
  *  This is the type of map shown when interacting with the metatiles for
- *  a wall-mounted Region Map (on the wall of the Pokemon Centers near the PC)
+ *  a wall-mounted Region Map (on the wall of the Pokemon Centres near the PC)
  *  It does not zoom, and pressing A or B closes the map
  *
  *  For the region map in the pokenav, see pokenav_region_map.c
@@ -231,8 +231,8 @@ static void PrintRegionMapSecName(void)
 static void PrintTitleWindowText(void)
 {
     static const u8 FlyPromptText[] = _("{R_BUTTON} FLY");
-    u32 hoennOffset = GetStringCenterAlignXOffset(FONT_NORMAL, gText_Hoenn, 0x38);
-    u32 flyOffset = GetStringCenterAlignXOffset(FONT_NORMAL, FlyPromptText, 0x38);
+    u32 hoennOffset = GetStringCentreAlignXOffset(FONT_NORMAL, gText_Hoenn, 0x38);
+    u32 flyOffset = GetStringCentreAlignXOffset(FONT_NORMAL, FlyPromptText, 0x38);
 
     FillWindowPixelBuffer(WIN_TITLE, PIXEL_FILL(1));
 

@@ -23,7 +23,7 @@ If you've done this before and just need a quick lookup, here's what files you n
 We will start with a graphic that we want to use for our new trainer pic. Unlike with adding Pokémon, the trainer sprites aren't sorted in individual folders, but rather in one folder:
 [graphics/trainers/front_pics](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/graphics/trainers/front_pics)
 
-**Remember to limit yourself to 16 colors including transparency in the first slot!**
+**Remember to limit yourself to 16 colours including transparency in the first slot!**
 
 Export the palette and place into the same folder.
 

@@ -97,14 +97,14 @@ const u8 gFurfrouPokedexText[] = _(
 
 const u8 gXerneasPokedexText[] = _(
     "Legends say that when the horns on\n"
-    "its head shine in seven colors, it is\n"
+    "its head shine in seven colours, it is\n"
     "sharing everlasting life. It slept for a\n"
     "thousand years in the form of a tree");
 
 const u8 gZygarde50PokedexText[] = _(
     "It's said to be monitoring the ecosystem\n"
     "from deep in the caves where it lives.\n"
-    "There are rumors that even greater power\n"
+    "There are rumours that even greater power\n"
     "lies hidden within its cells.");
 
 const u8 gZygarde10PokedexText[] = _(
@@ -146,7 +146,7 @@ const u8 gAraquanidPokedexText[] = _(
 
 const u8 gLurantisPokedexText[] = _(
     "It requires a lot of effort to maintain\n"
-    "Lurantis's vivid coloring, but some\n"
+    "Lurantis's vivid colouring, but some\n"
     "collectors enjoy this work and treat it\n"
     "as their hobby.");
 
@@ -213,49 +213,49 @@ const u8 gAlcremieVanillaCreamPokedexText[] = _(
 
 const u8 gAlcremieRubyCreamPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "sweet and tart flavor. This is\n"
+    "sweet and tart flavour. This is\n"
     "because of the way its cells\n"
     "spontaneously shifted during evolution.");
 
 const u8 gAlcremieMatchaCreamPokedexText[] = _(
     "The moment it evolved, it took on\n"
-    "an aromatic flavor. This is because\n"
+    "an aromatic flavour. This is because\n"
     "of the way its cells spontaneously\n"
     "shifted during evolution.");
 
 const u8 gAlcremieMintCreamPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "refreshing flavor. This is because\n"
+    "refreshing flavour. This is because\n"
     "of the way its cells spontaneously\n"
     "shifted during evolution.");
 
 const u8 gAlcremieLemonCreamPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "sour flavor. This is because of the\n"
+    "sour flavour. This is because of the\n"
     "way its cells spontaneously shifted\n"
     "during evolution.");
 
 const u8 gAlcremieSaltedCreamPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "salty flavor. This is because of the\n"
+    "salty flavour. This is because of the\n"
     "way its cells spontaneously shifted\n"
     "during evolution.");
 
 const u8 gAlcremieRubySwirlPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "mixed flavor. This is because of the\n"
+    "mixed flavour. This is because of the\n"
     "way its cells spontaneously shifted\n"
     "during evolution.");
 
 const u8 gAlcremieCaramelSwirlPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "bitter flavor. This is because of\n"
+    "bitter flavour. This is because of\n"
     "the way its cells spontaneously\n"
     "shifted during evolution.");
 
 const u8 gAlcremieRainbowSwirlPokedexText[] = _(
     "The moment it evolved, it took on a\n"
-    "complex flavor. This is because of\n"
+    "complex flavour. This is because of\n"
     "the way its cells spontaneously\n"
     "shifted during evolution.");
 

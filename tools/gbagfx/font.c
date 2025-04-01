@@ -10,7 +10,7 @@
 #include "util.h"
 
 unsigned char gFontPalette[][3] = {
-	{0x90, 0xC8, 0xFF}, // bg (saturated blue that contrasts well with the shadow color)
+	{0x90, 0xC8, 0xFF}, // bg (saturated blue that contrasts well with the shadow colour)
 	{0x38, 0x38, 0x38}, // fg (dark grey)
 	{0xD8, 0xD8, 0xD8}, // shadow (light grey)
 	{0xFF, 0xFF, 0xFF}  // box (white)
@@ -162,12 +162,12 @@ static void SetFontPalette(struct Image *image)
 {
 	image->hasPalette = true;
 
-	image->palette.numColors = 4;
+	image->palette.numColours = 4;
 
-	for (int i = 0; i < image->palette.numColors; i++) {
-		image->palette.colors[i].red = gFontPalette[i][0];
-		image->palette.colors[i].green = gFontPalette[i][1];
-		image->palette.colors[i].blue = gFontPalette[i][2];
+	for (int i = 0; i < image->palette.numColours; i++) {
+		image->palette.colours[i].red = gFontPalette[i][0];
+		image->palette.colours[i].green = gFontPalette[i][1];
+		image->palette.colours[i].blue = gFontPalette[i][2];
 	}
 
 	image->hasTransparency = false;

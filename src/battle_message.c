@@ -45,9 +45,9 @@ struct BattleWindowText
     u8 letterSpacing;
     u8 lineSpacing;
     u8 speed;
-    u8 fgColor;
-    u8 bgColor;
-    u8 shadowColor;
+    u8 fgColour;
+    u8 bgColour;
+    u8 shadowColour;
 };
 
 #if TESTING
@@ -147,13 +147,13 @@ const u8 *const gStatNamesTable[NUM_BATTLE_STATS] =
     [STAT_ACC]     = sText_Accuracy,
     [STAT_EVASION] = sText_Evasiveness,
 };
-const u8 *const gPokeblockWasTooXStringTable[FLAVOR_COUNT] =
+const u8 *const gPokeblockWasTooXStringTable[FLAVOUR_COUNT] =
 {
-    [FLAVOR_SPICY]  = COMPOUND_STRING("was too spicy!"),
-    [FLAVOR_DRY]    = COMPOUND_STRING("was too dry!"),
-    [FLAVOR_SWEET]  = COMPOUND_STRING("was too sweet!"),
-    [FLAVOR_BITTER] = COMPOUND_STRING("was too bitter!"),
-    [FLAVOR_SOUR]   = COMPOUND_STRING("was too sour!"),
+    [FLAVOUR_SPICY]  = COMPOUND_STRING("was too spicy!"),
+    [FLAVOUR_DRY]    = COMPOUND_STRING("was too dry!"),
+    [FLAVOUR_SWEET]  = COMPOUND_STRING("was too sweet!"),
+    [FLAVOUR_BITTER] = COMPOUND_STRING("was too bitter!"),
+    [FLAVOUR_SOUR]   = COMPOUND_STRING("was too sour!"),
 };
 
 static const u8 sText_Someones[] = _("someone's");
@@ -218,10 +218,10 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNWASDEFROSTED]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} thawed out!"),
     [STRINGID_PKMNWASDEFROSTED2]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} thawed out!"),
     [STRINGID_PKMNWASDEFROSTEDBY]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} melted the ice!"),
-    [STRINGID_PKMNWASPARALYZED]                     = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} is paralyzed, so it may be unable to move!"),
-    [STRINGID_PKMNWASPARALYZEDBY]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} paralyzed {B_EFF_NAME_WITH_PREFIX2}, so it may be unable to move!"), //not in gen 5+, ability popup
-    [STRINGID_PKMNISPARALYZED]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} couldn't move because it's paralyzed!"),
-    [STRINGID_PKMNISALREADYPARALYZED]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is already paralyzed!"),
+    [STRINGID_PKMNWASPARALYSED]                     = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} is paralysed, so it may be unable to move!"),
+    [STRINGID_PKMNWASPARALYSEDBY]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} paralysed {B_EFF_NAME_WITH_PREFIX2}, so it may be unable to move!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNISPARALYSED]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} couldn't move because it's paralysed!"),
+    [STRINGID_PKMNISALREADYPARALYSED]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is already paralysed!"),
     [STRINGID_PKMNHEALEDPARALYSIS]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} was cured of paralysis!"),
     [STRINGID_PKMNDREAMEATEN]                       = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s dream was eaten!"), //not in gen 5+, expansion doesn't use anymore
     [STRINGID_STATSWONTINCREASE]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} won't go any higher!"),
@@ -327,7 +327,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNFORESAWATTACK]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} foresaw an attack!"),
     [STRINGID_PKMNTOOKATTACK]                       = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} took the {B_BUFF1} attack!"),
     [STRINGID_PKMNATTACK]                           = COMPOUND_STRING("{B_BUFF1}'s attack!"), //not in gen 5+, expansion doesn't use anymore
-    [STRINGID_PKMNCENTERATTENTION]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} became the center of attention!"),
+    [STRINGID_PKMNCENTREATTENTION]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} became the centre of attention!"),
     [STRINGID_PKMNCHARGINGPOWER]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} began charging power!"),
     [STRINGID_NATUREPOWERTURNEDINTO]                = COMPOUND_STRING("Nature Power turned into {B_CURRENT_MOVE}!"),
     [STRINGID_PKMNSTATUSNORMAL]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s status returned to normal!"),
@@ -905,7 +905,7 @@ const u16 gZEffectStringIds[] =
     [B_MSG_Z_RESET_STATS] = STRINGID_ZMOVERESETSSTATS,
     [B_MSG_Z_ALL_STATS_UP]= STRINGID_ZMOVEALLSTATSUP,
     [B_MSG_Z_BOOST_CRITS] = STRINGID_ZMOVEZBOOSTCRIT,
-    [B_MSG_Z_FOLLOW_ME]   = STRINGID_PKMNCENTERATTENTION,
+    [B_MSG_Z_FOLLOW_ME]   = STRINGID_PKMNCENTREATTENTION,
     [B_MSG_Z_RECOVER_HP]  = STRINGID_ZMOVERESTOREHP,
     [B_MSG_Z_STAT_UP]     = STRINGID_ZMOVESTATUP,
     [B_MSG_Z_HP_TRAP]     = STRINGID_ZMOVEHPTRAP,
@@ -1176,10 +1176,10 @@ const u16 gGotPoisonedStringIds[] =
     [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNPOISONEDBY
 };
 
-const u16 gGotParalyzedStringIds[] =
+const u16 gGotParalysedStringIds[] =
 {
-    [B_MSG_STATUSED]            = STRINGID_PKMNWASPARALYZED,
-    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNWASPARALYZEDBY
+    [B_MSG_STATUSED]            = STRINGID_PKMNWASPARALYSED,
+    [B_MSG_STATUSED_BY_ABILITY] = STRINGID_PKMNWASPARALYSEDBY
 };
 
 const u16 gFellAsleepStringIds[] =
@@ -1380,7 +1380,7 @@ const u16 gRoomsStringIds[] =
 
 const u16 gStatusConditionsStringIds[] =
 {
-    STRINGID_PKMNWASPOISONED, STRINGID_PKMNBADLYPOISONED, STRINGID_PKMNWASBURNED, STRINGID_PKMNWASPARALYZED, STRINGID_PKMNFELLASLEEP, STRINGID_PKMNGOTFROSTBITE
+    STRINGID_PKMNWASPOISONED, STRINGID_PKMNBADLYPOISONED, STRINGID_PKMNWASBURNED, STRINGID_PKMNWASPARALYSED, STRINGID_PKMNFELLASLEEP, STRINGID_PKMNGOTFROSTBITE
 };
 
 const u16 gStatus2StringIds[] =
@@ -1416,17 +1416,17 @@ const u8 gText_BattleMenu[] = _("Battle{CLEAR_TO 56}Bag\nPokémon{CLEAR_TO 56}Ru
 const u8 gText_SafariZoneMenu[] = _("Ball{CLEAR_TO 56}{POKEBLOCK}\nGo Near{CLEAR_TO 56}Run");
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");
-const u8 gText_MoveInterfacePpType[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}PP\nTYPE/");
-const u8 gText_MoveInterfaceDynamicColors[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}");
-const u8 gText_WhichMoveToForget4[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}Which move should\nbe forgotten?");
-const u8 gText_BattleYesNoChoice[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}Yes\nNo");
-const u8 gText_BattleSwitchWhich[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}Switch\nwhich?");
-const u8 gText_BattleSwitchWhich2[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}");
+const u8 gText_MoveInterfacePpType[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}PP\nTYPE/");
+const u8 gText_MoveInterfaceDynamicColours[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}");
+const u8 gText_WhichMoveToForget4[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}Which move should\nbe forgotten?");
+const u8 gText_BattleYesNoChoice[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}Yes\nNo");
+const u8 gText_BattleSwitchWhich[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}Switch\nwhich?");
+const u8 gText_BattleSwitchWhich2[] = _("{PALETTE 5}{COLOUR_HIGHLIGHT_SHADOW DYNAMIC_COLOUR4 DYNAMIC_COLOUR5 DYNAMIC_COLOUR6}");
 const u8 gText_BattleSwitchWhich3[] = _("{UP_ARROW}");
 const u8 gText_BattleSwitchWhich4[] = _("{ESCAPE 4}");
 const u8 gText_BattleSwitchWhich5[] = _("-");
-const u8 gText_SafariBalls[] = _("{HIGHLIGHT DARK_GRAY}Safari Balls");
-const u8 gText_SafariBallLeft[] = _("{HIGHLIGHT DARK_GRAY}Left: $" "{HIGHLIGHT DARK_GRAY}");
+const u8 gText_SafariBalls[] = _("{HIGHLIGHT DARK_GREY}Safari Balls");
+const u8 gText_SafariBallLeft[] = _("{HIGHLIGHT DARK_GREY}Left: $" "{HIGHLIGHT DARK_GREY}");
 const u8 gText_Sleep[] = _("sleep");
 const u8 gText_Poison[] = _("poison");
 const u8 gText_Burn[] = _("burn");
@@ -1475,7 +1475,7 @@ static const u8 sText_Trainer2SentOutPkmn[] = _("{B_TRAINER2_NAME_WITH_CLASS} se
 static const u8 sText_TwoTrainersWantToBattle[] = _("You are challenged by {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\p");
 static const u8 sText_InGamePartnerSentOutZGoN[] = _("{B_PARTNER_NAME_WITH_CLASS} sent out {B_PLAYER_MON2_NAME}! Go, {B_PLAYER_MON1_NAME}!");
 
-const u16 gBattlePalaceFlavorTextTable[] =
+const u16 gBattlePalaceFlavourTextTable[] =
 {
     [B_MSG_GLINT_IN_EYE]   = STRINGID_GLINTAPPEARSINEYE,
     [B_MSG_GETTING_IN_POS] = STRINGID_PKMNGETTINGINTOPOSITION,
@@ -1560,9 +1560,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 1,
-        .fgColor = 1,
-        .bgColor = 15,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .bgColour = 15,
+        .shadowColour = 6,
     },
     [B_WIN_ACTION_PROMPT] = {
         .fillValue = PIXEL_FILL(0xF),
@@ -1570,9 +1570,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .bgColor = 15,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .bgColour = 15,
+        .shadowColour = 6,
     },
     [B_WIN_ACTION_MENU] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1580,9 +1580,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_1] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1590,9 +1590,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_2] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1600,9 +1600,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_3] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1610,9 +1610,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_4] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1620,9 +1620,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_PP] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1630,9 +1630,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 12,
-        .bgColor = 14,
-        .shadowColor = 11,
+        .fgColour = 12,
+        .bgColour = 14,
+        .shadowColour = 11,
     },
     [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1640,9 +1640,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_PP_REMAINING] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1650,9 +1650,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 2,
         .y = 1,
         .speed = 0,
-        .fgColor = 12,
-        .bgColor = 14,
-        .shadowColor = 11,
+        .fgColour = 12,
+        .bgColour = 14,
+        .shadowColour = 11,
     },
     [B_WIN_MOVE_TYPE] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1660,9 +1660,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_SWITCH_PROMPT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1670,9 +1670,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_YESNO] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1680,9 +1680,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_LEVEL_UP_BOX] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1690,9 +1690,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_LEVEL_UP_BANNER] = {
         .fillValue = PIXEL_FILL(0),
@@ -1700,8 +1700,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = 32,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .shadowColor = 2,
+        .fgColour = 1,
+        .shadowColour = 2,
     },
     [B_WIN_VS_PLAYER] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1709,9 +1709,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_OPPONENT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1719,9 +1719,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_MULTI_PLAYER_1] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1729,9 +1729,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_MULTI_PLAYER_2] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1739,9 +1739,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_MULTI_PLAYER_3] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1749,9 +1749,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_MULTI_PLAYER_4] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1759,9 +1759,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_VS_OUTCOME_DRAW] = {
         .fillValue = PIXEL_FILL(0),
@@ -1769,8 +1769,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .shadowColour = 6,
     },
     [B_WIN_VS_OUTCOME_LEFT] = {
         .fillValue = PIXEL_FILL(0),
@@ -1778,8 +1778,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .shadowColour = 6,
     },
     [B_WIN_VS_OUTCOME_RIGHT] = {
         .fillValue = PIXEL_FILL(0x0),
@@ -1787,8 +1787,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .shadowColour = 6,
     },
     [B_WIN_MOVE_DESCRIPTION] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1798,9 +1798,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .letterSpacing = 0,
         .lineSpacing = 0,
         .speed = 0,
-        .fgColor = TEXT_DYNAMIC_COLOR_4,
-        .bgColor = TEXT_DYNAMIC_COLOR_5,
-        .shadowColor = TEXT_DYNAMIC_COLOR_6,
+        .fgColour = TEXT_DYNAMIC_COLOUR_4,
+        .bgColour = TEXT_DYNAMIC_COLOUR_5,
+        .shadowColour = TEXT_DYNAMIC_COLOUR_6,
     },
 };
 
@@ -1812,9 +1812,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 1,
-        .fgColor = 1,
-        .bgColor = 15,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .bgColour = 15,
+        .shadowColour = 6,
     },
     [B_WIN_ACTION_PROMPT] = {
         .fillValue = PIXEL_FILL(0xF),
@@ -1822,9 +1822,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .bgColor = 15,
-        .shadowColor = 6,
+        .fgColour = 1,
+        .bgColour = 15,
+        .shadowColour = 6,
     },
     [B_WIN_ACTION_MENU] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1832,9 +1832,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_1] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1842,9 +1842,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_2] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1852,9 +1852,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_3] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1862,9 +1862,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_MOVE_NAME_4] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1872,9 +1872,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_PP] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1882,9 +1882,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 12,
-        .bgColor = 14,
-        .shadowColor = 11,
+        .fgColour = 12,
+        .bgColour = 14,
+        .shadowColour = 11,
     },
     [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1892,9 +1892,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_PP_REMAINING] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1902,9 +1902,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 2,
         .y = 1,
         .speed = 0,
-        .fgColor = 12,
-        .bgColor = 14,
-        .shadowColor = 11,
+        .fgColour = 12,
+        .bgColour = 14,
+        .shadowColour = 11,
     },
     [B_WIN_MOVE_TYPE] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1912,9 +1912,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_SWITCH_PROMPT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1922,9 +1922,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_YESNO] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1932,9 +1932,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_LEVEL_UP_BOX] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1942,9 +1942,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [B_WIN_LEVEL_UP_BANNER] = {
         .fillValue = PIXEL_FILL(0),
@@ -1952,8 +1952,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 32,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .shadowColor = 2,
+        .fgColour = 1,
+        .shadowColour = 2,
     },
     [ARENA_WIN_PLAYER_NAME] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1961,9 +1961,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 1,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 1,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_VS] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1971,9 +1971,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_OPPONENT_NAME] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1981,9 +1981,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_MIND] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1991,9 +1991,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_SKILL] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2001,9 +2001,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_BODY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2011,9 +2011,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_JUDGMENT_TITLE] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2021,9 +2021,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = -1,
         .y = 1,
         .speed = 0,
-        .fgColor = 13,
-        .bgColor = 14,
-        .shadowColor = 15,
+        .fgColour = 13,
+        .bgColour = 14,
+        .shadowColour = 15,
     },
     [ARENA_WIN_JUDGMENT_TEXT] = {
         .fillValue = PIXEL_FILL(0x1),
@@ -2031,9 +2031,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .x = 0,
         .y = 1,
         .speed = 1,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .fgColour = 2,
+        .bgColour = 1,
+        .shadowColour = 3,
     },
     [B_WIN_MOVE_DESCRIPTION] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2043,9 +2043,9 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .letterSpacing = 0,
         .lineSpacing = 0,
         .speed = 0,
-        .fgColor = TEXT_DYNAMIC_COLOR_4,
-        .bgColor = TEXT_DYNAMIC_COLOR_5,
-        .shadowColor = TEXT_DYNAMIC_COLOR_6,
+        .fgColour = TEXT_DYNAMIC_COLOUR_4,
+        .bgColour = TEXT_DYNAMIC_COLOUR_5,
+        .shadowColour = TEXT_DYNAMIC_COLOUR_6,
     },
 };
 
@@ -3306,7 +3306,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             }
             srcID += 3;
             break;
-        case B_BUFF_NEGATIVE_FLAVOR: // flavor table
+        case B_BUFF_NEGATIVE_FLAVOUR: // flavour table
             StringAppend(dst, gPokeblockWasTooXStringTable[src[srcID + 1]]);
             srcID += 2;
             break;
@@ -3453,9 +3453,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     printerTemplate.letterSpacing = textInfo[windowId].letterSpacing;
     printerTemplate.lineSpacing = textInfo[windowId].lineSpacing;
     printerTemplate.unk = 0;
-    printerTemplate.fgColor = textInfo[windowId].fgColor;
-    printerTemplate.bgColor = textInfo[windowId].bgColor;
-    printerTemplate.shadowColor = textInfo[windowId].shadowColor;
+    printerTemplate.fgColour = textInfo[windowId].fgColour;
+    printerTemplate.bgColour = textInfo[windowId].bgColour;
+    printerTemplate.shadowColour = textInfo[windowId].shadowColour;
 
     if (B_WIN_MOVE_NAME_1 <= windowId && windowId <= B_WIN_MOVE_NAME_4)
     {
@@ -3471,7 +3471,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     if (printerTemplate.x == 0xFF)
     {
         u32 width = GetBattleWindowTemplatePixelWidth(gBattleScripting.windowsType, windowId);
-        s32 alignX = GetStringCenterAlignXOffsetWithLetterSpacing(printerTemplate.fontId, printerTemplate.currentChar, width, printerTemplate.letterSpacing);
+        s32 alignX = GetStringCentreAlignXOffsetWithLetterSpacing(printerTemplate.fontId, printerTemplate.currentChar, width, printerTemplate.letterSpacing);
         printerTemplate.x = printerTemplate.currentX = alignX;
     }
 

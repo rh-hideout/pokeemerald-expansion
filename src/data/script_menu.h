@@ -148,7 +148,7 @@ static const struct MenuAction MultichoiceList_Mechadoll2_Q3[] =
 static const struct MenuAction MultichoiceList_Mechadoll3_Q1[] =
 {
     {COMPOUND_STRING("BURN HEAL")},
-    {COMPOUND_STRING("HARBOR MAIL")},
+    {COMPOUND_STRING("HARBOUR MAIL")},
     {COMPOUND_STRING("Same price")},
 };
 
@@ -458,7 +458,7 @@ static const struct MenuAction MultichoiceList_Tent[] =
 
 static const struct MenuAction MultichoiceList_LinkServicesNoBerry[] =
 {
-    {gText_TradeCenter},
+    {gText_TradeCentre},
     {gText_Colosseum},
     {gText_RecordCorner},
     {gText_Exit},
@@ -482,7 +482,7 @@ static const struct MenuAction MultichoiceList_BattleMode[] =
 
 static const struct MenuAction MultichoiceList_LinkServicesNoRecord[] =
 {
-    {gText_TradeCenter},
+    {gText_TradeCentre},
     {gText_Colosseum},
     {gText_BerryCrush3},
     {gText_Exit},
@@ -490,7 +490,7 @@ static const struct MenuAction MultichoiceList_LinkServicesNoRecord[] =
 
 static const struct MenuAction MultichoiceList_LinkServicesAll[] =
 {
-    {gText_TradeCenter},
+    {gText_TradeCentre},
     {gText_Colosseum},
     {gText_RecordCorner},
     {gText_BerryCrush3},
@@ -499,7 +499,7 @@ static const struct MenuAction MultichoiceList_LinkServicesAll[] =
 
 static const struct MenuAction MultichoiceList_LinkServicesNoRecordBerry[] =
 {
-    {gText_TradeCenter},
+    {gText_TradeCentre},
     {gText_Colosseum},
     {gText_Exit},
 };

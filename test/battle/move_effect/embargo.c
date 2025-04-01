@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't stop an item flung at an affected target fro
         MESSAGE("Wobbuffet used Fling!");
         MESSAGE("Wobbuffet flung its Light Ball!");
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+        MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
     }
 }
 

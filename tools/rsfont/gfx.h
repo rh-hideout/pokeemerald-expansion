@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct Color
+struct Colour
 {
 	unsigned char red;
 	unsigned char green;
@@ -33,8 +33,8 @@ struct Color
 
 struct Palette
 {
-	struct Color colors[256];
-	int numColors;
+	struct Colour colours[256];
+	int numColours;
 };
 
 struct Image {

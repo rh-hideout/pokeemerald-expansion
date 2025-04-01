@@ -1,5 +1,5 @@
 @ 'requests_effects' should be set to 1 if the special contains a call
-@ to 'Script_RequestEffects', which allows it to be analyzed with
+@ to 'Script_RequestEffects', which allows it to be analysed with
 @ 'RunScriptImmediatelyUntilEffect'.
 .macro def_special ptr:req, requests_effects=0
 .global SPECIAL_\ptr
@@ -381,17 +381,17 @@ gSpecials::
 	def_special CheckInteractedWithFriendsPosterDecor
 	def_special SetLilycoveLadyGfx
 	def_special Script_GetLilycoveLadyId
-	def_special GetFavorLadyState
-	def_special BufferFavorLadyRequest
-	def_special HasAnotherPlayerGivenFavorLadyItem
-	def_special BufferFavorLadyItemName
-	def_special BufferFavorLadyPlayerName
-	def_special DidFavorLadyLikeItem
-	def_special Script_FavorLadyOpenBagMenu
-	def_special Script_DoesFavorLadyLikeItem
-	def_special IsFavorLadyThresholdMet
-	def_special FavorLadyGetPrize
-	def_special SetFavorLadyState_Complete
+	def_special GetFavourLadyState
+	def_special BufferFavourLadyRequest
+	def_special HasAnotherPlayerGivenFavourLadyItem
+	def_special BufferFavourLadyItemName
+	def_special BufferFavourLadyPlayerName
+	def_special DidFavourLadyLikeItem
+	def_special Script_FavourLadyOpenBagMenu
+	def_special Script_DoesFavourLadyLikeItem
+	def_special IsFavourLadyThresholdMet
+	def_special FavourLadyGetPrize
+	def_special SetFavourLadyState_Complete
 	def_special GetQuizLadyState
 	def_special GetQuizAuthor
 	def_special IsQuizLadyWaitingForChallenger

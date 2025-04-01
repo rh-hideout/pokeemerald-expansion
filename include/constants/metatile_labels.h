@@ -213,7 +213,7 @@
 #define METATILE_General_Door                  0x021
 #define METATILE_General_Door_Contest          0x1DB
 #define METATILE_General_Door_Gym              0x1CD
-#define METATILE_General_Door_PokeCenter       0x061
+#define METATILE_General_Door_PokeCentre       0x061
 #define METATILE_General_Door_PokeMart         0x041
 #define METATILE_General_Grass                 0x001
 #define METATILE_General_Grass_TreeLeft        0x1CE
@@ -232,7 +232,7 @@
 #define METATILE_General_RockWall_SandBase     0x091
 #define METATILE_General_RoughDeepWater        0x14F
 #define METATILE_General_RoughWater            0x14E
-#define METATILE_General_SandPit_Center        0x121
+#define METATILE_General_SandPit_Centre        0x121
 #define METATILE_General_SecretBase_TreeLeft   0x026
 #define METATILE_General_SecretBase_TreeRight  0x027
 #define METATILE_General_SecretBase_VineLeft   0x036
@@ -298,7 +298,7 @@
 
 // gTileset_Mauville
 #define METATILE_Mauville_DeepSand_BottomMid  0x259
-#define METATILE_Mauville_DeepSand_Center     0x251
+#define METATILE_Mauville_DeepSand_Centre     0x251
 #define METATILE_Mauville_Door                0x2AC
 #define METATILE_Mauville_Door_BattleTent     0x3D4
 #define METATILE_Mauville_Door_CyclingRoad    0x289
@@ -359,7 +359,7 @@
 
 // gTileset_Mossdeep
 #define METATILE_Mossdeep_Door              0x2A1
-#define METATILE_Mossdeep_Door_SpaceCenter  0x2ED
+#define METATILE_Mossdeep_Door_SpaceCentre  0x2ED
 
 // gTileset_MossdeepGameCorner
 #define METATILE_MossdeepGameCorner_CounterClosed_Bottom  0x232
@@ -403,43 +403,43 @@
 #define METATILE_PetalburgGym_SlidingDoor_Frame3  0x21B
 #define METATILE_PetalburgGym_SlidingDoor_Frame4  0x21C
 
-// gTileset_PokemonCenter
-#define METATILE_PokemonCenter_CounterBarrier            0x25D
-#define METATILE_PokemonCenter_Door_CableClub            0x264
-#define METATILE_PokemonCenter_Escalator1F_Tile0_Frame0  0x280
-#define METATILE_PokemonCenter_Escalator1F_Tile0_Frame1  0x282
-#define METATILE_PokemonCenter_Escalator1F_Tile0_Frame2  0x284
-#define METATILE_PokemonCenter_Escalator1F_Tile1_Frame0  0x281
-#define METATILE_PokemonCenter_Escalator1F_Tile1_Frame1  0x283
-#define METATILE_PokemonCenter_Escalator1F_Tile1_Frame2  0x285
-#define METATILE_PokemonCenter_Escalator1F_Tile2_Frame0  0x288
-#define METATILE_PokemonCenter_Escalator1F_Tile2_Frame1  0x28A
-#define METATILE_PokemonCenter_Escalator1F_Tile2_Frame2  0x28C
-#define METATILE_PokemonCenter_Escalator1F_Tile3_Frame0  0x289
-#define METATILE_PokemonCenter_Escalator1F_Tile3_Frame1  0x28B
-#define METATILE_PokemonCenter_Escalator1F_Tile3_Frame2  0x28D
-#define METATILE_PokemonCenter_Escalator2F_Tile0_Frame0  0x2A0
-#define METATILE_PokemonCenter_Escalator2F_Tile0_Frame1  0x2A2
-#define METATILE_PokemonCenter_Escalator2F_Tile0_Frame2  0x2A4
-#define METATILE_PokemonCenter_Escalator2F_Tile1_Frame0  0x2A1
-#define METATILE_PokemonCenter_Escalator2F_Tile1_Frame1  0x2A3
-#define METATILE_PokemonCenter_Escalator2F_Tile1_Frame2  0x2A5
-#define METATILE_PokemonCenter_Escalator2F_Tile2_Frame0  0x2A8
-#define METATILE_PokemonCenter_Escalator2F_Tile2_Frame1  0x2AA
-#define METATILE_PokemonCenter_Escalator2F_Tile2_Frame2  0x2AC
-#define METATILE_PokemonCenter_Floor_Plain_Alt           0x2E4
-#define METATILE_PokemonCenter_Floor_ShadowTop           0x21E
-#define METATILE_PokemonCenter_Floor_ShadowTop_Alt       0x2DC
+// gTileset_PokemonCentre
+#define METATILE_PokemonCentre_CounterBarrier            0x25D
+#define METATILE_PokemonCentre_Door_CableClub            0x264
+#define METATILE_PokemonCentre_Escalator1F_Tile0_Frame0  0x280
+#define METATILE_PokemonCentre_Escalator1F_Tile0_Frame1  0x282
+#define METATILE_PokemonCentre_Escalator1F_Tile0_Frame2  0x284
+#define METATILE_PokemonCentre_Escalator1F_Tile1_Frame0  0x281
+#define METATILE_PokemonCentre_Escalator1F_Tile1_Frame1  0x283
+#define METATILE_PokemonCentre_Escalator1F_Tile1_Frame2  0x285
+#define METATILE_PokemonCentre_Escalator1F_Tile2_Frame0  0x288
+#define METATILE_PokemonCentre_Escalator1F_Tile2_Frame1  0x28A
+#define METATILE_PokemonCentre_Escalator1F_Tile2_Frame2  0x28C
+#define METATILE_PokemonCentre_Escalator1F_Tile3_Frame0  0x289
+#define METATILE_PokemonCentre_Escalator1F_Tile3_Frame1  0x28B
+#define METATILE_PokemonCentre_Escalator1F_Tile3_Frame2  0x28D
+#define METATILE_PokemonCentre_Escalator2F_Tile0_Frame0  0x2A0
+#define METATILE_PokemonCentre_Escalator2F_Tile0_Frame1  0x2A2
+#define METATILE_PokemonCentre_Escalator2F_Tile0_Frame2  0x2A4
+#define METATILE_PokemonCentre_Escalator2F_Tile1_Frame0  0x2A1
+#define METATILE_PokemonCentre_Escalator2F_Tile1_Frame1  0x2A3
+#define METATILE_PokemonCentre_Escalator2F_Tile1_Frame2  0x2A5
+#define METATILE_PokemonCentre_Escalator2F_Tile2_Frame0  0x2A8
+#define METATILE_PokemonCentre_Escalator2F_Tile2_Frame1  0x2AA
+#define METATILE_PokemonCentre_Escalator2F_Tile2_Frame2  0x2AC
+#define METATILE_PokemonCentre_Floor_Plain_Alt           0x2E4
+#define METATILE_PokemonCentre_Floor_ShadowTop           0x21E
+#define METATILE_PokemonCentre_Floor_ShadowTop_Alt       0x2DC
 
 // gTileset_Rustboro
-#define METATILE_Rustboro_Door_Gray  0x21F
+#define METATILE_Rustboro_Door_Grey  0x21F
 #define METATILE_Rustboro_Door_Tan   0x22F
 
 // gTileset_SecretBase
 #define METATILE_SecretBase_AttractMat_BottomLeft       0x313
 #define METATILE_SecretBase_AttractMat_BottomMid        0x314
 #define METATILE_SecretBase_AttractMat_BottomRight      0x315
-#define METATILE_SecretBase_AttractMat_Center           0x30C
+#define METATILE_SecretBase_AttractMat_Centre           0x30C
 #define METATILE_SecretBase_AttractMat_MidLeft          0x30B
 #define METATILE_SecretBase_AttractMat_MidRight         0x30D
 #define METATILE_SecretBase_AttractMat_TopLeft          0x303
@@ -473,7 +473,7 @@
 #define METATILE_SecretBase_BrickDesk_BottomLeft        0x2B0
 #define METATILE_SecretBase_BrickDesk_BottomMid         0x2B1
 #define METATILE_SecretBase_BrickDesk_BottomRight       0x2B2
-#define METATILE_SecretBase_BrickDesk_Center            0x2A9
+#define METATILE_SecretBase_BrickDesk_Centre            0x2A9
 #define METATILE_SecretBase_BrickDesk_MidLeft           0x2A8
 #define METATILE_SecretBase_BrickDesk_MidRight          0x2AA
 #define METATILE_SecretBase_BrickDesk_TopLeft           0x2A0
@@ -483,20 +483,20 @@
 #define METATILE_SecretBase_CampDesk_BottomLeft         0x2B4
 #define METATILE_SecretBase_CampDesk_BottomMid          0x2B5
 #define METATILE_SecretBase_CampDesk_BottomRight        0x2B6
-#define METATILE_SecretBase_CampDesk_Center             0x2AD
+#define METATILE_SecretBase_CampDesk_Centre             0x2AD
 #define METATILE_SecretBase_CampDesk_MidLeft            0x2AC
 #define METATILE_SecretBase_CampDesk_MidRight           0x2AE
 #define METATILE_SecretBase_CampDesk_TopLeft            0x2A4
 #define METATILE_SecretBase_CampDesk_TopMid             0x2A5
 #define METATILE_SecretBase_CampDesk_TopRight           0x2A6
-#define METATILE_SecretBase_ColorfulPlant_BaseLeft1     0x2E8
-#define METATILE_SecretBase_ColorfulPlant_BaseLeft2     0x2EA
-#define METATILE_SecretBase_ColorfulPlant_BaseRight1    0x2E9
-#define METATILE_SecretBase_ColorfulPlant_BaseRight2    0x2EB
-#define METATILE_SecretBase_ColorfulPlant_TopLeft       0x2E0
-#define METATILE_SecretBase_ColorfulPlant_TopLeftWall   0x2E1
-#define METATILE_SecretBase_ColorfulPlant_TopRight      0x2E2
-#define METATILE_SecretBase_ColorfulPlant_TopRightWall  0x2E3
+#define METATILE_SecretBase_ColourfulPlant_BaseLeft1     0x2E8
+#define METATILE_SecretBase_ColourfulPlant_BaseLeft2     0x2EA
+#define METATILE_SecretBase_ColourfulPlant_BaseRight1    0x2E9
+#define METATILE_SecretBase_ColourfulPlant_BaseRight2    0x2EB
+#define METATILE_SecretBase_ColourfulPlant_TopLeft       0x2E0
+#define METATILE_SecretBase_ColourfulPlant_TopLeftWall   0x2E1
+#define METATILE_SecretBase_ColourfulPlant_TopRight      0x2E2
+#define METATILE_SecretBase_ColourfulPlant_TopRightWall  0x2E3
 #define METATILE_SecretBase_ComfortChair                0x2C1
 #define METATILE_SecretBase_ComfortDesk_BottomLeft      0x29E
 #define METATILE_SecretBase_ComfortDesk_BottomMid       0x29F
@@ -511,7 +511,7 @@
 #define METATILE_SecretBase_FireBlastMat_BottomLeft     0x265
 #define METATILE_SecretBase_FireBlastMat_BottomMid      0x266
 #define METATILE_SecretBase_FireBlastMat_BottomRight    0x267
-#define METATILE_SecretBase_FireBlastMat_Center         0x25E
+#define METATILE_SecretBase_FireBlastMat_Centre         0x25E
 #define METATILE_SecretBase_FireBlastMat_MidLeft        0x25D
 #define METATILE_SecretBase_FireBlastMat_MidRight       0x25F
 #define METATILE_SecretBase_FireBlastMat_TopLeft        0x25A
@@ -520,7 +520,7 @@
 #define METATILE_SecretBase_FissureMat_BottomLeft       0x316
 #define METATILE_SecretBase_FissureMat_BottomMid        0x317
 #define METATILE_SecretBase_FissureMat_BottomRight      0x328
-#define METATILE_SecretBase_FissureMat_Center           0x30F
+#define METATILE_SecretBase_FissureMat_Centre           0x30F
 #define METATILE_SecretBase_FissureMat_MidLeft          0x30E
 #define METATILE_SecretBase_FissureMat_MidRight         0x320
 #define METATILE_SecretBase_FissureMat_TopLeft          0x306
@@ -549,7 +549,7 @@
 #define METATILE_SecretBase_HardDesk_BottomLeft         0x2B7
 #define METATILE_SecretBase_HardDesk_BottomMid          0x2CB
 #define METATILE_SecretBase_HardDesk_BottomRight        0x2CC
-#define METATILE_SecretBase_HardDesk_Center             0x2C3
+#define METATILE_SecretBase_HardDesk_Centre             0x2C3
 #define METATILE_SecretBase_HardDesk_MidLeft            0x2AF
 #define METATILE_SecretBase_HardDesk_MidRight           0x2C4
 #define METATILE_SecretBase_HardDesk_TopLeft            0x2A7
@@ -585,7 +585,7 @@
 #define METATILE_SecretBase_PowderSnowMat_BottomLeft    0x310
 #define METATILE_SecretBase_PowderSnowMat_BottomMid     0x311
 #define METATILE_SecretBase_PowderSnowMat_BottomRight   0x312
-#define METATILE_SecretBase_PowderSnowMat_Center        0x309
+#define METATILE_SecretBase_PowderSnowMat_Centre        0x309
 #define METATILE_SecretBase_PowderSnowMat_MidLeft       0x308
 #define METATILE_SecretBase_PowderSnowMat_MidRight      0x30A
 #define METATILE_SecretBase_PowderSnowMat_TopLeft       0x300
@@ -595,7 +595,7 @@
 #define METATILE_SecretBase_PrettyDesk_BottomLeft       0x2CD
 #define METATILE_SecretBase_PrettyDesk_BottomMid        0x2CE
 #define METATILE_SecretBase_PrettyDesk_BottomRight      0x2CF
-#define METATILE_SecretBase_PrettyDesk_Center           0x2C6
+#define METATILE_SecretBase_PrettyDesk_Centre           0x2C6
 #define METATILE_SecretBase_PrettyDesk_MidLeft          0x2C5
 #define METATILE_SecretBase_PrettyDesk_MidRight         0x2C7
 #define METATILE_SecretBase_PrettyDesk_TopLeft          0x2BD
@@ -660,7 +660,7 @@
 #define METATILE_SecretBase_SpikesMat_BottomLeft        0x329
 #define METATILE_SecretBase_SpikesMat_BottomMid         0x32A
 #define METATILE_SecretBase_SpikesMat_BottomRight       0x32B
-#define METATILE_SecretBase_SpikesMat_Center            0x322
+#define METATILE_SecretBase_SpikesMat_Centre            0x322
 #define METATILE_SecretBase_SpikesMat_MidLeft           0x321
 #define METATILE_SecretBase_SpikesMat_MidRight          0x323
 #define METATILE_SecretBase_SpikesMat_TopLeft           0x319
@@ -678,7 +678,7 @@
 #define METATILE_SecretBase_SurfMat_BottomLeft          0x252
 #define METATILE_SecretBase_SurfMat_BottomMid           0x253
 #define METATILE_SecretBase_SurfMat_BottomRight         0x254
-#define METATILE_SecretBase_SurfMat_Center              0x24B
+#define METATILE_SecretBase_SurfMat_Centre              0x24B
 #define METATILE_SecretBase_SurfMat_MidLeft             0x24A
 #define METATILE_SecretBase_SurfMat_MidRight            0x24C
 #define METATILE_SecretBase_SurfMat_TopLeft             0x242
@@ -688,7 +688,7 @@
 #define METATILE_SecretBase_ThunderMat_BottomLeft       0x255
 #define METATILE_SecretBase_ThunderMat_BottomMid        0x256
 #define METATILE_SecretBase_ThunderMat_BottomRight      0x257
-#define METATILE_SecretBase_ThunderMat_Center           0x24E
+#define METATILE_SecretBase_ThunderMat_Centre           0x24E
 #define METATILE_SecretBase_ThunderMat_MidLeft          0x24D
 #define METATILE_SecretBase_ThunderMat_MidRight         0x24F
 #define METATILE_SecretBase_ThunderMat_TopLeft          0x245

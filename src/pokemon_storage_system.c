@@ -157,7 +157,7 @@ enum {
     MENU_RIVER,
     MENU_SKY,
     MENU_POLKADOT,
-    MENU_POKECENTER,
+    MENU_POKECENTRE,
     MENU_MACHINE,
     MENU_SIMPLE,
 };
@@ -769,7 +769,7 @@ static void CreateIncomingBoxTitle(u8, s8);
 static void CycleBoxTitleSprites(void);
 static void SpriteCB_IncomingBoxTitle(struct Sprite *);
 static void SpriteCB_OutgoingBoxTitle(struct Sprite *);
-static void CycleBoxTitleColor(void);
+static void CycleBoxTitleColour(void);
 static s16 GetBoxTitleBaseX(const u8 *);
 
 // Wallpaper
@@ -818,7 +818,7 @@ static void UpdateWaveformAnimation(void);
 static void SetPartySlotTilemaps(void);
 static void StopFlashingCloseBoxButton(void);
 static void FreePokeStorageData(void);
-static void UpdatePartySlotColors(void);
+static void UpdatePartySlotColours(void);
 static void StartFlashingCloseBoxButton(void);
 static void SetUpDoShowPartyMenu(void);
 static void StartDisplayMonMosaicEffect(void);
@@ -919,20 +919,20 @@ static const union AffineAnimCmd *const sAffineAnims_ChooseBoxMenu[] =
     sAffineAnim_ChooseBoxMenu
 };
 
-static const u8 sChooseBoxMenu_TextColors[] = {TEXT_COLOR_RED, TEXT_DYNAMIC_COLOR_6, TEXT_DYNAMIC_COLOR_5};
+static const u8 sChooseBoxMenu_TextColours[] = {TEXT_COLOUR_RED, TEXT_DYNAMIC_COLOUR_6, TEXT_DYNAMIC_COLOUR_5};
 static const u8 sText_OutOf30[] = _("/30");
 
 static const u16 sChooseBoxMenu_Pal[]        = INCBIN_U16("graphics/pokemon_storage/box_selection_popup.gbapal");
-static const u8 sChooseBoxMenuCenter_Gfx[]   = INCBIN_U8("graphics/pokemon_storage/box_selection_popup_center.4bpp");
+static const u8 sChooseBoxMenuCentre_Gfx[]   = INCBIN_U8("graphics/pokemon_storage/box_selection_popup_centre.4bpp");
 static const u8 sChooseBoxMenuSides_Gfx[]    = INCBIN_U8("graphics/pokemon_storage/box_selection_popup_sides.4bpp");
 static const u32 sScrollingBg_Gfx[]          = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.4bpp.lz");
 static const u32 sScrollingBg_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.bin.lz");
 static const u16 sDisplayMenu_Pal[]          = INCBIN_U16("graphics/pokemon_storage/display_menu.gbapal"); // Unused
 static const u32 sDisplayMenu_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/display_menu.bin.lz");
 static const u16 sPkmnData_Tilemap[]         = INCBIN_U16("graphics/pokemon_storage/pkmn_data.bin");
-// sInterface_Pal - parts of the display frame, "PkmnData"'s normal color, Close Box
+// sInterface_Pal - parts of the display frame, "PkmnData"'s normal colour, Close Box
 static const u16 sInterface_Pal[]            = INCBIN_U16("graphics/pokemon_storage/interface.gbapal");
-static const u16 sPkmnDataGray_Pal[]         = INCBIN_U16("graphics/pokemon_storage/pkmn_data_gray.gbapal");
+static const u16 sPkmnDataGrey_Pal[]         = INCBIN_U16("graphics/pokemon_storage/pkmn_data_grey.gbapal");
 static const u16 sScrollingBg_Pal[]          = INCBIN_U16("graphics/pokemon_storage/scrolling_bg.gbapal");
 static const u16 sScrollingBgMoveItems_Pal[] = INCBIN_U16("graphics/pokemon_storage/scrolling_bg_move_items.gbapal");
 static const u16 sCloseBoxButton_Tilemap[]   = INCBIN_U16("graphics/pokemon_storage/close_box_button.bin");
@@ -1217,7 +1217,7 @@ static const union AffineAnimCmd *const sAffineAnims_ReleaseMon[] =
 
 #include "data/wallpapers.h"
 
-static const u16 sUnusedColor = RGB(26, 29, 8);
+static const u16 sUnusedColour = RGB(26, 29, 8);
 
 static const struct SpriteSheet sSpriteSheet_Arrow = {sArrow_Gfx, sizeof(sArrow_Gfx), GFXTAG_ARROW};
 
@@ -1307,7 +1307,7 @@ void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero
 {
     s32 i, tileBytesToBuffer, remainingBytes;
     u16 windowId;
-    u8 txtColor[3];
+    u8 txtColour[3];
     u8 *tileData1, *tileData2;
     struct WindowTemplate winTemplate = {0};
 
@@ -1319,12 +1319,12 @@ void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero
     tileData2 = (winTemplate.width * TILE_SIZE_4BPP) + tileData1;
 
     if (!zero1)
-        txtColor[0] = TEXT_COLOR_TRANSPARENT;
+        txtColour[0] = TEXT_COLOUR_TRANSPARENT;
     else
-        txtColor[0] = zero2;
-    txtColor[1] = TEXT_DYNAMIC_COLOR_6;
-    txtColor[2] = TEXT_DYNAMIC_COLOR_5;
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 1, 0, 0, txtColor, TEXT_SKIP_DRAW, string);
+        txtColour[0] = zero2;
+    txtColour[1] = TEXT_DYNAMIC_COLOUR_6;
+    txtColour[2] = TEXT_DYNAMIC_COLOUR_5;
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 1, 0, 0, txtColour, TEXT_SKIP_DRAW, string);
 
     tileBytesToBuffer = bytesToBuffer;
     if (tileBytesToBuffer > 6u)
@@ -1349,11 +1349,11 @@ void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero
     RemoveWindow(windowId);
 }
 
-static void UNUSED UnusedDrawTextWindow(const u8 *string, void *dst, u16 offset, u8 bgColor, u8 fgColor, u8 shadowColor)
+static void UNUSED UnusedDrawTextWindow(const u8 *string, void *dst, u16 offset, u8 bgColour, u8 fgColour, u8 shadowColour)
 {
     u32 tilesSize;
     u8 windowId;
-    u8 txtColor[3];
+    u8 txtColour[3];
     u8 *tileData1, *tileData2;
     struct WindowTemplate winTemplate = {0};
 
@@ -1361,13 +1361,13 @@ static void UNUSED UnusedDrawTextWindow(const u8 *string, void *dst, u16 offset,
     winTemplate.height = 2;
     tilesSize = winTemplate.width * TILE_SIZE_4BPP;
     windowId = AddWindow(&winTemplate);
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(bgColor));
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(bgColour));
     tileData1 = (u8 *) GetWindowAttribute(windowId, WINDOW_TILE_DATA);
     tileData2 = (winTemplate.width * TILE_SIZE_4BPP) + tileData1;
-    txtColor[0] = bgColor;
-    txtColor[1] = fgColor;
-    txtColor[2] = shadowColor;
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 2, 0, 0, txtColor, TEXT_SKIP_DRAW, string);
+    txtColour[0] = bgColour;
+    txtColour[1] = fgColour;
+    txtColour[2] = shadowColour;
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 2, 0, 0, txtColour, TEXT_SKIP_DRAW, string);
     CpuCopy16(tileData1, dst, tilesSize);
     CpuCopy16(tileData2, dst + offset, tilesSize);
     RemoveWindow(windowId);
@@ -1524,7 +1524,7 @@ static void Task_PCMainMenu(u8 taskId)
         LoadMessageBoxAndBorderGfx();
         DrawDialogueFrame(0, FALSE);
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
-        AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, TEXT_SKIP_DRAW, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+        AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, TEXT_SKIP_DRAW, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
         CopyWindowToVram(0, COPYWIN_FULL);
         CopyWindowToVram(task->tWindowId, COPYWIN_FULL);
         task->tState++;
@@ -1548,7 +1548,7 @@ static void Task_PCMainMenu(u8 taskId)
             {
                 task->tSelectedOption = task->tNextOption;
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
-                AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+                AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             }
             break;
         case MENU_B_PRESSED:
@@ -1564,14 +1564,14 @@ static void Task_PCMainMenu(u8 taskId)
             {
                 // Can't withdraw
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
-                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PartyFull, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PartyFull, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
                 task->tState = STATE_ERROR_MSG;
             }
             else if (task->tInput == OPTION_DEPOSIT && CountPartyMons() == 1)
             {
                 // Can't deposit
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
-                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_JustOnePkmn, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_JustOnePkmn, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
                 task->tState = STATE_ERROR_MSG;
             }
             else
@@ -1589,7 +1589,7 @@ static void Task_PCMainMenu(u8 taskId)
         if (JOY_NEW(A_BUTTON | B_BUTTON))
         {
             FillWindowPixelBuffer(0, PIXEL_FILL(1));
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             task->tState = STATE_HANDLE_INPUT;
         }
         else if (JOY_NEW(DPAD_UP))
@@ -1599,7 +1599,7 @@ static void Task_PCMainMenu(u8 taskId)
             Menu_MoveCursor(-1);
             task->tSelectedOption = Menu_GetCursorPos();
             FillWindowPixelBuffer(0, PIXEL_FILL(1));
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             task->tState = STATE_HANDLE_INPUT;
         }
         else if (JOY_NEW(DPAD_DOWN))
@@ -1609,7 +1609,7 @@ static void Task_PCMainMenu(u8 taskId)
             Menu_MoveCursor(1);
             task->tSelectedOption = Menu_GetCursorPos();
             FillWindowPixelBuffer(0, PIXEL_FILL(1));
-            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sMainMenuTexts[task->tSelectedOption].desc, 0, NULL, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_GREY);
             task->tState = STATE_HANDLE_INPUT;
         }
         break;
@@ -1746,7 +1746,7 @@ static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu, u16 tileTag, u16 pa
     };
     struct SpriteSheet sheets[] =
     {
-        {sChooseBoxMenuCenter_Gfx, 0x800, tileTag},
+        {sChooseBoxMenuCentre_Gfx, 0x800, tileTag},
         {sChooseBoxMenuSides_Gfx,  0x180, tileTag + 1},
         {}
     };
@@ -1904,7 +1904,7 @@ static void ChooseBoxMenu_PrintInfo(void)
     u8 *boxName = GetBoxNamePtr(sChooseBoxMenu->curBox);
     u8 numInBox = CountMonsInBox(sChooseBoxMenu->curBox);
     u32 winTileData;
-    s32 center;
+    s32 centre;
 
     memset(&template, 0, sizeof(template));
     template.width = 8;
@@ -1914,14 +1914,14 @@ static void ChooseBoxMenu_PrintInfo(void)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
 
     // Print box name
-    center = GetStringCenterAlignXOffset(FONT_NORMAL, boxName, 64);
-    AddTextPrinterParameterized3(windowId, FONT_NORMAL, center, 1, sChooseBoxMenu_TextColors, TEXT_SKIP_DRAW, boxName);
+    centre = GetStringCentreAlignXOffset(FONT_NORMAL, boxName, 64);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, centre, 1, sChooseBoxMenu_TextColours, TEXT_SKIP_DRAW, boxName);
 
     // Print #/30 for number of Pokémon in the box
     ConvertIntToDecimalStringN(numBoxMonsText, numInBox, STR_CONV_MODE_RIGHT_ALIGN, 2);
     StringAppend(numBoxMonsText, sText_OutOf30);
-    center = GetStringCenterAlignXOffset(FONT_NORMAL, numBoxMonsText, 64);
-    AddTextPrinterParameterized3(windowId, FONT_NORMAL, center, 17, sChooseBoxMenu_TextColors, TEXT_SKIP_DRAW, numBoxMonsText);
+    centre = GetStringCentreAlignXOffset(FONT_NORMAL, numBoxMonsText, 64);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, centre, 17, sChooseBoxMenu_TextColours, TEXT_SKIP_DRAW, numBoxMonsText);
 
     winTileData = GetWindowAttribute(windowId, WINDOW_TILE_DATA);
     CpuCopy32((void *)winTileData, (void *)OBJ_VRAM0 + 0x100 + (GetSpriteTileStartByTag(sChooseBoxMenu->tileTag) * 32), 0x400);
@@ -2813,7 +2813,7 @@ static void Task_WithdrawMon(u8 taskId)
     case 4:
         if (!DoMonPlaceChange())
         {
-            UpdatePartySlotColors();
+            UpdatePartySlotColours();
             sStorage->state++;
         }
         break;
@@ -2874,7 +2874,7 @@ static void Task_DepositMenu(u8 taskId)
         {
             ResetSelectionAfterDeposit();
             StartDisplayMonMosaicEffect();
-            UpdatePartySlotColors();
+            UpdatePartySlotColours();
             SetPokeStorageTask(Task_PokeStorageMain);
         }
         break;
@@ -2967,7 +2967,7 @@ static void Task_ReleaseMon(u8 taskId)
         {
             RefreshDisplayMon();
             StartDisplayMonMosaicEffect();
-            UpdatePartySlotColors();
+            UpdatePartySlotColours();
             sStorage->state++;
         }
         break;
@@ -3321,7 +3321,7 @@ static void Task_HandleMovingMonFromParty(u8 taskId)
     case 1:
         if (GetNumPartySpritesCompacting() == 0)
         {
-            UpdatePartySlotColors();
+            UpdatePartySlotColours();
             SetPokeStorageTask(Task_PokeStorageMain);
         }
         break;
@@ -3808,7 +3808,7 @@ static void FreePokeStorageData(void)
 
 static void SetScrollingBackground(void)
 {
-    SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOR | BGCNT_SCREENBASE(31));
+    SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOUR | BGCNT_SCREENBASE(31));
     DecompressAndLoadBgGfxUsingHeap(3, sScrollingBg_Gfx, 0, 0, 0);
     LZ77UnCompVram(sScrollingBg_Tilemap, (void *)BG_SCREEN_ADDR(31));
 }
@@ -3850,14 +3850,14 @@ static void LoadWaveformSpritePalette(void)
 static void InitPalettesAndSprites(void)
 {
     LoadPalette(sInterface_Pal, BG_PLTT_ID(0), sizeof(sInterface_Pal));
-    LoadPalette(sPkmnDataGray_Pal, BG_PLTT_ID(2), sizeof(sPkmnDataGray_Pal));
+    LoadPalette(sPkmnDataGrey_Pal, BG_PLTT_ID(2), sizeof(sPkmnDataGrey_Pal));
     LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
         LoadPalette(sScrollingBg_Pal, BG_PLTT_ID(3), sizeof(sScrollingBg_Pal));
     else
         LoadPalette(sScrollingBgMoveItems_Pal, BG_PLTT_ID(3), sizeof(sScrollingBgMoveItems_Pal));
 
-    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_16COLOR | BGCNT_SCREENBASE(30));
+    SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_16COLOUR | BGCNT_SCREENBASE(30));
     CreateDisplayMonSprite();
     CreateMarkingComboSprite();
     CreateWaveformSprites();
@@ -4025,14 +4025,14 @@ static void UpdateWaveformAnimation(void)
 
     if (sStorage->displayMonSpecies != SPECIES_NONE)
     {
-        // Start waveform animation and color "Pkmn Data"
+        // Start waveform animation and colour "Pkmn Data"
         TilemapUtil_SetRect(TILEMAPID_PKMN_DATA, 0, 0, 8, 2);
         for (i = 0; i < ARRAY_COUNT(sStorage->waveformSprites); i++)
             StartSpriteAnimIfDifferent(sStorage->waveformSprites[i], i * 2 + 1);
     }
     else
     {
-        // Stop waveform animation and gray out "Pkmn Data"
+        // Stop waveform animation and grey out "Pkmn Data"
         TilemapUtil_SetRect(TILEMAPID_PKMN_DATA, 0, 2, 8, 2);
         for (i = 0; i < ARRAY_COUNT(sStorage->waveformSprites); i++)
             StartSpriteAnim(sStorage->waveformSprites[i], i * 2);
@@ -4214,7 +4214,7 @@ static void SetPartySlotTilemap(u8 partyId, bool8 hasMon)
     }
 }
 
-static void UpdatePartySlotColors(void)
+static void UpdatePartySlotColours(void)
 {
     SetPartySlotTilemaps();
     TilemapUtil_SetRect(TILEMAPID_PARTY_MENU, 0, 0, 12, 22);
@@ -4362,7 +4362,7 @@ static void AddWallpapersMenu(u8 wallpaperSet)
         break;
     case MENU_ETCETERA - MENU_WALLPAPER_SETS_START:
         SetMenuText(MENU_POLKADOT);
-        SetMenuText(MENU_POKECENTER);
+        SetMenuText(MENU_POKECENTRE);
         SetMenuText(MENU_MACHINE);
         SetMenuText(MENU_SIMPLE);
         break;
@@ -4880,7 +4880,7 @@ static void MovePartySprites(s16 yDelta)
         if (sStorage->partySprites[i] != NULL)
         {
             sStorage->partySprites[i]->y += yDelta;
-            posY = sStorage->partySprites[i]->y + sStorage->partySprites[i]->y2 + sStorage->partySprites[i]->centerToCornerVecY;
+            posY = sStorage->partySprites[i]->y + sStorage->partySprites[i]->y2 + sStorage->partySprites[i]->centreToCornerVecY;
             posY += 16;
             if (posY > 192)
                 sStorage->partySprites[i]->invisible = TRUE;
@@ -5356,7 +5356,7 @@ static bool8 DoWallpaperGfxChange(void)
     case 2:
         if (WaitForWallpaperGfxLoad() == TRUE)
         {
-            CycleBoxTitleColor();
+            CycleBoxTitleColour();
             BeginNormalPaletteFade(sStorage->wallpaperPalBits, 1, 16, 0, RGB_WHITEALPHA);
             sStorage->wallpaperChangeState++;
         }
@@ -5409,8 +5409,8 @@ static void LoadWallpaperGfx(u8 boxId, s8 direction)
         DrawWallpaper(sStorage->wallpaperTilemap, sStorage->wallpaperLoadDir, sStorage->wallpaperOffset);
 
         CpuCopy16(wallpaper->palettes, sStorage->wallpaperTilemap, 0x40);
-        CpuCopy16(GetWaldaWallpaperColorsPtr(), &sStorage->wallpaperTilemap[1], 4);
-        CpuCopy16(GetWaldaWallpaperColorsPtr(), &sStorage->wallpaperTilemap[17], 4);
+        CpuCopy16(GetWaldaWallpaperColoursPtr(), &sStorage->wallpaperTilemap[1], 4);
+        CpuCopy16(GetWaldaWallpaperColoursPtr(), &sStorage->wallpaperTilemap[17], 4);
 
         if (sStorage->wallpaperLoadDir != 0)
             LoadPalette(sStorage->wallpaperTilemap, BG_PLTT_ID(4) + BG_PLTT_ID(sStorage->wallpaperOffset * 2), 2 * PLTT_SIZE_4BPP);
@@ -5497,8 +5497,8 @@ static void InitBoxTitle(u8 boxId)
 
     u16 wallpaperId = GetBoxWallpaper(boxId);
 
-    sStorage->boxTitlePal[14] = sBoxTitleColors[wallpaperId][0]; // Shadow color
-    sStorage->boxTitlePal[15] = sBoxTitleColors[wallpaperId][1]; // Text Color
+    sStorage->boxTitlePal[14] = sBoxTitleColours[wallpaperId][0]; // Shadow colour
+    sStorage->boxTitlePal[15] = sBoxTitleColours[wallpaperId][1]; // Text Colour
     LoadSpritePalettes(palettes);
     sStorage->wallpaperPalBits = 0x3f0;
 
@@ -5508,7 +5508,7 @@ static void InitBoxTitle(u8 boxId)
 
     // The below seems intended to have separately tracked
     // the incoming wallpaper title's palette, but as they now
-    // share a palette tag, all colors (and fields in some cases)
+    // share a palette tag, all colours (and fields in some cases)
     // this is redundant along with the use of boxTitleAltPalOffset
     tagIndex = IndexOfSpritePaletteTag(PALTAG_BOX_TITLE);
     sStorage->boxTitleAltPalOffset = OBJ_PLTT_ID(tagIndex) + 14;
@@ -5562,7 +5562,7 @@ static void CreateIncomingBoxTitle(u8 boxId, s8 direction)
     StringCopyPadded(sStorage->boxTitleText, GetBoxNamePtr(boxId), 0, BOX_NAME_LENGTH);
     DrawTextWindowAndBufferTiles(sStorage->boxTitleText, sStorage->boxTitleTiles, 0, 0, 2);
     LoadSpriteSheet(&spriteSheet);
-    LoadPalette(sBoxTitleColors[GetBoxWallpaper(boxId)], palOffset, sizeof(sBoxTitleColors[0]));
+    LoadPalette(sBoxTitleColours[GetBoxWallpaper(boxId)], palOffset, sizeof(sBoxTitleColours[0]));
     x = GetBoxTitleBaseX(GetBoxNamePtr(boxId));
     adjustedX = x;
     adjustedX += direction * 192;
@@ -5625,14 +5625,14 @@ static void SpriteCB_OutgoingBoxTitle(struct Sprite *sprite)
 #undef sOutgoingDelay
 #undef sOutgoingX
 
-static void CycleBoxTitleColor(void)
+static void CycleBoxTitleColour(void)
 {
     u8 boxId = StorageGetCurrentBox();
     u8 wallpaperId = GetBoxWallpaper(boxId);
     if (sStorage->boxTitleCycleId == 0)
-        CpuCopy16(sBoxTitleColors[wallpaperId], &gPlttBufferUnfaded[sStorage->boxTitlePalOffset], PLTT_SIZEOF(2));
+        CpuCopy16(sBoxTitleColours[wallpaperId], &gPlttBufferUnfaded[sStorage->boxTitlePalOffset], PLTT_SIZEOF(2));
     else
-        CpuCopy16(sBoxTitleColors[wallpaperId], &gPlttBufferUnfaded[sStorage->boxTitleAltPalOffset], PLTT_SIZEOF(2));
+        CpuCopy16(sBoxTitleColours[wallpaperId], &gPlttBufferUnfaded[sStorage->boxTitleAltPalOffset], PLTT_SIZEOF(2));
 }
 
 static s16 GetBoxTitleBaseX(const u8 *string)
@@ -7014,34 +7014,34 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
 
         txtPtr = sStorage->displayMonGenderLvlText;
         *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
-        *(txtPtr)++ = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
+        *(txtPtr)++ = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
         switch (gender)
         {
         case MON_MALE:
-            *(txtPtr)++ = TEXT_COLOR_RED;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_RED;
+            *(txtPtr)++ = TEXT_COLOUR_RED;
+            *(txtPtr)++ = TEXT_COLOUR_WHITE;
+            *(txtPtr)++ = TEXT_COLOUR_LIGHT_RED;
             *(txtPtr)++ = CHAR_MALE;
             break;
         case MON_FEMALE:
-            *(txtPtr)++ = TEXT_COLOR_GREEN;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_GREEN;
+            *(txtPtr)++ = TEXT_COLOUR_GREEN;
+            *(txtPtr)++ = TEXT_COLOUR_WHITE;
+            *(txtPtr)++ = TEXT_COLOUR_LIGHT_GREEN;
             *(txtPtr)++ = CHAR_FEMALE;
             break;
         default:
-            *(txtPtr)++ = TEXT_COLOR_DARK_GRAY;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_GRAY;
+            *(txtPtr)++ = TEXT_COLOUR_DARK_GREY;
+            *(txtPtr)++ = TEXT_COLOUR_WHITE;
+            *(txtPtr)++ = TEXT_COLOUR_LIGHT_GREY;
             *(txtPtr)++ = CHAR_SPACER; // Genderless
             break;
         }
 
         *(txtPtr++) = EXT_CTRL_CODE_BEGIN;
-        *(txtPtr++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-        *(txtPtr++) = TEXT_COLOR_DARK_GRAY;
-        *(txtPtr++) = TEXT_COLOR_WHITE;
-        *(txtPtr++) = TEXT_COLOR_LIGHT_GRAY;
+        *(txtPtr++) = EXT_CTRL_CODE_COLOUR_HIGHLIGHT_SHADOW;
+        *(txtPtr++) = TEXT_COLOUR_DARK_GREY;
+        *(txtPtr++) = TEXT_COLOUR_WHITE;
+        *(txtPtr++) = TEXT_COLOUR_LIGHT_GREY;
         *(txtPtr++) = CHAR_SPACE;
         *(txtPtr++) = CHAR_EXTRA_SYMBOL;
         *(txtPtr++) = CHAR_LV_2;
@@ -8038,7 +8038,7 @@ static const u8 *const sMenuTexts[] =
     [MENU_RIVER]      = COMPOUND_STRING("RIVER"),
     [MENU_SKY]        = COMPOUND_STRING("SKY"),
     [MENU_POLKADOT]   = COMPOUND_STRING("POLKA-DOT"),
-    [MENU_POKECENTER] = COMPOUND_STRING("POKéCENTER"),
+    [MENU_POKECENTRE] = COMPOUND_STRING("POKéCENTRE"),
     [MENU_MACHINE]    = COMPOUND_STRING("MACHINE"),
     [MENU_SIMPLE]     = COMPOUND_STRING("SIMPLE"),
 };
@@ -8247,7 +8247,7 @@ static bool8 MultiMove_Start(void)
         CopyWindowToVram8Bit(sStorage->multiMoveWindowId, COPYWIN_FULL);
         BlendPalettes(0x3F00, 8, RGB_WHITE);
         StartCursorAnim(CURSOR_ANIM_OPEN);
-        SetGpuRegBits(REG_OFFSET_BG0CNT, BGCNT_256COLOR);
+        SetGpuRegBits(REG_OFFSET_BG0CNT, BGCNT_256COLOUR);
         sMultiMove->state++;
         break;
     case 2:
@@ -8663,7 +8663,7 @@ static void MultiMove_ResetBg(void)
     ChangeBgX(0, 0, BG_COORD_SET);
     ChangeBgY(0, 0, BG_COORD_SET);
     SetBgAttribute(0, BG_ATTR_PALETTEMODE, 0);
-    ClearGpuRegBits(REG_OFFSET_BG0CNT, BGCNT_256COLOR);
+    ClearGpuRegBits(REG_OFFSET_BG0CNT, BGCNT_256COLOUR);
     FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
     CopyBgTilemapBufferToVram(0);
 }
@@ -9744,8 +9744,8 @@ void ResetWaldaWallpaper(void)
     gSaveBlock1Ptr->waldaPhrase.iconId = 0;
     gSaveBlock1Ptr->waldaPhrase.patternId = 0;
     gSaveBlock1Ptr->waldaPhrase.patternUnlocked = FALSE;
-    gSaveBlock1Ptr->waldaPhrase.colors[0] = RGB(21, 25, 30);
-    gSaveBlock1Ptr->waldaPhrase.colors[1] = RGB(6, 12, 24);
+    gSaveBlock1Ptr->waldaPhrase.colours[0] = RGB(21, 25, 30);
+    gSaveBlock1Ptr->waldaPhrase.colours[1] = RGB(6, 12, 24);
     gSaveBlock1Ptr->waldaPhrase.text[0] = EOS;
 }
 
@@ -9781,15 +9781,15 @@ void SetWaldaWallpaperIconId(u8 id)
         gSaveBlock1Ptr->waldaPhrase.iconId = id;
 }
 
-u16 *GetWaldaWallpaperColorsPtr(void)
+u16 *GetWaldaWallpaperColoursPtr(void)
 {
-    return gSaveBlock1Ptr->waldaPhrase.colors;
+    return gSaveBlock1Ptr->waldaPhrase.colours;
 }
 
-void SetWaldaWallpaperColors(u16 color1, u16 color2)
+void SetWaldaWallpaperColours(u16 colour1, u16 colour2)
 {
-    gSaveBlock1Ptr->waldaPhrase.colors[0] = color1;
-    gSaveBlock1Ptr->waldaPhrase.colors[1] = color2;
+    gSaveBlock1Ptr->waldaPhrase.colours[0] = colour1;
+    gSaveBlock1Ptr->waldaPhrase.colours[1] = colour2;
 }
 
 u8 *GetWaldaPhrasePtr(void)

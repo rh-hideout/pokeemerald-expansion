@@ -265,7 +265,7 @@ static void HandleInputChooseAction(u32 battler)
         {
             gBattleStruct->ackBallUseBtn = TRUE;
             gBattleStruct->ballSwapped = FALSE;
-            ArrowsChangeColorLastBallCycle(TRUE);
+            ArrowsChangeColourLastBallCycle(TRUE);
         }
 
         if (gBattleStruct->ackBallUseBtn)
@@ -298,13 +298,13 @@ static void HandleInputChooseAction(u32 battler)
             {
                 gBattleStruct->ackBallUseBtn = FALSE;
                 gBattleStruct->ballSwapped = FALSE;
-                ArrowsChangeColorLastBallCycle(FALSE);
+                ArrowsChangeColourLastBallCycle(FALSE);
             }
             else if (!JOY_HELD(B_LAST_USED_BALL_BUTTON) && CanThrowLastUsedBall())
             {
                 gBattleStruct->ackBallUseBtn = FALSE;
                 PlaySE(SE_SELECT);
-                ArrowsChangeColorLastBallCycle(FALSE);
+                ArrowsChangeColourLastBallCycle(FALSE);
                 TryHideLastUsedBall();
                 BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_THROW_BALL, 0);
                 PlayerBufferExecCompleted(battler);

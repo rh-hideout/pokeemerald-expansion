@@ -15,7 +15,7 @@
 #include "trainer_hill.h"
 #include "tv.h"
 #include "constants/rgb.h"
-#include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviours.h"
 #include "wild_encounter.h"
 
 struct ConnectionFlags
@@ -368,10 +368,10 @@ u32 MapGridGetMetatileIdAt(int x, int y)
     return block & MAPGRID_METATILE_ID_MASK;
 }
 
-u32 MapGridGetMetatileBehaviorAt(int x, int y)
+u32 MapGridGetMetatileBehaviourAt(int x, int y)
 {
     u16 metatile = MapGridGetMetatileIdAt(x, y);
-    return GetMetatileAttributesById(metatile) & METATILE_ATTR_BEHAVIOR_MASK;
+    return GetMetatileAttributesById(metatile) & METATILE_ATTR_BEHAVIOUR_MASK;
 }
 
 u8 MapGridGetMetatileLayerTypeAt(int x, int y)

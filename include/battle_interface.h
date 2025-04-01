@@ -81,7 +81,7 @@ enum
 
 #define TAG_GIMMICK_TRIGGER_PAL         0xD777
 #define TAG_MEGA_INDICATOR_PAL          0xD778
-#define TAG_MISC_INDICATOR_PAL          0xD779 // Alpha, Omega, and Dynamax indicators use the same palette as each of them only uses 4 different colors.
+#define TAG_MISC_INDICATOR_PAL          0xD779 // Alpha, Omega, and Dynamax indicators use the same palette as each of them only uses 4 different colours.
 #define TAG_TERA_INDICATOR_PAL          0xD77A
 
 enum
@@ -125,7 +125,7 @@ void TryHideLastUsedBall(void);
 void TryRestoreLastUsedBall(void);
 void TryAddLastUsedBallItemSprites(void);
 void SwapBallToDisplay(bool32 sameBall);
-void ArrowsChangeColorLastBallCycle(bool32 showArrows);
+void ArrowsChangeColourLastBallCycle(bool32 showArrows);
 void UpdateAbilityPopup(u8 battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);

@@ -16,7 +16,7 @@
 #define GAME_STAT_FISHING_ENCOUNTERS          12
 #define GAME_STAT_HATCHED_EGGS                13
 #define GAME_STAT_EVOLVED_POKEMON             14
-#define GAME_STAT_USED_POKECENTER             15
+#define GAME_STAT_USED_POKECENTRE             15
 #define GAME_STAT_RESTED_AT_HOME              16
 #define GAME_STAT_ENTERED_SAFARI_ZONE         17
 #define GAME_STAT_USED_CUT                    18

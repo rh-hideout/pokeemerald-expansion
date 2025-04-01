@@ -11,12 +11,12 @@
 // Format of a Paint Shop Pro palette file, line by line:
 // "JASC-PAL\r\n" (signature)
 // "0100\r\n" (version; seems to always be "0100")
-// "<NUMBER_OF_COLORS>\r\n" (number of colors in decimal)
+// "<NUMBER_OF_COLOURS>\r\n" (number of colours in decimal)
 //
-// <NUMBER_OF_COLORS> times:
-// "<RED> <GREEN> <BLUE>\r\n" (color entry)
+// <NUMBER_OF_COLOURS> times:
+// "<RED> <GREEN> <BLUE>\r\n" (colour entry)
 //
-// Each color component is a decimal number from 0 to 255.
+// Each colour component is a decimal number from 0 to 255.
 // Examples:
 // Black - "0 0 0\r\n"
 // Blue  - "0 0 255\r\n"
@@ -89,13 +89,13 @@ void ReadJascPalette(char *path, struct Palette *palette)
 
     ReadJascPaletteLine(fp, line);
 
-    if (!ParseNumber(line, NULL, 10, &palette->numColors))
-        FATAL_ERROR("Failed to parse number of colors.\n");
+    if (!ParseNumber(line, NULL, 10, &palette->numColours))
+        FATAL_ERROR("Failed to parse number of colours.\n");
 
-    if (palette->numColors < 1 || palette->numColors > 256)
-        FATAL_ERROR("%d is an invalid number of colors. The number of colors must be in the range [1, 256].\n", palette->numColors);
+    if (palette->numColours < 1 || palette->numColours > 256)
+        FATAL_ERROR("%d is an invalid number of colours. The number of colours must be in the range [1, 256].\n", palette->numColours);
 
-    for (int i = 0; i < palette->numColors; i++)
+    for (int i = 0; i < palette->numColours; i++)
     {
         ReadJascPaletteLine(fp, line);
 
@@ -107,53 +107,53 @@ void ReadJascPalette(char *path, struct Palette *palette)
         int blue;
 
         if (!ParseNumber(s, &end, 10, &red))
-            FATAL_ERROR("Failed to parse red color component.\n");
+            FATAL_ERROR("Failed to parse red colour component.\n");
 
         s = end;
 
         if (*s != ' ')
-            FATAL_ERROR("Expected a space after red color component.\n");
+            FATAL_ERROR("Expected a space after red colour component.\n");
 
         s++;
 
         if (*s < '0' || *s > '9')
-            FATAL_ERROR("Expected only a space between red and green color components.\n");
+            FATAL_ERROR("Expected only a space between red and green colour components.\n");
 
         if (!ParseNumber(s, &end, 10, &green))
-            FATAL_ERROR("Failed to parse green color component.\n");
+            FATAL_ERROR("Failed to parse green colour component.\n");
 
         s = end;
 
         if (*s != ' ')
-            FATAL_ERROR("Expected a space after green color component.\n");
+            FATAL_ERROR("Expected a space after green colour component.\n");
 
         s++;
 
         if (*s < '0' || *s > '9')
-            FATAL_ERROR("Expected only a space between green and blue color components.\n");
+            FATAL_ERROR("Expected only a space between green and blue colour components.\n");
 
         if (!ParseNumber(s, &end, 10, &blue))
-            FATAL_ERROR("Failed to parse blue color component.\n");
+            FATAL_ERROR("Failed to parse blue colour component.\n");
 
         if (*end != 0)
-            FATAL_ERROR("Garbage after blue color component.\n");
+            FATAL_ERROR("Garbage after blue colour component.\n");
 
         if (red < 0 || red > 255)
-            FATAL_ERROR("Red color component (%d) is outside the range [0, 255].\n", red);
+            FATAL_ERROR("Red colour component (%d) is outside the range [0, 255].\n", red);
 
         if (green < 0 || green > 255)
-            FATAL_ERROR("Green color component (%d) is outside the range [0, 255].\n", green);
+            FATAL_ERROR("Green colour component (%d) is outside the range [0, 255].\n", green);
 
         if (blue < 0 || blue > 255)
-            FATAL_ERROR("Blue color component (%d) is outside the range [0, 255].\n", blue);
+            FATAL_ERROR("Blue colour component (%d) is outside the range [0, 255].\n", blue);
 
-        palette->colors[i].red = red;
-        palette->colors[i].green = green;
-        palette->colors[i].blue = blue;
+        palette->colours[i].red = red;
+        palette->colours[i].green = green;
+        palette->colours[i].blue = blue;
     }
 
     if (fgetc(fp) != EOF)
-        FATAL_ERROR("Garbage after color data.\n");
+        FATAL_ERROR("Garbage after colour data.\n");
 
     fclose(fp);
 }
@@ -164,12 +164,12 @@ void WriteJascPalette(char *path, struct Palette *palette)
 
     fputs("JASC-PAL\r\n", fp);
     fputs("0100\r\n", fp);
-    fprintf(fp, "%d\r\n", palette->numColors);
+    fprintf(fp, "%d\r\n", palette->numColours);
 
-    for (int i = 0; i < palette->numColors; i++)
+    for (int i = 0; i < palette->numColours; i++)
     {
-        struct Color *color = &palette->colors[i];
-        fprintf(fp, "%d %d %d\r\n", color->red, color->green, color->blue);
+        struct Colour *colour = &palette->colours[i];
+        fprintf(fp, "%d %d %d\r\n", colour->red, colour->green, colour->blue);
     }
 
     fclose(fp);

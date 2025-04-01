@@ -93,8 +93,8 @@ static const struct SpriteTemplate sCloudSpriteTemplate =
 
 void Clouds_InitVars(void)
 {
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->weatherGfxLoaded = FALSE;
     gWeatherPtr->initStep = 0;
     if (gWeatherPtr->cloudSpritesCreated == FALSE)
@@ -151,8 +151,8 @@ bool8 Clouds_Finish(void)
 
 void Sunny_InitVars(void)
 {
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     Weather_SetBlendCoeffs(8, 12);
 }
 
@@ -235,8 +235,8 @@ void Drought_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = FALSE;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 0;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 0;
 }
 
 void Drought_InitAll(void)
@@ -476,8 +476,8 @@ void Rain_InitVars(void)
     gWeatherPtr->rainSpriteVisibleDelay = 8;
     gWeatherPtr->isDownpour = FALSE;
     gWeatherPtr->targetRainSpriteCount = 10;
-    gWeatherPtr->targetColorMapIndex = 3;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 3;
+    gWeatherPtr->colourMapStepDelay = 20;
     SetRainStrengthFromSoundEffect(SE_RAIN);
 }
 
@@ -768,8 +768,8 @@ void Snow_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = FALSE;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->targetSnowflakeSpriteCount = NUM_SNOWFLAKE_SPRITES;
     gWeatherPtr->snowflakeVisibleCounter = 0;
 }
@@ -924,8 +924,8 @@ static void InitSnowflakeSpriteMovement(struct Sprite *sprite)
     u16 rand;
     u16 x = ((sprite->tSnowflakeId * 5) & 7) * 30 + (Random() % 30);
 
-    sprite->y = -3 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
-    sprite->x = x - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
+    sprite->y = -3 - (gSpriteCoordOffsetY + sprite->centreToCornerVecY);
+    sprite->x = x - (gSpriteCoordOffsetX + sprite->centreToCornerVecX);
     sprite->tPosY = sprite->y * 128;
     sprite->x2 = 0;
     rand = Random();
@@ -944,7 +944,7 @@ static void UNUSED WaitSnowflakeSprite(struct Sprite *sprite)
     {
         sprite->invisible = FALSE;
         sprite->callback = UpdateSnowflakeSprite;
-        sprite->y = 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
+        sprite->y = 250 - (gSpriteCoordOffsetY + sprite->centreToCornerVecY);
         sprite->tPosY = sprite->y * 128;
         gWeatherPtr->snowflakeTimer = 0;
     }
@@ -960,14 +960,14 @@ static void UpdateSnowflakeSprite(struct Sprite *sprite)
     sprite->tWaveIndex &= 0xFF;
     sprite->x2 = gSineTable[sprite->tWaveIndex] / 64;
 
-    x = (sprite->x + sprite->centerToCornerVecX + gSpriteCoordOffsetX) & 0x1FF;
+    x = (sprite->x + sprite->centreToCornerVecX + gSpriteCoordOffsetX) & 0x1FF;
     if (x & 0x100)
         x |= -0x100;
 
     if (x < -3)
-        sprite->x = 242 - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
+        sprite->x = 242 - (gSpriteCoordOffsetX + sprite->centreToCornerVecX);
     else if (x > 242)
-        sprite->x = -3 - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
+        sprite->x = -3 - (gSpriteCoordOffsetX + sprite->centreToCornerVecX);
 }
 
 #undef tPosY
@@ -1014,8 +1014,8 @@ void Thunderstorm_InitVars(void)
     gWeatherPtr->rainSpriteVisibleDelay = 4;
     gWeatherPtr->isDownpour = FALSE;
     gWeatherPtr->targetRainSpriteCount = 16;
-    gWeatherPtr->targetColorMapIndex = 3;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 3;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->weatherGfxLoaded = FALSE;  // duplicate assignment
     gWeatherPtr->thunderEnqueued = FALSE;
     SetRainStrengthFromSoundEffect(SE_THUNDERSTORM);
@@ -1043,8 +1043,8 @@ void Downpour_InitVars(void)
     gWeatherPtr->rainSpriteVisibleDelay = 4;
     gWeatherPtr->isDownpour = TRUE;
     gWeatherPtr->targetRainSpriteCount = 24;
-    gWeatherPtr->targetColorMapIndex = 3;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 3;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->weatherGfxLoaded = FALSE;  // duplicate assignment
     SetRainStrengthFromSoundEffect(SE_DOWNPOUR);
 }
@@ -1106,7 +1106,7 @@ void Thunderstorm_Main(void)
         // fall through
     case THUNDER_STATE_SHORT_BOLT:
         // Short bolt of lightning strikes.
-        ApplyWeatherColorMapIfIdle(19);
+        ApplyWeatherColourMapIfIdle(19);
         // If final lightning bolt, enqueue thunder.
         if (!gWeatherPtr->thunderLongBolt && gWeatherPtr->thunderShortBolts == 1)
             EnqueueThunder(20);
@@ -1118,7 +1118,7 @@ void Thunderstorm_Main(void)
         if (--gWeatherPtr->thunderTimer == 0)
         {
             // Short bolt of lightning ends.
-            ApplyWeatherColorMapIfIdle(3);
+            ApplyWeatherColourMapIfIdle(3);
             gWeatherPtr->thunderAllowEnd = TRUE;
             if (--gWeatherPtr->thunderShortBolts != 0)
             {
@@ -1151,7 +1151,7 @@ void Thunderstorm_Main(void)
         {
             // Do long bolt. Enqueue thunder with a potentially longer delay.
             EnqueueThunder(100);
-            ApplyWeatherColorMapIfIdle(19);
+            ApplyWeatherColourMapIfIdle(19);
             gWeatherPtr->thunderTimer = (Random() & 0xF) + 30;
             gWeatherPtr->initStep++;
         }
@@ -1160,7 +1160,7 @@ void Thunderstorm_Main(void)
         if (--gWeatherPtr->thunderTimer == 0)
         {
             // Fade long bolt out over time.
-            ApplyWeatherColorMapIfIdle_Gradual(19, 3, 5);
+            ApplyWeatherColourMapIfIdle_Gradual(19, 3, 5);
             gWeatherPtr->initStep++;
         }
         break;
@@ -1343,8 +1343,8 @@ void FogHorizontal_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = FALSE;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     if (gWeatherPtr->fogHSpritesCreated == 0)
     {
         gWeatherPtr->fogHScrollCounter = 0;
@@ -1498,8 +1498,8 @@ void Ash_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = FALSE;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->ashUnused = 20; // Never read
     if (!gWeatherPtr->ashSpritesCreated)
     {
@@ -1708,8 +1708,8 @@ void FogDiagonal_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = 0;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     gWeatherPtr->fogHScrollCounter = 0;
     gWeatherPtr->fogHScrollOffset = 1;
     if (!gWeatherPtr->fogDSpritesCreated)
@@ -1922,8 +1922,8 @@ void Sandstorm_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = 0;
-    gWeatherPtr->targetColorMapIndex = 0;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 0;
+    gWeatherPtr->colourMapStepDelay = 20;
     if (!gWeatherPtr->sandstormSpritesCreated)
     {
         gWeatherPtr->sandstormXOffset = gWeatherPtr->sandstormYOffset = 0;
@@ -2152,7 +2152,7 @@ static void CreateSwirlSandstormSprites(void)
                 gWeatherPtr->sprites.s2.sandstormSprites2[i]->data[4] = 0x6730; // unused value
                 gWeatherPtr->sprites.s2.sandstormSprites2[i]->tEntranceDelay = sSwirlEntranceDelays[i];
                 StartSpriteAnim(gWeatherPtr->sprites.s2.sandstormSprites2[i], 1);
-                CalcCenterToCornerVec(gWeatherPtr->sprites.s2.sandstormSprites2[i], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_OFF);
+                CalcCentreToCornerVec(gWeatherPtr->sprites.s2.sandstormSprites2[i], SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), ST_OAM_AFFINE_OFF);
                 gWeatherPtr->sprites.s2.sandstormSprites2[i]->callback = WaitSandSwirlSpriteEntrance;
             }
             else
@@ -2219,8 +2219,8 @@ static void UpdateSandstormSwirlSprite(struct Sprite *sprite)
 void Shade_InitVars(void)
 {
     gWeatherPtr->initStep = 0;
-    gWeatherPtr->targetColorMapIndex = 3;
-    gWeatherPtr->colorMapStepDelay = 20;
+    gWeatherPtr->targetColourMapIndex = 3;
+    gWeatherPtr->colourMapStepDelay = 20;
 }
 
 void Shade_InitAll(void)

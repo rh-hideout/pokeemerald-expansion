@@ -49,9 +49,9 @@ enum {
     FONTATTR_LETTER_SPACING,
     FONTATTR_LINE_SPACING,
     FONTATTR_UNKNOWN,   // dunno what this is yet
-    FONTATTR_COLOR_FOREGROUND,
-    FONTATTR_COLOR_BACKGROUND,
-    FONTATTR_COLOR_SHADOW
+    FONTATTR_COLOUR_FOREGROUND,
+    FONTATTR_COLOUR_BACKGROUND,
+    FONTATTR_COLOUR_SHADOW
 };
 
 struct TextPrinterSubStruct
@@ -77,9 +77,9 @@ struct TextPrinterTemplate
     u8 letterSpacing;
     u8 lineSpacing;
     u8 unk:4;   // 0xC
-    u8 fgColor:4;
-    u8 bgColor:4;
-    u8 shadowColor:4;
+    u8 fgColour:4;
+    u8 bgColour:4;
+    u8 shadowColour:4;
 };
 
 struct TextPrinter
@@ -106,9 +106,9 @@ struct FontInfo
     u8 letterSpacing;
     u8 lineSpacing;
     u8 unk:4;
-    u8 fgColor:4;
-    u8 bgColor:4;
-    u8 shadowColor:4;
+    u8 fgColour:4;
+    u8 bgColour:4;
+    u8 shadowColour:4;
 };
 
 extern const struct FontInfo *gFonts;
@@ -144,9 +144,9 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
 bool32 AddTextPrinter(struct TextPrinterTemplate *template, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 void RunTextPrinters(void);
 bool32 IsTextPrinterActive(u8 id);
-void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor);
-void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
-void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
+void GenerateFontHalfRowLookupTable(u8 fgColour, u8 bgColour, u8 shadowColour);
+void SaveTextColours(u8 *fgColour, u8 *bgColour, u8 *shadowColour);
+void RestoreTextColours(u8 *fgColour, u8 *bgColour, u8 *shadowColour);
 void DecompressGlyphTile(const void *src_, void *dest_);
 void CopyGlyphToWindow(struct TextPrinter *x);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
@@ -157,7 +157,7 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter);
 bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter);
 bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter);
 bool32 TextPrinterWait(struct TextPrinter *textPrinter);
-void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *counter, u8 *yCoordIndex);
+void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColour, bool32 drawArrow, u8 *counter, u8 *yCoordIndex);
 s32 GetGlyphWidth(u16 glyphId, bool32 isJapanese, u8 fontId);
 s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing);
 s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum, u32 strSize);

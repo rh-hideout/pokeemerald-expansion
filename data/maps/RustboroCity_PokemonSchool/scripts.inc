@@ -216,7 +216,7 @@ RustboroCity_PokemonSchool_Text_ExplainPoison:
 	.string "Heal a poisoning using an ANTIDOTE.$"
 
 RustboroCity_PokemonSchool_Text_ExplainParalysis:
-	.string "If a POKéMON becomes paralyzed,\n"
+	.string "If a POKéMON becomes paralysed,\n"
 	.string "its SPEED drops.\p"
 	.string "It may also not be able to move while\n"
 	.string "it is in battle.\p"

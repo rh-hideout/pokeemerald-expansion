@@ -862,7 +862,7 @@ static bool8 DoesTypePreventStatus(u16 species, u32 status)
         break;
     case STATUS1_PARALYSIS:
         if (gSpeciesInfo[species].types[0] == TYPE_GROUND || gSpeciesInfo[species].types[1] == TYPE_GROUND
-            || (B_PARALYZE_ELECTRIC >= GEN_6 && (gSpeciesInfo[species].types[0] == TYPE_ELECTRIC || gSpeciesInfo[species].types[1] == TYPE_ELECTRIC)))
+            || (B_PARALYSE_ELECTRIC >= GEN_6 && (gSpeciesInfo[species].types[0] == TYPE_ELECTRIC || gSpeciesInfo[species].types[1] == TYPE_ELECTRIC)))
             ret = TRUE;
         break;
     case STATUS1_BURN:

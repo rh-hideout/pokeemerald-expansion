@@ -97,7 +97,7 @@ enum {
     WIN_TRAINER_MON1_NAME,
     WIN_TRAINER_MON2_NAME, // Used implicitly
     WIN_TRAINER_MON3_NAME, // Used implicitly
-    WIN_TRAINER_FLAVOR_TEXT = WIN_TRAINER_MON1_NAME + FRONTIER_PARTY_SIZE, // Trainer's potential, battle style, and stat texts
+    WIN_TRAINER_FLAVOUR_TEXT = WIN_TRAINER_MON1_NAME + FRONTIER_PARTY_SIZE, // Trainer's potential, battle style, and stat texts
     WIN_MATCH_NUMBER,
     WIN_MATCH_TRAINER_NAME_LEFT,
     WIN_MATCH_TRAINER_NAME_RIGHT,
@@ -389,7 +389,7 @@ static const struct WindowTemplate sInfoCardWindowTemplates[] =
         .paletteNum = 15,
         .baseBlock = 96,
     },
-    [WIN_TRAINER_FLAVOR_TEXT] = {
+    [WIN_TRAINER_FLAVOUR_TEXT] = {
         .bg = 0,
         .tilemapLeft = 2,
         .tilemapTop = 12,
@@ -472,7 +472,7 @@ static const struct WindowTemplate sInfoCardWindowTemplates[] =
         .paletteNum = 15,
         .baseBlock = 96,
     },
-    [WIN_TRAINER_FLAVOR_TEXT + NUM_INFO_CARD_WINDOWS] = {
+    [WIN_TRAINER_FLAVOUR_TEXT + NUM_INFO_CARD_WINDOWS] = {
         .bg = 1,
         .tilemapLeft = 2,
         .tilemapTop = 12,
@@ -4006,7 +4006,7 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
     case EFFECT_POISON:
-    case EFFECT_PARALYZE:
+    case EFFECT_PARALYSE:
     case EFFECT_TOXIC:
     case EFFECT_LEECH_SEED:
     case EFFECT_TAUNT:
@@ -4205,9 +4205,9 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     textPrinter.letterSpacing = 2;
     textPrinter.lineSpacing = 0;
     textPrinter.unk = 0;
-    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
-    textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
-    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+    textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_5;
+    textPrinter.bgColour = TEXT_COLOUR_TRANSPARENT;
+    textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
 
     // Get class and trainer name
     i = 0;
@@ -4239,7 +4239,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     }
 
     // Print class and trainer name
-    textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, gStringVar1, 0xD0, textPrinter.letterSpacing);
+    textPrinter.currentX = GetStringCentreAlignXOffsetWithLetterSpacing(textPrinter.fontId, gStringVar1, 0xD0, textPrinter.letterSpacing);
     textPrinter.currentChar = gStringVar1;
     textPrinter.windowId = windowId;
     PutWindowTilemap(windowId);
@@ -4271,8 +4271,8 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     }
     textPrinter.fontId = FONT_SHORT;
 
-    PutWindowTilemap(windowId + WIN_TRAINER_FLAVOR_TEXT);
-    CopyWindowToVram(windowId + WIN_TRAINER_FLAVOR_TEXT, COPYWIN_FULL);
+    PutWindowTilemap(windowId + WIN_TRAINER_FLAVOUR_TEXT);
+    CopyWindowToVram(windowId + WIN_TRAINER_FLAVOUR_TEXT, COPYWIN_FULL);
 
     // Print text about trainers potential in the tourney
     if (trainerId == TRAINER_FRONTIER_BRAIN)
@@ -4281,7 +4281,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
         textPrinter.currentChar = sBattleDomePotentialTexts[trainerTourneyId];
 
     textPrinter.fontId = FONT_NORMAL;
-    textPrinter.windowId = windowId + WIN_TRAINER_FLAVOR_TEXT;
+    textPrinter.windowId = windowId + WIN_TRAINER_FLAVOUR_TEXT;
     textPrinter.currentX = 0;
     textPrinter.y = 4;
     textPrinter.currentY = 4;
@@ -4794,9 +4794,9 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
     textPrinter.unk = 0;
-    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
-    textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
-    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+    textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_5;
+    textPrinter.bgColour = TEXT_COLOUR_TRANSPARENT;
+    textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
     StringExpandPlaceholders(gStringVar4, sBattleDomeWinTexts[winStringId]);
     textPrinter.currentChar = gStringVar4;
     textPrinter.windowId = windowId + WIN_MATCH_WIN_TEXT;
@@ -4819,7 +4819,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
     textPrinter.letterSpacing = 2;
     textPrinter.currentChar = gStringVar1;
     textPrinter.windowId = windowId + WIN_MATCH_TRAINER_NAME_LEFT;
-    textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x40, textPrinter.letterSpacing);
+    textPrinter.currentX = GetStringCentreAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x40, textPrinter.letterSpacing);
     textPrinter.currentY = textPrinter.y = 2;
     PutWindowTilemap(windowId + WIN_MATCH_TRAINER_NAME_LEFT);
     CopyWindowToVram(windowId + WIN_MATCH_TRAINER_NAME_LEFT, COPYWIN_FULL);
@@ -4835,7 +4835,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
 
     textPrinter.currentChar = gStringVar1;
     textPrinter.windowId = windowId + WIN_MATCH_TRAINER_NAME_RIGHT;
-    textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x40, textPrinter.letterSpacing);
+    textPrinter.currentX = GetStringCentreAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x40, textPrinter.letterSpacing);
     textPrinter.currentY = textPrinter.y = 2;
     PutWindowTilemap(windowId + WIN_MATCH_TRAINER_NAME_RIGHT);
     CopyWindowToVram(windowId + WIN_MATCH_TRAINER_NAME_RIGHT, COPYWIN_FULL);
@@ -4845,7 +4845,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
     textPrinter.letterSpacing = 0;
     textPrinter.currentChar = sBattleDomeMatchNumberTexts[matchNo];
     textPrinter.windowId = windowId + WIN_MATCH_NUMBER;
-    textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0xA0, textPrinter.letterSpacing);
+    textPrinter.currentX = GetStringCentreAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0xA0, textPrinter.letterSpacing);
     textPrinter.currentY = textPrinter.y = 2;
     PutWindowTilemap(windowId + WIN_MATCH_NUMBER);
     CopyWindowToVram(windowId + WIN_MATCH_NUMBER, COPYWIN_FULL);
@@ -5286,12 +5286,12 @@ static void Task_ShowTourneyTree(u8 taskId)
         textPrinter.y = 0;
         textPrinter.letterSpacing = 2;
         textPrinter.lineSpacing = 0;
-        textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x70, textPrinter.letterSpacing);
+        textPrinter.currentX = GetStringCentreAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x70, textPrinter.letterSpacing);
         textPrinter.currentY = 1;
         textPrinter.unk = 0;
-        textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
-        textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
-        textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+        textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_5;
+        textPrinter.bgColour = TEXT_COLOUR_TRANSPARENT;
+        textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
         AddTextPrinter(&textPrinter, 0, NULL);
         for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
         {
@@ -5344,26 +5344,26 @@ static void Task_ShowTourneyTree(u8 taskId)
             {
                 if (DOME_TRAINERS[i].trainerId == TRAINER_PLAYER)
                 {
-                    textPrinter.fgColor = TEXT_COLOR_LIGHT_GRAY;
-                    textPrinter.shadowColor = TEXT_COLOR_RED;
+                    textPrinter.fgColour = TEXT_COLOUR_LIGHT_GREY;
+                    textPrinter.shadowColour = TEXT_COLOUR_RED;
                 }
                 else
                 {
-                    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_2;
-                    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+                    textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_2;
+                    textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
                 }
             }
             else
             {
                 if (DOME_TRAINERS[i].trainerId == TRAINER_PLAYER)
                 {
-                    textPrinter.fgColor = TEXT_COLOR_LIGHT_GRAY;
-                    textPrinter.shadowColor = TEXT_COLOR_RED;
+                    textPrinter.fgColour = TEXT_COLOUR_LIGHT_GREY;
+                    textPrinter.shadowColour = TEXT_COLOUR_RED;
                 }
                 else
                 {
-                    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
-                    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+                    textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_5;
+                    textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
                 }
             }
 
@@ -5412,15 +5412,15 @@ static void Task_ShowTourneyTree(u8 taskId)
         i = 0;
         while (i < 91)
         {
-            gScanlineEffectRegBuffers[0][i] = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(31) | BGCNT_16COLOR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
-            gScanlineEffectRegBuffers[1][i] = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(31) | BGCNT_16COLOR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
+            gScanlineEffectRegBuffers[0][i] = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(31) | BGCNT_16COLOUR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
+            gScanlineEffectRegBuffers[1][i] = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(31) | BGCNT_16COLOUR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
             i++;
         }
 
         while (i < 160)
         {
-            gScanlineEffectRegBuffers[0][i] =  BGCNT_PRIORITY(1) | BGCNT_SCREENBASE(31) | BGCNT_16COLOR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
-            gScanlineEffectRegBuffers[1][i] =  BGCNT_PRIORITY(1) | BGCNT_SCREENBASE(31) | BGCNT_16COLOR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
+            gScanlineEffectRegBuffers[0][i] =  BGCNT_PRIORITY(1) | BGCNT_SCREENBASE(31) | BGCNT_16COLOUR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
+            gScanlineEffectRegBuffers[1][i] =  BGCNT_PRIORITY(1) | BGCNT_SCREENBASE(31) | BGCNT_16COLOUR | BGCNT_CHARBASE(2) | BGCNT_TXT256x256;
             i++;
         }
 
@@ -5470,11 +5470,11 @@ static void Task_HandleStaticTourneyTreeInput(u8 taskId)
             textPrinter.letterSpacing = 2;
             textPrinter.lineSpacing = 0;
             textPrinter.unk = 0;
-            textPrinter.fgColor = TEXT_DYNAMIC_COLOR_2;
-            textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
-            textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
+            textPrinter.fgColour = TEXT_DYNAMIC_COLOUR_2;
+            textPrinter.bgColour = TEXT_COLOUR_TRANSPARENT;
+            textPrinter.shadowColour = TEXT_DYNAMIC_COLOUR_4;
 
-            // Update the advancement lines and gray out eliminated trainer names
+            // Update the advancement lines and grey out eliminated trainer names
             for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
             {
                 CopyDomeTrainerName(gDisplayedStringBattle, DOME_TRAINERS[i].trainerId);
@@ -5941,7 +5941,7 @@ static void DecideRoundWinners(u8 roundId)
             }
             // Random part of the formula.
             points1 += (Random() & 0x1F);
-            // Favor trainers with higher id;
+            // Favour trainers with higher id;
             points1 += tournamentId1;
 
             for (monId1 = 0; monId1 < FRONTIER_PARTY_SIZE; monId1++)
@@ -5964,7 +5964,7 @@ static void DecideRoundWinners(u8 roundId)
             }
             // Random part of the formula.
             points2 += (Random() & 0x1F);
-            // Favor trainers with higher id;
+            // Favour trainers with higher id;
             points2 += tournamentId2;
 
             if (points1 > points2)
@@ -5979,7 +5979,7 @@ static void DecideRoundWinners(u8 roundId)
                 DOME_TRAINERS[tournamentId1].eliminatedAt = roundId;
                 gSaveBlock2Ptr->frontier.domeWinningMoves[tournamentId1] = GetWinningMove(tournamentId2, tournamentId1, roundId);
             }
-            // Points are the same, so we favor the one with the higher id.
+            // Points are the same, so we favour the one with the higher id.
             else if (tournamentId1 > tournamentId2)
             {
                 DOME_TRAINERS[tournamentId2].isEliminated = TRUE;

@@ -1,5 +1,5 @@
 # What are AI Flags?
-AI flags alter the behavior of AI controlled trainers.  These flags affect what moves the AI chooses to use, what Pokémon the AI sends out and when they decide to switch, overarching strategic choices the AI prefers to make, and more.
+AI flags alter the behaviour of AI controlled trainers.  These flags affect what moves the AI chooses to use, what Pokémon the AI sends out and when they decide to switch, overarching strategic choices the AI prefers to make, and more.
 
 The AI flags can be found in [`include/constants/battle_ai.h`](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/constants/battle_ai.h). Some flags have their own dedicated functions that affect how the AI scores its options when choosing what to do in battle, and those functions can be found in [`src/battle_ai_main.c`](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/battle_ai_main.c). Other flags are used in conditional checks to gate certain behaviour behind certain flags, which you can typically find by searching the codebase for the flag name and browsing from there.
 

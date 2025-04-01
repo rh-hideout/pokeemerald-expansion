@@ -1065,7 +1065,7 @@ static void AnimEruptionLaunchRock(struct Sprite *sprite)
 
 static u16 GetEruptionLaunchRockInitialYPos(u8 spriteId)
 {
-    s16 y = gSprites[spriteId].y + gSprites[spriteId].y2 + gSprites[spriteId].centerToCornerVecY;
+    s16 y = gSprites[spriteId].y + gSprites[spriteId].y2 + gSprites[spriteId].centreToCornerVecY;
 
     if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
         y += 74;
@@ -1417,9 +1417,9 @@ static void AnimTask_MoveHeatWaveTargets_Step(u8 taskId)
     }
 }
 
-// Used to add a color mask to the battle background.
+// Used to add a colour mask to the battle background.
 // arg 0: opacity
-// arg 1: color code
+// arg 1: colour code
 void AnimTask_BlendBackground(u8 taskId)
 {
     struct BattleAnimBgData animBg;

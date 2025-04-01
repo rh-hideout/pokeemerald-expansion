@@ -59,7 +59,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_CenterRoomWarp"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_CentreRoomWarp"
     },
     {
       "type": "trigger",

@@ -148,7 +148,7 @@ struct ObjectEvent *GetFollowerObject(void);
 void TrySpawnObjectEvents(s16 cameraX, s16 cameraY);
 u8 CreateObjectGraphicsSprite(u16, void (*)(struct Sprite *), s16 x, s16 y, u8 subpriority);
 u8 TrySpawnObjectEvent(u8 localId, u8 mapNum, u8 mapGroup);
-u8 SpawnSpecialObjectEventParameterized(u16 graphicsId, u8 movementBehavior, u8 localId, s16 x, s16 y, u8 elevation);
+u8 SpawnSpecialObjectEventParameterized(u16 graphicsId, u8 movementBehaviour, u8 localId, s16 x, s16 y, u8 elevation);
 u8 SpawnSpecialObjectEvent(struct ObjectEventTemplate *);
 void SetSpritePosToMapCoords(s16 mapX, s16 mapY, s16 *destX, s16 *destY);
 void CameraObjectReset(void);
@@ -497,7 +497,7 @@ u8 GetPlayerRunSlowMovementAction(u32);
 //sideways stairs
 u8 GetSidewaysStairsToRightDirection(s16, s16, u8);
 u8 GetSidewaysStairsToLeftDirection(s16, s16, u8);
-u8 GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, u8 dir, u8 currentBehavior, u8 nextBehavior, u8 collision);
+u8 GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, u8 dir, u8 currentBehaviour, u8 nextBehaviour, u8 collision);
 
 bool8 MovementAction_EmoteX_Step0(struct ObjectEvent *, struct Sprite *);
 bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *, struct Sprite *);

@@ -76,7 +76,7 @@ enum
 enum
 {
     SEARCH_NAME,
-    SEARCH_COLOR,
+    SEARCH_COLOUR,
     SEARCH_TYPE_LEFT,
     SEARCH_TYPE_RIGHT,
     SEARCH_ORDER,
@@ -540,7 +540,7 @@ static void LoadScreenSelectBarMain(u16);
 static void HighlightScreenSelectBarItem(u8, u16);
 static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite);
+static void SpriteCB_SlideCaughtMonToCentre(struct Sprite *sprite);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static void ResetOtherVideoRegisters(u16);
 static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
@@ -668,48 +668,48 @@ static const struct SpriteTemplate sStatBarBgSpriteTemplate =
 };
 enum
 {
-    COLOR_ID_ALPHA,
-    COLOR_ID_BAR_WHITE,
+    COLOUR_ID_ALPHA,
+    COLOUR_ID_BAR_WHITE,
     // These are repeated 6 times
-    COLOR_ID_FILL,
-    COLOR_ID_FILL_SHADOW,
-    COLOR_ID_FONT = 14,
-    COLOR_ID_FONT_SHADOW = 15,
+    COLOUR_ID_FILL,
+    COLOUR_ID_FILL_SHADOW,
+    COLOUR_ID_FONT = 14,
+    COLOUR_ID_FONT_SHADOW = 15,
 };
 enum
 {
-    COLOR_BEST, // Light blue
-    COLOR_VERY_GOOD, // Green
-    COLOR_GOOD, // Light Green
-    COLOR_AVERAGE, // Yellow
-    COLOR_BAD, // Orange
-    COLOR_WORST, // Red
+    COLOUR_BEST, // Light blue
+    COLOUR_VERY_GOOD, // Green
+    COLOUR_GOOD, // Light Green
+    COLOUR_AVERAGE, // Yellow
+    COLOUR_BAD, // Orange
+    COLOUR_WORST, // Red
 };
 static const u8 sStatBarsGfx[] = INCBIN_U8("graphics/pokedex/hgss/stat_bars.4bpp");
 static const u16 sStatBarPalette[16] = {
-    [COLOR_ID_ALPHA] = RGB(0, 0, 10),
-    [COLOR_ID_BAR_WHITE] = RGB_WHITE,
+    [COLOUR_ID_ALPHA] = RGB(0, 0, 10),
+    [COLOUR_ID_BAR_WHITE] = RGB_WHITE,
 
-    [COLOR_ID_FILL + COLOR_BEST * 2] = RGB(2, 25, 25),
-    [COLOR_ID_FILL_SHADOW + COLOR_BEST * 2] = RGB(13, 27, 27),
+    [COLOUR_ID_FILL + COLOUR_BEST * 2] = RGB(2, 25, 25),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_BEST * 2] = RGB(13, 27, 27),
 
-    [COLOR_ID_FILL + COLOR_VERY_GOOD * 2] = RGB(11, 25, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_VERY_GOOD * 2] = RGB(19, 27, 13),
+    [COLOUR_ID_FILL + COLOUR_VERY_GOOD * 2] = RGB(11, 25, 2),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_VERY_GOOD * 2] = RGB(19, 27, 13),
 
-    [COLOR_ID_FILL + COLOR_GOOD * 2] = RGB(22, 25, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_GOOD * 2] = RGB(26, 27, 13),
+    [COLOUR_ID_FILL + COLOUR_GOOD * 2] = RGB(22, 25, 2),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_GOOD * 2] = RGB(26, 27, 13),
 
-    [COLOR_ID_FILL + COLOR_AVERAGE * 2] = RGB(25, 22, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_AVERAGE * 2] = RGB(27, 26, 13),
+    [COLOUR_ID_FILL + COLOUR_AVERAGE * 2] = RGB(25, 22, 2),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_AVERAGE * 2] = RGB(27, 26, 13),
 
-    [COLOR_ID_FILL + COLOR_BAD * 2] = RGB(25, 17, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_BAD * 2] = RGB(27, 22, 13),
+    [COLOUR_ID_FILL + COLOUR_BAD * 2] = RGB(25, 17, 2),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_BAD * 2] = RGB(27, 22, 13),
 
-    [COLOR_ID_FILL + COLOR_WORST * 2] = RGB(25, 4, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_WORST * 2] = RGB(27, 15, 13),
+    [COLOUR_ID_FILL + COLOUR_WORST * 2] = RGB(25, 4, 2),
+    [COLOUR_ID_FILL_SHADOW + COLOUR_WORST * 2] = RGB(27, 15, 13),
 
-    [COLOR_ID_FONT] = RGB_BLACK,
-    [COLOR_ID_FONT_SHADOW] = RGB(22, 22, 22),
+    [COLOUR_ID_FONT] = RGB_BLACK,
+    [COLOUR_ID_FONT_SHADOW] = RGB(22, 22, 22),
 };
 static const struct SpritePalette sStatBarSpritePal[] = //{sStatBarPalette, TAG_STAT_BAR};
 {
@@ -1577,9 +1577,9 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
         .selectionBgY = 2,
         .selectionBgWidth = 12,
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
-        .description = gText_ListByBodyColor,
+        .description = gText_ListByBodyColour,
         .titleBgX = 0,
         .titleBgY = 4,
         .titleBgWidth = 5,
@@ -1647,9 +1647,9 @@ static const u8 sSearchMovementMap_SearchNatDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF,
         0xFF,
-        SEARCH_COLOR
+        SEARCH_COLOUR
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1660,13 +1660,13 @@ static const u8 sSearchMovementMap_SearchNatDex[SEARCH_COUNT][4] =
     {
         0xFF,
         SEARCH_TYPE_RIGHT,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_TYPE_RIGHT] =
     {   SEARCH_TYPE_LEFT,
         0xFF,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_ORDER] =
@@ -1702,7 +1702,7 @@ static const u8 sSearchMovementMap_ShiftNatDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1754,9 +1754,9 @@ static const u8 sSearchMovementMap_SearchHoennDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF,
         0xFF,
-        SEARCH_COLOR
+        SEARCH_COLOUR
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1767,13 +1767,13 @@ static const u8 sSearchMovementMap_SearchHoennDex[SEARCH_COUNT][4] =
     {
         0xFF,
         SEARCH_TYPE_RIGHT,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_TYPE_RIGHT] =
     {   SEARCH_TYPE_LEFT,
         0xFF,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_ORDER] =
@@ -1809,7 +1809,7 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1886,19 +1886,19 @@ static const struct SearchOptionText sDexSearchNameOptions[] =
     {},
 };
 
-static const struct SearchOptionText sDexSearchColorOptions[] =
+static const struct SearchOptionText sDexSearchColourOptions[] =
 {
     {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    [BODY_COLOUR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColourRed},
+    [BODY_COLOUR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColourBlue},
+    [BODY_COLOUR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColourYellow},
+    [BODY_COLOUR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColourGreen},
+    [BODY_COLOUR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColourBlack},
+    [BODY_COLOUR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColourBrown},
+    [BODY_COLOUR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColourPurple},
+    [BODY_COLOUR_GREY + 1]   = {gText_DexEmptyString, gText_DexSearchColourGrey},
+    [BODY_COLOUR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColourWhite},
+    [BODY_COLOUR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColourPink},
     {},
 };
 
@@ -1965,7 +1965,7 @@ static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 static const struct SearchOption sSearchOptions[] =
 {
     [SEARCH_NAME]       = {sDexSearchNameOptions,  6,  7, ARRAY_COUNT(sDexSearchNameOptions) - 1},
-    [SEARCH_COLOR]      = {sDexSearchColorOptions, 8,  9, ARRAY_COUNT(sDexSearchColorOptions) - 1},
+    [SEARCH_COLOUR]      = {sDexSearchColourOptions, 8,  9, ARRAY_COUNT(sDexSearchColourOptions) - 1},
     [SEARCH_TYPE_LEFT]  = {sDexSearchTypeOptions, 10, 11, ARRAY_COUNT(sDexSearchTypeOptions) - 1},
     [SEARCH_TYPE_RIGHT] = {sDexSearchTypeOptions, 12, 13, ARRAY_COUNT(sDexSearchTypeOptions) - 1},
     [SEARCH_ORDER]      = {sDexOrderOptions,       4,  5, ARRAY_COUNT(sDexOrderOptions) - 1},
@@ -2641,22 +2641,22 @@ static void CreatePokedexList(u8 dexMode, u8 order)
 
 static void PrintMonDexNumAndName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
 {
-    u8 color[3];
+    u8 colour[3];
 
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 4, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
+    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 4, (top * 8) + 1, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void PrintMonDexNumAndName_2(u8 windowId, u8 fontId, const u8* str, u8 left, u8 top) //offset for closer numer + text
 {
-    u8 color[3];
+    u8 colour[3];
 
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 13, (top * 8) + 1, 0, 0, color, -1, str);
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
+    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 13, (top * 8) + 1, 0, 0, colour, -1, str);
 }
 
 // u16 ignored is passed but never used
@@ -3546,52 +3546,52 @@ static inline void WritePixel(u8 *dst, u32 x, u32 y, u32 value)
 #define STAT_BAR_X_OFFSET 10
 static void CreateStatBar(u8 *dst, u32 y, u32 width)
 {
-    u32 i, color;
+    u32 i, colour;
 
     switch (width)
     {
     case 0 ... 5:
-        color = COLOR_WORST;
+        colour = COLOUR_WORST;
         break;
     case 6 ... 15:
-        color = COLOR_BAD;
+        colour = COLOUR_BAD;
         break;
     case 16 ... 25:
-        color = COLOR_AVERAGE;
+        colour = COLOUR_AVERAGE;
         break;
     case 26 ... 31:
-        color = COLOR_GOOD;
+        colour = COLOUR_GOOD;
         break;
     case 32 ... 37:
-        color = COLOR_VERY_GOOD;
+        colour = COLOUR_VERY_GOOD;
         break;
     default:
-        color = COLOR_BEST;
+        colour = COLOUR_BEST;
         break;
     }
 
     // white pixes left side
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 0, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 1, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 2, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 3, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 4, COLOR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET, y + 0, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET, y + 1, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET, y + 2, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET, y + 3, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET, y + 4, COLOUR_ID_BAR_WHITE);
 
     // white pixels right side
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 0, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 1, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 2, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 3, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 4, COLOR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 0, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 1, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 2, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 3, COLOUR_ID_BAR_WHITE);
+    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 4, COLOUR_ID_BAR_WHITE);
 
     // Fill
     for (i = 1; i < width - 1; i++)
     {
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 0, COLOR_ID_BAR_WHITE);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 1, COLOR_ID_FILL_SHADOW + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 2, COLOR_ID_FILL + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 3, COLOR_ID_FILL + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 4, COLOR_ID_BAR_WHITE);
+        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 0, COLOUR_ID_BAR_WHITE);
+        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 1, COLOUR_ID_FILL_SHADOW + colour * 2);
+        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 2, COLOUR_ID_FILL + colour * 2);
+        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 3, COLOUR_ID_FILL + colour * 2);
+        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 4, COLOUR_ID_BAR_WHITE);
     }
 }
 static const u8 sBaseStatOffsets[] =
@@ -3990,7 +3990,7 @@ static void Task_LoadAreaScreen(u8 taskId)
         break;
     case 1:
         LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOUR | BGCNT_TXT256x256);
         gMain.state++;
         break;
     case 2:
@@ -4180,10 +4180,10 @@ static void Task_HandleCaughtMonPageInput(u8 taskId)
         BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
         SetSpriteInvisibility(0, TRUE);
         SetSpriteInvisibility(1, TRUE);
-        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
+        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCentre;
         gTasks[taskId].func = Task_ExitCaughtMonPage;
     }
-    // Flicker caught screen color
+    // Flicker caught screen colour
     else if (++gTasks[taskId].tPalTimer & 16)
     {
         if (!HGSS_DARK_MODE)
@@ -4230,7 +4230,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
     }
 }
 
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
+static void SpriteCB_SlideCaughtMonToCentre(struct Sprite *sprite)
 {
     if (sprite->x < 0x78)
         sprite->x += 2;
@@ -4265,58 +4265,58 @@ static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
 //************************************
 static void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(0, 1, left, top, 0, 0, color, -1, str);
+    AddTextPrinterParameterized4(0, 1, left, top, 0, 0, colour, -1, str);
 }
 static void PrintInfoScreenTextWhite(const u8* str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_COLOR_WHITE;
-    color[2] = TEXT_DYNAMIC_COLOR_6;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_COLOUR_WHITE;
+    colour[2] = TEXT_DYNAMIC_COLOUR_6;
 
-    AddTextPrinterParameterized4(0, FONT_NORMAL, left, top, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(0, FONT_NORMAL, left, top, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 static void PrintInfoScreenTextSmall(const u8* str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(0, 0, left, top, 0, 0, color, 0, str);
+    AddTextPrinterParameterized4(0, 0, left, top, 0, 0, colour, 0, str);
 }
 static void UNUSED PrintInfoScreenTextSmallWhite(const u8* str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_COLOR_WHITE;
-    color[2] = TEXT_DYNAMIC_COLOR_6;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_COLOUR_WHITE;
+    colour[2] = TEXT_DYNAMIC_COLOUR_6;
 
-    AddTextPrinterParameterized4(0, 0, left, top, 0, 0, color, 0, str);
+    AddTextPrinterParameterized4(0, 0, left, top, 0, 0, colour, 0, str);
 }
 //Stats screen
 static void PrintStatsScreenTextSmall(u8 windowId, const u8* str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(windowId, 0, left, top, 0, 0, color, 0, str);
+    AddTextPrinterParameterized4(windowId, 0, left, top, 0, 0, colour, 0, str);
 }
 static void PrintStatsScreenTextSmallWhite(u8 windowId, const u8* str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_COLOR_WHITE;
-    color[2] = TEXT_DYNAMIC_COLOR_6;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_COLOUR_WHITE;
+    colour[2] = TEXT_DYNAMIC_COLOUR_6;
 
-    AddTextPrinterParameterized4(windowId, 0, left, top, 0, 0, color, 0, str);
+    AddTextPrinterParameterized4(windowId, 0, left, top, 0, 0, colour, 0, str);
 }
 
 //Type Icon
@@ -4430,7 +4430,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
         description = GetSpeciesPokedexDescription(species);
     else
         description = sExpandedPlaceholder_PokedexDescription;
-    PrintInfoScreenText(description, GetStringCenterAlignXOffset(FONT_NORMAL, description, 0xF0), 93);
+    PrintInfoScreenText(description, GetStringCentreAlignXOffset(FONT_NORMAL, description, 0xF0), 93);
 
     //Type Icon(s)
     if (owned)
@@ -4477,12 +4477,12 @@ static void UNUSED PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top)
 
 static void PrintInfoSubMenuText(u8 windowId, const u8 *str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, left, top, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, left, top, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
@@ -4745,16 +4745,16 @@ static void DestroyCategoryIcon(void)
 //*        STATS                     *
 //*                                  *
 //************************************
-static const u8 sStatsPageNavigationTextColor[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
+static const u8 sStatsPageNavigationTextColour[] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY};
 
 static void StatsPage_PrintNavigationButtons(void)
 {
     u8 x = 9;
     u8 y = 0;
     if (!HGSS_DECAPPED)
-        AddTextPrinterParameterized3(WIN_STATS_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_Stats_Buttons);
+        AddTextPrinterParameterized3(WIN_STATS_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_Stats_Buttons);
     else
-        AddTextPrinterParameterized3(WIN_STATS_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_Stats_Buttons_Decapped);
+        AddTextPrinterParameterized3(WIN_STATS_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_Stats_Buttons_Decapped);
 
     PutWindowTilemap(WIN_STATS_NAVIGATION_BUTTONS);
     CopyWindowToVram(WIN_STATS_NAVIGATION_BUTTONS, 3);
@@ -5919,7 +5919,7 @@ static void Task_ExitStatsScreen(u8 taskId)
 //*        EVOS                      *
 //*                                  *
 //************************************
-static const u8 sEvoFormsPageNavigationTextColor[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
+static const u8 sEvoFormsPageNavigationTextColour[] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_DARK_GREY};
 
 static void EvoFormsPage_PrintNavigationButtons(void)
 {
@@ -5931,25 +5931,25 @@ static void EvoFormsPage_PrintNavigationButtons(void)
         if (sPokedexView->selectedScreen == EVO_SCREEN)
         {
             if (!HGSS_DECAPPED)
-                AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x+9, y, sStatsPageNavigationTextColor, 0, sText_EVO_Buttons_PE);
+                AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x+9, y, sStatsPageNavigationTextColour, 0, sText_EVO_Buttons_PE);
             else
-                AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x+9, y, sStatsPageNavigationTextColor, 0, sText_EVO_Buttons_Decapped_PE);
+                AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x+9, y, sStatsPageNavigationTextColour, 0, sText_EVO_Buttons_Decapped_PE);
         }
         else if (sPokedexView->selectedScreen == FORMS_SCREEN)
         {
             if (sPokedexView->sFormScreenData.inSubmenu)
             {
                 if (!HGSS_DECAPPED)
-                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Submenu_PE);
+                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_FORMS_Buttons_Submenu_PE);
                 else
-                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Submenu_Decapped_PE);
+                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_FORMS_Buttons_Submenu_Decapped_PE);
             }
             else
             {
                 if (!HGSS_DECAPPED)
-                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_PE);
+                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_FORMS_Buttons_PE);
                 else
-                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColor, 0, sText_FORMS_Buttons_Decapped_PE);
+                    AddTextPrinterParameterized3(WIN_NAVIGATION_BUTTONS, 0, x, y, sStatsPageNavigationTextColour, 0, sText_FORMS_Buttons_Decapped_PE);
             }
         }
 
@@ -7250,7 +7250,7 @@ static void Task_LoadSizeScreen(u8 taskId)
 
         StringCopy(string, gText_SizeComparedTo);
         StringAppend(string, gSaveBlock2Ptr->playerName);
-        PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, 0xF0), 0x79);
+        PrintInfoScreenText(string, GetStringCentreAlignXOffset(FONT_NORMAL, string, 0xF0), 0x79);
         gMain.state++;
         break;
     }
@@ -7313,13 +7313,13 @@ static void Task_LoadSizeScreen(u8 taskId)
 
 static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
-    u16 color;
+    u16 colour;
 
     if (cryPlaying)
-        color = RGB(18, 28, 0);
+        colour = RGB(18, 28, 0);
     else
-        color = RGB(15, 21, 0);
-    LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
+        colour = RGB(15, 21, 0);
+    LoadPalette(&colour, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
 }
 
 static void Task_HandleSizeScreenInput(u8 taskId)
@@ -7614,7 +7614,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 //*        Search code               *
 //*                                  *
 //************************************
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColour, u8 type1, u8 type2)
 {
     u16 species;
     u16 i;
@@ -7651,14 +7651,14 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
         sPokedexView->pokemonListCount = resultsCount;
     }
 
-    // Search by body color
-    if (bodyColor != 0xFF)
+    // Search by body colour
+    if (bodyColour != 0xFF)
     {
         for (i = 0, resultsCount = 0; i < sPokedexView->pokemonListCount; i++)
         {
             species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-            if (bodyColor == gSpeciesInfo[species].bodyColor)
+            if (bodyColour == gSpeciesInfo[species].bodyColour)
             {
                 sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
                 resultsCount++;
@@ -7735,12 +7735,12 @@ static u8 LoadSearchMenu(void)
 
 static void PrintSearchText(const u8 *str, u32 x, u32 y)
 {
-    u8 color[3];
+    u8 colour[3];
 
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_DARK_GRAY;
-    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_DARK_GREY;
+    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void ClearSearchMenuRect(u32 x, u32 y, u32 width, u32 height)
@@ -7757,8 +7757,8 @@ static void ClearSearchMenuRect(u32 x, u32 y, u32 width, u32 height)
 #define tScrollOffset_Order     data[5]
 #define tCursorPos_Name         data[6]
 #define tScrollOffset_Name      data[7]
-#define tCursorPos_Color        data[8]
-#define tScrollOffset_Color     data[9]
+#define tCursorPos_Colour        data[8]
+#define tScrollOffset_Colour     data[9]
 #define tCursorPos_TypeLeft     data[10]
 #define tScrollOffset_TypeLeft  data[11]
 #define tCursorPos_TypeRight    data[12]
@@ -8030,11 +8030,11 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
-    u8 bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
+    u8 bodyColour = GetSearchModeSelection(taskId, SEARCH_COLOUR);
     u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
     u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
-    DoPokedexSearch(dexMode, order, abcGroup, bodyColor, type1, type2);
+    DoPokedexSearch(dexMode, order, abcGroup, bodyColour, type1, type2);
     gTasks[taskId].func = Task_WaitAndCompleteSearch;
 }
 
@@ -8229,7 +8229,7 @@ static void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 #define SEARCH_BG_SHIFT                 SEARCH_TOPBAR_SHIFT
 #define SEARCH_BG_CANCEL                SEARCH_TOPBAR_CANCEL
 #define SEARCH_BG_NAME                  (SEARCH_NAME + SEARCH_TOPBAR_COUNT)
-#define SEARCH_BG_COLOR                 (SEARCH_COLOR + SEARCH_TOPBAR_COUNT)
+#define SEARCH_BG_COLOUR                 (SEARCH_COLOUR + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_SELECTION_LEFT   (SEARCH_TYPE_LEFT + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_SELECTION_RIGHT  (SEARCH_TYPE_RIGHT + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_ORDER                 (SEARCH_ORDER + SEARCH_TOPBAR_COUNT)
@@ -8249,7 +8249,7 @@ static void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 d
         SetSearchRectHighlight(highlightFlags, sSearchMenuTopBarItems[searchBg].highlightX, sSearchMenuTopBarItems[searchBg].highlightY, sSearchMenuTopBarItems[searchBg].highlightWidth);
         break;
     case SEARCH_BG_NAME:
-    case SEARCH_BG_COLOR:
+    case SEARCH_BG_COLOUR:
     case SEARCH_BG_ORDER:
     case SEARCH_BG_MODE:
         SetSearchRectHighlight(highlightFlags, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgX, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgY, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgWidth);
@@ -8279,7 +8279,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, FALSE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, FALSE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, FALSE);
@@ -8292,7 +8292,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, FALSE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, TRUE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, TRUE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, TRUE);
@@ -8305,7 +8305,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, FALSE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, TRUE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, TRUE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, TRUE);
@@ -8330,8 +8330,8 @@ static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
     case SEARCH_NAME:
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, FALSE, FALSE);
         break;
-    case SEARCH_COLOR:
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, FALSE, FALSE);
+    case SEARCH_COLOUR:
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, FALSE, FALSE);
         break;
     case SEARCH_TYPE_LEFT:
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, FALSE, FALSE);
@@ -8364,8 +8364,8 @@ static void PrintSelectedSearchParameters(u8 taskId)
     searchParamId = gTasks[taskId].tCursorPos_Name + gTasks[taskId].tScrollOffset_Name;
     PrintSearchText(sDexSearchNameOptions[searchParamId].title, 0x2D, 0x11);
 
-    searchParamId = gTasks[taskId].tCursorPos_Color + gTasks[taskId].tScrollOffset_Color;
-    PrintSearchText(sDexSearchColorOptions[searchParamId].title, 0x2D, 0x21);
+    searchParamId = gTasks[taskId].tCursorPos_Colour + gTasks[taskId].tScrollOffset_Colour;
+    PrintSearchText(sDexSearchColourOptions[searchParamId].title, 0x2D, 0x21);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeLeft + gTasks[taskId].tScrollOffset_TypeLeft;
     PrintSearchText(sDexSearchTypeOptions[searchParamId].title, 0x2D, 0x31);
@@ -8453,7 +8453,7 @@ static u8 GetSearchModeSelection(u8 taskId, u8 option)
             return 0xFF;
         else
             return id;
-    case SEARCH_COLOR:
+    case SEARCH_COLOUR:
         if (id == 0)
             return 0xFF;
         else

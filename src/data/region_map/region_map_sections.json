@@ -794,7 +794,7 @@
       "height": 1
     },
     {
-      "map_section": "MAPSEC_ROUTE_4_POKECENTER",
+      "map_section": "MAPSEC_ROUTE_4_POKECENTRE",
       "name": "ROUTE 4",
       "name_clone": true,
       "x": 0,
@@ -803,7 +803,7 @@
       "height": 1
     },
     {
-      "map_section": "MAPSEC_ROUTE_10_POKECENTER",
+      "map_section": "MAPSEC_ROUTE_10_POKECENTRE",
       "name": "ROUTE 10",
       "name_clone": true,
       "x": 0,

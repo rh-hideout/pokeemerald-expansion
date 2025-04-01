@@ -14,11 +14,11 @@ def extract_palette(path):
     out_path = root + '.pal'
     with open(out_path, 'w', newline='\r\n') as f:
         f.write(PAL_PRELUDE)
-        colors = r.palette()
-        if len(colors) < 16:
-            colors += [(0, 0, 0) for _ in range(16-len(colors))]
-        f.write(f'{len(colors)}\n')
-        for r, g, b in colors:
+        colours = r.palette()
+        if len(colours) < 16:
+            colours += [(0, 0, 0) for _ in range(16-len(colours))]
+        f.write(f'{len(colours)}\n')
+        for r, g, b in colours:
             f.write(f'{r} {g} {b}\n')
 
 

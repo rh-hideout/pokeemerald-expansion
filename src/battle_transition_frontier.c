@@ -24,7 +24,7 @@ typedef bool8 (*TransitionStateFunc)(struct Task *task);
 static void SpriteCB_LogoCircleSlide(struct Sprite *sprite);
 static void SpriteCB_LogoCircleSpiral(struct Sprite *sprite);
 static bool8 WaitForLogoCirclesAnim(struct Task *task);
-static bool8 FadeInCenterLogoCircle(struct Task *task);
+static bool8 FadeInCentreLogoCircle(struct Task *task);
 static bool8 Circles_Init(struct Task *task);
 static bool8 CirclesMeet_CreateSprites(struct Task *task);
 static bool8 CirclesMeet_End(struct Task *task);
@@ -45,8 +45,8 @@ static bool8 CirclesSymmetricSpiralInSeq_End(struct Task *task);
 
 #define PALTAG_LOGO_CIRCLES 0x2E90
 
-static const u32 sLogoCenter_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.4bpp.lz");
-static const u32 sLogoCenter_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.bin.lz");
+static const u32 sLogoCentre_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_centre.4bpp.lz");
+static const u32 sLogoCentre_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_centre.bin.lz");
 static const u32 sLogoCircles_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_circles.4bpp.lz");
 static const u16 sLogo_Pal[] = INCBIN_U16("graphics/battle_transitions/frontier_logo_circles.gbapal");
 
@@ -121,7 +121,7 @@ static const TransitionStateFunc sFrontierCirclesMeet_Funcs[] =
     Circles_Init,
     CirclesMeet_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesMeet_End
 };
 
@@ -130,7 +130,7 @@ static const TransitionStateFunc sFrontierCirclesCross_Funcs[] =
     Circles_Init,
     CirclesCross_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesCross_End
 };
 
@@ -139,7 +139,7 @@ static const TransitionStateFunc sFrontierCirclesAsymmetricSpiral_Funcs[] =
     Circles_Init,
     CirclesAsymmetricSpiral_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesAsymmetricSpiral_End
 };
 
@@ -148,7 +148,7 @@ static const TransitionStateFunc sFrontierCirclesSymmetricSpiral_Funcs[] =
     Circles_Init,
     CirclesSymmetricSpiral_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesSymmetricSpiral_End
 };
 
@@ -157,7 +157,7 @@ static const TransitionStateFunc sFrontierCirclesMeetInSeq_Funcs[] =
     Circles_Init,
     CirclesMeetInSeq_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesMeetInSeq_End
 };
 
@@ -166,7 +166,7 @@ static const TransitionStateFunc sFrontierCirclesCrossInSeq_Funcs[] =
     Circles_Init,
     CirclesCrossInSeq_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesCrossInSeq_End
 };
 
@@ -175,7 +175,7 @@ static const TransitionStateFunc sFrontierCirclesAsymmetricSpiralInSeq_Funcs[] =
     Circles_Init,
     CirclesAsymmetricSpiralInSeq_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesAsymmetricSpiralInSeq_End
 };
 
@@ -184,7 +184,7 @@ static const TransitionStateFunc sFrontierCirclesSymmetricSpiralInSeq_Funcs[] =
     Circles_Init,
     CirclesSymmetricSpiralInSeq_CreateSprites,
     WaitForLogoCirclesAnim,
-    FadeInCenterLogoCircle,
+    FadeInCentreLogoCircle,
     CirclesSymmetricSpiralInSeq_End
 };
 
@@ -221,8 +221,8 @@ static void LoadLogoGfx(void)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sLogoCenter_Gfx, tileset);
-    LZ77UnCompVram(sLogoCenter_Tilemap, tilemap);
+    LZ77UnCompVram(sLogoCentre_Gfx, tileset);
+    LZ77UnCompVram(sLogoCentre_Tilemap, tilemap);
     LoadPalette(sLogo_Pal, BG_PLTT_ID(15), sizeof(sLogo_Pal));
     LoadCompressedSpriteSheet(&sSpriteSheet_LogoCircles);
     LoadSpritePalette(&sSpritePalette_LogoCircles);
@@ -385,7 +385,7 @@ static bool8 Circles_Init(struct Task *task)
     }
 }
 
-static bool8 FadeInCenterLogoCircle(struct Task *task)
+static bool8 FadeInCentreLogoCircle(struct Task *task)
 {
     if (task->tBlend == 0)
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_BG0_ON);

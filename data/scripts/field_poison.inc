@@ -14,12 +14,12 @@ EventScript_FieldWhiteOut::
 	special Script_FadeOutMapMusic
 	waitstate
 	fadescreen FADE_TO_BLACK
-	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, EventScript_SetRespawnLavaridgePkmnCenter
+	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, EventScript_SetRespawnLavaridgePkmnCentre
 	special SetCB2WhiteOut
 	waitstate
 	end
 
-EventScript_SetRespawnLavaridgePkmnCenter::
+EventScript_SetRespawnLavaridgePkmnCentre::
 	setrespawn HEAL_LOCATION_LAVARIDGE_TOWN
 	return
 

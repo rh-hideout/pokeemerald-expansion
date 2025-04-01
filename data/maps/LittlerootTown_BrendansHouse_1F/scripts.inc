@@ -54,7 +54,7 @@ LittlerootTown_BrendansHouse_1F_OnFrame:
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 3, LittlerootTown_BrendansHouse_1F_EventScript_EnterHouseMovingIn
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 5, LittlerootTown_BrendansHouse_1F_EventScript_GoUpstairsToSetClock
 	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 6, LittlerootTown_BrendansHouse_1F_EventScript_PetalburgGymReport
-	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 1, LittlerootTown_BrendansHouse_1F_EventScript_YoureNewNeighbor
+	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 1, LittlerootTown_BrendansHouse_1F_EventScript_YoureNewNeighbour
 	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 3, PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV
 	.2byte 0
 
@@ -88,7 +88,7 @@ LittlerootTown_BrendansHouse_1F_EventScript_PetalburgGymReport::
 	goto PlayersHouse_1F_EventScript_PetalburgGymReportMale
 	end
 
-LittlerootTown_BrendansHouse_1F_EventScript_YoureNewNeighbor::
+LittlerootTown_BrendansHouse_1F_EventScript_YoureNewNeighbour::
 	lockall
 	playse SE_PIN
 	applymovement LOCALID_RIVAL_MOM, Common_Movement_ExclamationMark
@@ -99,7 +99,7 @@ LittlerootTown_BrendansHouse_1F_EventScript_YoureNewNeighbor::
 	applymovement LOCALID_RIVAL_MOM, LittlerootTown_BrendansHouse_1F_Movement_RivalMomApproach
 	waitmovement 0
 	special GetRivalSonDaughterString
-	msgbox RivalsHouse_1F_Text_OhYoureTheNewNeighbor, MSGBOX_DEFAULT
+	msgbox RivalsHouse_1F_Text_OhYoureTheNewNeighbour, MSGBOX_DEFAULT
 	setflag FLAG_MET_RIVAL_MOM
 	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 2
 	releaseall
@@ -423,16 +423,16 @@ PlayersHouse_1F_Text_LatiEmergencyNewsFlash:
 	.string "We bring you this emergency\n"
 	.string "news flash!\p"
 	.string "In various HOENN locales, there have\n"
-	.string "been reports of a BZZT…colored\l"
+	.string "been reports of a BZZT…coloured\l"
 	.string "POKéMON in flight.\p"
 	.string "The identity of this POKéMON is\n"
 	.string "currently unknown.\p"
 	.string "We now return you to the regular\n"
 	.string "movie program.$"
 
-PlayersHouse_1F_Text_WhatColorDidTheySay:
+PlayersHouse_1F_Text_WhatColourDidTheySay:
 	.string "MOM: {PLAYER}, did you catch that?\p"
-	.string "What color did the announcer say\n"
+	.string "What colour did the announcer say\n"
 	.string "that POKéMON was?$"
 
 PlayersHouse_1F_Text_StillUnknownPokemon:

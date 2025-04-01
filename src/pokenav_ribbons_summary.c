@@ -805,14 +805,14 @@ static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *menu)
 
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *menu)
 {
-    u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+    u8 colour[] = {TEXT_COLOUR_RED, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY};
 
     ConvertIntToDecimalStringN(gStringVar1, GetCurrMonRibbonCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_RibbonsF700);
     FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
-    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, color, TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, colour, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
 }
 
@@ -820,14 +820,14 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
 {
     s32 i;
     u32 ribbonId = GetRibbonId();
-    u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+    u8 colour[] = {TEXT_COLOUR_RED, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY};
 
     FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
     if (ribbonId < FIRST_GIFT_RIBBON)
     {
         // Print normal ribbon name/description
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, color, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, colour, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
     }
     else
     {
@@ -843,7 +843,7 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
         // Print gift ribbon name/description
         ribbonId--;
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, color, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, colour, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
     }
 
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
@@ -867,8 +867,8 @@ static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *men
     PrintRibbbonsSummaryMonInfo(menu);
 }
 
-static const u8 sMaleIconString[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_RED}{WHITE}{GREEN}♂{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
-static const u8 sFemaleIconString[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_GREEN}{WHITE}{BLUE}♀{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
+static const u8 sMaleIconString[] = _("{COLOUR_HIGHLIGHT_SHADOW}{LIGHT_RED}{WHITE}{GREEN}♂{COLOUR_HIGHLIGHT_SHADOW}{DARK_GREY}{WHITE}{LIGHT_GREY}");
+static const u8 sFemaleIconString[] = _("{COLOUR_HIGHLIGHT_SHADOW}{LIGHT_GREEN}{WHITE}{BLUE}♀{COLOUR_HIGHLIGHT_SHADOW}{DARK_GREY}{WHITE}{LIGHT_GREY}");
 static const u8 sGenderlessIconString[] = _("{UNK_SPACER}");
 
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
@@ -935,7 +935,7 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
     txtPtr = ConvertIntToDecimalStringN(gStringVar1, id, STR_CONV_MODE_RIGHT_ALIGN, 3);
     *(txtPtr++) = CHAR_SLASH;
     ConvertIntToDecimalStringN(txtPtr, count, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, 56);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, gStringVar1, 56);
     AddTextPrinterParameterized(menu->listIdxWindowId, FONT_NORMAL, gStringVar1, x, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(menu->listIdxWindowId, COPYWIN_GFX);
 }

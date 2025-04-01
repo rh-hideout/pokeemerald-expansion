@@ -264,16 +264,16 @@ const struct Decoration gDecorations[] =
         .tiles = DecorGfx_PRETTY_FLOWERS,
     },
 
-    [DECOR_COLORFUL_PLANT] =
+    [DECOR_COLOURFUL_PLANT] =
     {
-        .id = DECOR_COLORFUL_PLANT,
-        .name = _("COLORFUL PLANT"),
+        .id = DECOR_COLOURFUL_PLANT,
+        .name = _("COLOURFUL PLANT"),
         .permission = DECORPERM_BEHIND_FLOOR,
         .shape = DECORSHAPE_2x2,
         .category = DECORCAT_PLANT,
         .price = 5000,
-        .description = DecorDesc_COLORFUL_PLANT,
-        .tiles = DecorGfx_COLORFUL_PLANT,
+        .description = DecorDesc_COLOURFUL_PLANT,
+        .tiles = DecorGfx_COLOURFUL_PLANT,
     },
 
     [DECOR_BIG_PLANT] =

@@ -202,7 +202,7 @@ static const u16 *const *const sPrizeListSets[] =
 };
 
 static const u16 sEReader_Pal[] = INCBIN_U16("graphics/trainer_hill/ereader.gbapal");
-static const u8 sRecordWinColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+static const u8 sRecordWinColours[] = {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY};
 
 static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_MODES] =
 {
@@ -623,13 +623,13 @@ void PrintOnTrainerHillRecordsWindow(void)
 
     SetUpDataStruct();
     FillWindowPixelBuffer(0, PIXEL_FILL(0));
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gText_TimeBoard, 0xD0);
-    AddTextPrinterParameterized3(0, FONT_NORMAL, x, 2, sRecordWinColors, TEXT_SKIP_DRAW, gText_TimeBoard);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, gText_TimeBoard, 0xD0);
+    AddTextPrinterParameterized3(0, FONT_NORMAL, x, 2, sRecordWinColours, TEXT_SKIP_DRAW, gText_TimeBoard);
 
     y = 18;
     for (i = 0; i < NUM_TRAINER_HILL_MODES; i++)
     {
-        AddTextPrinterParameterized3(0, FONT_NORMAL, 0, y, sRecordWinColors, TEXT_SKIP_DRAW, sModeStrings[i]);
+        AddTextPrinterParameterized3(0, FONT_NORMAL, 0, y, sRecordWinColours, TEXT_SKIP_DRAW, sModeStrings[i]);
         y += 15;
         total = GetTimerValue(&gSaveBlock1Ptr->trainerHillTimes[i]);
         minutes = total / (60 * 60);
@@ -642,7 +642,7 @@ void PrintOnTrainerHillRecordsWindow(void)
         ConvertIntToDecimalStringN(gStringVar3, secondsFraction, STR_CONV_MODE_LEADING_ZEROS, 2);
         StringExpandPlaceholders(StringCopy(gStringVar4, gText_TimeCleared), gText_XMinYDotZSec);
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 0xD0);
-        AddTextPrinterParameterized3(0, FONT_NORMAL, x, y, sRecordWinColors, TEXT_SKIP_DRAW, gStringVar4);
+        AddTextPrinterParameterized3(0, FONT_NORMAL, x, y, sRecordWinColours, TEXT_SKIP_DRAW, gStringVar4);
         y += 17;
     }
 

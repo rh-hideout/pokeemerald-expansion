@@ -57,7 +57,7 @@ static const struct BardSoundTemplate sBardSoundTemplates_Trainer[][MAX_BARD_SOU
         NULL_BARD_SOUND,
         NULL_BARD_SOUND,
     },
-    [EC_INDEX(EC_WORD_CENTER)] = {
+    [EC_INDEX(EC_WORD_CENTRE)] = {
         { .songId = PHONEME_ID(PH_DRESS_BLEND) },
         { .songId = PHONEME_ID(PH_NURSE_BLEND) },
         PREV_BARD_SOUND,

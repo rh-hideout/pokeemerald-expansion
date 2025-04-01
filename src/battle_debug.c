@@ -828,7 +828,7 @@ static const bool8 sHasChangeableEntries[LIST_ITEM_COUNT] =
     [LIST_ITEM_STAT_STAGES] = TRUE,
 };
 
-static const u16 sBgColor[] = {RGB_WHITE};
+static const u16 sBgColour[] = {RGB_WHITE};
 
 // this file's functions
 static void Task_DebugMenuFadeOut(u8 taskId);
@@ -915,7 +915,7 @@ void CB2_BattleDebugMenu(void)
         gMain.state++;
         break;
     case 3:
-        LoadPalette(sBgColor, 0, 2);
+        LoadPalette(sBgColour, 0, 2);
         LoadPalette(GetOverworldTextboxPalettePtr(), 0xf0, 16);
         gMain.state++;
         break;
@@ -1657,9 +1657,9 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
     printer.unk = 0;
     printer.letterSpacing = 0;
     printer.lineSpacing = 1;
-    printer.fgColor = 2;
-    printer.bgColor = 1;
-    printer.shadowColor = 3;
+    printer.fgColour = 2;
+    printer.bgColour = 1;
+    printer.shadowColour = 3;
     printer.x = sSecondaryListTemplate.item_X;
     printer.currentX = sSecondaryListTemplate.item_X;
     printer.currentChar = text;

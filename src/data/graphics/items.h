@@ -134,7 +134,7 @@ const u32 gItemIcon_Antidote[] = INCBIN_U32("graphics/items/icons/antidote.4bpp.
 const u32 gItemIconPalette_Antidote[] = INCBIN_U32("graphics/items/icon_palettes/antidote.gbapal.lz");
 
 const u32 gItemIcon_StatusHeal[] = INCBIN_U32("graphics/items/icons/status_heal.4bpp.lz");
-const u32 gItemIconPalette_ParalyzeHeal[] = INCBIN_U32("graphics/items/icon_palettes/paralyze_heal.gbapal.lz");
+const u32 gItemIconPalette_ParalyseHeal[] = INCBIN_U32("graphics/items/icon_palettes/paralyse_heal.gbapal.lz");
 
 const u32 gItemIconPalette_BurnHeal[] = INCBIN_U32("graphics/items/icon_palettes/burn_heal.gbapal.lz");
 
@@ -512,8 +512,8 @@ const u32 gItemIconPalette_DyniteOre[] = INCBIN_U32("graphics/items/icon_palette
 const u32 gItemIcon_OrangeMail[] = INCBIN_U32("graphics/items/icons/orange_mail.4bpp.lz");
 const u32 gItemIconPalette_OrangeMail[] = INCBIN_U32("graphics/items/icon_palettes/orange_mail.gbapal.lz");
 
-const u32 gItemIcon_HarborMail[] = INCBIN_U32("graphics/items/icons/harbor_mail.4bpp.lz");
-const u32 gItemIconPalette_HarborMail[] = INCBIN_U32("graphics/items/icon_palettes/harbor_mail.gbapal.lz");
+const u32 gItemIcon_HarbourMail[] = INCBIN_U32("graphics/items/icons/harbour_mail.4bpp.lz");
+const u32 gItemIconPalette_HarbourMail[] = INCBIN_U32("graphics/items/icon_palettes/harbour_mail.gbapal.lz");
 
 const u32 gItemIcon_GlitterMail[] = INCBIN_U32("graphics/items/icons/glitter_mail.4bpp.lz");
 const u32 gItemIconPalette_GlitterMail[] = INCBIN_U32("graphics/items/icon_palettes/glitter_mail.gbapal.lz");
@@ -807,7 +807,7 @@ const u32 gItemIcon_RustedSword[] = INCBIN_U32("graphics/items/icons/rusted_swor
 const u32 gItemIcon_RustedShield[] = INCBIN_U32("graphics/items/icons/rusted_shield.4bpp.lz");
 const u32 gItemIconPalette_RustedWeapons[] = INCBIN_U32("graphics/items/icon_palettes/rusted_weapons.gbapal.lz");
 
-// Colored Orbs
+// Coloured Orbs
 
 const u32 gItemIcon_RedOrb[] = INCBIN_U32("graphics/items/icons/red_orb.4bpp.lz");
 const u32 gItemIconPalette_RedOrb[] = INCBIN_U32("graphics/items/icon_palettes/red_orb.gbapal.lz");
@@ -1766,8 +1766,8 @@ const u32 gItemIconPalette_GlimmeringCharm[] = INCBIN_U32("graphics/items/icon_p
 
 // Form-changing Key Items
 
-const u32 gItemIcon_RotomCatalog[] = INCBIN_U32("graphics/items/icons/rotom_catalog.4bpp.lz");
-const u32 gItemIconPalette_RotomCatalog[] = INCBIN_U32("graphics/items/icon_palettes/rotom_catalog.gbapal.lz");
+const u32 gItemIcon_RotomCatalogue[] = INCBIN_U32("graphics/items/icons/rotom_catalogue.4bpp.lz");
+const u32 gItemIconPalette_RotomCatalogue[] = INCBIN_U32("graphics/items/icon_palettes/rotom_catalogue.gbapal.lz");
 
 const u32 gItemIcon_Gracidea[] = INCBIN_U32("graphics/items/icons/gracidea.4bpp.lz");
 const u32 gItemIconPalette_Gracidea[] = INCBIN_U32("graphics/items/icon_palettes/gracidea.gbapal.lz");

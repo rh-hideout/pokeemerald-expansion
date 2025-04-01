@@ -411,7 +411,7 @@ void BlitBitmapRectToWindow(u32 windowId, const u8 *pixels, u16 srcX, u16 srcY, 
     BlitBitmapRect4Bit(&sourceRect, &destRect, srcX, srcY, destX, destY, rectWidth, rectHeight, 0);
 }
 
-static void UNUSED BlitBitmapRectToWindowWithColorKey(u32 windowId, const u8 *pixels, u16 srcX, u16 srcY, u16 srcWidth, int srcHeight, u16 destX, u16 destY, u16 rectWidth, u16 rectHeight, u8 colorKey)
+static void UNUSED BlitBitmapRectToWindowWithColourKey(u32 windowId, const u8 *pixels, u16 srcX, u16 srcY, u16 srcWidth, int srcHeight, u16 destX, u16 destY, u16 rectWidth, u16 rectHeight, u8 colourKey)
 {
     struct Bitmap sourceRect;
     struct Bitmap destRect;
@@ -424,7 +424,7 @@ static void UNUSED BlitBitmapRectToWindowWithColorKey(u32 windowId, const u8 *pi
     destRect.width = 8 * gWindows[windowId].window.width;
     destRect.height = 8 * gWindows[windowId].window.height;
 
-    BlitBitmapRect4Bit(&sourceRect, &destRect, srcX, srcY, destX, destY, rectWidth, rectHeight, colorKey);
+    BlitBitmapRect4Bit(&sourceRect, &destRect, srcX, srcY, destX, destY, rectWidth, rectHeight, colourKey);
 }
 
 void FillWindowPixelRect(u32 windowId, u8 fillValue, u16 x, u16 y, u16 width, u16 height)
@@ -446,7 +446,7 @@ void CopyToWindowPixelBuffer(u32 windowId, const void *src, u16 size, u16 tileOf
         LZ77UnCompWram(src, gWindows[windowId].tileData + (32 * tileOffset));
 }
 
-// Sets all pixels within the window to the fillValue color.
+// Sets all pixels within the window to the fillValue colour.
 void FillWindowPixelBuffer(u32 windowId, u8 fillValue)
 {
     int fillSize = gWindows[windowId].window.width * gWindows[windowId].window.height;

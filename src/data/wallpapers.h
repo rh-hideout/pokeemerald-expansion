@@ -12,7 +12,7 @@ enum {
     WALLPAPER_RIVER,
     WALLPAPER_SKY,
     WALLPAPER_POLKADOT,
-    WALLPAPER_POKECENTER,
+    WALLPAPER_POKECENTRE,
     WALLPAPER_MACHINE,
     WALLPAPER_PLAIN,
     WALLPAPER_FRIENDS, // The one received as a gift from Walda's parents.
@@ -123,13 +123,13 @@ static const u16 sWallpaperPalettes_PolkaDot[][16] =
 static const u32 sWallpaperTiles_PolkaDot[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/polkadot/tiles.4bpp.lz");
 static const u32 sWallpaperTilemap_PolkaDot[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/polkadot/tilemap.bin.lz");
 
-static const u16 sWallpaperPalettes_Pokecenter[][16] =
+static const u16 sWallpaperPalettes_Pokecentre[][16] =
 {
-    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecenter/frame.gbapal"),
-    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecenter/bg.gbapal"),
+    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecentre/frame.gbapal"),
+    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecentre/bg.gbapal"),
 };
-static const u32 sWallpaperTiles_Pokecenter[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecenter/tiles.4bpp.lz");
-static const u32 sWallpaperTilemap_Pokecenter[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecenter/tilemap.bin.lz");
+static const u32 sWallpaperTiles_Pokecentre[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecentre/tiles.4bpp.lz");
+static const u32 sWallpaperTilemap_Pokecentre[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecentre/tilemap.bin.lz");
 
 static const u16 sWallpaperPalettes_Machine[][16] =
 {
@@ -150,8 +150,8 @@ static const u32 sWallpaperTilemap_Plain[] = INCBIN_U32("graphics/pokemon_storag
 // 12x18 tilemap
 static const u32 sWallpaperTilemap_Unused[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/unused.bin");
 
-// Shadow color, text color
-static const u16 sBoxTitleColors[WALLPAPER_COUNT][2] =
+// Shadow colour, text colour
+static const u16 sBoxTitleColours[WALLPAPER_COUNT][2] =
 {
     [WALLPAPER_FOREST]     = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_CITY]       = {RGB(7, 7, 7), RGB_WHITE},
@@ -166,7 +166,7 @@ static const u16 sBoxTitleColors[WALLPAPER_COUNT][2] =
     [WALLPAPER_RIVER]      = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_SKY]        = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_POLKADOT]   = {RGB(7, 7, 7), RGB_WHITE},
-    [WALLPAPER_POKECENTER] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_POKECENTRE] = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_MACHINE]    = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_PLAIN]      = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_FRIENDS]    = {RGB(7, 7, 7), RGB_WHITE}
@@ -191,7 +191,7 @@ static const struct Wallpaper sWallpapers[WALLPAPER_COUNT - 1] =
     [WALLPAPER_RIVER]      = WALLPAPER_ENTRY(River),
     [WALLPAPER_SKY]        = WALLPAPER_ENTRY(Sky),
     [WALLPAPER_POLKADOT]   = WALLPAPER_ENTRY(PolkaDot),
-    [WALLPAPER_POKECENTER] = WALLPAPER_ENTRY(Pokecenter),
+    [WALLPAPER_POKECENTRE] = WALLPAPER_ENTRY(Pokecentre),
     [WALLPAPER_MACHINE]    = WALLPAPER_ENTRY(Machine),
     [WALLPAPER_PLAIN]      = WALLPAPER_ENTRY(Plain),
 };
@@ -230,13 +230,13 @@ static const u16 sWallpaperPalettes_Block[][16] =
 static const u32 sWallpaperTiles_Block[]   = INCBIN_U32("graphics/pokemon_storage/wallpapers/block/tiles.4bpp.lz");
 static const u32 sWallpaperTilemap_Block[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/block/tilemap.bin.lz");
 
-static const u16 sWallpaperPalettes_Pokecenter2[][16] =
+static const u16 sWallpaperPalettes_Pokecentre2[][16] =
 {
-    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecenter2/bg.gbapal"),
-    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecenter2/bg.gbapal"),
+    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecentre2/bg.gbapal"),
+    INCBIN_U16("graphics/pokemon_storage/wallpapers/pokecentre2/bg.gbapal"),
 };
-static const u32 sWallpaperTiles_Pokecenter2[]   = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecenter2/tiles.4bpp.lz");
-static const u32 sWallpaperTilemap_Pokecenter2[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecenter2/tilemap.bin.lz");
+static const u32 sWallpaperTiles_Pokecentre2[]   = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecentre2/tiles.4bpp.lz");
+static const u32 sWallpaperTilemap_Pokecentre2[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/pokecentre2/tilemap.bin.lz");
 
 static const u16 sWallpaperPalettes_Frame[][16] =
 {
@@ -349,7 +349,7 @@ static const struct Wallpaper sWaldaWallpapers[] =
     WALLPAPER_ENTRY(Diagonal),
     WALLPAPER_ENTRY(Block),
     WALLPAPER_ENTRY_G(Ribbon),
-    WALLPAPER_ENTRY(Pokecenter2),
+    WALLPAPER_ENTRY(Pokecentre2),
     WALLPAPER_ENTRY(Frame),
     WALLPAPER_ENTRY(Blank),
     WALLPAPER_ENTRY(Circles),

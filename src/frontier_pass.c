@@ -30,10 +30,10 @@
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"
 
-// gFrontierPassBg_Pal has 8*16 colors, but they attempt to load 13*16 colors.
+// gFrontierPassBg_Pal has 8*16 colours, but they attempt to load 13*16 colours.
 // As a result it goes out of bounds and interprets 160 bytes of whatever comes
 // after gFrontierPassBg_Pal (by default, gFrontierPassBg_Gfx) as a palette.
-// Nothing uses these colors (except the Trainer Card, which correctly writes them)
+// Nothing uses these colours (except the Trainer Card, which correctly writes them)
 // so in practice this bug has no effect on the game.
 #ifdef BUGFIX
 #define NUM_BG_PAL_SLOTS 8
@@ -329,11 +329,11 @@ static const struct WindowTemplate sMapWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-static const u8 sTextColors[][3] =
+static const u8 sTextColours[][3] =
 {
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_BLUE},
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_RED, TEXT_COLOR_LIGHT_RED},
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_DARK_GREY, TEXT_COLOUR_LIGHT_GREY},
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_WHITE, TEXT_COLOUR_LIGHT_BLUE},
+    {TEXT_COLOUR_TRANSPARENT, TEXT_COLOUR_RED, TEXT_COLOUR_LIGHT_RED},
 };
 
 struct
@@ -1160,16 +1160,16 @@ static void ShowAndPrintWindows(void)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gText_SymbolsEarned, 96);
-    AddTextPrinterParameterized3(WINDOW_EARNED_SYMBOLS, FONT_NORMAL, x, 5, sTextColors[0], 0, gText_SymbolsEarned);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, gText_SymbolsEarned, 96);
+    AddTextPrinterParameterized3(WINDOW_EARNED_SYMBOLS, FONT_NORMAL, x, 5, sTextColours[0], 0, gText_SymbolsEarned);
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gText_BattleRecord, 96);
-    AddTextPrinterParameterized3(WINDOW_BATTLE_RECORD, FONT_NORMAL, x, 5, sTextColors[0], 0, gText_BattleRecord);
+    x = GetStringCentreAlignXOffset(FONT_NORMAL, gText_BattleRecord, 96);
+    AddTextPrinterParameterized3(WINDOW_BATTLE_RECORD, FONT_NORMAL, x, 5, sTextColours[0], 0, gText_BattleRecord);
 
-    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, 5, 4, sTextColors[0], 0, gText_BattlePoints);
+    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, 5, 4, sTextColours[0], 0, gText_BattlePoints);
     ConvertIntToDecimalStringN(gStringVar4, sPassData->battlePoints, STR_CONV_MODE_LEFT_ALIGN, 5);
     x = GetStringRightAlignXOffset(FONT_SMALL_NARROW, gStringVar4, 91);
-    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, x, 16, sTextColors[0], 0, gStringVar4);
+    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, x, 16, sTextColours[0], 0, gStringVar4);
 
     sPassData->cursorArea = GetCursorAreaFromCoords(sPassData->cursorX - 5, sPassData->cursorY + 5);
     sPassData->previousCursorArea = CURSOR_AREA_NOTHING;
@@ -1186,9 +1186,9 @@ static void PrintAreaDescription(u8 cursorArea)
     FillWindowPixelBuffer(WINDOW_DESCRIPTION, PIXEL_FILL(0));
 
     if (cursorArea == CURSOR_AREA_RECORD && !sPassData->hasBattleRecord)
-        AddTextPrinterParameterized3(WINDOW_DESCRIPTION, FONT_NORMAL, 2, 0, sTextColors[1], 0, sPassAreaDescriptions[CURSOR_AREA_NOTHING]);
+        AddTextPrinterParameterized3(WINDOW_DESCRIPTION, FONT_NORMAL, 2, 0, sTextColours[1], 0, sPassAreaDescriptions[CURSOR_AREA_NOTHING]);
     else if (cursorArea != CURSOR_AREA_NOTHING)
-        AddTextPrinterParameterized3(WINDOW_DESCRIPTION, FONT_NORMAL, 2, 0, sTextColors[1], 0, sPassAreaDescriptions[cursorArea]);
+        AddTextPrinterParameterized3(WINDOW_DESCRIPTION, FONT_NORMAL, 2, 0, sTextColours[1], 0, sPassAreaDescriptions[cursorArea]);
 
     CopyWindowToVram(WINDOW_DESCRIPTION, COPYWIN_FULL);
     CopyBgTilemapBufferToVram(0);
@@ -1725,12 +1725,12 @@ static void PrintOnFrontierMap(void)
     for (i = 0; i < NUM_FRONTIER_FACILITIES; i++)
     {
         if (i == sMapData->cursorPos)
-            AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (i * 16) + 1, sTextColors[2], 0, sMapLandmarks[i].name);
+            AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (i * 16) + 1, sTextColours[2], 0, sMapLandmarks[i].name);
         else
-            AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (i * 16) + 1, sTextColors[1], 0, sMapLandmarks[i].name);
+            AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (i * 16) + 1, sTextColours[1], 0, sMapLandmarks[i].name);
     }
 
-    AddTextPrinterParameterized3(MAP_WINDOW_DESCRIPTION, FONT_NORMAL, 4, 0, sTextColors[0], 0, sMapLandmarks[sMapData->cursorPos].description);
+    AddTextPrinterParameterized3(MAP_WINDOW_DESCRIPTION, FONT_NORMAL, 4, 0, sTextColours[0], 0, sMapLandmarks[sMapData->cursorPos].description);
 
     for (i = 0; i < MAP_WINDOW_COUNT; i++)
         CopyWindowToVram(i, COPYWIN_FULL);
@@ -1753,8 +1753,8 @@ static void HandleFrontierMapCursorMove(u8 direction)
         sMapData->cursorPos = (oldCursorPos + 1) % NUM_FRONTIER_FACILITIES;
     }
 
-    AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (oldCursorPos * 16) + 1, sTextColors[1], 0, sMapLandmarks[oldCursorPos].name);
-    AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (sMapData->cursorPos * 16) + 1, sTextColors[2], 0, sMapLandmarks[sMapData->cursorPos].name);
+    AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (oldCursorPos * 16) + 1, sTextColours[1], 0, sMapLandmarks[oldCursorPos].name);
+    AddTextPrinterParameterized3(MAP_WINDOW_NAME, FONT_NARROW, 4, (sMapData->cursorPos * 16) + 1, sTextColours[2], 0, sMapLandmarks[sMapData->cursorPos].name);
 
     sMapData->cursorSprite->y = (sMapData->cursorPos * 16) + 8;
 
@@ -1762,7 +1762,7 @@ static void HandleFrontierMapCursorMove(u8 direction)
     sMapData->mapIndicatorSprite->x = sMapLandmarks[sMapData->cursorPos].x;
     sMapData->mapIndicatorSprite->y = sMapLandmarks[sMapData->cursorPos].y;
     FillWindowPixelBuffer(MAP_WINDOW_DESCRIPTION, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(MAP_WINDOW_DESCRIPTION, FONT_NORMAL, 4, 0, sTextColors[0], 0, sMapLandmarks[sMapData->cursorPos].description);
+    AddTextPrinterParameterized3(MAP_WINDOW_DESCRIPTION, FONT_NORMAL, 4, 0, sTextColours[0], 0, sMapLandmarks[sMapData->cursorPos].description);
 
     for (i = 0; i < MAP_WINDOW_COUNT; i++)
         CopyWindowToVram(i, COPYWIN_FULL);

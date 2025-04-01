@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
     }
 }
 
-SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/paralyzed")
+SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/paralysed")
 {
     u32 status;
     u16 item;
@@ -182,7 +182,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/p
             MESSAGE("Wobbuffet thawed out!");
         }
         else if (status == STATUS1_PARALYSIS) {
-            MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+            MESSAGE("Wobbuffet couldn't move because it's paralysed!");
         }
         else {
             MESSAGE("Wobbuffet is fast asleep.");
@@ -231,7 +231,7 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
             break;
         case ITEM_LIGHT_BALL:
             {
-                MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+                MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
                 STATUS_ICON(opponent, STATUS1_PARALYSIS);
             }
             break;
@@ -291,7 +291,7 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
         case ITEM_LIGHT_BALL:
             {
                 NONE_OF {
-                    MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+                    MESSAGE("The opposing Wobbuffet is paralysed, so it may be unable to move!");
                     STATUS_ICON(opponent, STATUS1_PARALYSIS);
                 }
                 MESSAGE("The Light Ball was used up…");

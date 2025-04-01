@@ -491,8 +491,8 @@ extern const u8 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon[];
 // General
 static const u8 sDebugText_True[] =          _("TRUE");
 static const u8 sDebugText_False[] =         _("FALSE");
-static const u8 sDebugText_Colored_True[] =  _("{COLOR GREEN}TRUE");
-static const u8 sDebugText_Colored_False[] = _("{COLOR RED}FALSE");
+static const u8 sDebugText_Coloured_True[] =  _("{COLOUR GREEN}TRUE");
+static const u8 sDebugText_Coloured_False[] = _("{COLOUR RED}FALSE");
 static const u8 sDebugText_Dashes[] =        _("---");
 static const u8 sDebugText_Empty[] =         _("");
 static const u8 sDebugText_Continue[] =      _("Continue…{CLEAR_TO 110}{RIGHT_ARROW}");
@@ -1259,8 +1259,8 @@ static void Debug_InitDebugBattleData(void)
 
 static void Debug_GenerateListMenuNames(u32 totalItems)
 {
-    const u8 sColor_Red[] = _("{COLOR RED}");
-    const u8 sColor_Green[] = _("{COLOR GREEN}");
+    const u8 sColour_Red[] = _("{COLOUR RED}");
+    const u8 sColour_Green[] = _("{COLOUR GREEN}");
     u32 i, flagResult = 0;
     u8 const *name = NULL;
 
@@ -1307,13 +1307,13 @@ static void Debug_GenerateListMenuNames(u32 totalItems)
             }
             else if (flagResult)
             {
-                StringCopy(gStringVar1, sColor_Green);
+                StringCopy(gStringVar1, sColour_Green);
                 StringExpandPlaceholders(gStringVar4, name);
                 StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
             }
             else
             {
-                StringCopy(gStringVar1, sColor_Red);
+                StringCopy(gStringVar1, sColour_Red);
                 StringExpandPlaceholders(gStringVar4, name);
                 StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
             }
@@ -1849,7 +1849,7 @@ static void DebugAction_Util_Warp_SelectWarp(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         gTasks[taskId].tWarp = gTasks[taskId].tInput;
-        //If there's no warp with the number available, warp to the center of the map.
+        //If there's no warp with the number available, warp to the centre of the map.
         SetWarpDestinationToMapWarp(gTasks[taskId].tMapGroup, gTasks[taskId].tMapNum, gTasks[taskId].tWarp);
         DoWarp();
         ResetInitialPlayerAvatarState();
@@ -3831,7 +3831,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_VICTORY_WILD) \
     X(MUS_VICTORY_GYM_LEADER) \
     X(MUS_VICTORY_LEAGUE) \
-    X(MUS_C_COMM_CENTER) \
+    X(MUS_C_COMM_CENTRE) \
     X(MUS_GSC_PEWTER) \
     X(MUS_C_VS_LEGEND_BEAST) \
     X(MUS_ROUTE101) \
@@ -3875,7 +3875,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_ENCOUNTER_RICH) \
     X(MUS_VERDANTURF) \
     X(MUS_RUSTBORO) \
-    X(MUS_POKE_CENTER) \
+    X(MUS_POKE_CENTRE) \
     X(MUS_ROUTE104) \
     X(MUS_ROUTE119) \
     X(MUS_CYCLING) \
@@ -3990,7 +3990,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_RG_PALLET) \
     X(MUS_RG_OAK_LAB) \
     X(MUS_RG_OAK) \
-    X(MUS_RG_POKE_CENTER) \
+    X(MUS_RG_POKE_CENTRE) \
     X(MUS_RG_SS_ANNE) \
     X(MUS_RG_SURF) \
     X(MUS_RG_POKE_TOWER) \
@@ -4015,7 +4015,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_RG_NEW_GAME_EXIT) \
     X(MUS_RG_POKE_JUMP) \
     X(MUS_RG_UNION_ROOM) \
-    X(MUS_RG_NET_CENTER) \
+    X(MUS_RG_NET_CENTRE) \
     X(MUS_RG_MYSTERY_GIFT) \
     X(MUS_RG_BERRY_PICK) \
     X(MUS_RG_SEVII_CAVE) \

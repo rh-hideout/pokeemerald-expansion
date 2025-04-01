@@ -1,6 +1,6 @@
 This is a modified version of [the original tutorial about adding new Pokémon species available in Pokeemerald's wiki](https://github.com/pret/pokeemerald/wiki/How-to-add-a-new-Pokémon-species).
 
-Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
+Despite the persistent rumours about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
 ## IMPORTANT: This tutorial applies to Version 1.6.2 and lower.
@@ -44,9 +44,9 @@ cp -r graphics/pokemon/mewtwo graphics/pokemon/mewthree
 ```
 ## 1. Edit the sprites
 Let's edit the sprites. Start your favourite image editor (I have used GIMP) and change `anim_front.png`, `front.png` and `back.png` to meet your expectations.
-__Make sure that you are using the indexed mode and you have limited yourself to 15 colors!__
-Put the RGB values of your colors into `normal.pal` between the first and the last color and the RGB values for the shiny version into `shiny.pal`.
-Edit `footprint.png` using two colors in indexed mode, black and white.
+__Make sure that you are using the indexed mode and you have limited yourself to 15 colours!__
+Put the RGB values of your colours into `normal.pal` between the first and the last colour and the RGB values for the shiny version into `shiny.pal`.
+Edit `footprint.png` using two colours in indexed mode, black and white.
 Finally, edit `icon.png`. Notice, that the icon will use one of three predefined palettes instead of `normal.pal`.
 
 ## 2. Register the sprites
@@ -163,7 +163,7 @@ SINGLE_ANIMATION(Enamorus);
  };
 ```
 
-Because you are limited to two frames, there are already [predefined front sprite animations](#available-front-animations), describing translations, rotations, scalings or color changes.
+Because you are limited to two frames, there are already [predefined front sprite animations](#available-front-animations), describing translations, rotations, scalings or colour changes.
 
 Edit [src/pokemon.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/pokemon.c):
 ```diff
@@ -484,7 +484,7 @@ Append to [src/data/pokemon/pokedex_text.h](https://github.com/rh-hideout/pokeem
      "budding of fresh life across the land.");
 
 +const u8 gMewthreePokedexText[] = _(
-+    "The rumors became true.\n"
++    "The rumours became true.\n"
 +    "This is Mews final form.\n"
 +    "Its power level is over 9000.\n"
 +    "Has science gone too far?");
@@ -592,7 +592,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
          .growthRate = GROWTH_SLOW,
          .eggGroups = { EGG_GROUP_UNDISCOVERED, EGG_GROUP_UNDISCOVERED},
          .abilities = {ABILITY_HEALER, ABILITY_NONE, ABILITY_CONTRARY},
-         .bodyColor = BODY_COLOR_PINK,
+         .bodyColour = BODY_COLOUR_PINK,
          .noFlip = FALSE,
          .flags = SPECIES_FLAG_LEGENDARY,
      },
@@ -616,7 +616,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
 +        .eggGroups = { EGG_GROUP_UNDISCOVERED, EGG_GROUP_UNDISCOVERED},
 +        .abilities = {ABILITY_INSOMNIA, ABILITY_NONE},
 +        .safariZoneFleeRate = 0,
-+        .bodyColor = BODY_COLOR_PURPLE,
++        .bodyColour = BODY_COLOUR_PURPLE,
 +        .noFlip = FALSE,
 +     },
 #endif

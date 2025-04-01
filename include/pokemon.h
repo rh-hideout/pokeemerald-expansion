@@ -391,7 +391,7 @@ struct SpeciesInfo /*0xC4*/
     u16 trainerScale;
     u16 trainerOffset;
     const u8 *description;
-    u8 bodyColor:7;
+    u8 bodyColour:7;
     // Graphical Data
     u8 noFlip:1;
     u8 frontAnimDelay;
@@ -549,7 +549,7 @@ struct NatureInfo
     u8 backAnim;
     u8 pokeBlockAnim[2];
     u8 battlePalacePercents[4];
-    u8 battlePalaceFlavorText;
+    u8 battlePalaceFlavourText;
     u8 battlePalaceSmokescreen;
     const u8 *natureGirlMessage;
 };
@@ -760,8 +760,8 @@ const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny,
 const u32 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
 bool8 IsMoveHM(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
-s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
-s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
+s8 GetMonFlavourRelation(struct Pokemon *mon, u8 flavour);
+s8 GetFlavourRelationByPersonality(u32 personality, u8 flavour);
 bool8 IsTradedMon(struct Pokemon *mon);
 bool8 IsOtherTrainer(u32 otId, u8 *otName);
 void MonRestorePP(struct Pokemon *mon);

@@ -54,7 +54,7 @@ enum
 enum
 {
     SEARCH_NAME,
-    SEARCH_COLOR,
+    SEARCH_COLOUR,
     SEARCH_TYPE_LEFT,
     SEARCH_TYPE_RIGHT,
     SEARCH_ORDER,
@@ -272,7 +272,7 @@ static void HighlightSubmenuScreenSelectBarItem(u8, u16);
 static void Task_DisplayCaughtMonDexPage(u8);
 static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite);
+static void SpriteCB_SlideCaughtMonToCentre(struct Sprite *sprite);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static u32 GetMeasurementTextPositions(u32 textElement);
 static void PrintUnknownMonMeasurements(void);
@@ -1062,9 +1062,9 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
         .selectionBgY = 2,
         .selectionBgWidth = 12,
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
-        .description = gText_ListByBodyColor,
+        .description = gText_ListByBodyColour,
         .titleBgX = 0,
         .titleBgY = 4,
         .titleBgWidth = 5,
@@ -1132,9 +1132,9 @@ static const u8 sSearchMovementMap_SearchNatDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF,
         0xFF,
-        SEARCH_COLOR
+        SEARCH_COLOUR
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1145,13 +1145,13 @@ static const u8 sSearchMovementMap_SearchNatDex[SEARCH_COUNT][4] =
     {
         0xFF,
         SEARCH_TYPE_RIGHT,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_TYPE_RIGHT] =
     {   SEARCH_TYPE_LEFT,
         0xFF,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_ORDER] =
@@ -1187,7 +1187,7 @@ static const u8 sSearchMovementMap_ShiftNatDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1239,9 +1239,9 @@ static const u8 sSearchMovementMap_SearchHoennDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF,
         0xFF,
-        SEARCH_COLOR
+        SEARCH_COLOUR
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1252,13 +1252,13 @@ static const u8 sSearchMovementMap_SearchHoennDex[SEARCH_COUNT][4] =
     {
         0xFF,
         SEARCH_TYPE_RIGHT,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_TYPE_RIGHT] =
     {   SEARCH_TYPE_LEFT,
         0xFF,
-        SEARCH_COLOR,
+        SEARCH_COLOUR,
         SEARCH_ORDER
     },
     [SEARCH_ORDER] =
@@ -1294,7 +1294,7 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
         0xFF,
         0xFF
     },
-    [SEARCH_COLOR] =
+    [SEARCH_COLOUR] =
     {
         0xFF,
         0xFF,
@@ -1371,19 +1371,19 @@ static const struct SearchOptionText sDexSearchNameOptions[] =
     {},
 };
 
-static const struct SearchOptionText sDexSearchColorOptions[] =
+static const struct SearchOptionText sDexSearchColourOptions[] =
 {
     {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    [BODY_COLOUR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColourRed},
+    [BODY_COLOUR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColourBlue},
+    [BODY_COLOUR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColourYellow},
+    [BODY_COLOUR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColourGreen},
+    [BODY_COLOUR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColourBlack},
+    [BODY_COLOUR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColourBrown},
+    [BODY_COLOUR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColourPurple},
+    [BODY_COLOUR_GREY + 1]   = {gText_DexEmptyString, gText_DexSearchColourGrey},
+    [BODY_COLOUR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColourWhite},
+    [BODY_COLOUR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColourPink},
     {},
 };
 
@@ -1450,7 +1450,7 @@ static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 static const struct SearchOption sSearchOptions[] =
 {
     [SEARCH_NAME]       = {sDexSearchNameOptions,  6,  7, ARRAY_COUNT(sDexSearchNameOptions) - 1},
-    [SEARCH_COLOR]      = {sDexSearchColorOptions, 8,  9, ARRAY_COUNT(sDexSearchColorOptions) - 1},
+    [SEARCH_COLOUR]      = {sDexSearchColourOptions, 8,  9, ARRAY_COUNT(sDexSearchColourOptions) - 1},
     [SEARCH_TYPE_LEFT]  = {sDexSearchTypeOptions, 10, 11, ARRAY_COUNT(sDexSearchTypeOptions) - 1},
     [SEARCH_TYPE_RIGHT] = {sDexSearchTypeOptions, 12, 13, ARRAY_COUNT(sDexSearchTypeOptions) - 1},
     [SEARCH_ORDER]      = {sDexOrderOptions,       4,  5, ARRAY_COUNT(sDexOrderOptions) - 1},
@@ -2339,15 +2339,15 @@ static void CreatePokedexList(u8 dexMode, u8 order)
 
 static void PrintMonDexNum(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
 {
-    static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
-    AddTextPrinterParameterized4(windowId, fontId, left * 8, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
+    static const u8 colour[3] = { TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_LIGHT_GREY };
+    AddTextPrinterParameterized4(windowId, fontId, left * 8, (top * 8) + 1, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void PrintMonName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
 {
-    static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
+    static const u8 colour[3] = { TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_LIGHT_GREY };
     fontId = GetFontIdToFit(str, fontId, 0, 50);
-    AddTextPrinterParameterized4(windowId, fontId, left * 8, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(windowId, fontId, left * 8, (top * 8) + 1, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 // u16 ignored is passed but never used
@@ -3225,12 +3225,12 @@ static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite)
 
 static void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(0, FONT_NORMAL, left, top, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(0, FONT_NORMAL, left, top, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 #define tScrolling       data[0]
@@ -3548,7 +3548,7 @@ static void Task_LoadAreaScreen(u8 taskId)
         LoadScreenSelectBarSubmenu(0xD);
         HighlightSubmenuScreenSelectBarItem(0, 0xD);
         LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOUR | BGCNT_TXT256x256);
         gMain.state++;
         break;
     case 2:
@@ -3769,13 +3769,13 @@ static void Task_SwitchScreensFromCryScreen(u8 taskId)
 
 static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
-    u16 color;
+    u16 colour;
 
     if (cryPlaying)
-        color = RGB(18, 28, 0);
+        colour = RGB(18, 28, 0);
     else
-        color = RGB(15, 21, 0);
-    LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
+        colour = RGB(15, 21, 0);
+    LoadPalette(&colour, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
 }
 
 static void Task_LoadSizeScreen(u8 taskId)
@@ -3815,7 +3815,7 @@ static void Task_LoadSizeScreen(u8 taskId)
 
             StringCopy(string, gText_SizeComparedTo);
             StringAppend(string, gSaveBlock2Ptr->playerName);
-            PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, DISPLAY_WIDTH), 121);
+            PrintInfoScreenText(string, GetStringCentreAlignXOffset(FONT_NORMAL, string, DISPLAY_WIDTH), 121);
             gMain.state++;
         }
         break;
@@ -4089,10 +4089,10 @@ static void Task_HandleCaughtMonPageInput(u8 taskId)
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
-        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
+        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCentre;
         gTasks[taskId].func = Task_ExitCaughtMonPage;
     }
-    // Flicker caught screen color
+    // Flicker caught screen colour
     else if (++gTasks[taskId].tPalTimer & 16)
     {
         LoadPalette(gPokedexBgHoenn_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
@@ -4131,7 +4131,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
     }
 }
 
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
+static void SpriteCB_SlideCaughtMonToCentre(struct Sprite *sprite)
 {
     if (sprite->x < DISPLAY_WIDTH / 2)
         sprite->x += 2;
@@ -4165,7 +4165,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
     u8 digitCount = (NATIONAL_DEX_COUNT > 999 && IsNationalPokedexEnabled()) ? 4 : 3;
 
     if (newEntry)
-        PrintInfoScreenText(gText_PokedexRegistration, GetStringCenterAlignXOffset(FONT_NORMAL, gText_PokedexRegistration, DISPLAY_WIDTH), 0);
+        PrintInfoScreenText(gText_PokedexRegistration, GetStringCentreAlignXOffset(FONT_NORMAL, gText_PokedexRegistration, DISPLAY_WIDTH), 0);
     if (value == 0)
         value = NationalToHoennOrder(num);
     else
@@ -4195,7 +4195,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
         description = GetSpeciesPokedexDescription(species);
     else
         description = sExpandedPlaceholder_PokedexDescription;
-    PrintInfoScreenText(description, GetStringCenterAlignXOffset(FONT_NORMAL, description, DISPLAY_WIDTH), 95);
+    PrintInfoScreenText(description, GetStringCentreAlignXOffset(FONT_NORMAL, description, DISPLAY_WIDTH), 95);
 }
 
 void PrintMonMeasurements(u16 species, u32 owned)
@@ -4659,12 +4659,12 @@ static void ResetOtherVideoRegisters(u16 regBits)
 
 static void PrintInfoSubMenuText(u8 windowId, const u8 *str, u8 left, u8 top)
 {
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
+    u8 colour[3];
+    colour[0] = TEXT_COLOUR_TRANSPARENT;
+    colour[1] = TEXT_DYNAMIC_COLOUR_6;
+    colour[2] = TEXT_COLOUR_LIGHT_GREY;
 
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, left, top, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, left, top, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void UNUSED UnusedPrintNum(u8 windowId, u16 num, u8 left, u8 top)
@@ -4761,8 +4761,8 @@ static void UNUSED PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top)
 }
 
 // The footprints are drawn on WIN_FOOTPRINT, which uses BG palette 15 (loaded with graphics/text_window/message_box.gbapal)
-// The footprint pixels are stored as 1BPP, and set to the below color index in this palette when converted to 4BPP.
-#define FOOTPRINT_COLOR_IDX  2
+// The footprint pixels are stored as 1BPP, and set to the below colour index in this palette when converted to 4BPP.
+#define FOOTPRINT_COLOUR_IDX  2
 
 #define NUM_FOOTPRINT_TILES  4
 
@@ -4791,9 +4791,9 @@ void DrawFootprint(u8 windowId, u16 species)
             {
                 u8 tile = 0;
                 if (footprint1bpp & (1 << (2 * j)))
-                    tile |= FOOTPRINT_COLOR_IDX; // Set pixel
+                    tile |= FOOTPRINT_COLOUR_IDX; // Set pixel
                 if (footprint1bpp & (2 << (2 * j)))
-                    tile |= FOOTPRINT_COLOR_IDX << 4; // Set pixel
+                    tile |= FOOTPRINT_COLOUR_IDX << 4; // Set pixel
                 footprint4bpp[tileIdx] = tile;
                 tileIdx++;
             }
@@ -4895,7 +4895,7 @@ static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
     return CreateTrainerPicSprite(species, TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColour, u8 type1, u8 type2)
 {
     u16 species;
     u16 i;
@@ -4932,14 +4932,14 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
         sPokedexView->pokemonListCount = resultsCount;
     }
 
-    // Search by body color
-    if (bodyColor != 0xFF)
+    // Search by body colour
+    if (bodyColour != 0xFF)
     {
         for (i = 0, resultsCount = 0; i < sPokedexView->pokemonListCount; i++)
         {
             species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-            if (bodyColor == gSpeciesInfo[species].bodyColor)
+            if (bodyColour == gSpeciesInfo[species].bodyColour)
             {
                 sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
                 resultsCount++;
@@ -5016,15 +5016,15 @@ static u8 LoadSearchMenu(void)
 
 static void PrintSearchTextToFit(const u8 *str, u32 x, u32 y, u32 width)
 {
-    static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY };
+    static const u8 colour[3] = { TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_DARK_GREY };
     u32 fontId = GetFontIdToFit(str, FONT_NORMAL, 0, width);
-    AddTextPrinterParameterized4(0, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    AddTextPrinterParameterized4(0, fontId, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void PrintSearchText(const u8 *str, u32 x, u32 y)
 {
-    static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY };
-    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+    static const u8 colour[3] = { TEXT_COLOUR_TRANSPARENT, TEXT_DYNAMIC_COLOUR_6, TEXT_COLOUR_DARK_GREY };
+    AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 0, colour, TEXT_SKIP_DRAW, str);
 }
 
 static void ClearSearchMenuRect(u32 x, u32 y, u32 width, u32 height)
@@ -5041,8 +5041,8 @@ static void ClearSearchMenuRect(u32 x, u32 y, u32 width, u32 height)
 #define tScrollOffset_Order     data[5]
 #define tCursorPos_Name         data[6]
 #define tScrollOffset_Name      data[7]
-#define tCursorPos_Color        data[8]
-#define tScrollOffset_Color     data[9]
+#define tCursorPos_Colour        data[8]
+#define tScrollOffset_Colour     data[9]
 #define tCursorPos_TypeLeft     data[10]
 #define tScrollOffset_TypeLeft  data[11]
 #define tCursorPos_TypeRight    data[12]
@@ -5306,11 +5306,11 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
-    u8 bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
+    u8 bodyColour = GetSearchModeSelection(taskId, SEARCH_COLOUR);
     u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
     u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
-    DoPokedexSearch(dexMode, order, abcGroup, bodyColor, type1, type2);
+    DoPokedexSearch(dexMode, order, abcGroup, bodyColour, type1, type2);
     gTasks[taskId].func = Task_WaitAndCompleteSearch;
 }
 
@@ -5504,7 +5504,7 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 #define SEARCH_BG_SHIFT                 SEARCH_TOPBAR_SHIFT
 #define SEARCH_BG_CANCEL                SEARCH_TOPBAR_CANCEL
 #define SEARCH_BG_NAME                  (SEARCH_NAME + SEARCH_TOPBAR_COUNT)
-#define SEARCH_BG_COLOR                 (SEARCH_COLOR + SEARCH_TOPBAR_COUNT)
+#define SEARCH_BG_COLOUR                 (SEARCH_COLOUR + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_SELECTION_LEFT   (SEARCH_TYPE_LEFT + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_SELECTION_RIGHT  (SEARCH_TYPE_RIGHT + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_ORDER                 (SEARCH_ORDER + SEARCH_TOPBAR_COUNT)
@@ -5524,7 +5524,7 @@ static void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 d
         SetSearchRectHighlight(highlightFlags, sSearchMenuTopBarItems[searchBg].highlightX, sSearchMenuTopBarItems[searchBg].highlightY, sSearchMenuTopBarItems[searchBg].highlightWidth);
         break;
     case SEARCH_BG_NAME:
-    case SEARCH_BG_COLOR:
+    case SEARCH_BG_COLOUR:
     case SEARCH_BG_ORDER:
     case SEARCH_BG_MODE:
         SetSearchRectHighlight(highlightFlags, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgX, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgY, sSearchMenuItems[searchBg - SEARCH_TOPBAR_COUNT].titleBgWidth);
@@ -5554,7 +5554,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, FALSE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, FALSE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, FALSE);
@@ -5567,7 +5567,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, FALSE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, TRUE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, TRUE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, TRUE);
@@ -5580,7 +5580,7 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
         DrawSearchMenuItemBgHighlight(SEARCH_BG_SHIFT, TRUE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_CANCEL, FALSE, FALSE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, TRUE, TRUE);
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, TRUE, TRUE);
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_LEFT, TRUE, TRUE);
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_SELECTION_RIGHT, TRUE, TRUE);
@@ -5605,8 +5605,8 @@ static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
     case SEARCH_NAME:
         DrawSearchMenuItemBgHighlight(SEARCH_BG_NAME, FALSE, FALSE);
         break;
-    case SEARCH_COLOR:
-        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOR, FALSE, FALSE);
+    case SEARCH_COLOUR:
+        DrawSearchMenuItemBgHighlight(SEARCH_BG_COLOUR, FALSE, FALSE);
         break;
     case SEARCH_TYPE_LEFT:
         DrawSearchMenuItemBgHighlight(SEARCH_BG_TYPE_TITLE, FALSE, FALSE);
@@ -5639,8 +5639,8 @@ static void PrintSelectedSearchParameters(u8 taskId)
     searchParamId = gTasks[taskId].tCursorPos_Name + gTasks[taskId].tScrollOffset_Name;
     PrintSearchText(sDexSearchNameOptions[searchParamId].title, 0x2D, 0x11);
 
-    searchParamId = gTasks[taskId].tCursorPos_Color + gTasks[taskId].tScrollOffset_Color;
-    PrintSearchText(sDexSearchColorOptions[searchParamId].title, 0x2D, 0x21);
+    searchParamId = gTasks[taskId].tCursorPos_Colour + gTasks[taskId].tScrollOffset_Colour;
+    PrintSearchText(sDexSearchColourOptions[searchParamId].title, 0x2D, 0x21);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeLeft + gTasks[taskId].tScrollOffset_TypeLeft;
     PrintSearchTextToFit(sDexSearchTypeOptions[searchParamId].title, 0x2D, 0x31, 38);
@@ -5728,7 +5728,7 @@ static u8 GetSearchModeSelection(u8 taskId, u8 option)
             return 0xFF;
         else
             return id;
-    case SEARCH_COLOR:
+    case SEARCH_COLOUR:
         if (id == 0)
             return 0xFF;
         else

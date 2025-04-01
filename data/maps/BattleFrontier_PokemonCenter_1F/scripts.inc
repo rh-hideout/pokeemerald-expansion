@@ -1,45 +1,45 @@
 .set LOCALID_NURSE, 1
 
-BattleFrontier_PokemonCenter_1F_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_PokemonCenter_1F_OnTransition
+BattleFrontier_PokemonCentre_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_PokemonCentre_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
 
-BattleFrontier_PokemonCenter_1F_OnTransition:
+BattleFrontier_PokemonCentre_1F_OnTransition:
 	setrespawn HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST
 	end
 
-BattleFrontier_PokemonCenter_1F_EventScript_Nurse::
+BattleFrontier_PokemonCentre_1F_EventScript_Nurse::
 	setvar VAR_0x800B, LOCALID_NURSE
-	call Common_EventScript_PkmnCenterNurse
+	call Common_EventScript_PkmnCentreNurse
 	waitmessage
 	waitbuttonpress
 	release
 	end
 
-BattleFrontier_PokemonCenter_1F_EventScript_SchoolKid::
-	msgbox BattleFrontier_PokemonCenter_1F_Text_NeverSeenPokemon, MSGBOX_NPC
+BattleFrontier_PokemonCentre_1F_EventScript_SchoolKid::
+	msgbox BattleFrontier_PokemonCentre_1F_Text_NeverSeenPokemon, MSGBOX_NPC
 	end
 
-BattleFrontier_PokemonCenter_1F_EventScript_Man::
-	msgbox BattleFrontier_PokemonCenter_1F_Text_NextStopBattleArena, MSGBOX_NPC
+BattleFrontier_PokemonCentre_1F_EventScript_Man::
+	msgbox BattleFrontier_PokemonCentre_1F_Text_NextStopBattleArena, MSGBOX_NPC
 	end
 
-BattleFrontier_PokemonCenter_1F_EventScript_Picnicker::
-	msgbox BattleFrontier_PokemonCenter_1F_Text_GoingThroughEveryChallenge, MSGBOX_NPC
+BattleFrontier_PokemonCentre_1F_EventScript_Picnicker::
+	msgbox BattleFrontier_PokemonCentre_1F_Text_GoingThroughEveryChallenge, MSGBOX_NPC
 	end
 
-BattleFrontier_PokemonCenter_1F_EventScript_Skitty::
+BattleFrontier_PokemonCentre_1F_EventScript_Skitty::
 	lock
 	faceplayer
 	waitse
 	playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
-	msgbox BattleFrontier_PokemonCenter_1F_Text_Skitty, MSGBOX_DEFAULT
+	msgbox BattleFrontier_PokemonCentre_1F_Text_Skitty, MSGBOX_DEFAULT
 	waitmoncry
 	release
 	end
 
-BattleFrontier_PokemonCenter_1F_Text_NeverSeenPokemon:
+BattleFrontier_PokemonCentre_1F_Text_NeverSeenPokemon:
 	.string "There was someone here using a \n"
 	.string "POKéMON I've never seen before.\p"
 	.string "I never learned about it at\n"
@@ -47,15 +47,15 @@ BattleFrontier_PokemonCenter_1F_Text_NeverSeenPokemon:
 	.string "I wonder where you can catch POKéMON\n"
 	.string "like that.$"
 
-BattleFrontier_PokemonCenter_1F_Text_NextStopBattleArena:
+BattleFrontier_PokemonCentre_1F_Text_NextStopBattleArena:
 	.string "Okay! Next stop, the BATTLE ARENA!\n"
 	.string "I'd better get the right POKéMON from\l"
 	.string "the PC Storage System.$"
 
-BattleFrontier_PokemonCenter_1F_Text_GoingThroughEveryChallenge:
+BattleFrontier_PokemonCentre_1F_Text_GoingThroughEveryChallenge:
 	.string "Giggle… I'm going to go through every\n"
 	.string "challenge with just this baby!$"
 
-BattleFrontier_PokemonCenter_1F_Text_Skitty:
+BattleFrontier_PokemonCentre_1F_Text_Skitty:
 	.string "SKITTY: Mya myaaah!$"
 
