@@ -4731,7 +4731,7 @@ BattleScript_MoveEffectStockpileWoreOff::
 	return
 
 BattleScript_StockpileStatChangeDown:
-	statbuffchange MOVE_EFFECT_AFFECTS_USER, BattleScript_StockpileStatChangeDown_Ret
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN, BattleScript_StockpileStatChangeDown_Ret
 	setgraphicalstatchangevalues
 	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	printfromtable gStatDownStringIds
