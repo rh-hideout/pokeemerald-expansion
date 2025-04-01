@@ -2002,6 +2002,19 @@ u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
         }
     }
 
+    //  Handler for if Zacian or Zamazenta should learn Iron Head
+    //  since it transforms in the Behemoth Blade/Bash move in
+    //  battle in the Crowned forms.
+    if (learnset[sLearningMoveTableID].move == MOVE_IRON_HEAD && (species == SPECIES_ZAMAZENTA_CROWNED || species == SPECIES_ZACIAN_CROWNED))
+    {
+        for (u32 accessor = MON_DATA_MOVE1; accessor <= MON_DATA_MOVE4; accessor++)
+        {
+            u32 move = GetMonData(mon, accessor);
+            if (move == MOVE_BEHEMOTH_BLADE || move == MOVE_BEHEMOTH_BASH)
+                return MOVE_NONE;
+        }
+    }
+
     if (learnset[sLearningMoveTableID].level == level)
     {
         gMoveToLearn = learnset[sLearningMoveTableID].move;

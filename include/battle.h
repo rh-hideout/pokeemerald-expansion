@@ -335,8 +335,9 @@ struct SwitchinCandidate
 
 struct SimulatedDamage
 {
-    s32 expected;
-    s32 minimum;
+    u16 minimum;
+    u16 median;
+    u16 maximum;
 };
 
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
@@ -764,9 +765,6 @@ struct BattleStruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
     u16 hpBefore[MAX_BATTLERS_COUNT]; // Hp of battlers before using a move. For Berserk and Anger Shell.
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    s32 aiFinalScore[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // AI, target, moves to make debugging easier
-    u8 aiMoveOrAction[MAX_BATTLERS_COUNT];
-    u8 aiChosenTarget[MAX_BATTLERS_COUNT];
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 sameMoveTurns[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
@@ -816,12 +814,9 @@ struct BattleStruct
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 redCardActivates:1;
     u8 padding2:2; // padding in the middle so pursuit fields are together
-    u8 pursuitSwitchByMove:1;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
-
-    // Simultaneous hp reduction for spread moves
     s32 moveDamage[MAX_BATTLERS_COUNT];
     s32 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
@@ -832,10 +827,21 @@ struct BattleStruct
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
-    u8 padding3:2;
+    u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
+    u8 padding3:1;
+    u8 usedEjectItem;
+    u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 embodyAspectBoost[NUM_BATTLE_SIDES];
+    u16 savedMove; // backup current move for mid-turn switching, e.g. Red Card
+};
+
+struct AiBattleData
+{
+    s32 finalScore[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // AI, target, moves to make debugging easier
+    u8 moveOrAction[MAX_BATTLERS_COUNT];
+    u8 chosenTarget[MAX_BATTLERS_COUNT];
 };
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
@@ -1153,6 +1159,7 @@ extern u8 gSentPokesToOpponent[2];
 extern struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT];
 extern struct BattleScripting gBattleScripting;
 extern struct BattleStruct *gBattleStruct;
+extern struct AiBattleData *gAiBattleData;
 extern u8 *gLinkBattleSendBuffer;
 extern u8 *gLinkBattleRecvBuffer;
 extern struct BattleResources *gBattleResources;

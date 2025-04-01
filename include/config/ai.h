@@ -9,6 +9,7 @@
 #define SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE                   100
 #define SHOULD_SWITCH_TRUANT_PERCENTAGE                         100
 #define SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE                  100
+#define STAY_IN_STATS_RAISED                                    2  // Number of stat stages that must be raised across any stats before the AI won't switch mon out in certain cases
 
 // AI smart switching chances; if you want more complex behaviour, modify GetSwitchChance
 #define SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE                       100
@@ -45,6 +46,10 @@
 
 // AI held item-based move scoring
 #define LOW_ACCURACY_THRESHOLD                                  75 // Moves with accuracy equal OR below this value are considered low accuracy 
+
+// AI damage calc considerations
+#define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit
+#define RISKY_AI_CRIT_THRESHOLD_GEN_1                           128 // "Stat stage" at which Risky will assume it gets a crit with gen 1 mechanics (this translates to an X / 255 % crit threshold)
 
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50

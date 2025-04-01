@@ -272,7 +272,11 @@ BattleScript_EffectChillyReception::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_RAIN_PRIMAL, BattleScript_EffectChillyReceptionBlockedByPrimalRain
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_STRONG_WINDS, BattleScript_EffectChillyReceptionBlockedByStrongWinds
 	call BattleScript_EffectChillyReceptionPlayAnimation
+    #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
+	setfieldweather BATTLE_WEATHER_HAIL
+    #else
 	setfieldweather BATTLE_WEATHER_SNOW
+    #endif
 	call BattleScript_MoveWeatherChangeRet
 	goto BattleScript_MoveSwitch
 BattleScript_EffectChillyReceptionPlayAnimation:
@@ -1034,6 +1038,7 @@ BattleScript_EffectCoaching::
 	setallytonexttarget EffectCoaching_CheckAllyStats
 	goto BattleScript_ButItFailed
 EffectCoaching_CheckAllyStats:
+	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
 	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_ATK, MAX_STAT_STAGE, BattleScript_CoachingWorks
 	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_DEF, MAX_STAT_STAGE, BattleScript_CoachingWorks
 	goto BattleScript_ButItFailed   @ ally at max atk, def
@@ -3776,6 +3781,7 @@ BattleScript_TwoTurnMovesSecondTurn::
 
 BattleScript_TwoTurnMovesSecondTurnRet:
 	setbyte sB_ANIM_TURN, 1
+	setbyte sB_ANIM_TARGETS_HIT, 0
 	clearstatusfromeffect BS_ATTACKER, MOVE_EFFECT_CHARGING
 	clearsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
 	return
@@ -6043,6 +6049,8 @@ BattleScript_RoarSuccessSwitch::
 BattleScript_RoarSuccessSwitch_Ret:
 	swapattackerwithtarget  @ continuation of RedCardActivates
 	restoretarget
+	restoreattacker
+	restoresavedmove
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	return
 
@@ -9517,6 +9525,8 @@ BattleScript_RedCardActivationNoSwitch::
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
 	restoretarget
+	restoreattacker
+	restoresavedmove
 	return
 
 BattleScript_RedCardActivates::
@@ -9535,22 +9545,17 @@ BattleScript_RedCardEnd:
 	return
 BattleScript_RedCardIngrain:
 	printstring STRINGID_PKMNANCHOREDITSELF
+BattleScript_RedCardIngrainContinue:
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
 	restoretarget
 	return
 BattleScript_RedCardSuctionCups:
-	printstring STRINGID_PKMNANCHORSITSELFWITH
-	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
-	restoretarget
-	return
+    printstring STRINGID_PKMNANCHORSITSELFWITH
+    goto BattleScript_RedCardIngrainContinue
 BattleScript_RedCardDynamaxed:
 	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
-	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
-	restoretarget
-	return
+    goto BattleScript_RedCardIngrainContinue
 
 BattleScript_EjectButtonActivates::
 	makevisible BS_ATTACKER

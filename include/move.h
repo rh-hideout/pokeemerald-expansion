@@ -56,7 +56,6 @@ struct MoveInfo
     } zMove;
     // end of word
     s32 priority:4;
-    u32 recoil:7;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;
@@ -74,7 +73,6 @@ struct MoveInfo
     bool32 ballisticMove:1;
     bool32 powderMove:1;
     bool32 danceMove:1;
-    // end of word
     bool32 windMove:1;
     bool32 slicingMove:1;
     bool32 healingMove:1;
@@ -82,6 +80,7 @@ struct MoveInfo
     bool32 ignoresTargetAbility:1;
     bool32 ignoresTargetDefenseEvasionStages:1;
     bool32 damagesUnderground:1;
+    // end of word
     bool32 damagesUnderwater:1;
     bool32 damagesAirborne:1;
     bool32 damagesAirborneDoubleDamage:1;
@@ -106,7 +105,7 @@ struct MoveInfo
     bool32 sketchBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:3;
+    u32 padding:10;
     // end of word
 
     union {
@@ -119,11 +118,12 @@ struct MoveInfo
             u16 property; // can be used to remove the hardcoded values
         } protect;
         u32 status;
-        u16 moveProperty;
-        u16 holdEffect;
-        u16 type;
-        u16 fixedDamage;
-        u16 absorbPercentage;
+        u32 moveProperty;
+        u32 holdEffect;
+        u32 type;
+        u32 fixedDamage;
+        u32 absorbPercentage;
+        u32 recoilPercentage;
     } argument;
 
     // primary/secondary effects
@@ -210,11 +210,6 @@ static inline u32 GetMoveZPowerOverride(u32 moveId)
 static inline s32 GetMovePriority(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].priority;
-}
-
-static inline u32 GetMoveRecoil(u32 moveId)
-{
-    return gMovesInfo[SanitizeMoveId(moveId)].recoil;
 }
 
 static inline u32 GetMoveStrikeCount(u32 moveId)
@@ -488,6 +483,11 @@ static inline u32 GetMoveAbsorbPercentage(u32 moveId)
     if (gMovesInfo[moveId].argument.absorbPercentage == 0)
         return 50;
     return gMovesInfo[moveId].argument.absorbPercentage;
+}
+
+static inline u32 GetMoveRecoil(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.recoilPercentage;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

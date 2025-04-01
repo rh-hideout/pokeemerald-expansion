@@ -54,6 +54,7 @@ Pull Requests that fall into this category are not in scope by default and shoul
 2. **Fangame Features**: Adds a popular feature from other fangames  
 3. **Popular Non-SS Features**: Exceptions can be made for uniquely popular or requested features (Drowsy, PLA Legend Plate, etc.)
 4. **External Program**: External programs like poryscript, porymoves, etc.
+5. **Intergenerational Feature Compatibility**: Addresses limitations and issues resulting from including all generational behaviours in a GBA native title, and extrapolation of features no longer supported by GameFreak
 
 ## Workflow for Proposed Feature Scope Discussion
 For the contributor:

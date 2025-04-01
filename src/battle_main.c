@@ -207,6 +207,7 @@ EWRAM_DATA u8 gSentPokesToOpponent[2] = {0};
 EWRAM_DATA struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA struct BattleScripting gBattleScripting = {0};
 EWRAM_DATA struct BattleStruct *gBattleStruct = NULL;
+EWRAM_DATA struct AiBattleData *gAiBattleData = NULL;
 EWRAM_DATA u8 *gLinkBattleSendBuffer = NULL;
 EWRAM_DATA u8 *gLinkBattleRecvBuffer = NULL;
 EWRAM_DATA struct BattleResources *gBattleResources = NULL;
@@ -423,6 +424,10 @@ void CB2_InitBattle(void)
     AllocateBattleSpritesData();
     AllocateMonSpritesGfx();
     RecordedBattle_ClearFrontierPassFlag();
+
+#if T_SHOULD_RUN_MOVE_ANIM
+    gLoadFail = FALSE;
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
@@ -1888,7 +1893,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             const struct TrainerMon *partyData = trainer->party;
             u32 otIdType = OT_ID_RANDOM_NO_SHINY;
             u32 fixedOtId = 0;
-            u32 ability = 0;
+            u32 abilityNum = 0;
 
             if (trainer->doubleBattle == TRUE)
                 personalityValue = 0x80;
@@ -1927,25 +1932,25 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             if (partyData[monIndex].ability != ABILITY_NONE)
             {
                 const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
-                u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-                for (ability = 0; ability < maxAbilities; ++ability)
+                u32 maxAbilityNum = ARRAY_COUNT(speciesInfo->abilities);
+                for (abilityNum = 0; abilityNum < maxAbilityNum; ++abilityNum)
                 {
-                    if (speciesInfo->abilities[ability] == partyData[monIndex].ability)
+                    if (speciesInfo->abilities[abilityNum] == partyData[monIndex].ability)
                         break;
                 }
-                if (ability >= maxAbilities)
-                    ability = 0;
+                if (abilityNum >= maxAbilityNum)
+                    abilityNum = 0;
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {
                 const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
-                ability = personalityHash % 3;
-                while (speciesInfo->abilities[ability] == ABILITY_NONE)
+                abilityNum = personalityHash % 3;
+                while (speciesInfo->abilities[abilityNum] == ABILITY_NONE)
                 {
-                    ability--;
+                    abilityNum--;
                 }
             }
-            SetMonData(&party[i], MON_DATA_ABILITY_NUM, &ability);
+            SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
             if (partyData[monIndex].ball != ITEM_NONE)
             {
@@ -3205,6 +3210,9 @@ void SwitchInClearSetData(u32 battler)
     gCurrentMove = MOVE_NONE;
     gBattleStruct->arenaTurnCounter = 0xFF;
 
+    // Restore struct member so replacement does not miss timing
+    gSpecialStatuses[battler].switchInAbilityDone = FALSE;
+
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
     gSpecialStatuses[battler].physicalDmg = 0;
     gSpecialStatuses[battler].specialDmg = 0;
@@ -3875,7 +3883,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             gBattleStruct->monToSwitchIntoId[i] = PARTY_SIZE;
             gChosenActionByBattler[i] = B_ACTION_NONE;
             gChosenMoveByBattler[i] = MOVE_NONE;
-            gBattleStruct->battlerState[i].absentBattlerFlags = gAbsentBattlerFlags & (1u << i);
+            gBattleStruct->battlerState[i].absentBattlerFlags = (gAbsentBattlerFlags & (1u << i) ? TRUE : FALSE);
         }
         TurnValuesCleanUp(FALSE);
         SpecialStatusesClear();
@@ -3993,7 +4001,7 @@ void BattleTurnPassed(void)
     {
         gChosenActionByBattler[i] = B_ACTION_NONE;
         gChosenMoveByBattler[i] = MOVE_NONE;
-        gBattleStruct->battlerState[i].absentBattlerFlags = gAbsentBattlerFlags & (1u << i);
+        gBattleStruct->battlerState[i].absentBattlerFlags = (gAbsentBattlerFlags & (1u << i) ? TRUE : FALSE);
         gBattleStruct->monToSwitchIntoId[i] = PARTY_SIZE;
         gStatuses4[i] &= ~STATUS4_ELECTRIFIED;
     }
@@ -4197,7 +4205,7 @@ static void HandleTurnActionSelectionState(void)
                 SetupAISwitchingData(battler, switchType);
 
                 // Do scoring
-                gBattleStruct->aiMoveOrAction[battler] = BattleAI_ChooseMoveOrAction(battler);
+                gAiBattleData->moveOrAction[battler] = BattleAI_ChooseMoveOrAction(battler);
                 AI_DATA->aiCalcInProgress = FALSE;
             }
             // fallthrough
@@ -5665,7 +5673,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
     {
         // To account for Battle Factory and Slateport Battle Tent, enemy parties are zeroed out in the facilitites respective src/xxx.c files
         // The ZeroEnemyPartyMons() call happens in SaveXXXChallenge function (eg. SaveFactoryChallenge)
-        if (!(gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
+        if (!(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_ROAMER)))
         {
             ZeroEnemyPartyMons();
         }
@@ -5738,6 +5746,7 @@ static void ReturnFromBattleToOverworld(void)
     if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
     {
         UpdateRoamerHPStatus(&gEnemyParty[0]);
+        ZeroEnemyPartyMons();
 
 #ifndef BUGFIX
         if ((gBattleOutcome & B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT)
@@ -5959,19 +5968,19 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
         case SPECIES_TAUROS_PALDEA_COMBAT:
         case SPECIES_TAUROS_PALDEA_BLAZE:
         case SPECIES_TAUROS_PALDEA_AQUA:
-            return type2;
+            return gSpeciesInfo[species].types[1];
         }
         break;
     case EFFECT_IVY_CUDGEL:
         switch (species)
         {
         case SPECIES_OGERPON_WELLSPRING:
-        case SPECIES_OGERPON_HEARTHFLAME:
-        case SPECIES_OGERPON_CORNERSTONE:
         case SPECIES_OGERPON_WELLSPRING_TERA:
+        case SPECIES_OGERPON_HEARTHFLAME:
         case SPECIES_OGERPON_HEARTHFLAME_TERA:
+        case SPECIES_OGERPON_CORNERSTONE:
         case SPECIES_OGERPON_CORNERSTONE_TERA:
-            return type2;
+            return gSpeciesInfo[species].types[1];
         }
         break;
     case EFFECT_NATURAL_GIFT:
