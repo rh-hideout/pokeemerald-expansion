@@ -427,6 +427,10 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
         // Handle ice tile (some walking animation) -  Set a bit to freeze the follower's animation
         if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
             follower->disableAnim = TRUE;
+            
+        // Handle surfing
+        if (gSaveBlock3Ptr->NPCfollower.currentSprite == FOLLOWER_NPC_SPRITE_INDEX_SURF && GetFollowerNPCSprite() == gSaveBlock3Ptr->NPCfollower.graphicsId)
+            RETURN_STATE(MOVEMENT_ACTION_SURF_STILL_DOWN, direction);
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
