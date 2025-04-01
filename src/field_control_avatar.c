@@ -17,7 +17,7 @@
 #include "field_screen_effect.h"
 #include "field_specials.h"
 #include "fldeff_misc.h"
-#include "follow_me.h"
+#include "follower_npc.h"
 #include "item_menu.h"
 #include "link.h"
 #include "match_call.h"

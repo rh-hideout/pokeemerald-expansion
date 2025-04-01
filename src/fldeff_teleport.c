@@ -2,7 +2,7 @@
 #include "field_effect.h"
 #include "field_player_avatar.h"
 #include "fldeff.h"
-#include "follow_me.h"
+#include "follower_npc.h"
 #include "party_menu.h"
 #include "overworld.h"
 #include "task.h"

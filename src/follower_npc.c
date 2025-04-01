@@ -1,5 +1,5 @@
 #include "global.h"
-#include "follow_me.h"
+#include "follower_npc.h"
 #include "event_object_movement.h"
 #include "field_door.h"
 #include "field_effect.h"

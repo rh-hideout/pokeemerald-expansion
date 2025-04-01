@@ -1,7 +1,7 @@
-#ifndef GUARD_FOLLOW_ME_H
-#define GUARD_FOLLOW_ME_H
+#ifndef GUARD_FOLLOWER_NPC_H
+#define GUARD_FOLLOWER_NPC_H
 
-#include "constants/follow_me.h"
+#include "constants/follower_npc.h"
 
 #define MOVEMENT_INVALID 0xFE
 
@@ -44,8 +44,6 @@ bool8 PlayerHasFollower(void);
 u8 DetermineFollowerState(struct ObjectEvent* follower, u8 state, u8 direction);
 u8 DetermineFollowerDirection(struct ObjectEvent* player, struct ObjectEvent* follower);
 u8 GetFollowerMapObjId(void);
-
-// moved from field_screen_effect.c
 bool8 IsPlayerOnFoot(void);
 
-#endif //GUARD_FOLLOW_ME_H
+#endif // GUARD_FOLLOWER_NPC_H

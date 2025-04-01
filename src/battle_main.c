@@ -25,7 +25,7 @@
 #include "event_data.h"
 #include "evolution_scene.h"
 #include "field_weather.h"
-#include "follow_me.h"
+#include "follower_npc.h"
 #include "graphics.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"

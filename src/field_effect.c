@@ -40,7 +40,7 @@
 #include "constants/map_types.h"
 
 #if OW_ENABLE_NPC_FOLLOWERS
-#include "follow_me.h"
+#include "follower_npc.h"
 #endif
 
 #define subsprite_table(ptr) {.subsprites = ptr, .subspriteCount = (sizeof ptr) / (sizeof(struct Subsprite))}
