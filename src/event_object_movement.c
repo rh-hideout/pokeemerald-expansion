@@ -1351,7 +1351,7 @@ u8 GetObjectEventIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroupId)
 {
     if (localId < OBJ_EVENT_ID_FOLLOWER) {
 #if OW_ENABLE_NPC_FOLLOWERS
-        if (localId == OBJ_EVENT_ID_FOLLOW_ME)
+        if (localId == OBJ_EVENT_ID_NPC_FOLLOWER)
             return GetFollowerObjectId();
         else
 #endif

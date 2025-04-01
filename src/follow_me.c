@@ -1023,7 +1023,7 @@ void SetFollowerSprite(u8 spriteIndex)
     clone = *GetObjectEventTemplateByLocalIdAndMap(gSaveBlock3Ptr->NPCfollower.map.id, gSaveBlock3Ptr->NPCfollower.map.number, gSaveBlock3Ptr->NPCfollower.map.group);
     clone.graphicsId = newGraphicsId;
     clone.movementType = 0; // Make sure new follower sprite can't move on its own
-    clone.localId = OBJ_EVENT_ID_FOLLOW_ME;
+    clone.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
     gSaveBlock3Ptr->NPCfollower.objId = TrySpawnObjectEventTemplate(&clone, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, clone.x, clone.y);
     if (gSaveBlock3Ptr->NPCfollower.objId != OBJECT_EVENTS_COUNT)
     {
@@ -1084,7 +1084,7 @@ void CreateFollowerAvatar(void)
     clone.x = player->currentCoords.x - 7;
     clone.y = player->currentCoords.y - 7;
     clone.movementType = 0; // Doesn't get to move on its own
-    clone.localId = OBJ_EVENT_ID_FOLLOW_ME;
+    clone.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
 
     switch (GetPlayerFacingDirection())
     {
@@ -1152,7 +1152,7 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
             gSaveBlock3Ptr->NPCfollower.flags = followerFlags;
             gSaveBlock3Ptr->NPCfollower.createSurfBlob = 0;
             gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0;
-            follower->localId = OBJ_EVENT_ID_FOLLOW_ME;
+            follower->localId = OBJ_EVENT_ID_NPC_FOLLOWER;
             FlagSet(flag);
 
             if (!(gSaveBlock3Ptr->NPCfollower.flags & FOLLOW_ME_FLAG_CAN_BIKE) // Follower can't bike
