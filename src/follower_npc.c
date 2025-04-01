@@ -212,6 +212,11 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
     }
 }
 
+// Task data
+#define tState          data[0]
+#define tDoorX          data[2]
+#define tDoorY          data[3]
+
 void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
 {
     struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -244,9 +249,9 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
         {
             gPlayerAvatar.preventStep = TRUE;
             taskId = CreateTask(Task_FollowerNPCOutOfDoor, 1);
-            gTasks[taskId].data[0] = 0;
-            gTasks[taskId].data[2] = follower->currentCoords.x;
-            gTasks[taskId].data[3] = follower->currentCoords.y;
+            gTasks[taskId].tState = 0;
+            gTasks[taskId].tDoorX = follower->currentCoords.x;
+            gTasks[taskId].tDoorY = follower->currentCoords.y;
             TryUpdateFollowerNPCSpriteUnderwater();
             ObjectEventClearHeldMovementIfFinished(follower);
             return;
@@ -313,6 +318,10 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
 
     ObjectEventClearHeldMovementIfFinished(follower);
 }
+
+#undef tState
+#undef tDoorX
+#undef tDoorY
 
 static void Task_ReallowPlayerMovement(u8 taskId)
 {
@@ -724,54 +733,65 @@ static u8 GetPlayerFaceToDoorDirection(struct ObjectEvent* player, struct Object
     return DIR_NORTH;
 }
 
+// Task data
+#define tState              data[0]
+#define tDoorTask           data[1]
+#define tDoorX              data[2]
+#define tDoorY              data[3]
+#define OPEN_DOOR           0
+#define NPC_WALK_OUT        1
+#define CLOSE_DOOR          2
+#define UNFREEZE_OBJECTS    3
+#define REALLOW_MOVEMENT    4
+
 static void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct Task *task = &gTasks[taskId];
-    s16 *x = &task->data[2];
-    s16 *y = &task->data[3];
+    s16 *x = &task->tDoorX;
+    s16 *y = &task->tDoorY;
 
     if (OW_FACE_NPC_FOLLOWER_ON_DOOR_EXIT == TRUE && ObjectEventClearHeldMovementIfFinished(player)) {
         ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower)); // The player should face towards the follow as the exit the door
     }
 
-    switch (task->data[0])
+    switch (task->tState)
     {
-    case 0:
+    case OPEN_DOOR:
         FreezeObjectEvents();
-        task->data[1] = FieldAnimateDoorOpen(follower->currentCoords.x, follower->currentCoords.y);
-        if (task->data[1] != -1)
+        task->tDoorTask = FieldAnimateDoorOpen(follower->currentCoords.x, follower->currentCoords.y);
+        if (task->tDoorTask != -1)
             PlaySE(GetDoorSoundEffect(*x, *y)); // only play SE for animating doors
 
-        task->data[0] = 1;
+        task->tState = NPC_WALK_OUT;
         break;
-    case 1:
-        if (task->data[1] < 0 || gTasks[task->data[1]].isActive != TRUE) // if Door isn't still opening
+    case NPC_WALK_OUT:
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // if Door isn't still opening
         {
             follower->invisible = FALSE;
             ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door
             follower->singleMovementActive = FALSE;
             follower->heldMovementActive = FALSE;
             ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // follower step down
-            task->data[0] = 2;
+            task->tState = CLOSE_DOOR;
         }
         break;
-    case 2:
+    case CLOSE_DOOR:
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            task->data[1] = FieldAnimateDoorClose(*x, *y);
-            task->data[0] = 3;
+            task->tDoorTask = FieldAnimateDoorClose(*x, *y);
+            task->tState = UNFREEZE_OBJECTS;
         }
         break;
-    case 3:
-        if (task->data[1] < 0 || gTasks[task->data[1]].isActive != TRUE) // Door is closed
+    case UNFREEZE_OBJECTS:
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // Door is closed
         {
             UnfreezeObjectEvents();
-            task->data[0] = 4;
+            task->tState = REALLOW_MOVEMENT;
         }
         break;
-    case 4:
+    case REALLOW_MOVEMENT:
         FollowerNPC_HandleSprite();
         gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
         gPlayerAvatar.preventStep = FALSE; // Player can move again
@@ -779,6 +799,16 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         break;
     }
 }
+
+#undef tState
+#undef tDoorTask
+#undef tDoorX
+#undef tDoorY
+#undef OPEN_DOOR
+#undef NPC_WALK_OUT
+#undef CLOSE_DOOR
+#undef UNFREEZE_OBJECTS
+#undef REALLOW_MOVEMENT
 
 void EscalatorMoveFollowerNPC(u8 movementType)
 {
