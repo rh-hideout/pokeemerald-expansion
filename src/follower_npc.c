@@ -60,6 +60,9 @@ static void Task_FinishSurfDismount(u8 taskId);
 void SetFollowerNPCSurfSpriteAfterDive(void);
 static void Task_FollowerNPCOutOfDoor(u8 taskId);
 static void Task_FollowerNPCHandleEscalator(u8 taskId);
+static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId);
+static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task);
+static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task);
 static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, const u8 *script);
 
 static const struct FollowerNPCSpriteGraphics gFollowerNPCAlternateSprites[] =
@@ -830,6 +833,109 @@ static void Task_FollowerNPCHandleEscalator(u8 taskId)
     ObjectEventClearHeldMovementIfActive(follower);
     ObjectEventSetHeldMovement(follower, DetermineFollowerNPCState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, DetermineFollowerNPCDirection(player, follower)));
     DestroyTask(taskId);
+}
+
+void EscalatorMoveFollowerFinish(void)
+{
+    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
+        return;
+
+    CreateTask(Task_FollowerNPCHandleEscalatorFinish, 1);
+}
+
+static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
+{
+    s16 x, y;
+    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite* sprite = &gSprites[follower->spriteId];
+    struct Task *task = &gTasks[taskId];
+
+    switch (task->data[0])
+    {
+    case 0:
+        MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
+        PlayerGetDestCoords(&x, &y);
+        task->data[2] = MapGridGetMetatileBehaviorAt(x, y);
+        task->data[7] = 0;
+        task->data[0]++;
+        break;
+    case 1:
+        if (task->data[7]++ < 0x20) // Wait half a second before revealing the follower
+            break;
+
+        task->data[0]++;
+        task->data[1] = 16;
+        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+        gPlayerAvatar.preventStep = TRUE;
+        ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
+        if (task->data[2] == 0x6b)
+            task->data[0] = 4;
+        break;
+    case 2:
+        follower->invisible = FALSE;
+        CalculateFollowerNPCEscalatorTrajectoryDown(task);
+        task->data[0]++;
+        break;
+    case 3:
+        CalculateFollowerNPCEscalatorTrajectoryDown(task);
+        task->data[2]++;
+        if (task->data[2] & 1)
+        {
+            task->data[1]--;
+        }
+
+        if (task->data[1] == 0)
+        {
+            sprite->x2 = 0;
+            sprite->y2 = 0;
+            task->data[0] = 6;
+        }
+        break;
+    case 4:
+        follower->invisible = FALSE;
+        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        task->data[0]++;
+        break;
+    case 5:
+        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        task->data[2]++;
+        if (task->data[2] & 1)
+        {
+            task->data[1]--;
+        }
+
+        if (task->data[1] == 0)
+        {
+            sprite->x2 = 0;
+            sprite->y2 = 0;
+            task->data[0]++;
+        }
+        break;
+    case 6:
+        if (ObjectEventClearHeldMovementIfFinished(follower))
+        {
+            gPlayerAvatar.preventStep = FALSE;
+            DestroyTask(taskId);
+        }
+    }
+}
+
+static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
+{
+    struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+
+    sprite->x2 = Cos(0x84, task->data[1]);
+    sprite->y2 = Sin(0x94, task->data[1]);
+}
+
+static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
+{
+    struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+
+    sprite->x2 = Cos(0x7c, task->data[1]);
+    sprite->y2 = Sin(0x76, task->data[1]);
 }
 
 bool8 FollowerNPCCanBike(void)
