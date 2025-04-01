@@ -1269,7 +1269,7 @@
 	.byte 0xed
 	.endm
 
-	.macro removelightscreenreflect
+	.macro removescreens
 	.byte 0xee
 	.endm
 

@@ -1624,3 +1624,15 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out")
         MESSAGE("Wobbuffet used Tackle!");
     }
 }
+
+SINGLE_BATTLE_TEST("Dynamax: Destiny Bond if a dynamaxed battler is present on field")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("The move was blocked by the power of Dynamax!");
+    }
+}
