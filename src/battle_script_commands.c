@@ -6348,17 +6348,15 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
             if (numMonsFainted && CompareStat(battlerAtk, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
-                SET_STATCHANGER(stat, numMonsFainted, FALSE);
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
                 gLastUsedAbility = abilityAtk;
-
                 if (abilityAtk == ABILITY_AS_ONE_ICE_RIDER)
                     gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_CHILLING_NEIGH;
                 else if (abilityAtk == ABILITY_AS_ONE_SHADOW_RIDER)
                     gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_GRIM_NEIGH;
 
+                SET_STATCHANGER(stat, numMonsFainted, FALSE);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
                 gBattleScripting.animArg1 = GET_STAT_BUFF_ID(stat) + (numMonsFainted > 1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
-
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_RaiseStatOnFaintingTarget;
                 effect = TRUE;
