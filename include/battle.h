@@ -725,7 +725,7 @@ struct BattleStruct
     u8 startingStatusDone:1;
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
-    u8 obedienceResult:3;
+    u8 Unused:3;
     u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
@@ -786,7 +786,7 @@ struct BattleStruct
     u8 hitSwitchTargetFailed:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     u8 spriteIgnore0Hp:1;
-    u8 battleBondTransformed[NUM_BATTLE_SIDES]; // Bitfield for each party.
+    u8 battleBondBoost[NUM_BATTLE_SIDES]; // Bitfield for each party.
     u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
@@ -938,11 +938,11 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 painSplitHp;
+    s32 unused1;
     s32 bideDmg;
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused;
+    u8 unused2;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;

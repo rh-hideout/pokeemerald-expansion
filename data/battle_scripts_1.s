@@ -5414,10 +5414,6 @@ BattleScript_FaintTarget::
 	tryactivatefellstinger BS_ATTACKER
 	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
-	tryactivatemoxie BS_ATTACKER        @ and chilling neigh, as one ice rider
-	tryactivatebeastboost BS_ATTACKER
-	tryactivategrimneigh BS_ATTACKER    @ and as one shadow rider
-	tryactivatebattlebond BS_ATTACKER
 	trytrainerslidefirstdownmsg BS_TARGET
 	return
 
@@ -8446,10 +8442,9 @@ BattleScript_RaiseStatOnFaintingTarget::
 	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTarget_End
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
-	setgraphicalstatchangevalues
 	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	waitanimation
-	printstring STRINGID_LASTABILITYRAISEDSTAT
+	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseStatOnFaintingTarget_End:
 	return
@@ -8614,6 +8609,29 @@ BattleScript_BattleBondActivatesOnMoveEndAttacker::
 	waitanimation
 	handleformchange BS_ATTACKER, 2
 	printstring STRINGID_ATTACKERBECAMEASHSPECIES
+	return
+
+BattleScript_EffectBattleBondStatIncrease::
+	call BattleScript_AbilityPopUp
+	playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	setstatchanger STAT_ATK, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_EffectBattleBondStatIncreaseTrySpAtk
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_EffectBattleBondStatIncreaseTrySpAtk
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectBattleBondStatIncreaseTrySpAtk:
+	setstatchanger STAT_SPATK, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_EffectBattleBondStatIncreaseTrySpeed
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_EffectBattleBondStatIncreaseTrySpeed
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectBattleBondStatIncreaseTrySpeed:
+	setstatchanger STAT_SPEED, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR, BattleScript_EffectBattleBondStatIncreaseRet
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_EffectBattleBondStatIncreaseRet
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectBattleBondStatIncreaseRet:
 	return
 
 BattleScript_DancerActivates::

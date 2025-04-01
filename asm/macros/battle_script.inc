@@ -1949,14 +1949,6 @@
 	various \battler, VARIOUS_RESTORE_PP
 	.endm
 
-	.macro tryactivatemoxie battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_MOXIE
-	.endm
-
-	.macro tryactivatebeastboost battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BEAST_BOOST
-	.endm
-
 	.macro tryactivatereceiver battler:req
 	various \battler, VARIOUS_TRY_ACTIVATE_RECEIVER
 	.endm
@@ -2240,10 +2232,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryactivategrimneigh, battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
-	.endm
-
 	.macro consumeberry battler:req, fromBattler:req
 	various \battler, VARIOUS_CONSUME_BERRY
 	.byte \fromBattler
@@ -2302,10 +2290,6 @@
 	.macro jumpifnotrototilleraffected battler:req, jumpInstr:req
 	various \battler, VARIOUS_JUMP_IF_NOT_ROTOTILLER_AFFECTED
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryactivatebattlebond battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BATTLE_BOND
 	.endm
 
 	.macro jumpifcantreverttoprimal jumpInstr:req

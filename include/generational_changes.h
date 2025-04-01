@@ -15,6 +15,7 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
     [GEN_CONFIG_GALE_WINGS]                = B_GALE_WINGS,
     [GEN_CONFIG_HEAL_BELL_SOUNDPROOF]      = B_HEAL_BELL_SOUNDPROOF,
     [GEN_CONFIG_TELEPORT_BEHAVIOR]         = B_TELEPORT_BEHAVIOR,
+    [GEN_CONFIG_BATTLE_BOND]               = B_BATTLE_BOND,
 };
 
 #if TESTING

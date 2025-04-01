@@ -6221,6 +6221,137 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, u32 mov
     return FALSE;
 }
 
+static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    u32 effect = FALSE;
+    u32 abilityAtk = GetBattlerAbility(battlerAtk);
+
+    switch (abilityAtk)
+    {
+    case ABILITY_MAGICIAN:
+        if (move != MOVE_FLING && move != MOVE_NATURAL_GIFT
+         && gBattleMons[battlerAtk].item == ITEM_NONE
+         && gBattleMons[battlerDef].item != ITEM_NONE
+         && IsBattlerAlive(battlerAtk)
+         && IsBattlerTurnDamaged(battlerDef)
+         && CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].item)
+         && !gSpecialStatuses[battlerAtk].gemBoost   // In base game, gems are consumed after magician would activate.
+         && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(battlerDef)] & (1u << gBattlerPartyIndexes[battlerDef]))
+         && !DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
+         && (GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD || !IsBattlerAlive(battlerDef)))
+        {
+            StealTargetItem(battlerAtk, battlerDef);
+            gBattleScripting.battler = gBattlerAbility = battlerAtk;
+            gEffectBattler = battlerDef;
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_MagicianActivates;
+            gSpecialStatuses[battlerAtk].preventLifeOrbDamage = TRUE;
+            effect = TRUE;
+        }
+        break;
+    case ABILITY_MOXIE:
+    case ABILITY_CHILLING_NEIGH:
+    case ABILITY_AS_ONE_ICE_RIDER:
+    case ABILITY_GRIM_NEIGH:
+    case ABILITY_AS_ONE_SHADOW_RIDER:
+    case ABILITY_BEAST_BOOST:
+        {
+            if (!IsBattlerAlive(battlerAtk) || NoAliveMonsForEitherParty())
+                break;
+
+            u32 stat = STAT_ATK;
+            u32 numMonsFainted = NumFaintedBattlersByAttacker(battlerAtk);
+
+            if (abilityAtk == ABILITY_BEAST_BOOST)
+                stat = GetHighestStatId(battlerAtk);
+            else if (abilityAtk == ABILITY_GRIM_NEIGH || abilityAtk == ABILITY_AS_ONE_SHADOW_RIDER)
+                stat = STAT_SPATK;
+
+            if (numMonsFainted && CompareStat(battlerAtk, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
+            {
+                SET_STATCHANGER(stat, numMonsFainted, FALSE);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
+                gLastUsedAbility = abilityAtk;
+
+                if (abilityAtk == ABILITY_AS_ONE_ICE_RIDER)
+                    gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_CHILLING_NEIGH;
+                else if (abilityAtk == ABILITY_AS_ONE_SHADOW_RIDER)
+                    gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_GRIM_NEIGH;
+
+                // Bug: If a stat is raised by 2+ the anim should reflect that but it doesn't (visual issue only)
+                // Also the message is wrong when the stat is increaesd by more then one stage
+                gBattleScripting.animArg1 = GET_STAT_BUFF_ID(stat) + (numMonsFainted > 1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
+
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_RaiseStatOnFaintingTarget;
+                effect = TRUE;
+            }
+        }
+        break;
+    case ABILITY_BATTLE_BOND:
+        {
+            if (!IsBattlerAlive(battlerAtk)
+             || NoAliveMonsForEitherParty()
+             || NumFaintedBattlersByAttacker(battlerAtk) == 0)
+                break;
+
+            u32 side = GetBattlerSide(battlerAtk);
+
+            if (gBattleStruct->battleBondBoost[side] & (1u << gBattlerPartyIndexes[battlerAtk]))
+                break;
+
+
+            if (GetGenConfig(GEN_CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
+            {
+                // TODO: Convert this to a proper FORM_CHANGE type.
+                gLastUsedAbility = abilityAtk;
+                gBattleStruct->battleBondBoost[side] |= 1u << gBattlerPartyIndexes[battlerAtk];
+                PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battlerAtk].species);
+                gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[battlerAtk]] = gBattleMons[battlerAtk].species;
+                gBattleMons[battlerAtk].species = SPECIES_GRENINJA_ASH;
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_BattleBondActivatesOnMoveEndAttacker;
+                effect = TRUE;
+            }
+            else
+            {
+                u32 numStatBuffs = 0;
+                if (CompareStat(battlerAtk, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+                {
+                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_ATK) + STAT_ANIM_PLUS1;
+                    numStatBuffs++;
+                }
+                if (CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+                {
+                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_SPATK) + STAT_ANIM_PLUS1;
+                    numStatBuffs++;
+                }
+                if (CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+                {
+                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_SPEED) + STAT_ANIM_PLUS1;
+                    numStatBuffs++;
+                }
+
+                if (numStatBuffs > 0)
+                {
+                    if (numStatBuffs > 1)
+                        gBattleScripting.animArg1 = STAT_ANIM_MULTIPLE_PLUS1;
+
+                    gLastUsedAbility = abilityAtk;
+                    gBattlerAbility = battlerAtk;
+                    gBattleStruct->battleBondBoost[side] |= 1u << gBattlerPartyIndexes[battlerAtk];
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_EffectBattleBondStatIncrease;
+                    effect = TRUE;
+                }
+            }
+        }
+        break;
+    }
+
+    return effect;
+}
+
 static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
@@ -7003,27 +7134,8 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         }
-        case MOVEEND_MAGICIAN:
-            if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MAGICIAN
-              && gCurrentMove != MOVE_FLING && gCurrentMove != MOVE_NATURAL_GIFT
-              && gBattleMons[gBattlerAttacker].item == ITEM_NONE
-              && gBattleMons[gBattlerTarget].item != ITEM_NONE
-              && IsBattlerAlive(gBattlerAttacker)
-              && IsBattlerTurnDamaged(gBattlerTarget)
-              && CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
-              && !gSpecialStatuses[gBattlerAttacker].gemBoost   // In base game, gems are consumed after magician would activate.
-              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
-              && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
-              && (GetBattlerAbility(gBattlerTarget) != ABILITY_STICKY_HOLD || !IsBattlerAlive(gBattlerTarget)))
-            {
-                StealTargetItem(gBattlerAttacker, gBattlerTarget);
-                gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-                gEffectBattler = gBattlerTarget;
-                BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_MagicianActivates;
-                gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = TRUE;
-                effect = TRUE;
-            }
+        case MOVEEND_ABILITY_BLOCK:
+            effect = HandleMoveEndAbilityBlock(gBattlerAttacker, gBattlerTarget, gCurrentMove);
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_SHEER_FORCE:
@@ -9959,16 +10071,6 @@ static bool32 ChangeOrderTargetAfterAttacker(void)
     return TRUE;
 }
 
-static u32 CalculateBattlerPartyCount(u32 battler)
-{
-    u32 count;
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
-        count = CalculatePlayerPartyCount();
-    else
-        count = CalculateEnemyPartyCount();
-    return count;
-}
-
 static void Cmd_various(void)
 {
     CMD_ARGS(u8 battler, u8 id);
@@ -10558,53 +10660,6 @@ static void Cmd_various(void)
         MarkBattlerForControllerExec(battler);
         break;
     }
-    case VARIOUS_TRY_ACTIVATE_MOXIE:    // and chilling neigh + as one ice rider
-    {
-        VARIOUS_ARGS();
-
-        u16 battlerAbility = GetBattlerAbility(battler);
-
-        if ((battlerAbility == ABILITY_MOXIE
-         || battlerAbility == ABILITY_CHILLING_NEIGH
-         || battlerAbility == ABILITY_AS_ONE_ICE_RIDER)
-          && HasAttackerFaintedTarget()
-          && !NoAliveMonsForEitherParty()
-          && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
-        {
-            SET_STATCHANGER(STAT_ATK, 1, FALSE);
-            PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
-            BattleScriptPush(cmd->nextInstr);
-            gLastUsedAbility = battlerAbility;
-            if (battlerAbility == ABILITY_AS_ONE_ICE_RIDER)
-                gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_CHILLING_NEIGH;
-            gBattlescriptCurrInstr = BattleScript_RaiseStatOnFaintingTarget;
-            return;
-        }
-        break;
-    }
-    case VARIOUS_TRY_ACTIVATE_GRIM_NEIGH:   // and as one shadow rider
-    {
-        VARIOUS_ARGS();
-
-        u16 battlerAbility = GetBattlerAbility(battler);
-
-        if ((battlerAbility == ABILITY_GRIM_NEIGH
-         || battlerAbility == ABILITY_AS_ONE_SHADOW_RIDER)
-          && HasAttackerFaintedTarget()
-          && !NoAliveMonsForEitherParty()
-          && CompareStat(gBattlerAttacker, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
-        {
-            SET_STATCHANGER(STAT_SPATK, 1, FALSE);
-            PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
-            BattleScriptPush(cmd->nextInstr);
-            gLastUsedAbility = battlerAbility;
-            if (battlerAbility == ABILITY_AS_ONE_SHADOW_RIDER)
-                gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_GRIM_NEIGH;
-            gBattlescriptCurrInstr = BattleScript_RaiseStatOnFaintingTarget;
-            return;
-        }
-        break;
-    }
     case VARIOUS_TRY_ACTIVATE_RECEIVER: // Partner gets fainted's ally ability
     {
         VARIOUS_ARGS();
@@ -10619,24 +10674,6 @@ static void Cmd_various(void)
             gBattleScripting.battler = battler;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_ReceiverActivates;
-            return;
-        }
-        break;
-    }
-    case VARIOUS_TRY_ACTIVATE_BEAST_BOOST:
-    {
-        VARIOUS_ARGS();
-
-        i = GetHighestStatId(battler);
-        if (GetBattlerAbility(battler) == ABILITY_BEAST_BOOST
-            && HasAttackerFaintedTarget()
-            && !NoAliveMonsForEitherParty()
-            && CompareStat(gBattlerAttacker, i, MAX_STAT_STAGE, CMP_LESS_THAN))
-        {
-            SET_STATCHANGER(i, 1, FALSE);
-            PREPARE_STAT_BUFFER(gBattleTextBuff1, i);
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_AttackerAbilityStatRaise;
             return;
         }
         break;
@@ -11485,25 +11522,6 @@ static void Cmd_various(void)
             gBattlescriptCurrInstr = cmd->jumpInstr;   // Unaffected by rototiller - print STRINGID_NOEFFECTONTARGET
         }
         return;
-    }
-    // TODO: Convert this to a proper FORM_CHANGE type.
-    case VARIOUS_TRY_ACTIVATE_BATTLE_BOND:
-    {
-        VARIOUS_ARGS();
-        if (gBattleMons[gBattlerAttacker].species == SPECIES_GRENINJA_BATTLE_BOND
-            && HasAttackerFaintedTarget()
-            && CalculateBattlerPartyCount(gBattlerTarget) > 1
-            && !(gBattleStruct->battleBondTransformed[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker])))
-        {
-            gBattleStruct->battleBondTransformed[GetBattlerSide(gBattlerAttacker)] |= 1u << gBattlerPartyIndexes[gBattlerAttacker];
-            PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].species);
-            gBattleStruct->changedSpecies[GetBattlerSide(gBattlerAttacker)][gBattlerPartyIndexes[gBattlerAttacker]] = gBattleMons[gBattlerAttacker].species;
-            gBattleMons[gBattlerAttacker].species = SPECIES_GRENINJA_ASH;
-            BattleScriptPushCursor();
-            gBattlescriptCurrInstr = BattleScript_BattleBondActivatesOnMoveEndAttacker;
-            return;
-        }
-        break;
     }
     case VARIOUS_CONSUME_BERRY:
     {

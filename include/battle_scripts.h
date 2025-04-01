@@ -425,6 +425,7 @@ extern const u8 BattleScript_GulpMissileGorging[];
 extern const u8 BattleScript_GulpMissileGulping[];
 extern const u8 BattleScript_GulpMissileFormChange[];
 extern const u8 BattleScript_BattleBondActivatesOnMoveEndAttacker[];
+extern const u8 BattleScript_EffectBattleBondStatIncrease[];
 extern const u8 BattleScript_DesolateLandActivates[];
 extern const u8 BattleScript_PrimordialSeaActivates[];
 extern const u8 BattleScript_PrimalWeatherBlocksMove[];
