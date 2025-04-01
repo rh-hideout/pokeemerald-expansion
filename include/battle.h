@@ -130,10 +130,9 @@ struct DisableStruct
     u8 boosterEnergyActivates:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
-    u8 startEmergencyExit:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 padding:2;
+    u8 padding:3;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -197,8 +196,6 @@ struct SpecialStatus
 {
     s32 physicalDmg;
     s32 specialDmg;
-    u8 physicalBattlerId;
-    u8 specialBattlerId;
     u8 changedStatsBattlerId; // Battler that was responsible for the latest stat change. Can be self.
     u8 statLowered:1;
     u8 lightningRodRedirected:1;
@@ -628,7 +625,7 @@ struct BattlerState
     u8 targetsDone[MAX_BATTLERS_COUNT];
 
     u32 commandingDondozo:1;
-    u32 absentBattlerFlags:1;
+    u32 absent:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
     u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
@@ -691,7 +688,6 @@ struct BattleStruct
     u8 stateIdAfterSelScript[MAX_BATTLERS_COUNT];
     u8 prevSelectedPartySlot;
     u8 stringMoveType;
-    u8 absentBattlerFlags;
     u8 palaceFlags; // First 4 bits are "is <= 50% HP and not asleep" for each battler, last 4 bits are selected moves to pass to AI
     u8 field_93; // related to choosing pokemon?
     u8 wallyBattleState;
@@ -812,8 +808,8 @@ struct BattleStruct
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    u8 redCardActivates:1;
-    u8 padding2:2; // padding in the middle so pursuit fields are together
+    u8 cheekPouchActivated:1;
+    u8 padding2:3;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -828,13 +824,16 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
-    u8 padding3:1;
+    u8 noTargetPresent:1;
     u8 usedEjectItem;
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 embodyAspectBoost[NUM_BATTLE_SIDES];
     u16 savedMove; // backup current move for mid-turn switching, e.g. Red Card
+    u16 opponentMonCanTera:6;
+    u16 opponentMonCanDynamax:6;
+    u16 padding:4;
 };
 
 struct AiBattleData

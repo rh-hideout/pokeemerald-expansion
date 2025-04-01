@@ -5295,7 +5295,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar1, moves_x + 45, moves_y);
         //Physical/Special/Status Category
         DestroyCategoryIcon();
-        ShowCategoryIcon(GetBattleMoveCategory(move));
+        ShowCategoryIcon(GetMoveCategory(move));
         //Accuracy
         u32 accuracy = GetMoveAccuracy(move);
         if (accuracy == 0)
@@ -5344,7 +5344,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
         value = NationalToHoennOrder(num);
     else
         value = num;
-    ConvertIntToDecimalStringN(StringCopy(str, gText_NumberClear01), value, STR_CONV_MODE_LEADING_ZEROS, 3);
+    ConvertIntToDecimalStringN(StringCopy(str, gText_NumberClear01), value, STR_CONV_MODE_LEADING_ZEROS, 4);
     PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, str, base_x, base_y + 10);
 
     //Gender ratio //MON_GENDERLESS == 0xFF
@@ -6158,7 +6158,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
             u16 dexNum          = SpeciesToNationalPokedexNum(targetSpecies);
             if (sPokedexView->isSearchResults && sPokedexView->originalSearchSelectionNum == 0)
                 sPokedexView->originalSearchSelectionNum = sPokedexListItem->dexNum;
-                
+
             sPokedexListItem->dexNum = dexNum;
             sPokedexListItem->seen   = GetSetPokedexFlag(dexNum, FLAG_GET_SEEN);
             sPokedexListItem->owned  = GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT);
