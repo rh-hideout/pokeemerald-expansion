@@ -4160,12 +4160,12 @@ static inline uq4_12_t GetSupremeOverlordModifier(u32 battler)
     return UQ_4_12(1.0) + (PercentToUQ4_12(gBattleStruct->supremeOverlordCounter[battler] * 10));
 }
 
-static inline bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
+bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
 {
     u32 cutoff = gBattleMons[battler].maxHP / 2;
     // Had more than half of hp before, now has less
-     return (gBattleStruct->hpBefore[battler] > cutoff
-             && gBattleMons[battler].hp <= cutoff);
+    return gBattleStruct->hpBefore[battler] > cutoff
+        && gBattleMons[battler].hp <= cutoff;
 }
 
 #define ANIM_STAT_HP      0
@@ -12276,39 +12276,6 @@ bool32 IsMoveEffectBlockedByTarget(u32 ability)
     return FALSE;
 }
 
-u32 NumAffectedSpreadMoveTargets(void)
-{
-    u32 targetCount = 1;
-
-    if (!IsDoubleSpreadMove())
-        return targetCount;
-
-    targetCount = 0;
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
-            targetCount++;
-    }
-
-    return targetCount;
-}
-
-u32 NumFaintedBattlersByAttacker(u32 battlerAtk)
-{
-    u32 numMonsFainted = 0;
-
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (battler == battlerAtk)
-            continue;
-
-        if (IsBattlerTurnDamaged(battler) && !IsBattlerAlive(battler))
-            numMonsFainted++;
-    }
-
-    return numMonsFainted;
-}
-
 bool32 IsPursuitTargetSet(void)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
@@ -12349,50 +12316,4 @@ bool32 HasWeatherEffect(void)
     }
 
     return TRUE;
-}
-
-bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move)
-{
-    bool32 effect = FALSE;
-
-    if (IsPowderMove(move) && (battlerAtk != battlerDef))
-    {
-        if (B_POWDER_GRASS >= GEN_6
-         && (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) || GetBattlerAbility(battlerDef) == ABILITY_OVERCOAT))
-        {
-            gBattlerAbility = battlerDef;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_OVERCOAT);
-            effect = TRUE;
-        }
-        else if (GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_SAFETY_GOGGLES)
-        {
-            RecordItemEffectBattle(battlerDef, HOLD_EFFECT_SAFETY_GOGGLES);
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            effect = TRUE;
-        }
-
-        if (effect)
-            gBattlescriptCurrInstr = BattleScript_PowderMoveNoEffect;
-    }
-
-    return effect;
-}
-
-bool32 EmergencyExitCanBeTriggered(u32 battler)
-{
-    u32 ability = GetBattlerAbility(battler);
-
-    if (ability != ABILITY_EMERGENCY_EXIT && ability != ABILITY_WIMP_OUT)
-        return FALSE;
-
-    if (IsBattlerTurnDamaged(battler)
-     && IsBattlerAlive(battler)
-     && HadMoreThanHalfHpNowDoesnt(battler)
-     && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && CountUsablePartyMons(battler) > 0
-     && !(gStatuses3[battler] & STATUS3_SKY_DROPPED))
-        return TRUE;
-
-    return FALSE;
 }
