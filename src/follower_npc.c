@@ -835,7 +835,7 @@ static void Task_FollowerNPCHandleEscalator(u8 taskId)
     DestroyTask(taskId);
 }
 
-void EscalatorMoveFollowerFinish(void)
+void EscalatorMoveFollowerNPCFinish(void)
 {
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
