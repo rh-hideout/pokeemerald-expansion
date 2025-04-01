@@ -2253,15 +2253,6 @@ void UpdateFollowingPokemon(void)
     sprite->data[6] = 0; // set animation data
 }
 
-void ReturnFollowingMonToBall(void)
-{
-    struct ObjectEvent *objectEvent = GetFollowerObject();
-    struct Sprite *sprite = &gSprites[objectEvent->spriteId];
-
-    ClearObjectEventMovement(objectEvent, sprite);
-    ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_ENTER_POKEBALL);
-}
-
 // Remove follower object. Idempotent.
 void RemoveFollowingPokemon(void)
 {

@@ -508,6 +508,4 @@ bool8 MovementAction_EmoteX_Step0(struct ObjectEvent *, struct Sprite *);
 bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *, struct Sprite *);
 bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 
-void ReturnFollowingMonToBall(void);
-
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

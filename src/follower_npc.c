@@ -784,42 +784,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
     }
 }
 
-/* UNUSED
-void StairsMoveFollower(void)
-{
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
-        return;
-
-    if (!FuncIsActiveTask(Task_FollowerHandleIndoorStairs) && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != 2)
-        CreateTask(Task_FollowerHandleIndoorStairs, 1);
-}
-
-static void Task_FollowerHandleIndoorStairs(u8 taskId)
-{
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerMapObjId()];
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct Task *task = &gTasks[taskId];
-
-    switch (task->data[0])
-    {
-    case 0:
-        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 2; // So the task doesn't get created more than once
-        ObjectEventClearHeldMovementIfActive(follower);
-        ObjectEventSetHeldMovement(follower, DetermineFollowerState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, DetermineFollowerDirection(player, follower)));
-        task->data[0]++;
-        break;
-    case 1:
-        if (ObjectEventClearHeldMovementIfFinished(follower))
-        {
-            ObjectEventSetHeldMovement(follower, DetermineFollowerState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, player->movementDirection));
-            DestroyTask(taskId);
-        }
-        break;
-    }
-}
-*/
-
-void EscalatorMoveFollower(u8 movementType)
+void EscalatorMoveFollowerNPC(u8 movementType)
 {
     u8 taskId;
 
