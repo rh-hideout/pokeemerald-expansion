@@ -119,7 +119,7 @@ void HideNPCFollower(void)
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
-    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == 2 || gSaveBlock3Ptr->NPCfollower.createSurfBlob == 3)
+    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_RECREATE || gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_DESTROY)
     {
         SetSurfBlob_BobState(gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId, 2);
         DestroySprite(&gSprites[gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId]);
@@ -140,7 +140,7 @@ void FollowerNPC_SetIndicatorToComeOutDoor(void)
 void FollowerNPC_SetIndicatorToRecreateSurfBlob(void)
 {
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = 2;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_RECREATE;
 }
 
 void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)
@@ -232,7 +232,7 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
     if ((gSaveBlock3Ptr->NPCfollower.currentSprite == FOLLOWER_NPC_SPRITE_INDEX_SURF) && !(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) && follower->fieldEffectSpriteId == 0)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = 0;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
     }
 
     // Check if state would cause hidden follower to reappear
@@ -260,7 +260,7 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
         ObjectEventTurn(follower, player->facingDirection); // The follower should be facing the same direction as the player when it comes out of hiding
 
-        if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == 2) // Recreate surf blob
+        if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_RECREATE) // Recreate surf blob
         {
             SetUpSurfBlobFieldEffect(follower);
             follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
@@ -287,17 +287,17 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
         return;
     }
 
-    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == 1) // Get on Surf Blob
+    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_NEW) // Get on Surf Blob
     {
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = 2;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_RECREATE;
         gPlayerAvatar.preventStep = TRUE; // Wait for finish
         SetSurfJump();
         ObjectEventClearHeldMovementIfFinished(follower);
         return;
     }
-    else if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == 3) // Get off Surf Blob
+    else if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_DESTROY) // Get off Surf Blob
     {
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = 0;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
         gPlayerAvatar.preventStep = TRUE; // Wait for finish
         SetSurfDismount();
         ObjectEventClearHeldMovementIfFinished(follower);
@@ -570,7 +570,7 @@ void FollowerNPC_FollowerToWater(void)
     // Prepare for making the follower do the jump and spawn the surf head
     // right in front of the follower's location.
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_JUMP_DOWN, TRUE);
-    gSaveBlock3Ptr->NPCfollower.createSurfBlob = 1;
+    gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NEW;
 }
 
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
@@ -583,7 +583,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     TryUpdateFollowerNPCSpriteUnderwater();
 
-    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob != 2 && gSaveBlock3Ptr->NPCfollower.createSurfBlob != 3)
+    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob != FNPC_SURF_BLOB_RECREATE && gSaveBlock3Ptr->NPCfollower.createSurfBlob != FNPC_SURF_BLOB_DESTROY)
         return;
 
     // Spawn surfhead under follower
@@ -660,7 +660,7 @@ void PrepareFollowerNPCDismountSurf(void)
         return;
 
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_WALK_NORMAL_DOWN, TRUE);
-    gSaveBlock3Ptr->NPCfollower.createSurfBlob = 3;
+    gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_DESTROY;
 }
 
 static void SetSurfDismount(void)
@@ -711,7 +711,7 @@ void SetFollowerNPCSurfSpriteAfterDive(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
-    gSaveBlock3Ptr->NPCfollower.createSurfBlob = 2;
+    gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_RECREATE;
 #endif
 }
 
@@ -1068,7 +1068,7 @@ void CreateFollowerNPCAvatar(void)
     }
 
     if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = 0;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
 
     gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId].invisible = TRUE;
 }
@@ -1111,7 +1111,7 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
             gSaveBlock3Ptr->NPCfollower.script = script;
             gSaveBlock3Ptr->NPCfollower.flag = flag;
             gSaveBlock3Ptr->NPCfollower.flags = followerFlags;
-            gSaveBlock3Ptr->NPCfollower.createSurfBlob = 0;
+            gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
             gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0;
             follower->localId = OBJ_EVENT_ID_NPC_FOLLOWER;
             FlagSet(flag);

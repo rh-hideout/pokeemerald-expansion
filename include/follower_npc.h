@@ -14,6 +14,14 @@ enum FollowerNPCSpriteTypes
     FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER,
 };
 
+enum FollowerNPCSurfBlobStates
+{
+    FNPC_SURF_BLOB_NONE,
+    FNPC_SURF_BLOB_NEW,
+    FNPC_SURF_BLOB_RECREATE,
+    FNPC_SURF_BLOB_DESTROY
+};
+
 bool8 FollowerNPCComingThroughDoor(void);
 u8 GetFollowerNPCObjectId(void);
 u8 GetFollowerNPCLocalId(void);
