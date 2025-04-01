@@ -20,6 +20,12 @@ enum FollowerNPCDoorStairsStates
     FNPC_DOOR_NEEDS_TO_EXIT
 };
 
+enum FollowerNPCWarpEndStates
+{
+    FNPC_WARP_NONE,
+    FNPC_WARP_REAPPEAR
+};
+
 enum FollowerNPCSurfBlobStates
 {
     FNPC_SURF_BLOB_NONE,

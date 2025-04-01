@@ -238,7 +238,7 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
     // Check if state would cause hidden follower to reappear
     if (IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.warpEnd)
     {
-        gSaveBlock3Ptr->NPCfollower.warpEnd = 0;
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
 
         if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == FNPC_DOOR_NEEDS_TO_EXIT)
         {
@@ -833,7 +833,7 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
         task->data[0]++;
         task->data[1] = 16;
         CalculateFollowerNPCEscalatorTrajectoryUp(task);
-        gSaveBlock3Ptr->NPCfollower.warpEnd = 0;
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
         gPlayerAvatar.preventStep = TRUE;
         ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
         if (task->data[2] == 0x6b)
@@ -1011,7 +1011,7 @@ void FollowerNPC_WarpSetEnd(void)
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 
-    gSaveBlock3Ptr->NPCfollower.warpEnd = 1;
+    gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
     PlayerLogCoordinates(player);
 
     toY = gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
@@ -1273,7 +1273,6 @@ void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 #if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
     {
-        gSaveBlock3Ptr->NPCfollower.warpEnd = 0; // In case a follower warp had not yet finished.
         RemoveObjectEvent(&gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId]);
         FlagSet(gSaveBlock3Ptr->NPCfollower.flag);
         memset(&gSaveBlock3Ptr->NPCfollower, 0, sizeof(gSaveBlock3Ptr->NPCfollower));
