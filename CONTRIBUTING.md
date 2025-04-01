@@ -122,7 +122,7 @@ Once all items on the merge checklist are true, the branch will be merged in.
 
 ## Maintainers
 
-This list was last updated 2025 Feb 27.
+This list was last updated 2025 April 1.
 
 | Name | Discord | Currently Active | Areas of Expertise |
 | --- | --- | --- | --- |
@@ -135,7 +135,6 @@ This list was last updated 2025 Feb 27.
 | [Hedara](https://github.com/hedara90) | hedara | ✅ | Compression, Sprites
 | [Pawkkie](https://github.com/Pawkkie) | pawkkie | ✅ | Battle AI
 | [SBird](https://github.com/SBird1337) | karathan | ✅ | Dynamic Multichoice, Damage Calculation, Animations, Trainer Control, Tests
-| [AsparagusEduardo](https://github.com/AsparagusEduardo) | asparaguseduardo | Inactive | 
 | [Agustin](https://github.com/AgustinGDLV) | agustingdlv | Inactive | Gimmicks, Battle Engine, Tests, Items
 | [tertu](https://github.com/tertu-m) | tertu | Inactive | Randomizer
 
