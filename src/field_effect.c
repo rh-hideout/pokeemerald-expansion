@@ -1390,7 +1390,7 @@ void FieldCallback_UseFly(void)
 static void Task_UseFly(u8 taskId)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 #endif
     struct Task *task;
     task = &gTasks[taskId];
@@ -1405,10 +1405,10 @@ static void Task_UseFly(u8 taskId)
         }
         else
         {
-            u8 followerObjId = GetFollowerObjectId();
+            u8 followerObjId = GetFollowerNPCObjectId();
             follower->singleMovementActive = FALSE;
             follower->heldMovementActive = FALSE;
-            switch (DetermineFollowerDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
+            switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
             {
                 case DIR_NORTH:
                     ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
@@ -1430,7 +1430,7 @@ static void Task_UseFly(u8 taskId)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            SetFollowerSprite(FOLLOWER_SPRITE_INDEX_NORMAL);
+            SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
             follower->invisible = TRUE;
             gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0; // In case the follower was still coming out of a door.
             taskState++;
@@ -1489,7 +1489,7 @@ static void Task_FlyIntoMap(u8 taskId)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 #endif
     struct Task *task;
     task = &gTasks[taskId];
@@ -1677,7 +1677,7 @@ static bool8 FallWarpEffect_End(struct Task *task)
     InstallCameraPanAheadCallback();
     DestroyTask(FindTaskIdByFunc(Task_FallWarpFieldEffect));
 #if OW_ENABLE_NPC_FOLLOWERS
-    FollowMe_WarpSetEnd();
+    FollowerNPC_WarpSetEnd();
 #endif
 
     return FALSE;
@@ -1742,7 +1742,7 @@ static bool8 EscalatorWarpOut_WaitForPlayer(struct Task *task)
         task->data[2] = 0;
         task->data[3] = 0;
 #if OW_ENABLE_NPC_FOLLOWERS
-        EscalatorMoveFollower(task->data[1]);
+        EscalatorMoveFollowerNPC(task->data[1]);
 #endif
 
         if ((u8)task->data[1] == FALSE)
@@ -2415,7 +2415,7 @@ static void EscapeRopeWarpOutEffect_Init(struct Task *task)
 #if OW_ENABLE_NPC_FOLLOWERS
 static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     if (task->data[3] == 0)
     {
         if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -2424,10 +2424,10 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
         }
         else
         {
-            u8 followerObjId = GetFollowerObjectId();
+            u8 followerObjId = GetFollowerNPCObjectId();
             follower->singleMovementActive = FALSE;
             follower->heldMovementActive = FALSE;
-            switch (DetermineFollowerDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
+            switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
             {
                 case DIR_NORTH:
                     ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
@@ -2449,7 +2449,7 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            SetFollowerSprite(FOLLOWER_SPRITE_INDEX_NORMAL);
+            SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
             follower->invisible = TRUE;
             gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = 0; // In case the follower was still coming out of a door.
             task->tState++;
@@ -2525,7 +2525,7 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
     u8 spinDirections[5] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 #if OW_ENABLE_NPC_FOLLOWERS
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 #endif
     if ((task->tSpinDelay == 0 || (--task->tSpinDelay) == 0) && task->data[3] == 0)
     {
@@ -2779,7 +2779,7 @@ static void TeleportWarpInFieldEffect_SpinGround(struct Task *task)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 #if OW_ENABLE_NPC_FOLLOWERS
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 #endif
     u8 spinDirections[5] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
     if ((--task->data[1]) == 0 && task->data[3] == 0)
@@ -3331,7 +3331,7 @@ static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task)
         ObjectEventClearHeldMovementIfFinished(objectEvent);
         ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
 #if OW_ENABLE_NPC_FOLLOWERS
-        FollowMe_FollowerToWater();
+        FollowerNPC_FollowerToWater();
 #endif
 
         gFieldEffectArguments[0] = task->tDestX;

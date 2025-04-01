@@ -292,7 +292,7 @@ void FieldCB_DefaultWarpExit(void)
     WarpFadeInScreen();
     SetUpWarpExitTask();
 #if OW_ENABLE_NPC_FOLLOWERS
-    FollowMe_WarpSetEnd();
+    FollowerNPC_WarpSetEnd();
 #endif
     LockPlayerFieldControls();
 }
@@ -343,7 +343,7 @@ static void Task_ExitDoor(u8 taskId)
     {
     case 0:
 #if OW_ENABLE_NPC_FOLLOWERS
-        HideFollower();
+        HideNPCFollower();
 #endif
         SetPlayerVisibility(FALSE);
         FreezeObjectEvents();
@@ -375,8 +375,8 @@ static void Task_ExitDoor(u8 taskId)
         if (task->data[1] < 0 || gTasks[task->data[1]].isActive != TRUE)
         {
 #if OW_ENABLE_NPC_FOLLOWERS
-            FollowMe_SetIndicatorToComeOutDoor();
-            FollowMe_WarpSetEnd();
+            FollowerNPC_SetIndicatorToComeOutDoor();
+            FollowerNPC_WarpSetEnd();
 #endif
             UnfreezeObjectEvents();
             task->tState = 4;
@@ -399,7 +399,7 @@ static void Task_ExitNonAnimDoor(u8 taskId)
     {
     case 0:
 #if OW_ENABLE_NPC_FOLLOWERS
-        HideFollower();
+        HideNPCFollower();
 #endif
         SetPlayerVisibility(FALSE);
         FreezeObjectEvents();
@@ -420,8 +420,8 @@ static void Task_ExitNonAnimDoor(u8 taskId)
         if (IsPlayerStandingStill())
         {
 #if OW_ENABLE_NPC_FOLLOWERS
-            FollowMe_SetIndicatorToComeOutDoor();
-            FollowMe_WarpSetEnd();
+            FollowerNPC_SetIndicatorToComeOutDoor();
+            FollowerNPC_WarpSetEnd();
 #endif
             UnfreezeObjectEvents();
             task->tState = 3;
@@ -715,7 +715,7 @@ void Task_DoDoorWarp(u8 taskId)
         s16 *x = &task->data[2];
         s16 *y = &task->data[3];
         u8 playerObjId = gPlayerAvatar.objectEventId;
-        u8 followerObjId = GetFollowerObjectId();
+        u8 followerObjId = GetFollowerNPCObjectId();
 
         switch (task->data[0])
         {
@@ -738,8 +738,8 @@ void Task_DoDoorWarp(u8 taskId)
 
                 if (gSaveBlock3Ptr->NPCfollower.inProgress && !gObjectEvents[followerObjId].invisible)
                 {
-                    u8 newState = DetermineFollowerState(&gObjectEvents[followerObjId], MOVEMENT_ACTION_WALK_NORMAL_UP,
-                                                        DetermineFollowerDirection(&gObjectEvents[playerObjId], &gObjectEvents[followerObjId]));
+                    u8 newState = DetermineFollowerNPCState(&gObjectEvents[followerObjId], MOVEMENT_ACTION_WALK_NORMAL_UP,
+                                                        DetermineFollowerNPCDirection(&gObjectEvents[playerObjId], &gObjectEvents[followerObjId]));
                     ObjectEventClearHeldMovementIfActive(&gObjectEvents[followerObjId]);
                     ObjectEventSetHeldMovement(&gObjectEvents[followerObjId], newState);
                 }
@@ -1131,7 +1131,7 @@ static void Task_SpinEnterWarp(u8 taskId)
         if (WaitForWeatherFadeIn() && IsPlayerSpinEntranceActive() != TRUE)
         {
 #if OW_ENABLE_NPC_FOLLOWERS
-            FollowMe_WarpSetEnd();
+            FollowerNPC_WarpSetEnd();
 #endif
             UnfreezeObjectEvents();
             UnlockPlayerFieldControls();

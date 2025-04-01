@@ -293,10 +293,10 @@ EventScript_UseWaterfall::
 	msgbox Text_WantToWaterfall, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndWaterfall
 	msgbox Text_MonUsedWaterfall, MSGBOX_DEFAULT
-	call FollowerIntoPlayerScript
-	callnative HideFollower
+	call FollowerNPCIntoPlayerScript
+	callnative HideNPCFollower
 	dofieldeffect FLDEFF_USE_WATERFALL
-	callnative FollowMe_WarpSetEnd
+	callnative FollowerNPC_WarpSetEnd
 	goto EventScript_EndWaterfall
 
 EventScript_CannotUseWaterfall::
@@ -331,8 +331,8 @@ EventScript_UseDive::
 	msgbox Text_WantToDive, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndDive
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
-	call FollowerIntoPlayerScript
-	callnative HideFollower
+	call FollowerNPCIntoPlayerScript
+	callnative HideNPCFollower
 	setfieldeffectargument 0, VAR_0x8004
 	setfieldeffectargument 1, 1
 	dofieldeffect FLDEFF_USE_DIVE
@@ -358,8 +358,8 @@ EventScript_UseDiveUnderwater::
 	msgbox Text_WantToSurface, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndSurface
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
-	call FollowerIntoPlayerScript
-	callnative HideFollower
+	call FollowerNPCIntoPlayerScript
+	callnative HideNPCFollower
 	dofieldeffect FLDEFF_USE_DIVE
 	goto EventScript_EndSurface
 	end
@@ -371,7 +371,7 @@ EventScript_CantSurface::
 	end
 
 EventScript_EndSurface::
-	callnative SetFollowerSurfSpriteAfterDive
+	callnative SetFollowerNPCSurfSpriteAfterDive
 	releaseall
 	end
 
@@ -429,27 +429,17 @@ EventScript_FailSweetScent::
 
 Text_FailSweetScent:
 	.string "Looks like there's nothing here…$"
-
-FollowerPositionFixScript::
-	setvar 0x8000 0x0
-	callnative FollowerTrainerSightingPositionFix
-	compare VAR_RESULT 0xFFFF
-	goto_if_eq FollowerPositionFixScriptReturn
-	call WalkCall
-	setvar 0x8000 0x1
-	callnative FollowerTrainerSightingPositionFix
-FollowerPositionFixScriptReturn:
-	return
 	
-FollowerIntoPlayerScript::
+FollowerNPCIntoPlayerScript::
 	setvar 0x8000 0x0
-	callnative FollowerIntoPlayer
+	callnative FollowerNPCIntoPlayer
 	compare VAR_RESULT 0xFFFF
-	goto_if_eq FollowerPositionFixScriptReturn
+	goto_if_eq FollowerNPCIntoPlayerScriptReturn
 	setvar 0x8005 0xFD  @ follower
 	call WalkCall
 	setvar 0x8000 0x1
-	callnative FollowerIntoPlayer
+	callnative FollowerNPCIntoPlayer
+FollowerNPCIntoPlayerScriptReturn:
 	return
 	
 WalkCall:

@@ -685,7 +685,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     }
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER) && (heldKeys & B_BUTTON) && FlagGet(FLAG_SYS_B_DASH)
-     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0 && !FollowerComingThroughDoor())
+     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0 && !FollowerNPCComingThroughDoor())
     {
         if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
             PlayerRunSlow(direction);
@@ -1456,7 +1456,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     gPlayerAvatar.gender = gender;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_CONTROLLABLE | PLAYER_AVATAR_FLAG_ON_FOOT);
 #if OW_ENABLE_NPC_FOLLOWERS
-    CreateFollowerAvatar();
+    CreateFollowerNPCAvatar();
 #endif
 }
 
@@ -1708,7 +1708,7 @@ static void CreateStopSurfingTask(u8 direction)
     gTasks[taskId].data[0] = direction;
     Task_StopSurfingInit(taskId);
 #if OW_ENABLE_NPC_FOLLOWERS
-    PrepareFollowerDismountSurf();
+    PrepareFollowerNPCDismountSurf();
 #endif
 }
 

@@ -266,7 +266,7 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
     {
         if (Overworld_IsBikingAllowed() == TRUE && IsBikingDisallowedByPlayer() == 0
 #if OW_ENABLE_NPC_FOLLOWERS
-         && FollowerCanBike()
+         && FollowerNPCCanBike()
 #endif
          )
         {
@@ -288,7 +288,7 @@ static void ItemUseOnFieldCB_Bike(u8 taskId)
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
     
 #if OW_ENABLE_NPC_FOLLOWERS
-    FollowMe_HandleBike();
+    FollowerNPC_HandleBike();
 #endif
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
@@ -1083,7 +1083,7 @@ static void ItemUseOnFieldCB_EscapeRope(u8 taskId)
 bool8 CanUseDigOrEscapeRopeOnCurMap(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 #endif
     if (gMapHeader.allowEscaping)

@@ -394,8 +394,8 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
 #if OW_ENABLE_NPC_FOLLOWERS
-    else if (objectEventId == GetFollowerObjectId())
-        script = GetFollowerScriptPointer();
+    else if (objectEventId == GetFollowerNPCObjectId())
+        script = GetFollowerNPCScriptPointer();
 #endif
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
@@ -557,14 +557,14 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metati
 {
     if (FlagGet(FLAG_BADGE05_GET) == TRUE && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
 #if OW_ENABLE_NPC_FOLLOWERS
-     && CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
+     && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
 #endif
      )
         return EventScript_UseSurf;
 
     if (MetatileBehavior_IsWaterfall(metatileBehavior) == TRUE
 #if OW_ENABLE_NPC_FOLLOWERS
-     && CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_WATERFALL)
+     && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_WATERFALL)
 #endif
      )
     {
@@ -579,7 +579,7 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metati
 static bool32 TrySetupDiveDownScript(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
         return FALSE;
 #endif
     if (FlagGet(FLAG_BADGE07_GET) && TrySetDiveWarp() == 2)
@@ -593,7 +593,7 @@ static bool32 TrySetupDiveDownScript(void)
 static bool32 TrySetupDiveEmergeScript(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!CheckFollowerFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
         return FALSE;
 #endif
     if (FlagGet(FLAG_BADGE07_GET) && gMapHeader.mapType == MAP_TYPE_UNDERWATER && TrySetDiveWarp() == 1)

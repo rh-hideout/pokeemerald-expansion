@@ -2515,13 +2515,14 @@
 @ Follower NPCs
 
 	@ Sets an NPC up to follow the player.
+    @ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
     .macro setfollower localId:req, flags:req, script=0, battlePartner=0
 	checkfollower
 	goto_if_eq VAR_RESULT, TRUE, 1f
 	hidefollower
 	delay 16
-    callnative ScriptSetFollower
+    callnative ScriptSetFollowerNPC
 	.if \script == 0
 		.set setScript, FALSE
     .else
@@ -2536,19 +2537,19 @@
 	1:
     .endm
     
-    @ Remove the following NPC (assumes there will only ever be one).
+    @ Remove the follower NPC (assumes there will only ever be one).
     .macro destroyfollower
-    callnative ScriptDestroyFollower
+    callnative ScriptDestroyFollowerNPC
     .endm
     
-    @ Makes the player and follower face one another.
+    @ Makes the player and follower NPC face one another.
     .macro facefollower
-    callnative ScriptFaceFollower
+    callnative ScriptFaceFollowerNPC
     .endm
     
-    @ Checks if you have a follower. returns the result to VAR_RESULT.
+    @ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
     .macro checkfollower
-    callnative ScriptCheckFollower
+    callnative ScriptCheckFollowerNPC
     .endm
 
 	@ Updates Pokemon follower.
@@ -2556,8 +2557,8 @@
     callnative ScriptUpdateFollowingMon
     .endm
 
-    @ Changes the battle partner of the existing follower.
+    @ Changes the battle partner of the existing follower NPC.
     .macro changefollowerbattler battlePartner:req
-    callnative ScriptChangeFollowerBattlePartner
+    callnative ScriptChangeFollowerNPCBattlePartner
     .2byte \battlePartner
     .endm
