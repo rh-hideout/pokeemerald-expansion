@@ -811,15 +811,12 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
 #undef UNFREEZE_OBJECTS
 #undef REALLOW_MOVEMENT
 
-void EscalatorMoveFollowerNPC(u8 movementType)
+void EscalatorMoveFollowerNPC(void)
 {
-    u8 taskId;
-
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
-    taskId = CreateTask(Task_FollowerNPCHandleEscalator, 1);
-    gTasks[taskId].data[1] = movementType;
+    CreateTask(Task_FollowerNPCHandleEscalator, 1);
 }
 
 static void Task_FollowerNPCHandleEscalator(u8 taskId)

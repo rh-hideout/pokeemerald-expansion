@@ -1742,7 +1742,7 @@ static bool8 EscalatorWarpOut_WaitForPlayer(struct Task *task)
         task->data[2] = 0;
         task->data[3] = 0;
 #if OW_ENABLE_NPC_FOLLOWERS
-        EscalatorMoveFollowerNPC(task->data[1]);
+        EscalatorMoveFollowerNPC();
 #endif
 
         if ((u8)task->data[1] == FALSE)
