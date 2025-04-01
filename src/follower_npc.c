@@ -668,6 +668,8 @@ void PrepareFollowerNPCDismountSurf(void)
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_DESTROY;
 }
 
+#define tSpriteId       data[0]
+
 static void SetSurfDismount(void)
 {
     struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
@@ -683,7 +685,7 @@ static void SetSurfDismount(void)
 
     // Unbind and destroy Surf Blob
     task = CreateTask(Task_FinishSurfDismount, 1);
-    gTasks[task].data[0] = follower->fieldEffectSpriteId;
+    gTasks[task].tSpriteId = follower->fieldEffectSpriteId;
     SetSurfBlob_BobState(follower->fieldEffectSpriteId, 2);
     follower->fieldEffectSpriteId = 0; // Unbind
     FollowerNPC_HandleSprite();
@@ -705,11 +707,13 @@ static void Task_FinishSurfDismount(u8 taskId)
         return;
     }
 
-    DestroySprite(&gSprites[gTasks[taskId].data[0]]);
+    DestroySprite(&gSprites[gTasks[taskId].tSpriteId]);
     UnfreezeObjectEvents();
     DestroyTask(taskId);
     gPlayerAvatar.preventStep = FALSE;
 }
+
+#undef tSpriteId
 #endif
 
 void SetFollowerNPCSurfSpriteAfterDive(void)
