@@ -5608,6 +5608,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType, ABILITY_RUN_SCRIPT);
         break;
     case ABILITYEFFECT_MOVE_END: // Think contact abilities.
+        if (gBattlerAttacker == 1)
+        {
+            if (!IsBattlerTurnDamaged(gBattlerTarget))
+            {
+                gBattleStruct->aiMoveResult[gBattlerAttacker][gChosenMovePos]++;
+            }
+        }
         switch (gLastUsedAbility)
         {
         case ABILITY_JUSTIFIED:

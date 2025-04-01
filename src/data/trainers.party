@@ -11051,15 +11051,14 @@ Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: Check Bad Move
+AI: Smart Trainer
 
-Zigzagoon
-Level: 4
+Kartana
+Level: 100
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Shroomish
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Sacred Sword
+- Shadow Claw
+- Water Gun
 
 === TRAINER_HALEY_1 ===
 Name: HALEY

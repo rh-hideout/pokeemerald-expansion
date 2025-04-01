@@ -836,6 +836,7 @@ struct BattleStruct
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
+    u8 aiMoveResult[MAX_BATTLERS_COUNT][4];
 };
 
 struct AiBattleData

@@ -508,7 +508,8 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i];
+        gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i] - 5*gBattleStruct->aiMoveResult[battlerAi][i];
+        AI_THINKING_STRUCT->score[i] -= 5*gBattleStruct->aiMoveResult[battlerAi][i];
     }
 
     // Check special AI actions.
