@@ -10639,7 +10639,7 @@ s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedB
 s32 CalculateMoveDamageVars(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier,
                             u32 weather, u32 holdEffectAtk, u32 holdEffectDef, u32 abilityAtk, u32 abilityDef)
 {
-    u32 dmg = DoFixedDamageMoveCalc(damageCalcData);
+    s32 dmg = DoFixedDamageMoveCalc(damageCalcData);
     if (dmg != INT32_MAX)
         return dmg;
 
