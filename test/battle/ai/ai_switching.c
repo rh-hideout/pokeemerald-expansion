@@ -82,6 +82,22 @@ AI_SINGLE_BATTLE_TEST("AI will switch out if it has no move that affects the pla
     }
 }
 
+AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects the player, AI will send in a mon that can hit the player, even if not ideal")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Level(5); Moves(MOVE_CONFUSION); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 4); }
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (Wonder Guard)")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE, 100, RNG_AI_SWITCH_WONDER_GUARD);
@@ -106,16 +122,30 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spot
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: U-Turn will send out Ace Mon if it's the only one remaining")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send out Ace Mon if it's the only one remaining")
 {
+    u32 aiMove = 0;
+    // Moves testing all effects in IsSwitchOutEffect
+    PARAMETRIZE { aiMove = MOVE_U_TURN; }
+    PARAMETRIZE { aiMove = MOVE_TELEPORT; }
+    PARAMETRIZE { aiMove = MOVE_PARTING_SHOT; }
+    PARAMETRIZE { aiMove = MOVE_BATON_PASS; }
+    PARAMETRIZE { aiMove = MOVE_CHILLY_RECEPTION; }
+    PARAMETRIZE { aiMove = MOVE_SHED_TAIL; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
+        ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
+        ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
+        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_U_TURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { EXPECT_MOVE(opponent, aiMove); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
 
@@ -807,9 +837,9 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     PARAMETRIZE { aiMon = SPECIES_ORTHWORM; absorbingAbility = ABILITY_EARTH_EATER; move = MOVE_EARTHQUAKE;}
     PARAMETRIZE { aiMon = SPECIES_BRONZONG; absorbingAbility = ABILITY_LEVITATE; move = MOVE_EARTHQUAKE;}
     PARAMETRIZE { aiMon = SPECIES_ELECTRODE; absorbingAbility = ABILITY_SOUNDPROOF; move = MOVE_HYPER_VOICE;}
+    PARAMETRIZE { aiMon = SPECIES_SHIFTRY; absorbingAbility = ABILITY_WIND_RIDER; move = MOVE_HURRICANE;}
     GIVEN {
         ASSUME(B_REDIRECT_ABILITY_IMMUNITY >= GEN_5);
-        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(move); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
@@ -1083,5 +1113,22 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch in absorbing mon
     } WHEN {
         TURN { MOVE(player, MOVE_FLAMETHROWER); EXPECT_SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_CLOSE_COMBAT); EXPECT_MOVE(opponent, MOVE_DRACO_METEOR); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked player when determining which mon to send out")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_CHOICE_BAND; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_JOLTEON) { Speed(5); Moves(MOVE_EARTHQUAKE, MOVE_THUNDERBOLT); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_MACHAMP) { Speed(4); Moves(MOVE_REVENGE); }
+        OPPONENT(SPECIES_GYARADOS) { Speed(4); Moves(MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_TACKLE); item == ITEM_NONE ? EXPECT_SEND_OUT(opponent, 1) : EXPECT_SEND_OUT(opponent, 2); }
     }
 }
