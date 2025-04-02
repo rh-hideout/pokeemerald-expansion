@@ -3938,7 +3938,7 @@ static u32 IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statI
         return NO_INCREASE;
 
     // Don't increase stats if opposing battler has Unaware
-    if (IsBattlerSideUnaware(battlerDef))
+    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, AI_DATA))
         return NO_INCREASE;
 
     // Don't increase stat if AI is at +4
@@ -4428,11 +4428,11 @@ bool32 IsBattlerItemEnabled(u32 battler)
     return TRUE;
 }
 
-bool32 IsBattlerSideUnaware(u32 battler)
+bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiData)
 {
-    if (AI_DATA->abilities[battler] == ABILITY_UNAWARE)
+    if (aiData->abilities[battler] == ability)
         return TRUE;
-    if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ABILITY_UNAWARE)
+    if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
 }
