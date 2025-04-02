@@ -233,7 +233,6 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
 void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, struct AiLogicData *aiData);
 u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move);
-bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 

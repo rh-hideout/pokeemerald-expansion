@@ -512,7 +512,7 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
-        if (AI_DATA->items[battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(battlerDef))
+        if (AI_DATA->items[battlerDef] == ITEM_NONE)
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
@@ -4409,17 +4409,4 @@ bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef)
             return TRUE;
     }
     return FALSE;
-}
-
-bool32 IsBattlerItemEnabled(u32 battler)
-{
-    if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_NEGATE_UNAWARE)
-        return TRUE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-        return FALSE;
-    if (gStatuses3[battler] & STATUS3_EMBARGO)
-        return FALSE;
-    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
-        return FALSE;
-    return TRUE;
 }
