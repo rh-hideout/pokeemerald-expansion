@@ -377,6 +377,7 @@ struct EvoScreenData
     u8 menuPos;
     u8 arrowSpriteId;
     bool8 isMega;
+    u32 arrowSpriteDist[10];
 };
 
 struct FromScreenData
@@ -6099,7 +6100,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
                 else
                     pos = 0;
             } while (!sPokedexView->sEvoScreenData.seen[pos]);
-            gSprites[sPokedexView->sEvoScreenData.arrowSpriteId].y = base_y + base_y_offset * pos;
+            gSprites[sPokedexView->sEvoScreenData.arrowSpriteId].y = sPokedexView->sEvoScreenData.arrowSpriteDist[pos] + base_y + base_y_offset * pos;
             sPokedexView->sEvoScreenData.menuPos = pos;
         }
         else if (JOY_NEW(DPAD_UP))
@@ -6112,7 +6113,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
                     pos = max;
             } while (!sPokedexView->sEvoScreenData.seen[pos]);
 
-            gSprites[sPokedexView->sEvoScreenData.arrowSpriteId].y = base_y + base_y_offset * pos;
+            gSprites[sPokedexView->sEvoScreenData.arrowSpriteId].y = sPokedexView->sEvoScreenData.arrowSpriteDist[pos] + base_y + base_y_offset * pos;
             sPokedexView->sEvoScreenData.menuPos = pos;
         }
 
@@ -6349,25 +6350,67 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
 #define EVO_SCREEN_CRITS_DIGITS 1
 #define EVO_SCREEN_DMG_DIGITS 2
 
+static u32 GetSpeciesNameOffset(u32 nameWidth)
+{
+    if (nameWidth <= 8)
+        return 8;
+    if (nameWidth > 8 && nameWidth <= 10)
+        return 12;
+    else
+        return 24;
+
+}
+
+static u32 GetSpeciesNameFontId(u32 nameWidth)
+{
+    if (nameWidth <= 8)
+        return FONT_SMALL;
+    if (nameWidth > 8 && nameWidth <= 10)
+        return FONT_SMALL_NARROW;
+    else
+        return FONT_SMALL_NARROWER;
+
+}
+
+static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
+{
+    u32 i = 0;
+
+    while (speciesName[i] != EOS)
+        i++;
+
+    return i;
+
+}
+
 static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
 {
     int i;
     //const struct MapHeader *mapHeader;
+    const u8 *speciesName = GetSpeciesName(species);
+    u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(speciesName);
+    u32 speciesNameWidth = GetStringWidth(GetSpeciesNameFontId(speciesNameWidthInChars), speciesName, 0);
+    u32 speciesNameOffset = GetSpeciesNameOffset(speciesNameWidth);
     int fontId;
     u16 targetSpecies = 0;
     bool8 left = TRUE;
-    u8 base_x = 13+8;
-    u8 base_x_offset = 54+8;
+    u8 base_x = 21 ;
     u8 base_y = 51;
     u8 base_y_offset = 9;
     u8 times = 0;
-    u8 depth_x = 16;
+    u8 depth_x = 4;
+    u32 depth_offset = depth > 0 ? depth - 1 : 0;
+    u32 maxScreenWidth = 220 - ((depth_x * depth_offset) + speciesNameWidth);
+    u32 base_x_offset = speciesNameWidth + speciesNameOffset + (8 * depth_offset); // for evo method info
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (sPokedexView->sEvoScreenData.isMega)
         return;
 
+
     StringCopy(gStringVar1, GetSpeciesName(species));
+
+    sPokedexView->sEvoScreenData.arrowSpriteDist[depth] = numLines;
 
     //If there are no evolutions print text and return
     if (evolutions == NULL)
@@ -6375,7 +6418,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         if (depth == 0)
         {
             StringExpandPlaceholders(gStringVar4, sText_EVO_NONE);
-            PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, base_x-7-7, base_y + base_y_offset*(*depth_i));
+            PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, base_x-7-7, base_y + base_y_offset*(*depth_i) + numLines);
         }
         return;
     }
@@ -6394,8 +6437,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
 
         targetSpecies = evolutions[i].targetSpecies;
         sPokedexView->sEvoScreenData.targetSpecies[*depth_i] = targetSpecies;
-        CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i), 0);
-        HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset, *depth_i); //evolution mon name
+        CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i) + numLines, 0);
+        HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset + numLines, *depth_i); //evolution mon name
 
         for (j = 0; j < MAX_EVOLUTION_ICONS; j++)
         {
@@ -6421,7 +6464,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             StringCopy(gStringVar4, COMPOUND_STRING("{LV}{UP_ARROW}"));
             if (evolutions[i].param > 1)
             {
-                StringAppend(gStringVar4, COMPOUND_STRING(" to "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(" to "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEFT_ALIGN, EVO_SCREEN_LVL_DIGITS); //level
                 StringAppend(gStringVar4, gStringVar2);
             }
@@ -6512,7 +6555,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             {
             // Gen 2
             case IF_GENDER:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
                     case MON_MALE:   StringAppend(gStringVar4, COMPOUND_STRING("Male"));   break;
@@ -6520,23 +6562,18 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 }
                 break;
             case IF_MIN_FRIENDSHIP:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("high friendship"));
                 break;
             case IF_ATK_GT_DEF:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("Atk > Def"));
                 break;
             case IF_ATK_EQ_DEF:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("Atk = Def"));
                 break;
             case IF_ATK_LT_DEF:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
                 break;
             case IF_TIME:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
                     case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
@@ -6546,7 +6583,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 }
                 break;
             case IF_NOT_TIME:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
                     case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
@@ -6556,7 +6592,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 }
                 break;
             case IF_HOLD_ITEM:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("holds "));
                 CopyItemName(evolutions[i].params[j].arg1, gStringVar2); //item
                 StringAppend(gStringVar4, gStringVar2);
@@ -6564,18 +6599,15 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             // Gen 3
             case IF_PID_UPPER_MODULO_10_GT:
             case IF_PID_UPPER_MODULO_10_LE:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1 * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, COMPOUND_STRING("random %"));
                 StringAppend(gStringVar4, gStringVar2);
-                StringAppend(gStringVar4, COMPOUND_STRING("% at random"));
                 break;
             case IF_MIN_BEAUTY:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
-                StringAppend(gStringVar4, COMPOUND_STRING("high beauty"));
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}beauty"));
                 break;
             // Gen 4
             case IF_SPECIES_IN_PARTY:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1)); //mon name
                 StringAppend(gStringVar4, COMPOUND_STRING(" in party"));
                 break;
@@ -6596,58 +6628,45 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 break;
             // Gen 6
             case IF_TYPE_IN_PARTY:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name); //type name
                 StringAppend(gStringVar4, COMPOUND_STRING("-type in party"));
                 break;
             case IF_WEATHER:
                 break;
             case IF_KNOWS_MOVE_TYPE:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
                 StringAppend(gStringVar4, COMPOUND_STRING(" move"));
                 break;
             // Gen 8
             case IF_NATURE:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringCopy(gStringVar2, gNaturesInfo[evolutions[i].params[j].arg1].name);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" nature"));
                 break;
             case IF_AMPED_NATURE:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("Amped natures"));
                 break;
             case IF_LOW_KEY_NATURE:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING("Low-Key natures"));
                 break;
            case IF_RECOIL_DAMAGE_GE:
-                break;
             case IF_CURRENT_DAMAGE_GE:
-                break;
             case IF_CRITICAL_HITS_GE:
-                break;
             case IF_USED_MOVE_X_TIMES:
                 break;
             // Gen 9
             case IF_DEFEAT_X_WITH_ITEMS:
-                break;
             case IF_PID_MODULO_100_GT:
-                break;
             case IF_PID_MODULO_100_EQ:
-                break;
             case IF_PID_MODULO_100_LT:
                 break;
             case IF_MIN_OVERWORLD_STEPS:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING(", after "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 4);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" steps"));
                 break;
             case IF_BAG_ITEM_COUNT:
-                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" "));
@@ -6664,16 +6683,16 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             }
         }
 
-        fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, 137);
+        fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
 
         StringAppend(gStringVar4, COMPOUND_STRING("."));
-        BreakStringAutomatic(gStringVar4, 137, MAX_EVO_METHOD_LINES, fontId, FALSE);
-
-        if (i != 0)
-            numLines += CountLineBreaks(gStringVar4) * 8;
-
+        BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, FALSE);
+            
         PrintInfoScreenTextSmall(gStringVar4, fontId, base_x + depth_x*depth+base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
         (*depth_i)++;
+
+        numLines += (CountLineBreaks(gStringVar4)) * 8;
+        sPokedexView->sEvoScreenData.arrowSpriteDist[depth + 1] = numLines;
 
         PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
     }//For loop end

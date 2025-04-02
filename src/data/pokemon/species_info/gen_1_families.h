@@ -75,17 +75,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
                 CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_SMOLIV},
                     {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
                     {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA}
-                )
-            },
-            {EVO_LEVEL, 16, SPECIES_IVYSAUR,
-                CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_SMOLIV},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
                     {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
                     {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA}
                 )
             }
-        ),
+        )
     },
 
     [SPECIES_IVYSAUR] =
