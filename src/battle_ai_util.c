@@ -3937,6 +3937,10 @@ static u32 IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statI
     if (considerContrary && AI_DATA->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
+    // Don't increase stats if opposing battler has Unaware
+    if (AI_DATA->abilities[battlerDef] == ABILITY_UNAWARE)
+        return NO_INCREASE;
+
     // Don't increase stat if AI is at +4
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
         return NO_INCREASE;
