@@ -3938,7 +3938,7 @@ static u32 IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statI
         return NO_INCREASE;
 
     // Don't increase stats if opposing battler has Unaware
-    if (AI_DATA->abilities[battlerDef] == ABILITY_UNAWARE)
+    if (IsBattlerSideUnaware(battlerDef))
         return NO_INCREASE;
 
     // Don't increase stat if AI is at +4
@@ -4426,4 +4426,13 @@ bool32 IsBattlerItemEnabled(u32 battler)
     if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
         return FALSE;
     return TRUE;
+}
+
+bool32 IsBattlerSideUnaware(u32 battler)
+{
+    if (AI_DATA->abilities[battler] == ABILITY_UNAWARE)
+        return TRUE;
+    if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ABILITY_UNAWARE)
+        return TRUE;
+    return FALSE;
 }
