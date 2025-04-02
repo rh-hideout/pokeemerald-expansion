@@ -512,6 +512,8 @@ SINGLE_BATTLE_TEST("Red Card activates and is consumed but fails if the attacker
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
         NOT MESSAGE("Wobbuffet is switched out with the Eject Button!");
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_NONE);
     }
 }
 
