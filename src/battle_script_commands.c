@@ -6355,8 +6355,8 @@ static void Cmd_moveend(void)
 
                 // Not strictly a protect effect, but works the same way
                 if (gProtectStructs[gBattlerTarget].beakBlastCharge
-                    && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-                    && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+                 && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+                 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleMons[gBattlerAttacker].status1 = STATUS1_BURN;
@@ -11771,7 +11771,7 @@ static void Cmd_setprotectlike(void)
     CMD_ARGS();
 
     bool32 protectFails = TRUE;
-    u32 notLastTurn = TRUE;
+    bool32 notLastTurn = TRUE;
     u32 protectMethod = GetMoveProtectMethod(gCurrentMove);
 
     TryResetProtectUseCounter(gBattlerAttacker);

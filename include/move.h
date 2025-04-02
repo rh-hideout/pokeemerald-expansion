@@ -137,10 +137,7 @@ struct MoveInfo
             u16 stringId;
             u16 status;
         } twoTurnAttack;
-        struct {
-            u16 unused;
-            u16 method; // can be used to remove the hardcoded values
-        } protect;
+        u32 protectMethod;
         u32 status;
         u32 moveProperty;
         u32 holdEffect;
@@ -473,7 +470,7 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
 
 static inline u32 GetMoveProtectMethod(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].argument.protect.method;
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
 }
 
 static inline u32 GetMoveEffectArg_Status(u32 moveId)
