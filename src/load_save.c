@@ -213,6 +213,9 @@ void LoadLastThreeMons(void)
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_HP_LOST, &data);
         data = gPlayerParty[i].status;
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_STATUS, &data);
+        if (i >= gPlayerPartyCount)
+            ZeroMonData(&gPlayerParty[i]);
+        
     }
 
     if (OW_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
