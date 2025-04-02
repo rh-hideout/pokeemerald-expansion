@@ -27730,7 +27730,7 @@ F_TRAINER_FEMALE |
 #line 11059
                 MOVE_SACRED_SWORD,
                 MOVE_SHADOW_CLAW,
-                MOVE_WATER_GUN,
+                MOVE_ROCK_SLIDE,
             },
             },
         },

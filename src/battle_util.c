@@ -5608,13 +5608,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         effect = CanAbilityAbsorbMove(gBattlerAttacker, battler, gLastUsedAbility, move, moveType, ABILITY_RUN_SCRIPT);
         break;
     case ABILITYEFFECT_MOVE_END: // Think contact abilities.
-        if (gBattlerAttacker == 1)
-        {
-            if (!IsBattlerTurnDamaged(gBattlerTarget))
-            {
-                gBattleStruct->aiMoveResult[gBattlerAttacker][gChosenMovePos]++;
-            }
-        }
         switch (gLastUsedAbility)
         {
         case ABILITY_JUSTIFIED:
@@ -12385,4 +12378,33 @@ bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move)
     }
 
     return effect;
+}
+
+enum MoveFailTracking WhyDidAiMoveFail(void)
+{
+    if (IsBattlerTurnDamaged(gBattlerTarget) || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+    {
+        return MOVE_FAIL_NOT_TRACKED;
+    }
+
+    switch (gBattleMons[gBattlerTarget].ability)
+    {
+    case ABILITY_SOUNDPROOF:
+        if (IsSoundMove(gCurrentMove))
+            return TRACK_TYPE_SOUNDPROOF;
+        break;
+    case ABILITY_BULLETPROOF:
+        if (IsBallisticMove(gCurrentMove))
+            return TRACK_TYPE_BULLETPROOF;
+        break;
+    case ABILITY_WIND_RIDER:
+        if (IsWindMove(gCurrentMove))
+            return TRACK_TYPE_WIND_RIDER;
+        break;
+    }
+
+    if (gBattleStruct->dynamicMoveType != TYPE_NONE)
+        return (enum MoveFailTracking)gBattleStruct->dynamicMoveType;
+    else
+        return (enum MoveFailTracking)gMovesInfo[gCurrentMove].type;
 }

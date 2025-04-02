@@ -484,6 +484,20 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     AI_DATA->aiCalcInProgress = FALSE;
 }
 
+static u32 PpStallReduction(u32 move)
+{
+    enum MoveFailTracking type;
+    if (IsSoundMove(move))
+        type = TRACK_TYPE_SOUNDPROOF;
+    else if (IsBallisticMove(move))
+        type = TRACK_TYPE_BULLETPROOF;
+    else if (IsWindMove(move))
+        type = TRACK_TYPE_WIND_RIDER;
+    else
+        type = (enum MoveFailTracking)GetMoveType(move);
+    return gBattleStruct->aiMoveFailTracking[type]*5;
+}
+
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -508,9 +522,14 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i] - 5*gBattleStruct->aiMoveResult[battlerAi][i];
-        AI_THINKING_STRUCT->score[i] -= 5*gBattleStruct->aiMoveResult[battlerAi][i];
+        u32 currMove = gBattleMons[battlerAi].moves[i];
+        AI_THINKING_STRUCT->score[i] -= PpStallReduction(currMove);
+        gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i];
     }
+    //for (u32 index = 0; index < MOVE_FAIL_TRACKING_COUNT; index++)
+    //{
+    //    MgbaPrintf(MGBA_LOG_WARN, "%2u: %u", index, gBattleStruct->aiMoveFailTracking[index]);
+    //}
 
     // Check special AI actions.
     if (AI_THINKING_STRUCT->aiAction & AI_ACTION_FLEE)
