@@ -12,6 +12,7 @@
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
+#include "line_break.h"
 #include "main.h"
 #include "malloc.h"
 #include "menu.h"
@@ -278,6 +279,9 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 
 #define POKEBALL_ROTATION_TOP    64
 #define POKEBALL_ROTATION_BOTTOM (POKEBALL_ROTATION_TOP - 16)
+
+// for evolution method listings
+#define MAX_EVO_METHOD_LINES 10
 
 // Coordinates of the Pokémon sprite on its page (info/cry screens)
 #define MON_PAGE_X 48
@@ -568,7 +572,7 @@ static void Task_LoadEvolutionScreen(u8 taskId);
 static void Task_HandleEvolutionScreenInput(u8 taskId);
 static void Task_SwitchScreensFromEvolutionScreen(u8 taskId);
 static void Task_ExitEvolutionScreen(u8 taskId);
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i);
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
 static u8 PrintPreEvolutions(u8 taskId, u16 species);
 //Stat bars on scrolling screens
 static void TryDestroyStatBars(void);
@@ -6011,7 +6015,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
         u32 iconDepth = depth;
         //Print evo info and icons
         gTasks[taskId].data[3] = 0;
-        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth);
+        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
         LoadSpritePalette(&gSpritePalette_Arrow);
         GetSeenFlagTargetSpecies();
         if (sPokedexView->sEvoScreenData.numAllEvolutions > 0 && sPokedexView->sEvoScreenData.numSeen > 0)
@@ -6345,10 +6349,11 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
 #define EVO_SCREEN_CRITS_DIGITS 1
 #define EVO_SCREEN_DMG_DIGITS 2
 
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i)
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
 {
     int i;
     //const struct MapHeader *mapHeader;
+    int fontId;
     u16 targetSpecies = 0;
     bool8 left = TRUE;
     u8 base_x = 13+8;
@@ -6498,65 +6503,79 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         // Check for additional conditions. Skips if there's no additional conditions.
         for (j = 0; evolutions[i].params != NULL && evolutions[i].params[j].condition != CONDITIONS_END; j++)
         {
+            if (j == 0)
+            {
+                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+            }
+            
             switch((enum EvolutionConditions)evolutions[i].params[j].condition)
             {
             // Gen 2
             case IF_GENDER:
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
-                    case MON_MALE:   StringAppend(gStringVar4, COMPOUND_STRING(", Male"));   break;
-                    case MON_FEMALE: StringAppend(gStringVar4, COMPOUND_STRING(", Female")); break;
+                    case MON_MALE:   StringAppend(gStringVar4, COMPOUND_STRING("Male"));   break;
+                    case MON_FEMALE: StringAppend(gStringVar4, COMPOUND_STRING("Female")); break;
                 }
                 break;
             case IF_MIN_FRIENDSHIP:
-                StringAppend(gStringVar4, COMPOUND_STRING(", high friendship"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("high friendship"));
                 break;
             case IF_ATK_GT_DEF:
-                StringAppend(gStringVar4, COMPOUND_STRING(", Atk > Def"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("Atk > Def"));
                 break;
             case IF_ATK_EQ_DEF:
-                StringAppend(gStringVar4, COMPOUND_STRING(", Atk = Def"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("Atk = Def"));
                 break;
             case IF_ATK_LT_DEF:
-                StringAppend(gStringVar4, COMPOUND_STRING(", Atk < Def"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
                 break;
             case IF_TIME:
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING(", Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING(", Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING(", Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING(", Night"));   break;
+                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
+                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("Day"));     break;
+                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("Evening")); break;
+                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Night"));   break;
                 }
                 break;
             case IF_NOT_TIME:
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 switch(evolutions[i].params[j].arg1)
                 {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING(", NOT Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING(", NOT Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING(", NOT Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING(", Day"));         break; // More intuitive than "NOT Night"
+                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
+                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));     break;
+                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Evening")); break;
+                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Day"));         break; // More intuitive than "NOT Night"
                 }
                 break;
             case IF_HOLD_ITEM:
-                StringAppend(gStringVar4, COMPOUND_STRING(", holds "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("holds "));
                 CopyItemName(evolutions[i].params[j].arg1, gStringVar2); //item
                 StringAppend(gStringVar4, gStringVar2);
                 break;
             // Gen 3
             case IF_PID_UPPER_MODULO_10_GT:
             case IF_PID_UPPER_MODULO_10_LE:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1 * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING("% at random"));
                 break;
             case IF_MIN_BEAUTY:
-                StringAppend(gStringVar4, COMPOUND_STRING(", high beauty"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("high beauty"));
                 break;
             // Gen 4
             case IF_SPECIES_IN_PARTY:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1)); //mon name
                 StringAppend(gStringVar4, COMPOUND_STRING(" in party"));
                 break;
@@ -6577,29 +6596,31 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 break;
             // Gen 6
             case IF_TYPE_IN_PARTY:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name); //type name
                 StringAppend(gStringVar4, COMPOUND_STRING("-type in party"));
                 break;
             case IF_WEATHER:
                 break;
             case IF_KNOWS_MOVE_TYPE:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
                 StringAppend(gStringVar4, COMPOUND_STRING(" move"));
                 break;
             // Gen 8
             case IF_NATURE:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringCopy(gStringVar2, gNaturesInfo[evolutions[i].params[j].arg1].name);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" nature"));
                 break;
             case IF_AMPED_NATURE:
-                StringAppend(gStringVar4, COMPOUND_STRING(", Amped natures"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("Amped natures"));
                 break;
             case IF_LOW_KEY_NATURE:
-                StringAppend(gStringVar4, COMPOUND_STRING(", Low-Key natures"));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                StringAppend(gStringVar4, COMPOUND_STRING("Low-Key natures"));
                 break;
            case IF_RECOIL_DAMAGE_GE:
                 break;
@@ -6619,13 +6640,14 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_PID_MODULO_100_LT:
                 break;
             case IF_MIN_OVERWORLD_STEPS:
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 StringAppend(gStringVar4, COMPOUND_STRING(", after "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 4);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" steps"));
                 break;
             case IF_BAG_ITEM_COUNT:
-                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+                //StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" "));
@@ -6635,13 +6657,25 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case CONDITIONS_END:
                 break;
             }
+
+            if (evolutions[i].params[j+1].condition != CONDITIONS_END)
+            {
+                StringAppend(gStringVar4, COMPOUND_STRING(", "));
+            }
         }
 
-        StringAppend(gStringVar4, COMPOUND_STRING("."));
-        PrintInfoScreenTextSmall(gStringVar4, GetFontIdToFit(gStringVar4, FONT_SMALL, 0, 137), base_x + depth_x*depth+base_x_offset, base_y + base_y_offset*(*depth_i)); //Print actual instructions
+        fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, 137);
 
+        StringAppend(gStringVar4, COMPOUND_STRING("."));
+        BreakStringAutomatic(gStringVar4, 137, MAX_EVO_METHOD_LINES, fontId, FALSE);
+
+        if (i != 0)
+            numLines += CountLineBreaks(gStringVar4) * 8;
+
+        PrintInfoScreenTextSmall(gStringVar4, fontId, base_x + depth_x*depth+base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
         (*depth_i)++;
-        PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i);
+
+        PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
     }//For loop end
 }
 

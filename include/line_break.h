@@ -22,12 +22,13 @@ struct StringLine {
 };
 
 void StripLineBreaks(u8 *src);
-void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId);
-void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId);
+u32 CountLineBreaks(u8 *src);
+void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, bool32 showPrompt);
+void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, bool32 showPrompt);
 
 bool32 IsWordSplittingChar(const u8 *src, u32 index);
 u32 GetStringBadness(struct StringLine *stringLines, u32 numLines, u32 maxWidth);
-void BuildNewString(struct StringLine *stringLines, u32 numLines, u32 maxLines, u8 *str);
+void BuildNewString(struct StringLine *stringLines, u32 numLines, u32 maxLines, u8 *str, bool32 showPrompt);
 bool32 StringHasManualBreaks(u8 *src);
 
 #endif // GUARD_LINE_BREAK_H
