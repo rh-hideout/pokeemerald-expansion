@@ -1738,6 +1738,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_BELLY_DRUM:
         case EFFECT_FILLET_AWAY:
             if (aiData->abilities[battlerDef] == ABILITY_UNAWARE)
+                ADJUST_SCORE(-10);
             if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
             else if (aiData->hpPercents[battlerAtk] <= 60)
