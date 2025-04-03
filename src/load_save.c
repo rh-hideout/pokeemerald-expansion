@@ -213,8 +213,6 @@ void LoadLastThreeMons(void)
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_HP_LOST, &data);
         data = gPlayerParty[i].status;
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_STATUS, &data);
-        if (i >= gPlayerPartyCount)
-            ZeroMonData(&gPlayerParty[i]);
         
     }
 
