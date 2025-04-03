@@ -12380,31 +12380,29 @@ bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move)
     return effect;
 }
 
-enum MoveFailTracking WhyDidAiMoveFail(void)
+void UpdateStallMons(void)
 {
-    if (IsBattlerTurnDamaged(gBattlerTarget) || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+    if (IsBattlerTurnDamaged(gBattlerTarget) || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove) || gMovesInfo[gCurrentMove].category == DAMAGE_CATEGORY_STATUS)
+        return;
+    if (gMovesInfo[gCurrentMove].target == MOVE_TARGET_SELECTED)
     {
-        return MOVE_FAIL_NOT_TRACKED;
+        u32 moveType = GetBattleMoveType(gCurrentMove); //  Probably doesn't handle dynamic move types right now
+        u32 ability = GetBattlerAbility(gBattlerTarget);
+        if (CanAbilityAbsorbMove(gBattlerAttacker, gBattlerTarget, ability, gCurrentMove, moveType, ABILITY_CHECK_TRIGGER))
+        {
+            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+        }
+        else if (CanAbilityBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove, ability, ABILITY_CHECK_TRIGGER))
+        {
+            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+        }
+        else if (AI_GetMoveEffectiveness(gCurrentMove, gBattlerAttacker, gBattlerTarget) == 0)
+        {
+            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+        }
     }
-
-    switch (gBattleMons[gBattlerTarget].ability)
-    {
-    case ABILITY_SOUNDPROOF:
-        if (IsSoundMove(gCurrentMove))
-            return TRACK_TYPE_SOUNDPROOF;
-        break;
-    case ABILITY_BULLETPROOF:
-        if (IsBallisticMove(gCurrentMove))
-            return TRACK_TYPE_BULLETPROOF;
-        break;
-    case ABILITY_WIND_RIDER:
-        if (IsWindMove(gCurrentMove))
-            return TRACK_TYPE_WIND_RIDER;
-        break;
-    }
-
-    if (gBattleStruct->dynamicMoveType != TYPE_NONE)
-        return (enum MoveFailTracking)gBattleStruct->dynamicMoveType;
     else
-        return (enum MoveFailTracking)gMovesInfo[gCurrentMove].type;
+    {
+        //  This needs some other handling
+    }
 }

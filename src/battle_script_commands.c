@@ -6736,22 +6736,14 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_UPDATE_LAST_MOVES:
+            if (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT)
+                UpdateStallMons();
             if ((gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
              || (gBattleMons[gBattlerAttacker].status2 & (STATUS2_FLINCHED))
              || gProtectStructs[gBattlerAttacker].prlzImmobility)
-            {
-                if (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT)
-                {
-                    enum MoveFailTracking failure = WhyDidAiMoveFail();
-                    if (failure < MOVE_FAIL_TRACKING_COUNT)
-                        gBattleStruct->aiMoveFailTracking[failure]++;
-                }
                 gBattleStruct->battlerState[gBattlerAttacker].lastMoveFailed = TRUE;
-            }
             else
-            {
                 gBattleStruct->battlerState[gBattlerAttacker].lastMoveFailed = FALSE;
-            }
 
             // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
             if (GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP

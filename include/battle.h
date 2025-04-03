@@ -643,36 +643,6 @@ struct BattlerState
     // End of Word
 };
 
-enum MoveFailTracking
-{
-    TRACK_TYPE_NONE,
-    TRACK_TYPE_NORMAL,
-    TRACK_TYPE_FIGHTING,
-    TRACK_TYPE_FLYING,
-    TRACK_TYPE_POISON,
-    TRACK_TYPE_GROUND,
-    TRACK_TYPE_ROCk,
-    TRACK_TYPE_BUG,
-    TRACK_TYPE_GHOST,
-    TRACK_TYPE_STEEL,
-    TRACK_TYPE_MYSTERY,
-    TRACK_TYPE_FIRE,
-    TRACK_TYPE_WATER,
-    TRACK_TYPE_GRASS,
-    TRACK_TYPE_ELECTRIC,
-    TRACK_TYPE_PSYCHIC,
-    TRACK_TYPE_ICE,
-    TRACK_TYPE_DRAGON,
-    TRACK_TYPE_DARK,
-    TRACK_TYPE_FAIRY,
-    TRACK_TYPE_STELLAR,
-    TRACK_TYPE_SOUNDPROOF,
-    TRACK_TYPE_BULLETPROOF,
-    TRACK_TYPE_WIND_RIDER,
-    MOVE_FAIL_TRACKING_COUNT,
-    MOVE_FAIL_NOT_TRACKED,
-};
-
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
 struct BattleStruct
 {
@@ -866,7 +836,7 @@ struct BattleStruct
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
-    u8 aiMoveFailTracking[MOVE_FAIL_TRACKING_COUNT];
+    u8 playerStallMons[PARTY_SIZE];
 };
 
 struct AiBattleData

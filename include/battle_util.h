@@ -354,6 +354,6 @@ void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
 bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move);
-enum MoveFailTracking WhyDidAiMoveFail(void);
+void UpdateStallMons(void);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -484,18 +484,42 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     AI_DATA->aiCalcInProgress = FALSE;
 }
 
-static u32 PpStallReduction(u32 move)
+u32 GetPartyMonAbility(struct Pokemon *mon)
 {
-    enum MoveFailTracking type;
-    if (IsSoundMove(move))
-        type = TRACK_TYPE_SOUNDPROOF;
-    else if (IsBallisticMove(move))
-        type = TRACK_TYPE_BULLETPROOF;
-    else if (IsWindMove(move))
-        type = TRACK_TYPE_WIND_RIDER;
-    else
-        type = (enum MoveFailTracking)GetMoveType(move);
-    return gBattleStruct->aiMoveFailTracking[type]*5;
+    //  Doesn't have any special handling yet
+    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    u32 ability = gSpeciesInfo[species].abilities[GetMonData(mon, MON_DATA_ABILITY_NUM)];
+    return ability;
+}
+
+static u32 PpStallReduction(u32 move, u32 attacker)
+{
+    if (move == 0)
+        return 0;
+    u32 totalStallValue = 0;
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        u32 currentStallValue = gBattleStruct->playerStallMons[partyIndex];
+        if (currentStallValue == 0)
+            continue;
+        u32 species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
+        u32 ability = GetPartyMonAbility(&gPlayerParty[partyIndex]);
+        u32 moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
+        if (CanAbilityAbsorbMove(attacker, 0, ability, move, moveType, ABILITY_CHECK_TRIGGER)
+         || CanAbilityBlockMove(attacker, 0, move, ability, ABILITY_CHECK_TRIGGER)
+         || (CalcPartyMonTypeEffectivenessMultiplier(move, species, ability) == 0))
+        {
+            totalStallValue += currentStallValue;
+        }
+    }
+    u32 rnd = Random32();
+    for (u32 i = 0; i < totalStallValue; i++)
+    {
+        if (rnd & 1)
+            return 20;
+        rnd = rnd >> 1;
+    }
+    return 0;
 }
 
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
@@ -523,13 +547,9 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         u32 currMove = gBattleMons[battlerAi].moves[i];
-        AI_THINKING_STRUCT->score[i] -= PpStallReduction(currMove);
+        AI_THINKING_STRUCT->score[i] -= PpStallReduction(currMove, battlerAi);
         gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i];
     }
-    //for (u32 index = 0; index < MOVE_FAIL_TRACKING_COUNT; index++)
-    //{
-    //    MgbaPrintf(MGBA_LOG_WARN, "%2u: %u", index, gBattleStruct->aiMoveFailTracking[index]);
-    //}
 
     // Check special AI actions.
     if (AI_THINKING_STRUCT->aiAction & AI_ACTION_FLEE)
