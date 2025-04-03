@@ -600,6 +600,8 @@ static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
 u32 GetSpeciesNameOffset(u32 nameWidth);
 u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
+bool32 IsSpeciesAlcremie(u32 targetSpecies);
+bool32 IsItemSweet(u32 item);
 
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
@@ -6386,6 +6388,16 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
     if (depth == 0)
 }*/
 
+bool32 IsSpeciesAlcremie(u32 targetSpecies)
+{
+    return targetSpecies >= SPECIES_ALCREMIE_STRAWBERRY_VANILLA_CREAM && targetSpecies <= SPECIES_ALCREMIE_RIBBON_RAINBOW_SWIRL;
+}
+
+bool32 IsItemSweet(u32 item)
+{
+    return item >= ITEM_STRAWBERRY_SWEET && item <= ITEM_RIBBON_SWEET;
+}
+
 static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
 {
     int i;
@@ -6402,7 +6414,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
 
     if (sPokedexView->sEvoScreenData.isMega)
         return;
-
 
     StringCopy(gStringVar1, GetSpeciesName(species));
 
@@ -6422,6 +6433,11 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
     //Calculate number of possible direct evolutions (e.g. Eevee has 5 but torchic has 1)
     for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         times += 1;
+
+    if (times > 9 && species == SPECIES_MILCERY)
+        times = 9;
+
+
     gTasks[taskId].data[3] = times;
     sPokedexView->sEvoScreenData.numAllEvolutions += times;
 
@@ -6432,24 +6448,14 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         left = !left;
 
         targetSpecies = evolutions[i].targetSpecies;
+        bool32 isAlcremie = IsSpeciesAlcremie(targetSpecies);
+
         u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
-        //u32 speciesNameWidthInChars1 = 12;
         u32 speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
+            
         u32 speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
-        u32 speciesNameOffset = GetSpeciesNameOffset(speciesNameWidth);
-        u32 base_x_offset = speciesNameWidth + (depth_offset + base_x + speciesNameCharWidth); // for evo method info
+        u32 base_x_offset = speciesNameWidth + base_x + depth_offset; // for evo method info
         u32 maxScreenWidth = 230 - base_x_offset;
-    
-        MgbaPrintf(MGBA_LOG_WARN, "Name: %S", GetSpeciesName(targetSpecies));
-        MgbaPrintf(MGBA_LOG_WARN, "speciesNameWidth: %u", speciesNameWidth);
-        MgbaPrintf(MGBA_LOG_WARN, "speciesNameWidthInChars: %u", speciesNameWidthInChars);
-        MgbaPrintf(MGBA_LOG_WARN, "speciesNameCharWidth: %u", speciesNameCharWidth);
-        MgbaPrintf(MGBA_LOG_WARN, "speciesNameOffset: %u", speciesNameOffset);
-        MgbaPrintf(MGBA_LOG_WARN, "base_x_offset: %u", base_x_offset);
-        MgbaPrintf(MGBA_LOG_WARN, "depth_offset: %u", depth_offset);
-        MgbaPrintf(MGBA_LOG_WARN, "depth: %u", depth);
-        MgbaPrintf(MGBA_LOG_WARN, "maxScreenWidth: %u", maxScreenWidth);
-        MgbaPrintf(MGBA_LOG_WARN, "-------------------------");
 
         sPokedexView->sEvoScreenData.targetSpecies[*depth_i] = targetSpecies;
         CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i) + numLines, 0);
@@ -6479,7 +6485,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             StringCopy(gStringVar4, COMPOUND_STRING("{LV}{UP_ARROW}"));
             if (evolutions[i].param > 1)
             {
-                //StringAppend(gStringVar4, COMPOUND_STRING(" to "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEFT_ALIGN, EVO_SCREEN_LVL_DIGITS); //level
                 StringAppend(gStringVar4, gStringVar2);
             }
@@ -6497,6 +6502,19 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             break;
         case EVO_BATTLE_END:
             StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("End battle"));
+            break;
+        case EVO_SPIN:
+                StringCopy(gStringVar4, COMPOUND_STRING("Spin "));
+                if (evolutions[i].param == SPIN_CW_SHORT)
+                    StringAppend(gStringVar4, COMPOUND_STRING("CW <5s"));
+                else if (evolutions[i].param == SPIN_CW_LONG)
+                    StringAppend(gStringVar4, COMPOUND_STRING("CW >5s"));
+                else if (evolutions[i].param == SPIN_CCW_SHORT)
+                    StringAppend(gStringVar4, COMPOUND_STRING("CCW <5s"));
+                else if (evolutions[i].param == SPIN_CCW_LONG)
+                    StringAppend(gStringVar4, COMPOUND_STRING("CCW >5s"));
+                else
+                    StringAppend(gStringVar4, COMPOUND_STRING("CW/CCW >10s"));
             break;
         /*
         case EVO_LEVEL_SILCOON:
@@ -6608,8 +6626,15 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 break;
             case IF_HOLD_ITEM:
                 StringAppend(gStringVar4, COMPOUND_STRING("holds "));
-                CopyItemName(evolutions[i].params[j].arg1, gStringVar2); //item
-                StringAppend(gStringVar4, gStringVar2);
+                if (isAlcremie && IsItemSweet(evolutions[i].params[j].arg1))
+                {
+                    StringAppend(gStringVar4, COMPOUND_STRING("Sweet")); //item
+                }
+                else
+                {
+                    CopyItemName(evolutions[i].params[j].arg1, gStringVar2); //item
+                    StringAppend(gStringVar4, gStringVar2);
+                }
                 break;
             // Gen 3
             case IF_PID_UPPER_MODULO_10_GT:
@@ -6698,7 +6723,12 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             }
         }
 
-        fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
+        if (isAlcremie)
+            fontId = FONT_NARROWER;
+        else
+            fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
+
+        u32 fontHeight = GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT);
 
         StringAppend(gStringVar4, COMPOUND_STRING("."));
         BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, FALSE);
@@ -6706,7 +6736,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         PrintInfoScreenTextSmall(gStringVar4, fontId, base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
         (*depth_i)++;
 
-        numLines += CountLineBreaks(gStringVar4) * 8;
+        numLines = CountLineBreaks(gStringVar4) * fontHeight;
+
         sPokedexView->sEvoScreenData.arrowSpriteDist[depth + 1] = numLines;
 
         PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
