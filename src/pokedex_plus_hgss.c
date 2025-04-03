@@ -596,6 +596,11 @@ static void DestroyCategoryIcon(void);
 
 static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
 
+//Evo screen
+u32 GetSpeciesNameOffset(u32 nameWidth);
+u32 GetSpeciesNameFontId(u32 nameWidth);
+u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
+
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
 #define TAG_STAT_BAR_BG 4098
@@ -6176,13 +6181,14 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
 static void HandleTargetSpeciesPrintText(u32 targetSpecies, u32 base_x, u32 base_y, u32 base_y_offset, u32 base_i)
 {
     bool32 seen = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_SEEN);
+    u32 fontId = GetSpeciesNameFontId(GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies)));
 
     if (seen || !HGSS_HIDE_UNSEEN_EVOLUTION_NAMES)
         StringCopy(gStringVar3, GetSpeciesName(targetSpecies)); //evolution mon name
     else
         StringCopy(gStringVar3, gText_ThreeQuestionMarks); //show questionmarks instead of name
     StringExpandPlaceholders(gStringVar3, sText_EVO_Name); //evolution mon name
-    PrintInfoScreenTextSmall(gStringVar3, FONT_SMALL, base_x, base_y + base_y_offset*base_i); //evolution mon name
+    PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset*base_i); //evolution mon name
 }
 
 static void HandleTargetSpeciesPrintIcon(u8 taskId, u16 targetSpecies, u8 base_i, u8 iterations)
@@ -6350,58 +6356,48 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
 #define EVO_SCREEN_CRITS_DIGITS 1
 #define EVO_SCREEN_DMG_DIGITS 2
 
-static u32 GetSpeciesNameOffset(u32 nameWidth)
+u32 GetSpeciesNameOffset(u32 nameWidth)
 {
-    if (nameWidth <= 8)
-        return 8;
-    if (nameWidth > 8 && nameWidth <= 10)
-        return 12;
-    else
-        return 24;
-
+    u32 offsetWidth = nameWidth / 5;
+    return offsetWidth;
 }
 
-static u32 GetSpeciesNameFontId(u32 nameWidth)
+u32 GetSpeciesNameFontId(u32 nameWidth)
 {
     if (nameWidth <= 8)
         return FONT_SMALL;
-    if (nameWidth > 8 && nameWidth <= 10)
-        return FONT_SMALL_NARROW;
+    else if (nameWidth > 7 && nameWidth < 11)
+        return FONT_SMALL;//_NARROW;
     else
-        return FONT_SMALL_NARROWER;
-
+        return FONT_SMALL;//_NARROWER;
 }
 
-static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
+u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 {
     u32 i = 0;
 
-    while (speciesName[i] != EOS)
-        i++;
+    while (speciesName[i] != EOS) i++;
 
     return i;
-
 }
+
+/*u32 GetDepthOffset(u32 depth)
+{
+    if (depth == 0)
+}*/
 
 static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
 {
     int i;
-    //const struct MapHeader *mapHeader;
-    const u8 *speciesName = GetSpeciesName(species);
-    u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(speciesName);
-    u32 speciesNameWidth = GetStringWidth(GetSpeciesNameFontId(speciesNameWidthInChars), speciesName, 0);
-    u32 speciesNameOffset = GetSpeciesNameOffset(speciesNameWidth);
+    u32 depth_x = 4;
+    u32 depth_offset = 8 * (depth + 1);
     int fontId;
     u16 targetSpecies = 0;
     bool8 left = TRUE;
-    u8 base_x = 21 ;
-    u8 base_y = 51;
-    u8 base_y_offset = 9;
-    u8 times = 0;
-    u8 depth_x = 4;
-    u32 depth_offset = depth > 0 ? depth - 1 : 0;
-    u32 maxScreenWidth = 220 - ((depth_x * depth_offset) + speciesNameWidth);
-    u32 base_x_offset = speciesNameWidth + speciesNameOffset + (8 * depth_offset); // for evo method info
+    u32 base_x = 21;
+    u32 base_y = 51;
+    u32 base_y_offset = 9;
+    u32 times = 0; 
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (sPokedexView->sEvoScreenData.isMega)
@@ -6436,6 +6432,25 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         left = !left;
 
         targetSpecies = evolutions[i].targetSpecies;
+        u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
+        //u32 speciesNameWidthInChars1 = 12;
+        u32 speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
+        u32 speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
+        u32 speciesNameOffset = GetSpeciesNameOffset(speciesNameWidth);
+        u32 base_x_offset = speciesNameWidth + (depth_offset + base_x + speciesNameCharWidth); // for evo method info
+        u32 maxScreenWidth = 230 - base_x_offset;
+    
+        MgbaPrintf(MGBA_LOG_WARN, "Name: %S", GetSpeciesName(targetSpecies));
+        MgbaPrintf(MGBA_LOG_WARN, "speciesNameWidth: %u", speciesNameWidth);
+        MgbaPrintf(MGBA_LOG_WARN, "speciesNameWidthInChars: %u", speciesNameWidthInChars);
+        MgbaPrintf(MGBA_LOG_WARN, "speciesNameCharWidth: %u", speciesNameCharWidth);
+        MgbaPrintf(MGBA_LOG_WARN, "speciesNameOffset: %u", speciesNameOffset);
+        MgbaPrintf(MGBA_LOG_WARN, "base_x_offset: %u", base_x_offset);
+        MgbaPrintf(MGBA_LOG_WARN, "depth_offset: %u", depth_offset);
+        MgbaPrintf(MGBA_LOG_WARN, "depth: %u", depth);
+        MgbaPrintf(MGBA_LOG_WARN, "maxScreenWidth: %u", maxScreenWidth);
+        MgbaPrintf(MGBA_LOG_WARN, "-------------------------");
+
         sPokedexView->sEvoScreenData.targetSpecies[*depth_i] = targetSpecies;
         CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i) + numLines, 0);
         HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset + numLines, *depth_i); //evolution mon name
@@ -6612,12 +6627,12 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING(" in party"));
                 break;
             case IF_IN_MAPSEC:
-                StringAppend(gStringVar4, COMPOUND_STRING(" in "));
+                StringAppend(gStringVar4, COMPOUND_STRING("in "));
                 StringCopy(gStringVar2, gRegionMapEntries[evolutions[i].params[j].arg1].name);
                 StringAppend(gStringVar4, gStringVar2);
                 break;
             case IF_IN_MAP:
-                StringAppend(gStringVar4, COMPOUND_STRING(" in "));
+                StringAppend(gStringVar4, COMPOUND_STRING("in "));
                 GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(evolutions[i].params[j].arg1 >> 8, evolutions[i].params[j].arg1 & 0xFF)->regionMapSectionId, 0);
                 StringAppend(gStringVar4, gStringVar2);
                 break;
@@ -6649,7 +6664,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_LOW_KEY_NATURE:
                 StringAppend(gStringVar4, COMPOUND_STRING("Low-Key natures"));
                 break;
-           case IF_RECOIL_DAMAGE_GE:
+            case IF_RECOIL_DAMAGE_GE:
             case IF_CURRENT_DAMAGE_GE:
             case IF_CRITICAL_HITS_GE:
             case IF_USED_MOVE_X_TIMES:
@@ -6688,10 +6703,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         StringAppend(gStringVar4, COMPOUND_STRING("."));
         BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, FALSE);
             
-        PrintInfoScreenTextSmall(gStringVar4, fontId, base_x + depth_x*depth+base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
+        PrintInfoScreenTextSmall(gStringVar4, fontId, base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
         (*depth_i)++;
 
-        numLines += (CountLineBreaks(gStringVar4)) * 8;
+        numLines += CountLineBreaks(gStringVar4) * 8;
         sPokedexView->sEvoScreenData.arrowSpriteDist[depth + 1] = numLines;
 
         PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
