@@ -825,11 +825,14 @@ static void Task_EvolutionScene(u8 taskId)
             {
                 StopMapMusic();
                 Overworld_PlaySpecialMapMusic();
-                DoRemoveItems(mon);
+                
             }
             if (!gTasks[taskId].tEvoWasStopped)
+            {
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, mon);
-
+                DoRemoveItems(mon);
+            }
+            
             DestroyTask(taskId);
             FreeMonSpritesGfx();
             FREE_AND_SET_NULL(sEvoStructPtr);

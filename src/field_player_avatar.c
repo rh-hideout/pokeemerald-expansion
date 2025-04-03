@@ -754,7 +754,6 @@ bool32 CanTriggerSpinEvolution()
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
-        MgbaPrintf(MGBA_LOG_WARN, "spin detected: %u", VarGet(gSpecialVar_0x8000));
         gSpecialVar_0x8001 = FALSE; //canStopEvo
         canStopEvo = FALSE;
         gSpecialVar_0x8002 = TRUE; //tryMultiple

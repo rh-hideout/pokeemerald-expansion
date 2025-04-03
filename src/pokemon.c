@@ -4499,7 +4499,6 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         enum EvolutionConditions condition = params[i].condition;
         u32 currentCondition = FALSE;
 
-        MgbaPrintf(MGBA_LOG_WARN, "checking species conditions: %S %u", GetSpeciesName(GetMonData(mon, MON_DATA_SPECIES, 0)), condition);
         switch(condition)
         {
         // Gen 2
@@ -4525,14 +4524,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         case IF_TIME:
             if (GetTimeOfDay() == params[i].arg1)
-            {
                 currentCondition = TRUE;
-                MgbaPrintf(MGBA_LOG_WARN, "time of day matched: %u %u", params[i].arg1, GetTimeOfDay());
-            }
-            else 
-            {
-                MgbaPrintf(MGBA_LOG_WARN, "time of day not matched: %u %u", params[i].arg1, GetTimeOfDay());
-            }
                 
             break;
         case IF_NOT_TIME:
@@ -4542,7 +4534,6 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         case IF_HOLD_ITEM:
             if (heldItem == params[i].arg1)
             {
-                MgbaPrintf(MGBA_LOG_WARN, "holding item matched: %u %u", params[i].arg1, heldItem);
                 currentCondition = TRUE;
                 removeHoldItem = TRUE;
             }
@@ -4730,6 +4721,10 @@ void DoRemoveItems(struct Pokemon *mon)
     {
         RemoveBagItem(removeBagItem, removeBagItemCount);
     }
+
+    removeItem = FALSE;
+    removeBagItem = ITEM_NONE;
+    removeBagItemCount = 0;
 }
 
 u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo)
@@ -4883,17 +4878,13 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
             case EVO_SCRIPT_TRIGGER:
             case EVO_SPIN:
                 if (gSpecialVar_0x8000 == evolutions[i].param)
-                {
-                    MgbaPrintf(MGBA_LOG_WARN, "spin matched: %u %u", gSpecialVar_0x8000, evolutions[i].param);
                     conditionsMet = TRUE;
-                }
                     
                 break;
             }
 
             if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo))
             {
-                MgbaPrintf(MGBA_LOG_WARN, "targetSpecies: %S", GetSpeciesName(evolutions[i].targetSpecies));
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
                 // If you have overlapping evolutions, put the ones you want to happen first on top of the list.
@@ -6733,38 +6724,26 @@ void TrySpecialOverworldEvo(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        MgbaPrintf(MGBA_LOG_WARN, "found species: %S", GetSpeciesName(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, 0)));
         u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo);
 
-        //MgbaPrintf(MGBA_LOG_WARN, "targetSpecies: %S", GetSpeciesName(targetSpecies));
-        //MgbaPrintf(MGBA_LOG_WARN, "tried evolving: %u", !(sTriedEvolving & (1u << i)));
         if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & (1u << i)))
         {
-            MgbaPrintf(MGBA_LOG_WARN, "canStopEvo: %u", canStopEvo);
             sTriedEvolving |= 1u << i;
             if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
             {
-                MgbaPrintf(MGBA_LOG_WARN, "trying consecutive evo");
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
-                DoRemoveItems(&gPlayerParty[i]);
+                //DoRemoveItems(&gPlayerParty[i]);
             }
             else
             {
-                MgbaPrintf(MGBA_LOG_WARN, "trying evo scene");
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
-                DoRemoveItems(&gPlayerParty[i]);
+                //DoRemoveItems(&gPlayerParty[i]);
             }
                 
             if (tryMultiple)
-            {
-                MgbaPrintf(MGBA_LOG_WARN, "tryMultiple: %u", tryMultiple);
                 gCB2_AfterEvolution = TrySpecialOverworldEvo;
-            }
-                
             else
-            {
                 gCB2_AfterEvolution = CB2_ReturnToField;
-            }
             return;
         }
     }
