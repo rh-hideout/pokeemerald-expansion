@@ -174,6 +174,7 @@ void RecordKnownMove(u32 battlerId, u32 move)
     s32 i;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
+
         if (BATTLE_HISTORY->usedMoves[battlerId][i] == move)
             break;
         if (BATTLE_HISTORY->usedMoves[battlerId][i] == MOVE_NONE)
@@ -577,15 +578,6 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
 
     switch (effect)
     {
-    case EFFECT_LEVEL_DAMAGE:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level;
-        break;
-    case EFFECT_PSYWAVE:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].level;
-        break;
-    case EFFECT_FIXED_DAMAGE_ARG:
-        median = maximum = minimum = GetMoveFixedDamage(move);
-        break;
     case EFFECT_MULTI_HIT:
         if (move == MOVE_WATER_SHURIKEN && gBattleMons[damageCalcData->battlerAtk].species == SPECIES_GRENINJA_ASH)
         {
@@ -616,9 +608,6 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
     case EFFECT_ENDEAVOR:
         // If target has less HP than user, Endeavor does no damage
         median = maximum = minimum = max(0, gBattleMons[damageCalcData->battlerDef].hp - gBattleMons[damageCalcData->battlerAtk].hp);
-        break;
-    case EFFECT_SUPER_FANG:
-        median = maximum = minimum = max(1, gBattleMons[damageCalcData->battlerDef].hp / 2);
         break;
     case EFFECT_FINAL_GAMBIT:
         median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].hp;

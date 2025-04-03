@@ -218,14 +218,14 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SUPER_FANG] =
     {
-        .battleScript = BattleScript_EffectSuperFang,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
 
     [EFFECT_FIXED_DAMAGE_ARG] =
     {
-        .battleScript = BattleScript_EffectFixedDamageArg,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 
@@ -454,13 +454,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_LEVEL_DAMAGE] =
     {
-        .battleScript = BattleScript_EffectLevelDamage,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
     },
 
     [EFFECT_PSYWAVE] =
     {
-        .battleScript = BattleScript_EffectPsywave,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 
