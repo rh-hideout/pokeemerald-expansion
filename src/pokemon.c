@@ -16,6 +16,7 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "evolution_scene.h"
+#include "field_player_avatar.h"
 #include "field_specials.h"
 #include "field_weather.h"
 #include "graphics.h"
@@ -90,6 +91,9 @@ EWRAM_DATA struct SpriteTemplate gMultiuseSpriteTemplate = {0};
 EWRAM_DATA static struct MonSpritesGfxManager *sMonSpritesGfxManagers[MON_SPR_GFX_MANAGERS_COUNT] = {NULL};
 EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
+EWRAM_DATA bool32 removeHoldItem = 0;
+EWRAM_DATA u32 removeBagItem = 0;
+EWRAM_DATA u32 removeBagItemCount = 0;
 
 #include "data/abilities.h"
 
@@ -4462,9 +4466,9 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u32 beauty = GetMonData(mon, MON_DATA_BEAUTY, 0);
     u32 weather = GetCurrentWeather();
     u32 nature = GetNature(mon);
-    bool32 removeHoldItem = FALSE;
-    u32 removeBagItem = ITEM_NONE;
-    u32 removeBagItemCount = 0;
+    removeHoldItem = FALSE;
+    removeBagItem = ITEM_NONE;
+    removeBagItemCount = 0;
     u32 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
 
     u32 partnerSpecies, partnerHeldItem, partnerHoldEffect;
@@ -4494,6 +4498,8 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     {
         enum EvolutionConditions condition = params[i].condition;
         u32 currentCondition = FALSE;
+
+        MgbaPrintf(MGBA_LOG_WARN, "checking species conditions: %S %u", GetSpeciesName(GetMonData(mon, MON_DATA_SPECIES, 0)), condition);
         switch(condition)
         {
         // Gen 2
@@ -4519,7 +4525,15 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         case IF_TIME:
             if (GetTimeOfDay() == params[i].arg1)
+            {
                 currentCondition = TRUE;
+                MgbaPrintf(MGBA_LOG_WARN, "time of day matched: %u %u", params[i].arg1, GetTimeOfDay());
+            }
+            else 
+            {
+                MgbaPrintf(MGBA_LOG_WARN, "time of day not matched: %u %u", params[i].arg1, GetTimeOfDay());
+            }
+                
             break;
         case IF_NOT_TIME:
             if (GetTimeOfDay() != params[i].arg1)
@@ -4528,6 +4542,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         case IF_HOLD_ITEM:
             if (heldItem == params[i].arg1)
             {
+                MgbaPrintf(MGBA_LOG_WARN, "holding item matched: %u %u", params[i].arg1, heldItem);
                 currentCondition = TRUE;
                 removeHoldItem = TRUE;
             }
@@ -4700,17 +4715,21 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             return FALSE;
     }
     // All conditions passed. Consume hold and bag items.
+
+    return TRUE;
+}
+
+void DoRemoveItems(struct Pokemon *mon)
+{
     if (removeHoldItem)
     {
-        heldItem = ITEM_NONE;
+        u32 heldItem = ITEM_NONE;
         SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
     }
     if (removeBagItem != ITEM_NONE)
     {
         RemoveBagItem(removeBagItem, removeBagItemCount);
     }
-
-    return TRUE;
 }
 
 u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo)
@@ -4862,53 +4881,23 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
             switch (evolutions[i].method)
             {
             case EVO_SCRIPT_TRIGGER:
+            case EVO_SPIN:
                 if (gSpecialVar_0x8000 == evolutions[i].param)
+                {
+                    MgbaPrintf(MGBA_LOG_WARN, "spin matched: %u %u", gSpecialVar_0x8000, evolutions[i].param);
                     conditionsMet = TRUE;
+                }
+                    
                 break;
             }
 
             if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo))
             {
+                MgbaPrintf(MGBA_LOG_WARN, "targetSpecies: %S", GetSpeciesName(evolutions[i].targetSpecies));
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
                 // If you have overlapping evolutions, put the ones you want to happen first on top of the list.
                 targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE)
-                    targetSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS:
-                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS)
-                    targetSpecies = evolutions[i].targetSpecies;
                 break;
             }
         }
@@ -6744,18 +6733,38 @@ void TrySpecialOverworldEvo(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, SPECIES_NONE, &canStopEvo);
+        MgbaPrintf(MGBA_LOG_WARN, "found species: %S", GetSpeciesName(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, 0)));
+        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo);
+
+        //MgbaPrintf(MGBA_LOG_WARN, "targetSpecies: %S", GetSpeciesName(targetSpecies));
+        //MgbaPrintf(MGBA_LOG_WARN, "tried evolving: %u", !(sTriedEvolving & (1u << i)));
         if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & (1u << i)))
         {
+            MgbaPrintf(MGBA_LOG_WARN, "canStopEvo: %u", canStopEvo);
             sTriedEvolving |= 1u << i;
             if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
+            {
+                MgbaPrintf(MGBA_LOG_WARN, "trying consecutive evo");
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
+                DoRemoveItems(&gPlayerParty[i]);
+            }
             else
+            {
+                MgbaPrintf(MGBA_LOG_WARN, "trying evo scene");
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
+                DoRemoveItems(&gPlayerParty[i]);
+            }
+                
             if (tryMultiple)
+            {
+                MgbaPrintf(MGBA_LOG_WARN, "tryMultiple: %u", tryMultiple);
                 gCB2_AfterEvolution = TrySpecialOverworldEvo;
+            }
+                
             else
+            {
                 gCB2_AfterEvolution = CB2_ReturnToField;
+            }
             return;
         }
     }
