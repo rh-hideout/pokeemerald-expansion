@@ -1350,7 +1350,7 @@ bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dm
         if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
             continue;
 
-        dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_DEFENDING, aiData);
+        dmg = AI_GetDamage(battlerDef, battlerAtk, moveIndex, AI_DEFENDING, aiData);
 
         if (dmgMod)
             dmg *= dmgMod;
