@@ -4722,7 +4722,7 @@ void DoRemoveItems(struct Pokemon *mon)
         RemoveBagItem(removeBagItem, removeBagItemCount);
     }
 
-    removeItem = FALSE;
+    removeHoldItem = FALSE;
     removeBagItem = ITEM_NONE;
     removeBagItemCount = 0;
 }
