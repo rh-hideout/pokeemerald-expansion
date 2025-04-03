@@ -4874,6 +4874,42 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 if (evolutionItem == EVO_WATER_SCROLL)
                     targetSpecies = evolutions[i].targetSpecies;
                 break;
+            case EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS:
+                if (evolutions[i].param == heldItem && evolutionItem == EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
             }
         }
         break;

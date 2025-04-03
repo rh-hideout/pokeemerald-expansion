@@ -15,6 +15,7 @@
 #include "party_menu.h"
 #include "random.h"
 #include "rotating_gate.h"
+#include "rtc.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -34,9 +35,29 @@
 #define NUM_FORCED_MOVEMENTS 18
 #define NUM_ACRO_BIKE_COLLISIONS 5
 
+enum SpinDirection
+{
+    SPIN_DIRECTION_NONE,
+    SPIN_DIRECTION_CLOCKWISE,
+    SPIN_DIRECTION_COUNTER_CLOCKWISE,
+};
+
+struct SpinData
+{
+    u32 triggerEvo:1;
+    u32 spinDirection:2;
+    u32 spinTimeout:6;
+    u32 spinHistory0:3;
+    u32 spinHistory1:3;
+    u32 spinHistory2:3;
+    u32 spinHistory3:3;
+    u32 VBlanksSpinning:11; //34,1 seconds
+};
+
 static EWRAM_DATA u8 sSpinStartFacingDir = 0;
 EWRAM_DATA struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT] = {};
 EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
+EWRAM_DATA struct SpinData gPlayerSpinData = {};
 
 // static declarations
 
@@ -633,8 +654,146 @@ static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
     PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
+void UpdateSpinData(void)
+{
+    if (gPlayerSpinData.spinTimeout != 0)
+    {
+        gPlayerSpinData.spinTimeout--;
+        if (gPlayerSpinData.VBlanksSpinning < 2048)
+            gPlayerSpinData.VBlanksSpinning++;
+        if (gPlayerSpinData.spinTimeout == 0 && gPlayerSpinData.spinDirection != SPIN_DIRECTION_NONE)
+            gPlayerSpinData.triggerEvo = TRUE;
+    }
+}
+
+void ResetSpinTimer(void)
+{
+    gPlayerSpinData.spinTimeout = 0;
+    gPlayerSpinData.VBlanksSpinning = 0;
+    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
+    gPlayerSpinData.spinHistory0 = DIR_NONE;
+    gPlayerSpinData.spinHistory1 = DIR_NONE;
+    gPlayerSpinData.spinHistory2 = DIR_NONE;
+    gPlayerSpinData.spinHistory3 = DIR_NONE;
+}
+
+static const u8 sClockwiseDirections[4][4] =
+{
+    { DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST, },
+    { DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_NORTH, },
+    { DIR_SOUTH, DIR_WEST, DIR_NORTH, DIR_EAST, },
+    { DIR_WEST, DIR_NORTH, DIR_EAST, DIR_SOUTH, },
+};
+
+static const u8 sCounterClockwiseDirections[4][4] =
+{
+    { DIR_NORTH, DIR_WEST, DIR_SOUTH, DIR_EAST, },
+    { DIR_WEST, DIR_SOUTH, DIR_EAST, DIR_NORTH, },
+    { DIR_SOUTH, DIR_EAST, DIR_NORTH, DIR_WEST, },
+    { DIR_EAST, DIR_NORTH, DIR_WEST, DIR_SOUTH, },
+};
+
+static void WindUpSpinTimer(u32 direction)
+{
+    gPlayerSpinData.spinTimeout = 60;
+    gPlayerSpinData.spinHistory0 = gPlayerSpinData.spinHistory1;
+    gPlayerSpinData.spinHistory1 = gPlayerSpinData.spinHistory2;
+    gPlayerSpinData.spinHistory2 = gPlayerSpinData.spinHistory3;
+    gPlayerSpinData.spinHistory3 = direction;
+
+    for (int i = 0; i < ARRAY_COUNT(sClockwiseDirections); i++)
+    {
+        if (gPlayerSpinData.spinHistory0 == sClockwiseDirections[i][0]
+            && gPlayerSpinData.spinHistory1 == sClockwiseDirections[i][1]
+            && gPlayerSpinData.spinHistory2 == sClockwiseDirections[i][2]
+            && gPlayerSpinData.spinHistory3 == sClockwiseDirections[i][3])
+        {
+            gPlayerSpinData.spinDirection = SPIN_DIRECTION_CLOCKWISE;
+            return;
+        }
+    }
+    for (int i = 0; i < ARRAY_COUNT(sCounterClockwiseDirections); i++)
+    {
+        if (gPlayerSpinData.spinHistory0 == sCounterClockwiseDirections[i][0]
+            && gPlayerSpinData.spinHistory1 == sCounterClockwiseDirections[i][1]
+            && gPlayerSpinData.spinHistory2 == sCounterClockwiseDirections[i][2]
+            && gPlayerSpinData.spinHistory3 == sCounterClockwiseDirections[i][3])
+        {
+            gPlayerSpinData.spinDirection = SPIN_DIRECTION_COUNTER_CLOCKWISE;
+            return;
+        }
+    }
+    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
+}
+
+bool32 CanTriggerSpinEvolution()
+{
+    gSpecialVar_0x8000 = EVO_NONE;
+    if (gPlayerSpinData.triggerEvo)
+    {
+        u32 timeOfDay = GetTimeOfDay();
+        u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
+        u32 direction = gPlayerSpinData.spinDirection;
+        if (timeOfDay == TIME_EVENING && seconds >= 10)
+        {
+            gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS;
+        }
+        else if (timeOfDay == TIME_NIGHT)
+        {
+            if (seconds >= 5)
+            {
+                if (direction == SPIN_DIRECTION_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE;
+                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE;
+            }
+            else
+            {
+                if (direction == SPIN_DIRECTION_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE;
+                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE;
+            }
+        }
+        else if (timeOfDay != TIME_NIGHT)
+        {
+            if (seconds >= 5)
+            {
+                if (direction == SPIN_DIRECTION_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE;
+                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE;
+            }
+            else
+            {
+                if (direction == SPIN_DIRECTION_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE;
+                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE;
+            }
+        }
+        gSpecialVar_0x8001 = FALSE; //canStopEvo
+        gSpecialVar_0x8002 = TRUE; //tryMultiple
+        gPlayerSpinData.triggerEvo = FALSE;
+    }
+    if (gSpecialVar_0x8000 != EVO_NONE)
+    {
+        for (u32 i = 0; i < PARTY_SIZE; i++)
+        {
+            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, gSpecialVar_0x8000, NULL);
+            if (species != SPECIES_NONE)
+            {
+                return TRUE;
+            }
+        }
+    }
+
+    return FALSE;
+}
+
 static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
+    WindUpSpinTimer(direction);
     PlayerTurnInPlace(direction);
 }
 
@@ -666,7 +825,8 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
             return;
         }
     }
-    
+
+    ResetSpinTimer(); // Everything below will move the player a space, reset the timer.
     gPlayerAvatar.creeping = FALSE;
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
     {
@@ -2605,4 +2765,3 @@ bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, u8 direction)
         return FALSE;
     #endif
 }
-
