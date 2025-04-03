@@ -312,6 +312,8 @@ void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
     switch (newState) 
     {
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
+    case MOVEMENT_ACTION_JUMP_SPECIAL_DOWN ... MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT:
+    case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
         CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
         gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
     }
@@ -375,17 +377,27 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
 
         MoveCoords(direction, &followerX, &followerY);
         nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
+        follower->facingDirectionLocked = FALSE;
+
+    // Follower won't do delayed movement until player does a movement.
+    if (!IsStateMovement(state) && (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN || gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_SPECIAL_DOWN))
+        return MOVEMENT_ACTION_NONE;
 
     if (IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.delayedState)
-        newState = gSaveBlock3Ptr->NPCfollower.delayedState + direction;
+    {
+        // Lock face direction for Acro side jump.
+        if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            follower->facingDirectionLocked = TRUE;
+        newState = gSaveBlock3Ptr->NPCfollower.delayedState + (direction -1);
+    }    
 
     // Clear ice tile stuff
-    follower->disableAnim = FALSE; // follower->field1 &= 0xFB;
+    follower->disableAnim = FALSE;
 
-        // clear overwrite movement
+        // Clear overwrite movement
         follower->directionOverwrite = DIR_NONE;
 
-        // sideways stairs checks
+        // Sideways stairs checks
         collision = GetSidewaysStairsCollision(follower, direction, currentBehavior, nextBehavior, collision);
         switch (collision)
         {
@@ -404,7 +416,7 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
         RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_NORMAL_DOWN ... MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
-        // normal walk
+        // Normal walk
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
@@ -435,19 +447,18 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
         RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_FASTER_DOWN ... MOVEMENT_ACTION_WALK_FASTER_RIGHT:
-        // mach bike
         if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
             follower->disableAnim = TRUE;
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
 
-    // acro bike
     case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
         // Handle player on waterfall
         if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
             return MOVEMENT_INVALID;
 
         RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //regular movement
+
     case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
         RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
@@ -478,14 +489,25 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
             RETURN_STATE(MOVEMENT_ACTION_PLAYER_RUN_DOWN, direction);
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+
     case MOVEMENT_ACTION_JUMP_SPECIAL_DOWN ... MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT:
         gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_SPECIAL_DOWN;
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
     case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
-        gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_DOWN;
-        RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+        // Acro side hop
+        if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN)
+        {
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+                follower->facingDirectionLocked = TRUE;
+            return newState;
+        }
+        else
+        {
+            gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_DOWN;
+            RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+        }
 
-    // run slow
+    // Run slow
     #ifdef MOVEMENT_ACTION_RUN_DOWN_SLOW
     case MOVEMENT_ACTION_RUN_DOWN_SLOW ... MOVEMENT_ACTION_RUN_RIGHT_SLOW:
         if (gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES)
@@ -543,6 +565,26 @@ static bool8 IsStateMovement(u8 state)
     case MOVEMENT_ACTION_JUMP_IN_PLACE_UP_DOWN:
     case MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT_RIGHT:
     case MOVEMENT_ACTION_JUMP_IN_PLACE_RIGHT_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_UP:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_LEFT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_LEFT:
         return FALSE;
     }
 
@@ -963,7 +1005,10 @@ void FollowerNPC_HandleBike(void)
     else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE && FollowerNPCCanBike() && gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE); // Acro Bike on
     else
+    {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
+        gSaveBlock3Ptr->NPCfollower.delayedState = 0; // Disable saved Acro side jump
+    }
 }
 
 void FollowerNPC_HandleSprite(void)
