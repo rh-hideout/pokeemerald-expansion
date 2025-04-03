@@ -193,17 +193,17 @@ struct SpecialStatus
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 focusBanded:1;
-    u8 focusSashed:1;
     u8 emergencyExited:1;
     u8 afterYou:1;
-    // End of byte
-    u8 sturdied:1;
+    u8 enduredDamage:1;
     u8 stormDrainRedirected:1;
+    // End of byte
     u8 switchInAbilityDone:1;
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
+    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
+    u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
     // End of byte
     u8 gemParam;
     // End of byte
@@ -211,19 +211,15 @@ struct SpecialStatus
     u8 rototillerAffected:1;  // to be affected by rototiller
     u8 parentalBondState:2;
     u8 multiHitOn:1;
-    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
-    u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 affectionEndured:1;
-    // End of byte
-    u8 dancerUsedMove:1;
-    u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
     // End of byte
-    u8 enduredDamage:1;
-    u8 padding:7;
+    u8 dancerUsedMove:1;
+    u8 dancerOriginalTarget:3;
+    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
+    u8 unused:3;
+    // End of byte
 };
 
 struct SideTimer

@@ -2161,6 +2161,7 @@ static void Cmd_adjustdamage(void)
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
+    bool32 enduredHit = FALSE;
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
@@ -2202,65 +2203,58 @@ static void Cmd_adjustdamage(void)
 
         gPotentialItemEffectBattler = battlerDef;
 
-        if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
+        if (moveEffect == EFFECT_FALSE_SWIPE)
         {
+            enduredHit = TRUE;
+        }
+        else if (gProtectStructs[battlerDef].endured)
+        {
+            enduredHit = TRUE;
+            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
+        }
+        else if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
+        {
+            enduredHit = TRUE;
             RecordItemEffectBattle(battlerDef, holdEffect);
-            gSpecialStatuses[battlerDef].focusBanded = TRUE;
+            gLastUsedItem = gBattleMons[battlerDef].item;
+            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
         else if (B_STURDY >= GEN_5 && GetBattlerAbility(battlerDef) == ABILITY_STURDY && IsBattlerAtMaxHp(battlerDef))
         {
+            enduredHit = TRUE;
             RecordAbilityBattle(battlerDef, ABILITY_STURDY);
-            gSpecialStatuses[battlerDef].sturdied = TRUE;
+            gLastUsedAbility = ABILITY_STURDY;
+            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_STURDIED;
         }
         else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(battlerDef))
         {
+            enduredHit = TRUE;
             RecordItemEffectBattle(battlerDef, holdEffect);
-            gSpecialStatuses[battlerDef].focusSashed = TRUE;
+            gLastUsedItem = gBattleMons[battlerDef].item;
+            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
         else if (B_AFFECTION_MECHANICS == TRUE && GetBattlerSide(battlerDef) == B_SIDE_PLAYER && affectionScore >= AFFECTION_THREE_HEARTS)
         {
             if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
              || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
              || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
-                gSpecialStatuses[battlerDef].affectionEndured = TRUE;
+            {
+                enduredHit = TRUE;
+                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
+            }
         }
-
-        if (moveEffect != EFFECT_FALSE_SWIPE
-            && !gProtectStructs[battlerDef].endured
-            && !gSpecialStatuses[battlerDef].focusBanded
-            && !gSpecialStatuses[battlerDef].focusSashed
-            && (B_AFFECTION_MECHANICS == FALSE || !gSpecialStatuses[battlerDef].affectionEndured)
-            && !gSpecialStatuses[battlerDef].sturdied)
-            continue;
 
         // Handle reducing the dmg to 1 hp.
-        gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
-        gSpecialStatuses[battlerDef].enduredDamage = TRUE;
-
-        if (gProtectStructs[battlerDef].endured)
+        if (enduredHit)
         {
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
-        }
-        else if (gSpecialStatuses[battlerDef].focusBanded || gSpecialStatuses[battlerDef].focusSashed)
-        {
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            gSpecialStatuses[battlerDef].focusBanded = FALSE;
-            gSpecialStatuses[battlerDef].focusSashed = FALSE;
-        }
-        else if (gSpecialStatuses[battlerDef].sturdied)
-        {
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_STURDIED;
-            gLastUsedAbility = ABILITY_STURDY;
-        }
-        else if (B_AFFECTION_MECHANICS == TRUE && gSpecialStatuses[battlerDef].affectionEndured)
-        {
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
+            gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
+            gSpecialStatuses[battlerDef].enduredDamage = TRUE;
         }
     }
 
     if (calcSpreadMoveDamage)
         gBattleStruct->calculatedDamageDone = TRUE;
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 
     if (gSpecialStatuses[gBattlerAttacker].gemBoost
@@ -2289,7 +2283,6 @@ static void Cmd_multihitresultmessage(void)
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_STURDIED)
         {
             gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
-            gSpecialStatuses[gBattlerTarget].sturdied = FALSE; // Delete this line to make Sturdy last for the duration of the whole move turn.
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SturdiedMsg;
             return;
@@ -2299,8 +2292,6 @@ static void Cmd_multihitresultmessage(void)
             gLastUsedItem = gBattleMons[gBattlerTarget].item;
             gPotentialItemEffectBattler = gBattlerTarget;
             gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
-            gSpecialStatuses[gBattlerTarget].focusBanded = FALSE; // Delete this line to make Focus Band last for the duration of the whole move turn.
-            gSpecialStatuses[gBattlerTarget].focusSashed = FALSE; // Delete this line to make Focus Sash last for the duration of the whole move turn.
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_HangedOnMsg;
             return;
@@ -2967,7 +2958,6 @@ static void Cmd_resultmessage(void)
             else if (*moveResultFlags & MOVE_RESULT_STURDIED)
             {
                 *moveResultFlags &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
-                gSpecialStatuses[gBattlerTarget].sturdied = FALSE;
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_SturdiedMsg;
                 return;
@@ -2994,7 +2984,6 @@ static void Cmd_resultmessage(void)
             }
             else if (B_AFFECTION_MECHANICS == TRUE && (*moveResultFlags & MOVE_RESULT_FOE_ENDURED_AFFECTION))
             {
-                gSpecialStatuses[gBattlerTarget].affectionEndured = FALSE;
                 *moveResultFlags &= ~MOVE_RESULT_FOE_ENDURED_AFFECTION;
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_AffectionBasedEndurance;
@@ -7209,9 +7198,6 @@ static void Cmd_moveend(void)
                         gHitMarker |= (HITMARKER_NO_PPDEDUCT | HITMARKER_NO_ATTACKSTRING);
                         gBattleScripting.animTargetsHit = 0;
                         gBattleScripting.moveendState = 0;
-                        gSpecialStatuses[gBattlerTarget].sturdied = 0;
-                        gSpecialStatuses[gBattlerTarget].focusBanded = 0; // Delete this line to make Focus Band last for the duration of the whole move turn.
-                        gSpecialStatuses[gBattlerTarget].focusSashed = 0; // Delete this line to make Focus Sash last for the duration of the whole move turn.
                         gSpecialStatuses[gBattlerAttacker].multiHitOn = TRUE;
                         MoveValuesCleanUp();
                         BattleScriptPush(GetMoveBattleScript(gCurrentMove));
@@ -13089,6 +13075,10 @@ static void Cmd_setlightscreen(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+#define NOT_ENDURED       0
+#define FOCUS_SASHED      1
+#define FOCUS_BANDED      2
+#define AFFECTION_ENDURED 3
 static void Cmd_tryKO(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -13096,6 +13086,9 @@ static void Cmd_tryKO(void)
     bool32 lands = FALSE;
     u32 holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
     u16 targetAbility = GetBattlerAbility(gBattlerTarget);
+    u32 rand = Random() % 100;
+    u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
+    u32 endured = NOT_ENDURED;
 
     // Dynamaxed Pokemon cannot be hit by OHKO moves.
     if ((GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
@@ -13110,13 +13103,20 @@ static void Cmd_tryKO(void)
     if (holdEffect == HOLD_EFFECT_FOCUS_BAND
         && (Random() % 100) < GetBattlerHoldEffectParam(gBattlerTarget))
     {
-        gSpecialStatuses[gBattlerTarget].focusBanded = TRUE;
+        endured = FOCUS_BANDED;
         RecordItemEffectBattle(gBattlerTarget, holdEffect);
     }
     else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(gBattlerTarget))
     {
-        gSpecialStatuses[gBattlerTarget].focusSashed = TRUE;
+        endured = FOCUS_SASHED;
         RecordItemEffectBattle(gBattlerTarget, holdEffect);
+    }
+    else if (B_AFFECTION_MECHANICS == TRUE && GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER && affectionScore >= AFFECTION_THREE_HEARTS)
+    {
+        if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
+         || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
+         || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
+            endured = AFFECTION_ENDURED;
     }
 
     if (targetAbility == ABILITY_STURDY)
@@ -13152,13 +13152,13 @@ static void Cmd_tryKO(void)
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_ENDURED;
             }
-            else if (gSpecialStatuses[gBattlerTarget].focusBanded || gSpecialStatuses[gBattlerTarget].focusSashed)
+            else if (endured == FOCUS_BANDED || endured == FOCUS_SASHED)
             {
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_HUNG_ON;
                 gLastUsedItem = gBattleMons[gBattlerTarget].item;
             }
-            else if (B_AFFECTION_MECHANICS == TRUE && gSpecialStatuses[gBattlerTarget].affectionEndured)
+            else if (endured == AFFECTION_ENDURED)
             {
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
@@ -13181,6 +13181,10 @@ static void Cmd_tryKO(void)
         }
     }
 }
+#undef NOT_ENDURED
+#undef FOCUS_SASHED
+#undef FOCUS_BANDED
+#undef AFFECTION_ENDURED
 
 // Super Fang
 static void Cmd_damagetohalftargethp(void)
