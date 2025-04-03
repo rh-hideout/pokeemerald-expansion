@@ -164,6 +164,14 @@ static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
     return TRUE;
 }
 
+static bool32 AI_DoesChoiceItemBlockMove(u32 battler, u32 move)
+{
+    // Choice locked into something else
+    if (AI_DATA->lastUsedMove[battler] != MOVE_NONE && AI_DATA->lastUsedMove[battler] != move && HOLD_EFFECT_CHOICE(GetBattlerHoldEffect(battler, FALSE)) && IsBattlerItemEnabled(battler))
+        return TRUE;
+    return FALSE;
+}
+
 // Note that as many return statements as possible are INTENTIONALLY put after all of the loops;
 // the function can take a max of about 0.06s to run, and this prevents the player from identifying
 // whether the mon will switch or not by seeing how long the delay is before they select a move
@@ -194,7 +202,6 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     defType1 = gBattleMons[battler].types[0];
     defType2 = gBattleMons[battler].types[1];
 
-    // Check AI moves for damage dealt
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         aiMove = gBattleMons[battler].moves[i];
@@ -216,17 +223,16 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             if (!IsBattleMoveStatus(aiMove))
             {
                 // Check if mon has a super effective move
-                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0))
+                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceItemBlockMove(battler, aiMove))
                     hasSuperEffectiveMove = TRUE;
 
                 // Get maximum damage mon can deal
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, AI_DATA);
-                if(damageDealt > maxDamageDealt)
+                if(damageDealt > maxDamageDealt && !AI_DoesChoiceItemBlockMove(battler, aiMove))
                 {
                     maxDamageDealt = damageDealt;
                     aiBestMove = aiMove;
                 }
-
             }
         }
     }
@@ -987,10 +993,18 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
     u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    u32 lastUsedMove = AI_DATA->lastUsedMove[battler];
+    u32 opposingBattler = GetOppositeBattler(battler);
+    bool32 moveAffectsTarget = TRUE;
+
+    if (lastUsedMove != MOVE_NONE && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0)
+        || CanAbilityAbsorbMove(battler, opposingBattler, AI_DATA->abilities[opposingBattler], lastUsedMove, GetMoveType(lastUsedMove), ABILITY_CHECK_TRIGGER)
+        || CanAbilityBlockMove(battler, opposingBattler, lastUsedMove, AI_DATA->abilities[opposingBattler], ABILITY_CHECK_TRIGGER)))
+        moveAffectsTarget = FALSE;
 
     if (HOLD_EFFECT_CHOICE(holdEffect) && IsBattlerItemEnabled(battler))
     {
-        if (GetMoveCategory(AI_DATA->lastUsedMove[battler]) == DAMAGE_CATEGORY_STATUS && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
+        if ((GetMoveCategory(lastUsedMove) == DAMAGE_CATEGORY_STATUS || !moveAffectsTarget) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
     }
 
@@ -1874,7 +1888,7 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, u32 battlerSwitchi
     // Switch out effects
     if (!IsDoubleBattle()) // Not handling doubles' additional complexity
     {
-        if (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) && movedSecond)
+        if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) && movedSecond)
             return TRUE;
         if (AI_DATA->ejectButtonSwitch)
             return TRUE;
@@ -2088,7 +2102,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     }
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-     && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+     && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
         return aceMonId;
 
     return PARTY_SIZE;
@@ -2205,7 +2219,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
 
         // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
         if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-        && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+        && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
             return aceMonId;
 
         return PARTY_SIZE;

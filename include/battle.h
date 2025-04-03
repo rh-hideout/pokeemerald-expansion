@@ -130,20 +130,15 @@ struct DisableStruct
     u8 boosterEnergyActivates:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
-    u8 startEmergencyExit:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 padding:2;
+    u8 padding:3;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
-    u32 protected:1;
-    u32 spikyShielded:1;
-    u32 kingsShielded:1;
-    u32 banefulBunkered:1;
-    u32 obstructed:1;
+    u32 protected:7; // 126 protect options
     u32 endured:1;
     u32 noValidMoves:1;
     u32 helpingHand:1;
@@ -168,9 +163,8 @@ struct ProtectStruct
     u32 usedThroatChopPreventedMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
-    u32 touchedProtectLike:1;
-    u32 unused:1;
     // End of 32-bit bitfield
+    u16 touchedProtectLike:1;
     u16 disableEjectPack:1;
     u16 statFell:1;
     u16 pranksterElevated:1;
@@ -178,16 +172,13 @@ struct ProtectStruct
     u16 beakBlastCharge:1;
     u16 quash:1;
     u16 shellTrap:1;
-    u16 maxGuarded:1;
-    u16 silkTrapped:1;
-    u16 burningBulwarked:1;
     u16 eatMirrorHerb:1;
     u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
-    u16 padding:2;
+    u16 padding:4;
     // End of 16-bit bitfield
-    u32 physicalDmg;
-    u32 specialDmg;
+    u16 physicalDmg;
+    u16 specialDmg;
     u8 physicalBattlerId;
     u8 specialBattlerId;
 };
@@ -726,7 +717,7 @@ struct BattleStruct
     u8 startingStatusDone:1;
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
-    u8 obedienceResult:3;
+    u8 unused:3;
     u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
@@ -787,7 +778,7 @@ struct BattleStruct
     u8 hitSwitchTargetFailed:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     u8 spriteIgnore0Hp:1;
-    u8 battleBondTransformed[NUM_BATTLE_SIDES]; // Bitfield for each party.
+    u8 battleBondBoost[NUM_BATTLE_SIDES]; // Bitfield for each party.
     u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
@@ -809,9 +800,8 @@ struct BattleStruct
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    u8 redCardActivates:1;
     u8 cheekPouchActivated:1;
-    u8 padding2:1; // padding in the middle so pursuit fields are together
+    u8 padding2:3;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -912,18 +902,6 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
     gBattleMons[battlerId].types[2] = TYPE_MYSTERY;                                            \
 }
 
-#define IS_BATTLER_PROTECTED(battlerId)(gProtectStructs[battlerId].protected                                           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_WIDE_GUARD           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_QUICK_GUARD          \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_CRAFTY_SHIELD        \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_MAT_BLOCK            \
-                                        || gProtectStructs[battlerId].spikyShielded                                    \
-                                        || gProtectStructs[battlerId].kingsShielded                                    \
-                                        || gProtectStructs[battlerId].banefulBunkered                                  \
-                                        || gProtectStructs[battlerId].burningBulwarked                                 \
-                                        || gProtectStructs[battlerId].obstructed                                       \
-                                        || gProtectStructs[battlerId].silkTrapped)
-
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
 #define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
@@ -940,11 +918,11 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 painSplitHp;
+    s32 unused1;
     s32 bideDmg;
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused;
+    u8 unused2;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;

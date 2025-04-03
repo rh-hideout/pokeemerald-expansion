@@ -800,6 +800,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, u16 method, u32 
 bool32 DoesSpeciesHaveFormChangeMethod(u16 species, u16 method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
+void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(u16 species);
 bool32 TryFormChange(u32 monId, u32 side, u16 method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, u16 method);

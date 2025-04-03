@@ -2207,7 +2207,8 @@ s32 GetDrainedBigRootHp(u32 battler, s32 hp)
     return hp * -1;
 }
 
-static inline bool32 IsBattlerProtectedByMagicGuard(u32 battler, u32 ability)
+// This should always be the last check. Otherwise the ability might be recorded when it is not supposed to be
+bool32 IsMagicGuardProtected(u32 battler, u32 ability)
 {
     if (ability != ABILITY_MAGIC_GUARD)
         return FALSE;
@@ -2343,7 +2344,7 @@ u8 DoBattlerEndTurnEffects(void)
             if ((gStatuses3[battler] & STATUS3_LEECHSEED)
              && IsBattlerAlive(gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 gBattlerTarget = gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER; // Notice gBattlerTarget is actually the HP receiver.
                 gBattlerAttacker = battler;
@@ -2374,7 +2375,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_POISON:  // poison
             if ((gBattleMons[battler].status1 & STATUS1_POISON)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 if (ability == ABILITY_POISON_HEAL)
                 {
@@ -2402,7 +2403,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_BAD_POISON:  // toxic poison
             if ((gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
               && IsBattlerAlive(battler)
-              && !IsBattlerProtectedByMagicGuard(battler, ability))
+              && !IsMagicGuardProtected(battler, ability))
             {
                 if (ability == ABILITY_POISON_HEAL)
                 {
@@ -2433,7 +2434,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_BURN:  // burn
             if ((gBattleMons[battler].status1 & STATUS1_BURN)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
                 if (ability == ABILITY_HEATPROOF)
@@ -2452,7 +2453,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_FROSTBITE:  // burn
             if ((gBattleMons[battler].status1 & STATUS1_FROSTBITE)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
                 if (gBattleStruct->moveDamage[battler] == 0)
@@ -2465,7 +2466,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_NIGHTMARES:  // spooky nightmares
             if ((gBattleMons[battler].status2 & STATUS2_NIGHTMARE)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 // R/S does not perform this sleep check, which causes the nightmare effect to
                 // persist even after the affected Pokémon has been awakened by Shed Skin.
@@ -2487,7 +2488,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_CURSE:  // curse
             if ((gBattleMons[battler].status2 & STATUS2_CURSED)
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
                 if (gBattleStruct->moveDamage[battler] == 0)
@@ -2502,7 +2503,7 @@ u8 DoBattlerEndTurnEffects(void)
             {
                 if (--gDisableStructs[battler].wrapTurns != 0)  // damaged by wrap
                 {
-                    if (IsBattlerProtectedByMagicGuard(battler, ability))
+                    if (IsMagicGuardProtected(battler, ability))
                     {
                         gBattleStruct->turnEffectsTracker++;
                         break;
@@ -2812,7 +2813,7 @@ u8 DoBattlerEndTurnEffects(void)
         case ENDTURN_SALT_CURE:
             if (gStatuses4[battler] & STATUS4_SALT_CURE
              && IsBattlerAlive(battler)
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsMagicGuardProtected(battler, ability))
             {
                 gBattlerTarget = battler;
                 if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
@@ -4159,12 +4160,12 @@ static inline uq4_12_t GetSupremeOverlordModifier(u32 battler)
     return UQ_4_12(1.0) + (PercentToUQ4_12(gBattleStruct->supremeOverlordCounter[battler] * 10));
 }
 
-static inline bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
+bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
 {
     u32 cutoff = gBattleMons[battler].maxHP / 2;
     // Had more than half of hp before, now has less
-     return (gBattleStruct->hpBefore[battler] > cutoff
-             && gBattleMons[battler].hp <= cutoff);
+    return gBattleStruct->hpBefore[battler] > cutoff
+        && gBattleMons[battler].hp <= cutoff;
 }
 
 #define ANIM_STAT_HP      0
@@ -5281,6 +5282,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && IsDoubleBattle()
+             && !(gStatuses3[partner] & STATUS3_HEAL_BLOCK)
              && gBattleMons[partner].hp < gBattleMons[partner].maxHP
              && IsBattlerAlive(partner))
             {
@@ -5682,25 +5684,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 effect++;
             }
             break;
-        case ABILITY_EMERGENCY_EXIT:
-        case ABILITY_WIMP_OUT:
-            if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
-             && IsBattlerTurnDamaged(gBattlerTarget)
-             && IsBattlerAlive(battler)
-            // Had more than half of hp before, now has less
-             && HadMoreThanHalfHpNowDoesnt(battler)
-             && (gMultiHitCounter == 0 || gMultiHitCounter == 1)
-             && !(TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
-             && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-             && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-             && CountUsablePartyMons(battler) > 0
-             // Not currently held by Sky Drop
-             && !(gStatuses3[battler] & STATUS3_SKY_DROPPED))
-            {
-                gDisableStructs[battler].startEmergencyExit = TRUE;
-                effect++;
-            }
-            break;
         case ABILITY_WEAK_ARMOR:
             if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
              && IsBattlerTurnDamaged(gBattlerTarget)
@@ -5866,6 +5849,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 else
                 {
+                    gBattleScripting.battler = gBattlerTarget;
                     gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
                     if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
                         gBattleStruct->moveDamage[gBattlerAttacker] = 1;
@@ -5888,6 +5872,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         break;
                 }
 
+                gBattleScripting.battler = gBattlerTarget;
                 gBattleStruct->moveDamage[gBattlerAttacker] = gBattleStruct->moveDamage[gBattlerTarget];
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_AftermathDmg;
@@ -6320,7 +6305,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             case ABILITY_OPPORTUNIST:
                 if (gProtectStructs[battler].activateOpportunist == 2)
                 {
-                    gBattleScripting.animArg1 = 0;
                     gBattleScripting.battler = battler;
                     gProtectStructs[battler].activateOpportunist--;
                     ChooseStatBoostAnimation(battler);
@@ -7233,8 +7217,6 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum ItemCaseId caseID, bool32 pe
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItemRet;
         }
-        if (gDisableStructs[battler].startEmergencyExit && GetNonDynamaxHP(battler) >= GetNonDynamaxMaxHP(battler) / 2)
-            gDisableStructs[battler].startEmergencyExit = FALSE;
 
         return ITEM_HP_CHANGE;
     }
@@ -7355,7 +7337,7 @@ static inline u32 TryBoosterEnergy(u32 battler, enum ItemCaseId caseID)
     return ITEM_NO_EFFECT;
 }
 
-static u32 RestoreWhiteHerbStats(u32 battler)
+u32 RestoreWhiteHerbStats(u32 battler)
 {
     u32 i, effect = 0;
 
@@ -8770,45 +8752,55 @@ bool32 IsMoveMakingContact(u32 move, u32 battlerAtk)
     }
 }
 
+static inline bool32 IsSideProtected(u32 battler, enum ProtectMethod method)
+{
+    return gProtectStructs[battler].protected == method
+        || gProtectStructs[BATTLE_PARTNER(battler)].protected == method;
+}
+
 bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
 {
+    if (gProtectStructs[battlerDef].protected == PROTECT_NONE
+     && gProtectStructs[BATTLE_PARTNER(battlerDef)].protected == PROTECT_NONE)
+        return FALSE;
+
+    if (gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD && !MoveIgnoresProtect(move))
+    {
+        if (IsZMove(move) || IsMaxMove(move))
+            return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
+        if (IsMoveMakingContact(move, battlerAtk) && GetBattlerAbility(battlerAtk) == ABILITY_UNSEEN_FIST)
+            return FALSE;
+    }
+
     bool32 isProtected = FALSE;
 
-    if ((IsZMove(move) || IsMaxMove(move))
-        && (!gProtectStructs[battlerDef].maxGuarded || MoveIgnoresProtect(move)))
-        isProtected = FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
-    else if (gProtectStructs[battlerDef].maxGuarded && IsMoveBlockedByMaxGuard(move))
-        isProtected = TRUE;
-    else if (!gProtectStructs[battlerDef].maxGuarded // Max Guard cannot be bypassed by Unseen Fist
-          && IsMoveMakingContact(move, battlerAtk)
-          && GetBattlerAbility(battlerAtk) == ABILITY_UNSEEN_FIST)
-        isProtected = FALSE;
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_CRAFTY_SHIELD && IsBattleMoveStatus(move) && GetMoveEffect(move) != EFFECT_COACHING)
+    if (IsSideProtected(battlerDef, PROTECT_CRAFTY_SHIELD)
+     && IsBattleMoveStatus(move)
+     && GetMoveEffect(move) != EFFECT_COACHING)
         isProtected = TRUE;
     else if (MoveIgnoresProtect(move))
         isProtected = FALSE;
-    else if (gProtectStructs[battlerDef].protected)
+    else if (IsSideProtected(battlerDef, PROTECT_WIDE_GUARD) && IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, move)))
         isProtected = TRUE;
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_WIDE_GUARD
-             && GetBattlerMoveTargetType(battlerAtk, move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY))
+    else if (gProtectStructs[battlerDef].protected == PROTECT_NORMAL)
         isProtected = TRUE;
-    else if (gProtectStructs[battlerDef].banefulBunkered)
+    else if (gProtectStructs[battlerDef].protected == PROTECT_SPIKY_SHIELD)
         isProtected = TRUE;
-    else if (gProtectStructs[battlerDef].burningBulwarked)
+    else if (gProtectStructs[battlerDef].protected == PROTECT_MAX_GUARD)
         isProtected = TRUE;
-    else if ((gProtectStructs[battlerDef].obstructed || gProtectStructs[battlerDef].silkTrapped) && !IsBattleMoveStatus(move))
+    else if (gProtectStructs[battlerDef].protected == PROTECT_BANEFUL_BUNKER)
         isProtected = TRUE;
-    else if (gProtectStructs[battlerDef].spikyShielded)
+    else if (gProtectStructs[battlerDef].protected == PROTECT_BURNING_BULWARK)
         isProtected = TRUE;
-    else if (gProtectStructs[battlerDef].kingsShielded && !IsBattleMoveStatus(move))
+    else if (gProtectStructs[battlerDef].protected == PROTECT_OBSTRUCT && !IsBattleMoveStatus(move))
         isProtected = TRUE;
-    else if (gProtectStructs[battlerDef].maxGuarded)
+    else if (gProtectStructs[battlerDef].protected == PROTECT_SILK_TRAP && !IsBattleMoveStatus(move))
         isProtected = TRUE;
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_QUICK_GUARD
-             && GetChosenMovePriority(battlerAtk) > 0)
+    else if (gProtectStructs[battlerDef].protected == PROTECT_KINGS_SHIELD && !IsBattleMoveStatus(move))
         isProtected = TRUE;
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_MAT_BLOCK
-             && !IsBattleMoveStatus(move))
+    else if (IsSideProtected(battlerDef, PROTECT_QUICK_GUARD) && GetChosenMovePriority(battlerAtk) > 0)
+        isProtected = TRUE;
+    else if (IsSideProtected(battlerDef, PROTECT_MAT_BLOCK) && !IsBattleMoveStatus(move))
         isProtected = TRUE;
     else
         isProtected = FALSE;
@@ -8817,6 +8809,31 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
         gBattleStruct->missStringId[battlerDef] = gBattleCommunication[MISS_TYPE] = B_MSG_PROTECTED;
 
     return isProtected;
+}
+
+u32 GetProtectType(enum ProtectMethod method)
+{
+    switch (method)
+    {
+    case PROTECT_NONE:
+        return PROTECT_TYPE_NONE;
+    case PROTECT_NORMAL:
+    case PROTECT_SPIKY_SHIELD:
+    case PROTECT_KINGS_SHIELD:
+    case PROTECT_BANEFUL_BUNKER:
+    case PROTECT_BURNING_BULWARK:
+    case PROTECT_OBSTRUCT:
+    case PROTECT_SILK_TRAP:
+    case PROTECT_MAX_GUARD:
+        return PROTECT_TYPE_SINGLE;
+    case PROTECT_WIDE_GUARD:
+    case PROTECT_QUICK_GUARD:
+    case PROTECT_CRAFTY_SHIELD:
+    case PROTECT_MAT_BLOCK:
+        return PROTECT_TYPE_SIDE;
+    }
+
+    return FALSE;
 }
 
 // Only called directly when calculating damage type effectiveness
@@ -10191,7 +10208,9 @@ static inline uq4_12_t GetGlaiveRushModifier(u32 battlerDef)
 
 static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageCalculationData *damageCalcData)
 {
-    if ((IsZMove(damageCalcData->move) || IsMaxMove(damageCalcData->move)) && IS_BATTLER_PROTECTED(damageCalcData->battlerDef))
+    if ((IsZMove(damageCalcData->move) || IsMaxMove(damageCalcData->move))
+     && gProtectStructs[damageCalcData->battlerDef].protected != PROTECT_NONE
+     && gProtectStructs[damageCalcData->battlerDef].protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
 }
@@ -12294,23 +12313,6 @@ bool32 IsMoveEffectBlockedByTarget(u32 ability)
     return FALSE;
 }
 
-u32 NumAffectedSpreadMoveTargets(void)
-{
-    u32 targetCount = 1;
-
-    if (!IsDoubleSpreadMove())
-        return targetCount;
-
-    targetCount = 0;
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
-            targetCount++;
-    }
-
-    return targetCount;
-}
-
 bool32 IsPursuitTargetSet(void)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
@@ -12351,31 +12353,4 @@ bool32 HasWeatherEffect(void)
     }
 
     return TRUE;
-}
-
-bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move)
-{
-    bool32 effect = FALSE;
-
-    if (IsPowderMove(move) && (battlerAtk != battlerDef))
-    {
-        if (B_POWDER_GRASS >= GEN_6
-         && (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) || GetBattlerAbility(battlerDef) == ABILITY_OVERCOAT))
-        {
-            gBattlerAbility = battlerDef;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_OVERCOAT);
-            effect = TRUE;
-        }
-        else if (GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_SAFETY_GOGGLES)
-        {
-            RecordItemEffectBattle(battlerDef, HOLD_EFFECT_SAFETY_GOGGLES);
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            effect = TRUE;
-        }
-
-        if (effect)
-            gBattlescriptCurrInstr = BattleScript_PowderMoveNoEffect;
-    }
-
-    return effect;
 }
