@@ -58,6 +58,7 @@ bool8 CheckFollowerNPCFlag(u16 flag);
 void FollowerNPCWalkIntoPlayerForLeaveRoute(struct ObjectEvent *follower);
 void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower);
 void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct ObjectEvent *player);
+void FollowerNPCFaceAfterLeaveRoute(void);
 void FollowerNPCPositionFix(u8 offset);
 void SetFollowerNPCSprite(u8 spriteIndex);
 bool8 PlayerHasFollowerNPC(void);

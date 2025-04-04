@@ -1498,8 +1498,7 @@ static void Task_FlyIntoMap(u8 taskId)
 #if OW_ENABLE_NPC_FOLLOWERS
         if (gSaveBlock3Ptr->NPCfollower.inProgress && ObjectEventClearHeldMovementIfFinished(follower))
         {
-            ObjectEventTurn(follower, DIR_NORTH); // Follower faces the player
-            gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+            FollowerNPCFaceAfterLeaveRoute();
             taskState++;
         }
         else if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -2518,8 +2517,7 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
 #if OW_ENABLE_NPC_FOLLOWERS
         if (gSaveBlock3Ptr->NPCfollower.inProgress && ObjectEventClearHeldMovementIfFinished(follower))
         {
-            ObjectEventTurn(follower, DIR_NORTH); // Follower faces the player
-            gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+            FollowerNPCFaceAfterLeaveRoute();
             task->data[3]++;
         }
         else if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -2750,9 +2748,7 @@ static void TeleportWarpInFieldEffect_SpinGround(struct Task *task)
 #if OW_ENABLE_NPC_FOLLOWERS
         if (gSaveBlock3Ptr->NPCfollower.inProgress && ObjectEventClearHeldMovementIfFinished(follower))
         {
-            ObjectEventTurn(player, DIR_SOUTH); // Player faces the follower
-            ObjectEventTurn(follower, DIR_NORTH); // Follower faces the player
-            gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+            FollowerNPCFaceAfterLeaveRoute();
             task->data[3]++;
         }
         else if (!gSaveBlock3Ptr->NPCfollower.inProgress)

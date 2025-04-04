@@ -1329,6 +1329,37 @@ void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct Obj
     }
 }
 
+void FollowerNPCFaceAfterLeaveRoute(void)
+{
+    u8 playerDirection, followerDirection;
+    struct ObjectEvent *player, *follower;
+
+    player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    follower = &gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId];
+    playerDirection = DetermineFollowerNPCDirection(player, follower);
+    followerDirection = playerDirection;
+
+    //Flip direction
+    switch (playerDirection) 
+    {
+    case DIR_NORTH:
+        followerDirection = DIR_NORTH;
+        break;
+    case DIR_SOUTH:
+        followerDirection = DIR_SOUTH;
+        break;
+    case DIR_WEST:
+        followerDirection = DIR_WEST;
+        break;
+    case DIR_EAST:
+        followerDirection = DIR_EAST;
+        break;
+    }
+
+    ObjectEventTurn(follower, followerDirection);
+    gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+}
+
 enum
 {
 	GoDown,
