@@ -369,15 +369,15 @@ static void PlayerLogCoordinates(struct ObjectEvent* player)
 u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 direction)
 {
     u8 newState = MOVEMENT_INVALID;
-        u8 collision = COLLISION_NONE;
-        s16 followerX = follower->currentCoords.x;
-        s16 followerY = follower->currentCoords.y;
-        u8 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
-        u8 nextBehavior;
+    u8 collision = COLLISION_NONE;
+    s16 followerX = follower->currentCoords.x;
+    s16 followerY = follower->currentCoords.y;
+    u8 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
+    u8 nextBehavior;
 
-        MoveCoords(direction, &followerX, &followerY);
-        nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
-        follower->facingDirectionLocked = FALSE;
+    MoveCoords(direction, &followerX, &followerY);
+    nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
+    follower->facingDirectionLocked = FALSE;
 
     // Follower won't do delayed movement until player does a movement.
     if (!IsStateMovement(state) && (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN || gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_SPECIAL_DOWN))
@@ -394,20 +394,20 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
     // Clear ice tile stuff
     follower->disableAnim = FALSE;
 
-        // Clear overwrite movement
-        follower->directionOverwrite = DIR_NONE;
+    // Clear overwrite movement
+    follower->directionOverwrite = DIR_NONE;
 
-        // Sideways stairs checks
-        collision = GetSidewaysStairsCollision(follower, direction, currentBehavior, nextBehavior, collision);
-        switch (collision)
-        {
-        case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
-            follower->directionOverwrite = GetLeftSideStairsDirection(direction);
-            break;
-        case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
-            follower->directionOverwrite = GetRightSideStairsDirection(direction);
-            break;
-        }
+    // Sideways stairs checks
+    collision = GetSidewaysStairsCollision(follower, direction, currentBehavior, nextBehavior, collision);
+    switch (collision)
+    {
+    case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
+        follower->directionOverwrite = GetLeftSideStairsDirection(direction);
+        break;
+    case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
+        follower->directionOverwrite = GetRightSideStairsDirection(direction);
+        break;
+    }
 
     switch (state) 
     {
