@@ -540,13 +540,11 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         }
 
     // Run slow
-    #ifdef MOVEMENT_ACTION_RUN_DOWN_SLOW
     case MOVEMENT_ACTION_RUN_DOWN_SLOW ... MOVEMENT_ACTION_RUN_RIGHT_SLOW:
         if (gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES)
             RETURN_STATE(MOVEMENT_ACTION_RUN_DOWN_SLOW, direction);
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
-    #endif
 
     default:
         return MOVEMENT_INVALID;
