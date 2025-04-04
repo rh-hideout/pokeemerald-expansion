@@ -65,3 +65,20 @@ SINGLE_BATTLE_TEST("Thermal Exchange burn prevention can be bypassed with Mold B
         STATUS_ICON(player, burn: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Thermal Exchange boosts attack if hit by a damaging fire type move")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
+        PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
