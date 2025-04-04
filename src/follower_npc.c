@@ -820,11 +820,14 @@ static u8 GetPlayerFaceToDoorDirection(struct ObjectEvent* player, struct Object
 #define tDoorTask           data[1]
 #define tDoorX              data[2]
 #define tDoorY              data[3]
-#define OPEN_DOOR           0
-#define NPC_WALK_OUT        1
-#define CLOSE_DOOR          2
-#define UNFREEZE_OBJECTS    3
-#define REALLOW_MOVEMENT    4
+
+enum {
+    OPEN_DOOR,
+    NPC_WALK_OUT,
+    CLOSE_DOOR,
+    UNFREEZE_OBJECTS,
+    REALLOW_MOVEMENT
+};
 
 static void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
@@ -884,11 +887,6 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
 #undef tDoorTask
 #undef tDoorX
 #undef tDoorY
-#undef OPEN_DOOR
-#undef NPC_WALK_OUT
-#undef CLOSE_DOOR
-#undef UNFREEZE_OBJECTS
-#undef REALLOW_MOVEMENT
 
 void EscalatorMoveFollowerNPC(u8 movementType)
 {
@@ -922,13 +920,16 @@ void EscalatorMoveFollowerNPCFinish(void)
 #define tCounter                data[1]
 #define tMetatileBehavior       data[2]
 #define tTimer                  data[7]
-#define MOVE_TO_PLAYER_POS      0
-#define WAIT_FOR_PLAYER_MOVE    1
-#define SHOW_FOLLOWER_DOWN      2
-#define MOVE_FOLLOWER_DOWN      3
-#define SHOW_FOLLOWER_UP        4
-#define MOVE_FOLLOWER_UP        5
-#define MOVEMENT_FINISH         6
+
+enum {
+    MOVE_TO_PLAYER_POS,
+    WAIT_FOR_PLAYER_MOVE,
+    SHOW_FOLLOWER_DOWN,
+    MOVE_FOLLOWER_DOWN,
+    SHOW_FOLLOWER_UP,
+    MOVE_FOLLOWER_UP,
+    MOVEMENT_FINISH
+};
 
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 {
@@ -1029,13 +1030,6 @@ static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
 #undef tCounter
 #undef tMetatileBehavior
 #undef tTimer
-#undef MOVE_TO_PLAYER_POS
-#undef WAIT_FOR_PLAYER_MOVE
-#undef SHOW_FOLLOWER_DOWN
-#undef MOVE_FOLLOWER_DOWN
-#undef SHOW_FOLLOWER_UP
-#undef MOVE_FOLLOWER_UP
-#undef MOVEMENT_FINISH
 
 bool8 FollowerNPCCanBike(void)
 {
