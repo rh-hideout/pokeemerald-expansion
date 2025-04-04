@@ -598,7 +598,6 @@ static void DestroyCategoryIcon(void);
 static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
 
 //Evo screen
-u32 GetSpeciesNameOffset(u32 nameWidth);
 u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
 bool32 IsSpeciesAlcremie(u32 targetSpecies);
@@ -6359,12 +6358,6 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
 #define EVO_SCREEN_CRITS_DIGITS 1
 #define EVO_SCREEN_DMG_DIGITS 2
 
-u32 GetSpeciesNameOffset(u32 nameWidth)
-{
-    u32 offsetWidth = nameWidth / 5;
-    return offsetWidth;
-}
-
 u32 GetSpeciesNameFontId(u32 nameWidth)
 {
     if (nameWidth <= 8)
@@ -6383,11 +6376,6 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
     return i;
 }
-
-/*u32 GetDepthOffset(u32 depth)
-{
-    if (depth == 0)
-}*/
 
 bool32 IsSpeciesAlcremie(u32 targetSpecies)
 {
@@ -6437,7 +6425,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
 
     if (times > 9 && species == SPECIES_MILCERY)
         times = 9;
-
+    else if (times > 10)
+        times = 10;
 
     gTasks[taskId].data[3] = times;
     sPokedexView->sEvoScreenData.numAllEvolutions += times;
@@ -6668,7 +6657,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 break;
             // Gen 5
             case IF_TRADE_PARTNER_SPECIES:
-                StringAppend(gStringVar4, COMPOUND_STRING("Traded with "));
+                StringAppend(gStringVar4, COMPOUND_STRING("traded with "));
                 StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1));
                 break;
             // Gen 6
@@ -6691,13 +6680,13 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING(" nature"));
                 break;
             case IF_AMPED_NATURE:
-                StringAppend(gStringVar4, COMPOUND_STRING("Amped natures"));
+                StringAppend(gStringVar4, COMPOUND_STRING("amped natures"));
                 break;
             case IF_LOW_KEY_NATURE:
-                StringAppend(gStringVar4, COMPOUND_STRING("Low-Key natures"));
+                StringAppend(gStringVar4, COMPOUND_STRING("low-Key natures"));
                 break;
             case IF_RECOIL_DAMAGE_GE:
-                StringAppend(gStringVar4, COMPOUND_STRING("Takes >= "));
+                StringAppend(gStringVar4, COMPOUND_STRING("takes >= "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" recoil dmg"));
@@ -6713,16 +6702,16 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING(" critical hits"));
                 break;
             case IF_USED_MOVE_X_TIMES:
-                StringAppend(gStringVar4, COMPOUND_STRING("Use move "));
+                StringAppend(gStringVar4, COMPOUND_STRING("use move "));
                 StringAppend(gStringVar4, GetMoveName(evolutions[i].params[j].arg1));
                 StringAppend(gStringVar4, COMPOUND_STRING(" "));
-                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" times"));
                 break;
             // Gen 9
             case IF_DEFEAT_X_WITH_ITEMS:
-                StringAppend(gStringVar4, COMPOUND_STRING("Defeat "));
+                StringAppend(gStringVar4, COMPOUND_STRING("defeat "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" "));
@@ -6749,7 +6738,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING("%"));
                 break;
             case IF_MIN_OVERWORLD_STEPS:
-                StringAppend(gStringVar4, COMPOUND_STRING(", after "));
+                StringAppend(gStringVar4, COMPOUND_STRING("after "));
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 4);
                 StringAppend(gStringVar4, gStringVar2);
                 StringAppend(gStringVar4, COMPOUND_STRING(" steps"));
@@ -6760,6 +6749,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING(" "));
                 CopyItemNameHandlePlural(evolutions[i].params[j].arg1, gStringVar2, evolutions[i].params[j].arg2);
                 StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" in bag"));
                 break;
             case CONDITIONS_END:
                 break;
