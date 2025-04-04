@@ -208,6 +208,7 @@ static void CloseSummaryScreen(u8);
 static void Task_HandleInput(u8);
 static void ChangeSummaryPokemon(u8, s8);
 static void Task_ChangeSummaryMon(u8);
+static void GetSetMoveRelearnerVar(u8 *);
 static s8 AdvanceMonIndex(s8);
 static s8 AdvanceMultiBattleMonIndex(s8);
 static bool8 IsValidToViewInMulti(struct Pokemon *);
@@ -1536,7 +1537,11 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         sum->ribbonCount = GetMonData(mon, MON_DATA_RIBBON_COUNT);
         sum->teraType = GetMonData(mon, MON_DATA_TERA_TYPE);
         sum->isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-        sMonSummaryScreen->relearnableMovesNum = P_SUMMARY_SCREEN_MOVE_RELEARNER ? GetNumberOfRelearnableMoves(mon) : 0;
+        if (P_SUMMARY_SCREEN_MOVE_RELEARNER)
+        {
+            u8 state = 0;
+            GetSetMoveRelearnerVar(&state);
+        }
         return TRUE;
     }
     sMonSummaryScreen->switchCounter++;
@@ -1686,6 +1691,8 @@ static void ClearStatLabel(u32 length, u32 statsCoordX, u32 statsCoordY)
 
 static void Task_HandleInput(u8 taskId)
 {
+    u8 state = VarGet(P_VAR_MOVE_RELEARNER_STATE);
+
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
     {
         if (JOY_NEW(DPAD_UP))
@@ -1696,11 +1703,11 @@ static void Task_HandleInput(u8 taskId)
         {
             ChangeSummaryPokemon(taskId, 1);
         }
-        else if ((JOY_NEW(DPAD_LEFT)) || GetLRKeysPressed() == MENU_L_PRESSED)
+        else if (JOY_NEW(DPAD_LEFT))
         {
             ChangePage(taskId, -1);
         }
-        else if ((JOY_NEW(DPAD_RIGHT)) || GetLRKeysPressed() == MENU_R_PRESSED)
+        else if (JOY_NEW(DPAD_RIGHT))
         {
             ChangePage(taskId, 1);
         }
@@ -1759,6 +1766,32 @@ static void Task_HandleInput(u8 taskId)
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
             CloseSummaryScreen(taskId);
+        }
+        else if (JOY_NEW(R_BUTTON)) // R means increase. Level -> Egg -> TM -> Tutor
+        {
+            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES))
+            {
+                u8 attempts = MOVE_RELEARNER_COUNT; // Max attempts to cycle through all options
+                do {
+                    state = (state + 1) % MOVE_RELEARNER_COUNT;
+                    GetSetMoveRelearnerVar(&state);
+                    VarSet(P_VAR_MOVE_RELEARNER_STATE, state);
+                } while (sMonSummaryScreen->relearnableMovesNum == 0 && --attempts);
+                PlaySE(SE_SELECT);
+            }
+        }
+        else if (JOY_NEW(L_BUTTON)) // L means decrease. Level <- Egg <- TM <- Tutor
+        {
+            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES))
+            {
+                u8 attempts = MOVE_RELEARNER_COUNT; // Max attempts to cycle through all options
+                do {
+                    state = (state == 0) ? MOVE_RELEARNER_COUNT - 1 : state - 1;
+                    GetSetMoveRelearnerVar(&state);
+                    VarSet(P_VAR_MOVE_RELEARNER_STATE, state);
+                } while (sMonSummaryScreen->relearnableMovesNum == 0 && --attempts);
+                PlaySE(SE_SELECT);
+            }
         }
     }
 }
@@ -1969,6 +2002,9 @@ static void Task_ChangeSummaryMon(u8 taskId)
             if (P_SUMMARY_SCREEN_MOVE_RELEARNER
                 && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES))
             {
+                u8 state = VarGet(P_VAR_MOVE_RELEARNER_STATE);
+                GetSetMoveRelearnerVar(&state);
+                VarSet(P_VAR_MOVE_RELEARNER_STATE, state);
                 if (ShouldShowMoveRelearner())
                     PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
                 else
@@ -2018,6 +2054,44 @@ static void Task_ChangeSummaryMon(u8 taskId)
         return;
     }
     data[0]++;
+}
+
+// Not very elegant, I know
+static void GetSetMoveRelearnerVar(u8 *state)
+{
+    struct Pokemon *mon = &sMonSummaryScreen->currentMon;
+
+    if (*state == MOVE_RELEARNER_LEVEL_UP_MOVES && !GetNumberOfLevelUpMoves(mon))
+        *state = MOVE_RELEARNER_EGG_MOVES;
+
+    if (*state == MOVE_RELEARNER_EGG_MOVES && !GetNumberOfEggMoves(mon))
+        *state = MOVE_RELEARNER_TM_MOVES;
+
+    if (*state == MOVE_RELEARNER_TM_MOVES && !GetNumberOfTMMoves(mon))
+        *state = MOVE_RELEARNER_TUTOR_MOVES;
+
+    if (*state == MOVE_RELEARNER_TUTOR_MOVES && !GetNumberOfTutorMoves(mon))
+    {
+        *state = MOVE_RELEARNER_LEVEL_UP_MOVES;
+        sMonSummaryScreen->relearnableMovesNum = 0;
+        return;
+    }
+
+    switch (*state)
+    {
+        case MOVE_RELEARNER_EGG_MOVES:
+            sMonSummaryScreen->relearnableMovesNum = GetNumberOfEggMoves(mon);
+            break;
+        case MOVE_RELEARNER_TM_MOVES:
+            sMonSummaryScreen->relearnableMovesNum = GetNumberOfTMMoves(mon);
+            break;
+        case MOVE_RELEARNER_TUTOR_MOVES:
+            sMonSummaryScreen->relearnableMovesNum = GetNumberOfTutorMoves(mon);
+            break;
+        default: // MOVE_RELEARNER_LEVEL_UP_MOVES
+            sMonSummaryScreen->relearnableMovesNum = GetNumberOfLevelUpMoves(mon);
+            break;
+    }
 }
 
 static s8 AdvanceMonIndex(s8 delta)
@@ -3237,6 +3311,7 @@ static void PrintPageNamesAndStats(void)
 static void PutPageWindowTilemaps(u8 page)
 {
     u8 i;
+    u8 state = VarGet(P_VAR_MOVE_RELEARNER_STATE);
 
     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
@@ -3270,6 +3345,8 @@ static void PutPageWindowTilemaps(u8 page)
         }
         else
         {
+            GetSetMoveRelearnerVar(&state);
+            VarSet(P_VAR_MOVE_RELEARNER_STATE, state);
             if (ShouldShowMoveRelearner())
                 PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
         }
@@ -3284,6 +3361,8 @@ static void PutPageWindowTilemaps(u8 page)
         }
         else
         {
+            GetSetMoveRelearnerVar(&state);
+            VarSet(P_VAR_MOVE_RELEARNER_STATE, state);
             if (ShouldShowMoveRelearner())
                 PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
         }

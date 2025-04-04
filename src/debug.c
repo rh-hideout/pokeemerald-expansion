@@ -483,7 +483,7 @@ extern const u8 Debug_EventScript_Steven_Multi[];
 extern const u8 Debug_BerryPestsDisabled[];
 extern const u8 Debug_BerryWeedsDisabled[];
 
-extern const u8 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon[];
+extern const u8 Common_EventScript_MoveRelearner[];
 
 #include "data/map_group_count.h"
 
@@ -4491,7 +4491,7 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId)
 
 static void DebugAction_Party_MoveReminder(u8 taskId)
 {
-    Debug_DestroyMenu_Full_Script(taskId, FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon);
+    Debug_DestroyMenu_Full_Script(taskId, Common_EventScript_MoveRelearner);
 }
 
 static void DebugAction_Party_HatchAnEgg(u8 taskId)

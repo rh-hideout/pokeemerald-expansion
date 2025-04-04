@@ -8,4 +8,6 @@ void CB2_InitLearnMove(void);
 
 extern u8 gOriginSummaryScreenPage;
 
+#define MAX_RELEARNER_MOVES 0xFF
+
 #endif //GUARD_MOVE_RELEARNER_H

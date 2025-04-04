@@ -212,3 +212,37 @@ else:
 
 with open("./src/data/pokemon/teachable_learnsets.h", 'w') as file:
     file.write(out)
+
+with open("./include/config/pokemon.h", "r") as file:
+    config = file.read()
+
+with open("./include/config/pokemon.h", "r") as file:
+    config = file.read()
+
+# Generate tutor_moves.h
+relearner_config = re.findall(r"#define P_ENABLE_MOVE_RELEARNERS *([^ ]*)", config)
+if len(relearner_config) != 1:
+    quit()
+if relearner_config[0] not in ["1", "TRUE"]:
+    tutor_flag_config = re.findall(r"#define P_FLAG_TUTOR_MOVES *([^ ]*)", config)
+    if len(tutor_flag_config) != 1:
+        quit()
+    if tutor_flag_config[0] == "0":
+        quit()
+
+tutor_moves.sort()
+tutor_moves_array = ",\n    ".join(tutor_moves)
+
+tutor_moves_header = """//
+// DO NOT MODIFY THIS FILE! It is auto-generated from tools/learnset_helpers/teachable.py
+// It is used by the move relearner for tutor moves
+//
+
+const u16 gTutorMoves[] = {
+    %s,
+    MOVE_UNAVAILABLE
+};
+""" % tutor_moves_array
+
+with open("./src/data/pokemon/tutor_moves.h", 'w') as file:
+    file.write(tutor_moves_header)

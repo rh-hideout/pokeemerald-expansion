@@ -168,8 +168,7 @@
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_MOVE_END  0xFFFF
 
-#define MAX_LEVEL_UP_MOVES       20
-#define MAX_RELEARNER_MOVES      max(MAX_LEVEL_UP_MOVES, 25)
+#define MAX_LEVEL_UP_MOVES       50
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
@@ -342,5 +341,12 @@ enum EvolutionMode {
 #else
 #define LEGENDARY_PERFECT_IV_COUNT 0
 #endif
+
+// Move Relearner menu change constants
+#define MOVE_RELEARNER_LEVEL_UP_MOVES 0
+#define MOVE_RELEARNER_EGG_MOVES      1
+#define MOVE_RELEARNER_TM_MOVES       2
+#define MOVE_RELEARNER_TUTOR_MOVES    3
+#define MOVE_RELEARNER_COUNT          4
 
 #endif // GUARD_CONSTANTS_POKEMON_H
