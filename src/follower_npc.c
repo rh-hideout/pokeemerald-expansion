@@ -1224,15 +1224,15 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
         {
             follower = &gObjectEvents[eventObjId];
             flag = GetObjectEventFlagIdByLocalIdAndMap(follower->localId, follower->mapNum, follower->mapGroup);
-            if (flag == 0) // If the NPC does not have an event flag, don't create follower
+            if (flag == 0) // If the object does not have an event flag, don't create follower.
                 return;
-            follower->movementType = MOVEMENT_TYPE_NONE; // Doesn't get to move on its own anymore
-            gSprites[follower->spriteId].callback = MovementType_None; // MovementType_None
+            follower->movementType = MOVEMENT_TYPE_NONE; // Doesn't get to move on its own anymore.
+            gSprites[follower->spriteId].callback = MovementType_None;
             SetObjEventTemplateMovementType(localId, 0);
             if (setScript == TRUE)
-                script = ptr;
+                script = ptr; // Set the custom script.
             else
-                script = GetObjectEventScriptPointerByObjectEventId(eventObjId);
+                script = GetObjectEventScriptPointerByObjectEventId(eventObjId); // Use the object's original script.
 
             gSaveBlock3Ptr->NPCfollower.inProgress = TRUE;
             gSaveBlock3Ptr->NPCfollower.objId = eventObjId;
@@ -1246,14 +1246,14 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
             gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
             gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
             follower->localId = OBJ_EVENT_ID_NPC_FOLLOWER;
-            FlagSet(flag);
+            FlagSet(flag); // Set the original object's flag to remove it.
 
             if (!(gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_CAN_BIKE) // Follower can't bike
             &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE)) // Player on bike
                 SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Dismmount Bike
 
             if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
-                FollowerNPC_HandleSprite(); // Set the follower sprite to match the player state
+                FollowerNPC_HandleSprite(); // Set the follower sprite to match the player state.
         }
     }
 }
