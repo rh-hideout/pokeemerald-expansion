@@ -112,12 +112,15 @@ void FormatHexDate(u8 *dest, s32 year, s32 month, s32 day);
 void RtcCalcTimeDifference(struct SiiRtcInfo *rtc, struct Time *result, struct Time *t);
 void RtcCalcLocalTime(void);
 bool8 IsBetweenHours(s32 hours, s32 begin, s32 end);
-u8 GetTimeOfDay(void);
+u32 GetTimeOfDay(void);
+u32 GetTimeOfDayForDex(void);
 void RtcInitLocalTimeOffset(s32 hour, s32 minute);
 void RtcCalcLocalTimeOffset(s32 days, s32 hours, s32 minutes, s32 seconds);
 void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2);
 u32 RtcGetMinuteCount(void);
 u32 RtcGetLocalDayCount(void);
 void FormatDecimalTimeWithoutSeconds(u8 *dest, s8 hour, s8 minute, bool32 is24Hour);
+u32 TryIncrementTimeOfDay(u32 timeOfDay);
+u32 TryDecrementTimeOfDay(u32 timeOfDay);
 
 #endif // GUARD_RTC_UTIL_H
