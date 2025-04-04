@@ -1313,7 +1313,19 @@ void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct Obj
         ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
         follower->singleMovementActive = FALSE;
         follower->heldMovementActive = FALSE;
-        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
+
+        if (GetCollisionAtCoords(player, player->currentCoords.x, player->currentCoords.y + 1, DIR_SOUTH) == COLLISION_NONE)
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
+        else if (GetCollisionAtCoords(player, player->currentCoords.x + 1, player->currentCoords.y, DIR_EAST) == COLLISION_NONE)
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT); // Follower takes a step SOUTH
+        else if (GetCollisionAtCoords(player, player->currentCoords.x - 1, player->currentCoords.y, DIR_WEST) == COLLISION_NONE)
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT); // Follower takes a step SOUTH
+        else
+        {
+            FollowerNPCPositionFix(0);
+            follower->invisible = TRUE;
+            gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
+        }
     }
 }
 
