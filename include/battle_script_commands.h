@@ -65,7 +65,7 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
-void SetNonVolatileStatusCondition(u32 target, u32 statusMoveEffect);
+void SetNonVolatileStatusCondition(u32 target, enum MoveEffects effect);
 bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);
 
 extern void (* const gBattleScriptingCommandsTable[])(void);

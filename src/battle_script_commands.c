@@ -3227,7 +3227,7 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
      || effect == MOVE_EFFECT_PARALYSIS
      || effect == MOVE_EFFECT_BURN)
      {
-        gBattleStruct->synchronizeMoveEffect = statusMoveEffect;
+        gBattleStruct->synchronizeMoveEffect = effect;
         gHitMarker |= HITMARKER_SYNCHRONISE_EFFECT;
      }
 
