@@ -500,7 +500,7 @@ static u32 PpStallReduction(u32 move, u32 attacker)
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         u32 currentStallValue = gBattleStruct->playerStallMons[partyIndex];
-        if (currentStallValue == 0)
+        if (currentStallValue == 0 || GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP) == 0)
             continue;
         u32 species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
         u32 ability = GetPartyMonAbility(&gPlayerParty[partyIndex]);
