@@ -5796,7 +5796,7 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     for (i = ITEM_TM01; i < ITEM_HM08; i++)
     {
         j = ItemIdToBattleMoveId(i);
-        if ((P_ENABLE_ALL_TM_MOVES || CheckBagHasItem(i, 1)) && CanLearnTeachableMove(species, j))
+        if ((P_ENABLE_ALL_TM_MOVES || CheckBagHasItem(i, 1)) && CanLearnTeachableMove(species, j) && j != MOVE_NONE)
             allMoves[totalMoveCount++] = j;
     }
 
@@ -5866,7 +5866,6 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
         moves[numMoves++] = move;
     }
 
-    // If sort is FALSE, the list will be in move ID order.
     if (P_SORT_MOVES)
         SortMovesAlphabetically(moves, numMoves);
 
