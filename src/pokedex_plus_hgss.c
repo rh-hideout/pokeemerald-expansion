@@ -5,6 +5,7 @@
 #include "contest_effect.h"
 #include "data.h"
 #include "daycare.h"
+#include "debug.h"
 #include "decompress.h"
 #include "event_data.h"
 #include "gpu_regs.h"
@@ -6595,7 +6596,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 }
                 break;
             case IF_MIN_FRIENDSHIP:
-                StringAppend(gStringVar4, COMPOUND_STRING("high friendship"));
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}friendship"));
                 break;
             case IF_ATK_GT_DEF:
                 StringAppend(gStringVar4, COMPOUND_STRING("Atk > Def"));
@@ -6662,9 +6663,13 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, gStringVar2);
                 break;
             case IF_KNOWS_MOVE:
+                StringAppend(gStringVar4, COMPOUND_STRING("knows "));
+                StringAppend(gStringVar4, GetMoveName(evolutions[i].params[j].arg1));
                 break;
             // Gen 5
             case IF_TRADE_PARTNER_SPECIES:
+                StringAppend(gStringVar4, COMPOUND_STRING("Traded with "));
+                StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1));
                 break;
             // Gen 6
             case IF_TYPE_IN_PARTY:
@@ -6672,6 +6677,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING("-type in party"));
                 break;
             case IF_WEATHER:
+                StringAppend(gStringVar4, COMPOUND_STRING("weather "));
+                StringAppend(gStringVar4, GetWeatherName(evolutions[i].params[j].arg1));
                 break;
             case IF_KNOWS_MOVE_TYPE:
                 StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
@@ -6690,15 +6697,56 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, COMPOUND_STRING("Low-Key natures"));
                 break;
             case IF_RECOIL_DAMAGE_GE:
+                StringAppend(gStringVar4, COMPOUND_STRING("Takes >= "));
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" recoil dmg"));
+                break;
             case IF_CURRENT_DAMAGE_GE:
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" current dmg"));
+                break;
             case IF_CRITICAL_HITS_GE:
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 2);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" critical hits"));
+                break;
             case IF_USED_MOVE_X_TIMES:
+                StringAppend(gStringVar4, COMPOUND_STRING("Use move "));
+                StringAppend(gStringVar4, GetMoveName(evolutions[i].params[j].arg1));
+                StringAppend(gStringVar4, COMPOUND_STRING(" "));
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" times"));
                 break;
             // Gen 9
             case IF_DEFEAT_X_WITH_ITEMS:
+                StringAppend(gStringVar4, COMPOUND_STRING("Defeat "));
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING(" "));
+                StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1));
+                StringAppend(gStringVar4, COMPOUND_STRING(" that hold "));
+                CopyItemName(evolutions[i].params[j].arg2, gStringVar2);
+                StringAppend(gStringVar4, gStringVar2);
+                break;
             case IF_PID_MODULO_100_GT:
+                StringAppend(gStringVar4, COMPOUND_STRING(">"));
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING("%"));
+                break;
             case IF_PID_MODULO_100_EQ:
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING("%"));
+                break;
             case IF_PID_MODULO_100_LT:
+                StringAppend(gStringVar4, COMPOUND_STRING("<"));
+                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+                StringAppend(gStringVar4, gStringVar2);
+                StringAppend(gStringVar4, COMPOUND_STRING("%"));
                 break;
             case IF_MIN_OVERWORLD_STEPS:
                 StringAppend(gStringVar4, COMPOUND_STRING(", after "));
