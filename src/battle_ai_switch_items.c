@@ -1888,7 +1888,7 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, u32 battlerSwitchi
     // Switch out effects
     if (!IsDoubleBattle()) // Not handling doubles' additional complexity
     {
-        if (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) && movedSecond)
+        if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) && movedSecond)
             return TRUE;
         if (AI_DATA->ejectButtonSwitch)
             return TRUE;
@@ -2102,7 +2102,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     }
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-     && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+     && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
         return aceMonId;
 
     return PARTY_SIZE;
@@ -2219,7 +2219,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
 
         // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
         if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-        && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+        && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
             return aceMonId;
 
         return PARTY_SIZE;

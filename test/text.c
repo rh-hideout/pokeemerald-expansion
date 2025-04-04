@@ -67,7 +67,7 @@ TEST("Move names fit on Contest Screen")
 TEST("Move names fit on TMs & HMs Bag Screen")
 {
     u32 i;
-    const u32 fontId = FONT_NARROWER, widthPx = 61; 
+    const u32 fontId = FONT_NARROWER, widthPx = 61;
     u32 move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
@@ -713,7 +713,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_TARGETABILITYSTATRAISE:
     case STRINGID_TARGETSSTATWASMAXEDOUT:
     case STRINGID_ATTACKERABILITYSTATRAISE:
-    case STRINGID_LASTABILITYRAISEDSTAT:
     case STRINGID_TARGETABILITYSTATLOWER:
     case STRINGID_SCRIPTINGABILITYSTATRAISE:
     case STRINGID_BATTLERABILITYRAISEDSTAT:
