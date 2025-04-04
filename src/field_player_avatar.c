@@ -740,14 +740,14 @@ bool32 CanTriggerSpinEvolution()
             gSpecialVar_0x8000 = SPIN_EITHER;
         }
 
-        else if (seconds > 5 && seconds < 10)
+        else if (seconds >= 5 && seconds < 10)
         {
             if (direction == SPIN_DIRECTION_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CW_LONG;
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CCW_LONG;
         }
-        else if (seconds <= 5)
+        else if (seconds < 5)
         {
             if (direction == SPIN_DIRECTION_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CW_SHORT;

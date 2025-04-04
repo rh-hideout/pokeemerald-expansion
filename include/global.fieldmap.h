@@ -353,7 +353,6 @@ extern struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT];
 extern u8 gSelectedObjectEvent;
 extern struct MapHeader gMapHeader;
 extern struct PlayerAvatar gPlayerAvatar;
-//extern struct SpinData gPlayerSpinData;
 extern struct Camera gCamera;
 
 #endif // GUARD_GLOBAL_FIELDMAP_H

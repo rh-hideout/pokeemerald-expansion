@@ -70,16 +70,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sBulbasaurLevelUpLearnset,
         .teachableLearnset = sBulbasaurTeachableLearnset,
         .eggMoveLearnset = sBulbasaurEggMoveLearnset,
-        .evolutions = 
-            EVOLUTION({EVO_LEVEL, 16, SPECIES_IVYSAUR,
-                CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_SMOLIV},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA},
-                    {IF_SPECIES_IN_PARTY, SPECIES_BARRASKEWDA}
-                )
-            }
-        )
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_IVYSAUR}),
     },
 
     [SPECIES_IVYSAUR] =
