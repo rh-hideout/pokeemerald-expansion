@@ -6506,64 +6506,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 else
                     StringAppend(gStringVar4, COMPOUND_STRING("CW/CCW >10s"));
             break;
-        /*
-        case EVO_LEVEL_SILCOON:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_LVL_DIGITS); //level
-            StringExpandPlaceholders(gStringVar4, sText_EVO_LEVEL_SILCOON );
-            break;
-        case EVO_LEVEL_CASCOON:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_LVL_DIGITS); //level
-            StringExpandPlaceholders(gStringVar4, sText_EVO_LEVEL_CASCOON );
-            break;
-        case EVO_MOVE:
-            StringCopy(gStringVar2, GetMoveName(evolutions[i].param));
-            StringExpandPlaceholders(gStringVar4, sText_EVO_MOVE );
-            break;
-        case EVO_LEVEL_RAIN:
-            //if (j == WEATHER_RAIN || j == WEATHER_RAIN_THUNDERSTORM || j == WEATHER_DOWNPOUR)
-            StringExpandPlaceholders(gStringVar4, sText_EVO_LEVEL_RAIN );
-            break;
-        case EVO_TRADE_SPECIFIC_MON:
-            StringCopy(gStringVar2, GetSpeciesName(evolutions[i].param)); //mon name
-            StringExpandPlaceholders(gStringVar4, sText_EVO_TRADE_SPECIFIC_MON );
-            break;
-        case EVO_CRITICAL_HITS:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_CRITS_DIGITS); //crits
-            StringExpandPlaceholders(gStringVar4, sText_EVO_CRITICAL_HITS);
-            break;
-        case EVO_SCRIPT_TRIGGER_DMG:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, EVO_SCREEN_DMG_DIGITS); //damage
-            StringExpandPlaceholders(gStringVar4, sText_EVO_SCRIPT_TRIGGER_DMG);
-            break;
-        case EVO_DARK_SCROLL:
-            item = evolutions[i].param;
-            CopyItemName(item, gStringVar2);
-            StringExpandPlaceholders(gStringVar4, sText_EVO_DARK_SCROLL );
-            break;
-        case EVO_WATER_SCROLL:
-            item = evolutions[i].param;
-            CopyItemName(item, gStringVar2);
-            StringExpandPlaceholders(gStringVar4, sText_EVO_WATER_SCROLL );
-            break;
-        case EVO_USE_MOVE_TWENTY_TIMES:
-            StringCopy(gStringVar2, GetMoveName(evolutions[i].param));
-            StringExpandPlaceholders(gStringVar4, sText_EVO_USE_MOVE_TWENTY_TIMES );
-            break;
-        case EVO_RECOIL_DAMAGE_MALE:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, 3);
-            StringExpandPlaceholders(gStringVar4, sText_EVO_RECOIL_DAMAGE_MALE);
-            break;
-        case EVO_RECOIL_DAMAGE_FEMALE:
-            ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEADING_ZEROS, 3);
-            StringExpandPlaceholders(gStringVar4, sText_EVO_RECOIL_DAMAGE_FEMALE);
-            break;
-         case EVO_DEFEAT_THREE_WITH_ITEM:
-            item = evolutions[i].param;
-            CopyItemName(item, gStringVar2);
-            StringCopy(gStringVar3, GetSpeciesName(species));
-            StringExpandPlaceholders(gStringVar4, sText_EVO_DEFEAT_THREE_WITH_ITEM);
-            break;
-        */
         }//Switch end
 
         // Check for additional conditions. Skips if there's no additional conditions.
