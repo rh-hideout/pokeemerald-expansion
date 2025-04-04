@@ -881,8 +881,6 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         break;
     }
 }
-
-#undef tState
 #undef tDoorTask
 #undef tDoorX
 #undef tDoorY
@@ -921,6 +919,17 @@ void EscalatorMoveFollowerNPCFinish(void)
     CreateTask(Task_FollowerNPCHandleEscalatorFinish, 1);
 }
 
+#define tCounter                data[1]
+#define tMetatileBehavior       data[2]
+#define tTimer                  data[7]
+#define MOVE_TO_PLAYER_POS      0
+#define WAIT_FOR_PLAYER_MOVE    1
+#define SHOW_FOLLOWER_DOWN      2
+#define MOVE_FOLLOWER_DOWN      3
+#define SHOW_FOLLOWER_UP        4
+#define MOVE_FOLLOWER_UP        5
+#define MOVEMENT_FINISH         6
+
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 {
     s16 x, y;
@@ -929,70 +938,69 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
     struct Sprite* sprite = &gSprites[follower->spriteId];
     struct Task *task = &gTasks[taskId];
 
-    switch (task->data[0])
+    switch (task->tState)
     {
-    case 0:
+    case MOVE_TO_PLAYER_POS:
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
         PlayerGetDestCoords(&x, &y);
-        task->data[2] = MapGridGetMetatileBehaviorAt(x, y);
-        task->data[7] = 0;
-        task->data[0]++;
+        task->tMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+        task->tTimer = 0;
+        task->tState = WAIT_FOR_PLAYER_MOVE;
         break;
-    case 1:
-        if (task->data[7]++ < 0x20) // Wait half a second before revealing the follower
+    case WAIT_FOR_PLAYER_MOVE:
+        if (task->tTimer++ < 32) // Wait half a second before revealing the follower
             break;
 
-        task->data[0]++;
-        task->data[1] = 16;
-        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        task->tState = SHOW_FOLLOWER_DOWN;
+        task->tCounter = 16;
         gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
         gPlayerAvatar.preventStep = TRUE;
         ObjectEventClearHeldMovementIfActive(follower);
         ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
-        if (task->data[2] == 0x6b)
-            task->data[0] = 4;
+        if (task->tMetatileBehavior == 0x6b)
+            task->tState = SHOW_FOLLOWER_UP;
         break;
-    case 2:
+    case SHOW_FOLLOWER_DOWN:
         follower->invisible = FALSE;
         CalculateFollowerNPCEscalatorTrajectoryDown(task);
-        task->data[0]++;
+        task->tState = MOVE_FOLLOWER_DOWN;
         break;
-    case 3:
+    case MOVE_FOLLOWER_DOWN:
         CalculateFollowerNPCEscalatorTrajectoryDown(task);
-        task->data[2]++;
-        if (task->data[2] & 1)
+        task->tMetatileBehavior++;
+        if (task->tMetatileBehavior & 1)
         {
-            task->data[1]--;
+            task->tCounter--;
         }
 
-        if (task->data[1] == 0)
+        if (task->tCounter == 0)
         {
             sprite->x2 = 0;
             sprite->y2 = 0;
-            task->data[0] = 6;
+            task->tState = MOVEMENT_FINISH;
         }
         break;
-    case 4:
+    case SHOW_FOLLOWER_UP:
         follower->invisible = FALSE;
         CalculateFollowerNPCEscalatorTrajectoryUp(task);
-        task->data[0]++;
+        task->tState = MOVE_FOLLOWER_UP;
         break;
-    case 5:
+    case MOVE_FOLLOWER_UP:
         CalculateFollowerNPCEscalatorTrajectoryUp(task);
-        task->data[2]++;
-        if (task->data[2] & 1)
+        task->tMetatileBehavior++;
+        if (task->tMetatileBehavior & 1)
         {
-            task->data[1]--;
+            task->tCounter--;
         }
 
-        if (task->data[1] == 0)
+        if (task->tCounter == 0)
         {
             sprite->x2 = 0;
             sprite->y2 = 0;
-            task->data[0]++;
+            task->tState = MOVEMENT_FINISH;
         }
         break;
-    case 6:
+    case MOVEMENT_FINISH:
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
             gPlayerAvatar.preventStep = FALSE;
@@ -1005,17 +1013,29 @@ static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 {
     struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
 
-    sprite->x2 = Cos(0x84, task->data[1]);
-    sprite->y2 = Sin(0x94, task->data[1]);
+    sprite->x2 = Cos(0x84, task->tCounter);
+    sprite->y2 = Sin(0x94, task->tCounter);
 }
 
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
 {
     struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
 
-    sprite->x2 = Cos(0x7c, task->data[1]);
-    sprite->y2 = Sin(0x76, task->data[1]);
+    sprite->x2 = Cos(0x7c, task->tCounter);
+    sprite->y2 = Sin(0x76, task->tCounter);
 }
+
+#undef tState
+#undef tCounter
+#undef tMetatileBehavior
+#undef tTimer
+#undef MOVE_TO_PLAYER_POS
+#undef WAIT_FOR_PLAYER_MOVE
+#undef SHOW_FOLLOWER_DOWN
+#undef MOVE_FOLLOWER_DOWN
+#undef SHOW_FOLLOWER_UP
+#undef MOVE_FOLLOWER_UP
+#undef MOVEMENT_FINISH
 
 bool8 FollowerNPCCanBike(void)
 {
