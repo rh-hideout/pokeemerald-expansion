@@ -4114,24 +4114,7 @@ static void Task_HideFollowerForTeleport(u8 taskId)
         }
         else
         {
-            u8 followerObjId = GetFollowerNPCObjectId();
-            follower->singleMovementActive = FALSE;
-            follower->heldMovementActive = FALSE;
-            switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
-            {
-                case DIR_NORTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
-                    break;
-                case DIR_SOUTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
-                    break;
-                case DIR_EAST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
-                    break;
-                case DIR_WEST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
-                    break;
-            }
+            FollowerNPCWalkIntoPlayerForLeaveRoute(follower);
             taskState++;
         }
     }
@@ -4139,9 +4122,7 @@ static void Task_HideFollowerForTeleport(u8 taskId)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
-            follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
+            FollowerNPCHideForLeaveRoute(follower);
             DestroyTask(taskId);
         }
     }

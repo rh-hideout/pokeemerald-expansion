@@ -1405,24 +1405,7 @@ static void Task_UseFly(u8 taskId)
         }
         else
         {
-            u8 followerObjId = GetFollowerNPCObjectId();
-            follower->singleMovementActive = FALSE;
-            follower->heldMovementActive = FALSE;
-            switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
-            {
-                case DIR_NORTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
-                    break;
-                case DIR_SOUTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
-                    break;
-                case DIR_EAST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
-                    break;
-                case DIR_WEST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
-                    break;
-            }
+            FollowerNPCWalkIntoPlayerForLeaveRoute(follower);
             taskState++;
         }
     }
@@ -1430,9 +1413,7 @@ static void Task_UseFly(u8 taskId)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
-            follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
+            FollowerNPCHideForLeaveRoute(follower);
             taskState++;
         }
 #endif
@@ -1507,14 +1488,7 @@ static void Task_FlyIntoMap(u8 taskId)
         if (!FieldEffectActiveListContains(FLDEFF_FLY_IN))
         {
 #if OW_ENABLE_NPC_FOLLOWERS
-            if (gSaveBlock3Ptr->NPCfollower.inProgress) {
-                follower->invisible = FALSE; // Show the follower after FLY
-                MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-                ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
-                follower->singleMovementActive = FALSE;
-                follower->heldMovementActive = FALSE;
-                ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
-            }
+        FollowerNPCReappearAfterLeaveRoute(follower, player);
 #endif
             taskState++;
         }
@@ -2427,24 +2401,7 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
         }
         else
         {
-            u8 followerObjId = GetFollowerNPCObjectId();
-            follower->singleMovementActive = FALSE;
-            follower->heldMovementActive = FALSE;
-            switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
-            {
-                case DIR_NORTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
-                    break;
-                case DIR_SOUTH:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
-                    break;
-                case DIR_EAST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
-                    break;
-                case DIR_WEST:
-                    ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
-                    break;
-            }
+            FollowerNPCWalkIntoPlayerForLeaveRoute(follower);
             task->data[3]++;
         }
     }
@@ -2452,9 +2409,7 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
-            follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
+            FollowerNPCHideForLeaveRoute(follower);
             task->tState++;
         }
     }
@@ -2554,14 +2509,7 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
     if (task->data[3] == 1)
     {
 #if OW_ENABLE_NPC_FOLLOWERS
-        if (gSaveBlock3Ptr->NPCfollower.inProgress) {
-            follower->invisible = FALSE; // Show the follower after ESCAPE ROPE
-            MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-            ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
-            follower->singleMovementActive = FALSE;
-            follower->heldMovementActive = FALSE;
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
-            }
+        FollowerNPCReappearAfterLeaveRoute(follower, player);
 #endif
         task->data[3]++;
     }
@@ -2792,14 +2740,7 @@ static void TeleportWarpInFieldEffect_SpinGround(struct Task *task)
         if ((++task->data[2]) > 4 && task->data[14] == player->facingDirection)
         {
 #if OW_ENABLE_NPC_FOLLOWERS
-            if (gSaveBlock3Ptr->NPCfollower.inProgress) {
-                follower->invisible = FALSE; // Show the follower after TELEPORT
-                MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-                ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
-                follower->singleMovementActive = FALSE;
-                follower->heldMovementActive = FALSE;
-                ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
-            }
+        FollowerNPCReappearAfterLeaveRoute(follower, player);
 #endif
             task->data[3] = 1;
         }

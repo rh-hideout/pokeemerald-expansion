@@ -49,12 +49,12 @@ struct FollowerNPCSpriteGraphics
 static u16 GetFollowerNPCSprite(void);
 static void TryUpdateFollowerNPCSpriteUnderwater(void);
 static void Task_ReallowPlayerMovement(u8 taskId);
-static void PlayerLogCoordinates(struct ObjectEvent* player);
+static void PlayerLogCoordinates(struct ObjectEvent *player);
 static bool8 IsStateMovement(u8 state);
 static u8 ReturnFollowerNPCDelayedState(u8 direction);
 static void SetSurfJump(void);
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId);
-static void SetUpSurfBlobFieldEffect(struct ObjectEvent* npc);
+static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc);
 static void SetSurfDismount(void);
 static void Task_FinishSurfDismount(u8 taskId);
 void SetFollowerNPCSurfSpriteAfterDive(void);
@@ -104,7 +104,7 @@ u8 GetFollowerNPCLocalId(void)
     return gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId].localId;
 }
 
-const u8* GetFollowerNPCScriptPointer(void)
+const u8 *GetFollowerNPCScriptPointer(void)
 {
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return NULL;
@@ -204,7 +204,7 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
 {
     if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
     {
-        struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+        struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER);
 
         follower = &gObjectEvents[GetFollowerNPCMapObjId()]; // Can change on reload sprite
@@ -217,10 +217,10 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
 #define tDoorX          data[2]
 #define tDoorY          data[3]
 
-void NPCFollow(struct ObjectEvent* npc, u8 state, bool8 ignoreScriptActive)
+void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
 {
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     u8 dir;
     u8 newState;
     u8 taskId;
@@ -340,7 +340,7 @@ static void Task_ReallowPlayerMovement(u8 taskId)
     DestroyTask(taskId);
 }
 
-u8 DetermineFollowerNPCDirection(struct ObjectEvent* player, struct ObjectEvent* follower)
+u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
     // Move the follower towards the player
     s8 delta_x = follower->currentCoords.x - player->currentCoords.x;
@@ -359,14 +359,14 @@ u8 DetermineFollowerNPCDirection(struct ObjectEvent* player, struct ObjectEvent*
     return DIR_NONE;
 }
 
-static void PlayerLogCoordinates(struct ObjectEvent* player)
+static void PlayerLogCoordinates(struct ObjectEvent *player)
 {
     gSaveBlock3Ptr->NPCfollower.log.x = player->currentCoords.x;
     gSaveBlock3Ptr->NPCfollower.log.y = player->currentCoords.y;
 }
 
 #define RETURN_STATE(state, dir) return newState == MOVEMENT_INVALID ? state + (dir - 1) : ReturnFollowerNPCDelayedState(dir - 1);
-u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 direction)
+u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction)
 {
     u8 newState = MOVEMENT_INVALID;
     u8 collision = COLLISION_NONE;
@@ -631,10 +631,10 @@ static u8 ReturnFollowerNPCDelayedState(u8 direction)
     return newState + direction;
 }
 
-bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
+bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return FALSE;
@@ -658,7 +658,7 @@ void FollowerNPC_FollowerToWater(void)
 
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
 {
-    struct ObjectEvent* follower;
+    struct ObjectEvent *follower;
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
@@ -677,7 +677,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
 
 static void SetSurfJump(void)
 {
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     u8 direction;
     u8 jumpState;
 
@@ -716,7 +716,7 @@ static void SetSurfJump(void)
 
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
 {
-    struct ObjectEvent* npc = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCMapObjId()];
     bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait jump animation
     if (animStatus == 0)
         return;
@@ -729,7 +729,7 @@ static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
     return;
 }
 
-static void SetUpSurfBlobFieldEffect(struct ObjectEvent* npc)
+static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc)
 {
     // Set up gFieldEffectArguments for execution
     gFieldEffectArguments[0] = npc->currentCoords.x;                 // effect_x
@@ -750,7 +750,7 @@ void PrepareFollowerNPCDismountSurf(void)
 
 static void SetSurfDismount(void)
 {
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     u8 direction;
     u8 jumpState;
     u8 task;
@@ -774,7 +774,7 @@ static void SetSurfDismount(void)
 
 static void Task_FinishSurfDismount(u8 taskId)
 {
-    struct ObjectEvent* npc = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCMapObjId()];
     bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait animation
 
     if (animStatus == 0)
@@ -803,7 +803,7 @@ void SetFollowerNPCSurfSpriteAfterDive(void)
 }
 
 #if OW_ENABLE_NPC_FOLLOWERS
-static u8 GetPlayerFaceToDoorDirection(struct ObjectEvent* player, struct ObjectEvent* follower)
+static u8 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
     s16 delta_x = player->currentCoords.x - follower->currentCoords.x;
 
@@ -901,8 +901,8 @@ void EscalatorMoveFollowerNPC(u8 movementType)
 
 static void Task_FollowerNPCHandleEscalator(u8 taskId)
 {
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     ObjectEventClearHeldMovementIfActive(follower);
     ObjectEventSetHeldMovement(follower, DetermineFollowerNPCState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, DetermineFollowerNPCDirection(player, follower)));
@@ -934,9 +934,9 @@ enum {
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 {
     s16 x, y;
-    struct ObjectEvent* follower = &gObjectEvents[GetFollowerNPCMapObjId()];
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct Sprite* sprite = &gSprites[follower->spriteId];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *sprite = &gSprites[follower->spriteId];
     struct Task *task = &gTasks[taskId];
 
     switch (task->tState)
@@ -1012,7 +1012,7 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 
 static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 {
-    struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
 
     sprite->x2 = Cos(0x84, task->tCounter);
     sprite->y2 = Sin(0x94, task->tCounter);
@@ -1020,7 +1020,7 @@ static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
 {
-    struct Sprite* sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
 
     sprite->x2 = Cos(0x7c, task->tCounter);
     sprite->y2 = Sin(0x76, task->tCounter);
@@ -1157,7 +1157,7 @@ void FollowerNPC_WarpSetEnd(void)
 #if OW_ENABLE_NPC_FOLLOWERS
 void CreateFollowerNPCAvatar(void)
 {
-    struct ObjectEvent* player;
+    struct ObjectEvent *player;
     struct ObjectEventTemplate clone;
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -1201,7 +1201,7 @@ void CreateFollowerNPCAvatar(void)
 
 static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, const u8 *ptr)
 {
-    struct ObjectEvent* follower;
+    struct ObjectEvent *follower;
     u8 eventObjId;
     const u8 *script;
     u16 flag;
@@ -1266,6 +1266,51 @@ bool8 CheckFollowerNPCFlag(u16 flag)
 static u8 GetPlayerMapObjId(void)
 {
 	return gPlayerAvatar.objectEventId;
+}
+
+void FollowerNPCWalkIntoPlayerForLeaveRoute(struct ObjectEvent *follower)
+{
+    u8 followerObjId = GetFollowerNPCObjectId();
+
+    if (followerObjId == OBJECT_EVENTS_COUNT)
+        return;
+
+    follower->singleMovementActive = FALSE;
+    follower->heldMovementActive = FALSE;
+    switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
+    {
+        case DIR_NORTH:
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
+            break;
+        case DIR_SOUTH:
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
+            break;
+        case DIR_EAST:
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
+            break;
+        case DIR_WEST:
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
+            break;
+            }
+}
+
+void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower)
+{
+    SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
+    follower->invisible = TRUE;
+    gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
+}
+
+void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct ObjectEvent *player)
+{
+    if (gSaveBlock3Ptr->NPCfollower.inProgress) {
+        follower->invisible = FALSE; // Show the follower after ESCAPE ROPE
+        MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
+        ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
+        follower->singleMovementActive = FALSE;
+        follower->heldMovementActive = FALSE;
+        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
+    }
 }
 
 enum
@@ -1419,7 +1464,7 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
     {
         u8 playerDirection, followerDirection;
-        struct ObjectEvent* player, *follower;
+        struct ObjectEvent *player, *follower;
 
         player = &gObjectEvents[gPlayerAvatar.objectEventId];
         follower = &gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId];
