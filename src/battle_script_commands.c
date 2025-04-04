@@ -18645,6 +18645,7 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
+// TODO: YAWN
 // TODO: Modify all CanX functions to redirect here
 // TODO: Set Move Result flags for primary
 // TODO: Delete redundant code, leftover
@@ -18712,7 +18713,10 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
     {
     case ABILITY_IMMUNITY:
         if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_STATUS;
             battleScript = BattleScript_ImmunityProtected;
+        }
         break;
     case ABILITY_COMATOSE:
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
@@ -18746,6 +18750,7 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
     {
         if (option == NON_VOLATILE_STATUS_RUN_SCRIPT)
         {
+            gLastUsedAbility = gBattlerAbility = battlerDef;
             gBattlescriptCurrInstr = battleScript;
             RecordAbilityBattle(battlerDef, abilityDef);
         }
@@ -18768,13 +18773,14 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
     {
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
     }
-    else if (IsFlowerVeilProtected(battlerDef))
+    else if ((fieldAbility = IsFlowerVeilProtected(battlerDef)))
     {
+        abilityDef = fieldAbility - 1;
         battleScript = BattleScript_FlowerVeilProtects;
     }
     else if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && (fieldAbility = IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)))
     {
-        gBattlerAbility = fieldAbility - 1;
+        abilityDef = fieldAbility - 1;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PASTEL_VEIL;
         battleScript = BattleScript_ImmunityProtected;
     }
@@ -18796,6 +18802,7 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
     {
         if (option == NON_VOLATILE_STATUS_RUN_SCRIPT)
         {
+            gLastUsedAbility = gBattlerAbility = abilityDef;
             gBattlescriptCurrInstr = battleScript;
             RecordAbilityBattle(battlerDef, abilityDef);
         }
