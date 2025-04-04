@@ -22,6 +22,12 @@ struct PickupItem
     u8 percentage[10];
 };
 
+enum NonVolatileStatus
+{
+    NON_VOLATILE_STATUS_CHECK_TRIGGER,
+    NON_VOLATILE_STATUS_RUN_SCRIPT,
+};
+
 s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk);
 s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk);
 s32 GetCritHitOdds(s32 critChanceIndex);
@@ -59,6 +65,8 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
+void SetNonVolatileStatusCondition(u32 target, u32 statusMoveEffect);
+bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);
 
 extern void (* const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];

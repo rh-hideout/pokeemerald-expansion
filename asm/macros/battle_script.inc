@@ -1336,9 +1336,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused ptr:req
+	.macro setnonvolatilestatus
 	.byte 0xfd
-	.4byte \ptr
 	.endm
 
 	.macro tryworryseed failInstr:req
@@ -2370,6 +2369,10 @@
 
 	.macro restoresavedmove
 	callnative BS_RestoreSavedMove
+	.endm
+
+	.macro jumpifcantinflictknonvolatilestatus
+	callnative BS_JumpIfCantInflictkNonVolatileStatus
 	.endm
 
 @ helpful macros

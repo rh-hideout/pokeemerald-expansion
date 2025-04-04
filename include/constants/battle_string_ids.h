@@ -951,6 +951,7 @@
 #define B_MSG_ABILITY_PREVENTS_MOVE_STATUS    0
 #define B_MSG_ABILITY_PREVENTS_ABILITY_STATUS 1
 #define B_MSG_STATUS_HAD_NO_EFFECT            2
+#define B_MSG_ABILITY_PASTEL_VEIL             3
 
 // gGotDefrostedStringIds
 #define B_MSG_DEFROSTED         0

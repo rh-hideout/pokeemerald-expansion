@@ -6415,7 +6415,14 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         {
             gHitMarker &= ~HITMARKER_SYNCHRONISE_EFFECT;
 
-            if (!(gBattleMons[gBattlerAttacker].status1 & STATUS1_ANY))
+            // TODO: I'm not sure if Synchronize should silently fail (if it does) or not
+            bool32 statusChanged = CanInflictNonVolatileStatus(gBattlerTarget,
+                                                               gBattlerAttacker,
+                                                               GetBattlerAbility(gBattlerAttacker),
+                                                               MOVE_TOXIC, // Just a dummy to check Substitute protection
+                                                               gBattleStruct->synchronizeMoveEffect,
+                                                               NON_VOLATILE_STATUS_CHECK_TRIGGER);
+            if (statusChanged)
             {
                 gBattleStruct->synchronizeMoveEffect &= ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
                 if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)

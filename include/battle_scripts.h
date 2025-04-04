@@ -185,7 +185,6 @@ extern const u8 BattleScript_ItemNoStatLoss[];
 extern const u8 BattleScript_ItemNoStatLossSpicyExtract[];
 extern const u8 BattleScript_BRNPrevention[];
 extern const u8 BattleScript_PRLZPrevention[];
-extern const u8 BattleScript_PSNPrevention[];
 extern const u8 BattleScript_ObliviousPreventsAttraction[];
 extern const u8 BattleScript_FlinchPrevention[];
 extern const u8 BattleScript_OwnTempoPrevents[];
@@ -514,6 +513,19 @@ extern const u8 BattleScript_BoosterEnergyRet[];
 extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
 extern const u8 BattleScript_SleepClausePreventsEnd[];
+
+extern const u8 BattleScript_AbilityProtectsDoesntAffect[];
+extern const u8 BattleScript_WaterVeilPrevents[];
+extern const u8 BattleScript_PrintBattlerAbilityMadeIneffective[];
+extern const u8 BattleScript_ImmunityProtected[];
+extern const u8 BattleScript_SafeguardProtected[];
+extern const u8 BattleScript_FlowerVeilProtects[];
+extern const u8 BattleScript_SleepClauseBlocked[];
+extern const u8 BattleScript_AlreadyAsleep[];
+extern const u8 BattleScript_CantMakeAsleep[];
+extern const u8 BattleScript_AlreadyPoisoned[];
+extern const u8 BattleScript_AlreadyParalyzed[];
+extern const u8 BattleScript_AlreadyBurned[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -856,5 +868,6 @@ extern const u8 BattleScript_EffectSpicyExtract[];
 extern const u8 BattleScript_DamageToQuarterTargetHP[];
 extern const u8 BattleScript_EffectFickleBeam[];
 extern const u8 BattleScript_FickleBeamDoubled[];
+extern const u8 BattleScript_EffectNonVolatileStatus[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H
