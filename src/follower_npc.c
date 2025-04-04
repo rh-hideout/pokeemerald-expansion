@@ -1196,6 +1196,7 @@ void CreateFollowerNPCAvatar(void)
     if (gSaveBlock3Ptr->NPCfollower.objId == OBJECT_EVENTS_COUNT)
     {
         memset(&gSaveBlock3Ptr->NPCfollower, 0, sizeof(gSaveBlock3Ptr->NPCfollower));
+        return;
     }
 
     if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
