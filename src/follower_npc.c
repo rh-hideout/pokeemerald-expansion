@@ -374,6 +374,7 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
     s16 followerY = follower->currentCoords.y;
     u8 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
     u8 nextBehavior;
+    u8 noSpecialAnimFrames = (GetFollowerNPCSprite() == gSaveBlock3Ptr->NPCfollower.graphicsId);
 
     MoveCoords(direction, &followerX, &followerY);
     nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
@@ -457,28 +458,69 @@ u8 DetermineFollowerNPCState(struct ObjectEvent* follower, u8 state, u8 directio
         if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
             return MOVEMENT_INVALID;
 
-        RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //regular movement
+        RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //Regular movement
 
+    // Acro bike
     case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN, direction);
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN, direction);
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN, direction);
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN, direction);
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
+        if (noSpecialAnimFrames)
+        {
+            RETURN_STATE(MOVEMENT_ACTION_JUMP_DOWN, direction);
+        }
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN, direction);
+        if (noSpecialAnimFrames)
+        {
+            RETURN_STATE(MOVEMENT_ACTION_JUMP_DOWN, direction);
+        }
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN, direction);
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN, direction);
+        if (noSpecialAnimFrames)
+        {
+            RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+        }
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN, direction);
+        if (noSpecialAnimFrames)
+        {
+            RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+        }
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_RIGHT:
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN, direction);
+        if (noSpecialAnimFrames)
+        {
+            RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+        }
+        else
+            RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN, direction);
 
     // Sliding
     case MOVEMENT_ACTION_SLIDE_DOWN ... MOVEMENT_ACTION_SLIDE_RIGHT:
@@ -700,8 +742,8 @@ static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
 static void SetUpSurfBlobFieldEffect(struct ObjectEvent* npc)
 {
     // Set up gFieldEffectArguments for execution
-    gFieldEffectArguments[0] = npc->currentCoords.x;     // effect_x
-    gFieldEffectArguments[1] = npc->currentCoords.y;    // effect_y
+    gFieldEffectArguments[0] = npc->currentCoords.x;                 // effect_x
+    gFieldEffectArguments[1] = npc->currentCoords.y;                 // effect_y
     gFieldEffectArguments[2] = gSaveBlock3Ptr->NPCfollower.objId;    // objId
 }
 
@@ -1057,7 +1099,6 @@ void SetFollowerNPCSprite(u8 spriteIndex)
     // be reloaded.
     backupFollower = *follower;
     backupFollower.graphicsId = newGraphicsId;
-    // backupFollower.graphicsIdUpperByte = newGraphicsId >> 8;
     DestroySprite(&gSprites[oldSpriteId]);
     RemoveObjectEvent(&gObjectEvents[GetFollowerNPCMapObjId()]);
 
