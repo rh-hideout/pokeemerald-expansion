@@ -87,7 +87,7 @@ Now, let's see what needs to be done.
 
 ## 2. `SpeciesInfo`'s structure
 Now, to better understand Mewthree, we also need to understand Mew. Let's look at its data.
-```diff
+```c
     [SPECIES_MEW] =
     {
         .baseHP        = 100,
@@ -133,7 +133,11 @@ Now, to better understand Mewthree, we also need to understand Mew. Let's look a
         .frontPic = gMonFrontPic_Mew,
         .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(40, 40) : MON_COORDS_SIZE(64, 48),
         .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 13 : 9,
-        .frontAnimFrames = sAnims_Mew,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(1, 40),
+            ANIMCMD_FRAME(0, 10),
+        ),
         .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_SWING_CONVEX : ANIM_ZIGZAG_SLOW,
         .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 11,
         .backPic = gMonBackPic_Mew,
@@ -151,6 +155,7 @@ Now, to better understand Mewthree, we also need to understand Mew. Let's look a
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_NONE,
+            sAnimTable_Following,
             gOverworldPalette_Mew,
             gShinyOverworldPalette_Mew
         )
@@ -164,6 +169,8 @@ Now, to better understand Mewthree, we also need to understand Mew. Let's look a
 
 That's a lot of stuff! But don't worry, we'll go through it step by step throughout the tutorial
 (and it's miles better than having this same data through 20+ files like it used to be).
+
+**Note: Across the species files you'll see preprocessor instructions such as `#if/endif P_FAMILY_MEW`. These are used by expansion in order to allow users to disable species via config. Since we're making a new species from scratch, you DON'T need to add them as part of the process.**
 
 We'll start by adding the self-explanatory data that's also present in pret's vanilla structure:
 
@@ -539,6 +546,10 @@ Please note that Pecharunt, the Pokémon that should be above your insertion for
 
 You can define the animation order, in which the sprites will be shown. The first number is the sprite index (so 0 or 1) and the second number is the number of frames the sprite will be visible.
 
+### Version 1.11.0 or later
+We add this data directly to the entry, so go to section 4.
+
+### Version 1.10.3 or earlier
 Edit [src/data/pokemon_graphics/front_pic_anims.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/pokemon_graphics/front_pic_anims.h):
 
 ```diff
@@ -597,7 +608,9 @@ Now that we have all the external data ready, we just need to add it to `gSpecie
 +       .frontPic = gMonFrontPic_Mewthree,
 +       .frontPicSize = MON_COORDS_SIZE(64, 64),
 +       .frontPicYOffset = 0,
-+       .frontAnimFrames = sAnims_Mewthree,
++       .frontAnimFrames = ANIM_FRAMES(
++           ANIMCMD_FRAME(0, 1),
++       ),
 +       .frontAnimId = ANIM_GROW_VIBRATE,
 +       .frontAnimDelay = 15,
 +       .enemyMonElevation = 6,
@@ -621,7 +634,10 @@ Let's explain each of these:
 - `frontPicYOffset`:
     - Used to define what Y position the sprite sits at. This is used to set where they'd be "grounded". For the shadow, see `enemyMonElevation`.
 - `frontAnimFrames`:
-    - We link our animation frame animations that we defined earlier here.
+    - We define our animation frame animations directly here. In version `1.10.3 and earlier`, we add the reference to the table that we defined earlier here like this instead:
+        ```diff
+        +       .frontAnimFrames = sAnims_Mewthree,
+        ```
 - `frontAnimId`:
     - Because you are limited to two frames, there are already [predefined front sprite animations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/pokemon_animation.h), describing translations, rotations, scalings or color changes.
 - `frontAnimDelay`:
@@ -1105,13 +1121,13 @@ Thirdly, in [spritesheet_rules.mk](https://github.com/rh-hideout/pokeemerald-exp
 
 ```diff
 $(POKEMONGFXDIR)/mewtwo/overworld.4bpp: %.4bpp: %.png
-	$(GFX) $< $@ -mwidth 4 -mheight 4
+    $(GFX) $< $@ -mwidth 4 -mheight 4
 
 +$(POKEMONGFXDIR)/mewthree/overworld.4bpp: %.4bpp: %.png
 +	$(GFX) $< $@ -mwidth 4 -mheight 4
 
 $(POKEMONGFXDIR)/mew/overworld.4bpp: %.4bpp: %.png
-	$(GFX) $< $@ -mwidth 4 -mheight 4
+    $(GFX) $< $@ -mwidth 4 -mheight 4
 ```
 
 Fourthly, in [src/data/object_events/object_event_pic_tables_followers.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/object_events/object_event_pic_tables_followers.h):
@@ -1142,6 +1158,7 @@ And finally, in `gSpeciesInfo`:
 +           SIZE_32x32,
 +           SHADOW_SIZE_M,
 +           TRACKS_FOOT,
++           sAnimTable_Following,
 +           gOverworldPalette_Mewthree,
 +           gShinyOverworldPalette_Mewthree
 +       )
@@ -1150,6 +1167,7 @@ And finally, in `gSpeciesInfo`:
     },
  };
 ```
+**Note: In versions previous to 1.11, `sAnimTable_Following` is not added here.**
 
 ### Sprite Size
 Depending on your species, you might want to use different sizes for it. For example, certain species known for being big like Steelix use sprites that fit a 64x64 frame instead of 32x32, and as such have `SIZE_64x64` in their data instead of `SIZE_32x32` to accomodate for them.
@@ -1171,11 +1189,46 @@ To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADO
 ### Tracks
 You have 4 options for the tracks that your species will leave behind on sand.
  - `TRACKS_NONE`
- - `TRACKS_FOOT` ![sand_footprints](https://github.com/user-attachments/assets/8b8c34d6-72e9-4b9d-839d-0a5cc1ae1a4c)
- - `TRACKS_SLITHER` ![slither_tracks](https://github.com/user-attachments/assets/28219c05-61e0-48b3-9aeb-43f48e4ffdd4)
- - `TRACKS_SPOT` ![spot_tracks](https://github.com/user-attachments/assets/f7a24887-c5ca-47f2-8825-01f3df61deca)
- - `TRACKS_BUG` ![bug_tracks](https://github.com/user-attachments/assets/8cd1dea4-4123-4af8-a558-992874a6d589)
+ - `TRACKS_FOOT` ![sand_footprints](/graphics/field_effects/pics/sand_footprints.png)
+ - `TRACKS_SLITHER` ![slither_tracks](/graphics/field_effects/pics/slither_tracks.png)
+ - `TRACKS_SPOT` ![spot_tracks](/graphics/field_effects/pics/spot_tracks.png)
+ - `TRACKS_BUG` ![bug_tracks](/graphics/field_effects/pics/bug_tracks.png)
 
  ...though technically you can also use `TRACKS_BIKE_TIRE` if you wish to.
 
-![bike_tire_tracks](https://github.com/user-attachments/assets/ac81d211-85e5-443a-ac54-c2976f1f0b82)
+![bike_tire_tracks](/graphics/field_effects/pics/bike_tire_tracks.png)
+
+### Asymmetric sprites (Version 1.10.0 onwards)
+
+![scovillain](/graphics/pokemon/scovillain/overworld.png)
+
+You can set up an east-west asymetric overworld sprite by adding the East frames at the end of the sheet and changing the following:
+
+#### Version 1.11.0 onwards
+```diff
+        OVERWORLD(
+            sPicTable_Mewthree,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+-           sAnimTable_Following,
++           sAnimTable_Following_Asym,
+            gOverworldPalette_Mewthree,
+            gShinyOverworldPalette_Mewthree
+        )
+```
+#### Version 1.10.x
+```diff
+-       OVERWORLD(
++       OVERWORLD_SET_ANIM(
+            sPicTable_Mewthree,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
++           sAnimTable_Following_Asym,
+            gOverworldPalette_Mewthree,
+            gShinyOverworldPalette_Mewthree
+        )
+```
+
+Either way, you may create custom animation tables and use it here appropiately.
