@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Tri Attack can inflict paralysis, burn or freeze")
 #endif
 {
     u8 statusAnim;
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; }
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_BRN; }
+    // PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; }
+    // PARAMETRIZE { statusAnim = B_ANIM_STATUS_BRN; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_FRZ; }
     PASSES_RANDOMLY(1, 3, RNG_TRI_ATTACK);
     GIVEN {

@@ -3221,6 +3221,11 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED;
     }
 
+    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+
+    if (gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
+        return;
+
     // for synchronize
     if (effect == MOVE_EFFECT_POISON
      || effect == MOVE_EFFECT_TOXIC
@@ -3228,13 +3233,11 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
      || effect == MOVE_EFFECT_BURN)
      {
         gBattleStruct->synchronizeMoveEffect = effect;
-        gHitMarker |= HITMARKER_SYNCHRONISE_EFFECT;
+        gHitMarker |= HITMARKER_SYNCHRONIZE_EFFECT;
      }
 
     if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
-
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 }
 
 #define INCREMENT_RESET_RETURN                  \
@@ -3325,7 +3328,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
     if (gBattleScripting.moveEffect <= PRIMARY_STATUS_MOVE_EFFECT) // status change
     {
-        if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)) // Calcs already done
+        if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)) // Calcs already done)
         {
             statusChanged = CanInflictNonVolatileStatus(gBattlerAttacker,
                                                         gEffectBattler,
@@ -3334,6 +3337,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                                                         gBattleScripting.moveEffect,
                                                         STATUS_CHECK_TRIGGER);
         }
+
         if (statusChanged || gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
         {
             SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
@@ -5291,7 +5295,7 @@ static void MoveValuesCleanUp(void)
     gBattleCommunication[MISS_TYPE] = 0;
     if (!gMultiHitCounter)
         gHitMarker &= ~HITMARKER_DESTINYBOND;
-    gHitMarker &= ~HITMARKER_SYNCHRONISE_EFFECT;
+    gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 }
 
 static void Cmd_movevaluescleanup(void)
@@ -18769,10 +18773,7 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
         {
             battleScript = BattleScript_NotAffected;
         }
-        else if (effect == MOVE_EFFECT_FREEZE || effect == MOVE_EFFECT_FROSTBITE)
-        {
-            battleScript = BattleScript_AbilityProtectsDoesntAffect;
-        }
+        break;
     default:
         break;
     }

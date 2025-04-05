@@ -777,7 +777,7 @@ void HandleAction_NothingIsFainted(void)
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONISE_EFFECT
+                    | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONIZE_EFFECT
                     | HITMARKER_CHARGING | HITMARKER_NEVER_SET);
 }
 
@@ -791,7 +791,7 @@ void HandleAction_ActionFinished(void)
     SpecialStatusesClear();
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONISE_EFFECT
+                    | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONIZE_EFFECT
                     | HITMARKER_CHARGING | HITMARKER_NEVER_SET | HITMARKER_IGNORE_DISGUISE);
 
     // check if Stellar type boost should be used up
@@ -6411,11 +6411,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         gBattleStruct->bypassMoldBreakerChecks = FALSE;
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONISE_EFFECT))
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
         {
-            gHitMarker &= ~HITMARKER_SYNCHRONISE_EFFECT;
+            gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 
-            // TODO: I'm not sure if Synchronize should silently fail (if it does) or not
             bool32 statusChanged = CanInflictNonVolatileStatus(gBattlerTarget,
                                                                gBattlerAttacker,
                                                                GetBattlerAbility(gBattlerAttacker),
@@ -6436,16 +6435,21 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
                 effect++;
             }
+            else // Synchronize ability pop up still shows up even if status fails
+            {
+                BattleScriptPushCursor();
+                gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
+                gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
+            }
         }
         break;
     case ABILITYEFFECT_ATK_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONISE_EFFECT))
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
         {
-            gHitMarker &= ~HITMARKER_SYNCHRONISE_EFFECT;
+            gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 
-            // TODO: I'm not sure if Synchronize should silently fail (if it does) or not
-            bool32 statusChanged = CanInflictNonVolatileStatus(gBattlerTarget,
-                                                               gBattlerAttacker,
+            bool32 statusChanged = CanInflictNonVolatileStatus(gBattlerAttacker,
+                                                               gBattlerTarget,
                                                                GetBattlerAbility(gBattlerAttacker),
                                                                MOVE_TOXIC, // Just a dummy to check Substitute protection
                                                                gBattleStruct->synchronizeMoveEffect,
@@ -6464,6 +6468,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattlescriptCurrInstr = BattleScript_SynchronizeActivates;
                 gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
                 effect++;
+            }
+            else // Synchronize ability pop up still shows up even if status fails
+            {
+                BattleScriptPushCursor();
+                gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
+                gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
             }
         }
         break;
@@ -6857,7 +6867,7 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
                                     battlerDef,
                                     abilityDef,
                                     MOVE_ICE_BEAM,
-                                    MOVE_EFFECT_FREEZE, // also covers frostbite
+                                    MOVE_EFFECT_FREEZE,
                                     STATUS_CHECK_TRIGGER))
         return TRUE;
     return FALSE;
@@ -6866,7 +6876,14 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 // Unused, technically also redundant
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    return CanBeFrozen(battlerAtk, battlerDef, abilityDef);
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_ICE_BEAM,
+                                    MOVE_EFFECT_FREEZE_OR_FROSTBITE, // also covers frostbite
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
 bool32 CanBeConfused(u32 battler)

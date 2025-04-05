@@ -7419,9 +7419,9 @@ BattleScript_AbilityRaisesDefenderStat::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_AbilityPopUpTarget:
+BattleScript_AbilityPopUpTarget::
 	copybyte gBattlerAbility, gBattlerTarget
-BattleScript_AbilityPopUp:
+BattleScript_AbilityPopUp::
 	.if B_ABILITY_POP_UP == TRUE
 	showabilitypopup BS_ABILITY_BATTLER
 	pause 40
