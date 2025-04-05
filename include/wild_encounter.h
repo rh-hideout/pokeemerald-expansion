@@ -1,6 +1,7 @@
 #ifndef GUARD_WILD_ENCOUNTER_H
 #define GUARD_WILD_ENCOUNTER_H
 
+#include "rtc.h"
 #include "constants/wild_encounter.h"
 
 #define HEADER_NONE 0xFFFF
@@ -71,6 +72,6 @@ u8 ChooseWildMonIndex_Land(void);
 u8 ChooseWildMonIndex_WaterRock(void);
 u8 ChooseHiddenMonIndex(void);
 bool32 MapHasNoEncounterData(void);
-enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea);
+enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area);
 
 #endif // GUARD_WILD_ENCOUNTER_H
