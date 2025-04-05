@@ -3,9 +3,8 @@ This is a modified version of [the original tutorial about adding new Pokémon s
 Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
-## IMPORTANT: This tutorial applies to 1.8.x versions onward.
-- [Version 1.7.x](how_to_new_pokemon_1_7_0.md)
-- [Version 1.6.x](how_to_new_pokemon_1_6_0.md)
+## IMPORTANT: This tutorial applies to 1.7.x versions onward.
+- [v1.6.x and earlier](how_to_new_pokemon_1_6_0.md)
 
 # Changes compared to vanilla
 The main things that the Expansion changes are listed here.
@@ -683,6 +682,12 @@ Let's explain each of these:
         #define FOOTPRINT(sprite)
         #endif
         ```
+
+***NOTE:** In v1.7.x only, there were macros that set multiple of these fields. However, they were considered clunky to use, so they were removed in v1.8.
+    - `FRONT_PIC`: For `frontPic` and `frontPicSize`.
+    - `BACK_PIC`: For `backPic` and `backPicSize`.
+    - `PALETTES`: For `palette` and `shinyPalette`.
+    - `ICON`: For `iconSprite` and `iconPalIndex`.
 
 # The Data - Part 2
 
