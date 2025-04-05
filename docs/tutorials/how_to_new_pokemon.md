@@ -45,8 +45,7 @@ The main things that the Expansion changes are listed here.
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
 
-![mGBA_6WOo1TSlsn](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/0c625cd8-8f89-4bc8-a285-b10a420a8f6d)
-
+![visualizer1](/docs/tutorials/img/add_pokemon/visualizer1.gif)
 
 # The Data - Part 1
 
@@ -77,7 +76,7 @@ We add this at the end so that no existing species change Id and so that we don'
 
 Now, let's see how it looks in-game!
 
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/dc15b0ba-a4bd-4f4e-9658-2dff73a11f79)
+![visualizer2](/docs/tutorials/img/add_pokemon/visualizer2.png)
 
 Hmmm, something's not right...
 
@@ -431,7 +430,7 @@ Now we can add the number and entry to our Mewthree:
     },
  };
 ```
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/3759dd4c-8da5-4b1c-9a50-b9e9d0815e7f)
+![image](/docs/tutorials/img/add_pokemon/dex1.png)
 
 The values `pokemonScale`, `pokemonOffset`, `trainerScale` and `trainerOffset` are used for the height comparison figure in the Pokédex.
 
@@ -482,7 +481,7 @@ Edit [src/data/pokemon/pokedex_orders.h](https://github.com/rh-hideout/pokeemera
      ...
  };
 ```
-![mGBA_lUBfmFEKUx](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/3a8b8a17-759b-486b-9831-deb2f494bd71)
+![mGBA_lUBfmFEKUx](/docs/tutorials/img/add_pokemon/dex2.gif)
 
 
 # The Graphics
@@ -1031,7 +1030,7 @@ What this allows us to do is to be able to get all forms of a Pokémon in our co
 
 For example, in the HGSS dex, it lets us browse between the entries of every form available.:
 
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/a1a90b79-46a1-4cd6-97d6-ec5d741bfdc8) ![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/7cffc6be-0b5c-4074-b689-736a97297843)
+![hgssdex1](/docs/tutorials/img/add_pokemon/hgssdex1.png) ![image](/docs/tutorials/img/add_pokemon/hgssdex2.png)
 
 In addition, we have the `GET_BASE_SPECIES_ID` macro, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
 ```c
@@ -1062,7 +1061,7 @@ The second value is the target form, to which the Pokémon will change into.
 Values after that are referred as arguments, and needs to be put there depends on the type of form change, detailed in `include/constants/form_change_types.h`.
 
 ## 3. Gender differences
-![mGBA_Wq5cbDkNZG](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/45256192-b451-4baa-af06-f57ca16e1e46)
+![gender_diffs](/docs/tutorials/img/add_pokemon/gender_diffs.gif)
 
 You may have seen that there's a couple of duplicate fields with a "Female" suffix.
 ```diff
@@ -1101,7 +1100,7 @@ These are used to change the graphics of the Pokémon if they're female. If they
 However, `iconPalIndexFemale` is a special case, where it's *doesn't* read the male icon palette if its `iconSpriteFemale` is set, so if you're setting a female icon, be sure to set their palette index as well.
 
 ## 4. Overworld Data
-![mGBA_4iqvhhSltK](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/e59238dc-9779-4f26-a9e7-159a32caa3d9)
+![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
 
 If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld of your new species by following these steps:
 
