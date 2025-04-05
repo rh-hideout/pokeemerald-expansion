@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner")
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - right target")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
@@ -97,6 +97,24 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner")
         ABILITY_POPUP(opponentLeft, ABILITY_PASTEL_VEIL);
         MESSAGE("The opposing Wynaut is protected by a pastel veil!");
         NOT STATUS_ICON(opponentRight, badPoison: TRUE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - left target")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_PONYTA_GALAR) { Ability(ABILITY_PASTEL_VEIL); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TOXIC, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Toxic!");
+        ABILITY_POPUP(opponentRight, ABILITY_PASTEL_VEIL);
+        MESSAGE("The opposing Wynaut is protected by a pastel veil!");
+        NOT STATUS_ICON(opponentLeft, badPoison: TRUE);
     }
 }
 

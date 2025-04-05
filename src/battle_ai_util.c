@@ -922,7 +922,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                         return TRUE;
                     break;
                 case MOVE_EFFECT_FREEZE_OR_FROSTBITE:
-                    if (AI_CanGetFrostbite(battlerDef, abilityDef))
+                    if (CanBeFrozen(battlerAtk, battlerDef, abilityDef))
                         return TRUE;
                     break;
                 case MOVE_EFFECT_PARALYSIS:
@@ -3111,7 +3111,7 @@ bool32 IsBattlerIncapacitated(u32 battler, u32 ability)
 
 bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
 {
-    if (!CanBeSlept(battlerDef, defAbility, BLOCKED_BY_SLEEP_CLAUSE)
+    if (!CanBeSlept(battlerAtk, battlerDef, defAbility, BLOCKED_BY_SLEEP_CLAUSE)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || PartnerMoveEffectIsStatusSameTarget(BATTLE_PARTNER(battlerAtk), battlerDef, partnerMove))   // shouldn't try to sleep mon that partner is trying to make sleep
         return FALSE;
@@ -3150,7 +3150,7 @@ bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u3
 
 bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
 {
-    if (!CanBeParalyzed(battlerDef, defAbility)
+    if (!CanBeParalyzed(battlerAtk, battlerDef, defAbility)
       || AI_DATA->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex] == UQ_4_12(0.0)
       || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
@@ -3184,35 +3184,23 @@ bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battler
     return TRUE;
 }
 
-bool32 AI_CanGetFrostbite(u32 battler, u32 ability)
+bool32 ShouldBurnSelf(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    if (ability == ABILITY_MAGMA_ARMOR
-      || ability == ABILITY_COMATOSE
-      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || gBattleMons[battler].status1 & STATUS1_ANY
-      || IsAbilityStatusProtected(battler, ability)
-      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
-        return FALSE;
-    return TRUE;
-}
-
-bool32 ShouldBurnSelf(u32 battler, u32 ability)
-{
-    if (CanBeBurned(battler, ability) && (
-     ability == ABILITY_QUICK_FEET
-      || ability == ABILITY_HEATPROOF
-      || ability == ABILITY_MAGIC_GUARD
-      || (ability == ABILITY_FLARE_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
-      || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
-      || HasMoveEffect(battler, EFFECT_FACADE)
-      || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT)))
+    if (CanBeBurned(battlerAtk, battlerDef, abilityDef) && (
+     abilityDef == ABILITY_QUICK_FEET
+      || abilityDef == ABILITY_HEATPROOF
+      || abilityDef == ABILITY_MAGIC_GUARD
+      || (abilityDef == ABILITY_FLARE_BOOST && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+      || (abilityDef == ABILITY_GUTS && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+      || HasMoveEffect(battlerAtk, EFFECT_FACADE)
+      || HasMoveEffect(battlerAtk, EFFECT_PSYCHO_SHIFT)))
         return TRUE;
     return FALSE;
 }
 
 bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (!CanBeBurned(battlerDef, defAbility)
+    if (!CanBeBurned(battlerAtk, battlerDef, defAbility)
       || AI_DATA->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex] == UQ_4_12(0.0)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || PartnerMoveEffectIsStatusSameTarget(battlerAtkPartner, battlerDef, partnerMove))
@@ -3224,7 +3212,7 @@ bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtk
 
 bool32 AI_CanGiveFrostbite(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (!AI_CanGetFrostbite(battlerDef, defAbility)
+    if (!CanBeFrozen(battlerAtk, battlerDef, defAbility)
       || AI_DATA->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex] == UQ_4_12(0.0)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || PartnerMoveEffectIsStatusSameTarget(battlerAtkPartner, battlerDef, partnerMove))
