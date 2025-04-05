@@ -1,9 +1,6 @@
 #ifndef GUARD_WILD_ENCOUNTER_H
 #define GUARD_WILD_ENCOUNTER_H
 
-#include "config/overworld.h"
-#include "global.h"
-#include "rtc.h"
 #include "constants/wild_encounter.h"
 
 #define HEADER_NONE 0xFFFF
