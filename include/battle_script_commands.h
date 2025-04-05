@@ -24,8 +24,8 @@ struct PickupItem
 
 enum NonVolatileStatus
 {
-    NON_VOLATILE_STATUS_CHECK_TRIGGER,
-    NON_VOLATILE_STATUS_RUN_SCRIPT,
+    STATUS_CHECK_TRIGGER,
+    STATUS_RUN_SCRIPT,
 };
 
 s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk);

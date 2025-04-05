@@ -5911,7 +5911,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && IsBattlerAlive(gBattlerAttacker)
                  && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                  && IsBattlerTurnDamaged(gBattlerTarget)
-                 && CanBeSlept(gBattlerAttacker, ability, NOT_BLOCKED_BY_SLEEP_CLAUSE)
+                 && CanBeSlept(gBattlerTarget, gBattlerAttacker, ability, NOT_BLOCKED_BY_SLEEP_CLAUSE)
                  && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                  && IsMoveMakingContact(move, gBattlerAttacker))
                 {
@@ -5956,7 +5956,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 && IsBattlerAlive(gBattlerAttacker)
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                 && IsBattlerTurnDamaged(gBattlerTarget)
-                && CanBeParalyzed(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+                && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
                 && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                 && IsMoveMakingContact(move, gBattlerAttacker))
                 {
@@ -5976,7 +5976,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
              && (IsMoveMakingContact(move, gBattlerAttacker))
              && IsBattlerTurnDamaged(gBattlerTarget)
-             && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+             && CanBeBurned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker))
              && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
             {
                 gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_BURN;
@@ -6421,7 +6421,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                                                                GetBattlerAbility(gBattlerAttacker),
                                                                MOVE_TOXIC, // Just a dummy to check Substitute protection
                                                                gBattleStruct->synchronizeMoveEffect,
-                                                               NON_VOLATILE_STATUS_CHECK_TRIGGER);
+                                                               STATUS_CHECK_TRIGGER);
             if (statusChanged)
             {
                 gBattleStruct->synchronizeMoveEffect &= ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
@@ -6449,7 +6449,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                                                                GetBattlerAbility(gBattlerAttacker),
                                                                MOVE_TOXIC, // Just a dummy to check Substitute protection
                                                                gBattleStruct->synchronizeMoveEffect,
-                                                               NON_VOLATILE_STATUS_CHECK_TRIGGER);
+                                                               STATUS_CHECK_TRIGGER);
 
             if (statusChanged)
             {
@@ -6798,98 +6798,75 @@ bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag)
     return IsBattlerGrounded(battler);
 }
 
-bool32 CanBeSlept(u32 battler, u32 ability, enum SleepClauseBlock isBlockedBySleepClause)
+// TODO: Move needs to be passed as an argument because of substitute check
+bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause)
 {
-    if(IsSleepClauseActiveForSide(GetBattlerSide(battler)) && isBlockedBySleepClause)
+    if (IsSleepClauseActiveForSide(GetBattlerSide(battlerDef)) && isBlockedBySleepClause)
         return FALSE;
 
-    if (ability == ABILITY_INSOMNIA
-     || ability == ABILITY_VITAL_SPIRIT
-     || ability == ABILITY_COMATOSE
-     || ability == ABILITY_PURIFYING_SALT
-     || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
-     || gBattleMons[battler].status1 & STATUS1_ANY
-     || IsAbilityOnSide(battler, ABILITY_SWEET_VEIL)
-     || IsAbilityStatusProtected(battler, ability)
-     || IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_SPORE,
+                                    MOVE_EFFECT_SLEEP, // also covers poison
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
-bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 defAbility)
+bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    if (!(CanPoisonType(battlerAtk, battlerDef))
-     || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
-     || gBattleMons[battlerDef].status1 & STATUS1_ANY
-     || defAbility == ABILITY_IMMUNITY
-     || defAbility == ABILITY_COMATOSE
-     || defAbility == ABILITY_PURIFYING_SALT
-     || IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)
-     || IsAbilityStatusProtected(battlerDef, defAbility)
-     || IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_TOXIC,
+                                    MOVE_EFFECT_TOXIC, // also covers poison
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
-bool32 CanBeBurned(u32 battler, u32 ability)
+// TODO: check order of battlerAtk and battlerDef
+bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_FIRE)
-     || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
-     || gBattleMons[battler].status1 & STATUS1_ANY
-     || ability == ABILITY_WATER_VEIL
-     || ability == ABILITY_WATER_BUBBLE
-     || ability == ABILITY_COMATOSE
-     || ability == ABILITY_THERMAL_EXCHANGE
-     || ability == ABILITY_PURIFYING_SALT
-     || IsAbilityStatusProtected(battler, ability)
-     || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_WILL_O_WISP,
+                                    MOVE_EFFECT_BURN,
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
-bool32 CanBeParalyzed(u32 battler, u32 ability)
+bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    if ((B_PARALYZE_ELECTRIC >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_ELECTRIC))
-      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
-      || ability == ABILITY_LIMBER
-      || ability == ABILITY_COMATOSE
-      || ability == ABILITY_PURIFYING_SALT
-      || gBattleMons[battler].status1 & STATUS1_ANY
-      || IsAbilityStatusProtected(battler, ability)
-      || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_THUNDER_WAVE,
+                                    MOVE_EFFECT_PARALYSIS,
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
-bool32 CanBeFrozen(u32 battler)
+bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    u16 ability = GetBattlerAbility(battler);
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-     || IsBattlerWeatherAffected(battler, B_WEATHER_SUN)
-     || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
-     || ability == ABILITY_MAGMA_ARMOR
-     || ability == ABILITY_COMATOSE
-     || ability == ABILITY_PURIFYING_SALT
-     || gBattleMons[battler].status1 & STATUS1_ANY
-     || IsAbilityStatusProtected(battler, ability)
-     || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    if (CanInflictNonVolatileStatus(battlerAtk,
+                                    battlerDef,
+                                    abilityDef,
+                                    MOVE_ICE_BEAM,
+                                    MOVE_EFFECT_FREEZE, // also covers frostbite
+                                    STATUS_CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
-bool32 CanGetFrostbite(u32 battler)
+// Unused, technically also redundant
+bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    u16 ability = GetBattlerAbility(battler);
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD
-      || ability == ABILITY_MAGMA_ARMOR
-      || ability == ABILITY_COMATOSE
-      || ability == ABILITY_PURIFYING_SALT
-      || gBattleMons[battler].status1 & STATUS1_ANY
-      || IsAbilityStatusProtected(battler, ability)
-      || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
-        return FALSE;
-    return TRUE;
+    return CanBeFrozen(battlerAtk, battlerDef, abilityDef);
 }
 
 bool32 CanBeConfused(u32 battler)
@@ -8414,7 +8391,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
             }
             break;
         case HOLD_EFFECT_FLAME_ORB:
-            if (CanBeBurned(battler, battlerAbility))
+            if (CanBeBurned(battler, battler, battlerAbility))
             {
                 effect = ITEM_STATUS_CHANGE;
                 gBattleMons[battler].status1 = STATUS1_BURN;
@@ -8681,7 +8658,7 @@ u8 GetAttackerObedienceForAction()
         obedienceLevel = levelReferenced - obedienceLevel;
 
         calc = ((rnd >> 16) & 255);
-        if (calc < obedienceLevel && CanBeSlept(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), NOT_BLOCKED_BY_SLEEP_CLAUSE))
+        if (calc < obedienceLevel && CanBeSlept(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), NOT_BLOCKED_BY_SLEEP_CLAUSE))
         {
             // try putting asleep
             int i;

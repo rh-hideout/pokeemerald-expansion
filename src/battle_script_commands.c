@@ -3332,7 +3332,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                                                         battlerAbility,
                                                         gCurrentMove,
                                                         gBattleScripting.moveEffect,
-                                                        NON_VOLATILE_STATUS_CHECK_TRIGGER);
+                                                        STATUS_CHECK_TRIGGER);
         }
         if (statusChanged || gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
         {
@@ -4345,7 +4345,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             case MOVE_EFFECT_YAWN_FOE:
             {
                 if (!(gStatuses3[gBattlerTarget] & STATUS3_YAWN)
-                    && CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE)
+                    && CanBeSlept(gBattlerTarget, gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE)
                     && RandomPercentage(RNG_G_MAX_SNOOZE, 50))
                 {
                     gStatuses3[gBattlerTarget] |= STATUS3_YAWN_TURN(2);
@@ -6338,7 +6338,7 @@ static void Cmd_moveend(void)
 
                 // Not strictly a protect effect, but works the same way
                 if (gProtectStructs[gBattlerTarget].beakBlastCharge
-                 && CanBeBurned(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+                 && CanBeBurned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker))
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
@@ -10907,13 +10907,13 @@ static void Cmd_various(void)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 0;
             else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_TOXIC_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 1;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_BURN) && CanBeBurned(gBattlerTarget, targetAbility))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_BURN) && CanBeBurned(gBattlerAttacker, gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 2;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS) && CanBeParalyzed(gBattlerTarget, targetAbility))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS) && CanBeParalyzed(gBattlerAttacker, gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 3;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP) && CanBeSlept(gBattlerTarget, targetAbility, BLOCKED_BY_SLEEP_CLAUSE))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP) && CanBeSlept(gBattlerAttacker, gBattlerTarget, targetAbility, BLOCKED_BY_SLEEP_CLAUSE))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 4;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_FROSTBITE) && CanGetFrostbite(gBattlerTarget))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_FROSTBITE) && CanBeFrozen(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             else if (IsSleepClauseActiveForSide(GetBattlerSide(battler)))
             {
@@ -18378,7 +18378,7 @@ void BS_SwapStats(void)
 
 static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
 {
-    if (CanBeParalyzed(gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
+    if (CanBeParalyzed(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
     {
         gBattleMons[gBattlerTarget].status1 |= STATUS1_PARALYSIS;
         gBattleCommunication[MULTISTRING_CHOOSER] = 3;
@@ -18412,7 +18412,7 @@ static void TrySetPoison(const u8 *nextInstr, const u8 *failInstr)
 
 static void TrySetSleep(const u8 *nextInstr, const u8 *failInstr)
 {
-    if (CanBeSlept(gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE))
+    if (CanBeSlept(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE))
     {
         if (B_SLEEP_TURNS >= GEN_5)
             gBattleMons[gBattlerTarget].status1 |=  STATUS1_SLEEP_TURN((Random() % 3) + 2);
@@ -18645,125 +18645,157 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
-// TODO: YAWN
-// TODO: Modify all CanX functions to redirect here
-// TODO: Set Move Result flags for primary
-// TODO: Delete redundant code, leftover
-bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, enum MoveEffects effect, enum NonVolatileStatus option)
+static inline bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, const u8 *battleScript, enum NonVolatileStatus option)
 {
-    const u8 *battleScript = NULL;
-    u32 fieldAbility = ABILITY_NONE;
-
-    switch (effect)
-    {
-    case MOVE_EFFECT_POISON:
-    case MOVE_EFFECT_TOXIC:
-        if (gBattleMons[battlerDef].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
-            battleScript = BattleScript_AlreadyPoisoned;
-        else if (!CanPoisonType(battlerAtk, battlerDef))
-            battleScript = BattleScript_NotAffected;
-        break;
-    case MOVE_EFFECT_PARALYSIS:
-        if (gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS)
-            battleScript = BattleScript_AlreadyParalyzed;
-        else if (!CanParalyzeType(battlerAtk, battlerDef))
-            battleScript = BattleScript_NotAffected;
-        else // TODO: Figure out if this is even needed
-        {
-        	// typecalc
-        	// jumpifmovehadnoeffect BattleScript_ButItFailed
-            // clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-        }
-        break;
-    case MOVE_EFFECT_BURN:
-        if (gBattleMons[battlerDef].status1 & STATUS1_BURN)
-            battleScript = BattleScript_AlreadyBurned;
-        else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_FIRE))
-            battleScript = BattleScript_NotAffected;
-        break;
-    case MOVE_EFFECT_SLEEP:
-        if (gBattleMons[battlerDef].status1 & STATUS1_SLEEP)
-            battleScript = BattleScript_AlreadyAsleep;
-        else if (UproarWakeUpCheck(battlerDef))
-            battleScript = BattleScript_CantMakeAsleep;
-        else if (CanSleepDueToSleepClause(battlerAtk, battlerDef))
-            battleScript = BattleScript_SleepClauseBlocked;
-        break;
-    case MOVE_EFFECT_FREEZE:
-    case MOVE_EFFECT_FROSTBITE:
-        if (gBattleMons[battlerDef].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
-            battleScript = BattleScript_AlreadyBurned;
-        else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) || IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN))
-            battleScript = BattleScript_NotAffected;
-    default:
-        break;
-    }
-
     if (battleScript != NULL)
     {
-        if (option == NON_VOLATILE_STATUS_RUN_SCRIPT)
-        {
-            gBattlescriptCurrInstr = battleScript;
-            RecordAbilityBattle(battlerDef, abilityDef);
-        }
-        return FALSE;
-    }
-
-    switch (abilityDef)
-    {
-    case ABILITY_IMMUNITY:
-        if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_STATUS;
-            battleScript = BattleScript_ImmunityProtected;
-        }
-        break;
-    case ABILITY_COMATOSE:
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-        break;
-    case ABILITY_SHIELDS_DOWN:
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-        break;
-    case ABILITY_LIMBER:
-        if (effect == MOVE_EFFECT_PARALYSIS)
-            battleScript = BattleScript_ImmunityProtected;
-        break;
-    case ABILITY_PURIFYING_SALT:
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-        break;
-    case ABILITY_WATER_VEIL:
-    case ABILITY_WATER_BUBBLE:
-        if (effect == MOVE_EFFECT_BURN)
-            battleScript = BattleScript_WaterVeilPrevents;
-        break;
-    case ABILITY_VITAL_SPIRIT:
-    case ABILITY_INSOMNIA:
-        if (effect == MOVE_EFFECT_SLEEP)
-            battleScript = BattleScript_PrintBattlerAbilityMadeIneffective;
-    case ABILITY_MAGMA_ARMOR:
-        if (effect == MOVE_EFFECT_FREEZE || effect == MOVE_EFFECT_FROSTBITE)
-            battleScript = BattleScript_AbilityProtectsDoesntAffect;
-        break;
-    }
-
-    if (battleScript != NULL)
-    {
-        if (option == NON_VOLATILE_STATUS_RUN_SCRIPT)
+        if (option == STATUS_RUN_SCRIPT)
         {
             gLastUsedAbility = gBattlerAbility = battlerDef;
             gBattlescriptCurrInstr = battleScript;
             RecordAbilityBattle(battlerDef, abilityDef);
         }
-        return FALSE;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// TODO: YAWN
+// TODO: Set Move Result flags for primary
+bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, enum MoveEffects effect, enum NonVolatileStatus option)
+{
+    const u8 *battleScript = NULL;
+    u32 sideBattler = ABILITY_NONE;
+
+    // Move specific checks
+    switch (effect)
+    {
+    case MOVE_EFFECT_POISON:
+    case MOVE_EFFECT_TOXIC:
+        if (gBattleMons[battlerDef].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
+        {
+            battleScript = BattleScript_AlreadyPoisoned;
+        }
+        else if (!CanPoisonType(battlerAtk, battlerDef))
+        {
+            battleScript = BattleScript_NotAffected;
+        }
+        else if ((sideBattler = IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)))
+        {
+            battlerDef = sideBattler - 1;
+            abilityDef = ABILITY_PASTEL_VEIL;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PASTEL_VEIL;
+            battleScript = BattleScript_ImmunityProtected;
+        }
+        else if (abilityDef == ABILITY_IMMUNITY)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_STATUS;
+            battleScript = BattleScript_ImmunityProtected;
+        }
+        break;
+    case MOVE_EFFECT_PARALYSIS:
+        if (gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS)
+        {
+            battleScript = BattleScript_AlreadyParalyzed;
+        }
+        else if (!CanParalyzeType(battlerAtk, battlerDef))
+        {
+            battleScript = BattleScript_NotAffected;
+        }
+        // else // TODO: Figure out if this is even needed
+        // {
+        	// typecalc
+        	// jumpifmovehadnoeffect BattleScript_ButItFailed
+            // clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
+        // }
+        else if (abilityDef == ABILITY_LIMBER)
+        {
+            battleScript = BattleScript_ImmunityProtected;
+        }
+        break;
+    case MOVE_EFFECT_BURN:
+        if (gBattleMons[battlerDef].status1 & STATUS1_BURN)
+        {
+            battleScript = BattleScript_AlreadyBurned;
+        }
+        else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_FIRE))
+        {
+            battleScript = BattleScript_NotAffected;
+        }
+        else if (abilityDef == ABILITY_WATER_VEIL || abilityDef == ABILITY_WATER_BUBBLE)
+        {
+            battleScript = BattleScript_WaterVeilPrevents;
+        }
+        else if (abilityDef == ABILITY_THERMAL_EXCHANGE)
+        {
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        break;
+    case MOVE_EFFECT_SLEEP:
+        if (gBattleMons[battlerDef].status1 & STATUS1_SLEEP)
+        {
+            battleScript = BattleScript_AlreadyAsleep;
+        }
+        else if (UproarWakeUpCheck(battlerDef))
+        {
+            battleScript = BattleScript_CantMakeAsleep;
+        }
+        else if (CanSleepDueToSleepClause(battlerAtk, battlerDef))
+        {
+            battleScript = BattleScript_SleepClauseBlocked;
+        }
+        else if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
+        {
+            battleScript = BattleScript_ElectricTerrainPrevents;
+        }
+        else if ((sideBattler = IsAbilityOnSide(battlerDef, ABILITY_SWEET_VEIL)))
+        {
+            battlerDef = sideBattler - 1;
+            abilityDef = ABILITY_SWEET_VEIL;
+            battleScript = BattleScript_ImmunityProtected;
+        }
+        else if (abilityDef == ABILITY_VITAL_SPIRIT || abilityDef == ABILITY_INSOMNIA)
+        {
+            battleScript = BattleScript_PrintBattlerAbilityMadeIneffective;
+        }
+        break;
+    case MOVE_EFFECT_FREEZE:
+    case MOVE_EFFECT_FROSTBITE:
+        if (gBattleMons[battlerDef].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+        {
+            battleScript = BattleScript_AlreadyBurned;
+        }
+        else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) || IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN))
+        {
+            battleScript = BattleScript_NotAffected;
+        }
+        else if (effect == MOVE_EFFECT_FREEZE || effect == MOVE_EFFECT_FROSTBITE)
+        {
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+    default:
+        break;
     }
 
-    if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
+    if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, battleScript, option))
+        return FALSE;
+
+    // Checks that apply to all non volatile statuses
+    if (abilityDef == ABILITY_COMATOSE)
+    {
+        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+    }
+    else if (abilityDef == ABILITY_SHIELDS_DOWN)
+    {
+        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+    }
+    else if (abilityDef == ABILITY_PURIFYING_SALT)
+    {
+        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+    }
+    else if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
     {
         battleScript = BattleScript_MistyTerrainPrevents;
-    }
-    else if (effect == MOVE_EFFECT_SLEEP && IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
-    {
-        battleScript = BattleScript_ElectricTerrainPrevents;
     }
     else if (DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
     {
@@ -18773,21 +18805,11 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
     {
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
     }
-    else if ((fieldAbility = IsFlowerVeilProtected(battlerDef)))
+    else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
     {
-        abilityDef = fieldAbility - 1;
+        battlerDef = sideBattler - 1;
+        abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
-    }
-    else if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && (fieldAbility = IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)))
-    {
-        abilityDef = fieldAbility - 1;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PASTEL_VEIL;
-        battleScript = BattleScript_ImmunityProtected;
-    }
-    else if (effect == MOVE_EFFECT_SLEEP && (fieldAbility = IsAbilityOnSide(battlerDef, ABILITY_SWEET_VEIL)))
-    {
-        gBattleScripting.battler = fieldAbility - 1;
-        battleScript = BattleScript_ImmunityProtected;
     }
     else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
     {
@@ -18798,16 +18820,8 @@ bool32 CanInflictNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDe
         battleScript = BattleScript_ButItFailed;
     }
 
-    if (battleScript != NULL)
-    {
-        if (option == NON_VOLATILE_STATUS_RUN_SCRIPT)
-        {
-            gLastUsedAbility = gBattlerAbility = abilityDef;
-            gBattlescriptCurrInstr = battleScript;
-            RecordAbilityBattle(battlerDef, abilityDef);
-        }
+    if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, battleScript, option))
         return FALSE;
-    }
 
     return TRUE;
 }
@@ -18820,6 +18834,6 @@ void BS_JumpIfCantInflictkNonVolatileStatus(void)
                                     GetBattlerAbility(gBattlerTarget),
                                     gCurrentMove,
                                     GetMoveAdditionalEffectById(gCurrentMove, 0)->moveEffect,
-                                    NON_VOLATILE_STATUS_RUN_SCRIPT))
+                                    STATUS_RUN_SCRIPT))
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
