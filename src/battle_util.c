@@ -6903,16 +6903,21 @@ static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abi
     {
         if (option == STATUS_RUN_SCRIPT)
         {
+            if (battleScript != BattleScript_NotAffected)
+                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
+
             if (abilityAffected)
             {
                 gLastUsedAbility = gBattlerAbility = battlerDef;
                 RecordAbilityBattle(battlerDef, abilityDef);
             }
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
+
             gBattlescriptCurrInstr = battleScript;
         }
+        
         return TRUE;
     }
+
     return FALSE;
 }
 
@@ -6931,13 +6936,8 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, e
         {
             battleScript = BattleScript_AlreadyPoisoned;
         }
-        else if (IS_BATTLER_ANY_TYPE(battlerDef, TYPE_POISON, TYPE_STEEL))
+        else if (GetBattlerAbility(battlerAtk) != ABILITY_CORROSION && IS_BATTLER_ANY_TYPE(battlerDef, TYPE_POISON, TYPE_STEEL))
         {
-            battleScript = BattleScript_NotAffected;
-        }
-        else if (abilityDef == ABILITY_CORROSION)
-        {
-            abilityAffected = TRUE;
             battleScript = BattleScript_NotAffected;
         }
         else if ((sideBattler = IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)))
