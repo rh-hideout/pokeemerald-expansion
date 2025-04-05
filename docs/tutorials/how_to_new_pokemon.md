@@ -3,9 +3,7 @@ This is a modified version of [the original tutorial about adding new Pokémon s
 Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
-## IMPORTANT: This tutorial applies to 1.10.x versions onward.
-- [Version 1.9.x](how_to_new_pokemon_1_9_0.md)
-- [Version 1.8.x](how_to_new_pokemon_1_8_0.md)
+## IMPORTANT: This tutorial applies to 1.8.x versions onward.
 - [Version 1.7.x](how_to_new_pokemon_1_7_0.md)
 - [Version 1.6.x](how_to_new_pokemon_1_6_0.md)
 
@@ -39,7 +37,8 @@ The main things that the Expansion changes are listed here.
   * [1. Form tables](#1-form-tables)
   * [2. Form change tables](#2-form-change-tables)
   * [3. Gender differences](#3-gender-differences)
-  * [4. Overworld Data](#4-overworld-data)
+  * [4. Overworld Data (v1.9 onwards)](#4-overworld-data-v19-onwards)
+  * [5. In-battle shadows (v1.10 onwards)](#5-in-battle-shadows-v110-onwards)
 
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
@@ -720,7 +719,7 @@ Each species flag provides properties to the species:
     - Beast Ball's multiplier is set to x5 for this species.
         - All other ball multipliers are set to x0.1.
     - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
-- `isParadox` (previously `isParadoxForm`):
+- `isParadox` (`isParadoxForm` previous to 1.9):
     - ***1.10 onwards:*** Makes it so that Booster Energy cannot be knocked off.
     - ***1.9 and earlier:*** Does nothing.
 - `isTotem`:
@@ -745,7 +744,7 @@ Each species flag provides properties to the species:
     - This species cannot be traded away (like Black/White Kyurem).
 - `tmIlliterate`:
     - This species will be unable to learn the universal TM or Tutor moves.
-- `isFrontierBanned`:
+- `isFrontierBanned` ***(1.9 onwards)***:
     - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
 
 ## 2. Delimit the moveset
@@ -900,7 +899,7 @@ _NOTE: At the top of this file, you will probably see this warning:_
 // DO NOT MODIFY THIS FILE! It is auto-generated from tools/learnset_helpers/teachable.py`
 //
 ```
-The expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves. 
+From version 1.9 onwards, pokeemerald-expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves. 
 
 Ignore the warning shown above the first time you're adding your teachable moves (as otherwise the compiler will complain about the array not existing), but in the future (if you're using the learnset helper) simply edit what teachable moves your Pokémon can learn in one of the JSON files found in `tools/learnset_helpers/porymoves_files`. It doesn't really matter which one you add your new Pokémon to, as the tool pulls from all of the files in this folder.
 
@@ -1127,19 +1126,7 @@ These are used to change the graphics of the Pokémon if they're female. If they
 
 However, `iconPalIndexFemale` is a special case, where it's *doesn't* read the male icon palette if its `iconSpriteFemale` is set, so if you're setting a female icon, be sure to set their palette index as well.
 
-## 4. In-battle shadows (Version 1.10 onwards)
-Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
- - X offset
- - Y offset
- - Shadow size
-You have 4 options for their shadow, between Small, Medium, Large and Extra Large:
- - `SHADOW_SIZE_S`
- - `SHADOW_SIZE_M`
- - `SHADOW_SIZE_L`
- - `SHADOW_SIZE_XL_BATTLE_ONLY`
-To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.
-
-## 5. Overworld Data
+## 4. Overworld Data (v1.9 onwards)
 ![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
 
 If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld of your new species by following these steps:
@@ -1266,3 +1253,15 @@ You can set up an east-west asymetric overworld sprite by adding the East frames
 ```
 
 Either way, you may also create custom animation tables and use them here appropiately.
+
+## 5. In-battle shadows (v1.10 onwards)
+Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
+ - X offset
+ - Y offset
+ - Shadow size: you have 4 options for their shadow, between Small, Medium, Large and Extra Large:
+    - `SHADOW_SIZE_S`
+    - `SHADOW_SIZE_M`
+    - `SHADOW_SIZE_L`
+    - `SHADOW_SIZE_XL_BATTLE_ONLY`
+
+To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.

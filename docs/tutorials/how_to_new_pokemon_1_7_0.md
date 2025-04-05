@@ -5,8 +5,7 @@ Despite the persistent rumors about an incredibly strong third form of Mew hidin
 In this tutorial, we will add a new Pokémon species to the game.
 
 ## IMPORTANT: This tutorial applies to 1.7.x versions.
-- [Version 1.9.x](how_to_new_pokemon_1_9_0.md)
-- [Version 1.8.x](how_to_new_pokemon_1_8_0.md)
+- [Version 1.8.x onwards](how_to_new_pokemon.md)
 - [Version 1.6.x](how_to_new_pokemon_1_6_0.md)
 
 # Changes compared to vanilla
