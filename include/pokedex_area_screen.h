@@ -3,7 +3,7 @@
 
 #include "rtc.h"
 
-extern u32 gAreaTimeOfDay;
+extern u8 gAreaTimeOfDay;
 
 enum PokedexAreaScreenState
 {
