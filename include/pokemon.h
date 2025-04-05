@@ -617,9 +617,9 @@ extern u8 gEnemyPartyCount;
 extern struct Pokemon gEnemyParty[PARTY_SIZE];
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
-extern bool32 removeHoldItem;
-extern u32 removeBagItem;
-extern u32 removeBagItemCount;
+extern bool8 removeHoldItem;
+extern u16 removeBagItem;
+extern u16 removeBagItemCount;
 
 extern const u8 gFacilityClassToPicIndex[];
 extern const u8 gFacilityClassToTrainerClass[];

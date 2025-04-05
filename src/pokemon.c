@@ -91,9 +91,9 @@ EWRAM_DATA struct SpriteTemplate gMultiuseSpriteTemplate = {0};
 EWRAM_DATA static struct MonSpritesGfxManager *sMonSpritesGfxManagers[MON_SPR_GFX_MANAGERS_COUNT] = {NULL};
 EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
-EWRAM_DATA bool32 removeHoldItem = 0;
-EWRAM_DATA u32 removeBagItem = 0;
-EWRAM_DATA u32 removeBagItemCount = 0;
+EWRAM_DATA bool8 removeHoldItem = 0;
+EWRAM_DATA u16 removeBagItem = 0;
+EWRAM_DATA u16 removeBagItemCount = 0;
 
 #include "data/abilities.h"
 
