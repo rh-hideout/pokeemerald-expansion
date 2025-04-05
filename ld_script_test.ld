@@ -38,7 +38,7 @@ SECTIONS {
         __iwram_end = .;
     } > IWRAM
 
-    .iwram.sbss (NOLOAD) :
+    .iwram.bss (NOLOAD) :
     ALIGN(4)
     {
         src/*.o(.bss);
@@ -55,13 +55,17 @@ SECTIONS {
         data/*.o(COMMON);
         test/*.o(COMMON);
         *libc.a:sbrkr.o(COMMON);
-        . = ALIGN(4);
+    } > IWRAM
 
-	/* .persistent starts at 0x3007F00 */
-	/* WARNING: This is the end of the IRQ stack, if there's too
-	 * much data it WILL be overwritten. */
-	. = 0x7F00;
-	test/*.o(.persistent);
+    /* .persistent starts at 0x3007F00 */
+    /* WARNING: This is the end of the IRQ stack, if there's too
+     * much data it WILL be overwritten. */
+
+    . = 0x03007F00;
+    .iwram.persistent (NOLOAD) :
+    ALIGN(4)
+    {
+        test/*.o(.persistent);
     } > IWRAM
 
     /* BEGIN ROM DATA */
@@ -79,7 +83,7 @@ SECTIONS {
     script_data :
     ALIGN(4)
     {
-	data/*.o(script_data);
+    data/*.o(script_data);
     } > ROM =0
 
     lib_text :
@@ -114,7 +118,7 @@ SECTIONS {
     } > ROM =0
 
     .data.iwram :
-    ALIGN(4)
+    ALIGN(8)
     {
         __iwram_lma = .;
         . = . + (__iwram_end - __iwram_start);

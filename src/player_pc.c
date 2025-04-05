@@ -181,20 +181,30 @@ static EWRAM_DATA u8 sTopMenuNumOptions = 0;
 EWRAM_DATA struct PlayerPCItemPageStruct gPlayerPCItemPageInfo = {};
 static EWRAM_DATA struct ItemStorageMenu *sItemStorageMenu = NULL;
 
+static const u8 sText_WithdrawItem[] = _("WITHDRAW ITEM");
+static const u8 sText_DepositItem[] = _("DEPOSIT ITEM");
+static const u8 sText_TossItem[] = _("TOSS ITEM");
+static const u8 sText_Mailbox[] = _("MAILBOX");
+
+static const u8 sText_WithdrawHowManyItems[] = _("Withdraw how many\n{STR_VAR_1}?");
+static const u8 sText_WithdrawXItems[] = _("Withdrew {STR_VAR_2}\n{STR_VAR_1}.");
+static const u8 sText_NoRoomInBag[] = _("There is no more\nroom in the BAG.");
+static const u8 sText_TooImportantToToss[] = _("That's much too\nimportant to toss\nout!");
+
 static const u8 *const sItemStorage_OptionDescriptions[] =
 {
-    [MENU_WITHDRAW] = gText_TakeOutItemsFromPC,
-    [MENU_DEPOSIT]  = gText_StoreItemsInPC,
-    [MENU_TOSS]     = gText_ThrowAwayItemsInPC,
+    [MENU_WITHDRAW] = COMPOUND_STRING("Take out items from the PC."),
+    [MENU_DEPOSIT]  = COMPOUND_STRING("Store items in the PC."),
+    [MENU_TOSS]     = COMPOUND_STRING("Throw away items stored in the PC."),
     [MENU_EXIT]     = gText_GoBackPrevMenu,
 };
 
 static const struct MenuAction sPlayerPCMenuActions[] =
 {
-    [MENU_ITEMSTORAGE] = { gText_ItemStorage, {PlayerPC_ItemStorage} },
-    [MENU_MAILBOX]     = { gText_Mailbox,     {PlayerPC_Mailbox} },
-    [MENU_DECORATION]  = { gText_Decoration,  {PlayerPC_Decoration} },
-    [MENU_TURNOFF]     = { gText_TurnOff,     {PlayerPC_TurnOff} }
+    [MENU_ITEMSTORAGE] = { COMPOUND_STRING("ITEM STORAGE"), {PlayerPC_ItemStorage} },
+    [MENU_MAILBOX]     = { sText_Mailbox,                   {PlayerPC_Mailbox} },
+    [MENU_DECORATION]  = { COMPOUND_STRING("DECORATION"),   {PlayerPC_Decoration} },
+    [MENU_TURNOFF]     = { COMPOUND_STRING("TURN OFF"),     {PlayerPC_TurnOff} }
 };
 
 static const u8 sBedroomPC_OptionOrder[] =
@@ -216,9 +226,9 @@ static const u8 sPlayerPC_OptionOrder[] =
 
 static const struct MenuAction sItemStorage_MenuActions[] =
 {
-    [MENU_WITHDRAW] = { gText_WithdrawItem, {ItemStorage_Withdraw} },
-    [MENU_DEPOSIT]  = { gText_DepositItem,  {ItemStorage_Deposit} },
-    [MENU_TOSS]     = { gText_TossItem,     {ItemStorage_Toss} },
+    [MENU_WITHDRAW] = { sText_WithdrawItem, {ItemStorage_Withdraw} },
+    [MENU_DEPOSIT]  = { sText_DepositItem,  {ItemStorage_Deposit} },
+    [MENU_TOSS]     = { sText_TossItem,     {ItemStorage_Toss} },
     [MENU_EXIT]     = { gText_Cancel,       {ItemStorage_Exit} }
 };
 
@@ -230,10 +240,10 @@ static const u16 sNewGamePCItems[][2] =
 
 const struct MenuAction gMailboxMailOptions[] =
 {
-    { gText_Read,      {Mailbox_DoMailRead} },
-    { gText_MoveToBag, {Mailbox_MoveToBag} },
-    { gText_Give2,     {Mailbox_Give} },
-    { gText_Cancel2,   {Mailbox_Cancel} }
+    { COMPOUND_STRING("READ"),        {Mailbox_DoMailRead} },
+    { COMPOUND_STRING("MOVE TO BAG"), {Mailbox_MoveToBag} },
+    { COMPOUND_STRING("GIVE"),        {Mailbox_Give} },
+    { gText_Cancel2,                  {Mailbox_Cancel} }
 };
 
 static const struct WindowTemplate sWindowTemplates_MainMenus[] =
@@ -697,7 +707,7 @@ static void Mailbox_DrawMailboxMenu(u8 taskId)
 {
     u8 windowId = MailboxMenu_AddWindow(MAILBOXWIN_TITLE);
     MailboxMenu_AddWindow(MAILBOXWIN_LIST);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Mailbox, GetStringCenterAlignXOffset(FONT_NORMAL, gText_Mailbox, 0x40), 1, 0, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Mailbox, GetStringCenterAlignXOffset(FONT_NORMAL, sText_Mailbox, 0x40), 1, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].tListTaskId = MailboxMenu_CreateList(&gPlayerPCItemPageInfo);
     MailboxMenu_AddScrollArrows(&gPlayerPCItemPageInfo);
@@ -1147,9 +1157,9 @@ static void ItemStorage_CreateListMenu(u8 taskId)
     for (i = 0; i <= ITEMPC_WIN_LIST_END; i++)
         ItemStorage_AddWindow(i);
     toss = tInTossMenu;
-    text = gText_TossItem;
+    text = sText_TossItem;
     if (!toss)
-        text = gText_WithdrawItem;
+        text = sText_WithdrawItem;
     x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 104);
     AddTextPrinterParameterized(sItemStorageMenu->windowIds[ITEMPC_WIN_TITLE], FONT_NORMAL, text, x, 1, 0, NULL);
     CopyWindowToVram(sItemStorageMenu->windowIds[ITEMPC_WIN_ICON], COPYWIN_GFX);
@@ -1172,10 +1182,10 @@ static const u8 *ItemStorage_GetMessage(u16 itemId)
         string = gText_GoBackPrevMenu;
         break;
     case MSG_HOW_MANY_TO_WITHDRAW:
-        string = gText_WithdrawHowManyItems;
+        string = sText_WithdrawHowManyItems;
         break;
     case MSG_WITHDREW_ITEM:
-        string = gText_WithdrawXItems;
+        string = sText_WithdrawXItems;
         break;
     case MSG_HOW_MANY_TO_TOSS:
         string = gText_TossHowManyVar1s;
@@ -1184,10 +1194,10 @@ static const u8 *ItemStorage_GetMessage(u16 itemId)
         string = gText_ThrewAwayVar2Var1s;
         break;
     case MSG_NO_MORE_ROOM:
-        string = gText_NoRoomInBag;
+        string = sText_NoRoomInBag;
         break;
     case MSG_TOO_IMPORTANT:
-        string = gText_TooImportantToToss;
+        string = sText_TooImportantToToss;
         break;
     case MSG_OKAY_TO_THROW_AWAY:
         string = gText_ConfirmTossItems;

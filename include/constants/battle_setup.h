@@ -11,8 +11,7 @@
 #define TRAINER_BATTLE_REMATCH_DOUBLE                   7
 #define TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC  8
 #define TRAINER_BATTLE_PYRAMID                          9
-#define TRAINER_BATTLE_SET_TRAINER_A                    10
-#define TRAINER_BATTLE_SET_TRAINER_B                    11
+#define TRAINER_BATTLE_SET_TRAINERS_FOR_MULTI_BATTLE    10
 #define TRAINER_BATTLE_HILL                             12
 #define TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO            13
 

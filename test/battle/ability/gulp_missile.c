@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    // ASSUME(gMovesInfo[MOVE_AERIAL_ACE].category == DAMAGE_CATEGORY_PHYSICAL);
+    // ASSUME(GetMoveCategory(MOVE_AERIAL_ACE) == DAMAGE_CATEGORY_PHYSICAL);
 }
 
 SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2")
@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].makesContact == TRUE);
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_DRAGAPULT) { Ability(ability); }
     } WHEN {

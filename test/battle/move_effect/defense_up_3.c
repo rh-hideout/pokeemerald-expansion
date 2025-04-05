@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_COTTON_GUARD].effect == EFFECT_DEFENSE_UP_3);
+    ASSUME(GetMoveEffect(MOVE_COTTON_GUARD) == EFFECT_DEFENSE_UP_3);
 }
 
 SINGLE_BATTLE_TEST("Cotton Guard raises Defense by 3 stages", s16 damage)
@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Cotton Guard raises Defense by 3 stages", s16 damage)
     PARAMETRIZE { raiseDefense = FALSE; }
     PARAMETRIZE { raiseDefense = TRUE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -212,6 +212,14 @@ static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_
     [HILL_MODE_EXPERT]  = &sChallenge_Expert,
 };
 
+static const struct TrainerHillFloor *const sFloorData[NUM_TRAINER_HILL_MODES] =
+{
+    [HILL_MODE_NORMAL]  = &sFloors_Normal[0],
+    [HILL_MODE_VARIETY] = &sFloors_Variety[0],
+    [HILL_MODE_UNIQUE]  = &sFloors_Unique[0],
+    [HILL_MODE_EXPERT]  = &sFloors_Expert[0],
+};
+
 // Unused.
 static const u8 *const sFloorStrings[] =
 {
@@ -357,20 +365,14 @@ void FreeTrainerHillBattleStruct(void)
 static void SetUpDataStruct(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (sHillData == NULL)
-    {
-        sHillData = AllocZeroed(sizeof(*sHillData));
-        sHillData->floorId = gMapHeader.mapLayoutId - LAYOUT_TRAINER_HILL_1F;
+    if (sHillData != NULL) return;
 
-        // This copy depends on the floor data for each challenge being directly after the
-        // challenge header data, and for the field 'floors' in sHillData to come directly
-        // after the field 'challenge'.
-        // e.g. for HILL_MODE_NORMAL, it will copy sChallenge_Normal to sHillData->challenge and
-        // it will copy sFloors_Normal to sHillData->floors
-        CpuCopy32(sChallengeData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->challenge, sizeof(sHillData->challenge) + sizeof(sHillData->floors));
-        TrainerHillDummy();
-    }
-#endif //FREE_TRAINER_HILL
+    sHillData = AllocZeroed(sizeof(*sHillData));
+    sHillData->floorId = gMapHeader.mapLayoutId - LAYOUT_TRAINER_HILL_1F;
+
+    CpuCopy32(sChallengeData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->challenge, sizeof(sHillData->challenge));
+    CpuCopy32(sFloorData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->floors, sizeof(sHillData->floors));
+#endif // FREE_TRAINER_HILL
 }
 
 static void FreeDataStruct(void)
@@ -862,7 +864,7 @@ void SetHillTrainerFlag(void)
 
     for (i = 0; i < HILL_TRAINERS_PER_FLOOR; i++)
     {
-        if (gSaveBlock2Ptr->frontier.trainerIds[i] == gTrainerBattleOpponent_A)
+        if (gSaveBlock2Ptr->frontier.trainerIds[i] == TRAINER_BATTLE_PARAM.opponentA)
         {
             gSaveBlock2Ptr->frontier.trainerFlags |= 1u << (trainerIndexStart + i);
             break;
@@ -873,7 +875,7 @@ void SetHillTrainerFlag(void)
     {
         for (i = 0; i < HILL_TRAINERS_PER_FLOOR; i++)
         {
-            if (gSaveBlock2Ptr->frontier.trainerIds[i] == gTrainerBattleOpponent_B)
+            if (gSaveBlock2Ptr->frontier.trainerIds[i] == TRAINER_BATTLE_PARAM.opponentB)
             {
                 gSaveBlock2Ptr->frontier.trainerFlags |= 1u << (trainerIndexStart + i);
                 break;
@@ -920,14 +922,14 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
 void FillHillTrainerParty(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(gTrainerBattleOpponent_A, 0);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
 }
 
 void FillHillTrainersParties(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(gTrainerBattleOpponent_A, 0);
-    CreateNPCTrainerHillParty(gTrainerBattleOpponent_B, PARTY_SIZE / 2);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, PARTY_SIZE / 2);
 }
 
 // This function is unused, but my best guess is

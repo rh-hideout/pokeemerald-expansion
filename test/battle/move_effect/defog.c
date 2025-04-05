@@ -3,20 +3,20 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_DEFOG].effect == EFFECT_DEFOG);
-    ASSUME(gMovesInfo[MOVE_REFLECT].effect == EFFECT_REFLECT);
-    ASSUME(gMovesInfo[MOVE_LIGHT_SCREEN].effect == EFFECT_LIGHT_SCREEN);
-    ASSUME(gMovesInfo[MOVE_MIST].effect == EFFECT_MIST);
-    ASSUME(gMovesInfo[MOVE_SAFEGUARD].effect == EFFECT_SAFEGUARD);
-    ASSUME(gMovesInfo[MOVE_AURORA_VEIL].effect == EFFECT_AURORA_VEIL);
-    ASSUME(gMovesInfo[MOVE_STEALTH_ROCK].effect == EFFECT_STEALTH_ROCK);
-    ASSUME(gMovesInfo[MOVE_SPIKES].effect == EFFECT_SPIKES);
-    ASSUME(gMovesInfo[MOVE_TOXIC_SPIKES].effect == EFFECT_TOXIC_SPIKES);
-    ASSUME(gMovesInfo[MOVE_STICKY_WEB].effect == EFFECT_STICKY_WEB);
-    ASSUME(gMovesInfo[MOVE_TOXIC].effect == EFFECT_TOXIC);
-    ASSUME(gMovesInfo[MOVE_SCREECH].effect == EFFECT_DEFENSE_DOWN_2);
-    ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
-    ASSUME(gMovesInfo[MOVE_GUST].category == DAMAGE_CATEGORY_SPECIAL);
+    ASSUME(GetMoveEffect(MOVE_DEFOG) == EFFECT_DEFOG);
+    ASSUME(GetMoveEffect(MOVE_REFLECT) == EFFECT_REFLECT);
+    ASSUME(GetMoveEffect(MOVE_LIGHT_SCREEN) == EFFECT_LIGHT_SCREEN);
+    ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
+    ASSUME(GetMoveEffect(MOVE_SAFEGUARD) == EFFECT_SAFEGUARD);
+    ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
+    ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
+    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+    ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+    ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+    ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+    ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+    ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
 }
 
 SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
@@ -302,7 +302,7 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HAIL].effect == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(gSpeciesInfo[SPECIES_GLALIE].types[0] == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_GLALIE) { Speed(3); }
@@ -334,7 +334,7 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
 DOUBLE_BATTLE_TEST("Defog removes everything it can")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HAIL].effect == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(gSpeciesInfo[SPECIES_GLALIE].types[0] == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_GLALIE) { Speed(3); }

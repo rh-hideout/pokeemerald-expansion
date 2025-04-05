@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_DEFENSE_CURL].effect == EFFECT_DEFENSE_CURL);
+    ASSUME(GetMoveEffect(MOVE_DEFENSE_CURL) == EFFECT_DEFENSE_CURL);
 }
 
 SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
     PARAMETRIZE { raiseDefense = FALSE; }
     PARAMETRIZE { raiseDefense = TRUE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

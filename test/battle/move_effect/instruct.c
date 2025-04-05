@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_INSTRUCT].effect == EFFECT_INSTRUCT);
+    ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
 }
 
 DOUBLE_BATTLE_TEST("Instruct fails if target hasn't made a move")
@@ -24,7 +24,7 @@ DOUBLE_BATTLE_TEST("Instruct fails if target hasn't made a move")
 DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_BIDE].instructBanned == TRUE);
+        ASSUME(IsMoveInstructBanned(MOVE_BIDE));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_BIDE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Instruct-called move targets the target of the move picked o
 DOUBLE_BATTLE_TEST("Instruct doesn't bypass sleep")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SPORE].effect == EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -79,7 +79,7 @@ DOUBLE_BATTLE_TEST("Instruct doesn't bypass sleep")
 DOUBLE_BATTLE_TEST("Instruct fails if target doesn't know the last move it used")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DRAGON_DANCE].danceMove == TRUE);
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ORICORIO) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -100,7 +100,7 @@ DOUBLE_BATTLE_TEST("Instruct fails if target doesn't know the last move it used"
 DOUBLE_BATTLE_TEST("Instruct-called move fails if it can only be used on the first turn but consumes PP")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FAKE_OUT].effect == EFFECT_FIRST_TURN_ONLY);
+        ASSUME(GetMoveEffect(MOVE_FAKE_OUT) == EFFECT_FIRST_TURN_ONLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -112,14 +112,14 @@ DOUBLE_BATTLE_TEST("Instruct-called move fails if it can only be used on the fir
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerRight);
     } THEN {
-        EXPECT_EQ(playerRight->pp[3], gMovesInfo[MOVE_FAKE_OUT].pp - 2);
+        EXPECT_EQ(playerRight->pp[3], GetMovePP(MOVE_FAKE_OUT) - 2);
     }
 }
 
 DOUBLE_BATTLE_TEST("Instruct-called move doesn't fail if tormented")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TORMENT].effect == EFFECT_TORMENT);
+        ASSUME(GetMoveEffect(MOVE_TORMENT) == EFFECT_TORMENT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -138,7 +138,7 @@ DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault V
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
-        ASSUME(gMovesInfo[MOVE_TRICK].effect == EFFECT_TRICK);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_TRICK); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ASSAULT_VEST); }
@@ -155,7 +155,7 @@ DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault V
 DOUBLE_BATTLE_TEST("Instruct-called status move fails if taunted")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TAUNT].effect == EFFECT_TAUNT);
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -174,14 +174,14 @@ DOUBLE_BATTLE_TEST("Instruct-called status move fails if taunted")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         }
     } THEN {
-        EXPECT_EQ(playerRight->pp[3], gMovesInfo[MOVE_GROWL].pp - 1);
+        EXPECT_EQ(playerRight->pp[3], GetMovePP(MOVE_GROWL) - 1);
     }
 }
 
 DOUBLE_BATTLE_TEST("Instruct-called moves fail if disabled")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DISABLE].effect == EFFECT_DISABLE);
+        ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -194,15 +194,15 @@ DOUBLE_BATTLE_TEST("Instruct-called moves fail if disabled")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
     } THEN {
-        EXPECT_EQ(playerRight->pp[0], gMovesInfo[MOVE_TACKLE].pp - 1);
+        EXPECT_EQ(playerRight->pp[0], GetMovePP(MOVE_TACKLE) - 1);
     }
 }
 
 DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_QUICK_ATTACK].priority == 1);
-        ASSUME(gMovesInfo[MOVE_PSYCHIC_TERRAIN].effect == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_QUICK_ATTACK); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -214,5 +214,93 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_TERRAIN, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning Rod if it turns into an Electric Type move")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = opponentLeft; }
+    PARAMETRIZE { moveTarget = opponentRight; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_TACKLE, target: moveTarget);
+            MOVE(opponentLeft, MOVE_PLASMA_FISTS, target: playerLeft);
+            MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft);
+            MOVE(opponentRight, MOVE_CELEBRATE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_LIGHTNING_ROD);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Instructed move will be redirected by Follow Me after instructed target loses Stalwart")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = opponentLeft; }
+    PARAMETRIZE { moveTarget = opponentRight; }
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_FOLLOW_ME].effect == EFFECT_FOLLOW_ME);
+        ASSUME(gMovesInfo[MOVE_SKILL_SWAP].effect == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
+        PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_TACKLE, target: moveTarget);
+            MOVE(opponentLeft, MOVE_FOLLOW_ME);
+            MOVE(opponentRight, MOVE_SKILL_SWAP, target: playerLeft);
+            MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        HP_BAR(moveTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after instructed target loses Grass typing")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = opponentLeft; }
+    PARAMETRIZE { moveTarget = opponentRight; }
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_RAGE_POWDER].effect == EFFECT_FOLLOW_ME);
+        ASSUME(gMovesInfo[MOVE_RAGE_POWDER].powderMove == TRUE);
+        ASSUME(gMovesInfo[MOVE_SOAK].effect == EFFECT_SOAK);
+        PLAYER(SPECIES_TREECKO);
+        PLAYER(SPECIES_SCEPTILE);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_TACKLE, target: moveTarget);
+            MOVE(opponentLeft, MOVE_RAGE_POWDER);
+            MOVE(opponentRight, MOVE_SOAK, target: playerLeft);
+            MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_POWDER, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        HP_BAR(moveTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, opponentRight);
+        MESSAGE("Treecko transformed into the Water type!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        HP_BAR(opponentLeft);
     }
 }

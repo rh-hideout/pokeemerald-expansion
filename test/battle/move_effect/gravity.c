@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_GRAVITY].effect == EFFECT_GRAVITY);
+    ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
 }
 
 DOUBLE_BATTLE_TEST("Gravity cancels fly and sky drop if they are in the air")
