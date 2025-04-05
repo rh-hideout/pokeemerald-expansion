@@ -381,7 +381,7 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
     u32 timeOfDay = GetTimeOfDay();
 
     if (!OW_TIME_OF_DAY_ENCOUNTERS)
-        return 0;
+        return OW_TIME_OF_DAY_DEFAULT;
 
     if (InBattlePike()) 
     {
