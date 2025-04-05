@@ -35,6 +35,21 @@ SINGLE_BATTLE_TEST("Burn reduces Attack by 50%", s16 damage)
     }
 }
 
+SINGLE_BATTLE_TEST("Will-O-Wisp burns target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_WILL_O_WISP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
+        MESSAGE("The opposing Wobbuffet was burned!");
+        STATUS_ICON(opponent, burn: TRUE);
+    }
+}
+
+
 SINGLE_BATTLE_TEST("Will-O-Wisp can't burn a fire type")
 {
     GIVEN {
@@ -45,7 +60,7 @@ SINGLE_BATTLE_TEST("Will-O-Wisp can't burn a fire type")
     } SCENE {
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
-            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
             STATUS_ICON(opponent, burn: TRUE);
         }
     }

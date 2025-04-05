@@ -3186,7 +3186,7 @@ bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battler
 
 bool32 ShouldBurnSelf(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
-    if (CanBeBurned(battlerAtk, battlerDef, abilityDef) && (
+    if (CanBeBurned(battlerAtk, battlerAtk, abilityDef) && (
      abilityDef == ABILITY_QUICK_FEET
       || abilityDef == ABILITY_HEATPROOF
       || abilityDef == ABILITY_MAGIC_GUARD
