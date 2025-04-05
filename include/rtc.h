@@ -83,10 +83,14 @@
     #define NIGHT_HOUR_END     6
 #endif
 
-#define TIME_MORNING           0
-#define TIME_DAY               1
-#define TIME_EVENING           2
-#define TIME_NIGHT             3
+enum TimeOfDay 
+{
+    TIME_MORNING,
+    TIME_DAY,
+    TIME_EVENING,
+    TIME_NIGHT,
+    TIMES_OF_DAY_COUNT,
+};
 
 extern struct Time gLocalTime;
 
@@ -112,15 +116,15 @@ void FormatHexDate(u8 *dest, s32 year, s32 month, s32 day);
 void RtcCalcTimeDifference(struct SiiRtcInfo *rtc, struct Time *result, struct Time *t);
 void RtcCalcLocalTime(void);
 bool8 IsBetweenHours(s32 hours, s32 begin, s32 end);
-u32 GetTimeOfDay(void);
-u32 GetTimeOfDayForDex(void);
+enum TimeOfDay GetTimeOfDay(void);
+enum TimeOfDay GetTimeOfDayForDex(void);
 void RtcInitLocalTimeOffset(s32 hour, s32 minute);
 void RtcCalcLocalTimeOffset(s32 days, s32 hours, s32 minutes, s32 seconds);
 void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2);
 u32 RtcGetMinuteCount(void);
 u32 RtcGetLocalDayCount(void);
 void FormatDecimalTimeWithoutSeconds(u8 *dest, s8 hour, s8 minute, bool32 is24Hour);
-u32 TryIncrementTimeOfDay(u32 timeOfDay);
-u32 TryDecrementTimeOfDay(u32 timeOfDay);
+enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay);
+enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay);
 
 #endif // GUARD_RTC_UTIL_H

@@ -327,7 +327,7 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
         return hours >= begin && hours < end;
 }
 
-u32 GetTimeOfDay(void)
+enum TimeOfDay GetTimeOfDay(void)
 {
     RtcCalcLocalTime();
     if (IsBetweenHours(gLocalTime.hours, MORNING_HOUR_BEGIN, MORNING_HOUR_END))
@@ -339,7 +339,7 @@ u32 GetTimeOfDay(void)
     return TIME_DAY;
 }
 
-u32 GetTimeOfDayForDex(void)
+enum TimeOfDay GetTimeOfDayForDex(void)
 {
     return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_MORNING;
 }
@@ -426,12 +426,12 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
     *txtPtr = EOS;
 }
 
-u32 TryIncrementTimeOfDay(u32 timeOfDay)
+enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
     return timeOfDay == TIME_NIGHT ? TIME_MORNING : timeOfDay + 1;
 }
 
-u32 TryDecrementTimeOfDay(u32 timeOfDay)
+enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
     return timeOfDay == TIME_MORNING ? TIME_NIGHT : timeOfDay - 1;
 }

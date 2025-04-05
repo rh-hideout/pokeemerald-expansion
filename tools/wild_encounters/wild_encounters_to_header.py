@@ -1,5 +1,6 @@
 import json
 import re
+import os
 
 IS_ENABLED            = False
 
@@ -140,6 +141,10 @@ def ImportWildEncounterFile():
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
+
+    if not os.path.exists("Makefile"):
+        print("Please run this script from your root folder.")
+        quit()
 
     encounterTotalCount = []
     encounterCount = []

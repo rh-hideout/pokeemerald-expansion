@@ -708,7 +708,7 @@ bool32 ShouldShowAreaUnknownLabel(void)
 
 #define tState data[0]
 
-void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, u32 timeOfDay, u32 areaState)
+void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay timeOfDay, enum PokedexAreaScreenState areaState)
 {
     u8 taskId;
 
