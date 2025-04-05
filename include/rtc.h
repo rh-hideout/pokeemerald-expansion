@@ -1,7 +1,9 @@
 #ifndef GUARD_RTC_UTIL_H
 #define GUARD_RTC_UTIL_H
 
+#include "global.h"
 #include "siirtc.h"
+#include "config/overworld.h"
 
 #define RTC_INIT_ERROR         0x0001
 #define RTC_INIT_WARNING       0x0002
@@ -91,6 +93,8 @@ enum TimeOfDay
     TIME_NIGHT,
     TIMES_OF_DAY_COUNT,
 };
+
+STATIC_ASSERT(OW_TIME_OF_DAY_DEFAULT == 0, TimeOfDayDefaultMustBeFirstElementInTimeOfDayEnum)
 
 extern struct Time gLocalTime;
 

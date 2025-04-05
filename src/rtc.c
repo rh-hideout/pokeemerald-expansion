@@ -341,7 +341,7 @@ enum TimeOfDay GetTimeOfDay(void)
 
 enum TimeOfDay GetTimeOfDayForDex(void)
 {
-    return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_MORNING;
+    return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : 0;
 }
 
 void RtcInitLocalTimeOffset(s32 hour, s32 minute)

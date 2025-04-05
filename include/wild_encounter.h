@@ -1,6 +1,8 @@
 #ifndef GUARD_WILD_ENCOUNTER_H
 #define GUARD_WILD_ENCOUNTER_H
 
+#include "config/overworld.h"
+#include "global.h"
 #include "rtc.h"
 #include "constants/wild_encounter.h"
 
@@ -42,9 +44,9 @@ struct WildPokemonHeader
     u8 mapNum;
 
 #if OW_TIME_OF_DAY_ENCOUNTERS
-    const struct WildEncounterTypes encounterTypes[TIME_NIGHT + 1];
+    const struct WildEncounterTypes encounterTypes[TIMES_OF_DAY_COUNT];
 #else
-    const struct WildEncounterTypes encounterTypes[TIME_DAY];
+    const struct WildEncounterTypes encounterTypes[1];
 #endif
 };
 
