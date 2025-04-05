@@ -1132,9 +1132,7 @@ These are used to change the graphics of the Pokémon if they're female. If they
 However, `iconPalIndexFemale` is a special case, where it's *doesn't* read the male icon palette if its `iconSpriteFemale` is set, so if you're setting a female icon, be sure to set their palette index as well.
 
 ## 4. Overworld Data (v1.9 onwards)
-![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
-
-If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld of your new species by following these steps:
+If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld sprite data of your new species. Naturally, these can also be used for followers.
 
 First, since you copied the contents from Mew's folder previously, you should also have copied its overworld sprites. Edit those to your liking, as we have done before, making sure to update the palettes
 
@@ -1209,8 +1207,8 @@ Also, in `spritesheet_rules.mk`, `-mwidth` and `-mheight` need to be set to 8 in
 You have 4 options for their shadow, between Small, Medium, Large and None:
  - `SHADOW_SIZE_NONE`
  - `SHADOW_SIZE_S` ![shadow_small](/graphics/field_effects/pics/shadow_small.png)
- - `SHADOW_SIZE_M` ![shadow_medium](https://github.com/user-attachments/assets/b7792624-d65c-425b-9982-cab28ce4248e)
- - `SHADOW_SIZE_L` ![shadow_large](https://github.com/user-attachments/assets/ec2dc701-d335-44ad-8ded-f8003114f0ff)
+ - `SHADOW_SIZE_M` ![shadow_medium](/graphics/field_effects/pics/shadow_medium.png)
+ - `SHADOW_SIZE_L` ![shadow_large](/graphics/field_effects/pics/shadow_large.png)
 
 ### Tracks
 You have 4 options for the tracks that your species will leave behind on sand.
@@ -1258,6 +1256,13 @@ You can set up an east-west asymetric overworld sprite by adding the East frames
 ```
 
 Either way, you may also create custom animation tables and use them here appropiately.
+
+### How to add the Pokémon Object Events to map
+In Porymap, select the object you want to set the sprite to. Then, change the field "Sprite" to use `OBJ_EVENT_GFX_SPECIES(SPECIES)`, replacing SPECIES with the name of the species you want to use. If you get a compiler error, it's because it used the species define as part of the macro, so it needs to match how you defined it all the way back in [Declare a species constant](#1-Declare-a-species-constant).
+![charizard](/docs/tutorials/img/add_pokemon/charizard.png)
+![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
+
+
 
 ## 5. In-battle shadows (v1.10 onwards)
 Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
