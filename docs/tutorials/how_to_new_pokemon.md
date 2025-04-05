@@ -1,10 +1,9 @@
-<!--1.10.x-->
 This is a modified version of [the original tutorial about adding new Pokémon species available in Pokeemerald's wiki](https://github.com/pret/pokeemerald/wiki/How-to-add-a-new-Pokémon-species).
 
 Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
-## IMPORTANT: This tutorial applies to 1.10.x versions.
+## IMPORTANT: This tutorial applies to 1.10.x versions onward.
 - [Version 1.9.x](how_to_new_pokemon_1_9_0.md)
 - [Version 1.8.x](how_to_new_pokemon_1_8_0.md)
 - [Version 1.7.x](how_to_new_pokemon_1_7_0.md)
@@ -169,7 +168,9 @@ Now, to better understand Mewthree, we also need to understand Mew. Let's look a
 That's a lot of stuff! But don't worry, we'll go through it step by step throughout the tutorial
 (and it's miles better than having this same data through 20+ files like it used to be).
 
-**Note: Across the species files you'll see preprocessor instructions such as `#if/endif P_FAMILY_MEW`. These are used by expansion in order to allow users to disable species via config. Since we're making a new species from scratch, you DON'T need to add them as part of the process.**
+Across the species files you'll see preprocessor instructions such as `#if/endif P_FAMILY_MEW`. These are used by expansion in order to allow users to disable species via config. Since we're making a new species from scratch, you DON'T need to add them as part of the process.
+
+You can also ignore switch cases for `P_GBA_STYLE_SPECIES_GFX`, as those are only used to switching to GBA-styled sprites.
 
 We'll start by adding the self-explanatory data that's also present in pret's vanilla structure:
 
@@ -221,6 +222,13 @@ The `.` is the structure reference operator in C to refer to the member object o
 - `baseHP`, `baseAttack`, `baseDefense`, `baseSpeed`, `baseSpAttack` and `baseSpDefense` are the base stats. They can't go higher than 255.
 - `types` is using the macro `MON_TYPES` as a helper function for formatting so that only one type has to be input for species with a single type.
     - To add a species with 2 types, use the format `MON_TYPES(TYPE_PSYCHIC, TYPE_NORMAL)`.
+    - ***1.9 and earlier:*** The format for setting types is the following:
+        ```c
+        // Mono-type
+        .types = { TYPE_PSYCHIC, TYPE_PSYCHIC },
+        // Dual-type
+        .types = { TYPE_PSYCHIC, TYPE_DARK },
+        ```
 - `catchRate` is how likely it is to catch a Pokémon, the lower the value, the harder it is to catch. Legendaries generally have a catch rate of 3, so we put that here.
 - `expYield` is the base amount of experience that a Pokémon gives when defeated/caught. In vanilla, this value caps at 255, but we've increased it to a maximum of 65535 accomodate later gen's higher experience yields. (The highest official value is Blissey's with 608, so going beyond this point may cause exponential gains that could break the system 😱)
     - If you noticed, Mew's had some `#if`s, `#elif`s and `#endif` around it. This is because its yield has changed over time, and we let you choose which ones you want. This is not relevant to our Mewthree however, so we can just put a single `.expYield = 255,` line here.
@@ -243,6 +251,13 @@ The `.` is the structure reference operator in C to refer to the member object o
     - This should be consistent across evolution lines, otherwise levels could change upon evolution.
 - `eggGroups` are used for breed compatibility. Most Legendaries and Mythicals have the `EGG_GROUP_NO_EGGS_DISCOVERED` group, and so does our Mewthree. Go [here](https://bulbapedia.bulbagarden.net/wiki/Egg_Group) for more info.
     - This is using the helper macro `MON_EGG_GROUPS`.
+    - ***1.9 and earlier:*** The format for setting egg groups is the following:
+        ```c
+        // Mono-group
+        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_MONSTER },
+        // Dual-group
+        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_MINERAL },
+        ```
 - `abilities` determines the potential abilites of our species. Notice how I also set the ability to `ABILITY_INSOMNIA`, so our little monster doesn't even need to sleep anymore. You can find the abilities for example here [include/constants/abilities.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/constants/abilities.h).
     - When both slot 1 and 2 are defined as not being `ABILITY_NONE`, their starting ability will be decided on a coin flip using their personality. They can later be changed using an Ability Capsule.
         - Certain Pokémon such as Zygarde and Rockruff have different forms to add additional abilities. As such, they cannot be changed using an Ability Capsule (though the Zygarde Cube can change Zygarde's ability by changing them to their corresponding form)
@@ -691,19 +706,26 @@ We're almost there just a bit left!
  };
 ```
 Each species flag provides properties to the species:
+- `perfectIVCount` ***(1.10 onwards)***:
+    - Guarantees that the number of IVs specified here will be perfect.
 - `isLegendary`:
-    - Does nothing.
+    - ***1.10 onwards:*** Does nothing.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isMythical`:
     - Is skipped during Pokédex evaluations.
         - Unless it also has the `dexForceRequired` flag.
     - Cannot obtain Gigantamax factor via `ToggleGigantamaxFactor`.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isUltraBeast`:
     - Beast Ball's multiplier is set to x5 for this species.
         - All other ball multipliers are set to x0.1.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isParadox` (previously `isParadoxForm`):
-    - Makes it so that Booster Energy cannot be knocked off.
+    - ***1.10 onwards:*** Makes it so that Booster Energy cannot be knocked off.
+    - ***1.9 and earlier:*** Does nothing.
 - `isTotem`:
-    - Does nothing.
+    - ***1.10 onwards:*** Does nothing.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isMegaEvolution`:
     - A Mega indicator is added to the battle box indicating that they're Mega Evolved.
     - The species doesn't receive affection benefits.
@@ -717,13 +739,12 @@ Each species flag provides properties to the species:
     - Used to determine if Gigantamax forms should have their GMax moves or not.
     - Required when adding new Gigantamax forms.
 - `isAlolanForm`, `isGalarianForm`, `isHisuianForm`, `isPaldeanForm`:
-    - In the future, these will be used to determine breeding offspring from different based on their region.
+    - **1.10.3 onwards:** Used to determine breeding offspring from different parents based on their region.
+    - **1.10.2 and earlier:** Does nothing.
 - `cannotBeTraded`:
     - This species cannot be traded away (like Black/White Kyurem).
-- `perfectIVCount`:
-    - Guarantees that the number of IVs specified here will be perfect.
 - `tmIlliterate`:
-    - This species will be unable to learn the universal moves.
+    - This species will be unable to learn the universal TM or Tutor moves.
 - `isFrontierBanned`:
     - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
 
@@ -1005,7 +1026,7 @@ static const u16 sPikachuFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_PIKACHU
 ```
-We register the table each form entry in `gSpeciesInfo`.
+We register the table for each form in `gSpeciesInfo`.
 
 ```diff
     [SPECIES_PIKACHU] =
@@ -1069,26 +1090,33 @@ You may have seen that there's a couple of duplicate fields with a "Female" suff
     {
         ...
         .frontPic = gMonFrontPic_Frillish,
-+       .frontPicFemale = gMonFrontPic_FrillishF,
         .frontPicSize = MON_COORDS_SIZE(56, 56),
-+       .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
         .frontPicYOffset = 5,
-        .frontAnimFrames = sAnims_Frillish,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+        ),
         .frontAnimId = ANIM_RISING_WOBBLE,
         .backPic = gMonBackPic_Frillish,
-+       .backPicFemale = gMonBackPic_FrillishF,
         .backPicSize = MON_COORDS_SIZE(40, 56),
-+       .backPicSizeFemale = MON_COORDS_SIZE(40, 56),
         .backPicYOffset = 7,
         .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
         .palette = gMonPalette_Frillish,
-+       .paletteFemale = gMonPalette_FrillishF,
         .shinyPalette = gMonShinyPalette_Frillish,
-+       .shinyPaletteFemale = gMonShinyPalette_FrillishF,
         .iconSprite = gMonIcon_Frillish,
-+       .iconSpriteFemale = gMonIcon_FrillishF,
         .iconPalIndex = 0,
++#if P_GENDER_DIFFERENCES
++       .frontPicFemale = gMonFrontPic_FrillishF,
++       .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
++       .backPicFemale = gMonBackPic_FrillishF,
++       .backPicSizeFemale = MON_COORDS_SIZE(40, 56),
++       .paletteFemale = gMonPalette_FrillishF,
++       .shinyPaletteFemale = gMonShinyPalette_FrillishF,
++       .iconSpriteFemale = gMonIcon_FrillishF,
 +       .iconPalIndexFemale = 1,
++#endif //P_GENDER_DIFFERENCES
         FOOTPRINT(Frillish)
         .levelUpLearnset = sFrillishLevelUpLearnset,
         .teachableLearnset = sFrillishTeachableLearnset,
@@ -1099,7 +1127,19 @@ These are used to change the graphics of the Pokémon if they're female. If they
 
 However, `iconPalIndexFemale` is a special case, where it's *doesn't* read the male icon palette if its `iconSpriteFemale` is set, so if you're setting a female icon, be sure to set their palette index as well.
 
-## 4. Overworld Data
+## 4. In-battle shadows (Version 1.10 onwards)
+Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
+ - X offset
+ - Y offset
+ - Shadow size
+You have 4 options for their shadow, between Small, Medium, Large and Extra Large:
+ - `SHADOW_SIZE_S`
+ - `SHADOW_SIZE_M`
+ - `SHADOW_SIZE_L`
+ - `SHADOW_SIZE_XL_BATTLE_ONLY`
+To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.
+
+## 5. Overworld Data
 ![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
 
 If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld of your new species by following these steps:
@@ -1174,16 +1214,11 @@ Depending on your species, you might want to use different sizes for it. For exa
 Also, in `spritesheet_rules.mk`, `-mwidth` and `-mheight` need to be set to 8 instead of 4 for such cases.
 
 ### Shadows
-Gen 4 style shadows are defined by the `SHADOW` macro which takes the following arguments:
- - X offset
- - Y offset
- - Shadow size
-You have 4 options for their shadow, between Small, Medium, Large and Extra Large:
- - `SHADOW_SIZE_S`
- - `SHADOW_SIZE_M`
- - `SHADOW_SIZE_L`
- - `SHADOW_SIZE_XL_BATTLE_ONLY`
-To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.
+You have 4 options for their shadow, between Small, Medium, Large and None:
+ - `SHADOW_SIZE_NONE`
+ - `SHADOW_SIZE_S` ![shadow_small](/graphics/field_effects/pics/shadow_small.png)
+ - `SHADOW_SIZE_M` ![shadow_medium](https://github.com/user-attachments/assets/b7792624-d65c-425b-9982-cab28ce4248e)
+ - `SHADOW_SIZE_L` ![shadow_large](https://github.com/user-attachments/assets/ec2dc701-d335-44ad-8ded-f8003114f0ff)
 
 ### Tracks
 You have 4 options for the tracks that your species will leave behind on sand.
@@ -1230,4 +1265,4 @@ You can set up an east-west asymetric overworld sprite by adding the East frames
         )
 ```
 
-Either way, you may create custom animation tables and use it here appropiately.
+Either way, you may also create custom animation tables and use them here appropiately.
