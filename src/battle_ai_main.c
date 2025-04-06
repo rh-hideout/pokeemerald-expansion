@@ -2674,12 +2674,15 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_UPPER_HAND:
-            if (predictedMove == MOVE_NONE
-             || IsBattleMoveStatus(predictedMove)
-             || AI_IsSlower(battlerAtk, battlerDef, move)
-             || GetBattleMovePriority(battlerDef, aiData->abilities[battlerDef], predictedMove) < 1
-             || GetBattleMovePriority(battlerDef, aiData->abilities[battlerAtk], predictedMove) > 3) // Opponent going first or not using priority move
-                ADJUST_SCORE(-10);
+            {
+                u32 defPrio = GetBattleMovePriority(battlerDef, aiData->abilities[battlerDef], predictedMove);
+                if (predictedMove == MOVE_NONE
+                 || IsBattleMoveStatus(predictedMove)
+                 || AI_IsSlower(battlerAtk, battlerDef, move)
+                 || defPrio < 1
+                 || defPrio > 3) // Opponent going first or not using priority move
+                    ADJUST_SCORE(-10);
+            }
             break;
         case EFFECT_PLACEHOLDER:
             return 0;   // cannot even select

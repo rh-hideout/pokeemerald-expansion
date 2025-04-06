@@ -17856,12 +17856,13 @@ void BS_TryUpperHand(void)
     NATIVE_ARGS(const u8 *failInstr);
 
     u32 abilityDef = GetBattlerAbility(gBattlerTarget);
+    u32 prio = GetChosenMovePriority(gBattlerTarget, abilityDef);
 
     if (GetBattlerTurnOrderNum(gBattlerAttacker) > GetBattlerTurnOrderNum(gBattlerTarget)
      || gChosenMoveByBattler[gBattlerTarget] == MOVE_NONE
      || IsBattleMoveStatus(gChosenMoveByBattler[gBattlerTarget])
-     || GetChosenMovePriority(gBattlerTarget, abilityDef) < 1
-     || GetChosenMovePriority(gBattlerTarget, abilityDef) > 3) // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
+     || prio < 1
+     || prio > 3) // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
         gBattlescriptCurrInstr = cmd->failInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
