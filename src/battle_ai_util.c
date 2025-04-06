@@ -3120,7 +3120,7 @@ bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move
 
 bool32 ShouldPoisonSelf(u32 battler, u32 ability)
 {
-    if (CanBePoisoned(battler, battler, GetBattlerAbility(battler)) && (
+    if (CanBePoisoned(battler, battler, ABILITY_NONE, ability) && (
      ability == ABILITY_MARVEL_SCALE
       || ability == ABILITY_POISON_HEAL
       || ability == ABILITY_QUICK_FEET
@@ -3135,7 +3135,7 @@ bool32 ShouldPoisonSelf(u32 battler, u32 ability)
 
 bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
 {
-    if (!CanBePoisoned(battlerAtk, battlerDef, GetBattlerAbility(battlerDef))
+    if (!CanBePoisoned(battlerAtk, battlerDef, AI_DATA->abilities[battlerAtk], defAbility)
       || AI_DATA->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex] == UQ_4_12(0.0)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || PartnerMoveEffectIsStatusSameTarget(BATTLE_PARTNER(battlerAtk), battlerDef, partnerMove))

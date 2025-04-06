@@ -3332,6 +3332,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         {
             statusChanged = CanSetNonVolatileStatus(gBattlerAttacker,
                                                     gEffectBattler,
+                                                    GetBattlerAbility(gBattlerAttacker),
                                                     battlerAbility,
                                                     gBattleScripting.moveEffect,
                                                     STATUS_CHECK_TRIGGER);
@@ -10874,9 +10875,9 @@ static void Cmd_various(void)
             VARIOUS_ARGS(const u8 *failInstr, const u8 *sleepClauseFailInstr);
             u32 targetAbility = GetBattlerAbility(gBattlerTarget);
             // Psycho shift works
-            if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, targetAbility))
+            if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_TOXIC_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, targetAbility))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_TOXIC_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 1;
             else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_BURN) && CanBeBurned(gBattlerAttacker, gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 2;
@@ -10884,7 +10885,7 @@ static void Cmd_various(void)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 3;
             else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP) && CanBeSlept(gBattlerAttacker, gBattlerTarget, targetAbility, BLOCKED_BY_SLEEP_CLAUSE))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 4;
-            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_FROSTBITE) && CanBeFrozen(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
+            else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_FROSTBITE) && CanBeFrozen(gBattlerAttacker, gBattlerTarget, targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             else if (IsSleepClauseActiveForSide(GetBattlerSide(battler)))
             {
@@ -12515,6 +12516,7 @@ static void Cmd_trynonvolatilestatus(void)
 
     if (!CanSetNonVolatileStatus(gBattlerAttacker,
                                  gBattlerTarget,
+                                 GetBattlerAbility(gBattlerAttacker),
                                  GetBattlerAbility(gBattlerTarget),
                                  GetMoveNonVolatileStatus(gCurrentMove),
                                  STATUS_RUN_SCRIPT))
@@ -18384,7 +18386,7 @@ static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
 
 static void TrySetPoison(const u8 *nextInstr, const u8 *failInstr)
 {
-    if (CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
+    if (CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerAbility(gBattlerTarget)))
     {
         gBattleMons[gBattlerTarget].status1 |= STATUS1_POISON;
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;

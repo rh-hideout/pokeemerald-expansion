@@ -326,12 +326,12 @@ bool32 CanTargetPartner(u32 battlerAtk, u32 battlerDef);
 bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
 
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause);
-bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
+bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef);
 bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 ability);
 bool32 CanBeParalyzed(u32 battler, u32 battlerDef, u32 abilityDef);
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
-bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);
+bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);
 bool32 CanBeConfused(u32 battler);
 bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag);
 u32 GetBattlerAffectionHearts(u32 battler);

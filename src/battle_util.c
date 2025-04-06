@@ -65,6 +65,8 @@ static u32 GetFlingPowerFromItemId(u32 itemId);
 static void SetRandomMultiHitCounter();
 static u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
 static bool32 CanBeInfinitelyConfused(u32 battler);
+static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum NonVolatileStatus option);
+static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -5935,7 +5937,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 && IsBattlerAlive(gBattlerAttacker)
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                 && IsBattlerTurnDamaged(gBattlerTarget)
-                && CanBePoisoned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
+                && CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, GetBattlerAbility(gBattlerAttacker))
                 && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                 && IsMoveMakingContact(move, gBattlerAttacker))
                 {
@@ -6192,7 +6194,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
              && IsBattlerAlive(gBattlerTarget)
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-             && CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget))
+             && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
              && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
              && IsMoveMakingContact(move, gBattlerAttacker)
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
@@ -6210,7 +6212,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
              && IsBattlerAlive(gBattlerTarget)
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-             && CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget))
+             && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
              && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
             {
@@ -6417,6 +6419,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
             bool32 statusChanged = CanSetNonVolatileStatus(gBattlerTarget,
                                                            gBattlerAttacker,
+                                                           gLastUsedAbility,
                                                            GetBattlerAbility(gBattlerAttacker),
                                                            gBattleStruct->synchronizeMoveEffect,
                                                            STATUS_CHECK_TRIGGER);
@@ -6450,6 +6453,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
             bool32 statusChanged = CanSetNonVolatileStatus(gBattlerAttacker,
                                                            gBattlerTarget,
+                                                           gLastUsedAbility,
                                                            GetBattlerAbility(gBattlerAttacker),
                                                            gBattleStruct->synchronizeMoveEffect,
                                                            STATUS_CHECK_TRIGGER);
@@ -6814,6 +6818,7 @@ bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClau
 
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_SLEEP, // also covers yawn
                                 STATUS_CHECK_TRIGGER))
@@ -6821,10 +6826,11 @@ bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClau
     return FALSE;
 }
 
-bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
+bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                abilityAtk,
                                 abilityDef,
                                 MOVE_EFFECT_TOXIC, // also covers poison
                                 STATUS_CHECK_TRIGGER))
@@ -6837,6 +6843,7 @@ bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_BURN,
                                 STATUS_CHECK_TRIGGER))
@@ -6848,6 +6855,7 @@ bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_PARALYSIS,
                                 STATUS_CHECK_TRIGGER))
@@ -6859,6 +6867,7 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_FREEZE,
                                 STATUS_CHECK_TRIGGER))
@@ -6871,6 +6880,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
+                                ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_FREEZE_OR_FROSTBITE, // also covers frostbite
                                 STATUS_CHECK_TRIGGER))
@@ -6878,50 +6888,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
     return FALSE;
 }
 
-static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option)
-{
-    // Can freely sleep own partner
-    if (IsDoubleBattle() && IsSleepClauseEnabled() && IsBattlerAlly(battlerAtk, battlerDef))
-    {
-        if (option == STATUS_RUN_SCRIPT)
-            gBattleStruct->battlerState[battlerDef].sleepClauseEffectExempt = TRUE;
-        return FALSE;
-    }
-
-    if (option == STATUS_RUN_SCRIPT)
-        gBattleStruct->battlerState[battlerDef].sleepClauseEffectExempt = FALSE;
-    // Can't sleep if clause is active otherwise
-    if (IsSleepClauseActiveForSide(GetBattlerSide(battlerDef)))
-        return TRUE;
-
-    return FALSE;
-}
-
-static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum NonVolatileStatus option)
-{
-    if (battleScript != NULL)
-    {
-        if (option == STATUS_RUN_SCRIPT)
-        {
-            if (battleScript != BattleScript_NotAffected)
-                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
-
-            if (abilityAffected)
-            {
-                gLastUsedAbility = gBattlerAbility = battlerDef;
-                RecordAbilityBattle(battlerDef, abilityDef);
-            }
-
-            gBattlescriptCurrInstr = battleScript;
-        }
-        
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum MoveEffects effect, enum NonVolatileStatus option)
+bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffects effect, enum NonVolatileStatus option)
 {
     const u8 *battleScript = NULL;
     u32 sideBattler = ABILITY_NONE;
@@ -6936,7 +6903,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, e
         {
             battleScript = BattleScript_AlreadyPoisoned;
         }
-        else if (GetBattlerAbility(battlerAtk) != ABILITY_CORROSION && IS_BATTLER_ANY_TYPE(battlerDef, TYPE_POISON, TYPE_STEEL))
+        else if (abilityAtk != ABILITY_CORROSION && IS_BATTLER_ANY_TYPE(battlerDef, TYPE_POISON, TYPE_STEEL))
         {
             battleScript = BattleScript_NotAffected;
         }
@@ -7092,6 +7059,49 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityDef, e
         return FALSE;
 
     return TRUE;
+}
+
+static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option)
+{
+    // Can freely sleep own partner
+    if (IsDoubleBattle() && IsSleepClauseEnabled() && IsBattlerAlly(battlerAtk, battlerDef))
+    {
+        if (option == STATUS_RUN_SCRIPT)
+            gBattleStruct->battlerState[battlerDef].sleepClauseEffectExempt = TRUE;
+        return FALSE;
+    }
+
+    if (option == STATUS_RUN_SCRIPT)
+        gBattleStruct->battlerState[battlerDef].sleepClauseEffectExempt = FALSE;
+    // Can't sleep if clause is active otherwise
+    if (IsSleepClauseActiveForSide(GetBattlerSide(battlerDef)))
+        return TRUE;
+
+    return FALSE;
+}
+
+static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum NonVolatileStatus option)
+{
+    if (battleScript != NULL)
+    {
+        if (option == STATUS_RUN_SCRIPT)
+        {
+            if (battleScript != BattleScript_NotAffected)
+                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
+
+            if (abilityAffected)
+            {
+                gLastUsedAbility = gBattlerAbility = battlerDef;
+                RecordAbilityBattle(battlerDef, abilityDef);
+            }
+
+            gBattlescriptCurrInstr = battleScript;
+        }
+
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 bool32 CanBeConfused(u32 battler)
@@ -8607,7 +8617,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
         switch (battlerHoldEffect)
         {
         case HOLD_EFFECT_TOXIC_ORB:
-            if (CanBePoisoned(battler, battler, GetBattlerAbility(battler)))
+            if (CanBePoisoned(battler, battler, ABILITY_NONE, battlerAbility)) // Can corrosion trigger toxic orb on itself?
             {
                 effect = ITEM_STATUS_CHANGE;
                 gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
