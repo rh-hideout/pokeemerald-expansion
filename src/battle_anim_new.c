@@ -8581,7 +8581,6 @@ void AnimTask_GetLycanrocForm(u8 taskId)
         gBattleAnimArgs[0] = 2;
         
 
-    //gBattleAnimArgs[0] = 0;
     DestroyAnimVisualTask(taskId);
 }
 
