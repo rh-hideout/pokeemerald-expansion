@@ -418,7 +418,7 @@ static const u8 sText_BerrySuffix[] = _(" BERRY"); //no decapitalize until it is
 const u8 gText_EmptyString3[] = _("");
 static const u8 sText_YouThrowABallNowRight[] = _("You throw a BALL now, right?\nI… I'll do my best!");
 
-//big edit
+//big edit seem out of date
 // early declaration of strings
 // static const u8 sText_PkmnIncapableOfPower[];
 // static const u8 sText_GlintAppearsInEye[];
@@ -1160,6 +1160,12 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ELECTRICCURRENTISRUNNING]             = COMPOUND_STRING("An electric current is running across the battlefield!"),
     [STRINGID_SEEMSWEIRD]                           = COMPOUND_STRING("The battlefield seems weird!"),
     [STRINGID_WAGGLINGAFINGER]                      = COMPOUND_STRING("Waggling a finger let it use {B_CURRENT_MOVE}!"),
+    [STRINGID_BLASTBURNISCHARGING]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} building a blazing inferno!"), 
+    [STRINGID_HYDROCANNONISCHARGING]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} building a powerful torrent!"),
+    [STRINGID_PKMNALREADYHASFROSTBITE]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is already frostbitten!"),
+    [STRINGID_PKMNDROPPEDITEM]                      = COMPOUND_STRING("Wild {B_OPPONENT_MON1_NAME} dropped an item!"),
+    [STRINGID_ADDEDTOBAG]                           = COMPOUND_STRING("{B_PLAYER_NAME} put away the {B_BUFF1}\nin the BAG."),
+    [STRINGID_BAGISFULL]                            = COMPOUND_STRING("Too bad! The BAG is full…"),    
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -3643,7 +3649,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             }
             srcID += 3;
             break;
-        //big edit
+        //big edit unsure what is for
         // case B_BUFF_POCKET:
         //     hword = T1_READ_16(&src[srcID + 1]);
         //     CopyPocketName(hword, dst);

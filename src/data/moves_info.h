@@ -3784,7 +3784,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .power = 70,
         .type = TYPE_NORMAL,
         .accuracy = 100,
-        .pp = 10,
+        .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
@@ -5569,10 +5569,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "A gift in the form of a\n"
             "bomb. May restore HP."),
-        .effect = EFFECT_PRESENT,
-        .power = 1,
-        .type = TYPE_NORMAL,
-        .accuracy = 95,
+        .effect = EFFECT_HIT_ENEMY_HEAL_ALLY,
+        .power = 60,
+        .type = TYPE_ICE,
+        .accuracy = 100,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -7830,9 +7830,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A two turn attack that raises\n"
             "Sp.A, one turn in sun."),
         .effect = EFFECT_TWO_TURNS_ATTACK,
-        .power = 150,
+        .power = 120,
         .type = TYPE_FIRE,
-        .accuracy = 90,
+        .accuracy = 100,
         .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -7842,7 +7842,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
             .self = TRUE,
             .onChargeTurnOnly = TRUE,
-        }, SHEER_FORCE_HACK),
+        }), 
         .contestEffect = CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
@@ -7857,9 +7857,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A two turn attack that raises\n"
             "Sp.A, one turn in rain."),
         .effect = EFFECT_TWO_TURNS_ATTACK,
-        .power = 150,
+        .power = 120,
         .type = TYPE_WATER,
-        .accuracy = 90,
+        .accuracy = 100,
         .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -7869,7 +7869,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
             .self = TRUE,
             .onChargeTurnOnly = TRUE,
-        }, SHEER_FORCE_HACK),
+        }),
         .contestEffect = CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -7913,7 +7913,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "An attack that may shock\n"
             "the foe into flinching."),
         .effect = EFFECT_HIT,
-        .power = 30,
+        .power = 40,
         .type = TYPE_GHOST,
         .accuracy = 100,
         .pp = 15,
@@ -11701,7 +11701,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_2,
-            .chance = 10,
+            .chance = 20,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -13403,7 +13403,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        //.windMove = TRUE,
+        .windMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ACC_MINUS_1,
             .chance = 50,
@@ -13592,7 +13592,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_STEEL,
-        .accuracy = 85,
+        .accuracy = 90,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -20800,7 +20800,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
 
     //custom moves begin
-    
+
     [MOVE_EXO_BASH] =
     {
         .name = COMPOUND_STRING("Exo Bash"),
@@ -21359,7 +21359,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Attacks with ghastly power.\n"
             "Foe's last move has 3 PP cut."),
-        .effect = EFFECT_EERIE_SPELL,
+        .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_GHOST,
         .accuracy = 100,
@@ -21367,8 +21367,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .soundMove = TRUE,
-        .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_EERIE_SPELL,
+            .chance = 100,
+        }),
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_LATER,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -22340,7 +22342,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .makesContact = B_UPDATED_MOVE_DATA < GEN_4,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SP_ATK_TWO_DOWN,
+            .moveEffect = MOVE_EFFECT_SP_ATK_MINUS_2,
             .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
@@ -22486,7 +22488,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .ballisticMove = TRUE,
         .makesContact = B_UPDATED_MOVE_DATA < GEN_4,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SP_ATK_TWO_DOWN,
+            .moveEffect = MOVE_EFFECT_SP_ATK_MINUS_2,
             .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
@@ -23133,26 +23135,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0}
     },
 
-    [MOVE_PRESSURE_POINT] =
-    {
-        .name = COMPOUND_STRING("Pressure Point"),
-        .description = COMPOUND_STRING(
-            "The higher the foe's Sp.Attack\n"
-            "the more damage caused."),
-        .effect = EFFECT_FOUL_PLAY,
-        .power = 95,
-        .type = TYPE_FIGHTING,
-        .accuracy = 100,
-        .pp = 15,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_SPECIAL,
-        .makesContact = TRUE,
-        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
-        .contestCategory = CONTEST_CATEGORY_COOL,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {0}
-    },
 
     [MOVE_CHLORO_DIVE] =
     {
@@ -23175,6 +23157,27 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .gravityBanned = TRUE,
         .skyBattleBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0}
+    },
+
+    [MOVE_PRESSURE_POINT] =
+    {
+        .name = COMPOUND_STRING("Pressure Point"),
+        .description = COMPOUND_STRING(
+            "The higher the foe's Sp.Attack\n"
+            "the more damage caused."),
+        .effect = EFFECT_FOUL_PLAY,
+        .power = 95,
+        .type = TYPE_FIGHTING,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {0}
@@ -23238,7 +23241,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Super effective on Steel-\n"
             "types. May cause Poison."),
-        .effect = EFFECT_SUPER_EFFECTIVE_STEEL,
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
         .power = 70,
         .type = TYPE_POISON,
         .accuracy = 100,
@@ -23246,6 +23249,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = TYPE_STEEL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POISON,
             .chance = 10,
@@ -23262,7 +23266,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Super effective on Steel-\n"
             "types. May cause Paralysis."),
-        .effect = EFFECT_SUPER_EFFECTIVE_STEEL,
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -23270,6 +23274,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = TYPE_STEEL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PARALYSIS,
             .chance = 10,
@@ -23353,6 +23358,30 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
         .contestComboMoves = {0}
+    },
+
+    [MOVE_ELUDE] =
+    {
+        .name = COMPOUND_STRING("Elude"),
+        .description = COMPOUND_STRING(
+            "A fairy move for fleeing\n"
+            "from battle instantly."),
+        .effect = EFFECT_TELEPORT,
+        .power = 0,
+        .type = TYPE_FAIRY,
+        .accuracy = 0,
+        .pp = 20,
+        .target = MOVE_TARGET_USER,
+        .priority = -6,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RECOVER_HP },
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_CONFUSION, COMBO_STARTER_DOUBLE_TEAM, COMBO_STARTER_KINESIS, COMBO_STARTER_PSYCHIC},
+        .battleAnimScript = gBattleAnimMove_PartingShot,
     },
 
     [MOVE_BARRICADE] =
@@ -23505,7 +23534,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Super effective on Electric-\n"
             "types. May cause flinching."),
-        .effect = EFFECT_SUPER_EFFECTIVE_ELECTRIC,
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
         .power = 70,
         .type = TYPE_STEEL,
         .accuracy = 100,
@@ -23513,6 +23542,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = TYPE_ELECTRIC,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLINCH,
             .chance = 20,
@@ -23529,7 +23559,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Super effective on Fairy-\n"
             "types. May reduce DEF."),
-        .effect = EFFECT_SUPER_EFFECTIVE_FAIRY,
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
         .power = 70,
         .type = TYPE_DRAGON,
         .accuracy = 100,
@@ -23537,6 +23567,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = TYPE_FAIRY,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
             .chance = 20,
@@ -23773,6 +23804,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = B_UPDATED_MOVE_DATA >= GEN_7 ? MOVE_EFFECT_SP_DEF_PLUS_2:  MOVE_EFFECT_SP_DEF_PLUS_1,
+            .self = TRUE,
             .chance = 50,
         }),
         .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
@@ -23941,7 +23973,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_WATER,
-        .accuracy = 100,
+        .accuracy = 90,
         .pp = 5,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -23978,7 +24010,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Super effective on Water-\n"
             "types. May cause burn."),
-        .effect = EFFECT_FREEZE_DRY,
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
         .power = 70,
         .type = TYPE_FIRE,
         .accuracy = 100,
@@ -23986,7 +24018,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .makesContact = TRUE,
+        .argument = TYPE_WATER,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_BURN,
             .chance = 10,
@@ -23997,7 +24029,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0}
     },
 
-    //dual cannon needs dragon darts
+    [MOVE_DUAL_CANNON] =
+    {
+        .name = COMPOUND_STRING("Dual Cannon"),
+        .description = COMPOUND_STRING(
+            "The user attacks twice. Two\n"
+            "targets are hit once each."),
+        .effect = EFFECT_DRAGON_DARTS,
+        .power = 50,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .strikeCount = 2,
+        .parentalBondBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_REPETITION_NOT_BORING,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_DragonDarts,
+    },
 
     [MOVE_GATOR_SLIDE] =
     {
@@ -24123,7 +24176,329 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {0}
     },
 
+    [MOVE_VENGEANCE] =
+    {
+        .name = COMPOUND_STRING("Vengeance"),
+        .description = COMPOUND_STRING(
+            "An attack that does more\n"
+            "damage if an ally fainted."),
+        .effect = EFFECT_RETALIATE,
+        .power = 70,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_LATER,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_Retaliate,
+    },
 
+    [MOVE_SINISTER_SLAM] =
+    {
+        .name = COMPOUND_STRING("Sinister Slam"),
+        .description = COMPOUND_STRING(
+            "A swinging fist attack\n"
+            "that also lowers Speed."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_GHOST,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .self = TRUE,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .battleAnimScript = gBattleAnimMove_HammerArm,
+    },
+
+    [MOVE_DUAL_SHACKLE] =
+    {
+        .name = COMPOUND_STRING("Dual Shackle"),
+        .description = COMPOUND_STRING(
+            "Slams the foe with 2 ghostly\n"
+            "chains. May slow target."),
+        .effect = EFFECT_HIT,
+        .power = 40,
+        .type = TYPE_GHOST,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .strikeCount = 2,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .chance = 15,
+        }),
+        .contestEffect = CONTEST_EFFECT_REPETITION_NOT_BORING,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_DoubleHit,
+    },
+
+    [MOVE_FLURRY_STRIKES] =
+    {
+        .name = COMPOUND_STRING("Flurry Strikes"),
+        .description = COMPOUND_STRING(
+            "The user's fists hit one\n"
+            "to ten times in a row."),
+        .effect = EFFECT_POPULATION_BOMB,
+        .power = 18,
+        .type = TYPE_NORMAL,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .metronomeBanned = TRUE,
+        .strikeCount = 10,
+        .battleAnimScript = gBattleAnimMove_PopulationBomb,
+    },
+
+    [MOVE_CALMING_AROMA] =
+    {
+        .name = COMPOUND_STRING("Calming Aroma"),
+        .description = COMPOUND_STRING(
+            "Sends soothing spores to\n"
+            "cut Attack and Sp. Atk."),
+        .effect = EFFECT_NOBLE_ROAR,
+        .power = 0,
+        .type = TYPE_GRASS,
+        .accuracy = 100,
+        .pp = 30,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
+        .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .magicCoatAffected = TRUE,
+        .powderMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_NobleRoar,
+    },
+
+    [MOVE_VOLCANIC_BURST] =
+    {
+        .name = COMPOUND_STRING("Volcanic Burst"),
+        .description = COMPOUND_STRING(
+            "A powerful loyalty attack.\n"
+            "The user flinches if hit."),
+        .effect = EFFECT_FOCUS_PUNCH,
+        .power = 120,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_BOTH,
+        .priority = -3,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .mirrorMoveBanned = TRUE,
+        .windMove = TRUE,
+        .meFirstBanned = TRUE,
+        .sleepTalkBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .copycatBanned = TRUE,
+        .instructBanned = TRUE,
+        .assistBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ACC_MINUS_1,
+            .chance = 10,
+        }),
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_LATER,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .battleAnimScript = gBattleAnimMove_FocusPunch,
+    },
+
+    [MOVE_FOAM_FANG] =
+    {
+        .name = COMPOUND_STRING("Foam Fang"),
+        .description = COMPOUND_STRING(
+            "Slows the opponent,\n"
+            "may cause them to flinch."),
+        .effect = EFFECT_HIT,
+        .power = 65,
+        .type = TYPE_WATER,
+        .accuracy = 95,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .bitingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .chance = 100,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 10,
+        }),
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = COMBO_STARTER_FIRE_FANG,
+        .contestComboMoves = {COMBO_STARTER_ICE_FANG, COMBO_STARTER_THUNDER_FANG},
+        .battleAnimScript = gBattleAnimMove_AquaCutter,
+    },
+
+    [MOVE_FLARE_FIST] =
+    {
+        .name = COMPOUND_STRING("Flare Fist"),
+        .description = COMPOUND_STRING(
+            "A punch is thrown at blinding\n"
+            "speed to strike first."),
+        .effect = EFFECT_HIT,
+        .power = 55,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 1,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_FirePunch,
+    },
+
+     [MOVE_STEEL_CUTTER] =
+    {
+        .name = COMPOUND_STRING("Steel Cutter"),
+        .description = COMPOUND_STRING(
+            "Super effective on Steel-\n"
+            "Types. May lower Def."),
+        .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
+        .power = 70,
+        .type = TYPE_ROCK,
+        .accuracy = 100,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = TYPE_STEEL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .chance = 50,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_Slash,
+    },
+
+    [MOVE_STEEL_SHOT] =
+    {
+        .name = COMPOUND_STRING("Steel Shot"),
+        .description = COMPOUND_STRING(
+            "Shoots scales 2 to 5 times.\n"
+            "Ups Def, lowers Speed."),
+        .effect = EFFECT_MULTI_HIT,
+        .power = 25,
+        .type = TYPE_STEEL,
+        .accuracy = 90,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = MOVE_EFFECT_STEEL_SHOT,
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_ScaleShot,
+    },
+
+    [MOVE_GHASTLY_BURST] =
+    {
+        .name = COMPOUND_STRING("Ghastly Burst"),
+        .description = COMPOUND_STRING(
+            "An attack that does more\n"
+            "damage if an ally fainted."),
+        .effect = EFFECT_RETALIATE,
+        .power = 70,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_LATER,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_Retaliate,
+    },
+
+    [MOVE_NOSEDIVE] =
+    {
+        .name = COMPOUND_STRING("Nosedive"),
+        .description = COMPOUND_STRING(
+            "Attacks from high in the\n"
+            "air. May cause flinching."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_FLYING,
+        .accuracy = 95,
+        .pp = B_UPDATED_MOVE_DATA >= GEN_6 ? 15 : 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .slicingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 30,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_AirSlash,
+    },
+
+    [MOVE_FLURRY_O_BLOWS] =
+    {
+        .name = COMPOUND_STRING("Flurry O Blows"),
+        .description = COMPOUND_STRING(
+            "The user punches hit one\n"
+            "to ten times in a row."),
+        .effect = EFFECT_POPULATION_BOMB,
+        .power = 15,
+        .type = TYPE_NORMAL,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .metronomeBanned = TRUE,
+        .strikeCount = 10,
+        .battleAnimScript = gBattleAnimMove_PopulationBomb,
+    },
+    
 
     //bulag
 

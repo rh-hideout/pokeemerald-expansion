@@ -409,7 +409,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
 	.baseBlock = 0x02a0,
 },
 
-//big edit
+//big edit (assumed duplicated and no longer needed aka merge bs)
 // [B_WIN_MOVE_DESCRIPTION] = {
 //         .bg = 0,
 //         .tilemapLeft = 1,

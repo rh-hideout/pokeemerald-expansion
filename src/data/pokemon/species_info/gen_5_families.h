@@ -9295,7 +9295,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL),
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_SERENE_STRIKE },
+        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_SERENE_GRACE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Cryogonal"),
         .cryId = CRY_CRYOGONAL,
@@ -10235,7 +10235,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sRuffletLevelUpLearnset,
         .teachableLearnset = sRuffletTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_BRAVIARY},
-                                {EVO_MOVE, MOVE_AGILITY, SPECIES_BRAVIARY_HISUIAN}),
+                                {EVO_MOVE, MOVE_AGILITY, SPECIES_BRAVIARY_HISUI}),
     },
 
     [SPECIES_BRAVIARY] =

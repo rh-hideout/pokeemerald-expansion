@@ -159,15 +159,15 @@ enum ItemHoldEffect
     HOLD_EFFECT_OGERPON_MASK,
 
     //Custom hold effects
-#define HOLD_EFFECT_BARK_ARMOR          
-#define HOLD_EFFECT_TOXIN_BOOSTER       
-#define HOLD_EFFECT_FESTIVE_COAT        
-#define HOLD_EFFECT_CURSED_TOY          
-#define HOLD_EFFECT_MUSIC_BIRDBOX       
-#define HOLD_EFFECT_BLADE_ARMOR         
-#define HOLD_EFFECT_HOENN_SEACAKE       
-#define HOLD_EFFECT_SPIRIT_CHIME        
-#define HOLD_EFFECT_CAMO_CLOAK          
+    HOLD_EFFECT_BARK_ARMOR,          
+    HOLD_EFFECT_TOXIN_BOOSTER,       
+    HOLD_EFFECT_FESTIVE_COAT,        
+    HOLD_EFFECT_CURSED_TOY,          
+    HOLD_EFFECT_MUSIC_BIRDBOX,       
+    HOLD_EFFECT_BLADE_ARMOR,         
+    HOLD_EFFECT_HOENN_SEACAKE,       
+    HOLD_EFFECT_SPIRIT_CHIME,        
+    HOLD_EFFECT_CAMO_CLOAK,          
 
     // Gen2 hold effect
     HOLD_EFFECT_BERSERK_GENE,

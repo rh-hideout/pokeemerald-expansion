@@ -3303,6 +3303,10 @@ BattleScript_ScaleShot::
 	call BattleScript_MultiHitPrintStrings
 	goto BattleScript_DefDownSpeedUp
 
+BattleScript_SteelShot::
+	call BattleScript_MultiHitPrintStrings
+	goto BattleScript_SpeedDownDefUp
+
 BattleScript_EffectConversion::
 	attackcanceler
 	attackstring
@@ -6929,6 +6933,26 @@ BattleScript_DefDownSpeedUpTrySpeed:
 BattleScript_DefDownSpeedUpRet::
 	return
 
+BattleScript_SpeedDownDefUp::
+	jumpifstat BS_ATTACKER, CMP_GREATER_THAN, STAT_SPEED, MIN_STAT_STAGE, BattleScript_SpeedDownDefUpTrySpeed
+	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_DEF, MAX_STAT_STAGE, BattleScript_SpeedDownDefUpRet
+BattleScript_SpeedDownDefUpTrySpeed::
+	playstatchangeanimation BS_ATTACKER, BIT_SPEED, STAT_CHANGE_NEGATIVE | STAT_CHANGE_CANT_PREVENT
+	setstatchanger STAT_SPEED, 1, TRUE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_CERTAIN, BattleScript_SpeedDownDefUpTryDef
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_SpeedDownDefUpTryDef
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SpeedDownDefUpTryDef:
+	playstatchangeanimation BS_ATTACKER, BIT_SPEED, 0
+	setstatchanger STAT_DEF, 1, FALSE
+	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_CERTAIN, BattleScript_SpeedDownDefUpRet
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_SpeedDownDefUpRet
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SpeedDownDefUpRet::
+	return
+
 BattleScript_KnockedOff::
 	playanimation BS_TARGET, B_ANIM_ITEM_KNOCKOFF
 	printstring STRINGID_PKMNKNOCKEDOFF
@@ -7985,7 +8009,7 @@ BattleScript_TricksterEffect:
 BattleScript_TricksterEffect_WaitString:
 	waitmessage B_WAIT_TIME_LONG
 	copybyte sBATTLER, gBattlerTarget
-	call BattleScript_TryAdrenalineOrb
+	call BattleScript_TryIntimidateHoldEffects
 BattleScript_TricksterLoopIncrement:
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TricksterLoop
@@ -8011,7 +8035,7 @@ BattleScript_TricksterInReverse:
 	call BattleScript_AbilityPopUpTarget
 	pause B_WAIT_TIME_SHORT
 	modifybattlerstatstage BS_TARGET, STAT_SPATK, INCREASE, 1, BattleScript_TricksterLoopIncrement, ANIM_ON
-	call BattleScript_TryAdrenalineOrb
+	call BattleScript_TryIntimidateHoldEffects
 	goto BattleScript_TricksterLoopIncrement
 
 BattleScript_SupersweetSyrupActivates::

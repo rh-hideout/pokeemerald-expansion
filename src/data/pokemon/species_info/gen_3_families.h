@@ -1418,7 +1418,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .baseAttack    = 70,
         .baseDefense   = 50,
         .baseSpeed     = 95, //+30
-        .baseSpAttack  = P_UPDATED_STATS >= GEN_6 ? 120 : 90,   //+20
+        .baseSpAttack  = P_UPDATED_STATS >= GEN_6 ? 100 : 90,
         .baseSpDefense = 50,
         .types = MON_TYPES(TYPE_BUG, TYPE_FAIRY),
         .catchRate = 45,
@@ -9168,10 +9168,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 
     [SPECIES_GLALIE] =
     {
-        .baseHP        = 90,
-        .baseAttack    = 90,
-        .baseDefense   = 90,
-        .baseSpeed     = 80,
+        .baseHP        = 90,    //+10
+        .baseAttack    = 90,    //+10
+        .baseDefense   = 80,
+        .baseSpeed     = 95,    //+15
         .baseSpAttack  = 80,
         .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_ICE),

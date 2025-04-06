@@ -1030,7 +1030,7 @@
 #define MOVE_FLURRY_STORM 965       //TEST
 #define MOVE_CHLORO_DIVE 966    //D
 #define MOVE_PRESSURE_POINT 967 //D       
-#define MOVE_ELUDE 968              //DOES NOT WORK CRASHES GAME
+#define MOVE_ELUDE 968              //TEST TO SEE IF HAS OUT OF BATTLE EFFECT
 #define MOVE_BARRICADE 969          //TEST
 #define MOVE_CHAMELEE 970           //TEST
 #define MOVE_SONAR_WALL 971         //TEST
@@ -1051,18 +1051,34 @@
 #define MOVE_WATER_ARROW 986        
 #define MOVE_GIANT_BLOOM 987        
 #define MOVE_MAGMA_CANNON 988        
-#define MOVE_DUAL_CANNON 989        //NTM
+#define MOVE_DUAL_CANNON 989        
 #define MOVE_GATOR_SLIDE 990        
 #define MOVE_TANGLE_ARROW 991       
 #define MOVE_WINDCHILL 992 
 #define MOVE_BUZZ_BURST 993 
-#define MOVE_CYCLONE 994        
+#define MOVE_CYCLONE 994 
+//Stage 4
+#define MOVE_VENGEANCE 995
+#define MOVE_SINISTER_SLAM 996
+#define MOVE_DUAL_SHACKLE 997
+#define MOVE_FLURRY_STRIKES 998
+#define MOVE_CALMING_AROMA 999
+#define MOVE_VOLCANIC_BURST 1000
+#define MOVE_FOAM_FANG 1001
+#define MOVE_FLARE_FIST 1002
+#define MOVE_STEEL_CUTTER 1003
+#define MOVE_STEEL_SHOT 1004
+#define MOVE_GHASTLY_BURST 1005
+#define MOVE_NOSEDIVE 1006
+#define MOVE_FLURRY_O_BLOWS 1007
+// #define MOVE_
+// #define MOVE_
 //charge turn in snow
 //charge turn in sand
 //do defensive growth in sand
 
 
-#define MOVES_COUNT_GEN9 995
+#define MOVES_COUNT_GEN9 1008
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

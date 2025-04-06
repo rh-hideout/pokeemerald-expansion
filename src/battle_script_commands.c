@@ -1577,6 +1577,11 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
         if (IS_MOVE_PHYSICAL(move))
             calc = (calc * 80) / 100; // 1.2 hustle loss
         break;
+    // case ABILITY_HYPER_FOCUS:
+    //     if move super effective
+    //     do calc for perfect acc
+    //     
+    //     break;
     }
 
     // Target's ability
@@ -5811,6 +5816,9 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
             if (gBattleMons[battlerDef].ability != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[battlerDef] = 0;
             CheckSetUnburden(battlerDef);
+            if (gBattleMons[battlerDef].ability != ABILITY_PRECISE_TACTICS)
+                gBattleStruct->choicedMove[battlerDef] = 0;
+            CheckSetUnburden(battlerDef);
 
             // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable.
             if (B_KNOCK_OFF_REMOVAL >= GEN_5)
@@ -6544,6 +6552,9 @@ static void Cmd_moveend(void)
                     BattleScriptPushCursor();
                     if (gMovesInfo[gCurrentMove].argument == MOVE_EFFECT_SCALE_SHOT && !NoAliveMonsForEitherParty())
                         gBattlescriptCurrInstr = BattleScript_ScaleShot;
+                    else if (gMovesInfo[gCurrentMove].argument == MOVE_EFFECT_STEEL_SHOT && !NoAliveMonsForEitherParty())
+                        gBattlescriptCurrInstr = BattleScript_SteelShot;
+
                     else
                         gBattlescriptCurrInstr = BattleScript_MultiHitPrintStrings;
                     effect = TRUE;

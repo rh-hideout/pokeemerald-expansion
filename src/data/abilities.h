@@ -2457,12 +2457,12 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("May -DEF using a contact move."),
         .aiRating = 4,
     },
-    [ABILITY_SERENE_STRIKE] =
-    {
-        .name = _("Serene Strike"),
-        .description = COMPOUND_STRING("STAB x1.75, sec. effect chance x1.5."),
-        .aiRating = 5,
-    },
+    // [ABILITY_SERENE_STRIKE] =
+    // {
+    //     .name = _("Serene Strike"),
+    //     .description = COMPOUND_STRING("STAB x1.75, sec. effect chance x1.5."),
+    //     .aiRating = 5,
+    // },
     [ABILITY_PRIDE] =
     {
         .name = _("Erratic"),
@@ -2655,6 +2655,18 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Prevents added effects."),
         .aiRating = 5,
         .breakable = TRUE,
+    },
+    [ABILITY_TRUE_POWER] =
+    {
+        .name = _("True Power"),
+        .description = COMPOUND_STRING("Raises Sp.Attack."),
+        .aiRating = 10,
+    },
+    [ABILITY_PRECISE_TACTICS] =
+    {
+        .name = _("Precise Tactics"),
+        .description = COMPOUND_STRING("Ups Sp.Attack and locks move."),
+        .aiRating = 4,
     },
 
 };

@@ -96,6 +96,8 @@ static void Task_SetControllerToWaitForString(u8);
 static void Task_GiveExpWithExpBar(u8);
 static void Task_UpdateLvlInHealthbox(u8);
 static void PrintLinkStandbyMsg(void);
+//static void MoveSelectionDisplaySplitIcon(void); //for PSS symbols bottom right tutorial https://www.pokecommunity.com/threads/simple-modifications-directory.416647/page-20#post-10527471
+
 
 static void ReloadMoveNames(u32 battler);
 
@@ -1413,7 +1415,7 @@ void Task_PlayerController_RestoreBgmAfterCry(u8 taskId)
 
 static void DynamaxModifyHPLevelUp(struct Pokemon *mon, u32 battler, u32 oldMaxHP)
 {
-    ApplyDynamaxHPMultiplier(mon);
+    ApplyDynamaxHPMultiplier(battler, mon);
     gBattleScripting.levelUpHP = GetMonData(mon, MON_DATA_MAX_HP) - oldMaxHP; // overwrite levelUpHP since it overflows
     gBattleMons[battler].hp += gBattleScripting.levelUpHP;
     SetMonData(mon, MON_DATA_HP, &gBattleMons[battler].hp);
@@ -1753,6 +1755,25 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     PrependFontIdToFit(txtPtr, end, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_TYPE) - 25);
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_TYPE);
 }
+
+//big edit PSS icons
+//this is needed to be intergrated with above in order to acheive the icon in bottom right of battle menu according to this old tutorial:
+//https://www.pokecommunity.com/threads/simple-modifications-directory.416647/page-20#post-10527471
+// static void MoveSelectionDisplayMoveType(void)
+// {
+//     u8 *txtPtr;
+//     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct*)(&gBattleResources->bufferA[gActiveBattler][4]);
+
+//     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
+//     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
+//     *(txtPtr)++ = EXT_CTRL_CODE_FONT;
+//     *(txtPtr)++ = 1;
+
+//     StringCopy(txtPtr, gTypeNames[gBattleMoves[moveInfo->moves[gMoveSelectionCursor[gActiveBattler]]].type]);
+//     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_TYPE);
+	
+// [COLOR="Lime"]+	MoveSelectionDisplaySplitIcon();[/COLOR]
+// }
 
 static void MoveSelectionDisplayMoveDescription(u32 battler)
 {
@@ -2385,3 +2406,19 @@ static void PlayerHandleBattleDebug(u32 battler)
     SetMainCallback2(CB2_BattleDebugMenu);
     gBattlerControllerFuncs[battler] = Controller_WaitForDebug;
 }
+
+//big edit for PSS icons
+//this is custom old PSS icon for bottom right of battle menu https://www.pokecommunity.com/threads/simple-modifications-directory.416647/page-20#post-10527471
+// static void MoveSelectionDisplaySplitIcon(void){
+// 	static const u16 sSplitIcons_Pal[] = INCBIN_U16("graphics/interface/split_icons_battle.gbapal");
+// 	static const u8 sSplitIcons_Gfx[] = INCBIN_U8("graphics/interface/split_icons_battle.4bpp");
+// 	struct ChooseMoveStruct *moveInfo;
+// 	int icon;
+
+// 	moveInfo = (struct ChooseMoveStruct*)(&gBattleResources->bufferA[gActiveBattler][4]);
+// 	icon = GetBattleMoveSplit(moveInfo->moves[gMoveSelectionCursor[gActiveBattler]]);
+// 	LoadPalette(sSplitIcons_Pal, 10 * 0x10, 0x20);
+// 	BlitBitmapToWindow(B_WIN_DUMMY, sSplitIcons_Gfx + 0x80 * icon, 0, 0, 16, 16);
+// 	PutWindowTilemap(B_WIN_DUMMY);
+// 	CopyWindowToVram(B_WIN_DUMMY, 3);
+// }

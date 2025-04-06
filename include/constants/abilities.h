@@ -339,6 +339,7 @@
 #define ABILITY_POISON_PUPPETEER 310
 
 //Custom Abilities
+//Stage 1
 #define ABILITY_COLD_HEART 311      //chance to freeze on contact
 #define ABILITY_DUCK_N_WEAVE 312    //dodge chance if punch move 1st per round
 #define ABILITY_SUN_SOUL 313        //Sun Rain Dish
@@ -363,7 +364,7 @@
 #define ABILITY_MIST_GLIDER 332     //boost speed in misty
 #define ABILITY_MYTHIC_BLOOD 333    //boost highest stat in misty
 
-
+//Stage 2
 #define ABILITY_VENOM_SURGE 334     //gale wings for poison moves
 #define ABILITY_GRAVITY_SURGE 335   //sets gravity on entry                                                     TEST
 #define ABILITY_MAGICAL_SURGE 336   //sets magic room on entry                                                  TEST
@@ -381,10 +382,21 @@
 #define ABILITY_SPINNER 348
 #define ABILITY_ROYAL_COAT 349      //shield dust reformated                NTM
 
+//Stage 3
 #define ABILITY_NORMALIZE_AURA 350  //neutralizing gas for delcatty NTM
+#define ABILITY_TRUE_POWER 351
+#define ABILITY_PRECISE_TACTICS 352 //llook into bbattle util and battle script command lines
+#define ABILITY_HYPER_FOCUS 353
+// #define ABILITY_FIRE_DRIFT 354 //prio to fire attacks like gale wings
+// #define ABILITY_PERCEPTIVE 355 //immune to hazards
+// #define ABILITY_COZY_DREAMS 356 //heal at end of each turn
+// #define ABILITY_SOUL_DRAIN 357 //drain all non ghost/dark types
+// #define ABILITY_
+// #define ABILITY_
+// #define ABILITY_
 //remember to build the description doc for 328+
 
-#define ABILITIES_COUNT_GEN9 350
+#define ABILITIES_COUNT_GEN9 354
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

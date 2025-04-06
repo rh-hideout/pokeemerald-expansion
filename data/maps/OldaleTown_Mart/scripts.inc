@@ -18,7 +18,6 @@ OldaleTown_Mart_Pokemart_Basic:
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
 	.2byte ITEM_AWAKENING
-	.2byte ITEM_BARK_ARMOR
 	.2byte ITEM_NONE
 	pokemartlistend
 
