@@ -6578,6 +6578,18 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_MIN_BEAUTY:
                 StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}beauty"));
                 break;
+            case IF_MIN_COOLNESS:
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}coolness"));
+                break;
+            case IF_MIN_SMARTNESS:
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}smartness"));
+                break;
+            case IF_MIN_TOUGHNESS:
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}toughness"));
+                break;
+            case IF_MIN_CUTENESS:
+                StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}cuteness"));
+                break;
             // Gen 4
             case IF_SPECIES_IN_PARTY:
                 StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1)); //mon name
