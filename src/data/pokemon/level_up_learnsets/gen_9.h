@@ -5714,8 +5714,8 @@ static const struct LevelUpMove sMareepLevelUpLearnset[] = {
 };
 
 
-tail glow?
-dragon pulse (aphraros)
+// tail glow?
+// dragon pulse (aphraros)
 
 
 static const struct LevelUpMove sFlaaffyLevelUpLearnset[] = {
