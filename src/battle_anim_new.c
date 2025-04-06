@@ -8579,7 +8579,6 @@ void AnimTask_GetLycanrocForm(u8 taskId)
         gBattleAnimArgs[0] = 1;
     else if (gBattleMons[gBattleAnimAttacker].species == SPECIES_LYCANROC_DUSK)
         gBattleAnimArgs[0] = 2;
-        
 
     DestroyAnimVisualTask(taskId);
 }
