@@ -3120,7 +3120,7 @@ bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move
 
 bool32 ShouldPoisonSelf(u32 battler, u32 ability)
 {
-    if (CanBePoisoned(battler, battler, ABILITY_NONE, ability) && (
+    if (CanBePoisoned(battler, battler, ability, ability) && (
      ability == ABILITY_MARVEL_SCALE
       || ability == ABILITY_POISON_HEAL
       || ability == ABILITY_QUICK_FEET

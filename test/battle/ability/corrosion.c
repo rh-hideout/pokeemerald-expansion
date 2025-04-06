@@ -225,19 +225,3 @@ SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon 
         }
     }
 }
-
-SINGLE_BATTLE_TEST("Corrosion does not trigger users Toxic Orb")
-{
-    GIVEN {
-        PLAYER(SPECIES_SALANDIT) { Item(ITEM_TOXIC_ORB); Ability(ABILITY_CORROSION); }
-        OPPONENT(SPECIES_BELDUM);
-    } WHEN {
-        TURN {  }
-    } SCENE {
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            STATUS_ICON(opponent, badPoison: TRUE);
-        }
-    }
-}
