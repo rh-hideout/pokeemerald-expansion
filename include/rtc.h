@@ -85,6 +85,7 @@
     #define NIGHT_HOUR_END     6
 #endif
 
+// TIMES_OF_DAY_COUNT must be last
 enum TimeOfDay 
 {
     TIME_MORNING,

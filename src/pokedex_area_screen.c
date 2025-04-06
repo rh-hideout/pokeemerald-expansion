@@ -129,8 +129,8 @@ static void DestroyAreaScreenSprites(void);
 static void AddTimeOfDayLabels(void);
 static void ShowEncounterInfoLabel(void);
 static void ShowAreaUnknownLabel(void);
-static void PrintAreaLabelText(const u8 *text, u32 labelId, int textXPos);
-static void ClearAreaWindowLabel(u32 labelId);
+static void PrintAreaLabelText(const u8 *text, enum PokedexAreaLabels labelId, int textXPos);
+static void ClearAreaWindowLabel(enum PokedexAreaLabels labelId);
 
 bool32 ShouldShowAreaUnknownLabel(void);
 
@@ -632,7 +632,7 @@ static void DoAreaGlow(void)
     }
 }
 
-static const u8 *GetTimeOfDayTextWithButton(u32 gAreaTimeOfDay)
+static const u8 *GetTimeOfDayTextWithButton(enum TimeOfDay timeOfDay)
 {
     static const u8 gText_Morning[] = _("{DPAD_UPDOWN} MORNING");
     static const u8 gText_Day[] = _("{DPAD_UPDOWN} DAY");
@@ -683,14 +683,14 @@ static void ShowAreaUnknownLabel(void)
     PrintAreaLabelText(gText_AreaUnknown, DEX_AREA_LABEL_AREA_UNKNOWN, stringXPos);
 }
 
-static void ClearAreaWindowLabel(u32 labelId)
+static void ClearAreaWindowLabel(enum PokedexAreaLabels labelId)
 {
     FillWindowPixelBuffer(sPokedexAreaScreen->areaScreenLabelIds[labelId], PIXEL_FILL(0));
     ClearWindowTilemap(sPokedexAreaScreen->areaScreenLabelIds[labelId]);
     ScheduleBgCopyTilemapToVram(0);
 }
 
-static void PrintAreaLabelText(const u8 *text, u32 labelId, int textXPos)
+static void PrintAreaLabelText(const u8 *text, enum PokedexAreaLabels labelId, int textXPos)
 {
     ClearAreaWindowLabel(labelId);
 
