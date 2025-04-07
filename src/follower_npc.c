@@ -288,7 +288,7 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
         return;
     }
 
-    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_NEW) // Get on Surf Blob
+    if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_NEW && IsStateMovement(state)) // Get on Surf Blob
     {
         gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_RECREATE;
         gPlayerAvatar.preventStep = TRUE; // Wait for finish
@@ -312,7 +312,6 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     switch (newState) 
     {
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
-    case MOVEMENT_ACTION_JUMP_SPECIAL_DOWN ... MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT:
     case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
         CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
         gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
