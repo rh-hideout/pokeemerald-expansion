@@ -46,6 +46,7 @@ SUPER_ROD             = "super_rod"
 SUPER_ROD_FIRST_INDEX = 5
 SUPER_ROD_LAST_INDEX  = 9
 
+# time of day encounter data
 TIME_DEFAULT       = "OW_TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_LABEL = ""
 TIME_DEFAULT_INDEX = 0
