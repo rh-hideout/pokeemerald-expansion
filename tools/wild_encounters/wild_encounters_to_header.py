@@ -201,7 +201,6 @@ def ImportWildEncounterFile():
             
             if encounterTotalCount[headerIndex] != len(wEncounters):
                 encounterTotalCount[headerIndex] = len(wEncounters)
-            
             encounterCount[headerIndex] += 1
             headersArray = []
 
