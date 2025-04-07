@@ -5,7 +5,7 @@ import os
 IS_ENABLED            = False
 
 
-#C string vars
+# C string vars
 define                = "#define"
 ENCOUNTER_CHANCE      = "ENCOUNTER_CHANCE"
 SLOT                  = "SLOT"
@@ -14,10 +14,10 @@ NULL                  = "NULL"
 UNDEFINED             = "UNDEFINED"
 MAP_UNDEFINED         = "MAP_UNDEFINED"
 
-#encounter group header types, filled out programmatically
+# encounter group header types, filled out programmatically
 MON_HEADERS = []
 
-#mon encounter group types
+# mon encounter group types
 LAND_MONS             = "land_mons"
 LAND_MONS_LABEL       = "LandMons"
 LAND_MONS_INDEX       = 0
@@ -35,7 +35,7 @@ HIDDEN_MONS_LABEL     = "HiddenMons"
 HIDDEN_MONS_INDEX     = 4
 MONS_INFO_TOTAL       = HIDDEN_MONS_INDEX + 1
 
-#fishing encounter data
+# fishing encounter data
 GOOD_ROD              = "good_rod"
 GOOD_ROD_FIRST_INDEX  = 2
 GOOD_ROD_LAST_INDEX   = 4
@@ -63,7 +63,7 @@ TIME_NIGHT_LABEL   = "Night"
 TIME_NIGHT_INDEX   = 3
 TOTAL_TIME_STAGES  = TIME_NIGHT_INDEX + 1
 
-#struct building blocks
+# struct building blocks
 baseStruct          = "const struct WildPokemon"
 structLabel         = ""
 structMonType       = ""
@@ -85,25 +85,25 @@ headerStructTable   = {}
 
 headerIndex = 0
 
-#map header data variables
+# map header data variables
 hLabel       = ""
 hForMaps     = True
 headersArray = [headerIndex]
 
-#headersArrayItems
+# headersArrayItems
 landMonsInfo      = ""
 waterMonsInfo     = ""
 rockSmashMonsInfo = ""
 fishingMonsInfo   = ""
 
-#encounter rate variables
+# encounter rate variables
 eLandMons      = []
 eWaterMons     = []
 eRockSmashMons = []
 eFishingMons   = []
 
 
-#debug output control
+# debug output control
 printEncounterHeaders           = True
 printEncounterRateMacros        = True
 printEncounterStructsInfoString = True
@@ -111,19 +111,24 @@ printEncounterStructs           = True
 
 
 def ImportWildEncounterFile():
+    # make sure we're in the right directory before anything else
+    if not os.path.exists("Makefile"):
+        print("Please run this script from the project's root folder.")
+        quit()
+
     global MON_HEADERS
     global landMonsInfo
-    global waterMonsInfo 
-    global rockSmashMonsInfo 
+    global waterMonsInfo
+    global rockSmashMonsInfo
     global fishingMonsInfo
     global hiddenMonsInfo
-    global structLabel 
-    global structMonType 
+    global structLabel
+    global structMonType
     global structTime
-    global structMap 
-    global baseStructLabel 
-    global baseStructContent 
-    global infoStructString 
+    global structMap
+    global baseStructLabel
+    global baseStructContent
+    global infoStructString
     global infoStructRate
     global headerStructLabel
     global headerStructContent
@@ -144,10 +149,6 @@ def ImportWildEncounterFile():
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
-
-    if not os.path.exists("Makefile"):
-        print("Please run this script from your root folder.")
-        quit()
 
     encounterTotalCount = []
     encounterCount = []
@@ -210,7 +211,6 @@ def ImportWildEncounterFile():
 
             if not IS_ENABLED:
                 structTime = TIME_DEFAULT_LABEL
-                #structLabel = structLabel + "_Morning"
             elif TIME_MORNING_LABEL in structLabel:
                 structTime = TIME_MORNING_LABEL
             elif TIME_DAY_LABEL in structLabel:
@@ -269,7 +269,7 @@ def ImportWildEncounterFile():
                     infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
                     print(infoStructString)
 
-            AssembleMonHeaderContent()  
+            AssembleMonHeaderContent()
 
         headerIndex += 1
     PrintWildMonHeadersContent()
@@ -336,8 +336,8 @@ def AssembleMonHeaderContent():
 
 def SetupMonInfoVars():
     global landMonsInfo
-    global waterMonsInfo 
-    global rockSmashMonsInfo 
+    global waterMonsInfo
+    global rockSmashMonsInfo
     global fishingMonsInfo
     global hiddenMonsInfo
 
@@ -572,7 +572,7 @@ def PrintGeneratedWarningText():
     print("//")
     print("\n")
 
-    # get copied lhea :^ )
+    # get copied lhea :^ ) (this bit copied straight from @lhearachel's python scripts in tools/learnset_helpers)
 
 
 def IsConfigEnabled():
@@ -588,11 +588,15 @@ def TabStr(amount):
     global tabStr
     return tabStr * amount
 
+
 ImportWildEncounterFile()
 
 
-""" !!!! EXAMPLE TEXT !!!!
-#define ENCOUNTER_CHANCE_LAND_MONS_SLOT_0 20 
+"""
+!!!! EXAMPLE OUTPUT !!!!
+- when OW_TIME_OF DAY_ENCOUNTERS is FALSE in configoverworld.h
+
+#define ENCOUNTER_CHANCE_LAND_MONS_SLOT_0 20
 #define ENCOUNTER_CHANCE_LAND_MONS_SLOT_1 ENCOUNTER_CHANCE_LAND_MONS_SLOT_0 + 20
 #define ENCOUNTER_CHANCE_LAND_MONS_SLOT_2 ENCOUNTER_CHANCE_LAND_MONS_SLOT_1 + 10
 #define ENCOUNTER_CHANCE_LAND_MONS_SLOT_3 ENCOUNTER_CHANCE_LAND_MONS_SLOT_2 + 10
@@ -605,26 +609,26 @@ ImportWildEncounterFile()
 #define ENCOUNTER_CHANCE_LAND_MONS_SLOT_10 ENCOUNTER_CHANCE_LAND_MONS_SLOT_9 + 1
 #define ENCOUNTER_CHANCE_LAND_MONS_SLOT_11 ENCOUNTER_CHANCE_LAND_MONS_SLOT_10 + 1
 #define ENCOUNTER_CHANCE_LAND_MONS_TOTAL (ENCOUNTER_CHANCE_LAND_MONS_SLOT_11)
-#define ENCOUNTER_CHANCE_WATER_MONS_SLOT_0 60 
+#define ENCOUNTER_CHANCE_WATER_MONS_SLOT_0 60
 #define ENCOUNTER_CHANCE_WATER_MONS_SLOT_1 ENCOUNTER_CHANCE_WATER_MONS_SLOT_0 + 30
 #define ENCOUNTER_CHANCE_WATER_MONS_SLOT_2 ENCOUNTER_CHANCE_WATER_MONS_SLOT_1 + 5
 #define ENCOUNTER_CHANCE_WATER_MONS_SLOT_3 ENCOUNTER_CHANCE_WATER_MONS_SLOT_2 + 4
 #define ENCOUNTER_CHANCE_WATER_MONS_SLOT_4 ENCOUNTER_CHANCE_WATER_MONS_SLOT_3 + 1
 #define ENCOUNTER_CHANCE_WATER_MONS_TOTAL (ENCOUNTER_CHANCE_WATER_MONS_SLOT_4)
-#define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_0 60 
+#define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_0 60
 #define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_1 ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_0 + 30
 #define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_2 ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_1 + 5
 #define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_3 ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_2 + 4
 #define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_4 ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_3 + 1
 #define ENCOUNTER_CHANCE_ROCK_SMASH_MONS_TOTAL (ENCOUNTER_CHANCE_ROCK_SMASH_MONS_SLOT_4)
-#define ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_2 60 
+#define ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_2 60
 #define ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_3 ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_2 + 20
 #define ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_4 ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_3 + 20
 #define ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_TOTAL (ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_4)
-#define ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_SLOT_0 70 
+#define ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_SLOT_0 70
 #define ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_SLOT_1 ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_SLOT_0 + 30
 #define ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_TOTAL (ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_SLOT_1)
-#define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_5 40 
+#define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_5 40
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_6 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_5 + 40
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_7 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_6 + 15
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_8 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_7 + 4
@@ -653,10 +657,10 @@ const struct WildPokemonHeader gWildMonHeaders[] =
     {
         .mapGroup = MAP(ROUTE101),
         .mapNum = MAP_NUM(ROUTE101),
-        .encounterTypes = 
-            [TIME_DAY] = 
+        .encounterTypes =
+            [OW_TIME_OF_DAY_DEFAULT] =
             {
-                .landMonsInfo = &gRoute101_Day_LandMonsInfo,
+                .landMonsInfo = &gRoute101_LandMonsInfo,
                 .waterMonsInfo = NULL,
                 .rockSmashMonsInfo = NULL,
                 .fishingMonsInfo = NULL,
