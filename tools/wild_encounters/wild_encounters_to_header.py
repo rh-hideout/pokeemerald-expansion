@@ -2,8 +2,8 @@ import json
 import re
 import os
 
-IS_ENABLED            = False
 
+IS_ENABLED            = False
 
 # C string vars
 define                = "#define"
@@ -82,7 +82,6 @@ infoStructContent   = []
 headerStructLabel   = ""
 headerStructContent = {}
 headerStructTable   = {}
-
 headerIndex = 0
 
 # map header data variables
@@ -166,7 +165,6 @@ def ImportWildEncounterFile():
             hLabel = wData["wild_encounter_groups"][headerIndex]["label"]
             if headerSuffix in hLabel:
                 hLabel = hLabel[:len(hLabel) - len(headerSuffix)]
-
             MON_HEADERS.append(hLabel)
 
         if data["for_maps"]:
@@ -199,14 +197,12 @@ def ImportWildEncounterFile():
                 structMap = encounter["map"]
             else:
                 structMap = encounter["base_label"]
-
             structLabel = encounter["base_label"]
             
             if encounterTotalCount[headerIndex] != len(wEncounters):
                 encounterTotalCount[headerIndex] = len(wEncounters)
             
             encounterCount[headerIndex] += 1
-
             headersArray = []
 
             if not IS_ENABLED:
@@ -246,8 +242,6 @@ def ImportWildEncounterFile():
                     hiddenMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
                 else:
                     structMonType = ""
-                
-                if structMonType == "":
                     continue
                 
                 baseStructContent = []
@@ -255,6 +249,7 @@ def ImportWildEncounterFile():
                     if "mons" in group:
                         for mon in encounter[areaTable][group]:
                             baseStructContent.append(list(mon.values()))
+
                     if "encounter_rate" in group:
                         infoStructRate = encounter[areaTable][group]
                 
@@ -265,12 +260,12 @@ def ImportWildEncounterFile():
                     print("{")
                     PrintStructContent(baseStructContent)
                     print("};")
+
                 if printEncounterStructsInfoString:
                     infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
                     print(infoStructString)
 
             AssembleMonHeaderContent()
-
         headerIndex += 1
     PrintWildMonHeadersContent()
 
@@ -287,8 +282,7 @@ def GetStructLabelWithoutTime(label):
 
     if not IS_ENABLED:
         return label
-
-    if TIME_MORNING_LABEL in label:
+    elif TIME_MORNING_LABEL in label:
         timeLength = len(TIME_MORNING_LABEL)
     elif TIME_DAY_LABEL in label:
         timeLength = len(TIME_DAY_LABEL)
@@ -296,7 +290,6 @@ def GetStructLabelWithoutTime(label):
         timeLength = len(TIME_EVENING_LABEL)
     elif TIME_NIGHT_LABEL in label:
         timeLength = len(TIME_NIGHT_LABEL)
-    
     return label[:(labelLength - (timeLength + 1))]
 
 
@@ -304,6 +297,7 @@ def AssembleMonHeaderContent():
     global structLabel
 
     SetupMonInfoVars()
+
     tempHeaderLabel = GetWildMonHeadersLabel()
     tempHeaderTimeIndex = GetTimeIndexFromString(structTime)
     structLabelNoTime = GetStructLabelWithoutTime(structLabel)
@@ -322,7 +316,6 @@ def AssembleMonHeaderContent():
 
         timeStart = TIME_DEFAULT_INDEX
         timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
-
         while timeStart <= timeEnd:
             headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"].append([])
             timeStart += 1
@@ -345,18 +338,22 @@ def SetupMonInfoVars():
         landMonsInfo = NULL
     else:
         landMonsInfo = f"&{landMonsInfo}"
+
     if waterMonsInfo == "":
         waterMonsInfo = NULL
     else:
         waterMonsInfo = f"&{waterMonsInfo}"
+
     if rockSmashMonsInfo == "":
         rockSmashMonsInfo = NULL
     else:
         rockSmashMonsInfo = f"&{rockSmashMonsInfo}"
+
     if fishingMonsInfo == "":
         fishingMonsInfo = NULL
     else:
         fishingMonsInfo = f"&{fishingMonsInfo}"
+
     if hiddenMonsInfo == "":
         hiddenMonsInfo = NULL
     else:
@@ -376,6 +373,7 @@ def PrintWildMonHeadersContent():
                     PrintEncounterHeaders(headerStructTable[group][label]["headerType"])
 
                 PrintEncounterHeaders(tabStr + "{")
+
                 for stat in headerStructTable[group][label]:
                     mapData = headerStructTable[group][label][stat]
 
@@ -390,8 +388,9 @@ def PrintWildMonHeadersContent():
 
                         infoCount = 0
                         for monInfo in headerStructTable[group][label][stat]:
-                            infoIndex = 0
                             PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(infoCount)}] = ")
+
+                            infoIndex = 0
                             while infoIndex <= MONS_INFO_TOTAL - 1:
                                 if infoIndex == 0:
                                     PrintEncounterHeaders(TabStr(3) + "{")
@@ -408,22 +407,22 @@ def PrintWildMonHeadersContent():
                             infoCount += 1
                         PrintEncounterHeaders(TabStr(2) + "},")
                 PrintEncounterHeaders(tabStr + "},")
+
                 if labelCount + 1 == headerStructTable[group][label]["encounterTotalCount"]:
                     PrintEncounterHeaders(tabStr + "{")
                     PrintEncounterHeaders(f"{TabStr(2)}.mapGroup = {GetMapGroupEnum(MAP_UNDEFINED)},")
                     PrintEncounterHeaders(f"{TabStr(2)}.mapNum = {GetMapGroupEnum(MAP_UNDEFINED, labelCount + 1)},")
 
                     timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
-
                     nullCount = 0
                     while nullCount <= timeEnd:
                         if nullCount == 0:
                             PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
                             PrintEncounterHeaders(TabStr(2)+ "{")
 
-                        nullIndex = 0
                         PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(nullCount)}] = ")
 
+                        nullIndex = 0
                         while nullIndex <= MONS_INFO_TOTAL - 1:
                             if nullIndex == 0:
                                 PrintEncounterHeaders(TabStr(3) + "{")
@@ -493,7 +492,7 @@ def PrintEncounterRateMacros():
             print(
                 f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
             )
-        
+
         if rateCount + 1 == len(eRockSmashMons):
             print(
                 f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount})"
@@ -520,7 +519,7 @@ def PrintEncounterRateMacros():
 def GetTimeStrFromIndex(index):
     if not IS_ENABLED:
         return TIME_DEFAULT
-    if index == TIME_MORNING_INDEX:
+    elif index == TIME_MORNING_INDEX:
         return TIME_MORNING.upper()
     elif index == TIME_DAY_INDEX:
         return TIME_DAY.upper()
@@ -534,7 +533,7 @@ def GetTimeStrFromIndex(index):
 def GetTimeIndexFromString(string):
     if not IS_ENABLED:
         return TIME_DEFAULT_INDEX
-    if string.lower() == TIME_MORNING or string == TIME_MORNING_LABEL:
+    elif string.lower() == TIME_MORNING or string == TIME_MORNING_LABEL:
         return TIME_MORNING_INDEX
     elif string.lower() == TIME_DAY or string == TIME_DAY_LABEL:
         return TIME_DAY_INDEX
@@ -558,6 +557,7 @@ def GetIMonInfoStringFromIndex(index):
         return ".hiddenMonsInfo"
     return index
 
+
 def GetMapGroupEnum(string, index = 0):
     if "MAP_" in string and index == 0:
         return "MAP_GROUP(" + string[4:len(string)] + ")"
@@ -566,13 +566,15 @@ def GetMapGroupEnum(string, index = 0):
     return index
 
 
+"""
+get copied lhea :^ ) 
+- next two functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
+"""
 def PrintGeneratedWarningText():
     print("//")
     print("// DO NOT MODIFY THIS FILE! It is auto-generated by tools/wild_encounters/wild_encounters_to_header.py")
     print("//")
     print("\n")
-
-    # get copied lhea :^ ) (this bit copied straight from @lhearachel's python scripts in tools/learnset_helpers)
 
 
 def IsConfigEnabled():
