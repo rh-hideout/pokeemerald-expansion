@@ -1300,6 +1300,7 @@ void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower)
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     follower->invisible = TRUE;
     gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
+    gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE; // No more surf blob.
 }
 
 void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct ObjectEvent *player)
