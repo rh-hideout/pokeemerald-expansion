@@ -786,6 +786,7 @@ static void Task_FinishSurfDismount(u8 taskId)
         return;
     }
 
+    SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     DestroySprite(&gSprites[gTasks[taskId].tSpriteId]);
     UnfreezeObjectEvents();
     DestroyTask(taskId);
