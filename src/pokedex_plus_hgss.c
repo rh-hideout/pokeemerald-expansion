@@ -433,7 +433,7 @@ struct PokedexView
     u16 monSpriteIds[MAX_MONS_ON_SCREEN];
     u8 typeIconSpriteIds[2];
     u16 moveSelected;
-    u8 movesTotal;
+    u16 movesTotal;
     u8 statBarsSpriteId;
     u8 statBarsBgSpriteId;
     bool8 justScrolled;
@@ -5081,7 +5081,8 @@ static bool8 CalculateMoves(void)
     u8 numTMHMMoves = 0;
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
-    u8 i,j;
+    u8 i;
+    u16 isTMMove[MOVES_COUNT] = {0};
 
     // Mega pokemon don't have distinct learnsets from their base form; so use base species for calculation
     if (species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
@@ -5092,49 +5093,41 @@ static bool8 CalculateMoves(void)
     numLevelUpMoves = GetLevelUpMovesBySpecies(species, statsMovesLevelUp);
 
     //Egg moves
-    for (i=0; i < numEggMoves; i++)
+    for (i = 0; i < numEggMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesEgg[i];
         movesTotal++;
     }
 
     //Level up moves
-    for (i=0; i < numLevelUpMoves; i++)
+    for (i = 0; i < numLevelUpMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesLevelUp[i];
         movesTotal++;
     }
 
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    //TM moves
+    for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
     {
-        move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+        move = ItemIdToBattleMoveId(ITEM_TM01 + i);
+        if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
         {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-            {
-                sStatsMovesTMHM_ID[numTMHMMoves] = (ITEM_TM01 + j);
-                numTMHMMoves++;
+            isTMMove[move] = TRUE;
+            sStatsMovesTMHM_ID[numTMHMMoves] = ITEM_TM01 + i;
+            numTMHMMoves++;
 
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-                break;
-            }
+            sStatsMoves[movesTotal] = move;
+            movesTotal++;
         }
     }
 
+    //Tutor moves
     for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
     {
         move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
-        {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-                break;
-        }
-
-        if (j >= NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
+        if (!isTMMove[move])
         {
             numTutorMoves++;
-
             sStatsMoves[movesTotal] = move;
             movesTotal++;
         }
@@ -5155,7 +5148,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 numLevelUpMoves  = sPokedexView->numLevelUpMoves;
     u8 numTMHMMoves     = sPokedexView->numTMHMMoves;
     u8 numTutorMoves    = sPokedexView->numTutorMoves;
-    u8 movesTotal       = sPokedexView->movesTotal;
+    u16 movesTotal      = sPokedexView->movesTotal;
     u8 selected         = sPokedexView->moveSelected;
     u8 level;
     u8 moves_x = 5;
