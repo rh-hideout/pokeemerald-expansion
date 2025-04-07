@@ -442,7 +442,7 @@ def PrintWildMonHeadersContent():
 
 def GetWildMonHeadersLabel():
         return f"{baseStruct}{structHeader} {MON_HEADERS[headerIndex]}{structHeader}s{structArrayAssign}" + "\n{"
-    
+
 
 def PrintEncounterHeaders(content):
     if printEncounterHeaders:
