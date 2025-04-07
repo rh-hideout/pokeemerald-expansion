@@ -1969,6 +1969,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             if (partyData[monIndex].dynamaxLevel > 0)
             {
                 u32 data = partyData[monIndex].dynamaxLevel;
+                if (partyData[monIndex].shouldUseDynamax)
+                    gBattleStruct->opponentMonCanDynamax |= 1 << i;
                 SetMonData(&party[i], MON_DATA_DYNAMAX_LEVEL, &data);
             }
             if (partyData[monIndex].gigantamaxFactor)
@@ -1978,6 +1980,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             if (partyData[monIndex].teraType > 0)
             {
+                gBattleStruct->opponentMonCanTera |= 1 << i;
                 u32 data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
@@ -3272,14 +3275,10 @@ const u8* FaintClearSetData(u32 battler)
 
     memset(&gDisableStructs[battler], 0, sizeof(struct DisableStruct));
 
-    gProtectStructs[battler].protected = FALSE;
-    gProtectStructs[battler].spikyShielded = FALSE;
-    gProtectStructs[battler].kingsShielded = FALSE;
-    gProtectStructs[battler].banefulBunkered = FALSE;
+    if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
+        gProtectStructs[battler].protected = PROTECT_NONE;
+
     gProtectStructs[battler].quash = FALSE;
-    gProtectStructs[battler].obstructed = FALSE;
-    gProtectStructs[battler].silkTrapped = FALSE;
-    gProtectStructs[battler].burningBulwarked = FALSE;
     gProtectStructs[battler].endured = FALSE;
     gProtectStructs[battler].noValidMoves = FALSE;
     gProtectStructs[battler].helpingHand = FALSE;
@@ -5104,10 +5103,7 @@ static void TurnValuesCleanUp(bool8 var0)
     {
         if (var0)
         {
-            gProtectStructs[i].protected = FALSE;
-            gProtectStructs[i].spikyShielded = FALSE;
-            gProtectStructs[i].kingsShielded = FALSE;
-            gProtectStructs[i].banefulBunkered = FALSE;
+            gProtectStructs[i].protected = PROTECT_NONE;
             gProtectStructs[i].quash = FALSE;
             gProtectStructs[i].usedCustapBerry = FALSE;
             gProtectStructs[i].quickDraw = FALSE;
@@ -5139,8 +5135,6 @@ static void TurnValuesCleanUp(bool8 var0)
         gBattleStruct->battlerState[i].usedEjectItem = FALSE;
     }
 
-    gSideStatuses[B_SIDE_PLAYER] &= ~(SIDE_STATUS_QUICK_GUARD | SIDE_STATUS_WIDE_GUARD | SIDE_STATUS_CRAFTY_SHIELD | SIDE_STATUS_MAT_BLOCK);
-    gSideStatuses[B_SIDE_OPPONENT] &= ~(SIDE_STATUS_QUICK_GUARD | SIDE_STATUS_WIDE_GUARD | SIDE_STATUS_CRAFTY_SHIELD | SIDE_STATUS_MAT_BLOCK);
     gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;
     gSideTimers[B_SIDE_OPPONENT].followmeTimer = 0;
 
@@ -5631,12 +5625,15 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
     {
         gIsFishingEncounter = FALSE;
         gIsSurfingEncounter = FALSE;
-        if (gDexNavBattle && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
+        if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
+        {
             IncrementDexNavChain();
+            TryIncrementSpeciesSearchLevel();
+        }
         else
             gSaveBlock3Ptr->dexNavChain = 0;
 
-        gDexNavBattle = FALSE;
+        gDexNavSpecies = SPECIES_NONE;
         ResetSpriteData();
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                   | BATTLE_TYPE_RECORDED_LINK

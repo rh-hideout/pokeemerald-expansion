@@ -1200,6 +1200,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_QUIVER_DANCE:
         case EFFECT_GEOMANCY:
+            if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, aiData))
+                ADJUST_SCORE(-10);
             if (gBattleMons[battlerAtk].statStages[STAT_SPATK] >= MAX_STAT_STAGE || !HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
                 ADJUST_SCORE(-10);
             else if (!BattlerStatCanRise(battlerAtk, aiData->abilities[battlerAtk], STAT_SPEED))
@@ -1735,6 +1737,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_BELLY_DRUM:
         case EFFECT_FILLET_AWAY:
+            if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, aiData))
+                ADJUST_SCORE(-10);
             if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
             else if (aiData->hpPercents[battlerAtk] <= 60)

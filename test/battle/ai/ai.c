@@ -899,3 +899,15 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when det
         TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_FLAMETHROWER); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
+{
+    GIVEN {
+        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_BODY_SLAM); }
+    }
+}
