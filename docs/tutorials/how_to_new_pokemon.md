@@ -1262,7 +1262,10 @@ In Porymap, select the object you want to set the sprite to. Then, change the fi
 ![charizard](/docs/tutorials/img/add_pokemon/charizard.png)
 ![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
 
-
+If you want to use their shiny and/or female versions, use one of the following macros:
+- `OBJ_EVENT_GFX_SPECIES_SHINY(name)`
+- `OBJ_EVENT_GFX_SPECIES_FEMALE(name)`
+- `OBJ_EVENT_GFX_SPECIES_SHINY_FEMALE(name)`
 
 ## 5. In-battle shadows (v1.10 onwards)
 Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
