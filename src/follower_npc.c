@@ -116,7 +116,7 @@ const u8 *GetFollowerNPCScriptPointer(void)
 void HideNPCFollower(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
+    if (!gSaveBlock3Ptr->NPCfollower.inProgress || gObjectEvents[GetFollowerNPCMapObjId()].invisible)
         return;
 
     if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_RECREATE || gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_DESTROY)
@@ -125,6 +125,8 @@ void HideNPCFollower(void)
         DestroySprite(&gSprites[gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId]);
         gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId = 0; // Unbind
     }
+
+    gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
 
     gObjectEvents[GetFollowerNPCMapObjId()].invisible = TRUE;
 #endif
@@ -1302,6 +1304,7 @@ void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower)
     follower->invisible = TRUE;
     gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE; // No more surf blob.
+    gSaveBlock3Ptr->NPCfollower.delayedState = 0;
 }
 
 void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct ObjectEvent *player)
@@ -1380,6 +1383,14 @@ void FollowerNPCPositionFix(u8 offset)
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
+    
+    if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != FNPC_DOOR_NONE || gObjectEvents[followerObjid].invisible)
+    {
+        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
+        npcX = playerX;
+        npcY = playerY;
+        return;
+    }
 
     if (playerX == npcX)
     {
