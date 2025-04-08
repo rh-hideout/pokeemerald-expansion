@@ -662,11 +662,13 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
+    // Prevent player input until all forced mmovements are done and the follower is hidden.
     if (gTasks[taskId].tState == PREVENT_PLAYER_STEP)
     {
         gPlayerAvatar.preventStep = TRUE;
         gTasks[taskId].tState = DO_ALL_FORCED_MOVEMENTS;
     }
+    // The player will keep doing forced movments until they land on a non-forced-move metatile or hit collision.
     else if (gTasks[taskId].tState == DO_ALL_FORCED_MOVEMENTS && ObjectEventClearHeldMovementIfFinished(player) != 0)
     {
         // Lock follower facing direction for muddy slope.
@@ -677,12 +679,14 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
             gTasks[taskId].tState = NPC_INTO_PLAYER;
         return;
     }
+    // The NPC will take an extra step and be on the same tile as the player.
     else if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
     {
         ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
         gTasks[taskId].tState = ENABLE_PLAYER_STEP;
         return;
     }
+    // Hide the NPC until the player takes a step. Reallow player input.
     else if (gTasks[taskId].tState == ENABLE_PLAYER_STEP && ObjectEventClearHeldMovementIfFinished(follower) != 0)
     {
         follower->facingDirectionLocked = FALSE;
