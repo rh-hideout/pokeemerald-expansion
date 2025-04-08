@@ -51,7 +51,6 @@ struct SpinData
     u32 spinHistory2:3;
     u32 spinHistory3:3;
     u32 VBlanksSpinning:11; //34,1 seconds
-    u32 spinEvoQueued:1;
 };
 
 static EWRAM_DATA u8 sSpinStartFacingDir = 0;
