@@ -137,16 +137,6 @@ static const struct OamData sOamData_GimmickIndicator =
 };
 
 static void SpriteCb_GimmickIndicator(struct Sprite *sprite);
-static const struct SpriteTemplate sSpriteTemplate_GimmickIndicator =
-{
-    .tileTag = TAG_NORMAL_INDICATOR_TILE,   // updated dynamically
-    .paletteTag = TAG_TERA_INDICATOR_PAL,   // updated dynamically
-    .oam = &sOamData_GimmickIndicator,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCb_GimmickIndicator,
-};
 
 #define BATTLER_INDICATOR_TAG 0xDEDE
 static const struct SpriteSheet sBattler_GimmickSpritesheets[] =
