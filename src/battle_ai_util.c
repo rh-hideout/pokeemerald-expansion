@@ -3118,19 +3118,26 @@ bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move
     return TRUE;
 }
 
+static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, u32 ability)
+{
+    if (ability == ABILITY_MARVEL_SCALE
+     || ability == ABILITY_QUICK_FEET
+     || ability == ABILITY_MAGIC_GUARD
+     || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+     || HasMoveEffect(battler, EFFECT_FACADE)
+     || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT))
+        return TRUE;
+    return FALSE;
+}
+
 bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
 {
     u32 defAbility = GetBattlerAbility(battlerDef);
     // Battler can be poisoned and has move/ability that synergizes with being poisoned
     if (CanBePoisoned(battlerAtk, battlerDef, GetBattlerAbility(battlerDef)) && (
-        defAbility == ABILITY_MARVEL_SCALE
-         || defAbility == ABILITY_POISON_HEAL
-         || defAbility == ABILITY_QUICK_FEET
-         || defAbility == ABILITY_MAGIC_GUARD
-         || (defAbility == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-         || (defAbility == ABILITY_GUTS && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-         || HasMoveEffect(battlerDef, EFFECT_FACADE)
-         || HasMoveEffect(battlerDef, EFFECT_PSYCHO_SHIFT)))
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
+        || defAbility == ABILITY_POISON_HEAL
+        || (defAbility == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))))
     {
         if (battlerAtk == battlerDef) // Targeting self
             return TRUE;
@@ -3148,14 +3155,9 @@ bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef)
     u32 defAbility = GetBattlerAbility(battlerDef);
     // Battler can be burned and has move/ability that synergizes with being burned
     if (CanBeBurned(battlerDef, defAbility) && (
-        defAbility == ABILITY_MARVEL_SCALE
-         || defAbility == ABILITY_QUICK_FEET
-         || defAbility == ABILITY_HEATPROOF
-         || defAbility == ABILITY_MAGIC_GUARD
-         || (defAbility == ABILITY_FLARE_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
-         || (defAbility == ABILITY_GUTS && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-         || HasMoveEffect(battlerDef, EFFECT_FACADE)
-         || HasMoveEffect(battlerDef, EFFECT_PSYCHO_SHIFT)))
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
+        || defAbility == ABILITY_HEATPROOF
+        || (defAbility == ABILITY_FLARE_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))))
     {
         if (battlerAtk == battlerDef) // Targeting self
             return TRUE;
@@ -3186,13 +3188,8 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
     {
         u32 defAbility = GetBattlerAbility(battlerDef);
         // Battler can be frostbitten and has move/ability that synergizes with being frostbitten
-        if (CanBeFrozen(battlerDef) && (
-            defAbility == ABILITY_MARVEL_SCALE
-             || defAbility == ABILITY_QUICK_FEET
-             || defAbility == ABILITY_MAGIC_GUARD
-             || (defAbility == ABILITY_GUTS && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-             || HasMoveEffect(battlerDef, EFFECT_FACADE)
-             || HasMoveEffect(battlerDef, EFFECT_PSYCHO_SHIFT)))
+        if (CanBeFrozen(battlerDef) && 
+            DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility))
         {
             if (battlerAtk == battlerDef) // Targeting self
                 return TRUE;
@@ -3212,12 +3209,7 @@ bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef)
     u32 defAbility = GetBattlerAbility(battlerDef);
     // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
     if (CanBeParalyzed(battlerDef, defAbility) && (
-        defAbility == ABILITY_MARVEL_SCALE
-         || defAbility == ABILITY_QUICK_FEET
-         || defAbility == ABILITY_MAGIC_GUARD
-         || (defAbility == ABILITY_GUTS && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-         || HasMoveEffect(battlerDef, EFFECT_FACADE)
-         || HasMoveEffect(battlerDef, EFFECT_PSYCHO_SHIFT)))
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)))
     {
         if (battlerAtk == battlerDef) // Targeting self
             return TRUE;
