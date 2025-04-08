@@ -648,6 +648,51 @@ bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectE
     return FALSE;
 }
 
+// Task data
+#define tState                  data[0]
+#define PREVENT_PLAYER_STEP     0
+#define DO_ALL_FORCED_MOVEMENTS 1
+#define NPC_INTO_PLAYER         2
+#define ENABLE_PLAYER_STEP      3
+
+void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
+{
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (gTasks[taskId].tState == PREVENT_PLAYER_STEP)
+    {
+        gPlayerAvatar.preventStep = TRUE;
+        gTasks[taskId].tState = DO_ALL_FORCED_MOVEMENTS;
+    }
+    else if (gTasks[taskId].tState == DO_ALL_FORCED_MOVEMENTS && ObjectEventClearHeldMovementIfFinished(player) != 0)
+    {
+        if (TryDoMetatileBehaviorForcedMovement() == 0)
+            gTasks[taskId].tState = NPC_INTO_PLAYER;
+        return;
+    }
+    else if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+    {
+        follower->facingDirectionLocked = TRUE;
+        ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
+        gTasks[taskId].tState = ENABLE_PLAYER_STEP;
+        return;
+    }
+    else if (gTasks[taskId].tState == ENABLE_PLAYER_STEP && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+    {
+        follower->facingDirectionLocked = FALSE;
+        HideNPCFollower();
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
+        gPlayerAvatar.preventStep = FALSE;
+        DestroyTask(taskId);
+    }
+}
+
+#undef PREVENT_PLAYER_STEP
+#undef DO_ALL_FORCED_MOVEMENTS
+#undef NPC_INTO_PLAYER
+#undef ENABLE_PLAYER_STEP
+
 void FollowerNPC_FollowerToWater(void)
 {
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -820,7 +865,6 @@ static u8 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct Object
 }
 
 // Task data
-#define tState              data[0]
 #define tDoorTask           data[1]
 #define tDoorX              data[2]
 #define tDoorY              data[3]

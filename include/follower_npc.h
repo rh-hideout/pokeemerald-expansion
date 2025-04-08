@@ -34,6 +34,7 @@ enum FollowerNPCSurfBlobStates
     FNPC_SURF_BLOB_DESTROY
 };
 
+void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 bool8 FollowerNPCComingThroughDoor(void);
 u8 GetFollowerNPCObjectId(void);
 u8 GetFollowerNPCLocalId(void);
