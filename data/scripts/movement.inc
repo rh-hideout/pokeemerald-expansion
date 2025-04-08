@@ -107,6 +107,26 @@ Common_Movement_WalkUp2::
 	step_end
 
 @ Follower NPC
+Common_Movement_WalkUpHideSlow::
+    walk_slow_up
+    set_invisible
+    step_end
+
+Common_Movement_WalkDownHideSlow::
+    walk_slow_down
+    set_invisible
+    step_end
+
+Common_Movement_WalkRightHideSlow::
+    walk_slow_right
+    set_invisible
+    step_end
+
+Common_Movement_WalkLeftHideSlow::
+    walk_slow_left
+    set_invisible
+    step_end
+
 Common_Movement_WalkUpHide::
     walk_up
     set_invisible
@@ -124,5 +144,45 @@ Common_Movement_WalkRightHide::
 
 Common_Movement_WalkLeftHide::
     walk_left
+    set_invisible
+    step_end
+
+Common_Movement_WalkUpHideFast::
+    walk_fast_up
+    set_invisible
+    step_end
+
+Common_Movement_WalkDownHideFast::
+    walk_fast_down
+    set_invisible
+    step_end
+
+Common_Movement_WalkRightHideFast::
+    walk_fast_right
+    set_invisible
+    step_end
+
+Common_Movement_WalkLeftHideFast::
+    walk_fast_left
+    set_invisible
+    step_end
+
+Common_Movement_WalkUpHideFaster::
+    walk_faster_up
+    set_invisible
+    step_end
+
+Common_Movement_WalkDownHideFaster::
+    walk_faster_down
+    set_invisible
+    step_end
+
+Common_Movement_WalkRightHideFaster::
+    walk_faster_right
+    set_invisible
+    step_end
+
+Common_Movement_WalkLeftHideFaster::
+    walk_faster_left
     set_invisible
     step_end

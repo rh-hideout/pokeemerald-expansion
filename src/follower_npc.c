@@ -1622,32 +1622,30 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 #endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
+static const u8 *FollowerNPCHideMovementsSpeedTable[][4] = 
+{
+    [DIR_SOUTH] = {Common_Movement_WalkDownHideSlow, Common_Movement_WalkDownHide, Common_Movement_WalkDownHideFast, Common_Movement_WalkDownHideFaster},
+    [DIR_NORTH] = {Common_Movement_WalkUpHideSlow, Common_Movement_WalkUpHide, Common_Movement_WalkUpHideFast, Common_Movement_WalkUpHideFaster},
+    [DIR_WEST] = {Common_Movement_WalkLeftHideSlow, Common_Movement_WalkLeftHide, Common_Movement_WalkLeftHideFast, Common_Movement_WalkLeftHideFaster},
+    [DIR_EAST] = {Common_Movement_WalkRightHideSlow, Common_Movement_WalkRightHide, Common_Movement_WalkRightHideFast, Common_Movement_WalkRightHideFaster}
+};
+#endif
+
 void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
+    u8 walkSpeed = ScriptReadByte(ctx);
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
 
     if (gSaveBlock3Ptr->NPCfollower.inProgress && npc->invisible == FALSE)
     {
-        ClearObjectEventMovement(npc, &gSprites[npc->spriteId]);
-        gSprites[npc->spriteId].animCmdIndex = 0; // Reset start frame of animation
-        npc->singleMovementActive = FALSE;
-        npc->heldMovementActive = FALSE;
-        switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc))
-        {
-            case DIR_NORTH:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkUpHide);
-                break;
-            case DIR_SOUTH:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkDownHide);
-                break;
-            case DIR_EAST:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkRightHide);
-                break;
-            case DIR_WEST:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkLeftHide);
-                break;
-        }
+        u8 direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc);
+
+        if (walkSpeed > 3)
+            walkSpeed = 3;
+
+        ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, FollowerNPCHideMovementsSpeedTable[direction][walkSpeed]);
         gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
     }
 #endif

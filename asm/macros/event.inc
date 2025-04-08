@@ -2548,8 +2548,14 @@
     .endm
 
     @ Makes the follower NPC walk into the player and get hidden.
-    .macro hidefollowernpc
+    @ Optionally, you can set the walk speed for the movement:
+    @ 0 = Slow
+    @ 1 = Normal (default)
+    @ 2 = Fast
+    @ 3 = Faster
+    .macro hidefollowernpc speed=1
     callnative ScriptHideNPCFollower
+    .byte \speed
     waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
     .endm
     
