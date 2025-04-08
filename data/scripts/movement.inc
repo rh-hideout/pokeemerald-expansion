@@ -105,3 +105,24 @@ Common_Movement_WalkUp2::
 	walk_up
 	walk_up
 	step_end
+
+@ Follower NPC
+Common_Movement_WalkFasterUpHide::
+    walk_faster_up
+    set_invisible
+    step_end
+
+Common_Movement_WalkFasterDownHide::
+    walk_faster_down
+    set_invisible
+    step_end
+
+Common_Movement_WalkFasterRightHide::
+    walk_faster_right
+    set_invisible
+    step_end
+
+Common_Movement_WalkFasterLeftHide::
+    walk_faster_left
+    set_invisible
+    step_end
