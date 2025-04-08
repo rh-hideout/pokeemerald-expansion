@@ -3185,7 +3185,7 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
     else
     {
         u32 defAbility = GetBattlerAbility(battlerDef);
-        // Battler can be burned and has move/ability that synergizes with being burned
+        // Battler can be frostbitten and has move/ability that synergizes with being frostbitten
         if (CanBeFrozen(battlerDef) && (
             defAbility == ABILITY_MARVEL_SCALE
              || defAbility == ABILITY_QUICK_FEET
@@ -3210,7 +3210,7 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
 bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef)
 {
     u32 defAbility = GetBattlerAbility(battlerDef);
-    // Battler can be burned and has move/ability that synergizes with being burned
+    // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
     if (CanBeParalyzed(battlerDef, defAbility) && (
         defAbility == ABILITY_MARVEL_SCALE
          || defAbility == ABILITY_QUICK_FEET
