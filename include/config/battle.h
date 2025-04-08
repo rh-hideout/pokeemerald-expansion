@@ -321,6 +321,11 @@
 #define SHOW_TYPES_CAUGHT   2
 #define B_SHOW_TYPES        SHOW_TYPES_NEVER // When defined as SHOW_TYPES_ALWAYS, after selecting "Fight" in battle, the types of all Pokemon are revealed. Whe defined as SHOW_TYPES_OWN, types are only revealed if the player owns the mon in question.
 
+#define SHOW_EFFECTIVENESS_NEVER    0
+#define SHOW_EFFECTIVENESS_ALWAYS   1
+#define SHOW_EFFECTIVENESS_CAUGHT   2
+#define B_SHOW_EFFECTIVENESS        SHOW_EFFECTIVENESS_NEVER // When defined as SHOW_EFFECTIVENESS_ALWAYS, the effectiveness of a move is shown for the opponent. Whe defined as SHOW_EFFECTIVENESS_CAUGHT, types are only revealed if the player owns the mon in question.
+
 // Pokémon battle sprite settings
 #define B_ENEMY_MON_SHADOW_STYLE        GEN_LATEST // In Gen4+, all enemy Pokemon will have a shadow drawn beneath them.
 

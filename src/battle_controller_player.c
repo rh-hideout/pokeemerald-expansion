@@ -46,6 +46,7 @@
 #include "menu.h"
 #include "pokemon_summary_screen.h"
 #include "type_icons.h"
+#include "pokedex.h"
 
 static void PlayerBufferExecCompleted(u32 battler);
 static void PlayerHandleLoadMonSprite(u32 battler);
@@ -99,6 +100,8 @@ static void Task_UpdateLvlInHealthbox(u8);
 static void PrintLinkStandbyMsg(void);
 
 static void ReloadMoveNames(u32 battler);
+static u32 GetDefaultEffectivenessTarget(u32 battler);
+static void MoveSelectionDisplayMoveEffectiveness(u32 targetId, u32 battler);
 
 static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -502,6 +505,8 @@ void HandleInputChooseTarget(u32 battler)
                     i++;
                     break;
                 }
+                if (B_SHOW_EFFECTIVENESS)
+                    MoveSelectionDisplayMoveEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
@@ -551,6 +556,8 @@ void HandleInputChooseTarget(u32 battler)
                     i++;
                     break;
                 }
+                if (B_SHOW_EFFECTIVENESS)
+                    MoveSelectionDisplayMoveEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
@@ -749,6 +756,8 @@ void HandleInputChooseMove(u32 battler)
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             else
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler);
 
             gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_ShowAsMoveTarget;
             break;
@@ -785,6 +794,8 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 1;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
@@ -800,6 +811,8 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 1;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
@@ -814,6 +827,8 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 2;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
@@ -829,6 +844,8 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 2;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
@@ -866,6 +883,8 @@ void HandleInputChooseMove(u32 battler)
             ClearStdWindowAndFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
             CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_GFX);
             PlaySE(SE_SELECT);
+            if (B_SHOW_EFFECTIVENESS)
+                MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
         }
@@ -900,6 +919,8 @@ static void ReloadMoveNames(u32 battler)
         MoveSelectionDestroyCursorAt(battler);
         MoveSelectionDisplayMoveNames(battler);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
+        if (B_SHOW_EFFECTIVENESS)
+            MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
     }
@@ -1052,7 +1073,10 @@ void HandleMoveSwitching(u32 battler)
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
         gMoveSelectionCursor[battler] = gMultiUsePlayerCursor;
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-        MoveSelectionDisplayPpString(battler);
+        if (B_SHOW_EFFECTIVENESS)
+            MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
+        else
+            MoveSelectionDisplayPpString(battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
         AssignUsableZMoves(battler, moveInfo->moves);
@@ -1063,7 +1087,10 @@ void HandleMoveSwitching(u32 battler)
         MoveSelectionDestroyCursorAt(gMultiUsePlayerCursor);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
-        MoveSelectionDisplayPpString(battler);
+        if (B_SHOW_EFFECTIVENESS)
+            MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
+        else
+            MoveSelectionDisplayPpString(battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
     }
@@ -2148,7 +2175,10 @@ void InitMoveSelectionsVarsAndStrings(u32 battler)
     MoveSelectionDisplayMoveNames(battler);
     gMultiUsePlayerCursor = 0xFF;
     MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-    MoveSelectionDisplayPpString(battler);
+    if (B_SHOW_EFFECTIVENESS)
+        MoveSelectionDisplayMoveEffectiveness(GetDefaultEffectivenessTarget(battler), battler);
+    else
+        MoveSelectionDisplayPpString(battler);
     MoveSelectionDisplayPpNumber(battler);
     MoveSelectionDisplayMoveType(battler);
 }
@@ -2381,4 +2411,110 @@ static void PlayerHandleBattleDebug(u32 battler)
     BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
     SetMainCallback2(CB2_BattleDebugMenu);
     gBattlerControllerFuncs[battler] = Controller_WaitForDebug;
+}
+
+enum {
+    EFFECTIVENESS_SUPER_EFFECTIVE,
+    EFFECTIVENESS_NOT_VERY_EFFECTIVE,
+    EFFECTIVENESS_NO_EFFECT,
+    EFFECTIVENESS_NORMAL,
+};
+
+u32 CheckTypeEffectiveness(u32 targetId, u16 move, u32 battler)
+{
+    u32 moveType;
+    uq4_12_t modifier;
+    struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
+    moveType = CheckDynamicMoveType(mon, move, battler);
+
+    modifier = CalcTypeEffectivenessMultiplier(move, moveType, battler, targetId, GetBattlerAbility(targetId), FALSE);
+
+    if (modifier == UQ_4_12(0.0))
+    {
+        return EFFECTIVENESS_NO_EFFECT; // No effect
+    }
+    else if (modifier <= UQ_4_12(0.5))
+    {
+        return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
+    }
+    else if (modifier >= UQ_4_12(2.0))
+    {
+        return EFFECTIVENESS_SUPER_EFFECTIVE; // Super effective
+    }
+    else
+    {
+        return EFFECTIVENESS_NORMAL; // Normal effectiveness
+    }
+}
+
+bool32 ShouldShowTypeEffectiveness(u32 targetId)
+{
+    if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_CAUGHT)
+        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_CAUGHT);
+
+    return TRUE;
+}
+
+// Currently a placeholder until a proper implementation is made accounting for doubles
+static u32 GetDefaultEffectivenessTarget(u32 battler)
+{
+    return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
+}
+
+static void MoveSelectionDisplayMoveEffectiveness(u32 targetId, u32 battler)
+{
+    static const u8 noIcon[] =  _("");
+    static const u8 effectiveIcon[] =  _("{CIRCLE_HOLLOW}");
+    static const u8 superEffectiveIcon[] =  _("{CIRCLE_DOT}");
+    static const u8 notVeryEffectiveIcon[] =  _("{TRIANGLE}");
+    static const u8 immuneIcon[] =  _("{BIG_MULT_X}");
+    static const u8 teraIcon[] =  _("{UP_ARROW}");
+    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+    struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
+    u32 typeEffectiveness = CheckTypeEffectiveness(targetId, moveInfo->moves[gMoveSelectionCursor[battler]], battler);
+    u32 moveType = CheckDynamicMoveType(mon, moveInfo->moves[gMoveSelectionCursor[battler]], battler);
+    u8 *txtPtr;
+
+    if (GetActiveGimmick(battler) == GIMMICK_TERA || IsGimmickSelected(battler, GIMMICK_TERA))
+    {
+        u32 teraType = GetBattlerTeraType(battler);
+        if (teraType == TYPE_STELLAR && IsTypeStellarBoosted(battler, moveType))
+        {
+            txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
+        }
+        else if (moveType == teraType)
+        {
+            txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
+        }
+        else
+        {
+            txtPtr = StringCopy(gDisplayedStringBattle, noIcon);
+        }
+    }
+    else
+    {
+        txtPtr = StringCopy(gDisplayedStringBattle, noIcon);
+    }
+
+    if (!IsBattleMoveStatus(moveInfo->moves[gMoveSelectionCursor[battler]]) && ShouldShowTypeEffectiveness(targetId))
+    {
+        switch (typeEffectiveness)
+        {
+        case EFFECTIVENESS_SUPER_EFFECTIVE:
+            StringCopy(txtPtr, superEffectiveIcon);
+            break;
+        case EFFECTIVENESS_NOT_VERY_EFFECTIVE:
+            StringCopy(txtPtr, notVeryEffectiveIcon);
+            break;
+        case EFFECTIVENESS_NO_EFFECT:
+            StringCopy(txtPtr, immuneIcon);
+            break;
+        default:
+        case EFFECTIVENESS_NORMAL:
+            StringCopy(txtPtr, effectiveIcon);
+            break;
+        }
+    }
+
+    BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_PP);
 }
