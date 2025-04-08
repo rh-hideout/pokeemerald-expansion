@@ -265,20 +265,9 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 
 void LoadIndicatorSpritesGfx(void)
 {
-    u32 gimmick;
-    for (gimmick = 0; gimmick < GIMMICKS_COUNT; ++gimmick)
-    {
-        //if (gimmick == GIMMICK_TERA) // special case
-        //    LoadSpriteSheets(sTeraIndicatorSpriteSheets);
-        //else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
-        //    LoadSpriteSheet(gGimmicksInfo[gimmick].indicatorSheet);
-
-        if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-            LoadSpritePalette(gGimmicksInfo[gimmick].indicatorPal);
-    }
-    // Primal reversion graphics aren't loaded as part of gimmick data
-    //LoadSpriteSheet(&sSpriteSheet_AlphaIndicator);
-    //LoadSpriteSheet(&sSpriteSheet_OmegaIndicator);
+    LoadSpritePalette(&sSpritePalette_MiscIndicator);
+    LoadSpritePalette(&sSpritePalette_MegaIndicator);
+    LoadSpritePalette(&sSpritePalette_TeraIndicator);
 }
 
 static void SpriteCb_GimmickIndicator(struct Sprite *sprite)
@@ -302,17 +291,17 @@ const u32 *GetIndicatorSpriteSrc(u32 battler)
     if (IsBattlerPrimalReverted(battler))
     {
         if (gBattleMons[battler].species == SPECIES_GROUDON_PRIMAL)
-            return sSpriteSheet_OmegaIndicator.data;
+            return (u32 *)&sOmegaIndicatorGfx;
         else
-            return sSpriteSheet_AlphaIndicator.data;
+            return (u32 *)&sAlphaIndicatorGfx;
     }
     else if (gimmick == GIMMICK_TERA) // special case
     {
-        return sTeraIndicatorSpriteSheets[GetBattlerTeraType(battler)].data;
+        return (u32 *)sTeraIndicatorDataPtrs[GetBattlerTeraType(battler)];
     }
-    else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
+    else if (gGimmicksInfo[gimmick].indicatorData != NULL)
     {
-        return gGimmicksInfo[gimmick].indicatorSheet->data;
+        return (u32 *)gGimmicksInfo[gimmick].indicatorData;
     }
     else
     {
@@ -325,8 +314,8 @@ u32 GetIndicatorPalTag(u32 battler)
     u32 gimmick = GetActiveGimmick(battler);
     if (IsBattlerPrimalReverted(battler))
         return TAG_MISC_INDICATOR_PAL;
-    else if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-        return gGimmicksInfo[gimmick].indicatorPal->tag;
+    else if (gGimmicksInfo[gimmick].indicatorPalTag != 0)
+        return gGimmicksInfo[gimmick].indicatorPalTag;
     else
         return TAG_NONE;
 }
@@ -346,9 +335,11 @@ void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
     {
         sprite->oam.paletteNum = IndexOfSpritePaletteTag(palTag);
         sprite->invisible = invisible;
-        u32 tileStart = GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler);
-        u32 *dst = (u32 *)(OBJ_VRAM0 + 32*tileStart);
+
+        u32 *dst = (u32 *)(OBJ_VRAM0 + TILE_SIZE_4BPP*GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler));
+
         const u32 *src = GetIndicatorSpriteSrc(battler);
+
         for (u32 i = 0; i < INDICATOR_SIZE/4; i++)
             dst[i] = src[i];
     }
