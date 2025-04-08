@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Motor Drive absorbs status moves")
     }
 }
 
-DOUBLE_BATTLE_TEST("Motor Drive absorb a a move that targets all battlers but does not redirect")
+DOUBLE_BATTLE_TEST("Motor Drive absorbs moves that target all battlers but does not redirect")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);

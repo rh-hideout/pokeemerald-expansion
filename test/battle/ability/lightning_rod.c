@@ -98,7 +98,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
     }
 }
 
-DOUBLE_BATTLE_TEST("Lightning Rod absorb a a move that targets all battlers but does not redirect")
+DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but does not redirect")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
