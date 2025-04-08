@@ -780,7 +780,7 @@ bool32 CanTriggerSpinEvolution()
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
-            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, gSpecialVar_0x8000, NULL);
+            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, gSpecialVar_0x8000, NULL, CHECK_EVO);
             if (species != SPECIES_NONE)
             {
                 return TRUE;
