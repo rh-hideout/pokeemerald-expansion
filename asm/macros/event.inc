@@ -2546,6 +2546,12 @@
     .macro facefollower
     callnative ScriptFaceFollowerNPC
     .endm
+
+    @ Makes the follower NPC walk into the player and get hidden.
+    .macro hidefollowernpc
+    callnative ScriptHideNPCFollower
+    waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
+    .endm
     
     @ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
     .macro checkfollower

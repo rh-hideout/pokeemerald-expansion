@@ -1272,40 +1272,6 @@ struct ObjectEvent *ScriptHideFollower(void)
     return obj;
 }
 
-bool8 ScriptHideNPCFollower(void)
-{
-#if OW_ENABLE_NPC_FOLLOWERS
-    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
-
-    if (gSaveBlock3Ptr->NPCfollower.inProgress && npc->invisible == FALSE)
-    {
-        ClearObjectEventMovement(npc, &gSprites[npc->spriteId]);
-        gSprites[npc->spriteId].animCmdIndex = 0; // Reset start frame of animation
-        npc->singleMovementActive = FALSE;
-        npc->heldMovementActive = FALSE;
-        switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc))
-        {
-            case DIR_NORTH:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkFasterUpHide);
-                break;
-            case DIR_SOUTH:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkFasterDownHide);
-                break;
-            case DIR_EAST:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkFasterRightHide);
-                break;
-            case DIR_WEST:
-                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkFasterLeftHide);
-                break;
-        }
-        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
-
-        return TRUE;
-    }
-#endif
-    return FALSE;
-}
-
 bool8 ScrCmd_applymovement(struct ScriptContext *ctx)
 {
     u16 localId = VarGet(ScriptReadHalfword(ctx));
@@ -1326,12 +1292,10 @@ bool8 ScrCmd_applymovement(struct ScriptContext *ctx)
     ScriptMovement_StartObjectMovementScript(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, movementScript);
     sMovingNpcId = localId;
     if (localId != OBJ_EVENT_ID_FOLLOWER
-     && localId != OBJ_EVENT_ID_NPC_FOLLOWER
      && !FlagGet(FLAG_SAFE_FOLLOWER_MOVEMENT)
      && (movementScript < Common_Movement_FollowerSafeStart || movementScript > Common_Movement_FollowerSafeEnd))
     {
         ScriptHideFollower();
-        ScriptHideNPCFollower();
     }
     return FALSE;
 }

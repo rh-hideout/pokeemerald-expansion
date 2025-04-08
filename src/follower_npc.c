@@ -1,6 +1,8 @@
 #include "global.h"
 #include "follower_npc.h"
+#include "event_data.h"
 #include "event_object_movement.h"
+#include "event_scripts.h"
 #include "field_door.h"
 #include "field_effect.h"
 #include "field_effect_helpers.h"
@@ -11,14 +13,13 @@
 #include "fieldmap.h"
 #include "fldeff_misc.h"
 #include "item.h"
-#include "task.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "script.h"
-#include "event_data.h"
+#include "script_movement.h"
 #include "sound.h"
+#include "task.h"
 #include "trig.h"
-#include "metatile_behavior.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/songs.h"
@@ -1617,6 +1618,37 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 
         ObjectEventTurn(player, playerDirection);
         ObjectEventTurn(follower, followerDirection);
+    }
+#endif
+}
+
+void ScriptHideNPCFollower(struct ScriptContext *ctx)
+{
+#if OW_ENABLE_NPC_FOLLOWERS
+    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
+
+    if (gSaveBlock3Ptr->NPCfollower.inProgress && npc->invisible == FALSE)
+    {
+        ClearObjectEventMovement(npc, &gSprites[npc->spriteId]);
+        gSprites[npc->spriteId].animCmdIndex = 0; // Reset start frame of animation
+        npc->singleMovementActive = FALSE;
+        npc->heldMovementActive = FALSE;
+        switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc))
+        {
+            case DIR_NORTH:
+                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkUpHide);
+                break;
+            case DIR_SOUTH:
+                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkDownHide);
+                break;
+            case DIR_EAST:
+                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkRightHide);
+                break;
+            case DIR_WEST:
+                ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npc->mapGroup, npc->mapNum, Common_Movement_WalkLeftHide);
+                break;
+        }
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
     }
 #endif
 }
