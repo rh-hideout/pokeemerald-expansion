@@ -478,10 +478,10 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
         return TRUE;
 
-    if (CanAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[battlerDef], ABILITY_CHECK_TRIGGER))
+    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
     switch (GetMoveEffect(move))
@@ -1142,8 +1142,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
 
     u32 predictedMove = AI_DATA->lastUsedMove[battler]; // TODO update for move prediction
 
-    s8 aiPriority = GetBattleMovePriority(battlerAI, moveConsidered);
-    s8 playerPriority = GetBattleMovePriority(battler, predictedMove);
+    s8 aiPriority = GetBattleMovePriority(battlerAI, abilityAI, moveConsidered);
+    s8 playerPriority = GetBattleMovePriority(battler, abilityPlayer, predictedMove);
 
     if (aiPriority > playerPriority)
         return AI_IS_FASTER;
@@ -2501,6 +2501,9 @@ bool32 IsSwitchOutEffect(u32 effect)
     // Switch out effects like U-Turn, Volt Switch, etc.
     switch (effect)
     {
+    case EFFECT_TELEPORT:
+        if (B_TELEPORT_BEHAVIOR >= GEN_8)
+            return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_BATON_PASS:
@@ -3934,6 +3937,10 @@ static u32 IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statI
     if (considerContrary && AI_DATA->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
+    // Don't increase stats if opposing battler has Unaware
+    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, AI_DATA))
+        return NO_INCREASE;
+
     // Don't increase stat if AI is at +4
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
         return NO_INCREASE;
@@ -4419,4 +4426,13 @@ bool32 IsBattlerItemEnabled(u32 battler)
     if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
         return FALSE;
     return TRUE;
+}
+
+bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiData)
+{
+    if (aiData->abilities[battler] == ability)
+        return TRUE;
+    if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
+        return TRUE;
+    return FALSE;
 }
