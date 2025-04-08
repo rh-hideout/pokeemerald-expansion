@@ -656,6 +656,11 @@ extern const u8 Common_Movement_WalkFasterUpHide[];
 extern const u8 Common_Movement_WalkFasterDownHide[];
 extern const u8 Common_Movement_WalkFasterRightHide[];
 extern const u8 Common_Movement_WalkFasterLeftHide[];
+extern const u8 Common_Movement_FaceUp[];
+extern const u8 Common_Movement_FaceDown[];
+extern const u8 Common_Movement_FaceRight[];
+extern const u8 Common_Movement_FaceLeft[];
+
 extern const u8 EventScript_CancelMessageBox[];
 extern const u8 Common_EventScript_ShowPokemonCenterSign[];
 extern const u8 Common_EventScript_ShowPokemartSign[];
