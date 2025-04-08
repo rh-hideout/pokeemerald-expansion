@@ -1,6 +1,6 @@
 import json
 import sys
-
+import os
 
 """
 - you can change/add to these if you're adding seasons/days of the week, etc
@@ -28,6 +28,10 @@ OW_TIME_OF_DAY_DEFAULT = 0
 
 
 def GetWildEncounterFile():
+    if not os.path.exists("Makefile"):
+        print("Please run this script from the project's root folder.")
+        quit()
+
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
 
