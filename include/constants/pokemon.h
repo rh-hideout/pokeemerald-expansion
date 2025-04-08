@@ -302,7 +302,7 @@ enum EvolutionMethods {
     EVO_SCRIPT_TRIGGER,         // Player interacts with an overworld trigger
     EVO_LEVEL_BATTLE_ONLY,      // Pokémon reaches the specified level, in battle only
     EVO_BATTLE_END,             // Battle ends, doesn't need to level up
-    EVO_SPIN                    // The Player spins
+    EVO_SPIN                    // The player spins in the overworld
 };
 
 enum EvolutionMode {
@@ -317,18 +317,18 @@ enum EvolutionMode {
 
 
 enum PokemonJumpType {
-    PKMN_JUMP_TYPE_NONE, // Not allowed in Pokémon Jump
+    PKMN_JUMP_TYPE_NONE,        // Not allowed in Pokémon Jump
     PKMN_JUMP_TYPE_NORMAL,
     PKMN_JUMP_TYPE_FAST,
     PKMN_JUMP_TYPE_SLOW,
 };
 
 enum EvoSpinDirections {
-    SPIN_CW_SHORT,                  // Player spins clockwise
-    SPIN_CW_LONG,                  // Player spins clockwise
-    SPIN_CCW_SHORT,                 // Player spins counter-clockwise
-    SPIN_CCW_LONG,                 // Player spins counter-clockwise
-    SPIN_EITHER,                 // Player spins either clockwise or counter-clockwise
+    SPIN_CW_SHORT,              // Player spins clockwise
+    SPIN_CW_LONG,               // Player spins clockwise
+    SPIN_CCW_SHORT,             // Player spins counter-clockwise
+    SPIN_CCW_LONG,              // Player spins counter-clockwise
+    SPIN_EITHER,                // Player spins either clockwise or counter-clockwise
 };
 
 #define MON_PIC_WIDTH 64

@@ -6765,15 +6765,9 @@ void TrySpecialOverworldEvo(void)
         {
             sTriedEvolving |= 1u << i;
             if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
-            {
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
-                //DoRemoveItems(&gPlayerParty[i]);
-            }
             else
-            {
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
-                //DoRemoveItems(&gPlayerParty[i]);
-            }
                 
             if (tryMultiple)
                 gCB2_AfterEvolution = TrySpecialOverworldEvo;

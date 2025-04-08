@@ -827,6 +827,7 @@ static void Task_EvolutionScene(u8 taskId)
                 Overworld_PlaySpecialMapMusic();
                 
             }
+            
             if (!gTasks[taskId].tEvoWasStopped)
             {
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, mon);
