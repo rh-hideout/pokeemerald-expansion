@@ -782,7 +782,10 @@ static bool8 CanStopSurfing(s16 x, s16 y, u8 direction)
     if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
      && MapGridGetElevationAt(x, y) == 3
      && (GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT 
-     || GetObjectEventIdByPosition(x, y, 3) == GetFollowerNPCObjectId()))
+#if OW_ENABLE_NPC_FOLLOWERS
+     || GetObjectEventIdByPosition(x, y, 3) == GetFollowerNPCObjectId()
+#endif
+     ))
     {
         CreateStopSurfingTask(direction);
         return TRUE;
