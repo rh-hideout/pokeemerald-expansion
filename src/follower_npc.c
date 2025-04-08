@@ -379,7 +379,9 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
 
     MoveCoords(direction, &followerX, &followerY);
     nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
-    follower->facingDirectionLocked = FALSE;
+
+    if (FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
+        follower->facingDirectionLocked = FALSE;
 
     // Follower won't do delayed movement until player does a movement.
     if (!IsStateMovement(state) && (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN || gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_SPECIAL_DOWN))
@@ -667,13 +669,16 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
     }
     else if (gTasks[taskId].tState == DO_ALL_FORCED_MOVEMENTS && ObjectEventClearHeldMovementIfFinished(player) != 0)
     {
+        // Lock follower facing direction for muddy slope.
+        if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
+            follower->facingDirectionLocked = TRUE;
+            
         if (TryDoMetatileBehaviorForcedMovement() == 0)
             gTasks[taskId].tState = NPC_INTO_PLAYER;
         return;
     }
     else if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
     {
-        follower->facingDirectionLocked = TRUE;
         ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
         gTasks[taskId].tState = ENABLE_PLAYER_STEP;
         return;
