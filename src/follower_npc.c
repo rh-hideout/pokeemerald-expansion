@@ -1415,6 +1415,19 @@ void FollowerNPCFaceAfterLeaveRoute(void)
     gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
 }
 
+void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
+{
+    struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    
+    if (ObjectEventClearHeldMovementIfFinished(npcFollower) != 0)
+    {
+        HideNPCFollower();
+        gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
+        gPlayerAvatar.preventStep = FALSE;
+        DestroyTask(taskId);
+    }
+}
+
 enum
 {
 	GoDown,
