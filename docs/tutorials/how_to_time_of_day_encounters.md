@@ -45,7 +45,7 @@ Great questie bestie!
 Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h):
 - `OW_TIME_OF_DAY_ENCOUNTERS            FALSE`
   - **Acceptable values**: `TRUE` or `FALSE`
-  - should be `TRUE` or `FALSE`, basically enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
+  - this option enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
 - `OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE`
   - **Acceptable values**: `TRUE` or `FALSE`
   - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option at the bottom.
