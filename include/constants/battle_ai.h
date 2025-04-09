@@ -1,6 +1,14 @@
 #ifndef GUARD_CONSTANTS_BATTLE_AI_H
 #define GUARD_CONSTANTS_BATTLE_AI_H
 
+// States for wild Pokemon AI, set to B_VAR_WILD_AI_SETTING. Handled in src/battle_ai_main.c GetDynamicWildAiFlags()
+enum {
+    WILD_AI_NONE,
+    WILD_AI_BASIC_POKEMON,
+    WILD_AI_SMART_POKEMON,
+    WILD_AI_WILL_SUICIDE,
+};
+
 // battlers
 #define AI_TARGET 0
 #define AI_USER 1
@@ -60,3 +68,4 @@
 #define AI_SCORE_DEFAULT 100 // Default score for all AI moves.
 
 #endif // GUARD_CONSTANTS_BATTLE_AI_H
+

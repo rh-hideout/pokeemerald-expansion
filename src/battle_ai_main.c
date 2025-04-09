@@ -140,10 +140,37 @@ static u32 GetWildAiFlags(void)
     if (avgLevel >= 80)
         flags |= AI_FLAG_HP_AWARE;
 
+#if (B_VAR_WILD_AI_SETTING != 0)
+    {
+        u32 flagState = VarGet(B_VAR_WILD_AI_SETTING);
+        flags |= GetDynamicWildAiFlags(flagState);
+    }
+#endif
+
+// This can only read the first 16 AI flags.
     if (B_VAR_WILD_AI_FLAGS != 0 && VarGet(B_VAR_WILD_AI_FLAGS) != 0)
         flags |= VarGet(B_VAR_WILD_AI_FLAGS);
 
     return flags;
+}
+
+u32 GetDynamicWildAiFlags(u32 flagState)
+{
+    if (B_VAR_WILD_AI_FLAGS != 0 && VarGet(B_VAR_WILD_AI_FLAGS) != 0 && flagState != 0)
+        VarSet(B_VAR_WILD_AI_FLAGS, 0);
+
+    switch (flagState) {
+    case WILD_AI_NONE:
+        return 0;
+    case WILD_AI_BASIC_POKEMON:
+        return AI_FLAG_BASIC_TRAINER;
+    case WILD_AI_SMART_POKEMON:
+        return AI_FLAG_SMART_TRAINER;
+    case WILD_AI_WILL_SUICIDE:
+        return AI_FLAG_BASIC_TRAINER | AI_FLAG_WILL_SUICIDE;
+    default:
+        return 0;
+    }
 }
 
 static u32 GetAiFlags(u16 trainerId)
