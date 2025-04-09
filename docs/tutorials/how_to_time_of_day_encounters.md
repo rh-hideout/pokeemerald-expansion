@@ -1,7 +1,7 @@
 # Time-Based Encounters Tutorial
 
 ## What is the Time-Based Encounters feature? 
-Time-Based Encounters (from here on known as TBE) lets you pick which Pokémon appear during your play session, per route!
+Time-Based Encounters lets you pick which Pokémon appear based on the in-game clock, per route!
 Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you had a higher chance of catching a Bidoof than a Starly at night.
 
 
