@@ -91,9 +91,6 @@ EWRAM_DATA struct SpriteTemplate gMultiuseSpriteTemplate = {0};
 EWRAM_DATA static struct MonSpritesGfxManager *sMonSpritesGfxManagers[MON_SPR_GFX_MANAGERS_COUNT] = {NULL};
 EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
-EWRAM_DATA bool8 removeHoldItem = 0;
-EWRAM_DATA u16 removeBagItem = 0;
-EWRAM_DATA u16 removeBagItemCount = 0;
 
 #include "data/abilities.h"
 
@@ -4061,10 +4058,11 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                     case 7: // ITEM4_EVO_STONE
                         {
                             bool32 canStopEvo = TRUE;
-                            u32 targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo);
+                            u32 targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, CHECK_EVO);
 
                             if (targetSpecies != SPECIES_NONE)
                             {
+                                GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, DO_EVO);
                                 BeginEvolutionScene(mon, targetSpecies, canStopEvo, partyIndex);
                                 return FALSE;
                             }
@@ -4453,7 +4451,7 @@ u32 GetGMaxTargetSpecies(u32 species)
     return species;
 }
 
-bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo)
+bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
 {
     u32 i, j;
     u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
@@ -4465,9 +4463,9 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u16 upperPersonality = personality >> 16;
     u32 weather = GetCurrentWeather();
     u32 nature = GetNature(mon);
-    removeHoldItem = FALSE;
-    removeBagItem = ITEM_NONE;
-    removeBagItemCount = 0;
+    bool32 removeHoldItem = FALSE;
+    u32 removeBagItem = ITEM_NONE;
+    u32 removeBagItemCount = 0;
     u32 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
 
     u32 partnerSpecies, partnerHeldItem, partnerHoldEffect;
@@ -4737,6 +4735,19 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         case CONDITIONS_END:
             break;
         }
+
+        if (evoState == DO_EVO)
+        {
+            if (removeHoldItem)
+            {
+                u32 heldItem = ITEM_NONE;
+                SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+            }
+
+            if (removeBagItem != ITEM_NONE)
+                RemoveBagItem(removeBagItem, removeBagItemCount);
+        }
+
         if (currentCondition == FALSE)
             return FALSE;
     }
@@ -4745,24 +4756,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     return TRUE;
 }
 
-void DoRemoveItems(struct Pokemon *mon)
-{
-    if (removeHoldItem)
-    {
-        u32 heldItem = ITEM_NONE;
-        SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
-    }
-    if (removeBagItem != ITEM_NONE)
-    {
-        RemoveBagItem(removeBagItem, removeBagItemCount);
-    }
-
-    removeHoldItem = FALSE;
-    removeBagItem = ITEM_NONE;
-    removeBagItemCount = 0;
-}
-
-u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo)
+u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState)
 {
     int i;
     u32 targetSpecies = SPECIES_NONE;
@@ -4813,7 +4807,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4837,7 +4831,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, tradePartner, PARTY_SIZE, canStopEvo))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, tradePartner, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4863,7 +4857,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4890,7 +4884,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                     break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, evolutionItem, canStopEvo))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, evolutionItem, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4918,7 +4912,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -6759,10 +6753,11 @@ void TrySpecialOverworldEvo(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo);
+        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
 
         if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & (1u << i)))
         {
+            GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
             sTriedEvolving |= 1u << i;
             if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);

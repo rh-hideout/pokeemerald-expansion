@@ -315,6 +315,10 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
+enum EvoState {
+    CHECK_EVO,
+    DO_EVO,
+};
 
 enum PokemonJumpType {
     PKMN_JUMP_TYPE_NONE,        // Not allowed in Pokémon Jump

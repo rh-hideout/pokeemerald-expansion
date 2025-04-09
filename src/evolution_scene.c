@@ -556,7 +556,7 @@ static void CreateShedinja(u32 preEvoSpecies, u32 postEvoSpecies, struct Pokemon
         if (evolutions[i].method == EVO_SPLIT_FROM_EVO
          && evolutions[i].param == postEvoSpecies
          && gPlayerPartyCount < PARTY_SIZE
-         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, NULL))
+         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, NULL, CHECK_EVO))
         {
             s32 j;
             struct Pokemon *shedinja = &gPlayerParty[gPlayerPartyCount];
@@ -827,12 +827,9 @@ static void Task_EvolutionScene(u8 taskId)
                 Overworld_PlaySpecialMapMusic();
                 
             }
-            
+
             if (!gTasks[taskId].tEvoWasStopped)
-            {
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, mon);
-                DoRemoveItems(mon);
-            }
             
             DestroyTask(taskId);
             FreeMonSpritesGfx();
