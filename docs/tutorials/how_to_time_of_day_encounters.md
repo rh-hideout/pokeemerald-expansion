@@ -44,7 +44,7 @@ Great questie bestie!
 
 Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h):
 - `OW_TIME_OF_DAY_ENCOUNTERS            FALSE`
-  - should be `TRUE` or `FALSE`, basically enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on the value of `OW_TIME_OF_DAY_ENCOUNTERS`.
+  - should be `TRUE` or `FALSE`, basically enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
 - `OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE`
   - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option at the bottom.
 - `OW_TIME_OF_DAY_DEFAULT               TIME_MORNING`
@@ -55,12 +55,12 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 
 ## Examples
 
-### Running without the `--copy` option
+### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
 Make sure you run this from the root folder of your project!
 
 ```python3 migration_scripts/add_time_based_encounters.py```
 
-Result
+#### Result:
 ```
 "encounters": [
         {
@@ -144,16 +144,18 @@ Result
           "map": "MAP_ROUTE101",
           "base_label": "gRoute101_Night"
         },
-    ]
+]
+
+As you can see, the names change, but the encounters aren't touched, so you're free to add your own, piecemeal style.
     
 ```
 
-### Running with the `--copy` option
+### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) with the `--copy` option
 Make sure you run this from the root folder of your project!
 
 ```python3 migration_scripts/add_time_based_encounters.py --copy```
 
-Result
+#### Result:
 ```
 "encounters": [
         {
@@ -434,3 +436,4 @@ Result
         },
     ]
 ```
+As you can see, the group `gRoute101` was copied into groups that correspond with the four vanilla times of day (Morning/Day/Evening/Night).
