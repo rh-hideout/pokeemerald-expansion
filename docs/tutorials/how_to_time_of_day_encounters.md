@@ -2,7 +2,7 @@
 
 ## What is the Time-Based Encounters feature? 
 Time-Based Encounters lets you pick which Pokémon appear based on the in-game clock, per route!
-Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you had a higher chance of catching a Bidoof than a Starly at night.
+Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you have a higher chance of catching a Bidoof than a Starly at night.
 
 
 ## Sounds rad, how do I add them to my romhack?
