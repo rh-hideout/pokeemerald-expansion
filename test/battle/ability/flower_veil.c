@@ -1,6 +1,20 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+    ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_POISON);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
+    ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+    ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+    ASSUME(GetMoveEffect(MOVE_HYPNOSIS) == EFFECT_SLEEP);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_HYPNOSIS) == MOVE_EFFECT_SLEEP);
+}
+
 DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - right target")
 {
     u32 move;
@@ -12,7 +26,6 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - right tar
     PARAMETRIZE { move = MOVE_HYPNOSIS; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }

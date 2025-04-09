@@ -6,6 +6,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
     } WHEN {
@@ -23,7 +24,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it fails")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
         PLAYER(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
     } WHEN {
@@ -45,7 +46,7 @@ SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it
 SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }

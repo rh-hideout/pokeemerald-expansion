@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Poison Point will not poison Poison-Type targets with corros
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Wobbuffet was poisoned by the opposing Nidoran♂'s Poison Point!");
+            MESSAGE("Salandit was poisoned by the opposing Nidoran♂'s Poison Point!");
             STATUS_ICON(player, poison: TRUE);
         }
     }

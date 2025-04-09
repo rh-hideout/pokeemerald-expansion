@@ -104,6 +104,7 @@ SINGLE_BATTLE_TEST("Purifying Salt user can't be poisoned by Toxic Spikes")
 SINGLE_BATTLE_TEST("Purifying Salt protects from secondary effect burn")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_EMBER, MOVE_EFFECT_BURN));
         PLAYER(SPECIES_GARGANACL) { Ability(ABILITY_PURIFYING_SALT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

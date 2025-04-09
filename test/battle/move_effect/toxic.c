@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
 }
 
 SINGLE_BATTLE_TEST("Toxic inflicts bad poison")

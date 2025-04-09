@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+}
+
 SINGLE_BATTLE_TEST("Burn deals 1/16th (Gen7+) or 1/8th damage per turn")
 {
     u32 j;

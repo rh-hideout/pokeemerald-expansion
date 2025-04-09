@@ -25,7 +25,8 @@ SINGLE_BATTLE_TEST("Sleep prevents the battler from using a move")
 SINGLE_BATTLE_TEST("Sleep: Spore doesn't affect grass types")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
+        ASSUME(IsPowderMove(MOVE_SPORE));
+        ASSUME(B_POWDER_GRASS >= GEN_6);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHIKORITA);
     } WHEN {

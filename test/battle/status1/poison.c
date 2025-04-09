@@ -25,6 +25,8 @@ SINGLE_BATTLE_TEST("Poison can't bad poison a poison or steel type")
     PARAMETRIZE { species = SPECIES_BULBASAUR; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_POISON);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {

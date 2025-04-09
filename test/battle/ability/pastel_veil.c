@@ -86,6 +86,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - right tar
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PONYTA_GALAR) { Ability(ABILITY_PASTEL_VEIL); }
@@ -104,6 +105,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - left targ
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
