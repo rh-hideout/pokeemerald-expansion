@@ -3132,9 +3132,9 @@ static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, u32 ab
 
 bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
 {
-    u32 defAbility = GetBattlerAbility(battlerDef);
+    u32 defAbility = AI_DATA->abilities[battlerDef];
     // Battler can be poisoned and has move/ability that synergizes with being poisoned
-    if (CanBePoisoned(battlerAtk, battlerDef, GetBattlerAbility(battlerDef)) && (
+    if (CanBePoisoned(battlerAtk, battlerDef, defAbility) && (
         DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
         || defAbility == ABILITY_POISON_HEAL
         || (defAbility == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))))
@@ -3152,7 +3152,7 @@ bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
 
 bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef)
 {
-    u32 defAbility = GetBattlerAbility(battlerDef);
+    u32 defAbility = AI_DATA->abilities[battlerDef];
     // Battler can be burned and has move/ability that synergizes with being burned
     if (CanBeBurned(battlerDef, defAbility) && (
         DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
@@ -3186,7 +3186,7 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
     }
     else
     {
-        u32 defAbility = GetBattlerAbility(battlerDef);
+        u32 defAbility = AI_DATA->abilities[battlerDef];
         // Battler can be frostbitten and has move/ability that synergizes with being frostbitten
         if (CanBeFrozen(battlerDef) && 
             DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility))
@@ -3206,7 +3206,7 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
 
 bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef)
 {
-    u32 defAbility = GetBattlerAbility(battlerDef);
+    u32 defAbility = AI_DATA->abilities[battlerDef];
     // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
     if (CanBeParalyzed(battlerDef, defAbility) && (
         DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)))
