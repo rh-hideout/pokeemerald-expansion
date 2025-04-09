@@ -58,7 +58,9 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 ### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
 **Make sure you run this from the root folder of your project!**
 
-```python3 migration_scripts/add_time_based_encounters.py```
+```
+python3 migration_scripts/add_time_based_encounters.py
+```
 
 #### Result:
 ```
@@ -152,7 +154,9 @@ As you can see, the names change, but the encounters aren't touched, so you're f
 ### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) with the `--copy` option
 **Make sure you run this from the root folder of your project!**
 
-```python3 migration_scripts/add_time_based_encounters.py --copy```
+```
+python3 migration_scripts/add_time_based_encounters.py --copy
+```
 
 #### Result:
 ```
