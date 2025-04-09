@@ -417,10 +417,6 @@ void Overworld_ResetBattleFlagsAndVars(void)
         VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
     #endif
 
-    #if B_VAR_WILD_AI_FLAGS != 0
-        VarSet(B_VAR_WILD_AI_FLAGS,0);
-    #endif
-
     FlagClear(B_FLAG_INVERSE_BATTLE);
     FlagClear(B_FLAG_FORCE_DOUBLE_WILD);
     FlagClear(B_SMART_WILD_AI_FLAG);

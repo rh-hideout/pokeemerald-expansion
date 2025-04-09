@@ -51,6 +51,9 @@
 #define AI_FLAG_SMART_TRAINER         (AI_FLAG_BASIC_TRAINER | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_WEIGH_ABILITY_PREDICTION)
 #define AI_FLAG_PREDICTION            (AI_FLAG_PREDICT_SWITCH | AI_FLAG_PREDICT_INCOMING_MON)
 
+#define AI_FLAG_WILD_ENCOUNTER        (AI_FLAG_CHECK_BAD_MOVE) // You can append any flag you want depending on how smart you want the ai to be. See above how to combine several flags
+
+
 // 'other' ai logic flags
 #define AI_FLAG_DYNAMIC_FUNC          (1 << 28)  // Create custom AI functions for specific battles via "setdynamicaifunc" cmd
 #define AI_FLAG_ROAMING               (1 << 29)
