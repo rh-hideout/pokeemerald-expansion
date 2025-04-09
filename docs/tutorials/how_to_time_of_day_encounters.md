@@ -439,4 +439,4 @@ python3 migration_scripts/add_time_based_encounters.py --copy
         },
     ]
 ```
-As you can see, the group `gRoute101` was copied into groups that correspond with the four vanilla times of day (Morning/Day/Evening/Night).
+As you can see, the group `gRoute101` and all its encounters were copied into groups that correspond with the four vanilla times of day (Morning/Day/Evening/Night). 
