@@ -96,7 +96,7 @@ Common_Movement_Delay32:
 	delay_16
 	step_end
 
-Common_Movement_WalkUp:
+Common_Movement_WalkUp::
 	walk_up
 	step_end
 
@@ -107,82 +107,62 @@ Common_Movement_WalkUp2::
 	step_end
 
 @ Follower NPC
-Common_Movement_WalkUpHideSlow::
+Common_Movement_WalkUpSlow::
     walk_slow_up
-    set_invisible
     step_end
 
-Common_Movement_WalkDownHideSlow::
+Common_Movement_WalkDownSlow::
     walk_slow_down
-    set_invisible
     step_end
 
-Common_Movement_WalkRightHideSlow::
+Common_Movement_WalkRightSlow::
     walk_slow_right
-    set_invisible
     step_end
 
-Common_Movement_WalkLeftHideSlow::
+Common_Movement_WalkLeftSlow::
     walk_slow_left
-    set_invisible
     step_end
 
-Common_Movement_WalkUpHide::
-    walk_up
-    set_invisible
-    step_end
-
-Common_Movement_WalkDownHide::
+Common_Movement_WalkDown::
     walk_down
-    set_invisible
     step_end
 
-Common_Movement_WalkRightHide::
+Common_Movement_WalkRight::
     walk_right
-    set_invisible
     step_end
 
-Common_Movement_WalkLeftHide::
+Common_Movement_WalkLeft::
     walk_left
-    set_invisible
     step_end
 
-Common_Movement_WalkUpHideFast::
+Common_Movement_WalkUpFast::
     walk_fast_up
-    set_invisible
     step_end
 
-Common_Movement_WalkDownHideFast::
+Common_Movement_WalkDownFast::
     walk_fast_down
-    set_invisible
     step_end
 
-Common_Movement_WalkRightHideFast::
+Common_Movement_WalkRightFast::
     walk_fast_right
-    set_invisible
     step_end
 
-Common_Movement_WalkLeftHideFast::
+Common_Movement_WalkLeftFast::
     walk_fast_left
-    set_invisible
     step_end
 
-Common_Movement_WalkUpHideFaster::
+Common_Movement_WalkUpFaster::
     walk_faster_up
-    set_invisible
     step_end
 
-Common_Movement_WalkDownHideFaster::
+Common_Movement_WalkDownFaster::
     walk_faster_down
-    set_invisible
     step_end
 
-Common_Movement_WalkRightHideFaster::
+Common_Movement_WalkRightFaster::
     walk_faster_right
-    set_invisible
     step_end
 
-Common_Movement_WalkLeftHideFaster::
+Common_Movement_WalkLeftFaster::
     walk_faster_left
-    set_invisible
     step_end

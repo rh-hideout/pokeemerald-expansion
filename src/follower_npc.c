@@ -1515,13 +1515,6 @@ void FollowerNPCTrainerSightingPositionFix(void)
 #endif
 }
 
-void FollowerNPCIntoPlayer(void)
-{
-#if OW_ENABLE_NPC_FOLLOWERS
-    FollowerNPCPositionFix(0);
-#endif
-}
-
 bool8 PlayerHasFollowerNPC(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
@@ -1625,10 +1618,10 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 #if OW_ENABLE_NPC_FOLLOWERS
 static const u8 *FollowerNPCHideMovementsSpeedTable[][4] = 
 {
-    [DIR_SOUTH] = {Common_Movement_WalkDownHideSlow, Common_Movement_WalkDownHide, Common_Movement_WalkDownHideFast, Common_Movement_WalkDownHideFaster},
-    [DIR_NORTH] = {Common_Movement_WalkUpHideSlow, Common_Movement_WalkUpHide, Common_Movement_WalkUpHideFast, Common_Movement_WalkUpHideFaster},
-    [DIR_WEST] = {Common_Movement_WalkLeftHideSlow, Common_Movement_WalkLeftHide, Common_Movement_WalkLeftHideFast, Common_Movement_WalkLeftHideFaster},
-    [DIR_EAST] = {Common_Movement_WalkRightHideSlow, Common_Movement_WalkRightHide, Common_Movement_WalkRightHideFast, Common_Movement_WalkRightHideFaster}
+    [DIR_SOUTH] = {Common_Movement_WalkDownSlow, Common_Movement_WalkDown, Common_Movement_WalkDownFast, Common_Movement_WalkDownFaster},
+    [DIR_NORTH] = {Common_Movement_WalkUpSlow, Common_Movement_WalkUp, Common_Movement_WalkUpFast, Common_Movement_WalkUpFaster},
+    [DIR_WEST] = {Common_Movement_WalkLeftSlow, Common_Movement_WalkLeft, Common_Movement_WalkLeftFast, Common_Movement_WalkLeftFaster},
+    [DIR_EAST] = {Common_Movement_WalkRightSlow, Common_Movement_WalkRight, Common_Movement_WalkRightFast, Common_Movement_WalkRightFaster}
 };
 #endif
 

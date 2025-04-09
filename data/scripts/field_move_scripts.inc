@@ -293,8 +293,7 @@ EventScript_UseWaterfall::
 	msgbox Text_WantToWaterfall, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndWaterfall
 	msgbox Text_MonUsedWaterfall, MSGBOX_DEFAULT
-	call FollowerNPCIntoPlayerScript
-	callnative HideNPCFollower
+	hidefollowernpc
 	dofieldeffect FLDEFF_USE_WATERFALL
 	callnative FollowerNPC_WarpSetEnd
 	goto EventScript_EndWaterfall
@@ -331,8 +330,7 @@ EventScript_UseDive::
 	msgbox Text_WantToDive, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndDive
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
-	call FollowerNPCIntoPlayerScript
-	callnative HideNPCFollower
+	hidefollowernpc
 	setfieldeffectargument 0, VAR_0x8004
 	setfieldeffectargument 1, 1
 	dofieldeffect FLDEFF_USE_DIVE
@@ -358,8 +356,7 @@ EventScript_UseDiveUnderwater::
 	msgbox Text_WantToSurface, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndSurface
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
-	call FollowerNPCIntoPlayerScript
-	callnative HideNPCFollower
+	hidefollowernpc
 	dofieldeffect FLDEFF_USE_DIVE
 	goto EventScript_EndSurface
 	end
@@ -446,59 +443,3 @@ EventScript_UseDefog::
 	waitstate
 	releaseall
 	end
-	
-FollowerNPCIntoPlayerScript::
-	setvar 0x8000 0x0
-	callnative FollowerNPCIntoPlayer
-	compare VAR_RESULT 0xFFFF
-	goto_if_eq FollowerNPCIntoPlayerScriptReturn
-	setvar 0x8005 0xFD  @ follower
-	call WalkCall
-	setvar 0x8000 0x1
-	callnative FollowerNPCIntoPlayer
-FollowerNPCIntoPlayerScriptReturn:
-	return
-	
-WalkCall:
-	compare VAR_RESULT 0x0
-	call_if_eq WalkDownCall
-	compare VAR_RESULT 0x1
-	call_if_eq WalkUpCall
-	compare VAR_RESULT 0x2
-	call_if_eq WalkLeftCall
-	compare VAR_RESULT 0x3
-	call_if_eq WalkRightCall
-	waitmovement 0x8005
-	return
-	
-WalkDownCall:
-	applymovement 0x8005 WalkDown
-	return
-
-WalkUpCall:
-	applymovement 0x8005 WalkUp
-	return
-
-WalkLeftCall:
-	applymovement 0x8005 WalkLeft
-	return
-
-WalkRightCall:
-	applymovement 0x8005 WalkRight
-	return
-	
-WalkDown:
-	walk_down
-	step_end 
-
-WalkUp:
-	walk_up
-	step_end
-
-WalkLeft:
-	walk_left
-	step_end
-
-WalkRight:
-	walk_right
-	step_end

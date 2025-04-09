@@ -2557,6 +2557,7 @@
     callnative ScriptHideNPCFollower
     .byte \speed
     waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
+    callnative HideNPCFollower
     .endm
     
     @ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
