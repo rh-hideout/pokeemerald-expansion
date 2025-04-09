@@ -56,7 +56,7 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 ## Examples
 
 ### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
-Make sure you run this from the root folder of your project!
+**Make sure you run this from the root folder of your project!**
 
 ```python3 migration_scripts/add_time_based_encounters.py```
 
@@ -150,7 +150,7 @@ Make sure you run this from the root folder of your project!
 As you can see, the names change, but the encounters aren't touched, so you're free to add your own, piecemeal style.
 
 ### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) with the `--copy` option
-Make sure you run this from the root folder of your project!
+**Make sure you run this from the root folder of your project!**
 
 ```python3 migration_scripts/add_time_based_encounters.py --copy```
 
