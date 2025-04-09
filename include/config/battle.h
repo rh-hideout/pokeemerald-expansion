@@ -192,7 +192,6 @@
 // Eg: Replace with FLAG_UNUSED_0x264 so you can use that flag to toggle the feature.
 #define B_FLAG_INVERSE_BATTLE       0     // If this flag is set, the battle's type effectiveness are inversed. For example, fire is super effective against water.
 #define B_FLAG_FORCE_DOUBLE_WILD    0     // If this flag is set, all land and surfing wild battles will be double battles.
-#define B_SMART_WILD_AI_FLAG        0     // If not 0, you can set this flag in a script to enable smart wild pokemon
 #define B_FLAG_NO_BAG_USE           0     // If this flag is set, the ability to use the bag in battle is disabled.
 #define B_FLAG_NO_CATCHING          0     // If this flag is set, the ability to catch wild Pokémon is disabled.
 #define B_FLAG_NO_RUNNING           0     // If this flag is set, the ability to escape from wild battles is disabled. Also makes Roar/Whirlwind and Teleport (under Gen8) fail.
@@ -207,8 +206,17 @@
 // Eg: Replace with VAR_UNUSED_0x40F7 so you can use B_VAR_STARTING_STATUS for that feature.
 #define B_VAR_STARTING_STATUS       0     // If this var has a value, assigning a STATUS_FIELD_xx_TERRAIN to it before battle causes the battle to start with that terrain active.
 #define B_VAR_STARTING_STATUS_TIMER 0     // If this var has a value greater or equal than 1 field terrains will last that number of turns, otherwise they will last until they're overwritten.
-#define B_VAR_WILD_AI_FLAGS         0     // If not 0, you can use this var to add to default wild AI flags. NOT usable with flags above (1 << 15)
 #define B_VAR_DIFFICULTY            0     // If not 0, you can use this var to control which difficulty version of a Trainer is loaded. This should be manually set by the developer using Script_SetDifficulty AFTER NewGameInitData has run.
+
+// Wild AI handlers
+// Both vars require the flag to be set. By itself, the flag determines wild AI by level in src/battle_ai_main.c GetWildAiFlags()
+#define B_SMART_WILD_AI_FLAG        0     // If not 0, you can set this flag in a script to enable smart wild pokemon.
+#define B_VAR_WILD_AI_FLAGS         0     // If set, this var can be used to set AI flags for wild mons only out of the first 16 AI flags (up through 1 << 15)
+                                          // Setting this for new projects is not recommended; this config is for save compatibility.
+                                          // Many of the more desirable AI flags are after the cutoff.
+#define B_VAR_WILD_AI_SETTING       0     // If set, this var can be used to set AI for wild mons out of preset selections.
+                                          // Presets are defined in include/constants/battle_ai.h and src/battle_ai_main.c
+                                          // Having both B_VAR_WILD_AI_FLAGS and B_VAR_WILD_AI_SETTING defined will cause B_VAR_WILD_AI_FLAGS to be zeroed out after the player has B_VAR_WILD_AI_SETTING set in a script, to aid in transitioning.
 
 // Sky Battles
 #define B_FLAG_SKY_BATTLE                 0     // If this flag has a value, the player will be able to engage in scripted Sky Battles.

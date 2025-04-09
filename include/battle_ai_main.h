@@ -116,5 +116,8 @@ void Ai_UpdateSwitchInData(u32 battler);
 void Ai_UpdateFaintData(u32 battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunc(void);
+u32 GetDynamicWildAiFlags(u32 flagState);
+
+STATIC_ASSERT(B_VAR_WILD_AI_FLAGS == 0 || B_VAR_WILD_AI_SETTING == 0 || B_VAR_WILD_AI_FLAGS != B_VAR_WILD_AI_SETTING, Var1MustNotBeEqualToVar2)
 
 #endif // GUARD_BATTLE_AI_MAIN_H
