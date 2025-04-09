@@ -2455,10 +2455,15 @@ bool32 ShouldShowTypeEffectiveness(u32 targetId)
     return TRUE;
 }
 
-// Currently a placeholder until a proper implementation is made accounting for doubles
+// Currently missing the SV default behavior
 static u32 GetDefaultEffectivenessTarget(u32 battler)
 {
-    return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
+    u32 targetId = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    if (!IsDoubleBattle())
+        return targetId;
+    if (!IsBattlerAlive(targetId))
+        return BATTLE_PARTNER(targetId);
+    return targetId;
 }
 
 static void MoveSelectionDisplayMoveEffectiveness(u32 targetId, u32 battler)
