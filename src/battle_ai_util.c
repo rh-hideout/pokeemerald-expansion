@@ -478,10 +478,10 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
         return TRUE;
 
-    if (CanAbilityBlockMove(battlerAtk, battlerDef, move, aiData->abilities[battlerDef], ABILITY_CHECK_TRIGGER))
+    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER_AI))
         return TRUE;
 
     switch (GetMoveEffect(move))
@@ -1142,8 +1142,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
 
     u32 predictedMove = AI_DATA->lastUsedMove[battler]; // TODO update for move prediction
 
-    s8 aiPriority = GetBattleMovePriority(battlerAI, moveConsidered);
-    s8 playerPriority = GetBattleMovePriority(battler, predictedMove);
+    s8 aiPriority = GetBattleMovePriority(battlerAI, abilityAI, moveConsidered);
+    s8 playerPriority = GetBattleMovePriority(battler, abilityPlayer, predictedMove);
 
     if (aiPriority > playerPriority)
         return AI_IS_FASTER;
@@ -2501,6 +2501,9 @@ bool32 IsSwitchOutEffect(u32 effect)
     // Switch out effects like U-Turn, Volt Switch, etc.
     switch (effect)
     {
+    case EFFECT_TELEPORT:
+        if (B_TELEPORT_BEHAVIOR >= GEN_8)
+            return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_BATON_PASS:
@@ -3115,19 +3118,108 @@ bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move
     return TRUE;
 }
 
-bool32 ShouldPoisonSelf(u32 battler, u32 ability)
+static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, u32 ability)
 {
-    if (CanBePoisoned(battler, battler, GetBattlerAbility(battler)) && (
-     ability == ABILITY_MARVEL_SCALE
-      || ability == ABILITY_POISON_HEAL
-      || ability == ABILITY_QUICK_FEET
-      || ability == ABILITY_MAGIC_GUARD
-      || (ability == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
-      || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
-      || HasMoveEffect(battler, EFFECT_FACADE)
-      || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT)))
-        return TRUE;    // battler can be poisoned and has move/ability that synergizes with being poisoned
+    if (ability == ABILITY_MARVEL_SCALE
+     || ability == ABILITY_QUICK_FEET
+     || ability == ABILITY_MAGIC_GUARD
+     || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+     || HasMoveEffect(battler, EFFECT_FACADE)
+     || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT))
+        return TRUE;
     return FALSE;
+}
+
+bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
+{
+    u32 defAbility = GetBattlerAbility(battlerDef);
+    // Battler can be poisoned and has move/ability that synergizes with being poisoned
+    if (CanBePoisoned(battlerAtk, battlerDef, GetBattlerAbility(battlerDef)) && (
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
+        || defAbility == ABILITY_POISON_HEAL
+        || (defAbility == ABILITY_TOXIC_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))))
+    {
+        if (battlerAtk == battlerDef) // Targeting self
+            return TRUE;
+        else
+            return FALSE;
+    }
+    if (battlerAtk == battlerDef)
+        return FALSE;
+    else
+        return TRUE;
+}
+
+bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef)
+{
+    u32 defAbility = GetBattlerAbility(battlerDef);
+    // Battler can be burned and has move/ability that synergizes with being burned
+    if (CanBeBurned(battlerDef, defAbility) && (
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)
+        || defAbility == ABILITY_HEATPROOF
+        || (defAbility == ABILITY_FLARE_BOOST && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))))
+    {
+        if (battlerAtk == battlerDef) // Targeting self
+            return TRUE;
+        else
+            return FALSE;
+    }
+
+    if (battlerAtk == battlerDef)
+        return FALSE;
+    else
+        return TRUE;
+}
+
+bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef)
+{
+    if (!B_USE_FROSTBITE)
+    {
+        if (CanBeFrozen(battlerDef))
+        {
+            if (battlerAtk == battlerDef) // Targeting self
+                return FALSE;
+            else
+                return TRUE;
+        }
+        return FALSE;
+    }
+    else
+    {
+        u32 defAbility = GetBattlerAbility(battlerDef);
+        // Battler can be frostbitten and has move/ability that synergizes with being frostbitten
+        if (CanBeFrozen(battlerDef) && 
+            DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility))
+        {
+            if (battlerAtk == battlerDef) // Targeting self
+                return TRUE;
+            else
+                return FALSE;
+        }
+    
+        if (battlerAtk == battlerDef)
+            return FALSE;
+        else
+            return TRUE;
+    }
+}
+
+bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef)
+{
+    u32 defAbility = GetBattlerAbility(battlerDef);
+    // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
+    if (CanBeParalyzed(battlerDef, defAbility) && (
+        DoesBattlerBenefitFromAllVolatileStatus(battlerDef, defAbility)))
+    {
+        if (battlerAtk == battlerDef) // Targeting self
+            return TRUE;
+        else
+            return FALSE;
+    }
+    if (battlerAtk == battlerDef)
+        return FALSE;
+    else
+        return TRUE;
 }
 
 bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove)
@@ -3191,20 +3283,6 @@ bool32 AI_CanGetFrostbite(u32 battler, u32 ability)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;
-}
-
-bool32 ShouldBurnSelf(u32 battler, u32 ability)
-{
-    if (CanBeBurned(battler, ability) && (
-     ability == ABILITY_QUICK_FEET
-      || ability == ABILITY_HEATPROOF
-      || ability == ABILITY_MAGIC_GUARD
-      || (ability == ABILITY_FLARE_BOOST && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL))
-      || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
-      || HasMoveEffect(battler, EFFECT_FACADE)
-      || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT)))
-        return TRUE;
-    return FALSE;
 }
 
 bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
@@ -3934,6 +4012,10 @@ static u32 IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, u32 statI
     if (considerContrary && AI_DATA->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
+    // Don't increase stats if opposing battler has Unaware
+    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, AI_DATA))
+        return NO_INCREASE;
+
     // Don't increase stat if AI is at +4
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
         return NO_INCREASE;
@@ -4419,4 +4501,13 @@ bool32 IsBattlerItemEnabled(u32 battler)
     if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
         return FALSE;
     return TRUE;
+}
+
+bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiData)
+{
+    if (aiData->abilities[battler] == ability)
+        return TRUE;
+    if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
+        return TRUE;
+    return FALSE;
 }

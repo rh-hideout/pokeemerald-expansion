@@ -29691,13 +29691,13 @@ gBattleAnimMove_ContinentalCrush::
 	jumpargeq 0x0 0x0 ContinentalCrushDay
 	jumpargeq 0x0 0x2 ContinentalCrushAfternoon
 ContinentalCrushNight:
-	fadetobg BG_BLUE_SKY_NIGHT
+	fadetobg BG_ROCK_FIELD_NIGHT
 	goto FinishContinentalCrush
 ContinentalCrushDay:
-	fadetobg BG_BLUE_SKY_DAY
+	fadetobg BG_ROCK_FIELD_DAY
 	goto FinishContinentalCrush
 ContinentalCrushAfternoon:
-	fadetobg BG_BLUE_SKY_AFTERNOON
+	fadetobg BG_ROCK_FIELD_AFTERNOON
 FinishContinentalCrush:
 	delay 0x18
 	invisible ANIM_TARGET
@@ -31720,13 +31720,13 @@ gBattleAnimMove_Catastropika::
 	jumpargeq 0x0 0x0 CatastropikaDaytime
 	jumpargeq 0x0 0x2 CatastropikaAfternoon
 CatastropikaNight:
-	fadetobg BG_BLUE_SKY_NIGHT
+	fadetobg BG_MAX_LIGHTNING
 	goto CatastropikaFinish
 CatastropikaDaytime:
-	fadetobg BG_BLUE_SKY_DAY
+	fadetobg BG_MAX_LIGHTNING
 	goto CatastropikaFinish
 CatastropikaAfternoon:
-	fadetobg BG_BLUE_SKY_AFTERNOON
+	fadetobg BG_MAX_LIGHTNING
 CatastropikaFinish:
 	waitbgfadeout
 	visible ANIM_ATTACKER
@@ -32162,12 +32162,12 @@ gBattleAnimMove_StokedSparksurfer::
 	jumpargeq 0x0 0x0 StokedSparksurferDay
 	jumpargeq 0x0 0x2 StokedSparksurferAfternoon
 StokedSparksurferNight:
-	fadetobg BG_BLUE_SKY_NIGHT
+	fadetobg BG_MAX_LIGHTNING
 	goto StokedSparksurferFinish
 StokedSparksurferAfternoon:
-	fadetobg BG_BLUE_SKY_AFTERNOON
+	fadetobg BG_MAX_LIGHTNING
 StokedSparksurferDay:
-	fadetobg BG_BLUE_SKY_DAY
+	fadetobg BG_MAX_LIGHTNING
 StokedSparksurferFinish:
 	waitbgfadeout
 	visible ANIM_ATTACKER
@@ -33323,20 +33323,24 @@ OceanicOperettaExplosion:
 
 
 gBattleAnimMove_SplinteredStormshards::
+	createvisualtask AnimTask_GetLycanrocForm, 0x2
+	jumpargeq 0x0 0x0 SplinteredStormshardsDayForme
+	jumpargeq 0x0 0x2 SplinteredStormshardsDuskForme
+SplinteredStormshardsNightForme:
+	fadetobg BG_ROCK_FIELD_NIGHT
+	goto SplinteredStormshardsFinishFade
+SplinteredStormshardsDayForme:
+	fadetobg BG_ROCK_FIELD_DAY
+	goto SplinteredStormshardsFinishFade
+SplinteredStormshardsDuskForme:
+	fadetobg BG_ROCK_FIELD_AFTERNOON
+SplinteredStormshardsFinishFade:
+	waitbgfadeout
+	waitforvisualfinish
 	loadspritegfx ANIM_TAG_ROCKS @rock
 	loadspritegfx ANIM_TAG_ICICLE_SPEAR @spear
 	createvisualtask AnimTask_AllBattlersInvisibleExceptAttackerAndTarget, 0xA
 	waitforvisualfinish
-	createvisualtask AnimTask_GetLycanrocForm, 0x2
-	jumpargeq 0x0 0x1 SplinteredStormshardsNightForme
-SplinteredStormshardsDayForme:
-	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0x0, 0xc, 0x5bff
-	goto SplinteredStormshardsFinishFade
-SplinteredStormshardsNightForme:
-	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0x0, 0xc, 0x0000
-SplinteredStormshardsFinishFade:
-	waitforvisualfinish
-	setalpha 12, 8
 	playsewithpan SE_M_DRAGON_RAGE, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_IsTargetPlayerSide, 0x2
 	jumpargeq 0x7 ANIM_TARGET SplinteredStormshardsByOpponent
@@ -33345,7 +33349,6 @@ SplinteredStormshardsByPlayer:
 	call SplinteredStormshardsPlayer_Rising1
 	delay 0x2
 	loadspritegfx ANIM_TAG_ROUND_SHADOW @fly
-	invisible ANIM_TARGET
 	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
 	createsprite gSplinteredShardsFlySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0xd, 0x150
 	call SplinteredStormshardsPlayer_Rising1
@@ -33360,8 +33363,6 @@ SplinteredStormshardsByPlayer:
 	call SplinteredStormshardsPlayer_Rising1
 	delay 16
 	waitforvisualfinish
-	visible ANIM_TARGET
-	call SplinteredStormshardsFixBackgroundFade
 	waitforvisualfinish
 	loadspritegfx ANIM_TAG_METEOR @superpower
 	loadspritegfx ANIM_TAG_EXPLOSION @explosion
@@ -33389,6 +33390,8 @@ SplinteredStormshardsEnd:
 	waitforvisualfinish
 	createvisualtask AnimTask_AllBattlersVisible, 0xA
 	waitforvisualfinish
+	restorebg
+	waitbgfadein
 	waitforvisualfinish
 	end
 SplinteredStormshardsExplosionOpponent:
@@ -33428,7 +33431,6 @@ SplinteredStormshardsByOpponent:
 	call SplinteredStormshardsOpponent_Rising1
 	delay 0x2
 	loadspritegfx ANIM_TAG_ROUND_SHADOW @fly
-	invisible ANIM_TARGET
 	createsprite gSplinteredShardsFlySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0xd, 0x150
 	call SplinteredStormshardsOpponent_Rising1
 	call SplinteredStormshardsOpponent_Rising2
@@ -33442,10 +33444,6 @@ SplinteredStormshardsByOpponent:
 	call SplinteredStormshardsOpponent_Rising1
 	delay 16
 	waitforvisualfinish
-	visible ANIM_TARGET
-	call SplinteredStormshardsFixBackgroundFade
-	waitforvisualfinish
-	visible ANIM_TARGET
 	loadspritegfx ANIM_TAG_METEOR @superpower
 	loadspritegfx ANIM_TAG_EXPLOSION @explosion
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
@@ -33568,16 +33566,6 @@ SplinteredStormshardsOpponent_Rising2:
 	delay 0x2
 	createsprite gSplinteredShardsRisingSpearSpriteTemplate, ANIM_ATTACKER, 50, 0xdc, 0x40, 0xdc, 0x0, 0x30
 	delay 0x2
-	return
-SplinteredStormshardsFixBackgroundFade:
-	createvisualtask AnimTask_GetLycanrocForm, 0x2
-	jumpargeq 0x0 0x1 SplinteredStormshardsNightFormeReturn
-SplinteredStormshardsDayFormeReturn:
-	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0xc, 0x0, 0x5bff
-	goto SplinteredStormshardsFinishFadeReturn
-SplinteredStormshardsNightFormeReturn:
-	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, F_PAL_BG, 0x1, 0xc, 0x0, 0x0000
-SplinteredStormshardsFinishFadeReturn:
 	return
 
 

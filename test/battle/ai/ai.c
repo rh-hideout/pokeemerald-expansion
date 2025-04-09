@@ -899,3 +899,33 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when det
         TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_FLAMETHROWER); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
+{
+    GIVEN {
+        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_BODY_SLAM); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
+{
+    u32 aiMove;
+    PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
+    PARAMETRIZE { aiMove = MOVE_TOXIC; }
+    PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SWELLOW) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}

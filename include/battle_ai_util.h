@@ -177,11 +177,13 @@ bool32 AI_CanGetFrostbite(u32 battler, u32 ability);
 bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, u32 ability);
 bool32 IsBattlerIncapacitated(u32 battler, u32 ability);
 bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove);
-bool32 ShouldPoisonSelf(u32 battler, u32 ability);
+bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef);
 bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove);
 bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 partnerMove);
 bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove);
-bool32 ShouldBurnSelf(u32 battler, u32 ability);
+bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef);
+bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef);
+bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef);
 bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 AI_CanGiveFrostbite(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 AI_CanBeInfatuated(u32 battlerAtk, u32 battlerDef, u32 defAbility);
@@ -236,5 +238,6 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
+bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
 
 #endif //GUARD_BATTLE_AI_UTIL_H
