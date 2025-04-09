@@ -999,7 +999,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 
     if (lastUsedMove != MOVE_NONE && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0)
         || CanAbilityAbsorbMove(battler, opposingBattler, AI_DATA->abilities[opposingBattler], lastUsedMove, GetMoveType(lastUsedMove), ABILITY_CHECK_TRIGGER)
-        || CanAbilityBlockMove(battler, opposingBattler, lastUsedMove, AI_DATA->abilities[opposingBattler], ABILITY_CHECK_TRIGGER)))
+        || CanAbilityBlockMove(battler, opposingBattler, AI_DATA->abilities[battler], AI_DATA->abilities[opposingBattler], lastUsedMove, ABILITY_CHECK_TRIGGER)))
         moveAffectsTarget = FALSE;
 
     if (HOLD_EFFECT_CHOICE(holdEffect) && IsBattlerItemEnabled(battler))

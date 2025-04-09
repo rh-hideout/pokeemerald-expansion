@@ -31,6 +31,7 @@ enum NonVolatileStatus
 enum AbilityEffectOptions
 {
     ABILITY_CHECK_TRIGGER,
+    ABILITY_CHECK_TRIGGER_AI,
     ABILITY_RUN_SCRIPT,
 };
 
@@ -45,10 +46,6 @@ enum MoveAbsorbed
 enum {
     ABILITYEFFECT_ON_SWITCHIN,
     ABILITYEFFECT_ENDTURN,
-    ABILITYEFFECT_MOVES_BLOCK,
-    ABILITYEFFECT_WOULD_BLOCK,         // Checks immunity without triggering a script
-    ABILITYEFFECT_ABSORBING,
-    ABILITYEFFECT_WOULD_ABSORB,        // Checks immunity without triggering a script
     ABILITYEFFECT_MOVE_END_ATTACKER,
     ABILITYEFFECT_MOVE_END,
     ABILITYEFFECT_IMMUNITY,
@@ -224,7 +221,7 @@ u32 AtkCanceller_MoveSuccessOrder(void);
 void SetAtkCancellerForCalledMove(void);
 bool32 HasNoMonsToSwitch(u32 battler, u8 r1, u8 r2);
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbility);
-bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef, enum AbilityEffectOptions option);
+bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, u32 move, enum AbilityEffectOptions option);
 bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, u32 moveType, enum AbilityEffectOptions option);
 u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 moveArg);
 bool32 TryPrimalReversion(u32 battler);
@@ -328,7 +325,7 @@ bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause);
 bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef);
 bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 ability);
-bool32 CanBeParalyzed(u32 battler, u32 battlerDef, u32 abilityDef);
+bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
 bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);

@@ -4796,23 +4796,22 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     return GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
 }
 
-s8 GetChosenMovePriority(u32 battler)
+s32 GetChosenMovePriority(u32 battler, u32 ability)
 {
     u16 move;
 
-    gProtectStructs[battler].pranksterElevated = 0;
+    gProtectStructs[battler].pranksterElevated = FALSE;
     if (gProtectStructs[battler].noValidMoves)
         move = MOVE_STRUGGLE;
     else
         move = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 
-    return GetBattleMovePriority(battler, move);
+    return GetBattleMovePriority(battler, ability, move);
 }
 
-s8 GetBattleMovePriority(u32 battler, u16 move)
+s32 GetBattleMovePriority(u32 battler, u32 ability, u32 move)
 {
-    s8 priority;
-    u16 ability = GetBattlerAbility(battler);
+    s32 priority = 0;
 
     if (GetActiveGimmick(battler) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(move))
         move = GetUsableZMove(battler, move);
@@ -4924,9 +4923,9 @@ s32 GetWhichBattlerFasterOrTies(u32 battler1, u32 battler2, bool32 ignoreChosenM
     if (!ignoreChosenMoves)
     {
         if (gChosenActionByBattler[battler1] == B_ACTION_USE_MOVE)
-            priority1 = GetChosenMovePriority(battler1);
+            priority1 = GetChosenMovePriority(battler1, ability1);
         if (gChosenActionByBattler[battler2] == B_ACTION_USE_MOVE)
-            priority2 = GetChosenMovePriority(battler2);
+            priority2 = GetChosenMovePriority(battler2, ability2);
     }
 
     return GetWhichBattlerFasterArgs(
@@ -5679,19 +5678,19 @@ static void TryEvolvePokemon(void)
     {
         if (!(sTriedEvolving & (1u << i)))
         {
-            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_SPECIAL, i, NULL);
+            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_SPECIAL, i, NULL, DO_EVO);
             bool32 evoModeNormal = TRUE;
             sTriedEvolving |= 1u << i;
 
             if (species == SPECIES_NONE && (gLeveledUpInBattle & (1u << i)))
             {
                 gLeveledUpInBattle &= ~(1u << i);
-                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL);
+                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL, DO_EVO);
             }
 
             if (species == SPECIES_NONE)
             {
-                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_CANT_STOP, ITEM_NONE, NULL);
+                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_CANT_STOP, ITEM_NONE, NULL, DO_EVO);
                 evoModeNormal = FALSE;
             }
 
