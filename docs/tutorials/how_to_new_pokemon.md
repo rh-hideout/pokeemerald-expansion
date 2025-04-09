@@ -1,13 +1,10 @@
-<!--1.7.x-->
 This is a modified version of [the original tutorial about adding new Pokémon species available in Pokeemerald's wiki](https://github.com/pret/pokeemerald/wiki/How-to-add-a-new-Pokémon-species).
 
 Despite the persistent rumors about an incredibly strong third form of Mew hiding somewhere, it actually wasn't possible to catch it... OR WAS IT?
 In this tutorial, we will add a new Pokémon species to the game.
 
-## IMPORTANT: This tutorial applies to 1.7.x versions.
-- [Version 1.9.x](how_to_new_pokemon_1_9_0.md)
-- [Version 1.8.x](how_to_new_pokemon_1_8_0.md)
-- [Version 1.6.x](how_to_new_pokemon_1_6_0.md)
+## IMPORTANT: This tutorial applies to 1.7.x versions onward.
+- [v1.6.x and earlier](how_to_new_pokemon_1_6_0.md)
 
 # Changes compared to vanilla
 The main things that the Expansion changes are listed here.
@@ -39,12 +36,13 @@ The main things that the Expansion changes are listed here.
   * [1. Form tables](#1-form-tables)
   * [2. Form change tables](#2-form-change-tables)
   * [3. Gender differences](#3-gender-differences)
+  * [4. Overworld Data (v1.9 onwards)](#4-overworld-data-v19-onwards)
+  * [5. In-battle shadows (v1.10 onwards)](#5-in-battle-shadows-v110-onwards)
 
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
 
-![mGBA_6WOo1TSlsn](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/0c625cd8-8f89-4bc8-a285-b10a420a8f6d)
-
+![visualizer1](/docs/tutorials/img/add_pokemon/visualizer1.gif)
 
 # The Data - Part 1
 
@@ -60,22 +58,22 @@ Edit [include/constants/species.h](https://github.com/rh-hideout/pokeemerald-exp
  #define SPECIES_NONE                                    0
  #define SPECIES_BULBASAUR                               1
  ...
- #define SPECIES_EEVEE_PARTNER                           PLACEHOLDER_START + 54
-+#define SPECIES_MEWTHREE                                PLACEHOLDER_START + 55
+ #define SPECIES_MIMIKYU_BUSTED_TOTEM                    1523
+ #define SPECIES_MIMIKYU_TOTEM_BUSTED                    SPECIES_MIMIKYU_BUSTED_TOTEM
++#define SPECIES_MEWTHREE                                1524
 
--#define GIGANTAMAX_START                                SPECIES_EEVEE_PARTNER
-+#define GIGANTAMAX_START                                SPECIES_MEWTHREE
+-#define SPECIES_EGG                                     (SPECIES_MIMIKYU_BUSTED_TOTEM + 1)
++#define SPECIES_EGG                                     (SPECIES_MEWTHREE + 1)
 
- // Gigantamax Forms
- #define SPECIES_VENUSAUR_GIGANTAMAX                     GIGANTAMAX_START + 1
+ #define NUM_SPECIES SPECIES_EGG
 ```
 This number is stored in a Pokémon's save structure. These should generally never change, otherwise your saved Pokémon species will change as well.
 
-We add this before Gigantamax forms because they're temporary forms that shouldn't normally be saved into a Pokémon's save structure.
+We add this at the end so that no existing species change Id and so that we don't have to renumber everything after it.
 
 Now, let's see how it looks in-game!
 
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/dc15b0ba-a4bd-4f4e-9658-2dff73a11f79)
+![visualizer2](/docs/tutorials/img/add_pokemon/visualizer2.png)
 
 Hmmm, something's not right...
 
@@ -84,8 +82,8 @@ Oh, I know! We need to add the rest of the data! Normally, the vanilla game woul
 Now, let's see what needs to be done.
 
 ## 2. `SpeciesInfo`'s structure
-Now, to better understand Mewtwo, we also need to understand Mew. Let's look at its data.
-```diff
+Now, to better understand Mewthree, we also need to understand Mew. Let's look at its data.
+```c
     [SPECIES_MEW] =
     {
         .baseHP        = 100,
@@ -94,7 +92,7 @@ Now, to better understand Mewtwo, we also need to understand Mew. Let's look at 
         .baseSpeed     = 100,
         .baseSpAttack  = 100,
         .baseSpDefense = 100,
-        .types = { TYPE_PSYCHIC, TYPE_PSYCHIC },
+        .types = MON_TYPES(TYPE_PSYCHIC),
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 300,
@@ -110,10 +108,9 @@ Now, to better understand Mewtwo, we also need to understand Mew. Let's look at 
         .eggCycles = 120,
         .friendship = 100,
         .growthRate = GROWTH_MEDIUM_SLOW,
-        .eggGroups = { EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED },
-        .abilities = { ABILITY_SYNCHRONIZE, ABILITY_NONE },
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+        .abilities = { ABILITY_SYNCHRONIZE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PINK,
-        .isMythical = TRUE,
         .speciesName = _("Mew"),
         .cryId = CRY_MEW,
         .natDexNum = NATIONAL_DEX_MEW,
@@ -129,23 +126,49 @@ Now, to better understand Mewtwo, we also need to understand Mew. Let's look at 
         .pokemonOffset = -2,
         .trainerScale = 256,
         .trainerOffset = 0,
-        FRONT_PIC(Mew, 64, 48),
-        .frontPicYOffset = 9,
-        .frontAnimFrames = sAnims_Mew,
-        .frontAnimId = ANIM_ZIGZAG_SLOW,
-        .enemyMonElevation = 11,
-        BACK_PIC(Mew, 64, 64),
-        .backPicYOffset = 0,
+        .frontPic = gMonFrontPic_Mew,
+        .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(40, 40) : MON_COORDS_SIZE(64, 48),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 13 : 9,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(1, 40),
+            ANIMCMD_FRAME(0, 10),
+        ),
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_SWING_CONVEX : ANIM_ZIGZAG_SLOW,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 11,
+        .backPic = gMonBackPic_Mew,
+        .backPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(48, 48) : MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 8 : 0,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
-        PALETTES(Mew),
-        ICON(Mew, 0),
+        .palette = gMonPalette_Mew,
+        .shinyPalette = gMonShinyPalette_Mew,
+        .iconSprite = gMonIcon_Mew,
+        .iconPalIndex = 0,
+        SHADOW(0, 13, SHADOW_SIZE_S)
         FOOTPRINT(Mew)
-        LEARNSETS(Mew),
+        OVERWORLD(
+            sPicTable_Mew,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_NONE,
+            sAnimTable_Following,
+            gOverworldPalette_Mew,
+            gShinyOverworldPalette_Mew
+        )
+        .isMythical = TRUE,
+        .isFrontierBanned = TRUE,
+        .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sMewLevelUpLearnset,
+        .teachableLearnset = sMewTeachableLearnset,
     },
 ```
 
-That's a lot of stuff! But don't worry, we'll go through it step by step throught the tutorial
-(and miles better than having this same data through 20+ files like it used to be).
+That's a lot of stuff! But don't worry, we'll go through it step by step throughout the tutorial
+(and it's miles better than having this same data through 20+ files like it used to be).
+
+Across the species files you'll see preprocessor instructions such as `#if/endif P_FAMILY_MEW`. These are used by expansion in order to allow users to disable species via config. Since we're making a new species from scratch, you DON'T need to add them as part of the process.
+
+You can also ignore switch cases for `P_GBA_STYLE_SPECIES_GFX`, as those are only used to switching to GBA-styled sprites.
 
 We'll start by adding the self-explanatory data that's also present in pret's vanilla structure:
 
@@ -177,7 +200,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
 +       .baseSpeed     = 140,
 +       .baseSpAttack  = 194,
 +       .baseSpDefense = 120,
-+       .types = { TYPE_PSYCHIC, TYPE_PSYCHIC },
++       .types = MON_TYPES(TYPE_PSYCHIC),
 +       .catchRate = 3,
 +       .expYield = 255,
 +       .evYield_SpAttack  = 3,
@@ -185,7 +208,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
 +       .eggCycles = 120,
 +       .friendship = 0,
 +       .growthRate = GROWTH_SLOW,
-+       .eggGroups = { EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED },
++       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
 +       .abilities = { ABILITY_INSOMNIA, ABILITY_NONE, ABILITY_NONE },
 +       .bodyColor = BODY_COLOR_PURPLE,
 +    },
@@ -195,15 +218,22 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
 The `.` is the structure reference operator in C to refer to the member object of the structure SpeciesInfo.
 
 - `baseHP`, `baseAttack`, `baseDefense`, `baseSpeed`, `baseSpAttack` and `baseSpDefense` are the base stats. They can't go higher than 255.
-- You may be confused as to why `types` has `TYPE_PSYCHIC` twice. This is because the way the game determines single-type mon is to define both types the same.
-    - If we don't, it defaults to Normal due to it being the first type defined.
+- `types` is using the macro `MON_TYPES` as a helper function for formatting so that only one type has to be input for species with a single type.
+    - To add a species with 2 types, use the format `MON_TYPES(TYPE_PSYCHIC, TYPE_NORMAL)`.
+    - ***1.9 and earlier:*** The format for setting types is the following:
+        ```c
+        // Mono-type
+        .types = { TYPE_PSYCHIC, TYPE_PSYCHIC },
+        // Dual-type
+        .types = { TYPE_PSYCHIC, TYPE_DARK },
+        ```
 - `catchRate` is how likely it is to catch a Pokémon, the lower the value, the harder it is to catch. Legendaries generally have a catch rate of 3, so we put that here.
 - `expYield` is the base amount of experience that a Pokémon gives when defeated/caught. In vanilla, this value caps at 255, but we've increased it to a maximum of 65535 accomodate later gen's higher experience yields. (The highest official value is Blissey's with 608, so going beyond this point may cause exponential gains that could break the system 😱)
     - If you noticed, Mew's had some `#if`s, `#elif`s and `#endif` around it. This is because its yield has changed over time, and we let you choose which ones you want. This is not relevant to our Mewthree however, so we can just put a single `.expYield = 255,` line here.
 - `evYield_HP`, `evYield_Attack`, `evYield_Defense`, `evYield_Speed`, `evYield_SpAttack` and `evYield_SpDefense` are how many EVs does the Pokémon give when they're caught. Each of these fields can have a value of 3 at most. Officially, no Pokémon give out more than 3 EVs total, with them being determined by their evolution stage (eg, Pichu, Pikachu and Raichu give 1, 2 and 3 Speed EVs respectively), and they tend to be associated with its higher stats. Since our Mewthree is a Special Attack monster, we'll be consistent and make it give out 3 Special Attack EVs, but you're always free to assign whatever you feel like :)
     - Notice that the other `evYield` fields are not there. In C, numbers in a struct default to 0, so if we don't specify them, they'll be 0 all around! Less lines to worry about :D
 - `itemCommon` and `itemRare` are used to determine what items is the Pokémon holding when encountering it in the wild.
-    - 50% for `itemCommon` and 5% for `itemRare` (boosted to 60%/20% when the first mon in the party has Compound Grass or Super Luck)
+    - 50% for `itemCommon` and 5% for `itemRare` (boosted to 60%/20% when the first mon in the party has Compound Eyes or Super Luck)
     - If they're both set as the same item, the item has a 100% chance of appearing.
 - `genderRatio` is a fun one.
     - There are 4 ways of handling this
@@ -216,7 +246,16 @@ The `.` is the structure reference operator in C to refer to the member object o
 - `eggCycles` determines how fast an egg of this species will hatch. Doesn't matter much for evolved species or those that can't lay eggs, but we add the field here just in case.
 - `friendship` determines the amount of friendship of the mon when you catch it. Most Pokémon use `STANDARD_FRIENDSHIP`, but this creature of chaos does not want to be your friend, starting with 0.
 - `growthRate` determines the amounts of experience required to reach each level. Go [here](https://bulbapedia.bulbagarden.net/wiki/Experience) for more info.
+    - This should be consistent across evolution lines, otherwise levels could change upon evolution.
 - `eggGroups` are used for breed compatibility. Most Legendaries and Mythicals have the `EGG_GROUP_NO_EGGS_DISCOVERED` group, and so does our Mewthree. Go [here](https://bulbapedia.bulbagarden.net/wiki/Egg_Group) for more info.
+    - This is using the helper macro `MON_EGG_GROUPS`.
+    - ***1.9 and earlier:*** The format for setting egg groups is the following:
+        ```c
+        // Mono-group
+        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_MONSTER },
+        // Dual-group
+        .eggGroups = { EGG_GROUP_MONSTER, EGG_GROUP_MINERAL },
+        ```
 - `abilities` determines the potential abilites of our species. Notice how I also set the ability to `ABILITY_INSOMNIA`, so our little monster doesn't even need to sleep anymore. You can find the abilities for example here [include/constants/abilities.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/constants/abilities.h).
     - When both slot 1 and 2 are defined as not being `ABILITY_NONE`, their starting ability will be decided on a coin flip using their personality. They can later be changed using an Ability Capsule.
         - Certain Pokémon such as Zygarde and Rockruff have different forms to add additional abilities. As such, they cannot be changed using an Ability Capsule (though the Zygarde Cube can change Zygarde's ability by changing them to their corresponding form)
@@ -236,8 +275,7 @@ That's all the basic fields present in vanilla emerald, so now let's take a look
      [SPECIES_MEWTHREE] =
      {
         ...
-        .isLegendary = TRUE,
-        .allPerfectIVs = TRUE,
+        .bodyColor = BODY_COLOR_PURPLE,
 +       .speciesName = _("Mewthree"),
     },
  };
@@ -249,7 +287,7 @@ The `_()` underscore function doesn't really exist - it's a convention borrowed 
 Time for audio!
 We first need to convert an existing audio file to the format supported by the expansion.
 
-Most formats are supported for conversion, but for simplicity's sake, we're gonna use this [mp3 file](https://cdn.discordapp.com/attachments/1206424179197349924/1206424212403920996/mewthree.mp3?ex=6600df1a&is=65ee6a1a&hm=4f05d58a7ae22bfdcd5f83558e15320fc1b6cd42a8cb9dee347b20bfb805ece5&).
+Most formats are supported for conversion, but for simplicity's sake, we're gonna use an mp3 file.
 
 Now, let's copy the file to the `sound/direct_sound_samples/cries` folder.
 Once that's done, let's run the following command:
@@ -311,8 +349,6 @@ Lastly, we add the cry to our species entry
      [SPECIES_MEWTHREE] =
      {
         ...
-        .isLegendary = TRUE,
-        .allPerfectIVs = TRUE,
         .speciesName = _("Mewthree"),
 +       .cryId = CRY_MEWTHREE,
     },
@@ -354,7 +390,7 @@ enum {
 +   #define NATIONAL_DEX_COUNT  NATIONAL_DEX_MEWTHREE
 ```
 
-Do keep in mind that if you intend to add your new species to the Hoenn Dex, you'll also want to add a `HOENN_DEX` constant for it, like this:
+Do keep in mind that if you intend to add your new species to the Hoenn Dex, you'll also want to add a `HOENN_DEX` constant for it and give it a `HOENN_TO_NATIONAL` member, like this:
 
 ```diff
 // Hoenn Pokedex order
@@ -407,7 +443,7 @@ Now we can add the number and entry to our Mewthree:
     },
  };
 ```
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/3759dd4c-8da5-4b1c-9a50-b9e9d0815e7f)
+![image](/docs/tutorials/img/add_pokemon/dex1.png)
 
 The values `pokemonScale`, `pokemonOffset`, `trainerScale` and `trainerOffset` are used for the height comparison figure in the Pokédex.
 
@@ -458,7 +494,7 @@ Edit [src/data/pokemon/pokedex_orders.h](https://github.com/rh-hideout/pokeemera
      ...
  };
 ```
-![mGBA_lUBfmFEKUx](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/3a8b8a17-759b-486b-9831-deb2f494bd71)
+![mGBA_lUBfmFEKUx](/docs/tutorials/img/add_pokemon/dex2.gif)
 
 
 # The Graphics
@@ -475,7 +511,9 @@ __Make sure that you are using the indexed mode and you have limited yourself to
 
 Put the RGB values of your colors into `normal.pal` between the first and the last color and the RGB values for the shiny version into `shiny.pal`.
 Edit `footprint.png` using two colors in indexed mode, black and white.
-Finally, edit `icon.png`. Notice, that the icon will use one of 6 predefined palettes instead of `normal.pal`.
+Finally, edit `icon.png`.
+**Note**: the icon will use one of 6 predefined palettes instead of `normal.pal`.
+Open an icon sprite and load one of the palettes to find out which palette suits your icon sprite best.
 
 ## 2. Add the sprites to the rom
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them, which is kind of tedious.
@@ -485,15 +523,26 @@ Edit [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-exp
 
 ```diff
 #if P_FAMILY_PECHARUNT
-    // const u32 gMonFrontPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/front.4bpp.lz");
-    // const u32 gMonPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/normal.gbapal.lz");
-    // const u32 gMonBackPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/back.4bpp.lz");
-    // const u32 gMonShinyPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/shiny.gbapal.lz");
-    // const u8 gMonIcon_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/icon.4bpp");
+    const u32 gMonFrontPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/front.4bpp.lz");
+    const u32 gMonPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/normal.gbapal.lz");
+    const u32 gMonBackPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/back.4bpp.lz");
+    const u32 gMonShinyPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/shiny.gbapal.lz");
+    const u8 gMonIcon_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/icon.4bpp");
 #if P_FOOTPRINTS
-    // const u8 gMonFootprint_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/footprint.1bpp");
+    const u8 gMonFootprint_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/footprint.1bpp");
 #endif //P_FOOTPRINTS
+#if OW_POKEMON_OBJECT_EVENTS
+    const u32 gObjectEventPic_Pecharunt[] = INCBIN_COMP("graphics/pokemon/pecharunt/overworld.4bpp");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    const u32 gOverworldPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/overworld_normal.gbapal.lz");
+    const u32 gShinyOverworldPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/overworld_shiny.gbapal.lz");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_PECHARUNT
+
+    const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
+    const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
+    const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
 
 +   const u32 gMonFrontPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/anim_front.4bpp.lz");
 +   const u32 gMonBackPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/back.4bpp.lz");
@@ -505,12 +554,14 @@ Edit [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-exp
 
 Please note that Pecharunt, the Pokémon that should be above your insertion for the time being, reads a `front.png` sprite instead of an `anim_front.png` sprite. This is because currently, Pecharunt lacks a 2nd frame. If the front sprite sheet of your species uses 2 frames, you should use `anim_front`.
 
-It is also worth to mention that Pecharunt's sprites are commented out simply because they're currently missing.
-
 ## 3. Add the animations to the rom
 
 You can define the animation order, in which the sprites will be shown. The first number is the sprite index (so 0 or 1) and the second number is the number of frames the sprite will be visible.
 
+### Version 1.11.0 or later
+We add this data directly to the entry, so go to section 4.
+
+### Version 1.10.3 or earlier
 Edit [src/data/pokemon_graphics/front_pic_anims.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/pokemon_graphics/front_pic_anims.h):
 
 ```diff
@@ -566,69 +617,62 @@ Now that we have all the external data ready, we just need to add it to `gSpecie
         .pokemonOffset = 0,
         .trainerScale = 290,
         .trainerOffset = 2,
-+       FRONT_PIC(Mewthree, 64, 64),
++       .frontPic = gMonFrontPic_Mewthree,
++       .frontPicSize = MON_COORDS_SIZE(64, 64),
 +       .frontPicYOffset = 0,
-+       .frontAnimFrames = sAnims_Mewthree,
++       .frontAnimFrames = ANIM_FRAMES(
++           ANIMCMD_FRAME(0, 1),
++       ),
 +       .frontAnimId = ANIM_GROW_VIBRATE,
 +       .frontAnimDelay = 15,
 +       .enemyMonElevation = 6,
-+       BACK_PIC(Mewthree, 64, 64),
++       .backPic = gMonBackPic_Mewthree,
++       .backPicSize = MON_COORDS_SIZE(64, 64),
 +       .backPicYOffset = 0,
 +       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
-+       PALETTES(Mewthree),
-+       ICON(Mewthree, 2),
++       .palette = gMonPalette_Mewthree,
++       .shinyPalette = gMonShinyPalette_Mewthree,
+        .iconSprite = gMonIcon_Mewthree,
+        .iconPalIndex = 2,
 +       FOOTPRINT(Mewthree)
     },
  };
 ```
 Let's explain each of these:
-- `FRONT_PIC`:
-    - This is a macro handles both the `frontPic` and `frontPicSize` fields.
-        ```c
-        #define FRONT_PIC(sprite, width, height)                    \
-                .frontPic = gMonFrontPic_## sprite,                 \
-                .frontPicSize = MON_COORDS_SIZE(width, height)
-        ```
-    - The first value in the macro is used to reference the front sprite, so in this case, using `Mewthree` will call for `gMonFrontPic_Mewthree`.
-    - The second and third values (`width` and `height`) are used for defining the non-empty size of the sprite, which is used in move animations. If you're unsure of the values, you can leave them both as 64.
+- `frontPic`:
+    - Used to reference the front sprite, so in this case, we call for `gMonFrontPic_Mewthree`.
+- `frontPicSize`:
+    - The two values (`width` and `height`) are used for defining the non-empty size of the front sprite, which is used in move animations. If you're unsure of the values, you can leave them both as 64.
 - `frontPicYOffset`:
     - Used to define what Y position the sprite sits at. This is used to set where they'd be "grounded". For the shadow, see `enemyMonElevation`.
 - `frontAnimFrames`:
-    - We link our animation frame animations that we defined earlier here.
+    - We define our animation frame animations directly here. In version `1.10.3 and earlier`, we add the reference to the table that we defined earlier here like this instead:
+        ```diff
+        +       .frontAnimFrames = sAnims_Mewthree,
+        ```
 - `frontAnimId`:
     - Because you are limited to two frames, there are already [predefined front sprite animations](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/pokemon_animation.h), describing translations, rotations, scalings or color changes.
 - `frontAnimDelay`:
     - Sets a delay in frame count between when the Pokémon appears and when the animation starts.
 - `enemyMonElevation`:
     - Used to determine the altitude from the ground. Any value above 0 will show a shadow under the Pokémon, to signify that they're floating.
-- `BACK_PIC`:
-    - A macro like `FRONT_PIC` except for the back sprite handling the `frontPic` and `frontPicSize` fields in the same way.
-        ```c
-        #define BACK_PIC(sprite, width, height)                     \
-                .backPic = gMonBackPic_## sprite,                   \
-                .backPicSize = MON_COORDS_SIZE(width, height)
-        ```
+- `backPic`:
+    - Used to reference the back sprite, so in this case, we call for `gMonBackPic_Mewthree`.
+- `backPicSize`:
+    - The two values (`width` and `height`) are used for defining the non-empty size of the back sprite, which is used in move animations. If you're unsure of the values, you can leave them both as 64.
+    - **NOTE**: Mew has a tarnary switch here in order to change values depending on if a config option is set for displaying th original Gen 3 sprites.
 - `backPicYOffset`:
     - Used to define what Y position of the back sprite. When working with the animation debug menu, we recommend aligning the back sprite to the white background, as it was designed to properyly align with the real battle layout.
 - `backAnimId`:
     - Like `frontAnimId` except for the back sprites and them being a single frame. The IDs listed [here](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/pokemon_animation.h) are used to represent 3 different animations that happen based on the the Pokémon's nature.
-- `PALETTES`
-    - This macro was created to handle both regular and shiny palettes of a Pokémon. It just needs the species suffix to call the corresponding palette.
-        ```c
-        #define PALETTES(pal)                                       \
-                .palette = gMonPalette_## pal,                      \
-                .shinyPalette = gMonShinyPalette_## pal
-        ```
-- `ICON`
-    - This macro is calls both the icon sprite and its palette.
-        ```c
-        #define ICON(sprite, palId)                                 \
-                .iconSprite = gMonIcon_## sprite,                   \
-                .iconPalIndex = palId
-        ```
-        Here, you can choose between the six icon palettes; 0, 1, 2, 3, 4 and 5. All of them located in `graphics/pokemon/icon_palettes`.
-
-        Open an icon sprite and load one of the palettes to find out which palette suits your icon sprite best.
+- `palette`:
+    - Used to reference the non-shiny palette, so in this case, we call for `gMonPalette_Mewthree`.
+- `shinyPalette`:
+    - Used to reference the shiny palette, so in this case, we call for `gMonShinyPalette_Mewthree`.
+- `iconSprite`:
+    - Used to reference the icon sprite, so in this case, we call for `gMonIcon_Mewthree`.
+- `iconPalIndex`:
+    - Here, you can choose between the six icon palettes; 0, 1, 2, 3, 4 and 5. All of them located in `graphics/pokemon/icon_palettes`.
 - `FOOTPRINT`
     - We made this single field into a macro so that they can be ignored when `P_FOOTPRINTS` is set to false. It's also why we don't have an "," after calling it like the other macros (we add it as part of the macro itself).
         ```c
@@ -638,6 +682,12 @@ Let's explain each of these:
         #define FOOTPRINT(sprite)
         #endif
         ```
+
+***NOTE:** In v1.7.x only, there were macros that set multiple of these fields. However, they were considered clunky to use, so they were removed in v1.8.
+    - `FRONT_PIC`: For `frontPic` and `frontPicSize`.
+    - `BACK_PIC`: For `backPic` and `backPicSize`.
+    - `PALETTES`: For `palette` and `shinyPalette`.
+    - `ICON`: For `iconSprite` and `iconPalIndex`.
 
 # The Data - Part 2
 
@@ -655,24 +705,31 @@ We're almost there just a bit left!
         .abilities = { ABILITY_INSOMNIA, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
 +       .isLegendary = TRUE,
-+       .allPerfectIVs = TRUE,
++       .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
     },
  };
 ```
 Each species flag provides properties to the species:
+- `perfectIVCount` ***(1.10 onwards)***:
+    - Guarantees that the number of IVs specified here will be perfect.
 - `isLegendary`:
-    - Guarantees 3 perfect IVs upon generating the Pokémon[*](########## "As long as `P_LEGENDARY_PERFECT_IVS` is set to `GEN_6` or higher").
+    - ***1.10 onwards:*** Does nothing.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isMythical`:
-    - Guarantees 3 perfect IVs upon generating the Pokémon[*](########## "As long as `P_LEGENDARY_PERFECT_IVS` is set to `GEN_6` or higher").
     - Is skipped during Pokédex evaluations.
         - Unless it also has the `dexForceRequired` flag.
     - Cannot obtain Gigantamax factor via `ToggleGigantamaxFactor`.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isUltraBeast`:
-    - Guarantees 3 perfect IVs upon generating the Pokémon[*](########## "As long as `P_LEGENDARY_PERFECT_IVS` is set to `GEN_6` or higher").
     - Beast Ball's multiplier is set to x5 for this species.
         - All other ball multipliers are set to x0.1.
-- `isParadoxForm`:
-    - Currently has no functionality but can be utilized by users for their own benefits.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
+- `isParadox` (`isParadoxForm` previous to 1.9):
+    - ***1.10 onwards:*** Makes it so that Booster Energy cannot be knocked off.
+    - ***1.9 and earlier:*** Does nothing.
+- `isTotem`:
+    - ***1.10 onwards:*** Does nothing.
+    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
 - `isMegaEvolution`:
     - A Mega indicator is added to the battle box indicating that they're Mega Evolved.
     - The species doesn't receive affection benefits.
@@ -686,21 +743,21 @@ Each species flag provides properties to the species:
     - Used to determine if Gigantamax forms should have their GMax moves or not.
     - Required when adding new Gigantamax forms.
 - `isAlolanForm`, `isGalarianForm`, `isHisuianForm`, `isPaldeanForm`:
-    - In the future, these will be used to determine breeding offspring from different based on their region.
+    - **1.10.3 onwards:** Used to determine breeding offspring from different parents based on their region.
+    - **1.10.2 and earlier:** Does nothing.
 - `cannotBeTraded`:
     - This species cannot be traded away (like Black/White Kyurem).
-- `allPerfectIVs`:
-    - Guarantees 6 perfect IVs upon generating the Pokémon (like LGPE's Partner Pikachu and Eevee).
 - `tmIlliterate`:
-    - This species will be unable to learn the universal moves.
-
-*: As long as `P_LEGENDARY_PERFECT_IVS` is set to `GEN_6` or higher.
+    - This species will be unable to learn the universal TM or Tutor moves.
+- `isFrontierBanned` ***(1.9 onwards)***:
+    - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
 
 ## 2. Delimit the moveset
 
 Let's begin with the moves that can be learned by leveling up.
 
-Append to [src/data/pokemon/level_up_learnsets.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/pokemon/level_up_learnsets.h):
+Append to [src/data/pokemon/level_up_learnsets/gen_9.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/pokemon/level_up_learnsets/gen_9.h):
+**NOTE**: You can ignore the warning at the top of the file if you're just adding moves to Pokemon.
 
 ```diff
 #if P_FAMILY_PECHARUNT
@@ -737,6 +794,7 @@ static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
 +   LEVEL_UP_END
 +};
 ```
+**NOTE**: If `P_LVL_UP_LEARNSETS` is not set to something equal to `GEN_9`, the file to be edited will change to what's specified.
 
 Again, we need to register the learnset in `gSpeciesInfo`:
 
@@ -747,9 +805,10 @@ Again, we need to register the learnset in `gSpeciesInfo`:
      [SPECIES_MEWTHREE] =
      {
         ...
-        PALETTES(Mewthree),
-        ICON(Mewthree, 2),
-        FOOTPRINT(Mewthree)
+        .palette = gMonPalette_Mewthree,
+        .shinyPalette = gMonShinyPalette_Mewthree,
+        .iconSprite = gMonIcon_Mewthree,
+        .iconPalIndex = 2,
 +       .levelUpLearnset = sMewthreeLevelUpLearnset,
     },
  };
@@ -837,6 +896,24 @@ static const u16 sPecharuntTeachableLearnset[] = {
 +   MOVE_UNAVAILABLE, // This is required to determine where the array ends.
 +};
 #endif
+```
+
+_NOTE: At the top of this file, you will probably see this warning:_
+```
+//
+// DO NOT MODIFY THIS FILE! It is auto-generated from tools/learnset_helpers/teachable.py`
+//
+```
+From version 1.9 onwards, pokeemerald-expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves. 
+
+Ignore the warning shown above the first time you're adding your teachable moves (as otherwise the compiler will complain about the array not existing), but in the future (if you're using the learnset helper) simply edit what teachable moves your Pokémon can learn in one of the JSON files found in `tools/learnset_helpers/porymoves_files`. It doesn't really matter which one you add your new Pokémon to, as the tool pulls from all of the files in this folder.
+
+The learnset helper is useful if you plan on changing and/or increasing the available TMs and Tutor moves in your game. As an example, Bulbasaur learns Rage by TM in Red/Blue/Yellow, but in Emerald this TM does not exist. But since `tools/learnset_helpers/porymoves_files/rby.json` defines "MOVE_RAGE" as a TM move for Bulbasaur, that move would automatically be added to the `sBulbasaurTeachableLearnset` array if you were to add a Rage TM at any point.
+
+The learnset helper can be toggled on/off in `include/config/pokemon.h`:
+```
+// Learnset helper toggles
+#define P_LEARNSET_HELPER_TEACHABLE TRUE        // If TRUE, teachable_learnsets.h will be populated by tools/learnset_helpers/teachable.py using the included JSON files based on available TMs and tutors.
 ```
 
 Once more, we need to register the learnset in `gSpeciesInfo`:
@@ -953,7 +1030,7 @@ static const u16 sPikachuFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_PIKACHU
 ```
-We register the table each form entry in `gSpeciesInfo`.
+We register the table for each form in `gSpeciesInfo`.
 
 ```diff
     [SPECIES_PIKACHU] =
@@ -978,7 +1055,7 @@ What this allows us to do is to be able to get all forms of a Pokémon in our co
 
 For example, in the HGSS dex, it lets us browse between the entries of every form available.:
 
-![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/a1a90b79-46a1-4cd6-97d6-ec5d741bfdc8) ![image](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/7cffc6be-0b5c-4074-b689-736a97297843)
+![hgssdex1](/docs/tutorials/img/add_pokemon/hgssdex1.png) ![image](/docs/tutorials/img/add_pokemon/hgssdex2.png)
 
 In addition, we have the `GET_BASE_SPECIES_ID` macro, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
 ```c
@@ -1009,7 +1086,7 @@ The second value is the target form, to which the Pokémon will change into.
 Values after that are referred as arguments, and needs to be put there depends on the type of form change, detailed in `include/constants/form_change_types.h`.
 
 ## 3. Gender differences
-![mGBA_Wq5cbDkNZG](https://github.com/rh-hideout/pokeemerald-expansion/assets/2904965/45256192-b451-4baa-af06-f57ca16e1e46)
+![gender_diffs](/docs/tutorials/img/add_pokemon/gender_diffs.gif)
 
 You may have seen that there's a couple of duplicate fields with a "Female" suffix.
 ```diff
@@ -1017,26 +1094,33 @@ You may have seen that there's a couple of duplicate fields with a "Female" suff
     {
         ...
         .frontPic = gMonFrontPic_Frillish,
-+       .frontPicFemale = gMonFrontPic_FrillishF,
         .frontPicSize = MON_COORDS_SIZE(56, 56),
-+       .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
         .frontPicYOffset = 5,
-        .frontAnimFrames = sAnims_Frillish,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+        ),
         .frontAnimId = ANIM_RISING_WOBBLE,
         .backPic = gMonBackPic_Frillish,
-+       .backPicFemale = gMonBackPic_FrillishF,
         .backPicSize = MON_COORDS_SIZE(40, 56),
-+       .backPicSizeFemale = MON_COORDS_SIZE(40, 56),
         .backPicYOffset = 7,
         .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
         .palette = gMonPalette_Frillish,
-+       .paletteFemale = gMonPalette_FrillishF,
         .shinyPalette = gMonShinyPalette_Frillish,
-+       .shinyPaletteFemale = gMonShinyPalette_FrillishF,
         .iconSprite = gMonIcon_Frillish,
-+       .iconSpriteFemale = gMonIcon_FrillishF,
         .iconPalIndex = 0,
++#if P_GENDER_DIFFERENCES
++       .frontPicFemale = gMonFrontPic_FrillishF,
++       .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
++       .backPicFemale = gMonBackPic_FrillishF,
++       .backPicSizeFemale = MON_COORDS_SIZE(40, 56),
++       .paletteFemale = gMonPalette_FrillishF,
++       .shinyPaletteFemale = gMonShinyPalette_FrillishF,
++       .iconSpriteFemale = gMonIcon_FrillishF,
 +       .iconPalIndexFemale = 1,
++#endif //P_GENDER_DIFFERENCES
         FOOTPRINT(Frillish)
         .levelUpLearnset = sFrillishLevelUpLearnset,
         .teachableLearnset = sFrillishTeachableLearnset,
@@ -1047,3 +1131,150 @@ These are used to change the graphics of the Pokémon if they're female. If they
 
 However, `iconPalIndexFemale` is a special case, where it's *doesn't* read the male icon palette if its `iconSpriteFemale` is set, so if you're setting a female icon, be sure to set their palette index as well.
 
+## 4. Overworld Data (v1.9 onwards)
+If you have `OW_POKEMON_OBJECT_EVENTS` in your hack, you can add Overworld sprite data of your new species. Naturally, these can also be used for followers.
+
+First, since you copied the contents from Mew's folder previously, you should also have copied its overworld sprites. Edit those to your liking, as we have done before, making sure to update the palettes
+
+Secondly, in [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/graphics/pokemon.h), add the following:
+
+```diff
+    const u8 gMonIcon_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/icon.4bpp");
+    const u8 gMonFootprint_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/footprint.1bpp");
++   const u32 gObjectEventPic_Mewthree[] = INCBIN_COMP("graphics/pokemon/mewthree/overworld.4bpp");
++   const u32 gOverworldPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/overworld_normal.gbapal.lz");
++   const u32 gShinyOverworldPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/overworld_shiny.gbapal.lz");
+```
+
+Thirdly, in [spritesheet_rules.mk](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/spritesheet_rules.mk)
+
+```diff
+$(POKEMONGFXDIR)/mewtwo/overworld.4bpp: %.4bpp: %.png
+    $(GFX) $< $@ -mwidth 4 -mheight 4
+
++$(POKEMONGFXDIR)/mewthree/overworld.4bpp: %.4bpp: %.png
++	$(GFX) $< $@ -mwidth 4 -mheight 4
+
+$(POKEMONGFXDIR)/mew/overworld.4bpp: %.4bpp: %.png
+    $(GFX) $< $@ -mwidth 4 -mheight 4
+```
+
+Fourthly, in [src/data/object_events/object_event_pic_tables_followers.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/object_events/object_event_pic_tables_followers.h):
+```diff
+#if P_FAMILY_PECHARUNT
+/*static const struct SpriteFrameImage sPicTable_Pecharunt[] = {
+    overworld_ascending_frames(gObjectEventPic_Pecharunt, 4, 4),
+};*/
+#endif //P_FAMILY_PECHARUNT
+
++static const struct SpriteFrameImage sPicTable_Mewthree[] = {
++    overworld_ascending_frames(gObjectEventPic_Mewthree, 4, 4),
++};
+```
+
+And finally, in `gSpeciesInfo`:
+
+```diff
+ const struct SpeciesInfo gSpeciesInfo[] =
+ {
+     ...
+     [SPECIES_MEWTHREE] =
+     {
+        ...
+        FOOTPRINT(Mewthree)
++       OVERWORLD(
++           sPicTable_Mewthree,
++           SIZE_32x32,
++           SHADOW_SIZE_M,
++           TRACKS_FOOT,
++           sAnimTable_Following,
++           gOverworldPalette_Mewthree,
++           gShinyOverworldPalette_Mewthree
++       )
+        .levelUpLearnset = sMewthreeLevelUpLearnset,
+        .teachableLearnset = sMewthreeTeachableLearnset,
+    },
+ };
+```
+**Note: In versions previous to 1.11, `sAnimTable_Following` is not added here.**
+
+### Sprite Size
+Depending on your species, you might want to use different sizes for it. For example, certain species known for being big like Steelix use sprites that fit a 64x64 frame instead of 32x32, and as such have `SIZE_64x64` in their data instead of `SIZE_32x32` to accomodate for them.
+
+Also, in `spritesheet_rules.mk`, `-mwidth` and `-mheight` need to be set to 8 instead of 4 for such cases.
+
+### Shadows
+You have 4 options for their shadow, between Small, Medium, Large and None:
+ - `SHADOW_SIZE_NONE`
+ - `SHADOW_SIZE_S` ![shadow_small](/graphics/field_effects/pics/shadow_small.png)
+ - `SHADOW_SIZE_M` ![shadow_medium](/graphics/field_effects/pics/shadow_medium.png)
+ - `SHADOW_SIZE_L` ![shadow_large](/graphics/field_effects/pics/shadow_large.png)
+
+### Tracks
+You have 4 options for the tracks that your species will leave behind on sand.
+ - `TRACKS_NONE`
+ - `TRACKS_FOOT` ![sand_footprints](/graphics/field_effects/pics/sand_footprints.png)
+ - `TRACKS_SLITHER` ![slither_tracks](/graphics/field_effects/pics/slither_tracks.png)
+ - `TRACKS_SPOT` ![spot_tracks](/graphics/field_effects/pics/spot_tracks.png)
+ - `TRACKS_BUG` ![bug_tracks](/graphics/field_effects/pics/bug_tracks.png)
+
+ ...though technically you can also use `TRACKS_BIKE_TIRE` if you wish to.
+
+![bike_tire_tracks](/graphics/field_effects/pics/bike_tire_tracks.png)
+
+### Asymmetric sprites (Version 1.10.0 onwards)
+
+![scovillain](/graphics/pokemon/scovillain/overworld.png)
+
+You can set up an east-west asymetric overworld sprite by adding the East frames at the end of the sheet and changing the following:
+
+#### Version 1.11.0 onwards
+```diff
+        OVERWORLD(
+            sPicTable_Mewthree,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+-           sAnimTable_Following,
++           sAnimTable_Following_Asym,
+            gOverworldPalette_Mewthree,
+            gShinyOverworldPalette_Mewthree
+        )
+```
+#### Version 1.10.x
+```diff
+-       OVERWORLD(
++       OVERWORLD_SET_ANIM(
+            sPicTable_Mewthree,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
++           sAnimTable_Following_Asym,
+            gOverworldPalette_Mewthree,
+            gShinyOverworldPalette_Mewthree
+        )
+```
+
+Either way, you may also create custom animation tables and use them here appropiately.
+
+### How to add the Pokémon Object Events to map
+In Porymap, select the object you want to set the sprite to. Then, change the field "Sprite" to use `OBJ_EVENT_GFX_SPECIES(SPECIES)`, replacing SPECIES with the name of the species you want to use. If you get a compiler error, it's because it used the species define as part of the macro, so it needs to match how you defined it all the way back in [Declare a species constant](#1-Declare-a-species-constant).
+![charizard](/docs/tutorials/img/add_pokemon/charizard.png)
+![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
+
+If you want to use their shiny and/or female versions, use one of the following macros:
+- `OBJ_EVENT_GFX_SPECIES_SHINY(name)`
+- `OBJ_EVENT_GFX_SPECIES_FEMALE(name)`
+- `OBJ_EVENT_GFX_SPECIES_SHINY_FEMALE(name)`
+
+## 5. In-battle shadows (v1.10 onwards)
+Gen 4-style shadows are defined by the `SHADOW` macro which takes the following arguments:
+ - X offset
+ - Y offset
+ - Shadow size: you have 4 options for their shadow, between Small, Medium, Large and Extra Large:
+    - `SHADOW_SIZE_S`
+    - `SHADOW_SIZE_M`
+    - `SHADOW_SIZE_L`
+    - `SHADOW_SIZE_XL_BATTLE_ONLY`
+
+To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.

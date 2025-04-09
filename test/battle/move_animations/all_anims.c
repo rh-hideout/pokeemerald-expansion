@@ -5,6 +5,10 @@
 
 #if T_SHOULD_RUN_MOVE_ANIM
 
+#define ANIM_TEST_START_MOVE 1              //  First move to test
+#define ANIM_TEST_END_MOVE   MOVES_COUNT-1  //  Last move to test
+
+
 static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies)
 {
     if (gMovesInfo[j].effect == EFFECT_DARK_VOID) // User needs to be Darkrai
@@ -359,10 +363,10 @@ static void DoublesScene(u32 move, struct BattlePokemon *attacker)
     }
 }
 
-static void SameSideTargeting(u32 move, struct BattlePokemon *attacker)
-{
-    //  Don't know how to make sure this is correct, some moves don't display
-}
+//static void SameSideTargeting(u32 move, struct BattlePokemon *attacker)
+//{
+//    //  Don't know how to make sure this is correct, some moves don't display
+//}
 
 SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to opponent)")
 {
@@ -1148,5 +1152,352 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     }
 }
 */
+
+//  Z-Moves
+#define Z_MOVE_PARAMETERS PARAMETRIZE { zmove = MOVE_BREAKNECK_BLITZ; species = SPECIES_WOBBUFFET; move = MOVE_TACKLE; item = ITEM_NORMALIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_INFERNO_OVERDRIVE; species = SPECIES_WOBBUFFET; move = MOVE_EMBER; item = ITEM_FIRIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_HYDRO_VORTEX; species = SPECIES_WOBBUFFET; move = MOVE_BUBBLE; item = ITEM_WATERIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_GIGAVOLT_HAVOC; species = SPECIES_WOBBUFFET; move = MOVE_THUNDERBOLT; item = ITEM_ELECTRIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_BLOOM_DOOM; species = SPECIES_WOBBUFFET; move = MOVE_RAZOR_LEAF; item = ITEM_GRASSIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SUBZERO_SLAMMER; species = SPECIES_WOBBUFFET; move = MOVE_ICE_BEAM; item = ITEM_ICIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_ALL_OUT_PUMMELING; species = SPECIES_WOBBUFFET; move = MOVE_KARATE_CHOP; item = ITEM_FIGHTINIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_ACID_DOWNPOUR; species = SPECIES_WOBBUFFET; move = MOVE_SLUDGE_BOMB; item = ITEM_POISONIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_TECTONIC_RAGE; species = SPECIES_WOBBUFFET; move = MOVE_MUD_SLAP; item = ITEM_GROUNDIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SUPERSONIC_SKYSTRIKE; species = SPECIES_WOBBUFFET; move = MOVE_AERIAL_ACE; item = ITEM_FLYINIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SHATTERED_PSYCHE; species = SPECIES_WOBBUFFET; move = MOVE_CONFUSION; item = ITEM_PSYCHIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SAVAGE_SPIN_OUT; species = SPECIES_WOBBUFFET; move = MOVE_BUG_BUZZ; item = ITEM_BUGINIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_CONTINENTAL_CRUSH; species = SPECIES_WOBBUFFET; move = MOVE_ROCK_SLIDE; item = ITEM_ROCKIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_NEVER_ENDING_NIGHTMARE; species = SPECIES_WOBBUFFET; move = MOVE_SHADOW_BALL; item = ITEM_GHOSTIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_DEVASTATING_DRAKE; species = SPECIES_WOBBUFFET; move = MOVE_DRAGON_PULSE; item = ITEM_DRAGONIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_BLACK_HOLE_ECLIPSE; species = SPECIES_WOBBUFFET; move = MOVE_BITE; item = ITEM_DARKINIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_CORKSCREW_CRASH; species = SPECIES_WOBBUFFET; move = MOVE_METAL_CLAW; item = ITEM_STEELIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_TWINKLE_TACKLE; species = SPECIES_WOBBUFFET; move = MOVE_MOONBLAST; item = ITEM_FAIRIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_CATASTROPIKA; species = SPECIES_PIKACHU; move = MOVE_VOLT_TACKLE; item = ITEM_PIKANIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_EXTREME_EVOBOOST; species = SPECIES_EEVEE; move = MOVE_LAST_RESORT; item = ITEM_EEVIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_PULVERIZING_PANCAKE; species = SPECIES_SNORLAX; move = MOVE_GIGA_IMPACT; item = ITEM_SNORLIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_GENESIS_SUPERNOVA; species = SPECIES_MEW; move = MOVE_PSYCHIC; item = ITEM_MEWNIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SINISTER_ARROW_RAID; species = SPECIES_DECIDUEYE; move = MOVE_SPIRIT_SHACKLE; item = ITEM_DECIDIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_MALICIOUS_MOONSAULT; species = SPECIES_INCINEROAR; move = MOVE_DARKEST_LARIAT; item = ITEM_INCINIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_OCEANIC_OPERETTA; species = SPECIES_PRIMARINA; move = MOVE_SPARKLING_ARIA; item = ITEM_PRIMARIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SPLINTERED_STORMSHARDS; species = SPECIES_LYCANROC_MIDNIGHT; move = MOVE_STONE_EDGE; item = ITEM_LYCANIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SPLINTERED_STORMSHARDS; species = SPECIES_LYCANROC_MIDDAY; move = MOVE_STONE_EDGE; item = ITEM_LYCANIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SPLINTERED_STORMSHARDS; species = SPECIES_LYCANROC_DUSK; move = MOVE_STONE_EDGE; item = ITEM_LYCANIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_LETS_SNUGGLE_FOREVER; species = SPECIES_MIMIKYU; move = MOVE_PLAY_ROUGH; item = ITEM_MIMIKIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_CLANGOROUS_SOULBLAZE; species = SPECIES_KOMMO_O; move = MOVE_CLANGING_SCALES; item = ITEM_KOMMONIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_GUARDIAN_OF_ALOLA; species = SPECIES_TAPU_KOKO; move = MOVE_NATURES_MADNESS; item = ITEM_TAPUNIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SEARING_SUNRAZE_SMASH; species = SPECIES_SOLGALEO; move = MOVE_SUNSTEEL_STRIKE; item = ITEM_SOLGANIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_MENACING_MOONRAZE_MAELSTROM; species = SPECIES_LUNALA; move = MOVE_MOONGEIST_BEAM; item = ITEM_LUNALIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_SOUL_STEALING_7_STAR_STRIKE; species = SPECIES_MARSHADOW; move = MOVE_SPECTRAL_THIEF; item = ITEM_MARSHADIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_STOKED_SPARKSURFER; species = SPECIES_RAICHU_ALOLA; move = MOVE_THUNDERBOLT; item = ITEM_ALORAICHIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_10_000_000_VOLT_THUNDERBOLT; species = SPECIES_PIKACHU_ALOLA; move = MOVE_THUNDERBOLT; item = ITEM_PIKASHUNIUM_Z; } \
+    PARAMETRIZE { zmove = MOVE_LIGHT_THAT_BURNS_THE_SKY; species = SPECIES_NECROZMA_DAWN_WINGS; move = MOVE_PHOTON_GEYSER; item = ITEM_ULTRANECROZIUM_Z; }
+
+SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+        else
+        {
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (opponent to player)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(species) { Item(item); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(opponent, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+        else
+        {
+            TURN { MOVE(opponent, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, opponent);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to opponentLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(playerLeft, move, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); }
+        }
+        else
+        {
+            TURN { MOVE(playerLeft, move, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to opponentRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(playerLeft, move, gimmick: GIMMICK_Z_MOVE, target: opponentRight); }
+        }
+        else
+        {
+            TURN { MOVE(playerLeft, move, gimmick: GIMMICK_Z_MOVE, target: opponentRight); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to opponentLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(playerRight, move, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); }
+        }
+        else
+        {
+            TURN { MOVE(playerRight, move, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to opponentRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(playerRight, move, gimmick: GIMMICK_Z_MOVE, target: opponentRight); }
+        }
+        else
+        {
+            TURN { MOVE(playerRight, move, gimmick: GIMMICK_Z_MOVE, target: opponentRight); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to playerLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(species) { Item(item); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+        }
+        else
+        {
+            TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to playerRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(species) { Item(item); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_Z_MOVE, target: playerRight); }
+        }
+        else
+        {
+            TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_Z_MOVE, target: playerRight); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to playerLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(species) { Item(item); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(opponentRight, move, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+        }
+        else
+        {
+            TURN { MOVE(opponentRight, move, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to playerRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(species) { Item(item); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(opponentRight, move, gimmick: GIMMICK_Z_MOVE, target: playerRight); }
+        }
+        else
+        {
+            TURN { MOVE(opponentRight, move, gimmick: GIMMICK_Z_MOVE, target: playerRight); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+//  Max Moves
 
 #endif

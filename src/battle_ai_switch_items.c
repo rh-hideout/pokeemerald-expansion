@@ -458,7 +458,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     if (!(AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
     if (gBattleStruct->prevTurnSpecies[battler] != gBattleMons[battler].species) // AI mon has changed, player's behaviour no longer reliable; note to override this if using AI_FLAG_PREDICT_MOVE
-        return FALSE; 
+        return FALSE;
     if (HasSuperEffectiveMoveAgainstOpponents(battler, TRUE) && (RandomPercentage(RNG_AI_SWITCH_ABSORBING_STAY_IN, STAY_IN_ABSORBING_PERCENTAGE) || AI_DATA->aiSwitchPredictionInProgress))
         return FALSE;
     if (AreStatsRaised(battler))
@@ -681,7 +681,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 && !(gBattleMons[battler].status2 & STATUS2_FORESIGHT)
                 && !(gStatuses3[battler] & STATUS3_MIRACLE_EYED))
                 switchMon = FALSE;
-            
+
             if (switchMon)
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
         }
@@ -999,7 +999,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 
     if (lastUsedMove != MOVE_NONE && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0)
         || CanAbilityAbsorbMove(battler, opposingBattler, AI_DATA->abilities[opposingBattler], lastUsedMove, GetMoveType(lastUsedMove), ABILITY_CHECK_TRIGGER)
-        || CanAbilityBlockMove(battler, opposingBattler, lastUsedMove, AI_DATA->abilities[opposingBattler], ABILITY_CHECK_TRIGGER)))
+        || CanAbilityBlockMove(battler, opposingBattler, AI_DATA->abilities[battler], AI_DATA->abilities[opposingBattler], lastUsedMove, ABILITY_CHECK_TRIGGER)))
         moveAffectsTarget = FALSE;
 
     if (HOLD_EFFECT_CHOICE(holdEffect) && IsBattlerItemEnabled(battler))

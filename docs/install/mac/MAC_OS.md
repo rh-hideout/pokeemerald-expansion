@@ -10,6 +10,18 @@
     - If devkitARM is **not installed**, then go to [Installing devkitARM (macOS)](#installing-devkitarm-macos).
     - Otherwise, **open the Terminal** and go to [Choosing where to store pokeemerald-expansion (macOS)](#choosing-where-to-store-pokeemerald-expansion-macos)
 
+3. **Optional: To run tests**, if the homebrew environment is not installed, install the package manager using [this reference](https://brew.sh). Open your terminal and run the following commands:
+
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    brew install coreutils
+    ```
+
+4. **Optional: To run tests via Rosetta**
+    - You probably don't want to do this as it's much slower. Most users can use native tools, but some may have other reasons to use this setup such as working with Intel-only custom tooling.
+    - You will need an Intel-compatible homebrew installation. Understanding how to get one can be found [here](https://github.com/Homebrew/brew/issues/9173#issuecomment-729206868).
+    - Install `coreutils` like in step 3, but using your Intel-compatible installation of homebrew.
+
 ### Installing libpng (macOS)
 <details>
     <summary><i>Note for advanced users...</i></summary>

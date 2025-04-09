@@ -15,6 +15,7 @@
 #include "party_menu.h"
 #include "random.h"
 #include "rotating_gate.h"
+#include "rtc.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
