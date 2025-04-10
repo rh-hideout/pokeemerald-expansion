@@ -122,7 +122,6 @@ static const u8 *sTeraIndicatorDataPtrs[] =
     sDarkIndicatorGfx,
     sFairyIndicatorGfx,
     sStellarIndicatorGfx,
-    0
 };
 
 static const struct SpritePalette sSpritePalette_MiscIndicator = {sMiscIndicatorPal, TAG_MISC_INDICATOR_PAL};

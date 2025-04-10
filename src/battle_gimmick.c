@@ -320,7 +320,7 @@ u32 GetIndicatorPalTag(u32 battler)
         return TAG_NONE;
 }
 
-#define INDICATOR_SIZE 8*16/2
+#define INDICATOR_SIZE (8 * 16 / 2)
 
 void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
 {
@@ -336,11 +336,11 @@ void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
         sprite->oam.paletteNum = IndexOfSpritePaletteTag(palTag);
         sprite->invisible = invisible;
 
-        u32 *dst = (u32 *)(OBJ_VRAM0 + TILE_SIZE_4BPP*GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler));
+        u32 *dst = (u32 *)(OBJ_VRAM0 + TILE_SIZE_4BPP * GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler));
 
         const u32 *src = GetIndicatorSpriteSrc(battler);
 
-        for (u32 i = 0; i < INDICATOR_SIZE/4; i++)
+        for (u32 i = 0; i < INDICATOR_SIZE / 4; i++)
             dst[i] = src[i];
     }
     else // in case of error
@@ -348,6 +348,8 @@ void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
         sprite->invisible = TRUE;
     }
 }
+
+#undef INDICATOR_SIZE
 
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority)
 {
