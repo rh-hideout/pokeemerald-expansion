@@ -414,12 +414,12 @@ BattleScript_MoveEffectSaltCure::
 	return
 
 BattleScript_SaltCureExtraDamage::
-	playanimation BS_TARGET, B_ANIM_SALT_CURE_DAMAGE, NULL
+	playanimation BS_ATTACKER, B_ANIM_SALT_CURE_DAMAGE, NULL
 	waitanimation
 	call BattleScript_HurtTarget_NoString
 	printstring STRINGID_TARGETISHURTBYSALTCURE
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
+	tryfaintmon BS_ATTACKER
 	end2
 
 BattleScript_HurtTarget_NoString:
@@ -4977,7 +4977,7 @@ BattleScript_EffectWish::
 	attackcanceler
 	attackstring
 	ppreduce
-	trywish 0, BattleScript_ButItFailed
+	trywish BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	goto BattleScript_MoveEnd
@@ -5770,13 +5770,13 @@ BattleScript_FogEnded_Ret::
 	return
 
 BattleScript_IceBodyHeal::
-	call BattleScript_AbilityPopUpScripting
-	playanimation BS_SCRIPTING, B_ANIM_SIMPLE_HEAL
-	healthbarupdate BS_SCRIPTING
-	datahpupdate BS_SCRIPTING
+	call BattleScript_AbilityPopUp
+	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
 	printstring STRINGID_ICEBODYHPGAIN
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	end3
 
 BattleScript_OverworldStatusStarts::
 	printfromtable gStartingStatusStringIds
@@ -5837,11 +5837,13 @@ BattleScript_WonderRoomEnds::
 BattleScript_MagicRoomEnds::
 	printstring STRINGID_MAGICROOMENDS
 	waitmessage B_WAIT_TIME_LONG
+	setbyte gBattlerTarget, 0
+BattleScript_MagicRoomHealingItemsLoop:
+	copyarraywithindex gBattlerAttacker, gBattlerByTurnOrder, gBattlerTarget, 1
+	tryhealingitem
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_MagicRoomHealingItemsLoop
 	end2
-
-BattleScript_GrassyTerrainEnds::
-	call BattleScript_GrassyTerrainHeals_Ret
-	goto BattleScript_TerrainEnds
 
 BattleScript_TerrainEnds_Ret::
 	printfromtable gTerrainStringIds
@@ -6608,7 +6610,6 @@ BattleScript_SelectingNotAllowedCurrentMoveInPalace::
 	goto BattleScript_SelectingUnusableMoveInPalace
 
 BattleScript_WishComesTrue::
-	trywish 1, BattleScript_WishButFullHp
 	playanimation BS_TARGET, B_ANIM_WISH_HEAL
 	printstring STRINGID_PKMNWISHCAMETRUE
 	waitmessage B_WAIT_TIME_LONG
@@ -6927,7 +6928,7 @@ BattleScript_CudChewActivates::
 	pause B_WAIT_TIME_SHORTEST
 	call BattleScript_AbilityPopUp
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
-	consumeberry BS_SCRIPTING, FALSE
+	consumeberry BS_ATTACKER, FALSE
 	setbyte sBERRY_OVERRIDE, 0
 	end3
 
@@ -7079,6 +7080,7 @@ BattleScript_DoTurnDmg:
 	datahpupdate BS_ATTACKER
 	tryfaintmon BS_ATTACKER
 	checkteamslost BattleScript_DoTurnDmgEnd
+	tryhealingitem
 BattleScript_DoTurnDmgEnd:
 	end2
 
@@ -7326,6 +7328,7 @@ BattleScript_YawnEnd:
 BattleScript_EmbargoEndTurn::
 	printstring STRINGID_EMBARGOENDS
 	waitmessage B_WAIT_TIME_LONG
+	tryhealingitem
 	end2
 
 BattleScript_TelekinesisEndTurn::
@@ -7544,6 +7547,37 @@ BattleScript_EmergencyExitWild::
 	finishaction
 	return
 
+BattleScript_EmergencyExitEnd2::
+	pause 5
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_SLIDE_OFFSCREEN
+	waitanimation
+	openpartyscreen BS_ATTACKER, BattleScript_EmergencyExitRetEnd2
+	switchoutabilities BS_ATTACKER
+	waitstate
+	switchhandleorder BS_ATTACKER, 2
+	returntoball BS_TARGET, FALSE
+	getswitchedmondata BS_ATTACKER
+	switchindataupdate BS_ATTACKER
+	hpthresholds BS_ATTACKER
+	printstring STRINGID_SWITCHINMON
+	switchinanim BS_ATTACKER, FALSE, TRUE
+	waitstate
+	switchineffects BS_ATTACKER
+BattleScript_EmergencyExitRetEnd2:
+	end2
+
+BattleScript_EmergencyExitWildEnd2::
+	pause 5
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_SLIDE_OFFSCREEN
+	waitanimation
+	setoutcomeonteleport BS_ATTACKER
+	finishaction
+	end2
+
 BattleScript_TraceActivates::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
@@ -7586,6 +7620,7 @@ BattleScript_PickupActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_XFOUNDONEY
 	waitmessage B_WAIT_TIME_LONG
+	tryhealingitem
 BattleScript_PickupActivatesEnd:
 	end3
 
@@ -7595,6 +7630,7 @@ BattleScript_HarvestActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_HARVESTBERRY
 	waitmessage B_WAIT_TIME_LONG
+	tryhealingitem
 BattleScript_HarvestActivatesEnd:
 	end3
 
@@ -8229,25 +8265,13 @@ BattleScript_MoveUsedPsychicTerrainPrevents::
 	goto BattleScript_MoveEnd
 
 BattleScript_GrassyTerrainHeals::
-	call BattleScript_GrassyTerrainHeals_Ret
-	end2
-
-BattleScript_GrassyTerrainHeals_Ret::
-	setbyte gBattleCommunication, 0
-BattleScript_GrassyTerrainLoop:
-	copyarraywithindex gBattlerAttacker, gBattlerByTurnOrder, gBattleCommunication, 1
-	checkgrassyterrainheal BS_ATTACKER, BattleScript_GrassyTerrainLoopIncrement
 	printstring STRINGID_GRASSYTERRAINHEALS
 	waitmessage B_WAIT_TIME_LONG
 	orword gHitMarker, HITMARKER_IGNORE_BIDE | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER
-BattleScript_GrassyTerrainLoopIncrement::
-	addbyte gBattleCommunication, 1
-	jumpifbytenotequal gBattleCommunication, gBattlersCount, BattleScript_GrassyTerrainLoop
 	bicword gHitMarker, HITMARKER_IGNORE_BIDE | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
-BattleScript_GrassyTerrainHealEnd:
-	return
+	end2
 
 BattleScript_AbilityNoSpecificStatLoss::
 	pause B_WAIT_TIME_SHORT
