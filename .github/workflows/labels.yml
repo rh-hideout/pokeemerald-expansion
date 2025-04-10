@@ -15,6 +15,7 @@ jobs:
           count: 1
           labels: |
             General
+            General Merge
             category: ability
             category: battle-ai
             category: battle-mechanic

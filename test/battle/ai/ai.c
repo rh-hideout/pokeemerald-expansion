@@ -911,3 +911,21 @@ AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_BODY_SLAM); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
+{
+    u32 aiMove;
+    PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
+    PARAMETRIZE { aiMove = MOVE_TOXIC; }
+    PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SWELLOW) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}

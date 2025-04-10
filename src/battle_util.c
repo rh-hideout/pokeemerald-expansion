@@ -562,6 +562,10 @@ bool32 TryRunFromBattle(u32 battler)
     {
         effect++;
     }
+    else if (CanPlayerForfeitNormalTrainerBattle())
+    {
+        effect++;
+    }
     else
     {
         u8 runningFromBattler = BATTLE_OPPOSITE(battler);
@@ -6357,6 +6361,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 break;
             case ABILITY_WATER_VEIL:
             case ABILITY_WATER_BUBBLE:
+            case ABILITY_THERMAL_EXCHANGE:
                 if (gBattleMons[battler].status1 & STATUS1_BURN)
                 {
                     StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
@@ -10494,12 +10499,47 @@ s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalc
     return dmg;
 }
 
+static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalcData)
+{
+    s32 dmg = 0;
+
+    switch (GetMoveEffect(damageCalcData->move))
+    {
+    case EFFECT_LEVEL_DAMAGE:
+        dmg = gBattleMons[damageCalcData->battlerAtk].level;
+        break;
+    case EFFECT_PSYWAVE:
+        s32 randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
+        dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
+        break;
+    case EFFECT_FIXED_DAMAGE_ARG:
+        dmg = GetMoveFixedDamage(damageCalcData->move);
+        break;
+    case EFFECT_SUPER_FANG:
+        dmg = GetNonDynamaxHP(gBattlerTarget) / 2;
+        break;
+    default:
+        return INT32_MAX;
+    }
+
+    gBattleStruct->moveResultFlags[damageCalcData->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
+
+    if (dmg == 0)
+        dmg = 1;
+
+    return dmg;
+}
+
 static inline s32 DoMoveDamageCalc(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier, u32 weather)
 {
     u32 holdEffectAtk, holdEffectDef, abilityAtk, abilityDef;
 
     if (typeEffectivenessModifier == UQ_4_12(0.0))
         return 0;
+
+    s32 dmg = DoFixedDamageMoveCalc(damageCalcData);
+    if (dmg != INT32_MAX)
+        return dmg;
 
     holdEffectAtk = GetBattlerHoldEffect(damageCalcData->battlerAtk, TRUE);
     holdEffectDef = GetBattlerHoldEffect(damageCalcData->battlerDef, TRUE);
@@ -10609,6 +10649,10 @@ s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedB
 s32 CalculateMoveDamageVars(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier,
                             u32 weather, u32 holdEffectAtk, u32 holdEffectDef, u32 abilityAtk, u32 abilityDef)
 {
+    s32 dmg = DoFixedDamageMoveCalc(damageCalcData);
+    if (dmg != INT32_MAX)
+        return dmg;
+
     return DoMoveDamageCalcVars(damageCalcData, fixedBasePower, typeEffectivenessModifier, weather,
                                 holdEffectAtk, holdEffectDef, abilityAtk, abilityDef);
 }
