@@ -3696,20 +3696,6 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                if (GetBattlerSide(battler) == B_SIDE_OPPONENT
-                    && (B_SHOW_TYPES != SHOW_TYPES_SEEN)
-                    && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
-                                          | BATTLE_TYPE_FRONTIER
-                                          | BATTLE_TYPE_LINK
-                                          | BATTLE_TYPE_RECORDED_LINK
-                                          | BATTLE_TYPE_TRAINER_HILL)))
-                {
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
-                }
-            }
-
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             gBattleStruct->overworldWeatherDone = FALSE;
@@ -5551,7 +5537,7 @@ static void HandleEndTurn_FinishBattle(void)
                         GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_NICKNAME, gBattleResults.playerMon2Name);
                     }
                 }
-                else if (GetBattlerSide(battler) == B_SIDE_OPPONENT && B_SHOW_TYPES == SHOW_TYPES_SEEN)
+                else if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
                 {
                     HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
                 }
