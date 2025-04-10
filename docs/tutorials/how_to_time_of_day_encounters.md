@@ -43,16 +43,24 @@ This duplicates the encounter group's encounters as well as their labels/map gro
 Great questie bestie!
 
 Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h):
-- `OW_TIME_OF_DAY_ENCOUNTERS            FALSE`
+  ```
+- OW_TIME_OF_DAY_ENCOUNTERS            FALSE
+  ```
   - **Acceptable values**: `TRUE` or `FALSE`
-  - should be `TRUE` or `FALSE`, basically enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
-- `OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE`
+  -this option enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
+  ```
+- OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE
+  ```
   - **Acceptable values**: `TRUE` or `FALSE`
   - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option at the bottom.
-- `OW_TIME_OF_DAY_DEFAULT               TIME_MORNING`
+  ```
+- OW_TIME_OF_DAY_DEFAULT               TIME_MORNING
+  ```
   - **Acceptable values**: any value from the [`TimesOfDay`](../../include/rtc.h) enum, so by default `TIME_MORNING`, `TIME_DAY`, `TIME_EVENING`, and `TIME_NIGHT`.
   - this option specifies what time is the first value in the [`TimesOfDay`](../../include/rtc.h) enum. This should always be the first value there (`TIME_MORNING` by default), because it's how both the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) and the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) determine what elements go where when the encounters are converted.
-- `OW_TIME_OF_DAY_FALLBACK              OW_TIME_OF_DAY_DEFAULT`
+  ```
+- OW_TIME_OF_DAY_FALLBACK              OW_TIME_OF_DAY_DEFAULT
+  ```
   - **Acceptable values**: any value from the [`TimesOfDay`](../../include/rtc.h) enum, so by default `TIME_MORNING`, `TIME_DAY`, `TIME_EVENING`, and `TIME_NIGHT`.
   - this option controls which time is used when `OW_TIME_OF_DAY_DISABLE_FALLBACK` is `FALSE`. It's set to the same value as `OW_TIME_OF_DAY_DEFAULT` by... default. Keep in mind that if you enable `OW_TIME_OF_DAY_ENCOUNTERS` and set this to something other than `TIME_MORNING`, you should make sure that time has encounters, or you won't encounter anything.
 
