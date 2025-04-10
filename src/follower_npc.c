@@ -1616,7 +1616,7 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 }
 
 #if OW_ENABLE_NPC_FOLLOWERS
-static const u8 *FollowerNPCHideMovementsSpeedTable[][4] = 
+static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] = 
 {
     [DIR_SOUTH] = {Common_Movement_WalkDownSlow, Common_Movement_WalkDown, Common_Movement_WalkDownFast, Common_Movement_WalkDownFaster},
     [DIR_NORTH] = {Common_Movement_WalkUpSlow, Common_Movement_WalkUp, Common_Movement_WalkUpFast, Common_Movement_WalkUpFaster},
