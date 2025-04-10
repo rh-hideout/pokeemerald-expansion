@@ -42,7 +42,7 @@ This duplicates the encounter group's encounters as well as their labels/map gro
 ### So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
 Great questie bestie!
 
-Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h):
+Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h) and their default values:
   ```
 - OW_TIME_OF_DAY_ENCOUNTERS            FALSE
   ```
