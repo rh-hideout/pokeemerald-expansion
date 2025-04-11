@@ -2419,7 +2419,8 @@ static void PlayerHandleBattleDebug(u32 battler)
 }
 
 // Order based numerically, with EFFECTIVENESS_CANNOT_VIEW at 0 to always prioritize any other effectiveness during comparison
-enum {
+enum
+{
     EFFECTIVENESS_CANNOT_VIEW,
     EFFECTIVENESS_NO_EFFECT,
     EFFECTIVENESS_NOT_VERY_EFFECTIVE,
@@ -2450,21 +2451,12 @@ static u32 CheckTypeEffectiveness(u32 targetId, u32 battler)
         return EFFECTIVENESS_CANNOT_VIEW;
 
     if (modifier == UQ_4_12(0.0))
-    {
         return EFFECTIVENESS_NO_EFFECT; // No effect
-    }
     else if (modifier <= UQ_4_12(0.5))
-    {
         return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
-    }
     else if (modifier >= UQ_4_12(2.0))
-    {
         return EFFECTIVENESS_SUPER_EFFECTIVE; // Super effective
-    }
-    else
-    {
-        return EFFECTIVENESS_NORMAL; // Normal effectiveness
-    }
+    return EFFECTIVENESS_NORMAL; // Normal effectiveness
 }
 
 static u32 CheckTargetTypeEffectiveness(u32 battler)
@@ -2480,9 +2472,7 @@ static u32 CheckTargetTypeEffectiveness(u32 battler)
             return partnerFoeEffectiveness;
         if (IsBattlerAlive(battlerFoe) && IsBattlerAlive(partnerFoe)
          && partnerFoeEffectiveness > foeEffectiveness)
-        {
             return partnerFoeEffectiveness;
-        }
     }
     return foeEffectiveness; // fallthrough for any other circumstance
 }
@@ -2504,17 +2494,11 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, u32 batt
     {
         u32 teraType = GetBattlerTeraType(battler);
         if (teraType == TYPE_STELLAR && IsTypeStellarBoosted(battler, moveType))
-        {
             txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
-        }
         else if (moveType == teraType)
-        {
             txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
-        }
         else
-        {
             txtPtr = StringCopy(gDisplayedStringBattle, noIcon);
-        }
     }
     else
     {
