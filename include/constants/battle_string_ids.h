@@ -732,8 +732,10 @@
 #define STRINGID_PKMNGIGANTAMAXED                     730
 #define STRINGID_TIMETODYNAMAX                        731
 #define STRINGID_TIMETOGIGANTAMAX                     732
+#define STRINGID_QUESTIONFORFEITBATTLE                733
+#define STRINGID_FORFEITBATTLEGAVEMONEY               734
 
-#define BATTLESTRINGS_COUNT                           733
+#define BATTLESTRINGS_COUNT                           735
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
