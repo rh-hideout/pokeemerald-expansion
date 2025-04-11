@@ -729,50 +729,32 @@ static void WindUpSpinTimer(u32 direction)
 bool32 CanTriggerSpinEvolution()
 {
     gSpecialVar_0x8000 = EVO_NONE;
+    bool32 canStopEvo = TRUE;
     if (gPlayerSpinData.triggerEvo)
     {
-        u32 timeOfDay = GetTimeOfDay();
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
         u32 direction = gPlayerSpinData.spinDirection;
-        if (timeOfDay == TIME_EVENING && seconds >= 10)
+        if (seconds >= 10)
         {
-            gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS;
+            gSpecialVar_0x8000 = SPIN_EITHER;
         }
-        else if (timeOfDay == TIME_NIGHT)
+
+        else if (seconds >= 5 && seconds < 10)
         {
-            if (seconds >= 5)
-            {
-                if (direction == SPIN_DIRECTION_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE;
-                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE;
-            }
-            else
-            {
-                if (direction == SPIN_DIRECTION_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE;
-                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE;
-            }
+            if (direction == SPIN_DIRECTION_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CW_LONG;
+            else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CCW_LONG;
         }
-        else if (timeOfDay != TIME_NIGHT)
+        else if (seconds < 5)
         {
-            if (seconds >= 5)
-            {
-                if (direction == SPIN_DIRECTION_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE;
-                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE;
-            }
-            else
-            {
-                if (direction == SPIN_DIRECTION_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE;
-                else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                    gSpecialVar_0x8000 = EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE;
-            }
+            if (direction == SPIN_DIRECTION_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CW_SHORT;
+            else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
         gSpecialVar_0x8001 = FALSE; //canStopEvo
+        canStopEvo = FALSE;
         gSpecialVar_0x8002 = TRUE; //tryMultiple
         gPlayerSpinData.triggerEvo = FALSE;
     }
@@ -780,7 +762,7 @@ bool32 CanTriggerSpinEvolution()
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
-            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, gSpecialVar_0x8000, NULL, CHECK_EVO);
+            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
             if (species != SPECIES_NONE)
             {
                 return TRUE;

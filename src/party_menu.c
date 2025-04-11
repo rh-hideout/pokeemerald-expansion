@@ -1154,7 +1154,7 @@ static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
             DisplayPartyPokemonDataToTeachMove(slot, ItemIdToBattleMoveId(item));
             break;
         case 2: // Evolution stone
-            if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(currentPokemon, EVO_MODE_ITEM_CHECK, item, NULL, DO_EVO) != SPECIES_NONE)
+            if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(currentPokemon, EVO_MODE_ITEM_CHECK, item, NULL, NULL, CHECK_EVO) != SPECIES_NONE)
                 return FALSE;
             DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NO_USE);
             break;
@@ -5625,29 +5625,25 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
     PlaySE(SE_SELECT);
     if (cannotUseEffect)
     {
-        u16 targetSpecies = SPECIES_NONE;
-        bool32 evoModeNormal = TRUE;
+        u32 targetSpecies = SPECIES_NONE;
+        bool32 canStopEvo = TRUE;
 
         // Resets values to 0 so other means of teaching moves doesn't overwrite levels
         sInitialLevel = 0;
         sFinalLevel = 0;
 
-        if (holdEffectParam == 0)
+        if (holdEffectParam == 0) // Rare Candy
         {
-            targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, DO_EVO);
-            if (targetSpecies == SPECIES_NONE)
-            {
-                targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_CANT_STOP, ITEM_NONE, NULL, DO_EVO);
-                evoModeNormal = FALSE;
-            }
+            targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
         }
 
         if (targetSpecies != SPECIES_NONE)
         {
+            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
             RemoveBagItem(gSpecialVar_ItemId, 1);
             FreePartyPointers();
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
-            BeginEvolutionScene(mon, targetSpecies, evoModeNormal, gPartyMenu.slotId);
+            BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
             DestroyTask(taskId);
         }
         else
@@ -5821,28 +5817,24 @@ static void CB2_ReturnToPartyMenuUsingRareCandy(void)
 static void PartyMenuTryEvolution(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 targetSpecies = SPECIES_NONE;
-    bool32 evoModeNormal = TRUE;
+    u32 targetSpecies = SPECIES_NONE;
+    bool32 canStopEvo = TRUE;
 
     // Resets values to 0 so other means of teaching moves doesn't overwrite levels
     sInitialLevel = 0;
     sFinalLevel = 0;
 
-    targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, DO_EVO);
-    if (targetSpecies == SPECIES_NONE)
-    {
-        targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_CANT_STOP, ITEM_NONE, NULL, DO_EVO);
-        evoModeNormal = FALSE;
-    }
+    targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
 
     if (targetSpecies != SPECIES_NONE)
     {
+        GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
         FreePartyPointers();
         if (ItemId_GetFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
             gCB2_AfterEvolution = CB2_ReturnToPartyMenuUsingRareCandy;
         else
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
-        BeginEvolutionScene(mon, targetSpecies, evoModeNormal, gPartyMenu.slotId);
+        BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
         DestroyTask(taskId);
     }
     else
