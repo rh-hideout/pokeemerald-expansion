@@ -25,7 +25,9 @@
 <!-- Credit anyone who helped with this PR. -->
 <!-- Use their GitHub tag if they have one (or add "@/" at the start if they don't). The line must start with @. -->
 <!-- Eg.: "@Lunos for sprites, @/Masuda for support" -->
-<!--- Remove this section if not applicable. --->
+<!-- If it doesn't apply, feel free to remove this section. -->
+<!-- Make sure you and your collaborators are added to `CREDITS.md` by tagging the bot on GitHub. EVERY contribution matters! -->
+<!-- https://allcontributors.org/docs/en/bot/usage -->
 
 ## Feature(s) this PR does NOT handle:
 <!-- If this PR contains any unfinished and non-blocking work, please list them here for clarity. -->
