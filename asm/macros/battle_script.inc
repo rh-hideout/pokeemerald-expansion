@@ -1269,7 +1269,7 @@
 	.byte 0xed
 	.endm
 
-	.macro removelightscreenreflect
+	.macro removescreens
 	.byte 0xee
 	.endm
 
@@ -1614,6 +1614,11 @@
 	.4byte \ptr
 	.endm
 
+	.macro undodynamax battler:req
+	callnative BS_UndoDynamax
+	.byte \battler
+	.endm
+
 	.macro trytrainerslidezmovemsg
 	callnative BS_TryTrainerSlideZMoveMsg
 	.endm
@@ -1740,10 +1745,6 @@
 	.macro storehealingwish battler:req
 	callnative BS_StoreHealingWish
 	.byte \battler
-	.endm
-
-	.macro hitswitchtargetfailed
-	callnative BS_HitSwitchTargetFailed
 	.endm
 
 	.macro tryrevivalblessing, failInstr:req
@@ -2376,7 +2377,7 @@
 	callnative BS_SwapStats
 	.byte \stat
 	.endm
-    
+
 	.macro restoresavedmove
 	callnative BS_RestoreSavedMove
 	.endm

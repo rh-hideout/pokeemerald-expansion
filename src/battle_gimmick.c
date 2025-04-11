@@ -79,13 +79,9 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
     // Check the trainer party data to see if a gimmick is intended.
     else
     {
-        bool32 isSecondTrainer = (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT) && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT;
-        u16 trainerId = isSecondTrainer ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA;
-        const struct TrainerMon *mon = &GetTrainerPartyFromId(trainerId)[isSecondTrainer ? gBattlerPartyIndexes[battler] - MULTI_PARTY_SIZE : gBattlerPartyIndexes[battler]];
-
-        if (gimmick == GIMMICK_TERA && mon->teraType != TYPE_NONE)
+        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
-        if (gimmick == GIMMICK_DYNAMAX && mon->shouldUseDynamax)
+        if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
     }
 
@@ -269,20 +265,9 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 
 void LoadIndicatorSpritesGfx(void)
 {
-    u32 gimmick;
-    for (gimmick = 0; gimmick < GIMMICKS_COUNT; ++gimmick)
-    {
-        if (gimmick == GIMMICK_TERA) // special case
-            LoadSpriteSheets(sTeraIndicatorSpriteSheets);
-        else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
-            LoadSpriteSheet(gGimmicksInfo[gimmick].indicatorSheet);
-
-        if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-            LoadSpritePalette(gGimmicksInfo[gimmick].indicatorPal);
-    }
-    // Primal reversion graphics aren't loaded as part of gimmick data
-    LoadSpriteSheet(&sSpriteSheet_AlphaIndicator);
-    LoadSpriteSheet(&sSpriteSheet_OmegaIndicator);
+    LoadSpritePalette(&sSpritePalette_MiscIndicator);
+    LoadSpritePalette(&sSpritePalette_MegaIndicator);
+    LoadSpritePalette(&sSpritePalette_TeraIndicator);
 }
 
 static void SpriteCb_GimmickIndicator(struct Sprite *sprite)
@@ -299,28 +284,28 @@ static inline u32 GetIndicatorSpriteId(u32 healthboxId)
     return gBattleStruct->gimmick.indicatorSpriteId[gSprites[healthboxId].hMain_Battler];
 }
 
-u32 GetIndicatorTileTag(u32 battler)
+const u32 *GetIndicatorSpriteSrc(u32 battler)
 {
     u32 gimmick = GetActiveGimmick(battler);
 
     if (IsBattlerPrimalReverted(battler))
     {
         if (gBattleMons[battler].species == SPECIES_GROUDON_PRIMAL)
-            return TAG_OMEGA_INDICATOR_TILE;
+            return (u32 *)&sOmegaIndicatorGfx;
         else
-            return TAG_ALPHA_INDICATOR_TILE;
+            return (u32 *)&sAlphaIndicatorGfx;
     }
     else if (gimmick == GIMMICK_TERA) // special case
     {
-        return sTeraIndicatorSpriteSheets[GetBattlerTeraType(battler)].tag;
+        return (u32 *)sTeraIndicatorDataPtrs[GetBattlerTeraType(battler)];
     }
-    else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
+    else if (gGimmicksInfo[gimmick].indicatorData != NULL)
     {
-        return gGimmicksInfo[gimmick].indicatorSheet->tag;
+        return (u32 *)gGimmicksInfo[gimmick].indicatorData;
     }
     else
     {
-        return TAG_NONE;
+        return NULL;
     }
 }
 
@@ -329,33 +314,42 @@ u32 GetIndicatorPalTag(u32 battler)
     u32 gimmick = GetActiveGimmick(battler);
     if (IsBattlerPrimalReverted(battler))
         return TAG_MISC_INDICATOR_PAL;
-    else if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-        return gGimmicksInfo[gimmick].indicatorPal->tag;
+    else if (gGimmicksInfo[gimmick].indicatorPalTag != 0)
+        return gGimmicksInfo[gimmick].indicatorPalTag;
     else
         return TAG_NONE;
 }
 
+#define INDICATOR_SIZE (8 * 16 / 2)
+
 void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
 {
     u32 battler = gSprites[healthboxId].hMain_Battler;
-    u32 tileTag = GetIndicatorTileTag(battler);
     u32 palTag = GetIndicatorPalTag(battler);
     struct Sprite *sprite = &gSprites[GetIndicatorSpriteId(healthboxId)];
 
     if (GetIndicatorSpriteId(healthboxId) == 0) // safari zone means the player doesn't have an indicator sprite id
         return;
 
-    if (tileTag != TAG_NONE && palTag != TAG_NONE)
+    if (palTag != TAG_NONE)
     {
-        sprite->oam.tileNum = GetSpriteTileStartByTag(tileTag);
         sprite->oam.paletteNum = IndexOfSpritePaletteTag(palTag);
         sprite->invisible = invisible;
+
+        u32 *dst = (u32 *)(OBJ_VRAM0 + TILE_SIZE_4BPP * GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler));
+
+        const u32 *src = GetIndicatorSpriteSrc(battler);
+
+        for (u32 i = 0; i < INDICATOR_SIZE / 4; i++)
+            dst[i] = src[i];
     }
     else // in case of error
     {
         sprite->invisible = TRUE;
     }
 }
+
+#undef INDICATOR_SIZE
 
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority)
 {
@@ -393,7 +387,8 @@ void CreateIndicatorSprite(u32 battler)
     x = sIndicatorPositions[position][0];
     y += sIndicatorPositions[position][1];
 
-    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_GimmickIndicator, 0, y, 0);
+    LoadSpriteSheet(&sBattler_GimmickSpritesheets[battler]);
+    spriteId = CreateSprite(&(sSpriteTemplate_BattlerIndicators[battler]), 0, y, 0);
     gBattleStruct->gimmick.indicatorSpriteId[battler] = spriteId;
     gSprites[spriteId].tBattler = battler;
     gSprites[spriteId].tPosX = x;
