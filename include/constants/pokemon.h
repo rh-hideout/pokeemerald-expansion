@@ -283,7 +283,7 @@ enum EvolutionMethods {
     EVO_LEVEL_NATURE_AMPED,              // Pokémon reaches the specified level, it has a Hardy, Brave, Adamant, Naughty, Docile, Impish, Lax, Hasty, Jolly, Naive, Rash, Sassy, or Quirky nature.
     EVO_LEVEL_NATURE_LOW_KEY,            // Pokémon reaches the specified level, it has a Lonely, Bold, Relaxed, Timid, Serious, Modest, Mild, Quiet, Bashful, Calm, Gentle, or Careful nature.
     EVO_CRITICAL_HITS,                   // Pokémon performs specified number of critical hits in one battle
-    EVO_SCRIPT_TRIGGER_DMG,              // Pokémon has specified HP below max, then player interacts trigger
+    EVO_SCRIPT_TRIGGER_DMG,              // Pokémon has specified HP below max, then player interacts with script calling "tryspecialevo EVO_SCRIPT_TRIGGER_DMG"
     EVO_DARK_SCROLL,                     // interacts with Scroll of Darkness
     EVO_WATER_SCROLL,                    // interacts with Scroll of Waters
     EVO_ITEM_NIGHT,                      // specified item is used on Pokémon, is night
