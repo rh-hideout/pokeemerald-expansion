@@ -47,7 +47,7 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 - OW_TIME_OF_DAY_ENCOUNTERS            FALSE
   ```
   - **Acceptable values**: `TRUE` or `FALSE`
-  -this option enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
+  - this option enables or disables the feature. You'll notice your used ROM space changing when this is enabled or disabled, as the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) will generate the `encounterTypes` array in [`wild_encounter.h`](../../include/wild_encounter.h) with different sizes based on whether this value is `TRUE` or `FALSE`.
   ```
 - OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE
   ```
