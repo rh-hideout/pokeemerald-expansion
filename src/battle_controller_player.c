@@ -2484,26 +2484,10 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, u32 batt
     static const u8 superEffectiveIcon[] =  _("{CIRCLE_DOT}");
     static const u8 notVeryEffectiveIcon[] =  _("{TRIANGLE}");
     static const u8 immuneIcon[] =  _("{BIG_MULT_X}");
-    static const u8 teraIcon[] =  _("{UP_ARROW}");
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
-    u32 moveType = CheckDynamicMoveType(mon, moveInfo->moves[gMoveSelectionCursor[battler]], battler);
     u8 *txtPtr;
 
-    if (GetActiveGimmick(battler) == GIMMICK_TERA || IsGimmickSelected(battler, GIMMICK_TERA))
-    {
-        u32 teraType = GetBattlerTeraType(battler);
-        if (teraType == TYPE_STELLAR && IsTypeStellarBoosted(battler, moveType))
-            txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
-        else if (moveType == teraType)
-            txtPtr = StringCopy(gDisplayedStringBattle, teraIcon);
-        else
-            txtPtr = StringCopy(gDisplayedStringBattle, noIcon);
-    }
-    else
-    {
-        txtPtr = StringCopy(gDisplayedStringBattle, noIcon);
-    }
+    txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfacePP);
 
     if (!IsBattleMoveStatus(moveInfo->moves[gMoveSelectionCursor[battler]]))
     {
