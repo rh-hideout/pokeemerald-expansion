@@ -3418,16 +3418,6 @@ BattleScript_KOFail::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectSuperFang::
-	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-	attackstring
-	ppreduce
-	typecalc
-	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	damagetohalftargethp
-	goto BattleScript_HitFromAtkAnimation
-
 BattleScript_RecoilIfMiss::
 	printstring STRINGID_PKMNCRASHED
 	waitmessage B_WAIT_TIME_LONG
@@ -3872,28 +3862,6 @@ BattleScript_EffectDisable::
 	printstring STRINGID_PKMNMOVEWASDISABLED
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectLevelDamage::
-	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-	attackstring
-	ppreduce
-	typecalc
-	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	dmgtolevel
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
-
-BattleScript_EffectPsywave::
-	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-	attackstring
-	ppreduce
-	typecalc
-	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	psywavedamageeffect
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectCounter::
 	attackcanceler
@@ -4379,17 +4347,6 @@ BattleScript_EffectBatonPass::
 	waitstate
 	switchineffects BS_ATTACKER
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectFixedDamageArg::
-	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-	attackstring
-	ppreduce
-	typecalc
-	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	setargtobattledamage
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectMorningSun::
 BattleScript_EffectSynthesis::
@@ -10120,3 +10077,15 @@ BattleScript_SleepClausePreventsEnd::
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+BattleScript_QuestionForfeitBattle::
+	printselectionstring STRINGID_QUESTIONFORFEITBATTLE
+	forfeityesnobox BS_ATTACKER
+	endselectionscript
+
+BattleScript_ForfeitBattleGaveMoney::
+	getmoneyreward
+	printstring STRINGID_FORFEITBATTLEGAVEMONEY
+	waitmessage B_WAIT_TIME_LONG
+	end2
+

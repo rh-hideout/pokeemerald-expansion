@@ -3696,19 +3696,6 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                if (GetBattlerSide(battler) == B_SIDE_OPPONENT
-                 && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
-                                          | BATTLE_TYPE_FRONTIER
-                                          | BATTLE_TYPE_LINK
-                                          | BATTLE_TYPE_RECORDED_LINK
-                                          | BATTLE_TYPE_TRAINER_HILL)))
-                {
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
-                }
-            }
-
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             gBattleStruct->overworldWeatherDone = FALSE;
@@ -4230,6 +4217,15 @@ static void HandleTurnActionSelectionState(void)
                         gChosenActionByBattler[battler] = B_ACTION_NOTHING_FAINTED; // Not fainted, but it cannot move, because of the throwing ball.
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                     }
+                    else if (B_RUN_TRAINER_BATTLE
+                          && gBattleTypeFlags & BATTLE_TYPE_DOUBLE
+                          && position == B_POSITION_PLAYER_RIGHT
+                          && gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] == B_ACTION_RUN
+                          && gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] != B_ACTION_NOTHING_FAINTED)
+                    {
+                        gChosenActionByBattler[battler] = B_ACTION_USE_MOVE;
+                        gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                    }
                     else
                     {
                         gBattleStruct->itemPartyIndex[battler] = PARTY_SIZE;
@@ -4413,9 +4409,17 @@ static void HandleTurnActionSelectionState(void)
                     gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                     return;
                 }
+                else if (CanPlayerForfeitNormalTrainerBattle() && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
+                {
+                    gSelectionBattleScripts[battler] = BattleScript_QuestionForfeitBattle;
+                    gBattleCommunication[battler] = STATE_SELECTION_SCRIPT_MAY_RUN;
+                    gBattleStruct->selectionScriptFinished[battler] = FALSE;
+                    gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                    return;
+                }
                 else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
-                         && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
-                         && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
+                      && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+                      && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
                 {
                     BattleScriptExecute(BattleScript_PrintCantRunFromTrainer);
                     gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
@@ -5492,6 +5496,11 @@ static void HandleEndTurn_RanFromBattle(void)
         gBattlescriptCurrInstr = BattleScript_PrintPlayerForfeited;
         gBattleOutcome = B_OUTCOME_FORFEITED;
     }
+    else if (CanPlayerForfeitNormalTrainerBattle())
+    {
+        gBattlescriptCurrInstr = BattleScript_ForfeitBattleGaveMoney;
+        gBattleOutcome = B_OUTCOME_FORFEITED;
+    }
     else
     {
         switch (gProtectStructs[gBattlerAttacker].fleeType)
@@ -5549,6 +5558,10 @@ static void HandleEndTurn_FinishBattle(void)
                         gBattleResults.playerMon2Species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
                         GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_NICKNAME, gBattleResults.playerMon2Name);
                     }
+                }
+                else if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
+                {
+                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
                 }
             }
             TryPutPokemonTodayOnAir();
@@ -6113,4 +6126,26 @@ static s32 Factorial(s32 n)
     for (i = 2; i <= n; i++)
         f *= i;
     return f;
+}
+
+bool32 CanPlayerForfeitNormalTrainerBattle(void)
+{
+    if (!B_RUN_TRAINER_BATTLE)
+        return FALSE;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+        return FALSE;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_INVALID)
+        return FALSE;
+
+    return (gBattleTypeFlags & BATTLE_TYPE_TRAINER);
+}
+
+bool32 DidPlayerForfeitNormalTrainerBattle(void)
+{
+    if (!CanPlayerForfeitNormalTrainerBattle())
+        return FALSE;
+
+    return (gBattleOutcome == B_OUTCOME_FORFEITED);
 }
