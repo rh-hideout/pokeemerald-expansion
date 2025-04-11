@@ -3348,7 +3348,7 @@ static u8 ReformatItemDescription(u16 item, u8 *dest)
     u8 count = 0;
     u8 numLines = 1;
     u8 maxChars = 32;
-    u8 *desc = (u8 *)gItemsInfo[item].description;
+    u8 *desc = (u8 *)ItemId_GetDescription(item);
 
     while (*desc != EOS)
     {
