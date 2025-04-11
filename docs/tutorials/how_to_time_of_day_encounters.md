@@ -57,7 +57,7 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 - OW_TIME_OF_DAY_DEFAULT               TIME_MORNING
   ```
   - **Acceptable values**: any value from the [`TimesOfDay`](../../include/rtc.h) enum, so by default `TIME_MORNING`, `TIME_DAY`, `TIME_EVENING`, and `TIME_NIGHT`.
-  - this option specifies what time is the first value in the [`TimesOfDay`](../../include/rtc.h) enum. This should always be the first value there (`TIME_MORNING` by default), because it's how both the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) and the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) determine what elements go where when the encounters are converted.
+  - this option specifies what time is the first value in the [`TimesOfDay`](../../include/rtc.h) enum. This should always be the first value there (`TIME_MORNING` by default), because it's how both the [migration script](../../migration_scripts/add_time_based_encounters.py) and the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) determine what elements go where when the encounters are converted.
   ```
 - OW_TIME_OF_DAY_FALLBACK              OW_TIME_OF_DAY_DEFAULT
   ```
@@ -67,7 +67,7 @@ Here's a rundown, with more information than what's in the comments at [`overwor
 
 ## Examples
 
-### Running the [`migration_script`](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
+### Running the [migration script](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
 **Make sure you run this from the root folder of your project!**
 
 ```
