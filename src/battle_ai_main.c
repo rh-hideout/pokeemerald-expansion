@@ -35,6 +35,7 @@
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi);
 static u32 ChooseMoveOrAction_Doubles(u32 battlerAi);
 static inline void BattleAI_DoAIProcessing(struct AI_ThinkingStruct *aiThink, u32 battlerAi, u32 battlerDef);
+static inline void BattleAI_DoAIProcessing_PredictMove(struct AI_ThinkingStruct *aiThink, u32 battler, u32 opposingBattler);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AI_ThinkingStruct *aiThink, struct AiLogicData *aiData, u32 battlerAi, u32 battlerDef);
 static bool32 IsPinchBerryItemEffect(u32 holdEffect);
 
@@ -238,8 +239,10 @@ void BattleAI_SetupFlags(void)
 
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
 {
-    u32 moveLimitations;
+    u32 moveLimitations, moveLimitationsTarget;
+    u8 defaultScoreMovesTarget = defaultScoreMoves;
     u32 flags[MAX_BATTLERS_COUNT];
+    u32 moveIndex;
 
     // Clear AI data but preserve the flags.
     memcpy(&flags[0], &AI_THINKING_STRUCT->aiFlags[0], sizeof(u32) * MAX_BATTLERS_COUNT);
@@ -249,7 +252,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     moveLimitations = AI_DATA->moveLimitations[battler];
 
     // Conditional score reset, unlike Ruby.
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         if (moveLimitations & (1u << moveIndex))
             SET_SCORE(battler, moveIndex, 0);
@@ -263,6 +266,25 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
 
     gBattlerTarget = SetRandomTarget(battler);
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
+
+    // Initialize move prediction scores
+    if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_MOVES)
+    {
+        u32 opposingBattler = GetOppositeBattler(battler);
+        moveLimitationsTarget = AI_DATA->moveLimitations[opposingBattler];
+
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        {
+            if (moveLimitationsTarget & (1u << moveIndex))
+                SET_PREDICTED_SCORE(opposingBattler, moveIndex, 0);
+            if (defaultScoreMovesTarget & 1)
+                SET_PREDICTED_SCORE(opposingBattler, moveIndex, AI_SCORE_DEFAULT);
+            else
+                SET_PREDICTED_SCORE(opposingBattler, moveIndex, 0);
+
+            defaultScoreMovesTarget >>= 1;
+        }
+    }
 }
 
 u32 BattleAI_ChooseMoveOrAction(u32 battler)
@@ -489,6 +511,56 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     AI_DATA->aiCalcInProgress = FALSE;
 }
 
+u32 BattleAI_PredictMove(u32 battler, u32 opposingBattler)
+{
+    u8 currentMoveArray[MAX_MON_MOVES];
+    u8 consideredMoveArray[MAX_MON_MOVES];
+    u32 numOfBestMoves;
+    s32 i;
+    u32 flags = AI_THINKING_STRUCT->aiFlags[battler];
+
+    AI_DATA->partnerMove = 0;   // no ally
+    while (flags != 0)
+    {
+        if (flags & 1)
+        {
+            BattleAI_DoAIProcessing_PredictMove(AI_THINKING_STRUCT, battler, opposingBattler);
+        }
+        flags >>= 1;
+        AI_THINKING_STRUCT->aiLogicId++;
+    }
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        gAiBattleData->finalScore[opposingBattler][battler][i] = AI_THINKING_STRUCT->predictedScore[i][opposingBattler];
+        DebugPrintf("Final score: %d", gAiBattleData->finalScore[opposingBattler][battler][i]);
+    }
+
+    numOfBestMoves = 1;
+    currentMoveArray[0] = AI_THINKING_STRUCT->predictedScore[0][opposingBattler];
+    consideredMoveArray[0] = 0;
+
+    for (i = 1; i < MAX_MON_MOVES; i++)
+    {
+        if (gBattleMons[opposingBattler].moves[i] != MOVE_NONE)
+        {
+            // In ruby, the order of these if statements is reversed.
+            if (currentMoveArray[0] == AI_THINKING_STRUCT->predictedScore[i][opposingBattler])
+            {
+                currentMoveArray[numOfBestMoves] = AI_THINKING_STRUCT->predictedScore[i][opposingBattler];
+                consideredMoveArray[numOfBestMoves++] = i;
+            }
+            if (currentMoveArray[0] < AI_THINKING_STRUCT->predictedScore[i][opposingBattler])
+            {
+                numOfBestMoves = 1;
+                currentMoveArray[0] = AI_THINKING_STRUCT->predictedScore[i][opposingBattler];
+                consideredMoveArray[0] = i;
+            }
+        }
+    }
+    return consideredMoveArray[Random() % numOfBestMoves];
+}
+
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -678,6 +750,44 @@ static inline bool32 ShouldConsiderMoveForBattler(u32 battlerAi, u32 battlerDef,
             return FALSE;
     }
     return TRUE;
+}
+
+static inline void BattleAI_DoAIProcessing_PredictMove(struct AI_ThinkingStruct *aiThink, u32 battler, u32 opposingBattler)
+{
+    do
+    {
+        if (gBattleMons[opposingBattler].pp[aiThink->movesetIndex] == 0)
+            aiThink->moveConsidered = MOVE_NONE;
+        else
+            aiThink->moveConsidered = gBattleMons[opposingBattler].moves[aiThink->movesetIndex];
+        
+        DebugPrintf("Move considered: %d", aiThink->moveConsidered);
+
+        // There is no point in calculating scores for all 3 battlers(2 opponents + 1 ally) with certain moves.
+        if (aiThink->moveConsidered != MOVE_NONE
+          && aiThink->score[aiThink->movesetIndex] > 0
+          && ShouldConsiderMoveForBattler(opposingBattler, battler, aiThink->moveConsidered))
+        {
+            if (aiThink->aiLogicId < ARRAY_COUNT(sBattleAiFuncTable)
+              && sBattleAiFuncTable[aiThink->aiLogicId] != NULL)
+            {
+                // Call AI function
+                aiThink->predictedScore[aiThink->movesetIndex][opposingBattler] =
+                    sBattleAiFuncTable[aiThink->aiLogicId](opposingBattler,
+                      battler,
+                      aiThink->moveConsidered,
+                      aiThink->predictedScore[aiThink->movesetIndex][opposingBattler]);
+                DebugPrintf("Current score: %d", aiThink->predictedScore[aiThink->movesetIndex][opposingBattler]);
+            }
+        }
+        else
+        {
+            aiThink->predictedScore[aiThink->movesetIndex][opposingBattler] = 0;
+        }
+        aiThink->movesetIndex++;
+    } while (aiThink->movesetIndex < MAX_MON_MOVES);
+
+    aiThink->movesetIndex = 0;
 }
 
 static inline void BattleAI_DoAIProcessing(struct AI_ThinkingStruct *aiThink, u32 battlerAi, u32 battlerDef)

@@ -449,7 +449,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     struct Pokemon *party;
     u16 monAbility, aiMove;
     u32 opposingBattler = GetOppositeBattler(battler);
-    u32 incomingMove = AI_DATA->lastUsedMove[opposingBattler];
+    u32 incomingMove = (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_MOVES) ? AI_DATA->predictedMove[opposingBattler] : AI_DATA->lastUsedMove[opposingBattler];
     u32 incomingType = GetMoveType(incomingMove);
     u32 predictedMove = incomingMove; // Update for move prediction
     u32 predictedType = GetMoveType(predictedMove);
