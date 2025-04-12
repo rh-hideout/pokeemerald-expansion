@@ -1278,3 +1278,26 @@ Gen 4-style shadows are defined by the `SHADOW` macro which takes the following 
     - `SHADOW_SIZE_XL_BATTLE_ONLY`
 
 To make the Pokémon have no shadow, use the `NO_SHADOW` macro instead of `SHADOW`.
+
+## 6. Limiting species allowed as followers
+You may use the following configs in `include/config/overworld.h`
+```c
+#define OW_FOLLOWERS_ALLOWED_SPECIES (0)
+#define OW_FOLLOWERS_ALLOWED_MET_LVL (0)
+#define OW_FOLLOWERS_ALLOWED_MET_LOC (0)
+```
+Examples:
+```c
+// Yellow Pikachu:
+#define OW_FOLLOWERS_ALLOWED_SPECIES (SPECIES_PIKACHU)
+#define OW_FOLLOWERS_ALLOWED_MET_LVL (0)
+#define OW_FOLLOWERS_ALLOWED_MET_LOC (MAPSEC_PALLET_TOWN)
+// Hoenn Starter:
+#define OW_FOLLOWERS_ALLOWED_SPECIES (0)
+#define OW_FOLLOWERS_ALLOWED_MET_LVL (5)
+#define OW_FOLLOWERS_ALLOWED_MET_LOC (MAPSEC_ROUTE_101)
+// Species set in VAR_XXXX:
+#define OW_FOLLOWERS_ALLOWED_SPECIES (VAR_XXXX)
+#define OW_FOLLOWERS_ALLOWED_MET_LVL (0)
+#define OW_FOLLOWERS_ALLOWED_MET_LOC (0)
+```

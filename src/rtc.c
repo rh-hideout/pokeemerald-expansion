@@ -6,6 +6,7 @@
 #include "strings.h"
 #include "text.h"
 #include "fake_rtc.h"
+#include "overworld.h"
 
 // iwram bss
 static u16 sErrorStatus;
@@ -329,14 +330,8 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
 
 enum TimeOfDay GetTimeOfDay(void)
 {
-    RtcCalcLocalTime();
-    if (IsBetweenHours(gLocalTime.hours, MORNING_HOUR_BEGIN, MORNING_HOUR_END))
-        return TIME_MORNING;
-    else if (IsBetweenHours(gLocalTime.hours, EVENING_HOUR_BEGIN, EVENING_HOUR_END))
-        return TIME_EVENING;
-    else if (IsBetweenHours(gLocalTime.hours, NIGHT_HOUR_BEGIN, NIGHT_HOUR_END))
-        return TIME_NIGHT;
-    return TIME_DAY;
+    UpdateTimeOfDay();
+    return gTimeOfDay;
 }
 
 enum TimeOfDay GetTimeOfDayForDex(void)
