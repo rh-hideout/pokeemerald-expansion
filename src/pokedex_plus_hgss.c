@@ -6425,7 +6425,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
     u32 base_x = 21;
     u32 base_y = 51;
     u32 base_y_offset = 9;
-    u32 times = 0; 
+    u32 times = 0;
+    u32 arg; // shorthand for some of the more mathy evolutions
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (sPokedexView->sEvoScreenData.isMega)
@@ -6494,17 +6495,19 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         switch ((enum EvolutionMethods)evolutions[i].method)
         {
         case EVO_SCRIPT_TRIGGER:
-        case EVO_LEVEL_BATTLE_ONLY:
         case EVO_NONE:
             StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown"));
             break;
         case EVO_LEVEL:
+        case EVO_LEVEL_BATTLE_ONLY:
             StringCopy(gStringVar4, COMPOUND_STRING("{LV}{UP_ARROW}"));
             if (evolutions[i].param > 1)
             {
                 ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEFT_ALIGN, EVO_SCREEN_LVL_DIGITS); //level
                 StringAppend(gStringVar4, gStringVar2);
             }
+            if ((enum EvolutionMethods)evolutions[i].method == EVO_LEVEL_BATTLE_ONLY)
+                StringAppend(gStringVar4, COMPOUND_STRING(", in battle"));
             break;
         case EVO_TRADE:
             StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Trading"));
@@ -6597,8 +6600,16 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 break;
             // Gen 3
             case IF_PID_UPPER_MODULO_10_GT:
-            case IF_PID_UPPER_MODULO_10_LE:
-                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1 * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
+            case IF_PID_UPPER_MODULO_10_EQ:
+            case IF_PID_UPPER_MODULO_10_LT:
+                arg = evolutions[i].params[j].arg1;
+                    if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT 
+                        && arg < 10 && arg >= 0)
+                        arg = 9 - arg;
+                    else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ 
+                             && arg < 10 && arg >= 0)
+                        arg = 1;
+                ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
                 StringAppend(gStringVar4, COMPOUND_STRING("random %"));
                 StringAppend(gStringVar4, gStringVar2);
                 break;
@@ -6702,21 +6713,18 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 StringAppend(gStringVar4, gStringVar2);
                 break;
             case IF_PID_MODULO_100_GT:
-                StringAppend(gStringVar4, COMPOUND_STRING(">"));
-                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
-                StringAppend(gStringVar4, gStringVar2);
-                StringAppend(gStringVar4, COMPOUND_STRING("%"));
-                break;
             case IF_PID_MODULO_100_EQ:
-                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
-                StringAppend(gStringVar4, gStringVar2);
-                StringAppend(gStringVar4, COMPOUND_STRING("%"));
-                break;
             case IF_PID_MODULO_100_LT:
-                StringAppend(gStringVar4, COMPOUND_STRING("<"));
-                ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
-                StringAppend(gStringVar4, gStringVar2);
-                StringAppend(gStringVar4, COMPOUND_STRING("%"));
+                    arg = evolutions[i].params[j].arg1;
+                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT 
+                            && arg < 100 && arg >= 0)
+                            arg = 99 - arg;
+                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ 
+                                 && arg < 100 && arg >= 0)
+                            arg = 1;
+                    ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
+                    StringAppend(gStringVar4, COMPOUND_STRING("%"));
+                    StringAppend(gStringVar4, gStringVar2);
                 break;
             case IF_MIN_OVERWORLD_STEPS:
                 StringAppend(gStringVar4, COMPOUND_STRING("after "));

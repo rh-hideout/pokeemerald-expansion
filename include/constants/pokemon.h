@@ -258,7 +258,8 @@ enum EvolutionConditions {
     IF_HOLD_ITEM,                       // The Pokémon is holding a specific item.
     // Gen 3
     IF_PID_UPPER_MODULO_10_GT,          // The Pokémon's upper personality value's modulo by 10 is greater than the defined value.
-    IF_PID_UPPER_MODULO_10_LE,          // The Pokémon's upper personality value's modulo by 10 is lower or equal than the defined value.
+    IF_PID_UPPER_MODULO_10_EQ,          // The Pokémon's upper personality value's modulo by 10 is equal to the defined value.
+    IF_PID_UPPER_MODULO_10_LT,          // The Pokémon's upper personality value's modulo by 10 is lower or equal than the defined value.
     IF_MIN_BEAUTY,                      // The Pokémon has the defined amount of Beauty.
     IF_MIN_COOLNESS,                    // The Pokémon has the defined amount of Coolness.
     IF_MIN_SMARTNESS,                  // The Pokémon has the defined amount of Smartness. (aka Cleverness in Gen6+)

@@ -4553,8 +4553,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             if ((upperPersonality % 10) > params[i].arg1)
                 currentCondition = TRUE;
             break;
-        case IF_PID_UPPER_MODULO_10_LE:
-            if ((upperPersonality % 10) <= params[i].arg1)
+        case IF_PID_UPPER_MODULO_10_EQ:
+            if ((upperPersonality % 10) == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_UPPER_MODULO_10_LT:
+            if ((upperPersonality % 10) < params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_MIN_BEAUTY:
