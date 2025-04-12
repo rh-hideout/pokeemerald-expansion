@@ -1348,9 +1348,10 @@ static u8 GetPlayerMapObjId(void)
 	return gPlayerAvatar.objectEventId;
 }
 
-void FollowerNPCWalkIntoPlayerForLeaveRoute(struct ObjectEvent *follower)
+void FollowerNPCWalkIntoPlayerForLeaveMap(void)
 {
     u8 followerObjId = GetFollowerNPCObjectId();
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
 
     if (followerObjId == OBJECT_EVENTS_COUNT)
         return;
@@ -1374,7 +1375,7 @@ void FollowerNPCWalkIntoPlayerForLeaveRoute(struct ObjectEvent *follower)
             }
 }
 
-void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower)
+void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower)
 {
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     follower->invisible = TRUE;
@@ -1383,7 +1384,7 @@ void FollowerNPCHideForLeaveRoute(struct ObjectEvent *follower)
     gSaveBlock3Ptr->NPCfollower.delayedState = 0;
 }
 
-void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct ObjectEvent *player)
+void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct ObjectEvent *player)
 {
     if (gSaveBlock3Ptr->NPCfollower.inProgress) {
         follower->invisible = FALSE; // Show the follower after ESCAPE ROPE
@@ -1407,7 +1408,7 @@ void FollowerNPCReappearAfterLeaveRoute(struct ObjectEvent *follower, struct Obj
     }
 }
 
-void FollowerNPCFaceAfterLeaveRoute(void)
+void FollowerNPCFaceAfterLeaveMap(void)
 {
     u8 playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;

@@ -4117,7 +4117,7 @@ static void Task_HideFollowerForTeleport(u8 taskId)
         }
         else
         {
-            FollowerNPCWalkIntoPlayerForLeaveRoute(follower);
+            FollowerNPCWalkIntoPlayerForLeaveMap();
             taskState++;
         }
     }
@@ -4125,7 +4125,7 @@ static void Task_HideFollowerForTeleport(u8 taskId)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
-            FollowerNPCHideForLeaveRoute(follower);
+            FollowerNPCHideForLeaveMap(follower);
             DestroyTask(taskId);
         }
     }
