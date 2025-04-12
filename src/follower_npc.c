@@ -316,6 +316,7 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     {
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
     case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
         CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
         gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
     }
@@ -385,7 +386,7 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         follower->facingDirectionLocked = FALSE;
 
     // Follower won't do delayed movement until player does a movement.
-    if (!IsStateMovement(state) && (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_DOWN || gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_SPECIAL_DOWN))
+    if (!IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.delayedState)
         return MOVEMENT_ACTION_NONE;
 
     if (IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.delayedState)
@@ -427,7 +428,10 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
         // Ledge jump
         if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
-            RETURN_STATE(MOVEMENT_ACTION_JUMP_2_DOWN, direction); // Jump right away
+            return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1)); // Jump right away
+
+        if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
+            return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
 
         gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_2_DOWN;
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
@@ -487,10 +491,26 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
             
         RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
+        // Ledge jump
         if (noSpecialAnimFrames)
-            RETURN_STATE(MOVEMENT_ACTION_JUMP_DOWN, direction);
-            
-        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN, direction);
+        {
+            if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Jumped again.
+                return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
+
+            gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_2_DOWN;
+        }
+        else
+        {
+            if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
+                return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
+
+            if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
+                return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
+
+            gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN;
+        }
+
+        RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
         if (noSpecialAnimFrames)
             return MOVEMENT_ACTION_NONE;
@@ -619,10 +639,6 @@ static bool8 IsStateMovement(u8 state)
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_UP:
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_LEFT:
-    case MOVEMENT_ACTION_JUMP_2_DOWN:
-    case MOVEMENT_ACTION_JUMP_2_UP:
-    case MOVEMENT_ACTION_JUMP_2_RIGHT:
-    case MOVEMENT_ACTION_JUMP_2_LEFT:
         return FALSE;
     }
 
