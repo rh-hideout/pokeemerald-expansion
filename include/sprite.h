@@ -1,6 +1,7 @@
 #ifndef GUARD_SPRITE_H
 #define GUARD_SPRITE_H
 
+#define OAM_MATRIX_COUNT 32
 #define MAX_SPRITES 64
 #define SPRITE_NONE 0xFF
 #define TAG_NONE 0xFFFF
@@ -260,12 +261,12 @@ extern const union AffineAnimCmd *const gDummySpriteAffineAnimTable[];
 extern const struct SpriteTemplate gDummySpriteTemplate;
 
 extern u8 gReservedSpritePaletteCount;
-extern struct Sprite gSprites[];
+extern struct Sprite gSprites[MAX_SPRITES + 1];
 extern u8 gOamLimit;
 extern u16 gReservedSpriteTileCount;
 extern s16 gSpriteCoordOffsetX;
 extern s16 gSpriteCoordOffsetY;
-extern struct OamMatrix gOamMatrices[];
+extern struct OamMatrix gOamMatrices[OAM_MATRIX_COUNT];
 extern bool8 gAffineAnimsDisabled;
 
 void ResetSpriteData(void);
@@ -316,10 +317,10 @@ u16 GetSpriteTileTagByTileStart(u16 start);
 void RequestSpriteSheetCopy(const struct SpriteSheet *sheet);
 u16 LoadSpriteSheetDeferred(const struct SpriteSheet *sheet);
 void FreeAllSpritePalettes(void);
-u8 LoadSpritePalette(const struct SpritePalette *palette);
+u32 LoadSpritePalette(const struct SpritePalette *palette);
 void LoadSpritePalettes(const struct SpritePalette *palettes);
-u8 AllocSpritePalette(u16 tag);
-u8 IndexOfSpritePaletteTag(u16 tag);
+u32 AllocSpritePalette(u16 tag);
+u32 IndexOfSpritePaletteTag(u16 tag);
 u16 GetSpritePaletteTagByPaletteNum(u8 paletteNum);
 void FreeSpritePaletteByTag(u16 tag);
 void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subspriteTables);

@@ -57,6 +57,8 @@ TEST("Terastallization type is reset to the default types when setting Tera Type
     CreateMon(&mon, SPECIES_PIDGEY, 100, 0, FALSE, 0, OT_ID_PRESET, 0);
     SetMonData(&mon, MON_DATA_TERA_TYPE, &teraType);
     EXPECT_EQ(teraType, GetMonData(&mon, MON_DATA_TERA_TYPE));
+    if (typeNone == TYPE_NONE)
+        typeNone = GetTeraTypeFromPersonality(&mon);
     SetMonData(&mon, MON_DATA_TERA_TYPE, &typeNone);
     typeNone = GetMonData(&mon, MON_DATA_TERA_TYPE);
     EXPECT(typeNone == gSpeciesInfo[SPECIES_PIDGEY].types[0]
@@ -401,4 +403,24 @@ TEST("createmon [simple]")
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 100);
     EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_WYNAUT);
     EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_LEVEL), 10);
+}
+
+TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNER_MOVES")
+{
+    KNOWN_FAILING;
+
+    u32 j, count, species = 0;
+    const struct LevelUpMove *learnset;
+
+    for(j = 0; j < SPECIES_EGG; j++)
+    {
+        PARAMETRIZE { species = j; }
+    }
+
+    learnset = GetSpeciesLevelUpLearnset(species);
+    count = 0;
+    for (j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
+        count++;
+    EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
+    EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }

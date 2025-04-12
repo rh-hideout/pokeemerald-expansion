@@ -67,7 +67,7 @@ TEST("Move names fit on Contest Screen")
 TEST("Move names fit on TMs & HMs Bag Screen")
 {
     u32 i;
-    const u32 fontId = FONT_NARROWER, widthPx = 61; 
+    const u32 fontId = FONT_NARROWER, widthPx = 61;
     u32 move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
@@ -612,8 +612,8 @@ TEST("Battle strings fit on the battle message window")
         sBattlerAbilities[j] = longAbilityID;
 
     // Set Trainers
-    gTrainerBattleOpponent_A = 1;
-    gTrainerBattleOpponent_B = 1;
+    TRAINER_BATTLE_PARAM.opponentA = 1;
+    TRAINER_BATTLE_PARAM.opponentB = 1;
 
     // Set battler to 1, so "The opposing " is prefixed when refering to battlers.
     gBattleTypeFlags |= BATTLE_TYPE_TRAINER;
@@ -713,7 +713,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_TARGETABILITYSTATRAISE:
     case STRINGID_TARGETSSTATWASMAXEDOUT:
     case STRINGID_ATTACKERABILITYSTATRAISE:
-    case STRINGID_LASTABILITYRAISEDSTAT:
     case STRINGID_TARGETABILITYSTATLOWER:
     case STRINGID_SCRIPTINGABILITYSTATRAISE:
     case STRINGID_BATTLERABILITYRAISEDSTAT:

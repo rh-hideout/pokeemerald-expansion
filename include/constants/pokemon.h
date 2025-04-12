@@ -46,31 +46,31 @@
 #define EGG_GROUPS_PER_MON            2
 
 // Pokémon natures
-#define NATURE_HARDY    0
-#define NATURE_LONELY   1
-#define NATURE_BRAVE    2
-#define NATURE_ADAMANT  3
-#define NATURE_NAUGHTY  4
-#define NATURE_BOLD     5
-#define NATURE_DOCILE   6
-#define NATURE_RELAXED  7
-#define NATURE_IMPISH   8
-#define NATURE_LAX      9
-#define NATURE_TIMID    10
-#define NATURE_HASTY    11
-#define NATURE_SERIOUS  12
-#define NATURE_JOLLY    13
-#define NATURE_NAIVE    14
-#define NATURE_MODEST   15
-#define NATURE_MILD     16
-#define NATURE_QUIET    17
-#define NATURE_BASHFUL  18
-#define NATURE_RASH     19
-#define NATURE_CALM     20
-#define NATURE_GENTLE   21
-#define NATURE_SASSY    22
-#define NATURE_CAREFUL  23
-#define NATURE_QUIRKY   24
+#define NATURE_HARDY    0 // Neutral
+#define NATURE_LONELY   1 // +Atk -Def
+#define NATURE_BRAVE    2 // +Atk -Speed
+#define NATURE_ADAMANT  3 // +Atk -SpAtk
+#define NATURE_NAUGHTY  4 // +Atk -SpDef
+#define NATURE_BOLD     5 // +Def -Atk
+#define NATURE_DOCILE   6 // Neutral
+#define NATURE_RELAXED  7 // +Def -Speed
+#define NATURE_IMPISH   8 // +Def -SpAtk
+#define NATURE_LAX      9 // +Def -SpDef
+#define NATURE_TIMID    10 // +Speed -Atk
+#define NATURE_HASTY    11 // +Speed -Def
+#define NATURE_SERIOUS  12 // Neutral
+#define NATURE_JOLLY    13 // +Speed -SpAtk
+#define NATURE_NAIVE    14 // +Speed - SpDef
+#define NATURE_MODEST   15 // +SpAtk -Atk
+#define NATURE_MILD     16 // +SpAtk -Def
+#define NATURE_QUIET    17 // +SpAtk -Speed
+#define NATURE_BASHFUL  18 // Neutral
+#define NATURE_RASH     19 // +SpAtk -SpDef
+#define NATURE_CALM     20 // +SpDef -Atk
+#define NATURE_GENTLE   21 // +SpDef -Def
+#define NATURE_SASSY    22 // +SpDef -Speed
+#define NATURE_CAREFUL  23 // +SpDef -SpAtk
+#define NATURE_QUIRKY   24 // Neutral
 #define NUM_NATURES     25
 
 // Pokémon Stats
@@ -169,6 +169,7 @@
 #define LEVEL_UP_MOVE_END  0xFFFF
 
 #define MAX_LEVEL_UP_MOVES       20
+#define MAX_RELEARNER_MOVES      max(MAX_LEVEL_UP_MOVES, 25)
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
@@ -299,6 +300,17 @@ enum EvolutionMethods {
     EVO_ITEM_COUNT_999,                  // Pokémon levels up after trainer has collected 999 of a specific item
     EVO_DEFEAT_THREE_WITH_ITEM,          // Pokémon levels up after having defeat 3 Pokémon of the same species holding the specified item
     EVO_OVERWORLD_STEPS,                 // Pokémon levels up after having taken a specific amount of steps in the overworld
+
+    // Alcremie evolutions methods. Different combinations of day, spin rotation and duration.
+    EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS,
 };
 
 enum EvolutionMode {
@@ -310,6 +322,19 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_SPECIAL,
     EVO_MODE_OVERWORLD_SPECIAL,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
+};
+
+enum StartEvo
+{
+    CHECK_EVO,
+    DO_EVO,
+};
+
+enum PokemonJumpType{
+    PKMN_JUMP_TYPE_NONE, // Not allowed in Pokémon Jump
+    PKMN_JUMP_TYPE_NORMAL,
+    PKMN_JUMP_TYPE_FAST,
+    PKMN_JUMP_TYPE_SLOW,
 };
 
 #define MON_PIC_WIDTH 64

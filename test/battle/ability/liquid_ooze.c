@@ -108,5 +108,35 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of 
     }
 }
 
+/* * https://bulbapedia.bulbagarden.net/wiki/Liquid_Ooze_(Ability)#In_battle:
+   * If the recipient of Leech Seed's effect were to faint due to Liquid Ooze on the same turn as the victim of Leech Seed, then the victim faints before the recipient. This means that the victim's team loses the battle if both teams had their final Pokémon sent out. 
+ */
+SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder")
+{
+    u16 ability;
+    PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
+    PARAMETRIZE { ability = ABILITY_LIQUID_OOZE; }
+    GIVEN {
+        PLAYER(SPECIES_BULBASAUR)   { HP(1); }
+        OPPONENT(SPECIES_TENTACOOL) { HP(1); Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+    } SCENE {
+        // Player seeds opponent
+        MESSAGE("Bulbasaur used Leech Seed!");
+        // Drain at end of turn
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, opponent);
+        if (ability != ABILITY_LIQUID_OOZE) {
+            MESSAGE("The opposing Tentacool fainted!");
+            MESSAGE("The opposing Tentacool's health is sapped by Leech Seed!");
+        } else {
+            MESSAGE("The opposing Tentacool fainted!");
+            ABILITY_POPUP(opponent, ABILITY_LIQUID_OOZE);
+            MESSAGE("Bulbasaur sucked up the liquid ooze!");
+            MESSAGE("Bulbasaur fainted!");
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP instead of heal (Gen 3-4");
 TO_DO_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of heal (Gen 5+");

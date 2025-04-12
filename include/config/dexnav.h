@@ -5,11 +5,11 @@
 #define USE_DEXNAV_SEARCH_LEVELS      FALSE  /* WARNING: POSSIBLY EXCEEDS SAVEBLOCK SPACE! REQUIRES 1 BYTE PER SPECIES */
 
 // Flag/var defines
-#define FLAG_SYS_DEXNAV_SEARCH          0 // Searching for mon
-#define FLAG_SYS_DEXNAV_GET             0 // DexNav shows in start menu
-#define FLAG_SYS_DETECTOR_MODE          0 // Allow player to find hidden mons
-#define VAR_DEXNAV_SPECIES              0 // Registered DexNav species
-#define VAR_DEXNAV_STEP_COUNTER         0 // Steps for finding hidden pokemon
+#define DN_FLAG_SEARCHING             0 // Searching for mon
+#define DN_FLAG_DEXNAV_GET            0 // DexNav shows in start menu
+#define DN_FLAG_DETECTOR_MODE         0 // Allow player to find hidden mons
+#define DN_VAR_SPECIES                0 // Registered DexNav species
+#define DN_VAR_STEP_COUNTER           0 // Steps for finding hidden pokemon
 
 // Search parameters
 #define DEXNAV_TIMEOUT                  15  // 15 seconds is the time out. Max of 1092 seconds allowed

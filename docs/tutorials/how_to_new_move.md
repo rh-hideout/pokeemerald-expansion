@@ -170,8 +170,6 @@ Each move can have up to 15 additional effects, allowing you to construct monstr
         .chance = 40,
         .self = TRUE,
     },{
-        .moveEffect = MOVE_EFFECT_RAPID_SPIN,
-    },{
         .moveEffect = MOVE_EFFECT_DEF_MINUS_2,
         .chance = 50,
     }),

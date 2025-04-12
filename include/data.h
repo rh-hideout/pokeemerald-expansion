@@ -76,6 +76,7 @@ struct TrainerMon
     u8 padding1:1;
     u8 dynamaxLevel:4;
     u8 padding2:4;
+    u32 tags;
 };
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)
@@ -94,6 +95,10 @@ struct Trainer
              u8 startingStatus:6;    // this trainer starts a battle with a given status. see include/constants/battle.h for values
     /*0x1F*/ u8 mugshotColor;
     /*0x20*/ u8 partySize;
+    /*0x21*/ u8 poolSize;
+    /*0x22*/ u8 poolRuleIndex;
+    /*0x23*/ u8 poolPickIndex;
+    /*0x24*/ u8 poolPruneIndex;
 };
 
 struct TrainerClass
@@ -163,7 +168,7 @@ extern const union AffineAnimCmd *const gAffineAnims_BattleSpriteContest[];
 extern const union AnimCmd sAnim_GeneralFrame0[];
 extern const union AnimCmd sAnim_GeneralFrame3[];
 extern const union AnimCmd *const gAnims_MonPic[];
-extern const union AnimCmd *const sAnims_Trainer[];
+extern const union AnimCmd *const gAnims_Trainer[];
 extern const struct TrainerSprite gTrainerSprites[];
 extern const struct TrainerBacksprite gTrainerBacksprites[];
 

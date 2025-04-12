@@ -2956,7 +2956,6 @@ void SetContestants(u8 contestType, u8 rank)
     u8 opponentsCount = 0;
     u8 opponents[100];
     bool8 allowPostgameContestants = FALSE;
-    const u8 *filter;
 
     TryPutPlayerLast();
 
@@ -2964,19 +2963,18 @@ void SetContestants(u8 contestType, u8 rank)
         allowPostgameContestants = TRUE;
 
     // Find all suitable opponents
-    filter = gPostgameContestOpponentFilter;
     for (i = 0; i < ARRAY_COUNT(gContestOpponents); i++)
     {
         if (rank == gContestOpponents[i].whichRank)
         {
             if (allowPostgameContestants == TRUE)
             {
-                if (filter[i] == CONTEST_FILTER_NO_POSTGAME)
+                if (gContestOpponents[i].filter == CONTEST_FILTER_NO_POSTGAME)
                     continue;
             }
             else
             {
-                if (filter[i] == CONTEST_FILTER_ONLY_POSTGAME)
+                if (gContestOpponents[i].filter == CONTEST_FILTER_ONLY_POSTGAME)
                     continue;
             }
             if      (contestType == CONTEST_CATEGORY_COOL && gContestOpponents[i].aiPool_Cool)
@@ -3025,12 +3023,12 @@ void SetLinkAIContestants(u8 contestType, u8 rank, bool32 isPostgame)
 
         if (isPostgame == TRUE)
         {
-            if (gPostgameContestOpponentFilter[i] == CONTEST_FILTER_NO_POSTGAME)
+            if (gContestOpponents[i].filter == CONTEST_FILTER_NO_POSTGAME)
                 continue;
         }
         else
         {
-            if (gPostgameContestOpponentFilter[i] == CONTEST_FILTER_ONLY_POSTGAME)
+            if (gContestOpponents[i].filter == CONTEST_FILTER_ONLY_POSTGAME)
                 continue;
         }
         if ((contestType == CONTEST_CATEGORY_COOL && gContestOpponents[i].aiPool_Cool)
@@ -3269,16 +3267,19 @@ static u16 GetMoveEffectSymbolTileOffset(u16 move, u8 contestant)
 
     switch (gContestEffects[GetMoveContestEffect(move)].effectType)
     {
-    case 0:
-    case 1:
-    case 8:
+    case CONTEST_EFFECT_TYPE_APPEAL:
+    case CONTEST_EFFECT_TYPE_AVOID_STARTLE:
+    case CONTEST_EFFECT_TYPE_UNKNOWN:
         offset = 0x9082;
         break;
-    case 2:
-    case 3:
+    case CONTEST_EFFECT_TYPE_STARTLE_MON:
+    case CONTEST_EFFECT_TYPE_STARTLE_MONS:
         offset = 0x9088;
         break;
     default:
+    //case CONTEST_EFFECT_TYPE_WORSEN:
+    //case CONTEST_EFFECT_TYPE_SPECIAL_APPEAL:
+    //case CONTEST_EFFECT_TYPE_TURN_ORDER:
         offset = 0x9086;
         break;
     }
@@ -5484,10 +5485,10 @@ static void SetMoveTargetPosition(u16 move)
 {
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
-    case MOVE_TARGET_USER_OR_SELECTED:
     case MOVE_TARGET_USER:
         gBattlerTarget = B_POSITION_PLAYER_RIGHT;
         break;
+    case MOVE_TARGET_OPPONENT:
     case MOVE_TARGET_SELECTED:
     case MOVE_TARGET_RANDOM:
     case MOVE_TARGET_BOTH:

@@ -717,7 +717,7 @@ static void AnimSunlight(struct Sprite *sprite)
 // arg 6: ? (todo: something related to which mon the pixel offsets are based on)
 static void AnimEmberFlare(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget)
+    if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget)
         && (gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)
             || gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];

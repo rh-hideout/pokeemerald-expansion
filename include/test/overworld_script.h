@@ -54,6 +54,8 @@ asm(".set FALSE, 0\n"
 asm(".include \"constants/gba_constants.inc\"\n");
 
 // Make overworld script macros available.
-asm(".include \"asm/macros/event.inc\"\n");
+asm(".include \"constants/gba_constants.inc\"\n"
+    ".include \"asm/macros/asm.inc\"\n"
+    ".include \"asm/macros/event.inc\"\n");
 
 #endif
