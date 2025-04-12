@@ -18,6 +18,7 @@ void AllocateBattleResources(void)
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
+    gAiBattleData = AllocZeroed(sizeof(*gAiBattleData));
 
 #if B_FLAG_SKY_BATTLE
     gBattleStruct->isSkyBattle = FlagGet(B_FLAG_SKY_BATTLE);
@@ -25,7 +26,6 @@ void AllocateBattleResources(void)
 
     gBattleResources = AllocZeroed(sizeof(*gBattleResources));
     gBattleResources->secretBase = AllocZeroed(sizeof(*gBattleResources->secretBase));
-    gBattleResources->flags = AllocZeroed(sizeof(*gBattleResources->flags));
     gBattleResources->battleScriptsStack = AllocZeroed(sizeof(*gBattleResources->battleScriptsStack));
     gBattleResources->battleCallbackStack = AllocZeroed(sizeof(*gBattleResources->battleCallbackStack));
     gBattleResources->beforeLvlUp = AllocZeroed(sizeof(*gBattleResources->beforeLvlUp));
@@ -56,9 +56,9 @@ void FreeBattleResources(void)
     if (gBattleResources != NULL)
     {
         FREE_AND_SET_NULL(gBattleStruct);
+        FREE_AND_SET_NULL(gAiBattleData);
 
         FREE_AND_SET_NULL(gBattleResources->secretBase);
-        FREE_AND_SET_NULL(gBattleResources->flags);
         FREE_AND_SET_NULL(gBattleResources->battleScriptsStack);
         FREE_AND_SET_NULL(gBattleResources->battleCallbackStack);
         FREE_AND_SET_NULL(gBattleResources->beforeLvlUp);

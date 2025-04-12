@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Dynamax Cannon causes double damage to Dynamaxed Pokemon", s
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DYNAMAX_CANNON].effect == EFFECT_DYNAMAX_DOUBLE_DMG);
+        ASSUME(GetMoveEffect(MOVE_DYNAMAX_CANNON) == EFFECT_DYNAMAX_DOUBLE_DMG);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

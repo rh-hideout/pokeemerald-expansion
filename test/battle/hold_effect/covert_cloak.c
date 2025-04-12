@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_RAPID_SPIN].effect == EFFECT_RAPID_SPIN);
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
@@ -127,7 +127,6 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
 DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending on number of targets hit")
 {
     u32 moveToUse;
-    KNOWN_FAILING;
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_TACKLE; }
     GIVEN {
@@ -151,9 +150,33 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
     }
 }
 
+DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is hit")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_PROTECT; }
+    PARAMETRIZE { move = MOVE_FLY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, move, target: playerLeft);
+               MOVE(playerRight, move, target: opponentRight);
+               MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet's burn was cured!");
+            STATUS_ICON(opponentLeft, none: TRUE);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Covert Cloak blocks Sparkling Aria in singles")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }

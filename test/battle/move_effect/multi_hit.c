@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_BULLET_SEED].effect == EFFECT_MULTI_HIT);
+    ASSUME(GetMoveEffect(MOVE_BULLET_SEED) == EFFECT_MULTI_HIT);
 }
 
 SINGLE_BATTLE_TEST("Multi hit Moves hit the maximum amount with Skill Link")
@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit five times 50 Percent of the time with L
 SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after final hit")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -175,8 +175,8 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after final
 SINGLE_BATTLE_TEST("Scale Shot is immune to Fairy types and will end the move correctly")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].type == TYPE_DRAGON);
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
+        ASSUME(GetMoveType(MOVE_SCALE_SHOT) == TYPE_DRAGON);
         ASSUME(gSpeciesInfo[SPECIES_CLEFAIRY].types[0] == TYPE_FAIRY || gSpeciesInfo[SPECIES_CLEFAIRY].types[1] == TYPE_FAIRY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFAIRY) { HP(1); }
@@ -191,7 +191,7 @@ SINGLE_BATTLE_TEST("Scale Shot is immune to Fairy types and will end the move co
 DOUBLE_BATTLE_TEST("Scale Shot does not corrupt the next turn move used")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -216,7 +216,7 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after the 4
 {
     PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -241,7 +241,7 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after killi
     PARAMETRIZE { item = ITEM_LOADED_DICE; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_BAGON) { Item(item); }
         OPPONENT(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
         OPPONENT(SPECIES_WOBBUFFET);

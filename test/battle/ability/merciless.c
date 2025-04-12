@@ -3,7 +3,6 @@
 
 SINGLE_BATTLE_TEST("Merciless causes a move to result in a critical hit if the target is poisoned")
 {
-    PASSES_RANDOMLY(1, 1, RNG_CRITICAL_HIT);
     GIVEN {
         PLAYER(SPECIES_MAREANIE) { Ability(ABILITY_MERCILESS); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
