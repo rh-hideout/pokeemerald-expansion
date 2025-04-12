@@ -397,8 +397,8 @@ def PrintEncounterRateMacros():
     fieldCounter = 0
     # len(fieldData) - 1 here so we skip hidden_mons
     while fieldCounter < len(fieldData) - 1: 
-        rateCount = 0
         if "groups" not in fieldData[fieldCounter]:
+            rateCount = 0
             for percent in fieldData[fieldCounter]["encounter_rates"]:
                 if rateCount == 0:
                     print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount} {percent}")
