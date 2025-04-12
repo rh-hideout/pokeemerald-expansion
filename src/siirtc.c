@@ -75,7 +75,7 @@ static u8 ReadData();
 static void EnableGpioPortRead();
 static void DisableGpioPortRead();
 
-static const char AgbLibRtcVersion[] = "SIIRTC_V001";
+USED static const char AgbLibRtcVersion[] = "SIIRTC_V001";
 
 void SiiRtcUnprotect(void)
 {
