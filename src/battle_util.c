@@ -3874,7 +3874,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
         party = gEnemyParty;
 
         // Edge case: If both opposing Pokemon were knocked out on the same turn,
-        // make sure opponent only sents out the final Pokemon once.
+        // make sure opponent only sends out the final Pokemon once.
         if (battler == playerId
          && (gHitMarker & HITMARKER_FAINTED(flankId))
          && (gHitMarker & HITMARKER_FAINTED(playerId)))

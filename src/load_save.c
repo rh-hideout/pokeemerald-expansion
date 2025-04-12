@@ -1,6 +1,7 @@
 #include "global.h"
 #include "malloc.h"
 #include "berry_powder.h"
+#include "follower_npc.h"
 #include "item.h"
 #include "load_save.h"
 #include "main.h"
@@ -9,6 +10,7 @@
 #include "pokemon_storage_system.h"
 #include "random.h"
 #include "save_location.h"
+#include "script_pokemon_util.h"
 #include "trainer_hill.h"
 #include "gba/flash_internal.h"
 #include "decoration_inventory.h"
@@ -193,6 +195,31 @@ void LoadPlayerParty(void)
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_HP_LOST, &data);
         data = gPlayerParty[i].status;
         SetBoxMonData(&gPlayerParty[i].box, MON_DATA_STATUS, &data);
+    }
+}
+
+void LoadLastThreeMons(void)
+{
+    int i;
+
+    gPlayerPartyCount = gSaveBlock1Ptr->playerPartyCount;
+
+    for (i = 3; i < PARTY_SIZE; i++)
+    {
+        u32 data;
+        gPlayerParty[i] = gSaveBlock1Ptr->playerParty[i];
+
+        data = gPlayerParty[i].maxHP - gPlayerParty[i].hp;
+        SetBoxMonData(&gPlayerParty[i].box, MON_DATA_HP_LOST, &data);
+        data = gPlayerParty[i].status;
+        SetBoxMonData(&gPlayerParty[i].box, MON_DATA_STATUS, &data);
+        
+    }
+
+    if (OW_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
+     && (FlagGet(OW_FLAG_HEAL_AFTER_FOLLOWER_BATTLE) || OW_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == ALWAYS))
+    {
+        HealPlayerParty();
     }
 }
 
