@@ -18,22 +18,8 @@ MAP_UNDEFINED         = "MAP_UNDEFINED"
 MON_HEADERS = []
 
 # mon encounter group types
-LAND_MONS             = "land_mons"
-LAND_MONS_LABEL       = "LandMons"
-LAND_MONS_INDEX       = 0
-WATER_MONS            = "water_mons"
-WATER_MONS_LABEL      = "WaterMons"
-WATER_MONS_INDEX      = 1
-ROCK_SMASH_MONS       = "rock_smash_mons"
-ROCK_SMASH_MONS_LABEL = "RockSmashMons"
-ROCK_SMASH_MONS_INDEX = 2
-FISHING_MONS          = "fishing_mons"
-FISHING_MONS_LABEL    = "FishingMons"
-FISHING_MONS_INDEX    = 3
-HIDDEN_MONS           = "hidden_mons"
-HIDDEN_MONS_LABEL     = "HiddenMons"
-HIDDEN_MONS_INDEX     = 4
-MONS_INFO_TOTAL       = HIDDEN_MONS_INDEX + 1
+fieldData = []
+fieldInfoStrings = []
 
 # time of day encounter data
 TIME_DEFAULT       = "OW_TIME_OF_DAY_DEFAULT"
@@ -85,13 +71,6 @@ waterMonsInfo     = ""
 rockSmashMonsInfo = ""
 fishingMonsInfo   = ""
 
-# encounter rate variables
-eLandMons      = []
-eWaterMons     = []
-eRockSmashMons = []
-eFishingMons   = []
-
-
 # debug output control
 printEncounterHeaders           = True
 printEncounterRateMacros        = True
@@ -106,11 +85,7 @@ def ImportWildEncounterFile():
         quit()
 
     global MON_HEADERS
-    global landMonsInfo
-    global waterMonsInfo
-    global rockSmashMonsInfo
-    global fishingMonsInfo
-    global hiddenMonsInfo
+    global fieldInfoStrings
     global structLabel
     global structMonType
     global structTime
@@ -123,14 +98,11 @@ def ImportWildEncounterFile():
     global headerStructContent
     global hLabel
     global headersArray
-    global eLandMons
-    global eWaterMons
-    global eRockSmashMons
-    global eFishingMons
     global encounterTotalCount
     global encounterCount
     global headerIndex
     global tabStr
+    global fieldData
     tabStr = "    "
 
     global IS_ENABLED
@@ -163,17 +135,23 @@ def ImportWildEncounterFile():
         # for the encounter rate macros, so we don't worry about hidden mons here
         if headerIndex == 0:
             wFields = wData["wild_encounter_groups"][headerIndex]["fields"]
+            fieldCounter = 0
             for field in wFields:
-                if field["type"] == LAND_MONS:
-                    eLandMons = field["encounter_rates"]
-                elif field["type"] == WATER_MONS:
-                    eWaterMons = field["encounter_rates"]
-                elif field["type"] == ROCK_SMASH_MONS:
-                    eRockSmashMons = field["encounter_rates"]
-                elif field["type"] == FISHING_MONS:
-                    eFishingMons = field["encounter_rates"]
-                    eFishingMons.append(field["groups"])
+                fieldData.append({})
+                fieldData[fieldCounter]["name"] = field["type"]
+                fieldData[fieldCounter]["pascalName"] = GetPascalCase(field["type"])
+                fieldData[fieldCounter]["snakeName"] = GetSnakeCase(field["type"])
+                fieldData[fieldCounter]["encounter_rates"] = field["encounter_rates"]
 
+                if "groups" in field:
+                    fieldData[fieldCounter]["groups"] = field["groups"]
+
+                if fieldCounter == len(wFields) - 1:
+                    fieldData.append({})
+                    fieldData[fieldCounter + 1]["name"] = "hidden_mons"
+                    fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase("hidden_mons")
+                    fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase("hidden_mons")
+                fieldCounter += 1
             PrintGeneratedWarningText()
 
             print('#include "rtc.h"')
@@ -208,27 +186,17 @@ def ImportWildEncounterFile():
                 structTime = TIME_MORNING_LABEL
                 structLabel = structLabel + "_Morning"
 
-            landMonsInfo      = ""
-            waterMonsInfo     = ""
-            rockSmashMonsInfo = ""
-            fishingMonsInfo   = ""
-            hiddenMonsInfo    = ""
+            fieldCounter = 0
+            fieldInfoStrings = []
+            while fieldCounter < len(fieldData):
+                fieldInfoStrings.append("")
+                fieldCounter += 1
+
+            fieldCounter = 0
             for areaTable in encounter:
-                if LAND_MONS in areaTable:
-                    structMonType = LAND_MONS_LABEL
-                    landMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif WATER_MONS in areaTable:
-                    structMonType = WATER_MONS_LABEL
-                    waterMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif ROCK_SMASH_MONS in areaTable:
-                    structMonType = ROCK_SMASH_MONS_LABEL
-                    rockSmashMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif FISHING_MONS in areaTable:
-                    structMonType = FISHING_MONS_LABEL
-                    fishingMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif HIDDEN_MONS in areaTable:
-                    structMonType = HIDDEN_MONS_LABEL
-                    hiddenMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
+                if fieldData[fieldCounter]["name"] in areaTable:
+                    structMonType = fieldData[fieldCounter]["pascalName"]
+                    fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
                 else:
                     structMonType = ""
                     continue
@@ -254,6 +222,7 @@ def ImportWildEncounterFile():
                     infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
                     print(infoStructString)
 
+                fieldCounter += 1
             AssembleMonHeaderContent()
         headerIndex += 1
     PrintWildMonHeadersContent()
@@ -284,6 +253,7 @@ def GetStructLabelWithoutTime(label):
 
 def AssembleMonHeaderContent():
     global structLabel
+    global fieldInfoStrings
 
     SetupMonInfoVars()
 
@@ -309,45 +279,31 @@ def AssembleMonHeaderContent():
             headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"].append([])
             timeStart += 1
 
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(landMonsInfo)
+    fieldCounter = 0
+    while fieldCounter < len(fieldData):
+        headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(fieldInfoStrings[fieldCounter])
+        fieldCounter += 1
+    """headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(landMonsInfo)
     headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(waterMonsInfo)
     headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(rockSmashMonsInfo)
     headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(fishingMonsInfo)
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(hiddenMonsInfo)
+    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(hiddenMonsInfo)"""
 
 
 def SetupMonInfoVars():
-    global landMonsInfo
-    global waterMonsInfo
-    global rockSmashMonsInfo
-    global fishingMonsInfo
-    global hiddenMonsInfo
+    global fieldData
+    global fieldInfoStrings
 
-    if landMonsInfo == "":
-        landMonsInfo = NULL
-    else:
-        landMonsInfo = f"&{landMonsInfo}"
+    i = 0
+    while i < len(fieldData):
+        fieldData[i]["infoStringBase"] = "." + fieldData[i]["snakeName"] + structInfo
+        if fieldInfoStrings[i] == "":
+            fieldInfoStrings[i] = NULL
+        else:
+            fieldInfoStrings[i] = "&" + fieldInfoStrings[i]
 
-    if waterMonsInfo == "":
-        waterMonsInfo = NULL
-    else:
-        waterMonsInfo = f"&{waterMonsInfo}"
+        i += 1
 
-    if rockSmashMonsInfo == "":
-        rockSmashMonsInfo = NULL
-    else:
-        rockSmashMonsInfo = f"&{rockSmashMonsInfo}"
-
-    if fishingMonsInfo == "":
-        fishingMonsInfo = NULL
-    else:
-        fishingMonsInfo = f"&{fishingMonsInfo}"
-
-    if hiddenMonsInfo == "":
-        hiddenMonsInfo = NULL
-    else:
-        hiddenMonsInfo = f"&{hiddenMonsInfo}"
-    
 
 def PrintWildMonHeadersContent():
     global tabStr
@@ -380,7 +336,7 @@ def PrintWildMonHeadersContent():
                             PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(infoCount)}] = ")
 
                             infoIndex = 0
-                            while infoIndex <= MONS_INFO_TOTAL - 1:
+                            while infoIndex < len(fieldData):
                                 if infoIndex == 0:
                                     PrintEncounterHeaders(TabStr(3) + "{")
 
@@ -389,7 +345,7 @@ def PrintWildMonHeadersContent():
                                 else:
                                     PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(infoIndex)} = {monInfo[infoIndex]},")
 
-                                if infoIndex == MONS_INFO_TOTAL - 1:
+                                if infoIndex == len(fieldData) - 1:
                                     PrintEncounterHeaders(TabStr(3) + "},")
 
                                 infoIndex += 1
@@ -412,13 +368,13 @@ def PrintWildMonHeadersContent():
                         PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(nullCount)}] = ")
 
                         nullIndex = 0
-                        while nullIndex <= MONS_INFO_TOTAL - 1:
+                        while nullIndex <= len(fieldData) - 1:
                             if nullIndex == 0:
                                 PrintEncounterHeaders(TabStr(3) + "{")
 
                             PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(nullIndex)} = NULL,")
 
-                            if nullIndex == MONS_INFO_TOTAL - 1:
+                            if nullIndex == len(fieldData) - 1:
                                 PrintEncounterHeaders(TabStr(3) + "},")
 
                             nullIndex += 1
@@ -443,77 +399,51 @@ def PrintEncounterRateMacros():
     if not printEncounterRateMacros:
         return
 
-    rateCount = 0
-    for percent in eLandMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount} {percent}")
-        else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
-
-        if rateCount + 1 == len(eLandMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
-
-    rateCount = 0
-    for percent in eWaterMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount} {percent}")
-        else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
-
-        if rateCount + 1 == len(eWaterMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
-
-    rateCount = 0
-    for percent in eRockSmashMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount} {percent}")
-        else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
-
-        if rateCount + 1 == len(eRockSmashMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
-
-    if eFishingMons:
-        fishing_rates = eFishingMons[:-1]
-        fishing_groups = eFishingMons[-1]
-
-        for rodRate in fishing_groups:
-            rod_indices = fishing_groups[rodRate]
-
-            if not rod_indices:
-                 continue
-
-            for i, rodPercentIndex in enumerate(rod_indices):
-                if rodPercentIndex < 0 or rodPercentIndex >= len(fishing_rates):
-                     print(f"#error Invalid fishing encounter rate index {rodPercentIndex} for {rodRate.upper()}")
-                     continue
-
-                rate_value = fishing_rates[rodPercentIndex]
-
-                if i == 0:
-                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {rate_value}")
+    fieldCounter = 0
+    # len(fieldData) - 1 here so we skip hidden_mons
+    while fieldCounter < len(fieldData) - 1: 
+        rateCount = 0
+        if "groups" not in fieldData[fieldCounter]:
+            for percent in fieldData[fieldCounter]["encounter_rates"]:
+                if rateCount == 0:
+                    print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount} {percent}")
                 else:
-                    previous_rod_index = rod_indices[i-1]
-                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{previous_rod_index} + {rate_value}")
+                    print(
+                        f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount - 1} + {percent}"
+                    )
 
-                if i == len(rod_indices) - 1:
-                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex})")
+                if rateCount + 1 == len(fieldData):
+                    print(
+                        f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount})"
+                    )
+                rateCount += 1
+        else:
+            rates = fieldData[fieldCounter]["encounter_rates"]
+            groups = fieldData[fieldCounter]["groups"]
 
+            for encounterRate in groups:
+                encounter_indices = groups[encounterRate]
+
+                if not encounter_indices:
+                    continue
+
+                for i, encounterPercentIndex in enumerate(encounter_indices):
+                    if encounterPercentIndex < 0 or encounterPercentIndex >= len(rates):
+                        print(f"#error Invalid fishing encounter rate index {encounterPercentIndex} for {encounterRate.upper()}")
+                        continue
+
+                    rate_value = rates[encounterPercentIndex]
+
+                    if i == 0:
+                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{encounterRate.upper()}_{SLOT}_{encounterPercentIndex} {rate_value}")
+                    else:
+                        previous_rod_index = encounter_indices[i - 1]
+                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{encounterRate.upper()}_{SLOT}_{encounterPercentIndex} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{encounterRate.upper()}_{SLOT}_{previous_rod_index} + {rate_value}")
+
+                    if i == len(encounter_indices) - 1:
+                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{encounterRate.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{encounterRate.upper()}_{SLOT}_{encounterPercentIndex})")
+
+        fieldCounter += 1
 
 
 def GetTimeStrFromIndex(index):
@@ -545,17 +475,7 @@ def GetTimeIndexFromString(string):
 
 
 def GetIMonInfoStringFromIndex(index):
-    if index == LAND_MONS_INDEX:
-        return ".landMonsInfo"
-    elif index == WATER_MONS_INDEX:
-        return ".waterMonsInfo"
-    elif index == ROCK_SMASH_MONS_INDEX:
-        return ".rockSmashMonsInfo"
-    elif index == FISHING_MONS_INDEX:
-        return ".fishingMonsInfo"
-    elif index == HIDDEN_MONS_INDEX:
-        return ".hiddenMonsInfo"
-    return index
+    return fieldData[index]["infoStringBase"]
 
 
 def GetMapGroupEnum(string, index = 0):
@@ -589,6 +509,31 @@ def IsConfigEnabled():
 def TabStr(amount):
     global tabStr
     return tabStr * amount
+
+
+def GetPascalCase(string):
+    stringArray = string.split("_")
+    pascalString = ""
+
+    for string in stringArray:
+        pascalString += string.capitalize()
+
+    return pascalString
+
+def GetSnakeCase(string):
+    stringArray = string.split("_")
+    snakeString = ""
+
+    i = 0
+    for string in stringArray:
+        if i == 0:
+            snakeString += string
+        else:
+            snakeString += string.capitalize()
+
+        i += 1
+
+    return snakeString
 
 
 ImportWildEncounterFile()
