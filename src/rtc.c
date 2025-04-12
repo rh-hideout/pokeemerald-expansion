@@ -458,6 +458,7 @@ enum Weekday GetDayOfWeek(void)
     ConvertTimeToDateTime(&dateTime, &gLocalTime);
 
     return dateTime.dayOfWeek;
+}
   
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
