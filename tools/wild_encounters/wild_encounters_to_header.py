@@ -65,12 +65,6 @@ hLabel       = ""
 hForMaps     = True
 headersArray = [headerIndex]
 
-# headersArrayItems
-landMonsInfo      = ""
-waterMonsInfo     = ""
-rockSmashMonsInfo = ""
-fishingMonsInfo   = ""
-
 # debug output control
 printEncounterHeaders           = True
 printEncounterRateMacros        = True
