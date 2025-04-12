@@ -544,8 +544,8 @@ static void OpponentHandleChooseMove(u32 battler)
         }
         else
         {
-            chosenMoveId = gBattleStruct->aiMoveOrAction[battler];
-            gBattlerTarget = gBattleStruct->aiChosenTarget[battler];
+            chosenMoveId = gAiBattleData->moveOrAction[battler];
+            gBattlerTarget = gAiBattleData->chosenTarget[battler];
             switch (chosenMoveId)
             {
             case AI_CHOICE_WATCH:
@@ -560,7 +560,7 @@ static void OpponentHandleChooseMove(u32 battler)
             default:
                 {
                     u16 chosenMove = moveInfo->moves[chosenMoveId];
-                    if (GetBattlerMoveTargetType(battler, chosenMove) & (MOVE_TARGET_USER_OR_SELECTED | MOVE_TARGET_USER))
+                    if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_USER)
                         gBattlerTarget = battler;
                     if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_BOTH)
                     {
@@ -595,7 +595,7 @@ static void OpponentHandleChooseMove(u32 battler)
             move = moveInfo->moves[chosenMoveId];
         } while (move == MOVE_NONE);
 
-        if (GetBattlerMoveTargetType(battler, move) & (MOVE_TARGET_USER_OR_SELECTED | MOVE_TARGET_USER))
+        if (GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_USER)
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (battler << 8));
         else if (IsDoubleBattle())
         {

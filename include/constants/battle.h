@@ -239,15 +239,11 @@
 #define SIDE_STATUS_TOXIC_SPIKES            (1 << 13)
 #define SIDE_STATUS_STEALTH_ROCK            (1 << 14)
 // Missing flags previously were SIDE_STATUS_TOXIC_SPIKES_DAMAGED, SIDE_STATUS_STEALTH_ROCK_DAMAGED, SIDE_STATUS_STICKY_WEB_DAMAGED
-#define SIDE_STATUS_QUICK_GUARD             (1 << 18)
-#define SIDE_STATUS_WIDE_GUARD              (1 << 19)
-#define SIDE_STATUS_CRAFTY_SHIELD           (1 << 20)
-#define SIDE_STATUS_MAT_BLOCK               (1 << 21)
-#define SIDE_STATUS_STEELSURGE              (1 << 22)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 23)
-#define SIDE_STATUS_RAINBOW                 (1 << 24)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 25)
-#define SIDE_STATUS_SWAMP                   (1 << 26)
+#define SIDE_STATUS_STEELSURGE              (1 << 18)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 19)
+#define SIDE_STATUS_RAINBOW                 (1 << 20)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 21)
+#define SIDE_STATUS_SWAMP                   (1 << 22)
 
 #define SIDE_STATUS_HAZARDS_ANY    (SIDE_STATUS_SPIKES | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE)
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
@@ -558,7 +554,7 @@ enum MoveEffects
 
 #define MOVE_TARGET_SELECTED            0
 #define MOVE_TARGET_DEPENDS             (1 << 0)
-#define MOVE_TARGET_USER_OR_SELECTED    (1 << 1)
+#define MOVE_TARGET_OPPONENT            (1 << 1)
 #define MOVE_TARGET_RANDOM              (1 << 2)
 #define MOVE_TARGET_BOTH                (1 << 3)
 #define MOVE_TARGET_USER                (1 << 4)
