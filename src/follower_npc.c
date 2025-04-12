@@ -426,7 +426,6 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
 
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
         // Ledge jump
-            newState = MOVEMENT_INVALID;
         if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
             RETURN_STATE(MOVEMENT_ACTION_JUMP_2_DOWN, direction); // Jump right away
 
@@ -897,7 +896,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
     s16 *y = &task->tDoorY;
 
     if (OW_FACE_NPC_FOLLOWER_ON_DOOR_EXIT == TRUE && ObjectEventClearHeldMovementIfFinished(player)) {
-        ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower)); // The player should face towards the follow as the exit the door
+        ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower)); // The player should face towards the follower as they exit the door.
     }
 
     switch (task->tState)
@@ -914,7 +913,13 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // if Door isn't still opening
         {
             follower->invisible = FALSE;
-            ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)) // In case came out door while surfing.
+            {
+                SetUpSurfBlobFieldEffect(follower);
+                follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
+                SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
+            }
+            ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door.
             follower->singleMovementActive = FALSE;
             follower->heldMovementActive = FALSE;
             ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // follower step down
