@@ -3,7 +3,6 @@
 
 #include <stddef.h>
 
-#define ALWAYS 2
 #define TRUE   1
 #define FALSE  0
 

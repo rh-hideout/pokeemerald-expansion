@@ -4,6 +4,7 @@
 #include "constants/follower_npc.h"
 
 #define MOVEMENT_INVALID 0xFE
+#define ALWAYS           2
 
 enum FollowerNPCSpriteTypes
 {
