@@ -426,12 +426,9 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
 
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
         // Ledge jump
-        if (((newState - direction) >= MOVEMENT_ACTION_JUMP_2_DOWN && (newState - direction) <= MOVEMENT_ACTION_JUMP_2_RIGHT)
-        ||  ((newState - direction) >= 0x84 && (newState - direction) <= 0x87)) // Previously jumped
-        {
             newState = MOVEMENT_INVALID;
+        if (gSaveBlock3Ptr->NPCfollower.delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
             RETURN_STATE(MOVEMENT_ACTION_JUMP_2_DOWN, direction); // Jump right away
-        }
 
         gSaveBlock3Ptr->NPCfollower.delayedState = MOVEMENT_ACTION_JUMP_2_DOWN;
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
@@ -623,6 +620,10 @@ static bool8 IsStateMovement(u8 state)
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_UP:
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
     case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_LEFT:
+    case MOVEMENT_ACTION_JUMP_2_DOWN:
+    case MOVEMENT_ACTION_JUMP_2_UP:
+    case MOVEMENT_ACTION_JUMP_2_RIGHT:
+    case MOVEMENT_ACTION_JUMP_2_LEFT:
         return FALSE;
     }
 
