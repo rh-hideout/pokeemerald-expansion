@@ -4764,8 +4764,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_IMPOSTER:
             {
-                u32 diagonalBattler = BATTLE_OPPOSITE(battler);  
-                if (IsDoubleBattle())  
+                u32 diagonalBattler = BATTLE_OPPOSITE(battler);
+                if (IsDoubleBattle())
                     diagonalBattler = BATTLE_PARTNER(diagonalBattler);
                 if (IsBattlerAlive(diagonalBattler)
                     && !(gBattleMons[diagonalBattler].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
@@ -5303,8 +5303,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK:
         case ABILITY_EMBODY_ASPECT_WELLSPRING_MASK:
         case ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK:
-            if (!gSpecialStatuses[battler].switchInAbilityDone
-             && !(gBattleStruct->embodyAspectBoost[GetBattlerSide(battler)] & (1u << gBattlerPartyIndexes[battler])))
+            if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
                 u32 stat;
 
@@ -5323,7 +5322,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                gBattleStruct->embodyAspectBoost[GetBattlerSide(battler)] |= 1u << gBattlerPartyIndexes[battler];
                 SET_STATCHANGER(stat, 1, FALSE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
                 effect++;
