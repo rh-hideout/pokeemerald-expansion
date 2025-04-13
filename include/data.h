@@ -235,10 +235,26 @@ static inline const u8 *GetTrainerNameFromId(u16 trainerId)
     return gTrainers[difficulty][sanitizedTrainerId].trainerName;
 }
 
+const u8 gTrainerPicToTrainerBackPic[] =
+{
+    [TRAINER_PIC_BRENDAN] = TRAINER_BACK_PIC_BRENDAN
+    [TRAINER_PIC_MAY] = TRAINER_BACK_PIC_MAY
+    [TRAINER_PIC_RED] = TRAINER_BACK_PIC_RED
+    [TRAINER_PIC_LEAF] = TRAINER_BACK_PIC_LEAF
+    [TRAINER_PIC_RS_BRENDAN] = TRAINER_BACK_PIC_RUBY_SAPPHIRE_BRENDAN
+    [TRAINER_PIC_RS_MAY] = TRAINER_BACK_PIC_RUBY_SAPPHIRE_MAY
+    [TRAINER_PIC_WALLY] = TRAINER_BACK_PIC_WALLY
+    [TRAINER_PIC_STEVEN] = TRAINER_BACK_PIC_STEVEN
+}
+
 static inline const u8 GetTrainerPicFromId(u16 trainerId)
 {
     u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
+    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
+
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
 
     return gTrainers[difficulty][sanitizedTrainerId].trainerPic;
 }
