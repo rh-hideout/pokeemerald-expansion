@@ -10507,6 +10507,7 @@ s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalc
 static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalcData)
 {
     s32 dmg = 0;
+    s32 randDamage;
 
     switch (GetMoveEffect(damageCalcData->move))
     {
@@ -10514,7 +10515,7 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         dmg = gBattleMons[damageCalcData->battlerAtk].level;
         break;
     case EFFECT_PSYWAVE:
-        s32 randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
+        randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
         dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
         break;
     case EFFECT_FIXED_DAMAGE_ARG:
