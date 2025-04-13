@@ -612,8 +612,8 @@ extern bool32 consumeItem;
 extern u32 removeBagItem;
 extern u32 removeBagItemCount;
 
-extern const u8 gFacilityClassToPicIndex[];
-extern const u8 gFacilityClassToTrainerClass[];
+extern const u16 gFacilityClassToPicIndex[];
+extern const u16 gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
