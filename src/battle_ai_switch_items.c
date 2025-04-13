@@ -1976,7 +1976,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             aiMove = AI_DATA->switchinCandidate.battleMon.moves[j];
-
+            effectiveness = UQ_4_12(1.0);
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
                 if (AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_CONSERVATIVE)
