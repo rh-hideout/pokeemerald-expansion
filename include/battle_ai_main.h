@@ -37,11 +37,14 @@ enum StatChange
 #define NO_DAMAGE_OR_FAILS      -20 // Move fails or does no damage
 
 // Scores given in AI_CalcMoveEffectScore and AI_CalcHoldEffectMoveScore
-#define NO_INCREASE      0
-#define WEAK_EFFECT      1
-#define DECENT_EFFECT    2
-#define GOOD_EFFECT      3
-#define BEST_EFFECT      4
+enum AIScore
+{
+    NO_INCREASE,
+    WEAK_EFFECT,
+    DECENT_EFFECT,
+    GOOD_EFFECT,
+    BEST_EFFECT
+};
 
 // AI_TryToFaint
 #define FAST_KILL      6 // AI is faster and faints target
