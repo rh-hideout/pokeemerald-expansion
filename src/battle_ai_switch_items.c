@@ -413,7 +413,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
 static bool32 FindMonThatHitsWonderGuard(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
-    u32 i, move;
+    u32 i;
 
     if (IsDoubleBattle())
         return FALSE;
