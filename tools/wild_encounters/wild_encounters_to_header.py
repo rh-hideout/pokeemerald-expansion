@@ -392,19 +392,20 @@ def PrintEncounterRateMacros():
     fieldCounter = 0
     # len(fieldData) - 1 here so we skip hidden_mons
     while fieldCounter < len(fieldData) - 1: 
+        tempName = fieldData[fieldCounter]["name"].upper()
         if "groups" not in fieldData[fieldCounter]:
             rateCount = 0
             for percent in fieldData[fieldCounter]["encounter_rates"]:
                 if rateCount == 0:
-                    print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount} {percent}")
+                    print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
                 else:
                     print(
-                        f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount - 1} + {percent}"
+                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount - 1} + {percent}"
                     )
 
                 if rateCount + 1 == len(fieldData):
                     print(
-                        f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{SLOT}_{rateCount})"
+                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount})"
                     )
                 rateCount += 1
         else:
@@ -418,6 +419,7 @@ def PrintEncounterRateMacros():
                     continue
 
                 for i, methodPercentIndex in enumerate(method_indices):
+                    
                     if methodPercentIndex < 0 or methodPercentIndex >= len(rates):
                         print(f"#error Invalid fishing encounter rate index {methodPercentIndex} for {method.upper()}")
                         continue
@@ -425,13 +427,13 @@ def PrintEncounterRateMacros():
                     rate_value = rates[methodPercentIndex]
 
                     if i == 0:
-                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{method.upper()}_{SLOT}_{methodPercentIndex} {rate_value}")
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex} {rate_value}")
                     else:
                         previous_method_index = method_indices[i - 1]
-                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{method.upper()}_{SLOT}_{methodPercentIndex} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{method.upper()}_{SLOT}_{previous_method_index} + {rate_value}")
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{previous_method_index} + {rate_value}")
 
                     if i == len(method_indices) - 1:
-                        print(f"{define} {ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{method.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{fieldData[fieldCounter]["name"].upper()}_{method.upper()}_{SLOT}_{methodPercentIndex})")
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex})")
 
         fieldCounter += 1
 
