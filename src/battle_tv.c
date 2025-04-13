@@ -342,7 +342,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     defMon = GetPartyBattlerData(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
 
-    if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > BATTLESTRINGS_TABLE_START)
+    if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
     {
         tvPtr->side[atkSide].faintCause = FNT_OTHER;
         return;

@@ -561,8 +561,8 @@ extern u16 sBattlerAbilities[MAX_BATTLERS_COUNT];
 TEST("Battle strings fit on the battle message window")
 {
     u32 i, j, strWidth;
-    u32 start = BATTLESTRINGS_TABLE_START;
-    u32 end = BATTLESTRINGS_COUNT - 1;
+    u32 start = STRINGID_TABLE_START;
+    u32 end = STRINGID_COUNT - 1;
     const u32 fontId = FONT_NORMAL;
     enum StringID battleStringId = 0;
     u8 *battleString = Alloc(BATTLE_STRING_BUFFER_SIZE);

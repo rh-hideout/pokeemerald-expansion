@@ -10,7 +10,7 @@ enum StringID
     STRINGID_USEDMOVE,
     STRINGID_BATTLEEND,
     STRINGID_TRAINERSLIDE,
-    // Make sure to add new messages below this comment (see also BATTLESTRINGS_TABLE_START)
+    STRINGID_TABLE_START, // Make sure to add new messages below this marker
     // todo: make some of those names less vague: attacker/target vs pkmn, etc.
     STRINGID_TRAINER1LOSETEXT,
     STRINGID_PKMNGAINEDEXP,
@@ -735,13 +735,8 @@ enum StringID
     STRINGID_TIMETOGIGANTAMAX,
     STRINGID_QUESTIONFORFEITBATTLE,
     STRINGID_FORFEITBATTLEGAVEMONEY,
-    BATTLESTRINGS_COUNT
+    STRINGID_COUNT
 };
-
-// This is the string id that gBattleStringsTable starts with.
-// String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
-// and are instead handled explicitly by BufferStringBattle.
-#define BATTLESTRINGS_TABLE_START  STRINGID_TRAINER1LOSETEXT
 
 // The below IDs are all indexes into battle message tables,
 // used to determine which of a set of messages to print.
