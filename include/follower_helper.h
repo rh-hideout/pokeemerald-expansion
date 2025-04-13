@@ -1,7 +1,8 @@
 #ifndef GUARD_FOLLOWER_HELPER_H
 #define GUARD_FOLLOWER_HELPER_H
 
-enum {
+enum FollowerEmotion
+{
     FOLLOWER_EMOTION_HAPPY = 0,
     FOLLOWER_EMOTION_NEUTRAL, // Also called "No emotion"
     FOLLOWER_EMOTION_SAD,
@@ -50,7 +51,8 @@ struct FollowerMsgInfoExtended
 }; // size = 8 + 4 + 5*4 = 32, 0x20
 
 // Follower message conditions
-enum {
+enum MessageCondition
+{
     MSG_COND_NONE,
     MSG_COND_SPECIES,
     MSG_COND_TYPE,
@@ -84,7 +86,8 @@ enum {
 // Matches metatile behavior within a '+' shape of size `distance`
 #define MATCH_NEAR_MB(mb, distance) MATCH_U8(MSG_COND_NEAR_MB, mb, distance, 0)
 
-enum {
+enum ConditionalMessage
+{
     COND_MSG_CELEBI,
     COND_MSG_FIRE,
     COND_MSG_EVER_GRANDE,
