@@ -50,17 +50,19 @@ struct FollowerMsgInfoExtended
 }; // size = 8 + 4 + 5*4 = 32, 0x20
 
 // Follower message conditions
-#define MSG_COND_NONE           0
-#define MSG_COND_SPECIES        1
-#define MSG_COND_TYPE           2
-#define MSG_COND_STATUS         3
-#define MSG_COND_MAPSEC         4
-#define MSG_COND_MAP            5
-#define MSG_COND_ON_MB          6
-#define MSG_COND_WEATHER        7
-#define MSG_COND_MUSIC          8
-#define MSG_COND_TIME_OF_DAY    9
-#define MSG_COND_NEAR_MB        10
+enum {
+    MSG_COND_NONE,
+    MSG_COND_SPECIES,
+    MSG_COND_TYPE,
+    MSG_COND_STATUS,
+    MSG_COND_MAPSEC,
+    MSG_COND_MAP,
+    MSG_COND_ON_MB,
+    MSG_COND_WEATHER,
+    MSG_COND_MUSIC,
+    MSG_COND_TIME_OF_DAY,
+    MSG_COND_NEAR_MB
+};
 
 #define MATCH_U24(type, value) {type, {.raw = value}}
 #define MATCH_U16(type, value1, value2) {type, {.split = {.hw = value1, .b = value2}}}
