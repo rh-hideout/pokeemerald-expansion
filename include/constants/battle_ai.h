@@ -2,7 +2,7 @@
 #define GUARD_CONSTANTS_BATTLE_AI_H
 
 // States for wild Pokemon AI, set to B_VAR_WILD_AI_SETTING. Handled in src/battle_ai_main.c GetDynamicWildAiFlags()
-enum {
+enum WildAISetting {
     WILD_AI_NONE,
     WILD_AI_BASIC_POKEMON,
     WILD_AI_SMART_POKEMON,

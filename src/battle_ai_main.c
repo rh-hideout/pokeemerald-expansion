@@ -140,12 +140,10 @@ static u32 GetWildAiFlags(void)
     if (avgLevel >= 80)
         flags |= AI_FLAG_HP_AWARE;
 
-#if (B_VAR_WILD_AI_SETTING != 0)
+if (B_VAR_WILD_AI_SETTING != 0)
     {
-        u32 flagState = VarGet(B_VAR_WILD_AI_SETTING);
-        flags |= GetDynamicWildAiFlags(flagState);
+        flags |= GetDynamicWildAiFlags();
     }
-#endif
 
 // This can only read the first 16 AI flags.
     if (B_VAR_WILD_AI_FLAGS != 0 && VarGet(B_VAR_WILD_AI_FLAGS) != 0)
@@ -154,8 +152,11 @@ static u32 GetWildAiFlags(void)
     return flags;
 }
 
-u32 GetDynamicWildAiFlags(u32 flagState)
+u32 GetDynamicWildAiFlags(void)
 {
+    enum WildAISetting flagState = VarGet(B_VAR_WILD_AI_SETTING);
+
+
     if (B_VAR_WILD_AI_FLAGS != 0 && VarGet(B_VAR_WILD_AI_FLAGS) != 0 && flagState != 0)
         VarSet(B_VAR_WILD_AI_FLAGS, 0);
 
