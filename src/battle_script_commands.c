@@ -1153,15 +1153,15 @@ bool32 IsMoveNotAllowedInSkyBattles(u32 move)
     return (gBattleStruct->isSkyBattle && IsMoveSkyBattleBanned(gCurrentMove));
 }
 
-u32 NumAffectedSpreadMoveTargets(u32 battlerAtk)
+u32 NumAffectedSpreadMoveTargets(void)
 {
     u32 targetCount = 0;
 
+    if (!IsDoubleSpreadMove())
+        return targetCount;
+
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (battler == battlerAtk)
-            continue;
-
         if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
             targetCount++;
     }
@@ -3655,7 +3655,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
                     // For a move that hits multiple targets (i.e. Make it Rain)
                     // we only want to print the message on the final hit
-                    if (!(NumAffectedSpreadMoveTargets(gBattlerAttacker) > 1 && GetNextTarget(moveTarget, TRUE) != MAX_BATTLERS_COUNT))
+                    if (!(NumAffectedSpreadMoveTargets() > 1 && GetNextTarget(moveTarget, TRUE) != MAX_BATTLERS_COUNT))
                     {
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
                         gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
@@ -4659,7 +4659,7 @@ static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additional
 {
     // Self-targeting move effects only apply after the last mon has been hit
     if (additionalEffect->self
-     && NumAffectedSpreadMoveTargets(gBattlerAttacker) > 1
+     && NumAffectedSpreadMoveTargets() > 1
      && GetNextTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), TRUE) != MAX_BATTLERS_COUNT)
         return FALSE;
 
@@ -6844,7 +6844,7 @@ static void Cmd_moveend(void)
                 if ((gBattleMons[gBattlerTarget].status1 & argStatus)
                  && IsBattlerAlive(gBattlerTarget)
                  && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
-                 && (NumAffectedSpreadMoveTargets(gBattlerAttacker) > 1 || !IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget))))
+                 && (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget))))
                 {
                     gBattleMons[gBattlerTarget].status1 &= ~(argStatus);
 
