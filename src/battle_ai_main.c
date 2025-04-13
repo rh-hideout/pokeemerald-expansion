@@ -4601,7 +4601,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         // Consider move effects that target self
         if (additionalEffect->self)
         {
-            u32 StageStatId;
+            enum StatChange StageStatId;
 
             if (aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
             {
