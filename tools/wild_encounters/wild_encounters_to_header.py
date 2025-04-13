@@ -187,34 +187,35 @@ def ImportWildEncounterFile():
                 fieldCounter += 1
 
             fieldCounter = 0
-            for areaTable in encounter:
-                if fieldData[fieldCounter]["name"] in areaTable:
-                    structMonType = fieldData[fieldCounter]["pascalName"]
-                    fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
-                else:
-                    structMonType = ""
-                    continue
+            while fieldCounter < len(fieldData):
+                for areaTable in encounter:
+                    if fieldData[fieldCounter]["name"] in areaTable:
+                        structMonType = fieldData[fieldCounter]["pascalName"]
+                        fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
+                    else:
+                        structMonType = ""
+                        continue
                 
-                baseStructContent = []
-                for group in encounter[areaTable]:
-                    if "mons" in group:
-                        for mon in encounter[areaTable][group]:
-                            baseStructContent.append(list(mon.values()))
+                    baseStructContent = []
+                    for group in encounter[areaTable]:
+                        if "mons" in group:
+                            for mon in encounter[areaTable][group]:
+                                baseStructContent.append(list(mon.values()))
 
-                    if "encounter_rate" in group:
-                        infoStructRate = encounter[areaTable][group]
-                
-                baseStructLabel = f"{baseStruct} {structLabel}_{structMonType}{structArrayAssign}"
-                if printEncounterStructs:
-                    print()
-                    print(baseStructLabel)
-                    print("{")
-                    PrintStructContent(baseStructContent)
-                    print("};")
+                        if "encounter_rate" in group:
+                            infoStructRate = encounter[areaTable][group]
+                    
+                    baseStructLabel = f"{baseStruct} {structLabel}_{structMonType}{structArrayAssign}"
+                    if printEncounterStructs:
+                        print()
+                        print(baseStructLabel)
+                        print("{")
+                        PrintStructContent(baseStructContent)
+                        print("};")
 
-                if printEncounterStructsInfoString:
-                    infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
-                    print(infoStructString)
+                    if printEncounterStructsInfoString:
+                        infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
+                        print(infoStructString)
 
                 fieldCounter += 1
             AssembleMonHeaderContent()
