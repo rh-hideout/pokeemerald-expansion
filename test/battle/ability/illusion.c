@@ -22,3 +22,36 @@ SINGLE_BATTLE_TEST("Illusion can only imitate Normal Form terapagos")
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TACKLE); }
     }
 }
+
+SINGLE_BATTLE_TEST("Illusion breaks if the target faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TACKLE); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+        MESSAGE("Zoroark's illusion wore off!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        PLAYER(SPECIES_ZOROARK) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FINAL_GAMBIT); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+        MESSAGE("Zoroark's illusion wore off!");
+    }
+}
