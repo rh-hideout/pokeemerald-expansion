@@ -934,7 +934,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         // Various cases to add/remove points
         if (GetMoveRecoil(arg2) > 0)
             baseFromEffect++; // Recoil moves
-        if (gMovesInfo[arg2].effect == EFFECT_RAPID_SPIN)
+        if (GetMoveEffect(arg2) == EFFECT_RAPID_SPIN)
             baseFromEffect++;
         if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_SP_ATK_MINUS_2) || MoveHasAdditionalEffect(arg2, MOVE_EFFECT_ATK_DEF_DOWN))
             baseFromEffect += 2; // Overheat, Superpower, etc.

@@ -476,6 +476,13 @@ void AnimRockFragment(struct Sprite *sprite)
 }
 
 // Swirls particle in vortex. Used for moves like Fire Spin or Sand Tomb
+// args[0] - initial x offset
+// args[1] - initial y offset
+// args[2] - y increment
+// args[3] - duration
+// args[4] - increments some sin parameter
+// args[5] - fixed sin parameter
+// args[6] - attacker or target
 void AnimParticleInVortex(struct Sprite *sprite)
 {
     if (IsDoubleBattle()
@@ -1026,3 +1033,25 @@ void AnimTask_SeismicTossBgAccelerateDownAtEnd(u8 taskId)
         DestroyAnimVisualTask(taskId);
     }
 }
+
+const struct SpriteTemplate gSaltCureCrystalSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SALT_PARTICLE,
+    .paletteTag = ANIM_TAG_SALT_PARTICLE,
+    .oam = &gOamData_AffineNormal_ObjBlend_16x16,
+    .anims = gAnims_IceCrystalLarge,
+    .images = NULL,
+    .affineAnims = gAffineAnims_IceCrystalHit,
+    .callback = AnimIceEffectParticle,
+};
+
+const struct SpriteTemplate gSaltCureSwirlSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SALT_PARTICLE,
+    .paletteTag = ANIM_TAG_SALT_PARTICLE,
+    .oam = &gOamData_AffineNormal_ObjBlend_16x16,
+    .anims = gAnims_WaterMudOrb,
+    .images = NULL,
+    .affineAnims = gAffineAnims_Whirlpool,
+    .callback = AnimParticleInVortex,
+};

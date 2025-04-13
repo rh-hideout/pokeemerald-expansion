@@ -306,7 +306,7 @@ extern const u16 gPokedexSearchMenu_Pal[];
 extern const u32 gBerryCheck_Gfx[];
 extern const u32 gBerryCheck_Pal[];
 extern const u32 gBerryTag_Gfx[];
-extern const u32 gBerryTag_Pal[];
+extern const u32 gBerryTag_Tilemap[];
 
 // rayquaza scene gfx
 extern const u32 gRaySceneDuoFight_Groudon_Gfx[];
@@ -2895,6 +2895,8 @@ extern const u32 gBattleAnimSpriteGfx_PinkVioletOrb[];
 extern const u32 gBattleAnimSpritePal_PinkVioletOrb[];
 extern const u32 gBattleAnimSpriteGfx_TeraStarstormBeam[];
 extern const u32 gBattleAnimSpritePal_TeraStarstormBeam[];
+extern const u32 gBattleAnimSpriteGfx_SaltParticle[];
+extern const u32 gBattleAnimSpritePal_SaltParticle[];
 
 extern const u32 gBattleAnimBgImage_Dark[];
 extern const u32 gBattleAnimBgImage_Ghost[];
@@ -3037,11 +3039,11 @@ extern const u32 gBattleAnimBgTilemap_PsychicTerrain[];
 extern const u32 gBattleAnimBgImage_ShatteredPsyche[];
 extern const u32 gBattleAnimBgPalette_ShatteredPsyche[];
 extern const u32 gBattleAnimBgTilemap_ShatteredPsyche[];
-extern const u32 gBattleAnimBgImage_SkyDay[];
-extern const u32 gBattleAnimBgPalette_SkyDay[];
-extern const u32 gBattleAnimBgTilemap_SkyDay[];
-extern const u32 gBattleAnimBgPalette_SkyAfternoon[];
-extern const u32 gBattleAnimBgPalette_SkyNight[];
+extern const u32 gBattleAnimBgImage_RockField[];
+extern const u32 gBattleAnimBgPalette_RockDay[];
+extern const u32 gBattleAnimBgTilemap_RockField[];
+extern const u32 gBattleAnimBgPalette_RockAfternoon[];
+extern const u32 gBattleAnimBgPalette_RockNight[];
 extern const u32 gBattleAnimBgImage_SnuggleForever[];
 extern const u32 gBattleAnimBgPalette_SnuggleForever[];
 extern const u32 gBattleAnimBgTilemap_SnuggleForever[];

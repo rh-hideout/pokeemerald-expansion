@@ -722,6 +722,10 @@ void AnimTask_BlendNonAttackerPalettes(u8 taskId)
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
 }
 
+// gBattleAnimArgs[0] - initial x
+// gBattleAnimArgs[1] - initial y
+// gBattleAnimArgs[2] - negative?
+// gBattleAnimArgs[3] - sentinel value to compare to
 void AnimTask_StartSlidingBg(u8 taskId)
 {
     u8 newTaskId;
@@ -1036,7 +1040,7 @@ void AnimTask_SetAnimAttackerAndTargetForEffectTgt(u8 taskId)
 
 void AnimTask_IsTargetSameSide(u8 taskId)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         gBattleAnimArgs[ARG_RET_ID] = TRUE;
     else
         gBattleAnimArgs[ARG_RET_ID] = FALSE;

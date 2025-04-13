@@ -133,7 +133,7 @@ static inline bool32 Script_IsAnalyzingEffects(void)
 
 /* Optimize 'Script_RequestEffects' to a no-op if it would have no
  * effect. 'Script_RequestEffects' must be called in all commands and
- * natives/specials with 'request_effects=TRUE' even if it would have
+ * natives/specials with 'requests_effects=TRUE' even if it would have
  * no effect to future-proof against new effects. */
 #define Script_RequestEffects(effects) \
     ({ \

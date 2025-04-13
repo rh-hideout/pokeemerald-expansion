@@ -799,18 +799,6 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
     return TRUE;
 }
 
-u8 GetBattlerAtPosition(u8 position)
-{
-    u8 i;
-
-    for (i = 0; i < gBattlersCount; i++)
-    {
-        if (GetBattlerPosition(i) == position)
-            break;
-    }
-    return i;
-}
-
 bool8 IsBattlerSpritePresent(u8 battlerId)
 {
     if (IsContest())
@@ -1441,6 +1429,9 @@ static u8 UNUSED GetSpritePalIdxByPosition(u8 position)
     return GetBattlerAtPosition(position);
 }
 
+// gBattleAnimArgs 0-3 used
+// 0, 1 used for position
+// 2, 3 as some control variables
 void AnimSpriteOnMonPos(struct Sprite *sprite)
 {
     bool8 var;
@@ -1502,6 +1493,12 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+// arg0: start x offset
+// arg1: start y offset
+// arg2: end x offset
+// arg3: end y offset
+// arg4: duration
+// arg5: arc amplitude
 void AnimThrowProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
@@ -1704,6 +1701,11 @@ static void AnimTask_BlendMonInAndOut_Step(u8 taskId)
 }
 
 // See AnimTask_BlendMonInAndOut. Same, but ANIM_TAG_* instead of mon
+// args[0] - tag
+// arg 1: blend color
+// arg 2: target blend coefficient
+// arg 3: initial delay
+// arg 4: number of times to blend in and out
 void AnimTask_BlendPalInAndOutByTag(u8 task)
 {
     u8 palette = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);

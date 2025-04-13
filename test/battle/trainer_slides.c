@@ -4,7 +4,7 @@
 
 SINGLE_BATTLE_TEST("Trainer Slide: Before First Turn")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_BEFORE_FIRST_TURN;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_BEFORE_FIRST_TURN;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Before First Turn")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Critical Hit")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT;
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LASER_FOCUS) == EFFECT_LASER_FOCUS);
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Critical Hit")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Enemy Lands First Critical Hit")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT;
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LASER_FOCUS) == EFFECT_LASER_FOCUS);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Enemy Lands First Critical Hit")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First STAB Hit")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE;
 
     GIVEN {
         ASSUME((GetMoveType(MOVE_VINE_WHIP)) == gSpeciesInfo[SPECIES_BULBASAUR].types[0]);
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First STAB Hit")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Super Effective Hit")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT;
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Super Effective Hit")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Down")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Player Lands First Down")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Enemy Mon Unaffected")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_ENEMY_MON_UNAFFECTED;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_MON_UNAFFECTED;
     GIVEN {
         ASSUME(B_SHEER_COLD_IMMUNITY >= GEN_7);
         ASSUME(gSpeciesInfo[SPECIES_GLALIE].types[0] == TYPE_ICE);
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Enemy Mon Unaffected")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Last Switchin")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_LAST_SWITCHIN;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_SWITCHIN;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -139,9 +139,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Switchin")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Last Half Hp")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_LAST_HALF_HP;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_HALF_HP;
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SUPER_FANG].effect == EFFECT_SUPER_FANG);
+        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_SUPER_FANG);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseHP == 190);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Half Hp")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Last Low Hp")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_LAST_LOW_HP;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_LOW_HP;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER(SPECIES_WOBBUFFET) { Attack(999);}
@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Low Hp")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_MEGA_EVOLUTION;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_MEGA_EVOLUTION;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_Z_MOVE;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -200,7 +200,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
 
 SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = 1 + TRAINER_SLIDE_DYNAMAX;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_DYNAMAX;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
