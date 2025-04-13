@@ -2848,7 +2848,7 @@ static void Cmd_resultmessage(void)
 {
     CMD_ARGS();
 
-    u32 stringId = 0;
+    enum StringID stringId = 0;
     u16 *moveResultFlags = &gBattleStruct->moveResultFlags[gBattlerTarget];
 
     if (gBattleControllerExecFlags)
@@ -4424,10 +4424,13 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                         msg = B_MSG_STARTED_SANDSTORM;
                         break;
                     case MOVE_EFFECT_HAIL:
-                        if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) {
+                        if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
+                        {
                             weather = BATTLE_WEATHER_SNOW;
                             msg = B_MSG_STARTED_SNOW;
-                        } else {
+                        }
+                        else
+                        {
                             weather = BATTLE_WEATHER_HAIL;
                             msg = B_MSG_STARTED_HAIL;
                         }

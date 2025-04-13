@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_UTIL_H
 
 #include "move.h"
+#include "constants/battle_string_ids.h"
 
 #define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
 #define MOVE_LIMITATION_PP                      (1 << 1)
@@ -193,7 +194,7 @@ void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8* CancelMultiTurnMoves(u32 battler);
 bool32 WasUnableToUseMove(u32 battler);
-void PrepareStringBattle(u16 stringId, u32 battler);
+void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(u32 battler);
 void UpdateSentPokesToOpponentValue(u32 battler);
@@ -296,7 +297,7 @@ bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes);
 void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast);
 bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind);
 bool32 TryRoomService(u32 battler);
-void BufferStatChange(u32 battler, u8 statId, u8 stringId);
+void BufferStatChange(u32 battler, u8 statId, enum StringID stringId);
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 u16 GetUsedHeldItem(u32 battler);
 bool32 PickupHasValidTarget(u32 battler);

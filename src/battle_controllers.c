@@ -1097,7 +1097,7 @@ void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 tur
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 16 + sizeof(struct DisableStruct));
 }
 
-void BtlController_EmitPrintString(u32 battler, u32 bufferId, u16 stringID)
+void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringID)
 {
     s32 i;
     struct BattleMsgData *stringInfo;
@@ -1129,7 +1129,7 @@ void BtlController_EmitPrintString(u32 battler, u32 bufferId, u16 stringID)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, sizeof(struct BattleMsgData) + 4);
 }
 
-void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, u16 stringID)
+void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringID)
 {
     s32 i;
     struct BattleMsgData *stringInfo;

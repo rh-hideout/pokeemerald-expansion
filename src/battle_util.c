@@ -1092,7 +1092,7 @@ bool32 WasUnableToUseMove(u32 battler)
         return FALSE;
 }
 
-void PrepareStringBattle(u16 stringId, u32 battler)
+void PrepareStringBattle(enum StringID stringId, u32 battler)
 {
     u32 targetSide = GetBattlerSide(gBattlerTarget);
     u16 battlerAbility = GetBattlerAbility(battler);
@@ -6993,7 +6993,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
 static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCaseId caseID)
 {
     s32 i;
-    u16 stringId;
+    enum StringID stringId;
 
     for (i = 0; i < NUM_STATS - 1; i++)
     {
@@ -11768,7 +11768,7 @@ bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
     return ret;
 }
 
-void BufferStatChange(u32 battler, u8 statId, u8 stringId)
+void BufferStatChange(u32 battler, u8 statId, enum StringID stringId)
 {
     bool32 hasContrary = (GetBattlerAbility(battler) == ABILITY_CONTRARY);
 

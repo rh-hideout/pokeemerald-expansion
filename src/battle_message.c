@@ -2062,7 +2062,7 @@ static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
-void BufferStringBattle(u16 stringID, u32 battler)
+void BufferStringBattle(enum StringID stringID, u32 battler)
 {
     s32 i;
     const u8 *stringPtr = NULL;
