@@ -224,7 +224,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             if (!IsBattleMoveStatus(aiMove))
             {
                 // Check if mon has a super effective move
-                if (AI_DATA->effectiveness[battler][opposingBattler][i] >= UQ_4_12(2.0) && !AI_DoesChoiceItemBlockMove(battler, aiMove))
+                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceItemBlockMove(battler, aiMove))
                     hasSuperEffectiveMove = TRUE;
 
                 // Get maximum damage mon can deal
@@ -383,8 +383,9 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
-            if (aiMove != MOVE_NONE && (AI_DATA->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0)
-                    || AI_DATA->effectiveness[battler][opposingPartner][moveIndex] > UQ_4_12(0.0)))
+            if ((AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) > UQ_4_12(0.0)
+                    || AI_GetMoveEffectiveness(aiMove, battler, opposingPartner) > UQ_4_12(0.0))
+                    && aiMove != MOVE_NONE)
                 return FALSE;
         }
     }
@@ -393,8 +394,8 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
-            if (aiMove != MOVE_NONE && AI_DATA->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0)
-                    && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || gMovesInfo[aiMove].power != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
+            if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) > UQ_4_12(0.0) && aiMove != MOVE_NONE
+                && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || gMovesInfo[aiMove].power != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
                 return FALSE;
         }
     }
@@ -413,7 +414,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
 static bool32 FindMonThatHitsWonderGuard(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
-    u32 i;
+    u32 i, move;
 
     if (IsDoubleBattle())
         return FALSE;
@@ -424,8 +425,12 @@ static bool32 FindMonThatHitsWonderGuard(u32 battler)
     // Check if Pokémon has a super effective move.
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gBattleMons[battler].moves[i] != MOVE_NONE && AI_DATA->effectiveness[battler][opposingBattler][i] >= UQ_4_12(2.0))
-            return FALSE;
+        move = gBattleMons[battler].moves[i];
+        if (move != MOVE_NONE)
+        {
+            if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
+                return FALSE;
+        }
     }
 
     if (RandomPercentage(RNG_AI_SWITCH_WONDER_GUARD, GetSwitchChance(SHOULD_SWITCH_WONDER_GUARD)))
@@ -662,7 +667,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 || monAbility == ABILITY_EARLY_BIRD)
                 || holdEffect == (HOLD_EFFECT_CURE_SLP | HOLD_EFFECT_CURE_STATUS)
                 || HasMove(battler, MOVE_SLEEP_TALK)
-                || (HasMove(battler, MOVE_SNORE) && AI_DATA->effectiveness[battler][opposingBattler][GetIndexInMoveArray(battler, MOVE_SNORE)] >= UQ_4_12(2.0))
+                || (HasMoveEffect(battler, MOVE_SNORE) && AI_GetMoveEffectiveness(MOVE_SNORE, battler, opposingBattler) >= UQ_4_12(2.0))
                 || (IsBattlerGrounded(battler)
                     && (HasMove(battler, MOVE_MISTY_TERRAIN) || HasMove(battler, MOVE_ELECTRIC_TERRAIN)))
                 )
@@ -768,6 +773,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 static bool32 HasSuperEffectiveMoveAgainstOpponents(u32 battler, bool32 noRng)
 {
     s32 i;
+    u16 move;
 
     u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
@@ -776,10 +782,11 @@ static bool32 HasSuperEffectiveMoveAgainstOpponents(u32 battler, bool32 noRng)
     {
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[battler].moves[i] == MOVE_NONE)
+            move = gBattleMons[battler].moves[i];
+            if (move == MOVE_NONE)
                 continue;
 
-            if (AI_DATA->effectiveness[battler][opposingBattler][i] >= UQ_4_12(2.0))
+            if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
             {
                 if (noRng)
                     return TRUE;
@@ -797,10 +804,11 @@ static bool32 HasSuperEffectiveMoveAgainstOpponents(u32 battler, bool32 noRng)
     {
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[battler].moves[i] == MOVE_NONE)
+            move = gBattleMons[battler].moves[i];
+            if (move == MOVE_NONE)
                 continue;
 
-            if (AI_DATA->effectiveness[battler][opposingBattler][i] >= UQ_4_12(2.0))
+            if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
             {
                 if (noRng)
                     return TRUE;
@@ -973,7 +981,7 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     // Stay in if effective move
-    else if (AI_DATA->effectiveness[battler][opposingBattler][GetIndexInMoveArray(battler, encoredMove)] >= UQ_4_12(2.0))
+    else if (AI_GetMoveEffectiveness(encoredMove, battler, opposingBattler) >= UQ_4_12(2.0))
         return FALSE;
 
     // Switch out 50% of the time otherwise
@@ -1375,7 +1383,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     int i, j;
     int dmg, bestDmg = 0;
     int bestMonId = PARTY_SIZE;
-    uq4_12_t effectiveness;
+
     u32 aiMove;
 
     // If we couldn't find the best mon in terms of typing, find the one that deals most damage.
@@ -1390,7 +1398,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-                dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, &effectiveness, TRUE);
+                dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE);
                 if (bestDmg < dmg)
                 {
                     bestDmg = dmg;
@@ -1839,14 +1847,13 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
     int i = 0;
     u32 playerMove;
     s32 damageTaken = 0, maxDamageTaken = 0;
-    uq4_12_t effectiveness;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         playerMove = gBattleMons[opposingBattler].moves[i];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH)
         {
-            damageTaken = AI_CalcPartyMonDamage(playerMove, opposingBattler, battler, battleMon, &effectiveness, FALSE);
+            damageTaken = AI_CalcPartyMonDamage(playerMove, opposingBattler, battler, battleMon, FALSE);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
                 return damageTaken;
             if (damageTaken > maxDamageTaken)
@@ -1930,7 +1937,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 aiMove, hitsToKOAI, maxHitsToKO = 0;
     u16 bestResist = UQ_4_12(1.0), bestResistEffective = UQ_4_12(1.0), typeMatchup;
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, canSwitchinWin1v1;
-    uq4_12_t effectiveness = UQ_4_12(1.0);
 
     // Iterate through mons
     for (i = firstId; i < lastId; i++)
@@ -1976,13 +1982,13 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             aiMove = AI_DATA->switchinCandidate.battleMon.moves[j];
-            effectiveness = UQ_4_12(1.0);
+
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
                 if (AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_CONSERVATIVE)
-                    damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, &effectiveness, TRUE);
+                    damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE);
                 else
-                    damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, &effectiveness, TRUE);
+                    damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE);
             }
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
@@ -2011,7 +2017,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             {
                 if (typeMatchup < bestResistEffective)
                 {
-                    if (effectiveness >= UQ_4_12(2.0))
+                    if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0))
                     {
                         if (canSwitchinWin1v1)
                         {

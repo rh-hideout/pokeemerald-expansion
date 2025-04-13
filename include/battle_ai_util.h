@@ -129,7 +129,6 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef);
 u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(u32 moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
-u32 GetIndexInMoveArray(u32 battler, u32 move);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, u32 category);
 bool32 HasMoveWithType(u32 battler, u32 type);
@@ -230,7 +229,7 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseConfusionScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 
-s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, uq4_12_t *effectiveness, bool32 isPartyMonAttacker);
+s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, bool32 isPartyMonAttacker);
 u32 AI_WhoStrikesFirstPartyMon(u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 moveConsidered);
 s32 AI_TryToClearStats(u32 battlerAtk, u32 battlerDef, bool32 isDoubleBattle);
 bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef);
@@ -242,5 +241,6 @@ bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
+u32 GetIndexInMoveArray(u32 battler, u32 move);
 
 #endif //GUARD_BATTLE_AI_UTIL_H

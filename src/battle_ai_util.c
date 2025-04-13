@@ -804,6 +804,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         simDamage.maximum = 0;
     }
 
+    // convert multiper to AI_EFFECTIVENESS_xX
     *typeEffectiveness = effectivenessMultiplier;
 
     // Undo temporary settings
@@ -1096,6 +1097,12 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
 {
     uq4_12_t typeEffectiveness;
     u32 moveType;
+    u32 moveIndex = GetIndexInMoveArray(battlerAtk, move);
+    
+    // if effectiveness already computed, return that value
+    // Unfortunately, ineffective moves have to be recomputed this way
+    if (moveIndex < MAX_MON_MOVES && AI_DATA->effectiveness[battlerAtk][battlerDef][moveIndex] != Q_4_12(0.0))
+        return AI_DATA->effectiveness[battlerAtk][battlerDef][moveIndex];
 
     SaveBattlerData(battlerAtk);
     SaveBattlerData(battlerDef);
@@ -2083,17 +2090,6 @@ u16 *GetMovesArray(u32 battler)
         return gBattleMons[battler].moves;
     else
         return gBattleResources->battleHistory->usedMoves[battler];
-}
-
-u32 GetIndexInMoveArray(u32 battler, u32 move)
-{
-    u16 *moves = GetMovesArray(battler);
-    u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++) {
-        if (moves[i] == move)
-            return i;
-    }
-    return MAX_MON_MOVES;
 }
 
 bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensive)
@@ -3778,9 +3774,10 @@ void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons)
 }
 
 // party logic
-s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, uq4_12_t *effectiveness, bool32 isPartyMonAttacker)
+s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, bool32 isPartyMonAttacker)
 {
     struct SimulatedDamage dmg;
+    uq4_12_t effectiveness;
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
     if (isPartyMonAttacker)
@@ -3798,7 +3795,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         AI_THINKING_STRUCT->saved[battlerAtk].saved = FALSE;
     }
 
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, FALSE, AI_GetWeather());
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, FALSE, AI_GetWeather());
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
@@ -4508,4 +4505,15 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
     if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
+}
+
+u32 GetIndexInMoveArray(u32 battler, u32 move)
+{
+    u16 *moves = GetMovesArray(battler);
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++) {
+        if (moves[i] == move)
+            return i;
+    }
+    return MAX_MON_MOVES;
 }
