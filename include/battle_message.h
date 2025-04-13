@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_MESSAGE_H
 
 #include "constants/battle.h"
+#include "constants/battle_string_ids.h"
 
 // This buffer can hold many different things. Some of the things it can hold
 // that have explicit sizes are listed below to ensure it can contain them.
@@ -247,7 +248,7 @@ struct BattleMsgData
     u8 textBuffs[3][TEXT_BUFF_ARRAY_COUNT];
 };
 
-void BufferStringBattle(u16 stringID, u32 battler);
+void BufferStringBattle(enum StringID stringID, u32 battler);
 u32 BattleStringExpandPlaceholdersToDisplayedString(const u8 *src);
 u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize);
 void BattlePutTextOnWindow(const u8 *text, u8 windowId);

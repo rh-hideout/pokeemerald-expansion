@@ -396,6 +396,7 @@ struct BattleCallbacksStack
 struct StatsArray
 {
     u16 stats[NUM_STATS];
+    u16 level;
 };
 
 struct BattleResources

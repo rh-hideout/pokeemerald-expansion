@@ -564,6 +564,10 @@ bool32 TryRunFromBattle(u32 battler)
     {
         effect++;
     }
+    else if (CanPlayerForfeitNormalTrainerBattle())
+    {
+        effect++;
+    }
     else
     {
         u8 runningFromBattler = BATTLE_OPPOSITE(battler);
@@ -1090,7 +1094,7 @@ bool32 WasUnableToUseMove(u32 battler)
         return FALSE;
 }
 
-void PrepareStringBattle(u16 stringId, u32 battler)
+void PrepareStringBattle(enum StringID stringId, u32 battler)
 {
     u32 targetSide = GetBattlerSide(gBattlerTarget);
     u16 battlerAbility = GetBattlerAbility(battler);
@@ -4798,16 +4802,21 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_IMPOSTER:
-            if (IsBattlerAlive(BATTLE_OPPOSITE(battler))
-                && !(gBattleMons[BATTLE_OPPOSITE(battler)].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
-                && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
-                && !(gBattleStruct->illusion[BATTLE_OPPOSITE(battler)].on)
-                && !(gStatuses3[BATTLE_OPPOSITE(battler)] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER))
             {
-                gBattlerAttacker = battler;
-                gBattlerTarget = BATTLE_OPPOSITE(battler);
-                BattleScriptPushCursorAndCallback(BattleScript_ImposterActivates);
-                effect++;
+                u32 diagonalBattler = BATTLE_OPPOSITE(battler);  
+                if (IsDoubleBattle())  
+                    diagonalBattler = BATTLE_PARTNER(diagonalBattler);
+                if (IsBattlerAlive(diagonalBattler)
+                    && !(gBattleMons[diagonalBattler].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
+                    && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+                    && !(gBattleStruct->illusion[diagonalBattler].on)
+                    && !(gStatuses3[diagonalBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER))
+                {
+                    gBattlerAttacker = battler;
+                    gBattlerTarget = diagonalBattler;
+                    BattleScriptPushCursorAndCallback(BattleScript_ImposterActivates);
+                    effect++;
+                }
             }
             break;
         case ABILITY_MOLD_BREAKER:
@@ -7211,7 +7220,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
 static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCaseId caseID)
 {
     s32 i;
-    u16 stringId;
+    enum StringID stringId;
 
     for (i = 0; i < NUM_STATS - 1; i++)
     {
@@ -9708,22 +9717,22 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
         break;
     case ABILITY_PIXILATE:
         if (moveType == TYPE_FAIRY && gBattleStruct->ateBoost[battlerAtk])
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_GALVANIZE:
         if (moveType == TYPE_ELECTRIC && gBattleStruct->ateBoost[battlerAtk])
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_REFRIGERATE:
         if (moveType == TYPE_ICE && gBattleStruct->ateBoost[battlerAtk])
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_AERILATE:
         if (moveType == TYPE_FLYING && gBattleStruct->ateBoost[battlerAtk])
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_NORMALIZE:
-        if (moveType == TYPE_NORMAL && gBattleStruct->ateBoost[battlerAtk])
+        if (moveType == TYPE_NORMAL && gBattleStruct->ateBoost[battlerAtk] && GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
         break;
     case ABILITY_PUNK_ROCK:
@@ -10722,12 +10731,47 @@ s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalc
     return dmg;
 }
 
+static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalcData)
+{
+    s32 dmg = 0;
+
+    switch (GetMoveEffect(damageCalcData->move))
+    {
+    case EFFECT_LEVEL_DAMAGE:
+        dmg = gBattleMons[damageCalcData->battlerAtk].level;
+        break;
+    case EFFECT_PSYWAVE:
+        s32 randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
+        dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
+        break;
+    case EFFECT_FIXED_DAMAGE_ARG:
+        dmg = GetMoveFixedDamage(damageCalcData->move);
+        break;
+    case EFFECT_SUPER_FANG:
+        dmg = GetNonDynamaxHP(gBattlerTarget) / 2;
+        break;
+    default:
+        return INT32_MAX;
+    }
+
+    gBattleStruct->moveResultFlags[damageCalcData->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
+
+    if (dmg == 0)
+        dmg = 1;
+
+    return dmg;
+}
+
 static inline s32 DoMoveDamageCalc(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier, u32 weather)
 {
     u32 holdEffectAtk, holdEffectDef, abilityAtk, abilityDef;
 
     if (typeEffectivenessModifier == UQ_4_12(0.0))
         return 0;
+
+    s32 dmg = DoFixedDamageMoveCalc(damageCalcData);
+    if (dmg != INT32_MAX)
+        return dmg;
 
     holdEffectAtk = GetBattlerHoldEffect(damageCalcData->battlerAtk, TRUE);
     holdEffectDef = GetBattlerHoldEffect(damageCalcData->battlerDef, TRUE);
@@ -10837,6 +10881,10 @@ s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedB
 s32 CalculateMoveDamageVars(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier,
                             u32 weather, u32 holdEffectAtk, u32 holdEffectDef, u32 abilityAtk, u32 abilityDef)
 {
+    s32 dmg = DoFixedDamageMoveCalc(damageCalcData);
+    if (dmg != INT32_MAX)
+        return dmg;
+
     return DoMoveDamageCalcVars(damageCalcData, fixedBasePower, typeEffectivenessModifier, weather,
                                 holdEffectAtk, holdEffectDef, abilityAtk, abilityDef);
 }
@@ -11947,7 +11995,7 @@ bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
     return ret;
 }
 
-void BufferStatChange(u32 battler, u8 statId, u8 stringId)
+void BufferStatChange(u32 battler, u8 statId, enum StringID stringId)
 {
     bool32 hasContrary = (GetBattlerAbility(battler) == ABILITY_CONTRARY);
 
