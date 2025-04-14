@@ -6,8 +6,8 @@
 - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
 - [What are "supported suffixes?"](#what-are-supported-suffixes)
 - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
-- [That's *still* a lot of editing.](thats-still-a-lot-of-editin-)
-- [So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?](so-what-are-the-#define-options-in-overworld.h)
+- [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
+- [So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?](#so-what-are-the-#define-options-in-overworld.h)
 - [Examples](#examples)
 
 ## What is the Time-Based Encounters feature? 
