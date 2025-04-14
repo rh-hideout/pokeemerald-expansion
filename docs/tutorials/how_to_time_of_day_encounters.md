@@ -15,7 +15,7 @@ Time-Based Encounters lets you pick which Pokémon appear based on the in-game c
 Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you have a higher chance of catching a Bidoof than a Starly at night.
 
 
-## Sounds rad, how do I add them to my romhack?
+### Sounds rad, how do I add them to my romhack?
 There are a couple of ways! The system is built to handle your unchanged [`wild_encounters.json`](../../src/data/wild_encounters.json) file by default, so the most basic solution is to add an encounter group by editing that (by hand or [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)), and then add a supported suffix to the end of whatever name you give it.
 
 - NOTE: if you haven't specified/added any encounters, or have the option turned off, Expansion puts them into the `TIME_MORNING` slot to keep vanilla behavior. 
@@ -378,7 +378,7 @@ This duplicates the encounter group's encounters as well as their labels/map gro
 
 - NOTE: the `--copy` option will use up an additional 9kb of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
 
-### So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
+## So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
 Great questie bestie!
 
 Here's a rundown, with more information than what's in the comments at [`overworld.h`](../../include/config/overworld.h) and their default values:
