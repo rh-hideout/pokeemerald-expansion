@@ -1,14 +1,353 @@
 # Time-Based Encounters Tutorial
 
+## Table of Contents:
+- [What is the Time-Based Encounters feature?](#what-is-the-time-based-encounters-feature)
+- [Sounds rad, how do I add them to my romhack?](#sounds-rad-how-do-i-add-them-to-my-romhack)
+- [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
+- [What are "supported suffixes?"](#what-are-supported-suffixes)
+- [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
+- [That's *still* a lot of editing.](thats-still-a-lot-of-editin-)
+- [So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?](so-what-are-the-#define-options-in-overworld.h)
+- [Examples](#examples)
+
 ## What is the Time-Based Encounters feature? 
 Time-Based Encounters lets you pick which Pokémon appear based on the in-game clock, per route!
 Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you have a higher chance of catching a Bidoof than a Starly at night.
 
 
 ## Sounds rad, how do I add them to my romhack?
-There are a couple of ways! The system is built to handle your unchanged [`wild_encounters.json`](../../src/data/wild_encounters.json) file by default, so the most basic solution is to add an encounter group by editing that (by hand or with Porymap), and then add a supported suffix to the end of whatever name you give it. 
+There are a couple of ways! The system is built to handle your unchanged [`wild_encounters.json`](../../src/data/wild_encounters.json) file by default, so the most basic solution is to add an encounter group by editing that (by hand or [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)), and then add a supported suffix to the end of whatever name you give it.
 
 - NOTE: if you haven't specified/added any encounters, or have the option turned off, Expansion puts them into the `TIME_MORNING` slot to keep vanilla behavior. 
+
+### I've never added one by hand, but I want to!
+Great attitude bestie! It's very simple- all you need is to find your [`wild_encounters.json`](../../src/data/wild_encounters.json) file and open it up in your text/code editor of choice; I recommend VSCodium, but any will work.
+
+To get started, we'll use Route 101 as an example:
+```
+{
+          "map": "MAP_ROUTE101",
+          "base_label": "gRoute101",
+          "land_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              }
+            ]
+          }
+        },
+```
+That's it! That's the entire encounter group for Route 101. In other Routes or maps, you'll likely see other encounters listed; here we have only have `land_mons`, but vanilla emerald supports three more types of encounters, for a total of four:
+- `land_mons`, your standard grass or cave or sand encounter.
+- `water_mons`, used for surfing
+- `fishing_mons`, for fishing
+- `rock_smash_mons`, for when you get jumpscared by a Geodude in Route 111 after using Rock Smash.
+
+For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
+- have a fishing table (I'm adding a fishin hole to Route 101)
+- let you catch Spiky Eared Pichu, my favorite mon (not really)
+- have some rock smash encounters to up the spook factor
+- only occur at night
+
+With all of these things in mind, let's craft an encounter! We'll start off by copying the one we have, called `gRoute101`.
+```
+{
+          "map": "MAP_ROUTE101",
+          "base_label": "gRoute101",
+          "land_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              }
+            ]
+          }
+        },
+{
+          "map": "MAP_ROUTE101",
+          "base_label": "gRoute101_Night",
+          "land_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              }
+            ]
+          }
+        },
+```
+Okay, we have it duplicated. We leave the value for "map": the same as the original so the game knows that both of these encounters are for Route 101. You can see I changed the name of the copy to `gRoute101_Night`; that's one bullet point down! If we enable `OW_TIME_BASED_ENCOUNTERS` in [`overworld.h`](../../include/config/overworld.h), the game will recognize this encounter group goes in the `Night` slot and will switch which group is used to generate the encounters when the in-game clock changes to `TIME_NIGHT`. Next, let's add Spiky Eared Pichu and our two new encounter tables (`fishing_mons` and `rock_smash_mons`).
+
+```
+{
+          "map": "MAP_ROUTE101",
+          "base_label": "gRoute101_Night",
+          "land_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_PICHU_SPIKY_EARED"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              }
+            ]
+          },
+          "fishing_mons": {
+            "encounter_rate": 30,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_MAGIKARP"
+              },
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_MARILL"
+              },
+            ]
+          },
+          "rock_smash_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 2,
+                "species": "SPECIES_GEODUDE"
+              },
+            ]
+          }
+        },
+```
+And there we go! It has the `_Night` suffix, has Spiky Eared Pichu right up at the top of the list, has a couple of fishing encounters, and will jumpscare us with about a 20% chance every time we break a rock with rock smash. That's what the `encounter_rate` line means, by the way- the overall percentage you have of encountering *any* of the Pokémon listed.
+Congrats! You've just created a brand new encounter group, set its time, and adjusted the encounters! I'd highly recommend doing this [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)- the interface is very useful for editing maps, including wild encounters!
 
 ### What are "supported suffixes?"
 Vanilla Pokémon games usually work with 4 different times of day:
