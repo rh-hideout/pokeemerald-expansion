@@ -55,3 +55,17 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
         MESSAGE("Zoroark's illusion wore off!");
     }
 }
+
+SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZOROARK);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_ZOROARK);
+        EXPECT_EQ(gBattleStruct->illusion[0].on, FALSE); // Battler is Zoroark and not Illusioned
+    }
+}
