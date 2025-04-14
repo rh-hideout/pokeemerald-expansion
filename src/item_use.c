@@ -1186,6 +1186,15 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
+static bool32 SelectedMonHasStatus2(u16 itemId)
+{
+    if (gPartyMenu.slotId == 0)
+        return gBattleMons[0].status2 & GetItemStatus2Mask(itemId);
+    else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
+        return gBattleMons[2].status2 & GetItemStatus2Mask(itemId);
+    return FALSE;
+}
+
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
 {
@@ -1258,13 +1267,13 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
         break;
     case EFFECT_ITEM_CURE_STATUS:
         if (!((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
-            || (gPartyMenu.slotId == 0 && gBattleMons[gBattlerInMenuId].status2 & GetItemStatus2Mask(itemId))))
+            || SelectedMonHasStatus2(itemId)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
         if ((hp == 0 || hp == GetMonData(mon, MON_DATA_MAX_HP))
             && !((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
-            || (gPartyMenu.slotId == 0 && gBattleMons[gBattlerInMenuId].status2 & GetItemStatus2Mask(itemId))))
+            || SelectedMonHasStatus2(itemId)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_REVIVE:

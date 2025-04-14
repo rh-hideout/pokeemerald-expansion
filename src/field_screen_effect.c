@@ -39,6 +39,7 @@
 #include "constants/rgb.h"
 #include "trainer_hill.h"
 #include "fldeff.h"
+#include "battle.h"
 
 static void Task_ExitNonAnimDoor(u8);
 static void Task_ExitNonDoor(u8);
@@ -1156,6 +1157,7 @@ static void Task_OrbEffect(u8 taskId)
         ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN1_ON);
         SetGpuRegBits(REG_OFFSET_BLDCNT, gOrbEffectBackgroundLayerFlags[0]);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(12, 7));
+        UpdateShadowColor(RGB(9, 8, 8));
         SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR);
         SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG3 | WINOUT_WIN01_OBJ);
         SetBgTilemapPalette(0, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT, 0xF);
@@ -1223,6 +1225,7 @@ static void Task_OrbEffect(u8 taskId)
         SetGpuReg(REG_OFFSET_DISPCNT, tDispCnt);
         SetGpuReg(REG_OFFSET_BLDCNT, tBldCnt);
         SetGpuReg(REG_OFFSET_BLDALPHA, tBldAlpha);
+        UpdateShadowColor(RGB_BLACK);
         SetGpuReg(REG_OFFSET_WININ, tWinIn);
         SetGpuReg(REG_OFFSET_WINOUT, tWinOut);
         ScriptContext_Enable();
@@ -1342,6 +1345,21 @@ enum {
     FRLG_WHITEOUT_HEAL_SCRIPT,
 };
 
+static const u8 *GenerateRecoveryMessage(u8 taskId)
+{
+    bool32 forfeitTrainer = DidPlayerForfeitNormalTrainerBattle();
+    bool32 destinationIsPlayersHouse = (gTasks[taskId].tIsPlayerHouse == TRUE);
+
+    if (forfeitTrainer && destinationIsPlayersHouse)
+        return gText_PlayerRegroupHome;
+    else if (forfeitTrainer && !destinationIsPlayersHouse)
+        return gText_PlayerRegroupCenter;
+    else if (!forfeitTrainer && destinationIsPlayersHouse)
+        return gText_PlayerScurriedBackHome;
+    else
+        return gText_PlayerScurriedToCenter;
+}
+
 static void Task_RushInjuredPokemonToCenter(u8 taskId)
 {
     u32 windowId;
@@ -1361,7 +1379,8 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         break;
     case FRLG_WHITEOUT_PRINT_MSG:
     {
-        const u8 *recoveryMessage = gTasks[taskId].tIsPlayerHouse == TRUE ? gText_PlayerScurriedBackHome : gText_PlayerScurriedToCenter;
+        const u8 *recoveryMessage = GenerateRecoveryMessage(taskId);
+
         if (PrintWhiteOutRecoveryMessage(taskId, recoveryMessage, 2, 8))
         {
             ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
