@@ -962,7 +962,8 @@ const u16 gTerrainPreventsStringIds[] =
 
 const u16 gHealingWishStringIds[] =
 {
-    STRINGID_HEALINGWISHCAMETRUE, STRINGID_LUNARDANCECAMETRUE
+    STRINGID_HEALINGWISHCAMETRUE,
+    STRINGID_LUNARDANCECAMETRUE
 };
 
 const u16 gDmgHazardsStringIds[] =

@@ -178,7 +178,7 @@ void ActivateDynamax(u32 battler)
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = DYNAMAX_TURNS_COUNT;
+    gBattleStruct->dynamax.dynamaxTurns[battler] = gBattleTurnCounter + DYNAMAX_TURNS_COUNT;
 
     // Substitute is removed upon Dynamaxing.
     gBattleMons[battler].status2 &= ~STATUS2_SUBSTITUTE;
@@ -209,7 +209,6 @@ void UndoDynamax(u32 battler)
 
     // Makes sure there are no Dynamax flags set, including on switch / faint.
     SetActiveGimmick(battler, GIMMICK_NONE);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = 0;
 
     // Undo form change if needed.
     if (IsGigantamaxed(battler))
