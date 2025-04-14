@@ -1,5 +1,7 @@
 #include "global.h"
 #include "follower_npc.h"
+#include "battle_setup.h"
+#include "battle_tower.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -12,20 +14,25 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "fldeff_misc.h"
+#include "frontier_util.h"
 #include "item.h"
+#include "load_save.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "party_menu.h"
 #include "script.h"
 #include "script_movement.h"
+#include "script_pokemon_util.h"
 #include "sound.h"
 #include "task.h"
 #include "trig.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
-#include "constants/songs.h"
-#include "constants/map_types.h"
 #include "constants/field_effects.h"
+#include "constants/frontier_util.h"
+#include "constants/map_types.h"
 #include "constants/metatile_behaviors.h"
+#include "constants/songs.h"
 
 /*
 Known Issues:
@@ -1528,6 +1535,47 @@ void FollowerNPCPositionFix(u8 offset)
             }
         }
     }
+}
+
+static void ChooseFirstThreeEligibleMons(void)
+{
+    u8 i;
+    u8 count = 0;
+
+    ClearSelectedPartyOrder();
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0
+         && GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE
+         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
+            gSelectedOrderFromParty[count] = (i + 1);
+            count++;
+        }
+
+        if (count == 3)
+            break;
+    }
+}
+
+void PrepareForFollowerNPCBattle(void)
+{
+    SavePlayerParty();
+    ChooseFirstThreeEligibleMons();
+    ReducePlayerPartyToSelectedMons();
+	VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA);
+	VarSet(VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER);
+	CallFrontierUtilFunc();
+    gPartnerTrainerId = TRAINER_PARTNER(gSaveBlock3Ptr->NPCfollower.battlePartner);
+    FillPartnerParty(gPartnerTrainerId);
+}
+
+void RestorePartyAfterFollowerNPCBattle(void)
+{
+    VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
+	CallFrontierUtilFunc();
+	LoadPlayerParty();
 }
 #endif
 

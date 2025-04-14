@@ -251,11 +251,7 @@ static void Task_BattleStart(u8 taskId)
 #if OW_ENABLE_NPC_FOLLOWERS
             // Load the partner party if the NPC follower should participate.
             if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gSaveBlock3Ptr->NPCfollower.battlePartner)
-            {
-                SavePlayerParty();
-                gPartnerTrainerId = TRAINER_PARTNER(gSaveBlock3Ptr->NPCfollower.battlePartner);
-                FillPartnerParty(gPartnerTrainerId);
-            }
+                PrepareForFollowerNPCBattle();
 #endif
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
@@ -596,9 +592,7 @@ static void CB2_EndWildBattle(void)
 #if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.battlePartner && OW_FLAG_PARTNER_WILD_BATTLES != 0
      && (FlagGet(OW_FLAG_PARTNER_WILD_BATTLES) || OW_FLAG_PARTNER_WILD_BATTLES == ALWAYS))
-    {
-        LoadLastThreeMons();
-    }
+        RestorePartyAfterFollowerNPCBattle();
 #endif
 
     if (IsPlayerDefeated(gBattleOutcome) == TRUE && !InBattlePyramid() && !InBattlePike())
@@ -1302,7 +1296,7 @@ static void CB2_EndTrainerBattle(void)
 
 #if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.battlePartner)
-        LoadLastThreeMons();
+        RestorePartyAfterFollowerNPCBattle();
 #endif
 
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)

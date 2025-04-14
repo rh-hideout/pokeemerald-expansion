@@ -63,6 +63,8 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
 void FollowerNPCFaceAfterLeaveMap(void);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
 void FollowerNPCPositionFix(u8 offset);
+void PrepareForFollowerNPCBattle(void);
+void RestorePartyAfterFollowerNPCBattle(void);
 void SetFollowerNPCSprite(u8 spriteIndex);
 bool8 PlayerHasFollowerNPC(void);
 u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction);
