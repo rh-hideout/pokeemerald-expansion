@@ -101,6 +101,8 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
             return SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE;
         case SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS:
             return SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE;
+        case SHOULD_SWITCH_ALL_SCORES_BAD:
+            return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
         default:
             return 100;
     }
@@ -1178,14 +1180,16 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
     u32 i, score, opposingBattler = GetOppositeBattler(battler);
     if (!(AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
-        
+
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         score = gAiBattleData->finalScore[battler][opposingBattler][i];
         if (score > AI_BAD_SCORE_THRESHOLD)
             return FALSE;
     }
-    return TRUE;
+    if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD)))
+        return TRUE;
+    return FALSE;
 }
 
 bool32 ShouldStayInToUseMove(u32 battler)

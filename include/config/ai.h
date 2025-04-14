@@ -22,6 +22,7 @@
 #define SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE                      100 // Only if locked into status move
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE           50
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE    100
+#define SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE                     100
 
 // AI smart switching chances for bad statuses
 #define SHOULD_SWITCH_PERISH_SONG_PERCENTAGE                    100
