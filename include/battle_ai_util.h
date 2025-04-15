@@ -71,7 +71,7 @@ u32 GetBestDmgFromBattler(u32 battler, u32 battlerTarget, enum DamageCalcContext
 bool32 CanTargetMoveFaintAi(u32 move, u32 battlerDef, u32 battlerAtk, u32 nHits);
 bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dmgMod);
 s32 AI_DecideKnownAbilityForTurn(u32 battlerId);
-u32 AI_DecideHoldEffectForTurn(u32 battlerId);
+enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, u32 atkAbility, u32 move);
 u32 AI_GetWeather(void);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
@@ -95,7 +95,7 @@ bool32 IsStatBoostingBerry(u32 item);
 bool32 CanKnockOffItem(u32 battler, u32 item);
 bool32 IsAbilityOfRating(u32 ability, s8 rating);
 bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
-bool32 AI_MoveMakesContact(u32 ability, u32 holdEffect, u32 move);
+bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move);
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 u32 AI_GetBattlerAbility(u32 battler);
 
@@ -115,7 +115,7 @@ bool32 ShouldLowerAccuracy(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 bool32 ShouldLowerEvasion(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 
 // move checks
-bool32 IsAffectedByPowder(u32 battler, u32 ability, u32 holdEffect);
+bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category);
 s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, bool32 considerZPower);
@@ -147,11 +147,11 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 void ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove, s32 *score);
-bool32 ShouldSetSandstorm(u32 battler, u32 ability, u32 holdEffect);
-bool32 ShouldSetHail(u32 battler, u32 ability, u32 holdEffect);
-bool32 ShouldSetSnow(u32 battler, u32 ability, u32 holdEffect);
-bool32 ShouldSetRain(u32 battlerAtk, u32 ability, u32 holdEffect);
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, u32 holdEffect);
+bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetRain(u32 battlerAtk, u32 ability, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect);
 bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef);
 bool32 IsHealingMove(u32 move);
 bool32 HasHealingEffect(u32 battler);
