@@ -6820,12 +6820,15 @@ BattleScript_MagicCoatPrankster::
 BattleScript_SnatchedMove::
 	attackstring
 	ppreduce
+	saveattacker
+	savetarget
 	snatchsetbattlers
 	playanimation BS_TARGET, B_ANIM_SNATCH_MOVE
 	printstring STRINGID_PKMNSNATCHEDMOVE
 	waitmessage B_WAIT_TIME_LONG
 	orword gHitMarker, HITMARKER_ATTACKSTRING_PRINTED | HITMARKER_NO_PPDEDUCT | HITMARKER_ALLOW_NO_PP
-	swapattackerwithtarget
+	restoreattacker
+	restoretarget
 	return
 
 BattleScript_EnduredMsg::
