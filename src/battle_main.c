@@ -3097,7 +3097,7 @@ static void BattleStartClearSetData(void)
 void SwitchInClearSetData(u32 battler)
 {
     s32 i;
-    u32 effect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     struct DisableStruct disableStructCopy = gDisableStructs[battler];
 
     ClearIllusionMon(battler);
@@ -5220,6 +5220,8 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
                 case EFFECT_SHELL_TRAP:
                     BattleScriptExecute(BattleScript_ShellTrapSetUp);
                     return TRUE;
+                default:
+                    break;
                 }
             }
         }
@@ -5797,6 +5799,8 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
     case EFFECT_REVELATION_DANCE:
     case EFFECT_TERRAIN_PULSE:
         return FALSE;
+    default:
+        break;
     }
 
     ateType = TYPE_NONE;
@@ -5833,7 +5837,7 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
 u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
 {
     u32 moveType = GetMoveType(move);
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     u32 species, heldItem, holdEffect, ability, type1, type2, type3;
     bool32 monInBattle = gMain.inBattle && gPartyMenu.menuType != PARTY_MENU_TYPE_IN_BATTLE;
 
@@ -6024,6 +6028,8 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
     case EFFECT_TERA_STARSTORM:
         if (species == SPECIES_TERAPAGOS_STELLAR)
             return TYPE_STELLAR;
+        break;
+    default:
         break;
     }
 

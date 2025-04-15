@@ -243,6 +243,8 @@ bool32 IsMoveBlockedByDynamax(u32 move)
         case EFFECT_HEAT_CRASH:
         case EFFECT_LOW_KICK:
             return TRUE;
+        default:
+            break;
     }
     return FALSE;
 }
@@ -426,6 +428,8 @@ static u32 GetMaxPowerTier(u32 move)
                 default:
                 case 21 ... 25:   return MAX_POWER_TIER_5;
             }
+        default:
+            break;
     }
 
     switch (GetMovePower(move))

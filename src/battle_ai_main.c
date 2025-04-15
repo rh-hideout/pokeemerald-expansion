@@ -830,7 +830,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AI_ThinkingStruct *aiThink
 static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     // move data
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     s32 moveType;
     u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
     struct AiLogicData *aiData = AI_DATA;
@@ -928,6 +928,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_CURSE:
                 if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GHOST)) // Don't use Curse if you're a ghost type vs a Magic Guard user, they'll take no damage.
                     ADJUST_SCORE(-5);
+                break;
+            default:
                 break;
             }
             break;
@@ -1058,6 +1060,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_SNOWSCAPE:
             case EFFECT_SANDSTORM:
                 RETURN_SCORE_MINUS(30);
+                break;
+            default:
+                break;
         }
 
         if (!IsBattleMoveStatus(move))
@@ -2755,14 +2760,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     // move data
     u32 moveType = GetMoveType(move);
-    u32 effect = GetMoveEffect(move);
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
     // ally data
     u32 battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
     struct AiLogicData *aiData = AI_DATA;
     u32 atkPartnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
     u32 atkPartnerHoldEffect = aiData->holdEffects[BATTLE_PARTNER(battlerAtk)];
-    u32 partnerEffect = GetMoveEffect(aiData->partnerMove);
+    enum BattleMoveEffects partnerEffect = GetMoveEffect(aiData->partnerMove);
     bool32 partnerProtecting = (partnerEffect == EFFECT_PROTECT);
     bool32 attackerHasBadAbility = (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating < 0);
     bool32 partnerHasBadAbility = (gAbilitiesInfo[atkPartnerAbility].aiRating < 0);
@@ -2796,6 +2801,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_CHILLY_RECEPTION:
             if (IsMoveEffectWeather(move))
                 ADJUST_SCORE(-10);
+            break;
+        default:
             break;
         }
     } // check partner move effect
@@ -2842,6 +2849,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || HasMoveWithCriticalHitChance(battlerAtkPartner))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
+    default:
+        break;
     } // our effect relative to partner
 
     // consider global move effects
@@ -2879,6 +2888,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         {
             RETURN_SCORE_PLUS(DECENT_EFFECT);   // our partner benefits from snow
         }
+        break;
+    default:
         break;
     } // global move effect check
 
@@ -3121,6 +3132,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                  && gBattleMons[battlerAtkPartner].hp < gBattleMons[battlerAtkPartner].maxHP / 2)
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
                 break;
+            default:
+                break;
             } // attacker move effects
         } // check partner protecting
 
@@ -3136,6 +3149,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(GOOD_EFFECT);
             else if (IsAbilityOfRating(aiData->abilities[battlerAtk], 0) || IsAbilityOfRating(aiData->abilities[battlerDef], 10))
                 ADJUST_SCORE(DECENT_EFFECT); // we want to transfer our bad ability or take their awesome ability
+            break;
+        default:
             break;
         }
 
@@ -3319,7 +3334,7 @@ static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
 static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     // move data
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     struct AiLogicData *aiData = AI_DATA;
     u32 movesetIndex = AI_THINKING_STRUCT->movesetIndex;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][movesetIndex];
@@ -3946,7 +3961,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SEMI_INVULNERABLE:
         if (predictedMove != MOVE_NONE && !isDoubleBattle)
         {
-            u32 predictedEffect = GetMoveEffect(predictedMove);
+            enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move))
              && (predictedEffect == EFFECT_EXPLOSION || predictedEffect == EFFECT_PROTECT))
                 ADJUST_SCORE(GOOD_EFFECT);
@@ -4587,6 +4602,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SPECTRAL_THIEF:
         ADJUST_SCORE(AI_ShouldCopyStatChanges(battlerAtk, battlerDef));
         break;
+    default:
+        break;
     } // move effect checks
 
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
@@ -5093,7 +5110,7 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
       || (!AI_CanBattlerEscape(battlerAtk) && IsBattlerTrapped(battlerDef, battlerAtk)))
         return score;
 
-    u32 effect = GetMoveEffect(move);
+    enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (IsStatRaisingEffect(effect))
     {
@@ -5138,7 +5155,7 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
 
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
-    u32 effect = GetMoveEffect(move);
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 moveType = 0;
 
     SetTypeBeforeUsingMove(move, battlerAtk);
@@ -5330,7 +5347,7 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
 static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetMoveCategory(move) != DAMAGE_CATEGORY_STATUS || GetMoveEffect(AI_DATA->partnerMove) == moveEffect)
         return score;
@@ -5413,6 +5430,9 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
     case EFFECT_SNOWSCAPE:
         if (!(AI_GetWeather() & (B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY)))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
+        break;
+    default:
+        break;
     }
 
     return score;
@@ -5425,7 +5445,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 ability = gBattleMons[battlerAtk].ability;
     u32 opposingHazardFlags = gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_TOXIC_SPIKES);
     u32 aiHazardFlags = gSideStatuses[GetBattlerSide(battlerAtk)] & (SIDE_STATUS_HAZARDS_ANY);
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     struct AiLogicData *aiData = AI_DATA;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][AI_THINKING_STRUCT->movesetIndex];
 
@@ -5541,6 +5561,9 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_NO_RETREAT:
     case EFFECT_MEAN_LOOK:
         ADJUST_SCORE(-GOOD_EFFECT);
+        break;
+
+    default:
         break;
     }
 

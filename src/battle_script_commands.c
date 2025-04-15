@@ -332,7 +332,7 @@ static void DrawLevelUpBannerText(void);
 static void SpriteCB_MonIconOnLvlUpBanner(struct Sprite *sprite);
 static bool32 CriticalCapture(u32 odds);
 static void BestowItem(u32 battlerAtk, u32 battlerDef);
-static bool8 IsFinalStrikeEffect(u32 moveEffect);
+static bool8 IsFinalStrikeEffect(enum BattleMoveEffects moveEffect);
 static void TryUpdateRoundTurnOrder(void);
 static bool32 ChangeOrderTargetAfterAttacker(void);
 static bool32 SetTargetToNextPursuiter(u32 battlerDef);
@@ -1248,7 +1248,7 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    u32 effect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if (!IsBattlerAlive(gBattlerAttacker) && effect != EFFECT_EXPLOSION && !(gHitMarker & HITMARKER_NO_ATTACKSTRING))
     {
@@ -1491,9 +1491,9 @@ static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump)
 
 static bool32 AccuracyCalcHelper(u32 move, u32 battler)
 {
-    u32 effect = FALSE;
+    bool32 effect = FALSE;
     u32 ability = ABILITY_NONE;
-    u32 moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if ((gStatuses3[battler] & STATUS3_ALWAYS_HITS && gDisableStructs[battler].battlerWithSureHit == gBattlerAttacker)
      || (B_TOXIC_NEVER_MISS >= GEN_6 && moveEffect == EFFECT_TOXIC && IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_POISON))
@@ -1697,7 +1697,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     if (move == ACC_CURR_MOVE)
         move = gCurrentMove;
 
-    u32 effect = GetMoveEffect(move);
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
     u32 holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
 
@@ -2168,7 +2168,7 @@ static void Cmd_adjustdamage(void)
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
-    u32 moveEffect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
     bool32 enduredHit = FALSE;
 
@@ -2703,7 +2703,7 @@ static void Cmd_datahpupdate(void)
                     gBattleMons[battler].hp = 0;
                 }
 
-                u32 effect = GetMoveEffect(gCurrentMove);
+                enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
                 // Note: While physicalDmg/specialDmg below are only distinguished between for Counter/Mirror Coat, they are
                 //       used in combination as general damage trackers for other purposes. specialDmg is additionally used
@@ -6280,7 +6280,7 @@ static inline bool32 IsProtectEffectAffected(u32 battler, u32 move)
     return FALSE;
 }
 
-static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, u32 moveEffect)
+static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
 {
     if (GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_EJECT_BUTTON
      && battlerAtk != battlerDef
@@ -6293,7 +6293,7 @@ static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, u32 m
     return FALSE;
 }
 
-static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, u32 moveEffect)
+static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
 {
     if (gProtectStructs[battlerDef].statFell
      && GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_EJECT_PACK
@@ -6309,7 +6309,7 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, u32 mov
 
 static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move)
 {
-    u32 effect = FALSE;
+    bool32 effect = FALSE;
     u32 abilityAtk = GetBattlerAbility(battlerAtk);
 
     switch (abilityAtk)
@@ -6456,7 +6456,7 @@ static void Cmd_moveend(void)
     holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     moveType = GetBattleMoveType(gCurrentMove);
 
-    u32 moveEffect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     do
     {
@@ -7051,7 +7051,7 @@ static void Cmd_moveend(void)
                         gBattleStruct->dynamax.lastUsedBaseMove = gBattleStruct->dynamax.baseMoves[gBattlerAttacker];
                 }
             }
-            u32 originalEffect = GetMoveEffect(originallyUsedMove);
+            enum BattleMoveEffects originalEffect = GetMoveEffect(originallyUsedMove);
             if (!(gAbsentBattlerFlags & (1u << gBattlerAttacker))
                 && !gBattleStruct->battlerState[gBattlerAttacker].absent
                 && originalEffect != EFFECT_BATON_PASS && originalEffect != EFFECT_HEALING_WISH)
@@ -11863,7 +11863,7 @@ static void Cmd_various(void)
 static void TryResetProtectUseCounter(u32 battler)
 {
     u32 lastMove = gLastResultingMoves[battler];
-    u32 lastEffect = GetMoveEffect(lastMove);
+    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
     if (lastMove == MOVE_UNAVAILABLE
         || (!gBattleMoveEffects[lastEffect].usesProtectCounter
           && ((B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9 && lastEffect != EFFECT_ALLY_SWITCH)
@@ -13323,7 +13323,7 @@ static void Cmd_setfocusenergy(void)
 {
     CMD_ARGS(u8 battler);
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    u32 effect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if ((effect == EFFECT_DRAGON_CHEER && (!(IsDoubleBattle()) || (gAbsentBattlerFlags & (1u << battler))))
          || gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
@@ -16954,7 +16954,7 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler)
     return FALSE;
 }
 
-static bool8 IsFinalStrikeEffect(u32 moveEffect)
+static bool8 IsFinalStrikeEffect(enum BattleMoveEffects moveEffect)
 {
     u32 i;
 
@@ -17485,6 +17485,8 @@ void BS_SetRemoveTerrain(void)
         default:
             break;
         }
+        break;
+    default:
         break;
     }
 

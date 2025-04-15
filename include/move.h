@@ -183,7 +183,7 @@ static inline const u8 *GetMoveDescription(u32 moveId)
     return gMovesInfo[moveId].description;
 }
 
-static inline u32 GetMoveEffect(u32 moveId)
+static inline enum BattleMoveEffects GetMoveEffect(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].effect;
 }

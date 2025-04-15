@@ -183,7 +183,8 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     s32 i, damageDealt = 0, maxDamageDealt = 0, damageTaken = 0, maxDamageTaken = 0;
     u32 aiMove, playerMove, aiBestMove = MOVE_NONE, aiAbility = AI_DATA->abilities[battler], opposingBattler, weather = AI_GetWeather();
     bool32 getsOneShot = FALSE, hasStatusMove = FALSE, hasSuperEffectiveMove = FALSE;
-    u16 typeEffectiveness = UQ_4_12(1.0), aiMoveEffect; //baseline typing damage
+    u16 typeEffectiveness = UQ_4_12(1.0); //baseline typing damage
+    enum BattleMoveEffects aiMoveEffect;
     uq4_12_t effectiveness;
 
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer
@@ -1061,7 +1062,8 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(u32 battler)
 static bool32 HasGoodSubstituteMove(u32 battler)
 {
     int i;
-    u32 aiMove, aiMoveEffect, opposingBattler = GetOppositeBattler(battler);
+    u32 aiMove, opposingBattler = GetOppositeBattler(battler);
+    enum BattleMoveEffects aiMoveEffect;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         aiMove = gBattleMons[battler].moves[i];
