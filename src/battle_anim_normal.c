@@ -1045,6 +1045,10 @@ static void AnimTask_ShakeBattleTerrain_Step(u8 taskId)
 #undef tTimer
 #undef tShakeDelay
 
+// args[0] - initial pos x
+// args[1] - initial pos y
+// args[2] - which battler
+// args[3] - affine anim number
 void AnimHitSplatBasic(struct Sprite *sprite)
 {
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[3]);
