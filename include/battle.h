@@ -70,6 +70,11 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
+// Since this is part of a queue with a timer the worst case this should be increased to is 10.
+// The worst case are double battle if you set up a damage non types effect twice per turn. Realisitically this will never happen.
+// It is set to 4 in expnaision because that's how many such effects there are.
+#define DAMAGE_NON_TYPES_COUNT 4
+
 // Cleared each time a mon leaves the field, either by switching out or fainting
 struct DisableStruct
 {
@@ -249,8 +254,9 @@ struct SideTimer
     u8 followmeTarget:3;
     u8 followmePowder:1; // Rage powder, does not affect grass type pokemon.
     u16 retaliateTimer;
-    u16 damageNonTypesTimer;
-    u8 damageNonTypesType;
+    u16 damageNonTypesTimer[DAMAGE_NON_TYPES_COUNT];
+    u8 damageNonTypesType[DAMAGE_NON_TYPES_COUNT];
+    u8 damageNonTypesEndTurnCounter;
     u16 rainbowTimer;
     u16 seaOfFireTimer;
     u16 swampTimer;

@@ -140,6 +140,45 @@ static bool32 HandleEndTurnOrder(u32 battler)
     return effect;
 }
 
+static void RemoveAndShiftDamageNonTypes(u32 side)
+{
+    bool32 shift = FALSE;
+
+    for (u32 type = 0; type < DAMAGE_NON_TYPES_COUNT; type++)
+    {
+        if (gSideTimers[side].damageNonTypesTimer[type] == gBattleTurnCounter)
+        {
+            gSideTimers[side].damageNonTypesType[type] = TYPE_NONE;
+            shift = TRUE;
+        }
+    }
+
+    if (!shift)
+        return;
+
+    u32 types[DAMAGE_NON_TYPES_COUNT];
+    u32 timers[DAMAGE_NON_TYPES_COUNT] = {0};
+
+    for (u32 type = 0; type < DAMAGE_NON_TYPES_COUNT; type++)
+    {
+        types[type] = gSideTimers[side].damageNonTypesType[type];
+        gSideTimers[side].damageNonTypesType[type] = TYPE_NONE;
+
+        timers[type] = gSideTimers[side].damageNonTypesTimer[type];
+        gSideTimers[side].damageNonTypesTimer[type] = 0;
+    }
+
+    u32 i = 0;
+    for (u32 type = 0; type < DAMAGE_NON_TYPES_COUNT; type++)
+    {
+        if (types[type] != TYPE_NONE)
+        {
+            gSideTimers[side].damageNonTypesType[i] = types[type];
+            gSideTimers[side].damageNonTypesTimer[i++] = timers[type];
+        }
+    }
+}
+
 static bool32 HandleEndTurnVarious(u32 battler)
 {
     u32 i;
@@ -151,10 +190,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
         gFieldStatuses &= ~STATUS_FIELD_FAIRY_LOCK;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
-    {
-        if (gSideStatuses[i] & SIDE_STATUS_DAMAGE_NON_TYPES && gSideTimers[i].damageNonTypesTimer == gBattleTurnCounter)
-            gSideStatuses[i] &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
-    }
+        RemoveAndShiftDamageNonTypes(i);
 
     for (i = 0; i < gBattlersCount; i++)
     {
@@ -410,22 +446,41 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
 
     switch (gBattleStruct->eventBlockCounter)
     {
-    case FIRST_EVENT_BLOCK_GMAX_MOVE_RESIDUAL: // TODO: Has to be split into 3 statuses and needs a queue
+    case FIRST_EVENT_BLOCK_GMAX_MOVE_RESIDUAL:
         side = GetBattlerSide(battler);
-        if (gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES)
+        if (gSideTimers[side].damageNonTypesType[gSideTimers[side].damageNonTypesEndTurnCounter] != TYPE_NONE)
         {
             if (IsBattlerAlive(battler)
-             && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
+             && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType[gSideTimers[side].damageNonTypesEndTurnCounter])
              && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
             {
                 gBattlerAttacker = battler;
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 6;
-                ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
+                ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType[gSideTimers[side].damageNonTypesEndTurnCounter]);
                 BattleScriptExecute(BattleScript_DamageNonTypesContinues);
                 effect = TRUE;
             }
         }
-        gBattleStruct->eventBlockCounter++;
+
+        u32 nonDamageTypeCurrMax;
+        for (nonDamageTypeCurrMax = 0; nonDamageTypeCurrMax < DAMAGE_NON_TYPES_COUNT; nonDamageTypeCurrMax++)
+        {
+            if (gSideTimers[side].damageNonTypesType[nonDamageTypeCurrMax] == TYPE_NONE)
+                break;
+        }
+
+        if (nonDamageTypeCurrMax >= DAMAGE_NON_TYPES_COUNT)
+            nonDamageTypeCurrMax = DAMAGE_NON_TYPES_COUNT - 1;
+
+        if (gSideTimers[side].damageNonTypesEndTurnCounter == nonDamageTypeCurrMax)
+        {
+            gSideTimers[side].damageNonTypesEndTurnCounter = 0;
+            gBattleStruct->eventBlockCounter++;
+        }
+        else
+        {
+            gSideTimers[side].damageNonTypesEndTurnCounter++;
+        }
         break;
     case FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE:
         if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE && IsBattlerAlive(battler))
