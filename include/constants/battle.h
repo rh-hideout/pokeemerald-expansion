@@ -211,16 +211,15 @@
 #define HITMARKER_DISABLE_ANIMATION     (1 << 16)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 17)
 #define HITMARKER_PASSIVE_DAMAGE        (1 << 18)
-#define HITMARKER_DISOBEDIENT_MOVE      (1 << 19)
-#define HITMARKER_PLAYER_FAINTED        (1 << 20)
-#define HITMARKER_ALLOW_NO_PP           (1 << 21)
-#define HITMARKER_GRUDGE                (1 << 22)
-#define HITMARKER_OBEYS                 (1 << 23)
-#define HITMARKER_NEVER_SET             (1 << 24) // Cleared as part of a large group. Never set or checked
-#define HITMARKER_CHARGING              (1 << 25)
-#define HITMARKER_FAINTED(battler)      (1u << (battler + 26))
+#define HITMARKER_PLAYER_FAINTED        (1 << 19)
+#define HITMARKER_ALLOW_NO_PP           (1 << 20)
+#define HITMARKER_GRUDGE                (1 << 21)
+#define HITMARKER_OBEYS                 (1 << 22)
+#define HITMARKER_NEVER_SET             (1 << 23) // Cleared as part of a large group. Never set or checked
+#define HITMARKER_CHARGING              (1 << 24)
+#define HITMARKER_FAINTED(battler)      (1u << (battler + 25))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
-#define HITMARKER_STRING_PRINTED        (1 << 27)
+#define HITMARKER_STRING_PRINTED        (1 << 26)
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
