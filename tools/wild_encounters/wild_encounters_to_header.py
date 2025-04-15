@@ -22,8 +22,9 @@ fieldData = []
 fieldInfoStrings = []
 
 # time of day encounter data
-TIME_DEFAULT       = "OW_TIME_OF_DAY_DEFAULT"
-TIME_DEFAULT_LABEL = ""
+# if you adjust your TimeOfDay Enum, these need to reflect that
+TIME_DEFAULT       = ""
+TIME_DEFAULT_LABEL = "OW_TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_INDEX = 0
 TIME_MORNING       = "time_morning"
 TIME_MORNING_LABEL = "Morning"
@@ -37,7 +38,7 @@ TIME_EVENING_INDEX = 2
 TIME_NIGHT         = "time_night"
 TIME_NIGHT_LABEL   = "Night"
 TIME_NIGHT_INDEX   = 3
-TOTAL_TIME_STAGES  = TIME_NIGHT_INDEX + 1
+TOTAL_TIME_STAGES  = 4
 
 # struct building blocks
 baseStruct          = "const struct WildPokemon"
@@ -101,6 +102,9 @@ def ImportWildEncounterFile():
 
     global IS_ENABLED
     IS_ENABLED = IsConfigEnabled()
+
+    global TIME_DEFAULT
+    TIME_DEFAULT = GetDefaultTime()
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
@@ -177,8 +181,8 @@ def ImportWildEncounterFile():
             elif TIME_NIGHT_LABEL in structLabel:
                 structTime = TIME_NIGHT_LABEL
             else:
-                structTime = TIME_MORNING_LABEL
-                structLabel = structLabel + "_Morning"
+                structTime = GetTimeLabelFromIndex(GetTimeIndexFromString(TIME_DEFAULT))
+                structLabel = structLabel + GetTimeSuffixFromIndex(GetTimeIndexFromString(structTime))
 
             fieldCounter = 0
             fieldInfoStrings = []
@@ -452,6 +456,34 @@ def GetTimeStrFromIndex(index):
     return index
 
 
+def GetTimeSuffixFromIndex(index):
+    if type(index) == "str":
+        return ""
+    elif index == TIME_MORNING_INDEX:
+        return "_" + TIME_MORNING_LABEL
+    elif index == TIME_DAY_INDEX:
+        return "_" + TIME_DAY_LABEL
+    elif index == TIME_EVENING_INDEX:
+        return "_" + TIME_EVENING_LABEL
+    elif index == TIME_NIGHT_INDEX:
+        return "_" + TIME_NIGHT_LABEL
+    return GetTimeSuffixFromIndex(GetTimeStrFromIndex(TIME_DEFAULT))
+
+
+def GetTimeLabelFromIndex(index):
+    if type(index) == "str":
+        return ""
+    elif index == TIME_MORNING_INDEX:
+        return TIME_MORNING_LABEL
+    elif index == TIME_DAY_INDEX:
+        return TIME_DAY_LABEL
+    elif index == TIME_EVENING_INDEX:
+        return TIME_EVENING_LABEL
+    elif index == TIME_NIGHT_INDEX:
+        return TIME_NIGHT_LABEL
+    return GetTimeLabelFromIndex(GetTimeIndexFromString(TIME_DEFAULT))
+
+
 def GetTimeIndexFromString(string):
     if not IS_ENABLED:
         return TIME_DEFAULT_INDEX
@@ -496,6 +528,14 @@ def IsConfigEnabled():
         config_overworld = overworld_config_file.read()
         config_setting = CONFIG_ENABLED_PAT.search(config_overworld)
         return config_setting is not None and config_setting.group("cfg_val") in ("TRUE", "1")
+
+def GetDefaultTime():
+    DEFAULT_TIME_PAT = re.compile(r"#define OW_TIME_OF_DAY_DEFAULT\s+(?P<cfg_val>[^ ]*)")
+
+    with open("./include/config/overworld.h", "r") as overworld_config_file:
+        config_overworld = overworld_config_file.read()
+        config_setting = DEFAULT_TIME_PAT.search(config_overworld)
+        return config_setting.group("cfg_val")
 
 
 def TabStr(amount):
