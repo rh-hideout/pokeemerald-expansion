@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_intro_speedup.h"
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "bg.h"
@@ -152,8 +153,10 @@ static void BattleIntroSlideEnd(u8 taskId)
 static void BattleIntroSlide1(u8 taskId)
 {
     int i;
-
-    gBattle_BG1_X += 6;
+    if (BATTLE_INTRO_SPEEDUP)
+        gBattle_BG1_X += 6 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which battle intro foreground graphics (ex. grass for overworld encounters) slide across the screen during battle intro (original value of 6)
+    else
+        gBattle_BG1_X += 6;
     switch (gTasks[taskId].tState)
     {
     case 0:
@@ -177,7 +180,7 @@ static void BattleIntroSlide1(u8 taskId)
         break;
     case 2:
         gBattle_WIN0V -= 0xFF;
-        if ((gBattle_WIN0V & 0xFF00) == 0x3000)
+        if ((gBattle_WIN0V & 0xFF00) == 0x3000) // when gBattle_WIN0V reaches 0x3000, do something to the black bars on into
         {
             gTasks[taskId].tState++;
             gTasks[taskId].data[2] = DISPLAY_WIDTH;
@@ -195,12 +198,22 @@ static void BattleIntroSlide1(u8 taskId)
             if (gTasks[taskId].tTerrain == BATTLE_TERRAIN_LONG_GRASS)
             {
                 if (gBattle_BG1_Y != (u16)(-80))
-                    gBattle_BG1_Y -= 2;
+                {
+                    if (BATTLE_INTRO_SPEEDUP)
+                        gBattle_BG1_Y -= 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which battle intro foreground graphics (ex. grass for overworld encounters) exit the screen vertically during battle intro (original value of 2)
+                    else
+                        gBattle_BG1_Y -= 2;
+                }
             }
             else
             {
                 if (gBattle_BG1_Y != (u16)(-56))
-                    gBattle_BG1_Y -= 1;
+                {
+                    if (BATTLE_INTRO_SPEEDUP)
+                        gBattle_BG1_Y -= 1 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which battle intro foreground graphics (ex. grass for overworld encounters) exit the screen vertically during battle intro (original value of 1)
+                    else
+                        gBattle_BG1_Y -= 1;
+                }
             }
         }
 
@@ -208,7 +221,12 @@ static void BattleIntroSlide1(u8 taskId)
             gBattle_WIN0V -= 0x3FC;
 
         if (gTasks[taskId].data[2])
-            gTasks[taskId].data[2] -= 2;
+        {
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[2] -= 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which battle intro background graphics on BG3 (player and enemy positions) slide onto the screen horizontally (original value of 2)
+            else
+                gTasks[taskId].data[2] -= 2;
+        }
 
         // Scanline settings have already been set in CB2_InitBattleInternal()
         for (i = 0; i < DISPLAY_HEIGHT / 2; i++)
@@ -242,10 +260,16 @@ static void BattleIntroSlide2(u8 taskId)
     {
     case BATTLE_TERRAIN_SAND:
     case BATTLE_TERRAIN_WATER:
-        gBattle_BG1_X += 8;
+        if (BATTLE_INTRO_SPEEDUP)
+            gBattle_BG1_X += 8 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+        else
+            gBattle_BG1_X += 8;
         break;
     case BATTLE_TERRAIN_UNDERWATER:
-        gBattle_BG1_X += 6;
+        if (BATTLE_INTRO_SPEEDUP)
+            gBattle_BG1_X += 6 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+        else
+            gBattle_BG1_X += 6;
         break;
     }
 
@@ -253,9 +277,19 @@ static void BattleIntroSlide2(u8 taskId)
     {
         gBattle_BG1_Y = Cos2(gTasks[taskId].data[6]) / 512 - 8;
         if (gTasks[taskId].data[6] < 180)
-            gTasks[taskId].data[6] += 4;
+        {
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[6] += 4 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+            else
+                gTasks[taskId].data[6] += 4;
+        }
         else
-            gTasks[taskId].data[6] += 6;
+        {
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[6] += 6 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+            else
+                gTasks[taskId].data[6] += 6;
+        }
 
         if (gTasks[taskId].data[6] == 360)
             gTasks[taskId].data[6] = 0;
@@ -289,7 +323,10 @@ static void BattleIntroSlide2(u8 taskId)
         {
             gTasks[taskId].tState++;
             gTasks[taskId].data[2] = DISPLAY_WIDTH;
-            gTasks[taskId].data[3] = 32;
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[3] = ALPHA_BLEND_SPEEDUP_DIVISOR % 32; // Value that once reaches zero, sets GPU regs on BG3 to alpha blend fade the foreground graphics.
+            else
+                gTasks[taskId].data[3] = 32;
             gTasks[taskId].data[5] = 1;
             gIntroSlideFlags &= ~1;
         }
@@ -317,8 +354,12 @@ static void BattleIntroSlide2(u8 taskId)
             gBattle_WIN0V -= 0x3FC;
 
         if (gTasks[taskId].data[2])
-            gTasks[taskId].data[2] -= 2;
-
+        {
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[2] -= 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+            else
+                gTasks[taskId].data[2] -= 2;
+        }
         // Scanline settings have already been set in CB2_InitBattleInternal()
         for (i = 0; i < DISPLAY_HEIGHT / 2; i++)
             gScanlineEffectRegBuffers[gScanlineEffect.srcBuffer][i] = gTasks[taskId].data[2];
@@ -349,8 +390,10 @@ static void BattleIntroSlide2(u8 taskId)
 static void BattleIntroSlide3(u8 taskId)
 {
     int i;
-
-    gBattle_BG1_X += 8;
+    if (BATTLE_INTRO_SPEEDUP)
+        gBattle_BG1_X += 8 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+    else
+        gBattle_BG1_X += 8;
     switch (gTasks[taskId].tState)
     {
     case 0:
@@ -382,7 +425,10 @@ static void BattleIntroSlide3(u8 taskId)
         {
             gTasks[taskId].tState++;
             gTasks[taskId].data[2] = DISPLAY_WIDTH;
-            gTasks[taskId].data[3] = 32;
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[3] = ALPHA_BLEND_SPEEDUP_DIVISOR % 32;
+            else
+                gTasks[taskId].data[3] = 32;
             gTasks[taskId].data[5] = 1;
             gIntroSlideFlags &= ~1;
         }
@@ -405,7 +451,12 @@ static void BattleIntroSlide3(u8 taskId)
             gBattle_WIN0V -= 0x3FC;
 
         if (gTasks[taskId].data[2])
-            gTasks[taskId].data[2] -= 2;
+        {
+            if (BATTLE_INTRO_SPEEDUP)
+                gTasks[taskId].data[2] -= 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER;
+            else
+                gTasks[taskId].data[2] -= 2;
+        }
 
         // Scanline settings have already been set in CB2_InitBattleInternal()
         for (i = 0; i < DISPLAY_HEIGHT / 2; i++)

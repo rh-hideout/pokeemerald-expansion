@@ -6,6 +6,7 @@
 #include "battle_arena.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
+#include "battle_intro_speedup.h"
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_pyramid.h"
@@ -2658,7 +2659,10 @@ static void SpriteCB_MoveWildMonToRight(struct Sprite *sprite)
 {
     if ((gIntroSlideFlags & 1) == 0)
     {
-        sprite->x2 += 2;
+        if (BATTLE_INTRO_SPEEDUP)
+            sprite->x2 += 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which wild Pokemon sprite enters the battle scene horizontally (original value of 2)
+        else
+            sprite->x2 += 2;
         if (sprite->x2 == 0)
         {
             sprite->callback = SpriteCB_WildMonShowHealthbox;
