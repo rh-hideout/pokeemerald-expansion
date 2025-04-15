@@ -5341,6 +5341,7 @@ bool32 NoAliveMonsForPlayer(void)
     u32 i;
     u32 maxI = PARTY_SIZE;
     u32 HP_count = 0;
+    u32 ineligibleMonsCount = 0;
 
     if (B_MULTI_BATTLE_WHITEOUT < GEN_4 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
         maxI = MULTI_PARTY_SIZE;
@@ -5353,6 +5354,32 @@ bool32 NoAliveMonsForPlayer(void)
         {
             HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
         }
+
+        // Get the number of fainted mons or eggs (not empty slots) in the first three party slots.
+        if (i < 3 && ((GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_HP))
+         || GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)))
+        {
+            ineligibleMonsCount++;
+        }
+    }
+
+    // Get the number of inelligible slots in the saved player party.
+    if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
+     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA))
+    {
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            if (!GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_SPECIES)
+             || !GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HP)
+             || GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_IS_EGG))
+            {
+                ineligibleMonsCount++;
+            }
+        }
+
+        // If the total number of ineligible mons is 6 or more, lose the battle.
+        if (ineligibleMonsCount >= 6)
+            return TRUE;
     }
 
     return (HP_count == 0);
