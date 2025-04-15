@@ -415,7 +415,7 @@ void BattleArena_AddSkillPoints(u8 battler)
     }
 }
 
-void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
+void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
@@ -441,6 +441,8 @@ void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
     case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
+        break;
+    default:
         break;
     }
 }

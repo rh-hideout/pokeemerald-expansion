@@ -304,7 +304,7 @@ void DoMoveAnim(u16 move)
     // Make sure the anim target of moves hitting everyone is at the opposite side.
     if (GetBattlerMoveTargetType(gBattlerAttacker, move) & MOVE_TARGET_FOES_AND_ALLY && IsDoubleBattle())
     {
-        while (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+        while (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         {
             if (++gBattleAnimTarget >= MAX_BATTLERS_COUNT)
                 gBattleAnimTarget = 0;
@@ -563,7 +563,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
     case MOVE_TARGET_BOTH: // all opponents
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != ignoredTgt && !IsAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
+            if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
                 targets[numTargets++] = i + MAX_BATTLERS_COUNT;
         }
         break;
@@ -2157,8 +2157,7 @@ static void Cmd_teamattack_moveback(void)
     sBattleAnimScriptPtr += 2;
 
     // Apply to double battles when attacking own side
-    if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (!IsContest() && IsDoubleBattle() && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {
@@ -2195,7 +2194,7 @@ static void Cmd_teamattack_movefwd(void)
 
     // Apply to double battles when attacking own side
     if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+     && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {

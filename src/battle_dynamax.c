@@ -74,7 +74,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 bool32 CanDynamax(u32 battler)
 {
     u16 species = gBattleMons[battler].species;
-    u16 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
@@ -178,7 +178,7 @@ void ActivateDynamax(u32 battler)
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = DYNAMAX_TURNS_COUNT;
+    gBattleStruct->dynamax.dynamaxTurns[battler] = gBattleTurnCounter + DYNAMAX_TURNS_COUNT;
 
     // Substitute is removed upon Dynamaxing.
     gBattleMons[battler].status2 &= ~STATUS2_SUBSTITUTE;
@@ -209,7 +209,6 @@ void UndoDynamax(u32 battler)
 
     // Makes sure there are no Dynamax flags set, including on switch / faint.
     SetActiveGimmick(battler, GIMMICK_NONE);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = 0;
 
     // Undo form change if needed.
     if (IsGigantamaxed(battler))
@@ -490,4 +489,21 @@ void BS_JumpIfDynamaxed(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_UndoDynamax(void)
+{
+    NATIVE_ARGS(u8 battler);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
+    {
+        BattleScriptPushCursor();
+        UndoDynamax(battler);
+        gBattleScripting.battler = battler;
+        gBattlescriptCurrInstr = BattleScript_DynamaxEnds_Ret;
+        return;
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }

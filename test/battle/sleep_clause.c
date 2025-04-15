@@ -567,7 +567,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
-        ASSUME(GetMoveEffect(MOVE_SPARKLY_SWIRL) == EFFECT_SPARKLY_SWIRL);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
         ASSUME(B_SLEEP_TURNS >= GEN_5);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
@@ -1147,7 +1147,6 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
         MESSAGE("Wobbuffet fell asleep!");
         MESSAGE("Appletun used G-Max Sweetness!");
-        MESSAGE("Wobbuffet's status returned to normal!");
         MESSAGE("The opposing Wobbuffet used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
@@ -1391,7 +1390,6 @@ SINGLE_BATTLE_TEST("Sleep Clause: Suppressing and then sleeping Vital Spirit / I
 
 SINGLE_BATTLE_TEST("Sleep Clause: Mold Breaker Pokémon sleeping Vital Spirit / Insomnia activates sleep clause")
 {
-    KNOWN_FAILING; // Interaction between Mold Breaker and Vital Spirit / Insomnia is broken. Issue #5578 https://github.com/rh-hideout/pokeemerald-expansion/issues/5578
     u32 ability;
     PARAMETRIZE { ability = ABILITY_VITAL_SPIRIT; }
     PARAMETRIZE { ability = ABILITY_INSOMNIA; }
@@ -1411,7 +1409,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Mold Breaker Pokémon sleeping Vital Spirit / 
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing Delibird fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
-        MESSAGE("Sleep Clause kept the opposing Delibird awake!");
+        ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing Zigzagoon fell asleep!");
@@ -1519,7 +1517,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Reflection moves (ie. Magic Coat) fail if slee
         MESSAGE("The opposing Zigzagoon fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("The opposing Zigzagoon bounced the Spore back!"); // Should be MESSAGE("Zigzagoon bounced the Spore back!"); Issue #5579 https://github.com/rh-hideout/pokeemerald-expansion/issues/5579
+        MESSAGE("Zigzagoon bounced the Spore back!");
         MESSAGE("Sleep Clause kept the opposing Zigzagoon awake!");
     }
 }

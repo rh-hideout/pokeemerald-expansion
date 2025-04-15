@@ -660,6 +660,7 @@ static const u8 *const sActionStringTable[] =
     [PARTY_MSG_WHICH_APPLIANCE]        = gText_WhichAppliance,
     [PARTY_MSG_CHOOSE_SECOND_FUSION]   = gText_NextFusionMon,
     [PARTY_MSG_NO_POKEMON]             = COMPOUND_STRING("You have no POKéMON."),
+    [PARTY_MSG_CHOOSE_MON_FOR_BOX]     = gText_SendWhichMonToPC,
 };
 
 static const u8 *const sDescriptionStringTable[] =
@@ -798,6 +799,9 @@ static const u16 sFieldMoves[FIELD_MOVES_COUNT + 1] =
     [FIELD_MOVE_MILK_DRINK]   = MOVE_MILK_DRINK,
     [FIELD_MOVE_SOFT_BOILED]  = MOVE_SOFT_BOILED,
     [FIELD_MOVE_SWEET_SCENT]  = MOVE_SWEET_SCENT,
+#if OW_DEFOG_FIELD_MOVE == TRUE
+    [FIELD_MOVE_DEFOG]        = MOVE_DEFOG,
+#endif
     // NOTE: This value is used as the terminal value for the table. There's no reason to do this, as the size of the table is known.
     //       Whichever move shares this value (MOVE_SWORDS_DANCE by default) if present will be treated as the end of the array rather than a field move.
     [FIELD_MOVES_COUNT]       = FIELD_MOVES_COUNT
@@ -823,6 +827,9 @@ struct
     [FIELD_MOVE_MILK_DRINK]   = {SetUpFieldMove_SoftBoiled,  PARTY_MSG_NOT_ENOUGH_HP},
     [FIELD_MOVE_SOFT_BOILED]  = {SetUpFieldMove_SoftBoiled,  PARTY_MSG_NOT_ENOUGH_HP},
     [FIELD_MOVE_SWEET_SCENT]  = {SetUpFieldMove_SweetScent,  PARTY_MSG_CANT_USE_HERE},
+#if OW_DEFOG_FIELD_MOVE == TRUE
+    [FIELD_MOVE_DEFOG]        = {SetUpFieldMove_Defog,       PARTY_MSG_CANT_USE_HERE},
+#endif
 };
 
 static const u8 *const sUnionRoomTradeMessages[] =
