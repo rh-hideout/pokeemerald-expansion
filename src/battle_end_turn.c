@@ -489,13 +489,15 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_LEFTOVERS:
         case HOLD_EFFECT_BLACK_SLUDGE:
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter = 0;
@@ -1419,7 +1421,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
@@ -1431,6 +1433,8 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case HOLD_EFFECT_RESTORE_STATS:
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter = 0;
@@ -1482,7 +1486,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     }
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
