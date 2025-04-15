@@ -4505,7 +4505,6 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
                 if (!nonDamageTypeSet)
                 {
-                    gSideStatuses[side] |= SIDE_STATUS_DAMAGE_NON_TYPES;
                     gSideTimers[side].damageNonTypesTimer[newNonDamageType] = gBattleTurnCounter + 5; // damage is dealt for 4 turns, ends on 5th
                     gSideTimers[side].damageNonTypesType[newNonDamageType] = moveType;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
