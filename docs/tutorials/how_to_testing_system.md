@@ -32,7 +32,7 @@ This can be translated to an automated test as follows:
 ```
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_STUN_SPORE].effect == EFFECT_PARALYZE);
+    ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYZE);
 }
 
 SINGLE_BATTLE_TEST("Stun Spore inflicts paralysis")
@@ -78,7 +78,7 @@ This can again be translated as follows:
 SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_STUN_SPORE].powderMove);
+        ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
         PLAYER(SPECIES_ODDISH); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Meditate raises Attack", s16 damage)
     PARAMETRIZE { raiseAttack = FALSE; }
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -146,7 +146,7 @@ The overworld is not available, so it is only possible to test commands which do
 ### `ASSUME`
 `ASSUME(cond)`
 Causes the test to be skipped if `cond` is false. Used to document any prerequisites of the test, e.g. to test Burn reducing the Attack of a Pokémon we can observe the damage of a physical attack with and without the burn. To document that this test assumes the attack is physical we can use:
-`ASSUME(gMovesInfo[MOVE_WHATEVER].category == DAMAGE_CATEGORY_PHYSICAL);`
+`ASSUME(GetMoveCategory(MOVE_WHATEVER) == DAMAGE_CATEGORY_PHYSICAL);`
 
 ### `ASSUMPTIONS`
 ```
@@ -159,7 +159,7 @@ Should be placed immediately after any `#includes` and contain any `ASSUME` stat
 ```
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_POISON_STING].effect == EFFECT_POISON_HIT);
+    ASSUME(GetMoveEffect(MOVE_POISON_STING) == EFFECT_POISON_HIT);
 }
 ```
 
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Blaze boosts Fire-type moves in a pinch", s16 damage)
     PARAMETRIZE { hp = 99; }
     PARAMETRIZE { hp = 33; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         PLAYER(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); MaxHP(99); HP(hp); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -233,7 +233,7 @@ SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
 All `BattleRandom` calls involving tag will return the same number, so this cannot be used to have two moves independently hit or miss, for example.
 
 If the tag is not provided, runs the test 50 times and computes an approximate pass ratio.
-`PASSES_RANDOMLY(gMovesInfo[move].accuracy, 100);`
+`PASSES_RANDOMLY(GetMoveAccuracy(move), 100);`
 Note that this mode of PASSES_RANDOMLY makes the tests run very slowly and should be avoided where possible. If the mechanic you are testing is missing its tag, you should add it.
 
 ### `GIVEN`
@@ -553,6 +553,10 @@ Causes the test to fail if a and b compare incorrectly, e.g.
      // Expect results[0].damage * 1.5 == results[1].damage.
      EXPECT_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
 ```
+
+### `FORCE_MOVE_ANIM`
+`FORCE_MOVE_ANIM(TRUE)`
+Forces the moves in the current test to do their animations in headless mode. Useful for debugging animations.
 
 ## Overworld Command Reference
 

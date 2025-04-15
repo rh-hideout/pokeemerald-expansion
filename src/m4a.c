@@ -6,8 +6,6 @@ extern const u8 gCgb3Vol[];
 
 #define BSS_CODE __attribute__((section(".bss.code")))
 
-BSS_CODE ALIGNED(4) char SoundMainRAM_Buffer[0x800] = {0};
-
 COMMON_DATA struct SoundInfo gSoundInfo = {0};
 COMMON_DATA struct PokemonCrySong gPokemonCrySongs[MAX_POKEMON_CRIES] = {0};
 COMMON_DATA struct MusicPlayerInfo gPokemonCryMusicPlayers[MAX_POKEMON_CRIES] = {0};
@@ -71,8 +69,6 @@ void MPlayFadeOut(struct MusicPlayerInfo *mplayInfo, u16 speed)
 void m4aSoundInit(void)
 {
     s32 i;
-
-    CpuCopy32((void *)((s32)SoundMainRAM & ~1), SoundMainRAM_Buffer, sizeof(SoundMainRAM_Buffer));
 
     SoundInit(&gSoundInfo);
     MPlayExtender(gCgbChans);

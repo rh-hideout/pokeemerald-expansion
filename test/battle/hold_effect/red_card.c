@@ -413,7 +413,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied
 SINGLE_BATTLE_TEST("Red Card is consumed after dragged out replacement has its Speed lowered by Sticky Web")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_STICKY_WEB].effect == EFFECT_STICKY_WEB);
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
@@ -497,7 +497,25 @@ SINGLE_BATTLE_TEST("Red Card prevents Emergency Exit activation when triggered")
     }
 }
 
-TO_DO_BATTLE_TEST("Red Card activates but fails if the attacker has Dynamaxed");
+SINGLE_BATTLE_TEST("Red Card activates and is consumed but fails if the attacker is Dynamaxed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+    } WHEN {
+        TURN {
+            MOVE(opponent, MOVE_TACKLE);
+            MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        NOT MESSAGE("Wobbuffet is switched out with the Eject Button!");
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Red Card activates before Eject Pack")
 {
@@ -520,3 +538,4 @@ SINGLE_BATTLE_TEST("Red Card activates before Eject Pack")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
 }
+

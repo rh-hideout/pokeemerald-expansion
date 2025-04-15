@@ -864,7 +864,7 @@ static void InitPyramidChallenge(void)
     }
 
     InitBattlePyramidBagCursorPosition();
-    gTrainerBattleOpponent_A = 0;
+    TRAINER_BATTLE_PARAM.opponentA = 0;
     gBattleOutcome = 0;
 }
 
@@ -983,8 +983,10 @@ static void SetPickupItem(void)
 {
     int i;
     int itemIndex;
-    int rand;
+    int randVal;
+    u32 randSeedIndex, randSeed;
     u8 id;
+    rng_value_t rand;
     u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 floor = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
     u32 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE) % TOTAL_PYRAMID_ROUNDS;
@@ -994,15 +996,19 @@ static void SetPickupItem(void)
 
     id = GetPyramidFloorTemplateId();
     itemIndex = (gSpecialVar_LastTalked - sPyramidFloorTemplates[id].numTrainers) - 1;
-    rand = gSaveBlock2Ptr->frontier.pyramidRandoms[itemIndex / 2];
-    SeedRng2(rand);
+    randSeedIndex = (itemIndex & 1) * 2;
+    randSeed = (u32)gSaveBlock2Ptr->frontier.pyramidRandoms[randSeedIndex + 1] << 16;
+    randSeed |= gSaveBlock2Ptr->frontier.pyramidRandoms[randSeedIndex];
+    rand = LocalRandomSeed(randSeed);
 
-    for (i = 0; i < itemIndex + 1; i++)
-        rand = Random2() % 100;
+    for (i = 0; i < itemIndex / 2; i++)
+        LocalRandom(&rand);
+
+    randVal = LocalRandom(&rand) % 100;
 
     for (i = sPickupItemOffsets[floor]; i < ARRAY_COUNT(sPickupItemSlots); i++)
     {
-        if (rand < sPickupItemSlots[i][0])
+        if (randVal < sPickupItemSlots[i][0])
             break;
     }
 
@@ -1324,11 +1330,11 @@ bool8 GetBattlePyramidTrainerFlag(u8 eventId)
 
 void MarkApproachingPyramidTrainersAsBattled(void)
 {
-    MarkPyramidTrainerAsBattled(gTrainerBattleOpponent_A);
+    MarkPyramidTrainerAsBattled(TRAINER_BATTLE_PARAM.opponentA);
     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
     {
         gSelectedObjectEvent = GetChosenApproachingTrainerObjectEventId(1);
-        MarkPyramidTrainerAsBattled(gTrainerBattleOpponent_B);
+        MarkPyramidTrainerAsBattled(TRAINER_BATTLE_PARAM.opponentB);
     }
 }
 

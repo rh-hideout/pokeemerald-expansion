@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+)")
     PARAMETRIZE { hp = 99;  config = GEN_6; }
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_GALE_WINGS, config);
-        ASSUME(gMovesInfo[MOVE_AERIAL_ACE].type == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_AERIAL_ACE) == TYPE_FLYING);
         PLAYER(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); HP(hp); MaxHP(100); Speed(1);}
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100);};
     } WHEN {
@@ -33,8 +33,8 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves")
     PARAMETRIZE { move = MOVE_AERIAL_ACE; }
     PARAMETRIZE { move = MOVE_FLARE_BLITZ; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_AERIAL_ACE].type == TYPE_FLYING);
-        ASSUME(gMovesInfo[MOVE_FLARE_BLITZ].type == TYPE_FIRE);
+        ASSUME(GetMoveType(MOVE_AERIAL_ACE) == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_FLARE_BLITZ) == TYPE_FIRE);
         PLAYER(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); HP(100); MaxHP(100); Speed(1);}
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100);};
     } WHEN {
@@ -59,11 +59,11 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
     PARAMETRIZE { move = MOVE_JUDGMENT; heldItem = ITEM_SKY_PLATE; }
     PARAMETRIZE { move = MOVE_HIDDEN_POWER; heldItem = ITEM_NONE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_NATURAL_GIFT].effect == EFFECT_NATURAL_GIFT);
-        ASSUME(gMovesInfo[MOVE_JUDGMENT].effect == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        ASSUME(GetMoveEffect(MOVE_JUDGMENT) == EFFECT_CHANGE_TYPE_ON_ITEM);
         // IV combinations sourced from https://www.smogon.com/forums/threads/hidden-power-iv-combinations.78083/
-        ASSUME(gMovesInfo[MOVE_HIDDEN_POWER].effect == EFFECT_HIDDEN_POWER);
-        ASSUME(gMovesInfo[MOVE_TERA_BLAST].effect == EFFECT_TERA_BLAST);
+        ASSUME(GetMoveEffect(MOVE_HIDDEN_POWER) == EFFECT_HIDDEN_POWER);
+        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].secondaryId == TYPE_FLYING);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_LUM_BERRY)].type == TYPE_FLYING);

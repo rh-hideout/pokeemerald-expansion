@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Blunder Policy raises the users speed by 2 stages if the use
 {
     PASSES_RANDOMLY(3, 10, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOCUS_BLAST].accuracy == 70);
+        ASSUME(GetMoveAccuracy(MOVE_FOCUS_BLAST) == 70);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to a
 {
     PASSES_RANDOMLY(10, 10, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOCUS_BLAST].accuracy == 70);
+        ASSUME(GetMoveAccuracy(MOVE_FOCUS_BLAST) == 70);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
 {
     PASSES_RANDOMLY(10, 10, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOCUS_BLAST].accuracy == 70);
+        ASSUME(GetMoveAccuracy(MOVE_FOCUS_BLAST) == 70);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

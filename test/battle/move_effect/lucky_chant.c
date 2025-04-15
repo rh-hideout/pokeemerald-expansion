@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Lucky Chant prevents critical hits on the user's side")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_LUCKY_CHANT].effect == EFFECT_LUCKY_CHANT);
+        ASSUME(GetMoveEffect(MOVE_LUCKY_CHANT) == EFFECT_LUCKY_CHANT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

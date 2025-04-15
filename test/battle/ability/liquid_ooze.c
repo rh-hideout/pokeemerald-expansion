@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Leech Seed users to lose HP instead of he
 DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of heal")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_MATCHA_GOTCHA].effect == EFFECT_ABSORB);
+        ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
@@ -61,7 +61,7 @@ DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of
 DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enough damage")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_MATCHA_GOTCHA].effect == EFFECT_ABSORB);
+        ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
@@ -108,9 +108,11 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of 
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze causes leech seedee to faint before seeder")
+/* * https://bulbapedia.bulbagarden.net/wiki/Liquid_Ooze_(Ability)#In_battle:
+   * If the recipient of Leech Seed's effect were to faint due to Liquid Ooze on the same turn as the victim of Leech Seed, then the victim faints before the recipient. This means that the victim's team loses the battle if both teams had their final Pokémon sent out. 
+ */
+SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder")
 {
-    KNOWN_FAILING; // Message fails
     u16 ability;
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { ability = ABILITY_LIQUID_OOZE; }
@@ -120,16 +122,17 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes leech seedee to faint before seeder")
     } WHEN {
         TURN { MOVE(player, MOVE_LEECH_SEED); }
     } SCENE {
+        // Player seeds opponent
         MESSAGE("Bulbasaur used Leech Seed!");
         // Drain at end of turn
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, opponent);
         if (ability != ABILITY_LIQUID_OOZE) {
-            MESSAGE("The opposing Tentacool's health is sapped by Leech Seed!");
             MESSAGE("The opposing Tentacool fainted!");
+            MESSAGE("The opposing Tentacool's health is sapped by Leech Seed!");
         } else {
+            MESSAGE("The opposing Tentacool fainted!");
             ABILITY_POPUP(opponent, ABILITY_LIQUID_OOZE);
             MESSAGE("Bulbasaur sucked up the liquid ooze!");
-            MESSAGE("The opposing Tentacool fainted!");
             MESSAGE("Bulbasaur fainted!");
         }
     }

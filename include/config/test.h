@@ -1129,4 +1129,12 @@
 #undef P_FAMILY_PECHARUNT
 #define P_FAMILY_PECHARUNT               TRUE
 
+// Vars
+#undef B_VAR_DIFFICULTY
+#define B_VAR_DIFFICULTY                TESTING_VAR_DIFFICULTY
+
+// Flags
+#undef B_FLAG_SLEEP_CLAUSE
+#define B_FLAG_SLEEP_CLAUSE              TESTING_FLAG_SLEEP_CLAUSE
+
 #endif // GUARD_CONFIG_TEST_H

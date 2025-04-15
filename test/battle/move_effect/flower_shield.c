@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_FLOWER_SHIELD].effect == EFFECT_FLOWER_SHIELD);
+    ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_FLOWER_SHIELD);
 }
 
 DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all grass type pokemon")

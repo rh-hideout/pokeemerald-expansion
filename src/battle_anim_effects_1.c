@@ -30,6 +30,9 @@ static void AnimPetalDanceSmallFlower_Step(struct Sprite *);
 static void AnimRazorLeafParticle(struct Sprite *);
 static void AnimRazorLeafParticle_Step1(struct Sprite *);
 static void AnimRazorLeafParticle_Step2(struct Sprite *);
+static void AnimTeraStarstormBeam(struct Sprite *sprite);
+static void AnimTeraStarstormBeam_Step(struct Sprite *);
+static void AnimTeraStarstormStars_Step(struct Sprite *);
 static void AnimLeechSeed(struct Sprite *);
 static void AnimLeechSeed_Step(struct Sprite *);
 static void AnimLeechSeedSprouts(struct Sprite *);
@@ -3113,6 +3116,12 @@ const struct SpriteTemplate gChainBindingSpriteTemplate =
 };
 
 // functions
+// args[0] - initial x offset
+// args[1] - initial y offset
+// args[2] - some param to linear translation
+// args[3] - some param to linear translation
+// args[4] - offset that gets added to param for Sin
+// args[5] - another param for Sin
 static void AnimGrassKnot(struct Sprite *sprite)
 {
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
@@ -3989,6 +3998,153 @@ static void AnimRazorLeafParticle_Step2(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
+static const union AnimCmd sAnim_TeraStarstormBeamRing_0[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_TeraStarstormBeamRing_1[] =
+{
+    ANIMCMD_FRAME(4, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_TeraStarstormBeamRing[] =
+{
+    sAnim_TeraStarstormBeamRing_0,
+    sAnim_TeraStarstormBeamRing_1,
+};
+
+static const union AffineAnimCmd sAffineAnim_TeraStarstormBeamRing[] =
+{
+    AFFINEANIMCMD_FRAME(0x0, 0x0, 0, 1),
+    AFFINEANIMCMD_FRAME(0x60, 0x60, 0, 1),
+    AFFINEANIMCMD_END,
+};
+
+static const union AffineAnimCmd *const sAffineAnims_TeraStarstormBeamRing[] =
+{
+    sAffineAnim_TeraStarstormBeamRing,
+};
+
+const struct SpriteTemplate gTeraStarstormBeamSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_STARSTORM,
+    .paletteTag = ANIM_TAG_STARSTORM,
+    .oam = &gOamData_AffineOff_ObjNormal_16x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimTeraStarstormBeam,
+};
+
+//  arg0: start offset x
+//  arg1: start offset y
+//  arg2: end offset x
+//  arg3: end offset y
+//  arg4: duration
+static void AnimTeraStarstormBeam(struct Sprite *sprite)
+{
+    gBattleAnimArgs[0] += 4;
+    gBattleAnimArgs[1] -= 30;
+    InitSpritePosToAnimAttacker(sprite, TRUE);
+
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[3] = 0;
+    sprite->data[4] = -70;
+    InitAnimLinearTranslation(sprite);
+    sprite->callback = AnimTeraStarstormBeam_Step;
+    sprite->affineAnimPaused = TRUE;
+    sprite->callback(sprite);
+
+}
+
+static void AnimTeraStarstormBeam_Step(struct Sprite *sprite)
+{
+    if (AnimTranslateLinear(sprite))
+        DestroyAnimSprite(sprite);
+}
+
+const union AffineAnimCmd gTeraStarAffineAnimCmds[] = {
+    AFFINEANIMCMD_FRAME(0, 0, 0, 1),
+    AFFINEANIMCMD_JUMP(0),
+};
+
+const union AffineAnimCmd *const gTeraStarAffineAnimTable[] = {
+    gTeraStarAffineAnimCmds,
+};
+
+//  arg0: start offset x
+//  arg1: start offset y
+//  arg2: end offset x
+//  arg3: end offset y
+//  arg4: duration
+//  arg5: target partner
+//  arg6: ?????
+const struct SpriteTemplate gTeraStarSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_YELLOW_STAR,
+    .paletteTag = ANIM_TAG_YELLOW_STAR,
+    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gTeraStarAffineAnimTable,
+    .callback = AnimTeraStarstormStars,
+};
+
+
+void AnimTeraStarstormStars(struct Sprite *sprite)
+{
+    gBattleAnimArgs[0] += 4;
+    gBattleAnimArgs[1] -= 100;
+    InitSpritePosToAnimAttacker(sprite, TRUE);
+
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[1] = sprite->x;
+    sprite->data[3] = sprite->y;
+    if (gBattleAnimArgs[5] == 1)
+    {
+        u32 targetPartner;
+        if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+        {
+            if (gBattleAnimTarget == 0)
+                targetPartner = 2;
+            else
+                targetPartner = 0;
+        }
+        else
+        {
+            if (gBattleAnimTarget == 1)
+                targetPartner = 3;
+            else
+                targetPartner = 1;
+        }
+        sprite->data[2] = GetBattlerSpriteCoord(targetPartner, BATTLER_COORD_X_2) + gBattleAnimArgs[2] ;
+        sprite->data[4] = GetBattlerSpriteCoord(targetPartner, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    }
+    else
+    {
+        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2] ;
+        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    }
+    InitAnimLinearTranslation(sprite);
+    sprite->callback = AnimTeraStarstormStars_Step;
+    sprite->affineAnimPaused = TRUE;
+    sprite->callback(sprite);
+}
+
+static void AnimTeraStarstormStars_Step(struct Sprite *sprite)
+{
+    if (AnimTranslateLinear(sprite))
+        DestroyAnimSprite(sprite);
+    if ((u16)gBattleAnimArgs[7] == 0xFFFF)
+    {
+        StartSpriteAnim(sprite, 1);
+        sprite->affineAnimPaused = FALSE;
+    }
+}
+
 // Animates a sprite that moves linearly from one location to another, with a
 // single-cycle sine wave added to the y position along the way.
 // Used by Razor Leaf and Magical Leaf.
@@ -4020,7 +4176,7 @@ void AnimTranslateLinearSingleSineWave(struct Sprite *sprite)
 
     sprite->data[5] = gBattleAnimArgs[5];
     InitAnimArcTranslation(sprite);
-    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         sprite->data[0] = 1;
     else
         sprite->data[0] = 0;
@@ -5822,12 +5978,12 @@ static void AnimBowMon_Step1_Callback(struct Sprite *sprite)
     {
         sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
         PrepareBattlerSpriteForRotScale(sprite->data[3], ST_OAM_OBJ_NORMAL);
-        sprite->data[4] = (sprite->data[6] = GetBattlerSide(gBattleAnimAttacker)) ? 0x300 : 0xFFFFFD00;
+        sprite->data[4] = (sprite->data[6] = GetBattlerSide(gBattleAnimAttacker)) ? 768 : -768;
         sprite->data[5] = 0;
     }
 
     sprite->data[5] += sprite->data[4];
-    SetSpriteRotScale(sprite->data[3], 0x100, 0x100, sprite->data[5]);
+    SetSpriteRotScale(sprite->data[3], 256, 256, sprite->data[5]);
     SetBattlerSpriteYOffsetFromRotation(sprite->data[3]);
     if (++sprite->data[0] > 3)
     {
@@ -6313,6 +6469,8 @@ static void UNUSED AnimTask_ShowBattlersHealthbox(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
+// args[0] - sprite x
+// args[1] - sprite y
 static void AnimMoon(struct Sprite *sprite)
 {
     if (IsContest())
@@ -6693,16 +6851,23 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
 
     // if used future sight on opposing side, properly track who used it
-    if (gSideStatuses[oppSide] & SIDE_STATUS_FUTUREATTACK) {
-        for (i = 0; i < gBattlersCount; i++) {
-            if (IsAlly(i,battlerAtk))
+    if (gSideStatuses[oppSide] & SIDE_STATUS_FUTUREATTACK)
+    {
+        u32 battlerAtkSide = GetBattlerSide(battlerAtk);
+        for (i = 0; i < gBattlersCount; i++)
+        {
+            if (battlerAtkSide == GetBattlerSide(i))
                 continue;   // only on opposing side
-            if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerAtk) {
+
+            if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerAtk)
+            {
                 // if target was attacked with future sight from us, now they'll be the partner slot
                 gWishFutureKnock.futureSightBattlerIndex[i] = battlerPartner;
                 gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerPartner];
                 break;
-            } else if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerPartner) {
+            }
+            else if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerPartner)
+            {
                 gWishFutureKnock.futureSightBattlerIndex[i] = battlerAtk;
                 gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerAtk];
                 break;
@@ -6711,10 +6876,9 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > 0
-            || gWishFutureKnock.wishCounter[battlerPartner] > 0) {
+    if (gWishFutureKnock.wishCounter[battlerAtk] > gBattleTurnCounter
+     || gWishFutureKnock.wishCounter[battlerPartner] > gBattleTurnCounter)
         SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
-    }
 }
 
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
