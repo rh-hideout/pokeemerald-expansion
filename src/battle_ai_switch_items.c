@@ -1822,14 +1822,6 @@ static u16 GetSwitchinTypeMatchup(u32 opposingBattler, struct BattlePokemon batt
     return typeEffectiveness;
 }
 
-static bool32 NotEligibleToSwitch(u32 index)
-{
-    if (!(AI_DATA->switchinCandidateEligible & (1u << index)))
-        return TRUE;
-    else
-        return FALSE;
-}
-
 static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, int lastId)
 {
     u32 i;
