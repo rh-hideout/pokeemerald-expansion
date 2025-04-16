@@ -42,9 +42,9 @@ def GetWildEncounterFile():
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
 
-    #wBackupData = json.dumps(wData, indent=2)
-    #wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
-    #wBackupFile.write(wBackupData)
+    wBackupData = json.dumps(wData, indent=2)
+    wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
+    wBackupFile.write(wBackupData)
 
     global COPY_FULL_ENCOUNTER
     COPY_FULL_ENCOUNTER = False
