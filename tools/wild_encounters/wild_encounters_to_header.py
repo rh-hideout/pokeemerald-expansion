@@ -21,9 +21,9 @@ MON_HEADERS = []
 # mon encounter group types
 fieldData = []
 fieldInfoStrings = []
+fieldStrings = []
 
 # time of day encounter data
-# if you adjust your TimeOfDay Enum, these need to reflect that
 TIME_DEFAULT       = ""
 TIME_DEFAULT_LABEL = "TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_INDEX = 0
@@ -55,12 +55,15 @@ hLabel       = ""
 hForMaps     = True
 headersArray = [headerIndex]
 
+
+
 # debug output control
-printWarningAndInclude          = False
-printEncounterHeaders           = False
-printEncounterRateMacros        = False
-printEncounterStructsInfoString = False
-printEncounterStructs           = False
+mainSwitch                      = True
+printWarningAndInclude          = mainSwitch
+printEncounterHeaders           = mainSwitch
+printEncounterRateMacros        = mainSwitch
+printEncounterStructsInfoString = mainSwitch
+printEncounterStructs           = mainSwitch
 
 
 class TimeOfDay():
@@ -106,6 +109,7 @@ def ImportWildEncounterFile():
     global IS_ENABLED
 
     global fieldInfoStrings
+    global fieldStrings
     global structLabel
     global structMonType
     global structTime
@@ -182,12 +186,15 @@ def ImportWildEncounterFile():
 
             PrintEncounterRateMacros()
 
+        #TODO: account for multiple encounter tables in the same map
         for encounter in wEncounters:
             if "map" in encounter:
                 structMap = encounter["map"]
             else:
                 structMap = encounter["base_label"]
             structLabel = encounter["base_label"]
+
+            #print(structLabel)
             
             if encounterTotalCount[headerIndex] != len(wEncounters):
                 encounterTotalCount[headerIndex] = len(wEncounters)
@@ -198,17 +205,17 @@ def ImportWildEncounterFile():
             if IS_ENABLED:
                 timeCounter = 0
                 while timeCounter < TIMES_OF_DAY_COUNT:
-                    tempTime = TIME_OF_DAY.fvals[timeCounter]
-                    if tempTime in structLabel:
-                        structTime = TIME_OF_DAY.indexOf(tempTime)
+                    tempfTime = f"_{TIME_OF_DAY.fvals[timeCounter]}"
+                    tempTime = TIME_OF_DAY.vals[timeCounter]
+                    if tempfTime in structLabel or tempTime in structLabel:
+                        structTime = timeCounter
                     timeCounter += 1
-
-                structLabel += "_" + TIME_OF_DAY.fvals[structTime]
                     
             fieldCounter = 0
             fieldInfoStrings = []
             while fieldCounter < len(fieldData):
                 fieldInfoStrings.append("")
+                fieldStrings.append("")
                 fieldCounter += 1
 
             fieldCounter = 0
@@ -216,7 +223,12 @@ def ImportWildEncounterFile():
                 for areaTable in encounter:
                     if fieldData[fieldCounter]["name"] in areaTable:
                         structMonType = fieldData[fieldCounter]["pascalName"]
-                        fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
+                        if f"_{TIME_OF_DAY.fvals[structTime]}" in structLabel:
+                            fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
+                            fieldStrings[fieldCounter] = f"{structLabel}_{structMonType}"
+                        else:
+                            fieldInfoStrings[fieldCounter] = f"{structLabel}_{TIME_OF_DAY.fvals[structTime]}_{structMonType}{structInfo}"
+                            fieldStrings[fieldCounter] = f"{structLabel}_{TIME_OF_DAY.fvals[structTime]}_{structMonType}"
                     else:
                         structMonType = ""
                         continue
@@ -239,7 +251,7 @@ def ImportWildEncounterFile():
                         print("};")
 
                     if printEncounterStructsInfoString:
-                        infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
+                        infoStructString = f"{baseStruct}{structInfo} {fieldInfoStrings[fieldCounter]} = {{ {infoStructRate}, {fieldStrings[fieldCounter]} }};"
                         print(infoStructString)
 
                 fieldCounter += 1
@@ -268,10 +280,10 @@ def GetStructLabelWithoutTime(label):
         tempTime = TIME_OF_DAY.fvals[timeCounter]
         if tempTime in label:
             timeLength = len(tempTime)
+            return label[:(labelLength - (timeLength + 1))]
         
         timeCounter += 1
-
-    return label[:(labelLength - (timeLength + 1))]
+    return label
 
 
 def GetStructTimeWithoutLabel(label):
@@ -283,7 +295,7 @@ def GetStructTimeWithoutLabel(label):
     
     timeCounter = 0
     while timeCounter < TIMES_OF_DAY_COUNT:
-        tempTime = TIME_OF_DAY.fvals[timeCounter]
+        tempTime = f"_{TIME_OF_DAY.fvals[timeCounter]}"
         if tempTime in label:
             return timeCounter
         timeCounter += 1
@@ -304,10 +316,12 @@ def AssembleMonHeaderContent():
     structLabelNoTime = GetStructLabelWithoutTime(structLabel)
     
     if tempHeaderLabel not in headerStructTable:
+        #print(tempHeaderLabel)
         headerStructTable[tempHeaderLabel] = {}
         headerStructTable[tempHeaderLabel]["groupNum"] = headerIndex
 
     if structLabelNoTime not in headerStructTable[tempHeaderLabel]:
+        #print(structLabelNoTime)
         headerStructTable[tempHeaderLabel][structLabelNoTime] = {}
         headerStructTable[tempHeaderLabel][structLabelNoTime]["headerType"] = GetWildMonHeadersLabel()
         headerStructTable[tempHeaderLabel][structLabelNoTime]["mapGroup"] = structMap
