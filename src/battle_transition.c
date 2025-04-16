@@ -2572,7 +2572,8 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
     s16 opponentBRotationScales = 0;
 
     gReservedSpritePaletteCount = 10;
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)                                              
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)  
+    {                                            
         task->tOpponentSpriteBId = CreateTrainerSprite(trainerBPicId,
                                                     gTrainerSprites[trainerBPicId].mugshotCoords.x - 240,
                                                     gTrainerSprites[trainerBPicId].mugshotCoords.y + 42,
@@ -2586,32 +2587,35 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
         CalcCenterToCornerVec(opponentSpriteB, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
         opponentBRotationScales = gTrainerSprites[trainerBPicId].mugshotRotation;
         SetOamMatrixRotationScaling(opponentSpriteB->oam.matrixNum, opponentBRotationScales, opponentBRotationScales, 0);
-
+    }
+    
     task->tOpponentSpriteAId = CreateTrainerSprite(trainerAPicId,
                                                   gTrainerSprites[trainerAPicId].mugshotCoords.x - 32,
                                                   gTrainerSprites[trainerAPicId].mugshotCoords.y + 42,
                                                   0, NULL);
     
     gReservedSpritePaletteCount = 12;
-    partnerSprite->callback = SpriteCB_MugshotTrainerPicPartner;
-    partnerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-    partnerSprite->oam.matrixNum = AllocOamMatrix();
-    partnerSprite->oam.shape = SPRITE_SHAPE(64x32);
-    partnerSprite->oam.size = SPRITE_SIZE(64x32);
-    CalcCenterToCornerVec(partnerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
-    SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
 
-    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 
-                                                DISPLAY_WIDTH + 32, 
-                                                106, 
-                                                0, NULL); 
     if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
+    {
         task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId, 
                                                 DISPLAY_WIDTH + 240, 
                                                 106, 
                                                 0, NULL);
         partnerSprite = &gSprites[task->tPartnerSpriteId];
+        partnerSprite->callback = SpriteCB_MugshotTrainerPicPartner;
+        partnerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+        partnerSprite->oam.matrixNum = AllocOamMatrix();
+        partnerSprite->oam.shape = SPRITE_SHAPE(64x32);
+        partnerSprite->oam.size = SPRITE_SIZE(64x32);
+        CalcCenterToCornerVec(partnerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
+    }
 
+    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 
+                                                DISPLAY_WIDTH + 32, 
+                                                106, 
+                                                0, NULL); 
 
     opponentSpriteA = &gSprites[task->tOpponentSpriteAId];
     playerSprite = &gSprites[task->tPlayerSpriteId];
