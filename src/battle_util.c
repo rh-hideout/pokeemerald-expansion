@@ -5353,6 +5353,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_COMMANDER:
             partner = BATTLE_PARTNER(battler);
             if (!gSpecialStatuses[battler].switchInAbilityDone
+             && IsBattlerAlive(partner)
+             && IsBattlerAlive(battler)
              && gBattleStruct->commanderActive[partner] == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
              && GET_BASE_SPECIES_ID(GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
