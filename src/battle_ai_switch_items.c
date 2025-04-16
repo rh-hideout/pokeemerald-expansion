@@ -1195,7 +1195,8 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
 
 bool32 ShouldStayInToUseMove(u32 battler)
 {
-    u32 i, aiMove, aiMoveEffect, opposingBattler = GetOppositeBattler(battler);
+    u32 i, aiMove, opposingBattler = GetOppositeBattler(battler);
+    enum BattleMoveEffects aiMoveEffect;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         aiMove = gBattleMons[battler].moves[i];
