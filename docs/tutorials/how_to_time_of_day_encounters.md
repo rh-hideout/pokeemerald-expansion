@@ -331,7 +331,7 @@ Okay, we have it duplicated. We leave the value for "map": the same as the origi
                 "min_level": 2,
                 "max_level": 2,
                 "species": "SPECIES_MARILL"
-              },
+              }
             ]
           },
           "rock_smash_mons": {
@@ -341,7 +341,7 @@ Okay, we have it duplicated. We leave the value for "map": the same as the origi
                 "min_level": 2,
                 "max_level": 2,
                 "species": "SPECIES_GEODUDE"
-              },
+              }
             ]
           }
         },
@@ -361,6 +361,8 @@ So, the "supported suffixes" are just:
 - `_Day`
 - `_Evening`
 - `_Night`
+
+- NOTE: You can add more than just these by changing the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h). If you'd like to do this, I'd recommend making a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) somewhere outside your project folder, just so you can have a baseline to return to if something goes wrong. The [migration script](../../migration_scripts/add_time_based_encounters.py) makes a backup of the file ***each time it runs***, so it's essentially a one step undo button- if you plan on or think you might make lots of edits to [`wild_encounters.json`](../../src/data/wild_encounters.json), ***it is a very good idea to make a baseline backup***.
 
 ### That's a lot of manual editing. 
 You're so right bestie! Luckily for you, there's a python script that can help you out!
