@@ -224,3 +224,37 @@ u8 RandomWeightedIndex(u8 *weights, u8 length)
     }
     return 0;
 }
+
+// Returns whole word with just the random bit set; don't call with no set bits
+u32 RandomBit(enum RandomTag tag, u32 bits)
+{
+  u32 setBits[32];
+  u32 n = 0;
+  for (u32 mask = 1; mask != 0; mask <<= 1)
+  {
+    if (bits & mask)
+        setBits[n++] = mask;
+  }
+
+  if (n == 0)
+    return 0; // This is a little awkward, there are no set bits!
+  else
+    return setBits[RandomUniform(tag, 0, n-1)];
+}
+
+// Returns the index instead; don't call with no set bits
+u32 RandomBitIndex(enum RandomTag tag, u32 bits)
+{
+  u8 setIndexes[32];
+  u32 n = 0;
+  for (u32 i = 0; i < 32; i++)
+  {
+    if (bits & (1 << i))
+      setIndexes[n++] = i;
+  }
+
+  if (n == 0)
+    return 0; // What should we return here? UINT_MAX?
+  else
+    return setIndexes[RandomUniform(tag, 0, n-1)];
+}

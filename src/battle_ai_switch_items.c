@@ -1832,28 +1832,15 @@ static bool32 NotEligibleToSwitch(u32 index)
 
 static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, int lastId)
 {
-    int i;
-    u32 bits[PARTY_SIZE];
-    u32 start;
+    u32 i;
+
+    if (switchinCategory == 0)
+        return PARTY_SIZE;
 
     // Randomize between eligible mons
     if (AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_RANDOMIZE_SWITCHIN)
     {
-        // Randomize the order of eligible party indexes
-        start = RandomUniformExcept(RNG_AI_RANDOM_SWITCHIN, 0, PARTY_SIZE - 1, NotEligibleToSwitch);
-        for (i = 0; i < ARRAY_COUNT(bits); i++)
-        {
-            bits[i] = ((start + i) % PARTY_SIZE);
-        }
-
-        // Return the first mon in this random order that meets the category's criteria
-        for (i = firstId; i < lastId; i++) 
-        {
-            if ((switchinCategory & (1u << bits[i])) > 0)
-            {
-                return bits[i];
-            }
-        }
+        return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN, switchinCategory); // Can't pass this anything with no set bits
     }
 
     // Pick last eligible mon in party order

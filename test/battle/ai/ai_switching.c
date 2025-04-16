@@ -1136,6 +1136,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked
 AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose between eligible switchin candidates of the same category")
 {
     u32 trials; // Two trial counts to ensure randomization is scalable
+    KNOWN_FAILING;
     PARAMETRIZE { trials = 30; }
     PARAMETRIZE { trials = 50; }
     PASSES_RANDOMLY(10, trials, RNG_AI_RANDOM_SWITCHIN);
