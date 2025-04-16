@@ -278,7 +278,7 @@ enum
 };
 
 // Static Declarations
-static const u8 *GetHoldEffectName(u16 holdEffect);
+static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect);
 
 // const rom data
 static const u8 sText_Moves[] = _("Moves");
@@ -1130,7 +1130,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
         if (GetBattlerSide(i) == B_SIDE_PLAYER && IsBattlerAlive(i))
         {
             u16 ability = AI_DATA->abilities[i];
-            u16 holdEffect = AI_DATA->holdEffects[i];
+            enum ItemHoldEffect holdEffect = AI_DATA->holdEffects[i];
             u16 item = AI_DATA->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
@@ -2617,7 +2617,7 @@ static const u8 *const sHoldEffectNames[] =
     [HOLD_EFFECT_OGERPON_MASK] = sText_HoldEffectOgerponMask,
     [HOLD_EFFECT_BERSERK_GENE] = sText_HoldEffectBerserkGene,
 };
-static const u8 *GetHoldEffectName(u16 holdEffect)
+static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect)
 {
     if (holdEffect > ARRAY_COUNT(sHoldEffectNames))
         return sHoldEffectNames[0];
