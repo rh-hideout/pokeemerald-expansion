@@ -531,6 +531,7 @@ extern const u8 Debug_EventScript_EWRAMCounters[];
 extern const u8 Debug_EventScript_Steven_Multi[];
 extern const u8 Debug_EventScript_PrintTimeOfDay[];
 extern const u8 Debug_EventScript_TellTheTime[];
+extern const u8 Debug_EventScript_FakeRTCNotEnabled[];
 
 extern const u8 Debug_BerryPestsDisabled[];
 extern const u8 Debug_BerryWeedsDisabled[];
@@ -1930,8 +1931,12 @@ static void DebugAction_Util_BerryFunctions(u8 taskId)
 
 static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 {
-    Debug_DestroyMenu(taskId);
-    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
+    Debug_DestroyMenu_Full(taskId);
+    #if OW_USE_FAKE_RTC
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
+    #else
+        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    #endif
 }
 
 static void DebugAction_TimeSkip_TimesOfDay(u8 taskId)

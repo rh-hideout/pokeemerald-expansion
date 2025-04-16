@@ -600,6 +600,16 @@ Debug_EventScript_PrintTimeOfDay::
 	closemessage
 	end
 
+Debug_EventScript_FakeRTCNotEnabled::
+	msgbox Debug_EventScript_FakeRTCNotEnabled_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	return
+
+
+Debug_EventScript_FakeRTCNotEnabled_Text_0:
+	.string "You currently do not have Fake RTC\nenabeld. Please enabled it in include/\lconfig/overworld.h$"
+
 
 Debug_EventScript_TellTheTime_Text_0:
 	.string "Time and Date:\n"
