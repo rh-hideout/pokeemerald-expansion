@@ -1,3 +1,4 @@
+import enum
 import json
 import re
 import os
@@ -24,21 +25,9 @@ fieldInfoStrings = []
 # time of day encounter data
 # if you adjust your TimeOfDay Enum, these need to reflect that
 TIME_DEFAULT       = ""
-TIME_DEFAULT_LABEL = "OW_TIME_OF_DAY_DEFAULT"
+TIME_DEFAULT_LABEL = "TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_INDEX = 0
-TIME_MORNING       = "time_morning"
-TIME_MORNING_LABEL = "Morning"
-TIME_MORNING_INDEX = 0
-TIME_DAY           = "time_day"
-TIME_DAY_LABEL     = "Day"
-TIME_DAY_INDEX     = 1
-TIME_EVENING       = "time_evening"
-TIME_EVENING_LABEL = "Evening"
-TIME_EVENING_INDEX = 2
-TIME_NIGHT         = "time_night"
-TIME_NIGHT_LABEL   = "Night"
-TIME_NIGHT_INDEX   = 3
-TOTAL_TIME_STAGES  = 4
+TIMES_OF_DAY_COUNT = TIME_DEFAULT_INDEX + 1
 
 # struct building blocks
 baseStruct          = "const struct WildPokemon"
@@ -67,10 +56,42 @@ hForMaps     = True
 headersArray = [headerIndex]
 
 # debug output control
-printEncounterHeaders           = True
-printEncounterRateMacros        = True
-printEncounterStructsInfoString = True
-printEncounterStructs           = True
+printWarningAndInclude          = False
+printEncounterHeaders           = False
+printEncounterRateMacros        = False
+printEncounterStructsInfoString = False
+printEncounterStructs           = False
+
+
+class TimeOfDay():
+    def __init__(self):
+        self.vals = []
+        self.lvals = []
+        self.fvals = []
+        self.count = 0
+
+    def __len__(self):
+        return self.count
+    
+    def __str__(self):
+        return str([self.vals, self.lvals, self.fvals, self.count])
+
+    def add(self, val):
+        self.vals.append(val)
+        self.lvals.append(val.lower())
+        self.fvals.append(GetTimeLabelFromString(val).capitalize())
+        self.count += 1
+    
+    def indexOf(self, val):
+        tempArr = [self.vals, self.lvals, self.fvals]
+
+        for tvals in tempArr:
+            i = 0
+            for time in tvals:
+                if val in time:
+                    return i
+                i += 1
+        return -1
 
 
 def ImportWildEncounterFile():
@@ -80,6 +101,10 @@ def ImportWildEncounterFile():
         quit()
 
     global MON_HEADERS
+    global TIME_OF_DAY
+    global TIMES_OF_DAY_COUNT
+    global IS_ENABLED
+
     global fieldInfoStrings
     global structLabel
     global structMonType
@@ -100,11 +125,9 @@ def ImportWildEncounterFile():
     global fieldData
     tabStr = "    "
 
-    global IS_ENABLED
     IS_ENABLED = IsConfigEnabled()
 
-    global TIME_DEFAULT
-    TIME_DEFAULT = GetDefaultTime()
+    SetupUserTimeEnum()
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
@@ -150,13 +173,14 @@ def ImportWildEncounterFile():
                     fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase("hidden_mons")
                     fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase("hidden_mons")
                 fieldCounter += 1
-            PrintGeneratedWarningText()
 
-            print('#include "rtc.h"')
-            print("\n")
+            if printWarningAndInclude:
+                PrintGeneratedWarningText()
+
+                print('#include "rtc.h"')
+                print("\n")
 
             PrintEncounterRateMacros()
-            print("\n")
 
         for encounter in wEncounters:
             if "map" in encounter:
@@ -169,21 +193,18 @@ def ImportWildEncounterFile():
                 encounterTotalCount[headerIndex] = len(wEncounters)
             encounterCount[headerIndex] += 1
             headersArray = []
+            
+            structTime = TIME_DEFAULT_INDEX
+            if IS_ENABLED:
+                timeCounter = 0
+                while timeCounter < TIMES_OF_DAY_COUNT:
+                    tempTime = TIME_OF_DAY.fvals[timeCounter]
+                    if tempTime in structLabel:
+                        structTime = TIME_OF_DAY.indexOf(tempTime)
+                    timeCounter += 1
 
-            if not IS_ENABLED:
-                structTime = TIME_DEFAULT_LABEL
-            elif TIME_MORNING_LABEL in structLabel:
-                structTime = TIME_MORNING_LABEL
-            elif TIME_DAY_LABEL in structLabel:
-                structTime = TIME_DAY_LABEL
-            elif TIME_EVENING_LABEL in structLabel:
-                structTime = TIME_EVENING_LABEL
-            elif TIME_NIGHT_LABEL in structLabel:
-                structTime = TIME_NIGHT_LABEL
-            else:
-                structTime = GetTimeLabelFromIndex(GetTimeIndexFromString(TIME_DEFAULT))
-                structLabel = structLabel + GetTimeSuffixFromIndex(GetTimeIndexFromString(structTime))
-
+                structLabel += "_" + TIME_OF_DAY.fvals[structTime]
+                    
             fieldCounter = 0
             fieldInfoStrings = []
             while fieldCounter < len(fieldData):
@@ -236,28 +257,50 @@ def PrintStructContent(contentList):
 def GetStructLabelWithoutTime(label):
     labelLength = len(label)
     timeLength = 0
+    global TIMES_OF_DAY
+    global TIMES_OF_DAY_COUNT
 
     if not IS_ENABLED:
         return label
-    elif TIME_MORNING_LABEL in label:
-        timeLength = len(TIME_MORNING_LABEL)
-    elif TIME_DAY_LABEL in label:
-        timeLength = len(TIME_DAY_LABEL)
-    elif TIME_EVENING_LABEL in label:
-        timeLength = len(TIME_EVENING_LABEL)
-    elif TIME_NIGHT_LABEL in label:
-        timeLength = len(TIME_NIGHT_LABEL)
+    
+    timeCounter = 0
+    while timeCounter < TIMES_OF_DAY_COUNT:
+        tempTime = TIME_OF_DAY.fvals[timeCounter]
+        if tempTime in label:
+            timeLength = len(tempTime)
+        
+        timeCounter += 1
+
     return label[:(labelLength - (timeLength + 1))]
+
+
+def GetStructTimeWithoutLabel(label):
+    global TIME_OF_DAY
+    global TIMES_OF_DAY_COUNT
+
+    if not IS_ENABLED:
+        return TIME_DEFAULT_INDEX
+    
+    timeCounter = 0
+    while timeCounter < TIMES_OF_DAY_COUNT:
+        tempTime = TIME_OF_DAY.fvals[timeCounter]
+        if tempTime in label:
+            return timeCounter
+        timeCounter += 1
+        
+    return TIME_DEFAULT_INDEX
 
 
 def AssembleMonHeaderContent():
     global structLabel
     global fieldInfoStrings
+    global TIMES_OF_DAY
+    global TIMES_OF_DAY_COUNT
 
     SetupMonInfoVars()
 
     tempHeaderLabel = GetWildMonHeadersLabel()
-    tempHeaderTimeIndex = GetTimeIndexFromString(structTime)
+    tempHeaderTimeIndex = GetStructTimeWithoutLabel(structLabel)
     structLabelNoTime = GetStructLabelWithoutTime(structLabel)
     
     if tempHeaderLabel not in headerStructTable:
@@ -273,8 +316,7 @@ def AssembleMonHeaderContent():
         headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"] = []
 
         timeStart = TIME_DEFAULT_INDEX
-        timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
-        while timeStart <= timeEnd:
+        while timeStart < TIMES_OF_DAY_COUNT:
             headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"].append([])
             timeStart += 1
 
@@ -301,6 +343,8 @@ def SetupMonInfoVars():
 
 def PrintWildMonHeadersContent():
     global tabStr
+    global TIMES_OF_DAY
+    global TIMES_OF_DAY_COUNT
 
     groupCount = 0
     for group in headerStructTable:
@@ -327,7 +371,7 @@ def PrintWildMonHeadersContent():
 
                         infoCount = 0
                         for monInfo in headerStructTable[group][label][stat]:
-                            PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(infoCount)}] = ")
+                            PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[infoCount]}] = ")
 
                             infoIndex = 0
                             while infoIndex < len(fieldData):
@@ -352,14 +396,13 @@ def PrintWildMonHeadersContent():
                     PrintEncounterHeaders(f"{TabStr(2)}.mapGroup = {GetMapGroupEnum(MAP_UNDEFINED)},")
                     PrintEncounterHeaders(f"{TabStr(2)}.mapNum = {GetMapGroupEnum(MAP_UNDEFINED, labelCount + 1)},")
 
-                    timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
                     nullCount = 0
-                    while nullCount <= timeEnd:
+                    while nullCount < TIMES_OF_DAY_COUNT:
                         if nullCount == 0:
                             PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
                             PrintEncounterHeaders(TabStr(2)+ "{")
 
-                        PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(nullCount)}] = ")
+                        PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[nullCount]}] = ")
 
                         nullIndex = 0
                         while nullIndex <= len(fieldData) - 1:
@@ -407,10 +450,11 @@ def PrintEncounterRateMacros():
                         f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount - 1} + {percent}"
                     )
 
-                if rateCount + 1 == len(fieldData):
+                if rateCount + 1 == len(fieldData[fieldCounter]["encounter_rates"]):
                     print(
                         f"{define} {ENCOUNTER_CHANCE}_{tempName}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount})"
                     )
+
                 rateCount += 1
         else:
             rates = fieldData[fieldCounter]["encounter_rates"]
@@ -429,7 +473,6 @@ def PrintEncounterRateMacros():
                         continue
 
                     rate_value = rates[methodPercentIndex]
-
                     if i == 0:
                         print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex} {rate_value}")
                     else:
@@ -440,61 +483,20 @@ def PrintEncounterRateMacros():
                         print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex})")
 
         fieldCounter += 1
+    print("\n")
 
 
-def GetTimeStrFromIndex(index):
-    if not IS_ENABLED:
-        return TIME_DEFAULT
-    elif index == TIME_MORNING_INDEX:
-        return TIME_MORNING.upper()
-    elif index == TIME_DAY_INDEX:
-        return TIME_DAY.upper()
-    elif index == TIME_EVENING_INDEX:
-        return TIME_EVENING.upper()
-    elif index == TIME_NIGHT_INDEX:
-        return TIME_NIGHT.upper()
-    return index
+def GetTimeLabelFromString(string):
+    time = "TIME"
+    time_ = "TIME_"
 
+    if string == "TIMES_OF_DAY_COUNT":
+        return string
 
-def GetTimeSuffixFromIndex(index):
-    if type(index) == "str":
-        return ""
-    elif index == TIME_MORNING_INDEX:
-        return "_" + TIME_MORNING_LABEL
-    elif index == TIME_DAY_INDEX:
-        return "_" + TIME_DAY_LABEL
-    elif index == TIME_EVENING_INDEX:
-        return "_" + TIME_EVENING_LABEL
-    elif index == TIME_NIGHT_INDEX:
-        return "_" + TIME_NIGHT_LABEL
-    return GetTimeSuffixFromIndex(GetTimeStrFromIndex(TIME_DEFAULT))
-
-
-def GetTimeLabelFromIndex(index):
-    if type(index) == "str":
-        return ""
-    elif index == TIME_MORNING_INDEX:
-        return TIME_MORNING_LABEL
-    elif index == TIME_DAY_INDEX:
-        return TIME_DAY_LABEL
-    elif index == TIME_EVENING_INDEX:
-        return TIME_EVENING_LABEL
-    elif index == TIME_NIGHT_INDEX:
-        return TIME_NIGHT_LABEL
-    return GetTimeLabelFromIndex(GetTimeIndexFromString(TIME_DEFAULT))
-
-
-def GetTimeIndexFromString(string):
-    if not IS_ENABLED:
-        return TIME_DEFAULT_INDEX
-    elif string.lower() == TIME_MORNING or string == TIME_MORNING_LABEL:
-        return TIME_MORNING_INDEX
-    elif string.lower() == TIME_DAY or string == TIME_DAY_LABEL:
-        return TIME_DAY_INDEX
-    elif string.lower() == TIME_EVENING or string == TIME_EVENING_LABEL:
-        return TIME_EVENING_INDEX
-    elif string.lower() == TIME_NIGHT or string == TIME_NIGHT_LABEL:
-        return TIME_NIGHT_INDEX
+    if time_ in string.upper():
+        return string[len(time_):len(string)]
+    elif time in string.upper():
+        return string[len(time):len(string)]
     return string
 
 
@@ -512,7 +514,7 @@ def GetMapGroupEnum(string, index = 0):
 
 """
 get copied lhea :^ ) 
-- next two functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
+- next three functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
 """
 def PrintGeneratedWarningText():
     print("//")
@@ -529,13 +531,40 @@ def IsConfigEnabled():
         config_setting = CONFIG_ENABLED_PAT.search(config_overworld)
         return config_setting is not None and config_setting.group("cfg_val") in ("TRUE", "1")
 
-def GetDefaultTime():
-    DEFAULT_TIME_PAT = re.compile(r"#define OW_TIME_OF_DAY_DEFAULT\s+(?P<cfg_val>[^ ]*)")
 
-    with open("./include/config/overworld.h", "r") as overworld_config_file:
-        config_overworld = overworld_config_file.read()
-        config_setting = DEFAULT_TIME_PAT.search(config_overworld)
-        return config_setting.group("cfg_val")
+def GetTimeEnum():
+    DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*\}\s*\;")
+
+    with open("./include/rtc.h", "r") as rtc_include_file:
+        include_rtc = rtc_include_file.read()
+        include_enum = DEFAULT_TIME_PAT.search(include_rtc)
+        return include_enum.group("rtc_val")
+
+
+def SetupUserTimeEnum():
+    enum_string = GetTimeEnum()
+    enum_string = enum_string.split(",")
+    global TIMES_OF_DAY
+    global TIMES_OF_DAY_COUNT
+
+    global TIME_OF_DAY
+    TIME_OF_DAY = TimeOfDay()
+
+    strCount = 0
+    while strCount < len(enum_string) - 2: # we dont need the `TIMES_OF_DAY_COUNT` value
+        tempstr = enum_string[strCount].strip("\n ")
+        if "=" in tempstr:
+            tempstr = tempstr[0:tempstr.index("=")]
+            tempstr = tempstr.strip(" ")
+
+        if not enum_string[strCount].isspace() and enum_string[strCount] != "":
+            TIME_OF_DAY.add(tempstr)
+
+        strCount += 1
+
+    if IS_ENABLED:
+        TIMES_OF_DAY_COUNT = len(TIME_OF_DAY)
+    
 
 
 def TabStr(amount):
