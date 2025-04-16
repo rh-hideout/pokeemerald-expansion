@@ -7196,7 +7196,6 @@ static void Cmd_moveend(void)
                             gLastUsedItem = gBattleMons[battler].item;
                             SaveBattlerTarget(battler); // save battler with red card
                             SaveBattlerAttacker(gBattlerAttacker);
-                            gBattleStruct->savedMove = gCurrentMove;
                             gBattleScripting.battler = battler;
                             gEffectBattler = gBattlerAttacker;
                             if (moveEffect == EFFECT_HIT_ESCAPE)
@@ -7411,7 +7410,11 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_DANCER: // Special case because it's so annoying
-            if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
+            if (gCurrentMove == MOVE_NONE)
+                originallyUsedMove = gChosenMove; // Fallback to chosen move in case attacker is switched out in the middle of an attack resolution (eg red card)
+            else
+                originallyUsedMove = gCurrentMove;
+            if (IsDanceMove(originallyUsedMove) && !gBattleStruct->snatchedMoveIsUsed)
             {
                 u32 battler, nextDancer = 0;
                 bool32 hasDancerTriggered = FALSE;
@@ -7445,7 +7448,7 @@ static void Cmd_moveend(void)
                                 nextDancer = battler | 0x4;
                         }
                     }
-                    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, 0, 0))
+                    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, 0, originallyUsedMove))
                         effect = TRUE;
                 }
             }
@@ -18774,16 +18777,4 @@ void BS_SetSteelsurge(void)
         gSideTimers[targetSide].steelsurgeAmount = 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-void BS_RestoreSavedMove(void)
-{
-    NATIVE_ARGS();
-
-    if (gBattleStruct->savedMove == MOVE_NONE)
-        DebugPrintfLevel(MGBA_LOG_WARN, "restoresavedmove was called with no move saved!");
-
-    gCurrentMove = gBattleStruct->savedMove;
-    gBattleStruct->savedMove = MOVE_NONE;
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
