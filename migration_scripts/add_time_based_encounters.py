@@ -1,6 +1,8 @@
 import json
 import sys
 import os
+sys.path.append("./tools/wild_encounters/")
+from wild_encounters_to_header import TimeOfDay, GetTimeEnum, GetTimeLabelFromString
 
 """
 - you can change/add to these if you're adding seasons/days of the week, etc
@@ -32,12 +34,17 @@ def GetWildEncounterFile():
         print("Please run this script from the project's root folder.")
         quit()
 
+    timeOfDay = TimeOfDay()
+    timeOfDay = SetupUserTimeEnum(timeOfDay)
+
+
+
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
 
-    wBackupData = json.dumps(wData, indent=2)
-    wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
-    wBackupFile.write(wBackupData)
+    #wBackupData = json.dumps(wData, indent=2)
+    #wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
+    #wBackupFile.write(wBackupData)
 
     global COPY_FULL_ENCOUNTER
     COPY_FULL_ENCOUNTER = False
@@ -55,7 +62,7 @@ def GetWildEncounterFile():
 
         wEncounters_New = list()
         for map in wEncounters:
-            for suffix in ENCOUNTER_GROUP_SUFFIX:
+            for suffix in timeOfDay.fvals:
                 tempSuffix = "_" + suffix
                 if tempSuffix in map["base_label"]:
                     editMap = False
@@ -65,7 +72,7 @@ def GetWildEncounterFile():
 
             if editMap:
                 k = 0
-                for suffix in ENCOUNTER_GROUP_SUFFIX:
+                for suffix in timeOfDay.fvals:
                     tempDict = dict()
                     if k == OW_TIME_OF_DAY_DEFAULT or COPY_FULL_ENCOUNTER:
                         tempDict = map.copy()
@@ -92,6 +99,25 @@ def GetWildEncounterFile():
     wNewData = json.dumps(wData, indent=2)
     wNewFile = open("src/data/wild_encounters.json", mode="w", encoding="utf-8")
     wNewFile.write(wNewData)
+
+
+def SetupUserTimeEnum(timeOfDay):
+    enum_string = GetTimeEnum()
+    enum_string = enum_string.split(",")
+
+    strCount = 0
+    while strCount < len(enum_string) - 2: # we dont need the `TIMES_OF_DAY_COUNT` value
+        tempstr = enum_string[strCount].strip("\n ")
+        if "=" in tempstr:
+            tempstr = tempstr[0:tempstr.index("=")]
+            tempstr = tempstr.strip(" ")
+
+        if not enum_string[strCount].isspace() and enum_string[strCount] != "":
+            timeOfDay.add(tempstr)
+
+        strCount += 1
+    return timeOfDay
+
 
 
 GetWildEncounterFile()

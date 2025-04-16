@@ -88,11 +88,9 @@
 // TIMES_OF_DAY_COUNT must be last
 enum TimeOfDay 
 {
-    TIME_DAYBREAK,
     TIME_MORNING,
     TIME_DAY,
     TIME_EVENING,
-    TIME_NIGHTFALL,
     TIME_NIGHT,
     TIMES_OF_DAY_COUNT,
 };

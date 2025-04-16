@@ -269,7 +269,7 @@ def PrintStructContent(contentList):
 def GetStructLabelWithoutTime(label):
     labelLength = len(label)
     timeLength = 0
-    global TIMES_OF_DAY
+    global TIME_OF_DAY
     global TIMES_OF_DAY_COUNT
 
     if not IS_ENABLED:
@@ -306,7 +306,7 @@ def GetStructTimeWithoutLabel(label):
 def AssembleMonHeaderContent():
     global structLabel
     global fieldInfoStrings
-    global TIMES_OF_DAY
+    global TIME_OF_DAY
     global TIMES_OF_DAY_COUNT
 
     SetupMonInfoVars()
@@ -357,7 +357,7 @@ def SetupMonInfoVars():
 
 def PrintWildMonHeadersContent():
     global tabStr
-    global TIMES_OF_DAY
+    global TIME_OF_DAY
     global TIMES_OF_DAY_COUNT
 
     groupCount = 0
@@ -558,7 +558,7 @@ def GetTimeEnum():
 def SetupUserTimeEnum():
     enum_string = GetTimeEnum()
     enum_string = enum_string.split(",")
-    global TIMES_OF_DAY
+    global TIME_OF_DAY
     global TIMES_OF_DAY_COUNT
 
     global TIME_OF_DAY
@@ -611,7 +611,12 @@ def GetSnakeCase(string):
     return snakeString
 
 
-ImportWildEncounterFile()
+def main():
+    pass
+
+
+if __name__ == "__main__":
+        ImportWildEncounterFile()
 
 
 """
