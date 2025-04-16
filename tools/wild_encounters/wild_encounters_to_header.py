@@ -242,7 +242,7 @@ def ImportWildEncounterFile():
                         if "encounter_rate" in group:
                             infoStructRate = encounter[areaTable][group]
                     
-                    baseStructLabel = f"{baseStruct} {structLabel}_{structMonType}{structArrayAssign}"
+                    baseStructLabel = f"{baseStruct} {fieldStrings[fieldCounter]}{structArrayAssign}"
                     if printEncounterStructs:
                         print()
                         print(baseStructLabel)
