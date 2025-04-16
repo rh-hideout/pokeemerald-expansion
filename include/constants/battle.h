@@ -196,29 +196,33 @@
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 
-#define HITMARKER_IGNORE_BIDE           (1 << 4)
-#define HITMARKER_DESTINYBOND           (1 << 5)
-#define HITMARKER_NO_ANIMATIONS         (1 << 6)   // set from battleSceneOff. Never changed during battle
-#define HITMARKER_IGNORE_SUBSTITUTE     (1 << 7)
-#define HITMARKER_NO_ATTACKSTRING       (1 << 8)
-#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
-#define HITMARKER_NO_PPDEDUCT           (1 << 10)
-#define HITMARKER_STATUS_ABILITY_EFFECT (1 << 11)
-#define HITMARKER_SYNCHRONISE_EFFECT    (1 << 12)
-#define HITMARKER_RUN                   (1 << 13)
-#define HITMARKER_IGNORE_DISGUISE       (1 << 14)
-#define HITMARKER_DISABLE_ANIMATION     (1 << 15)   // disable animations during battle scripts, e.g. for Bug Bite
-#define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 16)
-#define HITMARKER_PASSIVE_DAMAGE        (1 << 17)
-#define HITMARKER_PLAYER_FAINTED        (1 << 18)
-#define HITMARKER_ALLOW_NO_PP           (1 << 19)
-#define HITMARKER_GRUDGE                (1 << 20)
-#define HITMARKER_OBEYS                 (1 << 21)
-#define HITMARKER_NEVER_SET             (1 << 22) // Cleared as part of a large group. Never set or checked
-#define HITMARKER_CHARGING              (1 << 23)
-#define HITMARKER_FAINTED(battler)      (1u << (battler + 24))
+#define HITMARKER_UNUSED_1              (1 << 4) // Cleared when waking up. Never set or checked.
+#define HITMARKER_IGNORE_BIDE           (1 << 5)
+#define HITMARKER_DESTINYBOND           (1 << 6)
+#define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
+#define HITMARKER_IGNORE_SUBSTITUTE     (1 << 8)
+#define HITMARKER_NO_ATTACKSTRING       (1 << 9)
+#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
+#define HITMARKER_NO_PPDEDUCT           (1 << 11)
+#define HITMARKER_UNUSED_2              (1 << 12)
+#define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
+#define HITMARKER_SYNCHRONISE_EFFECT    (1 << 14)
+#define HITMARKER_RUN                   (1 << 15)
+#define HITMARKER_IGNORE_DISGUISE       (1 << 16)
+#define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
+#define HITMARKER_UNUSED_3              (1 << 18)   // disable animations during battle scripts, e.g. for Bug Bite
+#define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
+#define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
+#define HITMARKER_UNUSED_4              (1 << 21)
+#define HITMARKER_PLAYER_FAINTED        (1 << 22)
+#define HITMARKER_ALLOW_NO_PP           (1 << 23)
+#define HITMARKER_GRUDGE                (1 << 24)
+#define HITMARKER_OBEYS                 (1 << 25)
+#define HITMARKER_NEVER_SET             (1 << 26) // Cleared as part of a large group. Never set or checked
+#define HITMARKER_CHARGING              (1 << 27)
+#define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
-#define HITMARKER_STRING_PRINTED        (1 << 25)
+#define HITMARKER_STRING_PRINTED        (1 << 29)
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)

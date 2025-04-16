@@ -6815,6 +6815,13 @@ static void Cmd_moveend(void)
                 }
             }
 
+            // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
+            if (gBattleStruct->snatchedMoveIsUsed)
+            {
+                u32 temp;
+                SWAP(gBattlerAttacker, gBattlerTarget, temp);
+            }
+
             if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
             {
                 gDisableStructs[gBattlerAttacker].usedMoves |= 1u << gCurrMovePos;
