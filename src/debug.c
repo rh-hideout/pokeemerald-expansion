@@ -1932,11 +1932,12 @@ static void DebugAction_Util_BerryFunctions(u8 taskId)
 static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    #if OW_USE_FAKE_RTC
-        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
-    #else
+    if (OW_USE_FAKE_RTC == FALSE) { 
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
-    #endif
+    }
+    else {
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
+    }
 }
 
 static void DebugAction_TimeSkip_TimesOfDay(u8 taskId)
