@@ -116,7 +116,6 @@ struct WildEncounterTypes
 };
 ```
 You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
--------
 
 For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
 - have a fishing table (I'm adding a fishin hole to Route 101)
