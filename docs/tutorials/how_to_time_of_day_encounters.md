@@ -101,7 +101,7 @@ That's it! That's the entire encounter group for Route 101. In other Routes or m
 - `rock_smash_mons`, for when you get jumpscared by a Geodude in Route 111 after using Rock Smash.
 - `fishing_mons`, for fishing
 
-----
+--
 **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent too, so as a standard, any custom encounter types should go before `hidden_mons` but after `fishing_mons`. To use the earlier examples:
 
 ```
@@ -117,7 +117,7 @@ struct WildEncounterTypes
 };
 ```
 You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my ~~expert~~ opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
-----
+--
 
 For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
 - have a fishing table (I'm adding a fishin hole to Route 101)
@@ -380,9 +380,9 @@ So, the "supported suffixes" are just:
 - `_Evening`
 - `_Night`
 
-----
+--
 **NOTE**: You can add more than just these by changing the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h). If you'd like to do this, I'd recommend making a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) somewhere outside your project folder, just so you can have a baseline to return to if something goes wrong. The [migration script](../../migration_scripts/add_time_based_encounters.py) makes a backup of the file ***each time it runs***, so it's essentially a one step undo button- if you plan on or think you might make lots of edits to [`wild_encounters.json`](../../src/data/wild_encounters.json), ***it is a very good idea to make a baseline backup***.
-----
+--
 
 ### That's a lot of manual editing. 
 You're so right bestie! Luckily for you, there's a python script that can help you out!
@@ -398,9 +398,9 @@ This script works kind of like a "template" feature- when you open it up to edit
 You're *still* so right bestie! Luckily for you, there's an optional argument you can add when you run the script: `--copy`.
 This duplicates the encounter group's encounters as well as their labels/map group values. When you open [`wild_encounters.json`](../../src/data/wild_encounters.json) for editing either in Porymap or a text editor, you'll notice that each group (`gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`) now all have the same encounters as `gRoute101` did. If you only want to add a couple of Pokémon here and there for each time of day, this is probably the easier option.
 
-----
+--
 **NOTE**: the `--copy` option will use up at least an additional 9kb of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
-----
+--
 
 ## So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
 Great questie bestie!
