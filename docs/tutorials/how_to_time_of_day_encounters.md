@@ -16,10 +16,10 @@ Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Rou
 
 
 ### Sounds rad, how do I add it to my romhack?
-There are a couple of ways! The system is built to handle your unchanged [`wild_encounters.json`](../../src/data/wild_encounters.json) file by default, so the most basic solution is to add an encounter group by editing that (by hand or [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)), and then add a supported suffix to the end of whatever name you give it.
+There are a couple of ways! The system is built to handle your unchanged [`wild_encounters.json`](../../src/data/wild_encounters.json) file by default, so the most basic solution is to add an encounter group by editing that (by hand or [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)), and then add a [supported suffix](#what-are-supported-suffixes) to the end of whatever name you give it.
 
 
-**NOTE**: if you haven't specified/added any encounters, or have the option turned off, Expansion puts them into the `TIME_MORNING` slot to keep vanilla behavior. 
+**NOTE**: if you haven't specified or added any encounters, or have the option turned off, Expansion puts them into the `TIME_MORNING` (or whatever your first time enum is set to in the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h)) slot to keep vanilla behavior. This means any map `"base_label"` without a [supported suffix](#what-are-supported-suffixes) is automatically set to the first time slot when `OW_TIME_OF_DAY_ENCOUNTERS` is `TRUE`.
 
 
 ### I've never added one by hand, but I want to!
