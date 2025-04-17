@@ -479,7 +479,7 @@ def PrintEncounterRateMacros():
                         print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex})")
 
         fieldCounter += 1
-    print("\n")
+    print()
 
 
 def GetTimeLabelFromString(string):
