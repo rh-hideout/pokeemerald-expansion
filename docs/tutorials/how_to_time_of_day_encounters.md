@@ -2,11 +2,11 @@
 
 ## Table of Contents:
 - [What is the Time-Based Encounters feature?](#what-is-the-time-based-encounters-feature)
-- [Sounds rad, how do I add them to my romhack?](#sounds-rad-how-do-i-add-them-to-my-romhack)
-- [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
-- [What are "supported suffixes?"](#what-are-supported-suffixes)
-- [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
-- [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
+ - [Sounds rad, how do I add them to my romhack?](#sounds-rad-how-do-i-add-them-to-my-romhack)
+ - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
+ - [What are "supported suffixes?"](#what-are-supported-suffixes)
+ - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
+ - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
 - [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
 - [Examples](#examples)
 
@@ -115,7 +115,7 @@ struct WildEncounterTypes
     const struct WildPokemonInfo *hiddenMonsInfo;
 };
 ```
-You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
+You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my (expert?) opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
 
 For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
 - have a fishing table (I'm adding a fishin hole to Route 101)
