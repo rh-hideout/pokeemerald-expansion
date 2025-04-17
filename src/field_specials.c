@@ -2,7 +2,7 @@
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "cable_club.h"
 #include "data.h"
 #include "decoration.h"
