@@ -336,7 +336,7 @@ static void DoStandardWildBattle(bool32 isDouble)
     gBattleTypeFlags = 0;
 #if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress && gSaveBlock3Ptr->NPCfollower.battlePartner && OW_FLAG_PARTNER_WILD_BATTLES != 0
-     && (FlagGet(OW_FLAG_PARTNER_WILD_BATTLES) || OW_FLAG_PARTNER_WILD_BATTLES == ALWAYS))
+     && (FlagGet(OW_FLAG_PARTNER_WILD_BATTLES) || OW_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS))
     {
         gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
     }
@@ -591,7 +591,7 @@ static void CB2_EndWildBattle(void)
     
 #if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.battlePartner && OW_FLAG_PARTNER_WILD_BATTLES != 0
-     && (FlagGet(OW_FLAG_PARTNER_WILD_BATTLES) || OW_FLAG_PARTNER_WILD_BATTLES == ALWAYS))
+     && (FlagGet(OW_FLAG_PARTNER_WILD_BATTLES) || OW_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS))
         RestorePartyAfterFollowerNPCBattle();
 #endif
 
