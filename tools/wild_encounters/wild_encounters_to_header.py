@@ -57,7 +57,7 @@ headersArray = [headerIndex]
 
 
 # debug output control
-mainSwitch                      = True
+mainSwitch                      = False
 printWarningAndInclude          = mainSwitch
 printEncounterHeaders           = mainSwitch
 printEncounterRateMacros        = mainSwitch
@@ -541,15 +541,26 @@ def SetupUserTimeEnum(timeOfDay):
     enum_string = GetTimeEnum()
     enum_string = enum_string.split(",")
 
-    strCount = 0
-    while strCount < len(enum_string) - 2: # we dont need the `TIMES_OF_DAY_COUNT` value
-        tempstr = enum_string[strCount].strip("\n ")
-        if "=" in tempstr:
-            tempstr = tempstr[0:tempstr.index("=")]
-            tempstr = tempstr.strip(" ")
+    # check for extra element from trailing comma
+    if enum_string[-1] == "" or enum_string[-1].isspace():
+        enum_string.pop(-1)
 
+    # we don't need the `TIMES_OF_DAY_COUNT` value, so - 1 from the value of len(enum_string)
+    strCount = 0
+    while strCount < len(enum_string) - 1:
+        tempStr = enum_string[strCount].strip("\n ")
+
+        """
+        we need to ignore any value assignments, as the times will need to correspond
+        with the elements in the array.
+        """
+        if "=" in tempStr:
+            tempStr = tempStr[0:tempStr.index("=")]
+            tempStr = tempStr.strip(" ")
+
+        #double check we didn't catch any empty values
         if not enum_string[strCount].isspace() and enum_string[strCount] != "":
-            timeOfDay.add(tempstr)
+            timeOfDay.add(tempStr)
 
         strCount += 1
     return timeOfDay

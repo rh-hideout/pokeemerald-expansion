@@ -9,18 +9,13 @@ try:
     sys.path.append("./tools/wild_encounters/")
     from wild_encounters_to_header import TimeOfDay, SetupUserTimeEnum
 except ImportError:
-    print("Could not import the file tools/wild_encounters/wild_encounters_to_header.p.")
+    print("Could not import the file tools/wild_encounters/wild_encounters_to_header.py")
     quit()
 
 ARGS = [
     "--copy",
 ]
 
-"""
-- make sure this number is the same as `TIME_OF_DAY_DEFAULT` in config/overworld.h.
-- by default in config/overworld.h it is set to `TIME_MORNING`, which is 0 in the
-`TimeOfDay` enum in include/rtc.h
-"""
 TIME_OF_DAY_DEFAULT = 0
 
 
@@ -47,9 +42,9 @@ def GetWildEncounterFile():
                 if arg == ARGS[0]:
                     COPY_FULL_ENCOUNTER = True
 
-    j = 0
+    encounterCount = 0
     for group in wData["wild_encounter_groups"]:
-        wEncounters = wData["wild_encounter_groups"][j]["encounters"]
+        wEncounters = wData["wild_encounter_groups"][encounterCount]["encounters"]
         editMap = True
 
         wEncounters_New = list()
@@ -85,8 +80,8 @@ def GetWildEncounterFile():
             else:
                 wEncounters_New.append(map.copy())
 
-        wData["wild_encounter_groups"][j]["encounters"] = wEncounters_New
-        j += 1
+        wData["wild_encounter_groups"][encounterCount]["encounters"] = wEncounters_New
+        encounterCount += 1
 
     wNewData = json.dumps(wData, indent=2)
     wNewFile = open("src/data/wild_encounters.json", mode="w", encoding="utf-8")
