@@ -2428,7 +2428,9 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
             SetVBlankCallback(VBlankCB_MugshotsFadeOut);
         }
         else
-        return FALSE;
+        {
+            return FALSE;
+        } 
     }
     else
     {
@@ -2448,7 +2450,9 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
             SetVBlankCallback(VBlankCB_MugshotsFadeOut);
         }
         else
-        return FALSE;
+        {
+            return FALSE;
+        } 
     }
     return FALSE;
 }
@@ -2595,7 +2599,6 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
                                                   0, NULL);
     
     gReservedSpritePaletteCount = 12;
-
     if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
     {
         task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId, 
