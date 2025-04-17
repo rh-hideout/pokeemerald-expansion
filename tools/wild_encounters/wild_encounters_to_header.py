@@ -35,17 +35,6 @@ HIDDEN_MONS_LABEL     = "HiddenMons"
 HIDDEN_MONS_INDEX     = 4
 MONS_INFO_TOTAL       = HIDDEN_MONS_INDEX + 1
 
-# fishing encounter data
-GOOD_ROD              = "good_rod"
-GOOD_ROD_FIRST_INDEX  = 2
-GOOD_ROD_LAST_INDEX   = 4
-OLD_ROD               = "old_rod"
-OLD_ROD_FIRST_INDEX   = 0
-OLD_ROD_LAST_INDEX    = 1
-SUPER_ROD             = "super_rod"
-SUPER_ROD_FIRST_INDEX = 5
-SUPER_ROD_LAST_INDEX  = 9
-
 # time of day encounter data
 TIME_DEFAULT       = "OW_TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_LABEL = ""
@@ -499,21 +488,32 @@ def PrintEncounterRateMacros():
             )
         rateCount += 1
 
-    for rodRate in eFishingMons[-1]:
-        for rodPercentIndex in eFishingMons[-1][rodRate]:
-            if rodPercentIndex == OLD_ROD_FIRST_INDEX or rodPercentIndex == GOOD_ROD_FIRST_INDEX or rodPercentIndex == SUPER_ROD_FIRST_INDEX:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {eFishingMons[rodPercentIndex]}"
-                )
-            else:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex - 1} + {eFishingMons[rodPercentIndex]}"
-                )
-            
-            if rodPercentIndex == OLD_ROD_LAST_INDEX or rodPercentIndex == GOOD_ROD_LAST_INDEX or rodPercentIndex == SUPER_ROD_LAST_INDEX:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex})"
-                )
+    if eFishingMons:
+        fishing_rates = eFishingMons[:-1]
+        fishing_groups = eFishingMons[-1]
+
+        for rodRate in fishing_groups:
+            rod_indices = fishing_groups[rodRate]
+
+            if not rod_indices:
+                 continue
+
+            for i, rodPercentIndex in enumerate(rod_indices):
+                if rodPercentIndex < 0 or rodPercentIndex >= len(fishing_rates):
+                     print(f"#error Invalid fishing encounter rate index {rodPercentIndex} for {rodRate.upper()}")
+                     continue
+
+                rate_value = fishing_rates[rodPercentIndex]
+
+                if i == 0:
+                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {rate_value}")
+                else:
+                    previous_rod_index = rod_indices[i-1]
+                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{previous_rod_index} + {rate_value}")
+
+                if i == len(rod_indices) - 1:
+                    print(f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex})")
+
 
 
 def GetTimeStrFromIndex(index):
