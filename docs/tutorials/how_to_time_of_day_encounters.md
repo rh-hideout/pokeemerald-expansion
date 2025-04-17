@@ -101,6 +101,7 @@ That's it! That's the entire encounter group for Route 101. In other Routes or m
 - `rock_smash_mons`, for when you get jumpscared by a Geodude in Route 111 after using Rock Smash.
 - `fishing_mons`, for fishing
 
+----
 **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent too, so as a standard, any custom encounter types should go before `hidden_mons` but after `fishing_mons`. To use the earlier examples:
 
 ```
@@ -116,6 +117,7 @@ struct WildEncounterTypes
 };
 ```
 You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my ~~expert~~ opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
+----
 
 For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
 - have a fishing table (I'm adding a fishin hole to Route 101)
@@ -378,7 +380,9 @@ So, the "supported suffixes" are just:
 - `_Evening`
 - `_Night`
 
+----
 **NOTE**: You can add more than just these by changing the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h). If you'd like to do this, I'd recommend making a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) somewhere outside your project folder, just so you can have a baseline to return to if something goes wrong. The [migration script](../../migration_scripts/add_time_based_encounters.py) makes a backup of the file ***each time it runs***, so it's essentially a one step undo button- if you plan on or think you might make lots of edits to [`wild_encounters.json`](../../src/data/wild_encounters.json), ***it is a very good idea to make a baseline backup***.
+----
 
 ### That's a lot of manual editing. 
 You're so right bestie! Luckily for you, there's a python script that can help you out!
@@ -394,7 +398,9 @@ This script works kind of like a "template" feature- when you open it up to edit
 You're *still* so right bestie! Luckily for you, there's an optional argument you can add when you run the script: `--copy`.
 This duplicates the encounter group's encounters as well as their labels/map group values. When you open [`wild_encounters.json`](../../src/data/wild_encounters.json) for editing either in Porymap or a text editor, you'll notice that each group (`gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`) now all have the same encounters as `gRoute101` did. If you only want to add a couple of Pokémon here and there for each time of day, this is probably the easier option.
 
+----
 **NOTE**: the `--copy` option will use up at least an additional 9kb of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
+----
 
 ## So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
 Great questie bestie!
@@ -411,15 +417,10 @@ Here's a rundown, with more information than what's in the comments at [`overwor
   - **Acceptable values**: `TRUE` or `FALSE`
   - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option at the bottom.
   ```
-- OW_TIME_OF_DAY_DEFAULT               TIME_MORNING
+- OW_TIME_OF_DAY_FALLBACK              TIME_MORNING
   ```
   - **Acceptable values**: any value from the [`TimesOfDay`](../../include/rtc.h) enum, so by default `TIME_MORNING`, `TIME_DAY`, `TIME_EVENING`, and `TIME_NIGHT`.
-  - this option specifies what time is the first value in the [`TimesOfDay`](../../include/rtc.h) enum. This should always be the first value there (`TIME_MORNING` by default), because it's how both the [migration script](../../migration_scripts/add_time_based_encounters.py) and the [json->C header conversion file](../../tools/wild_encounters/wild_encounters_to_header.py) determine what elements go where when the encounters are converted.
-  ```
-- OW_TIME_OF_DAY_FALLBACK              OW_TIME_OF_DAY_DEFAULT
-  ```
-  - **Acceptable values**: any value from the [`TimesOfDay`](../../include/rtc.h) enum, so by default `TIME_MORNING`, `TIME_DAY`, `TIME_EVENING`, and `TIME_NIGHT`.
-  - this option controls which time is used when `OW_TIME_OF_DAY_DISABLE_FALLBACK` is `FALSE`. It's set to the same value as `OW_TIME_OF_DAY_DEFAULT` by... default. Keep in mind that if you enable `OW_TIME_OF_DAY_ENCOUNTERS` and set this to something other than `TIME_MORNING`, you should make sure that time has encounters, or you won't encounter anything.
+  - this option controls which time is used when `OW_TIME_OF_DAY_DISABLE_FALLBACK` is `FALSE`. Keep in mind that if you enable `OW_TIME_OF_DAY_ENCOUNTERS` and set this to something other than `TIME_MORNING`, you should make sure that time has encounters, or you won't encounter anything.
 
 
 ## Examples
