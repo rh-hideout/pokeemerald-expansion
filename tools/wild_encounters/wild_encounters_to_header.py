@@ -537,12 +537,16 @@ def GetTimeEnum():
         return include_enum.group("rtc_val")
 
 
+def CheckEmpty(string):
+    return string == "" or string.isspace() or string == "\n"
+
+
 def SetupUserTimeEnum(timeOfDay):
     enum_string = GetTimeEnum()
     enum_string = enum_string.split(",")
 
     # check for extra element from trailing comma
-    if enum_string[-1] == "" or enum_string[-1].isspace():
+    if CheckEmpty(enum_string[-1]):
         enum_string.pop(-1)
 
     # we don't need the `TIMES_OF_DAY_COUNT` value, so - 1 from the value of len(enum_string)
@@ -559,7 +563,7 @@ def SetupUserTimeEnum(timeOfDay):
             tempStr = tempStr.strip(" ")
 
         #double check we didn't catch any empty values
-        if not enum_string[strCount].isspace() and enum_string[strCount] != "":
+        if not CheckEmpty(enum_string[strCount]):
             timeOfDay.add(tempStr)
 
         strCount += 1
