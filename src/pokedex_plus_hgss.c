@@ -6571,19 +6571,19 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_TIME:
                 switch(evolutions[i].params[j].arg1)
                 {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Night"));   break;
+                case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
+                case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("Day"));     break;
+                case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("Evening")); break;
+                case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Night"));   break;
                 }
                 break;
             case IF_NOT_TIME:
                 switch(evolutions[i].params[j].arg1)
                 {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Day"));         break; // More intuitive than "NOT Night"
+                case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
+                case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));     break;
+                case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Evening")); break;
+                case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Day"));         break; // More intuitive than "NOT Night"
                 }
                 break;
             case IF_HOLD_ITEM:

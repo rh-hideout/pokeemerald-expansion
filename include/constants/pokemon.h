@@ -316,6 +316,7 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
+// used to determine whether an evolution is happening or not, so we know if items should be removed
 enum EvoState {
     CHECK_EVO,
     DO_EVO,
