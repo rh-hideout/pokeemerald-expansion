@@ -57,7 +57,7 @@ headersArray = [headerIndex]
 
 
 # debug output control
-mainSwitch                      = False
+mainSwitch                      = True
 printWarningAndInclude          = mainSwitch
 printEncounterHeaders           = mainSwitch
 printEncounterRateMacros        = mainSwitch
@@ -319,10 +319,10 @@ def AssembleMonHeaderContent():
         headerStructTable[tempHeaderLabel][structLabelNoTime]["encounterTotalCount"] = encounterTotalCount[headerIndex]
         headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"] = []
 
-        timeStart = TIME_DEFAULT_INDEX
-        while timeStart < TIMES_OF_DAY_COUNT:
+        timeCounter = 0
+        while timeCounter < TIMES_OF_DAY_COUNT:
             headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"].append([])
-            timeStart += 1
+            timeCounter += 1
 
     fieldCounter = 0
     while fieldCounter < len(fieldData):
@@ -567,7 +567,6 @@ def SetupUserTimeEnum(timeOfDay):
 
 
 def TabStr(amount):
-    global tabStr
     return tabStr * amount
 
 
