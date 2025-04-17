@@ -1982,7 +1982,14 @@ static const u8 sWeatherNames[WEATHER_COUNT][24] = {
     [WEATHER_ABNORMAL]           = _("ABNORMAL(NOT WORKING)"),
     [WEATHER_ROUTE119_CYCLE]     = _("ROUTE119 CYCLE"),
     [WEATHER_ROUTE123_CYCLE]     = _("ROUTE123 CYCLE"),
+    [WEATHER_FOG]                = _("FOG"),
 };
+
+const u8 *GetWeatherName(u32 weatherId)
+{
+    return sWeatherNames[weatherId];
+}
+
 static const u8 sDebugText_WeatherNotDefined[] = _("NOT DEFINED!!!");
 static void DebugAction_Util_Weather(u8 taskId)
 {
