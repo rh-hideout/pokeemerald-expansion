@@ -2,11 +2,11 @@
 
 ## Table of Contents:
 - [What is the Time-Based Encounters feature?](#what-is-the-time-based-encounters-feature)
- - [Sounds rad, how do I add them to my romhack?](#sounds-rad-how-do-i-add-them-to-my-romhack)
- - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
- - [What are "supported suffixes?"](#what-are-supported-suffixes)
- - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
- - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
+  - [Sounds rad, how do I add them to my romhack?](#sounds-rad-how-do-i-add-them-to-my-romhack)
+  - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
+  - [What are "supported suffixes?"](#what-are-supported-suffixes)
+  - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
+  - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
 - [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
 - [Examples](#examples)
 
