@@ -334,7 +334,7 @@ def SetupMonInfoVars():
     i = 0
     while i < len(fieldData):
         fieldData[i]["infoStringBase"] = "." + fieldData[i]["snakeName"] + structInfo
-        if fieldInfoStrings[i] == "":
+        if CheckEmpty(fieldInfoStrings[i]):
             fieldInfoStrings[i] = NULL
         else:
             fieldInfoStrings[i] = "&" + fieldInfoStrings[i]
@@ -459,7 +459,6 @@ def PrintEncounterRateMacros():
 
             for method in groups:
                 method_indices = groups[method]
-
                 if not method_indices:
                     continue
 
