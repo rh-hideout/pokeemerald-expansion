@@ -11,7 +11,7 @@
 #include "constants/battle_move_effects.h"
 
 // this file's functions
-static bool8 IsNotSpecialBattleString(u16 stringId);
+static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(bool8 targetFainted);
@@ -319,7 +319,7 @@ static const u16 sSpecialBattleStrings[] =
 };
 
 // code
-void BattleTv_SetDataBasedOnString(u16 stringId)
+void BattleTv_SetDataBasedOnString(enum StringID stringId)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide, effSide, scriptingSide;
@@ -342,7 +342,7 @@ void BattleTv_SetDataBasedOnString(u16 stringId)
     defMon = GetPartyBattlerData(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
 
-    if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > BATTLESTRINGS_TABLE_START)
+    if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
     {
         tvPtr->side[atkSide].faintCause = FNT_OTHER;
         return;
@@ -720,10 +720,12 @@ void BattleTv_SetDataBasedOnString(u16 stringId)
     case STRINGID_PKMNHITWITHRECOIL:
         tvPtr->side[atkSide].faintCause = FNT_RECOIL;
         break;
+    default:
+        break;
     }
 }
 
-static bool8 IsNotSpecialBattleString(u16 stringId)
+static bool8 IsNotSpecialBattleString(enum StringID stringId)
 {
     s32 i = 0;
 

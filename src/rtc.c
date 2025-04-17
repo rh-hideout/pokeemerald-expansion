@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
+#include "datetime.h"
 #include "rtc.h"
 #include "string_util.h"
 #include "strings.h"
@@ -21,7 +22,7 @@ COMMON_DATA struct Time gLocalTime = {0};
 
 static const struct SiiRtcInfo sRtcDummy = {0, MONTH_JAN, 1}; // 2000 Jan 1
 
-static const s32 sNumDaysInMonths[MONTH_COUNT] =
+const s32 sNumDaysInMonths[MONTH_COUNT] =
 {
     [MONTH_JAN - 1] = 31,
     [MONTH_FEB - 1] = 28,
@@ -97,9 +98,6 @@ u16 ConvertDateToDayCount(u8 year, u8 month, u8 day)
 u16 RtcGetDayCount(struct SiiRtcInfo *rtc)
 {
     u8 year, month, day;
-
-    if (OW_USE_FAKE_RTC)
-        return rtc->day;
 
     year = ConvertBcdToBinary(rtc->year);
     month = ConvertBcdToBinary(rtc->month);
@@ -233,7 +231,7 @@ void RtcReset(void)
 {
     if (OW_USE_FAKE_RTC)
     {
-        memset(FakeRtc_GetCurrentTime(), 0, sizeof(struct Time));
+        FakeRtc_Reset();
         return;
     }
 
@@ -421,6 +419,42 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
     *txtPtr = EOS;
 }
 
+u16 GetFullYear(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.year;
+}
+
+enum Month GetMonth(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.month;
+}
+
+u8 GetDay(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.day;
+}
+
+enum Weekday GetDayOfWeek(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.dayOfWeek;
+}
+  
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
     return timeOfDay == TIME_NIGHT ? TIME_MORNING : timeOfDay + 1;

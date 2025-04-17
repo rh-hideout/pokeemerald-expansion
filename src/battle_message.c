@@ -169,7 +169,7 @@ const u8 gText_drastically[] = _("drastically ");
 const u8 gText_severely[] = _("severely ");
 static const u8 sText_TerrainReturnedToNormal[] = _("The terrain returned to normal!"); // Unused
 
-const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
+const u8 *const gBattleStringsTable[STRINGID_COUNT] =
 {
     [STRINGID_TRAINER1LOSETEXT]                     = COMPOUND_STRING("{B_TRAINER1_LOSE_TEXT}"),
     [STRINGID_PKMNGAINEDEXP]                        = COMPOUND_STRING("{B_BUFF1} gained{B_BUFF2} {B_BUFF3} Exp. Points!\p"),
@@ -698,7 +698,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_AIRBALLOONPOP]                        = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Air Balloon popped!"),
     [STRINGID_INCINERATEBURN]                       = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX}'s {B_LAST_ITEM} was burnt up!"),
     [STRINGID_BUGBITE]                              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} stole and ate its target's {B_LAST_ITEM}!"),
-    [STRINGID_ILLUSIONWOREOFF]                      = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s illusion wore off!"),
+    [STRINGID_ILLUSIONWOREOFF]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s illusion wore off!"),
     [STRINGID_ATTACKERCUREDTARGETSTATUS]            = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} cured {B_DEF_NAME_WITH_PREFIX2}'s problem!"),
     [STRINGID_ATTACKERLOSTFIRETYPE]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} burned itself out!"),
     [STRINGID_HEALERCURE]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_LAST_ABILITY} cured {B_SCR_NAME_WITH_PREFIX2}'s problem!"),
@@ -892,8 +892,8 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ITDOESNTAFFECTTWOFOES]                = COMPOUND_STRING("It doesn't affect {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}…"),
     [STRINGID_SENDCAUGHTMONPARTYORBOX]              = COMPOUND_STRING("Add {B_DEF_NAME} to your party?"),
     [STRINGID_PKMNSENTTOPCAFTERCATCH]               = gText_PkmnSentToPCAfterCatch,
-    [STRINGID_PKMNDYNAMAXED]                        = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} grew huge\ninto its Dynamax form!"),
-    [STRINGID_PKMNGIGANTAMAXED]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} grew huge\ninto its Gigantamax form!"),
+    [STRINGID_PKMNDYNAMAXED]                        = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} grew huge into its Dynamax form!"),
+    [STRINGID_PKMNGIGANTAMAXED]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} grew huge into its Gigantamax form!"),
     [STRINGID_TIMETODYNAMAX]                        = COMPOUND_STRING("Time to Dynamax!"),
     [STRINGID_TIMETOGIGANTAMAX]                     = COMPOUND_STRING("Time to Gigantamax!"),
     [STRINGID_QUESTIONFORFEITBATTLE]                = COMPOUND_STRING("Would you like to give up on this battle and quit now? Quitting the battle is the same as losing the battle."),
@@ -962,7 +962,8 @@ const u16 gTerrainPreventsStringIds[] =
 
 const u16 gHealingWishStringIds[] =
 {
-    STRINGID_HEALINGWISHCAMETRUE, STRINGID_LUNARDANCECAMETRUE
+    STRINGID_HEALINGWISHCAMETRUE,
+    STRINGID_LUNARDANCECAMETRUE
 };
 
 const u16 gDmgHazardsStringIds[] =
@@ -2062,7 +2063,7 @@ static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
-void BufferStringBattle(u16 stringID, u32 battler)
+void BufferStringBattle(enum StringID stringID, u32 battler)
 {
     s32 i;
     const u8 *stringPtr = NULL;
@@ -2344,7 +2345,7 @@ void BufferStringBattle(u16 stringID, u32 battler)
         stringPtr = gBattleStruct->trainerSlideMsg;
         break;
     default: // load a string from the table
-        if (stringID >= BATTLESTRINGS_COUNT)
+        if (stringID >= STRINGID_COUNT)
         {
             gDisplayedStringBattle[0] = EOS;
             return;

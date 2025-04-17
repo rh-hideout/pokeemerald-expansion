@@ -171,6 +171,7 @@ extern const union AnimCmd *const gAnims_MonPic[];
 extern const union AnimCmd *const gAnims_Trainer[];
 extern const struct TrainerSprite gTrainerSprites[];
 extern const struct TrainerBacksprite gTrainerBacksprites[];
+extern const u16 gTrainerPicToTrainerBackPic[];
 
 extern const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT];
 extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];
@@ -239,6 +240,10 @@ static inline const u8 GetTrainerPicFromId(u16 trainerId)
 {
     u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
+    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
+
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
 
     return gTrainers[difficulty][sanitizedTrainerId].trainerPic;
 }
