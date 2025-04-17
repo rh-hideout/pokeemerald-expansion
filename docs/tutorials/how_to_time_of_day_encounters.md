@@ -417,7 +417,7 @@ OW_TIME_OF_DAY_ENCOUNTERS            FALSE
 OW_TIME_OF_DAY_DISABLE_FALLBACK      FALSE
 ```
   - **Acceptable values**: `TRUE` or `FALSE`
-  - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option at the bottom.
+  - this option controls the behavior of the game when an encounter table isn't populated. If this is set to `TRUE`, whenever the game detects that you're in a time of day (Morning/Day/Evening/Night) on a map without any encounters for that time, you won't encounter any mons. If this is set to `FALSE`, the game will look for encounters at the time specified in the `OW_TIME_OF_DAY_FALLBACK` option below.
 ```
 OW_TIME_OF_DAY_FALLBACK              TIME_MORNING
 ```
