@@ -75,6 +75,7 @@ class TimeOfDay():
     def __len__(self):
         return self.count
     
+    # for debugging purposes
     def __str__(self):
         return str([self.vals, self.lvals, self.fvals, self.count])
 
@@ -94,6 +95,7 @@ class TimeOfDay():
                     return i
 
                 i += 1
+        # return -1 here so it returns a consistent type and can be checked against < 0
         return -1
 
 
