@@ -104,7 +104,7 @@ That's it! That's the entire encounter group for Route 101. In other Routes or m
 - `fishing_mons`, for fishing
 
 
-> **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent too, so as a standard, any custom encounter types should go before `hidden_mons` but after `fishing_mons`. To use the earlier examples:
+> **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent, so as a standard, any custom encounter types should go before `hidden_mons` but after `fishing_mons`. To use the earlier examples:
 
 ```c
 struct WildEncounterTypes
