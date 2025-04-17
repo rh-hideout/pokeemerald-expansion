@@ -437,3 +437,21 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Donodozo fainted right before
         NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
     }
 }
+
+DOUBLE_BATTLE_TEST("Commander prevent Donozo from switch out by Dragon Tail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_DRAGON_TAIL, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponentLeft);
+        NOT MESSAGE("Wobbuffet was dragged out!");
+    }
+}
