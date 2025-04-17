@@ -28,74 +28,74 @@ Great attitude bestie! It's very simple- all you need is to find your [`wild_enc
 To get started, we'll use Route 101 as an example:
 ```json
 {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
-        },
+  "map": "MAP_ROUTE101",
+  "base_label": "gRoute101",
+  "land_mons": {
+    "encounter_rate": 20,
+    "mons": [
+      {
+        "min_level": 2,
+        "max_level": 2,
+        "species": "SPECIES_WURMPLE"
+      },
+      {
+        "min_level": 2,
+        "max_level": 2,
+        "species": "SPECIES_POOCHYENA"
+      },
+      {
+        "min_level": 2,
+        "max_level": 2,
+        "species": "SPECIES_WURMPLE"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_WURMPLE"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_POOCHYENA"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_POOCHYENA"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_WURMPLE"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_POOCHYENA"
+      },
+      {
+        "min_level": 2,
+        "max_level": 2,
+        "species": "SPECIES_ZIGZAGOON"
+      },
+      {
+        "min_level": 2,
+        "max_level": 2,
+        "species": "SPECIES_ZIGZAGOON"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_ZIGZAGOON"
+      },
+      {
+        "min_level": 3,
+        "max_level": 3,
+        "species": "SPECIES_ZIGZAGOON"
+      }
+    ]
+  }
+},
 ```
 That's it! That's the entire encounter group for Route 101. In other Routes or maps, you'll likely see other encounters listed; here we have only have `land_mons`, but vanilla emerald supports three more types of encounters, for a total of four:
 - `land_mons`, your standard grass or cave or sand encounter.
@@ -437,87 +437,87 @@ python3 migration_scripts/add_time_based_encounters.py
 #### Result:
 ```json
 "encounters": [
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Morning",
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Morning",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Day"
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Evening"
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Night"
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
         },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        }
+      ]
+    }
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Day"
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Evening"
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Night"
+  },
 ]
     
 ```
@@ -533,282 +533,282 @@ python3 migration_scripts/add_time_based_encounters.py --copy
 #### Result:
 ```json
 "encounters": [
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Morning",
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Morning",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Day",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Evening",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
         },
         {
-          "map": "MAP_ROUTE101",
-          "base_label": "gRoute101_Night",
-          "land_mons": {
-            "encounter_rate": 20,
-            "mons": [
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 2,
-                "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              }
-            ]
-          }
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
         },
-    ]
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        }
+      ]
+    }
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Day",
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        }
+      ]
+    }
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Evening",
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        }
+      ]
+    }
+  },
+  {
+    "map": "MAP_ROUTE101",
+    "base_label": "gRoute101_Night",
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON"
+        }
+      ]
+    }
+  },
+]
 ```
 As you can see, the group `gRoute101` and all its encounters were copied into groups that correspond with the four vanilla times of day (Morning/Day/Evening/Night). 
