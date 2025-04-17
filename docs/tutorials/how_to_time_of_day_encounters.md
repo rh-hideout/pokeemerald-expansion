@@ -389,10 +389,10 @@ So, the "supported suffixes" are just:
 ### That's a lot of manual editing.
 You're so right bestie! Luckily for you, there's a python script that can help you out!
 The script is at [`migration_scripts/add_time_based_encounters.py`](../../migration_scripts/add_time_based_encounters.py). It, in order:
-1) Checks to make sure you're running it from the [root folder](../../) of your expansion project (specifically, wherever the project's [`Makefile`](../../Makefile) is)
-2) Makes a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) file called `wild_encounters.json.bak`
-3) Runs through `wild_encounters.json` and adds dummy encounter groups for each time denomination to each group
-    3.1) ie, `gRoute101` becomes `gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`
+1. Checks to make sure you're running it from the [root folder](../../) of your expansion project (specifically, wherever the project's [`Makefile`](../../Makefile) is)
+2. Makes a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) file called `wild_encounters.json.bak`
+3. Runs through `wild_encounters.json` and adds dummy encounter groups for each time denomination to each group
+    3.1. ie, `gRoute101` becomes `gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`
 
 This script works kind of like a "template" feature- when you open it up to edit either in Porymap or a text editor, you will see the encounter groups, but they won't be filled out with encounters. This lets you add Pokémon with your own encounter rates however you want.
 
