@@ -95,7 +95,6 @@ enum TimeOfDay
     TIMES_OF_DAY_COUNT,
 };
 
-//
 #define TIME_OF_DAY_DEFAULT    0
 
 extern struct Time gLocalTime;

@@ -1,4 +1,3 @@
-import enum
 import json
 import re
 import os
@@ -93,6 +92,7 @@ class TimeOfDay():
             for time in tvals:
                 if val in time:
                     return i
+
                 i += 1
         return -1
 
@@ -104,9 +104,15 @@ def ImportWildEncounterFile():
         quit()
 
     global MON_HEADERS
+
     global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
+    TIME_OF_DAY = SetupUserTimeEnum(TimeOfDay())
+
     global IS_ENABLED
+    global TIMES_OF_DAY_COUNT
+    if IsConfigEnabled():
+        IS_ENABLED = True
+        TIMES_OF_DAY_COUNT = len(TIME_OF_DAY)
 
     global fieldInfoStrings
     global fieldStrings
@@ -125,13 +131,9 @@ def ImportWildEncounterFile():
     global encounterTotalCount
     global encounterCount
     global headerIndex
-    global tabStr
     global fieldData
+    global tabStr
     tabStr = "    "
-
-    IS_ENABLED = IsConfigEnabled()
-
-    SetupUserTimeEnum()
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
@@ -176,28 +178,27 @@ def ImportWildEncounterFile():
                     fieldData[fieldCounter + 1]["name"] = "hidden_mons"
                     fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase("hidden_mons")
                     fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase("hidden_mons")
+
                 fieldCounter += 1
 
             if printWarningAndInclude:
                 PrintGeneratedWarningText()
-
                 print('#include "rtc.h"')
                 print("\n")
 
             PrintEncounterRateMacros()
 
-        #TODO: account for multiple encounter tables in the same map
         for encounter in wEncounters:
             if "map" in encounter:
                 structMap = encounter["map"]
             else:
                 structMap = encounter["base_label"]
+
             structLabel = encounter["base_label"]
 
-            #print(structLabel)
-            
             if encounterTotalCount[headerIndex] != len(wEncounters):
                 encounterTotalCount[headerIndex] = len(wEncounters)
+
             encounterCount[headerIndex] += 1
             headersArray = []
             
@@ -209,6 +210,7 @@ def ImportWildEncounterFile():
                     tempTime = TIME_OF_DAY.vals[timeCounter]
                     if tempfTime in structLabel or tempTime in structLabel:
                         structTime = timeCounter
+
                     timeCounter += 1
                     
             fieldCounter = 0
@@ -269,8 +271,6 @@ def PrintStructContent(contentList):
 def GetStructLabelWithoutTime(label):
     labelLength = len(label)
     timeLength = 0
-    global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
 
     if not IS_ENABLED:
         return label
@@ -281,15 +281,12 @@ def GetStructLabelWithoutTime(label):
         if tempTime in label:
             timeLength = len(tempTime)
             return label[:(labelLength - (timeLength + 1))]
-        
+
         timeCounter += 1
     return label
 
 
 def GetStructTimeWithoutLabel(label):
-    global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
-
     if not IS_ENABLED:
         return TIME_DEFAULT_INDEX
     
@@ -298,17 +295,12 @@ def GetStructTimeWithoutLabel(label):
         tempTime = f"_{TIME_OF_DAY.fvals[timeCounter]}"
         if tempTime in label:
             return timeCounter
+
         timeCounter += 1
-        
     return TIME_DEFAULT_INDEX
 
 
 def AssembleMonHeaderContent():
-    global structLabel
-    global fieldInfoStrings
-    global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
-
     SetupMonInfoVars()
 
     tempHeaderLabel = GetWildMonHeadersLabel()
@@ -316,12 +308,10 @@ def AssembleMonHeaderContent():
     structLabelNoTime = GetStructLabelWithoutTime(structLabel)
     
     if tempHeaderLabel not in headerStructTable:
-        #print(tempHeaderLabel)
         headerStructTable[tempHeaderLabel] = {}
         headerStructTable[tempHeaderLabel]["groupNum"] = headerIndex
 
     if structLabelNoTime not in headerStructTable[tempHeaderLabel]:
-        #print(structLabelNoTime)
         headerStructTable[tempHeaderLabel][structLabelNoTime] = {}
         headerStructTable[tempHeaderLabel][structLabelNoTime]["headerType"] = GetWildMonHeadersLabel()
         headerStructTable[tempHeaderLabel][structLabelNoTime]["mapGroup"] = structMap
@@ -341,9 +331,6 @@ def AssembleMonHeaderContent():
 
 
 def SetupMonInfoVars():
-    global fieldData
-    global fieldInfoStrings
-
     i = 0
     while i < len(fieldData):
         fieldData[i]["infoStringBase"] = "." + fieldData[i]["snakeName"] + structInfo
@@ -356,10 +343,6 @@ def SetupMonInfoVars():
 
 
 def PrintWildMonHeadersContent():
-    global tabStr
-    global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
-
     groupCount = 0
     for group in headerStructTable:
         labelCount = 0
@@ -481,7 +464,6 @@ def PrintEncounterRateMacros():
                     continue
 
                 for i, methodPercentIndex in enumerate(method_indices):
-                    
                     if methodPercentIndex < 0 or methodPercentIndex >= len(rates):
                         print(f"#error Invalid fishing encounter rate index {methodPercentIndex} for {method.upper()}")
                         continue
@@ -555,14 +537,9 @@ def GetTimeEnum():
         return include_enum.group("rtc_val")
 
 
-def SetupUserTimeEnum():
+def SetupUserTimeEnum(timeOfDay):
     enum_string = GetTimeEnum()
     enum_string = enum_string.split(",")
-    global TIME_OF_DAY
-    global TIMES_OF_DAY_COUNT
-
-    global TIME_OF_DAY
-    TIME_OF_DAY = TimeOfDay()
 
     strCount = 0
     while strCount < len(enum_string) - 2: # we dont need the `TIMES_OF_DAY_COUNT` value
@@ -572,13 +549,10 @@ def SetupUserTimeEnum():
             tempstr = tempstr.strip(" ")
 
         if not enum_string[strCount].isspace() and enum_string[strCount] != "":
-            TIME_OF_DAY.add(tempstr)
+            timeOfDay.add(tempstr)
 
         strCount += 1
-
-    if IS_ENABLED:
-        TIMES_OF_DAY_COUNT = len(TIME_OF_DAY)
-    
+    return timeOfDay
 
 
 def TabStr(amount):
@@ -592,8 +566,8 @@ def GetPascalCase(string):
 
     for string in stringArray:
         pascalString += string.capitalize()
-
     return pascalString
+
 
 def GetSnakeCase(string):
     stringArray = string.split("_")
@@ -607,7 +581,6 @@ def GetSnakeCase(string):
             snakeString += string.capitalize()
 
         i += 1
-
     return snakeString
 
 
@@ -616,7 +589,7 @@ def main():
 
 
 if __name__ == "__main__":
-        ImportWildEncounterFile()
+    ImportWildEncounterFile()
 
 
 """
