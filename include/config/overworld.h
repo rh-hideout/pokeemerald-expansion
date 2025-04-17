@@ -50,7 +50,6 @@
 #define OW_NPC_FOLLOWER_WILD_BATTLE_VS_2    TRUE  // If set to TRUE, two wild Pokemon will show up to the partner battle instead of just one.
 #define OW_NPC_FOLLOWER_PARTY_PREVIEW       TRUE  // If set to TRUE, a preview of the player's and partner's teams will be shown before every trainer battle.
 #define OW_FACE_NPC_FOLLOWER_ON_DOOR_EXIT   TRUE  // If set to TRUE, the player will turn to face the follower when they exit a doorway.
-#define OW_POST_BATTLE_NPC_FOLLOWER_FIX     FALSE // If you experience the NPC follower de-syncing with the player after battle, set to TRUE.
 
 // Overworld Pokémon
 #define OW_POKEMON_OBJECT_EVENTS       TRUE       // Adds Object Event fields for every species. Can be used for NPCs using the OBJ_EVENT_GFX_SPECIES macro (eg. OBJ_EVENT_GFX_SPECIES(BULBASAUR))

@@ -5757,14 +5757,6 @@ static void ReturnFromBattleToOverworld(void)
 
     m4aSongNumStop(SE_LOW_HEALTH);
     SetMainCallback2(gMain.savedCallback);
-
-#if OW_ENABLE_NPC_FOLLOWERS
-    // if you experience the follower de-syncing with the player after battle, set OW_POST_BATTLE_NPC_FOLLOWER_FIX to TRUE in include/config/overworld.h
-    #if OW_POST_BATTLE_NPC_FOLLOWER_FIX
-        FollowerNPC_WarpSetEnd();
-        gObjectEvents[GetFollowerNPCObjectId()].invisible = TRUE;
-    #endif
-#endif
 }
 
 void RunBattleScriptCommands_PopCallbacksStack(void)
