@@ -137,7 +137,7 @@ def ImportWildEncounterFile():
     global tabStr
     tabStr = "    "
 
-    wFile = open("src/data/wild_encounters_nopinou.json")
+    wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
 
     encounterTotalCount = []
