@@ -2580,7 +2580,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 {
     struct SpriteTemplate spriteTemplate;
     struct SpriteSheet spriteSheet;
-    struct CompressedSpritePalette spritePalette;
+    struct SpritePalette spritePalette;
     u8 *buffer;
     u8 *unusedBuffer;
     u8 subpriority;
@@ -2608,7 +2608,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 
         spritePalette.data = GetMonSpritePalFromSpeciesAndPersonality(monInfo->species, monInfo->isShiny, monInfo->personality);
         spritePalette.tag = multiplayerId;
-        LoadCompressedSpritePalette(&spritePalette);
+        LoadSpritePalette(&spritePalette);
 
         Free(buffer);
         Free(unusedBuffer);
