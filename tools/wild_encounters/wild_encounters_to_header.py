@@ -137,7 +137,7 @@ def ImportWildEncounterFile():
     global tabStr
     tabStr = "    "
 
-    wFile = open("src/data/wild_encounters.json")
+    wFile = open("src/data/wild_encounters_nopinou.json")
     wData = json.load(wFile)
 
     encounterTotalCount = []
@@ -368,9 +368,10 @@ def PrintWildMonHeadersContent():
                         PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
                         PrintEncounterHeaders(TabStr(2) + "{")
 
-                        infoCount = 0
-                        for monInfo in headerStructTable[group][label][stat]:
-                            PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[infoCount]}] = ")
+                        timeCounter = 0
+                        while timeCounter < TIMES_OF_DAY_COUNT:
+                            monInfo = headerStructTable[group][label][stat][timeCounter]
+                            PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[timeCounter]}] = ")
 
                             infoIndex = 0
                             while infoIndex < len(fieldData):
@@ -386,7 +387,7 @@ def PrintWildMonHeadersContent():
                                     PrintEncounterHeaders(TabStr(3) + "},")
 
                                 infoIndex += 1
-                            infoCount += 1
+                            timeCounter += 1
                         PrintEncounterHeaders(TabStr(2) + "},")
                 PrintEncounterHeaders(tabStr + "},")
 
