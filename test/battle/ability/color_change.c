@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Color Change does not change the type of a dual-type Pokemon
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_CUT, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-            MESSAGE("The opposing Xatu's Color Change made it the Psychic type!");
+            MESSAGE("The opposing Slowbro's Color Change made it the Psychic type!");
         }
     }
 }
