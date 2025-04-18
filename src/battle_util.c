@@ -309,7 +309,7 @@ bool32 HandleMoveTargetRedirection(void)
 // Functions
 void HandleAction_UseMove(void)
 {
-    u32 i;
+    u32 i, moveTarget;
 
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     if (gBattleStruct->battlerState[gBattlerAttacker].absentBattlerFlags
@@ -393,9 +393,10 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
 
+    moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+
     if (!HandleMoveTargetRedirection())
     {
-        u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
         if (IsDoubleBattle() && moveTarget & MOVE_TARGET_RANDOM)
         {
             gBattlerTarget = SetRandomTarget(gBattlerAttacker);
@@ -407,7 +408,7 @@ void HandleAction_UseMove(void)
         }
         else if (moveTarget == MOVE_TARGET_ALLY)
         {
-            if (IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)))
+            if (IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)) && !gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
                 gBattlerTarget = BATTLE_PARTNER(gBattlerAttacker);
             else
                 gBattlerTarget = gBattlerAttacker;
@@ -421,6 +422,10 @@ void HandleAction_UseMove(void)
                 if (IsBattlerAlive(gBattlerTarget))
                     break;
             }
+        }
+        else if (moveTarget == MOVE_TARGET_USER)
+        {
+            gBattlerTarget = gBattlerAttacker;
         }
         else
         {
@@ -455,8 +460,13 @@ void HandleAction_UseMove(void)
         }
     }
 
-    if ((IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
-     && (!IsBattlerAlive(gBattlerTarget) || gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch))
+    if (IsBattlerAlly(gBattlerAttacker, gBattlerTarget) && !IsBattlerAlive(gBattlerTarget))
+    {
+        gBattlescriptCurrInstr = BattleScript_FailedFromAtkCanceler;
+    }
+    // If originally targetting an ally but now targetting user due to Ally Switch
+    else if (moveTarget & MOVE_TARGET_ALLY && gBattlerAttacker == gBattlerTarget
+          && gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
     {
         gBattlescriptCurrInstr = BattleScript_FailedFromAtkCanceler;
     }
