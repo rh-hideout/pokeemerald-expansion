@@ -4126,10 +4126,8 @@ enum
     STATE_SELECTION_SCRIPT_MAY_RUN
 };
 
-void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
+void SetupAISwitchingData(u32 battler, u32 opposingBattler, enum SwitchType switchType)
 {
-    s32 opposingBattler = GetOppositeBattler(battler);
-
     // AI's predicting data
     if ((AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
     {
@@ -4172,10 +4170,17 @@ static void HandleTurnActionSelectionState(void)
                     && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE)))
             {
                 AI_DATA->aiCalcInProgress = TRUE;
+                u32 opposingBattler = GetOppositeBattler(battler);
 
                 // Setup battler data
                 BattleAI_SetupAIData(0xF, battler);
-                SetupAISwitchingData(battler, switchType);
+                if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_MOVES)
+                {
+                    AI_DATA->predictedMove[opposingBattler] = BattleAI_PredictMove(battler, opposingBattler);
+                    DebugPrintf("Predicted move: %d", AI_DATA->predictedMove[opposingBattler]);
+                }
+
+                SetupAISwitchingData(battler, opposingBattler, switchType);
 
                 // Do scoring
                 gAiBattleData->moveOrAction[battler] = BattleAI_ChooseMoveOrAction(battler);

@@ -351,6 +351,7 @@ struct AiLogicData
     u8 shouldSwitch; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 aiCalcInProgress:1;
     u8 battlerDoingPrediction; // Stores which battler is currently running its prediction calcs
+    u16 predictedMove[MAX_BATTLERS_COUNT];
 };
 
 struct AI_ThinkingStruct
@@ -359,6 +360,7 @@ struct AI_ThinkingStruct
     u8 movesetIndex;
     u16 moveConsidered;
     s32 score[MAX_MON_MOVES];
+    s32 predictedScore[MAX_MON_MOVES][MAX_BATTLERS_COUNT];
     u32 funcResult;
     u32 aiFlags[MAX_BATTLERS_COUNT];
     u8 aiAction;
