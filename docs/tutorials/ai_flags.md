@@ -179,3 +179,6 @@ AI will determine whether it would switch out in the player's situation or not, 
 
 ## `AI_FLAG_PREDICT_INCOMING_MON`
 This flag requires `AI_FLAG_PREDICT_SWITCH` to function. If the AI predicts that the player will switch, this flag allows the AI to run its move scoring calculation against the Pokémon it expects the player to switch into, instead of the Pokémon that it expects to switch out.
+
+## `AI_FLAG_RANDOMIZE_SWITCHIN`
+AI will randomly choose between eligible switchin candidates rather than always picking the last one in the party. For example, if the AI has two mons that can revenge kill the player's mon after a KO, by default the AI will only track the most recent eligible candidate, and will always send in the last one in party order as a result. With this flag, it will instead track all of the eligible mons, and randomly choose between them when deciding which to send out.

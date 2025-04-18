@@ -351,6 +351,7 @@ struct AiLogicData
     u8 shouldSwitch; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 aiCalcInProgress:1;
     u8 battlerDoingPrediction; // Stores which battler is currently running its prediction calcs
+    u8 switchinCandidateEligible; // Tracks which switchin candidates are valid
 };
 
 struct AI_ThinkingStruct
@@ -1167,6 +1168,7 @@ extern u16 gBallToDisplay;
 extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
+extern u8 gEligibleSwitchingMons;
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {

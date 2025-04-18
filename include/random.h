@@ -191,6 +191,7 @@ enum RandomTag
     RNG_RANDOM_TARGET,
     RNG_AI_PREDICT_ABILITY,
     RNG_AI_PREDICT_SWITCH,
+    RNG_AI_RANDOM_SWITCHIN,
     RNG_HEALER,
     RNG_DEXNAV_ENCOUNTER_LEVEL,
 };
@@ -241,5 +242,8 @@ u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u8 *weights
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
+
+u32 RandomBit(enum RandomTag tag, u32 bits);
+u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
 #endif // GUARD_RANDOM_H
