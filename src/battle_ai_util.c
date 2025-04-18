@@ -1103,6 +1103,12 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
 {
     uq4_12_t typeEffectiveness;
     u32 moveType;
+    u32 moveIndex = GetIndexInMoveArray(battlerAtk, move);
+    
+    // if effectiveness already computed, return that value
+    // Unfortunately, ineffective moves have to be recomputed this way
+    if (moveIndex < MAX_MON_MOVES && AI_DATA->effectiveness[battlerAtk][battlerDef][moveIndex] != Q_4_12(0.0))
+        return AI_DATA->effectiveness[battlerAtk][battlerDef][moveIndex];
 
     SaveBattlerData(battlerAtk);
     SaveBattlerData(battlerDef);
@@ -4518,4 +4524,15 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
     if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
+}
+
+u32 GetIndexInMoveArray(u32 battler, u32 move)
+{
+    u16 *moves = GetMovesArray(battler);
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++) {
+        if (moves[i] == move)
+            return i;
+    }
+    return MAX_MON_MOVES;
 }
