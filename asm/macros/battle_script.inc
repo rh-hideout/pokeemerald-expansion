@@ -1367,9 +1367,8 @@
 	callnative BS_RestoreAttacker
 	.endm
 
-	.macro jumpifintimidateabilityprevented jumpInstr:req
+	.macro jumpifintimidateabilityprevented
 	callnative BS_JumpIfIntimidateAbilityPrevented
-	.4byte \jumpInstr
 	.endm
 
 	.macro metalburstdamagecalculator failInstr:req

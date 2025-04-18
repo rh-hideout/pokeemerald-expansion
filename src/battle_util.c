@@ -9215,7 +9215,7 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
             basePower *= 2;
         break;
     case EFFECT_LASH_OUT:
-        if (gProtectStructs[battlerAtk].statFell)
+        if (gProtectStructs[battlerAtk].lashOutAffected)
             basePower *= 2;
         break;
     case EFFECT_EXPLOSION:
