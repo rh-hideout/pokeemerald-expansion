@@ -901,6 +901,12 @@ bool8 ScrCmd_gettime(struct ScriptContext *ctx)
     return FALSE;
 }
 
+bool8 ScrCmd_gettimeofday(struct ScriptContext *ctx)
+{
+    gSpecialVar_0x8000 = GetTimeOfDay();
+    return FALSE;
+}
+
 bool8 ScrCmd_setweather(struct ScriptContext *ctx)
 {
     u16 weather = VarGet(ScriptReadHalfword(ctx));
