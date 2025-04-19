@@ -71,7 +71,7 @@
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
 // Since this is part of a queue with a timer the worst case this should be increased to is 10.
-// The worst case are double battle if you set up a damage non types effect twice per turn. Realisitically this will never happen.
+// And worst case would be in a double battle if you set up a damage non types effect twice per turn. Realisitically this will never happen.
 // It is set to 4 in expnaision because that's how many such effects there are.
 #define DAMAGE_NON_TYPES_COUNT 4
 

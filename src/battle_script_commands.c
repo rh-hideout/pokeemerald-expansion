@@ -10095,7 +10095,6 @@ void BS_CourtChangeSwapSideStatuses(void)
     COURTCHANGE_SWAP(SIDE_STATUS_TOXIC_SPIKES, toxicSpikesAmount, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_STICKY_WEB, stickyWebAmount, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_STEELSURGE, steelsurgeAmount, temp);
-    // COURTCHANGE_SWAP(SIDE_STATUS_DAMAGE_NON_TYPES, damageNonTypesTimer, temp);
     // Track Pledge effect side
     COURTCHANGE_SWAP(SIDE_STATUS_RAINBOW, rainbowTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_SEA_OF_FIRE, seaOfFireTimer, temp);
@@ -10115,8 +10114,12 @@ void BS_CourtChangeSwapSideStatuses(void)
     // Track which side originally set the Sticky Web
     SWAP(sideTimerPlayer->stickyWebBattlerSide, sideTimerOpp->stickyWebBattlerSide, temp);
 
-    // Swap what type set the Gigantamax damage over time effect
-    // SWAP(sideTimerPlayer->damageNonTypesType, sideTimerOpp->damageNonTypesType, temp);
+    // Swap damageNonTypes effects
+    for (u32 i = 0; i < DAMAGE_NON_TYPES_COUNT; i++)
+    {
+        SWAP(sideTimerPlayer->damageNonTypesType[i], sideTimerOpp->damageNonTypesType[i], temp);
+        SWAP(sideTimerPlayer->damageNonTypesTimer[i], sideTimerOpp->damageNonTypesTimer[i], temp);
+    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
