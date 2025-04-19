@@ -161,6 +161,7 @@ static void BattleTest_SetUp(void *data)
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     TestInitConfigData();
+    TestFreeMoveInfoOverrideData();
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -1348,6 +1349,7 @@ static void TearDownBattle(void)
 static void CB2_BattleTest_NextParameter(void)
 {
     TestRunner_CheckMemory();
+    TestFreeMoveInfoOverrideData();
     if (++STATE->runParameter >= STATE->parameters)
     {
         SetMainCallback2(CB2_TestRunner);
@@ -1519,6 +1521,12 @@ void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
     SetGenConfig(configTag, value);
+}
+
+void TestSetMoveData(u32 sourceLine, u32 moveID, enum MoveDataID moveDataID, u32 value)
+{
+    INVALID_IF(!STATE->runGiven, "WITH_MOVE_DATA outside of GIVEN");
+    TestAddMoveInfoOverrideData(moveID, moveDataID, value);
 }
 
 void ClearFlagAfterTest(void)

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_SNORE].effect == EFFECT_SNORE);
+    ASSUME(GetMoveEffect(MOVE_SNORE) == EFFECT_SNORE);
 }
 
 SINGLE_BATTLE_TEST("Snore fails if not asleep")

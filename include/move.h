@@ -2,6 +2,7 @@
 #define GUARD_MOVES_H
 
 #include "contest_effect.h"
+#include "generational_changes.h"
 #include "constants/battle_move_effects.h"
 #include "constants/moves.h"
 
@@ -154,17 +155,25 @@ static inline const u8 *GetMoveName(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].name;
 }
 
+static inline u32 GetMoveEffect(u32 moveId)
+{
+#if TESTING
+    for (int i = 0; i < gMoveInfoOverrideCount; i++)
+    {
+        if (gMovesInfoTestOverride[i].moveID == moveId
+            && gMovesInfoTestOverride[i].moveDataID == MOVE_DATA_ID_EFFECT)
+            return gMovesInfoTestOverride[i].data;
+    }
+#endif
+    return gMovesInfo[SanitizeMoveId(moveId)].effect;
+}
+
 static inline const u8 *GetMoveDescription(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    if (gMovesInfo[moveId].effect == EFFECT_PLACEHOLDER)
+    if (GetMoveEffect(moveId) == EFFECT_PLACEHOLDER)
         return gNotDoneYetDescription;
     return gMovesInfo[moveId].description;
-}
-
-static inline u32 GetMoveEffect(u32 moveId)
-{
-    return gMovesInfo[SanitizeMoveId(moveId)].effect;
 }
 
 static inline u32 GetMoveType(u32 moveId)
@@ -529,12 +538,12 @@ static inline const u8 *GetMoveAnimationScript(u32 moveId)
 static inline const u8 *GetMoveBattleScript(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    if (gBattleMoveEffects[gMovesInfo[moveId].effect].battleScript == NULL)
+    if (gBattleMoveEffects[GetMoveEffect(moveId)].battleScript == NULL)
     {
         DebugPrintfLevel(MGBA_LOG_WARN, "No effect for moveId=%u", moveId);
         return gBattleMoveEffects[EFFECT_PLACEHOLDER].battleScript;
     }
-    return gBattleMoveEffects[gMovesInfo[moveId].effect].battleScript;
+    return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;
 }
 
 #endif // GUARD_MOVES_H
