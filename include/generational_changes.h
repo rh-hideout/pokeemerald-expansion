@@ -26,9 +26,9 @@ extern u8 gMoveInfoOverrideCount;
 
 struct MoveInfoOverride
 {
-    u16 moveID;
-    u16 moveDataID;
-    s32 data;
+    u32 moveID:11;
+    u32 moveDataID:6;
+    s32 data:15;
 };
 
 static inline u32 GetGenConfig(enum GenConfigTag configTag)
