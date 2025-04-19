@@ -2009,16 +2009,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_STEELSURGE;
         }
         return &sideTimer->steelsurgeAmount;
-    case LIST_SIDE_DAMAGE_NON_TYPES:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_DAMAGE_NON_TYPES;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
-            sideTimer->damageNonTypesType = GetMoveType(gCurrentMove);
-        }
-        return &sideTimer->damageNonTypesTimer;
     case LIST_SIDE_RAINBOW:
         if (changeStatus)
         {
