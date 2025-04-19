@@ -2245,3 +2245,10 @@ static const u16 sVanitwinFormSpeciesIdTable[] = {
     SPECIES_VANITWIN_FEMALE,
     FORM_SPECIES_END,
 };
+static const u16 sEmojinnFormSpeciesIdTable[] = {
+    SPECIES_EMOJINN_NORMAL,
+    SPECIES_EMOJINN_JOYFUL,
+    SPECIES_EMOJINN_RAGING,
+    SPECIES_EMOJINN_SOBBING,
+    FORM_SPECIES_END,
+};

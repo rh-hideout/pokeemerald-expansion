@@ -7046,6 +7046,14 @@ Cry_Bubbasaur::
 	.align 2	
 Cry_Bungaloon::
 	.incbin "sound/direct_sound_samples/cries/bungaloon.bin"
+
+	.align 2	
+Cry_Bitteragon::
+	.incbin "sound/direct_sound_samples/cries/bitteragon.bin"
+
+	.align 2	
+Cry_Wycern::
+	.incbin "sound/direct_sound_samples/cries/wycern.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

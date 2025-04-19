@@ -6542,6 +6542,17 @@ static const u16 sTowhorseEggMoveLearnset[] = {
     
 };
 
+static const u16 sBitteragonEggMoveLearnset[] = {
+    MOVE_BOOMBURST,
+    MOVE_ICICLE_SPEAR,
+    MOVE_ICE_HAMMER,
+    MOVE_CLEAR_SMOG,
+    MOVE_AGILITY,
+    MOVE_LAST_RESORT,
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sArctiglobeEggMoveLearnset[] = {
     MOVE_AUTOTOMIZE,
     MOVE_MEDITATE,

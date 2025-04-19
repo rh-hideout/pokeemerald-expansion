@@ -2871,6 +2871,10 @@ gCryTable::
 
 	cry Cry_Bungaloon
 
+	cry Cry_Bitteragon
+
+	cry Cry_Wycern
+
 .endif
 
 	.align 2
@@ -5746,4 +5750,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Bubbasaur
 
 	cry_reverse Cry_Bungaloon
+
+	cry_reverse Cry_Bitteragon
+
+	cry_reverse Cry_Wycern
 .endif

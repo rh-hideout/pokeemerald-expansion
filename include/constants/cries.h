@@ -2650,6 +2650,8 @@ enum {
     CRY_CHAMELEE,
     CRY_BUBBASAUR,
     CRY_BUNGALOON,
+    CRY_BITTERAGON,
+    CRY_WYCERN,  
     CRY_COUNT,
 };
 

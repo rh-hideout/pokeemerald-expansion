@@ -1365,5 +1365,12 @@ static const struct FormChange sSimionachFormChangeTable[] = {
     {FORM_CHANGE_END_BATTLE,        SPECIES_SIMIONACH_UNFOCUSED},
     {FORM_CHANGE_TERMINATOR},
 };
+static const struct FormChange sEmojinnFormChangeTable[] = {
+    {FORM_CHANGE_ITEM_HOLD,               SPECIES_EMOJINN_NORMAL,             ITEM_NONE},
+    {FORM_CHANGE_ITEM_HOLD,               SPECIES_EMOJINN_SOBBING,       ITEM_WELLSPRING_MASK},
+    {FORM_CHANGE_ITEM_HOLD,               SPECIES_EMOJINN_RAGING,      ITEM_HEARTHFLAME_MASK},
+    {FORM_CHANGE_ITEM_HOLD,               SPECIES_EMOJINN_JOYFUL,      ITEM_CORNERSTONE_MASK},
+    {FORM_CHANGE_TERMINATOR},
+};
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN
