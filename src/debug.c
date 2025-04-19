@@ -2377,13 +2377,6 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
         string = StringCopy(string, sText_Unreleased);
 }
 
-static void SilentWarpForTime(void)
-{
-    SetWarpDestination(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.warpId, gSaveBlock1Ptr->location.x, gSaveBlock1Ptr->location.y);
-    DoDiveWarp();
-    ResetInitialPlayerAvatarState();
-}
-
 static void DebugAction_TimeSkip_PrintTime(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
