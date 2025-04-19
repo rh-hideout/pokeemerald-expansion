@@ -1441,8 +1441,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_WILDFIRE,
-            .chance = 100,
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -1522,10 +1522,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_MUD_SPORT, COMBO_STARTER_RAIN_DANCE, COMBO_STARTER_WATER_SPORT},
         .battleAnimScript = gBattleAnimMove_WaterGun,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_CANNONADE,
-            .chance = 100,
-        }),
     },
 
     [MOVE_HYDRO_PUMP] =
@@ -2350,7 +2346,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_ROCK,
-        .accuracy = 100,
+        .accuracy = 90,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -12295,8 +12291,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .damagesAirborne = TRUE,
         .skyBattleBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_VOLCALITH,
-            .chance = 100,
+            .moveEffect = MOVE_EFFECT_SMACK_DOWN,
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -16072,10 +16067,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
         .battleAnimScript = gBattleAnimMove_Leafage,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_VINE_LASH,
-            .chance = 100,
-        }),
     },
 
     [MOVE_SPOTLIGHT] =

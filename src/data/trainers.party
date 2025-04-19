@@ -11050,24 +11050,16 @@ Class: Lass
 Pic: Lass
 Gender: Female
 Music: Female
-Double Battle: Yes
+Double Battle: No
 AI: Check Bad Move
 
-Snorlax
-Level: 100
+Zigzagoon
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-- Recover
-- Recover
-- Recover
-- Recover
 
-Snorlax
-Level: 100
+Shroomish
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-- Recover
-- Recover
-- Recover
-- Recover
 
 === TRAINER_HALEY_1 ===
 Name: HALEY
