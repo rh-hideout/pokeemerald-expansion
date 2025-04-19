@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk")
 SINGLE_BATTLE_TEST("Sleep Talk fails if user is taunted")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TAUNT].effect == EFFECT_TAUNT);
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         ASSUME(gMovesInfo[MOVE_SLEEP_TALK].category == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE, MOVE_FLY, MOVE_DIG); }
         OPPONENT(SPECIES_WOBBUFFET);

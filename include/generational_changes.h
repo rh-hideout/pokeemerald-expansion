@@ -2,6 +2,7 @@
 #define GUARD_GENERATIONAL_CHANGES_H
 
 #include "constants/generational_changes.h"
+#include "constants/move_data_ids.h"
 #include "config/battle.h"
 
 static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
@@ -19,13 +20,24 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
 
 #if TESTING
 extern u8 *gGenerationalChangesTestOverride;
+extern struct MoveInfoOverride *gMovesInfoTestOverride;
+extern u8 gMoveInfoOverrideCount;
 #endif
+
+struct MoveInfoOverride
+{
+    u16 moveID;
+    u16 moveDataID;
+    s32 data;
+};
 
 static inline u32 GetGenConfig(enum GenConfigTag configTag)
 {
-    if (configTag >= GEN_CONFIG_COUNT) return GEN_LATEST;
+    if (configTag >= GEN_CONFIG_COUNT)
+        return GEN_LATEST;
 #if TESTING
-    if (gGenerationalChangesTestOverride == NULL) return sGenerationalChanges[configTag];
+    if (gGenerationalChangesTestOverride == NULL)
+        return sGenerationalChanges[configTag];
     return gGenerationalChangesTestOverride[configTag];
 #else
     return sGenerationalChanges[configTag];
@@ -35,8 +47,10 @@ static inline u32 GetGenConfig(enum GenConfigTag configTag)
 static inline void SetGenConfig(enum GenConfigTag configTag, u32 value)
 {
 #if TESTING
-    if (configTag >= GEN_CONFIG_COUNT) return;
-    if (gGenerationalChangesTestOverride == NULL) return;
+    if (configTag >= GEN_CONFIG_COUNT)
+        return;
+    if (gGenerationalChangesTestOverride == NULL)
+        return;
     gGenerationalChangesTestOverride[configTag] = value;
 #endif
 }
@@ -44,6 +58,8 @@ static inline void SetGenConfig(enum GenConfigTag configTag, u32 value)
 #if TESTING
 void TestInitConfigData(void);
 void TestFreeConfigData(void);
+void TestFreeMoveInfoOverrideData(void);
+void TestAddMoveInfoOverrideData(u32 moveID, enum MoveDataID moveDataID, s32 data);
 #endif
 
 #endif // GUARD_GENERATIONAL_CHANGES_H
