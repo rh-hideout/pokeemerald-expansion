@@ -6941,7 +6941,8 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     for (i = 0; i < gBattlersCount; i++)
     {
         u16 ability = GetBattlerAbility(i);
-        if (IsBattlerAlly(i, battlerAtk))
+        // if not targeting a slot that got switched, continue
+        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
             continue;
 
         if (gChosenMoveByBattler[i] == MOVE_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
