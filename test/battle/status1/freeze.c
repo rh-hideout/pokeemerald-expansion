@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
     }
 }
 
-SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack when using scald")
+SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack when using Scald")
 {
     PASSES_RANDOMLY(80, 100, RNG_FROZEN);
     GIVEN {
