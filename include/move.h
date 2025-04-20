@@ -138,7 +138,7 @@ struct MoveInfo
     const u8 *battleAnimScript;
 };
 
-extern const struct MoveInfo gMovesInfo[];
+extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
 
@@ -155,15 +155,18 @@ static inline const u8 *GetMoveName(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].name;
 }
 
+#define CHECK_MOVE_DATA_OVERRIDE(_moveDataID)                   \
+for (int i = 0; i < gMoveInfoOverrideCount; i++)                \
+{                                                               \
+    if (gMovesInfoTestOverride[i].moveID == moveId              \
+        && gMovesInfoTestOverride[i].moveDataID == _moveDataID) \
+        return gMovesInfoTestOverride[i].data;                  \
+}
+
 static inline u32 GetMoveEffect(u32 moveId)
 {
 #if TESTING
-    for (int i = 0; i < gMoveInfoOverrideCount; i++)
-    {
-        if (gMovesInfoTestOverride[i].moveID == moveId
-            && gMovesInfoTestOverride[i].moveDataID == MOVE_DATA_ID_EFFECT)
-            return gMovesInfoTestOverride[i].data;
-    }
+    CHECK_MOVE_DATA_OVERRIDE(MOVE_DATA_ID_EFFECT);
 #endif
     return gMovesInfo[SanitizeMoveId(moveId)].effect;
 }
@@ -178,6 +181,9 @@ static inline const u8 *GetMoveDescription(u32 moveId)
 
 static inline u32 GetMoveType(u32 moveId)
 {
+#if TESTING
+    CHECK_MOVE_DATA_OVERRIDE(MOVE_DATA_ID_TYPE);
+#endif
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }
 
@@ -188,11 +194,17 @@ static inline u32 GetMoveCategory(u32 moveId)
 
 static inline u32 GetMovePower(u32 moveId)
 {
+#if TESTING
+    CHECK_MOVE_DATA_OVERRIDE(MOVE_DATA_ID_POWER);
+#endif
     return gMovesInfo[SanitizeMoveId(moveId)].power;
 }
 
 static inline u32 GetMoveAccuracy(u32 moveId)
 {
+#if TESTING
+    CHECK_MOVE_DATA_OVERRIDE(MOVE_DATA_ID_ACCURACY);
+#endif
     return gMovesInfo[SanitizeMoveId(moveId)].accuracy;
 }
 
@@ -203,6 +215,9 @@ static inline u32 GetMoveTarget(u32 moveId)
 
 static inline u32 GetMovePP(u32 moveId)
 {
+#if TESTING
+    CHECK_MOVE_DATA_OVERRIDE(MOVE_DATA_ID_PP);
+#endif
     return gMovesInfo[SanitizeMoveId(moveId)].pp;
 }
 
