@@ -422,7 +422,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when co
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander will not activate if Donodozo fainted right before Tatsugiri came in")
+DOUBLE_BATTLE_TEST("Commander will not activate if Dondozo fainted right before Tatsugiri came in")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -438,7 +438,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Donodozo fainted right before
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander prevent Donozo from switch out by Dragon Tail")
+DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
