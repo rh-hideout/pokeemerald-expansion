@@ -1024,7 +1024,7 @@ void MarkBattlerReceivedLinkData(u32 battler)
     gBattleControllerExecFlags &= ~(1u << (28 + battler));
 }
 
-const u8* CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
+const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
 {
     const u8 *result = NULL;
 
@@ -1085,7 +1085,7 @@ const u8* CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     return result;
 }
 
-const u8* CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
+const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
 {
     const u8 *result = NULL;
     gBattleMons[battler].status2 &= ~(STATUS2_UPROAR);
