@@ -210,7 +210,7 @@
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
-#define HITMARKER_UNUSED_3              (1 << 18)   // disable animations during battle scripts, e.g. for Bug Bite
+#define HITMARKER_UNUSED_3              (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
 #define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
 #define HITMARKER_UNUSED_4              (1 << 21)
