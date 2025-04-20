@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-        ASSUME(!gMovesInfo[MOVE_DREAM_EATER].ignoresSubstitute);
+        ASSUME(!MoveIgnoresSubstitute(MOVE_DREAM_EATER));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Thermal Exchange burn prevention can be bypassed with Mold B
 SINGLE_BATTLE_TEST("Thermal Exchange boosts attack if hit by a damaging fire type move")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -461,6 +461,11 @@ static inline bool32 IsMoveSketchBanned(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].sketchBanned;
 }
 
+static inline bool32 IsValidApprenticeMove(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
+}
+
 static inline u32 GetMoveTwoTurnAttackStringId(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.stringId;
