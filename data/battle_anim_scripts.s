@@ -3642,7 +3642,7 @@ gBattleAnimMove_MagmaStorm::
 	call FireSpinEffect
 	restorebg
 	waitbgfadeout
-	setarg 7, 0xFFFF
+	setarg 7, 0xFFF
 	waitbgfadein
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
@@ -28313,7 +28313,7 @@ Status_MagmaStorm:
 	call FireSpinEffect
 	restorebg
 	waitbgfadeout
-	setarg 7, 0xFFFF
+	setarg 7, 0xFFF
 	waitbgfadein
 	stopsound
 	clearmonbg ANIM_DEF_PARTNER

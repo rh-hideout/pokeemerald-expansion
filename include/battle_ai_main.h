@@ -39,11 +39,11 @@ enum StatChange
 // Scores given in AI_CalcMoveEffectScore and AI_CalcHoldEffectMoveScore
 enum AIScore
 {
-    NO_INCREASE,
-    WEAK_EFFECT,
-    DECENT_EFFECT,
-    GOOD_EFFECT,
-    BEST_EFFECT
+    NO_INCREASE = 0,
+    WEAK_EFFECT = 1,
+    DECENT_EFFECT = 2,
+    GOOD_EFFECT = 3,
+    BEST_EFFECT = 4
 };
 
 // AI_TryToFaint
