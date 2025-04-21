@@ -8,7 +8,6 @@
 #include "event_data.h"
 #include "script.h"
 
-
 static void FakeRtc_CalcTimeDifference(struct Time *result, struct SiiRtcInfo *t1, struct Time *t2);
 
 void FakeRtc_Reset(void)
