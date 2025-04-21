@@ -74,8 +74,8 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId);
 static void Mining_CheckItemFound(void);
 static void PrintMessage(const u8 *string);
 static void InitMiningWindows(void);
-static u32 GetCrackPosition(void);
-static bool32 IsCrackMax(void);
+static u32 GetStressLevelPosition(void);
+static bool32 IsStressLevelMax(void);
 static void EndMining(u8 taskId);
 static u32 ConvertLoadGameStateToItemIndex(void);
 static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId);
@@ -283,9 +283,9 @@ static const u16 sUiPalette[] = INCBIN_U16("graphics/mining_minigame/ui.gbapal")
 static const u32 sCollapseScreenTiles[] = INCBIN_U32("graphics/mining_minigame/collapse.4bpp.lz");
 static const u16 sCollapseScreenPalette[] = INCBIN_U16("graphics/mining_minigame/collapse.gbapal");
 
-static const u32 gCracksAndTerrainTiles[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.4bpp.lz");
-static const u32 gCracksAndTerrainTilemap[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.bin.lz");
-static const u16 gCracksAndTerrainPalette[] = INCBIN_U16("graphics/mining_minigame/cracks_terrain.gbapal");
+static const u32 gStressLevelAndTerrainTiles[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.4bpp.lz");
+static const u32 gStressLevelAndTerrainTilemap[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.bin.lz");
+static const u16 gStressLevelAndTerrainPalette[] = INCBIN_U16("graphics/mining_minigame/cracks_terrain.gbapal");
 
 static const u8 gMiningMessageBoxGfx[] = INCBIN_U8("graphics/mining_minigame/message_box.4bpp");
 static const u16 gMiningMessageBoxPal[] = INCBIN_U16("graphics/mining_minigame/message_box.gbapal");
@@ -1755,7 +1755,7 @@ static void MiningUi_Shake(u8 taskId)
     {
         case 0: // Left 1 - Down 1
             MakeCursorInvisible();
-            if (!IsCrackMax() && Random() % 100 < 20) // 20 % chance of not shaking the screen
+            if (!IsStressLevelMax() && Random() % 100 < 20) // 20 % chance of not shaking the screen
                 sMiningUiState->toggleShakeDuringAnimation = TRUE;  
             MoveItemSprites(-1, 1);
             sMiningUiState->shakeState++;
@@ -1788,7 +1788,7 @@ static void MiningUi_Shake(u8 taskId)
             break;
         case 6: // Down 2
             MoveItemSprites(-2, 4);
-            if (!IsCrackMax()) 
+            if (!IsStressLevelMax()) 
             {
                 gSprites[sMiningUiState->ShakeHitEffect].invisible = 0;
                 gSprites[sMiningUiState->ShakeHitTool].invisible = 0;
@@ -1822,7 +1822,7 @@ static void MiningUi_Shake(u8 taskId)
             break;
         case 12: // Right 1 - Down 1
             MoveItemSprites(3, 3);
-            if (!IsCrackMax()) 
+            if (!IsStressLevelMax()) 
                 gSprites[sMiningUiState->ShakeHitEffect].invisible = 0;
             gSprites[sMiningUiState->ShakeHitTool].x += 7;
             StartSpriteAnim(&gSprites[sMiningUiState->ShakeHitTool], 1);
@@ -1840,7 +1840,7 @@ static void MiningUi_Shake(u8 taskId)
             break;
         case 15:
             MoveItemSprites(-1, -1);
-            //if (!IsCrackMax())
+            //if (!IsStressLevelMax())
             //  gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
             sMiningUiState->shakeState++;
             break;
@@ -1858,7 +1858,7 @@ static void MiningUi_Shake(u8 taskId)
                 sMiningUiState->toggleShakeDuringAnimation = FALSE;
                 break;
             }
-            if (IsCrackMax()) 
+            if (IsStressLevelMax()) 
                 WallCollapseAnimation();
             gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
             sMiningUiState->shakeState = 0;
@@ -1907,7 +1907,7 @@ static bool8 Mining_LoadBgGraphics(void)
         case 0:
             ResetTempTileDataBuffers();
             DecompressAndCopyTileDataToVram(1, sCollapseScreenTiles, 0, 0, 0);
-            DecompressAndCopyTileDataToVram(2, gCracksAndTerrainTiles, 0, 0, 0);
+            DecompressAndCopyTileDataToVram(2, gStressLevelAndTerrainTiles, 0, 0, 0);
             DecompressAndCopyTileDataToVram(3, sUiTiles, 0, 0, 0);
             sMiningUiState->loadGameState++;
             break;
@@ -1919,14 +1919,14 @@ static bool8 Mining_LoadBgGraphics(void)
                     for (j = 0; j<32; j++) 
                         OverwriteTileDataInTilemapBuffer(0, i, j, tilemapBuf, 2);
                 }
-                LZDecompressWram(gCracksAndTerrainTilemap, sMiningUiState->sBg2TilemapBuffer);
+                LZDecompressWram(gStressLevelAndTerrainTilemap, sMiningUiState->sBg2TilemapBuffer);
                 LZDecompressWram(sUiTilemap, sMiningUiState->sBg3TilemapBuffer);
                 sMiningUiState->loadGameState++;
             }
             break;
         case 2:
             LoadPalette(sCollapseScreenPalette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
-            LoadPalette(gCracksAndTerrainPalette, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+            LoadPalette(gStressLevelAndTerrainPalette, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
             LoadPalette(sUiPalette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
             sMiningUiState->loadGameState++;
         case 3:
@@ -2176,7 +2176,7 @@ static void Task_MiningMainInput(u8 taskId)
     if (AreAllItemsFound())
         EndMining(taskId);
 
-    if (IsCrackMax())
+    if (IsStressLevelMax())
         EndMining(taskId);
 }
 
@@ -3057,14 +3057,14 @@ static void PrintMessage(const u8 *string)
     RunTextPrinters();
 }
 
-static u32 GetCrackPosition(void) 
+static u32 GetStressLevelPosition(void) 
 {
     return sMiningUiState->stressLevelPos;
 }
 
-static bool32 IsCrackMax(void) 
+static bool32 IsStressLevelMax(void) 
 {
-    return GetCrackPosition() == STRESS_LEVEL_POS_MAX;
+    return GetStressLevelPosition() == STRESS_LEVEL_POS_MAX;
 }
 
 static void EndMining(u8 taskId) 
@@ -3281,7 +3281,7 @@ static void HandleGameFinish(u8 taskId)
 {
     MakeCursorInvisible();
 
-    if (IsCrackMax()) 
+    if (IsStressLevelMax()) 
         // The Shake-Task creation is handled by Task_MiningUi_HandleMainInput
         // Here, we only set the Shake Duration.
         sMiningUiState->shakeDuration = 6; 
