@@ -863,11 +863,6 @@ void SetFollowerNPCSprite(u8 spriteIndex)
     }
 }
 
-static u8 GetPlayerMapObjId(void)
-{
-	return gPlayerAvatar.objectEventId;
-}
-
 static void ChooseFirstThreeEligibleMons(void)
 {
     u8 i;
@@ -1188,86 +1183,6 @@ void FollowerNPC_WarpSetEnd(void)
 #endif
 }
 
-enum
-{
-	GoDown,
-	GoUp,
-	GoLeft,
-	GoRight
-};
-
-void FollowerNPCPositionFix(void)
-{
-#if OW_ENABLE_NPC_FOLLOWERS
-    u8 playerObjId = GetPlayerMapObjId();
-    u8 followerObjid = gSaveBlock3Ptr->NPCfollower.objId;
-    u16 playerX = gObjectEvents[playerObjId].currentCoords.x;
-    u16 playerY = gObjectEvents[playerObjId].currentCoords.y;
-    u16 npcX = gObjectEvents[followerObjid].currentCoords.x;
-    u16 npcY = gObjectEvents[followerObjid].currentCoords.y;
-
-    gSpecialVar_Result = 0xFFFF;
-
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
-        return;
-    
-    if (gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs != FNPC_DOOR_NONE || gObjectEvents[followerObjid].invisible)
-    {
-        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
-        npcX = playerX;
-        npcY = playerY;
-        return;
-    }
-
-    if (playerX == npcX)
-    {
-        if (playerY > npcY)
-        {
-            if (playerY != npcY) //Player and follower are not 1 tile apart
-            {
-                if (gSpecialVar_0x8000 == 0)
-                    gSpecialVar_Result = GoDown;
-                else
-                    gObjectEvents[followerObjid].currentCoords.y = playerY;
-            }
-        }
-        else // Player Y <= npcY
-        {
-            if (playerY != npcY) //Player and follower are not 1 tile apart
-            {
-                if (gSpecialVar_0x8000 == 0)
-                    gSpecialVar_Result = GoUp;
-                else
-                    gObjectEvents[followerObjid].currentCoords.y = playerY;
-            }
-        }
-    }
-    else //playerY == npcY
-    {
-        if (playerX > npcX)
-        {
-            if (playerX != npcX) //Player and follower are not 1 tile apart
-            {
-                if (gSpecialVar_0x8000 == 0)
-                    gSpecialVar_Result = GoRight;
-                else
-                    gObjectEvents[followerObjid].currentCoords.x = playerX;
-            }
-        }
-        else // Player X <= npcX
-        {
-            if (playerX != npcX) //Player and follower are not 1 tile apart
-            {
-                if (gSpecialVar_0x8000 == 0)
-                    gSpecialVar_Result = GoLeft;
-                else
-                    gObjectEvents[followerObjid].currentCoords.x = playerX;
-            }
-        }
-    }
-#endif
-}
-
 bool8 FollowerNPCCanBike(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
@@ -1463,10 +1378,7 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
         else if (GetCollisionAtCoords(player, player->currentCoords.x - 1, player->currentCoords.y, DIR_WEST) == COLLISION_NONE)
             ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT); // Follower takes a step SOUTH
         else
-        {
-            FollowerNPCPositionFix();
-            follower->invisible = TRUE;
-        }
+            HideNPCFollower();
     }
 #endif
 }

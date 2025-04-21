@@ -66,7 +66,6 @@ const u8 *GetFollowerNPCScriptPointer(void);
 bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void HideNPCFollower(void);
 void FollowerNPC_WarpSetEnd(void);
-void FollowerNPCPositionFix(void);
 
 bool8 FollowerNPCCanBike(void);
 void FollowerNPC_HandleBike(void);
