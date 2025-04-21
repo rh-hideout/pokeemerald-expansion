@@ -308,13 +308,17 @@ BattleScript_CheckPrimalWeather:
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_STRONG_WINDS, BattleScript_MysteriousAirCurrentBlowsOn
 	return
 
-BattleScript_MoveSwitchPursuit:
+BattleScript_MoveSwitchPursuitEnd:
+	call BattleScript_MoveSwitchPursuitRet
+	end
+
+BattleScript_MoveSwitchPursuitRet:
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
 	jumpifnopursuitswitchdmg BattleScript_MoveSwitchOpenPartyScreen
-	end
+	return
 
 BattleScript_MoveSwitch:
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
@@ -1344,7 +1348,7 @@ BattleScript_EffectPartingShotTrySpAtk:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectPartingShotSwitch:
 	moveendall
-	goto BattleScript_MoveSwitchPursuit
+	goto BattleScript_MoveSwitchPursuitEnd
 
 BattleScript_EffectPowder::
 	attackcanceler
@@ -2768,21 +2772,12 @@ BattleScript_EffectHealBlock::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectHitEscape::
-	call BattleScript_EffectHit_Ret
-	jumpifmovehadnoeffect BattleScript_MoveEnd
-	tryfaintmon BS_TARGET
-	moveendto MOVEEND_ATTACKER_VISIBLE
-	moveendfrom MOVEEND_TARGET_VISIBLE
-	jumpifbattleend BattleScript_HitEscapeEnd
-	jumpifbyte CMP_NOT_EQUAL, gBattleOutcome, 0, BattleScript_HitEscapeEnd
-	jumpifemergencyexited BS_TARGET, BattleScript_HitEscapeEnd
 	jumpiffainted BS_TARGET, FALSE, BattleScript_HitEscapeSwitch
 	setbyte sGIVEEXP_STATE, 0
 	getexp BS_TARGET
 BattleScript_HitEscapeSwitch:
-	goto BattleScript_MoveSwitchPursuit
-BattleScript_HitEscapeEnd:
-	end
+	call BattleScript_MoveSwitchPursuitRet
+	return
 
 BattleScript_EffectPlaceholder::
 	attackcanceler

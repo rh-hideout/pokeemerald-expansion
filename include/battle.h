@@ -192,7 +192,7 @@ struct SpecialStatus
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 emergencyExited:1;
+    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 stormDrainRedirected:1;
@@ -216,8 +216,7 @@ struct SpecialStatus
     // End of byte
     u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
-    u8 unused:3;
+    u8 unused:4;
     // End of byte
 };
 
