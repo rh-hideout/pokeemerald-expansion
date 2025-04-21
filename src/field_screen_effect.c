@@ -412,7 +412,13 @@ static void Task_ExitNonAnimDoor(u8 taskId)
     case 2:
         if (IsPlayerStandingStill())
         {
-            FollowerNPC_SetIndicatorToComeOutDoor();
+            s16 x, y;
+
+            PlayerGetDestCoords(&x, &y);
+            if (!MetatileBehavior_IsDeepSouthWarp(MapGridGetMetatileBehaviorAt(x, y + 1)))
+                FollowerNPC_SetIndicatorToComeOutDoor();
+            // TODO: Add specific follower door warp behavior for MB_DEEP_SOUTH_WARP.
+
             FollowerNPC_WarpSetEnd();
             UnfreezeObjectEvents();
             task->tState = 3;
