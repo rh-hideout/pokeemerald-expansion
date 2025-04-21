@@ -6334,7 +6334,10 @@ void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality)
 
 bool8 HasTwoFramesAnimation(u16 species)
 {
-    return P_TWO_FRAME_FRONT_SPRITES && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder && species != SPECIES_UNOWN && !gTestRunnerHeadless;
+    return P_TWO_FRAME_FRONT_SPRITES 
+        && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder 
+        && species != SPECIES_UNOWN 
+        && !gTestRunnerHeadless;
 }
 
 static bool8 ShouldSkipFriendshipChange(void)
