@@ -362,7 +362,7 @@ void BattleArena_AddMindPoints(u8 battler)
 //    - Fake Out subtracts 1 point
 // All status moves give 0 points, with the following exceptions:
 //    - Protect, Detect, and Endure subtract 1 point
-    u32 effect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if (effect == EFFECT_FIRST_TURN_ONLY
      || effect == EFFECT_PROTECT
@@ -415,7 +415,7 @@ void BattleArena_AddSkillPoints(u8 battler)
     }
 }
 
-void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
+void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
@@ -441,6 +441,8 @@ void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
     case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
+        break;
+    default:
         break;
     }
 }

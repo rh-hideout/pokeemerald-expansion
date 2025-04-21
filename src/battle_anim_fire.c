@@ -572,6 +572,11 @@ static void AnimFireSpiralInward(struct Sprite *sprite)
 }
 
 // For the impact spread of fire sprites for moves like Blaze Kick or Fire Punch
+// args[0] - delta to mon x offset
+// args[1] - delta to mon y offset
+// args[2] - x increment
+// args[3] - y increment
+// args[4] - duration
 void AnimFireSpread(struct Sprite *sprite)
 {
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);

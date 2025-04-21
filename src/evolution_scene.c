@@ -821,7 +821,6 @@ static void Task_EvolutionScene(u8 taskId)
             }
             if (!gTasks[taskId].tEvoWasStopped)
             {
-                DoRemoveItems(mon);
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, mon);
             }
 

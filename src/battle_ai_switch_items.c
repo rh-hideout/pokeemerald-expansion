@@ -30,6 +30,7 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount);
 static bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon);
 static bool32 CanAbilityTrapOpponent(u16 ability, u32 opponent);
+static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
 static void InitializeSwitchinCandidate(struct Pokemon *mon)
 {
@@ -182,7 +183,8 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     s32 i, damageDealt = 0, maxDamageDealt = 0, damageTaken = 0, maxDamageTaken = 0;
     u32 aiMove, playerMove, aiBestMove = MOVE_NONE, aiAbility = AI_DATA->abilities[battler], opposingBattler, weather = AI_GetWeather();
     bool32 getsOneShot = FALSE, hasStatusMove = FALSE, hasSuperEffectiveMove = FALSE;
-    u16 typeEffectiveness = UQ_4_12(1.0), aiMoveEffect; //baseline typing damage
+    u16 typeEffectiveness = UQ_4_12(1.0); //baseline typing damage
+    enum BattleMoveEffects aiMoveEffect;
     uq4_12_t effectiveness;
 
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer
@@ -629,7 +631,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
 {
     bool32 switchMon = FALSE;
     u16 monAbility = AI_DATA->abilities[battler];
-    u16 holdEffect = AI_DATA->holdEffects[battler];
+    enum ItemHoldEffect holdEffect = AI_DATA->holdEffects[battler];
     u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyStatIsRaised(battler);
@@ -992,7 +994,7 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
 
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
     u32 lastUsedMove = AI_DATA->lastUsedMove[battler];
     u32 opposingBattler = GetOppositeBattler(battler);
     bool32 moveAffectsTarget = TRUE;
@@ -1060,7 +1062,8 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(u32 battler)
 static bool32 HasGoodSubstituteMove(u32 battler)
 {
     int i;
-    u32 aiMove, aiMoveEffect, opposingBattler = GetOppositeBattler(battler);
+    u32 aiMove, opposingBattler = GetOppositeBattler(battler);
+    enum BattleMoveEffects aiMoveEffect;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         aiMove = gBattleMons[battler].moves[i];
@@ -1488,7 +1491,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 static s32 GetSwitchinWeatherImpact(void)
 {
     s32 weatherImpact = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    enum ItemHoldEffect holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     if (HasWeatherEffect())
     {
@@ -1552,7 +1555,7 @@ static s32 GetSwitchinWeatherImpact(void)
 static u32 GetSwitchinRecurringHealing(void)
 {
     u32 recurringHealing = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    enum ItemHoldEffect holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_KLUTZ)
@@ -1586,7 +1589,7 @@ static u32 GetSwitchinRecurringHealing(void)
 static u32 GetSwitchinRecurringDamage(void)
 {
     u32 passiveDamage = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    enum ItemHoldEffect holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
@@ -2250,6 +2253,7 @@ static bool32 ShouldUseItem(u32 battler)
     s32 i;
     u8 validMons = 0;
     bool32 shouldUse = FALSE;
+    u32 healAmount = 0;
 
     if (IsAiVsAiBattle())
         return FALSE;
@@ -2291,10 +2295,12 @@ static bool32 ShouldUseItem(u32 battler)
         switch (ItemId_GetBattleUsage(item))
         {
         case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
-            shouldUse = AI_ShouldHeal(battler, 0);
+            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], &gEnemyParty[gBattlerPartyIndexes[battler]]);
+            shouldUse = AI_ShouldHeal(battler, healAmount);
             break;
         case EFFECT_ITEM_RESTORE_HP:
-            shouldUse = AI_ShouldHeal(battler, itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)]);
+            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], &gEnemyParty[gBattlerPartyIndexes[battler]]);
+            shouldUse = AI_ShouldHeal(battler, healAmount);
             break;
         case EFFECT_ITEM_CURE_STATUS:
             if (itemEffects[3] & ITEM3_SLEEP && gBattleMons[battler].status1 & STATUS1_SLEEP)
@@ -2360,6 +2366,9 @@ static bool32 ShouldUseItem(u32 battler)
 static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
 {
     bool32 shouldHeal = FALSE;
+    u8 opponent;
+    u32 maxDamage = 0;
+    u32 dmg = 0;
 
     if (gBattleMons[battler].hp < gBattleMons[battler].maxHP / 4
      || gBattleMons[battler].hp == 0
@@ -2368,6 +2377,30 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
         // We have low enough HP to consider healing
         shouldHeal = !AI_OpponentCanFaintAiWithMod(battler, healAmount); // if target can kill us even after we heal, why bother
     }
+
+    //calculate max expected damage from the opponent
+    for (opponent = 0; opponent < gBattlersCount; opponent++)
+    {
+        if (GetBattlerSide(opponent) == B_SIDE_PLAYER)
+        {
+            dmg = GetBestDmgFromBattler(opponent, battler, AI_DEFENDING);
+
+            if (dmg > maxDamage)
+                maxDamage = dmg;
+        }
+    }
+
+    // also heal if a 2HKO is outhealed
+    if (AI_OpponentCanFaintAiWithMod(battler, 0)
+      && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
+      && healAmount > 2*maxDamage)
+        return TRUE;
+
+    // also heal, if the expected damage is outhealed and it's the last remaining mon
+    if (AI_OpponentCanFaintAiWithMod(battler, 0)
+      && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
+      && CountUsablePartyMons(battler) == 0)
+        return TRUE;
 
     return shouldHeal;
 }
@@ -2385,4 +2418,29 @@ static bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
         }
     }
     return FALSE;
+}
+
+static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
+{
+    switch (itemEffectParam)
+    {
+    case ITEM6_HEAL_HP_FULL:
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) - GetMonData(mon, MON_DATA_HP, NULL);
+        break;
+    case ITEM6_HEAL_HP_HALF:
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 2;
+        if (itemEffectParam == 0)
+            itemEffectParam = 1;
+        break;
+    case ITEM6_HEAL_HP_LVL_UP:
+        itemEffectParam = gBattleScripting.levelUpHP;
+        break;
+    case ITEM6_HEAL_HP_QUARTER:
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 4;
+        if (itemEffectParam == 0)
+            itemEffectParam = 1;
+        break;
+    }
+
+    return itemEffectParam;
 }
