@@ -681,7 +681,6 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
 
 static const struct ListMenuItem sDebugMenu_Items_TimeSkip[] =
 {
-    //TODO: CUSTOM TIME FORWARDER MENU
     [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME] = {COMPOUND_STRING("Print current time"), DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIME},
     [DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY] = {COMPOUND_STRING("Print current time of day"), DEBUG_TIME_SKIP_MENU_ITEM_PRINTTIMEOFDAY},
     [DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY] = {COMPOUND_STRING("Change current time of day"), DEBUG_TIME_SKIP_MENU_ITEM_TIMESOFDAY},
