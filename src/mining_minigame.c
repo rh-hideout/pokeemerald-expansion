@@ -1,8 +1,4 @@
-// BUG TODO:    When digging up an item with the last hit before the stress level is maxed out, the game gives you another hit 
-// TODO++:      Completely rewrite the item generation algorithm. Splitting items into four zones is a bad idea.
-//              Use the current stone generation algorithm that checks WHICH stone can be placed WHERE, by iterating
-//              through the `itemMap[]`.
-// TODO:        Add the hit effect frame that appears when you hit an already dug up item
+// TODO:        Add the hit effect frame that appears  you hit an already dug up item
 // END TODO:    Check and fix the DEBUG SYSTEM for this minigame.
 // END TODO:    Make sure there are no warnings whatsoever!
 #include "mining_minigame.h"
@@ -1860,7 +1856,8 @@ static void MiningUi_Shake(u8 taskId)
             }
             if (IsStressLevelMax()) 
                 WallCollapseAnimation();
-            gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
+            if (!IsStressLevelMax())
+                gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
             sMiningUiState->shakeState = 0;
             sMiningUiState->shouldShake = FALSE;
             sMiningUiState->toggleShakeDuringAnimation = FALSE;
@@ -2173,11 +2170,16 @@ static void Task_MiningMainInput(u8 taskId)
         sMiningUiState->tool = BLUE_BUTTON;
     }
 
-    if (AreAllItemsFound())
-        EndMining(taskId);
 
-    if (IsStressLevelMax())
+    if (AreAllItemsFound()) {
+        DebugPrintf("all items found");
         EndMining(taskId);
+    }
+
+    if (IsStressLevelMax()) {
+        DebugPrintf("Stress level max");
+        EndMining(taskId);
+    }
 }
 
 static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr) 
@@ -2309,22 +2311,32 @@ static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16* ptr
     {   
         case 0:
             StressLevel_Draw_0(offsetIn8, ofs2, ptr);
+            if (sMiningUiState->tool == 1)  
+                sMiningUiState->stressLevelCount++;         
             sMiningUiState->stressLevelCount++;
             break;
         case 1:
             StressLevel_Draw_1(offsetIn8, ofs2, ptr);
+            if (sMiningUiState->tool == 1)  
+                sMiningUiState->stressLevelCount++;   
             sMiningUiState->stressLevelCount++;
             break;
         case 2:
             StressLevel_Draw_2(offsetIn8, ofs2, ptr);
+            if (sMiningUiState->tool == 1)  
+                sMiningUiState->stressLevelCount++;   
             sMiningUiState->stressLevelCount++;
             break;
         case 3:
             StressLevel_Draw_3(offsetIn8, ofs2, ptr);
+            if (sMiningUiState->tool == 1)  
+                sMiningUiState->stressLevelCount++;   
             sMiningUiState->stressLevelCount++;
             break;
         case 4:
             StressLevel_Draw_4(offsetIn8, ofs2, ptr);
+            if (sMiningUiState->tool == 1)  
+                sMiningUiState->stressLevelCount++;   
             sMiningUiState->stressLevelCount++;
             break;
         case 5:
