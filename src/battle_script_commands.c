@@ -15936,9 +15936,13 @@ static void Cmd_handleballthrow(void)
     }
     else
     {
-        u32 odds, i;
+        u32 i;
+        u32 maxHPbase = gBattleMons[gBattlerTarget].maxHP * 3;
+        u32 HPvalue = (maxHPbase - gBattleMons[gBattlerTarget].hp * 2);
+        u32 odds = HPvalue;
         u32 catchRate;
         u32 ballId = ItemIdToBallId(gLastUsedItem);
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u .. (maxHPbase=%u, HPvalue=%u)", odds, maxHPbase, HPvalue);
 
         gBallToDisplay = gLastThrownBall = gLastUsedItem;
         if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
@@ -16119,14 +16123,76 @@ static void Cmd_handleballthrow(void)
         else
             catchRate = catchRate + ballAddition;
 
-        odds = (catchRate * ballMultiplier / 100)
-            * (gBattleMons[gBattlerTarget].maxHP * 3 - gBattleMons[gBattlerTarget].hp * 2)
-            / (3 * gBattleMons[gBattlerTarget].maxHP);
+        odds *= catchRate;
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u .. (catchRate=%u, species=%u)", odds, catchRate, gBattleMons[gBattlerTarget].species);
+        odds = (odds * ballMultiplier) / 100;
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u .. (ballMultiplier=%u, ballID=%u)", odds, ballMultiplier, ballId);
+        
+        if (B_CATCH_BADGE_PENALTY >= GEN_9)
+        {
+            u16 badgePenalty = 100;
+
+            u8 badgeCount = 0;
+            u8 badgeLevel[] = {
+                15,
+                25,
+                35,
+                45,
+                55,
+                65,
+                75,
+                85,
+                100,
+            };
+            for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+            {
+                if (FlagGet(i))
+                    badgeCount++;
+            }
+
+            for (i = badgeCount; i < sizeof(badgeLevel); i++)
+            {
+                if (gBattleMons[gBattlerTarget].level <= badgeLevel[i])
+                    break;
+                
+                badgePenalty = (badgePenalty * 4) / 5;
+            }
+
+            odds = (odds * badgePenalty) / 100;
+            DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u .. (badgePenalty=%u, badgeCount=%u)", odds, badgePenalty, badgeCount);
+        }
+
+        odds /= maxHPbase;
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u", odds);
+
+        if (B_CATCH_LOW_LEVEL_BONUS >= GEN_9)
+        {
+            if (gBattleMons[gBattlerTarget].level <= 13)
+            {
+                odds *= 36 - (gBattleMons[gBattlerTarget].level * 2);
+                odds /= 10;
+            }
+        }
+        else if (B_CATCH_LOW_LEVEL_BONUS == GEN_8)
+        {
+            if (gBattleMons[gBattlerTarget].level <= 20)
+            {
+                odds *= 30 - gBattleMons[gBattlerTarget].level;
+                odds /= 10;
+            }
+        }
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "odds=%u .. (targetLevel=%u)", odds, gBattleMons[gBattlerTarget].level);
 
         if (gBattleMons[gBattlerTarget].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
-            odds *= 2;
+        {
+            if (B_CATCH_SLEEP_FREEZE_BONUS >= GEN_5)
+                odds = (odds * 25) / 10;
+            else
+                odds *= 2;
+        }
         if (gBattleMons[gBattlerTarget].status1 & (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE))
             odds = (odds * 15) / 10;
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "Final odds=%u .. (status1=%u)", odds, gBattleMons[gBattlerTarget].status1);
 
         if (gBattleResults.catchAttempts[ballId] < 255)
             gBattleResults.catchAttempts[ballId]++;
