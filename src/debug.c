@@ -104,7 +104,7 @@ enum UtilDebugMenu
     DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS,
     DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS,
     DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI,
-    DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER,
+    DEBUG_UTIL_MENU_ITEM_TIME_MENU,
 };
 
 enum TimeSkipDebugMenu
@@ -676,7 +676,7 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = {COMPOUND_STRING("Berry Functions…{CLEAR_TO 110}{RIGHT_ARROW}"),  DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS},
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = {COMPOUND_STRING("EWRAM Counters…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS},
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = {COMPOUND_STRING("Steven Multi"),                                 DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI},
-    [DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER]    = {COMPOUND_STRING("Time Skipper"),                                 DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER},
+    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]       = {COMPOUND_STRING("Time Menu"),                                    DEBUG_UTIL_MENU_ITEM_TIME_MENU},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeSkip[] =
@@ -878,7 +878,7 @@ static void (*const sDebugMenu_Actions_Utilities[])(u8) =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = DebugAction_Util_BerryFunctions,
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = DebugAction_Util_CheckEWRAMCounters,
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = DebugAction_Util_Steven_Multi,
-    [DEBUG_UTIL_MENU_ITEM_TIME_SKIPPER]    = DebugAction_Util_OpenTimeMenu,
+    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]    = DebugAction_Util_OpenTimeMenu,
 };
 
 static void (*const sDebugMenu_Actions_PCBag[])(u8) =
@@ -1932,24 +1932,30 @@ static void DebugAction_Util_BerryFunctions(u8 taskId)
 static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    if (OW_USE_FAKE_RTC == FALSE) { 
-        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
-    }
-    else {
-        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
-    }
+    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip, sDebugMenu_ListTemplate_TimeSkip);
 }
 
 static void DebugAction_TimeSkip_TimesOfDay(u8 taskId)
 {
-    Debug_DestroyMenu(taskId);
-    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_TimesOfDay, sDebugMenu_ListTemplate_TimeSkip_TimesOfDay);
+    Debug_DestroyMenu_Full(taskId);
+    if (OW_USE_FAKE_RTC == FALSE) { 
+        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    }
+    else {
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_TimesOfDay, sDebugMenu_ListTemplate_TimeSkip_TimesOfDay);
+    }
 }
 
 static void DebugAction_TimeSkip_Weekdays(u8 taskId)
 {
-    Debug_DestroyMenu(taskId);
-    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_Weekdays, sDebugMenu_ListTemplate_TimeSkip_Weekdays);
+    Debug_DestroyMenu_Full(taskId);
+    if (OW_USE_FAKE_RTC == FALSE) { 
+        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    }
+    else {
+        
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeSkip_Weekdays, sDebugMenu_ListTemplate_TimeSkip_Weekdays);
+    }
 }
 
 // *******************************
@@ -2386,11 +2392,20 @@ static void DebugAction_TimeSkip_PrintTime(u8 taskId)
 
 void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 {
-    struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
- 
-    StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
-    ConvertIntToDecimalStringN(gStringVar2, rtc->hour, STR_CONV_MODE_LEFT_ALIGN, 3);
-    ConvertIntToDecimalStringN(gStringVar3, rtc->minute, STR_CONV_MODE_LEADING_ZEROS, 2);
+    if(OW_USE_FAKE_RTC == TRUE) {
+        struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
+        StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
+        ConvertIntToDecimalStringN(gStringVar2, rtc->hour, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, rtc->minute, STR_CONV_MODE_LEADING_ZEROS, 2);
+    }
+    else {
+        u32 day = ((gLocalTime.days - 1) + 6) % 7 ;
+        RtcCalcLocalTime();
+        StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[day]);
+        ConvertIntToDecimalStringN(gStringVar2, gLocalTime.hours, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, gLocalTime.minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
+    }
+
 }
 
 static void DebugAction_TimeSkip_PrintTimeOfDay(u8 taskId)
