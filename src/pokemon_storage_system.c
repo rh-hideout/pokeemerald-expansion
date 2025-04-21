@@ -845,7 +845,7 @@ static void TilemapUtil_DrawPrev(u8);
 static void TilemapUtil_Draw(u8);
 
 // Form changing
-void SetMonFormPSS(struct BoxPokemon *boxMon, u32 method);
+void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method);
 void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 
 static const u8 gText_JustOnePkmn[] = _("There is just one POKéMON with you.");
@@ -6909,7 +6909,7 @@ static void ReshowDisplayMon(void)
         TryRefreshDisplayMon();
 }
 
-void SetMonFormPSS(struct BoxPokemon *boxMon, u32 method)
+void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u16 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method, 0);
     if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL))

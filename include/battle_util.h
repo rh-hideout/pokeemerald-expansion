@@ -172,6 +172,19 @@ enum SleepClauseBlock
     BLOCKED_BY_SLEEP_CLAUSE,
 };
 
+enum SkyDropState
+{
+    SKY_DROP_IGNORE,
+    SKY_DROP_ATTACKCANCELLER_CHECK,
+    SKY_DROP_GRAVITY_ON_AIRBORNE,
+    SKY_DROP_CANCEL_MULTI_TURN_MOVES,
+    SKY_DROP_STATUS_YAWN,
+    SKY_DROP_STATUS_FREEZE_SLEEP,
+};
+
+#define SKY_DROP_NO_TARGET 0xFF
+#define SKY_DROP_RELEASED_TARGET 0xFE
+
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
@@ -195,7 +208,7 @@ u8 GetBattlerForBattleScript(u8 caseId);
 bool32 IsBattlerMarkedForControllerExec(u32 battler);
 void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
-const u8* CancelMultiTurnMoves(u32 battler);
+const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
 bool32 WasUnableToUseMove(u32 battler);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
@@ -240,9 +253,9 @@ void HandleAction_RunBattleScript(void);
 u32 SetRandomTarget(u32 battler);
 u32 GetBattleMoveTarget(u16 move, u8 setTarget);
 u8 GetAttackerObedienceForAction();
-u32 GetBattlerHoldEffect(u32 battler, bool32 checkNegating);
-u32 GetBattlerHoldEffectIgnoreAbility(u32 battler, bool32 checkNegating);
-u32 GetBattlerHoldEffectInternal(u32 battler, bool32 checkNegating, bool32 checkAbility);
+enum ItemHoldEffect GetBattlerHoldEffect(u32 battler, bool32 checkNegating);
+enum ItemHoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler, bool32 checkNegating);
+enum ItemHoldEffect GetBattlerHoldEffectInternal(u32 battler, bool32 checkNegating, bool32 checkAbility);
 u32 GetBattlerHoldEffectParam(u32 battler);
 bool32 IsMoveMakingContact(u32 move, u32 battlerAtk);
 bool32 IsBattlerGrounded(u32 battler);
@@ -252,8 +265,8 @@ u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower, u32 rolloutTimer);
 u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter);
 s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedBasePower);
 s32 CalculateMoveDamageVars(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier,
-                            u32 weather, u32 holdEffectAtk, u32 holdEffectDef, u32 abilityAtk, u32 abilityDef);
-s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalcData, uq4_12_t typeEffectivenessModifier, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk, u32 holdEffectDef);
+                            u32 weather, enum ItemHoldEffect holdEffectAtk, enum ItemHoldEffect holdEffectDef, u32 abilityAtk, u32 abilityDef);
+s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalcData, uq4_12_t typeEffectivenessModifier, u32 abilityAtk, u32 abilityDef, enum ItemHoldEffect holdEffectAtk, enum ItemHoldEffect holdEffectDef);
 uq4_12_t CalcTypeEffectivenessMultiplier(u32 move, u32 moveType, u32 battlerAtk, u32 battlerDef, u32 defAbility, bool32 recordAbilities);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, u16 abilityDef);
 uq4_12_t GetTypeModifier(u32 atkType, u32 defType);
@@ -268,8 +281,8 @@ void ActivateUltraBurst(u32 battler);
 bool32 IsBattlerMegaEvolved(u32 battler);
 bool32 IsBattlerPrimalReverted(u32 battler);
 bool32 IsBattlerUltraBursted(u32 battler);
-u16 GetBattleFormChangeTargetSpecies(u32 battler, u16 method);
-bool32 TryBattleFormChange(u32 battler, u32 method);
+u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method);
+bool32 TryBattleFormChange(u32 battler, enum FormChanges method);
 bool32 DoBattlersShareType(u32 battler1, u32 battler2);
 bool32 CanBattlerGetOrLoseItem(u32 battler, u16 itemId);
 u32 GetIllusionMonSpecies(u32 battler);

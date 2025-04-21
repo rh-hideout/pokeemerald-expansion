@@ -4472,7 +4472,8 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     u16 friendship;
     u8 beauty = GetMonData(mon, MON_DATA_BEAUTY, 0);
     u16 upperPersonality = personality >> 16;
-    u32 holdEffect, currentMap, partnerSpecies, partnerHeldItem, partnerHoldEffect;
+    enum ItemHoldEffect holdEffect;
+    u32 currentMap, partnerSpecies, partnerHeldItem, partnerHoldEffect;
     bool32 consumeItem = FALSE;
     u16 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
@@ -6333,7 +6334,10 @@ void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality)
 
 bool8 HasTwoFramesAnimation(u16 species)
 {
-    return P_TWO_FRAME_FRONT_SPRITES && species != SPECIES_UNOWN && !gTestRunnerHeadless;
+    return P_TWO_FRAME_FRONT_SPRITES 
+        && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder 
+        && species != SPECIES_UNOWN 
+        && !gTestRunnerHeadless;
 }
 
 static bool8 ShouldSkipFriendshipChange(void)
@@ -6551,13 +6555,13 @@ u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, u16 method, u32 arg)
+u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32 arg)
 {
     return GetFormChangeTargetSpeciesBoxMon(&mon->box, method, arg);
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, u16 method, u32 arg)
+u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg)
 {
     u32 i;
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
@@ -6648,6 +6652,8 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, u16 method, u32 
                         break;
                     }
                     break;
+                default:
+                    break;
                 }
             }
         }
@@ -6672,7 +6678,7 @@ void TrySetDayLimitToFormChange(struct Pokemon *mon)
     }
 }
 
-bool32 DoesSpeciesHaveFormChangeMethod(u16 species, u16 method)
+bool32 DoesSpeciesHaveFormChangeMethod(u16 species, enum FormChanges method)
 {
     u32 i;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
@@ -6779,7 +6785,7 @@ bool32 SpeciesHasGenderDifferences(u16 species)
     return FALSE;
 }
 
-bool32 TryFormChange(u32 monId, u32 side, u16 method)
+bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method)
 {
     struct Pokemon *party = (side == B_SIDE_PLAYER) ? gPlayerParty : gEnemyParty;
 
@@ -6817,7 +6823,7 @@ bool32 IsSpeciesEnabled(u16 species)
     return gSpeciesInfo[species].baseHP > 0 || species == SPECIES_EGG;
 }
 
-void TryToSetBattleFormChangeMoves(struct Pokemon *mon, u16 method)
+void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method)
 {
     int i, j;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
