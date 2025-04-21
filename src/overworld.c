@@ -1539,7 +1539,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         }
     }
     // if stop running but keep holding B -> fix follower frame
-    if (PlayerHasFollowerNPC() && IsPlayerOnFoot() && IsPlayerStandingStill())
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT) && IsPlayerStandingStill())
         ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 }
 
