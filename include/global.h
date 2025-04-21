@@ -222,7 +222,6 @@ struct NPCFollower
     u16 flag;
     u16 graphicsId;
     u16 flags;
-    u8 locked;
     u8 battlePartner; // If you have more than 255 total battle partners defined, change this to a u16
 };
 
