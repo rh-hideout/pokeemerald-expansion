@@ -4754,6 +4754,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         }
 
+        // check if an evolution is about to happen and items should be removed
         if (evoState == DO_EVO)
         {
             if (removeHoldItem)
@@ -4769,7 +4770,6 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         if (currentCondition == FALSE)
             return FALSE;
     }
-    // All conditions passed. Consume hold and bag items.
 
     return TRUE;
 }
@@ -4863,7 +4863,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     case EVO_MODE_ITEM_CHECK:
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
-            bool32 conditionsMet = FALSE;
+            bool32 conditionMet = FALSE;
             if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
                 continue;
 
@@ -4871,11 +4871,11 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
             {
             case EVO_ITEM:
                 if (evolutions[i].param == evolutionItem)
-                    conditionsMet = TRUE;
+                    conditionMet = TRUE;
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            if (conditionMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
