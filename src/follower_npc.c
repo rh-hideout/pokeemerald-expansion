@@ -1470,7 +1470,7 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
             ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT); // Follower takes a step SOUTH
         else
         {
-            FollowerNPCPositionFix(0);
+            FollowerNPCPositionFix();
             follower->invisible = TRUE;
             gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
         }
@@ -1536,7 +1536,7 @@ enum
 	GoRight
 };
 
-void FollowerNPCPositionFix(u8 offset)
+void FollowerNPCPositionFix(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
     u8 playerObjId = GetPlayerMapObjId();
@@ -1563,22 +1563,22 @@ void FollowerNPCPositionFix(u8 offset)
     {
         if (playerY > npcY)
         {
-            if (playerY != npcY + offset) //Player and follower are not 1 tile apart
+            if (playerY != npcY) //Player and follower are not 1 tile apart
             {
                 if (gSpecialVar_0x8000 == 0)
                     gSpecialVar_Result = GoDown;
                 else
-                    gObjectEvents[followerObjid].currentCoords.y = playerY - offset;
+                    gObjectEvents[followerObjid].currentCoords.y = playerY;
             }
         }
         else // Player Y <= npcY
         {
-            if (playerY != npcY - offset) //Player and follower are not 1 tile apart
+            if (playerY != npcY) //Player and follower are not 1 tile apart
             {
                 if (gSpecialVar_0x8000 == 0)
                     gSpecialVar_Result = GoUp;
                 else
-                    gObjectEvents[followerObjid].currentCoords.y = playerY + offset;
+                    gObjectEvents[followerObjid].currentCoords.y = playerY;
             }
         }
     }
@@ -1586,22 +1586,22 @@ void FollowerNPCPositionFix(u8 offset)
     {
         if (playerX > npcX)
         {
-            if (playerX != npcX + offset) //Player and follower are not 1 tile apart
+            if (playerX != npcX) //Player and follower are not 1 tile apart
             {
                 if (gSpecialVar_0x8000 == 0)
                     gSpecialVar_Result = GoRight;
                 else
-                    gObjectEvents[followerObjid].currentCoords.x = playerX - offset;
+                    gObjectEvents[followerObjid].currentCoords.x = playerX;
             }
         }
         else // Player X <= npcX
         {
-            if (playerX != npcX - offset) //Player and follower are not 1 tile apart
+            if (playerX != npcX) //Player and follower are not 1 tile apart
             {
                 if (gSpecialVar_0x8000 == 0)
                     gSpecialVar_Result = GoLeft;
                 else
-                    gObjectEvents[followerObjid].currentCoords.x = playerX + offset;
+                    gObjectEvents[followerObjid].currentCoords.x = playerX;
             }
         }
     }
@@ -1665,13 +1665,6 @@ bool8 IsNPCFollowerWildBattle(void)
         return TRUE;
 #endif
 return FALSE;
-}
-
-void FollowerNPCTrainerSightingPositionFix(void)
-{
-#if OW_ENABLE_NPC_FOLLOWERS
-    FollowerNPCPositionFix(1);
-#endif
 }
 
 bool8 PlayerHasFollowerNPC(void)

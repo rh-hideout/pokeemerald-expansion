@@ -513,7 +513,7 @@ void DoWarp(void)
     PlaySE(SE_EXIT);
     gFieldCallback = FieldCB_DefaultWarpExit;
     gSpecialVar_0x8000 = 1;
-    FollowerNPCPositionFix(0);
+    FollowerNPCPositionFix();
     CreateTask(Task_WarpAndLoadMap, 10);
 }
 

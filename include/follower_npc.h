@@ -62,7 +62,7 @@ void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower);
 void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct ObjectEvent *player);
 void FollowerNPCFaceAfterLeaveMap(void);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
-void FollowerNPCPositionFix(u8 offset);
+void FollowerNPCPositionFix(void);
 void RestorePartyAfterFollowerNPCBattle(void);
 void PrepareForFollowerNPCBattle(void);
 bool8 IsNPCFollowerWildBattle(void);
