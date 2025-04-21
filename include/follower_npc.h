@@ -36,6 +36,7 @@ enum FollowerNPCSurfBlobStates
 
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 bool8 FollowerNPCComingThroughDoor(void);
+bool8 IsFollowerNPCBattlePartner(void);
 u8 GetFollowerNPCObjectId(void);
 u8 GetFollowerNPCLocalId(void);
 const u8 *GetFollowerNPCScriptPointer(void);
@@ -62,13 +63,14 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
 void FollowerNPCFaceAfterLeaveMap(void);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
 void FollowerNPCPositionFix(u8 offset);
-void PrepareForFollowerNPCBattle(void);
 void RestorePartyAfterFollowerNPCBattle(void);
+void PrepareForFollowerNPCBattle(void);
+bool8 IsNPCFollowerWildBattle(void);
 void SetFollowerNPCSprite(u8 spriteIndex);
 bool8 PlayerHasFollowerNPC(void);
 u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction);
 u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
-u8 GetFollowerNPCMapObjId(void);
+u8 GetFollowerNPCObjectId(void);
 bool8 IsPlayerOnFoot(void);
 
 #endif // GUARD_FOLLOWER_NPC_H

@@ -521,12 +521,10 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
     {
         playerAvatar->runningState = MOVING;
         moveFunc(direction);
-#if OW_ENABLE_NPC_FOLLOWERS
-        if (gSaveBlock3Ptr->NPCfollower.inProgress 
+        if (PlayerHasFollowerNPC() 
          && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE 
          && FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
             CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 3);
-#endif
         return TRUE;
     }
 }
@@ -942,10 +940,8 @@ static bool8 CanStopSurfing(s16 x, s16 y, u8 direction)
 {
     if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
      && MapGridGetElevationAt(x, y) == 3
-     && (GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT 
-#if OW_ENABLE_NPC_FOLLOWERS
+     && (GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT
      || GetObjectEventIdByPosition(x, y, 3) == GetFollowerNPCObjectId()
-#endif
      ))
     {
         CreateStopSurfingTask(direction);
@@ -1234,10 +1230,9 @@ void PlayerOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
     PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
-#if OW_ENABLE_NPC_FOLLOWERS
     // Edge case: If the player stops at the top of a mud slide, but the NPC follower is still on a mud slide tile,
     // move the follower into the player and hide them.
-    if (gSaveBlock3Ptr->NPCfollower.inProgress)
+    if (PlayerHasFollowerNPC())
     {
         struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -1251,7 +1246,6 @@ void PlayerOnBikeCollide(u8 direction)
             CreateTask(Task_HideNPCFollowerAfterMovementFinish, 2);
         }
     }
-#endif
 }
 
 void PlayerOnBikeCollideWithFarawayIslandMew(u8 direction)
@@ -1643,9 +1637,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     gPlayerAvatar.spriteId = objectEvent->spriteId;
     gPlayerAvatar.gender = gender;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_CONTROLLABLE | PLAYER_AVATAR_FLAG_ON_FOOT);
-#if OW_ENABLE_NPC_FOLLOWERS
     CreateFollowerNPCAvatar();
-#endif
 }
 
 void SetPlayerInvisibility(bool8 invisible)
@@ -1895,9 +1887,7 @@ static void CreateStopSurfingTask(u8 direction)
     taskId = CreateTask(Task_StopSurfingInit, 0xFF);
     gTasks[taskId].data[0] = direction;
     Task_StopSurfingInit(taskId);
-#if OW_ENABLE_NPC_FOLLOWERS
     PrepareFollowerNPCDismountSurf();
-#endif
 }
 
 static void Task_StopSurfingInit(u8 taskId)

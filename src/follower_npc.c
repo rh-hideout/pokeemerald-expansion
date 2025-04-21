@@ -1,5 +1,6 @@
 #include "global.h"
 #include "follower_npc.h"
+#include "battle.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "event_data.h"
@@ -65,7 +66,6 @@ static void Task_BindSurfBlobToFollowerNPC(u8 taskId);
 static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc);
 static void SetSurfDismount(void);
 static void Task_FinishSurfDismount(u8 taskId);
-void SetFollowerNPCSurfSpriteAfterDive(void);
 static void Task_FollowerNPCOutOfDoor(u8 taskId);
 static void Task_FollowerNPCHandleEscalator(u8 taskId);
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId);
@@ -95,66 +95,82 @@ static const struct FollowerNPCSpriteGraphics gFollowerNPCAlternateSprites[] =
     },
 
 };
+#endif
+
+bool8 IsFollowerNPCBattlePartner(void)
+{
+#if OW_ENABLE_NPC_FOLLOWERS
+    if (gSaveBlock3Ptr->NPCfollower.inProgress && gSaveBlock3Ptr->NPCfollower.battlePartner)
+        return TRUE;
+#endif
+    return FALSE;
+}
 
 u8 GetFollowerNPCObjectId(void)
 {
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
-        return OBJECT_EVENTS_COUNT;
-
-    return gSaveBlock3Ptr->NPCfollower.objId;
+#if OW_ENABLE_NPC_FOLLOWERS
+    if (gSaveBlock3Ptr->NPCfollower.inProgress)
+        return gSaveBlock3Ptr->NPCfollower.objId;
+#endif
+    return OBJECT_EVENTS_COUNT;
 }
 
 u8 GetFollowerNPCLocalId(void)
 {
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
-        return 0;
-
-    return gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId].localId;
+#if OW_ENABLE_NPC_FOLLOWERS
+    if (gSaveBlock3Ptr->NPCfollower.inProgress)
+        return gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId].localId;
+#endif
+    return 0;
 }
 
 const u8 *GetFollowerNPCScriptPointer(void)
 {
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress)
-        return NULL;
-
-    return gSaveBlock3Ptr->NPCfollower.script;
-}
+#if OW_ENABLE_NPC_FOLLOWERS
+    if (gSaveBlock3Ptr->NPCfollower.inProgress)
+        return gSaveBlock3Ptr->NPCfollower.script;
 #endif
+    return NULL;
+}
 
 void HideNPCFollower(void)
 {
 #if OW_ENABLE_NPC_FOLLOWERS
-    if (!gSaveBlock3Ptr->NPCfollower.inProgress || gObjectEvents[GetFollowerNPCMapObjId()].invisible)
+    if (!gSaveBlock3Ptr->NPCfollower.inProgress || gObjectEvents[GetFollowerNPCObjectId()].invisible)
         return;
 
     if (gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_RECREATE || gSaveBlock3Ptr->NPCfollower.createSurfBlob == FNPC_SURF_BLOB_DESTROY)
     {
-        SetSurfBlob_BobState(gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId, 2);
-        DestroySprite(&gSprites[gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId]);
-        gObjectEvents[GetFollowerNPCMapObjId()].fieldEffectSpriteId = 0; // Unbind
+        SetSurfBlob_BobState(gObjectEvents[GetFollowerNPCObjectId()].fieldEffectSpriteId, 2);
+        DestroySprite(&gSprites[gObjectEvents[GetFollowerNPCObjectId()].fieldEffectSpriteId]);
+        gObjectEvents[GetFollowerNPCObjectId()].fieldEffectSpriteId = 0; // Unbind
     }
 
     gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE;
 
-    gObjectEvents[GetFollowerNPCMapObjId()].invisible = TRUE;
+    gObjectEvents[GetFollowerNPCObjectId()].invisible = TRUE;
 #endif
 }
 
-#if OW_ENABLE_NPC_FOLLOWERS
 void FollowerNPC_SetIndicatorToComeOutDoor(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
         gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NEEDS_TO_EXIT;
+#endif
 }
 
 void FollowerNPC_SetIndicatorToRecreateSurfBlob(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
         gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_RECREATE;
+#endif
 }
 
 void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress)
     {
         if (gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_CLEAR_ON_WHITE_OUT)
@@ -164,13 +180,10 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)
         else
             FollowerNPC_WarpSetEnd();
     }
+#endif
 }
 
-u8 GetFollowerNPCMapObjId(void)
-{
-    return gSaveBlock3Ptr->NPCfollower.objId;
-}
-
+#if OW_ENABLE_NPC_FOLLOWERS
 static u16 GetFollowerNPCSprite(void)
 {
     u32 i;
@@ -214,13 +227,14 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
 {
     if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
     {
-        struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+        struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER);
 
-        follower = &gObjectEvents[GetFollowerNPCMapObjId()]; // Can change on reload sprite
+        follower = &gObjectEvents[GetFollowerNPCObjectId()]; // Can change on reload sprite
         follower->fieldEffectSpriteId = StartUnderwaterSurfBlobBobbing(follower->spriteId);
     }
 }
+#endif
 
 // Task data
 #define tState          data[0]
@@ -229,8 +243,9 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
 
 void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     u8 dir;
     u8 newState;
     u8 taskId;
@@ -329,29 +344,16 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     }
 
     ObjectEventClearHeldMovementIfFinished(follower);
+#endif
 }
 
 #undef tState
 #undef tDoorX
 #undef tDoorY
 
-static void Task_ReallowPlayerMovement(u8 taskId)
-{
-    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetFollowerNPCMapObjId()]);
-    if (animStatus == 0)
-    {
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
-        && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Temporarily stop running
-        return;
-    }
-
-    gPlayerAvatar.preventStep = FALSE;
-    DestroyTask(taskId);
-}
-
 u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     // Move the follower towards the player
     s8 delta_x = follower->currentCoords.x - player->currentCoords.x;
     s8 delta_y = follower->currentCoords.y - player->currentCoords.y;
@@ -365,8 +367,24 @@ u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent 
         return DIR_SOUTH;
     else if (delta_y > 0)
         return DIR_NORTH;
-
+#endif
     return DIR_NONE;
+}
+
+#if OW_ENABLE_NPC_FOLLOWERS
+static void Task_ReallowPlayerMovement(u8 taskId)
+{
+    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetFollowerNPCObjectId()]);
+    if (animStatus == 0)
+    {
+        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
+        && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
+            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Temporarily stop running
+        return;
+    }
+
+    gPlayerAvatar.preventStep = FALSE;
+    DestroyTask(taskId);
 }
 
 static void PlayerLogCoordinates(struct ObjectEvent *player)
@@ -659,10 +677,12 @@ static u8 ReturnFollowerNPCDelayedState(u8 direction)
 
     return newState + direction;
 }
+#endif
 
 bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+#if OW_ENABLE_NPC_FOLLOWERS
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -670,6 +690,7 @@ bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectE
 
     if (obstacle == follower && collider == player)
         return TRUE;
+#endif
 
     return FALSE;
 }
@@ -683,7 +704,8 @@ bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectE
 
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+#if OW_ENABLE_NPC_FOLLOWERS
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     // Prevent player input until all forced mmovements are done and the follower is hidden.
@@ -719,6 +741,9 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
         gPlayerAvatar.preventStep = FALSE;
         DestroyTask(taskId);
     }
+#else
+    DestroyTask(taskId);
+#endif
 }
 
 #undef PREVENT_PLAYER_STEP
@@ -728,6 +753,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 
 void FollowerNPC_FollowerToWater(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
@@ -735,16 +761,18 @@ void FollowerNPC_FollowerToWater(void)
     // right in front of the follower's location.
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_JUMP_DOWN, TRUE);
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NEW;
+#endif
 }
 
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     struct ObjectEvent *follower;
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
-    follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    follower = &gObjectEvents[GetFollowerNPCObjectId()];
     TryUpdateFollowerNPCSpriteUnderwater();
 
     if (gSaveBlock3Ptr->NPCfollower.createSurfBlob != FNPC_SURF_BLOB_RECREATE && gSaveBlock3Ptr->NPCfollower.createSurfBlob != FNPC_SURF_BLOB_DESTROY)
@@ -754,11 +782,13 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     SetUpSurfBlobFieldEffect(follower);
     follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
     SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
+#endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
 static void SetSurfJump(void)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     u8 direction;
     u8 jumpState;
 
@@ -791,13 +821,13 @@ static void SetSurfJump(void)
     CreateTask(Task_BindSurfBlobToFollowerNPC, 0x1);
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
 
-    follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    follower = &gObjectEvents[GetFollowerNPCObjectId()];
     ObjectEventSetHeldMovement(follower, jumpState);
 }
 
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
 {
-    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
     bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait jump animation
     if (animStatus == 0)
         return;
@@ -817,21 +847,25 @@ static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc)
     gFieldEffectArguments[1] = npc->currentCoords.y;                 // effect_y
     gFieldEffectArguments[2] = gSaveBlock3Ptr->NPCfollower.objId;    // objId
 }
+#endif
 
 void PrepareFollowerNPCDismountSurf(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_WALK_NORMAL_DOWN, TRUE);
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_DESTROY;
+#endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
 #define tSpriteId       data[0]
 
 static void SetSurfDismount(void)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     u8 direction;
     u8 jumpState;
     u8 task;
@@ -849,13 +883,13 @@ static void SetSurfDismount(void)
     follower->fieldEffectSpriteId = 0; // Unbind
     FollowerNPC_HandleSprite();
 
-    follower = &gObjectEvents[GetFollowerNPCMapObjId()]; // Can change after sprite reload
+    follower = &gObjectEvents[GetFollowerNPCObjectId()]; // Can change after sprite reload
     ObjectEventSetHeldMovement(follower, jumpState);
 }
 
 static void Task_FinishSurfDismount(u8 taskId)
 {
-    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
     bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait animation
 
     if (animStatus == 0)
@@ -912,7 +946,7 @@ enum {
 
 static void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct Task *task = &gTasks[taskId];
     s16 *x = &task->tDoorX;
@@ -975,8 +1009,20 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
 #undef tDoorX
 #undef tDoorY
 
+static void Task_FollowerNPCHandleEscalator(u8 taskId)
+{
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    ObjectEventClearHeldMovementIfActive(follower);
+    ObjectEventSetHeldMovement(follower, DetermineFollowerNPCState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, DetermineFollowerNPCDirection(player, follower)));
+    DestroyTask(taskId);
+}
+#endif
+
 void EscalatorMoveFollowerNPC(u8 movementType)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     u8 taskId;
 
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
@@ -984,25 +1030,19 @@ void EscalatorMoveFollowerNPC(u8 movementType)
 
     taskId = CreateTask(Task_FollowerNPCHandleEscalator, 1);
     gTasks[taskId].data[1] = movementType;
-}
-
-static void Task_FollowerNPCHandleEscalator(u8 taskId)
-{
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    ObjectEventClearHeldMovementIfActive(follower);
-    ObjectEventSetHeldMovement(follower, DetermineFollowerNPCState(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN, DetermineFollowerNPCDirection(player, follower)));
-    DestroyTask(taskId);
+#endif
 }
 
 void EscalatorMoveFollowerNPCFinish(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return;
 
     CreateTask(Task_FollowerNPCHandleEscalatorFinish, 1);
+#endif
 }
+#if OW_ENABLE_NPC_FOLLOWERS
 
 #define tCounter                data[1]
 #define tMetatileBehavior       data[2]
@@ -1021,7 +1061,7 @@ enum {
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 {
     s16 x, y;
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct Sprite *sprite = &gSprites[follower->spriteId];
     struct Task *task = &gTasks[taskId];
@@ -1099,7 +1139,7 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 
 static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 {
-    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCObjectId()].spriteId];
 
     sprite->x2 = Cos(0x84, task->tCounter);
     sprite->y2 = Sin(0x94, task->tCounter);
@@ -1107,7 +1147,7 @@ static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
 {
-    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCMapObjId()].spriteId];
+    struct Sprite *sprite = &gSprites[gObjectEvents[GetFollowerNPCObjectId()].spriteId];
 
     sprite->x2 = Cos(0x7c, task->tCounter);
     sprite->y2 = Sin(0x76, task->tCounter);
@@ -1117,19 +1157,25 @@ static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task)
 #undef tCounter
 #undef tMetatileBehavior
 #undef tTimer
+#endif
 
 bool8 FollowerNPCCanBike(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return TRUE;
     else if (gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_CAN_BIKE)
         return TRUE;
     else
         return FALSE;
+#else
+    return TRUE;
+#endif
 }
 
 void FollowerNPC_HandleBike(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.currentSprite == FOLLOWER_NPC_SPRITE_INDEX_SURF) // Follower is surfing
         return; // Sprite will automatically be adjusted when they finish surfing
 
@@ -1142,10 +1188,12 @@ void FollowerNPC_HandleBike(void)
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
         gSaveBlock3Ptr->NPCfollower.delayedState = 0; // Disable saved Acro side jump
     }
+#endif
 }
 
 void FollowerNPC_HandleSprite(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.flags & FOLLOWER_NPC_FLAG_CAN_BIKE)
     {
         if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
@@ -1161,8 +1209,10 @@ void FollowerNPC_HandleSprite(void)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     }
+#endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
 void SetFollowerNPCSprite(u8 spriteIndex)
 {
     u8 oldSpriteId;
@@ -1179,7 +1229,7 @@ void SetFollowerNPCSprite(u8 spriteIndex)
         return;
 
     // Save sprite
-    follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    follower = &gObjectEvents[GetFollowerNPCObjectId()];
     gSaveBlock3Ptr->NPCfollower.currentSprite = spriteIndex;
     oldSpriteId = follower->spriteId;
     newGraphicsId = GetFollowerNPCSprite();
@@ -1191,7 +1241,7 @@ void SetFollowerNPCSprite(u8 spriteIndex)
     backupFollower = *follower;
     backupFollower.graphicsId = newGraphicsId;
     DestroySprite(&gSprites[oldSpriteId]);
-    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCMapObjId()]);
+    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCObjectId()]);
 
     clone = *GetObjectEventTemplateByLocalIdAndMap(gSaveBlock3Ptr->NPCfollower.map.id, gSaveBlock3Ptr->NPCfollower.map.number, gSaveBlock3Ptr->NPCfollower.map.group);
     clone.graphicsId = newGraphicsId;
@@ -1200,7 +1250,7 @@ void SetFollowerNPCSprite(u8 spriteIndex)
     gSaveBlock3Ptr->NPCfollower.objId = TrySpawnObjectEventTemplate(&clone, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, clone.x, clone.y);
     if (gSaveBlock3Ptr->NPCfollower.objId != OBJECT_EVENTS_COUNT)
     {
-        follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+        follower = &gObjectEvents[GetFollowerNPCObjectId()];
         newSpriteId = follower->spriteId;
         *follower = backupFollower;
         follower->spriteId = newSpriteId;
@@ -1225,7 +1275,7 @@ void FollowerNPC_WarpSetEnd(void)
         return;
 
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    follower = &gObjectEvents[GetFollowerNPCObjectId()];
 
     gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
     PlayerLogCoordinates(player);
@@ -1241,9 +1291,9 @@ void FollowerNPC_WarpSetEnd(void)
 #endif
 }
 
-#if OW_ENABLE_NPC_FOLLOWERS
 void CreateFollowerNPCAvatar(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     struct ObjectEvent *player;
     struct ObjectEventTemplate clone;
 
@@ -1284,8 +1334,10 @@ void CreateFollowerNPCAvatar(void)
         gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE;
 
     gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId].invisible = TRUE;
+#endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
 static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, const u8 *ptr)
 {
     struct ObjectEvent *follower;
@@ -1339,8 +1391,15 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
     }
 }
 
+static u8 GetPlayerMapObjId(void)
+{
+	return gPlayerAvatar.objectEventId;
+}
+#endif
+
 bool8 CheckFollowerNPCFlag(u16 flag)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (!gSaveBlock3Ptr->NPCfollower.inProgress)
         return TRUE;
 
@@ -1348,17 +1407,16 @@ bool8 CheckFollowerNPCFlag(u16 flag)
         return TRUE;
 
     return FALSE;
-}
-
-static u8 GetPlayerMapObjId(void)
-{
-	return gPlayerAvatar.objectEventId;
+#else
+    return TRUE;
+#endif
 }
 
 void FollowerNPCWalkIntoPlayerForLeaveMap(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     u8 followerObjId = GetFollowerNPCObjectId();
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCMapObjId()];
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
 
     if (followerObjId == OBJECT_EVENTS_COUNT)
         return;
@@ -1380,19 +1438,23 @@ void FollowerNPCWalkIntoPlayerForLeaveMap(void)
             ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
             break;
             }
+#endif
 }
 
 void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     follower->invisible = TRUE;
     gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE; // No more surf blob.
     gSaveBlock3Ptr->NPCfollower.delayedState = 0;
+#endif
 }
 
 void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct ObjectEvent *player)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     if (gSaveBlock3Ptr->NPCfollower.inProgress) {
         follower->invisible = FALSE; // Show the follower after ESCAPE ROPE
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
@@ -1413,10 +1475,12 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
             gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
         }
     }
+#endif
 }
 
 void FollowerNPCFaceAfterLeaveMap(void)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     u8 playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;
 
@@ -1444,11 +1508,13 @@ void FollowerNPCFaceAfterLeaveMap(void)
 
     ObjectEventTurn(follower, followerDirection);
     gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
+#endif
 }
 
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
 {
-    struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCMapObjId()];
+#if OW_ENABLE_NPC_FOLLOWERS
+    struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
     
     if (ObjectEventClearHeldMovementIfFinished(npcFollower) != 0)
     {
@@ -1457,6 +1523,9 @@ void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
         gPlayerAvatar.preventStep = FALSE;
         DestroyTask(taskId);
     }
+#else
+    DestroyTask(taskId);
+#endif
 }
 
 enum
@@ -1469,6 +1538,7 @@ enum
 
 void FollowerNPCPositionFix(u8 offset)
 {
+#if OW_ENABLE_NPC_FOLLOWERS
     u8 playerObjId = GetPlayerMapObjId();
     u8 followerObjid = gSaveBlock3Ptr->NPCfollower.objId;
     u16 playerX = gObjectEvents[playerObjId].currentCoords.x;
@@ -1535,8 +1605,10 @@ void FollowerNPCPositionFix(u8 offset)
             }
         }
     }
+#endif
 }
 
+#if OW_ENABLE_NPC_FOLLOWERS
 static void ChooseFirstThreeEligibleMons(void)
 {
     u8 i;
@@ -1558,18 +1630,7 @@ static void ChooseFirstThreeEligibleMons(void)
             break;
     }
 }
-
-void PrepareForFollowerNPCBattle(void)
-{
-    SavePlayerParty();
-    ChooseFirstThreeEligibleMons();
-    ReducePlayerPartyToSelectedMons();
-	VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA);
-	VarSet(VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER);
-	CallFrontierUtilFunc();
-    gPartnerTrainerId = TRAINER_PARTNER(gSaveBlock3Ptr->NPCfollower.battlePartner);
-    FillPartnerParty(gPartnerTrainerId);
-}
+#endif
 
 void RestorePartyAfterFollowerNPCBattle(void)
 {
@@ -1577,7 +1638,34 @@ void RestorePartyAfterFollowerNPCBattle(void)
 	CallFrontierUtilFunc();
 	LoadPlayerParty();
 }
+
+void PrepareForFollowerNPCBattle(void)
+{
+#if OW_ENABLE_NPC_FOLLOWERS
+    // Load the partner party if the NPC follower should participate.
+    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gSaveBlock3Ptr->NPCfollower.battlePartner)
+    {
+        SavePlayerParty();
+        ChooseFirstThreeEligibleMons();
+        ReducePlayerPartyToSelectedMons();
+	    VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA);
+	    VarSet(VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER);
+	    CallFrontierUtilFunc();
+        gPartnerTrainerId = TRAINER_PARTNER(gSaveBlock3Ptr->NPCfollower.battlePartner);
+        FillPartnerParty(gPartnerTrainerId);
+    }
 #endif
+}
+
+bool8 IsNPCFollowerWildBattle(void)
+{
+#if OW_ENABLE_NPC_FOLLOWERS
+    if (gSaveBlock3Ptr->NPCfollower.inProgress && gSaveBlock3Ptr->NPCfollower.battlePartner && OW_FLAG_PARTNER_WILD_BATTLES != 0
+     && (OW_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS || FlagGet(OW_FLAG_PARTNER_WILD_BATTLES)))
+        return TRUE;
+#endif
+return FALSE;
+}
 
 void FollowerNPCTrainerSightingPositionFix(void)
 {
