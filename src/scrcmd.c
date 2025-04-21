@@ -14,6 +14,7 @@
 #include "event_data.h"
 #include "field_door.h"
 #include "field_effect.h"
+#include "field_move.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -2266,6 +2267,16 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
             break;
         }
     }
+    return FALSE;
+}
+
+bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
+{
+    enum FieldMove fieldMove = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1);
+
+    gSpecialVar_Result = IsFieldMoveUnlocked(fieldMove);
     return FALSE;
 }
 
