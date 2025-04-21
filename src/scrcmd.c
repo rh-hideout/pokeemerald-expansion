@@ -2247,15 +2247,20 @@ bool8 ScrCmd_setmonmove(struct ScriptContext *ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
+bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 {
-    u8 i;
-    u16 moveId = ScriptReadHalfword(ctx);
+    enum FieldMove fieldMove = ScriptReadByte(ctx);
+    bool32 doUnlockedCheck = ScriptReadByte(ctx);
+    u16 moveId;
 
     Script_RequestEffects(SCREFF_V1);
 
     gSpecialVar_Result = PARTY_SIZE;
-    for (i = 0; i < PARTY_SIZE; i++)
+    if (doUnlockedCheck && !IsFieldMoveUnlocked(fieldMove))
+        return FALSE;
+
+    moveId = FieldMove_GetMoveId(fieldMove);
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         if (!species)
@@ -2267,16 +2272,7 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
             break;
         }
     }
-    return FALSE;
-}
 
-bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
-{
-    enum FieldMove fieldMove = ScriptReadByte(ctx);
-
-    Script_RequestEffects(SCREFF_V1);
-
-    gSpecialVar_Result = IsFieldMoveUnlocked(fieldMove);
     return FALSE;
 }
 

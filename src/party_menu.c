@@ -3963,7 +3963,7 @@ static void CursorCb_FieldMove(u8 taskId)
     else
     {
         // All field moves before WATERFALL are HMs.
-        if (IsFieldMoveUnlocked(fieldMove))
+        if (!IsFieldMoveUnlocked(fieldMove))
         {
             DisplayPartyMenuMessage(gText_CantUseUntilNewBadge, TRUE);
             gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
@@ -4012,7 +4012,7 @@ static void CursorCb_FieldMove(u8 taskId)
                 DisplayCantUseFlashMessage();
                 break;
             default:
-                DisplayPartyMenuStdMessage(FieldMove_GetMoveId(fieldMove));
+                DisplayPartyMenuStdMessage(FieldMove_GetPartyMsgID(fieldMove));
                 break;
             }
             gTasks[taskId].func = Task_CancelAfterAorBPress;
