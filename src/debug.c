@@ -681,7 +681,6 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu[] =
 {
-    // PrependFontIdToFit(gStringVar2, end, FONT_NARROW, DEBUG_MENU_WIDTH_MAIN)
     [DEBUG_TIME_MENU_ITEM_PRINTTIME] = {COMPOUND_STRING("Print current time"), DEBUG_TIME_MENU_ITEM_PRINTTIME},
     [DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Print current time of day"), DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY},
     [DEBUG_TIME_MENU_ITEM_TIMESOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Change current time of day"), DEBUG_TIME_MENU_ITEM_TIMESOFDAY},
