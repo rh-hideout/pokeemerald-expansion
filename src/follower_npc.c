@@ -1,5 +1,6 @@
 #include "global.h"
 #include "follower_npc.h"
+#include "follower_npc_alternate_sprites.h"
 #include "battle.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
@@ -28,7 +29,6 @@
 #include "task.h"
 #include "trig.h"
 #include "constants/event_object_movement.h"
-#include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/frontier_util.h"
 #include "constants/map_types.h"
@@ -47,17 +47,6 @@ Known Issues:
 #define tDoorY          data[3]
 
 #if OW_ENABLE_NPC_FOLLOWERS
-
-struct FollowerNPCSpriteGraphics
-{
-    u16 normalId;
-    u16 machBikeId;
-    u16 acroBikeId;
-    u16 surfId;
-    u16 underwaterId;
-};
-
-// Function Declarations
 static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, const u8 *script);
 static u16 GetFollowerNPCSprite(void);
 static void PlayerLogCoordinates(struct ObjectEvent *player);
@@ -76,29 +65,6 @@ static void Task_FollowerNPCHandleEscalator(u8 taskId);
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId);
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task);
 static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task);
-
-static const struct FollowerNPCSpriteGraphics gFollowerNPCAlternateSprites[] =
-{
-    // FORMAT:
-    // {WALKING/RUNNING SPRITE ID, MACH BIKE SPRITE ID, ACRO BIKE SPRITE ID, SURFING SPRITE ID, DIVE SPRITE ID},
-    [0] = 
-    {
-        .normalId = OBJ_EVENT_GFX_RIVAL_MAY_NORMAL,
-        .machBikeId = OBJ_EVENT_GFX_RIVAL_MAY_MACH_BIKE,
-        .acroBikeId = OBJ_EVENT_GFX_RIVAL_MAY_ACRO_BIKE,
-        .surfId = OBJ_EVENT_GFX_RIVAL_MAY_SURFING,
-        .underwaterId = OBJ_EVENT_GFX_MAY_UNDERWATER,
-    },
-    [1] = 
-    {
-        .normalId = OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
-        .machBikeId = OBJ_EVENT_GFX_RIVAL_BRENDAN_MACH_BIKE,
-        .acroBikeId = OBJ_EVENT_GFX_RIVAL_BRENDAN_ACRO_BIKE,
-        .surfId = OBJ_EVENT_GFX_RIVAL_BRENDAN_SURFING,
-        .underwaterId = OBJ_EVENT_GFX_BRENDAN_UNDERWATER,
-    },
-
-};
 
 static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, const u8 *ptr)
 {

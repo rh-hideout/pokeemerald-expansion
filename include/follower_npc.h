@@ -5,6 +5,15 @@
 
 #define MOVEMENT_INVALID 0xFE
 
+struct FollowerNPCSpriteGraphics
+{
+    u16 normalId;
+    u16 machBikeId;
+    u16 acroBikeId;
+    u16 surfId;
+    u16 underwaterId;
+};
+
 enum FollowerNPCSpriteTypes
 {
     FOLLOWER_NPC_SPRITE_INDEX_NORMAL,
