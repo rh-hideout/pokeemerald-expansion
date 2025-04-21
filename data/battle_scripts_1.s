@@ -2713,6 +2713,7 @@ BattleScript_EffectGravity::
 	attackstring
 	ppreduce
 	setgravity BattleScript_ButItFailed
+	savetarget
 	attackanimation
 	waitanimation
 BattleScript_EffectGravitySuccess::
@@ -2730,6 +2731,7 @@ BattleScript_GravityLoopDrop:
 BattleScript_GravityLoopEnd:
 	moveendcase MOVEEND_TARGET_VISIBLE
 	jumpifnexttargetvalid BattleScript_GravityLoop
+	restoretarget
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectRoost::
@@ -4211,6 +4213,7 @@ BattleScript_EffectPerishSong::
 	attackstring
 	ppreduce
 	trysetperishsong BattleScript_ButItFailed
+	savetarget
 	attackanimation
 	waitanimation
 	printstring STRINGID_FAINTINTHREE
@@ -4222,6 +4225,7 @@ BattleScript_PerishSongLoop::
 BattleScript_PerishSongLoopIncrement::
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_PerishSongLoop
+	restoretarget
 	goto BattleScript_MoveEnd
 
 BattleScript_PerishSongBlocked::
