@@ -266,7 +266,7 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     }
 
     // Check if state would cause hidden follower to reappear
-    if (IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.warpEnd)
+    if (IsStateMovement(state) && gSaveBlock3Ptr->NPCfollower.warpEnd == FNPC_WARP_REAPPEAR)
     {
         gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_NONE;
 
@@ -1446,6 +1446,7 @@ void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower)
 #if OW_ENABLE_NPC_FOLLOWERS
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     follower->invisible = TRUE;
+    gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
     gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; // In case the follower was still coming out of a door.
     gSaveBlock3Ptr->NPCfollower.createSurfBlob = FNPC_SURF_BLOB_NONE; // No more surf blob.
     gSaveBlock3Ptr->NPCfollower.delayedState = 0;
@@ -1472,7 +1473,6 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
         {
             FollowerNPCPositionFix();
             follower->invisible = TRUE;
-            gSaveBlock3Ptr->NPCfollower.warpEnd = FNPC_WARP_REAPPEAR;
         }
     }
 #endif
@@ -1488,6 +1488,9 @@ void FollowerNPCFaceAfterLeaveMap(void)
     follower = &gObjectEvents[gSaveBlock3Ptr->NPCfollower.objId];
     playerDirection = DetermineFollowerNPCDirection(player, follower);
     followerDirection = playerDirection;
+
+    if (follower->invisible)
+        return;
 
     //Flip direction
     switch (playerDirection) 
