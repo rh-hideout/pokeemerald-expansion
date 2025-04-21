@@ -34,6 +34,24 @@ enum FollowerNPCSurfBlobStates
     FNPC_SURF_BLOB_DESTROY
 };
 
+enum FollowerNPCOutOfDoorTaskStates{
+    OPEN_DOOR,
+    NPC_WALK_OUT,
+    CLOSE_DOOR,
+    UNFREEZE_OBJECTS,
+    REALLOW_MOVEMENT
+};
+
+enum FollowerNPCHandleEscalatorFinishTaskStates{
+    MOVE_TO_PLAYER_POS,
+    WAIT_FOR_PLAYER_MOVE,
+    SHOW_FOLLOWER_DOWN,
+    MOVE_FOLLOWER_DOWN,
+    SHOW_FOLLOWER_UP,
+    MOVE_FOLLOWER_UP,
+    MOVEMENT_FINISH
+};
+
 u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction);
 void SetFollowerNPCSprite(u8 spriteIndex);
 

@@ -430,14 +430,6 @@ static void Task_ReallowPlayerMovement(u8 taskId)
 // Task data
 #define tDoorTask           data[1]
 
-enum {
-    OPEN_DOOR,
-    NPC_WALK_OUT,
-    CLOSE_DOOR,
-    UNFREEZE_OBJECTS,
-    REALLOW_MOVEMENT
-};
-
 static void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
@@ -515,16 +507,6 @@ static void Task_FollowerNPCHandleEscalator(u8 taskId)
 #define tCounter                data[1]
 #define tMetatileBehavior       data[2]
 #define tTimer                  data[7]
-
-enum {
-    MOVE_TO_PLAYER_POS,
-    WAIT_FOR_PLAYER_MOVE,
-    SHOW_FOLLOWER_DOWN,
-    MOVE_FOLLOWER_DOWN,
-    SHOW_FOLLOWER_UP,
-    MOVE_FOLLOWER_UP,
-    MOVEMENT_FINISH
-};
 
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 {
