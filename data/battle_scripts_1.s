@@ -2746,7 +2746,7 @@ BattleScript_EffectCaptivate::
 	attackstring
 	ppreduce
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	jumpifoppositegenders BattleScript_CaptivateCheckAcc
+	jumpifcaptivateaffected BattleScript_CaptivateCheckAcc
 	goto BattleScript_ButItFailed
 BattleScript_CaptivateCheckAcc:
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
