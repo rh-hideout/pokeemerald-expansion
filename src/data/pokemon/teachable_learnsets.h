@@ -38735,7 +38735,7 @@ static const u16 sVirtuitaTeachableLearnset[] = {
 static const u16 sFirvidTeachableLearnset[] = {
     MOVE_SUPER_FANG,
     MOVE_ICE_FANG,
-    MOVE_HYPER_FANG
+    MOVE_HYPER_FANG,
     MOVE_DOUBLE_EDGE,
     MOVE_ICY_WIND,
     MOVE_GRASSY_TERRAIN,
