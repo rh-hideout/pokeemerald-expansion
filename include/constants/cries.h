@@ -2652,6 +2652,8 @@ enum {
     CRY_BUNGALOON,
     CRY_BITTERAGON,
     CRY_WYCERN,  
+    CRY_FIRVID,
+    CRY_CHOLEFIR,  
     CRY_COUNT,
 };
 

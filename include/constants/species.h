@@ -1894,8 +1894,10 @@
 #define SPECIES_EMOJINN_SOBBING                         1776
 #define SPECIES_BITTERAGON                              1777
 #define SPECIES_WYCERN                                  1778
+#define SPECIES_FIRVID                                  1779
+#define SPECIES_CHOLEFIR                                1780
 
-#define SPECIES_EGG (SPECIES_WYCERN + 1)
+#define SPECIES_EGG (SPECIES_CHOLEFIR + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

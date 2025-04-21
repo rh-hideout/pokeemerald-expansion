@@ -7054,6 +7054,14 @@ Cry_Bitteragon::
 	.align 2	
 Cry_Wycern::
 	.incbin "sound/direct_sound_samples/cries/wycern.bin"
+
+	.align 2	
+Cry_Firvid::
+	.incbin "sound/direct_sound_samples/cries/firvid.bin"
+
+	.align 2	
+Cry_Cholefir::
+	.incbin "sound/direct_sound_samples/cries/cholefir.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

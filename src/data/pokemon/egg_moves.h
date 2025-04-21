@@ -6498,6 +6498,17 @@ static const u16 sVirtuitaEggMoveLearnset[] = {
     
 };
 
+static const u16 sCholefirEggMoveLearnset[] = {
+    MOVE_GLACIATE,
+    MOVE_DRAGON_HAMMER,
+    MOVE_SYNTHESIS,
+    MOVE_NOBLE_ROAR,
+    MOVE_NEEDLE_ARM,
+    MOVE_GRASS_WHISTLE,
+    MOVE_UNAVAILABLE,
+    
+};
+
 static const u16 sFuckerEggMoveLearnset[] = {
     MOVE_LIQUIDATION,
     MOVE_BULLET_PUNCH,

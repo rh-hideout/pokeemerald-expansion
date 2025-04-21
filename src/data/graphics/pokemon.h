@@ -22699,6 +22699,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Aquadiiva[] = INCBIN_U8("graphics/pokemon/aquadiiva/icon.4bpp");
    const u8 gMonFootprint_Aquadiiva[] = INCBIN_U8("graphics/pokemon/aquadiiva/footprint.1bpp");
 
+   const u32 gMonFrontPic_Firvid[] = INCBIN_U32("graphics/pokemon/firvid/front.4bpp.lz");
+   const u32 gMonBackPic_Firvid[] = INCBIN_U32("graphics/pokemon/firvid/back.4bpp.lz");
+   const u32 gMonPalette_Firvid[] = INCBIN_U32("graphics/pokemon/firvid/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Firvid[] = INCBIN_U32("graphics/pokemon/firvid/shiny.gbapal.lz");
+   const u8 gMonIcon_Firvid[] = INCBIN_U8("graphics/pokemon/firvid/icon.4bpp");
+   const u8 gMonFootprint_Firvid[] = INCBIN_U8("graphics/pokemon/firvid/footprint.1bpp");
+
+   const u32 gMonFrontPic_Cholefir[] = INCBIN_U32("graphics/pokemon/cholefir/front.4bpp.lz");
+   const u32 gMonBackPic_Cholefir[] = INCBIN_U32("graphics/pokemon/cholefir/back.4bpp.lz");
+   const u32 gMonPalette_Cholefir[] = INCBIN_U32("graphics/pokemon/cholefir/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Cholefir[] = INCBIN_U32("graphics/pokemon/cholefir/shiny.gbapal.lz");
+   const u8 gMonIcon_Cholefir[] = INCBIN_U8("graphics/pokemon/cholefir/icon.4bpp");
+   const u8 gMonFootprint_Cholefir[] = INCBIN_U8("graphics/pokemon/cholefir/footprint.1bpp");
+
    const u32 gMonFrontPic_Mamini[] = INCBIN_U32("graphics/pokemon/mamini/front.4bpp.lz");
    const u32 gMonBackPic_Mamini[] = INCBIN_U32("graphics/pokemon/mamini/back.4bpp.lz");
    const u32 gMonPalette_Mamini[] = INCBIN_U32("graphics/pokemon/mamini/normal.gbapal.lz");

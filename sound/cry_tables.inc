@@ -2875,6 +2875,10 @@ gCryTable::
 
 	cry Cry_Wycern
 
+	cry Cry_Firvid
+
+	cry Cry_Cholefir
+
 .endif
 
 	.align 2
@@ -5754,4 +5758,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Bitteragon
 
 	cry_reverse Cry_Wycern
+
+	cry_reverse Cry_Firvid
+
+	cry_reverse Cry_Cholefir
 .endif
