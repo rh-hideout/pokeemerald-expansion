@@ -628,20 +628,6 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-// static const s32 sMintuesValues[] =
-// {
-//     1,  2,  3,  4,  5,  6,  
-//     7,  8,  9,  10, 11, 12, 
-//     13, 14, 15, 16, 17, 18, 
-//     19, 20, 21, 22, 23, 24, 
-//     25, 26, 27, 28, 29, 30, 
-//     31, 32, 33, 34, 35, 36,
-//     37, 38, 39, 40, 41, 42,
-//     43, 44, 45, 46, 47, 48,
-//     49, 50, 51, 52, 53, 54, 
-//     55, 56, 57, 58, 59,
-// };
-
 // *******************************
 // List Menu Items
 static const struct ListMenuItem sDebugMenu_Items_Main[] =
@@ -877,7 +863,7 @@ static void (*const sDebugMenu_Actions_Utilities[])(u8) =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = DebugAction_Util_BerryFunctions,
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = DebugAction_Util_CheckEWRAMCounters,
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = DebugAction_Util_Steven_Multi,
-    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]    = DebugAction_Util_OpenTimeMenu,
+    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]       = DebugAction_Util_OpenTimeMenu,
 };
 
 static void (*const sDebugMenu_Actions_PCBag[])(u8) =
@@ -4975,4 +4961,5 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 static void DebugAction_Util_CheckEWRAMCounters(u8 taskId)
 {
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_EWRAMCounters);
+
 }
