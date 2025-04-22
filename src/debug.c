@@ -2386,7 +2386,8 @@ static void DebugAction_TimeMenu_PrintTime(u8 taskId)
 
 void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 {
-    if(OW_USE_FAKE_RTC == TRUE) {
+    if (OW_USE_FAKE_RTC == TRUE)
+    {
         struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
         StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
         ConvertIntToDecimalStringN(gStringVar2, rtc->hour, STR_CONV_MODE_LEFT_ALIGN, 3);
