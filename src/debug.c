@@ -1946,13 +1946,10 @@ static void DebugAction_TimeMenu_TimesOfDay(u8 taskId)
 static void DebugAction_TimeMenu_Weekdays(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    if (OW_USE_FAKE_RTC == FALSE) { 
+    if (OW_USE_FAKE_RTC == FALSE)
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
-    }
-    else {
-        
+    else
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_Weekdays, sDebugMenu_ListTemplate_TimeMenu_Weekdays);
-    }
 }
 
 // *******************************
