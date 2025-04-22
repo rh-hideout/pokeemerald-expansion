@@ -434,7 +434,7 @@ struct PokedexView
     u16 monSpriteIds[MAX_MONS_ON_SCREEN];
     u8 typeIconSpriteIds[2];
     u16 moveSelected;
-    u8 movesTotal;
+    u16 movesTotal;
     u8 statBarsSpriteId;
     u8 statBarsBgSpriteId;
     bool8 justScrolled;
@@ -5109,62 +5109,104 @@ static bool8 CalculateMoves(void)
     u8 numTMHMMoves = 0;
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
-    u8 i,j;
+    u8 i,j; 
+    u16 isTMMove[MOVES_COUNT] = {FALSE};
 
-    // Mega pokemon don't have distinct learnsets from their base form; so use base species for calculation
-    if (species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
+    // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
+    if ((species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
+        || (species >= SPECIES_VENUSAUR_GMAX && species <= SPECIES_URSHIFU_RAPID_STRIKE_GMAX))
         species = GetFormSpeciesId(species, 0);
 
-    //Calculate amount of Egg and LevelUp moves
-    numEggMoves = GetEggMovesBySpecies(species, statsMovesEgg);
-    numLevelUpMoves = GetLevelUpMovesBySpecies(species, statsMovesLevelUp);
+    // Egg moves
+    if (P_SHOW_EGG_MOVES)
+    {
+        u16 preSpecies = species;
+        while (preSpecies != SPECIES_NONE)
+        {
+            numEggMoves = GetEggMovesBySpecies(preSpecies, statsMovesEgg);
+            preSpecies = GetSpeciesPreEvolution(preSpecies);
+        }
+    }
+    else
+        numEggMoves = GetEggMovesBySpecies(species, statsMovesEgg);
 
-    //Egg moves
-    for (i=0; i < numEggMoves; i++)
+    for (i = 0; i < numEggMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesEgg[i];
         movesTotal++;
     }
 
-    //Level up moves
-    for (i=0; i < numLevelUpMoves; i++)
+    // Level up moves
+    numLevelUpMoves = GetLevelUpMovesBySpecies(species, statsMovesLevelUp);
+    for (i = 0; i < numLevelUpMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesLevelUp[i];
         movesTotal++;
     }
 
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    if (P_SORT_TMS_BY_NUM)
     {
-        move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+        // TM moves
+        for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
         {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
+            move = ItemIdToBattleMoveId(ITEM_TM01 + i);
+            if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
             {
-                sStatsMovesTMHM_ID[numTMHMMoves] = (ITEM_TM01 + j);
+                isTMMove[move] = TRUE;
+                sStatsMovesTMHM_ID[numTMHMMoves] = ITEM_TM01 + i;
                 numTMHMMoves++;
-
                 sStatsMoves[movesTotal] = move;
                 movesTotal++;
-                break;
+            }
+        }
+
+        // Tutor moves
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+        {
+            move = teachableLearnset[i];
+            if (!isTMMove[move])
+            {
+                numTutorMoves++;
+                sStatsMoves[movesTotal] = move;
+                movesTotal++;
             }
         }
     }
-
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    else
     {
-        move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+        // TM moves
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-                break;
+            move = teachableLearnset[i];
+            for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+            {
+                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
+                {
+                    sStatsMovesTMHM_ID[numTMHMMoves] = (ITEM_TM01 + j);
+                    numTMHMMoves++;
+                    sStatsMoves[movesTotal] = move;
+                    movesTotal++;
+                    break;
+                }
+            }
         }
 
-        if (j >= NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
+        // Tutor moves
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         {
-            numTutorMoves++;
+            move = teachableLearnset[i];
+            for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+            {
+                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
+                    break;
+            }
 
-            sStatsMoves[movesTotal] = move;
-            movesTotal++;
+            if (j >= NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
+            {
+                numTutorMoves++;
+                sStatsMoves[movesTotal] = move;
+                movesTotal++;
+            }
         }
     }
 
@@ -5183,8 +5225,8 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 numLevelUpMoves  = sPokedexView->numLevelUpMoves;
     u8 numTMHMMoves     = sPokedexView->numTMHMMoves;
     u8 numTutorMoves    = sPokedexView->numTutorMoves;
-    u8 movesTotal       = sPokedexView->movesTotal;
-    u8 selected         = sPokedexView->moveSelected;
+    u16 movesTotal      = sPokedexView->movesTotal;
+    u16 selected        = sPokedexView->moveSelected;
     u8 level;
     u8 moves_x = 5;
     u8 moves_y = 3;
@@ -5260,7 +5302,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
 {
-    u8 selected = sPokedexView->moveSelected;
+    u16 selected = sPokedexView->moveSelected;
     u16 move;
     u8 moves_x = 5;
     u8 moves_y = 5;
