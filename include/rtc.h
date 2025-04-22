@@ -95,9 +95,10 @@ enum TimeOfDay
     TIMES_OF_DAY_COUNT,
 };
 
-STATIC_ASSERT(OW_TIME_OF_DAY_DEFAULT == 0, TimeOfDayDefaultMustBeFirstElementInTimeOfDayEnum)
+#define TIME_OF_DAY_DEFAULT    0
 
 extern struct Time gLocalTime;
+extern const s32 sNumDaysInMonths[12];
 
 void RtcDisableInterrupts(void);
 void RtcRestoreInterrupts(void);
@@ -129,6 +130,10 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2);
 u32 RtcGetMinuteCount(void);
 u32 RtcGetLocalDayCount(void);
 void FormatDecimalTimeWithoutSeconds(u8 *dest, s8 hour, s8 minute, bool32 is24Hour);
+u16 GetFullYear(void);
+enum Month GetMonth(void);
+u8 GetDay(void);
+enum Weekday GetDayOfWeek(void);
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay);
 enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay);
 

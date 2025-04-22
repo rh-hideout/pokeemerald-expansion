@@ -2,35 +2,29 @@ import json
 import sys
 import os
 
-"""
-- you can change/add to these if you're adding seasons/days of the week, etc
-- if you're just adding times of the day, make sure they are in the same order
-as the `TimeOfDay` enum in include/rtc.h.
-- you don't need to add an entry for `TIMES_OF_DAY_COUNT`
-"""
-ENCOUNTER_GROUP_SUFFIX = [
-    "Morning",
-    "Day",
-    "Evening",
-    "Night"
-]
+try:
+    if not os.path.exists("./tools/wild_encounters/"):
+        print("Please run this script from the project's root folder.")
+        quit()
+    sys.path.append("./tools/wild_encounters/")
+    from wild_encounters_to_header import TimeOfDay, SetupUserTimeEnum
+except ImportError:
+    print("Could not import the file tools/wild_encounters/wild_encounters_to_header.py")
+    quit()
 
 ARGS = [
     "--copy",
 ]
 
-"""
-- make sure this number is the same as `OW_TIME_OF_DAY_DEFAULT` in config/overworld.h.
-- by default in config/overworld.h it is set to `TIME_MORNING`, which is 0 in the
-`TimeOfDay` enum in include/rtc.h
-"""
-OW_TIME_OF_DAY_DEFAULT = 0
+TIME_OF_DAY_DEFAULT = 0
 
 
 def GetWildEncounterFile():
     if not os.path.exists("Makefile"):
         print("Please run this script from the project's root folder.")
         quit()
+
+    timeOfDay = SetupUserTimeEnum(TimeOfDay())
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
@@ -48,14 +42,14 @@ def GetWildEncounterFile():
                 if arg == ARGS[0]:
                     COPY_FULL_ENCOUNTER = True
 
-    j = 0
+    encounterCount = 0
     for group in wData["wild_encounter_groups"]:
-        wEncounters = wData["wild_encounter_groups"][j]["encounters"]
+        wEncounters = wData["wild_encounter_groups"][encounterCount]["encounters"]
         editMap = True
 
         wEncounters_New = list()
         for map in wEncounters:
-            for suffix in ENCOUNTER_GROUP_SUFFIX:
+            for suffix in timeOfDay.fvals:
                 tempSuffix = "_" + suffix
                 if tempSuffix in map["base_label"]:
                     editMap = False
@@ -65,9 +59,9 @@ def GetWildEncounterFile():
 
             if editMap:
                 k = 0
-                for suffix in ENCOUNTER_GROUP_SUFFIX:
+                for suffix in timeOfDay.fvals:
                     tempDict = dict()
-                    if k == OW_TIME_OF_DAY_DEFAULT or COPY_FULL_ENCOUNTER:
+                    if k == TIME_OF_DAY_DEFAULT or COPY_FULL_ENCOUNTER:
                         tempDict = map.copy()
 
                     tempMapLabel = ""
@@ -86,8 +80,8 @@ def GetWildEncounterFile():
             else:
                 wEncounters_New.append(map.copy())
 
-        wData["wild_encounter_groups"][j]["encounters"] = wEncounters_New
-        j += 1
+        wData["wild_encounter_groups"][encounterCount]["encounters"] = wEncounters_New
+        encounterCount += 1
 
     wNewData = json.dumps(wData, indent=2)
     wNewFile = open("src/data/wild_encounters.json", mode="w", encoding="utf-8")

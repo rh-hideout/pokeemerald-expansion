@@ -6914,11 +6914,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gMoveSelectionCursor[battlerAtk], gMoveSelectionCursor[battlerPartner], temp);
     // Swap turn order, so that all the battlers take action
     SWAP(gChosenActionByBattler[battlerAtk], gChosenActionByBattler[battlerPartner], temp);
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (i = 0; i < gBattlersCount; i++)
     {
         if (gBattlerByTurnOrder[i] == battlerAtk || gBattlerByTurnOrder[i] == battlerPartner)
         {
-            for (j = i + 1; j < MAX_BATTLERS_COUNT; j++)
+            for (j = i + 1; j < gBattlersCount; j++)
             {
                 if (gBattlerByTurnOrder[j] == battlerAtk || gBattlerByTurnOrder[j] == battlerPartner)
                     break;
@@ -6938,9 +6938,13 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (i = 0; i < gBattlersCount; i++)
     {
         u16 ability = GetBattlerAbility(i);
+        // if not targeting a slot that got switched, continue
+        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
+            continue;
+
         if (gChosenMoveByBattler[i] == MOVE_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
             gBattleStruct->moveTarget[i] ^= BIT_FLANK;
     }
