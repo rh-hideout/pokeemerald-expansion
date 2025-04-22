@@ -7244,11 +7244,7 @@ static void Cmd_moveend(void)
                  && !NoAliveMonsForEitherParty()
                  && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    u32 increase = 2;
-                    if (GetGenConfig(B_FELL_STINGER) >= GEN_7)
-                        increase = 3;
-
-                    SET_STATCHANGER(STAT_ATK, increase, FALSE);
+                    SET_STATCHANGER(STAT_ATK, GetGenConfig(GEN_CONFIG_FELL_STINGER) >= GEN_7 ? 3 : 2, FALSE);
                     PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_FellStingerRaisesStat;
