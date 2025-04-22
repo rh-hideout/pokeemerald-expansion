@@ -283,7 +283,7 @@ enum EvolutionMethods {
     EVO_LEVEL_NATURE_AMPED,              // Pokémon reaches the specified level, it has a Hardy, Brave, Adamant, Naughty, Docile, Impish, Lax, Hasty, Jolly, Naive, Rash, Sassy, or Quirky nature.
     EVO_LEVEL_NATURE_LOW_KEY,            // Pokémon reaches the specified level, it has a Lonely, Bold, Relaxed, Timid, Serious, Modest, Mild, Quiet, Bashful, Calm, Gentle, or Careful nature.
     EVO_CRITICAL_HITS,                   // Pokémon performs specified number of critical hits in one battle
-    EVO_SCRIPT_TRIGGER_DMG,              // Pokémon has specified HP below max, then player interacts trigger
+    EVO_SCRIPT_TRIGGER_DMG,              // Pokémon has specified HP below max, then player interacts with script calling "tryspecialevo EVO_SCRIPT_TRIGGER_DMG"
     EVO_DARK_SCROLL,                     // interacts with Scroll of Darkness
     EVO_WATER_SCROLL,                    // interacts with Scroll of Waters
     EVO_ITEM_NIGHT,                      // specified item is used on Pokémon, is night
@@ -300,6 +300,17 @@ enum EvolutionMethods {
     EVO_ITEM_COUNT_999,                  // Pokémon levels up after trainer has collected 999 of a specific item
     EVO_DEFEAT_THREE_WITH_ITEM,          // Pokémon levels up after having defeat 3 Pokémon of the same species holding the specified item
     EVO_OVERWORLD_STEPS,                 // Pokémon levels up after having taken a specific amount of steps in the overworld
+
+    // Alcremie evolutions methods. Different combinations of day, spin rotation and duration.
+    EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_LESS_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_LESS_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DAY_MORE_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_NIGHT_MORE_THAN_5_SECS_COUNTER_CLOCKWISE,
+    EVO_ITEM_HOLD_SPIN_DUSK_MORE_THAN_10_SECS,
 };
 
 enum EvolutionMode {
@@ -311,6 +322,19 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_SPECIAL,
     EVO_MODE_OVERWORLD_SPECIAL,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
+};
+
+enum StartEvo
+{
+    CHECK_EVO,
+    DO_EVO,
+};
+
+enum PokemonJumpType{
+    PKMN_JUMP_TYPE_NONE, // Not allowed in Pokémon Jump
+    PKMN_JUMP_TYPE_NORMAL,
+    PKMN_JUMP_TYPE_FAST,
+    PKMN_JUMP_TYPE_SLOW,
 };
 
 #define MON_PIC_WIDTH 64

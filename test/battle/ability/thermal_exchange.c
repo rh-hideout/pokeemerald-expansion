@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Thermal Exchange makes Will-O-Wisp fail")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_WILL_O_WISP].effect == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -36,10 +36,9 @@ SINGLE_BATTLE_TEST("Thermal Exchange prevents the user from getting burned when 
 
 SINGLE_BATTLE_TEST("Thermal Exchange cures burns when acquired")
 {
-    KNOWN_FAILING;
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_WILL_O_WISP].effect == EFFECT_WILL_O_WISP);
-        ASSUME(gMovesInfo[MOVE_SKILL_SWAP].effect == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -48,14 +47,16 @@ SINGLE_BATTLE_TEST("Thermal Exchange cures burns when acquired")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
         STATUS_ICON(opponent, burn: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(opponent, ABILITY_THERMAL_EXCHANGE);
+        STATUS_ICON(opponent, burn: FALSE);
         NOT HP_BAR(opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Thermal Exchange burn prevention can be bypassed with Mold Breaker")
+SINGLE_BATTLE_TEST("Thermal Exchange burn prevention can be bypassed with Mold Breaker but is cured after")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_WILL_O_WISP].effect == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_RAMPARDOS) { Ability(ABILITY_MOLD_BREAKER); }
     } WHEN {
@@ -63,13 +64,16 @@ SINGLE_BATTLE_TEST("Thermal Exchange burn prevention can be bypassed with Mold B
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
         STATUS_ICON(player, burn: TRUE);
+        ABILITY_POPUP(player, ABILITY_THERMAL_EXCHANGE);
+        STATUS_ICON(player, burn: FALSE);
+        NOT HP_BAR(player);
     }
 }
 
 SINGLE_BATTLE_TEST("Thermal Exchange boosts attack if hit by a damaging fire type move")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

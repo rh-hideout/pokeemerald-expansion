@@ -243,6 +243,13 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     }
 
+    if (CanTriggerSpinEvolution())
+    {
+        ResetSpinTimer();
+        TrySpecialOverworldEvo(); // Special vars set in CanTriggerSpinEvolution.
+        return TRUE;
+    }
+
     return FALSE;
 }
 

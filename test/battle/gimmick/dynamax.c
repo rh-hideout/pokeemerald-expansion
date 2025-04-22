@@ -68,6 +68,29 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax Level increases HP and max HP multipliers b
     }
 }
 
+SINGLE_BATTLE_TEST("Dynamax: Dynamax expires when fainted")
+{
+    u32 dynamax;
+    PARAMETRIZE { dynamax = GIMMICK_NONE; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE, gimmick: dynamax); MOVE(opponent, MOVE_TACKLE); }
+    } SCENE {
+        if (dynamax)
+            MESSAGE("Wobbuffet used Max Strike!");
+        else
+            MESSAGE("Wobbuffet used Tackle!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        HP_BAR(player);
+        if (dynamax) // Expect to have visual reversion when fainting.
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        MESSAGE("Wobbuffet fainted!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns", u16 hp)
 {
     u32 dynamax;
@@ -382,6 +405,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain 
 {
     u16 capturedHP, finalHP;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND) { Ability(ABILITY_BATTLE_BOND); HP(100); Speed(100); }
         OPPONENT(SPECIES_CATERPIE) { HP(1); Speed(1000); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
@@ -1537,7 +1561,7 @@ SINGLE_BATTLE_TEST("Dynamax: Moxie clones can be triggered by Max Moves fainting
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
         ABILITY_POPUP(player, ABILITY_MOXIE);
-        MESSAGE("Gyarados's Moxie raised its Attack!");
+        MESSAGE("Gyarados's Attack rose!");
     }
 }
 
