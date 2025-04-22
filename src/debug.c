@@ -2427,7 +2427,7 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
         case TIME_NIGHT:
             StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Night);
             break;
-        default: //Added due to TIMES_OF_DAY_COUNT causing errors.
+        default:
             break;
     }
 }
