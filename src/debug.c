@@ -2393,7 +2393,8 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
         ConvertIntToDecimalStringN(gStringVar2, rtc->hour, STR_CONV_MODE_LEFT_ALIGN, 3);
         ConvertIntToDecimalStringN(gStringVar3, rtc->minute, STR_CONV_MODE_LEADING_ZEROS, 2);
     }
-    else {
+    else
+    {
         u32 day = ((gLocalTime.days - 1) + 6) % 7 ;
         RtcCalcLocalTime();
         StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[day]);
