@@ -2413,7 +2413,7 @@ static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId)
 
 void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
 {
-    switch(GetTimeOfDay())
+    switch (GetTimeOfDay())
     {
         case TIME_MORNING:
             StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Morning);
