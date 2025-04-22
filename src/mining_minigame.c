@@ -1,6 +1,10 @@
-// TODO:        Add the hit effect frame that appears  you hit an already dug up item
-// END TODO:    Check and fix the DEBUG SYSTEM for this minigame.
+// END TODO:    Remove comfy_anims and create a seperate branch
+// END TODO:    Rename folder and file names
 // END TODO:    Make sure there are no warnings whatsoever!
+// END TODO:    Remove large comment blocks
+// END TODO:    Clear debug scripts
+// END TODO:    Uncomment `NDEBUG`
+// END TODO:    Final testing
 #include "mining_minigame.h"
 #include "gba/types.h"
 #include "gba/defines.h"
@@ -1554,12 +1558,14 @@ static void Mining_Init(MainCallback callback)
     sMiningUiState->buriedStones[1].isSelected = TRUE;
 
     // Generate Items
-    u32 amountItemsToSelect = random(3) + 2; // The `+ 2` says that the min. amount of items to be generated are 2.
+    u32 amountItemsToSelect = Debug_SetNumberOfBuriedItems(random(3) + 2); // The `+ 2` says that the min. amount of items to be generated are 2.
+
     u32 itemStateIdsStep1[4] = {0,1,2,3};
     u32 itemStateIdsStep2[3];
     u32 itemStateIdsStep3[2];
 
     u32 firstBuriedItemId = itemStateIdsStep1[random(4)];
+    DebugPrintf("buriedItemId1: %d", firstBuriedItemId);
     sMiningUiState->buriedItems[firstBuriedItemId].isSelected = TRUE;
 
     for (u32 i = 0; i < 4; i++) 
@@ -1574,6 +1580,7 @@ static void Mining_Init(MainCallback callback)
     }
 
     u32 secondBuriedItemId = itemStateIdsStep2[random(3)];
+    DebugPrintf("buriedItemId2: %d", secondBuriedItemId);
     sMiningUiState->buriedItems[secondBuriedItemId].isSelected = TRUE;
 
     if (amountItemsToSelect > 2)
@@ -1589,7 +1596,8 @@ static void Mining_Init(MainCallback callback)
                 itemStateIdsStep3[i] = itemStateIdsStep2[i];
         }
 
-        u32 thirdBuriedItemId = itemStateIdsStep2[random(2)];
+        u32 thirdBuriedItemId = itemStateIdsStep3[random(2)];
+        DebugPrintf("buriedItemId3: %d", thirdBuriedItemId);
         sMiningUiState->buriedItems[thirdBuriedItemId].isSelected = TRUE;
 
         if (amountItemsToSelect == 4)
@@ -1600,9 +1608,12 @@ static void Mining_Init(MainCallback callback)
             else 
                 fourthBuriedItemId = itemStateIdsStep3[0];
 
-            sMiningUiState->buriedItems[fourthBuriedItemId].isSelected = TRUE;
+            sMiningUiState->buriedItems[fourthBuriedItemId].isSelected = TRUE;    
+            DebugPrintf("buriedItemId4: %d", fourthBuriedItemId);
+            DebugPrintf("Item4isSelected: %d", sMiningUiState->buriedItems[fourthBuriedItemId].isSelected);
         }
     }
+
 
     SetMainCallback2(Mining_SetupCB);
 }
@@ -2028,11 +2039,13 @@ static u8 GetRandomItemId()
 }
 
 static void InitItemsIfSelected(u32 item, u32 itemId) {
+    DebugPrintf("Hey! I got called!");
     if (sMiningUiState->buriedItems[item].isSelected) 
     {
         itemId = GetRandomItemId();
         SetBuriedItemsId(item, itemId);
         DoDrawRandomItem(item+1, itemId);
+        DebugPrintf("LItem: %d, ItemId: %d", item, itemId); 
     }
 }
 
@@ -2111,8 +2124,8 @@ static void Task_MiningWaitFadeIn(u8 taskId)
 {
     if (!gPaletteFade.active) 
     {
-        ConvertIntToDecimalStringN(gStringVar1,GetTotalNumberOfBuriedItems(),STR_CONV_MODE_LEFT_ALIGN,2);
-        StringExpandPlaceholders(gStringVar2,sText_SomethingPinged);
+        ConvertIntToDecimalStringN(gStringVar1, GetTotalNumberOfBuriedItems(), STR_CONV_MODE_LEFT_ALIGN, 2);
+        StringExpandPlaceholders(gStringVar2, sText_SomethingPinged);
         PrintMessage(gStringVar2);
         gTasks[taskId].func = Task_WaitButtonPressOpening;
     }
@@ -2546,7 +2559,7 @@ static void DrawItemSprite(u8 x, u8 y, u8 itemId, u32 itemNumPalTag, u32 itemSta
             gSpriteTemplate = CreatePaletteAndReturnTemplate(MiningItemList[itemId].tag, itemNumPalTag, itemId);
             LoadCompressedSpriteSheet(MiningItemList[itemId].sheet);
             sMiningUiState->buriedItems[itemStateId].spriteId = CreateSprite(&gSpriteTemplate, posX+POS_OFFS_64X64, posY+POS_OFFS_64X64, 3);   
-            Debug_RaiseSpritePriority(sMiningUiState->buriedItems[itemId].spriteId);
+            Debug_RaiseSpritePriority(sMiningUiState->buriedItems[itemStateId].spriteId);
             return;
             break;
     }
@@ -3320,6 +3333,7 @@ static u32 GetTotalNumberOfBuriedItems(void)
         if (GetBuriedBagItemId(itemIndex))
             count++;
 
+    DebugPrintf("NumberOfBuriedItems: %d", count);
     return count;
 }
 
@@ -3345,8 +3359,8 @@ static void InitBuriedItems(void)
     u32 index = 0;
     for (index = 0; index < MINING_MAX_NUM_BURIED_ITEMS; index++)
     {
-        SetBuriedItemsId(index,MININGID_NONE);
-        SetBuriedItemStatus(index,FALSE);
+        SetBuriedItemsId(index, MININGID_NONE);
+        SetBuriedItemStatus(index, FALSE);
     }
 }
 
@@ -3387,15 +3401,15 @@ static u32 Debug_SetNumberOfBuriedItems(u32 rnd)
 {
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
     u32 desiredNumItems = 4;
-    return (desiredNumItems - 2);
-#endif
+    return desiredNumItems;
+#else 
     return rnd;
+#endif
 }
 
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
 static u32 Debug_CreateRandomItem(u32 random, u32 itemId)
 {
-    u32 debug = 4;
     switch (debugVariable++)
     {
         case 0: return MININGID_THUNDER_STONE;
@@ -3410,7 +3424,7 @@ static u32 Debug_CreateRandomItem(u32 random, u32 itemId)
 static u32 Debug_DetermineStoneSize(u32 stone, u32 stoneIndex)
 {
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    u32 desiredStones[2] = {MININGID_STONE_MUSHROOM2, ID_STONE_MUSHROOM1};
+    u32 desiredStones[2] = {MININGID_STONE_MUSHROOM2, MININGID_STONE_MUSHROOM1};
     stoneIndex = (stoneIndex > 1) ? 1 : stoneIndex;
     return (desiredStones[stoneIndex] == MININGID_NONE) ? stone : desiredStones[stoneIndex];
 #else
