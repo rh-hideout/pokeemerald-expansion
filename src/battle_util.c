@@ -522,10 +522,7 @@ void HandleAction_UseMove(void)
         BattleArena_AddMindPoints(gBattlerAttacker);
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
         gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
-        gSpecialStatuses[i].emergencyExited = FALSE;
-    }
 
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
