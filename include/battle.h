@@ -228,13 +228,11 @@ struct SpecialStatus
     // End of byte
     u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
-    // End of byte
     u8 enduredDamage:1;
-    u8 padding:7;
+    // End of byte
 };
 
 struct SideTimer
