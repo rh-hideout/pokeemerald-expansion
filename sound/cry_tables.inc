@@ -2879,6 +2879,12 @@ gCryTable::
 
 	cry Cry_Cholefir
 
+	cry Cry_Sparmor
+
+	cry Cry_Ohmadillo
+
+	cry Cry_Colombolt
+
 .endif
 
 	.align 2
@@ -5762,4 +5768,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Firvid
 
 	cry_reverse Cry_Cholefir
+
+	cry_reverse Cry_Sparmor
+
+	cry_reverse Cry_Ohmadillo
+
+	cry_reverse Cry_Colombolt
 .endif

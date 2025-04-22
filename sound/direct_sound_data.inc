@@ -7062,6 +7062,18 @@ Cry_Firvid::
 	.align 2	
 Cry_Cholefir::
 	.incbin "sound/direct_sound_samples/cries/cholefir.bin"
+
+	.align 2	
+Cry_Sparmor::
+	.incbin "sound/direct_sound_samples/cries/sparmor.bin"
+
+	.align 2	
+Cry_Ohmadillo::
+	.incbin "sound/direct_sound_samples/cries/ohmadillo.bin"
+
+	.align 2	
+Cry_Colombolt::
+	.incbin "sound/direct_sound_samples/cries/colombolt.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

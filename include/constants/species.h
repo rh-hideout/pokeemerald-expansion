@@ -1896,8 +1896,11 @@
 #define SPECIES_WYCERN                                  1778
 #define SPECIES_FIRVID                                  1779
 #define SPECIES_CHOLEFIR                                1780
+#define SPECIES_SPARMOR                                 1781
+#define SPECIES_OHMADILLO                               1782
+#define SPECIES_COLOMBOLT                               1783
 
-#define SPECIES_EGG (SPECIES_CHOLEFIR + 1)
+#define SPECIES_EGG (SPECIES_COLOMBOLT + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

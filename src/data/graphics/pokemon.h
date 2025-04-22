@@ -23347,6 +23347,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/icon.4bpp");
    const u8 gMonFootprint_Costrike[] = INCBIN_U8("graphics/pokemon/costrike/footprint.1bpp");
 
+   const u32 gMonFrontPic_Sparmor[] = INCBIN_U32("graphics/pokemon/sparmor/front.4bpp.lz");
+   const u32 gMonBackPic_Sparmor[] = INCBIN_U32("graphics/pokemon/sparmor/back.4bpp.lz");
+   const u32 gMonPalette_Sparmor[] = INCBIN_U32("graphics/pokemon/sparmor/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sparmor[] = INCBIN_U32("graphics/pokemon/sparmor/shiny.gbapal.lz");
+   const u8 gMonIcon_Sparmor[] = INCBIN_U8("graphics/pokemon/sparmor/icon.4bpp");
+   const u8 gMonFootprint_Sparmor[] = INCBIN_U8("graphics/pokemon/sparmor/footprint.1bpp");
+
+   const u32 gMonFrontPic_Ohmadillo[] = INCBIN_U32("graphics/pokemon/ohmadillo/front.4bpp.lz");
+   const u32 gMonBackPic_Ohmadillo[] = INCBIN_U32("graphics/pokemon/ohmadillo/back.4bpp.lz");
+   const u32 gMonPalette_Ohmadillo[] = INCBIN_U32("graphics/pokemon/ohmadillo/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ohmadillo[] = INCBIN_U32("graphics/pokemon/ohmadillo/shiny.gbapal.lz");
+   const u8 gMonIcon_Ohmadillo[] = INCBIN_U8("graphics/pokemon/ohmadillo/icon.4bpp");
+   const u8 gMonFootprint_Ohmadillo[] = INCBIN_U8("graphics/pokemon/ohmadillo/footprint.1bpp");
+
+   const u32 gMonFrontPic_Colombolt[] = INCBIN_U32("graphics/pokemon/colombolt/front.4bpp.lz");
+   const u32 gMonBackPic_Colombolt[] = INCBIN_U32("graphics/pokemon/colombolt/back.4bpp.lz");
+   const u32 gMonPalette_Colombolt[] = INCBIN_U32("graphics/pokemon/colombolt/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Colombolt[] = INCBIN_U32("graphics/pokemon/colombolt/shiny.gbapal.lz");
+   const u8 gMonIcon_Colombolt[] = INCBIN_U8("graphics/pokemon/colombolt/icon.4bpp");
+   const u8 gMonFootprint_Colombolt[] = INCBIN_U8("graphics/pokemon/colombolt/footprint.1bpp");
+
    const u32 gMonFrontPic_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/front.4bpp.lz");
    const u32 gMonBackPic_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/back.4bpp.lz");
    const u32 gMonPalette_Emojinn[] = INCBIN_U32("graphics/pokemon/emojinn/normal.gbapal.lz");

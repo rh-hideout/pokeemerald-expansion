@@ -6597,6 +6597,17 @@ static const u16 sCofferuleEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 }; 
 
+
+static const u16 sColomboltEggMoveLearnset[] = {
+    MOVE_PARABOLIC_CHARGE,
+    MOVE_REVENGE,
+    MOVE_SHELL_TRAP,
+    MOVE_ELECTRIFY,
+    MOVE_HEAD_CHARGE,
+    MOVE_WIDE_GUARD,
+    MOVE_UNAVAILABLE,
+}; 
+
 static const u16 sUlmiraintEggMoveLearnset[] = {
     MOVE_DESTINY_BOND, 
     MOVE_LOCK_ON,
