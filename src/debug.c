@@ -3883,9 +3883,7 @@ static void DebugAction_TimeMenu_Sunday(u8 taskId)
     DebugAction_DestroyExtraWindow(taskId);
     struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
     
-    u32 weekdayCurrent = rtc->dayOfWeek;
-    u32 daysToAdd;
-    daysToAdd = ((0 - weekdayCurrent) + 7) % 7;
+    u32 daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);    
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_LoadMap);
