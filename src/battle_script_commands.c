@@ -1540,8 +1540,18 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
         gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_MISSED;
         effect = TRUE;
     }
+    else if (B_MINIMIZE_DMG_ACC >= GEN_6
+     && (gStatuses3[battler] & STATUS3_MINIMIZED)
+     && MoveIncreasesPowerToMinimizedTargets(move))
+    {
+        effect = TRUE;
+    }
+    else if (GetMoveAccuracy(move) == 0)
+    {
+        effect = TRUE;
+    }
 
-    if (HasWeatherEffect())
+    if (!effect && HasWeatherEffect())
     {
         if ((moveEffect == EFFECT_THUNDER || moveEffect == EFFECT_RAIN_ALWAYS_HIT)
             && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN))
@@ -1551,17 +1561,6 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
 
         if (effect)
             return effect;
-    }
-
-    if (B_MINIMIZE_DMG_ACC >= GEN_6
-     && (gStatuses3[battler] & STATUS3_MINIMIZED)
-     && MoveIncreasesPowerToMinimizedTargets(move))
-    {
-        effect = TRUE;
-    }
-    else if (GetMoveAccuracy(move) == 0)
-    {
-        effect = TRUE;
     }
 
     if (ability != ABILITY_NONE)
