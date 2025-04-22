@@ -612,7 +612,7 @@ Debug_EventScript_FakeRTCNotEnabled_Text_0:
 
 
 Debug_EventScript_TellTheTime_Text_0:
-	.string "Time and Date:\n"
+	.string "Time and date:\n"
 	.string "{STR_VAR_1} {STR_VAR_2}:{STR_VAR_3}$"
 
 DebugEventScript_PrintWeekday_Text_0:
