@@ -28,7 +28,7 @@ u32 CountLineBreaks(u8 *src)
     return numNewLines;
 }
 
-void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, bool32 showPrompt)
+void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt)
 {
     u32 currIndex = 0;
     u8 *currSrc = src;
@@ -38,16 +38,16 @@ void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, boo
         {
             u8 replacedChar = src[currIndex + 1];
             src[currIndex + 1] = EOS;
-            BreakSubStringAutomatic(currSrc, maxWidth, screenLines, fontId, showPrompt);
+            BreakSubStringAutomatic(currSrc, maxWidth, screenLines, fontId, toggleScrollPrompt);
             src[currIndex + 1] = replacedChar;
             currSrc = &src[currIndex + 1];
         }
         currIndex++;
     }
-    BreakSubStringAutomatic(currSrc, maxWidth, screenLines, fontId, showPrompt);
+    BreakSubStringAutomatic(currSrc, maxWidth, screenLines, fontId, toggleScrollPrompt);
 }
 
-void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, bool32 showPrompt)
+void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt)
 {
     //  If the string already has line breaks, don't interfere with them
     if (StringHasManualBreaks(src))
@@ -199,7 +199,7 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
             }
         } while (shouldTryAgain);
         //u32 currBadness = GetStringBadness(stringLines, totalLines, maxWidth);
-        BuildNewString(stringLines, totalLines, screenLines, src, showPrompt);
+        BuildNewString(stringLines, totalLines, screenLines, src, toggleScrollPrompt);
         Free(stringLines);
     }
 
@@ -261,7 +261,7 @@ u32 GetStringBadness(struct StringLine *stringLines, u32 numLines, u32 maxWidth)
 }
 
 //  Build the new string from the data stored in the StringLine structs
-void BuildNewString(struct StringLine *stringLines, u32 numLines, u32 maxLines, u8 *str, u32 showPrompt)
+void BuildNewString(struct StringLine *stringLines, u32 numLines, u32 maxLines, u8 *str, enum ToggleScrollPrompt toggleScrollPrompt)
 {
     u32 srcCharIndex = 0;
     for (u32 lineIndex = 0; lineIndex < numLines; lineIndex++)
@@ -273,7 +273,7 @@ void BuildNewString(struct StringLine *stringLines, u32 numLines, u32 maxLines, 
         if (lineIndex + 1 < numLines)
         {
             //  Add the appropriate line break depending on line number
-            if (lineIndex >= maxLines - 1 && numLines > maxLines && showPrompt)
+            if (lineIndex >= maxLines - 1 && numLines > maxLines && toggleScrollPrompt == SHOW_SCROLL_PROMPT)
                 str[srcCharIndex] = CHAR_PROMPT_SCROLL;
             else
                 str[srcCharIndex] = CHAR_NEWLINE;

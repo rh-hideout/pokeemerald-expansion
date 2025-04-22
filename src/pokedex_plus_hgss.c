@@ -6758,7 +6758,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         u32 fontHeight = GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT);
 
         StringAppend(gStringVar4, COMPOUND_STRING("."));
-        BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, FALSE);
+        BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, HIDE_SCROLL_PROMPT);
             
         PrintInfoScreenTextSmall(gStringVar4, fontId, base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
         (*depth_i)++;

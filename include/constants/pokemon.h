@@ -262,7 +262,7 @@ enum EvolutionConditions {
     IF_PID_UPPER_MODULO_10_LT,          // The Pokémon's upper personality value's modulo by 10 is lower or equal than the defined value.
     IF_MIN_BEAUTY,                      // The Pokémon has the defined amount of Beauty.
     IF_MIN_COOLNESS,                    // The Pokémon has the defined amount of Coolness.
-    IF_MIN_SMARTNESS,                  // The Pokémon has the defined amount of Smartness. (aka Cleverness in Gen6+)
+    IF_MIN_SMARTNESS,                   // The Pokémon has the defined amount of Smartness. (aka Cleverness in Gen6+)
     IF_MIN_TOUGHNESS,                   // The Pokémon has the defined amount of Toughness.
     IF_MIN_CUTENESS,                    // The Pokémon has the defined amount of Cuteness.
     // Gen 4
