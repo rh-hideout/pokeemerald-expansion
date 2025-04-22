@@ -5420,7 +5420,7 @@ bool32 NoAliveMonsForBattlerSide(u32 battler)
     for (u32 partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
     {
         if (GetMonData(&party[partyMon], MON_DATA_SPECIES)
-         && GetMonData(&gEnemyParty[partyMon], MON_DATA_HP) > 0
+         && GetMonData(&party[partyMon], MON_DATA_HP) > 0
          && !GetMonData(&party[partyMon], MON_DATA_IS_EGG))
             return FALSE;
     }
