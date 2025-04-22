@@ -7616,7 +7616,6 @@ static void Cmd_moveend(void)
             }
             gProtectStructs[gBattlerAttacker].shellTrap = FALSE;
             gBattleStruct->ateBoost[gBattlerAttacker] = FALSE;
-            gStatuses3[gBattlerAttacker] &= ~STATUS3_ME_FIRST;
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;
             gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = 0;
             gSpecialStatuses[gBattlerTarget].berryReduced = FALSE;
@@ -11012,7 +11011,6 @@ static void Cmd_various(void)
             }
             gHitMarker &= ~HITMARKER_ATTACKSTRING_PRINTED;
             gBattlerTarget = GetBattleMoveTarget(gCalledMove, NO_TARGET_OVERRIDE);
-            gStatuses3[gBattlerAttacker] |= STATUS3_ME_FIRST;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
