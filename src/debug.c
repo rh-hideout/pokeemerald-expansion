@@ -565,7 +565,7 @@ static const u8 gText_Wednesday[] = _("Wednesday,");
 static const u8 gText_Thursday[] = _("Thursday,");
 static const u8 gText_Friday[] = _("Friday,");
 
-static const u8 *const gDayNameStringsTable[7] = {
+static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
     gText_Sunday,
     gText_Monday,
     gText_Tuesday,
