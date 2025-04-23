@@ -65,11 +65,6 @@ void FakeRtc_ManuallySetTime(u32 day, u32 hour, u32 minute, u32 second)
     FakeRtc_AdvanceTimeBy(day, hour, minute, second);
 }
 
-void AdvanceScript(void)
-{
-    FakeRtc_AdvanceTimeBy(300, 0, 0, 0);
-}
-
 u32 FakeRtc_GetSecondsRatio(void)
 {
     return (OW_ALTERED_TIME_RATIO == GEN_8_PLA) ? 60 :
