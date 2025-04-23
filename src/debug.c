@@ -1596,59 +1596,17 @@ static void DebugTask_HandleMenuInput_Scripts(u8 taskId)
 
 static void DebugTask_HandleMenuInput_TimeMenu(u8 taskId)
 {
-    void (*func)(u8);
-    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        if ((func = sDebugMenu_Actions_TimeMenu[input]) != NULL)
-            func(taskId);
-    }
-    else if (JOY_NEW(B_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        Debug_DestroyMenu(taskId);
-        Debug_ReShowMainMenu();
-    }
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
 }
 
 static void DebugTask_HandleMenuInput_TimeMenu_TimesOfDay(u8 taskId)
 {
-    void (*func)(u8);
-    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        if ((func = sDebugMenu_Actions_TimeMenu_TimesOfDay[input]) != NULL)
-            func(taskId);
-    }
-    else if (JOY_NEW(B_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        Debug_DestroyMenu(taskId);
-        Debug_ReShowMainMenu();
-    }
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu_TimesOfDay, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
 }
 
 static void DebugTask_HandleMenuInput_TimeMenu_Weekdays(u8 taskId)
 {
-    void (*func)(u8);
-    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        if ((func = sDebugMenu_Actions_TimeMenu_Weekdays[input]) != NULL)
-            func(taskId);
-    }
-    else if (JOY_NEW(B_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        Debug_DestroyMenu(taskId);
-        Debug_ReShowMainMenu();
-    }
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu_Weekdays, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
 }
 
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
