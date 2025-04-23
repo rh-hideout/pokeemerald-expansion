@@ -71,54 +71,54 @@ void SetFollowerNPCData(u8 type, u16 value)
 #if OW_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
-        case FNPC_DATA_IN_PROGRESS:
-            gSaveBlock3Ptr->NPCfollower.inProgress = value;
-            break;
-        case FNPC_DATA_WARP_END:
-            gSaveBlock3Ptr->NPCfollower.warpEnd = value;
-            break;
-        case FNPC_DATA_SURF_BLOB:
-            gSaveBlock3Ptr->NPCfollower.createSurfBlob = value;
-            break;
-        case FNPC_DATA_COME_OUT_DOOR:
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = value;
-            break;
-        case FNPC_DATA_OBJ_ID:
-            gSaveBlock3Ptr->NPCfollower.objId = value;
-            break;
-        case FNPC_DATA_CURRENT_SPRITE:
-            gSaveBlock3Ptr->NPCfollower.currentSprite = value;
-            break;
-        case FNPC_DATA_DELAYED_STATE:
-            gSaveBlock3Ptr->NPCfollower.delayedState = value;
-            break;
-        case FNPC_DATA_MAP_ID:
-            gSaveBlock3Ptr->NPCfollower.map.id = value;
-            break;
-        case FNPC_DATA_MAP_NUM:
-            gSaveBlock3Ptr->NPCfollower.map.number = value;
-            break;
-        case FNPC_DATA_MAP_GROUP:
-            gSaveBlock3Ptr->NPCfollower.map.group = value;
-            break;
-        case FNPC_DATA_COORD_X:
-            gSaveBlock3Ptr->NPCfollower.log.x = value;
-            break;
-        case FNPC_DATA_COORD_Y:
-            gSaveBlock3Ptr->NPCfollower.log.y = value;
-            break;
-        case FNPC_DATA_EVENT_FLAG:
-            gSaveBlock3Ptr->NPCfollower.flag = value;
-            break;
-        case FNPC_DATA_GFX_ID:
-            gSaveBlock3Ptr->NPCfollower.graphicsId = value;
-            break;
-        case FNPC_DATA_FOLLOWER_FLAGS:
-            gSaveBlock3Ptr->NPCfollower.flags = value;
-            break;
-        case FNPC_DATA_BATTLE_PARTNER:
-            gSaveBlock3Ptr->NPCfollower.battlePartner = value;
-            break;
+    case FNPC_DATA_IN_PROGRESS:
+        gSaveBlock3Ptr->NPCfollower.inProgress = value;
+        break;
+    case FNPC_DATA_WARP_END:
+        gSaveBlock3Ptr->NPCfollower.warpEnd = value;
+        break;
+    case FNPC_DATA_SURF_BLOB:
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = value;
+        break;
+    case FNPC_DATA_COME_OUT_DOOR:
+        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = value;
+        break;
+    case FNPC_DATA_OBJ_ID:
+        gSaveBlock3Ptr->NPCfollower.objId = value;
+        break;
+    case FNPC_DATA_CURRENT_SPRITE:
+        gSaveBlock3Ptr->NPCfollower.currentSprite = value;
+        break;
+    case FNPC_DATA_DELAYED_STATE:
+        gSaveBlock3Ptr->NPCfollower.delayedState = value;
+        break;
+    case FNPC_DATA_MAP_ID:
+        gSaveBlock3Ptr->NPCfollower.map.id = value;
+        break;
+    case FNPC_DATA_MAP_NUM:
+        gSaveBlock3Ptr->NPCfollower.map.number = value;
+        break;
+    case FNPC_DATA_MAP_GROUP:
+        gSaveBlock3Ptr->NPCfollower.map.group = value;
+        break;
+    case FNPC_DATA_COORD_X:
+        gSaveBlock3Ptr->NPCfollower.log.x = value;
+        break;
+    case FNPC_DATA_COORD_Y:
+        gSaveBlock3Ptr->NPCfollower.log.y = value;
+        break;
+    case FNPC_DATA_EVENT_FLAG:
+        gSaveBlock3Ptr->NPCfollower.flag = value;
+        break;
+    case FNPC_DATA_GFX_ID:
+        gSaveBlock3Ptr->NPCfollower.graphicsId = value;
+        break;
+    case FNPC_DATA_FOLLOWER_FLAGS:
+        gSaveBlock3Ptr->NPCfollower.flags = value;
+        break;
+    case FNPC_DATA_BATTLE_PARTNER:
+        gSaveBlock3Ptr->NPCfollower.battlePartner = value;
+        break;
     }
 #endif
 }
@@ -144,38 +144,38 @@ u32 GetFollowerNPCData(u8 type)
 #if OW_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
-        case FNPC_DATA_IN_PROGRESS:
-            return gSaveBlock3Ptr->NPCfollower.inProgress;
-        case FNPC_DATA_WARP_END:
-            return gSaveBlock3Ptr->NPCfollower.warpEnd;
-        case FNPC_DATA_SURF_BLOB:
-            return gSaveBlock3Ptr->NPCfollower.createSurfBlob;
-        case FNPC_DATA_COME_OUT_DOOR:
-            return gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs;
-        case FNPC_DATA_OBJ_ID:
-            return gSaveBlock3Ptr->NPCfollower.objId;
-        case FNPC_DATA_CURRENT_SPRITE:
-            return gSaveBlock3Ptr->NPCfollower.currentSprite;
-        case FNPC_DATA_DELAYED_STATE:
-            return gSaveBlock3Ptr->NPCfollower.delayedState;
-        case FNPC_DATA_MAP_ID:
-            return gSaveBlock3Ptr->NPCfollower.map.id;
-        case FNPC_DATA_MAP_NUM:
-            return gSaveBlock3Ptr->NPCfollower.map.number;
-        case FNPC_DATA_MAP_GROUP:
-            return gSaveBlock3Ptr->NPCfollower.map.group;
-        case FNPC_DATA_COORD_X:
-            return gSaveBlock3Ptr->NPCfollower.log.x;
-        case FNPC_DATA_COORD_Y:
-            return gSaveBlock3Ptr->NPCfollower.log.y;
-        case FNPC_DATA_EVENT_FLAG:
-            return gSaveBlock3Ptr->NPCfollower.flag;
-        case FNPC_DATA_GFX_ID:
-            return gSaveBlock3Ptr->NPCfollower.graphicsId;
-        case FNPC_DATA_FOLLOWER_FLAGS:
-            return gSaveBlock3Ptr->NPCfollower.flags;
-        case FNPC_DATA_BATTLE_PARTNER:
-            return gSaveBlock3Ptr->NPCfollower.battlePartner;
+    case FNPC_DATA_IN_PROGRESS:
+        return gSaveBlock3Ptr->NPCfollower.inProgress;
+    case FNPC_DATA_WARP_END:
+        return gSaveBlock3Ptr->NPCfollower.warpEnd;
+    case FNPC_DATA_SURF_BLOB:
+        return gSaveBlock3Ptr->NPCfollower.createSurfBlob;
+    case FNPC_DATA_COME_OUT_DOOR:
+        return gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs;
+    case FNPC_DATA_OBJ_ID:
+        return gSaveBlock3Ptr->NPCfollower.objId;
+    case FNPC_DATA_CURRENT_SPRITE:
+        return gSaveBlock3Ptr->NPCfollower.currentSprite;
+    case FNPC_DATA_DELAYED_STATE:
+        return gSaveBlock3Ptr->NPCfollower.delayedState;
+    case FNPC_DATA_MAP_ID:
+        return gSaveBlock3Ptr->NPCfollower.map.id;
+    case FNPC_DATA_MAP_NUM:
+        return gSaveBlock3Ptr->NPCfollower.map.number;
+    case FNPC_DATA_MAP_GROUP:
+        return gSaveBlock3Ptr->NPCfollower.map.group;
+    case FNPC_DATA_COORD_X:
+        return gSaveBlock3Ptr->NPCfollower.log.x;
+    case FNPC_DATA_COORD_Y:
+        return gSaveBlock3Ptr->NPCfollower.log.y;
+    case FNPC_DATA_EVENT_FLAG:
+        return gSaveBlock3Ptr->NPCfollower.flag;
+    case FNPC_DATA_GFX_ID:
+        return gSaveBlock3Ptr->NPCfollower.graphicsId;
+    case FNPC_DATA_FOLLOWER_FLAGS:
+        return gSaveBlock3Ptr->NPCfollower.flags;
+    case FNPC_DATA_BATTLE_PARTNER:
+        return gSaveBlock3Ptr->NPCfollower.battlePartner;
     }
 #endif
     return 0;
@@ -287,69 +287,69 @@ static bool8 IsStateMovement(u8 state)
 {
     switch (state) 
     {
-        case MOVEMENT_ACTION_FACE_DOWN:
-        case MOVEMENT_ACTION_FACE_UP:
-        case MOVEMENT_ACTION_FACE_LEFT:
-        case MOVEMENT_ACTION_FACE_RIGHT:
-        case MOVEMENT_ACTION_DELAY_1:
-        case MOVEMENT_ACTION_DELAY_2:
-        case MOVEMENT_ACTION_DELAY_4:
-        case MOVEMENT_ACTION_DELAY_8:
-        case MOVEMENT_ACTION_DELAY_16:
-        case MOVEMENT_ACTION_FACE_PLAYER:
-        case MOVEMENT_ACTION_FACE_AWAY_PLAYER:
-        case MOVEMENT_ACTION_LOCK_FACING_DIRECTION:
-        case MOVEMENT_ACTION_UNLOCK_FACING_DIRECTION:
-        case MOVEMENT_ACTION_SET_INVISIBLE:
-        case MOVEMENT_ACTION_SET_VISIBLE:
-        case MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK:
-        case MOVEMENT_ACTION_EMOTE_QUESTION_MARK:
-        case MOVEMENT_ACTION_EMOTE_HEART:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_UP:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_LEFT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_UP:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_LEFT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_UP:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_LEFT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_DOWN:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_UP:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_LEFT:
-        case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_RIGHT:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_DOWN:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_UP:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_RIGHT:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_DOWN_UP:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_UP_DOWN:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT_RIGHT:
-        case MOVEMENT_ACTION_JUMP_IN_PLACE_RIGHT_LEFT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_UP:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_LEFT:
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN:
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_UP:
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_LEFT:
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN:
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_UP:
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_LEFT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_UP:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_LEFT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_UP:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_LEFT:
-            return FALSE;
+    case MOVEMENT_ACTION_FACE_DOWN:
+    case MOVEMENT_ACTION_FACE_UP:
+    case MOVEMENT_ACTION_FACE_LEFT:
+    case MOVEMENT_ACTION_FACE_RIGHT:
+    case MOVEMENT_ACTION_DELAY_1:
+    case MOVEMENT_ACTION_DELAY_2:
+    case MOVEMENT_ACTION_DELAY_4:
+    case MOVEMENT_ACTION_DELAY_8:
+    case MOVEMENT_ACTION_DELAY_16:
+    case MOVEMENT_ACTION_FACE_PLAYER:
+    case MOVEMENT_ACTION_FACE_AWAY_PLAYER:
+    case MOVEMENT_ACTION_LOCK_FACING_DIRECTION:
+    case MOVEMENT_ACTION_UNLOCK_FACING_DIRECTION:
+    case MOVEMENT_ACTION_SET_INVISIBLE:
+    case MOVEMENT_ACTION_SET_VISIBLE:
+    case MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK:
+    case MOVEMENT_ACTION_EMOTE_QUESTION_MARK:
+    case MOVEMENT_ACTION_EMOTE_HEART:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_UP:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_LEFT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_UP:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_LEFT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_UP:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_LEFT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_DOWN:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_UP:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_LEFT:
+    case MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_RIGHT:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_DOWN:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_UP:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_RIGHT:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_DOWN_UP:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_UP_DOWN:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT_RIGHT:
+    case MOVEMENT_ACTION_JUMP_IN_PLACE_RIGHT_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_UP:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_LEFT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_LEFT:
+        return FALSE;
     }
 
     return TRUE;
@@ -405,17 +405,17 @@ static void SetSurfJump(void)
     // Adjust surf head spawn location infront of follower
     switch (direction) 
     {
-        case DIR_SOUTH:
-            gFieldEffectArguments[1]++; // effect_y
-            break;
-        case DIR_NORTH:
-            gFieldEffectArguments[1]--;
-            break;
-        case DIR_WEST:
-            gFieldEffectArguments[0]--; // effect_x
-            break;
-        default: // DIR_EAST
-            gFieldEffectArguments[0]++;
+    case DIR_SOUTH:
+        gFieldEffectArguments[1]++; // effect_y
+        break;
+    case DIR_NORTH:
+        gFieldEffectArguments[1]--;
+        break;
+    case DIR_WEST:
+        gFieldEffectArguments[0]--; // effect_x
+        break;
+    default: // DIR_EAST
+        gFieldEffectArguments[0]++;
     };
 
     // Execute, store sprite ID in fieldEffectSpriteId and bind surf blob
@@ -530,51 +530,50 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
 
     switch (task->tState)
     {
-        case OPEN_DOOR:
-            FreezeObjectEvents();
-            task->tDoorTask = FieldAnimateDoorOpen(follower->currentCoords.x, follower->currentCoords.y);
-            if (task->tDoorTask != -1)
-                PlaySE(GetDoorSoundEffect(*x, *y)); // only play SE for animating doors
-
-            task->tState = NPC_WALK_OUT;
-            break;
-        case NPC_WALK_OUT:
-            if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // if Door isn't still opening
+    case OPEN_DOOR:
+        FreezeObjectEvents();
+        task->tDoorTask = FieldAnimateDoorOpen(follower->currentCoords.x, follower->currentCoords.y);
+        if (task->tDoorTask != -1)
+            PlaySE(GetDoorSoundEffect(*x, *y)); // only play SE for animating doors
+        task->tState = NPC_WALK_OUT;
+        break;
+    case NPC_WALK_OUT:
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // if Door isn't still opening
+        {
+            follower->invisible = FALSE;
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)) // In case came out door while surfing.
             {
-                follower->invisible = FALSE;
-                if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)) // In case came out door while surfing.
-                {
-                    SetUpSurfBlobFieldEffect(follower);
-                    follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
-                    SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
-                }
-                ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door.
-                follower->singleMovementActive = FALSE;
-                follower->heldMovementActive = FALSE;
-                ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // follower step down
-                task->tState = CLOSE_DOOR;
+                SetUpSurfBlobFieldEffect(follower);
+                follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
+                SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
             }
-            break;
-        case CLOSE_DOOR:
-            if (ObjectEventClearHeldMovementIfFinished(follower))
-            {
-                task->tDoorTask = FieldAnimateDoorClose(*x, *y);
-                task->tState = UNFREEZE_OBJECTS;
-            }
-            break;
-        case UNFREEZE_OBJECTS:
-            if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // Door is closed
-            {
-                UnfreezeObjectEvents();
-                task->tState = REALLOW_MOVEMENT;
-            }
-            break;
-        case REALLOW_MOVEMENT:
-            FollowerNPC_HandleSprite();
-            SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
-            gPlayerAvatar.preventStep = FALSE; // Player can move again
-            DestroyTask(taskId);
-            break;
+            ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door.
+            follower->singleMovementActive = FALSE;
+            follower->heldMovementActive = FALSE;
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // follower step down
+            task->tState = CLOSE_DOOR;
+        }
+        break;
+    case CLOSE_DOOR:
+        if (ObjectEventClearHeldMovementIfFinished(follower))
+        {
+            task->tDoorTask = FieldAnimateDoorClose(*x, *y);
+            task->tState = UNFREEZE_OBJECTS;
+        }
+        break;
+    case UNFREEZE_OBJECTS:
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // Door is closed
+        {
+            UnfreezeObjectEvents();
+            task->tState = REALLOW_MOVEMENT;
+        }
+        break;
+    case REALLOW_MOVEMENT:
+        FollowerNPC_HandleSprite();
+        SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+        gPlayerAvatar.preventStep = FALSE; // Player can move again
+        DestroyTask(taskId);
+        break;
     }
 }
 
@@ -604,69 +603,69 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
 
     switch (task->tState)
     {
-        case MOVE_TO_PLAYER_POS:
-            MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-            PlayerGetDestCoords(&x, &y);
-            task->tMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-            task->tTimer = 0;
-            task->tState = WAIT_FOR_PLAYER_MOVE;
+    case MOVE_TO_PLAYER_POS:
+        MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
+        PlayerGetDestCoords(&x, &y);
+        task->tMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+        task->tTimer = 0;
+        task->tState = WAIT_FOR_PLAYER_MOVE;
+        break;
+    case WAIT_FOR_PLAYER_MOVE:
+        if (task->tTimer++ < 32) // Wait half a second before revealing the follower
             break;
-        case WAIT_FOR_PLAYER_MOVE:
-            if (task->tTimer++ < 32) // Wait half a second before revealing the follower
-                break;
 
-            task->tState = SHOW_FOLLOWER_DOWN;
-            task->tCounter = 16;
-            SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
-            gPlayerAvatar.preventStep = TRUE;
-            ObjectEventClearHeldMovementIfActive(follower);
-            ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
-            if (task->tMetatileBehavior == 0x6b)
-                task->tState = SHOW_FOLLOWER_UP;
+        task->tState = SHOW_FOLLOWER_DOWN;
+        task->tCounter = 16;
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
+        gPlayerAvatar.preventStep = TRUE;
+        ObjectEventClearHeldMovementIfActive(follower);
+        ObjectEventSetHeldMovement(follower, GetFaceDirectionMovementAction(DIR_EAST));
+        if (task->tMetatileBehavior == 0x6b)
+            task->tState = SHOW_FOLLOWER_UP;
 
-            break;
-        case SHOW_FOLLOWER_DOWN:
-            follower->invisible = FALSE;
-            CalculateFollowerNPCEscalatorTrajectoryDown(task);
-            task->tState = MOVE_FOLLOWER_DOWN;
-            break;
-        case MOVE_FOLLOWER_DOWN:
-            CalculateFollowerNPCEscalatorTrajectoryDown(task);
-            task->tMetatileBehavior++;
-            if (task->tMetatileBehavior & 1)
-                task->tCounter--;
+        break;
+    case SHOW_FOLLOWER_DOWN:
+        follower->invisible = FALSE;
+        CalculateFollowerNPCEscalatorTrajectoryDown(task);
+        task->tState = MOVE_FOLLOWER_DOWN;
+        break;
+    case MOVE_FOLLOWER_DOWN:
+        CalculateFollowerNPCEscalatorTrajectoryDown(task);
+        task->tMetatileBehavior++;
+        if (task->tMetatileBehavior & 1)
+            task->tCounter--;
 
-            if (task->tCounter == 0)
-            {
-                sprite->x2 = 0;
-                sprite->y2 = 0;
-                task->tState = MOVEMENT_FINISH;
-            }
-            break;
-        case SHOW_FOLLOWER_UP:
-            follower->invisible = FALSE;
-            CalculateFollowerNPCEscalatorTrajectoryUp(task);
-            task->tState = MOVE_FOLLOWER_UP;
-            break;
-        case MOVE_FOLLOWER_UP:
-            CalculateFollowerNPCEscalatorTrajectoryUp(task);
-            task->tMetatileBehavior++;
-            if (task->tMetatileBehavior & 1)
-                task->tCounter--;
+        if (task->tCounter == 0)
+        {
+            sprite->x2 = 0;
+            sprite->y2 = 0;
+            task->tState = MOVEMENT_FINISH;
+        }
+        break;
+    case SHOW_FOLLOWER_UP:
+        follower->invisible = FALSE;
+        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        task->tState = MOVE_FOLLOWER_UP;
+        break;
+    case MOVE_FOLLOWER_UP:
+        CalculateFollowerNPCEscalatorTrajectoryUp(task);
+        task->tMetatileBehavior++;
+        if (task->tMetatileBehavior & 1)
+            task->tCounter--;
 
-            if (task->tCounter == 0)
-            {
-                sprite->x2 = 0;
-                sprite->y2 = 0;
-                task->tState = MOVEMENT_FINISH;
-            }
-            break;
-        case MOVEMENT_FINISH:
-            if (ObjectEventClearHeldMovementIfFinished(follower))
-            {
-                gPlayerAvatar.preventStep = FALSE;
-                DestroyTask(taskId);
-            }
+        if (task->tCounter == 0)
+        {
+            sprite->x2 = 0;
+            sprite->y2 = 0;
+            task->tState = MOVEMENT_FINISH;
+        }
+        break;
+    case MOVEMENT_FINISH:
+        if (ObjectEventClearHeldMovementIfFinished(follower))
+        {
+            gPlayerAvatar.preventStep = FALSE;
+            DestroyTask(taskId);
+        }
     }
 }
 
@@ -732,179 +731,179 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
     collision = GetSidewaysStairsCollision(follower, direction, currentBehavior, nextBehavior, collision);
     switch (collision)
     {
-        case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
-            follower->directionOverwrite = GetLeftSideStairsDirection(direction);
-            break;
-        case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
-            follower->directionOverwrite = GetRightSideStairsDirection(direction);
-            break;
+    case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
+        follower->directionOverwrite = GetLeftSideStairsDirection(direction);
+        break;
+    case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
+        follower->directionOverwrite = GetRightSideStairsDirection(direction);
+        break;
     }
 
     switch (state) 
     {
-        case MOVEMENT_ACTION_WALK_SLOW_DOWN ... MOVEMENT_ACTION_WALK_SLOW_RIGHT:
-            // Slow walk
-            RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_DOWN, direction);
+    case MOVEMENT_ACTION_WALK_SLOW_DOWN ... MOVEMENT_ACTION_WALK_SLOW_RIGHT:
+        // Slow walk
+        RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_DOWN, direction);
 
-        case MOVEMENT_ACTION_WALK_NORMAL_DOWN ... MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
-            // Normal walk
-            RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+    case MOVEMENT_ACTION_WALK_NORMAL_DOWN ... MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
+        // Normal walk
+        RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
-        case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
-            // Ledge jump
-            if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
-                return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1)); // Jump right away
+    case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
+        // Ledge jump
+        if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
+            return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1)); // Jump right away
 
+        if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
+            return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
+
+        SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
+        RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+
+    case MOVEMENT_ACTION_WALK_FAST_DOWN ... MOVEMENT_ACTION_WALK_FAST_RIGHT:
+        // Handle player on waterfall
+        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && (state == MOVEMENT_ACTION_WALK_FAST_UP))
+            return MOVEMENT_INVALID;
+
+        // Handle ice tile (some walking animation) -  Set a bit to freeze the follower's animation
+        if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
+            follower->disableAnim = TRUE;
+
+        // Handle surfing
+        if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID))
+            RETURN_STATE(MOVEMENT_ACTION_SURF_STILL_DOWN, direction);
+
+        RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+
+    case MOVEMENT_ACTION_WALK_FASTER_DOWN ... MOVEMENT_ACTION_WALK_FASTER_RIGHT:
+        if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
+            follower->disableAnim = TRUE;
+
+        RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
+
+    case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
+        // Handle player on waterfall
+        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
+            return MOVEMENT_INVALID;
+
+        RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //Regular movement
+
+    // Acro bike
+    case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
+
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_RIGHT:
+        if (noSpecialAnimFrames)
+            RETURN_STATE(MOVEMENT_ACTION_JUMP_DOWN, direction);
+
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
+        // Ledge jump
+        if (noSpecialAnimFrames)
+        {
+            if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Jumped again.
+                return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
+
+            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
+        }
+        else
+        {
             if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
                 return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
 
-            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
-            RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+            if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
+                return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
 
-        case MOVEMENT_ACTION_WALK_FAST_DOWN ... MOVEMENT_ACTION_WALK_FAST_RIGHT:
-            // Handle player on waterfall
-            if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && (state == MOVEMENT_ACTION_WALK_FAST_UP))
-                return MOVEMENT_INVALID;
+            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN);
+        }
 
-            // Handle ice tile (some walking animation) -  Set a bit to freeze the follower's animation
-            if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
-                follower->disableAnim = TRUE;
+        RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
-            // Handle surfing
-            if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID))
-                RETURN_STATE(MOVEMENT_ACTION_SURF_STILL_DOWN, direction);
+    case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
+        if (noSpecialAnimFrames)
+            return MOVEMENT_ACTION_NONE;
 
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN, direction);
+
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_RIGHT:
+        if (noSpecialAnimFrames)
             RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
-        case MOVEMENT_ACTION_WALK_FASTER_DOWN ... MOVEMENT_ACTION_WALK_FASTER_RIGHT:
-            if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
-                follower->disableAnim = TRUE;
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN, direction);
 
-            RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
-
-        case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
-            // Handle player on waterfall
-            if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
-                return MOVEMENT_INVALID;
-
-            RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //Regular movement
-
-        // Acro bike
-        case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
-            if (noSpecialAnimFrames)
-                return MOVEMENT_ACTION_NONE;
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_RIGHT:
-            if (noSpecialAnimFrames)
-                return MOVEMENT_ACTION_NONE;
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_RIGHT:
-            if (noSpecialAnimFrames)
-                return MOVEMENT_ACTION_NONE;
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_FACE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_RIGHT:
-            if (noSpecialAnimFrames)
-                return MOVEMENT_ACTION_NONE;
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_FACE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_HOP_RIGHT:
-            if (noSpecialAnimFrames)
-                RETURN_STATE(MOVEMENT_ACTION_JUMP_DOWN, direction);
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
-            // Ledge jump
-            if (noSpecialAnimFrames)
-            {
-                if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Jumped again.
-                    return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
-
-                SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
-            }
-            else
-            {
-                if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
-                    return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
-
-                if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
-                    return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
-
-                SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN);
-            }
-
+    case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_RIGHT:
+        if (noSpecialAnimFrames)
             RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
-        case MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_RIGHT:
-            if (noSpecialAnimFrames)
-                return MOVEMENT_ACTION_NONE;
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN, direction);
 
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_IN_PLACE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_RIGHT:
-            if (noSpecialAnimFrames)
-                RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_RIGHT:
-            if (noSpecialAnimFrames)
-                RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN, direction);
-
-        case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_RIGHT:
-            if (noSpecialAnimFrames)
-                RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
-
-            RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN, direction);
-
-        // Sliding
-        case MOVEMENT_ACTION_SLIDE_DOWN ... MOVEMENT_ACTION_SLIDE_RIGHT:
-            RETURN_STATE(MOVEMENT_ACTION_SLIDE_DOWN, direction);
-
-        case MOVEMENT_ACTION_PLAYER_RUN_DOWN ... MOVEMENT_ACTION_PLAYER_RUN_RIGHT:
-            // Running frames
-            if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
-                RETURN_STATE(MOVEMENT_ACTION_PLAYER_RUN_DOWN, direction);
-
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN ... MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_RIGHT:
+        if (noSpecialAnimFrames)
             RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
-        case MOVEMENT_ACTION_JUMP_SPECIAL_DOWN ... MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT:
-            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_SPECIAL_DOWN);
+        RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN, direction);
+
+    // Sliding
+    case MOVEMENT_ACTION_SLIDE_DOWN ... MOVEMENT_ACTION_SLIDE_RIGHT:
+        RETURN_STATE(MOVEMENT_ACTION_SLIDE_DOWN, direction);
+
+    case MOVEMENT_ACTION_PLAYER_RUN_DOWN ... MOVEMENT_ACTION_PLAYER_RUN_RIGHT:
+        // Running frames
+        if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
+            RETURN_STATE(MOVEMENT_ACTION_PLAYER_RUN_DOWN, direction);
+
+        RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
+
+    case MOVEMENT_ACTION_JUMP_SPECIAL_DOWN ... MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT:
+        SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_SPECIAL_DOWN);
+        RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+
+    case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
+        // Acro side hop
+        if (delayedState == MOVEMENT_ACTION_JUMP_DOWN)
+        {
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+                follower->facingDirectionLocked = TRUE;
+
+            return newState;
+        }
+        else
+        {
+            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_DOWN);
             RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+        }
 
-        case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
-            // Acro side hop
-            if (delayedState == MOVEMENT_ACTION_JUMP_DOWN)
-            {
-                if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
-                    follower->facingDirectionLocked = TRUE;
+    // Run slow
+    case MOVEMENT_ACTION_RUN_DOWN_SLOW ... MOVEMENT_ACTION_RUN_RIGHT_SLOW:
+        if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
+            RETURN_STATE(MOVEMENT_ACTION_RUN_DOWN_SLOW, direction);
 
-                return newState;
-            }
-            else
-            {
-                SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_DOWN);
-                RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
-            }
+        RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
-        // Run slow
-        case MOVEMENT_ACTION_RUN_DOWN_SLOW ... MOVEMENT_ACTION_RUN_RIGHT_SLOW:
-            if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
-                RETURN_STATE(MOVEMENT_ACTION_RUN_DOWN_SLOW, direction);
-
-            RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
-
-        default:
-            return MOVEMENT_INVALID;
+    default:
+        return MOVEMENT_INVALID;
     }
 
     return newState;
@@ -1078,11 +1077,11 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
 
     switch (newState) 
     {
-        case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
-        case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
-        case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
-            CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
-            gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
+    case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
+    case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
+        CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
+        gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
     }
 
     ObjectEventClearHeldMovementIfFinished(follower);
@@ -1107,15 +1106,15 @@ void CreateFollowerNPCAvatar(void)
 
     switch (GetPlayerFacingDirection())
     {
-        case DIR_NORTH:
-            clone.movementType = MOVEMENT_TYPE_FACE_UP;
-            break;
-        case DIR_WEST:
-            clone.movementType = MOVEMENT_TYPE_FACE_LEFT;
-            break;
-        case DIR_EAST:
-            clone.movementType = MOVEMENT_TYPE_FACE_RIGHT;
-            break;
+    case DIR_NORTH:
+        clone.movementType = MOVEMENT_TYPE_FACE_UP;
+        break;
+    case DIR_WEST:
+        clone.movementType = MOVEMENT_TYPE_FACE_LEFT;
+        break;
+    case DIR_EAST:
+        clone.movementType = MOVEMENT_TYPE_FACE_RIGHT;
+        break;
     }
 
     // Create NPC and store ID
@@ -1366,18 +1365,18 @@ void FollowerNPCWalkIntoPlayerForLeaveMap(void)
     follower->heldMovementActive = FALSE;
     switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], &gObjectEvents[followerObjId]))
     {
-        case DIR_NORTH:
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
-            break;
-        case DIR_SOUTH:
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
-            break;
-        case DIR_EAST:
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
-            break;
-        case DIR_WEST:
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
-            break;
+    case DIR_NORTH:
+        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_UP);
+        break;
+    case DIR_SOUTH:
+        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
+        break;
+    case DIR_EAST:
+        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
+        break;
+    case DIR_WEST:
+        ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
+        break;
     }
 }
 
@@ -1588,22 +1587,22 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
         //Flip direction
         switch (playerDirection) 
         {
-            case DIR_NORTH:
-                playerDirection = DIR_SOUTH;
-                followerDirection = DIR_NORTH;
-                break;
-            case DIR_SOUTH:
-                playerDirection = DIR_NORTH;
-                followerDirection = DIR_SOUTH;
-                break;
-            case DIR_WEST:
-                playerDirection = DIR_EAST;
-                followerDirection = DIR_WEST;
-                break;
-            case DIR_EAST:
-                playerDirection = DIR_WEST;
-                followerDirection = DIR_EAST;
-                break;
+        case DIR_NORTH:
+            playerDirection = DIR_SOUTH;
+            followerDirection = DIR_NORTH;
+            break;
+        case DIR_SOUTH:
+            playerDirection = DIR_NORTH;
+            followerDirection = DIR_SOUTH;
+            break;
+        case DIR_WEST:
+            playerDirection = DIR_EAST;
+            followerDirection = DIR_WEST;
+            break;
+        case DIR_EAST:
+            playerDirection = DIR_WEST;
+            followerDirection = DIR_EAST;
+            break;
         }
 
         ObjectEventTurn(player, playerDirection);
