@@ -62,7 +62,7 @@ def turn_analysed_data_into_string(data, enum):
     return result
 
 def main():
-    toml_path = "./sprite_enum_table.toml"
+    toml_path = "./tools/mining_minigame/sprite_enum_table.toml"
     gfx_items = "./graphics/mining_minigame/items/"
     gfx_stones = "./graphics/mining_minigame/stones/"
     analysed_sprite_data = []

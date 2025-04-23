@@ -453,7 +453,7 @@ $(OBJ_DIR)/sym_ewram.ld: sym_ewram.txt
 
 MINING_DEPS := $(shell find graphics/mining_minigame/items/ -type f -name '*.4bpp') \
                $(shell find graphics/mining_minigame/stones/ -type f -name '*.4bpp') \
-			   graphics/mining_minigame/sprite_enum_table.toml
+			   tools/mining_minigame/sprite_enum_table.toml
 
 TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(shell find data/ -type f -name '*.inc') $(INCLUDE_DIRS)/constants/tms_hms.h $(C_SUBDIR)/pokemon.c
 
