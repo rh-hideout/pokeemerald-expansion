@@ -61,7 +61,7 @@ def turn_analysed_data_into_string(data, enum):
     result = "    [" + enum + "] = " + "{\n" + result + "\n" + "    },\n"
     return result
 
-if __name__ == "__main__":
+def main():
     toml_path = "./sprite_enum_table.toml"
     gfx_items = "./graphics/mining_minigame/items/"
     gfx_stones = "./graphics/mining_minigame/stones/"
@@ -71,7 +71,6 @@ if __name__ == "__main__":
 
 static const int SpriteTileTable[][16] = {
 """
-
 
     with open(toml_path, "rb") as f:
         toml_data = tomllib.load(f)
@@ -104,3 +103,7 @@ static const int SpriteTileTable[][16] = {
     
     with open('./src/data/mining_minigame.h', 'w') as file:
         file.write(contents)
+
+
+if __name__ == "__main__":
+    main()
