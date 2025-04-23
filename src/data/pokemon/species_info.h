@@ -12631,7 +12631,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .palette = gMonPalette_Sparmor,
         .shinyPalette = gMonShinyPalette_Sparmor,
         .iconSprite = gMonIcon_Sparmor,
-        .iconPalIndex = 0,
+        .iconPalIndex = 2,
         FOOTPRINT(Sparmor)
         .levelUpLearnset = sSparmorLevelUpLearnset,
         .teachableLearnset = sSparmorTeachableLearnset,
@@ -12688,7 +12688,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .palette = gMonPalette_Ohmadillo,
         .shinyPalette = gMonShinyPalette_Ohmadillo,
         .iconSprite = gMonIcon_Ohmadillo,
-        .iconPalIndex = 0,
+        .iconPalIndex = 2,
         FOOTPRINT(Ohmadillo)
         .levelUpLearnset = sOhmadilloLevelUpLearnset,
         .teachableLearnset = sOhmadilloTeachableLearnset,
@@ -12745,7 +12745,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .palette = gMonPalette_Colombolt,
         .shinyPalette = gMonShinyPalette_Colombolt,
         .iconSprite = gMonIcon_Colombolt,
-        .iconPalIndex = 0,
+        .iconPalIndex = 2,
         FOOTPRINT(Colombolt)
         .levelUpLearnset = sColomboltLevelUpLearnset,
         .teachableLearnset = sColomboltTeachableLearnset,
