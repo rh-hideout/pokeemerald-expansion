@@ -5108,7 +5108,7 @@ static bool8 CalculateMoves(void)
     u8 numTMHMMoves = 0;
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
-    u8 i,j; 
+    u8 i,j;
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
     if ((species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
