@@ -48,7 +48,6 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
-
 enum
 {
     PAGE_MAIN,
@@ -5110,7 +5109,6 @@ static bool8 CalculateMoves(void)
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
     u8 i,j; 
-    u16 isTMMove[MOVES_COUNT] = {FALSE};
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
     if ((species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
@@ -5118,7 +5116,7 @@ static bool8 CalculateMoves(void)
         species = GetFormSpeciesId(species, 0);
 
     // Egg moves
-    if (P_SHOW_EGG_MOVES)
+    if (SHOW_EGG_MOVES_FOR_EVOS)
     {
         u16 preSpecies = species;
         while (preSpecies != SPECIES_NONE)
@@ -5144,15 +5142,20 @@ static bool8 CalculateMoves(void)
         movesTotal++;
     }
 
-    if (P_SORT_TMS_BY_NUM)
+    if (SORT_TMS_BY_NUM)
     {
+#if TUTOR_MOVES_ARRAY == FALSE
+        u16 isTMMove[MOVES_COUNT] = {FALSE};
+#endif
         // TM moves
         for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
         {
             move = ItemIdToBattleMoveId(ITEM_TM01 + i);
             if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
             {
+#if TUTOR_MOVES_ARRAY == FALSE
                 isTMMove[move] = TRUE;
+#endif
                 sStatsMovesTMHM_ID[numTMHMMoves] = ITEM_TM01 + i;
                 numTMHMMoves++;
                 sStatsMoves[movesTotal] = move;
@@ -5161,6 +5164,18 @@ static bool8 CalculateMoves(void)
         }
 
         // Tutor moves
+#if TUTOR_MOVES_ARRAY == TRUE
+        for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
+        {
+            move = gTutorMoves[i];
+            if (move != MOVE_UNAVAILABLE && CanLearnTeachableMove(species, move))
+            {
+                numTutorMoves++;
+                sStatsMoves[movesTotal] = move;
+                movesTotal++;
+            }
+        }
+#else
         for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         {
             move = teachableLearnset[i];
@@ -5171,6 +5186,7 @@ static bool8 CalculateMoves(void)
                 movesTotal++;
             }
         }
+#endif
     }
     else
     {
