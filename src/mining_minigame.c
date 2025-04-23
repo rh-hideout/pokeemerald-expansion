@@ -1,9 +1,8 @@
-// END TODO:    Remove comfy_anims and create a seperate branch
-// END TODO:    Rename folder and file names
 // END TODO:    Make sure there are no warnings whatsoever!
 // END TODO:    Remove large comment blocks
 // END TODO:    Clear debug scripts
 // END TODO:    Uncomment `NDEBUG`
+// END TODO:    Remove comfy_anims and create a seperate branch
 // END TODO:    Final testing
 #include "mining_minigame.h"
 #include "gba/types.h"
@@ -283,9 +282,9 @@ static const u16 sUiPalette[] = INCBIN_U16("graphics/mining_minigame/ui.gbapal")
 static const u32 sCollapseScreenTiles[] = INCBIN_U32("graphics/mining_minigame/collapse.4bpp.lz");
 static const u16 sCollapseScreenPalette[] = INCBIN_U16("graphics/mining_minigame/collapse.gbapal");
 
-static const u32 gStressLevelAndTerrainTiles[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.4bpp.lz");
-static const u32 gStressLevelAndTerrainTilemap[] = INCBIN_U32("graphics/mining_minigame/cracks_terrain.bin.lz");
-static const u16 gStressLevelAndTerrainPalette[] = INCBIN_U16("graphics/mining_minigame/cracks_terrain.gbapal");
+static const u32 gStressLevelAndTerrainTiles[] = INCBIN_U32("graphics/mining_minigame/stress_level_terrain.4bpp.lz");
+static const u32 gStressLevelAndTerrainTilemap[] = INCBIN_U32("graphics/mining_minigame/stress_level_terrain.bin.lz");
+static const u16 gStressLevelAndTerrainPalette[] = INCBIN_U16("graphics/mining_minigame/stress_level_terrain.gbapal");
 
 static const u8 gMiningMessageBoxGfx[] = INCBIN_U8("graphics/mining_minigame/message_box.4bpp");
 static const u16 gMiningMessageBoxPal[] = INCBIN_U16("graphics/mining_minigame/message_box.gbapal");
