@@ -338,7 +338,6 @@ static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 static EWRAM_DATA struct DebugBattleData *sDebugBattleData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
 EWRAM_DATA u32 gDebugAIFlags = 0;
-EWRAM_DATA u32 gDebugTime = 0;
 
 // *******************************
 // Define functions
