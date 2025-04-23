@@ -1169,20 +1169,22 @@ void ClearTrainerFlag(u16 trainerId)
 
 void BattleSetup_StartTrainerBattle(void)
 {
-    if (gNoOfApproachingTrainers == 2) {
-        if (FollowerNPCIsBattlePartner()) {
+    if (gNoOfApproachingTrainers == 2)
+    {
+        if (FollowerNPCIsBattlePartner())
             gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
-        }
-        else {
+        else
             gBattleTypeFlags = (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
-        }
     }
-    else {
-        if (FollowerNPCIsBattlePartner()) {
+    else
+    {
+        if (FollowerNPCIsBattlePartner())
+        {
             gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER);
             TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
         }
-        else {
+        else
+        {
             gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
         }
     }

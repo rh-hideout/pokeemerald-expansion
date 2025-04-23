@@ -706,7 +706,8 @@ void Task_WarpAndLoadMap(u8 taskId)
 
 void Task_DoDoorWarp(u8 taskId)
 {
-    if (PlayerHasFollowerNPC()) {
+    if (PlayerHasFollowerNPC())
+    {
         struct Task *task = &gTasks[taskId];
         s16 *x = &task->data[2];
         s16 *y = &task->data[3];
@@ -780,7 +781,8 @@ void Task_DoDoorWarp(u8 taskId)
             break;
         }
     }
-    else {
+    else
+    {
         struct Task *task = &gTasks[taskId];
         s16 *x = &task->data[2];
         s16 *y = &task->data[3];
