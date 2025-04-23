@@ -1,4 +1,3 @@
-// END TODO:    Make sure there are no warnings whatsoever!
 // END TODO:    Remove large comment blocks
 // END TODO:    Clear debug scripts
 // END TODO:    Uncomment `NDEBUG`
