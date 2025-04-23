@@ -3234,9 +3234,6 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
-    if (gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-        return;
-
     // for synchronize
     if (effect == MOVE_EFFECT_POISON
      || effect == MOVE_EFFECT_TOXIC
@@ -3339,7 +3336,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
     if (gBattleScripting.moveEffect <= PRIMARY_STATUS_MOVE_EFFECT) // status change
     {
-        if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)) // Calcs already done)
+        if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)) // Calcs already done
         {
             statusChanged = CanSetNonVolatileStatus(gBattlerAttacker,
                                                     gEffectBattler,
