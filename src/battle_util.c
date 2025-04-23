@@ -6222,6 +6222,21 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 effect++;
             }
             break;
+        case ABILITY_COLLAPSING_RUIN:
+            if (!(gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+            && !IsBattlerAlive(gBattlerTarget)
+            && (!gBattleStruct->isSkyBattle)
+            && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+            && !IS_MOVE_STATUS(gCurrentMove)
+            && TARGET_TURN_DAMAGED
+            && (gSideTimers[GetBattlerSide(gBattlerAttacker)].stealthRockAmount != 1))
+            {
+                SWAP(gBattlerAttacker, gBattlerTarget, i);
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_CollapsingRuinStealthRockActivates;
+                effect++;
+            }
+            break;
         }
         break;
     case ABILITYEFFECT_MOVE_END_ATTACKER: // Same as above, but for attacker
@@ -10492,10 +10507,18 @@ static inline u32 CalcAttackStat(u32 move, u32 battlerAtk, u32 battlerDef, u32 m
                 RecordAbilityBattle(battlerDef, ABILITY_THICK_FAT);
         }
         break;
-    }
-
-    switch (defAbility)
-    {
+    case ABILITY_COLLAPSING_RUIN:
+        if (moveType == TYPE_WATER
+         || moveType == TYPE_FIGHTING
+         || moveType == TYPE_GROUND
+         || moveType == TYPE_GRASS
+         || moveType == TYPE_STEEL)
+        {
+            modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
+            if (updateFlags)
+                RecordAbilityBattle(battlerDef, defAbility);
+        }
+        break;
     case ABILITY_SHAVED_ICE:
         if (moveType == TYPE_FIRE || moveType == TYPE_ROCK || moveType == TYPE_FIGHTING || moveType == TYPE_STEEL)
         {

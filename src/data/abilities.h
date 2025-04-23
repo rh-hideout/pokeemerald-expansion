@@ -2925,4 +2925,11 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_COLLAPSING_RUIN] = 
+    {
+        .name = _("Collapsing Ruin"),
+        .description = COMPOUND_STRING("Removes Rock-type weakness. Sets\nstealth rocks upon fatal blow."),
+        .aiRating = 5,
+    }
+
 };

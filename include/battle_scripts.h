@@ -550,6 +550,7 @@ extern const u8 BattleScript_BearHugRockyHelmetActivates[];
 extern const u8 BattleScript_AbilityStatusEffectNoPopUp[];
 extern const u8 BattleScript_FrozenBunkerFormChange[];
 extern const u8 BattleScript_OneHPAttackerForExplosion[];
+extern const u8 BattleScript_CollapsingRuinStealthRockActivates[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

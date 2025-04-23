@@ -884,6 +884,7 @@ static const u8 sText_EclipseActivates[] = _("{B_ATK_NAME_WITH_PREFIX}'s Eclipse
 static const u8 sText_TargetWasTrapped[] = _("{B_DEF_NAME_WITH_PREFIX} was trapped!");
 static const u8 sText_FlareHealHpUp[] = _("The burning healed {B_ATK_NAME_WITH_PREFIX}\na little bit!");
 static const u8 sText_PkmnsItemPreventsYLoss[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_LAST_ITEM}\nprevents {B_BUFF1} loss!");
+static const u8 sText_CollapsingRuinStealthRocks[] = _("Rocks exploded from {B_ATK_NAME_WITH_PREFIX}\ninto the opposing field!");
 
 
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
@@ -1623,6 +1624,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ECLIPSEACTIVATES - BATTLESTRINGS_TABLE_START] = sText_EclipseActivates,
     [STRINGID_FLAREHEALHPUP - BATTLESTRINGS_TABLE_START] = sText_FlareHealHpUp,
     [STRINGID_PKMNSITEMPREVENTSYLOSS - BATTLESTRINGS_TABLE_START] = sText_PkmnsItemPreventsYLoss,
+    [STRINGID_COLLAPSINGRUINSTEALTHROCKS - BATTLESTRINGS_TABLE_START] = sText_CollapsingRuinStealthRocks,
 };
 
 const u16 gTrainerUsedItemStringIds[] =
