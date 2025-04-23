@@ -7650,7 +7650,7 @@ static void Task_WaitAfterMultiPartnerPartySlideIn(u8 taskId)
     s16 *data = gTasks[taskId].data;
 
     // data[0] used as a timer afterwards rather than the x pos
-    if (IsFollowerNPCBattlePartner()) {
+    if (FollowerNPCIsBattlePartner()) {
         if (++data[0] == 128)
             Task_ClosePartyMenu(taskId);
     }

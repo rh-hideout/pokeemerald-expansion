@@ -706,8 +706,7 @@ void Task_WarpAndLoadMap(u8 taskId)
 
 void Task_DoDoorWarp(u8 taskId)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
-    if (gSaveBlock3Ptr->NPCfollower.inProgress) {
+    if (PlayerHasFollowerNPC()) {
         struct Task *task = &gTasks[taskId];
         s16 *x = &task->data[2];
         s16 *y = &task->data[3];
@@ -720,7 +719,7 @@ void Task_DoDoorWarp(u8 taskId)
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
                 SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); //Stop running
 
-            gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = FNPC_DOOR_NONE; //Just in case came out and when right back in
+            SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE); //Just in case came out and when right back in
             FreezeObjectEvents();
             PlayerGetDestCoords(x, y);
             PlaySE(GetDoorSoundEffect(*x, *y - 1));
@@ -733,7 +732,7 @@ void Task_DoDoorWarp(u8 taskId)
                 ObjectEventClearHeldMovementIfActive(&gObjectEvents[playerObjId]);
                 ObjectEventSetHeldMovement(&gObjectEvents[playerObjId], MOVEMENT_ACTION_WALK_NORMAL_UP);
 
-                if (gSaveBlock3Ptr->NPCfollower.inProgress && !gObjectEvents[followerObjId].invisible)
+                if (PlayerHasFollowerNPC() && !gObjectEvents[followerObjId].invisible)
                 {
                     u8 newState = DetermineFollowerNPCState(&gObjectEvents[followerObjId], MOVEMENT_ACTION_WALK_NORMAL_UP,
                                                         DetermineFollowerNPCDirection(&gObjectEvents[playerObjId], &gObjectEvents[followerObjId]));
@@ -747,7 +746,7 @@ void Task_DoDoorWarp(u8 taskId)
         case 2:
             if (IsPlayerStandingStill())
             {
-                if (!gSaveBlock3Ptr->NPCfollower.inProgress || gObjectEvents[followerObjId].invisible) //Don't close door on follower
+                if (!PlayerHasFollowerNPC() || gObjectEvents[followerObjId].invisible) //Don't close door on follower
                     task->data[1] = FieldAnimateDoorClose(*x, *y - 1);
                 ObjectEventClearHeldMovementIfFinished(&gObjectEvents[playerObjId]);
                 SetPlayerVisibility(0);
@@ -761,7 +760,7 @@ void Task_DoDoorWarp(u8 taskId)
             }
             break;
         case 4:
-            if (gSaveBlock3Ptr->NPCfollower.inProgress)
+            if (PlayerHasFollowerNPC())
             {
                 ObjectEventClearHeldMovementIfActive(&gObjectEvents[followerObjId]);
                 ObjectEventSetHeldMovement(&gObjectEvents[followerObjId], MOVEMENT_ACTION_WALK_NORMAL_UP);
@@ -782,7 +781,6 @@ void Task_DoDoorWarp(u8 taskId)
         }
     }
     else {
-#endif
         struct Task *task = &gTasks[taskId];
         s16 *x = &task->data[2];
         s16 *y = &task->data[3];
@@ -839,9 +837,7 @@ void Task_DoDoorWarp(u8 taskId)
             task->func = Task_WarpAndLoadMap;
             break;
         }
-#if OW_ENABLE_NPC_FOLLOWERS
     }
-#endif
 }
 
 static void Task_DoContestHallWarp(u8 taskId)

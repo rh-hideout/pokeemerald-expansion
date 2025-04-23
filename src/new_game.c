@@ -47,6 +47,7 @@
 #include "constants/map_groups.h"
 #include "constants/items.h"
 #include "difficulty.h"
+#include "follower_npc.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -211,9 +212,7 @@ void NewGameInitData(void)
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
     ResetDexNav();
-#if OW_ENABLE_NPC_FOLLOWERS
-    memset(&gSaveBlock3Ptr->NPCfollower, 0, sizeof(gSaveBlock3Ptr->NPCfollower));
-#endif
+    ClearFollowerNPCData();
 }
 
 static void ResetMiniGamesRecords(void)

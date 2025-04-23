@@ -14,6 +14,26 @@ struct FollowerNPCSpriteGraphics
     u16 underwaterId;
 };
 
+enum FollowerNPCDataTypes
+{
+    FNPC_DATA_IN_PROGRESS,
+    FNPC_DATA_WARP_END,
+    FNPC_DATA_SURF_BLOB,
+    FNPC_DATA_COME_OUT_DOOR,
+    FNPC_DATA_OBJ_ID,
+    FNPC_DATA_CURRENT_SPRITE,
+    FNPC_DATA_DELAYED_STATE,
+    FNPC_DATA_MAP_ID,
+    FNPC_DATA_MAP_NUM,
+    FNPC_DATA_MAP_GROUP,
+    FNPC_DATA_COORD_X,
+    FNPC_DATA_COORD_Y,
+    FNPC_DATA_EVENT_FLAG,
+    FNPC_DATA_GFX_ID,
+    FNPC_DATA_FOLLOWER_FLAGS,
+    FNPC_DATA_BATTLE_PARTNER
+};
+
 enum FollowerNPCSpriteTypes
 {
     FOLLOWER_NPC_SPRITE_INDEX_NORMAL,
@@ -61,6 +81,11 @@ enum FollowerNPCHandleEscalatorFinishTaskStates{
     MOVEMENT_FINISH
 };
 
+void SetFollowerNPCData(u8 type, u16 value);
+const u8 *GetFollowerNPCScriptPointer(void);
+u32 GetFollowerNPCData(u8 type);
+void ClearFollowerNPCData(void);
+
 u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction);
 void SetFollowerNPCSprite(u8 spriteIndex);
 
@@ -71,7 +96,6 @@ void FollowerNPC_HandleSprite(void);
 u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 u8 GetFollowerNPCObjectId(void);
 bool8 CheckFollowerNPCFlag(u16 flag);
-const u8 *GetFollowerNPCScriptPointer(void);
 bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void HideNPCFollower(void);
 void FollowerNPC_WarpSetEnd(void);
@@ -95,7 +119,7 @@ void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower);
 void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct ObjectEvent *player);
 void FollowerNPCFaceAfterLeaveMap(void);
 
-bool8 IsFollowerNPCBattlePartner(void);
+bool8 FollowerNPCIsBattlePartner(void);
 bool8 IsNPCFollowerWildBattle(void);
 void PrepareForFollowerNPCBattle(void);
 void RestorePartyAfterFollowerNPCBattle(void);
