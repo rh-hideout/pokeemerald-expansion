@@ -412,19 +412,6 @@ static void DebugAction_TimeMenu_Weekdays(u8 taskId);
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
 
-// static void DebugAction_TimeMenu_Morning(u8 taskId);
-// static void DebugAction_TimeMenu_Day(u8 taskId);
-// static void DebugAction_TimeMenu_Evening(u8 taskId);
-// static void DebugAction_TimeMenu_Night(u8 taskId);
-
-// static void DebugAction_TimeMenu_Sunday(u8 taskId);
-// static void DebugAction_TimeMenu_Monday(u8 taskId);
-// static void DebugAction_TimeMenu_Tuesday(u8 taskId);
-// static void DebugAction_TimeMenu_Wednesday(u8 taskId);
-// static void DebugAction_TimeMenu_Thursday(u8 taskId);
-// static void DebugAction_TimeMenu_Friday(u8 taskId);
-// static void DebugAction_TimeMenu_Saturday(u8 taskId);
-
 static void DebugAction_OpenPCBagFillMenu(u8 taskId);
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId);
 static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId);
@@ -666,29 +653,29 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu[] =
 {
-    [DEBUG_TIME_MENU_ITEM_PRINTTIME] = {COMPOUND_STRING("Print current time"), DEBUG_TIME_MENU_ITEM_PRINTTIME},
+    [DEBUG_TIME_MENU_ITEM_PRINTTIME] = {COMPOUND_STRING("Print current time"),                          DEBUG_TIME_MENU_ITEM_PRINTTIME},
     [DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Print current time of day"), DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY},
-    [DEBUG_TIME_MENU_ITEM_TIMESOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Change current time of day"), DEBUG_TIME_MENU_ITEM_TIMESOFDAY},
-    [DEBUG_TIME_MENU_ITEM_WEEKDAYS] = {COMPOUND_STRING("Change current weekday"), DEBUG_TIME_MENU_ITEM_WEEKDAYS},
+    [DEBUG_TIME_MENU_ITEM_TIMESOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Change current time of day"),    DEBUG_TIME_MENU_ITEM_TIMESOFDAY},
+    [DEBUG_TIME_MENU_ITEM_WEEKDAYS] = {COMPOUND_STRING("Change current weekday"),                       DEBUG_TIME_MENU_ITEM_WEEKDAYS},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_TimesOfDay[] =
 {
     [DEBUG_TIME_MENU_ITEM_MORNING] = {gTimeOfDayStringsTable[TIME_MORNING], DEBUG_TIME_MENU_ITEM_MORNING},
-    [DEBUG_TIME_MENU_ITEM_DAY] = {gTimeOfDayStringsTable[TIME_DAY], DEBUG_TIME_MENU_ITEM_DAY},
+    [DEBUG_TIME_MENU_ITEM_DAY] = {gTimeOfDayStringsTable[TIME_DAY],         DEBUG_TIME_MENU_ITEM_DAY},
     [DEBUG_TIME_MENU_ITEM_EVENING] = {gTimeOfDayStringsTable[TIME_EVENING], DEBUG_TIME_MENU_ITEM_EVENING},
-    [DEBUG_TIME_MENU_ITEM_NIGHT] = {gTimeOfDayStringsTable[TIME_NIGHT], DEBUG_TIME_MENU_ITEM_NIGHT},
+    [DEBUG_TIME_MENU_ITEM_NIGHT] = {gTimeOfDayStringsTable[TIME_NIGHT],     DEBUG_TIME_MENU_ITEM_NIGHT},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_Weekdays[] =
 {
-    [DEBUG_TIME_MENU_ITEM_SUNDAY] = {gDayNameStringsTable[WEEKDAY_SUN], DEBUG_TIME_MENU_ITEM_SUNDAY},
-    [DEBUG_TIME_MENU_ITEM_MONDAY] = {gDayNameStringsTable[WEEKDAY_MON], DEBUG_TIME_MENU_ITEM_MONDAY},
-    [DEBUG_TIME_MENU_ITEM_TUESDAY] = {gDayNameStringsTable[WEEKDAY_TUE], DEBUG_TIME_MENU_ITEM_TUESDAY},
+    [DEBUG_TIME_MENU_ITEM_SUNDAY] = {gDayNameStringsTable[WEEKDAY_SUN],    DEBUG_TIME_MENU_ITEM_SUNDAY},
+    [DEBUG_TIME_MENU_ITEM_MONDAY] = {gDayNameStringsTable[WEEKDAY_MON],    DEBUG_TIME_MENU_ITEM_MONDAY},
+    [DEBUG_TIME_MENU_ITEM_TUESDAY] = {gDayNameStringsTable[WEEKDAY_TUE],   DEBUG_TIME_MENU_ITEM_TUESDAY},
     [DEBUG_TIME_MENU_ITEM_WEDNESDAY] = {gDayNameStringsTable[WEEKDAY_WED], DEBUG_TIME_MENU_ITEM_WEDNESDAY},
-    [DEBUG_TIME_MENU_ITEM_THURSDAY] = {gDayNameStringsTable[WEEKDAY_THU], DEBUG_TIME_MENU_ITEM_THURSDAY},
-    [DEBUG_TIME_MENU_ITEM_FRIDAY] = {gDayNameStringsTable[WEEKDAY_FRI], DEBUG_TIME_MENU_ITEM_FRIDAY},
-    [DEBUG_TIME_MENU_ITEM_SATURDAY] = {gDayNameStringsTable[WEEKDAY_SAT], DEBUG_TIME_MENU_ITEM_SATURDAY},
+    [DEBUG_TIME_MENU_ITEM_THURSDAY] = {gDayNameStringsTable[WEEKDAY_THU],  DEBUG_TIME_MENU_ITEM_THURSDAY},
+    [DEBUG_TIME_MENU_ITEM_FRIDAY] = {gDayNameStringsTable[WEEKDAY_FRI],    DEBUG_TIME_MENU_ITEM_FRIDAY},
+    [DEBUG_TIME_MENU_ITEM_SATURDAY] = {gDayNameStringsTable[WEEKDAY_SAT],  DEBUG_TIME_MENU_ITEM_SATURDAY},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_PCBag[] =
@@ -1880,7 +1867,7 @@ static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 static void DebugAction_TimeMenu_TimesOfDay(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    if (OW_USE_FAKE_RTC == FALSE)
+    if (!OW_USE_FAKE_RTC)
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
     else
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_TimesOfDay, sDebugMenu_ListTemplate_TimeMenu_TimesOfDay);
@@ -1889,7 +1876,7 @@ static void DebugAction_TimeMenu_TimesOfDay(u8 taskId)
 static void DebugAction_TimeMenu_Weekdays(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    if (OW_USE_FAKE_RTC == FALSE)
+    if (!OW_USE_FAKE_RTC)
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
     else
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_Weekdays, sDebugMenu_ListTemplate_TimeMenu_Weekdays);
@@ -2329,7 +2316,7 @@ static void DebugAction_TimeMenu_PrintTime(u8 taskId)
 
 void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 {
-    if (OW_USE_FAKE_RTC == TRUE)
+    if (OW_USE_FAKE_RTC)
     {
         struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
         StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
@@ -2344,7 +2331,6 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
         ConvertIntToDecimalStringN(gStringVar2, gLocalTime.hours, STR_CONV_MODE_LEFT_ALIGN, 3);
         ConvertIntToDecimalStringN(gStringVar3, gLocalTime.minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
     }
-
 }
 
 static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId)
@@ -4855,5 +4841,4 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 static void DebugAction_Util_CheckEWRAMCounters(u8 taskId)
 {
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_EWRAMCounters);
-
 }

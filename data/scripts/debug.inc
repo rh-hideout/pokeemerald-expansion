@@ -592,7 +592,6 @@ Debug_EventScript_TellTheTime::
 	closemessage
 	end
 
-
 Debug_EventScript_PrintTimeOfDay::
 	callnative DebugMenu_CalculateTimeOfDay
 	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
@@ -605,7 +604,6 @@ Debug_EventScript_FakeRTCNotEnabled::
 	waitmessage
 	closemessage
 	return
-
 
 Debug_EventScript_FakeRTCNotEnabled_Text_0:
 	.string "You currently do not have Fake RTC\nenabled. Please enable it in include/\lconfig/overworld.h$"
