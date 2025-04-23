@@ -568,10 +568,12 @@ static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
     COMPOUND_STRING("Saturday"),
 };
 
-static const u8 sDebugText_TimeMenu_Morning[] = _("Morning");
-static const u8 sDebugText_TimeMenu_Day[] = _("Day");
-static const u8 sDebugText_TimeMenu_Evening[] = _("Evening");
-static const u8 sDebugText_TimeMenu_Night[] = _("Night");
+static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
+    COMPOUND_STRING("Morning"),
+    COMPOUND_STRING("Day"),
+    COMPOUND_STRING("Evening"),
+    COMPOUND_STRING("Night"),
+};
 
 // Flags/Vars Menu
 static const u8 sDebugText_FlagsVars_Flag[] =                _("Flag: {STR_VAR_1}{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}");
@@ -668,10 +670,10 @@ static const struct ListMenuItem sDebugMenu_Items_TimeMenu[] =
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_TimesOfDay[] =
 {
-    [DEBUG_TIME_MENU_ITEM_MORNING] = {sDebugText_TimeMenu_Morning, DEBUG_TIME_MENU_ITEM_MORNING},
-    [DEBUG_TIME_MENU_ITEM_DAY] = {sDebugText_TimeMenu_Day, DEBUG_TIME_MENU_ITEM_DAY},
-    [DEBUG_TIME_MENU_ITEM_EVENING] = {sDebugText_TimeMenu_Evening, DEBUG_TIME_MENU_ITEM_EVENING},
-    [DEBUG_TIME_MENU_ITEM_NIGHT] = {sDebugText_TimeMenu_Night, DEBUG_TIME_MENU_ITEM_NIGHT},
+    [DEBUG_TIME_MENU_ITEM_MORNING] = {gTimeOfDayStringsTable[TIME_MORNING], DEBUG_TIME_MENU_ITEM_MORNING},
+    [DEBUG_TIME_MENU_ITEM_DAY] = {gTimeOfDayStringsTable[TIME_DAY], DEBUG_TIME_MENU_ITEM_DAY},
+    [DEBUG_TIME_MENU_ITEM_EVENING] = {gTimeOfDayStringsTable[TIME_EVENING], DEBUG_TIME_MENU_ITEM_EVENING},
+    [DEBUG_TIME_MENU_ITEM_NIGHT] = {gTimeOfDayStringsTable[TIME_NIGHT], DEBUG_TIME_MENU_ITEM_NIGHT},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_Weekdays[] =
@@ -2395,16 +2397,16 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
     switch (GetTimeOfDay())
     {
         case TIME_MORNING:
-            StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Morning);
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MORNING]);
             break;
         case TIME_DAY:
-            StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Day);
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_DAY]);
             break;
         case TIME_EVENING:
-            StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Evening);
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_EVENING]);
             break;
         case TIME_NIGHT:
-            StringExpandPlaceholders(gStringVar1, sDebugText_TimeMenu_Night);
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_NIGHT]);
             break;
         default:
             break;
