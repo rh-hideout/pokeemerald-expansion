@@ -1,4 +1,3 @@
-// END TODO:    Remove comfy_anims and create a seperate branch
 // END TODO:    Clear debug scripts
 // END TODO:    Final testing
 #include "mining_minigame.h"
@@ -34,7 +33,6 @@
 #include "field_message_box.h"
 #include "constants/items.h"
 #include "item.h"
-#include "comfy_anim.h"
 #include "data/mining_minigame.h"
 
 /* >> Specials << */
@@ -527,15 +525,6 @@ static const union AnimCmd *const gHitPickaxeAnim[] =
 #define COMFY_X 0
 #define COMFY_Y 1
 
-static void SpriteCB_Cursor(struct Sprite* sprite) 
-{
-    sprite->x = ReadComfyAnimValueSmooth(&gComfyAnims[sprite->data[COMFY_X]]);
-    sprite->y = ReadComfyAnimValueSmooth(&gComfyAnims[sprite->data[COMFY_Y]]);
-
-    // Update anim's X and Y pos
-    gComfyAnims[gSprites[sMiningUiState->cursorSpriteIndex].data[COMFY_X]].config.data.spring.to = Q_24_8(8 + 16 * sMiningUiState->cursorX);
-    gComfyAnims[gSprites[sMiningUiState->cursorSpriteIndex].data[COMFY_Y]].config.data.spring.to = Q_24_8(8 + 16 * sMiningUiState->cursorY);
-}
 
 static const struct SpriteTemplate gSpriteCursor =
 {
@@ -545,7 +534,7 @@ static const struct SpriteTemplate gSpriteCursor =
     .anims = gCursorAnim,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_Cursor,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate gSpriteButtonRed =
@@ -1736,7 +1725,6 @@ static void Task_Mining_WaitFadeAndBail(u8 taskId)
 static void Mining_MainCB(void) 
 {
     RunTasks();
-    AdvanceComfyAnimations();
     AnimateSprites();
     BuildOamBuffer();
     DoScheduledBgTilemapCopiesToVram();
@@ -2054,25 +2042,6 @@ static void Mining_LoadSpriteGraphics(void)
     u32 itemId3 = 0;
     u32 itemId4 = 0;
     u32 stone = MININGID_NONE;
-    struct ComfyAnimSpringConfig animConfigX, animConfigY;
-
-    // -- X values --
-    animConfigX.from = Q_24_8(0 + 8);
-    animConfigX.to = Q_24_8(0 + 8);
-    animConfigX.mass = Q_24_8(50);
-    animConfigX.tension = Q_24_8(285);
-    animConfigX.friction = Q_24_8(1150);
-    animConfigX.clampAfter = 0;
-    animConfigX.delayFrames = 0;
-
-    // -- Y values --
-    animConfigY.from = Q_24_8(2 * 16 + 8);
-    animConfigY.to = Q_24_8(2 * 16 + 8);
-    animConfigY.mass = Q_24_8(50);
-    animConfigY.tension = Q_24_8(285);
-    animConfigY.friction = Q_24_8(1150);
-    animConfigY.clampAfter = 0;
-    animConfigY.delayFrames = 0;
 
     LoadSpritePalette(sSpritePal_Cursor);
     LoadCompressedSpriteSheet(sSpriteSheet_Cursor);
@@ -2102,8 +2071,6 @@ static void Mining_LoadSpriteGraphics(void)
     sMiningUiState->cursorSpriteIndex = CreateSprite(&gSpriteCursor, 8, 40, 0);
     sMiningUiState->cursorX = 0;
     sMiningUiState->cursorY = 2;
-    gSprites[sMiningUiState->cursorSpriteIndex].data[COMFY_X] = CreateComfyAnim_Spring(&animConfigX);
-    gSprites[sMiningUiState->cursorSpriteIndex].data[COMFY_Y] = CreateComfyAnim_Spring(&animConfigY);
     sMiningUiState->bRedSpriteIndex = CreateSprite(&gSpriteButtonRed, 217, 78, 0);
     sMiningUiState->bBlueSpriteIndex = CreateSprite(&gSpriteButtonBlue, 217, 138, 1);
     sMiningUiState->tool = 0;
@@ -2153,15 +2120,19 @@ static void Task_MiningMainInput(u8 taskId)
 
     else if (gMain.newAndRepeatedKeys & DPAD_LEFT && sMiningUiState->cursorX > 0) 
     {
+        gSprites[sMiningUiState->cursorSpriteIndex].x -= 16;
         sMiningUiState->cursorX -= 1;
     } else if (gMain.newAndRepeatedKeys & DPAD_RIGHT && sMiningUiState->cursorX < 11) 
     {
+        gSprites[sMiningUiState->cursorSpriteIndex].x += 16;
         sMiningUiState->cursorX += 1;
     } else if (gMain.newAndRepeatedKeys & DPAD_UP && sMiningUiState->cursorY > 2) 
     {
+        gSprites[sMiningUiState->cursorSpriteIndex].y -= 16;
         sMiningUiState->cursorY -= 1;
     } else if (gMain.newAndRepeatedKeys & DPAD_DOWN && sMiningUiState->cursorY < 9) 
     {
+        gSprites[sMiningUiState->cursorSpriteIndex].y += 16;
         sMiningUiState->cursorY += 1;
     }
 
@@ -2973,7 +2944,6 @@ static void Mining_FreeResources(void)
         Free(sMiningUiState);
 
     FreeAllWindowBuffers();
-    ReleaseComfyAnims();
     ResetSpriteData();
     SetGpuReg(REG_OFFSET_WIN0H, 0);
     SetGpuReg(REG_OFFSET_WIN0V, 0);
