@@ -49,9 +49,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user is holding Mail")
 {
     KNOWN_FAILING;
 
-    ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
-
     GIVEN {
+        ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ORANGE_MAIL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -81,9 +80,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Mega Stone")
 
 SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal")
 {
-    ASSUME(ItemId_GetHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
-
     GIVEN {
+        ASSUME(ItemId_GetHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FIGHTINIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
