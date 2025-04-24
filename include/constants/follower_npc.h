@@ -32,3 +32,4 @@
 #define FNPC_ALWAYS 2
 
 #endif // GUARD_CONSTANTS_FOLLOWER_NPC_H
+f
