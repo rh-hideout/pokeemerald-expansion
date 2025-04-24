@@ -168,10 +168,6 @@ enum
     CONTROLLER_CHOSENMONRETURNVALUE,
     CONTROLLER_ONERETURNVALUE,
     CONTROLLER_ONERETURNVALUE_DUPLICATE,
-    CONTROLLER_CLEARUNKVAR,
-    CONTROLLER_SETUNKVAR,
-    CONTROLLER_CLEARUNKFLAG,
-    CONTROLLER_TOGGLEUNKFLAG,
     CONTROLLER_HITANIMATION,
     CONTROLLER_CANTSWITCH,
     CONTROLLER_PLAYSE,
@@ -210,7 +206,7 @@ void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);
 void BtlController_EmitSetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck, u8 bytes, void *data);
 void BtlController_EmitLoadMonSprite(u32 battler, u32 bufferId);
-void BtlController_EmitSwitchInAnim(u32 battler, u32 bufferId, u8 partyId, bool8 dontClearSubstituteBit);
+void BtlController_EmitSwitchInAnim(u32 battler, u32 bufferId, u8 partyId, bool8 dontClearTransform, bool8 dontClearSubstituteBit);
 void BtlController_EmitReturnMonToBall(u32 battler, u32 bufferId, bool8 skipAnim);
 void BtlController_EmitDrawTrainerPic(u32 battler, u32 bufferId);
 void BtlController_EmitTrainerSlide(u32 battler, u32 bufferId);
@@ -218,8 +214,8 @@ void BtlController_EmitTrainerSlideBack(u32 battler, u32 bufferId);
 void BtlController_EmitFaintAnimation(u32 battler, u32 bufferId);
 void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, struct DisableStruct *disableStructPtr, u8 multihit);
-void BtlController_EmitPrintString(u32 battler, u32 bufferId, u16 stringId);
-void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, u16 stringId);
+void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringId);
+void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId);
 void BtlController_EmitYesNoBox(u32 battler, u32 bufferId);
 void BtlController_EmitChooseMove(u32 battler, u32 bufferId, bool8 isDoubleBattle, bool8 NoPpNumber, struct ChooseMoveStruct *movePpData);
@@ -255,7 +251,7 @@ void BattleControllerComplete(u32 battler); // Can be used for all the controlle
 void BtlController_Empty(u32 battler); // Empty command, does nothing, only completes the execution.
 void BtlController_TerminatorNop(u32 battler); // Dummy function at the end of the table.
 void BattleControllerDummy(u32 battler);
-void StartSendOutAnim(u32 battler, bool32 dontClearSubstituteBit, bool32 doSlideIn);
+void StartSendOutAnim(u32 battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn);
 void Controller_WaitForString(u32 battler);
 void Controller_WaitForHealthBar(u32 battler);
 
@@ -323,6 +319,7 @@ void SetControllerToRecordedPlayer(u32 battler);
 
 // opponent controller
 void SetControllerToOpponent(u32 battler);
+void OpponentHandleTrainerSlide(u32 battler);
 
 // player partner controller
 void Controller_PlayerPartnerShowIntroHealthbox(u32 battler); // Also used by the link partner.

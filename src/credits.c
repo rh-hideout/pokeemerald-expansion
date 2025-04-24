@@ -81,10 +81,8 @@ struct CreditsEntry
     const u8 *text;
 };
 
-static EWRAM_DATA s16 UNUSED sUnkVar = 0; // Never read, only set to 0
 static EWRAM_DATA u16 sSavedTaskId = 0;
 EWRAM_DATA bool8 gHasHallOfFameRecords = 0;
-static EWRAM_DATA bool8 sUsedSpeedUp = 0; // Never read
 static EWRAM_DATA struct CreditsData *sCreditsData = {0};
 
 static const u16 sCredits_Pal[] = INCBIN_U16("graphics/credits/credits.gbapal");
@@ -272,16 +270,6 @@ static const union AnimCmd *const sAnims_Rival[] =
     sAnim_Rival_Still,
 };
 
-#define MONBG_OFFSET (MON_PIC_SIZE * 3)
-static const struct SpriteSheet sSpriteSheet_MonBg[] = {
-    { gDecompressionBuffer, MONBG_OFFSET, TAG_MON_BG },
-    {},
-};
-static const struct SpritePalette sSpritePalette_MonBg[] = {
-    { (const u16 *)&gDecompressionBuffer[MONBG_OFFSET], TAG_MON_BG },
-    {},
-};
-
 static const struct OamData sOamData_MonBg =
 {
     .y = DISPLAY_HEIGHT,
@@ -355,7 +343,6 @@ static void CB2_Credits(void)
         VBlankCB_Credits();
         RunTasks();
         AnimateSprites();
-        sUsedSpeedUp = TRUE;
     }
     BuildOamBuffer();
     UpdatePaletteFade();
@@ -448,7 +435,6 @@ void CB2_StartCreditsSequence(void)
     SetVBlankCallback(VBlankCB_Credits);
     m4aSongNumStart(MUS_CREDITS);
     SetMainCallback2(CB2_Credits);
-    sUsedSpeedUp = FALSE;
     sCreditsData = AllocZeroed(sizeof(struct CreditsData));
 
     DeterminePokemonToShow();
@@ -480,7 +466,6 @@ static void Task_CreditsMain(u8 taskId)
         return;
     }
 
-    sUnkVar = 0;
     mode = gTasks[taskId].tNextMode;
 
     if (gTasks[taskId].tNextMode == MODE_BIKE_SCENE)
@@ -534,6 +519,8 @@ static void Task_ReadyShowMons(u8 taskId)
     }
 }
 
+#define MONBG_OFFSET (MON_PIC_SIZE * 3)
+
 static void Task_LoadShowMons(u8 taskId)
 {
     switch (gMain.state)
@@ -541,8 +528,11 @@ static void Task_LoadShowMons(u8 taskId)
     default:
     case 0:
     {
-        u16 i;
+        s32 i;
         u16 *temp;
+        u8 *buffer = Alloc(MONBG_OFFSET + PLTT_SIZEOF(16));
+        struct SpriteSheet bgSheet = { buffer, MONBG_OFFSET, TAG_MON_BG };
+        struct SpritePalette bgPalette = { (u16 *) &buffer[MONBG_OFFSET], TAG_MON_BG };
 
         ResetSpriteData();
         ResetAllPicSprites();
@@ -553,20 +543,22 @@ static void Task_LoadShowMons(u8 taskId)
         LoadPalette(gBirchBagGrass_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(2 * 16 - 1));
 
         for (i = 0; i < MON_PIC_SIZE; i++)
-            gDecompressionBuffer[i] = 0x11;
-        for (i = 0; i < MON_PIC_SIZE; i++)
-            (gDecompressionBuffer + MON_PIC_SIZE)[i] = 0x22;
-        for (i = 0; i < MON_PIC_SIZE; i++)
-            (gDecompressionBuffer + MON_PIC_SIZE * 2)[i] = 0x33;
+        {
+            buffer[i] = 0x11;
+            (buffer + MON_PIC_SIZE)[i] = 0x22;
+            (buffer + MON_PIC_SIZE * 2)[i] = 0x33;
+        }
 
-        temp = (u16 *)(&gDecompressionBuffer[MONBG_OFFSET]);
+        temp = (u16 *)(&buffer[MONBG_OFFSET]);
         temp[0] = RGB_BLACK;
         temp[1] = RGB(31, 31, 20); // light yellow
         temp[2] = RGB(31, 20, 20); // light red
         temp[3] = RGB(20, 20, 31); // light blue
 
-        LoadSpriteSheet(sSpriteSheet_MonBg);
-        LoadSpritePalette(sSpritePalette_MonBg);
+        LoadSpriteSheet(&bgSheet);
+        LoadSpritePalette(&bgPalette);
+
+        Free(buffer);
 
         gMain.state++;
         break;
@@ -740,7 +732,6 @@ static void Task_UpdatePage(u8 taskId)
             gTasks[taskId].tState = 1;
             gTasks[taskId].tDelay = 72;
             gTasks[gTasks[taskId].tMainTaskId].tPrintedPage = FALSE;
-            sUnkVar = 0;
         }
         return;
     case 1:

@@ -1941,12 +1941,10 @@ static void DrawPlayerNameWindows(struct BerryCrushGame *game)
 // Each player name window border uses a color that corresponds to a slot of the crusher lid
 static void CopyPlayerNameWindowGfxToBg(struct BerryCrushGame *game)
 {
-    u8 i = 0;
-    u8 *windowGfx;
+    s32 i;
+    u8 *windowGfx = malloc_and_decompress(gBerryCrush_TextWindows_Tilemap, NULL);
 
-    LZ77UnCompWram(gBerryCrush_TextWindows_Tilemap, gDecompressionBuffer);
-
-    for (windowGfx = gDecompressionBuffer; i < game->playerCount; i++)
+    for (i = 0; i < game->playerCount; i++)
     {
         CopyToBgTilemapBufferRect(
             3,
@@ -1958,6 +1956,8 @@ static void CopyPlayerNameWindowGfxToBg(struct BerryCrushGame *game)
         );
     }
     CopyBgTilemapBufferToVram(3);
+
+    Free(windowGfx);
 }
 
 static void CreateGameSprites(struct BerryCrushGame *game)
@@ -3398,7 +3398,9 @@ static u32 Cmd_StopGame(struct BerryCrushGame *game, u8 *args)
         break;
     case 2:
         if (game->gfx.counter != 0)
+        {
             game->gfx.counter--;
+        }
         else
         {
             RunOrScheduleCommand(CMD_CLOSE_LINK, SCHEDULE_CMD, NULL);

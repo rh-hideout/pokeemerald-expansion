@@ -1,6 +1,7 @@
 #include "global.h"
 #include "malloc.h"
 #include "berry_powder.h"
+#include "fake_rtc.h"
 #include "item.h"
 #include "load_save.h"
 #include "main.h"
@@ -63,6 +64,7 @@ void CheckForFlashMemory(void)
 void ClearSav3(void)
 {
     CpuFill16(0, &gSaveblock3, sizeof(struct SaveBlock3));
+    FakeRtc_Reset();
 }
 
 void ClearSav2(void)
@@ -235,7 +237,7 @@ void LoadObjectEvents(void)
         // Try to restore saved inactive follower
         if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER &&
             !gObjectEvents[i].active &&
-            gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_MON_BASE)
+            gObjectEvents[i].graphicsId & OBJ_EVENT_MON)
             gObjectEvents[i].active = TRUE;
     }
 }

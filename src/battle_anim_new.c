@@ -4380,6 +4380,29 @@ const struct SpriteTemplate gSpriteTemplate_FlipTurnBack = {
     .callback = AnimAbsorptionOrb
 };
 
+// U-Turn
+const struct SpriteTemplate gUTurnBallSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SMALL_BUBBLES,
+    .paletteTag = ANIM_TAG_RAZOR_LEAF,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_ShadowBall,
+    .callback = AnimShadowBall,
+};
+
+const struct SpriteTemplate gUTurnBallBackSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SMALL_BUBBLES,
+    .paletteTag = ANIM_TAG_RAZOR_LEAF,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_ShadowBall,
+    .callback = AnimAbsorptionOrb,
+};
+
 // wicked blow
 static const union AffineAnimCmd sSpriteAffineAnim_DrainPunchFist[] = {
     AFFINEANIMCMD_FRAME(256, 256, 0, 1), //Double sprite size
@@ -7821,8 +7844,8 @@ static void SpriteCB_MindBlownBall(struct Sprite *sprite)
     sprite->data[3] = gBattleAnimArgs[2];
     sprite->data[4] = sprite->x << 4;
     sprite->data[5] = sprite->y << 4;
-    sprite->data[6] = ((oldPosX - sprite->x) << 4) / (gBattleAnimArgs[0] << 1);
-    sprite->data[7] = ((oldPosY - sprite->y) << 4) / (gBattleAnimArgs[0] << 1);
+    sprite->data[6] = SAFE_DIV((oldPosX - sprite->x) << 4, gBattleAnimArgs[0] << 1);
+    sprite->data[7] = SAFE_DIV((oldPosY - sprite->y) << 4, gBattleAnimArgs[0] << 1);
     sprite->callback = AnimMindBlownBallStep;
 }
 static void AnimMindBlownBallStep(struct Sprite *sprite)
@@ -8551,12 +8574,12 @@ void AnimTask_GetTimeOfDay(u8 taskId)
 
 void AnimTask_GetLycanrocForm(u8 taskId)
 {
-    if (GetMonData(GetIllusionMonPtr(gBattleAnimAttacker), MON_DATA_SPECIES) == SPECIES_LYCANROC_MIDNIGHT)
-        gBattleAnimArgs[0] = 1;
-    else
-        gBattleAnimArgs[0] = 0;
-
     gBattleAnimArgs[0] = 0;
+    if (gBattleMons[gBattleAnimAttacker].species == SPECIES_LYCANROC_MIDNIGHT)
+        gBattleAnimArgs[0] = 1;
+    else if (gBattleMons[gBattleAnimAttacker].species == SPECIES_LYCANROC_DUSK)
+        gBattleAnimArgs[0] = 2;
+
     DestroyAnimVisualTask(taskId);
 }
 
@@ -8873,7 +8896,7 @@ static void SpriteCB_AnimSpriteOnTargetSideCentre(struct Sprite *sprite)
 
     if (!sprite->data[0])
     {
-        if (IsAlly(gBattleAnimAttacker, target))
+        if (IsBattlerAlly(gBattleAnimAttacker, target))
         {
             if (IsDoubleBattle())
                 InitSpritePosToAnimAttackersCentre(sprite, FALSE);
@@ -9049,7 +9072,7 @@ static void SpriteCB_DragonEnergyShot(struct Sprite* sprite)
     u8 def1 = gBattleAnimTarget;
     u8 def2 = BATTLE_PARTNER(def1);
 
-    if (!IsDoubleBattle() || IsAlly(gBattleAnimAttacker, gBattleAnimTarget))
+    if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         y = GetBattlerSpriteCoord(def1, BATTLER_COORD_Y_PIC_OFFSET);
     else
     {
@@ -9149,7 +9172,7 @@ static void SpriteCB_GlacialLance(struct Sprite* sprite)
 
     sprite->data[0] = gBattleAnimArgs[6];
 
-    if (!IsDoubleBattle() || IsAlly(gBattleAnimAttacker, gBattleAnimTarget))
+    if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         sprite->data[2] = GetBattlerSpriteCoord(def1, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Converge on target
         sprite->data[4] = GetBattlerSpriteCoord(def1, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
@@ -9244,21 +9267,15 @@ void AnimTask_DynamaxGrowth(u8 taskId) // from CFRU
 
 void AnimTask_GetWeatherToSet(u8 taskId)
 {
-    switch (gMovesInfo[gCurrentMove].argument)
-    {
-        case MAX_EFFECT_SUN:
-            gBattleAnimArgs[ARG_RET_ID] = 1;
-            break;
-        case MAX_EFFECT_RAIN:
-            gBattleAnimArgs[ARG_RET_ID] = 2;
-            break;
-        case MAX_EFFECT_SANDSTORM:
-            gBattleAnimArgs[ARG_RET_ID] = 3;
-            break;
-        case MAX_EFFECT_HAIL:
-            gBattleAnimArgs[ARG_RET_ID] = 4;
-            break;
-    }
+    if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_SUN))
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SUN;
+    else if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_RAIN))
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_RAIN;
+    else if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_SANDSTORM))
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SANDSTORM;
+    else if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_HAIL))
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_HAIL;
+
     DestroyAnimVisualTask(taskId);
 }
 

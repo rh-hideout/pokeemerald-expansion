@@ -28,7 +28,7 @@ Let's look at an example:
 ```c
 [MOVE_THUNDER_SHOCK] =
 {
-    .name = HANDLE_EXPANDED_MOVE_NAME("ThunderShock", "Thunder Shock"),
+    .name = COMPOUND_STRING("Thunder Shock"),
     .description = COMPOUND_STRING(
         "An electrical attack that\n"
         "may paralyze the foe."),
@@ -51,7 +51,7 @@ Let's look at an example:
     .contestComboMoves = {COMBO_STARTER_CHARGE},
 },
 ```
-The `HANDLE_EXPANDED_MOVE_NAME` allows the usage of a name of extended character length, so long as the `B_EXPANDED_MOVE_NAMES` is set to `TRUE`, whereas by default it's limited in Gen 3 to 12 characters. Most of the fields here are obvious, but the two important ones for determining what a move actually *does* are `effect` and `additionalEffects`.
+Most of the fields here are obvious, but the two important ones for determining what a move actually *does* are `effect` and `additionalEffects`.
 
 The `effect` represents how the move actually works when called in battle - it can be a two turn move, or a move that only works if the target is holding an item, for example. How each effect works is pretty much unique, but the way a move of a particular effect is executed is defined by a script [`data/battle_scripts_1.s`](#databattle_scripts_1s), and any *variable* characteristics such as typing or power are defined in either [`src/battle_script_commands.c`](#srcbattle_script_commandsc) or [`src/battle_util.c`](#srcbattle_utilc), depending on the effect. The vast majority of non-status moves are simply `EFFECT_HIT`, in that they deal damage and apply `additionalEffects` (if defined).
 
@@ -169,8 +169,6 @@ Each move can have up to 15 additional effects, allowing you to construct monstr
         .moveEffect = MOVE_EFFECT_ALL_STATS_UP,
         .chance = 40,
         .self = TRUE,
-    },{
-        .moveEffect = MOVE_EFFECT_RAPID_SPIN,
     },{
         .moveEffect = MOVE_EFFECT_DEF_MINUS_2,
         .chance = 50,

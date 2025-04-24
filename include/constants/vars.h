@@ -4,7 +4,7 @@
 #define VARS_START 0x4000
 
 // temporary vars
-// The first 0x10 vars are are temporary--they are cleared every time a map is loaded.
+// The first 0x10 vars are temporary--they are cleared every time a map is loaded.
 #define TEMP_VARS_START            0x4000
 #define VAR_TEMP_0                 (TEMP_VARS_START + 0x0)
 #define VAR_TEMP_1                 (TEMP_VARS_START + 0x1)
@@ -301,7 +301,7 @@
 #define VAR_MON_BOX_ID                0x8012
 #define VAR_MON_BOX_POS               0x8013
 #define VAR_UNUSED_0x8014             0x8014
-#define VAR_TRAINER_BATTLE_OPPONENT_A 0x8015 // Alias of gTrainerBattleOpponent_A
+#define VAR_TRAINER_BATTLE_OPPONENT_A 0x8015 // Alias of TRAINER_BATTLE_PARAM.opponentA
 
 #define SPECIAL_VARS_END              0x8015
 
@@ -323,5 +323,17 @@
 #define VAR_TEMP_FRONTIER_TUTOR_ID         VAR_TEMP_E
 
 #define VAR_TEMP_TRANSFERRED_SPECIES  VAR_TEMP_1
+
+#if TESTING
+#define TESTING_VARS_START             0x9000
+#define TESTING_VAR_DIFFICULTY         (TESTING_VARS_START + 0x0)
+#define TESTING_VAR_UNUSED_1           (TESTING_VARS_START + 0x1)
+#define TESTING_VAR_UNUSED_2           (TESTING_VARS_START + 0x2)
+#define TESTING_VAR_UNUSED_3           (TESTING_VARS_START + 0x3)
+#define TESTING_VAR_UNUSED_4           (TESTING_VARS_START + 0x4)
+#define TESTING_VAR_UNUSED_5           (TESTING_VARS_START + 0x5)
+#define TESTING_VAR_UNUSED_6           (TESTING_VARS_START + 0x6)
+#define TESTING_VAR_UNUSED_7           (TESTING_VARS_START + 0x7)
+#endif // TESTING
 
 #endif // GUARD_CONSTANTS_VARS_H

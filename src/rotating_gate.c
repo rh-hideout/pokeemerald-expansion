@@ -3,6 +3,7 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
+#include "rotating_gate.h"
 #include "sound.h"
 #include "sprite.h"
 #include "constants/songs.h"
@@ -740,7 +741,7 @@ static u8 RotatingGate_CreateGate(u8 gateId, s16 deltaX, s16 deltaY)
 
     template.tileTag = gate->shape + ROTATING_GATE_TILE_TAG;
 
-    spriteId = CreateSprite(&template, 0, 0, 0x93);
+    spriteId = CreateSprite(&template, 0, 0, OW_OBJECT_SUBPRIORITY - 1); // Above shadows
     if (spriteId == MAX_SPRITES)
         return MAX_SPRITES;
 
@@ -939,7 +940,7 @@ void RotatingGate_InitPuzzle(void)
     }
 }
 
-void RotatingGatePuzzleCameraUpdate(u16 deltaX, u16 deltaY)
+void RotatingGatePuzzleCameraUpdate(s16 deltaX, s16 deltaY)
 {
     if (GetCurrentMapRotatingGatePuzzleType())
     {
@@ -958,7 +959,7 @@ void RotatingGate_InitPuzzleAndGraphics(void)
     }
 }
 
-bool8 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
 {
     s32 i;
 
@@ -996,7 +997,7 @@ bool8 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
     return FALSE;
 }
 
-bool8 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
 {
     s32 i;
 

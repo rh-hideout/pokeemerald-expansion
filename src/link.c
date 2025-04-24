@@ -55,10 +55,7 @@ struct LinkTestBGInfo
 static struct BlockTransfer sBlockSend;
 static struct BlockTransfer sBlockRecv[MAX_LINK_PLAYERS];
 static u32 sBlockSendDelayCounter;
-static bool32 sDummy1; // Never read
-static bool8 sDummy2; // Never assigned, read in unused function
 static u32 sPlayerDataExchangeStatus;
-static bool32 sDummy3; // Never read
 static u8 sLinkTestLastBlockSendPos;
 static u8 sLinkTestLastBlockRecvPos[MAX_LINK_PLAYERS];
 static u8 sNumVBlanksWithoutSerialIntr;
@@ -73,15 +70,11 @@ COMMON_DATA u32 gLinkDebugSeed = 0;
 COMMON_DATA struct LinkPlayerBlock gLocalLinkPlayerBlock = {0};
 COMMON_DATA bool8 gLinkErrorOccurred = 0;
 COMMON_DATA u32 gLinkDebugFlags = 0;
-COMMON_DATA u32 gLinkFiller1 = 0;
 COMMON_DATA bool8 gRemoteLinkPlayersNotReceived[MAX_LINK_PLAYERS] = {0};
 COMMON_DATA u8 gBlockReceivedStatus[MAX_LINK_PLAYERS] = {0};
-COMMON_DATA u32 gLinkFiller2 = 0;
 COMMON_DATA u16 gLinkHeldKeys = 0;
 COMMON_DATA u16 ALIGNED(4) gRecvCmds[MAX_RFU_PLAYERS][CMD_LENGTH] = {0};
 COMMON_DATA u32 gLinkStatus = 0;
-COMMON_DATA bool8 gLinkDummy1 = 0; // Never read
-COMMON_DATA bool8 gLinkDummy2 = 0; // Never read
 COMMON_DATA bool8 gReadyToExitStandby[MAX_LINK_PLAYERS] = {0};
 COMMON_DATA bool8 gReadyToCloseLink[MAX_LINK_PLAYERS] = {0};
 COMMON_DATA u16 gReadyCloseLinkType = 0; // Never read
@@ -96,9 +89,6 @@ COMMON_DATA void (*gLinkCallback)(void) = NULL;
 COMMON_DATA u8 gShouldAdvanceLinkState = 0;
 COMMON_DATA u16 gLinkTestBlockChecksums[MAX_LINK_PLAYERS] = {0};
 COMMON_DATA u8 gBlockRequestType = 0;
-COMMON_DATA u32 gLinkFiller3 = 0;
-COMMON_DATA u32 gLinkFiller4 = 0;
-COMMON_DATA u32 gLinkFiller5 = 0;
 COMMON_DATA u8 gLastSendQueueCount = 0;
 COMMON_DATA struct Link gLink = {0};
 COMMON_DATA u8 gLastRecvQueueCount = 0;
@@ -310,7 +300,6 @@ static void UNUSED LinkTestScreen(void)
     AnimateSprites();
     BuildOamBuffer();
     UpdatePaletteFade();
-    sDummy3 = FALSE;
     InitLocalLinkPlayer();
     CreateTask(Task_PrintTestData, 0);
     SetMainCallback2(CB2_LinkTest);
@@ -378,9 +367,6 @@ void OpenLink(void)
         gSuppressLinkErrorMessage = FALSE;
         ResetBlockReceivedFlags();
         ResetBlockSend();
-        sDummy1 = FALSE;
-        gLinkDummy2 = FALSE;
-        gLinkDummy1 = FALSE;
         gReadyCloseLinkType = 0;
         CreateTask(Task_TriggerHandshake, 2);
     }
@@ -552,10 +538,8 @@ static void ProcessRecvCmds(u8 unused)
                 gLinkPartnersHeldKeys[i] = gRecvCmds[i][1];
                 break;
             case LINKCMD_DUMMY_1:
-                gLinkDummy2 = TRUE;
                 break;
             case LINKCMD_DUMMY_2:
-                gLinkDummy2 = TRUE;
                 break;
             case LINKCMD_INIT_BLOCK:
             {
@@ -571,18 +555,11 @@ static void ProcessRecvCmds(u8 unused)
             {
                 if (sBlockRecv[i].size > BLOCK_BUFFER_SIZE)
                 {
-                    u16 *buffer;
-                    u16 j;
-
-                    buffer = (u16 *)gDecompressionBuffer;
-                    for (j = 0; j < CMD_LENGTH - 1; j++)
-                    {
-                        buffer[(sBlockRecv[i].pos / 2) + j] = gRecvCmds[i][j + 1];
-                    }
+                    // Too large block was sent.
                 }
                 else
                 {
-                    u16 j;
+                    u32 j;
 
                     for (j = 0; j < CMD_LENGTH - 1; j++)
                     {
@@ -1376,11 +1353,6 @@ bool8 IsLinkMaster(void)
     return EXTRACT_MASTER(gLinkStatus);
 }
 
-static u8 UNUSED GetDummy2(void)
-{
-    return sDummy2;
-}
-
 void SetCloseLinkCallbackAndType(u16 type)
 {
     if (gWirelessCommType == TRUE)
@@ -1392,7 +1364,6 @@ void SetCloseLinkCallbackAndType(u16 type)
         if (gLinkCallback == NULL)
         {
             gLinkCallback = LinkCB_ReadyCloseLink;
-            gLinkDummy1 = FALSE;
             gReadyCloseLinkType = type;
         }
     }
@@ -1413,7 +1384,6 @@ void SetCloseLinkCallback(void)
         else
         {
             gLinkCallback = LinkCB_ReadyCloseLink;
-            gLinkDummy1 = FALSE;
             gReadyCloseLinkType = 0;
         }
     }
@@ -1449,7 +1419,6 @@ static void LinkCB_WaitCloseLink(void)
         gLinkVSyncDisabled = TRUE;
         CloseLink();
         gLinkCallback = NULL;
-        gLinkDummy1 = TRUE;
     }
 }
 
@@ -1469,7 +1438,6 @@ void SetCloseLinkCallbackHandleJP(void)
         else
         {
             gLinkCallback = LinkCB_ReadyCloseLinkWithJP;
-            gLinkDummy1 = FALSE;
             gReadyCloseLinkType = 0;
         }
     }
@@ -1511,7 +1479,6 @@ static void LinkCB_WaitCloseLinkWithJP(void)
         gLinkVSyncDisabled = TRUE;
         CloseLink();
         gLinkCallback = NULL;
-        gLinkDummy1 = TRUE;
     }
 }
 
@@ -1525,8 +1492,6 @@ void SetLinkStandbyCallback(void)
     {
         if (gLinkCallback == NULL)
             gLinkCallback = LinkCB_Standby;
-
-        gLinkDummy1 = FALSE;
     }
 }
 

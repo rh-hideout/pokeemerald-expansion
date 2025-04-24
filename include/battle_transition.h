@@ -11,6 +11,7 @@ void GetBg0TilesDst(u16 **tilemap, u16 **tileset);
 extern const struct SpritePalette gSpritePalette_Pokeball;
 
 enum {
+    MUGSHOT_COLOR_NONE,
     MUGSHOT_COLOR_PURPLE,
     MUGSHOT_COLOR_GREEN,
     MUGSHOT_COLOR_PINK,

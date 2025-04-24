@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "config/general.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
 #include "gba/gba.h"
+#include "siirtc.h"
 #include "fpmath.h"
 #include "metaprogram.h"
 #include "constants/global.h"
@@ -131,7 +132,7 @@
 
 #define FEATURE_FLAG_ASSERT(flag, id) STATIC_ASSERT(flag > TEMP_FLAGS_END || flag == 0, id)
 
-#ifndef NDEBUG
+// NOTE: This uses hardware timers 2 and 3; this will not work during active link connections or with the eReader
 static inline void CycleCountStart()
 {
     REG_TM2CNT_H = 0;
@@ -154,7 +155,6 @@ static inline u32 CycleCountEnd()
     // return result
     return REG_TM2CNT_L | (REG_TM3CNT_L << 16u);
 }
-#endif
 
 struct Coords8
 {
@@ -206,12 +206,16 @@ struct Time
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
-    struct Time fakeRTC;
+    struct SiiRtcInfo fakeRTC;
 #endif
 #if OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_FIRST_TIME
     u8 itemFlags[ITEM_FLAGS_COUNT];
 #endif
-};
+#if USE_DEXNAV_SEARCH_LEVELS == TRUE
+    u8 dexNavSearchLevels[NUM_SPECIES];
+#endif
+    u8 dexNavChain;
+}; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
 
@@ -566,6 +570,8 @@ struct SaveBlock2
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
 
+extern u8 UpdateSpritePaletteWithTime(u8);
+
 struct SecretBaseParty
 {
     u32 personality[PARTY_SIZE];
@@ -681,8 +687,8 @@ struct MauvilleManBard
 {
     /*0x00*/ u8 id;
     /*0x01*/ //u8 padding1;
-    /*0x02*/ u16 songLyrics[BARD_SONG_LENGTH];
-    /*0x0E*/ u16 temporaryLyrics[BARD_SONG_LENGTH];
+    /*0x02*/ u16 songLyrics[NUM_BARD_SONG_WORDS];
+    /*0x0E*/ u16 newSongLyrics[NUM_BARD_SONG_WORDS];
     /*0x1A*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
     /*0x22*/ u8 filler_2DB6[0x3];
     /*0x25*/ u8 playerTrainerId[TRAINER_ID_LENGTH];
@@ -815,8 +821,7 @@ struct DayCare
 {
     struct DaycareMon mons[DAYCARE_MON_COUNT];
     u32 offspringPersonality;
-    u8 stepCounter;
-    //u8 padding[3];
+    u32 stepCounter;
 };
 
 struct LilycoveLadyQuiz
@@ -1128,5 +1133,9 @@ struct MapPosition
     s16 y;
     s8 elevation;
 };
+
+#if T_SHOULD_RUN_MOVE_ANIM
+extern bool32 gLoadFail;
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
 #endif // GUARD_GLOBAL_H

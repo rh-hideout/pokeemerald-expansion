@@ -17,6 +17,48 @@ python3 migration_scripts/*.py ; #run the migration script
 
 `*` will need to be replaced with the name of the appropriate script.
 
+## 1.10.x to 1.11.x+
+
+### Contest Opponents
+
+* Filepath [`migration_scripts/1.11/consolidate_contest_opponent_filters.py`](1.11/consolidate_contest_opponent_filters.py)
+* Introduced in [Consolidated contest opponent filters into gContestOpponents #6119](https://github.com/rh-hideout/pokeemerald-expansion/pull/6119)
+
+Moves the contest opponent filters in src/data/contest_opponents.h from gPostgameContestOpponentFilter to gContestOpponents
+
+#### [src/data/contest_opponents.h](../src/data/contest_opponents.h)
+```diff
+const struct ContestPokemon gContestOpponents[] =
+{
+    [CONTEST_OPPONENT_JIMMY] = {
++       .filter = CONTEST_FILTER_NONE,
+...
+- const u8 gPostgameContestOpponentFilter[] =
+- {
+-     [CONTEST_OPPONENT_JIMMY] = CONTEST_FILTER_NONE,
+```
+
+### Battle Frontier Trainers
+
+* Filepath [`migration_scripts/1.11/convert_battle_frontier_trainers.py`](1.11/convert_battle_frontier_trainers.py)
+* Introduced in [Consolidated Frontier teams into battle_frontier_trainers.h #5892](https://github.com/rh-hideout/pokeemerald-expansion/pull/5892)
+
+Moves the Battle Frontier trainer parties from battle_frontier_trainer_mons.h to battle_frontier_trainers.h
+
+#### [src/data/battle_frontier/battle_frontier_trainer_mons.h](../src/data/battle_frontier/battle_frontier_trainer_mons.h)
+```diff
+- const u16 gBattleFrontierTrainerMons_Brady[] =
+- {
+-    FRONTIER_MONS_YOUNGSTER_LASS_1
+- };
+```
+
+#### [src/data/battle_frontier/battle_frontier_trainers.h](../src/data/battle_frontier/battle_frontier_trainers.h)
+```diff
+-    .monSet = gBattleFrontierTrainerMons_Brady
++    .monSet = (const u16[]){FRONTIER_MONS_YOUNGSTER_LASS_1}
+```
+
 ## 1.8.x to 1.9.x+
 
 ### Battle Anim Moves

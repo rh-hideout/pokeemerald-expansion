@@ -3,20 +3,14 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_RAZOR_WIND].effect == EFFECT_TWO_TURNS_ATTACK);
-    ASSUME(gMovesInfo[MOVE_SKULL_BASH].effect == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveEffect(MOVE_RAZOR_WIND) == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveEffect(MOVE_SKULL_BASH) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME(MoveHasAdditionalEffectSelf(MOVE_SKULL_BASH, MOVE_EFFECT_DEF_PLUS_1) == TRUE);
-    ASSUME(gMovesInfo[MOVE_SKY_ATTACK].effect == EFFECT_TWO_TURNS_ATTACK);
-
-    // Solar Beam - check for sun
-    ASSUME(gMovesInfo[MOVE_SOLAR_BEAM].effect == EFFECT_SOLAR_BEAM);
-    ASSUME(HIHALF(gMovesInfo[MOVE_SOLAR_BLADE].argument) == B_WEATHER_SUN);
-    ASSUME(gMovesInfo[MOVE_SOLAR_BLADE].effect == EFFECT_SOLAR_BEAM);
-    ASSUME(HIHALF(gMovesInfo[MOVE_SOLAR_BLADE].argument) == B_WEATHER_SUN);
+    ASSUME(GetMoveEffect(MOVE_SKY_ATTACK) == EFFECT_TWO_TURNS_ATTACK);
 
     // Electro shot - check for rain
-    ASSUME(HIHALF(gMovesInfo[MOVE_ELECTRO_SHOT].argument) == B_WEATHER_RAIN);
-    ASSUME(gMovesInfo[MOVE_ELECTRO_SHOT].effect == EFFECT_TWO_TURNS_ATTACK);
+    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == B_WEATHER_RAIN);
+    ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME(MoveHasAdditionalEffectSelf(MOVE_ELECTRO_SHOT, MOVE_EFFECT_SP_ATK_PLUS_1) == TRUE);
 }
 
@@ -49,7 +43,6 @@ SINGLE_BATTLE_TEST("Razor Wind needs a charging turn")
 
 SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -69,7 +62,6 @@ SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
         MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
             MESSAGE("Wobbuffet used Razor Wind!");
-        // For some reason, this breaks with and only with Razor Wind...
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         HP_BAR(opponent);
     }

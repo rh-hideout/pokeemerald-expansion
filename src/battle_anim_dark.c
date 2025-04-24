@@ -257,6 +257,10 @@ const struct SpriteTemplate gPunishmentImpactSpriteTemplate =
     .callback = AnimPunishment,
 };
 
+// arg 0: x pixel offset
+// arg 1: y pixel offset
+// arg 2: Something
+// arg 3: Something
 static void AnimPunishment(struct Sprite *sprite)
 {
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[3]);
@@ -928,16 +932,9 @@ void AnimTask_MetallicShine(u8 taskId)
     }
 
     if (IsContest())
-    {
         species = gContestResources->moveAnim->species;
-    }
     else
-    {
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
-            species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_SPECIES);
-        else
-            species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_SPECIES);
-    }
+        species = GetMonData(GetPartyBattlerData(gBattleAnimAttacker), MON_DATA_SPECIES);
 
     spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     newSpriteId = CreateInvisibleSpriteCopy(gBattleAnimAttacker, spriteId, species);
