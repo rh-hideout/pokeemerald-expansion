@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Comatose pokemon don't get poisoned by Toxic Spikes on switc
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
+        PLAYER(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
         OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
