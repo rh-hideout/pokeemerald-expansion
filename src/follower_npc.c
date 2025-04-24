@@ -36,10 +36,10 @@
 #include "constants/songs.h"
 
 /*
-Known Issues:
-    -follower gets messed up if you go into a map with a maximum number of event objects
-        -inherits incorrect palette, may get directionally confused
-*/
+ * Known Issues:
+ *     -follower gets messed up if you go into a map with a maximum number of event objects
+ *         -inherits incorrect palette, may get directionally confused
+ */
 
 // Task data
 #define tState          data[0]
@@ -196,10 +196,11 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
     const u8 *script;
     u16 flag;
 
+    // Only allow 1 follower NPC at a time.
     if (PlayerHasFollowerNPC())
-        return; // Only 1 NPC following at a time
+        return;
 
-    for (eventObjId = 0; eventObjId < OBJECT_EVENTS_COUNT; eventObjId++) // For each NPC on the map
+    for (eventObjId = 0; eventObjId < OBJECT_EVENTS_COUNT; eventObjId++)
     {
         if (!gObjectEvents[eventObjId].active || gObjectEvents[eventObjId].isPlayer)
             continue;
@@ -208,16 +209,19 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
         {
             follower = &gObjectEvents[eventObjId];
             flag = GetObjectEventFlagIdByLocalIdAndMap(follower->localId, follower->mapNum, follower->mapGroup);
-            if (flag == 0) // If the object does not have an event flag, don't create follower.
+            // If the object does not have an event flag, don't create follower.
+            if (flag == 0)
                 return;
 
-            follower->movementType = MOVEMENT_TYPE_NONE; // Doesn't get to move on its own anymore.
+            follower->movementType = MOVEMENT_TYPE_NONE;
             gSprites[follower->spriteId].callback = MovementType_None;
             SetObjEventTemplateMovementType(localId, 0);
             if (setScript == TRUE)
-                script = ptr; // Set the custom script.
+                // Set the custom script.
+                script = ptr;
             else
-                script = GetObjectEventScriptPointerByObjectEventId(eventObjId); // Use the object's original script.
+                // Use the object's original script.
+                script = GetObjectEventScriptPointerByObjectEventId(eventObjId);
 
             SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
             SetFollowerNPCData(FNPC_DATA_OBJ_ID, eventObjId);
@@ -231,14 +235,17 @@ static void TurnNPCIntoFollower(u8 localId, u16 followerFlags, u8 setScript, con
             SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
             SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
             follower->localId = OBJ_EVENT_ID_NPC_FOLLOWER;
-            FlagSet(flag); // Set the original object's flag to remove it.
+            // Set the original object's flag to remove it.
+            FlagSet(flag);
 
-            if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) // Follower can't bike
-            &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE)) // Player on bike
-                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Dismmount Bike
+            // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
+            if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
+            &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
 
+            // Set the follower sprite to match the player state.
             if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
-                FollowerNPC_HandleSprite(); // Set the follower sprite to match the player state.
+                FollowerNPC_HandleSprite();
         }
     }
 }
@@ -383,7 +390,7 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
         struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER);
 
-        follower = &gObjectEvents[GetFollowerNPCObjectId()]; // Can change on reload sprite
+        follower = &gObjectEvents[GetFollowerNPCObjectId()];
         follower->fieldEffectSpriteId = StartUnderwaterSurfBlobBobbing(follower->spriteId);
     }
 }
@@ -394,15 +401,14 @@ static void SetSurfJump(void)
     u8 direction;
     u8 jumpState;
 
-    // Reset NPC movement bits
     ObjectEventClearHeldMovement(follower);
 
-    // Jump animation according to direction
+    // Jump animation according to direction.
     direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], follower);
     jumpState = GetJumpMovementAction(direction);
     SetUpSurfBlobFieldEffect(follower);
 
-    // Adjust surf head spawn location infront of follower
+    // Adjust surf head spawn location infront of follower.
     switch (direction) 
     {
     case DIR_SOUTH:
@@ -418,7 +424,7 @@ static void SetSurfJump(void)
         gFieldEffectArguments[0]++;
     };
 
-    // Execute, store sprite ID in fieldEffectSpriteId and bind surf blob
+    // Execute, store sprite ID in fieldEffectSpriteId and bind surf blob.
     follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
     CreateTask(Task_BindSurfBlobToFollowerNPC, 0x1);
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
@@ -429,7 +435,7 @@ static void SetSurfJump(void)
 
 static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc)
 {
-    // Set up gFieldEffectArguments for execution
+    // Set up gFieldEffectArguments for execution.
     gFieldEffectArguments[0] = npc->currentCoords.x;                 // effect_x
     gFieldEffectArguments[1] = npc->currentCoords.y;                 // effect_y
     gFieldEffectArguments[2] = GetFollowerNPCData(FNPC_DATA_OBJ_ID); // objId
@@ -454,37 +460,40 @@ static void SetSurfDismount(void)
     task = CreateTask(Task_FinishSurfDismount, 1);
     gTasks[task].tSpriteId = follower->fieldEffectSpriteId;
     SetSurfBlob_BobState(follower->fieldEffectSpriteId, 2);
-    follower->fieldEffectSpriteId = 0; // Unbind
+    follower->fieldEffectSpriteId = 0;
     FollowerNPC_HandleSprite();
 
-    follower = &gObjectEvents[GetFollowerNPCObjectId()]; // Can change after sprite reload
+    follower = &gObjectEvents[GetFollowerNPCObjectId()];
     ObjectEventSetHeldMovement(follower, jumpState);
 }
 
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
 {
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
-    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait jump animation
+    // Wait for the jump animation.
+    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
     if (animStatus == 0)
         return;
 
-    // Bind objs
+    // Bind the blob to the follower.
     SetSurfBlob_BobState(npc->fieldEffectSpriteId, 0x1);
     UnfreezeObjectEvents();
     DestroyTask(taskId);
-    gPlayerAvatar.preventStep = FALSE; // Player can move again
+    gPlayerAvatar.preventStep = FALSE;
     return;
 }
 
 static void Task_FinishSurfDismount(u8 taskId)
 {
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
-    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc); // Wait animation
+    // Wait for the animation to finish.
+    bool8 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
 
     if (animStatus == 0)
     {
+        // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Temporarily stop running
+            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
 
         return;
     }
@@ -503,9 +512,10 @@ static void Task_ReallowPlayerMovement(u8 taskId)
     bool8 animStatus = ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetFollowerNPCObjectId()]);
     if (animStatus == 0)
     {
+        // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
         && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT); // Temporarily stop running
+            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
 
         return;
     }
@@ -514,7 +524,7 @@ static void Task_ReallowPlayerMovement(u8 taskId)
     DestroyTask(taskId);
 }
 
-// Task data
+// Task data.
 #define tDoorTask           data[1]
 
 static void Task_FollowerNPCOutOfDoor(u8 taskId)
@@ -525,32 +535,36 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
     s16 *x = &task->tDoorX;
     s16 *y = &task->tDoorY;
 
+    // The player faces follower as they exit the door.
     if (OW_FACE_NPC_FOLLOWER_ON_DOOR_EXIT == TRUE && ObjectEventClearHeldMovementIfFinished(player))
-        ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower)); // The player should face towards the follower as they exit the door.
+        ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower));
 
     switch (task->tState)
     {
     case OPEN_DOOR:
         FreezeObjectEvents();
         task->tDoorTask = FieldAnimateDoorOpen(follower->currentCoords.x, follower->currentCoords.y);
+        // Only play SE for animated doors.
         if (task->tDoorTask != -1)
-            PlaySE(GetDoorSoundEffect(*x, *y)); // only play SE for animating doors
+            PlaySE(GetDoorSoundEffect(*x, *y));
         task->tState = NPC_WALK_OUT;
         break;
     case NPC_WALK_OUT:
-        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // if Door isn't still opening
+        // If the door isn't still opening.
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE)
         {
             follower->invisible = FALSE;
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)) // In case came out door while surfing.
+            // If the follower should be surfing.
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
             {
                 SetUpSurfBlobFieldEffect(follower);
                 follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
                 SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
             }
-            ObjectEventTurn(follower, DIR_SOUTH); // The follower should be facing down when it comes out the door.
+            ObjectEventTurn(follower, DIR_SOUTH);
             follower->singleMovementActive = FALSE;
             follower->heldMovementActive = FALSE;
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // follower step down
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
             task->tState = CLOSE_DOOR;
         }
         break;
@@ -562,7 +576,8 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         }
         break;
     case UNFREEZE_OBJECTS:
-        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE) // Door is closed
+        // Wait for door to close.
+        if (task->tDoorTask < 0 || gTasks[task->tDoorTask].isActive != TRUE)
         {
             UnfreezeObjectEvents();
             task->tState = REALLOW_MOVEMENT;
@@ -571,7 +586,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
     case REALLOW_MOVEMENT:
         FollowerNPC_HandleSprite();
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
-        gPlayerAvatar.preventStep = FALSE; // Player can move again
+        gPlayerAvatar.preventStep = FALSE;
         DestroyTask(taskId);
         break;
     }
@@ -611,7 +626,8 @@ static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId)
         task->tState = WAIT_FOR_PLAYER_MOVE;
         break;
     case WAIT_FOR_PLAYER_MOVE:
-        if (task->tTimer++ < 32) // Wait half a second before revealing the follower
+        // Wait half a second before revealing the follower.
+        if (task->tTimer++ < 32)
             break;
 
         task->tState = SHOW_FOLLOWER_DOWN;
@@ -721,13 +737,13 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         newState = delayedState + (direction -1);
     }    
 
-    // Clear ice tile stuff
+    // Clear ice tile stuff.
     follower->disableAnim = FALSE;
 
-    // Clear overwrite movement
+    // Clear overwrite movement.
     follower->directionOverwrite = DIR_NONE;
 
-    // Sideways stairs checks
+    // Sideways stairs checks.
     collision = GetSidewaysStairsCollision(follower, direction, currentBehavior, nextBehavior, collision);
     switch (collision)
     {
@@ -742,34 +758,34 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
     switch (state) 
     {
     case MOVEMENT_ACTION_WALK_SLOW_DOWN ... MOVEMENT_ACTION_WALK_SLOW_RIGHT:
-        // Slow walk
+        // Slow walk.
         RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_NORMAL_DOWN ... MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
-        // Normal walk
+        // Normal walk.
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
-        // Ledge jump
-        if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Previously jumped
-            return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1)); // Jump right away
+        // Ledge jump.
+        if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
+            return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
 
-        if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
+        if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN)
             return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
 
         SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_FAST_DOWN ... MOVEMENT_ACTION_WALK_FAST_RIGHT:
-        // Handle player on waterfall
+        // Handle player on waterfall.
         if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && (state == MOVEMENT_ACTION_WALK_FAST_UP))
             return MOVEMENT_INVALID;
 
-        // Handle ice tile (some walking animation) -  Set a bit to freeze the follower's animation
+        // Handle ice tile (some walking animation).
         if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
             follower->disableAnim = TRUE;
 
-        // Handle surfing
+        // Handle surfing.
         if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID))
             RETURN_STATE(MOVEMENT_ACTION_SURF_STILL_DOWN, direction);
 
@@ -782,13 +798,13 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
 
     case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
-        // Handle player on waterfall
+        // Handle player on waterfall.
         if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
             return MOVEMENT_INVALID;
 
-        RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);  //Regular movement
+        RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);
 
-    // Acro bike
+    // Acro bike.
     case MOVEMENT_ACTION_ACRO_WHEELIE_FACE_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_FACE_RIGHT:
         if (noSpecialAnimFrames)
             return MOVEMENT_ACTION_NONE;
@@ -820,17 +836,17 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         RETURN_STATE(MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN, direction);
 
     case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
-        // Ledge jump
+        // Ledge jump.
         if (noSpecialAnimFrames)
         {
-            if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN) // Jumped again.
+            if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
                 return (MOVEMENT_ACTION_JUMP_2_DOWN + (direction - 1));
 
             SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, MOVEMENT_ACTION_JUMP_2_DOWN);
         }
         else
         {
-            if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN) // Jumped again.
+            if (delayedState == MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN)
                 return (MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN + (direction - 1));
 
             if (delayedState == MOVEMENT_ACTION_JUMP_2_DOWN)
@@ -865,12 +881,12 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
 
         RETURN_STATE(MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN, direction);
 
-    // Sliding
+    // Sliding.
     case MOVEMENT_ACTION_SLIDE_DOWN ... MOVEMENT_ACTION_SLIDE_RIGHT:
         RETURN_STATE(MOVEMENT_ACTION_SLIDE_DOWN, direction);
 
     case MOVEMENT_ACTION_PLAYER_RUN_DOWN ... MOVEMENT_ACTION_PLAYER_RUN_RIGHT:
-        // Running frames
+        // Running frames.
         if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
             RETURN_STATE(MOVEMENT_ACTION_PLAYER_RUN_DOWN, direction);
 
@@ -881,7 +897,7 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
-        // Acro side hop
+        // Acro side hop.
         if (delayedState == MOVEMENT_ACTION_JUMP_DOWN)
         {
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
@@ -895,7 +911,7 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
             RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
         }
 
-    // Run slow
+    // Run slow.
     case MOVEMENT_ACTION_RUN_DOWN_SLOW ... MOVEMENT_ACTION_RUN_RIGHT_SLOW:
         if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES))
             RETURN_STATE(MOVEMENT_ACTION_RUN_DOWN_SLOW, direction);
@@ -909,6 +925,12 @@ u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 directio
     return newState;
 }
 
+/*
+ * Reload the entire event object.
+ * It would usually be enough just to change the sprite Id, but if the original
+ * sprite and the new sprite have different palettes, the palette would need to
+ * be reloaded.
+ */
 void SetFollowerNPCSprite(u8 spriteIndex)
 {
     u8 oldSpriteId;
@@ -924,16 +946,12 @@ void SetFollowerNPCSprite(u8 spriteIndex)
     if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == spriteIndex)
         return;
 
-    // Save sprite
+    // Save the sprite.
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
     SetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE, spriteIndex);
     oldSpriteId = follower->spriteId;
     newGraphicsId = GetFollowerNPCSprite();
 
-    // Reload the entire event object.
-    // It would usually be enough just to change the sprite Id, but if the original
-    // sprite and the new sprite have different palettes, the palette would need to
-    // be reloaded.
     backupFollower = *follower;
     backupFollower.graphicsId = newGraphicsId;
     DestroySprite(&gSprites[oldSpriteId]);
@@ -941,7 +959,7 @@ void SetFollowerNPCSprite(u8 spriteIndex)
 
     clone = *GetObjectEventTemplateByLocalIdAndMap(GetFollowerNPCData(FNPC_DATA_MAP_ID), GetFollowerNPCData(FNPC_DATA_MAP_NUM), GetFollowerNPCData(FNPC_DATA_MAP_GROUP));
     clone.graphicsId = newGraphicsId;
-    clone.movementType = 0; // Make sure new follower sprite can't move on its own
+    clone.movementType = 0;
     clone.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
     SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&clone, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, clone.x, clone.y));
     if (GetFollowerNPCData(FNPC_DATA_OBJ_ID) != OBJECT_EVENTS_COUNT)
@@ -994,21 +1012,24 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     u8 newState;
     u8 taskId;
 
-    if (player != npc) // Only when the player moves
+    // Only when the player moves.
+    if (player != npc)
         return;
+    // Only if a follower exists.
     else if (!PlayerHasFollowerNPC())
         return;
+    // Don't follow during a script.
     else if (ArePlayerFieldControlsLocked() && !ignoreScriptActive)
-        return; // Don't follow during a script
+        return;
 
-    // fix post-surf jump
+    // Follower changes to normal sprite after getting off surf blob.
     if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && !CheckFollowerNPCFlag(PLAYER_AVATAR_FLAG_SURFING) && follower->fieldEffectSpriteId == 0)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
     }
 
-    // Check if state would cause hidden follower to reappear
+    // Check if the state would cause hidden follower to reappear.
     if (IsStateMovement(state) && GetFollowerNPCData(FNPC_DATA_WARP_END) == FNPC_WARP_REAPPEAR)
     {
         SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
@@ -1027,9 +1048,11 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
 
         follower->invisible = FALSE;
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-        ObjectEventTurn(follower, player->facingDirection); // The follower should be facing the same direction as the player when it comes out of hiding
+        // The follower should be facing the same direction as the player when it comes out of hiding.
+        ObjectEventTurn(follower, player->facingDirection);
 
-        if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_RECREATE) // Recreate surf blob
+        // Recreate the surf blob if needed.
+        if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_RECREATE)
         {
             SetUpSurfBlobFieldEffect(follower);
             follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
@@ -1056,18 +1079,20 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
         return;
     }
 
-    if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_NEW && IsStateMovement(state)) // Get on Surf Blob
+    // Follower gets on surf blob.
+    if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_NEW && IsStateMovement(state))
     {
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_RECREATE);
-        gPlayerAvatar.preventStep = TRUE; // Wait for finish
+        gPlayerAvatar.preventStep = TRUE;
         SetSurfJump();
         ObjectEventClearHeldMovementIfFinished(follower);
         return;
     }
-    else if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_DESTROY) // Get off Surf Blob
+    // Follower gets off surf blob.
+    else if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_DESTROY)
     {
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
-        gPlayerAvatar.preventStep = TRUE; // Wait for finish
+        gPlayerAvatar.preventStep = TRUE;
         SetSurfDismount();
         ObjectEventClearHeldMovementIfFinished(follower);
         return;
@@ -1082,8 +1107,9 @@ void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive)
     case MOVEMENT_ACTION_JUMP_2_DOWN ... MOVEMENT_ACTION_JUMP_2_RIGHT:
     case MOVEMENT_ACTION_JUMP_DOWN ... MOVEMENT_ACTION_JUMP_RIGHT:
     case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN ... MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
-        CreateTask(Task_ReallowPlayerMovement, 1); // Synchronize movements on stairs and ledges
-        gPlayerAvatar.preventStep = TRUE;   // allow follower to catch up
+        // Synchronize movements on stairs and ledges.
+        CreateTask(Task_ReallowPlayerMovement, 1);
+        gPlayerAvatar.preventStep = TRUE;
     }
 
     ObjectEventClearHeldMovementIfFinished(follower);
@@ -1103,7 +1129,7 @@ void CreateFollowerNPCAvatar(void)
     clone.graphicsId = GetFollowerNPCSprite();
     clone.x = player->currentCoords.x - 7;
     clone.y = player->currentCoords.y - 7;
-    clone.movementType = 0; // Doesn't get to move on its own
+    clone.movementType = 0;
     clone.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
 
     switch (GetPlayerFacingDirection())
@@ -1119,7 +1145,7 @@ void CreateFollowerNPCAvatar(void)
         break;
     }
 
-    // Create NPC and store ID
+    // Create NPC and store ID.
     SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&clone, GetFollowerNPCData(FNPC_DATA_MAP_NUM), GetFollowerNPCData(FNPC_DATA_MAP_GROUP), clone.x, clone.y));
     if (GetFollowerNPCData(FNPC_DATA_OBJ_ID) == OBJECT_EVENTS_COUNT)
     {
@@ -1154,7 +1180,6 @@ void FollowerNPC_HandleSprite(void)
 
 u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
-    // Move the follower towards the player
     s8 delta_x = follower->currentCoords.x - player->currentCoords.x;
     s8 delta_y = follower->currentCoords.y - player->currentCoords.y;
 
@@ -1258,21 +1283,24 @@ bool8 FollowerNPCCanBike(void)
 
 void FollowerNPC_HandleBike(void)
 {
-    if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF) // Follower is surfing
-        return; // Sprite will automatically be adjusted when they finish surfing
+    // Wait until after get off surf blob to start biking.
+    if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF)
+        return;
 
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
     {
-        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE); // Mach Bike on
+        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE);
     }
     else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
     {
-        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE); // Acro Bike on
+        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE);
     }
     else
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
-        SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0); // Disable saved Acro side jump
+        // Disable saved Acro side jump.
+        if (GetFollowerNPCData(FNPC_DATA_DELAYED_STATE) == MOVEMENT_ACTION_JUMP_DOWN)
+            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
     }
 }
 
@@ -1281,8 +1309,7 @@ void FollowerNPC_FollowerToWater(void)
     if (!PlayerHasFollowerNPC())
         return;
 
-    // Prepare for making the follower do the jump and spawn the surf head
-    // right in front of the follower's location.
+    // Prepare for making the follower do the jump and spawn the surf blob right in front of the follower's location.
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_JUMP_DOWN, TRUE);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NEW);
 }
@@ -1306,7 +1333,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY)
         return;
 
-    // Spawn surfhead under follower
+    // Spawn the surf blob under the follower.
     SetUpSurfBlobFieldEffect(follower);
     follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
     SetSurfBlob_BobState(follower->fieldEffectSpriteId, 1);
@@ -1395,8 +1422,8 @@ void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower)
     SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     follower->invisible = TRUE;
     SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
-    SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE); // In case the follower was still coming out of a door.
-    SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE); // No more surf blob.
+    SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
     SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
 }
 
@@ -1404,18 +1431,19 @@ void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct Objec
 {
     if (PlayerHasFollowerNPC())
     {
-        follower->invisible = FALSE; // Show the follower after ESCAPE ROPE
+        follower->invisible = FALSE;
         MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-        ObjectEventTurn(follower, DIR_SOUTH); // Turn the follower SOUTH
+        ObjectEventTurn(follower, DIR_SOUTH);
         follower->singleMovementActive = FALSE;
         follower->heldMovementActive = FALSE;
 
+        // Follower only steps onto a tile without collision.
         if (GetCollisionAtCoords(player, player->currentCoords.x, player->currentCoords.y + 1, DIR_SOUTH) == COLLISION_NONE)
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN); // Follower takes a step SOUTH
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_DOWN);
         else if (GetCollisionAtCoords(player, player->currentCoords.x + 1, player->currentCoords.y, DIR_EAST) == COLLISION_NONE)
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT); // Follower takes a step SOUTH
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_RIGHT);
         else if (GetCollisionAtCoords(player, player->currentCoords.x - 1, player->currentCoords.y, DIR_WEST) == COLLISION_NONE)
-            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT); // Follower takes a step SOUTH
+            ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
         else
             HideNPCFollower();
     }
@@ -1558,7 +1586,7 @@ void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
     }
 }
 
-// Script commands
+// Script commands.
 void ScriptSetFollowerNPC(struct ScriptContext *ctx)
 {
     u8 localId = ScriptReadByte(ctx);
@@ -1595,24 +1623,20 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
         playerDirection = DetermineFollowerNPCDirection(player, follower);
         followerDirection = playerDirection;
 
-        //Flip direction
+        //Flip direction.
         switch (playerDirection) 
         {
         case DIR_NORTH:
             playerDirection = DIR_SOUTH;
-            followerDirection = DIR_NORTH;
             break;
         case DIR_SOUTH:
             playerDirection = DIR_NORTH;
-            followerDirection = DIR_SOUTH;
             break;
         case DIR_WEST:
             playerDirection = DIR_EAST;
-            followerDirection = DIR_WEST;
             break;
         case DIR_EAST:
             playerDirection = DIR_WEST;
-            followerDirection = DIR_EAST;
             break;
         }
 
