@@ -47,6 +47,7 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "config/pokedex_plus_hgss.h"
 
 enum
 {
@@ -297,9 +298,6 @@ static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCBIN_U32("grap
 static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin.lz");
 
 #define SCROLLING_MON_X 146
-#define HGSS_DECAPPED FALSE
-#define HGSS_DARK_MODE FALSE
-#define HGSS_HIDE_UNSEEN_EVOLUTION_NAMES FALSE
 
 // For scrolling search parameter
 #define MAX_SEARCH_PARAM_ON_SCREEN   6
@@ -5116,7 +5114,7 @@ static bool8 CalculateMoves(void)
         species = GetFormSpeciesId(species, 0);
 
     // Egg moves
-    if (SHOW_EGG_MOVES_FOR_EVOS)
+    if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
     {
         u16 preSpecies = species;
         while (preSpecies != SPECIES_NONE)
@@ -5142,9 +5140,9 @@ static bool8 CalculateMoves(void)
         movesTotal++;
     }
 
-    if (SORT_TMS_BY_NUM)
+    if (HGSS_SORT_TMS_BY_NUM)
     {
-#if TUTOR_MOVES_ARRAY == FALSE
+#if P_TUTOR_MOVES_ARRAY == FALSE
         u16 isTMMove[MOVES_COUNT] = {FALSE};
 #endif
         // TM moves
@@ -5153,7 +5151,7 @@ static bool8 CalculateMoves(void)
             move = ItemIdToBattleMoveId(ITEM_TM01 + i);
             if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
             {
-#if TUTOR_MOVES_ARRAY == FALSE
+#if P_TUTOR_MOVES_ARRAY == FALSE
                 isTMMove[move] = TRUE;
 #endif
                 sStatsMovesTMHM_ID[numTMHMMoves] = ITEM_TM01 + i;
@@ -5164,7 +5162,7 @@ static bool8 CalculateMoves(void)
         }
 
         // Tutor moves
-#if TUTOR_MOVES_ARRAY == TRUE
+#if P_TUTOR_MOVES_ARRAY == TRUE
         for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
         {
             move = gTutorMoves[i];

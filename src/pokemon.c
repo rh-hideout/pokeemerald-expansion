@@ -92,9 +92,9 @@ EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
 #include "data/abilities.h"
-#if TUTOR_MOVES_ARRAY == TRUE
+#if P_TUTOR_MOVES_ARRAY == TRUE
 #include "data/tutor_moves.h"
-#endif // TUTOR_MOVES_ARRAY
+#endif // P_TUTOR_MOVES_ARRAY
 
 // Used in an unreferenced function in RS.
 // Unreferenced here and in FRLG.
