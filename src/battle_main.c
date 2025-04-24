@@ -5690,27 +5690,22 @@ static void TryEvolvePokemon(void)
     {
         if (!(sTriedEvolving & (1u << i)))
         {
-            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_SPECIAL, i, NULL, DO_EVO);
-            bool32 evoModeNormal = TRUE;
+            bool32 canStopEvo = TRUE;
+            u32 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_SPECIAL, i, NULL, &canStopEvo, CHECK_EVO);
             sTriedEvolving |= 1u << i;
 
             if (species == SPECIES_NONE && (gLeveledUpInBattle & (1u << i)))
             {
                 gLeveledUpInBattle &= ~(1u << i);
-                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL, DO_EVO);
-            }
-
-            if (species == SPECIES_NONE)
-            {
-                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_CANT_STOP, ITEM_NONE, NULL, DO_EVO);
-                evoModeNormal = FALSE;
+                species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL, &canStopEvo, CHECK_EVO);
             }
 
             if (species != SPECIES_NONE)
             {
                 FreeAllWindowBuffers();
                 gBattleMainFunc = WaitForEvoSceneToFinish;
-                EvolutionScene(&gPlayerParty[i], species, evoModeNormal, i);
+                GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_BATTLE_ONLY, gLeveledUpInBattle, NULL, &canStopEvo, DO_EVO);
+                EvolutionScene(&gPlayerParty[i], species, canStopEvo, i);
                 return;
             }
         }

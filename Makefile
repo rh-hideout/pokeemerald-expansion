@@ -455,7 +455,7 @@ MINING_DEPS := $(shell find graphics/mining_minigame/items/ -type f -name '*.4bp
                $(shell find graphics/mining_minigame/stones/ -type f -name '*.4bpp') \
 			   tools/mining_minigame/sprite_enum_table.toml
 
-TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(shell find data/ -type f -name '*.inc') $(INCLUDE_DIRS)/constants/tms_hms.h $(C_SUBDIR)/pokemon.c
+TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(shell find data/ -type f -name '*.inc') $(INCLUDE_DIRS)/constants/tms_hms.h $(INCLUDE_DIRS)/config/pokemon.h $(C_SUBDIR)/pokemon.c
 
 $(LEARNSET_HELPERS_BUILD_DIR):
 	@mkdir -p $@
