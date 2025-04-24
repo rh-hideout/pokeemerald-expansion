@@ -93,7 +93,7 @@ EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
 #include "data/abilities.h"
-#if P_TUTOR_MOVES_ARRAY == TRUE
+#if P_TUTOR_MOVES_ARRAY
 #include "data/tutor_moves.h"
 #endif // P_TUTOR_MOVES_ARRAY
 

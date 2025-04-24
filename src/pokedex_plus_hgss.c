@@ -5133,7 +5133,7 @@ static bool8 CalculateMoves(void)
         }
 
         // Tutor moves
-#if P_TUTOR_MOVES_ARRAY == TRUE
+#if P_TUTOR_MOVES_ARRAY
         for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
         {
             move = gTutorMoves[i];
