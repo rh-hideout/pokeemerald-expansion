@@ -2987,14 +2987,9 @@ static void PrintMessage(const u8 *string)
     RunTextPrinters();
 }
 
-static u32 GetStressLevelPosition(void) 
-{
-    return sMiningUiState->stressLevelPos;
-}
-
 static bool32 IsStressLevelMax(void) 
 {
-    return GetStressLevelPosition() == STRESS_LEVEL_POS_MAX;
+    return sMiningUiState->stressLevelPos == STRESS_LEVEL_POS_MAX;
 }
 
 static void EndMining(u8 taskId) 
