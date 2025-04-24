@@ -10249,7 +10249,7 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
     sJustOpenedBag = FALSE;
 }
 
-u8 GetInPartyMenu(void)
+u32 GetInPartyMenu(void)
 {
     return sInPartyMenu;
 }
