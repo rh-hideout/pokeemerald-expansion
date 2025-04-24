@@ -72,46 +72,46 @@ void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value)
     switch (type)
     {
     case FNPC_DATA_IN_PROGRESS:
-        gSaveBlock3Ptr->NPCfollower.inProgress = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.inProgress = value;
         break;
     case FNPC_DATA_WARP_END:
-        gSaveBlock3Ptr->NPCfollower.warpEnd = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.warpEnd = value;
         break;
     case FNPC_DATA_SURF_BLOB:
-        gSaveBlock3Ptr->NPCfollower.createSurfBlob = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.createSurfBlob = value;
         break;
     case FNPC_DATA_COME_OUT_DOOR:
-        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = value;
         break;
     case FNPC_DATA_OBJ_ID:
-        gSaveBlock3Ptr->NPCfollower.objId = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.objId = value;
         break;
     case FNPC_DATA_CURRENT_SPRITE:
-        gSaveBlock3Ptr->NPCfollower.currentSprite = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.currentSprite = value;
         break;
     case FNPC_DATA_DELAYED_STATE:
-        gSaveBlock3Ptr->NPCfollower.delayedState = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.delayedState = value;
         break;
     case FNPC_DATA_MAP_ID:
-        gSaveBlock3Ptr->NPCfollower.map.id = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.map.id = value;
         break;
     case FNPC_DATA_MAP_NUM:
-        gSaveBlock3Ptr->NPCfollower.map.number = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.map.number = value;
         break;
     case FNPC_DATA_MAP_GROUP:
-        gSaveBlock3Ptr->NPCfollower.map.group = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.map.group = value;
         break;
     case FNPC_DATA_EVENT_FLAG:
-        gSaveBlock3Ptr->NPCfollower.flag = (u16)value;
+        gSaveBlock3Ptr->NPCfollower.flag = value;
         break;
     case FNPC_DATA_GFX_ID:
-        gSaveBlock3Ptr->NPCfollower.graphicsId = (u16)value;
+        gSaveBlock3Ptr->NPCfollower.graphicsId = value;
         break;
     case FNPC_DATA_FOLLOWER_FLAGS:
-        gSaveBlock3Ptr->NPCfollower.flags = (u16)value;
+        gSaveBlock3Ptr->NPCfollower.flags = value;
         break;
     case FNPC_DATA_BATTLE_PARTNER:
-        gSaveBlock3Ptr->NPCfollower.battlePartner = (u8)value;
+        gSaveBlock3Ptr->NPCfollower.battlePartner = value;
         break;
     }
 #endif
