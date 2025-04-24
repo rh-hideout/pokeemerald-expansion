@@ -8241,13 +8241,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         else if (IsBattlerAffectedByHazards(battler, TRUE))
         {
             i = GetBattlerAbility(battler);
-            if (!(gBattleMons[battler].status1 & STATUS1_ANY)
-                && !IS_BATTLER_OF_TYPE(battler, TYPE_STEEL)
-                && i != ABILITY_IMMUNITY
-                && i != ABILITY_PURIFYING_SALT
-                && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-                && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
-                && !(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+            if (CanBePoisoned(gBattlerAttacker, battler, i))
             {
                 if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2)
                     gBattleMons[battler].status1 |= STATUS1_TOXIC_POISON;
