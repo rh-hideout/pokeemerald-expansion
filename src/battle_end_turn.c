@@ -445,7 +445,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
             gBattleMons[battler].status2 -= STATUS2_LOCK_CONFUSE_TURN(1);
             if (WasUnableToUseMove(battler))
             {
-                CancelMultiTurnMoves(battler);
+                CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
             }
             else if (!(gBattleMons[battler].status2 & STATUS2_LOCK_CONFUSE) && (gBattleMons[battler].status2 & STATUS2_MULTIPLETURNS))
             {
@@ -489,13 +489,15 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_LEFTOVERS:
         case HOLD_EFFECT_BLACK_SLUDGE:
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter = 0;
@@ -560,7 +562,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
-        gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
+        gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
         gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE;
         if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
         {
@@ -991,7 +993,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !UproarWakeUpCheck(battler)
          && !IsLeafGuardProtected(battler, ability))
         {
-            CancelMultiTurnMoves(battler);
+            CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
             gEffectBattler = gBattlerTarget = battler;
             if (IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
@@ -1377,7 +1379,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                 gBattleMons[battler].status2 -= STATUS2_UPROAR_TURN(1);  // uproar timer goes down
                 if (WasUnableToUseMove(battler))
                 {
-                    CancelMultiTurnMoves(battler);
+                    CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;
                 }
                 else if (gBattleMons[battler].status2 & STATUS2_UPROAR)
@@ -1388,7 +1390,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                 else
                 {
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;
-                    CancelMultiTurnMoves(battler);
+                    CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
                 }
                 BattleScriptExecute(BattleScript_PrintUproarOverTurns);
                 effect = TRUE;
@@ -1419,7 +1421,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
@@ -1431,6 +1433,8 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case HOLD_EFFECT_RESTORE_STATS:
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter = 0;
@@ -1482,7 +1486,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     }
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
-        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))

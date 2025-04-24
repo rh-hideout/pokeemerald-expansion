@@ -379,7 +379,7 @@ DOUBLE_BATTLE_TEST("Intimidate will correctly decrease the attack of the second 
 SINGLE_BATTLE_TEST("Intimdate does not lose timing after mega evolution and switch out by a hit escape move")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
