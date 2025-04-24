@@ -5080,18 +5080,19 @@ static bool8 CalculateMoves(void)
     u8 i,j;
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
-    if ((species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
-        || (species >= SPECIES_VENUSAUR_GMAX && species <= SPECIES_URSHIFU_RAPID_STRIKE_GMAX))
+    if (gSpeciesInfo[species].isMegaEvolution || gSpeciesInfo[species].isGigantamax)
         species = GetFormSpeciesId(species, 0);
 
     // Egg moves
     if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
     {
+        DebugPrintf("Species is: %S", GetSpeciesName(species));
         u16 preSpecies = species;
         while (preSpecies != SPECIES_NONE)
         {
             numEggMoves = GetEggMovesBySpecies(preSpecies, statsMovesEgg);
             preSpecies = GetSpeciesPreEvolution(preSpecies);
+            DebugPrintf("Pre Species is: %S", GetSpeciesName(preSpecies));
         }
     }
     else
