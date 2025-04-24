@@ -5063,21 +5063,88 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
     DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
 }
 
+static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *numTutorMoves)
+{
+    u16 i, move;
+    bool8 isTMMove[MOVES_COUNT] = {0};
+    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+
+    // TM Moves
+    if (HGSS_SORT_TMS_BY_NUM)
+    {
+        for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
+        {
+            move = ItemIdToBattleMoveId(ITEM_TM01 + i);
+            if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
+            {
+                isTMMove[move] = TRUE;
+                sStatsMovesTMHM_ID[*numTMHMMoves] = ITEM_TM01 + i;
+                (*numTMHMMoves)++;
+                sStatsMoves[movesTotal] = move;
+                movesTotal++;
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+        {
+            move = teachableLearnset[i];
+            for (u16 j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+            {
+                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
+                {
+                    isTMMove[move] = TRUE;
+                    sStatsMovesTMHM_ID[*numTMHMMoves] = ITEM_TM01 + j;
+                    (*numTMHMMoves)++;
+                    sStatsMoves[movesTotal] = move;
+                    movesTotal++;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Tutor Moves
+#if P_TUTOR_MOVES_ARRAY
+    for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
+    {
+        move = gTutorMoves[i];
+        if (!isTMMove[move] && CanLearnTeachableMove(species, move))
+        {
+            sStatsMoves[movesTotal] = move;
+            movesTotal++;
+            (*numTutorMoves)++;
+        }
+    }
+#else
+    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    {
+        move = teachableLearnset[i];
+        if (!isTMMove[move] && CanLearnTeachableMove(species, move))
+        {
+            sStatsMoves[movesTotal] = move;
+            movesTotal++;
+            (*numTutorMoves)++;
+        }
+    }
+#endif
+    return movesTotal;
+}
+
 static bool8 CalculateMoves(void)
 {
     u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
-    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
 
     u16 statsMovesEgg[EGG_MOVES_ARRAY_COUNT] = {0};
     u16 statsMovesLevelUp[MAX_LEVEL_UP_MOVES] = {0};
-    u16 move;
 
     u8 numEggMoves = 0;
     u8 numLevelUpMoves = 0;
     u8 numTMHMMoves = 0;
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
-    u8 i,j;
+    u8 i;
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
     if (gSpeciesInfo[species].isMegaEvolution || gSpeciesInfo[species].isGigantamax)
@@ -5094,7 +5161,9 @@ static bool8 CalculateMoves(void)
         }
     }
     else
+    {
         numEggMoves = GetEggMovesBySpecies(species, statsMovesEgg);
+    }
 
     for (i = 0; i < numEggMoves; i++)
     {
@@ -5110,89 +5179,8 @@ static bool8 CalculateMoves(void)
         movesTotal++;
     }
 
-    if (HGSS_SORT_TMS_BY_NUM)
-    {
-#if P_TUTOR_MOVES_ARRAY == FALSE
-        u16 isTMMove[MOVES_COUNT] = {FALSE};
-#endif
-        // TM moves
-        for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
-        {
-            move = ItemIdToBattleMoveId(ITEM_TM01 + i);
-            if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
-            {
-#if P_TUTOR_MOVES_ARRAY == FALSE
-                isTMMove[move] = TRUE;
-#endif
-                sStatsMovesTMHM_ID[numTMHMMoves] = ITEM_TM01 + i;
-                numTMHMMoves++;
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-            }
-        }
-
-        // Tutor moves
-#if P_TUTOR_MOVES_ARRAY
-        for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
-        {
-            move = gTutorMoves[i];
-            if (move != MOVE_UNAVAILABLE && CanLearnTeachableMove(species, move))
-            {
-                numTutorMoves++;
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-            }
-        }
-#else
-        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-        {
-            move = teachableLearnset[i];
-            if (!isTMMove[move])
-            {
-                numTutorMoves++;
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-            }
-        }
-#endif
-    }
-    else
-    {
-        // TM moves
-        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-        {
-            move = teachableLearnset[i];
-            for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
-            {
-                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-                {
-                    sStatsMovesTMHM_ID[numTMHMMoves] = (ITEM_TM01 + j);
-                    numTMHMMoves++;
-                    sStatsMoves[movesTotal] = move;
-                    movesTotal++;
-                    break;
-                }
-            }
-        }
-
-        // Tutor moves
-        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-        {
-            move = teachableLearnset[i];
-            for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
-            {
-                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-                    break;
-            }
-
-            if (j >= NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
-            {
-                numTutorMoves++;
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-            }
-        }
-    }
+    // TM and Tutor moves
+    movesTotal = AddTMTutorMoves(species, movesTotal, &numTMHMMoves, &numTutorMoves);
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
