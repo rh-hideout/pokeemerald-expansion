@@ -68,7 +68,7 @@ static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task);
 
 void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
     case FNPC_DATA_IN_PROGRESS:
@@ -119,14 +119,14 @@ void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value)
 
 static void SetFollowerNPCScriptPointer(const u8 *script)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     gSaveBlock3Ptr->NPCfollower.script = script;
 #endif
 }
 
 static void PlayerLogCoordinates(struct ObjectEvent *player)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     gSaveBlock3Ptr->NPCfollower.log.x = player->currentCoords.x;
     gSaveBlock3Ptr->NPCfollower.log.y = player->currentCoords.y;
 #endif
@@ -134,7 +134,7 @@ static void PlayerLogCoordinates(struct ObjectEvent *player)
 
 const u8 *GetFollowerNPCScriptPointer(void)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     if (PlayerHasFollowerNPC())
         return gSaveBlock3Ptr->NPCfollower.script;
         
@@ -144,7 +144,7 @@ const u8 *GetFollowerNPCScriptPointer(void)
 
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
     case FNPC_DATA_IN_PROGRESS:
@@ -182,7 +182,7 @@ u32 GetFollowerNPCData(enum FollowerNPCDataTypes type)
 
 void ClearFollowerNPCData(void)
 {
-#if OW_ENABLE_NPC_FOLLOWERS
+#if FNPC_ENABLE_NPC_FOLLOWERS
     memset(&gSaveBlock3Ptr->NPCfollower, 0, sizeof(gSaveBlock3Ptr->NPCfollower));
 #endif
 }
@@ -528,7 +528,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
     s16 *y = &task->tDoorY;
 
     // The player faces follower as they exit the door.
-    if (OW_FACE_NPC_FOLLOWER_ON_DOOR_EXIT == TRUE && ObjectEventClearHeldMovementIfFinished(player))
+    if (FNPC_FACE_NPC_FOLLOWER_ON_DOOR_EXIT == TRUE && ObjectEventClearHeldMovementIfFinished(player))
         ObjectEventTurn(player, GetPlayerFaceToDoorDirection(player, follower));
 
     switch (task->tState)
@@ -1468,8 +1468,8 @@ u32 GetFollowerNPCBattlePartner(void)
 
 bool32 IsNPCFollowerWildBattle(void)
 {
-    if (FollowerNPCIsBattlePartner() && OW_FLAG_PARTNER_WILD_BATTLES != 0
-     && (OW_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS || FlagGet(OW_FLAG_PARTNER_WILD_BATTLES)))
+    if (FollowerNPCIsBattlePartner() && FNPC_FLAG_PARTNER_WILD_BATTLES != 0
+     && (FNPC_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS || FlagGet(FNPC_FLAG_PARTNER_WILD_BATTLES)))
         return TRUE;
 
     return FALSE;
