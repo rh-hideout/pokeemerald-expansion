@@ -26,8 +26,6 @@ enum FollowerNPCDataTypes
     FNPC_DATA_MAP_ID,
     FNPC_DATA_MAP_NUM,
     FNPC_DATA_MAP_GROUP,
-    FNPC_DATA_COORD_X,
-    FNPC_DATA_COORD_Y,
     FNPC_DATA_EVENT_FLAG,
     FNPC_DATA_GFX_ID,
     FNPC_DATA_FOLLOWER_FLAGS,
@@ -81,26 +79,26 @@ enum FollowerNPCHandleEscalatorFinishTaskStates{
     MOVEMENT_FINISH
 };
 
-void SetFollowerNPCData(u8 type, u16 value);
+void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value);
 const u8 *GetFollowerNPCScriptPointer(void);
-u32 GetFollowerNPCData(u8 type);
+u32 GetFollowerNPCData(enum FollowerNPCDataTypes type);
 void ClearFollowerNPCData(void);
 
-u8 DetermineFollowerNPCState(struct ObjectEvent *follower, u8 state, u8 direction);
-void SetFollowerNPCSprite(u8 spriteIndex);
+u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
+void SetFollowerNPCSprite(u32 spriteIndex);
 
-bool8 PlayerHasFollowerNPC(void);
-void NPCFollow(struct ObjectEvent *npc, u8 state, bool8 ignoreScriptActive);
+bool32 PlayerHasFollowerNPC(void);
+void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive);
 void CreateFollowerNPCAvatar(void);
 void FollowerNPC_HandleSprite(void);
-u8 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
-u8 GetFollowerNPCObjectId(void);
-bool8 CheckFollowerNPCFlag(u16 flag);
-bool8 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
+u32 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
+u32 GetFollowerNPCObjectId(void);
+bool32 CheckFollowerNPCFlag(u32 flag);
+bool32 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void HideNPCFollower(void);
 void FollowerNPC_WarpSetEnd(void);
 
-bool8 FollowerNPCCanBike(void);
+bool32 FollowerNPCCanBike(void);
 void FollowerNPC_HandleBike(void);
 
 void FollowerNPC_FollowerToWater(void);
@@ -108,10 +106,10 @@ void FollowerNPC_SetIndicatorToRecreateSurfBlob(void);
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void);
 void PrepareFollowerNPCDismountSurf(void);
 
-bool8 FollowerNPCComingThroughDoor(void);
+bool32 FollowerNPCComingThroughDoor(void);
 void FollowerNPC_SetIndicatorToComeOutDoor(void);
 
-void EscalatorMoveFollowerNPC(u8 movementType);
+void EscalatorMoveFollowerNPC(u32 movementType);
 void EscalatorMoveFollowerNPCFinish(void);
 
 void FollowerNPCWalkIntoPlayerForLeaveMap(void);
@@ -119,8 +117,8 @@ void FollowerNPCHideForLeaveMap(struct ObjectEvent *follower);
 void FollowerNPCReappearAfterLeaveMap(struct ObjectEvent *follower, struct ObjectEvent *player);
 void FollowerNPCFaceAfterLeaveMap(void);
 
-bool8 FollowerNPCIsBattlePartner(void);
-bool8 IsNPCFollowerWildBattle(void);
+bool32 FollowerNPCIsBattlePartner(void);
+bool32 IsNPCFollowerWildBattle(void);
 void PrepareForFollowerNPCBattle(void);
 void RestorePartyAfterFollowerNPCBattle(void);
 void FollowerNPC_TryRemoveFollowerOnWhiteOut(void);
