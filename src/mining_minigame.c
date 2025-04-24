@@ -1,7 +1,5 @@
-// END TODO:    Remove large comment blocks
-// END TODO:    Clear debug scripts
-// END TODO:    Uncomment `NDEBUG`
 // END TODO:    Remove comfy_anims and create a seperate branch
+// END TODO:    Clear debug scripts
 // END TODO:    Final testing
 #include "mining_minigame.h"
 #include "gba/types.h"
@@ -95,12 +93,22 @@ static void WallCollapseAnimation();
 
 /* >> Debug << */
 static u32 Debug_SetNumberOfBuriedItems(u32 rnd);
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-static u32 Debug_CreateRandomItem(u32 random, u32 itemId);
-#endif
 static u32 Debug_DetermineStoneSize(u32 stone, u32 stoneIndex);
 static void Debug_DetermineLocation(u32* x, u32* y, u32 item);
 static void Debug_RaiseSpritePriority(u32 spriteId);
+#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
+static u32 Debug_CreateRandomItem(u32 random, u32 itemId);
+
+#define DEBUG_DESIRED_NUMBER_OF_ITEMS   4
+#define DEBUG_MININGID_ITEM1            MININGID_THUNDER_STONE
+#define DEBUG_MININGID_ITEM2            MININGID_THUNDER_STONE
+#define DEBUG_MININGID_ITEM3            MININGID_THUNDER_STONE
+#define DEBUG_MININGID_ITEM4            MININGID_THUNDER_STONE
+#define DEBUG_MININGID_STONE1           MININGID_STONE_MUSHROOM1
+#define DEBUG_MININGID_STONE2           MININGID_STONE_MUSHROOM2
+
+#endif
+
 
 struct BuriedItem 
 {
@@ -815,7 +823,6 @@ static const struct SpritePalette sSpritePal_StoneMushroom2[] =
     {NULL},
 };
 
-// Item SpriteSheets and SpritePalettes
 static const struct CompressedSpriteSheet sSpriteSheet_ItemHeartScale =
 {
     gItemHeartScaleGfx,
@@ -1113,8 +1120,8 @@ struct MiningItem
 {
     u32 miningItemId;
     u32 bagItemId;
-    u32 top; // starts with 0
-    u32 left; // starts with 0
+    u32 top;        // starts with 0
+    u32 left;       // starts with 0
     u32 totalTiles; // starts with 0
     u32 tag;
     const struct CompressedSpriteSheet* sheet;
@@ -1123,8 +1130,8 @@ struct MiningItem
 
 struct MiningStone 
 {
-    u32 top; // starts with 0
-    u32 left; // starts with 0
+    u32 top;        // starts with 0
+    u32 left;       // starts with 0
     u32 height;
     u32 width;
 };
@@ -1563,7 +1570,6 @@ static void Mining_Init(MainCallback callback)
     u32 itemStateIdsStep3[2];
 
     u32 firstBuriedItemId = itemStateIdsStep1[random(4)];
-    DebugPrintf("buriedItemId1: %d", firstBuriedItemId);
     sMiningUiState->buriedItems[firstBuriedItemId].isSelected = TRUE;
 
     for (u32 i = 0; i < 4; i++) 
@@ -1578,7 +1584,6 @@ static void Mining_Init(MainCallback callback)
     }
 
     u32 secondBuriedItemId = itemStateIdsStep2[random(3)];
-    DebugPrintf("buriedItemId2: %d", secondBuriedItemId);
     sMiningUiState->buriedItems[secondBuriedItemId].isSelected = TRUE;
 
     if (amountItemsToSelect > 2)
@@ -1595,7 +1600,6 @@ static void Mining_Init(MainCallback callback)
         }
 
         u32 thirdBuriedItemId = itemStateIdsStep3[random(2)];
-        DebugPrintf("buriedItemId3: %d", thirdBuriedItemId);
         sMiningUiState->buriedItems[thirdBuriedItemId].isSelected = TRUE;
 
         if (amountItemsToSelect == 4)
@@ -1607,8 +1611,6 @@ static void Mining_Init(MainCallback callback)
                 fourthBuriedItemId = itemStateIdsStep3[0];
 
             sMiningUiState->buriedItems[fourthBuriedItemId].isSelected = TRUE;    
-            DebugPrintf("buriedItemId4: %d", fourthBuriedItemId);
-            DebugPrintf("Item4isSelected: %d", sMiningUiState->buriedItems[fourthBuriedItemId].isSelected);
         }
     }
 
@@ -1896,7 +1898,6 @@ static void Mining_FadeAndBail(void)
     SetMainCallback2(Mining_MainCB);
 }
 
-// Credits to Sbird (Karathan) --- Overwrite `tilemap`
 #define TILE_POS(x,y) (32*(y) + (x))
 
 static void OverwriteTileDataInTilemapBuffer(u8 tile, u8 x, u8 y, u16* tilemapBuf, u8 pal) 
@@ -2028,7 +2029,7 @@ static u8 GetRandomItemId()
     }
 
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    return Debug_CreateRandomItem(rarity,itemId); // Debug
+    return Debug_CreateRandomItem(rarity,itemId);
 #else
     return itemId;
 #endif
@@ -2037,13 +2038,11 @@ static u8 GetRandomItemId()
 }
 
 static void InitItemsIfSelected(u32 item, u32 itemId) {
-    DebugPrintf("Hey! I got called!");
     if (sMiningUiState->buriedItems[item].isSelected) 
     {
         itemId = GetRandomItemId();
         SetBuriedItemsId(item, itemId);
         DoDrawRandomItem(item+1, itemId);
-        DebugPrintf("LItem: %d, ItemId: %d", item, itemId); 
     }
 }
 
@@ -2083,12 +2082,13 @@ static void Mining_LoadSpriteGraphics(void)
 
     ClearItemMap();
 
-    // ITEMS
+    // Items
     InitItemsIfSelected(0, itemId1);
     InitItemsIfSelected(1, itemId2);
     InitItemsIfSelected(2, itemId3);
     InitItemsIfSelected(3, itemId4);
     
+    // Stones
     for (i=0; i<MINING_COUNT_MAX_NUMBER_STONES; i++) 
     {
         stone = MININGID_NONE;
@@ -2097,10 +2097,6 @@ static void Mining_LoadSpriteGraphics(void)
 
         stone = Debug_DetermineStoneSize(stone,i);
         DoDrawRandomStone(stone);
-        //Check every stone size that will fit in current itemMap
-        //Create an tempArray of ones that will def fit
-        //rnd should pull from that temp array when using doDrawRandomStone
-        //if rnd rolls a stone that's not in the tempArray, roll again
     }
 
     sMiningUiState->cursorSpriteIndex = CreateSprite(&gSpriteCursor, 8, 40, 0);
@@ -2181,16 +2177,11 @@ static void Task_MiningMainInput(u8 taskId)
         sMiningUiState->tool = BLUE_BUTTON;
     }
 
-
-    if (AreAllItemsFound()) {
-        DebugPrintf("all items found");
+    if (AreAllItemsFound()) 
         EndMining(taskId);
-    }
 
-    if (IsStressLevelMax()) {
-        DebugPrintf("Stress level max");
+    if (IsStressLevelMax())
         EndMining(taskId);
-    }
 }
 
 static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr) 
@@ -2311,11 +2302,7 @@ static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-// This function draws the individual frames of the stress level indicator:
-//      - `offsetIn8` represents the offset to the left side of the screen. The bigger that value, the greater the stress level
-//      - `ofs2` represents the offset to the right side of the screen which is needed, to make the indicator flow smoothly.
-//      `offsetIn8`: `1 = 32 px` or `1 = 4x 8x8 tiles` afaik
-//      `ofs2`:      `1 = 8 px` or `1 = 8x8 tile`
+// This function draws the individual frames of the stress level indicator
 static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16* ptr) 
 {
     switch (sMiningUiState->stressLevelCount) 
@@ -2404,11 +2391,7 @@ static void Mining_UpdateStressLevel(void)
     }
 }
 
-// Draws a tile layer (of the terrain) to the screen.
-// This function is used to make a random sequence of terrain tiles.
-//
-// In the switch statement, for example case 0 and case 1 do the same thing. Thats because the layer is a 3 bit integer (2 * 2 * 2 possible nums) and I want multiple probabilies for
-// other tiles as well. Thats why case 0 and case 1 do the same thing, to increase the probabily of drawing layer_tile 0 to the screen.
+// Draws a tile layer to the screen.
 static void Terrain_DrawLayerTileToScreen(u8 x, u8 y, u8 layer, u16* ptr) 
 {
     u8 tileX = x*2;
@@ -2471,26 +2454,6 @@ static struct SpriteTemplate CreatePaletteAndReturnTemplate(u32 TileTag, u32 Pal
     return TempSpriteTemplate;
 }
 
-// These offset values are important because I dont want the sprites to be placed somewhere regarding the center and not the top left corner
-//
-// Basically what these offset do is this: (c is the center the sprite uses to navigate the position and @ is the point we want, the top left corner; for a 32x32 sprite)
-//
-// @--|--|
-// |--c--|
-// |--|--|
-//
-// x + 16:
-//
-//    @--|--|
-//    c--|--|
-//    |--|--|
-//
-// and finally, y + 16
-//
-//    (@c)--|--|
-//    | - - |--|
-//    | - - |--|
-//
 #define POS_OFFS_32X32 16
 #define POS_OFFS_64X64 32
 
@@ -2590,15 +2553,6 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     posY + MiningItemList[(itemId)].top > yBorder
 #define IGNORE_COORDS 255
 
-// This function is used to determine wether an item should be placed or not.
-// Items could generate on top of each other if this function isnt used to check if the next placement will overwrite other data in itemMap
-// It does that by checking if the value at position `some x` and `some y` in itemMap, is holding either the value 1,2,3 or 4;
-// If yes, return 0 (false, so item should not be drawn and instead new positions should be generated)
-// If no, return 1 (true) and the item can be drawn to the screen
-//
-// And theres the posX and posY check. They are there to make sure that the item sprite will not be drawn outside the box.
-// *_RIGHT tells whats the max. amount of tiles if you go from left to right (starting with 0)
-// the same with *_BOTTOM but going down from top to bottom
 static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder) 
 {
     u32 i;
@@ -2621,12 +2575,6 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
     u32 xMax, yMax, xMin, yMin;
     u32 paletteTag;
 
-    // Zone Split
-    //
-    // The wall is splitted into 4x6 tiles zones. Each zone is reserved for 1 item
-    //
-    // |item1|item3|
-    // |item2|item4|
     switch(itemStateId) 
     {
         default:
@@ -2679,11 +2627,11 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
                 continue;
 
             DrawItemSprite(x,y,itemId, paletteTag, itemStateId - 1);
-            OverwriteItemMapData(x, y, itemStateId, itemId); // For the collection logic, overwrite the itemmap data
+            OverwriteItemMapData(x, y, itemStateId, itemId); // For the collection logic, overwrite the item map data
             isItemPlaced = TRUE;
             break;
         }
-        // If it hasn't placed an Item (that's very unlikely but while debuggin, this happened), just retry
+        // If it hasn't placed an Item (we dont really need this, why am I not deleting this??? lol, we lowkey dont need this huh), just retry
         if (y == yMax && !isItemPlaced) 
             y = yMin;
     }
@@ -2801,7 +2749,8 @@ static bool8 AtCornerOfRectangle(u8 row, u8 col, u8 baseRow, u8 baseCol, u8 fina
 }
 
 // Randomly generates a terrain, stores the layering in an array and draw the right tiles, with the help of the layer map, to the screen.
-// Use the above function just to draw a tile once (for updating the tile, use Terrain_UpdateLayerTileOnScreen(...); )
+// Use the above function just to draw a tile once 
+// Credits - Skeli
 static void Mining_DrawRandomTerrain(void) 
 {
     u8 row1, row2, col1, col2, x, y;
@@ -2812,11 +2761,11 @@ static void Mining_DrawRandomTerrain(void)
     s8 finalCol, k, m;
     u16* ptr = GetBgTilemapBuffer(2);
 
-    //Start by placing blank layer 3 rocks
+    // Start by placing blank layer 3 rocks
     for (i = 0; i < 96; ++i) 
         sMiningUiState->layerMap[i] = 2;
 
-    //Create patches of lighter dirt areas
+    // Create patches of lighter dirt areas
     totalTimes = 3 + random(5);
     for (i = 0; i < totalTimes; ++i)
     {
@@ -2839,34 +2788,34 @@ static void Mining_DrawRandomTerrain(void)
         }
     }
 
-    //Create smaller patches of big rocks on top
-    /*Always in the shape:
-      0 0 0
+    // Create smaller patches of big rocks on top
+    /* Always in the shape:
+        0 0 0
       0 0 0 0 0
       0 0 0 0 0
       0 0 0 0 0
-      0 0 0
-      */
+        0 0 0
+    */
     totalTimes = random(5)+2;
     for (i = 0; i < totalTimes; ++i)
     {
-        baseRow = RandRangeSigned(-4, 8); //Rocks can go up to one row over on either top or bottom
-        baseCol = RandRangeSigned(-4, 12); //Rocks can go up to one col over on either left or right
+        baseRow = RandRangeSigned(-4, 8);  // Rocks can go up to one row over on either top or bottom
+        baseCol = RandRangeSigned(-4, 12); // Rocks can go up to one col over on either left or right
         finalRow = baseRow + 5;
         finalCol = baseCol + 5;
 
         for (k = baseRow; k < finalRow; ++k)
         {
             if (k < 0 || k >= 8)
-                continue; //Not legal row
+                continue; // Not legal row
 
             for (m = baseCol; m < finalCol; ++m)
             {
                 if (m < 0 || m >= 12)
-                    continue; //Not legal column
+                    continue; // Not legal column
 
                 if (AtCornerOfRectangle(k, m, baseRow, baseCol, baseRow + 4, baseCol + 4))
-                    continue; //Leave corner out
+                    continue; // Leave corner out
 
                 sMiningUiState->layerMap[m + k*12] = 0;
             }
@@ -2880,32 +2829,24 @@ static void Mining_DrawRandomTerrain(void)
     for (y = 2; y < 8 +2; y++) 
     {
         for (x = 0; x < 12 && i < 96; x++, i++) 
-        {
             Terrain_DrawLayerTileToScreen(x, y, sMiningUiState->layerMap[i], ptr);
-        }
     }
 }
 
-// This function is like 'Terrain_DrawLayerTileToScreen(...);', but for updating a tile AND the layer in the layerMap (we want to sync it)
 static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY) 
 {
     u8 i;
     u8 tileX;
     u8 tileY;
 
-    i = (sMiningUiState->cursorY-2+ofsY)*12 + sMiningUiState->cursorX + ofsX; // Why the minus 2? Because the cursorY value starts at 2, so when calculating the position of the cursor, we have that additional 2 with it!!
-    tileX = (sMiningUiState->cursorX+ofsX) * 2;
-    tileY = (sMiningUiState->cursorY+ofsY) * 2;
+    i = (sMiningUiState->cursorY - 2 + ofsY) * 12 + sMiningUiState->cursorX + ofsX; // It needs the `-2` because the cursorY value started at `2` 
+    tileX = (sMiningUiState->cursorX + ofsX) * 2;
+    tileY = (sMiningUiState->cursorY + ofsY) * 2;
     if (sMiningUiState->layerMap[i] < 6) 
     {
-        // Here, case 0 is missing because it will never appear. Why? Because the value we are doing the switch statement on would need to be negative.
-        // Case 6 clears the tile so we can take a look at Bg3 (for the item sprite)!
-        //
-        // Other than that, the tiles here are in order.
-
         sMiningUiState->layerMap[i]++;
 
-        switch (sMiningUiState->layerMap[i]) // Incrementing? Idk if thats the bug for wrong tile replacements... 
+        switch (sMiningUiState->layerMap[i]) // Each case represents one layer on the wall
         { 
             case 1:
                 OverwriteTileDataInTilemapBuffer(0x19, tileX, tileY, ptr, 0x01);
@@ -2947,7 +2888,6 @@ static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY)
     }
 }
 
-// Using this function here to overwrite the tilemap entry when hitting with the pickaxe (blue button is pressed)
 static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr) 
 {
     u8 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2)*12;
@@ -2960,7 +2900,7 @@ static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
         if (sMiningUiState->cursorX != 11) 
             Terrain_UpdateLayerTileOnScreen(ptr, 1, 0);
 
-        // We have to add '2' to 7 and 0 because, remember: The cursor spawns at Y_position 2!!!
+        // We have to add '2' to '7' and '0', because the cursor spawns at Y position 2
         if (sMiningUiState->cursorY != 9) 
             Terrain_UpdateLayerTileOnScreen(ptr, 0, 1);
 
@@ -2985,7 +2925,7 @@ static void Terrain_Hammer_OverwriteTiles(u16* ptr)
     if (isItemDugUp == 0) 
     {
         // Corners
-        // We have to add '2' to 7 and 0 because, remember: The cursor spawns at Y_position 2!!!
+        // We have to add '2' to '7' and '0', because the cursor spawns at Y position 2
         if (sMiningUiState->cursorX != 11 && sMiningUiState->cursorY != 9) 
             Terrain_UpdateLayerTileOnScreen(ptr, 1, 1);
 
@@ -3003,7 +2943,6 @@ static void Terrain_Hammer_OverwriteTiles(u16* ptr)
     }
 }
 
-// Used in the Input task.
 static void Mining_UpdateTerrain(void) 
 {
     u16* ptr = GetBgTilemapBuffer(2);
@@ -3305,8 +3244,7 @@ static void HandleGameFinish(u8 taskId)
     MakeCursorInvisible();
 
     if (IsStressLevelMax()) 
-        // The Shake-Task creation is handled by Task_MiningUi_HandleMainInput
-        // Here, we only set the Shake Duration.
+        // Here, we only set the Shake Duration. The Task, which handles the shake effect, is created by the input handler.
         sMiningUiState->shakeDuration = 6; 
     else 
         PrintMessage(sText_EverythingWas);
@@ -3331,7 +3269,6 @@ static u32 GetTotalNumberOfBuriedItems(void)
         if (GetBuriedBagItemId(itemIndex))
             count++;
 
-    DebugPrintf("NumberOfBuriedItems: %d", count);
     return count;
 }
 
@@ -3398,8 +3335,7 @@ static void ExitMiningUI(u8 taskId)
 static u32 Debug_SetNumberOfBuriedItems(u32 rnd)
 {
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    u32 desiredNumItems = 4;
-    return desiredNumItems;
+    return DEBUG_DESIRED_NUMBER_OF_ITEMS;
 #else 
     return rnd;
 #endif
@@ -3410,10 +3346,10 @@ static u32 Debug_CreateRandomItem(u32 random, u32 itemId)
 {
     switch (debugVariable++)
     {
-        case 0: return MININGID_THUNDER_STONE;
-        case 1: return MININGID_THUNDER_STONE;
-        case 2: return MININGID_THUNDER_STONE;
-        case 3: return MININGID_THUNDER_STONE;
+        case 0: return DEBUG_MININGID_ITEM1;
+        case 1: return DEBUG_MININGID_ITEM2;
+        case 2: return DEBUG_MININGID_ITEM3;
+        case 3: return DEBUG_MININGID_ITEM4;
         default: return itemId;
     }
 }
@@ -3422,7 +3358,7 @@ static u32 Debug_CreateRandomItem(u32 random, u32 itemId)
 static u32 Debug_DetermineStoneSize(u32 stone, u32 stoneIndex)
 {
 #if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    u32 desiredStones[2] = {MININGID_STONE_MUSHROOM2, MININGID_STONE_MUSHROOM1};
+    u32 desiredStones[2] = {DEBUG_MININGID_STONE1, DEBUG_MININGID_STONE2};
     stoneIndex = (stoneIndex > 1) ? 1 : stoneIndex;
     return (desiredStones[stoneIndex] == MININGID_NONE) ? stone : desiredStones[stoneIndex];
 #else
