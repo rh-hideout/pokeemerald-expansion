@@ -1899,8 +1899,9 @@
 #define SPECIES_SPARMOR                                 1781
 #define SPECIES_OHMADILLO                               1782
 #define SPECIES_COLOMBOLT                               1783
+#define SPECIES_PILLAIA                                 1784
 
-#define SPECIES_EGG (SPECIES_COLOMBOLT + 1)
+#define SPECIES_EGG (SPECIES_PILLAIA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

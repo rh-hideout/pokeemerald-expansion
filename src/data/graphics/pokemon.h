@@ -22293,6 +22293,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_JerminSwarm[] = INCBIN_U32("graphics/pokemon/jermin/swarm/shiny.gbapal.lz");
    const u8 gMonIcon_JerminSwarm[] = INCBIN_U8("graphics/pokemon/jermin/swarm/icon.4bpp");
 
+   const u32 gMonFrontPic_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/front.4bpp.lz");
+   const u32 gMonBackPic_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/back.4bpp.lz");
+   const u32 gMonPalette_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/shiny.gbapal.lz");
+   const u8 gMonIcon_Pillaia[] = INCBIN_U8("graphics/pokemon/pillaia/icon.4bpp");
+   const u8 gMonFootprint_Pillaia[] = INCBIN_U8("graphics/pokemon/pillaia/footprint.1bpp");
+
    const u32 gMonFrontPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/front.4bpp.lz");
    const u32 gMonBackPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/back.4bpp.lz");
    const u32 gMonPalette_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/normal.gbapal.lz");

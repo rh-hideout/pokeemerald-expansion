@@ -1938,6 +1938,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .formChangeTable = sJerminFormChangeTable,
     },
 
+        [SPECIES_PILLAIA] =
+    { 
+       .baseHP        = 95,
+       .baseAttack    = 40,
+       .baseDefense   = 80,
+       .baseSpeed     = 50,
+       .baseSpAttack  = 100,
+       .baseSpDefense = 130,
+       .types = { TYPE_ROCK, TYPE_GRASS },
+       .catchRate = 104,
+       .expYield = 44,
+       .evYield_Speed  = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 10,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
+       .abilities = { ABILITY_UNNERVE, ABILITY_GRASSY_SURGE, ABILITY_COLLAPSING_RUIN, ABILITY_REGENERATOR },  //Replace Grass Pelt with Collapsing Ruin
+       .bodyColor = BODY_COLOR_GRAY,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Pillaia"),
+      .cryId = CRY_PILLAIA,
+       .natDexNum = NATIONAL_DEX_PILLAIA,
+       .categoryName = _("Pedestal"),
+       .height = 17,
+       .weight = 800,
+       .description = COMPOUND_STRING(
+           "Few people let Pillaia into their gardens\n"
+           "willingly, and they're notoriously difficult\n"
+           "to remove. Often completely stationary,at least"
+           "when within view."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Pillaia,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Pillaia,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Pillaia,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Pillaia,
+       .shinyPalette = gMonShinyPalette_Pillaia,
+       .iconSprite = gMonIcon_Pillaia,
+       .iconPalIndex = 1,
+       FOOTPRINT(Pillaia)
+       .levelUpLearnset = sPillaiaLevelUpLearnset,
+    },
+
         [SPECIES_ARACHNOTE] =
     { 
        .baseHP        = 67,

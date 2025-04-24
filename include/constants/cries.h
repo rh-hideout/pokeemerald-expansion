@@ -2656,7 +2656,8 @@ enum {
     CRY_CHOLEFIR,  
     CRY_SPARMOR,  
     CRY_OHMADILLO,
-    CRY_COLOMBOLT,  
+    CRY_COLOMBOLT,
+    CRY_PILLAIA,  
     CRY_COUNT,
 };
 

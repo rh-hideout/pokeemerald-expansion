@@ -7074,6 +7074,10 @@ Cry_Ohmadillo::
 	.align 2	
 Cry_Colombolt::
 	.incbin "sound/direct_sound_samples/cries/colombolt.bin"
+
+	.align 2	
+Cry_Pillaia::
+	.incbin "sound/direct_sound_samples/cries/pillaia.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

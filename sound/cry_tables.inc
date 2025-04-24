@@ -2885,6 +2885,8 @@ gCryTable::
 
 	cry Cry_Colombolt
 
+	cry Cry_Pillaia
+
 .endif
 
 	.align 2
@@ -5774,4 +5776,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ohmadillo
 
 	cry_reverse Cry_Colombolt
+
+	cry_reverse Cry_Pillaia
 .endif
