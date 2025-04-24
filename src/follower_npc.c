@@ -258,25 +258,21 @@ static u32 GetFollowerNPCSprite(void)
         for (i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
             if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID))
                 return gFollowerNPCAlternateSprites[i].machBikeId;
-
         break;
     case FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE:
         for (i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
             if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID))
                 return gFollowerNPCAlternateSprites[i].acroBikeId;
-
         break;
     case FOLLOWER_NPC_SPRITE_INDEX_SURF:
         for (i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
             if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID))
                 return gFollowerNPCAlternateSprites[i].surfId;
-
         break;
     case FOLLOWER_NPC_SPRITE_INDEX_UNDERWATER:
         for (i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
             if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID))
                 return gFollowerNPCAlternateSprites[i].underwaterId;
-
         break;
     }
 
