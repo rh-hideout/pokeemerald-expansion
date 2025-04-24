@@ -5086,13 +5086,11 @@ static bool8 CalculateMoves(void)
     // Egg moves
     if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
     {
-        DebugPrintf("Species is: %S", GetSpeciesName(species));
         u16 preSpecies = species;
         while (preSpecies != SPECIES_NONE)
         {
             numEggMoves = GetEggMovesBySpecies(preSpecies, statsMovesEgg);
             preSpecies = GetSpeciesPreEvolution(preSpecies);
-            DebugPrintf("Pre Species is: %S", GetSpeciesName(preSpecies));
         }
     }
     else
