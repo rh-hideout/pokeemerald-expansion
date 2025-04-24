@@ -146,7 +146,7 @@ static bool8 LavaridgeGym1FWarpEffect_Warp(struct Task *, struct ObjectEvent *, 
 
 static void Task_EscapeRopeWarpOut(u8);
 static void EscapeRopeWarpOutEffect_Init(struct Task *);
-static void EscapeRopeWarpOutEffect_HideFollower(struct Task *);
+static void EscapeRopeWarpOutEffect_HideFollowerNPC(struct Task *);
 static void EscapeRopeWarpOutEffect_Spin(struct Task *);
 
 static void FieldCallback_EscapeRopeWarpIn(void);
@@ -698,7 +698,7 @@ static bool8 (*const sLavaridgeGym1FWarpEffectFuncs[])(struct Task *, struct Obj
 static void (*const sEscapeRopeWarpOutEffectFuncs[])(struct Task *) =
 {
     EscapeRopeWarpOutEffect_Init,
-    EscapeRopeWarpOutEffect_HideFollower,
+    EscapeRopeWarpOutEffect_HideFollowerNPC,
     EscapeRopeWarpOutEffect_Spin,
 };
 
@@ -2366,11 +2366,18 @@ void SpriteCB_AshPuff(struct Sprite *sprite)
         FieldEffectStop(sprite, FLDEFF_ASH_PUFF);
 }
 
-#define tState     data[0]
-#define tSpinDelay data[1]
-#define tNumTurns  data[2]
-#define tTimer     data[14]
-#define tStartDir  data[15]
+#define tState          data[0]
+#define tSpinDelay      data[1]
+#define tNumTurns       data[2]
+#define tHideFollower   data[3]
+#define tTimer          data[14]
+#define tStartDir       data[15]
+
+enum
+{
+    START_MOVEMENT,
+    WAIT_MOVEMENT_END
+};
 
 void StartEscapeRopeFieldEffect(void)
 {
@@ -2396,10 +2403,10 @@ static void EscapeRopeWarpOutEffect_Init(struct Task *task)
     task->tStartDir = GetPlayerFacingDirection();
 }
 
-static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
+static void EscapeRopeWarpOutEffect_HideFollowerNPC(struct Task *task)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
-    if (task->data[3] == 0)
+    if (task->tHideFollower == START_MOVEMENT)
     {
         if (!PlayerHasFollowerNPC())
         {
@@ -2408,10 +2415,10 @@ static void EscapeRopeWarpOutEffect_HideFollower(struct Task *task)
         else
         {
             FollowerNPCWalkIntoPlayerForLeaveMap();
-            task->data[3]++;
+            task->tHideFollower = WAIT_MOVEMENT_END;
         }
     }
-    if (task->data[3] == 1)
+    if (task->tHideFollower == WAIT_MOVEMENT_END)
     {
         if (ObjectEventClearHeldMovementIfFinished(follower))
         {
