@@ -1,5 +1,3 @@
-// END TODO:    Clear debug scripts
-// END TODO:    Final testing
 #include "mining_minigame.h"
 #include "gba/types.h"
 #include "gba/defines.h"
