@@ -206,6 +206,7 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetContestLinkResults();
     ResetItemFlags();
+    gSpecialVar_MonBoxId = 0xFF;
 }
 
 static void ResetMiniGamesRecords(void)

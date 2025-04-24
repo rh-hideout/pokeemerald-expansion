@@ -2746,7 +2746,11 @@ static void Task_OnSelectedMon(u8 taskId)
             if (sInPartyMenu)
                 VarSet(VAR_RESULT, GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES));
             else
+            {
                 VarSet(VAR_RESULT, GetBoxMonDataAt(sStorage->newCurrBoxId, sCursorPosition, MON_DATA_SPECIES));
+                gSpecialVar_MonBoxId = sStorage->newCurrBoxId;
+                gSpecialVar_MonBoxPos = sCursorPosition;
+            }
             gSpecialVar_0x8004 = sCursorPosition;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
@@ -10249,13 +10253,9 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
     sJustOpenedBag = FALSE;
 }
 
-u32 GetInPartyMenu(void)
-{
-    return sInPartyMenu;
-}
-
 // Used as a script special for showing a box mon to various npcs (e.g. in-game trades, move deleter)
 void ChooseBoxMon(void)
 {
+    gSpecialVar_MonBoxId = 0xFF;
     EnterPokeStorage(OPTION_SELECT_MON);
 }
