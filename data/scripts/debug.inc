@@ -584,3 +584,34 @@ Debug_EventScript_FontTest::
 @Debug_EventScript_InflictStatus1_Close:
 @	releaseall
 @	end
+
+Debug_EventScript_TellTheTime::
+	callnative DebugMenu_CalculateTime
+	msgbox Debug_EventScript_TellTheTime_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	end
+
+Debug_EventScript_PrintTimeOfDay::
+	callnative DebugMenu_CalculateTimeOfDay
+	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	end
+
+Debug_EventScript_FakeRTCNotEnabled::
+	msgbox Debug_EventScript_FakeRTCNotEnabled_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	return
+
+Debug_EventScript_FakeRTCNotEnabled_Text_0:
+	.string "You currently do not have Fake RTC\nenabled. Please enable it in include/\lconfig/overworld.h$"
+
+
+Debug_EventScript_TellTheTime_Text_0:
+	.string "Time and date:\n"
+	.string "{STR_VAR_1}, {STR_VAR_2}:{STR_VAR_3}$"
+
+DebugEventScript_PrintWeekday_Text_0:
+	.string "Time of day: {STR_VAR_1}$"
