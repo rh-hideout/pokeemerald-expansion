@@ -7078,6 +7078,18 @@ Cry_Colombolt::
 	.align 2	
 Cry_Pillaia::
 	.incbin "sound/direct_sound_samples/cries/pillaia.bin"
+
+	.align 2	
+Cry_Voltocor::
+	.incbin "sound/direct_sound_samples/cries/voltocor.bin"
+
+	.align 2	
+Cry_Volbrat::
+	.incbin "sound/direct_sound_samples/cries/volbrat.bin"
+
+	.align 2	
+Cry_Voliath::
+	.incbin "sound/direct_sound_samples/cries/voliath.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

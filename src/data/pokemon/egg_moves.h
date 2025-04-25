@@ -6427,6 +6427,16 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVoliathEggMoveLearnset[] = {
+    MOVE_NUZZLE,
+    MOVE_EERIE_IMPULSE,
+    MOVE_SNARL,
+    MOVE_ZAP_CANNON,
+    MOVE_AQUA_TAIL,
+    MOVE_CLOSE_COMBAT,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sBungaloonEggMoveLearnset[] = {
     MOVE_AQUA_JET,
     MOVE_WITHDRAW,

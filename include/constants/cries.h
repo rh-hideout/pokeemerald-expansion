@@ -2658,6 +2658,9 @@ enum {
     CRY_OHMADILLO,
     CRY_COLOMBOLT,
     CRY_PILLAIA,  
+    CRY_VOLTOCOR,
+    CRY_VOLBRAT,
+    CRY_VOLIATH,
     CRY_COUNT,
 };
 

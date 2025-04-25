@@ -2887,6 +2887,12 @@ gCryTable::
 
 	cry Cry_Pillaia
 
+	cry Cry_Voltocor
+
+	cry Cry_Volbrat
+
+	cry Cry_Voliath
+
 .endif
 
 	.align 2
@@ -5778,4 +5784,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Colombolt
 
 	cry_reverse Cry_Pillaia
+
+	cry_reverse Cry_Voltocor
+	
+	cry_reverse Cry_Volbrat
+
+	cry_reverse Cry_Voliath
 .endif

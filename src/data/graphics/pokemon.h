@@ -22503,6 +22503,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Carpedian[] = INCBIN_U8("graphics/pokemon/carpedian/icon.4bpp");
    const u8 gMonFootprint_Carpedian[] = INCBIN_U8("graphics/pokemon/carpedian/footprint.1bpp");
 
+   const u32 gMonFrontPic_Voltocor[] = INCBIN_U32("graphics/pokemon/voltocor/front.4bpp.lz");
+   const u32 gMonBackPic_Voltocor[] = INCBIN_U32("graphics/pokemon/voltocor/back.4bpp.lz");
+   const u32 gMonPalette_Voltocor[] = INCBIN_U32("graphics/pokemon/voltocor/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Voltocor[] = INCBIN_U32("graphics/pokemon/voltocor/shiny.gbapal.lz");
+   const u8 gMonIcon_Voltocor[] = INCBIN_U8("graphics/pokemon/voltocor/icon.4bpp");
+   const u8 gMonFootprint_Voltocor[] = INCBIN_U8("graphics/pokemon/voltocor/footprint.1bpp");
+
+   const u32 gMonFrontPic_Volbrat[] = INCBIN_U32("graphics/pokemon/volbrat/front.4bpp.lz");
+   const u32 gMonBackPic_Volbrat[] = INCBIN_U32("graphics/pokemon/volbrat/back.4bpp.lz");
+   const u32 gMonPalette_Volbrat[] = INCBIN_U32("graphics/pokemon/volbrat/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Volbrat[] = INCBIN_U32("graphics/pokemon/volbrat/shiny.gbapal.lz");
+   const u8 gMonIcon_Volbrat[] = INCBIN_U8("graphics/pokemon/volbrat/icon.4bpp");
+   const u8 gMonFootprint_Volbrat[] = INCBIN_U8("graphics/pokemon/volbrat/footprint.1bpp");
+
+  const u32 gMonFrontPic_Voliath[] = INCBIN_U32("graphics/pokemon/voliath/front.4bpp.lz");
+   const u32 gMonBackPic_Voliath[] = INCBIN_U32("graphics/pokemon/voliath/back.4bpp.lz");
+   const u32 gMonPalette_Voliath[] = INCBIN_U32("graphics/pokemon/voliath/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Voliath[] = INCBIN_U32("graphics/pokemon/voliath/shiny.gbapal.lz");
+   const u8 gMonIcon_Voliath[] = INCBIN_U8("graphics/pokemon/voliath/icon.4bpp");
+   const u8 gMonFootprint_Voliath[] = INCBIN_U8("graphics/pokemon/voliath/footprint.1bpp");
+
    const u32 gMonFrontPic_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/front.4bpp.lz");
    const u32 gMonBackPic_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/back.4bpp.lz");
    const u32 gMonPalette_Seaman[] = INCBIN_U32("graphics/pokemon/seaman/normal.gbapal.lz");

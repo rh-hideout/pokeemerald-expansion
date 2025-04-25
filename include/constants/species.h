@@ -1900,8 +1900,11 @@
 #define SPECIES_OHMADILLO                               1782
 #define SPECIES_COLOMBOLT                               1783
 #define SPECIES_PILLAIA                                 1784
+#define SPECIES_VOLTOCOR                                1785
+#define SPECIES_VOLBRAT                                 1786
+#define SPECIES_VOLIATH                                 1787
 
-#define SPECIES_EGG (SPECIES_PILLAIA + 1)
+#define SPECIES_EGG (SPECIES_VOLIATH + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
