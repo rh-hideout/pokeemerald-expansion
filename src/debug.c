@@ -104,7 +104,7 @@ enum UtilDebugMenu
     DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS,
     DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS,
     DEBUG_UTIL_MENU_ITEM_TIME_MENU,
-    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI, // Please keep this at the bottom <3
+    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI // Please keep this at the bottom <3
 };
 
 enum TimeMenuDebugMenu
