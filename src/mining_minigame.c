@@ -332,7 +332,7 @@ static const struct SpritePalette sSpritePal_Buttons[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_HitEffectHammer[] =
 {
-    {gHitEffectHammerGfx, 64*64/2 , TAG_HIT_EFFECT_HAMMER},
+    {gHitEffectHammerGfx, 64 * 64 / 2 , TAG_HIT_EFFECT_HAMMER},
     {NULL},
 };
 
