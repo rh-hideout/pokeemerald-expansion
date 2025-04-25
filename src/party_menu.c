@@ -7601,6 +7601,7 @@ static void CB2_ChooseContestMon(void)
 // Used as a script special for showing a party mon to various npcs (e.g. in-game trades, move deleter)
 void ChoosePartyMon(void)
 {
+    gSpecialVar_MonBoxId = 0xFF;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChoosePartyMon, 10);
