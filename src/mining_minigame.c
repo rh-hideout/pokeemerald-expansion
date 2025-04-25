@@ -320,7 +320,7 @@ static const struct SpritePalette sSpritePal_Cursor[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Buttons[] =
 {
-    {gButtonGfx, 8192/2 , TAG_BUTTONS},
+    {gButtonGfx, 8192 / 2 , TAG_BUTTONS},
     {NULL},
 };
 
