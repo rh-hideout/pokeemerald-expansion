@@ -2893,6 +2893,10 @@ gCryTable::
 
 	cry Cry_Voliath
 
+	cry Cry_Meower
+
+	cry Cry_Catation
+
 .endif
 
 	.align 2
@@ -5790,4 +5794,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Volbrat
 
 	cry_reverse Cry_Voliath
+	
+	cry_reverse Cry_Meower
+
+	cry_reverse Cry_Catation
 .endif

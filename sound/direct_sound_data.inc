@@ -7090,6 +7090,14 @@ Cry_Volbrat::
 	.align 2	
 Cry_Voliath::
 	.incbin "sound/direct_sound_samples/cries/voliath.bin"
+
+	.align 2	
+Cry_Meower::
+	.incbin "sound/direct_sound_samples/cries/meower.bin"
+
+	.align 2	
+Cry_Catation::
+	.incbin "sound/direct_sound_samples/cries/catation.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -22713,6 +22713,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Virtuita[] = INCBIN_U8("graphics/pokemon/virtuita/icon.4bpp");
    const u8 gMonFootprint_Virtuita[] = INCBIN_U8("graphics/pokemon/virtuita/footprint.1bpp");
 
+   const u32 gMonFrontPic_Meower[] = INCBIN_U32("graphics/pokemon/meower/front.4bpp.lz");
+   const u32 gMonBackPic_Meower[] = INCBIN_U32("graphics/pokemon/meower/back.4bpp.lz");
+   const u32 gMonPalette_Meower[] = INCBIN_U32("graphics/pokemon/meower/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Meower[] = INCBIN_U32("graphics/pokemon/meower/shiny.gbapal.lz");
+   const u8 gMonIcon_Meower[] = INCBIN_U8("graphics/pokemon/meower/icon.4bpp");
+   const u8 gMonFootprint_Meower[] = INCBIN_U8("graphics/pokemon/meower/footprint.1bpp");
+
+   const u32 gMonFrontPic_Catation[] = INCBIN_U32("graphics/pokemon/catation/front.4bpp.lz");
+   const u32 gMonBackPic_Catation[] = INCBIN_U32("graphics/pokemon/catation/back.4bpp.lz");
+   const u32 gMonPalette_Catation[] = INCBIN_U32("graphics/pokemon/catation/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Catation[] = INCBIN_U32("graphics/pokemon/catation/shiny.gbapal.lz");
+   const u8 gMonIcon_Catation[] = INCBIN_U8("graphics/pokemon/catation/icon.4bpp");
+   const u8 gMonFootprint_Catation[] = INCBIN_U8("graphics/pokemon/catation/footprint.1bpp");
+
    const u32 gMonFrontPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/front.4bpp.lz");
    const u32 gMonBackPic_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/back.4bpp.lz");
    const u32 gMonPalette_Yuukiino[] = INCBIN_U32("graphics/pokemon/yuukiino/normal.gbapal.lz");

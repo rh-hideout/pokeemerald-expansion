@@ -2661,6 +2661,8 @@ enum {
     CRY_VOLTOCOR,
     CRY_VOLBRAT,
     CRY_VOLIATH,
+    CRY_MEOWER,
+    CRY_CATATION,
     CRY_COUNT,
 };
 

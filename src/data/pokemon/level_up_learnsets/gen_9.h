@@ -24460,6 +24460,14 @@ static const struct LevelUpMove sVirtuitaLevelUpLearnset[] = {
    LEVEL_UP_MOVE(72, MOVE_BLUE_FLARE),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sMeowerLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sCatationLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sAquadiivaLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_HELPING_HAND),
    LEVEL_UP_MOVE( 1, MOVE_WATERFALL),

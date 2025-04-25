@@ -39043,6 +39043,16 @@ static const u16 sVirtuitaTeachableLearnset[] = {
     MOVE_DEFOG,
     MOVE_UNAVAILABLE,
 };
+static const u16 sMeowerTeachableLearnset[] = {
+    MOVE_GRASS_KNOT,
+    MOVE_SURF,
+    MOVE_UNAVAILABLE,
+};
+static const u16 sCatationTeachableLearnset[] = {
+    MOVE_GRASS_KNOT,
+    MOVE_SURF,
+    MOVE_UNAVAILABLE,
+};
 static const u16 sFirvidTeachableLearnset[] = {
     MOVE_SUPER_FANG,
     MOVE_ICE_FANG,

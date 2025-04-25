@@ -1903,8 +1903,10 @@
 #define SPECIES_VOLTOCOR                                1785
 #define SPECIES_VOLBRAT                                 1786
 #define SPECIES_VOLIATH                                 1787
+#define SPECIES_MEOWER                                  1788
+#define SPECIES_CATATION                                1789
 
-#define SPECIES_EGG (SPECIES_VOLIATH + 1)
+#define SPECIES_EGG (SPECIES_CATATION + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

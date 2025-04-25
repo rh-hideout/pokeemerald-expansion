@@ -6508,6 +6508,8 @@ static const u16 sVirtuitaEggMoveLearnset[] = {
     
 };
 
+////static const u16 sCatationEggMoveLearnset[] = {
+
 static const u16 sCholefirEggMoveLearnset[] = {
     MOVE_GLACIATE,
     MOVE_DRAGON_HAMMER,
