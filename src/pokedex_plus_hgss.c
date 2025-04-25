@@ -49,7 +49,7 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
-
+#include "config/pokedex_plus_hgss.h"
 
 enum
 {
@@ -265,9 +265,6 @@ static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCBIN_U32("grap
 static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin.lz");
 
 #define SCROLLING_MON_X 146
-#define HGSS_DECAPPED FALSE
-#define HGSS_DARK_MODE FALSE
-#define HGSS_HIDE_UNSEEN_EVOLUTION_NAMES FALSE
 
 // For scrolling search parameter
 #define MAX_SEARCH_PARAM_ON_SCREEN   6
@@ -405,7 +402,7 @@ struct PokedexView
     u16 monSpriteIds[MAX_MONS_ON_SCREEN];
     u8 typeIconSpriteIds[2];
     u16 moveSelected;
-    u8 movesTotal;
+    u16 movesTotal;
     u8 statBarsSpriteId;
     u8 statBarsBgSpriteId;
     bool8 justScrolled;
@@ -5066,78 +5063,124 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
     DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
 }
 
+static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *numTutorMoves)
+{
+    u16 i, move;
+    bool8 isTMMove[MOVES_COUNT] = {0};
+    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+
+    // TM Moves
+    if (HGSS_SORT_TMS_BY_NUM)
+    {
+        for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
+        {
+            move = ItemIdToBattleMoveId(ITEM_TM01 + i);
+            if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
+            {
+                isTMMove[move] = TRUE;
+                sStatsMovesTMHM_ID[*numTMHMMoves] = ITEM_TM01 + i;
+                (*numTMHMMoves)++;
+                sStatsMoves[movesTotal] = move;
+                movesTotal++;
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+        {
+            move = teachableLearnset[i];
+            for (u16 j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
+            {
+                if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
+                {
+                    isTMMove[move] = TRUE;
+                    sStatsMovesTMHM_ID[*numTMHMMoves] = ITEM_TM01 + j;
+                    (*numTMHMMoves)++;
+                    sStatsMoves[movesTotal] = move;
+                    movesTotal++;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Tutor Moves
+#if P_TUTOR_MOVES_ARRAY
+    for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
+    {
+        move = gTutorMoves[i];
+        if (!isTMMove[move] && CanLearnTeachableMove(species, move))
+        {
+            sStatsMoves[movesTotal] = move;
+            movesTotal++;
+            (*numTutorMoves)++;
+        }
+    }
+#else
+    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    {
+        move = teachableLearnset[i];
+        if (!isTMMove[move] && CanLearnTeachableMove(species, move))
+        {
+            sStatsMoves[movesTotal] = move;
+            movesTotal++;
+            (*numTutorMoves)++;
+        }
+    }
+#endif
+    return movesTotal;
+}
+
 static bool8 CalculateMoves(void)
 {
     u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
-    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
 
     u16 statsMovesEgg[EGG_MOVES_ARRAY_COUNT] = {0};
     u16 statsMovesLevelUp[MAX_LEVEL_UP_MOVES] = {0};
-    u16 move;
 
     u8 numEggMoves = 0;
     u8 numLevelUpMoves = 0;
     u8 numTMHMMoves = 0;
     u8 numTutorMoves = 0;
     u16 movesTotal = 0;
-    u8 i,j;
+    u8 i;
 
-    // Mega pokemon don't have distinct learnsets from their base form; so use base species for calculation
-    if (species >= SPECIES_VENUSAUR_MEGA && species <= SPECIES_GROUDON_PRIMAL)
+    // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
+    if (gSpeciesInfo[species].isMegaEvolution || gSpeciesInfo[species].isGigantamax)
         species = GetFormSpeciesId(species, 0);
 
-    //Calculate amount of Egg and LevelUp moves
-    numEggMoves = GetEggMovesBySpecies(species, statsMovesEgg);
-    numLevelUpMoves = GetLevelUpMovesBySpecies(species, statsMovesLevelUp);
+    // Egg moves
+    if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
+    {
+        u16 preSpecies = species;
+        while (preSpecies != SPECIES_NONE)
+        {
+            numEggMoves = GetEggMovesBySpecies(preSpecies, statsMovesEgg);
+            preSpecies = GetSpeciesPreEvolution(preSpecies);
+        }
+    }
+    else
+    {
+        numEggMoves = GetEggMovesBySpecies(species, statsMovesEgg);
+    }
 
-    //Egg moves
-    for (i=0; i < numEggMoves; i++)
+    for (i = 0; i < numEggMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesEgg[i];
         movesTotal++;
     }
 
-    //Level up moves
-    for (i=0; i < numLevelUpMoves; i++)
+    // Level up moves
+    numLevelUpMoves = GetLevelUpMovesBySpecies(species, statsMovesLevelUp);
+    for (i = 0; i < numLevelUpMoves; i++)
     {
         sStatsMoves[movesTotal] = statsMovesLevelUp[i];
         movesTotal++;
     }
 
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-    {
-        move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
-        {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-            {
-                sStatsMovesTMHM_ID[numTMHMMoves] = (ITEM_TM01 + j);
-                numTMHMMoves++;
-
-                sStatsMoves[movesTotal] = move;
-                movesTotal++;
-                break;
-            }
-        }
-    }
-
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-    {
-        move = teachableLearnset[i];
-        for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
-        {
-            if (ItemIdToBattleMoveId(ITEM_TM01 + j) == move)
-                break;
-        }
-
-        if (j >= NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
-        {
-            numTutorMoves++;
-
-            sStatsMoves[movesTotal] = move;
-            movesTotal++;
-        }
-    }
+    // TM and Tutor moves
+    movesTotal = AddTMTutorMoves(species, movesTotal, &numTMHMMoves, &numTutorMoves);
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
@@ -5154,8 +5197,8 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 numLevelUpMoves  = sPokedexView->numLevelUpMoves;
     u8 numTMHMMoves     = sPokedexView->numTMHMMoves;
     u8 numTutorMoves    = sPokedexView->numTutorMoves;
-    u8 movesTotal       = sPokedexView->movesTotal;
-    u8 selected         = sPokedexView->moveSelected;
+    u16 movesTotal      = sPokedexView->movesTotal;
+    u16 selected        = sPokedexView->moveSelected;
     u8 level;
     u8 moves_x = 5;
     u8 moves_y = 3;
@@ -5231,7 +5274,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
 {
-    u8 selected = sPokedexView->moveSelected;
+    u16 selected = sPokedexView->moveSelected;
     u16 move;
     u8 moves_x = 5;
     u8 moves_y = 5;

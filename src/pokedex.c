@@ -30,6 +30,7 @@
 #include "window.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "config/pokedex_plus_hgss.h"
 
 enum
 {
