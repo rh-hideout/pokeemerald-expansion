@@ -1649,25 +1649,29 @@ bool8 (*const gMovementActionFuncs_WalkSlowStairsRight[])(struct ObjectEvent *, 
     MovementAction_PauseSpriteAnim,
 };
 
-u8 (*const gMovementActionFuncs_SurfStillDown[])(struct ObjectEvent *, struct Sprite *) = {
+u8 (*const gMovementActionFuncs_SurfStillDown[])(struct ObjectEvent *, struct Sprite *) = 
+{
     MovementAction_SurfStillDown_Step0,
     MovementAction_SurfStillDown_Step1,
     MovementAction_PauseSpriteAnim,
 };
 
-u8 (*const gMovementActionFuncs_SurfStillUp[])(struct ObjectEvent *, struct Sprite *) = {
+u8 (*const gMovementActionFuncs_SurfStillUp[])(struct ObjectEvent *, struct Sprite *) = 
+{
     MovementAction_SurfStillUp_Step0,
     MovementAction_SurfStillUp_Step1,
     MovementAction_PauseSpriteAnim,
 };
 
-u8 (*const gMovementActionFuncs_SurfStillLeft[])(struct ObjectEvent *, struct Sprite *) = {
+u8 (*const gMovementActionFuncs_SurfStillLeft[])(struct ObjectEvent *, struct Sprite *) = 
+{
     MovementAction_SurfStillLeft_Step0,
     MovementAction_SurfStillLeft_Step1,
     MovementAction_PauseSpriteAnim,
 };
 
-u8 (*const gMovementActionFuncs_SurfStillRight[])(struct ObjectEvent *, struct Sprite *) = {
+u8 (*const gMovementActionFuncs_SurfStillRight[])(struct ObjectEvent *, struct Sprite *) = 
+{
     MovementAction_SurfStillRight_Step0,
     MovementAction_SurfStillRight_Step1,
     MovementAction_PauseSpriteAnim,
