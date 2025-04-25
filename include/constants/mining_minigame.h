@@ -9,6 +9,14 @@
 #define MINING_MAX_NUM_BURIED_ITEMS     4
 #define MINING_COUNT_MAX_NUMBER_STONES  2
 
+/*********** SOUNDS ************/
+#define MINING_SE_HIT_HAMMER            SE_M_ROCK_THROW
+#define MINING_SE_HIT_PICKAXE           SE_M_DIG
+#define MINING_SE_HIT_DUG_UP            SE_ICE_STAIRS
+#define MINING_SE_WALL_COLLAPSE         SE_M_EARTHQUAKE
+#define MINING_SE_TOOL_SWITCH           SE_ROTATING_GATE
+#define MINING_SE_ITEM_SPARKLE          SE_RG_CARD_OPEN
+
 /*********** ITEM SPRITE TAGS ************/
 enum 
 {

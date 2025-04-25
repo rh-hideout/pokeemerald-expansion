@@ -11,6 +11,8 @@
 #include "overworld.h"
 #include "malloc.h"
 #include "gba/macro.h"
+#include "gba/m4a_internal.h"
+#include "m4a.h"
 #include "menu_helpers.h"
 #include "menu.h"
 #include "malloc.h"
@@ -66,7 +68,6 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId);
 static void Mining_CheckItemFound(void);
 static void PrintMessage(const u8 *string);
 static void InitMiningWindows(void);
-static u32 GetStressLevelPosition(void);
 static bool32 IsStressLevelMax(void);
 static void EndMining(u8 taskId);
 static u32 ConvertLoadGameStateToItemIndex(void);
@@ -519,10 +520,6 @@ static const union AnimCmd *const gHitPickaxeAnim[] =
     gAnimCmd_EffectPickaxeHit,
     gAnimCmd_EffectPickaxeNotHit,
 };
-
-#define COMFY_X 0
-#define COMFY_Y 1
-
 
 static const struct SpriteTemplate gSpriteCursor =
 {
@@ -2097,6 +2094,7 @@ static void Task_MiningMainInput(u8 taskId)
 {
     if (gMain.newKeys & A_BUTTON && !sMiningUiState->shouldShake)  
     {
+        u32 cursorPos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2) * 12;
         Mining_UpdateTerrain();
         Mining_UpdateStressLevel();
         ScheduleBgCopyTilemapToVram(2);
@@ -2107,10 +2105,35 @@ static void Task_MiningMainInput(u8 taskId)
         {
             sMiningUiState->ShakeHitEffect = CreateSprite(&gSpriteHitEffectHammer, (sMiningUiState->cursorX*16)+8, (sMiningUiState->cursorY*16)+8, 0);
             sMiningUiState->ShakeHitTool = CreateSprite(&gSpriteHitHammer, (sMiningUiState->cursorX*16)+24, sMiningUiState->cursorY*16, 0);
+
+            if (sMiningUiState->layerMap[cursorPos] == 6 && sMiningUiState->itemMap[cursorPos] > 4)
+            {
+                m4aMPlayStop(&gMPlayInfo_SE1);
+                m4aMPlayStop(&gMPlayInfo_SE2);
+                PlayBGM(MINING_SE_HIT_DUG_UP);
+            }
+            else 
+            {
+                m4aMPlayStop(&gMPlayInfo_SE1);
+                m4aMPlayStop(&gMPlayInfo_SE2);
+                PlaySE(MINING_SE_HIT_HAMMER);
+            }
         } else 
         {
             sMiningUiState->ShakeHitEffect = CreateSprite(&gSpriteHitEffectPickaxe, (sMiningUiState->cursorX*16)+8, (sMiningUiState->cursorY*16)+8, 0);
             sMiningUiState->ShakeHitTool = CreateSprite(&gSpriteHitPickaxe, (sMiningUiState->cursorX*16)+24, sMiningUiState->cursorY*16, 0);
+            if (sMiningUiState->layerMap[cursorPos] == 6 && sMiningUiState->itemMap[cursorPos] > 4)
+            {
+                m4aMPlayStop(&gMPlayInfo_SE1);
+                m4aMPlayStop(&gMPlayInfo_SE2);
+                PlayBGM(MINING_SE_HIT_DUG_UP);
+            }
+            else 
+            {
+                m4aMPlayStop(&gMPlayInfo_SE1);
+                m4aMPlayStop(&gMPlayInfo_SE2);
+                PlaySE(MINING_SE_HIT_PICKAXE);
+            }
         }
         sMiningUiState->shouldShake = TRUE;
         CreateTask(MiningUi_Shake, 0);
@@ -2139,18 +2162,23 @@ static void Task_MiningMainInput(u8 taskId)
         StartSpriteAnim(&gSprites[sMiningUiState->bRedSpriteIndex], 1);
         StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex],1);
         sMiningUiState->tool = RED_BUTTON;
+        PlaySE(MINING_SE_TOOL_SWITCH);
     } else if (gMain.newAndRepeatedKeys & L_BUTTON) 
     {
         StartSpriteAnim(&gSprites[sMiningUiState->bRedSpriteIndex], 0);
         StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex], 0);
         sMiningUiState->tool = BLUE_BUTTON;
+        PlaySE(MINING_SE_TOOL_SWITCH);
     }
 
     if (AreAllItemsFound()) 
         EndMining(taskId);
 
     if (IsStressLevelMax())
+    {
         EndMining(taskId);
+        PlaySE(SE_M_EARTHQUAKE);
+    }   
 }
 
 static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr) 
@@ -2684,6 +2712,7 @@ static void HandleItemState(u32 itemId) {
         BeginNormalPaletteFade(1 << (16 + gSprites[sMiningUiState->buriedItems[itemId].spriteId].oam.paletteNum), 2, 16, 0, RGB_WHITE);
         sMiningUiState->buriedItems[itemId].buriedState = stop;
         SetBuriedItemStatus(itemId,TRUE);
+        PlaySE(SE_RG_CARD_OPEN);
     }
 }
 
@@ -2879,10 +2908,14 @@ static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
         // Center hit
         Terrain_UpdateLayerTileOnScreen(ptr,0,0);
         if (sMiningUiState->tool == BLUE_BUTTON) 
+        {
             Terrain_UpdateLayerTileOnScreen(ptr,0,0);
+        }
         return 0;
     } else 
+    {
         return 1;
+    }
 }
 
 static void Terrain_Hammer_OverwriteTiles(u16* ptr) 
@@ -2915,6 +2948,7 @@ static void Terrain_Hammer_OverwriteTiles(u16* ptr)
 static void Mining_UpdateTerrain(void) 
 {
     u16* ptr = GetBgTilemapBuffer(2);
+
     switch (sMiningUiState->tool) 
     {
         case RED_BUTTON:
