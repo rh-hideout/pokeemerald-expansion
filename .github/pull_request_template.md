@@ -21,13 +21,11 @@
 ## Issue(s) that this PR fixes
 <!-- Format: "Fixes #2345, fixes #4523, closes #2222." Remove this section if not applicable.-->
 
-## People who collaborated with me in this PR
-<!-- Credit anyone who helped with this PR. -->
-<!-- Use their GitHub tag if they have one (or add "@/" at the start if they don't). The line must start with @. -->
-<!-- Eg.: "@Lunos for sprites, @/Masuda for support" -->
-<!-- If it doesn't apply, feel free to remove this section. -->
-<!-- Make sure you and your collaborators are added to `CREDITS.md` by tagging the bot on GitHub. EVERY contribution matters! -->
-<!-- https://allcontributors.org/docs/en/bot/usage -->
+<!-- CREDITS -->
+<!-- Once your PR is submitted, leave a comment asking the bot to add you to the credits. -->
+<!-- If anybody helped with this PR, please encourage them to comment on your PR and ask the bot to add them to the credits. -->
+<!-- EVERY contribution matters! -->
+<!-- https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions -->
 
 ## Feature(s) this PR does NOT handle:
 <!-- If this PR contains any unfinished and non-blocking work, please list them here for clarity. -->
