@@ -45,6 +45,7 @@ def handle_file(fileInput):
                         line = line.replace("u32", "u16")
                         if "INCBIN_U32" in line:
                             line = line.replace("INCBIN_U32", "INCBIN_U16")
+                            line = line.replace(".lz", "")
                         break
             else:
                 pass
