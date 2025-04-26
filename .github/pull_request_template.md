@@ -36,6 +36,6 @@
 <!--- Remove this section if not applicable. --->
 
 ## Discord contact info
-<!-- Add your Discord username for any follow-up questions (e.g., Lunos#1234). -->
-<!--- Remove this section if not applicable. --->
+<!-- Add your Discord username for any follow-up questions (e.g., pcg06). -->
+<!-- If you have created a discussion thread, this is a good place to link it. -->
 <!--- Contributors must join https://discord.gg/6CzjAG6GZk -->
