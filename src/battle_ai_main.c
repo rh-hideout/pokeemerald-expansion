@@ -280,6 +280,10 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
     else
         ret = ChooseMoveOrAction_Doubles(battler);
 
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && ret < MAX_MON_MOVES) {
+        ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[ret]));
+    }
+
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
     memset(&gProtectStructs, 0, MAX_BATTLERS_COUNT * sizeof(struct ProtectStruct));
@@ -287,6 +291,14 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
     TestRunner_Battle_CheckAiMoveScores(battler);
     #endif // TESTING
     return ret;
+}
+
+void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u32 move) {
+    // After choosing a move assuming that a gimmick will be used, reconsider whether the gimmick is necassary.
+
+    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_NONE && !ShouldUseZMove(battlerAtk, battlerDef, move)) {
+        gBattleStruct->aiUsingGimmick[battler] = FALSE;
+    }
 }
 
 static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
@@ -395,6 +407,7 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
+    gBattleStruct->aiUsingGimmick[battler] = TRUE;
 }
 
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
