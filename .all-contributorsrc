@@ -1,0 +1,126 @@
+{
+  "projectName": "pokeemerald-expansion",
+  "projectOwner": "rh-hideout",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "CREDITS.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "AgustinGDLV",
+      "name": "AgustinGDLV",
+      "avatar_url": "https://avatars.githubusercontent.com/u/103095241?v=4",
+      "profile": "https://github.com/AgustinGDLV",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "AlexOn1ine",
+      "name": "Alex",
+      "avatar_url": "https://avatars.githubusercontent.com/u/93446519?v=4",
+      "profile": "https://github.com/AlexOn1ine",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "Bassoonian",
+      "name": "Bassoonian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16993385?v=4",
+      "profile": "https://github.com/Bassoonian",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "DizzyEggg",
+      "name": "DizzyEggg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16259973?v=4",
+      "profile": "https://github.com/DizzyEggg",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "ghoulslash",
+      "name": "ghoulslash",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41651341?v=4",
+      "profile": "https://github.com/ghoulslash",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "hedara90",
+      "name": "hedara90",
+      "avatar_url": "https://avatars.githubusercontent.com/u/149414898?v=4",
+      "profile": "https://github.com/hedara90",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "mrgriffin",
+      "name": "Martin Griffin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/838573?v=4",
+      "profile": "http://www.martin-griffin.com/",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "Pawkkie",
+      "name": "Pawkkie",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61265402?v=4",
+      "profile": "https://github.com/Pawkkie",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "SBird1337",
+      "name": "Philipp AUER",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3799173?v=4",
+      "profile": "https://github.com/SBird1337",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "tertu-m",
+      "name": "tertu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/836640?v=4",
+      "profile": "https://github.com/tertu-m",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "pkmnsnfrn",
+      "name": "psf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/77138753?v=4",
+      "profile": "https://linktr.ee/pkmnsnfrn",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": true
+}
