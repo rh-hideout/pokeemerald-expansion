@@ -3202,7 +3202,7 @@ BattleScript_StatDownEnd::
 BattleScript_MirrorArmorReflect::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	jumpifsubstituteblocks BattleScript_AbilityNoSpecificStatLoss
+	jumpifstatus2 BS_ATTACKER, STATUS2_SUBSTITUTE, BattleScript_MirrorArmorDoesntAffect
 BattleScript_MirrorArmorReflectStatLoss:
 	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_MIRROR_ARMOR | STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_MirrorArmorReflectEnd
 	jumpifbyte CMP_LESS_THAN, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_MirrorArmorReflectAnim
@@ -3214,6 +3214,13 @@ BattleScript_MirrorArmorReflectPrintString:
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_MirrorArmorReflectEnd:
+	return
+
+BattleScript_MirrorArmorDoesntAffect:
+	swapattackerwithtarget
+	printstring STRINGID_ITDOESNTAFFECT
+	waitmessage B_WAIT_TIME_LONG
+	swapattackerwithtarget
 	return
 
 BattleScript_MirrorArmorReflectWontFall:
