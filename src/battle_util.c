@@ -8971,9 +8971,14 @@ static inline uq4_12_t GetGlaiveRushModifier(u32 battlerDef)
 
 static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageCalculationData *damageCalcData)
 {
+    u32 protected = gProtectStructs[damageCalcData->battlerDef].protected;
     if ((IsZMove(damageCalcData->move) || IsMaxMove(damageCalcData->move))
-     && gProtectStructs[damageCalcData->battlerDef].protected != PROTECT_NONE
-     && gProtectStructs[damageCalcData->battlerDef].protected != PROTECT_MAX_GUARD)
+     && protected != PROTECT_NONE
+     && protected != PROTECT_WIDE_GUARD
+     && protected != PROTECT_QUICK_GUARD
+     && protected != PROTECT_CRAFTY_SHIELD
+     && protected != PROTECT_MAT_BLOCK
+     && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
 }
