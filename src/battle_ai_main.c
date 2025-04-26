@@ -265,9 +265,25 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
+void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move) {
+    // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necassary.
+
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) {
+        gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
+    }
+
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) {
+        gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
+    }
+}
+
 u32 BattleAI_ChooseMoveOrAction(u32 battler)
 {
     u32 ret;
+
+    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) {
+        DecideTerrastal(battler);
+    }
 
     if (!IsDoubleBattle())
         ret = ChooseMoveOrAction_Singles(battler);
@@ -275,7 +291,7 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
         ret = ChooseMoveOrAction_Doubles(battler);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && ret < MAX_MON_MOVES) {
-        ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[ret]));
+        ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[ret]);
     }
 
     // Clear protect structures, some flags may be set during AI calcs
@@ -285,14 +301,6 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
     TestRunner_Battle_CheckAiMoveScores(battler);
     #endif // TESTING
     return ret;
-}
-
-void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u32 move) {
-    // After choosing a move assuming that a gimmick will be used, reconsider whether the gimmick is necassary.
-
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_NONE && !ShouldUseZMove(battlerAtk, battlerDef, move)) {
-        gBattleStruct->aiUsingGimmick[battler] = FALSE;
-    }
 }
 
 static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
@@ -433,7 +441,7 @@ static void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u
             continue;
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, FALSE, weather);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
