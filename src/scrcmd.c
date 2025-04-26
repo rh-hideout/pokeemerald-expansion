@@ -3148,7 +3148,7 @@ bool8 ScrCmd_addtime(struct ScriptContext *ctx)
     u32 hours = ScriptReadWord(ctx);
     u32 minutes = ScriptReadWord(ctx);
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_AdvanceTimeBy(days, hours, minutes, 0);
 
@@ -3159,7 +3159,7 @@ bool8 ScrCmd_adddays(struct ScriptContext *ctx)
 {
     u32 days = ScriptReadWord(ctx);
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_AdvanceTimeBy(days, 0, 0, 0);
 
@@ -3170,7 +3170,7 @@ bool8 ScrCmd_addhours(struct ScriptContext *ctx)
 {
     u32 hours = ScriptReadWord(ctx);
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_AdvanceTimeBy(0, hours, 0, 0);
 
@@ -3181,7 +3181,7 @@ bool8 ScrCmd_addminutes(struct ScriptContext *ctx)
 {
     u32 minutes = ScriptReadWord(ctx);
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_AdvanceTimeBy(0, 0, minutes, 0);
 
@@ -3193,7 +3193,7 @@ bool8 ScrCmd_fwdtime(struct ScriptContext *ctx)
     u32 hours = ScriptReadWord(ctx);
     u32 minutes = ScriptReadWord(ctx);
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_ForwardTimeTo(hours, minutes, 0);
 
@@ -3208,7 +3208,7 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     u32 daysToAdd;
     daysToAdd = ((weekdayTarget - rtc->dayOfWeek) + 7) % 7;
     
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
     return FALSE;

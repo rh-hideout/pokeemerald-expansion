@@ -2308,6 +2308,10 @@
 	callnative ScriptSetDoubleBattleFlag, requests_effects=1
 	.endm
 
+	@ ============================ @
+	@ FAKE RTC MACROS
+	@ Will only function if OW_USE_FAKE_RTC is true. If it has any additional requirements, it will be listed accordingly.
+	
 	@ When OW_USE_FAKE_RTC is true and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
 	.macro pausefakertc
 	callnative Script_PauseFakeRtc, requests_effects=1
@@ -2325,42 +2329,41 @@
 
 	@ When OW_USE_FAKE_RTC is true, adds a specified amount of time.
 	.macro addtime days:req, hours:req, minutes:req
-	callnative ScrCmd_addtime
+	callnative ScrCmd_addtime, requests_effects=1
 	.4byte \days
 	.4byte \hours
 	.4byte \minutes
 	.endm
 
-	@ Adds a specified number of days to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days to the time. 
 	.macro adddays days:req
-	callnative ScrCmd_adddays
+	callnative ScrCmd_adddays, requests_effects=1
 	.4byte \days
 	.endm
 
-	@ Adds a specified number of days, hours, and minutes to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
 	.macro addhours hours:req
-	callnative ScrCmd_addhours
+	callnative ScrCmd_addhours, requests_effects=1
 	.4byte \hours
 	.endm
 
-	@ Adds a specified number of days, hours, and minutes to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
 	.macro addminutes minutes:req
-	callnative ScrCmd_addminutes
+	callnative ScrCmd_addminutes, requests_effects=1
 	.4byte \minutes
 	.endm
 
 	@ Forwards the time to a specified hour and minute. 
 	@ This causes the time to go to the next day if the time has already been past. 
 	.macro fwdtime hours:req, minutes:req
-	callnative ScrCmd_fwdtime
+	callnative ScrCmd_fwdtime, requests_effects=1
 	.4byte \hours
 	.4byte \minutes
 	.endm
 
-	@ Forwards the time to a specified day of the week. Uses a 0-index starting from Monday.
-	@ This causes the time to go to the next day if the time has already been past. 
+	@ Forwards the time to a specified day of the week. Uses a 0-index starting from Sunday.
 	.macro fwdweekday weekday:req
-	callnative ScrCmd_fwdweekday
+	callnative ScrCmd_fwdweekday, requests_effects=1
 	.4byte \weekday
 	.endm
 
