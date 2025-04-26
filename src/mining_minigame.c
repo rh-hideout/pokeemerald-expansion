@@ -2912,11 +2912,10 @@ static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
 
 static void Terrain_Hammer_OverwriteTiles(u16* ptr)
 {
-    u8 isItemDugUp;
-    u8 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY - 2) * 12;
+    bool32 isItemDugUp = Terrain_Pickaxe_OverwriteTiles(ptr);
+    u32 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY - 2) * 12;
 
-    isItemDugUp = Terrain_Pickaxe_OverwriteTiles(ptr);
-    if (isItemDugUp == 0)
+    if (!isItemDugUp)
     {
         // Corners
         // We have to add '2' to '7' and '0', because the cursor spawns at Y position 2
