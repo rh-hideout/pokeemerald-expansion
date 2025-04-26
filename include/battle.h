@@ -906,10 +906,6 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
 }
 
 #define IS_BATTLER_PROTECTED(battlerId)(gProtectStructs[battlerId].protected                                           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_WIDE_GUARD           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_QUICK_GUARD          \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_CRAFTY_SHIELD        \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_MAT_BLOCK            \
                                         || gProtectStructs[battlerId].spikyShielded                                    \
                                         || gProtectStructs[battlerId].kingsShielded                                    \
                                         || gProtectStructs[battlerId].banefulBunkered                                  \
@@ -1294,5 +1290,12 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
 }
 
-#endif // GUARD_BATTLE_H
+static inline bool32 IsBattlerSideProtected(u32 battler)
+{
+    return gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_WIDE_GUARD
+                                                   | SIDE_STATUS_QUICK_GUARD
+                                                   | SIDE_STATUS_CRAFTY_SHIELD
+                                                   | SIDE_STATUS_MAT_BLOCK);
+}
 
+#endif // GUARD_BATTLE_H
