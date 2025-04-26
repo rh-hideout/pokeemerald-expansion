@@ -2744,11 +2744,11 @@ static void Task_OnSelectedMon(u8 taskId)
         case MENU_SELECT:
             PlaySE(SE_SELECT);
             if (sInPartyMenu)
-                VarSet(VAR_RESULT, GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES));
+                gSpecialVar_Result = GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES);
             else
             {
-                VarSet(VAR_RESULT, GetBoxMonDataAt(sStorage->newCurrBoxId, sCursorPosition, MON_DATA_SPECIES));
-                gSpecialVar_MonBoxId = sStorage->newCurrBoxId;
+                gSpecialVar_Result = GetBoxMonDataAt(StorageGetCurrentBox(), sCursorPosition, MON_DATA_SPECIES);
+                gSpecialVar_MonBoxId = StorageGetCurrentBox();
                 gSpecialVar_MonBoxPos = sCursorPosition;
             }
             gSpecialVar_0x8004 = sCursorPosition;
