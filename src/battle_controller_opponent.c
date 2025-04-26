@@ -569,9 +569,7 @@ static void OpponentHandleChooseMove(u32 battler)
                             gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
                     }
                     // If opponent can and should use a gimmick (considering trainer data), do it
-                    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
-                     && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
-                     && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveId])))
+                    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && gBattleStruct->aiUsingGimmick[battler] == TRUE)
                     {
                         BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (RET_GIMMICK) | (gBattlerTarget << 8));
                     }
