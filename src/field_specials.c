@@ -1566,7 +1566,10 @@ u8 GetLeadMonIndex(void)
 
 u16 ScriptGetPartyMonSpecies(void)
 {
-    return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG);
+    else
+        return GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
 }
 
 // Removed for Emerald
@@ -1994,12 +1997,22 @@ void BufferVarsForIVRater(void)
     u8 i;
     u32 ivStorage[NUM_STATS];
 
-    ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
-    ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
-    ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
-    ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
-    ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
-    ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    if(gSpecialVar_MonBoxId == 0xFF){
+        ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    }
+    else{
+        ivStorage[STAT_HP] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPDEF_IV);
+    }
 
     gSpecialVar_0x8005 = 0;
 
@@ -2807,7 +2820,11 @@ void ShowNatureGirlMessage(void)
     if (gSpecialVar_0x8004 >= PARTY_SIZE)
         gSpecialVar_0x8004 = 0;
 
-    nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    else
+        nature = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PERSONALITY) % NUM_NATURES;
+    
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 

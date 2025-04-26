@@ -3290,16 +3290,28 @@ static void ChangeBoxPokemonNickname_CB(void)
 
 void BufferMonNickname(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    else
+        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
     StringGet_Nickname(gStringVar1);
 }
 
 void IsMonOTIDNotPlayers(void)
 {
-    if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
-        gSpecialVar_Result = FALSE;
-    else
-        gSpecialVar_Result = TRUE;
+    if(gSpecialVar_MonBoxId == 0xFF){
+        if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+    else{
+        if (GetPlayerIDAsU32() == GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_OT_ID))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+
 }
 
 static u8 GetTVGroupByShowId(u8 kind)

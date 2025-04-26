@@ -470,6 +470,7 @@ static void Task_ChooseMonForMoveRelearner(u8);
 static void CB2_ChooseMonForMoveRelearner(void);
 static void Task_BattlePyramidChooseMonHeldItems(u8);
 static void ShiftMoveSlot(struct Pokemon *, u8, u8);
+static void ShiftMoveSlotBoxMon(u8, u8);
 static void BlitBitmapToPartyWindow_LeftColumn(u8, u8, u8, u8, u8, bool8);
 static void BlitBitmapToPartyWindow_RightColumn(u8, u8, u8, u8, u8, bool8);
 static void CursorCb_Summary(u8);
@@ -7681,7 +7682,10 @@ static void Task_BattlePyramidChooseMonHeldItems(u8 taskId)
 
 void MoveDeleterChooseMoveToForget(void)
 {
-    ShowPokemonSummaryScreen(SUMMARY_MODE_SELECT_MOVE, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, CB2_ReturnToField);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        ShowPokemonSummaryScreen(SUMMARY_MODE_SELECT_MOVE, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, CB2_ReturnToField);
+    else
+        ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, 29, CB2_ReturnToField);
     gFieldCallback = FieldCB_ContinueScriptHandleMusic;
 }
 
@@ -7692,17 +7696,32 @@ void GetNumMovesSelectedMonHas(void)
     gSpecialVar_Result = 0;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + i) != MOVE_NONE)
-            gSpecialVar_Result++;
+        if(gSpecialVar_MonBoxId == 0xFF){
+            if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + i) != MOVE_NONE)
+                gSpecialVar_Result++;
+        }
+        else{
+            if (GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + i) != MOVE_NONE)
+                gSpecialVar_Result++;
+        }
     }
 }
 
 void BufferMoveDeleterNicknameAndMove(void)
 {
-    struct Pokemon *mon = &gPlayerParty[gSpecialVar_0x8004];
-    u16 move = GetMonData(mon, MON_DATA_MOVE1 + gSpecialVar_0x8005);
+    u16 move = 0;
+    if(gSpecialVar_MonBoxId == 0xFF){
+        struct Pokemon *mon = &gPlayerParty[gSpecialVar_0x8004];
+        move = GetMonData(mon, MON_DATA_MOVE1 + gSpecialVar_0x8005);
 
-    GetMonNickname(mon, gStringVar1);
+        GetMonNickname(mon, gStringVar1);
+    }
+    else{
+        move = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + gSpecialVar_0x8005);
+
+        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+    }
+
     StringCopy(gStringVar2, GetMoveName(move));
 }
 
@@ -7710,10 +7729,23 @@ void MoveDeleterForgetMove(void)
 {
     u16 i;
 
-    SetMonMoveSlot(&gPlayerParty[gSpecialVar_0x8004], MOVE_NONE, gSpecialVar_0x8005);
-    RemoveMonPPBonus(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005);
-    for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
-        ShiftMoveSlot(&gPlayerParty[gSpecialVar_0x8004], i, i + 1);
+    if(gSpecialVar_MonBoxId == 0xFF){
+        SetMonMoveSlot(&gPlayerParty[gSpecialVar_0x8004], MOVE_NONE, gSpecialVar_0x8005);
+        RemoveMonPPBonus(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005);
+        for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
+            ShiftMoveSlot(&gPlayerParty[gSpecialVar_0x8004], i, i + 1);
+    }
+    else{
+        i = MOVE_NONE;
+        SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + gSpecialVar_0x8005, &i);
+        //SetBoxMonData(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], MON_DATA_MOVE1 + gSpecialVar_0x8005, MOVE_POUND);
+        SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + gSpecialVar_0x8005, &gMovesInfo[MOVE_NONE].pp);
+        u8 ppBonuses = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES);
+        ppBonuses &= gPPUpClearMask[gSpecialVar_0x8005];
+        SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES, &ppBonuses);
+        for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
+            ShiftMoveSlotBoxMon(i, i + 1);
+    }
 }
 
 static void ShiftMoveSlot(struct Pokemon *mon, u8 slotTo, u8 slotFrom)
@@ -7735,6 +7767,27 @@ static void ShiftMoveSlot(struct Pokemon *mon, u8 slotTo, u8 slotFrom)
     SetMonData(mon, MON_DATA_PP1 + slotTo, &pp0);
     SetMonData(mon, MON_DATA_PP1 + slotFrom, &pp1);
     SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
+}
+
+static void ShiftMoveSlotBoxMon( u8 slotTo, u8 slotFrom)
+{
+    u16 move1 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotTo);
+    u16 move0 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotFrom);
+    u8 pp1 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotTo);
+    u8 pp0 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotFrom);
+    u8 ppBonuses = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES);
+    u8 ppBonusMask1 = gPPUpGetMask[slotTo];
+    u8 ppBonusMove1 = (ppBonuses & ppBonusMask1) >> (slotTo * 2);
+    u8 ppBonusMask2 = gPPUpGetMask[slotFrom];
+    u8 ppBonusMove2 = (ppBonuses & ppBonusMask2) >> (slotFrom * 2);
+    ppBonuses &= ~ppBonusMask1;
+    ppBonuses &= ~ppBonusMask2;
+    ppBonuses |= (ppBonusMove1 << (slotFrom * 2)) + (ppBonusMove2 << (slotTo * 2));
+    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotTo, &move0);
+    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotFrom, &move1);
+    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotTo, &pp0);
+    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotFrom, &pp1);
+    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
 void IsSelectedMonEgg(void)
@@ -7760,7 +7813,11 @@ void IsLastMonThatKnowsSurf(void)
     u32 i, j;
 
     gSpecialVar_Result = FALSE;
-    move = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + gSpecialVar_0x8005);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        move = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + gSpecialVar_0x8005);
+    else
+        move = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + gSpecialVar_0x8005);
+
     if (move == MOVE_SURF)
     {
         for (i = 0; i < CalculatePlayerPartyCount(); i++)
