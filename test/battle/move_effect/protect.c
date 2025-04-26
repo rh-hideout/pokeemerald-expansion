@@ -564,7 +564,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't max move demage", s16 damage)
+SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Max Move demage", s16 damage)
 {
     s16 dmg[2];
     u32 move;
@@ -587,7 +587,7 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't max
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce z move demage", s16 damage)
+SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage", s16 damage)
 {
     bool32 protected;
     u32 move;
@@ -603,7 +603,6 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -615,5 +614,7 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[2].damage, results[3].damage);
+        EXPECT_EQ(results[4].damage, results[5].damage);
     }
 }
