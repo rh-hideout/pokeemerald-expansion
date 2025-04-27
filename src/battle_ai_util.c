@@ -4502,7 +4502,8 @@ void DecideTerastal(u32 battler)
         {
             goto yes_tera;
         }
-        else {
+        else 
+        {
             // will we go first?
             if (AI_WhoStrikesFirst(battler, battlerOpponent, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, AI_DATA->abilities[battler], killingMove) >= GetBattleMovePriority(battlerOpponent, AI_DATA->abilities[battlerOpponent], hardPunishingMove)) 
                 goto yes_tera;
