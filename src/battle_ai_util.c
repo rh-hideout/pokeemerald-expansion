@@ -4345,7 +4345,6 @@ void DecideTerastal(u32 battler)
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
         return;
     
-
     if (!(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         return;
     
@@ -4353,11 +4352,10 @@ void DecideTerastal(u32 battler)
     if (IsDoubleBattle())    
         return; 
     
-
     // TODO: A lot of these checks are most effective for an omnicient ai. 
     // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
 
-    u32 battlerOpponent = BATTLE_OPPOSITE(battler);
+    u32 battlerOpponent = GetOppositeBattler(battler);
 
     // Default calculations automatically assume gimmicks for the attacker, but not the defender.
     // Consider calcs for the other possibilities.
@@ -4414,7 +4412,7 @@ void DecideTerastal(u32 battler)
     }
 
     // Check whether tera enables a KO
-    bool8 hasKoWithout = FALSE;
+    bool32 hasKoWithout = FALSE;
     u16 killingMove = MOVE_NONE;
 
     for (int i = 0; i < MAX_MON_MOVES; i++) 
@@ -4429,11 +4427,11 @@ void DecideTerastal(u32 battler)
             hasKoWithout = TRUE;
     }
 
-    bool8 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
+    bool32 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
 
     // Check whether tera saves us from a KO
-    bool8 savedFromKo = FALSE; 
-    bool8 getsKodRegardlessBySingleMove = FALSE;
+    bool32 savedFromKo = FALSE; 
+    bool32 getsKodRegardlessBySingleMove = FALSE;
 
     for (int i = 0; i < MAX_MON_MOVES; i++) 
     {
@@ -4461,8 +4459,8 @@ void DecideTerastal(u32 battler)
 
     // Check whether there is a move that deals over half hp, and all such moves are reduced to under 1/4 hp by tera
     // (e.g. a weakness becomes a resistance, a 4x weakness becomes neutral, etc)
-    bool8 takesBigHit = FALSE;
-    bool8 savedFromAllBigHits = TRUE;
+    bool32 takesBigHit = FALSE;
+    bool32 savedFromAllBigHits = TRUE;
     for (int i = 0; i < MAX_MON_MOVES; i++) 
     {
         if (takenWithoutTera[i].median > myHp/2) 
@@ -4474,15 +4472,15 @@ void DecideTerastal(u32 battler)
     }
 
     // Check for any benefit whatsoever. Only used for the last possible mon that could tera.
-    bool8 anyOffensiveBenefit = FALSE;
+    bool32 anyOffensiveBenefit = FALSE;
     for (int i = 0; i < MAX_MON_MOVES; i++) 
     {
         if (dealtWithTera[i].median > dealtWithoutTera[i].median) 
             anyOffensiveBenefit = TRUE;
     }  
 
-    bool8 anyDefensiveBenefit = FALSE;
-    bool8 anyDefensiveDrawback = FALSE; 
+    bool32 anyDefensiveBenefit = FALSE;
+    bool32 anyDefensiveDrawback = FALSE; 
     for (int i = 0; i < MAX_MON_MOVES; i++) 
     {
         if (takenWithTera[i].median < takenWithoutTera[i].median) 
