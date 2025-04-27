@@ -410,14 +410,14 @@ struct SpeciesInfo /*0xC4*/
     const union AnimCmd *const *frontAnimFrames;
     const u32 *frontPic;
     const u32 *backPic;
-    const u32 *palette;
-    const u32 *shinyPalette;
+    const u16 *palette;
+    const u16 *shinyPalette;
     const u8 *iconSprite;
 #if P_GENDER_DIFFERENCES
     const u32 *frontPicFemale;
     const u32 *backPicFemale;
-    const u32 *paletteFemale;
-    const u32 *shinyPaletteFemale;
+    const u16 *paletteFemale;
+    const u16 *shinyPaletteFemale;
     const u8 *iconSpriteFemale;
 #endif //P_GENDER_DIFFERENCES
 #if P_FOOTPRINTS
@@ -773,9 +773,9 @@ u16 GetBattleBGM(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 void CreateTask_PlayMapChosenOrBattleBGM(u16 songId);
-const u32 *GetMonFrontSpritePal(struct Pokemon *mon);
-const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
-const u32 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
+const u16 *GetMonFrontSpritePal(struct Pokemon *mon);
+const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
+const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
 bool8 IsMoveHM(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
