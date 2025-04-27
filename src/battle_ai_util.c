@@ -721,7 +721,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
     }
 
-    SetMoveDamageCategory(battlerAtk, battlerDef, move);
+    SetDynamicMoveCategory(battlerAtk, battlerDef, move);
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
     effectivenessMultiplier = CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerDef, aiData->abilities[battlerDef], FALSE);
@@ -4381,9 +4381,9 @@ void DecideTerastal(u32 battler)
             dealtWithoutTera[i] = noDmg;
         
 
-        if (!IsMoveUnusable(i, opponentsMoves[i], AI_DATA->moveLimitations[battlerOpponent]) && !IsBattleMoveStatus(opponentsMoves[i]))  {
-            takenWithTera[i] = AI_CalcDamage(opponentsMoves[i], battlerOpponent, battler, &effectiveness, TRUE, TRUE, AI_GetWeather());
+        if (!IsMoveUnusable(i, opponentsMoves[i], AI_DATA->moveLimitations[battlerOpponent]) && !IsBattleMoveStatus(opponentsMoves[i]))  
         {
+            takenWithTera[i] = AI_CalcDamage(opponentsMoves[i], battlerOpponent, battler, &effectiveness, TRUE, TRUE, AI_GetWeather());
             effectivenessTakenWithTera[i] = effectiveness;
         }
         else 
@@ -4422,7 +4422,7 @@ void DecideTerastal(u32 battler)
         if (dealtWithTera[i].median >= oppHp) 
         {
             u16 move = myMoves[i];
-            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, move) > GetBattleMovePriority(battler, killingMove))
+            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, AI_DATA->abilities[battler], move) > GetBattleMovePriority(battler, AI_DATA->abilities[battler], killingMove))
                 killingMove = move;
         } 
         if (dealtWithoutTera[i].median >= oppHp) 
@@ -4454,7 +4454,7 @@ void DecideTerastal(u32 battler)
         if (takenWithTera[i].maximum >= myHp) 
         {
             u16 move = opponentsMoves[i];
-            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(battlerOpponent, move) > GetBattleMovePriority(battlerOpponent, hardPunishingMove)) 
+            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(battlerOpponent, AI_DATA->abilities[battlerOpponent], move) > GetBattleMovePriority(battlerOpponent, AI_DATA->abilities[battlerOpponent], hardPunishingMove)) 
                 hardPunishingMove = move;
         }
     }
@@ -4504,7 +4504,7 @@ void DecideTerastal(u32 battler)
         }
         else {
             // will we go first?
-            if (AI_WhoStrikesFirst(battler, battlerOpponent, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, killingMove) >= GetBattleMovePriority(battlerOpponent, hardPunishingMove)) 
+            if (AI_WhoStrikesFirst(battler, battlerOpponent, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, AI_DATA->abilities[battler], killingMove) >= GetBattleMovePriority(battlerOpponent, AI_DATA->abilities[battlerOpponent], hardPunishingMove)) 
                 goto yes_tera;
         }
     }
