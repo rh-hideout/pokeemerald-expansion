@@ -4342,18 +4342,17 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
 void DecideTerastal(u32 battler)
 {
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) {
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
         return;
-    }
+    
 
-    if (!(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) {
+    if (!(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         return;
-    }
-
-    if (IsDoubleBattle()) {
-        // TODO: Currently only single battles are considered.
+    
+    // TODO: Currently only single battles are considered.
+    if (IsDoubleBattle())    
         return; 
-    }
+    
 
     // TODO: A lot of these checks are most effective for an omnicient ai. 
     // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
@@ -4374,24 +4373,21 @@ void DecideTerastal(u32 battler)
 
     uq4_12_t effectiveness;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (myMoves[i] != MOVE_NONE 
-           && myMoves[i] != MOVE_UNAVAILABLE
-            && !IsBattleMoveStatus(myMoves[i]) 
-            && !(AI_DATA->moveLimitations[battler] & (1u << i))) {
-            dealtWithoutTera[i] = AI_CalcDamage(myMoves[i], battler, battlerOpponent, &effectiveness, FALSE, FALSE, AI_GetWeather(), DMG_ROLL_DEFAULT);
-        }
-        else {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (!IsMoveUnusable(i, myMoves[i], AI_DATA->moveLimitations[battler]) && !IsBattleMoveStatus(myMoves[i])) 
+            dealtWithoutTera[i] = AI_CalcDamage(myMoves[i], battler, battlerOpponent, &effectiveness, FALSE, FALSE, AI_GetWeather());
+        else 
             dealtWithoutTera[i] = noDmg;
-        }
-        if (opponentsMoves[i] != MOVE_NONE 
-           && opponentsMoves[i] != MOVE_UNAVAILABLE
-            && !IsBattleMoveStatus(opponentsMoves[i]) 
-            && !(AI_DATA->moveLimitations[battlerOpponent] & (1u << i))) {
-            takenWithTera[i] = AI_CalcDamage(opponentsMoves[i], battlerOpponent, battler, &effectiveness, TRUE, TRUE, AI_GetWeather(), DMG_ROLL_HIGHEST);
+        
+
+        if (!IsMoveUnusable(i, opponentsMoves[i], AI_DATA->moveLimitations[battlerOpponent]) && !IsBattleMoveStatus(opponentsMoves[i]))  {
+            takenWithTera[i] = AI_CalcDamage(opponentsMoves[i], battlerOpponent, battler, &effectiveness, TRUE, TRUE, AI_GetWeather());
+        {
             effectivenessTakenWithTera[i] = effectiveness;
         }
-        else {
+        else 
+        {
             takenWithTera[i] = noDmg;
             effectivenessTakenWithTera[i] = Q_4_12(0.0);
         }
@@ -4408,29 +4404,29 @@ void DecideTerastal(u32 battler)
 
     // Check how many pokemon we have that could tera
     int numPossibleTera = 0; 
-    for (int i = 0; i < PARTY_SIZE; i++) {
+    for (int i = 0; i < PARTY_SIZE; i++) 
+    {
         if ( GetMonData(&party[i], MON_DATA_HP) != 0
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) {
+         && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) 
             numPossibleTera++;
-         }
     }
 
     // Check whether tera enables a KO
     bool8 hasKoWithout = FALSE;
     u16 killingMove = MOVE_NONE;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (dealtWithTera[i].median >= oppHp) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (dealtWithTera[i].median >= oppHp) 
+        {
             u16 move = myMoves[i];
-            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, move) > GetBattleMovePriority(battler, killingMove)){
+            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, move) > GetBattleMovePriority(battler, killingMove))
                 killingMove = move;
-            }
         } 
-        if (dealtWithoutTera[i].median >= oppHp) {
+        if (dealtWithoutTera[i].median >= oppHp) 
             hasKoWithout = TRUE;
-        } 
     }
 
     bool8 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
@@ -4439,27 +4435,27 @@ void DecideTerastal(u32 battler)
     bool8 savedFromKo = FALSE; 
     bool8 getsKodRegardlessBySingleMove = FALSE;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (takenWithoutTera[i].maximum >= myHp && takenWithTera[i].maximum >= myHp) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithoutTera[i].maximum >= myHp && takenWithTera[i].maximum >= myHp) 
             getsKodRegardlessBySingleMove = TRUE;
-        } 
-        if (takenWithoutTera[i].maximum >= myHp && takenWithTera[i].maximum < myHp) {
+
+        if (takenWithoutTera[i].maximum >= myHp && takenWithTera[i].maximum < myHp) 
             savedFromKo = TRUE;
-        } 
     }
 
-    if (getsKodRegardlessBySingleMove) {
+    if (getsKodRegardlessBySingleMove)
         savedFromKo = FALSE;
-    }
 
     // Check whether opponent can punish tera by ko'ing 
     u16 hardPunishingMove = MOVE_NONE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (takenWithTera[i].maximum >= myHp) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithTera[i].maximum >= myHp) 
+        {
             u16 move = opponentsMoves[i];
-            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(battlerOpponent, move) > GetBattleMovePriority(battlerOpponent, hardPunishingMove)) {
+            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(battlerOpponent, move) > GetBattleMovePriority(battlerOpponent, hardPunishingMove)) 
                 hardPunishingMove = move;
-            }
         }
     }
 
@@ -4467,85 +4463,84 @@ void DecideTerastal(u32 battler)
     // (e.g. a weakness becomes a resistance, a 4x weakness becomes neutral, etc)
     bool8 takesBigHit = FALSE;
     bool8 savedFromAllBigHits = TRUE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (takenWithoutTera[i].median > myHp/2) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithoutTera[i].median > myHp/2) 
+        {
             takesBigHit = TRUE; 
-            if (takenWithTera[i].median > myHp/4) {
+            if (takenWithTera[i].median > myHp/4) 
                 savedFromAllBigHits = FALSE;
-            }
         }
     }
 
     // Check for any benefit whatsoever. Only used for the last possible mon that could tera.
     bool8 anyOffensiveBenefit = FALSE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (dealtWithTera[i].median > dealtWithoutTera[i].median) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (dealtWithTera[i].median > dealtWithoutTera[i].median) 
             anyOffensiveBenefit = TRUE;
-        }
     }  
 
     bool8 anyDefensiveBenefit = FALSE;
     bool8 anyDefensiveDrawback = FALSE; 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
-        if (takenWithTera[i].median < takenWithoutTera[i].median) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithTera[i].median < takenWithoutTera[i].median) 
             anyDefensiveBenefit = TRUE;
-        }
-        if (takenWithTera[i].median > takenWithoutTera[i].median) {
+
+        if (takenWithTera[i].median > takenWithoutTera[i].median) 
             anyDefensiveDrawback = TRUE;
-        }
     }
 
     // Make decisions
     // This is done after all loops to minimise the possibility of a timing attack in whcih the player could
     // determine whether the AI will tera based on the time taken to select a move.
 
-    if (enablesKo) {
-        if (hardPunishingMove == MOVE_NONE) {
+    if (enablesKo) 
+    {
+        if (hardPunishingMove == MOVE_NONE) 
+        {
             goto yes_tera;
         }
         else {
             // will we go first?
-            if (AI_WhoStrikesFirst(battler, battlerOpponent, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, killingMove) >= GetBattleMovePriority(battlerOpponent, hardPunishingMove)) {
+            if (AI_WhoStrikesFirst(battler, battlerOpponent, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, killingMove) >= GetBattleMovePriority(battlerOpponent, hardPunishingMove)) 
                 goto yes_tera;
-            }
         }
     }
 
     // Decide to conserve tera based on number of possible later oppotunities
     u16 conserveTeraChance = 10 * (numPossibleTera-1);
-    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) {
+    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
         goto no_tera;
-    }
 
-    if (savedFromKo) {
-        if (hardPunishingMove == MOVE_NONE) {
+    if (savedFromKo) 
+    {
+        if (hardPunishingMove == MOVE_NONE) 
+        {
             goto yes_tera;
         }
-        else {
+        else 
+        {
             // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
             // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
-            if (Random() % 100 < 40) {
+            if (Random() % 100 < 40) 
                 goto yes_tera;
-            }
         }
     }
 
-    if (hardPunishingMove != MOVE_NONE) {
+    if (hardPunishingMove != MOVE_NONE) 
         goto no_tera;
-    }
 
-    if (takesBigHit && savedFromAllBigHits) {
+    if (takesBigHit && savedFromAllBigHits) 
         goto yes_tera;
-    }
 
     // No strongly compelling reason to tera. Conserve it if possible. 
-    if (numPossibleTera > 1) {
+    if (numPossibleTera > 1) 
         goto no_tera;
-    }
 
-    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) {
+    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) 
         goto yes_tera;
-    }
 
     // TODO: Effects other than direct damage are not yet considered. For example, may want to tera poison to avoid a Toxic.
     
@@ -4555,7 +4550,8 @@ void DecideTerastal(u32 battler)
 yes_tera:
     // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
         AI_DATA->simulatedDmg[battlerOpponent][battler][i] = takenWithTera[i];
         AI_DATA->effectiveness[battlerOpponent][battler][i] = effectivenessTakenWithTera[i];
     }
@@ -4566,9 +4562,8 @@ no_tera:
     gBattleStruct->aiUsingGimmick[battler] = FALSE;
 
     // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
-    for (int i = 0; i < MAX_MON_MOVES; i++) {
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
         AI_DATA->simulatedDmg[battler][battlerOpponent][i] = dealtWithoutTera[i];
-    }
 
     return;
 

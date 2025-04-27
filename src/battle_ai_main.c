@@ -281,18 +281,18 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
 {
     u32 ret;
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) {
+    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         DecideTerastal(battler);
-    }
+    
 
     if (!IsDoubleBattle())
         ret = ChooseMoveOrAction_Singles(battler);
     else
         ret = ChooseMoveOrAction_Doubles(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && ret < MAX_MON_MOVES) {
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && ret < MAX_MON_MOVES) 
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[ret]);
-    }
+    
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
