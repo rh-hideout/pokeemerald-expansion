@@ -262,11 +262,13 @@ TEST("givemon respects FORM_CHANGE_ITEM_HOLD")
 
     RUN_OVERWORLD_SCRIPT(
         givemon SPECIES_ARCEUS_NORMAL, 100, item=ITEM_ZAP_PLATE;
+        givemon SPECIES_ARCEUS_GRASS, 100, item=ITEM_ZAP_PLATE;
+        givemon SPECIES_ARCEUS_ELECTRIC, 100, item=ITEM_ZAP_PLATE;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_ZAP_PLATE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
+    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
 }
 
 TEST("givemon [moves]")
