@@ -4353,6 +4353,13 @@ bool32 IsAIUsingGimmick(u32 battler)
     return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
 }
 
+struct AltTeraCalcs {
+    struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
+    struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
+};
+
+bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs);
+
 void DecideTerastal(u32 battler)
 {
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
@@ -4372,8 +4379,7 @@ void DecideTerastal(u32 battler)
 
     // Default calculations automatically assume gimmicks for the attacker, but not the defender.
     // Consider calcs for the other possibilities.
-    struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
-    struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
+    struct AltTeraCalcs altCalcs;
 
     struct SimulatedDamage noDmg = {0};
 
@@ -4387,30 +4393,54 @@ void DecideTerastal(u32 battler)
     for (int i = 0; i < MAX_MON_MOVES; i++) 
     {
         if (!IsMoveUnusable(i, aiMoves[i], AI_DATA->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i])) 
-            dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, FALSE, FALSE, AI_GetWeather());
+            altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, FALSE, FALSE, AI_GetWeather());
         else 
-            dealtWithoutTera[i] = noDmg;
+            altCalcs.dealtWithoutTera[i] = noDmg;
         
 
         if (!IsMoveUnusable(i, oppMoves[i], AI_DATA->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[i]))  
         {
-            takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, TRUE, TRUE, AI_GetWeather());
+            altCalcs.takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, TRUE, TRUE, AI_GetWeather());
             effectivenessTakenWithTera[i] = effectiveness;
         }
         else 
         {
-            takenWithTera[i] = noDmg;
+            altCalcs.takenWithTera[i] = noDmg;
             effectivenessTakenWithTera[i] = Q_4_12(0.0);
         }
     }
 
-    u16 aiHp = gBattleMons[battler].hp;
-    u16 oppHp = gBattleMons[opposingBattler].hp;
+
+    bool32 res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
 
 
+    if (res) 
+    {
+        // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
+        for (int i = 0; i < MAX_MON_MOVES; i++) 
+        {
+            AI_DATA->simulatedDmg[opposingBattler][battler][i] = altCalcs.takenWithTera[i];
+            AI_DATA->effectiveness[opposingBattler][battler][i] = effectivenessTakenWithTera[i];
+        }
+    }
+    else 
+    {
+        // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
+        for (int i = 0; i < MAX_MON_MOVES; i++) 
+            AI_DATA->simulatedDmg[battler][opposingBattler][i] = altCalcs.dealtWithoutTera[i];
+    }
+
+    SetAIUsingGimmick(battler, res);
+    return;
+}
+
+// macros are not expanded recursively
 #define dealtWithTera AI_DATA->simulatedDmg[battler][opposingBattler]
+#define dealtWithoutTera altCalcs->dealtWithoutTera
+#define takenWithTera altCalcs->takenWithTera
 #define takenWithoutTera AI_DATA->simulatedDmg[opposingBattler][battler]
 
+bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs) {
     struct Pokemon* party = GetBattlerParty(battler);
 
     // Check how many pokemon we have that could tera
@@ -4423,6 +4453,12 @@ void DecideTerastal(u32 battler)
          && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) 
             numPossibleTera++;
     }
+
+    u16 aiHp = gBattleMons[battler].hp;
+    u16 oppHp = gBattleMons[opposingBattler].hp;
+
+    u16* aiMoves = GetMovesArray(battler);
+    u16* oppMoves = GetMovesArray(opposingBattler);
 
     // Check whether tera enables a KO
     bool32 hasKoWithout = FALSE;
@@ -4511,77 +4547,59 @@ void DecideTerastal(u32 battler)
     {
         if (hardPunishingMove == MOVE_NONE) 
         {
-            goto yes_tera;
+            return TRUE;
         }
         else 
         {
             // will we go first?
             if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, AI_DATA->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, AI_DATA->abilities[opposingBattler], hardPunishingMove)) 
-                goto yes_tera;
+                return TRUE;
         }
     }
 
     // Decide to conserve tera based on number of possible later oppotunities
     u16 conserveTeraChance = 10 * (numPossibleTera-1);
     if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
-        goto no_tera;
+        return FALSE;
 
     if (savedFromKo) 
     {
         if (hardPunishingMove == MOVE_NONE) 
         {
-            goto yes_tera;
+            return TRUE;
         }
         else 
         {
             // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
             // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
             if (Random() % 100 < 40) 
-                goto yes_tera;
+                return TRUE;
         }
     }
 
     if (hardPunishingMove != MOVE_NONE) 
-        goto no_tera;
+        return FALSE;
 
     if (takesBigHit && savedFromAllBigHits) 
-        goto yes_tera;
+        return TRUE;
 
     // No strongly compelling reason to tera. Conserve it if possible. 
     if (numPossibleTera > 1) 
-        goto no_tera;
+        return FALSE;
 
     if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) 
-        goto yes_tera;
+        return TRUE;
 
     // TODO: Effects other than direct damage are not yet considered. For example, may want to tera poison to avoid a Toxic.
     
 
-    goto no_tera;
-
-yes_tera:
-    // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
-
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
-    {
-        AI_DATA->simulatedDmg[opposingBattler][battler][i] = takenWithTera[i];
-        AI_DATA->effectiveness[opposingBattler][battler][i] = effectivenessTakenWithTera[i];
-    }
-
-    return;
-no_tera:
-    
-    SetAIUsingGimmick(battler, FALSE);
-
-    // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
-        AI_DATA->simulatedDmg[battler][opposingBattler][i] = dealtWithoutTera[i];
-
-    return;
-
-#undef dealtWithTera
-#undef takenWithoutTera
+    return FALSE;
 }
+#undef dealtWithTera
+#undef dealtWithoutTera
+#undef takenWithTera
+#undef takenWithoutTera
+
 
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId)
 {
