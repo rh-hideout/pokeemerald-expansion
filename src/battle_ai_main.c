@@ -282,7 +282,7 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
     u32 ret;
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) {
-        DecideTerrastal(battler);
+        DecideTerastal(battler);
     }
 
     if (!IsDoubleBattle())

@@ -97,7 +97,7 @@ bool32 IsAbilityOfRating(u32 ability, s8 rating);
 bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
 bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move);
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
-void DecideTerrastal(u32 battler);
+void DecideTerastal(u32 battler);
 u32 AI_GetBattlerAbility(u32 battler);
 
 // stat stage checks

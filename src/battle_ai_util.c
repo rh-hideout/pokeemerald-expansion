@@ -4340,7 +4340,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
     return FALSE;
 }
 
-void DecideTerrastal(u32 battler)
+void DecideTerastal(u32 battler)
 {
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) {
         return;
@@ -4513,7 +4513,7 @@ void DecideTerrastal(u32 battler)
 
     // Decide to conserve tera based on number of possible later oppotunities
     u16 conserveTeraChance = 10 * (numPossibleTera-1);
-    if (Random() % 100 < conserveTeraChance) {
+    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) {
         goto no_tera;
     }
 
