@@ -4340,6 +4340,19 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
     return FALSE;
 }
 
+void SetAIUsingGimmick(u32 battler, bool32 use) 
+{
+    if (use)
+        gAiBattleData->aiUsingGimmick |= (1<<battler);
+    else
+        gAiBattleData->aiUsingGimmick &= ~(1<<battler);
+}
+
+bool32 IsAIUsingGimmick(u32 battler) 
+{
+    return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
+}
+
 void DecideTerastal(u32 battler)
 {
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
@@ -4558,7 +4571,7 @@ yes_tera:
     return;
 no_tera:
     
-    gBattleStruct->aiUsingGimmick[battler] = FALSE;
+    SetAIUsingGimmick(battler, FALSE);
 
     // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
     for (int i = 0; i < MAX_MON_MOVES; i++) 

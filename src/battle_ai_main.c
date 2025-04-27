@@ -270,15 +270,17 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) 
-        gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
+        SetAIUsingGimmick(battlerAtk, FALSE);
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) 
-        gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
+        SetAIUsingGimmick(battlerAtk, FALSE);
 }
 
 u32 BattleAI_ChooseMoveOrAction(u32 battler)
 {
     u32 ret;
+
+    SetAIUsingGimmick(battler, TRUE);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         DecideTerastal(battler);
@@ -408,7 +410,6 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
-    gBattleStruct->aiUsingGimmick[battler] = TRUE;
 }
 
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
