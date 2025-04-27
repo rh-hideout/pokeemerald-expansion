@@ -179,3 +179,6 @@ AI will determine whether it would switch out in the player's situation or not, 
 
 ## `AI_FLAG_PREDICT_INCOMING_MON`
 This flag requires `AI_FLAG_PREDICT_SWITCH` to function. If the AI predicts that the player will switch, this flag allows the AI to run its move scoring calculation against the Pokémon it expects the player to switch into, instead of the Pokémon that it expects to switch out.
+
+## `AI_FLAG_SMART_TERA`
+AI will make smarter decisions about when to terastalize (over the default behaviour to always tera when available). This considers factors such as whether tera allows the AI to KO the opponent, whether it can save itself from a KO or a big hit, and how many remaining pokemon could terastalize. This behaviour is not currently supported in double battles.
