@@ -1,4 +1,5 @@
 import tomllib
+import json
 import os
 
 xcoord_table = [
@@ -61,8 +62,15 @@ def turn_analysed_data_into_string(data, enum):
     result = "    [" + enum + "] = " + "{\n" + result + "\n" + "    },\n"
     return result
 
+def get_id_by_path(data, filename, whichtype):
+    for item in data[whichtype]:
+        if item["path"] == filename:
+            return item["id"]
+    print(f"No ID found for the path '{filename}'.")
+    quit()
+
 def main():
-    toml_path = "./tools/mining_minigame/sprite_enum_table.toml"
+    json_path = "./tools/mining_minigame/table.json"
     gfx_items = "./graphics/mining_minigame/items/"
     gfx_stones = "./graphics/mining_minigame/stones/"
     analysed_sprite_data = []
@@ -72,14 +80,14 @@ def main():
 static const int SpriteTileTable[][16] = {
 """
 
-    with open(toml_path, "rb") as f:
-        toml_data = tomllib.load(f)
+    with open(json_path, "rb") as f:
+        json_data = json.load(f)
 
     # Items
     for filename in os.listdir(gfx_items):
         if os.path.isfile(os.path.join(gfx_items, filename)) and filename.endswith('.4bpp'):
             key = gfx_items + filename
-            enum = toml_data['items'][key]
+            enum = get_id_by_path(json_data, key, "items")
             data = read_4bpp_file(key)
             if data:
                 for tile in range(0, 16):
@@ -91,7 +99,7 @@ static const int SpriteTileTable[][16] = {
     for filename in os.listdir(gfx_stones):
         if os.path.isfile(os.path.join(gfx_stones, filename)) and filename.endswith('.4bpp'):
             key = gfx_stones + filename
-            enum = toml_data['stones'][key]
+            enum = get_id_by_path(json_data, key, "stones")
             data = read_4bpp_file(key)
             if data:
                 for tile in range(0, 16):
