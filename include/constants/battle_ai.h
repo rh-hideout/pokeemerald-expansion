@@ -30,7 +30,7 @@
 #define AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE  (1 << 22)  // AI adds score to highest damage move regardless of accuracy or secondary effect
 #define AI_FLAG_PREDICT_SWITCH              (1 << 23)  // AI will predict the player's switches and switchins based on how it would handle the situation. Recommend using AI_FLAG_OMNISCIENT
 #define AI_FLAG_PREDICT_INCOMING_MON        (1 << 24)  // AI will score against the predicting incoming mon if it predicts the player to switch. Requires AI_FLAG_PREDICT_SWITCH
-#define AI_FLAG_SMART_TERA                       (1 << 25)  // AI will make smarter decisions when choosing whether to terrastelize (default is to always tera whenever available).
+#define AI_FLAG_SMART_TERA                  (1 << 25)  // AI will make smarter decisions when choosing whether to terrastalize (default is to always tera whenever available).
 
 #define AI_FLAG_COUNT                       26
 
