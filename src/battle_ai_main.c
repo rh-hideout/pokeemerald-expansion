@@ -265,16 +265,15 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
-void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move) {
-    // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necassary.
+void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move) 
+{
+    // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) {
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) 
         gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
-    }
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) {
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) 
         gBattleStruct->aiUsingGimmick[battlerAtk] = FALSE;
-    }
 }
 
 u32 BattleAI_ChooseMoveOrAction(u32 battler)
