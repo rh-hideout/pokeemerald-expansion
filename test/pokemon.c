@@ -256,6 +256,19 @@ TEST("givemon respects perfectIVCount")
     }
 }
 
+TEST("givemon respects FORM_CHANGE_ITEM_HOLD")
+{
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_ARCEUS_NORMAL, 100, item=ITEM_ZAP_PLATE;
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_ZAP_PLATE);
+}
+
 TEST("givemon [moves]")
 {
     ZeroPlayerPartyMons();
