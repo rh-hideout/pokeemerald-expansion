@@ -22732,8 +22732,16 @@ static const struct LevelUpMove sJerminLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_POISON_FANG),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sPedestoneLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_POISON_FANG),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sErochreLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_ROCK_WRECKER),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sPillaiaLevelUpLearnset[] = {
-   LEVEL_UP_MOVE( 0, MOVE_SEED_FLARE),
+   LEVEL_UP_MOVE( 1, MOVE_SEED_FLARE),
    LEVEL_UP_END
    };
 static const struct LevelUpMove sMogumoleLevelUpLearnset[] = {

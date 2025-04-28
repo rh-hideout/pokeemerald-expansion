@@ -2897,6 +2897,10 @@ gCryTable::
 
 	cry Cry_Catation
 
+	cry Cry_Erochre
+
+	cry Cry_Pedestone
+
 .endif
 
 	.align 2
@@ -5798,4 +5802,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Meower
 
 	cry_reverse Cry_Catation
+
+	cry_reverse Cry_Erochre
+
+	cry_reverse Cry_Pedestone
 .endif

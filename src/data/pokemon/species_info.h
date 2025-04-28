@@ -1938,6 +1938,120 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .formChangeTable = sJerminFormChangeTable,
     },
 
+        [SPECIES_PEDESTONE] =
+    { 
+       .baseHP        = 50,
+       .baseAttack    = 30,
+       .baseDefense   = 90,
+       .baseSpeed     = 20,
+       .baseSpAttack  = 30,
+       .baseSpDefense = 90,
+       .types = { TYPE_ROCK, TYPE_NONE },
+       .catchRate = 160,
+       .expYield = 50,
+       .evYield_Defense = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 10,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
+       .abilities = { ABILITY_SOLID_ROCK, ABILITY_STURDY, ABILITY_CLEAR_BODY, ABILITY_MAGIC_GUARD },  //Replace Grass Pelt with Collapsing Ruin
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+       .speciesName = _("Pedestone"),
+       .cryId = CRY_PEDESTONE,
+       .natDexNum = NATIONAL_DEX_PEDESTONE,
+       .categoryName = _("Pedestal"),
+       .height = 8,
+       .weight = 320,
+       .description = COMPOUND_STRING(
+           "Its origins are largely unknown,\n"
+           "appearing in gardens, graveyards and\n"
+           "museums seemingly overnight. Where\n"
+           "there is stonework, there are Pedestone."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Pedestone,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Pedestone,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Pedestone,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Pedestone,
+       .shinyPalette = gMonShinyPalette_Pedestone,
+       .iconSprite = gMonIcon_Pedestone,
+       .iconPalIndex = 1,
+       FOOTPRINT(Pedestone)
+       .levelUpLearnset = sPedestoneLevelUpLearnset,
+       .eggMoveLearnset = sPedestoneEggMoveLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 27, SPECIES_EROCHRE},
+                               {EVO_ITEM_HOLD, ITEM_MIRACLE_SEED, SPECIES_PILLAIA}),
+    },
+
+        [SPECIES_EROCHRE] =
+    { 
+       .baseHP        = 95,
+       .baseAttack    = 100,
+       .baseDefense   = 130,
+       .baseSpeed     = 50,
+       .baseSpAttack  = 40,
+       .baseSpDefense = 80,
+       .types = { TYPE_ROCK, TYPE_GROUND },
+       .catchRate = 81,
+       .expYield = 103,
+       .evYield_Defense = 1,
+       .genderRatio = MON_GENDERLESS,
+       .eggCycles = 10,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
+       .abilities = { ABILITY_FILTER, ABILITY_SAND_STREAM, ABILITY_COLLAPSING_RUIN, ABILITY_DRY_SKIN },  //Replace Grass Pelt with Collapsing Ruin
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .allPerfectIVs = FALSE,
+      .speciesName = _("Erochre"),
+      .cryId = CRY_EROCHRE,
+       .natDexNum = NATIONAL_DEX_EROCHRE,
+       .categoryName = _("Pedestal"),
+       .height = 18,
+       .weight = 1200,
+       .description = COMPOUND_STRING(
+           "Wandering desert nomads can always make\n"
+           "out the distinct sound of wind whistling\n"
+           "around the sand having blown holes clean\n"
+           "Erochre, through its stone."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Erochre,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_Erochre,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Erochre,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Erochre,
+       .shinyPalette = gMonShinyPalette_Erochre,
+       .iconSprite = gMonIcon_Erochre,
+       .iconPalIndex = 1,
+       FOOTPRINT(Erochre)
+       .levelUpLearnset = sErochreLevelUpLearnset,
+       .eggMoveLearnset = sPedestoneEggMoveLearnset,
+    },
+
         [SPECIES_PILLAIA] =
     { 
        .baseHP        = 95,
@@ -1947,15 +2061,15 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .baseSpAttack  = 100,
        .baseSpDefense = 130,
        .types = { TYPE_ROCK, TYPE_GRASS },
-       .catchRate = 104,
-       .expYield = 44,
-       .evYield_Speed  = 1,
+       .catchRate = 81,
+       .expYield = 103,
+       .evYield_Defense = 1,
        .genderRatio = MON_GENDERLESS,
        .eggCycles = 10,
        .friendship = 100,
        .growthRate = GROWTH_MEDIUM_SLOW,
        .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
-       .abilities = { ABILITY_UNNERVE, ABILITY_GRASSY_SURGE, ABILITY_COLLAPSING_RUIN, ABILITY_REGENERATOR },  //Replace Grass Pelt with Collapsing Ruin
+       .abilities = { ABILITY_UNNERVE, ABILITY_GRASSY_SURGE, ABILITY_COLLAPSING_RUIN, ABILITY_REGENERATOR }, 
        .bodyColor = BODY_COLOR_GRAY,
        .isLegendary = FALSE,
        .allPerfectIVs = FALSE,
@@ -1967,9 +2081,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 800,
        .description = COMPOUND_STRING(
            "Few people let Pillaia into their gardens\n"
-           "willingly, and they're notoriously difficult\n"
-           "to remove. Often completely stationary,at least"
-           "when within view."),
+           "willingly, and they're notoriously hard to\n"
+           "remove. They're completely stationary,\n"
+           "but only when being looked at."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1991,6 +2105,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Pillaia)
        .levelUpLearnset = sPillaiaLevelUpLearnset,
+       .eggMoveLearnset = sPedestoneEggMoveLearnset,
     },
 
         [SPECIES_ARACHNOTE] =

@@ -22696,6 +22696,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = Move_GIGA_DRAIN,
     },
 
+    [MOVE_EROSION_WAVE] =
+    {
+        .name = COMPOUND_STRING("Erosion Wave"),
+        .description = COMPOUND_STRING(
+            "A powerful wave attack\n"
+            "that may lower Sp. Def."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_ROCK,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_1,
+            .chance = 10,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
+        .contestCategory = CONTEST_CATEGORY_SMART,
+        .battleAnimScript = Move_SURF,
+    },
+
     
     // END OF CAPRICCIO MOVES
 

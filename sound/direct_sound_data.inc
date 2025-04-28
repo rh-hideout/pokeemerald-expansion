@@ -7098,6 +7098,14 @@ Cry_Meower::
 	.align 2	
 Cry_Catation::
 	.incbin "sound/direct_sound_samples/cries/catation.bin"
+
+	.align 2	
+Cry_Erochre::
+	.incbin "sound/direct_sound_samples/cries/erochre.bin"
+
+	.align 2	
+Cry_Pedestone::
+	.incbin "sound/direct_sound_samples/cries/pedestone.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

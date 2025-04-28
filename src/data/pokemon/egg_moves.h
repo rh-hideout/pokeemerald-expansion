@@ -6323,6 +6323,17 @@ static const u16 sMogeriaEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sPedestoneEggMoveLearnset[] = {
+    MOVE_SHORE_UP,
+    MOVE_ACCELEROCK,
+    MOVE_TAR_SHOT,
+    MOVE_THOUSAND_WAVES,
+    MOVE_WIDE_GUARD,
+    MOVE_AROMATHERAPY,
+    MOVE_SPIKE_CANNON,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sIwikEggMoveLearnset[] = {
     MOVE_AROMATHERAPY,
     MOVE_EGG_BOMB,

@@ -22293,12 +22293,26 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_JerminSwarm[] = INCBIN_U32("graphics/pokemon/jermin/swarm/shiny.gbapal.lz");
    const u8 gMonIcon_JerminSwarm[] = INCBIN_U8("graphics/pokemon/jermin/swarm/icon.4bpp");
 
+   const u32 gMonFrontPic_Pedestone[] = INCBIN_U32("graphics/pokemon/pedestone/front.4bpp.lz");
+   const u32 gMonBackPic_Pedestone[] = INCBIN_U32("graphics/pokemon/pedestone/back.4bpp.lz");
+   const u32 gMonPalette_Pedestone[] = INCBIN_U32("graphics/pokemon/pedestone/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Pedestone[] = INCBIN_U32("graphics/pokemon/pedestone/shiny.gbapal.lz");
+   const u8 gMonIcon_Pedestone[] = INCBIN_U8("graphics/pokemon/pedestone/icon.4bpp");
+   const u8 gMonFootprint_Pedestone[] = INCBIN_U8("graphics/pokemon/pedestone/footprint.1bpp");
+
    const u32 gMonFrontPic_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/front.4bpp.lz");
    const u32 gMonBackPic_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/back.4bpp.lz");
    const u32 gMonPalette_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/normal.gbapal.lz");
    const u32 gMonShinyPalette_Pillaia[] = INCBIN_U32("graphics/pokemon/pillaia/shiny.gbapal.lz");
    const u8 gMonIcon_Pillaia[] = INCBIN_U8("graphics/pokemon/pillaia/icon.4bpp");
    const u8 gMonFootprint_Pillaia[] = INCBIN_U8("graphics/pokemon/pillaia/footprint.1bpp");
+
+   const u32 gMonFrontPic_Erochre[] = INCBIN_U32("graphics/pokemon/erochre/front.4bpp.lz");
+   const u32 gMonBackPic_Erochre[] = INCBIN_U32("graphics/pokemon/erochre/back.4bpp.lz");
+   const u32 gMonPalette_Erochre[] = INCBIN_U32("graphics/pokemon/erochre/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Erochre[] = INCBIN_U32("graphics/pokemon/erochre/shiny.gbapal.lz");
+   const u8 gMonIcon_Erochre[] = INCBIN_U8("graphics/pokemon/erochre/icon.4bpp");
+   const u8 gMonFootprint_Erochre[] = INCBIN_U8("graphics/pokemon/erochre/footprint.1bpp");
 
    const u32 gMonFrontPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/front.4bpp.lz");
    const u32 gMonBackPic_Impfection[] = INCBIN_U32("graphics/pokemon/impfection/back.4bpp.lz");

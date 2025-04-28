@@ -2663,6 +2663,8 @@ enum {
     CRY_VOLIATH,
     CRY_MEOWER,
     CRY_CATATION,
+    CRY_EROCHRE,
+    CRY_PEDESTONE,
     CRY_COUNT,
 };
 
