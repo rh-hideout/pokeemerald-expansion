@@ -2744,12 +2744,16 @@ static void Task_OnSelectedMon(u8 taskId)
         case MENU_SELECT:
             PlaySE(SE_SELECT);
             if (sInPartyMenu)
+            {
                 gSpecialVar_Result = GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES);
+                gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[sCursorPosition]);
+            }
             else
             {
                 gSpecialVar_Result = GetBoxMonDataAt(StorageGetCurrentBox(), sCursorPosition, MON_DATA_SPECIES);
                 gSpecialVar_MonBoxId = StorageGetCurrentBox();
                 gSpecialVar_MonBoxPos = sCursorPosition;
+                gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[0]);
             }
             gSpecialVar_0x8004 = sCursorPosition;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
