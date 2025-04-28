@@ -861,6 +861,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
         RETURN_SCORE_MINUS(20);
 
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS && moveEffect != EFFECT_SLEEP 
+        && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
+    {
+        RETURN_SCORE_MINUS(20);
+    }
+
     // Don't use anything but super effective thawing moves if target is frozen if any other attack available
     if (((GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0) || CanBurnHitThaw(move)) && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & (STATUS1_FROSTBITE | STATUS1_FREEZE)))
     {
