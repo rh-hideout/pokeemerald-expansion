@@ -304,8 +304,8 @@ void Ai_InitPartyStruct(void)
     bool32 isOmniscient = (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_OMNISCIENT) || (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_OMNISCIENT);
     struct Pokemon *mon;
 
-    AI_PARTY->count[B_SIDE_PLAYER] = gPlayerPartyCount;
-    AI_PARTY->count[B_SIDE_OPPONENT] = gEnemyPartyCount;
+    AI_PARTY->count[B_SIDE_PLAYER] = CalculatePlayerPartyCount();
+    AI_PARTY->count[B_SIDE_OPPONENT] = CalculateEnemyPartyCount();
 
     // Save first 2 or 4(in doubles) mons
     CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, B_SIDE_PLAYER);
