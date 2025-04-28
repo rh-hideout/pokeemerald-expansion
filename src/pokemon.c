@@ -4568,32 +4568,42 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         case IF_MIN_BEAUTY:
+        {
             u32 beauty = GetMonData(mon, MON_DATA_BEAUTY, 0);
             if (beauty >= params[i].arg1)
                 currentCondition = TRUE;
             break;
+        }
         case IF_MIN_COOLNESS:
+        {
             u32 coolness = GetMonData(mon, MON_DATA_COOL, 0);
             if (coolness >= params[i].arg1)
                 currentCondition = TRUE;
             break;
+        }
         case IF_MIN_SMARTNESS: 
         // remember that even though it's called "Smart/Smartness" here, 
         // from gen 6 and up it's known as "Clever/Cleverness."
+        {
             u32 smartness = GetMonData(mon, MON_DATA_SMART, 0);
             if (smartness >= params[i].arg1)
                 currentCondition = TRUE;
             break;
+        }
         case IF_MIN_TOUGHNESS:
+        {
             u32 toughness = GetMonData(mon, MON_DATA_TOUGH, 0);
             if (toughness >= params[i].arg1)
                 currentCondition = TRUE;
             break;
+        }
         case IF_MIN_CUTENESS:
+        {
             u32 cuteness = GetMonData(mon, MON_DATA_CUTE, 0);
             if (cuteness >= params[i].arg1)
                 currentCondition = TRUE;
             break;
+        }
         // Gen 4
         case IF_SPECIES_IN_PARTY:
             for (j = 0; j < PARTY_SIZE; j++)
