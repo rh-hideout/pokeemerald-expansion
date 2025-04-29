@@ -2373,7 +2373,7 @@ void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpect
     s32 battlerId = battler - gBattleMons;
     u32 i;
 
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves.moves[i] != MOVE_NONE)
         {
