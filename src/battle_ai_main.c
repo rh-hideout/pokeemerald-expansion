@@ -308,7 +308,7 @@ void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
     gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
 }
 
-void ComputeBattlerScore(u32 battler)
+void ComputeBattlerMoveScore(u32 battler)
 {
     if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
         && (BattlerHasAi(battler)
@@ -324,12 +324,12 @@ void ComputeBattlerScore(u32 battler)
         AI_DATA->aiCalcInProgress = TRUE;
         BattleAI_SetupAIData(0xF, battler);
         SetupAISwitchingData(battler, switchType);
-        gAiBattleData->moveIndex[battler] = BattleAI_ChooseMoveOrAction(battler); // Calculate score and chose move index
+        gAiBattleData->moveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
         AI_DATA->aiCalcInProgress = FALSE;
     }
 }
 
-u32 BattleAI_ChooseMoveOrAction(u32 battler)
+u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 moveIndex;
 
