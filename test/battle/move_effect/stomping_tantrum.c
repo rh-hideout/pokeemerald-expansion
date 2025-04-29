@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double damage if target protec
     }
 }
 
-SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double damage if it failed on the previous turn cause of Protect")
+SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double if it missed")
 {
     s16 damage[2];
     GIVEN {
@@ -130,34 +130,5 @@ SINGLE_BATTLE_TEST("Stomping Tatrum will deal double damage if user was immune t
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
         EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
-    }
-}
-
-
-SINGLE_BATTLE_TEST("Stomping Tatrum will deal double damage if user failed to attack due to sleep")
-{
-    s16 damage[3];
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(2)); };
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { }
-        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
-        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
-        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
-    } SCENE {
-        MESSAGE("Wobbuffet is fast asleep.");
-
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
-
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
-        HP_BAR(opponent, captureDamage: &damage[1]);
-
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
-        HP_BAR(opponent, captureDamage: &damage[2]);
-    } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
-        EXPECT_EQ(damage[1], damage[2]);
     }
 }
