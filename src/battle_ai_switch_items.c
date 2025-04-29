@@ -2232,11 +2232,11 @@ static bool32 AiExpectsToFaintPlayer(u32 battler)
 {
     u8 target = gAiBattleData->chosenTarget[battler];
 
-    if (gAiBattleData->moveOrAction[battler] > 3)
+    if (gAiBattleData->moveIndex[battler] > 3)
         return FALSE; // AI not planning to use move
 
     if (GetBattlerSide(target) != GetBattlerSide(battler)
-      && CanIndexMoveFaintTarget(battler, target, gAiBattleData->moveOrAction[battler], AI_ATTACKING)
+      && CanIndexMoveFaintTarget(battler, target, gAiBattleData->moveIndex[battler], AI_ATTACKING)
       && AI_IsFaster(battler, target, GetAIChosenMove(battler)))
     {
         // We expect to faint the target and move first -> dont use an item

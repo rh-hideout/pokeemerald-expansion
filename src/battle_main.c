@@ -4134,32 +4134,6 @@ enum
     STATE_SELECTION_SCRIPT_MAY_RUN
 };
 
-void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
-{
-    s32 opposingBattler = GetOppositeBattler(battler);
-
-    // AI's predicting data
-    if ((AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
-    {
-        AI_DATA->aiSwitchPredictionInProgress = TRUE;
-        AI_DATA->battlerDoingPrediction = battler;
-        AI_DATA->mostSuitableMonId[opposingBattler] = GetMostSuitableMonToSwitchInto(opposingBattler, switchType);
-        if (ShouldSwitch(opposingBattler))
-            AI_DATA->shouldSwitch |= (1u << opposingBattler);
-        AI_DATA->aiSwitchPredictionInProgress = FALSE;
-        gBattleStruct->prevTurnSpecies[opposingBattler] = gBattleMons[opposingBattler].species;
-
-        // Determine whether AI will use predictions this turn
-        AI_DATA->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
-    }
-
-    // AI's data
-    AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
-    if (ShouldSwitch(battler))
-        AI_DATA->shouldSwitch |= (1u << battler);
-    gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
-}
-
 static void HandleTurnActionSelectionState(void)
 {
     s32 i, battler;
@@ -4173,22 +4147,7 @@ static void HandleTurnActionSelectionState(void)
         case STATE_TURN_START_RECORD: // Recorded battle related action on start of every turn.
             RecordedBattle_CopyBattlerMoves(battler);
             gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
-            enum SwitchType switchType = (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE; // Risky AI switches aggressively even mid battle
-
-            // Do AI score computations here so we can use them in AI_TrySwitchOrUseItem
-            if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
-                    && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE)))
-            {
-                AI_DATA->aiCalcInProgress = TRUE;
-
-                // Setup battler data
-                BattleAI_SetupAIData(0xF, battler);
-                SetupAISwitchingData(battler, switchType);
-
-                // Do scoring
-                gAiBattleData->moveOrAction[battler] = BattleAI_ChooseMoveOrAction(battler);
-                AI_DATA->aiCalcInProgress = FALSE;
-            }
+            ComputeBattlerScore(battler); // Do AI score computations here so we can use them in AI_TrySwitchOrUseItem
             // fallthrough
         case STATE_BEFORE_ACTION_CHOSEN: // Choose an action.
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;

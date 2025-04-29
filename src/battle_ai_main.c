@@ -265,14 +265,78 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
+bool32 BattlerChoseNonMoveAction(void)
+{
+    if (AI_THINKING_STRUCT->aiAction & AI_ACTION_FLEE)
+    {
+        gAiBattleData->actionFlee = TRUE;
+        return TRUE;
+    }
+
+    if (AI_THINKING_STRUCT->aiAction & AI_ACTION_WATCH)
+    {
+        gAiBattleData->choiceWatch = TRUE;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
+{
+    s32 opposingBattler = GetOppositeBattler(battler);
+
+    // AI's predicting data
+    if ((AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
+    {
+        AI_DATA->aiSwitchPredictionInProgress = TRUE;
+        AI_DATA->battlerDoingPrediction = battler;
+        AI_DATA->mostSuitableMonId[opposingBattler] = GetMostSuitableMonToSwitchInto(opposingBattler, switchType);
+        if (ShouldSwitch(opposingBattler))
+            AI_DATA->shouldSwitch |= (1u << opposingBattler);
+        AI_DATA->aiSwitchPredictionInProgress = FALSE;
+        gBattleStruct->prevTurnSpecies[opposingBattler] = gBattleMons[opposingBattler].species;
+
+        // Determine whether AI will use predictions this turn
+        AI_DATA->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
+    }
+
+    // AI's data
+    AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
+    if (ShouldSwitch(battler))
+        AI_DATA->shouldSwitch |= (1u << battler);
+    gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
+}
+
+void ComputeBattlerScore(u32 battler)
+{
+    if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
+        && (BattlerHasAi(battler)
+        && !(gBattleTypeFlags & BATTLE_TYPE_PALACE)))
+    {
+        // If ai is about to flee or chosen to watch player, no need to calc anything
+        if (BattlerChoseNonMoveAction())
+            return;
+
+        // Risky AI switches aggressively even mid battle
+        enum SwitchType switchType = (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE;
+
+        AI_DATA->aiCalcInProgress = TRUE;
+        BattleAI_SetupAIData(0xF, battler);
+        SetupAISwitchingData(battler, switchType);
+        gAiBattleData->moveIndex[battler] = BattleAI_ChooseMoveOrAction(battler); // Calculate score and chose move index
+        AI_DATA->aiCalcInProgress = FALSE;
+    }
+}
+
 u32 BattleAI_ChooseMoveOrAction(u32 battler)
 {
-    u32 ret;
+    u32 moveIndex;
 
     if (!IsDoubleBattle())
-        ret = ChooseMoveOrAction_Singles(battler);
+        moveIndex = ChooseMoveOrAction_Singles(battler);
     else
-        ret = ChooseMoveOrAction_Doubles(battler);
+        moveIndex = ChooseMoveOrAction_Doubles(battler);
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -280,7 +344,8 @@ u32 BattleAI_ChooseMoveOrAction(u32 battler)
     #if TESTING
     TestRunner_Battle_CheckAiMoveScores(battler);
     #endif // TESTING
-    return ret;
+
+    return moveIndex;
 }
 
 static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
@@ -516,12 +581,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
         gAiBattleData->finalScore[battlerAi][gBattlerTarget][i] = AI_THINKING_STRUCT->score[i];
     }
 
-    // Check special AI actions.
-    if (AI_THINKING_STRUCT->aiAction & AI_ACTION_FLEE)
-        return AI_CHOICE_FLEE;
-    if (AI_THINKING_STRUCT->aiAction & AI_ACTION_WATCH)
-        return AI_CHOICE_WATCH;
-
     numOfBestMoves = 1;
     currentMoveArray[0] = AI_THINKING_STRUCT->score[0];
     consideredMoveArray[0] = 0;
@@ -594,48 +653,37 @@ static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
                 AI_THINKING_STRUCT->aiLogicId++;
             }
 
-            if (AI_THINKING_STRUCT->aiAction & AI_ACTION_FLEE)
+            mostViableMovesScores[0] = AI_THINKING_STRUCT->score[0];
+            mostViableMovesIndices[0] = 0;
+            mostViableMovesNo = 1;
+            for (j = 1; j < MAX_MON_MOVES; j++)
             {
-                actionOrMoveIndex[i] = AI_CHOICE_FLEE;
-            }
-            else if (AI_THINKING_STRUCT->aiAction & AI_ACTION_WATCH)
-            {
-                actionOrMoveIndex[i] = AI_CHOICE_WATCH;
-            }
-            else
-            {
-                mostViableMovesScores[0] = AI_THINKING_STRUCT->score[0];
-                mostViableMovesIndices[0] = 0;
-                mostViableMovesNo = 1;
-                for (j = 1; j < MAX_MON_MOVES; j++)
+                if (gBattleMons[battlerAi].moves[j] != 0)
                 {
-                    if (gBattleMons[battlerAi].moves[j] != 0)
-                    {
-                        if (!CanTargetBattler(battlerAi, i, gBattleMons[battlerAi].moves[j]))
-                            continue;
+                    if (!CanTargetBattler(battlerAi, i, gBattleMons[battlerAi].moves[j]))
+                        continue;
 
-                        if (mostViableMovesScores[0] == AI_THINKING_STRUCT->score[j])
-                        {
-                            mostViableMovesScores[mostViableMovesNo] = AI_THINKING_STRUCT->score[j];
-                            mostViableMovesIndices[mostViableMovesNo] = j;
-                            mostViableMovesNo++;
-                        }
-                        if (mostViableMovesScores[0] < AI_THINKING_STRUCT->score[j])
-                        {
-                            mostViableMovesScores[0] = AI_THINKING_STRUCT->score[j];
-                            mostViableMovesIndices[0] = j;
-                            mostViableMovesNo = 1;
-                        }
+                    if (mostViableMovesScores[0] == AI_THINKING_STRUCT->score[j])
+                    {
+                        mostViableMovesScores[mostViableMovesNo] = AI_THINKING_STRUCT->score[j];
+                        mostViableMovesIndices[mostViableMovesNo] = j;
+                        mostViableMovesNo++;
+                    }
+                    if (mostViableMovesScores[0] < AI_THINKING_STRUCT->score[j])
+                    {
+                        mostViableMovesScores[0] = AI_THINKING_STRUCT->score[j];
+                        mostViableMovesIndices[0] = j;
+                        mostViableMovesNo = 1;
                     }
                 }
-                actionOrMoveIndex[i] = mostViableMovesIndices[Random() % mostViableMovesNo];
-                bestMovePointsForTarget[i] = mostViableMovesScores[0];
+            }
+            actionOrMoveIndex[i] = mostViableMovesIndices[Random() % mostViableMovesNo];
+            bestMovePointsForTarget[i] = mostViableMovesScores[0];
 
-                // Don't use a move against ally if it has less than 100 points.
-                if (i == BATTLE_PARTNER(battlerAi) && bestMovePointsForTarget[i] < AI_SCORE_DEFAULT)
-                {
-                    bestMovePointsForTarget[i] = -1;
-                }
+            // Don't use a move against ally if it has less than 100 points.
+            if (i == BATTLE_PARTNER(battlerAi) && bestMovePointsForTarget[i] < AI_SCORE_DEFAULT)
+            {
+                bestMovePointsForTarget[i] = -1;
             }
 
             for (j = 0; j < MAX_MON_MOVES; j++)
@@ -862,7 +910,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         RETURN_SCORE_MINUS(20);
 
     // Don't setup into expected Focus Punch. Revisit alongside predictedMove with move prediction
-    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS && moveEffect != EFFECT_SLEEP 
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS && moveEffect != EFFECT_SLEEP
         && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
     {
         RETURN_SCORE_MINUS(20);

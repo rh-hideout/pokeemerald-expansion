@@ -146,7 +146,7 @@ void FreeBattleSpritesData(void)
 u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 {
     s32 i, var1, var2;
-    s32 chosenMoveId = -1;
+    s32 chosenMoveIndex = -1;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     u8 unusableMovesBits = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     s32 percent = Random() % 100;
@@ -199,15 +199,15 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
         gBattleStruct->palaceFlags &= (1 << MAX_BATTLERS_COUNT) - 1;
         gBattleStruct->palaceFlags |= (selectedMoves << MAX_BATTLERS_COUNT);
         BattleAI_SetupAIData(selectedMoves, battler);
-        chosenMoveId = BattleAI_ChooseMoveOrAction(battler);
+        chosenMoveIndex = BattleAI_ChooseMoveOrAction(battler);
     }
 
     // If no moves matched the selected group, pick a new move from groups the Pokémon has
     // In this case the AI is not checked again, so the choice may be worse
     // If a move is chosen this way, there's a 50% chance that it will be unable to use it anyway
-    if (chosenMoveId == -1 || chosenMoveId >= MAX_MON_MOVES)
+    if (chosenMoveIndex == -1 || chosenMoveIndex >= MAX_MON_MOVES)
     {
-        chosenMoveId = -1;
+        chosenMoveIndex = -1;
         if (unusableMovesBits != ALL_MOVES_MASK)
         {
             numMovesPerGroup = 0, numMultipleMoveGroups = 0;
@@ -254,8 +254,8 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
                 {
                     i = Random() % MAX_MON_MOVES;
                     if (!((1u << i) & unusableMovesBits))
-                        chosenMoveId = i;
-                } while (chosenMoveId == -1);
+                        chosenMoveIndex = i;
+                } while (chosenMoveIndex == -1);
             }
             else
             {
@@ -280,8 +280,8 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
                 {
                     i = Random() % MAX_MON_MOVES;
                     if (!((1u << i) & unusableMovesBits) && randSelectGroup == GetBattlePalaceMoveGroup(battler, moveInfo->moves[i]))
-                        chosenMoveId = i;
-                } while (chosenMoveId == -1);
+                        chosenMoveIndex = i;
+                } while (chosenMoveIndex == -1);
             }
 
             // Because the selected move was not from the Nature-chosen move group there's a 50% chance
@@ -300,16 +300,16 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
         }
     }
 
-    moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveId]);
+    moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
     if (moveTarget & MOVE_TARGET_USER)
-        chosenMoveId |= (battler << 8);
+        chosenMoveIndex |= (battler << 8);
     else if (moveTarget == MOVE_TARGET_SELECTED)
-        chosenMoveId |= GetBattlePalaceTarget(battler);
+        chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
-        chosenMoveId |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
+        chosenMoveIndex |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
 
-    return chosenMoveId;
+    return chosenMoveIndex;
 }
 
 #undef maxGroupNum
