@@ -554,7 +554,7 @@ static void OpponentHandleChooseMove(u32 battler)
         }
         else
         {
-            chosenMoveIndex = gAiBattleData->moveIndex[battler];
+            chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
             gBattlerTarget = gAiBattleData->chosenTarget[battler];
 
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
@@ -586,7 +586,7 @@ static void OpponentHandleChooseMove(u32 battler)
         u32 target;
         do
         {
-            chosenMoveIndex = Random() & 3;
+            chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 

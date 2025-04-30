@@ -109,7 +109,7 @@ enum AIScore
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler);
-void ComputeBattlerMoveScore(u32 battler);
+void ComputeBattlerDecisions(u32 battler);
 u32 BattleAI_ChooseMoveIndex(u32 battler);
 void Ai_InitPartyStruct(void);
 void Ai_UpdateSwitchInData(u32 battler);

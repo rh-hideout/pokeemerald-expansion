@@ -349,7 +349,7 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
     u32 chosenMoveIndex;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
-    chosenMoveIndex = gAiBattleData->moveIndex[battler];
+    chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
     gBattlerTarget = gAiBattleData->chosenTarget[battler];
     u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 

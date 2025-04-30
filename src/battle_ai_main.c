@@ -308,7 +308,7 @@ void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
     gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
 }
 
-void ComputeBattlerMoveScore(u32 battler)
+void ComputeBattlerDecisions(u32 battler)
 {
     if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
         && (BattlerHasAi(battler)
@@ -324,19 +324,19 @@ void ComputeBattlerMoveScore(u32 battler)
         AI_DATA->aiCalcInProgress = TRUE;
         BattleAI_SetupAIData(0xF, battler);
         SetupAISwitchingData(battler, switchType);
-        gAiBattleData->moveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
+        gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
         AI_DATA->aiCalcInProgress = FALSE;
     }
 }
 
 u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
-    u32 moveIndex;
+    u32 chosenMoveIndex;
 
     if (!IsDoubleBattle())
-        moveIndex = ChooseMoveOrAction_Singles(battler);
+        chosenMoveIndex = ChooseMoveOrAction_Singles(battler);
     else
-        moveIndex = ChooseMoveOrAction_Doubles(battler);
+        chosenMoveIndex = ChooseMoveOrAction_Doubles(battler);
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -345,7 +345,7 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
     TestRunner_Battle_CheckAiMoveScores(battler);
     #endif // TESTING
 
-    return moveIndex;
+    return chosenMoveIndex;
 }
 
 static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
