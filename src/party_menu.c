@@ -7095,6 +7095,7 @@ void ChooseMonForTradingBoard(u8 menuType, MainCallback callback)
 
 void ChooseMonForMoveTutor(void)
 {
+    gSpecialVar_MonBoxId = 0xFF;
     InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_MOVE_TUTOR, FALSE, PARTY_MSG_TEACH_WHICH_MON, Task_HandleChooseMonInput, CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
@@ -7686,7 +7687,7 @@ void MoveDeleterChooseMoveToForget(void)
     if(gSpecialVar_MonBoxId == 0xFF)
         ShowPokemonSummaryScreen(SUMMARY_MODE_SELECT_MOVE, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, CB2_ReturnToField);
     else
-        ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, 29, CB2_ReturnToField);
+        ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, CB2_ReturnToField);
     gFieldCallback = FieldCB_ContinueScriptHandleMusic;
 }
 

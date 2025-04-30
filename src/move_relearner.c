@@ -680,7 +680,7 @@ static void DoMoveRelearnerMain(void)
             if(gSpecialVar_MonBoxId == 0xFF)
                 ShowSelectMovePokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, CB2_InitLearnMoveReturnFromSelectMove, GetCurrentSelectedMove());
             else
-                ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, 29, CB2_InitLearnMoveReturnFromSelectMove);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, CB2_InitLearnMoveReturnFromSelectMove);
             FreeMoveRelearnerResources();
         }
         break;

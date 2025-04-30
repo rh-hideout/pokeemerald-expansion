@@ -556,3 +556,4 @@ gSpecials::
 	def_special Script_GetChosenMonDefensiveIVs
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special ChooseBoxMon
+	def_special CanTeachMoveBoxMon

@@ -2752,9 +2752,9 @@ static void Task_OnSelectedMon(u8 taskId)
             {
                 gSpecialVar_Result = GetBoxMonDataAt(StorageGetCurrentBox(), sCursorPosition, MON_DATA_SPECIES);
                 gSpecialVar_MonBoxId = StorageGetCurrentBox();
-                gSpecialVar_MonBoxPos = sCursorPosition;
                 gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[0]);
             }
+            gSpecialVar_MonBoxPos = sCursorPosition;
             gSpecialVar_0x8004 = sCursorPosition;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);

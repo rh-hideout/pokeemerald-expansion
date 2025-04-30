@@ -5,6 +5,7 @@
 #include "battle_tower.h"
 #include "cable_club.h"
 #include "data.h"
+#include "daycare.h"
 #include "decoration.h"
 #include "diploma.h"
 #include "event_data.h"
@@ -20,6 +21,7 @@
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item_icon.h"
+#include "item_menu.h"
 #include "link.h"
 #include "load_save.h"
 #include "list_menu.h"
@@ -32,6 +34,7 @@
 #include "pokeblock.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
+#include "pokemon_summary_screen.h"
 #include "random.h"
 #include "rayquaza_scene.h"
 #include "region_map.h"
@@ -78,6 +81,13 @@
 #define ELEVATOR_WINDOW_WIDTH  3
 #define ELEVATOR_WINDOW_HEIGHT 3
 #define ELEVATOR_LIGHT_STAGES  3
+
+enum {
+    CAN_LEARN_MOVE,
+    CANNOT_LEARN_MOVE,
+    ALREADY_KNOWS_MOVE,
+    CANNOT_LEARN_MOVE_IS_EGG
+};
 
 EWRAM_DATA bool8 gBikeCyclingChallenge = FALSE;
 EWRAM_DATA u8 gBikeCollisions = 0;
@@ -141,6 +151,18 @@ static void Task_CloseBattlePikeCurtain(u8);
 static u8 DidPlayerGetFirstFans(void);
 static void SetInitialFansOfPlayer(void);
 static u16 PlayerGainRandomTrainerFan(void);
+static void Task_LearnedMoveBoxMon(u8);
+static void Task_ReplaceBoxMonMoveYesNo(u8);
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8);
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8);
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8);
+static void StopLearningBoxMonMovePrompt(u8);
+static void CB2_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(void);
+static void Task_BoxMonReplaceMove(u8);
+static void Task_StopLearningBoxMonMoveYesNo(u8);
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8);
+static void Task_DidntLearnMove(u8);
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
@@ -4299,4 +4321,244 @@ void UseBlankMessageToCancelPokemonPic(void)
     u8 t = EOS;
     AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
     ScriptMenu_HidePokemonPic();
+}
+
+void CanTeachMoveBoxMon(void)
+{
+    ScriptContext_Stop();
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
+        if (GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            DebugPrintf("%u", gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
+            //DebugPrintf("%u", GetMonData(gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG));
+            DebugPrintf("%u", GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG));
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (MonKnowsMove(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToMon(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            else
+            {
+                GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+    }
+    else
+    {
+        if (GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (BoxMonKnowsMove(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToBoxMon(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            else
+            {
+                GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+        
+    }
+}
+
+static void Task_LearnedMoveBoxMon(u8 taskId)
+{
+    s16 move = gSpecialVar_ItemId;
+
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+    else
+        GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+    StringCopy(gStringVar2, GetMoveName(move));
+    ShowFieldMessage(gText_PkmnLearnedMove4);
+    gTasks[taskId].func = Task_DoLearnedBoxMonMoveFanfareAfterText;
+}
+
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        PlayFanfare(MUS_LEVEL_UP);
+        gSpecialVar_Result = CAN_LEARN_MOVE;
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
+static void Task_ReplaceBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleReplaceBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        ShowFieldMessage(gText_WhichMoveToForget);
+        gTasks[taskId].func = Task_ShowSummaryScreenToForgetBoxMonMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        StopLearningBoxMonMovePrompt(taskId);
+        break;
+    }
+}
+
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        if(gSpecialVar_MonBoxId == 0xFF)
+            ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_MonBoxPos, gPlayerPartyCount - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+        else
+            ShowSelectMoveBoxPokemonSummaryScreen(GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+    }
+}
+
+static void CB2_ReturnToFieldWhileLearningMove(void)
+{
+    if (!gPaletteFade.active)
+    {
+        gFieldCallback = Task_ReturnToFieldWhileLearningMove;
+        SetMainCallback2(CB2_ReturnToField);
+    }
+}
+
+static void Task_ReturnToFieldWhileLearningMove(void)
+{
+    if (GetMoveSlotToReplace() < MAX_MON_MOVES)
+    {
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        else
+        {
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        ShowFieldMessage(gText_12PoofForgotMove);
+        CreateTask(Task_BoxMonReplaceMove,1);
+    }
+    else
+        CreateTask(StopLearningBoxMonMovePrompt,1);
+}
+
+static void Task_BoxMonReplaceMove(u8 taskId)
+{
+
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        u16 move = gSpecialVar_ItemId;
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
+            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace()); 
+        }
+        else
+        {
+            struct BoxPokemon *mon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+
+            u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
+            ppBonuses &= gPPUpClearMask[GetMoveSlotToReplace()];
+            SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
+
+            SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
+            SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
+        }
+     
+        Task_LearnedMoveBoxMon(taskId);
+    }
+}
+
+static void StopLearningBoxMonMovePrompt(u8 taskId)
+{
+    StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+    ShowFieldMessage(gText_StopLearningMove2);
+    gTasks[taskId].func = Task_StopLearningBoxMonMoveYesNo;
+}
+
+static void Task_StopLearningBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleStopLearningBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_MoveNotLearned);
+        gSpecialVar_Result = 4;
+        gTasks[taskId].func = Task_DidntLearnMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+        gTasks[taskId].func = Task_ReplaceBoxMonMoveYesNo;
+        break;
+    }
+}
+
+static void Task_DidntLearnMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
 }

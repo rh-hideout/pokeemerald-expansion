@@ -1212,6 +1212,12 @@ void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 ma
     sMonSummaryScreen->newMove = newMove;
 }
 
+void ShowSelectMoveBoxPokemonSummaryScreen(struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove)
+{
+    ShowPokemonSummaryScreen(SUMMARY_MODE_BOX_SELECT_MOVE, mons, monIndex, maxMonIndex, callback);
+    sMonSummaryScreen->newMove = newMove;
+}
+
 void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
 {
     ShowPokemonSummaryScreen(mode, mons, monIndex, maxMonIndex, callback);

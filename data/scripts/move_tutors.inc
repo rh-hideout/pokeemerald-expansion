@@ -265,6 +265,71 @@ MoveTutor_EventScript_OpenPartyMenu::
 	faceplayer
 	return
 
+MoveTutor_EventScript_OpenBox::
+	fadescreen FADE_TO_BLACK
+	special ChooseBoxMon
+	waitstate
+	special IsSelectedMonEgg
+	goto_if_eq VAR_RESULT, TRUE, MoveTutor_EggCantForgetMoves
+	setvar VAR_ITEM_ID, MOVE_EXPLOSION
+	special CanTeachMoveBoxMon
+	goto_if_eq VAR_RESULT, 1, MoveTutor_CantLearnMove
+	goto_if_eq VAR_RESULT, 2, MoveTutor_AlreadyKnowsMove
+	goto_if_eq VAR_RESULT, 3, MoveTutor_EggCantForgetMoves
+	waitstate
+	goto_if_eq VAR_RESULT, 4, MoveTutor_EventScript_ExplosionDeclined
+	setflag FLAG_MOVE_TUTOR_TAUGHT_EXPLOSION
+	goto MoveTutor_EventScript_ExplosionTaught
+	end
+
+MoveTutor_ForgetMove::
+	special MoveDeleterChooseMoveToForget
+	fadescreen FADE_FROM_BLACK
+	msgbox LilycoveCity_MoveDeletersHouse_Text_MonsMoveShouldBeForgotten, MSGBOX_YESNO
+	switch VAR_RESULT
+	case YES, LilycoveCity_MoveDeletersHouse_EventScript_TryForgetMove
+	case NO, LilycoveCity_MoveDeletersHouse_EventScript_ComeAgain
+	
+	goto_if_eq VAR_0x8005, MAX_MON_MOVES, LilycoveCity_MoveDeletersHouse_EventScript_ChooseMonAndMoveToForget
+	special BufferMoveDeleterNicknameAndMove
+	msgbox LilycoveCity_MoveDeletersHouse_Text_MonsMoveShouldBeForgotten, MSGBOX_YESNO
+	switch VAR_RESULT
+	case YES, LilycoveCity_MoveDeletersHouse_EventScript_TryForgetMove
+	case NO, LilycoveCity_MoveDeletersHouse_EventScript_ComeAgain
+
+MoveTutor_MoveDeletersHouse_EventScript_TryForgetMove::	
+	special MoveDeleterForgetMove
+	playfanfare MUS_MOVE_DELETED
+	waitfanfare
+	msgbox LilycoveCity_MoveDeletersHouse_Text_MonHasForgottenMove, MSGBOX_DEFAULT
+	waitstate
+	lock
+	faceplayer
+	return
+
+MoveTutor_EggCantForgetMoves::
+	msgbox LilycoveCity_MoveDeletersHouse_Text_EggCantForgetMoves, MSGBOX_DEFAULT
+	releaseall
+	end
+
+MoveTutor_CantLearnMove::
+	msgbox MoveTutor_Text_CantLearnMove, MSGBOX_DEFAULT
+	releaseall
+	end
+
+MoveTutor_AlreadyKnowsMove::
+	msgbox MoveTutor_Text_AlreadyKnowsMove, MSGBOX_DEFAULT
+	releaseall
+	end
+
+MoveTutor_Text_CantLearnMove:
+	.string "Hmm, i don't think that Pokemon\n"
+	.string "has the power to Explode.$"
+
+MoveTutor_Text_AlreadyKnowsMove:
+	.string "That Pokemon can Explode all on\n"
+	.string "its own.$"
+
 MoveTutor_EventScript_CanOnlyBeLearnedOnce::
 	msgbox MoveTutor_Text_ThisMoveCanOnlyBeLearnedOnce, MSGBOX_YESNO
 	return
