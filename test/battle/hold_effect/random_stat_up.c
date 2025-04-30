@@ -17,7 +17,6 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Starf Berry, the Attack of Wobbuffet sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
@@ -29,22 +28,22 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_STARF_BERRY); HP(101); MaxHP(400); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ONE_OF {
-            MESSAGE("Using Starf Berry, the Attack of Wobbuffet sharply rose!");
-            MESSAGE("Using Starf Berry, the Defense of Wobbuffet sharply rose!");
-            MESSAGE("Using Starf Berry, the Sp. Atk of Wobbuffet sharply rose!");
-            MESSAGE("Using Starf Berry, the Sp. Def of Wobbuffet sharply rose!");
-            MESSAGE("Using Starf Berry, the Speed of Wobbuffet sharply rose!");
-        }
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_LE(player->hp * 4, player->maxHP);
+        ONE_OF {
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+        }
     }
 }
 
@@ -54,22 +53,22 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_STARF_BERRY); HP(201); MaxHP(400); Ability(ABILITY_GLUTTONY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ONE_OF {
-            MESSAGE("Using Starf Berry, the Attack of Munchlax sharply rose!");
-            MESSAGE("Using Starf Berry, the Defense of Munchlax sharply rose!");
-            MESSAGE("Using Starf Berry, the Sp. Atk of Munchlax sharply rose!");
-            MESSAGE("Using Starf Berry, the Sp. Def of Munchlax sharply rose!");
-            MESSAGE("Using Starf Berry, the Speed of Munchlax sharply rose!");
-        }
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_LE(player->hp * 2, player->maxHP);
+        ONE_OF {
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+        }
     }
 }
 
@@ -79,22 +78,22 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         PLAYER(SPECIES_FLAPPLE) { Item(ITEM_STARF_BERRY); HP(101); MaxHP(400); Ability(ABILITY_RIPEN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_RIPEN);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ONE_OF {
-            MESSAGE("Using Starf Berry, the Attack of Flapple drastically rose!");
-            MESSAGE("Using Starf Berry, the Defense of Flapple drastically rose!");
-            MESSAGE("Using Starf Berry, the Sp. Atk of Flapple drastically rose!");
-            MESSAGE("Using Starf Berry, the Sp. Def of Flapple drastically rose!");
-            MESSAGE("Using Starf Berry, the Speed of Flapple drastically rose!");
-        }
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_LE(player->hp * 4, player->maxHP);
+        ONE_OF {
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 4);
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 4);
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 4);
+            EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 4);
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 4);
+        }
     }
 }

@@ -1619,7 +1619,7 @@ bool32 MoodyCantRaiseStat(u32 stat)
     return CompareStat(gBattlerAttacker, stat, MAX_STAT_STAGE, CMP_EQUAL);
 }
 
-// gBattlerAttacker is the battler that's trying to raise their stats and due to limitations of RandomUniformExcept, cannot be an argument
+// gBattlerAttacker is the battler that's trying to lower their stats and due to limitations of RandomUniformExcept, cannot be an argument
 bool32 MoodyCantLowerStat(u32 stat)
 {
     return stat == GET_STAT_BUFF_ID(gBattleScripting.statChanger) || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
