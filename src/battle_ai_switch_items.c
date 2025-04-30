@@ -411,7 +411,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
     return FALSE;
 }
 
-static bool32 FindMonThatHitsWonderGuard(u32 battler)
+static bool32 ShouldSwitchIfWonderGuard(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 i, move;
@@ -434,7 +434,12 @@ static bool32 FindMonThatHitsWonderGuard(u32 battler)
     }
 
     if (RandomPercentage(RNG_AI_SWITCH_WONDER_GUARD, GetSwitchChance(SHOULD_SWITCH_WONDER_GUARD)))
-        return FindMonWithMoveOfEffectiveness(battler, opposingBattler, UQ_4_12(2.0));
+    {
+        if (AI_DATA->mostSuitableMonId[battler] == PARTY_SIZE) // No good candidate mons, find any one that can deal damage
+            return FindMonWithMoveOfEffectiveness(battler, opposingBattler, UQ_4_12(2.0));
+        else // Good candidate mon, send that in
+            return SetSwitchinAndSwitch(battler, PARTY_SIZE);
+    }
 
     return FALSE;
 }
@@ -1145,7 +1150,7 @@ bool32 ShouldSwitch(u32 battler)
     // FindMon functions can prompt a switch to specific party members that override GetMostSuitableMonToSwitchInto
     // The rest can prompt a switch to party member returned by GetMostSuitableMonToSwitchInto
 
-    if (FindMonThatHitsWonderGuard(battler))
+    if (ShouldSwitchIfWonderGuard(battler))
         return TRUE;
     if ((AI_THINKING_STRUCT->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_SMART_SWITCHING) && (CanMonSurviveHazardSwitchin(battler) == FALSE))
         return FALSE;
