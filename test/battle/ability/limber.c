@@ -4,6 +4,7 @@
 SINGLE_BATTLE_TEST("Limber prevents paralysis")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER_SHOCK, MOVE_EFFECT_PARALYSIS) == TRUE);
         PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -21,6 +22,8 @@ SINGLE_BATTLE_TEST("Limber prevents paralysis")
 SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_PARALYZE);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
         PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
