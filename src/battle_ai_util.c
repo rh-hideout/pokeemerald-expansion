@@ -3765,20 +3765,20 @@ void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons)
 }
 
 // party logic
-s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, bool32 isPartyMonAttacker)
+s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, enum DamageCalcContext calcContext)
 {
     struct SimulatedDamage dmg;
     uq4_12_t effectiveness;
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
-    if (isPartyMonAttacker)
+    if (calcContext == AI_ATTACKING)
     {
         gBattleMons[battlerAtk] = switchinCandidate;
         AI_THINKING_STRUCT->saved[battlerDef].saved = TRUE;
         SetBattlerAiData(battlerAtk, AI_DATA); // set known opposing battler data
         AI_THINKING_STRUCT->saved[battlerDef].saved = FALSE;
     }
-    else
+    else if (calcContext == AI_DEFENDING)
     {
         gBattleMons[battlerDef] = switchinCandidate;
         AI_THINKING_STRUCT->saved[battlerAtk].saved = TRUE;
@@ -3787,13 +3787,31 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
     }
 
     dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, FALSE, AI_GetWeather());
+
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
-    if (isPartyMonAttacker)
+    if (calcContext == AI_ATTACKING)
+    {
         SetBattlerAiData(battlerAtk, AI_DATA);
-    else
+        if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_RISKY && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE))
+            return dmg.maximum;
+        else if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_RISKY))
+            return dmg.minimum;
+        else
+            return dmg.median;
+    }
+
+    else if (calcContext == AI_DEFENDING)
+    {
         SetBattlerAiData(battlerDef, AI_DATA);
+        if (AI_THINKING_STRUCT->aiFlags[battlerDef] & AI_FLAG_RISKY && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE))
+            return dmg.minimum;
+        else if (AI_THINKING_STRUCT->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_RISKY))
+            return dmg.maximum;
+        else
+            return dmg.median;
+    }
 
     return dmg.median;
 }
