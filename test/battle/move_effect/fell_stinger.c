@@ -6,10 +6,10 @@ SINGLE_BATTLE_TEST("Fell Stinger raises user's Attack by 3 stages if it faints t
     u32 config;
 
     PARAMETRIZE { config = GEN_7; }
-    PARAMETRIZE { config = GEN_6; } // Fails for gen 6
+    PARAMETRIZE { config = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_FELL_STINGER, config);
+        WITH_CONFIG(GEN_CONFIG_FELL_STINGER_STAT_RAISE, config);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FELL_STINGER); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
