@@ -50,7 +50,6 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - left targ
     PARAMETRIZE { move = MOVE_HYPNOSIS; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_CHIKORITA);
