@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         switch(i) {

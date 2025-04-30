@@ -2193,6 +2193,8 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     INVALID_IF(requirePartyIndex && ctx.partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), \
                 "MOVE to invalid party index");
 
+    INVALID_IF(moveId == MOVE_TACKLE, "Tackle's power varies too much across generations, please use Scratch");
+
     if (ctx.explicitHit)
         DATA.battleRecordTurns[DATA.turns][battlerId].hit = 1 + ctx.hit;
     if (ctx.explicitCriticalHit)

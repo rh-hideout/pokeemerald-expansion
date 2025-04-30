@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents intimidate")
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_KRABBY) { Ability(ABILITY_HYPER_CUTTER); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SCRATCH); }
 
     } SCENE {
         HP_BAR(player, captureDamage: &turnOneHit);

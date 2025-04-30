@@ -128,7 +128,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
 {
     u32 moveToUse;
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
-    PARAMETRIZE { moveToUse = MOVE_TACKLE; }
+    PARAMETRIZE { moveToUse = MOVE_SCRATCH; }
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WOBBUFFET);
@@ -138,7 +138,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
         TURN { MOVE(playerRight, moveToUse, target: opponentRight); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
-        if (moveToUse == MOVE_TACKLE) {
+        if (moveToUse == MOVE_SCRATCH) {
             MESSAGE("The opposing Wobbuffet's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
@@ -197,7 +197,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not prevent ability stat changes")
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Wobbuffet's Speed fell!");
     }
