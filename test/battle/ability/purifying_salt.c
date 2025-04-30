@@ -117,3 +117,17 @@ SINGLE_BATTLE_TEST("Purifying Salt doesn't prevent pokemon from being poisoned b
         HP_BAR(player);
     }
 }
+
+SINGLE_BATTLE_TEST("Purifying Salt protects from secondary effect burn")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_EMBER, MOVE_EFFECT_BURN));
+        PLAYER(SPECIES_GARGANACL) { Ability(ABILITY_PURIFYING_SALT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        NOT STATUS_ICON(player, STATUS1_BURN);
+    }
+}
