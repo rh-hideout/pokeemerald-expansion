@@ -144,29 +144,17 @@ static void InitSinglePlayerBtlControllers(void)
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         if (isRecorded)
-        {
             btlControllerFunc0 = SetControllerToRecordedPlayer;
-            btlControllerFunc1 = SetControllerToOpponent;
-            btlControllerFunc2 = SetControllerToPlayerPartner;
-            btlControllerFunc3 = SetControllerToOpponent;
-
-            pos0 = B_POSITION_PLAYER_LEFT;
-            pos1 = B_POSITION_OPPONENT_LEFT;
-            pos2 = B_POSITION_PLAYER_RIGHT;
-            pos3 = B_POSITION_OPPONENT_RIGHT;
-        }
         else
-        {
             btlControllerFunc0 = SetControllerToPlayer;
-            btlControllerFunc1 = SetControllerToOpponent;
-            btlControllerFunc2 = SetControllerToPlayerPartner;
-            btlControllerFunc3 = SetControllerToOpponent;
+        btlControllerFunc1 = SetControllerToOpponent;
+        btlControllerFunc2 = SetControllerToPlayerPartner;
+        btlControllerFunc3 = SetControllerToOpponent;
 
-            pos0 = B_POSITION_PLAYER_LEFT;
-            pos1 = B_POSITION_OPPONENT_LEFT;
-            pos2 = B_POSITION_PLAYER_RIGHT;
-            pos3 = B_POSITION_OPPONENT_RIGHT;
-        }
+        pos0 = B_POSITION_PLAYER_LEFT;
+        pos1 = B_POSITION_OPPONENT_LEFT;
+        pos2 = B_POSITION_PLAYER_RIGHT;
+        pos3 = B_POSITION_OPPONENT_RIGHT;
 
         gBattlerControllerFuncs[0] = btlControllerFunc0;
         gBattlerControllerFuncs[1] = btlControllerFunc1;
