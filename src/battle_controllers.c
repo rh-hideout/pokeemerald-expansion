@@ -124,11 +124,6 @@ void InitBattleControllers(void)
 static void InitSinglePlayerBtlControllers(void)
 {
     s32 i;
-    u32 pos0, pos1, pos2, pos3;
-    BattleControllerFunc btlControllerFunc0 = NULL;
-    BattleControllerFunc btlControllerFunc1 = NULL;
-    BattleControllerFunc btlControllerFunc2 = NULL;
-    BattleControllerFunc btlControllerFunc3 = NULL;
     bool32 isDouble = IsDoubleBattle();
     bool32 isMaster = (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
     bool32 isRecorded = (gBattleTypeFlags & BATTLE_TYPE_RECORDED);
@@ -190,28 +185,18 @@ static void InitSinglePlayerBtlControllers(void)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
+            gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+            gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+            gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
+            gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
+
             if (isRecorded)
-                btlControllerFunc0 = SetControllerToRecordedPlayer;
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
             else
-                btlControllerFunc0 = SetControllerToPlayer;
-            btlControllerFunc1 = SetControllerToOpponent;
-            btlControllerFunc2 = SetControllerToPlayerPartner;
-            btlControllerFunc3 = SetControllerToOpponent;
-
-            pos0 = B_POSITION_PLAYER_LEFT;
-            pos1 = B_POSITION_OPPONENT_LEFT;
-            pos2 = B_POSITION_PLAYER_RIGHT;
-            pos3 = B_POSITION_OPPONENT_RIGHT;
-
-            gBattlerControllerFuncs[0] = btlControllerFunc0;
-            gBattlerControllerFuncs[1] = btlControllerFunc1;
-            gBattlerControllerFuncs[2] = btlControllerFunc2;
-            gBattlerControllerFuncs[3] = btlControllerFunc3;
-
-            gBattlerPositions[0] = pos0;
-            gBattlerPositions[1] = pos1;
-            gBattlerPositions[2] = pos2;
-            gBattlerPositions[3] = pos3;
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
+            gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayerPartner;
+            gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
 
             BufferBattlePartyCurrentOrderBySide(0, 0);
             BufferBattlePartyCurrentOrderBySide(1, 0);
