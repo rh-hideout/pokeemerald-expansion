@@ -6632,11 +6632,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Meower,
        .shinyPalette = gMonShinyPalette_Meower,
        .iconSprite = gMonIcon_Meower,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Meower)
        .levelUpLearnset = sMeowerLevelUpLearnset,
        .teachableLearnset = sMeowerTeachableLearnset,
-///       .eggMoveLearnset = sCatationEggMoveLearnset,
+       .eggMoveLearnset = sCatationEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_MOON_STONE, SPECIES_CATATION}),
     },
         [SPECIES_CATATION] =
@@ -6689,11 +6689,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Catation,
        .shinyPalette = gMonShinyPalette_Catation,
        .iconSprite = gMonIcon_Catation,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Catation)
        .levelUpLearnset = sCatationLevelUpLearnset,
        .teachableLearnset = sCatationTeachableLearnset,
-///       .eggMoveLearnset = sCatationEggMoveLearnset,
+       .eggMoveLearnset = sCatationEggMoveLearnset,
     },
 
         [SPECIES_YUUKIINO] =
