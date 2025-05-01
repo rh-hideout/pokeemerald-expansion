@@ -11408,12 +11408,13 @@ void UpdateStallMons(void)
     if (gMovesInfo[gCurrentMove].target == MOVE_TARGET_SELECTED)
     {
         u32 moveType = GetBattleMoveType(gCurrentMove); //  Probably doesn't handle dynamic move types right now
-        u32 ability = GetBattlerAbility(gBattlerTarget);
-        if (CanAbilityAbsorbMove(gBattlerAttacker, gBattlerTarget, ability, gCurrentMove, moveType, ABILITY_CHECK_TRIGGER))
+        u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
+        u32 abilityDef = GetBattlerAbility(gBattlerTarget);
+        if (CanAbilityAbsorbMove(gBattlerAttacker, gBattlerTarget, abilityDef, gCurrentMove, moveType, ABILITY_CHECK_TRIGGER))
         {
             gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
-        else if (CanAbilityBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove, ability, ABILITY_CHECK_TRIGGER))
+        else if (CanAbilityBlockMove(gBattlerAttacker, gBattlerTarget, abilityAtk, abilityDef, gCurrentMove, ABILITY_CHECK_TRIGGER))
         {
             gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
