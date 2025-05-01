@@ -85,12 +85,12 @@ struct DisableStruct
     s8 stockpileBeforeSpDef;
     u8 substituteHP;
     u8 encoredMovePos;
-    u8 disableTimer:4;
-    u8 encoreTimer:4;
-    u8 perishSongTimer:4;
-    u8 rolloutTimer:4;
-    u8 rolloutTimerStartValue:4;
-    u8 tauntTimer:4;
+    u16 disableTimer;
+    u16 encoreTimer;
+    u16 perishSongTimer;
+    u16 rolloutTimer;
+    u16 rolloutTimerStartValue;
+    u16 tauntTimer;
     u8 furyCutterCounter;
     u8 battlerPreventingEscape;
     u8 battlerWithSureHit;
@@ -99,16 +99,16 @@ struct DisableStruct
     u8 chargeTimer:4;
     u8 rechargeTimer;
     u8 autotomizeCount;
-    u8 slowStartTimer;
-    u8 embargoTimer;
-    u8 magnetRiseTimer;
-    u8 telekinesisTimer;
-    u8 healBlockTimer;
-    u8 laserFocusTimer;
-    u8 throatChopTimer;
+    u16 slowStartTimer;
+    u16 embargoTimer;
+    u16 magnetRiseTimer;
+    u16 telekinesisTimer;
+    u16 healBlockTimer;
+    u16 laserFocusTimer;
+    u16 throatChopTimer;
     u8 wrapTurns;
-    u8 syrupBombTimer;
-    u8 tormentTimer:4; // used for G-Max Meltdown
+    u16 syrupBombTimer;
+    u16 tormentTimer; // used for G-Max Meltdown
     u8 usedMoves:4;
     u8 truantCounter:1;
     u8 truantSwitchInHack:1;
@@ -130,46 +130,32 @@ struct DisableStruct
     u8 boosterEnergyActivates:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
-    u8 startEmergencyExit:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 padding:2;
+    u8 padding:3;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
-    u32 protected:1;
-    u32 spikyShielded:1;
-    u32 kingsShielded:1;
-    u32 banefulBunkered:1;
-    u32 obstructed:1;
+    u32 protected:7; // 126 protect options
     u32 endured:1;
     u32 noValidMoves:1;
     u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 prlzImmobility:1;
+    u32 nonVolatileStatusImmobility:1;
     u32 confusionSelfDmg:1;
-    u32 targetAffected:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 usedImprisonedMove:1;
-    u32 loveImmobility:1;
-    u32 usedDisabledMove:1;
-    u32 usedTauntedMove:1;
-    u32 flag2Unknown:1; // Only set to 0 once. Checked in 'WasUnableToUseMove' function.
-    u32 flinchImmobility:1;
+    u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
     u32 notFirstStrike:1;
     u32 palaceUnableToUseMove:1;
-    u32 usedHealBlockedMove:1;
-    u32 usedGravityPreventedMove:1;
     u32 powderSelfDmg:1;
-    u32 usedThroatChopPreventedMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
-    u32 unused:1;
+    u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
     u16 statFell:1;
@@ -178,16 +164,14 @@ struct ProtectStruct
     u16 beakBlastCharge:1;
     u16 quash:1;
     u16 shellTrap:1;
-    u16 maxGuarded:1;
-    u16 silkTrapped:1;
-    u16 burningBulwarked:1;
     u16 eatMirrorHerb:1;
     u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
-    u16 padding:2;
+    u16 lashOutAffected:1;
+    u16 padding:4;
     // End of 16-bit bitfield
-    u32 physicalDmg;
-    u32 specialDmg;
+    u16 physicalDmg;
+    u16 specialDmg;
     u8 physicalBattlerId;
     u8 specialBattlerId;
 };
@@ -202,17 +186,17 @@ struct SpecialStatus
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 focusBanded:1;
-    u8 focusSashed:1;
-    u8 emergencyExited:1;
+    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 afterYou:1;
-    // End of byte
-    u8 sturdied:1;
+    u8 enduredDamage:1;
     u8 stormDrainRedirected:1;
+    // End of byte
     u8 switchInAbilityDone:1;
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
+    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
+    u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
     // End of byte
     u8 gemParam;
     // End of byte
@@ -220,19 +204,14 @@ struct SpecialStatus
     u8 rototillerAffected:1;  // to be affected by rototiller
     u8 parentalBondState:2;
     u8 multiHitOn:1;
-    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
-    u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 affectionEndured:1;
-    // End of byte
-    u8 dancerUsedMove:1;
-    u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
     // End of byte
-    u8 enduredDamage:1;
-    u8 padding:7;
+    u8 dancerUsedMove:1;
+    u8 dancerOriginalTarget:3;
+    u8 unused:4;
+    // End of byte
 };
 
 struct SideTimer
@@ -284,7 +263,7 @@ struct FieldTimer
 
 struct WishFutureKnock
 {
-    u8 futureSightCounter[MAX_BATTLERS_COUNT];
+    u16 futureSightCounter[MAX_BATTLERS_COUNT];
     u8 futureSightBattlerIndex[MAX_BATTLERS_COUNT];
     u8 futureSightPartyIndex[MAX_BATTLERS_COUNT];
     u16 futureSightMove[MAX_BATTLERS_COUNT];
@@ -409,6 +388,7 @@ struct BattleCallbacksStack
 struct StatsArray
 {
     u16 stats[NUM_STATS];
+    u16 level;
 };
 
 struct BattleResources
@@ -570,7 +550,7 @@ struct ZMoveData
 
 struct DynamaxData
 {
-    u8 dynamaxTurns[MAX_BATTLERS_COUNT];
+    u16 dynamaxTurns[MAX_BATTLERS_COUNT];
     u16 baseMoves[MAX_BATTLERS_COUNT]; // base move of Max Move
     u16 lastUsedBaseMove;
 };
@@ -647,9 +627,9 @@ struct BattlerState
 struct BattleStruct
 {
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
-    u8 turnEffectsTracker;
+    u8 eventBlockCounter;
     u8 turnEffectsBattlerId;
-    u8 turnCountersTracker;
+    u8 endTurnEventsCounter;
     u16 wrappedMove[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
@@ -720,18 +700,16 @@ struct BattleStruct
         struct LinkBattlerHeader linkBattlerHeader;
         struct BattleVideo battleVideo;
     } multiBuffer;
-    u8 wishPerishSongState;
-    u8 wishPerishSongBattlerId;
     u8 startingStatus:6; // status to apply at battle start. defined in constants/battle.h
     u8 startingStatusDone:1;
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
-    u8 obedienceResult:3;
+    u8 unused:3;
     u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
-    u8 startingStatusTimer;
+    u16 startingStatusTimer;
     u8 atkCancellerTracker;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
@@ -784,17 +762,17 @@ struct BattleStruct
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
-    u8 hitSwitchTargetFailed:1;
+    u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     u8 spriteIgnore0Hp:1;
-    u8 battleBondTransformed[NUM_BATTLE_SIDES]; // Bitfield for each party.
+    u8 battleBondBoost[NUM_BATTLE_SIDES]; // Bitfield for each party.
     u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
-    u8 pledgeMove:1;
     u8 isSkyBattle:1;
-    u32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
-    u32 aiDelayFrames; // Number of frames it took to choose an action.
+    s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
+    s32 aiDelayFrames; // Number of frames it took to choose an action.
+    s32 aiDelayCycles; // Number of cycles it took to choose an action.
     u8 timesGotHit[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 transformZeroToHero[NUM_BATTLE_SIDES];
     u8 stickySyrupdBy[MAX_BATTLERS_COUNT];
@@ -809,9 +787,8 @@ struct BattleStruct
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    u8 redCardActivates:1;
     u8 cheekPouchActivated:1;
-    u8 padding2:1; // padding in the middle so pursuit fields are together
+    u8 padding2:3;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -831,8 +808,6 @@ struct BattleStruct
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u8 embodyAspectBoost[NUM_BATTLE_SIDES];
-    u16 savedMove; // backup current move for mid-turn switching, e.g. Red Card
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
@@ -842,8 +817,11 @@ struct BattleStruct
 struct AiBattleData
 {
     s32 finalScore[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // AI, target, moves to make debugging easier
-    u8 moveOrAction[MAX_BATTLERS_COUNT];
+    u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
+    u8 actionFlee:1;
+    u8 choiceWatch:1;
+    u8 padding:6;
 };
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
@@ -913,18 +891,6 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
     gBattleMons[battlerId].types[2] = TYPE_MYSTERY;                                            \
 }
 
-#define IS_BATTLER_PROTECTED(battlerId)(gProtectStructs[battlerId].protected                                           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_WIDE_GUARD           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_QUICK_GUARD          \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_CRAFTY_SHIELD        \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_MAT_BLOCK            \
-                                        || gProtectStructs[battlerId].spikyShielded                                    \
-                                        || gProtectStructs[battlerId].kingsShielded                                    \
-                                        || gProtectStructs[battlerId].banefulBunkered                                  \
-                                        || gProtectStructs[battlerId].burningBulwarked                                 \
-                                        || gProtectStructs[battlerId].obstructed                                       \
-                                        || gProtectStructs[battlerId].silkTrapped)
-
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
 #define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
@@ -941,11 +907,11 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 painSplitHp;
+    s32 unused1;
     s32 bideDmg;
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused;
+    u8 unused2;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
@@ -1099,7 +1065,7 @@ extern u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13]; //to handle stupidly large z move names
 extern u32 gBattleTypeFlags;
-extern u8 gBattleTerrain;
+extern u8 gBattleEnvironment;
 extern u8 *gBattleAnimBgTileBuffer;
 extern u8 *gBattleAnimBgTilemapBuffer;
 extern u32 gBattleControllerExecFlags;
@@ -1304,4 +1270,3 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 }
 
 #endif // GUARD_BATTLE_H
-

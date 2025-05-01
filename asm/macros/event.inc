@@ -338,6 +338,12 @@
 	.byte SCR_OP_GETTIME
 	.endm
 
+	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
+	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
+	.macro gettimeofday
+	callnative ScrCmd_gettimeofday
+	.endm
+
 	@ Plays the specified sound. Only one sound may play at a time, with newer ones interrupting older ones.
 	.macro playse song:req
 	.byte SCR_OP_PLAYSE
@@ -1790,11 +1796,14 @@
 	.4byte \text
 	.endm
 
-	@ Equivalent to fadescreen but copies gPlttBufferUnfaded to an allocated buffer on the fade out
-	@ and the reverse on the fade in, in effect saving gPlttBufferUnfaded to restore it.
-	.macro fadescreenswapbuffers mode:req
+	@ Equivalent to fadescreen but uses a hardware fade and darken/lighten blend modes,
+	@ to avoid modifying palettes at all.
+	@ Useful for fade-out/fade-in without leaving the overworld or entering a new scene.
+	@ If nowait set, doesn't wait for the fade to complete
+	.macro fadescreenswapbuffers mode:req, nowait=0
 	.byte SCR_OP_FADESCREENSWAPBUFFERS
 	.byte \mode
+	.byte \nowait
 	.endm
 
 	@ Buffers the specified trainer's class name to the given string var.
@@ -2444,7 +2453,7 @@
 	callnative Script_SetDifficulty, requests_effects=1
 	.byte \difficulty
 	.endm
-    
+
 	.macro forcesave
 	callnative Script_ForceSaveGame
 	waitstate
@@ -2509,4 +2518,68 @@
 	.macro cant_see_if_ne, a:req, b:req
 	compare \a, \b
 	cant_see_if 5
+	.endm
+
+@ Follower NPCs
+
+	@ Sets an NPC up to follow the player.
+	@ Follower flags are defined in include/constants/follower_npc.h
+	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
+	.macro setfollower localId:req, flags:req, script=0, battlePartner=0
+	checkfollower
+	goto_if_eq VAR_RESULT, TRUE, 1f
+	hidefollower
+	delay 16
+	callnative ScriptSetFollowerNPC
+	.if \script == 0
+		.set setScript, FALSE
+	.else
+		.set setScript, TRUE
+	.endif
+	.byte \localId
+	.2byte \flags
+	.byte setScript
+	.2byte \battlePartner
+	.4byte \script
+	updatefollowingmon
+	1:
+	.endm
+
+	@ Remove the follower NPC (assumes there will only ever be one).
+	.macro destroyfollower
+	callnative ScriptDestroyFollowerNPC
+	.endm
+
+	@ Makes the player and follower NPC face one another.
+	.macro facefollower
+	callnative ScriptFaceFollowerNPC
+	.endm
+
+	@ Makes the follower NPC walk into the player and get hidden.
+	@ Optionally, you can set the walk speed for the movement:
+	@ 0 = Slow
+	@ 1 = Normal (default)
+	@ 2 = Fast
+	@ 3 = Faster
+	.macro hidefollowernpc speed=1
+	callnative ScriptHideNPCFollower
+	.byte \speed
+	waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
+	callnative HideNPCFollower
+	.endm
+
+	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
+	.macro checkfollower
+	callnative ScriptCheckFollowerNPC
+	.endm
+
+	@ Updates Pokemon follower.
+	.macro updatefollowingmon
+	callnative ScriptUpdateFollowingMon
+	.endm
+
+	@ Changes the battle partner of the existing follower NPC.
+	.macro changefollowerbattler battlePartner:req
+	callnative ScriptChangeFollowerNPCBattlePartner
+	.2byte \battlePartner
 	.endm

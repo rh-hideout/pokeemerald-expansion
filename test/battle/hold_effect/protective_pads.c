@@ -97,9 +97,9 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
             if (move == MOVE_SPIKY_SHIELD) {
                 HP_BAR(player);
             } else if (move == MOVE_BANEFUL_BUNKER) {
-                STATUS_ICON(player, STATUS1_BURN);
-            } else if (move == MOVE_BURNING_BULWARK) {
                 STATUS_ICON(player, STATUS1_POISON);
+            } else if (move == MOVE_BURNING_BULWARK) {
+                STATUS_ICON(player, STATUS1_BURN);
             } else if (move == MOVE_KINGS_SHIELD) {
                 MESSAGE("Wobbuffet's Attack fell!");
             } else if (move == MOVE_SILK_TRAP) {

@@ -47,3 +47,18 @@ SINGLE_BATTLE_TEST("Static triggers 30% of the time")
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_TACKLE); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_STATIC);
+        STATUS_ICON(player, paralysis: TRUE);
+    }
+}

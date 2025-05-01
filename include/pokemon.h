@@ -2,6 +2,7 @@
 #define GUARD_POKEMON_H
 
 #include "sprite.h"
+#include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/regions.h"
 #include "constants/region_map_sections.h"
@@ -343,11 +344,20 @@ struct BattlePokemon
     /*0x5A*/ bool8 isShiny;
 };
 
+struct EvolutionParam
+{
+    u16 condition;
+    u16 arg1;
+    u16 arg2;
+    u16 arg3;
+};
+
 struct Evolution
 {
     u16 method;
     u16 param;
     u16 targetSpecies;
+    const struct EvolutionParam *params;
 };
 
 struct SpeciesInfo /*0xC4*/
@@ -400,14 +410,14 @@ struct SpeciesInfo /*0xC4*/
     const union AnimCmd *const *frontAnimFrames;
     const u32 *frontPic;
     const u32 *backPic;
-    const u32 *palette;
-    const u32 *shinyPalette;
+    const u16 *palette;
+    const u16 *shinyPalette;
     const u8 *iconSprite;
 #if P_GENDER_DIFFERENCES
     const u32 *frontPicFemale;
     const u32 *backPicFemale;
-    const u32 *paletteFemale;
-    const u32 *shinyPaletteFemale;
+    const u16 *paletteFemale;
+    const u16 *shinyPaletteFemale;
     const u8 *iconSpriteFemale;
 #endif //P_GENDER_DIFFERENCES
 #if P_FOOTPRINTS
@@ -608,9 +618,12 @@ extern u8 gEnemyPartyCount;
 extern struct Pokemon gEnemyParty[PARTY_SIZE];
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
+extern bool32 consumeItem;
+extern u32 removeBagItem;
+extern u32 removeBagItemCount;
 
-extern const u8 gFacilityClassToPicIndex[];
-extern const u8 gFacilityClassToTrainerClass[];
+extern const u16 gFacilityClassToPicIndex[];
+extern const u16 gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
@@ -622,6 +635,9 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct Ability gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
+#if P_TUTOR_MOVES_ARRAY
+extern const u16 gTutorMoves[];
+#endif // P_TUTOR_MOVES_ARRAY
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
@@ -655,6 +671,7 @@ void SetMonMoveSlot(struct Pokemon *mon, u16 move, u8 slot);
 void SetBattleMonMoveSlot(struct BattlePokemon *mon, u16 move, u8 slot);
 void GiveMonInitialMoveset(struct Pokemon *mon);
 void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon);
+u16 MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u32 level);
 u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove);
 void DeleteFirstMoveAndGiveMoveToMon(struct Pokemon *mon, u16 move);
 void DeleteFirstMoveAndGiveMoveToBoxMon(struct BoxPokemon *boxMon, u16 move);
@@ -722,7 +739,8 @@ u8 *UseStatIncreaseItem(u16 itemId);
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
 u32 GetGMaxTargetSpecies(u32 species);
-u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner);
+bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState);
+u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(u16 nationalNum);
 u16 NationalToHoennOrder(u16 nationalNum);
@@ -755,9 +773,9 @@ u16 GetBattleBGM(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 void CreateTask_PlayMapChosenOrBattleBGM(u16 songId);
-const u32 *GetMonFrontSpritePal(struct Pokemon *mon);
-const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
-const u32 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
+const u16 *GetMonFrontSpritePal(struct Pokemon *mon);
+const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
+const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
 bool8 IsMoveHM(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
@@ -785,14 +803,15 @@ void DestroyMonSpritesGfxManager(u8 managerId);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
 u16 GetFormSpeciesId(u16 speciesId, u8 formId);
 u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, u16 method, u32 arg);
-u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, u16 method, u32 arg);
-bool32 DoesSpeciesHaveFormChangeMethod(u16 species, u16 method);
+u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32 arg);
+u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg);
+bool32 DoesSpeciesHaveFormChangeMethod(u16 species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
+void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(u16 species);
-bool32 TryFormChange(u32 monId, u32 side, u16 method);
-void TryToSetBattleFormChangeMoves(struct Pokemon *mon, u16 method);
+bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method);
+void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);
 void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
@@ -809,5 +828,6 @@ u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
 u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
+u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
 
 #endif // GUARD_POKEMON_H

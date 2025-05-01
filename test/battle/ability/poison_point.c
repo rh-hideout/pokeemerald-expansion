@@ -49,3 +49,22 @@ SINGLE_BATTLE_TEST("Poison Point triggers 30% of the time")
         STATUS_ICON(player, poison: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Poison Point will not poison Poison-Type targets with corrosion")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); }
+        OPPONENT(SPECIES_NIDORAN_M) { Ability(ABILITY_POISON_POINT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+            MESSAGE("Salandit was poisoned by the opposing Nidoran♂'s Poison Point!");
+            STATUS_ICON(player, poison: TRUE);
+        }
+    }
+}

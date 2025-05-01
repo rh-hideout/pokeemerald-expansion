@@ -476,6 +476,13 @@ void AnimRockFragment(struct Sprite *sprite)
 }
 
 // Swirls particle in vortex. Used for moves like Fire Spin or Sand Tomb
+// args[0] - initial x offset
+// args[1] - initial y offset
+// args[2] - y increment
+// args[3] - duration
+// args[4] - increments some sin parameter
+// args[5] - fixed sin parameter
+// args[6] - attacker or target
 void AnimParticleInVortex(struct Sprite *sprite)
 {
     if (IsDoubleBattle()
@@ -530,7 +537,7 @@ void AnimTask_LoadSandstormBackground(u8 taskId)
     GetBattleAnimBg1Data(&animBg);
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Sandstorm, animBg.tilesOffset);
     AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_Sandstorm, FALSE);
-    LoadCompressedPalette(gBattleAnimSpritePal_FlyingDirt, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
+    LoadPalette(gBattleAnimSpritePal_FlyingDirt, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
     if (gBattleAnimArgs[0] && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
         var0 = 1;

@@ -346,12 +346,12 @@ static void PlayerPartnerHandleChooseAction(u32 battler)
 
 static void PlayerPartnerHandleChooseMove(u32 battler)
 {
-    u8 chosenMoveId;
+    u32 chosenMoveIndex;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
-    chosenMoveId = gAiBattleData->moveOrAction[battler];
+    chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
     gBattlerTarget = gAiBattleData->chosenTarget[battler];
-    u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveId]);
+    u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
     if (moveTarget & MOVE_TARGET_USER)
         gBattlerTarget = battler;
@@ -364,13 +364,13 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
     // If partner can and should use a gimmick (considering trainer data), do it
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
         && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
-        && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveId])))
+        && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveIndex])))
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (RET_GIMMICK) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
     }
     else
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
     }
 
     PlayerPartnerBufferExecCompleted(battler);
@@ -424,7 +424,7 @@ static void PlayerPartnerHandleHealthBarUpdate(u32 battler)
 
 static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler)
 {
-    const u32 *trainerPal;
+    const u16 *trainerPal;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
