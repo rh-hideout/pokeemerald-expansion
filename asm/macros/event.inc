@@ -2528,7 +2528,7 @@
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
 	checkfollowernpc
 	goto_if_eq VAR_RESULT, TRUE, 1f
-	hidefollowernpc
+	hidefollower
 	delay 16
 	callnative ScriptSetFollowerNPC
 	.if \script == 0
