@@ -15,13 +15,12 @@ SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
 
 SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-type moves by 30% in sandstorm", s16 damage)
 {
-    KNOWN_FAILING; //   What?
     u32 moveOpponent, movePlayer;
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_ROCK_THROW; }
     PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_ROCK_THROW; }
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_EARTHQUAKE; }
-    PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_EARTHQUAKE; }
-    PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_IRON_HEAD; }
+    PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_IRON_HEAD; }
     PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_IRON_HEAD; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
