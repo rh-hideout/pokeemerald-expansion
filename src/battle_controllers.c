@@ -142,11 +142,19 @@ static void InitSinglePlayerBtlControllers(void)
     {
         if (!isDouble)
         {
-            if (!isRecorded)
+            if (!isRecorded || !isRecordedLink || isRecordedMaster)
             {
                 gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
                 gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+            }
+            else
+            {
+                gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
+                gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
+            }
 
+            if (!isRecorded)
+            {
                 if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                     gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToSafari;
                 else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
@@ -160,26 +168,9 @@ static void InitSinglePlayerBtlControllers(void)
             else
             {
                 if (!isRecordedLink)
-                {
-                    gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-                    gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-
                     gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
-                }
-                else if (isRecordedMaster)
-                {
-                    gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-                    gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-
-                    gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-                }
                 else
-                {
-                    gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
-                    gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
-
                     gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-                }
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
             }
         }
