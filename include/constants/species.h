@@ -1907,8 +1907,11 @@
 #define SPECIES_CATATION                                1789
 #define SPECIES_EROCHRE                                 1790
 #define SPECIES_PEDESTONE                               1791
+#define SPECIES_INKROW                                  1792
+#define SPECIES_LIQUILL                                 1793
+#define SPECIES_RAVARNISH                               1794
 
-#define SPECIES_EGG (SPECIES_PEDESTONE + 1)
+#define SPECIES_EGG (SPECIES_RAVARNISH + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

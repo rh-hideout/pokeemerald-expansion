@@ -2901,6 +2901,12 @@ gCryTable::
 
 	cry Cry_Pedestone
 
+	cry Cry_Inkrow
+
+	cry Cry_Liquill
+
+	cry Cry_Ravarnish
+
 .endif
 
 	.align 2
@@ -5806,4 +5812,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Erochre
 
 	cry_reverse Cry_Pedestone
+
+	cry_reverse Cry_Inkrow
+
+	cry_reverse Cry_Liquill
+
+	cry_reverse Cry_Ravarnish
 .endif

@@ -6385,6 +6385,16 @@ static const u16 sFlarheaEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sRavarnishEggMoveLearnset[] = {
+    MOVE_TOXIC_SPIKES,
+    MOVE_ACID_ARMOR,
+    MOVE_REFRESH,
+    MOVE_OCTAZOOKA,
+    MOVE_BANEFUL_BUNKER,
+    MOVE_ACID_SPRAY,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sTarantagonEggMoveLearnset[] = {
     MOVE_OBSTRUCT,
     MOVE_AMNESIA,
@@ -6439,12 +6449,12 @@ static const u16 sYardsteinEggMoveLearnset[] = {
 };
 
 static const u16 sVoliathEggMoveLearnset[] = {
-    MOVE_NUZZLE,
-    MOVE_EERIE_IMPULSE,
-    MOVE_SNARL,
-    MOVE_ZAP_CANNON,
     MOVE_AQUA_TAIL,
+    MOVE_ASSIST,
     MOVE_CLOSE_COMBAT,
+    MOVE_EERIE_IMPULSE,
+    MOVE_HELPING_HAND,
+    MOVE_SNARL,
     MOVE_UNAVAILABLE,
 };
 
@@ -6519,7 +6529,16 @@ static const u16 sVirtuitaEggMoveLearnset[] = {
     
 };
 
-////static const u16 sCatationEggMoveLearnset[] = {
+static const u16 sCatationEggMoveLearnset[] = {
+    MOVE_GROWTH,
+    MOVE_LEECH_SEED,
+    MOVE_LIQUIDATION,
+    MOVE_POWER_TRIP,
+    MOVE_SNAP_TRAP,
+    MOVE_TOXIC_SPIKES,
+    MOVE_UNAVAILABLE,
+    
+};
 
 static const u16 sCholefirEggMoveLearnset[] = {
     MOVE_GLACIATE,

@@ -7106,6 +7106,18 @@ Cry_Erochre::
 	.align 2	
 Cry_Pedestone::
 	.incbin "sound/direct_sound_samples/cries/pedestone.bin"
+
+	.align 2	
+Cry_Inkrow::
+	.incbin "sound/direct_sound_samples/cries/inkrow.bin"
+
+	.align 2	
+Cry_Liquill::
+	.incbin "sound/direct_sound_samples/cries/liquill.bin"
+
+	.align 2	
+Cry_Ravarnish::
+	.incbin "sound/direct_sound_samples/cries/ravarnish.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

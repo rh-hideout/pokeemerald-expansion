@@ -22321,6 +22321,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/icon.4bpp");
    const u8 gMonFootprint_Impfection[] = INCBIN_U8("graphics/pokemon/impfection/footprint.1bpp");
 
+   const u32 gMonFrontPic_Inkrow[] = INCBIN_U32("graphics/pokemon/inkrow/front.4bpp.lz");
+   const u32 gMonBackPic_Inkrow[] = INCBIN_U32("graphics/pokemon/inkrow/back.4bpp.lz");
+   const u32 gMonPalette_Inkrow[] = INCBIN_U32("graphics/pokemon/inkrow/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Inkrow[] = INCBIN_U32("graphics/pokemon/inkrow/shiny.gbapal.lz");
+   const u8 gMonIcon_Inkrow[] = INCBIN_U8("graphics/pokemon/inkrow/icon.4bpp");
+   const u8 gMonFootprint_Inkrow[] = INCBIN_U8("graphics/pokemon/inkrow/footprint.1bpp");
+
+   const u32 gMonFrontPic_Liquill[] = INCBIN_U32("graphics/pokemon/liquill/front.4bpp.lz");
+   const u32 gMonBackPic_Liquill[] = INCBIN_U32("graphics/pokemon/liquill/back.4bpp.lz");
+   const u32 gMonPalette_Liquill[] = INCBIN_U32("graphics/pokemon/liquill/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Liquill[] = INCBIN_U32("graphics/pokemon/liquill/shiny.gbapal.lz");
+   const u8 gMonIcon_Liquill[] = INCBIN_U8("graphics/pokemon/liquill/icon.4bpp");
+   const u8 gMonFootprint_Liquill[] = INCBIN_U8("graphics/pokemon/liquill/footprint.1bpp");
+
+   const u32 gMonFrontPic_Ravarnish[] = INCBIN_U32("graphics/pokemon/ravarnish/front.4bpp.lz");
+   const u32 gMonBackPic_Ravarnish[] = INCBIN_U32("graphics/pokemon/ravarnish/back.4bpp.lz");
+   const u32 gMonPalette_Ravarnish[] = INCBIN_U32("graphics/pokemon/ravarnish/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Ravarnish[] = INCBIN_U32("graphics/pokemon/ravarnish/shiny.gbapal.lz");
+   const u8 gMonIcon_Ravarnish[] = INCBIN_U8("graphics/pokemon/ravarnish/icon.4bpp");
+   const u8 gMonFootprint_Ravarnish[] = INCBIN_U8("graphics/pokemon/ravarnish/footprint.1bpp");
+
    const u32 gMonFrontPic_Hyduck[] = INCBIN_U32("graphics/pokemon/hyduck/front.4bpp.lz");
    const u32 gMonBackPic_Hyduck[] = INCBIN_U32("graphics/pokemon/hyduck/back.4bpp.lz");
    const u32 gMonPalette_Hyduck[] = INCBIN_U32("graphics/pokemon/hyduck/normal.gbapal.lz");
