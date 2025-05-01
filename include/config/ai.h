@@ -60,4 +60,9 @@
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50
 
+// AI PP Stall detection chance per roll
+#define PP_STALL_DISREGARD_MOVE_PERCENTAGE                      50
+// Score reduction if any roll for PP stall detection passes
+#define PP_STALL_SCORE_REDUCTION                                20
+
 #endif // GUARD_CONFIG_AI_H

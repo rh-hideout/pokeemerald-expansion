@@ -584,13 +584,13 @@ static u32 PpStallReduction(u32 move, u32 attacker)
             totalStallValue += currentStallValue;
         }
     }
-    u32 rnd = Random32();
+
     for (u32 i = 0; i < totalStallValue; i++)
     {
-        if (rnd & 1)
-            return 20;
-        rnd = rnd >> 1;
+        if (RandomPercentage(RNG_AI_PP_STALL_DISREGARD_MOVE, (100 - PP_STALL_DISREGARD_MOVE_PERCENTAGE)))
+            return PP_STALL_SCORE_REDUCTION;
     }
+
     return 0;
 }
 
