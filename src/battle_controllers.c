@@ -153,16 +153,9 @@ static void InitSinglePlayerBtlControllers(void)
                 gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
             }
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        {
-            gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
-            gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
-        }
         else
         {
-            if (!isRecorded || isMulti || isMaster)
+            if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || !isRecorded || isMulti || isMaster)
             {
                 gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
                 gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
