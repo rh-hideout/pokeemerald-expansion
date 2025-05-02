@@ -157,11 +157,11 @@ static void InitSinglePlayerBtlControllers(void)
             gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
         }
 
-        if (!isDouble)
+        if (isRecorded)
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
+        else if (!isDouble)
         {
-            if (isRecorded)
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
-            else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+            if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToWally;
@@ -171,21 +171,11 @@ static void InitSinglePlayerBtlControllers(void)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        {
-            if (isRecorded)
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
-            else
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-        }
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+        else if (isAIvsAI)
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
         else
-        {
-            if (isRecorded)
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
-            else if (isAIvsAI)
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
-            else
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-        }
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
 
         if (!isDouble)
         {
