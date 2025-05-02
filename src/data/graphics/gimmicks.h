@@ -99,7 +99,7 @@ static const u16 sMiscIndicatorPal[] = INCBIN_U16("graphics/battle_interface/mis
 static const u16 sMegaIndicatorPal[] = INCBIN_U16("graphics/battle_interface/mega_indicator.gbapal");
 static const u16 sTeraIndicatorPal[] = INCBIN_U16("graphics/battle_interface/tera_indicator.gbapal");
 
-static const u8 *sTeraIndicatorDataPtrs[] =
+static const u8 *const sTeraIndicatorDataPtrs[] =
 {
     sNormalIndicatorGfx,
     sNormalIndicatorGfx,

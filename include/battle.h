@@ -144,25 +144,18 @@ struct ProtectStruct
     u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 prlzImmobility:1;
+    u32 nonVolatileStatusImmobility:1;
     u32 confusionSelfDmg:1;
-    u32 touchedProtectLike:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 usedImprisonedMove:1;
-    u32 loveImmobility:1;
-    u32 usedDisabledMove:1;
-    u32 usedTauntedMove:1;
-    u32 flag2Unknown:1; // Only set to 0 once. Checked in 'WasUnableToUseMove' function.
-    u32 flinchImmobility:1;
+    u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
     u32 notFirstStrike:1;
     u32 palaceUnableToUseMove:1;
-    u32 usedHealBlockedMove:1;
-    u32 usedGravityPreventedMove:1;
     u32 powderSelfDmg:1;
-    u32 usedThroatChopPreventedMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
+    u32 touchedProtectLike:1;
+    u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
     u16 statFell:1;
@@ -174,7 +167,8 @@ struct ProtectStruct
     u16 eatMirrorHerb:1;
     u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
-    u16 padding:5;
+    u16 lashOutAffected:1;
+    u16 padding:4;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -192,7 +186,7 @@ struct SpecialStatus
     u8 lightningRodRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 emergencyExited:1;
+    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 stormDrainRedirected:1;
@@ -216,8 +210,7 @@ struct SpecialStatus
     // End of byte
     u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
-    u8 unused:3;
+    u8 unused:4;
     // End of byte
 };
 
@@ -815,8 +808,6 @@ struct BattleStruct
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u8 embodyAspectBoost[NUM_BATTLE_SIDES];
-    u16 savedMove; // backup current move for mid-turn switching, e.g. Red Card
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
@@ -825,8 +816,12 @@ struct BattleStruct
 struct AiBattleData
 {
     s32 finalScore[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // AI, target, moves to make debugging easier
-    u8 moveOrAction[MAX_BATTLERS_COUNT];
+    u8 playerStallMons[PARTY_SIZE];
+    u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
+    u8 actionFlee:1;
+    u8 choiceWatch:1;
+    u8 padding:6;
 };
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
@@ -1070,7 +1065,7 @@ extern u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13]; //to handle stupidly large z move names
 extern u32 gBattleTypeFlags;
-extern u8 gBattleTerrain;
+extern u8 gBattleEnvironment;
 extern u8 *gBattleAnimBgTileBuffer;
 extern u8 *gBattleAnimBgTilemapBuffer;
 extern u32 gBattleControllerExecFlags;
@@ -1275,4 +1270,3 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 }
 
 #endif // GUARD_BATTLE_H
-

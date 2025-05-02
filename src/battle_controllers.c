@@ -1419,10 +1419,10 @@ void BtlController_EmitFaintingCry(u32 battler, u32 bufferId)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitIntroSlide(u32 battler, u32 bufferId, u8 terrainId)
+void BtlController_EmitIntroSlide(u32 battler, u32 bufferId, u8 environmentId)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_INTROSLIDE;
-    gBattleResources->transferBuffer[1] = terrainId;
+    gBattleResources->transferBuffer[1] = environmentId;
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 2);
 }
 
@@ -2838,7 +2838,7 @@ bool32 TwoOpponentIntroMons(u32 battler) // Double battle with both opponent pok
 // Sprite data for SpriteCB_FreePlayerSpriteLoadMonSprite
 #define sBattlerId data[5]
 
-void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, const u32 *trainerPal, s16 framesToWait, void (*controllerCallback)(u32 battler))
+void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(u32 battler))
 {
     u8 paletteNum, taskId;
     u32 side = GetBattlerSide(battler);
@@ -2865,7 +2865,7 @@ void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, c
         StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], ShouldDoSlideInAnim(battler) ? 2 : 1);
 
         paletteNum = AllocSpritePalette(tagTrainerPal);
-        LoadCompressedPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+        LoadPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = paletteNum;
     }
     else

@@ -23,6 +23,12 @@
 #define MOVE_LIMITATION_PLACEHOLDER             (1 << 15)
 #define MOVE_LIMITATIONS_ALL                    0xFFFF
 
+enum NonVolatileStatus
+{
+    STATUS_CHECK_TRIGGER,
+    STATUS_RUN_SCRIPT,
+};
+
 enum AbilityEffectOptions
 {
     ABILITY_CHECK_TRIGGER,
@@ -172,6 +178,19 @@ enum SleepClauseBlock
     BLOCKED_BY_SLEEP_CLAUSE,
 };
 
+enum SkyDropState
+{
+    SKY_DROP_IGNORE,
+    SKY_DROP_ATTACKCANCELLER_CHECK,
+    SKY_DROP_GRAVITY_ON_AIRBORNE,
+    SKY_DROP_CANCEL_MULTI_TURN_MOVES,
+    SKY_DROP_STATUS_YAWN,
+    SKY_DROP_STATUS_FREEZE_SLEEP,
+};
+
+#define SKY_DROP_NO_TARGET 0xFF
+#define SKY_DROP_RELEASED_TARGET 0xFE
+
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
@@ -195,7 +214,7 @@ u8 GetBattlerForBattleScript(u8 caseId);
 bool32 IsBattlerMarkedForControllerExec(u32 battler);
 void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
-const u8* CancelMultiTurnMoves(u32 battler);
+const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
 bool32 WasUnableToUseMove(u32 battler);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
@@ -268,8 +287,8 @@ void ActivateUltraBurst(u32 battler);
 bool32 IsBattlerMegaEvolved(u32 battler);
 bool32 IsBattlerPrimalReverted(u32 battler);
 bool32 IsBattlerUltraBursted(u32 battler);
-u16 GetBattleFormChangeTargetSpecies(u32 battler, u16 method);
-bool32 TryBattleFormChange(u32 battler, u32 method);
+u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method);
+bool32 TryBattleFormChange(u32 battler, enum FormChanges method);
 bool32 DoBattlersShareType(u32 battler1, u32 battler2);
 bool32 CanBattlerGetOrLoseItem(u32 battler, u16 itemId);
 u32 GetIllusionMonSpecies(u32 battler);
@@ -318,12 +337,13 @@ bool32 MoveHasChargeTurnAdditionalEffect(u32 move);
 bool32 CanTargetPartner(u32 battlerAtk, u32 battlerDef);
 bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
 
-bool32 CanBeSlept(u32 battler, u32 ability, enum SleepClauseBlock isBlockedBySleepClause);
-bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 CanBeBurned(u32 battler, u32 ability);
-bool32 CanBeParalyzed(u32 battler, u32 ability);
-bool32 CanBeFrozen(u32 battler);
-bool32 CanGetFrostbite(u32 battler);
+bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause);
+bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef);
+bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 ability);
+bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
+bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
+bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef);
+bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffects secondaryMoveEffect, enum NonVolatileStatus option);
 bool32 CanBeConfused(u32 battler);
 bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag);
 u32 GetBattlerAffectionHearts(u32 battler);
@@ -355,6 +375,8 @@ void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
 u32 RestoreWhiteHerbStats(u32 battler);
+bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
+void UpdateStallMons(void);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -448,7 +448,7 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
             HandleLoadSpecialPokePic(TRUE,
                                      gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + B_POSITION_OPPONENT_LEFT],
                                      species, pid);
-            LoadCompressedSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
+            LoadSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
             *speciesLoc = species;
         }
         break;
@@ -533,7 +533,7 @@ static void CB2_LoadEggHatch(void)
     case 2:
         DecompressAndLoadBgGfxUsingHeap(0, gBattleTextboxTiles, 0, 0, 0);
         CopyToBgTilemapBuffer(0, gBattleTextboxTilemap, 0, 0);
-        LoadCompressedPalette(gBattleTextboxPalette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+        LoadPalette(gBattleTextboxPalette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
         gMain.state++;
         break;
     case 3:

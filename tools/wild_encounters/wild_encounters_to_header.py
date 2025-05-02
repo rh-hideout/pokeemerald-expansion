@@ -18,51 +18,15 @@ MAP_UNDEFINED         = "MAP_UNDEFINED"
 MON_HEADERS = []
 
 # mon encounter group types
-LAND_MONS             = "land_mons"
-LAND_MONS_LABEL       = "LandMons"
-LAND_MONS_INDEX       = 0
-WATER_MONS            = "water_mons"
-WATER_MONS_LABEL      = "WaterMons"
-WATER_MONS_INDEX      = 1
-ROCK_SMASH_MONS       = "rock_smash_mons"
-ROCK_SMASH_MONS_LABEL = "RockSmashMons"
-ROCK_SMASH_MONS_INDEX = 2
-FISHING_MONS          = "fishing_mons"
-FISHING_MONS_LABEL    = "FishingMons"
-FISHING_MONS_INDEX    = 3
-HIDDEN_MONS           = "hidden_mons"
-HIDDEN_MONS_LABEL     = "HiddenMons"
-HIDDEN_MONS_INDEX     = 4
-MONS_INFO_TOTAL       = HIDDEN_MONS_INDEX + 1
-
-# fishing encounter data
-GOOD_ROD              = "good_rod"
-GOOD_ROD_FIRST_INDEX  = 2
-GOOD_ROD_LAST_INDEX   = 4
-OLD_ROD               = "old_rod"
-OLD_ROD_FIRST_INDEX   = 0
-OLD_ROD_LAST_INDEX    = 1
-SUPER_ROD             = "super_rod"
-SUPER_ROD_FIRST_INDEX = 5
-SUPER_ROD_LAST_INDEX  = 9
+fieldData = []
+fieldInfoStrings = []
+fieldStrings = []
 
 # time of day encounter data
-TIME_DEFAULT       = "OW_TIME_OF_DAY_DEFAULT"
-TIME_DEFAULT_LABEL = ""
+TIME_DEFAULT       = ""
+TIME_DEFAULT_LABEL = "TIME_OF_DAY_DEFAULT"
 TIME_DEFAULT_INDEX = 0
-TIME_MORNING       = "time_morning"
-TIME_MORNING_LABEL = "Morning"
-TIME_MORNING_INDEX = 0
-TIME_DAY           = "time_day"
-TIME_DAY_LABEL     = "Day"
-TIME_DAY_INDEX     = 1
-TIME_EVENING       = "time_evening"
-TIME_EVENING_LABEL = "Evening"
-TIME_EVENING_INDEX = 2
-TIME_NIGHT         = "time_night"
-TIME_NIGHT_LABEL   = "Night"
-TIME_NIGHT_INDEX   = 3
-TOTAL_TIME_STAGES  = TIME_NIGHT_INDEX + 1
+TIMES_OF_DAY_COUNT = TIME_DEFAULT_INDEX + 1
 
 # struct building blocks
 baseStruct          = "const struct WildPokemon"
@@ -90,24 +54,49 @@ hLabel       = ""
 hForMaps     = True
 headersArray = [headerIndex]
 
-# headersArrayItems
-landMonsInfo      = ""
-waterMonsInfo     = ""
-rockSmashMonsInfo = ""
-fishingMonsInfo   = ""
-
-# encounter rate variables
-eLandMons      = []
-eWaterMons     = []
-eRockSmashMons = []
-eFishingMons   = []
 
 
 # debug output control
-printEncounterHeaders           = True
-printEncounterRateMacros        = True
-printEncounterStructsInfoString = True
-printEncounterStructs           = True
+mainSwitch                      = True
+printWarningAndInclude          = mainSwitch
+printEncounterHeaders           = mainSwitch
+printEncounterRateMacros        = mainSwitch
+printEncounterStructsInfoString = mainSwitch
+printEncounterStructs           = mainSwitch
+
+
+class TimeOfDay():
+    def __init__(self):
+        self.vals = []
+        self.lvals = []
+        self.fvals = []
+        self.count = 0
+
+    def __len__(self):
+        return self.count
+    
+    # for debugging purposes
+    def __str__(self):
+        return str([self.vals, self.lvals, self.fvals, self.count])
+
+    def add(self, val):
+        self.vals.append(val)
+        self.lvals.append(val.lower())
+        self.fvals.append(GetTimeLabelFromString(val).capitalize())
+        self.count += 1
+    
+    def indexOf(self, val):
+        tempArr = [self.vals, self.lvals, self.fvals]
+
+        for tvals in tempArr:
+            i = 0
+            for time in tvals:
+                if val in time:
+                    return i
+
+                i += 1
+        # return -1 here so it returns a consistent type and can be checked against < 0
+        return -1
 
 
 def ImportWildEncounterFile():
@@ -117,11 +106,18 @@ def ImportWildEncounterFile():
         quit()
 
     global MON_HEADERS
-    global landMonsInfo
-    global waterMonsInfo
-    global rockSmashMonsInfo
-    global fishingMonsInfo
-    global hiddenMonsInfo
+
+    global TIME_OF_DAY
+    TIME_OF_DAY = SetupUserTimeEnum(TimeOfDay())
+
+    global IS_ENABLED
+    global TIMES_OF_DAY_COUNT
+    if IsConfigEnabled():
+        IS_ENABLED = True
+        TIMES_OF_DAY_COUNT = len(TIME_OF_DAY)
+
+    global fieldInfoStrings
+    global fieldStrings
     global structLabel
     global structMonType
     global structTime
@@ -134,18 +130,12 @@ def ImportWildEncounterFile():
     global headerStructContent
     global hLabel
     global headersArray
-    global eLandMons
-    global eWaterMons
-    global eRockSmashMons
-    global eFishingMons
     global encounterTotalCount
     global encounterCount
     global headerIndex
+    global fieldData
     global tabStr
     tabStr = "    "
-
-    global IS_ENABLED
-    IS_ENABLED = IsConfigEnabled()
 
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
@@ -174,97 +164,101 @@ def ImportWildEncounterFile():
         # for the encounter rate macros, so we don't worry about hidden mons here
         if headerIndex == 0:
             wFields = wData["wild_encounter_groups"][headerIndex]["fields"]
+            fieldCounter = 0
             for field in wFields:
-                if field["type"] == LAND_MONS:
-                    eLandMons = field["encounter_rates"]
-                elif field["type"] == WATER_MONS:
-                    eWaterMons = field["encounter_rates"]
-                elif field["type"] == ROCK_SMASH_MONS:
-                    eRockSmashMons = field["encounter_rates"]
-                elif field["type"] == FISHING_MONS:
-                    eFishingMons = field["encounter_rates"]
-                    eFishingMons.append(field["groups"])
+                fieldData.append({})
+                fieldData[fieldCounter]["name"] = field["type"]
+                fieldData[fieldCounter]["pascalName"] = GetPascalCase(field["type"])
+                fieldData[fieldCounter]["snakeName"] = GetSnakeCase(field["type"])
+                fieldData[fieldCounter]["encounter_rates"] = field["encounter_rates"]
 
-            PrintGeneratedWarningText()
+                if "groups" in field:
+                    fieldData[fieldCounter]["groups"] = field["groups"]
 
-            print('#include "rtc.h"')
-            print("\n")
+                if fieldCounter == len(wFields) - 1:
+                    fieldData.append({})
+                    fieldData[fieldCounter + 1]["name"] = "hidden_mons"
+                    fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase("hidden_mons")
+                    fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase("hidden_mons")
+
+                fieldCounter += 1
+
+            if printWarningAndInclude:
+                PrintGeneratedWarningText()
+                print('#include "rtc.h"')
+                print("\n")
 
             PrintEncounterRateMacros()
-            print("\n")
 
         for encounter in wEncounters:
             if "map" in encounter:
                 structMap = encounter["map"]
             else:
                 structMap = encounter["base_label"]
+
             structLabel = encounter["base_label"]
-            
+
             if encounterTotalCount[headerIndex] != len(wEncounters):
                 encounterTotalCount[headerIndex] = len(wEncounters)
+
             encounterCount[headerIndex] += 1
             headersArray = []
+            
+            structTime = TIME_DEFAULT_INDEX
+            if IS_ENABLED:
+                timeCounter = 0
+                while timeCounter < TIMES_OF_DAY_COUNT:
+                    tempfTime = f"_{TIME_OF_DAY.fvals[timeCounter]}"
+                    tempTime = TIME_OF_DAY.vals[timeCounter]
+                    if tempfTime in structLabel or tempTime in structLabel:
+                        structTime = timeCounter
 
-            if not IS_ENABLED:
-                structTime = TIME_DEFAULT_LABEL
-            elif TIME_MORNING_LABEL in structLabel:
-                structTime = TIME_MORNING_LABEL
-            elif TIME_DAY_LABEL in structLabel:
-                structTime = TIME_DAY_LABEL
-            elif TIME_EVENING_LABEL in structLabel:
-                structTime = TIME_EVENING_LABEL
-            elif TIME_NIGHT_LABEL in structLabel:
-                structTime = TIME_NIGHT_LABEL
-            else:
-                structTime = TIME_MORNING_LABEL
-                structLabel = structLabel + "_Morning"
+                    timeCounter += 1
+                    
+            fieldCounter = 0
+            fieldInfoStrings = []
+            while fieldCounter < len(fieldData):
+                fieldInfoStrings.append("")
+                fieldStrings.append("")
+                fieldCounter += 1
 
-            landMonsInfo      = ""
-            waterMonsInfo     = ""
-            rockSmashMonsInfo = ""
-            fishingMonsInfo   = ""
-            hiddenMonsInfo    = ""
-            for areaTable in encounter:
-                if LAND_MONS in areaTable:
-                    structMonType = LAND_MONS_LABEL
-                    landMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif WATER_MONS in areaTable:
-                    structMonType = WATER_MONS_LABEL
-                    waterMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif ROCK_SMASH_MONS in areaTable:
-                    structMonType = ROCK_SMASH_MONS_LABEL
-                    rockSmashMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif FISHING_MONS in areaTable:
-                    structMonType = FISHING_MONS_LABEL
-                    fishingMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                elif HIDDEN_MONS in areaTable:
-                    structMonType = HIDDEN_MONS_LABEL
-                    hiddenMonsInfo = f"{structLabel}_{structMonType}{structInfo}"
-                else:
-                    structMonType = ""
-                    continue
+            fieldCounter = 0
+            while fieldCounter < len(fieldData):
+                for areaTable in encounter:
+                    if fieldData[fieldCounter]["name"] in areaTable:
+                        structMonType = fieldData[fieldCounter]["pascalName"]
+                        if f"_{TIME_OF_DAY.fvals[structTime]}" in structLabel:
+                            fieldInfoStrings[fieldCounter] = f"{structLabel}_{structMonType}{structInfo}"
+                            fieldStrings[fieldCounter] = f"{structLabel}_{structMonType}"
+                        else:
+                            fieldInfoStrings[fieldCounter] = f"{structLabel}_{TIME_OF_DAY.fvals[structTime]}_{structMonType}{structInfo}"
+                            fieldStrings[fieldCounter] = f"{structLabel}_{TIME_OF_DAY.fvals[structTime]}_{structMonType}"
+                    else:
+                        structMonType = ""
+                        continue
                 
-                baseStructContent = []
-                for group in encounter[areaTable]:
-                    if "mons" in group:
-                        for mon in encounter[areaTable][group]:
-                            baseStructContent.append(list(mon.values()))
+                    baseStructContent = []
+                    for group in encounter[areaTable]:
+                        if "mons" in group:
+                            for mon in encounter[areaTable][group]:
+                                baseStructContent.append(list(mon.values()))
 
-                    if "encounter_rate" in group:
-                        infoStructRate = encounter[areaTable][group]
-                
-                baseStructLabel = f"{baseStruct} {structLabel}_{structMonType}{structArrayAssign}"
-                if printEncounterStructs:
-                    print()
-                    print(baseStructLabel)
-                    print("{")
-                    PrintStructContent(baseStructContent)
-                    print("};")
+                        if "encounter_rate" in group:
+                            infoStructRate = encounter[areaTable][group]
+                    
+                    baseStructLabel = f"{baseStruct} {fieldStrings[fieldCounter]}{structArrayAssign}"
+                    if printEncounterStructs:
+                        print()
+                        print(baseStructLabel)
+                        print("{")
+                        PrintStructContent(baseStructContent)
+                        print("};")
 
-                if printEncounterStructsInfoString:
-                    infoStructString = f"{baseStruct}{structInfo} {structLabel}_{structMonType}{structInfo} = {{ {infoStructRate}, {structLabel}_{structMonType} }};"
-                    print(infoStructString)
+                    if printEncounterStructsInfoString:
+                        infoStructString = f"{baseStruct}{structInfo} {fieldInfoStrings[fieldCounter]} = {{ {infoStructRate}, {fieldStrings[fieldCounter]} }};"
+                        print(infoStructString)
 
+                fieldCounter += 1
             AssembleMonHeaderContent()
         headerIndex += 1
     PrintWildMonHeadersContent()
@@ -282,24 +276,37 @@ def GetStructLabelWithoutTime(label):
 
     if not IS_ENABLED:
         return label
-    elif TIME_MORNING_LABEL in label:
-        timeLength = len(TIME_MORNING_LABEL)
-    elif TIME_DAY_LABEL in label:
-        timeLength = len(TIME_DAY_LABEL)
-    elif TIME_EVENING_LABEL in label:
-        timeLength = len(TIME_EVENING_LABEL)
-    elif TIME_NIGHT_LABEL in label:
-        timeLength = len(TIME_NIGHT_LABEL)
-    return label[:(labelLength - (timeLength + 1))]
+    
+    timeCounter = 0
+    while timeCounter < TIMES_OF_DAY_COUNT:
+        tempTime = TIME_OF_DAY.fvals[timeCounter]
+        if tempTime in label:
+            timeLength = len(tempTime)
+            return label[:(labelLength - (timeLength + 1))]
+
+        timeCounter += 1
+    return label
+
+
+def GetStructTimeWithoutLabel(label):
+    if not IS_ENABLED:
+        return TIME_DEFAULT_INDEX
+    
+    timeCounter = 0
+    while timeCounter < TIMES_OF_DAY_COUNT:
+        tempTime = f"_{TIME_OF_DAY.fvals[timeCounter]}"
+        if tempTime in label:
+            return timeCounter
+
+        timeCounter += 1
+    return TIME_DEFAULT_INDEX
 
 
 def AssembleMonHeaderContent():
-    global structLabel
-
     SetupMonInfoVars()
 
     tempHeaderLabel = GetWildMonHeadersLabel()
-    tempHeaderTimeIndex = GetTimeIndexFromString(structTime)
+    tempHeaderTimeIndex = GetStructTimeWithoutLabel(structLabel)
     structLabelNoTime = GetStructLabelWithoutTime(structLabel)
     
     if tempHeaderLabel not in headerStructTable:
@@ -314,55 +321,30 @@ def AssembleMonHeaderContent():
         headerStructTable[tempHeaderLabel][structLabelNoTime]["encounterTotalCount"] = encounterTotalCount[headerIndex]
         headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"] = []
 
-        timeStart = TIME_DEFAULT_INDEX
-        timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
-        while timeStart <= timeEnd:
+        timeCounter = 0
+        while timeCounter < TIMES_OF_DAY_COUNT:
             headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"].append([])
-            timeStart += 1
+            timeCounter += 1
 
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(landMonsInfo)
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(waterMonsInfo)
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(rockSmashMonsInfo)
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(fishingMonsInfo)
-    headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(hiddenMonsInfo)
+    fieldCounter = 0
+    while fieldCounter < len(fieldData):
+        headerStructTable[tempHeaderLabel][structLabelNoTime]["encounter_types"][tempHeaderTimeIndex].append(fieldInfoStrings[fieldCounter])
+        fieldCounter += 1
 
 
 def SetupMonInfoVars():
-    global landMonsInfo
-    global waterMonsInfo
-    global rockSmashMonsInfo
-    global fishingMonsInfo
-    global hiddenMonsInfo
+    i = 0
+    while i < len(fieldData):
+        fieldData[i]["infoStringBase"] = "." + fieldData[i]["snakeName"] + structInfo
+        if CheckEmpty(fieldInfoStrings[i]):
+            fieldInfoStrings[i] = NULL
+        else:
+            fieldInfoStrings[i] = "&" + fieldInfoStrings[i]
 
-    if landMonsInfo == "":
-        landMonsInfo = NULL
-    else:
-        landMonsInfo = f"&{landMonsInfo}"
+        i += 1
 
-    if waterMonsInfo == "":
-        waterMonsInfo = NULL
-    else:
-        waterMonsInfo = f"&{waterMonsInfo}"
-
-    if rockSmashMonsInfo == "":
-        rockSmashMonsInfo = NULL
-    else:
-        rockSmashMonsInfo = f"&{rockSmashMonsInfo}"
-
-    if fishingMonsInfo == "":
-        fishingMonsInfo = NULL
-    else:
-        fishingMonsInfo = f"&{fishingMonsInfo}"
-
-    if hiddenMonsInfo == "":
-        hiddenMonsInfo = NULL
-    else:
-        hiddenMonsInfo = f"&{hiddenMonsInfo}"
-    
 
 def PrintWildMonHeadersContent():
-    global tabStr
-
     groupCount = 0
     for group in headerStructTable:
         labelCount = 0
@@ -386,12 +368,13 @@ def PrintWildMonHeadersContent():
                         PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
                         PrintEncounterHeaders(TabStr(2) + "{")
 
-                        infoCount = 0
-                        for monInfo in headerStructTable[group][label][stat]:
-                            PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(infoCount)}] = ")
+                        timeCounter = 0
+                        while timeCounter < TIMES_OF_DAY_COUNT:
+                            monInfo = headerStructTable[group][label][stat][timeCounter]
+                            PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[timeCounter]}] = ")
 
                             infoIndex = 0
-                            while infoIndex <= MONS_INFO_TOTAL - 1:
+                            while infoIndex < len(fieldData):
                                 if infoIndex == 0:
                                     PrintEncounterHeaders(TabStr(3) + "{")
 
@@ -400,11 +383,11 @@ def PrintWildMonHeadersContent():
                                 else:
                                     PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(infoIndex)} = {monInfo[infoIndex]},")
 
-                                if infoIndex == MONS_INFO_TOTAL - 1:
+                                if infoIndex == len(fieldData) - 1:
                                     PrintEncounterHeaders(TabStr(3) + "},")
 
                                 infoIndex += 1
-                            infoCount += 1
+                            timeCounter += 1
                         PrintEncounterHeaders(TabStr(2) + "},")
                 PrintEncounterHeaders(tabStr + "},")
 
@@ -413,23 +396,22 @@ def PrintWildMonHeadersContent():
                     PrintEncounterHeaders(f"{TabStr(2)}.mapGroup = {GetMapGroupEnum(MAP_UNDEFINED)},")
                     PrintEncounterHeaders(f"{TabStr(2)}.mapNum = {GetMapGroupEnum(MAP_UNDEFINED, labelCount + 1)},")
 
-                    timeEnd = TIME_NIGHT_INDEX if IS_ENABLED else TIME_DEFAULT_INDEX
                     nullCount = 0
-                    while nullCount <= timeEnd:
+                    while nullCount < TIMES_OF_DAY_COUNT:
                         if nullCount == 0:
                             PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
                             PrintEncounterHeaders(TabStr(2)+ "{")
 
-                        PrintEncounterHeaders(f"{TabStr(3)}[{GetTimeStrFromIndex(nullCount)}] = ")
+                        PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[nullCount]}] = ")
 
                         nullIndex = 0
-                        while nullIndex <= MONS_INFO_TOTAL - 1:
+                        while nullIndex <= len(fieldData) - 1:
                             if nullIndex == 0:
                                 PrintEncounterHeaders(TabStr(3) + "{")
 
                             PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(nullIndex)} = NULL,")
 
-                            if nullIndex == MONS_INFO_TOTAL - 1:
+                            if nullIndex == len(fieldData) - 1:
                                 PrintEncounterHeaders(TabStr(3) + "},")
 
                             nullIndex += 1
@@ -454,108 +436,70 @@ def PrintEncounterRateMacros():
     if not printEncounterRateMacros:
         return
 
-    rateCount = 0
-    for percent in eLandMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount} {percent}")
+    fieldCounter = 0
+    # len(fieldData) - 1 here so we skip hidden_mons
+    while fieldCounter < len(fieldData) - 1: 
+        tempName = fieldData[fieldCounter]["name"].upper()
+        if "groups" not in fieldData[fieldCounter]:
+            rateCount = 0
+            for percent in fieldData[fieldCounter]["encounter_rates"]:
+                if rateCount == 0:
+                    print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
+                else:
+                    print(
+                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount - 1} + {percent}"
+                    )
+
+                if rateCount + 1 == len(fieldData[fieldCounter]["encounter_rates"]):
+                    print(
+                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount})"
+                    )
+
+                rateCount += 1
         else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
+            rates = fieldData[fieldCounter]["encounter_rates"]
+            groups = fieldData[fieldCounter]["groups"]
 
-        if rateCount + 1 == len(eLandMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{LAND_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
+            for method in groups:
+                method_indices = groups[method]
+                if not method_indices:
+                    continue
 
-    rateCount = 0
-    for percent in eWaterMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount} {percent}")
-        else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
+                for i, methodPercentIndex in enumerate(method_indices):
+                    if methodPercentIndex < 0 or methodPercentIndex >= len(rates):
+                        print(f"#error Invalid fishing encounter rate index {methodPercentIndex} for {method.upper()}")
+                        continue
 
-        if rateCount + 1 == len(eWaterMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{WATER_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
+                    rate_value = rates[methodPercentIndex]
+                    if i == 0:
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex} {rate_value}")
+                    else:
+                        previous_method_index = method_indices[i - 1]
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{previous_method_index} + {rate_value}")
 
-    rateCount = 0
-    for percent in eRockSmashMons:
-        if rateCount == 0:
-            print(f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount} {percent}")
-        else:
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount - 1} + {percent}"
-            )
+                    if i == len(method_indices) - 1:
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{method.upper()}_{SLOT}_{methodPercentIndex})")
 
-        if rateCount + 1 == len(eRockSmashMons):
-            print(
-                f"{define} {ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{ROCK_SMASH_MONS.upper()}_{SLOT}_{rateCount})"
-            )
-        rateCount += 1
-
-    for rodRate in eFishingMons[-1]:
-        for rodPercentIndex in eFishingMons[-1][rodRate]:
-            if rodPercentIndex == OLD_ROD_FIRST_INDEX or rodPercentIndex == GOOD_ROD_FIRST_INDEX or rodPercentIndex == SUPER_ROD_FIRST_INDEX:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {eFishingMons[rodPercentIndex]}"
-                )
-            else:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex - 1} + {eFishingMons[rodPercentIndex]}"
-                )
-            
-            if rodPercentIndex == OLD_ROD_LAST_INDEX or rodPercentIndex == GOOD_ROD_LAST_INDEX or rodPercentIndex == SUPER_ROD_LAST_INDEX:
-                print(
-                    f"{define} {ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{TOTAL} ({ENCOUNTER_CHANCE}_{FISHING_MONS.upper()}_{rodRate.upper()}_{SLOT}_{rodPercentIndex})"
-                )
+        fieldCounter += 1
+    print()
 
 
-def GetTimeStrFromIndex(index):
-    if not IS_ENABLED:
-        return TIME_DEFAULT
-    elif index == TIME_MORNING_INDEX:
-        return TIME_MORNING.upper()
-    elif index == TIME_DAY_INDEX:
-        return TIME_DAY.upper()
-    elif index == TIME_EVENING_INDEX:
-        return TIME_EVENING.upper()
-    elif index == TIME_NIGHT_INDEX:
-        return TIME_NIGHT.upper()
-    return index
+def GetTimeLabelFromString(string):
+    time = "TIME"
+    time_ = "TIME_"
 
+    if string == "TIMES_OF_DAY_COUNT":
+        return string
 
-def GetTimeIndexFromString(string):
-    if not IS_ENABLED:
-        return TIME_DEFAULT_INDEX
-    elif string.lower() == TIME_MORNING or string == TIME_MORNING_LABEL:
-        return TIME_MORNING_INDEX
-    elif string.lower() == TIME_DAY or string == TIME_DAY_LABEL:
-        return TIME_DAY_INDEX
-    elif string.lower() == TIME_EVENING or string == TIME_EVENING_LABEL:
-        return TIME_EVENING_INDEX
-    elif string.lower() == TIME_NIGHT or string == TIME_NIGHT_LABEL:
-        return TIME_NIGHT_INDEX
+    if time_ in string.upper():
+        return string[len(time_):len(string)]
+    elif time in string.upper():
+        return string[len(time):len(string)]
     return string
 
 
 def GetIMonInfoStringFromIndex(index):
-    if index == LAND_MONS_INDEX:
-        return ".landMonsInfo"
-    elif index == WATER_MONS_INDEX:
-        return ".waterMonsInfo"
-    elif index == ROCK_SMASH_MONS_INDEX:
-        return ".rockSmashMonsInfo"
-    elif index == FISHING_MONS_INDEX:
-        return ".fishingMonsInfo"
-    elif index == HIDDEN_MONS_INDEX:
-        return ".hiddenMonsInfo"
-    return index
+    return fieldData[index]["infoStringBase"]
 
 
 def GetMapGroupEnum(string, index = 0):
@@ -568,7 +512,7 @@ def GetMapGroupEnum(string, index = 0):
 
 """
 get copied lhea :^ ) 
-- next two functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
+- next three functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
 """
 def PrintGeneratedWarningText():
     print("//")
@@ -586,12 +530,82 @@ def IsConfigEnabled():
         return config_setting is not None and config_setting.group("cfg_val") in ("TRUE", "1")
 
 
+def GetTimeEnum():
+    DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*\}\s*\;")
+
+    with open("./include/rtc.h", "r") as rtc_include_file:
+        include_rtc = rtc_include_file.read()
+        include_enum = DEFAULT_TIME_PAT.search(include_rtc)
+        return include_enum.group("rtc_val")
+
+
+def CheckEmpty(string):
+    return string == "" or string.isspace() or string == "\n"
+
+
+def SetupUserTimeEnum(timeOfDay):
+    enum_string = GetTimeEnum()
+    enum_string = enum_string.split(",")
+
+    # check for extra element from trailing comma
+    if CheckEmpty(enum_string[-1]):
+        enum_string.pop(-1)
+
+    # we don't need the `TIMES_OF_DAY_COUNT` value, so - 1 from the value of len(enum_string)
+    strCount = 0
+    while strCount < len(enum_string) - 1:
+        tempStr = enum_string[strCount].strip("\n ")
+
+        """
+        we need to ignore any value assignments, as the times will need to correspond
+        with the elements in the array.
+        """
+        if "=" in tempStr:
+            tempStr = tempStr[0:tempStr.index("=")]
+            tempStr = tempStr.strip(" ")
+
+        #double check we didn't catch any empty values
+        if not CheckEmpty(enum_string[strCount]):
+            timeOfDay.add(tempStr)
+
+        strCount += 1
+    return timeOfDay
+
+
 def TabStr(amount):
-    global tabStr
     return tabStr * amount
 
 
-ImportWildEncounterFile()
+def GetPascalCase(string):
+    stringArray = string.split("_")
+    pascalString = ""
+
+    for string in stringArray:
+        pascalString += string.capitalize()
+    return pascalString
+
+
+def GetSnakeCase(string):
+    stringArray = string.split("_")
+    snakeString = ""
+
+    i = 0
+    for string in stringArray:
+        if i == 0:
+            snakeString += string
+        else:
+            snakeString += string.capitalize()
+
+        i += 1
+    return snakeString
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    ImportWildEncounterFile()
 
 
 """

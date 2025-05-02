@@ -471,7 +471,7 @@ struct PokemonStorageSystemData
     u8 cursorPrevHorizPos;
     u8 cursorFlipTimer;
     u8 cursorPalNums[2];
-    const u32 *displayMonPalette;
+    const u16 *displayMonPalette;
     u32 displayMonPersonality;
     u16 displayMonSpecies;
     u16 displayMonItemId;
@@ -524,7 +524,6 @@ struct PokemonStorageSystemData
     u16 displayMonPalOffset;
     u16 *displayMonTilePtr;
     struct Sprite *displayMonSprite;
-    u16 displayMonPalBuffer[0x40];
     u8 ALIGNED(4) tileBuffer[MON_PIC_SIZE * MAX_MON_PIC_FRAMES];
     u8 ALIGNED(4) itemIconBuffer[0x800];
     u8 wallpaperBgTilemapBuffer[0x1000];
@@ -845,7 +844,7 @@ static void TilemapUtil_DrawPrev(u8);
 static void TilemapUtil_Draw(u8);
 
 // Form changing
-void SetMonFormPSS(struct BoxPokemon *boxMon, u32 method);
+void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method);
 void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 
 static const u8 gText_JustOnePkmn[] = _("There is just one POKéMON with you.");
@@ -3933,13 +3932,11 @@ static void CreateDisplayMonSprite(void)
     u8 palSlot;
     u8 spriteId;
     struct SpriteSheet sheet = {sStorage->tileBuffer, MON_PIC_SIZE, GFXTAG_DISPLAY_MON};
-    struct SpritePalette palette = {sStorage->displayMonPalBuffer, PALTAG_DISPLAY_MON};
+    struct SpritePalette palette = {sStorage->displayMonPalette, PALTAG_DISPLAY_MON};
     struct SpriteTemplate template = sSpriteTemplate_DisplayMon;
 
     for (i = 0; i < MON_PIC_SIZE; i++)
         sStorage->tileBuffer[i] = 0;
-    for (i = 0; i < 16; i++)
-        sStorage->displayMonPalBuffer[i] = 0;
 
     sStorage->displayMonSprite = NULL;
 
@@ -3977,9 +3974,8 @@ static void LoadDisplayMonGfx(u16 species, u32 pid)
     if (species != SPECIES_NONE)
     {
         LoadSpecialPokePic(sStorage->tileBuffer, species, pid, TRUE);
-        LZ77UnCompWram(sStorage->displayMonPalette, sStorage->displayMonPalBuffer);
         CpuCopy32(sStorage->tileBuffer, sStorage->displayMonTilePtr, MON_PIC_SIZE);
-        LoadPalette(sStorage->displayMonPalBuffer, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
+        LoadPalette(sStorage->displayMonPalette, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
         sStorage->displayMonSprite->invisible = FALSE;
     }
     else
@@ -6909,7 +6905,7 @@ static void ReshowDisplayMon(void)
         TryRefreshDisplayMon();
 }
 
-void SetMonFormPSS(struct BoxPokemon *boxMon, u32 method)
+void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u16 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method, 0);
     if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL))
