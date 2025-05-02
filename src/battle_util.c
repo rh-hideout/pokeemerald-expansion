@@ -3590,6 +3590,11 @@ static void CancellerWeatherPrimal(u32 *effect)
         }
         if (*effect == 1)
         {
+            if (gStatuses3[gBattlerAttacker] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
+            {
+                gStatuses3[gBattlerAttacker] = 0;
+                gProtectStructs[gBattlerAttacker].chargingTurn = FALSE;
+            }
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_PrimalWeatherBlocksMove;
