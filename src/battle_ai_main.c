@@ -607,7 +607,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
     u8 consideredMoveArray[MAX_MON_MOVES];
     u32 numOfBestMoves;
     s32 i;
-    u32 flags = AI_THINKING_STRUCT->aiFlags[battlerAi];
+    u64 flags = AI_THINKING_STRUCT->aiFlags[battlerAi];
 
     AI_DATA->partnerMove = 0;   // no ally
     while (flags != 0)
@@ -619,7 +619,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
             else
                 BattleAI_DoAIProcessing(AI_THINKING_STRUCT, battlerAi, gBattlerTarget);
         }
-        flags >>= 1;
+        flags >>= (u64)1;
         AI_THINKING_STRUCT->aiLogicId++;
     }
 
@@ -656,7 +656,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battlerAi)
 static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
 {
     s32 i, j;
-    u32 flags;
+    u64 flags;
     s32 bestMovePointsForTarget[MAX_BATTLERS_COUNT];
     u8 mostViableTargetsArray[MAX_BATTLERS_COUNT];
     u8 actionOrMoveIndex[MAX_BATTLERS_COUNT];
@@ -696,7 +696,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battlerAi)
                     else
                         BattleAI_DoAIProcessing(AI_THINKING_STRUCT, battlerAi, gBattlerTarget);
                 }
-                flags >>= 1;
+                flags >>= (u64)1;
                 AI_THINKING_STRUCT->aiLogicId++;
             }
 
