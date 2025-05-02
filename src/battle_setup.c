@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "load_save.h"
 #include "battle_setup.h"
+#include "battle_tower.h"
 #include "battle_transition.h"
 #include "main.h"
 #include "task.h"
@@ -11,6 +12,7 @@
 #include "metatile_behavior.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
+#include "follower_npc.h"
 #include "random.h"
 #include "starter_choose.h"
 #include "script_pokemon_util.h"
@@ -246,6 +248,7 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
+            PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
@@ -327,7 +330,11 @@ static void DoStandardWildBattle(bool32 isDouble)
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
-    if (isDouble)
+    if (IsNPCFollowerWildBattle())
+    {
+        gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
+    }
+    else if (isDouble)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
     if (InBattlePyramid())
     {
@@ -573,6 +580,15 @@ static void CB2_EndWildBattle(void)
 {
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
+    
+    if (IsNPCFollowerWildBattle())
+    {
+        RestorePartyAfterFollowerNPCBattle();
+        if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
+         && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
+         || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
+            HealPlayerParty();
+    }
 
     if (IsPlayerDefeated(gBattleOutcome) == TRUE && !InBattlePyramid() && !InBattlePike())
     {
@@ -605,7 +621,7 @@ static void CB2_EndScriptedWildBattle(void)
     }
 }
 
-u8 BattleSetup_GetTerrainId(void)
+u8 BattleSetup_GetEnvironmentId(void)
 {
     u16 tileBehavior;
     s16 x, y;
@@ -618,11 +634,11 @@ u8 BattleSetup_GetTerrainId(void)
     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
     if (MetatileBehavior_IsTallGrass(tileBehavior))
-        return BATTLE_TERRAIN_GRASS;
+        return BATTLE_ENVIRONMENT_GRASS;
     if (MetatileBehavior_IsLongGrass(tileBehavior))
-        return BATTLE_TERRAIN_LONG_GRASS;
+        return BATTLE_ENVIRONMENT_LONG_GRASS;
     if (MetatileBehavior_IsSandOrDeepSand(tileBehavior))
-        return BATTLE_TERRAIN_SAND;
+        return BATTLE_ENVIRONMENT_SAND;
 
     switch (gMapHeader.mapType)
     {
@@ -632,41 +648,41 @@ u8 BattleSetup_GetTerrainId(void)
         break;
     case MAP_TYPE_UNDERGROUND:
         if (MetatileBehavior_IsIndoorEncounter(tileBehavior))
-            return BATTLE_TERRAIN_BUILDING;
+            return BATTLE_ENVIRONMENT_BUILDING;
         if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-            return BATTLE_TERRAIN_POND;
-        return BATTLE_TERRAIN_CAVE;
+            return BATTLE_ENVIRONMENT_POND;
+        return BATTLE_ENVIRONMENT_CAVE;
     case MAP_TYPE_INDOOR:
     case MAP_TYPE_SECRET_BASE:
-        return BATTLE_TERRAIN_BUILDING;
+        return BATTLE_ENVIRONMENT_BUILDING;
     case MAP_TYPE_UNDERWATER:
-        return BATTLE_TERRAIN_UNDERWATER;
+        return BATTLE_ENVIRONMENT_UNDERWATER;
     case MAP_TYPE_OCEAN_ROUTE:
         if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-            return BATTLE_TERRAIN_WATER;
-        return BATTLE_TERRAIN_PLAIN;
+            return BATTLE_ENVIRONMENT_WATER;
+        return BATTLE_ENVIRONMENT_PLAIN;
     }
     if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior))
-        return BATTLE_TERRAIN_WATER;
+        return BATTLE_ENVIRONMENT_WATER;
     if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-        return BATTLE_TERRAIN_POND;
+        return BATTLE_ENVIRONMENT_POND;
     if (MetatileBehavior_IsMountain(tileBehavior))
-        return BATTLE_TERRAIN_MOUNTAIN;
+        return BATTLE_ENVIRONMENT_MOUNTAIN;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
     {
         // Is BRIDGE_TYPE_POND_*?
         if (MetatileBehavior_GetBridgeType(tileBehavior) != BRIDGE_TYPE_OCEAN)
-            return BATTLE_TERRAIN_POND;
+            return BATTLE_ENVIRONMENT_POND;
 
         if (MetatileBehavior_IsBridgeOverWater(tileBehavior) == TRUE)
-            return BATTLE_TERRAIN_WATER;
+            return BATTLE_ENVIRONMENT_WATER;
     }
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(ROUTE113) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(ROUTE113))
-        return BATTLE_TERRAIN_SAND;
+        return BATTLE_ENVIRONMENT_SAND;
     if (GetSavedWeather() == WEATHER_SANDSTORM)
-        return BATTLE_TERRAIN_SAND;
+        return BATTLE_ENVIRONMENT_SAND;
 
-    return BATTLE_TERRAIN_PLAIN;
+    return BATTLE_ENVIRONMENT_PLAIN;
 }
 
 static u8 GetBattleTransitionTypeByMap(void)
@@ -1160,9 +1176,24 @@ void ClearTrainerFlag(u16 trainerId)
 void BattleSetup_StartTrainerBattle(void)
 {
     if (gNoOfApproachingTrainers == 2)
-        gBattleTypeFlags = (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
+    {
+        if (FollowerNPCIsBattlePartner())
+            gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
+        else
+            gBattleTypeFlags = (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
+    }
     else
-        gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
+    {
+        if (FollowerNPCIsBattlePartner())
+        {
+            gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER);
+            TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
+        }
+        else
+        {
+            gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
+        }
+    }
 
     if (InBattlePyramid())
     {
@@ -1251,6 +1282,15 @@ static void HandleBattleVariantEndParty(void)
 static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
+
+    if (FollowerNPCIsBattlePartner())
+    {
+        RestorePartyAfterFollowerNPCBattle();
+        if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
+         && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
+         || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
+            HealPlayerParty();
+    }
 
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {

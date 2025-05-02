@@ -4,7 +4,7 @@
 #include "constants/battle.h"
 #include "battle_bg.h"
 
-struct BattleTerrain {
+struct BattleEnvironment {
     u8 name[26];
     u16 naturePower;
     u16 secretPowerEffect;
@@ -12,6 +12,6 @@ struct BattleTerrain {
     struct BattleBackground background;
 };
 
-extern const struct BattleTerrain gBattleTerrainInfo[BATTLE_TERRAIN_COUNT];
+extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_TERRAIN_COUNT];
 
 #endif // GUARD_BATTLE_TERRAIN_H

@@ -103,8 +103,8 @@ enum UtilDebugMenu
     DEBUG_UTIL_MENU_ITEM_EXPANSION_VER,
     DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS,
     DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS,
-    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI,
     DEBUG_UTIL_MENU_ITEM_TIME_MENU,
+    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI // Please keep this at the bottom <3
 };
 
 enum TimeMenuDebugMenu
@@ -120,7 +120,7 @@ enum TimeMenuTimeOfDay
     DEBUG_TIME_MENU_ITEM_MORNING,
     DEBUG_TIME_MENU_ITEM_DAY,
     DEBUG_TIME_MENU_ITEM_EVENING,
-    DEBUG_TIME_MENU_ITEM_NIGHT, 
+    DEBUG_TIME_MENU_ITEM_NIGHT,
 };
 
 enum TimeMenuWeekdays
@@ -231,18 +231,18 @@ enum BattleAIFlags
     DEBUG_BATTLE_1_MENU_ITEM_CONTINUE,
 };
 
-enum BattleTerrain
+enum BattleEnvironment
 {
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_0,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_1,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_2,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_3,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_4,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_5,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_6,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_7,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_8,
-    DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_9,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_0,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_1,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_2,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_3,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_4,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_5,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_6,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_7,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_8,
+    DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_9,
 };
 
 enum GiveDebugMenu
@@ -328,7 +328,7 @@ struct DebugBattleData
 {
     u8 submenu;
     u8 battleType;
-    u8 battleTerrain;
+    u8 battleEnvironment;
     bool8 aiFlags[AI_FLAG_COUNT];
 };
 
@@ -769,23 +769,23 @@ static const struct ListMenuItem sDebugMenu_Items_Battle_1[] =
     [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_13] = {COMPOUND_STRING("{STR_VAR_1}Stall"),                 DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_13},
     [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_14] = {COMPOUND_STRING("{STR_VAR_1}Screener"),              DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_14},
     [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_15] = {COMPOUND_STRING("{STR_VAR_1}Smart switching"),       DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_15},
-    [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_16] = {COMPOUND_STRING("{STR_VAR_1}Ace pokemon"),           DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_16},
+    [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_16] = {COMPOUND_STRING("{STR_VAR_1}Ace Pokémon"),           DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_16},
     [DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_17] = {COMPOUND_STRING("{STR_VAR_1}Omniscient"),            DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_17},
     [DEBUG_BATTLE_1_MENU_ITEM_CONTINUE]   = {sDebugText_Continue,                                 DEBUG_BATTLE_1_MENU_ITEM_CONTINUE},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_Battle_2[] =
 {
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_0] = {COMPOUND_STRING("Grass…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_0},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_1] = {COMPOUND_STRING("Long grass…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_1},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_2] = {COMPOUND_STRING("Sand…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_2},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_3] = {COMPOUND_STRING("Underwater…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_3},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_4] = {COMPOUND_STRING("Water…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_4},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_5] = {COMPOUND_STRING("Pond…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_5},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_6] = {COMPOUND_STRING("Mountain…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_6},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_7] = {COMPOUND_STRING("Cave…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_7},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_8] = {COMPOUND_STRING("Building…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_8},
-    [DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_9] = {COMPOUND_STRING("Plain…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_9},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_0] = {COMPOUND_STRING("Grass…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_0},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_1] = {COMPOUND_STRING("Long grass…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_1},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_2] = {COMPOUND_STRING("Sand…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_2},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_3] = {COMPOUND_STRING("Underwater…{CLEAR_TO 110}{RIGHT_ARROW}"), DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_3},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_4] = {COMPOUND_STRING("Water…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_4},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_5] = {COMPOUND_STRING("Pond…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_5},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_6] = {COMPOUND_STRING("Mountain…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_6},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_7] = {COMPOUND_STRING("Cave…{CLEAR_TO 110}{RIGHT_ARROW}"),       DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_7},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_8] = {COMPOUND_STRING("Building…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_8},
+    [DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_9] = {COMPOUND_STRING("Plain…{CLEAR_TO 110}{RIGHT_ARROW}"),      DEBUG_BATTLE_2_MENU_ITEM_ENVIRONMENT_9},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_Give[] =
@@ -1391,7 +1391,7 @@ static void Debug_InitDebugBattleData(void)
     u32 i;
     sDebugBattleData->submenu       = 0;
     sDebugBattleData->battleType    = 0xFF;
-    sDebugBattleData->battleTerrain = 0xFF;
+    sDebugBattleData->battleEnvironment = 0xFF;
 
     for (i = 0; i < AI_FLAG_COUNT; i++)
         sDebugBattleData->aiFlags[i] = FALSE;
@@ -1708,7 +1708,7 @@ static void DebugTask_HandleMenuInput_Battle(u8 taskId)
             break;
         case 2: // Terrain
             sDebugBattleData->submenu++;
-            sDebugBattleData->battleTerrain = idx;
+            sDebugBattleData->battleEnvironment = idx;
             Debug_DestroyMenu(taskId);
             Debug_ShowMenu(DebugTask_HandleMenuInput_Battle, gMultiuseListMenuTemplate);
             break;
@@ -1767,7 +1767,7 @@ static void Debug_InitializeBattle(u8 taskId)
     }
 
     // Set terrain
-    gBattleTerrain = sDebugBattleData->battleTerrain;
+    gBattleEnvironment = sDebugBattleData->battleEnvironment;
 
     // Populate enemy party
     for (i = 0; i < PARTY_SIZE; i++)
@@ -3776,7 +3776,7 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
 {
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-    
+
     DebugAction_DestroyExtraWindow(taskId);
     switch (input)
     {
@@ -3808,7 +3808,7 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     {
         case DEBUG_TIME_MENU_ITEM_SUNDAY:
             daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);    
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_MONDAY:
             daysToAdd = ((WEEKDAY_MON - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;

@@ -20,6 +20,7 @@
   - [Day/Night System FAQ](tutorials/dns.md)
 - [Changelog](./CHANGELOG.md)
     - [1.11.x]()
+        - [Version 1.11.2](changelogs/1.11.x/1.11.2.md)
         - [Version 1.11.1](changelogs/1.11.x/1.11.1.md)
         - [Version 1.11.0](changelogs/1.11.x/1.11.0.md)
     - [1.10.x]()

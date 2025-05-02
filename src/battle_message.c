@@ -362,9 +362,9 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNPREVENTSUSAGE]                    = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevents {B_ATK_NAME_WITH_PREFIX2} from using {B_CURRENT_MOVE}!"), //I don't see this in SV text
     [STRINGID_PKMNRESTOREDHPUSING]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} restored HP using its {B_DEF_ABILITY}!"), //not in gen 5+, ability popup
     [STRINGID_PKMNCHANGEDTYPEWITH]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} made it the {B_BUFF1} type!"), //not in gen 5+, ability popup
-    [STRINGID_PKMNPREVENTSPARALYSISWITH]            = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevents paralysis!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNPREVENTSPARALYSISWITH]            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_LAST_ABILITY} prevents paralysis!"), //not in gen 5+, ability popup
     [STRINGID_PKMNPREVENTSROMANCEWITH]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevents romance!"), //not in gen 5+, ability popup
-    [STRINGID_PKMNPREVENTSPOISONINGWITH]            = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevents poisoning!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNPREVENTSPOISONINGWITH]            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_LAST_ABILITY} prevents poisoning!"), //not in gen 5+, ability popup
     [STRINGID_PKMNPREVENTSCONFUSIONWITH]            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} prevents confusion!"), //not in gen 5+, ability popup
     [STRINGID_PKMNRAISEDFIREPOWERWITH]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} raised the power of Fire-type moves!"), //not in gen 5+, ability popup
     [STRINGID_PKMNANCHORSITSELFWITH]                = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} anchors itself with {B_DEF_ABILITY}!"), //not in gen 5+, ability popup
@@ -468,7 +468,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_ITEMALLOWSONLYYMOVE]                  = COMPOUND_STRING("{B_LAST_ITEM} only allows the use of {B_CURRENT_MOVE}!\p"),
     [STRINGID_PKMNHUNGONWITHX]                      = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} hung on using its {B_LAST_ITEM}!"),
     [STRINGID_EMPTYSTRING3]                         = gText_EmptyString3,
-    [STRINGID_PKMNSXPREVENTSBURNS]                  = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX}'s {B_EFF_ABILITY} prevents burns!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNSXPREVENTSBURNS]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_LAST_ABILITY} prevents burns!"), //not in gen 5+, ability popup
     [STRINGID_PKMNSXBLOCKSY]                        = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} blocks {B_CURRENT_MOVE}!"), //not in gen 5+, ability popup
     [STRINGID_PKMNSXRESTOREDHPALITTLE2]             = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} restored its HP a little!"), //not in gen 5+, ability popup
     [STRINGID_PKMNSXWHIPPEDUPSANDSTORM]             = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY} whipped up a sandstorm!"), //not in gen 5+, ability popup
@@ -525,7 +525,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNOBTAINEDX2]                       = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} obtained {B_BUFF2}."),
     [STRINGID_PKMNOBTAINEDXYOBTAINEDZ]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} obtained {B_BUFF1}.\p{B_DEF_NAME_WITH_PREFIX} obtained {B_BUFF2}."),
     [STRINGID_BUTNOEFFECT]                          = COMPOUND_STRING("But it had no effect!"),
-    [STRINGID_PKMNSXHADNOEFFECTONY]                 = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY} had no effect on {B_EFF_NAME_WITH_PREFIX2}!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNSXHADNOEFFECTONY]                 = COMPOUND_STRING("Target protected by {B_LAST_ABILITY}!"), //not in gen 5+, ability popup
     [STRINGID_TWOENEMIESDEFEATED]                   = sText_TwoInGameTrainersDefeated,
     [STRINGID_TRAINER2LOSETEXT]                     = COMPOUND_STRING("{B_TRAINER2_LOSE_TEXT}"),
     [STRINGID_PKMNINCAPABLEOFPOWER]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} appears incapable of using its power!"),
@@ -1333,25 +1333,14 @@ const u16 gBerryEffectStringIds[] =
     [B_MSG_NORMALIZED_STATUS] = STRINGID_PKMNSITEMNORMALIZEDSTATUS
 };
 
-const u16 gBRNPreventionStringIds[] =
+const u16 gStatusPreventionStringIds[] =
 {
-    [B_MSG_ABILITY_PREVENTS_MOVE_STATUS]    = STRINGID_PKMNSXPREVENTSBURNS,
+    [B_MSG_ABILITY_PREVENTS_MOVE_BURN]      = STRINGID_PKMNSXPREVENTSBURNS,
+    [B_MSG_ABILITY_PREVENTS_MOVE_PARALYSIS] = STRINGID_PKMNPREVENTSPARALYSISWITH,
+    [B_MSG_ABILITY_PREVENTS_MOVE_POISON]    = STRINGID_PKMNPREVENTSPOISONINGWITH,
     [B_MSG_ABILITY_PREVENTS_ABILITY_STATUS] = STRINGID_PKMNSXPREVENTSYSZ,
-    [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY
-};
-
-const u16 gPRLZPreventionStringIds[] =
-{
-    [B_MSG_ABILITY_PREVENTS_MOVE_STATUS]    = STRINGID_PKMNPREVENTSPARALYSISWITH,
-    [B_MSG_ABILITY_PREVENTS_ABILITY_STATUS] = STRINGID_PKMNSXPREVENTSYSZ,
-    [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY
-};
-
-const u16 gPSNPreventionStringIds[] =
-{
-    [B_MSG_ABILITY_PREVENTS_MOVE_STATUS]    = STRINGID_PKMNPREVENTSPOISONINGWITH,
-    [B_MSG_ABILITY_PREVENTS_ABILITY_STATUS] = STRINGID_PKMNSXPREVENTSYSZ,
-    [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY
+    [B_MSG_STATUS_HAD_NO_EFFECT]            = STRINGID_PKMNSXHADNOEFFECTONY,
+    [B_MSG_ABILITY_PASTEL_VEIL]             = STRINGID_PASTELVEILPROTECTED
 };
 
 const u16 gItemSwapStringIds[] =

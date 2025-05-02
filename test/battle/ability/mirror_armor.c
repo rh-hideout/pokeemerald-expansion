@@ -102,10 +102,8 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers the Attack of Pokemon with Intimidate")
     }
 }
 
-// Unsure whether this should or should not fail, as Showdown has conflicting information. Needs testing in gen8 games.
 SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stats of an attacking Pokemon behind Substitute")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
         OPPONENT(SPECIES_WYNAUT);
