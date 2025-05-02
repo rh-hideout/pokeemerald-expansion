@@ -287,9 +287,9 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
 {
     s32 opposingBattler = GetOppositeBattler(battler);
 
+    // Switch prediction
     if ((AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
     {
-        // Switch prediction
         AI_DATA->aiSwitchPredictionInProgress = TRUE;
         AI_DATA->battlerDoingPrediction = battler;
         AI_DATA->mostSuitableMonId[opposingBattler] = GetMostSuitableMonToSwitchInto(opposingBattler, switchType);
@@ -334,7 +334,7 @@ void ComputeBattlerDecisions(u32 battler)
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
         ModifySwitchAfterMoveScoring(battler);
-        
+
         AI_DATA->aiCalcInProgress = FALSE;
     }
 }
