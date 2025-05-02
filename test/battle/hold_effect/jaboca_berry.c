@@ -58,3 +58,18 @@ SINGLE_BATTLE_TEST("Jaboca Berry tirggers before Bug Bite can steal it")
         NOT MESSAGE("Wynaut stole and ate the opposing Wobbuffet's Jaboca Berry!");
     }
 }
+
+SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user dies")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_JABOCA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
+    }
+}
