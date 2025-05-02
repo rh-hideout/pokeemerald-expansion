@@ -825,7 +825,6 @@ struct BattleStruct
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u8 storeBattlerSpriteId;
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
