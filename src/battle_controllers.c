@@ -168,24 +168,11 @@ static void InitSinglePlayerBtlControllers(void)
         else
             gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
 
-        if (!isDouble)
-        {
-            if (isRecorded && isRecordedLink)
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-            else
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
-        }
-        else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        {
+        if ((isDouble && ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || !isRecorded || isMulti || !isRecordedLink))
+            || (!isDouble && (!isRecorded || !isRecordedLink)))
             gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
-        }
         else
-        {
-            if (!isRecorded || isMulti || !isRecordedLink)
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
-            else
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-        }
+            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
 
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
