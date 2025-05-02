@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on 
 
 AI_SINGLE_BATTLE_TEST("AI will use Shed Tail to pivot to another mon while in damage stalemate with player rather than hard switching")
 {
-    u64 aiFlags;
+    u32 aiFlags;
     PARAMETRIZE { aiFlags = 0; }
     PARAMETRIZE { aiFlags = AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES; }
     GIVEN {
