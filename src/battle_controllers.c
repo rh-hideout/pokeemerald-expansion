@@ -130,6 +130,7 @@ static void InitSinglePlayerBtlControllers(void)
     bool32 isRecordedMaster = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
     bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
     bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
+    bool32 isAIvsAI = IsAiVsAiBattle();
 
     gBattleMainFunc = BeginBattleIntro;
 
@@ -164,15 +165,10 @@ static void InitSinglePlayerBtlControllers(void)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToWally;
-            else if (IsAiVsAiBattle())
+            else if (isAIvsAI)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
             else
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-
-            if (isRecorded && isRecordedLink)
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-            else
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
@@ -180,6 +176,26 @@ static void InitSinglePlayerBtlControllers(void)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
             else
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+        }
+        else
+        {
+            if (isRecorded)
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
+            else if (isAIvsAI)
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
+            else
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+        }
+
+        if (!isDouble)
+        {
+            if (isRecorded && isRecordedLink)
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
+            else
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        {
             gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
             gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayerPartner;
             gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
@@ -201,16 +217,10 @@ static void InitSinglePlayerBtlControllers(void)
         {
             if (!isRecorded)
             {
-                if (IsAiVsAiBattle())
-                {
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
+                if (isAIvsAI)
                     gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayerPartner;
-                }
                 else
-                {
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
                     gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
-                }
                 gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
                 gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
             }
@@ -239,7 +249,6 @@ static void InitSinglePlayerBtlControllers(void)
                     gBattlerPartyIndexes[2] = 3;
                     gBattlerPartyIndexes[3] = 3;
                 }
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
                 gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToRecordedPlayer;
             }
         }
