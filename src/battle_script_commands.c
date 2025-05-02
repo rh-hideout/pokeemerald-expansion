@@ -11128,12 +11128,12 @@ static void Cmd_various(void)
     case VARIOUS_HANDLE_TRAINER_SLIDE_MSG:
     {
         VARIOUS_ARGS(u8 case_);
-        if (cmd->case_ == 0)
+        if (cmd->case_ == PRINT_SLIDE_MESSAGE)
         {
             BtlController_EmitPrintString(battler, BUFFER_A, STRINGID_TRAINERSLIDE);
             MarkBattlerForControllerExec(battler);
         }
-        else
+        else if (cmd->case_ == RESTORE_BATTLER_SLIDE_CONTROL)
         {
             if (IsBattlerAlive(battler))
             {
