@@ -563,35 +563,42 @@ u32 GetPartyMonAbility(struct Pokemon *mon)
     return ability;
 }
 
-static u32 PpStallReduction(u32 move, u32 attacker)
+static u32 PpStallReduction(u32 move, u32 battlerAtk)
 {
-    if (move == 0)
+    if (move == MOVE_NONE)
         return 0;
+    u32 tempBattleMonIndex = 0;
     u32 totalStallValue = 0;
+    u32 returnValue = 0;
+    struct BattlePokemon backupBattleMon;
+    memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
-        u32 currentStallValue = gBattleStruct->playerStallMons[partyIndex];
+        u32 currentStallValue = gAiBattleData->playerStallMons[partyIndex];
         if (currentStallValue == 0 || GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP) == 0)
             continue;
+        PokemonToBattleMon(&gPlayerParty[partyIndex], &gBattleMons[tempBattleMonIndex]);
         u32 species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
-        u32 abilityAtk = 0;
+        u32 abilityAtk = ABILITY_NONE;
         u32 abilityDef = GetPartyMonAbility(&gPlayerParty[partyIndex]);
         u32 moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
-        if (CanAbilityAbsorbMove(attacker, 0, abilityAtk, move, moveType, ABILITY_CHECK_TRIGGER)
-         || CanAbilityBlockMove(attacker, 0, abilityAtk, abilityDef, move, ABILITY_CHECK_TRIGGER)
+        if (CanAbilityAbsorbMove(battlerAtk, tempBattleMonIndex, abilityDef, move, moveType, ABILITY_CHECK_TRIGGER)
+         || CanAbilityBlockMove(battlerAtk, tempBattleMonIndex, abilityAtk, abilityDef, move, ABILITY_CHECK_TRIGGER)
          || (CalcPartyMonTypeEffectivenessMultiplier(move, species, abilityDef) == 0))
         {
             totalStallValue += currentStallValue;
         }
     }
 
-    for (u32 i = 0; i < totalStallValue; i++)
+    for (u32 i = 0; returnValue == 0 && i < totalStallValue; i++)
     {
         if (RandomPercentage(RNG_AI_PP_STALL_DISREGARD_MOVE, (100 - PP_STALL_DISREGARD_MOVE_PERCENTAGE)))
-            return PP_STALL_SCORE_REDUCTION;
+            returnValue = PP_STALL_SCORE_REDUCTION;
     }
 
-    return 0;
+    memcpy(&gBattleMons[tempBattleMonIndex], &backupBattleMon, sizeof(struct BattlePokemon));
+
+    return returnValue;
 }
 
 static u32 ChooseMoveOrAction_Singles(u32 battlerAi)

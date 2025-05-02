@@ -11412,15 +11412,15 @@ void UpdateStallMons(void)
         u32 abilityDef = GetBattlerAbility(gBattlerTarget);
         if (CanAbilityAbsorbMove(gBattlerAttacker, gBattlerTarget, abilityDef, gCurrentMove, moveType, ABILITY_CHECK_TRIGGER))
         {
-            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+            gAiBattleData->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
         else if (CanAbilityBlockMove(gBattlerAttacker, gBattlerTarget, abilityAtk, abilityDef, gCurrentMove, ABILITY_CHECK_TRIGGER))
         {
-            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+            gAiBattleData->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
         else if (AI_GetMoveEffectiveness(gCurrentMove, gBattlerAttacker, gBattlerTarget) == 0)
         {
-            gBattleStruct->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+            gAiBattleData->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
     }
     else
