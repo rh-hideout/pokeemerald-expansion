@@ -140,35 +140,20 @@ static void InitSinglePlayerBtlControllers(void)
 
     if (!isRecorded || !isMulti || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER))
     {
-        if (!isDouble)
+        if ((!isDouble && (!isRecorded || !isRecordedLink || isRecordedMaster))
+            || (isDouble && ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || !isRecorded || isMulti || isMaster)))
         {
-            if (!isRecorded || !isRecordedLink || isRecordedMaster)
-            {
-                gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-                gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-            }
-            else
-            {
-                gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
-                gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
-            }
+            gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+            gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+            gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
+            gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
         }
         else
         {
-            if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || !isRecorded || isMulti || isMaster)
-            {
-                gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-                gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-                gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
-                gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
-            }
-            else
-            {
-                gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
-                gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
-                gBattlerPositions[2] = B_POSITION_OPPONENT_RIGHT;
-                gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
-            }
+            gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
+            gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
+            gBattlerPositions[2] = B_POSITION_OPPONENT_RIGHT;
+            gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
         }
 
         if (!isDouble)
