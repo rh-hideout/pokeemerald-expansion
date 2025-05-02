@@ -43,7 +43,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
-extern const struct BattleBackground gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
+extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow;
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadowsSized;
 extern const struct SpriteTemplate gSpriteTemplate_EnemyShadow;
@@ -933,7 +933,7 @@ static void LoadBattleBg(u8 battleBgType, u8 battleEnvironment)
     case MAP_BATTLE_SCENE_NORMAL:
         LZDecompressVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GYM:
         LZDecompressVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));

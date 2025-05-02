@@ -4541,7 +4541,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         case IF_TIME:
             if (GetTimeOfDay() == params[i].arg1)
                 currentCondition = TRUE;
-                
+
             break;
         case IF_NOT_TIME:
             if (GetTimeOfDay() != params[i].arg1)
@@ -4581,8 +4581,8 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         }
-        case IF_MIN_SMARTNESS: 
-        // remember that even though it's called "Smart/Smartness" here, 
+        case IF_MIN_SMARTNESS:
+        // remember that even though it's called "Smart/Smartness" here,
         // from gen 6 and up it's known as "Clever/Cleverness."
         {
             u32 smartness = GetMonData(mon, MON_DATA_SMART, 0);
@@ -4941,7 +4941,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
             case EVO_SPIN:
                 if (gSpecialVar_0x8000 == evolutions[i].param)
                     conditionsMet = TRUE;
-                    
+
                 break;
             }
 
@@ -6375,9 +6375,9 @@ void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality)
 
 bool8 HasTwoFramesAnimation(u16 species)
 {
-    return P_TWO_FRAME_FRONT_SPRITES 
-        && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder 
-        && species != SPECIES_UNOWN 
+    return P_TWO_FRAME_FRONT_SPRITES
+        && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder
+        && species != SPECIES_UNOWN
         && !gTestRunnerHeadless;
 }
 
@@ -6682,7 +6682,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                     if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;
-                case FORM_CHANGE_END_BATTLE_TERRAIN:
+                case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
                     if (gBattleEnvironment == formChanges[i].param1)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;
@@ -6817,7 +6817,7 @@ void TrySpecialOverworldEvo(void)
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
             else
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
-                
+
             if (tryMultiple)
                 gCB2_AfterEvolution = TrySpecialOverworldEvo;
             else

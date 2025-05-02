@@ -1,5 +1,5 @@
-#ifndef GUARD_BATTLE_TERRAIN_H
-#define GUARD_BATTLE_TERRAIN_H
+#ifndef GUARD_BATTLE_ENVIRONMENT_H
+#define GUARD_BATTLE_ENVIRONMENT_H
 
 #include "constants/battle.h"
 #include "battle_bg.h"
@@ -12,6 +12,6 @@ struct BattleEnvironment {
     struct BattleBackground background;
 };
 
-extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_TERRAIN_COUNT];
+extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
 
-#endif // GUARD_BATTLE_TERRAIN_H
+#endif // GUARD_BATTLE_ENVIRONMENT_H
