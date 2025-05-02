@@ -1278,12 +1278,8 @@ void ModifySwitchAfterMoveScoring(u32 battler)
         return;
 
     if (ShouldSwitchIfAllScoresBad(battler))
-    {
         AI_DATA->shouldSwitch |= (1u << battler);
-        return; // Don't do further analysis if all moves are already bad
-    }
-
-    if (ShouldStayInToUseMove(battler))
+    else if (ShouldStayInToUseMove(battler))
         AI_DATA->shouldSwitch &= ~(1u << battler);
 }
 

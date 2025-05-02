@@ -283,13 +283,13 @@ bool32 BattlerChoseNonMoveAction(void)
     return FALSE;
 }
 
-void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
+void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
 {
     s32 opposingBattler = GetOppositeBattler(battler);
 
-    // AI's predicting data
     if ((AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
     {
+        // Switch prediction
         AI_DATA->aiSwitchPredictionInProgress = TRUE;
         AI_DATA->battlerDoingPrediction = battler;
         AI_DATA->mostSuitableMonId[opposingBattler] = GetMostSuitableMonToSwitchInto(opposingBattler, switchType);
@@ -302,11 +302,8 @@ void SetupAISwitchingData(u32 battler, enum SwitchType switchType)
         AI_DATA->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
     }
 
-    // AI's data
-    AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
-    if (ShouldSwitch(battler))
-        AI_DATA->shouldSwitch |= (1u << battler);
-    gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
+    // TODO Move prediction
+    // ModifySwitchAfterMoveScoring(opposingBattler);
 }
 
 void ComputeBattlerDecisions(u32 battler)
@@ -323,9 +320,21 @@ void ComputeBattlerDecisions(u32 battler)
         enum SwitchType switchType = (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE;
 
         AI_DATA->aiCalcInProgress = TRUE;
+
+        // Setup battler and prediction data
         BattleAI_SetupAIData(0xF, battler);
-        SetupAISwitchingData(battler, switchType);
+        SetupAIPredictionData(battler, switchType);
+
+        // AI's own switching data
+        AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
+        if (ShouldSwitch(battler))
+            AI_DATA->shouldSwitch |= (1u << battler);
+        gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
+
+        // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
+        ModifySwitchAfterMoveScoring(battler);
+        
         AI_DATA->aiCalcInProgress = FALSE;
     }
 }
