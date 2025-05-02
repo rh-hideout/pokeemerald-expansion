@@ -355,72 +355,43 @@ static void InitLinkBtlControllers(void)
 
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
+            u32 linkPositionLeft, linkPositionRight;
+            BattleControllerFunc linkBtlControllerFunc;
+
+            if (i == multiplayerId)
+            {
+                linkPositionLeft = B_POSITION_PLAYER_LEFT;
+                linkPositionRight = B_POSITION_PLAYER_RIGHT;
+                linkBtlControllerFunc = SetControllerToPlayer;
+            }
+            else if ((!(gLinkPlayers[i].id & 1) && !(gLinkPlayers[multiplayerId].id & 1))
+                || ((gLinkPlayers[i].id & 1) && (gLinkPlayers[multiplayerId].id & 1)))
+            {
+                linkPositionLeft = B_POSITION_PLAYER_LEFT;
+                linkPositionRight = B_POSITION_PLAYER_RIGHT;
+                linkBtlControllerFunc = SetControllerToLinkPartner;
+            }
+            else
+            {
+                linkPositionLeft = B_POSITION_OPPONENT_LEFT;
+                linkPositionRight = B_POSITION_OPPONENT_RIGHT;
+                linkBtlControllerFunc = SetControllerToLinkOpponent;
+            }
+            gBattlerControllerFuncs[gLinkPlayers[i].id] = linkBtlControllerFunc;
             switch (gLinkPlayers[i].id)
             {
             case 0:
             case 3:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 0);
+                gBattlerPositions[gLinkPlayers[i].id] = linkPositionLeft;
+                gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
                 break;
             case 1:
             case 2:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
+                gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
+                gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
                 break;
-            }
-
-            if (i == multiplayerId)
-            {
-                gBattlerControllerFuncs[gLinkPlayers[i].id] = SetControllerToPlayer;
-                switch (gLinkPlayers[i].id)
-                {
-                case 0:
-                case 3:
-                    gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_PLAYER_LEFT;
-                    gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
-                    break;
-                case 1:
-                case 2:
-                    gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_PLAYER_RIGHT;
-                    gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
-                    break;
-                }
-            }
-            else
-            {
-                if ((!(gLinkPlayers[i].id & 1) && !(gLinkPlayers[multiplayerId].id & 1))
-                 || ((gLinkPlayers[i].id & 1) && (gLinkPlayers[multiplayerId].id & 1)))
-                {
-                    gBattlerControllerFuncs[gLinkPlayers[i].id] = SetControllerToLinkPartner;
-                    switch (gLinkPlayers[i].id)
-                    {
-                    case 0:
-                    case 3:
-                        gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_PLAYER_LEFT;
-                        gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
-                        break;
-                    case 1:
-                    case 2:
-                        gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_PLAYER_RIGHT;
-                        gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
-                        break;
-                    }
-                }
-                else
-                {
-                    gBattlerControllerFuncs[gLinkPlayers[i].id] = SetControllerToLinkOpponent;
-                    switch (gLinkPlayers[i].id)
-                    {
-                    case 0:
-                    case 3:
-                        gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_OPPONENT_LEFT;
-                        gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
-                        break;
-                    case 1:
-                    case 2:
-                        gBattlerPositions[gLinkPlayers[i].id] = B_POSITION_OPPONENT_RIGHT;
-                        gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
-                        break;
-                    }
-                }
             }
         }
     }
