@@ -168,6 +168,14 @@ static void InitSinglePlayerBtlControllers(void)
                     gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
                 else
                     gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+            }
+            else
+            {
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
+            }
+
+            if (!isRecorded)
+            {
                 gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
             }
             else
@@ -176,7 +184,6 @@ static void InitSinglePlayerBtlControllers(void)
                     gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
                 else
                     gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
-                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
             }
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
