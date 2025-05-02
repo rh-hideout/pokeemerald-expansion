@@ -188,7 +188,7 @@ static void InitSinglePlayerBtlControllers(void)
         else
             gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToRecordedOpponent;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || (isRecorded && isMulti))
         {
             BufferBattlePartyCurrentOrderBySide(0, 0);
             BufferBattlePartyCurrentOrderBySide(1, 0);
@@ -198,27 +198,12 @@ static void InitSinglePlayerBtlControllers(void)
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;
             gBattlerPartyIndexes[2] = 3;
-            if (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE)
+            if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+                && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
                 gBattlerPartyIndexes[3] = 1;
             else
                 gBattlerPartyIndexes[3] = 3;
         }
-        else
-        {
-            if (isRecorded && isMulti)
-            {
-                BufferBattlePartyCurrentOrderBySide(0, 0);
-                BufferBattlePartyCurrentOrderBySide(1, 0);
-                BufferBattlePartyCurrentOrderBySide(2, 1);
-                BufferBattlePartyCurrentOrderBySide(3, 1);
-
-                gBattlerPartyIndexes[0] = 0;
-                gBattlerPartyIndexes[1] = 0;
-                gBattlerPartyIndexes[2] = 3;
-                gBattlerPartyIndexes[3] = 3;
-            }
-        }
-
     }
     else
     {
