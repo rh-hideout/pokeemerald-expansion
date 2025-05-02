@@ -36,7 +36,7 @@ const u32 gBattleEnvironmentTiles_Building[] = INCBIN_U32("graphics/battle_envir
 const u16 gBattleEnvironmentPalette_Frontier[] = INCBIN_U16("graphics/battle_environment/stadium/battle_frontier.gbapal.lz"); // this is also used for link battles
 const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_environment/building/map.bin.lz");
 
-#define TERRAIN_BACKGROUND(background)                          \
+#define ENVIRONMENT_BACKGROUND(background)                      \
 {                                                               \
     .tileset = gBattleEnvironmentTiles_##background,            \
     .tilemap = gBattleEnvironmentTilemap_##background,          \
@@ -58,7 +58,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #endif
         .secretPowerEffect = B_SECRET_POWER_EFFECT >= GEN_4 ? MOVE_EFFECT_SLEEP : MOVE_EFFECT_POISON,
         .camouflageType = TYPE_GRASS,
-        .background = TERRAIN_BACKGROUND(TallGrass),
+        .background = ENVIRONMENT_BACKGROUND(TallGrass),
     },
 
     [BATTLE_ENVIRONMENT_LONG_GRASS] =
@@ -72,7 +72,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #endif
         .secretPowerEffect = MOVE_EFFECT_SLEEP,
         .camouflageType = TYPE_GRASS,
-        .background = TERRAIN_BACKGROUND(LongGrass),
+        .background = ENVIRONMENT_BACKGROUND(LongGrass),
     },
 
     [BATTLE_ENVIRONMENT_SAND] =
@@ -80,7 +80,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_6 ? MOVE_EARTH_POWER : MOVE_EARTHQUAKE,
         .secretPowerEffect = MOVE_EFFECT_ACC_MINUS_1,
         .camouflageType = TYPE_GROUND,
-        .background = TERRAIN_BACKGROUND(Sand),
+        .background = ENVIRONMENT_BACKGROUND(Sand),
     },
 
     [BATTLE_ENVIRONMENT_UNDERWATER] =
@@ -88,7 +88,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = MOVE_HYDRO_PUMP,
         .secretPowerEffect = B_SECRET_POWER_EFFECT >= GEN_6 ? MOVE_EFFECT_ATK_MINUS_1 : MOVE_EFFECT_DEF_MINUS_1,
         .camouflageType = TYPE_WATER,
-        .background = TERRAIN_BACKGROUND(Underwater),
+        .background = ENVIRONMENT_BACKGROUND(Underwater),
     },
 
     [BATTLE_ENVIRONMENT_WATER] =
@@ -96,7 +96,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_HYDRO_PUMP : MOVE_SURF,
         .secretPowerEffect = MOVE_EFFECT_ATK_MINUS_1,
         .camouflageType = TYPE_WATER,
-        .background = TERRAIN_BACKGROUND(Water),
+        .background = ENVIRONMENT_BACKGROUND(Water),
     },
 
     [BATTLE_ENVIRONMENT_POND] =
@@ -104,7 +104,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_HYDRO_PUMP : MOVE_BUBBLE_BEAM,
         .secretPowerEffect = B_SECRET_POWER_EFFECT >= GEN_4 ? MOVE_EFFECT_ATK_MINUS_1 : MOVE_EFFECT_SPD_MINUS_1,
         .camouflageType = TYPE_WATER,
-        .background = TERRAIN_BACKGROUND(PondWater),
+        .background = ENVIRONMENT_BACKGROUND(PondWater),
     },
 
     [BATTLE_ENVIRONMENT_MOUNTAIN] =
@@ -124,7 +124,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = MOVE_EFFECT_CONFUSION,
     #endif
         .camouflageType = B_CAMOUFLAGE_TYPES >= GEN_5 ? TYPE_GROUND : TYPE_ROCK,
-        .background = TERRAIN_BACKGROUND(Rock),
+        .background = ENVIRONMENT_BACKGROUND(Rock),
     },
 
     [BATTLE_ENVIRONMENT_CAVE] =
@@ -140,7 +140,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #endif
         .secretPowerEffect = MOVE_EFFECT_FLINCH,
         .camouflageType = TYPE_ROCK,
-        .background = TERRAIN_BACKGROUND(Cave),
+        .background = ENVIRONMENT_BACKGROUND(Cave),
     },
 
     [BATTLE_ENVIRONMENT_BUILDING] =
@@ -148,7 +148,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .naturePower = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT,
         .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
         .camouflageType = TYPE_NORMAL,
-        .background = TERRAIN_BACKGROUND(Building),
+        .background = ENVIRONMENT_BACKGROUND(Building),
     },
 
     [BATTLE_ENVIRONMENT_PLAIN] =

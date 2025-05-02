@@ -466,7 +466,7 @@ enum MoveEffects
 #define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
-// Battle terrain defines for gBattleEnvironment.
+// Battle environment defines for gBattleEnvironment.
 #define BATTLE_ENVIRONMENT_GRASS            0
 #define BATTLE_ENVIRONMENT_LONG_GRASS       1
 #define BATTLE_ENVIRONMENT_SAND             2
