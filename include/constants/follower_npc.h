@@ -28,7 +28,8 @@
 #define FNPC_ALL                              FOLLOWER_NPC_FLAG_ALL
 
 
-#define FNPC_NONE   0
-#define FNPC_ALWAYS 2
+#define FNPC_NONE       0
+#define FNPC_ALWAYS     2
+#define FNPC_DISABLED   2
 
 #endif // GUARD_CONSTANTS_FOLLOWER_NPC_H

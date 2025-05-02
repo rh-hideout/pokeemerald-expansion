@@ -1672,7 +1672,10 @@ void ScriptHideNPCFollower(struct ScriptContext *ctx)
 
 void ScriptCheckFollowerNPC(struct ScriptContext *ctx)
 {
-    gSpecialVar_Result = PlayerHasFollowerNPC();
+    if (!FNPC_ENABLE_NPC_FOLLOWERS)
+        gSpecialVar_Result = FNPC_DISABLED;
+    else
+        gSpecialVar_Result = PlayerHasFollowerNPC();
 }
 
 void ScriptUpdateFollowingMon(struct ScriptContext *ctx)
