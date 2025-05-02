@@ -266,72 +266,75 @@ static void InitLinkBtlControllers(void)
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if (!isDouble)
+    if ((!isDouble || !(gBattleTypeFlags & BATTLE_TYPE_MULTI) || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)))
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
+        if (!isDouble)
         {
-            gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+            if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
+            {
+                gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+                gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+            }
+            else
+            {
+                gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
+                gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
+            }
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
+        }
+        else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && isDouble)
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
+            {
+                gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+                gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+                gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
+                gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
+            }
+            else
+            {
+                gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
+                gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
+                gBattlerPositions[2] = B_POSITION_OPPONENT_RIGHT;
+                gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
+            }
+            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
+            gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
+            gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToLinkOpponent;
         }
         else
-        {
-            gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
-        }
-        gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-        gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
-    }
-    else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && isDouble)
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
             gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
             gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
             gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
             gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
-        }
-        else
-        {
-            gBattlerPositions[0] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[1] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[2] = B_POSITION_OPPONENT_RIGHT;
-            gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
-        }
-        gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-        gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
-        gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
-        gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToLinkOpponent;
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-    {
-        gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-        gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-        gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
-        gBattlerPositions[3] = B_POSITION_OPPONENT_RIGHT;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
-        {
-            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
-            gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToLinkPartner;
-            gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
-        }
-        else
-        {
-            gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToLinkPartner;
-            gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
-            gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
-            gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToLinkOpponent;
-        }
+            if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
+            {
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
+                gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToLinkPartner;
+                gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
+            }
+            else
+            {
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToLinkPartner;
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
+                gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
+                gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToLinkOpponent;
+            }
 
-        BufferBattlePartyCurrentOrderBySide(0, 0);
-        BufferBattlePartyCurrentOrderBySide(1, 0);
-        BufferBattlePartyCurrentOrderBySide(2, 1);
-        BufferBattlePartyCurrentOrderBySide(3, 1);
-        gBattlerPartyIndexes[0] = 0;
-        gBattlerPartyIndexes[1] = 0;
-        gBattlerPartyIndexes[2] = 3;
-        gBattlerPartyIndexes[3] = 3;
+            BufferBattlePartyCurrentOrderBySide(0, 0);
+            BufferBattlePartyCurrentOrderBySide(1, 0);
+            BufferBattlePartyCurrentOrderBySide(2, 1);
+            BufferBattlePartyCurrentOrderBySide(3, 1);
+            gBattlerPartyIndexes[0] = 0;
+            gBattlerPartyIndexes[1] = 0;
+            gBattlerPartyIndexes[2] = 3;
+            gBattlerPartyIndexes[3] = 3;
+        }
     }
     else
     {
