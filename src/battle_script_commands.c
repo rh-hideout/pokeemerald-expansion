@@ -7158,6 +7158,10 @@ static void Cmd_moveend(void)
                     if (!(ejectPackBattlers & 1u << battler))
                         continue;
 
+                    // Hit escape moves activate before Eject Pack for user
+                    if (moveEffect == EFFECT_HIT_ESCAPE && gBattlerAttacker == battler)
+                        continue;
+
                     gBattleScripting.battler = battler;
                     gLastUsedItem = gBattleMons[battler].item;
 
