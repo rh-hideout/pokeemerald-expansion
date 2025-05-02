@@ -258,6 +258,9 @@ static void InitLinkBtlControllers(void)
     s32 i;
     bool32 isDouble = IsDoubleBattle();
 
+    if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
+        gBattleMainFunc = BeginBattleIntro;
+
     if (!isDouble)
         gBattlersCount = 2;
     else
@@ -267,8 +270,6 @@ static void InitLinkBtlControllers(void)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
-            gBattleMainFunc = BeginBattleIntro;
-
             gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
             gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
 
@@ -288,8 +289,6 @@ static void InitLinkBtlControllers(void)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
-            gBattleMainFunc = BeginBattleIntro;
-
             gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
             gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
             gBattlerPositions[2] = B_POSITION_PLAYER_RIGHT;
@@ -322,8 +321,6 @@ static void InitLinkBtlControllers(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
-            gBattleMainFunc = BeginBattleIntro;
-
             gBattlerControllerFuncs[0] = SetControllerToPlayer;
             gBattlerControllerFuncs[1] = SetControllerToOpponent;
             gBattlerControllerFuncs[2] = SetControllerToLinkPartner;
@@ -349,9 +346,6 @@ static void InitLinkBtlControllers(void)
     else
     {
         u8 multiplayerId = GetMultiplayerId();
-
-        if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
-            gBattleMainFunc = BeginBattleIntro;
 
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
