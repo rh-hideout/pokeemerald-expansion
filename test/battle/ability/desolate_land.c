@@ -77,7 +77,9 @@ SINGLE_BATTLE_TEST("Desolate Land will not create a softlock when move in semi i
         TURN { SWITCH(opponent, 1); SKIP_TURN(player); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
+        ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
