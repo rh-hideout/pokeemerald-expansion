@@ -158,21 +158,16 @@ static void InitSinglePlayerBtlControllers(void)
 
         if (!isDouble)
         {
-            if (!isRecorded)
-            {
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToSafari;
-                else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToWally;
-                else if (IsAiVsAiBattle())
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
-                else
-                    gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
-            }
-            else
-            {
+            if (isRecorded)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
-            }
+            else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToSafari;
+            else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToWally;
+            else if (IsAiVsAiBattle())
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayerPartner;
+            else
+                gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
 
             if (!isRecorded)
             {
