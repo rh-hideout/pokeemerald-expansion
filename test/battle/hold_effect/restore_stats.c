@@ -217,3 +217,21 @@ SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggere
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("White Herb is correctly displayed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SUPERPOWER, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+        MESSAGE("Wynaut returned its stats to normal using its White Herb!");
+    } THEN {
+        EXPECT(playerLeft->item == ITEM_NONE);
+        EXPECT(playerLeft->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
+    }
+}

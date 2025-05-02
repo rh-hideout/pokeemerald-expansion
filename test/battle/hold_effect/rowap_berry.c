@@ -57,3 +57,18 @@ SINGLE_BATTLE_TEST("Rowap Berry is not triggered by a physical move")
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user dies")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_ROWAP_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWIFT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWIFT, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rowap Berry!");
+    }
+}

@@ -36,3 +36,23 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
+        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_KARTANA) { Ability(ABILITY_BEAST_BOOST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DESTINY_BOND, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_BEAST_BOOST);
+        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("2 sent out Wobbuffet!");
+    }
+}
