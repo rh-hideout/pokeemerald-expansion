@@ -1677,6 +1677,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                     gBattleStruct->blunderPolicy = TRUE;    // Only activates from missing through acc/evasion checks
 
                 if (effect == EFFECT_DRAGON_DARTS
+                    && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(battlerDef), gCurrentMove)
                     && !recalcDragonDarts // So we don't jump back and forth between targets
                     && CanTargetPartner(gBattlerAttacker, battlerDef)
                     && !TargetFullyImmuneToCurrMove(gBattlerAttacker, BATTLE_PARTNER(battlerDef)))
@@ -7005,6 +7006,7 @@ static void Cmd_moveend(void)
                 else
                 {
                     if (moveEffect == EFFECT_DRAGON_DARTS
+                     && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), gCurrentMove)
                      && !(gBattleStruct->moveResultFlags[BATTLE_PARTNER(gBattlerTarget)] & MOVE_RESULT_MISSED) // didn't miss the other target
                      && CanTargetPartner(gBattlerAttacker, gBattlerTarget)
                      && !TargetFullyImmuneToCurrMove(gBattlerAttacker, BATTLE_PARTNER(gBattlerTarget)))

@@ -227,15 +227,28 @@ static bool32 ShouldTeraShellDistortTypeMatchups(u32 move, u32 battlerDef, u32 a
     return FALSE;
 }
 
+static inline bool32 IsDragonDartsSecondHit(u32 effect)
+{
+    if (effect != EFFECT_DRAGON_DARTS)
+        return FALSE;
+
+    if (gMultiHitCounter == 1)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
 {
     u32 ability = GetBattlerAbility(battlerAtk);
     u32 effect = GetMoveEffect(move);
 
     if (gSideTimers[defSide].followmeTimer == 0
-        || !IsBattlerAlive(gSideTimers[defSide].followmeTarget)
-        || effect == EFFECT_SNIPE_SHOT || effect == EFFECT_SKY_DROP
-        || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
+        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
+        || effect == EFFECT_SNIPE_SHOT
+        || effect == EFFECT_SKY_DROP
+        || ability == ABILITY_PROPELLER_TAIL
+        || ability == ABILITY_STALWART)
         return FALSE;
 
     if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
@@ -3691,6 +3704,7 @@ static void CancellerMultihitMoves(u32 *effect)
             gMultiHitCounter = GetMoveStrikeCount(gCurrentMove);
 
             if (GetMoveEffect(gCurrentMove) == EFFECT_DRAGON_DARTS
+             && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), gCurrentMove)
              && CanTargetPartner(gBattlerAttacker, gBattlerTarget)
              && TargetFullyImmuneToCurrMove(gBattlerAttacker, gBattlerTarget))
                 gBattlerTarget = BATTLE_PARTNER(gBattlerTarget);
