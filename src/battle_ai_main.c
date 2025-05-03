@@ -3172,14 +3172,19 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 RETURN_SCORE_MINUS(10);
                 break;
             case ABILITY_FLASH_FIRE:
+            case ABILITY_WELL_BAKED_BODY:
                 if (moveType == TYPE_FIRE)
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    if (HasMoveWithType(battlerAtkPartner, TYPE_FIRE)
+                    if (atkPartnerAbility == ABILITY_FLASH_FIRE && HasMoveWithType(battlerAtkPartner, TYPE_FIRE)
                         && !gDisableStructs[battlerAtkPartner].flashFireBoosted)
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                    if (atkPartnerAbility == ABILITY_WELL_BAKED_BODY && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_DEF))
                     {
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
