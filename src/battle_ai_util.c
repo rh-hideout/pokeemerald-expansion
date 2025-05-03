@@ -1581,6 +1581,64 @@ bool32 IsHazardClearingMove(u32 move)
     return FALSE;
 }
 
+bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(allyMove);
+    struct AiLogicData *aiData = AI_DATA;
+
+    if (effect != EFFECT_PROTECT)
+    {
+        return FALSE;
+    }
+    else
+    {
+        enum ProtectMethod protectMethod = GetMoveProtectMethod(allyMove);
+        
+        if (protectMethod == PROTECT_QUICK_GUARD)
+        {
+            u32 attackerAbility = aiData->abilities[battlerAtk];
+            u32 priority = GetMovePriority(attackerMove);
+            
+            if (attackerAbility == ABILITY_GALE_WINGS && GetMoveType(attackerMove) == TYPE_FLYING 
+                && (GetGenConfig(GEN_CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battlerAtk)))
+                return TRUE;
+            
+            if (attackerAbility == ABILITY_PRANKSTER && IsBattleMoveStatus(attackerMove))
+                priority += 1;
+            
+            if (attackerAbility == ABILITY_TRIAGE && IsHealingMove(attackerMove))
+                priority += 3;
+
+            return (priority > 0);
+        }
+
+        if (IsBattleMoveStatus(attackerMove))
+        {
+            switch (protectMethod)
+            {
+            case PROTECT_NORMAL:
+            case PROTECT_CRAFTY_SHIELD:
+            case PROTECT_MAX_GUARD:
+            case PROTECT_WIDE_GUARD:
+                return TRUE;
+
+            default:
+                return FALSE;
+            }
+        }
+        else
+        {
+            switch (protectMethod)
+            {
+            case PROTECT_CRAFTY_SHIELD:
+                return FALSE;
+            default:
+                return TRUE;
+            }
+        }
+    }
+}
+
 bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility)
 {
     if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE)
