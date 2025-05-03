@@ -3055,17 +3055,25 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             switch (atkPartnerAbility)
             {
             case ABILITY_ANGER_POINT:
-                if (MoveAlwaysCrits(move)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
+                if (BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
                     && AI_IsFaster(battlerAtk, battlerAtkPartner, move) 
                     && isFriendlyFireOK)
                 {
-                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    if (MoveAlwaysCrits(move))
                     {
-                        ADJUST_SCORE(DECENT_EFFECT);
+                        if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                        {
+                            ADJUST_SCORE(DECENT_EFFECT);
+                        }
+                        RETURN_SCORE_PLUS(GOOD_EFFECT);
                     }
-                    RETURN_SCORE_PLUS(GOOD_EFFECT);
+                    // Multi-hit moves have a higher chance of critting
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    }
                 }
+
                 break;
             case ABILITY_LIGHTNING_ROD:
             case ABILITY_MOTOR_DRIVE:
@@ -3142,7 +3150,11 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
                 }
                 RETURN_SCORE_MINUS(10);
                 break;
@@ -3160,6 +3172,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             case ABILITY_THERMAL_EXCHANGE:
                 if (moveType == TYPE_FIRE && isFriendlyFireOK
+                    && !IsBattleMoveStatus(move)
                     && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
                     && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK))
                 {
@@ -3167,6 +3180,12 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
+
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    }
+
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
                 }
                 RETURN_SCORE_MINUS(10);
@@ -3216,6 +3235,12 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     {
                         ADJUST_SCORE(GOOD_EFFECT);
                     }
+
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    }
+
                     ADJUST_SCORE(WEAK_EFFECT); // Beat Up is handled later
                 }
                 break;
@@ -3257,7 +3282,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // attacker move effects specifically targeting partner
         if (!partnerProtecting)
         {
-            if (CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING))
+            if (wouldPartnerFaint)
             {
                 RETURN_SCORE_PLUS(-30);
             }
