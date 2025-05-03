@@ -165,7 +165,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        if (gSideStatuses[i] & SIDE_STATUS_DAMAGE_NON_TYPES && gSideStates[i].damageNonTypesTimer == gBattleTurnCounter)
+        if (gSideStatuses[i] & SIDE_STATUS_DAMAGE_NON_TYPES && gSideTimers[i].damageNonTypesTimer == gBattleTurnCounter)
             gSideStatuses[i] &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
     }
 
@@ -425,12 +425,12 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         if (gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES)
         {
             if (IsBattlerAlive(battler)
-             && !IS_BATTLER_OF_TYPE(battler, gSideStates[side].damageNonTypesType)
+             && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
              && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
             {
                 gBattlerAttacker = battler;
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 6;
-                ChooseDamageNonTypesString(gSideStates[side].damageNonTypesType);
+                ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
                 BattleScriptExecute(BattleScript_DamageNonTypesContinues);
                 effect = TRUE;
             }
@@ -1085,7 +1085,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     switch (gBattleStruct->eventBlockCounter)
     {
     case SECOND_EVENT_BLOCK_REFLECT:
-        if (gSideStatuses[side] & SIDE_STATUS_REFLECT && gSideStates[side].reflectTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_REFLECT && gSideTimers[side].reflectTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_REFLECT;
@@ -1097,7 +1097,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_LIGHT_SCREEN:
-        if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN && gSideStates[side].lightscreenTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN && gSideTimers[side].lightscreenTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LIGHTSCREEN;
@@ -1109,7 +1109,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_SAFEGUARD:
-        if (gSideStatuses[side] & SIDE_STATUS_SAFEGUARD && gSideStates[side].safeguardTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_SAFEGUARD && gSideTimers[side].safeguardTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SAFEGUARD;
@@ -1119,7 +1119,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_MIST:
-        if (gSideStates[side].mistTimer != 0 && gSideStates[side].mistTimer == gBattleTurnCounter)
+        if (gSideTimers[side].mistTimer != 0 && gSideTimers[side].mistTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_MIST;
@@ -1131,7 +1131,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_TAILWIND:
-        if (gSideStatuses[side] & SIDE_STATUS_TAILWIND && gSideStates[side].tailwindTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_TAILWIND && gSideTimers[side].tailwindTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_TAILWIND;
@@ -1141,7 +1141,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_LUCKY_CHANT:
-        if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT && gSideStates[side].luckyChantTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT && gSideTimers[side].luckyChantTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LUCKY_CHANT;
@@ -1154,7 +1154,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         if (gSideStatuses[side] & SIDE_STATUS_RAINBOW)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
-            if (gSideStates[side].rainbowTimer == gBattleTurnCounter)
+            if (gSideTimers[side].rainbowTimer == gBattleTurnCounter)
             {
                 gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
                 BattleScriptExecute(BattleScript_TheRainbowDisappeared);
@@ -1166,7 +1166,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
         if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
         {
-            if (gSideStates[side].seaOfFireTimer == gBattleTurnCounter)
+            if (gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
             {
                 gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
                 BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
@@ -1179,7 +1179,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         if (gSideStatuses[side] & SIDE_STATUS_SWAMP)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
-            if (gSideStates[side].swampTimer == gBattleTurnCounter)
+            if (gSideTimers[side].swampTimer == gBattleTurnCounter)
             {
                 gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
                 BattleScriptExecute(BattleScript_TheSwampDisappeared);
@@ -1189,7 +1189,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_AURORA_VEIL:
-        if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL && gSideStates[side].auroraVeilTimer == gBattleTurnCounter)
+        if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL && gSideTimers[side].auroraVeilTimer == gBattleTurnCounter)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_AURORA_VEIL;

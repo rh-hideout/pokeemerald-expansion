@@ -6821,10 +6821,10 @@ static void TrySwapSkyDropTargets(u32 battlerAtk, u32 battlerPartner)
 }
 
 #define TRY_SIDE_TIMER_BATTLER_ID_SWAP(battlerAtk, battlerPartner, side, field)    \
-    if (gSideStates[side].field == battlerAtk)                      \
-        gSideStates[side].field = battlerPartner;                   \
-    else if (gSideStates[side].field == battlerPartner)             \
-        gSideStates[side].field = battlerAtk;
+    if (gSideTimers[side].field == battlerAtk)                      \
+        gSideTimers[side].field = battlerPartner;                   \
+    else if (gSideTimers[side].field == battlerPartner)             \
+        gSideTimers[side].field = battlerAtk;
 
 static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
 {

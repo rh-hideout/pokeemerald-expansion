@@ -1888,7 +1888,7 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
 
 static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
 {
-    struct SideStates *sideTimer = &gSideStates[GetBattlerSide(data->battlerId)];
+    struct SideTimer *sideTimer = &gSideTimers[GetBattlerSide(data->battlerId)];
 
     switch (data->currentSecondaryListItemId)
     {

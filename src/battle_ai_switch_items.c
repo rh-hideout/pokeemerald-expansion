@@ -1455,7 +1455,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
         // Spikes
         if ((hazardFlags & SIDE_STATUS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2))
         {
-            spikesDamage = maxHP / ((5 - gSideStates[GetBattlerSide(battler)].spikesAmount) * 2);
+            spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
                 spikesDamage = 1;
             hazardDamage += spikesDamage;
@@ -1472,7 +1472,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
             && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
         {
-            tSpikesLayers = gSideStates[GetBattlerSide(battler)].toxicSpikesAmount;
+            tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
             if (tSpikesLayers == 1)
             {
                 tSpikesDamage = maxHP / 8;
@@ -1624,7 +1624,7 @@ static u32 GetSwitchinRecurringDamage(void)
 static u32 GetSwitchinStatusDamage(u32 battler)
 {
     u8 defType1 = AI_DATA->switchinCandidate.battleMon.types[0], defType2 = AI_DATA->switchinCandidate.battleMon.types[1];
-    u8 tSpikesLayers = gSideStates[GetBattlerSide(battler)].toxicSpikesAmount;
+    u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
     u16 heldItemEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
     u32 status = AI_DATA->switchinCandidate.battleMon.status1, ability = AI_DATA->switchinCandidate.battleMon.ability, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP;
     u32 statusDamage = 0;

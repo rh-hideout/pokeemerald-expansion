@@ -2889,7 +2889,7 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
         && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
         || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY))
     {
-        s32 spikesDmg = maxHp / ((5 - gSideStates[GetBattlerSide(currBattler)].spikesAmount) * 2);
+        s32 spikesDmg = maxHp / ((5 - gSideTimers[GetBattlerSide(currBattler)].spikesAmount) * 2);
         if (spikesDmg == 0)
             spikesDmg = 1;
         hazardDamage += spikesDmg;

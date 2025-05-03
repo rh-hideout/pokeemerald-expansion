@@ -192,7 +192,7 @@ EWRAM_DATA u16 gChosenMoveByBattler[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gHitMarker = 0;
 EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gSideStatuses[NUM_BATTLE_SIDES] = {0};
-EWRAM_DATA struct SideStates gSideStates[NUM_BATTLE_SIDES] = {0};
+EWRAM_DATA struct SideTimer gSideTimers[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA u32 gStatuses3[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gStatuses4[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT] = {0};
@@ -2987,7 +2987,7 @@ static void BattleStartClearSetData(void)
     memset(&gDisableStructs, 0, sizeof(gDisableStructs));
     memset(&gFieldTimers, 0, sizeof(gFieldTimers));
     memset(&gSideStatuses, 0, sizeof(gSideStatuses));
-    memset(&gSideStates, 0, sizeof(gSideStates));
+    memset(&gSideTimers, 0, sizeof(gSideTimers));
     memset(&gWishFutureKnock, 0, sizeof(gWishFutureKnock));
     memset(&gBattleResults, 0, sizeof(gBattleResults));
     ClearSetBScriptingStruct();
@@ -3070,9 +3070,9 @@ static void BattleStartClearSetData(void)
     gBattleStruct->arenaLostPlayerMons = 0;
     gBattleStruct->arenaLostOpponentMons = 0;
 
-    for (i = 0; i < ARRAY_COUNT(gSideStates); i++)
+    for (i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
-        gSideStates[i].stickyWebBattlerId = 0xFF;
+        gSideTimers[i].stickyWebBattlerId = 0xFF;
     }
     gBattleStruct->appearedInBattle = 0;
     gBattleStruct->beatUpSlot = 0;
@@ -3202,11 +3202,11 @@ void SwitchInClearSetData(u32 battler)
 
     ClearPursuitValuesIfSet(battler);
 
-    for (i = 0; i < ARRAY_COUNT(gSideStates); i++)
+    for (i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
         // Switched into sticky web user slot, so reset stored battler ID
-        if (gSideStates[i].stickyWebBattlerId == battler)
-            gSideStates[i].stickyWebBattlerId = 0xFF;
+        if (gSideTimers[i].stickyWebBattlerId == battler)
+            gSideTimers[i].stickyWebBattlerId = 0xFF;
     }
 
     for (i = 0; i < gBattlersCount; i++)
@@ -3333,11 +3333,11 @@ const u8* FaintClearSetData(u32 battler)
         }
     }
 
-    for (i = 0; i < ARRAY_COUNT(gSideStates); i++)
+    for (i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
         // User of sticky web fainted, so reset the stored battler ID
-        if (gSideStates[i].stickyWebBattlerId == battler)
-            gSideStates[i].stickyWebBattlerId = 0xFF;
+        if (gSideTimers[i].stickyWebBattlerId == battler)
+            gSideTimers[i].stickyWebBattlerId = 0xFF;
     }
 
     for (i = 0; i < gBattlersCount; i++)
@@ -3978,8 +3978,8 @@ void BattleTurnPassed(void)
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        if (gSideStates[i].retaliateTimer > 0)
-            gSideStates[i].retaliateTimer--;
+        if (gSideTimers[i].retaliateTimer > 0)
+            gSideTimers[i].retaliateTimer--;
     }
 
     gFieldStatuses &= ~STATUS_FIELD_ION_DELUGE;
@@ -5094,8 +5094,8 @@ static void TurnValuesCleanUp(bool8 var0)
         gProtectStructs[i].lashOutAffected = FALSE;
     }
 
-    gSideStates[B_SIDE_PLAYER].followmeTimer = 0;
-    gSideStates[B_SIDE_OPPONENT].followmeTimer = 0;
+    gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;
+    gSideTimers[B_SIDE_OPPONENT].followmeTimer = 0;
 
     gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceller
     ClearPursuitValues();
