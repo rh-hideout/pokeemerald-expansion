@@ -2871,7 +2871,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING);
     bool32 isFriendlyFireOK = !(CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING)) 
         && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
-    bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING);
+    bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING) 
+        && !partnerProtecting && IsBattlerAlive(battlerAtkPartner);
 
     // check what effect partner is using
     if (aiData->partnerMove != 0)
@@ -2991,7 +2992,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     } // global move effect check
 
     // Specific logic for spread moves.
-    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY && IsBattlerAlive(battlerAtkPartner))
+    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
     {
         // Don't kill your partner for no reason.
         if (wouldPartnerFaint)
