@@ -3067,60 +3067,70 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     RETURN_SCORE_PLUS(GOOD_EFFECT);
                 }
                 break;
-            case ABILITY_VOLT_ABSORB:
-                if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
-                {
-                    RETURN_SCORE_MINUS(10);
-                }
-                break;  // handled in AI_HPAware
+            case ABILITY_LIGHTNING_ROD:
             case ABILITY_MOTOR_DRIVE:
+            case ABILITY_VOLT_ABSORB:
                 if (moveType == TYPE_ELECTRIC)
                 {
+                    if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
+                        break;
+
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    if (BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED))
+                    else if (atkPartnerAbility == ABILITY_VOLT_ABSORB && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+
+                    if (atkPartnerAbility == ABILITY_MOTOR_DRIVE && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                    if (atkPartnerAbility == ABILITY_LIGHTNING_ROD && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK)
+                        && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL))
                     {
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
                 }
                 break;
-            case ABILITY_LIGHTNING_ROD:
-                if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5
-                    && moveType == TYPE_ELECTRIC)
-                {
-                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
-                    {
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    }
-                    if (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
-                        && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
-                    {
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
-                    }
-                }
-                break;
-            case ABILITY_WATER_ABSORB:
-            case ABILITY_DRY_SKIN:
             case ABILITY_EARTH_EATER:
-                if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                if (moveType == TYPE_GROUND && moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                {
+                    ADJUST_SCORE(DECENT_EFFECT);
+                }
+                else if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
                 {
                     RETURN_SCORE_MINUS(10);
                 }
                 break;  // handled in AI_HPAware
+            case ABILITY_DRY_SKIN:
+            case ABILITY_WATER_ABSORB:
             case ABILITY_STORM_DRAIN:
-                if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5
-                    && moveType == TYPE_WATER)
+                if (moveType == TYPE_WATER)
                 {
+                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_STORM_DRAIN)
+                        break;
+
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    if (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
-                        && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
+                    else 
                     {
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                        if (atkPartnerAbility == ABILITY_STORM_DRAIN)
+                        {
+                            if (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
+                                && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
+                            {
+                                RETURN_SCORE_PLUS(WEAK_EFFECT);
+                            }
+                        }
+                        else if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                        {
+                            RETURN_SCORE_MINUS(10);
+                        }                        
                     }
                 }
                 break;
@@ -3218,13 +3228,22 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 break;
             case ABILITY_CONTRARY:
+            case ABILITY_DEFIANT:
+            case ABILITY_COMPETITIVE:
                 if (IsStatLoweringEffect(effect) && isFriendlyFireOK)
                 {
-                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    if ((atkPartnerAbility == ABILITY_CONTRARY)
+                        || (atkPartnerAbility == ABILITY_DEFIANT && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
+                            && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL))
+                        || (atkPartnerAbility == ABILITY_COMPETITIVE && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK)
+                            && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)))
                     {
-                        ADJUST_SCORE(GOOD_EFFECT);
+                        if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                        {
+                            ADJUST_SCORE(GOOD_EFFECT);
+                        }
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
                 }
                 break;
             }
