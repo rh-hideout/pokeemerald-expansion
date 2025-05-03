@@ -146,10 +146,12 @@ static void InitBtlControllersInternal(void)
         bool32 isPlayerPrimary;
         if (isLink)
             isPlayerPrimary = (isMaster || (isDouble && isMulti));
-        else if (!isDouble)
-            isPlayerPrimary = (!isRecorded || !isRecordedLink || isRecordedMaster);
+        else if (!isRecorded)
+            isPlayerPrimary = TRUE;
+        else if (isDouble)
+            isPlayerPrimary = (isInGamePartner || isMulti || isMaster);
         else
-            isPlayerPrimary = (!isRecorded || isInGamePartner || isMulti || isMaster);
+            isPlayerPrimary = (!isRecordedLink || isRecordedMaster);
 
         if (isPlayerPrimary)
         {
