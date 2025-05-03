@@ -4278,6 +4278,12 @@ static const u16 sBasculinEggMoveLearnset[] = {
     MOVE_HEAD_SMASH,
     MOVE_UNAVAILABLE,
 };
+#if P_HISUIAN_FORMS
+static const u16 sBasculinWhiteStripedEggMoveLearnset[] = {
+    MOVE_ENDEAVOR,
+    MOVE_LAST_RESPECTS,
+    MOVE_UNAVAILABLE,
+};
 #endif //P_FAMILY_BASCULIN
 
 #if P_FAMILY_SANDILE
