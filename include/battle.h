@@ -214,16 +214,12 @@ struct SpecialStatus
     // End of byte
 };
 
-struct SideTimer
+struct SideStates
 {
     u16 reflectTimer;
-    u8 reflectBattlerId;
     u16 lightscreenTimer;
-    u8 lightscreenBattlerId;
     u16 mistTimer;
-    u8 mistBattlerId;
     u16 safeguardTimer;
-    u8 safeguardBattlerId;
     u16 spikesAmount; // debug menu complains. might be better to solve there instead if possible
     u16 toxicSpikesAmount;
     u16 stealthRockAmount;
@@ -231,11 +227,8 @@ struct SideTimer
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
-    u8 auroraVeilBattlerId;
     u16 tailwindTimer;
-    u8 tailwindBattlerId;
     u16 luckyChantTimer;
-    u8 luckyChantBattlerId;
     u16 steelsurgeAmount;
     // Timers below this point are not swapped by Court Change
     u16 followmeTimer;
@@ -1111,7 +1104,7 @@ extern u16 gChosenMoveByBattler[MAX_BATTLERS_COUNT];
 extern u32 gHitMarker;
 extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
-extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
+extern struct SideStates gSideStates[NUM_BATTLE_SIDES];
 extern u32 gStatuses3[MAX_BATTLERS_COUNT];
 extern u32 gStatuses4[MAX_BATTLERS_COUNT];
 extern struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT];

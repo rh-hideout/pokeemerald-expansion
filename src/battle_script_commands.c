@@ -3154,10 +3154,9 @@ static inline bool32 TrySetReflect(u32 battler)
     {
         gSideStatuses[side] |= SIDE_STATUS_REFLECT;
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].reflectTimer = gBattleTurnCounter + 8;
+            gSideStates[side].reflectTimer = gBattleTurnCounter + 8;
         else
-            gSideTimers[side].reflectTimer = gBattleTurnCounter + 5;
-        gSideTimers[side].reflectBattlerId = battler;
+            gSideStates[side].reflectTimer = gBattleTurnCounter + 5;
 
         if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
@@ -3176,10 +3175,9 @@ static inline bool32 TrySetLightScreen(u32 battler)
     {
         gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].lightscreenTimer = gBattleTurnCounter + 8;
+            gSideStates[side].lightscreenTimer = gBattleTurnCounter + 8;
         else
-            gSideTimers[side].lightscreenTimer = gBattleTurnCounter + 5;
-        gSideTimers[side].lightscreenBattlerId = battler;
+            gSideStates[side].lightscreenTimer = gBattleTurnCounter + 5;
 
         if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
@@ -3870,7 +3868,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 }
                 break;
             case MOVE_EFFECT_SPIKES:
-                if (gSideTimers[GetBattlerSide(gEffectBattler)].spikesAmount < 3)
+                if (gSideStates[GetBattlerSide(gEffectBattler)].spikesAmount < 3)
                 {
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SPIKESSCATTERED;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -4286,8 +4284,8 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 {
                     u32 moveType = GetMoveType(gCurrentMove);
                     gSideStatuses[side] |= SIDE_STATUS_DAMAGE_NON_TYPES;
-                    gSideTimers[side].damageNonTypesTimer = gBattleTurnCounter + 5; // damage is dealt for 4 turns, ends on 5th
-                    gSideTimers[side].damageNonTypesType = moveType;
+                    gSideStates[side].damageNonTypesTimer = gBattleTurnCounter + 5; // damage is dealt for 4 turns, ends on 5th
+                    gSideStates[side].damageNonTypesType = moveType;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     ChooseDamageNonTypesString(moveType);
                     gBattlescriptCurrInstr = BattleScript_DamageNonTypesStarts;
@@ -4317,10 +4315,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 {
                     gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_AURORA_VEIL;
                     if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
-                        gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = gBattleTurnCounter + 8;
+                        gSideStates[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = gBattleTurnCounter + 8;
                     else
-                        gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = gBattleTurnCounter + 5;
-                    gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilBattlerId = gBattlerAttacker;
+                        gSideStates[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = gBattleTurnCounter + 5;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SAFEGUARD;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_EffectAuroraVeilSuccess;
@@ -4613,14 +4610,14 @@ static void Cmd_tryfaintmon(void)
                 if (gBattleResults.playerFaintCounter < 255)
                     gBattleResults.playerFaintCounter++;
                 AdjustFriendshipOnBattleFaint(battler);
-                gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
+                gSideStates[B_SIDE_PLAYER].retaliateTimer = 2;
             }
             else
             {
                 if (gBattleResults.opponentFaintCounter < 255)
                     gBattleResults.opponentFaintCounter++;
                 gBattleResults.lastOpponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
-                gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
+                gSideStates[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
             if ((gHitMarker & HITMARKER_DESTINYBOND) && IsBattlerAlive(gBattlerAttacker)
                  && !(GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX))
@@ -5944,7 +5941,7 @@ static void Cmd_playstatchangeanimation(void)
                         changeableStatsCount++;
                     }
                 }
-                else if (!gSideTimers[GetBattlerSide(battler)].mistTimer
+                else if (!gSideStates[GetBattlerSide(battler)].mistTimer
                         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_CLEAR_AMULET
                         && ability != ABILITY_CLEAR_BODY
                         && ability != ABILITY_FULL_METAL_BODY
@@ -8218,7 +8215,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         && IsBattlerAffectedByHazards(battler, FALSE)
         && IsBattlerGrounded(battler))
     {
-        u8 spikesDmg = (5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2;
+        u8 spikesDmg = (5 - gSideStates[GetBattlerSide(battler)].spikesAmount) * 2;
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (spikesDmg);
         if (gBattleStruct->moveDamage[battler] == 0)
             gBattleStruct->moveDamage[battler] = 1;
@@ -8245,7 +8242,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         if (IS_BATTLER_OF_TYPE(battler, TYPE_POISON)) // Absorb the toxic spikes.
         {
             gSideStatuses[GetBattlerSide(battler)] &= ~SIDE_STATUS_TOXIC_SPIKES;
-            gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount = 0;
+            gSideStates[GetBattlerSide(battler)].toxicSpikesAmount = 0;
             gBattleScripting.battler = battler;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_ToxicSpikesAbsorbed;
@@ -8254,7 +8251,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         {
             if (CanBePoisoned(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerAbility(battler)))
             {
-                if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2)
+                if (gSideStates[GetBattlerSide(battler)].toxicSpikesAmount >= 2)
                     gBattleMons[battler].status1 |= STATUS1_TOXIC_POISON;
                 else
                     gBattleMons[battler].status1 |= STATUS1_POISON;
@@ -9696,7 +9693,7 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
 
     for (i = 0; i < 2; i++)
     {
-        struct SideTimer *sideTimer = &gSideTimers[i];
+        struct SideStates *sideTimer = &gSideStates[i];
         u32 *sideStatuses = &gSideStatuses[i];
 
         if (GetBattlerSide(battlerAtk) != i)
@@ -9745,7 +9742,7 @@ static bool32 TryTidyUpClear(u32 battlerAtk, bool32 clear)
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        struct SideTimer *sideTimer = &gSideTimers[i];
+        struct SideStates *sideTimer = &gSideStates[i];
         u32 *sideStatuses = &gSideStatuses[i];
 
         gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
@@ -9892,8 +9889,8 @@ void BS_CourtChangeSwapSideStatuses(void)
 {
     NATIVE_ARGS();
 
-    struct SideTimer *sideTimerPlayer = &gSideTimers[B_SIDE_PLAYER];
-    struct SideTimer *sideTimerOpp = &gSideTimers[B_SIDE_OPPONENT];
+    struct SideStates *sideTimerPlayer = &gSideStates[B_SIDE_PLAYER];
+    struct SideStates *sideTimerOpp = &gSideStates[B_SIDE_OPPONENT];
     u32 temp;
 
     // Swap timers and statuses
@@ -9917,14 +9914,6 @@ void BS_CourtChangeSwapSideStatuses(void)
     COURTCHANGE_SWAP(SIDE_STATUS_SWAMP, swampTimer, temp);
 
     // Change battler IDs of swapped effects. Needed for the correct string when they expire
-    // E.g. "Foe's Reflect wore off!"
-    UPDATE_COURTCHANGED_BATTLER(reflectBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(lightscreenBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(mistBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(safeguardBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(auroraVeilBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(tailwindBattlerId);
-    UPDATE_COURTCHANGED_BATTLER(luckyChantBattlerId);
     UPDATE_COURTCHANGED_BATTLER(stickyWebBattlerId);
 
     // Track which side originally set the Sticky Web
@@ -10658,8 +10647,7 @@ static void Cmd_various(void)
         if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_LUCKY_CHANT))
         {
             gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_LUCKY_CHANT;
-            gSideTimers[GetBattlerSide(battler)].luckyChantBattlerId = battler;
-            gSideTimers[GetBattlerSide(battler)].luckyChantTimer = gBattleTurnCounter + 5;
+            gSideStates[GetBattlerSide(battler)].luckyChantTimer = gBattleTurnCounter + 5;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         else
@@ -11109,10 +11097,9 @@ static void Cmd_various(void)
         {
             gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_AURORA_VEIL;
             if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_LIGHT_CLAY)
-                gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = gBattleTurnCounter + 8;
+                gSideStates[GetBattlerSide(battler)].auroraVeilTimer = gBattleTurnCounter + 8;
             else
-                gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = gBattleTurnCounter + 5;
-            gSideTimers[GetBattlerSide(battler)].auroraVeilBattlerId = battler;
+                gSideStates[GetBattlerSide(battler)].auroraVeilTimer = gBattleTurnCounter + 5;
 
             if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
@@ -11304,8 +11291,8 @@ static void Cmd_various(void)
         gDisableStructs[gBattlerTarget].furyCutterCounter = 0;
 
         // End any Follow Me/Rage Powder effects caused by the target
-        if (gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer != 0 && gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget == gBattlerTarget)
-            gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer = 0;
+        if (gSideStates[GetBattlerSide(gBattlerTarget)].followmeTimer != 0 && gSideStates[GetBattlerSide(gBattlerTarget)].followmeTarget == gBattlerTarget)
+            gSideStates[GetBattlerSide(gBattlerTarget)].followmeTimer = 0;
 
         break;
     }
@@ -11512,8 +11499,8 @@ static void Cmd_various(void)
         //  If Pokémon which set up Sticky Web is not on the field, no Pokémon have their Speed lowered."
         gBattlerAttacker = gBattlerTarget;  // Initialize 'fail' condition
         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
-        if (gSideTimers[GetBattlerSide(battler)].stickyWebBattlerId != 0xFF)
-            gBattlerAttacker = gSideTimers[GetBattlerSide(battler)].stickyWebBattlerId;
+        if (gSideStates[GetBattlerSide(battler)].stickyWebBattlerId != 0xFF)
+            gBattlerAttacker = gSideStates[GetBattlerSide(battler)].stickyWebBattlerId;
         break;
     }
     case VARIOUS_CUT_1_3_HP_RAISE_STATS:
@@ -12283,7 +12270,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
 
     if (statValue <= -1) // Stat decrease.
     {
-        if (gSideTimers[GetBattlerSide(battler)].mistTimer
+        if (gSideStates[GetBattlerSide(battler)].mistTimer
             && !certain && gCurrentMove != MOVE_CURSE
             && !(battler == gBattlerTarget && GetBattlerAbility(gBattlerAttacker) == ABILITY_INFILTRATOR))
         {
@@ -13136,15 +13123,14 @@ static void Cmd_setmist(void)
 {
     CMD_ARGS();
 
-    if (gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer)
+    if (gSideStates[GetBattlerSide(gBattlerAttacker)].mistTimer)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MIST_FAILED;
     }
     else
     {
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer = gBattleTurnCounter + 5;
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].mistBattlerId = gBattlerAttacker;
+        gSideStates[GetBattlerSide(gBattlerAttacker)].mistTimer = gBattleTurnCounter + 5;
         gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_MIST;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
     }
@@ -13378,7 +13364,7 @@ static void Cmd_counterdamagecalculator(void)
         gBattleStruct->moveDamage[gBattlerTarget] = gProtectStructs[gBattlerAttacker].physicalDmg * 2;
 
         if (IsAffectedByFollowMe(gBattlerAttacker, sideTarget, gCurrentMove))
-            gBattlerTarget = gSideTimers[sideTarget].followmeTarget;
+            gBattlerTarget = gSideStates[sideTarget].followmeTarget;
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].physicalBattlerId;
 
@@ -13405,7 +13391,7 @@ static void Cmd_mirrorcoatdamagecalculator(void)
         gBattleStruct->moveDamage[gBattlerTarget] = gProtectStructs[gBattlerAttacker].specialDmg * 2;
 
         if (IsAffectedByFollowMe(gBattlerAttacker, sideTarget, gCurrentMove))
-            gBattlerTarget = gSideTimers[sideTarget].followmeTarget;
+            gBattlerTarget = gSideStates[sideTarget].followmeTarget;
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].specialBattlerId;
 
@@ -13809,8 +13795,7 @@ static void Cmd_settailwind(void)
     if (!(gSideStatuses[side] & SIDE_STATUS_TAILWIND))
     {
         gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
-        gSideTimers[side].tailwindBattlerId = gBattlerAttacker;
-        gSideTimers[side].tailwindTimer = gBattleTurnCounter +  (B_TAILWIND_TURNS >= GEN_5 ? 4 : 3);
+        gSideStates[side].tailwindTimer = gBattleTurnCounter +  (B_TAILWIND_TURNS >= GEN_5 ? 4 : 3);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -14011,14 +13996,14 @@ static void Cmd_trysetspikes(void)
 
     u8 targetSide = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
 
-    if (gSideTimers[targetSide].spikesAmount == 3)
+    if (gSideStates[targetSide].spikesAmount == 3)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
     {
         gSideStatuses[targetSide] |= SIDE_STATUS_SPIKES;
-        gSideTimers[targetSide].spikesAmount++;
+        gSideStates[targetSide].spikesAmount++;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -14206,8 +14191,7 @@ static void Cmd_setsafeguard(void)
     else
     {
         gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_SAFEGUARD;
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].safeguardTimer = gBattleTurnCounter + 5;
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].safeguardBattlerId = gBattlerAttacker;
+        gSideStates[GetBattlerSide(gBattlerAttacker)].safeguardTimer = gBattleTurnCounter + 5;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SAFEGUARD;
     }
 
@@ -14391,35 +14375,35 @@ static void Cmd_rapidspinfree(void)
     else if (gSideStatuses[atkSide] & SIDE_STATUS_SPIKES)
     {
         gSideStatuses[atkSide] &= ~SIDE_STATUS_SPIKES;
-        gSideTimers[atkSide].spikesAmount = 0;
+        gSideStates[atkSide].spikesAmount = 0;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_SpikesFree;
     }
     else if (gSideStatuses[atkSide] & SIDE_STATUS_TOXIC_SPIKES)
     {
         gSideStatuses[atkSide] &= ~SIDE_STATUS_TOXIC_SPIKES;
-        gSideTimers[atkSide].toxicSpikesAmount = 0;
+        gSideStates[atkSide].toxicSpikesAmount = 0;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_ToxicSpikesFree;
     }
     else if (gSideStatuses[atkSide] & SIDE_STATUS_STICKY_WEB)
     {
         gSideStatuses[atkSide] &= ~SIDE_STATUS_STICKY_WEB;
-        gSideTimers[atkSide].stickyWebAmount = 0;
+        gSideStates[atkSide].stickyWebAmount = 0;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_StickyWebFree;
     }
     else if (gSideStatuses[atkSide] & SIDE_STATUS_STEALTH_ROCK)
     {
         gSideStatuses[atkSide] &= ~SIDE_STATUS_STEALTH_ROCK;
-        gSideTimers[atkSide].stealthRockAmount = 0;
+        gSideStates[atkSide].stealthRockAmount = 0;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_StealthRockFree;
     }
     else if (gSideStatuses[atkSide] & SIDE_STATUS_STEELSURGE)
     {
         gSideStatuses[atkSide] &= ~SIDE_STATUS_STEELSURGE;
-        gSideTimers[atkSide].steelsurgeAmount = 0;
+        gSideStates[atkSide].steelsurgeAmount = 0;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_SteelsurgeFree;
     }
@@ -14486,9 +14470,9 @@ static void Cmd_setstickyweb(void)
     else
     {
         gSideStatuses[targetSide] |= SIDE_STATUS_STICKY_WEB;
-        gSideTimers[targetSide].stickyWebBattlerId = gBattlerAttacker; // For Mirror Armor
-        gSideTimers[targetSide].stickyWebBattlerSide = GetBattlerSide(gBattlerAttacker); // For Court Change/Defiant - set this to the user's side
-        gSideTimers[targetSide].stickyWebAmount = 1;
+        gSideStates[targetSide].stickyWebBattlerId = gBattlerAttacker; // For Mirror Armor
+        gSideStates[targetSide].stickyWebBattlerSide = GetBattlerSide(gBattlerAttacker); // For Court Change/Defiant - set this to the user's side
+        gSideStates[targetSide].stickyWebAmount = 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -14686,9 +14670,9 @@ static void Cmd_setforcedtarget(void)
 {
     CMD_ARGS();
 
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer = 1;
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget = gBattlerTarget;
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmePowder = IsPowderMove(gCurrentMove);
+    gSideStates[GetBattlerSide(gBattlerTarget)].followmeTimer = 1;
+    gSideStates[GetBattlerSide(gBattlerTarget)].followmeTarget = gBattlerTarget;
+    gSideStates[GetBattlerSide(gBattlerTarget)].followmePowder = IsPowderMove(gCurrentMove);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -15004,13 +14988,13 @@ static void Cmd_settoxicspikes(void)
     CMD_ARGS(const u8 *failInstr);
 
     u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (gSideTimers[targetSide].toxicSpikesAmount >= 2)
+    if (gSideStates[targetSide].toxicSpikesAmount >= 2)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
     {
-        gSideTimers[targetSide].toxicSpikesAmount++;
+        gSideStates[targetSide].toxicSpikesAmount++;
         gSideStatuses[targetSide] |= SIDE_STATUS_TOXIC_SPIKES;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -15209,7 +15193,7 @@ static void Cmd_setstealthrock(void)
     else
     {
         gSideStatuses[targetSide] |= SIDE_STATUS_STEALTH_ROCK;
-        gSideTimers[targetSide].stealthRockAmount = 1;
+        gSideStates[targetSide].stealthRockAmount = 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -16655,7 +16639,7 @@ void BS_CalcMetalBurstDmg(void)
         gBattleStruct->moveDamage[gBattlerTarget] = gProtectStructs[gBattlerAttacker].physicalDmg * 150 / 100;
 
         if (IsAffectedByFollowMe(gBattlerAttacker, sideTarget, gCurrentMove))
-            gBattlerTarget = gSideTimers[sideTarget].followmeTarget;
+            gBattlerTarget = gSideStates[sideTarget].followmeTarget;
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].physicalBattlerId;
 
@@ -16668,7 +16652,7 @@ void BS_CalcMetalBurstDmg(void)
         gBattleStruct->moveDamage[gBattlerTarget] = gProtectStructs[gBattlerAttacker].specialDmg * 150 / 100;
 
         if (IsAffectedByFollowMe(gBattlerAttacker, sideTarget, gCurrentMove))
-            gBattlerTarget = gSideTimers[sideTarget].followmeTarget;
+            gBattlerTarget = gSideStates[sideTarget].followmeTarget;
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].specialBattlerId;
 
@@ -17545,13 +17529,13 @@ void BS_SetPledgeStatus(void)
         switch (cmd->sideStatus)
         {
         case SIDE_STATUS_RAINBOW:
-            gSideTimers[side].rainbowTimer = gBattleTurnCounter + 4;
+            gSideStates[side].rainbowTimer = gBattleTurnCounter + 4;
             break;
         case SIDE_STATUS_SEA_OF_FIRE:
-            gSideTimers[side].seaOfFireTimer = gBattleTurnCounter + 4;
+            gSideStates[side].seaOfFireTimer = gBattleTurnCounter + 4;
             break;
         case SIDE_STATUS_SWAMP:
-            gSideTimers[side].swampTimer = gBattleTurnCounter + 4;
+            gSideStates[side].swampTimer = gBattleTurnCounter + 4;
         }
 
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -18632,7 +18616,7 @@ void BS_SetSteelsurge(void)
     else
     {
         gSideStatuses[targetSide] |= SIDE_STATUS_STEELSURGE;
-        gSideTimers[targetSide].steelsurgeAmount = 1;
+        gSideStates[targetSide].steelsurgeAmount = 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

@@ -288,8 +288,8 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
     u32 ability = GetBattlerAbility(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
-    if (gSideTimers[defSide].followmeTimer == 0
-        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
+    if (gSideStates[defSide].followmeTimer == 0
+        || (!IsBattlerAlive(gSideStates[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
         || ability == ABILITY_PROPELLER_TAIL
@@ -299,7 +299,7 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
     if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
         return FALSE;
 
-    if (gSideTimers[defSide].followmePowder && !IsAffectedByPowder(battlerAtk, ability, GetBattlerHoldEffect(battlerAtk, TRUE)))
+    if (gSideStates[defSide].followmePowder && !IsAffectedByPowder(battlerAtk, ability, GetBattlerHoldEffect(battlerAtk, TRUE)))
         return FALSE;
 
     return TRUE;
@@ -316,13 +316,13 @@ bool32 HandleMoveTargetRedirection(void)
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
      && moveTarget == MOVE_TARGET_SELECTED
-     && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gSideTimers[side].followmeTarget))
+     && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gSideStates[side].followmeTarget))
     {
-        gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
+        gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideStates[side].followmeTarget; // follow me moxie fix
         return TRUE;
     }
     else if (IsDoubleBattle()
-           && gSideTimers[side].followmeTimer == 0
+           && gSideStates[side].followmeTimer == 0
            && (!IsBattleMoveStatus(gCurrentMove) || (moveTarget != MOVE_TARGET_USER && moveTarget != MOVE_TARGET_ALL_BATTLERS))
            && ((ability != ABILITY_LIGHTNING_ROD && moveType == TYPE_ELECTRIC)
             || (ability != ABILITY_STORM_DRAIN && moveType == TYPE_WATER)))
@@ -1170,7 +1170,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
                  || (targetAbility == ABILITY_COMPETITIVE && CompareStat(gBattlerTarget, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)))
               && gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != BATTLE_PARTNER(gBattlerTarget)
               && ((gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != gBattlerTarget) || gBattleScripting.stickyWebStatDrop == 1)
-              && !(gBattleScripting.stickyWebStatDrop == 1 && gSideTimers[targetSide].stickyWebBattlerSide == targetSide)) // Sticky Web must have been set by the foe
+              && !(gBattleScripting.stickyWebStatDrop == 1 && gSideStates[targetSide].stickyWebBattlerSide == targetSide)) // Sticky Web must have been set by the foe
     {
         gBattlerAbility = gBattlerTarget;
         BattleScriptPushCursor();
@@ -3327,56 +3327,56 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                                                B_SIDE_PLAYER,
                                                B_MSG_SET_TAILWIND,
                                                B_ANIM_TAILWIND,
-                                               &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
+                                               &gSideStates[B_SIDE_PLAYER].tailwindTimer);
                 break;
             case STARTING_STATUS_TAILWIND_OPPONENT:
                 effect = SetStartingSideStatus(SIDE_STATUS_TAILWIND,
                                                B_SIDE_OPPONENT,
                                                B_MSG_SET_TAILWIND,
                                                B_ANIM_TAILWIND,
-                                               &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
+                                               &gSideStates[B_SIDE_OPPONENT].tailwindTimer);
                 break;
             case STARTING_STATUS_RAINBOW_PLAYER:
                 effect = SetStartingSideStatus(SIDE_STATUS_RAINBOW,
                                                B_SIDE_PLAYER,
                                                B_MSG_SET_RAINBOW,
                                                B_ANIM_RAINBOW,
-                                               &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
+                                               &gSideStates[B_SIDE_PLAYER].rainbowTimer);
                 break;
             case STARTING_STATUS_RAINBOW_OPPONENT:
                 effect = SetStartingSideStatus(SIDE_STATUS_RAINBOW,
                                                B_SIDE_OPPONENT,
                                                B_MSG_SET_RAINBOW,
                                                B_ANIM_RAINBOW,
-                                               &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
+                                               &gSideStates[B_SIDE_OPPONENT].rainbowTimer);
                 break;
             case STARTING_STATUS_SEA_OF_FIRE_PLAYER:
                 effect = SetStartingSideStatus(SIDE_STATUS_SEA_OF_FIRE,
                                                B_SIDE_PLAYER,
                                                B_MSG_SET_SEA_OF_FIRE,
                                                B_ANIM_SEA_OF_FIRE,
-                                               &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
+                                               &gSideStates[B_SIDE_PLAYER].seaOfFireTimer);
                 break;
             case STARTING_STATUS_SEA_OF_FIRE_OPPONENT:
                 effect = SetStartingSideStatus(SIDE_STATUS_SEA_OF_FIRE,
                                                B_SIDE_OPPONENT,
                                                B_MSG_SET_SEA_OF_FIRE,
                                                B_ANIM_SEA_OF_FIRE,
-                                               &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
+                                               &gSideStates[B_SIDE_OPPONENT].seaOfFireTimer);
                 break;
             case STARTING_STATUS_SWAMP_PLAYER:
                 effect = SetStartingSideStatus(SIDE_STATUS_SWAMP,
                                                B_SIDE_PLAYER,
                                                B_MSG_SET_SWAMP,
                                                B_ANIM_SWAMP,
-                                               &gSideTimers[B_SIDE_PLAYER].swampTimer);
+                                               &gSideStates[B_SIDE_PLAYER].swampTimer);
                 break;
             case STARTING_STATUS_SWAMP_OPPONENT:
                 effect = SetStartingSideStatus(SIDE_STATUS_SWAMP,
                                                B_SIDE_OPPONENT,
                                                B_MSG_SET_SWAMP,
                                                B_ANIM_SWAMP,
-                                               &gSideTimers[B_SIDE_OPPONENT].swampTimer);
+                                               &gSideStates[B_SIDE_OPPONENT].swampTimer);
                 break;
             }
 
@@ -4922,7 +4922,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
              && IsBattleMovePhysical(gCurrentMove)
              && IsBattlerTurnDamaged(gBattlerTarget)
-             && (gSideTimers[GetBattlerSide(gBattlerAttacker)].toxicSpikesAmount != 2))
+             && (gSideStates[GetBattlerSide(gBattlerAttacker)].toxicSpikesAmount != 2))
             {
                 SWAP(gBattlerAttacker, gBattlerTarget, i);
                 BattleScriptPushCursor();
@@ -7492,7 +7492,7 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
         side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
         if (IsAffectedByFollowMe(gBattlerAttacker, side, move))
         {
-            targetBattler = gSideTimers[side].followmeTarget;
+            targetBattler = gSideStates[side].followmeTarget;
         }
         else
         {
@@ -7542,7 +7542,7 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
     case MOVE_TARGET_RANDOM:
         side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
         if (IsAffectedByFollowMe(gBattlerAttacker, side, move))
-            targetBattler = gSideTimers[side].followmeTarget;
+            targetBattler = gSideStates[side].followmeTarget;
         else if (IsDoubleBattle() && moveTarget & MOVE_TARGET_RANDOM)
             targetBattler = SetRandomTarget(gBattlerAttacker);
         else
@@ -8351,7 +8351,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_RETALIATE:
-        if (gSideTimers[atkSide].retaliateTimer == 1)
+        if (gSideStates[atkSide].retaliateTimer == 1)
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_SOLAR_BEAM:

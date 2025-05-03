@@ -1723,27 +1723,27 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_SPIKES:
-            if (gSideTimers[GetBattlerSide(battlerDef)].spikesAmount >= 3)
+            if (gSideStates[GetBattlerSide(battlerDef)].spikesAmount >= 3)
                 ADJUST_SCORE(-10);
             else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)
-              && gSideTimers[GetBattlerSide(battlerDef)].spikesAmount == 2)
+              && gSideStates[GetBattlerSide(battlerDef)].spikesAmount == 2)
                 ADJUST_SCORE(-10); // only one mon needs to set up the last layer of Spikes
             break;
         case EFFECT_STEALTH_ROCK:
-            if (gSideTimers[GetBattlerSide(battlerDef)].stealthRockAmount > 0
+            if (gSideStates[GetBattlerSide(battlerDef)].stealthRockAmount > 0
               || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)) //Only one mon needs to set up Stealth Rocks
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_TOXIC_SPIKES:
-            if (gSideTimers[GetBattlerSide(battlerDef)].toxicSpikesAmount >= 2)
+            if (gSideStates[GetBattlerSide(battlerDef)].toxicSpikesAmount >= 2)
                 ADJUST_SCORE(-10);
-            else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove) && gSideTimers[GetBattlerSide(battlerDef)].toxicSpikesAmount == 1)
+            else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove) && gSideStates[GetBattlerSide(battlerDef)].toxicSpikesAmount == 1)
                 ADJUST_SCORE(-10); // only one mon needs to set up the last layer of Toxic Spikes
             break;
         case EFFECT_STICKY_WEB:
-            if (gSideTimers[GetBattlerSide(battlerDef)].stickyWebAmount)
+            if (gSideStates[GetBattlerSide(battlerDef)].stickyWebAmount)
                 ADJUST_SCORE(-10);
-            else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove) && gSideTimers[GetBattlerSide(battlerDef)].stickyWebAmount)
+            else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove) && gSideStates[GetBattlerSide(battlerDef)].stickyWebAmount)
                 ADJUST_SCORE(-10); // only one mon needs to set up Sticky Web
             break;
         case EFFECT_FORESIGHT:
@@ -5448,7 +5448,7 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
     switch (moveEffect)
     {
     case EFFECT_TAILWIND:
-        if (!gSideTimers[GetBattlerSide(battlerAtk)].tailwindTimer && !(gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
+        if (!gSideStates[GetBattlerSide(battlerAtk)].tailwindTimer && !(gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_TRICK_ROOM:
