@@ -257,6 +257,7 @@ static void InitLinkBtlControllers(void)
 {
     s32 i;
     bool32 isDouble = IsDoubleBattle();
+    bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
 
     if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         gBattleMainFunc = BeginBattleIntro;
@@ -266,9 +267,9 @@ static void InitLinkBtlControllers(void)
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((!isDouble || !(gBattleTypeFlags & BATTLE_TYPE_MULTI) || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)))
+    if ((!isDouble || !isMulti || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)))
     {
-        if ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER) || (isDouble && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+        if ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER) || (isDouble && isMulti))
         {
             gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
             gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
@@ -288,7 +289,7 @@ static void InitLinkBtlControllers(void)
             gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
             gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
         }
-        else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && isDouble)
+        else if (!isMulti && isDouble)
         {
             gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
             gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToLinkOpponent;
