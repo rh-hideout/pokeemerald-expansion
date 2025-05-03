@@ -3104,13 +3104,17 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 break;
             case ABILITY_EARTH_EATER:
-                if (moveType == TYPE_GROUND && moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+            case ABILITY_LEVITATE:
+                if (moveType == TYPE_GROUND)
                 {
-                    ADJUST_SCORE(DECENT_EFFECT);
-                }
-                else if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
-                {
-                    RETURN_SCORE_MINUS(10);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    else if (atkPartnerAbility == ABILITY_EARTH_EATER && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
                 }
                 break;  // handled in AI_HPAware
             case ABILITY_DRY_SKIN:
