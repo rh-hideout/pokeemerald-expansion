@@ -2859,7 +2859,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 atkPartnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
     u32 atkPartnerHoldEffect = aiData->holdEffects[BATTLE_PARTNER(battlerAtk)];
     enum BattleMoveEffects partnerEffect = GetMoveEffect(aiData->partnerMove);
-    bool32 partnerProtecting = (partnerEffect == EFFECT_PROTECT);
+    bool32 partnerProtecting = (partnerEffect == EFFECT_PROTECT) 
+        && (aiData->partnerMove != MOVE_CRAFTY_SHIELD || aiData->partnerMove != MOVE_QUICK_GUARD);
     bool32 attackerHasBadAbility = (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating < 0);
     bool32 partnerHasBadAbility = (gAbilitiesInfo[atkPartnerAbility].aiRating < 0);
     u32 predictedMove = aiData->lastUsedMove[battlerDef];
@@ -3294,7 +3295,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         } // ability checks
 
         // attacker move effects specifically targeting partner
-        if (!partnerProtecting)
+        if (partnerEffect != EFFECT_PROTECT)
         {
             if (wouldPartnerFaint)
             {
