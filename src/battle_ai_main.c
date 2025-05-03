@@ -2869,10 +2869,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
     u32 friendlyFireThreshold = FriendlyFireHitsToKO(battlerAtk);
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING);
-    bool32 isFriendlyFireOK = !(CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING)) 
-        && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
     bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING) 
         && !partnerProtecting && IsBattlerAlive(battlerAtkPartner);
+    bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
 
     // check what effect partner is using
     if (aiData->partnerMove != 0)
@@ -2924,7 +2923,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_HELPING_HAND:
         if (!IsBattlerAlive(battlerAtkPartner) || !HasDamagingMove(battlerAtkPartner))
-            ADJUST_SCORE(-5);
+            ADJUST_SCORE(-20);
         break;
     case EFFECT_PERISH_SONG:
         if (aiData->partnerMove != 0 && HasTrappingMoveEffect(battlerAtkPartner))
@@ -3014,7 +3013,18 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     break;
                 }
             }
-            // TODO: times it's ok to kill your partner even though the opponents also don't die
+            // Both opponents can kill the partner
+            else if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtk), battlerAtkPartner) 
+                && (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtkPartner)))
+            {
+                // The spread move should kill an opponent.
+                if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING) 
+                    || CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING))
+                {
+                    ADJUST_SCORE(WEAK_EFFECT);
+                }
+            }
+            // No reason to kill partner has been found.
             else
             {
                 RETURN_SCORE_MINUS(10);
@@ -3332,7 +3342,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && !IsBattleMoveStatus(move)
                   && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
                   && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                  && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING))
+                  && !wouldPartnerFaint)
                 {
                     if (isFriendlyFireOK)
                     {
