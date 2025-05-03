@@ -6828,7 +6828,6 @@ static void TrySwapSkyDropTargets(u32 battlerAtk, u32 battlerPartner)
 
 static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
 {
-    u32 atkSide = GetBattlerSide(battlerAtk);
     u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
 
     // if we've set sticky web on the opposing side, need to swap stickyWebBattlerId for mirror armor
