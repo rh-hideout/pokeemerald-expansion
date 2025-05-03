@@ -1910,8 +1910,11 @@
 #define SPECIES_INKROW                                  1792
 #define SPECIES_LIQUILL                                 1793
 #define SPECIES_RAVARNISH                               1794
+#define SPECIES_MOBLIN                                  1795
+#define SPECIES_FANGSTER                                1796
+#define SPECIES_MAFIADON                                1797
 
-#define SPECIES_EGG (SPECIES_RAVARNISH + 1)
+#define SPECIES_EGG (SPECIES_MAFIADON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

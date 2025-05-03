@@ -7118,6 +7118,18 @@ Cry_Liquill::
 	.align 2	
 Cry_Ravarnish::
 	.incbin "sound/direct_sound_samples/cries/ravarnish.bin"
+
+	.align 2	
+Cry_Moblin::
+	.incbin "sound/direct_sound_samples/cries/moblin.bin"
+
+	.align 2	
+Cry_Fangster::
+	.incbin "sound/direct_sound_samples/cries/fangster.bin"
+
+	.align 2	
+Cry_Mafiadon::
+	.incbin "sound/direct_sound_samples/cries/mafiadon.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

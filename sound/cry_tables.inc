@@ -2907,6 +2907,12 @@ gCryTable::
 
 	cry Cry_Ravarnish
 
+	cry Cry_Moblin
+
+	cry Cry_Fangster
+
+	cry Cry_Mafiadon
+
 .endif
 
 	.align 2
@@ -5818,4 +5824,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Liquill
 
 	cry_reverse Cry_Ravarnish
+
+	cry_reverse Cry_Moblin
+
+	cry_reverse Cry_Fangster
+
+	cry_reverse Cry_Mafiadon
 .endif

@@ -2668,6 +2668,9 @@ enum {
     CRY_INKROW,
     CRY_LIQUILL,
     CRY_RAVARNISH,
+    CRY_MOBLIN,
+    CRY_FANGSTER,
+    CRY_MAFIADON,
     CRY_COUNT,
 };
 

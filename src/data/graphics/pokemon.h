@@ -23575,6 +23575,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Ganglython[] = INCBIN_U8("graphics/pokemon/ganglython/icon.4bpp");
    const u8 gMonFootprint_Ganglython[] = INCBIN_U8("graphics/pokemon/ganglython/footprint.1bpp");
 
+   const u32 gMonFrontPic_Moblin[] = INCBIN_U32("graphics/pokemon/moblin/front.4bpp.lz");
+   const u32 gMonBackPic_Moblin[] = INCBIN_U32("graphics/pokemon/moblin/back.4bpp.lz");
+   const u32 gMonPalette_Moblin[] = INCBIN_U32("graphics/pokemon/moblin/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Moblin[] = INCBIN_U32("graphics/pokemon/moblin/shiny.gbapal.lz");
+   const u8 gMonIcon_Moblin[] = INCBIN_U8("graphics/pokemon/moblin/icon.4bpp");
+   const u8 gMonFootprint_Moblin[] = INCBIN_U8("graphics/pokemon/moblin/footprint.1bpp");
+
+   const u32 gMonFrontPic_Fangster[] = INCBIN_U32("graphics/pokemon/fangster/front.4bpp.lz");
+   const u32 gMonBackPic_Fangster[] = INCBIN_U32("graphics/pokemon/fangster/back.4bpp.lz");
+   const u32 gMonPalette_Fangster[] = INCBIN_U32("graphics/pokemon/fangster/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Fangster[] = INCBIN_U32("graphics/pokemon/fangster/shiny.gbapal.lz");
+   const u8 gMonIcon_Fangster[] = INCBIN_U8("graphics/pokemon/fangster/icon.4bpp");
+   const u8 gMonFootprint_Fangster[] = INCBIN_U8("graphics/pokemon/fangster/footprint.1bpp");
+
+   const u32 gMonFrontPic_Mafiadon[] = INCBIN_U32("graphics/pokemon/mafiadon/front.4bpp.lz");
+   const u32 gMonBackPic_Mafiadon[] = INCBIN_U32("graphics/pokemon/mafiadon/back.4bpp.lz");
+   const u32 gMonPalette_Mafiadon[] = INCBIN_U32("graphics/pokemon/mafiadon/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Mafiadon[] = INCBIN_U32("graphics/pokemon/mafiadon/shiny.gbapal.lz");
+   const u8 gMonIcon_Mafiadon[] = INCBIN_U8("graphics/pokemon/mafiadon/icon.4bpp");
+   const u8 gMonFootprint_Mafiadon[] = INCBIN_U8("graphics/pokemon/mafiadon/footprint.1bpp");
+
    const u32 gMonFrontPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/front.4bpp.lz");
    const u32 gMonBackPic_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/back.4bpp.lz");
    const u32 gMonPalette_Ouroblack[] = INCBIN_U32("graphics/pokemon/ouroblack/normal.gbapal.lz");
