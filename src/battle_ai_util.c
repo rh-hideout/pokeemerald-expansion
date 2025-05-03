@@ -4517,3 +4517,13 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
         return TRUE;
     return FALSE;
 }
+
+u32 FriendlyFireHitsToKO(u32 battler)
+{
+    if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_RISKY)
+        return FRIENDLY_FIRE_RISKY_THRESHOLD;
+    if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_CONSERVATIVE)
+        return FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD;
+
+    return FRIENDLY_FIRE_NORMAL_THRESHOLD;
+}
