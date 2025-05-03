@@ -143,10 +143,15 @@ static void InitBtlControllersInternal(void)
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
     {
-        if ((!isLink && ((!isDouble && (!isRecorded || !isRecordedLink || isRecordedMaster))
-                || (isDouble && (!isRecorded || isInGamePartner || isMulti || isMaster))))
-            || (isLink && (isMaster || (isDouble && isMulti)))
-        )
+        bool32 isPlayerPrimary;
+        if (isLink)
+            isPlayerPrimary = (isMaster || (isDouble && isMulti));
+        else if (!isDouble)
+            isPlayerPrimary = (!isRecorded || !isRecordedLink || isRecordedMaster);
+        else
+            isPlayerPrimary = (!isRecorded || isInGamePartner || isMulti || isMaster);
+
+        if (isPlayerPrimary)
         {
             gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
             gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
@@ -183,6 +188,7 @@ static void InitBtlControllersInternal(void)
         }
         else
         {
+            // Player 1
             if (isRecorded)
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToRecordedPlayer;
             else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
@@ -194,12 +200,19 @@ static void InitBtlControllersInternal(void)
             else
                 gBattlerControllerFuncs[gBattlerPositions[0]] = SetControllerToPlayer;
 
-            if ((isDouble && (isInGamePartner || !isRecorded || isMulti || !isRecordedLink))
-                || (!isDouble && (!isRecorded || !isRecordedLink)))
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
+            // Opponent 1
+            bool32 isOpponent1Recorded;
+            if (isDouble)
+                isOpponent1Recorded = (!isInGamePartner && isRecorded && !isMulti && isRecordedLink);
             else
-                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
+                isOpponent1Recorded = isRecorded && isRecordedLink;
 
+            if (isOpponent1Recorded)
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToRecordedOpponent;
+            else
+                gBattlerControllerFuncs[gBattlerPositions[1]] = SetControllerToOpponent;
+
+            // Player 2
             if (isInGamePartner)
                 gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayerPartner;
             else if (isRecorded)
@@ -209,14 +222,21 @@ static void InitBtlControllersInternal(void)
             else
                 gBattlerControllerFuncs[gBattlerPositions[2]] = SetControllerToPlayer;
 
+            // Opponent 2
             if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToOpponent;
             else
                 gBattlerControllerFuncs[gBattlerPositions[3]] = SetControllerToRecordedOpponent;
         }
 
-        if ((!isLink && (isInGamePartner || (isRecorded && isMulti)))
-            || (isLink && isDouble && isMulti))
+        bool32 bufferPartyOrders;
+
+        if (!isLink)
+            bufferPartyOrders = (isInGamePartner || (isRecorded && isMulti));
+        else
+            bufferPartyOrders = (isDouble && isMulti);
+
+        if (bufferPartyOrders)
         {
             BufferBattlePartyCurrentOrderBySide(0, 0);
             BufferBattlePartyCurrentOrderBySide(1, 0);
