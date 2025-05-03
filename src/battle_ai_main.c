@@ -3025,7 +3025,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         switch (atkPartnerHoldEffect)
         {
         case HOLD_EFFECT_WEAKNESS_POLICY:
-            if (CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerAtkPartner, atkPartnerAbility, FALSE) >= UQ_4_12(2.0))
+            if (aiData->effectiveness[battlerAtk][battlerAtkPartner][AI_THINKING_STRUCT->movesetIndex] >= UQ_4_12(2.0))
             {
                 ADJUST_SCORE(WEAK_EFFECT);
                 
