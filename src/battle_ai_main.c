@@ -3072,7 +3072,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_VOLT_ABSORB:
                 if (moveType == TYPE_ELECTRIC)
                 {
-                    if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
+                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
                         break;
 
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
@@ -3130,7 +3130,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         else if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
                         {
                             RETURN_SCORE_MINUS(10);
-                        }                        
+                        }
                     }
                 }
                 break;
