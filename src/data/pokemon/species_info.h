@@ -7446,9 +7446,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 10,
        .weight = 398,
        .description = COMPOUND_STRING(
-           "''Yeah boss! Sweep 'em good, bossman! Yeah,\n"
-           "rough 'em up real good, boss! Hit 'em wid' \n" 
-           "a Sucka' Punch, boss!''\n"),
+           "''Yeah boss! Sweep 'em good,\n"
+           "bossman! Yeah, rough 'em\n" 
+           "up real good, boss! Hit\n"
+           "'em wid' a Sucka' Punch, boss!''\n"),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -7559,10 +7560,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 24,
        .weight = 2820,
        .description = COMPOUND_STRING(
-           "You come to me, and you say: ''Set-up and\n"
-           "sweep''. But you don't ask with respect.\n" 
+           "''You come to me, and you say: 'Set-up and\n"
+           "sweep'. But you don't ask with respect.\n" 
            "You don't offer friendship. You don't even\n"
-           "think to call me Mafiadon.\n"),
+           "think to call me Mafiadon.''\n"),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
