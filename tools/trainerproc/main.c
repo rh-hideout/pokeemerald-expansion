@@ -123,8 +123,8 @@ struct Trainer
     struct String name;
     int name_line;
 
-    enum BattleType double_battle;
-    int double_battle_line;
+    enum BattleType battle_type;
+    int battle_type_line;
 
     struct Pokemon pokemon[PARTY_SIZE];
     int pokemon_n;
@@ -1224,10 +1224,10 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
         }
         else if (is_literal_token(&key, "Battle Type"))
         {
-            if (trainer->double_battle_line)
+            if (trainer->battle_type_line)
                 any_error = !set_show_parse_error(p, key.location, "duplicate 'Battle Type'");
-            trainer->double_battle_line = value.location.line;
-            if (!token_battle_type(p, &value, &trainer->double_battle))
+            trainer->battle_type_line = value.location.line;
+            if (!token_battle_type(p, &value, &trainer->battle_type))
                 any_error = !show_parse_error(p);
         }
         else if (is_literal_token(&key, "Mugshot"))
@@ -1786,11 +1786,11 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, " },\n");
         }
 
-        if (trainer->double_battle_line)
+        if (trainer->battle_type_line)
         {
-            fprintf(f, "#line %d\n", trainer->double_battle_line);
+            fprintf(f, "#line %d\n", trainer->battle_type_line);
             fprintf(f, "        .battleType = ");
-            if (trainer->double_battle == BATTLE_TYPE_DOUBLE)
+            if (trainer->battle_type == BATTLE_TYPE_DOUBLE)
                 fprintf(f, "TRAINER_BATTLE_TYPE_DOUBLES,\n");
             else
                 fprintf(f, "TRAINER_BATTLE_TYPE_SINGLES,\n");
