@@ -3118,25 +3118,21 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (moveType == TYPE_ELECTRIC)
                 {
                     if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
-                        break;
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
 
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    else if (atkPartnerAbility == ABILITY_VOLT_ABSORB && !(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                    else if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                    else
                     {
                         RETURN_SCORE_MINUS(10);
-                    }
-
-                    if (atkPartnerAbility == ABILITY_MOTOR_DRIVE && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED))
-                    {
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
-                    }
-                    if (atkPartnerAbility == ABILITY_LIGHTNING_ROD && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK)
-                        && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL))
-                    {
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
                 }
                 break;
@@ -3157,26 +3153,15 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_DRY_SKIN:
             case ABILITY_WATER_ABSORB:
             case ABILITY_STORM_DRAIN:
-                if (moveType == TYPE_WATER)
+                if (moveType == TYPE_WATER && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
-                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_STORM_DRAIN)
-                        break;
-
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
                     else 
                     {
-                        if (atkPartnerAbility == ABILITY_STORM_DRAIN)
-                        {
-                            if (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
-                                && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
-                            {
-                                RETURN_SCORE_PLUS(WEAK_EFFECT);
-                            }
-                        }
-                        else if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                        if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
                         {
                             RETURN_SCORE_MINUS(10);
                         }
@@ -3185,7 +3170,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             case ABILITY_WATER_COMPACTION:
                 if (moveType == TYPE_WATER && isFriendlyFireOK
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_DEF))
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
@@ -3201,7 +3186,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             case ABILITY_STEAM_ENGINE:
                 if (isFriendlyFireOK && (moveType == TYPE_WATER || moveType == TYPE_FIRE)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED))
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
@@ -3214,8 +3199,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_THERMAL_EXCHANGE:
                 if (moveType == TYPE_FIRE && isFriendlyFireOK
                     && !IsBattleMoveStatus(move)
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK))
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
@@ -3239,12 +3223,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
-                    if (atkPartnerAbility == ABILITY_FLASH_FIRE && HasMoveWithType(battlerAtkPartner, TYPE_FIRE)
-                        && !gDisableStructs[battlerAtkPartner].flashFireBoosted)
-                    {
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
-                    }
-                    if (atkPartnerAbility == ABILITY_WELL_BAKED_BODY && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_DEF))
+                    if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                     {
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
@@ -3258,19 +3237,16 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
                     
-                    if (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
-                        && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK))
+                    if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                     {
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
                 }
                 break;
             case ABILITY_JUSTIFIED:
-                if (moveType == TYPE_DARK
+                if (moveType == TYPE_DARK && isFriendlyFireOK
                     && !IsBattleMoveStatus(move)
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                    && isFriendlyFireOK)
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
@@ -3286,10 +3262,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 break;
             case ABILITY_RATTLED:
-                if (!IsBattleMoveStatus(move)
+                if (!IsBattleMoveStatus(move) && isFriendlyFireOK
                     && (moveType == TYPE_DARK || moveType == TYPE_GHOST || moveType == TYPE_BUG)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED)
-                    && isFriendlyFireOK)
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
                     if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
@@ -3301,20 +3276,13 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_CONTRARY:
             case ABILITY_DEFIANT:
             case ABILITY_COMPETITIVE:
-                if (IsStatLoweringEffect(effect) && isFriendlyFireOK)
+                if (IsStatLoweringEffect(effect) && isFriendlyFireOK && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
-                    if ((atkPartnerAbility == ABILITY_CONTRARY)
-                        || (atkPartnerAbility == ABILITY_DEFIANT && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                            && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL))
-                        || (atkPartnerAbility == ABILITY_COMPETITIVE && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK)
-                            && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)))
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
                     {
-                        if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
-                        {
-                            ADJUST_SCORE(GOOD_EFFECT);
-                        }
-                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                        ADJUST_SCORE(GOOD_EFFECT);
                     }
+                    RETURN_SCORE_PLUS(WEAK_EFFECT);
                 }
                 break;
             }

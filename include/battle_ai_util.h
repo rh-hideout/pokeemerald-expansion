@@ -196,6 +196,7 @@ bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
 bool32 IsMoxieTypeAbility(u32 abilityId);
+bool32 ShouldTriggerAbility(u32 battler, u32 ability);
 
 // partner logic
 #define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))

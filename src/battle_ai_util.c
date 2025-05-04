@@ -4601,3 +4601,49 @@ bool32 IsMoxieTypeAbility(u32 abilityId)
         return FALSE;
     }
 }
+
+// Should the AI use a spread move to deliberately activate its partner's ability?
+bool32 ShouldTriggerAbility(u32 battler, u32 ability)
+{
+    switch (ability)
+    {
+        case ABILITY_LIGHTNING_ROD:
+        case ABILITY_STORM_DRAIN:
+            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+                return FALSE;
+            else 
+                return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
+
+        case ABILITY_DEFIANT:
+        case ABILITY_JUSTIFIED:
+        case ABILITY_MOXIE:
+        case ABILITY_SAP_SIPPER:
+        case ABILITY_THERMAL_EXCHANGE:
+            return (BattlerStatCanRise(battler, ability, STAT_ATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL));
+
+        case ABILITY_COMPETITIVE:
+            return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
+
+        case ABILITY_CONTRARY:
+            return TRUE;
+        
+        case ABILITY_DRY_SKIN:
+        case ABILITY_VOLT_ABSORB:
+        case ABILITY_WATER_ABSORB:
+            return (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_HP_AWARE);
+
+        case ABILITY_RATTLED:
+        case ABILITY_STEAM_ENGINE:
+            return BattlerStatCanRise(battler, ability, STAT_SPEED);
+
+        case ABILITY_FLASH_FIRE:
+            return (HasMoveWithType(battler, TYPE_FIRE) && !gDisableStructs[battler].flashFireBoosted);
+
+        case ABILITY_WATER_COMPACTION:
+        case ABILITY_WELL_BAKED_BODY:
+            return (BattlerStatCanRise(battler, ability, STAT_DEF));
+
+        default:
+            return FALSE;
+    }
+}
