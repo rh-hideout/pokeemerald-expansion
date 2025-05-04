@@ -1222,10 +1222,20 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->name_line = value.location.line;
             trainer->name = token_string(&value);
         }
+        else if (is_literal_token(&key, "Double Battle"))
+        {
+            if (trainer->battle_type_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Double Battle' or 'Battle Type'");
+            trainer->battle_type_line = value.location.line;
+            bool is_double_battle;
+            if (!token_bool(p, &value, is_double_battle))
+                any_error = !show_parse_error(p);
+            trainer->battle_type = is_double_battle ? BATTLE_TYPE_DOUBLE : BATTLE_TYPE_SINGLE;
+        }
         else if (is_literal_token(&key, "Battle Type"))
         {
             if (trainer->battle_type_line)
-                any_error = !set_show_parse_error(p, key.location, "duplicate 'Battle Type'");
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Double Battle' or 'Battle Type'");
             trainer->battle_type_line = value.location.line;
             if (!token_battle_type(p, &value, &trainer->battle_type))
                 any_error = !show_parse_error(p);
