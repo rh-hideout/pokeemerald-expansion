@@ -4585,3 +4585,19 @@ u32 FriendlyFireHitsToKO(u32 battler)
 
     return FRIENDLY_FIRE_NORMAL_THRESHOLD;
 }
+
+bool32 IsMoxieTypeAbility(u32 abilityId)
+{
+    switch (abilityId)
+    {
+    case ABILITY_MOXIE:
+    case ABILITY_BEAST_BOOST:
+    case ABILITY_CHILLING_NEIGH:
+    case ABILITY_AS_ONE_ICE_RIDER:
+    case ABILITY_GRIM_NEIGH:
+    case ABILITY_AS_ONE_SHADOW_RIDER:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}

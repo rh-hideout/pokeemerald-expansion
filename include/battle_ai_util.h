@@ -194,6 +194,9 @@ bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsWakeupTurn(u32 battler);
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
+// ability logic
+bool32 IsMoxieTypeAbility(u32 abilityId);
+
 // partner logic
 #define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))
 u32 GetAllyChosenMove(u32 battlerId);

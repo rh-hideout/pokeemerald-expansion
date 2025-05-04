@@ -2151,8 +2151,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && move != MOVE_CRAFTY_SHIELD) //These moves have infinite usage
                 {
                     if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp
-                      && aiData->abilities[battlerDef] != ABILITY_MOXIE
-                      && aiData->abilities[battlerDef] != ABILITY_BEAST_BOOST)
+                      && !(IsMoxieTypeAbility(aiData->abilities[battlerDef])))
                     {
                         ADJUST_SCORE(-10); //Don't protect if you're going to faint after protecting
                     }
@@ -3022,6 +3021,34 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     || CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING))
                 {
                     ADJUST_SCORE(WEAK_EFFECT);
+                }
+                
+                // Alternatively, it benefits from the ally's death, and it will probably die anyway.
+                if (IsMoxieTypeAbility(aiData->abilities[battlerAtk]))
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+                if ((aiData->abilities[battlerAtk] == ABILITY_RECEIVER) && !partnerHasBadAbility)
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+                if (HasMove(battlerAtk, MOVE_LAST_RESPECTS))
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+            }
+            // It can kill one opponent when killing its ally, and its ally is not in extreme danger.
+            // This is easy for the player to cheese.
+            else if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING) 
+                || CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING))
+            {
+                if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE) 
+                {
+                    RETURN_SCORE_PLUS(10);
+                }
+                else
+                {
+                    ADJUST_SCORE(-DECENT_EFFECT);
                 }
             }
             // No reason to kill partner has been found.
