@@ -240,12 +240,12 @@ void BattleAI_SetupFlags(void)
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
 {
     u32 moveLimitations;
-    u32 flags[MAX_BATTLERS_COUNT];
+    u64 flags[MAX_BATTLERS_COUNT];
 
     // Clear AI data but preserve the flags.
-    memcpy(&flags[0], &AI_THINKING_STRUCT->aiFlags[0], sizeof(u32) * MAX_BATTLERS_COUNT);
+    memcpy(&flags[0], &AI_THINKING_STRUCT->aiFlags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
     memset(AI_THINKING_STRUCT, 0, sizeof(struct AI_ThinkingStruct));
-    memcpy(&AI_THINKING_STRUCT->aiFlags[0], &flags[0], sizeof(u32) * MAX_BATTLERS_COUNT);
+    memcpy(&AI_THINKING_STRUCT->aiFlags[0], &flags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
 
     moveLimitations = AI_DATA->moveLimitations[battler];
 
