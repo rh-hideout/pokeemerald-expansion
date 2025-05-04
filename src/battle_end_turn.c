@@ -1151,40 +1151,31 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
-        if (gSideStatuses[side] & SIDE_STATUS_RAINBOW)
+        gBattlerAttacker = GetBattlerSideForMessage(side);
+        if (gSideStatuses[side] & SIDE_STATUS_RAINBOW && gSideTimers[side].rainbowTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = GetBattlerSideForMessage(side);
-            if (gSideTimers[side].rainbowTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
-                BattleScriptExecute(BattleScript_TheRainbowDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
+            BattleScriptExecute(BattleScript_TheRainbowDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
             break;
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
-        if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
+        if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE && gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
         {
-            if (gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
-                BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
+            BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_SWAMP:
-        if (gSideStatuses[side] & SIDE_STATUS_SWAMP)
+        gBattlerAttacker = GetBattlerSideForMessage(side);
+        if (gSideStatuses[side] & SIDE_STATUS_SWAMP && gSideTimers[side].swampTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = GetBattlerSideForMessage(side);
-            if (gSideTimers[side].swampTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
-                BattleScriptExecute(BattleScript_TheSwampDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
+            BattleScriptExecute(BattleScript_TheSwampDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
         break;
