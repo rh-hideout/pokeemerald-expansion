@@ -366,11 +366,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_POISON] =
+    [EFFECT_NON_VOLATILE_STATUS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 4,
-        .encourageEncore = TRUE,
     },
 
     [EFFECT_PARALYZE] =

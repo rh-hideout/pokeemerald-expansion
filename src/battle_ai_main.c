@@ -1021,12 +1021,21 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case ABILITY_MAGIC_GUARD:
             switch (moveEffect)
             {
-            case EFFECT_POISON:
             case EFFECT_WILL_O_WISP:
             case EFFECT_TOXIC:
             case EFFECT_LEECH_SEED:
                 ADJUST_SCORE(-5);
                 break;
+            case EFFECT_NON_VOLATILE_STATUS:
+            {
+                switch(GetMoveNonVolatileStatus(move))
+                {
+                case MOVE_EFFECT_POISON:
+                    ADJUST_SCORE(-5);
+                    break;
+                }
+                break;
+            }
             case EFFECT_CURSE:
                 if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GHOST)) // Don't use Curse if you're a ghost type vs a Magic Guard user, they'll take no damage.
                     ADJUST_SCORE(-5);
@@ -1564,12 +1573,22 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (!ShouldLowerStat(battlerAtk, battlerDef, abilityDef, STAT_SPEED))
                 ADJUST_SCORE(-1);    // may still want to just poison
             //fallthrough
-        case EFFECT_POISON:
         case EFFECT_TOXIC:
             if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             if (!ShouldPoison(battlerAtk, battlerDef))
                 ADJUST_SCORE(-5);
+            break;
+        case EFFECT_NON_VOLATILE_STATUS:
+            switch(GetMoveNonVolatileStatus(move))
+            {
+            case MOVE_EFFECT_POISON:
+                if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                if (!ShouldPoison(battlerAtk, battlerDef))
+                    ADJUST_SCORE(-5);
+                break;
+            }
             break;
         case EFFECT_LIGHT_SCREEN:
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LIGHTSCREEN
@@ -3699,8 +3718,15 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_TOXIC:
-    case EFFECT_POISON:
         IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
+        break;
+    case EFFECT_NON_VOLATILE_STATUS:
+        switch(GetMoveNonVolatileStatus(move))
+        {
+        case MOVE_EFFECT_POISON:
+            IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
+            break;
+        }
         break;
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
@@ -3833,13 +3859,27 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_ENCORE:
+    {
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (gDisableStructs[battlerDef].encoreTimer == 0
+
+        enum BattleMoveEffects effect = GetMoveEffect(gLastMoves[battlerDef]);
+        bool32 encourage = gBattleMoveEffects[effect].encourageEncore;
+        if (effect == EFFECT_NON_VOLATILE_STATUS)
+        {
+            switch(GetMoveNonVolatileStatus(gLastMoves[battlerDef]))
+            {
+            case MOVE_EFFECT_POISON:
+                encourage = TRUE;
+                break;
+            }
+        }
+        if (gDisableStructs[battlerDef].encoreTimer == 0
         && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
-        && (gBattleMoveEffects[GetMoveEffect(gLastMoves[battlerDef])].encourageEncore))
+        && (encourage))
             ADJUST_SCORE(BEST_EFFECT);
         break;
+    }
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
         if (!IsWakeupTurn(battlerAtk) && gBattleMons[battlerAtk].status1 & STATUS1_SLEEP)
@@ -5029,7 +5069,7 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_ACCURACY_DOWN_2:
     case EFFECT_EVASION_DOWN_2:
     case EFFECT_REFLECT:
-    case EFFECT_POISON:
+    case EFFECT_NON_VOLATILE_STATUS:
     case EFFECT_PARALYZE:
     case EFFECT_SUBSTITUTE:
     case EFFECT_LEECH_SEED:
@@ -5410,7 +5450,14 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_SPECIAL_DEFENSE_DOWN_2:
             case EFFECT_ACCURACY_DOWN_2:
             case EFFECT_EVASION_DOWN_2:
-            case EFFECT_POISON:
+            case EFFECT_NON_VOLATILE_STATUS:
+                switch(GetMoveNonVolatileStatus(move))
+                {
+                case MOVE_EFFECT_POISON:
+                    ADJUST_SCORE(-2);
+                    break;
+                }
+                break;
             case EFFECT_PAIN_SPLIT:
             case EFFECT_PERISH_SONG:
             case EFFECT_SAFEGUARD:

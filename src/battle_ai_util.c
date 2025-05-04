@@ -1503,7 +1503,7 @@ bool32 IsNonVolatileStatusMoveEffect(enum BattleMoveEffects moveEffect)
     {
     case EFFECT_SLEEP:
     case EFFECT_TOXIC:
-    case EFFECT_POISON:
+    case EFFECT_NON_VOLATILE_STATUS:
     case EFFECT_PARALYZE:
     case EFFECT_WILL_O_WISP:
     case EFFECT_YAWN:
@@ -3591,10 +3591,11 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
         return FALSE;
 
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
+    u32 nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
     if (partnerMove != MOVE_NONE
      && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
      && (partnerEffect == EFFECT_SLEEP
-       || partnerEffect == EFFECT_POISON
+       || (partnerEffect == EFFECT_NON_VOLATILE_STATUS && nonVolatileStatus == MOVE_EFFECT_POISON)
        || partnerEffect == EFFECT_TOXIC
        || partnerEffect == EFFECT_PARALYZE
        || partnerEffect == EFFECT_WILL_O_WISP
@@ -4473,7 +4474,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
     if (HasMoveEffect(battlerDef, EFFECT_SLEEP)
      || HasMoveEffect(battlerDef, EFFECT_TOXIC)
-     || HasMoveEffect(battlerDef, EFFECT_POISON)
+     || HasMoveEffect(battlerDef, EFFECT_NON_VOLATILE_STATUS)
      || HasMoveEffect(battlerDef, EFFECT_PARALYZE)
      || HasMoveEffect(battlerDef, EFFECT_WILL_O_WISP)
      || HasMoveEffect(battlerDef, EFFECT_CONFUSE)

@@ -64,7 +64,8 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
     PARAMETRIZE { move = MOVE_FIRE_PLEDGE; moveTarget = playerRight; move2 = MOVE_GRASS_PLEDGE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
         #if B_USE_FROSTBITE == TRUE
         ASSUME(GetMoveAdditionalEffectById(MOVE_ICE_BEAM, 0)->moveEffect == MOVE_EFFECT_FREEZE_OR_FROSTBITE);

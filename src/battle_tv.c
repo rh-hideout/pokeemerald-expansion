@@ -931,13 +931,26 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     {
     case PTS_MOVE_EFFECT: // arg1 -> move slot, arg2 -> move
     {
-        u8 baseFromEffect = gBattleMoveEffects[GetMoveEffect(arg2)].battleTvScore;
+        u32 effect = GetMoveEffect(arg2);
+        u8 baseFromEffect = gBattleMoveEffects[effect].battleTvScore;
 
         // Various cases to add/remove points
+        switch (effect)
+        {
+        case EFFECT_RAPID_SPIN:
+            baseFromEffect++;
+            break;
+        case EFFECT_NON_VOLATILE_STATUS:
+            switch(GetMoveNonVolatileStatus(arg2))
+            {
+            case MOVE_EFFECT_POISON:
+                baseFromEffect += 4;
+                break;
+            }
+            break;
+        }
         if (GetMoveRecoil(arg2) > 0)
             baseFromEffect++; // Recoil moves
-        if (GetMoveEffect(arg2) == EFFECT_RAPID_SPIN)
-            baseFromEffect++;
         if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_SP_ATK_MINUS_2) || MoveHasAdditionalEffect(arg2, MOVE_EFFECT_ATK_DEF_DOWN))
             baseFromEffect += 2; // Overheat, Superpower, etc.
         if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_STEAL_ITEM))
