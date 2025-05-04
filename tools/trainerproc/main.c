@@ -847,12 +847,7 @@ static struct String token_string(const struct Token *t)
 
 static bool token_gender(struct Parser *p, const struct Token *t, enum Gender *g)
 {
-    if (is_empty_token(t))
-    {
-        *g = GENDER_ANY;
-        return true;
-    }
-    else if (is_literal_token(t, "M") || is_literal_token(t, "Male"))
+    if (is_literal_token(t, "M") || is_literal_token(t, "Male"))
     {
         *g = GENDER_MALE;
         return true;
@@ -870,12 +865,7 @@ static bool token_gender(struct Parser *p, const struct Token *t, enum Gender *g
 
 static bool token_battle_type(struct Parser *p, const struct Token *t, enum BattleType *g)
 {
-    if (is_empty_token(t))
-    {
-        *g = BATTLE_TYPE_SINGLE;
-        return true;
-    }
-    else if (is_literal_token(t, "Single") || is_literal_token(t, "Singles"))
+    if (is_literal_token(t, "Single") || is_literal_token(t, "Singles"))
     {
         *g = BATTLE_TYPE_SINGLE;
         return true;
@@ -1228,7 +1218,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
                 any_error = !set_show_parse_error(p, key.location, "duplicate 'Double Battle' or 'Battle Type'");
             trainer->battle_type_line = value.location.line;
             bool is_double_battle;
-            if (!token_bool(p, &value, is_double_battle))
+            if (!token_bool(p, &value, &is_double_battle))
                 any_error = !show_parse_error(p);
             trainer->battle_type = is_double_battle ? BATTLE_TYPE_DOUBLE : BATTLE_TYPE_SINGLE;
         }
@@ -1333,7 +1323,9 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
 
         pokemon->nickname = token_string(&nickname);
         pokemon->species = token_string(&species);
-        if (!token_gender(p, &gender, &pokemon->gender))
+        if (is_empty_token(&gender))
+            pokemon->gender = GENDER_ANY;
+        else if (!token_gender(p, &gender, &pokemon->gender))
             any_error = !show_parse_error(p);
         pokemon->item = token_string(&item);
         pokemon->header_line = species.location.line;
