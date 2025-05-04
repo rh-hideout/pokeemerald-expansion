@@ -4002,7 +4002,6 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
 {
     switch(GetMoveEffect(move))
     {
-    case EFFECT_SLEEP:
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
     case EFFECT_NON_VOLATILE_STATUS:
@@ -4044,9 +4043,9 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
+static bool32 IsDomeComboMove(u32 move)
 {
-    switch(effect)
+    switch(GetMoveEffect(move))
     {
     // Weather moves
     case EFFECT_SUNNY_DAY:
@@ -4087,7 +4086,17 @@ static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_STEALTH_ROCK:
     case EFFECT_STICKY_WEB:
     // Inflicting sleep & related effects
-    case EFFECT_SLEEP:
+    case EFFECT_NON_VOLATILE_STATUS:
+    {
+        switch(GetMoveNonVolatileStatus(move))
+        {
+        case MOVE_EFFECT_SLEEP:
+            return TRUE;
+        default:
+            return FALSE;
+        }
+        break;
+    }
     case EFFECT_YAWN:
     case EFFECT_DREAM_EATER:
     case EFFECT_NIGHTMARE:
@@ -4307,7 +4316,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                 switch (k)
                 {
                 case MOVE_POINTS_COMBO:
-                    allocatedArray[k] = IsDomeComboMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeComboMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_RAISE:
                     allocatedArray[k] = IsStatRaisingEffect(effect) ? 1 : 0;

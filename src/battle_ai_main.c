@@ -926,6 +926,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     // move data
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
     s32 moveType;
     u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
     struct AiLogicData *aiData = AI_DATA;
@@ -957,8 +958,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         RETURN_SCORE_MINUS(20);
 
     // Don't setup into expected Focus Punch. Revisit alongside predictedMove with move prediction
-    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS && moveEffect != EFFECT_SLEEP
-        && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS
+        && !(moveEffect == EFFECT_NON_VOLATILE_STATUS && nonVolatileStatus == MOVE_EFFECT_SLEEP)
+        && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH
+        && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
     {
         RETURN_SCORE_MINUS(20);
     }
@@ -1028,7 +1031,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             case EFFECT_NON_VOLATILE_STATUS:
             {
-                switch(GetMoveNonVolatileStatus(move))
+                switch(nonVolatileStatus)
                 {
                 case MOVE_EFFECT_POISON:
                     ADJUST_SCORE(-5);
@@ -1062,7 +1065,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_SWEET_VEIL:
-            if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+            if (moveEffect == EFFECT_YAWN
+            || (moveEffect == EFFECT_NON_VOLATILE_STATUS && nonVolatileStatus == MOVE_EFFECT_SLEEP))
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_FLOWER_VEIL:
@@ -1111,7 +1115,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_SWEET_VEIL:
-                if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+                if (moveEffect == EFFECT_YAWN
+                || (moveEffect == EFFECT_NON_VOLATILE_STATUS && nonVolatileStatus == MOVE_EFFECT_SLEEP))
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_FLOWER_VEIL:
@@ -1134,7 +1139,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // terrain & effect checks
         if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
         {
-            if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+            if (moveEffect == EFFECT_YAWN
+            || (moveEffect == EFFECT_NON_VOLATILE_STATUS && nonVolatileStatus == MOVE_EFFECT_SLEEP))
                 RETURN_SCORE_MINUS(20);
         }
 
@@ -1200,11 +1206,22 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         default:
             break;  // check move damage
-        case EFFECT_SLEEP:
-            if (!AI_CanPutToSleep(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
-                ADJUST_SCORE(-20);
+        case EFFECT_NON_VOLATILE_STATUS:
+            switch(nonVolatileStatus)
+            {
+            case MOVE_EFFECT_POISON:
+                if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                if (!ShouldPoison(battlerAtk, battlerDef))
+                    ADJUST_SCORE(-5);
+                break;
+            case MOVE_EFFECT_SLEEP:
+                if (!AI_CanPutToSleep(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
+                    ADJUST_SCORE(-20);
+                break;
+            }
             break;
         case EFFECT_EXPLOSION:
             if (!(AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE))
@@ -1548,7 +1565,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (HasMoveEffect(battlerAtk, EFFECT_SUBSTITUTE) && !(gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE))
                 ADJUST_SCORE(-10);
-            if (HasMoveEffect(battlerAtk, EFFECT_SLEEP) && ! (gBattleMons[battlerDef].status1 & STATUS1_SLEEP))
+            if (HasNonVolatileMoveEffect(battlerAtk, MOVE_EFFECT_SLEEP) && ! (gBattleMons[battlerDef].status1 & STATUS1_SLEEP))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_COUNTER:
@@ -1578,17 +1595,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (!ShouldPoison(battlerAtk, battlerDef))
                 ADJUST_SCORE(-5);
-            break;
-        case EFFECT_NON_VOLATILE_STATUS:
-            switch(GetMoveNonVolatileStatus(move))
-            {
-            case MOVE_EFFECT_POISON:
-                if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
-                    ADJUST_SCORE(-10);
-                if (!ShouldPoison(battlerAtk, battlerDef))
-                    ADJUST_SCORE(-5);
-                break;
-            }
             break;
         case EFFECT_LIGHT_SCREEN:
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LIGHTSCREEN
@@ -3481,7 +3487,19 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     // move effect checks
     switch (moveEffect)
     {
-    case EFFECT_SLEEP:
+    case EFFECT_NON_VOLATILE_STATUS:
+    {
+        switch(GetMoveNonVolatileStatus(move))
+        {
+        case MOVE_EFFECT_POISON:
+            IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
+            break;
+        case MOVE_EFFECT_SLEEP:
+            IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
+            break;
+        }
+        break;
+    }
     case EFFECT_YAWN:
         IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
         break;
@@ -3719,14 +3737,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_TOXIC:
         IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
-        break;
-    case EFFECT_NON_VOLATILE_STATUS:
-        switch(GetMoveNonVolatileStatus(move))
-        {
-        case MOVE_EFFECT_POISON:
-            IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
-            break;
-        }
         break;
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
