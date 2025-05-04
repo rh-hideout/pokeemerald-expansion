@@ -38,6 +38,12 @@ enum Gender
     GENDER_FEMALE,
 };
 
+enum BattleType
+{
+    BATTLE_TYPE_SINGLE,
+    BATTLE_TYPE_DOUBLE,
+};
+
 // TODO: Support Hidden Power.
 struct Pokemon
 {
@@ -117,7 +123,7 @@ struct Trainer
     struct String name;
     int name_line;
 
-    bool double_battle;
+    enum BattleType double_battle;
     int double_battle_line;
 
     struct Pokemon pokemon[PARTY_SIZE];
@@ -862,6 +868,29 @@ static bool token_gender(struct Parser *p, const struct Token *t, enum Gender *g
     }
 }
 
+static bool token_battle_type(struct Parser *p, const struct Token *t, enum BattleType *g)
+{
+    if (is_empty_token(t))
+    {
+        *g = BATTLE_TYPE_SINGLE;
+        return true;
+    }
+    else if (is_literal_token(t, "Single") || is_literal_token(t, "Singles"))
+    {
+        *g = BATTLE_TYPE_SINGLE;
+        return true;
+    }
+    else if (is_literal_token(t, "Double") || is_literal_token(t, "Doubles"))
+    {
+        *g = BATTLE_TYPE_DOUBLE;
+        return true;
+    }
+    else
+    {
+        return set_parse_error(p, t->location, "invalid battle type");
+    }
+}
+
 static bool token_stats(struct Parser *p, const struct Token *t, struct Stats *stats, bool require_all)
 {
     struct Source source = {
@@ -1193,12 +1222,12 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->name_line = value.location.line;
             trainer->name = token_string(&value);
         }
-        else if (is_literal_token(&key, "Double Battle"))
+        else if (is_literal_token(&key, "Battle Type"))
         {
             if (trainer->double_battle_line)
-                any_error = !set_show_parse_error(p, key.location, "duplicate 'Double Battle'");
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Battle Type'");
             trainer->double_battle_line = value.location.line;
-            if (!token_bool(p, &value, &trainer->double_battle))
+            if (!token_battle_type(p, &value, &trainer->double_battle))
                 any_error = !show_parse_error(p);
         }
         else if (is_literal_token(&key, "Mugshot"))
@@ -1253,7 +1282,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
         }
         else
         {
-            any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Double Battle', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
+            any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
         }
     }
     if (!trainer->pic_line)
@@ -1760,9 +1789,11 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         if (trainer->double_battle_line)
         {
             fprintf(f, "#line %d\n", trainer->double_battle_line);
-            fprintf(f, "        .doubleBattle = ");
-            fprint_bool(f, trainer->double_battle);
-            fprintf(f, ",\n");
+            fprintf(f, "        .battleType = ");
+            if (trainer->double_battle == BATTLE_TYPE_DOUBLE)
+                fprintf(f, "TRAINER_BATTLE_TYPE_DOUBLES,\n");
+            else
+                fprintf(f, "TRAINER_BATTLE_TYPE_SINGLES,\n");
         }
 
         if (trainer->ai_flags_n > 0)

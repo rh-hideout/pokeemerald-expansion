@@ -526,7 +526,14 @@ static void CB2_InitBattleInternal(void)
                                                                         | BATTLE_TYPE_TRAINER_HILL
                                                                         | BATTLE_TYPE_RECORDED)))
     {
-        gBattleTypeFlags |= (IsTrainerDoubleBattle(TRAINER_BATTLE_PARAM.opponentA) ? BATTLE_TYPE_DOUBLE : 0);
+        switch (GetTrainerBattleType(TRAINER_BATTLE_PARAM.opponentA))
+        {
+        case TRAINER_BATTLE_TYPE_SINGLES:
+            break;
+        case TRAINER_BATTLE_TYPE_DOUBLES:
+            gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+            break;
+        }
     }
 
     InitBattleBgsVideo();
@@ -1903,7 +1910,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             u32 fixedOtId = 0;
             u32 abilityNum = 0;
 
-            if (trainer->doubleBattle == TRUE)
+            if (trainer->battleType != TRAINER_BATTLE_TYPE_SINGLES)
                 personalityValue = 0x80;
             else if (trainer->encounterMusic_gender & F_TRAINER_FEMALE)
                 personalityValue = 0x78; // Use personality more likely to result in a female Pokémon

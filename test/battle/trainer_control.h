@@ -21,7 +21,7 @@
 #line 6
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 7
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 3,
         .party = (const struct TrainerMon[])
         {
@@ -101,7 +101,7 @@
 #line 38
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 39
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
@@ -132,7 +132,7 @@
 #line 50
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 51
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
@@ -163,7 +163,7 @@
 #line 62
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 63
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
@@ -194,7 +194,7 @@
 #line 74
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 75
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
@@ -224,7 +224,7 @@
 #line 86
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 87
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 88
         .partySize = 1,
         .poolSize = 4,
@@ -289,7 +289,7 @@
 #line 103
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 104
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 105
         .partySize = 3,
         .poolSize = 6,
@@ -384,7 +384,7 @@
 #line 128
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 129
-        .doubleBattle = TRUE,
+        .battleType = TRAINER_BATTLE_TYPE_DOUBLES,
 #line 131
         .poolRuleIndex = POOL_RULESET_WEATHER_DOUBLES,
 #line 130
@@ -533,7 +533,7 @@
 #line 166
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 167
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 169
         .poolRuleIndex = POOL_RULESET_BASIC,
 #line 168
@@ -595,7 +595,7 @@
 #line 185
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 186
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 188
         .poolRuleIndex = POOL_RULESET_BASIC,
 #line 189
@@ -655,7 +655,7 @@
 #line 203
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 204
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 206
         .poolRuleIndex = POOL_RULESET_BASIC,
 #line 207
