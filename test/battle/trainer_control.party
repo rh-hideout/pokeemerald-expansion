@@ -213,3 +213,29 @@ Wobbuffet
 
 Eevee
 Tags: Lead
+
+=== 9 ===
+Name: Test9
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 2
+
+Wynaut
+
+Wobbuffet
+
+=== 10 ===
+Name: Test10
+Class: Pkmn Trainer 1
+Pic: Red
+Gender: Male
+Music: Male
+Battle Type: Doubles
+Party Size: 2
+
+Wynaut
+
+Wobbuffet

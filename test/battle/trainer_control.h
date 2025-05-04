@@ -704,3 +704,89 @@
             },
         },
     },
+#line 217
+    [DIFFICULTY_NORMAL][9] =
+    {
+#line 218
+        .trainerName = _("Test9"),
+#line 219
+        .trainerClass = TRAINER_CLASS_PKMN_TRAINER_1,
+#line 220
+        .trainerPic = TRAINER_PIC_RED,
+        .encounterMusic_gender =
+#line 222
+            TRAINER_ENCOUNTER_MUSIC_MALE,
+#line 223
+        .battleType = TRAINER_BATTLE_TYPE_DOUBLES,
+#line 224
+        .partySize = 2,
+        .poolSize = 2,
+        .party = (const struct TrainerMon[])
+        {
+            {
+#line 226
+            .species = SPECIES_WYNAUT,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+#line 227
+            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
+#line 227
+            .lvl = 100,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            },
+            {
+#line 228
+            .species = SPECIES_WOBBUFFET,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+#line 229
+            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
+#line 229
+            .lvl = 100,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            },
+        },
+    },
+#line 230
+    [DIFFICULTY_NORMAL][10] =
+    {
+#line 231
+        .trainerName = _("Test10"),
+#line 232
+        .trainerClass = TRAINER_CLASS_PKMN_TRAINER_1,
+#line 233
+        .trainerPic = TRAINER_PIC_RED,
+        .encounterMusic_gender =
+#line 235
+            TRAINER_ENCOUNTER_MUSIC_MALE,
+#line 236
+        .battleType = TRAINER_BATTLE_TYPE_DOUBLES,
+#line 237
+        .partySize = 2,
+        .poolSize = 2,
+        .party = (const struct TrainerMon[])
+        {
+            {
+#line 239
+            .species = SPECIES_WYNAUT,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+#line 240
+            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
+#line 240
+            .lvl = 100,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            },
+            {
+#line 241
+            .species = SPECIES_WOBBUFFET,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+#line 242
+            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
+#line 242
+            .lvl = 100,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            },
+        },
+    },
