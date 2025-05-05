@@ -994,7 +994,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
         u8 taskId;
 
         mon = GetPartyBattlerData(battlerId);
-        if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+        if (!IsBattlerShowingBackSprite(battlerId))
             pan = 25;
         else
             pan = -25;
@@ -1041,7 +1041,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
 
     StartSpriteAffineAnim(&gSprites[gBattlerSpriteIds[sprite->sBattler]], BATTLER_AFFINE_EMERGE);
 
-    if (GetBattlerSide(sprite->sBattler) == B_SIDE_OPPONENT)
+    if (!IsBattlerShowingBackSprite(sprite->sBattler))
         gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_OpponentMonFromBall;
     else
         gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_PlayerMonFromBall;

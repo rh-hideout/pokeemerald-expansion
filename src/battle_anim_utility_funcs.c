@@ -732,7 +732,7 @@ void AnimTask_StartSlidingBg(u8 taskId)
 
     UpdateAnimBg3ScreenSize(FALSE);
     newTaskId = CreateTask(AnimTask_UpdateSlidingBg, 5);
-    if (gBattleAnimArgs[2] && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (gBattleAnimArgs[2] && !IsBattlerShowingBackSprite(gBattleAnimAttacker))
     {
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -765,13 +765,13 @@ static void AnimTask_UpdateSlidingBg(u8 taskId)
 
 void AnimTask_GetAttackerSide(u8 taskId)
 {
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimAttacker);
+    gBattleAnimArgs[ARG_RET_ID] = IsBattlerShowingBackSprite(gBattleAnimAttacker);
     DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_GetTargetSide(u8 taskId)
 {
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimTarget);
+    gBattleAnimArgs[ARG_RET_ID] = IsBattlerShowingBackSprite(gBattleAnimTarget);
     DestroyAnimVisualTask(taskId);
 }
 

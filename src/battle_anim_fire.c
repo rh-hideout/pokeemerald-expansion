@@ -594,7 +594,7 @@ void AnimFirePlume(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
 
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsBattlerShowingBackSprite(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         sprite->y += gBattleAnimArgs[1];
@@ -616,7 +616,7 @@ void AnimFirePlume(struct Sprite *sprite)
 
 static void AnimLargeFlame(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsBattlerShowingBackSprite(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         sprite->y += gBattleAnimArgs[1];
@@ -652,7 +652,7 @@ static void AnimUnusedSmallEmber(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
 
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsBattlerShowingBackSprite(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
     }
@@ -877,7 +877,7 @@ static void AnimFireSpiralOutward_Step2(struct Sprite *sprite)
 #define tTimer2           data[2]
 #define tTimer3           data[3]
 #define tAttackerY        data[4]
-#define tAttackerSide     data[5]
+#define tBackSprite       data[5]
 #define tActiveSprites    data[IDX_ACTIVE_SPRITES]
 // data[8]-data[15] used by PrepareEruptAnimTaskData / UpdateEruptAnimTask
 #define tAttackerSpriteId data[15]
@@ -903,7 +903,7 @@ void AnimTask_EruptionLaunchRocks(u8 taskId)
     task->tTimer2 = 0;
     task->tTimer3 = 0;
     task->tAttackerY = gSprites[task->tAttackerSpriteId].y;
-    task->tAttackerSide = GetBattlerSide(gBattleAnimAttacker);
+    task->tBackSprite = IsBattlerShowingBackSprite(gBattleAnimAttacker);
     task->tActiveSprites = 0;
 
     PrepareBattlerSpriteForRotScale(task->tAttackerSpriteId, ST_OAM_OBJ_NORMAL);
@@ -931,7 +931,7 @@ static void AnimTask_EruptionLaunchRocks_Step(u8 taskId)
                 gSprites[task->tAttackerSpriteId].x2 = -3;
         }
 
-        if (task->tAttackerSide != B_SIDE_PLAYER)
+        if (!task->tBackSprite)
         {
             if (++task->tTimer3 > 4)
             {
@@ -954,7 +954,7 @@ static void AnimTask_EruptionLaunchRocks_Step(u8 taskId)
     case 2:
         if (++task->tTimer1 > 4)
         {
-            if (task->tAttackerSide != B_SIDE_PLAYER)
+            if (!task->tBackSprite)
                 PrepareEruptAnimTaskData(task, task->tAttackerSpriteId, 0xE0, 0x200, 0x180, 0xF0, 6);
             else
                 PrepareEruptAnimTaskData(task, task->tAttackerSpriteId, 0xE0, 0x200, 0x180, 0xC0, 6);
@@ -983,7 +983,7 @@ static void AnimTask_EruptionLaunchRocks_Step(u8 taskId)
 
         if (++task->tTimer3 > 24)
         {
-            if (task->tAttackerSide != B_SIDE_PLAYER)
+            if (!task->tBackSprite)
                 PrepareEruptAnimTaskData(task, task->tAttackerSpriteId, 0x180, 0xF0, 0x100, 0x100, 8);
             else
                 PrepareEruptAnimTaskData(task, task->tAttackerSpriteId, 0x180, 0xC0, 0x100, 0x100, 8);
@@ -998,7 +998,7 @@ static void AnimTask_EruptionLaunchRocks_Step(u8 taskId)
         }
         break;
     case 5:
-        if (task->tAttackerSide != B_SIDE_PLAYER)
+        if (!task->tBackSprite)
             gSprites[task->tAttackerSpriteId].y--;
 
         if (!UpdateEruptAnimTask(task))
@@ -1026,7 +1026,7 @@ static void CreateEruptionLaunchRocks(u8 spriteId, u8 taskId, u8 activeSpritesId
     u16 y = GetEruptionLaunchRockInitialYPos(spriteId);
     u16 x = gSprites[spriteId].x;
 
-    if(GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if(IsBattlerShowingBackSprite(gBattleAnimAttacker))
     {
         x -= 12;
         sign = 1;
@@ -1072,7 +1072,7 @@ static u16 GetEruptionLaunchRockInitialYPos(u8 spriteId)
 {
     s16 y = gSprites[spriteId].y + gSprites[spriteId].y2 + gSprites[spriteId].centerToCornerVecY;
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if (IsBattlerShowingBackSprite(gBattleAnimAttacker))
         y += 74;
     else
         y += 44;
@@ -1116,7 +1116,7 @@ static void UpdateEruptionLaunchRockPos(struct Sprite *sprite)
 #undef tTimer2
 #undef tTimer3
 #undef tAttackerY
-#undef tAttackerSide
+#undef tBackSprite
 #undef tActiveSprites
 #undef tAttackerSpriteId
 #undef sSpeedDelay
@@ -1206,7 +1206,7 @@ void AnimWillOWispOrb(struct Sprite *sprite)
         StartSpriteAnim(sprite, gBattleAnimArgs[2]);
         sprite->data[7] = gBattleAnimArgs[2];
 
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (!IsBattlerShowingBackSprite(gBattleAnimAttacker))
         {
             sprite->data[4] = 4;
         }
@@ -1220,7 +1220,7 @@ void AnimWillOWispOrb(struct Sprite *sprite)
         break;
     case 1:
         sprite->data[1] += 192;
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (!IsBattlerShowingBackSprite(gBattleAnimAttacker))
         {
             sprite->y2 = -(sprite->data[1] >> 8);
         }
@@ -1327,7 +1327,7 @@ void AnimTask_MoveHeatWaveTargets(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
-    task->data[12] = GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER ? 1 : -1;
+    task->data[12] = IsBattlerShowingBackSprite(gBattleAnimAttacker) ? 1 : -1;
     task->data[13] = IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)) + 1;
     task->data[14] = GetAnimBattlerSpriteId(ANIM_TARGET);
     task->data[15] = GetAnimBattlerSpriteId(ANIM_DEF_PARTNER);

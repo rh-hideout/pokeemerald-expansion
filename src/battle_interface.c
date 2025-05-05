@@ -1259,7 +1259,7 @@ u8 CreatePartyStatusSummarySprites(u8 battlerId, struct HpAndStatus *partyInfo, 
 
     if (!skipPlayer || GetBattlerPosition(battlerId) != B_POSITION_OPPONENT_RIGHT)
     {
-        if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
+        if (IsBattlerShowingBackSprite(battlerId)) 
         {
             isOpponent = FALSE;
             bar_X = 136, bar_Y = 96;

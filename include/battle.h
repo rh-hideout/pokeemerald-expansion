@@ -1225,6 +1225,11 @@ static inline bool32 IsBattlerAlly(u32 battlerAtk, u32 battlerDef)
     return (GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef));
 }
 
+static inline bool32 IsBattlerShowingBackSprite(u32 battler)
+{
+    return (GetBattlerSide(battler) == B_SIDE_PLAYER);
+}
+
 static inline u32 GetOpposingSideBattler(u32 battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
