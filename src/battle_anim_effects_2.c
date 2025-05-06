@@ -953,7 +953,7 @@ const struct SpriteTemplate gRedHeartRisingSpriteTemplate =
     .callback = AnimRedHeartRising,
 };
 
-// New struct that's just a copy of 'gMagentaHeartSpriteTemplate', without need to make new anim tags 
+// New struct that's just a copy of 'gMagentaHeartSpriteTemplate', without need to make new anim tags
 const struct SpriteTemplate gRedHeartCharmSpriteTemplate =
 {
     .tileTag = ANIM_TAG_RED_HEART,
@@ -2726,7 +2726,7 @@ void AnimHyperVoiceRing(struct Sprite *sprite)
         y = GetBattlerSpriteCoord(battler2, yCoordType);
     }
 
-    if (GetBattlerSide(battler2))
+    if (GetBattlerSide(battler2) == B_SIDE_OPPONENT)
         x += gBattleAnimArgs[3];
     else
         x -= gBattleAnimArgs[3];

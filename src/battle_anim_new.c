@@ -8096,7 +8096,7 @@ static void SpriteCB_PyroBallLaunch(struct Sprite *sprite)
 {
     InitSpritePositionForPyroBall(sprite);
 
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[4];
@@ -8119,7 +8119,7 @@ static void SpriteCB_AcidLaunchSingleTarget(struct Sprite *sprite)
     InitSpritePosToAnimTarget(sprite, TRUE);
     l1 = sprite->x; l2 = sprite->y;
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         gBattleAnimArgs[4] = -gBattleAnimArgs[4];
 
     sprite->data[0] = gBattleAnimArgs[2];

@@ -493,7 +493,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker))
+        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
             gBattleAnimArgs[1] = -gBattleAnimArgs[1];
