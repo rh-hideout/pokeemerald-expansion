@@ -66,6 +66,9 @@
 #include "constants/songs.h"
 #include "constants/species.h"
 #include "constants/weather.h"
+#include "siirtc.h"
+#include "rtc.h"
+#include "fake_rtc.h"
 #include "save.h"
 
 // *******************************
@@ -100,7 +103,35 @@ enum UtilDebugMenu
     DEBUG_UTIL_MENU_ITEM_EXPANSION_VER,
     DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS,
     DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS,
-    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI,
+    DEBUG_UTIL_MENU_ITEM_TIME_MENU,
+    DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI // Please keep this at the bottom <3
+};
+
+enum TimeMenuDebugMenu
+{
+    DEBUG_TIME_MENU_ITEM_PRINTTIME,
+    DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY,
+    DEBUG_TIME_MENU_ITEM_TIMESOFDAY,
+    DEBUG_TIME_MENU_ITEM_WEEKDAYS,
+};
+
+enum TimeMenuTimeOfDay
+{
+    DEBUG_TIME_MENU_ITEM_MORNING,
+    DEBUG_TIME_MENU_ITEM_DAY,
+    DEBUG_TIME_MENU_ITEM_EVENING,
+    DEBUG_TIME_MENU_ITEM_NIGHT, 
+};
+
+enum TimeMenuWeekdays
+{
+    DEBUG_TIME_MENU_ITEM_SUNDAY,
+    DEBUG_TIME_MENU_ITEM_MONDAY,
+    DEBUG_TIME_MENU_ITEM_TUESDAY,
+    DEBUG_TIME_MENU_ITEM_WEDNESDAY,
+    DEBUG_TIME_MENU_ITEM_THURSDAY,
+    DEBUG_TIME_MENU_ITEM_FRIDAY,
+    DEBUG_TIME_MENU_ITEM_SATURDAY,
 };
 
 enum GivePCBagDebugMenu
@@ -306,7 +337,7 @@ static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 static EWRAM_DATA struct DebugBattleData *sDebugBattleData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
-EWRAM_DATA u32 gDebugAIFlags = 0;
+EWRAM_DATA u64 gDebugAIFlags = 0;
 
 // *******************************
 // Define functions
@@ -370,6 +401,15 @@ static void DebugAction_Util_ExpansionVersion(u8 taskId);
 static void DebugAction_Util_BerryFunctions(u8 taskId);
 static void DebugAction_Util_CheckEWRAMCounters(u8 taskId);
 static void DebugAction_Util_Steven_Multi(u8 taskId);
+static void DebugAction_Util_OpenTimeMenu(u8 taskId);
+
+static void DebugAction_TimeMenu_PrintTime(u8 taskId);
+static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId);
+static void DebugAction_TimeMenu_TimesOfDay(u8 taskId);
+static void DebugAction_TimeMenu_Weekdays(u8 taskId);
+
+static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
+static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
 
 static void DebugAction_OpenPCBagFillMenu(u8 taskId);
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId);
@@ -479,6 +519,9 @@ extern const u8 Debug_BoxFilledMessage[];
 extern const u8 Debug_ShowExpansionVersion[];
 extern const u8 Debug_EventScript_EWRAMCounters[];
 extern const u8 Debug_EventScript_Steven_Multi[];
+extern const u8 Debug_EventScript_PrintTimeOfDay[];
+extern const u8 Debug_EventScript_TellTheTime[];
+extern const u8 Debug_EventScript_FakeRTCNotEnabled[];
 
 extern const u8 Debug_BerryPestsDisabled[];
 extern const u8 Debug_BerryWeedsDisabled[];
@@ -502,6 +545,26 @@ static const u8 sDebugText_Util_WarpToMap_SelectMap[] =      _("Map: {STR_VAR_1}
 static const u8 sDebugText_Util_WarpToMap_SelectWarp[] =     _("Warp:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_3}{CLEAR_TO 90}");
 static const u8 sDebugText_Util_WarpToMap_SelMax[] =         _("{STR_VAR_1} / {STR_VAR_2}");
 static const u8 sDebugText_Util_Weather_ID[] =               _("Weather ID: {STR_VAR_3}\n{STR_VAR_1}\n{STR_VAR_2}");
+
+//Time Menu
+
+static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
+    COMPOUND_STRING("Sunday"),
+    COMPOUND_STRING("Monday"),
+    COMPOUND_STRING("Tuesday"),
+    COMPOUND_STRING("Wednesday"),
+    COMPOUND_STRING("Thursday"),
+    COMPOUND_STRING("Friday"),
+    COMPOUND_STRING("Saturday"),
+};
+
+static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
+    COMPOUND_STRING("Morning"),
+    COMPOUND_STRING("Day"),
+    COMPOUND_STRING("Evening"),
+    COMPOUND_STRING("Night"),
+};
+
 // Flags/Vars Menu
 static const u8 sDebugText_FlagsVars_Flag[] =                _("Flag: {STR_VAR_1}{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}");
 static const u8 sDebugText_FlagsVars_VariableHex[] =         _("{STR_VAR_1}{CLEAR_TO 90}\n0x{STR_VAR_2}{CLEAR_TO 90}");
@@ -584,6 +647,34 @@ static const struct ListMenuItem sDebugMenu_Items_Utilities[] =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = {COMPOUND_STRING("Berry Functions…{CLEAR_TO 110}{RIGHT_ARROW}"),  DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS},
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = {COMPOUND_STRING("EWRAM Counters…{CLEAR_TO 110}{RIGHT_ARROW}"),   DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS},
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = {COMPOUND_STRING("Steven Multi"),                                 DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI},
+    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]       = {COMPOUND_STRING("Time Menu"),                                    DEBUG_UTIL_MENU_ITEM_TIME_MENU},
+};
+
+static const struct ListMenuItem sDebugMenu_Items_TimeMenu[] =
+{
+    [DEBUG_TIME_MENU_ITEM_PRINTTIME] = {COMPOUND_STRING("Print current time"),                          DEBUG_TIME_MENU_ITEM_PRINTTIME},
+    [DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Print current time of day"), DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY},
+    [DEBUG_TIME_MENU_ITEM_TIMESOFDAY] = {COMPOUND_STRING("{FONT_NARROW}Change current time of day"),    DEBUG_TIME_MENU_ITEM_TIMESOFDAY},
+    [DEBUG_TIME_MENU_ITEM_WEEKDAYS] = {COMPOUND_STRING("Change current weekday"),                       DEBUG_TIME_MENU_ITEM_WEEKDAYS},
+};
+
+static const struct ListMenuItem sDebugMenu_Items_TimeMenu_TimesOfDay[] =
+{
+    [DEBUG_TIME_MENU_ITEM_MORNING] = {gTimeOfDayStringsTable[TIME_MORNING], DEBUG_TIME_MENU_ITEM_MORNING},
+    [DEBUG_TIME_MENU_ITEM_DAY] = {gTimeOfDayStringsTable[TIME_DAY],         DEBUG_TIME_MENU_ITEM_DAY},
+    [DEBUG_TIME_MENU_ITEM_EVENING] = {gTimeOfDayStringsTable[TIME_EVENING], DEBUG_TIME_MENU_ITEM_EVENING},
+    [DEBUG_TIME_MENU_ITEM_NIGHT] = {gTimeOfDayStringsTable[TIME_NIGHT],     DEBUG_TIME_MENU_ITEM_NIGHT},
+};
+
+static const struct ListMenuItem sDebugMenu_Items_TimeMenu_Weekdays[] =
+{
+    [DEBUG_TIME_MENU_ITEM_SUNDAY] = {gDayNameStringsTable[WEEKDAY_SUN],    DEBUG_TIME_MENU_ITEM_SUNDAY},
+    [DEBUG_TIME_MENU_ITEM_MONDAY] = {gDayNameStringsTable[WEEKDAY_MON],    DEBUG_TIME_MENU_ITEM_MONDAY},
+    [DEBUG_TIME_MENU_ITEM_TUESDAY] = {gDayNameStringsTable[WEEKDAY_TUE],   DEBUG_TIME_MENU_ITEM_TUESDAY},
+    [DEBUG_TIME_MENU_ITEM_WEDNESDAY] = {gDayNameStringsTable[WEEKDAY_WED], DEBUG_TIME_MENU_ITEM_WEDNESDAY},
+    [DEBUG_TIME_MENU_ITEM_THURSDAY] = {gDayNameStringsTable[WEEKDAY_THU],  DEBUG_TIME_MENU_ITEM_THURSDAY},
+    [DEBUG_TIME_MENU_ITEM_FRIDAY] = {gDayNameStringsTable[WEEKDAY_FRI],    DEBUG_TIME_MENU_ITEM_FRIDAY},
+    [DEBUG_TIME_MENU_ITEM_SATURDAY] = {gDayNameStringsTable[WEEKDAY_SAT],  DEBUG_TIME_MENU_ITEM_SATURDAY},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_PCBag[] =
@@ -757,6 +848,7 @@ static void (*const sDebugMenu_Actions_Utilities[])(u8) =
     [DEBUG_UTIL_MENU_ITEM_BERRY_FUNCTIONS] = DebugAction_Util_BerryFunctions,
     [DEBUG_UTIL_MENU_ITEM_EWRAM_COUNTERS]  = DebugAction_Util_CheckEWRAMCounters,
     [DEBUG_UTIL_MENU_ITEM_STEVEN_MULTI]    = DebugAction_Util_Steven_Multi,
+    [DEBUG_UTIL_MENU_ITEM_TIME_MENU]       = DebugAction_Util_OpenTimeMenu,
 };
 
 static void (*const sDebugMenu_Actions_PCBag[])(u8) =
@@ -847,6 +939,33 @@ static void (*const sDebugMenu_Actions_BerryFunctions[])(u8) =
     [DEBUG_BERRY_FUNCTIONS_MENU_NEXT_STAGE] = DebugAction_BerryFunctions_NextStage,
     [DEBUG_BERRY_FUNCTIONS_MENU_PESTS]      = DebugAction_BerryFunctions_Pests,
     [DEBUG_BERRY_FUNCTIONS_MENU_WEEDS]      = DebugAction_BerryFunctions_Weeds,
+};
+
+static void (*const sDebugMenu_Actions_TimeMenu[])(u8) =
+{
+    [DEBUG_TIME_MENU_ITEM_PRINTTIME] = DebugAction_TimeMenu_PrintTime,
+    [DEBUG_TIME_MENU_ITEM_PRINTTIMEOFDAY] = DebugAction_TimeMenu_PrintTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_TIMESOFDAY] = DebugAction_TimeMenu_TimesOfDay,
+    [DEBUG_TIME_MENU_ITEM_WEEKDAYS] = DebugAction_TimeMenu_Weekdays,
+};
+
+static void (*const sDebugMenu_Actions_TimeMenu_TimesOfDay[])(u8) =
+{
+    [DEBUG_TIME_MENU_ITEM_MORNING] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_DAY] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_EVENING] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_NIGHT] = DebugAction_TimeMenu_ChangeTimeOfDay,
+};
+
+static void (*const sDebugMenu_Actions_TimeMenu_Weekdays[])(u8) =
+{
+    [DEBUG_TIME_MENU_ITEM_SUNDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_MONDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_TUESDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_WEDNESDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_THURSDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_FRIDAY] = DebugAction_TimeMenu_ChangeWeekdays,
+    [DEBUG_TIME_MENU_ITEM_SATURDAY] = DebugAction_TimeMenu_ChangeWeekdays,
 };
 
 // *******************************
@@ -997,6 +1116,27 @@ static const struct ListMenuTemplate sDebugMenu_ListTemplate_BerryFunctions =
     .items = sDebugMenu_Items_BerryFunctions,
     .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
     .totalItems = ARRAY_COUNT(sDebugMenu_Items_BerryFunctions),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeMenu =
+{
+    .items = sDebugMenu_Items_TimeMenu,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeMenu),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeMenu_TimesOfDay =
+{
+    .items = sDebugMenu_Items_TimeMenu_TimesOfDay,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeMenu_TimesOfDay),
+};
+
+static const struct ListMenuTemplate sDebugMenu_ListTemplate_TimeMenu_Weekdays =
+{
+    .items = sDebugMenu_Items_TimeMenu_Weekdays,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .totalItems = ARRAY_COUNT(sDebugMenu_Items_TimeMenu_Weekdays),
 };
 
 // *******************************
@@ -1444,6 +1584,21 @@ static void DebugTask_HandleMenuInput_Scripts(u8 taskId)
     DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_Scripts, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
 }
 
+static void DebugTask_HandleMenuInput_TimeMenu(u8 taskId)
+{
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
+}
+
+static void DebugTask_HandleMenuInput_TimeMenu_TimesOfDay(u8 taskId)
+{
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu_TimesOfDay, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
+}
+
+static void DebugTask_HandleMenuInput_TimeMenu_Weekdays(u8 taskId)
+{
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu_Weekdays, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
+}
+
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
 {
     void (*func)(u8);
@@ -1612,7 +1767,7 @@ static void Debug_InitializeBattle(u8 taskId)
     }
 
     // Set terrain
-    gBattleTerrain = sDebugBattleData->battleTerrain;
+    gBattleEnvironment = sDebugBattleData->battleTerrain;
 
     // Populate enemy party
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1700,6 +1855,30 @@ static void DebugAction_Util_BerryFunctions(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
     Debug_ShowMenu(DebugTask_HandleMenuInput_BerryFunctions, sDebugMenu_ListTemplate_BerryFunctions);
+}
+
+static void DebugAction_Util_OpenTimeMenu(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu, sDebugMenu_ListTemplate_TimeMenu);
+}
+
+static void DebugAction_TimeMenu_TimesOfDay(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    if (!OW_USE_FAKE_RTC)
+        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    else
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_TimesOfDay, sDebugMenu_ListTemplate_TimeMenu_TimesOfDay);
+}
+
+static void DebugAction_TimeMenu_Weekdays(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    if (!OW_USE_FAKE_RTC)
+        Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    else
+        Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_Weekdays, sDebugMenu_ListTemplate_TimeMenu_Weekdays);
 }
 
 // *******************************
@@ -1982,7 +2161,14 @@ static const u8 sWeatherNames[WEATHER_COUNT][24] = {
     [WEATHER_ABNORMAL]           = _("ABNORMAL(NOT WORKING)"),
     [WEATHER_ROUTE119_CYCLE]     = _("ROUTE119 CYCLE"),
     [WEATHER_ROUTE123_CYCLE]     = _("ROUTE123 CYCLE"),
+    [WEATHER_FOG]                = _("FOG"),
 };
+
+const u8 *GetWeatherName(u32 weatherId)
+{
+    return sWeatherNames[weatherId];
+}
+
 static const u8 sDebugText_WeatherNotDefined[] = _("NOT DEFINED!!!");
 static void DebugAction_Util_Weather(u8 taskId)
 {
@@ -2125,6 +2311,60 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
         string = StringCopy(string, sText_Released);
     else
         string = StringCopy(string, sText_Unreleased);
+}
+
+static void DebugAction_TimeMenu_PrintTime(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    LockPlayerFieldControls();
+    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_TellTheTime);
+}
+
+void DebugMenu_CalculateTime(struct ScriptContext *ctx)
+{
+    if (OW_USE_FAKE_RTC)
+    {
+        struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
+        StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);
+        ConvertIntToDecimalStringN(gStringVar2, rtc->hour, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, rtc->minute, STR_CONV_MODE_LEADING_ZEROS, 2);
+    }
+    else
+    {
+        u32 day = ((gLocalTime.days - 1) + 6) % 7 ;
+        RtcCalcLocalTime();
+        StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[day]);
+        ConvertIntToDecimalStringN(gStringVar2, gLocalTime.hours, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, gLocalTime.minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
+    }
+}
+
+static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    LockPlayerFieldControls();
+    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_PrintTimeOfDay);
+}
+
+void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
+{
+    switch (GetTimeOfDay())
+    {
+        case TIME_MORNING:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MORNING]);
+            break;
+        case TIME_DAY:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_DAY]);
+            break;
+        case TIME_EVENING:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_EVENING]);
+            break;
+        case TIME_NIGHT:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_NIGHT]);
+            break;
+        default:
+            break;
+    }
 }
 
 // *******************************
@@ -3528,6 +3768,75 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
         Debug_DestroyMenu_Full_Script(taskId, DebugScript_DaycareMonsNotCompatible);
     else // 2 pokemon which can have a pokemon baby together
         TriggerPendingDaycareEgg();
+}
+
+// *******************************
+// Actions TimeMenu
+
+static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
+{
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    
+    DebugAction_DestroyExtraWindow(taskId);
+    switch (input)
+    {
+        case DEBUG_TIME_MENU_ITEM_MORNING:
+            FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_DAY:
+            FakeRtc_ForwardTimeTo(DAY_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_EVENING:
+            FakeRtc_ForwardTimeTo(EVENING_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_NIGHT:
+            FakeRtc_ForwardTimeTo(NIGHT_HOUR_BEGIN, 0, 0);
+            break;
+    }
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_LoadMap);
+}
+
+static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
+{
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
+    u32 daysToAdd = 0;
+
+    DebugAction_DestroyExtraWindow(taskId);
+    switch(input)
+    {
+        case DEBUG_TIME_MENU_ITEM_SUNDAY:
+            daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);    
+            break;
+        case DEBUG_TIME_MENU_ITEM_MONDAY:
+            daysToAdd = ((WEEKDAY_MON - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_TUESDAY:
+            daysToAdd = ((WEEKDAY_TUE - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_WEDNESDAY:
+            daysToAdd = ((WEEKDAY_WED - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_THURSDAY:
+            daysToAdd = ((WEEKDAY_THU - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_FRIDAY:
+            daysToAdd = ((WEEKDAY_FRI - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_SATURDAY:
+            daysToAdd = ((WEEKDAY_SAT - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+            break;
+        }
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_LoadMap);
 }
 
 // *******************************

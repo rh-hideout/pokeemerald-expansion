@@ -1046,8 +1046,7 @@ static void Task_ShowAiPoints(u8 taskId)
                 data->spriteIds.aiIconSpriteIds[i] = 0xFF;
             }
         }
-
-        mon = &GetBattlerParty(data->aiBattlerId)[gBattlerPartyIndexes[data->aiBattlerId]];
+        mon = GetPartyBattlerData(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
@@ -1228,7 +1227,7 @@ static void Task_ShowAiKnowledge(u8 taskId)
             }
         }
 
-        mon = &GetBattlerParty(data->aiBattlerId)[gBattlerPartyIndexes[data->aiBattlerId]];
+        mon = GetPartyBattlerData(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),

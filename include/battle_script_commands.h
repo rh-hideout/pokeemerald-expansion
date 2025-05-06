@@ -39,8 +39,6 @@ void HandleBattleWindow(u8 xStart, u8 yStart, u8 xEnd, u8 yEnd, u8 flags);
 bool8 UproarWakeUpCheck(u8 battlerId);
 bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 DoesDisguiseBlockMove(u32 battler, u32 move);
-bool32 CanPoisonType(u8 battlerAttacker, u8 battlerTarget);
-bool32 CanParalyzeType(u8 battlerAttacker, u8 battlerTarget);
 bool32 CanUseLastResort(u8 battlerId);
 u32 IsFlowerVeilProtected(u32 battler);
 u32 IsLeafGuardProtected(u32 battler, u32 ability);
@@ -60,6 +58,7 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
+void SetNonVolatileStatusCondition(u32 target, enum MoveEffects effect);
 
 extern void (* const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];

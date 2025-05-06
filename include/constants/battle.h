@@ -172,10 +172,10 @@
 #define STATUS3_GASTRO_ACID             (1 << 16)
 #define STATUS3_EMBARGO                 (1 << 17)
 #define STATUS3_UNDERWATER              (1 << 18)
-#define STATUS3_INTIMIDATE_POKES        (1 << 19)
-#define STATUS3_TRACE                   (1 << 20)
+#define STATUS3_UNUSED_19               (1 << 19)
+#define STATUS3_UNUSED_20               (1 << 20)
 #define STATUS3_SMACKED_DOWN            (1 << 21)
-#define STATUS3_ME_FIRST                (1 << 22)
+#define STATUS3_UNUSED_22               (1 << 22)
 #define STATUS3_TELEKINESIS             (1 << 23)
 #define STATUS3_PHANTOM_FORCE           (1 << 24)
 #define STATUS3_MIRACLE_EYED            (1 << 25)
@@ -206,7 +206,7 @@
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
 #define HITMARKER_UNUSED_2              (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
-#define HITMARKER_SYNCHRONISE_EFFECT    (1 << 14)
+#define HITMARKER_SYNCHRONIZE_EFFECT    (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
@@ -218,7 +218,7 @@
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
 #define HITMARKER_GRUDGE                (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
-#define HITMARKER_NEVER_SET             (1 << 26) // Cleared as part of a large group. Never set or checked
+#define HITMARKER_UNUSED_5              (1 << 26)
 #define HITMARKER_CHARGING              (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
@@ -466,32 +466,32 @@ enum MoveEffects
 #define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
-// Battle terrain defines for gBattleTerrain.
-#define BATTLE_TERRAIN_GRASS            0
-#define BATTLE_TERRAIN_LONG_GRASS       1
-#define BATTLE_TERRAIN_SAND             2
-#define BATTLE_TERRAIN_UNDERWATER       3
-#define BATTLE_TERRAIN_WATER            4
-#define BATTLE_TERRAIN_POND             5
-#define BATTLE_TERRAIN_MOUNTAIN         6
-#define BATTLE_TERRAIN_CAVE             7
-#define BATTLE_TERRAIN_BUILDING         8
-#define BATTLE_TERRAIN_PLAIN            9
-// New battle terrains are used for Secret Power but not fully implemented.
-#define BATTLE_TERRAIN_SOARING          10
-#define BATTLE_TERRAIN_SKY_PILLAR       11
-#define BATTLE_TERRAIN_BURIAL_GROUND    12
-#define BATTLE_TERRAIN_PUDDLE           13
-#define BATTLE_TERRAIN_MARSH            14
-#define BATTLE_TERRAIN_SWAMP            15
-#define BATTLE_TERRAIN_SNOW             16
-#define BATTLE_TERRAIN_ICE              17
-#define BATTLE_TERRAIN_VOLCANO          18
-#define BATTLE_TERRAIN_DISTORTION_WORLD 19
-#define BATTLE_TERRAIN_SPACE            20
-#define BATTLE_TERRAIN_ULTRA_SPACE      21
+// Battle environment defines for gBattleEnvironment.
+#define BATTLE_ENVIRONMENT_GRASS            0
+#define BATTLE_ENVIRONMENT_LONG_GRASS       1
+#define BATTLE_ENVIRONMENT_SAND             2
+#define BATTLE_ENVIRONMENT_UNDERWATER       3
+#define BATTLE_ENVIRONMENT_WATER            4
+#define BATTLE_ENVIRONMENT_POND             5
+#define BATTLE_ENVIRONMENT_MOUNTAIN         6
+#define BATTLE_ENVIRONMENT_CAVE             7
+#define BATTLE_ENVIRONMENT_BUILDING         8
+#define BATTLE_ENVIRONMENT_PLAIN            9
+// New battle environments are used for Secret Power but not fully implemented.
+#define BATTLE_ENVIRONMENT_SOARING          10
+#define BATTLE_ENVIRONMENT_SKY_PILLAR       11
+#define BATTLE_ENVIRONMENT_BURIAL_GROUND    12
+#define BATTLE_ENVIRONMENT_PUDDLE           13
+#define BATTLE_ENVIRONMENT_MARSH            14
+#define BATTLE_ENVIRONMENT_SWAMP            15
+#define BATTLE_ENVIRONMENT_SNOW             16
+#define BATTLE_ENVIRONMENT_ICE              17
+#define BATTLE_ENVIRONMENT_VOLCANO          18
+#define BATTLE_ENVIRONMENT_DISTORTION_WORLD 19
+#define BATTLE_ENVIRONMENT_SPACE            20
+#define BATTLE_ENVIRONMENT_ULTRA_SPACE      21
 
-#define BATTLE_TERRAIN_COUNT            22
+#define BATTLE_ENVIRONMENT_COUNT            22
 
 #define B_WAIT_TIME_LONG        (B_WAIT_TIME_MULTIPLIER * 4)
 #define B_WAIT_TIME_MED         (B_WAIT_TIME_MULTIPLIER * 3)
