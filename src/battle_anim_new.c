@@ -7538,28 +7538,28 @@ static void AnimBlastBurnTargetPlume_Step1(struct Sprite *sprite)
 
 static void SpriteCB_SpriteToCentreOfSide(struct Sprite *sprite)
 {
-    bool8 var;
+    bool8 respectMonPicOffsets;
 
     if (!sprite->data[0])
     {
         if (!gBattleAnimArgs[3])
-            var = TRUE;
+            respectMonPicOffsets = TRUE;
         else
-            var = FALSE;
+            respectMonPicOffsets = FALSE;
 
         if (gBattleAnimArgs[2] == 0) //Attacker
         {
             if (IsDoubleBattle())
-                InitSpritePosToAnimAttackersCentre(sprite, var);
+                InitSpritePosToAnimAttackersCentre(sprite, respectMonPicOffsets);
             else
-                InitSpritePosToAnimAttacker(sprite, var);
+                InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
         }
         else
         {
             if (IsDoubleBattle())
-                InitSpritePosToAnimTargetsCentre(sprite, var);
+                InitSpritePosToAnimTargetsCentre(sprite, respectMonPicOffsets);
             else
-                InitSpritePosToAnimTarget(sprite, var);
+                InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
         }
 
         sprite->data[0]++;
@@ -7698,21 +7698,21 @@ static void SpriteCB_CoreEnforcerBeam(struct Sprite *sprite)
 
 static void SpriteCB_TranslateAnimSpriteToTargetMonLocationDoubles(struct Sprite *sprite)
 {
-    bool8 v1;
+    bool8 respectMonPicOffsets;
     u8 target;
     u8 coordType;
 
     if (!(gBattleAnimArgs[5] & 0xff00))
-        v1 = TRUE;
+        respectMonPicOffsets = TRUE;
     else
-        v1 = FALSE;
+        respectMonPicOffsets = FALSE;
 
     if (!(gBattleAnimArgs[5] & 0xff))
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     else
         coordType = BATTLER_COORD_Y;
 
-    InitSpritePosToAnimAttacker(sprite, v1);
+    InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
     if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
@@ -8068,7 +8068,7 @@ static void SpriteCB_PyroBallRockBounceStep(struct Sprite *sprite)
 
 static void InitSpritePositionForPyroBall(struct Sprite *sprite)
 {
-    InitSpritePosToAnimAttacker(sprite, 0);
+    InitSpritePosToAnimAttacker(sprite, FALSE);
     sprite->y += 20; //Move closer to attacker's feet
 
     if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
