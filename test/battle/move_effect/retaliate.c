@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_RETALIATE); }
         TURN { MOVE(player, MOVE_RETALIATE); }
     } SCENE {
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_RETALIATE); }
         TURN { MOVE(opponent, MOVE_RETALIATE); }
     } SCENE {
