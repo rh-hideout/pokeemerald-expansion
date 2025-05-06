@@ -2236,7 +2236,7 @@ static void Cmd_createdragondartsprite(void)
     u8 argVar;
     u8 argsCount;
     s16 subpriority;
-    struct Pokemon *party = GetBattlerParty(gBattleAnimAttacker);
+    struct Pokemon *mon = GetPartyBattlerData(gBattleAnimAttacker);
 
     sBattleAnimScriptPtr++;
 
@@ -2253,10 +2253,10 @@ static void Cmd_createdragondartsprite(void)
 
     subpriority = GetSubpriorityForMoveAnim(argVar);
 
-    if (GetMonData(&party[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_SPECIES) == SPECIES_DRAGAPULT)
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_DRAGAPULT)
     {
         template.tileTag = ANIM_TAG_DREEPY;
-        if (IsMonShiny(&party[gBattlerPartyIndexes[gBattleAnimAttacker]]) == TRUE)
+        if (IsMonShiny(mon) == TRUE)
             template.paletteTag = ANIM_TAG_DREEPY_SHINY;
         else
             template.paletteTag = ANIM_TAG_DREEPY;

@@ -1286,8 +1286,8 @@ static void TrySetBattleSeminarShow(void)
                     bestMoveId = i;
             }
 
-            opponentSpecies = GetMonData(&gEnemyParty [gBattlerPartyIndexes[gBattlerTarget]],   MON_DATA_SPECIES, NULL);
-            playerSpecies   = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]], MON_DATA_SPECIES, NULL);
+            opponentSpecies = GetMonData(GetPartyBattlerData(gBattlerTarget),   MON_DATA_SPECIES, NULL);
+            playerSpecies   = GetMonData(GetPartyBattlerData(gBattlerAttacker), MON_DATA_SPECIES, NULL);
             TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, gMoveSelectionCursor[gBattlerAttacker], gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
             break;
         }
@@ -1363,15 +1363,14 @@ void BattleTv_ClearExplosionFaintCause(void)
 u8 GetBattlerMoveSlotId(u8 battlerId, u16 moveId)
 {
     s32 i;
-    struct Pokemon *party;
-    party = GetBattlerParty(battlerId);
+    struct Pokemon *mon = GetPartyBattlerData(battlerId);
 
     i = 0;
     while (1)
     {
         if (i >= MAX_MON_MOVES)
             break;
-        if (GetMonData(&party[gBattlerPartyIndexes[battlerId]], MON_DATA_MOVE1 + i, NULL) == moveId)
+        if (GetMonData(mon, MON_DATA_MOVE1 + i, NULL) == moveId)
             break;
         i++;
     }

@@ -1646,8 +1646,8 @@ u8 GetImprisonedMovesCount(u32 battler, u16 move)
 u32 GetBattlerAffectionHearts(u32 battler)
 {
     u8 side = GetBattlerSide(battler);
-    struct Pokemon *party = GetSideParty(side);
-    u16 species = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
+    struct Pokemon *mon = GetPartyBattlerData(battler);
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
 
     if (side != B_SIDE_PLAYER)
         return AFFECTION_NO_HEARTS;
@@ -1659,7 +1659,7 @@ u32 GetBattlerAffectionHearts(u32 battler)
                                 | BATTLE_TYPE_SECRET_BASE)))
         return AFFECTION_NO_HEARTS;
 
-    return GetMonAffectionHearts(&party[gBattlerPartyIndexes[battler]]);
+    return GetMonAffectionHearts(mon);
 }
 
 // gBattlerAttacker is the battler that's trying to raise their stats and due to limitations of RandomUniformExcept, cannot be an argument
@@ -4029,7 +4029,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_ZERO_TO_HERO:
             side = GetBattlerSide(battler);
-            mon = &GetSideParty(side)[gBattlerPartyIndexes[battler]];
+            mon = GetPartyBattlerData(battler);
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_PALAFIN_HERO
@@ -6119,8 +6119,7 @@ static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
 
 static u32 ItemRestorePp(u32 battler, u32 itemId, enum ItemCaseId caseID)
 {
-    struct Pokemon *party = GetBattlerParty(battler);
-    struct Pokemon *mon = &party[gBattlerPartyIndexes[battler]];
+    struct Pokemon *mon = GetPartyBattlerData(battler);
     u32 i, changedPP = 0;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -10117,7 +10116,7 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
     u32 species = gBattleMons[battler].species;
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    struct Pokemon *mon = &GetBattlerParty(battler)[gBattlerPartyIndexes[battler]];
+    struct Pokemon *mon = GetPartyBattlerData(battler);
     u16 heldItem = gBattleMons[battler].item;
 
     for (i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
@@ -10342,9 +10341,9 @@ struct Pokemon *GetIllusionMonPtr(u32 battler)
     if (!gBattleStruct->illusion[battler].set)
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
-            SetIllusionMon(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
+            SetIllusionMon(GetPartyBattlerData(battler), battler);
         else
-            SetIllusionMon(&gEnemyParty[gBattlerPartyIndexes[battler]], battler);
+            SetIllusionMon(GetPartyBattlerData(battler), battler);
     }
     if (!gBattleStruct->illusion[battler].on)
         return NULL;

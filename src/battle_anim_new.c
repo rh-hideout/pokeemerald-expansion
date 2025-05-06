@@ -9281,8 +9281,8 @@ void AnimTask_GetWeatherToSet(u8 taskId)
 
 void AnimTask_SyrupBomb(u8 taskId)
 {
-    struct Pokemon *party = GetBattlerParty(gBattleAnimAttacker);
-    gBattleAnimArgs[0] = IsMonShiny(&party[gBattlerPartyIndexes[gBattleAnimAttacker]]);
+    struct Pokemon *mon = GetPartyBattlerData(gBattleAnimAttacker);
+    gBattleAnimArgs[0] = IsMonShiny(mon);
     DestroyAnimVisualTask(taskId);
 }
 

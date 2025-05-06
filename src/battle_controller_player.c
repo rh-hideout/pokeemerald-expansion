@@ -429,7 +429,7 @@ void HandleInputChooseTarget(u32 battler)
 {
     s32 i;
     static const u8 identities[MAX_BATTLERS_COUNT] = {B_POSITION_PLAYER_LEFT, B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_RIGHT, B_POSITION_OPPONENT_LEFT};
-    u16 move = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_MOVE1 + gMoveSelectionCursor[battler]);
+    u16 move = GetMonData(GetPartyBattlerData(battler), MON_DATA_MOVE1 + gMoveSelectionCursor[battler]);
     u16 moveTarget = GetBattlerMoveTargetType(battler, move);
 
     DoBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX, 15, 1);
@@ -1037,11 +1037,11 @@ void HandleMoveSwitching(u32 battler)
             {
                 for (i = 0; i < MAX_MON_MOVES; i++)
                 {
-                    moveStruct.moves[i] = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_MOVE1 + i);
-                    moveStruct.currentPp[i] = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_PP1 + i);
+                    moveStruct.moves[i] = GetMonData(GetPartyBattlerData(battler), MON_DATA_MOVE1 + i);
+                    moveStruct.currentPp[i] = GetMonData(GetPartyBattlerData(battler), MON_DATA_PP1 + i);
                 }
 
-                totalPPBonuses = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_PP_BONUSES);
+                totalPPBonuses = GetMonData(GetPartyBattlerData(battler), MON_DATA_PP_BONUSES);
                 for (i = 0; i < MAX_MON_MOVES; i++)
                     perMovePPBonuses[i] = (totalPPBonuses & (3 << (i * 2))) >> (i * 2);
 
@@ -1063,11 +1063,11 @@ void HandleMoveSwitching(u32 battler)
 
                 for (i = 0; i < MAX_MON_MOVES; i++)
                 {
-                    SetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_MOVE1 + i, &moveStruct.moves[i]);
-                    SetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_PP1 + i, &moveStruct.currentPp[i]);
+                    SetMonData(GetPartyBattlerData(battler), MON_DATA_MOVE1 + i, &moveStruct.moves[i]);
+                    SetMonData(GetPartyBattlerData(battler), MON_DATA_PP1 + i, &moveStruct.currentPp[i]);
                 }
 
-                SetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_PP_BONUSES, &totalPPBonuses);
+                SetMonData(GetPartyBattlerData(battler), MON_DATA_PP_BONUSES, &totalPPBonuses);
             }
         }
 
@@ -1264,10 +1264,10 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
         FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 
-        HandleLowHpMusicChange(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
+        HandleLowHpMusicChange(GetPartyBattlerData(battler), battler);
 
         if (TwoPlayerIntroMons(battler))
-            HandleLowHpMusicChange(&gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]], BATTLE_PARTNER(battler));
+            HandleLowHpMusicChange(GetPartyBattlerData(BATTLE_PARTNER(battler)), BATTLE_PARTNER(battler));
 
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
         gBattlerControllerFuncs[battler] = Intro_DelayAndEnd;
@@ -1282,12 +1282,12 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
     // Start shiny animation if applicable for 1st Pokémon
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-        TryShinyAnimation(battler, &gPlayerParty[gBattlerPartyIndexes[battler]]);
+        TryShinyAnimation(battler, GetPartyBattlerData(battler));
 
     // Start shiny animation if applicable for 2nd Pokémon
     if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
-        TryShinyAnimation(BATTLE_PARTNER(battler), &gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]);
+        TryShinyAnimation(BATTLE_PARTNER(battler), GetPartyBattlerData(BATTLE_PARTNER(battler)));
 
     // Show healthbox after ball anim
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
@@ -1297,11 +1297,11 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
         {
             if (TwoPlayerIntroMons(battler) && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
             {
-                UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], &gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]], HEALTHBOX_ALL);
+                UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetPartyBattlerData(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(BATTLE_PARTNER(battler));
                 SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
             }
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gPlayerParty[gBattlerPartyIndexes[battler]], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetPartyBattlerData(battler), HEALTHBOX_ALL);
             StartHealthboxSlideIn(battler);
             SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
         }
@@ -1388,7 +1388,7 @@ static void SwitchIn_HandleSoundAndEnd(u32 battler)
         && !IsCryPlayingOrClearCrySongs())
     {
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
-        HandleLowHpMusicChange(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
+        HandleLowHpMusicChange(GetPartyBattlerData(battler), battler);
         PlayerBufferExecCompleted(battler);
     }
 }
@@ -1398,14 +1398,14 @@ static void SwitchIn_TryShinyAnimShowHealthbox(u32 battler)
     // Start shiny animation if applicable
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
         && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-        TryShinyAnimation(battler, &gPlayerParty[gBattlerPartyIndexes[battler]]);
+        TryShinyAnimation(battler, GetPartyBattlerData(battler));
 
     // Wait for ball anim, then show healthbox
     if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
     {
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gPlayerParty[gBattlerPartyIndexes[battler]], HEALTHBOX_ALL);
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetPartyBattlerData(battler), HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
         gBattlerControllerFuncs[battler] = SwitchIn_CleanShinyAnimShowSubstitute;
@@ -1768,7 +1768,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     }
     else if (P_SHOW_DYNAMIC_TYPES) // Non-vanilla changes to battle UI showing dynamic types
     {
-        struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
+        struct Pokemon *mon = GetPartyBattlerData(battler);
         type = CheckDynamicMoveType(mon, move, battler);
     }
     end = StringCopy(txtPtr, gTypesInfo[type].name);
@@ -1892,7 +1892,7 @@ static void PrintLinkStandbyMsg(void)
 
 static void PlayerHandleLoadMonSprite(u32 battler)
 {
-    BattleLoadMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
+    BattleLoadMonSpriteGfx(GetPartyBattlerData(battler), battler);
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
     gBattlerControllerFuncs[battler] = CompleteOnBattlerSpritePosX_0;
 }
@@ -2276,9 +2276,9 @@ void PlayerHandleExpUpdate(u32 battler)
 
 static void PlayerHandleStatusXor(u32 battler)
 {
-    u32 val = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_STATUS) ^ gBattleResources->bufferA[battler][1];
+    u32 val = GetMonData(GetPartyBattlerData(battler), MON_DATA_STATUS) ^ gBattleResources->bufferA[battler][1];
 
-    SetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_STATUS, &val);
+    SetMonData(GetPartyBattlerData(battler), MON_DATA_STATUS, &val);
     PlayerBufferExecCompleted(battler);
 }
 
@@ -2449,7 +2449,7 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 static u32 CheckTypeEffectiveness(u32 targetId, u32 battler)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
+    struct Pokemon *mon = GetPartyBattlerData(battler);
     u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
     u32 moveType = CheckDynamicMoveType(mon, move, battler);
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(move, moveType, battler, targetId, GetBattlerAbility(targetId), FALSE);
