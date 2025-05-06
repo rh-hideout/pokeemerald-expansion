@@ -1583,4 +1583,3 @@ u32 DoEndTurnEffects(void)
             return TRUE;
     }
 }
-
