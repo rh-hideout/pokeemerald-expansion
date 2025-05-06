@@ -1465,14 +1465,14 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     task->data[9] = 16;
     task->data[10] = gBattleAnimArgs[0];
 
-    baseX = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
+    baseX = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     baseY = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM);
     if (!IsContest())
     {
         spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
-            x = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
+            x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
             y = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_BOTTOM);
             gSprites[spriteId].data[0] = baseX << 4;
             gSprites[spriteId].data[1] = baseY << 4;

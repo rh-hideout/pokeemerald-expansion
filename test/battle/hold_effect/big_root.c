@@ -30,8 +30,6 @@ SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage
 
 SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingrain and Aqua Ring", s16 heal, s16 damage)
 {
-    KNOWN_FAILING;
-
     u32 item;
     u32 move;
 
@@ -53,9 +51,9 @@ SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingr
         HP_BAR(player, captureDamage: &results[i].heal);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage); // Damage is unaffected
-        EXPECT_MUL_EQ(results[1].heal, Q_4_12(5234 / 4096), results[0].heal);
-        EXPECT_MUL_EQ(results[3].heal, Q_4_12(5234 / 4096), results[2].heal);
-        EXPECT_MUL_EQ(results[5].heal, Q_4_12(5234 / 4096), results[4].heal);
+        EXPECT_MUL_EQ(results[0].heal, Q_4_12(1.3), results[1].heal);
+        EXPECT_MUL_EQ(results[2].heal, Q_4_12(1.3), results[3].heal);
+        EXPECT_MUL_EQ(results[4].heal, Q_4_12(1.3), results[5].heal);
     }
 }
 

@@ -335,8 +335,6 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter)
     {
-        struct Pokemon *party;
-
         if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter
          && gWishFutureKnock.futureSightCounter[BATTLE_PARTNER(battler)] <= gBattleTurnCounter)
         {
@@ -357,8 +355,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
         gBattlerAttacker = gWishFutureKnock.futureSightBattlerIndex[battler];
         gCurrentMove = gWishFutureKnock.futureSightMove[battler];
 
-        party = GetSideParty(GetBattlerSide(gBattlerAttacker));
-        if (&party[gWishFutureKnock.futureSightPartyIndex[gBattlerTarget]] == &party[gBattlerPartyIndexes[gBattlerAttacker]])
+        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
         BattleScriptExecute(BattleScript_MonTookFutureAttack);
@@ -562,7 +559,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
-        gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
+        gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
         gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE;
         if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
         {

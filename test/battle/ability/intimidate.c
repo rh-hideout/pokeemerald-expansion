@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
 }
 
 SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after switch out", s16 damage)
@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after switch ou
         OPPONENT(SPECIES_ARBOK) { Ability(ability); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         if (ability == ABILITY_INTIMIDATE)
         {
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after KO", s16 
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_ARBOK) { Ability(ability); Speed(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(opponent);
         if (ability == ABILITY_INTIMIDATE)
@@ -104,17 +104,17 @@ DOUBLE_BATTLE_TEST("Intimidate doesn't activate on an empty field in a double ba
     }
 }
 
-SINGLE_BATTLE_TEST("Intimidate and Eject Button force the opponent to Attack")
+SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Attack")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_HITMONTOP) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_HITMONTOP) { Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN {
            MOVE(player, MOVE_QUICK_ATTACK);
-           MOVE(opponent, MOVE_TACKLE);
+           MOVE(opponent, MOVE_SCRATCH);
            SEND_OUT(opponent, 1);
         }
     } SCENE {
@@ -125,8 +125,8 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button force the opponent to Attack")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         MESSAGE("The opposing Hitmontop's Intimidate cuts Wobbuffet's Attack!");
         NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
-            MESSAGE("The opposing Hitmontop used Tackle!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+            MESSAGE("The opposing Hitmontop used Scratch!");
         }
     }
 }
@@ -295,7 +295,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
 SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutralizing Gas - opponent caused switches")
 {
     u32 move, item;
-    PARAMETRIZE { move = MOVE_TACKLE; item = ITEM_EJECT_BUTTON; }
+    PARAMETRIZE { move = MOVE_SCRATCH; item = ITEM_EJECT_BUTTON; }
     PARAMETRIZE { move = MOVE_GROWL; item = ITEM_EJECT_PACK; }
     PARAMETRIZE { move = MOVE_ROAR; item = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_DRAGON_TAIL; item = ITEM_NONE; }
@@ -365,6 +365,7 @@ DOUBLE_BATTLE_TEST("Intimidate will correctly decrease the attack of the second 
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_PROTOSYNTHESIS);
@@ -372,14 +373,13 @@ DOUBLE_BATTLE_TEST("Intimidate will correctly decrease the attack of the second 
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         }
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     }
 }
 
 SINGLE_BATTLE_TEST("Intimdate does not lose timing after mega evolution and switch out by a hit escape move")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
@@ -388,5 +388,50 @@ SINGLE_BATTLE_TEST("Intimdate does not lose timing after mega evolution and swit
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Intimidate drop down both opposing atk before eject pack has the chance to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Intimidate will not miss timing for competitive")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_MILOTIC) { Ability(ABILITY_COMPETITIVE); }
+        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
     }
 }

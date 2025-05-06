@@ -1046,12 +1046,15 @@ enum GotStatusedStringID
     B_MSG_STATUSED_BY_ABILITY,
 };
 
-// gBRNPreventionStringIds / gPRLZPreventionStringIds / gPSNPreventionStringIds
+// gStatusPreventionStringIds
 enum StatusPreventionStringID
 {
-    B_MSG_ABILITY_PREVENTS_MOVE_STATUS,
+    B_MSG_ABILITY_PREVENTS_MOVE_BURN,
+    B_MSG_ABILITY_PREVENTS_MOVE_PARALYSIS,
+    B_MSG_ABILITY_PREVENTS_MOVE_POISON,
     B_MSG_ABILITY_PREVENTS_ABILITY_STATUS,
     B_MSG_STATUS_HAD_NO_EFFECT,
+    B_MSG_ABILITY_PASTEL_VEIL,
 };
 
 // gGotDefrostedStringIds

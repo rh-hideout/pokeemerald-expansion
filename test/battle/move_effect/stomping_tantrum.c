@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double damage if target protec
     }
 }
 
-SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double damage if it failed on the previous turn cause of Protect")
+SINGLE_BATTLE_TEST("Stomping Tatrum will not deal double if it missed")
 {
     s16 damage[2];
     GIVEN {

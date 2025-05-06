@@ -104,36 +104,36 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
 void AnimTask_SetCamouflageBlend(u8 taskId)
 {
     u32 selectedPalettes = UnpackSelectedBattlePalettes(gBattleAnimArgs[0]);
-    switch (gBattleTerrain)
+    switch (gBattleEnvironment)
     {
-    case BATTLE_TERRAIN_GRASS:
+    case BATTLE_ENVIRONMENT_GRASS:
         gBattleAnimArgs[4] = RGB(12, 24, 2);
         break;
-    case BATTLE_TERRAIN_LONG_GRASS:
+    case BATTLE_ENVIRONMENT_LONG_GRASS:
         gBattleAnimArgs[4] = RGB(0, 15, 2);
         break;
-    case BATTLE_TERRAIN_SAND:
+    case BATTLE_ENVIRONMENT_SAND:
         gBattleAnimArgs[4] = RGB(30, 24, 11);
         break;
-    case BATTLE_TERRAIN_UNDERWATER:
+    case BATTLE_ENVIRONMENT_UNDERWATER:
         gBattleAnimArgs[4] = RGB(0, 0, 18);
         break;
-    case BATTLE_TERRAIN_WATER:
+    case BATTLE_ENVIRONMENT_WATER:
         gBattleAnimArgs[4] = RGB(11, 22, 31);
         break;
-    case BATTLE_TERRAIN_POND:
+    case BATTLE_ENVIRONMENT_POND:
         gBattleAnimArgs[4] = RGB(11, 22, 31);
         break;
-    case BATTLE_TERRAIN_MOUNTAIN:
+    case BATTLE_ENVIRONMENT_MOUNTAIN:
         gBattleAnimArgs[4] = RGB(22, 16, 10);
         break;
-    case BATTLE_TERRAIN_CAVE:
+    case BATTLE_ENVIRONMENT_CAVE:
         gBattleAnimArgs[4] = RGB(14, 9, 3);
         break;
-    case BATTLE_TERRAIN_BUILDING:
+    case BATTLE_ENVIRONMENT_BUILDING:
         gBattleAnimArgs[4] = RGB_WHITE;
         break;
-    case BATTLE_TERRAIN_PLAIN:
+    case BATTLE_ENVIRONMENT_PLAIN:
     default:
         gBattleAnimArgs[4] = RGB_WHITE;
         break;
@@ -483,29 +483,29 @@ static void StatsChangeAnimation_Step2(u8 taskId)
     switch (sAnimStatsChangeData->aAnimStatId)
     {
     case STAT_ANIM_PAL_ATK:
-        LoadCompressedPalette(gStatAnim_Attack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Attack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_DEF:
-        LoadCompressedPalette(gStatAnim_Defense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Defense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_ACC:
-        LoadCompressedPalette(gStatAnim_Accuracy_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Accuracy_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_SPEED:
-        LoadCompressedPalette(gStatAnim_Speed_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Speed_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_EVASION:
-        LoadCompressedPalette(gStatAnim_Evasion_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Evasion_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_SPATK:
-        LoadCompressedPalette(gStatAnim_SpAttack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_SpAttack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     case STAT_ANIM_PAL_SPDEF:
-        LoadCompressedPalette(gStatAnim_SpDefense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_SpDefense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     default:
  // case STAT_ANIM_PAL_MULTIPLE:
-        LoadCompressedPalette(gStatAnim_Multiple_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+        LoadPalette(gStatAnim_Multiple_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     }
 
@@ -795,7 +795,7 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u32 *palette)
+void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
     u16 species;
     u8 spriteId, spriteId2;
@@ -841,7 +841,7 @@ void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 b
     GetBattleAnimBg1Data(&animBgData);
     AnimLoadCompressedBgTilemapHandleContest(&animBgData, tilemap, FALSE);
     AnimLoadCompressedBgGfx(animBgData.bgId, gfx, animBgData.tilesOffset);
-    LoadCompressedPalette(palette, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
+    LoadPalette(palette, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
 
     gBattle_BG1_X = 0;
     gBattle_BG1_Y = 0;
@@ -916,9 +916,9 @@ static void UpdateMonScrollingBgMask(u8 taskId)
     }
 }
 
-void AnimTask_GetBattleTerrain(u8 taskId)
+void AnimTask_GetBattleEnvironment(u8 taskId)
 {
-    gBattleAnimArgs[0] = gBattleTerrain;
+    gBattleAnimArgs[0] = gBattleEnvironment;
     DestroyAnimVisualTask(taskId);
 }
 

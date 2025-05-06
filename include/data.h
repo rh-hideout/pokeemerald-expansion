@@ -33,7 +33,7 @@ struct TrainerSprite
 {
     u8 y_offset;
     struct CompressedSpriteSheet frontPic;
-    struct CompressedSpritePalette palette;
+    struct SpritePalette palette;
     const union AnimCmd *const *const animation;
     const struct Coords16 mugshotCoords;
     s16 mugshotRotation;
@@ -43,7 +43,7 @@ struct TrainerBacksprite
 {
     struct MonCoords coordinates;
     struct CompressedSpriteSheet backPic;
-    struct CompressedSpritePalette palette;
+    struct SpritePalette palette;
     const union AnimCmd *const *const animation;
 };
 
@@ -83,7 +83,7 @@ struct TrainerMon
 
 struct Trainer
 {
-    /*0x00*/ u32 aiFlags;
+    /*0x00*/ u64 aiFlags;
     /*0x04*/ const struct TrainerMon *party;
     /*0x08*/ u16 items[MAX_TRAINER_ITEMS];
     /*0x10*/ u8 trainerClass;
@@ -121,7 +121,7 @@ struct TypeInfo
     u16 isSpecialCaseType:1;
     u16 isHiddenPowerType:1; // Changing this for any type will change the distribution of all Hidden Power types from vanilla.
     u16 padding:11;
-    const u32 *const paletteTMHM;
+    const u16 *const paletteTMHM;
     //u16 enhanceItem;
     //u16 berry;
     //u16 gem;
@@ -295,7 +295,7 @@ static inline const struct TrainerMon *GetTrainerPartyFromId(u16 trainerId)
     return gTrainers[difficulty][sanitizedTrainerId].party;
 }
 
-static inline const bool32 GetTrainerAIFlagsFromId(u16 trainerId)
+static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
 {
     u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
