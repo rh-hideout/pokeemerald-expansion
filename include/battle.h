@@ -621,11 +621,11 @@ struct PartyState
 {
     u32 intrepidSwordBoost:1;
     u32 dauntlessShieldBoost:1;
-    u32 ateBerry:1; // array id determined by side, each party pokemon as bit
+    u32 ateBerry:1;
     u32 battleBondBoost:1;
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
-    u32 padding:25;
+    u32 padding:26;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
