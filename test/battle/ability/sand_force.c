@@ -3,7 +3,12 @@
 
 SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
 {
+    u32 type1 = gSpeciesInfo[SPECIES_SHELLOS].types[0];
+    u32 type2 = gSpeciesInfo[SPECIES_SHELLOS].types[1];
     GIVEN {
+        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
+        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
+        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
