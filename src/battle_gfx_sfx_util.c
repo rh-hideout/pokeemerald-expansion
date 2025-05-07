@@ -780,7 +780,7 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             if (state == 2)
             {
-                if (WhichBattleCoords(0))
+                if (GetBattlerCoordsIndex(0) != BATTLE_COORDS_SINGLES)
                     LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
                 else
                     LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);

@@ -34,19 +34,21 @@ static void CreateBattlerTrace(struct Task *task, u8 taskId);
 
 EWRAM_DATA static union AffineAnimCmd *sAnimTaskAffineAnim = NULL;
 
-const struct UCoords8 sBattlerCoords[][MAX_BATTLERS_COUNT] =
+const struct UCoords8 sBattlerCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT] =
 {
-    { // Single battle
-        { 72, 80 },
-        { 176, 40 },
-        { 48, 40 },
-        { 112, 80 },
+    [BATTLE_COORDS_SINGLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 72, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 176, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 48, 40 },
+        [B_POSITION_OPPONENT_RIGHT] = { 112, 80 },
     },
-    { // Double battle
-        { 32, 80 },
-        { 200, 40 },
-        { 90, 88 },
-        { 152, 32 },
+    [BATTLE_COORDS_DOUBLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 32, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 200, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 90, 84 },
+        [B_POSITION_OPPONENT_RIGHT] = { 152, 32 },
     },
 };
 
@@ -99,10 +101,10 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
     {
     case BATTLER_COORD_X:
     case BATTLER_COORD_X_2:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].x;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].x;
         break;
     case BATTLER_COORD_Y:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
         break;
     case BATTLER_COORD_Y_PIC_OFFSET:
     case BATTLER_COORD_Y_PIC_OFFSET_DEFAULT:
@@ -202,7 +204,7 @@ u8 GetBattlerSpriteFinal_Y(u8 battlerId, u16 species, bool8 a3)
         offset = GetBattlerYDelta(battlerId, species);
         offset -= GetBattlerElevation(battlerId, species);
     }
-    y = offset + sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+    y = offset + sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
     if (a3)
     {
         if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
