@@ -2913,6 +2913,8 @@ gCryTable::
 
 	cry Cry_Mafiadon
 
+	cry Cry_Shiribiko
+
 .endif
 
 	.align 2
@@ -5830,4 +5832,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Fangster
 
 	cry_reverse Cry_Mafiadon
+
+	cry_reverse Cry_Shiribiko
 .endif

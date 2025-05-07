@@ -7130,6 +7130,10 @@ Cry_Fangster::
 	.align 2	
 Cry_Mafiadon::
 	.incbin "sound/direct_sound_samples/cries/mafiadon.bin"
+
+	.align 2	
+Cry_Shiribiko::
+	.incbin "sound/direct_sound_samples/cries/shiribiko.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

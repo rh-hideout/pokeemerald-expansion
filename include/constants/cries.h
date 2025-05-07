@@ -2671,6 +2671,7 @@ enum {
     CRY_MOBLIN,
     CRY_FANGSTER,
     CRY_MAFIADON,
+    CRY_SHIRIBIKO,
     CRY_COUNT,
 };
 

@@ -23687,6 +23687,19 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Seraphill[] = INCBIN_U8("graphics/pokemon/seraphill/icon.4bpp");
    const u8 gMonFootprint_Seraphill[] = INCBIN_U8("graphics/pokemon/seraphill/footprint.1bpp");
 
+   const u32 gMonFrontPic_Shiribiko[] = INCBIN_U32("graphics/pokemon/shiribiko/front.4bpp.lz");
+   const u32 gMonBackPic_Shiribiko[] = INCBIN_U32("graphics/pokemon/shiribiko/back.4bpp.lz");
+   const u32 gMonPalette_Shiribiko[] = INCBIN_U32("graphics/pokemon/shiribiko/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Shiribiko[] = INCBIN_U32("graphics/pokemon/shiribiko/shiny.gbapal.lz");
+   const u8 gMonIcon_Shiribiko[] = INCBIN_U8("graphics/pokemon/shiribiko/icon.4bpp");
+   const u8 gMonFootprint_Shiribiko[] = INCBIN_U8("graphics/pokemon/shiribiko/footprint.1bpp");
+
+   const u32 gMonFrontPic_ShiribikoUltra[] = INCBIN_U32("graphics/pokemon/shiribiko/ultra/front.4bpp.lz");
+   const u32 gMonPalette_ShiribikoUltra[] = INCBIN_U32("graphics/pokemon/shiribiko/ultra/normal.gbapal.lz");
+   const u32 gMonBackPic_ShiribikoUltra[] = INCBIN_U32("graphics/pokemon/shiribiko/ultra/back.4bpp.lz");
+   const u32 gMonShinyPalette_ShiribikoUltra[] = INCBIN_U32("graphics/pokemon/shiribiko/ultra/shiny.gbapal.lz");
+   const u8 gMonIcon_ShiribikoUltra[] = INCBIN_U8("graphics/pokemon/shiribiko/ultra/icon.4bpp");
+
    const u32 gMonFrontPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/front.4bpp.lz");
    const u32 gMonBackPic_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/back.4bpp.lz");
    const u32 gMonPalette_Nyanonite[] = INCBIN_U32("graphics/pokemon/nyanonite/normal.gbapal.lz");
