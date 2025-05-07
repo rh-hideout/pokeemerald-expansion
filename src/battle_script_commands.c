@@ -2401,7 +2401,7 @@ static inline bool32 TryActivateWeakenessBerry(u32 battlerDef)
         gSpecialStatuses[battlerDef].berryReduced = FALSE;
         gBattleScripting.battler = battlerDef;
         gLastUsedItem = gBattleMons[battlerDef].item;
-        gBattleStruct->ateBerry[battlerDef & BIT_SIDE] |= 1u << gBattlerPartyIndexes[battlerDef];
+        gBattleStruct->partyState[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]].ateBerry = TRUE;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_BerryReduceDmg;
         return TRUE;
@@ -6206,14 +6206,14 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
             u32 side = GetBattlerSide(battlerAtk);
 
-            if (gBattleStruct->battleBondBoost[side] & (1u << gBattlerPartyIndexes[battlerAtk]))
+            if (gBattleStruct->partyState[side][gBattlerPartyIndexes[battlerAtk]].battleBondBoost)
                 break;
 
             if (GetGenConfig(GEN_CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
             {
                 // TODO: Convert this to a proper FORM_CHANGE type.
                 gLastUsedAbility = abilityAtk;
-                gBattleStruct->battleBondBoost[side] |= 1u << gBattlerPartyIndexes[battlerAtk];
+                gBattleStruct->partyState[side][gBattlerPartyIndexes[battlerAtk]].battleBondBoost = TRUE;
                 PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battlerAtk].species);
                 gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[battlerAtk]] = gBattleMons[battlerAtk].species;
                 gBattleMons[battlerAtk].species = SPECIES_GRENINJA_ASH;
@@ -6247,7 +6247,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
                     gLastUsedAbility = abilityAtk;
                     gBattlerAbility = battlerAtk;
-                    gBattleStruct->battleBondBoost[side] |= 1u << gBattlerPartyIndexes[battlerAtk];
+                    gBattleStruct->partyState[side][gBattlerPartyIndexes[battlerAtk]].battleBondBoost = TRUE;
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_EffectBattleBondStatIncrease;
                     effect = TRUE;
@@ -9075,7 +9075,7 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId)
     if (ItemId_GetPocket(itemId) == POCKET_BERRIES
         && GetBattlerAbility(battler) == ABILITY_CHEEK_POUCH
         && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)
-        && gBattleStruct->ateBerry[GetBattlerSide(battler)] & (1u << gBattlerPartyIndexes[battler])
+        && gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry
         && !IsBattlerAtMaxHp(battler))
     {
         gBattleStruct->cheekPouchActivated = TRUE;
@@ -11411,7 +11411,7 @@ static void Cmd_various(void)
         if (cmd->fromBattler)
             gLastUsedItem = gBattleMons[battler].item;
 
-        gBattleStruct->ateBerry[battler & BIT_SIDE] |= 1u << gBattlerPartyIndexes[battler];
+        gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry = TRUE;
         gBattleScripting.battler = gEffectBattler = gBattlerTarget = battler;    // Cover all berry effect battler cases. e.g. ChangeStatBuffs uses target ID
         if (ItemBattleEffects(ITEMEFFECT_USE_LAST_ITEM, battler, FALSE))
             return;

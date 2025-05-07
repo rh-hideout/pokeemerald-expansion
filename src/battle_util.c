@@ -1281,7 +1281,7 @@ bool32 IsBelchPreventingMove(u32 battler, u32 move)
     if (GetMoveEffect(move) != EFFECT_BELCH)
         return FALSE;
 
-    return !(gBattleStruct->ateBerry[battler & BIT_SIDE] & (1u << gBattlerPartyIndexes[battler]));
+    return !gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry;
 }
 
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
@@ -3856,11 +3856,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_SUPERSWEET_SYRUP:
             if (!gSpecialStatuses[battler].switchInAbilityDone
-                    && !(gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] & (1u << gBattlerPartyIndexes[battler])))
+             && !gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].supersweetSyrup)
             {
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                gBattleStruct->supersweetSyrup[GetBattlerSide(battler)] |= (1u << gBattlerPartyIndexes[battler]);
+                gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].supersweetSyrup = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_SupersweetSyrupActivates);
                 effect++;
             }
@@ -3897,12 +3897,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_INTREPID_SWORD:
             if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && !(gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] & (1u << gBattlerPartyIndexes[battler])))
+             && !gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].intrepidSwordBoost)
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
                 if (B_INTREPID_SWORD == GEN_9)
-                    gBattleStruct->intrepidSwordBoost[GetBattlerSide(battler)] |= 1u << gBattlerPartyIndexes[battler];
+                    gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].intrepidSwordBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_ATK, 1, FALSE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
@@ -3911,12 +3911,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_DAUNTLESS_SHIELD:
             if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && !(gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] & (1u << gBattlerPartyIndexes[battler])))
+             && !gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].dauntlessShieldBoost)
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
                 if (B_DAUNTLESS_SHIELD == GEN_9)
-                    gBattleStruct->dauntlessShieldBoost[GetBattlerSide(battler)] |= 1u << gBattlerPartyIndexes[battler];
+                    gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].dauntlessShieldBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_DEF, 1, FALSE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
@@ -4033,10 +4033,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_PALAFIN_HERO
-             && !(gBattleStruct->transformZeroToHero[side] & (1u << gBattlerPartyIndexes[battler])))
+             && !gBattleStruct->partyState[side][gBattlerPartyIndexes[battler]].transformZeroToHero)
             {
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                gBattleStruct->transformZeroToHero[side] |= 1u << gBattlerPartyIndexes[battler];
+                gBattleStruct->partyState[side][gBattlerPartyIndexes[battler]].transformZeroToHero = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_ZeroToHeroActivates);
                 effect++;
             }
@@ -7431,8 +7431,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
 
     // Berry was successfully used on a Pokemon.
     if (effect && (gLastUsedItem >= FIRST_BERRY_INDEX && gLastUsedItem <= LAST_BERRY_INDEX))
-        gBattleStruct->ateBerry[battler & BIT_SIDE] |= 1u << gBattlerPartyIndexes[battler];
-
+        gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry = TRUE;
     return effect;
 }
 
