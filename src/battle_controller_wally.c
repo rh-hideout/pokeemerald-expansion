@@ -218,11 +218,11 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-        TryShinyAnimation(battler, &gPlayerParty[gBattlerPartyIndexes[battler]]);
+        TryShinyAnimation(battler, GetPartyBattlerData(battler));
 
     if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
-        TryShinyAnimation(BATTLE_PARTNER(battler), &gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]);
+        TryShinyAnimation(BATTLE_PARTNER(battler), GetPartyBattlerData(BATTLE_PARTNER(battler)));
 
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
         && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive
@@ -232,12 +232,12 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], &gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetPartyBattlerData(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
             StartHealthboxSlideIn(BATTLE_PARTNER(battler));
             SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
         }
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gPlayerParty[gBattlerPartyIndexes[battler]], HEALTHBOX_ALL);
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetPartyBattlerData(battler), HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
 
@@ -266,7 +266,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 
         CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
-        HandleLowHpMusicChange(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
+        HandleLowHpMusicChange(GetPartyBattlerData(battler), battler);
 
         WallyBufferExecCompleted(battler);
     }
@@ -408,7 +408,7 @@ static void WallyHandlePlaySE(u32 battler)
 // Wally's Pokémon during the tutorial is never intended to faint, so that's probably why it's different here.
 static void WallyHandleFaintingCry(u32 battler)
 {
-    u16 species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
+    u16 species = GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     WallyBufferExecCompleted(battler);

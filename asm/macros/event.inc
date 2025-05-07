@@ -2525,8 +2525,8 @@
 	@ Sets an NPC up to follow the player.
 	@ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
-	.macro setfollower localId:req, flags:req, script=0, battlePartner=0
-	checkfollower
+	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
+	checkfollowernpc
 	goto_if_eq VAR_RESULT, TRUE, 1f
 	hidefollower
 	delay 16
@@ -2546,12 +2546,12 @@
 	.endm
 
 	@ Remove the follower NPC (assumes there will only ever be one).
-	.macro destroyfollower
+	.macro destroyfollowernpc
 	callnative ScriptDestroyFollowerNPC
 	.endm
 
 	@ Makes the player and follower NPC face one another.
-	.macro facefollower
+	.macro facefollowernpc
 	callnative ScriptFaceFollowerNPC
 	.endm
 
@@ -2569,7 +2569,7 @@
 	.endm
 
 	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
-	.macro checkfollower
+	.macro checkfollowernpc
 	callnative ScriptCheckFollowerNPC
 	.endm
 

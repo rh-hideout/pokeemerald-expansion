@@ -1046,8 +1046,7 @@ static void Task_ShowAiPoints(u8 taskId)
                 data->spriteIds.aiIconSpriteIds[i] = 0xFF;
             }
         }
-
-        mon = &GetBattlerParty(data->aiBattlerId)[gBattlerPartyIndexes[data->aiBattlerId]];
+        mon = GetPartyBattlerData(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
@@ -1228,7 +1227,7 @@ static void Task_ShowAiKnowledge(u8 taskId)
             }
         }
 
-        mon = &GetBattlerParty(data->aiBattlerId)[gBattlerPartyIndexes[data->aiBattlerId]];
+        mon = GetPartyBattlerData(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
@@ -1899,7 +1898,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_REFLECT;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_REFLECT;
-            sideTimer->reflectBattlerId = data->battlerId;
         }
         return &sideTimer->reflectTimer;
     case LIST_SIDE_LIGHTSCREEN:
@@ -1909,7 +1907,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_LIGHTSCREEN;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_LIGHTSCREEN;
-            sideTimer->lightscreenBattlerId = data->battlerId;
         }
         return &sideTimer->lightscreenTimer;
     case LIST_SIDE_STICKY_WEB:
@@ -1939,7 +1936,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_SAFEGUARD;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_SAFEGUARD;
-            sideTimer->safeguardBattlerId = data->battlerId;
         }
         return &sideTimer->safeguardTimer;
     case LIST_SIDE_MIST:
@@ -1949,7 +1945,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_MIST;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_MIST;
-            sideTimer->mistBattlerId = data->battlerId;
         }
         return &sideTimer->mistTimer;
     case LIST_SIDE_TAILWIND:
@@ -1959,7 +1954,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_TAILWIND;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_TAILWIND;
-            sideTimer->tailwindBattlerId = data->battlerId;
         }
         return &sideTimer->tailwindTimer;
     case LIST_SIDE_AURORA_VEIL:
@@ -1969,7 +1963,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_AURORA_VEIL;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_AURORA_VEIL;
-            sideTimer->auroraVeilBattlerId = data->battlerId;
         }
         return &sideTimer->auroraVeilTimer;
     case LIST_SIDE_LUCKY_CHANT:
@@ -1979,7 +1972,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_LUCKY_CHANT;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_LUCKY_CHANT;
-            sideTimer->luckyChantBattlerId = data->battlerId;
         }
         return &sideTimer->luckyChantTimer;
     case LIST_SIDE_TOXIC_SPIKES:
