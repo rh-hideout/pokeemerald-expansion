@@ -417,7 +417,7 @@ void Ai_InitPartyStruct(void)
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
                 playerMove = GetMonData(mon, MON_DATA_MOVE1 + j);
-                if (IsSpeciesOfType(GetMonData(mon, MON_DATA_SPECIES), GetMoveType(playerMove)))
+                if (IsSpeciesOfType(GetMonData(mon, MON_DATA_SPECIES), GetMoveType(playerMove) && GetMovePower(playerMove) != 0))
                     AI_PARTY->mons[B_SIDE_PLAYER][i].moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
             }
         }
