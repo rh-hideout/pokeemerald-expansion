@@ -315,7 +315,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI knows if redirection moves provide immunity to allies")
+AI_DOUBLE_BATTLE_TEST("AI knows if redirection abilities provide immunity to allies")
 {
     KNOWN_FAILING;
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
