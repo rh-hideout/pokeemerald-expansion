@@ -93,7 +93,7 @@ u32 GetItemStatus2Mask(u16 itemId);
  * {
  *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
  *   ...
- *   ITEM_HM_CUT = ITEM_HM08,
+ *   ITEM_HM_CUT = ITEM_HM01,
  *   ...
  * }; */
 #define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
