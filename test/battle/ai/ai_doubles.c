@@ -87,6 +87,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
 
 AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner without a positive effect")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+
     u32 species;
 
     PARAMETRIZE { species = SPECIES_CHARIZARD; }
@@ -110,6 +112,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner w
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -125,6 +129,8 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy")
 AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability but will not KO the ally needlessly")
 {
     ASSUME(GetMoveTarget(MOVE_BULLDOZE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
+    ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
 
     u32 species, ability, currentHP;    
 
@@ -150,6 +156,9 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
 
 AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it will benefit the ally")
 {
+    ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+    ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
+
     u32 defAbility, atkAbility, currentHP;
 
     PARAMETRIZE { defAbility = ABILITY_FLASH_FIRE; atkAbility = ABILITY_SCRAPPY;        currentHP = 400; }
@@ -173,6 +182,9 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
 
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -188,6 +200,9 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
 
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon and does not kill the partner needlessly")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+
     u32 currentHP;
     PARAMETRIZE { currentHP = 1; }
     PARAMETRIZE { currentHP = 200; }
@@ -207,8 +222,11 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon an
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon and a partner it believes about to die")
+AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon and a partner it believes is about to die")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
@@ -225,6 +243,9 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon an
 
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills both opposing mons")
 {
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -239,6 +260,10 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills both opposing mons"
 
 AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
 {
+    ASSUME(gItemsInfo[ITEM_WEAKNESS_POLICY].holdEffect == HOLD_EFFECT_WEAKNESS_POLICY);
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+
     u32 species;
     PARAMETRIZE { species = SPECIES_INCINEROAR; }
     PARAMETRIZE { species = SPECIES_CLEFFA; }
@@ -260,7 +285,8 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
 
 AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide")
 {
-    ASSUME(GetMoveTarget(MOVE_BULLDOZE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
 
     u32 aiFlags;    
 
@@ -284,7 +310,14 @@ AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field wit
 
 AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 {
+    ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+    ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_LAVA_PLUME) == TYPE_FIRE);
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
+    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
 
     u32 ability, move, species;
 
@@ -318,7 +351,10 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 AI_DOUBLE_BATTLE_TEST("AI knows if redirection abilities provide immunity to allies")
 {
     KNOWN_FAILING;
+    ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
     u32 ability, move, species, config;
 
