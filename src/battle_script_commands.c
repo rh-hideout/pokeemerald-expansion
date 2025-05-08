@@ -1837,7 +1837,7 @@ static void Cmd_ppreduce(void)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (GetBattlerSide(i) != GetBattlerSide(gBattlerAttacker) && IsBattlerAlive(i))
+            if (!IsBattlerAlly(i, gBattlerAttacker) && IsBattlerAlive(i))
                 ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
         }
     }
@@ -4338,7 +4338,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 u8 battler;
                 for (battler = 0; battler < MAX_BATTLERS_COUNT; ++battler)
                 {
-                    if (GetBattlerSide(battler) != GetBattlerSide(gBattlerTarget))
+                    if (!IsBattlerAlly(battler, gBattlerTarget))
                         continue;
                     if (!(gBattleMons[battler].status2 & STATUS2_WRAPPED))
                     {
@@ -4628,7 +4628,7 @@ static void Cmd_tryfaintmon(void)
             }
             if ((gStatuses3[gBattlerTarget] & STATUS3_GRUDGE)
              && !(gHitMarker & HITMARKER_GRUDGE)
-             && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget)
+             && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
              && IsBattlerAlive(gBattlerAttacker)
              && gCurrentMove != MOVE_STRUGGLE)
             {
@@ -6071,7 +6071,7 @@ static u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
          && !(excludeCurrent && battler == gBattlerTarget)
          && IsBattlerAlive(battler)
          && !gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
-         && (GetBattlerSide(battler) != GetBattlerSide(gBattlerAttacker) || moveTarget == MOVE_TARGET_FOES_AND_ALLY))
+         && (!IsBattlerAlly(battler, gBattlerAttacker) || moveTarget == MOVE_TARGET_FOES_AND_ALLY))
             break;
     }
     return battler;
@@ -6431,7 +6431,7 @@ static void Cmd_moveend(void)
             if (gBattleMons[gBattlerTarget].status2 & STATUS2_RAGE
                 && IsBattlerAlive(gBattlerTarget)
                 && gBattlerAttacker != gBattlerTarget
-                && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget)
+                && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
                 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
                 && IsBattlerTurnDamaged(gBattlerTarget)
                 && !IsBattleMoveStatus(gCurrentMove)
@@ -6717,7 +6717,7 @@ static void Cmd_moveend(void)
             // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
             if (GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP
                 && gBattlerTarget != gBattlerAttacker
-                && GetBattlerSide(gBattlerTarget) != GetBattlerSide(gBattlerAttacker)
+                && !IsBattlerAlly(gBattlerTarget, gBattlerAttacker)
                 && gProtectStructs[gBattlerTarget].physicalDmg
                 && gProtectStructs[gBattlerTarget].physicalBattlerId == gBattlerAttacker
                 && !TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
@@ -10131,7 +10131,7 @@ static void Cmd_various(void)
         while (gBattleStruct->friskedBattler < gBattlersCount)
         {
             gBattlerTarget = gBattleStruct->friskedBattler++;
-            if (GetBattlerSide(battler) != GetBattlerSide(gBattlerTarget)
+            if (!IsBattlerAlly(battler, gBattlerTarget)
                 && IsBattlerAlive(gBattlerTarget)
                 && gBattleMons[gBattlerTarget].item != ITEM_NONE)
             {
@@ -10879,7 +10879,7 @@ static void Cmd_various(void)
     case VARIOUS_JUMP_IF_TARGET_ALLY:
     {
         VARIOUS_ARGS(const u8 *jumpInstr);
-        if (GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget))
+        if (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
             gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -14231,7 +14231,7 @@ static bool32 SetTargetToNextPursuiter(u32 battlerDef)
         && GetMoveEffect(gChosenMoveByBattler[battler]) == EFFECT_PURSUIT
         && IsBattlerAlive(battlerDef)
         && IsBattlerAlive(battler)
-        && GetBattlerSide(battler) != GetBattlerSide(battlerDef)
+        && !IsBattlerAlly(battler, battlerDef)
         && (B_PURSUIT_TARGET >= GEN_4 || gBattleStruct->moveTarget[battler] == battlerDef)
         && !IsGimmickSelected(battler, GIMMICK_Z_MOVE)
         && !IsGimmickSelected(battler, GIMMICK_DYNAMAX)
@@ -15090,7 +15090,7 @@ static void Cmd_tryswapabilities(void)
         }
         else
         {
-            if (GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget))
+            if (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
                 gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerAttacker].ability;
             gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
             gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = gBattleMons[gBattlerAttacker].ability;

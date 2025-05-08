@@ -2107,7 +2107,7 @@ static void Cmd_splitbgprio_foes(void)
     sBattleAnimScriptPtr += 2;
 
     // Apply only if the attacking the opposing side
-    if (GetBattlerSide(gBattleAnimAttacker) != GetBattlerSide(gBattleAnimTarget))
+    if (!IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler != ANIM_ATTACKER)
             battlerId = gBattleAnimTarget;

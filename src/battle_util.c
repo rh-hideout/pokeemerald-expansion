@@ -316,7 +316,7 @@ bool32 HandleMoveTargetRedirection(void)
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
      && moveTarget == MOVE_TARGET_SELECTED
-     && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gSideTimers[side].followmeTarget))
+     && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
         return TRUE;
@@ -459,7 +459,7 @@ void HandleAction_UseMove(void)
         {
             gBattlerTarget = SetRandomTarget(gBattlerAttacker);
             if (gAbsentBattlerFlags & (1u << gBattlerTarget)
-                && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget))
+                && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
             {
                 gBattlerTarget = GetPartnerBattler(gBattlerTarget);
             }
@@ -490,7 +490,7 @@ void HandleAction_UseMove(void)
             gBattlerTarget = *(gBattleStruct->moveTarget + gBattlerAttacker);
             if (!IsBattlerAlive(gBattlerTarget)
             && moveTarget != MOVE_TARGET_OPPONENTS_FIELD
-            && (GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget)))
+            && (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget)))
             {
                 gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerTarget)));
             }
@@ -2352,7 +2352,7 @@ static void CancellerPsychicTerrain(u32 *effect)
         && GetChosenMovePriority(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) > 0
         && GetMoveTarget(gCurrentMove) != MOVE_TARGET_ALL_BATTLERS
         && GetMoveTarget(gCurrentMove) != MOVE_TARGET_OPPONENTS_FIELD
-        && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget))
+        && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
     {
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedPsychicTerrainPrevents;
@@ -2804,7 +2804,7 @@ static void ForewarnChooseMove(u32 battler)
     // Put all moves
     for (count = 0, i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if (IsBattlerAlive(i) && GetBattlerSide(i) != GetBattlerSide(battler))
+        if (IsBattlerAlive(i) && !IsBattlerAlly(i, battler))
         {
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
