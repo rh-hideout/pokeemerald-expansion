@@ -1485,7 +1485,7 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
     DATA.recordedBattle.rngSeed = seed;
 }
 
-void AIFlags_(u32 sourceLine, u32 flags)
+void AIFlags_(u32 sourceLine, u64 flags)
 {
     INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
     DATA.recordedBattle.AI_scripts = flags;

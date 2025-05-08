@@ -780,10 +780,15 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             if (state == 2)
             {
-                if (WhichBattleCoords(0))
+                switch (GetBattlerCoordsIndex(B_POSITION_PLAYER_LEFT))
+                {
+                default:
                     LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
-                else
+                    break;
+                case BATTLE_COORDS_SINGLES:
                     LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    break;
+                }
             }
             else if (state == 3)
                 LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
@@ -867,11 +872,11 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         if (GetBattlerSide(*battler) == B_SIDE_PLAYER)
         {
             if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
-                UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], &gPlayerParty[gBattlerPartyIndexes[*battler]], HEALTHBOX_ALL);
+                UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], GetPartyBattlerData(*battler), HEALTHBOX_ALL);
         }
         else
         {
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], &gEnemyParty[gBattlerPartyIndexes[*battler]], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], GetPartyBattlerData(*battler), HEALTHBOX_ALL);
         }
         SetHealthboxSpriteInvisible(gHealthboxSpriteIds[*battler]);
         (*battler)++;
@@ -1039,7 +1044,7 @@ void BattleLoadSubstituteOrMonSpriteGfx(u8 battler, bool8 loadMonSprite)
     else
     {
         if (!IsContest())
-            BattleLoadMonSpriteGfx(&GetBattlerParty(battler)[gBattlerPartyIndexes[battler]], battler);
+            BattleLoadMonSpriteGfx(GetPartyBattlerData(battler), battler);
     }
 }
 

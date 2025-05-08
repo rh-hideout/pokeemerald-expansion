@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
     ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
 }
 
@@ -28,10 +28,10 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
     u32 move;
     s16 damage[2];
 
-    PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_TACKLE; }
+    PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_ROUND; }
 
-    PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_TACKLE; }
+    PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_SCRATCH; }
     PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_ROUND; }
 
     GIVEN {
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        if ((move == MOVE_TACKLE && species == SPECIES_ROARING_MOON) || (move == MOVE_ROUND && species == SPECIES_WALKING_WAKE))
+        if ((move == MOVE_SCRATCH && species == SPECIES_ROARING_MOON) || (move == MOVE_ROUND && species == SPECIES_WALKING_WAKE))
             EXPECT_MUL_EQ(damage[0], Q_4_12(1.3), damage[1]);
         else
             EXPECT_EQ(damage[0], damage[1]);

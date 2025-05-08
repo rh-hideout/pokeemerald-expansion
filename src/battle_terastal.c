@@ -110,7 +110,7 @@ bool32 CanTerastallize(u32 battler)
 // Returns a battler's Tera type.
 u32 GetBattlerTeraType(u32 battler)
 {
-    return GetMonData(&GetBattlerParty(battler)[gBattlerPartyIndexes[battler]], MON_DATA_TERA_TYPE);
+    return GetMonData(GetPartyBattlerData(battler), MON_DATA_TERA_TYPE);
 }
 
 // Uses up a type's Stellar boost.

@@ -58,18 +58,18 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
     expectedMove2 = MOVE_NONE;
 
     // Here it's a simple test, both Slam and Strength deal the same damage, but Strength always hits, whereas Slam often misses.
-    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_TACKLE; hp = 490; expectedMove = MOVE_STRENGTH; turns = 4; }
-    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 365; expectedMove = MOVE_STRENGTH; turns = 3; }
-    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 245; expectedMove = MOVE_STRENGTH; turns = 2; }
-    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 125; expectedMove = MOVE_STRENGTH; turns = 1; }
+    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SCRATCH; hp = 490; expectedMove = MOVE_STRENGTH; turns = 4; }
+    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 365; expectedMove = MOVE_STRENGTH; turns = 3; }
+    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 245; expectedMove = MOVE_STRENGTH; turns = 2; }
+    PARAMETRIZE { move1 = MOVE_SLAM; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 125; expectedMove = MOVE_STRENGTH; turns = 1; }
     // Mega Kick deals more damage, but can miss more often. Here, AI should choose Mega Kick if it can faint target in less number of turns than Strength. Otherwise, it should use Strength.
-    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 170; expectedMove = MOVE_MEGA_KICK; turns = 1; }
-    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 245; expectedMove = MOVE_STRENGTH; turns = 2; }
+    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 170; expectedMove = MOVE_MEGA_KICK; turns = 1; }
+    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 245; expectedMove = MOVE_STRENGTH; turns = 2; }
     // Swift always hits and Guts has accuracy of 100%. Hustle lowers accuracy of all physical moves.
-    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_TACKLE; hp = 5; expectedMove = MOVE_SWIFT; turns = 1; }
-    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_GUST; move4 = MOVE_TACKLE; hp = 5; expectedMove = MOVE_GUST; turns = 1; }
-    // Mega Kick and Slam both have lower accuracy. Gust and Tackle both have 100, so AI can choose either of them.
-    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_SLAM; move3 = MOVE_TACKLE; move4 = MOVE_GUST; hp = 5; expectedMove = MOVE_GUST; expectedMove2 = MOVE_TACKLE; turns = 1; }
+    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_SWIFT; turns = 1; }
+    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_GUST; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_GUST; turns = 1; }
+    // Mega Kick and Slam both have lower accuracy. Gust and Scratch both have 100, so AI can choose either of them.
+    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_SLAM; move3 = MOVE_SCRATCH; move4 = MOVE_GUST; hp = 5; expectedMove = MOVE_GUST; expectedMove2 = MOVE_SCRATCH; turns = 1; }
     // All moves hit with No guard ability
     PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_GUST; hp = 5; expectedMove = MOVE_MEGA_KICK; expectedMove2 = MOVE_GUST; turns = 1; }
     // Tests to compare move that always hits and a beneficial effect. A move with higher acc should be chosen in this case.
@@ -85,14 +85,14 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
         ASSUME(GetMovePower(MOVE_MEGA_KICK) > GetMovePower(MOVE_STRENGTH));
         ASSUME(GetMoveAccuracy(MOVE_SLAM) < GetMoveAccuracy(MOVE_STRENGTH));
         ASSUME(GetMoveAccuracy(MOVE_MEGA_KICK) < GetMoveAccuracy(MOVE_STRENGTH));
-        ASSUME(GetMoveAccuracy(MOVE_TACKLE) == 100);
+        ASSUME(GetMoveAccuracy(MOVE_SCRATCH) == 100);
         ASSUME(GetMoveAccuracy(MOVE_GUST) == 100);
         ASSUME(GetMoveAccuracy(MOVE_SHOCK_WAVE) == 0);
         ASSUME(GetMoveAccuracy(MOVE_THUNDERBOLT) == 100);
         ASSUME(GetMoveAccuracy(MOVE_ICY_WIND) != 100);
         ASSUME(GetMoveCategory(MOVE_SLAM) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
-        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_MEGA_KICK) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_SHOCK_WAVE) == DAMAGE_CATEGORY_SPECIAL);
@@ -359,7 +359,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use ground type attacks against flying type Poke
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_CROBAT);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE, MOVE_POISON_STING, MOVE_GUST); }
+        OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH, MOVE_POISON_STING, MOVE_GUST); }
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { MOVE(player, MOVE_GRAVITY); NOT_EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -388,7 +388,7 @@ AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already c
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(weatherMoveLeft); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, weatherMoveRight); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, weatherMoveRight); }
     } WHEN {
             TURN {  NOT_EXPECT_MOVE(opponentRight, weatherMoveRight);
                     SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerLeft);
@@ -410,7 +410,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move1, move2, move3, move4); }
     } WHEN {
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
@@ -440,7 +440,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, statusMove); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove); }
     } WHEN {
             TURN {  NOT_EXPECT_MOVE(opponentRight, statusMove);
                     SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerLeft);
@@ -654,13 +654,13 @@ AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_PHANPY) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+        OPPONENT(SPECIES_PHANPY) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
         OPPONENT(species) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         if (species == SPECIES_CHARIZARD)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     }
 }
 
@@ -671,10 +671,10 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
         OPPONENT(SPECIES_PIKACHU) { HP(1); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); }
         TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
     }
 }
@@ -686,7 +686,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kill an opposing mon and 
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
         OPPONENT(SPECIES_PARAS) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
@@ -704,13 +704,13 @@ AI_DOUBLE_BATTLE_TEST("AI will the see a corresponding absorbing ability on part
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DISCHARGE, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DISCHARGE, MOVE_SCRATCH); }
         OPPONENT(SPECIES_PIKACHU) { HP(1); Ability(ability); Moves(MOVE_CELEBRATE); }
     } WHEN {
         if (ability == ABILITY_LIGHTNING_ROD)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_DISCHARGE); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_TACKLE); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
     }
 }
 
@@ -825,7 +825,7 @@ AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player'
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(playerMon) { Ability(ability); }
-        OPPONENT(SPECIES_SMEARGLE) { Item(ITEM_CHOICE_BAND); Moves(aiMove, MOVE_TACKLE); }
+        OPPONENT(SPECIES_SMEARGLE) { Item(ITEM_CHOICE_BAND); Moves(aiMove, MOVE_SCRATCH); }
     } WHEN {
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, aiMove); }
         TURN { EXPECT_MOVE(opponent, aiMove); }
@@ -839,10 +839,10 @@ AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a move of the sam
         ASSUME(GetMovePriority(MOVE_SUCKER_PUNCH) == 1);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(300); Moves(MOVE_QUICK_ATTACK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_SUCKER_PUNCH, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_SUCKER_PUNCH, MOVE_SCRATCH); }
     } WHEN {
         TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_SUCKER_PUNCH); }
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
     }
 }
 
@@ -891,11 +891,11 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when det
         ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_BEAUTIFLY) { Speed(10); Moves(MOVE_AIR_SLASH); }
-        OPPONENT(SPECIES_CACNEA) { Speed(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_CACNEA) { Speed(1); Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_COMBUSKEN) { Speed(1); Moves(MOVE_FLAMETHROWER); Item(ITEM_FOCUS_SASH); }
         OPPONENT(SPECIES_CROBAT) { Speed(11); Moves(MOVE_SLUDGE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_FLAMETHROWER); }
     }
 }
@@ -906,11 +906,11 @@ AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon")
         ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_TACKLE, MOVE_EARTHQUAKE); }
+        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH, MOVE_EARTHQUAKE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
-        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
     }
 }
 
@@ -920,14 +920,14 @@ AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon after Air Balloon mon switches
         ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_TACKLE); }
-        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_TACKLE, MOVE_EARTHQUAKE); }
+        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH, MOVE_EARTHQUAKE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
-        TURN { SWITCH(player, 0); EXPECT_MOVE(opponent, MOVE_TACKLE); }
-        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); SEND_OUT(player, 1); }
+        TURN { SWITCH(player, 0); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); SEND_OUT(player, 1); }
     }
 }
 

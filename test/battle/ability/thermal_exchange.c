@@ -24,9 +24,9 @@ SINGLE_BATTLE_TEST("Thermal Exchange prevents the user from getting burned when 
         PLAYER(SPECIES_BAXCALIBUR) { Ability(ABILITY_THERMAL_EXCHANGE); }
         OPPONENT(SPECIES_PONYTA) { Ability(ABILITY_FLAME_BODY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
             STATUS_ICON(player, burn: TRUE);

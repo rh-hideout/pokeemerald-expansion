@@ -32,6 +32,9 @@
 #define AI_FLAG_PREDICT_INCOMING_MON        (1 << 24)  // AI will score against the predicting incoming mon if it predicts the player to switch. Requires AI_FLAG_PREDICT_SWITCH
 #define AI_FLAG_PP_STALL_PREVENTION         (1 << 25)  // AI keeps track of the player's switches where the incoming mon is immune to the chosen move
 
+// Flags at and after 32 need different formatting, as in
+// #define AI_FLAG_PLACEHOLDER      ((u64)1 << 32)
+
 #define AI_FLAG_COUNT                       26
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
@@ -40,10 +43,10 @@
 #define AI_FLAG_PREDICTION            (AI_FLAG_PREDICT_SWITCH | AI_FLAG_PREDICT_INCOMING_MON)
 
 // 'other' ai logic flags
-#define AI_FLAG_DYNAMIC_FUNC          (1 << 28)  // Create custom AI functions for specific battles via "setdynamicaifunc" cmd
-#define AI_FLAG_ROAMING               (1 << 29)
-#define AI_FLAG_SAFARI                (1 << 30)
-#define AI_FLAG_FIRST_BATTLE          (1 << 31)
+#define AI_FLAG_DYNAMIC_FUNC          ((u64)1 << 60)  // Create custom AI functions for specific battles via "setdynamicaifunc" cmd
+#define AI_FLAG_ROAMING               ((u64)1 << 61)
+#define AI_FLAG_SAFARI                ((u64)1 << 62)
+#define AI_FLAG_FIRST_BATTLE          ((u64)1 << 63)
 
 #define AI_SCORE_DEFAULT 100 // Default score for all AI moves.
 

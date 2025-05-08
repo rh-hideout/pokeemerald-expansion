@@ -737,10 +737,10 @@ void AnimTask_TectonicRageRollout(u8 taskId)
 
     task = &gTasks[taskId];
 
-    var0 = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
-    var1 = GetBattlerSpriteCoord(gBattleAnimAttacker, 1) + 24;
-    var2 = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
-    var3 = GetBattlerSpriteCoord(gBattleAnimTarget, 1) + 24;
+    var0 = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    var1 = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + 24;
+    var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;

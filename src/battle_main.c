@@ -2669,7 +2669,7 @@ void SpriteCallbackDummy_2(struct Sprite *sprite)
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
 {
     u8 battler = sprite->sBattler;
-    u32 personality = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_PERSONALITY);
+    u32 personality = GetMonData(GetPartyBattlerData(battler), MON_DATA_PERSONALITY);
     u16 species;
     u8 yOffset;
 
@@ -3198,7 +3198,7 @@ void SwitchInClearSetData(u32 battler)
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->battlerState[battler].lastMoveFailed = FALSE;
     gBattleStruct->palaceFlags &= ~(1u << battler);
-    gBattleStruct->canPickupItem &= ~(1u << battler);
+    gBattleStruct->battlerState[battler].canPickupItem = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3402,7 +3402,7 @@ static void DoBattleIntro(void)
     s32 i;
     u32 battler;
 
-    switch (gBattleStruct->introState)
+    switch ((enum BattleIntroStates)gBattleStruct->introState)
     {
     case BATTLE_INTRO_STATE_GET_MON_DATA:
         battler = gBattleCommunication[1];
@@ -3480,7 +3480,7 @@ static void DoBattleIntro(void)
                 {
                     BtlController_EmitLoadMonSprite(battler, BUFFER_A);
                     MarkBattlerForControllerExec(battler);
-                    gBattleResults.lastOpponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
+                    gBattleResults.lastOpponentSpecies = GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES, NULL);
                 }
                 break;
             case B_POSITION_PLAYER_RIGHT:
@@ -3503,7 +3503,7 @@ static void DoBattleIntro(void)
                 {
                     BtlController_EmitLoadMonSprite(battler, BUFFER_A);
                     MarkBattlerForControllerExec(battler);
-                    gBattleResults.lastOpponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
+                    gBattleResults.lastOpponentSpecies = GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES, NULL);
                 }
                 break;
             }
@@ -3730,7 +3730,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     if (gBattleControllerExecFlags)
         return;
 
-    switch (gBattleStruct->eventsBeforeFirstTurnState)
+    switch ((enum FirstTurnEventsStates)gBattleStruct->eventsBeforeFirstTurnState)
     {
     case FIRST_TURN_EVENTS_START:
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
@@ -3739,8 +3739,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             for (i = 0; i < gBattlersCount; i++)
             {
                 gBattleStruct->monToSwitchIntoId[i] = PARTY_SIZE; // Included here because switches can happen before during set ups (eg. eject pack)
-                struct Pokemon *party = GetBattlerParty(i);
-                struct Pokemon *mon = &party[gBattlerPartyIndexes[i]];
+                struct Pokemon *mon = GetPartyBattlerData(i);
                 if (!IsBattlerAlive(i) || gBattleMons[i].species == SPECIES_NONE || GetMonData(mon, MON_DATA_IS_EGG))
                     gAbsentBattlerFlags |= 1u << i;
             }
@@ -5080,7 +5079,7 @@ static void TurnValuesCleanUp(bool8 var0)
                 if (gDisableStructs[i].rechargeTimer == 0)
                     gBattleMons[i].status2 &= ~STATUS2_RECHARGE;
             }
-            gBattleStruct->canPickupItem &= ~(1u << i);
+            gBattleStruct->battlerState[i].canPickupItem = FALSE;
         }
 
         if (gDisableStructs[i].substituteHP == 0)
@@ -5508,13 +5507,13 @@ static void HandleEndTurn_FinishBattle(void)
                 {
                     if (gBattleResults.playerMon1Species == SPECIES_NONE)
                     {
-                        gBattleResults.playerMon1Species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
-                        GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_NICKNAME, gBattleResults.playerMon1Name);
+                        gBattleResults.playerMon1Species = GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES, NULL);
+                        GetMonData(GetPartyBattlerData(battler), MON_DATA_NICKNAME, gBattleResults.playerMon1Name);
                     }
                     else
                     {
-                        gBattleResults.playerMon2Species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
-                        GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_NICKNAME, gBattleResults.playerMon2Name);
+                        gBattleResults.playerMon2Species = GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES, NULL);
+                        GetMonData(GetPartyBattlerData(battler), MON_DATA_NICKNAME, gBattleResults.playerMon2Name);
                     }
                 }
                 else if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
@@ -6028,7 +6027,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
     gBattleStruct->ateBoost[battler] = FALSE;
     gSpecialStatuses[battler].gemBoost = FALSE;
 
-    moveType = GetDynamicMoveType(&GetBattlerParty(battler)[gBattlerPartyIndexes[battler]],
+    moveType = GetDynamicMoveType(GetPartyBattlerData(battler),
                                   move,
                                   battler,
                                   &gBattleStruct->ateBoost[battler]);

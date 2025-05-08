@@ -1581,7 +1581,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 
 void AnimTask_VoltSwitch(struct Sprite* sprite)
 {
-	InitSpritePosToAnimAttacker(sprite, 0);
+	InitSpritePosToAnimAttacker(sprite, FALSE);
 
 	if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
 		gBattleAnimArgs[2] = -gBattleAnimArgs[2];

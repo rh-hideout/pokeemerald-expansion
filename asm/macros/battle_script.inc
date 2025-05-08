@@ -1954,10 +1954,6 @@
 	various BS_ATTACKER, VARIOUS_TRY_ACTIVATE_SOULHEART
 	.endm
 
-	.macro tryactivatefellstinger battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_FELL_STINGER
-	.endm
-
 	.macro playmoveanimation battler:req, move:req
 	various \battler, VARIOUS_PLAY_MOVE_ANIMATION
 	.2byte \move

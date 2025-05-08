@@ -3,6 +3,14 @@
 
 #include "battle_controllers.h"
 
+// used for sBattlerCoords and sBattlerHealthboxCoords
+enum BattleCoordTypes
+{
+    BATTLE_COORDS_SINGLES,
+    BATTLE_COORDS_DOUBLES,
+    BATTLE_COORDS_COUNT,
+};
+
 enum
 {
     HP_CURRENT,
@@ -100,7 +108,7 @@ enum
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
 
-u32 WhichBattleCoords(u32 battlerId);
+enum BattleCoordTypes GetBattlerCoordsIndex(u32 battler);
 u8 CreateBattlerHealthboxSprites(u8 battler);
 u8 CreateSafariPlayerHealthboxSprites(void);
 void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 currVal, s32 receivedValue);
