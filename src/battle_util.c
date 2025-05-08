@@ -10710,8 +10710,10 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
         modifier = UQ_4_12(1.0);
     }
 
+    // Iron Ball ignores type modifiers for flying-type mons if it is the only source of grounding
     if (moveType == TYPE_GROUND
         && IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING)
+        && GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_IRON_BALL
         && !IsBattlerGroundedInverseCheck(battlerDef, TRUE, TRUE)
         && !FlagGet(B_FLAG_INVERSE_BATTLE)
         && B_IRON_BALL >= GEN_5)
