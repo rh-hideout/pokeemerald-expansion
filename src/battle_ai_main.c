@@ -375,8 +375,9 @@ static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
 
 void Ai_InitPartyStruct(void)
 {
-    u32 i;
+    u32 i, j;
     bool32 isOmniscient = (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_OMNISCIENT) || (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_OMNISCIENT);
+    bool32 assumeStab = (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STAB) || (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STAB);
     struct Pokemon *mon;
 
     AI_PARTY->count[B_SIDE_PLAYER] = CalculatePlayerPartyCount();
@@ -402,13 +403,23 @@ void Ai_InitPartyStruct(void)
 
         if (isOmniscient)
         {
-            u32 j;
             mon = &gPlayerParty[i];
             AI_PARTY->mons[B_SIDE_PLAYER][i].item = GetMonData(mon, MON_DATA_HELD_ITEM);
             AI_PARTY->mons[B_SIDE_PLAYER][i].heldEffect = ItemId_GetHoldEffect(AI_PARTY->mons[B_SIDE_PLAYER][i].item);
             AI_PARTY->mons[B_SIDE_PLAYER][i].ability = GetMonAbility(mon);
             for (j = 0; j < MAX_MON_MOVES; j++)
                 AI_PARTY->mons[B_SIDE_PLAYER][i].moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
+        }
+        else if (assumeStab)
+        {
+            u32 playerMove;
+            mon = &gPlayerParty[i];
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                playerMove = GetMonData(mon, MON_DATA_MOVE1 + j);
+                if (IsSpeciesOfType(GetMonData(mon, MON_DATA_SPECIES), GetMoveType(playerMove)))
+                    AI_PARTY->mons[B_SIDE_PLAYER][i].moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
+            }
         }
     }
 }

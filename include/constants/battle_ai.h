@@ -31,6 +31,7 @@
 #define AI_FLAG_PREDICT_SWITCH              (1 << 23)  // AI will predict the player's switches and switchins based on how it would handle the situation. Recommend using AI_FLAG_OMNISCIENT
 #define AI_FLAG_PREDICT_INCOMING_MON        (1 << 24)  // AI will score against the predicting incoming mon if it predicts the player to switch. Requires AI_FLAG_PREDICT_SWITCH
 #define AI_FLAG_PP_STALL_PREVENTION         (1 << 25)  // AI keeps track of the player's switches where the incoming mon is immune to the chosen move
+#define AI_FLAG_ASSUME_STAB                 (1 << 26)  // AI knows player's STAB moves, but nothing else. Restricted version of AI_FLAG_OMNISCIENT.
 
 // Flags at and after 32 need different formatting, as in
 // #define AI_FLAG_PLACEHOLDER      ((u64)1 << 32)
