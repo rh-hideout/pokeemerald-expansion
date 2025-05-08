@@ -2252,3 +2252,8 @@ static const u16 sEmojinnFormSpeciesIdTable[] = {
     SPECIES_EMOJINN_SOBBING,
     FORM_SPECIES_END,
 };
+static const u16 sShiribikoFormSpeciesIdTable[] = {
+SPECIES_SHIRIBIKO_PLAYING,
+SPECIES_SHIRIBIKO_ULTRA,
+FORM_SPECIES_END,
+};

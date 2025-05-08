@@ -1372,5 +1372,12 @@ static const struct FormChange sEmojinnFormChangeTable[] = {
     {FORM_CHANGE_ITEM_HOLD,               SPECIES_EMOJINN_JOYFUL,      ITEM_CORNERSTONE_MASK},
     {FORM_CHANGE_TERMINATOR},
 };
+
+static const struct FormChange sShiribikoFormChangeTable[] = {
+    {FORM_CHANGE_BATTLE_SWITCH, SPECIES_SHIRIBIKO_PLAYING},
+    {FORM_CHANGE_FAINT,         SPECIES_SHIRIBIKO_PLAYING},
+    {FORM_CHANGE_END_BATTLE,    SPECIES_SHIRIBIKO_PLAYING},
+    {FORM_CHANGE_TERMINATOR},
+};
 #undef WHEN_LEARNED
 #undef WHEN_FORGOTTEN

@@ -14908,6 +14908,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Shiribiko)
        .levelUpLearnset = sShiribikoLevelUpLearnset,
+       .formSpeciesIdTable = sShiribikoFormSpeciesIdTable,
+       .formChangeTable = sShiribikoFormChangeTable,
     },
     
         [SPECIES_SHIRIBIKO_ULTRA] =
@@ -14962,6 +14964,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Shiribiko)
        .levelUpLearnset = sShiribikoLevelUpLearnset,
+       .formSpeciesIdTable = sShiribikoFormSpeciesIdTable,
+       .formChangeTable = sShiribikoFormChangeTable,
     },
     
         [SPECIES_NYANONITE] =
