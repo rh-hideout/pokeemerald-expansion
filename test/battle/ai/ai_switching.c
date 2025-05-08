@@ -1174,6 +1174,6 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will use pivot move to activate Palafin's Z
         OPPONENT(SPECIES_PALAFIN_ZERO) { Moves(MOVE_FLIP_TURN); }
         OPPONENT(SPECIES_FINIZEN);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_FLIP_TURN); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
