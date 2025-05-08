@@ -2907,6 +2907,12 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
 
     battlerToSwitch = gBattleStruct->AI_monToSwitchIntoId[battlerAtk];
 
+    // Palafin always wants to activate Zero to Hero
+    if (gBattleMons[battlerAtk].species == SPECIES_PALAFIN_ZERO
+        && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
+        && CountUsablePartyMons(battlerAtk) != 0)
+        return SHOULD_PIVOT;
+
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
