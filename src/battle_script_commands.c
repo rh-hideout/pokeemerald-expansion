@@ -2095,7 +2095,6 @@ static void Cmd_adjustdamage(void)
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveEffect = GetMoveEffect(gCurrentMove);
-    u32 movePower = GetMovePower(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -2203,8 +2202,6 @@ static void Cmd_adjustdamage(void)
         && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && gBattleMons[gBattlerAttacker].item
-        && moveEffect != EFFECT_PLEDGE
-        && movePower > 1
         && gCurrentMove != MOVE_STRUGGLE)
     {
         BattleScriptPushCursor();
