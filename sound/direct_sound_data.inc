@@ -7134,6 +7134,14 @@ Cry_Mafiadon::
 	.align 2	
 Cry_Shiribiko::
 	.incbin "sound/direct_sound_samples/cries/shiribiko.bin"
+
+	.align 2	
+Cry_Flockarrion::
+	.incbin "sound/direct_sound_samples/cries/flockarrion.bin"
+
+	.align 2	
+Cry_Sepulture::
+	.incbin "sound/direct_sound_samples/cries/sepulture.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

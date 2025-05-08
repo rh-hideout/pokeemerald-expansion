@@ -1916,8 +1916,10 @@
 #define SPECIES_SHIRIBIKO                               SPECIES_SHIRIBIKO_NORMAL
 #define SPECIES_SHIRIBIKO_PLAYING                       1798
 #define SPECIES_SHIRIBIKO_ULTRA                         1799
+#define SPECIES_FLOCKARRION                             1800
+#define SPECIES_SEPULTURE                               1801
 
-#define SPECIES_EGG (SPECIES_SHIRIBIKO_ULTRA + 1)
+#define SPECIES_EGG (SPECIES_SEPULTURE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

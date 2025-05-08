@@ -25534,6 +25534,14 @@ static const struct LevelUpMove sKorokamiLevelUpLearnset[] = {
     LEVEL_UP_MOVE(66, MOVE_CRUNCH), ///////OVERBITE
     LEVEL_UP_END
    };
+static const struct LevelUpMove sFlockarrionLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_GUST), 
+    LEVEL_UP_END
+   };
+static const struct LevelUpMove sSepultureLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_GUST), 
+    LEVEL_UP_END
+   };
 static const struct LevelUpMove sGanglythonLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_TACKLE),
     LEVEL_UP_MOVE( 1, MOVE_PSYWAVE),

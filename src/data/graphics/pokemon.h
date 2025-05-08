@@ -23568,6 +23568,20 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Korokami[] = INCBIN_U8("graphics/pokemon/korokami/icon.4bpp");
    const u8 gMonFootprint_Korokami[] = INCBIN_U8("graphics/pokemon/korokami/footprint.1bpp");
 
+   const u32 gMonFrontPic_Flockarrion[] = INCBIN_U32("graphics/pokemon/flockarrion/front.4bpp.lz");
+   const u32 gMonBackPic_Flockarrion[] = INCBIN_U32("graphics/pokemon/flockarrion/back.4bpp.lz");
+   const u32 gMonPalette_Flockarrion[] = INCBIN_U32("graphics/pokemon/flockarrion/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Flockarrion[] = INCBIN_U32("graphics/pokemon/flockarrion/shiny.gbapal.lz");
+   const u8 gMonIcon_Flockarrion[] = INCBIN_U8("graphics/pokemon/flockarrion/icon.4bpp");
+   const u8 gMonFootprint_Flockarrion[] = INCBIN_U8("graphics/pokemon/flockarrion/footprint.1bpp");
+
+   const u32 gMonFrontPic_Sepulture[] = INCBIN_U32("graphics/pokemon/sepulture/front.4bpp.lz");
+   const u32 gMonBackPic_Sepulture[] = INCBIN_U32("graphics/pokemon/sepulture/back.4bpp.lz");
+   const u32 gMonPalette_Sepulture[] = INCBIN_U32("graphics/pokemon/sepulture/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sepulture[] = INCBIN_U32("graphics/pokemon/sepulture/shiny.gbapal.lz");
+   const u8 gMonIcon_Sepulture[] = INCBIN_U8("graphics/pokemon/sepulture/icon.4bpp");
+   const u8 gMonFootprint_Sepulture[] = INCBIN_U8("graphics/pokemon/sepulture/footprint.1bpp");
+
    const u32 gMonFrontPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/front.4bpp.lz");
    const u32 gMonBackPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/back.4bpp.lz");
    const u32 gMonPalette_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/normal.gbapal.lz");

@@ -38622,6 +38622,16 @@ static const u16 sKorokamiTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sFlockarrionTeachableLearnset[] = {
+    MOVE_FLY,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sSepultureTeachableLearnset[] = {
+    MOVE_FLY,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sGanglythonTeachableLearnset[] = {
     MOVE_U_TURN,
     MOVE_BUG_BUZZ,

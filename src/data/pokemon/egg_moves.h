@@ -6488,6 +6488,12 @@ static const u16 sKorokamiEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sSepultureEggMoveLearnset[] = {
+    MOVE_SKY_ATTACK,
+///////////////////////////////
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sGanglythonEggMoveLearnset[] = {
     MOVE_ANCIENT_POWER,
     MOVE_MOONBLAST,
