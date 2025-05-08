@@ -4574,9 +4574,9 @@ u32 GetFriendlyFireKOThreshold(u32 battler)
     return FRIENDLY_FIRE_NORMAL_THRESHOLD;
 }
 
-bool32 IsMoxieTypeAbility(u32 abilityId)
+bool32 IsMoxieTypeAbility(u32 ability)
 {
-    switch (abilityId)
+    switch (ability)
     {
     case ABILITY_MOXIE:
     case ABILITY_BEAST_BOOST:

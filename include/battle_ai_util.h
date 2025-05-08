@@ -195,7 +195,7 @@ bool32 IsWakeupTurn(u32 battler);
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
-bool32 IsMoxieTypeAbility(u32 abilityId);
+bool32 IsMoxieTypeAbility(u32 ability);
 bool32 ShouldTriggerAbility(u32 battler, u32 ability);
 
 // partner logic
