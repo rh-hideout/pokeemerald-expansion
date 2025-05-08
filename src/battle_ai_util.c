@@ -1596,19 +1596,7 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
         
         if (protectMethod == PROTECT_QUICK_GUARD)
         {
-            u32 attackerAbility = aiData->abilities[battlerAtk];
-            u32 priority = GetMovePriority(attackerMove);
-            
-            if (attackerAbility == ABILITY_GALE_WINGS && GetMoveType(attackerMove) == TYPE_FLYING 
-                && (GetGenConfig(GEN_CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battlerAtk)))
-                return TRUE;
-            
-            if (attackerAbility == ABILITY_PRANKSTER && IsBattleMoveStatus(attackerMove))
-                priority += 1;
-            
-            if (attackerAbility == ABILITY_TRIAGE && IsHealingMove(attackerMove))
-                priority += 3;
-
+            u32 priority = GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], attackerMove);
             return (priority > 0);
         }
 
