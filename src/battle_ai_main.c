@@ -3061,18 +3061,13 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // Partner will not faint.
         else {
 
-        // Triggering your ally's hold item should only be done deliberately with a spread move.
+            // Triggering your ally's hold item should only be done deliberately with a spread move.
             switch (atkPartnerHoldEffect)
             {
             case HOLD_EFFECT_WEAKNESS_POLICY:
-                if (aiData->effectiveness[battlerAtk][battlerAtkPartner][AI_THINKING_STRUCT->movesetIndex] >= UQ_4_12(2.0))
+                if (aiData->effectiveness[battlerAtk][battlerAtkPartner][AI_THINKING_STRUCT->movesetIndex] >= UQ_4_12(2.0) && isFriendlyFireOK)
                 {
-                    ADJUST_SCORE(WEAK_EFFECT);
-                    
-                    if (isFriendlyFireOK)
-                    {
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    }
+                    ADJUST_SCORE(GOOD_EFFECT);
                 }            
                 break;
             default:
