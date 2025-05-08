@@ -290,7 +290,7 @@ static void AnimTranslateWebThread_Step(struct Sprite *sprite)
 static void AnimStringWrap(struct Sprite *sprite)
 {
     SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -381,7 +381,7 @@ void AnimTranslateStinger(struct Sprite *sprite)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker))
+        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
             gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -426,7 +426,7 @@ void AnimMissileArc(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
 
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[4];

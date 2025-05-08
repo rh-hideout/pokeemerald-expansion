@@ -34,19 +34,21 @@ static void CreateBattlerTrace(struct Task *task, u8 taskId);
 
 EWRAM_DATA static union AffineAnimCmd *sAnimTaskAffineAnim = NULL;
 
-const struct UCoords8 sBattlerCoords[][MAX_BATTLERS_COUNT] =
+const struct UCoords8 sBattlerCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT] =
 {
-    { // Single battle
-        { 72, 80 },
-        { 176, 40 },
-        { 48, 40 },
-        { 112, 80 },
+    [BATTLE_COORDS_SINGLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 72, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 176, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 48, 40 },
+        [B_POSITION_OPPONENT_RIGHT] = { 112, 80 },
     },
-    { // Double battle
-        { 32, 80 },
-        { 200, 40 },
-        { 90, 88 },
-        { 152, 32 },
+    [BATTLE_COORDS_DOUBLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 32, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 200, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 90, 84 },
+        [B_POSITION_OPPONENT_RIGHT] = { 152, 32 },
     },
 };
 
@@ -99,10 +101,10 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
     {
     case BATTLER_COORD_X:
     case BATTLER_COORD_X_2:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].x;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].x;
         break;
     case BATTLER_COORD_Y:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
         break;
     case BATTLER_COORD_Y_PIC_OFFSET:
     case BATTLER_COORD_Y_PIC_OFFSET_DEFAULT:
@@ -202,7 +204,7 @@ u8 GetBattlerSpriteFinal_Y(u8 battlerId, u16 species, bool8 a3)
         offset = GetBattlerYDelta(battlerId, species);
         offset -= GetBattlerElevation(battlerId, species);
     }
-    y = offset + sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+    y = offset + sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
     if (a3)
     {
         if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
@@ -1434,21 +1436,21 @@ static u8 UNUSED GetSpritePalIdxByPosition(u8 position)
 // 2, 3 as some control variables
 void AnimSpriteOnMonPos(struct Sprite *sprite)
 {
-    bool8 var;
+    bool8 respectMonPicOffsets;
 
     if (!sprite->data[0])
     {
         if (!gBattleAnimArgs[3])
-            var = TRUE;
+            respectMonPicOffsets = TRUE;
         else
-            var = FALSE;
+            respectMonPicOffsets = FALSE;
 
         if (gBattleAnimArgs[2] == 0)
-            InitSpritePosToAnimAttacker(sprite, var);
+            InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
         else if (gBattleAnimArgs[2] == 1)
-            InitSpritePosToAnimTarget(sprite, var);
+            InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
         else if (gBattleAnimArgs[2] == 2)
-            InitSpritePosToAnimAttackerPartner(sprite, var);
+            InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
 
         sprite->data[0]++;
 
@@ -1502,7 +1504,7 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
 void AnimThrowProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
@@ -1520,32 +1522,32 @@ static void AnimThrowProjectile_Step(struct Sprite *sprite)
 
 void AnimTravelDiagonally(struct Sprite *sprite)
 {
-    bool8 r4;
+    bool8 respectOffsets;
     u8 battlerId, coordType;
 
     if (!gBattleAnimArgs[6])
     {
-        r4 = TRUE;
+        respectOffsets = TRUE;
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     }
     else
     {
-        r4 = FALSE;
+        respectOffsets = FALSE;
         coordType = BATTLER_COORD_Y;
     }
     if (gBattleAnimArgs[5] == ANIM_ATTACKER)
     {
-        InitSpritePosToAnimAttacker(sprite, r4);
+        InitSpritePosToAnimAttacker(sprite, respectOffsets);
         battlerId = gBattleAnimAttacker;
     }
     else
     {
-        InitSpritePosToAnimTarget(sprite, r4);
+        InitSpritePosToAnimTarget(sprite, respectOffsets);
         battlerId = gBattleAnimTarget;
     }
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    InitSpritePosToAnimTarget(sprite, r4);
+    InitSpritePosToAnimTarget(sprite, respectOffsets);
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(battlerId, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(battlerId, coordType) + gBattleAnimArgs[3];
@@ -2193,7 +2195,7 @@ u8 CreateInvisibleSpriteCopy(int battlerId, u8 spriteId, int species)
 void AnimTranslateLinearAndFlicker_Flipped(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
     {
         sprite->x -= gBattleAnimArgs[0];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
@@ -2238,7 +2240,7 @@ void AnimTranslateLinearAndFlicker(struct Sprite *sprite)
 void AnimSpinningSparkle(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];

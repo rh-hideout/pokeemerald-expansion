@@ -83,7 +83,7 @@ struct TrainerMon
 
 struct Trainer
 {
-    /*0x00*/ u32 aiFlags;
+    /*0x00*/ u64 aiFlags;
     /*0x04*/ const struct TrainerMon *party;
     /*0x08*/ u16 items[MAX_TRAINER_ITEMS];
     /*0x10*/ u8 trainerClass;
@@ -295,7 +295,7 @@ static inline const struct TrainerMon *GetTrainerPartyFromId(u16 trainerId)
     return gTrainers[difficulty][sanitizedTrainerId].party;
 }
 
-static inline const bool32 GetTrainerAIFlagsFromId(u16 trainerId)
+static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
 {
     u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
