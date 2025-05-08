@@ -213,7 +213,7 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, u32 mo
 bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 PartnerMoveActivatesSleepClause(u32 move);
 bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move);
-u32 FriendlyFireHitsToKO(u32 battler);
+u32 GetFriendlyFireKOThreshold(u32 battler);
 bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove);
 
 // party logic

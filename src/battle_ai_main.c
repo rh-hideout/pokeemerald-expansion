@@ -2866,7 +2866,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
-    u32 friendlyFireThreshold = FriendlyFireHitsToKO(battlerAtk);
+    u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING);
     bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, AI_THINKING_STRUCT->movesetIndex, AI_ATTACKING) 
         && !partnerProtecting && IsBattlerAlive(battlerAtkPartner);
@@ -3056,31 +3056,35 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 RETURN_SCORE_MINUS(10);
             }
-        } 
+        }
+        
+        // Partner will not faint.
+        else {
 
-    // Triggering your ally's hold item should only be done deliberately with a spread move.
-        switch (atkPartnerHoldEffect)
-        {
-        case HOLD_EFFECT_WEAKNESS_POLICY:
-            if (aiData->effectiveness[battlerAtk][battlerAtkPartner][AI_THINKING_STRUCT->movesetIndex] >= UQ_4_12(2.0))
+        // Triggering your ally's hold item should only be done deliberately with a spread move.
+            switch (atkPartnerHoldEffect)
             {
-                ADJUST_SCORE(WEAK_EFFECT);
-                
-                if (isFriendlyFireOK)
+            case HOLD_EFFECT_WEAKNESS_POLICY:
+                if (aiData->effectiveness[battlerAtk][battlerAtkPartner][AI_THINKING_STRUCT->movesetIndex] >= UQ_4_12(2.0))
                 {
                     ADJUST_SCORE(WEAK_EFFECT);
-                }
-            }            
-            break;
-        default:
-            break;
+                    
+                    if (isFriendlyFireOK)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                }            
+                break;
+            default:
+                break;
+            }
         }
     }
 
     // check specific target
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
     {
-        bool32 isMoveRelevant = TRUE;
+        bool32 isMoveAffectedByPartnerAbility = TRUE;
 
         if (wouldPartnerFaint)
         {
@@ -3105,15 +3109,11 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         }
                         RETURN_SCORE_PLUS(GOOD_EFFECT);
                     }
-                    // Multi-hit moves have a higher chance of critting
-                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
-                    {
-                        ADJUST_SCORE(WEAK_EFFECT);
-                    }
+                // todo: figuring out a non-guaranteed crit roll that's useful
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_LIGHTNING_ROD:
@@ -3141,7 +3141,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_EARTH_EATER:
@@ -3159,7 +3159,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;  // handled in AI_HPAware
             case ABILITY_DRY_SKIN:
@@ -3187,7 +3187,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_WATER_COMPACTION:
@@ -3206,7 +3206,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_STEAM_ENGINE:
@@ -3221,7 +3221,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_THERMAL_EXCHANGE:
@@ -3243,7 +3243,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_FLASH_FIRE:
@@ -3261,7 +3261,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_SAP_SIPPER:
@@ -3279,7 +3279,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_JUSTIFIED:
@@ -3301,7 +3301,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_RATTLED:
@@ -3317,7 +3317,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_CONTRARY:
@@ -3333,7 +3333,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    isMoveRelevant = FALSE;
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             }
@@ -3344,7 +3344,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         {
             if (wouldPartnerFaint)
             {
-                RETURN_SCORE_PLUS(-30);
+                RETURN_SCORE_MINUS(30);
             }
         
             switch (effect)
@@ -3487,7 +3487,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             } // attacker move effects
         } // check partner protecting
 
-        if ((isMoveRelevant && (score <= AI_SCORE_DEFAULT)) || !isMoveRelevant)
+        if ((isMoveAffectedByPartnerAbility && (score <= AI_SCORE_DEFAULT)) || !isMoveAffectedByPartnerAbility)
         {
             RETURN_SCORE_MINUS(10);
         }
@@ -3550,7 +3550,7 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING);
-    u32 friendlyFireThreshold = FriendlyFireHitsToKO(battlerAtk);
+    u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     return (IsDoubleBattle()
          && noOfHitsToFaintPartner != 0 // Immunity check
          && IsBattlerAlive(partnerBattler)
