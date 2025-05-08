@@ -657,13 +657,13 @@ static void AnimUnusedCirclingShock(struct Sprite *sprite)
     sprite->callback = TranslateSpriteInCircle;
 }
 
-// arg 0:
-// arg 1:
-// arg 2:
+// arg 0: index to sine table
+// arg 1: something multiplied with
+// arg 2: index to sine table
 // arg 3: duration
 // arg 4: target
-// arg 5:
-// arg 6:
+// arg 5: 0 or non-0 determines which set of battler sprite coords to use
+// arg 6: increase battler sprite priority by 1
 void AnimSparkElectricity(struct Sprite *sprite)
 {
     u8 battler;
@@ -1581,7 +1581,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 
 void AnimTask_VoltSwitch(struct Sprite* sprite)
 {
-	InitSpritePosToAnimAttacker(sprite, 0);
+	InitSpritePosToAnimAttacker(sprite, FALSE);
 
 	if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
 		gBattleAnimArgs[2] = -gBattleAnimArgs[2];

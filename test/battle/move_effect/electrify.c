@@ -5,34 +5,33 @@ SINGLE_BATTLE_TEST("Electrify makes the target's move Electric-type for the rema
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_SANDSLASH].types[0] == TYPE_GROUND || gSpeciesInfo[SPECIES_SANDSLASH].types[1] == TYPE_GROUND);
-        ASSUME(GetMoveType(MOVE_TACKLE) != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SANDSLASH);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
     }
 }
 
 DOUBLE_BATTLE_TEST("Electrify makes the target's move Electric-type for the remainder of the turn (double move)")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_SANDSLASH].types[0] == TYPE_GROUND || gSpeciesInfo[SPECIES_SANDSLASH].types[1] == TYPE_GROUND);
-        ASSUME(GetMoveType(MOVE_TACKLE) != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_SANDSLASH);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_TACKLE, target:opponentLeft); MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft); MOVE(opponentRight, MOVE_CELEBRATE); }
+        TURN { MOVE(opponentLeft, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_SCRATCH, target:opponentLeft); MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentLeft);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerRight);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
     }
 }
 
@@ -53,9 +52,8 @@ SINGLE_BATTLE_TEST("Electrify can change status moves to Electric-type")
     }
 }
 
-SINGLE_BATTLE_TEST("Electrify changes the type of foreseen moves")
+SINGLE_BATTLE_TEST("Electrify changes the type of foreseen moves when hitting its target")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_SANDSLASH].types[0] == TYPE_GROUND || gSpeciesInfo[SPECIES_SANDSLASH].types[1] == TYPE_GROUND);
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
@@ -63,12 +61,12 @@ SINGLE_BATTLE_TEST("Electrify changes the type of foreseen moves")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SANDSLASH);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}
-        TURN {}
+        TURN { MOVE(opponent, MOVE_ELECTRIFY); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
         NOT HP_BAR(opponent);
     }
 }

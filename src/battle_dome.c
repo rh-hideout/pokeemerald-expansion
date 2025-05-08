@@ -537,7 +537,7 @@ static const struct CompressedSpriteSheet sTourneyTreeButtonsSpriteSheet[] =
 };
 
 // Unused
-static const struct CompressedSpritePalette sTourneyTreeButtonsSpritePal[] =
+static const struct SpritePalette sTourneyTreeButtonsSpritePal[] =
 {
     {.data = gDomeTourneyTreeButtons_Pal, .tag = TAG_BUTTONS},
     {},
@@ -2681,11 +2681,11 @@ static void Task_ShowTourneyInfoCard(u8 taskId)
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyInfoCard_Tilemap, 0x2000, 0, 1);
         DecompressAndLoadBgGfxUsingHeap(3, gDomeTourneyInfoCardBg_Tilemap, 0x800, 0, 1);
         LoadCompressedSpriteSheet(sTourneyTreeButtonsSpriteSheet);
-        LoadCompressedPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
-        LoadCompressedPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        LoadCompressedPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
+        LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
+        LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         if (mode == INFOCARD_MATCH)
-            LoadCompressedPalette(gDomeTourneyMatchCardBg_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP); // Changes the moving info card bg to orange when in match card mode
+            LoadPalette(gDomeTourneyMatchCardBg_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP); // Changes the moving info card bg to orange when in match card mode
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
         ShowBg(0);
         ShowBg(1);
@@ -3902,7 +3902,7 @@ static bool32 IsDomeHealingMove(u32 move)
     }
 }
 
-static bool32 IsDomeDefensiveMoveEffect(u32 effect)
+static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
@@ -3934,7 +3934,7 @@ static bool32 IsDomeDefensiveMoveEffect(u32 effect)
     }
 }
 
-static bool32 IsDomeRiskyMoveEffect(u32 effect)
+static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
@@ -4047,7 +4047,7 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMoveEffect(u32 effect)
+static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
@@ -4304,7 +4304,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     move = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j];
                 else
                     move = gFacilityTrainerMons[DOME_MONS[trainerTourneyId][i]].moves[j];
-                u32 effect = GetMoveEffect(move);
+                enum BattleMoveEffects effect = GetMoveEffect(move);
                 u32 accuracy = GetMoveAccuracy(move);
 
                 switch (k)
@@ -5255,9 +5255,9 @@ static void Task_ShowTourneyTree(u8 taskId)
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyLine_Gfx, 0x2000, 0, 0);
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyLineDown_Tilemap, 0x2000, 0, 1);
         DecompressAndLoadBgGfxUsingHeap(3, gDomeTourneyLineUp_Tilemap, 0x2000, 0, 1);
-        LoadCompressedPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
-        LoadCompressedPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        LoadCompressedPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
+        LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
+        LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
         ShowBg(0);
         ShowBg(1);

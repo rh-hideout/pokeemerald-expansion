@@ -304,7 +304,7 @@ void DoMoveAnim(u16 move)
     // Make sure the anim target of moves hitting everyone is at the opposite side.
     if (GetBattlerMoveTargetType(gBattlerAttacker, move) & MOVE_TARGET_FOES_AND_ALLY && IsDoubleBattle())
     {
-        while (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+        while (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         {
             if (++gBattleAnimTarget >= MAX_BATTLERS_COUNT)
                 gBattleAnimTarget = 0;
@@ -505,7 +505,7 @@ static void Cmd_loadspritegfx(void)
     sBattleAnimScriptPtr++;
     index = T1_READ_16(sBattleAnimScriptPtr);
     LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)]);
-    LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(index)]);
+    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(index)]);
     sBattleAnimScriptPtr += 2;
     AddSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
     sAnimFramesToWait = 1;
@@ -563,7 +563,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
     case MOVE_TARGET_BOTH: // all opponents
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != ignoredTgt && !IsAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
+            if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
                 targets[numTargets++] = i + MAX_BATTLERS_COUNT;
         }
         break;
@@ -1573,14 +1573,14 @@ void LoadMoveBg(u16 bgId)
         RelocateBattleBgPal(GetBattleBgPaletteNum(), decompressionBuffer, 0x100, FALSE);
         DmaCopy32(3, decompressionBuffer, (void *)BG_SCREEN_ADDR(26), 0x800);
         LZDecompressVram(gBattleAnimBackgroundTable[bgId].image, (void *)BG_SCREEN_ADDR(4));
-        LoadCompressedPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(GetBattleBgPaletteNum()), PLTT_SIZE_4BPP);
+        LoadPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(GetBattleBgPaletteNum()), PLTT_SIZE_4BPP);
         Free(decompressionBuffer);
     }
     else
     {
         LZDecompressVram(gBattleAnimBackgroundTable[bgId].tilemap, (void *)BG_SCREEN_ADDR(26));
         LZDecompressVram(gBattleAnimBackgroundTable[bgId].image, (void *)BG_CHAR_ADDR(2));
-        LoadCompressedPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+        LoadPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
     }
 }
 
@@ -2157,8 +2157,7 @@ static void Cmd_teamattack_moveback(void)
     sBattleAnimScriptPtr += 2;
 
     // Apply to double battles when attacking own side
-    if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (!IsContest() && IsDoubleBattle() && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {
@@ -2195,7 +2194,7 @@ static void Cmd_teamattack_movefwd(void)
 
     // Apply to double battles when attacking own side
     if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+     && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {
@@ -2237,7 +2236,7 @@ static void Cmd_createdragondartsprite(void)
     u8 argVar;
     u8 argsCount;
     s16 subpriority;
-    struct Pokemon *party = GetBattlerParty(gBattleAnimAttacker);
+    struct Pokemon *mon = GetPartyBattlerData(gBattleAnimAttacker);
 
     sBattleAnimScriptPtr++;
 
@@ -2254,10 +2253,10 @@ static void Cmd_createdragondartsprite(void)
 
     subpriority = GetSubpriorityForMoveAnim(argVar);
 
-    if (GetMonData(&party[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_SPECIES) == SPECIES_DRAGAPULT)
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_DRAGAPULT)
     {
         template.tileTag = ANIM_TAG_DREEPY;
-        if (IsMonShiny(&party[gBattlerPartyIndexes[gBattleAnimAttacker]]) == TRUE)
+        if (IsMonShiny(mon) == TRUE)
             template.paletteTag = ANIM_TAG_DREEPY_SHINY;
         else
             template.paletteTag = ANIM_TAG_DREEPY;

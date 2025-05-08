@@ -541,8 +541,8 @@ const struct SpriteTemplate gTwisterEmberSpriteTemplate =
 
 static void AnimLavaPlumeOrbitScatter(struct Sprite *sprite)
 {
-    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
-    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, 3);
+    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[0] = Sin(gBattleAnimArgs[0], 10);
     sprite->data[1] = Cos(gBattleAnimArgs[0], 7);
     sprite->callback = AnimLavaPlumeOrbitScatterStep;
@@ -572,6 +572,11 @@ static void AnimFireSpiralInward(struct Sprite *sprite)
 }
 
 // For the impact spread of fire sprites for moves like Blaze Kick or Fire Punch
+// args[0] - delta to mon x offset
+// args[1] - delta to mon y offset
+// args[2] - x increment
+// args[3] - y increment
+// args[4] - duration
 void AnimFireSpread(struct Sprite *sprite)
 {
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
@@ -717,7 +722,7 @@ static void AnimSunlight(struct Sprite *sprite)
 // arg 6: ? (todo: something related to which mon the pixel offsets are based on)
 static void AnimEmberFlare(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget)
+    if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget)
         && (gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)
             || gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];

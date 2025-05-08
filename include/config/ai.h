@@ -9,6 +9,7 @@
 #define SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE                   100
 #define SHOULD_SWITCH_TRUANT_PERCENTAGE                         100
 #define SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE                  100
+#define STAY_IN_STATS_RAISED                                    2  // Number of stat stages that must be raised across any stats before the AI won't switch mon out in certain cases
 
 // AI smart switching chances; if you want more complex behaviour, modify GetSwitchChance
 #define SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE                       100
@@ -21,6 +22,7 @@
 #define SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE                      100 // Only if locked into status move
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE           50
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE    100
+#define SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE                     100
 
 // AI smart switching chances for bad statuses
 #define SHOULD_SWITCH_PERISH_SONG_PERCENTAGE                    100
@@ -43,7 +45,27 @@
 #define SHOULD_SWITCH_REGENERATOR_PERCENTAGE                        50
 #define SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE           20
 
+// AI switchin considerations
+#define ALL_MOVES_BAD_STATUS_MOVES_BAD                          FALSE // If the AI has no moves that affect the target, ShouldSwitchIfAllMovesBad can prompt a switch. Enabling this config will ignore status moves that can affect the target when making this decision.
+#define AI_BAD_SCORE_THRESHOLD                                  90 // Move scores beneath this threshold are considered "bad" when deciding switching
+#define AI_GOOD_SCORE_THRESHOLD                                 100 // Move scores above this threshold are considered "good" when deciding switching
+
+// AI held item-based move scoring
+#define LOW_ACCURACY_THRESHOLD                                  75 // Moves with accuracy equal OR below this value are considered low accuracy 
+
+// AI move scoring
+#define STATUS_MOVE_FOCUS_PUNCH_CHANCE                          50 // Chance the AI will use a status move if the player's best move is Focus Punch
+
+// AI damage calc considerations
+#define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit
+#define RISKY_AI_CRIT_THRESHOLD_GEN_1                           128 // "Stat stage" at which Risky will assume it gets a crit with gen 1 mechanics (this translates to an X / 255 % crit threshold)
+
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50
+
+// AI PP Stall detection chance per roll
+#define PP_STALL_DISREGARD_MOVE_PERCENTAGE                      50
+// Score reduction if any roll for PP stall detection passes
+#define PP_STALL_SCORE_REDUCTION                                20
 
 #endif // GUARD_CONFIG_AI_H

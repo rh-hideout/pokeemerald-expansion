@@ -415,11 +415,15 @@ const struct SpriteTemplate gSyrupBombYellowShellBSpriteTemplate =
     .callback = AnimAnimSyrupBomb,
 };
 
+// args[0] - initial x
+// args[1] - initial y
+// args[2] - attacker or target
+// args[3] - affine anim number
 static void AnimGunkShotImpact(struct Sprite *sprite)
 {
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[3]);
     if (gBattleAnimArgs[2] == 0)
-        InitSpritePosToAnimAttacker(sprite, 1);
+        InitSpritePosToAnimAttacker(sprite, TRUE);
     else
         InitSpritePosToAnimTarget(sprite, TRUE);
 
@@ -427,6 +431,10 @@ static void AnimGunkShotImpact(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+// args[0] - initial attacker x
+// args[1] - initial attacker y
+// args[2] - ???
+// args[3] - some param
 static void AnimGunkShotParticles(struct Sprite *sprite)
 {
     u16 retArg;
@@ -434,9 +442,9 @@ static void AnimGunkShotParticles(struct Sprite *sprite)
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[0] = 30;
     sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, 3);
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     InitAnimLinearTranslation(sprite);
     sprite->data[5] = 0xD200 / sprite->data[0];
     sprite->data[7] = gBattleAnimArgs[3];

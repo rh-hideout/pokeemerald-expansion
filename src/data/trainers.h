@@ -303,7 +303,7 @@
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 196
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 197
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 198
@@ -555,7 +555,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 294
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 295
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 296
@@ -1007,7 +1007,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 474
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 475
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 476
@@ -1041,7 +1041,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 487
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 488
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 489
@@ -1075,7 +1075,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 500
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 501
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 502
@@ -1229,7 +1229,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_ADMIN_F,
         .encounterMusic_gender =
 #line 561
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 562
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 563
@@ -1274,7 +1274,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_ADMIN_F,
         .encounterMusic_gender =
 #line 578
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 579
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 580
@@ -1375,7 +1375,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 617
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 618
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 619
@@ -1409,7 +1409,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 630
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 631
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 632
@@ -1454,7 +1454,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 647
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 648
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 649
@@ -1564,7 +1564,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 689
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 690
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 691
@@ -1609,7 +1609,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 706
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 707
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 708
@@ -1654,7 +1654,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 723
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 724
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 725
@@ -1710,7 +1710,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 744
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 745
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 746
@@ -1766,7 +1766,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 765
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 766
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 767
@@ -2421,7 +2421,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1039
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1040
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1041
@@ -2466,7 +2466,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1056
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1057
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1058
@@ -2500,7 +2500,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1069
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1070
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1071
@@ -2534,7 +2534,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1082
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1083
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1084
@@ -2579,7 +2579,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1099
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1100
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1101
@@ -2624,7 +2624,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1116
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1117
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1118
@@ -2669,7 +2669,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 1133
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1134
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 1135
@@ -3953,7 +3953,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1656
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1657
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1658
@@ -3994,7 +3994,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1672
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1673
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1674
@@ -4036,7 +4036,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1689
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1690
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1691
@@ -4077,7 +4077,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1705
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1706
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1707
@@ -4156,7 +4156,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1739
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1740
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1741
@@ -4203,7 +4203,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1757
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1758
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1759
@@ -4261,7 +4261,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1779
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1780
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1781
@@ -4297,7 +4297,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1793
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1794
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1795
@@ -4333,7 +4333,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1807
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1808
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1809
@@ -4369,7 +4369,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1821
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1822
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1823
@@ -4427,7 +4427,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1843
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1844
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1845
@@ -4474,7 +4474,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1861
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1862
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1863
@@ -4532,7 +4532,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1883
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1884
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1885
@@ -4590,7 +4590,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1905
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1906
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1907
@@ -4648,7 +4648,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1927
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1928
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1929
@@ -4706,7 +4706,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 1949
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1950
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 1951
@@ -4764,7 +4764,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 1971
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1972
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 1973
@@ -4809,7 +4809,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 1988
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 1989
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 1990
@@ -4854,7 +4854,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2005
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2006
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2007
@@ -4899,7 +4899,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2022
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2023
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2024
@@ -4933,7 +4933,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2035
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2036
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2037
@@ -4967,7 +4967,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2048
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2049
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2050
@@ -5012,7 +5012,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2065
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2066
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2067
@@ -5057,7 +5057,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2082
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2083
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2084
@@ -5102,7 +5102,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 2099
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2100
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 2101
@@ -5158,7 +5158,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2120
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2121
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2122
@@ -5196,7 +5196,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2134
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2135
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2136
@@ -5315,7 +5315,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2181
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2182
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2183
@@ -5358,7 +5358,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2197
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2198
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2199
@@ -5396,7 +5396,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2211
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2212
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2213
@@ -5434,7 +5434,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2225
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2226
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2227
@@ -5472,7 +5472,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2239
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2240
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2241
@@ -5510,7 +5510,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2253
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2254
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2255
@@ -5548,7 +5548,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 2267
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2268
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2269
@@ -5593,7 +5593,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2285
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2286
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2287
@@ -5627,7 +5627,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2298
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2299
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2300
@@ -5661,7 +5661,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2311
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2312
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2313
@@ -5695,7 +5695,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2324
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2325
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2326
@@ -5754,7 +5754,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2349
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2350
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2351
@@ -5788,7 +5788,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2362
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2363
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2364
@@ -5822,7 +5822,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2375
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2376
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2377
@@ -5898,7 +5898,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2407
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2408
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2409
@@ -5943,7 +5943,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2424
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2425
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2426
@@ -6002,7 +6002,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2449
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2450
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2451
@@ -6061,7 +6061,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2474
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2475
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2476
@@ -6120,7 +6120,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2499
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2500
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2501
@@ -6215,7 +6215,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 2538
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2539
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 2540
@@ -6479,7 +6479,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 2642
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2643
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 2644
@@ -6556,7 +6556,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAGMA_GRUNT_F,
         .encounterMusic_gender =
 #line 2672
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 2673
             TRAINER_ENCOUNTER_MUSIC_MAGMA,
 #line 2674
@@ -8342,7 +8342,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 3385
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 3386
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 3387
@@ -9414,7 +9414,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 3814
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 3815
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 3816
@@ -10595,7 +10595,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4277
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4278
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4279
@@ -10633,7 +10633,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4291
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4292
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4293
@@ -10667,7 +10667,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4304
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4305
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4306
@@ -10701,7 +10701,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4317
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4318
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4319
@@ -10735,7 +10735,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4330
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4331
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4332
@@ -10791,7 +10791,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4351
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4352
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4353
@@ -10836,7 +10836,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4368
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4369
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4370
@@ -10881,7 +10881,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4385
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4386
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4387
@@ -10926,7 +10926,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4402
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4403
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4404
@@ -10971,7 +10971,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4419
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4420
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4421
@@ -11016,7 +11016,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 4436
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4437
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 4438
@@ -11505,7 +11505,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_ELITE_FOUR_PHOEBE,
         .encounterMusic_gender =
 #line 4642
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4643
             TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR,
 #line 4644
@@ -11624,7 +11624,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_ELITE_FOUR_GLACIA,
         .encounterMusic_gender =
 #line 4693
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4694
             TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR,
 #line 4695
@@ -11860,7 +11860,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_ROXANNE,
         .encounterMusic_gender =
 #line 4795
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4796
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 4797
@@ -12117,7 +12117,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_FLANNERY,
         .encounterMusic_gender =
 #line 4905
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4906
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 4907
@@ -12313,7 +12313,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_WINONA,
         .encounterMusic_gender =
 #line 4989
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 4990
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 4991
@@ -12945,7 +12945,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5250
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5251
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5252
@@ -12979,7 +12979,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5263
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5264
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5265
@@ -13024,7 +13024,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5280
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5281
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5282
@@ -13069,7 +13069,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5297
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5298
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5299
@@ -13114,7 +13114,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5314
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5315
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5316
@@ -13159,7 +13159,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SCHOOL_KID_F,
         .encounterMusic_gender =
 #line 5331
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5332
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 5333
@@ -13899,7 +13899,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5632
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5633
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5634
@@ -13935,7 +13935,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5645
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5646
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5647
@@ -13971,7 +13971,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5658
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5659
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5660
@@ -14033,7 +14033,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5679
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5680
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5681
@@ -14082,7 +14082,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5696
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5697
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5698
@@ -14131,7 +14131,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5713
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5714
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5715
@@ -14180,7 +14180,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5730
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5731
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5732
@@ -14229,7 +14229,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 5747
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5748
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 5749
@@ -14466,7 +14466,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5845
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5846
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5847
@@ -14507,7 +14507,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5862
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5863
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5864
@@ -14552,7 +14552,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5879
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5880
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5881
@@ -14597,7 +14597,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5896
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5897
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5898
@@ -14642,7 +14642,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5913
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5914
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5915
@@ -14687,7 +14687,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 5930
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 5931
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 5932
@@ -15034,7 +15034,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 6072
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6073
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 6074
@@ -16662,7 +16662,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6720
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6721
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6722
@@ -16696,7 +16696,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6733
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6734
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6735
@@ -16752,7 +16752,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6754
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6755
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6756
@@ -16786,7 +16786,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6767
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6768
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6769
@@ -16820,7 +16820,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6780
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6781
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6782
@@ -16854,7 +16854,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6793
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6794
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6795
@@ -17048,7 +17048,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6871
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6872
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6873
@@ -17082,7 +17082,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6884
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6885
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6886
@@ -17116,7 +17116,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6897
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6898
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6899
@@ -17150,7 +17150,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6910
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6911
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6912
@@ -17184,7 +17184,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 6923
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 6924
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 6925
@@ -17550,7 +17550,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7069
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7070
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7071
@@ -17584,7 +17584,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7082
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7083
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7084
@@ -17629,7 +17629,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7099
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7100
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7101
@@ -17663,7 +17663,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7112
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7113
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7114
@@ -17697,7 +17697,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7125
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7126
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7127
@@ -17742,7 +17742,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7142
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7143
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7144
@@ -17776,7 +17776,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7155
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7156
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7157
@@ -17810,7 +17810,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7168
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7169
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7170
@@ -17844,7 +17844,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 7181
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7182
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 7183
@@ -18929,7 +18929,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 7611
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7612
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 7613
@@ -18984,7 +18984,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 7632
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7633
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 7634
@@ -19482,7 +19482,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7838
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7839
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7840
@@ -19516,7 +19516,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7851
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7852
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7853
@@ -19550,7 +19550,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7864
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7865
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7866
@@ -19595,7 +19595,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7881
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7882
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7883
@@ -19629,7 +19629,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7894
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7895
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7896
@@ -19663,7 +19663,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7907
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7908
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7909
@@ -19708,7 +19708,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7924
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7925
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7926
@@ -19753,7 +19753,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7941
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7942
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7943
@@ -19798,7 +19798,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 7958
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7959
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 7960
@@ -19843,7 +19843,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 7975
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7976
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 7977
@@ -19884,7 +19884,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 7992
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 7993
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 7994
@@ -19929,7 +19929,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 8009
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8010
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 8011
@@ -19970,7 +19970,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 8026
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8027
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 8028
@@ -20011,7 +20011,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 8043
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8044
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 8045
@@ -20052,7 +20052,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 8060
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8061
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 8062
@@ -20111,7 +20111,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 8085
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8086
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 8087
@@ -20170,7 +20170,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8110
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8111
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8112
@@ -20215,7 +20215,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8127
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8128
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8129
@@ -20249,7 +20249,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8140
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8141
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8142
@@ -20283,7 +20283,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8153
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8154
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8155
@@ -20328,7 +20328,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8170
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8171
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8172
@@ -20362,7 +20362,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8183
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8184
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8185
@@ -20407,7 +20407,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8200
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8201
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8202
@@ -20441,7 +20441,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8213
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8214
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8215
@@ -20497,7 +20497,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8234
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8235
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8236
@@ -20531,7 +20531,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8247
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8248
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8249
@@ -20565,7 +20565,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8260
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8261
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8262
@@ -20599,7 +20599,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8273
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8274
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8275
@@ -20633,7 +20633,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8286
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8287
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8288
@@ -20678,7 +20678,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8303
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8304
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8305
@@ -20712,7 +20712,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8316
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8317
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8318
@@ -20757,7 +20757,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8333
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8334
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8335
@@ -20791,7 +20791,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8346
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8347
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8348
@@ -20825,7 +20825,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8359
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8360
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8361
@@ -20859,7 +20859,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8372
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8373
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8374
@@ -20904,7 +20904,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8389
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8390
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8391
@@ -20938,7 +20938,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8402
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8403
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8404
@@ -20983,7 +20983,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8419
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8420
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8421
@@ -21028,7 +21028,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8436
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8437
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8438
@@ -21073,7 +21073,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8453
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8454
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8455
@@ -21107,7 +21107,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8466
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8467
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8468
@@ -21141,7 +21141,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8479
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8480
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8481
@@ -21175,7 +21175,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8492
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8493
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8494
@@ -21220,7 +21220,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 8509
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8510
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 8511
@@ -21276,7 +21276,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8530
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8531
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8532
@@ -21335,7 +21335,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8555
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8556
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8557
@@ -21394,7 +21394,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8580
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8581
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8582
@@ -21439,7 +21439,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8597
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8598
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8599
@@ -21484,7 +21484,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8614
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8615
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8616
@@ -21529,7 +21529,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8631
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8632
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8633
@@ -21624,7 +21624,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8669
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8670
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8671
@@ -21669,7 +21669,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8686
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8687
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8688
@@ -21725,7 +21725,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8707
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8708
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8709
@@ -21781,7 +21781,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8728
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8729
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8730
@@ -21837,7 +21837,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 8749
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 8750
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 8751
@@ -22878,7 +22878,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEFAN_F,
         .encounterMusic_gender =
 #line 9163
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9164
             TRAINER_ENCOUNTER_MUSIC_TWINS,
 #line 9165
@@ -22941,7 +22941,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 9188
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9189
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 9190
@@ -23016,7 +23016,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 9219
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9220
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9221
@@ -23143,7 +23143,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 9270
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9271
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 9272
@@ -23186,7 +23186,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 9288
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9289
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 9290
@@ -24151,7 +24151,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9673
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9674
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9675
@@ -24185,7 +24185,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9686
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9687
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9688
@@ -24241,7 +24241,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9707
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9708
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9709
@@ -24297,7 +24297,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9728
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9729
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9730
@@ -24331,7 +24331,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9741
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9742
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9743
@@ -24387,7 +24387,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9762
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9763
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9764
@@ -24443,7 +24443,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9783
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9784
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9785
@@ -24477,7 +24477,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9796
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9797
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9798
@@ -24533,7 +24533,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 9817
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 9818
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 9819
@@ -25113,7 +25113,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 10041
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10042
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10043
@@ -25202,7 +25202,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 10074
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10075
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10076
@@ -25281,7 +25281,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 10105
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10106
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10107
@@ -25370,7 +25370,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 10138
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10139
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10140
@@ -25459,7 +25459,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 10171
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10172
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10173
@@ -25548,7 +25548,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 10204
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10205
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10206
@@ -25908,7 +25908,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10347
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10348
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10349
@@ -25955,7 +25955,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10365
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10366
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10367
@@ -26013,7 +26013,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10387
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10388
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10389
@@ -26060,7 +26060,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10405
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10406
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10407
@@ -26107,7 +26107,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10423
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10424
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10425
@@ -26154,7 +26154,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10441
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10442
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10443
@@ -26201,7 +26201,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_RANGER_F,
         .encounterMusic_gender =
 #line 10459
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10460
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10461
@@ -26323,7 +26323,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 10507
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10508
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 10509
@@ -26368,7 +26368,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 10524
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10525
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 10526
@@ -26531,7 +26531,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 10588
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10589
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 10590
@@ -26597,7 +26597,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 10614
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10615
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 10616
@@ -26663,7 +26663,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 10640
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10641
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 10642
@@ -26817,7 +26817,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 10702
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10703
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 10704
@@ -26883,7 +26883,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_HEX_MANIAC,
         .encounterMusic_gender =
 #line 10728
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10729
             TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS,
 #line 10730
@@ -26981,7 +26981,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAGMA_GRUNT_F,
         .encounterMusic_gender =
 #line 10767
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10768
             TRAINER_ENCOUNTER_MUSIC_MAGMA,
 #line 10769
@@ -27154,7 +27154,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 10836
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10837
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 10838
@@ -27317,7 +27317,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 10900
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10901
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 10902
@@ -27351,7 +27351,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AQUA_GRUNT_F,
         .encounterMusic_gender =
 #line 10913
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10914
             TRAINER_ENCOUNTER_MUSIC_AQUA,
 #line 10915
@@ -27549,7 +27549,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 10990
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 10991
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 10992
@@ -27706,7 +27706,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11051
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11052
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11053
@@ -27751,7 +27751,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11068
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11069
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11070
@@ -27796,7 +27796,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11085
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11086
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11087
@@ -27830,7 +27830,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11098
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11099
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11100
@@ -27886,7 +27886,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11119
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11120
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11121
@@ -27931,7 +27931,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11136
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11137
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11138
@@ -27976,7 +27976,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11153
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11154
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11155
@@ -28021,7 +28021,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11170
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11171
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11172
@@ -28077,7 +28077,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11191
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11192
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11193
@@ -28111,7 +28111,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11204
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11205
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11206
@@ -28167,7 +28167,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11225
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11226
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11227
@@ -28201,7 +28201,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LASS,
         .encounterMusic_gender =
 #line 11238
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11239
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11240
@@ -29769,7 +29769,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 11853
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11854
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 11855
@@ -29844,7 +29844,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 11884
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11885
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 11886
@@ -29903,7 +29903,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 11909
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 11910
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 11911
@@ -30158,7 +30158,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 12018
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12019
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 12020
@@ -30893,7 +30893,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 12327
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12328
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 12329
@@ -30960,7 +30960,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 12352
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12353
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 12354
@@ -31027,7 +31027,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 12377
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12378
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 12379
@@ -31245,7 +31245,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 12461
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12462
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 12463
@@ -31509,7 +31509,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 12565
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12566
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 12567
@@ -32453,7 +32453,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LADY,
         .encounterMusic_gender =
 #line 12956
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12957
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 12958
@@ -32534,7 +32534,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_TUBER_F,
         .encounterMusic_gender =
 #line 12987
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 12988
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 12989
@@ -32701,7 +32701,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_CYCLING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 13051
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13052
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13053
@@ -32831,7 +32831,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 13103
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13104
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13105
@@ -32865,7 +32865,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 13116
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13117
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 13118
@@ -32931,7 +32931,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 13142
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13143
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 13144
@@ -33105,7 +33105,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 13210
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13211
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 13212
@@ -33182,7 +33182,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 13240
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13241
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 13242
@@ -33708,7 +33708,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAGMA_GRUNT_F,
         .encounterMusic_gender =
 #line 13451
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13452
             TRAINER_ENCOUNTER_MUSIC_MAGMA,
 #line 13453
@@ -33742,7 +33742,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAGMA_GRUNT_F,
         .encounterMusic_gender =
 #line 13464
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13465
             TRAINER_ENCOUNTER_MUSIC_MAGMA,
 #line 13466
@@ -33776,7 +33776,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAGMA_GRUNT_F,
         .encounterMusic_gender =
 #line 13477
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13478
             TRAINER_ENCOUNTER_MUSIC_MAGMA,
 #line 13479
@@ -33875,7 +33875,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 13515
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13516
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 13517
@@ -34008,7 +34008,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SWIMMER_F,
         .encounterMusic_gender =
 #line 13567
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13568
             TRAINER_ENCOUNTER_MUSIC_SWIMMER,
 #line 13569
@@ -34214,7 +34214,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 13648
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13649
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 13650
@@ -34315,7 +34315,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PICNICKER,
         .encounterMusic_gender =
 #line 13687
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13688
             TRAINER_ENCOUNTER_MUSIC_GIRL,
 #line 13689
@@ -34489,7 +34489,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_AROMA_LADY,
         .encounterMusic_gender =
 #line 13755
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13756
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13757
@@ -34534,7 +34534,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 13772
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13773
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13774
@@ -34622,7 +34622,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 13806
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13807
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13808
@@ -34667,7 +34667,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 13823
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13824
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13825
@@ -34712,7 +34712,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 13840
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13841
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13842
@@ -34843,7 +34843,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RUNNING_TRIATHLETE_F,
         .encounterMusic_gender =
 #line 13891
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13892
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13893
@@ -34877,7 +34877,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 13904
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13905
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13906
@@ -34911,7 +34911,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 13917
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13918
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13919
@@ -34945,7 +34945,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_EXPERT_F,
         .encounterMusic_gender =
 #line 13930
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13931
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 13932
@@ -35067,7 +35067,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PARASOL_LADY,
         .encounterMusic_gender =
 #line 13978
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 13979
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 13980
@@ -35141,7 +35141,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BATTLE_GIRL,
         .encounterMusic_gender =
 #line 14008
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14009
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 14010
@@ -35316,7 +35316,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 14075
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14076
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14077
@@ -35405,7 +35405,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 14108
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14109
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 14110
@@ -35452,7 +35452,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 14126
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14127
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14128
@@ -35497,7 +35497,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_MAY,
         .encounterMusic_gender =
 #line 14143
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14144
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14145
@@ -35542,7 +35542,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_ROXANNE,
         .encounterMusic_gender =
 #line 14160
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14161
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14162
@@ -35643,7 +35643,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_ROXANNE,
         .encounterMusic_gender =
 #line 14202
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14203
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14204
@@ -35762,7 +35762,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_ROXANNE,
         .encounterMusic_gender =
 #line 14252
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14253
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14254
@@ -35881,7 +35881,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_ROXANNE,
         .encounterMusic_gender =
 #line 14302
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14303
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14304
@@ -36936,7 +36936,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_FLANNERY,
         .encounterMusic_gender =
 #line 14752
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14753
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14754
@@ -37039,7 +37039,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_FLANNERY,
         .encounterMusic_gender =
 #line 14794
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14795
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14796
@@ -37160,7 +37160,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_FLANNERY,
         .encounterMusic_gender =
 #line 14844
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14845
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14846
@@ -37299,7 +37299,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_FLANNERY,
         .encounterMusic_gender =
 #line 14902
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 14903
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 14904
@@ -37906,7 +37906,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_WINONA,
         .encounterMusic_gender =
 #line 15160
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15161
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 15162
@@ -38025,7 +38025,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_WINONA,
         .encounterMusic_gender =
 #line 15210
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15211
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 15212
@@ -38162,7 +38162,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_WINONA,
         .encounterMusic_gender =
 #line 15268
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15269
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 15270
@@ -38299,7 +38299,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEADER_WINONA,
         .encounterMusic_gender =
 #line 15326
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15327
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 15328
@@ -39690,7 +39690,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_SALON_MAIDEN_ANABEL,
         .encounterMusic_gender =
 #line 15918
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15919
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 15920
@@ -39788,7 +39788,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_ARENA_TYCOON_GRETA,
         .encounterMusic_gender =
 #line 15957
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15958
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 15959
@@ -39854,7 +39854,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PIKE_QUEEN_LUCY,
         .encounterMusic_gender =
 #line 15983
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 15984
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 15985
@@ -40751,7 +40751,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 16333
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16334
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 16335
@@ -40798,7 +40798,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 16351
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16352
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 16353
@@ -40856,7 +40856,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 16373
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16374
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 16375
@@ -40914,7 +40914,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_COOLTRAINER_F,
         .encounterMusic_gender =
 #line 16395
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16396
             TRAINER_ENCOUNTER_MUSIC_COOL,
 #line 16397
@@ -41393,7 +41393,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 16581
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16582
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16583
@@ -41482,7 +41482,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 16614
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16615
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16616
@@ -41571,7 +41571,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 16647
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16648
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16649
@@ -41660,7 +41660,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_POKEMON_BREEDER_F,
         .encounterMusic_gender =
 #line 16680
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16681
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16682
@@ -41749,7 +41749,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 16713
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16714
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16715
@@ -41794,7 +41794,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 16730
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16731
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16732
@@ -41850,7 +41850,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 16751
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16752
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16753
@@ -41906,7 +41906,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_BEAUTY,
         .encounterMusic_gender =
 #line 16772
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16773
             TRAINER_ENCOUNTER_MUSIC_FEMALE,
 #line 16774
@@ -41962,7 +41962,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_PSYCHIC_F,
         .encounterMusic_gender =
 #line 16793
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16794
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 16795
@@ -42095,7 +42095,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_LEAF,
         .encounterMusic_gender =
 #line 16845
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16846
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 16847
@@ -42157,7 +42157,7 @@ F_TRAINER_FEMALE |
         .trainerPic = TRAINER_PIC_RS_MAY,
         .encounterMusic_gender =
 #line 16869
-F_TRAINER_FEMALE |
+F_TRAINER_FEMALE | 
 #line 16870
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 16871

@@ -58,7 +58,6 @@ DOUBLE_BATTLE_TEST("Coaching bypasses Crafty Shield")
 
 DOUBLE_BATTLE_TEST("Coaching fails if all allies are is semi-invulnerable")
 {
-    KNOWN_FAILING; // Coaching succeeds
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -104,10 +103,10 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: playerRight); }
         TURN { MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         MESSAGE("Wynaut fainted!");
         MESSAGE("Wobbuffet used Coaching!");
         NONE_OF {

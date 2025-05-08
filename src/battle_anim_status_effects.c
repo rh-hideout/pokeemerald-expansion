@@ -12,7 +12,7 @@
 #include "constants/rgb.h"
 
 extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct CompressedSpritePalette gBattleAnimPaletteTable[];
+extern const struct SpritePalette gBattleAnimPaletteTable[];
 extern const struct OamData gOamData_AffineOff_ObjNormal_8x8;
 extern const struct OamData gOamData_AffineOff_ObjBlend_64x64;
 
@@ -277,7 +277,7 @@ static u8 UNUSED Task_FlashingCircleImpacts(u8 battlerId, bool8 red)
     u8 i;
 
     LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
-    LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
+    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
     gTasks[taskId].data[0] = battlerId;
     if (red)
     {
@@ -403,7 +403,7 @@ void AnimTask_CentredFrozenIceCube(u8 taskId)
     u8 battler1 = gBattleAnimTarget;
     u8 battler2 = BATTLE_PARTNER(battler1);
 
-    if (!IsDoubleBattle() || IsAlly(gBattleAnimAttacker, gBattleAnimTarget))
+    if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         x = GetBattlerSpriteCoord(battler1, BATTLER_COORD_X_2);
         y = GetBattlerSpriteCoord(battler1, BATTLER_COORD_Y_PIC_OFFSET);
