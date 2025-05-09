@@ -2552,7 +2552,7 @@ static void PrintBattlerOnAbilityPopUp(u8 battlerId, u8 spriteId1, u8 spriteId2)
     if (illusionMon != NULL)
         GetMonData(illusionMon, MON_DATA_NICKNAME, nick);
     else
-        GetMonData(GetPartyBattlerData(battlerId), MON_DATA_NICKNAME, nick);
+        GetMonData(GetBattlerMon(battlerId), MON_DATA_NICKNAME, nick);
 
     for (i = 0; i < POKEMON_NAME_LENGTH; ++i)
     {
