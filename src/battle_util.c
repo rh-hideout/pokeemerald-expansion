@@ -7432,7 +7432,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
     // Berry was successfully used on a Pokemon.
     if (effect && (gLastUsedItem >= FIRST_BERRY_INDEX && gLastUsedItem <= LAST_BERRY_INDEX))
         gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry = TRUE;
-        
+
     return effect;
 }
 
