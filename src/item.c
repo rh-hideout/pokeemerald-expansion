@@ -585,6 +585,39 @@ void CompactItemsInBagPocket(struct BagPocket *bagPocket)
     }
 }
 
+#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
+#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
+
+static const u16 gTMHMItemIds[] =
+{
+    RECURSIVELY(R_ZIP_WITH(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP_WITH(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
+};
+
+void SortTMHMs(struct BagPocket *bagPocket)
+{
+    u16 i, j;
+
+    for (i = 0; i < bagPocket->capacity - 1; i++)
+    {
+        u32 itemPresent = FALSE;
+        for (j = 0; j < bagPocket->capacity - 1; j++)
+        {
+            if (gTMHMItemIds[i] == bagPocket->itemSlots[j].itemId
+             && GetBagItemQuantity(&bagPocket->itemSlots[i].quantity) != 0)
+            {
+                itemPresent = TRUE;
+                break;
+            }
+        }
+        if (itemPresent)
+        {
+            DebugPrintf("gTMHMItemIds[i] %d", gTMHMItemIds[i]);
+            bagPocket->itemSlots[i].itemId = gTMHMItemIds[i];
+        }
+    }
+}
+
 void SortBerriesOrTMHMs(struct BagPocket *bagPocket)
 {
     u16 i, j;

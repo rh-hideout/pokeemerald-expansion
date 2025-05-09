@@ -2,8 +2,10 @@
 #define GUARD_ITEM_USE_H
 
 extern const u16 gTMHMMoves[];
+extern const u16 gTMMoves[];
 extern const u16 gHMMoves[];
 u32 GetTMHMMovesArrayLength(void);
+u32 GetTMMovesArrayLength(void);
 u32 GetHMMovesArrayLength(void);
 
 void ItemUseOutOfBattle_Mail(u8);

@@ -25,6 +25,7 @@
 #include "field_weather.h"
 #include "international_string_util.h"
 #include "item.h"
+#include "item_use.h"
 #include "item_icon.h"
 #include "list_menu.h"
 #include "m4a.h"
@@ -120,7 +121,7 @@ enum TimeMenuTimeOfDay
     DEBUG_TIME_MENU_ITEM_MORNING,
     DEBUG_TIME_MENU_ITEM_DAY,
     DEBUG_TIME_MENU_ITEM_EVENING,
-    DEBUG_TIME_MENU_ITEM_NIGHT, 
+    DEBUG_TIME_MENU_ITEM_NIGHT,
 };
 
 enum TimeMenuWeekdays
@@ -3776,7 +3777,7 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
 {
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-    
+
     DebugAction_DestroyExtraWindow(taskId);
     switch (input)
     {
@@ -3808,7 +3809,7 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     {
         case DEBUG_TIME_MENU_ITEM_SUNDAY:
             daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);    
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_MONDAY:
             daysToAdd = ((WEEKDAY_MON - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
@@ -3947,12 +3948,19 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 {
-    u16 itemId;
+    u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
 
-    for (itemId = ITEM_TM01; itemId <= ITEM_HM08; itemId++)
+    for (u32 item = 0; item < ITEMS_COUNT; item++)
     {
-        if (CheckBagHasSpace(itemId, 1) && ItemIdToBattleMoveId(itemId) != MOVE_NONE)
-            AddBagItem(itemId, 1);
+        if (gItemsInfo[item].pocket != POCKET_TM_HM)
+            continue;
+
+        for (u32 i = 0; i < TMHM_MovesArrayLength; i++)
+        {
+            if (gTMHMMoves[i] == gItemsInfo[item].secondaryId && CheckBagHasSpace(item, 1))
+                AddBagItem(item, 1);
+            // DebugPrintf("i: %d, gTMHMMoves[i]: %d", i, gTMHMMoves[i]);
+        }
     }
 }
 

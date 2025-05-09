@@ -112,6 +112,11 @@ const u16 gTMHMMoves[] =
     FOREACH_HM(HM_MOVE)
 };
 
+const u16 gTMMoves[] =
+{
+    FOREACH_TM(TM_MOVE)
+};
+
 const u16 gHMMoves[] =
 {
     FOREACH_HM(HM_MOVE)
@@ -120,6 +125,11 @@ const u16 gHMMoves[] =
 u32 GetTMHMMovesArrayLength(void)
 {
     return ARRAY_COUNT(gTMHMMoves);
+}
+
+u32 GetTMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gTMMoves);
 }
 
 u32 GetHMMovesArrayLength(void)
@@ -307,7 +317,7 @@ static void ItemUseOnFieldCB_Bike(u8 taskId)
         GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE);
     else // ACRO_BIKE
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
-    
+
     FollowerNPC_HandleBike();
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
