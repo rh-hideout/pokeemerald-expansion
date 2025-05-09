@@ -10342,7 +10342,7 @@ u32 GetBattlerVisualSpecies(u32 battler)
     return gBattleMons[battler].species;
 }
 
-bool32 TryClearIllusion(u32 battler, bool32 end3)
+bool32 TryClearIllusion(u32 battler, u32 caseID)
 {
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return FALSE;
@@ -10350,7 +10350,7 @@ bool32 TryClearIllusion(u32 battler, bool32 end3)
         return FALSE;
 
     gBattleScripting.battler = battler;
-    if (end3)
+    if (caseID == ABILITYEFFECT_ON_SWITCHIN)
     {
         BattleScriptPushCursorAndCallback(BattleScript_IllusionOffEnd3);
     }

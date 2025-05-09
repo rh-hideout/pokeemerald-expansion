@@ -6452,7 +6452,7 @@ static void Cmd_moveend(void)
         case MOVEEND_ABILITIES: // Such as abilities activating on contact(Poison Spore, Rough Skin, etc.).
             if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, 0, 0, 0))
                 effect = TRUE;
-            else if (TryClearIllusion(gBattlerTarget, FALSE))
+            else if (TryClearIllusion(gBattlerTarget, ABILITYEFFECT_MOVE_END))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -8334,6 +8334,8 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
                     return TRUE;
                 break;
             }
+            if (TryClearIllusion(i, ABILITYEFFECT_ON_SWITCHIN))
+                return TRUE;
         }
 
         gDisableStructs[battler].stickyWebDone = FALSE;
@@ -10166,7 +10168,7 @@ static void Cmd_various(void)
     case VARIOUS_TRY_ILLUSION_OFF:
     {
         VARIOUS_ARGS();
-        if (TryClearIllusion(battler, FALSE))
+        if (TryClearIllusion(battler, ABILITYEFFECT_MOVE_END))
             return;
         break;
     }
