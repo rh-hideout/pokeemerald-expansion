@@ -5816,7 +5816,7 @@ static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abi
             if (abilityAffected)
             {
                 gLastUsedAbility = abilityDef;
-                gBattlerAbility = battlerDef;
+                gBattleScripting.battler = gBattlerAbility = battlerDef;
                 RecordAbilityBattle(battlerDef, abilityDef);
             }
 
