@@ -8921,9 +8921,9 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
 
     // The offensive stats of a Player's Pokémon are boosted by x1.1 (+10%) if they have the 1st badge and 7th badges.
     // Having the 1st badge boosts physical attack while having the 7th badge boosts special attack.
-    if (ShouldGetStatBadgeBoost(FLAG_BADGE01_GET, battlerAtk) && IsBattleMovePhysical(move))
+    if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_ATTACK, battlerAtk) && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
-    if (ShouldGetStatBadgeBoost(FLAG_BADGE07_GET, battlerAtk) && IsBattleMoveSpecial(move))
+    if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_SPATK, battlerAtk) && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
 
     return uq4_12_multiply_by_int_half_down(modifier, atkStat);
@@ -9096,9 +9096,9 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
 
     // The defensive stats of a Player's Pokémon are boosted by x1.1 (+10%) if they have the 5th badge and 7th badges.
     // Having the 5th badge boosts physical defense while having the 7th badge boosts special defense.
-    if (ShouldGetStatBadgeBoost(FLAG_BADGE05_GET, battlerDef) && IsBattleMovePhysical(move))
+    if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_DEFENSE, battlerDef) && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
-    if (ShouldGetStatBadgeBoost(FLAG_BADGE07_GET, battlerDef) && IsBattleMoveSpecial(move))
+    if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_SPDEF, battlerDef) && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
 
     return uq4_12_multiply_by_int_half_down(modifier, defStat);
@@ -10441,7 +10441,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
 
 bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, u32 battler)
 {
-    if (B_BADGE_BOOST == GEN_3)
+    if (B_BADGE_BOOST == GEN_3 && badgeFlag != 0)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
             return FALSE;
