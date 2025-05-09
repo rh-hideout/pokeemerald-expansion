@@ -2546,20 +2546,23 @@ static void PrintBattlerOnAbilityPopUp(u8 battlerId, u8 spriteId1, u8 spriteId2)
     u8 lastChar;
     u8* textPtr;
     u8 monName[POKEMON_NAME_LENGTH + 3] = {0};
-    u8* nick = gBattleMons[battlerId].nickname; // This needs to be updated for Illusion support
+    struct Pokemon *illusionMon = GetIllusionMonPtr(battlerId);
+    u8 nick[POKEMON_NAME_LENGTH + 1] = {0};
+
+    if (illusionMon != NULL)
+        GetMonData(illusionMon, MON_DATA_NICKNAME, nick);
+    else
+        GetMonData(GetPartyBattlerData(battlerId), MON_DATA_NICKNAME, nick);
 
     for (i = 0; i < POKEMON_NAME_LENGTH; ++i)
     {
-        monName[i] = nick[i];
-
-        if (nick[i] == EOS || i + 1 == POKEMON_NAME_LENGTH) // End of string
+        if (nick[i] == EOS) // End of string
             break;
+
+        monName[i] = nick[i];
     }
 
-    textPtr = monName + i + 1;
-
-    if (*(textPtr - 1) == EOS)
-        textPtr--;
+    textPtr = monName + i;
 
     lastChar = *(textPtr - 1);
 
