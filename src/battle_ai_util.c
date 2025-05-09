@@ -128,19 +128,20 @@ void RecordLastUsedMoveBy(u32 battlerId, u32 move)
     BATTLE_HISTORY->moveHistory[battlerId][*index] = move;
 }
 
-void RecordKnownMove(u32 battlerId, u32 move)
+void RecordKnownMove(u32 battler, u32 move)
 {
-    s32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    s32 moveIndex;
+
+    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (BATTLE_HISTORY->usedMoves[battlerId][i] == move)
+        if (gBattleMons[battler].moves[moveIndex] == move)
             break;
-        if (BATTLE_HISTORY->usedMoves[battlerId][i] == MOVE_NONE)
-        {
-            BATTLE_HISTORY->usedMoves[battlerId][i] = move;
-            AI_PARTY->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].moves[i] = move;
-            break;
-        }
+    }
+
+    if (moveIndex < MAX_MON_MOVES && BATTLE_HISTORY->usedMoves[battler][moveIndex] == MOVE_NONE)
+    {
+        BATTLE_HISTORY->usedMoves[battler][moveIndex] = move;
+        AI_PARTY->mons[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].moves[moveIndex] = move;
     }
 }
 
