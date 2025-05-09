@@ -160,9 +160,9 @@ static void SwitchIn_ShowHealthbox(u32 battler)
         FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 
         CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
-        HandleLowHpMusicChange(GetPartyBattlerData(battler), battler);
+        HandleLowHpMusicChange(GetBattlerMon(battler), battler);
         StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetPartyBattlerData(battler), HEALTHBOX_ALL);
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
 
@@ -175,7 +175,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
         && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
     {
-        TryShinyAnimation(battler, GetPartyBattlerData(battler));
+        TryShinyAnimation(battler, GetBattlerMon(battler));
     }
 
     if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy

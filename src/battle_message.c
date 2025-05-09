@@ -2121,7 +2121,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
                 stringPtr = sText_LegendaryPkmnAppeared;
-            else if (IsDoubleBattle() && IsValidForBattle(GetPartyBattlerData(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
+            else if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
                 stringPtr = sText_TwoWildPkmnAppeared;
             else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
                 stringPtr = sText_WildPkmnAppearedPause;
@@ -2132,7 +2132,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
     case STRINGID_INTROSENDOUT: // poke first send-out
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetPartyBattlerData(BATTLE_PARTNER(battler))))
+            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
                     stringPtr = sText_InGamePartnerSentOutZGoN;
@@ -2150,7 +2150,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         else
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetPartyBattlerData(BATTLE_PARTNER(battler))))
+            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
                 if (BATTLE_TWO_VS_ONE_OPPONENT)
                     stringPtr = sText_Trainer1SentOutTwoPkmn;
@@ -2399,7 +2399,7 @@ static const u8 *TryGetStatusString(u8 *src)
 static void GetBattlerNick(u32 battler, u8 *dst)
 {
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
-    struct Pokemon *mon = GetPartyBattlerData(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
 
     if (illusionMon != NULL)
         mon = illusionMon;
@@ -3180,7 +3180,7 @@ static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)
     if (GetMonAbility(mon) == ABILITY_ILLUSION)
     {
         if (IsBattlerAlive(BATTLE_PARTNER(battler)))
-            partnerMon = GetPartyBattlerData(BATTLE_PARTNER(battler));
+            partnerMon = GetBattlerMon(BATTLE_PARTNER(battler));
         else
             partnerMon = mon;
 

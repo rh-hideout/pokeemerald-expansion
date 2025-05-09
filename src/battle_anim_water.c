@@ -1360,7 +1360,7 @@ static u8 GetWaterSpoutPowerForAnim(void)
     u8 i;
     u16 hp;
     u16 maxhp;
-    struct Pokemon *slot = GetPartyBattlerData(gBattleAnimAttacker);
+    struct Pokemon *slot = GetBattlerMon(gBattleAnimAttacker);
 
     maxhp = GetMonData(slot, MON_DATA_MAX_HP);
     hp = GetMonData(slot, MON_DATA_HP);

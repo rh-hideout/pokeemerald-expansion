@@ -118,7 +118,7 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
         }
         else
         {
-            mon = GetPartyBattlerData(battlerId);
+            mon = GetBattlerMon(battlerId);
             illusionMon = GetIllusionMonPtr(battlerId);
             if (illusionMon != NULL)
                 mon = illusionMon;
@@ -162,7 +162,7 @@ u8 GetBattlerYDelta(u8 battlerId, u16 species)
         {
             spriteInfo = gBattleSpritesDataPtr->battlerData;
             if (!spriteInfo[battlerId].transformSpecies)
-                personality = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_PERSONALITY);
+                personality = GetMonData(GetBattlerMon(battlerId), MON_DATA_PERSONALITY);
             else
                 personality = gTransformedPersonalities[battlerId];
             species = GetUnownSpeciesId(personality);
@@ -275,7 +275,7 @@ u8 GetBattlerYCoordWithElevation(u8 battlerId)
         spriteInfo = gBattleSpritesDataPtr->battlerData;
 
         if (!spriteInfo[battlerId].transformSpecies)
-            species = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_SPECIES);
+            species = GetMonData(GetBattlerMon(battlerId), MON_DATA_SPECIES);
         else
             species = spriteInfo[battlerId].transformSpecies;
 
@@ -817,7 +817,7 @@ bool8 IsBattlerSpritePresent(u8 battlerId)
         if (GetBattlerPosition(battlerId) == 0xff)
             return FALSE;
 
-        if (!gBattleStruct->spriteIgnore0Hp && GetMonData(GetPartyBattlerData(battlerId), MON_DATA_HP) == 0)
+        if (!gBattleStruct->spriteIgnore0Hp && GetMonData(GetBattlerMon(battlerId), MON_DATA_HP) == 0)
             return FALSE;
         return TRUE;
     }
@@ -1851,7 +1851,7 @@ static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
             {
                 spriteInfo = gBattleSpritesDataPtr->battlerData;
                 if (!spriteInfo[battlerId].transformSpecies)
-                    species = GetMonData(GetPartyBattlerData(i), MON_DATA_SPECIES);
+                    species = GetMonData(GetBattlerMon(i), MON_DATA_SPECIES);
                 else
                     species = spriteInfo[battlerId].transformSpecies;
 
@@ -2082,7 +2082,7 @@ s16 GetBattlerSpriteCoordAttr(u8 battlerId, u8 attr)
     }
     else
     {
-        struct Pokemon *mon = GetPartyBattlerData(battlerId);
+        struct Pokemon *mon = GetBattlerMon(battlerId);
 
         spriteInfo = gBattleSpritesDataPtr->battlerData;
         if (!spriteInfo[battlerId].transformSpecies)

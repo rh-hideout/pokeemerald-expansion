@@ -370,7 +370,7 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         InitPrioritiesForVisibleBattlers();
         UpdateOamPriorityInAllHealthboxes(0, sAnimHideHpBoxes);
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-            gAnimBattlerSpecies[i] = GetMonData(GetPartyBattlerData(i), MON_DATA_SPECIES);
+            gAnimBattlerSpecies[i] = GetMonData(GetBattlerMon(i), MON_DATA_SPECIES);
     }
     else
     {
@@ -2236,7 +2236,7 @@ static void Cmd_createdragondartsprite(void)
     u8 argVar;
     u8 argsCount;
     s16 subpriority;
-    struct Pokemon *mon = GetPartyBattlerData(gBattleAnimAttacker);
+    struct Pokemon *mon = GetBattlerMon(gBattleAnimAttacker);
 
     sBattleAnimScriptPtr++;
 

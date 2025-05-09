@@ -1646,7 +1646,7 @@ u8 GetImprisonedMovesCount(u32 battler, u16 move)
 u32 GetBattlerAffectionHearts(u32 battler)
 {
     u8 side = GetBattlerSide(battler);
-    struct Pokemon *mon = GetPartyBattlerData(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
 
     if (side != B_SIDE_PLAYER)
@@ -4029,7 +4029,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_ZERO_TO_HERO:
             side = GetBattlerSide(battler);
-            mon = GetPartyBattlerData(battler);
+            mon = GetBattlerMon(battler);
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_PALAFIN_HERO
@@ -4116,7 +4116,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerAlive(battler)
              && gBattleStruct->commanderActive[partner] == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
-             && GET_BASE_SPECIES_ID(GetMonData(GetPartyBattlerData(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
+             && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
                 SaveBattlerAttacker(gBattlerAttacker);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
@@ -6119,7 +6119,7 @@ static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
 
 static u32 ItemRestorePp(u32 battler, u32 itemId, enum ItemCaseId caseID)
 {
-    struct Pokemon *mon = GetPartyBattlerData(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
     u32 i, changedPP = 0;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -10116,7 +10116,7 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
     u32 species = gBattleMons[battler].species;
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    struct Pokemon *mon = GetPartyBattlerData(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
     u16 heldItem = gBattleMons[battler].item;
 
     for (i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
@@ -10341,9 +10341,9 @@ struct Pokemon *GetIllusionMonPtr(u32 battler)
     if (!gBattleStruct->illusion[battler].set)
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
-            SetIllusionMon(GetPartyBattlerData(battler), battler);
+            SetIllusionMon(GetBattlerMon(battler), battler);
         else
-            SetIllusionMon(GetPartyBattlerData(battler), battler);
+            SetIllusionMon(GetBattlerMon(battler), battler);
     }
     if (!gBattleStruct->illusion[battler].on)
         return NULL;
@@ -10469,7 +10469,7 @@ void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, u32 move)
             gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
         break;
     case EFFECT_TERA_STARSTORM:
-        if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GET_BASE_SPECIES_ID(GetMonData(GetPartyBattlerData(battlerAtk), MON_DATA_SPECIES)) == SPECIES_TERAPAGOS)
+        if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battlerAtk), MON_DATA_SPECIES)) == SPECIES_TERAPAGOS)
             gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
         break;
     default:

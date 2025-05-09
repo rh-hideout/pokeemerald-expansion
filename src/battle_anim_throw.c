@@ -908,7 +908,7 @@ void AnimTask_SwitchOutBallEffect(u8 taskId)
     u32 selectedPalettes;
 
     spriteId = gBattlerSpriteIds[gBattleAnimAttacker];
-    ballId = GetMonData(GetPartyBattlerData(gBattleAnimAttacker), MON_DATA_POKEBALL);
+    ballId = GetMonData(GetBattlerMon(gBattleAnimAttacker), MON_DATA_POKEBALL);
 
     switch (gTasks[taskId].data[0])
     {

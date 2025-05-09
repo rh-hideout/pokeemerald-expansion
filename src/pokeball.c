@@ -993,7 +993,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
         u16 wantedCryCase;
         u8 taskId;
 
-        mon = GetPartyBattlerData(battlerId);
+        mon = GetBattlerMon(battlerId);
         if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
             pan = 25;
         else
@@ -1581,7 +1581,7 @@ void FreeBallGfx(u8 ballId)
 static u16 GetBattlerPokeballItemId(u8 battlerId)
 {
     struct Pokemon *illusionMon;
-    struct Pokemon *mon = GetPartyBattlerData(battlerId);
+    struct Pokemon *mon = GetBattlerMon(battlerId);
 
     illusionMon = GetIllusionMonPtr(battlerId);
     if (illusionMon != NULL)

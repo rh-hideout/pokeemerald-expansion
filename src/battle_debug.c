@@ -1046,7 +1046,7 @@ static void Task_ShowAiPoints(u8 taskId)
                 data->spriteIds.aiIconSpriteIds[i] = 0xFF;
             }
         }
-        mon = GetPartyBattlerData(data->aiBattlerId);
+        mon = GetBattlerMon(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
@@ -1227,7 +1227,7 @@ static void Task_ShowAiKnowledge(u8 taskId)
             }
         }
 
-        mon = GetPartyBattlerData(data->aiBattlerId);
+        mon = GetBattlerMon(data->aiBattlerId);
 
         data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
@@ -2295,7 +2295,7 @@ static void UpdateMonData(struct BattleDebugMenu *data)
     {
         if (data->battlerWasChanged[i])
         {
-            struct Pokemon *mon = GetPartyBattlerData(i);
+            struct Pokemon *mon = GetBattlerMon(i);
             struct BattlePokemon *battleMon = &gBattleMons[i];
 
             SetMonData(mon, MON_DATA_HELD_ITEM, &battleMon->item);

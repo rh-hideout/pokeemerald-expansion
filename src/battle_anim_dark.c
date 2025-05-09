@@ -934,7 +934,7 @@ void AnimTask_MetallicShine(u8 taskId)
     if (IsContest())
         species = gContestResources->moveAnim->species;
     else
-        species = GetMonData(GetPartyBattlerData(gBattleAnimAttacker), MON_DATA_SPECIES);
+        species = GetMonData(GetBattlerMon(gBattleAnimAttacker), MON_DATA_SPECIES);
 
     spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     newSpriteId = CreateInvisibleSpriteCopy(gBattleAnimAttacker, spriteId, species);

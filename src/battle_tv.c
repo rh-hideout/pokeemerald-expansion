@@ -338,8 +338,8 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     defSide = GetBattlerSide(gBattlerTarget);
     effSide = GetBattlerSide(gEffectBattler);
     scriptingSide = GetBattlerSide(gBattleMsgDataPtr->scrActive);
-    atkMon = GetPartyBattlerData(gBattlerAttacker);
-    defMon = GetPartyBattlerData(gBattlerTarget);
+    atkMon = GetBattlerMon(gBattlerAttacker);
+    defMon = GetBattlerMon(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
 
     if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
@@ -1286,8 +1286,8 @@ static void TrySetBattleSeminarShow(void)
                     bestMoveId = i;
             }
 
-            opponentSpecies = GetMonData(GetPartyBattlerData(gBattlerTarget),   MON_DATA_SPECIES, NULL);
-            playerSpecies   = GetMonData(GetPartyBattlerData(gBattlerAttacker), MON_DATA_SPECIES, NULL);
+            opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES, NULL);
+            playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES, NULL);
             TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, gMoveSelectionCursor[gBattlerAttacker], gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
             break;
         }
@@ -1363,7 +1363,7 @@ void BattleTv_ClearExplosionFaintCause(void)
 u8 GetBattlerMoveSlotId(u8 battlerId, u16 moveId)
 {
     s32 i;
-    struct Pokemon *mon = GetPartyBattlerData(battlerId);
+    struct Pokemon *mon = GetBattlerMon(battlerId);
 
     i = 0;
     while (1)

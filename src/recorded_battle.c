@@ -759,24 +759,24 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                     if (!(gBattleMons[battlerId].status2 & STATUS2_TRANSFORMED))
                     {
                         for (j = 0; j < MAX_MON_MOVES; j++)
-                            ppBonuses[j] = (GetMonData(GetPartyBattlerData(battlerId), MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
+                            ppBonuses[j] = (GetMonData(GetBattlerMon(battlerId), MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
 
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            movePp.moves[j] = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_MOVE1 + moveSlots[j], NULL);
-                            movePp.currentPp[j] = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_PP1 + moveSlots[j], NULL);
+                            movePp.moves[j] = GetMonData(GetBattlerMon(battlerId), MON_DATA_MOVE1 + moveSlots[j], NULL);
+                            movePp.currentPp[j] = GetMonData(GetBattlerMon(battlerId), MON_DATA_PP1 + moveSlots[j], NULL);
                             movePp.maxPp[j] = ppBonuses[moveSlots[j]];
                         }
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            SetMonData(GetPartyBattlerData(battlerId), MON_DATA_MOVE1 + j, &movePp.moves[j]);
-                            SetMonData(GetPartyBattlerData(battlerId), MON_DATA_PP1 + j, &movePp.currentPp[j]);
+                            SetMonData(GetBattlerMon(battlerId), MON_DATA_MOVE1 + j, &movePp.moves[j]);
+                            SetMonData(GetBattlerMon(battlerId), MON_DATA_PP1 + j, &movePp.currentPp[j]);
                         }
                         ppBonusSet = 0;
                         for (j = 0; j < MAX_MON_MOVES; j++)
                             ppBonusSet |= movePp.maxPp[j] << (j << 1);
 
-                        SetMonData(GetPartyBattlerData(battlerId), MON_DATA_PP_BONUSES, &ppBonusSet);
+                        SetMonData(GetBattlerMon(battlerId), MON_DATA_PP_BONUSES, &ppBonusSet);
                     }
                     gChosenMoveByBattler[battlerId] = gBattleMons[battlerId].moves[gBattleStruct->chosenMovePositions[battlerId]];
                 }

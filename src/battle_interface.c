@@ -1179,8 +1179,8 @@ void SwapHpBarsWithHpText(void)
          && GetBattlerSide(i) != B_SIDE_OPPONENT
          && (GetBattlerCoordsIndex(i) != BATTLE_COORDS_SINGLES || GetBattlerSide(i) != B_SIDE_PLAYER))
         {
-            s32 currHp = GetMonData(GetPartyBattlerData(i), MON_DATA_HP);
-            s32 maxHp = GetMonData(GetPartyBattlerData(i), MON_DATA_MAX_HP);
+            s32 currHp = GetMonData(GetBattlerMon(i), MON_DATA_HP);
+            s32 maxHp = GetMonData(GetBattlerMon(i), MON_DATA_MAX_HP);
             bool8 noBars;
 
             gBattleSpritesDataPtr->battlerData[i].hpNumbersNoBars ^= 1;
@@ -1202,7 +1202,7 @@ void SwapHpBarsWithHpText(void)
                 else // text to bars
                 {
                     UpdateStatusIconInHealthbox(gHealthboxSpriteIds[i]);
-                    UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetPartyBattlerData(i), HEALTHBOX_HEALTH_BAR);
+                    UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetBattlerMon(i), HEALTHBOX_HEALTH_BAR);
                     CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_FRAME_END_BAR), (void *)(OBJ_VRAM0 + 0x680 + gSprites[gHealthboxSpriteIds[i]].oam.tileNum * TILE_SIZE_4BPP), 32);
                 }
             }
@@ -1213,7 +1213,7 @@ void SwapHpBarsWithHpText(void)
                     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                     {
                         // Most likely a debug function.
-                        PrintSafariMonInfo(gHealthboxSpriteIds[i], GetPartyBattlerData(i));
+                        PrintSafariMonInfo(gHealthboxSpriteIds[i], GetBattlerMon(i));
                     }
                     else
                     {
@@ -1226,9 +1226,9 @@ void SwapHpBarsWithHpText(void)
                 else // text to bars
                 {
                     UpdateStatusIconInHealthbox(gHealthboxSpriteIds[i]);
-                    UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetPartyBattlerData(i), HEALTHBOX_HEALTH_BAR);
+                    UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetBattlerMon(i), HEALTHBOX_HEALTH_BAR);
                     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                        UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetPartyBattlerData(i), HEALTHBOX_NICK);
+                        UpdateHealthboxAttribute(gHealthboxSpriteIds[i], GetBattlerMon(i), HEALTHBOX_NICK);
                 }
             }
             gSprites[gHealthboxSpriteIds[i]].hMain_Data7 ^= 1;
@@ -1783,7 +1783,7 @@ static void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
     battlerId = gSprites[healthboxSpriteId].hMain_Battler;
     if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
         return;
-    if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(GetPartyBattlerData(battlerId), MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
+    if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(GetBattlerMon(battlerId), MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
         return;
 
     healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
@@ -1807,7 +1807,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
     if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
     {
-        status = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_STATUS);
+        status = GetMonData(GetBattlerMon(battlerId), MON_DATA_STATUS);
         switch (GetBattlerCoordsIndex(battlerId))
         {
         case BATTLE_COORDS_SINGLES:
@@ -1820,7 +1820,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     }
     else
     {
-        status = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_STATUS);
+        status = GetMonData(GetBattlerMon(battlerId), MON_DATA_STATUS);
         tileNumAdder = 0x11;
     }
 
@@ -2144,7 +2144,7 @@ static void MoveBattleBarGraphically(u8 battlerId, u8 whichBar)
                     gBattleSpritesDataPtr->battleBars[battlerId].receivedValue,
                     &gBattleSpritesDataPtr->battleBars[battlerId].currValue,
                     array, B_EXPBAR_PIXELS / 8);
-        level = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_LEVEL);
+        level = GetMonData(GetBattlerMon(battlerId), MON_DATA_LEVEL);
         if (level >= MAX_LEVEL)
         {
             for (i = 0; i < 8; i++)
