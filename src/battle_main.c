@@ -3829,6 +3829,8 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
             if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, 0, 0, 0) != 0)
                 return;
+            if (TryClearIllusion(i, TRUE))
+                return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->eventsBeforeFirstTurnState++;

@@ -3529,7 +3529,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (IsBattlerAlive(diagonalBattler)
                     && !(gBattleMons[diagonalBattler].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
                     && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
-                    && !(gBattleStruct->illusion[diagonalBattler].on)
+                    && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
                     && !(gStatuses3[diagonalBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER))
                 {
                     gBattlerAttacker = battler;
@@ -4754,7 +4754,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_ILLUSION:
-            if (gBattleStruct->illusion[gBattlerTarget].on && !gBattleStruct->illusion[gBattlerTarget].broken && IsBattlerTurnDamaged(gBattlerTarget))
+            if (gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON && IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gBattleScripting.battler = gBattlerTarget;
                 BattleScriptPushCursor();
@@ -10334,18 +10334,44 @@ bool32 CanBattlerGetOrLoseItem(u32 battler, u16 itemId)
         return TRUE;
 }
 
+u32 GetBattlerVisualSpecies(u32 battler)
+{
+    u32 illusionSpecies = GetIllusionMonSpecies(battler);
+    if (illusionSpecies != SPECIES_NONE)
+        return illusionSpecies;
+    return gBattleMons[battler].species;
+}
+
+bool32 TryClearIllusion(u32 battler, bool32 end3)
+{
+    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
+        return FALSE;
+    if (GetBattlerAbility(battler) == ABILITY_ILLUSION && IsBattlerAlive(battler))
+        return FALSE;
+
+    gBattleScripting.battler = battler;
+    if (end3)
+    {
+        BattleScriptPushCursorAndCallback(BattleScript_IllusionOffEnd3);
+    }
+    else
+    {
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_IllusionOff;
+    }
+    return TRUE;
+}
+
 struct Pokemon *GetIllusionMonPtr(u32 battler)
 {
-    if (gBattleStruct->illusion[battler].broken)
-        return NULL;
-    if (!gBattleStruct->illusion[battler].set)
+    if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
             SetIllusionMon(GetPartyBattlerData(battler), battler);
         else
             SetIllusionMon(GetPartyBattlerData(battler), battler);
     }
-    if (!gBattleStruct->illusion[battler].on)
+    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return NULL;
 
     return gBattleStruct->illusion[battler].mon;
@@ -10364,12 +10390,34 @@ u32 GetIllusionMonSpecies(u32 battler)
     return SPECIES_NONE;
 }
 
+u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon)
+{
+    s32 id;
+    // Find last alive non-egg pokemon.
+    for (id = PARTY_SIZE - 1; id >= 0; id--)
+    {
+        if (GetMonData(&party[id], MON_DATA_SANITY_HAS_SPECIES)
+            && GetMonData(&party[id], MON_DATA_HP)
+            && !GetMonData(&party[id], MON_DATA_IS_EGG))
+        {
+            u32 species = GetMonData(&party[id], MON_DATA_SPECIES);
+            if (species == SPECIES_TERAPAGOS_STELLAR || (species >= SPECIES_OGERPON_TEAL_TERA && species <= SPECIES_OGERPON_CORNERSTONE_TERA))
+                continue;
+            if (&party[id] != mon && &party[id] != partnerMon)
+                return id;
+            else // If this pokemon or its partner is last in the party, ignore Illusion.
+                return PARTY_SIZE;
+        }
+    }
+    return PARTY_SIZE;
+}
+
 bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
 {
     struct Pokemon *party, *partnerMon;
-    s32 i, id;
+    u32 id;
 
-    gBattleStruct->illusion[battler].set = 1;
+    gBattleStruct->illusion[battler].state = ILLUSION_OFF;
     if (GetMonAbility(mon) != ABILITY_ILLUSION)
         return FALSE;
 
@@ -10380,28 +10428,12 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     else
         partnerMon = mon;
 
-    // Find last alive non-egg pokemon.
-    for (i = PARTY_SIZE - 1; i >= 0; i--)
+    id = GetIllusionMonPartyId(party, mon, partnerMon);
+    if (id != PARTY_SIZE)
     {
-        id = i;
-        if (GetMonData(&party[id], MON_DATA_SANITY_HAS_SPECIES)
-            && GetMonData(&party[id], MON_DATA_HP)
-            && !GetMonData(&party[id], MON_DATA_IS_EGG))
-        {
-            if (&party[id] != mon && &party[id] != partnerMon)
-            {
-                gBattleStruct->illusion[battler].on = 1;
-                gBattleStruct->illusion[battler].broken = 0;
-                gBattleStruct->illusion[battler].partyId = id;
-                gBattleStruct->illusion[battler].mon = &party[id];
-                return TRUE;
-            }
-            else if (&party[id] == mon)
-            {
-                // If this pokemon is last in the party, ignore Illusion.
-                return FALSE;
-            }
-        }
+        gBattleStruct->illusion[battler].state = ILLUSION_ON;
+        gBattleStruct->illusion[battler].mon = &party[id];
+        return TRUE;
     }
 
     return FALSE;

@@ -73,7 +73,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 // Returns whether a battler can Dynamax.
 bool32 CanDynamax(u32 battler)
 {
-    u16 species = gBattleMons[battler].species;
+    u16 species = GetBattlerVisualSpecies(battler);
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.

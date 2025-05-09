@@ -6452,6 +6452,8 @@ static void Cmd_moveend(void)
         case MOVEEND_ABILITIES: // Such as abilities activating on contact(Poison Spore, Rough Skin, etc.).
             if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, 0, 0, 0))
                 effect = TRUE;
+            else if (TryClearIllusion(gBattlerTarget, FALSE))
+                effect = TRUE;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_ABILITIES_ATTACKER: // Poison Touch, possibly other in the future
@@ -10164,14 +10166,8 @@ static void Cmd_various(void)
     case VARIOUS_TRY_ILLUSION_OFF:
     {
         VARIOUS_ARGS();
-        if (GetIllusionMonPtr(battler) != NULL)
-        {
-            gBattleScripting.battler = battler;
-            gBattlescriptCurrInstr = cmd->nextInstr;
-            BattleScriptPushCursor();
-            gBattlescriptCurrInstr = BattleScript_IllusionOff;
+        if (TryClearIllusion(battler, FALSE))
             return;
-        }
         break;
     }
     case VARIOUS_SET_SPRITEIGNORE0HP:
@@ -13140,7 +13136,7 @@ static void Cmd_transformdataexecution(void)
     gChosenMove = MOVE_UNAVAILABLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
     if (gBattleMons[gBattlerTarget].status2 & STATUS2_TRANSFORMED
-        || gBattleStruct->illusion[gBattlerTarget].on
+        || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON
         || gStatuses3[gBattlerTarget] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;

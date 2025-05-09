@@ -512,10 +512,7 @@ bool8 TryHandleLaunchBattleTableAnimation(u8 activeBattler, u8 atkBattler, u8 de
     }
 
     if (tableId == B_ANIM_ILLUSION_OFF)
-    {
-        gBattleStruct->illusion[activeBattler].broken = 1;
-        gBattleStruct->illusion[activeBattler].on = 0;
-    }
+        gBattleStruct->illusion[activeBattler].state = ILLUSION_OFF;
 
     gBattleAnimAttacker = atkBattler;
     gBattleAnimTarget = defBattler;
@@ -951,6 +948,8 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
             // Get base form if its currently Gigantamax
             if (IsGigantamaxed(battlerDef))
                 targetSpecies = gBattleStruct->changedSpecies[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]];
+            else if (gBattleStruct->illusion[battlerDef].state == ILLUSION_ON)
+                targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
                 targetSpecies = GetMonData(monDef, MON_DATA_SPECIES);
             personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);

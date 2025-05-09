@@ -6845,6 +6845,14 @@ BattleScript_BattlerFormChangeWithStringEnd3::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
+BattleScript_IllusionOffAndTerastallization::
+	call BattleScript_IllusionOff
+	goto BattleScript_Terastallization
+
+BattleScript_IllusionOffEnd3::
+	call BattleScript_IllusionOff
+	end3
+
 BattleScript_IllusionOff::
 	spriteignore0hp TRUE
 	playanimation BS_SCRIPTING, B_ANIM_ILLUSION_OFF

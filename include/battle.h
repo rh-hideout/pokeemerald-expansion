@@ -523,12 +523,15 @@ struct LinkBattlerHeader
     struct BattleEnigmaBerry battleEnigmaBerry;
 };
 
+enum IllusionState {
+    ILLUSION_NOT_SET,
+    ILLUSION_OFF,
+    ILLUSION_ON
+};
+
 struct Illusion
 {
-    u8 on;
-    u8 set;
-    u8 broken;
-    u8 partyId;
+    enum IllusionState state;
     struct Pokemon *mon;
 };
 
