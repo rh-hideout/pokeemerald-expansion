@@ -6074,10 +6074,12 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
         gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
 
     // Check if a gem should activate.
+    u32 effect = GetMoveEffect(move);
     if (holdEffect == HOLD_EFFECT_GEMS
         && GetBattleMoveType(move) == ItemId_GetSecondaryId(heldItem)
-        && GetMoveEffect(move) != EFFECT_PLEDGE
-        && GetMovePower(move) > 1)
+        && effect != EFFECT_PLEDGE
+        && effect != EFFECT_OHKO
+        && effect != EFFECT_STRUGGLE)
     {
         gSpecialStatuses[battler].gemParam = GetBattlerHoldEffectParam(battler);
         gSpecialStatuses[battler].gemBoost = TRUE;
