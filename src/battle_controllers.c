@@ -3044,7 +3044,7 @@ static void AnimateMonAfterKnockout(u32 battler)
 
 static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront)
 {
-    u32 species = gBattleMons[battlerId].species;
+    u32 species = GetBattlerVisualSpecies(battlerId);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
     if (isFront)
@@ -3064,9 +3064,10 @@ static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront)
 
 static u32 ReturnAnimIdForBattler(bool32 wasPlayerSideKnockedOut, u32 specificBattler)
 {
+    u32 species = GetBattlerVisualSpecies(specificBattler);
     if (wasPlayerSideKnockedOut)
-        return gSpeciesInfo[gBattleMons[specificBattler].species].frontAnimId;
+        return gSpeciesInfo[species].frontAnimId;
     else
-        return GetSpeciesBackAnimSet(gBattleMons[specificBattler].species);
+        return GetSpeciesBackAnimSet(species);
 }
 
