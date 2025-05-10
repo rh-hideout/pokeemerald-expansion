@@ -237,9 +237,10 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 s
     }
 }
 
-SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
+SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BESTOW) == EFFECT_BESTOW);
         PLAYER(SPECIES_TOXEL) { Item(ITEM_BERSERK_GENE); Ability(ABILITY_KLUTZ); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
