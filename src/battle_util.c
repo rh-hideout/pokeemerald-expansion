@@ -6649,7 +6649,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                     gBattleStruct->moneyMultiplierItem = 1;
                 }
                 break;
-            case HOLD_EFFECT_RESTORE_STATS:
+            case HOLD_EFFECT_WHITE_HERB:
                 effect = RestoreWhiteHerbStats(battler);
                 if (effect != 0)
                     BattleScriptExecute(BattleScript_WhiteHerbEnd2);
@@ -6868,7 +6868,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 if (!moveTurn)
                     effect = ItemRestorePp(battler, gLastUsedItem, caseID);
                 break;
-            case HOLD_EFFECT_RESTORE_STATS:
+            case HOLD_EFFECT_WHITE_HERB:
                 effect = RestoreWhiteHerbStats(battler);
                 if (effect != 0)
                     BattleScriptExecute(BattleScript_WhiteHerbEnd2);
@@ -7415,7 +7415,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
     case ITEMEFFECT_STATS_CHANGED:
         switch (battlerHoldEffect)
         {
-        case HOLD_EFFECT_RESTORE_STATS:
+        case HOLD_EFFECT_WHITE_HERB:
             effect = RestoreWhiteHerbStats(battler);
             if (effect != 0)
             {

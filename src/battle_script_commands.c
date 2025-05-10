@@ -7157,7 +7157,7 @@ static void Cmd_moveend(void)
                 if (!IsBattlerAlive(i))
                     continue;
 
-                if (GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_RESTORE_STATS
+                if (GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_WHITE_HERB
                  && RestoreWhiteHerbStats(i))
                 {
                     BattleScriptPushCursor();

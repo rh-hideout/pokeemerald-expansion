@@ -4449,7 +4449,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
     case EFFECT_SHELL_SMASH:
-        if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_RESTORE_STATS)
+        if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_WHITE_HERB)
             ADJUST_SCORE(WEAK_EFFECT);
 
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
