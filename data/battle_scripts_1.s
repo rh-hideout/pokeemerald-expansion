@@ -10035,7 +10035,7 @@ BattleScript_CouldntFullyProtect::
 BattleScript_BerserkGeneRet::
 	saveattacker
 	savetarget
-    copybyte gBattlerTarget, sBATTLER
+	copybyte gBattlerTarget, sBATTLER
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerserkGeneRet_TryConfuse
 	setgraphicalstatchangevalues
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
