@@ -764,6 +764,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro removestockpilecounters
+	callnative BS_RemoveStockpileCounters
+	.endm
+
 	.macro setdrainedhp
 	.byte 0x88
 	.endm

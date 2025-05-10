@@ -3279,7 +3279,6 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     case MOVE_EFFECT_KNOCK_OFF:
     case MOVE_EFFECT_SMACK_DOWN:
     case MOVE_EFFECT_REMOVE_STATUS:
-    case MOVE_EFFECT_STOCKPILE_WORE_OFF:
         gBattleStruct->moveEffect2 = gBattleScripting.moveEffect;
         gBattlescriptCurrInstr++;
         return;
@@ -6514,15 +6513,6 @@ static void Cmd_moveend(void)
                 if (!DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
                 {
                     effect = TryKnockOffBattleScript(gBattlerTarget);
-                }
-                break;
-            case MOVE_EFFECT_STOCKPILE_WORE_OFF:
-                if (gDisableStructs[gBattlerAttacker].stockpileCounter != 0)
-                {
-                    gDisableStructs[gBattlerAttacker].stockpileCounter = 0;
-                    effect = TRUE;
-                    BattleScriptPush(gBattlescriptCurrInstr);
-                    gBattlescriptCurrInstr = BattleScript_MoveEffectStockpileWoreOff;
                 }
                 break;
             case MOVE_EFFECT_SMACK_DOWN:
@@ -12040,6 +12030,7 @@ static void Cmd_stockpile(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+
 static void Cmd_stockpiletobasedamage(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -12054,10 +12045,6 @@ static void Cmd_stockpiletobasedamage(void)
         if (gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
             gBattleScripting.animTurn = gDisableStructs[gBattlerAttacker].stockpileCounter;
 
-        if (!(gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT && IsBattlerAlive(gBattlerTarget)))
-        {
-            gBattleStruct->moveEffect2 = MOVE_EFFECT_STOCKPILE_WORE_OFF;
-        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -12088,7 +12075,6 @@ static void Cmd_stockpiletohpheal(void)
             {
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / (1 << (3 - gDisableStructs[gBattlerAttacker].stockpileCounter));
                 gBattleScripting.animTurn = gDisableStructs[gBattlerAttacker].stockpileCounter;
-                gBattleStruct->moveEffect2 = MOVE_EFFECT_STOCKPILE_WORE_OFF;
             }
             else // Snatched move
             {
@@ -12103,6 +12089,24 @@ static void Cmd_stockpiletohpheal(void)
             gBattlescriptCurrInstr = cmd->nextInstr;
             gBattlerTarget = gBattlerAttacker;
         }
+    }
+}
+
+void BS_RemoveStockpileCounters(void)
+{
+    NATIVE_ARGS();
+
+    if (GetMoveEffect(gCurrentMove) == EFFECT_SWALLOW
+     && gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
+     && IsBattlerAlive(gBattlerTarget))
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        gDisableStructs[gBattlerAttacker].stockpileCounter = 0;
+        BattleScriptPush(cmd->nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStockpileWoreOff;
     }
 }
 
