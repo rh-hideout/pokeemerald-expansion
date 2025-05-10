@@ -12030,7 +12030,6 @@ static void Cmd_stockpile(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-
 static void Cmd_stockpiletobasedamage(void)
 {
     CMD_ARGS(const u8 *failInstr);
