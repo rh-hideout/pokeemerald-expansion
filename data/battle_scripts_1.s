@@ -6223,6 +6223,14 @@ BattleScript_ToxicSpikesPoisoned::
 	waitstate
 	return
 
+BattleScript_ToxicSpikesBadlyPoisoned::
+	printstring STRINGID_TOXICSPIKESBADLYPOISONED
+	waitmessage B_WAIT_TIME_LONG
+	statusanimation BS_SCRIPTING
+	updatestatusicon BS_SCRIPTING
+	waitstate
+	return
+
 BattleScript_StickyWebOnSwitchIn::
 	savetarget
 	saveattacker

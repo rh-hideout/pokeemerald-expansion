@@ -8253,8 +8253,11 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             i = GetBattlerAbility(battler);
             if (CanBePoisoned(gBattlerAttacker, battler, i))
             {
-                if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2)
+                u32 tspikes = 0;
+                if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2) {
+                    tspikes = 1;
                     gBattleMons[battler].status1 |= STATUS1_TOXIC_POISON;
+                }
                 else
                     gBattleMons[battler].status1 |= STATUS1_POISON;
 
@@ -8262,7 +8265,10 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
                 MarkBattlerForControllerExec(battler);
                 gBattleScripting.battler = battler;
                 BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_ToxicSpikesPoisoned;
+                if (tspikes == 0)
+                    gBattlescriptCurrInstr = BattleScript_ToxicSpikesPoisoned;
+                else
+                    gBattlescriptCurrInstr = BattleScript_ToxicSpikesBadlyPoisoned;
             }
         }
     }
