@@ -72,6 +72,7 @@ static EWRAM_DATA u16 sFieldEffectScriptId = 0;
 
 static u8 sBrailleWindowId;
 static bool8 sIsScriptedWildDouble;
+static struct ScriptContext * sScriptContextPtr;
 
 extern const SpecialFunc gSpecials[];
 extern const u8 *gStdScripts[];
@@ -79,6 +80,7 @@ extern const u8 *gStdScripts_End[];
 
 static void CloseBrailleWindow(void);
 static void DynamicMultichoiceSortList(struct ListMenuItem *items, u32 count);
+static bool8 ScriptContext_NextCommandEndsScript(struct ScriptContext * ctx);
 
 // This is defined in here so the optimizer can't see its value when compiling
 // script.c.
@@ -1640,7 +1642,6 @@ bool8 ScrCmd_releaseall(struct ScriptContext *ctx)
     ObjectEventClearHeldMovementIfFinished(&gObjectEvents[playerObjectId]);
     ScriptMovement_UnfreezeObjectEvents();
     UnfreezeObjectEvents();
-    gMsgBoxIsCancelable = FALSE;
     return FALSE;
 }
 
@@ -1661,7 +1662,6 @@ bool8 ScrCmd_release(struct ScriptContext *ctx)
     ObjectEventClearHeldMovementIfFinished(&gObjectEvents[playerObjectId]);
     ScriptMovement_UnfreezeObjectEvents();
     UnfreezeObjectEvents();
-    gMsgBoxIsCancelable = FALSE;
     return FALSE;
 }
 
@@ -1734,17 +1734,61 @@ bool8 ScrCmd_closemessage(struct ScriptContext *ctx)
     return FALSE;
 }
 
+static u8 ScriptContext_GetEndScriptInput(struct ScriptContext * ctx)
+{
+    if (JOY_HELD(DPAD_UP) && gSpecialVar_Facing != DIR_NORTH)
+        return gBufferedWalkawayInput = DPAD_UP;
+
+    if (JOY_HELD(DPAD_DOWN) && gSpecialVar_Facing != DIR_SOUTH)
+        return gBufferedWalkawayInput = DPAD_DOWN;
+
+    if (JOY_HELD(DPAD_LEFT) && gSpecialVar_Facing != DIR_WEST)
+        return gBufferedWalkawayInput = DPAD_LEFT;
+
+    if (JOY_HELD(DPAD_RIGHT) && gSpecialVar_Facing != DIR_EAST)
+        return gBufferedWalkawayInput = DPAD_RIGHT;
+
+    if (JOY_NEW(L_BUTTON))
+        return gBufferedWalkawayInput = L_BUTTON;
+
+    if (JOY_HELD(R_BUTTON))
+        return gBufferedWalkawayInput = R_BUTTON;
+
+    if (JOY_HELD(START_BUTTON))
+        return gBufferedWalkawayInput = START_BUTTON;
+
+    if (JOY_HELD(SELECT_BUTTON))
+        return gBufferedWalkawayInput = SELECT_BUTTON;
+
+    return 0;
+}
+
 static bool8 WaitForAorBPress(void)
 {
     if (JOY_NEW(A_BUTTON))
         return TRUE;
     if (JOY_NEW(B_BUTTON))
         return TRUE;
+
+    if (ScriptContext_NextCommandEndsScript(sScriptContextPtr))
+    {
+        if (ScriptContext_GetEndScriptInput(sScriptContextPtr))
+        {
+            if(gBufferedWalkawayInput >= DPAD_RIGHT && gBufferedWalkawayInput <= DPAD_DOWN)
+            {   // FRLG ends script with DPAD input but doesn't actually turn--unbuffer that input
+                gBufferedWalkawayInput = 0;
+            }
+            gMsgBoxIsCancelable = FALSE;
+            return TRUE;
+        }
+    }
+
     return FALSE;
 }
 
 bool8 ScrCmd_waitbuttonpress(struct ScriptContext *ctx)
 {
+    sScriptContextPtr = ctx;
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     SetupNativeScript(ctx, WaitForAorBPress);
@@ -3161,6 +3205,21 @@ bool8 ScrFunc_hidefollower(struct ScriptContext *ctx)
 
     // execute next script command with no delay
     return TRUE;
+}
+
+static bool8 ScriptContext_NextCommandEndsScript(struct ScriptContext * ctx)
+{
+    const u8 * script = ctx->scriptPtr;
+    u8 nextCmd = *script;
+    if (nextCmd == 3) // return
+    {
+        script = ctx->stack[ctx->stackDepth - 1];
+        nextCmd = *script;
+    }
+    if (nextCmd < 0x6B || nextCmd > 0x6C) // releaseall or release
+        return FALSE;
+    else
+        return TRUE;
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
