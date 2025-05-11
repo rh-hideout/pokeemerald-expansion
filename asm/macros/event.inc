@@ -2527,7 +2527,7 @@
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
 	checkfollowernpc
-	goto_if_ne VAR_RESULT, FALSE, 1f
+	goto_if_eq VAR_RESULT, TRUE, 1f
 	hidefollower
 	delay 16
 	callnative ScriptSetFollowerNPC
@@ -2568,7 +2568,7 @@
 	callnative HideNPCFollower
 	.endm
 
-	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT. Returns 2 if follower NPCs are disabled.
+	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
 	.macro checkfollowernpc
 	callnative ScriptCheckFollowerNPC
 	.endm
