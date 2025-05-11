@@ -2526,30 +2526,38 @@
 	@ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
-	checkfollowernpc
-	.if VAR_RESULT == FALSE
-		hidefollower
-		delay 16
-		callnative ScriptSetFollowerNPC
-		.if \script == 0
-			.set setScript, FALSE
-		.else
-			.set setScript, TRUE
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		checkfollowernpc
+		.if VAR_RESULT == FALSE
+			hidefollower
+			delay 16
+			callnative ScriptSetFollowerNPC
+			.if \script == 0
+				.set setScript, FALSE
+			.else
+				.set setScript, TRUE
+			.endif
+			.byte \localId
+			.2byte \flags
+			.byte setScript
+			.2byte \battlePartner
+			.4byte \script
+			updatefollowingmon
 		.endif
-		.byte \localId
-		.2byte \flags
-		.byte setScript
-		.2byte \battlePartner
-		.4byte \script
-		updatefollowingmon
+	.else
+		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
 	.endm
 
 	@ Remove the follower NPC (assumes there will only ever be one).
 	.macro destroyfollowernpc
-	checkfollowernpc
-	.if VAR_RESULT == TRUE
-		callnative ScriptDestroyFollowerNPC
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		checkfollowernpc
+		.if VAR_RESULT == TRUE
+			callnative ScriptDestroyFollowerNPC
+		.endif
+	.else
+		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
 	.endm
 
