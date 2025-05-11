@@ -411,7 +411,7 @@ static u16 GetRandomAlternateMove(u8 monId)
 
         if (TrySetMove(monId, moveId))
         {
-            if (gMovesInfo[moveId].validApprenticeMove)
+            if (IsValidApprenticeMove(moveId))
                 break;
             i++;
         }

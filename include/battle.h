@@ -148,27 +148,19 @@ struct ProtectStruct
     u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 prlzImmobility:1;
+    u32 nonVolatileStatusImmobility:1;
     u32 confusionSelfDmg:1;
     u32 targetAffected:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 usedImprisonedMove:1;
-    u32 loveImmobility:1;
-    u32 usedDisabledMove:1;
-    u32 usedTauntedMove:1;
-    u32 flag2Unknown:1; // Only set to 0 once. Checked in 'WasUnableToUseMove' function.
-    u32 flinchImmobility:1;
+    u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
     u32 notFirstStrike:1;
     u32 palaceUnableToUseMove:1;
-    u32 usedHealBlockedMove:1;
-    u32 usedGravityPreventedMove:1;
     u32 powderSelfDmg:1;
-    u32 usedThroatChopPreventedMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
-    u32 unused:1;
+    u32 unused:9;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
     u16 statFell:1;
@@ -183,7 +175,8 @@ struct ProtectStruct
     u16 eatMirrorHerb:1;
     u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
-    u16 padding:2;
+    u16 lashOutAffected:1;
+    u16 padding:1;
     // End of 16-bit bitfield
     u32 physicalDmg;
     u32 specialDmg;
@@ -227,13 +220,11 @@ struct SpecialStatus
     // End of byte
     u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
-    // End of byte
     u8 enduredDamage:1;
-    u8 padding:7;
+    // End of byte
 };
 
 struct SideTimer
@@ -631,7 +622,6 @@ struct BattlerState
     u32 multipleSwitchInBattlers:1;
     u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
     u32 activeAbilityPopUps:1;
-    u32 lastMoveFailed:1; // For Stomping Tantrum
     u32 forcedSwitch:1;
     u32 storedHealingWish:1;
     u32 storedLunarDance:1;
@@ -639,7 +629,8 @@ struct BattlerState
     u32 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u32 usedMicleBerry:1;
     u32 pursuitTarget:1;
-    u32 padding:17;
+    u32 stompingTantrumTimer:2;
+    u32 padding:16;
     // End of Word
 };
 
@@ -745,19 +736,19 @@ struct BattleStruct
     u8 debugBattler;
     u8 magnitudeBasePower;
     u8 presentBasePower;
-    u8 roostTypes[MAX_BATTLERS_COUNT][2];
+    u8 roostTypes[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
     bool8 ateBoost[MAX_BATTLERS_COUNT];
-    u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][2];    // two per battler
+    u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum BattleIntroStates introState:8;
-    u8 ateBerry[2]; // array id determined by side, each party pokemon as bit
+    u8 ateBerry[NUM_BATTLE_SIDES]; // array id determined by side, each party pokemon as bit
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
@@ -813,13 +804,14 @@ struct BattleStruct
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
+    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
     u8 cheekPouchActivated:1;
     u8 padding2:3;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
-    s32 moveDamage[MAX_BATTLERS_COUNT];
-    s32 critChance[MAX_BATTLERS_COUNT];
+    s16 moveDamage[MAX_BATTLERS_COUNT];
+    s16 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 missStringId[MAX_BATTLERS_COUNT];
     u8 noResultString[MAX_BATTLERS_COUNT];
@@ -830,12 +822,9 @@ struct BattleStruct
     u8 numSpreadTargets:2;
     u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
     u8 noTargetPresent:1;
-    u8 usedEjectItem;
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u8 embodyAspectBoost[NUM_BATTLE_SIDES];
-    u16 savedMove; // backup current move for mid-turn switching, e.g. Red Card
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 padding:4;
@@ -909,10 +898,6 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
 }
 
 #define IS_BATTLER_PROTECTED(battlerId)(gProtectStructs[battlerId].protected                                           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_WIDE_GUARD           \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_QUICK_GUARD          \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_CRAFTY_SHIELD        \
-                                        || gSideStatuses[GetBattlerSide(battlerId)] & SIDE_STATUS_MAT_BLOCK            \
                                         || gProtectStructs[battlerId].spikyShielded                                    \
                                         || gProtectStructs[battlerId].kingsShielded                                    \
                                         || gProtectStructs[battlerId].banefulBunkered                                  \
@@ -1094,7 +1079,7 @@ extern u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13]; //to handle stupidly large z move names
 extern u32 gBattleTypeFlags;
-extern u8 gBattleTerrain;
+extern u8 gBattleEnvironment;
 extern u8 *gBattleAnimBgTileBuffer;
 extern u8 *gBattleAnimBgTilemapBuffer;
 extern u32 gBattleControllerExecFlags;
@@ -1297,5 +1282,12 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
 }
 
-#endif // GUARD_BATTLE_H
+static inline bool32 IsBattlerSideProtected(u32 battler)
+{
+    return gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_WIDE_GUARD
+                                                   | SIDE_STATUS_QUICK_GUARD
+                                                   | SIDE_STATUS_CRAFTY_SHIELD
+                                                   | SIDE_STATUS_MAT_BLOCK);
+}
 
+#endif // GUARD_BATTLE_H

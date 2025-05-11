@@ -4,10 +4,10 @@
 SINGLE_BATTLE_TEST("Static inflicts paralysis on contact")
 {
     u32 move;
-    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_SWIFT; }
     GIVEN {
-        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_SWIFT));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
@@ -35,11 +35,11 @@ SINGLE_BATTLE_TEST("Static triggers 30% of the time")
     PASSES_RANDOMLY(3, 10, RNG_STATIC);
     GIVEN {
         ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_4);
-        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);

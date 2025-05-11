@@ -179,3 +179,19 @@ SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right pok
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn triggers before Eject Pack")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GOODRA_HISUI) { Ability(ABILITY_GOOEY); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
