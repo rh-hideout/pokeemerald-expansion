@@ -341,7 +341,7 @@
 	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
 	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
 	.macro gettimeofday
-	callnative ScrCmd_gettimeofday requests_effects=1
+	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
 
 	@ Plays the specified sound. Only one sound may play at a time, with newer ones interrupting older ones.

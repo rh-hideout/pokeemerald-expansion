@@ -3205,7 +3205,7 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
     
     u32 weekdayTarget = ScriptReadWord(ctx);
-    u32 daysToAdd = ((weekdayTarget - rtc->dayOfWeek) + 7) % 7;
+    u32 daysToAdd = ((weekdayTarget - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
     
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     
