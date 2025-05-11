@@ -359,16 +359,19 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     switch (stringId)
     {
     case STRINGID_ITDOESNTAFFECT:
+    case STRINGID_ITDOESNTAFFECTTWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 2, 0);
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
             TrySetBattleSeminarShow();
         break;
     case STRINGID_NOTVERYEFFECTIVE:
+    case STRINGID_NOTVERYEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP, NULL) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
+    case STRINGID_SUPEREFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 0, 0);
         break;
     case STRINGID_PKMNFORESAWATTACK:
