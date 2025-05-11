@@ -1601,13 +1601,9 @@ void ScriptSetFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 {
-    if (PlayerHasFollowerNPC())
-    {
-        RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
-        FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
-        ClearFollowerNPCData();
-    }
-
+    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
+    FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
+    ClearFollowerNPCData();
     UpdateFollowingPokemon();
 }
 
