@@ -2557,7 +2557,7 @@
 			callnative ScriptDestroyFollowerNPC
 		.endif
 	.else
-		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+		.error "destroyfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
 	.endm
 
