@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it destroyed the item with I
 SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it knocked off that item")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {

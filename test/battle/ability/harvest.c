@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when knocked off by Knock Of
 {
     PASSES_RANDOMLY(1, 1, RNG_HARVEST);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
