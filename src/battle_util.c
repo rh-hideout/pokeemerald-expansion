@@ -4954,13 +4954,13 @@ gFieldStatuses |= STATUS_FIELD_PSYCHIC_TERRAIN;
                 effect++;
             }
             break;
-        case ABILITY_TRICKSTER:
+        case ABILITY_FRIGHTEN:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_SPATK, 1, TRUE);
-                BattleScriptPushCursorAndCallback(BattleScript_TricksterActivates);    
+                BattleScriptPushCursorAndCallback(BattleScript_FrightenActivates);    
                 effect++;
             }
             break;

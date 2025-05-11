@@ -430,10 +430,11 @@ static const u8 sText_YouThrowABallNowRight[] = _("You throw a BALL now, right?\
 // static const u8 sText_TiedOpponentByReferee[];
 // static const u8 sText_QuestionForfeitMatch[];
 // static const u8 sText_ForfeitedMatch[];
-// static const u8 sText_Trainer1WinText[];
-// static const u8 sText_Trainer2WinText[];
-// static const u8 sText_TwoInGameTrainersDefeated[];
-// static const u8 sText_Trainer2LoseText[];
+//static const u8 sText_Trainer1WinText[];
+//static const u8 sText_Trainer2WinText[];
+//static const u8 sText_TwoInGameTrainersDefeated[];
+static const u8 sText_TwoInGameTrainersDefeated[] = _("You defeated {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\p");
+//static const u8 sText_Trainer2LoseText[];
 
 // New battle strings.
 const u8 gText_drastically[] = _("drastically ");
@@ -798,7 +799,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNOBTAINEDXYOBTAINEDZ]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} obtained {B_BUFF1}.\p{B_DEF_NAME_WITH_PREFIX} obtained {B_BUFF2}."),
     [STRINGID_BUTNOEFFECT]                          = COMPOUND_STRING("But it had no effect!"),
     [STRINGID_PKMNSXHADNOEFFECTONY]                 = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY} had no effect on {B_EFF_NAME_WITH_PREFIX2}!"), //not in gen 5+, ability popup
-    //[STRINGID_TWOENEMIESDEFEATED]                   = sText_TwoInGameTrainersDefeated,
+    [STRINGID_TWOENEMIESDEFEATED]                   = sText_TwoInGameTrainersDefeated,
     [STRINGID_TRAINER2LOSETEXT]                     = COMPOUND_STRING("{B_TRAINER2_LOSE_TEXT}"),
     [STRINGID_PKMNINCAPABLEOFPOWER]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} appears incapable of using its power!"),
     [STRINGID_GLINTAPPEARSINEYE]                    = COMPOUND_STRING("A glint appears in {B_SCR_NAME_WITH_PREFIX2}'s eyes!"),

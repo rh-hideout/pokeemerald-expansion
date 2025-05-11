@@ -377,7 +377,7 @@
 #define ABILITY_ENDLESS_HUNGER 343  //as long as holdng a berry recover hp per turn UNSURE HOW TO MAKE
 #define ABILITY_DRAGONATE 344       //pixelate for dragons                                                      DONE
 #define ABILITY_VENGEFUL 345        //chance to ghost curse when hit with a contact move
-#define ABILITY_TRICKSTER 346       //special intimidate                NEED A BATTLE SCRIPT FOR BATTLE_UTIL also build logic
+#define ABILITY_FRIGHTEN 346       //special intimidate                
 #define ABILITY_KICKBOXER 347
 #define ABILITY_SPINNER 348
 #define ABILITY_ROYAL_COAT 349      //shield dust reformated                NTM
@@ -385,14 +385,14 @@
 //Stage 3
 #define ABILITY_NORMALIZE_AURA 350  //neutralizing gas for delcatty NTM
 #define ABILITY_TRUE_POWER 351
-#define ABILITY_PRECISE_TACTICS 352 //llook into bbattle util and battle script command lines
+#define ABILITY_PRECISE_TACTICS 352 //look into battle util and battle script command lines
 #define ABILITY_HYPER_FOCUS 353
 // #define ABILITY_FIRE_DRIFT 354 //prio to fire attacks like gale wings
 // #define ABILITY_PERCEPTIVE 355 //immune to hazards
 // #define ABILITY_COZY_DREAMS 356 //heal at end of each turn
 // #define ABILITY_SOUL_DRAIN 357 //drain all non ghost/dark types
-// #define ABILITY_
-// #define ABILITY_
+// #define ABILITY_                 //supersweet syrup for poison and ground types "messy"
+// #define ABILITY_                 
 // #define ABILITY_
 //remember to build the description doc for 328+
 

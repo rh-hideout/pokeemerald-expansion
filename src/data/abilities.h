@@ -2631,9 +2631,9 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Curses on contact."),
         .aiRating = 4,
     },
-    [ABILITY_TRICKSTER] =
+    [ABILITY_FRIGHTEN] =
     {
-        .name = _("Trickster"),
+        .name = _("Frighten"),
         .description = COMPOUND_STRING("Lowers the foe's Sp.Atk."),
         .aiRating = 7,
     },

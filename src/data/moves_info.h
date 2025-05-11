@@ -16658,7 +16658,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A sun-fueled strike that\n"
             "ignores abilities."),
         .effect = EFFECT_HIT,
-        .power = 100,
+        .power = 80,
         .type = TYPE_STEEL,
         .accuracy = 100,
         .pp = 5,
@@ -20799,7 +20799,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     },
 
 
-    //custom moves begin
+    //custom moves begin 
 
     [MOVE_EXO_BASH] =
     {
@@ -21144,7 +21144,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Pestilence"),
         .description = COMPOUND_STRING(
-            "Attacks with acidic ooze.\n"
+            "Attacks with an acidic blow.\n"
             "Likely to poison foes."),
         .effect = EFFECT_HIT,
         .power = 100,
@@ -22708,7 +22708,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Shadow Stare"),
         .description = COMPOUND_STRING(
-            "Unpleasant sound waves that\n"
+            "Unpleasant gaze that\n"
             "damage and prevent healing."),
         .effect = EFFECT_HIT,
         .power = 75,
@@ -23154,8 +23154,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .argument = TYPE_FLYING,
         .makesContact = TRUE,
         .minimizeDoubleDamage = TRUE,
-        .gravityBanned = TRUE,
-        .skyBattleBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -23226,9 +23224,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .zMove = { .powerOverride = 170 },
         .argument = TYPE_PSYCHIC,
         .makesContact = TRUE,
-        .minimizeDoubleDamage = TRUE,
-        .gravityBanned = TRUE,
-        .skyBattleBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -23303,8 +23298,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .argument = TYPE_DARK,
         .strikeCount = 2,
         .makesContact = TRUE,
-        .gravityBanned = TRUE,
-        .skyBattleBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -24259,7 +24252,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "The user's fists hit one\n"
             "to ten times in a row."),
         .effect = EFFECT_POPULATION_BOMB,
-        .power = 18,
+        .power = 15,
         .type = TYPE_NORMAL,
         .accuracy = 90,
         .pp = 10,
@@ -24302,10 +24295,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
     {
         .name = COMPOUND_STRING("Volcanic Burst"),
         .description = COMPOUND_STRING(
-            "A powerful loyalty attack.\n"
+            "A powerful charged attack.\n"
             "The user flinches if hit."),
         .effect = EFFECT_FOCUS_PUNCH,
-        .power = 120,
+        .power = 140,
         .type = TYPE_FIRE,
         .accuracy = 100,
         .pp = 20,
@@ -24478,26 +24471,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .battleAnimScript = gBattleAnimMove_AirSlash,
     },
 
-    [MOVE_FLURRY_O_BLOWS] =
-    {
-        .name = COMPOUND_STRING("Flurry O Blows"),
-        .description = COMPOUND_STRING(
-            "The user punches hit one\n"
-            "to ten times in a row."),
-        .effect = EFFECT_POPULATION_BOMB,
-        .power = 15,
-        .type = TYPE_NORMAL,
-        .accuracy = 90,
-        .pp = 10,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_PHYSICAL,
-        .makesContact = TRUE,
-        .punchingMove = TRUE,
-        .metronomeBanned = TRUE,
-        .strikeCount = 10,
-        .battleAnimScript = gBattleAnimMove_PopulationBomb,
-    },
     
 
     //bulag

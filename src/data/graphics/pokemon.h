@@ -14142,6 +14142,33 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gShinyOverworldPalette_Empoleon[] = INCBIN_U32("graphics/pokemon/empoleon/overworld_shiny.gbapal.lz");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
+#if P_MEGA_EVOLUTIONS
+    const u32 gMonFrontPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/front.png.lz");
+    const u32 gMonPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/normal.pal.lz");
+    const u32 gMonBackPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/back.png.lz");
+    const u32 gMonShinyPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/shiny.pal.lz");
+    const u8 gMonIcon_EmpoleonMegaX[] = INCBIN_U8("graphics/pokemon/Empoleon/icon.4bpp");
+#if OW_POKEMON_OBJECT_EVENTS
+    // const u32 gObjectEventPic_EmpoleonMegaX[] = INCBIN_COMP("graphics/pokemon/Empoleon/mega_x/overworld.4bpp");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    // const u32 gOverworldPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/overworld_normal.gbapal.lz");
+    // const u32 gShinyOverworldPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/overworld_shiny.gbapal.lz");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
+
+    const u32 gMonFrontPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/front.png.lz");
+    const u32 gMonPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/normal.pal.lz");
+    const u32 gMonBackPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/back.png.lz");
+    const u32 gMonShinyPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/shiny.pal.lz");
+    const u8 gMonIcon_EmpoleonMegaY[] = INCBIN_U8("graphics/pokemon/Empoleon/icon.4bpp");
+#if OW_POKEMON_OBJECT_EVENTS
+    // const u32 gObjectEventPic_EmpoleonMegaY[] = INCBIN_COMP("graphics/pokemon/Empoleon/mega_y/overworld.4bpp");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    // const u32 gOverworldPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/overworld_normal.gbapal.lz");
+    // const u32 gShinyOverworldPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/overworld_shiny.gbapal.lz");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_PIPLUP
 
 #if P_FAMILY_STARLY

@@ -138,6 +138,10 @@ static const u8 sGenericMulchDesc[]   = _("A fertilizer that\n"
                                           "is unsuitable for\n"
                                           "local soil.");
 
+static const u8 sEmpoleoniteDesc[]   = _("This stone enables\n"
+                                          "Empoleon to Mega\n"
+                                          "Evolve in battle.");
+
 const struct Item gItemsInfo[] =
 {
     [ITEM_NONE] =
@@ -5928,6 +5932,36 @@ const struct Item gItemsInfo[] =
         .flingPower = 80,
         .iconPic = gItemIcon_Latiosite,
         .iconPalette = gItemIconPalette_Latiosite,
+    },
+
+    [ITEM_EMPOLEONITE_X] =
+    {
+        .name = _("Empoleonite X"),
+        .pluralName = _("Empoleons X"),
+        .price = 0,
+        .holdEffect = HOLD_EFFECT_MEGA_STONE,
+        .description = sEmpoleoniteDesc,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 80,
+        .iconPic = gItemIcon_CharizarditeX,
+        .iconPalette = gItemIconPalette_CharizarditeX,
+    },
+
+    [ITEM_EMPOLEONITE_Y] =
+    {
+        .name = _("Empoleonite Y"),
+        .pluralName = _("Empoleons Y"),
+        .price = 0,
+        .holdEffect = HOLD_EFFECT_MEGA_STONE,
+        .description = sEmpoleoniteDesc,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 80,
+        .iconPic = gItemIcon_CharizarditeY,
+        .iconPalette = gItemIconPalette_CharizarditeY,
     },
 
     [ITEM_LOPUNNITE] =

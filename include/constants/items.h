@@ -1004,10 +1004,18 @@
 
 #define ITEM_STRANGE_BALL 828
 
+//Custom Items
+//Held
+//Balls
+//Berries
+//Mega Stones
+#define ITEM_EMPOLEONITE_X 829
+#define ITEM_EMPOLEONITE_Y 830
+
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 829
+#define ITEMS_COUNT 831
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

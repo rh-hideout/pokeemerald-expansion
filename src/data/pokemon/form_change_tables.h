@@ -515,6 +515,17 @@ static const struct FormChange sDeoxysSpeedFormChangeTable[] = {
 };
 #endif //P_FAMILY_DEOXYS
 
+#if P_FAMILY_PIPLUP
+static const struct FormChange sEmpoleonFormChangeTable[] = {
+#if P_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_EMPOLEON_MEGA_X, ITEM_EMPOLEONITE_X},
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_EMPOLEON_MEGA_Y, ITEM_EMPOLEONITE_Y},
+#endif 
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_PIPLUP
+
+
 #if P_FAMILY_BURMY
 static const struct FormChange sBurmyFormChangeTable[] = {
     {FORM_CHANGE_END_BATTLE_TERRAIN, SPECIES_BURMY_PLANT, BATTLE_TERRAIN_GRASS},

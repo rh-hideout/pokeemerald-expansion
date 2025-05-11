@@ -3631,7 +3631,7 @@ static void PrintRibbonCount(void)
 
 static void BufferIvOrEvStats(u8 mode)
 {
-    u16 hp, hp2, atk, def, spA, spD, spe;
+    u16 hp, hp2 = 0, atk, def, spA, spD, spe;
     u8 *currHPString = Alloc(20);
 
     switch (mode)

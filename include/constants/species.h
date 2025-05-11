@@ -1637,8 +1637,10 @@
 #define SPECIES_URSHIFU_RAPID_STRIKE_STYLE_GMAX         SPECIES_URSHIFU_RAPID_STRIKE_GMAX
 #define SPECIES_MIMIKYU_BUSTED_TOTEM                    1523
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    SPECIES_MIMIKYU_BUSTED_TOTEM
+#define SPECIES_EMPOLEON_MEGA_X                         1524
+#define SPECIES_EMPOLEON_MEGA_Y                         1525
 
-#define SPECIES_EGG                                     (SPECIES_MIMIKYU_BUSTED_TOTEM + 1)
+#define SPECIES_EGG                                     (SPECIES_EMPOLEON_MEGA_Y + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -7986,57 +7986,57 @@ BattleScript_IntimidateInReverse:
 	goto BattleScript_IntimidateLoopIncrement
 
 
-BattleScript_TricksterActivates::
+BattleScript_FrightenActivates::
 	showabilitypopup BS_ATTACKER
 	copybyte sSAVED_BATTLER, gBattlerTarget
 	pause B_WAIT_TIME_LONG
 	destroyabilitypopup
 	setbyte gBattlerTarget, 0
-BattleScript_TricksterLoop:
-	jumpifbyteequal gBattlerTarget, gBattlerAttacker, BattleScript_TricksterLoopIncrement
-	jumpiftargetally BattleScript_TricksterLoopIncrement
-	jumpifabsent BS_TARGET, BattleScript_TricksterLoopIncrement
-	jumpifstatus2 BS_TARGET, STATUS2_SUBSTITUTE, BattleScript_TricksterLoopIncrement
-	jumpifability BS_TARGET, ABILITY_STEADFAST, BattleScript_TricksterInReverse
-BattleScript_TricksterEffect:
+BattleScript_FrightenLoop:
+	jumpifbyteequal gBattlerTarget, gBattlerAttacker, BattleScript_FrightenLoopIncrement
+	jumpiftargetally BattleScript_FrightenLoopIncrement
+	jumpifabsent BS_TARGET, BattleScript_FrightenLoopIncrement
+	jumpifstatus2 BS_TARGET, STATUS2_SUBSTITUTE, BattleScript_FrightenLoopIncrement
+	jumpifability BS_TARGET, ABILITY_STEADFAST, BattleScript_FrightenInReverse
+BattleScript_FrightenEffect:
 	copybyte sBATTLER, gBattlerAttacker
 	setstatchanger STAT_SPATK, 1, TRUE
-	statbuffchange STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_TricksterLoopIncrement
+	statbuffchange STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_FrightenLoopIncrement
 	setgraphicalstatchangevalues
-	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_TricksterContrary
+	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_FrightenContrary
 	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	printstring STRINGID_PKMNCUTSSPATTACKWITH
-BattleScript_TricksterEffect_WaitString:
+BattleScript_FrightenEffect_WaitString:
 	waitmessage B_WAIT_TIME_LONG
 	copybyte sBATTLER, gBattlerTarget
 	call BattleScript_TryIntimidateHoldEffects
-BattleScript_TricksterLoopIncrement:
+BattleScript_FrightenLoopIncrement:
 	addbyte gBattlerTarget, 1
-	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TricksterLoop
-BattleScript_TricksterEnd:
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_FrightenLoop
+BattleScript_FrightenEnd:
 	copybyte sBATTLER, gBattlerAttacker
 	destroyabilitypopup
 	copybyte gBattlerTarget, sSAVED_BATTLER
 	pause B_WAIT_TIME_MED
 	end3
 
-BattleScript_TricksterContrary:
+BattleScript_FrightenContrary:
 	call BattleScript_AbilityPopUpTarget
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TricksterContrary_WontIncrease
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_FrightenContrary_WontIncrease
 	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	printfromtable gStatUpStringIds
-	goto BattleScript_TricksterEffect_WaitString
-BattleScript_TricksterContrary_WontIncrease:
+	goto BattleScript_FrightenEffect_WaitString
+BattleScript_FrightenContrary_WontIncrease:
 	printstring STRINGID_TARGETSTATWONTGOHIGHER
-	goto BattleScript_TricksterEffect_WaitString
+	goto BattleScript_FrightenEffect_WaitString
 
-BattleScript_TricksterInReverse:
+BattleScript_FrightenInReverse:
 	copybyte sBATTLER, gBattlerTarget
 	call BattleScript_AbilityPopUpTarget
 	pause B_WAIT_TIME_SHORT
-	modifybattlerstatstage BS_TARGET, STAT_SPATK, INCREASE, 1, BattleScript_TricksterLoopIncrement, ANIM_ON
+	modifybattlerstatstage BS_TARGET, STAT_SPATK, INCREASE, 1, BattleScript_FrightenLoopIncrement, ANIM_ON
 	call BattleScript_TryIntimidateHoldEffects
-	goto BattleScript_TricksterLoopIncrement
+	goto BattleScript_FrightenLoopIncrement
 
 BattleScript_SupersweetSyrupActivates::
  	savetarget
