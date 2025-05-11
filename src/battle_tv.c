@@ -929,27 +929,112 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
 
     switch (caseId)
     {
+#define move arg2
     case PTS_MOVE_EFFECT: // arg1 -> move slot, arg2 -> move
     {
-        u8 baseFromEffect = gBattleMoveEffects[GetMoveEffect(arg2)].battleTvScore;
+        enum BattleMoveEffects effect = GetMoveEffect(move);
+        u8 baseFromEffect = gBattleMoveEffects[effect].battleTvScore;
 
-        // Various cases to add/remove points
-        if (GetMoveRecoil(arg2) > 0)
-            baseFromEffect++; // Recoil moves
-        if (GetMoveEffect(arg2) == EFFECT_RAPID_SPIN)
+        // Changes depending on the effect
+        switch (effect)
+        {
+        case EFFECT_FIXED_DAMAGE_ARG:
+            baseFromEffect *= (GetMoveFixedDamage(move) / 20);
+            break;
+        case EFFECT_TWO_TURNS_ATTACK:
+            for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
+            {
+                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
+                switch ((enum MoveEffects)additionalEffect->moveEffect)
+                {
+                case MOVE_EFFECT_ATK_PLUS_1:
+                case MOVE_EFFECT_DEF_PLUS_1:
+                case MOVE_EFFECT_SP_ATK_PLUS_1:
+                case MOVE_EFFECT_SP_DEF_PLUS_1:
+                case MOVE_EFFECT_SPD_PLUS_1:
+                case MOVE_EFFECT_ACC_PLUS_1:
+                case MOVE_EFFECT_EVS_PLUS_1:
+                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                        baseFromEffect += 2;
+                    break;
+                case MOVE_EFFECT_ATK_PLUS_2:
+                case MOVE_EFFECT_DEF_PLUS_2:
+                case MOVE_EFFECT_SP_ATK_PLUS_2:
+                case MOVE_EFFECT_SP_DEF_PLUS_2:
+                case MOVE_EFFECT_SPD_PLUS_2:
+                case MOVE_EFFECT_ACC_PLUS_2:
+                case MOVE_EFFECT_EVS_PLUS_2:
+                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                        baseFromEffect += 3;
+                    break;
+                case MOVE_EFFECT_FLINCH:
+                    if (additionalEffect->self == FALSE)
+                        baseFromEffect += 3;
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
+        case EFFECT_FIRST_TURN_ONLY:
+            if (MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100))
+                baseFromEffect += 3;
+            break;
+        case EFFECT_CONFUSE:
+            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+                baseFromEffect += 2;
+            break;
+        default:
+            break;
+        }
+
+        // Guaranteed hit but without negative priority
+        if (GetMoveAccuracy(move) == 0 && GetMovePriority(move) >= 0)
             baseFromEffect++;
-        if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_SP_ATK_MINUS_2) || MoveHasAdditionalEffect(arg2, MOVE_EFFECT_ATK_DEF_DOWN))
-            baseFromEffect += 2; // Overheat, Superpower, etc.
-        if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_STEAL_ITEM))
-            baseFromEffect += 3;
-        if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_WRAP) || MoveHasAdditionalEffectSelf(arg2, MOVE_EFFECT_THRASH))
-            baseFromEffect += 3;
-        if (MoveHasAdditionalEffect(arg2, MOVE_EFFECT_RECHARGE))
-            baseFromEffect += 4;
+        // User recoil damage
+        if (GetMoveRecoil(move) > 0)
+            baseFromEffect++;
+
+        // Additional move effects in any move
+        for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
+            switch (additionalEffect->moveEffect)
+            {
+            case MOVE_EFFECT_STEAL_ITEM:
+                if ((additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                    baseFromEffect += 3;
+                break;
+            case MOVE_EFFECT_THRASH:
+                if (additionalEffect->self == TRUE)
+                    baseFromEffect += 3;
+                break;
+            case MOVE_EFFECT_WRAP:
+                if (additionalEffect->self == FALSE)
+                    baseFromEffect += 3;
+                break;
+            case MOVE_EFFECT_RECHARGE:
+                if (additionalEffect->self == TRUE)
+                    baseFromEffect += 4;
+                break;
+            case MOVE_EFFECT_ATK_DEF_DOWN:
+            case MOVE_EFFECT_ATK_MINUS_2:
+            case MOVE_EFFECT_DEF_MINUS_2:
+            case MOVE_EFFECT_SP_ATK_MINUS_2:
+            case MOVE_EFFECT_SP_DEF_MINUS_2:
+            case MOVE_EFFECT_SPD_MINUS_2:
+            case MOVE_EFFECT_ACC_MINUS_2:
+            case MOVE_EFFECT_EVS_MINUS_2:
+                if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                    baseFromEffect += 2;
+                break;
+            }
+        }
 
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += baseFromEffect;
         break;
     }
+#undef move
     case PTS_EFFECTIVENESS:
     case PTS_CRITICAL_HIT:
     case PTS_STAT_INCREASE_1:
