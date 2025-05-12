@@ -4432,7 +4432,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "While attacking, it may\n"
             "steal the foe's held item."),
-        .effect = EFFECT_STEAL_ITEM,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 60 : 40,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -4441,6 +4441,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STEAL_ITEM,
+        }),
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .meFirstBanned = TRUE,
         .metronomeBanned = TRUE,
@@ -8965,7 +8968,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Cutely begs to obtain an\n"
             "item held by the foe."),
-        .effect = EFFECT_STEAL_ITEM,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 60 : 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -8978,6 +8981,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .copycatBanned = TRUE,
         .assistBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STEAL_ITEM,
+        }),
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .contestComboStarterId = 0,

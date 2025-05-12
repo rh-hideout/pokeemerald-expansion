@@ -962,6 +962,7 @@ static const u16 sProtectSuccessRates[] = {USHRT_MAX, USHRT_MAX / 2, USHRT_MAX /
 static const u16 sFinalStrikeOnlyEffects[] =
 {
     MOVE_EFFECT_BUG_BITE,
+    MOVE_EFFECT_STEAL_ITEM,
     MOVE_EFFECT_REMOVE_ARG_TYPE,
     MOVE_EFFECT_REMOVE_STATUS,
     MOVE_EFFECT_RECOIL_HP_25,
@@ -3278,6 +3279,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     case MOVE_EFFECT_SPIKES:
     case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_BUG_BITE:
+    case MOVE_EFFECT_STEAL_ITEM:
         activateAfterFaint = TRUE;
         break;
     }
@@ -3619,6 +3621,35 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             case MOVE_EFFECT_RAGE:
                 gBattleMons[gBattlerAttacker].status2 |= STATUS2_RAGE;
                 gBattlescriptCurrInstr++;
+                break;
+            case MOVE_EFFECT_STEAL_ITEM:
+                if (!CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
+                    || gBattleMons[gBattlerAttacker].item != ITEM_NONE
+                    || gBattleMons[gBattlerTarget].item == ITEM_NONE)
+                {
+                    gBattlescriptCurrInstr++;
+                }
+                else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_NoItemSteal;
+
+                    gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
+                    RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
+                }
+                else
+                {
+                    StealTargetItem(gBattlerAttacker, gBattlerTarget);  // Attacker steals target item
+
+                    if (!(B_STEAL_WILD_ITEMS >= GEN_9
+                     && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
+                    {
+                        gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
+                        gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+                    }
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemSteal;
+                }
                 break;
             case MOVE_EFFECT_PREVENT_ESCAPE:
                 gBattleMons[gBattlerTarget].status2 |= STATUS2_ESCAPE_PREVENTION;
@@ -6516,35 +6547,6 @@ static void Cmd_moveend(void)
             case EFFECT_KNOCK_OFF:
                 if (!DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
                     effect = TryKnockOffBattleScript(gBattlerTarget);
-                break;
-            case EFFECT_STEAL_ITEM:
-                if (!CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                    || gBattleMons[gBattlerAttacker].item != ITEM_NONE
-                    || gBattleMons[gBattlerTarget].item == ITEM_NONE)
-                {
-                    gBattlescriptCurrInstr++;
-                }
-                else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
-                {
-                    BattleScriptPush(gBattlescriptCurrInstr + 1);
-                    gBattlescriptCurrInstr = BattleScript_NoItemSteal;
-
-                    gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
-                    RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
-                }
-                else
-                {
-                    StealTargetItem(gBattlerAttacker, gBattlerTarget);  // Attacker steals target item
-
-                    if (!(B_STEAL_WILD_ITEMS >= GEN_9
-                     && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
-                    {
-                        gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
-                        gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
-                    }
-                    BattleScriptPush(gBattlescriptCurrInstr + 1);
-                    gBattlescriptCurrInstr = BattleScript_ItemSteal;
-                }
                 break;
             case EFFECT_HIT_SWITCH_TARGET:
                 if (IsBattlerTurnDamaged(gBattlerTarget)
