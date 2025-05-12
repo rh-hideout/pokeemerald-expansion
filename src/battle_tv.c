@@ -45,9 +45,11 @@ enum {
     PTS_FLINCHED,
     PTS_STAT_INCREASE_1,
     PTS_STAT_INCREASE_2,
+    PTS_STAT_INCREASE_3,
     PTS_STAT_DECREASE_SELF,
     PTS_STAT_DECREASE_1,
     PTS_STAT_DECREASE_2,
+    PTS_STAT_DECREASE_3,
     PTS_STAT_INCREASE_NOT_SELF,
 };
 
@@ -131,67 +133,6 @@ static const u16 sPoints_CriticalHit[] = { 6 };
 static const u16 sPoints_Faint[] = { 6 };
 static const u16 sPoints_Flinched[] = { 4 };
 
-static const u16 sPoints_StatIncrease1[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = 2,
-    [STAT_DEF - 1]     = 2,
-    [STAT_SPEED - 1]   = 2,
-    [STAT_SPATK - 1]   = 2,
-    [STAT_SPDEF - 1]   = 2,
-    [STAT_ACC - 1]     = 2,
-    [STAT_EVASION - 1] = 2
-};
-static const u16 sPoints_StatIncrease2[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = 4,
-    [STAT_DEF - 1]     = 4,
-    [STAT_SPEED - 1]   = 4,
-    [STAT_SPATK - 1]   = 4,
-    [STAT_SPDEF - 1]   = 4,
-    [STAT_ACC - 1]     = 4,
-    [STAT_EVASION - 1] = 4
-};
-static const u16 sPoints_StatDecreaseSelf[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = -1,
-    [STAT_DEF - 1]     = -1,
-    [STAT_SPEED - 1]   = -1,
-    [STAT_SPATK - 1]   = -1,
-    [STAT_SPDEF - 1]   = -1,
-    [STAT_ACC - 1]     = -1,
-    [STAT_EVASION - 1] = -1
-};
-static const u16 sPoints_StatDecrease1[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = 2,
-    [STAT_DEF - 1]     = 2,
-    [STAT_SPEED - 1]   = 2,
-    [STAT_SPATK - 1]   = 2,
-    [STAT_SPDEF - 1]   = 2,
-    [STAT_ACC - 1]     = 2,
-    [STAT_EVASION - 1] = 2
-};
-static const u16 sPoints_StatDecrease2[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = 4,
-    [STAT_DEF - 1]     = 4,
-    [STAT_SPEED - 1]   = 4,
-    [STAT_SPATK - 1]   = 4,
-    [STAT_SPDEF - 1]   = 4,
-    [STAT_ACC - 1]     = 4,
-    [STAT_EVASION - 1] = 4
-};
-static const u16 sPoints_StatIncreaseNotSelf[NUM_BATTLE_STATS - 1] =
-{
-    [STAT_ATK - 1]     = -2,
-    [STAT_DEF - 1]     = -2,
-    [STAT_SPEED - 1]   = -2,
-    [STAT_SPATK - 1]   = -2,
-    [STAT_SPDEF - 1]   = -2,
-    [STAT_ACC - 1]     = -2,
-    [STAT_EVASION - 1] = -2
-};
-
 static const u16 *const sPointsArray[] =
 {
     [PTS_EFFECTIVENESS]          = sPoints_Effectiveness,
@@ -210,12 +151,6 @@ static const u16 *const sPointsArray[] =
     [PTS_FAINT]                  = sPoints_Faint,
     [PTS_FAINT_SET_UP]           = sPoints_Faint,
     [PTS_FLINCHED]               = sPoints_Flinched,
-    [PTS_STAT_INCREASE_1]        = sPoints_StatIncrease1,
-    [PTS_STAT_INCREASE_2]        = sPoints_StatIncrease2,
-    [PTS_STAT_DECREASE_SELF]     = sPoints_StatDecreaseSelf,
-    [PTS_STAT_DECREASE_1]        = sPoints_StatDecrease1,
-    [PTS_STAT_DECREASE_2]        = sPoints_StatDecrease2,
-    [PTS_STAT_INCREASE_NOT_SELF] = sPoints_StatIncreaseNotSelf
 };
 
 // Points will always be calculated for these messages
@@ -356,7 +291,9 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_ATTACKERSSTATROSE:
         if (gBattleTextBuff1[2] != 0)
         {
-            if (*statStringId == STRINGID_STATSHARPLY)
+            if (*statStringId == STRINGID_DRASTICALLY)
+                AddMovePoints(PTS_STAT_INCREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            else if (*statStringId == STRINGID_STATSHARPLY)
                 AddMovePoints(PTS_STAT_INCREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
             else
                 AddMovePoints(PTS_STAT_INCREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
@@ -367,7 +304,9 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         {
             if (gBattlerAttacker == gBattlerTarget)
             {
-                if (*statStringId == STRINGID_STATSHARPLY)
+                if (*statStringId == STRINGID_DRASTICALLY)
+                    AddMovePoints(PTS_STAT_INCREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else if (*statStringId == STRINGID_STATSHARPLY)
                     AddMovePoints(PTS_STAT_INCREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
                 else
                     AddMovePoints(PTS_STAT_INCREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
@@ -385,7 +324,9 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_DEFENDERSSTATFELL:
         if (gBattleTextBuff1[2] != 0)
         {
-            if (*statStringId == STRINGID_STATHARSHLY)
+            if (*statStringId == STRINGID_SEVERELY)
+                AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            else if (*statStringId == STRINGID_STATHARSHLY)
                 AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
             else
                 AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
@@ -500,8 +441,8 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_PKMNFASTASLEEP:
         if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId != 0
-            && gBattleMsgDataPtr->currentMove != MOVE_SNORE
-            && gBattleMsgDataPtr->currentMove != MOVE_SLEEP_TALK)
+            && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SNORE
+            && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SLEEP_TALK)
             AddMovePoints(PTS_STATUS, 3, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMoveSlot);
         break;
     case STRINGID_PKMNWASFROZEN:
@@ -839,7 +780,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     struct BattleTv *tvPtr = &gBattleStruct->tv;
     u32 atkSide = GetBattlerSide(gBattlerAttacker);
     u32 defSide = GetBattlerSide(gBattlerTarget);
-    const u16 *ptr;
     s32 i;
 
     switch (caseId)
@@ -952,13 +892,25 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
 #undef move
     case PTS_EFFECTIVENESS:
     case PTS_CRITICAL_HIT:
-    case PTS_STAT_INCREASE_1:
-    case PTS_STAT_INCREASE_2:
-    case PTS_STAT_DECREASE_SELF:
-    case PTS_STAT_DECREASE_1:
-    case PTS_STAT_DECREASE_2:
-    case PTS_STAT_INCREASE_NOT_SELF:
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += sPointsArray[caseId][arg2];
+        break;
+    case PTS_STAT_INCREASE_1:
+    case PTS_STAT_DECREASE_1:
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 2;
+        break;
+    case PTS_STAT_INCREASE_2:
+    case PTS_STAT_DECREASE_2:
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 4;
+        break;
+    case PTS_STAT_INCREASE_3:
+    case PTS_STAT_DECREASE_3:
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 6;
+        break;
+    case PTS_STAT_DECREASE_SELF:
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] -= 1;
+        break;
+    case PTS_STAT_INCREASE_NOT_SELF:
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] -= 2;
         break;
 
 #define move arg1
@@ -1017,7 +969,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
-
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
         break;
     }
@@ -1036,6 +987,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
         break;
     }
     case PTS_ELECTRIC:
