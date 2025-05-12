@@ -27,7 +27,7 @@ enum {
     PTS_RAIN,
     PTS_SUN,
     PTS_SANDSTORM,
-    PTS_HAIL,
+    PTS_HAIL_SNOW,
     PTS_ELECTRIC,
     PTS_STATUS_DMG,
     PTS_STATUS,
@@ -99,76 +99,6 @@ static const u16 sPoints_SetUp[] =
     7, // Grudge
     6,
     2  // Ingrain
-};
-static const u16 sPoints_RainMoves[] =
-{
-    MOVE_BUBBLE, 3,
-    MOVE_WHIRLPOOL, 3,
-    MOVE_OCTAZOOKA, 3,
-    MOVE_CLAMP, 3,
-    MOVE_WITHDRAW, 3,
-    MOVE_CRABHAMMER, 3,
-    MOVE_WATER_SPOUT, 3,
-    MOVE_DIVE, 3,
-    MOVE_WATERFALL, 3,
-    MOVE_MUDDY_WATER, 3,
-    MOVE_SURF, 3,
-    MOVE_HYDRO_CANNON, 3,
-    MOVE_HYDRO_PUMP, 3,
-    MOVE_BUBBLE_BEAM, 3,
-    MOVE_WATER_SPORT, 0, // Unnecessary, unlisted moves are already given 0 points
-    MOVE_WATER_GUN, 3,
-    MOVE_WATER_PULSE, 3,
-    MOVE_WEATHER_BALL, 3,
-    MOVE_THUNDER, 3,
-    MOVE_SOLAR_BEAM, -4,
-    MOVE_OVERHEAT, -4,
-    MOVE_FLAME_WHEEL, -4,
-    MOVE_FLAMETHROWER, -4,
-    MOVE_SACRED_FIRE, -4,
-    MOVE_FIRE_BLAST, -4,
-    MOVE_HEAT_WAVE, -4,
-    MOVE_EMBER, -4,
-    MOVE_BLAST_BURN, -4,
-    MOVE_BLAZE_KICK, -4,
-    MOVE_ERUPTION, -4,
-    MOVE_FIRE_SPIN, -4,
-    MOVE_FIRE_PUNCH, -4,
-    MOVE_SOLAR_BEAM, -4, // Repeated
-    TABLE_END, 0
-};
-static const u16 sPoints_SunMoves[] =
-{
-    MOVE_OVERHEAT, 3,
-    MOVE_FLAME_WHEEL, 3,
-    MOVE_FLAMETHROWER, 3,
-    MOVE_SACRED_FIRE, 3,
-    MOVE_FIRE_BLAST, 3,
-    MOVE_HEAT_WAVE, 3,
-    MOVE_EMBER, 3,
-    MOVE_BLAST_BURN, 3,
-    MOVE_BLAZE_KICK, 3,
-    MOVE_ERUPTION, 3,
-    MOVE_FIRE_SPIN, 3,
-    MOVE_FIRE_PUNCH, 3,
-    MOVE_SOLAR_BEAM, 5,
-    MOVE_SYNTHESIS, 3,
-    MOVE_MORNING_SUN, 3,
-    MOVE_MOONLIGHT, 3,
-    MOVE_WEATHER_BALL, 3,
-    TABLE_END, 0
-};
-static const u16 sPoints_SandstormMoves[] =
-{
-    MOVE_WEATHER_BALL, 3,
-    MOVE_SOLAR_BEAM, -3,
-    TABLE_END, 0
-};
-static const u16 sPoints_HailMoves[] =
-{
-    MOVE_WEATHER_BALL, 3,
-    MOVE_SOLAR_BEAM, -3,
-    TABLE_END, 0
 };
 static const u16 sPoints_ElectricMoves[] =
 {
@@ -279,10 +209,6 @@ static const u16 *const sPointsArray[] =
 {
     [PTS_EFFECTIVENESS]          = sPoints_Effectiveness,
     [PTS_SET_UP]                 = sPoints_SetUp,
-    [PTS_RAIN]                   = sPoints_RainMoves,
-    [PTS_SUN]                    = sPoints_SunMoves,
-    [PTS_SANDSTORM]              = sPoints_SandstormMoves,
-    [PTS_HAIL]                   = sPoints_HailMoves,
     [PTS_ELECTRIC]               = sPoints_ElectricMoves,
     [PTS_STATUS_DMG]             = sPoints_StatusDmg,
     [PTS_STATUS]                 = sPoints_Status,
@@ -1051,9 +977,81 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
 
 #define move arg1
     case PTS_RAIN:
+    {
+        s32 points = 0;
+
+        if (!IsBattleMoveStatus(move))
+        {
+            switch (GetMoveType(move))
+            {
+            case TYPE_WATER: points += 3; break;
+            case TYPE_FIRE:  points -= 4; break;
+            default: break;
+            }
+        }
+        else if (move == MOVE_WITHDRAW) // For some reason, vanilla gives points to it
+        {
+            points += 3;
+        }
+
+        switch (GetMoveEffect(move))
+        {
+        case EFFECT_WEATHER_BALL:
+        case EFFECT_THUNDER:
+            points += 3;
+            break;
+        case EFFECT_SOLAR_BEAM:
+            points -= 4;
+            break;
+        default:
+            break;
+        }
+
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
+        break;
+    }
     case PTS_SUN:
+    {
+        s32 points = 0;
+
+        if (!IsBattleMoveStatus(move) && GetMoveType(move) == TYPE_FIRE)
+            points += 3;
+
+        switch (GetMoveEffect(move))
+        {
+        case EFFECT_SOLAR_BEAM:
+            points += 5;
+            break;
+        case EFFECT_WEATHER_BALL:
+        case EFFECT_SYNTHESIS:
+        case EFFECT_MORNING_SUN:
+        case EFFECT_MOONLIGHT:
+            points += 3;
+            break;
+        default:
+            break;
+        }
+
+        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
+        break;
+    }
     case PTS_SANDSTORM:
-    case PTS_HAIL:
+    case PTS_HAIL_SNOW:
+    {
+        s32 points = 0;
+        switch (GetMoveEffect(move))
+        {
+        case EFFECT_WEATHER_BALL:
+            points += 3;
+            break;
+        case EFFECT_SOLAR_BEAM:
+            points -= 3;
+            break;
+        default:
+            break;
+        }
+        break;
+    }
     case PTS_ELECTRIC:
         i = 0;
         ptr = sPointsArray[caseId];
@@ -1475,5 +1473,5 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 moveId, u8 moveSlot)
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, moveId, moveSlot, 0);
     else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
-        AddMovePoints(PTS_HAIL, moveId, moveSlot, 0);
+        AddMovePoints(PTS_HAIL_SNOW, moveId, moveSlot, 0);
 }
