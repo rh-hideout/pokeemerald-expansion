@@ -30,7 +30,7 @@ enum {
     PTS_HAIL_SNOW,
     PTS_ELECTRIC,
     PTS_STATUS_DMG,
-    PTS_STATUS,
+    PTS_STATUS_SKIP_TURN,
     PTS_SPIKES,
     PTS_WATER_SPORT,
     PTS_MUD_SPORT,
@@ -112,45 +112,12 @@ static const u16 sPoints_StatusDmg[] =
     3, // Nightmare
     3  // Wrap (Trapping move)
 };
-static const u16 sPoints_Status[] =
-{
-    5, // Attraction
-    5, // Confusion
-    5, // Paralysis
-    5, // Sleep
-    5  // Freeze
-};
-
-static const u16 sPoints_Spikes[] = { 4 };
-static const u16 sPoints_WaterSport[] = { 5 };
-static const u16 sPoints_MudSport[] = { 5 };
-static const u16 sPoints_Reflect[] = { 3 };
-static const u16 sPoints_LightScreen[] = { 3 };
-static const u16 sPoints_Safeguard[] = { 4 };
-static const u16 sPoints_Mist[] = { 3 };
-static const u16 sPoints_BreakWall[] = { 6 };
-static const u16 sPoints_CriticalHit[] = { 6 };
-static const u16 sPoints_Faint[] = { 6 };
-static const u16 sPoints_Flinched[] = { 4 };
 
 static const u16 *const sPointsArray[] =
 {
     [PTS_EFFECTIVENESS]          = sPoints_Effectiveness,
     [PTS_SET_UP]                 = sPoints_SetUp,
     [PTS_STATUS_DMG]             = sPoints_StatusDmg,
-    [PTS_STATUS]                 = sPoints_Status,
-    [PTS_SPIKES]                 = sPoints_Spikes,
-    [PTS_WATER_SPORT]            = sPoints_WaterSport,
-    [PTS_MUD_SPORT]              = sPoints_MudSport,
-    [PTS_REFLECT]                = sPoints_Reflect,
-    [PTS_LIGHT_SCREEN]           = sPoints_LightScreen,
-    [PTS_SAFEGUARD]              = sPoints_Safeguard,
-    [PTS_MIST]                   = sPoints_Mist,
-    [PTS_BREAK_WALL]             = sPoints_BreakWall,
-    [PTS_CRITICAL_HIT]           = sPoints_CriticalHit,
-    [PTS_FAINT]                  = sPoints_Faint,
-    [PTS_FAINT_SET_UP]           = sPoints_Faint,
-    [PTS_FLINCHED]               = sPoints_Flinched,
 };
 
 // Points will always be calculated for these messages
@@ -425,7 +392,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_PKMNIMMOBILIZEDBYLOVE:
         if (tvPtr->pos[atkSide][atkFlank].attractMonId != 0)
-            AddMovePoints(PTS_STATUS, 0, tvPtr->pos[atkSide][atkFlank].attractMonId - 1, tvPtr->pos[atkSide][atkFlank].attractMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 0, tvPtr->pos[atkSide][atkFlank].attractMonId - 1, tvPtr->pos[atkSide][atkFlank].attractMoveSlot);
         break;
     case STRINGID_PKMNWASPARALYZED:
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].prlzMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
@@ -433,7 +400,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_PKMNISPARALYZED:
         if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId != 0)
-            AddMovePoints(PTS_STATUS, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMoveSlot);
         break;
     case STRINGID_PKMNFELLASLEEP:
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].slpMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
@@ -443,7 +410,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId != 0
             && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SNORE
             && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SLEEP_TALK)
-            AddMovePoints(PTS_STATUS, 3, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 3, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMoveSlot);
         break;
     case STRINGID_PKMNWASFROZEN:
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].frzMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
@@ -451,7 +418,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_PKMNISFROZEN:
         if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMonId != 0)
-            AddMovePoints(PTS_STATUS, 4, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 4, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMoveSlot);
         break;
     case STRINGID_PKMNWASCONFUSED:
         tvPtr->pos[effSide][effFlank].confusionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
@@ -459,7 +426,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_ITHURTCONFUSION:
         if (tvPtr->pos[atkSide][atkFlank].confusionMonId != 0)
-            AddMovePoints(PTS_STATUS, 1, tvPtr->pos[atkSide][atkFlank].confusionMonId - 1, tvPtr->pos[atkSide][atkFlank].confusionMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 1, tvPtr->pos[atkSide][atkFlank].confusionMonId - 1, tvPtr->pos[atkSide][atkFlank].confusionMoveSlot);
         tvPtr->side[atkSide].faintCause = FNT_CONFUSION;
         break;
     case STRINGID_SPIKESSCATTERED:
@@ -891,7 +858,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     }
 #undef move
     case PTS_EFFECTIVENESS:
-    case PTS_CRITICAL_HIT:
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += sPointsArray[caseId][arg2];
         break;
     case PTS_STAT_INCREASE_1:
@@ -904,6 +870,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         break;
     case PTS_STAT_INCREASE_3:
     case PTS_STAT_DECREASE_3:
+    case PTS_CRITICAL_HIT:
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 6;
         break;
     case PTS_STAT_DECREASE_SELF:
@@ -997,27 +964,34 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
 #undef move
 
     case PTS_FAINT:
-        tvPtr->side[arg2 ^ 1].faintCause = FNT_NONE;
-        movePoints->points[arg2][0 * 4 + arg3] += sPointsArray[caseId][arg1];
+        tvPtr->side[arg2 ^ BIT_SIDE].faintCause = FNT_NONE;
+        movePoints->points[arg2][0 * 4 + arg3] += 6;
         break;
     case PTS_FAINT_SET_UP:
         tvPtr->side[arg2].faintCause = FNT_NONE;
-        // fallthrough
+        movePoints->points[arg2][0 * 4 + arg3] += 6;
+        break;
     case PTS_SET_UP:
         movePoints->points[arg2][0 * 4 + arg3] += sPointsArray[caseId][arg1];
         break;
     case PTS_BREAK_WALL:
-        movePoints->points[atkSide][arg2 * 4 + arg3] += sPointsArray[caseId][arg1];
+        movePoints->points[atkSide][arg2 * 4 + arg3] += 6;
         break;
     case PTS_STATUS_DMG:
-    case PTS_STATUS:
-    case PTS_SAFEGUARD:
-    case PTS_MIST:
-    case PTS_FLINCHED:
         movePoints->points[atkSide ^ BIT_SIDE][arg2 * 4 + arg3] += sPointsArray[caseId][arg1];
         break;
+    case PTS_STATUS_SKIP_TURN:
+        movePoints->points[atkSide ^ BIT_SIDE][arg2 * 4 + arg3] += 5;
+        break;
+    case PTS_MIST:
+        movePoints->points[atkSide ^ BIT_SIDE][arg2 * 4 + arg3] += 3;
+        break;
+    case PTS_SAFEGUARD:
+    case PTS_FLINCHED:
+        movePoints->points[atkSide ^ BIT_SIDE][arg2 * 4 + arg3] += 4;
+        break;
     case PTS_SPIKES:
-        movePoints->points[arg1][arg2 * 4 + arg3] += sPointsArray[caseId][0];
+        movePoints->points[arg1][arg2 * 4 + arg3] += 4;
         break;
 
 #define move arg1
@@ -1029,12 +1003,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             if (tvPtr->pos[defSide][0].waterSportMonId != 0)
             {
                 u32 id = (tvPtr->pos[defSide][0].waterSportMonId - 1) * 4;
-                movePoints->points[defSide][id + tvPtr->pos[defSide][0].waterSportMoveSlot] += sPointsArray[caseId][0];
+                movePoints->points[defSide][id + tvPtr->pos[defSide][0].waterSportMoveSlot] += 5;
             }
             if (tvPtr->pos[defSide][1].waterSportMonId != 0)
             {
                 u32 id = (tvPtr->pos[defSide][1].waterSportMonId - 1) * 4;
-                movePoints->points[defSide][id + tvPtr->pos[defSide][1].waterSportMoveSlot] += sPointsArray[caseId][0];
+                movePoints->points[defSide][id + tvPtr->pos[defSide][1].waterSportMoveSlot] += 5;
             }
         }
         break;
@@ -1045,12 +1019,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             if (tvPtr->pos[defSide][0].mudSportMonId != 0)
             {
                 u32 id = (tvPtr->pos[defSide][0].mudSportMonId - 1) * 4;
-                movePoints->points[defSide][id + tvPtr->pos[defSide][0].mudSportMoveSlot] += sPointsArray[caseId][0];
+                movePoints->points[defSide][id + tvPtr->pos[defSide][0].mudSportMoveSlot] += 5;
             }
             if (tvPtr->pos[defSide][1].mudSportMonId != 0)
             {
                 u32 id = (tvPtr->pos[defSide][1].mudSportMonId - 1) * 4;
-                movePoints->points[defSide][id + tvPtr->pos[defSide][1].mudSportMoveSlot] += sPointsArray[caseId][0];
+                movePoints->points[defSide][id + tvPtr->pos[defSide][1].mudSportMoveSlot] += 5;
             }
         }
         break;
@@ -1059,7 +1033,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         if (IsBattleMovePhysical(move) && power != 0 && tvPtr->side[defSide].reflectMonId != 0)
         {
             u32 id = (tvPtr->side[defSide].reflectMonId - 1) * 4;
-            movePoints->points[defSide][id + tvPtr->side[defSide].reflectMoveSlot] += sPointsArray[caseId][0];
+            movePoints->points[defSide][id + tvPtr->side[defSide].reflectMoveSlot] += 3;
         }
         break;
     case PTS_LIGHT_SCREEN:
