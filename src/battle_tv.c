@@ -100,19 +100,6 @@ static const u16 sPoints_SetUp[] =
     6,
     2  // Ingrain
 };
-static const u16 sPoints_ElectricMoves[] =
-{
-    MOVE_THUNDERBOLT, 3,
-    MOVE_THUNDER_PUNCH, 3,
-    MOVE_SPARK, 3,
-    MOVE_THUNDER_SHOCK, 3,
-    MOVE_ZAP_CANNON, 3,
-    MOVE_SHOCK_WAVE, 3,
-    MOVE_THUNDER_WAVE, 0, // Unnecessary, unlisted moves are already given 0 points
-    MOVE_THUNDER, 3,
-    MOVE_VOLT_TACKLE, 3,
-    TABLE_END, 0
-};
 static const u16 sPoints_StatusDmg[] =
 {
     5, // Curse
@@ -209,7 +196,6 @@ static const u16 *const sPointsArray[] =
 {
     [PTS_EFFECTIVENESS]          = sPoints_Effectiveness,
     [PTS_SET_UP]                 = sPoints_SetUp,
-    [PTS_ELECTRIC]               = sPoints_ElectricMoves,
     [PTS_STATUS_DMG]             = sPoints_StatusDmg,
     [PTS_STATUS]                 = sPoints_Status,
     [PTS_SPIKES]                 = sPoints_Spikes,
@@ -1053,17 +1039,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         break;
     }
     case PTS_ELECTRIC:
-        i = 0;
-        ptr = sPointsArray[caseId];
-        do
-        {
-            if (move == ptr[i])
-            {
-                movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += ptr[i+1];
-                break;
-            }
-            i += 2;
-        } while (ptr[i] != TABLE_END);
+        if (!IsBattleMoveStatus(move) && GetMoveType(move) == TYPE_ELECTRIC)
+            movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += 3;
         break;
 #undef move
 
