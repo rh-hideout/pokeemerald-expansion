@@ -5347,7 +5347,7 @@ static void Cmd_getexp(void)
 
 static u32 CountAliveMonsForBattlerSide(u32 battler)
 {
-    u32 i = 0;
+    u32 aliveMons = 0;
     struct Pokemon *party = GetBattlerParty(battler);
 
     for (u32 partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
@@ -5355,10 +5355,10 @@ static u32 CountAliveMonsForBattlerSide(u32 battler)
         if (GetMonData(&party[partyMon], MON_DATA_SPECIES)
          && GetMonData(&party[partyMon], MON_DATA_HP) > 0
          && !GetMonData(&party[partyMon], MON_DATA_IS_EGG))
-            i++;
+            aliveMons++;
     }
 
-    return i;
+    return aliveMons;
 }
 
 bool32 NoAliveMonsForBattlerSide(u32 battler)
