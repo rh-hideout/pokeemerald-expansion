@@ -2528,22 +2528,23 @@
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
 	.if FNPC_ENABLE_NPC_FOLLOWERS
 		checkfollowernpc
-		.if VAR_RESULT == FALSE
-			hidefollower
-			delay 16
-			callnative ScriptSetFollowerNPC
-			.if \script == 0
-				.set setScript, FALSE
-			.else
-				.set setScript, TRUE
-			.endif
-			.byte \localId
-			.2byte \flags
-			.byte setScript
-			.2byte \battlePartner
-			.4byte \script
-			updatefollowingmon
+		compare VAR_RESULT, FALSE
+		goto_if_ne 1f
+		hidefollower
+		waitmovement OBJ_EVENT_ID_FOLLOWER
+		callnative ScriptSetFollowerNPC
+		.if \script == 0
+			.set setScript, FALSE
+		.else
+			.set setScript, TRUE
 		.endif
+		.byte \localId
+		.2byte \flags
+		.byte setScript
+		.2byte \battlePartner
+		.4byte \script
+		updatefollowingmon
+        1:
 	.else
 		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2553,9 +2554,10 @@
 	.macro destroyfollowernpc
 	.if FNPC_ENABLE_NPC_FOLLOWERS
 		checkfollowernpc
-		.if VAR_RESULT == TRUE
-			callnative ScriptDestroyFollowerNPC
-		.endif
+		compare VAR_RESULT, TRUE
+		goto_if_ne 1f
+		callnative ScriptDestroyFollowerNPC
+		1:
 	.else
 		.error "destroyfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2564,9 +2566,10 @@
 	@ Makes the player and follower NPC face one another.
 	.macro facefollowernpc
 	checkfollowernpc
-	.if VAR_RESULT == TRUE
-		callnative ScriptFaceFollowerNPC
-	.endif
+	compare VAR_RESULT, TRUE
+	goto_if_ne 1f
+	callnative ScriptFaceFollowerNPC
+	1:
 	.endm
 
 	@ Makes the follower NPC walk into the player and get hidden.
@@ -2577,12 +2580,13 @@
 	@ 3 = Faster
 	.macro hidefollowernpc speed=1
 	checkfollowernpc
-	.if VAR_RESULT == TRUE
-		callnative ScriptHideNPCFollower
-		.byte \speed
-		waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
-		callnative HideNPCFollower
-	.endif
+	compare VAR_RESULT, TRUE
+	goto_if_ne 1f
+	callnative ScriptHideNPCFollower
+	.byte \speed
+	waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
+	callnative HideNPCFollower
+	1:
 	.endm
 
 	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
@@ -2602,8 +2606,9 @@
 	@ Changes the battle partner of the existing follower NPC.
 	.macro changefollowerbattler battlePartner:req
 	checkfollowernpc
-	.if VAR_RESULT == TRUE
-		callnative ScriptChangeFollowerNPCBattlePartner
-		.2byte \battlePartner
-	.endif
+	compare VAR_RESULT, TRUE
+	goto_if_ne 1f
+	callnative ScriptChangeFollowerNPCBattlePartner
+	.2byte \battlePartner
+	1:
 	.endm
