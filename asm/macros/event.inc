@@ -2587,7 +2587,11 @@
 
 	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
 	.macro checkfollowernpc
-	callnative ScriptCheckFollowerNPC
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		callnative ScriptCheckFollowerNPC
+	.else
+		setvar VAR_RESULT, FALSE
+	.endif
 	.endm
 
 	@ Updates Pokemon follower.
