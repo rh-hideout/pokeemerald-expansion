@@ -346,7 +346,7 @@ SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if used by a Terastallized Pokemon"
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
     } SCENE {
         MESSAGE("Wobbuffet used Conversion 2!");
@@ -362,13 +362,13 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Terastallized Pokemon's Tera Ty
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
         TURN { MOVE(opponent, MOVE_REFLECT_TYPE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         // turn 2
         MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
         // turn 3
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("It doesn't affect the opposing Wobbuffet…");
         NOT { HP_BAR(opponent); }
     }
@@ -455,19 +455,19 @@ SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and i
 {
     KNOWN_FAILING; // Transform seems to be bugged in tests.
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_TACKLE, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
         OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_TRANSFORM); }
         TURN { MOVE(player, MOVE_EARTHQUAKE); }
-        // TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE, target: player, gimmick: GIMMICK_TERA); }
+        // TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH, target: player, gimmick: GIMMICK_TERA); }
     } SCENE {
         // turn 2
         MESSAGE("Wobbuffet used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
         HP_BAR(opponent);
         // turn 3
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("It doesn't affect Ditto…");
         NOT { HP_BAR(opponent); }
     }
@@ -501,13 +501,13 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Stellar-type Pokemon's base typ
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
         TURN { MOVE(opponent, MOVE_REFLECT_TYPE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         // turn 2
         MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
         // turn 3
-        MESSAGE("Banette used Tackle!");
+        MESSAGE("Banette used Scratch!");
         MESSAGE("It doesn't affect the opposing Wobbuffet…");
         NOT { HP_BAR(opponent); }
     }
@@ -747,10 +747,10 @@ SINGLE_BATTLE_TEST("(TERA) Terapagos retains the Stellar type boost at all times
 {
     s16 damage[2];
     u32 move;
-    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_MACH_PUNCH; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         ASSUME(GetMoveType(MOVE_MACH_PUNCH) != TYPE_NORMAL);
         PLAYER(SPECIES_TERAPAGOS);
         OPPONENT(SPECIES_WOBBUFFET);
