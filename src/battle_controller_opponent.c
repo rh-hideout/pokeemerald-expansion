@@ -6,6 +6,7 @@
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
+#include "battle_controller_util.h"
 #include "battle_message.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
@@ -353,15 +354,8 @@ static void SwitchIn_ShowSubstitute(u32 battler)
 
 static void SwitchIn_HandleSoundAndEnd(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive && !IsCryPlayingOrClearCrySongs())
-    {
-        if (gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
-         || gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy_2)
-        {
-            m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
-            OpponentBufferExecCompleted(battler);
-        }
-    }
+    if (SwitchIn_HandleSoundAndEndUtil(battler, FALSE))
+        OpponentBufferExecCompleted(battler);
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)

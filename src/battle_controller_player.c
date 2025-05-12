@@ -3,6 +3,7 @@
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
+#include "battle_controller_util.h"
 #include "battle_dome.h"
 #include "battle_interface.h"
 #include "battle_message.h"
@@ -1384,10 +1385,8 @@ static void SwitchIn_CleanShinyAnimShowSubstitute(u32 battler)
 
 static void SwitchIn_HandleSoundAndEnd(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive
-        && !IsCryPlayingOrClearCrySongs())
+    if (SwitchIn_HandleSoundAndEndUtil(battler, TRUE))
     {
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
         PlayerBufferExecCompleted(battler);
     }
