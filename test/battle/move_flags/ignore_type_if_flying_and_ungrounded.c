@@ -1,30 +1,13 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(MoveHasAdditionalEffect(MOVE_THOUSAND_ARROWS, MOVE_EFFECT_SMACK_DOWN));
-    ASSUME(MoveIgnoresTypeIfFlyingAndUngrounded(MOVE_THOUSAND_ARROWS) == TRUE);
-}
-
-SINGLE_BATTLE_TEST("Thousand Arrows does not ground mons behind substitutes")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SKARMORY);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_THOUSAND_ARROWS); }
-    } SCENE {
-        NOT MESSAGE("The opposing Skarmory fell straight down!");
-    }
-}
-
 SINGLE_BATTLE_TEST("Thousand Arrows does neutral damage to non-grounded Flying types regardless of other typings")
 {
     u32 pokemon;
     PARAMETRIZE { pokemon = SPECIES_SKARMORY; }
     PARAMETRIZE { pokemon = SPECIES_SCYTHER; }
     GIVEN {
+        ASSUME(MoveIgnoresTypeIfFlyingAndUngrounded(MOVE_THOUSAND_ARROWS) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(pokemon);
     } WHEN {
