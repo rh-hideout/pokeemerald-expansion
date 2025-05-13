@@ -7,6 +7,29 @@
 #include "task.h"
 #include "constants/battle_anim.h"
 
+bool32 TryShinyAnimAfterMonAnimUtil(u32 battler)
+{
+    if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
+     || gSprites[gBattlerSpriteIds[battler]].x2 != 0)
+        return FALSE;
+    
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
+    {
+        TryShinyAnimation(battler, GetBattlerMon(battler));
+        return FALSE;
+    }
+
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim)
+        return FALSE;
+
+    gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
+    gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
+    FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
+    FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+
+    return TRUE;
+}
+
 bool32 SwitchIn_ShowSubstituteUtil(u32 battler, bool32 isPlayerSide)
 {
     if (gSprites[gHealthboxSpriteIds[battler]].callback != SpriteCallbackDummy)
