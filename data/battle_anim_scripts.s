@@ -28936,13 +28936,13 @@ General_PrimalReversion_Omega:
 	end
 FireGeyser:
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
-	delay 0x1
+	delay 1
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4109, 24
-	delay 0x1
+	delay 1
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
-	delay 0x1
+	delay 1
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
-	delay 0x1
+	delay 1
 	return
 
 gBattleAnimGeneral_PowerConstruct::
@@ -28950,7 +28950,7 @@ gBattleAnimGeneral_PowerConstruct::
 	loadspritegfx ANIM_TAG_ZYGARDE_HEXES @hexagon
 	loadspritegfx ANIM_TAG_VERTICAL_HEX @arrow
 	loadspritegfx ANIM_TAG_FLYING_DIRT
-	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SNORE_Z, 0, 0xA, 0xA, 0x0688   @Green
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SNORE_Z, 0, 10, 10, RGB(2, 20, 26)   @Green
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
@@ -28995,7 +28995,7 @@ PowerConstructParticles:
 ZGeyser:
 	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
 	delay 1
-	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4109, 24
+	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
 	delay 1
 	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
 	delay 1
@@ -29047,13 +29047,13 @@ gBattleAnimGeneral_UltraBurst::
 	end
 LightGeyser:
 	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
-	delay 0x1
-	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4109, 24
-	delay 0x1
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
+	delay 1
 	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
-	delay 0x1
+	delay 1
 	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
-	delay 0x1
+	delay 1
 	return
 
 gBattleAnimGeneral_AffectionHangedOn::
