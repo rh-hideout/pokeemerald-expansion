@@ -24,7 +24,8 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves")
 {
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
-        ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_PARALYZE);
+        ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_STUN_SPORE) == MOVE_EFFECT_PARALYSIS);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
     } WHEN {

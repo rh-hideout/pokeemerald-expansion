@@ -2085,7 +2085,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Scatters a powder that may\n"
             "paralyze the foe."),
-        .effect = EFFECT_PARALYZE,
+        .effect = EFFECT_NON_VOLATILE_STATUS,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 75,
@@ -2296,7 +2296,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A weak jolt of electricity\n"
             "that paralyzes the foe."),
-        .effect = EFFECT_PARALYZE,
+        .effect = EFFECT_NON_VOLATILE_STATUS,
         .power = 0,
         .type = TYPE_ELECTRIC,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_7 ? 90 : 100,
@@ -3619,7 +3619,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             .accuracy = 75,
         #endif
-        .effect = EFFECT_PARALYZE,
+        .effect = EFFECT_NON_VOLATILE_STATUS,
         .power = 0,
         .type = TYPE_NORMAL,
         .pp = 30,

@@ -13,7 +13,7 @@ struct BattlePyramidRequirement {
     u8 nEvoItems;
 };
 
-// EFFECT_PARALYZE, MOVE_EFFECT_PARALYZE (30% or more)
+// MOVE_EFFECT_PARALYZE (30% or more)
 static const u16 sParalyzingMoves[] = {
     //MOVE_THUNDER_PUNCH,
     MOVE_BODY_SLAM,

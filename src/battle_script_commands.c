@@ -1281,7 +1281,7 @@ static void Cmd_attackcanceler(void)
                             ABILITY_RUN_SCRIPT))
         return;
 
-    if (effect == EFFECT_PARALYZE)
+    if (effect == EFFECT_NON_VOLATILE_STATUS && GetMoveNonVolatileStatus(gCurrentMove) == MOVE_EFFECT_PARALYSIS)
     {
         if (CanAbilityAbsorbMove(gBattlerAttacker,
                                  gBattlerTarget,

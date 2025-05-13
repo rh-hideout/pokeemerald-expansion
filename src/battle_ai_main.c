@@ -1293,6 +1293,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
                     ADJUST_SCORE(-20);
                 break;
+            case MOVE_EFFECT_PARALYSIS:
+                if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                if (!ShouldParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
+                    ADJUST_SCORE(-5);
+                break;
             }
             break;
         case EFFECT_EXPLOSION:
@@ -1700,12 +1706,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_FLATTER:
             if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
-            break;
-        case EFFECT_PARALYZE:
-            if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
-                ADJUST_SCORE(-5);
             break;
         case EFFECT_SUBSTITUTE:
             if (gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
@@ -3564,6 +3564,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         case MOVE_EFFECT_SLEEP:
             IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
             break;
+        case MOVE_EFFECT_PARALYSIS:
+            IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
+            break;
         }
         break;
     }
@@ -3850,9 +3853,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_CONFUSE:
         IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
         break;
-    case EFFECT_PARALYZE:
-        IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
-        break;
     case EFFECT_SUBSTITUTE:
     case EFFECT_SHED_TAIL:
         ADJUST_SCORE(IncreaseSubstituteMoveScore(battlerAtk, battlerDef, move));
@@ -3944,6 +3944,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             switch(GetMoveNonVolatileStatus(gLastMoves[battlerDef]))
             {
             case MOVE_EFFECT_POISON:
+            case MOVE_EFFECT_PARALYSIS:
                 encourage = TRUE;
                 break;
             }
@@ -5144,7 +5145,6 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_EVASION_DOWN_2:
     case EFFECT_REFLECT:
     case EFFECT_NON_VOLATILE_STATUS:
-    case EFFECT_PARALYZE:
     case EFFECT_SUBSTITUTE:
     case EFFECT_LEECH_SEED:
     case EFFECT_MINIMIZE:

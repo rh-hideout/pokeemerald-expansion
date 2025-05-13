@@ -211,8 +211,9 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             || aiMoveEffect == EFFECT_EXPLOSION
             || (aiMoveEffect == EFFECT_NON_VOLATILE_STATUS
                 && (nonVolatileStatus == MOVE_EFFECT_SLEEP
-                 || nonVolatileStatus == MOVE_EFFECT_TOXIC))
-            || aiMoveEffect == EFFECT_YAWN || aiMoveEffect == EFFECT_WILL_O_WISP || aiMoveEffect == EFFECT_PARALYZE
+                 || nonVolatileStatus == MOVE_EFFECT_TOXIC
+                 || nonVolatileStatus == MOVE_EFFECT_PARALYSIS))
+            || aiMoveEffect == EFFECT_YAWN || aiMoveEffect == EFFECT_WILL_O_WISP
             || aiMoveEffect == EFFECT_TRICK || aiMoveEffect == EFFECT_TRICK_ROOM || aiMoveEffect== EFFECT_WONDER_ROOM || aiMoveEffect ==  EFFECT_PSYCHO_SHIFT || aiMoveEffect == EFFECT_FIRST_TURN_ONLY
             )
             {
