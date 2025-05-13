@@ -867,7 +867,6 @@ extern const u8 BattleScript_EffectFickleBeam[];
 extern const u8 BattleScript_FickleBeamDoubled[];
 extern const u8 BattleScript_QuestionForfeitBattle[];
 extern const u8 BattleScript_ForfeitBattleGaveMoney[];
-extern const u8 BattleScript_EffectNonVolatileStatus[];
 extern const u8 BattleScript_AbilityPopUp[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

@@ -4008,7 +4008,6 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     case EFFECT_LEECH_SEED:
     case EFFECT_TAUNT:
     case EFFECT_TORMENT:
-    case EFFECT_WILL_O_WISP:
     case EFFECT_ENCORE:
     case EFFECT_ATTRACT:
     case EFFECT_NIGHTMARE:

@@ -812,14 +812,15 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             case MOVE_EFFECT_SLEEP:
                 baseFromEffect++;
                 break;
+            case MOVE_EFFECT_PARALYSIS:
+                baseFromEffect += 3;
+                break;
+            case MOVE_EFFECT_BURN:
             case MOVE_EFFECT_POISON:
                 baseFromEffect += 4;
                 break;
             case MOVE_EFFECT_TOXIC:
                 baseFromEffect += 5;
-                break;
-            case MOVE_EFFECT_PARALYSIS:
-                baseFromEffect += 3;
                 break;
             }
             break;

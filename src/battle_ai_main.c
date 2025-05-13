@@ -1095,7 +1095,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case ABILITY_MAGIC_GUARD:
             switch (moveEffect)
             {
-            case EFFECT_WILL_O_WISP:
             case EFFECT_LEECH_SEED:
                 ADJUST_SCORE(-5);
                 break;
@@ -1105,6 +1104,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 {
                 case MOVE_EFFECT_POISON:
                 case MOVE_EFFECT_TOXIC:
+                case MOVE_EFFECT_BURN:
                     ADJUST_SCORE(-5);
                     break;
                 }
@@ -1297,6 +1297,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                     ADJUST_SCORE(-10);
                 if (!ShouldParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
+                    ADJUST_SCORE(-5);
+                break;
+            case MOVE_EFFECT_BURN:
+                if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
                     ADJUST_SCORE(-5);
                 break;
             }
@@ -1994,12 +2000,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             if (B_MENTAL_HERB >= GEN_5 && aiData->holdEffects[battlerDef] == HOLD_EFFECT_MENTAL_HERB)
                 ADJUST_SCORE(-6);
-            break;
-        case EFFECT_WILL_O_WISP:
-            if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
-                ADJUST_SCORE(-5);
             break;
         case EFFECT_MEMENTO:
             if (CountUsablePartyMons(battlerAtk) == 0 || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
@@ -3567,6 +3567,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         case MOVE_EFFECT_PARALYSIS:
             IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
             break;
+        case MOVE_EFFECT_BURN:
+            IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
+            break;
         }
         break;
     }
@@ -4247,9 +4250,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_TORMENT:
-        break;
-    case EFFECT_WILL_O_WISP:
-        IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_FOLLOW_ME:
         if (isDoubleBattle
@@ -5155,7 +5155,6 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_DEFENSE_CURL:
     case EFFECT_TORMENT:
     case EFFECT_FLATTER:
-    case EFFECT_WILL_O_WISP:
     case EFFECT_INGRAIN:
     case EFFECT_IMPRISON:
     case EFFECT_TICKLE:
