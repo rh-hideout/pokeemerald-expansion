@@ -1025,7 +1025,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             switch (moveEffect)
             {
             case EFFECT_WILL_O_WISP:
-            case EFFECT_TOXIC:
             case EFFECT_LEECH_SEED:
                 ADJUST_SCORE(-5);
                 break;
@@ -1034,6 +1033,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 switch(nonVolatileStatus)
                 {
                 case MOVE_EFFECT_POISON:
+                case MOVE_EFFECT_TOXIC:
                     ADJUST_SCORE(-5);
                     break;
                 }
@@ -1210,6 +1210,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             switch(nonVolatileStatus)
             {
             case MOVE_EFFECT_POISON:
+            case MOVE_EFFECT_TOXIC:
                 if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
                     ADJUST_SCORE(-10);
                 if (!ShouldPoison(battlerAtk, battlerDef))
@@ -1590,12 +1591,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (!ShouldLowerStat(battlerAtk, battlerDef, abilityDef, STAT_SPEED))
                 ADJUST_SCORE(-1);    // may still want to just poison
             //fallthrough
-        case EFFECT_TOXIC:
-            if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldPoison(battlerAtk, battlerDef))
-                ADJUST_SCORE(-5);
-            break;
         case EFFECT_LIGHT_SCREEN:
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LIGHTSCREEN
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -3492,6 +3487,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         switch(GetMoveNonVolatileStatus(move))
         {
         case MOVE_EFFECT_POISON:
+        case MOVE_EFFECT_TOXIC:
             IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
             break;
         case MOVE_EFFECT_SLEEP:
@@ -3734,9 +3730,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_MOONLIGHT:
         if (ShouldRecover(battlerAtk, battlerDef, move, 50, AI_DEFENDING))
             ADJUST_SCORE(GOOD_EFFECT);
-        break;
-    case EFFECT_TOXIC:
-        IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:

@@ -182,13 +182,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_TOXIC] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 5,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_LIGHT_SCREEN] =
     {
         .battleScript = BattleScript_EffectLightScreen,

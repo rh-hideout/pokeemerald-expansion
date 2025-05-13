@@ -4006,7 +4006,6 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     case EFFECT_DISABLE:
     case EFFECT_NON_VOLATILE_STATUS:
     case EFFECT_PARALYZE:
-    case EFFECT_TOXIC:
     case EFFECT_LEECH_SEED:
     case EFFECT_TAUNT:
     case EFFECT_TORMENT:
