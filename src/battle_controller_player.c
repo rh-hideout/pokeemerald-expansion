@@ -3,7 +3,6 @@
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
-#include "battle_controller_util.h"
 #include "battle_dome.h"
 #include "battle_interface.h"
 #include "battle_message.h"
