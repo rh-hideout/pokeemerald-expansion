@@ -7,6 +7,14 @@
 #include "task.h"
 #include "constants/battle_anim.h"
 
+void TrySetBattlerShadowSpriteCallback(u32 battler)
+{
+    if (gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary].callback == SpriteCallbackDummy
+     && (B_ENEMY_MON_SHADOW_STYLE <= GEN_3 || P_GBA_STYLE_SPECIES_GFX == TRUE
+      || gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary].callback == SpriteCallbackDummy))
+        SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
+}
+
 bool32 TryShinyAnimAfterMonAnimUtil(u32 battler)
 {
     if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
