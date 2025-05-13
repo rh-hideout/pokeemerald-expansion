@@ -344,17 +344,8 @@ static void SwitchIn_ShowHealthbox(u32 battler)
 
 static void SwitchIn_TryShinyAnim(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
-        && !gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
-        TryShinyAnimation(battler, GetBattlerMon(battler));
-
-    if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
-        && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-    {
-        DestroySprite(&gSprites[gBattleControllerData[battler]]);
-        SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
+    if (SwitchIn_TryShinyAnimUtil(battler, FALSE))
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
-    }
 }
 
 static void RecordedOpponentHandleLoadMonSprite(u32 battler)

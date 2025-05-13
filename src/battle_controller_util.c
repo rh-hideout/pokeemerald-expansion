@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_anim.h"
 #include "battle_interface.h"
 #include "m4a.h"
 #include "sound.h"
@@ -58,6 +59,24 @@ bool32 SwitchIn_ShowHealthboxUtil(u32 battler, bool32 isPlayerSide)
 
     if (!isPlayerSide)
         CopyBattleSpriteInvisibility(battler);
+
+    return TRUE;
+}
+
+bool32 SwitchIn_TryShinyAnimUtil(u32 battler, bool32 isPlayerSide)
+{
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
+     && !gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
+        TryShinyAnimation(battler, GetBattlerMon(battler));
+
+    if (gSprites[gBattleControllerData[battler]].callback != SpriteCallbackDummy
+     || gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
+        return FALSE;
+
+    DestroySprite(&gSprites[gBattleControllerData[battler]]);
+
+    if (!isPlayerSide)
+        SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
 
     return TRUE;
 }
