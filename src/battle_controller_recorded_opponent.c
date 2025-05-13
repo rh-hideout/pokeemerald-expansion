@@ -326,13 +326,8 @@ static void TryShinyAnimAfterMonAnim(u32 battler)
 
 static void SwitchIn_ShowSubstitute(u32 battler)
 {
-    if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
-    {
-        if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
-            InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
-
+    if (SwitchIn_ShowSubstituteUtil(battler, FALSE))
         gBattlerControllerFuncs[battler] = SwitchIn_HandleSoundAndEnd;
-    }
 }
 
 static void SwitchIn_HandleSoundAndEnd(u32 battler)

@@ -4,6 +4,7 @@
 #include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_controller_util.h"
 #include "battle_message.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
@@ -202,14 +203,8 @@ static void WaitForMonAnimAfterLoad(u32 battler)
 
 static void SwitchIn_ShowSubstitute(u32 battler)
 {
-    if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
-    {
-        CopyBattleSpriteInvisibility(battler);
-        if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
-            InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
-
+    if (SwitchIn_ShowSubstituteUtil(battler, TRUE))
         gBattlerControllerFuncs[battler] = SwitchIn_WaitAndEnd;
-    }
 }
 
 static void SwitchIn_WaitAndEnd(u32 battler)
