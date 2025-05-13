@@ -56,3 +56,16 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
         MESSAGE("2 sent out Wobbuffet!");
     }
 }
+
+TO_DO_BATTLE_TEST("Beast Boost boosts Attack 1st in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Defense 2nd in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Special Attack 3rd in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Special Defense 4th in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost considers Power Split");
+TO_DO_BATTLE_TEST("Beast Boost considers Guard Split");
+TO_DO_BATTLE_TEST("Beast Boost considers Power Trick");
+TO_DO_BATTLE_TEST("Beast Boost considers Wonder Room");
+TO_DO_BATTLE_TEST("Beast Boost considers Speed Swap");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider stat stages");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider held items");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider status condition reductions");
