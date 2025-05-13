@@ -1384,7 +1384,7 @@ static void SwitchIn_CleanShinyAnimShowSubstitute(u32 battler)
 
 static void SwitchIn_HandleSoundAndEnd(u32 battler)
 {
-    if (SwitchIn_HandleSoundAndEndUtil(battler, TRUE))
+    if (SwitchIn_HandleSoundAndEndUtil(battler))
     {
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
         PlayerBufferExecCompleted(battler);
@@ -1393,7 +1393,7 @@ static void SwitchIn_HandleSoundAndEnd(u32 battler)
 
 static void SwitchIn_TryShinyAnimShowHealthbox(u32 battler)
 {
-    if (SwitchIn_TryShinyAnimUtil(battler, TRUE))
+    if (SwitchIn_TryShinyAnimUtil(battler))
     {
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
