@@ -169,20 +169,20 @@ void RecordLastUsedMoveBy(u32 battlerId, u32 move)
     BATTLE_HISTORY->moveHistory[battlerId][*index] = move;
 }
 
-void RecordKnownMove(u32 battlerId, u32 move)
+void RecordKnownMove(u32 battler, u32 move)
 {
-    s32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
+    s32 moveIndex;
 
-        if (BATTLE_HISTORY->usedMoves[battlerId][i] == move)
+    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (gBattleMons[battler].moves[moveIndex] == move)
             break;
-        if (BATTLE_HISTORY->usedMoves[battlerId][i] == MOVE_NONE)
-        {
-            BATTLE_HISTORY->usedMoves[battlerId][i] = move;
-            AI_PARTY->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].moves[i] = move;
-            break;
-        }
+    }
+
+    if (moveIndex < MAX_MON_MOVES && BATTLE_HISTORY->usedMoves[battler][moveIndex] == MOVE_NONE)
+    {
+        BATTLE_HISTORY->usedMoves[battler][moveIndex] = move;
+        AI_PARTY->mons[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].moves[moveIndex] = move;
     }
 }
 
@@ -1135,7 +1135,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
     u32 abilityAI = AI_DATA->abilities[battlerAI];
     u32 abilityPlayer = AI_DATA->abilities[battler];
 
-    u32 predictedMove = AI_DATA->lastUsedMove[battler]; // TODO update for move prediction
+    u32 predictedMove = ((AI_THINKING_STRUCT->aiFlags[battlerAI] & AI_FLAG_PREDICT_MOVE) && AI_DATA->predictingMove) ? AI_DATA->predictedMove[battler] : AI_DATA->lastUsedMove[battler];
 
     s8 aiPriority = GetBattleMovePriority(battlerAI, abilityAI, moveConsidered);
     s8 playerPriority = GetBattleMovePriority(battler, abilityPlayer, predictedMove);
@@ -2935,6 +2935,12 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
 
     battlerToSwitch = gBattleStruct->AI_monToSwitchIntoId[battlerAtk];
 
+    // Palafin always wants to activate Zero to Hero
+    if (gBattleMons[battlerAtk].species == SPECIES_PALAFIN_ZERO
+        && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
+        && CountUsablePartyMons(battlerAtk) != 0)
+        return SHOULD_PIVOT;
+
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
@@ -3108,7 +3114,7 @@ bool32 CanKnockOffItem(u32 battler, u32 item)
       | BATTLE_TYPE_RECORDED_LINK
       | BATTLE_TYPE_SECRET_BASE
       | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0)
-      )) && GetBattlerSide(battler) == B_SIDE_PLAYER)
+      )) && IsOnPlayerSide(battler))
         return FALSE;
 
     if (AI_DATA->abilities[battler] == ABILITY_STICKY_HOLD)
@@ -4546,4 +4552,11 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
     if (IsDoubleBattle() && AI_DATA->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
+}
+
+u32 GetThinkingBattler(u32 battler)
+{
+    if (AI_DATA->aiPredictionInProgress)
+        return AI_DATA->battlerDoingPrediction;
+    return battler;
 }

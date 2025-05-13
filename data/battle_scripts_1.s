@@ -780,7 +780,7 @@ BattleScript_EffectFling::
 	jumpiflastuseditemholdeffect BS_ATTACKER, HOLD_EFFECT_MENTAL_HERB, BattleScript_FlingMentalHerb
 	jumpiflastuseditemholdeffect BS_ATTACKER, HOLD_EFFECT_POISON_POWER, BattleScript_FlingPoisonBarb
 	jumpiflastuseditemholdeffect BS_ATTACKER, HOLD_EFFECT_TOXIC_ORB, BattleScript_FlingToxicOrb
-	jumpiflastuseditemholdeffect BS_ATTACKER, HOLD_EFFECT_RESTORE_STATS, BattleScript_FlingWhiteHerb
+	jumpiflastuseditemholdeffect BS_ATTACKER, HOLD_EFFECT_WHITE_HERB, BattleScript_FlingWhiteHerb
 	goto BattleScript_FlingEnd
 BattleScript_EffectFlingConsumeBerry:
 	savebattleritem BS_TARGET
@@ -2717,12 +2717,12 @@ BattleScript_EffectGravity::
 	attackstring
 	ppreduce
 	setgravity BattleScript_ButItFailed
-	savetarget
 	attackanimation
 	waitanimation
 BattleScript_EffectGravitySuccess::
 	printstring STRINGID_GRAVITYINTENSIFIED
 	waitmessage B_WAIT_TIME_LONG
+	savetarget
 	selectfirstvalidtarget
 BattleScript_GravityLoop:
 	movevaluescleanup
@@ -4598,7 +4598,10 @@ BattleScript_EffectSpitUp::
 	damagecalc
 	adjustdamage
 	stockpiletobasedamage BattleScript_SpitUpFail
-	goto BattleScript_HitFromAtkAnimation
+	call BattleScript_Hit_RetFromAtkAnimation
+	tryfaintmon BS_TARGET
+	removestockpilecounters
+	goto BattleScript_SpitUpEnd
 BattleScript_SpitUpFail::
 	checkparentalbondcounter 2, BattleScript_SpitUpEnd
 	pause B_WAIT_TIME_SHORT
@@ -4621,7 +4624,16 @@ BattleScript_EffectSwallow::
 	attackstring
 	ppreduce
 	stockpiletohpheal BattleScript_SwallowFail
-	goto BattleScript_PresentHealTarget
+	attackanimation
+	waitanimation
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET
+	printstring STRINGID_PKMNREGAINEDHEALTH
+	waitmessage B_WAIT_TIME_LONG
+	removestockpilecounters
+	goto BattleScript_MoveEnd
+
 
 BattleScript_SwallowFail::
 	pause B_WAIT_TIME_SHORT
@@ -5233,7 +5245,6 @@ BattleScript_FaintTarget::
 	dofaintanimation BS_TARGET
 	printstring STRINGID_TARGETFAINTED
 	cleareffectsonfaint BS_TARGET
-	tryactivatefellstinger BS_ATTACKER
 	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
 	trytrainerslidefirstdownmsg BS_TARGET
@@ -6024,6 +6035,14 @@ BattleScript_ToxicSpikesAbsorbed::
 
 BattleScript_ToxicSpikesPoisoned::
 	printstring STRINGID_TOXICSPIKESPOISONED
+	waitmessage B_WAIT_TIME_LONG
+	statusanimation BS_SCRIPTING
+	updatestatusicon BS_SCRIPTING
+	waitstate
+	return
+
+BattleScript_ToxicSpikesBadlyPoisoned::
+	printstring STRINGID_TOXICSPIKESBADLYPOISONED
 	waitmessage B_WAIT_TIME_LONG
 	statusanimation BS_SCRIPTING
 	updatestatusicon BS_SCRIPTING
@@ -6844,6 +6863,14 @@ BattleScript_BattlerFormChangeWithStringEnd3::
 	handleformchange BS_SCRIPTING, 2
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_IllusionOffAndTerastallization::
+	call BattleScript_IllusionOff
+	goto BattleScript_Terastallization
+
+BattleScript_IllusionOffEnd3::
+	call BattleScript_IllusionOff
 	end3
 
 BattleScript_IllusionOff::
@@ -9883,15 +9910,16 @@ BattleScript_CouldntFullyProtect::
 	return
 
 BattleScript_BerserkGeneRet::
+	saveattacker
 	savetarget
 	copybyte gBattlerTarget, sBATTLER
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerserkGeneRet_TryConfuse
 	setgraphicalstatchangevalues
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
 	call BattleScript_StatUp
 BattleScript_BerserkGeneRet_TryConfuse:
-	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
+	jumpifability BS_ATTACKER, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
 	jumpifsafeguard BattleScript_BerserkGeneRet_SafeguardProtected
 	seteffectprimary MOVE_EFFECT_CONFUSION
 	goto BattleScript_BerserkGeneRet_End
@@ -9906,9 +9934,14 @@ BattleScript_BerserkGeneRet_OwnTempoPrevents:
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_BerserkGeneRet_End:
+	restoreattacker
 	restoretarget
-	removeitem BS_SCRIPTING
-	end3
+	removeitem BS_ATTACKER
+	return
+
+BattleScript_BerserkGeneRetEnd2::
+	call BattleScript_BerserkGeneRet
+	end2
 
 BattleScript_BoosterEnergyEnd2::
 	call BattleScript_BoosterEnergyRet

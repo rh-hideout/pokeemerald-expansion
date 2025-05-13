@@ -764,6 +764,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro removestockpilecounters
+	callnative BS_RemoveStockpileCounters
+	.endm
+
 	.macro setdrainedhp
 	.byte 0x88
 	.endm
@@ -1952,10 +1956,6 @@
 
 	.macro tryactivatesoulheart
 	various BS_ATTACKER, VARIOUS_TRY_ACTIVATE_SOULHEART
-	.endm
-
-	.macro tryactivatefellstinger battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_FELL_STINGER
 	.endm
 
 	.macro playmoveanimation battler:req, move:req

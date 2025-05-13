@@ -121,7 +121,6 @@ enum CmdVarious
     VARIOUS_INSTANT_HP_DROP,
     VARIOUS_CLEAR_STATUS,
     VARIOUS_RESTORE_PP,
-    VARIOUS_TRY_ACTIVATE_FELL_STINGER,
     VARIOUS_PLAY_MOVE_ANIMATION,
     VARIOUS_SET_LUCKY_CHANT,
     VARIOUS_SUCKER_PUNCH_CHECK,
@@ -262,7 +261,7 @@ enum MoveEndEffects
     MOVEEND_ATTACKER_VISIBLE,
     MOVEEND_TARGET_VISIBLE,
     MOVEEND_ITEM_EFFECTS_TARGET,
-    MOVEEND_MOVE_EFFECTS2,
+    MOVEEND_FIRST_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ALL,
     MOVEEND_SYMBIOSIS,
     MOVEEND_HIT_SWITCH_TARGET,
@@ -271,14 +270,13 @@ enum MoveEndEffects
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
-    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a multi-hit move
+    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_RECOIL,
-    MOVEEND_RAPID_SPIN,
+    MOVEEND_SECOND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_ABILITY_BLOCK,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Eject Pack
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Opportunist
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
     MOVEEND_EJECT_BUTTON,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc

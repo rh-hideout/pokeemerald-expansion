@@ -164,6 +164,24 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns and correctly con
     }
 }
 
+// Visual test to make sure Zoroark appears as Wobbuffet/Zigzagoon until illusion breaks
+SINGLE_BATTLE_TEST("Dynamax: Illusion doesn't break upon Dynamaxing when illusioned")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_ZIGZAGOON; }
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK);
+        PLAYER(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+    }
+}
+
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be flinched")
 {
     GIVEN {

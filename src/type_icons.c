@@ -240,7 +240,7 @@ void LoadTypeIcons(u32 battler)
 {
     u32 position;
 
-    struct Pokemon* mon = GetPartyBattlerData(battler);
+    struct Pokemon* mon = GetBattlerMon(battler);
     u32 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
 
     if (B_SHOW_TYPES == SHOW_TYPES_NEVER 
@@ -296,7 +296,7 @@ static bool32 UseDoubleBattleCoords(u32 position)
 
 static u32 GetMonPublicType(u32 battlerId, u32 typeNum)
 {
-    struct Pokemon* mon = GetPartyBattlerData(battlerId);
+    struct Pokemon* mon = GetBattlerMon(battlerId);
     u32 monSpecies = GetMonData(mon,MON_DATA_SPECIES,NULL);
     struct Pokemon* monIllusion;
     u32 illusionSpecies;
