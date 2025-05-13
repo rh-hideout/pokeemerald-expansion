@@ -286,11 +286,8 @@ static void SwitchIn_ShowSubstitute(u32 battler)
 
 static void SwitchIn_WaitAndEnd(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive
-        && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
-    {
+    if (SwitchIn_WaitAndEndUtil(battler))
         RecordedPlayerBufferExecCompleted(battler);
-    }
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)
