@@ -8875,21 +8875,15 @@ BattleScript_BerryConfuseHealRet_Anim:
 	return
 
 BattleScript_BerryStatRaiseEnd2::
-	jumpifability BS_ATTACKER, ABILITY_RIPEN, BattleScript_BerryStatRaiseEnd2_AbilityPopup
-	goto BattleScript_BerryStatRaiseEnd2_Anim
-BattleScript_BerryStatRaiseEnd2_AbilityPopup:
-	call BattleScript_AbilityPopUp
-BattleScript_BerryStatRaiseEnd2_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_AFFECTS_USER, BattleScript_BerryStatRaiseEnd2_End
-	setgraphicalstatchangevalues
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
-	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
-	call BattleScript_StatUp
-	removeitem BS_ATTACKER
-BattleScript_BerryStatRaiseEnd2_End::
+	call BattleScript_BerryStatRaiseRet
 	end2
 
 BattleScript_BerryStatRaiseRet::
+	@ to ensure `statbuffchange` has correct battler id, backup and use target
+	savetarget
+	copybyte gBattlerTarget, sBATTLER
+	jumpifnotberry BS_ATTACKER, BattleScript_BerryStatRaiseRet_Anim
+	@ check ripen popup if consuming berry
 	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_BerryStatRaiseRet_AbilityPopup
 	goto BattleScript_BerryStatRaiseRet_Anim
 BattleScript_BerryStatRaiseRet_AbilityPopup:
@@ -8902,6 +8896,7 @@ BattleScript_BerryStatRaiseRet_Anim:
 	call BattleScript_StatUp
 	removeitem BS_SCRIPTING
 BattleScript_BerryStatRaiseRet_End:
+	restoretarget
 	return
 
 BattleScript_BerryFocusEnergyRet::
