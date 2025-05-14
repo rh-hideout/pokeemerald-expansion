@@ -1497,16 +1497,9 @@ bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect)
     }
 }
 
-bool32 IsNonVolatileStatusMoveEffect(enum BattleMoveEffects moveEffect)
+bool32 IsNonVolatileStatusMove(u32 move)
 {
-    switch (moveEffect)
-    {
-    case EFFECT_NON_VOLATILE_STATUS:
-    case EFFECT_YAWN:
-        return TRUE;
-    default:
-        return FALSE;
-    }
+    return GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE;
 }
 
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect)
@@ -1625,7 +1618,6 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
     enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
     if (B_TOXIC_NEVER_MISS >= GEN_6
-        && effect == EFFECT_NON_VOLATILE_STATUS
         && nonVolatileStatus == MOVE_EFFECT_TOXIC
         && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
         return TRUE;
@@ -2158,7 +2150,6 @@ bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-            && GetMoveEffect(moves[i]) == EFFECT_NON_VOLATILE_STATUS
             && GetMoveNonVolatileStatus(moves[i]) == effect)
             return TRUE;
     }
@@ -2313,8 +2304,7 @@ bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef)
         if (IsMoveUnusable(i, moves[i], moveLimitations))
             continue;
 
-        if (GetMoveEffect(moves[i]) == EFFECT_NON_VOLATILE_STATUS
-        && GetMoveNonVolatileStatus(moves[i]) == MOVE_EFFECT_SLEEP
+        if (GetMoveNonVolatileStatus(moves[i]) == MOVE_EFFECT_SLEEP
         && AI_DATA->moveAccuracy[battlerAtk][battlerDef][i] < 85)
             return TRUE;
     }
@@ -2561,20 +2551,16 @@ static inline bool32 IsMoveSleepClauseTrigger(u32 move)
     // Sleeping effects like Sleep Powder, Yawn, Dark Void, etc.
     switch (effect)
     {
-    case EFFECT_NON_VOLATILE_STATUS:
-    {
-        switch(GetMoveNonVolatileStatus(move))
-        {
-        case MOVE_EFFECT_SLEEP:
-            return TRUE;
-        }
-        break;
-    }
     case EFFECT_YAWN:
     case EFFECT_DARK_VOID:
         return TRUE;
     default:
         break;
+    }
+    switch(GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_SLEEP:
+        return TRUE;
     }
 
     // Sleeping effects like G-Max Befuddle, G-Max Snooze, etc.
@@ -3626,12 +3612,11 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
     if (partnerMove != MOVE_NONE
      && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
-     && ((partnerEffect == EFFECT_NON_VOLATILE_STATUS
-            && (nonVolatileStatus == MOVE_EFFECT_POISON
-             || nonVolatileStatus == MOVE_EFFECT_TOXIC
-             || nonVolatileStatus == MOVE_EFFECT_SLEEP
-             || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
-             || nonVolatileStatus == MOVE_EFFECT_BURN))
+     && (nonVolatileStatus == MOVE_EFFECT_POISON
+       || nonVolatileStatus == MOVE_EFFECT_TOXIC
+       || nonVolatileStatus == MOVE_EFFECT_SLEEP
+       || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
+       || nonVolatileStatus == MOVE_EFFECT_BURN
        || partnerEffect == EFFECT_YAWN))
         return TRUE;
     return FALSE;

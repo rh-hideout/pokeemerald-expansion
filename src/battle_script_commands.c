@@ -1281,7 +1281,7 @@ static void Cmd_attackcanceler(void)
                             ABILITY_RUN_SCRIPT))
         return;
 
-    if (effect == EFFECT_NON_VOLATILE_STATUS && GetMoveNonVolatileStatus(gCurrentMove) == MOVE_EFFECT_PARALYSIS)
+    if (GetMoveNonVolatileStatus(gCurrentMove) == MOVE_EFFECT_PARALYSIS)
     {
         if (CanAbilityAbsorbMove(gBattlerAttacker,
                                  gBattlerTarget,
@@ -1498,7 +1498,6 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
 
     if ((gStatuses3[battler] & STATUS3_ALWAYS_HITS && gDisableStructs[battler].battlerWithSureHit == gBattlerAttacker)
      || (B_TOXIC_NEVER_MISS >= GEN_6
-        && moveEffect == EFFECT_NON_VOLATILE_STATUS
         && nonVolatileStatus == MOVE_EFFECT_TOXIC
         && IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_POISON))
      || gStatuses4[battler] & STATUS4_GLAIVE_RUSH)

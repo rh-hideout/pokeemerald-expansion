@@ -4004,19 +4004,24 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     {
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
-    case EFFECT_NON_VOLATILE_STATUS:
     case EFFECT_LEECH_SEED:
     case EFFECT_TAUNT:
     case EFFECT_TORMENT:
     case EFFECT_ENCORE:
     case EFFECT_ATTRACT:
     case EFFECT_NIGHTMARE:
-    case EFFECT_YAWN:
     case EFFECT_CURSE:
         return TRUE;
     default:
-        return MoveHasAdditionalEffect(move, MOVE_EFFECT_WRAP);
+        break;
     }
+
+    if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE)
+        return TRUE;
+    if (MoveHasAdditionalEffect(move, MOVE_EFFECT_WRAP))
+        return TRUE;
+
+    return FALSE;
 }
 
 static bool32 IsDomeRareMove(u32 move)
@@ -4082,18 +4087,6 @@ static bool32 IsDomeComboMove(u32 move)
     case EFFECT_TOXIC_SPIKES:
     case EFFECT_STEALTH_ROCK:
     case EFFECT_STICKY_WEB:
-    // Inflicting sleep & related effects
-    case EFFECT_NON_VOLATILE_STATUS:
-    {
-        switch(GetMoveNonVolatileStatus(move))
-        {
-        case MOVE_EFFECT_SLEEP:
-            return TRUE;
-        default:
-            return FALSE;
-        }
-        break;
-    }
     case EFFECT_YAWN:
     case EFFECT_DREAM_EATER:
     case EFFECT_NIGHTMARE:
@@ -4125,8 +4118,19 @@ static bool32 IsDomeComboMove(u32 move)
     case EFFECT_ROAR:
         return TRUE;
     default:
+        break;
+    }
+
+    // Inflicting sleep & related effects
+    switch(GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_SLEEP:
+        return TRUE;
+    default:
         return FALSE;
     }
+
+    return FALSE;
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points

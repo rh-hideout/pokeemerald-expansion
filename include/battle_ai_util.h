@@ -142,7 +142,7 @@ bool32 HasMoveThatLowersOwnStats(u32 battlerId);
 bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect);
 bool32 HasAnyKnownMove(u32 battlerId);
 bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect);
-bool32 IsNonVolatileStatusMoveEffect(enum BattleMoveEffects moveEffect);
+bool32 IsNonVolatileStatusMove(u32 moveEffect);
 bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility);
 bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsHazardMove(u32 move);

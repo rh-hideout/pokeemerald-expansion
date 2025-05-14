@@ -806,25 +806,23 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
             break;
-        case EFFECT_NON_VOLATILE_STATUS:
-            switch(GetMoveNonVolatileStatus(arg2))
-            {
-            case MOVE_EFFECT_SLEEP:
-                baseFromEffect++;
-                break;
-            case MOVE_EFFECT_PARALYSIS:
-                baseFromEffect += 3;
-                break;
-            case MOVE_EFFECT_BURN:
-            case MOVE_EFFECT_POISON:
-                baseFromEffect += 4;
-                break;
-            case MOVE_EFFECT_TOXIC:
-                baseFromEffect += 5;
-                break;
-            }
-            break;
         default:
+            break;
+        }
+        switch(GetMoveNonVolatileStatus(arg2))
+        {
+        case MOVE_EFFECT_SLEEP:
+            baseFromEffect++;
+            break;
+        case MOVE_EFFECT_PARALYSIS:
+            baseFromEffect += 3;
+            break;
+        case MOVE_EFFECT_BURN:
+        case MOVE_EFFECT_POISON:
+            baseFromEffect += 4;
+            break;
+        case MOVE_EFFECT_TOXIC:
+            baseFromEffect += 5;
             break;
         }
 
