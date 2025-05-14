@@ -28950,7 +28950,7 @@ gBattleAnimGeneral_PowerConstruct::
 	loadspritegfx ANIM_TAG_ZYGARDE_HEXES @hexagon
 	loadspritegfx ANIM_TAG_VERTICAL_HEX @arrow
 	loadspritegfx ANIM_TAG_FLYING_DIRT
-	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SNORE_Z, 0, 10, 10, RGB(2, 20, 26)   @Green
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SNORE_Z, 0, 10, 10, RGB(8, 20, 26)   @Green
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
