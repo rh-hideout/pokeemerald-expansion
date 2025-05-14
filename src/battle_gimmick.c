@@ -71,7 +71,7 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
         return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
     }
     // The player can bypass these checks because they can choose through the controller.
-    else if (GetBattlerSide(battler) == B_SIDE_PLAYER
+    else if (IsOnPlayerSide(battler)
          && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
     {
         return TRUE;
@@ -138,7 +138,7 @@ void CreateGimmickTriggerSprite(u32 battler)
     const struct GimmickInfo * gimmick = &gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]];
 
     // Exit if there shouldn't be a sprite produced.
-    if (GetBattlerSide(battler) == B_SIDE_OPPONENT
+    if (!IsOnPlayerSide(battler)
      || gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_NONE
      || gimmick->triggerSheet == NULL
      || HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))

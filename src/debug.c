@@ -337,7 +337,7 @@ static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 static EWRAM_DATA struct DebugBattleData *sDebugBattleData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
-EWRAM_DATA u32 gDebugAIFlags = 0;
+EWRAM_DATA u64 gDebugAIFlags = 0;
 
 // *******************************
 // Define functions
@@ -1767,7 +1767,7 @@ static void Debug_InitializeBattle(u8 taskId)
     }
 
     // Set terrain
-    gBattleTerrain = sDebugBattleData->battleTerrain;
+    gBattleEnvironment = sDebugBattleData->battleTerrain;
 
     // Populate enemy party
     for (i = 0; i < PARTY_SIZE; i++)
