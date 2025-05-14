@@ -6072,7 +6072,7 @@ static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
     if (gProtectStructs[battler].statFell
      && !gProtectStructs[battler].disableEjectPack
      && CountUsablePartyMons(battler) > 0
-     && !(gCurrentMove == MOVE_PARTING_SHOT && CanBattlerSwitch(gBattlerAttacker))) // Does not activate if attacker used Parting Shot and can switch out
+     && !(GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(gBattlerAttacker))) // Does not activate if attacker used Parting Shot and can switch out
     {
         gProtectStructs[battler].statFell = FALSE;
         gBattleScripting.battler = battler;
@@ -7587,9 +7587,9 @@ u8 GetAttackerObedienceForAction()
     }
 
     // is not obedient
-    if (gCurrentMove == MOVE_RAGE)
-        gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_RAGE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
+    if (moveEffect == EFFECT_RAGE)
+        gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_RAGE;
     if (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP && (moveEffect == EFFECT_SNORE || moveEffect == EFFECT_SLEEP_TALK))
         return DISOBEYS_WHILE_ASLEEP;
 
@@ -10853,9 +10853,9 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
 // Possible return values are defined in battle.h following MOVE_TARGET_SELECTED
 u32 GetBattlerMoveTargetType(u32 battler, u32 move)
 {
-    if (move == MOVE_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
-        return MOVE_TARGET_USER;
     enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+        return MOVE_TARGET_USER;
     if (effect == EFFECT_EXPANDING_FORCE && IsBattlerTerrainAffected(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
         return MOVE_TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)

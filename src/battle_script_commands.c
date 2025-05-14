@@ -3381,7 +3381,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
                     // If the confusion is activating due to being released from Sky Drop, go to "confused due to fatigue" script.
                     // Otherwise, do normal confusion script.
-                    if (gCurrentMove == MOVE_SKY_DROP)
+                    if (GetMoveEffect(gCurrentMove) == EFFECT_SKY_DROP)
                     {
                         gBattleMons[gEffectBattler].status2 &= ~(STATUS2_LOCK_CONFUSE);
                         gBattlerAttacker = gEffectBattler;
@@ -6895,9 +6895,11 @@ static void Cmd_moveend(void)
                      && !TargetFullyImmuneToCurrMove(gBattlerAttacker, BATTLE_PARTNER(gBattlerTarget)))
                         gBattlerTarget = BATTLE_PARTNER(gBattlerTarget); // Target the partner in doubles for second hit.
 
+                    enum BattleMoveEffects chosenEffect = GetMoveEffect(gChosenMove);
+
                     if (gBattleMons[gBattlerAttacker].hp
                      && gBattleMons[gBattlerTarget].hp
-                     && (gChosenMove == MOVE_SLEEP_TALK || (gChosenMove == MOVE_SNORE) || !(gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP))
+                     && (chosenEffect == EFFECT_SLEEP_TALK || chosenEffect == EFFECT_SNORE || !(gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP))
                      && !(gBattleMons[gBattlerAttacker].status1 & STATUS1_FREEZE))
                     {
                         if (gSpecialStatuses[gBattlerAttacker].parentalBondState)
@@ -13614,7 +13616,7 @@ static void Cmd_copymovepermanently(void)
 
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[gBattlerAttacker].moves[i] == MOVE_SKETCH)
+            if (GetMoveEffect(gBattleMons[gBattlerAttacker].moves[i]) == EFFECT_SKETCH)
                 continue;
             if (gBattleMons[gBattlerAttacker].moves[i] == gLastPrintedMoves[gBattlerTarget])
                 break;
@@ -14390,7 +14392,7 @@ static void Cmd_recoverbasedonsunlight(void)
     gBattlerTarget = gBattlerAttacker;
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
-        if (gCurrentMove == MOVE_SHORE_UP)
+        if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (HasWeatherEffect() && gBattleWeather & B_WEATHER_SANDSTORM)
                 gBattleStruct->moveDamage[gBattlerAttacker] = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
