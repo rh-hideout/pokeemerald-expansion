@@ -8528,9 +8528,11 @@ BattleScript_FriskMsg::
 
 BattleScript_FriskActivates::
 	saveattacker
+        savetarget
 	copybyte gBattlerAttacker, sBATTLER
 	tryfriskmsg BS_SCRIPTING
 	restoreattacker
+        restoretarget
 	end3
 
 BattleScript_ImposterActivates::
