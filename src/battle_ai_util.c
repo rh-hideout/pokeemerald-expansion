@@ -2149,8 +2149,7 @@ bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-            && GetMoveNonVolatileStatus(moves[i]) == effect)
+        if (GetMoveNonVolatileStatus(moves[i]) == effect)
             return TRUE;
     }
 
