@@ -5,6 +5,7 @@
 #include "constants/trainers.h"
 #include "constants/battle.h"
 #include "difficulty.h"
+#include "debug.h"
 
 #define MAX_TRAINER_ITEMS 4
 
@@ -200,7 +201,9 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
 
 static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
+    u32 sanitizedTrainerId = 0;
+    if (gIsDebugBattle) return GetDebugAiTrainer();
+    sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
     return &gTrainers[difficulty][sanitizedTrainerId];
@@ -208,10 +211,9 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
 
 static inline const u8 GetTrainerClassFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
+    const struct Trainer *trainer = GetTrainerStructFromId(trainerId);
 
-    return gTrainers[difficulty][sanitizedTrainerId].trainerClass;
+    return trainer->trainerClass;
 }
 
 static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
@@ -225,82 +227,62 @@ static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
 
 static inline const u8 *GetTrainerNameFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
-
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    {
+        enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
         return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
-    return gTrainers[difficulty][sanitizedTrainerId].trainerName;
+    }
+    return GetTrainerStructFromId(trainerId)->trainerName;
 }
 
 static inline const u8 GetTrainerPicFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
     enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
         return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
 
-    return gTrainers[difficulty][sanitizedTrainerId].trainerPic;
+    return GetTrainerStructFromId(trainerId)->trainerPic;
 }
 
 static inline const u8 GetTrainerStartingStatusFromId(u16 trainerId)
 {
-    return gTrainers[GetCurrentDifficultyLevel()][SanitizeTrainerId(trainerId)].startingStatus;
+    return GetTrainerStructFromId(trainerId)->startingStatus;
 }
 
 static inline const bool32 IsTrainerDoubleBattle(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    return gTrainers[difficulty][sanitizedTrainerId].doubleBattle;
+    return GetTrainerStructFromId(trainerId)->doubleBattle;
 }
 
 static inline const u8 GetTrainerPartySizeFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    return gTrainers[difficulty][sanitizedTrainerId].partySize;
+    return GetTrainerStructFromId(trainerId)->partySize;
 }
 
 static inline const bool32 DoesTrainerHaveMugshot(u16 trainerId)
 {
-    return gTrainers[GetCurrentDifficultyLevel()][SanitizeTrainerId(trainerId)].mugshotColor;
+    return GetTrainerStructFromId(trainerId)->mugshotColor;
 }
 
 static inline const u8 GetTrainerMugshotColorFromId(u16 trainerId)
 {
-    return gTrainers[GetCurrentDifficultyLevel()][SanitizeTrainerId(trainerId)].mugshotColor;
+    return GetTrainerStructFromId(trainerId)->mugshotColor;
 }
 
 static inline const u16 *GetTrainerItemsFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    return gTrainers[difficulty][sanitizedTrainerId].items;
+    return GetTrainerStructFromId(trainerId)->items;
 }
 
 static inline const struct TrainerMon *GetTrainerPartyFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    return gTrainers[difficulty][sanitizedTrainerId].party;
+    return GetTrainerStructFromId(trainerId)->party;
 }
 
 static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
-
-    return gTrainers[difficulty][sanitizedTrainerId].aiFlags;
+    return GetTrainerStructFromId(trainerId)->aiFlags;
 }
 
 #endif // GUARD_DATA_H
