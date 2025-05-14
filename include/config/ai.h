@@ -62,6 +62,7 @@
 
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50
+#define PREDICT_MOVE_CHANCE                                     100
 
 // AI PP Stall detection chance per roll
 #define PP_STALL_DISREGARD_MOVE_PERCENTAGE                      50

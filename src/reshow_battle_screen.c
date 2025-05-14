@@ -268,7 +268,7 @@ static bool8 LoadBattlerSpriteGfx(u32 battler)
 {
     if (battler < gBattlersCount)
     {
-        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battler))
         {
             if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
                 BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
@@ -300,7 +300,7 @@ void CreateBattlerSprite(u32 battler)
         else
             posY = GetBattlerSpriteDefault_Y(battler);
 
-        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battler))
         {
             if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
                 return;
@@ -372,7 +372,7 @@ static void CreateHealthboxSprite(u32 battler)
         InitBattlerHealthboxCoords(battler);
         SetHealthboxSpriteVisible(healthboxSpriteId);
 
-        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battler))
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_SAFARI_ALL_TEXT);
@@ -384,7 +384,7 @@ static void CreateHealthboxSprite(u32 battler)
         else
             DummyBattleInterfaceFunc(gHealthboxSpriteIds[battler], FALSE);
 
-        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battler))
         {
             if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);

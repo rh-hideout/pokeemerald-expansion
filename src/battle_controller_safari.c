@@ -267,7 +267,7 @@ static void SafariHandlePrintString(u32 battler)
 
 static void SafariHandlePrintSelectionString(u32 battler)
 {
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
         SafariHandlePrintString(battler);
     else
         SafariBufferExecCompleted(battler);

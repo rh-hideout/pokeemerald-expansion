@@ -110,7 +110,7 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
 
 void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
 {
-    if (GetBattlerSide(battler) != B_SIDE_OPPONENT)
+    if (IsOnPlayerSide(battler))
     {
         s32 i;
         for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)

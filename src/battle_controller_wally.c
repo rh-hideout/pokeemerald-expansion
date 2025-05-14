@@ -326,7 +326,7 @@ static void WallyHandlePrintString(u32 battler)
 
 static void WallyHandlePrintSelectionString(u32 battler)
 {
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
         WallyHandlePrintString(battler);
     else
         WallyBufferExecCompleted(battler);

@@ -276,7 +276,7 @@ DOUBLE_BATTLE_TEST("Pickup grants a random item used by another Pokémon")
 {
     PASSES_RANDOMLY(1, 3, RNG_PICKUP);
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_RESTORE_STATS);
+        ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_WHITE_HERB);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }

@@ -994,7 +994,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
         u8 taskId;
 
         mon = GetBattlerMon(battlerId);
-        if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battlerId))
             pan = 25;
         else
             pan = -25;
@@ -1041,7 +1041,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
 
     StartSpriteAffineAnim(&gSprites[gBattlerSpriteIds[sprite->sBattler]], BATTLER_AFFINE_EMERGE);
 
-    if (GetBattlerSide(sprite->sBattler) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(sprite->sBattler))
         gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_OpponentMonFromBall;
     else
         gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_PlayerMonFromBall;
@@ -1491,7 +1491,7 @@ void StartHealthboxSlideIn(u8 battlerId)
     healthboxSprite->x2 = 0x73;
     healthboxSprite->y2 = 0;
     healthboxSprite->callback = SpriteCB_HealthboxSlideIn;
-    if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(battlerId))
     {
         healthboxSprite->sSpeedX = -healthboxSprite->sSpeedX;
         healthboxSprite->sSpeedY = -healthboxSprite->sSpeedY;
