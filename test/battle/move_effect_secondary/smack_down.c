@@ -1,10 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-}
-
 SINGLE_BATTLE_TEST("Smack Down does not ground mons behind substitutes")
 {
     GIVEN {
