@@ -19,16 +19,3 @@ SINGLE_BATTLE_TEST("Thunder's accuracy is lowered to 50% in Sunlight")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER, opponent);
     }
 }
-
-SINGLE_BATTLE_TEST("Thunder bypasses accuracy checks in Rain")
-{
-    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_RAIN_DANCE); MOVE(player, MOVE_THUNDER); }
-    } SCENE {
-        NONE_OF { MESSAGE("Wobbuffet's attack missed!"); }
-    }
-}

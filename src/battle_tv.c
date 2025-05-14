@@ -902,7 +902,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         switch (GetMoveEffect(move))
         {
         case EFFECT_WEATHER_BALL:
-        case EFFECT_THUNDER:
             points += 3;
             break;
         case EFFECT_SOLAR_BEAM:
@@ -911,6 +910,9 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
+
+        if (MoveAlwaysHitsUnderRain(move))
+            points += 3;
 
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
         break;

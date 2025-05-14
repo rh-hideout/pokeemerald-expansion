@@ -1635,9 +1635,9 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
     if ((weather & B_WEATHER_SUN) && effect == EFFECT_THUNDER)
         return FALSE;
 
-    // increased accuracy but don't always hit
-    if ((weather & B_WEATHER_RAIN) && effect == EFFECT_THUNDER)
+    if ((weather & B_WEATHER_RAIN) && MoveAlwaysHitsUnderRain(move))
         return TRUE;
+    // increased accuracy but don't always hit
     if ((weather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && effect == EFFECT_BLIZZARD)
         return TRUE;
     if (B_MINIMIZE_DMG_ACC >= GEN_6 && (gStatuses3[battlerDef] & STATUS3_MINIMIZED) && MoveIncreasesPowerToMinimizedTargets(move))
@@ -1736,7 +1736,7 @@ bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEff
       || atkAbility == ABILITY_HYDRATION
       || atkAbility == ABILITY_RAIN_DISH
       || atkAbility == ABILITY_DRY_SKIN
-      || HasMoveEffect(battlerAtk, EFFECT_THUNDER)
+      || HasMoveThatAlwaysHitsUnderRain(battlerAtk)
       || HasMoveEffect(battlerAtk, EFFECT_WEATHER_BALL)
       || HasMoveWithType(battlerAtk, TYPE_WATER)))
     {
@@ -2641,6 +2641,18 @@ bool32 HasSnatchAffectedMove(u32 battler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && MoveCanBeSnatched(moves[i]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 HasMoveThatAlwaysHitsUnderRain(u32 battler)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && MoveAlwaysHitsUnderRain(moves[i]))
             return TRUE;
     }
     return FALSE;

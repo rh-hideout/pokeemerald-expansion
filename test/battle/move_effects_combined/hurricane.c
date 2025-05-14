@@ -5,6 +5,7 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HURRICANE) == EFFECT_THUNDER);
     ASSUME(GetMoveAccuracy(MOVE_HURRICANE) == 70);
+    ASSUME(MoveAlwaysHitsUnderRain(MOVE_HURRICANE) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Hurricane's accuracy is lowered to 50% in Sunlight")
