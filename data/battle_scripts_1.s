@@ -2713,12 +2713,12 @@ BattleScript_EffectGravity::
 	attackstring
 	ppreduce
 	setgravity BattleScript_ButItFailed
-	savetarget
 	attackanimation
 	waitanimation
 BattleScript_EffectGravitySuccess::
 	printstring STRINGID_GRAVITYINTENSIFIED
 	waitmessage B_WAIT_TIME_LONG
+	savetarget
 	selectfirstvalidtarget
 BattleScript_GravityLoop:
 	movevaluescleanup
@@ -6223,6 +6223,14 @@ BattleScript_ToxicSpikesPoisoned::
 	waitstate
 	return
 
+BattleScript_ToxicSpikesBadlyPoisoned::
+	printstring STRINGID_TOXICSPIKESBADLYPOISONED
+	waitmessage B_WAIT_TIME_LONG
+	statusanimation BS_SCRIPTING
+	updatestatusicon BS_SCRIPTING
+	waitstate
+	return
+
 BattleScript_StickyWebOnSwitchIn::
 	savetarget
 	saveattacker
@@ -8999,34 +9007,29 @@ BattleScript_BerryConfuseHealRet_Anim:
 	removeitem BS_TARGET
 	return
 
-BattleScript_BerryStatRaiseEnd2::
-	jumpifability BS_ATTACKER, ABILITY_RIPEN, BattleScript_BerryStatRaiseEnd2_AbilityPopup
-	goto BattleScript_BerryStatRaiseEnd2_Anim
-BattleScript_BerryStatRaiseEnd2_AbilityPopup:
-	call BattleScript_AbilityPopUp
-BattleScript_BerryStatRaiseEnd2_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_AFFECTS_USER, BattleScript_BerryStatRaiseEnd2_End
-	setgraphicalstatchangevalues
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
-	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
-	call BattleScript_StatUp
-	removeitem BS_ATTACKER
-BattleScript_BerryStatRaiseEnd2_End::
+BattleScript_ConsumableStatRaiseEnd2::
+	call BattleScript_ConsumableStatRaiseRet
 	end2
 
-BattleScript_BerryStatRaiseRet::
-	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_BerryStatRaiseRet_AbilityPopup
-	goto BattleScript_BerryStatRaiseRet_Anim
-BattleScript_BerryStatRaiseRet_AbilityPopup:
+BattleScript_ConsumableStatRaiseRet::
+	@ to ensure `statbuffchange` has correct battler id, backup and use target
+	savetarget
+	copybyte gBattlerTarget, sBATTLER
+	jumpifnotberry BS_SCRIPTING, BattleScript_ConsumableStatRaiseRet_Anim
+	@ check ripen popup if consuming berry
+	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_ConsumableStatRaiseRet_AbilityPopup
+	goto BattleScript_ConsumableStatRaiseRet_Anim
+BattleScript_ConsumableStatRaiseRet_AbilityPopup:
 	call BattleScript_AbilityPopUp
-BattleScript_BerryStatRaiseRet_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerryStatRaiseRet_End
+BattleScript_ConsumableStatRaiseRet_Anim:
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_ConsumableStatRaiseRet_End
 	setgraphicalstatchangevalues
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
 	call BattleScript_StatUp
 	removeitem BS_SCRIPTING
-BattleScript_BerryStatRaiseRet_End:
+BattleScript_ConsumableStatRaiseRet_End:
+	restoretarget
 	return
 
 BattleScript_BerryFocusEnergyRet::
@@ -10033,15 +10036,16 @@ BattleScript_CouldntFullyProtect::
 	return
 
 BattleScript_BerserkGeneRet::
+	saveattacker
 	savetarget
 	copybyte gBattlerTarget, sBATTLER
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerserkGeneRet_TryConfuse
 	setgraphicalstatchangevalues
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
 	call BattleScript_StatUp
 BattleScript_BerserkGeneRet_TryConfuse:
-	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
+	jumpifability BS_ATTACKER, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
 	jumpifsafeguard BattleScript_BerserkGeneRet_SafeguardProtected
 	seteffectprimary MOVE_EFFECT_CONFUSION
 	goto BattleScript_BerserkGeneRet_End
@@ -10056,9 +10060,14 @@ BattleScript_BerserkGeneRet_OwnTempoPrevents:
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_BerserkGeneRet_End:
+	restoreattacker
 	restoretarget
-	removeitem BS_SCRIPTING
-	end3
+	removeitem BS_ATTACKER
+	return
+
+BattleScript_BerserkGeneRetEnd2::
+	call BattleScript_BerserkGeneRet
+	end2
 
 BattleScript_BoosterEnergyEnd2::
 	call BattleScript_BoosterEnergyRet
