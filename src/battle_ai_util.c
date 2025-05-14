@@ -1022,8 +1022,11 @@ s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp)
 {
     if (dmg == 0)
-        return 0;
-    return hp / (dmg + 1) + 1;
+        return UINT32_MAX;
+    if (hp % dmg == 0)
+        return hp / (dmg + 1) + 1;
+    else
+        return (hp / dmg) + 1;
 }
 
 u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, u32 battlerDef)
