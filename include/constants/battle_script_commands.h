@@ -271,7 +271,7 @@ enum MoveEndEffects
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_SECOND_MOVE_BLOCK, 
+    MOVEEND_SECOND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_ABILITY_BLOCK,
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Opportunist
