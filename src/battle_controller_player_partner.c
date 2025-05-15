@@ -47,7 +47,6 @@ static void PlayerPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void PlayerPartnerHandleEndLinkBattle(u32 battler);
 
 static void PlayerPartnerBufferRunCommand(u32 battler);
-static void PlayerPartnerBufferExecCompleted(u32 battler);
 
 static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -207,7 +206,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
 }
 
-static void PlayerPartnerBufferExecCompleted(u32 battler)
+void PlayerPartnerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

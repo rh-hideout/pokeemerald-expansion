@@ -50,7 +50,6 @@ static void RecordedOpponentHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedOpponentHandleEndLinkBattle(u32 battler);
 
 static void RecordedOpponentBufferRunCommand(u32 battler);
-static void RecordedOpponentBufferExecCompleted(u32 battler);
 static void SwitchIn_HandleSoundAndEnd(u32 battler);
 
 static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -128,7 +127,7 @@ static void RecordedOpponentBufferRunCommand(u32 battler)
     }
 }
 
-static void RecordedOpponentBufferExecCompleted(u32 battler)
+void RecordedOpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = RecordedOpponentBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

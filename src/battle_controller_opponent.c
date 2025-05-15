@@ -57,7 +57,6 @@ static void OpponentHandleEndLinkBattle(u32 battler);
 static u8 CountAIAliveNonEggMonsExcept(u8 slotToIgnore);
 
 static void OpponentBufferRunCommand(u32 battler);
-static void OpponentBufferExecCompleted(u32 battler);
 static void SwitchIn_HandleSoundAndEnd(u32 battler);
 
 static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -330,7 +329,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
 }
 
-static void OpponentBufferExecCompleted(u32 battler)
+void OpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

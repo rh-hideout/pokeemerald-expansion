@@ -39,7 +39,6 @@ static void SafariHandleIntroTrainerBallThrow(u32 battler);
 static void SafariHandleEndLinkBattle(u32 battler);
 
 static void SafariBufferRunCommand(u32 battler);
-static void SafariBufferExecCompleted(u32 battler);
 static void CompleteWhenChosePokeblock(u32 battler);
 
 static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -224,7 +223,7 @@ static void CompleteWhenChosePokeblock(u32 battler)
     }
 }
 
-static void SafariBufferExecCompleted(u32 battler)
+void SafariBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = SafariBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

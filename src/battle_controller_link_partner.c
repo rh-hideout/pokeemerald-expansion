@@ -43,7 +43,6 @@ static void LinkPartnerHandleLinkStandbyMsg(u32 battler);
 static void LinkPartnerHandleEndLinkBattle(u32 battler);
 
 static void LinkPartnerBufferRunCommand(u32 battler);
-void LinkPartnerBufferExecCompleted(u32 battler);
 
 static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {

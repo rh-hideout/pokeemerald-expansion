@@ -50,7 +50,6 @@ static void WallyHandleDrawPartyStatusSummary(u32 battler);
 static void WallyHandleEndLinkBattle(u32 battler);
 
 static void WallyBufferRunCommand(u32 battler);
-static void WallyBufferExecCompleted(u32 battler);
 static void CompleteOnChosenItem(u32 battler);
 static void Intro_WaitForShinyAnimAndHealthbox(u32 battler);
 
@@ -271,7 +270,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
     }
 }
 
-static void WallyBufferExecCompleted(u32 battler)
+void WallyBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = WallyBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

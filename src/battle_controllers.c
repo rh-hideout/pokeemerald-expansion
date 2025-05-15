@@ -3018,10 +3018,6 @@ void BtlController_HandleHidePartyStatusSummary(u32 battler)
     BtlController_Complete(battler);
 }
 
-extern void PlayerBufferExecCompleted(u32 battler);
-extern void LinkOpponentBufferExecCompleted(u32 battler);
-extern void LinkPartnerBufferExecCompleted(u32 battler);
-
 void BtlController_HandleBattleAnimation(u32 battler)
 {
     if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL))

@@ -47,7 +47,6 @@ static void RecordedPlayerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPlayerHandleEndLinkBattle(u32 battler);
 
 static void RecordedPlayerBufferRunCommand(u32 battler);
-static void RecordedPlayerBufferExecCompleted(u32 battler);
 
 static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -284,7 +283,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
 }
 
-static void RecordedPlayerBufferExecCompleted(u32 battler)
+void RecordedPlayerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = RecordedPlayerBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)

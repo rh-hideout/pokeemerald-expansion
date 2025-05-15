@@ -290,6 +290,7 @@ void BtlController_HandleBattleAnimation(u32 battler);
 
 // player controller
 void SetControllerToPlayer(u32 battler);
+void PlayerBufferExecCompleted(u32 battler);
 void SetBattleEndCallbacks(u32 battler);
 void PlayerHandleBallThrowAnim(u32 battler);
 void PlayerHandleExpUpdate(u32 battler);
@@ -312,29 +313,37 @@ void HandleChooseMoveAfterDma3(u32 battler);
 
 // recorded player controller
 void SetControllerToRecordedPlayer(u32 battler);
+void RecordedPlayerBufferExecCompleted(u32 battler);
 
 // opponent controller
 void SetControllerToOpponent(u32 battler);
+void OpponentBufferExecCompleted(u32 battler);
 void OpponentHandleTrainerSlide(u32 battler);
 
 // player partner controller
 void Controller_PlayerPartnerShowIntroHealthbox(u32 battler); // Also used by the link partner.
 void SetControllerToPlayerPartner(u32 battler);
+void PlayerPartnerBufferExecCompleted(u32 battler);
 
 // safari controller
 void SetControllerToSafari(u32 battler);
+void SafariBufferExecCompleted(u32 battler);
 
 // wally controller
 void SetControllerToWally(u32 battler);
+void WallyBufferExecCompleted(u32 battler);
 
 // recorded opponent controller
 void SetControllerToRecordedOpponent(u32 battler);
+void RecordedOpponentBufferExecCompleted(u32 battler);
 
 // link opponent
 void SetControllerToLinkOpponent(u32 battler);
+void LinkOpponentBufferExecCompleted(u32 battler);
 
 // link partner
 void SetControllerToLinkPartner(u32 battler);
+void LinkPartnerBufferExecCompleted(u32 battler);
 
 void TrySetBattlerShadowSpriteCallback(u32 battler);
 
