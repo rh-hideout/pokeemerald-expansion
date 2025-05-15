@@ -28904,7 +28904,7 @@ General_PrimalReversion_Alpha:
 WaterGeyser:
 	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
 	delay 1
-	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4109, 24
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
 	delay 1
 	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
 	delay 1
@@ -28937,7 +28937,7 @@ General_PrimalReversion_Omega:
 FireGeyser:
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
 	delay 1
-	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4109, 24
+	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
 	delay 1
 	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
 	delay 1
