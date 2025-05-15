@@ -260,7 +260,7 @@ void BtlController_HandleGetMonData(u32 battler);
 void BtlController_HandleGetRawMonData(u32 battler);
 void BtlController_HandleSetMonData(u32 battler);
 void BtlController_HandleSetRawMonData(u32 battler);
-void BtlController_HandleLoadMonSprite(u32 battler, void (*controllerCallback)(u32 battler));
+void BtlController_HandleLoadMonSprite(u32 battler);
 void BtlController_HandleSwitchInAnim(u32 battler);
 void BtlController_HandleReturnMonToBall(u32 battler);
 void BtlController_HandleDrawTrainerPic(u32 battlerId, u32 trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority);
@@ -349,6 +349,8 @@ void LinkPartnerBufferExecCompleted(u32 battler);
 void TrySetBattlerShadowSpriteCallback(u32 battler);
 
 bool32 TryShinyAnimAfterMonAnimUtil(u32 battler);
+void TryShinyAnimAfterMonAnim(u32 battler);
+void WaitForMonAnimAfterLoad(u32 battler);
 bool32 SwitchIn_ShowSubstituteUtil(u32 battler);
 void BtlController_HandleSwitchInWaitAndEnd(u32 battler);
 void BtlController_Intro_DelayAndEnd(u32 battler);

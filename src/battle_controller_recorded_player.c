@@ -29,7 +29,6 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 
-static void RecordedPlayerHandleLoadMonSprite(u32 battler);
 static void RecordedPlayerHandleDrawTrainerPic(u32 battler);
 static void RecordedPlayerHandleTrainerSlideBack(u32 battler);
 static void RecordedPlayerHandleChooseAction(u32 battler);
@@ -50,7 +49,7 @@ static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 ba
     [CONTROLLER_GETRAWMONDATA]            = BtlController_Empty,
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
-    [CONTROLLER_LOADMONSPRITE]            = RecordedPlayerHandleLoadMonSprite,
+    [CONTROLLER_LOADMONSPRITE]            = BtlController_HandleLoadMonSprite,
     [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = RecordedPlayerHandleDrawTrainerPic,
@@ -255,12 +254,6 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
     }
 }
 
-static void WaitForMonAnimAfterLoad(u32 battler)
-{
-    if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
-        BtlController_Complete(battler);
-}
-
 void RecordedPlayerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = RecordedPlayerBufferRunCommand;
@@ -275,11 +268,6 @@ void RecordedPlayerBufferExecCompleted(u32 battler)
     {
         gBattleControllerExecFlags &= ~(1u << battler);
     }
-}
-
-static void RecordedPlayerHandleLoadMonSprite(u32 battler)
-{
-    BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
 }
 
 static void RecordedPlayerHandleDrawTrainerPic(u32 battler)

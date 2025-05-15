@@ -32,7 +32,6 @@
 #include "constants/party_menu.h"
 #include "constants/trainers.h"
 
-static void PlayerPartnerHandleLoadMonSprite(u32 battler);
 static void PlayerPartnerHandleDrawTrainerPic(u32 battler);
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler);
 static void PlayerPartnerHandleChooseAction(u32 battler);
@@ -50,7 +49,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_GETRAWMONDATA]            = BtlController_Empty,
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
-    [CONTROLLER_LOADMONSPRITE]            = PlayerPartnerHandleLoadMonSprite,
+    [CONTROLLER_LOADMONSPRITE]            = BtlController_HandleLoadMonSprite,
     [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = PlayerPartnerHandleDrawTrainerPic,
@@ -178,12 +177,6 @@ void Controller_PlayerPartnerShowIntroHealthbox(u32 battler)
     }
 }
 
-static void WaitForMonAnimAfterLoad(u32 battler)
-{
-    if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
-        BtlController_Complete(battler);
-}
-
 void PlayerPartnerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
@@ -198,11 +191,6 @@ void PlayerPartnerBufferExecCompleted(u32 battler)
     {
         gBattleControllerExecFlags &= ~(1u << battler);
     }
-}
-
-static void PlayerPartnerHandleLoadMonSprite(u32 battler)
-{
-    BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
 }
 
 // some explanation here

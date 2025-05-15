@@ -40,7 +40,6 @@
 #include "trainer_hill.h"
 #include "test_runner.h"
 
-static void OpponentHandleLoadMonSprite(u32 battler);
 static void OpponentHandleDrawTrainerPic(u32 battler);
 static void OpponentHandleTrainerSlideBack(u32 battler);
 static void OpponentHandleChooseAction(u32 battler);
@@ -60,7 +59,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
     [CONTROLLER_GETRAWMONDATA]            = BtlController_HandleGetRawMonData,
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
-    [CONTROLLER_LOADMONSPRITE]            = OpponentHandleLoadMonSprite,
+    [CONTROLLER_LOADMONSPRITE]            = BtlController_HandleLoadMonSprite,
     [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = OpponentHandleDrawTrainerPic,
@@ -294,12 +293,6 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
     }
 }
 
-static void TryShinyAnimAfterMonAnim(u32 battler)
-{
-    if (TryShinyAnimAfterMonAnimUtil(battler))
-        BtlController_Complete(battler);
-}
-
 void OpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
@@ -314,11 +307,6 @@ void OpponentBufferExecCompleted(u32 battler)
     {
         gBattleControllerExecFlags &= ~(1u << battler);
     }
-}
-
-static void OpponentHandleLoadMonSprite(u32 battler)
-{
-    BtlController_HandleLoadMonSprite(battler, TryShinyAnimAfterMonAnim);
 }
 
 static u32 OpponentGetTrainerPicId(u32 battlerId)

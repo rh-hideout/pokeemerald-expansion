@@ -30,7 +30,6 @@
 #include "recorded_battle.h"
 #include "random.h"
 
-static void LinkPartnerHandleLoadMonSprite(u32 battler);
 static void LinkPartnerHandleDrawTrainerPic(u32 battler);
 static void LinkPartnerHandleTrainerSlideBack(u32 battler);
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler);
@@ -46,7 +45,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
     [CONTROLLER_GETRAWMONDATA]            = BtlController_Empty,
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
-    [CONTROLLER_LOADMONSPRITE]            = LinkPartnerHandleLoadMonSprite,
+    [CONTROLLER_LOADMONSPRITE]            = BtlController_HandleLoadMonSprite,
     [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = LinkPartnerHandleDrawTrainerPic,
@@ -115,12 +114,6 @@ static void LinkPartnerBufferRunCommand(u32 battler)
     }
 }
 
-static void WaitForMonAnimAfterLoad(u32 battler)
-{
-    if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
-        BtlController_Complete(battler);
-}
-
 void LinkPartnerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = LinkPartnerBufferRunCommand;
@@ -135,11 +128,6 @@ void LinkPartnerBufferExecCompleted(u32 battler)
     {
         gBattleControllerExecFlags &= ~(1u << battler);
     }
-}
-
-static void LinkPartnerHandleLoadMonSprite(u32 battler)
-{
-    BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
 }
 
 static void LinkPartnerHandleDrawTrainerPic(u32 battler)
