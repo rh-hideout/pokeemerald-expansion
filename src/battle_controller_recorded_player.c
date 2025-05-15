@@ -125,15 +125,6 @@ static void RecordedPlayerBufferRunCommand(u32 battler)
     }
 }
 
-static void Intro_DelayAndEnd(u32 battler)
-{
-    if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
-    {
-        gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        BtlController_Complete(battler);
-    }
-}
-
 static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
 {
     bool32 healthboxAnimDone = FALSE;
@@ -171,7 +162,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
                 HandleLowHpMusicChange(GetBattlerMon(BATTLE_PARTNER(battler)), BATTLE_PARTNER(battler));
 
             gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
-            gBattlerControllerFuncs[battler] = Intro_DelayAndEnd;
+            gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
         }
     }
     else
@@ -196,7 +187,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         if (healthboxAnimDone)
         {
             gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
-            gBattlerControllerFuncs[battler] = Intro_DelayAndEnd;
+            gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
         }
     }
 }

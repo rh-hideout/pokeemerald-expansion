@@ -136,15 +136,6 @@ static void OpponentBufferRunCommand(u32 battler)
     }
 }
 
-static void Intro_DelayAndEnd(u32 battler)
-{
-    if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
-    {
-        gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        BtlController_Complete(battler);
-    }
-}
-
 static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
 {
     bool8 healthboxAnimDone = FALSE;
@@ -208,7 +199,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         }
 
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
-        gBattlerControllerFuncs[battler] = Intro_DelayAndEnd;
+        gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
     }
 }
 

@@ -3134,6 +3134,15 @@ void BtlController_HandleSwitchInWaitAndEnd(u32 battler)
         BtlController_Complete(battler);
 }
 
+void BtlController_Intro_DelayAndEnd(u32 battler)
+{
+    if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
+    {
+        gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
+        BtlController_Complete(battler);
+    }
+}
+
 bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler)
 {
     if (gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive || IsCryPlayingOrClearCrySongs())
