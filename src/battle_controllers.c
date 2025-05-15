@@ -3149,6 +3149,20 @@ bool32 SwitchIn_ShowSubstituteUtil(u32 battler)
     return TRUE;
 }
 
+void BtlController_HandleSwitchInShowSubstitute(u32 battler)
+{
+    if (SwitchIn_ShowSubstituteUtil(battler))
+    {
+        // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
+        if (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted
+         && gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted
+         && gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted)
+            gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
+        else
+            gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
+    }
+}
+
 void BtlController_HandleSwitchInWaitAndEnd(u32 battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive

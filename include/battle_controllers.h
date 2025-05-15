@@ -356,5 +356,6 @@ bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler);
 bool32 SwitchIn_ShowHealthboxUtil(u32 battler);
 bool32 SwitchIn_TryShinyAnimUtil(u32 battler);
 void BtlController_HandleSwitchInSoundAndEnd(u32 battler);
+void BtlController_HandleSwitchInShowSubstitute(u32 battler);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H

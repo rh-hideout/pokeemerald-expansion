@@ -262,16 +262,10 @@ static void WaitForMonAnimAfterLoad(u32 battler)
         BtlController_Complete(battler);
 }
 
-static void SwitchIn_ShowSubstitute(u32 battler)
-{
-    if (SwitchIn_ShowSubstituteUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
-}
-
 static void SwitchIn_ShowHealthbox(u32 battler)
 {
     if (SwitchIn_ShowHealthboxUtil(battler))
-        gBattlerControllerFuncs[battler] = SwitchIn_ShowSubstitute;
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowSubstitute;
 }
 
 static void SwitchIn_TryShinyAnim(u32 battler)
