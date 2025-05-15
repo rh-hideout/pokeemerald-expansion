@@ -1376,30 +1376,17 @@ bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability)
 
 u32 AI_GetBattlerAbility(u32 battler)
 {
-    if (gAiLogicData->ability[battler] == ABILITY_RETRIEVED)
-        return gBattleMons[battler].ability;
-
     if (gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed)
-    {
-        gAiLogicData->abilityState[battler] = ABILITY_RETRIEVED;
         return gBattleMons[battler].ability;
-    }
 
     if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
-    {
-        gAiLogicData->abilityState[battler] = NO_ABILITY_RETRIEVED;
         return ABILITY_NONE;
-    }
 
     if (IsNeutralizingGasOnField()
      && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS
      && GetBattlerHoldEffectIgnoreAbility(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD)
-    {
-        gAiLogicData->abilityState[battler] = NO_ABILITY_RETRIEVED;
         return ABILITY_NONE;
-    }
 
-    gAiLogicData->abilityState[battler] = RETRIEVED_ABILITY;
     return gBattleMons[battler].ability;
 }
 
