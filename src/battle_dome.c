@@ -4065,7 +4065,6 @@ static bool32 IsDomeComboMove(u32 move)
     case EFFECT_MORNING_SUN:
     case EFFECT_MOONLIGHT:
     case EFFECT_SHORE_UP:
-    case EFFECT_BLIZZARD:
     case EFFECT_SOLAR_BEAM:
     case EFFECT_GROWTH:
     case EFFECT_AURORA_VEIL:
@@ -4123,6 +4122,8 @@ static bool32 IsDomeComboMove(u32 move)
     }
 
     if (MoveAlwaysHitsInRain(move))
+        return TRUE;
+    else if (MoveAlwaysHitsInHailSnow(move))
         return TRUE;
 
     return FALSE;
