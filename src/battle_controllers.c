@@ -2707,6 +2707,14 @@ void BtlController_HandlePrintString(u32 battler)
         BattleArena_DeductSkillPoints(battler, *stringId);
 }
 
+void BtlController_HandlePrintStringPlayerOnly(u32 battler)
+{
+    if (IsOnPlayerSide(battler))
+        BtlController_HandlePrintString(battler);
+    else
+        BtlController_Complete(battler);
+}
+
 void BtlController_HandleHealthBarUpdate(u32 battler)
 {
     s32 maxHP, curHP;
