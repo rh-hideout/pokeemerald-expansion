@@ -83,7 +83,6 @@ static void MoveSelectionDisplayMoveType(u32 battler);
 static void MoveSelectionDisplayMoveNames(u32 battler);
 static void TryMoveSelectionDisplayMoveDescription(u32 battler);
 static void MoveSelectionDisplayMoveDescription(u32 battler);
-static void SwitchIn_HandleSoundAndEnd(u32 battler);
 static void WaitForMonSelection(u32 battler);
 static void CompleteWhenChoseItem(u32 battler);
 static void Task_LaunchLvlUpAnim(u8);
@@ -1363,16 +1362,7 @@ static void SwitchIn_CleanShinyAnimShowSubstitute(u32 battler)
         if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
 
-        gBattlerControllerFuncs[battler] = SwitchIn_HandleSoundAndEnd;
-    }
-}
-
-static void SwitchIn_HandleSoundAndEnd(u32 battler)
-{
-    if (SwitchIn_HandleSoundAndEndUtil(battler))
-    {
-        HandleLowHpMusicChange(GetBattlerMon(battler), battler);
-        BtlController_Complete(battler);
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
     }
 }
 

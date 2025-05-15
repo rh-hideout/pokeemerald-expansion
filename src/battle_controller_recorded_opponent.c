@@ -47,7 +47,6 @@ static void RecordedOpponentHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedOpponentHandleEndLinkBattle(u32 battler);
 
 static void RecordedOpponentBufferRunCommand(u32 battler);
-static void SwitchIn_HandleSoundAndEnd(u32 battler);
 
 static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -281,13 +280,7 @@ static void TryShinyAnimAfterMonAnim(u32 battler)
 static void SwitchIn_ShowSubstitute(u32 battler)
 {
     if (SwitchIn_ShowSubstituteUtil(battler))
-        gBattlerControllerFuncs[battler] = SwitchIn_HandleSoundAndEnd;
-}
-
-static void SwitchIn_HandleSoundAndEnd(u32 battler)
-{
-    if (SwitchIn_HandleSoundAndEndUtil(battler))
-        BtlController_Complete(battler);
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)

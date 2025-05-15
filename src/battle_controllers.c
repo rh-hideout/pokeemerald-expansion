@@ -3179,6 +3179,16 @@ bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler)
     return TRUE;
 }
 
+void BtlController_HandleSwitchInSoundAndEnd(u32 battler)
+{
+    if (SwitchIn_HandleSoundAndEndUtil(battler))
+    {
+        if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+            HandleLowHpMusicChange(GetBattlerMon(battler), battler);
+        BtlController_Complete(battler);
+    }
+}
+
 bool32 SwitchIn_ShowHealthboxUtil(u32 battler)
 {
     u32 side = GetBattlerSide(battler);
