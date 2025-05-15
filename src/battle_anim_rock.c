@@ -485,11 +485,7 @@ void AnimRockFragment(struct Sprite *sprite)
 // args[6] - attacker or target
 void AnimParticleInVortex(struct Sprite *sprite)
 {
-    if (IsDoubleBattle()
-    && (gAnimMoveIndex == MOVE_BLEAKWIND_STORM 
-     || gAnimMoveIndex == MOVE_SANDSEAR_STORM
-     || gAnimMoveIndex == MOVE_SPRINGTIDE_STORM
-     || gAnimMoveIndex == MOVE_WILDBOLT_STORM))
+    if (IsDoubleBattle() && GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
         InitSpritePosToAnimTargetsCentre(sprite, FALSE);
     else
         InitSpritePosToAnimBattler(gBattleAnimArgs[6], sprite, FALSE);

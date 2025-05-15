@@ -45,7 +45,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     } SCENE {
         MESSAGE("Shuckle's Defense fell!"); // Contrary activates
     } THEN {
-        EXPECT(gBattleResources->aiData->abilities[B_POSITION_PLAYER_LEFT] == ABILITY_CONTRARY);
+        EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_LEFT] == ABILITY_CONTRARY);
     }
 }
 
@@ -749,7 +749,7 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK); NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
     } THEN {
-        EXPECT(gBattleResources->aiData->abilities[B_POSITION_PLAYER_RIGHT] == ABILITY_VOLT_ABSORB);
+        EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_RIGHT] == ABILITY_VOLT_ABSORB);
     }
 }
 
@@ -942,15 +942,15 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
         TURN { MOVE(player, MOVE_TORCH_SONG);   MOVE(opponent, MOVE_PSYCHIC);    }
         TURN { MOVE(player, MOVE_GROWL);        MOVE(opponent, MOVE_RAGE_FIST);  }
     } THEN {
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][0], MOVE_TACKLE);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][1], MOVE_GROWL);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][2], MOVE_FLOWER_TRICK);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][3], MOVE_TORCH_SONG);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][0], MOVE_TACKLE);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][1], MOVE_GROWL);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][2], MOVE_FLOWER_TRICK);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][3], MOVE_TORCH_SONG);
 
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][0], MOVE_RAGE_FIST);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][1], MOVE_PSYCHIC);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][2], MOVE_SCRATCH);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][3], MOVE_EARTHQUAKE);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][0], MOVE_RAGE_FIST);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][1], MOVE_PSYCHIC);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][2], MOVE_SCRATCH);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][3], MOVE_EARTHQUAKE);
     }
 }
 
