@@ -1693,8 +1693,8 @@ bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffe
       || ability == ABILITY_MAGIC_GUARD
       || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
       || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
-      || HasMoveEffect(battler, EFFECT_SHORE_UP)
-      || HasMoveEffect(battler, EFFECT_WEATHER_BALL))
+      || HasMoveWithEffect(battler, EFFECT_SHORE_UP)
+      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -1715,9 +1715,9 @@ bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
       || ability == ABILITY_OVERCOAT
       || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
       || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || HasMoveEffect(battler, EFFECT_BLIZZARD)
-      || HasMoveEffect(battler, EFFECT_AURORA_VEIL)
-      || HasMoveEffect(battler, EFFECT_WEATHER_BALL))
+      || HasMoveWithEffect(battler, EFFECT_BLIZZARD)
+      || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
+      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -1736,8 +1736,8 @@ bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEff
       || atkAbility == ABILITY_HYDRATION
       || atkAbility == ABILITY_RAIN_DISH
       || atkAbility == ABILITY_DRY_SKIN
-      || HasMoveEffect(battlerAtk, EFFECT_THUNDER)
-      || HasMoveEffect(battlerAtk, EFFECT_WEATHER_BALL)
+      || HasMoveWithEffect(battlerAtk, EFFECT_THUNDER)
+      || HasMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL)
       || HasMoveWithType(battlerAtk, TYPE_WATER)))
     {
         return TRUE;
@@ -1758,12 +1758,12 @@ bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffe
       || atkAbility == ABILITY_LEAF_GUARD
       || atkAbility == ABILITY_SOLAR_POWER
       || atkAbility == ABILITY_HARVEST
-      || HasMoveEffect(battlerAtk, EFFECT_SOLAR_BEAM)
-      || HasMoveEffect(battlerAtk, EFFECT_MORNING_SUN)
-      || HasMoveEffect(battlerAtk, EFFECT_SYNTHESIS)
-      || HasMoveEffect(battlerAtk, EFFECT_MOONLIGHT)
-      || HasMoveEffect(battlerAtk, EFFECT_WEATHER_BALL)
-      || HasMoveEffect(battlerAtk, EFFECT_GROWTH)
+      || HasMoveWithEffect(battlerAtk, EFFECT_SOLAR_BEAM)
+      || HasMoveWithEffect(battlerAtk, EFFECT_MORNING_SUN)
+      || HasMoveWithEffect(battlerAtk, EFFECT_SYNTHESIS)
+      || HasMoveWithEffect(battlerAtk, EFFECT_MOONLIGHT)
+      || HasMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL)
+      || HasMoveWithEffect(battlerAtk, EFFECT_GROWTH)
       || HasMoveWithType(battlerAtk, TYPE_FIRE)))
     {
         return TRUE;
@@ -1782,9 +1782,9 @@ bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
       || ability == ABILITY_FORECAST
       || ability == ABILITY_SLUSH_RUSH
       || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || HasMoveEffect(battler, EFFECT_BLIZZARD)
-      || HasMoveEffect(battler, EFFECT_AURORA_VEIL)
-      || HasMoveEffect(battler, EFFECT_WEATHER_BALL))
+      || HasMoveWithEffect(battler, EFFECT_BLIZZARD)
+      || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
+      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -1874,7 +1874,7 @@ bool32 ShouldLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
         // If AI is faster and doesn't have any mons left, lowering speed doesn't give any
         return !(AI_IsFaster(battlerAtk, battlerDef, AI_THINKING_STRUCT->moveConsidered)
             && CountUsablePartyMons(battlerAtk) == 0
-            && !HasMoveEffect(battlerAtk, EFFECT_ELECTRO_BALL));
+            && !HasMoveWithEffect(battlerAtk, EFFECT_ELECTRO_BALL));
     }
 
     return TRUE;
@@ -2135,7 +2135,7 @@ bool32 HasMoveWithType(u32 battler, u32 type)
     return FALSE;
 }
 
-bool32 HasMoveEffect(u32 battlerId, enum BattleMoveEffects effect)
+bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects effect)
 {
     s32 i;
     u16 *moves = GetMovesArray(battlerId);
@@ -3104,7 +3104,7 @@ bool32 IsBattlerIncapacitated(u32 battler, u32 ability)
     if ((gBattleMons[battler].status1 & STATUS1_FREEZE) && !HasThawingMove(battler))
         return TRUE;    // if battler has thawing move we assume they will definitely use it, and thus being frozen should be neglected
 
-    if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveEffect(battler, EFFECT_SLEEP_TALK))
+    if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveWithEffect(battler, EFFECT_SLEEP_TALK))
         return TRUE;
 
     if (gBattleMons[battler].status2 & STATUS2_RECHARGE || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
@@ -3128,8 +3128,8 @@ static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, u32 ab
      || ability == ABILITY_QUICK_FEET
      || ability == ABILITY_MAGIC_GUARD
      || (ability == ABILITY_GUTS && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
-     || HasMoveEffect(battler, EFFECT_FACADE)
-     || HasMoveEffect(battler, EFFECT_PSYCHO_SHIFT))
+     || HasMoveWithEffect(battler, EFFECT_FACADE)
+     || HasMoveWithEffect(battler, EFFECT_PSYCHO_SHIFT))
         return TRUE;
     return FALSE;
 }
@@ -3511,8 +3511,8 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     u32 atkSide = GetBattlerSide(battlerAtk);
 
     // Don't waste a turn if screens will be broken
-    if (HasMoveEffect(battlerDef, EFFECT_BRICK_BREAK)
-     || HasMoveEffect(battlerDef, EFFECT_RAGING_BULL))
+    if (HasMoveWithEffect(battlerDef, EFFECT_BRICK_BREAK)
+     || HasMoveWithEffect(battlerDef, EFFECT_RAGING_BULL))
         return FALSE;
 
     switch (moveEffect)
@@ -4043,10 +4043,10 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         return NO_INCREASE;
 
     // Don't increase stats if opposing battler has Encore
-    if (HasMoveEffect(battlerDef, EFFECT_ENCORE))
+    if (HasMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
-    if (IsDoubleBattle() && HasMoveEffect(GetPartnerBattler(battlerDef), EFFECT_ENCORE))
+    if (IsDoubleBattle() && HasMoveWithEffect(GetPartnerBattler(battlerDef), EFFECT_ENCORE))
         return NO_INCREASE;
 
     // Predicting switch
@@ -4165,11 +4165,11 @@ void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
         if (!HasDamagingMove(battlerDef))
             ADJUST_SCORE_PTR(DECENT_EFFECT);
 
-        if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveEffect(battlerAtk, EFFECT_PROTECT))
+        if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveWithEffect(battlerAtk, EFFECT_PROTECT))
             ADJUST_SCORE_PTR(WEAK_EFFECT);    // stall tactic
 
         if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PSN_ANY)
-          || HasMoveEffect(battlerAtk, EFFECT_VENOM_DRENCH)
+          || HasMoveWithEffect(battlerAtk, EFFECT_VENOM_DRENCH)
           || AI_DATA->abilities[battlerAtk] == ABILITY_MERCILESS)
             ADJUST_SCORE_PTR(DECENT_EFFECT);
         else
@@ -4234,8 +4234,8 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     else
         return;
 
-    if ((HasMoveEffect(battlerAtk, EFFECT_DREAM_EATER) || HasMoveEffect(battlerAtk, EFFECT_NIGHTMARE))
-      && !(HasMoveEffect(battlerDef, EFFECT_SNORE) || HasMoveEffect(battlerDef, EFFECT_SLEEP_TALK)))
+    if ((HasMoveWithEffect(battlerAtk, EFFECT_DREAM_EATER) || HasMoveWithEffect(battlerAtk, EFFECT_NIGHTMARE))
+      && !(HasMoveWithEffect(battlerDef, EFFECT_SNORE) || HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK)))
         ADJUST_SCORE_PTR(WEAK_EFFECT);
 
     if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_SLEEP)
@@ -4381,11 +4381,11 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
 {
     if (aiData->abilities[battlerDef] == ABILITY_MAGIC_BOUNCE
      || CountUsablePartyMons(battlerDef) == 0
-     || HasMoveEffect(battlerDef, EFFECT_RAPID_SPIN)
-     || HasMoveEffect(battlerDef, EFFECT_TIDY_UP)
-     || HasMoveEffect(battlerDef, EFFECT_DEFOG)
+     || HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN)
+     || HasMoveWithEffect(battlerDef, EFFECT_TIDY_UP)
+     || HasMoveWithEffect(battlerDef, EFFECT_DEFOG)
      || HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_DEFOG)
-     || HasMoveEffect(battlerDef, EFFECT_MAGIC_COAT))
+     || HasMoveWithEffect(battlerDef, EFFECT_MAGIC_COAT))
         return FALSE;
 
     return TRUE;
@@ -4423,8 +4423,8 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, st
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
      || partnerAbility == ABILITY_CONTRARY
      || partnerAbility == ABILITY_GOOD_AS_GOLD
-     || HasMoveEffect(BATTLE_OPPOSITE(battlerAtk), EFFECT_FOUL_PLAY)
-     || HasMoveEffect(BATTLE_OPPOSITE(battlerAtkPartner), EFFECT_FOUL_PLAY))
+     || HasMoveWithEffect(BATTLE_OPPOSITE(battlerAtk), EFFECT_FOUL_PLAY)
+     || HasMoveWithEffect(BATTLE_OPPOSITE(battlerAtkPartner), EFFECT_FOUL_PLAY))
         return FALSE;
 
     preventsStatLoss = (partnerAbility == ABILITY_CLEAR_BODY
@@ -4477,13 +4477,13 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
     if (IsBattlerPredictedToSwitch(battlerDef))
         scoreIncrease += DECENT_EFFECT;
 
-    if (HasMoveEffect(battlerDef, EFFECT_SLEEP)
-     || HasMoveEffect(battlerDef, EFFECT_TOXIC)
-     || HasMoveEffect(battlerDef, EFFECT_POISON)
-     || HasMoveEffect(battlerDef, EFFECT_PARALYZE)
-     || HasMoveEffect(battlerDef, EFFECT_WILL_O_WISP)
-     || HasMoveEffect(battlerDef, EFFECT_CONFUSE)
-     || HasMoveEffect(battlerDef, EFFECT_LEECH_SEED))
+    if (HasMoveWithEffect(battlerDef, EFFECT_SLEEP)
+     || HasMoveWithEffect(battlerDef, EFFECT_TOXIC)
+     || HasMoveWithEffect(battlerDef, EFFECT_POISON)
+     || HasMoveWithEffect(battlerDef, EFFECT_PARALYZE)
+     || HasMoveWithEffect(battlerDef, EFFECT_WILL_O_WISP)
+     || HasMoveWithEffect(battlerDef, EFFECT_CONFUSE)
+     || HasMoveWithEffect(battlerDef, EFFECT_LEECH_SEED))
         scoreIncrease += GOOD_EFFECT;
 
     if (AI_DATA->hpPercents[battlerAtk] > 70)

@@ -665,7 +665,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 || monAbility == ABILITY_EARLY_BIRD)
                 || holdEffect == (HOLD_EFFECT_CURE_SLP | HOLD_EFFECT_CURE_STATUS)
                 || HasMove(battler, MOVE_SLEEP_TALK)
-                || (HasMoveEffect(battler, MOVE_SNORE) && AI_GetMoveEffectiveness(MOVE_SNORE, battler, opposingBattler) >= UQ_4_12(2.0))
+                || (HasMoveWithEffect(battler, MOVE_SNORE) && AI_GetMoveEffectiveness(MOVE_SNORE, battler, opposingBattler) >= UQ_4_12(2.0))
                 || (IsBattlerGrounded(battler)
                     && (HasMove(battler, MOVE_MISTY_TERRAIN) || HasMove(battler, MOVE_ELECTRIC_TERRAIN)))
                 )
@@ -760,7 +760,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
                 break;
 
             return FALSE;
-        
+
         case ABILITY_ZERO_TO_HERO:
             // Want to activate Palafin-Zero at all costs
             if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO)
