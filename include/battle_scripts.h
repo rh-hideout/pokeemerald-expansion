@@ -816,7 +816,7 @@ extern const u8 BattleScript_MoveEffectEerieSpell[];
 extern const u8 BattleScript_EffectJungleHealing[];
 extern const u8 BattleScript_EffectCoaching[];
 extern const u8 BattleScript_EffectDecorate[];
-extern const u8 BattleScript_EffectRecoilHP25[];
+extern const u8 BattleScript_EffectStruggle[];
 extern const u8 BattleScript_EffectStuffCheeks[];
 extern const u8 BattleScript_MoveEffectLightScreen[];
 extern const u8 BattleScript_MoveEffectReflect[];

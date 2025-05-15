@@ -1876,9 +1876,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_RECOIL_HP_25] =
+    [EFFECT_STRUGGLE] =
     {
-        .battleScript = BattleScript_EffectRecoilHP25,
+        .battleScript = BattleScript_EffectStruggle,
         .battleTvScore = 0, // TODO: Assign points
     },
 
