@@ -269,16 +269,10 @@ static void TryShinyAnimAfterMonAnim(u32 battler)
         BtlController_Complete(battler);
 }
 
-static void SwitchIn_ShowHealthbox(u32 battler)
-{
-    if (SwitchIn_ShowHealthboxUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowSubstitute;
-}
-
 static void SwitchIn_TryShinyAnim(u32 battler)
 {
     if (SwitchIn_TryShinyAnimUtil(battler))
-        gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
 }
 
 void LinkOpponentBufferExecCompleted(u32 battler)

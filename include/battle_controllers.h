@@ -354,6 +354,7 @@ void BtlController_HandleSwitchInWaitAndEnd(u32 battler);
 void BtlController_Intro_DelayAndEnd(u32 battler);
 bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler);
 bool32 SwitchIn_ShowHealthboxUtil(u32 battler);
+void BtlController_HandleSwitchInShowHealthbox(u32 battler);
 bool32 SwitchIn_TryShinyAnimUtil(u32 battler);
 void BtlController_HandleSwitchInSoundAndEnd(u32 battler);
 void BtlController_HandleSwitchInShowSubstitute(u32 battler);

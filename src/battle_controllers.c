@@ -3233,6 +3233,12 @@ bool32 SwitchIn_ShowHealthboxUtil(u32 battler)
     return TRUE;
 }
 
+void BtlController_HandleSwitchInShowHealthbox(u32 battler)
+{
+    if (SwitchIn_ShowHealthboxUtil(battler))
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowSubstitute;
+}
+
 bool32 SwitchIn_TryShinyAnimUtil(u32 battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
