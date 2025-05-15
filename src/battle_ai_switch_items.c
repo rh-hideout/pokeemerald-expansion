@@ -462,6 +462,8 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
         return FALSE;
     if (AreStatsRaised(battler))
         return FALSE;
+    if (IsMoldBreakerTypeAbility(opposingBattler, GetBattlerAbility(opposingBattler)))
+        return FALSE;
 
     // Don't switch if mon could OHKO
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -472,7 +474,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
             // Only check damage if it's a damaging move
             if (!IsBattleMoveStatus(aiMove))
             {
-                if (AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
+                if (!AI_DoesChoiceItemBlockMove(battler, aiMove) && AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
                     return FALSE;
             }
         }
