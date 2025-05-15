@@ -73,7 +73,8 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison- and Steel-type targets if it us
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
-        ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_POISON_POWER);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(heldItem); }
         OPPONENT(SPECIES_ODDISH);

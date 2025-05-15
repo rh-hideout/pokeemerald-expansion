@@ -34,19 +34,21 @@ static void CreateBattlerTrace(struct Task *task, u8 taskId);
 
 EWRAM_DATA static union AffineAnimCmd *sAnimTaskAffineAnim = NULL;
 
-const struct UCoords8 sBattlerCoords[][MAX_BATTLERS_COUNT] =
+const struct UCoords8 sBattlerCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT] =
 {
-    { // Single battle
-        { 72, 80 },
-        { 176, 40 },
-        { 48, 40 },
-        { 112, 80 },
+    [BATTLE_COORDS_SINGLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 72, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 176, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 48, 40 },
+        [B_POSITION_OPPONENT_RIGHT] = { 112, 80 },
     },
-    { // Double battle
-        { 32, 80 },
-        { 200, 40 },
-        { 90, 88 },
-        { 152, 32 },
+    [BATTLE_COORDS_DOUBLES] =
+    {
+        [B_POSITION_PLAYER_LEFT]    = { 32, 80 },
+        [B_POSITION_OPPONENT_LEFT]  = { 200, 40 },
+        [B_POSITION_PLAYER_RIGHT]   = { 90, 84 },
+        [B_POSITION_OPPONENT_RIGHT] = { 152, 32 },
     },
 };
 
@@ -99,10 +101,10 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
     {
     case BATTLER_COORD_X:
     case BATTLER_COORD_X_2:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].x;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].x;
         break;
     case BATTLER_COORD_Y:
-        retVal = sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+        retVal = sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
         break;
     case BATTLER_COORD_Y_PIC_OFFSET:
     case BATTLER_COORD_Y_PIC_OFFSET_DEFAULT:
@@ -116,7 +118,7 @@ u8 GetBattlerSpriteCoord(u8 battlerId, u8 coordType)
         }
         else
         {
-            mon = GetPartyBattlerData(battlerId);
+            mon = GetBattlerMon(battlerId);
             illusionMon = GetIllusionMonPtr(battlerId);
             if (illusionMon != NULL)
                 mon = illusionMon;
@@ -160,14 +162,14 @@ u8 GetBattlerYDelta(u8 battlerId, u16 species)
         {
             spriteInfo = gBattleSpritesDataPtr->battlerData;
             if (!spriteInfo[battlerId].transformSpecies)
-                personality = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_PERSONALITY);
+                personality = GetMonData(GetBattlerMon(battlerId), MON_DATA_PERSONALITY);
             else
                 personality = gTransformedPersonalities[battlerId];
             species = GetUnownSpeciesId(personality);
         }
     }
 
-    if (GetBattlerSide(battlerId) == B_SIDE_PLAYER || IsContest())
+    if (IsOnPlayerSide(battlerId) || IsContest())
         ret = gSpeciesInfo[species].backPicYOffset;
     else
         ret = gSpeciesInfo[species].frontPicYOffset;
@@ -177,7 +179,7 @@ u8 GetBattlerYDelta(u8 battlerId, u16 species)
 u8 GetBattlerElevation(u8 battlerId, u16 species)
 {
     u8 ret = 0;
-    if (GetBattlerSide(battlerId) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(battlerId))
     {
         if (!IsContest())
         {
@@ -193,7 +195,7 @@ u8 GetBattlerSpriteFinal_Y(u8 battlerId, u16 species, bool8 a3)
     u16 offset;
     u8 y;
 
-    if (GetBattlerSide(battlerId) == B_SIDE_PLAYER || IsContest())
+    if (IsOnPlayerSide(battlerId) || IsContest())
     {
         offset = GetBattlerYDelta(battlerId, species);
     }
@@ -202,10 +204,10 @@ u8 GetBattlerSpriteFinal_Y(u8 battlerId, u16 species, bool8 a3)
         offset = GetBattlerYDelta(battlerId, species);
         offset -= GetBattlerElevation(battlerId, species);
     }
-    y = offset + sBattlerCoords[WhichBattleCoords(battlerId)][GetBattlerPosition(battlerId)].y;
+    y = offset + sBattlerCoords[GetBattlerCoordsIndex(battlerId)][GetBattlerPosition(battlerId)].y;
     if (a3)
     {
-        if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(battlerId))
             y += 8;
         if (y > DISPLAY_HEIGHT - MON_PIC_HEIGHT + 8)
             y = DISPLAY_HEIGHT - MON_PIC_HEIGHT + 8;
@@ -254,7 +256,7 @@ u8 GetBattlerSpriteDefault_Y(u8 battlerId)
 u8 GetSubstituteSpriteDefault_Y(u8 battlerId)
 {
     u16 y;
-    if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(battlerId))
         y = GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y) + 16;
     else
         y = GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y) + 17;
@@ -273,11 +275,11 @@ u8 GetBattlerYCoordWithElevation(u8 battlerId)
         spriteInfo = gBattleSpritesDataPtr->battlerData;
 
         if (!spriteInfo[battlerId].transformSpecies)
-            species = GetMonData(GetPartyBattlerData(battlerId), MON_DATA_SPECIES);
+            species = GetMonData(GetBattlerMon(battlerId), MON_DATA_SPECIES);
         else
             species = spriteInfo[battlerId].transformSpecies;
 
-        if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(battlerId))
             y -= GetBattlerElevation(battlerId, species);
     }
     return y;
@@ -688,7 +690,7 @@ void SetAnimSpriteInitialXOffset(struct Sprite *sprite, s16 xOffset)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
             sprite->x -= xOffset;
         else
             sprite->x += xOffset;
@@ -815,7 +817,7 @@ bool8 IsBattlerSpritePresent(u8 battlerId)
         if (GetBattlerPosition(battlerId) == 0xff)
             return FALSE;
 
-        if (!gBattleStruct->spriteIgnore0Hp && GetMonData(GetPartyBattlerData(battlerId), MON_DATA_HP) == 0)
+        if (!gBattleStruct->spriteIgnore0Hp && GetMonData(GetBattlerMon(battlerId), MON_DATA_HP) == 0)
             return FALSE;
         return TRUE;
     }
@@ -1429,23 +1431,26 @@ static u8 UNUSED GetSpritePalIdxByPosition(u8 position)
     return GetBattlerAtPosition(position);
 }
 
+// gBattleAnimArgs 0-3 used
+// 0, 1 used for position
+// 2, 3 as some control variables
 void AnimSpriteOnMonPos(struct Sprite *sprite)
 {
-    bool8 var;
+    bool8 respectMonPicOffsets;
 
     if (!sprite->data[0])
     {
         if (!gBattleAnimArgs[3])
-            var = TRUE;
+            respectMonPicOffsets = TRUE;
         else
-            var = FALSE;
+            respectMonPicOffsets = FALSE;
 
         if (gBattleAnimArgs[2] == 0)
-            InitSpritePosToAnimAttacker(sprite, var);
+            InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
         else if (gBattleAnimArgs[2] == 1)
-            InitSpritePosToAnimTarget(sprite, var);
+            InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
         else if (gBattleAnimArgs[2] == 2)
-            InitSpritePosToAnimAttackerPartner(sprite, var);
+            InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
 
         sprite->data[0]++;
 
@@ -1480,7 +1485,7 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
         coordType = BATTLER_COORD_Y;
 
     InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[4];
@@ -1499,7 +1504,7 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
 void AnimThrowProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
@@ -1517,32 +1522,32 @@ static void AnimThrowProjectile_Step(struct Sprite *sprite)
 
 void AnimTravelDiagonally(struct Sprite *sprite)
 {
-    bool8 r4;
+    bool8 respectOffsets;
     u8 battlerId, coordType;
 
     if (!gBattleAnimArgs[6])
     {
-        r4 = TRUE;
+        respectOffsets = TRUE;
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     }
     else
     {
-        r4 = FALSE;
+        respectOffsets = FALSE;
         coordType = BATTLER_COORD_Y;
     }
     if (gBattleAnimArgs[5] == ANIM_ATTACKER)
     {
-        InitSpritePosToAnimAttacker(sprite, r4);
+        InitSpritePosToAnimAttacker(sprite, respectOffsets);
         battlerId = gBattleAnimAttacker;
     }
     else
     {
-        InitSpritePosToAnimTarget(sprite, r4);
+        InitSpritePosToAnimTarget(sprite, respectOffsets);
         battlerId = gBattleAnimTarget;
     }
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    InitSpritePosToAnimTarget(sprite, r4);
+    InitSpritePosToAnimTarget(sprite, respectOffsets);
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(battlerId, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(battlerId, coordType) + gBattleAnimArgs[3];
@@ -1698,6 +1703,11 @@ static void AnimTask_BlendMonInAndOut_Step(u8 taskId)
 }
 
 // See AnimTask_BlendMonInAndOut. Same, but ANIM_TAG_* instead of mon
+// args[0] - tag
+// arg 1: blend color
+// arg 2: target blend coefficient
+// arg 3: initial delay
+// arg 4: number of times to blend in and out
 void AnimTask_BlendPalInAndOutByTag(u8 task)
 {
     u8 palette = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
@@ -1841,11 +1851,11 @@ static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
             {
                 spriteInfo = gBattleSpritesDataPtr->battlerData;
                 if (!spriteInfo[battlerId].transformSpecies)
-                    species = GetMonData(GetPartyBattlerData(i), MON_DATA_SPECIES);
+                    species = GetMonData(GetBattlerMon(i), MON_DATA_SPECIES);
                 else
                     species = spriteInfo[battlerId].transformSpecies;
 
-                if (GetBattlerSide(i) == B_SIDE_PLAYER)
+                if (IsOnPlayerSide(i))
                     return gSpeciesInfo[species].backPicYOffset;
                 else
                     return gSpeciesInfo[species].frontPicYOffset;
@@ -2007,7 +2017,7 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16
         gMonSpritesGfxPtr->buffer = AllocZeroed(MON_PIC_SIZE * MAX_MON_PIC_FRAMES);
     if (!isBackpic)
     {
-        LoadCompressedPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
+        LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
         LoadSpecialPokePic(gMonSpritesGfxPtr->buffer,
                            species,
                            personality,
@@ -2015,7 +2025,7 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16
     }
     else
     {
-        LoadCompressedPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
+        LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
         LoadSpecialPokePic(gMonSpritesGfxPtr->buffer,
                            species,
                            personality,
@@ -2072,7 +2082,7 @@ s16 GetBattlerSpriteCoordAttr(u8 battlerId, u8 attr)
     }
     else
     {
-        struct Pokemon *mon = GetPartyBattlerData(battlerId);
+        struct Pokemon *mon = GetBattlerMon(battlerId);
 
         spriteInfo = gBattleSpritesDataPtr->battlerData;
         if (!spriteInfo[battlerId].transformSpecies)
@@ -2090,7 +2100,7 @@ s16 GetBattlerSpriteCoordAttr(u8 battlerId, u8 attr)
         if (species == SPECIES_UNOWN)
             species = GetUnownSpeciesId(personality);
 
-        if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(battlerId))
         {
         #if P_GENDER_DIFFERENCES
             if (gSpeciesInfo[species].backPicFemale != NULL && IsPersonalityFemale(species, personality))
@@ -2185,7 +2195,7 @@ u8 CreateInvisibleSpriteCopy(int battlerId, u8 spriteId, int species)
 void AnimTranslateLinearAndFlicker_Flipped(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
@@ -2207,7 +2217,7 @@ void AnimTranslateLinearAndFlicker_Flipped(struct Sprite *sprite)
 // Used by three different unused battle anim sprite templates.
 void AnimTranslateLinearAndFlicker(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         gBattleAnimArgs[3] *= -1;
@@ -2230,7 +2240,7 @@ void AnimTranslateLinearAndFlicker(struct Sprite *sprite)
 void AnimSpinningSparkle(struct Sprite *sprite)
 {
     SetSpriteCoordsToAnimAttackerCoords(sprite);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -2262,7 +2272,7 @@ void AnimTask_AttackerPunchWithTrace(u8 taskId)
     struct Task *task = &gTasks[taskId];
 
     task->tBattlerSpriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
-    task->tMoveSpeed = (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER) ? -8 : 8;
+    task->tMoveSpeed = (!IsOnPlayerSide(gBattleAnimAttacker)) ? -8 : 8;
     task->tState = 0;
     task->tCounter = 0;
     gSprites[task->tBattlerSpriteId].x2 -= task->tBattlerSpriteId;
@@ -2361,7 +2371,7 @@ void AnimWeatherBallUp(struct Sprite *sprite)
 {
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimAttacker))
         sprite->data[0] = 5;
     else
         sprite->data[0] = -10;
@@ -2387,7 +2397,7 @@ void AnimWeatherBallDown(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[2] = sprite->x + gBattleAnimArgs[4];
     sprite->data[4] = sprite->y + gBattleAnimArgs[5];
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         x = (u16)gBattleAnimArgs[4] + 30;
         sprite->x += x;

@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if not asleep")
     PARAMETRIZE { status = STATUS1_NONE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(status); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Sleep Talk works if user has Comatose")
 {
 
     GIVEN {
-        PLAYER(SPECIES_KOMALA) { Moves(MOVE_SLEEP_TALK, MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH); }
+        PLAYER(SPECIES_KOMALA) { Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
@@ -62,21 +62,21 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if no moves work")
 SINGLE_BATTLE_TEST("Sleep Talk can still use moves with no PP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); MovesWithPP({MOVE_SLEEP_TALK, 10}, {MOVE_TACKLE, 0}, {MOVE_FLY, 10}, {MOVE_DIG, 10}); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); MovesWithPP({MOVE_SLEEP_TALK, 10}, {MOVE_SCRATCH, 0}, {MOVE_FLY, 10}, {MOVE_DIG, 10}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
     }
 }
 
 SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE, MOVE_FLY, MOVE_DIG); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
@@ -84,19 +84,19 @@ SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
     }
 }
 
 SINGLE_BATTLE_TEST("Sleep Talk fails if user is taunted")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TAUNT].effect == EFFECT_TAUNT);
-        ASSUME(gMovesInfo[MOVE_SLEEP_TALK].category == DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE, MOVE_FLY, MOVE_DIG); }
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_SLEEP_TALK) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TAUNT); MOVE(player, MOVE_SLEEP_TALK); }
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if user is taunted")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         }
     }
 }
@@ -113,7 +113,7 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Lig
 {
     PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SPARK].type == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SPARK, MOVE_FLY, MOVE_DIG); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -132,7 +132,7 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
 {
     PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_WATER_GUN].type == TYPE_WATER);
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_WATER_GUN, MOVE_FLY, MOVE_DIG); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

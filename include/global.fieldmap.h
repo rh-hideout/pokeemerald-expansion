@@ -37,8 +37,11 @@ typedef void (*TilesetCB)(void);
 
 struct Tileset
 {
-    /*0x00*/ bool8 isCompressed;
+    /*0x00*/ u8 isCompressed:1;
+    /*0x00*/ u8 swapPalettes:7; // Bitmask determining whether palette has an alternate, night-time palette
     /*0x01*/ bool8 isSecondary;
+    /*0x02*/ u8 lightPalettes; // Bitmask determining whether a palette should be time-blended as a light
+    /*0x03*/ u8 customLightColor; // Bitmask determining which light palettes have custom light colors (color 15)
     /*0x04*/ const u32 *tiles;
     /*0x08*/ const u16 (*palettes)[16];
     /*0x0C*/ const u16 *metatiles;
@@ -188,14 +191,15 @@ struct ObjectEvent
              u32 inShallowFlowingWater:1;
              u32 inSandPile:1;
              u32 inHotSprings:1;
-             u32 hasShadow:1;
+             u32 noShadow:1;
              u32 spriteAnimPausedBackup:1;
     /*0x03*/ u32 spriteAffineAnimPausedBackup:1;
              u32 disableJumpLandingGroundEffect:1;
              u32 fixedPriority:1;
              u32 hideReflection:1;
              u32 shiny:1; // OW mon shininess
-             u32 padding:3;
+             u32 jumpDone:1;
+             u32 padding:2;
     /*0x04*/ u16 graphicsId; // 12 bits for species; high 4 bits for form
     /*0x06*/ u8 movementType;
     /*0x07*/ u8 trainerType;
@@ -209,8 +213,11 @@ struct ObjectEvent
     /*0x14*/ struct Coords16 previousCoords;
     /*0x18*/ u16 facingDirection:4; // current direction?
              u16 movementDirection:4;
-             u16 rangeX:4;
-             u16 rangeY:4;
+             struct __attribute__((packed))
+             {
+                u16 rangeX:4;
+                u16 rangeY:4;
+             } range;
     /*0x1A*/ u8 fieldEffectSpriteId;
     /*0x1B*/ u8 warpArrowSpriteId;
     /*0x1C*/ u8 movementActionId;

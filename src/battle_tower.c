@@ -75,7 +75,6 @@ static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount);
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId);
 static void FillFactoryTentTrainerParty(u16 trainerId, u8 firstMonId);
 static u8 GetFrontierTrainerFixedIvs(u16 trainerId);
-static void FillPartnerParty(u16 trainerId);
 #if FREE_BATTLE_TOWER_E_READER == FALSE
 static void SetEReaderTrainerChecksum(struct BattleTowerEReaderTrainer *ereaderTrainer);
 #endif //FREE_BATTLE_TOWER_E_READER
@@ -2656,8 +2655,8 @@ static void SetTowerInterviewData(void)
     StripExtCtrlCodes(text);
     StringCopy(gSaveBlock2Ptr->frontier.towerInterview.opponentName, text);
     GetBattleTowerTrainerLanguage(&gSaveBlock2Ptr->frontier.towerInterview.opponentLanguage, TRAINER_BATTLE_PARAM.opponentA);
-    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[1]], MON_DATA_SPECIES, NULL);
-    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(&gPlayerParty[gBattlerPartyIndexes[0]], MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(GetBattlerMon(1), MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(GetBattlerMon(0), MON_DATA_SPECIES, NULL);
     for (i = 0; i < VANILLA_POKEMON_NAME_LENGTH + 1; i++)
         gSaveBlock2Ptr->frontier.towerInterview.opponentMonNickname[i] = gBattleMons[0].nickname[i];
     gSaveBlock2Ptr->frontier.towerBattleOutcome = gBattleOutcome;
@@ -2958,7 +2957,7 @@ void TryHideBattleTowerReporter(void)
 
 #define STEVEN_OTID 61226
 
-static void FillPartnerParty(u16 trainerId)
+void FillPartnerParty(u16 trainerId)
 {
     s32 i, j, k;
     u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;

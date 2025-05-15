@@ -241,37 +241,9 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     return ret;
 }
 
-u32 LoadCompressedSpritePalette(const struct CompressedSpritePalette *src)
-{
-    return LoadCompressedSpritePaletteWithTag(src->data, src->tag);
-}
-
-u32 LoadCompressedSpritePaletteWithTag(const u32 *pal, u16 tag)
-{
-    u32 index;
-    struct SpritePalette dest;
-    void *buffer = malloc_and_decompress(pal, NULL);
-
-    dest.data = buffer;
-    dest.tag = tag;
-    index = LoadSpritePalette(&dest);
-    Free(buffer);
-    return index;
-}
-
-void LoadCompressedSpritePaletteOverrideBuffer(const struct CompressedSpritePalette *src, void *buffer)
-{
-    struct SpritePalette dest;
-
-    DecompressDataWithHeaderWram(src->data, buffer);
-    dest.data = buffer;
-    dest.tag = src->tag;
-    LoadSpritePalette(&dest);
-}
-
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
 {
-    DecompressDataWithHeaderWram(src->data, buffer);
+    LZ77UnCompWram(src->data, buffer);
 }
 
 void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
@@ -1365,21 +1337,6 @@ bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src
     dest.tag = src->tag;
 
     LoadSpriteSheet(&dest);
-    Free(buffer);
-    return FALSE;
-}
-
-bool8 LoadCompressedSpritePaletteUsingHeap(const struct CompressedSpritePalette *src)
-{
-    struct SpritePalette dest;
-    void *buffer;
-
-    buffer = AllocZeroed(GetDecompressedDataSize(&src->data[0]));
-    DecompressDataWithHeaderWram(src->data, buffer);
-    dest.data = buffer;
-    dest.tag = src->tag;
-
-    LoadSpritePalette(&dest);
     Free(buffer);
     return FALSE;
 }

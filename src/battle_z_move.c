@@ -113,7 +113,7 @@ bool32 IsZMove(u32 move)
 
 bool32 CanUseZMove(u32 battler)
 {
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     // Check if Player has Z-Power Ring.
     if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
@@ -144,7 +144,7 @@ bool32 CanUseZMove(u32 battler)
 u32 GetUsableZMove(u32 battler, u32 move)
 {
     u32 item = gBattleMons[battler].item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
     {
@@ -168,7 +168,7 @@ void ActivateZMove(u32 battler)
 bool32 IsViableZMove(u32 battler, u32 move)
 {
     u32 item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
     int moveSlotIndex;
 
     item = gBattleMons[battler].item;
@@ -364,7 +364,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
             gDisplayedStringBattle[1] = CHAR_HYPHEN;
             StringCopy(gDisplayedStringBattle + 2, GetMoveName(move));
         }
-        else if (zmove == MOVE_EXTREME_EVOBOOST)
+        else if (GetMoveEffect(zmove) == EFFECT_EXTREME_EVOBOOST)
         {
             // Damaging move -> status z move
             StringCopy(gDisplayedStringBattle, sText_StatsPlus2);
