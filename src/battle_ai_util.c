@@ -1142,7 +1142,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
     u32 abilityAI = gAiLogicData->abilities[battlerAI];
     u32 abilityPlayer = gAiLogicData->abilities[battler];
 
-    u32 predictedMove = ((gAiThinkingStruct->aiFlags[battlerAI] & AI_FLAG_PREDICT_MOVE) && gAiLogicData->predictingMove) ? gAiLogicData->predictedMove[battler] : gAiLogicData->lastUsedMove[battler];
+    u32 predictedMove = GetIncomingMove(battlerAI, battler, gAiLogicData);
 
     s8 aiPriority = GetBattleMovePriority(battlerAI, abilityAI, moveConsidered);
     s8 playerPriority = GetBattleMovePriority(battler, abilityPlayer, predictedMove);

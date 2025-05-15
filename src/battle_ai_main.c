@@ -358,7 +358,6 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE)
     {
         gAiLogicData->predictedMove[opposingBattler] = gBattleMons[opposingBattler].moves[BattleAI_ChooseMoveIndex(opposingBattler)];
-        DebugPrintf("Predicted move: %d", gAiLogicData->predictedMove[opposingBattler]);
         ModifySwitchAfterMoveScoring(opposingBattler);
 
         // Determine whether AI will use predictions this turn
@@ -678,16 +677,17 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     u32 numOfBestMoves;
     s32 i;
     u64 flags = gAiThinkingStruct->aiFlags[GetThinkingBattler(battler)];
+    u32 opposingBattler = GetOppositeBattler(battler);
 
     gAiLogicData->partnerMove = 0;   // no ally
     while (flags != 0)
     {
         if (flags & 1)
         {
-            if (IsBattlerPredictedToSwitch(gBattlerTarget) && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_INCOMING_MON))
-                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battler, gBattlerTarget);
+            if (IsBattlerPredictedToSwitch(opposingBattler) && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_INCOMING_MON))
+                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battler, opposingBattler);
             else
-                BattleAI_DoAIProcessing(gAiThinkingStruct, battler, gBattlerTarget);
+                BattleAI_DoAIProcessing(gAiThinkingStruct, battler, opposingBattler);
         }
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
@@ -695,7 +695,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        gAiBattleData->finalScore[battler][gBattlerTarget][i] = gAiThinkingStruct->score[i];
+        gAiBattleData->finalScore[battler][opposingBattler][i] = gAiThinkingStruct->score[i];
     }
 
     numOfBestMoves = 1;
@@ -1003,7 +1003,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     bool32 isDoubleBattle = IsValidDoubleBattle(battlerAtk);
     u32 i;
     u32 weather;
-    u32 predictedMove = ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE) && aiData->predictingMove) ? gAiLogicData->predictedMove[battlerDef] : aiData->lastUsedMove[battlerDef];
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     u32 abilityAtk = aiData->abilities[battlerAtk];
     u32 abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
@@ -2932,7 +2932,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     bool32 partnerProtecting = (partnerEffect == EFFECT_PROTECT);
     bool32 attackerHasBadAbility = (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating < 0);
     bool32 partnerHasBadAbility = (gAbilitiesInfo[atkPartnerAbility].aiRating < 0);
-    u32 predictedMove = ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE) && aiData->predictingMove) ? gAiLogicData->predictedMove[battlerDef] : aiData->lastUsedMove[battlerDef];
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
 
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
@@ -3503,7 +3503,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][movesetIndex];
 
     s32 score = 0;
-    u32 predictedMove = ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE) && aiData->predictingMove) ? gAiLogicData->predictedMove[battlerDef] : aiData->lastUsedMove[battlerDef];
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     u32 predictedType = GetMoveType(predictedMove);
     u32 predictedMoveSlot = GetMoveSlot(GetMovesArray(battlerDef), predictedMove);
     bool32 isDoubleBattle = IsValidDoubleBattle(battlerAtk);
@@ -5611,7 +5611,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     struct AiLogicData *aiData = gAiLogicData;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
-    u32 predictedMove = ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE) && aiData->predictingMove) ? aiData->predictedMove[battlerDef] : aiData->lastUsedMove[battlerDef];
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
 
     // Switch benefit
     switch (moveEffect)
