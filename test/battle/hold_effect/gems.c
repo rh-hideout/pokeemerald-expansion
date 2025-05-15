@@ -87,3 +87,19 @@ SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT_ATTACK, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Gem is not consumed if a no type damage move is used") //ie. Counter, Psywave, Super Fang. All these moves have 1 base power.
+{
+    ASSUME(GetMovePower(MOVE_PSYWAVE) == 1);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PSYCHIC_GEM); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYWAVE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("The Psychic Gem strengthened Wobbuffet's power!");
+        }
+    }
+}
