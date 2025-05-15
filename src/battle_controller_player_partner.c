@@ -49,7 +49,6 @@ static void PlayerPartnerHandleEndLinkBattle(u32 battler);
 
 static void PlayerPartnerBufferRunCommand(u32 battler);
 static void PlayerPartnerBufferExecCompleted(u32 battler);
-static void SwitchIn_WaitAndEnd(u32 battler);
 
 static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -203,13 +202,7 @@ static void WaitForMonAnimAfterLoad(u32 battler)
 static void SwitchIn_ShowSubstitute(u32 battler)
 {
     if (SwitchIn_ShowSubstituteUtil(battler))
-        gBattlerControllerFuncs[battler] = SwitchIn_WaitAndEnd;
-}
-
-static void SwitchIn_WaitAndEnd(u32 battler)
-{
-    if (SwitchIn_WaitAndEndUtil(battler))
-        BtlController_Complete(battler);
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)

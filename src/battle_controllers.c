@@ -3127,10 +3127,11 @@ bool32 SwitchIn_ShowSubstituteUtil(u32 battler)
     return TRUE;
 }
 
-bool32 SwitchIn_WaitAndEndUtil(u32 battler)
+void BtlController_HandleSwitchInWaitAndEnd(u32 battler)
 {
-    return !gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive
-        && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy;
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive
+        && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
+        BtlController_Complete(battler);
 }
 
 bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler)
