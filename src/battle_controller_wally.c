@@ -42,7 +42,6 @@ static void WallyHandlePrintSelectionString(u32 battler);
 static void WallyHandleChooseAction(u32 battler);
 static void WallyHandleChooseMove(u32 battler);
 static void WallyHandleChooseItem(u32 battler);
-static void WallyHandleHealthBarUpdate(u32 battler);
 static void WallyHandlePlaySE(u32 battler);
 static void WallyHandleFaintingCry(u32 battler);
 static void WallyHandleIntroTrainerBallThrow(u32 battler);
@@ -79,7 +78,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_OPENBAG]                  = WallyHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = BtlController_Empty,
     [CONTROLLER_23]                       = BtlController_Empty,
-    [CONTROLLER_HEALTHBARUPDATE]          = WallyHandleHealthBarUpdate,
+    [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
     [CONTROLLER_STATUSICONUPDATE]         = BtlController_Empty,
     [CONTROLLER_STATUSANIMATION]          = BtlController_Empty,
@@ -388,11 +387,6 @@ static void WallyHandleChooseItem(u32 battler)
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = OpenBagAfterPaletteFade;
     gBattlerInMenuId = battler;
-}
-
-static void WallyHandleHealthBarUpdate(u32 battler)
-{
-    BtlController_HandleHealthBarUpdate(battler, TRUE);
 }
 
 // For some reason Wally's SE don't take side into account and pan is always the same. Possibly a bug

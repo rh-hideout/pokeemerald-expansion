@@ -41,7 +41,6 @@ static void PlayerPartnerHandlePrintString(u32 battler);
 static void PlayerPartnerHandleChooseAction(u32 battler);
 static void PlayerPartnerHandleChooseMove(u32 battler);
 static void PlayerPartnerHandleChoosePokemon(u32 battler);
-static void PlayerPartnerHandleHealthBarUpdate(u32 battler);
 static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void PlayerPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void PlayerPartnerHandleEndLinkBattle(u32 battler);
@@ -74,7 +73,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_OPENBAG]                  = BtlController_Empty,
     [CONTROLLER_CHOOSEPOKEMON]            = PlayerPartnerHandleChoosePokemon,
     [CONTROLLER_23]                       = BtlController_Empty,
-    [CONTROLLER_HEALTHBARUPDATE]          = PlayerPartnerHandleHealthBarUpdate,
+    [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate, // Partner's player gets experience the same way as the player.
     [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
@@ -363,11 +362,6 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
     }
     BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
     BtlController_Complete(battler);
-}
-
-static void PlayerPartnerHandleHealthBarUpdate(u32 battler)
-{
-    BtlController_HandleHealthBarUpdate(battler, FALSE);
 }
 
 static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler)

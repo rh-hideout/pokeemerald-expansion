@@ -271,7 +271,7 @@ void BtlController_HandleSuccessBallThrowAnim(u32 battler, u32 target, u32 animI
 void BtlController_HandleBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture);
 void BtlController_HandleMoveAnimation(u32 battler, bool32 updateTvData);
 void BtlController_HandlePrintString(u32 battler, bool32 updateTvData, bool32 arenaPtsDeduct);
-void BtlController_HandleHealthBarUpdate(u32 battler, bool32 updateHpText);
+void BtlController_HandleHealthBarUpdate(u32 battler);
 void DoStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusAnimation(u32 battler);

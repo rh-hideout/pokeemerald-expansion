@@ -50,7 +50,6 @@ static void OpponentHandleChooseAction(u32 battler);
 static void OpponentHandleChooseMove(u32 battler);
 static void OpponentHandleChooseItem(u32 battler);
 static void OpponentHandleChoosePokemon(u32 battler);
-static void OpponentHandleHealthBarUpdate(u32 battler);
 static void OpponentHandleIntroTrainerBallThrow(u32 battler);
 static void OpponentHandleDrawPartyStatusSummary(u32 battler);
 static void OpponentHandleEndLinkBattle(u32 battler);
@@ -85,7 +84,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
     [CONTROLLER_OPENBAG]                  = OpponentHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = OpponentHandleChoosePokemon,
     [CONTROLLER_23]                       = BtlController_Empty,
-    [CONTROLLER_HEALTHBARUPDATE]          = OpponentHandleHealthBarUpdate,
+    [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
     [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
@@ -667,11 +666,6 @@ static u8 CountAIAliveNonEggMonsExcept(u8 slotToIgnore)
     }
 
     return count;
-}
-
-static void OpponentHandleHealthBarUpdate(u32 battler)
-{
-    BtlController_HandleHealthBarUpdate(battler, FALSE);
 }
 
 static void OpponentHandleIntroTrainerBallThrow(u32 battler)

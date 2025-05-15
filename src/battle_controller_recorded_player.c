@@ -39,7 +39,6 @@ static void RecordedPlayerHandleChooseAction(u32 battler);
 static void RecordedPlayerHandleChooseMove(u32 battler);
 static void RecordedPlayerHandleChooseItem(u32 battler);
 static void RecordedPlayerHandleChoosePokemon(u32 battler);
-static void RecordedPlayerHandleHealthBarUpdate(u32 battler);
 static void RecordedPlayerHandleStatusIconUpdate(u32 battler);
 static void RecordedPlayerHandleStatusAnimation(u32 battler);
 static void RecordedPlayerHandleIntroTrainerBallThrow(u32 battler);
@@ -74,7 +73,7 @@ static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 ba
     [CONTROLLER_OPENBAG]                  = RecordedPlayerHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = RecordedPlayerHandleChoosePokemon,
     [CONTROLLER_23]                       = BtlController_Empty,
-    [CONTROLLER_HEALTHBARUPDATE]          = RecordedPlayerHandleHealthBarUpdate,
+    [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = RecordedPlayerHandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = RecordedPlayerHandleStatusAnimation,
@@ -429,11 +428,6 @@ static void RecordedPlayerHandleChoosePokemon(u32 battler)
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
     BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, gBattleStruct->monToSwitchIntoId[battler], NULL);
     BtlController_Complete(battler);
-}
-
-static void RecordedPlayerHandleHealthBarUpdate(u32 battler)
-{
-    BtlController_HandleHealthBarUpdate(battler, TRUE);
 }
 
 static void RecordedPlayerHandleStatusIconUpdate(u32 battler)

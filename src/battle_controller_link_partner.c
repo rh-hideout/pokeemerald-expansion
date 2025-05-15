@@ -36,7 +36,6 @@ static void LinkPartnerHandleDrawTrainerPic(u32 battler);
 static void LinkPartnerHandleTrainerSlideBack(u32 battler);
 static void LinkPartnerHandleMoveAnimation(u32 battler);
 static void LinkPartnerHandlePrintString(u32 battler);
-static void LinkPartnerHandleHealthBarUpdate(u32 battler);
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void LinkPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void LinkPartnerHandleLinkStandbyMsg(u32 battler);
@@ -70,7 +69,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
     [CONTROLLER_OPENBAG]                  = BtlController_Empty,
     [CONTROLLER_CHOOSEPOKEMON]            = BtlController_Empty,
     [CONTROLLER_23]                       = BtlController_Empty,
-    [CONTROLLER_HEALTHBARUPDATE]          = LinkPartnerHandleHealthBarUpdate,
+    [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
     [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
@@ -205,11 +204,6 @@ static void LinkPartnerHandleMoveAnimation(u32 battler)
 static void LinkPartnerHandlePrintString(u32 battler)
 {
     BtlController_HandlePrintString(battler, TRUE, FALSE);
-}
-
-static void LinkPartnerHandleHealthBarUpdate(u32 battler)
-{
-    BtlController_HandleHealthBarUpdate(battler, FALSE);
 }
 
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler)
