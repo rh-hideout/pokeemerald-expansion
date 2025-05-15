@@ -827,11 +827,6 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     return GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS;
 }
 
-static inline bool32 IsBattleMoveRecoil(u32 move)
-{
-    return GetMoveRecoil(move) > 0 || GetMoveEffect(move) == EFFECT_RECOIL_IF_MISS;
-}
-
 /* Checks if 'battlerId' is any of the types.
  * Passing multiple types is more efficient than calling this multiple
  * times with one type because it shares the 'GetBattlerTypes' result. */

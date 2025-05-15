@@ -934,7 +934,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         u8 baseFromEffect = gBattleMoveEffects[GetMoveEffect(arg2)].battleTvScore;
 
         // Various cases to add/remove points
-        if (GetMoveRecoil(arg2) > 0)
+        if (GetMoveEffect(arg2) == EFFECT_RECOIL)
             baseFromEffect++; // Recoil moves
         if (GetMoveEffect(arg2) == EFFECT_RAPID_SPIN)
             baseFromEffect++;
