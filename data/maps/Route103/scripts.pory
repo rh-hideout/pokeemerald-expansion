@@ -93,6 +93,8 @@ Route103_EventScript_StartBrendanBattleMudkip::
 
 Route103_EventScript_AfterMayBattle::
 	msgbox Route103_Text_MayTimeToHeadBack, MSGBOX_DEFAULT
+	msgbox Route103_Text_MayTakeThis, MSGBOX_DEFAULT
+	giveitem ITEM_RARE_CANDY
 	goto Route103_EventScript_RivalExit
 	end
 
@@ -314,7 +316,7 @@ Route103_Text_MayTimeToHeadBack:
 	.string "You might be able to befriend any\n"
 	.string "kind of POKéMON easily.\p"
 	.string "Well, it's time to head back to\n"
-	.string "the LAB.$"
+	.string "more training.$"
 
 Route103_Text_BrendanRoute103Pokemon:
 	.string "BRENDAN: Okay, so it's this one and\n"
@@ -355,3 +357,6 @@ Route103_Text_RouteSign:
 	.string "{DOWN_ARROW} OLDALE TOWN$"
 
 `
+text Route103_Text_MayTakeThis {
+	format("Before we leave though, take this {PLAYER}. It will come in handy.")
+}

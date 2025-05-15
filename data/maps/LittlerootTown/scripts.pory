@@ -52,6 +52,7 @@ LittlerootTown_OnTransition:
 	call_if_eq VAR_LITTLEROOT_RIVAL_STATE, 3, LittlerootTown_EventScript_SetRivalLeftForRoute103
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_HideMapNamePopup
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_EventScript_LeftLabAfterDexUpgrade
+	call_if_unset FLAG_TSUIBATTLE, LittlerootTown_EventScript_SetupTsuiBattle
 	end
 
 LittlerootTown_EventScript_LeftLabAfterDexUpgrade::
@@ -923,26 +924,18 @@ LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "Let's go inside.$"
 
 LittlerootTown_Text_WaitPlayer:
-	.string "MOM: Wait, {PLAYER}!$"
+	.string "Oh!$"
 
 LittlerootTown_Text_WearTheseRunningShoes:
-	.string "MOM: {PLAYER}! {PLAYER}! Did you\n"
-	.string "introduce yourself to PROF. BIRCH?\p"
-	.string "Oh! What an adorable POKéMON!\n"
-	.string "You got it from PROF. BIRCH. How nice!\p"
-	.string "You're your father's child, all right.\n"
-	.string "You look good together with POKéMON!\p"
-	.string "Here, honey! If you're going out on an\n"
-	.string "adventure, wear these RUNNING SHOES.\p"
-	.string "They'll put a zip in your step!$"
+	.string "Note to self: Mother said if you're going \n"
+	.string "on an adventure, wear the RUNNING SHOES.\n"
 
 LittlerootTown_Text_SwitchShoesWithRunningShoes:
 	.string "{PLAYER} switched shoes with the\n"
 	.string "RUNNING SHOES.$"
 
 LittlerootTown_Text_ExplainRunningShoes:
-	.string "MOM: {PLAYER}, those shoes came with\n"
-	.string "instructions.\p"
+	.string "These shoes came with instructions.\p"
 	.string "“Press the B Button while wearing these\n"
 	.string "RUNNING SHOES to run extra-fast!\p"
 	.string "“Slip on these RUNNING SHOES and race\n"
@@ -950,13 +943,7 @@ LittlerootTown_Text_ExplainRunningShoes:
 
 LittlerootTown_Text_ComeHomeIfAnythingHappens:
 	.string "… … … … … … … …\n"
-	.string "… … … … … … … …\p"
-	.string "To think that you have your very own\n"
-	.string "POKéMON now…\l"
-	.string "Your father will be overjoyed.\p"
-	.string "…But please be careful.\n"
-	.string "If anything happens, you can come home.\p"
-	.string "Go on, go get them, honey!$"
+	.string "… … … … … … … …$"
 
 LittlerootTown_Text_CanUsePCToStoreItems:
 	.string "If you use a PC, you can store items\n"
@@ -964,10 +951,10 @@ LittlerootTown_Text_CanUsePCToStoreItems:
 	.string "The power of science is staggering!$"
 
 LittlerootTown_Text_BirchSpendsDaysInLab:
-	.string "PROF. BIRCH spends days in his LAB\n"
+	.string "PROF. TSUI spends days in his LAB\n"
 	.string "studying, then he'll suddenly go out in\l"
 	.string "the wild to do more research…\p"
-	.string "When does PROF. BIRCH spend time\n"
+	.string "When does PROF. TSUI spend time\n"
 	.string "at home?$"
 
 LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut:
@@ -989,7 +976,7 @@ LittlerootTown_Text_CanYouGoSeeWhatsHappening:
 	.string "for me?$"
 
 LittlerootTown_Text_YouSavedBirch:
-	.string "You saved PROF. BIRCH!\n"
+	.string "You saved PROF. TSUI!\n"
 	.string "I'm so glad!$"
 
 LittlerootTown_Text_GoodLuckCatchingPokemon:
@@ -1007,7 +994,7 @@ LittlerootTown_Text_PlayersHouse:
 	.string "{PLAYER}'s HOUSE$"
 
 LittlerootTown_Text_ProfBirchsHouse:
-	.string "PROF. BIRCH'S HOUSE$"
+	.string "PROF. TSUI'S HOUSE$"
 
 LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 	.string "PROF. BIRCH: Well, well, {PLAYER}{KUN}!\n"
@@ -1021,3 +1008,115 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 	.string "Let's go to my LAB.$"
 
 `
+script LittlerootTown_EventScript_TsuiLabSign {
+	lockall
+	msgbox("PROF. TSUI'S POKéMON LAB")
+	releaseall
+}
+
+script LittlerootTown_EventScript_SetupTsuiBattle {
+	if (!((flag(FLAG_BALL_1_USED) || flag(FLAG_BALL_2_USED) || flag(FLAG_BALL_3_USED)) && (flag(FLAG_BALL_4_USED) || flag(FLAG_BALL_5_USED) || flag(FLAG_BALL_6_USED)) && (flag(FLAG_BALL_7_USED) || flag(FLAG_BALL_8_USED) || flag(FLAG_BALL_9_USED)))){
+		setflag(FLAG_TSUIBATTLE)
+		setvar(LITTLEROOT_STATE, 0)
+	}
+}
+
+script LittlerootTown_EventScript_TsuiBattle {
+	trainerbattle_single(LITTLEROOTTOWN_TSUI, Tsui_intro, Tsui_outro, GivePokedex)
+	end
+}
+
+script GivePokedex {
+	lock
+    msgbox(TakePokedex, MSGBOX_DEFAULT)
+    playfanfare(MUS_OBTAIN_ITEM)
+	message("{PLAYER} received the POKéDEX!$")
+	waitfanfare
+    closemessage
+	setflag(FLAG_SYS_POKEDEX_GET)
+	special(SetUnlockedPokedexFlags)
+	setflag(FLAG_RECEIVED_POKEDEX_FROM_BIRCH)
+	setflag(FLAG_ADVENTURE_STARTED)
+	setvar(VAR_CABLE_CLUB_TUTORIAL_STATE, 1)
+    msgbox(LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex, MSGBOX_DEFAULT)
+	msgbox(format("PROF. TSUI: It looks like the POKéDEX came with an update as well!"))
+	waitmessage
+	call(UpgradeNationalDex)
+    msgbox(format("Also take these with you."), MSGBOX_DEFAULT)
+    giveitem(ITEM_POKE_BALL, 5)
+	giveitem(ITEM_EXP_SHARE)
+    msgbox(format("These Poké Balls will allow you to catch your own POKéMON in tall grass so you can collect research for the POKéDEX. The Exp. Share will help one of your selected POKéMON harvest experience points more easily."), MSGBOX_DEFAULT)
+	waitmessage
+	msgbox(format("Well I'll let you be on your way now. Don't forget to stop by and let your mother know you're leaving. Also, I believe MAY is waiting for you on ROUTE 103."), MSGBOX_DEFAULT)
+    waitmessage
+	msgbox(format("Have a great journey {PLAYER}!"), MSGBOX_DEFAULT)
+	waitmessage
+	call(TsuiBattleExit)
+	call(LittlerootTown_EventScript_GiveRunningShoesTrigger)
+	call(Route101_EventScript_HideMayInBedroom)
+    release
+	return
+}
+
+text TakePokedex{
+    format("Before you leave, take this {PLAYER}, I ordered this for my research, but I think you should have it.")
+}
+
+script UpgradeNationalDex{
+    lock
+    playfanfare(MUS_OBTAIN_ITEM)
+	message(LittlerootTown_ProfessorBirchsLab_Text_PokedexUpgradedToNational)
+	waitmessage
+	waitfanfare
+	setflag(FLAG_SYS_NATIONAL_DEX)
+	special(EnableNationalPokedex)
+    release
+    return
+}
+
+script TsuiBattleExit {
+	lockall
+	applymovement(9, TsuiLeave)
+	waitmovement(9)
+	removeobject(9)
+	setflag(FLAG_TSUIBATTLE)
+	setvar(LITTLEROOT_STATE, 1)
+	waitmessage
+	release
+}
+
+movement TsuiLeave {
+	face_down
+	walk_down * 5
+}
+
+script LittlerootTown_Trigger_GoSeeMay {
+	lockall
+	msgbox(format("Go visit PROF. TSUI's house."))
+	applymovement(OBJ_EVENT_ID_PLAYER, StopPlayer)
+	waitmovement(OBJ_EVENT_ID_PLAYER)
+	releaseall
+}
+
+script LittlerootTown_Trigger_BlockPath {
+	lockall
+	msgbox(format("You're not prepared to leave LITTLEROOT TOWN yet."))
+	applymovement(OBJ_EVENT_ID_PLAYER, StopPlayer)
+	waitmovement(OBJ_EVENT_ID_PLAYER)
+	releaseall
+}
+
+movement StopPlayer {
+	face_down
+	walk_down
+}
+
+text Tsui_intro {
+	format("PROF. TSUI: Let's see how you well perform in a battle.")
+}
+
+text Tsui_outro {
+	format("Wow! Not bad for a rookie!")
+}
+
+

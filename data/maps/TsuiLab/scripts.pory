@@ -1,0 +1,1289 @@
+mapscripts TsuiLab_MapScripts {
+    MAP_SCRIPT_ON_TRANSITION: TsuiLab_EventScript_BallDefault
+}
+
+script TsuiLab_EventScript_BallDefault{
+    setvar(VAR_USED_STARTER, 0)
+}
+
+script Start_StarterChoose_Sequence{
+    lock
+    applymovement(OBJ_EVENT_ID_PLAYER, MeetBirch)
+    waitmovement(OBJ_EVENT_ID_PLAYER)
+    msgbox(BeginAdventureText)
+    waitmessage
+    closemessage
+    applymovement(10, ProfMove)
+    waitmovement(10)
+    setvar(VAR_MEETPROF, 1)
+    setvar(VAR_NOLEAVE, 1)
+    release
+}
+
+script Start_StarterChoose_Sequence2{
+    lock
+    applymovement(OBJ_EVENT_ID_PLAYER, MeetBirch2)
+    waitmovement(OBJ_EVENT_ID_PLAYER)
+    goto(Start_StarterChoose_Sequence)
+}
+
+script TsuiLab_Trigger_FirstTest {
+    if (var(VAR_FIRSTTEST) == 1) {
+        lockall
+        msgbox("PROF. TSUI: HEY WAIT!")
+        applymovement(OBJ_EVENT_ID_PLAYER, TsuiLab_Movement_Playerfaceup)
+        waitmovement(OBJ_EVENT_ID_PLAYER)
+        applymovement(10, TsuiLab_Movement_Tsuigoestoplayer)
+        waitmovement(10)
+        msgbox(format("PROF. TSUI: Meet me at the back of my lab before you leave LITTLEROOT TOWN so I can prepare you for your journey."))
+        setvar(VAR_FIRSTTEST, 2)
+        if (var(VAR_FIRSTTEST) == 2) {
+            applymovement(10, Tsui_Movement_Leave)
+            waitmovement(10)
+            removeobject(10)
+            setflag(FLAG_TSUIGONE)
+        }
+        releaseall
+    }
+}
+
+movement MeetBirch{
+    walk_up * 3
+}
+
+movement MeetBirch2{
+    walk_left
+} 
+
+movement ProfMove{
+    walk_right * 4
+    face_left
+}
+
+movement TsuiLab_Movement_Playerfaceup {
+    emote_exclamation_mark
+    face_up
+}
+
+movement TsuiLab_Movement_Tsuigoestoplayer {
+    walk_left * 3
+    face_down
+}
+
+movement Tsui_Movement_Leave {
+    face_up
+    walk_up * 4
+}
+
+text BeginAdventureText{
+    format("{COLOR RED}{SHADOW LIGHT_RED}PROF. TSUI:{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY} Hello {PLAYER}, my name is PROF. TSUI.\n"
+    "This is my lab.\p"
+    "Today is the day that you will be\n"
+    "receiving three POKéMON.\p"
+    "{COLOR GREEN}{SHADOW LIGHT_GREEN}Now choose wisely.\n"
+    "{COLOR BLUE}{SHADOW LIGHT_BLUE}If you would like to see more options\l"
+    "come and talk to me.\n")
+}
+ 
+script StopLeaving{
+	lockall
+	msgbox(format("You need to choose your POKéMON and let PROF. TSUI know afterwards."))
+	applymovement(OBJ_EVENT_ID_PLAYER, DoNotLeave)
+	waitmovement(OBJ_EVENT_ID_PLAYER)
+	releaseall
+}
+
+movement DoNotLeave{
+    walk_up
+}
+
+script TsuiLab_EventScript_Tsui{
+    lockall
+    faceplayer
+    if(!((flag(FLAG_BALL_1_USED) || flag(FLAG_BALL_2_USED) || flag(FLAG_BALL_3_USED)) && (flag(FLAG_BALL_4_USED) || flag(FLAG_BALL_5_USED) || flag(FLAG_BALL_6_USED)) && (flag(FLAG_BALL_7_USED) || flag(FLAG_BALL_8_USED) || flag(FLAG_BALL_9_USED)))){
+        msgbox(format("PROF. TSUI: Hello, would you like to see more?"), MSGBOX_YESNO)
+        if(var(VAR_RESULT) == YES){
+            if(var(VAR_USED_STARTER) != 2){
+                addvar(VAR_USED_STARTER, 1)
+            }
+            else{
+                setvar(VAR_USED_STARTER, 0)
+            }
+            msgbox(format("PROF. TSUI: Choose your POKéMON wisely."))
+        }
+        else{
+            msgbox(format("PROF. TSUI: Choose your POKéMON wisely."))
+        }
+    }
+    else{
+        msgbox(format("PROF. TSUI: You made some great choices! Take care of your POKéMON."))
+        setvar(VAR_FIRSTTEST, 1)
+        setvar(VAR_NOLEAVE, 2) 
+        clearflag(FLAG_TSUIBATTLE)
+        setflag(FLAG_SYS_POKEMON_GET)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_PokeballOne{
+    lockall
+    if(!(flag(FLAG_BALL_1_USED) || flag(FLAG_BALL_2_USED) || flag(FLAG_BALL_3_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_RIOLU)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_RALTS)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_SHINX)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballTwo{
+    lockall
+    if(!(flag(FLAG_BALL_1_USED) || flag(FLAG_BALL_2_USED) || flag(FLAG_BALL_3_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_ROCKRUFF)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_PIKACHU)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_TOGEPI)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballThree{
+    lockall
+    if(!(flag(FLAG_BALL_1_USED) || flag(FLAG_BALL_2_USED) || flag(FLAG_BALL_3_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_SHROOMISH)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_CARBINK)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_ROOKIDEE)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_PokeballFour{
+    lockall
+    if(!(flag(FLAG_BALL_4_USED) || flag(FLAG_BALL_5_USED) || flag(FLAG_BALL_6_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_SEWADDLE)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_SCRAGGY)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_TOXEL)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballFive{
+    lockall
+    if(!(flag(FLAG_BALL_4_USED) || flag(FLAG_BALL_5_USED) || flag(FLAG_BALL_6_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_EEVEE)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_FRIGIBAX)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_NOIBAT)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballSix{
+    lockall
+    if(!(flag(FLAG_BALL_4_USED) || flag(FLAG_BALL_5_USED) || flag(FLAG_BALL_6_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_STARYU)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_HONEDGE)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_MIMIKYU)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_PokeballSeven{
+    lockall
+    if(!(flag(FLAG_BALL_7_USED) || flag(FLAG_BALL_8_USED) || flag(FLAG_BALL_9_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_STUNFISK)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_STARLY)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_MAGBY)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballEight{
+    lockall
+    if(!(flag(FLAG_BALL_7_USED) || flag(FLAG_BALL_8_USED) || flag(FLAG_BALL_9_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_BLIPBUG)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_BOUNSWEET)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_FIDOUGH)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+ 
+script TsuiLab_EventScript_PokeballNine{
+    lockall
+    if(!(flag(FLAG_BALL_7_USED) || flag(FLAG_BALL_8_USED) || flag(FLAG_BALL_9_USED))){
+        if(var(VAR_USED_STARTER) == 0){
+            call(TsuiLab_EventScript_GLIGAR)
+        }
+        elif(var(VAR_USED_STARTER) == 1){
+            call(TsuiLab_EventScript_CHARCADET)
+        }
+        elif(var(VAR_USED_STARTER) == 2){
+            call(TsuiLab_EventScript_MAGIKARP)
+        }
+    }
+    else{
+        msgbox("Don't take another.")
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_RIOLU{
+ 
+    lockall
+    showmonpic(SPECIES_RIOLU,10,3)
+    msgbox("Do you want to choose RIOLU?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_RIOLU, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved RIOLU.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved RIOLU.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_ROCKRUFF{
+ 
+    lockall
+    showmonpic(SPECIES_ROCKRUFF,10,3)
+    msgbox("Do you want to choose ROCKRUFF?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_ROCKRUFF, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved ROCKRUFF.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved ROCKRUFF.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_SHROOMISH{
+ 
+    lockall
+    showmonpic(SPECIES_SHROOMISH,10,3)
+    msgbox("Do you want to choose SHROOMISH?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_SHROOMISH, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SHROOMISH.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SHROOMISH.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_SEWADDLE{
+ 
+    lockall
+    showmonpic(SPECIES_SEWADDLE,10,3)
+    msgbox("Do you want to choose SEWADDLE?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_SEWADDLE, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SEWADDLE.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SEWADDLE.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_EEVEE{
+ 
+    lockall
+    showmonpic(SPECIES_EEVEE,10,3)
+    msgbox("Do you want to choose EEVEE?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_EEVEE, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved EEVEE.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved EEVEE.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_STARYU{
+ 
+    lockall
+    showmonpic(SPECIES_STARYU,10,3)
+    msgbox("Do you want to choose STARYU?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_STARYU, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STARYU.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STARYU.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_STUNFISK{
+ 
+    lockall
+    showmonpic(SPECIES_STUNFISK,10,3)
+    msgbox("Do you want to choose STUNFISK?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_STUNFISK, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STUNFISK.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STUNFISK.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_BLIPBUG{
+ 
+    lockall
+    showmonpic(SPECIES_BLIPBUG,10,3)
+    msgbox("Do you want to choose BLIPBUG?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_BLIPBUG, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved BLIPBUG.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved BLIPBUG.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_GLIGAR{
+ 
+    lockall
+    showmonpic(SPECIES_GLIGAR,10,3)
+    msgbox("Do you want to choose GLIGAR?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_GLIGAR, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved GLIGAR.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved GLIGAR.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_RALTS{
+ 
+    lockall
+    showmonpic(SPECIES_RALTS,10,3)
+    msgbox("Do you want to choose RALTS?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_RALTS, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved RALTS.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved RALTS.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_PIKACHU{
+ 
+    lockall
+    showmonpic(SPECIES_PIKACHU,10,3)
+    msgbox("Do you want to choose PIKACHU?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_PIKACHU, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved PIKACHU.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved PIKACHU.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_CARBINK{
+ 
+    lockall
+    showmonpic(SPECIES_CARBINK,10,3)
+    msgbox("Do you want to choose CARBINK?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_CARBINK, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved CARBINK.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved CARBINK.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_SCRAGGY{
+ 
+    lockall
+    showmonpic(SPECIES_SCRAGGY,10,3)
+    msgbox("Do you want to choose SCRAGGY?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_SCRAGGY, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SCRAGGY.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SCRAGGY.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_FRIGIBAX{
+ 
+    lockall
+    showmonpic(SPECIES_FRIGIBAX,10,3)
+    msgbox("Do you want to choose FRIGIBAX?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_FRIGIBAX, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved FRIGIBAX.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved FRIGIBAX.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_HONEDGE{
+ 
+    lockall
+    showmonpic(SPECIES_HONEDGE,10,3)
+    msgbox("Do you want to choose HONEDGE?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_HONEDGE, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved HONEDGE.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved HONEDGE.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_STARLY{
+ 
+    lockall
+    showmonpic(SPECIES_STARLY,10,3)
+    msgbox("Do you want to choose STARLY?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_STARLY, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STARLY.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved STARLY.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_BOUNSWEET{
+ 
+    lockall
+    showmonpic(SPECIES_BOUNSWEET,10,3)
+    msgbox("Do you want to choose BOUNSWEET?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_BOUNSWEET, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved BOUNSWEET.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved BOUNSWEET.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_CHARCADET{
+ 
+    lockall
+    showmonpic(SPECIES_CHARCADET,10,3)
+    msgbox("Do you want to choose CHARCADET?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_CHARCADET, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved CHARCADET.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved CHARCADET.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_SHINX{
+ 
+    lockall
+    showmonpic(SPECIES_SHINX,10,3)
+    msgbox("Do you want to choose SHINX?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_SHINX, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SHINX.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved SHINX.")
+            removeobject(1)
+            setflag(FLAG_BALL_1_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_TOGEPI{
+ 
+    lockall
+    showmonpic(SPECIES_TOGEPI,10,3)
+    msgbox("Do you want to choose TOGEPI?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_TOGEPI, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved TOGEPI.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved TOGEPI.")
+            removeobject(2)
+            setflag(FLAG_BALL_2_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_ROOKIDEE{
+ 
+    lockall
+    showmonpic(SPECIES_ROOKIDEE,10,3)
+    msgbox("Do you want to choose ROOKIDEE?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_ROOKIDEE, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved ROOKIDEE.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved ROOKIDEE.")
+            removeobject(3)
+            setflag(FLAG_BALL_3_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_TOXEL{
+ 
+    lockall
+    showmonpic(SPECIES_TOXEL,10,3)
+    msgbox("Do you want to choose TOXEL?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_TOXEL, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved TOXEL.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved TOXEL.")
+            removeobject(4)
+            setflag(FLAG_BALL_4_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_NOIBAT{
+ 
+    lockall
+    showmonpic(SPECIES_NOIBAT,10,3)
+    msgbox("Do you want to choose NOIBAT?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_NOIBAT, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved NOIBAT.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved NOIBAT.")
+            removeobject(5)
+            setflag(FLAG_BALL_5_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_MIMIKYU{
+ 
+    lockall
+    showmonpic(SPECIES_MIMIKYU,10,3)
+    msgbox("Do you want to choose MIMIKYU?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_MIMIKYU, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MIMIKYU.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MIMIKYU.")
+            removeobject(6)
+            setflag(FLAG_BALL_6_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_MAGBY{
+ 
+    lockall
+    showmonpic(SPECIES_MAGBY,10,3)
+    msgbox("Do you want to choose MAGBY?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_MAGBY, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MAGBY.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MAGBY.")
+            removeobject(7)
+            setflag(FLAG_BALL_7_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_FIDOUGH{
+ 
+    lockall
+    showmonpic(SPECIES_FIDOUGH,10,3)
+    msgbox("Do you want to choose FIDOUGH?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_FIDOUGH, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved FIDOUGH.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved FIDOUGH.")
+            removeobject(8)
+            setflag(FLAG_BALL_8_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script TsuiLab_EventScript_MAGIKARP{
+ 
+    lockall
+    showmonpic(SPECIES_MAGIKARP,10,3)
+    msgbox("Do you want to choose MAGIKARP?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon(SPECIES_MAGIKARP, 10, ITEM_NONE)
+        if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MAGIKARP.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknamePartyMon)
+        }
+        elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
+            playfanfare(MUS_OBTAIN_ITEM)
+            msgbox("Recieved MAGIKARP.")
+            removeobject(9)
+            setflag(FLAG_BALL_9_USED)
+            call(NicknameBoxMon)
+        }
+        else{
+            hidemonpic
+            msgbox("No more room in party.")
+        }
+    }
+    else{
+        hidemonpic
+        msgbox(NewProfessor_NotChosen)
+    }
+    waitmessage
+    releaseall
+    end
+}
+
+script NicknamePartyMon{
+ 
+    msgbox("Give it a nickname?", MSGBOX_YESNO)
+    hidemonpic
+    if(var(VAR_RESULT) == YES){
+        call(Common_EventScript_GetGiftMonPartySlot)
+        call(Common_EventScript_NameReceivedPartyMon)
+    }
+ 
+ 
+}
+ 
+script NicknameBoxMon{
+ 
+    msgbox("Give it a nickname?", MSGBOX_YESNO)
+    hidemonpic
+    if(var(VAR_RESULT) == YES){
+        call(Common_EventScript_NameReceivedBoxMon)
+    }
+    call(Common_EventScript_TransferredToPC)
+ 
+}
+ 
+text NewProfessor_NotChosen{
+    "You did not choose the POKéMON."
+}
