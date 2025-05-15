@@ -122,7 +122,7 @@ static void PlayerPartnerBufferRunCommand(u32 battler)
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sPlayerPartnerBufferCommands))
             sPlayerPartnerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
         else
-            PlayerPartnerBufferExecCompleted(battler);
+            BtlController_Complete(battler);
     }
 }
 
@@ -131,7 +131,7 @@ static void Intro_DelayAndEnd(u32 battler)
     if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -197,7 +197,7 @@ void Controller_PlayerPartnerShowIntroHealthbox(u32 battler)
 static void WaitForMonAnimAfterLoad(u32 battler)
 {
     if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
-        PlayerPartnerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowSubstitute(u32 battler)
@@ -209,7 +209,7 @@ static void SwitchIn_ShowSubstitute(u32 battler)
 static void SwitchIn_WaitAndEnd(u32 battler)
 {
     if (SwitchIn_WaitAndEndUtil(battler))
-        PlayerPartnerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)
@@ -307,7 +307,7 @@ static void PlayerPartnerHandlePrintString(u32 battler)
 static void PlayerPartnerHandleChooseAction(u32 battler)
 {
     AI_TrySwitchOrUseItem(battler);
-    PlayerPartnerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void PlayerPartnerHandleChooseMove(u32 battler)
@@ -339,7 +339,7 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
         BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
     }
 
-    PlayerPartnerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void PlayerPartnerHandleChoosePokemon(u32 battler)
@@ -380,7 +380,7 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
     }
     BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
-    PlayerPartnerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void PlayerPartnerHandleHealthBarUpdate(u32 battler)
@@ -418,6 +418,6 @@ static void PlayerPartnerHandleEndLinkBattle(u32 battler)
     gBattleOutcome = gBattleResources->bufferA[battler][1];
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
-    PlayerPartnerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
     gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
 }

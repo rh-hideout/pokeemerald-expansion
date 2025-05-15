@@ -247,7 +247,7 @@ void BtlController_EmitResetActionMoveSelection(u32 battler, u32 bufferId, u8 ca
 void BtlController_EmitEndLinkBattle(u32 battler, u32 bufferId, u8 battleOutcome);
 void BtlController_EmitDebugMenu(u32 battler, u32 bufferId);
 
-void BattleControllerComplete(u32 battler); // Can be used for all the controllers.
+void BtlController_Complete(u32 battler); // Can be used for all the controllers.
 void BtlController_Empty(u32 battler); // Empty command, does nothing, only completes the execution.
 void BtlController_TerminatorNop(u32 battler); // Dummy function at the end of the table.
 void BattleControllerDummy(u32 battler);

@@ -130,7 +130,7 @@ static void WallyBufferRunCommand(u32 battler)
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sWallyBufferCommands))
             sWallyBufferCommands[gBattleResources->bufferA[battler][0]](battler);
         else
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
     }
 }
 
@@ -146,7 +146,7 @@ static void WallyHandleActions(u32 battler)
         {
             PlaySE(SE_SELECT);
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, 0);
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
             gBattleStruct->wallyBattleState++;
             gBattleStruct->wallyMovesState = 0;
             gBattleStruct->wallyWaitFrames = B_WAIT_TIME_LONG;
@@ -157,7 +157,7 @@ static void WallyHandleActions(u32 battler)
         {
             PlaySE(SE_SELECT);
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, 0);
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
             gBattleStruct->wallyBattleState++;
             gBattleStruct->wallyMovesState = 0;
             gBattleStruct->wallyWaitFrames = B_WAIT_TIME_LONG;
@@ -167,7 +167,7 @@ static void WallyHandleActions(u32 battler)
         if (--gBattleStruct->wallyWaitFrames == 0)
         {
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_WALLY_THROW, 0);
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
             gBattleStruct->wallyBattleState++;
             gBattleStruct->wallyMovesState = 0;
             gBattleStruct->wallyWaitFrames = B_WAIT_TIME_LONG;
@@ -188,7 +188,7 @@ static void WallyHandleActions(u32 battler)
         {
             PlaySE(SE_SELECT);
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_ITEM, 0);
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
         }
         break;
     }
@@ -210,7 +210,7 @@ static void CompleteOnChosenItem(u32 battler)
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
         BtlController_EmitOneReturnValue(battler, BUFFER_B, gSpecialVar_ItemId);
-        WallyBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -268,7 +268,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
-        WallyBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -329,7 +329,7 @@ static void WallyHandlePrintSelectionString(u32 battler)
     if (IsOnPlayerSide(battler))
         WallyHandlePrintString(battler);
     else
-        WallyBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void HandleChooseActionAfterDma3(u32 battler)
@@ -379,7 +379,7 @@ static void WallyHandleChooseMove(u32 battler)
         {
             PlaySE(SE_SELECT);
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, 0x100);
-            WallyBufferExecCompleted(battler);
+            BtlController_Complete(battler);
         }
         break;
     }
@@ -401,7 +401,7 @@ static void WallyHandleHealthBarUpdate(u32 battler)
 static void WallyHandlePlaySE(u32 battler)
 {
     PlaySE(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8));
-    WallyBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 // All of the other controllers use CRY_MODE_FAINT.
@@ -411,7 +411,7 @@ static void WallyHandleFaintingCry(u32 battler)
     u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
-    WallyBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void WallyHandleIntroTrainerBallThrow(u32 battler)
@@ -435,7 +435,7 @@ static void WallyHandleEndLinkBattle(u32 battler)
     gBattleOutcome = gBattleResources->bufferA[battler][1];
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
-    WallyBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER) && gBattleTypeFlags & BATTLE_TYPE_LINK)
         gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;

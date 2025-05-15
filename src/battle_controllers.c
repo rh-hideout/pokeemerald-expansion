@@ -1526,7 +1526,7 @@ void BtlController_EmitDebugMenu(u32 battler, u32 bufferId)
 // Standardized Controller functions
 
 // Can be used for all the controllers.
-void BattleControllerComplete(u32 battler)
+void BtlController_Complete(u32 battler)
 {
     gBattlerControllerEndFuncs[battler](battler);
 }
@@ -2146,7 +2146,7 @@ static void Controller_ReturnMonToBall2(u32 battler)
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive)
     {
         FreeMonSprite(battler);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2180,7 +2180,7 @@ static void Controller_FaintPlayerMon(u32 battler)
         FreeOamMatrix(gSprites[spriteId].oam.matrixNum);
         DestroySprite(&gSprites[spriteId]);
         SetHealthboxSpriteInvisible(gHealthboxSpriteIds[battler]);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2189,7 +2189,7 @@ static void Controller_FaintOpponentMon(u32 battler)
     if (!gSprites[gBattlerSpriteIds[battler]].inUse)
     {
         SetHealthboxSpriteInvisible(gHealthboxSpriteIds[battler]);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2237,7 +2237,7 @@ static void Controller_DoMoveAnimation(u32 battler)
             CopyAllBattleSpritesInvisibilities();
             TrySetBehindSubstituteSpriteBit(battler, gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8));
             gBattleSpritesDataPtr->healthBoxesData[battler].animationState = 0;
-            BattleControllerComplete(battler);
+            BtlController_Complete(battler);
         }
         break;
     }
@@ -2251,7 +2251,7 @@ static void Controller_HandleTrainerSlideBack(u32 battler)
             FreeTrainerFrontPicPalette(gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineParam);
         FreeSpriteOamMatrix(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
         DestroySprite(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2268,38 +2268,38 @@ void Controller_WaitForHealthBar(u32 battler)
     {
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
 static void Controller_WaitForBallThrow(u32 battler)
 {
     if (!gDoingBattleAnim || !gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive)
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
 }
 
 static void Controller_WaitForBattleAnimation(u32 battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].animFromTableActive)
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
 }
 
 static void Controller_WaitForStatusAnimation(u32 battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive)
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
 }
 
 static void Controller_WaitForTrainerPic(u32 battler)
 {
     if (gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback == SpriteCallbackDummy)
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
 }
 
 void Controller_WaitForString(u32 battler)
 {
     if (!IsTextPrinterActive(B_WIN_MSG))
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
 }
 
 static void Controller_WaitForPartyStatusSummary(u32 battler)
@@ -2307,7 +2307,7 @@ static void Controller_WaitForPartyStatusSummary(u32 battler)
     if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer = 0;
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2320,7 +2320,7 @@ static void Controller_HitAnimation(u32 battler)
         gSprites[spriteId].data[1] = 0;
         gSprites[spriteId].invisible = FALSE;
         gDoingBattleAnim = FALSE;
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
     else
     {
@@ -2333,7 +2333,7 @@ static void Controller_HitAnimation(u32 battler)
 // Used for all the commands which do nothing.
 void BtlController_Empty(u32 battler)
 {
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 // Dummy function at the end of the table.
@@ -2369,7 +2369,7 @@ void BtlController_HandleGetMonData(u32 battler)
         }
     }
     BtlController_EmitDataTransfer(battler, BUFFER_B, size, monData);
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleGetRawMonData(u32 battler)
@@ -2385,7 +2385,7 @@ void BtlController_HandleGetRawMonData(u32 battler)
         dst[i] = src[i];
 
     BtlController_EmitDataTransfer(battler, BUFFER_B, gBattleResources->bufferA[battler][2], dst);
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleSetMonData(u32 battler)
@@ -2407,7 +2407,7 @@ void BtlController_HandleSetMonData(u32 battler)
             monToCheck >>= 1;
         }
     }
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleSetRawMonData(u32 battler)
@@ -2418,7 +2418,7 @@ void BtlController_HandleSetRawMonData(u32 battler)
     for (i = 0; i < gBattleResources->bufferA[battler][2]; i++)
         dst[i] = gBattleResources->bufferA[battler][3 + i];
 
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleLoadMonSprite(u32 battler, void (*controllerCallback)(u32 battler))
@@ -2466,7 +2466,7 @@ void BtlController_HandleReturnMonToBall(u32 battler)
     else
     {
         FreeMonSprite(battler);
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -2684,7 +2684,7 @@ void BtlController_HandlePrintString(u32 battler, bool32 updateTvData, bool32 ar
         TestRunner_Battle_RecordMessage(gDisplayedStringBattle);
         if (gTestRunnerHeadless)
         {
-            BattleControllerComplete(battler);
+            BtlController_Complete(battler);
             return;
         }
     }
@@ -2755,7 +2755,7 @@ void BtlController_HandleHitAnimation(u32 battler)
 {
     if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE)
     {
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
     else
     {
@@ -2771,7 +2771,7 @@ void BtlController_HandlePlaySE(u32 battler)
     s32 pan = IsOnPlayerSide(battler) ? SOUND_PAN_ATTACKER : SOUND_PAN_TARGET;
 
     PlaySE12WithPanning(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8), pan);
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandlePlayFanfareOrBGM(u32 battler)
@@ -2786,7 +2786,7 @@ void BtlController_HandlePlayFanfareOrBGM(u32 battler)
         PlayFanfare(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8));
     }
 
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleFaintingCry(u32 battler)
@@ -2806,14 +2806,14 @@ void BtlController_HandleFaintingCry(u32 battler)
     }
 
     PlayCry_ByMode(GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES), pan, CRY_MODE_FAINT);
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleIntroSlide(u32 battler)
 {
     HandleIntroSlide(gBattleResources->bufferA[battler][1]);
     gIntroSlideFlags |= 1;
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleSpriteInvisibility(u32 battler)
@@ -2823,7 +2823,7 @@ void BtlController_HandleSpriteInvisibility(u32 battler)
         gSprites[gBattlerSpriteIds[battler]].invisible = gBattleResources->bufferA[battler][1];
         CopyBattleSpriteInvisibility(battler);
     }
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 bool32 TwoPlayerIntroMons(u32 battler) // Double battle with both player pokemon active.
@@ -2981,7 +2981,7 @@ void BtlController_HandleDrawPartyStatusSummary(u32 battler, u32 side, bool32 co
 {
     if (gBattleResources->bufferA[battler][1] != 0 && IsOnPlayerSide(battler))
     {
-        BattleControllerComplete(battler);
+        BtlController_Complete(battler);
     }
     else
     {
@@ -3015,7 +3015,7 @@ void BtlController_HandleHidePartyStatusSummary(u32 battler)
 {
     if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusSummaryShown)
         gTasks[gBattlerStatusSummaryTaskId[battler]].func = Task_HidePartyStatusSummary;
-    BattleControllerComplete(battler);
+    BtlController_Complete(battler);
 }
 
 void BtlController_HandleBattleAnimation(u32 battler, bool32 ignoreSE, bool32 updateTvData)
@@ -3028,7 +3028,7 @@ void BtlController_HandleBattleAnimation(u32 battler, bool32 ignoreSE, bool32 up
         gAnimDisableStructPtr = (struct DisableStruct *)&gBattleResources->bufferA[battler][4];
 
         if (TryHandleLaunchBattleTableAnimation(battler, battler, battler, animationId, argument))
-            BattleControllerComplete(battler);
+            BtlController_Complete(battler);
         else
             gBattlerControllerFuncs[battler] = Controller_WaitForBattleAnimation;
 

@@ -122,7 +122,7 @@ static void RecordedPlayerBufferRunCommand(u32 battler)
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sRecordedPlayerBufferCommands))
             sRecordedPlayerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
         else
-            RecordedPlayerBufferExecCompleted(battler);
+            BtlController_Complete(battler);
     }
 }
 
@@ -131,7 +131,7 @@ static void Intro_DelayAndEnd(u32 battler)
     if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        RecordedPlayerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -274,7 +274,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 static void WaitForMonAnimAfterLoad(u32 battler)
 {
     if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
-        RecordedPlayerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowSubstitute(u32 battler)
@@ -286,7 +286,7 @@ static void SwitchIn_ShowSubstitute(u32 battler)
 static void SwitchIn_WaitAndEnd(u32 battler)
 {
     if (SwitchIn_WaitAndEndUtil(battler))
-        RecordedPlayerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)
@@ -397,7 +397,7 @@ static void ChooseActionInBattlePalace(u32 battler)
     if (gBattleCommunication[4] >= gBattlersCount / 2)
     {
         BtlController_EmitTwoReturnValues(battler, BUFFER_B, RecordedBattle_GetBattlerAction(RECORDED_BATTLE_PALACE_ACTION, battler), 0);
-        RecordedPlayerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -410,7 +410,7 @@ static void RecordedPlayerHandleChooseAction(u32 battler)
     else
     {
         BtlController_EmitTwoReturnValues(battler, BUFFER_B, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
-        RecordedPlayerBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -427,7 +427,7 @@ static void RecordedPlayerHandleChooseMove(u32 battler)
         BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, moveId | (target << 8));
     }
 
-    RecordedPlayerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void RecordedPlayerHandleChooseItem(u32 battler)
@@ -438,7 +438,7 @@ static void RecordedPlayerHandleChooseItem(u32 battler)
     gBattleStruct->itemPartyIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
     gBattleStruct->itemMoveIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
     BtlController_EmitOneReturnValue(battler, BUFFER_B, gBattleStruct->chosenItem[battler]);
-    RecordedPlayerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void RecordedPlayerHandleChoosePokemon(u32 battler)
@@ -446,7 +446,7 @@ static void RecordedPlayerHandleChoosePokemon(u32 battler)
     gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
     BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, gBattleStruct->monToSwitchIntoId[battler], NULL);
-    RecordedPlayerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void RecordedPlayerHandleHealthBarUpdate(u32 battler)
@@ -498,6 +498,6 @@ static void RecordedPlayerHandleEndLinkBattle(u32 battler)
     gBattleOutcome = gBattleResources->bufferA[battler][1];
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
-    RecordedPlayerBufferExecCompleted(battler);
+    BtlController_Complete(battler);
     gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
 }

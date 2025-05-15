@@ -132,7 +132,7 @@ static void OpponentBufferRunCommand(u32 battler)
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sOpponentBufferCommands))
             sOpponentBufferCommands[gBattleResources->bufferA[battler][0]](battler);
         else
-            OpponentBufferExecCompleted(battler);
+            BtlController_Complete(battler);
     }
 }
 
@@ -141,7 +141,7 @@ static void Intro_DelayAndEnd(u32 battler)
     if (--gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay == (u8)-1)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        OpponentBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
@@ -313,7 +313,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 static void TryShinyAnimAfterMonAnim(u32 battler)
 {
     if (TryShinyAnimAfterMonAnimUtil(battler))
-        OpponentBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowSubstitute(u32 battler)
@@ -325,7 +325,7 @@ static void SwitchIn_ShowSubstitute(u32 battler)
 static void SwitchIn_HandleSoundAndEnd(u32 battler)
 {
     if (SwitchIn_HandleSoundAndEndUtil(battler))
-        OpponentBufferExecCompleted(battler);
+        BtlController_Complete(battler);
 }
 
 static void SwitchIn_ShowHealthbox(u32 battler)
@@ -470,7 +470,7 @@ static void OpponentHandlePrintString(u32 battler)
 static void OpponentHandleChooseAction(u32 battler)
 {
     AI_TrySwitchOrUseItem(battler);
-    OpponentBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static void OpponentHandleChooseMove(u32 battler)
@@ -521,7 +521,7 @@ static void OpponentHandleChooseMove(u32 battler)
                 BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
             }
         }
-        OpponentBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
     else // Wild pokemon - use random move
     {
@@ -581,14 +581,14 @@ static void OpponentHandleChooseMove(u32 battler)
         else
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) << 8));
 
-        OpponentBufferExecCompleted(battler);
+        BtlController_Complete(battler);
     }
 }
 
 static void OpponentHandleChooseItem(u32 battler)
 {
     BtlController_EmitOneReturnValue(battler, BUFFER_B, gBattleStruct->chosenItem[battler]);
-    OpponentBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static inline bool32 IsAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u32 battler)
@@ -661,7 +661,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
     TestRunner_Battle_CheckSwitch(battler, chosenMonId);
     #endif // TESTING
     BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
-    OpponentBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
 
 static u8 CountAIAliveNonEggMonsExcept(u8 slotToIgnore)
@@ -708,5 +708,5 @@ static void OpponentHandleEndLinkBattle(u32 battler)
         gMain.callback1 = gPreBattleCallback1;
         SetMainCallback2(gMain.savedCallback);
     }
-    OpponentBufferExecCompleted(battler);
+    BtlController_Complete(battler);
 }
