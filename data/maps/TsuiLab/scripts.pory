@@ -134,7 +134,7 @@ script TsuiLab_EventScript_PokeballOne{
             call(TsuiLab_EventScript_RIOLU)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_RALTS)
+            call(TsuiLab_EventScript_WHISMUR)
         }
         elif(var(VAR_USED_STARTER) == 2){
             call(TsuiLab_EventScript_SHINX)
@@ -176,7 +176,7 @@ script TsuiLab_EventScript_PokeballThree{
             call(TsuiLab_EventScript_SHROOMISH)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_CARBINK)
+            call(TsuiLab_EventScript_FLETCHLING)
         }
         elif(var(VAR_USED_STARTER) == 2){
             call(TsuiLab_EventScript_ROOKIDEE)
@@ -197,7 +197,7 @@ script TsuiLab_EventScript_PokeballFour{
             call(TsuiLab_EventScript_SEWADDLE)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_SCRAGGY)
+            call(TsuiLab_EventScript_MUNNA)
         }
         elif(var(VAR_USED_STARTER) == 2){
             call(TsuiLab_EventScript_TOXEL)
@@ -218,10 +218,10 @@ script TsuiLab_EventScript_PokeballFive{
             call(TsuiLab_EventScript_EEVEE)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_FRIGIBAX)
+            call(TsuiLab_EventScript_TADBULB)
         }
         elif(var(VAR_USED_STARTER) == 2){
-            call(TsuiLab_EventScript_NOIBAT)
+            call(TsuiLab_EventScript_DEDENNE)
         }
     }
     else{
@@ -239,10 +239,10 @@ script TsuiLab_EventScript_PokeballSix{
             call(TsuiLab_EventScript_STARYU)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_HONEDGE)
+            call(TsuiLab_EventScript_ESPURR)
         }
         elif(var(VAR_USED_STARTER) == 2){
-            call(TsuiLab_EventScript_MIMIKYU)
+            call(TsuiLab_EventScript_DEWPIDER)
         }
     }
     else{
@@ -260,10 +260,10 @@ script TsuiLab_EventScript_PokeballSeven{
             call(TsuiLab_EventScript_STUNFISK)
         }
         elif(var(VAR_USED_STARTER) == 1){
-            call(TsuiLab_EventScript_STARLY)
+            call(TsuiLab_EventScript_BUIZEL)
         }
         elif(var(VAR_USED_STARTER) == 2){
-            call(TsuiLab_EventScript_MAGBY)
+            call(TsuiLab_EventScript_IGGLYBUFF)
         }
     }
     else{
@@ -284,7 +284,7 @@ script TsuiLab_EventScript_PokeballEight{
             call(TsuiLab_EventScript_BOUNSWEET)
         }
         elif(var(VAR_USED_STARTER) == 2){
-            call(TsuiLab_EventScript_FIDOUGH)
+            call(TsuiLab_EventScript_NYMBLE)
         }
     }
     else{
@@ -631,23 +631,23 @@ script TsuiLab_EventScript_GLIGAR{
     end
 }
 
-script TsuiLab_EventScript_RALTS{
+script TsuiLab_EventScript_WHISMUR{
  
     lockall
-    showmonpic(SPECIES_RALTS,10,3)
-    msgbox("Do you want to choose RALTS?", MSGBOX_YESNO)
+    showmonpic(SPECIES_WHISMUR,10,3)
+    msgbox("Do you want to choose WHISMUR?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_RALTS, 10, ITEM_NONE)
+        givemon(SPECIES_WHISMUR, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved RALTS.")
+            msgbox("Recieved WHISMUR.")
             removeobject(1)
             setflag(FLAG_BALL_1_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved RALTS.")
+            msgbox("Recieved WHISMUR.")
             removeobject(1)
             setflag(FLAG_BALL_1_USED)
             call(NicknameBoxMon)
@@ -701,23 +701,23 @@ script TsuiLab_EventScript_PIKACHU{
     end
 }
 
-script TsuiLab_EventScript_CARBINK{
+script TsuiLab_EventScript_FLETCHLING{
  
     lockall
-    showmonpic(SPECIES_CARBINK,10,3)
-    msgbox("Do you want to choose CARBINK?", MSGBOX_YESNO)
+    showmonpic(SPECIES_FLETCHLING,10,3)
+    msgbox("Do you want to choose FLETCHLING?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_CARBINK, 10, ITEM_NONE)
+        givemon(SPECIES_FLETCHLING, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved CARBINK.")
+            msgbox("Recieved FLETCHLING.")
             removeobject(3)
             setflag(FLAG_BALL_3_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved CARBINK.")
+            msgbox("Recieved FLETCHLING.")
             removeobject(3)
             setflag(FLAG_BALL_3_USED)
             call(NicknameBoxMon)
@@ -736,23 +736,23 @@ script TsuiLab_EventScript_CARBINK{
     end
 }
 
-script TsuiLab_EventScript_SCRAGGY{
+script TsuiLab_EventScript_MUNNA{
  
     lockall
-    showmonpic(SPECIES_SCRAGGY,10,3)
-    msgbox("Do you want to choose SCRAGGY?", MSGBOX_YESNO)
+    showmonpic(SPECIES_MUNNA,10,3)
+    msgbox("Do you want to choose MUNNA?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_SCRAGGY, 10, ITEM_NONE)
+        givemon(SPECIES_MUNNA, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved SCRAGGY.")
+            msgbox("Recieved MUNNA.")
             removeobject(4)
             setflag(FLAG_BALL_4_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved SCRAGGY.")
+            msgbox("Recieved MUNNA.")
             removeobject(4)
             setflag(FLAG_BALL_4_USED)
             call(NicknameBoxMon)
@@ -771,23 +771,23 @@ script TsuiLab_EventScript_SCRAGGY{
     end
 }
 
-script TsuiLab_EventScript_FRIGIBAX{
+script TsuiLab_EventScript_TADBULB{
  
     lockall
-    showmonpic(SPECIES_FRIGIBAX,10,3)
-    msgbox("Do you want to choose FRIGIBAX?", MSGBOX_YESNO)
+    showmonpic(SPECIES_TADBULB,10,3)
+    msgbox("Do you want to choose TADBULB?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_FRIGIBAX, 10, ITEM_NONE)
+        givemon(SPECIES_TADBULB, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved FRIGIBAX.")
+            msgbox("Recieved TADBULB.")
             removeobject(5)
             setflag(FLAG_BALL_5_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved FRIGIBAX.")
+            msgbox("Recieved TADBULB.")
             removeobject(5)
             setflag(FLAG_BALL_5_USED)
             call(NicknameBoxMon)
@@ -806,23 +806,23 @@ script TsuiLab_EventScript_FRIGIBAX{
     end
 }
 
-script TsuiLab_EventScript_HONEDGE{
+script TsuiLab_EventScript_ESPURR{
  
     lockall
-    showmonpic(SPECIES_HONEDGE,10,3)
-    msgbox("Do you want to choose HONEDGE?", MSGBOX_YESNO)
+    showmonpic(SPECIES_ESPURR,10,3)
+    msgbox("Do you want to choose ESPURR?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_HONEDGE, 10, ITEM_NONE)
+        givemon(SPECIES_ESPURR, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved HONEDGE.")
+            msgbox("Recieved ESPURR.")
             removeobject(6)
             setflag(FLAG_BALL_6_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved HONEDGE.")
+            msgbox("Recieved ESPURR.")
             removeobject(6)
             setflag(FLAG_BALL_6_USED)
             call(NicknameBoxMon)
@@ -841,23 +841,23 @@ script TsuiLab_EventScript_HONEDGE{
     end
 }
 
-script TsuiLab_EventScript_STARLY{
+script TsuiLab_EventScript_BUIZEL{
  
     lockall
-    showmonpic(SPECIES_STARLY,10,3)
-    msgbox("Do you want to choose STARLY?", MSGBOX_YESNO)
+    showmonpic(SPECIES_BUIZEL,10,3)
+    msgbox("Do you want to choose BUIZEL?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_STARLY, 10, ITEM_NONE)
+        givemon(SPECIES_BUIZEL, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved STARLY.")
+            msgbox("Recieved BUIZEL.")
             removeobject(7)
             setflag(FLAG_BALL_7_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved STARLY.")
+            msgbox("Recieved BUIZEL.")
             removeobject(7)
             setflag(FLAG_BALL_7_USED)
             call(NicknameBoxMon)
@@ -1086,23 +1086,23 @@ script TsuiLab_EventScript_TOXEL{
     end
 }
 
-script TsuiLab_EventScript_NOIBAT{
+script TsuiLab_EventScript_DEDENNE{
  
     lockall
-    showmonpic(SPECIES_NOIBAT,10,3)
-    msgbox("Do you want to choose NOIBAT?", MSGBOX_YESNO)
+    showmonpic(SPECIES_DEDENNE,10,3)
+    msgbox("Do you want to choose DEDENNE?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_NOIBAT, 10, ITEM_NONE)
+        givemon(SPECIES_DEDENNE, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved NOIBAT.")
+            msgbox("Recieved DEDENNE.")
             removeobject(5)
             setflag(FLAG_BALL_5_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved NOIBAT.")
+            msgbox("Recieved DEDENNE.")
             removeobject(5)
             setflag(FLAG_BALL_5_USED)
             call(NicknameBoxMon)
@@ -1121,23 +1121,23 @@ script TsuiLab_EventScript_NOIBAT{
     end
 }
 
-script TsuiLab_EventScript_MIMIKYU{
+script TsuiLab_EventScript_DEWPIDER{
  
     lockall
-    showmonpic(SPECIES_MIMIKYU,10,3)
-    msgbox("Do you want to choose MIMIKYU?", MSGBOX_YESNO)
+    showmonpic(SPECIES_DEWPIDER,10,3)
+    msgbox("Do you want to choose DEWPIDER?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_MIMIKYU, 10, ITEM_NONE)
+        givemon(SPECIES_DEWPIDER, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MIMIKYU.")
+            msgbox("Recieved DEWPIDER.")
             removeobject(6)
             setflag(FLAG_BALL_6_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MIMIKYU.")
+            msgbox("Recieved DEWPIDER.")
             removeobject(6)
             setflag(FLAG_BALL_6_USED)
             call(NicknameBoxMon)
@@ -1156,23 +1156,23 @@ script TsuiLab_EventScript_MIMIKYU{
     end
 }
 
-script TsuiLab_EventScript_MAGBY{
+script TsuiLab_EventScript_IGGLYBUFF{
  
     lockall
-    showmonpic(SPECIES_MAGBY,10,3)
-    msgbox("Do you want to choose MAGBY?", MSGBOX_YESNO)
+    showmonpic(SPECIES_IGGLYBUFF,10,3)
+    msgbox("Do you want to choose IGGLYBUFF?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_MAGBY, 10, ITEM_NONE)
+        givemon(SPECIES_IGGLYBUFF, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MAGBY.")
+            msgbox("Recieved IGGLYBUFF.")
             removeobject(7)
             setflag(FLAG_BALL_7_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MAGBY.")
+            msgbox("Recieved IGGLYBUFF.")
             removeobject(7)
             setflag(FLAG_BALL_7_USED)
             call(NicknameBoxMon)
@@ -1191,23 +1191,23 @@ script TsuiLab_EventScript_MAGBY{
     end
 }
 
-script TsuiLab_EventScript_FIDOUGH{
+script TsuiLab_EventScript_NYMBLE{
  
     lockall
-    showmonpic(SPECIES_FIDOUGH,10,3)
-    msgbox("Do you want to choose FIDOUGH?", MSGBOX_YESNO)
+    showmonpic(SPECIES_NYMBLE,10,3)
+    msgbox("Do you want to choose NYMBLE?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_FIDOUGH, 10, ITEM_NONE)
+        givemon(SPECIES_NYMBLE, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved FIDOUGH.")
+            msgbox("Recieved NYMBLE.")
             removeobject(8)
             setflag(FLAG_BALL_8_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved FIDOUGH.")
+            msgbox("Recieved NYMBLE.")
             removeobject(8)
             setflag(FLAG_BALL_8_USED)
             call(NicknameBoxMon)

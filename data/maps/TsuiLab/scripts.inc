@@ -307,7 +307,7 @@ TsuiLab_EventScript_PokeballOne_9:
 
 TsuiLab_EventScript_PokeballOne_10:
 # 137 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_RALTS
+	call TsuiLab_EventScript_WHISMUR
 	goto TsuiLab_EventScript_PokeballOne_1
 
 TsuiLab_EventScript_PokeballOne_11:
@@ -413,7 +413,7 @@ TsuiLab_EventScript_PokeballThree_9:
 
 TsuiLab_EventScript_PokeballThree_10:
 # 179 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_CARBINK
+	call TsuiLab_EventScript_FLETCHLING
 	goto TsuiLab_EventScript_PokeballThree_1
 
 TsuiLab_EventScript_PokeballThree_11:
@@ -466,7 +466,7 @@ TsuiLab_EventScript_PokeballFour_9:
 
 TsuiLab_EventScript_PokeballFour_10:
 # 200 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_SCRAGGY
+	call TsuiLab_EventScript_MUNNA
 	goto TsuiLab_EventScript_PokeballFour_1
 
 TsuiLab_EventScript_PokeballFour_11:
@@ -519,12 +519,12 @@ TsuiLab_EventScript_PokeballFive_9:
 
 TsuiLab_EventScript_PokeballFive_10:
 # 221 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_FRIGIBAX
+	call TsuiLab_EventScript_TADBULB
 	goto TsuiLab_EventScript_PokeballFive_1
 
 TsuiLab_EventScript_PokeballFive_11:
 # 224 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_NOIBAT
+	call TsuiLab_EventScript_DEDENNE
 	goto TsuiLab_EventScript_PokeballFive_1
 
 
@@ -572,12 +572,12 @@ TsuiLab_EventScript_PokeballSix_9:
 
 TsuiLab_EventScript_PokeballSix_10:
 # 242 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_HONEDGE
+	call TsuiLab_EventScript_ESPURR
 	goto TsuiLab_EventScript_PokeballSix_1
 
 TsuiLab_EventScript_PokeballSix_11:
 # 245 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_MIMIKYU
+	call TsuiLab_EventScript_DEWPIDER
 	goto TsuiLab_EventScript_PokeballSix_1
 
 
@@ -625,12 +625,12 @@ TsuiLab_EventScript_PokeballSeven_9:
 
 TsuiLab_EventScript_PokeballSeven_10:
 # 263 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_STARLY
+	call TsuiLab_EventScript_BUIZEL
 	goto TsuiLab_EventScript_PokeballSeven_1
 
 TsuiLab_EventScript_PokeballSeven_11:
 # 266 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_MAGBY
+	call TsuiLab_EventScript_IGGLYBUFF
 	goto TsuiLab_EventScript_PokeballSeven_1
 
 
@@ -683,7 +683,7 @@ TsuiLab_EventScript_PokeballEight_10:
 
 TsuiLab_EventScript_PokeballEight_11:
 # 287 "data//maps/TsuiLab/scripts.pory"
-	call TsuiLab_EventScript_FIDOUGH
+	call TsuiLab_EventScript_NYMBLE
 	goto TsuiLab_EventScript_PokeballEight_1
 
 
@@ -1307,67 +1307,67 @@ TsuiLab_EventScript_GLIGAR_6:
 	goto TsuiLab_EventScript_GLIGAR_1
 
 
-TsuiLab_EventScript_RALTS::
+TsuiLab_EventScript_WHISMUR::
 # 636 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 637 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_RALTS, 10, 3
+	showmonpic SPECIES_WHISMUR, 10, 3
 # 638 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_RALTS_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_WHISMUR_Text_0, MSGBOX_YESNO
 # 639 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_RALTS_2
+	goto_if_eq TsuiLab_EventScript_WHISMUR_2
 # 661 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 662 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_RALTS_1:
+TsuiLab_EventScript_WHISMUR_1:
 # 664 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 665 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_RALTS_2:
+TsuiLab_EventScript_WHISMUR_2:
 # 640 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_RALTS, 10, ITEM_NONE
+	givemon SPECIES_WHISMUR, 10, ITEM_NONE
 # 641 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_RALTS_5
+	goto_if_eq TsuiLab_EventScript_WHISMUR_5
 # 648 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_RALTS_6
+	goto_if_eq TsuiLab_EventScript_WHISMUR_6
 # 656 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 657 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_RALTS_1
+	goto TsuiLab_EventScript_WHISMUR_1
 
-TsuiLab_EventScript_RALTS_5:
+TsuiLab_EventScript_WHISMUR_5:
 # 642 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 643 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_RALTS_Text_1
+	msgbox TsuiLab_EventScript_WHISMUR_Text_1
 # 644 "data//maps/TsuiLab/scripts.pory"
 	removeobject 1
 # 645 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_1_USED
 # 646 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_RALTS_1
+	goto TsuiLab_EventScript_WHISMUR_1
 
-TsuiLab_EventScript_RALTS_6:
+TsuiLab_EventScript_WHISMUR_6:
 # 649 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 650 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_RALTS_Text_1
+	msgbox TsuiLab_EventScript_WHISMUR_Text_1
 # 651 "data//maps/TsuiLab/scripts.pory"
 	removeobject 1
 # 652 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_1_USED
 # 653 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_RALTS_1
+	goto TsuiLab_EventScript_WHISMUR_1
 
 
 TsuiLab_EventScript_PIKACHU::
@@ -1433,319 +1433,319 @@ TsuiLab_EventScript_PIKACHU_6:
 	goto TsuiLab_EventScript_PIKACHU_1
 
 
-TsuiLab_EventScript_CARBINK::
+TsuiLab_EventScript_FLETCHLING::
 # 706 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 707 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_CARBINK, 10, 3
+	showmonpic SPECIES_FLETCHLING, 10, 3
 # 708 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_CARBINK_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_FLETCHLING_Text_0, MSGBOX_YESNO
 # 709 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_CARBINK_2
+	goto_if_eq TsuiLab_EventScript_FLETCHLING_2
 # 731 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 732 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_CARBINK_1:
+TsuiLab_EventScript_FLETCHLING_1:
 # 734 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 735 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_CARBINK_2:
+TsuiLab_EventScript_FLETCHLING_2:
 # 710 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_CARBINK, 10, ITEM_NONE
+	givemon SPECIES_FLETCHLING, 10, ITEM_NONE
 # 711 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_CARBINK_5
+	goto_if_eq TsuiLab_EventScript_FLETCHLING_5
 # 718 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_CARBINK_6
+	goto_if_eq TsuiLab_EventScript_FLETCHLING_6
 # 726 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 727 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_CARBINK_1
+	goto TsuiLab_EventScript_FLETCHLING_1
 
-TsuiLab_EventScript_CARBINK_5:
+TsuiLab_EventScript_FLETCHLING_5:
 # 712 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 713 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_CARBINK_Text_1
+	msgbox TsuiLab_EventScript_FLETCHLING_Text_1
 # 714 "data//maps/TsuiLab/scripts.pory"
 	removeobject 3
 # 715 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_3_USED
 # 716 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_CARBINK_1
+	goto TsuiLab_EventScript_FLETCHLING_1
 
-TsuiLab_EventScript_CARBINK_6:
+TsuiLab_EventScript_FLETCHLING_6:
 # 719 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 720 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_CARBINK_Text_1
+	msgbox TsuiLab_EventScript_FLETCHLING_Text_1
 # 721 "data//maps/TsuiLab/scripts.pory"
 	removeobject 3
 # 722 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_3_USED
 # 723 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_CARBINK_1
+	goto TsuiLab_EventScript_FLETCHLING_1
 
 
-TsuiLab_EventScript_SCRAGGY::
+TsuiLab_EventScript_MUNNA::
 # 741 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 742 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_SCRAGGY, 10, 3
+	showmonpic SPECIES_MUNNA, 10, 3
 # 743 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_SCRAGGY_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_MUNNA_Text_0, MSGBOX_YESNO
 # 744 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_SCRAGGY_2
+	goto_if_eq TsuiLab_EventScript_MUNNA_2
 # 766 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 767 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_SCRAGGY_1:
+TsuiLab_EventScript_MUNNA_1:
 # 769 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 770 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_SCRAGGY_2:
+TsuiLab_EventScript_MUNNA_2:
 # 745 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_SCRAGGY, 10, ITEM_NONE
+	givemon SPECIES_MUNNA, 10, ITEM_NONE
 # 746 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_SCRAGGY_5
+	goto_if_eq TsuiLab_EventScript_MUNNA_5
 # 753 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_SCRAGGY_6
+	goto_if_eq TsuiLab_EventScript_MUNNA_6
 # 761 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 762 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_SCRAGGY_1
+	goto TsuiLab_EventScript_MUNNA_1
 
-TsuiLab_EventScript_SCRAGGY_5:
+TsuiLab_EventScript_MUNNA_5:
 # 747 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 748 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_SCRAGGY_Text_1
+	msgbox TsuiLab_EventScript_MUNNA_Text_1
 # 749 "data//maps/TsuiLab/scripts.pory"
 	removeobject 4
 # 750 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_4_USED
 # 751 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_SCRAGGY_1
+	goto TsuiLab_EventScript_MUNNA_1
 
-TsuiLab_EventScript_SCRAGGY_6:
+TsuiLab_EventScript_MUNNA_6:
 # 754 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 755 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_SCRAGGY_Text_1
+	msgbox TsuiLab_EventScript_MUNNA_Text_1
 # 756 "data//maps/TsuiLab/scripts.pory"
 	removeobject 4
 # 757 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_4_USED
 # 758 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_SCRAGGY_1
+	goto TsuiLab_EventScript_MUNNA_1
 
 
-TsuiLab_EventScript_FRIGIBAX::
+TsuiLab_EventScript_TADBULB::
 # 776 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 777 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_FRIGIBAX, 10, 3
+	showmonpic SPECIES_TADBULB, 10, 3
 # 778 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FRIGIBAX_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_TADBULB_Text_0, MSGBOX_YESNO
 # 779 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_FRIGIBAX_2
+	goto_if_eq TsuiLab_EventScript_TADBULB_2
 # 801 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 802 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_FRIGIBAX_1:
+TsuiLab_EventScript_TADBULB_1:
 # 804 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 805 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_FRIGIBAX_2:
+TsuiLab_EventScript_TADBULB_2:
 # 780 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_FRIGIBAX, 10, ITEM_NONE
+	givemon SPECIES_TADBULB, 10, ITEM_NONE
 # 781 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_FRIGIBAX_5
+	goto_if_eq TsuiLab_EventScript_TADBULB_5
 # 788 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_FRIGIBAX_6
+	goto_if_eq TsuiLab_EventScript_TADBULB_6
 # 796 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 797 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_FRIGIBAX_1
+	goto TsuiLab_EventScript_TADBULB_1
 
-TsuiLab_EventScript_FRIGIBAX_5:
+TsuiLab_EventScript_TADBULB_5:
 # 782 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 783 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FRIGIBAX_Text_1
+	msgbox TsuiLab_EventScript_TADBULB_Text_1
 # 784 "data//maps/TsuiLab/scripts.pory"
 	removeobject 5
 # 785 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_5_USED
 # 786 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_FRIGIBAX_1
+	goto TsuiLab_EventScript_TADBULB_1
 
-TsuiLab_EventScript_FRIGIBAX_6:
+TsuiLab_EventScript_TADBULB_6:
 # 789 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 790 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FRIGIBAX_Text_1
+	msgbox TsuiLab_EventScript_TADBULB_Text_1
 # 791 "data//maps/TsuiLab/scripts.pory"
 	removeobject 5
 # 792 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_5_USED
 # 793 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_FRIGIBAX_1
+	goto TsuiLab_EventScript_TADBULB_1
 
 
-TsuiLab_EventScript_HONEDGE::
+TsuiLab_EventScript_ESPURR::
 # 811 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 812 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_HONEDGE, 10, 3
+	showmonpic SPECIES_ESPURR, 10, 3
 # 813 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_HONEDGE_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_ESPURR_Text_0, MSGBOX_YESNO
 # 814 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_HONEDGE_2
+	goto_if_eq TsuiLab_EventScript_ESPURR_2
 # 836 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 837 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_HONEDGE_1:
+TsuiLab_EventScript_ESPURR_1:
 # 839 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 840 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_HONEDGE_2:
+TsuiLab_EventScript_ESPURR_2:
 # 815 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_HONEDGE, 10, ITEM_NONE
+	givemon SPECIES_ESPURR, 10, ITEM_NONE
 # 816 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_HONEDGE_5
+	goto_if_eq TsuiLab_EventScript_ESPURR_5
 # 823 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_HONEDGE_6
+	goto_if_eq TsuiLab_EventScript_ESPURR_6
 # 831 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 832 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_HONEDGE_1
+	goto TsuiLab_EventScript_ESPURR_1
 
-TsuiLab_EventScript_HONEDGE_5:
+TsuiLab_EventScript_ESPURR_5:
 # 817 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 818 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_HONEDGE_Text_1
+	msgbox TsuiLab_EventScript_ESPURR_Text_1
 # 819 "data//maps/TsuiLab/scripts.pory"
 	removeobject 6
 # 820 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_6_USED
 # 821 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_HONEDGE_1
+	goto TsuiLab_EventScript_ESPURR_1
 
-TsuiLab_EventScript_HONEDGE_6:
+TsuiLab_EventScript_ESPURR_6:
 # 824 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 825 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_HONEDGE_Text_1
+	msgbox TsuiLab_EventScript_ESPURR_Text_1
 # 826 "data//maps/TsuiLab/scripts.pory"
 	removeobject 6
 # 827 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_6_USED
 # 828 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_HONEDGE_1
+	goto TsuiLab_EventScript_ESPURR_1
 
 
-TsuiLab_EventScript_STARLY::
+TsuiLab_EventScript_BUIZEL::
 # 846 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 847 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_STARLY, 10, 3
+	showmonpic SPECIES_BUIZEL, 10, 3
 # 848 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_STARLY_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_BUIZEL_Text_0, MSGBOX_YESNO
 # 849 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_STARLY_2
+	goto_if_eq TsuiLab_EventScript_BUIZEL_2
 # 871 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 872 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_STARLY_1:
+TsuiLab_EventScript_BUIZEL_1:
 # 874 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 875 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_STARLY_2:
+TsuiLab_EventScript_BUIZEL_2:
 # 850 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_STARLY, 10, ITEM_NONE
+	givemon SPECIES_BUIZEL, 10, ITEM_NONE
 # 851 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_STARLY_5
+	goto_if_eq TsuiLab_EventScript_BUIZEL_5
 # 858 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_STARLY_6
+	goto_if_eq TsuiLab_EventScript_BUIZEL_6
 # 866 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 867 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_STARLY_1
+	goto TsuiLab_EventScript_BUIZEL_1
 
-TsuiLab_EventScript_STARLY_5:
+TsuiLab_EventScript_BUIZEL_5:
 # 852 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 853 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_STARLY_Text_1
+	msgbox TsuiLab_EventScript_BUIZEL_Text_1
 # 854 "data//maps/TsuiLab/scripts.pory"
 	removeobject 7
 # 855 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_7_USED
 # 856 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_STARLY_1
+	goto TsuiLab_EventScript_BUIZEL_1
 
-TsuiLab_EventScript_STARLY_6:
+TsuiLab_EventScript_BUIZEL_6:
 # 859 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 860 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_STARLY_Text_1
+	msgbox TsuiLab_EventScript_BUIZEL_Text_1
 # 861 "data//maps/TsuiLab/scripts.pory"
 	removeobject 7
 # 862 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_7_USED
 # 863 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_STARLY_1
+	goto TsuiLab_EventScript_BUIZEL_1
 
 
 TsuiLab_EventScript_BOUNSWEET::
@@ -2126,256 +2126,256 @@ TsuiLab_EventScript_TOXEL_6:
 	goto TsuiLab_EventScript_TOXEL_1
 
 
-TsuiLab_EventScript_NOIBAT::
+TsuiLab_EventScript_DEDENNE::
 # 1091 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 1092 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_NOIBAT, 10, 3
+	showmonpic SPECIES_DEDENNE, 10, 3
 # 1093 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_NOIBAT_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_DEDENNE_Text_0, MSGBOX_YESNO
 # 1094 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_NOIBAT_2
+	goto_if_eq TsuiLab_EventScript_DEDENNE_2
 # 1116 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1117 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_NOIBAT_1:
+TsuiLab_EventScript_DEDENNE_1:
 # 1119 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 1120 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_NOIBAT_2:
+TsuiLab_EventScript_DEDENNE_2:
 # 1095 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_NOIBAT, 10, ITEM_NONE
+	givemon SPECIES_DEDENNE, 10, ITEM_NONE
 # 1096 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_NOIBAT_5
+	goto_if_eq TsuiLab_EventScript_DEDENNE_5
 # 1103 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_NOIBAT_6
+	goto_if_eq TsuiLab_EventScript_DEDENNE_6
 # 1111 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1112 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_NOIBAT_1
+	goto TsuiLab_EventScript_DEDENNE_1
 
-TsuiLab_EventScript_NOIBAT_5:
+TsuiLab_EventScript_DEDENNE_5:
 # 1097 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1098 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_NOIBAT_Text_1
+	msgbox TsuiLab_EventScript_DEDENNE_Text_1
 # 1099 "data//maps/TsuiLab/scripts.pory"
 	removeobject 5
 # 1100 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_5_USED
 # 1101 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_NOIBAT_1
+	goto TsuiLab_EventScript_DEDENNE_1
 
-TsuiLab_EventScript_NOIBAT_6:
+TsuiLab_EventScript_DEDENNE_6:
 # 1104 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1105 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_NOIBAT_Text_1
+	msgbox TsuiLab_EventScript_DEDENNE_Text_1
 # 1106 "data//maps/TsuiLab/scripts.pory"
 	removeobject 5
 # 1107 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_5_USED
 # 1108 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_NOIBAT_1
+	goto TsuiLab_EventScript_DEDENNE_1
 
 
-TsuiLab_EventScript_MIMIKYU::
+TsuiLab_EventScript_DEWPIDER::
 # 1126 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 1127 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_MIMIKYU, 10, 3
+	showmonpic SPECIES_DEWPIDER, 10, 3
 # 1128 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MIMIKYU_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_DEWPIDER_Text_0, MSGBOX_YESNO
 # 1129 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_MIMIKYU_2
+	goto_if_eq TsuiLab_EventScript_DEWPIDER_2
 # 1151 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1152 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_MIMIKYU_1:
+TsuiLab_EventScript_DEWPIDER_1:
 # 1154 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 1155 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_MIMIKYU_2:
+TsuiLab_EventScript_DEWPIDER_2:
 # 1130 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_MIMIKYU, 10, ITEM_NONE
+	givemon SPECIES_DEWPIDER, 10, ITEM_NONE
 # 1131 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_MIMIKYU_5
+	goto_if_eq TsuiLab_EventScript_DEWPIDER_5
 # 1138 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_MIMIKYU_6
+	goto_if_eq TsuiLab_EventScript_DEWPIDER_6
 # 1146 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1147 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_MIMIKYU_1
+	goto TsuiLab_EventScript_DEWPIDER_1
 
-TsuiLab_EventScript_MIMIKYU_5:
+TsuiLab_EventScript_DEWPIDER_5:
 # 1132 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1133 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MIMIKYU_Text_1
+	msgbox TsuiLab_EventScript_DEWPIDER_Text_1
 # 1134 "data//maps/TsuiLab/scripts.pory"
 	removeobject 6
 # 1135 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_6_USED
 # 1136 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_MIMIKYU_1
+	goto TsuiLab_EventScript_DEWPIDER_1
 
-TsuiLab_EventScript_MIMIKYU_6:
+TsuiLab_EventScript_DEWPIDER_6:
 # 1139 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1140 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MIMIKYU_Text_1
+	msgbox TsuiLab_EventScript_DEWPIDER_Text_1
 # 1141 "data//maps/TsuiLab/scripts.pory"
 	removeobject 6
 # 1142 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_6_USED
 # 1143 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_MIMIKYU_1
+	goto TsuiLab_EventScript_DEWPIDER_1
 
 
-TsuiLab_EventScript_MAGBY::
+TsuiLab_EventScript_IGGLYBUFF::
 # 1161 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 1162 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_MAGBY, 10, 3
+	showmonpic SPECIES_IGGLYBUFF, 10, 3
 # 1163 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MAGBY_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_IGGLYBUFF_Text_0, MSGBOX_YESNO
 # 1164 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_MAGBY_2
+	goto_if_eq TsuiLab_EventScript_IGGLYBUFF_2
 # 1186 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1187 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_MAGBY_1:
+TsuiLab_EventScript_IGGLYBUFF_1:
 # 1189 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 1190 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_MAGBY_2:
+TsuiLab_EventScript_IGGLYBUFF_2:
 # 1165 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_MAGBY, 10, ITEM_NONE
+	givemon SPECIES_IGGLYBUFF, 10, ITEM_NONE
 # 1166 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_MAGBY_5
+	goto_if_eq TsuiLab_EventScript_IGGLYBUFF_5
 # 1173 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_MAGBY_6
+	goto_if_eq TsuiLab_EventScript_IGGLYBUFF_6
 # 1181 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1182 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_MAGBY_1
+	goto TsuiLab_EventScript_IGGLYBUFF_1
 
-TsuiLab_EventScript_MAGBY_5:
+TsuiLab_EventScript_IGGLYBUFF_5:
 # 1167 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1168 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MAGBY_Text_1
+	msgbox TsuiLab_EventScript_IGGLYBUFF_Text_1
 # 1169 "data//maps/TsuiLab/scripts.pory"
 	removeobject 7
 # 1170 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_7_USED
 # 1171 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_MAGBY_1
+	goto TsuiLab_EventScript_IGGLYBUFF_1
 
-TsuiLab_EventScript_MAGBY_6:
+TsuiLab_EventScript_IGGLYBUFF_6:
 # 1174 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1175 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_MAGBY_Text_1
+	msgbox TsuiLab_EventScript_IGGLYBUFF_Text_1
 # 1176 "data//maps/TsuiLab/scripts.pory"
 	removeobject 7
 # 1177 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_7_USED
 # 1178 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_MAGBY_1
+	goto TsuiLab_EventScript_IGGLYBUFF_1
 
 
-TsuiLab_EventScript_FIDOUGH::
+TsuiLab_EventScript_NYMBLE::
 # 1196 "data//maps/TsuiLab/scripts.pory"
 	lockall
 # 1197 "data//maps/TsuiLab/scripts.pory"
-	showmonpic SPECIES_FIDOUGH, 10, 3
+	showmonpic SPECIES_NYMBLE, 10, 3
 # 1198 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FIDOUGH_Text_0, MSGBOX_YESNO
+	msgbox TsuiLab_EventScript_NYMBLE_Text_0, MSGBOX_YESNO
 # 1199 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, YES
-	goto_if_eq TsuiLab_EventScript_FIDOUGH_2
+	goto_if_eq TsuiLab_EventScript_NYMBLE_2
 # 1221 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1222 "data//maps/TsuiLab/scripts.pory"
 	msgbox NewProfessor_NotChosen
-TsuiLab_EventScript_FIDOUGH_1:
+TsuiLab_EventScript_NYMBLE_1:
 # 1224 "data//maps/TsuiLab/scripts.pory"
 	waitmessage
 # 1225 "data//maps/TsuiLab/scripts.pory"
 	releaseall
 	end
 
-TsuiLab_EventScript_FIDOUGH_2:
+TsuiLab_EventScript_NYMBLE_2:
 # 1200 "data//maps/TsuiLab/scripts.pory"
-	givemon SPECIES_FIDOUGH, 10, ITEM_NONE
+	givemon SPECIES_NYMBLE, 10, ITEM_NONE
 # 1201 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PARTY
-	goto_if_eq TsuiLab_EventScript_FIDOUGH_5
+	goto_if_eq TsuiLab_EventScript_NYMBLE_5
 # 1208 "data//maps/TsuiLab/scripts.pory"
 	compare VAR_RESULT, MON_GIVEN_TO_PC
-	goto_if_eq TsuiLab_EventScript_FIDOUGH_6
+	goto_if_eq TsuiLab_EventScript_NYMBLE_6
 # 1216 "data//maps/TsuiLab/scripts.pory"
 	hidemonpic
 # 1217 "data//maps/TsuiLab/scripts.pory"
 	msgbox TsuiLab_EventScript_RIOLU_Text_2
-	goto TsuiLab_EventScript_FIDOUGH_1
+	goto TsuiLab_EventScript_NYMBLE_1
 
-TsuiLab_EventScript_FIDOUGH_5:
+TsuiLab_EventScript_NYMBLE_5:
 # 1202 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1203 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FIDOUGH_Text_1
+	msgbox TsuiLab_EventScript_NYMBLE_Text_1
 # 1204 "data//maps/TsuiLab/scripts.pory"
 	removeobject 8
 # 1205 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_8_USED
 # 1206 "data//maps/TsuiLab/scripts.pory"
 	call NicknamePartyMon
-	goto TsuiLab_EventScript_FIDOUGH_1
+	goto TsuiLab_EventScript_NYMBLE_1
 
-TsuiLab_EventScript_FIDOUGH_6:
+TsuiLab_EventScript_NYMBLE_6:
 # 1209 "data//maps/TsuiLab/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 1210 "data//maps/TsuiLab/scripts.pory"
-	msgbox TsuiLab_EventScript_FIDOUGH_Text_1
+	msgbox TsuiLab_EventScript_NYMBLE_Text_1
 # 1211 "data//maps/TsuiLab/scripts.pory"
 	removeobject 8
 # 1212 "data//maps/TsuiLab/scripts.pory"
 	setflag FLAG_BALL_8_USED
 # 1213 "data//maps/TsuiLab/scripts.pory"
 	call NicknameBoxMon
-	goto TsuiLab_EventScript_FIDOUGH_1
+	goto TsuiLab_EventScript_NYMBLE_1
 
 
 TsuiLab_EventScript_MAGIKARP::
@@ -2587,13 +2587,13 @@ TsuiLab_EventScript_GLIGAR_Text_1:
 # 608 "data//maps/TsuiLab/scripts.pory"
 	.string "Recieved GLIGAR.$"
 
-TsuiLab_EventScript_RALTS_Text_0:
+TsuiLab_EventScript_WHISMUR_Text_0:
 # 638 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose RALTS?$"
+	.string "Do you want to choose WHISMUR?$"
 
-TsuiLab_EventScript_RALTS_Text_1:
+TsuiLab_EventScript_WHISMUR_Text_1:
 # 643 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved RALTS.$"
+	.string "Recieved WHISMUR.$"
 
 TsuiLab_EventScript_PIKACHU_Text_0:
 # 673 "data//maps/TsuiLab/scripts.pory"
@@ -2603,45 +2603,45 @@ TsuiLab_EventScript_PIKACHU_Text_1:
 # 678 "data//maps/TsuiLab/scripts.pory"
 	.string "Recieved PIKACHU.$"
 
-TsuiLab_EventScript_CARBINK_Text_0:
+TsuiLab_EventScript_FLETCHLING_Text_0:
 # 708 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose CARBINK?$"
+	.string "Do you want to choose FLETCHLING?$"
 
-TsuiLab_EventScript_CARBINK_Text_1:
+TsuiLab_EventScript_FLETCHLING_Text_1:
 # 713 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved CARBINK.$"
+	.string "Recieved FLETCHLING.$"
 
-TsuiLab_EventScript_SCRAGGY_Text_0:
+TsuiLab_EventScript_MUNNA_Text_0:
 # 743 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose SCRAGGY?$"
+	.string "Do you want to choose MUNNA?$"
 
-TsuiLab_EventScript_SCRAGGY_Text_1:
+TsuiLab_EventScript_MUNNA_Text_1:
 # 748 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved SCRAGGY.$"
+	.string "Recieved MUNNA.$"
 
-TsuiLab_EventScript_FRIGIBAX_Text_0:
+TsuiLab_EventScript_TADBULB_Text_0:
 # 778 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose FRIGIBAX?$"
+	.string "Do you want to choose TADBULB?$"
 
-TsuiLab_EventScript_FRIGIBAX_Text_1:
+TsuiLab_EventScript_TADBULB_Text_1:
 # 783 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved FRIGIBAX.$"
+	.string "Recieved TADBULB.$"
 
-TsuiLab_EventScript_HONEDGE_Text_0:
+TsuiLab_EventScript_ESPURR_Text_0:
 # 813 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose HONEDGE?$"
+	.string "Do you want to choose ESPURR?$"
 
-TsuiLab_EventScript_HONEDGE_Text_1:
+TsuiLab_EventScript_ESPURR_Text_1:
 # 818 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved HONEDGE.$"
+	.string "Recieved ESPURR.$"
 
-TsuiLab_EventScript_STARLY_Text_0:
+TsuiLab_EventScript_BUIZEL_Text_0:
 # 848 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose STARLY?$"
+	.string "Do you want to choose BUIZEL?$"
 
-TsuiLab_EventScript_STARLY_Text_1:
+TsuiLab_EventScript_BUIZEL_Text_1:
 # 853 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved STARLY.$"
+	.string "Recieved BUIZEL.$"
 
 TsuiLab_EventScript_BOUNSWEET_Text_0:
 # 883 "data//maps/TsuiLab/scripts.pory"
@@ -2691,37 +2691,37 @@ TsuiLab_EventScript_TOXEL_Text_1:
 # 1063 "data//maps/TsuiLab/scripts.pory"
 	.string "Recieved TOXEL.$"
 
-TsuiLab_EventScript_NOIBAT_Text_0:
+TsuiLab_EventScript_DEDENNE_Text_0:
 # 1093 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose NOIBAT?$"
+	.string "Do you want to choose DEDENNE?$"
 
-TsuiLab_EventScript_NOIBAT_Text_1:
+TsuiLab_EventScript_DEDENNE_Text_1:
 # 1098 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved NOIBAT.$"
+	.string "Recieved DEDENNE.$"
 
-TsuiLab_EventScript_MIMIKYU_Text_0:
+TsuiLab_EventScript_DEWPIDER_Text_0:
 # 1128 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose MIMIKYU?$"
+	.string "Do you want to choose DEWPIDER?$"
 
-TsuiLab_EventScript_MIMIKYU_Text_1:
+TsuiLab_EventScript_DEWPIDER_Text_1:
 # 1133 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved MIMIKYU.$"
+	.string "Recieved DEWPIDER.$"
 
-TsuiLab_EventScript_MAGBY_Text_0:
+TsuiLab_EventScript_IGGLYBUFF_Text_0:
 # 1163 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose MAGBY?$"
+	.string "Do you want to choose IGGLYBUFF?$"
 
-TsuiLab_EventScript_MAGBY_Text_1:
+TsuiLab_EventScript_IGGLYBUFF_Text_1:
 # 1168 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved MAGBY.$"
+	.string "Recieved IGGLYBUFF.$"
 
-TsuiLab_EventScript_FIDOUGH_Text_0:
+TsuiLab_EventScript_NYMBLE_Text_0:
 # 1198 "data//maps/TsuiLab/scripts.pory"
-	.string "Do you want to choose FIDOUGH?$"
+	.string "Do you want to choose NYMBLE?$"
 
-TsuiLab_EventScript_FIDOUGH_Text_1:
+TsuiLab_EventScript_NYMBLE_Text_1:
 # 1203 "data//maps/TsuiLab/scripts.pory"
-	.string "Recieved FIDOUGH.$"
+	.string "Recieved NYMBLE.$"
 
 TsuiLab_EventScript_MAGIKARP_Text_0:
 # 1233 "data//maps/TsuiLab/scripts.pory"

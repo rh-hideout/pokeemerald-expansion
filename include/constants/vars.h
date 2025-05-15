@@ -264,15 +264,15 @@
 #define VAR_ROXANNE_CALL_STEP_COUNTER                    0x40F4
 #define VAR_SCOTT_BF_CALL_STEP_COUNTER                   0x40F5
 #define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0x40F6
-#define VAR_UNUSED_0x40F7                                0x40F7 // Unused Var
-#define VAR_UNUSED_0x40F8                                0x40F8 // Unused Var
-#define VAR_UNUSED_0x40F9                                0x40F9 // Unused Var
-#define VAR_UNUSED_0x40FA                                0x40FA // Unused Var
-#define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
-#define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
-#define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
-#define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
-#define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
+#define VAR_USED_STARTER                                0x40F7 // Used Var
+#define LITTLEROOT_STATE                                0x40F8 // Used Var
+#define VAR_FIRSTTEST                                   0x40F9 // Used Var
+#define TSUIHOUSE_STATE                                 0x40FA // Used Var
+#define VAR_MEETMAY                                     0x40FB // Used Var
+#define VAR_NOLEAVE                                     0x40FC // Used Var
+#define VAR_MEETPROF                                    0x40FD // Used Var
+#define OLDALE_BLOCK                                    0x40FE // Unused Var
+#define VAR_TEMP_PKMN3C                                0x40FF // Unused Var
 
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)

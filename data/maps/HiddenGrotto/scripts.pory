@@ -1,0 +1,54 @@
+mapscripts HiddenGrotto_MapScripts {}
+
+script HiddenGrotto_EventScript_Shaymin {
+    msgbox(format("You feel a disturbance in the air..."), MSGBOX_AUTOCLOSE)
+    delay(20)
+    waitmessage
+    lockall
+    setflag(FLAG_NOCATCHING)
+    setflag(FLAG_NORUNNING)
+    setflag(FLAG_SHAYMIN)
+    playmoncry(SPECIES_SHAYMIN, CRY_MODE_ENCOUNTER)
+    delay(40)
+    waitmoncry
+    setwildbattle(SPECIES_SHAYMIN, 20)
+    dowildbattle
+    specialvar(VAR_RESULT, GetBattleOutcome)
+	if(var(VAR_RESULT) == B_OUTCOME_WON){
+		call(Won_or_Caught)
+	}
+	elif(var(VAR_RESULT) == B_OUTCOME_PLAYER_TELEPORTED){
+		call(RanAway)
+	}
+	waitmessage
+	releaseall
+}
+
+script Won_or_Caught {
+	fadescreen(FADE_TO_BLACK)
+	removeobject(2)
+	fadescreen(FADE_FROM_BLACK)
+    clearflag(FLAG_NOCATCHING)
+    clearflag(FLAG_NORUNNING)
+	giveitem(ITEM_LEPPA_BERRY)
+	giveitem(ITEM_SITRUS_BERRY)
+	giveitem(ITEM_STARDUST)
+	giveitem(ITEM_SWIFT_FEATHER)
+	giveitem(ITEM_HEAL_BALL)
+	giveitem(ITEM_QUICK_BALL)
+	giveitem(ITEM_CALCIUM)
+	giveitem(ITEM_PP_UP)
+	return
+}
+
+script RanAway {
+	playmoncry(SPECIES_SHAYMIN, CRY_MODE_ENCOUNTER)
+	msgbox(format("Shayy...."), MSGBOX_AUTOCLOSE)
+	delay(20)
+	fadescreen(FADE_TO_BLACK)
+	removeobject(2)
+	fadescreen(FADE_FROM_BLACK)
+    clearflag(FLAG_NOCATCHING)
+    clearflag(FLAG_NORUNNING)
+	return
+}

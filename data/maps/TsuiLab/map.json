@@ -2,7 +2,7 @@
   "id": "MAP_TSUI_LAB",
   "name": "TsuiLab",
   "layout": "LAYOUT_TSUI_LAB",
-  "music": "MUS_LITTLEROOT",
+  "music": "MUS_BIRCH_LAB",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -132,7 +132,7 @@
       "flag": "FLAG_BALL_9_USED"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
+      "graphics_id": "OBJ_EVENT_GFX_MANIAC",
       "x": 6,
       "y": 7,
       "elevation": 0,

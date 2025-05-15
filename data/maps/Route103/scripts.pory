@@ -95,6 +95,8 @@ Route103_EventScript_AfterMayBattle::
 	msgbox Route103_Text_MayTimeToHeadBack, MSGBOX_DEFAULT
 	msgbox Route103_Text_MayTakeThis, MSGBOX_DEFAULT
 	giveitem ITEM_RARE_CANDY
+	setflag FLAG_BLOCKOLDALE
+	setvar VAR_OLDALE_TOWN_STATE, 1
 	goto Route103_EventScript_RivalExit
 	end
 

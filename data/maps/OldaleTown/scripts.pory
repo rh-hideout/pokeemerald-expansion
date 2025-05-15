@@ -10,13 +10,18 @@ OldaleTown_MapScripts::
 OldaleTown_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	setflag FLAG_VISITED_OLDALE_TOWN
-	call_if_unset FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_BlockWestEntrance
+	call_if_unset FLAG_BLOCKOLDALE, OldaleTown_EventScript_BlockWestEntrance
 	call_if_unset FLAG_RECEIVED_POTION_OLDALE, OldaleTown_EventScript_MoveMartEmployee
 	call_if_set FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_SetOldaleState
+	call_if_set FLAG_BLOCKOLDALE, OldaleTown_EventScript_SetOldaleState2
 	end
 
 @ This script seems pointless because nothing uses VAR_OLDALE_TOWN_STATE
 OldaleTown_EventScript_SetOldaleState::
+	setvar VAR_OLDALE_TOWN_STATE, 0
+	return
+	
+OldaleTown_EventScript_SetOldaleState2::
 	setvar VAR_OLDALE_TOWN_STATE, 1
 	return
 
@@ -401,3 +406,13 @@ OldaleTown_Text_TownSign:
 	.string "“Where things start off scarce.”$"
 
 `
+
+script OldaleTown_EventScript_Block {
+	applymovement(OBJ_EVENT_ID_PLAYER, BlockedPathMovement)
+	waitmovement(OBJ_EVENT_ID_PLAYER)
+	msgbox(format("I have to battle MAY..."), MSGBOX_SIGN)
+	}
+
+movement BlockedPathMovement {
+	walk_right
+}

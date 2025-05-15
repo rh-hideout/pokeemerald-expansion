@@ -297,6 +297,8 @@ Route104_EventScript_Girl1::
 
 Route104_EventScript_BugCatcher::
 	msgbox Route104_Text_WhatsItLikeAtBottomOfSea, MSGBOX_SIGN
+	msgbox IFoundThisNearTheShore, MSGBOX_DEFAULT
+	giveitem ITEM_WATER_STONE
 	end
 
 Route104_EventScript_BrineysCottageSign::
@@ -1172,3 +1174,11 @@ Route104_Text_BrendanPostBattle:
 	.string "Like MR. BRINEY, it's important to\n"
 	.string "become friends with your POKéMON.$"
 `
+
+text GiveOldRod {
+	format("Here, take this loser.")
+}
+
+text IFoundThisNearTheShore {
+	format("You want this item I found near the shore? I have no use for it.")
+}

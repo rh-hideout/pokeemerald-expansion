@@ -185,6 +185,13 @@
       "elevation": 0,
       "dest_map": "MAP_PETALBURG_CITY_MART",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 20,
+      "y": 32,
+      "elevation": 0,
+      "dest_map": "MAP_PETALBURG_CITY_HOUSE3",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
