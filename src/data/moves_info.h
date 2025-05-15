@@ -7199,7 +7199,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Role Play"),
         .description = COMPOUND_STRING(
             "Mimics the target and\n"
-            "copies its special ability."),
+            "copies its ability."),
         .effect = EFFECT_ROLE_PLAY,
         .power = 0,
         .type = TYPE_PSYCHIC,
