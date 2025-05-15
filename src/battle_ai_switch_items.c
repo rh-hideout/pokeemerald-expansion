@@ -462,7 +462,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
         return FALSE;
     if (AreStatsRaised(battler))
         return FALSE;
-    if (IsMoldBreakerTypeAbility(opposingBattler, GetBattlerAbility(opposingBattler)))
+    if (IsMoldBreakerTypeAbility(opposingBattler, gAiLogicData->abilities[opposingBattler]))
         return FALSE;
 
     // Don't switch if mon could OHKO
