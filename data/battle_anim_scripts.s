@@ -28672,6 +28672,8 @@ gBattleAnimGeneral_MegaEvolution::
 	loadspritegfx ANIM_TAG_MEGA_STONE
 	loadspritegfx ANIM_TAG_MEGA_PARTICLES
 	loadspritegfx ANIM_TAG_MEGA_SYMBOL
+	loadspritegfx ANIM_TAG_ELECTRICITY
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ELECTRICITY, 0, 12, 12, RGB(228, 0, 120)
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
@@ -28685,12 +28687,13 @@ gBattleAnimGeneral_MegaEvolution::
 	delay 20
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
 	waitforvisualfinish
+	createvisualtask SoundTask_PlayNormalCry, 0
 	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
-	waitforvisualfinish
-	createvisualtask SoundTask_PlayNormalCry, 0
-	createsprite gMegaSymbolSpriteTemplate ANIM_ATTACKER, 2
+	createsprite gMegaSymbolSpriteTemplate ANIM_ATTACKER, 3, 0, 0, ANIM_ATTACKER
+	delay 2
+	call MegaEvolutionSpinEffect
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
@@ -28711,6 +28714,21 @@ MegaEvolutionParticles:
 	delay 3
 	createsprite gMegaParticlesSpriteTemplate, ANIM_ATTACKER, 2, 5, -40, 13
 	delay 3
+	return
+
+MegaEvolutionSpinEffect:
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 12, 528, 30, 13, 50, 0
+	delay 2
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 0, 480, 20, 16, -46, 0
+	delay 2
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 1, 576, 20, 8, 42, 0
+	delay 2
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 15, 400, 25, 11, -42, 0
+	delay 2
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 12, 512, 25, 16, 46, 0
+	delay 2
+	createsprite gMegaSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 1, 464, 30, 15, -50, 0
+	delay 2
 	return
 
 gBattleAnimGeneral_TeraCharge::
@@ -28859,18 +28877,14 @@ gBattleAnimGeneral_PrimalReversion::
 	createvisualtask AnimTask_PrimalReversion, 0x5
 	jumpargeq 0x0, ITEM_RED_ORB, General_PrimalReversion_Omega
 	jumpargeq 0x0, ITEM_BLUE_ORB, General_PrimalReversion_Alpha
+	goto gBattleAnimGeneral_MegaEvolution
 General_PrimalReversion_Alpha:
 	loadspritegfx ANIM_TAG_ALPHA_STONE
 	loadspritegfx ANIM_TAG_MEGA_PARTICLES
 	loadspritegfx ANIM_TAG_ALPHA_SYMBOL
+	loadspritegfx ANIM_TAG_HYDRO_PUMP
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
-	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
-	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 6, 0, 11, RGB(31, 31, 11)
-	call MegaEvolutionParticles
-	call MegaEvolutionParticles
-	call MegaEvolutionParticles
-	waitforvisualfinish
 	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
 	createsprite gAlphaStoneSpriteTemplate, ANIM_ATTACKER, 41, 0, 0, 0, 0
 	delay 20
@@ -28879,25 +28893,31 @@ General_PrimalReversion_Alpha:
 	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
-	waitforvisualfinish
 	createvisualtask SoundTask_PlayNormalCry, 0
-	createsprite gAlphaSymbolSpriteTemplate ANIM_ATTACKER, 2
+	createsprite gAlphaSymbolSpriteTemplate ANIM_ATTACKER, 3, 0, 0, ANIM_ATTACKER
+	call WaterGeyser
+	call WaterGeyser
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	end
+WaterGeyser:
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
+	delay 1
+	return
 General_PrimalReversion_Omega:
 	loadspritegfx ANIM_TAG_OMEGA_STONE
 	loadspritegfx ANIM_TAG_MEGA_PARTICLES
 	loadspritegfx ANIM_TAG_OMEGA_SYMBOL
+	loadspritegfx ANIM_TAG_SMALL_EMBER
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
-	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
-	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 6, 0, 11, RGB(31, 31, 11)
-	call MegaEvolutionParticles
-	call MegaEvolutionParticles
-	call MegaEvolutionParticles
-	waitforvisualfinish
 	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
 	createsprite gOmegaStoneSpriteTemplate, ANIM_ATTACKER, 41, 0, 0, 0, 0
 	delay 20
@@ -28906,13 +28926,82 @@ General_PrimalReversion_Omega:
 	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
-	waitforvisualfinish
 	createvisualtask SoundTask_PlayNormalCry, 0
-	createsprite gOmegaSymbolSpriteTemplate ANIM_ATTACKER, 2
+	createsprite gOmegaSymbolSpriteTemplate ANIM_ATTACKER, 3, 0, 0, ANIM_ATTACKER
+	call FireGeyser
+	call FireGeyser
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	end
+FireGeyser:
+	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
+	delay 1
+	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
+	delay 1
+	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
+	delay 1
+	createsprite gOmegaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
+	delay 1
+	return
+
+gBattleAnimGeneral_PowerConstruct::
+	loadspritegfx ANIM_TAG_SNORE_Z
+	loadspritegfx ANIM_TAG_ZYGARDE_HEXES @hexagon
+	loadspritegfx ANIM_TAG_VERTICAL_HEX @arrow
+	loadspritegfx ANIM_TAG_FLYING_DIRT
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SNORE_Z, 0, 10, 10, RGB(8, 20, 26)   @Green
+	monbg ANIM_ATTACKER
+	setalpha 12, 8
+	loopsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER, 13, 3
+	call PowerConstructParticles
+	call PowerConstructParticles
+	call PowerConstructParticles
+	waitforvisualfinish
+	playsewithpan SE_ORB, SOUND_PAN_ATTACKER
+	createsprite gPowerConstructEmergeSpriteTemplate, ANIM_ATTACKER, 0, 0, 0, 0, 0
+	delay 20
+	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
+	waitforvisualfinish
+	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
+	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
+	createvisualtask SoundTask_PlayNormalCry, 0
+	createsprite gZSymbolSpriteTemplate ANIM_ATTACKER, 3, 0, 0, ANIM_ATTACKER
+	call ZGeyser
+	call ZGeyser
+	call ZGeyser
+	call ZGeyser
+	waitforvisualfinish
+	clearmonbg ANIM_ATK_PARTNER
+	blendoff
+	end
+PowerConstructParticles:
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, 40, -10, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, -35, -10, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, 15, -40, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, -10, -32, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, 25, -20, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, -40, -20, 13
+	delay 3
+	createsprite gPowerConstructSpriteTemplate, ANIM_ATTACKER, 2, 5, -40, 13
+	delay 3
+	return
+ZGeyser:
+	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
+	delay 1
+	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
+	delay 1
+	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
+	delay 1
+	createsprite gThousandArrowsGreenHexTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
+	delay 1
+	return
 
 gBattleAnimGeneral_UltraBurst::
 	loadspritegfx ANIM_TAG_ULTRA_BURST_SYMBOL
@@ -28920,8 +29009,10 @@ gBattleAnimGeneral_UltraBurst::
 	loadspritegfx ANIM_TAG_LEAF @green
 	loadspritegfx ANIM_TAG_ELECTRIC_ORBS @charge particles
 	loadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT @psycho boost
+	loadspritegfx ANIM_TAG_HYDRO_PUMP
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB(250, 240, 230)
 	createvisualtask AnimTask_BlendBattleAnimPal, 0xa, (F_PAL_BG | F_PAL_ADJACENT), 0x2, 0x0, 0xF, 0x0000
 	waitforvisualfinish
 	createvisualtask AnimTask_ElectricChargingParticles, 2, ANIM_ATTACKER, 60, 2, 12 	@ charge particles to attacker
@@ -28938,18 +29029,32 @@ gBattleAnimGeneral_UltraBurst::
 	call LightThatBurnsTheSkyGreenSparks
 	call LightThatBurnsTheSkyGreenSparks
 	delay 20
+	playsewithpan SE_ORB, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
-	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createsprite gUltraBurstSymbolSpriteTemplate, ANIM_ATTACKER, 0x0, 0x0, 0x0, 0x0, 0x0
 	waitforvisualfinish
+	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
-	waitforvisualfinish
 	createvisualtask SoundTask_PlayNormalCry, 0
+	call LightGeyser
+	call LightGeyser
+	call LightGeyser
+	call LightGeyser
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	end
+LightGeyser:
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -4, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 16, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, 4, 24
+	delay 1
+	createsprite gAlphaGeyserSpriteTemplate ANIM_ATTACKER, 3, ANIM_ATTACKER, -16, 24
+	delay 1
+	return
 
 gBattleAnimGeneral_AffectionHangedOn::
 	loadspritegfx ANIM_TAG_RED_HEART
