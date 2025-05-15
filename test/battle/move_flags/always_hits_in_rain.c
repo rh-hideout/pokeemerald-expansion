@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Thunder bypasses accuracy checks in Rain")
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(MoveAlwaysHitsUnderRain(MOVE_THUNDER) == TRUE);
+        ASSUME(MoveAlwaysHitsInRain(MOVE_THUNDER) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

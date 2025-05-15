@@ -911,7 +911,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             break;
         }
 
-        if (MoveAlwaysHitsUnderRain(move))
+        if (MoveAlwaysHitsInRain(move))
             points += 3;
 
         movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;

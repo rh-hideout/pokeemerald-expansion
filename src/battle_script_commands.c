@@ -1553,7 +1553,7 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
 
     if (!effect && HasWeatherEffect())
     {
-        if (MoveAlwaysHitsUnderRain(move) && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN))
+        if (MoveAlwaysHitsInRain(move) && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN))
             effect = TRUE;
         else if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && moveEffect == EFFECT_BLIZZARD)
             effect = TRUE;
