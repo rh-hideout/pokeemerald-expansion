@@ -2453,15 +2453,30 @@ void BtlController_HandleLoadMonSprite(u32 battler, void (*controllerCallback)(u
     gBattlerControllerFuncs[battler] = controllerCallback;
 }
 
-void BtlController_HandleSwitchInAnim(u32 battler, bool32 isPlayerSide, void (*controllerCallback)(u32 battler))
+void BtlController_HandleSwitchInAnim(u32 battler)
 {
+    bool32 isPlayerSide = (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
+                        || gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted
+                        || gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted
+                        || gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
+
+    if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+    {
+        gActionSelectionCursor[battler] = 0;
+        gMoveSelectionCursor[battler] = 0;
+    }
+    else if (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted)
+    {
+        gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
+    }
+
     if (isPlayerSide)
         ClearTemporarySpeciesSpriteData(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3]);
     gBattlerPartyIndexes[battler] = gBattleResources->bufferA[battler][1];
     if (isPlayerSide)
         BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
     StartSendOutAnim(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3], FALSE);
-    gBattlerControllerFuncs[battler] = controllerCallback;
+    gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInTryShinyAnim;
 }
 
 void BtlController_HandleReturnMonToBall(u32 battler)
@@ -3257,8 +3272,42 @@ bool32 SwitchIn_TryShinyAnimUtil(u32 battler)
     return TRUE;
 }
 
+static void SwitchIn_CleanShinyAnimShowSubstitute(u32 battler)
+{
+    if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
+     && gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim
+     && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
+    {
+        CopyBattleSpriteInvisibility(battler);
+
+        // Reset shiny anim (even if it didn't occur)
+        gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
+        FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
+        FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+
+        // Check if Substitute should be shown
+        if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
+            InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
+
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
+    }
+}
+
 void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
 {
     if (SwitchIn_TryShinyAnimUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
+    {
+        if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+        {
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
+            StartHealthboxSlideIn(battler);
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
+            gBattlerControllerFuncs[battler] = SwitchIn_CleanShinyAnimShowSubstitute;
+        }
+        else
+        {
+            gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
+        }
+    }
 }

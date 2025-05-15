@@ -33,7 +33,6 @@
 #include "constants/trainers.h"
 
 static void PlayerPartnerHandleLoadMonSprite(u32 battler);
-static void PlayerPartnerHandleSwitchInAnim(u32 battler);
 static void PlayerPartnerHandleDrawTrainerPic(u32 battler);
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler);
 static void PlayerPartnerHandleChooseAction(u32 battler);
@@ -52,7 +51,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
     [CONTROLLER_LOADMONSPRITE]            = PlayerPartnerHandleLoadMonSprite,
-    [CONTROLLER_SWITCHINANIM]             = PlayerPartnerHandleSwitchInAnim,
+    [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = PlayerPartnerHandleDrawTrainerPic,
     [CONTROLLER_TRAINERSLIDE]             = BtlController_Empty,
@@ -204,11 +203,6 @@ void PlayerPartnerBufferExecCompleted(u32 battler)
 static void PlayerPartnerHandleLoadMonSprite(u32 battler)
 {
     BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
-}
-
-static void PlayerPartnerHandleSwitchInAnim(u32 battler)
-{
-    BtlController_HandleSwitchInAnim(battler, TRUE, BtlController_HandleSwitchInTryShinyAnim);
 }
 
 // some explanation here

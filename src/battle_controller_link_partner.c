@@ -31,7 +31,6 @@
 #include "random.h"
 
 static void LinkPartnerHandleLoadMonSprite(u32 battler);
-static void LinkPartnerHandleSwitchInAnim(u32 battler);
 static void LinkPartnerHandleDrawTrainerPic(u32 battler);
 static void LinkPartnerHandleTrainerSlideBack(u32 battler);
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler);
@@ -48,7 +47,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
     [CONTROLLER_SETMONDATA]               = BtlController_HandleSetMonData,
     [CONTROLLER_SETRAWMONDATA]            = BtlController_HandleSetRawMonData,
     [CONTROLLER_LOADMONSPRITE]            = LinkPartnerHandleLoadMonSprite,
-    [CONTROLLER_SWITCHINANIM]             = LinkPartnerHandleSwitchInAnim,
+    [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = LinkPartnerHandleDrawTrainerPic,
     [CONTROLLER_TRAINERSLIDE]             = BtlController_Empty,
@@ -141,11 +140,6 @@ void LinkPartnerBufferExecCompleted(u32 battler)
 static void LinkPartnerHandleLoadMonSprite(u32 battler)
 {
     BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
-}
-
-static void LinkPartnerHandleSwitchInAnim(u32 battler)
-{
-    BtlController_HandleSwitchInAnim(battler, TRUE, BtlController_HandleSwitchInTryShinyAnim);
 }
 
 static void LinkPartnerHandleDrawTrainerPic(u32 battler)
