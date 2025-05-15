@@ -36,7 +36,6 @@ static void RecordedOpponentHandleLoadMonSprite(u32 battler);
 static void RecordedOpponentHandleSwitchInAnim(u32 battler);
 static void RecordedOpponentHandleDrawTrainerPic(u32 battler);
 static void RecordedOpponentHandleTrainerSlideBack(u32 battler);
-static void RecordedOpponentHandlePrintString(u32 battler);
 static void RecordedOpponentHandleChooseAction(u32 battler);
 static void RecordedOpponentHandleChooseMove(u32 battler);
 static void RecordedOpponentHandleChooseItem(u32 battler);
@@ -68,7 +67,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
-    [CONTROLLER_PRINTSTRING]              = RecordedOpponentHandlePrintString,
+    [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = BtlController_Empty,
     [CONTROLLER_CHOOSEACTION]             = RecordedOpponentHandleChooseAction,
     [CONTROLLER_YESNOBOX]                 = BtlController_Empty,
@@ -356,11 +355,6 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
 static void RecordedOpponentHandleTrainerSlideBack(u32 battler)
 {
     BtlController_HandleTrainerSlideBack(battler, 35, FALSE);
-}
-
-static void RecordedOpponentHandlePrintString(u32 battler)
-{
-    BtlController_HandlePrintString(battler, FALSE, FALSE);
 }
 
 static void RecordedOpponentHandleChooseAction(u32 battler)

@@ -29,7 +29,6 @@
 static void SafariHandleDrawTrainerPic(u32 battler);
 static void SafariHandleSuccessBallThrowAnim(u32 battler);
 static void SafariHandleBallThrowAnim(u32 battler);
-static void SafariHandlePrintString(u32 battler);
 static void SafariHandlePrintSelectionString(u32 battler);
 static void SafariHandleChooseAction(u32 battler);
 static void SafariHandleChooseItem(u32 battler);
@@ -59,7 +58,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_BALLTHROWANIM]            = SafariHandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_Empty,
-    [CONTROLLER_PRINTSTRING]              = SafariHandlePrintString,
+    [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = SafariHandlePrintSelectionString,
     [CONTROLLER_CHOOSEACTION]             = SafariHandleChooseAction,
     [CONTROLLER_YESNOBOX]                 = BtlController_Empty,
@@ -258,15 +257,10 @@ static void SafariHandleBallThrowAnim(u32 battler)
     BtlController_HandleBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
 }
 
-static void SafariHandlePrintString(u32 battler)
-{
-    BtlController_HandlePrintString(battler, FALSE, FALSE);
-}
-
 static void SafariHandlePrintSelectionString(u32 battler)
 {
     if (IsOnPlayerSide(battler))
-        SafariHandlePrintString(battler);
+        BtlController_HandlePrintString(battler);
     else
         BtlController_Complete(battler);
 }

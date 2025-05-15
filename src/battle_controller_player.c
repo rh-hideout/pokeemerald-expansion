@@ -56,7 +56,6 @@ static void PlayerHandleTrainerSlideBack(u32 battler);
 static void PlayerHandlePaletteFade(u32 battler);
 static void PlayerHandleSuccessBallThrowAnim(u32 battler);
 static void PlayerHandlePause(u32 battler);
-static void PlayerHandlePrintString(u32 battler);
 static void PlayerHandlePrintSelectionString(u32 battler);
 static void PlayerHandleChooseAction(u32 battler);
 static void PlayerHandleYesNoBox(u32 battler);
@@ -118,7 +117,7 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_BALLTHROWANIM]            = PlayerHandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = PlayerHandlePause,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
-    [CONTROLLER_PRINTSTRING]              = PlayerHandlePrintString,
+    [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = PlayerHandlePrintSelectionString,
     [CONTROLLER_CHOOSEACTION]             = PlayerHandleChooseAction,
     [CONTROLLER_YESNOBOX]                 = PlayerHandleYesNoBox,
@@ -1995,15 +1994,10 @@ static void PlayerHandlePause(u32 battler)
     BtlController_Complete(battler);
 }
 
-static void PlayerHandlePrintString(u32 battler)
-{
-    BtlController_HandlePrintString(battler, TRUE, TRUE);
-}
-
 static void PlayerHandlePrintSelectionString(u32 battler)
 {
     if (IsOnPlayerSide(battler))
-        PlayerHandlePrintString(battler);
+        BtlController_HandlePrintString(battler);
     else
         BtlController_Complete(battler);
 }

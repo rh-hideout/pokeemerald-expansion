@@ -36,7 +36,6 @@ static void PlayerPartnerHandleLoadMonSprite(u32 battler);
 static void PlayerPartnerHandleSwitchInAnim(u32 battler);
 static void PlayerPartnerHandleDrawTrainerPic(u32 battler);
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler);
-static void PlayerPartnerHandlePrintString(u32 battler);
 static void PlayerPartnerHandleChooseAction(u32 battler);
 static void PlayerPartnerHandleChooseMove(u32 battler);
 static void PlayerPartnerHandleChoosePokemon(u32 battler);
@@ -64,7 +63,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
-    [CONTROLLER_PRINTSTRING]              = PlayerPartnerHandlePrintString,
+    [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = BtlController_Empty,
     [CONTROLLER_CHOOSEACTION]             = PlayerPartnerHandleChooseAction,
     [CONTROLLER_YESNOBOX]                 = BtlController_Empty,
@@ -272,11 +271,6 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler)
 {
     BtlController_HandleTrainerSlideBack(battler, 35, FALSE);
-}
-
-static void PlayerPartnerHandlePrintString(u32 battler)
-{
-    BtlController_HandlePrintString(battler, FALSE, FALSE);
 }
 
 static void PlayerPartnerHandleChooseAction(u32 battler)
