@@ -269,12 +269,6 @@ static void TryShinyAnimAfterMonAnim(u32 battler)
         BtlController_Complete(battler);
 }
 
-static void SwitchIn_TryShinyAnim(u32 battler)
-{
-    if (SwitchIn_TryShinyAnimUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
-}
-
 void LinkOpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
@@ -298,7 +292,7 @@ static void LinkOpponentHandleLoadMonSprite(u32 battler)
 
 static void LinkOpponentHandleSwitchInAnim(u32 battler)
 {
-    BtlController_HandleSwitchInAnim(battler, FALSE, SwitchIn_TryShinyAnim);
+    BtlController_HandleSwitchInAnim(battler, FALSE, BtlController_HandleSwitchInTryShinyAnim);
 }
 
 static void LinkOpponentHandleDrawTrainerPic(u32 battler)

@@ -301,12 +301,6 @@ static void TryShinyAnimAfterMonAnim(u32 battler)
         BtlController_Complete(battler);
 }
 
-static void SwitchIn_TryShinyAnim(u32 battler)
-{
-    if (SwitchIn_TryShinyAnimUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
-}
-
 void OpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
@@ -331,7 +325,7 @@ static void OpponentHandleLoadMonSprite(u32 battler)
 static void OpponentHandleSwitchInAnim(u32 battler)
 {
     gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
-    BtlController_HandleSwitchInAnim(battler, FALSE, SwitchIn_TryShinyAnim);
+    BtlController_HandleSwitchInAnim(battler, FALSE, BtlController_HandleSwitchInTryShinyAnim);
 }
 
 static u32 OpponentGetTrainerPicId(u32 battlerId)

@@ -3256,3 +3256,9 @@ bool32 SwitchIn_TryShinyAnimUtil(u32 battler)
 
     return TRUE;
 }
+
+void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
+{
+    if (SwitchIn_TryShinyAnimUtil(battler))
+        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
+}

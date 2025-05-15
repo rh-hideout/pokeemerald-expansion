@@ -185,12 +185,6 @@ static void WaitForMonAnimAfterLoad(u32 battler)
         BtlController_Complete(battler);
 }
 
-static void SwitchIn_TryShinyAnim(u32 battler)
-{
-    if (SwitchIn_TryShinyAnimUtil(battler))
-        gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
-}
-
 void PlayerPartnerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
@@ -214,7 +208,7 @@ static void PlayerPartnerHandleLoadMonSprite(u32 battler)
 
 static void PlayerPartnerHandleSwitchInAnim(u32 battler)
 {
-    BtlController_HandleSwitchInAnim(battler, TRUE, SwitchIn_TryShinyAnim);
+    BtlController_HandleSwitchInAnim(battler, TRUE, BtlController_HandleSwitchInTryShinyAnim);
 }
 
 // some explanation here
