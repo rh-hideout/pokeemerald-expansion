@@ -1632,7 +1632,7 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
 
     // discouraged from hitting
     weather = AI_GetWeather();
-    if ((weather & B_WEATHER_SUN) && effect == EFFECT_THUNDER)
+    if ((weather & B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
         return FALSE;
 
     if ((weather & B_WEATHER_RAIN) && MoveAlwaysHitsInRain(move))
@@ -2653,6 +2653,18 @@ bool32 HasMoveThatAlwaysHitsInRain(u32 battler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && MoveAlwaysHitsInRain(moves[i]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 HasMoveThatHas50AccuracyInSun(u32 battler)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && MoveHas50AccuracyInSun(moves[i]))
             return TRUE;
     }
     return FALSE;

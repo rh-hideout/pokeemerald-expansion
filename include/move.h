@@ -114,6 +114,7 @@ struct MoveInfo
     bool32 forcePressure:1;
     bool32 cantUseTwice:1;
     bool32 alwaysHitsInRain:1;
+    bool32 accuracy50InSun:1;
     // Ban flags
     bool32 gravityBanned:1;
     bool32 mirrorMoveBanned:1;
@@ -130,7 +131,7 @@ struct MoveInfo
     bool32 sketchBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:9;
+    u32 padding:8;
     // end of word
 
     union {
@@ -393,6 +394,11 @@ static inline bool32 MoveCantBeUsedTwice(u32 moveId)
 static inline bool32 MoveAlwaysHitsInRain(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].alwaysHitsInRain;
+}
+
+static inline bool32 MoveHas50AccuracyInSun(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].accuracy50InSun;
 }
 
 static inline bool32 IsMoveGravityBanned(u32 moveId)

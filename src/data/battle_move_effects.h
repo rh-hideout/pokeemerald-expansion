@@ -792,12 +792,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .twoTurnEffect = TRUE,
     },
 
-    [EFFECT_THUNDER] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 1,
-    },
-
     [EFFECT_TELEPORT] =
     {
         .battleScript = BattleScript_EffectTeleport,

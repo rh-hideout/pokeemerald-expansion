@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_THUNDER) == EFFECT_THUNDER);
     ASSUME(GetMoveAccuracy(MOVE_THUNDER) == 70);
+    ASSUME(MoveHas50AccuracyInSun(MOVE_HURRICANE) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Thunder's accuracy is lowered to 50% in Sunlight")
