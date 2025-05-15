@@ -42,7 +42,6 @@ static void WallyHandlePrintSelectionString(u32 battler);
 static void WallyHandleChooseAction(u32 battler);
 static void WallyHandleChooseMove(u32 battler);
 static void WallyHandleChooseItem(u32 battler);
-static void WallyHandlePlaySE(u32 battler);
 static void WallyHandleFaintingCry(u32 battler);
 static void WallyHandleIntroTrainerBallThrow(u32 battler);
 static void WallyHandleDrawPartyStatusSummary(u32 battler);
@@ -93,7 +92,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_ONERETURNVALUE_DUPLICATE] = BtlController_Empty,
     [CONTROLLER_HITANIMATION]             = BtlController_HandleHitAnimation,
     [CONTROLLER_CANTSWITCH]               = BtlController_Empty,
-    [CONTROLLER_PLAYSE]                   = WallyHandlePlaySE,
+    [CONTROLLER_PLAYSE]                   = BtlController_HandlePlaySE,
     [CONTROLLER_PLAYFANFAREORBGM]         = BtlController_HandlePlayFanfareOrBGM,
     [CONTROLLER_FAINTINGCRY]              = WallyHandleFaintingCry,
     [CONTROLLER_INTROSLIDE]               = BtlController_HandleIntroSlide,
@@ -387,13 +386,6 @@ static void WallyHandleChooseItem(u32 battler)
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = OpenBagAfterPaletteFade;
     gBattlerInMenuId = battler;
-}
-
-// For some reason Wally's SE don't take side into account and pan is always the same. Possibly a bug
-static void WallyHandlePlaySE(u32 battler)
-{
-    PlaySE(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8));
-    BtlController_Complete(battler);
 }
 
 // All of the other controllers use CRY_MODE_FAINT.
