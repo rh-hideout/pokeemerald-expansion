@@ -39,12 +39,11 @@ static void LinkPartnerHandlePrintString(u32 battler);
 static void LinkPartnerHandleHealthBarUpdate(u32 battler);
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void LinkPartnerHandleDrawPartyStatusSummary(u32 battler);
-static void LinkPartnerHandleBattleAnimation(u32 battler);
 static void LinkPartnerHandleLinkStandbyMsg(u32 battler);
 static void LinkPartnerHandleEndLinkBattle(u32 battler);
 
 static void LinkPartnerBufferRunCommand(u32 battler);
-static void LinkPartnerBufferExecCompleted(u32 battler);
+void LinkPartnerBufferExecCompleted(u32 battler);
 
 static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -96,7 +95,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_HandleHidePartyStatusSummary,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_HandleSpriteInvisibility,
-    [CONTROLLER_BATTLEANIMATION]          = LinkPartnerHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = LinkPartnerHandleLinkStandbyMsg,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = LinkPartnerHandleEndLinkBattle,
@@ -145,7 +144,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
 }
 
-static void LinkPartnerBufferExecCompleted(u32 battler)
+void LinkPartnerBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = LinkPartnerBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
@@ -225,11 +224,6 @@ static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler)
 static void LinkPartnerHandleDrawPartyStatusSummary(u32 battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_PLAYER, TRUE);
-}
-
-static void LinkPartnerHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, FALSE, TRUE);
 }
 
 static void LinkPartnerHandleLinkStandbyMsg(u32 battler)

@@ -47,7 +47,6 @@ static void RecordedOpponentHandleStatusIconUpdate(u32 battler);
 static void RecordedOpponentHandleStatusAnimation(u32 battler);
 static void RecordedOpponentHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedOpponentHandleDrawPartyStatusSummary(u32 battler);
-static void RecordedOpponentHandleBattleAnimation(u32 battler);
 static void RecordedOpponentHandleEndLinkBattle(u32 battler);
 
 static void RecordedOpponentBufferRunCommand(u32 battler);
@@ -104,7 +103,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_HandleHidePartyStatusSummary,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_HandleSpriteInvisibility,
-    [CONTROLLER_BATTLEANIMATION]          = RecordedOpponentHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = BtlController_Empty,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = RecordedOpponentHandleEndLinkBattle,
@@ -441,11 +440,6 @@ static void RecordedOpponentHandleIntroTrainerBallThrow(u32 battler)
 static void RecordedOpponentHandleDrawPartyStatusSummary(u32 battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_OPPONENT, TRUE);
-}
-
-static void RecordedOpponentHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, FALSE, FALSE);
 }
 
 static void RecordedOpponentHandleEndLinkBattle(u32 battler)

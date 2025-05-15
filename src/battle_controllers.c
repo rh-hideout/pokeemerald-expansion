@@ -3018,9 +3018,14 @@ void BtlController_HandleHidePartyStatusSummary(u32 battler)
     BtlController_Complete(battler);
 }
 
-void BtlController_HandleBattleAnimation(u32 battler, bool32 ignoreSE, bool32 updateTvData)
+extern void PlayerBufferExecCompleted(u32 battler);
+extern void LinkOpponentBufferExecCompleted(u32 battler);
+extern void LinkPartnerBufferExecCompleted(u32 battler);
+
+void BtlController_HandleBattleAnimation(u32 battler)
 {
-    if (ignoreSE || !IsBattleSEPlaying(battler))
+    if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL))
+        || !IsBattleSEPlaying(battler))
     {
         u8 animationId = gBattleResources->bufferA[battler][1];
         u16 argument = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
@@ -3032,7 +3037,10 @@ void BtlController_HandleBattleAnimation(u32 battler, bool32 ignoreSE, bool32 up
         else
             gBattlerControllerFuncs[battler] = Controller_WaitForBattleAnimation;
 
-        if (updateTvData)
+        // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
+        if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
+         || gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted
+         || gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted)
             BattleTv_SetDataBasedOnAnimation(animationId);
     }
 }

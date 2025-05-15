@@ -44,7 +44,6 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler);
 static void PlayerPartnerHandleHealthBarUpdate(u32 battler);
 static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void PlayerPartnerHandleDrawPartyStatusSummary(u32 battler);
-static void PlayerPartnerHandleBattleAnimation(u32 battler);
 static void PlayerPartnerHandleEndLinkBattle(u32 battler);
 
 static void PlayerPartnerBufferRunCommand(u32 battler);
@@ -100,7 +99,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_HandleHidePartyStatusSummary,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_HandleSpriteInvisibility,
-    [CONTROLLER_BATTLEANIMATION]          = PlayerPartnerHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = BtlController_Empty,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = PlayerPartnerHandleEndLinkBattle,
@@ -390,11 +389,6 @@ static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler)
 static void PlayerPartnerHandleDrawPartyStatusSummary(u32 battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_PLAYER, TRUE);
-}
-
-static void PlayerPartnerHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, FALSE, FALSE);
 }
 
 static void PlayerPartnerHandleEndLinkBattle(u32 battler)

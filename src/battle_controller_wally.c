@@ -47,7 +47,6 @@ static void WallyHandlePlaySE(u32 battler);
 static void WallyHandleFaintingCry(u32 battler);
 static void WallyHandleIntroTrainerBallThrow(u32 battler);
 static void WallyHandleDrawPartyStatusSummary(u32 battler);
-static void WallyHandleBattleAnimation(u32 battler);
 static void WallyHandleEndLinkBattle(u32 battler);
 
 static void WallyBufferRunCommand(u32 battler);
@@ -105,7 +104,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_Empty,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_Empty,
-    [CONTROLLER_BATTLEANIMATION]          = WallyHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = BtlController_Empty,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = WallyHandleEndLinkBattle,
@@ -423,11 +422,6 @@ static void WallyHandleIntroTrainerBallThrow(u32 battler)
 static void WallyHandleDrawPartyStatusSummary(u32 battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_PLAYER, FALSE);
-}
-
-static void WallyHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, TRUE, FALSE);
 }
 
 static void WallyHandleEndLinkBattle(u32 battler)

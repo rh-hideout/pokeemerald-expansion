@@ -40,12 +40,11 @@ static void LinkOpponentHandlePrintString(u32 battler);
 static void LinkOpponentHandleHealthBarUpdate(u32 battler);
 static void LinkOpponentHandleIntroTrainerBallThrow(u32 battler);
 static void LinkOpponentHandleDrawPartyStatusSummary(u32 battler);
-static void LinkOpponentHandleBattleAnimation(u32 battler);
 static void LinkOpponentHandleLinkStandbyMsg(u32 battler);
 static void LinkOpponentHandleEndLinkBattle(u32 battler);
 
 static void LinkOpponentBufferRunCommand(u32 battler);
-static void LinkOpponentBufferExecCompleted(u32 battler);
+void LinkOpponentBufferExecCompleted(u32 battler);
 static void SwitchIn_HandleSoundAndEnd(u32 battler);
 
 static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -98,7 +97,7 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_HandleHidePartyStatusSummary,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_HandleSpriteInvisibility,
-    [CONTROLLER_BATTLEANIMATION]          = LinkOpponentHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = LinkOpponentHandleLinkStandbyMsg,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = LinkOpponentHandleEndLinkBattle,
@@ -299,7 +298,7 @@ static void SwitchIn_TryShinyAnim(u32 battler)
         gBattlerControllerFuncs[battler] = SwitchIn_ShowHealthbox;
 }
 
-static void LinkOpponentBufferExecCompleted(u32 battler)
+void LinkOpponentBufferExecCompleted(u32 battler)
 {
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
@@ -441,11 +440,6 @@ static void LinkOpponentHandleIntroTrainerBallThrow(u32 battler)
 static void LinkOpponentHandleDrawPartyStatusSummary(u32 battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_OPPONENT, TRUE);
-}
-
-static void LinkOpponentHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, FALSE, TRUE);
 }
 
 static void LinkOpponentHandleLinkStandbyMsg(u32 battler)

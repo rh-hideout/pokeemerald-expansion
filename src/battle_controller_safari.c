@@ -36,7 +36,6 @@ static void SafariHandleChooseItem(u32 battler);
 static void SafariHandleStatusIconUpdate(u32 battler);
 static void SafariHandleFaintingCry(u32 battler);
 static void SafariHandleIntroTrainerBallThrow(u32 battler);
-static void SafariHandleBattleAnimation(u32 battler);
 static void SafariHandleEndLinkBattle(u32 battler);
 
 static void SafariBufferRunCommand(u32 battler);
@@ -93,7 +92,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = BtlController_Empty,
     [CONTROLLER_ENDBOUNCE]                = BtlController_Empty,
     [CONTROLLER_SPRITEINVISIBILITY]       = BtlController_Empty,
-    [CONTROLLER_BATTLEANIMATION]          = SafariHandleBattleAnimation,
+    [CONTROLLER_BATTLEANIMATION]          = BtlController_HandleBattleAnimation,
     [CONTROLLER_LINKSTANDBYMSG]           = BtlController_Empty,
     [CONTROLLER_RESETACTIONMOVESELECTION] = BtlController_Empty,
     [CONTROLLER_ENDLINKBATTLE]            = SafariHandleEndLinkBattle,
@@ -328,11 +327,6 @@ static void SafariHandleIntroTrainerBallThrow(u32 battler)
     StartHealthboxSlideIn(battler);
     SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
     gBattlerControllerFuncs[battler] = Controller_WaitForHealthbox;
-}
-
-static void SafariHandleBattleAnimation(u32 battler)
-{
-    BtlController_HandleBattleAnimation(battler, TRUE, FALSE);
 }
 
 static void SafariHandleEndLinkBattle(u32 battler)
