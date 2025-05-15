@@ -4776,7 +4776,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #if B_PP_REDUCED_BY_SPITE >= GEN_4
             "of the foe's last move by 4."),
         #else
-            "of the foe's last move by 2-5."),
+            "of foe's last move by 2-5."),
         #endif
         .effect = EFFECT_SPITE,
         .power = 0,
