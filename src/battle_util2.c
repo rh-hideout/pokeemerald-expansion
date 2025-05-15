@@ -19,6 +19,10 @@ void AllocateBattleResources(void)
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
     gAiBattleData = AllocZeroed(sizeof(*gAiBattleData));
+    gAiThinkingStruct = AllocZeroed(sizeof(*gAiThinkingStruct));
+    gAiLogicData = AllocZeroed(sizeof(*gAiLogicData));
+    gAiPartyData = AllocZeroed(sizeof(*gAiPartyData));
+    gBattleHistory = AllocZeroed(sizeof(*gBattleHistory));
 
 #if B_FLAG_SKY_BATTLE
     gBattleStruct->isSkyBattle = FlagGet(B_FLAG_SKY_BATTLE);
@@ -29,10 +33,6 @@ void AllocateBattleResources(void)
     gBattleResources->battleScriptsStack = AllocZeroed(sizeof(*gBattleResources->battleScriptsStack));
     gBattleResources->battleCallbackStack = AllocZeroed(sizeof(*gBattleResources->battleCallbackStack));
     gBattleResources->beforeLvlUp = AllocZeroed(sizeof(*gBattleResources->beforeLvlUp));
-    gBattleResources->ai = AllocZeroed(sizeof(*gBattleResources->ai));
-    gBattleResources->aiData = AllocZeroed(sizeof(*gBattleResources->aiData));
-    gBattleResources->aiParty = AllocZeroed(sizeof(*gBattleResources->aiParty));
-    gBattleResources->battleHistory = AllocZeroed(sizeof(*gBattleResources->battleHistory));
 
     gLinkBattleSendBuffer = AllocZeroed(BATTLE_BUFFER_LINK_SIZE);
     gLinkBattleRecvBuffer = AllocZeroed(BATTLE_BUFFER_LINK_SIZE);
@@ -57,15 +57,15 @@ void FreeBattleResources(void)
     {
         FREE_AND_SET_NULL(gBattleStruct);
         FREE_AND_SET_NULL(gAiBattleData);
+        FREE_AND_SET_NULL(gAiThinkingStruct);
+        FREE_AND_SET_NULL(gAiLogicData);
+        FREE_AND_SET_NULL(gAiPartyData);
+        FREE_AND_SET_NULL(gBattleHistory);
 
         FREE_AND_SET_NULL(gBattleResources->secretBase);
         FREE_AND_SET_NULL(gBattleResources->battleScriptsStack);
         FREE_AND_SET_NULL(gBattleResources->battleCallbackStack);
         FREE_AND_SET_NULL(gBattleResources->beforeLvlUp);
-        FREE_AND_SET_NULL(gBattleResources->ai);
-        FREE_AND_SET_NULL(gBattleResources->aiData);
-        FREE_AND_SET_NULL(gBattleResources->aiParty);
-        FREE_AND_SET_NULL(gBattleResources->battleHistory);
         FREE_AND_SET_NULL(gBattleResources);
 
         FREE_AND_SET_NULL(gLinkBattleSendBuffer);

@@ -1384,10 +1384,8 @@ static void SwitchIn_CleanShinyAnimShowSubstitute(u32 battler)
 
 static void SwitchIn_HandleSoundAndEnd(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive
-        && !IsCryPlayingOrClearCrySongs())
+    if (SwitchIn_HandleSoundAndEndUtil(battler))
     {
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
         PlayerBufferExecCompleted(battler);
     }
@@ -1395,16 +1393,8 @@ static void SwitchIn_HandleSoundAndEnd(u32 battler)
 
 static void SwitchIn_TryShinyAnimShowHealthbox(u32 battler)
 {
-    // Start shiny animation if applicable
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
-        && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-        TryShinyAnimation(battler, GetBattlerMon(battler));
-
-    // Wait for ball anim, then show healthbox
-    if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
-     && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
+    if (SwitchIn_TryShinyAnimUtil(battler))
     {
-        DestroySprite(&gSprites[gBattleControllerData[battler]]);
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
