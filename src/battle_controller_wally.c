@@ -36,7 +36,6 @@ static void WallyHandleDrawTrainerPic(u32 battler);
 static void WallyHandleTrainerSlide(u32 battler);
 static void WallyHandleSuccessBallThrowAnim(u32 battler);
 static void WallyHandleBallThrowAnim(u32 battler);
-static void WallyHandleMoveAnimation(u32 battler);
 static void WallyHandlePrintString(u32 battler);
 static void WallyHandlePrintSelectionString(u32 battler);
 static void WallyHandleChooseAction(u32 battler);
@@ -68,7 +67,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_SUCCESSBALLTHROWANIM]     = WallyHandleSuccessBallThrowAnim,
     [CONTROLLER_BALLTHROWANIM]            = WallyHandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
-    [CONTROLLER_MOVEANIMATION]            = WallyHandleMoveAnimation,
+    [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
     [CONTROLLER_PRINTSTRING]              = WallyHandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = WallyHandlePrintSelectionString,
     [CONTROLLER_CHOOSEACTION]             = WallyHandleChooseAction,
@@ -308,11 +307,6 @@ static void WallyHandleSuccessBallThrowAnim(u32 battler)
 static void WallyHandleBallThrowAnim(u32 battler)
 {
     BtlController_HandleBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
-}
-
-static void WallyHandleMoveAnimation(u32 battler)
-{
-    BtlController_HandleMoveAnimation(battler, FALSE);
 }
 
 static void WallyHandlePrintString(u32 battler)
