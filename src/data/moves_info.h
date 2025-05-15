@@ -34,8 +34,8 @@ static const u8 sHyperBeamDescription[] = _(
     "user immobile the next turn.");
 
 static const u8 sRevengeDescription[] = _(
-    "An attack that gains power\n"
-    "if injured by the foe.");
+    "An attack that moves last\n"
+    "and gains power if hit.");
 
 static const u8 sPluckDescription[] = _(
     "Eats the foe's held Berry\n"
@@ -426,8 +426,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Razor Wind"),
         .description = COMPOUND_STRING(
-            "A 2-turn move that strikes\n"
-            "the foes on the 2nd turn."),
+            "A 2-turn move with a high\n"
+            "critical-hit ratio."),
         .effect = EFFECT_TWO_TURNS_ATTACK,
         .power = 80,
         .type = TYPE_NORMAL,
@@ -16628,7 +16628,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Beak Blast"),
         .description = COMPOUND_STRING(
-            "Heats up beak to attack.\n"
+            "Heats beak to attack last.\n"
             "Burns foe on contact."),
         .effect = EFFECT_BEAK_BLAST,
         .power = 100,
