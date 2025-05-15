@@ -29,9 +29,15 @@ static const u8 sMegaDrainDescription[] = _(
     "An attack that absorbs\n"
     "half the damage inflicted.");
 
+#if B_SKIP_RECHARGE != GEN_1
 static const u8 sHyperBeamDescription[] = _(
     "Powerful, but leaves the\n"
     "user immobile the next turn.");
+#else
+static const u8 sHyperBeamDescription[] = _(
+    "Leaves the user immobile\n"
+    "if target is not KO'd.");
+#endif
 
 static const u8 sRevengeDescription[] = _(
     "An attack that gains power\n"
