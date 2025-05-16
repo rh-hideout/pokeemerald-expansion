@@ -1601,6 +1601,9 @@ void ScriptSetFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 {
+    if (!PlayerHasFollowerNPC())
+        return;
+
     RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
     FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
     ClearFollowerNPCData();
@@ -1609,6 +1612,9 @@ void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 {
+    if (!PlayerHasFollowerNPC())
+        return;
+
     u32 playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -1651,6 +1657,9 @@ static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] =
 
 void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
+    if (!PlayerHasFollowerNPC())
+        return;
+        
     u32 walkSpeed = ScriptReadByte(ctx);
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
 
@@ -1678,6 +1687,9 @@ void ScriptUpdateFollowingMon(struct ScriptContext *ctx)
 
 void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 {
+    if (!PlayerHasFollowerNPC())
+        return;
+        
     u32 newBattlePartner = ScriptReadHalfword(ctx);
 
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);

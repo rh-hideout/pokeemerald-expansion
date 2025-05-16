@@ -2597,11 +2597,7 @@
 	@ Remove the follower NPC (assumes there will only ever be one).
 	.macro destroyfollowernpc
 	.if FNPC_ENABLE_NPC_FOLLOWERS
-		checkfollowernpc
-		compare VAR_RESULT, TRUE
-		goto_if_ne 1f
 		callnative ScriptDestroyFollowerNPC
-		1:
 	.else
 		.error "destroyfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2609,11 +2605,7 @@
 
 	@ Makes the player and follower NPC face one another.
 	.macro facefollowernpc
-	checkfollowernpc
-	compare VAR_RESULT, TRUE
-	goto_if_ne 1f
 	callnative ScriptFaceFollowerNPC
-	1:
 	.endm
 
 	@ Makes the follower NPC walk into the player and get hidden.
@@ -2623,23 +2615,15 @@
 	@ 2 = Fast
 	@ 3 = Faster
 	.macro hidefollowernpc speed=1
-	checkfollowernpc
-	compare VAR_RESULT, TRUE
-	goto_if_ne 1f
 	callnative ScriptHideNPCFollower
 	.byte \speed
 	waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
 	callnative HideNPCFollower
-	1:
 	.endm
 
 	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
 	.macro checkfollowernpc
-	.if FNPC_ENABLE_NPC_FOLLOWERS
-		callnative ScriptCheckFollowerNPC
-	.else
-		setvar VAR_RESULT, FALSE
-	.endif
+	callnative ScriptCheckFollowerNPC
 	.endm
 
 	@ Updates Pokemon follower.
@@ -2649,10 +2633,6 @@
 
 	@ Changes the battle partner of the existing follower NPC.
 	.macro changefollowerbattler battlePartner:req
-	checkfollowernpc
-	compare VAR_RESULT, TRUE
-	goto_if_ne 1f
 	callnative ScriptChangeFollowerNPCBattlePartner
 	.2byte \battlePartner
-	1:
 	.endm
