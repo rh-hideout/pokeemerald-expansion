@@ -37,7 +37,7 @@ static inline bool32 IsMoveUnusable(u32 moveIndex, u32 move, u32 moveLimitations
         || moveLimitations & 1u << moveIndex;
 }
 
-typedef u32 (*MoveFlag)(u32 getFlag);
+typedef bool32 (*MoveFlag)(bool32 getFlag);
 
 bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 move);
 bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 move);
