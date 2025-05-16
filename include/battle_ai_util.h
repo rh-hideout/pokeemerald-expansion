@@ -37,6 +37,8 @@ static inline bool32 IsMoveUnusable(u32 moveIndex, u32 move, u32 moveLimitations
         || moveLimitations & 1u << moveIndex;
 }
 
+typedef u32 (*MoveFlag)(u32 getFlag);
+
 bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 move);
 bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 move);
 bool32 AI_RandLessThan(u32 val);
@@ -167,13 +169,7 @@ bool32 IsChaseEffect(enum BattleMoveEffects effect);
 bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);
 bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
 bool32 IsSemiInvulnerable(u32 battlerDef, u32 move);
-bool32 HasSubstituteIgnoringMove(u32 battler);
-bool32 HasHighCritRatioMove(u32 battler);
-bool32 HasMagicCoatAffectedMove(u32 battler);
-bool32 HasSnatchAffectedMove(u32 battler);
-bool32 HasMoveThatAlwaysHitsInRain(u32 battler);
-bool32 HasMoveThatHas50AccuracyInSun(u32 battler);
-bool32 HasMoveThatAlwaysHitsInHailSnow(u32 battler);
+bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 

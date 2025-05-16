@@ -1691,7 +1691,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             else if (aiData->hpPercents[battlerAtk] <= 25)
                 ADJUST_SCORE(-10);
-            else if (HasSubstituteIgnoringMove(battlerDef))
+            else if (HasMoveWithFlag(battlerDef, MoveCanBeSnatched))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_SHED_TAIL:
@@ -1701,7 +1701,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             else if (aiData->hpPercents[battlerAtk] <= 50)
                 ADJUST_SCORE(-10);
-            else if (HasSubstituteIgnoringMove(battlerDef))
+            else if (HasMoveWithFlag(battlerDef, MoveIgnoresSubstitute))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_LEECH_SEED:
@@ -2367,7 +2367,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);    // no teammates to assist from
             break;
         case EFFECT_MAGIC_COAT:
-            if (!HasMagicCoatAffectedMove(battlerDef))
+            if (!HasMoveWithFlag(battlerDef, MoveCanBeBouncedBack))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_YAWN:
@@ -2414,8 +2414,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SNATCH:
-            if (!HasSnatchAffectedMove(battlerDef)
-              || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+            if (!HasMoveWithFlag(battlerDef, MoveCanBeSnatched)
+             || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_POWER_TRICK:
@@ -3812,9 +3812,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LASER_FOCUS:
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
-          || aiData->abilities[battlerAtk] == ABILITY_SNIPER
-          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
-          || HasHighCritRatioMove(battlerAtk))
+         || aiData->abilities[battlerAtk] == ABILITY_SNIPER
+         || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
+         || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_CONFUSE:
@@ -4101,7 +4101,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(WEAK_EFFECT);
             if (HasMoveWithType(battlerDef, TYPE_WATER) || HasMoveWithType(BATTLE_PARTNER(battlerDef), TYPE_WATER))
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveThatHas50AccuracyInSun(battlerDef) || HasMoveThatHas50AccuracyInSun(BATTLE_PARTNER(battlerDef)))
+            if (HasMoveWithFlag(battlerDef, MoveHas50AccuracyInSun) || HasMoveWithFlag(BATTLE_PARTNER(battlerDef), MoveHas50AccuracyInSun))
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
