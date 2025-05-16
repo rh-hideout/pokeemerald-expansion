@@ -282,16 +282,17 @@ struct AiPartyMon
     u16 item;
     u16 heldEffect;
     u16 ability;
-    u16 gender;
     u16 level;
     u16 moves[MAX_MON_MOVES];
     u32 status;
-    bool8 isFainted;
-    bool8 wasSentInBattle;
     u8 switchInCount; // Counts how many times this Pokemon has been sent out or switched into in a battle.
+    u8 gender:2;
+    u8 isFainted:1;
+    u8 wasSentInBattle:1;
+    u8 padding:4;
 };
 
-struct AIPartyData // Opposing battlers - party mons.
+struct AiPartyData // Opposing battlers - party mons.
 {
     struct AiPartyMon mons[NUM_BATTLE_SIDES][PARTY_SIZE]; // 2 parties(player, opponent). Used to save information on opposing party.
     u8 count[NUM_BATTLE_SIDES];
@@ -341,7 +342,7 @@ struct AiLogicData
     u16 predictedMove[MAX_BATTLERS_COUNT];
 };
 
-struct AI_ThinkingStruct
+struct AiThinkingStruct
 {
     u8 aiState;
     u8 movesetIndex;
@@ -392,19 +393,10 @@ struct BattleResources
     struct BattleScriptsStack* battleScriptsStack;
     struct BattleCallbacksStack* battleCallbackStack;
     struct StatsArray* beforeLvlUp;
-    struct AI_ThinkingStruct *ai;
-    struct AiLogicData *aiData;
-    struct AIPartyData *aiParty;
-    struct BattleHistory *battleHistory;
     u8 bufferA[MAX_BATTLERS_COUNT][0x200];
     u8 bufferB[MAX_BATTLERS_COUNT][0x200];
     u8 transferBuffer[0x100];
 };
-
-#define AI_THINKING_STRUCT ((struct AI_ThinkingStruct *)(gBattleResources->ai))
-#define AI_DATA ((struct AiLogicData *)(gBattleResources->aiData))
-#define AI_PARTY ((struct AIPartyData *)(gBattleResources->aiParty))
-#define BATTLE_HISTORY ((struct BattleHistory *)(gBattleResources->battleHistory))
 
 struct BattleResults
 {
@@ -728,7 +720,6 @@ struct BattleStruct
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 sameMoveTurns[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
-    u16 moveEffect2; // For Knock Off
     u16 changedSpecies[NUM_BATTLE_SIDES][PARTY_SIZE]; // For forms when multiple mons can change into the same pokemon.
     u8 quickClawBattlerId;
     struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
@@ -827,47 +818,42 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     return GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS;
 }
 
-static inline bool32 IsBattleMoveRecoil(u32 move)
-{
-    return GetMoveRecoil(move) > 0 || GetMoveEffect(move) == EFFECT_RECOIL_IF_MISS;
-}
-
-/* Checks if 'battlerId' is any of the types.
+/* Checks if 'battler' is any of the types.
  * Passing multiple types is more efficient than calling this multiple
  * times with one type because it shares the 'GetBattlerTypes' result. */
-#define _IS_BATTLER_ANY_TYPE(battlerId, ignoreTera, ...) \
-    ({ \
-        u32 types[3]; \
-        GetBattlerTypes(battlerId, ignoreTera, types); \
+#define _IS_BATTLER_ANY_TYPE(battler, ignoreTera, ...)                           \
+    ({                                                                           \
+        u32 types[3];                                                            \
+        GetBattlerTypes(battler, ignoreTera, types);                             \
         RECURSIVELY(R_FOR_EACH(_IS_BATTLER_ANY_TYPE_HELPER, __VA_ARGS__)) FALSE; \
     })
 
 #define _IS_BATTLER_ANY_TYPE_HELPER(type) (types[0] == type) || (types[1] == type) || (types[2] == type) ||
 
-#define IS_BATTLER_ANY_TYPE(battlerId, ...) _IS_BATTLER_ANY_TYPE(battlerId, FALSE, __VA_ARGS__)
+#define IS_BATTLER_ANY_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, FALSE, __VA_ARGS__)
 #define IS_BATTLER_OF_TYPE IS_BATTLER_ANY_TYPE
-#define IS_BATTLER_ANY_BASE_TYPE(battlerId, ...) _IS_BATTLER_ANY_TYPE(battlerId, TRUE, __VA_ARGS__)
+#define IS_BATTLER_ANY_BASE_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, TRUE, __VA_ARGS__)
 #define IS_BATTLER_OF_BASE_TYPE IS_BATTLER_ANY_BASE_TYPE
 
-#define IS_BATTLER_TYPELESS(battlerId) \
-    ({ \
-        u32 types[3]; \
-        GetBattlerTypes(battlerId, FALSE, types); \
+#define IS_BATTLER_TYPELESS(battlerId)                                                    \
+    ({                                                                                    \
+        u32 types[3];                                                                     \
+        GetBattlerTypes(battlerId, FALSE, types);                                         \
         types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
     })
 
-#define SET_BATTLER_TYPE(battlerId, type)              \
-{                                                      \
-    gBattleMons[battlerId].types[0] = type;            \
-    gBattleMons[battlerId].types[1] = type;            \
-    gBattleMons[battlerId].types[2] = TYPE_MYSTERY;    \
+#define SET_BATTLER_TYPE(battler, type)              \
+{                                                    \
+    gBattleMons[battler].types[0] = type;            \
+    gBattleMons[battler].types[1] = type;            \
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;    \
 }
 
-#define RESTORE_BATTLER_TYPE(battlerId)                                                        \
-{                                                                                              \
-    gBattleMons[battlerId].types[0] = gSpeciesInfo[gBattleMons[battlerId].species].types[0];   \
-    gBattleMons[battlerId].types[1] = gSpeciesInfo[gBattleMons[battlerId].species].types[1];   \
-    gBattleMons[battlerId].types[2] = TYPE_MYSTERY;                                            \
+#define RESTORE_BATTLER_TYPE(battler)                                                      \
+{                                                                                          \
+    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];   \
+    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];   \
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                          \
 }
 
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
@@ -1107,6 +1093,10 @@ extern struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT];
 extern struct BattleScripting gBattleScripting;
 extern struct BattleStruct *gBattleStruct;
 extern struct AiBattleData *gAiBattleData;
+extern struct AiThinkingStruct *gAiThinkingStruct;
+extern struct AiLogicData *gAiLogicData;
+extern struct AiPartyData *gAiPartyData;
+extern struct BattleHistory *gBattleHistory;
 extern u8 *gLinkBattleSendBuffer;
 extern u8 *gLinkBattleRecvBuffer;
 extern struct BattleResources *gBattleResources;
