@@ -222,6 +222,7 @@ void OpponentSwitchInResetSentPokesToOpponentValue(u32 battler);
 void UpdateSentPokesToOpponentValue(u32 battler);
 void BattleScriptPush(const u8 *bsPtr);
 void BattleScriptPushCursor(void);
+void BattleScriptCall(const u8 *bsPtr);
 void BattleScriptPop(void);
 u32 TrySetCantSelectMoveBattleScript(u32 battler);
 u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check);
