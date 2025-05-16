@@ -3178,14 +3178,14 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
     }
 }
 
-static void Debug_Display_Shiny(bool32 isShiny, u8 windowId)
+static void Debug_Display_TrueFalse(bool32 value, u8 windowId, const u8 *titleStr)
 {
     static const u8 *txtStr;
-    txtStr = isShiny ? sDebugText_True : sDebugText_False;
+    txtStr = value ? sDebugText_True : sDebugText_False;
     StringCopyPadded(gStringVar2, txtStr, CHAR_SPACE, 15);
-    ConvertIntToDecimalStringN(gStringVar3, isShiny, STR_CONV_MODE_LEADING_ZEROS, 0);
+    ConvertIntToDecimalStringN(gStringVar3, value, STR_CONV_MODE_LEADING_ZEROS, 0);
     StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-    StringExpandPlaceholders(gStringVar4, sDebugText_PokemonShiny);
+    StringExpandPlaceholders(gStringVar4, titleStr);
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
@@ -3216,7 +3216,7 @@ static void DebugAction_Give_Pokemon_SelectLevel(u8 taskId)
             sDebugMonData->level = gTasks[taskId].tInput;
             gTasks[taskId].tInput = 0;
             gTasks[taskId].tDigit = 0;
-            Debug_Display_Shiny(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId);
+            Debug_Display_TrueFalse(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId, sDebugText_PokemonShiny);
             gTasks[taskId].func = DebugAction_Give_Pokemon_SelectShiny;
         }
     }
@@ -3246,7 +3246,7 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tInput ^= JOY_NEW(DPAD_UP | DPAD_DOWN) > 0;
-        Debug_Display_Shiny(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId);
+        Debug_Display_TrueFalse(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId, sDebugText_PokemonShiny);
     }
 
     if (JOY_NEW(A_BUTTON))
@@ -3438,13 +3438,7 @@ static void DebugAction_Give_Pokemon_SelectDynamaxLevel(u8 taskId)
         sDebugMonData->dynamaxLevel = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
-
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 0);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        StringCopyPadded(gStringVar2, sDebugText_False, CHAR_SPACE, 15);
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonGmaxFactor);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-
+        Debug_Display_TrueFalse(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId, sDebugText_PokemonGmaxFactor);
         gTasks[taskId].func = DebugAction_Give_Pokemon_SelectGigantamaxFactor;
     }
     else if (JOY_NEW(B_BUTTON))
@@ -3469,18 +3463,11 @@ static void Debug_Display_StatInfo(const u8* text, u32 stat, u32 value, u32 digi
 
 static void DebugAction_Give_Pokemon_SelectGigantamaxFactor(u8 taskId)
 {
-    static const u8 *txtStr;
-
     if (JOY_NEW(DPAD_ANY))
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tInput ^= JOY_NEW(DPAD_UP | DPAD_DOWN) > 0;
-        txtStr = (gTasks[taskId].tInput == TRUE) ? sDebugText_True : sDebugText_False;
-        StringCopyPadded(gStringVar2, txtStr, CHAR_SPACE, 15);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 0);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonGmaxFactor);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        Debug_Display_TrueFalse(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId, sDebugText_PokemonGmaxFactor);
     }
 
     if (JOY_NEW(A_BUTTON))
