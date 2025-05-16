@@ -1612,7 +1612,7 @@ void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 {
-    if (!PlayerHasFollowerNPC())
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
 
     u32 playerDirection, followerDirection;
@@ -1687,7 +1687,7 @@ void ScriptUpdateFollowingMon(struct ScriptContext *ctx)
 
 void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 {
-    if (!PlayerHasFollowerNPC())
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
         
     u32 newBattlePartner = ScriptReadHalfword(ctx);
