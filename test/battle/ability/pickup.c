@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it destroyed the item with I
 SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it knocked off that item")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
@@ -276,7 +276,7 @@ DOUBLE_BATTLE_TEST("Pickup grants a random item used by another Pokémon")
 {
     PASSES_RANDOMLY(1, 3, RNG_PICKUP);
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_RESTORE_STATS);
+        ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_WHITE_HERB);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }

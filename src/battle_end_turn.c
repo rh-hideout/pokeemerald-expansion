@@ -116,6 +116,19 @@ static inline bool32 IsBattlerProtectedByMagicGuard(u32 battler, u32 ability)
     return TRUE;
 }
 
+static u32 GetBattlerSideForMessage(u32 side)
+{
+    u32 battler = 0;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == side)
+            break;
+    }
+
+    return battler;
+}
+
 static bool32 HandleEndTurnOrder(u32 battler)
 {
     bool32 effect = FALSE;
@@ -292,7 +305,7 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
             gBattlerAbility = battler;
             gLastUsedAbility = ability;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || GetBattlerSide(battler) == B_SIDE_PLAYER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
                 BattleScriptExecute(BattleScript_EmergencyExitEnd2);
             else
                 BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
@@ -312,7 +325,7 @@ static bool32 HandleEndTurnAffection(u32 battler)
 
     if (!B_AFFECTION_MECHANICS
      || !IsBattlerAlive(battler)
-     || GetBattlerSide(battler) != B_SIDE_PLAYER)
+     || !IsOnPlayerSide(battler))
         return effect;
 
     if (GetBattlerAffectionHearts(gBattlerAttacker) >= AFFECTION_FOUR_HEARTS && (Random() % 100 < 20))
@@ -355,7 +368,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
         gBattlerAttacker = gWishFutureKnock.futureSightBattlerIndex[battler];
         gCurrentMove = gWishFutureKnock.futureSightMove[battler];
 
-        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
+        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
         BattleScriptExecute(BattleScript_MonTookFutureAttack);
@@ -377,7 +390,7 @@ static bool32 HandleEndTurnWish(u32 battler)
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
         if (B_WISH_HP_SOURCE >= GEN_5)
         {
-            if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+            if (IsOnPlayerSide(battler))
                 gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
             else
                 gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
@@ -429,7 +442,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-            BtlController_EmitStatusAnimation(battler, BUFFER_A, FALSE, STATUS1_BURN);
+            BtlController_EmitStatusAnimation(battler, B_COMM_TO_CONTROLLER, FALSE, STATUS1_BURN);
             MarkBattlerForControllerExec(battler);
             BattleScriptExecute(BattleScript_HurtByTheSeaOfFire);
             effect = TRUE;
@@ -733,8 +746,11 @@ static bool32 HandleEndTurnWrap(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_WRAPPED && IsBattlerAlive(battler))
     {
-        if (--gDisableStructs[battler].wrapTurns != 0 && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+        if (--gDisableStructs[battler].wrapTurns != 0)
         {
+            if (IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+                return effect;
+
             gBattleScripting.animArg1 = gBattleStruct->wrappedMove[battler];
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
@@ -1014,7 +1030,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
                     gBattleMons[battler].status1 |= ((Random() % 4) + 3);
 
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
-                BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
                 BattleScriptExecute(BattleScript_YawnMakesAsleep);
             }
@@ -1074,7 +1090,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_REFLECT:
         if (gSideStatuses[side] & SIDE_STATUS_REFLECT && gSideTimers[side].reflectTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].reflectBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_REFLECT;
             BattleScriptExecute(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
@@ -1086,7 +1102,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_LIGHT_SCREEN:
         if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN && gSideTimers[side].lightscreenTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].lightscreenBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LIGHTSCREEN;
             BattleScriptExecute(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
@@ -1098,7 +1114,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_SAFEGUARD:
         if (gSideStatuses[side] & SIDE_STATUS_SAFEGUARD && gSideTimers[side].safeguardTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].safeguardBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SAFEGUARD;
             BattleScriptExecute(BattleScript_SafeguardEnds);
             effect = TRUE;
@@ -1108,7 +1124,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_MIST:
         if (gSideTimers[side].mistTimer != 0 && gSideTimers[side].mistTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].mistBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_MIST;
             BattleScriptExecute(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
@@ -1120,7 +1136,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_TAILWIND:
         if (gSideStatuses[side] & SIDE_STATUS_TAILWIND && gSideTimers[side].tailwindTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].tailwindBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_TAILWIND;
             BattleScriptExecute(BattleScript_TailwindEnds);
             effect = TRUE;
@@ -1130,7 +1146,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     case SECOND_EVENT_BLOCK_LUCKY_CHANT:
         if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT && gSideTimers[side].luckyChantTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].luckyChantBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LUCKY_CHANT;
             BattleScriptExecute(BattleScript_LuckyChantEnds);
             effect = TRUE;
@@ -1138,63 +1154,38 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
-        if (gSideStatuses[side] & SIDE_STATUS_RAINBOW)
+        gBattlerAttacker = GetBattlerSideForMessage(side);
+        if (gSideStatuses[side] & SIDE_STATUS_RAINBOW && gSideTimers[side].rainbowTimer == gBattleTurnCounter)
         {
-            for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount; gBattlerAttacker++)
-            {
-                if (GetBattlerSide(gBattlerAttacker) == side)
-                    break;
-            }
-
-            if (gSideTimers[side].rainbowTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
-                BattleScriptExecute(BattleScript_TheRainbowDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
+            BattleScriptExecute(BattleScript_TheRainbowDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
             break;
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
-        if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
+        if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE && gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
         {
-            for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount; gBattlerAttacker++)
-            {
-                if (GetBattlerSide(gBattlerAttacker) == side)
-                    break;
-            }
-
-            if (gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
-                BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
+            BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_SWAMP:
-        if (gSideStatuses[side] & SIDE_STATUS_SWAMP)
+        gBattlerAttacker = GetBattlerSideForMessage(side);
+        if (gSideStatuses[side] & SIDE_STATUS_SWAMP && gSideTimers[side].swampTimer == gBattleTurnCounter)
         {
-            for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount; gBattlerAttacker++)
-            {
-                if (GetBattlerSide(gBattlerAttacker) == side)
-                    break;
-            }
-
-            if (gSideTimers[side].swampTimer == gBattleTurnCounter)
-            {
-                gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
-                BattleScriptExecute(BattleScript_TheSwampDisappeared);
-                effect = TRUE;
-            }
+            gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
+            BattleScriptExecute(BattleScript_TheSwampDisappeared);
+            effect = TRUE;
         }
         gBattleStruct->eventBlockCounter++;
         break;
     case SECOND_EVENT_BLOCK_AURORA_VEIL:
         if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL && gSideTimers[side].auroraVeilTimer == gBattleTurnCounter)
         {
-            gBattlerAttacker = gSideTimers[side].auroraVeilBattlerId;
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_AURORA_VEIL;
             BattleScriptExecute(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
@@ -1361,7 +1352,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                     gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_NIGHTMARE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = 1;
                     BattleScriptExecute(BattleScript_MonWokeUpInUproar);
-                    BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
+                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
                     MarkBattlerForControllerExec(gBattlerAttacker);
                     break;
                 }
@@ -1427,7 +1418,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
             if (ItemBattleEffects(ITEMEFFECT_ORBS, battler, FALSE))
                 effect = TRUE;
             break;
-        case HOLD_EFFECT_RESTORE_STATS:
+        case HOLD_EFFECT_WHITE_HERB:
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
             break;

@@ -171,6 +171,9 @@ bool32 HasSubstituteIgnoringMove(u32 battler);
 bool32 HasHighCritRatioMove(u32 battler);
 bool32 HasMagicCoatAffectedMove(u32 battler);
 bool32 HasSnatchAffectedMove(u32 battler);
+bool32 HasMoveThatAlwaysHitsInRain(u32 battler);
+bool32 HasMoveThatHas50AccuracyInSun(u32 battler);
+bool32 HasMoveThatAlwaysHitsInHailSnow(u32 battler);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 
@@ -194,6 +197,10 @@ bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsWakeupTurn(u32 battler);
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
+// ability logic
+bool32 IsMoxieTypeAbility(u32 ability);
+bool32 ShouldTriggerAbility(u32 battler, u32 ability);
+
 // partner logic
 #define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))
 u32 GetAllyChosenMove(u32 battlerId);
@@ -209,6 +216,8 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, u32 mo
 bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 PartnerMoveActivatesSleepClause(u32 move);
 bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move);
+u32 GetFriendlyFireKOThreshold(u32 battler);
+bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove);
 
 // party logic
 struct BattlePokemon *AllocSaveBattleMons(void);
@@ -238,7 +247,9 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, st
 u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
+u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
+u32 GetThinkingBattler(u32 battler);
 
 #endif //GUARD_BATTLE_AI_UTIL_H
