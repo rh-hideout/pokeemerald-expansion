@@ -2602,7 +2602,7 @@ bool32 HasDamagingMoveOfType(u32 battlerId, u32 type)
     return FALSE;
 }
 
-bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag)
+bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlagFunc)
 {
     u16 *moves = GetMovesArray(battler);
     u32 moveLimitations = gAiLogicData->moveLimitations[battler];
