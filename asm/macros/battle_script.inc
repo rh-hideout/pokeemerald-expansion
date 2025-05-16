@@ -764,6 +764,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro removestockpilecounters
+	callnative BS_RemoveStockpileCounters
+	.endm
+
 	.macro setdrainedhp
 	.byte 0x88
 	.endm
@@ -2318,9 +2322,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpiflastuseditemholdeffect battler:req, holdEffect:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT
+	.macro jumpiflastuseditemholdeffect holdEffect:req, secondaryId:req, jumpInstr:req
+	callnative BS_JumpIfLastUsedItemHoldEffect
 	.byte \holdEffect
+	.2byte \secondaryId
 	.4byte \jumpInstr
 	.endm
 

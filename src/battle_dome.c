@@ -4044,8 +4044,9 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
+static bool32 IsDomeComboMove(u32 move)
 {
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     switch(effect)
     {
     // Weather moves
@@ -4064,8 +4065,6 @@ static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_MORNING_SUN:
     case EFFECT_MOONLIGHT:
     case EFFECT_SHORE_UP:
-    case EFFECT_THUNDER:
-    case EFFECT_BLIZZARD:
     case EFFECT_SOLAR_BEAM:
     case EFFECT_GROWTH:
     case EFFECT_AURORA_VEIL:
@@ -4119,8 +4118,15 @@ static bool32 IsDomeComboMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_ROAR:
         return TRUE;
     default:
-        return FALSE;
+        break;
     }
+
+    if (MoveAlwaysHitsInRain(move))
+        return TRUE;
+    else if (MoveAlwaysHitsInHailSnow(move))
+        return TRUE;
+
+    return FALSE;
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points
@@ -4307,7 +4313,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                 switch (k)
                 {
                 case MOVE_POINTS_COMBO:
-                    allocatedArray[k] = IsDomeComboMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeComboMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_RAISE:
                     allocatedArray[k] = IsStatRaisingEffect(effect) ? 1 : 0;

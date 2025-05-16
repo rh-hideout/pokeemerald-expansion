@@ -2655,8 +2655,8 @@ static void SetTowerInterviewData(void)
     StripExtCtrlCodes(text);
     StringCopy(gSaveBlock2Ptr->frontier.towerInterview.opponentName, text);
     GetBattleTowerTrainerLanguage(&gSaveBlock2Ptr->frontier.towerInterview.opponentLanguage, TRAINER_BATTLE_PARAM.opponentA);
-    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(GetPartyBattlerData(1), MON_DATA_SPECIES, NULL);
-    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(GetPartyBattlerData(0), MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(GetBattlerMon(1), MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(GetBattlerMon(0), MON_DATA_SPECIES, NULL);
     for (i = 0; i < VANILLA_POKEMON_NAME_LENGTH + 1; i++)
         gSaveBlock2Ptr->frontier.towerInterview.opponentMonNickname[i] = gBattleMons[0].nickname[i];
     gSaveBlock2Ptr->frontier.towerBattleOutcome = gBattleOutcome;

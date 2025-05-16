@@ -73,3 +73,5 @@ SINGLE_BATTLE_TEST("Beads of Ruin's message displays correctly after all battler
         MESSAGE("The opposing Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
     }
 }
+
+TO_DO_BATTLE_TEST("Beads of Ruin reduce Defense if Wonder Room is active");
