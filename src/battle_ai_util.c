@@ -1667,7 +1667,6 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
     if (gAiLogicData->abilities[battlerDef] == ABILITY_NO_GUARD || gAiLogicData->abilities[battlerAtk] == ABILITY_NO_GUARD)
         return TRUE;
 
-    enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
     if (B_TOXIC_NEVER_MISS >= GEN_6
         && nonVolatileStatus == MOVE_EFFECT_TOXIC
