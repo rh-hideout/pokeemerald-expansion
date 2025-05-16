@@ -1657,7 +1657,7 @@ static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] =
 
 void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
-    if (!PlayerHasFollowerNPC())
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
         
     u32 walkSpeed = ScriptReadByte(ctx);
