@@ -2919,6 +2919,10 @@ gCryTable::
 
 	cry Cry_Sepulture
 
+	cry Cry_Schizstarf
+
+	cry Cry_Wawho
+
 .endif
 
 	.align 2
@@ -5842,4 +5846,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Flockarrion
 
 	cry_reverse Cry_Sepulture
+
+	cry_reverse Cry_Schizstarf
+
+	cry_reverse Cry_Wawho
 .endif

@@ -6720,3 +6720,14 @@ static const u16 sGuertenityEggMoveLearnset[] = {
     
 };
 
+static const u16 sSchizstarfEggMoveLearnset[] = {
+    MOVE_BATON_PASS, 
+    MOVE_CLOSE_COMBAT,
+    MOVE_HYDRO_PUMP,
+    MOVE_LANDS_WRATH,
+    MOVE_PETAL_DANCE,
+    MOVE_ZAP_CANNON,
+    MOVE_UNAVAILABLE,
+
+};
+

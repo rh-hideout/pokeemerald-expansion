@@ -23093,6 +23093,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Epilate[] = INCBIN_U8("graphics/pokemon/epilate/icon.4bpp");
    const u8 gMonFootprint_Epilate[] = INCBIN_U8("graphics/pokemon/epilate/footprint.1bpp");
 
+   const u32 gMonFrontPic_Schizstarf[] = INCBIN_U32("graphics/pokemon/schizstarf/front.4bpp.lz");
+   const u32 gMonBackPic_Schizstarf[] = INCBIN_U32("graphics/pokemon/schizstarf/back.4bpp.lz");
+   const u32 gMonPalette_Schizstarf[] = INCBIN_U32("graphics/pokemon/schizstarf/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Schizstarf[] = INCBIN_U32("graphics/pokemon/schizstarf/shiny.gbapal.lz");
+   const u8 gMonIcon_Schizstarf[] = INCBIN_U8("graphics/pokemon/schizstarf/icon.4bpp");
+   const u8 gMonFootprint_Schizstarf[] = INCBIN_U8("graphics/pokemon/schizstarf/footprint.1bpp");
+
    const u32 gMonFrontPic_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/front.4bpp.lz");
    const u32 gMonBackPic_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/back.4bpp.lz");
    const u32 gMonPalette_Qrakenmark[] = INCBIN_U32("graphics/pokemon/qrakenmark/normal.gbapal.lz");
@@ -23262,6 +23269,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Moyalith[] = INCBIN_U32("graphics/pokemon/moyalith/shiny.gbapal.lz");
    const u8 gMonIcon_Moyalith[] = INCBIN_U8("graphics/pokemon/moyalith/icon.4bpp");
    const u8 gMonFootprint_Moyalith[] = INCBIN_U8("graphics/pokemon/moyalith/footprint.1bpp");
+
+   const u32 gMonFrontPic_Wawho[] = INCBIN_U32("graphics/pokemon/wawho/front.4bpp.lz");
+   const u32 gMonBackPic_Wawho[] = INCBIN_U32("graphics/pokemon/wawho/back.4bpp.lz");
+   const u32 gMonPalette_Wawho[] = INCBIN_U32("graphics/pokemon/wawho/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Wawho[] = INCBIN_U32("graphics/pokemon/wawho/shiny.gbapal.lz");
+   const u8 gMonIcon_Wawho[] = INCBIN_U8("graphics/pokemon/wawho/icon.4bpp");
+   const u8 gMonFootprint_Wawho[] = INCBIN_U8("graphics/pokemon/wawho/footprint.1bpp");
 
    const u32 gMonFrontPic_Regirode[] = INCBIN_U32("graphics/pokemon/regirode/front.4bpp.lz");
    const u32 gMonBackPic_Regirode[] = INCBIN_U32("graphics/pokemon/regirode/back.4bpp.lz");

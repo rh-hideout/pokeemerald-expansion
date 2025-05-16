@@ -7142,6 +7142,14 @@ Cry_Flockarrion::
 	.align 2	
 Cry_Sepulture::
 	.incbin "sound/direct_sound_samples/cries/sepulture.bin"
+
+	.align 2	
+Cry_Schizstarf::
+	.incbin "sound/direct_sound_samples/cries/schizstarf.bin"
+
+	.align 2	
+Cry_Wawho::
+	.incbin "sound/direct_sound_samples/cries/wawho.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

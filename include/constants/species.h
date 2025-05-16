@@ -1918,8 +1918,10 @@
 #define SPECIES_SHIRIBIKO_ULTRA                         1799
 #define SPECIES_FLOCKARRION                             1800
 #define SPECIES_SEPULTURE                               1801
+#define SPECIES_SCHIZSTARF                              1802
+#define SPECIES_WAWHO                                   1803
 
-#define SPECIES_EGG (SPECIES_SEPULTURE + 1)
+#define SPECIES_EGG (SPECIES_WAWHO + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
