@@ -2612,7 +2612,7 @@ bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlagFunc)
         if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
             continue;
 
-        if (getFlag(moves[moveIndex]))
+        if (getFlagFunc(moves[moveIndex]))
             return TRUE;
     }
     return FALSE;
