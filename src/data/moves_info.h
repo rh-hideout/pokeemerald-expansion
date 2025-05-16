@@ -404,7 +404,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Guillotine"),
         .description = COMPOUND_STRING(
             "A powerful pincer attack\n"
-            "that KOs if hits."),
+            "that KOs if it hits."),
         .effect = EFFECT_OHKO,
         .power = 1,
         .type = TYPE_NORMAL,
@@ -1266,7 +1266,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Roar"),
         .description = COMPOUND_STRING(
-            "Switches foe out\n"
+            "Switches the foe out\n"
             "or ends wild battle."),
         .effect = EFFECT_ROAR,
         .power = 0,
@@ -3054,7 +3054,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Reflect"),
         .description = COMPOUND_STRING(
-            "Wall of light cuts phyiscal\n"
+            "Wall of light cuts physical\n"
             "damage for 5 turns."),
         .effect = EFFECT_REFLECT,
         .power = 0,
@@ -5986,7 +5986,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_ENCORE] =
     {
         .name = COMPOUND_STRING("Encore"),
-        // TODO: Generation differences for encore not yet implemented.
         .description = COMPOUND_STRING(
             "Makes the foe repeat its\n"
             "last move over 3 turns."),
@@ -7093,7 +7092,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Charge"),
         .description = COMPOUND_STRING(
             "Charges power to boost the\n"
-            "electric move used next."),
+            "Electric move used next."),
         .effect = EFFECT_CHARGE,
         .power = 0,
         .type = TYPE_ELECTRIC,
@@ -7199,7 +7198,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Role Play"),
         .description = COMPOUND_STRING(
             "Mimics the target and\n"
-            "copies its ability."),
+            "copies its Ability."),
         .effect = EFFECT_ROLE_PLAY,
         .power = 0,
         .type = TYPE_PSYCHIC,
@@ -7924,7 +7923,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Mud Sport"),
         .description = COMPOUND_STRING(
             "Covers the user in mud to\n"
-            "weaken all electric moves."),
+            "weaken all Electric moves."),
         // in theory this should mention 5 turns (gen 6+)
         .effect = EFFECT_MUD_SPORT,
         .power = 0,
@@ -9118,7 +9117,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Water Sport"),
         .description = COMPOUND_STRING(
             "The user becomes soaked to\n"
-            "weaken all fire moves."),
+            "weaken all Fire moves."),
         // in theory this should mention 5 turns (gen6+)
         .effect = EFFECT_WATER_SPORT,
         .power = 0,
@@ -9932,7 +9931,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Gastro Acid"),
         .description = COMPOUND_STRING(
             "Stomach acid suppresses\n"
-            "the foe's ability."),
+            "the foe's Ability."),
         .effect = EFFECT_GASTRO_ACID,
         .power = 0,
         .type = TYPE_POISON,
@@ -12702,7 +12701,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Simple Beam"),
         .description = COMPOUND_STRING(
             "A beam that changes the\n"
-            "foe's ability to Simple."),
+            "foe's Ability to Simple."),
         .effect = EFFECT_SIMPLE_BEAM,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -12725,7 +12724,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Entrainment"),
         .description = COMPOUND_STRING(
             "Makes the foe mimic the\n"
-            "user, gaining its ability."),
+            "user, gaining its Ability."),
         .effect = EFFECT_ENTRAINMENT,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -16552,7 +16551,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Core Enforcer"),
         .description = COMPOUND_STRING(
             "Hits with a ray that\n"
-            "nullifies the foe's ability."),
+            "nullifies the foe's Ability."),
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_DRAGON,
