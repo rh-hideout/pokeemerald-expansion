@@ -77,7 +77,7 @@ bool32 CanDynamax(u32 battler)
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
         return FALSE;
 
     // Check if Player has a Dynamax Band.

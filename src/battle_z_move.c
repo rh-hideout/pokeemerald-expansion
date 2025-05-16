@@ -364,7 +364,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
             gDisplayedStringBattle[1] = CHAR_HYPHEN;
             StringCopy(gDisplayedStringBattle + 2, GetMoveName(move));
         }
-        else if (zmove == MOVE_EXTREME_EVOBOOST)
+        else if (GetMoveEffect(zmove) == EFFECT_EXTREME_EVOBOOST)
         {
             // Damaging move -> status z move
             StringCopy(gDisplayedStringBattle, sText_StatsPlus2);

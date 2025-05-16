@@ -626,7 +626,7 @@ static void AnimAquaTail(struct Sprite *sprite)
 // args[1] - initial y delta
 static void AnimKnockOffAquaTail(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         sprite->x -= gBattleAnimArgs[0];
         sprite->y += gBattleAnimArgs[1];
@@ -657,26 +657,36 @@ static void AnimKnockOffAquaTailStep(struct Sprite *sprite)
     sprite->data[2]++;
 }
 
+#define tRaindropSpawnTimer    data[0]
+#define tRaindropUnused        data[1]
+#define tRaindropSpawnInterval data[2]
+#define tRaindropSpawnDuration data[3] // number of frames over which we spawn raindrops
+
 void AnimTask_CreateRaindrops(u8 taskId)
 {
     u8 x, y;
 
-    if (gTasks[taskId].data[0] == 0)
+    if (gTasks[taskId].tRaindropSpawnTimer == 0)
     {
-        gTasks[taskId].data[1] = gBattleAnimArgs[0];
-        gTasks[taskId].data[2] = gBattleAnimArgs[1];
-        gTasks[taskId].data[3] = gBattleAnimArgs[2];
+        gTasks[taskId].tRaindropUnused        = gBattleAnimArgs[0];
+        gTasks[taskId].tRaindropSpawnInterval = gBattleAnimArgs[1];
+        gTasks[taskId].tRaindropSpawnDuration = gBattleAnimArgs[2];
     }
-    gTasks[taskId].data[0]++;
-    if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
+    gTasks[taskId].tRaindropSpawnTimer++;
+    if (gTasks[taskId].tRaindropSpawnTimer % gTasks[taskId].tRaindropSpawnInterval == 1)
     {
         x = Random2() % DISPLAY_WIDTH;
         y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gRainDropSpriteTemplate, x, y, 4);
     }
-    if (gTasks[taskId].data[0] == gTasks[taskId].data[3])
+    if (gTasks[taskId].tRaindropSpawnTimer == gTasks[taskId].tRaindropSpawnDuration)
         DestroyAnimVisualTask(taskId);
 }
+
+#undef tRaindropSpawnTimer
+#undef tRaindropUnused
+#undef tRaindropSpawnInterval
+#undef tRaindropSpawnDuration
 
 static void AnimRainDrop(struct Sprite *sprite)
 {
@@ -687,6 +697,10 @@ static void AnimRainDrop_Step(struct Sprite *sprite)
 {
     if (++sprite->data[0] <= 13)
     {
+        //
+        // Make the raindrop fall, but only until it reaches the
+        // impact/splash frames of its animation.
+        //
         sprite->x2++;
         sprite->y2 += 4;
     }
@@ -699,7 +713,7 @@ static void AnimWaterBubbleProjectile(struct Sprite *sprite)
 {
     u8 spriteId;
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) - gBattleAnimArgs[0];
         sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[1];
@@ -711,7 +725,7 @@ static void AnimWaterBubbleProjectile(struct Sprite *sprite)
         sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[1];
         sprite->animPaused = TRUE;
     }
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
     sprite->data[0] = gBattleAnimArgs[6];
     sprite->data[1] = sprite->x;
@@ -773,7 +787,7 @@ static void AnimAuroraBeamRings(struct Sprite *sprite)
     s16 unkArg;
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         unkArg = -gBattleAnimArgs[2];
     else
         unkArg = gBattleAnimArgs[2];
@@ -917,7 +931,7 @@ static void AnimHydroCannonCharge(struct Sprite *sprite)
     priority = GetBattlerSpriteSubpriority(gBattleAnimAttacker);
     if (!IsContest())
     {
-        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(gBattleAnimAttacker))
         {
             sprite->x2 = 10;
             sprite->subpriority = priority + 2;
@@ -962,7 +976,7 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
     else
         coordType = BATTLER_COORD_Y;
     InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
@@ -1024,7 +1038,7 @@ void AnimTask_CreateSurfWave(u8 taskId)
     if (!IsContest())
     {
         SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 1);
-        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
             AnimLoadCompressedBgTilemap(animBg.bgId, gBattleAnimBgTilemap_SurfOpponent);
         else
             AnimLoadCompressedBgTilemap(animBg.bgId, gBattleAnimBgTilemap_SurfPlayer);
@@ -1064,7 +1078,7 @@ void AnimTask_CreateSurfWave(u8 taskId)
         gTasks[taskId].data[1] = 1;
         gTasks[taskId2].data[3] = 0;
     }
-    else if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+    else if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         *x = -224;
         *y = 256;
@@ -1433,7 +1447,7 @@ void AnimTask_WaterSpoutRain(u8 taskId)
     struct Task *task = &gTasks[taskId];
 
     task->data[1] = GetWaterSpoutPowerForAnim();
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimAttacker))
     {
         task->data[4] = 136;
         task->data[6] = 40;
@@ -1552,7 +1566,7 @@ void AnimTask_WaterSport(u8 taskId)
 
     task->data[3] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     task->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    task->data[7] = (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER) ? 1 : -1;
+    task->data[7] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
     if (IsContest())
         task->data[7] *= -1;
     task->data[5] = task->data[3] + task->data[7] * 8;

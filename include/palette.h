@@ -95,7 +95,6 @@ u32 UpdatePaletteFade(void);
 void ResetPaletteFade(void);
 bool32 BeginNormalPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, u32 blendColor);
 bool32 BeginTimeOfDayPaletteFade(u32 selectedPalettes, s8 delay, u8 startY, u8 targetY, struct BlendSettings *bld0, struct BlendSettings *bld1, u32 weight, u32 color);
-void PaletteStruct_ResetById(u32 id);
 void ResetPaletteFadeControl(void);
 void InvertPlttBuffer(u32 selectedPalettes);
 void TintPlttBuffer(u32 selectedPalettes, s8 r, s8 g, s8 b);
@@ -117,12 +116,12 @@ void TintPalette_CustomTone(u16 *palette, u32 count, u16 rTone, u16 gTone, u16 b
 
 static inline void SetBackdropFromColor(u32 color)
 {
-  FillPalette(color, 0, PLTT_SIZEOF(1));
+    FillPalette(color, 0, PLTT_SIZEOF(1));
 }
 
 static inline void SetBackdropFromPalette(const u16 *palette)
 {
-  LoadPalette(palette, 0, PLTT_SIZEOF(1));
+    LoadPalette(palette, 0, PLTT_SIZEOF(1));
 }
 
 #endif // GUARD_PALETTE_H
