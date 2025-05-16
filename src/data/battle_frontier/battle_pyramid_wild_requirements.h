@@ -13,7 +13,7 @@ struct BattlePyramidRequirement {
     u8 nEvoItems;
 };
 
-// EFFECT_PARALYZE, MOVE_EFFECT_PARALYZE (30% or more)
+// MOVE_EFFECT_PARALYZE (30% or more)
 static const u16 sParalyzingMoves[] = {
     //MOVE_THUNDER_PUNCH,
     MOVE_BODY_SLAM,
@@ -35,7 +35,7 @@ static const u16 sParalyzingMoves[] = {
     MOVE_COMBAT_TORQUE,
 };
 
-// MOVE_EFFECT_POISON (30% or more), EFFECT_POISON, MOVE_EFFECT_TOXIC, EFFECT_TOXIC, EFFECT_TOXIC_THREAD
+// MOVE_EFFECT_POISON (30% or more), MOVE_EFFECT_TOXIC, EFFECT_TOXIC_THREAD
 static const u16 sPoisoningMoves[] = {
     MOVE_POISON_STING,
     //MOVE_TWINEEDLE,
@@ -57,7 +57,7 @@ static const u16 sPoisoningMoves[] = {
     MOVE_TOXIC_THREAD,
 };
 
-// MOVE_EFFECT_BURN, EFFECT_WILL_O_WISP
+// MOVE_EFFECT_BURN
 static const u16 sBurningMoves[] = {
     MOVE_WILL_O_WISP,
     //MOVE_EMBER,
