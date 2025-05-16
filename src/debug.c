@@ -3265,6 +3265,17 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
     }
 }
 
+static void Debug_Display_Ability(u32 abilityId, u32 digit, u8 windowId)//(u32 natureId, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    ConvertIntToDecimalStringN(gStringVar3, abilityId, STR_CONV_MODE_LEADING_ZEROS, 2);
+    StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
+    u8 *end = StringCopy(gStringVar1, gAbilitiesInfo[abilityId].name);
+    WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
+    StringExpandPlaceholders(gStringVar4, sDebugText_PokemonAbility);
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
 static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
@@ -3289,19 +3300,12 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        u16 abilityId;
         sDebugMonData->nature = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
-        StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        abilityId = GetAbilityBySpecies(sDebugMonData->species, 0);
-        u8 *end = StringCopy(gStringVar1, gAbilitiesInfo[abilityId].name);
-        WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(gTasks[taskId].tSubWindowId));
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonAbility);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        u32 abilityId = GetAbilityBySpecies(sDebugMonData->species, 0);
+        Debug_Display_Ability(abilityId, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
 
         gTasks[taskId].func = DebugAction_Give_Pokemon_SelectAbility;
     }
@@ -3315,7 +3319,6 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
 
 static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
 {
-    u16 abilityId;
     u8 abilityCount = NUM_ABILITY_SLOTS - 1; //-1 for proper iteration
     u8 i = 0;
 
@@ -3340,14 +3343,8 @@ static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
         {
             i++;
         }
-        abilityId = GetAbilityBySpecies(sDebugMonData->species, gTasks[taskId].tInput - i);
-        StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-        u8 *end = StringCopy(gStringVar1, gAbilitiesInfo[abilityId].name);
-        WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(gTasks[taskId].tSubWindowId));
-        StringExpandPlaceholders(gStringVar4, sDebugText_PokemonAbility);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        u32 abilityId = GetAbilityBySpecies(sDebugMonData->species, gTasks[taskId].tInput - i);
+        Debug_Display_Ability(abilityId, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     }
 
     if (JOY_NEW(A_BUTTON))
