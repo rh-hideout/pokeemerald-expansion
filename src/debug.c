@@ -1633,7 +1633,7 @@ static void DebugTask_HandleMenuInput_Scripts(u8 taskId)
 
 static void DebugTask_HandleMenuInput_TimeMenu(u8 taskId)
 {
-    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu, DebugTask_HandleMenuInput_Main, sDebugMenu_ListTemplate_Main);
+    DebugTask_HandleMenuInput_General(taskId, sDebugMenu_Actions_TimeMenu, DebugTask_HandleMenuInput_Utilities, sDebugMenu_ListTemplate_Utilities);
 }
 
 static void DebugTask_HandleMenuInput_TimeMenu_TimesOfDay(u8 taskId)
@@ -1916,7 +1916,7 @@ static void DebugAction_Util_BerryFunctions(u8 taskId)
 
 static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 {
-    Debug_DestroyMenu_Full(taskId);
+    Debug_DestroyMenu(taskId);
     Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu, sDebugMenu_ListTemplate_TimeMenu);
 }
 
