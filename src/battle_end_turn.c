@@ -746,8 +746,11 @@ static bool32 HandleEndTurnWrap(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_WRAPPED && IsBattlerAlive(battler))
     {
-        if (--gDisableStructs[battler].wrapTurns != 0 && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+        if (--gDisableStructs[battler].wrapTurns != 0)
         {
+            if (IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+                return effect;
+
             gBattleScripting.animArg1 = gBattleStruct->wrappedMove[battler];
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
