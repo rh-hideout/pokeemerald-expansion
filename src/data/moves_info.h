@@ -12551,8 +12551,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Soak"),
         .description = COMPOUND_STRING(
-            "Sprays water at the foe\n"
-            "making it Water type."),
+            "Sprays water at the foe,\n"
+            "changing it to Water type."),
         .effect = EFFECT_SOAK,
         .power = 0,
         .type = TYPE_WATER,
@@ -14506,8 +14506,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Trick-or-Treat"),
         .description = COMPOUND_STRING(
-            "Goes trick-or-treating\n"
-            "making the foe Ghost type."),
+            "Goes trick-or-treating,\n"
+            "adding Ghost type to foe."),
         .effect = EFFECT_THIRD_TYPE,
         .power = 0,
         .type = TYPE_GHOST,
@@ -14602,8 +14602,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Forest's Curse"),
         .description = COMPOUND_STRING(
-            "Puts a curse on the foe\n"
-            "making the foe Grass type."),
+            "Puts a curse on the foe,\n"
+            "adding the Grass type."),
         .effect = EFFECT_THIRD_TYPE,
         .power = 0,
         .type = TYPE_GRASS,
