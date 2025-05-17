@@ -40,6 +40,10 @@
 #define INCBIN_S16  INCBIN
 #define INCBIN_S32  INCBIN
 #define INCBIN_COMP INCBIN
+
+#ifndef TESTING
+#define TESTING 0
+#endif
 #endif // IDE support
 
 #define ARRAY_COUNT(array) (size_t)(sizeof(array) / sizeof((array)[0]))
