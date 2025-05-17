@@ -4077,7 +4077,8 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     // Don't increase stats if opposing battler has used Haze
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (GetMoveEffect(gBattleHistory->usedMoves[battlerDef][i]) == EFFECT_HAZE)
+        if (GetMoveEffect(gBattleHistory->usedMoves[battlerDef][i]) == EFFECT_HAZE
+            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[battlerDef][i], MOVE_EFFECT_CLEAR_SMOG))
             return NO_INCREASE;
     }
 
