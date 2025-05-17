@@ -4396,7 +4396,7 @@ void DecideTerastal(u32 battler)
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
         return;
     
-    if (!(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         return;
     
     // TODO: Currently only single battles are considered.
