@@ -21,6 +21,7 @@
             - Gen 8+ damaging moves are given power extrapolated from Gen 7.
             - Gen 8+ status moves have no additional effects, like Healing Wish.
         - Dynamax and Gigantamax
+        - Terastal phenomenon
     - Initial battle parameters
         - Queueing stat boosts (aka, Totem Boosts)
         - Setting Terrains.
@@ -115,7 +116,7 @@
             - *Clear Boxes*: cleans every Pokémon from the Boxes.
             - *Hatch an Egg*: lets you choose an Egg in your party and immediately hatch it.
     - [HGSS Pokédex](https://github.com/TheXaman/pokeemerald/tree/tx_pokedexPlus_hgss) by @TheXaman
-        - May be disabled.
+        - Not enabled by default, can be enabled in `include/config/pokedex_plus_hgss.h`
         - **Additional features**:
             - *Support for new evolution methods*.
             - *Dark Mode*.
@@ -123,12 +124,12 @@
     - [Dynamic Multichoice](https://github.com/SBird1337/pokeemerald/tree/feature/dynmulti) by @SBird1337
     - [Saveblock Cleansing](https://github.com/ghoulslash/pokeemerald/tree/saveblock) by @ghoulslash
     - [Followers & Expanded IDs](https://github.com/aarant/pokeemerald/tree/followers-expanded-id) by @aarant
-        - May be disabled.
+        - Not enabled by default, can be enabled in `include/config/overworld.h`
         - Includes Pokémon followers like in HGSS, including interactions.
         - ***Expands the amount of possible object event IDs beyond 255.***
         - ***Includes an implementation of dynamic overworld palettes (DOWP).***
         - **Additional features**:
-            - *Pokémon overworld sprites up to Generation 8.*
+            - *Pokémon overworld sprites up to Generation 9.*
             - *Integration with our Pokémon Sprite Visualizer, allowing users to browse through the follower sprites alongside battle sprites.*
 - ***Other features***
     - Pressing B while holding a Pokémon drops them like in modern games (configurable).
@@ -142,4 +143,4 @@
     - All bugfixes from pret included.
     - Fixed overworld snow effect.
 
-There are some mechanics, moves and abilities that are missing and being developed. Check [the project's milestones](https://github.com/rh-hideout/pokeemerald-expansion/milestones) and our [issues page](https://github.com/rh-hideout/pokeemerald-expansion/issues) to see which ones.
+There are some mechanics, moves and abilities that are missing and being developed. Check our [issues page](https://github.com/rh-hideout/pokeemerald-expansion/issues) to see which ones.
