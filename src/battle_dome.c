@@ -5,9 +5,10 @@
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
-#include "frontier_util.h"
 #include "battle_message.h"
 #include "event_data.h"
+#include "frontier_util.h"
+#include "item_use.h"
 #include "overworld.h"
 #include "util.h"
 #include "malloc.h"
@@ -3973,13 +3974,15 @@ static bool32 IsDomeLuckyMove(u32 move)
 
 static bool32 IsDomePopularMove(u32 move)
 {
-    u8 i;
-    for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
+    u32 i;
+    u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
+
+    for (i = 0; i < TMHM_MovesArrayLength; i++)
     {
-        if (ItemIdToBattleMoveId(ITEM_TM01 + i) == move)
+        if (gTMHMMoves[i] == move)
             return TRUE;
     }
-    if (i == NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
+    if (i == TMHM_MovesArrayLength)
         return FALSE;
     // Filter in TMs/HMs
     if (GetMovePower(move) >= 90)

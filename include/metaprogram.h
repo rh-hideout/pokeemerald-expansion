@@ -28,6 +28,7 @@
 
 /* You'll never guess what this one does */
 #define APPEND_SEMICOLON(a) a;
+#define APPEND_COMMA(a) a,
 
 /* Converts a string to a compound literal, essentially making it a pointer to const u8 */
 #define COMPOUND_STRING(str) (const u8[]) _(str)
@@ -80,6 +81,18 @@
 #define R_FOR_EACH_WITH(macro, args, ...) __VA_OPT__(R_FOR_EACH_WITH_(macro, args, __VA_ARGS__))
 #define R_FOR_EACH_WITH_(macro, args, a, ...) INVOKE_WITH(macro, args, a) __VA_OPT__(R_FOR_EACH_WITH_P PARENS (macro, args, __VA_ARGS__))
 #define R_FOR_EACH_WITH_P() R_FOR_EACH_WITH_
+
+/* Expands to 'macro(a, b)' for each 'a' in 'as' and 'b' in 'bs'.
+ * Uses the shorter of 'as' and 'bs'. */
+#define R_ZIP_WITH(macro, as, bs) CAT(R_ZIP_WITH_, CAT(R_ZIP_WITH_NONEMPTY(as), R_ZIP_WITH_NONEMPTY(bs)))(macro, FIRST as, FIRST bs, (EXCEPT_1 as), (EXCEPT_1 bs))
+#define R_ZIP_WITH_00(macro, a, b, as, bs)
+#define R_ZIP_WITH_01(macro, a, b, as, bs)
+#define R_ZIP_WITH_10(macro, a, b, as, bs)
+#define R_ZIP_WITH_11(macro, a, b, as, bs) macro(a, b) R_ZIP_WITH_P PARENS (macro, as, bs)
+#define R_ZIP_WITH_P() R_ZIP_WITH
+
+#define R_ZIP_WITH_NONEMPTY(as) R_ZIP_WITH_NONEMPTY_ as
+#define R_ZIP_WITH_NONEMPTY_(...) FIRST(__VA_OPT__(1,) 0)
 
 /* Picks the xth VA_ARG if it exists, otherwise returns a default value */
 #define DEFAULT(_default, ...) FIRST(__VA_OPT__(__VA_ARGS__, ) _default)

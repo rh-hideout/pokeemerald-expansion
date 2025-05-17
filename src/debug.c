@@ -25,6 +25,7 @@
 #include "field_weather.h"
 #include "international_string_util.h"
 #include "item.h"
+#include "item_use.h"
 #include "item_icon.h"
 #include "list_menu.h"
 #include "m4a.h"
@@ -3996,12 +3997,19 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 {
-    u16 itemId;
+    u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
 
-    for (itemId = ITEM_TM01; itemId <= ITEM_HM08; itemId++)
+    for (u32 item = 0; item < ITEMS_COUNT; item++)
     {
-        if (CheckBagHasSpace(itemId, 1) && ItemIdToBattleMoveId(itemId) != MOVE_NONE)
-            AddBagItem(itemId, 1);
+        if (gItemsInfo[item].pocket != POCKET_TM_HM)
+            continue;
+
+        for (u32 i = 0; i < TMHM_MovesArrayLength; i++)
+        {
+            if (gTMHMMoves[i] == gItemsInfo[item].secondaryId && CheckBagHasSpace(item, 1))
+                AddBagItem(item, 1);
+            // DebugPrintf("i: %d, gTMHMMoves[i]: %d", i, gTMHMMoves[i]);
+        }
     }
 }
 

@@ -883,7 +883,10 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId] - 1; i++)
         {
-            GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            if (pocketId == TMHM_POCKET)
+                GetItemName(sListBuffer2->name[i], i);
+            else
+                GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -897,7 +900,10 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId]; i++)
         {
-            GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            if (pocketId == TMHM_POCKET)
+                GetItemName(sListBuffer2->name[i], i);
+            else
+                GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -909,25 +915,58 @@ static void LoadBagItemListBuffers(u8 pocketId)
     gMultiuseListMenuTemplate.maxShowed = gBagMenu->numShownItems[pocketId];
 }
 
+#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
+#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
+
+static const u16 gTMItemIds[] =
+{
+    RECURSIVELY(R_ZIP_WITH(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
+};
+
+static const u16 gHMItemIds[] =
+{
+    RECURSIVELY(R_ZIP_WITH(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
+};
+
 static void GetItemName(u8 *dest, u16 itemId)
 {
     u8 *end;
     switch (gBagPosition.pocket)
     {
     case TMHM_POCKET:
-        end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-        if (itemId >= ITEM_HM01)
         {
-            // Get HM number
-            ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_HM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
-            StringExpandPlaceholders(dest, gText_NumberItem_HM);
-        }
-        else
-        {
-            // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_TM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-            StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+            // u32 i;
+            // u32 moveTM = FALSE;
+            // u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
+            // for (i = 0; i < TMHM_MovesArrayLength; i++)
+            // {
+            //     if (gTMMoves[i] == gItemsInfo[itemId].secondaryId)
+            //     {
+            //         moveTM = TRUE;
+            //         break;
+            //     }
+            //     if (gHMMoves[i] == gItemsInfo[itemId].secondaryId)
+            //     {
+            //         moveTM = FALSE;
+            //         break;
+            //     }
+            // }
+            if (itemId < ARRAY_COUNT(gTMItemIds))
+            {
+                // ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_TM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+                end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gTMItemIds[itemId])));
+                PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+
+                ConvertIntToDecimalStringN(gStringVar1, itemId + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+                StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+            }
+            else
+            {
+                end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gHMItemIds[itemId - ARRAY_COUNT(gTMItemIds)])));
+                PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+                ConvertIntToDecimalStringN(gStringVar1, itemId - ARRAY_COUNT(gTMItemIds) + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+                StringExpandPlaceholders(dest, gText_NumberItem_HM);
+            }
         }
         break;
     case BERRIES_POCKET:
@@ -984,11 +1023,24 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         itemQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, itemIndex);
 
         // Draw HM icon
-        if (itemId >= ITEM_HM01 && itemId <= ITEM_HM08)
-            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+        // DebugPrintf("itemIndex: %d", itemIndex);
+        // DebugPrintf("gHMItemIds[itemIndex] : %d", gHMItemIds[itemIndex] );
+        // DebugPrintf("itemId : %d", itemId);
+        // DebugPrintf("==========================");
+
+        for (u32 i = 0; i < ARRAY_COUNT(gHMItemIds); i++)
+        {
+            if (itemId == gHMItemIds[i])
+            {
+                DebugPrintf("gHMItemIds[%d]: %d", i, gHMItemIds[i]);
+                BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+                break;
+            }
+        }
 
         if (gBagPosition.pocket != KEYITEMS_POCKET && ItemId_GetImportance(itemId) == FALSE)
         {
+            // DebugPrintf("==========================");
             // Print item quantity
             ConvertIntToDecimalStringN(gStringVar1, itemQuantity, STR_CONV_MODE_RIGHT_ALIGN, MAX_ITEM_DIGITS);
             StringExpandPlaceholders(gStringVar4, gText_xVar1);
@@ -1135,6 +1187,8 @@ void UpdatePocketItemList(u8 pocketId)
     switch (pocketId)
     {
     case TMHM_POCKET:
+        SortTMHMs(pocket);
+        break;
     case BERRIES_POCKET:
         SortBerriesOrTMHMs(pocket);
         break;

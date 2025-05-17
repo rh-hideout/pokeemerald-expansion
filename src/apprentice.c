@@ -8,6 +8,7 @@
 #include "field_player_avatar.h"
 #include "international_string_util.h"
 #include "item.h"
+#include "item_use.h"
 #include "item_menu.h"
 #include "main.h"
 #include "malloc.h"
@@ -353,8 +354,8 @@ static u16 GetRandomAlternateMove(u8 monId)
                 // NOTE: Below is an infinite loop if a species which cannot learn TMs is assigned to an Apprentice
                 do
                 {
-                    id = Random() % (NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES);
-                    shouldUseMove = CanLearnTeachableMove(species, ItemIdToBattleMoveId(ITEM_TM01 + id));
+                    id = Random() % GetTMHMMovesArrayLength();
+                    shouldUseMove = CanLearnTeachableMove(species, gTMHMMoves[id]);
                 }
                 while (!shouldUseMove);
 

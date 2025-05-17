@@ -179,14 +179,6 @@ enum {
 #define MENU_DIR_RIGHT    2
 #define MENU_DIR_LEFT    -2
 
-#define HM_MOVES_END 0xFFFF
-
-static const u16 sHMMoves[] =
-{
-    MOVE_CUT, MOVE_FLY, MOVE_SURF, MOVE_STRENGTH, MOVE_FLASH,
-    MOVE_ROCK_SMASH, MOVE_WATERFALL, MOVE_DIVE, HM_MOVES_END
-};
-
 enum {
     CAN_LEARN_MOVE,
     CANNOT_LEARN_MOVE,
@@ -1594,9 +1586,9 @@ static bool8 DoesSelectedMonKnowHM(u8 *slotPtr)
         u32 j = 0;
         u16 move = GetMonData(&gPlayerParty[*slotPtr], MON_DATA_MOVE1 + i);
 
-        while (sHMMoves[j] != HM_MOVES_END)
+        while (gHMMoves[j] != GetHMMovesArrayLength())
         {
-            if (sHMMoves[j++] == move)
+            if (gHMMoves[j++] == move)
                 return TRUE;
         }
     }
