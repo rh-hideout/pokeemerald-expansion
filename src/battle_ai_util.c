@@ -4478,7 +4478,7 @@ bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs
     int numPossibleTera = 0; 
     for (int i = 0; i < PARTY_SIZE; i++) 
     {
-        if ( GetMonData(&party[i], MON_DATA_HP) != 0
+        if (GetMonData(&party[i], MON_DATA_HP) != 0
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
          && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) 
@@ -4571,7 +4571,7 @@ bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs
     }
 
     // Make decisions
-    // This is done after all loops to minimise the possibility of a timing attack in whcih the player could
+    // This is done after all loops to minimize the possibility of a timing attack in which the player could
     // determine whether the AI will tera based on the time taken to select a move.
 
     if (enablesKo) 
