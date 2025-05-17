@@ -4070,8 +4070,8 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (gAiLogicData->abilities[battlerDef] == ABILITY_OPPORTUNIST)
         return NO_INCREASE;
 
-    // Don't increase stats if opposing battler has Encore
-    if (HasMoveWithEffect(battlerDef, EFFECT_ENCORE))
+    // Don't increase stats if opposing battler has Encore or Haze
+    if (HasMoveWithEffect(battlerDef, EFFECT_ENCORE) || HasMoveWithEffect(battlerDef, EFFECT_HAZE))
         return NO_INCREASE;
 
     if (IsDoubleBattle() && HasMoveWithEffect(GetPartnerBattler(battlerDef), EFFECT_ENCORE))
