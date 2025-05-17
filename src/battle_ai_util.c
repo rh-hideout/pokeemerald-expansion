@@ -4589,7 +4589,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
     }
 
     // Decide to conserve tera based on number of possible later oppotunities
-    u16 conserveTeraChance = 10 * (numPossibleTera-1);
+    u16 conserveTeraChance = AI_CONSERVE_TERA_CHANCE_PER_MON * (numPossibleTera-1);
     if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
         return NO_GIMMICK;
 
@@ -4603,7 +4603,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
         {
             // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
             // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
-            if (Random() % 100 < 40) 
+            if (Random() % 100 < AI_TERA_PREDICT_CHANCE) 
                 return USE_GIMMICK;
         }
     }
