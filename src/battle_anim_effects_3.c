@@ -1204,15 +1204,26 @@ const struct SpriteTemplate gMegaParticlesSpriteTemplate =
     .callback = AnimPowerAbsorptionOrb,
 };
 
+const struct SpriteTemplate gMegaSmokeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ELECTRICITY,
+    .paletteTag = ANIM_TAG_ELECTRICITY,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gAnims_ElectricPuff,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimParticleInVortex,
+};
+
 const struct SpriteTemplate gMegaSymbolSpriteTemplate =
 {
     .tileTag = ANIM_TAG_MEGA_SYMBOL,
     .paletteTag = ANIM_TAG_MEGA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
+    .affineAnims = gSpriteAffineAnimTable_MegaSymbol,
+    .callback = AnimSpriteOnMonPos,
 };
 
 const struct SpriteTemplate gAlphaStoneSpriteTemplate =
@@ -1241,22 +1252,55 @@ const struct SpriteTemplate gAlphaSymbolSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ALPHA_SYMBOL,
     .paletteTag = ANIM_TAG_ALPHA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
+    .affineAnims = gSpriteAffineAnimTable_PrimalSymbol,
+    .callback = AnimSpriteOnMonPos,
 };
 
 const struct SpriteTemplate gOmegaSymbolSpriteTemplate =
 {
     .tileTag = ANIM_TAG_OMEGA_SYMBOL,
     .paletteTag = ANIM_TAG_OMEGA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
+    .affineAnims = gSpriteAffineAnimTable_PrimalSymbol,
+    .callback = AnimSpriteOnMonPos,
+};
+
+const struct SpriteTemplate gPowerConstructSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_VERTICAL_HEX,
+    .paletteTag = ANIM_TAG_ZYGARDE_HEXES,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gPowerAbsorptionOrbAnimTable,
+    .images = NULL,
+    .affineAnims = gPowerAbsorptionOrbAffineAnimTable,
+    .callback = AnimPowerAbsorptionOrb,
+};
+
+const struct SpriteTemplate gPowerConstructEmergeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_VERTICAL_HEX,
+    .paletteTag = ANIM_TAG_ZYGARDE_HEXES,
+    .oam = &gOamData_AffineDouble_ObjBlend_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_LusterPurgeCircle,
+    .callback = AnimSpriteOnMonPos,
+};
+
+const struct SpriteTemplate gZSymbolSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SNORE_Z,
+    .paletteTag = ANIM_TAG_SNORE_Z,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gSpriteAffineAnimTable_MegaSymbol,
+    .callback = AnimSpriteOnMonPos,
 };
 
 const struct SpriteTemplate gTeraCrystalSpriteTemplate =

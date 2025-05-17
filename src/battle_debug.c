@@ -972,7 +972,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 83 + count * 54, i * 15, 0, NULL);
 
             ConvertIntToDecimalStringN(text,
-                                       AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, AI_DATA),
+                                       AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
                                        STR_CONV_MODE_RIGHT_ALIGN, 3);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, i * 15, 0, NULL);
 
@@ -980,9 +980,9 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
         }
     }
 
-    if (AI_DATA->shouldSwitch & (1u << data->aiBattlerId))
+    if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
-        u32 switchMon = GetMonData(&gEnemyParty[AI_DATA->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        u32 switchMon = GetMonData(&gEnemyParty[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
 
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, sText_IsSwitching, 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, gSpeciesInfo[switchMon].speciesName, 74 + 68, 64, 0, NULL);
@@ -1128,9 +1128,9 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
     {
         if (IsOnPlayerSide(i) && IsBattlerAlive(i))
         {
-            u16 ability = AI_DATA->abilities[i];
-            enum ItemHoldEffect holdEffect = AI_DATA->holdEffects[i];
-            u16 item = AI_DATA->items[i];
+            u16 ability = gAiLogicData->abilities[i];
+            enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[i];
+            u16 item = gAiLogicData->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, ItemId_GetName(item), x, 15, 0, NULL);
@@ -1146,10 +1146,10 @@ static void PutAiPartyText(struct BattleDebugMenu *data)
 {
     u32 i, j, count;
     u8 *text = Alloc(0x50), *txtPtr;
-    struct AiPartyMon *aiMons = AI_PARTY->mons[GetBattlerSide(data->aiBattlerId)];
+    struct AiPartyMon *aiMons = gAiPartyData->mons[GetBattlerSide(data->aiBattlerId)];
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);
-    count = AI_PARTY->count[GetBattlerSide(data->aiBattlerId)];
+    count = gAiPartyData->count[GetBattlerSide(data->aiBattlerId)];
     for (i = 0; i < count; i++)
     {
         if (aiMons[i].wasSentInBattle)
@@ -1275,8 +1275,8 @@ static void Task_ShowAiParty(u8 taskId)
         LoadMonIconPalettes();
         LoadPartyMenuAilmentGfx();
         data->aiBattlerId = data->battlerId;
-        aiMons = AI_PARTY->mons[GetBattlerSide(data->aiBattlerId)];
-        for (i = 0; i < AI_PARTY->count[GetBattlerSide(data->aiBattlerId)]; i++)
+        aiMons = gAiPartyData->mons[GetBattlerSide(data->aiBattlerId)];
+        for (i = 0; i < gAiPartyData->count[GetBattlerSide(data->aiBattlerId)]; i++)
         {
             u16 species = SPECIES_NONE; // Question mark
             if (aiMons[i].wasSentInBattle && aiMons[i].species)
@@ -2191,8 +2191,8 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     case LIST_ITEM_AI:
-        data->modifyArrows.modifiedValPtr = &gBattleResources->ai->aiFlags[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gBattleResources->ai->aiFlags[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
+        data->modifyArrows.modifiedValPtr = &gAiThinkingStruct->aiFlags[data->battlerId];
+        data->modifyArrows.currValue = GetBitfieldValue(gAiThinkingStruct->aiFlags[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     CASE_ITEM_STATUS:

@@ -23,12 +23,23 @@
  *   +---------------------------+
  */
 
-#define MAX_BATTLERS_COUNT  4
+enum BattlerPosition
+{
+    B_POSITION_PLAYER_LEFT,
+    B_POSITION_OPPONENT_LEFT,
+    B_POSITION_PLAYER_RIGHT,
+    B_POSITION_OPPONENT_RIGHT,
+    MAX_POSITION_COUNT,
+};
 
-#define B_POSITION_PLAYER_LEFT        0
-#define B_POSITION_OPPONENT_LEFT      1
-#define B_POSITION_PLAYER_RIGHT       2
-#define B_POSITION_OPPONENT_RIGHT     3
+enum BattlerId
+{
+    B_BATTLER_0,
+    B_BATTLER_1,
+    B_BATTLER_2,
+    B_BATTLER_3,
+    MAX_BATTLERS_COUNT,
+};
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
@@ -374,10 +385,8 @@ enum MoveEffects
     MOVE_EFFECT_EVS_MINUS_2,
     MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
-    MOVE_EFFECT_KNOCK_OFF,
     MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
-    MOVE_EFFECT_SMACK_DOWN,
     MOVE_EFFECT_FLAME_BURST,
     MOVE_EFFECT_FEINT,
     MOVE_EFFECT_V_CREATE,

@@ -263,7 +263,6 @@ enum MoveEndEffects
     MOVEEND_FIRST_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ALL,
     MOVEEND_SYMBIOSIS,
-    MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
     MOVEEND_SUBSTITUTE,
     MOVEEND_SKY_DROP_CONFUSE,
