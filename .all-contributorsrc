@@ -120,6 +120,15 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "LinathanZel",
+      "name": "Linathan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35115312?v=4",
+      "profile": "https://github.com/LinathanZel",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
