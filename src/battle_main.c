@@ -5773,17 +5773,17 @@ void RunBattleScriptCommands(void)
 
 bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
 {
-    u32 ateType;
+    u32 ateType = TYPE_NONE;
 
     switch (GetMoveEffect(move))
     {
     case EFFECT_TERA_BLAST:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
-            return FALSE;
+            return ateType;
         break;
     case EFFECT_TERA_STARSTORM:
         if (gBattleMons[battlerAtk].species == SPECIES_TERAPAGOS_STELLAR)
-            return FALSE;
+            return ateType;
         break;
     case EFFECT_HIDDEN_POWER:
     case EFFECT_WEATHER_BALL:
@@ -5791,10 +5791,9 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
     case EFFECT_CHANGE_TYPE_ON_ITEM:
     case EFFECT_REVELATION_DANCE:
     case EFFECT_TERRAIN_PULSE:
-        return FALSE;
+        return ateType;
     }
 
-    ateType = TYPE_NONE;
     switch (attackerAbility)
     {
     case ABILITY_PIXILATE:
@@ -5814,23 +5813,17 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
         break;
     }
 
-    if (ateType != TYPE_NONE && GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)
-    {
-        gBattleStruct->dynamicMoveType = ateType | F_DYNAMIC_TYPE_SET;
-        return TRUE;
-    }
-
-    return FALSE;
+    return ateType;
 }
 
 // Returns TYPE_NONE if type doesn't change.
-// NULL can be passed to ateBoost to avoid applying ate-ability boosts when opening the summary screen in-battle.
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
+u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
 {
     u32 moveType = GetMoveType(move);
     u32 moveEffect = GetMoveEffect(move);
     u32 species, heldItem, holdEffect, ability, type1, type2, type3;
-    bool32 monInBattle = gMain.inBattle && gPartyMenu.menuType != PARTY_MENU_TYPE_IN_BATTLE;
+    bool32 monInBattle = state == MON_IN_BATTLE || state == MON_SUMMARY_SCREEN;
+    enum Gimmick gimmick = GIMMICK_NONE;
 
     if (move == MOVE_STRUGGLE)
         return TYPE_NORMAL;
@@ -5935,10 +5928,10 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
             return ItemId_GetSecondaryId(heldItem);
         break;
     case EFFECT_REVELATION_DANCE:
-        if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
+        if (gimmick != GIMMICK_Z_MOVE)
         {
             u32 teraType;
-            if (GetActiveGimmick(battler) == GIMMICK_TERA && ((teraType = GetMonData(mon, MON_DATA_TERA_TYPE)) != TYPE_STELLAR))
+            if (gimmick == GIMMICK_TERA && ((teraType = GetMonData(mon, MON_DATA_TERA_TYPE)) != TYPE_STELLAR))
                 return teraType;
             else if (type1 != TYPE_MYSTERY && !(gDisableStructs[battler].roostActive && type1 == TYPE_FLYING))
                 return type1;
@@ -6013,7 +6006,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
         }
         break;
     case EFFECT_TERA_BLAST:
-        if (GetActiveGimmick(battler) == GIMMICK_TERA)
+        if (gimmick == GIMMICK_TERA)
             return GetMonData(mon, MON_DATA_TERA_TYPE);
         break;
     case EFFECT_TERA_STARSTORM:
@@ -6031,20 +6024,24 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
         return TYPE_DARK;
     }
     else if (moveType == TYPE_NORMAL
-          && ((!gMain.inBattle || TrySetAteType(move, battler, ability))
-          && GetActiveGimmick(battler) != GIMMICK_DYNAMAX))
+          && gimmick != GIMMICK_DYNAMAX
+          && gimmick != GIMMICK_Z_MOVE)
     {
-        if (gMain.inBattle && ateBoost != NULL)
-            *ateBoost = TRUE;
+        u32 ateType = TrySetAteType(move, battler, ability);
+        if (ateType != TYPE_NONE && state == MON_IN_BATTLE)
+            gBattleStruct->ateBoost[battler] = TRUE;
+        return ateType;
     }
     else if (moveType != TYPE_NORMAL
           && moveEffect != EFFECT_HIDDEN_POWER
           && moveEffect != EFFECT_WEATHER_BALL
           && ability == ABILITY_NORMALIZE
-          && GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
+          && gimmick != GIMMICK_Z_MOVE)
     {
-        if (gMain.inBattle && ateBoost != NULL && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
-            *ateBoost = TRUE;
+        if (monInBattle
+         && !gBattleStruct->ateBoost[battler]
+         && gimmick != GIMMICK_DYNAMAX)
+            gBattleStruct->ateBoost[battler] = TRUE;
         return TYPE_NORMAL;
     }
 
@@ -6064,7 +6061,8 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
     moveType = GetDynamicMoveType(&GetBattlerParty(battler)[gBattlerPartyIndexes[battler]],
                                   move,
                                   battler,
-                                  &gBattleStruct->ateBoost[battler]);
+                                  MON_IN_BATTLE);
+
     if (moveType != TYPE_NONE)
         gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
 

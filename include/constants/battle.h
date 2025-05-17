@@ -622,4 +622,11 @@ enum SlideMsgStates
     RESTORE_BATTLER_SLIDE_CONTROL,
 };
 
+enum MonState
+{
+    MON_IN_BATTLE,
+    MON_OUTSIDE_BATTLE,
+    MON_SUMMARY_SCREEN, // MON_IN_BATTLE alternative To avoid setting setting the ate type global in the summary screen
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_H
