@@ -3303,7 +3303,7 @@ static void CancellerObedience(u32 *effect)
             damageCalcData.moveType = TYPE_MYSTERY;
             damageCalcData.isCrit = FALSE;
             damageCalcData.randomFactor = FALSE;
-            damageCalcData.updateFlags = TRUE;
+            damageCalcData.state = BATTLE_DMG_CALC;
             gBattleStruct->moveDamage[gBattlerAttacker] = CalculateMoveDamage(&damageCalcData, 40);
             gBattlescriptCurrInstr = BattleScript_IgnoresAndHitsItself;
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
@@ -3479,7 +3479,7 @@ static void CancellerConfused(u32 *effect)
                 damageCalcData.moveType = TYPE_MYSTERY;
                 damageCalcData.isCrit = FALSE;
                 damageCalcData.randomFactor = FALSE;
-                damageCalcData.updateFlags = TRUE;
+                damageCalcData.state = BATTLE_DMG_CALC;
                 gBattleStruct->moveDamage[gBattlerAttacker] = CalculateMoveDamage(&damageCalcData, 40);
                 gProtectStructs[gBattlerAttacker].confusionSelfDmg = TRUE;
                 gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
@@ -9208,13 +9208,17 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
         }
         break;
     case EFFECT_PAYBACK:
-        if (GetBattlerTurnOrderNum(battlerAtk) > GetBattlerTurnOrderNum(battlerDef)
-            && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gDisableStructs[battlerDef].isFirstTurn != 2))
+        if (damageCalcData->state == AI_DMG_CALC && AI_IsSlower(battlerAtk, battlerDef, move))
+            basePower *= 2; // Checking turn Order can be incorrect during ai calcs
+        else if (GetBattlerTurnOrderNum(battlerAtk) > GetBattlerTurnOrderNum(battlerDef)
+              && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gDisableStructs[battlerDef].isFirstTurn != 2))
             basePower *= 2;
         break;
     case EFFECT_BOLT_BEAK:
-        if (GetBattlerTurnOrderNum(battlerAtk) < GetBattlerTurnOrderNum(battlerDef)
-            || gDisableStructs[battlerDef].isFirstTurn == 2)
+        if (damageCalcData->state == AI_DMG_CALC && AI_IsFaster(battlerAtk, battlerDef, move))
+            basePower *= 2; // Checking turn Order can be incorrect during ai calcs
+        else if (GetBattlerTurnOrderNum(battlerAtk) < GetBattlerTurnOrderNum(battlerDef)
+                 || gDisableStructs[battlerDef].isFirstTurn == 2)
             basePower *= 2;
         break;
     case EFFECT_ROUND:
@@ -9343,7 +9347,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_RETALIATE:
-        if (gSideTimers[atkSide].retaliateTimer == 1)
+        if (gSideTimers[atkSide].retaliateTimer == 1 || (amageCalcData->state == AI_DMG_CALC && gSideTimers[atkSide].retaliateTimer == 2))
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_SOLAR_BEAM:
@@ -9528,7 +9532,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
         if (moveType == TYPE_FIRE)
         {
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 RecordAbilityBattle(battlerDef, defAbility);
         }
         break;
@@ -9856,7 +9860,7 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
         if (moveType == TYPE_FIRE || moveType == TYPE_ICE)
         {
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 RecordAbilityBattle(battlerDef, ABILITY_THICK_FAT);
         }
         break;
@@ -9995,7 +9999,7 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
         if (gBattleMons[battlerDef].status1 & STATUS1_ANY && usesDefStat)
         {
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 RecordAbilityBattle(battlerDef, ABILITY_MARVEL_SCALE);
         }
         break;
@@ -10003,7 +10007,7 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
         if (usesDefStat)
         {
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 RecordAbilityBattle(battlerDef, ABILITY_FUR_COAT);
         }
         break;
@@ -10011,7 +10015,7 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
         if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && usesDefStat)
         {
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 RecordAbilityBattle(battlerDef, ABILITY_GRASS_PELT);
         }
         break;
@@ -10346,7 +10350,7 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageCalculationData *da
             return UQ_4_12(1.0);
         if (moveType == holdEffectDefParam && (moveType == TYPE_NORMAL || typeEffectivenessModifier >= UQ_4_12(2.0)))
         {
-            if (damageCalcData->updateFlags)
+            if (damageCalcData->state == BATTLE_DMG_CALC)
                 gSpecialStatuses[battlerDef].berryReduced = TRUE;
             return (abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
@@ -10553,7 +10557,7 @@ s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedB
                                                                       damageCalcData->battlerAtk,
                                                                       damageCalcData->battlerDef,
                                                                       GetBattlerAbility(damageCalcData->battlerDef),
-                                                                      damageCalcData->updateFlags);
+                                                                      damageCalcData->state);
 
     if (GetMoveEffect(damageCalcData->move) == EFFECT_FUTURE_SIGHT
      && IsFutureSightAttackerInParty(damageCalcData->battlerAtk, damageCalcData->battlerDef))

@@ -677,7 +677,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         damageCalcData.moveType = moveType;
         damageCalcData.isCrit = FALSE;
         damageCalcData.randomFactor = FALSE;
-        damageCalcData.updateFlags = FALSE;
+        damageCalcData.state = AI_DMG_CALC;
 
         critChanceIndex = CalcCritChanceStage(battlerAtk, battlerDef, move, FALSE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk]);
         if (critChanceIndex > 1) // Consider crit damage only if a move has at least +2 crit chance
