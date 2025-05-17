@@ -6038,7 +6038,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
           && ability == ABILITY_NORMALIZE
           && gimmick != GIMMICK_Z_MOVE)
     {
-        if (monInBattle
+        if (state == MON_IN_BATTLE
          && !gBattleStruct->ateBoost[battler]
          && gimmick != GIMMICK_DYNAMAX)
             gBattleStruct->ateBoost[battler] = TRUE;
