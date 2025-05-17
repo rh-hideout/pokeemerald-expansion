@@ -87,7 +87,8 @@
       "profile": "https://github.com/Pawkkie",
       "contributions": [
         "maintenance",
-        "code"
+        "code",
+        "doc"
       ]
     },
     {
@@ -122,5 +123,6 @@
     }
   ],
   "contributorsPerLine": 7,
-  "linkToUsage": true
+  "linkToUsage": true,
+  "commitType": "docs"
 }
