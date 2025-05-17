@@ -4074,6 +4074,18 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (HasMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
+    // Don't increase stats if opposing battler has used Haze
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (GetMoveEffect(gBattleHistory->usedMoves[battlerDef][i]) == EFFECT_HAZE
+            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[battlerDef][i], MOVE_EFFECT_CLEAR_SMOG))
+            return NO_INCREASE;
+    }
+
+    // Don't increase if AI is at +1 and opponent has Haze
+    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5)
+        return NO_INCREASE;
+
     if (IsDoubleBattle() && HasMoveWithEffect(GetPartnerBattler(battlerDef), EFFECT_ENCORE))
         return NO_INCREASE;
 
