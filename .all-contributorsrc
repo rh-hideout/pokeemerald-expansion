@@ -120,6 +120,16 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "ExpoSeed",
+      "name": "ExpoSeed",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43502820?v=4",
+      "profile": "https://github.com/ExpoSeed",
+      "contributions": [
+        "code",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
