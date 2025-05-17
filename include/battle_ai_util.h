@@ -134,12 +134,8 @@ bool32 HasMove(u32 battlerId, u32 move);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, u32 category);
 bool32 HasMoveWithType(u32 battler, u32 type);
-<<<<<<< HEAD
 bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
-=======
-bool32 HasMoveEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
->>>>>>> rhh/upcoming
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
 bool32 HasMoveWithAdditionalEffect(u32 battlerId, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
