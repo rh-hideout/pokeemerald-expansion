@@ -350,6 +350,10 @@ enum DifficultyLevel GetCurrentDifficultyLevel(void)
 }
 ```
 
+### Data file format
+
+External data files should use JSON.
+
 ## Principles
 
 ### Minimally Invasive

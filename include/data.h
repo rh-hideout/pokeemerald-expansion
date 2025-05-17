@@ -81,6 +81,12 @@ struct TrainerMon
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)
 
+enum TrainerBattleType 
+{
+    TRAINER_BATTLE_TYPE_SINGLES,
+    TRAINER_BATTLE_TYPE_DOUBLES,
+};
+
 struct Trainer
 {
     /*0x00*/ u64 aiFlags;
@@ -90,8 +96,7 @@ struct Trainer
     /*0x11*/ u8 encounterMusic_gender; // last bit is gender
     /*0x12*/ u8 trainerPic;
     /*0x13*/ u8 trainerName[TRAINER_NAME_LENGTH + 1];
-    /*0x1E*/ bool8 doubleBattle:1;
-             bool8 padding:1;
+    /*0x1E*/ u8 battleType:2;
              u8 startingStatus:6;    // this trainer starts a battle with a given status. see include/constants/battle.h for values
     /*0x1F*/ u8 mugshotColor;
     /*0x20*/ u8 partySize;
@@ -253,12 +258,12 @@ static inline const u8 GetTrainerStartingStatusFromId(u16 trainerId)
     return gTrainers[GetCurrentDifficultyLevel()][SanitizeTrainerId(trainerId)].startingStatus;
 }
 
-static inline const bool32 IsTrainerDoubleBattle(u16 trainerId)
+static inline const enum TrainerBattleType GetTrainerBattleType(u16 trainerId)
 {
     u32 sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
-    return gTrainers[difficulty][sanitizedTrainerId].doubleBattle;
+    return gTrainers[difficulty][sanitizedTrainerId].battleType;
 }
 
 static inline const u8 GetTrainerPartySizeFromId(u16 trainerId)

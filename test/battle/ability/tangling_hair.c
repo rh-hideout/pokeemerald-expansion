@@ -68,3 +68,20 @@ SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps ori
         MESSAGE("The opposing Pawniard was hurt by Dugtrio's Rocky Helmet!");
     }
 }
+
+SINGLE_BATTLE_TEST("Tangling Hair does not activate on confusion damage")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_CONFUSION, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        }
+    }
+}
