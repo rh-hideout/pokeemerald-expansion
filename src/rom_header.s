@@ -1,6 +1,8 @@
 @ Note: ROM header data is empty space here.
 @ It's populated by gbafix using data provided in the Makefile.
 
+.section .text
+
 Start::
 	b Init
 

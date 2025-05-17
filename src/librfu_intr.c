@@ -1,6 +1,10 @@
 #include "global.h"
 #include "librfu.h"
 
+#pragma GCC optimize ("no-toplevel-reorder")
+#pragma GCC target ("arm")
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+
 static void sio32intr_clock_master(void);
 static void sio32intr_clock_slave(void);
 static u16 handshake_wait(u16 slot);
