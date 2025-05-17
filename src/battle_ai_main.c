@@ -414,7 +414,7 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 chosenMoveIndex;
 
-    SetAIUsingGimmick(battler, TRUE);
+    SetAIUsingGimmick(battler, USE_GIMMICK);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
         DecideTerastal(battler);

@@ -446,7 +446,7 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
 }
 
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum CalcConsiderGimmick considerGimmickAtk, enum CalcConsiderGimmick considerGimmickDef)
+struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
 {
     struct SimulatedDamage dmg;
 
@@ -696,7 +696,7 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
     return FALSE;
 }
 
-struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum CalcConsiderGimmick considerGimmickAtk, enum CalcConsiderGimmick considerGimmickDef, u32 weather)
+struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather)
 {
     struct SimulatedDamage simDamage;
     s32 moveType;
@@ -4371,9 +4371,9 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
     return FALSE;
 }
 
-void SetAIUsingGimmick(u32 battler, bool32 use) 
+void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use) 
 {
-    if (use)
+    if (use == USE_GIMMICK)
         gAiBattleData->aiUsingGimmick |= (1<<battler);
     else
         gAiBattleData->aiUsingGimmick &= ~(1<<battler);
@@ -4389,7 +4389,7 @@ struct AltTeraCalcs {
     struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
 };
 
-bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs);
+enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs);
 
 void DecideTerastal(u32 battler)
 {
@@ -4442,10 +4442,10 @@ void DecideTerastal(u32 battler)
     }
 
 
-    bool32 res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
+    enum AIConsiderGimmick res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
 
 
-    if (res) 
+    if (res == USE_GIMMICK) 
     {
         // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
         for (int i = 0; i < MAX_MON_MOVES; i++) 
@@ -4471,7 +4471,7 @@ void DecideTerastal(u32 battler)
 #define takenWithTera altCalcs->takenWithTera
 #define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
 
-bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs) {
+enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs) {
     struct Pokemon* party = GetBattlerParty(battler);
 
     // Check how many pokemon we have that could tera
@@ -4578,53 +4578,53 @@ bool32 ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs
     {
         if (hardPunishingMove == MOVE_NONE) 
         {
-            return TRUE;
+            return USE_GIMMICK;
         }
         else 
         {
             // will we go first?
             if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)) 
-                return TRUE;
+                return USE_GIMMICK;
         }
     }
 
     // Decide to conserve tera based on number of possible later oppotunities
     u16 conserveTeraChance = 10 * (numPossibleTera-1);
     if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
-        return FALSE;
+        return NO_GIMMICK;
 
     if (savedFromKo) 
     {
         if (hardPunishingMove == MOVE_NONE) 
         {
-            return TRUE;
+            return USE_GIMMICK;
         }
         else 
         {
             // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
             // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
             if (Random() % 100 < 40) 
-                return TRUE;
+                return USE_GIMMICK;
         }
     }
 
     if (hardPunishingMove != MOVE_NONE) 
-        return FALSE;
+        return NO_GIMMICK;
 
     if (takesBigHit && savedFromAllBigHits) 
-        return TRUE;
+        return USE_GIMMICK;
 
     // No strongly compelling reason to tera. Conserve it if possible. 
     if (numPossibleTera > 1) 
-        return FALSE;
+        return NO_GIMMICK;
 
     if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) 
-        return TRUE;
+        return USE_GIMMICK;
 
     // TODO: Effects other than direct damage are not yet considered. For example, may want to tera poison to avoid a Toxic.
     
 
-    return FALSE;
+    return NO_GIMMICK;
 }
 #undef dealtWithTera
 #undef dealtWithoutTera
