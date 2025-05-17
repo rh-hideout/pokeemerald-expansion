@@ -697,8 +697,10 @@ void DecompressTrainerFrontPic(u16 frontPicId, u8 battler)
 void DecompressTrainerBackPic(u16 backPicId, u8 battler)
 {
     u8 position = GetBattlerPosition(battler);
-    DecompressPicFromTable(&gTrainerBacksprites[backPicId].backPic,
-                           gMonSpritesGfxPtr->spritesGfx[position]);
+    const struct SpriteFrameImage *frame = &gTrainerBacksprites[backPicId].backPic;
+    u32 size = (frame->size * gTrainerBacksprites[backPicId].coordinates.y_offset);
+
+    CpuSmartCopy16(frame->data, gMonSpritesGfxPtr->spritesGfx[position], size);
     LoadPalette(gTrainerBacksprites[backPicId].palette.data,
                           OBJ_PLTT_ID(battler), PLTT_SIZE_4BPP);
 }

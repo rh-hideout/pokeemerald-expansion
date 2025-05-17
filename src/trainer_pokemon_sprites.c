@@ -66,9 +66,15 @@ static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *
     else
     {
         if (isFrontPic)
+        {
             DecompressPicFromTable(&gTrainerSprites[species].frontPic, dest);
+        }
         else
-            DecompressPicFromTable(&gTrainerBacksprites[species].backPic, dest);
+        {
+            const struct SpriteFrameImage *frame = &gTrainerBacksprites[species].backPic;
+            u32 size = (frame->size * gTrainerBacksprites[species].coordinates.y_offset);
+            CpuSmartCopy16(frame->data, dest, size);
+        }
     }
     return FALSE;
 }
