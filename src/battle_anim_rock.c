@@ -1078,3 +1078,14 @@ const struct SpriteTemplate gSaltCureSwirlSpriteTemplate =
     .affineAnims = gAffineAnims_Whirlpool,
     .callback = AnimParticleInVortex,
 };
+
+const struct SpriteTemplate gRockPlumeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ROCKS,
+    .paletteTag = ANIM_TAG_ROCKS,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gAnims_FlyingRock,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimDirtPlumeParticle,
+};

@@ -4403,6 +4403,17 @@ const struct SpriteTemplate gUTurnBallBackSpriteTemplate =
     .callback = AnimAbsorptionOrb,
 };
 
+// dynamax cannon
+const struct SpriteTemplate gSpriteTemplate_DynamaxCannonOrb = {
+    .tileTag = ANIM_TAG_HYDRO_PUMP,
+    .paletteTag = ANIM_TAG_HYDRO_PUMP,
+    .oam = &gOamData_AffineDouble_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = sSpriteAffineAnimTable_HydroCannonBall,
+    .callback = AnimShadowBall
+};
+
 // wicked blow
 static const union AffineAnimCmd sSpriteAffineAnim_DrainPunchFist[] = {
     AFFINEANIMCMD_FRAME(256, 256, 0, 1), //Double sprite size

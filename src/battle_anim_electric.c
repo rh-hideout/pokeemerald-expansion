@@ -343,6 +343,19 @@ static const union AffineAnimCmd sAffineAnim_GrowingElectricOrb_2[] =
     AFFINEANIMCMD_END,
 };
 
+static const union AffineAnimCmd sAffineAnim_GrowingElectricOrb_3[] =
+{
+    AFFINEANIMCMD_FRAME(0x10, 0x10, 0, 0),
+    AFFINEANIMCMD_FRAME(0x4, 0x4, 0, 60),
+    AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
+    AFFINEANIMCMD_LOOP(0),
+    AFFINEANIMCMD_FRAME(0xFFFC, 0xFFFC, 0, 5),
+    AFFINEANIMCMD_FRAME(0x4, 0x4, 0, 5),
+    AFFINEANIMCMD_LOOP(10),
+    AFFINEANIMCMD_FRAME(-4, -4, 0, 60),
+    AFFINEANIMCMD_END,
+};
+
 static const union AffineAnimCmd sAffineAnim_GrowingElectricOrb_4[] =
 {
     AFFINEANIMCMD_FRAME(5, 5, 0, 0),
@@ -368,6 +381,11 @@ const union AffineAnimCmd *const gAffineAnims_GrowingElectricOrb2[] =
     sAffineAnim_GrowingElectricOrb_4,
 };
 
+const union AffineAnimCmd *const gAffineAnims_GrowingElectricOrb3[] =
+{
+    sAffineAnim_GrowingElectricOrb_3,
+};
+
 const struct SpriteTemplate gGrowingChargeOrbSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -388,6 +406,18 @@ const struct SpriteTemplate gGrowingChargeOrb2SpriteTemplate =
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb2,
+    .callback = AnimGrowingChargeOrb,
+};
+
+// For Dynamax Cannon - orb gets smaller at the end
+const struct SpriteTemplate gGrowingChargeOrb3SpriteTemplate =
+{
+    .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
+    .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
+    .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_GrowingElectricOrb3,
     .callback = AnimGrowingChargeOrb,
 };
 
@@ -485,6 +515,17 @@ const struct SpriteTemplate gFairyLockChainsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FAIRY_LOCK_CHAINS,
     .paletteTag = ANIM_TAG_FAIRY_LOCK_CHAINS,
+    .oam = &gOamData_AffineOff_ObjNormal_64x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimVoltTackleBolt,
+};
+
+const struct SpriteTemplate gCollisionCourseSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SMALL_EMBER,
+    .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_64x32,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
@@ -1256,19 +1297,25 @@ void AnimTask_VoltTackleBolt(u8 taskId)
 static bool8 CreateVoltTackleBolt(struct Task *task, u8 taskId)
 {
     u32 spriteId;
-    bool32 isFairyLock = (gAnimMoveIndex == MOVE_FAIRY_LOCK);
-
-    if (isFairyLock)
-        spriteId = CreateSprite(&gFairyLockChainsSpriteTemplate, task->data[3], task->data[5] + 10, 35);
-    else
-        spriteId = CreateSprite(&gVoltTackleBoltSpriteTemplate, task->data[3], task->data[5], 35);
+    switch(gAnimMoveIndex)
+    {
+        case MOVE_FAIRY_LOCK:
+            spriteId = CreateSprite(&gFairyLockChainsSpriteTemplate, task->data[3], task->data[5] + 10, 35);
+            break;
+        case MOVE_COLLISION_COURSE:
+            spriteId = CreateSprite(&gCollisionCourseSpriteTemplate, task->data[3], task->data[5], 35);
+            break;
+        default:
+            spriteId = CreateSprite(&gVoltTackleBoltSpriteTemplate, task->data[3], task->data[5], 35);
+    }
+    bool32 doDestroyOamMatrix = (gAnimMoveIndex == MOVE_FAIRY_LOCK) || (gAnimMoveIndex == MOVE_COLLISION_COURSE);
 
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].data[6] = taskId;
         gSprites[spriteId].data[7] = 7;
-        gSprites[spriteId].data[1] = isFairyLock ? 25 : 12; // How long the chains / bolts stay on screen.
-        gSprites[spriteId].data[2] = isFairyLock; // Whether to destroy the Oam Matrix.
+        gSprites[spriteId].data[1] = (gAnimMoveIndex == MOVE_FAIRY_LOCK) ? 25 : 12; // How long the chains / bolts stay on screen.
+        gSprites[spriteId].data[2] = doDestroyOamMatrix; // Whether to destroy the Oam Matrix.
         task->data[7]++;
     }
 
