@@ -5823,7 +5823,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     u32 moveEffect = GetMoveEffect(move);
     u32 species, heldItem, holdEffect, ability, type1, type2, type3;
     bool32 monInBattle = state == MON_IN_BATTLE || state == MON_SUMMARY_SCREEN;
-    enum Gimmick gimmick = GIMMICK_NONE;
+    enum Gimmick gimmick = GetActiveGimmick(battler);
 
     if (move == MOVE_STRUGGLE)
         return TYPE_NORMAL;
@@ -6024,6 +6024,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         return TYPE_DARK;
     }
     else if (moveType == TYPE_NORMAL
+          && ability != ABILITY_NORMALIZE
           && gimmick != GIMMICK_DYNAMAX
           && gimmick != GIMMICK_Z_MOVE)
     {
