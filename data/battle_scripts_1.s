@@ -5265,7 +5265,7 @@ BattleScript_HandleFaintedMon::
 	printstring STRINGID_USENEXTPKMN
 	setbyte gBattleCommunication, 0
 	yesnobox
-	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, 0, BattleScript_FaintedMonTryChoose
+	jumpifbyte CMP_EQUAL, cCURSOR_POSITION, 0, BattleScript_FaintedMonTryChoose
 @ Player said no, try to run
 	jumpifplayerran BattleScript_FaintedMonEnd
 	printstring STRINGID_CANTESCAPE2
@@ -5285,7 +5285,7 @@ BattleScript_FaintedMonTryChoose:
 	printstring STRINGID_ENEMYABOUTTOSWITCHPKMN
 	setbyte gBattleCommunication, 0
 	yesnobox
-	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, 1, BattleScript_FaintedMonSendOutNew
+	jumpifbyte CMP_EQUAL, cCURSOR_POSITION, 1, BattleScript_FaintedMonSendOutNew
 @ Player said yes, go to party screen (note optional flag, player may exit the menu instead)
 	setatktoplayer0
 	openpartyscreen BS_ATTACKER | PARTY_SCREEN_OPTIONAL, BattleScript_FaintedMonSendOutNew
@@ -8922,17 +8922,17 @@ BattleScript_FlushMessageBox::
 	return
 
 BattleScript_PalacePrintFlavorText::
-	setbyte gBattleCommunication + 1, 0
+	setbyte cCURSOR_POSITION, 0
 BattleScript_PalaceTryBattlerFlavorText::
-	palaceflavortext BS_ATTACKER @ BS_ATTACKER here overwritten by gBattleCommunication + 1
+	palaceflavortext BS_ATTACKER @ BS_ATTACKER here overwritten by cCURSOR_POSITION
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, TRUE, BattleScript_PalaceEndFlavorText
 	printfromtable gBattlePalaceFlavorTextTable
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PalaceEndFlavorText::
-	addbyte gBattleCommunication + 1, 1
-	jumpifbytenotequal gBattleCommunication + 1, gBattlersCount, BattleScript_PalaceTryBattlerFlavorText
+	addbyte cCURSOR_POSITION, 1
+	jumpifbytenotequal cCURSOR_POSITION, gBattlersCount, BattleScript_PalaceTryBattlerFlavorText
 	setbyte gBattleCommunication, 0
-	setbyte gBattleCommunication + 1, 0
+	setbyte cCURSOR_POSITION, 0
 	end2
 
 BattleScript_ArenaTurnBeginning::
@@ -8976,8 +8976,8 @@ BattleScript_ArenaDoJudgment::
 	arenajudgmentstring B_MSG_REF_JUDGE_BODY
 	arenawaitmessage B_MSG_REF_JUDGE_BODY
 	arenajudgmentwindow
-	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, ARENA_RESULT_PLAYER_LOST, BattleScript_ArenaJudgmentPlayerLoses
-	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, ARENA_RESULT_TIE, BattleScript_ArenaJudgmentDraw
+	jumpifbyte CMP_EQUAL, cCURSOR_POSITION, ARENA_RESULT_PLAYER_LOST, BattleScript_ArenaJudgmentPlayerLoses
+	jumpifbyte CMP_EQUAL, cCURSOR_POSITION, ARENA_RESULT_TIE, BattleScript_ArenaJudgmentDraw
 @ ARENA_RESULT_PLAYER_WON
 	arenajudgmentstring B_MSG_REF_PLAYER_WON
 	arenawaitmessage B_MSG_REF_PLAYER_WON
@@ -9480,14 +9480,14 @@ BattleScript_GoodAsGoldActivates::
 
 BattleScript_PastelVeilActivates::
 	setbyte gBattleCommunication, 0
-	setbyte gBattleCommunication + 1, 0
+	setbyte cCURSOR_POSITION, 0
 BattleScript_PastelVeil_TryCurePoison:
 	jumpifstatus BS_TARGET, STATUS1_POISON | STATUS1_TOXIC_POISON, BattleScript_PastelVeilCurePoison
 	goto BattleScript_PastelVeilLoopIncrement
 BattleScript_PastelVeilCurePoison:
-	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication + 1, 0x0, BattleScript_PastelVeilCurePoisonNoPopUp
+	jumpifbyte CMP_NOT_EQUAL, cCURSOR_POSITION, 0x0, BattleScript_PastelVeilCurePoisonNoPopUp
 	call BattleScript_AbilityPopUp
-	setbyte gBattleCommunication + 1, 1
+	setbyte cCURSOR_POSITION, 1
 BattleScript_PastelVeilCurePoisonNoPopUp: @ Only show Pastel Veil pop up once if it cures two mons
 	printfromtable gSwitchInAbilityStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -9729,7 +9729,7 @@ BattleScript_ConfuseSideIncrement:
 	setallytonexttarget BattleScript_ConfuseSideLoop
 BattleScript_ConfuseSideEnd:
 	restoretarget
-	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, 1, BattleScript_PrintCoinsScattered @ Gold Rush
+	jumpifbyte CMP_EQUAL, cCURSOR_POSITION, 1, BattleScript_PrintCoinsScattered @ Gold Rush
 	goto BattleScript_MoveEnd
 
 BattleScript_PrintCoinsScattered:

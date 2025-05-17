@@ -54,6 +54,7 @@
 #define MSG_DISPLAY             7
 #define BATTLE_COMMUNICATION_ENTRIES_COUNT  8
 
+#define cCURSOR_POSITION     (gBattleCommunication + CURSOR_POSITION)
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
 #define cMISS_TYPE           (gBattleCommunication + MISS_TYPE)
 
