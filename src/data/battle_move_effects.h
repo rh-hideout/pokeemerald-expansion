@@ -16,10 +16,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_SLEEP] =
+    [EFFECT_NON_VOLATILE_STATUS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 1,
+        .battleTvScore = 0, // Handled within the battle TV functions
     },
 
     [EFFECT_ABSORB] =
@@ -180,13 +180,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectRestoreHp,
         .battleTvScore = 3,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_TOXIC] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
 
@@ -363,20 +356,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectReflect,
         .battleTvScore = 7,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_POISON] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 4,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_PARALYZE] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 4,
         .encourageEncore = TRUE,
     },
 
@@ -885,13 +864,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectFlatter,
         .battleTvScore = 7,
-    },
-
-    [EFFECT_WILL_O_WISP] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 5,
-        .encourageEncore = TRUE,
     },
 
     [EFFECT_MEMENTO] =

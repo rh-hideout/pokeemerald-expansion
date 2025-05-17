@@ -5,7 +5,8 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 {
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
