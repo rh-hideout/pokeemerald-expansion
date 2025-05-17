@@ -120,6 +120,15 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "Cafeei",
+      "name": "Cafe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46283144?v=4",
+      "profile": "https://github.com/Cafeei",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
