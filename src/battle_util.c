@@ -9347,7 +9347,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_RETALIATE:
-        if (gSideTimers[atkSide].retaliateTimer == 1 || (amageCalcData->state == AI_DMG_CALC && gSideTimers[atkSide].retaliateTimer == 2))
+        if (gSideTimers[atkSide].retaliateTimer == 1 || (damageCalcData->state == AI_DMG_CALC && gSideTimers[atkSide].retaliateTimer == 2))
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_SOLAR_BEAM:
