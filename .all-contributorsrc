@@ -120,6 +120,16 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "khbsd",
+      "name": "khbsd",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26092020?v=4",
+      "profile": "https://github.com/khbsd",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
