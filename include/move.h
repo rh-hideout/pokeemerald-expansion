@@ -2,6 +2,7 @@
 #define GUARD_MOVES_H
 
 #include "contest_effect.h"
+#include "constants/battle.h"
 #include "constants/battle_move_effects.h"
 #include "constants/moves.h"
 
@@ -535,9 +536,18 @@ static inline u32 GetMoveRecoil(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.recoilPercentage;
 }
 
-static inline u32 GetMoveNonVolatileStatus(u32 moveId)
+static inline u32 GetMoveNonVolatileStatus(u32 move)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].argument.nonVolatileStatus;
+    move = SanitizeMoveId(move);
+    switch(GetMoveEffect(move))
+    {
+    case EFFECT_NON_VOLATILE_STATUS:
+    case EFFECT_YAWN:
+    case EFFECT_DARK_VOID:
+        return gMovesInfo[move].argument.nonVolatileStatus;
+    default:
+        return MOVE_EFFECT_NONE;
+    }
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

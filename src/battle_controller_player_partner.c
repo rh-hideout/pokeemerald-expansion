@@ -184,7 +184,7 @@ void PlayerPartnerBufferExecCompleted(u32 battler)
     {
         u8 playerId = GetMultiplayerId();
 
-        PrepareBufferDataTransferLink(battler, 2, 4, &playerId);
+        PrepareBufferDataTransferLink(battler, B_COMM_CONTROLLER_IS_DONE, 4, &playerId);
         gBattleResources->bufferA[battler][0] = CONTROLLER_TERMINATOR_NOP;
     }
     else
@@ -265,11 +265,11 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
         && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
         && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveIndex])))
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
     }
     else
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
     }
 
     BtlController_Complete(battler);
@@ -312,7 +312,7 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
     }
-    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
 }
 

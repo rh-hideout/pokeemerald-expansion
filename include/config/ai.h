@@ -69,4 +69,9 @@
 // Score reduction if any roll for PP stall detection passes
 #define PP_STALL_SCORE_REDUCTION                                20
 
+// AI's acceptable number of hits to KO the partner via friendly fire in a double battle.
+#define FRIENDLY_FIRE_RISKY_THRESHOLD           2
+#define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
+#define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD    4
+
 #endif // GUARD_CONFIG_AI_H
