@@ -1258,7 +1258,7 @@ static void TrySetBattleSeminarShow(void)
             damageCalcData.moveType = GetMoveType(gCurrentMove);
             damageCalcData.isCrit = FALSE;
             damageCalcData.randomFactor = FALSE;
-            damageCalcData.updateFlags = FALSE;
+            damageCalcData.state = AI_DMG_CALC;
             gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&damageCalcData, powerOverride);
             dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))

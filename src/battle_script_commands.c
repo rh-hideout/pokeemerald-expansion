@@ -2049,7 +2049,7 @@ static void Cmd_damagecalc(void)
     damageCalcData.move = gCurrentMove;
     damageCalcData.moveType = GetBattleMoveType(gCurrentMove);
     damageCalcData.randomFactor = TRUE;
-    damageCalcData.updateFlags = TRUE;
+    damageCalcData.state = BATTLE_DMG_CALC;
 
     if (IsSpreadMove(moveTarget))
     {

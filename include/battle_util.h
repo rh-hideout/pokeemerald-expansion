@@ -150,6 +150,12 @@ enum {
 
 extern const struct TypePower gNaturalGiftTable[];
 
+enum DmgCalcState
+{
+    BATTLE_DMG_CALC, // Records abilities/items and checks various effects during actual battle (non simulated damage)
+    AI_DMG_CALC, // Skips the above mentioned calculations during ai calcs (simulated damage)
+};
+
 struct DamageCalculationData
 {
     u32 battlerAtk:3;
@@ -158,8 +164,8 @@ struct DamageCalculationData
     u32 moveType:5;
     u32 isCrit:1;
     u32 randomFactor:1;
-    u32 updateFlags:1;
-    u32 padding:2;
+    enum DmgCalcState state:1;
+    u32 padding:1;
 };
 STATIC_ASSERT(sizeof(struct DamageCalculationData) <= 4, StructExceedsFourBytes);
 
