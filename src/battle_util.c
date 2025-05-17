@@ -10557,7 +10557,7 @@ s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedB
                                                                       damageCalcData->battlerAtk,
                                                                       damageCalcData->battlerDef,
                                                                       GetBattlerAbility(damageCalcData->battlerDef),
-                                                                      damageCalcData->state);
+                                                                      damageCalcData->state == BATTLE_DMG_CALC);
 
     if (GetMoveEffect(damageCalcData->move) == EFFECT_FUTURE_SIGHT
      && IsFutureSightAttackerInParty(damageCalcData->battlerAtk, damageCalcData->battlerDef))
