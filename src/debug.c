@@ -234,7 +234,7 @@ static void DebugAction_Util_Script_7(u8 taskId, DebugFunc input, const struct D
 static void DebugAction_Util_Script_8(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems);
 
 static void DebugAction_OpenSubMenu(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems);
-static void DebugAction_OpenSubMenuDynamic(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems);
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems);
 
 static void DebugTask_HandleMenuInput_BerryFunctions(u8 taskId);
@@ -624,7 +624,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
     {CMP_STR("Give X…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Give,      sDebugMenu_Actions_Give, ARRAY_COUNT(sDebugMenu_Actions_Give), },
     {CMP_STR("Player…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Player,    sDebugMenu_Actions_Player, ARRAY_COUNT(sDebugMenu_Actions_Player), },
     {CMP_STR("Scripts…" _ARROW),      DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Scripts,   sDebugMenu_Actions_Scripts, ARRAY_COUNT(sDebugMenu_Actions_Scripts), },
-    {CMP_STR("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuDynamic, DebugTask_HandleMenuInput_FlagsVars, },
+    {CMP_STR("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, DebugTask_HandleMenuInput_FlagsVars, },
     {CMP_STR("Sound…" _ARROW),        DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Sound,     sDebugMenu_Actions_Sound, ARRAY_COUNT(sDebugMenu_Actions_Sound), },
     {CMP_STR("ROM Info…" _ARROW),     DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_ROMInfo,   sDebugMenu_Actions_ROMInfo2, ARRAY_COUNT(sDebugMenu_Actions_ROMInfo2), },
     {CMP_STR("Cancel"),               DebugAction_Cancel, }
@@ -1238,7 +1238,7 @@ static void DebugTask_HandleMenuInput_ROMInfo(u8 taskId)
 
 // *******************************
 // Open sub-menus
-static void DebugAction_OpenSubMenuDynamic(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems)
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
