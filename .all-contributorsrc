@@ -168,6 +168,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "contributor",
+      "name": "contributor",
+      "avatar_url": "https://avatars.githubusercontent.com/u/598873?v=4",
+      "profile": "https://github.com/contributor",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
