@@ -2376,16 +2376,25 @@ static bool8 Mugshot_StartOpponentSlide(struct Task *task)
     sTransitionData->BG0HOFS_Upper += 8;
 
     SetTrainerPicSlideDirection(task->tOpponentSpriteAId, 0);
-    SetTrainerPicSlideDirection(task->tOpponentSpriteBId, 0);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)  
+    {
+            SetTrainerPicSlideDirection(task->tOpponentSpriteBId, 0);
+    }
     SetTrainerPicSlideDirection(task->tPlayerSpriteId, 1);
-    SetTrainerPicSlideDirection(task->tPartnerSpriteId, 1);
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    {
+        SetTrainerPicSlideDirection(task->tPartnerSpriteId, 1);
+    }
 
     // Start opponent slide
     IncrementTrainerPicState(task->tOpponentSpriteAId);
 
     PlaySE(SE_MUGSHOT);
 
-    IncrementTrainerPicState(task->tOpponentSpriteBId);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)    
+    {
+        IncrementTrainerPicState(task->tOpponentSpriteBId);
+    }
 
     sTransitionData->VBlank_DMA++;
     return FALSE;
@@ -2400,7 +2409,10 @@ static bool8 Mugshot_WaitStartPlayerSlide(struct Task *task)
     if (IsTrainerPicSlideDone(task->tOpponentSpriteAId))
     {
         task->tState++;
-        IncrementTrainerPicState(task->tPartnerSpriteId);
+        if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        {
+            IncrementTrainerPicState(task->tPartnerSpriteId);
+        }
         IncrementTrainerPicState(task->tPlayerSpriteId);
     }
     return FALSE;
