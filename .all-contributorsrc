@@ -129,9 +129,58 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "AsparagusEduardo",
+      "name": "Eduardo Quezada",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2904965?v=4",
+      "profile": "https://github.com/AsparagusEduardo",
+      "contributions": [
+        "code",
+        "data",
+        "doc",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "promotion",
+        "research",
+        "review",
+        "test",
+        "tutorial",
+        "userTesting"
+      ]
+    },
+    {
+      "login": "khbsd",
+      "name": "khbsd",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26092020?v=4",
+      "profile": "https://github.com/khbsd",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "Cafeei",
+      "name": "Cafe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46283144?v=4",
+      "profile": "https://github.com/Cafeei",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "agsmgmaster64",
+      "name": "agsmgmaster64",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67435611?v=4",
+      "profile": "https://github.com/agsmgmaster64",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "linkToUsage": true,
-  "commitType": "docs"
+  "commitType": "docs",
+  "skipCi": true
 }
