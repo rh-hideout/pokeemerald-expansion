@@ -1022,6 +1022,10 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
     else if (ArePlayerFieldControlsLocked() && !ignoreScriptActive)
         return;
 
+    // Restore post warp behavior after setobjectxy.
+    if (GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NO_POS_SET)
+        SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+
     // Follower changes to normal sprite after getting off surf blob.
     if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && !CheckFollowerNPCFlag(PLAYER_AVATAR_FLAG_SURFING) && follower->fieldEffectSpriteId == 0)
     {
@@ -1250,7 +1254,6 @@ void FollowerNPC_WarpSetEnd(void)
 {
     struct ObjectEvent *player;
     struct ObjectEvent *follower;
-    u32 toY;
 
     if (!PlayerHasFollowerNPC())
         return;
@@ -1258,11 +1261,20 @@ void FollowerNPC_WarpSetEnd(void)
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
 
-    SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
     PlayerLogCoordinates(player);
 
-    toY = GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
-    MoveObjectEventToMapCoords(follower, player->currentCoords.x, toY);
+    // Skip setting position if setobjectxy was used during ON_WARP_INTO_MAP_TABLE
+    if (GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NO_POS_SET)
+    {
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
+        SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    }
+    else
+    {
+        u32 toY = GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
+        MoveObjectEventToMapCoords(follower, player->currentCoords.x, toY);
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+    }
 
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
