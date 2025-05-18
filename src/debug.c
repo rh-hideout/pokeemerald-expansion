@@ -404,7 +404,6 @@ extern const u8 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon[];
 #include "data/map_group_count.h"
 
 // Text
-#define CMP_STR COMPOUND_STRING
 #define _ARROW "{CLEAR_TO 110}{RIGHT_ARROW}"
 
 // General
@@ -425,20 +424,20 @@ static const u8 sDebugText_Util_Weather_ID[] =               _("Weather ID: {STR
 //Time Menu
 
 static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
-    CMP_STR("Sunday"),
-    CMP_STR("Monday"),
-    CMP_STR("Tuesday"),
-    CMP_STR("Wednesday"),
-    CMP_STR("Thursday"),
-    CMP_STR("Friday"),
-    CMP_STR("Saturday"),
+    COMPOUND_STRING("Sunday"),
+    COMPOUND_STRING("Monday"),
+    COMPOUND_STRING("Tuesday"),
+    COMPOUND_STRING("Wednesday"),
+    COMPOUND_STRING("Thursday"),
+    COMPOUND_STRING("Friday"),
+    COMPOUND_STRING("Saturday"),
 };
 
 static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
-    CMP_STR("Morning"),
-    CMP_STR("Day"),
-    CMP_STR("Evening"),
-    CMP_STR("Night"),
+    COMPOUND_STRING("Morning"),
+    COMPOUND_STRING("Day"),
+    COMPOUND_STRING("Evening"),
+    COMPOUND_STRING("Night"),
 };
 
 // Flags/Vars Menu
@@ -464,14 +463,14 @@ static const u8 sDebugText_Sound_Music_ID[] =           _("Music ID: {STR_VAR_3}
 
 const u8 *const gText_DigitIndicator[] =
 {
-    CMP_STR("{LEFT_ARROW}+1{RIGHT_ARROW}        "),
-    CMP_STR("{LEFT_ARROW}+10{RIGHT_ARROW}       "),
-    CMP_STR("{LEFT_ARROW}+100{RIGHT_ARROW}      "),
-    CMP_STR("{LEFT_ARROW}+1000{RIGHT_ARROW}     "),
-    CMP_STR("{LEFT_ARROW}+10000{RIGHT_ARROW}    "),
-    CMP_STR("{LEFT_ARROW}+100000{RIGHT_ARROW}   "),
-    CMP_STR("{LEFT_ARROW}+1000000{RIGHT_ARROW}  "),
-    CMP_STR("{LEFT_ARROW}+10000000{RIGHT_ARROW} "),
+    COMPOUND_STRING("{LEFT_ARROW}+1{RIGHT_ARROW}        "),
+    COMPOUND_STRING("{LEFT_ARROW}+10{RIGHT_ARROW}       "),
+    COMPOUND_STRING("{LEFT_ARROW}+100{RIGHT_ARROW}      "),
+    COMPOUND_STRING("{LEFT_ARROW}+1000{RIGHT_ARROW}     "),
+    COMPOUND_STRING("{LEFT_ARROW}+10000{RIGHT_ARROW}    "),
+    COMPOUND_STRING("{LEFT_ARROW}+100000{RIGHT_ARROW}   "),
+    COMPOUND_STRING("{LEFT_ARROW}+1000000{RIGHT_ARROW}  "),
+    COMPOUND_STRING("{LEFT_ARROW}+10000000{RIGHT_ARROW} "),
 };
 
 static const s32 sPowersOfTen[] =
@@ -511,145 +510,145 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu_Weekdays[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
 {
-    { CMP_STR("Print current time…"),                      DebugAction_TimeMenu_PrintTime },
-    { CMP_STR("{FONT_NARROW}Print current time of day…"),  DebugAction_TimeMenu_PrintTimeOfDay },
-    { CMP_STR("{FONT_NARROW}Change current time of day…"), DebugAction_OpenSubMenuFakeRTC, DebugTask_HandleMenuInput_TimeMenu_TimesOfDay, sDebugMenu_Actions_TimeMenu_TimesOfDay, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu_TimesOfDay), },
-    { CMP_STR("Change current weekday…"),                  DebugAction_OpenSubMenuFakeRTC, DebugTask_HandleMenuInput_TimeMenu_Weekdays,   sDebugMenu_Actions_TimeMenu_Weekdays, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu_Weekdays), },
-    { CMP_STR("Check wall clock…"),                        DebugAction_TimeMenu_CheckWallClock },
-    { CMP_STR("Set wall clock…"),                          DebugAction_TimeMenu_SetWallClock },
+    { COMPOUND_STRING("Print current time…"),                      DebugAction_TimeMenu_PrintTime },
+    { COMPOUND_STRING("{FONT_NARROW}Print current time of day…"),  DebugAction_TimeMenu_PrintTimeOfDay },
+    { COMPOUND_STRING("{FONT_NARROW}Change current time of day…"), DebugAction_OpenSubMenuFakeRTC, DebugTask_HandleMenuInput_TimeMenu_TimesOfDay, sDebugMenu_Actions_TimeMenu_TimesOfDay, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu_TimesOfDay), },
+    { COMPOUND_STRING("Change current weekday…"),                  DebugAction_OpenSubMenuFakeRTC, DebugTask_HandleMenuInput_TimeMenu_Weekdays,   sDebugMenu_Actions_TimeMenu_Weekdays, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu_Weekdays), },
+    { COMPOUND_STRING("Check wall clock…"),                        DebugAction_TimeMenu_CheckWallClock },
+    { COMPOUND_STRING("Set wall clock…"),                          DebugAction_TimeMenu_SetWallClock },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_BerryFunctions[] =
 {
-    { CMP_STR("Clear map trees"),      DebugAction_BerryFunctions_ClearAll },
-    { CMP_STR("Ready map trees"),      DebugAction_BerryFunctions_Ready },
-    { CMP_STR("Grow map trees"),       DebugAction_BerryFunctions_NextStage },
-    { CMP_STR("Give map trees pests"), DebugAction_BerryFunctions_Pests },
-    { CMP_STR("Give map trees weeds"), DebugAction_BerryFunctions_Weeds },
+    { COMPOUND_STRING("Clear map trees"),      DebugAction_BerryFunctions_ClearAll },
+    { COMPOUND_STRING("Ready map trees"),      DebugAction_BerryFunctions_Ready },
+    { COMPOUND_STRING("Grow map trees"),       DebugAction_BerryFunctions_NextStage },
+    { COMPOUND_STRING("Give map trees pests"), DebugAction_BerryFunctions_Pests },
+    { COMPOUND_STRING("Give map trees weeds"), DebugAction_BerryFunctions_Weeds },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
 {
-    { CMP_STR("Fly to map…"),             DebugAction_Util_Fly },
-    { CMP_STR("Warp to map warp…"),       DebugAction_Util_Warp_Warp },
-    { CMP_STR("Set weather…"),            DebugAction_Util_Weather },
-    { CMP_STR("Font Test…"),              DebugAction_Util_FontTest },
-    { CMP_STR("Time Functions…" _ARROW),  DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_TimeMenu, sDebugMenu_Actions_TimeMenu, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu) },
-    { CMP_STR("Watch credits…"),          DebugAction_Util_WatchCredits },
-    { CMP_STR("Cheat start"),             DebugAction_Util_CheatStart },
-    { CMP_STR("Berry Functions…" _ARROW), DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_BerryFunctions, sDebugMenu_Actions_BerryFunctions, ARRAY_COUNT(sDebugMenu_Actions_BerryFunctions) },
-    { CMP_STR("EWRAM Counters…"),         DebugAction_Util_CheckEWRAMCounters },
-    { CMP_STR("Steven Multi"),            DebugAction_Util_Steven_Multi },
+    { COMPOUND_STRING("Fly to map…"),             DebugAction_Util_Fly },
+    { COMPOUND_STRING("Warp to map warp…"),       DebugAction_Util_Warp_Warp },
+    { COMPOUND_STRING("Set weather…"),            DebugAction_Util_Weather },
+    { COMPOUND_STRING("Font Test…"),              DebugAction_Util_FontTest },
+    { COMPOUND_STRING("Time Functions…" _ARROW),  DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_TimeMenu, sDebugMenu_Actions_TimeMenu, ARRAY_COUNT(sDebugMenu_Actions_TimeMenu) },
+    { COMPOUND_STRING("Watch credits…"),          DebugAction_Util_WatchCredits },
+    { COMPOUND_STRING("Cheat start"),             DebugAction_Util_CheatStart },
+    { COMPOUND_STRING("Berry Functions…" _ARROW), DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_BerryFunctions, sDebugMenu_Actions_BerryFunctions, ARRAY_COUNT(sDebugMenu_Actions_BerryFunctions) },
+    { COMPOUND_STRING("EWRAM Counters…"),         DebugAction_Util_CheckEWRAMCounters },
+    { COMPOUND_STRING("Steven Multi"),            DebugAction_Util_Steven_Multi },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_PCBag_Fill[] =
 {
-    { CMP_STR("Fill PC Boxes Fast"),        DebugAction_PCBag_Fill_PCBoxes_Fast },
-    { CMP_STR("Fill PC Boxes Slow (LAG!)"), DebugAction_PCBag_Fill_PCBoxes_Slow },
-    { CMP_STR("Fill PC Items") ,            DebugAction_PCBag_Fill_PCItemStorage },
-    { CMP_STR("Fill Pocket Items"),         DebugAction_PCBag_Fill_PocketItems },
-    { CMP_STR("Fill Pocket Poké Balls"),    DebugAction_PCBag_Fill_PocketPokeBalls },
-    { CMP_STR("Fill Pocket TMHM"),          DebugAction_PCBag_Fill_PocketTMHM },
-    { CMP_STR("Fill Pocket Berries"),       DebugAction_PCBag_Fill_PocketBerries },
-    { CMP_STR("Fill Pocket Key Items"),     DebugAction_PCBag_Fill_PocketKeyItems },
+    { COMPOUND_STRING("Fill PC Boxes Fast"),        DebugAction_PCBag_Fill_PCBoxes_Fast },
+    { COMPOUND_STRING("Fill PC Boxes Slow (LAG!)"), DebugAction_PCBag_Fill_PCBoxes_Slow },
+    { COMPOUND_STRING("Fill PC Items") ,            DebugAction_PCBag_Fill_PCItemStorage },
+    { COMPOUND_STRING("Fill Pocket Items"),         DebugAction_PCBag_Fill_PocketItems },
+    { COMPOUND_STRING("Fill Pocket Poké Balls"),    DebugAction_PCBag_Fill_PocketPokeBalls },
+    { COMPOUND_STRING("Fill Pocket TMHM"),          DebugAction_PCBag_Fill_PocketTMHM },
+    { COMPOUND_STRING("Fill Pocket Berries"),       DebugAction_PCBag_Fill_PocketBerries },
+    { COMPOUND_STRING("Fill Pocket Key Items"),     DebugAction_PCBag_Fill_PocketKeyItems },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_PCBag[] =
 {
-    { CMP_STR("Access PC"),           DebugAction_PCBag_AccessPC },
-    { CMP_STR("Fill…" _ARROW),        DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_PCBag_Fill, sDebugMenu_Actions_PCBag_Fill, ARRAY_COUNT(sDebugMenu_Actions_PCBag_Fill) },
-    { CMP_STR("Clear Bag"),           DebugAction_PCBag_ClearBag },
-    { CMP_STR("Clear Storage Boxes"), DebugAction_PCBag_ClearBoxes },
+    { COMPOUND_STRING("Access PC"),           DebugAction_PCBag_AccessPC },
+    { COMPOUND_STRING("Fill…" _ARROW),        DebugAction_OpenSubMenu, DebugTask_HandleMenuInput_PCBag_Fill, sDebugMenu_Actions_PCBag_Fill, ARRAY_COUNT(sDebugMenu_Actions_PCBag_Fill) },
+    { COMPOUND_STRING("Clear Bag"),           DebugAction_PCBag_ClearBag },
+    { COMPOUND_STRING("Clear Storage Boxes"), DebugAction_PCBag_ClearBoxes },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
 {
-    { CMP_STR("Move Reminder"),   DebugAction_Party_MoveReminder },
-    { CMP_STR("Hatch an Egg"),    DebugAction_Party_HatchAnEgg },
-    { CMP_STR("Heal party"),      DebugAction_Party_HealParty },
-    { CMP_STR("Inflict Status1"), DebugAction_Party_InflictStatus1 },
-    { CMP_STR("Check EVs"),       DebugAction_Party_CheckEVs },
-    { CMP_STR("Check IVs"),       DebugAction_Party_CheckIVs },
-    { CMP_STR("Clear Party"),     DebugAction_Party_ClearParty },
+    { COMPOUND_STRING("Move Reminder"),   DebugAction_Party_MoveReminder },
+    { COMPOUND_STRING("Hatch an Egg"),    DebugAction_Party_HatchAnEgg },
+    { COMPOUND_STRING("Heal party"),      DebugAction_Party_HealParty },
+    { COMPOUND_STRING("Inflict Status1"), DebugAction_Party_InflictStatus1 },
+    { COMPOUND_STRING("Check EVs"),       DebugAction_Party_CheckEVs },
+    { COMPOUND_STRING("Check IVs"),       DebugAction_Party_CheckIVs },
+    { COMPOUND_STRING("Clear Party"),     DebugAction_Party_ClearParty },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
 {
-    { CMP_STR("Give item XYZ…" _ARROW),    DebugAction_Give_Item },
-    { CMP_STR("Pokémon (Basic)" _ARROW),   DebugAction_Give_PokemonSimple },
-    { CMP_STR("Pokémon (Complex)" _ARROW), DebugAction_Give_PokemonComplex },
-    { CMP_STR("Max Money"),                DebugAction_Give_MaxMoney },
-    { CMP_STR("Max Coins"),                DebugAction_Give_MaxCoins },
-    { CMP_STR("Max Battle Points"),        DebugAction_Give_MaxBattlePoints },
-    { CMP_STR("Daycare Egg"),              DebugAction_Give_DayCareEgg },
+    { COMPOUND_STRING("Give item XYZ…" _ARROW),    DebugAction_Give_Item },
+    { COMPOUND_STRING("Pokémon (Basic)" _ARROW),   DebugAction_Give_PokemonSimple },
+    { COMPOUND_STRING("Pokémon (Complex)" _ARROW), DebugAction_Give_PokemonComplex },
+    { COMPOUND_STRING("Max Money"),                DebugAction_Give_MaxMoney },
+    { COMPOUND_STRING("Max Coins"),                DebugAction_Give_MaxCoins },
+    { COMPOUND_STRING("Max Battle Points"),        DebugAction_Give_MaxBattlePoints },
+    { COMPOUND_STRING("Daycare Egg"),              DebugAction_Give_DayCareEgg },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Player[] =
 {
-    { CMP_STR("Player name"),    DebugAction_Player_Name },
-    { CMP_STR("Toggle gender"),  DebugAction_Player_Gender },
-    { CMP_STR("New Trainer ID"), DebugAction_Player_Id },
+    { COMPOUND_STRING("Player name"),    DebugAction_Player_Name },
+    { COMPOUND_STRING("Toggle gender"),  DebugAction_Player_Gender },
+    { COMPOUND_STRING("New Trainer ID"), DebugAction_Player_Id },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Scripts[] =
 {
-    { CMP_STR("Script 1"), DebugAction_Util_Script_1 },
-    { CMP_STR("Script 2"), DebugAction_Util_Script_2 },
-    { CMP_STR("Script 3"), DebugAction_Util_Script_3 },
-    { CMP_STR("Script 4"), DebugAction_Util_Script_4 },
-    { CMP_STR("Script 5"), DebugAction_Util_Script_5 },
-    { CMP_STR("Script 6"), DebugAction_Util_Script_6 },
-    { CMP_STR("Script 7"), DebugAction_Util_Script_7 },
-    { CMP_STR("Script 8"), DebugAction_Util_Script_8 },
+    { COMPOUND_STRING("Script 1"), DebugAction_Util_Script_1 },
+    { COMPOUND_STRING("Script 2"), DebugAction_Util_Script_2 },
+    { COMPOUND_STRING("Script 3"), DebugAction_Util_Script_3 },
+    { COMPOUND_STRING("Script 4"), DebugAction_Util_Script_4 },
+    { COMPOUND_STRING("Script 5"), DebugAction_Util_Script_5 },
+    { COMPOUND_STRING("Script 6"), DebugAction_Util_Script_6 },
+    { COMPOUND_STRING("Script 7"), DebugAction_Util_Script_7 },
+    { COMPOUND_STRING("Script 8"), DebugAction_Util_Script_8 },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Sound[] =
 {
-    { CMP_STR("SFX…" _ARROW),   DebugAction_Sound_SE },
-    { CMP_STR("Music…" _ARROW), DebugAction_Sound_MUS },
+    { COMPOUND_STRING("SFX…" _ARROW),   DebugAction_Sound_SE },
+    { COMPOUND_STRING("Music…" _ARROW), DebugAction_Sound_MUS },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
 {
-    { CMP_STR("Save Block space"),  DebugAction_ROMInfo_CheckSaveBlock },
-    { CMP_STR("ROM space"),         DebugAction_ROMInfo_CheckROMSpace },
-    { CMP_STR("Expansion Version"), DebugAction_ROMInfo_ExpansionVersion },
+    { COMPOUND_STRING("Save Block space"),  DebugAction_ROMInfo_CheckSaveBlock },
+    { COMPOUND_STRING("ROM space"),         DebugAction_ROMInfo_CheckROMSpace },
+    { COMPOUND_STRING("Expansion Version"), DebugAction_ROMInfo_ExpansionVersion },
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
 {
-    {CMP_STR("Utilities…" _ARROW),    DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Utilities, sDebugMenu_Actions_Utilities, ARRAY_COUNT(sDebugMenu_Actions_Utilities), },
-    {CMP_STR("PC/Bag…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_PCBag,     sDebugMenu_Actions_PCBag, ARRAY_COUNT(sDebugMenu_Actions_PCBag), },
-    {CMP_STR("Party…" _ARROW),        DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Party,     sDebugMenu_Actions_Party, ARRAY_COUNT(sDebugMenu_Actions_Party), },
-    {CMP_STR("Give X…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Give,      sDebugMenu_Actions_Give, ARRAY_COUNT(sDebugMenu_Actions_Give), },
-    {CMP_STR("Player…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Player,    sDebugMenu_Actions_Player, ARRAY_COUNT(sDebugMenu_Actions_Player), },
-    {CMP_STR("Scripts…" _ARROW),      DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Scripts,   sDebugMenu_Actions_Scripts, ARRAY_COUNT(sDebugMenu_Actions_Scripts), },
-    {CMP_STR("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, DebugTask_HandleMenuInput_FlagsVars, },
-    {CMP_STR("Sound…" _ARROW),        DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Sound,     sDebugMenu_Actions_Sound, ARRAY_COUNT(sDebugMenu_Actions_Sound), },
-    {CMP_STR("ROM Info…" _ARROW),     DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_ROMInfo,   sDebugMenu_Actions_ROMInfo2, ARRAY_COUNT(sDebugMenu_Actions_ROMInfo2), },
-    {CMP_STR("Cancel"),               DebugAction_Cancel, }
+    {COMPOUND_STRING("Utilities…" _ARROW),    DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Utilities, sDebugMenu_Actions_Utilities, ARRAY_COUNT(sDebugMenu_Actions_Utilities), },
+    {COMPOUND_STRING("PC/Bag…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_PCBag,     sDebugMenu_Actions_PCBag, ARRAY_COUNT(sDebugMenu_Actions_PCBag), },
+    {COMPOUND_STRING("Party…" _ARROW),        DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Party,     sDebugMenu_Actions_Party, ARRAY_COUNT(sDebugMenu_Actions_Party), },
+    {COMPOUND_STRING("Give X…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Give,      sDebugMenu_Actions_Give, ARRAY_COUNT(sDebugMenu_Actions_Give), },
+    {COMPOUND_STRING("Player…" _ARROW),       DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Player,    sDebugMenu_Actions_Player, ARRAY_COUNT(sDebugMenu_Actions_Player), },
+    {COMPOUND_STRING("Scripts…" _ARROW),      DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Scripts,   sDebugMenu_Actions_Scripts, ARRAY_COUNT(sDebugMenu_Actions_Scripts), },
+    {COMPOUND_STRING("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, DebugTask_HandleMenuInput_FlagsVars, },
+    {COMPOUND_STRING("Sound…" _ARROW),        DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_Sound,     sDebugMenu_Actions_Sound, ARRAY_COUNT(sDebugMenu_Actions_Sound), },
+    {COMPOUND_STRING("ROM Info…" _ARROW),     DebugAction_OpenSubMenu,       DebugTask_HandleMenuInput_ROMInfo,   sDebugMenu_Actions_ROMInfo2, ARRAY_COUNT(sDebugMenu_Actions_ROMInfo2), },
+    {COMPOUND_STRING("Cancel"),               DebugAction_Cancel, }
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
 {
-    [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { CMP_STR("Set Flag XYZ…" _ARROW),              DebugAction_FlagsVars_Flags },
-    [DEBUG_FLAGVAR_MENU_ITEM_VARS]                 = { CMP_STR("Set Var XYZ…" _ARROW),               DebugAction_FlagsVars_Vars },
-    [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_ALL]         = { CMP_STR("Pokédex Flags All"),                 DebugAction_FlagsVars_PokedexFlags_All },
-    [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_RESET]       = { CMP_STR("Pokédex Flags Reset"),               DebugAction_FlagsVars_PokedexFlags_Reset },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX]       = { CMP_STR("Toggle {STR_VAR_1}Pokédex"),         DebugAction_FlagsVars_SwitchDex },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX]        = { CMP_STR("Toggle {STR_VAR_1}National Dex"),    DebugAction_FlagsVars_SwitchNatDex },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV]       = { CMP_STR("Toggle {STR_VAR_1}PokéNav"),         DebugAction_FlagsVars_SwitchPokeNav },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL]    = { CMP_STR("Toggle {STR_VAR_1}Match Call"),      DebugAction_FlagsVars_SwitchMatchCall },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES]     = { CMP_STR("Toggle {STR_VAR_1}Running Shoes"),   DebugAction_FlagsVars_RunningShoes },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS]     = { CMP_STR("Toggle {STR_VAR_1}Fly Flags"),       DebugAction_FlagsVars_ToggleFlyFlags },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL]    = { CMP_STR("Toggle {STR_VAR_1}All badges"),      DebugAction_FlagsVars_ToggleBadgeFlags },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR]    = { CMP_STR("Toggle {STR_VAR_1}Game clear"),      DebugAction_FlagsVars_ToggleGameClear },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS] = { CMP_STR("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_FlagsVars_ToggleFrontierPass },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { CMP_STR("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_FlagsVars_CollisionOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { CMP_STR("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_FlagsVars_EncounterOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { CMP_STR("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_FlagsVars_TrainerSeeOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { CMP_STR("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_FlagsVars_BagUseOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { CMP_STR("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_FlagsVars_CatchingOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { COMPOUND_STRING("Set Flag XYZ…" _ARROW),              DebugAction_FlagsVars_Flags },
+    [DEBUG_FLAGVAR_MENU_ITEM_VARS]                 = { COMPOUND_STRING("Set Var XYZ…" _ARROW),               DebugAction_FlagsVars_Vars },
+    [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_ALL]         = { COMPOUND_STRING("Pokédex Flags All"),                 DebugAction_FlagsVars_PokedexFlags_All },
+    [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_RESET]       = { COMPOUND_STRING("Pokédex Flags Reset"),               DebugAction_FlagsVars_PokedexFlags_Reset },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Pokédex"),         DebugAction_FlagsVars_SwitchDex },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX]        = { COMPOUND_STRING("Toggle {STR_VAR_1}National Dex"),    DebugAction_FlagsVars_SwitchNatDex },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV]       = { COMPOUND_STRING("Toggle {STR_VAR_1}PokéNav"),         DebugAction_FlagsVars_SwitchPokeNav },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Match Call"),      DebugAction_FlagsVars_SwitchMatchCall },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Running Shoes"),   DebugAction_FlagsVars_RunningShoes },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Fly Flags"),       DebugAction_FlagsVars_ToggleFlyFlags },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}All badges"),      DebugAction_FlagsVars_ToggleBadgeFlags },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Game clear"),      DebugAction_FlagsVars_ToggleGameClear },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS] = { COMPOUND_STRING("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_FlagsVars_ToggleFrontierPass },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_FlagsVars_CollisionOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_FlagsVars_EncounterOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_FlagsVars_TrainerSeeOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_FlagsVars_BagUseOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { COMPOUND_STRING("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_FlagsVars_CatchingOnOff },
 };
 
 // *******************************
@@ -1795,7 +1794,7 @@ static void Debug_Display_FlagInfo(u32 flag, u32 digit, u8 windowId)
 {
     ConvertIntToDecimalStringN(gStringVar1, flag, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_FLAGS);
     ConvertIntToHexStringN(gStringVar2, flag, STR_CONV_MODE_LEFT_ALIGN, 3);
-    StringExpandPlaceholders(gStringVar1, CMP_STR("{STR_VAR_1}{CLEAR_TO 90}\n0x{STR_VAR_2}{CLEAR_TO 90}"));
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("{STR_VAR_1}{CLEAR_TO 90}\n0x{STR_VAR_2}{CLEAR_TO 90}"));
     if (FlagGet(flag))
         StringCopyPadded(gStringVar2, sDebugText_True, CHAR_SPACE, 15);
     else
@@ -2547,7 +2546,7 @@ static void Debug_Display_Nature(u32 natureId, u32 digit, u8 windowId)
     ConvertIntToDecimalStringN(gStringVar3, natureId, STR_CONV_MODE_LEADING_ZEROS, 2);
     StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
     StringCopy(gStringVar1, gNaturesInfo[natureId].name);
-    StringExpandPlaceholders(gStringVar4, CMP_STR("Nature ID: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Nature ID: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
@@ -2854,17 +2853,17 @@ static void Debug_Display_MoveInfo(u32 moveId, u32 iteration, u32 digit, u8 wind
     u8 *end = StringCopy(gStringVar1, GetMoveName(moveId));
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
-    StringCopy(gStringVar4, CMP_STR("Move "));
+    StringCopy(gStringVar4, COMPOUND_STRING("Move "));
     ConvertIntToDecimalStringN(gStringVar3, iteration, STR_CONV_MODE_LEADING_ZEROS, 1);
     StringAppend(gStringVar4, gStringVar3);
-    StringAppend(gStringVar4, CMP_STR(": "));
+    StringAppend(gStringVar4, COMPOUND_STRING(": "));
     ConvertIntToDecimalStringN(gStringVar3, moveId, STR_CONV_MODE_LEADING_ZEROS, 3);
     StringAppend(gStringVar4, gStringVar3);
-    StringAppend(gStringVar4, CMP_STR("{CLEAR_TO 90}\n"));
+    StringAppend(gStringVar4, COMPOUND_STRING("{CLEAR_TO 90}\n"));
     StringAppend(gStringVar4, gStringVar1);
-    StringAppend(gStringVar4, CMP_STR("{CLEAR_TO 90}\n{CLEAR_TO 90}\n"));
+    StringAppend(gStringVar4, COMPOUND_STRING("{CLEAR_TO 90}\n{CLEAR_TO 90}\n"));
     StringAppend(gStringVar4, gText_DigitIndicator[digit]);
-    StringAppend(gStringVar4, CMP_STR("{CLEAR_TO 90}"));
+    StringAppend(gStringVar4, COMPOUND_STRING("{CLEAR_TO 90}"));
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
