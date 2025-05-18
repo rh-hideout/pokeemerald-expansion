@@ -914,3 +914,18 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
         EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][3], MOVE_EARTHQUAKE);
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI sees Bolt Beak's boosted damage")
+{
+    ASSUME(GetMoveEffect(MOVE_BOLT_BEAK) == EFFECT_BOLT_BEAK);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_FLOATZEL) { Speed(2); Moves(MOVE_FLIP_TURN); }
+        PLAYER(SPECIES_SIMISEAR) { Speed(2); Moves(MOVE_FLAMETHROWER); Nature(NATURE_MODEST); Item(ITEM_SITRUS_BERRY); HPIV(31); AttackIV(31); DefenseIV(31); SpAttackIV(31); SpDefenseIV(31); }
+        OPPONENT(SPECIES_SNOVER) { Speed(1); HP(1); Ability(ABILITY_SNOW_WARNING); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ARCTOZOLT) { Speed(1); Ability(ABILITY_SLUSH_RUSH); Moves(MOVE_BOLT_BEAK, MOVE_ROCK_SLIDE); Nature(NATURE_JOLLY); Item(ITEM_LIFE_ORB); HPIV(31); AttackIV(31); DefenseIV(31); SpAttackIV(31); SpDefenseIV(31); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLIP_TURN); EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { EXPECT_MOVE(opponent, MOVE_BOLT_BEAK); MOVE(player, MOVE_FLAMETHROWER); SEND_OUT(player, 1); }
+    }
+}
