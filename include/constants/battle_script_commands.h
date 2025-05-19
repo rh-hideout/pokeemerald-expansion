@@ -310,9 +310,9 @@ enum MoveEndEffects
     MOVEEND_RECOIL,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
+    MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
     MOVEEND_EJECT_ITEMS,
     MOVEEND_WHITE_HERB,
-    MOVEEND_RED_CARD,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_PICKPOCKET,

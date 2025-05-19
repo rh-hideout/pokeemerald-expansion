@@ -19,6 +19,7 @@
   - [How to use the Testing System](tutorials/how_to_testing_system.md)
 - [Changelog](./CHANGELOG.md)
     - [1.9.x]()
+        - [Version 1.9.4](changelogs/1.9.x/1.9.4.md)
         - [Version 1.9.3](changelogs/1.9.x/1.9.3.md)
         - [Version 1.9.2](changelogs/1.9.x/1.9.2.md)
         - [Version 1.9.1](changelogs/1.9.x/1.9.1.md)

@@ -135,3 +135,33 @@ SINGLE_BATTLE_TEST("Ice Face doesn't transform Eiscue if Cloud Nine/Air Lock is 
         MESSAGE("Eiscue fainted!");
     }
 }
+
+SINGLE_BATTLE_TEST("Ice Face is not restored if hail or snow and Eiscue are already out")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
+    PARAMETRIZE { move = MOVE_HAIL; }
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gMovesInfo[MOVE_SNOWSCAPE].effect == EFFECT_SNOWSCAPE);
+        ASSUME(gMovesInfo[MOVE_HAIL].effect == EFFECT_HAIL);
+        PLAYER(SPECIES_EISCUE);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ICE_FACE);
+        MESSAGE("Eiscue transformed!");
+        ABILITY_POPUP(player, ABILITY_ICE_FACE);
+        MESSAGE("Eiscue transformed!");
+        ABILITY_POPUP(player, ABILITY_ICE_FACE);
+        MESSAGE("Eiscue transformed!");
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_ICE_FACE);
+            MESSAGE("Eiscue transformed!");
+        }
+    }
+}
