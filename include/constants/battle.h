@@ -427,7 +427,7 @@
 
 // capriccio move effects
 #define MOVE_EFFECT_STICKY_TONGUE       89
-#define MOVE_EFFECT_LEECH_SEED          90
+#define MOVE_EFFECT_LEECH_SEED_ON_HIT   90
 #define MOVE_EFFECT_RECHARGE_D          91
 #define MOVE_EFFECT_CLEAR_WEATHER       92
 #define MOVE_EFFECT_CURSE               93

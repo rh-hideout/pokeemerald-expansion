@@ -7,7 +7,6 @@
 #include "battle_controllers.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_interface.h"
-#include "battle_intro_speedup.h"
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "battle_tv.h"
@@ -2506,10 +2505,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
 
         gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
         gSprites[gBattlerSpriteIds[battler]].x2 = -DISPLAY_WIDTH;
-        if (BATTLE_INTRO_SPEEDUP)
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which trainer sprite enters the scene (original value of 2)
-        else
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2;
+        gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2; // Controls the speed at which trainer sprite enters the scene (original value of 2)
         gSprites[gBattlerSpriteIds[battler]].oam.affineParam = trainerPicId;
     }
     else // Player's side
@@ -2544,10 +2540,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
         }
         gSprites[gBattlerSpriteIds[battler]].x2 = DISPLAY_WIDTH;
-        if (BATTLE_INTRO_SPEEDUP)
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which player sprite enters the scene (original value of 2)
-        else
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2;
+        gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2; // Controls the speed at which player sprite enters the scene (original value of 2)
     }
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
         gSprites[gBattlerSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
@@ -2569,10 +2562,7 @@ void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
                                                          30);
         gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
         gSprites[gBattlerSpriteIds[battler]].x2 = -96;
-        if (BATTLE_INTRO_SPEEDUP)
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which trainer sprite slides into the scene (original value of 2)
-        else
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2;
+        gSprites[gBattlerSpriteIds[battler]].sSpeedX = 2; // Controls the speed at which trainer sprite slides into the scene (original value of 2)
     }
     else
     {
@@ -2583,10 +2573,7 @@ void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
         gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
         gSprites[gBattlerSpriteIds[battler]].x2 = 96;
         gSprites[gBattlerSpriteIds[battler]].x += 32;
-        if (BATTLE_INTRO_SPEEDUP)
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2 * BATTLE_INTRO_SPEEDUP_MULTIPLIER; // Controls the speed at which players sprite slides into the scene (original value of 2)
-        else
-            gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2;
+        gSprites[gBattlerSpriteIds[battler]].sSpeedX = -2; // Controls the speed at which players sprite slides into the scene (original value of 2)
         }
     gSprites[gBattlerSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
 
