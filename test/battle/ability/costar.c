@@ -14,12 +14,12 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
         TURN { SWITCH(opponentRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
     } SCENE {
         // Turn 1 - buff up
-        MESSAGE("Foe Wobbuffet used Swords Dance!");
+        MESSAGE("The opposing Wobbuffet used Swords Dance!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         // Turn 2 - Switch into Flamigo
         MESSAGE("2 sent out Flamigo!");
         ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
-        MESSAGE("Foe Flamigo copied Foe Wobbuffet's stat changes!");
+        MESSAGE("The opposing Flamigo copied the opposing Wobbuffet's stat changes!");
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }

@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a fainted party member for an oppon
     } WHEN {
         TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING, partyIndex:1); }
     } SCENE {
-        MESSAGE("Foe Raichu used Revival Blessing!");
+        MESSAGE("The opposing Raichu used Revival Blessing!");
         MESSAGE("Pichu was revived and is ready to fight again!");
     }
 }
@@ -70,10 +70,10 @@ DOUBLE_BATTLE_TEST("Revival Blessing cannot revive a partner's party member")
         TURN { MOVE(user, MOVE_REVIVAL_BLESSING, partyIndex:4); }
     } SCENE {
         if (user == opponentLeft) {
-            MESSAGE("Foe Wobbuffet used Revival Blessing!");
+            MESSAGE("The opposing Wobbuffet used Revival Blessing!");
             MESSAGE("But it failed!");
         } else {
-            MESSAGE("Foe Wynaut used Revival Blessing!");
+            MESSAGE("The opposing Wynaut used Revival Blessing!");
             MESSAGE("Wynaut was revived and is ready to fight again!");
         }
     }
@@ -91,8 +91,8 @@ DOUBLE_BATTLE_TEST("Revival Blessing doesn't prevent revived battlers from losin
                MOVE(opponentLeft, MOVE_REVIVAL_BLESSING, partyIndex: 1); }
     } SCENE {
         MESSAGE("Wobbuffet used Tackle!");
-        MESSAGE("Foe Wynaut fainted!");
-        MESSAGE("Foe Wobbuffet used Revival Blessing!");
+        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing Wobbuffet used Revival Blessing!");
         MESSAGE("Wynaut was revived and is ready to fight again!");
         NOT { MESSAGE("Wynaut used Celebrate!"); }
     }
@@ -113,16 +113,16 @@ DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags")
         // Turn 1
         MESSAGE("Salamence used Earthquake!");
         HP_BAR(opponentLeft);
-        MESSAGE("Foe Geodude fainted!");
+        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
-        MESSAGE("It doesn't affect Foe Starly…");
-        MESSAGE("Foe Starly used Revival Blessing!");
+        MESSAGE("It doesn't affect the opposing Starly…");
+        MESSAGE("The opposing Starly used Revival Blessing!");
         MESSAGE("Geodude was revived and is ready to fight again!"); // Should have prefix but it doesn't currently.
         // Turn 2
         MESSAGE("Salamence used Earthquake!");
         HP_BAR(opponentLeft);
-        MESSAGE("Foe Geodude fainted!");
+        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
-        MESSAGE("It doesn't affect Foe Starly…");
+        MESSAGE("It doesn't affect the opposing Starly…");
     }
 }

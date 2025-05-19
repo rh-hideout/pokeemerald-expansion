@@ -13,6 +13,7 @@
 #include "trig.h"
 #include "util.h"
 #include "data.h"
+#include "item.h"
 #include "constants/songs.h"
 
 static void Task_DoPokeballSendOutAnim(u8 taskId);
@@ -47,36 +48,38 @@ static u16 GetBattlerPokeballItemId(u8 battlerId);
 
 // rom const data
 
-#define GFX_TAG_POKE_BALL    55000
-#define GFX_TAG_GREAT_BALL   55001
-#define GFX_TAG_ULTRA_BALL   55002
-#define GFX_TAG_MASTER_BALL  55003
-#define GFX_TAG_PREMIER_BALL 55004
-#define GFX_TAG_HEAL_BALL    55005
-#define GFX_TAG_NET_BALL     55006
-#define GFX_TAG_NEST_BALL    55007
-#define GFX_TAG_DIVE_BALL    55008
-#define GFX_TAG_DUSK_BALL    55009
-#define GFX_TAG_TIMER_BALL   55010
-#define GFX_TAG_QUICK_BALL   55011
-#define GFX_TAG_REPEAT_BALL  55012
-#define GFX_TAG_LUXURY_BALL  55013
-#define GFX_TAG_LEVEL_BALL   55014
-#define GFX_TAG_LURE_BALL    55015
-#define GFX_TAG_MOON_BALL    55016
-#define GFX_TAG_FRIEND_BALL  55017
-#define GFX_TAG_LOVE_BALL    55018
-#define GFX_TAG_FAST_BALL    55019
-#define GFX_TAG_HEAVY_BALL   55020
-#define GFX_TAG_DREAM_BALL   55021
-#define GFX_TAG_SAFARI_BALL  55022
-#define GFX_TAG_SPORT_BALL   55023
-#define GFX_TAG_PARK_BALL    55024
-#define GFX_TAG_BEAST_BALL   55025
-#define GFX_TAG_CHERISH_BALL 55026
+#define GFX_TAG_STRANGE_BALL 55000
+#define GFX_TAG_POKE_BALL    55001
+#define GFX_TAG_GREAT_BALL   55002
+#define GFX_TAG_ULTRA_BALL   55003
+#define GFX_TAG_MASTER_BALL  55004
+#define GFX_TAG_PREMIER_BALL 55005
+#define GFX_TAG_HEAL_BALL    55006
+#define GFX_TAG_NET_BALL     55007
+#define GFX_TAG_NEST_BALL    55008
+#define GFX_TAG_DIVE_BALL    55009
+#define GFX_TAG_DUSK_BALL    55010
+#define GFX_TAG_TIMER_BALL   55011
+#define GFX_TAG_QUICK_BALL   55012
+#define GFX_TAG_REPEAT_BALL  55013
+#define GFX_TAG_LUXURY_BALL  55014
+#define GFX_TAG_LEVEL_BALL   55015
+#define GFX_TAG_LURE_BALL    55016
+#define GFX_TAG_MOON_BALL    55017
+#define GFX_TAG_FRIEND_BALL  55018
+#define GFX_TAG_LOVE_BALL    55019
+#define GFX_TAG_FAST_BALL    55020
+#define GFX_TAG_HEAVY_BALL   55021
+#define GFX_TAG_DREAM_BALL   55022
+#define GFX_TAG_SAFARI_BALL  55023
+#define GFX_TAG_SPORT_BALL   55024
+#define GFX_TAG_PARK_BALL    55025
+#define GFX_TAG_BEAST_BALL   55026
+#define GFX_TAG_CHERISH_BALL 55027
 
 const struct CompressedSpriteSheet gBallSpriteSheets[POKEBALL_COUNT] =
 {
+    [BALL_STRANGE] = {gBallGfx_Strange, 384, GFX_TAG_STRANGE_BALL},
     [BALL_POKE]    = {gBallGfx_Poke,    384, GFX_TAG_POKE_BALL},
     [BALL_GREAT]   = {gBallGfx_Great,   384, GFX_TAG_GREAT_BALL},
     [BALL_ULTRA]   = {gBallGfx_Ultra,   384, GFX_TAG_ULTRA_BALL},
@@ -108,6 +111,7 @@ const struct CompressedSpriteSheet gBallSpriteSheets[POKEBALL_COUNT] =
 
 const struct CompressedSpritePalette gBallSpritePalettes[POKEBALL_COUNT] =
 {
+    [BALL_STRANGE] = {gBallPal_Strange, GFX_TAG_STRANGE_BALL},
     [BALL_POKE]    = {gBallPal_Poke,    GFX_TAG_POKE_BALL},
     [BALL_GREAT]   = {gBallPal_Great,   GFX_TAG_GREAT_BALL},
     [BALL_ULTRA]   = {gBallPal_Ultra,   GFX_TAG_ULTRA_BALL},
@@ -252,6 +256,16 @@ static const union AffineAnimCmd *const sAffineAnim_BallRotate[] =
 
 const struct SpriteTemplate gBallSpriteTemplates[POKEBALL_COUNT] =
 {
+    [BALL_STRANGE] =
+    {
+        .tileTag = GFX_TAG_STRANGE_BALL,
+        .paletteTag = GFX_TAG_STRANGE_BALL,
+        .oam = &sBallOamData,
+        .anims = sBallAnimSequences,
+        .images = NULL,
+        .affineAnims = sAffineAnim_BallRotate,
+        .callback = SpriteCB_BallThrow,
+    },
     [BALL_POKE] =
     {
         .tileTag = GFX_TAG_POKE_BALL,
@@ -562,7 +576,7 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
 
     throwCaseId = gTasks[taskId].tThrowId;
     battlerId = gTasks[taskId].tBattler;
-    ballId = ItemIdToBallId(GetBattlerPokeballItemId(battlerId));
+    ballId = GetBattlerPokeballItemId(battlerId);
     LoadBallGfx(ballId);
     ballSpriteId = CreateSprite(&gBallSpriteTemplates[ballId], 32, 80, 29);
     gSprites[ballSpriteId].data[0] = 0x80;
@@ -651,7 +665,7 @@ static void SpriteCB_BallThrow(struct Sprite *sprite)
         sprite->x2 = 0;
         sprite->y2 = 0;
         sprite->data[5] = 0;
-        ballId = ItemIdToBallId(GetBattlerPokeballItemId(opponentBattler));
+        ballId = GetBattlerPokeballItemId(opponentBattler);
         AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
         sprite->data[0] = LaunchBallFadeMonTask(FALSE, opponentBattler, 14, ballId);
         sprite->sBattler = opponentBattler;
@@ -967,7 +981,7 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
     u32 ballId;
 
     StartSpriteAnim(sprite, 1);
-    ballId = ItemIdToBallId(GetBattlerPokeballItemId(battlerId));
+    ballId = GetBattlerPokeballItemId(battlerId);
     AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
     sprite->data[0] = LaunchBallFadeMonTask(TRUE, sprite->sBattler, 14, ballId);
     sprite->callback = HandleBallAnimEnd;
@@ -1571,16 +1585,22 @@ void FreeBallGfx(u8 ballId)
 
 static u16 GetBattlerPokeballItemId(u8 battlerId)
 {
-    struct Pokemon *mon, *illusionMon;
-
-    if (GetBattlerSide(battlerId) == B_SIDE_PLAYER)
-        mon = &gPlayerParty[gBattlerPartyIndexes[battlerId]];
-    else
-        mon = &gEnemyParty[gBattlerPartyIndexes[battlerId]];
+    struct Pokemon *illusionMon;
+    struct Pokemon *mon = GetPartyBattlerData(battlerId);
 
     illusionMon = GetIllusionMonPtr(battlerId);
     if (illusionMon != NULL)
         mon = illusionMon;
 
     return GetMonData(mon, MON_DATA_POKEBALL);
+}
+
+enum PokeBall ItemIdToBallId(u32 ballItem)
+{
+    enum PokeBall secondaryId = ItemId_GetSecondaryId(ballItem);
+
+    if (secondaryId <= BALL_STRANGE || secondaryId >= POKEBALL_COUNT)
+        return BALL_STRANGE;
+
+    return secondaryId;
 }

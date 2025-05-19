@@ -27,6 +27,16 @@ If you are not using competitive syntax parties, instead access the trainer data
 # What AI Flags does pokeemerald-expansion have?
 This section lists all of expansion’s AI Flags and briefly describes the effect they have on the AI’s behaviour. In all cases, please check the corresponding function or surrounding code around their implementation for more details. Some of these functions are vanilla, some share a name with vanilla but have been modified to varying degrees, and some are completely new.
 
+## Composite AI Flags
+
+Expansion has two "composite" AI flags, `AI_FLAG_BASIC_TRAINER` and `AI_FLAG_SMART_TRAINER`. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you. 
+
+`AI_FLAG_BASIC_TRAINER` is expansion's version of generic, normal AI behaviour. It includes `AI_FLAG_CHECK_BAD_MOVE` (don't use bad moves), `AI_FLAG_TRY_TO_FAINT` (faint the player where possible), and `AI_FLAG_CHECK_VIABILITY` (choose the most effective move to use in the current context). Trainers with this flag will still be smarter than they are in vanilla as there have been dramatic improvements made to move selection, but not incredibly so. Trainers with this flag should feel like normal trainers. In general we recommend these three flags be used in all cases, unless you specifically want a trainer who makes obvious mistakes in battle.
+
+`AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), and `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
+
+Expansion has LOADS of flags, which will be covered in the rest of this guide. If you don't want to engage with detailed trainer AI tuning though, you can just use these two composite flags, and trust that expansion will keep their contents updated to always represent the most standard and the smartest behaviour we can.
+
 ## `AI_FLAG_CHECK_BAD_MOVE`
 The AI will avoid using moves that are likely to fail in the current situation. This flag helps prevent the AI from making ineffective choices, such as using moves into immunities, into invulnerable states, or when the moves are otherwise hindered by abilities, terrain, or status conditions.
 
@@ -42,8 +52,8 @@ This flag is divided into two components to calculate the best available move fo
 
 This is different to `AI_FLAG_CHECK_BAD_MOVE` as it calculates how poor a move is and not whether it will fail or not.
 
-## `AI_FLAG_SETUP_FIRST_TURN`
-AI will prioritize using setup moves on the first turn. These include stat buffs, field effects, status moves, etc.
+## `AI_FLAG_FORCE_SETUP_FIRST_TURN`
+AI will prioritize using setup moves on the first turn at the expense of all else. These include stat buffs, field effects, status moves, etc. AI_FLAG_CHECK_VIABILITY will instead do this when the AI determines it makes sense.
 
 This is just a flat increase without any consideration of whether it makes sense to use the move or not. For better move choice quality for those moves, `AI_FLAG_CHECK_VIABILITY` should be used.
 
@@ -124,7 +134,10 @@ Affects when the AI chooses to switch. AI will make smarter decisions about when
 * The current mon loses the 1v1 quickly and has at least ½ HP, or ¼ and Regenerator
 
 ## `AI_FLAG_ACE_POKEMON`
-Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unless it is the last one remaining, or is forced to be switched in (Roar, U-Turn with 1 mon remaining, etc.)
+Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unless it is the last one remaining, or is forced to be switched in (Roar, U-Turn with 1 mon remaining, etc.). If you are challenged by two different trainers at the same time, only the ones with this flag will have Ace Pokémon. For example vs one trainer with `AI_FLAG_ACE_POKEMON`and the other without, there will be a total of 1 Ace Pokémon.
+
+## `AI_FLAG_DOUBLE_ACE_POKEMON`
+Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviour as `AI_FLAG_ACE_POKEMON`. Intented for double battles where you battle one trainer id that represents two trainers, ie Twins, Couples. If you apply this flag to trainers outside of double battles or in cases where two trainers can challenge you at the same time, it has the same behaviour. For example vs two trainers with `AI_FLAG_DOUBLE_ACE_POKEMON` there will be a total of 4 Ace Pokémon.
 
 ## `AI_FLAG_OMNISCIENT`
 AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.

@@ -1281,6 +1281,17 @@ const struct SpriteTemplate gTeraCrystalSpreadSpriteTemplate =
     .callback = AnimTask_TeraCrystalShatter,
 };
 
+const struct SpriteTemplate gPinkPetalVortexTemplate =
+{
+    .tileTag = ANIM_TAG_PINK_PETAL,
+    .paletteTag = ANIM_TAG_PINK_PETAL,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gSweetScentPetalAnimCmdTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimParticleInVortex
+};
+
 // Task data for AnimTask_TeraCrystalShatter
 #define tCounter    data[0]
 #define tDX         data[6]

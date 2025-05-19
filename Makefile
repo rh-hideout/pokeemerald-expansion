@@ -5,12 +5,10 @@ MAKER_CODE  := 01
 REVISION    := 0
 KEEP_TEMPS  ?= 0
 
-# `File name`.gba ('_agbcc' will be appended to the non-modern builds)
+# `File name`.gba
 FILE_NAME := pokeemerald
 BUILD_DIR := build
 
-# Builds the ROM using a modern compiler
-MODERN      ?= 1
 # Compares the ROM to a checksum of the original - only makes sense using when non-modern
 COMPARE     ?= 0
 # Executes the Test Runner System that checks that all mechanics work as expected
@@ -19,15 +17,17 @@ TEST         ?= 0
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
 UNUSED_ERROR ?= 0
+# Adds -Og and -g flags, which optimize the build for debugging and include debug info respectively
+DEBUG        ?= 0
 
-ifeq (agbcc,$(MAKECMDGOALS))
-  MODERN := 0
-endif
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
 endif
 ifeq (check,$(MAKECMDGOALS))
   TEST := 1
+endif
+ifeq (debug,$(MAKECMDGOALS))
+  DEBUG := 1
 endif
 
 # Default make rule
@@ -58,52 +58,27 @@ ifeq ($(OS),Windows_NT)
   EXE := .exe
 endif
 
-# use arm-none-eabi-cpp for macOS
-# as macOS's default compiler is clang
-# and clang's preprocessor will warn on \u
-# when preprocessing asm files, expecting a unicode literal
-# we can't unconditionally use arm-none-eabi-cpp
-# as installations which install binutils-arm-none-eabi
-# don't come with it
-ifneq ($(MODERN),1)
-  ifeq ($(shell uname -s),Darwin)
-    CPP := $(PREFIX)cpp
-  else
-    CPP := $(CC) -E
-  endif
-else
-  CPP := $(PREFIX)cpp
-endif
+CPP := $(PREFIX)cpp
 
-ROM_NAME := $(FILE_NAME)_agbcc.gba
-OBJ_DIR_NAME := $(BUILD_DIR)/emerald
-OBJ_DIR_NAME_TEST := $(BUILD_DIR)/test
-MODERN_ROM_NAME := $(FILE_NAME).gba
-MODERN_OBJ_DIR_NAME := $(BUILD_DIR)/modern
-MODERN_OBJ_DIR_NAME_TEST := $(BUILD_DIR)/modern-test
+ROM_NAME := $(FILE_NAME).gba
+OBJ_DIR_NAME := $(BUILD_DIR)/modern
+OBJ_DIR_NAME_TEST := $(BUILD_DIR)/modern-test
+OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/modern-debug
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
-MODERN_ELF_NAME := $(MODERN_ROM_NAME:.gba=.elf)
-MODERN_MAP_NAME := $(MODERN_ROM_NAME:.gba=.map)
-TESTELF = $(MODERN_ROM_NAME:.gba=-test.elf)
-HEADLESSELF = $(MODERN_ROM_NAME:.gba=-test-headless.elf)
+TESTELF = $(ROM_NAME:.gba=-test.elf)
+HEADLESSELF = $(ROM_NAME:.gba=-test-headless.elf)
 
 # Pick our active variables
-ifeq ($(MODERN),0)
-  ROM := $(ROM_NAME)
-  ifeq ($(TEST), 0)
-    OBJ_DIR := $(OBJ_DIR_NAME)
-  else
-    OBJ_DIR := $(OBJ_DIR_NAME_TEST)
-  endif
+ROM := $(ROM_NAME)
+ifeq ($(TEST), 0)
+  OBJ_DIR := $(OBJ_DIR_NAME)
 else
-  ROM := $(MODERN_ROM_NAME)
-  ifeq ($(TEST), 0)
-    OBJ_DIR := $(MODERN_OBJ_DIR_NAME)
-  else
-    OBJ_DIR := $(MODERN_OBJ_DIR_NAME_TEST)
-  endif
+  OBJ_DIR := $(OBJ_DIR_NAME_TEST)
+endif
+ifeq ($(DEBUG),1)
+  OBJ_DIR := $(OBJ_DIR_NAME_DEBUG)
 endif
 ifeq ($(TESTELF),$(MAKECMDGOALS))
   TEST := 1
@@ -131,41 +106,45 @@ TEST_BUILDDIR = $(OBJ_DIR)/$(TEST_SUBDIR)
 SHELL := bash -o pipefail
 
 # Set flags for tools
-ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=$(MODERN)
+ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=1
 
 INCLUDE_DIRS := include
 INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
 INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 
-O_LEVEL ?= 2
-CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=$(MODERN) -DTESTING=$(TEST)
-ifeq ($(MODERN),0)
-  CPPFLAGS += -I tools/agbcc/include -I tools/agbcc -nostdinc -undef
-  CC1 := tools/agbcc/bin/agbcc$(EXE)
-  override CFLAGS += -mthumb-interwork -Wimplicit -Wparentheses -Werror -O$(O_LEVEL) -fhex-asm -g
-  LIBPATH := -L ../../tools/agbcc/lib
-  LIB := $(LIBPATH) -lgcc -lc -L../../libagbsyscall -lagbsyscall
+ifeq ($(DEBUG),1)
+O_LEVEL ?= g
 else
-  # Note: The makefile must be set up to not call these if modern == 0
-  MODERNCC := $(PREFIX)gcc
-  PATH_MODERNCC := PATH="$(PATH)" $(MODERNCC)
-  CC1 := $(shell $(PATH_MODERNCC) --print-prog-name=cc1) -quiet
-  override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
-  ifeq ($(ANALYZE),1)
-    override CFLAGS += -fanalyzer
-  endif
-  # Only throw an error for unused elements if its RH-Hideout's repo
-  ifeq ($(UNUSED_ERROR),0)
-    ifneq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
-      override CFLAGS += -Wno-error=unused-variable -Wno-error=unused-const-variable -Wno-error=unused-parameter -Wno-error=unused-function -Wno-error=unused-but-set-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-value -Wno-error=unused-local-typedefs
-    endif
-  endif
-  LIBPATH := -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libc.a))"
-  LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
+O_LEVEL ?= 2
 endif
+CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST)
+ARMCC := $(PREFIX)gcc
+PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
+CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
+override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
+ifeq ($(ANALYZE),1)
+  override CFLAGS += -fanalyzer
+endif
+# Only throw an error for unused elements if its RH-Hideout's repo
+ifeq ($(UNUSED_ERROR),0)
+  ifneq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
+    override CFLAGS += -Wno-error=unused-variable -Wno-error=unused-const-variable -Wno-error=unused-parameter -Wno-error=unused-function -Wno-error=unused-but-set-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-value -Wno-error=unused-local-typedefs
+  endif
+endif
+LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
+LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
 # Enable debug info if set
 ifeq ($(DINFO),1)
   override CFLAGS += -g
+else
+  ifeq ($(DEBUG),1)
+    override CFLAGS += -g
+  endif
+endif
+
+ifeq ($(NOOPT),1)
+override CFLAGS := $(filter-out -O1 -Og -O2,$(CFLAGS))
+override CFLAGS += -O0
 endif
 
 # Variable filled out in other make files
@@ -198,8 +177,8 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidynonmodern tidycheck generated clean-generated $(TESTELF)
-.PHONY: all rom agbcc modern compare check
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck generated clean-generated $(TESTELF)
+.PHONY: all rom agbcc modern compare check debug
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -269,6 +248,7 @@ $(shell mkdir -p $(SUBDIRS))
 # Pretend rules that are actually flags defer to `make all`
 modern: all
 compare: all
+debug: all
 # Uncomment the next line, and then comment the 4 lines after it to reenable agbcc.
 #agbcc: all
 agbcc:
@@ -317,20 +297,18 @@ clean-assets:
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
-tidy: tidynonmodern tidymodern tidycheck
+tidy: tidymodern tidycheck tidydebug
 
-tidynonmodern:
+tidymodern:
 	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
 	rm -rf $(OBJ_DIR_NAME)
 
-tidymodern:
-	rm -f $(MODERN_ROM_NAME) $(MODERN_ELF_NAME) $(MODERN_MAP_NAME)
-	rm -rf $(MODERN_OBJ_DIR_NAME)
-
 tidycheck:
 	rm -f $(TESTELF) $(HEADLESSELF)
-	rm -rf $(MODERN_OBJ_DIR_NAME_TEST)
 	rm -rf $(OBJ_DIR_NAME_TEST)
+
+tidydebug:
+	rm -rf $(DEBUG_OBJ_DIR_NAME)
 
 # Other rules
 include graphics_file_rules.mk
@@ -366,24 +344,11 @@ ifeq ($(COMPETITIVE_PARTY_SYNTAX),1)
 %.h: %.party ; $(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
 endif
 
-ifeq ($(MODERN),0)
-$(C_BUILDDIR)/libc.o: CC1 := $(TOOLS_DIR)/agbcc/bin/old_agbcc$(EXE)
-$(C_BUILDDIR)/libc.o: CFLAGS := -O2
-$(C_BUILDDIR)/siirtc.o: CFLAGS := -mthumb-interwork
-$(C_BUILDDIR)/agb_flash.o: CFLAGS := -O -mthumb-interwork
-$(C_BUILDDIR)/agb_flash_1m.o: CFLAGS := -O -mthumb-interwork
-$(C_BUILDDIR)/agb_flash_mx.o: CFLAGS := -O -mthumb-interwork
-$(C_BUILDDIR)/m4a.o: CC1 := tools/agbcc/bin/old_agbcc$(EXE)
-$(C_BUILDDIR)/record_mixing.o: CFLAGS += -ffreestanding
-$(C_BUILDDIR)/librfu_intr.o: CC1 := $(TOOLS_DIR)/agbcc/bin/agbcc_arm$(EXE)
-$(C_BUILDDIR)/librfu_intr.o: CFLAGS := -O2 -mthumb-interwork -quiet
-else
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
 $(C_BUILDDIR)/pokedex_plus_hgss.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
 # Annoyingly we can't turn this on just for src/data/trainers.h
 $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret
-endif
 
 # Dependency rules (for the *.c & *.s sources to .o files)
 # Have to be explicit or else missing files won't be reported.
@@ -464,18 +429,13 @@ $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h: $(DATA_ASM_BUILDDIR)/event_scr
 	python3 $(TOOLS_DIR)/learnset_helpers/teachable.py
 
 # Linker script
-ifeq ($(MODERN),0)
-LD_SCRIPT := ld_script.ld
-LD_SCRIPT_DEPS := $(OBJ_DIR)/sym_bss.ld $(OBJ_DIR)/sym_common.ld $(OBJ_DIR)/sym_ewram.ld
-else
 LD_SCRIPT := ld_script_modern.ld
 LD_SCRIPT_DEPS :=
-endif
 
 # Final rules
 
 libagbsyscall:
-	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=$(MODERN)
+	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
 # Elf from object files
 LDFLAGS = -Map ../../$(MAP)

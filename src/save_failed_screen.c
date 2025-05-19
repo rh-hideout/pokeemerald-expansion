@@ -399,3 +399,55 @@ static bool8 WipeSectors(u32 sectorBits)
     else
         return TRUE;
 }
+
+void CB2_FlashNotDetectedScreen(void)
+{
+    static const struct WindowTemplate textWin[] =
+    {
+        {
+            .bg = 0,
+            .tilemapLeft = 3,
+            .tilemapTop = 2,
+            .width = 24,
+            .height = 16,
+            .paletteNum = 15,
+            .baseBlock = 1,
+        }
+    };
+
+    if (gMain.state)
+        return;
+
+    SetGpuReg(REG_OFFSET_DISPCNT, 0);
+    SetGpuReg(REG_OFFSET_BLDCNT, 0);
+    SetGpuReg(REG_OFFSET_BG0CNT, 0);
+    SetGpuReg(REG_OFFSET_BG0HOFS, 0);
+    SetGpuReg(REG_OFFSET_BG0VOFS, 0);
+    DmaFill16(3, 0, VRAM, VRAM_SIZE);
+    DmaFill32(3, 0, OAM, OAM_SIZE);
+    DmaFill16(3, 0, PLTT, PLTT_SIZE);
+    ResetBgsAndClearDma3BusyFlags(0);
+    InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
+    LoadBgTiles(0, gTextWindowFrame1_Gfx, 0x120, 0x214);
+    DeactivateAllTextPrinters();
+    ResetTasks();
+    ResetPaletteFade();
+    LoadPalette(gTextWindowFrame1_Pal, 0xE0, 0x20);
+    LoadPalette(gStandardMenuPalette, 0xF0, 0x20);
+    InitWindows(textWin);
+    DrawStdFrameWithCustomTileAndPalette(0, TRUE, 0x214, 0xE);
+    static const u8 saveFailedMessage[] =_(
+        "{COLOR RED}ERROR! {COLOR DARK_GRAY}Flash memory not detected!\n"
+        "\n"
+        "If playing on an emulator, set your\n"
+        "save type setting to\n"
+        "Flash 1Mb/128K and reload the ROM.\n"
+        "\n"
+        "If playing on hardware, your cart\n"
+        "does not have a working flash chip.");
+    SaveFailedScreenTextPrint(saveFailedMessage, 1, 0);
+    TransferPlttBuffer();
+    *(u16*)PLTT = RGB(17, 18, 31);
+    ShowBg(0);
+    gMain.state++;
+}

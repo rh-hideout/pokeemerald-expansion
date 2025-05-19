@@ -22,6 +22,8 @@ enum
     CONDITION_SEARCH_FUNC_SELECT_MON,
 };
 
+static const u8 gText_NumberIndex[] = _("No. {DYNAMIC 0}");
+
 struct Pokenav_SearchResults
 {
     u32 (*callback)(struct Pokenav_SearchResults *);

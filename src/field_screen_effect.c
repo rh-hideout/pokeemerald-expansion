@@ -7,11 +7,13 @@
 #include "field_effect.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
+#include "event_scripts.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_special_scene.h"
 #include "field_weather.h"
 #include "gpu_regs.h"
+#include "heal_location.h"
 #include "io_reg.h"
 #include "link.h"
 #include "link_rfu.h"
@@ -26,10 +28,13 @@
 #include "script.h"
 #include "sound.h"
 #include "start_menu.h"
+#include "strings.h"
+#include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
+#include "constants/heal_locations.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 #include "trainer_hill.h"
@@ -45,6 +50,14 @@ static void Task_SpinEnterWarp(u8 taskId);
 static void Task_WarpAndLoadMap(u8 taskId);
 static void Task_DoDoorWarp(u8 taskId);
 static void Task_EnableScriptAfterMusicFade(u8 taskId);
+
+static void ExitStairsMovement(s16*, s16*, s16*, s16*, s16*);
+static void GetStairsMovementDirection(u32, s16*, s16*);
+static void Task_ExitStairs(u8);
+static bool8 WaitStairExitMovementFinished(s16*, s16*, s16*, s16*, s16*);
+static void UpdateStairsMovement(s16, s16, s16*, s16*, s16*);
+static void Task_StairWarp(u8);
+static void ForceStairsMovement(u32, s16*, s16*);
 
 // data[0] is used universally by tasks in this file as a state for switches
 #define tState       data[0]
@@ -263,10 +276,14 @@ static void SetUpWarpExitTask(void)
     behavior = MapGridGetMetatileBehaviorAt(x, y);
     if (MetatileBehavior_IsDoor(behavior) == TRUE)
         func = Task_ExitDoor;
+    else if (MetatileBehavior_IsDirectionalStairWarp(behavior) == TRUE && !gExitStairsMovementDisabled)
+        func = Task_ExitStairs;
     else if (MetatileBehavior_IsNonAnimDoor(behavior) == TRUE)
         func = Task_ExitNonAnimDoor;
     else
         func = Task_ExitNonDoor;
+
+    gExitStairsMovementDisabled = FALSE;
     CreateTask(func, 10);
 }
 
@@ -1273,4 +1290,347 @@ static void Task_EnableScriptAfterMusicFade(u8 taskId)
         DestroyTask(taskId);
         ScriptContext_Enable();
     }
+}
+
+static const struct WindowTemplate sWindowTemplate_WhiteoutText =
+{
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 5,
+    .width = 30,
+    .height = 11,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+static const u8 sWhiteoutTextColors[] = { TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+
+#define tState         data[0]
+#define tWindowId      data[1]
+#define tPrintState    data[2]
+#define tIsPlayerHouse data[3]
+
+static bool32 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u32 x, u32 y)
+{
+    u32 windowId = gTasks[taskId].tWindowId;
+
+    switch (gTasks[taskId].tPrintState)
+    {
+    case 0:
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+        StringExpandPlaceholders(gStringVar4, text);
+        AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 1, 0, sWhiteoutTextColors, 1, gStringVar4);
+        gTextFlags.canABSpeedUpPrint = FALSE;
+        gTasks[taskId].tPrintState = 1;
+        break;
+    case 1:
+        RunTextPrinters();
+        if (!IsTextPrinterActive(windowId))
+        {
+            gTasks[taskId].tPrintState = 0;
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
+}
+
+enum {
+    FRLG_WHITEOUT_ENTER_MSG_SCREEN,
+    FRLG_WHITEOUT_PRINT_MSG,
+    FRLG_WHITEOUT_LEAVE_MSG_SCREEN,
+    FRLG_WHITEOUT_HEAL_SCRIPT,
+};
+
+static void Task_RushInjuredPokemonToCenter(u8 taskId)
+{
+    u32 windowId;
+
+    switch (gTasks[taskId].tState)
+    {
+    case FRLG_WHITEOUT_ENTER_MSG_SCREEN:
+        windowId = AddWindow(&sWindowTemplate_WhiteoutText);
+        gTasks[taskId].tWindowId = windowId;
+        Menu_LoadStdPalAt(BG_PLTT_ID(15));
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+        PutWindowTilemap(windowId);
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+
+        gTasks[taskId].tIsPlayerHouse = IsLastHealLocationPlayerHouse();
+        gTasks[taskId].tState = FRLG_WHITEOUT_PRINT_MSG;
+        break;
+    case FRLG_WHITEOUT_PRINT_MSG:
+    {
+        const u8 *recoveryMessage = gTasks[taskId].tIsPlayerHouse == TRUE ? gText_PlayerScurriedBackHome : gText_PlayerScurriedToCenter;
+        if (PrintWhiteOutRecoveryMessage(taskId, recoveryMessage, 2, 8))
+        {
+            ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
+            gTasks[taskId].tState = FRLG_WHITEOUT_LEAVE_MSG_SCREEN;
+        }
+        break;
+    }
+    case FRLG_WHITEOUT_LEAVE_MSG_SCREEN:
+        windowId = gTasks[taskId].tWindowId;
+        ClearWindowTilemap(windowId);
+        CopyWindowToVram(windowId, COPYWIN_MAP);
+        RemoveWindow(windowId);
+        FillPalBufferBlack();
+        FadeInFromBlack();
+        gTasks[taskId].tState = FRLG_WHITEOUT_HEAL_SCRIPT;
+        break;
+    case FRLG_WHITEOUT_HEAL_SCRIPT:
+        if (WaitForWeatherFadeIn() == TRUE)
+        {
+            DestroyTask(taskId);
+            if (gTasks[taskId].tIsPlayerHouse)
+                ScriptContext_SetupScript(EventScript_AfterWhiteOutMomHeal);
+            else
+                ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal);
+        }
+        break;
+    }
+}
+
+void FieldCB_RushInjuredPokemonToCenter(void)
+{
+    u8 taskId;
+
+    LockPlayerFieldControls();
+    FillPalBufferBlack();
+    taskId = CreateTask(Task_RushInjuredPokemonToCenter, 10);
+    gTasks[taskId].tState = FRLG_WHITEOUT_ENTER_MSG_SCREEN;
+}
+
+static void GetStairsMovementDirection(u32 metatileBehavior, s16 *speedX, s16 *speedY)
+{
+    if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+    {
+        *speedX = 16;
+        *speedY = -10;
+    }
+    else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior))
+    {
+        *speedX = -17;
+        *speedY = -10;
+    }
+    else if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+    {
+        *speedX = 17;
+        *speedY = 3;
+    }
+    else if (MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+    {
+        *speedX = -17;
+        *speedY = 3;
+    }
+    else
+    {
+        *speedX = 0;
+        *speedY = 0;
+    }
+}
+
+static bool8 WaitStairExitMovementFinished(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer)
+{
+    struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
+    if (*timer != 0)
+    {
+        *offsetX += *speedX;
+        *offsetY += *speedY;
+        sprite->x2 = *offsetX >> 5;
+        sprite->y2 = *offsetY >> 5;
+        (*timer)--;
+        return TRUE;
+    }
+    else
+    {
+        sprite->x2 = 0;
+        sprite->y2 = 0;
+        return FALSE;
+    }
+}
+
+static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer)
+{
+    s16 x, y;
+    u32 metatileBehavior;
+    s32 direction;
+    struct Sprite *sprite;
+
+    PlayerGetDestCoords(&x, &y);
+    metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior) || MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+        direction = DIR_WEST;
+    else
+        direction = DIR_EAST;
+
+    ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceSlowMovementAction(direction));
+    GetStairsMovementDirection(metatileBehavior, speedX, speedY);
+    *offsetX = *speedX * 16;
+    *offsetY = *speedY * 16;
+    *timer = 16;
+    sprite = &gSprites[gPlayerAvatar.spriteId];
+    sprite->x2 = *offsetX >> 5;
+    sprite->y2 = *offsetY >> 5;
+    *speedX *= -1;
+    *speedY *= -1;
+}
+
+#define tState data[0]
+#define tSpeedX data[1]
+#define tSpeedY data[2]
+#define tOffsetX data[3]
+#define tOffsetY data[4]
+#define tTimer data[5]
+
+static void Task_ExitStairs(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+    switch (tState)
+    {
+    default:
+        if (WaitForWeatherFadeIn() == TRUE)
+        {
+            CameraObjectReset();
+            UnlockPlayerFieldControls();
+            DestroyTask(taskId);
+        }
+        break;
+    case 0:
+        Overworld_PlaySpecialMapMusic();
+        WarpFadeInScreen();
+        LockPlayerFieldControls();
+        ExitStairsMovement(&tSpeedX, &tSpeedY, &tOffsetX, &tOffsetY, &tTimer);
+        tState++;
+        break;
+    case 1:
+        if (!WaitStairExitMovementFinished(&tSpeedX, &tSpeedY, &tOffsetX, &tOffsetY, &tTimer))
+            tState++;
+        break;
+    }
+}
+
+static void ForceStairsMovement(u32 metatileBehavior, s16 *speedX, s16 *speedY)
+{
+    ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
+    GetStairsMovementDirection(metatileBehavior, speedX, speedY);
+}
+#undef tSpeedX
+#undef tSpeedY
+#undef tOffsetX
+#undef tOffsetY
+#undef tTimer
+
+#define tMetatileBehavior data[1]
+#define tSpeedX           data[2]
+#define tSpeedY           data[3]
+#define tOffsetX          data[4]
+#define tOffsetY          data[5]
+#define tTimer            data[6]
+#define tDelay            data[15]
+
+static void UpdateStairsMovement(s16 speedX, s16 speedY, s16 *offsetX, s16 *offsetY, s16 *timer)
+{
+    struct Sprite *playerSprite = &gSprites[gPlayerAvatar.spriteId];
+    struct ObjectEvent *playerObjectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (speedY > 0 || *timer > 6)
+        *offsetY += speedY;
+
+    *offsetX += speedX;
+    (*timer)++;
+    playerSprite->x2 = *offsetX >> 5;
+    playerSprite->y2 = *offsetY >> 5;
+    if (playerObjectEvent->heldMovementFinished)
+        ObjectEventForceSetHeldMovement(playerObjectEvent, GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
+}
+
+static void Task_StairWarp(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+    struct ObjectEvent *playerObjectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *playerSprite = &gSprites[gPlayerAvatar.spriteId];
+
+    switch (tState)
+    {
+    case 0:
+        LockPlayerFieldControls();
+        FreezeObjectEvents();
+        CameraObjectFreeze();
+        tState++;
+        break;
+    case 1:
+        if (!ObjectEventIsMovementOverridden(playerObjectEvent) || ObjectEventClearHeldMovementIfFinished(playerObjectEvent))
+        {
+            if (tDelay != 0)
+            {
+                tDelay--;
+            }
+            else
+            {
+                TryFadeOutOldMapMusic();
+                PlayRainStoppingSoundEffect();
+                playerSprite->oam.priority = 1;
+                ForceStairsMovement(tMetatileBehavior, &tSpeedX, &tSpeedY);
+                PlaySE(SE_EXIT);
+                tState++;
+            }
+        }
+        break;
+    case 2:
+        UpdateStairsMovement(tSpeedX, tSpeedY, &tOffsetX, &tOffsetY, &tTimer);
+        tDelay++;
+        if (tDelay >= 12)
+        {
+            WarpFadeOutScreen();
+            tState++;
+        }
+        break;
+    case 3:
+        UpdateStairsMovement(tSpeedX, tSpeedY, &tOffsetX, &tOffsetY, &tTimer);
+        if (!PaletteFadeActive() && BGMusicStopped())
+            tState++;
+        break;
+    default:
+        gFieldCallback = FieldCB_DefaultWarpExit;
+        WarpIntoMap();
+        SetMainCallback2(CB2_LoadMap);
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+void DoStairWarp(u16 metatileBehavior, u16 delay)
+{
+    u8 taskId = CreateTask(Task_StairWarp, 10);
+    gTasks[taskId].tMetatileBehavior = metatileBehavior;
+    gTasks[taskId].tDelay = delay;
+    Task_StairWarp(taskId);
+}
+
+#undef tMetatileBehavior
+#undef tSpeedX
+#undef tSpeedY
+#undef tOffsetX
+#undef tOffsetY
+#undef tTimer
+#undef tDelay
+
+bool32 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection == DIR_WEST)
+    {
+        if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior))
+            return TRUE;
+        if (MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+            return TRUE;
+    }
+    else if (playerDirection == DIR_EAST)
+    {
+        if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+            return TRUE;
+        if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+            return TRUE;
+    }
+    return FALSE;
 }

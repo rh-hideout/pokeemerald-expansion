@@ -349,6 +349,28 @@ const struct SpriteTemplate gSeedFlareGreenWavesTemplate =
     .callback = AnimFlyingSandCrescent
 };
 
+const struct SpriteTemplate gMakingItRainTemplate =
+{
+    .tileTag = ANIM_TAG_COIN,
+    .paletteTag = ANIM_TAG_COIN,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gCoinAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimFallingRock,
+};
+
+const struct SpriteTemplate gFallingSeedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SEED,
+    .paletteTag = ANIM_TAG_SEED,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimFallingRock,
+};
+
 static void AnimStealthRock(struct Sprite *sprite)
 {
     s16 x, y;
@@ -456,7 +478,15 @@ void AnimRockFragment(struct Sprite *sprite)
 // Swirls particle in vortex. Used for moves like Fire Spin or Sand Tomb
 void AnimParticleInVortex(struct Sprite *sprite)
 {
-    InitSpritePosToAnimBattler(gBattleAnimArgs[6], sprite, FALSE);
+    if (IsDoubleBattle()
+    && (gAnimMoveIndex == MOVE_BLEAKWIND_STORM 
+     || gAnimMoveIndex == MOVE_SANDSEAR_STORM
+     || gAnimMoveIndex == MOVE_SPRINGTIDE_STORM
+     || gAnimMoveIndex == MOVE_WILDBOLT_STORM))
+        InitSpritePosToAnimTargetsCentre(sprite, FALSE);
+    else
+        InitSpritePosToAnimBattler(gBattleAnimArgs[6], sprite, FALSE);
+
     sprite->data[0] = gBattleAnimArgs[3];
     sprite->data[1] = gBattleAnimArgs[2];
     sprite->data[2] = gBattleAnimArgs[4];

@@ -128,36 +128,38 @@ static const struct CaptureStar sCaptureStars[] =
     },
 };
 
-#define TAG_PARTICLES_POKEBALL    65030
-#define TAG_PARTICLES_GREATBALL   65031
-#define TAG_PARTICLES_ULTRABALL   65032
-#define TAG_PARTICLES_MASTERBALL  65033
-#define TAG_PARTICLES_PREMIERBALL 65034
-#define TAG_PARTICLES_HEALBALL    65035
-#define TAG_PARTICLES_NETBALL     65036
-#define TAG_PARTICLES_NESTBALL    65037
-#define TAG_PARTICLES_DIVEBALL    65038
-#define TAG_PARTICLES_DUSKBALL    65039
-#define TAG_PARTICLES_TIMERBALL   65040
-#define TAG_PARTICLES_QUICKBALL   65041
-#define TAG_PARTICLES_REPEATBALL  65042
-#define TAG_PARTICLES_LUXURYBALL  65043
-#define TAG_PARTICLES_LEVELBALL   65044
-#define TAG_PARTICLES_LUREBALL    65045
-#define TAG_PARTICLES_MOONBALL    65046
-#define TAG_PARTICLES_FRIENDBALL  65047
-#define TAG_PARTICLES_LOVEBALL    65048
-#define TAG_PARTICLES_FASTBALL    65049
-#define TAG_PARTICLES_HEAVYBALL   65050
-#define TAG_PARTICLES_DREAMBALL   65051
-#define TAG_PARTICLES_SAFARIBALL  65052
-#define TAG_PARTICLES_SPORTBALL   65053
-#define TAG_PARTICLES_PARKBALL    65054
-#define TAG_PARTICLES_BEASTBALL   65055
-#define TAG_PARTICLES_CHERISHBALL 65056
+#define TAG_PARTICLES_STRANGEBALL 65030
+#define TAG_PARTICLES_POKEBALL    65031
+#define TAG_PARTICLES_GREATBALL   65032
+#define TAG_PARTICLES_ULTRABALL   65033
+#define TAG_PARTICLES_MASTERBALL  65034
+#define TAG_PARTICLES_PREMIERBALL 65035
+#define TAG_PARTICLES_HEALBALL    65036
+#define TAG_PARTICLES_NETBALL     65037
+#define TAG_PARTICLES_NESTBALL    65038
+#define TAG_PARTICLES_DIVEBALL    65039
+#define TAG_PARTICLES_DUSKBALL    65040
+#define TAG_PARTICLES_TIMERBALL   65041
+#define TAG_PARTICLES_QUICKBALL   65042
+#define TAG_PARTICLES_REPEATBALL  65043
+#define TAG_PARTICLES_LUXURYBALL  65044
+#define TAG_PARTICLES_LEVELBALL   65045
+#define TAG_PARTICLES_LUREBALL    65046
+#define TAG_PARTICLES_MOONBALL    65047
+#define TAG_PARTICLES_FRIENDBALL  65048
+#define TAG_PARTICLES_LOVEBALL    65049
+#define TAG_PARTICLES_FASTBALL    65050
+#define TAG_PARTICLES_HEAVYBALL   65051
+#define TAG_PARTICLES_DREAMBALL   65052
+#define TAG_PARTICLES_SAFARIBALL  65053
+#define TAG_PARTICLES_SPORTBALL   65054
+#define TAG_PARTICLES_PARKBALL    65055
+#define TAG_PARTICLES_BEASTBALL   65056
+#define TAG_PARTICLES_CHERISHBALL 65057
 
 static const struct CompressedSpriteSheet sBallParticleSpriteSheets[] =
 {
+    [BALL_STRANGE]  = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_STRANGEBALL},
     [BALL_POKE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_POKEBALL},
     [BALL_GREAT]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_GREATBALL},
     [BALL_ULTRA]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_ULTRABALL},
@@ -189,6 +191,7 @@ static const struct CompressedSpriteSheet sBallParticleSpriteSheets[] =
 
 static const struct CompressedSpritePalette sBallParticlePalettes[] =
 {
+    [BALL_STRANGE]  = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_STRANGEBALL},
     [BALL_POKE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_POKEBALL},
     [BALL_GREAT]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_GREATBALL},
     [BALL_ULTRA]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_ULTRABALL},
@@ -272,6 +275,7 @@ static const union AnimCmd *const sAnims_BallParticles[] =
 
 static const u8 sBallParticleAnimNums[POKEBALL_COUNT] =
 {
+    [BALL_STRANGE] = 0,
     [BALL_POKE]    = 0,
     [BALL_GREAT]   = 0,
     [BALL_ULTRA]   = 5,
@@ -304,6 +308,7 @@ static const u8 sBallParticleAnimNums[POKEBALL_COUNT] =
 static const TaskFunc sBallParticleAnimationFuncs[POKEBALL_COUNT] =
 {
     // Todo: assign and possibly create different particles
+    [BALL_STRANGE] = GreatBallOpenParticleAnimation,
     [BALL_POKE]    = PokeBallOpenParticleAnimation,
     [BALL_GREAT]   = GreatBallOpenParticleAnimation,
     [BALL_ULTRA]   = UltraBallOpenParticleAnimation,
@@ -335,6 +340,15 @@ static const TaskFunc sBallParticleAnimationFuncs[POKEBALL_COUNT] =
 
 static const struct SpriteTemplate sBallParticleSpriteTemplates[POKEBALL_COUNT] =
 {
+    [BALL_STRANGE] = {
+        .tileTag = TAG_PARTICLES_STRANGEBALL,
+        .paletteTag = TAG_PARTICLES_STRANGEBALL,
+        .oam = &gOamData_AffineOff_ObjNormal_8x8,
+        .anims = sAnims_BallParticles,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
+    },
     [BALL_POKE] = {
         .tileTag = TAG_PARTICLES_POKEBALL,
         .paletteTag = TAG_PARTICLES_POKEBALL,
@@ -583,6 +597,7 @@ static const struct SpriteTemplate sBallParticleSpriteTemplates[POKEBALL_COUNT] 
 const u16 gBallOpenFadeColors[] =
 {
     // Todo, assign different colors
+    [BALL_STRANGE] = RGB(16, 23, 30),
     [BALL_POKE] = RGB(31, 22, 30),
     [BALL_GREAT] = RGB(16, 23, 30),
     [BALL_ULTRA] = RGB(31, 31, 15),
@@ -887,19 +902,17 @@ void AnimTask_SwitchOutShrinkMon(u8 taskId)
 void AnimTask_SwitchOutBallEffect(u8 taskId)
 {
     u8 spriteId;
-    u16 ball;
-    u8 ballId;
+    enum PokeBall ballId;
     u8 x, y;
     u8 priority, subpriority;
     u32 selectedPalettes;
 
     spriteId = gBattlerSpriteIds[gBattleAnimAttacker];
     if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
-        ball = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
+        ballId = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
     else
-        ball = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
+        ballId = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
 
-    ballId = ItemIdToBallId(ball);
     switch (gTasks[taskId].data[0])
     {
     case 0:
@@ -921,14 +934,14 @@ void AnimTask_SwitchOutBallEffect(u8 taskId)
 
 void AnimTask_LoadBallGfx(u8 taskId)
 {
-    u8 ballId = ItemIdToBallId(gLastUsedItem);
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     LoadBallGfx(ballId);
     DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_FreeBallGfx(u8 taskId)
 {
-    u8 ballId = ItemIdToBallId(gLastUsedItem);
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     FreeBallGfx(ballId);
     DestroyAnimVisualTask(taskId);
 }
@@ -943,69 +956,6 @@ void AnimTask_IsBallBlockedByTrainer(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-u8 ItemIdToBallId(u16 ballItem)
-{
-    switch (ballItem)
-    {
-    case ITEM_POKE_BALL:
-        return BALL_POKE;
-    case ITEM_GREAT_BALL:
-        return BALL_GREAT;
-    case ITEM_ULTRA_BALL:
-        return BALL_ULTRA;
-    case ITEM_MASTER_BALL:
-        return BALL_MASTER;
-    case ITEM_PREMIER_BALL:
-        return BALL_PREMIER;
-    case ITEM_HEAL_BALL:
-        return BALL_HEAL;
-    case ITEM_NET_BALL:
-        return BALL_NET;
-    case ITEM_NEST_BALL:
-        return BALL_NEST;
-    case ITEM_DIVE_BALL:
-        return BALL_DIVE;
-    case ITEM_DUSK_BALL:
-        return BALL_DUSK;
-    case ITEM_TIMER_BALL:
-        return BALL_TIMER;
-    case ITEM_QUICK_BALL:
-        return BALL_QUICK;
-    case ITEM_REPEAT_BALL:
-        return BALL_REPEAT;
-    case ITEM_LUXURY_BALL:
-        return BALL_LUXURY;
-    case ITEM_LEVEL_BALL:
-        return BALL_LEVEL;
-    case ITEM_LURE_BALL:
-        return BALL_LURE;
-    case ITEM_MOON_BALL:
-        return BALL_MOON;
-    case ITEM_FRIEND_BALL:
-        return BALL_FRIEND;
-    case ITEM_LOVE_BALL:
-        return BALL_LOVE;
-    case ITEM_FAST_BALL:
-        return BALL_FAST;
-    case ITEM_HEAVY_BALL:
-        return BALL_HEAVY;
-    case ITEM_DREAM_BALL:
-        return BALL_DREAM;
-    case ITEM_SAFARI_BALL:
-        return BALL_SAFARI;
-    case ITEM_SPORT_BALL:
-        return BALL_SPORT;
-    case ITEM_PARK_BALL:
-        return BALL_PARK;
-    case ITEM_BEAST_BALL:
-        return BALL_BEAST;
-    case ITEM_CHERISH_BALL:
-        return BALL_CHERISH;
-    default:
-        return BALL_POKE;
-    }
-}
-
 #define tSpriteId data[0]
 
 #define sDuration data[0]
@@ -1014,10 +964,9 @@ u8 ItemIdToBallId(u16 ballItem)
 
 void AnimTask_ThrowBall(u8 taskId)
 {
-    u8 ballId;
     u8 spriteId;
 
-    ballId = ItemIdToBallId(gLastUsedItem);
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     spriteId = CreateSprite(&gBallSpriteTemplates[ballId], 32, 80, 29);
     gSprites[spriteId].sDuration = 34;
     gSprites[spriteId].sTargetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
@@ -1039,7 +988,7 @@ static void AnimTask_ThrowBall_Step(u8 taskId)
 void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
 {
     s16 x, y;
-    u8 ballId;
+    enum PokeBall ballId;
     u8 subpriority;
     u8 spriteId;
 
@@ -1128,8 +1077,7 @@ static void SpriteCB_Ball_Throw(struct Sprite *sprite)
 
 static void SpriteCB_Ball_Arc(struct Sprite *sprite)
 {
-    s32 i;
-    u8 ballId;
+    u32 i;
 
     if (TranslateAnimHorizontalArc(sprite))
     {
@@ -1151,14 +1099,9 @@ static void SpriteCB_Ball_Arc(struct Sprite *sprite)
             sprite->sTimer = 0;
             sprite->callback = SpriteCB_Ball_MonShrink;
 
-            ballId = ItemIdToBallId(gLastUsedItem);
-            switch (ballId)
-            {
-            case 0 ... POKEBALL_COUNT - 1:
-                AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
-                LaunchBallFadeMonTask(FALSE, gBattleAnimTarget, 14, ballId);
-                break;
-            }
+            enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
+            AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
+            LaunchBallFadeMonTask(FALSE, gBattleAnimTarget, 14, ballId);
         }
     }
 }
@@ -1720,20 +1663,13 @@ static void SpriteCB_CaptureStar_Flicker(struct Sprite *sprite)
 // - Wild mon emerge from Poké Ball
 static void SpriteCB_Ball_Release_Step(struct Sprite *sprite)
 {
-    u8 ballId;
-
     StartSpriteAnim(sprite, 1);
     StartSpriteAffineAnim(sprite, 0);
     sprite->callback = SpriteCB_Ball_Release_Wait;
 
-    ballId = ItemIdToBallId(gLastUsedItem);
-    switch (ballId)
-    {
-    case 0 ... POKEBALL_COUNT - 1:
-        AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
-        LaunchBallFadeMonTask(TRUE, gBattleAnimTarget, 14, ballId);
-        break;
-    }
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
+    AnimateBallOpenParticles(sprite->x, sprite->y - 5, 1, 28, ballId);
+    LaunchBallFadeMonTask(TRUE, gBattleAnimTarget, 14, ballId);
 
     // Animate Pokémon emerging from Poké Ball
     gSprites[gBattlerSpriteIds[gBattleAnimTarget]].invisible = FALSE;
