@@ -12,13 +12,13 @@ If you want the best performance and least amount of issues with Windows interfe
 2. Once the process finishes, restart your machine.
 
 ### WSL1
-3a. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL1.
+3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL1.
 
     ```powershell
     wsl --set-version Ubuntu 1
     ```
 ### WSL2
-3a. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL2.
+3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL2.
 
     ```powershell
     wsl --set-version Ubuntu 2

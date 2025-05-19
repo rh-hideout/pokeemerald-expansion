@@ -1,6 +1,7 @@
 # Pokeemerald-Expansion Changelogs
 
 ## 1.10.x
+- **[Version 1.10.2](docs/changelogs/1.10.x/1.10.2.md) - 🧹 Bugfix Release**
 - **[Version 1.10.1](docs/changelogs/1.10.x/1.10.1.md) - 🧹 Bugfix Release**
 - **[Version 1.10.0](docs/changelogs/1.10.x/1.10.0.md) - ✨ Feature Release**
 

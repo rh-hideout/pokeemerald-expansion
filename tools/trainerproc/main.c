@@ -1650,7 +1650,7 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, ",\n");
         }
 
-        fprintf(f, "        .encounterMusic_gender = \n");
+        fprintf(f, "        .encounterMusic_gender =\n");
         if (trainer->gender == GENDER_FEMALE)
         {
             fprintf(f, "#line %d\n", trainer->gender_line);

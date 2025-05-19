@@ -257,6 +257,10 @@ const struct SpriteTemplate gPunishmentImpactSpriteTemplate =
     .callback = AnimPunishment,
 };
 
+// arg 0: x pixel offset
+// arg 1: y pixel offset
+// arg 2: Something
+// arg 3: Something
 static void AnimPunishment(struct Sprite *sprite)
 {
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[3]);
