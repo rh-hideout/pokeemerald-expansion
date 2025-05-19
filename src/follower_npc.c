@@ -1263,7 +1263,7 @@ void FollowerNPC_WarpSetEnd(void)
 
     PlayerLogCoordinates(player);
 
-    // Skip setting position if setobjectxy was used during ON_WARP_INTO_MAP_TABLE
+    // Skip setting position if setobjectxy was used during ON_WARP_INTO_MAP_TABLE.
     if (GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NO_POS_SET)
     {
         SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
