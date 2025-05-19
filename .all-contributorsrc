@@ -122,6 +122,24 @@
       ]
     },
     {
+      "login": "wiz1989",
+      "name": "wiz1989",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80073265?v=4",
+      "profile": "https://github.com/wiz1989",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "PCG06",
+      "name": "PCG",
+      "avatar_url": "https://avatars.githubusercontent.com/u/75729017?v=4",
+      "profile": "https://github.com/PCG06",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "kittenchilly",
       "name": "kittenchilly",
       "avatar_url": "https://avatars.githubusercontent.com/u/23617175?v=4",
@@ -205,6 +223,16 @@
       "name": "Ruby",
       "avatar_url": "https://avatars.githubusercontent.com/u/178652077?v=4",
       "profile": "https://github.com/RubyRaven6",
+            "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "mudskipper13",
+      "name": "mudskipper13",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105766191?v=4",
+      "profile": "https://github.com/mudskipper13",
       "contributions": [
         "code",
         "doc"
