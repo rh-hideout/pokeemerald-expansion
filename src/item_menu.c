@@ -910,7 +910,7 @@ static void GetItemName(u8 *dest, u16 itemId)
     {
     case TMHM_POCKET:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 73);
+        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
         if (itemId >= ITEM_HM01)
         {
             // Get HM number
@@ -927,7 +927,7 @@ static void GetItemName(u8 *dest, u16 itemId)
     case BERRIES_POCKET:
         ConvertIntToDecimalStringN(gStringVar1, itemId - FIRST_BERRY_INDEX + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
         end = CopyItemName(itemId, gStringVar2);
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 73);
+        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
         StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
         break;
     default:

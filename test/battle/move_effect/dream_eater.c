@@ -54,3 +54,7 @@ SINGLE_BATTLE_TEST("Dream Eater fails if Heal Block applies")
         }
     }
 }
+
+TO_DO_BATTLE_TEST("Dream Eater works on targets with Comatose");
+TO_DO_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 1-4)");
+TO_DO_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 5+)");

@@ -138,8 +138,14 @@
 // Primarily used for Arctiglobe's form change from 'encased' to 'freed'.
 #define FORM_CHANGE_HIT_BY_SUPER_EFFECTIVE_MOVE 24
 
-// Form change for Aegislash
-#define FORM_CHANGE_BATTLE_ATTACK               25
-#define FORM_CHANGE_BATTLE_KINGS_SHIELD         26
+// Form change that activates before using a move.
+// param1: move to check
+// param2: ability to check, optional
+#define FORM_CHANGE_BATTLE_BEFORE_MOVE          25
+
+// Form change that activates before using a specific move category.
+// param1: move category to check
+// param2: ability to check, optional
+#define FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY 26
 
 #endif // GUARD_CONSTANTS_FORM_CHANGE_TYPES_H

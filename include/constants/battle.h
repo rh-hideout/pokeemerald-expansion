@@ -338,7 +338,11 @@
 #define MOVE_EFFECT_TOXIC               6
 #define MOVE_EFFECT_FROSTBITE           7
 #define PRIMARY_STATUS_MOVE_EFFECT      MOVE_EFFECT_FROSTBITE // All above move effects apply primary status
-#define MOVE_EFFECT_FREEZE_OR_FROSTBITE (B_USE_FROSTBITE == TRUE ? MOVE_EFFECT_FROSTBITE : MOVE_EFFECT_FREEZE)
+#if B_USE_FROSTBITE == TRUE
+#define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FROSTBITE
+#else
+#define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
+#endif
 #define MOVE_EFFECT_CONFUSION           8
 #define MOVE_EFFECT_FLINCH              9
 #define MOVE_EFFECT_TRI_ATTACK          10
@@ -412,22 +416,30 @@
 #define MOVE_EFFECT_PSYCHIC_NOISE       78
 #define MOVE_EFFECT_TERA_BLAST          79
 #define MOVE_EFFECT_ORDER_UP            80
+#define MOVE_EFFECT_ION_DELUGE          81
+#define MOVE_EFFECT_AROMATHERAPY        82 // No functionality yet
+#define MOVE_EFFECT_HAZE                83
+#define MOVE_EFFECT_LEECH_SEED          84
+#define MOVE_EFFECT_REFLECT             85
+#define MOVE_EFFECT_LIGHT_SCREEN        86
+#define MOVE_EFFECT_SALT_CURE           87
+#define MOVE_EFFECT_EERIE_SPELL         88
 
 // capriccio move effects
-#define MOVE_EFFECT_STICKY_TONGUE       81
-#define MOVE_EFFECT_LEECH_SEED          82
-#define MOVE_EFFECT_RECHARGE_D          83
-#define MOVE_EFFECT_CLEAR_WEATHER       84
-#define MOVE_EFFECT_CURSE               85
-#define MOVE_EFFECT_DAILY_DOSE          86
-#define MOVE_EFFECT_BEAR_HUG_ABILITY    87
-#define MOVE_EFFECT_BEAR_HUG_ITEM       88
-#define MOVE_EFFECT_PSYCHIC_D           89
-#define MOVE_EFFECT_EVOCATION           90
-#define MOVE_EFFECT_BRUTAL_PUNISHMENT   91
-#define MOVE_EFFECT_BRUTAL_PUNISHMENT2  92
+#define MOVE_EFFECT_STICKY_TONGUE       89
+#define MOVE_EFFECT_LEECH_SEED          90
+#define MOVE_EFFECT_RECHARGE_D          91
+#define MOVE_EFFECT_CLEAR_WEATHER       92
+#define MOVE_EFFECT_CURSE               93
+#define MOVE_EFFECT_DAILY_DOSE          94
+#define MOVE_EFFECT_BEAR_HUG_ABILITY    95
+#define MOVE_EFFECT_BEAR_HUG_ITEM       96
+#define MOVE_EFFECT_PSYCHIC_D           97
+#define MOVE_EFFECT_EVOCATION           98
+#define MOVE_EFFECT_BRUTAL_PUNISHMENT   99
+#define MOVE_EFFECT_BRUTAL_PUNISHMENT2  100
 
-#define NUM_MOVE_EFFECTS                93
+#define NUM_MOVE_EFFECTS                101
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000

@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Anger Shell activates only if the target had more than 50% o
     PARAMETRIZE { hp = 254; activates = TRUE; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].power != 0);
+        ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
         PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(hp); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Anger Shell lowers Def/Sp.Def by 1 and raises Atk/Sp.Atk/Spd
 {
     u16 maxHp = 500;
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].power != 0);
+        ASSUME(!IS_MOVE_STATUS(MOVE_TACKLE));
         PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

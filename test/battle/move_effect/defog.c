@@ -19,7 +19,7 @@ ASSUMPTIONS
     ASSUME(gMovesInfo[MOVE_GUST].category == DAMAGE_CATEGORY_SPECIAL);
 }
 
-SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1")
+SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -51,7 +51,8 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Reflect and Light Screen from opponent's side", s16 damagePhysical, s16 damageSpecial)
+TO_DO_BATTLE_TEST("Defog doesn't remove Reflect or Light Screen from the user's side");
+DOUBLE_BATTLE_TEST("Defog removes Reflect and Light Screen from target's side", s16 damagePhysical, s16 damageSpecial)
 {
     u16 move;
 
@@ -71,8 +72,6 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Reflect and Light 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         if (move == MOVE_DEFOG) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Wobbuffet's evasiveness fell!");
             MESSAGE("The opposing team's Reflect wore off!");
             MESSAGE("The opposing team's Light Screen wore off!");
         }
@@ -86,7 +85,8 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Reflect and Light 
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Mist and Safeguard from opponent's side")
+TO_DO_BATTLE_TEST("Defog doesn't remove Mist or Safeguard from the user's side");
+DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
 {
     u16 move;
 
@@ -105,7 +105,6 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Mist and Safeguard
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAFEGUARD, opponentRight);
         if (move == MOVE_DEFOG) {
-            MESSAGE("The opposing Wobbuffet is protected by the mist!");
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
             MESSAGE("The opposing team's Mist wore off!");
             MESSAGE("The opposing team's Safeguard wore off!");
@@ -131,7 +130,9 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Mist and Safeguard
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Stealth Rock and Sticky Web from player's side (Gen 6+)")
+TO_DO_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from target's side");
+TO_DO_BATTLE_TEST("Defog doesn't remove Stealth Rock or Sticky Web from user's side (Gen 4-5)");
+DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (Gen 6+)")
 {
     u16 move;
 
@@ -151,13 +152,9 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Stealth Rock and S
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
-        if (move == MOVE_DEFOG) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Wobbuffet's evasiveness fell!");
-            if (B_DEFOG_EFFECT_CLEARING >= GEN_6) {
-                MESSAGE("The pointed stones disappeared from around your team!");
-                MESSAGE("The sticky web has disappeared from the ground around your team!");
-            }
+        if (move == MOVE_DEFOG && B_DEFOG_EFFECT_CLEARING >= GEN_6) {
+            MESSAGE("The pointed stones disappeared from around your team!");
+            MESSAGE("The sticky web has disappeared from the ground around your team!");
         }
         // Switch happens
         SWITCH_OUT_MESSAGE("Wobbuffet");
@@ -181,7 +178,9 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Stealth Rock and S
     }
 }
 
-SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Spikes from player's side")
+TO_DO_BATTLE_TEST("Defog removes Spikes from target's side");
+TO_DO_BATTLE_TEST("Defog doesn't remove Spikes from user's side (Gen 4-5)");
+SINGLE_BATTLE_TEST("Defog removes Spikes from user's side (Gen 6+)")
 {
     u16 move;
 
@@ -197,12 +196,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Spikes from player
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        if (move == MOVE_DEFOG) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Wobbuffet's evasiveness fell!");
-            if (B_DEFOG_EFFECT_CLEARING >= GEN_6)
-                MESSAGE("The spikes disappeared from the ground around your team!");
-        }
+        if (move == MOVE_DEFOG && B_DEFOG_EFFECT_CLEARING >= GEN_6)
+            MESSAGE("The spikes disappeared from the ground around your team!");
         // Switch happens
         SWITCH_OUT_MESSAGE("Wobbuffet");
         SEND_IN_MESSAGE("Wobbuffet");
@@ -219,7 +214,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Spikes from player
     }
 }
 
-SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes terrain (Gen 8+)")
+TO_DO_BATTLE_TEST("Defog doesn't remove terrain (Gen 4-7)");
+SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
 {
     u16 move;
 
@@ -235,8 +231,6 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes terrain (Gen 8+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's evasiveness fell!");
         if (B_DEFOG_EFFECT_CLEARING >= GEN_8) {
             if (move == MOVE_PSYCHIC_TERRAIN) {
                 MESSAGE("The weirdness disappeared from the battlefield!");
@@ -263,7 +257,9 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes terrain (Gen 8+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Toxic Spikes from opponent's side")
+TO_DO_BATTLE_TEST("Defog removes Toxic Spikes from target's side");
+TO_DO_BATTLE_TEST("Defog doesn't remove Toxic Spikes from user's side (Gen 4-5)");
+SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from user's side (Gen 6+)")
 {
     u16 move;
 
@@ -279,12 +275,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Toxic Spikes from 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        if (move == MOVE_DEFOG) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's evasiveness fell!");
-            if (B_DEFOG_EFFECT_CLEARING >= GEN_6)
-                MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
-        }
+        if (move == MOVE_DEFOG && B_DEFOG_EFFECT_CLEARING >= GEN_6)
+            MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
         // Switch happens
         MESSAGE("2 sent out Wobbuffet!");
         if (move != MOVE_DEFOG || B_DEFOG_EFFECT_CLEARING <= GEN_5) {
@@ -302,7 +294,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Toxic Spikes from 
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Aurora Veil from player's side", s16 damagePhysical, s16 damageSpecial)
+TO_DO_BATTLE_TEST("Defog doesn't remove Aurora Veil from the user's side");
+DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhysical, s16 damageSpecial)
 {
     u16 move;
 
@@ -338,7 +331,7 @@ DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes Aurora Veil from p
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog lowers evasiveness by 1 and removes everything it can")
+DOUBLE_BATTLE_TEST("Defog removes everything it can")
 {
     GIVEN {
         ASSUME(gMovesInfo[MOVE_HAIL].effect == EFFECT_HAIL);

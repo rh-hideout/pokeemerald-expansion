@@ -209,3 +209,28 @@ SINGLE_BATTLE_TEST("Booster Energy can't be tricked if a Paradox species is invo
         MESSAGE("But it failed!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Booster Energy triggers correctly for all battlers if multiple fainted the previous turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CATERPIE) { HP(1); }
+        PLAYER(SPECIES_GOUGING_FIRE) { Item(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_IRON_MOTH) { Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        OPPONENT(SPECIES_FLUTTER_MANE) { Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_CATERPIE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION);
+               SEND_OUT(opponentRight, 3);
+               SEND_OUT(opponentLeft, 2);
+               SEND_OUT(playerRight, 3);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_PROTOSYNTHESIS);
+        ABILITY_POPUP(playerRight, ABILITY_QUARK_DRIVE);
+        ABILITY_POPUP(opponentLeft, ABILITY_PROTOSYNTHESIS);
+    }
+}

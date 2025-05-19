@@ -63,7 +63,32 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when its abili
     }
 }
 
-TO_DO_BATTLE_TEST("Forecast transforms Castform back to normal under Cloud Nine/Air Lock");
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock")
+{
+    u32 species = 0, ability = 0;
+    PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+    GIVEN {
+        PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        // transforms
+        ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        MESSAGE("Cherrim transformed!");
+        // back to normal
+        ABILITY_POPUP(opponent, ability);
+        ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        MESSAGE("Cherrim transformed!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_CHERRIM_OVERCAST);
+    }
+}
 
 DOUBLE_BATTLE_TEST("Flower Gift increases the attack of Cherrim and its allies by 1.5x", s16 damageL, s16 damageR)
 {

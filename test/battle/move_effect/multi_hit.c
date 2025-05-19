@@ -200,30 +200,6 @@ DOUBLE_BATTLE_TEST("Scale Shot does not corrupt the next turn move used")
     }
 }
 
-SINGLE_BATTLE_TEST("Endure does not prevent multiple hits and stat changes occur at the end of the turn")
-{
-    GIVEN {
-        ASSUME(gMovesInfo[MOVE_SCALE_SHOT].effect == EFFECT_MULTI_HIT);
-        ASSUME(gMovesInfo[MOVE_ENDURE].effect == EFFECT_ENDURE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_ENDURE); MOVE(player, MOVE_SCALE_SHOT); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Defense fell!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed rose!");
-    }
-}
-
 SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after the 4th hit of Loaded Dice")
 {
     PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);

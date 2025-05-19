@@ -1374,7 +1374,6 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         ClearWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_MAP);
         RemoveWindow(windowId);
-        FillPalBufferBlack();
         FadeInFromBlack();
         gTasks[taskId].tState = FRLG_WHITEOUT_HEAL_SCRIPT;
         break;

@@ -909,3 +909,61 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI correctly handles abilities
         TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_ABSORB); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch out if Yawn'd with only Ace mon remaining")
+{
+    u32 aceFlag;
+    PARAMETRIZE{ aceFlag = 0; }
+    PARAMETRIZE{ aceFlag = AI_FLAG_ACE_POKEMON; }
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_YAWN].effect == EFFECT_YAWN);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | aceFlag | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_SLOWKING) { Moves(MOVE_YAWN, MOVE_CONFUSION, MOVE_POWER_GEM, MOVE_WATER_PULSE); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_SCOLIPEDE) { Moves(MOVE_POISON_TAIL); }
+        OPPONENT(SPECIES_ABSOL) { Moves(MOVE_KNOCK_OFF, MOVE_CRUNCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_POISON_TAIL); }
+        if (aceFlag)
+            TURN { MOVE(player, MOVE_POWER_GEM); EXPECT_MOVE(opponent, MOVE_POISON_TAIL); }
+        else
+            TURN { MOVE(player, MOVE_POWER_GEM); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch in ace mon after U-Turn if other options available")
+{
+    u32 aceFlag;
+    PARAMETRIZE{ aceFlag = 0; }
+    PARAMETRIZE{ aceFlag = AI_FLAG_ACE_POKEMON; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | aceFlag | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_U_TURN); }
+        OPPONENT(SPECIES_NUMEL) { Level(5); Moves(MOVE_SPLASH); }
+        OPPONENT(SPECIES_SCIZOR) { Moves(MOVE_BUG_BITE); }
+    } WHEN {
+        if (aceFlag)
+            TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 1); MOVE(player, MOVE_SURF); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 2); MOVE(player, MOVE_SURF); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: AI won't switch in ace mon after U-Turn if other options available")
+{
+    u32 aceFlag;
+    PARAMETRIZE{ aceFlag = 0; }
+    PARAMETRIZE{ aceFlag = AI_FLAG_ACE_POKEMON; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | aceFlag | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_U_TURN); }
+        OPPONENT(SPECIES_NUMEL) { Level(5); Moves(MOVE_SPLASH); }
+        OPPONENT(SPECIES_SCIZOR) { Moves(MOVE_BUG_BITE); }
+    } WHEN {
+        if (aceFlag)
+            TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 1); MOVE(player, MOVE_SURF); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 2); MOVE(player, MOVE_SURF); }
+    }
+}
