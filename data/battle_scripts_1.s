@@ -797,7 +797,7 @@ BattleScript_EffectFlakCannon::
 	resultmessage
 	waitmessage B_WAIT_TIME_MED
 	tryfaintmon BS_TARGET
-	trysymbiosis
+	trysymbiosis BS_ATTACKER
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectFling::

@@ -20821,7 +20821,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .description = COMPOUND_STRING(
             "Whips up an electric\n"
             "cyclone to clear hazards."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_RAPID_SPIN,
         .power = 75,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -20829,11 +20829,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_RAPID_SPIN,
-            .self = TRUE,
-        }
-        ),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE_ONCE,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
