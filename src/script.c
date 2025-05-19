@@ -4,6 +4,7 @@
 #include "mystery_gift.h"
 #include "util.h"
 #include "constants/event_objects.h"
+#include "constants/flags.h"
 #include "constants/map_scripts.h"
 #include "field_message_box.h"
 
@@ -255,6 +256,8 @@ void ScriptContext_SetupScript(const u8 *ptr)
     InitScriptContext(&sGlobalScriptContext, gScriptCmdTable, gScriptCmdTableEnd);
     SetupBytecodeScript(&sGlobalScriptContext, ptr);
     LockPlayerFieldControls();
+    if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
+        FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
 }
 

@@ -2155,6 +2155,20 @@ static const u16 sGimmighoulFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_GIMMIGHOUL
 
+#if P_FAMILY_POLTCHAGEIST
+static const u16 sPoltchageistFormSpeciesIdTable[] = {
+    SPECIES_POLTCHAGEIST_COUNTERFEIT,
+    SPECIES_POLTCHAGEIST_ARTISAN,
+    FORM_SPECIES_END,
+};
+
+static const u16 sSinistchaFormSpeciesIdTable[] = {
+    SPECIES_SINISTCHA_UNREMARKABLE,
+    SPECIES_SINISTCHA_MASTERPIECE,
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_POLTCHAGEIST
+
 #if P_FAMILY_OGERPON
 static const u16 sOgerponFormSpeciesIdTable[] = {
     SPECIES_OGERPON_TEAL,

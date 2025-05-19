@@ -1608,7 +1608,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_HIT_SWITCH_TARGET] =
     {
-        .battleScript = BattleScript_EffectHitSwitchTarget,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2281,7 +2281,14 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
+
+    [EFFECT_SPECTRAL_THIEF] =
+    {
+        .battleScript = BattleScript_EffectSpectralThief,
+        .battleTvScore = 0, // TODO: Assign points
+    },
     
+    // capriccio effects
     [EFFECT_SHARPEN] = 
     {
         .battleScript = BattleScript_EffectSharpen,

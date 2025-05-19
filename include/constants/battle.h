@@ -395,50 +395,49 @@
 #define MOVE_EFFECT_SMACK_DOWN          57
 #define MOVE_EFFECT_FLAME_BURST         58
 #define MOVE_EFFECT_FEINT               59
-#define MOVE_EFFECT_SPECTRAL_THIEF      60
-#define MOVE_EFFECT_V_CREATE            61
-#define MOVE_EFFECT_HAPPY_HOUR          62
-#define MOVE_EFFECT_CORE_ENFORCER       63
-#define MOVE_EFFECT_THROAT_CHOP         64
-#define MOVE_EFFECT_INCINERATE          65
-#define MOVE_EFFECT_BUG_BITE            66
-#define MOVE_EFFECT_RECOIL_HP_25        67
-#define MOVE_EFFECT_TRAP_BOTH           68
-#define MOVE_EFFECT_ROUND               69
-#define MOVE_EFFECT_STOCKPILE_WORE_OFF  70
-#define MOVE_EFFECT_DIRE_CLAW           71
-#define MOVE_EFFECT_STEALTH_ROCK        72
-#define MOVE_EFFECT_SPIKES              73
-#define MOVE_EFFECT_SYRUP_BOMB          74
-#define MOVE_EFFECT_FLORAL_HEALING      75
-#define MOVE_EFFECT_SECRET_POWER        76
-#define MOVE_EFFECT_PSYCHIC_NOISE       77
-#define MOVE_EFFECT_TERA_BLAST          78
-#define MOVE_EFFECT_ORDER_UP            79
-#define MOVE_EFFECT_ION_DELUGE          80
-#define MOVE_EFFECT_AROMATHERAPY        81 // No functionality yet
-#define MOVE_EFFECT_HAZE                82
-#define MOVE_EFFECT_LEECH_SEED          83
-#define MOVE_EFFECT_REFLECT             84
-#define MOVE_EFFECT_LIGHT_SCREEN        85
-#define MOVE_EFFECT_SALT_CURE           86
-#define MOVE_EFFECT_EERIE_SPELL         87
+#define MOVE_EFFECT_V_CREATE            60
+#define MOVE_EFFECT_HAPPY_HOUR          61
+#define MOVE_EFFECT_CORE_ENFORCER       62
+#define MOVE_EFFECT_THROAT_CHOP         63
+#define MOVE_EFFECT_INCINERATE          64
+#define MOVE_EFFECT_BUG_BITE            65
+#define MOVE_EFFECT_RECOIL_HP_25        66
+#define MOVE_EFFECT_TRAP_BOTH           67
+#define MOVE_EFFECT_ROUND               68
+#define MOVE_EFFECT_STOCKPILE_WORE_OFF  69
+#define MOVE_EFFECT_DIRE_CLAW           70
+#define MOVE_EFFECT_STEALTH_ROCK        71
+#define MOVE_EFFECT_SPIKES              72
+#define MOVE_EFFECT_SYRUP_BOMB          73
+#define MOVE_EFFECT_FLORAL_HEALING      74
+#define MOVE_EFFECT_SECRET_POWER        75
+#define MOVE_EFFECT_PSYCHIC_NOISE       76
+#define MOVE_EFFECT_TERA_BLAST          77
+#define MOVE_EFFECT_ORDER_UP            78
+#define MOVE_EFFECT_ION_DELUGE          79
+#define MOVE_EFFECT_AROMATHERAPY        80 // No functionality yet
+#define MOVE_EFFECT_HAZE                81
+#define MOVE_EFFECT_LEECH_SEED          82
+#define MOVE_EFFECT_REFLECT             83
+#define MOVE_EFFECT_LIGHT_SCREEN        84
+#define MOVE_EFFECT_SALT_CURE           85
+#define MOVE_EFFECT_EERIE_SPELL         86
 
 // capriccio move effects
-#define MOVE_EFFECT_STICKY_TONGUE       88
-#define MOVE_EFFECT_LEECH_SEED_ON_HIT   89
-#define MOVE_EFFECT_RECHARGE_D          90
-#define MOVE_EFFECT_CLEAR_WEATHER       91
-#define MOVE_EFFECT_CURSE               92
-#define MOVE_EFFECT_DAILY_DOSE          93
-#define MOVE_EFFECT_BEAR_HUG_ABILITY    94
-#define MOVE_EFFECT_BEAR_HUG_ITEM       95
-#define MOVE_EFFECT_PSYCHIC_D           96
-#define MOVE_EFFECT_EVOCATION           97
-#define MOVE_EFFECT_BRUTAL_PUNISHMENT   98
-#define MOVE_EFFECT_BRUTAL_PUNISHMENT2  99
+#define MOVE_EFFECT_STICKY_TONGUE       87
+#define MOVE_EFFECT_LEECH_SEED_ON_HIT   88
+#define MOVE_EFFECT_RECHARGE_D          89
+#define MOVE_EFFECT_CLEAR_WEATHER       90
+#define MOVE_EFFECT_CURSE               91
+#define MOVE_EFFECT_DAILY_DOSE          92
+#define MOVE_EFFECT_BEAR_HUG_ABILITY    93
+#define MOVE_EFFECT_BEAR_HUG_ITEM       94
+#define MOVE_EFFECT_PSYCHIC_D           95
+#define MOVE_EFFECT_EVOCATION           96
+#define MOVE_EFFECT_BRUTAL_PUNISHMENT   97
+#define MOVE_EFFECT_BRUTAL_PUNISHMENT2  98
 
-#define NUM_MOVE_EFFECTS                100
+#define NUM_MOVE_EFFECTS                99
 
 #define MOVE_EFFECT_AFFECTS_USER        0x2000
 #define MOVE_EFFECT_CERTAIN             0x4000
@@ -532,7 +531,7 @@
 
 #define MOVE_TARGET_SELECTED            0
 #define MOVE_TARGET_DEPENDS             (1 << 0)
-#define MOVE_TARGET_USER_OR_SELECTED    (1 << 1)
+#define MOVE_TARGET_OPPONENT            (1 << 1)
 #define MOVE_TARGET_RANDOM              (1 << 2)
 #define MOVE_TARGET_BOTH                (1 << 3)
 #define MOVE_TARGET_USER                (1 << 4)
