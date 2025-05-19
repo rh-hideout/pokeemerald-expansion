@@ -890,7 +890,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ELECTRICCURRENTISRUNNING]             = COMPOUND_STRING("An electric current is running across the battlefield!"),
     [STRINGID_SEEMSWEIRD]                           = COMPOUND_STRING("The battlefield seems weird!"),
     [STRINGID_WAGGLINGAFINGER]                      = COMPOUND_STRING("Waggling a finger let it use {B_CURRENT_MOVE}!"),
-    [STRINGID_ATTACKERLOSTITSTYPE]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} lost\nits {B_BUFF1} type!"),
     [STRINGID_WEATHERBECAMECLEAR]                   = COMPOUND_STRING("The weather became clear!"),
     [STRINGID_PHANTOMFANGCURSE]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} laid a CURSE\non {B_DEF_NAME_WITH_PREFIX}!"),
     [STRINGID_SHARPENALREADYPUMPED]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is already\npumped!"),
@@ -914,7 +913,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNSXRESTOREDPARTNERHPALITTLE2]      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY}\nrestored its partner's HP a little!"),
     [STRINGID_ECLIPSEACTIVATES]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s Eclipse blocked out\nthe harsh sunlight!"),
     [STRINGID_FLAREHEALHPUP]                        = COMPOUND_STRING("The burning healed {B_ATK_NAME_WITH_PREFIX}\na little bit!"),
-    [STRINGID_PKMNSITEMPREVENTSYLOSS]               = COMPOUND_STRING("{B_SCR_ACTIVE_NAME_WITH_PREFIX}'s {B_LAST_ITEM}\nprevents {B_BUFF1} loss!"),
+    [STRINGID_PKMNSITEMPREVENTSYLOSS]               = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_LAST_ITEM}\nprevents {B_BUFF1} loss!"),
     [STRINGID_COLLAPSINGRUINSTEALTHROCKS]           = COMPOUND_STRING("Rocks exploded from {B_ATK_NAME_WITH_PREFIX}\ninto the opposing field!"),
 };
 
