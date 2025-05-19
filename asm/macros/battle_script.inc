@@ -507,9 +507,9 @@
 	.byte \battler
 	.endm
 
-	.macro trainerslidein battler:req
+	.macro trainerslidein position:req
 	.byte 0x53
-	.byte \battler
+	.byte \position
 	.endm
 
 	.macro playse song:req
@@ -1669,6 +1669,21 @@
 	.macro damagetoquartertargethp
 	callnative BS_DamageToQuarterTargetHP
 	.endm
+		
+	.macro ficklebeamdamagecalculation
+	callnative BS_FickleBeamDamageCalculation
+	.endm
+
+	.macro trytarshot failInstr:req
+	callnative BS_TryTarShot
+	.4byte \failInstr
+	.endm
+
+	.macro jumpifblockedbysoundproof battler:req, failInstr:req
+	callnative BS_JumpIfBlockedBySoundproof
+	.byte \battler
+	.4byte \failInstr
+	.endm
 
 	.macro trygivegem failInstr:req
 	callnative BS_TryGiveGem
@@ -1695,7 +1710,7 @@
 	.macro setatkhptoone
 	callnative BS_SetAtkHPToOne
 	.endm
-		
+
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
 	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
@@ -2234,11 +2249,6 @@
 
 	.macro trynoretreat battler:req, failInstr:req
 	various \battler, VARIOUS_TRY_NO_RETREAT
-	.4byte \failInstr
-	.endm
-
-	.macro trytarshot battler:req, failInstr:req
-	various \battler, VARIOUS_TRY_TAR_SHOT
 	.4byte \failInstr
 	.endm
 

@@ -44,6 +44,7 @@
 #include "roamer.h"
 #include "safari_zone.h"
 #include "scanline_effect.h"
+#include "script.h"
 #include "sound.h"
 #include "sprite.h"
 #include "string_util.h"
@@ -181,6 +182,7 @@ EWRAM_DATA u16 gLastPrintedMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastLandedMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastHitByType[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA u16 gLastUsedMoveType[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastResultingMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLockedMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastUsedMove = 0;
@@ -3032,6 +3034,7 @@ static void BattleStartClearSetData(void)
         gLastMoves[i] = MOVE_NONE;
         gLastLandedMoves[i] = MOVE_NONE;
         gLastHitByType[i] = 0;
+        gLastUsedMoveType[i] = 0;
         gLastResultingMoves[i] = MOVE_NONE;
         gLastHitBy[i] = 0xFF;
         gLockedMoves[i] = MOVE_NONE;
@@ -3118,8 +3121,6 @@ static void BattleStartClearSetData(void)
         gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
         gBattleStruct->itemLost[B_SIDE_OPPONENT][i].originalItem = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM);
         gPartyCriticalHits[i] = 0;
-        gBattleStruct->allowedToChangeFormInWeather[i][B_SIDE_PLAYER] = FALSE;
-        gBattleStruct->allowedToChangeFormInWeather[i][B_SIDE_OPPONENT] = FALSE;
     }
 
     gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
@@ -3212,6 +3213,7 @@ void SwitchInClearSetData(u32 battler)
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
     gLastHitByType[battler] = 0;
+    gLastUsedMoveType[battler] = 0;
     gLastResultingMoves[battler] = MOVE_NONE;
     gLastPrintedMoves[battler] = MOVE_NONE;
     gLastHitBy[battler] = 0xFF;
@@ -3225,6 +3227,7 @@ void SwitchInClearSetData(u32 battler)
     gBattleStruct->lastMoveFailed &= ~(gBitTable[battler]);
     gBattleStruct->palaceFlags &= ~(gBitTable[battler]);
     gBattleStruct->boosterEnergyActivates &= ~(gBitTable[battler]);
+    gBattleStruct->canPickupItem &= ~(1u << battler);
 
     for (i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
@@ -3341,6 +3344,7 @@ const u8* FaintClearSetData(u32 battler)
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
     gLastHitByType[battler] = 0;
+    gLastUsedMoveType[battler] = 0;
     gLastResultingMoves[battler] = MOVE_NONE;
     gLastPrintedMoves[battler] = MOVE_NONE;
     gLastHitBy[battler] = 0xFF;
@@ -3373,9 +3377,9 @@ const u8* FaintClearSetData(u32 battler)
 
     gBattleResources->flags->flags[battler] = 0;
 
-    gBattleMons[battler].type1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
-    gBattleMons[battler].type2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
-    gBattleMons[battler].type3 = TYPE_MYSTERY;
+    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
+    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;
 
     Ai_UpdateFaintData(battler);
     TryBattleFormChange(battler, FORM_CHANGE_FAINT);
@@ -3475,9 +3479,9 @@ static void DoBattleIntro(void)
             else
             {
                 memcpy(&gBattleMons[battler], &gBattleResources->bufferB[battler][4], sizeof(struct BattlePokemon));
-                gBattleMons[battler].type1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
-                gBattleMons[battler].type2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
-                gBattleMons[battler].type3 = TYPE_MYSTERY;
+                gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
+                gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
+                gBattleMons[battler].types[2] = TYPE_MYSTERY;
                 gBattleMons[battler].ability = GetAbilityBySpecies(gBattleMons[battler].species, gBattleMons[battler].abilityNum);
                 gBattleStruct->hpOnSwitchout[GetBattlerSide(battler)] = gBattleMons[battler].hp;
                 gBattleMons[battler].status2 = 0;
@@ -3761,7 +3765,7 @@ static void DoBattleIntro(void)
                 gBattleStruct->startingStatus = GetTrainerStartingStatusFromId(gTrainerBattleOpponent_B);
                 gBattleStruct->startingStatusTimer = 0; // infinite
             }
-            else if (GetTrainerStartingStatusFromId(gTrainerBattleOpponent_A))
+            else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && GetTrainerStartingStatusFromId(gTrainerBattleOpponent_A))
             {
                 gBattleStruct->startingStatus = GetTrainerStartingStatusFromId(gTrainerBattleOpponent_A);
                 gBattleStruct->startingStatusTimer = 0; // infinite
@@ -4044,6 +4048,11 @@ void BattleTurnPassed(void)
     SetAiLogicDataForTurn(AI_DATA); // get assumed abilities, hold effects, etc of all battlers
     gBattleMainFunc = HandleTurnActionSelectionState;
 
+    if (gSideTimers[B_SIDE_PLAYER].retaliateTimer > 0)
+        gSideTimers[B_SIDE_PLAYER].retaliateTimer--;
+    if (gSideTimers[B_SIDE_OPPONENT].retaliateTimer > 0)
+        gSideTimers[B_SIDE_OPPONENT].retaliateTimer--;
+
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleScriptExecute(BattleScript_PalacePrintFlavorText);
     else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaTurnCounter == 0)
@@ -4268,9 +4277,9 @@ static void HandleTurnActionSelectionState(void)
 
                         moveInfo.zmove = gBattleStruct->zmove;
                         moveInfo.species = gBattleMons[battler].species;
-                        moveInfo.monType1 = gBattleMons[battler].type1;
-                        moveInfo.monType2 = gBattleMons[battler].type2;
-                        moveInfo.monType3 = gBattleMons[battler].type3;
+                        moveInfo.monTypes[0] = gBattleMons[battler].types[0];
+                        moveInfo.monTypes[1] = gBattleMons[battler].types[1];
+                        moveInfo.monTypes[2] = gBattleMons[battler].types[2];
 
                         for (i = 0; i < MAX_MON_MOVES; i++)
                         {
@@ -4722,7 +4731,6 @@ void SwapTurnOrder(u8 id1, u8 id2)
 u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect)
 {
     u32 speed = gBattleMons[battler].speed;
-    u32 highestStat = GetHighestStatId(battler);
 
     // weather abilities
     if (WEATHER_HAS_EFFECT)
@@ -4744,10 +4752,10 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect)
         speed *= 2;
     else if (ability == ABILITY_SLOW_START && gDisableStructs[battler].slowStartTimer != 0)
         speed /= 2;
-    else if (ability == ABILITY_PROTOSYNTHESIS && gBattleWeather & B_WEATHER_SUN && highestStat == STAT_SPEED)
-        speed = (speed * 150) / 100;
-    else if (ability == ABILITY_QUARK_DRIVE && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && highestStat == STAT_SPEED)
-        speed = (speed * 150) / 100;
+    else if (ability == ABILITY_PROTOSYNTHESIS && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && ((gBattleWeather & B_WEATHER_SUN && WEATHER_HAS_EFFECT) || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_QUARK_DRIVE && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
 
     // stat stages
     speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
@@ -5121,6 +5129,7 @@ static void TurnValuesCleanUp(bool8 var0)
                 if (gDisableStructs[i].rechargeTimer == 0)
                     gBattleMons[i].status2 &= ~STATUS2_RECHARGE;
             }
+            gBattleStruct->canPickupItem &= ~(1u << i);
         }
 
         if (gDisableStructs[i].substituteHP == 0)
@@ -5626,9 +5635,14 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
     }
 
     FreeAllWindowBuffers();
-    if (gBattleStruct != NULL && !(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
     {
-        ZeroEnemyPartyMons();
+        // To account for Battle Factory and Slateport Battle Tent, enemy parties are zeroed out in the facilitites respective src/xxx.c files
+        // The ZeroEnemyPartyMons() call happens in SaveXXXChallenge function (eg. SaveFactoryChallenge)
+        if (!(gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
+        {
+            ZeroEnemyPartyMons();
+        }
         ResetDynamicAiFunc();
         FreeMonSpritesGfx();
         FreeBattleResources();
@@ -5749,8 +5763,10 @@ bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
     case EFFECT_HIDDEN_POWER:
     case EFFECT_WEATHER_BALL:
     case EFFECT_BOIL_OVER:
-    case EFFECT_CHANGE_TYPE_ON_ITEM:
     case EFFECT_NATURAL_GIFT:
+    case EFFECT_CHANGE_TYPE_ON_ITEM:
+    case EFFECT_REVELATION_DANCE:
+    case EFFECT_TERRAIN_PULSE:
         return FALSE;
     }
 
@@ -5849,30 +5865,34 @@ if (gMovesInfo[move].effect == EFFECT_BOIL_OVER)
     {
         gBattleStruct->dynamicMoveType = ItemId_GetSecondaryId(gBattleMons[battlerAtk].item) | F_DYNAMIC_TYPE_SET;
     }
-    else if (gMovesInfo[move].effect == EFFECT_REVELATION_DANCE)
+    else if (gMovesInfo[move].effect == EFFECT_REVELATION_DANCE && GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)
     {
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GetBattlerTeraType(battlerAtk) != TYPE_STELLAR)
             gBattleStruct->dynamicMoveType = GetBattlerTeraType(battlerAtk);
-        else if (gBattleMons[battlerAtk].type1 != TYPE_MYSTERY)
-            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type1 | F_DYNAMIC_TYPE_SET;
-        else if (gBattleMons[battlerAtk].type2 != TYPE_MYSTERY)
-            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type2 | F_DYNAMIC_TYPE_SET;
-        else if (gBattleMons[battlerAtk].type3 != TYPE_MYSTERY)
-            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type3 | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].types[0] != TYPE_MYSTERY && !(gBattleResources->flags->flags[battlerAtk] & RESOURCE_FLAG_ROOST && gBattleMons[battlerAtk].types[0] == TYPE_FLYING))
+            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].types[0] | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].types[1] != TYPE_MYSTERY && !(gBattleResources->flags->flags[battlerAtk] & RESOURCE_FLAG_ROOST && gBattleMons[battlerAtk].types[1] == TYPE_FLYING))
+            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].types[1] | F_DYNAMIC_TYPE_SET;
+        else if (gBattleResources->flags->flags[battlerAtk] & RESOURCE_FLAG_ROOST)
+            gBattleStruct->dynamicMoveType = (B_ROOST_PURE_FLYING >= GEN_5 ? TYPE_NORMAL : TYPE_MYSTERY) | F_DYNAMIC_TYPE_SET;
+        else if (gBattleMons[battlerAtk].types[2] != TYPE_MYSTERY)
+            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].types[2] | F_DYNAMIC_TYPE_SET;
+        else
+            gBattleStruct->dynamicMoveType = TYPE_MYSTERY | F_DYNAMIC_TYPE_SET;
     }
     else if (gMovesInfo[move].effect == EFFECT_RAGING_BULL
             && (gBattleMons[battlerAtk].species == SPECIES_TAUROS_PALDEAN_COMBAT_BREED
              || gBattleMons[battlerAtk].species == SPECIES_TAUROS_PALDEAN_BLAZE_BREED
              || gBattleMons[battlerAtk].species == SPECIES_TAUROS_PALDEAN_AQUA_BREED))
     {
-            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type2 | F_DYNAMIC_TYPE_SET;
+            gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].types[1] | F_DYNAMIC_TYPE_SET;
     }
     else if (gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
             && (gBattleMons[battlerAtk].species == SPECIES_OGERPON_WELLSPRING_MASK || gBattleMons[battlerAtk].species == SPECIES_OGERPON_WELLSPRING_MASK_TERA
              || gBattleMons[battlerAtk].species == SPECIES_OGERPON_HEARTHFLAME_MASK || gBattleMons[battlerAtk].species == SPECIES_OGERPON_HEARTHFLAME_MASK_TERA
              || gBattleMons[battlerAtk].species == SPECIES_OGERPON_CORNERSTONE_MASK || gBattleMons[battlerAtk].species == SPECIES_OGERPON_CORNERSTONE_MASK_TERA ))
     {
-        gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].type2 | F_DYNAMIC_TYPE_SET;
+        gBattleStruct->dynamicMoveType = gBattleMons[battlerAtk].types[1] | F_DYNAMIC_TYPE_SET;
     }
     else if (gMovesInfo[move].effect == EFFECT_NATURAL_GIFT)
     {
@@ -5950,21 +5970,20 @@ if (gMovesInfo[move].effect == EFFECT_BOIL_OVER)
     }
 }
 
-// special to set a field's totem boost(s)
-// inputs:
-//  var8000: battler
-//  var8001 - var8007: stat changes
-void SetTotemBoost(void)
+// Queues stat boosts for a given battler for totem battles
+void ScriptSetTotemBoost(struct ScriptContext *ctx)
 {
-    u32 battler = gSpecialVar_0x8000;
+    u32 battler = VarGet(ScriptReadHalfword(ctx));
+    u32 stat;
     u32 i;
 
     for (i = 0; i < (NUM_BATTLE_STATS - 1); i++)
     {
-        if (*(&gSpecialVar_0x8001 + i))
+        stat = VarGet(ScriptReadHalfword(ctx));
+        if (stat)
         {
             gQueuedStatBoosts[battler].stats |= (1 << i);
-            gQueuedStatBoosts[battler].statChanges[i] = *(&gSpecialVar_0x8001 + i);
+            gQueuedStatBoosts[battler].statChanges[i] = stat;
             gQueuedStatBoosts[battler].stats |= 0x80;  // used as a flag for the "totem flared to life" script
         }
     }

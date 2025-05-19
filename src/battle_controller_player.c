@@ -387,8 +387,8 @@ static void HandleInputChooseAction(u32 battler)
          && !(gAbsentBattlerFlags & gBitTable[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)])
          && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
-            // Return item to bag if partner had selected one.
-            if (gBattleResources->bufferA[battler][1] == B_ACTION_USE_ITEM)
+            // Return item to bag if partner had selected one (except flutes).
+            if (gBattleResources->bufferA[battler][1] == B_ACTION_USE_ITEM && !IsItemFlute(itemId))
             {
                 AddBagItem(itemId, 1);
             }
@@ -890,7 +890,7 @@ static void HandleInputChooseMove(u32 battler)
     }
     else if (JOY_NEW(START_BUTTON))
     {
-        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
+        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))
         {
             gBattleStruct->gimmick.playerSelect ^= 1;
             ReloadMoveNames(battler);
@@ -1733,7 +1733,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
         if (speciesId == SPECIES_OGERPON_WELLSPRING_MASK || speciesId == SPECIES_OGERPON_WELLSPRING_MASK_TERA
             || speciesId == SPECIES_OGERPON_HEARTHFLAME_MASK || speciesId == SPECIES_OGERPON_HEARTHFLAME_MASK_TERA
             || speciesId == SPECIES_OGERPON_CORNERSTONE_MASK || speciesId == SPECIES_OGERPON_CORNERSTONE_MASK_TERA)
-            type = gBattleMons[battler].type2;
+            type = gBattleMons[battler].types[1];
     }
     // Max Guard is a Normal-type move
     else if (gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].category == DAMAGE_CATEGORY_STATUS

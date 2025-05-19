@@ -813,7 +813,6 @@ static void HandleInput(bool8 showContest)
         MoveRelearnerShowHideHearts(GetCurrentSelectedMove());
         if (B_SHOW_CATEGORY_ICON == TRUE)
             MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
-        
         break;
     case LIST_CANCEL:
         PlaySE(SE_SELECT);
