@@ -3850,9 +3850,9 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 if (!(gStatuses3[gBattlerTarget] & STATUS3_LEECHSEED) 
                 || !(gBattleMons[gBattlerTarget].status2 & STATUS2_SUBSTITUTE))
                 {
-                    if (gBattleMons[gBattlerAttacker].type1 == TYPE_GRASS
-                     || gBattleMons[gBattlerAttacker].type2 == TYPE_GRASS
-                     || gBattleMons[gBattlerAttacker].type3 == TYPE_GRASS)
+                    if (gBattleMons[gBattlerAttacker].types[0] == TYPE_GRASS
+                     || gBattleMons[gBattlerAttacker].types[1] == TYPE_GRASS
+                     || gBattleMons[gBattlerAttacker].types[2] == TYPE_GRASS)
                      {
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -15387,9 +15387,9 @@ static void Cmd_switchoutabilities(void)
         {
             if(IsBattlerAlive(i))
             {
-                gBattleMons[i].type1 = gSpeciesInfo[gBattleMons[i].species].types[0];
-                gBattleMons[i].type2 = gSpeciesInfo[gBattleMons[i].species].types[1];
-                gBattleMons[i].type3 = TYPE_MYSTERY;
+                gBattleMons[i].types[0] = gSpeciesInfo[gBattleMons[i].species].types[0];
+                gBattleMons[i].types[1] = gSpeciesInfo[gBattleMons[i].species].types[1];
+                gBattleMons[i].types[2] = TYPE_MYSTERY;
             }
         }
         gBattleMons[battler].ability = ABILITY_NONE;
