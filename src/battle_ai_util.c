@@ -4154,7 +4154,7 @@ bool32 IsBattlerItemEnabled(u32 battler)
         return FALSE;
     if (gStatuses3[battler] & STATUS3_EMBARGO)
         return FALSE;
-    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
+    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS4_GASTRO_ACID))
         return FALSE;
     return TRUE;
 }
