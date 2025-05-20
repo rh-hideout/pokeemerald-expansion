@@ -3166,31 +3166,13 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId, DebugFunc inputFunc, 
     switch(input)
     {
         case WEEKDAY_SUN:
-            daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_MON:
-            daysToAdd = ((WEEKDAY_MON - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_TUE:
-            daysToAdd = ((WEEKDAY_TUE - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_WED:
-            daysToAdd = ((WEEKDAY_WED - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_THU:
-            daysToAdd = ((WEEKDAY_THU - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_FRI:
-            daysToAdd = ((WEEKDAY_FRI - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
         case WEEKDAY_SAT:
-            daysToAdd = ((WEEKDAY_SAT - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+            daysToAdd = ((input - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
             FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
             break;
         }
