@@ -5908,7 +5908,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
         }
         break;
     case EFFECT_BOIL_OVER:
-        if (gMain.inBattle && WEATHER_HAS_EFFECT)
+        if (gMain.inBattle && HasWeatherEffect())
         {
             if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
                 return TYPE_WATER;

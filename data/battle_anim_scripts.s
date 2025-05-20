@@ -4100,6 +4100,7 @@ PowerSplitLaunch:
 
 gBattleAnimMove_WonderRoom::
 	call InitRoomAnimation
+gBattleAnimGeneral_InverseRoom::
 gBattleAnimGeneral_WonderRoom::
 	playsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET
 	fadetobg BG_WONDER_ROOM

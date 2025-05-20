@@ -588,8 +588,9 @@
 #define B_ANIM_SIMPLE_HEAL              52
 #define B_ANIM_CURSED                   53
 #define B_ANIM_LEECH_SEED_PLANTED       54
+#define B_ANIM_INVERSE_ROOM             55
 
-#define NUM_B_ANIMS_GENERAL             53
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

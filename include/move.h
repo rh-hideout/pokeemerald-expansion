@@ -90,6 +90,9 @@ struct MoveInfo
     bool32 ignoresSubstitute:1;
     bool32 forcePressure:1;
     bool32 cantUseTwice:1;
+    bool32 kickingMove:1;
+    bool32 beamMove:1;
+    bool32 foodMove:1;
     // Ban flags
     bool32 gravityBanned:1;
     bool32 mirrorMoveBanned:1;
@@ -487,6 +490,8 @@ static inline u32 GetMoveAbsorbPercentage(u32 moveId)
     moveId = SanitizeMoveId(moveId);
     if (gMovesInfo[moveId].argument.absorbPercentage == 0)
         return 50;
+    else if (gMovesInfo[moveId].argument.absorbPercentage == 101)
+        return 9999;
     return gMovesInfo[moveId].argument.absorbPercentage;
 }
 
