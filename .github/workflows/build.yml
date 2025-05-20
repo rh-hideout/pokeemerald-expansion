@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: github.actor != 'allcontributors'
     runs-on: ubuntu-latest
     env:
       GAME_VERSION: EMERALD
