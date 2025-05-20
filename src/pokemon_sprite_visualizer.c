@@ -1673,12 +1673,12 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 
     if (JOY_NEW(L_BUTTON)  && (Backsprite->callback == SpriteCallbackDummy))
     {
-        PlayCryInternal(data->currentmonId, 0, 120, 10, 0);
+        PlayCryInternal(data->currentmonId, 0, 120, 10, CRY_MODE_NORMAL);
         LaunchAnimationTaskForBackSprite(Backsprite, data->animIdBack-1);
     }
     if (JOY_NEW(R_BUTTON) && (Frontsprite->callback == SpriteCallbackDummy))
     {
-        PlayCryInternal(data->currentmonId, 0, 120, 10, 0);
+        PlayCryInternal(data->currentmonId, 0, 120, 10, CRY_MODE_NORMAL);
         if (HasTwoFramesAnimation(data->currentmonId))
             StartSpriteAnim(Frontsprite, 1);
 
