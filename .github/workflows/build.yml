@@ -21,8 +21,7 @@ jobs:
       - name: Bypass CI for allcontributors
         if: github.actor == 'pkmnsnfrn'
         run: |
-          echo "CI bypassed for allcontributors"
-          exit 0
+          echo "CI bypassed for allcontributors" && exit 0
 
       - name: Checkout
         uses: actions/checkout@v2
