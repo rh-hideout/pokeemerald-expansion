@@ -17,6 +17,12 @@ jobs:
       COMPARE: 0
       UNUSED_ERROR: 1
     steps:
+      - name: Bypass CI for allcontributors
+        if: github.actor == 'allcontributors'
+        run: |
+          echo "CI bypassed for allcontributors"
+          exit 0
+
       - name: Checkout
         uses: actions/checkout@v2
 
