@@ -4338,7 +4338,7 @@ static void SetNewMoveTypeIcon(void)
     u32 type = GetMoveType(sMonSummaryScreen->newMove);
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
 
-    if (TRUE)
+    if (P_SHOW_DYNAMIC_TYPES)
     {
         enum MonState state = gMain.inBattle ? MON_SUMMARY_SCREEN : MON_OUTSIDE_BATTLE;
         type = CheckDynamicMoveType(mon, sMonSummaryScreen->newMove, 0, state);  // Bug: in battle, this only shows the dynamic type of battler in position 0
