@@ -19,7 +19,7 @@ jobs:
       UNUSED_ERROR: 1
     steps:
       - name: Bypass CI for allcontributors
-        if: github.actor == 'allcontributors'
+        if: github.actor == 'pkmnsnfrn'
         run: |
           echo "CI bypassed for allcontributors"
           exit 0
