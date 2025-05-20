@@ -3425,10 +3425,11 @@ static void CancellerTruant(u32 *effect)
 
 static void CancellerSupportive(u32 *effect)
 {
-    if (GetBattlerAbility(gBattlerAttacker) == ABILITY_SUPPORTIVE && (gMovesInfo[gCurrentMove].recoil > 0 || gMovesInfo[gCurrentMove].effect == EFFECT_MIND_BLOWN))
+    u32 supportiveBattler = IsAbilityOnField(ABILITY_SUPPORTIVE);
+    if (supportiveBattler && (IsBattleMoveRecoil(gCurrentMove)
+                          || GetMoveEffect(gCurrentMove) == EFFECT_MIND_BLOWN))
     {
-        gBattleScripting.battler = gBattlerAttacker;
-        CancelMultiTurnMoves(gBattlerAttacker);
+        gBattleScripting.battler = supportiveBattler - 1;
         gBattlescriptCurrInstr = BattleScript_SupportiveStopsRecoil;
         gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
         *effect = 1;
@@ -6823,7 +6824,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         gEffectBattler = gBattlerTarget;
                         BattleScriptPushCursor();
                         gBattlescriptCurrInstr = BattleScript_MagicianActivates;
-                        gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = TRUE;
                         effect++;
                     }                
                 }

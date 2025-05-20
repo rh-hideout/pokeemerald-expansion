@@ -8825,7 +8825,7 @@ BattleScript_DampStopsExplosion::
 BattleScript_SupportiveStopsRecoil::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
-	printstring STRINGID_SUPPORTIVENORECOIL
+	printstring STRINGID_PKMNPREVENTSUSAGE
 	pause B_WAIT_TIME_LONG
 	moveendto MOVEEND_NEXT_TARGET
 	moveendcase MOVEEND_CLEAR_BITS
