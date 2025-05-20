@@ -435,6 +435,7 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
         return TRUE;
 
     u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerDef)];
+    // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if ((partnerAbility == ABILITY_LIGHTNING_ROD && moveType == TYPE_ELECTRIC)
      || (partnerAbility == ABILITY_STORM_DRAIN && moveType == TYPE_WATER))
     {
