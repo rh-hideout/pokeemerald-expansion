@@ -38,6 +38,7 @@ script Won_or_Caught {
 	giveitem(ITEM_QUICK_BALL)
 	giveitem(ITEM_CALCIUM)
 	giveitem(ITEM_PP_UP)
+	giveitem(ITEM_TM_HIDDEN_POWER)
 	return
 }
 

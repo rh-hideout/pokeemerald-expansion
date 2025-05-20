@@ -1238,9 +1238,9 @@
 #define FLAG_NOCATCHING                                            0x4A0 // Used Flag
 #define FLAG_NORUNNING                                             0x4A1 // Used Flag
 #define FLAG_BLOCKROUTE102                                         0x4A2 // Used Flag
-#define FLAG_STARTER_8                                            0x4A3 // Unused Flag
-#define FLAG_STARTER_9                                            0x4A4 // Unused Flag
-#define FLAG_UNUSED_0x4A5                                           0x4A5 // Unused Flag
+#define FLAG_RECEIVED_OLDROD2                                      0x4A3 // Used Flag
+#define FLAG_RECEIVED_ARMOR                                        0x4A4 // Used Flag
+#define FLAG_RECEIVE_WATERSTONE                                    0x4A5 // Used Flag
 #define FLAG_UNUSED_0x4A6                                           0x4A6 // Unused Flag
 #define FLAG_UNUSED_0x4A7                                           0x4A7 // Unused Flag
 #define FLAG_UNUSED_0x4A8                                           0x4A8 // Unused Flag

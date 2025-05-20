@@ -283,3 +283,18 @@ RustboroCity_Gym_Text_RoxanneRematchNeedTwoMons:
 	.string "Please return with at least one more\n"
 	.string "POKéMON.$"
 `
+
+script RustboroCity_Gym_EventScript_Anya {
+	trainerbattle_single(TRAINER_ANYA, Anya_intro, Anya_outro)
+	msgbox(format("You're stronger than I thought you were. Good luck!"), MSGBOX_DEFAULT)
+	release
+	end
+}
+
+text Anya_intro {
+	format("There's no way you're getting past me!")
+}
+
+text Anya_outro {
+	format("No way!")
+}

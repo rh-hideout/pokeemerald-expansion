@@ -1,1 +1,31 @@
 mapscripts PetalburgCity_House3_MapScripts {}
+
+script PetalburgCity_EventScript_LavaridgeMigrant {
+    lock
+    faceplayer
+    goto_if_set(FLAG_RECEIVED_ARMOR, PetalburgCity_EventScript_GaveArmor)
+    msgbox(format("Hey there young lad, I just moved here from Lavaridge Town. I must say the differences between here and there are scorching."), MSGBOX_DEFAULT)
+    msgbox(format("I am a collector of curiosities and artifacts from all over HOENN. I'm especially interested in . . . dark pasts, shall we say."), MSGBOX_DEFAULT)
+    msgbox(format("Since you seem trustworthy, I'll give you the choice of one of my artifacts."), MSGBOX_DEFAULT)
+    message(format("Choose wisely."))
+    multichoice(25, 8, MULTI_CHARCADET_EVOLVE, 0)
+    closemessage
+    if (var(VAR_RESULT) == 0) {
+        giveitem(ITEM_AUSPICIOUS_ARMOR)
+    }
+    elif (var(VAR_RESULT) == 1) {
+        giveitem(ITEM_MALICIOUS_ARMOR)
+    }
+    waitmessage
+    setflag(FLAG_RECEIVED_ARMOR)
+    release
+    end
+}
+
+script PetalburgCity_EventScript_GaveArmor {
+    msgbox(format("I heard that certain POKéMON react differently when in the presence of these mysterious artifacts."), MSGBOX_DEFAULT)
+	waitmessage
+	closemessage
+	release
+	end
+}

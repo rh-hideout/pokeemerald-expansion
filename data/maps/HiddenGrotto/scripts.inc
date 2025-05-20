@@ -80,25 +80,27 @@ Won_or_Caught::
 	giveitem ITEM_CALCIUM
 # 40 "data/maps/HiddenGrotto/scripts.pory"
 	giveitem ITEM_PP_UP
+# 41 "data/maps/HiddenGrotto/scripts.pory"
+	giveitem ITEM_TM_HIDDEN_POWER
 	return
 
 
 RanAway::
-# 45 "data/maps/HiddenGrotto/scripts.pory"
-	playmoncry SPECIES_SHAYMIN, CRY_MODE_ENCOUNTER
 # 46 "data/maps/HiddenGrotto/scripts.pory"
-	msgbox RanAway_Text_0, MSGBOX_AUTOCLOSE
+	playmoncry SPECIES_SHAYMIN, CRY_MODE_ENCOUNTER
 # 47 "data/maps/HiddenGrotto/scripts.pory"
-	delay 20
+	msgbox RanAway_Text_0, MSGBOX_AUTOCLOSE
 # 48 "data/maps/HiddenGrotto/scripts.pory"
-	fadescreen FADE_TO_BLACK
+	delay 20
 # 49 "data/maps/HiddenGrotto/scripts.pory"
-	removeobject 2
+	fadescreen FADE_TO_BLACK
 # 50 "data/maps/HiddenGrotto/scripts.pory"
-	fadescreen FADE_FROM_BLACK
+	removeobject 2
 # 51 "data/maps/HiddenGrotto/scripts.pory"
-	clearflag FLAG_NOCATCHING
+	fadescreen FADE_FROM_BLACK
 # 52 "data/maps/HiddenGrotto/scripts.pory"
+	clearflag FLAG_NOCATCHING
+# 53 "data/maps/HiddenGrotto/scripts.pory"
 	clearflag FLAG_NORUNNING
 	return
 
@@ -108,5 +110,5 @@ HiddenGrotto_EventScript_Shaymin_Text_0:
 	.string "You feel a disturbance in the air...$"
 
 RanAway_Text_0:
-# 46 "data/maps/HiddenGrotto/scripts.pory"
+# 47 "data/maps/HiddenGrotto/scripts.pory"
 	.string "Shayy....$"

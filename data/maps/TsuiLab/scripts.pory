@@ -305,7 +305,7 @@ script TsuiLab_EventScript_PokeballNine{
             call(TsuiLab_EventScript_CHARCADET)
         }
         elif(var(VAR_USED_STARTER) == 2){
-            call(TsuiLab_EventScript_MAGIKARP)
+            call(TsuiLab_EventScript_PORYGON)
         }
     }
     else{
@@ -1226,23 +1226,23 @@ script TsuiLab_EventScript_NYMBLE{
     end
 }
 
-script TsuiLab_EventScript_MAGIKARP{
+script TsuiLab_EventScript_PORYGON{
  
     lockall
-    showmonpic(SPECIES_MAGIKARP,10,3)
-    msgbox("Do you want to choose MAGIKARP?", MSGBOX_YESNO)
+    showmonpic(SPECIES_PORYGON,10,3)
+    msgbox("Do you want to choose PORYGON?", MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES){
-        givemon(SPECIES_MAGIKARP, 10, ITEM_NONE)
+        givemon(SPECIES_PORYGON, 10, ITEM_NONE)
         if(var(VAR_RESULT) == MON_GIVEN_TO_PARTY){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MAGIKARP.")
+            msgbox("Recieved PORYGON.")
             removeobject(9)
             setflag(FLAG_BALL_9_USED)
             call(NicknamePartyMon)
         }
         elif(var(VAR_RESULT) == MON_GIVEN_TO_PC){
             playfanfare(MUS_OBTAIN_ITEM)
-            msgbox("Recieved MAGIKARP.")
+            msgbox("Recieved PORYGON.")
             removeobject(9)
             setflag(FLAG_BALL_9_USED)
             call(NicknameBoxMon)

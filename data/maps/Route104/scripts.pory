@@ -296,9 +296,13 @@ Route104_EventScript_Girl1::
 	end
 
 Route104_EventScript_BugCatcher::
+	lock
+	goto_if_set FLAG_RECEIVE_WATERSTONE, Route104_EventScript_GaveWaterStone
 	msgbox Route104_Text_WhatsItLikeAtBottomOfSea, MSGBOX_SIGN
 	msgbox IFoundThisNearTheShore, MSGBOX_DEFAULT
 	giveitem ITEM_WATER_STONE
+	setflag FLAG_RECEIVE_WATERSTONE
+	release
 	end
 
 Route104_EventScript_BrineysCottageSign::
@@ -997,8 +1001,15 @@ Route104_EventScript_Mia::
 	end
 
 Route104_EventScript_Darian::
+	lock
+	faceplayer
+	goto_if_set FLAG_RECEIVED_OLDROD2, Route104_EventScript_GaveOldRod
 	trainerbattle_single TRAINER_DARIAN, Route104_Text_DarianIntro, Route104_Text_DarianDefeat
 	msgbox Route104_Text_DarianPostBattle, MSGBOX_AUTOCLOSE
+	msgbox GiveOldRod, MSGBOX_DEFAULT
+	giveitem ITEM_OLD_ROD
+	setflag FLAG_RECEIVED_OLDROD2
+	release
 	end
 
 Route104_Text_BrineyLivesInSeasideCottage:
@@ -1181,4 +1192,20 @@ text GiveOldRod {
 
 text IFoundThisNearTheShore {
 	format("You want this item I found near the shore? I have no use for it.")
+}
+
+script Route104_EventScript_GaveOldRod {
+	msgbox(format("The OLD ROD allows you to encounter POKéMON from the water that you never usually see in the grass. It can be registered from your BAG for easier use."), MSGBOX_DEFAULT)
+	waitmessage
+	closemessage
+	release
+	end
+}
+
+script Route104_EventScript_GaveWaterStone {
+	msgbox(format("It's a really pretty rock. I wonder what you can do with it."), MSGBOX_DEFAULT)
+	waitmessage
+	closemessage
+	release
+	end
 }
