@@ -32,8 +32,8 @@ enum AIPivot
 
 enum AIConsiderGimmick 
 {
-    USE_GIMMICK,
     NO_GIMMICK,
+    USE_GIMMICK,
 };
 
 static inline bool32 IsMoveUnusable(u32 moveIndex, u32 move, u32 moveLimitations)

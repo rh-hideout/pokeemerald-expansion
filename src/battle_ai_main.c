@@ -404,10 +404,10 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) 
-        SetAIUsingGimmick(battlerAtk, FALSE);
+        SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) 
-        SetAIUsingGimmick(battlerAtk, FALSE);
+        SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
 u32 BattleAI_ChooseMoveIndex(u32 battler)
