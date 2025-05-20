@@ -79,13 +79,9 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
     // Check the trainer party data to see if a gimmick is intended.
     else
     {
-        bool32 isSecondTrainer = (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT) && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT;
-        u16 trainerId = isSecondTrainer ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA;
-        const struct TrainerMon *mon = &GetTrainerPartyFromId(trainerId)[isSecondTrainer ? gBattlerPartyIndexes[battler] - MULTI_PARTY_SIZE : gBattlerPartyIndexes[battler]];
-
-        if (gimmick == GIMMICK_TERA && mon->teraType != TYPE_NONE)
+        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
-        if (gimmick == GIMMICK_DYNAMAX && mon->shouldUseDynamax)
+        if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
     }
 
@@ -204,6 +200,7 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 {
     s32 xSlide, xPriority, xOptimal;
     s32 yDiff;
+    s32 xHealthbox = gSprites[gHealthboxSpriteIds[sprite->tBattler]].x;
 
     if (IsDoubleBattle())
     {
@@ -222,25 +219,29 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 
     if (sprite->tHide)
     {
-        if (sprite->x != gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xSlide)
+        if (sprite->x < xHealthbox - xSlide)
             sprite->x++;
 
-        if (sprite->x >= gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xPriority)
+        if (sprite->x >= xHealthbox - xPriority)
             sprite->oam.priority = 2;
         else
             sprite->oam.priority = 1;
 
         sprite->y = gSprites[gHealthboxSpriteIds[sprite->tBattler]].y - yDiff;
         sprite->y2 = gSprites[gHealthboxSpriteIds[sprite->tBattler]].y2 - yDiff;
-        if (sprite->x == gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xSlide)
+        if (sprite->x == xHealthbox - xSlide)
             DestroyGimmickTriggerSprite();
     }
     else
     {
-        if (sprite->x != gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xOptimal)
+        // Edge case: in doubles, if selecting move and next mon's action too fast, the second battler's gimmick icon uses the x from the first battler's gimmick icon
+        if (sprite->y != gSprites[gHealthboxSpriteIds[sprite->tBattler]].y - yDiff)
+            sprite->x = xHealthbox - xSlide;
+
+        if (sprite->x > xHealthbox - xOptimal)
             sprite->x--;
 
-        if (sprite->x >= gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xPriority)
+        if (sprite->x >= xHealthbox - xPriority)
             sprite->oam.priority = 2;
         else
             sprite->oam.priority = 1;

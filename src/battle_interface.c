@@ -3042,6 +3042,9 @@ static void DestroyLastUsedBallGfx(struct Sprite *sprite)
 
 void TryToAddMoveInfoWindow(void)
 {
+    if (!B_SHOW_MOVE_DESCRIPTION)
+        return;
+
     LoadSpritePalette(&sSpritePalette_AbilityPopUp);
     if (GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF)
         LoadSpriteSheet(&sSpriteSheet_MoveInfoWindow);
@@ -3104,7 +3107,7 @@ static void SpriteCB_LastUsedBall(struct Sprite *sprite)
 }
 
 static void SpriteCB_MoveInfoWin(struct Sprite *sprite)
-{    
+{
     if (sprite->sHide)
     {
         if (sprite->x != LAST_BALL_WIN_X_0)

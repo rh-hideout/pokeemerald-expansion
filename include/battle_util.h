@@ -130,7 +130,6 @@ enum
     CANCELLER_STANCE_CHANGE_2,
     CANCELLER_WEATHER_PRIMAL,
     CANCELLER_DYNAMAX_BLOCKED,
-    CANCELLER_POWDER_MOVE,
     CANCELLER_POWDER_STATUS,
     CANCELLER_RECOIL_SUPPORTIVE,
     CANCELLER_FOOD_UNNERVE,
@@ -210,6 +209,7 @@ bool32 AreAllMovesUnusable(u32 battler);
 u8 GetImprisonedMovesCount(u32 battler, u16 move);
 u8 DoFieldEndTurnEffects(void);
 s32 GetDrainedBigRootHp(u32 battler, s32 hp);
+bool32 IsMagicGuardProtected(u32 battler, u32 ability);
 u8 DoBattlerEndTurnEffects(void);
 bool32 HandleWishPerishSongOnTurnEnd(void);
 bool32 HandleFaintedMonActions(void);
@@ -307,7 +307,6 @@ bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move);
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon);
 void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon);
 void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing);
-bool32 IsAlly(u32 battlerAtk, u32 battlerDef);
 bool32 IsGen6ExpShareEnabled(void);
 bool32 MoveHasAdditionalEffect(u32 move, u32 moveEffect);
 bool32 MoveHasAdditionalEffectWithChance(u32 move, u32 moveEffect, u32 chance);
@@ -353,5 +352,8 @@ bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
+bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move);
+bool32 EmergencyExitCanBeTriggered(u32 battler);
+u32 RestoreWhiteHerbStats(u32 battler);
 
 #endif // GUARD_BATTLE_UTIL_H

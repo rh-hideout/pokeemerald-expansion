@@ -238,7 +238,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_RECOIL_IF_MISS] =
     {
-        .battleScript = BattleScript_EffectRecoilIfMiss,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 

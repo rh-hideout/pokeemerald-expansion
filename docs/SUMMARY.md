@@ -21,6 +21,7 @@
   - [How to add new Trainer Slides](tutorials/how_to_new_trainer_slide.md)
 - [Changelog](./CHANGELOG.md)
     - [1.11.x]()
+        - [Version 1.11.1](changelogs/1.11.x/1.11.1.md)
         - [Version 1.11.0](changelogs/1.11.x/1.11.0.md)
     - [1.10.x]()
         - [Version 1.10.3](changelogs/1.10.x/1.10.3.md)

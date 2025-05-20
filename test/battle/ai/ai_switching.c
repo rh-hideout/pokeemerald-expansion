@@ -106,16 +106,30 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spot
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: U-Turn will send out Ace Mon if it's the only one remaining")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send out Ace Mon if it's the only one remaining")
 {
+    u32 aiMove = 0;
+    // Moves testing all effects in IsSwitchOutEffect
+    PARAMETRIZE { aiMove = MOVE_U_TURN; }
+    PARAMETRIZE { aiMove = MOVE_TELEPORT; }
+    PARAMETRIZE { aiMove = MOVE_PARTING_SHOT; }
+    PARAMETRIZE { aiMove = MOVE_BATON_PASS; }
+    PARAMETRIZE { aiMove = MOVE_CHILLY_RECEPTION; }
+    PARAMETRIZE { aiMove = MOVE_SHED_TAIL; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
+        ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
+        ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
+        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_U_TURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { EXPECT_MOVE(opponent, aiMove); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
 
