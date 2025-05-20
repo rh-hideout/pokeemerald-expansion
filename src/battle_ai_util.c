@@ -421,7 +421,7 @@ static inline s32 DmgRoll(s32 dmg)
     return dmg;
 }
 
-bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType)
+bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType, u32 weather)
 {
     struct AiLogicData *aiData = AI_DATA;
 
@@ -432,6 +432,19 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
         return TRUE;
 
     if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER))
+        return TRUE;
+
+    u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerDef)];
+    if ((partnerAbility == ABILITY_LIGHTNING_ROD && moveType == TYPE_ELECTRIC)
+     || (partnerAbility == ABILITY_STORM_DRAIN && moveType == TYPE_WATER))
+    {
+        if (CanAbilityAbsorbMove(battlerAtk, BATTLE_PARTNER(battlerDef), partnerAbility, move, moveType, ABILITY_CHECK_TRIGGER))
+            return TRUE;
+    }
+
+    if (weather & B_WEATHER_SUN_PRIMAL && moveType == TYPE_WATER)
+        return TRUE;
+    if (weather & B_WEATHER_RAIN_PRIMAL && moveType == TYPE_FIRE)
         return TRUE;
 
     switch (GetMoveEffect(move))
@@ -658,7 +671,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     u32 movePower = GetMovePower(move);
     if (movePower)
-        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType);
+        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType, weather);
 
     if (movePower && !isDamageMoveUnusable)
     {
