@@ -87,7 +87,7 @@ SINGLE_BATTLE_TEST("Flare Blitz deals 33% of recoil damage to the user and can b
 SINGLE_BATTLE_TEST("Flare Blitz is absorbed by Flash Fire and no recoil damage is dealt")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLARE_BLITZ].recoil > 0);
+        ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_FLASH_FIRE); };
     } WHEN {

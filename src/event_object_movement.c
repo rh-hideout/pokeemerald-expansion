@@ -1435,8 +1435,8 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousCoords.y = y;
     objectEvent->currentElevation = template->elevation;
     objectEvent->previousElevation = template->elevation;
-    objectEvent->rangeX = template->movementRangeX;
-    objectEvent->rangeY = template->movementRangeY;
+    objectEvent->range.rangeX = template->movementRangeX;
+    objectEvent->range.rangeY = template->movementRangeY;
     objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
     objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
@@ -1444,10 +1444,10 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
     {
-        if (objectEvent->rangeX == 0)
-            objectEvent->rangeX++;
-        if (objectEvent->rangeY == 0)
-            objectEvent->rangeY++;
+        if (objectEvent->range.rangeX == 0)
+            objectEvent->range.rangeX++;
+        if (objectEvent->range.rangeY == 0)
+            objectEvent->range.rangeY++;
     }
     return objectEventId;
 }
@@ -1840,13 +1840,10 @@ u8 CreateObjectGraphicsSprite(u16 graphicsId, void (*callback)(struct Sprite *),
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     struct Sprite *sprite;
     u8 spriteId;
-    bool32 isShiny = graphicsId & OBJ_EVENT_MON_SHINY;
 
     spriteTemplate = Alloc(sizeof(struct SpriteTemplate));
     CopyObjectGraphicsInfoToSpriteTemplate(graphicsId, callback, spriteTemplate, &subspriteTables);
 
-    if (isShiny)
-        graphicsId -= SPECIES_SHINY_TAG;
 
     if (OW_GFX_COMPRESS)
     {
@@ -6207,18 +6204,18 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
     s16 top;
     s16 bottom;
 
-    if (objectEvent->rangeX != 0)
+    if (objectEvent->range.rangeX != 0)
     {
-        left = objectEvent->initialCoords.x - objectEvent->rangeX;
-        right = objectEvent->initialCoords.x + objectEvent->rangeX;
+        left = objectEvent->initialCoords.x - objectEvent->range.rangeX;
+        right = objectEvent->initialCoords.x + objectEvent->range.rangeX;
 
         if (left > x || right < x)
             return TRUE;
     }
-    if (objectEvent->rangeY != 0)
+    if (objectEvent->range.rangeY != 0)
     {
-        top = objectEvent->initialCoords.y - objectEvent->rangeY;
-        bottom = objectEvent->initialCoords.y + objectEvent->rangeY;
+        top = objectEvent->initialCoords.y - objectEvent->range.rangeY;
+        bottom = objectEvent->initialCoords.y + objectEvent->range.rangeY;
 
         if (top > y || bottom < y)
             return TRUE;

@@ -336,6 +336,11 @@ static void ApplyDaycareExperience(struct Pokemon *mon)
     CalculateMonStats(mon);
 }
 
+static u32 GetExpAtLevelCap(struct Pokemon *mon)
+{
+    return gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate][GetCurrentLevelCap()];
+}
+
 static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
 {
     u32 species;
@@ -358,6 +363,9 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     if (GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap())
     {
         experience = GetMonData(&pokemon, MON_DATA_EXP) + daycareMon->steps;
+        u32 maxExp = GetExpAtLevelCap(&pokemon);
+        if (experience > maxExp)
+            experience = maxExp;
         SetMonData(&pokemon, MON_DATA_EXP, &experience);
         ApplyDaycareExperience(&pokemon);
     }

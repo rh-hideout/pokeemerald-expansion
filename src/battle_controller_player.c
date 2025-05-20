@@ -2011,14 +2011,18 @@ static void HandleChooseActionAfterDma3(u32 battler)
         {
             gBattleStruct->aiDelayFrames = gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
             gBattleStruct->aiDelayTimer = 0;
-            #if DEBUG_AI_DELAY_TIMER
+            if (DEBUG_AI_DELAY_TIMER)
             {
-                static const u8 sText_AIDelay[] = _("AI delay:\n{B_BUFF1} frames");
-                PREPARE_HWORD_NUMBER_BUFFER(gBattleTextBuff1, 3, gBattleStruct->aiDelayFrames);
-                BattleStringExpandPlaceholdersToDisplayedString(sText_AIDelay);
+                static const u8 sFramesText[] = _(" frames thinking\n");
+                static const u8 sCyclesText[] = _(" cycles");
+                ConvertIntToDecimalStringN(gDisplayedStringBattle, gBattleStruct->aiDelayFrames, STR_CONV_MODE_RIGHT_ALIGN, 3);
+                u8* end = StringAppend(gDisplayedStringBattle, sFramesText);
+                ConvertIntToDecimalStringN(end, gBattleStruct->aiDelayCycles, STR_CONV_MODE_RIGHT_ALIGN, 8);
+                // Clear old result once read out
+                gBattleStruct->aiDelayCycles = 0;
+                StringAppend(gDisplayedStringBattle, sCyclesText);
                 BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_ACTION_PROMPT);
             }
-            #endif // DEBUG_AI_DELAY_TIMER
         }
         gBattlerControllerFuncs[battler] = HandleInputChooseAction;
     }

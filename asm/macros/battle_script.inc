@@ -1100,7 +1100,7 @@
 	.byte \battler
 	.endm
 
-	.macro callterrainattack
+	.macro callenvironmentattack
 	.byte 0xcc
 	.endm
 
@@ -1255,7 +1255,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settypetoterrain failInstr:req
+	.macro settypetoenvironment failInstr:req
 	.byte 0xeb
 	.4byte \failInstr
 	.endm
@@ -1331,7 +1331,7 @@
 	.byte \stat
 	.endm
 
-	.macro jumpifoppositegenders jumpInstr:req
+	.macro jumpifcaptivateaffected jumpInstr:req
 	.byte 0xfc
 	.4byte \jumpInstr
 	.endm
@@ -1367,6 +1367,10 @@
 	callnative BS_RestoreAttacker
 	.endm
 
+	.macro jumpifintimidateabilityprevented
+	callnative BS_JumpIfIntimidateAbilityPrevented
+	.endm
+
 	.macro metalburstdamagecalculator failInstr:req
 	callnative BS_CalcMetalBurstDmg
 	.4byte \failInstr
@@ -1381,6 +1385,10 @@
 	.macro itemstatchangeeffects battler:req
 	callnative BS_RunStatChangeItems
 	.byte \battler
+	.endm
+
+	.macro tryintimidatejectpack
+	callnative BS_TryIntimidatEjectpack
 	.endm
 
 	.macro allyswitchswapbattlers
@@ -1745,10 +1753,6 @@
 	.macro storehealingwish battler:req
 	callnative BS_StoreHealingWish
 	.byte \battler
-	.endm
-
-	.macro hitswitchtargetfailed
-	callnative BS_HitSwitchTargetFailed
 	.endm
 
 	.macro tryrevivalblessing, failInstr:req
