@@ -29,11 +29,13 @@ This section lists all of expansion’s AI Flags and briefly describes the effec
 
 ## Composite AI Flags
 
-Expansion has two "composite" AI flags, `AI_FLAG_BASIC_TRAINER` and `AI_FLAG_SMART_TRAINER`. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you. 
+Expansion has a few "composite" AI flags. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you. 
 
 `AI_FLAG_BASIC_TRAINER` is expansion's version of generic, normal AI behaviour. It includes `AI_FLAG_CHECK_BAD_MOVE` (don't use bad moves), `AI_FLAG_TRY_TO_FAINT` (faint the player where possible), and `AI_FLAG_CHECK_VIABILITY` (choose the most effective move to use in the current context). Trainers with this flag will still be smarter than they are in vanilla as there have been dramatic improvements made to move selection, but not incredibly so. Trainers with this flag should feel like normal trainers. In general we recommend these three flags be used in all cases, unless you specifically want a trainer who makes obvious mistakes in battle.
 
 `AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), and `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
+
+`AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future. 
 
 Expansion has LOADS of flags, which will be covered in the rest of this guide. If you don't want to engage with detailed trainer AI tuning though, you can just use these two composite flags, and trust that expansion will keep their contents updated to always represent the most standard and the smartest behaviour we can.
 
@@ -165,3 +167,15 @@ AI always assumes it will roll the lowest possible result when comparing damage 
 
 ## `AI_FLAG_SEQUENCE_SWITCHING`
 AI will always switch out after a KO in exactly party order as defined in the trainer data (ie. slot 1, then 2, then 3, etc.). The AI will never switch out mid-battle unless forced to (Roar etc.). If the AI uses a move that requires a switch where it makes a decision about what to send in (U-Turn etc.), it will always switch out into the lowest available party index.
+
+## `AI_FLAG_WEIGH_ABILITY_PREDICTION`
+AI will predict the player's ability based to its aiRating. Without this flag the AI randomly assumes an ability with an even distribution between all possible abilities until one is confirmed. With this flag, it instead guesses proportionally to each ability's aiRating, making it far more likely to guess an ability like Water Absorb than Damp if both are options.
+
+## `AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE`
+AI will add score to its highest damaging move, regardless of accuracy or secondary effects. Replaces deprecated `AI_FLAG_PREFER_STRONGEST_MOVE`.
+
+## `AI_FLAG_PREDICT_SWITCH`
+AI will determine whether it would switch out in the player's situation or not, and predict the player to switch accordingly. In any case where the AI would consider switching, it will assume the player will switch. This is modulated by a 50% failure rate, so the behaviour is non-deterministic and can change from turn to turn to emulate the inconsistency in human predictions. This behaviour is improved significantly by using `AI_FLAG_SMART_SWITCHING` and `AI_FLAG_SMART_MON_CHOICES` as they improve the AI's ability to determine good situations to switch, and also by `AI_FLAG_OMNISCIENT` so the AI can use all its knowledge of the player's team to make the decision.
+
+## `AI_FLAG_PREDICT_INCOMING_MON`
+This flag requires `AI_FLAG_PREDICT_SWITCH` to function. If the AI predicts that the player will switch, this flag allows the AI to run its move scoring calculation against the Pokémon it expects the player to switch into, instead of the Pokémon that it expects to switch out.

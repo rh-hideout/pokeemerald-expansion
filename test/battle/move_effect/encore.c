@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_ENCORE].effect == EFFECT_ENCORE);
+    ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
 }
 
 SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used before move")

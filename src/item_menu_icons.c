@@ -6,9 +6,12 @@
 #include "item_menu.h"
 #include "item_icon.h"
 #include "item_menu_icons.h"
+#include "malloc.h"
 #include "menu_helpers.h"
+#include "menu.h"
 #include "sprite.h"
 #include "window.h"
+#include "util.h"
 #include "constants/items.h"
 
 enum {
@@ -269,18 +272,13 @@ static const union AnimCmd *const sBerryPicSpriteAnimTable[] =
     sAnim_BerryPic
 };
 
-static const struct SpriteFrameImage sBerryPicSpriteImageTable[] =
-{
-    {&gDecompressionBuffer[0], 0x800},
-};
-
 static const struct SpriteTemplate sBerryPicSpriteTemplate =
 {
     .tileTag = TAG_NONE,
     .paletteTag = TAG_BERRY_PIC_PAL,
     .oam = &sBerryPicOamData,
     .anims = sBerryPicSpriteAnimTable,
-    .images = sBerryPicSpriteImageTable,
+    .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallbackDummy,
 };
@@ -319,7 +317,7 @@ static const struct SpriteTemplate sBerryPicRotatingSpriteTemplate =
     .paletteTag = TAG_BERRY_PIC_PAL,
     .oam = &sBerryPicRotatingOamData,
     .anims = sBerryPicSpriteAnimTable,
-    .images = sBerryPicSpriteImageTable,
+    .images = NULL,
     .affineAnims = sBerryPicRotatingAnimCmds,
     .callback = SpriteCallbackDummy,
 };
@@ -640,45 +638,81 @@ static void ArrangeBerryGfx(void *src, void *dest)
     }
 }
 
-static void LoadBerryGfx(u8 berryId)
+#define BERRY_SPRITE_SIZE ((64*64)/2) // 0x800
+
+struct BerryDynamicGfx
+{
+    ALIGNED(4) u8 gfx[BERRY_SPRITE_SIZE];
+    struct SpriteFrameImage images[1];
+};
+
+static struct BerryDynamicGfx *LoadBerryGfx(u8 berryId)
 {
     struct CompressedSpritePalette pal;
 
-    if (berryId == ITEM_TO_BERRY(ITEM_ENIGMA_BERRY_E_READER) - 1 && IsEnigmaBerryValid())
-    {
-        // unknown empty if statement
-    }
-
     pal.data = sBerryPicTable[berryId].pal;
-    pal.tag = TAG_BERRY_PIC_PAL;
+    pal.tag = TAG_BERRY_PIC_PAL + berryId;
     LoadCompressedSpritePalette(&pal);
-    LZDecompressWram(sBerryPicTable[berryId].tiles, &gDecompressionBuffer[0x1000]);
-    ArrangeBerryGfx(&gDecompressionBuffer[0x1000], &gDecompressionBuffer[0]);
+    struct BerryDynamicGfx *gfxAlloced = Alloc(sizeof(struct BerryDynamicGfx));
+    void *buffer = malloc_and_decompress(sBerryPicTable[berryId].tiles, NULL);
+    ArrangeBerryGfx(buffer, gfxAlloced->gfx);
+    Free(buffer);
+
+    return gfxAlloced;
 }
 
-u8 CreateBerryTagSprite(u8 id, s16 x, s16 y)
+static u32 CreateBerrySprite(const struct SpriteTemplate *sprTemplate, u32 berryId, s32 x, s32 y)
 {
-    LoadBerryGfx(id);
-    return CreateSprite(&sBerryPicSpriteTemplate, x, y, 0);
+    u32 spriteId;
+    struct BerryDynamicGfx *dynamicGfx = LoadBerryGfx(berryId);
+    struct SpriteTemplate newSprTemplate = *sprTemplate;
+
+    newSprTemplate.paletteTag += berryId;
+    newSprTemplate.images = dynamicGfx->images;
+
+    dynamicGfx->images[0].data = dynamicGfx->gfx;
+    dynamicGfx->images[0].size = BERRY_SPRITE_SIZE;
+    dynamicGfx->images[0].relativeFrames = FALSE;
+
+    spriteId = CreateSprite(&newSprTemplate, x, y, 0);
+    StoreWordInTwoHalfwords((u16 *) &gSprites[spriteId].data[BERRY_ICON_GFX_PTR_DATA_ID], (u32) dynamicGfx);
+    return spriteId;
 }
 
-void FreeBerryTagSpritePalette(void)
+u32 CreateBerryTagSprite(u32 id, s32 x, s32 y)
 {
-    FreeSpritePaletteByTag(TAG_BERRY_PIC_PAL);
+    return CreateBerrySprite(&sBerryPicSpriteTemplate, id, x, y);
 }
 
 // For throwing berries into the Berry Blender
-u8 CreateSpinningBerrySprite(u8 berryId, u8 x, u8 y, bool8 startAffine)
+u32 CreateSpinningBerrySprite(u32 berryId, s32 x, s32 y, bool32 startAffine)
 {
-    u8 spriteId;
-
-    FreeSpritePaletteByTag(TAG_BERRY_PIC_PAL);
-    LoadBerryGfx(berryId);
-    spriteId = CreateSprite(&sBerryPicRotatingSpriteTemplate, x, y, 0);
-    if (startAffine == TRUE)
+    u32 spriteId = CreateBerrySprite(&sBerryPicRotatingSpriteTemplate, berryId, x, y);
+    if (startAffine)
         StartSpriteAffineAnim(&gSprites[spriteId], 1);
 
     return spriteId;
+}
+
+void DestroyBerryIconSprite(u32 spriteId, u32 berryId, bool32 freePal)
+{
+    DestroyBerryIconSpritePtr(&gSprites[spriteId], berryId, freePal);
+}
+
+void DestroyBerryIconSpritePtr(struct Sprite *sprite, u32 berryId, bool32 freePal)
+{
+    u32 gfxBuffer;
+
+    LoadWordFromTwoHalfwords((u16 *) &sprite->data[BERRY_ICON_GFX_PTR_DATA_ID], &gfxBuffer);
+    Free((void *)gfxBuffer);
+    DestroySprite(sprite);
+    if (freePal)
+        FreeBerryIconSpritePalette(berryId);
+}
+
+void FreeBerryIconSpritePalette(u32 berryId)
+{
+    FreeSpritePaletteByTag(TAG_BERRY_PIC_PAL + berryId);
 }
 
 u8 CreateBerryFlavorCircleSprite(s16 x)

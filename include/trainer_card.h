@@ -50,7 +50,6 @@ struct TrainerCard
                 u32 frontier;
              } linkPoints; // This field is used differently by FRLG vs Emerald
     /*0x40*/ u32 unionRoomNum;
-    /*0x44*/ u8 filler[8];
     /*0x4C*/ bool8 shouldDrawStickers; // FRLG only
     /*0x4D*/ u8 unused;
     /*0x4E*/ u8 monIconTint; // FRLG only

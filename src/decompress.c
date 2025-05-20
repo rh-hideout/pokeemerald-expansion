@@ -5,8 +5,7 @@
 #include "pokemon.h"
 #include "pokemon_sprite_visualizer.h"
 #include "text.h"
-
-EWRAM_DATA ALIGNED(4) u8 gDecompressionBuffer[0x4000] = {0};
+#include "menu.h"
 
 void LZDecompressWram(const u32 *src, void *dest)
 {
@@ -40,66 +39,69 @@ u32 IsLZ77Data(const void *ptr, u32 minSize, u32 maxSize)
     return 0;
 }
 
-u16 LoadCompressedSpriteSheet(const struct CompressedSpriteSheet *src)
+static inline u32 DoLoadCompressedSpriteSheet(const struct CompressedSpriteSheet *src, void *buffer)
 {
     struct SpriteSheet dest;
 
-    LZ77UnCompWram(src->data, gDecompressionBuffer);
-    dest.data = gDecompressionBuffer;
+    dest.data = buffer;
     dest.size = src->size;
     dest.tag = src->tag;
     return LoadSpriteSheet(&dest);
 }
 
+u32 LoadCompressedSpriteSheet(const struct CompressedSpriteSheet *src)
+{
+    void *buffer = malloc_and_decompress(src->data, NULL);
+    u32 ret = DoLoadCompressedSpriteSheet(src, buffer);
+    Free(buffer);
+
+    return ret;
+}
+
+u32 LoadCompressedSpriteSheetOverrideBuffer(const struct CompressedSpriteSheet *src, void *buffer)
+{
+    LZDecompressWram(src->data, buffer);
+    return DoLoadCompressedSpriteSheet(src, buffer);
+}
+
 // This can be used for either compressed or uncompressed sprite sheets
-u16 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s32 offset)
+u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s32 offset)
 {
     struct SpriteTemplate myTemplate;
     struct SpriteFrameImage myImage;
     u32 size;
 
     // Check for LZ77 header and read uncompressed size, or fallback if not compressed (zero size)
-    if ((size = IsLZ77Data(template->images->data, TILE_SIZE_4BPP, sizeof(gDecompressionBuffer))) == 0)
+    if ((size = IsLZ77Data(template->images->data, TILE_SIZE_4BPP, MAX_DECOMPRESSION_BUFFER_SIZE)) == 0)
         return LoadSpriteSheetByTemplate(template, 0, offset);
 
-    LZ77UnCompWram(template->images->data, gDecompressionBuffer);
-    myImage.data = gDecompressionBuffer;
+    void *buffer = malloc_and_decompress(template->images->data, NULL);
+    myImage.data = buffer;
     myImage.size = size + offset;
     myTemplate.images = &myImage;
     myTemplate.tileTag = template->tileTag;
 
-    return LoadSpriteSheetByTemplate(&myTemplate, 0, offset);
+    u32 ret = LoadSpriteSheetByTemplate(&myTemplate, 0, offset);
+    Free(buffer);
+    return ret;
 }
 
-void LoadCompressedSpriteSheetOverrideBuffer(const struct CompressedSpriteSheet *src, void *buffer)
+u32 LoadCompressedSpritePalette(const struct CompressedSpritePalette *src)
 {
-    struct SpriteSheet dest;
+    return LoadCompressedSpritePaletteWithTag(src->data, src->tag);
+}
 
-    LZ77UnCompWram(src->data, buffer);
+u32 LoadCompressedSpritePaletteWithTag(const u32 *pal, u16 tag)
+{
+    u32 index;
+    struct SpritePalette dest;
+    void *buffer = malloc_and_decompress(pal, NULL);
+
     dest.data = buffer;
-    dest.size = src->size;
-    dest.tag = src->tag;
-    LoadSpriteSheet(&dest);
-}
-
-void LoadCompressedSpritePalette(const struct CompressedSpritePalette *src)
-{
-    struct SpritePalette dest;
-
-    LZ77UnCompWram(src->data, gDecompressionBuffer);
-    dest.data = (void *) gDecompressionBuffer;
-    dest.tag = src->tag;
-    LoadSpritePalette(&dest);
-}
-
-void LoadCompressedSpritePaletteWithTag(const u32 *pal, u16 tag)
-{
-    struct SpritePalette dest;
-
-    LZ77UnCompWram(pal, gDecompressionBuffer);
-    dest.data = (void *) gDecompressionBuffer;
     dest.tag = tag;
-    LoadSpritePalette(&dest);
+    index = LoadSpritePalette(&dest);
+    Free(buffer);
+    return index;
 }
 
 void LoadCompressedSpritePaletteOverrideBuffer(const struct CompressedSpritePalette *src, void *buffer)

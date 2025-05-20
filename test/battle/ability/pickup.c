@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item after its holder faints")
 SINGLE_BATTLE_TEST("Pickup doesn't grant an used item if holder is replaced")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_PARTING_SHOT].effect == EFFECT_PARTING_SHOT);
+        ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(300); HP(151); Item(ITEM_SITRUS_BERRY); }
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if the user eats it with Bug Bi
 SINGLE_BATTLE_TEST("Pickup doesn't grant an used item if its user already restored it")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_RECYCLE].effect == EFFECT_RECYCLE);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
@@ -222,7 +222,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an used item if its user already restor
 SINGLE_BATTLE_TEST("Pickup restores an item that has been Flinged")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLING].effect == EFFECT_FLING);
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
@@ -239,7 +239,7 @@ SINGLE_BATTLE_TEST("Pickup restores an item that has been Flinged")
 SINGLE_BATTLE_TEST("Pickup restores an item that was used by Natural Gift")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_NATURAL_GIFT].effect == EFFECT_NATURAL_GIFT);
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {

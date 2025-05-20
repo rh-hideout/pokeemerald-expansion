@@ -14,6 +14,7 @@ enum
     MAP_INPUT_MOVE_END,
     MAP_INPUT_A_BUTTON,
     MAP_INPUT_B_BUTTON,
+    MAP_INPUT_R_BUTTON
 };
 
 enum {
@@ -114,6 +115,10 @@ bool8 IsRegionMapZoomed(void);
 void TrySetPlayerIconBlink(void);
 void BlendRegionMap(u16 color, u32 coeff);
 void SetRegionMapDataForZoom(void);
+
+//Pokenav Fly funcs
+u32 FilterFlyDestination(struct RegionMap* regionMap);
+void SetFlyDestination(struct RegionMap* regionMap);
 
 extern const struct RegionMapLocation gRegionMapEntries[];
 

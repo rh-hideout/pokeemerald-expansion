@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TAKE_HEART].effect == EFFECT_TAKE_HEART);
+    ASSUME(GetMoveEffect(MOVE_TAKE_HEART) == EFFECT_TAKE_HEART);
 }
 
 SINGLE_BATTLE_TEST("Take Heart increases Sp. Atk and Sp. Def by one stage")
@@ -50,8 +50,8 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
 SINGLE_BATTLE_TEST("Take Heart cures sleep when used by Sleep Talk")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SPORE].effect == EFFECT_SLEEP);
-        ASSUME(gMovesInfo[MOVE_SLEEP_TALK].effect == EFFECT_SLEEP_TALK);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SLEEP_TALK, MOVE_TAKE_HEART); }
     } WHEN {

@@ -168,10 +168,6 @@ enum
     CONTROLLER_CHOSENMONRETURNVALUE,
     CONTROLLER_ONERETURNVALUE,
     CONTROLLER_ONERETURNVALUE_DUPLICATE,
-    CONTROLLER_CLEARUNKVAR,
-    CONTROLLER_SETUNKVAR,
-    CONTROLLER_CLEARUNKFLAG,
-    CONTROLLER_TOGGLEUNKFLAG,
     CONTROLLER_HITANIMATION,
     CONTROLLER_CANTSWITCH,
     CONTROLLER_PLAYSE,
@@ -323,6 +319,7 @@ void SetControllerToRecordedPlayer(u32 battler);
 
 // opponent controller
 void SetControllerToOpponent(u32 battler);
+void OpponentHandleTrainerSlide(u32 battler);
 
 // player partner controller
 void Controller_PlayerPartnerShowIntroHealthbox(u32 battler); // Also used by the link partner.

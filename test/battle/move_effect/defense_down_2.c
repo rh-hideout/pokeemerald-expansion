@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_SCREECH].effect == EFFECT_DEFENSE_DOWN_2);
+    ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
 }
 
 SINGLE_BATTLE_TEST("Screech lowers Defense by 2 stages", s16 damage)
@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Screech lowers Defense by 2 stages", s16 damage)
     PARAMETRIZE { lowerDefense = FALSE; }
     PARAMETRIZE { lowerDefense = TRUE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

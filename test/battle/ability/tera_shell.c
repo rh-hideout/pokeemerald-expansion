@@ -92,8 +92,23 @@ DOUBLE_BATTLE_TEST("Tera Shell only makes the first hit against Terapagos from a
         MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIZZARD, opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("It's not very effective…");
         HP_BAR(playerRight);
+        MESSAGE("It's not very effective…");
         NOT MESSAGE("It's not very effective…");
+    }
+}
+
+SINGLE_BATTLE_TEST("Tera Shell respects immunity")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL) { Ability(ABILITY_TERA_SHELL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SHADOW_BALL); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TERA_SHELL);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_BALL, opponent);
+        }
     }
 }

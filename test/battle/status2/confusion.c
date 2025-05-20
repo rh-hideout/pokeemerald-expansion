@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Confusion adds a 50/33% chance to hit self with 40 power")
     PASSES_RANDOMLY(pctChance, 100, RNG_CONFUSION);
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_CONFUSION_SELF_DMG_CHANCE, genConfig);
-        ASSUME(gMovesInfo[MOVE_TACKLE].power == 40);
+        ASSUME(GetMovePower(MOVE_TACKLE) == 40);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); };
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); };
     } WHEN {
