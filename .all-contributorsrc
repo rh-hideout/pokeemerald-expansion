@@ -259,6 +259,5 @@
   ],
   "contributorsPerLine": 7,
   "linkToUsage": true,
-  "commitType": "docs",
-  "skipCi": true
+  "commitType": "docs"
 }
