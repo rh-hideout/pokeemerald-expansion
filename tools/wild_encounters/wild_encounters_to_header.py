@@ -179,7 +179,7 @@ def ImportWildEncounterFile():
                 """
                 hidden_mons = "hidden_mons"
                 if (fieldCounter == len(wFields) - 1) and not CheckFieldDataDupes(hidden_mons):
-                    hidden_dummy_rates = [0, 0]
+                    hidden_dummy_rates = [1, 0]
                     AddFieldData(fieldCounter + 1, hidden_mons, hidden_dummy_rates)
 
                 fieldCounter += 1
