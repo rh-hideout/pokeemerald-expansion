@@ -17,6 +17,7 @@
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
+#include "fake_rtc.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
@@ -24,6 +25,8 @@
 #include "field_tasks.h"
 #include "field_weather.h"
 #include "fieldmap.h"
+#include "follower_npc.h"
+#include "gpu_regs.h"
 #include "item.h"
 #include "lilycove_lady.h"
 #include "main.h"
@@ -55,6 +58,7 @@
 #include "list_menu.h"
 #include "malloc.h"
 #include "constants/event_objects.h"
+#include "constants/map_types.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -795,6 +799,13 @@ static bool8 IsPaletteNotActive(void)
         return FALSE;
 }
 
+// pauses script until palette fade inactive
+bool8 ScrFunc_WaitPaletteNotActive(struct ScriptContext *ctx)
+{
+    SetupNativeScript(ctx, IsPaletteNotActive);
+    return TRUE;
+}
+
 bool8 ScrCmd_fadescreen(struct ScriptContext *ctx)
 {
     u32 mode = ScriptReadByte(ctx);
@@ -818,37 +829,28 @@ bool8 ScrCmd_fadescreenspeed(struct ScriptContext *ctx)
     return TRUE;
 }
 
-static EWRAM_DATA u32 *sPalBuffer = NULL;
-
 bool8 ScrCmd_fadescreenswapbuffers(struct ScriptContext *ctx)
 {
     u8 mode = ScriptReadByte(ctx);
+    u8 nowait = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     switch (mode)
     {
-    case FADE_TO_BLACK:
-    case FADE_TO_WHITE:
-    default:
-        if (sPalBuffer == NULL)
-        {
-            sPalBuffer = Alloc(PLTT_SIZE);
-            CpuCopy32(gPlttBufferUnfaded, sPalBuffer, PLTT_SIZE);
-            FadeScreen(mode, 0);
-        }
-        break;
     case FADE_FROM_BLACK:
     case FADE_FROM_WHITE:
-        if (sPalBuffer != NULL)
-        {
-            CpuCopy32(sPalBuffer, gPlttBufferUnfaded, PLTT_SIZE);
-            FadeScreen(mode, 0);
-            FREE_AND_SET_NULL(sPalBuffer);
-        }
+        // Restore last weather blend before fading in,
+        // since BLDALPHA was modified by fade-out
+        SetGpuReg(REG_OFFSET_BLDALPHA,
+                  BLDALPHA_BLEND(gWeatherPtr->currBlendEVA, gWeatherPtr->currBlendEVB));
         break;
     }
 
+    FadeScreenHardware(mode, 0);
+
+    if (nowait)
+        return FALSE;
     SetupNativeScript(ctx, IsPaletteNotActive);
     return TRUE;
 }
@@ -899,6 +901,14 @@ bool8 ScrCmd_gettime(struct ScriptContext *ctx)
     gSpecialVar_0x8000 = gLocalTime.hours;
     gSpecialVar_0x8001 = gLocalTime.minutes;
     gSpecialVar_0x8002 = gLocalTime.seconds;
+    return FALSE;
+}
+
+bool8 ScrCmd_gettimeofday(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+    
+    gSpecialVar_0x8000 = GetTimeOfDay();
     return FALSE;
 }
 
@@ -1489,7 +1499,29 @@ bool8 ScrCmd_resetobjectsubpriority(struct ScriptContext *ctx)
 bool8 ScrCmd_faceplayer(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    if (PlayerHasFollowerNPC() 
+     && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE 
+     && gSelectedObjectEvent == GetFollowerNPCObjectId())
+    {
+        struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
 
+        switch (DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npcFollower))
+        {
+        case DIR_NORTH:
+            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npcFollower->mapGroup, npcFollower->mapNum, Common_Movement_FaceUp);
+            break;
+        case DIR_SOUTH:
+            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npcFollower->mapGroup, npcFollower->mapNum, Common_Movement_FaceDown);
+            break;
+        case DIR_EAST:
+            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npcFollower->mapGroup, npcFollower->mapNum, Common_Movement_FaceRight);
+            break;
+        case DIR_WEST:
+            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, npcFollower->mapGroup, npcFollower->mapNum, Common_Movement_FaceLeft);
+            break;
+        }
+        return FALSE;
+    }
     if (gObjectEvents[gSelectedObjectEvent].active)
         ObjectEventFaceOppositeDirection(&gObjectEvents[gSelectedObjectEvent], GetPlayerFacingDirection());
     return FALSE;
@@ -2138,11 +2170,11 @@ bool8 ScrCmd_bufferdecorationname(struct ScriptContext *ctx)
 bool8 ScrCmd_buffermovename(struct ScriptContext *ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 moveId = VarGet(ScriptReadHalfword(ctx));
+    u16 move = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
-    StringCopy(sScriptStringVars[stringVarIndex], GetMoveName(moveId));
+    StringCopy(sScriptStringVars[stringVarIndex], GetMoveName(move));
     return FALSE;
 }
 
@@ -2250,7 +2282,7 @@ bool8 ScrCmd_setmonmove(struct ScriptContext *ctx)
 bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
 {
     u8 i;
-    u16 moveId = ScriptReadHalfword(ctx);
+    u16 move = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -2260,7 +2292,7 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], move) == TRUE)
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;
@@ -3132,6 +3164,77 @@ bool8 ScrFunc_hidefollower(struct ScriptContext *ctx)
 
     // execute next script command with no delay
     return TRUE;
+}
+
+bool8 ScrCmd_addtime(struct ScriptContext *ctx)
+{
+    u32 days = ScriptReadWord(ctx);
+    u32 hours = ScriptReadWord(ctx);
+    u32 minutes = ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_AdvanceTimeBy(days, hours, minutes, 0);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_adddays(struct ScriptContext *ctx)
+{
+    u32 days = ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_AdvanceTimeBy(days, 0, 0, 0);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_addhours(struct ScriptContext *ctx)
+{
+    u32 hours = ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_AdvanceTimeBy(0, hours, 0, 0);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_addminutes(struct ScriptContext *ctx)
+{
+    u32 minutes = ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_AdvanceTimeBy(0, 0, minutes, 0);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_fwdtime(struct ScriptContext *ctx)
+{
+    u32 hours = ScriptReadWord(ctx);
+    u32 minutes = ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_ForwardTimeTo(hours, minutes, 0);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
+{
+    struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
+    
+    u32 weekdayTarget = ScriptReadWord(ctx);
+    u32 daysToAdd = ((weekdayTarget - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+    
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    
+    FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+    return FALSE;
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)

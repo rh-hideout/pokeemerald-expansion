@@ -14,25 +14,58 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         switch(i) {
             case 0:
-                MESSAGE("Nihilego's Beast Boost raised its Attack!");
+                MESSAGE("Nihilego's Attack rose!");
                 break;
             case 1:
-                MESSAGE("Nihilego's Beast Boost raised its Defense!");
+                MESSAGE("Nihilego's Defense rose!");
                 break;
             case 2:
-                MESSAGE("Nihilego's Beast Boost raised its Sp. Atk!");
+                MESSAGE("Nihilego's Sp. Atk rose!");
                 break;
             case 3:
-                MESSAGE("Nihilego's Beast Boost raised its Sp. Def!");
+                MESSAGE("Nihilego's Sp. Def rose!");
                 break;
             case 4:
-                MESSAGE("Nihilego's Beast Boost raised its Speed!");
+                MESSAGE("Nihilego's Speed rose!");
                 break;
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
+        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_KARTANA) { Ability(ABILITY_BEAST_BOOST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DESTINY_BOND, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_BEAST_BOOST);
+        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("2 sent out Wobbuffet!");
+    }
+}
+
+TO_DO_BATTLE_TEST("Beast Boost boosts Attack 1st in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Defense 2nd in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Special Attack 3rd in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost boosts Special Defense 4th in case of a stat tie");
+TO_DO_BATTLE_TEST("Beast Boost considers Power Split");
+TO_DO_BATTLE_TEST("Beast Boost considers Guard Split");
+TO_DO_BATTLE_TEST("Beast Boost considers Power Trick");
+TO_DO_BATTLE_TEST("Beast Boost considers Wonder Room");
+TO_DO_BATTLE_TEST("Beast Boost considers Speed Swap");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider stat stages");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider held items");
+TO_DO_BATTLE_TEST("Beast Boost doesn't consider status condition reductions");

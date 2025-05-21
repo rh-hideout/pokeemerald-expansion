@@ -8,11 +8,10 @@
 #include "task.h"
 #include "trig.h"
 #include "util.h"
-#include "constants/battle_anim.h"
 #include "constants/rgb.h"
 
 extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct CompressedSpritePalette gBattleAnimPaletteTable[];
+extern const struct SpritePalette gBattleAnimPaletteTable[];
 extern const struct OamData gOamData_AffineOff_ObjNormal_8x8;
 extern const struct OamData gOamData_AffineOff_ObjBlend_64x64;
 
@@ -269,16 +268,16 @@ static const struct SpriteTemplate sFlashingCircleImpactSpriteTemplate =
     .callback = AnimFlashingCircleImpact,
 };
 
-static u8 UNUSED Task_FlashingCircleImpacts(u8 battlerId, bool8 red)
+static u8 UNUSED Task_FlashingCircleImpacts(u8 battler, bool8 red)
 {
-    u8 battlerSpriteId = gBattlerSpriteIds[battlerId];
+    u8 battlerSpriteId = gBattlerSpriteIds[battler];
     u8 taskId = CreateTask(Task_UpdateFlashingCircleImpacts, 10);
     u8 spriteId;
     u8 i;
 
     LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
-    LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
-    gTasks[taskId].data[0] = battlerId;
+    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_CIRCLE_IMPACT)]);
+    gTasks[taskId].data[0] = battler;
     if (red)
     {
         gTasks[taskId].data[1] = RGB_RED;
@@ -588,15 +587,15 @@ void AnimTask_StatsChange(u8 taskId)
 
 #undef CASE
 
-void LaunchStatusAnimation(u8 battlerId, u8 statusAnimId)
+void LaunchStatusAnimation(u8 battler, u8 statusAnimId)
 {
     u8 taskId;
 
-    gBattleAnimAttacker = battlerId;
-    gBattleAnimTarget = battlerId;
+    gBattleAnimAttacker = battler;
+    gBattleAnimTarget = battler;
     LaunchBattleAnimation(ANIM_TYPE_STATUS, statusAnimId);
     taskId = CreateTask(Task_DoStatusAnimation, 10);
-    gTasks[taskId].data[0] = battlerId;
+    gTasks[taskId].data[0] = battler;
 }
 
 static void Task_DoStatusAnimation(u8 taskId)

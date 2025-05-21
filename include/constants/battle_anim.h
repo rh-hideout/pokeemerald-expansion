@@ -508,9 +508,9 @@
 #define BG_BOLT_STRIKE 55
 #define BG_ZMOVE_ACTIVATE 56
 #define BG_TECTONIC_RAGE 57
-#define BG_BLUE_SKY_DAY 58
-#define BG_BLUE_SKY_AFTERNOON 59
-#define BG_BLUE_SKY_NIGHT 60
+#define BG_ROCK_FIELD_DAY 58
+#define BG_ROCK_FIELD_AFTERNOON 59
+#define BG_ROCK_FIELD_NIGHT 60
 #define BG_ZMOVE_MOUNTAIN 61
 #define BG_NEVERENDING_NIGHTMARE 62
 #define BG_WATER_PULSE 63
@@ -589,10 +589,11 @@
 #define B_ANIM_TERA_CHARGE              50
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
-#define B_ANIM_SHADOW_SKY_CONTINUES     53
-#define B_ANIM_CALL_REVERSE_MODE        54
+#define B_ANIM_POWER_CONSTRUCT          53
+#define B_ANIM_SHADOW_SKY_CONTINUES     54
+#define B_ANIM_CALL_REVERSE_MODE        55
 
-#define NUM_B_ANIMS_GENERAL             55
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
