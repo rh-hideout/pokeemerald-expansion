@@ -679,7 +679,7 @@ if __name__ == "__main__":
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_TOTAL (ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_9)
 
 - if DEXNAV_ENABLED is TRUE
-- these macros are all 0 if hidden_mons isn't in the encounter rate list
+- these macros are all 0 if hidden_mons isn't in the encounter rate list at the top of wild_encounters.json
 #define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 0
 #define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1 ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 + 0
 #define ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL (ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1)
