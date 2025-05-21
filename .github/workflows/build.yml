@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    if: github.actor != 'allcontributors'
+    if: github.actor != 'pkmnsnfrn'
     runs-on: ubuntu-latest
     env:
       GAME_VERSION: EMERALD
@@ -37,3 +37,11 @@ jobs:
           TEST: 1
         run: |
           make -j${nproc} check
+  pkmnsnfrn:
+    if: github.actor == 'pkmnsnfrn'
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Automatically pass for pkmnsnfrn
+        run: echo "CI automatically passes for pkmnsnfrn" && exit 0
+

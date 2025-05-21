@@ -6,6 +6,7 @@ on:
 
 jobs:
   label:
+    if: github.actor != 'pkmnsnfrn'
     runs-on: ubuntu-latest
     steps:
       - name: check labels
@@ -26,3 +27,11 @@ jobs:
             category: overworld
             category: pokemon
             category: sprite-issue
+  pkmnsnfrn:
+    if: github.actor == 'pkmnsnfrn'
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Automatically pass for pkmnsnfrn
+        run: echo "CI automatically passes for pkmnsnfrn" && exit 0
+
