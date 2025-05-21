@@ -175,7 +175,7 @@ def ImportWildEncounterFile():
 
                 """ 
                     hidden mons need a special bit of logic since they're not in the vanilla
-                    wild_encounters.json file, but the game expects them to be there
+                    wild_encounters.json file, but the code expects them to be there
                 """
                 hidden_mons = "hidden_mons"
                 if (fieldCounter == len(wFields) - 1) and not CheckFieldDataDupes(hidden_mons):
