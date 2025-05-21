@@ -9463,7 +9463,7 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         dmg = GetMoveFixedDamage(damageCalcData->move);
         break;
     case EFFECT_SUPER_FANG:
-        dmg = GetNonDynamaxHP(gBattlerTarget) / 2;
+        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) / 2;
         break;
     default:
         return INT32_MAX;
