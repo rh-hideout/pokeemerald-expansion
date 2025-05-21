@@ -445,7 +445,7 @@ def PrintEncounterRateMacros():
                 for percent in fieldData[fieldCounter]["encounter_rates"]:
                     if not DEXNAV_ENABLED and tempName == "HIDDEN_MONS":
                         break
-                    
+
                     if rateCount == 0:
                         print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
                     else:
@@ -677,7 +677,10 @@ if __name__ == "__main__":
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_8 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_7 + 4
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_9 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_8 + 1
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_TOTAL (ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_9)
-#define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 100
+
+- if DEXNAV_ENABLED is TRUE
+- these macros are all 0 if hidden_mons isn't in the encounter rate list
+#define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 0
 #define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1 ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 + 0
 #define ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL (ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1)
 
