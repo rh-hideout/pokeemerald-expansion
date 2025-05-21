@@ -173,7 +173,8 @@ def ImportWildEncounterFile():
                 if "groups" in field:
                     fieldData[fieldCounter]["groups"] = field["groups"]
 
-                """ hidden mons need a special bit of logic since they're not in the vanilla
+                """ 
+                    hidden mons need a special bit of logic since they're not in the vanilla
                     wild_encounters.json file, but the game expects them to be there
                 """
                 hidden_mons = "hidden_mons"
