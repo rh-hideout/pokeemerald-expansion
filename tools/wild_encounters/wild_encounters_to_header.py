@@ -4,6 +4,7 @@ import os
 
 
 IS_ENABLED            = False
+DEXNAV_ENABLED        = False
 
 # C string vars
 define                = "#define"
@@ -113,6 +114,9 @@ def ImportWildEncounterFile():
     if IsConfigEnabled():
         IS_ENABLED = True
         TIMES_OF_DAY_COUNT = len(TIME_OF_DAY)
+    
+    global DEXNAV_ENABLED
+    DEXNAV_ENABLED = IsDexnavEnabled()
 
     global fieldInfoStrings
     global fieldStrings
@@ -174,7 +178,7 @@ def ImportWildEncounterFile():
                 """
                 hidden_mons = "hidden_mons"
                 if (fieldCounter == len(wFields) - 1) and not CheckFieldDataDupes(hidden_mons):
-                    hidden_dummy_rates = [100, 0]
+                    hidden_dummy_rates = [0, 0]
                     AddFieldData(fieldCounter + 1, hidden_mons, hidden_dummy_rates)
 
                 fieldCounter += 1
@@ -439,6 +443,9 @@ def PrintEncounterRateMacros():
             rateCount = 0
             if fieldData[fieldCounter]["encounter_rates"]:
                 for percent in fieldData[fieldCounter]["encounter_rates"]:
+                    if not DEXNAV_ENABLED and tempName == "HIDDEN_MONS":
+                        break
+                    
                     if rateCount == 0:
                         print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
                     else:
@@ -508,7 +515,7 @@ def GetMapGroupEnum(string, index = 0):
 
 """
 get copied lhea :^ ) 
-- next three functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
+- next four functions copied almost verbatim from @lhearachel's python scripts in tools/learnset_helpers
 """
 def PrintGeneratedWarningText():
     print("//")
@@ -521,6 +528,15 @@ def IsConfigEnabled():
     CONFIG_ENABLED_PAT = re.compile(r"#define OW_TIME_OF_DAY_ENCOUNTERS\s+(?P<cfg_val>[^ ]*)")
 
     with open("./include/config/overworld.h", "r") as overworld_config_file:
+        config_overworld = overworld_config_file.read()
+        config_setting = CONFIG_ENABLED_PAT.search(config_overworld)
+        return config_setting is not None and config_setting.group("cfg_val") in ("TRUE", "1")
+
+
+def IsDexnavEnabled():
+    CONFIG_ENABLED_PAT = re.compile(r"#define DEXNAV_ENABLED\s+(?P<cfg_val>[^ ]*)")
+
+    with open("./include/config/dexnav.h", "r") as overworld_config_file:
         config_overworld = overworld_config_file.read()
         config_setting = CONFIG_ENABLED_PAT.search(config_overworld)
         return config_setting is not None and config_setting.group("cfg_val") in ("TRUE", "1")
