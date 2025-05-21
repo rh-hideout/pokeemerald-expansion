@@ -54,8 +54,6 @@ hLabel       = ""
 hForMaps     = True
 headersArray = [headerIndex]
 
-
-
 # debug output control
 mainSwitch                      = True
 printWarningAndInclude          = mainSwitch
@@ -175,11 +173,12 @@ def ImportWildEncounterFile():
                 if "groups" in field:
                     fieldData[fieldCounter]["groups"] = field["groups"]
 
-                if fieldCounter == len(wFields) - 1:
+                hidden_mons = "hidden_mons"
+                if (fieldCounter == len(wFields) - 1) and (fieldData[fieldCounter]["name"] != hidden_mons):
                     fieldData.append({})
-                    fieldData[fieldCounter + 1]["name"] = "hidden_mons"
-                    fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase("hidden_mons")
-                    fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase("hidden_mons")
+                    fieldData[fieldCounter + 1]["name"] = hidden_mons
+                    fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase(hidden_mons)
+                    fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase(hidden_mons)
 
                 fieldCounter += 1
 
