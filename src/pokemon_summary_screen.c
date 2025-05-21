@@ -137,7 +137,8 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u16 species2; // 0x2
         u8 isEgg:1; // 0x4
         u8 isShiny:1;
-        u8 padding:6;
+        u8 isShadow:1;
+        u8 padding:5;
         u8 level; // 0x5
         u8 ribbonCount; // 0x6
         u8 ailment; // 0x7
@@ -219,6 +220,7 @@ static void PssScrollRightEnd(u8);
 static void PssScrollLeft(u8);
 static void PssScrollLeftEnd(u8);
 static void TryDrawExperienceProgressBar(void);
+static void LoadSummaryPalette(void);
 static void SwitchToMoveSelection(u8);
 static void Task_HandleInput_MoveSelect(u8);
 static bool8 HasMoreThanOneMove(void);
@@ -1327,6 +1329,7 @@ static bool8 LoadGraphics(void)
             gMain.state++;
         break;
     case 11:
+        LoadSummaryPalette();
         PrintMonInfo();
         gMain.state++;
         break;
@@ -1550,6 +1553,7 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         sum->ribbonCount = GetMonData(mon, MON_DATA_RIBBON_COUNT);
         sum->teraType = GetMonData(mon, MON_DATA_TERA_TYPE);
         sum->isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+        sum->isShadow = GetMonData(mon, MON_DATA_IS_SHADOW);
         sMonSummaryScreen->relearnableMovesNum = P_SUMMARY_SCREEN_MOVE_RELEARNER ? GetNumberOfRelearnableMoves(mon) : 0;
         return TRUE;
     }
@@ -1939,16 +1943,6 @@ static void ChangeSummaryPokemon(u8 taskId, s8 delta)
                 ScheduleBgCopyTilemapToVram(0);
                 HandleStatusTilemap(0, 2);
             }
-            if (sMonSummaryScreen->summary.ailment != AILMENT_SHADOW)
-            {
-                LoadPalette(gSummaryShadow_Pal, 0, 0x100);
-                LoadPalette(&gPPTextPalette, 0x81, 0x1E);
-            }
-            else if (sMonSummaryScreen->summary.ailment == AILMENT_SHADOW)
-            {
-                LoadPalette(gSummaryScreen_Pal, 0, 0x100);
-                LoadPalette(&gPPTextPalette, 0x81, 0x1E);
-            }
             sMonSummaryScreen->curMonIndex = monId;
             gTasks[taskId].data[0] = 0;
             gTasks[taskId].func = Task_ChangeSummaryMon;
@@ -2013,6 +2007,9 @@ static void Task_ChangeSummaryMon(u8 taskId)
         data[1] = 0;
         break;
     case 8:
+        LoadSummaryPalette();
+        break;
+    case 9:
         sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] = LoadMonGfxAndSprite(&sMonSummaryScreen->currentMon, &data[1]);
         if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] == SPRITE_NONE)
             return;
@@ -2020,17 +2017,17 @@ static void Task_ChangeSummaryMon(u8 taskId)
         TryDrawExperienceProgressBar();
         data[1] = 0;
         break;
-    case 9:
+    case 10:
         SetTypeIcons();
         break;
-    case 10:
+    case 11:
         PrintMonInfo();
         break;
-    case 11:
+    case 12:
         PrintPageSpecificText(sMonSummaryScreen->currPageIndex);
         LimitEggSummaryPageDisplay();
         break;
-    case 12:
+    case 13:
         gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON]].data[2] = 0;
         break;
     default:
@@ -2255,6 +2252,15 @@ static void TryDrawExperienceProgressBar(void)
         else
             DrawExperienceProgressBar(&sMonSummaryScreen->currentMon);
     }
+}
+
+static void LoadSummaryPalette(void)
+{
+    if (sMonSummaryScreen->summary.isShadow)
+        LoadPalette(gSummaryShadow_Pal, BG_PLTT_ID(0), 8 * PLTT_SIZE_4BPP);
+    else
+        LoadPalette(gSummaryScreen_Pal, BG_PLTT_ID(0), 8 * PLTT_SIZE_4BPP);
+    LoadPalette(&gPPTextPalette, BG_PLTT_ID(8) + 1, PLTT_SIZEOF(16 - 1));
 }
 
 static void SwitchToMoveSelection(u8 taskId)
