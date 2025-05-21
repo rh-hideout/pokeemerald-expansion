@@ -7150,6 +7150,18 @@ Cry_Schizstarf::
 	.align 2	
 Cry_Wawho::
 	.incbin "sound/direct_sound_samples/cries/wawho.bin"
+
+	.align 2	
+Cry_Phamothom::
+	.incbin "sound/direct_sound_samples/cries/phamothom.bin"
+
+	.align 2	
+Cry_Magghost::
+	.incbin "sound/direct_sound_samples/cries/magghost.bin"
+
+	.align 2	
+Cry_Coccurn::
+	.incbin "sound/direct_sound_samples/cries/coccurn.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -1929,8 +1929,11 @@
 #define SPECIES_SEPULTURE                               1801
 #define SPECIES_SCHIZSTARF                              1802
 #define SPECIES_WAWHO                                   1803
+#define SPECIES_PHAMOTHOM                               1804
+#define SPECIES_MAGGHOST                                1805
+#define SPECIES_COCCURN                                 1806
 
-#define SPECIES_EGG (SPECIES_WAWHO + 1)
+#define SPECIES_EGG (SPECIES_COCCURN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -28327,6 +28327,27 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Sepulture[] = INCBIN_U8("graphics/pokemon/sepulture/icon.4bpp");
    const u8 gMonFootprint_Sepulture[] = INCBIN_U8("graphics/pokemon/sepulture/footprint.1bpp");
 
+   const u32 gMonFrontPic_Magghost[] = INCBIN_U32("graphics/pokemon/magghost/front.4bpp.lz");
+   const u32 gMonBackPic_Magghost[] = INCBIN_U32("graphics/pokemon/magghost/back.4bpp.lz");
+   const u32 gMonPalette_Magghost[] = INCBIN_U32("graphics/pokemon/magghost/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Magghost[] = INCBIN_U32("graphics/pokemon/magghost/shiny.gbapal.lz");
+   const u8 gMonIcon_Magghost[] = INCBIN_U8("graphics/pokemon/magghost/icon.4bpp");
+   const u8 gMonFootprint_Magghost[] = INCBIN_U8("graphics/pokemon/magghost/footprint.1bpp");
+
+   const u32 gMonFrontPic_Coccurn[] = INCBIN_U32("graphics/pokemon/coccurn/front.4bpp.lz");
+   const u32 gMonBackPic_Coccurn[] = INCBIN_U32("graphics/pokemon/coccurn/back.4bpp.lz");
+   const u32 gMonPalette_Coccurn[] = INCBIN_U32("graphics/pokemon/coccurn/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Coccurn[] = INCBIN_U32("graphics/pokemon/coccurn/shiny.gbapal.lz");
+   const u8 gMonIcon_Coccurn[] = INCBIN_U8("graphics/pokemon/coccurn/icon.4bpp");
+   const u8 gMonFootprint_Coccurn[] = INCBIN_U8("graphics/pokemon/coccurn/footprint.1bpp");
+
+   const u32 gMonFrontPic_Phamothom[] = INCBIN_U32("graphics/pokemon/phamothom/front.4bpp.lz");
+   const u32 gMonBackPic_Phamothom[] = INCBIN_U32("graphics/pokemon/phamothom/back.4bpp.lz");
+   const u32 gMonPalette_Phamothom[] = INCBIN_U32("graphics/pokemon/phamothom/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Phamothom[] = INCBIN_U32("graphics/pokemon/phamothom/shiny.gbapal.lz");
+   const u8 gMonIcon_Phamothom[] = INCBIN_U8("graphics/pokemon/phamothom/icon.4bpp");
+   const u8 gMonFootprint_Phamothom[] = INCBIN_U8("graphics/pokemon/phamothom/footprint.1bpp");
+
    const u32 gMonFrontPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/front.4bpp.lz");
    const u32 gMonBackPic_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/back.4bpp.lz");
    const u32 gMonPalette_Ganglython[] = INCBIN_U32("graphics/pokemon/ganglython/normal.gbapal.lz");

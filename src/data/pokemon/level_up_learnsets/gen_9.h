@@ -25541,6 +25541,18 @@ static const struct LevelUpMove sFlockarrionLevelUpLearnset[] = {
 static const struct LevelUpMove sSepultureLevelUpLearnset[] = {
     LEVEL_UP_MOVE(1, MOVE_GUST), 
     LEVEL_UP_END
+    };
+static const struct LevelUpMove sMagghostLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_GUST), 
+    LEVEL_UP_END
+   };
+static const struct LevelUpMove sCoccurnLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_GUST), 
+    LEVEL_UP_END
+   };
+static const struct LevelUpMove sPhamothomLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_GUST), 
+    LEVEL_UP_END
    };
 static const struct LevelUpMove sGanglythonLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_TACKLE),

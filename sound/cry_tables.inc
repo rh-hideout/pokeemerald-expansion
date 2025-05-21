@@ -2923,6 +2923,12 @@ gCryTable::
 
 	cry Cry_Wawho
 
+	cry Cry_Phamothom
+
+	cry Cry_Magghost
+
+	cry Cry_Coccurn
+
 .endif
 
 	.align 2
@@ -5850,4 +5856,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Schizstarf
 
 	cry_reverse Cry_Wawho
+
+	cry_reverse Cry_Phamothom
+
+	cry_reverse Cry_Magghost
+
+	cry_reverse Cry_Coccurn
 .endif

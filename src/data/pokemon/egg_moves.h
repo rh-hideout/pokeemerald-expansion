@@ -6494,6 +6494,18 @@ static const u16 sSepultureEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+
+static const u16 sPhamothomEggMoveLearnset[] = {
+    MOVE_POWDER,
+    MOVE_LUNAR_DANCE,
+    MOVE_MOONLIGHT,
+    MOVE_MEAN_LOOK,
+    MOVE_SPITE,
+    MOVE_FELL_STINGER,
+    MOVE_POLLEN_PUFF,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sGanglythonEggMoveLearnset[] = {
     MOVE_ANCIENT_POWER,
     MOVE_MOONBLAST,
