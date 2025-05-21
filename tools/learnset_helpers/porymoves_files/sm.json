@@ -6229,7 +6229,7 @@
       "MOVE_REVENGE",
       "MOVE_REVERSAL",
       "MOVE_SLEEP_TALK",
-      "MOVE_SMELLING_SALT"
+      "MOVE_SMELLING_SALTS"
     ],
     "TutorMoves": []
   },
@@ -6382,7 +6382,7 @@
       "MOVE_REVENGE",
       "MOVE_REVERSAL",
       "MOVE_SLEEP_TALK",
-      "MOVE_SMELLING_SALT"
+      "MOVE_SMELLING_SALTS"
     ],
     "TutorMoves": []
   },
@@ -7355,7 +7355,7 @@
       "MOVE_POWER_TRICK",
       "MOVE_QUICK_GUARD",
       "MOVE_ROLLING_KICK",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_THUNDER_PUNCH",
       "MOVE_TICKLE"
     ],
@@ -7489,7 +7489,7 @@
       "MOVE_POWER_TRICK",
       "MOVE_QUICK_GUARD",
       "MOVE_ROLLING_KICK",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_THUNDER_PUNCH",
       "MOVE_TICKLE"
     ],
@@ -7638,7 +7638,7 @@
       "MOVE_POWER_TRICK",
       "MOVE_QUICK_GUARD",
       "MOVE_ROLLING_KICK",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_THUNDER_PUNCH",
       "MOVE_TICKLE"
     ],
@@ -12606,7 +12606,7 @@
       "MOVE_MAGNITUDE",
       "MOVE_MUDDY_WATER",
       "MOVE_SLEEP_TALK",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SNORE",
       "MOVE_ZEN_HEADBUTT"
     ],
@@ -24581,7 +24581,7 @@
       "MOVE_METRONOME",
       "MOVE_MIMIC",
       "MOVE_PRESENT",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SNORE",
       "MOVE_THUNDER_FANG"
     ],
@@ -24720,7 +24720,7 @@
       "MOVE_METRONOME",
       "MOVE_MIMIC",
       "MOVE_PRESENT",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SNORE",
       "MOVE_THUNDER_FANG"
     ],
@@ -30061,7 +30061,7 @@
       "MOVE_LOW_KICK",
       "MOVE_NIGHT_SLASH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT"
+      "MOVE_SMELLING_SALTS"
     ],
     "TutorMoves": [
       "MOVE_FIRE_PLEDGE"
@@ -30192,7 +30192,7 @@
       "MOVE_LOW_KICK",
       "MOVE_NIGHT_SLASH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT"
+      "MOVE_SMELLING_SALTS"
     ],
     "TutorMoves": [
       "MOVE_FIRE_PLEDGE"
@@ -30349,7 +30349,7 @@
       "MOVE_LOW_KICK",
       "MOVE_NIGHT_SLASH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT"
+      "MOVE_SMELLING_SALTS"
     ],
     "TutorMoves": [
       "MOVE_BLAST_BURN",
@@ -34270,7 +34270,7 @@
       "MOVE_EXTRASENSORY",
       "MOVE_FAKE_TEARS",
       "MOVE_HAMMER_ARM",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SMOKESCREEN",
       "MOVE_SNORE",
       "MOVE_TAKE_DOWN"
@@ -34397,7 +34397,7 @@
       "MOVE_EXTRASENSORY",
       "MOVE_FAKE_TEARS",
       "MOVE_HAMMER_ARM",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SMOKESCREEN",
       "MOVE_SNORE",
       "MOVE_TAKE_DOWN"
@@ -34558,7 +34558,7 @@
       "MOVE_EXTRASENSORY",
       "MOVE_FAKE_TEARS",
       "MOVE_HAMMER_ARM",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SMOKESCREEN",
       "MOVE_SNORE",
       "MOVE_TAKE_DOWN"
@@ -34609,7 +34609,7 @@
       },
       {
         "Level": 28,
-        "Move": "MOVE_SMELLING_SALT"
+        "Move": "MOVE_SMELLING_SALTS"
       },
       {
         "Level": 31,
@@ -34742,7 +34742,7 @@
       },
       {
         "Level": 30,
-        "Move": "MOVE_SMELLING_SALT"
+        "Move": "MOVE_SMELLING_SALTS"
       },
       {
         "Level": 34,
@@ -35641,7 +35641,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_REVERSAL",
       "MOVE_SCREECH",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP",
       "MOVE_SUPERPOWER"
@@ -35769,7 +35769,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_REVERSAL",
       "MOVE_SCREECH",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP",
       "MOVE_SUPERPOWER"
@@ -35920,7 +35920,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_REVERSAL",
       "MOVE_SCREECH",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP",
       "MOVE_SUPERPOWER"
@@ -38534,7 +38534,7 @@
       "MOVE_PSYCHO_SHIFT",
       "MOVE_RAPID_SPIN",
       "MOVE_ROLE_PLAY",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SPOTLIGHT",
       "MOVE_TRICK",
       "MOVE_WATER_PULSE",
@@ -39048,7 +39048,7 @@
       "MOVE_NASTY_PLOT",
       "MOVE_ROTOTILLER",
       "MOVE_SEED_BOMB",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SWITCHEROO",
       "MOVE_TEETER_DANCE",
       "MOVE_WORRY_SEED"
@@ -39198,7 +39198,7 @@
       "MOVE_NASTY_PLOT",
       "MOVE_ROTOTILLER",
       "MOVE_SEED_BOMB",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SWITCHEROO",
       "MOVE_TEETER_DANCE",
       "MOVE_WORRY_SEED"
@@ -48246,7 +48246,7 @@
     "EggMoves": [],
     "TutorMoves": []
   },
-  "WORMADAM_PLANT_CLOAK": {
+  "WORMADAM_PLANT": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -52913,7 +52913,7 @@
       "MOVE_ME_FIRST",
       "MOVE_MEDITATE",
       "MOVE_QUICK_GUARD",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_VACUUM_WAVE",
       "MOVE_WAKE_UP_SLAP"
     ],
@@ -53052,7 +53052,7 @@
       "MOVE_ME_FIRST",
       "MOVE_MEDITATE",
       "MOVE_QUICK_GUARD",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_VACUUM_WAVE",
       "MOVE_WAKE_UP_SLAP"
     ],
@@ -54137,7 +54137,7 @@
       "MOVE_MAGNITUDE",
       "MOVE_MUDDY_WATER",
       "MOVE_SLEEP_TALK",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_SNORE",
       "MOVE_ZEN_HEADBUTT"
     ],
@@ -62422,7 +62422,7 @@
       "MOVE_FORESIGHT",
       "MOVE_MACH_PUNCH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_WIDE_GUARD"
     ],
     "TutorMoves": []
@@ -62546,7 +62546,7 @@
       "MOVE_FORESIGHT",
       "MOVE_MACH_PUNCH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_WIDE_GUARD"
     ],
     "TutorMoves": []
@@ -62674,7 +62674,7 @@
       "MOVE_FORESIGHT",
       "MOVE_MACH_PUNCH",
       "MOVE_REVERSAL",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_WIDE_GUARD"
     ],
     "TutorMoves": []
@@ -72602,7 +72602,7 @@
       "MOVE_KNOCK_OFF",
       "MOVE_LOW_KICK",
       "MOVE_ME_FIRST",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_VITAL_THROW"
     ],
     "TutorMoves": []
@@ -72745,7 +72745,7 @@
       "MOVE_KNOCK_OFF",
       "MOVE_LOW_KICK",
       "MOVE_ME_FIRST",
-      "MOVE_SMELLING_SALT",
+      "MOVE_SMELLING_SALTS",
       "MOVE_VITAL_THROW"
     ],
     "TutorMoves": []
@@ -79371,7 +79371,7 @@
     ],
     "TutorMoves": []
   },
-  "MEOWSTIC_MALE": {
+  "MEOWSTIC_M": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -93399,7 +93399,7 @@
     "EggMoves": [],
     "TutorMoves": []
   },
-  "RATTATA_ALOLAN": {
+  "RATTATA_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -93502,7 +93502,7 @@
     ],
     "TutorMoves": []
   },
-  "RATICATE_ALOLAN": {
+  "RATICATE_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -93632,7 +93632,7 @@
     ],
     "TutorMoves": []
   },
-  "RAICHU_ALOLAN": {
+  "RAICHU_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -93741,7 +93741,7 @@
     ],
     "TutorMoves": []
   },
-  "SANDSHREW_ALOLAN": {
+  "SANDSHREW_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -93864,7 +93864,7 @@
     ],
     "TutorMoves": []
   },
-  "SANDSLASH_ALOLAN": {
+  "SANDSLASH_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -93968,7 +93968,7 @@
     ],
     "TutorMoves": []
   },
-  "VULPIX_ALOLAN": {
+  "VULPIX_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -94097,7 +94097,7 @@
     ],
     "TutorMoves": []
   },
-  "NINETALES_ALOLAN": {
+  "NINETALES_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -94200,7 +94200,7 @@
     ],
     "TutorMoves": []
   },
-  "DIGLETT_ALOLAN": {
+  "DIGLETT_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -94304,7 +94304,7 @@
     ],
     "TutorMoves": []
   },
-  "DUGTRIO_ALOLAN": {
+  "DUGTRIO_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -94436,7 +94436,7 @@
     ],
     "TutorMoves": []
   },
-  "MEOWTH_ALOLAN": {
+  "MEOWTH_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -94555,7 +94555,7 @@
     ],
     "TutorMoves": []
   },
-  "PERSIAN_ALOLAN": {
+  "PERSIAN_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -94708,7 +94708,7 @@
     ],
     "TutorMoves": []
   },
-  "GEODUDE_ALOLAN": {
+  "GEODUDE_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -94827,7 +94827,7 @@
     ],
     "TutorMoves": []
   },
-  "GRAVELER_ALOLAN": {
+  "GRAVELER_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -94954,7 +94954,7 @@
     ],
     "TutorMoves": []
   },
-  "GOLEM_ALOLAN": {
+  "GOLEM_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -95097,7 +95097,7 @@
     ],
     "TutorMoves": []
   },
-  "GRIMER_ALOLAN": {
+  "GRIMER_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -95221,7 +95221,7 @@
     ],
     "TutorMoves": []
   },
-  "MUK_ALOLAN": {
+  "MUK_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -95366,7 +95366,7 @@
     ],
     "TutorMoves": []
   },
-  "EXEGGUTOR_ALOLAN": {
+  "EXEGGUTOR_ALOLA": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -95484,7 +95484,7 @@
       "MOVE_DRACO_METEOR"
     ]
   },
-  "MAROWAK_ALOLAN": {
+  "MAROWAK_ALOLA": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -95978,7 +95978,7 @@
     "EggMoves": [],
     "TutorMoves": []
   },
-  "WORMADAM_SANDY_CLOAK": {
+  "WORMADAM_SANDY": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -96093,7 +96093,7 @@
     "EggMoves": [],
     "TutorMoves": []
   },
-  "WORMADAM_TRASH_CLOAK": {
+  "WORMADAM_TRASH": {
     "LevelMoves": [
       {
         "Level": 0,
@@ -97019,7 +97019,7 @@
       "MOVE_DRACO_METEOR"
     ]
   },
-  "FLOETTE_ETERNAL_FLOWER": {
+  "FLOETTE_ETERNAL": {
     "LevelMoves": [
       {
         "Level": 1,
@@ -97117,7 +97117,7 @@
     ],
     "TutorMoves": []
   },
-  "MEOWSTIC_FEMALE": {
+  "MEOWSTIC_F": {
     "LevelMoves": [
       {
         "Level": 1,

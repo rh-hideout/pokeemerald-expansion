@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_scripts.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_util.h"
@@ -11,6 +12,7 @@
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "main.h"
+#include "malloc.h"
 #include "m4a.h"
 #include "palette.h"
 #include "pokemon.h"
@@ -28,11 +30,6 @@
 */
 
 #define ANIM_SPRITE_INDEX_COUNT 8
-
-extern const u16 gMovesWithQuietBGM[];
-extern const u8 *const gBattleAnims_General[];
-extern const u8 *const gBattleAnims_Special[];
-extern const u8 *const gBattleAnims_StatusConditions[];
 
 static void Cmd_loadspritegfx(void);
 static void Cmd_unloadspritegfx(void);
@@ -116,7 +113,7 @@ EWRAM_DATA static u16 sSoundAnimFramesToWait = 0;
 EWRAM_DATA static u8 sMonAnimTaskIdArray[2] = {0};
 EWRAM_DATA u8 gAnimMoveTurn = 0;
 EWRAM_DATA static u8 sAnimBackgroundFadeState = 0;
-EWRAM_DATA u16 gAnimMoveIndex = 0; // Set but unused.
+EWRAM_DATA u16 gAnimMoveIndex = 0;
 EWRAM_DATA u8 gBattleAnimAttacker = 0;
 EWRAM_DATA u8 gBattleAnimTarget = 0;
 EWRAM_DATA u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {0};
@@ -182,6 +179,94 @@ static void (* const sScriptCmdTable[])(void) =
     Cmd_createdragondartsprite,      // 0x34
 };
 
+static const u16 sMovesWithQuietBGM[] =
+{
+    MOVE_SING, MOVE_PERISH_SONG, MOVE_GRASS_WHISTLE
+};
+
+static const u8* const sBattleAnims_StatusConditions[NUM_B_ANIMS_STATUS] =
+{
+    [B_ANIM_STATUS_PSN]         = gBattleAnimStatus_Poison,
+    [B_ANIM_STATUS_CONFUSION]   = gBattleAnimStatus_Confusion,
+    [B_ANIM_STATUS_BRN]         = gBattleAnimStatus_Burn,
+    [B_ANIM_STATUS_INFATUATION] = gBattleAnimStatus_Infatuation,
+    [B_ANIM_STATUS_SLP]         = gBattleAnimStatus_Sleep,
+    [B_ANIM_STATUS_PRZ]         = gBattleAnimStatus_Paralysis,
+    [B_ANIM_STATUS_FRZ]         = gBattleAnimStatus_Freeze,
+    [B_ANIM_STATUS_CURSED]      = gBattleAnimStatus_Curse,
+    [B_ANIM_STATUS_NIGHTMARE]   = gBattleAnimStatus_Nightmare,
+};
+
+static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
+{
+    [B_ANIM_STATS_CHANGE]           = gBattleAnimGeneral_StatsChange,
+    [B_ANIM_SUBSTITUTE_FADE]        = gBattleAnimGeneral_SubstituteFade,
+    [B_ANIM_SUBSTITUTE_APPEAR]      = gBattleAnimGeneral_SubstituteAppear,
+    [B_ANIM_POKEBLOCK_THROW]        = gBattleAnimGeneral_PokeblockThrow,
+    [B_ANIM_ITEM_KNOCKOFF]          = gBattleAnimGeneral_ItemKnockoff,
+    [B_ANIM_TURN_TRAP]              = gBattleAnimGeneral_TurnTrap,
+    [B_ANIM_HELD_ITEM_EFFECT]       = gBattleAnimGeneral_HeldItemEffect,
+    [B_ANIM_SMOKEBALL_ESCAPE]       = gBattleAnimGeneral_SmokeballEscape,
+    [B_ANIM_HANGED_ON]              = gBattleAnimGeneral_HangedOn,
+    [B_ANIM_RAIN_CONTINUES]         = gBattleAnimGeneral_Rain,
+    [B_ANIM_SUN_CONTINUES]          = gBattleAnimGeneral_Sun,
+    [B_ANIM_SANDSTORM_CONTINUES]    = gBattleAnimGeneral_Sandstorm,
+    [B_ANIM_HAIL_CONTINUES]         = gBattleAnimGeneral_Hail,
+    [B_ANIM_LEECH_SEED_DRAIN]       = gBattleAnimGeneral_LeechSeedDrain,
+    [B_ANIM_MON_HIT]                = gBattleAnimGeneral_MonHit,
+    [B_ANIM_ITEM_STEAL]             = gBattleAnimGeneral_ItemSteal,
+    [B_ANIM_SNATCH_MOVE]            = gBattleAnimGeneral_SnatchMove,
+    [B_ANIM_FUTURE_SIGHT_HIT]       = gBattleAnimGeneral_FutureSightHit,
+    [B_ANIM_DOOM_DESIRE_HIT]        = gBattleAnimGeneral_DoomDesireHit,
+    [B_ANIM_FOCUS_PUNCH_SETUP]      = gBattleAnimGeneral_FocusPunchSetUp,
+    [B_ANIM_INGRAIN_HEAL]           = gBattleAnimGeneral_IngrainHeal,
+    [B_ANIM_WISH_HEAL]              = gBattleAnimGeneral_WishHeal,
+    [B_ANIM_MEGA_EVOLUTION]         = gBattleAnimGeneral_MegaEvolution,
+    [B_ANIM_ILLUSION_OFF]           = gBattleAnimGeneral_IllusionOff,
+    [B_ANIM_FORM_CHANGE]            = gBattleAnimGeneral_FormChange,
+    [B_ANIM_SLIDE_OFFSCREEN]        = gBattleAnimGeneral_SlideOffScreen,
+    [B_ANIM_RESTORE_BG]             = gBattleAnimGeneral_RestoreBg,
+    [B_ANIM_TOTEM_FLARE]            = gBattleAnimGeneral_TotemFlare,
+    [B_ANIM_GULP_MISSILE]           = gBattleAnimGeneral_GulpMissile,
+    [B_ANIM_STRONG_WINDS]           = gBattleAnimGeneral_StrongWinds,
+    [B_ANIM_PRIMAL_REVERSION]       = gBattleAnimGeneral_PrimalReversion,
+    [B_ANIM_AQUA_RING_HEAL]         = gBattleAnimGeneral_AquaRingHeal,
+    [B_ANIM_BEAK_BLAST_SETUP]       = gBattleAnimGeneral_BeakBlastSetUp,
+    [B_ANIM_SHELL_TRAP_SETUP]       = gBattleAnimGeneral_ShellTrapSetUp,
+    [B_ANIM_ZMOVE_ACTIVATE]         = gBattleAnimGeneral_ZMoveActivate,
+    [B_ANIM_AFFECTION_HANGED_ON]    = gBattleAnimGeneral_AffectionHangedOn,
+    [B_ANIM_SNOW_CONTINUES]         = gBattleAnimGeneral_Snow,
+    [B_ANIM_ULTRA_BURST]            = gBattleAnimGeneral_UltraBurst,
+    [B_ANIM_SALT_CURE_DAMAGE]       = gBattleAnimGeneral_SaltCureDamage,
+    [B_ANIM_DYNAMAX_GROWTH]         = gBattleAnimGeneral_DynamaxGrowth,
+    [B_ANIM_MAX_SET_WEATHER]        = gBattleAnimGeneral_SetWeather,
+    [B_ANIM_SYRUP_BOMB_SPEED_DROP]  = gBattleAnimGeneral_SyrupBombSpeedDrop,
+    [B_ANIM_RAINBOW]                = gBattleAnimGeneral_Rainbow,
+    [B_ANIM_SEA_OF_FIRE]            = gBattleAnimGeneral_SeaOfFire,
+    [B_ANIM_SWAMP]                  = gBattleAnimGeneral_Swamp,
+    [B_ANIM_TRICK_ROOM]             = gBattleAnimGeneral_TrickRoom,
+    [B_ANIM_WONDER_ROOM]            = gBattleAnimGeneral_WonderRoom,
+    [B_ANIM_MAGIC_ROOM]             = gBattleAnimGeneral_MagicRoom,
+    [B_ANIM_TAILWIND]               = gBattleAnimGeneral_Tailwind,
+    [B_ANIM_FOG_CONTINUES]          = gBattleAnimGeneral_Fog,
+    [B_ANIM_TERA_CHARGE]            = gBattleAnimGeneral_TeraCharge,
+    [B_ANIM_TERA_ACTIVATE]          = gBattleAnimGeneral_TeraActivate,
+    [B_ANIM_SIMPLE_HEAL]            = gBattleAnimGeneral_SimpleHeal,
+    [B_ANIM_INVERSE_ROOM]           = gBattleAnimGeneral_InverseRoom,
+};
+
+static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
+{
+    [B_ANIM_LVL_UP]                     = gBattleAnimSpecial_LevelUp,
+    [B_ANIM_SWITCH_OUT_PLAYER_MON]      = gBattleAnimSpecial_SwitchOutPlayerMon,
+    [B_ANIM_SWITCH_OUT_OPPONENT_MON]    = gBattleAnimSpecial_SwitchOutOpponentMon,
+    [B_ANIM_BALL_THROW]                 = gBattleAnimSpecial_BallThrow,
+    [B_ANIM_BALL_THROW_WITH_TRAINER]    = gBattleAnimSpecial_BallThrowWithTrainer,
+    [B_ANIM_SUBSTITUTE_TO_MON]          = gBattleAnimSpecial_SubstituteToMon,
+    [B_ANIM_MON_TO_SUBSTITUTE]          = gBattleAnimSpecial_MonToSubstitute,
+    [B_ANIM_CRITICAL_CAPTURE_THROW]     = gBattleAnimSpecial_CriticalCaptureBallThrow,
+};
+
 void ClearBattleAnimationVars(void)
 {
     s32 i;
@@ -220,7 +305,7 @@ void DoMoveAnim(u16 move)
     // Make sure the anim target of moves hitting everyone is at the opposite side.
     if (GetBattlerMoveTargetType(gBattlerAttacker, move) & MOVE_TARGET_FOES_AND_ALLY && IsDoubleBattle())
     {
-        while (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+        while (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         {
             if (++gBattleAnimTarget >= MAX_BATTLERS_COUNT)
                 gBattleAnimTarget = 0;
@@ -286,12 +371,7 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         InitPrioritiesForVisibleBattlers();
         UpdateOamPriorityInAllHealthboxes(0, sAnimHideHpBoxes);
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-        {
-            if (GetBattlerSide(i) != B_SIDE_PLAYER)
-                gAnimBattlerSpecies[i] = GetMonData(&gEnemyParty[gBattlerPartyIndexes[i]], MON_DATA_SPECIES);
-            else
-                gAnimBattlerSpecies[i] = GetMonData(&gPlayerParty[gBattlerPartyIndexes[i]], MON_DATA_SPECIES);
-        }
+            gAnimBattlerSpecies[i] = GetMonData(GetPartyBattlerData(i), MON_DATA_SPECIES);
     }
     else
     {
@@ -314,16 +394,16 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
     {
     case ANIM_TYPE_GENERAL:
     default:
-        sBattleAnimScriptPtr = gBattleAnims_General[animId];
+        sBattleAnimScriptPtr = sBattleAnims_General[animId];
         break;
     case ANIM_TYPE_MOVE:
         sBattleAnimScriptPtr = GetMoveAnimationScript(animId);
         break;
     case ANIM_TYPE_STATUS:
-        sBattleAnimScriptPtr = gBattleAnims_StatusConditions[animId];
+        sBattleAnimScriptPtr = sBattleAnims_StatusConditions[animId];
         break;
     case ANIM_TYPE_SPECIAL:
-        sBattleAnimScriptPtr = gBattleAnims_Special[animId];
+        sBattleAnimScriptPtr = sBattleAnims_Special[animId];
         break;
     }
     gAnimScriptActive = TRUE;
@@ -335,9 +415,9 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
 
     if (animType == ANIM_TYPE_MOVE)
     {
-        for (i = 0; gMovesWithQuietBGM[i] != 0xFFFF; i++)
+        for (i = 0; i < ARRAY_COUNT(sMovesWithQuietBGM); i++)
         {
-            if (animId == gMovesWithQuietBGM[i])
+            if (animId == sMovesWithQuietBGM[i])
             {
                 m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 128);
                 break;
@@ -484,7 +564,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
     case MOVE_TARGET_BOTH: // all opponents
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != ignoredTgt && !IsAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
+            if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
                 targets[numTargets++] = i + MAX_BATTLERS_COUNT;
         }
         break;
@@ -798,7 +878,7 @@ static void Cmd_end(void)
         // Debugging - ensure no hanging mon bg tasks
         if (FuncIsActiveTask(Task_UpdateMonBg))
             DebugPrintf("Move %d animation still has Task_UpdateMonBg active at the end!", gAnimMoveIndex);
-        
+
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 256);
         if (!IsContest())
         {
@@ -1487,17 +1567,15 @@ void LoadMoveBg(u16 bgId)
 {
     if (IsContest())
     {
+        void *decompressionBuffer = Alloc(0x800);
         const u32 *tilemap = gBattleAnimBackgroundTable[bgId].tilemap;
-        void *dmaSrc;
-        void *dmaDest;
 
-        LZDecompressWram(tilemap, gDecompressionBuffer);
-        RelocateBattleBgPal(GetBattleBgPaletteNum(), (void *)gDecompressionBuffer, 0x100, FALSE);
-        dmaSrc = gDecompressionBuffer;
-        dmaDest = (void *)BG_SCREEN_ADDR(26);
-        DmaCopy32(3, dmaSrc, dmaDest, 0x800);
+        LZDecompressWram(tilemap, decompressionBuffer);
+        RelocateBattleBgPal(GetBattleBgPaletteNum(), decompressionBuffer, 0x100, FALSE);
+        DmaCopy32(3, decompressionBuffer, (void *)BG_SCREEN_ADDR(26), 0x800);
         LZDecompressVram(gBattleAnimBackgroundTable[bgId].image, (void *)BG_SCREEN_ADDR(4));
         LoadCompressedPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(GetBattleBgPaletteNum()), PLTT_SIZE_4BPP);
+        Free(decompressionBuffer);
     }
     else
     {
@@ -2080,8 +2158,7 @@ static void Cmd_teamattack_moveback(void)
     sBattleAnimScriptPtr += 2;
 
     // Apply to double battles when attacking own side
-    if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (!IsContest() && IsDoubleBattle() && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {
@@ -2118,7 +2195,7 @@ static void Cmd_teamattack_movefwd(void)
 
     // Apply to double battles when attacking own side
     if (!IsContest() && IsDoubleBattle()
-     && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+     && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (wantedBattler == ANIM_ATTACKER)
         {
@@ -2145,12 +2222,9 @@ static void Cmd_stopsound(void)
 
 static void Cmd_jumpifmovetypeequal(void)
 {
-    u8 moveType;
     const u8 *type = sBattleAnimScriptPtr + 1;
     sBattleAnimScriptPtr += 2;
-    GET_MOVE_TYPE(gCurrentMove, moveType);
-
-    if (*type != moveType)
+    if (*type != GetBattleMoveType(gCurrentMove))
         sBattleAnimScriptPtr += 4;
     else
         sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);

@@ -23,17 +23,16 @@ body:
       label: Version
       description: What version of pokeemerald-expansion are you using as a base?
       options:
-        - 1.9.0 (Latest release)
+        - 1.11.2 (Latest release)
         - master (default, unreleased bugfixes)
         - upcoming (Edge)
-        - 1.8.6
-        - 1.8.5
-        - 1.8.4
-        - 1.8.3
-        - 1.8.2
-        - 1.8.1
-        - 1.8.0
-        - pre-1.8.0
+        - 1.11.1
+        - 1.11.0
+        - 1.10.3
+        - 1.10.2
+        - 1.10.1
+        - 1.10.0
+        - pre-1.10.0
     validations:
       required: true
   - type: input

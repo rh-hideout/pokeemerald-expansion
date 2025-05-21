@@ -45,7 +45,7 @@ bool32 IsGimmickSelected(u32 battler, enum Gimmick gimmick)
 {
     // There's no player select in tests, but some gimmicks need to test choice before they are fully activated.
     if (TESTING)
-        return (gBattleStruct->gimmick.toActivate & gBitTable[battler]) && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
+        return (gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
     else
         return gBattleStruct->gimmick.usableGimmick[battler] == gimmick && gBattleStruct->gimmick.playerSelect;
 }
@@ -79,13 +79,9 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
     // Check the trainer party data to see if a gimmick is intended.
     else
     {
-        bool32 isSecondTrainer = (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT) && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT;
-        u16 trainerId = isSecondTrainer ? gTrainerBattleOpponent_B : gTrainerBattleOpponent_A;
-        const struct TrainerMon *mon = &GetTrainerPartyFromId(trainerId)[isSecondTrainer ? gBattlerPartyIndexes[battler] - MULTI_PARTY_SIZE : gBattlerPartyIndexes[battler]];
-
-        if (gimmick == GIMMICK_TERA && mon->teraType != TYPE_NONE)
+        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
-        if (gimmick == GIMMICK_DYNAMAX && mon->shouldUseDynamax)
+        if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
     }
 
@@ -96,10 +92,10 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
 bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
 {
     // Check whether partner battler has used gimmick or plans to during turn.
-    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE
+    if (IsDoubleBattle()
         && IsPartnerMonFromSameTrainer(battler)
         && (gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick]
-        || ((gBattleStruct->gimmick.toActivate & gBitTable[BATTLE_PARTNER(battler)]
+        || ((gBattleStruct->gimmick.toActivate & (1u << BATTLE_PARTNER(battler))
         && gBattleStruct->gimmick.usableGimmick[BATTLE_PARTNER(battler)] == gimmick))))
     {
         return TRUE;
@@ -115,7 +111,7 @@ bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
 void SetGimmickAsActivated(u32 battler, enum Gimmick gimmick)
 {
     gBattleStruct->gimmick.activated[battler][gimmick] = TRUE;
-    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && IsPartnerMonFromSameTrainer(battler))
+    if (IsDoubleBattle() && IsPartnerMonFromSameTrainer(battler))
         gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick] = TRUE;
 }
 
@@ -144,7 +140,8 @@ void CreateGimmickTriggerSprite(u32 battler)
     // Exit if there shouldn't be a sprite produced.
     if (GetBattlerSide(battler) == B_SIDE_OPPONENT
      || gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_NONE
-     || gimmick->triggerSheet == NULL)
+     || gimmick->triggerSheet == NULL
+     || HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))
     {
         return;
     }
@@ -155,7 +152,7 @@ void CreateGimmickTriggerSprite(u32 battler)
 
     if (gBattleStruct->gimmick.triggerSpriteId == 0xFF)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+        if (IsDoubleBattle())
             gBattleStruct->gimmick.triggerSpriteId = CreateSprite(gimmick->triggerTemplate,
                                                                   gSprites[gHealthboxSpriteIds[battler]].x - DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE,
                                                                   gSprites[gHealthboxSpriteIds[battler]].y - DOUBLES_GIMMICK_TRIGGER_POS_Y_DIFF, 0);
@@ -203,8 +200,9 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 {
     s32 xSlide, xPriority, xOptimal;
     s32 yDiff;
+    s32 xHealthbox = gSprites[gHealthboxSpriteIds[sprite->tBattler]].x;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+    if (IsDoubleBattle())
     {
         xSlide = DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE;
         xPriority = DOUBLES_GIMMICK_TRIGGER_POS_X_PRIORITY;
@@ -221,25 +219,29 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 
     if (sprite->tHide)
     {
-        if (sprite->x != gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xSlide)
+        if (sprite->x < xHealthbox - xSlide)
             sprite->x++;
 
-        if (sprite->x >= gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xPriority)
+        if (sprite->x >= xHealthbox - xPriority)
             sprite->oam.priority = 2;
         else
             sprite->oam.priority = 1;
 
         sprite->y = gSprites[gHealthboxSpriteIds[sprite->tBattler]].y - yDiff;
         sprite->y2 = gSprites[gHealthboxSpriteIds[sprite->tBattler]].y2 - yDiff;
-        if (sprite->x == gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xSlide)
+        if (sprite->x == xHealthbox - xSlide)
             DestroyGimmickTriggerSprite();
     }
     else
     {
-        if (sprite->x != gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xOptimal)
+        // Edge case: in doubles, if selecting move and next mon's action too fast, the second battler's gimmick icon uses the x from the first battler's gimmick icon
+        if (sprite->y != gSprites[gHealthboxSpriteIds[sprite->tBattler]].y - yDiff)
+            sprite->x = xHealthbox - xSlide;
+
+        if (sprite->x > xHealthbox - xOptimal)
             sprite->x--;
 
-        if (sprite->x >= gSprites[gHealthboxSpriteIds[sprite->tBattler]].x - xPriority)
+        if (sprite->x >= xHealthbox - xPriority)
             sprite->oam.priority = 2;
         else
             sprite->oam.priority = 1;
@@ -263,20 +265,9 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
 
 void LoadIndicatorSpritesGfx(void)
 {
-    u32 gimmick;
-    for (gimmick = 0; gimmick < GIMMICKS_COUNT; ++gimmick)
-    {
-        if (gimmick == GIMMICK_TERA) // special case
-            LoadSpriteSheets(sTeraIndicatorSpriteSheets);
-        else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
-            LoadSpriteSheet(gGimmicksInfo[gimmick].indicatorSheet);
-
-        if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-            LoadSpritePalette(gGimmicksInfo[gimmick].indicatorPal);
-    }
-    // Primal reversion graphics aren't loaded as part of gimmick data
-    LoadSpriteSheet(&sSpriteSheet_AlphaIndicator);
-    LoadSpriteSheet(&sSpriteSheet_OmegaIndicator);
+    LoadSpritePalette(&sSpritePalette_MiscIndicator);
+    LoadSpritePalette(&sSpritePalette_MegaIndicator);
+    LoadSpritePalette(&sSpritePalette_TeraIndicator);
 }
 
 static void SpriteCb_GimmickIndicator(struct Sprite *sprite)
@@ -293,28 +284,28 @@ static inline u32 GetIndicatorSpriteId(u32 healthboxId)
     return gBattleStruct->gimmick.indicatorSpriteId[gSprites[healthboxId].hMain_Battler];
 }
 
-u32 GetIndicatorTileTag(u32 battler)
+const u32 *GetIndicatorSpriteSrc(u32 battler)
 {
     u32 gimmick = GetActiveGimmick(battler);
 
     if (IsBattlerPrimalReverted(battler))
     {
         if (gBattleMons[battler].species == SPECIES_GROUDON_PRIMAL)
-            return TAG_OMEGA_INDICATOR_TILE;
+            return (u32 *)&sOmegaIndicatorGfx;
         else
-            return TAG_ALPHA_INDICATOR_TILE;
+            return (u32 *)&sAlphaIndicatorGfx;
     }
     else if (gimmick == GIMMICK_TERA) // special case
     {
-        return sTeraIndicatorSpriteSheets[GetBattlerTeraType(battler)].tag;
+        return (u32 *)sTeraIndicatorDataPtrs[GetBattlerTeraType(battler)];
     }
-    else if (gGimmicksInfo[gimmick].indicatorSheet != NULL)
+    else if (gGimmicksInfo[gimmick].indicatorData != NULL)
     {
-        return gGimmicksInfo[gimmick].indicatorSheet->tag;
+        return (u32 *)gGimmicksInfo[gimmick].indicatorData;
     }
     else
     {
-        return TAG_NONE;
+        return NULL;
     }
 }
 
@@ -323,33 +314,42 @@ u32 GetIndicatorPalTag(u32 battler)
     u32 gimmick = GetActiveGimmick(battler);
     if (IsBattlerPrimalReverted(battler))
         return TAG_MISC_INDICATOR_PAL;
-    else if (gGimmicksInfo[gimmick].indicatorPal != NULL)
-        return gGimmicksInfo[gimmick].indicatorPal->tag;
+    else if (gGimmicksInfo[gimmick].indicatorPalTag != 0)
+        return gGimmicksInfo[gimmick].indicatorPalTag;
     else
         return TAG_NONE;
 }
 
+#define INDICATOR_SIZE (8 * 16 / 2)
+
 void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible)
 {
     u32 battler = gSprites[healthboxId].hMain_Battler;
-    u32 tileTag = GetIndicatorTileTag(battler);
     u32 palTag = GetIndicatorPalTag(battler);
     struct Sprite *sprite = &gSprites[GetIndicatorSpriteId(healthboxId)];
 
     if (GetIndicatorSpriteId(healthboxId) == 0) // safari zone means the player doesn't have an indicator sprite id
         return;
 
-    if (tileTag != TAG_NONE && palTag != TAG_NONE)
+    if (palTag != TAG_NONE)
     {
-        sprite->oam.tileNum = GetSpriteTileStartByTag(tileTag);
         sprite->oam.paletteNum = IndexOfSpritePaletteTag(palTag);
         sprite->invisible = invisible;
+
+        u32 *dst = (u32 *)(OBJ_VRAM0 + TILE_SIZE_4BPP * GetSpriteTileStartByTag(BATTLER_INDICATOR_TAG + battler));
+
+        const u32 *src = GetIndicatorSpriteSrc(battler);
+
+        for (u32 i = 0; i < INDICATOR_SIZE / 4; i++)
+            dst[i] = src[i];
     }
     else // in case of error
     {
         sprite->invisible = TRUE;
     }
 }
+
+#undef INDICATOR_SIZE
 
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority)
 {
@@ -370,10 +370,10 @@ void UpdateIndicatorLevelData(u32 healthboxId, u32 level)
 
 static const s8 sIndicatorPositions[][2] =
 {
-    [B_POSITION_PLAYER_LEFT] = {53, -9},
-    [B_POSITION_OPPONENT_LEFT] = {44, -9},
-    [B_POSITION_PLAYER_RIGHT] = {52, -9},
-    [B_POSITION_OPPONENT_RIGHT] = {44, -9},
+    [B_POSITION_PLAYER_LEFT] = {49, -9},
+    [B_POSITION_OPPONENT_LEFT] = {40, -9},
+    [B_POSITION_PLAYER_RIGHT] = {48, -9},
+    [B_POSITION_OPPONENT_RIGHT] = {40, -9},
 };
 
 void CreateIndicatorSprite(u32 battler)
@@ -387,7 +387,8 @@ void CreateIndicatorSprite(u32 battler)
     x = sIndicatorPositions[position][0];
     y += sIndicatorPositions[position][1];
 
-    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_GimmickIndicator, 0, y, 0);
+    LoadSpriteSheet(&sBattler_GimmickSpritesheets[battler]);
+    spriteId = CreateSprite(&(sSpriteTemplate_BattlerIndicators[battler]), 0, y, 0);
     gBattleStruct->gimmick.indicatorSpriteId[battler] = spriteId;
     gSprites[spriteId].tBattler = battler;
     gSprites[spriteId].tPosX = x;

@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffect(MOVE_THOUSAND_ARROWS, MOVE_EFFECT_SMACK_DOWN) == TRUE);
-    ASSUME(gMovesInfo[MOVE_THOUSAND_ARROWS].ignoreTypeIfFlyingAndUngrounded == TRUE);
+    ASSUME(MoveHasAdditionalEffect(MOVE_THOUSAND_ARROWS, MOVE_EFFECT_SMACK_DOWN));
+    ASSUME(MoveIgnoresTypeIfFlyingAndUngrounded(MOVE_THOUSAND_ARROWS) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Thousand Arrows does not ground mons behind substitutes")
@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Thousand Arrows does not ground mons behind substitutes")
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_THOUSAND_ARROWS); }
     } SCENE {
-        NOT MESSAGE("Foe Skarmory fell straight down!");
+        NOT MESSAGE("The opposing Skarmory fell straight down!");
     }
 }
 
@@ -33,11 +33,11 @@ SINGLE_BATTLE_TEST("Thousand Arrows does neutral damage to non-grounded Flying t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THOUSAND_ARROWS, player);
         if (pokemon == SPECIES_SKARMORY) {
-            MESSAGE("Foe Skarmory fell straight down!");
-            MESSAGE("Foe Skarmory used Celebrate!");
+            MESSAGE("The opposing Skarmory fell straight down!");
+            MESSAGE("The opposing Skarmory used Celebrate!");
         } else {
-            MESSAGE("Foe Scyther fell straight down!");
-            MESSAGE("Foe Scyther used Celebrate!");
+            MESSAGE("The opposing Scyther fell straight down!");
+            MESSAGE("The opposing Scyther used Celebrate!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("Congratulations, 1!");

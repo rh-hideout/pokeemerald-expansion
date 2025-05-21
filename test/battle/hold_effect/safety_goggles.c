@@ -9,14 +9,14 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_STUN_SPORE].powderMove);
+        ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ABRA) { Item(ITEM_SAFETY_GOGGLES); }
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-        MESSAGE("Foe Abra is not affected thanks to its Safety Goggles!");
+        MESSAGE("The opposing Abra is not affected thanks to its Safety Goggles!");
     }
 }
 
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Hail")
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
-        NOT MESSAGE("Foe Wobbuffet is pelted by HAIL!");
+        NOT MESSAGE("The opposing Wobbuffet is buffeted by the hail!");
     }
 }
 
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm")
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
-        NOT MESSAGE("Foe Wobbuffet is buffeted by the sandstorm!");
+        NOT MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
     }
 }
 

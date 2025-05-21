@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Inner Focus prevents intimidate")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
         ABILITY_POPUP(opponent, ABILITY_INNER_FOCUS);
-        MESSAGE("Foe Zubat's Inner Focus prevents stat loss!");
+        MESSAGE("The opposing Zubat's Inner Focus prevents stat loss!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -38,12 +38,12 @@ SINGLE_BATTLE_TEST("Inner Focus prevents flinching")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
-        NONE_OF { MESSAGE("Foe Zubat flinched!"); }
+        NONE_OF { MESSAGE("The opposing Zubat flinched and couldn't move!"); }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Inner Focus is ignored by Mold Breaker")
+SINGLE_BATTLE_TEST("Mold Breaker ignores Inner Focus")
 {
     GIVEN {
         PLAYER(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); };
@@ -52,6 +52,6 @@ SINGLE_BATTLE_TEST("Inner Focus is ignored by Mold Breaker")
         TURN { MOVE(player, MOVE_FAKE_OUT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
-        MESSAGE("Foe Zubat flinched!");
+        MESSAGE("The opposing Zubat flinched and couldn't move!");
     }
 }

@@ -39,14 +39,14 @@ DOUBLE_BATTLE_TEST("Teraform Zero can be supressed")
 SINGLE_BATTLE_TEST("Teraform Zero can be replaced")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_WORRY_SEED].effect == EFFECT_WORRY_SEED);
-        ASSUME(gMovesInfo[MOVE_REST].effect == EFFECT_REST);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_WORRY_SEED);
+        ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_TERAPAGOS);
         OPPONENT(SPECIES_WHIMSICOTT) { Ability(ABILITY_PRANKSTER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_WORRY_SEED); MOVE(player, MOVE_REST, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Foe Whimsicott used Worry Seed!");
+        MESSAGE("The opposing Whimsicott used Worry Seed!");
         MESSAGE("Terapagos acquired Insomnia!");
         MESSAGE("Terapagos used Rest!");
         ABILITY_POPUP(player, ABILITY_INSOMNIA);
@@ -57,13 +57,13 @@ SINGLE_BATTLE_TEST("Teraform Zero can be replaced")
 SINGLE_BATTLE_TEST("Teraform Zero cannot be swapped")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SKILL_SWAP].effect == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_TERAPAGOS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Skill Swap!");
+        MESSAGE("The opposing Wobbuffet used Skill Swap!");
         MESSAGE("But it failed!");
     }
 }
@@ -71,20 +71,19 @@ SINGLE_BATTLE_TEST("Teraform Zero cannot be swapped")
 SINGLE_BATTLE_TEST("Teraform Zero cannot be copied")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_ROLE_PLAY].effect == EFFECT_ROLE_PLAY);
+        ASSUME(GetMoveEffect(MOVE_ROLE_PLAY) == EFFECT_ROLE_PLAY);
         PLAYER(SPECIES_TERAPAGOS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_ROLE_PLAY); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Role Play!");
+        MESSAGE("The opposing Wobbuffet used Role Play!");
         MESSAGE("But it failed!");
     }
 }
 
 DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's popup when trying to activate")
 {
-    KNOWN_FAILING; // #5010
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
         PLAYER(SPECIES_ABSOL) {Ability(ABILITY_PRESSURE); }
@@ -95,8 +94,8 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
         TURN {  SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
         MESSAGE("Terapagos is storing energy!");
-        MESSAGE("Terapagos terastalized into the Stellar type!");
+        MESSAGE("Terapagos terastallized into the Stellar type!");
         NOT ABILITY_POPUP(playerRight, ABILITY_NEUTRALIZING_GAS);
-        MESSAGE("Terapagos used Celebreate!");
+        MESSAGE("Terapagos used Celebrate!");
     }
 }

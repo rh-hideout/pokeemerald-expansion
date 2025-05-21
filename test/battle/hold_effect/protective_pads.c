@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(gItemsInfo[ITEM_PROTECTIVE_PADS].holdEffect == HOLD_EFFECT_PROTECTIVE_PADS);
-    ASSUME(gMovesInfo[MOVE_TACKLE].makesContact == TRUE);
+    ASSUME(MoveMakesContact(MOVE_TACKLE) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Protective Pads protected moves still make direct contact", s16 damage)
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't reduce tough claws damage", s16 dama
 SINGLE_BATTLE_TEST("Protective Pads doesn't invalid unseen fist")
 {
     GIVEN {
-        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE_STYLE) { Ability(ABILITY_UNSEEN_FIST); Item(ITEM_PROTECTIVE_PADS); }
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { Ability(ABILITY_UNSEEN_FIST); Item(ITEM_PROTECTIVE_PADS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_TACKLE); }
@@ -69,7 +69,44 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
         HP_BAR(opponent);
         NONE_OF {
             HP_BAR(player);
-            MESSAGE("Wobbuffet was hurt by Foe Wobbuffet's Rocky Helmet!");
+            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
+    PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
+    PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
+    PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_OBSTRUCT; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); MOVE(player, MOVE_TACKLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+            if (move == MOVE_SPIKY_SHIELD) {
+                HP_BAR(player);
+            } else if (move == MOVE_BANEFUL_BUNKER) {
+                STATUS_ICON(player, STATUS1_POISON);
+            } else if (move == MOVE_BURNING_BULWARK) {
+                STATUS_ICON(player, STATUS1_BURN);
+            } else if (move == MOVE_KINGS_SHIELD) {
+                MESSAGE("Wobbuffet's Attack fell!");
+            } else if (move == MOVE_SILK_TRAP) {
+                MESSAGE("Wobbuffet's Speed fell!");
+            } else if (move == MOVE_OBSTRUCT) {
+                MESSAGE("Wobbuffet's Defense harshly fell!");
+            }
         }
     }
 }

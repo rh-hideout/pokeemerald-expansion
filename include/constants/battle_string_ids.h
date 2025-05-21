@@ -747,8 +747,27 @@
 #define STRINGID_FLAREHEALHPUP                        745
 #define STRINGID_PKMNSITEMPREVENTSYLOSS               746
 #define STRINGID_COLLAPSINGRUINSTEALTHROCKS           747
+#define STRINGID_FICKLEBEAMDOUBLED                    748
+#define STRINGID_COMMANDERACTIVATES                   749
+#define STRINGID_POKEFLUTECATCHY                      750
+#define STRINGID_POKEFLUTE                            751
+#define STRINGID_MONHEARINGFLUTEAWOKE                 752
+#define STRINGID_SUNLIGHTISHARSH                      753
+#define STRINGID_ITISHAILING                          754
+#define STRINGID_ITISSNOWING                          755
+#define STRINGID_ISCOVEREDWITHGRASS                   756
+#define STRINGID_MISTSWIRLSAROUND                     757
+#define STRINGID_ELECTRICCURRENTISRUNNING             758
+#define STRINGID_SEEMSWEIRD                           759
+#define STRINGID_WAGGLINGAFINGER                      760
+#define STRINGID_BLOCKEDBYSLEEPCLAUSE                 761
+#define STRINGID_SUPEREFFECTIVETWOFOES                762
+#define STRINGID_NOTVERYEFFECTIVETWOFOES              763
+#define STRINGID_ITDOESNTAFFECTTWOFOES                764
+#define STRINGID_SENDCAUGHTMONPARTYORBOX              765
+#define STRINGID_PKMNSENTTOPCAFTERCATCH               766
 
-#define BATTLESTRINGS_COUNT                           748
+#define BATTLESTRINGS_COUNT                           767
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -804,13 +823,24 @@
 
 // gWeatherEndsStringIds
 #define B_MSG_WEATHER_END_RAIN         0
-#define B_MSG_WEATHER_END_SANDSTORM    1
-#define B_MSG_WEATHER_END_SUN          2
+#define B_MSG_WEATHER_END_SUN          1
+#define B_MSG_WEATHER_END_SANDSTORM    2
 #define B_MSG_WEATHER_END_HAIL         3
-#define B_MSG_WEATHER_END_STRONG_WINDS 4
-#define B_MSG_WEATHER_END_SNOW         5
-#define B_MSG_WEATHER_END_FOG          6
+#define B_MSG_WEATHER_END_SNOW         4
+#define B_MSG_WEATHER_END_FOG          5
+#define B_MSG_WEATHER_END_STRONG_WINDS 6
 #define B_MSG_WEATHER_END_COUNT        7
+
+// gWeatherTurnStringIds
+#define B_MSG_WEATHER_TURN_RAIN         0
+#define B_MSG_WEATHER_TURN_DOWNPOUR     1
+#define B_MSG_WEATHER_TURN_SUN          2
+#define B_MSG_WEATHER_TURN_SANDSTORM    3
+#define B_MSG_WEATHER_TURN_HAIL         4
+#define B_MSG_WEATHER_TURN_SNOW         5
+#define B_MSG_WEATHER_TURN_FOG          6
+#define B_MSG_WEATHER_TURN_STRONG_WINDS 7
+#define B_MSG_WEATHER_TURN_COUNT        8
 
 // gRainContinuesStringIds
 #define B_MSG_RAIN_CONTINUES     0
@@ -902,10 +932,12 @@
 #define B_MSG_WEAKEN_FIRE     1
 
 // gCaughtMonStringIds
-#define B_MSG_SENT_SOMEONES_PC  0
-#define B_MSG_SENT_LANETTES_PC  1
-#define B_MSG_SOMEONES_BOX_FULL 2
-#define B_MSG_LANETTES_BOX_FULL 3
+#define B_MSG_NO_MESSSAGE_SKIP   0
+#define B_MSG_SENT_SOMEONES_PC   1
+#define B_MSG_SENT_LANETTES_PC   2
+#define B_MSG_SOMEONES_BOX_FULL  3
+#define B_MSG_LANETTES_BOX_FULL  4
+#define B_MSG_SWAPPED_INTO_PARTY 5
 
 // gPrimalWeatherBlocksStringIds
 #define B_MSG_PRIMAL_WEATHER_FIZZLED_BY_RAIN    0
@@ -1034,7 +1066,10 @@
 #define B_MSG_SET_TAILWIND_PLAYER   7
 #define B_MSG_SET_TAILWIND_OPPONENT 8
 #define B_MSG_SET_INVERSE_ROOM      9
-#define B_MSG_STARTING_STATUS_COUNT 10
+#define B_MSG_SET_RAINBOW           10
+#define B_MSG_SET_SEA_OF_FIRE       11
+#define B_MSG_SET_SWAMP             12
+#define B_MSG_STARTING_STATUS_COUNT 13
 
 
 // gWrappedStringIds

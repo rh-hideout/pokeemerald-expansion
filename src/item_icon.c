@@ -1,12 +1,13 @@
 #include "global.h"
+#include "battle_main.h"
 #include "decompress.h"
 #include "graphics.h"
+#include "item.h"
 #include "item_icon.h"
 #include "malloc.h"
+#include "move.h"
 #include "sprite.h"
 #include "constants/items.h"
-#include "item.h"
-#include "battle_main.h"
 
 // EWRAM vars
 EWRAM_DATA u8 *gItemIconDecompressionBuffer = NULL;
@@ -182,7 +183,7 @@ const void *GetItemIconPalette(u16 itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
     if (itemId >= ITEM_TM01 && itemId < ITEM_HM01 + NUM_HIDDEN_MACHINES)
-        return gTypesInfo[gMovesInfo[gItemsInfo[itemId].secondaryId].type].paletteTMHM;
+        return gTypesInfo[GetMoveType(gItemsInfo[itemId].secondaryId)].paletteTMHM;
 
     return gItemsInfo[itemId].iconPalette;
 }

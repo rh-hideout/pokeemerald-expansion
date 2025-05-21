@@ -3,11 +3,11 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_RAGING_BULL].effect == EFFECT_RAGING_BULL);
-    ASSUME(gMovesInfo[MOVE_SNOWSCAPE].effect == EFFECT_SNOWSCAPE);
-    ASSUME(gMovesInfo[MOVE_LIGHT_SCREEN].effect == EFFECT_LIGHT_SCREEN);
-    ASSUME(gMovesInfo[MOVE_REFLECT].effect == EFFECT_REFLECT);
-    ASSUME(gMovesInfo[MOVE_AURORA_VEIL].effect == EFFECT_AURORA_VEIL);
+    ASSUME(GetMoveEffect(MOVE_RAGING_BULL) == EFFECT_RAGING_BULL);
+    ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+    ASSUME(GetMoveEffect(MOVE_LIGHT_SCREEN) == EFFECT_LIGHT_SCREEN);
+    ASSUME(GetMoveEffect(MOVE_REFLECT) == EFFECT_REFLECT);
+    ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
 }
 
 SINGLE_BATTLE_TEST("Raging Bull removes Light Screen, Reflect and Aurora Veil from the target's side of the field")
@@ -41,7 +41,6 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
     PARAMETRIZE { move = MOVE_REFLECT; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
@@ -143,9 +142,9 @@ SINGLE_BATTLE_TEST("Move Raging Bull changes it's type depending on the Tauros F
     u16 speciesPlayer;
     u16 speciesOpponent;
 
-    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEAN_COMBAT_BREED; speciesOpponent = SPECIES_CHARIZARD; }
-    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEAN_BLAZE_BREED; speciesOpponent = SPECIES_BLASTOISE; }
-    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEAN_AQUA_BREED; speciesOpponent = SPECIES_VENUSAUR; }
+    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEA_COMBAT; speciesOpponent = SPECIES_CHARIZARD; }
+    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEA_BLAZE; speciesOpponent = SPECIES_BLASTOISE; }
+    PARAMETRIZE { speciesPlayer = SPECIES_TAUROS_PALDEA_AQUA; speciesOpponent = SPECIES_VENUSAUR; }
 
     GIVEN {
         PLAYER(speciesPlayer);

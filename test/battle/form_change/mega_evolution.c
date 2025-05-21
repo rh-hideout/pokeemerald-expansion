@@ -27,9 +27,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - opponent fas
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
         MESSAGE("Venusaur's Venusaurite is reacting to 1's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Venusaur has Mega Evolved into Mega Venusaur!");
@@ -49,9 +49,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - player faste
         MESSAGE("Venusaur's Venusaurite is reacting to 1's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Venusaur has Mega Evolved into Mega Venusaur!");
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
     }
 }
 
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order")
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Gardevoir used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         ASSUME(player->speed == 205);
     }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Sableye used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         ASSUME(player->speed == 45);
     }
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
 DOUBLE_BATTLE_TEST("Mega Evolution happens after switching, but before Focus Punch-like Moves")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOCUS_PUNCH].effect == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_WYNAUT);
@@ -145,9 +145,9 @@ SINGLE_BATTLE_TEST("Regular Mega Evolution and Fervent Wish Mega Evolution can h
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
         MESSAGE("Rayquaza has Mega Evolved into Mega Rayquaza!");
 
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_RAYQUAZA_MEGA);
         EXPECT_EQ(opponent->species, SPECIES_GARDEVOIR_MEGA);
@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Regular Mega Evolution and Fervent Wish Mega Evolution can h
 SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_CRUNCH].makesContact == TRUE);
+        ASSUME(MoveMakesContact(MOVE_CRUNCH) == TRUE);
         ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[0] != ABILITY_ROUGH_SKIN);
         ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[1] != ABILITY_ROUGH_SKIN);
         ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[2] != ABILITY_ROUGH_SKIN);
@@ -168,10 +168,10 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
-        MESSAGE("Foe Garchomp fainted!");
+        MESSAGE("The opposing Garchomp fainted!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
-            MESSAGE("Wobbuffet was hurt by Foe Garchomp's Rough Skin!");
+            MESSAGE("Wobbuffet was hurt by the opposing Garchomp's Rough Skin!");
             HP_BAR(player);
         }
     }

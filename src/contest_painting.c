@@ -21,10 +21,10 @@
 #include "window.h"
 #include "constants/rgb.h"
 
-u16 (*gContestMonPixels)[][32];
-struct ImageProcessingContext gImageProcessingContext;
-struct ContestWinner *gContestPaintingWinner;
-u16 *gContestPaintingMonPalette;
+COMMON_DATA u16 (*gContestMonPixels)[][32] = {0};
+COMMON_DATA struct ImageProcessingContext gImageProcessingContext = {0};
+COMMON_DATA struct ContestWinner *gContestPaintingWinner = {0};
+COMMON_DATA u16 *gContestPaintingMonPalette = NULL;
 
 static u8 sHoldState;
 static u16 sMosaicVal;
@@ -212,7 +212,6 @@ static void ShowContestPainting(void)
         gMain.state++;
         break;
     case 2:
-        SeedRng(gMain.vblankCounter1);
         InitKeys();
         InitContestPaintingWindow();
         gMain.state++;
@@ -595,4 +594,3 @@ static void CreateContestPaintingPicture(u8 contestWinnerId, bool8 isForArtist)
     InitPaintingMonOamData(contestWinnerId);
     LoadContestPaintingFrame(contestWinnerId, isForArtist);
 }
-

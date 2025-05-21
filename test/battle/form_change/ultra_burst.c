@@ -27,9 +27,9 @@ DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - opponent faster
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } SCENE {
-        MESSAGE("Bright light is about to burst out of Foe Necrozma!");
+        MESSAGE("Bright light is about to burst out of the opposing Necrozma!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, opponentLeft);
-        MESSAGE("Foe Necrozma regained its true power through Ultra Burst!");
+        MESSAGE("The opposing Necrozma regained its true power through Ultra Burst!");
         MESSAGE("Bright light is about to burst out of Necrozma!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, playerLeft);
         MESSAGE("Necrozma regained its true power through Ultra Burst!");
@@ -49,9 +49,9 @@ DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - player faster")
         MESSAGE("Bright light is about to burst out of Necrozma!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, playerLeft);
         MESSAGE("Necrozma regained its true power through Ultra Burst!");
-        MESSAGE("Bright light is about to burst out of Foe Necrozma!");
+        MESSAGE("Bright light is about to burst out of the opposing Necrozma!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, opponentLeft);
-        MESSAGE("Foe Necrozma regained its true power through Ultra Burst!");
+        MESSAGE("The opposing Necrozma regained its true power through Ultra Burst!");
     }
 }
 
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Ultra Burst affects turn order")
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } SCENE {
         MESSAGE("Necrozma used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         ASSUME(player->speed == 263);
     }
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Ultra Burst affects turn order")
 DOUBLE_BATTLE_TEST("Ultra Burst happens after switching, but before Focus Punch-like Moves")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FOCUS_PUNCH].effect == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WYNAUT);
@@ -111,9 +111,9 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, player);
         MESSAGE("Necrozma regained its true power through Ultra Burst!");
 
-        MESSAGE("Foe Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
+        MESSAGE("The opposing Gardevoir's Gardevoirite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("Foe Gardevoir has Mega Evolved into Mega Gardevoir!");
+        MESSAGE("The opposing Gardevoir has Mega Evolved into Mega Gardevoir!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_NECROZMA_ULTRA);
         EXPECT_EQ(opponent->species, SPECIES_GARDEVOIR_MEGA);

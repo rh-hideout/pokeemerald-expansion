@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_BELLY_DRUM].effect == EFFECT_BELLY_DRUM);
+    ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
 }
 
 SINGLE_BATTLE_TEST("Belly Drum cuts the user's HP in half")
@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
     PARAMETRIZE { raiseAttack = FALSE; }
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
         if (raiseAttack) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet cut its own HP and maximized ATTACK!");
+            MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if user's current HP is half or less than h
 SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SWORDS_DANCE].effect == EFFECT_ATTACK_UP_2);
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -100,12 +100,36 @@ SINGLE_BATTLE_TEST("Belly Drum's HP cost doesn't trigger effects that trigger on
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
-        MESSAGE("Wobbuffet cut its own HP and maximized ATTACK!");
+        MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
 
+SINGLE_BATTLE_TEST("Belly Drum minimizes the user's Attack stat with Contrary", s16 damage)
+{
+    bool32 raiseAttack;
+    PARAMETRIZE { raiseAttack = FALSE; }
+    PARAMETRIZE { raiseAttack = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (raiseAttack) TURN { MOVE(player, MOVE_BELLY_DRUM); }
+        TURN { MOVE(player, MOVE_TACKLE); }
+    } SCENE {
+        if (raiseAttack) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");  // Message unaffected by Contrary
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(4), results[0].damage);
+    }
+}
+
 TO_DO_BATTLE_TEST("Belly Drum maximizes the user's Attack stat, even when below 0");
-TO_DO_BATTLE_TEST("Belly Drum minimizes the user's Attack stat if it has Contrary"); // Should still say "maximized attack"
 TO_DO_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even with Contrary");
 TO_DO_BATTLE_TEST("Belly Drum deducts HP if the user has contrary and is at -6");

@@ -47,6 +47,9 @@ enum
 
 #define TAG_HEALTHBAR_PAL               TAG_HEALTHBAR_PLAYER1_TILE
 #define TAG_HEALTHBOX_PAL               TAG_HEALTHBOX_PLAYER1_TILE
+#define TAG_SHADOW_PAL                  TAG_HEALTHBOX_PLAYER1_TILE
+
+#define TAG_SHADOW_TILE                 0xD759
 
 #define TAG_GIMMICK_TRIGGER_TILE        0xD777
 #define TAG_MEGA_INDICATOR_TILE         0xD778
@@ -125,5 +128,7 @@ void SwapBallToDisplay(bool32 sameBall);
 void ArrowsChangeColorLastBallCycle(bool32 showArrows);
 void UpdateAbilityPopup(u8 battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
+void TryToAddMoveInfoWindow(void);
+void TryToHideMoveInfoWindow(void);
 
 #endif // GUARD_BATTLE_INTERFACE_H

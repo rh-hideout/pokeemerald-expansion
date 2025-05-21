@@ -33,12 +33,12 @@ SINGLE_BATTLE_TEST("Covert Cloak blocks secondary effects")
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         NONE_OF {
-            MESSAGE("Foe Wobbuffet is paralyzed! It may be unable to move!");
-            MESSAGE("Foe Wobbuffet was burned!");
-            MESSAGE("Foe Wobbuffet was poisoned!");
-            MESSAGE("Foe Wobbuffet flinched!");
+            MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
+            MESSAGE("The opposing Wobbuffet was burned!");
+            MESSAGE("The opposing Wobbuffet was poisoned!");
+            MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Foe Wobbuffet was prevented from healing!");
+            MESSAGE("The opposing Wobbuffet was prevented from healing!");
         }
     } THEN { // Can't find good way to test trapping
         EXPECT(!(opponent->status2 & STATUS2_ESCAPE_PREVENTION));
@@ -68,16 +68,16 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
         HP_BAR(opponent);
         switch (move) {
             case MOVE_INFESTATION:
-                MESSAGE("Foe Skarmory has been afflicted with an infestation by Wobbuffet!");
+                MESSAGE("The opposing Skarmory has been afflicted with an infestation by Wobbuffet!");
                 break;
             case MOVE_THOUSAND_ARROWS:
-                MESSAGE("Foe Skarmory fell straight down!");
+                MESSAGE("The opposing Skarmory fell straight down!");
                 break;
             case MOVE_JAW_LOCK:
                 MESSAGE("Neither Pokémon can run away!");
                 break;
             case MOVE_PAY_DAY:
-                MESSAGE("Coins scattered everywhere!");
+                MESSAGE("Coins were scattered everywhere!");
                 break;
         }
     } THEN { // Can't find good way to test trapping
@@ -98,9 +98,8 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_RAPID_SPIN, MOVE_EFFECT_RAPID_SPIN) == TRUE);
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_VOLTAIC_CYCLONE, MOVE_EFFECT_RAPID_SPIN) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -130,7 +129,6 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
 DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending on number of targets hit")
 {
     u32 moveToUse;
-    KNOWN_FAILING;
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_TACKLE; }
     GIVEN {
@@ -143,20 +141,44 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
         if (moveToUse == MOVE_TACKLE) {
-            MESSAGE("Foe Wobbuffet's burn was healed.");
+            MESSAGE("The opposing Wobbuffet's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
             NONE_OF {
-                MESSAGE("Foe Wobbuffet's burn was healed.");
+                MESSAGE("The opposing Wobbuffet's burn was cured!");
                 STATUS_ICON(opponentLeft, none: TRUE);
             }
         }
     }
 }
 
+DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is hit")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_PROTECT; }
+    PARAMETRIZE { move = MOVE_FLY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, move, target: playerLeft);
+               MOVE(playerRight, move, target: opponentRight);
+               MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet's burn was cured!");
+            STATUS_ICON(opponentLeft, none: TRUE);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Covert Cloak blocks Sparkling Aria in singles")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
@@ -165,7 +187,7 @@ SINGLE_BATTLE_TEST("Covert Cloak blocks Sparkling Aria in singles")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, player);
         NONE_OF {
-            MESSAGE("Foe Wobbuffet's burn was healed.");
+            MESSAGE("The opposing Wobbuffet's burn was cured!");
             STATUS_ICON(opponent, none: TRUE);
         }
     }

@@ -530,13 +530,13 @@ const struct SpriteTemplate gSpacialRendBladesTemplate2 =
 // Sea of Fire
 const struct SpriteTemplate gTwisterEmberSpriteTemplate =
 {
-	.tileTag = ANIM_TAG_SMALL_EMBER,
-	.paletteTag = ANIM_TAG_SMALL_EMBER,
-	.oam = &gOamData_AffineOff_ObjNormal_32x32,
-	.anims = gAnims_BasicFire,
-	.images = NULL,
-	.affineAnims = gDummySpriteAffineAnimTable,
-	.callback = AnimMoveTwisterParticle,
+    .tileTag = ANIM_TAG_SMALL_EMBER,
+    .paletteTag = ANIM_TAG_SMALL_EMBER,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gAnims_BasicFire,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimMoveTwisterParticle,
 };
 
 static void AnimLavaPlumeOrbitScatter(struct Sprite *sprite)
@@ -572,6 +572,11 @@ static void AnimFireSpiralInward(struct Sprite *sprite)
 }
 
 // For the impact spread of fire sprites for moves like Blaze Kick or Fire Punch
+// args[0] - delta to mon x offset
+// args[1] - delta to mon y offset
+// args[2] - x increment
+// args[3] - y increment
+// args[4] - duration
 void AnimFireSpread(struct Sprite *sprite)
 {
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
@@ -717,7 +722,7 @@ static void AnimSunlight(struct Sprite *sprite)
 // arg 6: ? (todo: something related to which mon the pixel offsets are based on)
 static void AnimEmberFlare(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget)
+    if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget)
         && (gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)
             || gBattleAnimAttacker == GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];

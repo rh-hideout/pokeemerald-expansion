@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Sand Veil increases evasion during sandstorm")
 {
     PASSES_RANDOMLY(4, 5, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_POUND].accuracy == 100);
+        ASSUME(GetMoveAccuracy(MOVE_POUND) == 100);
         PLAYER(SPECIES_SANDSHREW) { Ability(ABILITY_SAND_VEIL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -28,3 +28,6 @@ SINGLE_BATTLE_TEST("Sand Veil increases evasion during sandstorm")
         HP_BAR(player);
     }
 }
+
+TO_DO_BATTLE_TEST("Sand Veil doesn't prevent Sandstorm damage if Cloud Nine/Air Lock is on the field");
+TO_DO_BATTLE_TEST("Sand Veil doesn't increase evasion if Cloud Nine/Air Lock is on the field");
