@@ -158,27 +158,24 @@ def ImportWildEncounterFile():
 
         if data["for_maps"]:
             hForMaps = wData["wild_encounter_groups"][headerIndex]["for_maps"]
-    
-        # for the encounter rate macros, so we don't worry about hidden mons here
+
         if headerIndex == 0:
             wFields = wData["wild_encounter_groups"][headerIndex]["fields"]
             fieldCounter = 0
             for field in wFields:
-                fieldData.append({})
-                fieldData[fieldCounter]["name"] = field["type"]
-                fieldData[fieldCounter]["pascalName"] = GetPascalCase(field["type"])
-                fieldData[fieldCounter]["snakeName"] = GetSnakeCase(field["type"])
-                fieldData[fieldCounter]["encounter_rates"] = field["encounter_rates"]
+                if not CheckFieldDataDupes(field["type"]):
+                    AddFieldData(fieldCounter, field["type"], field["encounter_rates"])
 
                 if "groups" in field:
                     fieldData[fieldCounter]["groups"] = field["groups"]
 
+                """ hidden mons need a special bit of logic since they're not in the vanilla
+                    wild_encounters.json file, but the game expects them to be there
+                """
                 hidden_mons = "hidden_mons"
-                if (fieldCounter == len(wFields) - 1) and (fieldData[fieldCounter]["name"] != hidden_mons):
-                    fieldData.append({})
-                    fieldData[fieldCounter + 1]["name"] = hidden_mons
-                    fieldData[fieldCounter + 1]["pascalName"] = GetPascalCase(hidden_mons)
-                    fieldData[fieldCounter + 1]["snakeName"] = GetSnakeCase(hidden_mons)
+                if (fieldCounter == len(wFields) - 1) and not CheckFieldDataDupes(hidden_mons):
+                    hidden_dummy_rates = [100, 0]
+                    AddFieldData(fieldCounter + 1, hidden_mons, hidden_dummy_rates)
 
                 fieldCounter += 1
 
@@ -436,25 +433,25 @@ def PrintEncounterRateMacros():
         return
 
     fieldCounter = 0
-    # len(fieldData) - 1 here so we skip hidden_mons
-    while fieldCounter < len(fieldData) - 1: 
+    while fieldCounter < len(fieldData): 
         tempName = fieldData[fieldCounter]["name"].upper()
         if "groups" not in fieldData[fieldCounter]:
             rateCount = 0
-            for percent in fieldData[fieldCounter]["encounter_rates"]:
-                if rateCount == 0:
-                    print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
-                else:
-                    print(
-                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount - 1} + {percent}"
-                    )
+            if fieldData[fieldCounter]["encounter_rates"]:
+                for percent in fieldData[fieldCounter]["encounter_rates"]:
+                    if rateCount == 0:
+                        print(f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {percent}")
+                    else:
+                        print(
+                            f"{define} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount} {ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount - 1} + {percent}"
+                        )
 
-                if rateCount + 1 == len(fieldData[fieldCounter]["encounter_rates"]):
-                    print(
-                        f"{define} {ENCOUNTER_CHANCE}_{tempName}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount})"
-                    )
+                    if rateCount + 1 == len(fieldData[fieldCounter]["encounter_rates"]):
+                        print(
+                            f"{define} {ENCOUNTER_CHANCE}_{tempName}_{TOTAL} ({ENCOUNTER_CHANCE}_{tempName}_{SLOT}_{rateCount})"
+                        )
 
-                rateCount += 1
+                    rateCount += 1
         else:
             rates = fieldData[fieldCounter]["encounter_rates"]
             groups = fieldData[fieldCounter]["groups"]
@@ -599,6 +596,21 @@ def GetSnakeCase(string):
     return snakeString
 
 
+def CheckFieldDataDupes(name):
+    for field in fieldData:
+        if field["name"] == name:
+            return True
+    return False
+
+
+def AddFieldData(index, fieldType, fieldRates):
+    fieldData.append({})
+    fieldData[index]["name"] = fieldType
+    fieldData[index]["pascalName"] = GetPascalCase(fieldType)
+    fieldData[index]["snakeName"] = GetSnakeCase(fieldType)
+    fieldData[index]["encounter_rates"] = fieldRates
+
+
 def main():
     pass
 
@@ -649,6 +661,9 @@ if __name__ == "__main__":
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_8 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_7 + 4
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_9 ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_8 + 1
 #define ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_TOTAL (ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_9)
+#define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 100
+#define ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1 ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 + 0
+#define ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL (ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1)
 
 const struct WildPokemon gRoute101_LandMons_Day[] =
 {
