@@ -59,7 +59,6 @@ SINGLE_BATTLE_TEST("Anticipation doesn't consider Normalize into their effective
 
 SINGLE_BATTLE_TEST("Anticipation doesn't consider Scrappy into their effectiveness (Gen5+)")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_CLOSE_COMBAT) == TYPE_FIGHTING);
         ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
@@ -80,7 +79,6 @@ SINGLE_BATTLE_TEST("Anticipation doesn't consider Scrappy into their effectivene
 
 SINGLE_BATTLE_TEST("Anticipation doesn't consider Gravity into their effectiveness (Gen5+)")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_SKARMORY);
         OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_EARTHQUAKE, MOVE_GRAVITY, MOVE_SCRATCH, MOVE_POUND); }
@@ -133,7 +131,6 @@ SINGLE_BATTLE_TEST("Anticipation considers Synchronoise as an ordinary Psychic-t
 
 SINGLE_BATTLE_TEST("Anticipation considers Freeze-Dry as an ordinary Ice-type move")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_FREEZE_DRY) == TYPE_ICE);
         ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[0] == TYPE_WATER);
@@ -150,7 +147,6 @@ SINGLE_BATTLE_TEST("Anticipation considers Freeze-Dry as an ordinary Ice-type mo
 
 SINGLE_BATTLE_TEST("Anticipation considers Flying Press as an ordinary Fighting-type move")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_FLYING_PRESS) == TYPE_FIGHTING);
         ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);
@@ -280,7 +276,6 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
 
 SINGLE_BATTLE_TEST("Anticipation does not consider Strong Winds on type matchups")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_RAYQUAZA_MEGA].types[0] == TYPE_DRAGON);
         ASSUME(gSpeciesInfo[SPECIES_RAYQUAZA_MEGA].types[1] == TYPE_FLYING);
@@ -313,7 +308,6 @@ SINGLE_BATTLE_TEST("Anticipation does not consider ate-abilities")
 
 SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+)")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
         ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[1] == TYPE_NORMAL);
@@ -323,9 +317,9 @@ SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+)
         TURN { MOVE(opponent, MOVE_HIDDEN_POWER); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // Check that the item is triggered
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player); // Check that the item is triggered
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, opponent);
-        HP_BAR(opponent);
+        HP_BAR(player);
         MESSAGE("It's super effective!");
     }
 }
