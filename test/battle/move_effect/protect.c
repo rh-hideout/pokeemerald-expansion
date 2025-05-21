@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("King's Shield, Silk Trap and Obstruct protect from damaging 
                     MESSAGE("Wobbuffet's Attack fell!");
                     #else
                     MESSAGE("Wobbuffet's Attack harshly fell!");
-                    #endif    
+                    #endif
                 } else if (statId == STAT_SPEED) {
                     MESSAGE("Wobbuffet's Speed fell!");
                 } else if (statId == STAT_DEF) {
@@ -487,36 +487,49 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from status moves")
     }
 }
 
-SINGLE_BATTLE_TEST("Protect does not block Confide")
+SINGLE_BATTLE_TEST("Protect does not block Confide or Decorate")
 {
+    u32 move;
+    PARAMETRIZE { move = MOVE_CONFIDE; }
+    PARAMETRIZE { move = MOVE_DECORATE; }
+
     GIVEN {
         ASSUME(gMovesInfo[MOVE_CONFIDE].effect == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME(gMovesInfo[MOVE_CONFIDE].ignoresProtect == TRUE);
+        ASSUME(gMovesInfo[MOVE_DECORATE].effect == EFFECT_DECORATE);
+        ASSUME(gMovesInfo[MOVE_DECORATE].ignoresProtect == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_CONFIDE); }
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, move); }
     } SCENE {
-        MESSAGE("Wobbuffet used Confide!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFIDE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         NOT MESSAGE("The opposing Wobbuffet protected itself!");
     }
 }
 
-DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide")
+DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decorate")
 {
+    u32 move;
+    PARAMETRIZE { move = MOVE_CONFIDE; }
+    PARAMETRIZE { move = MOVE_DECORATE; }
+
     GIVEN {
         ASSUME(gMovesInfo[MOVE_CONFIDE].effect == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME(gMovesInfo[MOVE_CONFIDE].ignoresProtect == TRUE);
+        ASSUME(gMovesInfo[MOVE_DECORATE].effect == EFFECT_DECORATE);
+        ASSUME(gMovesInfo[MOVE_DECORATE].ignoresProtect == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, MOVE_CONFIDE, target: opponentLeft); MOVE(playerRight, MOVE_CONFIDE, target: opponentRight); }
+        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, move, target: opponentLeft); MOVE(playerRight, move, target: opponentRight); }
     } SCENE {
-        MESSAGE("Wobbuffet used Confide!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         MESSAGE("The opposing Wobbuffet protected itself!");
-        MESSAGE("Wynaut used Confide!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
         MESSAGE("The opposing Wynaut protected itself!");
     }
 }
@@ -524,7 +537,6 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide")
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLOWER_SHIELD].target == MOVE_TARGET_ALL_BATTLERS);
         ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);
         ASSUME(gSpeciesInfo[SPECIES_TANGROWTH].types[0] == TYPE_GRASS);
         ASSUME(gSpeciesInfo[SPECIES_SUNKERN].types[0] == TYPE_GRASS);
@@ -570,3 +582,4 @@ SINGLE_BATTLE_TEST("Spiky Shield does not damage users on Counter or Mirror Coat
         }
     }
 }
+

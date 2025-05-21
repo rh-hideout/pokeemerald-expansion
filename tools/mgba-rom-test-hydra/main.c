@@ -812,7 +812,9 @@ int main(int argc, char *argv[])
                     fprintf(stdout, "  - \e[31mand %d more...\e[0m\n", fails - MAX_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
-                fprintf(stdout, "  - \e[31m%s\e[0m - %s.\n", failed_TestFilenameLine[i], failed_TestNames[i]);
+                fprintf(stdout, "  - \e[31m");
+                fprint_buffer(stdout, failed_TestFilenameLine[i], strlen(failed_TestFilenameLine[i]));
+                fprintf(stdout, "\e[0m - %s.\n", failed_TestNames[i]);
             }
         }
 
@@ -826,7 +828,9 @@ int main(int argc, char *argv[])
                     fprintf(stdout, "  - \e[33mand %d more...\e[0m\n", assumptionFails - MAX_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
-                fprintf(stdout, "  - \e[33m%s\e[0m - %s.\n", assumeFailed_FilenameLine[i], assumeFailed_TestNames[i]);
+                fprintf(stdout, "  - \e[33m");
+                fprint_buffer(stdout, assumeFailed_FilenameLine[i], strlen(assumeFailed_FilenameLine[i]));
+                fprintf(stdout, "\e[0m - %s.\n", assumeFailed_TestNames[i]);
             }
         }
 
@@ -840,7 +844,9 @@ int main(int argc, char *argv[])
                     fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", knownFailsPassing - MAX_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
-                fprintf(stdout, "  - \e[32m%s\e[0m - %s.\n", knownFailingPassed_FilenameLine[i], knownFailingPassed_TestNames[i]);
+                fprintf(stdout, "  - \e[32m");
+                fprint_buffer(stdout, knownFailingPassed_FilenameLine[i], strlen(knownFailingPassed_FilenameLine[i]));
+                fprintf(stdout, "\e[0m - %s.\n", knownFailingPassed_TestNames[i]);
             }
         }
 

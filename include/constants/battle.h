@@ -121,6 +121,8 @@
 #define STATUS1_PSN_ANY          (STATUS1_POISON | STATUS1_TOXIC_POISON)
 #define STATUS1_ANY              (STATUS1_SLEEP | STATUS1_POISON | STATUS1_BURN | STATUS1_FREEZE | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
 
+#define STATUS1_REFRESH          (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
+
 // Volatile status ailments
 // These are removed after exiting the battle or switching out
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
@@ -509,7 +511,7 @@
 #define MOVE_TARGET_FOES_AND_ALLY       (1 << 5)
 #define MOVE_TARGET_OPPONENTS_FIELD     (1 << 6)
 #define MOVE_TARGET_ALLY                (1 << 7)
-#define MOVE_TARGET_ALL_BATTLERS        ((1 << 8) | MOVE_TARGET_USER)
+#define MOVE_TARGET_ALL_BATTLERS        ((1 << 8) | MOVE_TARGET_USER) // No functionality for status moves
 
 // For the second argument of GetMoveTarget, when no target override is needed
 #define NO_TARGET_OVERRIDE 0

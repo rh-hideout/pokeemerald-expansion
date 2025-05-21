@@ -24,7 +24,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ABSORB] =
     {
-        .battleScript = BattleScript_EffectAbsorb,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 4,
     },
 

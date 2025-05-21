@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Sap Sipper does not increase Attack if already maxed")
 {
     GIVEN {
         PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); MOVE(opponent, MOVE_VINE_WHIP); }
     } SCENE {

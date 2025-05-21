@@ -407,14 +407,13 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 ba
     return accuracy;
 }
 
-static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlersCount)
+static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlersCount, u32 weather)
 {
-    u32 battlerDef, i, weather;
     u16 *moves;
-
+    u32 battlerDef, moveIndex, move;
+    u32 rollType = GetDmgRollType(battlerAtk);
     SaveBattlerData(battlerAtk);
     moves = GetMovesArray(battlerAtk);
-    weather = AI_GetWeather(aiData);
 
     SetBattlerData(battlerAtk);
 
@@ -426,27 +425,22 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u3
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        for (i = 0; i < MAX_MON_MOVES; i++)
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             struct SimulatedDamage dmg = {0};
             u8 effectiveness = AI_EFFECTIVENESS_x0;
-            u32 move = moves[i];
+            move = moves[moveIndex];
 
             if (move != 0
              && move != 0xFFFF
              //&& gMovesInfo[move].power != 0  /* we want to get effectiveness and accuracy of status moves */
-             && !(aiData->moveLimitations[battlerAtk] & (1u << i)))
+             && !(aiData->moveLimitations[battlerAtk] & (1u << moveIndex)))
             {
-                if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_RISKY)
-                    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, DMG_ROLL_HIGHEST);
-                else if (AI_THINKING_STRUCT->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)
-                    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, DMG_ROLL_LOWEST);
-                else
-                    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, DMG_ROLL_DEFAULT);
-                aiData->moveAccuracy[battlerAtk][battlerDef][i] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
+                dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, TRUE, weather, rollType);
+                aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
             }
-            aiData->simulatedDmg[battlerAtk][battlerDef][i] = dmg;
-            aiData->effectiveness[battlerAtk][battlerDef][i] = effectiveness;
+            aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+            aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
         }
         RestoreBattlerData(battlerDef);
     }
@@ -455,7 +449,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u3
 
 void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 {
-    u32 battlerAtk, battlersCount;
+    u32 battlerAtk, battlersCount, weather;
 
     memset(aiData, 0, sizeof(struct AiLogicData));
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
@@ -465,6 +459,8 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
 
     aiData->weatherHasEffect = WEATHER_HAS_EFFECT;
+    weather = AI_GetWeather(aiData);
+
     // get/assume all battler data and simulate AI damage
     battlersCount = gBattlersCount;
 
@@ -482,7 +478,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         if (!IsBattlerAlive(battlerAtk))
             continue;
 
-        SetBattlerAiMovesData(aiData, battlerAtk, battlersCount);
+        SetBattlerAiMovesData(aiData, battlerAtk, battlersCount, weather);
     }
     AI_DATA->aiCalcInProgress = FALSE;
 }
@@ -2508,12 +2504,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             else
                 ADJUST_SCORE(-10);
-            break;
-        case EFFECT_POWER_BASED_ON_USER_HP:
-            if (effectiveness <= AI_EFFECTIVENESS_x0_5)
-                ADJUST_SCORE(-1);
-            if (aiData->hpPercents[battlerDef] < 50)
-                ADJUST_SCORE(-1);
             break;
         case EFFECT_FLAIL:
             if (AI_IsSlower(battlerAtk, battlerDef, move) // Opponent should go first

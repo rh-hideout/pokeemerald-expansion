@@ -124,3 +124,35 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by the AI regardless if there i
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Steel Roller and Ice Spinner reverts typing on Mimicry users")
+{
+    u32 j;
+    static const u16 terrainMoves[] =
+    {
+        MOVE_ELECTRIC_TERRAIN,
+        MOVE_PSYCHIC_TERRAIN,
+        MOVE_GRASSY_TERRAIN,
+        MOVE_MISTY_TERRAIN,
+    };
+
+    u16 terrainMove = MOVE_NONE;
+    u16 removeTerrainMove = MOVE_NONE;
+
+    for (j = 0; j < ARRAY_COUNT(terrainMoves); j++)
+    {
+        PARAMETRIZE { removeTerrainMove = MOVE_STEEL_ROLLER; terrainMove = terrainMoves[j]; }
+        PARAMETRIZE { removeTerrainMove = MOVE_ICE_SPINNER; terrainMove =  terrainMoves[j]; }
+    }
+
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[1] == TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET); 
+        OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
+    } WHEN {
+        TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }
+        TURN { MOVE(player, MOVE_TOXIC); }
+    } SCENE {
+        MESSAGE("It doesn't affect the opposing Stunfisk…");
+    }
+}

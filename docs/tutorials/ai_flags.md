@@ -134,10 +134,10 @@ Affects when the AI chooses to switch. AI will make smarter decisions about when
 * The current mon loses the 1v1 quickly and has at least ½ HP, or ¼ and Regenerator
 
 ## `AI_FLAG_ACE_POKEMON`
-Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unless it is the last one remaining, or is forced to be switched in (Roar, U-Turn with 1 mon remaining, etc.)
+Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unless it is the last one remaining, or is forced to be switched in (Roar, U-Turn with 1 mon remaining, etc.). If you are challenged by two different trainers at the same time, only the ones with this flag will have Ace Pokémon. For example vs one trainer with `AI_FLAG_ACE_POKEMON`and the other without, there will be a total of 1 Ace Pokémon.
 
 ## `AI_FLAG_DOUBLE_ACE_POKEMON`
-Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviour as `AI_FLAG_ACE_POKEMON`. Intented for double battles where you battle one trainer id that represents two trainers, ie Twins, Couples.
+Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviour as `AI_FLAG_ACE_POKEMON`. Intented for double battles where you battle one trainer id that represents two trainers, ie Twins, Couples. If you apply this flag to trainers outside of double battles or in cases where two trainers can challenge you at the same time, it has the same behaviour. For example vs two trainers with `AI_FLAG_DOUBLE_ACE_POKEMON` there will be a total of 4 Ace Pokémon.
 
 ## `AI_FLAG_OMNISCIENT`
 AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.

@@ -1605,7 +1605,7 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
     return width;
 }
 
-s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum, u32 strSize, bool32 printDebug)
+s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum, u32 strSize)
 {
     u32 strWidth = 0, strLen, currLine;
     u8 strCopy[strSize];
@@ -1621,10 +1621,6 @@ s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum,
             strWidth = GetStringWidth(fontId, strCopy, letterSpacing);
             strLen = StringLineLength(strCopy);
             StringAppend(strCopy, gText_EmptyString3);
-        #ifndef NDEBUG
-            if (printDebug && strWidth != 0)
-                DebugPrintf("  Line %d, len:%d, width:%d, \"%S\"", currLine, strLen, strWidth, strCopy);
-        #endif
         }
         str += strLen + 1;
     }

@@ -798,9 +798,7 @@
 	2:
 	.endm
 
-	.macro setmultihitcounter value:req
-	.byte 0x8d
-	.byte \value
+	.macro unused_0x8d
 	.endm
 
 	.macro initmultihitstring
@@ -1104,7 +1102,7 @@
 	.byte 0xcc
 	.endm
 
-	.macro cureifburnedparalysedorpoisoned failInstr:req
+	.macro curestatuswithmove failInstr:req
 	.byte 0xcd
 	.4byte \failInstr
 	.endm
@@ -1726,6 +1724,15 @@
 	.4byte \failInstr
 	.endm
 
+	.macro tryhitswitchtarget failInstr:req
+	callnative BS_TryHitSwitchTarget
+	.4byte \failInstr
+	.endm
+
+	.macro setmagiccoattarget
+	callnative BS_SetMagicCoatTarget
+	.endm
+
 	.macro jumpifcommanderactive jumpInstr:req
 	callnative BS_JumpIfCommanderActive
 	.4byte \jumpInstr
@@ -1739,13 +1746,22 @@
 	callnative BS_WaitFanfare
 	.endm
 
+	.macro setbeakblast
+	callnative BS_SetBeakBlast
+	.endm
+
+	.macro cantarshotwork failInstr:req
+	callnative BS_CanTarShotWork
+	.4byte \failInstr
+	.endm
+
+	.macro removeterrain
+	callnative BS_RemoveTerrain
+	.endm
+
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
 	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
-	.endm
-
-	.macro setmagiccoattarget battler:req
-	various \battler, VARIOUS_SET_MAGIC_COAT_TARGET
 	.endm
 
 	.macro getifcantrunfrombattle battler:req
@@ -1963,11 +1979,6 @@
 
 	.macro setargtobattledamage
 	various BS_ATTACKER, VARIOUS_SET_ARG_TO_BATTLE_DAMAGE
-	.endm
-
-	.macro tryhitswitchtarget failInstr:req
-	various BS_ATTACKER, VARIOUS_TRY_HIT_SWITCH_TARGET
-	.4byte \failInstr
 	.endm
 
 	.macro tryautotomize battler:req, failInstr:req
@@ -2218,10 +2229,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removeterrain
-	various BS_ATTACKER, VARIOUS_REMOVE_TERRAIN
-	.endm
-
 	.macro trytoclearprimalweather
 	various BS_ATTACKER, VARIOUS_TRY_TO_CLEAR_PRIMAL_WEATHER
 	.endm
@@ -2270,11 +2277,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro cantarshotwork battler:req, failInstr:req
-	various \battler, VARIOUS_CAN_TAR_SHOT_WORK
-	.4byte \failInstr
-	.endm
-
 	.macro checkpoltergeist battler:req, failInstr:req
 	various \battler, VARIOUS_CHECK_POLTERGEIST
 	.4byte \failInstr
@@ -2314,10 +2316,6 @@
 
 	.macro battleritemtolastuseditem battler:req
 	various \battler, VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM
-	.endm
-
-	.macro setbeakblast battler:req
-	various \battler, VARIOUS_SET_BEAK_BLAST
 	.endm
 
 	.macro swapsidestatuses

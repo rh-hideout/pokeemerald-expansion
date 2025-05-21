@@ -320,6 +320,8 @@ include audio_rules.mk
 # NOTE: Tools must have been built prior (FIXME)
 # so you can't really call this rule directly
 generated: $(AUTO_GEN_TARGETS)
+	@: # Silence the "Nothing to be done for `generated'" message, which some people were confusing for an error.
+
 
 %.s:   ;
 %.png: ;
@@ -379,6 +381,10 @@ $(TEST_BUILDDIR)/%.o: $(TEST_SUBDIR)/%.c
 $(TEST_BUILDDIR)/%.d: $(TEST_SUBDIR)/%.c
 	$(SCANINC) -M $@ $(INCLUDE_SCANINC_ARGS) -I tools/agbcc/include $<
 
+ifneq ($(NODEP),1)
+-include $(addprefix $(OBJ_DIR)/,$(TEST_SRCS:.c=.d))
+endif
+
 $(ASM_BUILDDIR)/%.o: $(ASM_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
@@ -432,6 +438,7 @@ libagbsyscall:
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
 # Elf from object files
+LDFLAGS = -Map ../../$(MAP)
 $(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
 	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ $(OBJS_REL) $(LIB) | cat
 	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ <objs> <libs> | cat"

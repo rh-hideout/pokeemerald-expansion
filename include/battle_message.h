@@ -10,6 +10,7 @@
                                 max(POKEMON_NAME_LENGTH + 1, \
                                     ABILITY_NAME_LENGTH + 1)))
 #define BATTLE_MSG_MAX_WIDTH    208
+#define BATTLE_MSG_MAX_LINES    2
 
 // for 0xFD
 #define B_TXT_BUFF1 0x0
@@ -78,6 +79,10 @@
 #define B_TXT_DEF_NAME_WITH_PREFIX2 0x3F //lowercase
 #define B_TXT_EFF_NAME_WITH_PREFIX2 0x40 //lowercase
 #define B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX2 0x41 //lowercase
+#define B_TXT_TRAINER1_NAME_WITH_CLASS 0x42
+#define B_TXT_TRAINER2_NAME_WITH_CLASS 0x43
+#define B_TXT_PARTNER_NAME_WITH_CLASS 0x44
+#define B_TXT_ATK_TRAINER_NAME_WITH_CLASS 0x45
 
 #define B_BUFF_STRING                       0
 #define B_BUFF_NUMBER                       1
@@ -318,9 +323,9 @@ extern const u8 gText_Loss[];
 extern const u8 gText_Draw[];
 extern const u8 gText_StatSharply[];
 extern const u8 gText_StatRose[];
-extern const u8 sText_StatFell[];
-extern const u8 sText_drastically[];
-extern const u8 sText_severely[];
+extern const u8 gText_StatFell[];
+extern const u8 gText_drastically[];
+extern const u8 gText_severely[];
 extern const u8 gText_DefendersStatRose[];
 extern const u8 gText_PkmnGettingPumped[];
 extern const u8 gText_PkmnShroudedInMist[];

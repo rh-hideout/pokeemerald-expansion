@@ -250,6 +250,7 @@ struct SpecialStatus
     u8 emergencyExited:1;
     u8 afterYou:1;
     u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
+    u8 distortedTypeMatchups:1;
 };
 
 struct SideTimer
@@ -823,11 +824,12 @@ struct BattleStruct
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     u8 boosterEnergyActivates;
-    u8 distortedTypeMatchups;
     u8 categoryOverride; // for Z-Moves and Max Moves
     u8 commandingDondozo;
-    u16 commanderActive[NUM_BATTLE_SIDES];
+    u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
+    u8 redCardActivates:1;
+    u8 padding:7;
     u8 usedEjectItem;
     u8 usedMicleBerry;
 };

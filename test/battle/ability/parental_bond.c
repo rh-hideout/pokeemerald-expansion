@@ -286,6 +286,26 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
     }
 }
 
+SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out on the second hit")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_DRAGON_TAIL].effect == EFFECT_HIT_SWITCH_TARGET);
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_DRAGON_TAIL, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wynaut was dragged out!");
+    }
+    THEN {
+        EXPECT_EQ(player->species, SPECIES_KANGASKHAN_MEGA);
+    }
+}
+
 TO_DO_BATTLE_TEST("Parental Bond tests");
 
 // Temporary TODO: Convert Bulbapedia description into tests.

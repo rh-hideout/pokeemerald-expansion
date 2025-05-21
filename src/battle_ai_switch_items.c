@@ -41,7 +41,7 @@ static bool32 IsAceMon(u32 battler, u32 monPartyId)
 {
     if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_ACE_POKEMON
             && !(gBattleStruct->forcedSwitch & (1u << battler))
-            && monPartyId == CalculateEnemyPartyCount()-1)
+            && monPartyId == CalculateEnemyPartyCountInSide(battler)-1)
         return TRUE;
     if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON
             && !(gBattleStruct->forcedSwitch & (1u << battler))
@@ -430,7 +430,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
     u32 opposingBattler = GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
     u32 incomingMove = AI_DATA->lastUsedMove[opposingBattler];
     bool32 isOpposingBattlerChargingOrInvulnerable = (IsSemiInvulnerable(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove));
-    
+
     if (IsDoubleBattle() || !(AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
 
@@ -840,9 +840,9 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     // Stay in if effective move
-    else if (AI_GetMoveEffectiveness(encoredMove, battler, opposingBattler) >= AI_EFFECTIVENESS_x2) 
+    else if (AI_GetMoveEffectiveness(encoredMove, battler, opposingBattler) >= AI_EFFECTIVENESS_x2)
         return FALSE;
-        
+
     // Switch out 50% of the time otherwise
     else if (RandomPercentage(RNG_AI_SWITCH_ENCORE, 50) && AI_DATA->mostSuitableMonId[battler] != PARTY_SIZE)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1224,6 +1224,8 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     int i, j;
     int dmg, bestDmg = 0;
     int bestMonId = PARTY_SIZE;
+    u32 rollType = GetDmgRollType(battler);
+
     u32 aiMove;
 
     gMoveResultFlags = 0;
@@ -1239,10 +1241,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
             if (aiMove != MOVE_NONE && gMovesInfo[aiMove].power != 0)
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-                if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_CONSERVATIVE)
-                    dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE, DMG_ROLL_LOWEST);
-                else
-                    dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE, DMG_ROLL_DEFAULT);
+                dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, AI_DATA->switchinCandidate.battleMon, TRUE, rollType);
                 if (bestDmg < dmg)
                 {
                     bestDmg = dmg;
