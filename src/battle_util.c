@@ -4313,6 +4313,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 ability
 
     if (option == ABILITY_RUN_SCRIPT)
     {
+        gMultiHitCounter = 0;   // Prevent multi-hit moves from hitting more than once after move has been absorbed.
         gBattleScripting.battler = gBattlerAbility = battlerAbility;
         gBattlescriptCurrInstr = battleScriptBlocksMove;
     }
