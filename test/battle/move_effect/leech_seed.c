@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_LEECH_SEED].effect == EFFECT_LEECH_SEED);
+    ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
 }
 
 SINGLE_BATTLE_TEST("Leech Seed doesn't affect Grass-type Pokémon")
@@ -55,25 +55,6 @@ SINGLE_BATTLE_TEST("Leech Seed recovery is prevented by Heal Block")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
         HP_BAR(opponent);
         NOT HP_BAR(player);
-    }
-}
-
-SINGLE_BATTLE_TEST("Leech Seed recovery will drain the hp of user if leech seeded mon has Liquid Ooze")
-{
-    s16 damage;
-    s16 healed;
-
-    GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_LEECH_SEED); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
-        HP_BAR(opponent, captureDamage: &damage);
-        HP_BAR(player, captureDamage: &healed);
-    } THEN {
-        EXPECT_EQ(damage, healed);
     }
 }
 

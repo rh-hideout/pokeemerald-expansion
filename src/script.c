@@ -2,8 +2,11 @@
 #include "script.h"
 #include "event_data.h"
 #include "mystery_gift.h"
+#include "random.h"
+#include "trainer_see.h"
 #include "util.h"
 #include "constants/event_objects.h"
+#include "constants/flags.h"
 #include "constants/map_scripts.h"
 #include "field_message_box.h"
 
@@ -50,6 +53,8 @@ void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTable
 
     for (i = 0; i < (int)ARRAY_COUNT(ctx->stack); i++)
         ctx->stack[i] = NULL;
+
+    ctx->breakOnTrainerBattle = FALSE;
 }
 
 u8 SetupBytecodeScript(struct ScriptContext *ctx, const u8 *ptr)
@@ -255,6 +260,16 @@ void ScriptContext_SetupScript(const u8 *ptr)
     InitScriptContext(&sGlobalScriptContext, gScriptCmdTable, gScriptCmdTableEnd);
     SetupBytecodeScript(&sGlobalScriptContext, ptr);
     LockPlayerFieldControls();
+    if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
+        FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
+    sGlobalScriptContextStatus = CONTEXT_RUNNING;
+}
+
+// Moves a script from a local context to the global context and enables it.
+void ScriptContext_ContinueScript(struct ScriptContext *ctx)
+{
+    sGlobalScriptContext = *ctx;
+    LockPlayerFieldControls();
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
 }
 
@@ -281,7 +296,7 @@ void RunScriptImmediately(const u8 *ptr)
     while (RunScriptCommand(&sImmediateScriptContext) == TRUE);
 }
 
-u8 *MapHeaderGetScriptTable(u8 tag)
+const u8 *MapHeaderGetScriptTable(u8 tag)
 {
     const u8 *mapScripts = gMapHeader.mapScripts;
 
@@ -303,14 +318,14 @@ u8 *MapHeaderGetScriptTable(u8 tag)
 
 void MapHeaderRunScriptType(u8 tag)
 {
-    u8 *ptr = MapHeaderGetScriptTable(tag);
+    const u8 *ptr = MapHeaderGetScriptTable(tag);
     if (ptr)
         RunScriptImmediately(ptr);
 }
 
-u8 *MapHeaderCheckScriptTable(u8 tag)
+const u8 *MapHeaderCheckScriptTable(u8 tag)
 {
-    u8 *ptr = MapHeaderGetScriptTable(tag);
+    const u8 *ptr = MapHeaderGetScriptTable(tag);
 
     if (!ptr)
         return NULL;
@@ -332,7 +347,12 @@ u8 *MapHeaderCheckScriptTable(u8 tag)
 
         // Run map script if vars are equal
         if (VarGet(varIndex1) == VarGet(varIndex2))
-            return T2_READ_PTR(ptr);
+        {
+            const u8 *mapScript = T2_READ_PTR(ptr);
+            if (!Script_HasNoEffect(mapScript))
+                return mapScript;
+        }
+
         ptr += 4;
     }
 }
@@ -364,7 +384,7 @@ void RunOnDiveWarpMapScript(void)
 
 bool8 TryRunOnFrameMapScript(void)
 {
-    u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_FRAME_TABLE);
+    const u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_FRAME_TABLE);
 
     if (!ptr)
         return FALSE;
@@ -375,7 +395,7 @@ bool8 TryRunOnFrameMapScript(void)
 
 void TryRunOnWarpIntoMapScript(void)
 {
-    u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE);
+    const u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE);
     if (ptr)
         RunScriptImmediately(ptr);
 }
@@ -503,4 +523,117 @@ void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize)
         scriptSize = sizeof(gSaveBlock1Ptr->ramScript.data.script);
     InitRamScript(script, scriptSize, MAP_GROUP(UNDEFINED), MAP_NUM(UNDEFINED), NO_OBJECT);
 #endif //FREE_MYSTERY_EVENT_BUFFERS
+}
+
+bool8 LoadTrainerObjectScript(void)
+{
+    sGlobalScriptContext.scriptPtr = gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr;
+    return TRUE;
+}
+
+struct ScriptEffectContext {
+    u32 breakOn;
+    intptr_t breakTo[5];
+    const u8 *nextCmd;
+};
+
+struct ScriptEffectContext *gScriptEffectContext = NULL;
+
+static bool32 Script_IsEffectInstrumentedCommand(ScrCmdFunc func)
+{
+    // In ROM mirror 1.
+    return (((uintptr_t)func) & 0xE000000) == 0xA000000;
+}
+
+/* 'setjmp' and 'longjmp' cause link errors, so we use
+ * '__builtin_setjmp' and '__builtin_longjmp' instead.
+ * See https://gcc.gnu.org/onlinedocs/gcc/Nonlocal-Gotos.html */
+static bool32 RunScriptImmediatelyUntilEffect_InternalLoop(struct ScriptContext *ctx)
+{
+    if (__builtin_setjmp(gScriptEffectContext->breakTo) == 0)
+    {
+        while (TRUE)
+        {
+            u32 cmdCode;
+            ScrCmdFunc *func;
+
+            gScriptEffectContext->nextCmd = ctx->scriptPtr;
+
+            if (!ctx->scriptPtr)
+                return FALSE;
+
+            cmdCode = *ctx->scriptPtr;
+            ctx->scriptPtr++;
+            func = &ctx->cmdTable[cmdCode];
+
+            // Invalid script command.
+            if (func >= ctx->cmdTableEnd)
+                return TRUE;
+
+            if (!Script_IsEffectInstrumentedCommand(*func))
+                return TRUE;
+
+            // Command which waits for a frame.
+            if ((*func)(ctx))
+            {
+                gScriptEffectContext->nextCmd = ctx->scriptPtr;
+                return TRUE;
+            }
+        }
+    }
+    else
+    {
+        return TRUE;
+    }
+}
+
+void Script_GotoBreak_Internal(void)
+{
+    __builtin_longjmp(gScriptEffectContext->breakTo, 1);
+}
+
+bool32 RunScriptImmediatelyUntilEffect_Internal(u32 effects, const u8 *ptr, struct ScriptContext *ctx)
+{
+    bool32 result;
+    struct ScriptEffectContext seCtx;
+    seCtx.breakOn = effects & 0x7FFFFFFF;
+
+    if (ctx == NULL)
+        ctx = &sImmediateScriptContext;
+
+    InitScriptContext(ctx, gScriptCmdTable, gScriptCmdTableEnd);
+    if (effects & SCREFF_TRAINERBATTLE)
+        ctx->breakOnTrainerBattle = TRUE;
+    SetupBytecodeScript(ctx, ptr);
+
+    rng_value_t rngValue = gRngValue;
+    gScriptEffectContext = &seCtx;
+    result = RunScriptImmediatelyUntilEffect_InternalLoop(ctx);
+    gScriptEffectContext = NULL;
+    gRngValue = rngValue;
+
+    if (result)
+        ctx->scriptPtr = seCtx.nextCmd;
+
+    return result;
+}
+
+bool32 Script_HasNoEffect(const u8 *ptr)
+{
+    return !RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE, ptr, NULL);
+}
+
+void Script_RequestEffects_Internal(u32 effects)
+{
+    if (gScriptEffectContext->breakOn & effects)
+        __builtin_longjmp(gScriptEffectContext->breakTo, 1);
+}
+
+void Script_RequestWriteVar_Internal(u32 varId)
+{
+    if (varId == 0)
+        return;
+    if (SPECIAL_VARS_START <= varId && varId <= SPECIAL_VARS_END)
+        return;
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 }

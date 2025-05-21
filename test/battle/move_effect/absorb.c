@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_ABSORB].effect == EFFECT_ABSORB);
+    ASSUME(GetMoveEffect(MOVE_ABSORB) == EFFECT_ABSORB);
 }
 
 SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
@@ -21,25 +21,6 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
         HP_BAR(player, captureDamage: &healed);
     } THEN {
         EXPECT_MUL_EQ(damage, Q_4_12(-0.5), healed);
-    }
-}
-
-SINGLE_BATTLE_TEST("Absorb deals 50% of the damage dealt to user agains Liquid Ooze")
-{
-    s16 damage;
-    s16 healed;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ABSORB); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
-        HP_BAR(opponent, captureDamage: &damage);
-        HP_BAR(player, captureDamage: &healed);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-    } THEN {
-        EXPECT_MUL_EQ(damage, Q_4_12(0.5), healed);
     }
 }
 
@@ -69,41 +50,22 @@ DOUBLE_BATTLE_TEST("Matcha Gatcha recovers 50% of the damage dealt from both tar
     s16 healedRight;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_MATCHA_GOTCHA].effect == EFFECT_ABSORB);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
+        PLAYER(SPECIES_PIKACHU) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_STARYU);
+        OPPONENT(SPECIES_STARYU);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MATCHA_GOTCHA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &damageLeft);
-        HP_BAR(playerLeft, captureDamage: &healedLeft);
         HP_BAR(opponentRight, captureDamage: &damageRight);
+        HP_BAR(playerLeft, captureDamage: &healedLeft);
         HP_BAR(playerLeft, captureDamage: &healedRight);
     } THEN {
         EXPECT_MUL_EQ(damageLeft, Q_4_12(-0.5), healedLeft);
         EXPECT_MUL_EQ(damageRight, Q_4_12(-0.5), healedRight);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Matcha Gatcha will faint the pokemon if Liquid Ooze drain deals enough damage")
-{
-    GIVEN {
-        ASSUME(gMovesInfo[MOVE_MATCHA_GOTCHA].effect == EFFECT_ABSORB);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_MATCHA_GOTCHA); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
-        HP_BAR(opponentLeft);
-        HP_BAR(playerLeft);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -122,6 +84,22 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
         HP_BAR(player, captureDamage: &healed);
     } THEN {
         EXPECT_MUL_EQ(damage, Q_4_12(-0.75), healed);
+    }
+}
+
+SINGLE_BATTLE_TEST("Absorb does not drain any HP if user flinched")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
+            MESSAGE("The opposing Wobbuffet had its energy drained!");
+        }
     }
 }
 

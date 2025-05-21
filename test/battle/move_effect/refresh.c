@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_REFRESH].effect == EFFECT_REFRESH);
+    ASSUME(GetMoveEffect(MOVE_REFRESH) == EFFECT_REFRESH);
 }
 
 SINGLE_BATTLE_TEST("Refresh cures the user of burn, frostbite, poison, and paralysis")
@@ -45,8 +45,8 @@ SINGLE_BATTLE_TEST("Refresh does not cure the user of Freeze")
 SINGLE_BATTLE_TEST("Refresh does not cure sleep when used by Sleep Talk")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SPORE].effect == EFFECT_SLEEP);
-        ASSUME(gMovesInfo[MOVE_SLEEP_TALK].effect == EFFECT_SLEEP_TALK);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SLEEP_TALK, MOVE_REFRESH); }
     } WHEN {

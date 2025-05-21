@@ -36,6 +36,7 @@ extern const u8 EventScript_TryDoDoubleTrainerBattle[];
 extern const u8 EventScript_TryDoNormalTrainerBattle[];
 extern const u8 EventScript_TryDoDoubleRematchBattle[];
 extern const u8 EventScript_TryDoRematchBattle[];
+extern const u8 EventScript_ObjectApproachPlayer[];
 
 extern const u8 BerryTreeScript[];
 
@@ -405,6 +406,7 @@ extern const u8 EventScript_UseFlash[];
 extern const u8 EventScript_UseCut[];
 extern const u8 EventScript_UseRockSmash[];
 extern const u8 EventScript_UseDig[];
+extern const u8 EventScript_UseCutGrass[];
 
 //player pc
 extern const u8 LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC[];
@@ -653,5 +655,13 @@ extern const u8 Common_Movement_FollowerSafeEnd[];
 extern const u8 EventScript_CancelMessageBox[];
 extern const u8 Common_EventScript_ShowPokemonCenterSign[];
 extern const u8 Common_EventScript_ShowPokemartSign[];
+// DexNav
+extern const u8 EventScript_StartDexNavBattle[];
+extern const u8 EventScript_NotFoundNearby[];
+extern const u8 EventScript_PokemonGotAway[];
+extern const u8 EventScript_LostSignal[];
+extern const u8 EventScript_TooDark[];
+extern const u8 EventScript_MovedTooFast[];
+
 
 #endif // GUARD_EVENT_SCRIPTS_H

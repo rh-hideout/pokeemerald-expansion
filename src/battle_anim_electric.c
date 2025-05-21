@@ -589,6 +589,17 @@ const struct SpriteTemplate gIonSpriteTemplate =
     .callback = AnimIon,
 };
 
+const struct SpriteTemplate gVoltSwitchSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SHADOW_BALL,
+    .paletteTag = ANIM_TAG_IONS,
+    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_ShadowBall,
+    .callback = AnimTask_VoltSwitch,
+};
+
 // functions
 static void AnimLightning(struct Sprite *sprite)
 {
@@ -646,6 +657,13 @@ static void AnimUnusedCirclingShock(struct Sprite *sprite)
     sprite->callback = TranslateSpriteInCircle;
 }
 
+// arg 0:
+// arg 1:
+// arg 2:
+// arg 3: duration
+// arg 4: target
+// arg 5:
+// arg 6:
 void AnimSparkElectricity(struct Sprite *sprite)
 {
     u8 battler;
@@ -731,7 +749,9 @@ static void AnimZapCannonSpark_Step(struct Sprite *sprite)
             sprite->invisible ^= 1;
     }
     else
+    {
         DestroyAnimSprite(sprite);
+    }
 }
 
 static void AnimThunderboltOrb_Step(struct Sprite *sprite)
@@ -1013,7 +1033,9 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
         }
     }
     else if(task->data[7] == 0)
+    {
         DestroyAnimVisualTask(taskId);
+    }
 }
 
 static void AnimElectricChargingParticles_Step(struct Sprite *sprite)
@@ -1134,7 +1156,9 @@ void AnimTask_VoltTackleAttackerReappear(u8 taskId)
                 gSprites[task->data[15]].x2 = task->data[14];
             }
             else
+            {
                 task->data[0]++;
+            }
 
         }
         break;
@@ -1522,4 +1546,53 @@ static void AnimIon_Step(struct Sprite *sprite)
     }
     if (sprite->animEnded)
         DestroySprite(sprite);
+}
+
+//Volt Switch//
+
+//Launches the projectiles for Volt Switch
+//arg 0: initial x pixel offset
+//arg 1: initial y pixel offset
+//arg 2: target x pixel offset
+//arg 3: target y pixel offset
+//arg 4: duration
+//arg 5: wave amplitude
+static void VoltSwitch_Step(struct Sprite* sprite)
+{
+	sprite->invisible = FALSE;
+
+	if (TranslateAnimHorizontalArc(sprite))
+	{
+		//Merge coords into one
+		sprite->x += sprite->x2;
+		sprite->y += sprite->y2;
+		sprite->x2 = 0;
+		sprite->y2 = 0;
+
+		//Come straight back to the attacker
+		sprite->data[0] = 0x14; //Duration
+		sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+		sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+
+		sprite->callback = StartAnimLinearTranslation;
+		StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+	}
+}
+
+void AnimTask_VoltSwitch(struct Sprite* sprite)
+{
+	InitSpritePosToAnimAttacker(sprite, 0);
+
+	if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+		gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+	else
+		sprite->y += 10; //Move slightly down
+
+	sprite->data[0] = gBattleAnimArgs[4];
+	sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
+	sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
+	sprite->data[5] = gBattleAnimArgs[5];
+	InitAnimArcTranslation(sprite);
+
+	sprite->callback = VoltSwitch_Step;
 }

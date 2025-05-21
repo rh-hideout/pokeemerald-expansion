@@ -993,16 +993,11 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
         u16 wantedCryCase;
         u8 taskId;
 
+        mon = GetPartyBattlerData(battlerId);
         if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
-        {
-            mon = &gEnemyParty[gBattlerPartyIndexes[battlerId]];
             pan = 25;
-        }
         else
-        {
-            mon = &gPlayerParty[gBattlerPartyIndexes[battlerId]];
             pan = -25;
-        }
 
         if ((battlerId == GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) || battlerId == GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
          && IsDoubleBattle() && gBattleSpritesDataPtr->animationData->introAnimActive)

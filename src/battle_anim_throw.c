@@ -908,10 +908,7 @@ void AnimTask_SwitchOutBallEffect(u8 taskId)
     u32 selectedPalettes;
 
     spriteId = gBattlerSpriteIds[gBattleAnimAttacker];
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
-        ballId = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
-    else
-        ballId = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
+    ballId = GetMonData(GetPartyBattlerData(gBattleAnimAttacker), MON_DATA_POKEBALL);
 
     switch (gTasks[taskId].data[0])
     {
@@ -1339,7 +1336,9 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
             gBattleSpritesDataPtr->animationData->ballSubpx &= 0xFF;
         }
         else
+        {
             gBattleSpritesDataPtr->animationData->ballSubpx += 176;
+        }
 
         sprite->sTimer++;
         sprite->affineAnimPaused = FALSE;
@@ -1364,7 +1363,9 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
                 ChangeSpriteAffineAnim(sprite, BALL_ROTATE_RIGHT);
         }
         else
+        {
             sprite->affineAnimPaused = TRUE;
+        }
         break;
     case BALL_ROLL_2:
         if (gBattleSpritesDataPtr->animationData->ballSubpx > 255)
@@ -1373,7 +1374,9 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
             gBattleSpritesDataPtr->animationData->ballSubpx &= 0xFF;
         }
         else
+        {
             gBattleSpritesDataPtr->animationData->ballSubpx += 176;
+        }
 
         sprite->sTimer++;
         sprite->affineAnimPaused = FALSE;
@@ -1408,7 +1411,9 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
             gBattleSpritesDataPtr->animationData->ballSubpx &= 0xFF;
         }
         else
+        {
             gBattleSpritesDataPtr->animationData->ballSubpx += 176;
+        }
 
         sprite->sTimer++;
         sprite->affineAnimPaused = FALSE;
@@ -1602,7 +1607,9 @@ static void SpriteCB_Ball_FadeOut(struct Sprite *sprite)
 static void DestroySpriteAfterOneFrame(struct Sprite *sprite)
 {
     if (sprite->sFrame == 0)
+    {
         sprite->sFrame = -1;
+    }
     else
     {
         FreeSpriteOamMatrix(sprite);
@@ -1622,7 +1629,9 @@ static void MakeCaptureStars(struct Sprite *sprite)
     u8 subpriority;
 
     if (sprite->subpriority)
+    {
         subpriority = sprite->subpriority - 1;
+    }
     else
     {
         subpriority = 0;
@@ -2559,7 +2568,9 @@ static void SpriteCB_ShinyStars_Diagonal(struct Sprite *sprite)
 {
     // Delayed four frames to de-sync from encircling stars
     if (sprite->sTimer < 4)
+    {
         sprite->sTimer++;
+    }
     else
     {
         sprite->invisible = FALSE;

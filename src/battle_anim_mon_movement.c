@@ -908,7 +908,7 @@ static void AnimTask_SlideOffScreen_Step(u8 taskId)
 // arg 1: wave amplitude
 // arg 2: wave period
 // arg 3: num sways
-// arg 4: which mon (0 = attacker, 1`= target)
+// arg 4: which mon (0 = attacker, 1 = target)
 void AnimTask_SwayMon(u8 taskId)
 {
     u8 spriteId;

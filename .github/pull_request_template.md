@@ -1,7 +1,12 @@
 <!--- Provide a general summary of your changes in the Title above -->
 
+<!--- Before submitting, please make sure your pull request meets the scope guidelines. If unsure, please open a thread in #pr-discussions.-->
+<!--- Scope Guidelines: https://github.com/rh-hideout/pokeemerald-expansion/blob/master/docs/team_procedures/scope.md  -->
+<!--- #pr-discussions:  https://discord.com/channels/419213663107416084/1102784418369785948 -->
+
 ## Description
 <!--- Describe your changes in detail -->
+<!--- If you believe this PR qualifies as a "Big Feature" as defined in docs/team_procedures/schedule.md, please let a Maintainer know! -->
 
 ## Images
 <!-- Please provide with relevant GIFs or images to make it easier for reviewers to accept your PR quicker.-->
@@ -13,7 +18,8 @@
 
 ## **People who collaborated with me in this PR**
 <!-- Please credit everyone else that contributed to this PR, be it code and/or assets. -->
-<!-- Use their GitHub tag if they have one. -->
+<!-- Use their GitHub tag if they have one (or add "@/" at the start if they don't). Be sure to start the line using @ so the automatic changelog can properly detect the collaborators. -->
+<!-- Eg.: "@Lunos for sprites, @/Masuda for support" -->
 <!-- If it doesn't apply, feel free to remove this section. -->
 
 ## Feature(s) this PR does NOT handle:

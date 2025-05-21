@@ -220,7 +220,7 @@ enum
     LIST_AI_CHECK_VIABILITY,
     LIST_AI_SETUP_FIRST_TURN,
     LIST_AI_RISKY,
-    LIST_AI_PREFER_STRONGEST_MOVE,
+    LIST_AI_TRY_TO_2HKO,
     LIST_AI_PREFER_BATON_PASS,
     LIST_AI_DOUBLE_BATTLE,
     LIST_AI_HP_AWARE,
@@ -385,7 +385,7 @@ static const u8 sText_TryToFaint[] = _("Try to Faint");
 static const u8 sText_CheckViability[] = _("Check Viability");
 static const u8 sText_SetUpFirstTurn[] = _("Setup First Turn");
 static const u8 sText_Risky[] = _("Risky");
-static const u8 sText_PreferStrongestMove[] = _("Prefer Strongest Move");
+static const u8 sText_TryTo2HKO[] = _("Try to 2HKO");
 static const u8 sText_PreferBatonPass[] = _("Prefer Baton Pass");
 static const u8 sText_DoubleBattle[] = _("Double Battle");
 static const u8 sText_HpAware[] = _("HP Aware");
@@ -628,7 +628,7 @@ static const struct ListMenuItem sAIListItems[] =
     {sText_CheckViability, LIST_AI_CHECK_VIABILITY},
     {sText_SetUpFirstTurn, LIST_AI_SETUP_FIRST_TURN},
     {sText_Risky, LIST_AI_RISKY},
-    {sText_PreferStrongestMove, LIST_AI_PREFER_STRONGEST_MOVE},
+    {sText_TryTo2HKO, LIST_AI_TRY_TO_2HKO},
     {sText_PreferBatonPass, LIST_AI_PREFER_BATON_PASS},
     {sText_DoubleBattle, LIST_AI_DOUBLE_BATTLE},
     {sText_HpAware, LIST_AI_HP_AWARE},
@@ -818,7 +818,7 @@ static void PrintDigitChars(struct BattleDebugMenu *data);
 static void SetUpModifyArrows(struct BattleDebugMenu *data);
 static void UpdateBattlerValue(struct BattleDebugMenu *data);
 static void UpdateMonData(struct BattleDebugMenu *data);
-static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
+static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
 static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 moveUp);
 static void SwitchToDebugView(u8 taskId);
 static void SwitchToDebugViewFromAiParty(u8 taskId);
@@ -1852,7 +1852,7 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
         charDigits[i] = valueDigits[i] + CHAR_0;
 }
 
-static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
+static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
 {
     struct SideTimer *sideTimer = &gSideTimers[GetBattlerSide(data->battlerId)];
 
@@ -1982,7 +1982,7 @@ static u8 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus,
                 *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_DAMAGE_NON_TYPES;
             else
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
-            sideTimer->damageNonTypesType = gMovesInfo[gCurrentMove].type;
+            sideTimer->damageNonTypesType = GetMoveType(gCurrentMove);
         }
         return &sideTimer->damageNonTypesTimer;
     case LIST_SIDE_RAINBOW:

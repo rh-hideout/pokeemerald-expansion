@@ -210,6 +210,50 @@ TEST("givemon [simple]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
 }
 
+TEST("givemon respects perfectIVCount")
+{
+    ZeroPlayerPartyMons();
+    u32 perfectIVs[6] = {0};
+
+    ASSUME(gSpeciesInfo[SPECIES_MEW].perfectIVCount == 3);
+    ASSUME(gSpeciesInfo[SPECIES_CELEBI].perfectIVCount == 3);
+    ASSUME(gSpeciesInfo[SPECIES_JIRACHI].perfectIVCount == 3);
+    ASSUME(gSpeciesInfo[SPECIES_MANAPHY].perfectIVCount == 3);
+    ASSUME(gSpeciesInfo[SPECIES_VICTINI].perfectIVCount == 3);
+    ASSUME(gSpeciesInfo[SPECIES_DIANCIE].perfectIVCount == 3);
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_MEW, 100;
+        givemon SPECIES_CELEBI, 100;
+        givemon SPECIES_JIRACHI, 100;
+        givemon SPECIES_MANAPHY, 100;
+        givemon SPECIES_VICTINI, 100;
+        givemon SPECIES_DIANCIE, 100;
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_MEW);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_CELEBI);
+    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_SPECIES), SPECIES_JIRACHI);
+    EXPECT_EQ(GetMonData(&gPlayerParty[3], MON_DATA_SPECIES), SPECIES_MANAPHY);
+    EXPECT_EQ(GetMonData(&gPlayerParty[4], MON_DATA_SPECIES), SPECIES_VICTINI);
+    EXPECT_EQ(GetMonData(&gPlayerParty[5], MON_DATA_SPECIES), SPECIES_DIANCIE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[3], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[4], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[5], MON_DATA_LEVEL), 100);
+    for (u32 j = 0; j < 6; j++)
+    {
+        for (u32 k = 0; k < NUM_STATS; k++)
+        {
+            if (GetMonData(&gPlayerParty[j], MON_DATA_HP_IV + k) == MAX_PER_STAT_IVS)
+                perfectIVs[j]++;
+        }
+        EXPECT_GE(perfectIVs[j], 3);
+    }
+}
+
 TEST("givemon [moves]")
 {
     ZeroPlayerPartyMons();
@@ -231,7 +275,7 @@ TEST("givemon [all]")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_TACKLE, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, isShiny=TRUE, ggMaxFactor=TRUE, teraType=TYPE_FIRE;
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_TACKLE, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, isShiny=TRUE, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
@@ -260,6 +304,7 @@ TEST("givemon [all]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_TERA_TYPE), TYPE_FIRE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DYNAMAX_LEVEL), 7);
 }
 
 TEST("givemon [vars]")
@@ -292,9 +337,10 @@ TEST("givemon [vars]")
     VarSet(VAR_TEMP_9, TRUE);
     VarSet(VAR_TEMP_A, TRUE);
     VarSet(VAR_TEMP_B, TYPE_FIRE);
+    VarSet(VAR_TEMP_E, 7);
 
     RUN_OVERWORLD_SCRIPT(
-        givemon VAR_TEMP_C, VAR_TEMP_D, item=VAR_0x8000, ball=VAR_0x8001, nature=VAR_0x8002, abilityNum=VAR_0x8003, gender=VAR_0x8004, hpEv=VAR_0x8005, atkEv=VAR_0x8006, defEv=VAR_0x8007, speedEv=VAR_0x8008, spAtkEv=VAR_0x8009, spDefEv=VAR_0x800A, hpIv=VAR_0x800B, atkIv=VAR_TEMP_0, defIv=VAR_TEMP_1, speedIv=VAR_TEMP_2, spAtkIv=VAR_TEMP_3, spDefIv=VAR_TEMP_4, move1=VAR_TEMP_5, move2=VAR_TEMP_6, move3=VAR_TEMP_7, move4=VAR_TEMP_8, isShiny=VAR_TEMP_9, ggMaxFactor=VAR_TEMP_A, teraType=VAR_TEMP_B;
+        givemon VAR_TEMP_C, VAR_TEMP_D, item=VAR_0x8000, ball=VAR_0x8001, nature=VAR_0x8002, abilityNum=VAR_0x8003, gender=VAR_0x8004, hpEv=VAR_0x8005, atkEv=VAR_0x8006, defEv=VAR_0x8007, speedEv=VAR_0x8008, spAtkEv=VAR_0x8009, spDefEv=VAR_0x800A, hpIv=VAR_0x800B, atkIv=VAR_TEMP_0, defIv=VAR_TEMP_1, speedIv=VAR_TEMP_2, spAtkIv=VAR_TEMP_3, spDefIv=VAR_TEMP_4, move1=VAR_TEMP_5, move2=VAR_TEMP_6, move3=VAR_TEMP_7, move4=VAR_TEMP_8, isShiny=VAR_TEMP_9, gmaxFactor=VAR_TEMP_A, teraType=VAR_TEMP_B, dmaxLevel=VAR_TEMP_E;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
@@ -323,6 +369,7 @@ TEST("givemon [vars]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_TERA_TYPE), TYPE_FIRE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DYNAMAX_LEVEL), 7);
 }
 
 TEST("checkteratype/setteratype work")
@@ -354,4 +401,24 @@ TEST("createmon [simple]")
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 100);
     EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_WYNAUT);
     EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_LEVEL), 10);
+}
+
+TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNER_MOVES")
+{
+    KNOWN_FAILING;
+
+    u32 j, count, species = 0;
+    const struct LevelUpMove *learnset;
+
+    for(j = 0; j < SPECIES_EGG; j++)
+    {
+        PARAMETRIZE { species = j; }
+    }
+
+    learnset = GetSpeciesLevelUpLearnset(species);
+    count = 0;
+    for (j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
+        count++;
+    EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
+    EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }

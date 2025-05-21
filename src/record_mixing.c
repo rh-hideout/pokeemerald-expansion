@@ -770,14 +770,12 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
     bool8 canHoldItem[MAX_LINK_PLAYERS][DAYCARE_MON_COUNT];
     u8 idxs[MAX_LINK_PLAYERS][2];
     u8 numDaycareCanHold;
-    u16 oldSeed;
     bool32 anyRS;
+    rng_value_t localRngState = LocalRandomSeed(gLinkPlayers[0].trainerId);
 
     // Seed RNG to the first player's trainer id so that
     // every player has the same random swap occur
     // (see the other use of Random2 in this function)
-    oldSeed = Random2();
-    SeedRng2(gLinkPlayers[0].trainerId);
     linkPlayerCount = GetLinkPlayerCount();
     for (i = 0; i < MAX_LINK_PLAYERS; i++)
     {
@@ -907,7 +905,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
             itemId2 = GetDaycareMailItemId(&mixMail->mail[1]);
 
             if ((!itemId1 && !itemId2) || (itemId1 && itemId2))
-                idxs[j][DAYCARE_SLOT] = Random2() % 2;
+                idxs[j][DAYCARE_SLOT] = LocalRandom32(&localRngState) % 2;
             else if (itemId1 && !itemId2)
                 idxs[j][DAYCARE_SLOT] = 0;
             else if (!itemId1 && itemId2)
@@ -958,7 +956,6 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
     mixMail = (void *)records + multiplayerId * recordSize;
     memcpy(&gSaveBlock1Ptr->daycare.mons[0].mail, &mixMail->mail[0], sizeof(struct DaycareMail));
     memcpy(&gSaveBlock1Ptr->daycare.mons[1].mail, &mixMail->mail[1], sizeof(struct DaycareMail));
-    SeedRng(oldSeed);
 }
 
 
