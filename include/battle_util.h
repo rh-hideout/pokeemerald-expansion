@@ -160,12 +160,12 @@ struct DamageCalculationData
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
-    u32 move:16;
+    u32 move:12;
     u32 moveType:5;
     u32 isCrit:1;
     u32 randomFactor:1;
     enum DmgCalcState state:1;
-    u32 padding:1;
+    u32 padding:6;
 };
 STATIC_ASSERT(sizeof(struct DamageCalculationData) <= 4, StructExceedsFourBytes);
 
