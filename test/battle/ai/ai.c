@@ -915,7 +915,7 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it will have no affect")
+AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
 {
     u32 ability;
 
