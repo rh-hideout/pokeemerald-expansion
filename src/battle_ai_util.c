@@ -2201,6 +2201,9 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
+// HasSideMoveWithMoveEffect checks if the AI knows a side has a move effect, 
+// while HasBattlerSideUsedMoveWithEffect checks if the side has ever used a move effect.
+// The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
 {
     u32 i;
@@ -2268,6 +2271,9 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     return FALSE;
 }
 
+// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect, 
+// while HasBattlerSideUsedMoveWithAdditionalEffect checks if the side has ever used a move effect.
+// The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
 {
     u32 i;
