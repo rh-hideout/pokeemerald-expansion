@@ -5854,8 +5854,8 @@ gBattleAnimMove_DualChop::
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 0x4, 0x4
 	delay 6
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 6, 1
-	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, 0xffe0, 0x0, 0x0, 0x0, 0xa, 0x1, 0x3, 0x0     @left
-	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, 0x0515, 0x0, 0x0, 0x0, 0xa, 0x1, 0x3, 0x0     @right
+	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, -32, 0, 0, 0, 10, 1, 3, 0     @left
+	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, 1301, 0, 0, 0, 10, 1, 3, 0     @right
 	waitforvisualfinish
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gDualChopImpactTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x1, 0x2
@@ -10467,7 +10467,7 @@ gBattleAnimMove_ThroatChop::
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
-	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, 0xfff0, 0x0, 0x0, 0x0, 0xa, 0x1, 0x3, 0x0
+	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, -16, 0, 0, 0, 10, 1, 3, 0
 	waitforvisualfinish
 	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101
 	createsprite gThroatChopRedImpactTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x1, 0x2
@@ -17062,7 +17062,7 @@ gBattleAnimMove_UpperHand::
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
-	createsprite gKarateChopSpriteTemplate, 2, 8, -16, 0, 0, 0, 10, 1, 3, 0
+	createsprite gKarateChopSpriteTemplate, ANIM_ATK_PARTNER, 8, -16, 0, 0, 0, 10, 1, 3, 0
 	waitforvisualfinish
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gForcePalmSpriteTemplate 3, 4, 0, 0, 1, 2
