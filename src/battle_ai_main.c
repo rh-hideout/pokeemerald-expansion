@@ -5407,19 +5407,19 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SUNNY_DAY:
-        if (!(AI_GetWeather() & (B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_RAIN_DANCE:
-        if (!(AI_GetWeather() & (B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_HAIL:
-        if (!(AI_GetWeather() & (B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SNOWSCAPE:
-        if (!(AI_GetWeather() & (B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
     }
 
