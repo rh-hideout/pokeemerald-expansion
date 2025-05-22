@@ -86,7 +86,7 @@ git switch -c newFeature # the name newFeature can be anything you want. This tu
 #### 4. Copy your target branch to your new branch
 This will change your new branch to match the latest version of your chosen target branch.
 ```bash
-git reset --hard /upcoming # If your PR is going to target master, replace upcoming with master.
+git reset --hard upcoming # If your PR is going to target master, replace upcoming with master.
 ```
 
 #### 5. Implement your code
