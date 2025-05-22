@@ -4307,7 +4307,7 @@ static void SetMoveTypeIcons(void)
             type = GetMoveType(summary->moves[i]);
             if (P_SHOW_DYNAMIC_TYPES)
             {
-                enum MonState state = gMain.inBattle ? MON_SUMMARY_SCREEN : MON_OUTSIDE_BATTLE;
+                enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
                 type = CheckDynamicMoveType(mon, sMonSummaryScreen->newMove, 0, state); // Bug: in battle, this only shows the dynamic type of battler in position 0
             }
 
@@ -4340,7 +4340,7 @@ static void SetNewMoveTypeIcon(void)
 
     if (P_SHOW_DYNAMIC_TYPES)
     {
-        enum MonState state = gMain.inBattle ? MON_SUMMARY_SCREEN : MON_OUTSIDE_BATTLE;
+        enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
         type = CheckDynamicMoveType(mon, sMonSummaryScreen->newMove, 0, state);  // Bug: in battle, this only shows the dynamic type of battler in position 0
     }
 

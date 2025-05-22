@@ -5771,7 +5771,7 @@ void RunBattleScriptCommands(void)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
 }
 
-bool32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
+u32 TrySetAteType(u32 move, u32 battlerAtk, u32 attackerAbility)
 {
     u32 ateType = TYPE_NONE;
 
@@ -5822,13 +5822,12 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     u32 moveType = GetMoveType(move);
     u32 moveEffect = GetMoveEffect(move);
     u32 species, heldItem, holdEffect, ability, type1, type2, type3;
-    bool32 monInBattle = state == MON_IN_BATTLE || state == MON_SUMMARY_SCREEN;
     enum Gimmick gimmick = GetActiveGimmick(battler);
 
     if (move == MOVE_STRUGGLE)
         return TYPE_NORMAL;
 
-    if (monInBattle)
+    if (state == MON_IN_BATTLE)
     {
         species = gBattleMons[battler].species;
         heldItem = gBattleMons[battler].item;
@@ -5852,7 +5851,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     switch (moveEffect)
     {
     case EFFECT_WEATHER_BALL:
-        if (monInBattle)
+        if (state == MON_IN_BATTLE)
         {
             if (HasWeatherEffect())
             {
@@ -5893,7 +5892,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     case EFFECT_HIDDEN_POWER:
         {
             u32 typeBits = 0;
-            if (monInBattle)
+            if (state == MON_IN_BATTLE)
             {
                 typeBits = ((gBattleMons[battler].hpIV & 1) << 0)
                         | ((gBattleMons[battler].attackIV & 1) << 1)
@@ -5972,7 +5971,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         else
             return moveType;
     case EFFECT_TERRAIN_PULSE:
-        if (monInBattle)
+        if (state == MON_IN_BATTLE)
         {
             if (IsBattlerTerrainAffected(battler, STATUS_FIELD_TERRAIN_ANY))
             {
