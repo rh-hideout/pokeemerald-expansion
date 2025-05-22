@@ -622,4 +622,10 @@ enum SlideMsgStates
     RESTORE_BATTLER_SLIDE_CONTROL,
 };
 
+enum MonState
+{
+    MON_IN_BATTLE,
+    MON_OUTSIDE_BATTLE,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_H
