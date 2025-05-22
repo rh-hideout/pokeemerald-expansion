@@ -815,3 +815,18 @@ AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would be
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI won't use stat boosting moves if the player has used Haze")
+{
+    PASSES_RANDOMLY(BOOST_INTO_HAZE_CHANCE, 100, RNG_AI_BOOST_INTO_HAZE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HAZE) == EFFECT_HAZE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_DANCE) == EFFECT_DRAGON_DANCE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_HAZE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_DRAGON_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAZE); EXPECT_MOVE(opponent, MOVE_DRAGON_DANCE); }
+        TURN { MOVE(player, MOVE_HAZE); EXPECT_MOVE(opponent, MOVE_DRAGON_DANCE); }
+    }
+}
