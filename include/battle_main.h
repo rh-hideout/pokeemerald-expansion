@@ -93,7 +93,7 @@ const u8* FaintClearSetData(u32 battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(u32 battler);
 void SwitchTwoBattlersInParty(u32 battler, u32 battler2);
-void SwitchPartyOrder(u32 battlerId);
+void SwitchPartyOrder(u32 battler);
 void SwapTurnOrder(u8 id1, u8 id2);
 u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 u32 GetBattlerTotalSpeedStat(u32 battler);

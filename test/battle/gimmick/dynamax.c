@@ -455,7 +455,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain 
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, player);
     } THEN {
         EXPECT_MUL_EQ(maxHP - hp, GetDynamaxLevelHPMultiplier(0, FALSE), player->maxHP - player->hp);
     }
