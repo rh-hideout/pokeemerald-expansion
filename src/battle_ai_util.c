@@ -2196,7 +2196,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
 {
     if (HasMoveWithEffect(battler, effect))
         return TRUE;
-    if (IsDoubleBattle() && HasMoveWithEffect(BATTLE_PARTNER(battler), effect))
+    if (IsDoubleBattle() && HasMoveWithEffect(GetPartnerBattler(battler), effect))
         return TRUE;
     return FALSE;
 }
@@ -2208,7 +2208,7 @@ bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
     {
         if (GetMoveEffect(gBattleHistory->usedMoves[battler][i]) == effect)
             return TRUE;
-        if (IsDoubleBattle() && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
+        if (IsDoubleBattle() && GetMoveEffect(gBattleHistory->usedMoves[GetPartnerBattler(battler)][i]) == effect)
             return TRUE;
     }
     return FALSE;
@@ -2263,7 +2263,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
 {
     if (HasMoveWithAdditionalEffect(battler, moveEffect))
         return TRUE;
-    if (IsDoubleBattle() && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
+    if (IsDoubleBattle() && HasMoveWithAdditionalEffect(GetPartnerBattler(battler), moveEffect))
         return TRUE;
     return FALSE;
 }
@@ -2275,7 +2275,7 @@ bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     {
         if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
             return TRUE;
-        if (IsDoubleBattle() && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
+        if (IsDoubleBattle() && MoveHasAdditionalEffect(gBattleHistory->usedMoves[GetPartnerBattler(battler)][i], moveEffect))
             return TRUE;
     }
     return FALSE;
