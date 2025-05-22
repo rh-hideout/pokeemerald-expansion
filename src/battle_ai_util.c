@@ -2201,6 +2201,19 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
+bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
+{
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (GetMoveEffect(gBattleHistory->usedMoves[battler][i]) == effect)
+            return TRUE;
+        if (IsDoubleBattle() && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect)
 {
     s32 i;
@@ -2252,6 +2265,19 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
         return TRUE;
     if (IsDoubleBattle() && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
         return TRUE;
+    return FALSE;
+}
+
+bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
+{
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
+            return TRUE;
+        if (IsDoubleBattle() && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
+            return TRUE;
+    }
     return FALSE;
 }
 
@@ -4092,26 +4118,16 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
-    // Don't increase stats if opposing battler has used Haze
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (GetMoveEffect(gBattleHistory->usedMoves[battlerDef][i]) == EFFECT_HAZE
-            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[battlerDef][i], MOVE_EFFECT_CLEAR_SMOG)
-            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[battlerDef][i], MOVE_EFFECT_HAZE))
-            return NO_INCREASE;
-        else if (IsDoubleBattle() && (GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battlerDef)][i]) == EFFECT_HAZE
-            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battlerDef)][i], MOVE_EFFECT_CLEAR_SMOG)
-            || MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battlerDef)][i], MOVE_EFFECT_HAZE)))
-            return NO_INCREASE;
-    }
+    // Don't increase stats if opposing battler has used Haze effect
+    if (HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE)
+        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
+        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE))
+        return NO_INCREASE;
 
-    // Don't increase if AI is at +1 and opponent has Haze
+    // Don't increase if AI is at +1 and opponent has Haze effect
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5 && (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_HAZE)
         || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
         || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE)))
-        return NO_INCREASE;
-
-    if (IsDoubleBattle() && HasMoveWithEffect(GetPartnerBattler(battlerDef), EFFECT_ENCORE))
         return NO_INCREASE;
 
     // Predicting switch
