@@ -35,7 +35,7 @@ This section guides you through submitting a feature request for pokeemerald-exp
 
 ### What should I do before making a feature request?
 
-- Make sure your request is in [pokeemerald-expansion's scope](/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server](https://discord.gg/6CzjAG6GZk).
+- Make sure your request is in [pokeemerald-expansion's scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server](https://discord.gg/6CzjAG6GZk).
 
 ### What should I do before making a feature request?
 
@@ -49,7 +49,7 @@ To request a feature to be added to the project, open a [feature request](https:
 ### What happens after I submit a feature request?
 
 - A maintainer will [label](https://github.com/rh-hideout/pokeemerald-expansion/labels) the issue.
-- If the feature request is out of [scope](/team_procedures/scope.md), it will be closed.
+- If the feature request is out of [scope](docs/team_procedures/scope.md), it will be closed.
 - if the request is in scope, any other contributor can volunteer to [fufill it via a pull request](#Pull-Requests). When the request is filled, the request will be closed.
 
 ## Pull Requests
@@ -59,7 +59,7 @@ If you have read all of this and still need help, feel free to start a thread in
 ### What should I do before starting a pull request?
 
 - If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/) has a [guide on forking and cloning the repository](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/wiki/The-Basics-of-GitHub). Make sure you have a [local copy](INSTALL.md) of `pokeemerald-expansion`.
-- Make sure your contribution is in [scope](/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
+- Make sure your contribution is in [scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
 - Choose a branch to contribute your PR to:
     - **`master`**: Fixes for bugs that are currently present in the `master` branch.
     - **`upcoming`**: All other pull requests.
