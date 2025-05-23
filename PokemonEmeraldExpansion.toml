@@ -1,0 +1,3984 @@
+[General]
+ApplicationVersion = '''0.5.6'''
+FreeSpaceSearch = '''000200'''
+FreeSpaceBuffer = '''040'''
+NextExportID = '''0'''
+ShowRawIVByteForTrainer = False
+
+#################################
+[[NamedAnchors]]
+Name = '''data.header.title'''
+Address = 0x0000A0
+Format = '''`asc`12'''
+DefaultHash = '''662A937D'''
+
+[[NamedAnchors]]
+Name = '''data.header.gamecode'''
+Address = 0x0000AC
+Format = '''`asc`4'''
+DefaultHash = '''51418EA3'''
+
+[[NamedAnchors]]
+Name = '''data.header.makercode'''
+Address = 0x0000B0
+Format = '''`asc`2'''
+DefaultHash = '''B214E3C3'''
+
+[[NamedAnchors]]
+Name = '''data.header.romname'''
+Address = 0x000108
+Format = '''`asc`32'''
+DefaultHash = '''0DF0CDE2'''
+
+[[NamedAnchors]]
+Name = '''sound.newgame.titlescreen.song'''
+Address = 0x0AAAE8
+Format = '''[track::songnames]1'''
+DefaultHash = '''69E83D68'''
+
+[[NamedAnchors]]
+Name = '''graphics.text.font.japan4.characters'''
+Address = 0x65C4E4
+Format = '''`ucs2x16x128`'''
+DefaultHash = '''C6AABA23'''
+
+[[NamedAnchors]]
+Name = '''graphics.text.font.japan4.width'''
+Address = 0x6644E4
+Format = '''[width.]512'''
+DefaultHash = '''9FEC0E11'''
+
+[[NamedAnchors]]
+Name = '''graphics.text.font.japan5.characters'''
+Address = 0x6646E4
+Format = '''`ucs2x16x128`'''
+DefaultHash = '''C6AABA23'''
+
+[[NamedAnchors]]
+Name = '''graphics.text.font.japan5.width'''
+Address = 0x66C6E4
+Format = '''[width.]512'''
+DefaultHash = '''9FEC0E11'''
+
+[[NamedAnchors]]
+Name = '''scripts.battle.badge.obey.flags'''
+Address = 0x045DC4
+Format = '''[word::|h]4'''
+DefaultHash = '''34CCD589'''
+
+[[NamedAnchors]]
+Name = '''scripts.battle.badge.obey.0badges'''
+Address = 0x045D4A
+Format = '''[level.]1'''
+DefaultHash = '''5B7F8610'''
+
+[[NamedAnchors]]
+Name = '''scripts.battle.badge.obey.2badges'''
+Address = 0x045D58
+Format = '''[level.]scripts.battle.badge.obey.0badges'''
+DefaultHash = '''6EF97965'''
+
+[[NamedAnchors]]
+Name = '''scripts.battle.badge.obey.4badges'''
+Address = 0x045D66
+Format = '''[level.]scripts.battle.badge.obey.0badges'''
+DefaultHash = '''6EF97965'''
+
+[[NamedAnchors]]
+Name = '''scripts.battle.badge.obey.6badges'''
+Address = 0x045D74
+Format = '''[level.]scripts.battle.badge.obey.0badges'''
+DefaultHash = '''6EF97965'''
+
+[[NamedAnchors]]
+Name = '''data.items.stats'''
+Address = 0x190D4AC
+Format = '''[name""13 unused. index: price: holdeffect.holdeffects param. description<""> keyitemvalue. bagkeyitem. pocket.pocketid type.|s=pocket(0=itemtype|1=itemtype|3=itemtype|4=itemtype|5=itemtype) fieldeffect<> battleusage:: battleeffect<> battleextra::]data.items.count'''
+DefaultHash = '''96642A43'''
+
+[[NamedAnchors]]
+Name = '''data.menus.text.pc'''
+Address = 0x49371C
+Format = '''[text<""> msgvar::messagevars]31'''
+DefaultHash = '''9D0F6DEF'''
+
+[[NamedAnchors]]
+Name = '''graphics.pokemon.sprites.elevation'''
+Address = 0x48A190
+Format = '''[elevation.]data.pokemon.names'''
+DefaultHash = '''052A8530'''
+
+[[NamedAnchors]]
+Name = '''graphics.trainers.sprites.back.throw'''
+Address = 0x4A101C
+Format = '''[titleTag:|h paletteTag:|h oam<> anims<> sprites<`osl|graphics.trainers.palettes.back:sprite`> affineAnimations<> callback<>]graphics.trainers.sprites.back.enter'''
+DefaultHash = '''7DB38EA7'''
+
+[[NamedAnchors]]
+Name = '''graphics.items.ball.palettes'''
+Address = 0x190DD10
+Format = '''[palette<`lzp4`> a b unused:]graphics.items.ball.sprites'''
+DefaultHash = '''F8F2B863'''
+
+[[NamedAnchors]]
+Name = '''graphics.items.sprites'''
+Address = 0x1D7CC1
+Format = '''[sprite<`lzs4x3x3`> palette<`lzp4`>]data.items.stats+1'''
+DefaultHash = '''A0AF2FB0'''
+
+[[NamedAnchors]]
+Name = '''data.pokedex.search.alpha'''
+Address = 0x4C80F8
+Format = '''[species:data.pokedex.national]data.pokedex.national'''
+DefaultHash = '''742C6C04'''
+
+[[NamedAnchors]]
+Name = '''data.text.menu.itemStorage'''
+Address = 0x169455
+Format = '''[text<""> thumb<>]1'''
+DefaultHash = '''CA82776B'''
+
+[[NamedAnchors]]
+Name = '''sound.fanfares'''
+Address = 0x49E880
+Format = '''[songID:songnames duration:]18'''
+DefaultHash = '''7383D525'''
+
+#################################
+#################################
+[[MatchedWords]]
+Name = '''scripts.money.cap'''
+Address = 0x0E5188
+Length = 4
+
+[[MatchedWords]]
+Name = '''scripts.daycare.exp.multiplier'''
+Address = 0x070AE8
+Length = 1
+Note = '''Picking an even number will prevent new eggs from being created.'''
+
+[[MatchedWords]]
+Name = '''scripts.newgame.money'''
+Address = 0x0845BC
+Length = 2
+
+[[MatchedWords]]
+Name = '''scripts.newgame.pokemon.level'''
+Address = 0x0B1178
+Length = 1
+
+[[MatchedWords]]
+Name = '''scripts.newgame.start.bank'''
+Address = 0x084456
+Length = 1
+
+[[MatchedWords]]
+Name = '''scripts.newgame.start.map'''
+Address = 0x084458
+Length = 1
+
+[[MatchedWords]]
+Name = '''scripts.exp.boost.luckyegg'''
+Address = 0x04A682
+Length = 1
+
+[[MatchedWords]]
+Name = '''scripts.exp.boost.trainer'''
+Address = 0x04A69E
+Length = 1
+
+[[MatchedWords]]
+Name = '''scripts.exp.boost.traded'''
+Address = 0x04A6FC
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.pokemon.type.holdEffect.length'''
+Address = 0x069778
+Length = 1
+Offset = -1
+
+[[MatchedWords]]
+Name = '''data.trainers.call.odds.normal'''
+Address = 0x195E8E
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.trainers.call.odds.lightningrod'''
+Address = 0x195EAC
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.trainers.gym.leader.battles.needed.rematch1'''
+Address = 0x0B1220
+Length = 1
+Note = '''After this many  wild battles, there is a 31% chance of a gym leader rematch becoming available.'''
+
+[[MatchedWords]]
+Name = '''data.trainers.gym.leader.battles.needed.rematch2'''
+Address = 0x0B123C
+Length = 1
+Note = '''After this many trainer battles, there is a 31% chance of a gym leader rematch becoming available.'''
+
+[[MatchedWords]]
+Name = '''data.trainers.gym.leader.battles.needed.rematch3'''
+Address = 0x163A10
+Length = 1
+Note = '''After this many battle-frontier battles, there is a 31% chance of a gym leader rematch becoming available.'''
+
+[[MatchedWords]]
+Name = '''scripts.evolution.count'''
+Address = 0x06D180
+Length = 1
+Offset = -1
+
+[[MatchedWords]]
+Name = '''data.items.count'''
+Address = 0x1B0014
+Length = 2
+
+[[MatchedWords]]
+Name = '''scripts.moves.flash.maxlevel'''
+Address = 0x54FE78
+Length = 1
+Offset = -1
+
+[[MatchedWords]]
+Name = '''scripts.games.safari.balls.count'''
+Address = 0x0FC0E6
+Length = 1
+
+[[MatchedWords]]
+Name = '''graphics.overworld.tablelength'''
+Address = 0x08E6C4
+Length = 1
+Offset = -1
+
+#################################
+[[OffsetPointer]]
+Address = 0x038850
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x0389F8
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x069188
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x069230
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x06B82C
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x06E624
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x06F0D0
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x14F21C
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x14F504
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x196A98
+Offset = 0x000004
+
+[[OffsetPointer]]
+Address = 0x13094C
+Offset = 0x000010
+
+[[OffsetPointer]]
+Address = 0x122CB0
+Offset = 0xFFFFFFF8
+
+[[OffsetPointer]]
+Address = 0x122CD0
+Offset = 0xFFFFFFF8
+
+#################################
+[[List]]
+Name = '''weathertypes'''
+DefaultHash = '''5C45A6FC'''
+0 = [
+   '''None''',
+   '''SunnyClouds''',
+   '''Sunny''',
+   '''Rain''',
+   '''Snow''',
+   '''RainThunderstorm''',
+   '''FogHorizontal''',
+   '''VolcanicAsh''',
+   '''Sandstorm''',
+   '''FogDiagonal''',
+   '''Underwater''',
+   '''Shade''',
+   '''Drought''',
+   '''Downpour''',
+   '''UnderwaterBubbles''',
+   '''Abnormal''',
+   '''Route119Cycle''',
+   '''Route123Cycle''',
+]
+
+[[List]]
+Name = '''maptypes'''
+DefaultHash = '''11367EB2'''
+0 = [
+   '''none''',
+   '''town''',
+   '''city''',
+   '''route''',
+   '''underground''',
+   '''underwater''',
+   '''ocean_route''',
+   '''unknown''',
+   '''indoor''',
+   '''secret_base''',
+]
+
+[[List]]
+Name = '''mapdirections'''
+DefaultHash = '''374FA6D0'''
+0 = [
+   '''None''',
+   '''Down''',
+   '''Up''',
+   '''Left''',
+   '''Right''',
+   '''Dive''',
+   '''Emerge''',
+]
+
+[[List]]
+Name = '''egggroups'''
+DefaultHash = '''4CF53988'''
+0 = [
+   '''None''',
+   '''Monster''',
+   '''Water1''',
+   '''Bug''',
+   '''Flying''',
+   '''Field''',
+   '''Fairy''',
+   '''Grass''',
+   '''Human-Like''',
+   '''Water3''',
+   '''Mineral''',
+   '''Amorphous''',
+   '''Water2''',
+   '''Ditto''',
+   '''Dragon''',
+   '''Undiscovered''',
+]
+
+[[List]]
+Name = '''scriptvariablealiases'''
+DefaultHash = '''480EC564'''
+16384 = [
+   '''temp0''',
+   '''temp1''',
+   '''temp2''',
+   '''temp3''',
+   '''temp4''',
+   '''temp5''',
+   '''temp6''',
+   '''temp7''',
+   '''temp8''',
+   '''temp9''',
+   '''tempA''',
+   '''tempB''',
+   '''tempC''',
+   '''tempD''',
+   '''tempE''',
+   '''tempF''',
+   '''gfx0''',
+   '''gfx1''',
+   '''gfx2''',
+   '''gfx3''',
+   '''gfx4''',
+   '''gfx5''',
+   '''gfx6''',
+   '''gfx7''',
+   '''gfx8''',
+   '''gfx9''',
+   '''gfxA''',
+   '''gfxB''',
+   '''gfxC''',
+   '''gfxD''',
+   '''gfxE''',
+   '''gfxF''',
+]
+32768 = [
+   '''var0''',
+   '''var1''',
+   '''var2''',
+   '''var3''',
+   '''var4''',
+   '''var5''',
+   '''var6''',
+   '''var7''',
+   '''var8''',
+   '''var9''',
+   '''varA''',
+   '''varB''',
+   '''varFacing''',
+   '''varResult''',
+   '''varItemID''',
+   '''varLastTalked''',
+]
+
+[[List]]
+Name = '''FacingOptions'''
+DefaultHash = '''A60E2217'''
+0 = [
+   '''NoMovement''',
+   '''LookAround''',
+   '''WanderAround''',
+   '''WanderUpAndDown''',
+   '''WanderDownAndUp''',
+   '''WanderLeftAndRight''',
+   '''WanderRightAndLeft''',
+   '''FaceUp''',
+   '''FaceDown''',
+   '''FaceLeft''',
+   '''FaceRight''',
+   '''Player''',
+   '''BerryTreeGrowth''',
+   '''FaceDownAndUp''',
+   '''FaceLeftAndRight''',
+   '''FaceUpAndLeft''',
+   '''FaceUpAndRight''',
+   '''FaceDownAndLeft''',
+   '''FaceDownAndRight''',
+   '''FaceDownUpAndLeft''',
+   '''FaceDownUpAndRight''',
+   '''FaceUpLeftAndRight''',
+   '''FaceDownLeftAndRight''',
+   '''RotateCounterclockwise''',
+   '''RotateClockwise''',
+   '''WalkUpAndDown''',
+   '''WalkDownAndUp''',
+   '''WalkLeftAndRight''',
+   '''WalkRightAndLeft''',
+   '''WalkSequenceUpRightLeftDown''',
+   '''WalkSequenceRightLeftDownUp''',
+   '''WalkSequenceDownUpRightLeft''',
+   '''WalkSequenceLeftDownUpRight''',
+   '''WalkSequenceUpLeftRightDown''',
+   '''WalkSequenceLeftRightDownUp''',
+   '''WalkSequenceDownUpLeftRight''',
+   '''WalkSequenceRightDownUpLeft''',
+   '''WalkSequenceLeftUpDownRight''',
+   '''WalkSequenceUpDownRightLeft''',
+   '''WalkSequenceRightLeftUpDown''',
+   '''WalkSequenceDownRightLeftUp''',
+   '''WalkSequenceRightUpDownLeft''',
+   '''WalkSequenceUpDownLeftRight''',
+   '''WalkSequenceLeftRightUpDown''',
+   '''WalkSequenceDownLeftRightUp''',
+   '''WalkSequenceUpLeftDownRight''',
+   '''WalkSequenceDownRightUpLeft''',
+   '''WalkSequenceLeftDownRightUp''',
+   '''WalkSequenceRightUpLeftDown''',
+   '''WalkSequenceUpRightDownLeft''',
+   '''WalkSequenceDownLeftUpRight''',
+   '''WalkSequenceLeftUpRightDown''',
+   '''WalkSequenceRightDownLeftUp''',
+   '''CopyPlayer''',
+   '''CopyPlayerOpposite''',
+   '''CopyPlayerCounterclockwise''',
+   '''CopyPlayerClockwise''',
+   '''TreeDisguise''',
+   '''MountainDisguise''',
+   '''CopyPlayerInGrass''',
+   '''CopyPlayerOppositeInGrass''',
+   '''CopyPlayerCounterclockwiseInGrass''',
+   '''CopyPlayerClockwiseInGrass''',
+   '''Buried''',
+   '''WalkInPlaceDown''',
+   '''WalkInPlaceUp''',
+   '''WalkInPlaceLeft''',
+   '''WalkInPlaceRight''',
+   '''WalkSlowlyInPlaceDown''',
+   '''WalkSlowlyInPlaceUp''',
+   '''WalkSlowlyInPlaceLeft''',
+   '''WalkSlowlyInPlaceRight''',
+   '''JogInPlaceDown''',
+   '''JogInPlaceUp''',
+   '''JogInPlaceLeft''',
+   '''JogInPlaceRight''',
+   '''Invisible''',
+   '''VsSeeker4d''',
+   '''VsSeeker4e''',
+   '''VsSeeker4f''',
+   '''WanderAroundSlower''',
+]
+
+[[List]]
+Name = '''terrains'''
+DefaultHash = '''E83FE8B9'''
+0 = [
+   '''grass''',
+   '''long grass''',
+   '''sand''',
+   '''underwater''',
+   '''water''',
+   '''pond water''',
+   '''rock''',
+   '''cave''',
+   '''building''',
+   '''plain''',
+]
+
+[[List]]
+Name = '''growthrates'''
+DefaultHash = '''A63200DC'''
+0 = [
+   '''Medium Fast''',
+   '''Erratic''',
+   '''Fluctuating''',
+   '''Medium Slow''',
+   '''Fast''',
+   '''Slow''',
+]
+
+[[List]]
+Name = '''bodycolors'''
+DefaultHash = '''89A569F4'''
+0 = [
+   '''Red''',
+   '''Blue''',
+   '''Yellow''',
+   '''Green''',
+   '''Black''',
+   '''Brown''',
+   '''Purple''',
+   '''Gray''',
+   '''White''',
+   '''Pink''',
+]
+
+[[List]]
+Name = '''effectiveness'''
+DefaultHash = '''381AF281'''
+0 = '''None'''
+5 = '''Half'''
+10 = '''Normal'''
+20 = '''Double'''
+
+[[List]]
+Name = '''contesteffectnames'''
+DefaultHash = '''DAA1D7FA'''
+0 = [
+   '''HighlyAppealing''',
+   '''UserMoreEasilyStartled''',
+   '''GreatAppealButNoMoreMoves''',
+   '''RepetitionNotBoring''',
+   '''AvoidStartleOnce''',
+   '''AvoidStartle''',
+   '''AvoidStartleSlightly''',
+   '''UserLessEasilyStartled''',
+   '''StartleFrontMon''',
+   '''SlightlyStartlePrevMons''',
+   '''StartlePrevMon''',
+   '''StartlePrevMons''',
+   '''BadlyStartleFrontMon''',
+   '''BadlyStartlePrevMons''',
+   '''StartlePrevMon2''',
+   '''StartPrevMons2''',
+   '''ShiftJudgeAttention''',
+   '''StartleMonWithJudgesAttention''',
+   '''JamsOthersButMissOneTurn''',
+   '''StartleMonsSameTypeAppeal''',
+   '''StartMonsCoolAppeal''',
+   '''StartleMonsBeautyAppeal''',
+   '''StartleMonsCuteAppeal''',
+   '''StartleMonsSmartAppeal''',
+   '''StartleMonsToughAppeal''',
+   '''MakeFollowingMonNervous''',
+   '''MakeFollowingMonsNervous''',
+   '''WorsenConditionOfPrevMons''',
+   '''BadlyStartlesMonsInGoodCondition''',
+   '''BetterIfFirst''',
+   '''BetterIfLast''',
+   '''AppealAsGoodAsPrevOnes''',
+   '''AppealAsGoodAsPrevOne''',
+   '''BetterWhenLater''',
+   '''QualityDependsOnTiming''',
+   '''BetterIfSameType''',
+   '''BetterIfDiffType''',
+   '''AffectedByPrevAppeal''',
+   '''ImproveConditionPreventNervousness''',
+   '''BetterWithGoodCondition''',
+   '''NextAppealEarlier''',
+   '''NextAppealLater''',
+   '''MakeScramblingTurnOrderEasier''',
+   '''ScrambleNextTurnOrder''',
+   '''ExciteAudienceInAnyContest''',
+   '''BadlyStartleMonsWithGoodAppeals''',
+   '''BettenWhenAudienceExcited''',
+   '''DontExciteAudience''',
+]
+
+[[List]]
+Name = '''contesteffects'''
+DefaultHash = '''A97C9ED7'''
+0 = [
+   '''Appeal''',
+   '''AvoidStartle''',
+   '''StartleMon''',
+   '''StartleMons''',
+   '''Worsen''',
+   '''SpecialAppeal''',
+   '''TurnOrder''',
+]
+
+[[List]]
+Name = '''contestcombostarter'''
+DefaultHash = '''07023C4E'''
+0 = [
+   '''-''',
+   '''Rain Dance''',
+   '''Rage''',
+   '''Focus Energy''',
+   '''Hypnosis''',
+   '''Endure''',
+   '''Horn Attack''',
+   '''Swords Dance''',
+   '''Stockpile''',
+   '''Sunny Day''',
+   '''Rest''',
+   '''Vice Grip''',
+   '''Defense Curl''',
+   '''Charge''',
+   '''Rock Throw''',
+   '''Yawn''',
+   '''Scary Face''',
+   '''Powder Snow''',
+   '''Lock On''',
+   '''Soft Boiled''',
+   '''Mean Look''',
+   '''Scratch''',
+   '''Growth''',
+   '''Hail''',
+   '''Sandstorm''',
+   '''Belly Drum''',
+   '''Mind Reader''',
+   '''Dragon Breath''',
+   '''Dragon Rage''',
+   '''Dragon Dance''',
+   '''Surf''',
+   '''Dive''',
+   '''String Shot''',
+   '''Leer''',
+   '''Taunt''',
+   '''Charm''',
+   '''Harden''',
+   '''Sing''',
+   '''Earthquake''',
+   '''DoubleTeam''',
+   '''Curse''',
+   '''SweetScent''',
+   '''Sludge''',
+   '''Sludge Bomb''',
+   '''Thunder Punch''',
+   '''Fire Punch''',
+   '''Ice Punch''',
+   '''Peck''',
+   '''Metal Sound''',
+   '''Mud Sport''',
+   '''Water Sport''',
+   '''Bone Club''',
+   '''Bonemerang''',
+   '''Bone Rush''',
+   '''Sand Attack''',
+   '''Mud Slap''',
+   '''Fake Out''',
+   '''Psychic''',
+   '''Kinesis''',
+   '''Confusion''',
+   '''Pound''',
+   '''Smog''',
+   '''Calm Mind''',
+]
+
+[[List]]
+Name = '''moveeffectoptions'''
+DefaultHash = '''BEB1E0CE'''
+0 = [
+   '''None''',
+   '''SleepPrimary''',
+   '''PoisonHitChance''',
+   '''HealHalfDamage''',
+   '''BurnHitChance''',
+   '''FreezeHitChance''',
+   '''ParalyzeHitChance''',
+   '''SelfKOAndAttack''',
+   '''HealHalfIfOpponentSleeping''',
+   '''RepeatTargetMove''',
+   '''RaiseAttack1Primary''',
+   '''RaiseDefense1Primary''',
+   '''Unused0C''',
+   '''RaiseSpAttack1Primary''',
+   '''Unused0E''',
+   '''Unused0F''',
+   '''RaiseEvasiveness1Primary''',
+   '''NeverMiss''',
+   '''LowerAttack1Primary''',
+   '''LowerDefense1Primary''',
+   '''LowerSpeed1Primary''',
+   '''Unused15''',
+   '''Unused16''',
+   '''LowerAccuracy1Primary''',
+   '''LowerEvasion1Primary''',
+   '''RemoveStateChanges''',
+   '''Bide''',
+   '''2to3turnsThenConfused''',
+   '''OpponentSwitch''',
+   '''2to5hits''',
+   '''ChangeTypeToFriendlyMove''',
+   '''Flinch''',
+   '''HealHalfSelf''',
+   '''BadPoisonPrimary''',
+   '''Money''',
+   '''RaiseSpDefense2Wall''',
+   '''ParalyzeBurnFreeze''',
+   '''Rest''',
+   '''OHKO''',
+   '''2turnHighCrit''',
+   '''HalfDamage''',
+   '''40Damage''',
+   '''2to5turnTrap''',
+   '''HighCrit''',
+   '''2hits''',
+   '''MissHurtSelf''',
+   '''PreventStatReduction''',
+   '''RaiseCriticalRate''',
+   '''25Recoil''',
+   '''ConfusionPrimary''',
+   '''RaiseAttack2Primary''',
+   '''RaiseDefense2Primary''',
+   '''RaiseSpeed2Primary''',
+   '''RaiseSpAttack2Primary''',
+   '''RaiseSpDefense2Primary''',
+   '''Unused37''',
+   '''Unused38''',
+   '''Transform''',
+   '''LowerAttack2Primary''',
+   '''LowerDefense2Primary''',
+   '''LowerSpeed2Primary''',
+   '''Unused3D''',
+   '''LowerSpDefense2Primary''',
+   '''Unused3F''',
+   '''Unused40''',
+   '''RaiseDefense2Wall''',
+   '''PoisonPrimary''',
+   '''ParalyzePrimary''',
+   '''LowerAttack1HitChance''',
+   '''LowerDefense1HitChance''',
+   '''LowerSpeed1HitChance''',
+   '''LowerSpAttack1HitChance''',
+   '''LowerSpDefense1HitChance''',
+   '''LowerAccuracy1HitChance''',
+   '''Unused4A''',
+   '''2turnHighCritFlinch''',
+   '''ConfusionHitChance''',
+   '''2hitsPoisonHitChance''',
+   '''NeverMissMoveLast''',
+   '''Substitute''',
+   '''SkipNextTurn''',
+   '''RaiseAttack1IfDamaged''',
+   '''Mimic''',
+   '''RandomMove''',
+   '''SeedOpponent''',
+   '''Splash''',
+   '''Disable''',
+   '''DamageBasedOnLevel''',
+   '''DamageRandom''',
+   '''DoubleBackPhysicalDamage''',
+   '''OpponentRepeatMoveFor2to6turns''',
+   '''PainSplit''',
+   '''WhileSleepingAndFlinch''',
+   '''ChangeTypeToResistPreviousHit''',
+   '''NextAttackHits''',
+   '''Sketch''',
+   '''Unused60''',
+   '''SleepTalk''',
+   '''DestinyBond''',
+   '''StrengthDependsOnHealth''',
+   '''ReducePP''',
+   '''NeverKOTarget''',
+   '''HealPartyStatus''',
+   '''NormalPlusPriority''',
+   '''3turnTripleHit''',
+   '''StealItem''',
+   '''NoSwitch''',
+   '''Nightmare''',
+   '''RaiseEvasivenessAndBecomeSmaller''',
+   '''Curse''',
+   '''Unused6E''',
+   '''EvadeNextAttack''',
+   '''Spikes''',
+   '''TargetCannnotRaiseEvasion''',
+   '''PerishSong''',
+   '''Sand5Turns''',
+   '''Endure''',
+   '''5turnsUntilMiss''',
+   '''ConfuseAndRaiseAttack2''',
+   '''GetStrongerEachHit''',
+   '''Attract''',
+   '''StrongerWithFriendship''',
+   '''Present''',
+   '''WeakerWithFriendship''',
+   '''PreventStatus5Turns''',
+   '''BurnDefrost''',
+   '''Magnitude''',
+   '''BatonPass''',
+   '''DoublePowerIfOpponentSwitching''',
+   '''RemoveBindSeedSpikes''',
+   '''20Damage''',
+   '''Unused83''',
+   '''MorningSun''',
+   '''Synthesis''',
+   '''Moonlight''',
+   '''HiddenPower''',
+   '''Rain5turns''',
+   '''Sun5turns''',
+   '''RaiseDefense1HitChance''',
+   '''RaiseAttack1HitChance''',
+   '''RaiseAllStats1HitChance''',
+   '''Unused8D''',
+   '''HalfHealthToRaiseAttackMax''',
+   '''CopyTargetStatChangesPrimary''',
+   '''DoubleBackSpecialDamage''',
+   '''RaiseDefenseThenAttackTurn2''',
+   '''FlinchAndDoubleDamageToFly''',
+   '''DoubleDamageToDig''',
+   '''DamageIn2Turns''',
+   '''DoubleDamageToFly''',
+   '''FlinchAndDoubleDamageToMinimize''',
+   '''ChargeFirstTurn''',
+   '''ParalyzeAndIncreaseAccuracyInRain''',
+   '''Escape''',
+   '''DamageBasedOnPartySize''',
+   '''2turn''',
+   '''RaiseDefenseAndImproveRollingMoves''',
+   '''RestoreHPOrAllyInField''',
+   '''MoveFirstFlinchOnlyWorksTurn1''',
+   '''2to5turnsAndAllNoSleep''',
+   '''Stockpile''',
+   '''Spit Up''',
+   '''Swallow''',
+   '''UnusedA3''',
+   '''Hail5turns''',
+   '''Torment''',
+   '''ConfuseAndRaiseSpAttack2''',
+   '''BurnPrimary''',
+   '''SelfKOLowerAttack2SpAttack2''',
+   '''DoubleDamageIfSelfStatus''',
+   '''SelfFlinchIfHit''',
+   '''DoubleDamageToParalyzeAndHealParalyze''',
+   '''ForceFoesTargetUser''',
+   '''NaturePower''',
+   '''BoostNextElectricMove''',
+   '''Taunt''',
+   '''BoostAllyPower''',
+   '''TradeHeldItems''',
+   '''CopyAbility''',
+   '''HealHalfNextTurn''',
+   '''UseAllyMove''',
+   '''Ingrain''',
+   '''LowerSelfAttack1Defense1''',
+   '''ReflectStatusMoves''',
+   '''Recycle''',
+   '''DoubleDamageIfHitThisTurn''',
+   '''BreakWall''',
+   '''Yawn''',
+   '''KnockOff''',
+   '''TargetHPEqualUser''',
+   '''DamageBasedOnHighRemainingHealth''',
+   '''SwapAbilityWithTarget''',
+   '''Imprison''',
+   '''HealSelfStatus''',
+   '''Grudge''',
+   '''Snatch''',
+   '''DamageBasedOnTargetWeight''',
+   '''SecondEffectBasedOnTerrain''',
+   '''33Recoil''',
+   '''ConfuseAllPokemon''',
+   '''HighCritBurn''',
+   '''MudSport''',
+   '''BadPoisonHitChance''',
+   '''WeatherBall''',
+   '''LowerSpAttack2Self''',
+   '''LowerAttack1Defense1Primary''',
+   '''RaiseDefense1SpDefense1''',
+   '''CanDamageFly''',
+   '''RaiseAttack1Defense1Primary''',
+   '''HighCritPoison''',
+   '''WaterSport''',
+   '''RaiseSpAttack1SpDefense1Primary''',
+   '''RaiseAttack1Speed1Primary''',
+   '''ChangetypeFromTerrain''',
+]
+
+[[List]]
+Name = '''moveinfo'''
+DefaultHash = '''631AD2F4'''
+0 = [
+   '''Makes Contact''',
+   '''Affected by Protect''',
+   '''Affected by Magic Coat''',
+   '''Affected by Snatch''',
+   '''Affected by Mirror Move''',
+   '''Affected by King's Rock''',
+]
+
+[[List]]
+Name = '''holdeffects'''
+DefaultHash = '''0FC68E4B'''
+0 = [
+   '''None''',
+   '''Heal|HP Yellow|Once''',
+   '''Remove Paralysis|Once''',
+   '''Remove Sleep|Once''',
+   '''Remove Poison|Once''',
+   '''Remove Burn|Once''',
+   '''Remove Freeze|Once''',
+   '''Restore PP|Empty|Once''',
+   '''Remove Confusion|Once''',
+   '''Remove Any Status Condition|Once''',
+   '''Heal, May Confuse − Attack natures|Once''',
+   '''Heal, May Confuse − Sp. Atk natures|Once''',
+   '''Heal, May Confuse − Speed natures|Once''',
+   '''Heal, May Confuse − Sp. Def natures|Once''',
+   '''Heal, May Confuse − Defense natures|Once''',
+   '''Boost ATK|HP Red|Once''',
+   '''Boost DEF|HP Red|Once''',
+   '''Boost SPD|HP Red|Once''',
+   '''Boost SP.ATK|HP Red|Once''',
+   '''Boost SP.DEF|HP Red|Once''',
+   '''Boost Crit.Ratio|HP Red|Once''',
+   '''Sharp Boost Random Stat|HP Red|Once''',
+   '''Reduce Enemy Accuracy''',
+   '''Restore Any Stat Loss|Once''',
+   '''Macho Brace''',
+   '''Exp. Share''',
+   '''May Strike First''',
+   '''Boost Friendliness''',
+   '''Remove Infatuation''',
+   '''Choice Band''',
+   '''Enemy May Flinch''',
+   '''Boost Bug-Type Moves''',
+   '''Doubles Battle Money''',
+   '''Repels Wild PKMN''',
+   '''Soul Dew''',
+   '''Boost SP.ATK for Clamperl''',
+   '''Boost SP.DEF for Clamperl''',
+   '''Flee Any Wild Battle''',
+   '''Prevent Evolution''',
+   '''May Endure Hit''',
+   '''Boost Exp. Gain''',
+   '''Boost Crit Ratio''',
+   '''Boost Steel-Type Moves''',
+   '''Restore Health Each Round''',
+   '''No effect''',
+   '''Boost SP.ATK For Pikachu''',
+   '''Boost Ground-Type Moves''',
+   '''Boost Rock-Type Moves''',
+   '''Boost Grass-Type Moves''',
+   '''Boost Dark-Type Moves''',
+   '''Boost Fighting-Type Moves''',
+   '''Boost Electric-Type Moves''',
+   '''Boost Water-Type Moves''',
+   '''Boost Flying-Type Moves''',
+   '''Boost Poison-Type Moves''',
+   '''Boost Ice-Type Moves''',
+   '''Boost Ghost-Type Moves''',
+   '''Boost Psychic-Type Moves''',
+   '''Boost Fire-Type Moves''',
+   '''Boost Dragon-Type Moves''',
+   '''Boost Normal-Type Moves''',
+   '''Up-Grade''',
+   '''Heal When Striking An Enemy''',
+   '''Boost Chansey's Crit.Ratio''',
+   '''Boost Ditto's DEF''',
+   '''Boost Cubone and Marowak ATK''',
+   '''Boost Farfetch'd Crit.Ratio''',
+]
+
+[[List]]
+Name = '''contestPokemonFlags'''
+DefaultHash = '''2A30B5CC'''
+0 = [
+   '''whichRankHigh''',
+   '''whichRankLow''',
+   '''Cool''',
+   '''Beauty''',
+   '''Cute''',
+   '''Smart''',
+   '''Tough''',
+]
+
+[[List]]
+Name = '''owfootprints'''
+DefaultHash = '''538F93B1'''
+0 = [
+   '''None''',
+   '''Feet''',
+   '''Bike''',
+]
+
+[[List]]
+Name = '''movetarget'''
+DefaultHash = '''7A9872EA'''
+0 = [
+   '''RecentAttacker''',
+   '''UserOrSelected''',
+   '''Random''',
+   '''Both''',
+   '''Self''',
+   '''Everyone''',
+   '''Hazard''',
+]
+
+[[List]]
+Name = '''trainerStructType'''
+DefaultHash = '''945C1CA6'''
+0 = [
+   '''Normal''',
+   '''Moves''',
+   '''Items''',
+   '''Both''',
+]
+
+[[List]]
+Name = '''decorpermissions'''
+DefaultHash = '''D9A29CA3'''
+0 = [
+   '''Normal''',
+   '''Put On Floor''',
+   '''Object''',
+   '''Place On Wall''',
+   '''Doll or Cushion''',
+]
+
+[[List]]
+Name = '''decorcategory'''
+DefaultHash = '''F5F8A39C'''
+0 = [
+   '''Desk''',
+   '''Chair''',
+   '''Plant''',
+   '''Unique''',
+   '''Mat''',
+   '''Poster''',
+   '''Doll''',
+   '''Cushion''',
+]
+
+[[List]]
+Name = '''decorshape'''
+DefaultHash = '''F1BAB4AA'''
+0 = [
+   '''1x1''',
+   '''2x1''',
+   '''unused''',
+   '''1x1t''',
+   '''2x2p''',
+   '''1x1p''',
+   '''unused''',
+   '''3x1''',
+   '''2x2''',
+   '''3x2''',
+]
+
+[[List]]
+Name = '''evolutionmethods'''
+DefaultHash = '''721F046F'''
+0 = [
+   '''None''',
+   '''Happiness''',
+   '''Happy Day''',
+   '''Happy Night''',
+   '''Level''',
+   '''Trade''',
+   '''Trade Item''',
+   '''Stone''',
+   '''Level High Attack''',
+   '''Level Attack matches Defense''',
+   '''Level High Defense''',
+   '''Level Odd Personality''',
+   '''Level Even Personality''',
+   '''Level And New Pokemon''',
+   '''Level But New Pokemon''',
+   '''Beauty''',
+]
+
+[[List]]
+Name = '''evbits'''
+DefaultHash = '''51251C05'''
+0 = [
+   '''+1 HP''',
+   '''+2 HP''',
+   '''+1 Attack''',
+   '''+2 Attack''',
+   '''+1 Defense''',
+   '''+2 Defense''',
+   '''+1 Speed''',
+   '''+2 Speed''',
+   '''+1 Sp Attack''',
+   '''+2 Sp Attack''',
+   '''+1 Sp Defense''',
+   '''+2 Sp Defense''',
+]
+
+[[List]]
+Name = '''battletowerEvFlags'''
+DefaultHash = '''0D84B8FB'''
+0 = [
+   '''Hp''',
+   '''Attack''',
+   '''Defense''',
+   '''Speed''',
+   '''SpAttack''',
+   '''SpDefense''',
+]
+
+[[List]]
+Name = '''traineraibits'''
+DefaultHash = '''D888191A'''
+0 = [
+   '''CheckBadMove''',
+   '''TryToKO''',
+   '''CheckViability''',
+   '''SetupFirstTurn''',
+   '''Risky''',
+   '''PreferStrongestMove''',
+   '''PreferBatonPass''',
+   '''DoubleBattle''',
+   '''HPAware''',
+   '''Unknown''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Ret''',
+   '''Roaming''',
+   '''Safari''',
+   '''FirstBattle''',
+]
+
+[[List]]
+Name = '''script_compare'''
+DefaultHash = '''7ADFAA2B'''
+0 = [
+   '''<''',
+   '''==''',
+   '''>''',
+   '''<=''',
+   '''>=''',
+   '''!=''',
+]
+
+[[List]]
+Name = '''battle_compare'''
+DefaultHash = '''C9E2E57D'''
+0 = [
+   '''=''',
+   '''!=''',
+   '''>''',
+   '''<''',
+   '''&''',
+   '''&~''',
+]
+
+[[List]]
+Name = '''catchmap_shape'''
+DefaultHash = '''CD8C2E92'''
+0 = [
+   '''small''',
+   '''wide''',
+   '''tall''',
+   '''wider''',
+   '''taller''',
+   '''widest''',
+   '''tallest''',
+]
+
+[[List]]
+Name = '''mapnamepopuptheme'''
+DefaultHash = '''D3484352'''
+0 = [
+   '''wood''',
+   '''marble''',
+   '''stone''',
+   '''brick''',
+   '''underwater''',
+   '''stone2''',
+]
+
+[[List]]
+Name = '''trainergender'''
+DefaultHash = '''928E9941'''
+0 = [
+   '''male''',
+   '''female''',
+]
+
+[[List]]
+Name = '''doublebattleflag'''
+DefaultHash = '''A0EB7FA1'''
+0 = [
+   '''Single''',
+   '''Double''',
+]
+
+[[List]]
+Name = '''songloopoptions'''
+DefaultHash = '''50E56293'''
+0 = [
+   '''playOnce''',
+   '''loop''',
+]
+
+[[List]]
+Name = '''genderratiovalues'''
+DefaultHash = '''ABDC644D'''
+0 = '''100% Male'''
+31 = '''87% Male'''
+63 = '''75% Male'''
+89 = '''65% Male'''
+127 = '''50% Male & 50% Female'''
+165 = '''65% Female'''
+191 = '''75% Female'''
+223 = '''87% Female'''
+254 = [
+   '''100% Female''',
+   '''Genderless''',
+]
+
+[[List]]
+Name = '''statusanimations'''
+DefaultHash = '''A00173C0'''
+0 = [
+   '''Poison''',
+   '''Confusion''',
+   '''Burn''',
+   '''Infatuation''',
+   '''Sleep''',
+   '''Paralysis''',
+   '''Freeze''',
+   '''Curse''',
+   '''Nightmare''',
+]
+
+[[List]]
+Name = '''itemtype'''
+DefaultHash = '''75C339B2'''
+0 = [
+   '''Mail''',
+   '''Party_Menu''',
+   '''Field_Item''',
+   '''PokeBlock_Case''',
+   '''Bag_Menu''',
+]
+
+[[List]]
+Name = '''varmacros'''
+DefaultHash = '''79BD029C'''
+32780 = [
+   '''Facing''',
+   '''Ans''',
+   '''ItemID''',
+   '''LastTalked''',
+   '''ContestRank''',
+   '''ContestCategory''',
+   '''MonBoxID''',
+   '''MonBoxPosition''',
+]
+
+[[List]]
+Name = '''miscanimations'''
+DefaultHash = '''47B1EACC'''
+0 = [
+   '''LevelUp''',
+   '''SwitchOutPlayerPokémon''',
+   '''SwitchOutEnemyPokémon''',
+   '''ThrowPokéBall''',
+   '''ThrowPokéBallWithTrainer''',
+   '''SubstituteToPokémon''',
+   '''PokémonToSubstitute''',
+]
+
+[[List]]
+Name = '''animationpan'''
+DefaultHash = '''72196742'''
+63 = '''sound_pan_target'''
+192 = '''sound_pan_attacker'''
+
+[[List]]
+Name = '''animationbanks'''
+DefaultHash = '''7E5C76C9'''
+0 = [
+   '''anim_attacker''',
+   '''anim_target''',
+   '''anim_atk_partner''',
+   '''anim_def_partner''',
+]
+
+[[List]]
+Name = '''animationbg'''
+DefaultHash = '''DC3F2B02'''
+0 = [
+   '''bg_none''',
+   '''bg_dark''',
+   '''bg_ghost''',
+   '''bg_psychic''',
+   '''bg_impact_opponent''',
+   '''bg_impact_player''',
+   '''bg_impact_contests''',
+   '''bg_drill''',
+   '''bg_drill_contests''',
+   '''bg_highspeed_opponent''',
+   '''bg_highspeed_player''',
+   '''bg_thunder''',
+   '''bg_guillotine_opponent''',
+   '''bg_guillotine_player''',
+   '''bg_guillotine_contests''',
+   '''bg_ice''',
+   '''bg_cosmic''',
+   '''bg_in_air''',
+   '''bg_sky''',
+   '''bg_sky_contests''',
+   '''bg_aurora''',
+   '''bg_fissure''',
+   '''bg_bug_opponent''',
+   '''bg_bug_player''',
+   '''bg_solar_beam_opponent''',
+   '''bg_solar_beam_player''',
+   '''bg_solar_beam_contests''',
+]
+
+[[List]]
+Name = '''messagevars'''
+DefaultHash = '''E3C1D205'''
+0 = [
+   '''none''',
+   '''pokemonName''',
+   '''unused02''',
+   '''unused03''',
+   '''releasePokemon1''',
+   '''unused05''',
+   '''releasePokemon3''',
+   '''itemName''',
+]
+
+[[List]]
+Name = '''perstepcallbacks'''
+DefaultHash = '''09824F34'''
+0 = [
+   '''Dummy''',
+   '''CollectAsh''',
+   '''FortreeBridge''',
+   '''PacifidlogBridge''',
+   '''SootopolisGymIce''',
+   '''EndTruckSequence''',
+   '''SecretBase''',
+   '''CrackedFloor''',
+]
+
+[[List]]
+Name = '''directions'''
+DefaultHash = '''01E9FA2C'''
+1 = [
+   '''South''',
+   '''Down''',
+   '''North''',
+   '''Up''',
+   '''West''',
+   '''Left''',
+   '''East''',
+   '''Right''',
+   '''Southwest''',
+   '''Southeast''',
+   '''Northwest''',
+   '''Northeast''',
+]
+
+[[List]]
+Name = '''AI_targets'''
+DefaultHash = '''E7E3E801'''
+0 = [
+   '''target''',
+   '''user''',
+   '''targetPartner''',
+   '''userPartner''',
+]
+
+[[List]]
+Name = '''AI_type_matchups'''
+DefaultHash = '''AF20BDCB'''
+0 = '''NoEffect'''
+10 = '''DoubleNotVeryEffective'''
+20 = '''NotVeryEffective'''
+40 = '''Neutral'''
+80 = '''SuperEffective'''
+160 = '''DoubleSuperEffective'''
+
+[[List]]
+Name = '''screenfades'''
+DefaultHash = '''C5D64A3C'''
+0 = [
+   '''FromBlack''',
+   '''ToBlack''',
+   '''FromWhite''',
+   '''ToWhite''',
+]
+
+[[List]]
+Name = '''move_particles'''
+DefaultHash = '''7F30B505'''
+0 = [
+   '''Bone''',
+   '''SparkThunderbolt''',
+   '''Pencil''',
+   '''AirWave''',
+   '''WhiteOrb''',
+   '''Sword''',
+   '''LeechSeed''',
+   '''ExplosionCircles''',
+   '''PinkOrb(Unused)''',
+   '''Gust''',
+   '''IceCube''',
+   '''SparkParalysis''',
+   '''OrangeOrb(Unused)''',
+   '''YellowBall''',
+   '''LockOn''',
+   '''TiedBag''',
+   '''BlackSmoke''',
+   '''BlackBall''',
+   '''ConversionSquares''',
+   '''Glass(Unused)''',
+   '''OrangeHorn''',
+   '''OrangeHit''',
+   '''BlueHit''',
+   '''BlueShards(Unused)''',
+   '''ClosingFrowningEye(Unused)''',
+   '''WavingHand(Unused)''',
+   '''OrangeHitClone(Unused)''',
+   '''LeerFlash''',
+   '''BlueBurst(Unused)''',
+   '''SmallFire''',
+   '''GraySmoke''',
+   '''HPRestoredStar''',
+   '''BubbleBurst''',
+   '''SacredFire''',
+   '''SpinningFire(Unused)''',
+   '''BlastBurnFire''',
+   '''Lightning(Unused)''',
+   '''Lightning_Thunder''',
+   '''ClawSlashCurved(Unused)''',
+   '''ClawSlashDiagonal''',
+   '''ScratchCurved(Unused)''',
+   '''ScratchHorizontal(Unused)''',
+   '''BubbleBurst(Unused)''',
+   '''IceBall''',
+   '''GlassPane(Unused)''',
+   '''PinkHearts(Unused)''',
+   '''SapDripAmber(Unused)''',
+   '''SapDripPink(Unused)''',
+   '''GreenSparkle''',
+   '''Yellowsparkle''',
+   '''HumanoidFoot(Unused)''',
+   '''AnimalFoot''',
+   '''HumanoidHand(Unused)''',
+   '''NoiseLine''',
+   '''Unused0x2746''',
+   '''HumanoidFist(Unused)''',
+   '''SlamImpact''',
+   '''TealRing(Unused)''',
+   '''SmallRocks''',
+   '''BlueZ(Unused)''',
+   '''Unused0x274C''',
+   '''Gust(Unused)''',
+   '''SpinningGreenOrbs(Unused)''',
+   '''SmallLeaf''',
+   '''MetronomeFinger''',
+   '''PurplePowder''',
+   '''BrownTriangle(Unused)''',
+   '''GreenPowder''',
+   '''YellowPowder''',
+   '''PurplePowderClone(Unused)''',
+   '''LightBlueSmallSparkles''',
+   '''LightBlueLargeSparkles''',
+   '''PinkNotesAndRests''',
+   '''RubberDuck''',
+   '''Mud''',
+   '''RedAlert''',
+   '''WideBlueFire(Unused)''',
+   '''BlueFire(Unused)''',
+   '''SmallShockAndOrbs(Unused)''',
+   '''LargeShockAndOrbs''',
+   '''Bell(Unused)''',
+   '''PinkGlove(Unused)''',
+   '''BlueLines(Unused)''',
+   '''OrangeImpact(Unused)''',
+   '''LightBlueImpact(Unused)''',
+   '''LockOn(Unused)''',
+   '''Exhale''',
+   '''FrustrationMark''',
+   '''TinySnowball(Unused)''',
+   '''LongVine(Unused)''',
+   '''Dagger(Unused)''',
+   '''Clapping(Unused)''',
+   '''MagentaTube(Unused)''',
+   '''AmnesiaQuestionMark''',
+   '''String(Unused)''',
+   '''SmallPencil(Unused)''',
+   '''Petal(Unused)''',
+   '''BentSpoon''',
+   '''Cobweb(Unused)''',
+   '''BottleOfMilk''',
+   '''PayDayCoin''',
+   '''GreenCrackedEgg(Unused)''',
+   '''GreenHatchingEgg(Unused)''',
+   '''WhiteEgg(Unused)''',
+   '''NarrowFangs(Unused)''',
+   '''LargeExplosion(Unused)''',
+   '''SmallExplosion(Unused)''',
+   '''WaterDroplet(Unused)''',
+   '''WaterDropletBurst(Unused)''',
+   '''SmallSeed(Unused)''',
+   '''Sprout(Unused)''',
+   '''RustedNail(Unused)''',
+   '''PlasmaBall(Unused)''',
+   '''WaterColumn(Unused)''',
+   '''Mud(Unused)''',
+   '''Raining''',
+   '''FurySwipes(Unused)''',
+   '''CurvedVine(Unused)''',
+   '''Teeth(Unused)''',
+   '''ShadowBone(Unused)''',
+   '''WhiteBag(Unused)''',
+   '''Unused0x2789''',
+   '''PurpleCoral(Unused)''',
+   '''PurpleDroplet(Unused)''',
+   '''MediumShockAndOrbs(Unused)''',
+   '''ClosingEye(Unused)''',
+   '''GrayOrb(Unused)''',
+   '''SubstituteDoll''',
+   '''LargeWhirlwind(Unused)''',
+   '''SmallWhirlwind(Unused)''',
+   '''MediumExplosion(Unused)''',
+   '''ExplosionCircles(Unused)''',
+   '''HumanoidTongue(Unused)''',
+   '''LightGraySmokePuff(Unused)''',
+   '''LightGraySmokeCloud(Unused)''',
+   '''Hit''',
+   '''TinyHit''',
+   '''ScratchCurved''',
+   '''Cut''',
+   '''LongTeeth''',
+   '''RainbowRing''',
+   '''IceCrystals''',
+   '''IceSpikes''',
+   '''HandsAndFeet''',
+   '''WhiteMist''',
+   '''Clamp''',
+   '''MediumBubble''',
+   '''SolarBeamOrbs''',
+   '''WaterHit''',
+   '''WaterOrb''',
+   '''SludgeAndPoisonBubble''',
+   '''ToxicBubble''',
+   '''Spikes''',
+   '''YellowHorn''',
+   '''RazorWind''',
+   '''SmallBubble''',
+   '''RoundShadow''',
+   '''Sunlight''',
+   '''Spore''',
+   '''Flower''',
+   '''RazorLeaf''',
+   '''SpikeCannonSpike''',
+   '''Whirlwind''',
+   '''GoldRing''',
+   '''PurpleRing''',
+   '''BlueRing''',
+   '''GreenScreen''',
+   '''BlueScreen''',
+   '''RedScreen''',
+   '''GrayScreen''',
+   '''GoldScreen''',
+   '''BlackBall2''',
+   '''PoisonGas''',
+   '''ThunderWave''',
+   '''SwiftStar''',
+   '''WhiteEgg''',
+   '''ShadowBall''',
+   '''Tongue''',
+   '''VoidLines''',
+   '''BendyString''',
+   '''WebThread''',
+   '''SpiderWeb''',
+   '''LightBulb(Unused)''',
+   '''Slash''',
+   '''FocusEnergy''',
+   '''SharpenBall''',
+   '''Tendrils''',
+   '''OpenedEye''',
+   '''WhiteShadow''',
+   '''TealAlert''',
+   '''OpeningEye''',
+   '''WhiteHalo''',
+   '''FangAttack''',
+   '''GlowingHand''',
+   '''Moon''',
+   '''MoonlightSparkle''',
+   '''Spiral''',
+   '''GrayZ''',
+   '''Explosion''',
+   '''GrayNail''',
+   '''GhostlySpirit''',
+   '''EruptionRock''',
+   '''BreakingEgg''',
+   '''LargeThinRing''',
+   '''PunchImpact(Unused)''',
+   '''Bell''',
+   '''RedAndYellowNotesAndRests''',
+   '''SpeedDust''',
+   '''TornMetal''',
+   '''ThoughtBubble''',
+   '''MagentaHeart''',
+   '''LimeGreenOrbs''',
+   '''CircleOfLight''',
+   '''Electricity''',
+   '''TauntFinger''',
+   '''MovementWaves''',
+   '''RedHeart''',
+   '''RedOrb''',
+   '''EyeSparkle''',
+   '''PinkHeart''',
+   '''SweetKissAngel''',
+   '''LovelyKissDevil''',
+   '''Swipe''',
+   '''Roots''',
+   '''WhiteBag''',
+   '''UproarNote''',
+   '''PokéBall''',
+   '''RedSpotlight''',
+   '''TanZ''',
+   '''RapidSpin''',
+   '''TriAttackTriangle''',
+   '''WillOWispOrb''',
+   '''WillOWispFire''',
+   '''GoldStars''',
+   '''EclipsingOrb''',
+   '''GrayOrbs''',
+   '''BlueOrbs''',
+   '''RedOrbs''',
+   '''Petal''',
+   '''PainSplit''',
+   '''Confetti''',
+   '''LightGreenStar''',
+   '''PinkCloud''',
+   '''TinyWaterDroplet''',
+   '''GuardRing''',
+   '''PurpleScratch''',
+   '''RevengeSwipe''',
+   '''LightPinkHand''',
+   '''SmallRedEye''',
+   '''DragonDanceOrb''',
+   '''GiantRedX''',
+   '''ExperienceOrb''',
+   '''PawPrint''',
+   '''PurpleFire''',
+   '''BarrageBall''',
+   '''SmellingSaltsEffect''',
+   '''SuperpowerEffect''',
+   '''FlatRock''',
+   '''MagnifyingGlass''',
+   '''MudShotOrb''',
+   '''MetalSoundWaves''',
+   '''FlyingDirt''',
+   '''IcicleSpear''',
+   '''Hail''',
+   '''GlowingRedOrb''',
+   '''GlowingGreenOrb''',
+   '''GreenNeedle''',
+   '''WhiteCircleOfLight''',
+   '''GlowingBlueOrb''',
+   '''PokéBlock''',
+   '''WhiteFeather''',
+   '''GraySparkle''',
+   '''Splash''',
+   '''WaterBead''',
+   '''GemTopLeft(Unused)''',
+   '''GemCenterBottom(Unused)''',
+   '''GemRight(Unused)''',
+   '''KnockOffHit''',
+   '''Recycling''',
+   '''Particles(Unused)''',
+   '''Protect''',
+   '''DirtMound''',
+   '''ElectricOrbs''',
+   '''WeatherBall''',
+   '''SkyAttackBird''',
+   '''XImpact''',
+   '''FalseSwipeHit''',
+   '''WhipHit''',
+   '''WhiteRing''',
+]
+
+[[List]]
+Name = '''MapLayerOptions'''
+DefaultHash = '''E3ADB58F'''
+0 = [
+   '''Normal''',
+   '''Covered''',
+   '''Split''',
+]
+
+[[List]]
+Name = '''MapTerrainOptions'''
+DefaultHash = '''0EC04F31'''
+0 = [
+   '''Normal''',
+   '''Grass''',
+   '''Water''',
+]
+
+[[List]]
+Name = '''MapEncounterOptions'''
+DefaultHash = '''0EC04F31'''
+0 = [
+   '''Normal''',
+   '''Grass''',
+   '''Water''',
+]
+
+[[List]]
+Name = '''MapSignpostKindOptions'''
+DefaultHash = '''855AA71E'''
+0 = [
+   '''Facing Any''',
+   '''Facing North''',
+   '''Facing South''',
+   '''Facing East''',
+   '''Facing West''',
+   '''Hidden Item (unused 1)''',
+   '''Hidden Item (unused 2)''',
+   '''Hidden Item''',
+   '''Secret Base''',
+]
+
+[[List]]
+Name = '''allowcanceloptions'''
+DefaultHash = '''89FDFB4B'''
+0 = [
+   '''AllowCancel''',
+   '''ForbidCancel''',
+]
+
+[[List]]
+Name = '''bufferNames'''
+DefaultHash = '''8F6489B5'''
+0 = [
+   '''buffer1''',
+   '''buffer2''',
+   '''buffer3''',
+]
+
+[[List]]
+Name = '''bs_battlers'''
+DefaultHash = '''D250A77C'''
+0 = [
+   '''target''',
+   '''attacker''',
+   '''effect_battler''',
+   '''fainted''',
+   '''attacker_with_partner''',
+   '''fainted_link_multiple_1''',
+   '''fainted_link_multiple_2''',
+   '''battler_0''',
+   '''attacker_side''',
+   '''not_attacker_side''',
+   '''scripting''',
+   '''player1''',
+   '''opponent1''',
+   '''player2''',
+   '''opponent2''',
+]
+
+[[List]]
+Name = '''bs_stats'''
+DefaultHash = '''B1BA942D'''
+0 = [
+   '''hp''',
+   '''attack''',
+   '''defense''',
+   '''speed''',
+   '''spAttack''',
+   '''spDefense''',
+   '''accuracy''',
+   '''evasion''',
+]
+
+[[List]]
+Name = '''stat_stages'''
+DefaultHash = '''6FBCD53F'''
+0 = [
+   '''negative_6''',
+   '''negative_5''',
+   '''negative_4''',
+   '''negative_3''',
+   '''negative_2''',
+   '''negative_1''',
+   '''default''',
+   '''positive_1''',
+   '''positive_2''',
+   '''positive_3''',
+   '''positive_4''',
+   '''positive_5''',
+   '''positive_6''',
+]
+
+[[List]]
+Name = '''bs_moveeffects'''
+DefaultHash = '''4F90F5D1'''
+1 = [
+   '''Sleep''',
+   '''Poison''',
+   '''Burn''',
+   '''Freeze''',
+   '''Paralyze''',
+   '''BadPoison''',
+   '''Confusion''',
+   '''Flinch''',
+   '''BurnFreezeParalyze''',
+   '''2to5turnsAndAllNoSleep''',
+   '''Money''',
+   '''ChargeFirstTurn''',
+   '''2to5turnTrap''',
+   '''25Recoil''',
+   '''RaiseAtk1''',
+   '''RaiseDef1''',
+   '''RaiseSpeed1''',
+   '''RaiseSpAtk1''',
+   '''RaiseSpDef1''',
+   '''RaiseAcc1''',
+   '''RaiseEvasion1''',
+   '''LowerAtk1''',
+   '''LowerDef1''',
+   '''LowerSpeed1''',
+   '''LowerSpAtk1''',
+   '''LowerSpDef1''',
+   '''LowerAcc1''',
+   '''LowerEvasion1''',
+   '''RechargeNextTurn''',
+   '''RaiseAtk1IfDamaged''',
+   '''StealItem''',
+   '''NoSwitch''',
+   '''Nightmare''',
+   '''RaiseAllStats1''',
+   '''RemoveBindSeedSpikes''',
+   '''RemoveParalyze''',
+   '''LowerAtk1Def1''',
+   '''33Recoil''',
+   '''RaiseAtk2''',
+   '''RaiseDef2''',
+   '''RaiseSpeed2''',
+   '''RaiseSpAtk2''',
+   '''RaiseSpDef2''',
+   '''RaiseAcc2''',
+   '''RaiseEvasion2''',
+   '''LowerAtk2''',
+   '''LowerDef2''',
+   '''LowerSpeed2''',
+   '''LowerSpAtk2''',
+   '''LowerSpDef2''',
+   '''LowerAcc2''',
+   '''LowerEvasion2''',
+   '''2to3turnsThenConfused''',
+   '''KnockOff''',
+]
+65 = [
+   '''SelfSleep''',
+   '''SelfPoison''',
+   '''SelfBurn''',
+   '''SelfFreeze''',
+   '''SelfParalyze''',
+   '''SelfBadPoison''',
+   '''SelfConfusion''',
+   '''SelfFlinch''',
+   '''SelfBurnFreezeParalyze''',
+   '''Self2to5turnsAndAllNoSleep''',
+   '''SelfMoney''',
+   '''SelfChargeFirstTurn''',
+   '''Self2to5turnTrap''',
+   '''Self25Recoil''',
+   '''SelfRaiseAtk1''',
+   '''SelfRaiseDef1''',
+   '''SelfRaiseSpeed1''',
+   '''SelfRaiseSpAtk1''',
+   '''SelfRaiseSpDef1''',
+   '''SelfRaiseAcc1''',
+   '''SelfRaiseEvasion1''',
+   '''SelfLowerAtk1''',
+   '''SelfLowerDef1''',
+   '''SelfLowerSpeed1''',
+   '''SelfLowerSpAtk1''',
+   '''SelfLowerSpDef1''',
+   '''SelfLowerAcc1''',
+   '''SelfLowerEvasion1''',
+   '''SelfRechargeNextTurn''',
+   '''SelfRaiseAtk1IfDamaged''',
+   '''SelfStealItem''',
+   '''SelfNoSwitch''',
+   '''SelfNightmare''',
+   '''SelfRaiseAllStats1''',
+   '''SelfRemoveBindSeedSpikes''',
+   '''SelfRemoveParalyze''',
+   '''SelfLowerAtk1Def1''',
+   '''Self33Recoil''',
+   '''SelfRaiseAtk2''',
+   '''SelfRaiseDef2''',
+   '''SelfRaiseSpeed2''',
+   '''SelfRaiseSpAtk2''',
+   '''SelfRaiseSpDef2''',
+   '''SelfRaiseAcc2''',
+   '''SelfRaiseEvasion2''',
+   '''SelfLowerAtk2''',
+   '''SelfLowerDef2''',
+   '''SelfLowerSpeed2''',
+   '''SelfLowerSpAtk2''',
+   '''SelfLowerSpDef2''',
+   '''SelfLowerAcc2''',
+   '''SelfLowerEvasion2''',
+   '''Self2to3turnsThenConfused''',
+   '''SelfKnockOff''',
+]
+129 = [
+   '''SleepCertain''',
+   '''PoisonCertain''',
+   '''BurnCertain''',
+   '''FreezeCertain''',
+   '''ParalyzeCertain''',
+   '''BadPoisonCertain''',
+   '''ConfusionCertain''',
+   '''FlinchCertain''',
+   '''BurnFreezeParalyzeCertain''',
+   '''2to5turnsAndAllNoSleepCertain''',
+   '''MoneyCertain''',
+   '''ChargeFirstTurnCertain''',
+   '''2to5turnTrapCertain''',
+   '''25RecoilCertain''',
+   '''RaiseAtk1Certain''',
+   '''RaiseDef1Certain''',
+   '''RaiseSpeed1Certain''',
+   '''RaiseSpAtk1Certain''',
+   '''RaiseSpDef1Certain''',
+   '''RaiseAcc1Certain''',
+   '''RaiseEvasion1Certain''',
+   '''LowerAtk1Certain''',
+   '''LowerDef1Certain''',
+   '''LowerSpeed1Certain''',
+   '''LowerSpAtk1Certain''',
+   '''LowerSpDef1Certain''',
+   '''LowerAcc1Certain''',
+   '''LowerEvasion1Certain''',
+   '''RechargeNextTurnCertain''',
+   '''RaiseAtk1IfDamagedCertain''',
+   '''StealItemCertain''',
+   '''NoSwitchCertain''',
+   '''NightmareCertain''',
+   '''RaiseAllStats1Certain''',
+   '''RemoveBindSeedSpikesCertain''',
+   '''RemoveParalyzeCertain''',
+   '''LowerAtk1Def1Certain''',
+   '''33RecoilCertain''',
+   '''RaiseAtk2Certain''',
+   '''RaiseDef2Certain''',
+   '''RaiseSpeed2Certain''',
+   '''RaiseSpAtk2Certain''',
+   '''RaiseSpDef2Certain''',
+   '''RaiseAcc2Certain''',
+   '''RaiseEvasion2Certain''',
+   '''LowerAtk2Certain''',
+   '''LowerDef2Certain''',
+   '''LowerSpeed2Certain''',
+   '''LowerSpAtk2Certain''',
+   '''LowerSpDef2Certain''',
+   '''LowerAcc2Certain''',
+   '''LowerEvasion2Certain''',
+   '''2to3turnsThenConfusedCertain''',
+   '''KnockOffCertain''',
+]
+193 = [
+   '''SelfSleepCertain''',
+   '''SelfPoisonCertain''',
+   '''SelfBurnCertain''',
+   '''SelfFreezeCertain''',
+   '''SelfParalyzeCertain''',
+   '''SelfBadPoisonCertain''',
+   '''SelfConfusionCertain''',
+   '''SelfFlinchCertainCertain''',
+   '''SelfBurnFreezeParalyzeCertain''',
+   '''Self2to5turnsAndAllNoSleepCertain''',
+   '''SelfMoneyCertain''',
+   '''SelfChargeFirstTurnCertain''',
+   '''Self2to5turnTrapCertain''',
+   '''Self25RecoilCertain''',
+   '''SelfRaiseAtk1Certain''',
+   '''SelfRaiseDef1Certain''',
+   '''SelfRaiseSpeed1Certain''',
+   '''SelfRaiseSpAtk1Certain''',
+   '''SelfRaiseSpDef1Certain''',
+   '''SelfRaiseAcc1Certain''',
+   '''SelfRaiseEvasion1Certain''',
+   '''SelfLowerAtk1Certain''',
+   '''SelfLowerDef1Certain''',
+   '''SelfLowerSpeed1Certain''',
+   '''SelfLowerSpAtk1Certain''',
+   '''SelfLowerSpDef1Certain''',
+   '''SelfLowerAcc1Certain''',
+   '''SelfLowerEvasion1Certain''',
+   '''SelfRechargeNextTurnCertain''',
+   '''SelfRaiseAtk1IfDamagedCertain''',
+   '''SelfStealItemCertain''',
+   '''SelfNoSwitchCertain''',
+   '''SelfNightmareCertain''',
+   '''SelfRaiseAllStats1Certain''',
+   '''SelfRemoveBindSeedSpikesCertain''',
+   '''SelfRemoveParalyzeCertain''',
+   '''SelfLowerAtk1Def1Certain''',
+   '''Self33RecoilCertain''',
+   '''SelfRaiseAtk2Certain''',
+   '''SelfRaiseDef2Certain''',
+   '''SelfRaiseSpeed2Certain''',
+   '''SelfRaiseSpAtk2Certain''',
+   '''SelfRaiseSpDef2Certain''',
+   '''SelfRaiseAcc2Certain''',
+   '''SelfRaiseEvasion2Certain''',
+   '''SelfLowerAtk2Certain''',
+   '''SelfLowerDef2Certain''',
+   '''SelfLowerSpeed2Certain''',
+   '''SelfLowerSpAtk2Certain''',
+   '''SelfLowerSpDef2Certain''',
+   '''SelfLowerAcc2Certain''',
+   '''SelfLowerEvasion2Certain''',
+   '''Self2to3turnsThenConfusedCertain''',
+   '''SelfKnockOffCertain''',
+]
+251 = '''LowerSpAtk2SelfCertain'''
+
+[[List]]
+Name = '''bs_statchanger'''
+DefaultHash = '''9A40FBEA'''
+17 = [
+   '''RaiseAtk1''',
+   '''RaiseDef1''',
+   '''RaiseSpeed1''',
+   '''RaiseSpAtk1''',
+   '''RaiseSpDef1''',
+   '''RaiseAcc1''',
+   '''RaiseEvasion1''',
+]
+33 = [
+   '''RaiseAtk2''',
+   '''RaiseDef2''',
+   '''RaiseSpeed2''',
+   '''RaiseSpAtk2''',
+   '''RaiseSpDef2''',
+   '''RaiseAcc2''',
+   '''RaiseEvasion2''',
+]
+145 = [
+   '''LowerAtk1''',
+   '''LowerDef1''',
+   '''LowerSpeed1''',
+   '''LowerSpAtk1''',
+   '''LowerSpDef1''',
+   '''LowerAcc1''',
+   '''LowerEvasion1''',
+]
+161 = [
+   '''LowerAtk2''',
+   '''LowerDef2''',
+   '''LowerSpeed2''',
+   '''LowerSpAtk2''',
+   '''LowerSpDef2''',
+   '''LowerAcc2''',
+   '''LowerEvasion2''',
+]
+
+[[List]]
+Name = '''statanimation'''
+DefaultHash = '''590F632A'''
+2 = '''Atk'''
+4 = '''Def'''
+6 = '''Atk|Def'''
+8 = '''Speed'''
+10 = '''Atk|Speed'''
+12 = '''Def|Speed'''
+14 = '''Atk|Def|Speed'''
+16 = '''SpAtk'''
+18 = '''Atk|SpAtk'''
+20 = '''Def|SpAtk'''
+22 = '''Atk|Def|SpAtk'''
+24 = '''Speed|SpAtk'''
+26 = '''Atk|Speed|SpAtk'''
+28 = '''Def|Speed|SpAtk'''
+30 = '''Atk|Def|Speed|SpAtk'''
+32 = '''SpDef'''
+34 = '''Atk|SpDef'''
+36 = '''Def|SpDef'''
+38 = '''Atk|Def|SpDef'''
+40 = '''Speed|SpDef'''
+42 = '''Atk|Speed|SpDef'''
+44 = '''Def|Speed|SpDef'''
+46 = '''Atk|Def|Speed|SpDef'''
+48 = '''SpAtk|SpDef'''
+50 = '''Atk|SpAtk|SpDef'''
+52 = '''Def|SpAtk|SpDef'''
+54 = '''Atk|Def|SpAtk|SpDef'''
+56 = '''Speed|SpAtk|SpDef'''
+58 = '''Atk|Speed|SpAtk|SpDef'''
+60 = '''Def|Speed|SpAtk|SpDef'''
+62 = '''Atk|Def|Speed|SpAtk|SpDef'''
+64 = '''Acc'''
+66 = '''Atk|Acc'''
+68 = '''Def|Acc'''
+70 = '''Atk|Def|Acc'''
+72 = '''Speed|Acc'''
+74 = '''Atk|Speed|Acc'''
+76 = '''Def|Speed|Acc'''
+78 = '''Atk|Def|Speed|Acc'''
+80 = '''SpAtk|Acc'''
+82 = '''Atk|SpAtk|Acc'''
+84 = '''Def|SpAtk|Acc'''
+86 = '''Atk|Def|SpAtk|Acc'''
+88 = '''Speed|SpAtk|Acc'''
+90 = '''Atk|Speed|SpAtk|Acc'''
+92 = '''Def|Speed|SpAtk|Acc'''
+94 = '''Atk|Def|Speed|SpAtk|Acc'''
+96 = '''SpDef|Acc'''
+98 = '''Atk|SpDef|Acc'''
+100 = '''Def|SpDef|Acc'''
+102 = '''Atk|Def|SpDef|Acc'''
+104 = '''Speed|SpDef|Acc'''
+106 = '''Atk|Speed|SpDef|Acc'''
+108 = '''Def|Speed|SpDef|Acc'''
+110 = '''Atk|Def|Speed|SpDef|Acc'''
+112 = '''SpAtk|SpDef|Acc'''
+114 = '''Atk|SpAtk|SpDef'''
+116 = '''Def|SpAtk|SpDef'''
+118 = '''Atk|Def|SpAtk|SpDef'''
+120 = '''Speed|SpAtk|SpDef|Acc'''
+122 = '''Atk|Speed|SpAtk|SpDef|Acc'''
+124 = '''Def|Speed|SpAtk|SpDef|Acc'''
+126 = '''Atk|Def|Speed|SpAtk|SpDef|Acc'''
+
+[[List]]
+Name = '''movementtypes'''
+DefaultHash = '''D5F625AB'''
+0 = [
+   '''face_down''',
+   '''face_up''',
+   '''face_left''',
+   '''face_right''',
+   '''walk_slow_down''',
+   '''walk_slow_up''',
+   '''walk_slow_left''',
+   '''walk_slow_right''',
+   '''walk_down''',
+   '''walk_up''',
+   '''walk_left''',
+   '''walk_right''',
+   '''jump_2_down''',
+   '''jump_2_up''',
+   '''jump_2_left''',
+   '''jump_2_right''',
+   '''delay_1''',
+   '''delay_2''',
+   '''delay_4''',
+   '''delay_8''',
+   '''delay_16''',
+   '''walk_fast_down''',
+   '''walk_fast_up''',
+   '''walk_fast_left''',
+   '''walk_fast_right''',
+   '''walk_in_place_slow_down''',
+   '''walk_in_place_slow_up''',
+   '''walk_in_place_slow_left''',
+   '''walk_in_place_slow_right''',
+   '''walk_in_place_down''',
+   '''walk_in_place_up''',
+   '''walk_in_place_left''',
+   '''walk_in_place_right''',
+   '''walk_in_place_fast_down''',
+   '''walk_in_place_fast_up''',
+   '''walk_in_place_fast_left''',
+   '''walk_in_place_fast_right''',
+   '''walk_in_place_fastest_down''',
+   '''walk_in_place_fastest_up''',
+   '''walk_in_place_fastest_left''',
+   '''walk_in_place_fastest_right''',
+   '''ride_water_current_down''',
+   '''ride_water_current_up''',
+   '''ride_water_current_left''',
+   '''ride_water_current_right''',
+   '''walk_fastest_down''',
+   '''walk_fastest_up''',
+   '''walk_fastest_left''',
+   '''walk_fastest_right''',
+   '''slide_down''',
+   '''slide_up''',
+   '''slide_left''',
+   '''slide_right''',
+   '''player_run_down''',
+   '''player_run_up''',
+   '''player_run_left''',
+   '''player_run_right''',
+   '''start_anim_in_direction''',
+   '''jump_special_down''',
+   '''jump_special_up''',
+   '''jump_special_left''',
+   '''jump_special_right''',
+   '''face_player''',
+   '''face_away_player''',
+   '''lock_facing_direction''',
+   '''unlock_facing_direction''',
+   '''jump_down''',
+   '''jump_up''',
+   '''jump_left''',
+   '''jump_right''',
+   '''jump_in_place_down''',
+   '''jump_in_place_up''',
+   '''jump_in_place_left''',
+   '''jump_in_place_right''',
+   '''jump_in_place_down_up''',
+   '''jump_in_place_up_down''',
+   '''jump_in_place_left_right''',
+   '''jump_in_place_right_left''',
+   '''face_original_direction''',
+   '''nurse_joy_bow''',
+   '''enable_jump_landing_ground_effect''',
+   '''disable_jump_landing_ground_effect''',
+   '''disable_anim''',
+   '''restore_anim''',
+   '''set_invisible''',
+   '''set_visible''',
+   '''emote_exclamation_mark''',
+   '''emote_question_mark''',
+   '''emote_heart''',
+   '''reveal_trainer''',
+   '''rock_smash_break''',
+   '''cut_tree''',
+   '''set_fixed_priority''',
+   '''clear_fixed_priority''',
+   '''init_affine_anim''',
+   '''clear_affine_anim''',
+   '''hide_reflection''',
+   '''show_reflection''',
+   '''walk_down_start_affine''',
+   '''walk_down_affine''',
+]
+140 = [
+   '''walk_diag_northwest''',
+   '''walk_diag_northeast''',
+   '''walk_diag_southwest''',
+   '''walk_diag_southeast''',
+   '''walk_slow_diag_northwest''',
+   '''walk_slow_diag_northeast''',
+   '''walk_slow_diag_southwest''',
+   '''walk_slow_diag_southeast''',
+   '''store_lock_anim''',
+   '''free_unlock_anim''',
+   '''walk_left_affine''',
+   '''walk_right_affine''',
+   '''levitate''',
+   '''stop_levitate''',
+   '''destroy_extra_task''',
+   '''figure_8''',
+   '''fly_up''',
+   '''fly_down''',
+]
+
+[[List]]
+Name = '''pocketid'''
+DefaultHash = '''CD8EDDB0'''
+1 = [
+   '''item''',
+   '''ball''',
+   '''tm''',
+   '''berry''',
+   '''key''',
+]
+
+[[List]]
+Name = '''effectanimations'''
+DefaultHash = '''4850EA54'''
+0 = [
+   '''FormChange''',
+   '''StatChange''',
+   '''SubstituteFade''',
+   '''SubstituteAppear''',
+   '''PokeblockThrow''',
+   '''ItemKnockOff''',
+   '''TurnTrap''',
+   '''HeldItemEffect''',
+   '''SmokeBall''',
+   '''FocusBand''',
+   '''Rain''',
+   '''Sun''',
+   '''Sandstorm''',
+   '''Hail''',
+   '''LeechSeedDrain''',
+   '''ConfuseHit''',
+   '''ItemSteal''',
+   '''SnatchMove''',
+   '''FutureSight''',
+   '''DoomDesire''',
+   '''FocusPunchSetUp''',
+   '''IngrainHeal''',
+   '''WishHeal''',
+]
+
+[[List]]
+Name = '''friendshipevents'''
+DefaultHash = '''53493216'''
+0 = [
+   '''GrowLevel''',
+   '''Vitamin''',
+   '''BattleItem''',
+   '''LeagueBattle''',
+   '''LearnTMHM''',
+   '''Walking''',
+   '''FaintInBattle''',
+   '''FaintOutsideBattle''',
+   '''FaintInBattleBigLevelGap''',
+]
+
+[[List]]
+Name = '''MapAttributeBehaviors'''
+DefaultHash = '''FA9F2ED1'''
+0 = [
+   '''Normal''',
+   '''Secret_Base_Wall''',
+   '''Tall_Grass''',
+   '''Long_Grass''',
+   '''Unused_04''',
+   '''Unused_05''',
+   '''Deep_Sand''',
+   '''Short_Grass''',
+   '''Cave''',
+   '''Long_Grass_South_Edge''',
+   '''No_Running''',
+   '''Indoor_Encounter''',
+   '''Mountain_Top''',
+   '''Battle_Pyramid_Warp''',
+   '''Mossdeep_Gym_Warp''',
+   '''Mt_Pyre_Hole''',
+   '''Pond_Water''',
+   '''Semi_Deep_Water''',
+   '''Deep_Water''',
+   '''Waterfall''',
+   '''Sootopolis_Deep_Water''',
+   '''Ocean_Water''',
+   '''Puddle''',
+   '''Shallow_Water''',
+   '''Unused_Sootopolis_Deep_Water''',
+   '''No_Surfacing''',
+   '''Unused_Sootopolis_Deep_Water_2''',
+   '''Stairs_Outside_Abandoned_Ship''',
+   '''Shoal_Cave_Entrance''',
+   '''Unused_1d''',
+   '''Unused_1e''',
+   '''Unused_1f''',
+   '''Ice''',
+   '''Sand''',
+   '''Seaweed''',
+   '''Unused_23''',
+   '''Ashgrass''',
+   '''Footprints''',
+   '''Thin_Ice''',
+   '''Cracked_Ice''',
+   '''Hot_Springs''',
+   '''Lavaridge_Gym_B1f_Warp''',
+   '''Seaweed_No_Surfacing''',
+   '''Reflection_Under_Bridge''',
+   '''Unused_2c''',
+   '''Unused_2d''',
+   '''Unused_2e''',
+   '''Unused_2f''',
+   '''Impassable_East''',
+   '''Impassable_West''',
+   '''Impassable_North''',
+   '''Impassable_South''',
+   '''Impassable_Northeast''',
+   '''Impassable_Northwest''',
+   '''Impassable_Southeast''',
+   '''Impassable_Southwest''',
+   '''Jump_East''',
+   '''Jump_West''',
+   '''Jump_North''',
+   '''Jump_South''',
+   '''Jump_Northeast''',
+   '''Jump_Northwest''',
+   '''Jump_Southeast''',
+   '''Jump_Southwest''',
+   '''Walk_East''',
+   '''Walk_West''',
+   '''Walk_North''',
+   '''Walk_South''',
+   '''Slide_East''',
+   '''Slide_West''',
+   '''Slide_North''',
+   '''Slide_South''',
+   '''Trick_House_Puzzle_8_Floor''',
+   '''Unused_49''',
+   '''Unused_4a''',
+   '''Unused_4b''',
+   '''Unused_4c''',
+   '''Unused_4d''',
+   '''Unused_4e''',
+   '''Unused_4f''',
+   '''Eastward_Current''',
+   '''Westward_Current''',
+   '''Northward_Current''',
+   '''Southward_Current''',
+   '''Unused_54''',
+   '''Unused_55''',
+   '''Unused_56''',
+   '''Unused_57''',
+   '''Unused_58''',
+   '''Unused_59''',
+   '''Unused_5a''',
+   '''Unused_5b''',
+   '''Unused_5c''',
+   '''Unused_5d''',
+   '''Unused_5e''',
+   '''Unused_5f''',
+   '''Non_Animated_Door''',
+   '''Ladder''',
+   '''East_Arrow_Warp''',
+   '''West_Arrow_Warp''',
+   '''North_Arrow_Warp''',
+   '''South_Arrow_Warp''',
+   '''Cracked_Floor_Hole''',
+   '''Aqua_Hideout_Warp''',
+   '''Lavaridge_Gym_1f_Warp''',
+   '''Animated_Door''',
+   '''Up_Escalator''',
+   '''Down_Escalator''',
+   '''Water_Door''',
+   '''Water_South_Arrow_Warp''',
+   '''Deep_South_Warp''',
+   '''Unused_6f''',
+   '''Bridge_Over_Ocean''',
+   '''Bridge_Over_Pond_Low''',
+   '''Bridge_Over_Pond_Med''',
+   '''Bridge_Over_Pond_High''',
+   '''Pacifidlog_Vertical_Log_Top''',
+   '''Pacifidlog_Vertical_Log_Bottom''',
+   '''Pacifidlog_Horizontal_Log_Left''',
+   '''Pacifidlog_Horizontal_Log_Right''',
+   '''Fortree_Bridge''',
+   '''Unused_79''',
+   '''Bridge_Over_Pond_Med_Edge_1''',
+   '''Bridge_Over_Pond_Med_Edge_2''',
+   '''Bridge_Over_Pond_High_Edge_1''',
+   '''Bridge_Over_Pond_High_Edge_2''',
+   '''Unused_Bridge''',
+   '''Bike_Bridge_Over_Barrier''',
+   '''Counter''',
+   '''Unused_81''',
+   '''Unused_82''',
+   '''Pc''',
+   '''Cable_Box_Results_1''',
+   '''Region_Map''',
+   '''Television''',
+   '''Pokeblock_Feeder''',
+   '''Unused_88''',
+   '''Slot_Machine''',
+   '''Roulette''',
+   '''Closed_Sootopolis_Door''',
+   '''Trick_House_Puzzle_Door''',
+   '''Petalburg_Gym_Door''',
+   '''Running_Shoes_Instruction''',
+   '''Questionnaire''',
+   '''Secret_Base_Spot_Red_Cave''',
+   '''Secret_Base_Spot_Red_Cave_Open''',
+   '''Secret_Base_Spot_Brown_Cave''',
+   '''Secret_Base_Spot_Brown_Cave_Open''',
+   '''Secret_Base_Spot_yellow_Cave''',
+   '''Secret_Base_Spot_yellow_Cave_Open''',
+   '''Secret_Base_Spot_Tree_Left''',
+   '''Secret_Base_Spot_Tree_Left_Open''',
+   '''Secret_Base_Spot_Shrub''',
+   '''Secret_Base_Spot_Shrub_Open''',
+   '''Secret_Base_Spot_Blue_Cave''',
+   '''Secret_Base_Spot_Blue_Cave_Open''',
+   '''Secret_Base_Spot_Tree_Right''',
+   '''Secret_Base_Spot_Tree_Right_Open''',
+   '''Unused_9e''',
+   '''Unused_9f''',
+   '''Berry_Tree_Soil''',
+   '''Unused_A1''',
+   '''Unused_A2''',
+   '''Unused_A3''',
+   '''Unused_A4''',
+   '''Unused_A5''',
+   '''Unused_A6''',
+   '''Unused_A7''',
+   '''Unused_A8''',
+   '''Unused_A9''',
+   '''Unused_Aa''',
+   '''Unused_Ab''',
+   '''Unused_Ac''',
+   '''Unused_Ad''',
+   '''Unused_Ae''',
+   '''Unused_Af''',
+   '''Secret_Base_Pc''',
+   '''Secret_Base_Register_Pc''',
+   '''Secret_Base_Scenery''',
+   '''Secret_Base_Trainer_Spot''',
+   '''Secret_Base_Decoration''',
+   '''Holds_Small_Decoration''',
+   '''Unused_B6''',
+   '''Secret_Base_North_Wall''',
+   '''Secret_Base_Balloon''',
+   '''Secret_Base_Impassable''',
+   '''Secret_Base_Glitter_Mat''',
+   '''Secret_Base_Jump_Mat''',
+   '''Secret_Base_Spin_Mat''',
+   '''Secret_Base_Sound_Mat''',
+   '''Secret_Base_Breakable_Door''',
+   '''Secret_Base_Sand_Ornament''',
+   '''Impassable_South_And_North''',
+   '''Impassable_West_And_East''',
+   '''Secret_Base_Hole''',
+   '''Holds_Large_Decoration''',
+   '''Secret_Base_Tv_Shield''',
+   '''Player_Room_Pc_On''',
+   '''Secret_Base_Decoration_Base''',
+   '''Secret_Base_Poster''',
+   '''Unused_C8''',
+   '''Unused_C9''',
+   '''Unused_Ca''',
+   '''Unused_Cb''',
+   '''Unused_Cc''',
+   '''Unused_Cd''',
+   '''Unused_Ce''',
+   '''Unused_Cf''',
+   '''Muddy_Slope''',
+   '''Bumpy_Slope''',
+   '''Cracked_Floor''',
+   '''Isolated_Vertical_Rail''',
+   '''Isolated_Horizontal_Rail''',
+   '''Vertical_Rail''',
+   '''Horizontal_Rail''',
+   '''Unused_D7''',
+   '''Unused_D8''',
+   '''Unused_D9''',
+   '''Unused_Da''',
+   '''Unused_Db''',
+   '''Unused_Dc''',
+   '''Unused_Dd''',
+   '''Unused_De''',
+   '''Unused_Df''',
+   '''Picture_Book_Shelf''',
+   '''Bookshelf''',
+   '''Pokemon_Center_Bookshelf''',
+   '''Vase''',
+   '''Trash_Can''',
+   '''Shop_Shelf''',
+   '''Blueprint''',
+   '''Cable_Box_Results_2''',
+   '''Wireless_Box_Results''',
+   '''Trainer_Hill_Timer''',
+   '''Sky_Pillar_Closed_Door''',
+   '''Unused_Eb''',
+   '''Unused_Ec''',
+   '''Unused_Ed''',
+   '''Unused_Ee''',
+   '''Unused_Ef''',
+]
+
+[[List]]
+Name = '''encountersongs'''
+DefaultHash = '''F5E5B010'''
+0 = [
+   '''boy''',
+   '''girl''',
+   '''tubers/young couples''',
+   '''suspicious''',
+   '''intense''',
+   '''cooltrainer''',
+   '''aqua''',
+   '''magma''',
+   '''swimmer''',
+   '''twins''',
+   '''elite4''',
+   '''hiker/sailor''',
+   '''interviewer''',
+   '''rich''',
+]
+
+[[List]]
+Name = '''pokenavTowns'''
+DefaultHash = '''1A6AE4ED'''
+0 = [
+   '''LITTLEROOT TOWN''',
+   '''OLDALE TOWN''',
+   '''DEWFORD TOWN''',
+   '''LAVARIDGE TOWN''',
+   '''FALLARBOR TOWN''',
+   '''VERDANTURF TOWN''',
+   '''PACIFIDLOG TOWN''',
+   '''PETALBURG CITY''',
+   '''SLATEPORT CITY TOP''',
+   '''SLATEPORT CITY BOTTOM''',
+   '''MAUVILLE CITY LEFT''',
+   '''MAUVILLE CITY RIGHT''',
+   '''RUSTBORO CITY TOP''',
+   '''RUSTBORO CITY BOTTOM''',
+   '''FORTREE CITY''',
+   '''LILYCOVE CITY LEFT''',
+   '''LILYCOVE CITY RIGHT''',
+   '''MOSSDEEP CITY LEFT''',
+   '''MOSSDEEP CITY RIGHT''',
+   '''SOOTOPOLIS CITY''',
+   '''EVER GRANDE CITY TOP''',
+   '''EVER GRANDE CITY BOTTOM''',
+]
+
+[[List]]
+Name = '''specials'''
+DefaultHash = '''E74F20C6'''
+0 = [
+   '''HealPlayerParty''',
+   '''SetCableClubWarp''',
+   '''DoCableClubWarp''',
+   '''ReturnFromLinkRoom''',
+   '''CleanupLinkRoomState''',
+   '''ExitLinkRoom''',
+   '''SetPlayerSecretBase''',
+   '''CheckPlayerHasSecretBase''',
+   '''EnterSecretBase''',
+   '''ClearAndLeaveSecretBase''',
+   '''MoveOutOfSecretBase''',
+   '''IsCurSecretBaseOwnedByAnotherPlayer''',
+   '''GetCurSecretBaseRegistrationValidity''',
+   '''ToggleCurSecretBaseRegistry''',
+   '''ShowSecretBaseDecorationMenu''',
+   '''ShowSecretBaseRegistryMenu''',
+   '''PrepSecretBaseBattleFlags''',
+   '''GetSecretBaseOwnerAndState''',
+   '''InitSecretBaseDecorationSprites''',
+   '''SetDecoration''',
+   '''GetObjectEventLocalIdByFlag''',
+   '''GetSecretBaseTypeInFrontOfPlayer''',
+   '''SetSecretBaseOwnerGfxId''',
+   '''PutAwayDecorationIteration''',
+   '''EnterNewlyCreatedSecretBase''',
+   '''SetBattledOwnerFromResult''',
+   '''DoSecretBasePCTurnOffEffect''',
+   '''RecordMixingPlayerSpotTriggered''',
+   '''TryBattleLinkup''',
+   '''TryTradeLinkup''',
+   '''TryRecordMixLinkup''',
+   '''ValidateMixingGameLanguage''',
+   '''CloseLink''',
+   '''ColosseumPlayerSpotTriggered''',
+   '''PlayerEnteredTradeSeat''',
+   '''-''',
+   '''CableClubSaveGame''',
+   '''TryBerryBlenderLinkup''',
+   '''GetLinkPartnerNames''',
+   '''SpawnLinkPartnerObjectEvent''',
+   '''SavePlayerParty''',
+   '''LoadPlayerParty''',
+   '''ChooseHalfPartyForBattle''',
+   '''Script_ShowLinkTrainerCard''',
+   '''ObjectEventInteractionGetBerryTreeData''',
+   '''ObjectEventInteractionGetBerryName''',
+   '''ObjectEventInteractionGetBerryCountString''',
+   '''Bag_ChooseBerry''',
+   '''ObjectEventInteractionPlantBerryTree''',
+   '''ObjectEventInteractionPickBerryTree''',
+   '''ObjectEventInteractionRemoveBerryTree''',
+   '''ObjectEventInteractionWaterBerryTree''',
+   '''PlayerHasBerries''',
+   '''IsEnigmaBerryValid''',
+   '''GetTrainerBattleMode''',
+   '''ShowTrainerIntroSpeech''',
+   '''ShowTrainerCantBattleSpeech''',
+   '''GetTrainerFlag''',
+   '''DoTrainerApproach''',
+   '''PlayTrainerEncounterMusic''',
+   '''ShouldTryRematchBattle''',
+   '''IsTrainerReadyForRematch''',
+   '''BattleSetup_StartRematchBattle''',
+   '''ShowPokemonStorageSystemPC''',
+   '''HasEnoughMonsForDoubleBattle''',
+   '''TurnOffTVScreen''',
+   '''DoTVShow''',
+   '''DoPokeNews''',
+   '''GetRandomActiveShowIdx''',
+   '''GetSelectedTVShow''',
+   '''InterviewBefore''',
+   '''InterviewAfter''',
+   '''IsLeadMonNicknamedOrNotEnglish''',
+   '''SetContestCategoryStringVarForInterview''',
+   '''GetNextActiveShowIfMassOutbreak''',
+   '''IsTVShowAlreadyInQueue''',
+   '''CheckForPlayersHouseNews''',
+   '''GetMomOrDadStringForTVMessage''',
+   '''ResetTVShowState''',
+   '''GetContestWinnerId''',
+   '''GetContestPlayerId''',
+   '''GetNpcContestantLocalId''',
+   '''BufferContestWinnerTrainerName''',
+   '''BufferContestWinnerMonName''',
+   '''BufferContestTrainerAndMonNames''',
+   '''GetContestMonConditionRanking''',
+   '''SetContestTrainerGfxIds''',
+   '''TryEnterContestMon''',
+   '''GetContestantNamesAtRank''',
+   '''SetLinkContestPlayerGfx''',
+   '''GetContestMonCondition''',
+   '''HasMonWonThisContestBefore''',
+   '''GiveMonContestRibbon''',
+   '''IsContestDebugActive''',
+   '''GiveMonArtistRibbon''',
+   '''TryContestGModeLinkup''',
+   '''SaveGame''',
+   '''DoWateringBerryTreeAnim''',
+   '''ShowEasyChatScreen''',
+   '''ShowEasyChatProfile''',
+   '''ScrSpecial_GetCurrentMauvilleMan''',
+   '''ScrSpecial_HasBardSongBeenChanged''',
+   '''ScrSpecial_SaveBardSongLyrics''',
+   '''ScrSpecial_GetHipsterSpokenFlag''',
+   '''ScrSpecial_SetHipsterSpokenFlag''',
+   '''ScrSpecial_HipsterTeachWord''',
+   '''ScrSpecial_PlayBardSong''',
+   '''ScrSpecial_SetMauvilleOldManObjEventGfx''',
+   '''ScrSpecial_GenerateGiddyLine''',
+   '''ScrSpecial_GiddyShouldTellAnotherTale''',
+   '''ScrSpecial_StorytellerGetFreeStorySlot''',
+   '''ScrSpecial_StorytellerDisplayStory''',
+   '''ScrSpecial_StorytellerStoryListMenu''',
+   '''ScrSpecial_StorytellerUpdateStat''',
+   '''ScrSpecial_StorytellerInitializeRandomStat''',
+   '''ScrSpecial_HasStorytellerAlreadyRecorded''',
+   '''ScrSpecial_TraderMenuGetDecoration''',
+   '''ScrSpecial_GetTraderTradedFlag''',
+   '''ScrSpecial_DoesPlayerHaveNoDecorations''',
+   '''ScrSpecial_IsDecorationFull''',
+   '''ScrSpecial_TraderMenuGiveDecoration''',
+   '''ScrSpecial_TraderDoDecorationTrade''',
+   '''GetSeedotSizeRecordInfo''',
+   '''CompareSeedotSize''',
+   '''GetLotadSizeRecordInfo''',
+   '''CompareLotadSize''',
+   '''TryPutNameRaterShowOnTheAir''',
+   '''BufferMonNickname''',
+   '''IsMonOTIDNotPlayers''',
+   '''BufferTrendyPhraseString''',
+   '''IsTrendyPhraseBoring''',
+   '''BufferDeepLinkPhrase''',
+   '''GetDewfordHallPaintingNameIndex''',
+   '''SwapRegisteredBike''',
+   '''CalculatePlayerPartyCount''',
+   '''CountPartyNonEggMons''',
+   '''CountPartyAliveNonEggMons_IgnoreVar4Slot''',
+   '''ShouldReadyContestArtist''',
+   '''SaveMuseumContestPainting''',
+   '''DoesContestCategoryHaveMuseumPainting''',
+   '''CountPlayerMuseumPaintings''',
+   '''ShowContestPainting  @ unused''',
+   '''MauvilleGymSetDefaultBarriers''',
+   '''MauvilleGymPressSwitch''',
+   '''ShowFieldMessageStringVar4''',
+   '''DrawWholeMapView''',
+   '''StorePlayerCoordsInVars''',
+   '''MauvilleGymDeactivatePuzzle''',
+   '''PetalburgGymSlideOpenRoomDoors''',
+   '''PetalburgGymUnlockRoomDoors''',
+   '''GetPlayerTrainerIdOnesDigit''',
+   '''GetPlayerBigGuyGirlString''',
+   '''GetRivalSonDaughterString''',
+   '''SetHiddenItemFlag''',
+   '''CableCarWarp''',
+   '''CableCar''',
+   '''Overworld_PlaySpecialMapMusic''',
+   '''StartWallClock''',
+   '''Special_ViewWallClock''',
+   '''ChooseStarter''',
+   '''StartWallyTutorialBattle''',
+   '''ChangePokemonNickname''',
+   '''ChoosePartyMon''',# Selected index will be stored in var4. var4=1 for lead pokemon, var4=6 for last pokemon, var4=7 for cancel. Requires `waitstate` after.
+   '''GetFirstFreePokeblockSlot''',
+   '''DoBerryBlending''',
+   '''PlayRoulette''',
+   '''IsFanClubMemberFanOfPlayer''',
+   '''GetNumFansOfPlayerInTrainerFanClub''',
+   '''BufferFanClubTrainerName''',
+   '''TryLoseFansFromPlayTimeAfterLinkBattle''',
+   '''TryLoseFansFromPlayTime''',
+   '''SetPlayerGotFirstFans''',
+   '''UpdateTrainerFanClubGameClear''',
+   '''Script_TryGainNewFanFromCounter''',
+   '''RockSmashWildEncounter''',
+   '''GabbyAndTyGetBattleNum''',
+   '''GabbyAndTyAfterInterview''',
+   '''GabbyAndTyBeforeInterview''',
+   '''DoTVShowInSearchOfTrainers''',
+   '''IsGabbyAndTyShowOnTheAir''',
+   '''GabbyAndTyGetLastQuote''',
+   '''GabbyAndTyGetLastBattleTrivia''',
+   '''GetGabbyAndTyLocalIds''',
+   '''GetBattleOutcome''',
+   '''GetDaycareMonNicknames''',
+   '''GetDaycareState''',
+   '''RejectEggFromDayCare''',
+   '''GiveEggFromDaycare''',
+   '''SetDaycareCompatibilityString''',
+   '''GetSelectedMonNicknameAndSpecies''',
+   '''StoreSelectedPokemonInDaycare''',
+   '''ChooseSendDaycareMon''',
+   '''ShowDaycareLevelMenu''',
+   '''GetNumLevelsGainedFromDaycare''',
+   '''GetDaycareCost''',
+   '''TakePokemonFromDaycare''',
+   '''ScriptHatchMon''',
+   '''EggHatch''',
+   '''CheckDaycareMonReceivedMail''',
+   '''ShowLinkBattleRecords''',
+   '''IsEnoughForCostInVar5''',
+   '''SubtractMoneyFromVar5''',
+   '''TryFieldPoisonWhiteOut''',
+   '''SetCB2WhiteOut''',
+   '''RotatingGate_InitPuzzle''',
+   '''RotatingGate_InitPuzzleAndGraphics''',
+   '''SetSSTidalFlag''',
+   '''ResetSSTidalFlag''',
+   '''EnterSafariMode''',
+   '''ExitSafariMode''',
+   '''GetPokeblockFeederInFront''',
+   '''OpenPokeblockCaseOnFeeder''',
+   '''IsMirageIslandPresent''',
+   '''UpdateShoalTideFlag''',
+   '''InitBirchState''',
+   '''ScriptGetPokedexInfo''',
+   '''ShowPokedexRatingMessage''',
+   '''DoPCTurnOnEffect''',
+   '''DoPCTurnOffEffect''',
+   '''SetDeptStoreFloor''',
+   '''DoLotteryCornerComputerEffect''',
+   '''EndLotteryCornerComputerEffect''',
+   '''ChooseMonForMoveRelearner''',
+   '''MoveDeleterChooseMoveToForget''',
+   '''MoveDeleterForgetMove''',
+   '''BufferMoveDeleterNicknameAndMove''',
+   '''GetNumMovesSelectedMonHas''',
+   '''TeachMoveRelearnerMove''',
+   '''GetRecordedCyclingRoadResults''',
+   '''Special_BeginCyclingRoadChallenge''',
+   '''GetPlayerAvatarBike''',
+   '''FinishCyclingRoadChallenge''',
+   '''UpdateCyclingRoadState''',
+   '''GetLeadMonFriendshipScore''',
+   '''CallFrontierUtilFunc''',
+   '''CallBattleTowerFunc''',
+   '''CallBattleDomeFunction''',
+   '''CallBattlePalaceFunction''',
+   '''CopyEReaderTrainerGreeting''',
+   '''DoSpecialTrainerBattle''',
+   '''CallBattleArenaFunction''',
+   '''CallBattleFactoryFunction''',
+   '''CallBattlePikeFunction''',
+   '''CallBattlePyramidFunction''',
+   '''StopMapMusic''',
+   '''CallVerdanturfTentFunction''',
+   '''CallFallarborTentFunction''',
+   '''CallSlateportTentFunction''',
+   '''ChoosePartyForBattleFrontier''',
+   '''ValidateEReaderTrainer''',
+   '''GetBestBattleTowerStreak''',
+   '''ReducePlayerPartyToSelectedMons''',
+   '''BedroomPC''',
+   '''PlayerPC''',
+   '''FieldShowRegionMap''',
+   '''GetInGameTradeSpeciesInfo''',
+   '''CreateInGameTradePokemon''',
+   '''DoInGameTradeScene''',
+   '''GetTradeSpecies''',
+   '''GetWeekCount''',
+   '''RetrieveLotteryNumber''',
+   '''PickLotteryCornerTicket''',
+   '''ShowBerryBlenderRecordWindow''',
+   '''ResetTrickHouseNuggetFlag''',
+   '''SetTrickHouseNuggetFlag''',
+   '''ScriptMenu_CreatePCMultichoice''',
+   '''AccessHallOfFamePC''',
+   '''Special_ShowDiploma''',
+   '''CheckLeadMonCool''',
+   '''CheckLeadMonBeauty''',
+   '''CheckLeadMonCute''',
+   '''CheckLeadMonSmart''',
+   '''CheckLeadMonTough''',
+   '''LookThroughPorthole''',
+   '''DoSoftReset''',
+   '''GameClear''',
+   '''MoveElevator''',
+   '''ShowGlassWorkshopMenu''',
+   '''SpawnCameraObject''',
+   '''RemoveCameraObject''',
+   '''GetPokeblockNameByMonNature''',
+   '''GetSecretBaseNearbyMapName''',
+   '''CheckRelicanthWailord''',
+   '''ShouldDoBrailleRegirockEffectOld''',
+   '''DoOrbEffect''',
+   '''FadeOutOrbEffect''',
+   '''WaitWeather''',
+   '''BufferEReaderTrainerName''',
+   '''GetSlotMachineId''',
+   '''GetPlayerFacingDirection''',
+   '''FoundAbandonedShipRoom1Key''',
+   '''FoundAbandonedShipRoom2Key''',
+   '''FoundAbandonedShipRoom4Key''',
+   '''FoundAbandonedShipRoom6Key''',
+   '''LeadMonHasEffortRibbon''',
+   '''GiveLeadMonEffortRibbon''',
+   '''Special_AreLeadMonEVsMaxedOut''',
+   '''Script_FacePlayer''',
+   '''Script_ClearHeldMovement''',
+   '''InitRoamer''',
+   '''TryUpdateRusturfTunnelState''',
+   '''IsGrassTypeInParty''',
+   '''DoContestHallWarp''',
+   '''PutZigzagoonInPlayerParty''',
+   '''IsStarterInParty''',
+   '''CopyCurSecretBaseOwnerName_StrVar1''',
+   '''ScriptCheckFreePokemonStorageSpace''',
+   '''DoSealedChamberShakingEffect1''',
+   '''ShowDeptStoreElevatorFloorSelect''',
+   '''InteractWithShieldOrTVDecoration''',
+   '''IsPokerusInParty''',
+   '''SetSootopolisGymCrackedIceMetatiles''',
+   '''ShakeCamera''',
+   '''StartGroudonKyogreBattle''',
+   '''BattleSetup_StartLegendaryBattle''',
+   '''StartRegiBattle''',
+   '''SetTrainerFacingDirection''',
+   '''DoSealedChamberShakingEffect2''',
+   '''FoundBlackGlasses''',
+   '''StartDroughtWeatherBlend''',
+   '''DoDiveWarp''',
+   '''DoFallWarp''',
+   '''ShowContestEntryMonPic''',
+   '''HideContestEntryMonPic''',
+   '''SetEReaderTrainerGfxId''',
+   '''BattleSetup_StartLatiBattle''',
+   '''SetRoute119Weather''',
+   '''SetRoute123Weather''',
+   '''GetContestMultiplayerId''',
+   '''GetPartyMonSpecies''',# Read party index from var4, return species.
+   '''IsSelectedMonEgg''',
+   '''TryInitBattleTowerAwardManObjectEvent''',
+   '''MoveOutOfSecretBaseFromOutside''',
+   '''LoadPlayerBag''',
+   '''Script_FadeOutMapMusic''',
+   '''SetPacifidlogTMReceivedDay''',
+   '''GetDaysUntilPacifidlogTMAvailable''',
+   '''HasAllHoennMons''',
+   '''MonOTNameNotPlayer''',
+   '''BufferLottoTicketNumber''',
+   '''TryHideBattleTowerReporter''',
+   '''DoesPartyHaveEnigmaBerry''',
+   '''GenerateContestRand''',
+   '''SetChampionSaveWarp''',
+   '''TryPutTreasureInvestigatorsOnAir''',
+   '''TryPutLotteryWinnerReportOnAir''',
+   '''TryPutTrainerFanClubOnAir''',
+   '''ShouldHideFanClubInterviewer''',
+   '''ShowGlassWorkshopMenu''',
+   '''PutFanClubSpecialOnTheAir''',
+   '''IncrementDailyPlantedBerries''',
+   '''IncrementDailyPickedBerries''',
+   '''InitSecretBaseVars''',
+   '''CheckInteractedWithFriendsSandOrnament''',
+   '''DeclinedSecretBaseBattle''',
+   '''DrewSecretBaseBattle''',
+   '''WonSecretBaseBattle''',
+   '''LostSecretBaseBattle''',
+   '''CheckInteractedWithFriendsDollDecor''',
+   '''CheckInteractedWithFriendsCushionDecor''',
+   '''CheckInteractedWithFriendsFurnitureBottom''',
+   '''CheckInteractedWithFriendsFurnitureMiddle''',
+   '''CheckInteractedWithFriendsFurnitureTop''',
+   '''CheckInteractedWithFriendsPosterDecor''',
+   '''SetLilycoveLadyGfx''',
+   '''Script_GetLilycoveLadyId''',
+   '''GetFavorLadyState''',
+   '''BufferFavorLadyRequest''',
+   '''HasAnotherPlayerGivenFavorLadyItem''',
+   '''BufferFavorLadyItemName''',
+   '''BufferFavorLadyPlayerName''',
+   '''DidFavorLadyLikeItem''',
+   '''Script_FavorLadyOpenBagMenu''',
+   '''Script_DoesFavorLadyLikeItem''',
+   '''IsFavorLadyThresholdMet''',
+   '''FavorLadyGetPrize''',
+   '''SetFavorLadyState_Complete''',
+   '''GetQuizLadyState''',
+   '''GetQuizAuthor''',
+   '''IsQuizLadyWaitingForChallenger''',
+   '''QuizLadyShowQuizQuestion''',
+   '''QuizLadyGetPlayerAnswer''',
+   '''IsQuizAnswerCorrect''',
+   '''BufferQuizPrizeItem''',
+   '''SetQuizLadyState_Complete''',
+   '''BufferQuizAuthorNameAndCheckIfLady''',
+   '''SetQuizLadyState_GivePrize''',
+   '''ClearQuizLadyPlayerAnswer''',
+   '''Script_QuizLadyOpenBagMenu''',
+   '''ClearQuizLadyQuestionAndAnswer''',
+   '''QuizLadySetCustomQuestion''',
+   '''QuizLadyTakePrizeForCustomQuiz''',
+   '''GetMysteryEventCardVal''',
+   '''QuizLadyRecordCustomQuizData''',
+   '''QuizLadySetWaitingForChallenger''',
+   '''BufferQuizCorrectAnswer''',
+   '''BufferQuizPrizeName''',
+   '''QuizLadyPickNewQuestion''',
+   '''ShouldContestLadyShowGoOnAir''',
+   '''HasPlayerGivenContestLadyPokeblock''',
+   '''Script_BufferContestLadyCategoryAndMonName''',
+   '''OpenPokeblockCaseForContestLady''',
+   '''SetContestLadyGivenPokeblock''',
+   '''GetContestLadyMonSpecies''',
+   '''GetContestLadyCategory''',
+   '''PutLilycoveContestLadyShowOnTheAir''',
+   '''CloseBattlePikeCurtain''',
+   '''CallApprenticeFunction''',
+   '''ShouldTryGetTrainerScript''',
+   '''ShowMapNamePopup''',
+   '''ShowMapNamePopup''',
+   '''DoMirageTowerCeilingCrumble''',
+   '''SetMirageTowerVisibility''',
+   '''StartPlayerDescendMirageTower''',
+   '''BufferTMHMMoveName''',
+   '''IsWirelessAdapterConnected''',
+   '''TryBecomeLinkLeader''',
+   '''TryJoinLinkGroup''',
+   '''RunUnionRoom''',
+   '''ShowWirelessCommunicationScreen''',
+   '''InitUnionRoom''',
+   '''BufferUnionRoomPlayerName''',
+   '''RetrieveWonderNewsVal''',
+   '''ChooseMonForWirelessMinigame''',
+   '''Script_ResetUnionRoomTrade''',
+   '''IsBadEggInParty''',
+   '''ValidateReceivedWonderCard''',
+   '''HasAtLeastOneBerry''',
+   '''IsPokemonJumpSpeciesInParty''',
+   '''ShowPokemonJumpRecords''',
+   '''IsDodrioInParty''',
+   '''ShowDodrioBerryPickingRecords''',
+   '''OffsetCameraForBattle''',
+   '''GetDeptStoreDefaultFloorChoice''',
+   '''BufferVarsForIVRater''',
+   '''LinkContestWaitForConnection''',
+   '''GetWirelessCommType''',
+   '''LinkContestTryShowWirelessIndicator''',
+   '''LinkContestTryHideWirelessIndicator''',
+   '''IsWirelessContest''',
+   '''ShowRankingHallRecordsWindow''',
+   '''ScrollRankingHallRecordsWindow''',
+   '''ShowFrontierManiacMessage''',
+   '''IsContestWithRSPlayer''',
+   '''ClearLinkContestFlags''',
+   '''TryContestEModeLinkup''',
+   '''ShowScrollableMultichoice''',
+   '''ScrollableMultichoice_TryReturnToList''',
+   '''BufferBattleTowerElevatorFloors''',
+   '''TryStoreHeldItemsInPyramidBag''',
+   '''ChooseItemsToTossFromPyramidBag''',
+   '''DoBattlePyramidMonsHaveHeldItem''',
+   '''BattlePyramidChooseMonHeldItems''',
+   '''SetBattleTowerLinkPlayerGfx''',
+   '''ShowNatureGirlMessage''',
+   '''ShowBattlePointsWindow''',
+   '''UpdateBattlePointsWindow''',
+   '''CloseBattlePointsWindow''',
+   '''GiveFrontierBattlePoints''',
+   '''TakeFrontierBattlePoints''',
+   '''GetFrontierBattlePoints''',
+   '''ShowFrontierExchangeCornerItemIconWindow''',
+   '''CloseFrontierExchangeCornerItemIconWindow''',
+   '''DisplayBerryPowderVendorMenu''',
+   '''RemoveBerryPowderVendorMenu''',
+   '''HasEnoughBerryPowder''',
+   '''TakeBerryPowder''',
+   '''PrintPlayerBerryPowderAmount''',
+   '''ShowFrontierGamblerLookingMessage''',
+   '''ShowFrontierGamblerGoMessage''',
+   '''Script_DoRayquazaScene''',
+   '''OpenPokenavForTutorial''',
+   '''ScriptMenu_CreateStartMenuForPokenavTutorial''',
+   '''CountPlayerTrainerStars''',
+   '''BufferBattleFrontierTutorMoveName''',
+   '''CloseBattleFrontierTutorWindow''',
+   '''ScrollableMultichoice_RedrawPersistentMenu''',
+   '''ChooseMonForMoveTutor''',
+   '''GetBattleFrontierTutorMoveIndex''',
+   '''ScrollableMultichoice_ClosePersistentMenu''',
+   '''DoDeoxysRockInteraction''',
+   '''SetDeoxysRockPalette''',
+   '''CreateEventLegalEnemyMon''',
+   '''StartMirageTowerDisintegration''',
+   '''StartMirageTowerShake''',
+   '''StartMirageTowerFossilFallAndSink''',
+   '''ChangeBoxPokemonNickname''',
+   '''GetPCBoxToSendMon''',
+   '''ShouldShowBoxWasFullMessage''',
+   '''SetMatchCallRegisteredFlag''',
+   '''DoDomeConfetti''',
+   '''CreateAbnormalWeatherEvent''',
+   '''GetAbnormalWeatherMapNameAndType''',
+   '''GetMartEmployeeObjectEventId''',
+   '''SaveForBattleTowerLink''',
+   '''Unused_SetWeatherSunny''',
+   '''SetUnlockedPokedexFlags''',
+   '''IsTrainerRegistered''',
+   '''ShouldDoBrailleRegicePuzzle''',
+   '''EnableNationalPokedex''',
+   '''ScriptMenu_CreateLilycoveSSTidalMultichoice''',
+   '''GetLilycoveSSTidalSelection''',
+   '''TurnOnTVScreen''',
+   '''SetMewAboveGrass''',
+   '''ShouldDistributeEonTicket''',
+   '''LinkRetireStatusWithBattleTowerPartner''',
+   '''BattleTowerReconnectLink''',
+   '''CallTrainerHillFunction''',
+   '''Script_DoRayquazaScene''',
+   '''LoopWingFlapSE''',
+   '''DestroyMewEmergingGrassSprite''',
+   '''ShowBerryCrushRankings''',
+   '''TryBufferWaldaPhrase''',
+   '''DoWaldaNamingScreen''',
+   '''TryGetWallpaperWithWaldaPhrase''',
+   '''PlayerNotAtTrainerHillEntrance''',
+   '''GetBattlePyramidHint''',
+   '''LoadLinkContestPlayerPalettes''',
+   '''ShowTrainerHillRecords''',
+   '''PlayerFaceTrainerAfterBattle''',
+   '''ResetHealLocationFromDewford''',
+   '''IsLastMonThatKnowsSurf''',
+   '''CountPartyAliveNonEggMons''',
+   '''TryPrepareSecondApproachingTrainer''',
+   '''RemoveRecordsWindow''',
+   '''CloseDeptStoreElevatorWindow''',
+   '''TrySetBattleTowerLinkType''',
+]
+
+[[List]]
+Name = '''songnames'''
+DefaultHash = '''C457C218'''
+0 = [
+   '''mus_dummy''',
+   '''se_use_item''',
+   '''se_pc_login''',
+   '''se_pc_off''',
+   '''se_pc_on''',
+   '''se_select''',
+   '''se_win_open''',
+   '''se_wall_hit''',
+   '''se_door''',
+   '''se_exit''',
+   '''se_ledge''',
+   '''se_bike_bell''',
+   '''se_not_effective''',
+   '''se_effective''',
+   '''se_super_effective''',
+   '''se_ball_open''',
+   '''se_faint''',
+   '''se_flee''',
+   '''se_sliding_door''',
+   '''se_ship''',
+   '''se_bang''',
+   '''se_pin''',
+   '''se_boo''',
+   '''se_ball''',
+   '''se_contest_place''',
+   '''se_a''',
+   '''se_i''',
+   '''se_u''',
+   '''se_e''',
+   '''se_o''',
+   '''se_n''',
+   '''se_success''',
+   '''se_failure''',
+   '''se_exp''',
+   '''se_bike_hop''',
+   '''se_switch''',
+   '''se_click''',
+   '''se_fu_zaku''',
+   '''se_contest_condition_lose''',
+   '''se_lavaridge_fall_warp''',
+   '''se_ice_stairs''',
+   '''se_ice_break''',
+   '''se_ice_crack''',
+   '''se_fall''',
+   '''se_unlock''',
+   '''se_warp_in''',
+   '''se_warp_out''',
+   '''se_repel''',
+   '''se_rotating_gate''',
+   '''se_truck_move''',
+   '''se_truck_stop''',
+   '''se_truck_unload''',
+   '''se_truck_door''',
+   '''se_berry_blender''',
+   '''se_card''',
+   '''se_save''',
+   '''se_ball_bounce_1''',
+   '''se_ball_bounce_2''',
+   '''se_ball_bounce_3''',
+   '''se_ball_bounce_4''',
+   '''se_ball_trade''',
+   '''se_ball_throw''',
+   '''se_note_c''',
+   '''se_note_d''',
+   '''se_note_e''',
+   '''se_note_f''',
+   '''se_note_g''',
+   '''se_note_a''',
+   '''se_note_b''',
+   '''se_note_c_high''',
+   '''se_puddle''',
+   '''se_bridge_walk''',
+   '''se_itemfinder''',
+   '''se_ding_dong''',
+   '''se_balloon_red''',
+   '''se_balloon_blue''',
+   '''se_balloon_yellow''',
+   '''se_breakable_door''',
+   '''se_mud_ball''',
+   '''se_field_poison''',
+   '''se_escalator''',
+   '''se_thunderstorm''',
+   '''se_thunderstorm_stop''',
+   '''se_downpour''',
+   '''se_downpour_stop''',
+   '''se_rain''',
+   '''se_rain_stop''',
+   '''se_thunder''',
+   '''se_thunder2''',
+   '''se_elevator''',
+   '''se_low_health''',
+   '''se_exp_max''',
+   '''se_roulette_ball''',
+   '''se_roulette_ball2''',
+   '''se_taillow_wing_flap''',
+   '''se_shop''',
+   '''se_contest_heart''',
+   '''se_contest_curtain_rise''',
+   '''se_contest_curtain_fall''',
+   '''se_contest_icon_change''',
+   '''se_contest_icon_clear''',
+   '''se_contest_mons_turn''',
+   '''se_shiny''',
+   '''se_intro_blast''',
+   '''se_mugshot''',
+   '''se_applause''',
+   '''se_vend''',
+   '''se_orb''',
+   '''se_dex_scroll''',
+   '''se_dex_page''',
+   '''se_pokenav_on''',
+   '''se_pokenav_off''',
+   '''se_dex_search''',
+   '''se_egg_hatch''',
+   '''se_ball_tray_enter''',
+   '''se_ball_tray_ball''',
+   '''se_ball_tray_exit''',
+   '''se_glass_flute''',
+   '''se_m_thunderbolt''',
+   '''se_m_thunderbolt2''',
+   '''se_m_harden''',
+   '''se_m_nightmare''',
+   '''se_m_vital_throw''',
+   '''se_m_vital_throw2''',
+   '''se_m_bubble''',
+   '''se_m_bubble2''',
+   '''se_m_bubble3''',
+   '''se_m_rain_dance''',
+   '''se_m_cut''',
+   '''se_m_string_shot''',
+   '''se_m_string_shot2''',
+   '''se_m_rock_throw''',
+   '''se_m_gust''',
+   '''se_m_gust2''',
+   '''se_m_double_slap''',
+   '''se_m_double_team''',
+   '''se_m_razor_wind''',
+   '''se_m_icy_wind''',
+   '''se_m_thunder_wave''',
+   '''se_m_comet_punch''',
+   '''se_m_mega_kick''',
+   '''se_m_mega_kick2''',
+   '''se_m_crabhammer''',
+   '''se_m_jump_kick''',
+   '''se_m_flame_wheel''',
+   '''se_m_flame_wheel2''',
+   '''se_m_flamethrower''',
+   '''se_m_fire_punch''',
+   '''se_m_toxic''',
+   '''se_m_sacred_fire''',
+   '''se_m_sacred_fire2''',
+   '''se_m_ember''',
+   '''se_m_take_down''',
+   '''se_m_blizzard''',
+   '''se_m_blizzard2''',
+   '''se_m_scratch''',
+   '''se_m_vicegrip''',
+   '''se_m_wing_attack''',
+   '''se_m_fly''',
+   '''se_m_sand_attack''',
+   '''se_m_razor_wind2''',
+   '''se_m_bite''',
+   '''se_m_headbutt''',
+   '''se_m_surf''',
+   '''se_m_hydro_pump''',
+   '''se_m_whirlpool''',
+   '''se_m_horn_attack''',
+   '''se_m_tail_whip''',
+   '''se_m_mist''',
+   '''se_m_poison_powder''',
+   '''se_m_bind''',
+   '''se_m_dragon_rage''',
+   '''se_m_sing''',
+   '''se_m_perish_song''',
+   '''se_m_pay_day''',
+   '''se_m_dig''',
+   '''se_m_dizzy_punch''',
+   '''se_m_self_destruct''',
+   '''se_m_explosion''',
+   '''se_m_absorb_2''',
+   '''se_m_absorb''',
+   '''se_m_screech''',
+   '''se_m_bubble_beam''',
+   '''se_m_bubble_beam2''',
+   '''se_m_supersonic''',
+   '''se_m_belly_drum''',
+   '''se_m_metronome''',
+   '''se_m_bonemerang''',
+   '''se_m_lick''',
+   '''se_m_psybeam''',
+   '''se_m_faint_attack''',
+   '''se_m_swords_dance''',
+   '''se_m_leer''',
+   '''se_m_swagger''',
+   '''se_m_swagger2''',
+   '''se_m_heal_bell''',
+   '''se_m_confuse_ray''',
+   '''se_m_snore''',
+   '''se_m_brick_break''',
+   '''se_m_giga_drain''',
+   '''se_m_psybeam2''',
+   '''se_m_solar_beam''',
+   '''se_m_petal_dance''',
+   '''se_m_teleport''',
+   '''se_m_minimize''',
+   '''se_m_sketch''',
+   '''se_m_swift''',
+   '''se_m_reflect''',
+   '''se_m_barrier''',
+   '''se_m_detect''',
+   '''se_m_lock_on''',
+   '''se_m_moonlight''',
+   '''se_m_charm''',
+   '''se_m_charge''',
+   '''se_m_strength''',
+   '''se_m_hyper_beam''',
+   '''se_m_waterfall''',
+   '''se_m_reversal''',
+   '''se_m_acid_armor''',
+   '''se_m_sandstorm''',
+   '''se_m_tri_attack''',
+   '''se_m_tri_attack2''',
+   '''se_m_encore''',
+   '''se_m_encore2''',
+   '''se_m_baton_pass''',
+   '''se_m_milk_drink''',
+   '''se_m_attract''',
+   '''se_m_attract2''',
+   '''se_m_morning_sun''',
+   '''se_m_flatter''',
+   '''se_m_sand_tomb''',
+   '''se_m_grasswhistle''',
+   '''se_m_spit_up''',
+   '''se_m_dive''',
+   '''se_m_earthquake''',
+   '''se_m_twister''',
+   '''se_m_sweet_scent''',
+   '''se_m_yawn''',
+   '''se_m_sky_uppercut''',
+   '''se_m_stat_increase''',
+   '''se_m_heat_wave''',
+   '''se_m_uproar''',
+   '''se_m_hail''',
+   '''se_m_cosmic_power''',
+   '''se_m_teeter_dance''',
+   '''se_m_stat_decrease''',
+   '''se_m_haze''',
+   '''se_m_hyper_beam2''',
+   '''se_rg_door''',
+   '''se_rg_card_flip''',
+   '''se_rg_card_flipping''',
+   '''se_rg_card_open''',
+   '''se_rg_bag_cursor''',
+   '''se_rg_bag_pocket''',
+   '''se_rg_ball_click''',
+   '''se_rg_shop''',
+   '''se_rg_ss_anne_horn''',
+   '''se_rg_help_open''',
+   '''se_rg_help_close''',
+   '''se_rg_help_error''',
+   '''se_rg_deoxys_move''',
+   '''se_rg_poke_jump_success''',
+   '''se_rg_poke_jump_failure''',
+   '''se_pokenav_call''',
+   '''se_pokenav_hang_up''',
+   '''se_arena_timeup1''',
+   '''se_arena_timeup2''',
+   '''se_pike_curtain_close''',
+   '''se_pike_curtain_open''',
+   '''se_sudowoodo_shake''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''dummy_song_header''',
+   '''mus_littleroot_test''',
+   '''mus_gsc_route38''',
+   '''mus_caught''',
+   '''mus_victory_wild''',
+   '''mus_victory_gym_leader''',
+   '''mus_victory_league''',
+   '''mus_c_comm_center''',
+   '''mus_gsc_pewter''',
+   '''mus_c_vs_legend_beast''',
+   '''mus_route101''',
+   '''mus_route110''',
+   '''mus_route120''',
+   '''mus_petalburg''',
+   '''mus_oldale''',
+   '''mus_gym''',
+   '''mus_surf''',
+   '''mus_petalburg_woods''',
+   '''mus_level_up''',
+   '''mus_heal''',
+   '''mus_obtain_badge''',
+   '''mus_obtain_item''',
+   '''mus_evolved''',
+   '''mus_obtain_tmhm''',
+   '''mus_lilycove_museum''',
+   '''mus_route122''',
+   '''mus_oceanic_museum''',
+   '''mus_evolution_intro''',
+   '''mus_evolution''',
+   '''mus_move_deleted''',
+   '''mus_encounter_girl''',
+   '''mus_encounter_male''',
+   '''mus_abandoned_ship''',
+   '''mus_fortree''',
+   '''mus_birch_lab''',
+   '''mus_b_tower_rs''',
+   '''mus_encounter_swimmer''',
+   '''mus_cave_of_origin''',
+   '''mus_obtain_berry''',
+   '''mus_awaken_legend''',
+   '''mus_slots_jackpot''',
+   '''mus_slots_win''',
+   '''mus_too_bad''',
+   '''mus_roulette''',
+   '''mus_link_contest_p1''',
+   '''mus_link_contest_p2''',
+   '''mus_link_contest_p3''',
+   '''mus_link_contest_p4''',
+   '''mus_encounter_rich''',
+   '''mus_verdanturf''',
+   '''mus_rustboro''',
+   '''mus_poke_center''',
+   '''mus_route104''',
+   '''mus_route119''',
+   '''mus_cycling''',
+   '''mus_poke_mart''',
+   '''mus_littleroot''',
+   '''mus_mt_chimney''',
+   '''mus_encounter_female''',
+   '''mus_lilycove''',
+   '''mus_route111''',
+   '''mus_help''',
+   '''mus_underwater''',
+   '''mus_victory_trainer''',
+   '''mus_title''',
+   '''mus_intro''',
+   '''mus_encounter_may''',
+   '''mus_encounter_intense''',
+   '''mus_encounter_cool''',
+   '''mus_route113''',
+   '''mus_encounter_aqua''',
+   '''mus_follow_me''',
+   '''mus_encounter_brendan''',
+   '''mus_ever_grande''',
+   '''mus_encounter_suspicious''',
+   '''mus_victory_aqua_magma''',
+   '''mus_cable_car''',
+   '''mus_game_corner''',
+   '''mus_dewford''',
+   '''mus_safari_zone''',
+   '''mus_victory_road''',
+   '''mus_aqua_magma_hideout''',
+   '''mus_sailing''',
+   '''mus_mt_pyre''',
+   '''mus_slateport''',
+   '''mus_mt_pyre_exterior''',
+   '''mus_school''',
+   '''mus_hall_of_fame''',
+   '''mus_fallarbor''',
+   '''mus_sealed_chamber''',
+   '''mus_contest_winner''',
+   '''mus_contest''',
+   '''mus_encounter_magma''',
+   '''mus_intro_battle''',
+   '''mus_abnormal_weather''',
+   '''mus_weather_groudon''',
+   '''mus_sootopolis''',
+   '''mus_contest_results''',
+   '''mus_hall_of_fame_room''',
+   '''mus_trick_house''',
+   '''mus_encounter_twins''',
+   '''mus_encounter_elite_four''',
+   '''mus_encounter_hiker''',
+   '''mus_contest_lobby''',
+   '''mus_encounter_interviewer''',
+   '''mus_encounter_champion''',
+   '''mus_credits''',
+   '''mus_end''',
+   '''mus_b_frontier''',
+   '''mus_b_arena''',
+   '''mus_obtain_b_points''',
+   '''mus_register_match_call''',
+   '''mus_b_pyramid''',
+   '''mus_b_pyramid_top''',
+   '''mus_b_palace''',
+   '''mus_rayquaza_appears''',
+   '''mus_b_tower''',
+   '''mus_obtain_symbol''',
+   '''mus_b_dome''',
+   '''mus_b_pike''',
+   '''mus_b_factory''',
+   '''mus_vs_rayquaza''',
+   '''mus_vs_frontier_brain''',
+   '''mus_vs_mew''',
+   '''mus_b_dome_lobby''',
+   '''mus_vs_wild''',
+   '''mus_vs_aqua_magma''',
+   '''mus_vs_trainer''',
+   '''mus_vs_gym_leader''',
+   '''mus_vs_champion''',
+   '''mus_vs_regi''',
+   '''mus_vs_kyogre_groudon''',
+   '''mus_vs_rival''',
+   '''mus_vs_elite_four''',
+   '''mus_vs_aqua_magma_leader''',
+   '''mus_rg_follow_me''',
+   '''mus_rg_game_corner''',
+   '''mus_rg_rocket_hideout''',
+   '''mus_rg_gym''',
+   '''mus_rg_jigglypuff''',
+   '''mus_rg_intro_fight''',
+   '''mus_rg_title''',
+   '''mus_rg_cinnabar''',
+   '''mus_rg_lavender''',
+   '''mus_rg_heal''',
+   '''mus_rg_cycling''',
+   '''mus_rg_encounter_rocket''',
+   '''mus_rg_encounter_girl''',
+   '''mus_rg_encounter_boy''',
+   '''mus_rg_hall_of_fame''',
+   '''mus_rg_viridian_forest''',
+   '''mus_rg_mt_moon''',
+   '''mus_rg_poke_mansion''',
+   '''mus_rg_credits''',
+   '''mus_rg_route1''',
+   '''mus_rg_route24''',
+   '''mus_rg_route3''',
+   '''mus_rg_route11''',
+   '''mus_rg_victory_road''',
+   '''mus_rg_vs_gym_leader''',
+   '''mus_rg_vs_trainer''',
+   '''mus_rg_vs_wild''',
+   '''mus_rg_vs_champion''',
+   '''mus_rg_pallet''',
+   '''mus_rg_oak_lab''',
+   '''mus_rg_oak''',
+   '''mus_rg_poke_center''',
+   '''mus_rg_ss_anne''',
+   '''mus_rg_surf''',
+   '''mus_rg_poke_tower''',
+   '''mus_rg_silph''',
+   '''mus_rg_fuchsia''',
+   '''mus_rg_celadon''',
+   '''mus_rg_victory_trainer''',
+   '''mus_rg_victory_wild''',
+   '''mus_rg_victory_gym_leader''',
+   '''mus_rg_vermillion''',
+   '''mus_rg_pewter''',
+   '''mus_rg_encounter_rival''',
+   '''mus_rg_rival_exit''',
+   '''mus_rg_dex_rating''',
+   '''mus_rg_obtain_key_item''',
+   '''mus_rg_caught_intro''',
+   '''mus_rg_photo''',
+   '''mus_rg_game_freak''',
+   '''mus_rg_caught''',
+   '''mus_rg_new_game_instruct''',
+   '''mus_rg_new_game_intro''',
+   '''mus_rg_new_game_exit''',
+   '''mus_rg_poke_jump''',
+   '''mus_rg_union_room''',
+   '''mus_rg_net_center''',
+   '''mus_rg_mystery_gift''',
+   '''mus_rg_berry_pick''',
+   '''mus_rg_sevii_cave''',
+   '''mus_rg_teachy_tv_show''',
+   '''mus_rg_sevii_route''',
+   '''mus_rg_sevii_dungeon''',
+   '''mus_rg_sevii_123''',
+   '''mus_rg_sevii_45''',
+   '''mus_rg_sevii_67''',
+   '''mus_rg_poke_flute''',
+   '''mus_rg_vs_deoxys''',
+   '''mus_rg_vs_mewtwo''',
+   '''mus_rg_vs_legend''',
+   '''mus_rg_encounter_gym_leader''',
+   '''mus_rg_encounter_deoxys''',
+   '''mus_rg_trainer_tower''',
+   '''mus_rg_slow_pallet''',
+   '''mus_rg_teachy_tv_menu''',
+   '''ph_trap_blend''',
+   '''ph_trap_held''',
+   '''ph_trap_solo''',
+   '''ph_face_blend''',
+   '''ph_face_held''',
+   '''ph_face_solo''',
+   '''ph_cloth_blend''',
+   '''ph_cloth_held''',
+   '''ph_cloth_solo''',
+   '''ph_dress_blend''',
+   '''ph_dress_held''',
+   '''ph_dress_solo''',
+   '''ph_fleece_blend''',
+   '''ph_fleece_held''',
+   '''ph_fleece_solo''',
+   '''ph_kit_blend''',
+   '''ph_kit_held''',
+   '''ph_kit_solo''',
+   '''ph_price_blend''',
+   '''ph_price_held''',
+   '''ph_price_solo''',
+   '''ph_lot_blend''',
+   '''ph_lot_held''',
+   '''ph_lot_solo''',
+   '''ph_goat_blend''',
+   '''ph_goat_held''',
+   '''ph_goat_solo''',
+   '''ph_thought_blend''',
+   '''ph_thought_held''',
+   '''ph_thought_solo''',
+   '''ph_choice_blend''',
+   '''ph_choice_held''',
+   '''ph_choice_solo''',
+   '''ph_mouth_blend''',
+   '''ph_mouth_held''',
+   '''ph_mouth_solo''',
+   '''ph_foot_blend''',
+   '''ph_foot_held''',
+   '''ph_foot_solo''',
+   '''ph_goose_blend''',
+   '''ph_goose_held''',
+   '''ph_goose_solo''',
+   '''ph_strut_blend''',
+   '''ph_strut_held''',
+   '''ph_strut_solo''',
+   '''ph_cure_blend''',
+   '''ph_cure_held''',
+   '''ph_cure_solo''',
+   '''ph_nurse_blend''',
+   '''ph_nurse_held''',
+   '''ph_nurse_solo''',
+]
+
+[[List]]
+Name = '''allFonts'''
+DefaultHash = '''44B3303B'''
+0 = [
+   '''short2''',
+   '''other''',
+   '''black''',
+   '''black-03''',
+   '''black-04''',
+   '''black-05''',
+   '''braille''',
+   '''bag''',
+   '''short''',
+   '''japan6''',
+]
+
+#################################
+#################################
+[[GotoShortcut]]
+Name = '''Pokemon'''
+Image = '''graphics.pokemon.sprites.front/295/sprite/'''
+Destination = '''data.pokemon.stats/1'''
+
+[[GotoShortcut]]
+Name = '''Trainers'''
+Image = '''graphics.trainers.sprites.front/3/sprite/'''
+Destination = '''data.trainers.stats'''
+
+[[GotoShortcut]]
+Name = '''Moves'''
+Image = '''graphics.items.sprites/298/sprite/'''
+Destination = '''data.pokemon.moves.stats.battle'''
+
+[[GotoShortcut]]
+Name = '''Items'''
+Image = '''graphics.items.sprites/13/sprite/'''
+Destination = '''data.items.stats'''
+
+[[GotoShortcut]]
+Name = '''Maps'''
+Image = '''data.maps.banks/0/maps/9/map/0/layout/0/blockmap/'''
+Destination = '''maps.bank0.littleroot town.0-9'''
+
+#################################
+[[TableGroup]]
+Name = '''Pokemon'''
+DefaultHash = '''EEC9FC1F'''
+0 = [
+   '''data.pokemon.names''',
+   '''data.pokemon.stats''',
+   '''data.pokemon.evolutions''',
+   '''data.pokedex.regional''',
+   '''data.pokedex.national''',
+   '''data.pokedex.hoennToNational''',
+   '''data.pokedex.search.alpha''',
+   '''data.pokedex.search.weight''',
+   '''data.pokedex.search.size''',
+   '''data.pokedex.search.type''',
+   '''sound.pokemon.cry.growl''',
+   '''sound.pokemon.cry.normal''',
+   '''sound.pokemon.cry.hoennconversion''',
+]
+
+[[TableGroup]]
+Name = '''Sprites'''
+DefaultHash = '''81856012'''
+0 = [
+   '''graphics.pokemon.sprites.front''',
+   '''graphics.pokemon.sprites.coordinates.front''',
+   '''graphics.pokemon.sprites.elevation''',
+   '''graphics.pokemon.animations.front''',
+   '''graphics.pokemon.sprites.back''',
+   '''graphics.pokemon.sprites.coordinates.back''',
+   '''graphics.pokemon.animations.back''',
+   '''graphics.pokemon.palettes.normal''',
+   '''graphics.pokemon.palettes.shiny''',
+   '''graphics.pokemon.icons.sprites''',
+   '''graphics.pokemon.icons.index''',
+   '''graphics.pokemon.sprites.anchor''',
+   '''graphics.pokemon.animations.frames''',
+   '''graphics.pokemon.sprites.footprint''',
+]
+
+[[TableGroup]]
+Name = '''Moves'''
+DefaultHash = '''A3C07072'''
+0 = [
+   '''data.pokemon.moves.levelup''',
+   '''data.pokemon.moves.tutorcompatibility''',
+   '''data.pokemon.moves.tmcompatibility''',
+]
+
+[[TableGroup]]
+Name = '''Trainer'''
+DefaultHash = '''60EF4A4B'''
+0 = [
+   '''data.trainers.stats|0''',
+]
+
+[[TableGroup]]
+Name = '''Team'''
+DefaultHash = '''BBD75146'''
+0 = [
+   '''data.trainers.stats|1''',
+]
+
+[[TableGroup]]
+Name = '''Move'''
+DefaultHash = '''F7293F16'''
+0 = [
+   '''data.pokemon.moves.names''',
+   '''data.pokemon.moves.descriptions''',
+   '''graphics.pokemon.moves.animations''',
+   '''data.pokemon.moves.stats.contest''',
+]
+
+[[TableGroup]]
+Name = '''Battle'''
+DefaultHash = '''A2476DB5'''
+0 = [
+   '''data.pokemon.moves.stats.battle''',
+]
+
+[[TableGroup]]
+Name = '''Stats'''
+DefaultHash = '''6340998D'''
+0 = [
+   '''data.items.stats''',
+]
+
+[[TableGroup]]
+Name = '''More'''
+DefaultHash = '''8D5E8FD0'''
+0 = [
+   '''graphics.items.sprites''',
+   '''data.items.effects''',
+]
+
+[[TableGroup]]
+Name = '''Background'''
+DefaultHash = '''351FBA04'''
+0 = [
+   '''graphics.battle.background.sprites|0''',
+]
+
+[[TableGroup]]
+Name = '''Intro'''
+DefaultHash = '''1C565CDD'''
+0 = [
+   '''graphics.battle.background.sprites|1''',
+]
+

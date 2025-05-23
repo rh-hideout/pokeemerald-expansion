@@ -1,0 +1,15 @@
+script ScriptTest {
+    lock
+    faceplayer
+    msgbox("Do you like me?")
+    multichoice {
+        "Yes"
+        "No"
+        "Maybe"
+        "Weirdo"
+        "Breh"
+        "Lol"
+    }
+    releaseall
+    end
+}

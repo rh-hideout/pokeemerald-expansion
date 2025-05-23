@@ -1,0 +1,95 @@
+{
+  "id": "MAP_NEW_LITTLEROOT_TOWN",
+  "name": "NewLittlerootTown",
+  "layout": "LAYOUT_NEW_LITTLEROOT_TOWN",
+  "music": "MUS_LITTLEROOT_TEST",
+  "region_map_section": "MAPSEC_NEW_LITTLEROOT_TOWN",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_TOWN",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 40,
+      "y": 39,
+      "elevation": 0,
+      "dest_map": "MAP_LITTLEROOT_TOWN",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 34,
+      "y": 39,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_LITTLEROOT_SUPERMARKET",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 30,
+      "y": 39,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 35,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "NewLittleroot_Supermarket_Sign"
+    },
+    {
+      "type": "sign",
+      "x": 36,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "NewLittleroot_Supermarket_Sign"
+    },
+    {
+      "type": "sign",
+      "x": 31,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "The_Fallen_Souls_Sign"
+    },
+    {
+      "type": "sign",
+      "x": 32,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "The_Fallen_Souls_Sign"
+    },
+    {
+      "type": "sign",
+      "x": 41,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "NewLittlerootTown_Sign"
+    },
+    {
+      "type": "sign",
+      "x": 42,
+      "y": 39,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "NewLittlerootTown_Sign"
+    }
+  ]
+}

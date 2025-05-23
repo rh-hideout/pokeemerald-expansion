@@ -1,0 +1,53 @@
+script KantoStarters {
+    dynmultipush("Bulbasaur", SPECIES_BULBASAUR)
+    dynmultipush("Charmander", SPECIES_CHARMANDER)
+    dynmultipush("Squirtle", SPECIES_SQUIRTLE)
+}
+
+script JohtoStarters {
+    dynmultipush("Chikorita", SPECIES_CHIKORITA)
+    dynmultipush("Cyndaquil", SPECIES_CYNDAQUIL)
+    dynmultipush("Totodile", SPECIES_TOTODILE)
+}
+
+script  HoennStarters {
+    dynmultipush("Treecko", SPECIES_TREECKO)
+    dynmultipush("Torchic", SPECIES_TORCHIC)
+    dynmultipush("Mudkip", SPECIES_MUDKIP)
+}
+
+script SinnohStarters {
+    dynmultipush("Tur", SPECIES_TURTWIG)
+    dynmultipush("", SPECIES_CHIMCHAR)
+    dynmultipush("", SPECIES_PIPLUP)
+}
+
+script UnovaStarters {
+    dynmultipush("", SPECIES_SNIVY)
+    dynmultipush("", SPECIES_TEPIG)
+    dynmultipush("", SPECIES_OSHAWOTT)
+}
+
+script KalosStarters {
+    dynmultipush("", SPECIES_CHESPIN)
+    dynmultipush("", SPECIES_FENNEKIN)
+    dynmultipush("", SPECIES_FROAKIE)
+}
+
+script AlolaStarters {
+    dynmultipush("", SPECIES_ROWLET)
+    dynmultipush("", SPECIES_LITTEN)
+    dynmultipush("", SPECIES_POPPLIO)
+}
+
+script GalarStarters {
+    dynmultipush("", SPECIES_GROOKEY)
+    dynmultipush("", SPECIES_SCORBUNNY)
+    dynmultipush("", SPECIES_SOBBLE)
+}
+
+script PaldeaStarters {
+    dynmultipush("", SPECIES_SPRIGATITO)
+    dynmultipush("", SPECIES_FUECOCO)
+    dynmultipush("", SPECIES_QUAXLY)
+}

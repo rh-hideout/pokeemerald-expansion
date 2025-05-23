@@ -1,0 +1,348 @@
+mapscripts NewLittleroot_Supermarket_MapScripts {
+
+}
+
+script NewLittleroot_Supermarket_Employee_1 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen I market. How may I help you?"))
+    waitmessage
+    pokemart(Gen1Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_2 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen II market. How may I help you?"))
+    waitmessage
+    pokemart(Gen2Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_3 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen III market. How may I help you?"))
+    waitmessage
+    pokemart(Gen3Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_4 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen IV market. How may I help you?"))
+    waitmessage
+    pokemart(Gen4Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_5 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen V market. How may I help you?"))
+    waitmessage
+    pokemart(Gen5Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_6 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen VI market. How may I help you?"))
+    waitmessage
+    pokemart(Gen6Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_7 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen VII market. How may I help you?"))
+    waitmessage
+    pokemart(Gen7Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_8 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen VIII market. How may I help you?"))
+    waitmessage
+    pokemart(Gen8Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+script NewLittleroot_Supermarket_Employee_9 {
+    lock
+    faceplayer
+    message(format("Hello, welcome to the Gen IX market. How may I help you?"))
+    waitmessage
+    pokemart(Gen9Shop)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+ mart Gen1Shop {
+    ITEM_THUNDER_STONE
+    ITEM_FIRE_STONE
+    ITEM_WATER_STONE
+    ITEM_LEAF_STONE
+    ITEM_MOON_STONE
+    ITEM_FULL_RESTORE
+    ITEM_POKE_BALL
+    ITEM_GREAT_BALL
+    ITEM_SAFARI_BALL
+    ITEM_MASTER_BALL
+    ITEM_RARE_CANDY
+    ITEM_NONE
+}
+
+ mart Gen2Shop {
+    ITEM_SUN_STONE
+    ITEM_LEVEL_BALL
+    ITEM_LURE_BALL
+    ITEM_LOVE_BALL
+    ITEM_FAST_BALL
+    ITEM_HEAVY_BALL
+    ITEM_FRIEND_BALL
+    ITEM_MOON_BALL
+    ITEM_DRAGON_SCALE
+    ITEM_METAL_COAT
+    ITEM_UPGRADE
+    ITEM_SACRED_ASH
+    ITEM_LIGHT_BALL
+    ITEM_NONE
+}
+
+ mart Gen3Shop {
+    ITEM_TIMER_BALL
+    ITEM_REPEAT_BALL
+    ITEM_LUXURY_BALL
+    ITEM_DIVE_BALL
+    ITEM_NET_BALL
+    ITEM_ENIGMA_BERRY
+    ITEM_ACRO_BIKE
+    ITEM_MACH_BIKE
+    ITEM_NONE
+}
+
+ mart Gen4Shop {
+    ITEM_QUICK_BALL
+    ITEM_DUSK_BALL
+    ITEM_HEAL_BALL
+    ITEM_DESTINY_KNOT
+    ITEM_EXPERT_BELT
+    ITEM_FULL_RESTORE
+    ITEM_CHOICE_BAND
+    ITEM_CHOICE_SCARF
+    ITEM_CHOICE_SPECS
+    ITEM_TOXIC_ORB
+    ITEM_LIFE_ORB
+    ITEM_FLAME_ORB
+    ITEM_ELECTIRIZER
+    ITEM_DUBIOUS_DISC
+    ITEM_REAPER_CLOTH
+    ITEM_PROTECTOR
+    ITEM_MAGMARIZER
+    ITEM_RAZOR_CLAW
+    ITEM_RAZOR_FANG
+    ITEM_DUSK_STONE
+    ITEM_DAWN_STONE
+    ITEM_SHINY_STONE
+    ITEM_FOCUS_SASH
+    ITEM_OVAL_STONE
+    ITEM_HONEY
+    ITEM_NONE
+}
+
+ mart Gen5Shop {
+    ITEM_DREAM_BALL
+    ITEM_AIR_BALLOON
+    ITEM_ROCKY_HELMET
+    ITEM_RED_CARD
+    ITEM_EJECT_BUTTON
+    ITEM_EVIOLITE
+    ITEM_HEALTH_WING
+    ITEM_MUSCLE_WING
+    ITEM_RESIST_WING
+    ITEM_GENIUS_WING
+    ITEM_CLEVER_WING
+    ITEM_SWIFT_WING
+    ITEM_NONE
+}
+
+ mart Gen6Shop {
+    ITEM_THUNDER_STONE
+    ITEM_FIRE_STONE
+    ITEM_WATER_STONE
+    ITEM_LEAF_STONE
+    ITEM_MOON_STONE
+    ITEM_FULL_RESTORE
+    ITEM_POKE_BALL
+    ITEM_GREAT_BALL
+    ITEM_SAFARI_BALL
+    ITEM_MASTER_BALL
+    ITEM_RARE_CANDY
+    ITEM_NONE
+}
+
+ mart Gen7Shop {
+    ITEM_THUNDER_STONE
+    ITEM_FIRE_STONE
+    ITEM_WATER_STONE
+    ITEM_LEAF_STONE
+    ITEM_MOON_STONE
+    ITEM_FULL_RESTORE
+    ITEM_POKE_BALL
+    ITEM_GREAT_BALL
+    ITEM_SAFARI_BALL
+    ITEM_MASTER_BALL
+    ITEM_RARE_CANDY
+    ITEM_NONE
+}
+
+ mart Gen8Shop {
+    ITEM_THUNDER_STONE
+    ITEM_FIRE_STONE
+    ITEM_WATER_STONE
+    ITEM_LEAF_STONE
+    ITEM_MOON_STONE
+    ITEM_FULL_RESTORE
+    ITEM_POKE_BALL
+    ITEM_GREAT_BALL
+    ITEM_SAFARI_BALL
+    ITEM_MASTER_BALL
+    ITEM_RARE_CANDY
+    ITEM_NONE
+}
+
+ mart Gen9Shop {
+    ITEM_THUNDER_STONE
+    ITEM_FIRE_STONE
+    ITEM_WATER_STONE
+    ITEM_LEAF_STONE
+    ITEM_MOON_STONE
+    ITEM_FULL_RESTORE
+    ITEM_POKE_BALL
+    ITEM_GREAT_BALL
+    ITEM_SAFARI_BALL
+    ITEM_MASTER_BALL
+    ITEM_RARE_CANDY
+    ITEM_NONE
+}
+
+script Luxray_Battle_Decision {
+    lock // Locks the Player in Place during dialogue.
+    faceplayer // NPC will face the player.
+    playmoncry(SPECIES_LUXRAY, CRY_MODE_NORMAL) // Macro that will play Luxray's Cry.
+    waitse // Waits for the sound effect to end. In this case Luxray's Cry.
+    msgbox("Luxray!") // What Luxray will say.
+    waitmessage
+    msgbox("{PLAYER}: E-Easy there kitty...") // The Player will respond.
+    playmoncry(SPECIES_LUXRAY, CRY_MODE_NORMAL) // Macro that will play Luxray's Cry again.
+    msgbox("Luxray: Lux-RAY!") // What Luxray will say again.
+    waitse // Waits for the sound effect to end. In this case Luxray's Cry.
+    waitmessage // Waits on the third-person dialogue to play
+    msgbox(format("The Luxray seems very hostile. It seems like it wants to battle.")) // Dialgoue in Third-Person.
+    msgbox("Do you want to battle Luxray?", MSGBOX_YESNO) // Yes or No Choice dialogue for Luxray Battle.
+    
+    if(var(VAR_RESULT) == YES) { // If the Player chose yes then excecute the script below.
+        call(Luxray_Battle)
+        end }
+        elif(var(VAR_RESULT) != YES){
+            call(RanAway)
+        }
+}
+
+script Won_or_Caught {
+	fadescreen(FADE_TO_BLACK)
+	removeobject(15)
+	fadescreen(FADE_FROM_BLACK)
+	return
+}
+ 
+script RanAway {
+	
+	fadescreen(FADE_TO_BLACK)
+    delay(20)
+	removeobject(15)
+	fadescreen(FADE_FROM_BLACK)
+	msgbox("Luxray ran away.")
+    releaseall
+	return
+}
+
+script LuxrayTrigger {
+    lockall
+    setflag(FLAG_UNUSED_0x021)
+    applymovement(15, LuxrayRun)
+    waitmovement(0)
+    releaseall
+}
+
+movement LuxrayRun {
+    walk_fast_down * 4
+}
+
+script Luxray_Battle {
+	lockall
+	setflag(FLAG_UNUSED_0x022)
+	playmoncry(SPECIES_LUXRAY, CRY_MODE_NORMAL)
+	delay(40)
+	waitmoncry
+	setwildbattle(SPECIES_LUXRAY, 50, ITEM_ELECTRIUM_Z)
+    dowildbattle
+    specialvar(VAR_RESULT, GetBattleOutcome)
+
+	if(var(VAR_RESULT) == B_OUTCOME_CAUGHT){
+		call(Won_or_Caught)
+	}
+	elif(var(VAR_RESULT) == B_OUTCOME_WON){
+		call(Won_or_Caught)
+	}
+	elif(var(VAR_RESULT) == B_OUTCOME_RAN){
+		call(RanAway)
+	}
+	elif(var(VAR_RESULT) == B_OUTCOME_PLAYER_TELEPORTED){
+		call(RanAway)
+	}
+	waitmessage
+	releaseall
+}
+
+script NewLittlerootTown_Sign {
+    lockall
+    msgbox(format("New Littleroot Town: A sleek expansion to Littleroot Town, developed by Team Magma under the guise of progress. Maxie rewarded the Champion for their efforts in saving the world from Groudon and Kyogre by granting them this upgraded settlement. Though modern and efficient, its origins remain a source of quiet suspicion."))
+    releaseall
+}
+
+script NewLittleroot_Supermarket_Sign {
+    lockall
+    msgbox(format("New Littleroot Town Supermarket: Built alongside the expansion of New Littleroot Town, this supermarket is a symbol of modernization and convenience. Stocked with a wide range of Trainer essentials and specialty items, it serves as a hub for locals and newcomers alike. Funded in part by Team Magma, the store reflects their vision of progress though some still question the motives behind their generosity."))
+    releaseall
+}
+
+script The_Fallen_Souls_Sign {
+    lockall
+    msgbox(format("The Fallen Souls: Legendary Pokémon who died unnaturally, their spirits trapped between worlds and dimensions."))
+    releaseall
+}

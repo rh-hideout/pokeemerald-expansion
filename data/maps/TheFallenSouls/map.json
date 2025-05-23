@@ -1,0 +1,223 @@
+{
+  "id": "MAP_THE_FALLEN_SOULS",
+  "name": "TheFallenSouls",
+  "layout": "LAYOUT_THE_FALLEN_SOULS",
+  "music": "MUS_SEALED_CHAMBER",
+  "region_map_section": "MAPSEC_THE_FALLEN_SOULS",
+  "requires_flash": false,
+  "weather": "WEATHER_FOG_HORIZONTAL",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": false,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 21,
+      "y": 37,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_LITTLEROOT_TOWN",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 18,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 23,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 26,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 26,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 26,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 26,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 32,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 32,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 32,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 32,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 21,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_THE_FALLEN_SOULS",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}
