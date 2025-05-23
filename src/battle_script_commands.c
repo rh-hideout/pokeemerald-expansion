@@ -1447,13 +1447,13 @@ static void Cmd_attackcanceler(void)
     }
 }
 
-static void JumpIfMoveFailed(u32 adder, u32 move, u32 moveType)
+static void JumpIfMoveFailed(u32 adder, u32 move, u32 moveType, const u8 *failInstr)
 {
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
     {
         gLastLandedMoves[gBattlerTarget] = 0;
         gLastHitByType[gBattlerTarget] = 0;
-        gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
+        gBattlescriptCurrInstr = failInstr;
         return;
     }
     else
@@ -1476,14 +1476,14 @@ static void Cmd_unused5(void)
 {
 }
 
-static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump)
+static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump, const u8 *failInstr)
 {
     bool32 affected = IsBattlerProtected(gBattlerAttacker, battler, move);
     if (affected)
     {
         gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_MISSED;
         if (shouldJump)
-            JumpIfMoveFailed(7, move, GetBattleMoveType(move));
+            JumpIfMoveFailed(7, move, GetBattleMoveType(move), failInstr);
     }
     return affected;
 }
@@ -1707,7 +1707,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             gBattlescriptCurrInstr = nextInstr;
         else if (gStatuses3[gBattlerTarget] & (STATUS3_SEMI_INVULNERABLE))
             gBattlescriptCurrInstr = failInstr;
-        else if (!JumpIfMoveAffectedByProtect(gCurrentMove, gBattlerTarget, TRUE))
+        else if (!JumpIfMoveAffectedByProtect(gCurrentMove, gBattlerTarget, TRUE, failInstr))
             gBattlescriptCurrInstr = nextInstr;
         if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
         {
@@ -1749,7 +1749,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                 continue;
 
             numTargets++;
-            if (JumpIfMoveAffectedByProtect(move, battlerDef, FALSE) || AccuracyCalcHelper(move, battlerDef))
+            if (JumpIfMoveAffectedByProtect(move, battlerDef, FALSE, failInstr) || AccuracyCalcHelper(move, battlerDef))
                 continue;
 
             u32 accuracy = GetTotalAccuracy(gBattlerAttacker,
@@ -1796,7 +1796,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         if (calcSpreadMove)
             gBattleStruct->calculatedSpreadMoveAccuracy = TRUE;
 
-        JumpIfMoveFailed(7, move, moveType);
+        JumpIfMoveFailed(7, move, moveType, failInstr);
     }
 }
 
@@ -12268,9 +12268,8 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
             return STAT_CHANGE_DIDNT_WORK;
         }
         else if (gCurrentMove != MOVE_CURSE
-                 && notProtectAffected != TRUE && JumpIfMoveAffectedByProtect(gCurrentMove, gBattlerTarget, TRUE))
+                 && notProtectAffected != TRUE && JumpIfMoveAffectedByProtect(gCurrentMove, gBattlerTarget, TRUE, BattleScript_ButItFailed))
         {
-            gBattlescriptCurrInstr = BattleScript_ButItFailed;
             return STAT_CHANGE_DIDNT_WORK;
         }
         else if ((battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(battlerAbility))
@@ -16506,7 +16505,6 @@ static void Cmd_tryworryseed(void)
       || gBattleMons[gBattlerTarget].ability == ABILITY_INSOMNIA)
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
-        gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
