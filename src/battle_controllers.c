@@ -3158,7 +3158,7 @@ bool32 TryShinyAnimAfterMonAnimUtil(u32 battler)
     if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
      || gSprites[gBattlerSpriteIds[battler]].x2 != 0)
         return FALSE;
-    
+
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
     {
         TryShinyAnimation(battler, GetBattlerMon(battler));
@@ -3200,7 +3200,7 @@ bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler)
 {
     if (gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive || IsCryPlayingOrClearCrySongs())
         return FALSE;
-    
+
     if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
      && gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy_2
      && GetBattlerSide(battler) == B_SIDE_OPPONENT)

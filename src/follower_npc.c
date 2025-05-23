@@ -137,7 +137,7 @@ const u8 *GetFollowerNPCScriptPointer(void)
 #if FNPC_ENABLE_NPC_FOLLOWERS
     if (PlayerHasFollowerNPC())
         return gSaveBlock3Ptr->NPCfollower.script;
-        
+
 #endif
     return NULL;
 }
@@ -735,7 +735,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
             follower->facingDirectionLocked = TRUE;
 
         newState = delayedState + (direction -1);
-    }    
+    }
 
     // Clear ice tile stuff.
     follower->disableAnim = FALSE;
@@ -1543,7 +1543,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
         // Lock follower facing direction for muddy slope.
         if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
             follower->facingDirectionLocked = TRUE;
-            
+
         if (TryDoMetatileBehaviorForcedMovement() == 0)
             gTasks[taskId].tState = NPC_INTO_PLAYER;
 
@@ -1576,7 +1576,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
 {
     struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
-    
+
     if (ObjectEventClearHeldMovementIfFinished(npcFollower) != 0)
     {
         HideNPCFollower();
