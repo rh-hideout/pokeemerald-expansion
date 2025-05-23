@@ -16283,7 +16283,6 @@ static void Cmd_trygivecaughtmonnick(void)
 {
     CMD_ARGS();
 
-    struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
     switch (gBattleCommunication[MULTIUSE_STATE])
     {
     case 0:
@@ -16330,6 +16329,7 @@ static void Cmd_trygivecaughtmonnick(void)
     case 2:
         if (!gPaletteFade.active)
         {
+            struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
             GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
             FreeAllWindowBuffers();
             MainCallback callback = CalculatePlayerPartyCount() == PARTY_SIZE ? ReshowBlankBattleScreenAfterMenu : BattleMainCB2;
@@ -16346,7 +16346,7 @@ static void Cmd_trygivecaughtmonnick(void)
     case 3:
         if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
         {
-            SetMonData(caughtMon, MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
+            SetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
