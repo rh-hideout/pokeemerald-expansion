@@ -95,7 +95,7 @@ static void InitPlayerTrainerId(void)
 static void SetDefaultOptions(void)
 {
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
-    gSaveBlock2Ptr->optionsWindowFrameType = 13;
+    gSaveBlock2Ptr->optionsWindowFrameType = 12;
     gSaveBlock2Ptr->optionsSound = OPTIONS_SOUND_STEREO;
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
