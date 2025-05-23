@@ -4731,14 +4731,14 @@ gBattleAnimMove_QuickGuard::
 	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 2, 0, 10, RGB_WHITE
 	delay 16
 	monbg ANIM_ATTACKER
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xE, 0x0, 0x8, 0x0, 0x0
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xfff2, 0x0, 0x8, 0x0, 0x0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 14, 0, 8, ANIM_ATTACKER, 0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, -14, 0, 8, ANIM_ATTACKER, 0
 	delay 1
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xE, 0x0, 0x8, 0x0, 0x0
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xfff2, 0x0, 0x8, 0x0, 0x0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 14, 0, 8, ANIM_ATTACKER, 0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, -14, 0, 8, ANIM_ATTACKER, 0
 	delay 1
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xE, 0x0, 0x8, 0x0, 0x0
-	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 0xfff2, 0x0, 0x8, 0x0, 0x0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, 14, 0, 8, ANIM_ATTACKER, 0
+	createsprite gQuickGuardArmImpactTemplate, ANIM_TARGET, 3, -14, 0, 8, ANIM_ATTACKER, 0
 	waitforvisualfinish
 	playsewithpan SE_M_DETECT, SOUND_PAN_ATTACKER
 	createsprite gSpinningSparkleSpriteTemplate, ANIM_ATTACKER, 13, 0x0, 0xffe3 @up
