@@ -20,6 +20,7 @@
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item_icon.h"
+#include "item_use.h"
 #include "link.h"
 #include "load_save.h"
 #include "list_menu.h"
@@ -1674,7 +1675,7 @@ bool8 BufferTMHMMoveName(void)
 {
     // if (gItemsInfo[gSpecialVar_0x8004].pocket != TMHM_POCKET)
     {
-        StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gSpecialVar_0x8004)));
+        StringCopy(gStringVar2, GetMoveName(gTMHMMoves[gSpecialVar_0x8004]));
         return TRUE;
     }
 

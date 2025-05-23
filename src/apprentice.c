@@ -359,7 +359,7 @@ static u16 GetRandomAlternateMove(u8 monId)
                 }
                 while (!shouldUseMove);
 
-                moveId = ItemIdToBattleMoveId(ITEM_TM01 + id);
+                moveId = gTMHMMoves[id];
                 shouldUseMove = TRUE;
 
                 if (numLearnsetMoves <= MAX_MON_MOVES)

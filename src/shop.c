@@ -14,6 +14,7 @@
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
+#include "item_use.h"
 #include "item_menu.h"
 #include "list_menu.h"
 #include "main.h"
@@ -1025,7 +1026,7 @@ static void Task_BuyMenu(u8 taskId)
                     }
                     else if (ItemId_GetPocket(itemId) == POCKET_TM_HM)
                     {
-                        StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
+                        StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId]));
                         BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany2, Task_BuyHowManyDialogueInit);
                     }
                     else

@@ -1147,7 +1147,7 @@ static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
         default:
             return FALSE;
         case 1: // TM/HM
-            DisplayPartyPokemonDataToTeachMove(slot, ItemIdToBattleMoveId(item));
+            DisplayPartyPokemonDataToTeachMove(slot, gTMHMMoves[item]);
             break;
         case 2: // Evolution stone
             if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(currentPokemon, EVO_MODE_ITEM_CHECK, item, NULL, NULL, CHECK_EVO) != SPECIES_NONE)
@@ -5369,11 +5369,6 @@ void ItemUseCB_PPUp(u8 taskId, TaskFunc task)
     gTasks[taskId].func = Task_HandleWhichMoveInput;
 }
 
-u16 ItemIdToBattleMoveId(u16 item)
-{
-    return (ItemId_GetPocket(item) == POCKET_TM_HM) ? gItemsInfo[item].secondaryId : MOVE_NONE;
-}
-
 bool8 MonKnowsMove(struct Pokemon *mon, u16 move)
 {
     u8 i;
@@ -5417,7 +5412,7 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon;
     u16 item = gSpecialVar_ItemId;
-    u16 move = ItemIdToBattleMoveId(item);
+    u16 move = gTMHMMoves[item];
 
     gPartyMenu.data1 = move;
     gPartyMenu.learnMoveState = 0;

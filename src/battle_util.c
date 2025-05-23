@@ -14,6 +14,7 @@
 #include "pokemon.h"
 #include "international_string_util.h"
 #include "item.h"
+#include "item_use.h"
 #include "util.h"
 #include "battle_scripts.h"
 #include "random.h"
@@ -10544,9 +10545,9 @@ u8 GetCategoryBasedOnStats(u32 battler)
 
 static u32 GetFlingPowerFromItemId(u32 itemId)
 {
-    if (gItemsInfo[itemId].pocket != TMHM_POCKET)
+    if (gItemsInfo[itemId].pocket == TMHM_POCKET)
     {
-        u32 power = GetMovePower(ItemIdToBattleMoveId(itemId));
+        u32 power = GetMovePower(gTMHMMoves[itemId]);
         if (power > 1)
             return power;
         return 10; // Status moves and moves with variable power always return 10 power.

@@ -934,39 +934,20 @@ static void GetItemName(u8 *dest, u16 itemId)
     switch (gBagPosition.pocket)
     {
     case TMHM_POCKET:
+        // Seperate Id from item ids, exclusively for tms / hms
+        if (itemId < ARRAY_COUNT(gTMItemIds))
         {
-            // u32 i;
-            // u32 moveTM = FALSE;
-            // u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
-            // for (i = 0; i < TMHM_MovesArrayLength; i++)
-            // {
-            //     if (gTMMoves[i] == gItemsInfo[itemId].secondaryId)
-            //     {
-            //         moveTM = TRUE;
-            //         break;
-            //     }
-            //     if (gHMMoves[i] == gItemsInfo[itemId].secondaryId)
-            //     {
-            //         moveTM = FALSE;
-            //         break;
-            //     }
-            // }
-            if (itemId < ARRAY_COUNT(gTMItemIds))
-            {
-                // ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_TM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-                end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gTMItemIds[itemId])));
-                PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-
-                ConvertIntToDecimalStringN(gStringVar1, itemId + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-                StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
-            }
-            else
-            {
-                end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gHMItemIds[itemId - ARRAY_COUNT(gTMItemIds)])));
-                PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-                ConvertIntToDecimalStringN(gStringVar1, itemId - ARRAY_COUNT(gTMItemIds) + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
-                StringExpandPlaceholders(dest, gText_NumberItem_HM);
-            }
+            end = StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId]));
+            PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+            ConvertIntToDecimalStringN(gStringVar1, itemId + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+            StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+        }
+        else
+        {
+            end = StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId - ARRAY_COUNT(gTMItemIds)]));
+            PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+            ConvertIntToDecimalStringN(gStringVar1, itemId - ARRAY_COUNT(gTMItemIds) + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+            StringExpandPlaceholders(dest, gText_NumberItem_HM);
         }
         break;
     case BERRIES_POCKET:
@@ -1023,16 +1004,10 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         itemQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, itemIndex);
 
         // Draw HM icon
-        // DebugPrintf("itemIndex: %d", itemIndex);
-        // DebugPrintf("gHMItemIds[itemIndex] : %d", gHMItemIds[itemIndex] );
-        // DebugPrintf("itemId : %d", itemId);
-        // DebugPrintf("==========================");
-
         for (u32 i = 0; i < ARRAY_COUNT(gHMItemIds); i++)
         {
             if (itemId == gHMItemIds[i])
             {
-                DebugPrintf("gHMItemIds[%d]: %d", i, gHMItemIds[i]);
                 BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
                 break;
             }
@@ -1040,8 +1015,6 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 
         if (gBagPosition.pocket != KEYITEMS_POCKET && ItemId_GetImportance(itemId) == FALSE)
         {
-            // DebugPrintf("==========================");
-            // Print item quantity
             ConvertIntToDecimalStringN(gStringVar1, itemQuantity, STR_CONV_MODE_RIGHT_ALIGN, MAX_ITEM_DIGITS);
             StringExpandPlaceholders(gStringVar4, gText_xVar1);
             offset = GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 119);
@@ -2657,7 +2630,7 @@ static void PrintTMHMMoveData(u16 itemId)
     }
     else
     {
-        moveId = ItemIdToBattleMoveId(itemId);
+        moveId = gTMHMMoves[itemId];
         BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(moveId) + 1, 0, 0);
 
         // Print TMHM power
