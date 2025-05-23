@@ -84,15 +84,15 @@
 
 /* Expands to 'macro(a, b)' for each 'a' in 'as' and 'b' in 'bs'.
  * Uses the shorter of 'as' and 'bs'. */
-#define R_ZIP_WITH(macro, as, bs) CAT(R_ZIP_WITH_, CAT(R_ZIP_WITH_NONEMPTY(as), R_ZIP_WITH_NONEMPTY(bs)))(macro, FIRST as, FIRST bs, (EXCEPT_1 as), (EXCEPT_1 bs))
-#define R_ZIP_WITH_00(macro, a, b, as, bs)
-#define R_ZIP_WITH_01(macro, a, b, as, bs)
-#define R_ZIP_WITH_10(macro, a, b, as, bs)
-#define R_ZIP_WITH_11(macro, a, b, as, bs) macro(a, b) R_ZIP_WITH_P PARENS (macro, as, bs)
-#define R_ZIP_WITH_P() R_ZIP_WITH
+#define R_ZIP(macro, as, bs) CAT(R_ZIP_, CAT(R_ZIP_NONEMPTY(as), R_ZIP_NONEMPTY(bs)))(macro, FIRST as, FIRST bs, (EXCEPT_1 as), (EXCEPT_1 bs))
+#define R_ZIP_00(macro, a, b, as, bs)
+#define R_ZIP_01(macro, a, b, as, bs)
+#define R_ZIP_10(macro, a, b, as, bs)
+#define R_ZIP_11(macro, a, b, as, bs) macro(a, b) R_ZIP_P PARENS (macro, as, bs)
+#define R_ZIP_P() R_ZIP
 
-#define R_ZIP_WITH_NONEMPTY(as) R_ZIP_WITH_NONEMPTY_ as
-#define R_ZIP_WITH_NONEMPTY_(...) FIRST(__VA_OPT__(1,) 0)
+#define R_ZIP_NONEMPTY(as) R_ZIP_NONEMPTY_ as
+#define R_ZIP_NONEMPTY_(...) FIRST(__VA_OPT__(1,) 0)
 
 /* Picks the xth VA_ARG if it exists, otherwise returns a default value */
 #define DEFAULT(_default, ...) FIRST(__VA_OPT__(__VA_ARGS__, ) _default)

@@ -920,12 +920,12 @@ static void LoadBagItemListBuffers(u8 pocketId)
 
 static const u16 gTMItemIds[] =
 {
-    RECURSIVELY(R_ZIP_WITH(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
 };
 
 static const u16 gHMItemIds[] =
 {
-    RECURSIVELY(R_ZIP_WITH(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
 };
 
 static void GetItemName(u8 *dest, u16 itemId)
