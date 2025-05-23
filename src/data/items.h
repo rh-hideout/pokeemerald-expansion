@@ -12538,6 +12538,1096 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_EonTicket,
     },
 
+    [ITEM_RED_ORB] =
+    {
+        .name = _("RED ORB"),
+        .itemId = ITEM_RED_ORB,
+        .price = 0,
+        .description = sRedOrbDesc,
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_BLUE_ORB] =
+    {
+        .name = _("BLUE ORB"),
+        .itemId = ITEM_BLUE_ORB,
+        .price = 0,
+        .description = sBlueOrbDesc,
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_SCANNER] =
+    {
+        .name = _("SCANNER"),
+        .itemId = ITEM_SCANNER,
+        .price = 0,
+        .description = sScannerDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_GO_GOGGLES] =
+    {
+        .name = _("GO-GOGGLES"),
+        .itemId = ITEM_GO_GOGGLES,
+        .price = 0,
+        .description = sGoGogglesDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_METEORITE] =
+    {
+        .name = _("METEORITE"),
+        .itemId = ITEM_METEORITE,
+        .price = 0,
+        .description = sMeteoriteDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_ROOM_1_KEY] =
+    {
+        .name = _("RM. 1 KEY"),
+        .itemId = ITEM_ROOM_1_KEY,
+        .price = 0,
+        .description = sRoom1KeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_ROOM_2_KEY] =
+    {
+        .name = _("RM. 2 KEY"),
+        .itemId = ITEM_ROOM_2_KEY,
+        .price = 0,
+        .description = sRoom2KeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_ROOM_4_KEY] =
+    {
+        .name = _("RM. 4 KEY"),
+        .itemId = ITEM_ROOM_4_KEY,
+        .price = 0,
+        .description = sRoom4KeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_ROOM_6_KEY] =
+    {
+        .name = _("RM. 6 KEY"),
+        .itemId = ITEM_ROOM_6_KEY,
+        .price = 0,
+        .description = sRoom6KeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_STORAGE_KEY] =
+    {
+        .name = _("STORAGE KEY"),
+        .itemId = ITEM_STORAGE_KEY,
+        .price = 0,
+        .description = sStorageKeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_ROOT_FOSSIL] =
+    {
+        .name = _("ROOT FOSSIL"),
+        .itemId = ITEM_ROOT_FOSSIL,
+        .price = 0,
+        .description = sRootFossilDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_CLAW_FOSSIL] =
+    {
+        .name = _("CLAW FOSSIL"),
+        .itemId = ITEM_CLAW_FOSSIL,
+        .price = 0,
+        .description = sClawFossilDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_DEVON_SCOPE] =
+    {
+        .name = _("DEVON SCOPE"),
+        .itemId = ITEM_DEVON_SCOPE,
+        .price = 0,
+        .description = sDevonScopeDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+// TMs/HMs
+
+    [ITEM_TM01_FOCUS_PUNCH] =
+    {
+        .name = _("TM01"),
+        .itemId = ITEM_TM01_FOCUS_PUNCH,
+        .price = 3000,
+        .description = sTM01Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM02_DRAGON_CLAW] =
+    {
+        .name = _("TM02"),
+        .itemId = ITEM_TM02_DRAGON_CLAW,
+        .price = 3000,
+        .description = sTM02Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM03_WATER_PULSE] =
+    {
+        .name = _("TM03"),
+        .itemId = ITEM_TM03_WATER_PULSE,
+        .price = 3000,
+        .description = sTM03Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM04_CALM_MIND] =
+    {
+        .name = _("TM04"),
+        .itemId = ITEM_TM04_CALM_MIND,
+        .price = 3000,
+        .description = sTM04Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM05_ROAR] =
+    {
+        .name = _("TM05"),
+        .itemId = ITEM_TM05_ROAR,
+        .price = 1000,
+        .description = sTM05Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM06_TOXIC] =
+    {
+        .name = _("TM06"),
+        .itemId = ITEM_TM06_TOXIC,
+        .price = 3000,
+        .description = sTM06Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM07_HAIL] =
+    {
+        .name = _("TM07"),
+        .itemId = ITEM_TM07_HAIL,
+        .price = 3000,
+        .description = sTM07Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM08_BULK_UP] =
+    {
+        .name = _("TM08"),
+        .itemId = ITEM_TM08_BULK_UP,
+        .price = 3000,
+        .description = sTM08Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM09_BULLET_SEED] =
+    {
+        .name = _("TM09"),
+        .itemId = ITEM_TM09_BULLET_SEED,
+        .price = 3000,
+        .description = sTM09Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM10_HIDDEN_POWER] =
+    {
+        .name = _("TM10"),
+        .itemId = ITEM_TM10_HIDDEN_POWER,
+        .price = 3000,
+        .description = sTM10Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM11_SUNNY_DAY] =
+    {
+        .name = _("TM11"),
+        .itemId = ITEM_TM11_SUNNY_DAY,
+        .price = 2000,
+        .description = sTM11Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM12_TAUNT] =
+    {
+        .name = _("TM12"),
+        .itemId = ITEM_TM12_TAUNT,
+        .price = 3000,
+        .description = sTM12Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM13_ICE_BEAM] =
+    {
+        .name = _("TM13"),
+        .itemId = ITEM_TM13_ICE_BEAM,
+        .price = 3000,
+        .description = sTM13Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM14_BLIZZARD] =
+    {
+        .name = _("TM14"),
+        .itemId = ITEM_TM14_BLIZZARD,
+        .price = 5500,
+        .description = sTM14Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM15_HYPER_BEAM] =
+    {
+        .name = _("TM15"),
+        .itemId = ITEM_TM15_HYPER_BEAM,
+        .price = 7500,
+        .description = sTM15Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM16_LIGHT_SCREEN] =
+    {
+        .name = _("TM16"),
+        .itemId = ITEM_TM16_LIGHT_SCREEN,
+        .price = 3000,
+        .description = sTM16Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM17_PROTECT] =
+    {
+        .name = _("TM17"),
+        .itemId = ITEM_TM17_PROTECT,
+        .price = 3000,
+        .description = sTM17Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM18_RAIN_DANCE] =
+    {
+        .name = _("TM18"),
+        .itemId = ITEM_TM18_RAIN_DANCE,
+        .price = 2000,
+        .description = sTM18Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM19_GIGA_DRAIN] =
+    {
+        .name = _("TM19"),
+        .itemId = ITEM_TM19_GIGA_DRAIN,
+        .price = 3000,
+        .description = sTM19Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM20_SAFEGUARD] =
+    {
+        .name = _("TM20"),
+        .itemId = ITEM_TM20_SAFEGUARD,
+        .price = 3000,
+        .description = sTM20Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM21_FRUSTRATION] =
+    {
+        .name = _("TM21"),
+        .itemId = ITEM_TM21_FRUSTRATION,
+        .price = 1000,
+        .description = sTM21Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM22_SOLAR_BEAM] =
+    {
+        .name = _("TM22"),
+        .itemId = ITEM_TM22_SOLAR_BEAM,
+        .price = 3000,
+        .description = sTM22Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM23_IRON_TAIL] =
+    {
+        .name = _("TM23"),
+        .itemId = ITEM_TM23_IRON_TAIL,
+        .price = 3000,
+        .description = sTM23Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM24_THUNDERBOLT] =
+    {
+        .name = _("TM24"),
+        .itemId = ITEM_TM24_THUNDERBOLT,
+        .price = 3000,
+        .description = sTM24Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM25_THUNDER] =
+    {
+        .name = _("TM25"),
+        .itemId = ITEM_TM25_THUNDER,
+        .price = 5500,
+        .description = sTM25Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM26_EARTHQUAKE] =
+    {
+        .name = _("TM26"),
+        .itemId = ITEM_TM26_EARTHQUAKE,
+        .price = 3000,
+        .description = sTM26Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM27_RETURN] =
+    {
+        .name = _("TM27"),
+        .itemId = ITEM_TM27_RETURN,
+        .price = 1000,
+        .description = sTM27Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM28_DIG] =
+    {
+        .name = _("TM28"),
+        .itemId = ITEM_TM28_DIG,
+        .price = 2000,
+        .description = sTM28Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM29_PSYCHIC] =
+    {
+        .name = _("TM29"),
+        .itemId = ITEM_TM29_PSYCHIC,
+        .price = 2000,
+        .description = sTM29Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM30_SHADOW_BALL] =
+    {
+        .name = _("TM30"),
+        .itemId = ITEM_TM30_SHADOW_BALL,
+        .price = 3000,
+        .description = sTM30Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM31_BRICK_BREAK] =
+    {
+        .name = _("TM31"),
+        .itemId = ITEM_TM31_BRICK_BREAK,
+        .price = 3000,
+        .description = sTM31Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM32_DOUBLE_TEAM] =
+    {
+        .name = _("TM32"),
+        .itemId = ITEM_TM32_DOUBLE_TEAM,
+        .price = 2000,
+        .description = sTM32Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM33_REFLECT] =
+    {
+        .name = _("TM33"),
+        .itemId = ITEM_TM33_REFLECT,
+        .price = 3000,
+        .description = sTM33Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM34_SHOCK_WAVE] =
+    {
+        .name = _("TM34"),
+        .itemId = ITEM_TM34_SHOCK_WAVE,
+        .price = 3000,
+        .description = sTM34Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM35_FLAMETHROWER] =
+    {
+        .name = _("TM35"),
+        .itemId = ITEM_TM35_FLAMETHROWER,
+        .price = 3000,
+        .description = sTM35Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM36_SLUDGE_BOMB] =
+    {
+        .name = _("TM36"),
+        .itemId = ITEM_TM36_SLUDGE_BOMB,
+        .price = 1000,
+        .description = sTM36Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM37_SANDSTORM] =
+    {
+        .name = _("TM37"),
+        .itemId = ITEM_TM37_SANDSTORM,
+        .price = 2000,
+        .description = sTM37Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM38_FIRE_BLAST] =
+    {
+        .name = _("TM38"),
+        .itemId = ITEM_TM38_FIRE_BLAST,
+        .price = 5500,
+        .description = sTM38Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM39_ROCK_TOMB] =
+    {
+        .name = _("TM39"),
+        .itemId = ITEM_TM39_ROCK_TOMB,
+        .price = 3000,
+        .description = sTM39Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM40_AERIAL_ACE] =
+    {
+        .name = _("TM40"),
+        .itemId = ITEM_TM40_AERIAL_ACE,
+        .price = 3000,
+        .description = sTM40Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM41_TORMENT] =
+    {
+        .name = _("TM41"),
+        .itemId = ITEM_TM41_TORMENT,
+        .price = 3000,
+        .description = sTM41Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM42_FACADE] =
+    {
+        .name = _("TM42"),
+        .itemId = ITEM_TM42_FACADE,
+        .price = 3000,
+        .description = sTM42Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM43_SECRET_POWER] =
+    {
+        .name = _("TM43"),
+        .itemId = ITEM_TM43_SECRET_POWER,
+        .price = 3000,
+        .description = sTM43Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM44_REST] =
+    {
+        .name = _("TM44"),
+        .itemId = ITEM_TM44_REST,
+        .price = 3000,
+        .description = sTM44Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM45_ATTRACT] =
+    {
+        .name = _("TM45"),
+        .itemId = ITEM_TM45_ATTRACT,
+        .price = 3000,
+        .description = sTM45Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM46_THIEF] =
+    {
+        .name = _("TM46"),
+        .itemId = ITEM_TM46_THIEF,
+        .price = 3000,
+        .description = sTM46Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM47_STEEL_WING] =
+    {
+        .name = _("TM47"),
+        .itemId = ITEM_TM47_STEEL_WING,
+        .price = 3000,
+        .description = sTM47Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM48_SKILL_SWAP] =
+    {
+        .name = _("TM48"),
+        .itemId = ITEM_TM48_SKILL_SWAP,
+        .price = 3000,
+        .description = sTM48Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM49_SNATCH] =
+    {
+        .name = _("TM49"),
+        .itemId = ITEM_TM49_SNATCH,
+        .price = 3000,
+        .description = sTM49Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_TM50_OVERHEAT] =
+    {
+        .name = _("TM50"),
+        .itemId = ITEM_TM50_OVERHEAT,
+        .price = 3000,
+        .description = sTM50Desc,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM01_CUT] =
+    {
+        .name = _("HM01"),
+        .itemId = ITEM_HM01_CUT,
+        .price = 0,
+        .description = sHM01Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM02_FLY] =
+    {
+        .name = _("HM02"),
+        .itemId = ITEM_HM02_FLY,
+        .price = 0,
+        .description = sHM02Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM03_SURF] =
+    {
+        .name = _("HM03"),
+        .itemId = ITEM_HM03_SURF,
+        .price = 0,
+        .description = sHM03Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM04_STRENGTH] =
+    {
+        .name = _("HM04"),
+        .itemId = ITEM_HM04_STRENGTH,
+        .price = 0,
+        .description = sHM04Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM05_FLASH] =
+    {
+        .name = _("HM05"),
+        .itemId = ITEM_HM05_FLASH,
+        .price = 0,
+        .description = sHM05Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM06_ROCK_SMASH] =
+    {
+        .name = _("HM06"),
+        .itemId = ITEM_HM06_ROCK_SMASH,
+        .price = 0,
+        .description = sHM06Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM07_WATERFALL] =
+    {
+        .name = _("HM07"),
+        .itemId = ITEM_HM07_WATERFALL,
+        .price = 0,
+        .description = sHM07Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_HM08_DIVE] =
+    {
+        .name = _("HM08"),
+        .itemId = ITEM_HM08_DIVE,
+        .price = 0,
+        .description = sHM08Desc,
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+
+    [ITEM_15B] =
+    {
+        .name = _("????????"),
+        .itemId = ITEM_NONE,
+        .price = 0,
+        .description = sDummyDesc,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_15C] =
+    {
+        .name = _("????????"),
+        .itemId = ITEM_NONE,
+        .price = 0,
+        .description = sDummyDesc,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+// FireRed/LeafGreen key items
+
+    [ITEM_OAKS_PARCEL] =
+    {
+        .name = _("OAK'S PARCEL"),
+        .itemId = ITEM_OAKS_PARCEL,
+        .price = 0,
+        .description = sOaksParcelDesc,
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_POKE_FLUTE] =
+    {
+        .name = _("POKé FLUTE"),
+        .itemId = ITEM_POKE_FLUTE,
+        .price = 0,
+        .description = sPokeFluteDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_SECRET_KEY] =
+    {
+        .name = _("SECRET KEY"),
+        .itemId = ITEM_SECRET_KEY,
+        .price = 0,
+        .description = sSecretKeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_BIKE_VOUCHER] =
+    {
+        .name = _("BIKE VOUCHER"),
+        .itemId = ITEM_BIKE_VOUCHER,
+        .price = 0,
+        .description = sBikeVoucherDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_GOLD_TEETH] =
+    {
+        .name = _("GOLD TEETH"),
+        .itemId = ITEM_GOLD_TEETH,
+        .price = 0,
+        .description = sGoldTeethDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_OLD_AMBER] =
+    {
+        .name = _("OLD AMBER"),
+        .itemId = ITEM_OLD_AMBER,
+        .price = 0,
+        .description = sOldAmberDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_CARD_KEY] =
+    {
+        .name = _("CARD KEY"),
+        .itemId = ITEM_CARD_KEY,
+        .price = 0,
+        .description = sCardKeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_LIFT_KEY] =
+    {
+        .name = _("LIFT KEY"),
+        .itemId = ITEM_LIFT_KEY,
+        .price = 0,
+        .description = sLiftKeyDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_HELIX_FOSSIL] =
+    {
+        .name = _("HELIX FOSSIL"),
+        .itemId = ITEM_HELIX_FOSSIL,
+        .price = 0,
+        .description = sHelixFossilDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_DOME_FOSSIL] =
+    {
+        .name = _("DOME FOSSIL"),
+        .itemId = ITEM_DOME_FOSSIL,
+        .price = 0,
+        .description = sDomeFossilDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_SILPH_SCOPE] =
+    {
+        .name = _("SILPH SCOPE"),
+        .itemId = ITEM_SILPH_SCOPE,
+        .price = 0,
+        .description = sSilphScopeDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_BICYCLE] =
+    {
+        .name = _("BICYCLE"),
+        .itemId = ITEM_BICYCLE,
+        .price = 0,
+        .description = sBicycleDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_TOWN_MAP] =
+    {
+        .name = _("TOWN MAP"),
+        .itemId = ITEM_TOWN_MAP,
+        .price = 0,
+        .description = sTownMapDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_VS_SEEKER] =
+    {
+        .name = _("VS SEEKER"),
+        .itemId = ITEM_VS_SEEKER,
+        .price = 0,
+        .description = sVSSeekerDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_FAME_CHECKER] =
+    {
+        .name = _("FAME CHECKER"),
+        .itemId = ITEM_FAME_CHECKER,
+        .price = 0,
+        .description = sFameCheckerDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_TM_CASE] =
+    {
+        .name = _("TM CASE"),
+        .itemId = ITEM_TM_CASE,
+        .price = 0,
+        .description = sTMCaseDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TmCase,
+    },
+
+    [ITEM_BERRY_POUCH] =
+    {
+        .name = _("BERRY POUCH"),
+        .itemId = ITEM_BERRY_POUCH,
+        .price = 0,
+        .description = sBerryPouchDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_TEACHY_TV] =
+    {
+        .name = _("TEACHY TV"),
+        .itemId = ITEM_TEACHY_TV,
+        .price = 0,
+        .description = sTeachyTVDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_TRI_PASS] =
+    {
+        .name = _("TRI-PASS"),
+        .itemId = ITEM_TRI_PASS,
+        .price = 0,
+        .description = sTriPassDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_RAINBOW_PASS] =
+    {
+        .name = _("RAINBOW PASS"),
+        .itemId = ITEM_RAINBOW_PASS,
+        .price = 0,
+        .description = sRainbowPassDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_TEA] =
+    {
+        .name = _("TEA"),
+        .itemId = ITEM_TEA,
+        .price = 0,
+        .description = sTeaDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
     [ITEM_MYSTIC_TICKET] =
     {
         .name = _("Mystic Ticket"),

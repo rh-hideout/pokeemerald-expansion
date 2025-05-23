@@ -939,6 +939,13 @@ static void GetItemName(u8 *dest, u16 itemId)
     default:
         end = CopyItemName(itemId, dest);
         PrependFontIdToFit(dest, end, FONT_NARROW, 88);
+        if (itemId == ITEM_TM_CASE)
+        {
+            CopyItemName(itemId, gStringVar2);
+            StringExpandPlaceholders(dest, gText_TMCase_Blue);
+        }
+        else
+            CopyItemName(itemId, dest);
         break;
     }
 }
@@ -1329,7 +1336,9 @@ static u8 GetSwitchBagPocketDirection(void)
 
 static void ChangeBagPocketId(u8 *bagPocketId, s8 deltaBagPocketId)
 {
-    if (deltaBagPocketId == MENU_CURSOR_DELTA_RIGHT && *bagPocketId == POCKETS_COUNT - 1)
+    if ((deltaBagPocketId == MENU_CURSOR_DELTA_RIGHT && *bagPocketId == BALLS_POCKET) || (deltaBagPocketId == MENU_CURSOR_DELTA_LEFT && *bagPocketId == BERRIES_POCKET))
+        *bagPocketId += deltaBagPocketId*2;
+    else if (deltaBagPocketId == MENU_CURSOR_DELTA_RIGHT && *bagPocketId == POCKETS_COUNT - 1)
         *bagPocketId = 0;
     else if (deltaBagPocketId == MENU_CURSOR_DELTA_LEFT && *bagPocketId == 0)
         *bagPocketId = POCKETS_COUNT - 1;
