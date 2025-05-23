@@ -8,13 +8,13 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_TACKLE); }
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 0); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_STANCE_CHANGE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Aegislash used Scratch!");
+        MESSAGE("Aegislash used Tackle!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);

@@ -12,9 +12,17 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_MAGMA",
-  "connections": null,
-  "object_events": [],
-  "warp_events": [],
-  "coord_events": [],
-  "bg_events": []
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

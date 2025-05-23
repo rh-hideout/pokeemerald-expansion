@@ -21,6 +21,8 @@ static const u16 sBulbasaurEggMoveLearnset[] = {
     MOVE_ENDURE,
     MOVE_GIGA_DRAIN,
     MOVE_GRASSY_TERRAIN,
+    MOVE_LIGHT_SCREEN,
+    MOVE_SAFEGUARD,
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_BULBASAUR
@@ -4278,13 +4280,6 @@ static const u16 sBasculinEggMoveLearnset[] = {
     MOVE_HEAD_SMASH,
     MOVE_UNAVAILABLE,
 };
-#if P_HISUIAN_FORMS
-static const u16 sBasculinWhiteStripedEggMoveLearnset[] = {
-    MOVE_ENDEAVOR,
-    MOVE_LAST_RESPECTS,
-    MOVE_UNAVAILABLE,
-};
-#endif //P_HISUIAN_FORMS
 #endif //P_FAMILY_BASCULIN
 
 #if P_FAMILY_SANDILE

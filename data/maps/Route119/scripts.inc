@@ -512,7 +512,7 @@ Route119_Text_MayExplainFly:
 	.string "Well, let's meet again somewhere!$"
 
 Route119_Text_BrendanIntro:
-	.string "BRENDAN: {PLAYER}! So this is where\n"
+	.string "{RIVAL}: {PLAYER}! So this is where\n"
 	.string "you've been looking for POKéMON?\p"
 	.string "Let me see how good you got.\n"
 	.string "I'll test you!\p"
@@ -524,13 +524,13 @@ Route119_Text_BrendanDefeat:
 	.string "You've gotten pretty darn decent.$"
 
 Route119_Text_BrendanIllGiveYouThis:
-	.string "BRENDAN: I'd say you're good enough\n"
+	.string "{RIVAL}: I'd say you're good enough\n"
 	.string "to search for POKéMON anywhere.\p"
 	.string "Here, I'll give you this.\n"
 	.string "Try it out.$"
 
 Route119_Text_BrendanExplainFly:
-	.string "BRENDAN: Use FLY, and your POKéMON\n"
+	.string "{RIVAL}: Use FLY, and your POKéMON\n"
 	.string "instantly carries you to any town\l"
 	.string "you've already visited.\p"
 	.string "But you need the FORTREE GYM BADGE \n"

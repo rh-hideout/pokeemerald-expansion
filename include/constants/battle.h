@@ -23,23 +23,12 @@
  *   +---------------------------+
  */
 
-enum BattlerPosition
-{
-    B_POSITION_PLAYER_LEFT,
-    B_POSITION_OPPONENT_LEFT,
-    B_POSITION_PLAYER_RIGHT,
-    B_POSITION_OPPONENT_RIGHT,
-    MAX_POSITION_COUNT,
-};
+#define MAX_BATTLERS_COUNT  4
 
-enum BattlerId
-{
-    B_BATTLER_0,
-    B_BATTLER_1,
-    B_BATTLER_2,
-    B_BATTLER_3,
-    MAX_BATTLERS_COUNT,
-};
+#define B_POSITION_PLAYER_LEFT        0
+#define B_POSITION_OPPONENT_LEFT      1
+#define B_POSITION_PLAYER_RIGHT       2
+#define B_POSITION_OPPONENT_RIGHT     3
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
@@ -614,18 +603,6 @@ enum StartingStatus
     STARTING_STATUS_SEA_OF_FIRE_OPPONENT,
     STARTING_STATUS_SWAMP_PLAYER,
     STARTING_STATUS_SWAMP_OPPONENT,
-};
-
-enum SlideMsgStates
-{
-    PRINT_SLIDE_MESSAGE,
-    RESTORE_BATTLER_SLIDE_CONTROL,
-};
-
-enum MonState
-{
-    MON_IN_BATTLE,
-    MON_OUTSIDE_BATTLE,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H

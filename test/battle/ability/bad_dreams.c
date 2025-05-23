@@ -2,7 +2,7 @@
 #include "test/battle.h"
 
 // Also checks that non-sleeping enemy is not affected.
-SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of HP")
+SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of hp")
 {
     u32 status;
     PARAMETRIZE { status = STATUS1_NONE; }

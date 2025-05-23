@@ -4,15 +4,15 @@
 SINGLE_BATTLE_TEST("Sucker Punch hits targets that are about to attack")
 {
     GIVEN {
-        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) != DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SUCKER_PUNCH); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SUCKER_PUNCH); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         HP_BAR(player);
     }
 }

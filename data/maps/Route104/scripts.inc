@@ -1128,7 +1128,7 @@ Route104_Text_MayPostBattle:
 	.string "POKéMON, too.$"
 
 Route104_Text_BrendanWeShouldRegister:
-	.string "BRENDAN: Oh, hey, {PLAYER}!\p"
+	.string "{RIVAL}: Oh, hey, {PLAYER}!\p"
 	.string "Cool, you had DEVON install the MATCH\n"
 	.string "CALL system on your POKéNAV!\p"
 	.string "Let's register each other in our\n"
@@ -1139,7 +1139,7 @@ Route104_Text_RegisteredBrendan:
 	.string "in the POKéNAV.$"
 
 Route104_Text_BrendanHowsYourPokedex:
-	.string "BRENDAN: {PLAYER}, how's your POKéDEX?\n"
+	.string "{RIVAL}: {PLAYER}, how's your POKéDEX?\n"
 	.string "Have you filled in any pages yet?$"
 
 Route104_Text_BrendanDoingGreatLetsBattle:
@@ -1148,15 +1148,15 @@ Route104_Text_BrendanDoingGreatLetsBattle:
 	.string "a battle?$"
 
 Route104_Text_BrendanNoConfidence:
-	.string "BRENDAN: What's the matter? Don't have\n"
+	.string "{RIVAL}: What's the matter? Don't have\n"
 	.string "any confidence in your POKéMON?$"
 
 Route104_Text_BrendanLetsBattle:
-	.string "BRENDAN: What's up?\n"
+	.string "{RIVAL}: What's up?\n"
 	.string "Want to have a battle with me?$"
 
 Route104_Text_BrendanIntro:
-	.string "BRENDAN: I know you just became\n"
+	.string "{RIVAL}: I know you just became\n"
 	.string "a TRAINER, but I won't go easy!$"
 
 Route104_Text_BrendanDefeat:
@@ -1164,7 +1164,7 @@ Route104_Text_BrendanDefeat:
 	.string "You're pretty good.$"
 
 Route104_Text_BrendanPostBattle:
-	.string "BRENDAN: You've gotten pretty decent\n"
+	.string "{RIVAL}: You've gotten pretty decent\n"
 	.string "at handling POKéMON.\p"
 	.string "But, you know, you shouldn't just be\n"
 	.string "making POKéMON battle.\p"

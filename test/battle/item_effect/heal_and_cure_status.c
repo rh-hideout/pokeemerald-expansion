@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures confusion")
     } WHEN {
         TURN{ MOVE(opponent, MOVE_CONFUSE_RAY); }
         TURN{ USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
-        TURN{ MOVE(player, MOVE_SCRATCH); }
+        TURN{ MOVE(player, MOVE_TACKLE); }
     } SCENE {
         MESSAGE("Wobbuffet had its HP restored.");
         NONE_OF { MESSAGE("Wobbuffet is confused!"); }

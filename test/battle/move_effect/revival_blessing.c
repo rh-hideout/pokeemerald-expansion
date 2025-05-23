@@ -87,10 +87,10 @@ DOUBLE_BATTLE_TEST("Revival Blessing doesn't prevent revived battlers from losin
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight);
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentRight);
                MOVE(opponentLeft, MOVE_REVIVAL_BLESSING, partyIndex: 1); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("Wobbuffet used Tackle!");
         MESSAGE("The opposing Wynaut fainted!");
         MESSAGE("The opposing Wobbuffet used Revival Blessing!");
         MESSAGE("Wynaut was revived and is ready to fight again!");

@@ -24,7 +24,7 @@
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
-#define STARTER_MON_COUNT   3
+#define STARTER_MON_COUNT   27
 
 // Position of the sprite of the selected starter Pokémon
 #define STARTER_PKMN_POS_X (DISPLAY_WIDTH / 2)

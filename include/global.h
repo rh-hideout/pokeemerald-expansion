@@ -489,7 +489,7 @@ struct ApprenticeQuestion
     u8 moveSlot:2;
     u8 suggestedChange:2; // TRUE if told to use held item or second move, FALSE if told to use no item or first move
     //u8 padding;
-    u16 data; // used both as an itemId and a move
+    u16 data; // used both as an itemId and a moveId
 };
 
 struct PlayersApprentice
@@ -530,6 +530,7 @@ struct RankingHall2P
 struct SaveBlock2
 {
     /*0x00*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
+    /*0xF2C*/ u8 rivalName[PLAYER_NAME_LENGTH + 1];
     /*0x08*/ u8 playerGender; // MALE, FEMALE
     /*0x09*/ u8 specialSaveWarpFlags;
     /*0x0A*/ u8 playerTrainerId[TRAINER_ID_LENGTH];

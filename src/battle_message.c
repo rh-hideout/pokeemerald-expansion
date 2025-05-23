@@ -638,7 +638,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_STEALTHROCKDMG]                       = COMPOUND_STRING("Pointed stones dug into {B_SCR_NAME_WITH_PREFIX2}!"),
     [STRINGID_TOXICSPIKESABSORBED]                  = COMPOUND_STRING("The poison spikes disappeared from the ground around {B_SCR_TEAM2} team!"),
     [STRINGID_TOXICSPIKESPOISONED]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} was poisoned!"),
-    [STRINGID_TOXICSPIKESBADLYPOISONED]             = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} was badly poisoned!"),
     [STRINGID_STICKYWEBSWITCHIN]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} was caught in a sticky web!"),
     [STRINGID_HEALINGWISHCAMETRUE]                  = COMPOUND_STRING("The healing wish came true for {B_ATK_NAME_WITH_PREFIX2}!"),
     [STRINGID_HEALINGWISHHEALED]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} regained health!"),
@@ -2494,6 +2493,8 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     else
     {
         toCpy = GetTrainerNameFromId(trainerId);
+        if (toCpy[0] == B_BUFF_PLACEHOLDER_BEGIN && toCpy[1] == B_TXT_RIVAL_NAME)
+            toCpy = GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL);
     }
 
     return toCpy;
@@ -3001,6 +3002,8 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_PARTNER_NAME:
                 toCpy = BattleStringGetPlayerName(text, GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
                 break;
+                case B_TXT_RIVAL_NAME:
+                toCpy = gSaveBlock2Ptr->rivalName;
             case B_TXT_PARTNER_NAME_WITH_CLASS:
                 toCpy = textStart;
                 classString = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;

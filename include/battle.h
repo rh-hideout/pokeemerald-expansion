@@ -132,7 +132,6 @@ struct DisableStruct
     u8 unburdenActive:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
     u8 padding:3;
 };
 
@@ -623,6 +622,7 @@ struct BattlerState
     u32 multipleSwitchInBattlers:1;
     u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
     u32 activeAbilityPopUps:1;
+    u32 lastMoveFailed:1; // For Stomping Tantrum
     u32 forcedSwitch:1;
     u32 storedHealingWish:1;
     u32 storedLunarDance:1;
@@ -630,8 +630,7 @@ struct BattlerState
     u32 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u32 usedMicleBerry:1;
     u32 pursuitTarget:1;
-    u32 stompingTantrumTimer:2;
-    u32 padding:16;
+    u32 padding:17;
     // End of Word
 };
 
@@ -737,19 +736,19 @@ struct BattleStruct
     u8 debugBattler;
     u8 magnitudeBasePower;
     u8 presentBasePower;
-    u8 roostTypes[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];
+    u8 roostTypes[MAX_BATTLERS_COUNT][2];
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
     bool8 ateBoost[MAX_BATTLERS_COUNT];
-    u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
+    u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][2];    // two per battler
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum BattleIntroStates introState:8;
-    u8 ateBerry[NUM_BATTLE_SIDES]; // array id determined by side, each party pokemon as bit
+    u8 ateBerry[2]; // array id determined by side, each party pokemon as bit
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
@@ -805,14 +804,13 @@ struct BattleStruct
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
     u8 cheekPouchActivated:1;
     u8 padding2:3;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
-    s16 moveDamage[MAX_BATTLERS_COUNT];
-    s16 critChance[MAX_BATTLERS_COUNT];
+    s32 moveDamage[MAX_BATTLERS_COUNT];
+    s32 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 missStringId[MAX_BATTLERS_COUNT];
     u8 noResultString[MAX_BATTLERS_COUNT];
@@ -823,6 +821,7 @@ struct BattleStruct
     u8 numSpreadTargets:2;
     u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
     u8 noTargetPresent:1;
+    u8 usedEjectItem;
     u8 usedMicleBerry;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
@@ -860,51 +859,51 @@ static inline bool32 IsBattleMoveRecoil(u32 move)
     return GetMoveRecoil(move) > 0 || GetMoveEffect(move) == EFFECT_RECOIL_IF_MISS;
 }
 
-/* Checks if 'battler' is any of the types.
+/* Checks if 'battlerId' is any of the types.
  * Passing multiple types is more efficient than calling this multiple
  * times with one type because it shares the 'GetBattlerTypes' result. */
-#define _IS_BATTLER_ANY_TYPE(battler, ignoreTera, ...)                           \
-    ({                                                                           \
-        u32 types[3];                                                            \
-        GetBattlerTypes(battler, ignoreTera, types);                             \
+#define _IS_BATTLER_ANY_TYPE(battlerId, ignoreTera, ...) \
+    ({ \
+        u32 types[3]; \
+        GetBattlerTypes(battlerId, ignoreTera, types); \
         RECURSIVELY(R_FOR_EACH(_IS_BATTLER_ANY_TYPE_HELPER, __VA_ARGS__)) FALSE; \
     })
 
 #define _IS_BATTLER_ANY_TYPE_HELPER(type) (types[0] == type) || (types[1] == type) || (types[2] == type) ||
 
-#define IS_BATTLER_ANY_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, FALSE, __VA_ARGS__)
+#define IS_BATTLER_ANY_TYPE(battlerId, ...) _IS_BATTLER_ANY_TYPE(battlerId, FALSE, __VA_ARGS__)
 #define IS_BATTLER_OF_TYPE IS_BATTLER_ANY_TYPE
-#define IS_BATTLER_ANY_BASE_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, TRUE, __VA_ARGS__)
+#define IS_BATTLER_ANY_BASE_TYPE(battlerId, ...) _IS_BATTLER_ANY_TYPE(battlerId, TRUE, __VA_ARGS__)
 #define IS_BATTLER_OF_BASE_TYPE IS_BATTLER_ANY_BASE_TYPE
 
-#define IS_BATTLER_TYPELESS(battlerId)                                                    \
-    ({                                                                                    \
-        u32 types[3];                                                                     \
-        GetBattlerTypes(battlerId, FALSE, types);                                         \
+#define IS_BATTLER_TYPELESS(battlerId) \
+    ({ \
+        u32 types[3]; \
+        GetBattlerTypes(battlerId, FALSE, types); \
         types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
     })
 
-#define SET_BATTLER_TYPE(battler, type)              \
-{                                                    \
-    gBattleMons[battler].types[0] = type;            \
-    gBattleMons[battler].types[1] = type;            \
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;    \
+#define SET_BATTLER_TYPE(battlerId, type)              \
+{                                                      \
+    gBattleMons[battlerId].types[0] = type;            \
+    gBattleMons[battlerId].types[1] = type;            \
+    gBattleMons[battlerId].types[2] = TYPE_MYSTERY;    \
 }
 
-#define RESTORE_BATTLER_TYPE(battler)                                                      \
-{                                                                                          \
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];   \
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];   \
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                          \
+#define RESTORE_BATTLER_TYPE(battlerId)                                                        \
+{                                                                                              \
+    gBattleMons[battlerId].types[0] = gSpeciesInfo[gBattleMons[battlerId].species].types[0];   \
+    gBattleMons[battlerId].types[1] = gSpeciesInfo[gBattleMons[battlerId].species].types[1];   \
+    gBattleMons[battlerId].types[2] = TYPE_MYSTERY;                                            \
 }
 
-#define IS_BATTLER_PROTECTED(battler)(gProtectStructs[battler].protected              \
-                                        || gProtectStructs[battler].spikyShielded     \
-                                        || gProtectStructs[battler].kingsShielded     \
-                                        || gProtectStructs[battler].banefulBunkered   \
-                                        || gProtectStructs[battler].burningBulwarked  \
-                                        || gProtectStructs[battler].obstructed        \
-                                        || gProtectStructs[battler].silkTrapped)
+#define IS_BATTLER_PROTECTED(battlerId)(gProtectStructs[battlerId].protected                                           \
+                                        || gProtectStructs[battlerId].spikyShielded                                    \
+                                        || gProtectStructs[battlerId].kingsShielded                                    \
+                                        || gProtectStructs[battlerId].banefulBunkered                                  \
+                                        || gProtectStructs[battlerId].burningBulwarked                                 \
+                                        || gProtectStructs[battlerId].obstructed                                       \
+                                        || gProtectStructs[battlerId].silkTrapped)
 
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))

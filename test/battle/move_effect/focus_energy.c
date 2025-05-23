@@ -31,11 +31,11 @@ SINGLE_BATTLE_TEST("Focus Energy increases the user's critical hit ratio by 1 st
     } WHEN {
         if (useFocusEnergy)
             TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
-        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
         if (useFocusEnergy)
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
         MESSAGE("A critical hit!");
     }
 }

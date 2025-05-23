@@ -1,9 +1,9 @@
 gText_Birch_Welcome::
-	.string "Hi! Sorry to keep you waiting!\p"
-	.string "Welcome to the world of POKéMON!\p"
-	.string "My name is BIRCH.\p"
-	.string "But everyone calls me the POKéMON\n"
-	.string "PROFESSOR.\p"
+	.string "Welcome to Team Magma!\p"
+	.string "I heard you were the new recruit.\p"
+	.string "I am Maxie.\p"
+	.string "Here at Team Magma our goal is to\n"
+	.string "create landmass to the Hoenn region.\p"
 	.string "$"
 
 gText_Birch_Pokemon::
@@ -39,8 +39,29 @@ gText_Birch_WhatsYourName::
 	.string "All right.\n"
 	.string "What's your name?$"
 
+
+gText_Birch_ConfirmBoy::
+	.string "All right, so you’re a boy?$"
+
+gText_Birch_ConfirmGirl::
+	.string "All right, so you’re a girl?$"
+
 gText_Birch_SoItsPlayer::
 	.string "So it's {PLAYER}{KUN}?$"
+
+gText_Birch_YourePlayerAndHeIs::
+	.string "OK...\n"
+	.string "So, you’re {PLAYER}?\p"
+	.string "A fine name that is!\p"
+	.string "Now, this boy here...\n"
+	.string "I believe he’s your friend.\p"
+	.string "What might his name be?\n"
+	.string "$"
+
+gText_Birch_SoItsRival::
+	.string "{RIVAL}, is it?\n"
+	.string "That's your friend's name?\p"
+	.string "$"
 
 gText_Birch_YourePlayer::
 	.string "Ah, okay!\p"

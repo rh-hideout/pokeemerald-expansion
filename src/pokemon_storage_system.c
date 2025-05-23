@@ -9714,9 +9714,9 @@ u32 CountAllStorageMons(void)
     return count;
 }
 
-bool32 AnyStorageMonWithMove(u16 move)
+bool32 AnyStorageMonWithMove(u16 moveId)
 {
-    u16 moves[] = {move, MOVES_COUNT};
+    u16 moves[] = {moveId, MOVES_COUNT};
     s32 i, j;
 
     for (i = 0; i < TOTAL_BOXES_COUNT; i++)

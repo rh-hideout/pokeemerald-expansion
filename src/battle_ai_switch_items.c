@@ -1244,7 +1244,7 @@ void AI_TrySwitchOrUseItem(u32 battler)
         }
     }
 
-    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
+    BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
 }
 
 // If there are two(or more) mons to choose from, always choose one that has baton pass
@@ -2311,7 +2311,7 @@ static bool32 ShouldUseItem(u32 battler)
             // Set selected party ID to current battler if none chosen.
             if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
                 gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_ITEM, 0);
             gBattleStruct->chosenItem[battler] = item;
             gBattleResources->battleHistory->trainerItems[i] = 0;
             return shouldUse;

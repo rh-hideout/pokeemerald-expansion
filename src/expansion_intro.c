@@ -14,7 +14,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
-#if EXPANSION_INTRO == TRUE
+#if EXPANSION_INTRO == FALSE
 
 #define TAG_DIZZY   20000
 #define TAG_PORYGON 20001

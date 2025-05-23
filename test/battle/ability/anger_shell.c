@@ -14,13 +14,13 @@ SINGLE_BATTLE_TEST("Anger Shell activates only if the target had more than 50% o
     PARAMETRIZE { hp = 254; activates = TRUE; }
 
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+        ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
         PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(hp); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         if (activates) {
             ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
         } else {
@@ -41,13 +41,13 @@ SINGLE_BATTLE_TEST("Anger Shell lowers Def/Sp.Def by 1 and raises Atk/Sp.Atk/Spd
 {
     u16 maxHp = 500;
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+        ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
         PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Defense fell!");

@@ -12,9 +12,10 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_RIVAL_MAY_NORMAL",
       "x": 1,
       "y": 1,
@@ -28,6 +29,7 @@
       "flag": "FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 0,
       "y": 6,
@@ -41,6 +43,7 @@
       "flag": "FLAG_DECORATION_1"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
       "x": 1,
       "y": 6,
@@ -54,6 +57,7 @@
       "flag": "FLAG_DECORATION_2"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_2",
       "x": 2,
       "y": 6,
@@ -67,6 +71,7 @@
       "flag": "FLAG_DECORATION_3"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_3",
       "x": 3,
       "y": 6,
@@ -80,6 +85,7 @@
       "flag": "FLAG_DECORATION_4"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_4",
       "x": 4,
       "y": 6,
@@ -93,6 +99,7 @@
       "flag": "FLAG_DECORATION_5"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_5",
       "x": 5,
       "y": 6,
@@ -106,6 +113,7 @@
       "flag": "FLAG_DECORATION_6"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_6",
       "x": 0,
       "y": 7,
@@ -119,6 +127,7 @@
       "flag": "FLAG_DECORATION_7"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
       "x": 1,
       "y": 7,
@@ -132,6 +141,7 @@
       "flag": "FLAG_DECORATION_8"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_8",
       "x": 2,
       "y": 7,
@@ -145,6 +155,7 @@
       "flag": "FLAG_DECORATION_9"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_9",
       "x": 3,
       "y": 7,
@@ -158,6 +169,7 @@
       "flag": "FLAG_DECORATION_10"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_A",
       "x": 4,
       "y": 7,
@@ -171,6 +183,7 @@
       "flag": "FLAG_DECORATION_11"
     },
     {
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_B",
       "x": 5,
       "y": 7,
@@ -182,45 +195,6 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
       "flag": "FLAG_DECORATION_12"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_MOM",
-      "x": 1,
-      "y": 1,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_PICHU_DOLL",
-      "x": 3,
-      "y": 4,
-      "elevation": 4,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 5,
-      "y": 4,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "LittlerootTown_MaysHouse_2F_EventScript_RivalsPokeBall",
-      "flag": "FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_POKE_BALL"
     }
   ],
   "warp_events": [
@@ -232,7 +206,9 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+
+  ],
   "bg_events": [
     {
       "type": "sign",

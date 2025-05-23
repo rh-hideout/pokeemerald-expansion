@@ -45,3 +45,5 @@ tools/trainerproc/trainerproc
 *.smol
 *.fastSmol
 *.smolTM
+Test.mp4
+tools/porypal/

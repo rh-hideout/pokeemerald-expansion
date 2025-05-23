@@ -7,9 +7,9 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain when hit by an attack")
         PLAYER(SPECIES_ARBOLIVA) { Ability(ABILITY_SEED_SOWER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing Wobbuffet used Tackle!");
         HP_BAR(player);
         ABILITY_POPUP(player);
         MESSAGE("Grass grew to cover the battlefield!");

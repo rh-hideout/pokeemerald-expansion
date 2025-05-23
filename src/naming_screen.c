@@ -29,6 +29,7 @@
 #include "main.h"
 #include "constants/event_objects.h"
 #include "constants/rgb.h"
+#include "random.h"
 
 enum {
     INPUT_NONE,
@@ -307,6 +308,10 @@ static const u8 sPageColumnXPos[KBPAGE_COUNT][KBCOL_COUNT] = {
     [KEYBOARD_LETTERS_LOWER] = {0, 12, 24, 56, 68, 80, 92, 123},
     [KEYBOARD_LETTERS_UPPER] = {0, 12, 24, 56, 68, 80, 92, 123},
     [KEYBOARD_SYMBOLS]       = {0, 22, 44, 66, 88, 110}
+};
+
+static const u8 *const gMalePresetNames[] = {
+    gText_ExpandedPlaceholder_Brendan
 };
 
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[];
@@ -1367,6 +1372,7 @@ static void NamingScreen_CreatePlayerIcon(void);
 static void NamingScreen_CreatePCIcon(void);
 static void NamingScreen_CreateMonIcon(void);
 static void NamingScreen_CreateWaldaDadIcon(void);
+static void NamingScreen_CreateRivalIcon(void);
 static void NamingScreen_CreateCodeIcon(void);
 
 static void (*const sIconFunctions[])(void) =
@@ -1376,6 +1382,7 @@ static void (*const sIconFunctions[])(void) =
     NamingScreen_CreatePCIcon,
     NamingScreen_CreateMonIcon,
     NamingScreen_CreateWaldaDadIcon,
+    NamingScreen_CreateRivalIcon,
     NamingScreen_CreateCodeIcon,
 };
 
@@ -1394,7 +1401,7 @@ static void NamingScreen_CreatePlayerIcon(void)
     u16 rivalGfxId;
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
+    rivalGfxId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
@@ -1425,6 +1432,17 @@ static void NamingScreen_CreateWaldaDadIcon(void)
     spriteId = CreateObjectGraphicsSprite(OBJ_EVENT_GFX_MAN_1, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
+}
+
+static void NamingScreen_CreateRivalIcon(void)
+{
+    u8 rivalGfxId;
+    u8 spriteId;
+
+    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gSaveBlock2Ptr->playerGender ^ 1);
+    spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
+    gSprites[spriteId].oam.priority = 3;
+    StartSpriteAnim(&gSprites[spriteId], 4);
 }
 
 static void NamingScreen_CreateCodeIcon(void)
@@ -1747,6 +1765,7 @@ static void (*const sDrawTextEntryBoxFuncs[])(void) =
     [NAMING_SCREEN_CAUGHT_MON] = DrawMonTextEntryBox,
     [NAMING_SCREEN_NICKNAME]   = DrawMonTextEntryBox,
     [NAMING_SCREEN_WALDA]      = DrawNormalTextEntryBox,
+    [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox,
     [NAMING_SCREEN_CODE]       = DrawNormalTextEntryBox,
 };
 
@@ -2101,6 +2120,13 @@ static void UNUSED Debug_NamingScreenNickname(void)
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_ReturnToFieldWithOpenMenu);
 }
 
+void NameRival(void)
+{
+    StringCopy(gSaveBlock2Ptr->rivalName, gMalePresetNames[Random() % NELEMS(gMalePresetNames)]); // choose a random name from gMalePresetNames for a female player's rival
+    DoNamingScreen(NAMING_SCREEN_RIVAL, gSaveBlock2Ptr->rivalName, 0, 0, 0, CB2_ReturnToFieldContinueScript);
+}
+
+
 //--------------------------------------------------
 // Forward-declared variables
 //--------------------------------------------------
@@ -2150,6 +2176,18 @@ static const struct NamingScreenTemplate sWaldaWordsScreenTemplate =
     .title = gText_TellHimTheWords,
 };
 
+static const u8 sText_RivalsName[] = _("Your friend's name?");
+static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
+{
+    .copyExistingString = FALSE,
+    .maxChars = PLAYER_NAME_LENGTH,
+    .iconFunction = 5,
+    .addGenderIcon = FALSE,
+    .initialPage = KBPAGE_LETTERS_UPPER,
+    .unused = 35,
+    .title = sText_RivalsName,
+};
+
 static const u8 sText_EnterCode[] = _("Enter code:");
 static const struct NamingScreenTemplate sCodeScreenTemplate = 
 {
@@ -2169,6 +2207,7 @@ static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
     [NAMING_SCREEN_CAUGHT_MON] = &sMonNamingScreenTemplate,
     [NAMING_SCREEN_NICKNAME]   = &sMonNamingScreenTemplate,
     [NAMING_SCREEN_WALDA]      = &sWaldaWordsScreenTemplate,
+    [NAMING_SCREEN_RIVAL]      = &sRivalNamingScreenTemplate,
     [NAMING_SCREEN_CODE]       = &sCodeScreenTemplate,
 };
 
@@ -2619,5 +2658,4 @@ static const struct SpritePalette sSpritePalettes[] =
     {gNamingScreenMenu_Pal[4], PALTAG_OK_BUTTON},
     {}
 };
-
 

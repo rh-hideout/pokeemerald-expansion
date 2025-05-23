@@ -214,7 +214,9 @@
 #define MAPSEC_ALTERING_CAVE                0xD2
 #define MAPSEC_NAVEL_ROCK                   0xD3
 #define MAPSEC_TRAINER_HILL                 0xD4
-#define MAPSEC_NONE                         0xD5
+#define MAPSEC_NEW_LITTLEROOT_TOWN          0XD5
+#define MAPSEC_THE_FALLEN_SOULS             0xD6
+#define MAPSEC_NONE                         0xD7
 
 #define METLOC_SPECIAL_EGG                  0xFD
 #define METLOC_IN_GAME_TRADE                0xFE

@@ -1,7 +1,7 @@
 #ifndef GUARD_MONEY_H
 #define GUARD_MONEY_H
 
-#define MAX_MONEY 999999 // Can be increased to INT_MAX
+#define MAX_MONEY 999999999 // Can be increased to INT_MAX
 
 #define MAX_MONEY_DIGITS ((MAX_MONEY > 999999999) ? 10 : \
         (MAX_MONEY > 99999999) ? 9 : \

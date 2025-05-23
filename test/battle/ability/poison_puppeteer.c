@@ -1,6 +1,10 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+}
+
 SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was poisoned by a damaging move")
 {
     GIVEN {

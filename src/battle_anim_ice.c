@@ -13,16 +13,11 @@
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
 
-enum {
-   HAILSTRUCTTYPE_NEGATIVE_POS_MOD = 0,
-   HAILSTRUCTTYPE_POSITIVE_POS_MOD = 1,
-   HAILSTRUCTTYPE_FIXED_POSITION   = 2,
-};
 struct HailStruct {
     s32 x:10;
     s32 y:10;
     s32 bPosition:8;
-    s32 type:4;
+    s32 unk3:4;
 };
 
 static void AnimUnusedIceCrystalThrow(struct Sprite *);
@@ -387,16 +382,16 @@ const struct SpriteTemplate gPoisonGasCloudSpriteTemplate =
 
 static const struct HailStruct sHailCoordData[] =
 {
-    {.x = 100, .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .type = HAILSTRUCTTYPE_FIXED_POSITION},
-    {.x = 85,  .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .type = HAILSTRUCTTYPE_NEGATIVE_POS_MOD},
-    {.x = 242, .y = 120, .bPosition = B_POSITION_OPPONENT_LEFT,  .type = HAILSTRUCTTYPE_POSITIVE_POS_MOD},
-    {.x = 66,  .y = 120, .bPosition = B_POSITION_PLAYER_RIGHT,   .type = HAILSTRUCTTYPE_POSITIVE_POS_MOD},
-    {.x = 182, .y = 120, .bPosition = B_POSITION_OPPONENT_RIGHT, .type = HAILSTRUCTTYPE_NEGATIVE_POS_MOD},
-    {.x = 60,  .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .type = HAILSTRUCTTYPE_FIXED_POSITION},
-    {.x = 214, .y = 120, .bPosition = B_POSITION_OPPONENT_LEFT,  .type = HAILSTRUCTTYPE_NEGATIVE_POS_MOD},
-    {.x = 113, .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .type = HAILSTRUCTTYPE_POSITIVE_POS_MOD},
-    {.x = 210, .y = 120, .bPosition = B_POSITION_OPPONENT_RIGHT, .type = HAILSTRUCTTYPE_POSITIVE_POS_MOD},
-    {.x = 38,  .y = 120, .bPosition = B_POSITION_PLAYER_RIGHT,   .type = HAILSTRUCTTYPE_NEGATIVE_POS_MOD},
+    {.x = 100, .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .unk3 = 2},
+    {.x = 85,  .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .unk3 = 0},
+    {.x = 242, .y = 120, .bPosition = B_POSITION_OPPONENT_LEFT,  .unk3 = 1},
+    {.x = 66,  .y = 120, .bPosition = B_POSITION_PLAYER_RIGHT,   .unk3 = 1},
+    {.x = 182, .y = 120, .bPosition = B_POSITION_OPPONENT_RIGHT, .unk3 = 0},
+    {.x = 60,  .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .unk3 = 2},
+    {.x = 214, .y = 120, .bPosition = B_POSITION_OPPONENT_LEFT,  .unk3 = 0},
+    {.x = 113, .y = 120, .bPosition = B_POSITION_PLAYER_LEFT,    .unk3 = 1},
+    {.x = 210, .y = 120, .bPosition = B_POSITION_OPPONENT_RIGHT, .unk3 = 1},
+    {.x = 38,  .y = 120, .bPosition = B_POSITION_PLAYER_RIGHT,   .unk3 = 0},
 };
 
 static const union AffineAnimCmd sAffineAnim_HailParticle_0[] =
@@ -1450,13 +1445,6 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
     }
 }
 
-#define tState             data[0]
-#define tSpriteCount       data[1]
-#define tHailAffineAnimNum data[2]
-#define tHailStructId      data[3]
-#define tInitialDelayTimer data[4]
-#define tHailSpawnTimer    data[5]
-
 void AnimTask_Hail(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -1467,86 +1455,71 @@ void AnimTask_Hail(u8 taskId)
 static void AnimTask_Hail2(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    switch (task->tState)
+    switch (task->data[0])
     {
     case 0:
-        if (++task->tInitialDelayTimer > 2)
+        if (++task->data[4] > 2)
         {
-            task->tInitialDelayTimer = 0;
-            task->tHailSpawnTimer = 0;
-            task->tHailAffineAnimNum = 0;
-            task->tState++;
+            task->data[4] = 0;
+            task->data[5] = 0;
+            task->data[2] = 0;
+            task->data[0]++;
         }
         break;
     case 1:
-        if (task->tHailSpawnTimer == 0)
+        if (task->data[5] == 0)
         {
-            if (GenerateHailParticle(task->tHailStructId, task->tHailAffineAnimNum, taskId, 1))
-                task->tSpriteCount++;
+            if (GenerateHailParticle(task->data[3], task->data[2], taskId, 1))
+                task->data[1]++;
 
-            if (++task->tHailAffineAnimNum == (int)ARRAY_COUNT(sAffineAnims_HailParticle))
+            if (++task->data[2] == 3)
             {
-                if (++task->tHailStructId == (int)ARRAY_COUNT(sHailCoordData))
-                    task->tState++;
+                if (++task->data[3] == 10)
+                    task->data[0]++;
                 else
-                    task->tState--;
+                    task->data[0]--;
             }
             else
             {
-                task->tHailSpawnTimer = 1;
+                task->data[5] = 1;
             }
 
         }
         else
         {
-            task->tHailSpawnTimer--;
+            task->data[5]--;
         }
         break;
     case 2:
-        if (task->tSpriteCount == 0)
+        if (task->data[1] == 0)
             DestroyAnimVisualTask(taskId);
         break;
     }
 }
-
-#undef tState
-#undef tSpriteCount
-#undef tHailAffineAnimNum
-#undef tHailStructId
-#undef tInitialDelayTimer
-#undef tHailSpawnTimer
-
-// Hail falling particle sprite vars
-#define sSpawnImpactEffect data[0]
-#define sTargetX           data[3]
-#define sTargetY           data[4]
-#define sAffineAnimNum     data[5]
-#define sOwnerTaskId       data[6]
-#define sOwnerTaskSpriteCountField data[7]
 
 static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, u8 c)
 {
     u8 id;
     s16 battlerX, battlerY;
     s16 spriteX;
-    bool8 shouldSpawnImpactEffect = FALSE;
-    s8 type = sHailCoordData[hailStructId].type;
+    bool8 possibleBool = FALSE;
+    s8 unk = sHailCoordData[hailStructId].unk3;
 
-    if (type != HAILSTRUCTTYPE_FIXED_POSITION)
+    if (unk != 2)
     {
         id = GetBattlerAtPosition(sHailCoordData[hailStructId].bPosition);
         if (IsBattlerSpriteVisible(id))
         {
-            shouldSpawnImpactEffect = TRUE;
+            possibleBool = TRUE;
             battlerX = GetBattlerSpriteCoord(id, BATTLER_COORD_X_2);
             battlerY = GetBattlerSpriteCoord(id, BATTLER_COORD_Y_PIC_OFFSET);
-            switch (type)
+            switch (unk)
             {
-            case HAILSTRUCTTYPE_NEGATIVE_POS_MOD:
+            case 0:
                 battlerX -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
                 battlerY -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
-            case HAILSTRUCTTYPE_POSITIVE_POS_MOD:
+            case 1:
                 battlerX += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
                 battlerY += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
@@ -1572,12 +1545,12 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
     else
     {
         StartSpriteAffineAnim(&gSprites[id], affineAnimNum);
-        gSprites[id].sSpawnImpactEffect = shouldSpawnImpactEffect;
-        gSprites[id].sTargetX           = battlerX;
-        gSprites[id].sTargetY           = battlerY;
-        gSprites[id].sAffineAnimNum     = affineAnimNum;
-        gSprites[id].sOwnerTaskId       = taskId;
-        gSprites[id].sOwnerTaskSpriteCountField = c;
+        gSprites[id].data[0] = possibleBool;
+        gSprites[id].data[3] = battlerX;
+        gSprites[id].data[4] = battlerY;
+        gSprites[id].data[5] = affineAnimNum;
+        gSprites[id].data[6] = taskId;
+        gSprites[id].data[7] = c;
         return TRUE;
     }
 }
@@ -1589,23 +1562,20 @@ static void AnimHailBegin(struct Sprite *sprite)
     sprite->x += 4;
     sprite->y += 8;
 
-    if (sprite->x < sprite->sTargetX && sprite->y < sprite->sTargetY)
+    if (sprite->x < sprite->data[3] && sprite->y < sprite->data[4])
         return;
 
-    if (sprite->sSpawnImpactEffect == 1 && sprite->sAffineAnimNum == 0)
+    if (sprite->data[0] == 1 && sprite->data[5] == 0)
     {
         spriteId = CreateSprite(&gIceCrystalHitLargeSpriteTemplate,
-                                sprite->sTargetX, sprite->sTargetY, sprite->subpriority);
+                                sprite->data[3], sprite->data[4], sprite->subpriority);
 
         sprite->data[0] = spriteId;
         if (spriteId != MAX_SPRITES)
         {
-            // The sprite template we're using is shared amongst a few other 
-            // places, which make the sprite flicker. That's not what we want 
-            // here, though. Override the callback.
             gSprites[sprite->data[0]].callback = AnimHailContinue;
-            gSprites[sprite->data[0]].sOwnerTaskId = sprite->sOwnerTaskId;
-            gSprites[sprite->data[0]].sOwnerTaskSpriteCountField = sprite->sOwnerTaskSpriteCountField;
+            gSprites[sprite->data[0]].data[6] = sprite->data[6];
+            gSprites[sprite->data[0]].data[7] = sprite->data[7];
         }
 
         FreeOamMatrix(sprite->oam.matrixNum);
@@ -1613,33 +1583,21 @@ static void AnimHailBegin(struct Sprite *sprite)
     }
     else
     {
-        gTasks[sprite->sOwnerTaskId].data[sprite->sOwnerTaskSpriteCountField]--;
+        gTasks[sprite->data[6]].data[sprite->data[7]]--;
         FreeOamMatrix(sprite->oam.matrixNum);
         DestroySprite(sprite);
     }
 }
-
-#undef sSpawnImpactEffect
-#undef sTargetX
-#undef sTargetY
-#undef sAffineAnimNum
-
-// Hail impact VFX sprite vars
-#define sTimer data[0]
 
 static void AnimHailContinue(struct Sprite *sprite)
 {
-    if (++sprite->sTimer == 20)
+    if (++sprite->data[0] == 20)
     {
-        gTasks[sprite->sOwnerTaskId].data[sprite->sOwnerTaskSpriteCountField]--;
+        gTasks[sprite->data[6]].data[sprite->data[7]]--;
         FreeOamMatrix(sprite->oam.matrixNum);
         DestroySprite(sprite);
     }
 }
-
-#undef sTimer
-#undef sOwnerTaskId
-#undef sOwnerTaskSpriteCountField
 
 // Initializes the animation for Ice Ball.
 // arg 0: initial x pixel offset

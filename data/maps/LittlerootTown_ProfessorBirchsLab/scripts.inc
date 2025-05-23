@@ -788,13 +788,13 @@ LittlerootTown_ProfessorBirchsLab_Text_MayWhereShouldIGoNext:
 	.string "for POKéMON next?$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanGotPokedexTooTakeThese:
-	.string "BRENDAN: Huh…\n"
+	.string "{RIVAL}: Huh…\n"
 	.string "So you got a POKéDEX, too.\p"
 	.string "Well then, here.\n"
 	.string "I'll give you these.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_CatchCoolPokemonWithPokeBalls:
-	.string "BRENDAN: You know it's more fun to\n"
+	.string "{RIVAL}: You know it's more fun to\n"
 	.string "have a whole bunch of POKéMON.\p"
 	.string "I'm going to explore all over the place\n"
 	.string "to find different POKéMON.\p"
@@ -805,7 +805,7 @@ LittlerootTown_ProfessorBirchsLab_Text_HeyYourBagsFull:
 	.string "Hey, your BAG's full.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanWhereShouldIGoNext:
-	.string "BRENDAN: Where should I look for\n"
+	.string "{RIVAL}: Where should I look for\n"
 	.string "POKéMON next…$"
 
 LittlerootTown_ProfessorBirchsLab_Text_SeriousLookingMachine:
@@ -847,7 +847,7 @@ LittlerootTown_ProfessorBirchsLab_Text_MayUpgradeSoCool:
 	.string "so many POKéMON, {PLAYER}{KUN}!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanYouCanThankMe:
-	.string "BRENDAN: I went out all over HOENN\n"
+	.string "{RIVAL}: I went out all over HOENN\n"
 	.string "and checked out POKéMON.\p"
 	.string "You can thank me for getting\n"
 	.string "the NATIONAL Mode POKéDEX.\p"
@@ -876,7 +876,7 @@ LittlerootTown_ProfessorBirchsLab_Text_MayTakeBreakFromFieldwork:
 	.string "a while.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanTakeBreakFromFieldwork:
-	.string "BRENDAN: For the time being,\n"
+	.string "{RIVAL}: For the time being,\n"
 	.string "I'm taking a break from fieldwork.\p"
 	.string "I'll be helping out the PROF here\n"
 	.string "for a while.$"
@@ -969,7 +969,7 @@ LittlerootTown_ProfessorBirchsLab_Text_MayWhatNextImStayingHere:
 	.string "I'm staying here to help the PROF.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanPreferCollectingSlowly:
-	.string "BRENDAN: Rather than collecting\n"
+	.string "{RIVAL}: Rather than collecting\n"
 	.string "POKéMON, I prefer slowly and \l"
 	.string "steadily raising the one I chose.$"
 
@@ -979,7 +979,7 @@ LittlerootTown_ProfessorBirchsLab_Text_MayHaveYouGoneToBattleFrontier:
 	.string "the BATTLE FRONTIER?$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanHaveYouGoneToBattleFrontier:
-	.string "BRENDAN: Hey, {PLAYER}!\n"
+	.string "{RIVAL}: Hey, {PLAYER}!\n"
 	.string "Have you gone out to that place,\l"
 	.string "the BATTLE FRONTIER?$"
 

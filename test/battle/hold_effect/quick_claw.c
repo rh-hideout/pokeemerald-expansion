@@ -14,9 +14,9 @@ SINGLE_BATTLE_TEST("Quick Claw activates 20% of the time")
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_QUICK_CLAW); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("Wobbuffet used Tackle!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     }
 }

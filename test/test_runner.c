@@ -684,22 +684,12 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 'S':
                 pokeS = va_arg(va, const u8 *);
-                if (pokeS == NULL)
+                while ((c = *pokeS++) != EOS)
                 {
-                    i = MgbaPutchar_(i, 'N');
-                    i = MgbaPutchar_(i, 'U');
-                    i = MgbaPutchar_(i, 'L');
-                    i = MgbaPutchar_(i, 'L');
-                }
-                else
-                {
-                    while ((c = *pokeS++) != EOS)
-                    {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
-                    }
+                    if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
+                        i = MgbaPutchar_(i, c);
+                    else
+                        i = MgbaPutchar_(i, '?');
                 }
                 break;
             }

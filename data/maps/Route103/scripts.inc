@@ -316,7 +316,7 @@ Route103_Text_MayTimeToHeadBack:
 	.string "the LAB.$"
 
 Route103_Text_BrendanRoute103Pokemon:
-	.string "BRENDAN: Okay, so it's this one and\n"
+	.string "{RIVAL}: Okay, so it's this one and\n"
 	.string "that one that live on ROUTE 103…$"
 
 Route103_Text_BrendanLetsBattle:
@@ -331,7 +331,7 @@ Route103_Text_BrendanDefeated:
 	.string "Huh, {PLAYER}, you're not too shabby.$"
 
 Route103_Text_BrendanTimeToHeadBack:
-	.string "BRENDAN: I think I get it.\n"
+	.string "{RIVAL}: I think I get it.\n"
 	.string "I think I know why my dad has his eye\l"
 	.string "out for you now.\p"
 	.string "Look, your POKéMON already likes you,\n"

@@ -173,7 +173,7 @@ static void PlayerBufferExecCompleted(u32 battler)
     {
         u8 playerId = GetMultiplayerId();
 
-        PrepareBufferDataTransferLink(battler, B_COMM_CONTROLLER_IS_DONE, 4, &playerId);
+        PrepareBufferDataTransferLink(battler, 2, 4, &playerId);
         gBattleResources->bufferA[battler][0] = CONTROLLER_TERMINATOR_NOP;
     }
     else
@@ -306,7 +306,7 @@ static void HandleInputChooseAction(u32 battler)
                 PlaySE(SE_SELECT);
                 ArrowsChangeColorLastBallCycle(FALSE);
                 TryHideLastUsedBall();
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
+                BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_THROW_BALL, 0);
                 PlayerBufferExecCompleted(battler);
             }
             return;
@@ -321,16 +321,16 @@ static void HandleInputChooseAction(u32 battler)
         switch (gActionSelectionCursor[battler])
         {
         case 0: // Top left
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, 0);
             break;
         case 1: // Top right
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_ITEM, 0);
             break;
         case 2: // Bottom left
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_SWITCH, 0);
             break;
         case 3: // Bottom right
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_RUN, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_RUN, 0);
             break;
         }
         PlayerBufferExecCompleted(battler);
@@ -388,7 +388,7 @@ static void HandleInputChooseAction(u32 battler)
                 AddBagItem(itemId, 1);
             }
             PlaySE(SE_SELECT);
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_CANCEL_PARTNER, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_CANCEL_PARTNER, 0);
             PlayerBufferExecCompleted(battler);
         }
         else if (B_QUICK_MOVE_CURSOR_TO_RUN)
@@ -408,7 +408,7 @@ static void HandleInputChooseAction(u32 battler)
     }
     else if (DEBUG_BATTLE_MENU == TRUE && JOY_NEW(SELECT_BUTTON))
     {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_DEBUG, 0);
+        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_DEBUG, 0);
         PlayerBufferExecCompleted(battler);
     }
     else if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == FALSE
@@ -416,7 +416,7 @@ static void HandleInputChooseAction(u32 battler)
     {
         PlaySE(SE_SELECT);
         TryHideLastUsedBall();
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
+        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_THROW_BALL, 0);
         PlayerBufferExecCompleted(battler);
     }
 }
@@ -445,9 +445,9 @@ void HandleInputChooseTarget(u32 battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
         TryHideLastUsedBall();
         HideGimmickTriggerSprite();
@@ -601,9 +601,9 @@ void HandleInputShowEntireFieldTargets(u32 battler)
         PlaySE(SE_SELECT);
         HideAllTargets();
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideGimmickTriggerSprite();
         PlayerBufferExecCompleted(battler);
     }
@@ -629,9 +629,9 @@ void HandleInputShowTargets(u32 battler)
         PlaySE(SE_SELECT);
         HideShownTargets(battler);
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideGimmickTriggerSprite();
         TryHideLastUsedBall();
         PlayerBufferExecCompleted(battler);
@@ -733,9 +733,9 @@ void HandleInputChooseMove(u32 battler)
         case 0:
         default:
             if (gBattleStruct->gimmick.playerSelect)
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+                BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
             else
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+                BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
             HideGimmickTriggerSprite();
             TryHideLastUsedBall();
             PlayerBufferExecCompleted(battler);
@@ -771,7 +771,7 @@ void HandleInputChooseMove(u32 battler)
         }
         else
         {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, 0xFFFF);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, 0xFFFF);
             HideGimmickTriggerSprite();
             PlayerBufferExecCompleted(battler);
             TryToHideMoveInfoWindow();
@@ -1437,7 +1437,7 @@ static void Task_GiveExpToMon(u8 taskId)
                 DynamaxModifyHPLevelUp(mon, battler, oldMaxHP);
 
             gainedExp -= nextLvlExp - currExp;
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RET_VALUE_LEVELED_UP, gainedExp);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, RET_VALUE_LEVELED_UP, gainedExp);
 
             if (IsDoubleBattle() == TRUE
              && (monId == gBattlerPartyIndexes[battler] || monId == gBattlerPartyIndexes[BATTLE_PARTNER(battler)]))
@@ -1518,7 +1518,7 @@ static void Task_GiveExpWithExpBar(u8 taskId)
                     DynamaxModifyHPLevelUp(mon, battler, oldMaxHP);
 
                 gainedExp -= expOnNextLvl - currExp;
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RET_VALUE_LEVELED_UP, gainedExp);
+                BtlController_EmitTwoReturnValues(battler, BUFFER_B, RET_VALUE_LEVELED_UP, gainedExp);
                 gTasks[taskId].func = Task_LaunchLvlUpAnim;
             }
             else
@@ -1587,9 +1587,9 @@ static void WaitForMonSelection(u32 battler)
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
         if (gPartyMenuUseExitCallback == TRUE)
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
+            BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SIZE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, PARTY_SIZE, NULL);
 
         if ((gBattleResources->bufferA[battler][1] & 0xF) == 1)
             PrintLinkStandbyMsg();
@@ -1613,7 +1613,7 @@ static void CompleteWhenChoseItem(u32 battler)
 {
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
-        BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gSpecialVar_ItemId);
+        BtlController_EmitOneReturnValue(battler, BUFFER_B, gSpecialVar_ItemId);
         PlayerBufferExecCompleted(battler);
     }
 }
@@ -1640,9 +1640,9 @@ static void PlayerHandleYesNoInput(u32 battler)
         PlaySE(SE_SELECT);
 
         if (gMultiUsePlayerCursor != 0)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 0xE, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 0xE, 0);
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 0xD, 0);
+            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 0xD, 0);
 
         PlayerBufferExecCompleted(battler);
     }
@@ -1714,6 +1714,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     }
     else if (effect == EFFECT_IVY_CUDGEL)
     {
+
         if (speciesId == SPECIES_OGERPON_WELLSPRING || speciesId == SPECIES_OGERPON_WELLSPRING_TERA
          || speciesId == SPECIES_OGERPON_HEARTHFLAME || speciesId == SPECIES_OGERPON_HEARTHFLAME_TERA
          || speciesId == SPECIES_OGERPON_CORNERSTONE || speciesId == SPECIES_OGERPON_CORNERSTONE_TERA)
@@ -1733,7 +1734,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     else if (P_SHOW_DYNAMIC_TYPES) // Non-vanilla changes to battle UI showing dynamic types
     {
         struct Pokemon *mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
-        type = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
+        type = CheckDynamicMoveType(mon, move, battler);
     }
     end = StringCopy(txtPtr, gTypesInfo[type].name);
 
@@ -2113,7 +2114,7 @@ static void PlayerChooseMoveInBattlePalace(u32 battler)
     if (--gBattleStruct->arenaMindPoints[battler] == 0)
     {
         gBattlePalaceMoveSelectionRngValue = gRngValue;
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, ChooseMoveAndTargetInBattlePalace(battler));
+        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, ChooseMoveAndTargetInBattlePalace(battler));
         PlayerBufferExecCompleted(battler);
     }
 }
@@ -2179,7 +2180,7 @@ static void PlayerHandleChoosePokemon(u32 battler)
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CHOOSE_FAINTED_MON
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattlerPartyIndexes[battler] + 1, gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, gBattlerPartyIndexes[battler] + 1, gBattlePartyCurrentOrder);
         PlayerBufferExecCompleted(battler);
     }
     else
@@ -2278,25 +2279,25 @@ static void PlayerHandlePlayBGM(u32 battler)
 
 static void PlayerHandleTwoReturnValues(u32 battler)
 {
-    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 0, 0);
+    BtlController_EmitTwoReturnValues(battler, BUFFER_B, 0, 0);
     PlayerBufferExecCompleted(battler);
 }
 
 static void PlayerHandleChosenMonReturnValue(u32 battler)
 {
-    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, 0, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, 0, NULL);
     PlayerBufferExecCompleted(battler);
 }
 
 static void PlayerHandleOneReturnValue(u32 battler)
 {
-    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, 0);
+    BtlController_EmitOneReturnValue(battler, BUFFER_B, 0);
     PlayerBufferExecCompleted(battler);
 }
 
 static void PlayerHandleOneReturnValue_Duplicate(u32 battler)
 {
-    BtlController_EmitOneReturnValue_Duplicate(battler, B_COMM_TO_ENGINE, 0);
+    BtlController_EmitOneReturnValue_Duplicate(battler, BUFFER_B, 0);
     PlayerBufferExecCompleted(battler);
 }
 

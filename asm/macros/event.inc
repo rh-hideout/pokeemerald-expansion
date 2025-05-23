@@ -2510,3 +2510,16 @@
 	compare \a, \b
 	cant_see_if 5
 	.endm
+
+	@ Displays a box containing the front sprite for the specified Pokemon species.
+	.macro showmonpic2 species:req, x:req, y:req
+	.byte SCR_OP_SHOWMONPIC2
+	.2byte \species
+	.byte \x
+	.byte \y
+	.endm
+
+	@ Hides the box displayed by showmonpic2.
+	.macro hidemonpic2
+	.byte SCR_OP_HIDEMONPIC2
+	.endm

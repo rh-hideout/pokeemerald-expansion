@@ -19,17 +19,17 @@ DOUBLE_BATTLE_TEST("Follow Me redirects single target moves used by opponents to
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: moveUser);
-               MOVE(playerRight, MOVE_SCRATCH, target: partner);
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: moveUser);
+               MOVE(playerRight, MOVE_TACKLE, target: partner);
                MOVE(moveUser, MOVE_FOLLOW_ME);
-               MOVE(partner, MOVE_SCRATCH, target: playerLeft); }
+               MOVE(partner, MOVE_TACKLE, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, moveUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
         HP_BAR(moveUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
         HP_BAR(moveUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, partner);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, partner);
         HP_BAR(playerLeft);
     }
 }
@@ -47,22 +47,22 @@ DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SPOTLIGHT, target: moveTarget);
-               MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
-               MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
-               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+               MOVE(playerRight, MOVE_TACKLE, target: opponentRight);
+               MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft);
+               MOVE(opponentRight, MOVE_TACKLE, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPOTLIGHT, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
         if (moveTarget != playerRight)
             HP_BAR(moveTarget);
         else
             HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         if (moveTarget == playerRight)
             HP_BAR(moveTarget);
         else
             HP_BAR(playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentRight);
         if (moveTarget == playerRight)
             HP_BAR(moveTarget);
         else
