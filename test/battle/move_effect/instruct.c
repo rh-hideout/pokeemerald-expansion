@@ -60,7 +60,8 @@ DOUBLE_BATTLE_TEST("Instruct-called move targets the target of the move picked o
 DOUBLE_BATTLE_TEST("Instruct doesn't bypass sleep")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
         OPPONENT(SPECIES_WOBBUFFET);

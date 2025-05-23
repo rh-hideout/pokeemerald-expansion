@@ -148,26 +148,26 @@ void SoundTask_PlayCryHighPitch(u8 taskId)
     }
     else
     {
-        u8 battlerId;
+        u8 battler;
 
         // Get wanted battler.
         if (gBattleAnimArgs[0] == ANIM_ATTACKER)
-            battlerId = gBattleAnimAttacker;
+            battler = gBattleAnimAttacker;
         else if (gBattleAnimArgs[0] == ANIM_TARGET)
-            battlerId = gBattleAnimTarget;
+            battler = gBattleAnimTarget;
         else if (gBattleAnimArgs[0] == ANIM_ATK_PARTNER)
-            battlerId = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = BATTLE_PARTNER(gBattleAnimAttacker);
         else
-            battlerId = BATTLE_PARTNER(gBattleAnimTarget);
+            battler = BATTLE_PARTNER(gBattleAnimTarget);
 
         // Check if battler is visible.
-        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battlerId))
+        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
         {
             DestroyAnimVisualTask(taskId);
             return;
         }
 
-        species = (GetIllusionMonSpecies(battlerId) != SPECIES_NONE) ? GetIllusionMonSpecies(battlerId) : gAnimBattlerSpecies[battlerId];
+        species = (GetIllusionMonSpecies(battler) != SPECIES_NONE) ? GetIllusionMonSpecies(battler) : gAnimBattlerSpecies[battler];
     }
 
     if (species != SPECIES_NONE)
@@ -193,26 +193,26 @@ void SoundTask_PlayDoubleCry(u8 taskId)
     }
     else
     {
-        u8 battlerId;
+        u8 battler;
 
         // Get wanted battler.
         if (gBattleAnimArgs[0] == ANIM_ATTACKER)
-            battlerId = gBattleAnimAttacker;
+            battler = gBattleAnimAttacker;
         else if (gBattleAnimArgs[0] == ANIM_TARGET)
-            battlerId = gBattleAnimTarget;
+            battler = gBattleAnimTarget;
         else if (gBattleAnimArgs[0] == ANIM_ATK_PARTNER)
-            battlerId = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = BATTLE_PARTNER(gBattleAnimAttacker);
         else
-            battlerId = BATTLE_PARTNER(gBattleAnimTarget);
+            battler = BATTLE_PARTNER(gBattleAnimTarget);
 
         // Check if battler is visible.
-        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battlerId))
+        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
         {
             DestroyAnimVisualTask(taskId);
             return;
         }
 
-        species = (GetIllusionMonSpecies(battlerId) != SPECIES_NONE) ? GetIllusionMonSpecies(battlerId) : gAnimBattlerSpecies[battlerId];
+        species = (GetIllusionMonSpecies(battler) != SPECIES_NONE) ? GetIllusionMonSpecies(battler) : gAnimBattlerSpecies[battler];
     }
 
     gTasks[taskId].data[0] = gBattleAnimArgs[1];
