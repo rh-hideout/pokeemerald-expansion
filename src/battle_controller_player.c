@@ -1739,7 +1739,6 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     }
     else if (effect == EFFECT_IVY_CUDGEL)
     {
-
         if (speciesId == SPECIES_OGERPON_WELLSPRING || speciesId == SPECIES_OGERPON_WELLSPRING_TERA
          || speciesId == SPECIES_OGERPON_HEARTHFLAME || speciesId == SPECIES_OGERPON_HEARTHFLAME_TERA
          || speciesId == SPECIES_OGERPON_CORNERSTONE || speciesId == SPECIES_OGERPON_CORNERSTONE_TERA)
@@ -1759,7 +1758,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     else if (P_SHOW_DYNAMIC_TYPES) // Non-vanilla changes to battle UI showing dynamic types
     {
         struct Pokemon *mon = GetBattlerMon(battler);
-        type = CheckDynamicMoveType(mon, move, battler);
+        type = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
     }
     end = StringCopy(txtPtr, gTypesInfo[type].name);
 
@@ -2441,7 +2440,7 @@ static u32 CheckTypeEffectiveness(u32 targetId, u32 battler)
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     struct Pokemon *mon = GetBattlerMon(battler);
     u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
-    u32 moveType = CheckDynamicMoveType(mon, move, battler);
+    u32 moveType = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(move, moveType, battler, targetId, GetBattlerAbility(targetId), FALSE);
 
     if (!ShouldShowTypeEffectiveness(targetId))
