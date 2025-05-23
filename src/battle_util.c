@@ -14,7 +14,6 @@
 #include "pokemon.h"
 #include "international_string_util.h"
 #include "item.h"
-#include "item_use.h"
 #include "util.h"
 #include "battle_scripts.h"
 #include "random.h"

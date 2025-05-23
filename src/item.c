@@ -31,6 +31,40 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
+#define TM_MOVE(name) MOVE_##name,
+#define HM_MOVE(name) MOVE_##name,
+
+const u16 gTMHMMoves[] =
+{
+    FOREACH_TM(TM_MOVE)
+    FOREACH_HM(HM_MOVE)
+};
+
+const u16 gTMMoves[] =
+{
+    FOREACH_TM(TM_MOVE)
+};
+
+const u16 gHMMoves[] =
+{
+    FOREACH_HM(HM_MOVE)
+};
+
+u32 GetTMHMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gTMHMMoves);
+}
+
+u32 GetTMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gTMMoves);
+}
+
+u32 GetHMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gHMMoves);
+}
+
 static u16 GetBagItemQuantity(u16 *quantity)
 {
     return gSaveBlock2Ptr->encryptionKey ^ *quantity;

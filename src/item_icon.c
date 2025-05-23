@@ -3,7 +3,6 @@
 #include "decompress.h"
 #include "graphics.h"
 #include "item.h"
-#include "item_use.h"
 #include "item_icon.h"
 #include "malloc.h"
 #include "move.h"
@@ -161,7 +160,7 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
     }
 }
 
-static inline bool32 IsItemIdFromHM(u32 itemId)
+static bool32 IsItemIdFromHM(u32 itemId)
 {
     for (u32 i = 0; i < GetHMMovesArrayLength(); i++)
     {

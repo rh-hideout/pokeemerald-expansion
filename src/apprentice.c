@@ -8,7 +8,6 @@
 #include "field_player_avatar.h"
 #include "international_string_util.h"
 #include "item.h"
-#include "item_use.h"
 #include "item_menu.h"
 #include "main.h"
 #include "malloc.h"

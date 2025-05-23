@@ -1,13 +1,6 @@
 #ifndef GUARD_ITEM_USE_H
 #define GUARD_ITEM_USE_H
 
-extern const u16 gTMHMMoves[];
-extern const u16 gTMMoves[];
-extern const u16 gHMMoves[];
-u32 GetTMHMMovesArrayLength(void);
-u32 GetTMMovesArrayLength(void);
-u32 GetHMMovesArrayLength(void);
-
 void ItemUseOutOfBattle_Mail(u8);
 void ItemUseOutOfBattle_Bike(u8);
 void ItemUseOutOfBattle_Rod(u8);

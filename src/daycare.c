@@ -2,7 +2,6 @@
 #include "pokemon.h"
 #include "battle.h"
 #include "daycare.h"
-#include "item_use.h"
 #include "string_util.h"
 #include "caps.h"
 #include "mail.h"

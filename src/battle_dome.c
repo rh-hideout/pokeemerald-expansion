@@ -8,7 +8,7 @@
 #include "battle_message.h"
 #include "event_data.h"
 #include "frontier_util.h"
-#include "item_use.h"
+#include "item.h"
 #include "overworld.h"
 #include "util.h"
 #include "malloc.h"
