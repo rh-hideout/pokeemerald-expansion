@@ -2929,6 +2929,10 @@ gCryTable::
 
 	cry Cry_Coccurn
 
+	cry Cry_Permaceros
+
+	cry Cry_Maleentis
+
 .endif
 
 	.align 2
@@ -5862,4 +5866,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Magghost
 
 	cry_reverse Cry_Coccurn
+
+	cry_reverse Cry_Permaceros
+
+	cry_reverse Cry_Maleentis
 .endif

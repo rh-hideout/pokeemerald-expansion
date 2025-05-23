@@ -26760,6 +26760,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/icon.4bpp");
    const u8 gMonFootprint_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/footprint.1bpp");
 
+   const u32 gMonFrontPic_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/front.4bpp.lz");
+   const u32 gMonBackPic_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/back.4bpp.lz");
+   const u32 gMonPalette_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/shiny.gbapal.lz");
+   const u8 gMonIcon_Permaceros[] = INCBIN_U8("graphics/pokemon/permaceros/icon.4bpp");
+   const u8 gMonFootprint_Permaceros[] = INCBIN_U8("graphics/pokemon/permaceros/footprint.1bpp");
+
    const u32 gMonFrontPic_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/front.4bpp.lz");
    const u32 gMonBackPic_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/back.4bpp.lz");
    const u32 gMonPalette_Juankey[] = INCBIN_U32("graphics/pokemon/juankey/normal.gbapal.lz");
@@ -27366,6 +27373,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/shiny.gbapal.lz");
    const u8 gMonIcon_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/icon.4bpp");
    const u8 gMonFootprint_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/footprint.1bpp");
+
+   const u32 gMonFrontPic_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/front.4bpp.lz");
+   const u32 gMonBackPic_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/back.4bpp.lz");
+   const u32 gMonPalette_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/shiny.gbapal.lz");
+   const u8 gMonIcon_Maleentis[] = INCBIN_U8("graphics/pokemon/maleentis/icon.4bpp");
+   const u8 gMonFootprint_Maleentis[] = INCBIN_U8("graphics/pokemon/maleentis/footprint.1bpp");
 
    const u32 gMonFrontPic_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/front.4bpp.lz");
    const u32 gMonBackPic_Tadpoison[] = INCBIN_U32("graphics/pokemon/tadpoison/back.4bpp.lz");

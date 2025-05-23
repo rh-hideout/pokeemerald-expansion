@@ -1932,8 +1932,10 @@
 #define SPECIES_PHAMOTHOM                               1804
 #define SPECIES_MAGGHOST                                1805
 #define SPECIES_COCCURN                                 1806
+#define SPECIES_PERMACEROS                              1807
+#define SPECIES_MALEENTIS                               1808
 
-#define SPECIES_EGG (SPECIES_COCCURN + 1)
+#define SPECIES_EGG (SPECIES_MALEENTIS + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

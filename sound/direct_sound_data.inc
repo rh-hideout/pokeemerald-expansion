@@ -7162,6 +7162,14 @@ Cry_Magghost::
 	.align 2	
 Cry_Coccurn::
 	.incbin "sound/direct_sound_samples/cries/coccurn.bin"
+
+	.align 2	
+Cry_Permaceros::
+	.incbin "sound/direct_sound_samples/cries/permaceros.bin"
+
+	.align 2	
+Cry_Maleentis::
+	.incbin "sound/direct_sound_samples/cries/maleentis.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

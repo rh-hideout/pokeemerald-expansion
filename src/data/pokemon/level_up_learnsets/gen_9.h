@@ -22813,6 +22813,10 @@ static const struct LevelUpMove sNaughtycootLevelUpLearnset[] = {
    LEVEL_UP_MOVE(70, MOVE_SHITPOST), 
    LEVEL_UP_END
    };
+static const struct LevelUpMove sPermacerosLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_GLACIAL_LANCE),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sJuankeyLevelUpLearnset[] = {   
    LEVEL_UP_MOVE( 1, MOVE_LICK),
    LEVEL_UP_MOVE( 1, MOVE_TACKLE),
@@ -24014,6 +24018,10 @@ static const struct LevelUpMove sPunkuyuLevelUpLearnset[] = {
     LEVEL_UP_MOVE(54, MOVE_FOCUS_ENERGY), 
     LEVEL_UP_MOVE(59, MOVE_EARTHQUAKE), 
     LEVEL_UP_MOVE(64, MOVE_CLOSE_COMBAT), 
+    LEVEL_UP_END
+    };
+static const struct LevelUpMove sMaleentisLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_CROSS_POISON), 
     LEVEL_UP_END
     };
 static const struct LevelUpMove sChameleeLevelUpLearnset[] = {
