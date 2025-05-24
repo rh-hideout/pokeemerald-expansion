@@ -3997,19 +3997,10 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 {
-    u32 TMHM_MovesArrayLength = GetTMHMMovesArrayLength();
-
-    for (u32 item = 0; item < ITEMS_COUNT; item++)
+    for (u32 i = 0; i < GetTMHMMovesArrayLength(); i++)
     {
-        if (gItemsInfo[item].pocket != POCKET_TM_HM)
-            continue;
-
-        for (u32 i = 0; i < TMHM_MovesArrayLength; i++)
-        {
-            if (gTMHMMoves[i] == gItemsInfo[item].secondaryId && CheckBagHasSpace(item, 1))
-                AddBagItem(item, 1);
-            // DebugPrintf("i: %d, gTMHMMoves[i]: %d", i, gTMHMMoves[i]);
-        }
+        if (CheckBagHasSpace(gTMHMItemIds[i], 1))
+            AddBagItem(gTMHMItemIds[i], 1);
     }
 }
 

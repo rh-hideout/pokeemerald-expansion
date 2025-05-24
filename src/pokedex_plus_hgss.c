@@ -12,7 +12,6 @@
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item.h"
-#include "item_use.h"
 #include "item_icon.h"
 #include "line_break.h"
 #include "main.h"

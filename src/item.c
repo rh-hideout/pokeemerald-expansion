@@ -31,6 +31,15 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
+#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
+#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
+
+const u16 gTMHMItemIds[] =
+{
+    RECURSIVELY(R_ZIP(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
+};
+
 #define TM_MOVE(name) MOVE_##name,
 #define HM_MOVE(name) MOVE_##name,
 
@@ -645,7 +654,7 @@ void SortTMHMs(struct BagPocket *bagPocket)
         bagPocket->itemSlots[sortedItem].itemId = currItemSlots[sortedItem];
 }
 
-void SortBerriesOrTMHMs(struct BagPocket *bagPocket)
+void SortBerries(struct BagPocket *bagPocket)
 {
     u16 i, j;
 

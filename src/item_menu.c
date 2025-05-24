@@ -909,19 +909,6 @@ static void LoadBagItemListBuffers(u8 pocketId)
     gMultiuseListMenuTemplate.maxShowed = gBagMenu->numShownItems[pocketId];
 }
 
-#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
-#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
-
-static const u16 gTMItemIds[] =
-{
-    RECURSIVELY(R_ZIP(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
-};
-
-static const u16 gHMItemIds[] =
-{
-    RECURSIVELY(R_ZIP(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
-};
-
 static void GetItemName(u8 *dest, u16 itemId)
 {
     u8 *end;
@@ -933,11 +920,10 @@ static void GetItemName(u8 *dest, u16 itemId)
             bool32 isHM = FALSE;
             for (i = 0; i < GetTMHMMovesArrayLength(); i++)
             {
-                // DebugPrintf("itemId: %d hmIndex: %d", itemId, hmIndex);
-                if (itemId == gTMItemIds[i])
+                if (gItemsInfo[itemId].secondaryId == gTMMoves[i])
                     break;
 
-                if (itemId == gHMItemIds[i])
+                if (gItemsInfo[itemId].secondaryId == gHMMoves[i])
                 {
                     isHM = TRUE;
                     break;
@@ -1012,13 +998,15 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         itemId = BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, itemIndex);
         itemQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, itemIndex);
 
-        // Draw HM icon
-        for (u32 i = 0; i < ARRAY_COUNT(gHMItemIds); i++)
+        if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
         {
-            if (itemId == gHMItemIds[i])
+            for (u32 i = 0; i < GetHMMovesArrayLength(); i++)
             {
-                BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
-                break;
+                if (gItemsInfo[itemId].secondaryId == gHMMoves[i])
+                {
+                    BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+                    break;
+                }
             }
         }
 
@@ -1172,7 +1160,7 @@ void UpdatePocketItemList(u8 pocketId)
         SortTMHMs(pocket);
         break;
     case BERRIES_POCKET:
-        SortBerriesOrTMHMs(pocket);
+        SortBerries(pocket);
         break;
     default:
         CompactItemsInBagPocket(pocket);
