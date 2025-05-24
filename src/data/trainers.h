@@ -27712,7 +27712,7 @@ F_TRAINER_FEMALE |
 #line 11053
         .battleType = TRAINER_BATTLE_TYPE_SINGLES,
 #line 11054
-        .aiFlags = AI_FLAG_CHECK_BAD_MOVE,
+        .aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_OMNISCIENT,
         .partySize = 2,
         .party = (const struct TrainerMon[])
         {
@@ -27723,20 +27723,26 @@ F_TRAINER_FEMALE |
 #line 11058
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
 #line 11057
-            .lvl = 4,
+            .lvl = 100,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
 #line 11060
-            .species = SPECIES_SHROOMISH,
+            .species = SPECIES_VENUSAUR,
             .gender = TRAINER_MON_RANDOM_GENDER,
+#line 11060
+            .heldItem = ITEM_VENUSAURITE,
 #line 11062
-            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
 #line 11061
-            .lvl = 4,
+            .lvl = 100,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+#line 11062
+                MOVE_SLUDGE_BOMB,
+            },
             },
         },
     },

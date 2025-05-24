@@ -445,6 +445,74 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
     return (usable == 0);
 }
 
+static u32 GetViableGimmick(u32 battler)
+{
+    for (u32 gimmick = 0; gimmick < GIMMICKS_COUNT; gimmick++)
+    {
+        if (CanActivateGimmick(battler, gimmick))
+            return gimmick;
+    }
+    return GIMMICK_NONE;
+}
+
+// Temporarily enable gimmicks for damage calcs if planned
+static u32 GetPossibleGimmickForDamageCalc(u32 battler, u32 move, u32 considerZPower)
+{
+    // enum Gimmick gimmick = GIMMICK_NONE;
+    u32 gimmick = GIMMICK_NONE;
+
+    if (GetActiveGimmick(battler) != GIMMICK_NONE)
+        return GIMMICK_NONE;
+
+    switch (GetViableGimmick(battler))
+    {
+    case GIMMICK_MEGA:
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM);
+        DebugPrintf("Can Mega Evolve");
+        gimmick = GIMMICK_MEGA;
+        break;
+    case GIMMICK_ULTRA_BURST:
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST);
+        gimmick = GIMMICK_ULTRA_BURST;
+        break;
+    case GIMMICK_TERA:
+        // Integrate into the ai tera pr
+        gimmick = GIMMICK_TERA;
+        break;
+    case GIMMICK_DYNAMAX:
+        gimmick = GIMMICK_DYNAMAX;
+        break;
+    case GIMMICK_Z_MOVE:
+        if (considerZPower && IsViableZMove(battler, move))
+        {
+            gBattleStruct->zmove.baseMoves[battler] = move;
+            gimmick = GIMMICK_Z_MOVE;
+        }
+        break;
+    }
+
+    if (gimmick != GIMMICK_NONE)
+        SetActiveGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]);
+
+    return gimmick;
+}
+
+static void RevertFormAfterDamageCalc(u32 battler, u32 gimmick)
+{
+    u32 monId = gBattlerPartyIndexes[battler];
+    u32 side = GetBattlerSide(battler);
+    struct Pokemon *party = GetBattlerParty(battler);
+
+    if (gBattleStruct->changedSpecies[side][monId] == SPECIES_NONE)
+        return;
+
+    // TODO do all other for change methods
+    TryToSetBattleFormChangeMoves(&party[monId], FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM);
+    SetMonData(&party[monId], MON_DATA_SPECIES, &gBattleStruct->changedSpecies[side][monId]);
+    // RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
+    gBattleStruct->changedSpecies[side][monId] = SPECIES_NONE;
+}
+
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
 struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, bool32 considerZPower)
 {
@@ -703,24 +771,15 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     uq4_12_t effectivenessMultiplier;
     bool32 isDamageMoveUnusable = FALSE;
-    bool32 toggledGimmick = FALSE;
+
+    u32 toggledGimmickAtk = GetPossibleGimmickForDamageCalc(battlerAtk, move, considerZPower);
+    u32 toggledGimmickDef = GetPossibleGimmickForDamageCalc(battlerDef, move, considerZPower);
+
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
 
     if (moveEffect == EFFECT_NATURE_POWER)
         move = GetNaturePowerMove(battlerAtk);
-
-    // Temporarily enable gimmicks for damage calcs if planned
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && !(gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !considerZPower))
-    {
-        // Set Z-Move variables if needed
-        if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && IsViableZMove(battlerAtk, move))
-            gBattleStruct->zmove.baseMoves[battlerAtk] = move;
-
-        toggledGimmick = TRUE;
-        SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
-    }
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
     SetTypeBeforeUsingMove(move, battlerAtk);
@@ -817,6 +876,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         simDamage.maximum = 0;
     }
 
+    DebugPrintf("simDamage.median: %d", simDamage.median);
     // convert multiper to AI_EFFECTIVENESS_xX
     *typeEffectiveness = effectivenessMultiplier;
 
@@ -824,8 +884,18 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->swapDamageCategory = FALSE;
     gBattleStruct->zmove.baseMoves[battlerAtk] = MOVE_NONE;
-    if (toggledGimmick)
+
+    if (toggledGimmickAtk != GIMMICK_NONE)
+    {
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
+        RevertFormAfterDamageCalc(battlerAtk, toggledGimmickAtk);
+    }
+    if (toggledGimmickDef != GIMMICK_NONE)
+    {
+        SetActiveGimmick(battlerDef, GIMMICK_NONE);
+        RevertFormAfterDamageCalc(battlerDef, toggledGimmickDef);
+    }
+
     gAiLogicData->aiCalcInProgress = FALSE;
     return simDamage;
 }
@@ -2201,7 +2271,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
-// HasBattlerSideMoveWithEffect checks if the AI knows a side has a move effect, 
+// HasBattlerSideMoveWithEffect checks if the AI knows a side has a move effect,
 // while HasBattlerSideUsedMoveWithEffect checks if the side has ever used a move effect.
 // The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
@@ -2271,7 +2341,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     return FALSE;
 }
 
-// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect, 
+// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect,
 // while HasBattlerSideUsedMoveWithAdditionalEffect checks if the side has ever used a move effect.
 // The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
