@@ -883,10 +883,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId] - 1; i++)
         {
-            if (pocketId == TMHM_POCKET)
-                GetItemName(sListBuffer2->name[i], i);
-            else
-                GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -900,10 +897,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId]; i++)
         {
-            if (pocketId == TMHM_POCKET)
-                GetItemName(sListBuffer2->name[i], i);
-            else
-                GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            GetItemName(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -934,20 +928,35 @@ static void GetItemName(u8 *dest, u16 itemId)
     switch (gBagPosition.pocket)
     {
     case TMHM_POCKET:
-        // Seperate Id from item ids, exclusively for tms / hms
-        if (itemId < ARRAY_COUNT(gTMItemIds))
         {
-            end = StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId]));
+            u32 i;
+            bool32 isHM = FALSE;
+            for (i = 0; i < GetTMHMMovesArrayLength(); i++)
+            {
+                // DebugPrintf("itemId: %d hmIndex: %d", itemId, hmIndex);
+                if (itemId == gTMItemIds[i])
+                    break;
+
+                if (itemId == gHMItemIds[i])
+                {
+                    isHM = TRUE;
+                    break;
+                }
+            }
+
+            end = StringCopy(gStringVar2, GetMoveName(gItemsInfo[itemId].secondaryId));
             PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-            ConvertIntToDecimalStringN(gStringVar1, itemId + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-            StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
-        }
-        else
-        {
-            end = StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId - ARRAY_COUNT(gTMItemIds)]));
-            PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-            ConvertIntToDecimalStringN(gStringVar1, itemId - ARRAY_COUNT(gTMItemIds) + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
-            StringExpandPlaceholders(dest, gText_NumberItem_HM);
+            if (isHM)
+            {
+                ConvertIntToDecimalStringN(gStringVar1, i + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+                StringExpandPlaceholders(dest, gText_NumberItem_HM);
+            }
+            else
+            {
+                ConvertIntToDecimalStringN(gStringVar1, i + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+                StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+            }
+
         }
         break;
     case BERRIES_POCKET:

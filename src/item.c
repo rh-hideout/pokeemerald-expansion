@@ -619,37 +619,30 @@ void CompactItemsInBagPocket(struct BagPocket *bagPocket)
     }
 }
 
-#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
-#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
-
-static const u16 gTMHMItemIds[] =
-{
-    RECURSIVELY(R_ZIP(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
-    RECURSIVELY(R_ZIP(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
-};
-
 void SortTMHMs(struct BagPocket *bagPocket)
 {
     u16 i, j;
+    u32 pocketCapacity = bagPocket->capacity;
+    u32 currItemSlots[pocketCapacity];
+    u32 sortedItem = 0;
 
-    for (i = 0; i < bagPocket->capacity - 1; i++)
+    for (i = 0; i < pocketCapacity - 1; i++)
+        currItemSlots[i] = bagPocket->itemSlots[i].itemId;
+
+    for (i = 0; i < pocketCapacity - 1; i++)
     {
-        u32 itemPresent = FALSE;
-        for (j = 0; j < bagPocket->capacity - 1; j++)
+        for (j = 0; j < pocketCapacity - 1; j++)
         {
-            if (gTMHMItemIds[i] == bagPocket->itemSlots[j].itemId
-             && GetBagItemQuantity(&bagPocket->itemSlots[i].quantity) != 0)
+            if (gItemsInfo[currItemSlots[j]].secondaryId == gTMHMMoves[i])
             {
-                itemPresent = TRUE;
+                bagPocket->itemSlots[sortedItem++].itemId = currItemSlots[j];
                 break;
             }
         }
-        if (itemPresent)
-        {
-            DebugPrintf("gTMHMItemIds[i] %d", gTMHMItemIds[i]);
-            bagPocket->itemSlots[i].itemId = gTMHMItemIds[i];
-        }
     }
+
+    for (; sortedItem < pocketCapacity - 1; sortedItem++)
+        bagPocket->itemSlots[sortedItem].itemId = currItemSlots[sortedItem];
 }
 
 void SortBerriesOrTMHMs(struct BagPocket *bagPocket)
