@@ -15150,7 +15150,7 @@ static void Cmd_trycopyability(void)
 
 static void Cmd_trywish(void)
 {
-    CMD_ARGS(u8 turnNumber, const u8 *failInstr);
+    CMD_ARGS(u8 turnNumber, const u8 *failInstr, const u8 *healBlockedInstr);
 
     switch (cmd->turnNumber)
     {
@@ -15174,7 +15174,9 @@ static void Cmd_trywish(void)
             gBattleStruct->moveDamage[gBattlerTarget] = max(1, GetNonDynamaxMaxHP(gBattlerAttacker) / 2);
 
         gBattleStruct->moveDamage[gBattlerTarget] *= -1;
-        if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
+	if (gStatuses3[gBattlerTarget] & STATUS3_HEAL_BLOCK)
+	    gBattlescriptCurrInstr = cmd->healBlockedInstr;
+	else if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
             gBattlescriptCurrInstr = cmd->failInstr;
         else
             gBattlescriptCurrInstr = cmd->nextInstr;
