@@ -32,4 +32,6 @@ void InitTilesetAnim_EliteFour(void);
 void InitTilesetAnim_BattleDome(void);
 void InitTilesetAnim_BattlePyramid(void);
 
+void InitTilesetAnim_TestCamp(void);
+
 #endif // GUARD_TILESET_ANIMS_H

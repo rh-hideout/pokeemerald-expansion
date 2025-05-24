@@ -834,5 +834,5 @@ const struct Tileset gTileset_TestCamp =
     .palettes = gTilesetPalettes_TestCamp,
     .metatiles = gMetatiles_TestCamp,
     .metatileAttributes = gMetatileAttributes_TestCamp,
-    .callback = NULL,
+    .callback = InitTilesetAnim_TestCamp,
 };

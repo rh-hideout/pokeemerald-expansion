@@ -53,10 +53,10 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_IMPASSABLE_NORTHWEST]               = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_SOUTHEAST]               = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_SOUTHWEST]               = TILE_FLAG_UNUSED,
-    [MB_JUMP_NORTHEAST]                     = TILE_FLAG_UNUSED,
-    [MB_JUMP_NORTHWEST]                     = TILE_FLAG_UNUSED,
+    [MB_JUMP_NORTSOUTH]                     = TILE_FLAG_UNUSED,
+    [MB_JUMP_ALL]                     = TILE_FLAG_UNUSED,
     [MB_JUMP_SOUTHEAST]                     = TILE_FLAG_UNUSED,
-    [MB_JUMP_SOUTHWEST]                     = TILE_FLAG_UNUSED,
+    [MB_JUMP_EASTWEST]                     = TILE_FLAG_UNUSED,
     [MB_WALK_EAST]                          = TILE_FLAG_UNUSED,
     [MB_WALK_WEST]                          = TILE_FLAG_UNUSED,
     [MB_WALK_NORTH]                         = TILE_FLAG_UNUSED,
@@ -150,34 +150,22 @@ bool8 MetatileBehavior_IsEncounterTile(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsJumpEast(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_EAST)
-        return TRUE;
-    else
-        return FALSE;
+    return metatileBehavior == MB_JUMP_EAST || metatileBehavior == MB_JUMP_EASTWEST || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsJumpWest(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_WEST)
-        return TRUE;
-    else
-        return FALSE;
+    return metatileBehavior == MB_JUMP_WEST || metatileBehavior == MB_JUMP_EASTWEST || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsJumpNorth(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_NORTH)
-        return TRUE;
-    else
-        return FALSE;
+    return metatileBehavior == MB_JUMP_NORTH || metatileBehavior == MB_JUMP_NORTSOUTH || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_SOUTH)
-        return TRUE;
-    else
-        return FALSE;
+    return metatileBehavior == MB_JUMP_SOUTH || metatileBehavior == MB_JUMP_NORTSOUTH || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)

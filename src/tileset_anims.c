@@ -43,6 +43,9 @@ static void TilesetAnim_MauvilleGym(u16);
 static void TilesetAnim_BikeShop(u16);
 static void TilesetAnim_BattlePyramid(u16);
 static void TilesetAnim_BattleDome(u16);
+static void TilesetAnim_TestCamp(u16);
+
+
 static void QueueAnimTiles_General_Flower(u16);
 static void QueueAnimTiles_General_Water(u16);
 static void QueueAnimTiles_General_SandWaterEdge(u16);
@@ -73,6 +76,8 @@ static void QueueAnimTiles_MauvilleGym_ElectricGates(u16);
 static void QueueAnimTiles_SootopolisGym_Waterfalls(u16);
 static void QueueAnimTiles_EliteFour_GroundLights(u16);
 static void QueueAnimTiles_EliteFour_WallLights(u16);
+
+static void QueueAnimTiles_TestCamp_Campfire(u16);
 
 const u16 gTilesetAnims_General_Flower_Frame1[] = INCBIN_U16("data/tilesets/primary/general/anim/flower/1.4bpp");
 const u16 gTilesetAnims_General_Flower_Frame0[] = INCBIN_U16("data/tilesets/primary/general/anim/flower/0.4bpp");
@@ -544,6 +549,15 @@ static const u16 *const sTilesetAnims_BattleDomeFloorLightPals[] = {
     gTilesetAnims_BattleDomePals0_3,
 };
 
+const u16 gTilesetAnims_TestCamp_Campfire_Frame0[] = INCBIN_U16("data/tilesets/primary/test_camp/anim/campfire/0.4bpp");
+const u16 gTilesetAnims_TestCamp_Campfire_Frame1[] = INCBIN_U16("data/tilesets/primary/test_camp/anim/campfire/1.4bpp");
+
+const u16 *const gTilesetAnims_TestCamp_Campfire[] = {
+    gTilesetAnims_TestCamp_Campfire_Frame0,
+    gTilesetAnims_TestCamp_Campfire_Frame1,
+};
+
+
 static void ResetTilesetAnimBuffer(void)
 {
     sTilesetDMA3TransferBufferSize = 0;
@@ -629,6 +643,13 @@ void InitTilesetAnim_Building(void)
     sPrimaryTilesetAnimCallback = TilesetAnim_Building;
 }
 
+void InitTilesetAnim_TestCamp(void)
+{
+    sPrimaryTilesetAnimCounter = 0;
+    sPrimaryTilesetAnimCounterMax = 256;
+    sPrimaryTilesetAnimCallback = TilesetAnim_TestCamp;
+}
+
 static void TilesetAnim_General(u16 timer)
 {
     if (timer % 16 == 0)
@@ -647,6 +668,12 @@ static void TilesetAnim_Building(u16 timer)
 {
     if (timer % 8 == 0)
         QueueAnimTiles_Building_TVTurnedOn(timer / 8);
+}
+
+static void TilesetAnim_TestCamp(u16 timer)
+{
+    if (timer % 8 == 0)
+        QueueAnimTiles_TestCamp_Campfire(timer / 8);
 }
 
 static void QueueAnimTiles_General_Flower(u16 timer)
@@ -670,7 +697,13 @@ static void QueueAnimTiles_General_SandWaterEdge(u16 timer)
 static void QueueAnimTiles_General_Waterfall(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_Waterfall);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(496)), 6 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x078)), 6 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_TestCamp_Campfire(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_TestCamp_Campfire);
+    AppendTilesetAnimToBuffer(gTilesetAnims_TestCamp_Campfire[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x0F0)), 6 * TILE_SIZE_4BPP);
 }
 
 void InitTilesetAnim_Petalburg(void)
