@@ -737,8 +737,15 @@
 #define STRINGID_BLASTBURNISCHARGING                  734
 #define STRINGID_HYDROCANNONISCHARGING                735
 #define STRINGID_PKMNALREADYHASFROSTBITE              736
+#define STRINGID_SNOWSTALKERHPDROP                    737
+#define STRINGID_SANDACTIVATEDABILITY                 738
+#define STRINGID_HARDHATIN                            739
+#define STRINGID_SANDBAGIN                            740
+#define STRINGID_HARDHATPOP                           741
+#define STRINGID_SANDBAGPOP                           742
+#define STRINGID_SUBBERRY                             743
 
-#define BATTLESTRINGS_COUNT                           737
+#define BATTLESTRINGS_COUNT                           744
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

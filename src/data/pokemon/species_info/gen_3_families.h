@@ -1417,9 +1417,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .baseHP        = 60,
         .baseAttack    = 70,
         .baseDefense   = 50,
-        .baseSpeed     = 80, //+15
+        .baseSpeed     = 75,    //+10
         .baseSpAttack  = P_UPDATED_STATS >= GEN_6 ? 100 : 90,
-        .baseSpDefense = 50,
+        .baseSpDefense = 60,    //+10
         .types = MON_TYPES(TYPE_BUG, TYPE_FAIRY),
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
@@ -1566,9 +1566,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 
     [SPECIES_DUSTOX] =
     {
-        .baseHP        = 70,    //+10
+        .baseHP        = 60,    
         .baseAttack    = 60,    //+10
-        .baseDefense   = 100,   //+30
+        .baseDefense   = 90,    //+20
         .baseSpeed     = 55,    //-10
         .baseSpAttack  = 60,    //+10
         .baseSpDefense = 100,   //+10

@@ -1637,10 +1637,52 @@
 #define SPECIES_URSHIFU_RAPID_STRIKE_STYLE_GMAX         SPECIES_URSHIFU_RAPID_STRIKE_GMAX
 #define SPECIES_MIMIKYU_BUSTED_TOTEM                    1523
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    SPECIES_MIMIKYU_BUSTED_TOTEM
+//Custom
 #define SPECIES_EMPOLEON_MEGA_X                         1524
 #define SPECIES_EMPOLEON_MEGA_Y                         1525
-
-#define SPECIES_EGG                                     (SPECIES_EMPOLEON_MEGA_Y + 1)
+#define SPECIES_VENUSAUR_MEGA_Y                         1526
+#define SPECIES_BLASTOISE_MEGA_Y                        1527
+#define SPECIES_BUTTERFREE_MEGA                         1528
+#define SPECIES_MACHAMP_MEGA                            1529
+#define SPECIES_GENGAR_MEGA_Y                           1530
+#define SPECIES_KINGLER_MEGA                            1531
+#define SPECIES_LAPRAS_MEGA                             1532
+#define SPECIES_EEVEE_MEGA                              1533
+#define SPECIES_SNORLAX_MEGA                            1534
+#define SPECIES_GARBODOR_MEGA                           1535
+#define SPECIES_MELMETAL_MEGA                           1536
+#define SPECIES_RILLABOOM_MEGA_X                        1537
+#define SPECIES_RILLABOOM_MEGA_Y                        1538
+#define SPECIES_CINDERACE_MEGA                          1539
+#define SPECIES_INTELEON_MEGA                           1540
+#define SPECIES_CORVIKNIGHT_MEGA                        1541
+#define SPECIES_ORBEETLE_MEGA                           1542
+#define SPECIES_DREDNAW_MEGA                            1543
+#define SPECIES_COALOSSAL_MEGA                          1544
+#define SPECIES_SANDACONDA_MEGA                         1545
+#define SPECIES_TOXTRICITY_MEGA                         1546
+#define SPECIES_CENTISKORCH_MEGA                        1547
+#define SPECIES_HATTERENE_MEGA                          1548
+#define SPECIES_GRIMMSNARL_MEGA                         1549
+#define SPECIES_ALCREMIE_MEGA                           1550
+#define SPECIES_COPPERAJAH_MEGA                         1551
+#define SPECIES_DURALUDON_MEGA                          1552
+#define SPECIES_URSHIFU_SINGLE_STRIKE_MEGA              1553
+#define SPECIES_URSHIFU_RAPID_STRIKE_MEGA               1554
+#define SPECIES_DUSKNOIR_MEGA                           1555
+#define SPECIES_INFERNAPE_MEGA                          1556
+#define SPECIES_LUXRAY_MEGA                             1557
+#define SPECIES_ROSERADE_MEGA                           1558
+#define SPECIES_SLAKING_MEGA                            1559
+#define SPECIES_TORTERRA_MEGA                           1560
+#define SPECIES_SAMUROTT_H_MEGA                         1561
+#define SPECIES_SKELEDIRGE_MEGA                         1562
+#define SPECIES_MILOTIC_MEGA                            1563
+#define SPECIES_RAICHU_MEGA                             1564
+#define SPECIES_TROPIUS_MEGA                            1565
+#define SPECIES_LUGIA_PRIMAL                            1566
+#define SPECIES_HO_OH_PRIMAL                            1567
+#define SPECIES_EGG                                     (SPECIES_HO_OH_PRIMAL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

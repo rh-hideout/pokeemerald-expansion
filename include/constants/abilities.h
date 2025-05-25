@@ -348,7 +348,7 @@
 #define ABILITY_NOXIOUS_ARMOR 316   //take less damage if enemy is poisoned
 #define ABILITY_DROWSY_AURA 317     //sleep on hit
 #define ABILITY_BULLY 318           //chance to reduce def on hit
-#define ABILITY_PLACEHOLDER 319     //deleted serene strike
+#define ABILITY_DESERT_ARMOR 319    //reduced inc damage in sand                                                NTM
 #define ABILITY_PRIDE 320           //SpA guts
 #define ABILITY_ABSOLUTE_ZERO 321   //reduced inc damage in snow
 #define ABILITY_BOUNTIFUL_BLOOM 322 //boost grass/ground moves in rain
@@ -370,33 +370,43 @@
 #define ABILITY_MAGICAL_SURGE 336   //sets magic room on entry                                                  TEST
 #define ABILITY_WONDER_SURGE 337    //sets wonder room on entry                                                 TEST
 #define ABILITY_RESOLVE 338         //sets mist on entry                                                        TEST
-#define ABILITY_THICK_STEAM 339     //sets mist on hit              HAVENT TRIED YET
-#define ABILITY_LUCKY_SPIRIT 340    //sets lucky chant on entry                                                 TEST
-#define ABILITY_BOOMBOX 341         //sets uproar on entry          UNSURE HOW TO MAKE
-#define ABILITY_FILTHY_FORM 342     //sets mud sport on entry                                                   TEST
-#define ABILITY_ENDLESS_HUNGER 343  //as long as holdng a berry recover hp per turn UNSURE HOW TO MAKE
-#define ABILITY_DRAGONATE 344       //pixelate for dragons                                                      DONE
-#define ABILITY_VENGEFUL 345        //chance to ghost curse when hit with a contact move
-#define ABILITY_FRIGHTEN 346       //special intimidate                
-#define ABILITY_KICKBOXER 347
-#define ABILITY_SPINNER 348
-#define ABILITY_ROYAL_COAT 349      //shield dust reformated                NTM
+#define ABILITY_LUCKY_SPIRIT 339    //sets lucky chant on entry                                                 TEST
+//make #define ABILITY_BOOMBOX 340         //sets uproar on entry          UNSURE HOW TO MAKE
+#define ABILITY_FILTHY_FORM 341     //sets mud sport on entry                                                   TEST
+//make #define ABILITY_ENDLESS_HUNGER 342  //as long as holdng a berry recover hp per turn UNSURE HOW TO MAKE
+#define ABILITY_DRAGONATE 343       //pixelate for dragons                                                      DONE
+#define ABILITY_VENGEFUL 344        //chance to ghost curse when hit with a contact move
+#define ABILITY_FRIGHTEN 345       //special intimidate                
+#define ABILITY_KICKBOXER 346
+#define ABILITY_SPINNER 347
 
-//Stage 3
-#define ABILITY_NORMALIZE_AURA 350  //neutralizing gas for delcatty NTM
-#define ABILITY_TRUE_POWER 351
-#define ABILITY_PRECISE_TACTICS 352 //look into battle util and battle script command lines
-#define ABILITY_HYPER_FOCUS 353
-// #define ABILITY_FIRE_DRIFT 354 //prio to fire attacks like gale wings
-// #define ABILITY_PERCEPTIVE 355 //immune to hazards
-// #define ABILITY_COZY_DREAMS 356 //heal at end of each turn
-// #define ABILITY_SOUL_DRAIN 357 //drain all non ghost/dark types
-// #define ABILITY_                 //supersweet syrup for poison and ground types "messy"
-// #define ABILITY_                 
-// #define ABILITY_
+//Stage 3 dont forget to check all descriptor defines
+#define ABILITY_TRUE_POWER 348      //double special attack
+#define ABILITY_PRECISE_TACTICS 349 //look into battle util and battle script command lines
+#define ABILITY_FIRE_DRIFT 350   //prio to fire attacks like gale wings
+// #define ABILITY_PERCEPTIVE 351   //immune to hazards
+// #define ABILITY_COZY_DREAMS 352  //heal at end of each turn
+// #define ABILITY_SOUL_DRAIN 353   //drain all non ghost/dark types
+#define ABILITY_DIRT_DEVIL 354   //supersweet syrup for poison and ground types "messy"
+#define ABILITY_SPIKY_ARMOR 355  //toxic debris but spikes                 
+#define ABILITY_SKEPTIC 356         //thick fat versus ghost and dark types
+// #define ABILITY_WEB_SWING 357    //when switching out deploy sticky webs
+#define ABILITY_CLUTCH_UP 358    //when reduced by half omni boost but cannot retreat
+#define ABILITY_HELLFIRE 359     //iron barbs
+#define ABILITY_LAST_LINE 360    //beserk but defenses
+// #define ABILITY_DUST_FORM 361    //uses powder on hit
+// #define ABILITY_FAIRY_DUST 362   //uses magic powder on hit
+#define ABILITY_SAND_SONG 363    //liquid voice for ground moves
+#define ABILITY_INFLATE 364      //raise defenses when hit by a wind move
+#define ABILITY_ANCIENT_IDOL 365 //raise special defense like defiant
+#define ABILITY_CHILL_SONG 366   //liquid voice but ice
+#define ABILITY_CYRO_SPIRIT 367  //Steely spirit but ice
+#define ABILITY_TRAINED_MIND 368 //scrappy but psychic v dark
+#define ABILITY_SNOW_STALKER 369  //solar power for snow
+#define ABILITY_SANDY_SOUL 370   //protosynthesis with sand
 //remember to build the description doc for 328+
 
-#define ABILITIES_COUNT_GEN9 354
+#define ABILITIES_COUNT_GEN9 371
 
 #define ABILITIES_COUNT ABILITIES_COUNT_GEN9
 

@@ -2649,13 +2649,6 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Spin moves go first."),
         .aiRating = 6,
     },
-    [ABILITY_ROYAL_COAT] =
-    {
-        .name = _("Royal Coat"),
-        .description = COMPOUND_STRING("Prevents added effects."),
-        .aiRating = 5,
-        .breakable = TRUE,
-    },
     [ABILITY_TRUE_POWER] =
     {
         .name = _("True Power"),
@@ -2668,5 +2661,97 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Ups Sp.Attack and locks move."),
         .aiRating = 4,
     },
+    [ABILITY_FIRE_DRIFT] =
+    {
+        .name = _("Fire Drift"),
+        .description = COMPOUND_STRING("Fire moves go first."),
+        .aiRating = 6,
+    },
+    [ABILITY_DIRT_DEVIL] =
+    {
+        .name = _("Dirt Devil"),
+        .description = COMPOUND_STRING("Lowers the foe's Evasion."),
+        .aiRating = 5,
+    },
+    [ABILITY_SPIKY_ARMOR] =
+    {
+        .name = _("Spiky Armor"),
+        .description = COMPOUND_STRING("Throws spikes if hit."),
+        .aiRating = 4,
+    },
+    [ABILITY_SKEPTIC] =
+    {
+        .name = _("Skeptic"),
+        .description = COMPOUND_STRING("Protection versus ghosts and dark."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+    [ABILITY_HELLFIRE] =
+    {
+        .name = _("Hellfire"),
+        .description = COMPOUND_STRING("Hurts to touch."),
+        .aiRating = 6,
+    },
+    [ABILITY_LAST_LINE] =
+    {
+        .name = _("Last Line"),
+        .description = COMPOUND_STRING("Boosts both defenses at low HP."),
+        .aiRating = 5,
+    },
+    [ABILITY_SAND_SONG] =
+    {
+        .name = _("Sand Song"),
+        .description = COMPOUND_STRING("Makes sound moves Ground."),
+        .aiRating = 5,
+    },
+    [ABILITY_INFLATE] =
+    {
+        .name = _("Inflate"),
+        .description = COMPOUND_STRING("Ups Def if hit by wind or in tailwind."),
+        .aiRating = 4,
+        .breakable = TRUE,
+    },
+    [ABILITY_ANCIENT_IDOL] =
+    {
+        .name = _("Ancient Idol"),
+        .description = COMPOUND_STRING("Lowered stats up Sp.Def."),
+        .aiRating = 5,
+    },
+    [ABILITY_CHILL_SONG] =
+    {
+        .name = _("Chill Song"),
+        .description = COMPOUND_STRING("Makes sound moves Ice."),
+        .aiRating = 5,
+    },
+    [ABILITY_CYRO_SPIRIT] =
+    {
+        .name = _("Cyro Spirit"),
+        .description = COMPOUND_STRING("Boosts ally's Ice moves."),
+        .aiRating = 2,
+    },
+    [ABILITY_TRAINED_MIND] =
+    {
+        .name = _("Trained Mind"),
+        .description = COMPOUND_STRING("Hits Dark-type Pokémon."),
+        .aiRating = 6,
+    },
+    [ABILITY_SNOW_STALKER] =
+    {
+        .name = _("Snow Stalker"),
+        .description = COMPOUND_STRING("Powers up in snow."),
+        .aiRating = 3,
+    },
+    [ABILITY_SANDY_SOUL] =
+    {
+        .name = _("Sandy Soul"),
+        .description = COMPOUND_STRING("Sand boosts best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+
+
 
 };

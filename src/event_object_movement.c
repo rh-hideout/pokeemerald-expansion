@@ -537,6 +537,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     // Gen VIII
     #ifdef ITEM_STRANGE_BALL
     {gObjectEventPal_StrangeBall,           OBJ_EVENT_PAL_TAG_BALL_STRANGE},
+    {gObjectEventPal_CyroBall,             OBJ_EVENT_PAL_TAG_BALL_PREMIER},
     #endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_Substitute,            OBJ_EVENT_PAL_TAG_SUBSTITUTE},

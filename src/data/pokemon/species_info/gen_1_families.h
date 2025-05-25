@@ -268,6 +268,62 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formSpeciesIdTable = sVenusaurFormSpeciesIdTable,
         .formChangeTable = sVenusaurFormChangeTable,
     },
+
+    [SPECIES_VENUSAUR_MEGA_Y] =
+    {
+        .baseHP        = 80,
+        .baseAttack    = 90,    //-10
+        .baseDefense   = 103,   //-20
+        .baseSpeed     = 60,    //-20
+        .baseSpAttack  = 147,   //+25
+        .baseSpDefense = 145,   //+25
+        .types = MON_TYPES(TYPE_GRASS, TYPE_POISON),
+        .catchRate = 45,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 313 : 281,
+        .evYield_SpAttack = 2,
+        .evYield_SpDefense = 1,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
+        .abilities = { ABILITY_PRECISE_TACTICS, ABILITY_PRECISE_TACTICS, ABILITY_PRECISE_TACTICS },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Venusaur"),
+        .cryId = CRY_VENUSAUR_MEGA,
+        .natDexNum = NATIONAL_DEX_VENUSAUR,
+        .categoryName = _("Seed"),
+        .height = 24,
+        .weight = 1555,
+        .description = COMPOUND_STRING(
+            "In order to support its flower, which\n"
+            "has grown larger due to Mega Evolution,\n"
+            "its back and legs have become stronger."),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 388,
+        .trainerOffset = 6,
+        .frontPic = gMonFrontPic_VenusaurGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 3,
+        .frontAnimFrames = sAnims_VenusaurGmax,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_VenusaurGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 8,
+        .backAnimId = BACK_ANIM_SHAKE_GLOW_GREEN,
+        .palette = gMonPalette_VenusaurGmax,
+        .shinyPalette = gMonShinyPalette_VenusaurGmax,
+        .iconSprite = gMonIcon_VenusaurGmax,
+        .iconPalIndex = 4,
+        SHADOW(2, 6, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Venusaur)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sVenusaurLevelUpLearnset,
+        .teachableLearnset = sVenusaurTeachableLearnset,
+        .formSpeciesIdTable = sVenusaurFormSpeciesIdTable,
+        .formChangeTable = sVenusaurFormChangeTable,
+    },
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -900,10 +956,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     {
         .baseHP        = 79,
         .baseAttack    = 103,
-        .baseDefense   = 120,
+        .baseDefense   = 125,   //+5
         .baseSpeed     = 78,
         .baseSpAttack  = 135,
-        .baseSpDefense = 115,
+        .baseSpDefense = 120,   //+5
         .types = MON_TYPES(TYPE_WATER),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 315 : 284,
@@ -942,6 +998,62 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .palette = gMonPalette_BlastoiseMega,
         .shinyPalette = gMonShinyPalette_BlastoiseMega,
         .iconSprite = gMonIcon_BlastoiseMega,
+        .iconPalIndex = 2,
+        SHADOW(4, 11, SHADOW_SIZE_L)
+        FOOTPRINT(Blastoise)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sBlastoiseLevelUpLearnset,
+        .teachableLearnset = sBlastoiseTeachableLearnset,
+        .formSpeciesIdTable = sBlastoiseFormSpeciesIdTable,
+        .formChangeTable = sBlastoiseFormChangeTable,
+    },
+
+    [SPECIES_BLASTOISE_MEGA_Y] =
+    {
+        .baseHP        = 79,
+        .baseAttack    = 113,   //+10
+        .baseDefense   = 150,   //+30
+        .baseSpeed     = 48,    //-30
+        .baseSpAttack  = 135,
+        .baseSpDefense = 105,   
+        .types = MON_TYPES(TYPE_WATER, TYPE_STEEL),
+        .catchRate = 45,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 315 : 284,
+        .evYield_SpDefense = 3,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
+        .abilities = { ABILITY_BESERK, ABILITY_BESERK, ABILITY_BESERK },
+        .bodyColor = BODY_COLOR_BLUE,
+        .speciesName = _("Blastoise"),
+        .cryId = CRY_BLASTOISE_MEGA,
+        .natDexNum = NATIONAL_DEX_BLASTOISE,
+        .categoryName = _("Shellfish"),
+        .height = 16,
+        .weight = 1011,
+        .description = COMPOUND_STRING(
+            "The cannons on its back are as powerful\n"
+            "as turrets. Its tough legs and back\n"
+            "enable it to withstand the recoil from\n"
+            "the barrage it fires."),
+        .pokemonScale = 256,
+        .pokemonOffset = -1,
+        .trainerScale = 293,
+        .trainerOffset = 2,
+        .frontPic = gMonFrontPic_BlastoiseGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_BlastoiseGmax,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_BlastoiseGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_SHAKE_GLOW_BLUE,
+        .palette = gMonPalette_BlastoiseGmax,
+        .shinyPalette = gMonShinyPalette_BlastoiseGmax,
+        .iconSprite = gMonIcon_BlastoiseGmax,
         .iconPalIndex = 2,
         SHADOW(4, 11, SHADOW_SIZE_L)
         FOOTPRINT(Blastoise)
