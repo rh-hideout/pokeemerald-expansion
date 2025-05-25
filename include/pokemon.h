@@ -2,6 +2,7 @@
 #define GUARD_POKEMON_H
 
 #include "sprite.h"
+#include "constants/battle.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/regions.h"
@@ -308,6 +309,42 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
+#define BATTLER_HAS_VOLATILE(battler, volatile) gBattleMons[battler].volatileStatuses.volatile
+#define OR_BATTLER_HAS_VOLATILE(battler, volatile) || BATTLER_HAS_VOLATILE(battler, volatile)
+#define BATTLER_HAS_VOLATILES(battler, volatile1, ...) (BATTLER_HAS_VOLATILE(battler, volatile1) __VA_OPT__(RECURSIVELY(R_FOR_EACH_WITH(OR_BATTLER_HAS_VOLATILE, (battler), __VA_ARGS__))))
+
+#define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_ANY(enum, fieldName, ...) DEFAULT(fieldName, __VA_OPT__(fieldName:FIRST(__VA_ARGS__)));
+#define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_U32(...) u32 UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_ANY(__VA_ARGS__)
+#define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER(memberArr) UNPACK_VOLATILE_STATUS_STRUCT_MEMBER##memberArr
+#define UNPACK_VOLATILE_STATUS_STRUCT(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_STRUCT_MEMBER, __VA_ARGS__))
+
+struct VolatileStatuses
+{
+    UNPACK_VOLATILE_STATUS_STRUCT(VOLATILE_STATUS_DEFINITONS)
+    // u32 confusionTurns:3;
+    // u32 flinched:1;
+    // u32 uproarTurns:3;
+    // u32 torment:1;
+    // u32 bideTurns:2;
+    // u32 lockConfusionTurns:2;
+    // u32 multipleTurns:1;
+    // u32 wrapped:1;
+    // u32 powder:1;
+    // u32 infatuation:4; // one bit for each battler
+    // u32 defenseCurl:1;
+    // u32 transformed:1;
+    // u32 recharge:1;
+    // u32 rage:1;
+    // u32 substitute:1;
+    // u32 destinyBond:1;
+    // u32 escapePrevention:1;
+    // u32 nightmare:1;
+    // u32 cursed:1;
+    // u32 foresight:1;
+    // u32 dragonCheer:1;
+    // u32 focusEnergy:1;
+};
+
 struct BattlePokemon
 {
     /*0x00*/ u16 species;
@@ -339,10 +376,15 @@ struct BattlePokemon
     /*0x45*/ u32 experience;
     /*0x49*/ u32 personality;
     /*0x4D*/ u32 status1;
-    /*0x51*/ u32 status2;
-    /*0x55*/ u32 otId;
-    /*0x59*/ u8 metLevel;
-    /*0x5A*/ bool8 isShiny;
+    /*0x51*/ union {
+        struct {
+            u32 status2; // To be expanded to include Status3/4
+        };
+        struct VolatileStatuses volatileStatuses;
+    };
+    /*0x5D*/ u32 otId;
+    /*0x61*/ u8 metLevel;
+    /*0x62*/ bool8 isShiny;
 };
 
 struct EvolutionParam
