@@ -11313,3 +11313,18 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
     }
     return FALSE;
 }
+
+#define UNPACK_VOLATILE_STATUS_GETTER_U32(enum, fieldName, ...) case enum: return gBattleMons[battler].volatileStatuses.fieldName;
+#define UNPACK_VOLATILE_STATUS_GETTER(caseArr) UNPACK_VOLATILE_STATUS_GETTER##caseArr
+#define UNPACK_VOLATILE_STATUS_GETTERS(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_GETTER, __VA_ARGS__))
+
+// Gets the value of a volatile status flag for a certain battler
+u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus)
+{
+    switch (volatileStatus)
+    {
+        UNPACK_VOLATILE_STATUS_GETTERS(VOLATILE_STATUS_DEFINITONS)
+        default: // invalid volatile status
+            return 0;
+    }
+}

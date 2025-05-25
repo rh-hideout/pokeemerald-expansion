@@ -385,5 +385,6 @@ bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
+u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -150,6 +150,7 @@ enum BattlerId
     _U32(VOLATILE_STATUS_MULTIPLETURNS, multipleTurns, 1), \
     _U32(VOLATILE_STATUS_WRAPPED, wrapped, 1), \
     _U32(VOLATILE_STATUS_POWDER, powder, 1), \
+    _U32(VOLATILE_STATUS_UNUSED, padding, 1), \
     _U32(VOLATILE_STATUS_INFATUATION, infatuation, 4), \
     _U32(VOLATILE_STATUS_DEFENSE_CURL, defenseCurl, 1), \
     _U32(VOLATILE_STATUS_TRANSFORMED, transformed, 1), \
@@ -175,6 +176,7 @@ enum VolatileStatus
     VOLATILE_STATUS_MULTIPLETURNS,
     VOLATILE_STATUS_WRAPPED,
     VOLATILE_STATUS_POWDER,
+    VOLATILE_STATUS_UNUSED,
     VOLATILE_STATUS_INFATUATION,
     VOLATILE_STATUS_DEFENSE_CURL,
     VOLATILE_STATUS_TRANSFORMED,
@@ -204,6 +206,7 @@ enum VolatileStatus
 #define STATUS2_MULTIPLETURNS         (1 << 12)
 #define STATUS2_WRAPPED               (1 << 13)
 #define STATUS2_POWDER                (1 << 14)
+//#define STATUS2_UNUSED                (1 << 15)
 #define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
 #define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
 #define STATUS2_DEFENSE_CURL          (1 << 20)

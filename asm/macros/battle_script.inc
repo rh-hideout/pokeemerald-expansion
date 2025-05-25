@@ -155,10 +155,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifstatus2 battler:req, flags:req, jumpInstr:req
+	.macro jumpifvolatilestatus battler:req, volatileStatus:req, jumpInstr:req
 	.byte 0x1d
 	.byte \battler
-	.4byte \flags
+	.byte \volatileStatus
 	.4byte \jumpInstr
 	.endm
 

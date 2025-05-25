@@ -330,6 +330,7 @@ struct VolatileStatuses
     // u32 multipleTurns:1;
     // u32 wrapped:1;
     // u32 powder:1;
+    // u32 padding:1;
     // u32 infatuation:4; // one bit for each battler
     // u32 defenseCurl:1;
     // u32 transformed:1;
