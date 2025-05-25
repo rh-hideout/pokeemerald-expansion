@@ -385,7 +385,7 @@ struct StatsArray
 {
     u16 stats[NUM_STATS];
     u16 level:15;
-    u16 learMultiplyMoves:1;
+    u16 learnMultipleMoves:1;
 };
 
 struct BattleResources
