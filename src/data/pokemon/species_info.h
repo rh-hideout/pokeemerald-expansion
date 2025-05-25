@@ -207,6 +207,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .pokemonOffset = 16,
        .trainerScale = 256,
        .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Maplage,
        .frontPicSize = MON_COORDS_SIZE(64, 64),
        .frontPicYOffset = 4,
        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
@@ -310,9 +311,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 16,
        .weight = 600,
        .description = COMPOUND_STRING(
-           "Ginocchio are often seen wandering alone \n"
-           "and aimless like a hermit, appearing to \n"
-           "be lost.Its wooden skin allows it to easily\n"
+           "Ginocchio are often seen wandering alone\n"
+           "and aimless like a hermit, appearing to be\n"
+           "lost. Its wooden skin allows it to easily\n"
            "lurk within trees."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
@@ -365,10 +366,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 5,
        .weight = 107,
        .description = COMPOUND_STRING(
-           "Known for having a hard life, they protect\n"
-           "their flame by training everyday, lifting\n"
-           "their heavy tail that  weaker Pokémon would\n"
-           "drop to escape danger."),
+           "Known for having a hard life, Magmata\n"
+           "train every day to protect their flame.\n"
+           "They use their tail to defend weaker\n"
+           "Pokémon in the ashen areas they live in."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -422,9 +423,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 1567,
        .description = COMPOUND_STRING(
            "A life of battle leads Delava to smelt\n"
-           "metal and improve its body.  It’s often\n"
-           "used by other Pokémon for its unbreakable\n"
-           "spirit."),
+           "metal and improve its body. Other\n"
+           "Pokémon will often hide behind it\n"
+           "and its unbreakable spirit."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -477,10 +478,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 23,
        .weight = 6660,
        .description = COMPOUND_STRING(
-           "The marks on Salezerker cause some to fear\n"
-           "it as an omen of destruction, but its scary\n"
-           "appearance conceals a kind soul within.\n"
-           "It uses its tail to protect those around it."),
+           "A brutal-looking Pokémon, many fear the\n"
+           "marks on Salezerker, but behind its armor\n"
+           "is a kind soul. Its tail cannot be lifted and\n"
+           "it uses this fact to guard those around it."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -532,10 +533,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 6,
        .weight = 57,
        .description = COMPOUND_STRING(
-           "It can dissolve into water and move  around\n"
-           "however it pleases as it searches for shiny\n"
-           "rocks. It is recommended not to call it a\n"
-           "“big drip”."),
+           "It can dissolve seamlessly into water and\n"
+           "move around however it pleases to seek\n"
+           "out shiny rocks. It will squeak loudly at\n"
+           "anyone who calls it a “big drip”."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -588,10 +589,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 9,
        .weight = 560,
        .description = COMPOUND_STRING(
-           "Aquaos slowly stalk anything that gets \n"
-           "too close to its pond, and strike when their.\n"
-           "prey is exhausted. It likes to lay its eggs.\n"
-           "on Meower."),
+           "Aquaos slowly stalk anything that gets\n"
+           "too close to its pond and will strike\n"
+           "once their prey is exhausted. Its eyes\n"
+           "can be seen glowing in the water."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -644,9 +645,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 15,
        .weight = 3120,
        .description = COMPOUND_STRING(
-           "Many folk tales speak of how this Pokémon \n"
-           "will flood villages in its rage and sadness.\n"
-           "However, with love, it can open its heart.\n"),
+           "Many folktales speak of how this Pokémon\n"
+           "will flood villages out of rage and sadness,\n"
+           "though just as many tell stories of how\n"
+           "love may let it open its heart. "),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -975,10 +977,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 21,
        .weight = 1718,
        .description = COMPOUND_STRING(
-           "Whipsicuffs are quite docile unless\n"
-           "provoked. They can launch their massive\n"
-           "arms with a distinct cracking sound\n"
-           "from the speed."),
+           "Whipsicuffs are quite docile species\n"
+           "unless provoked. They throws punches\n"
+           "so fast they make a distinct cracking\n"
+           "sound the species is named after."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1031,10 +1033,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 3,
        .weight = 29,
        .description = COMPOUND_STRING(
-           "Barely aware of their own thoughts, let\n"
-           "alone their surroundings, Afloof are\n"
-           "unable to defend themselves despite\n"
-           "strong claws."),
+           "Barely aware of their own thoughts,\n"
+           "let alone their surroundings, Afloof\n"
+           "are unable to defend themselves\n"
+           "despite their strong claws."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1198,13 +1200,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .speciesName = _("Hamstatic"),
       .cryId = CRY_HAMSTATIC,
        .natDexNum = NATIONAL_DEX_HAMSTATIC,
-       .categoryName = _("Rockstar"),
+       .categoryName = _("Upstart"),
        .height = 7,
        .weight = 160,
        .description = COMPOUND_STRING(
-           "Ampstar are Hamstatic that achieve the\n"
-           "rock legend dream. They can be found\n"
-           "crowd surfing at their more wild gigs.\n"),
+           "Hamstatic dream of becoming musical\n"
+           "legends. They can be found in forests\n"
+           "practicing their songs, though few can\n"
+           "break out of their amateur status."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1254,14 +1257,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .speciesName = _("Ampstar"),
       .cryId = CRY_AMPSTAR,
        .natDexNum = NATIONAL_DEX_AMPSTAR,
-       .categoryName = _("Upstart"),
+       .categoryName = _("Rockstar"),
        .height = 3,
        .weight = 35,
        .description = COMPOUND_STRING(
-           "Hamstatic dream of becoming rock legends.\n"
-           "They can be found practicing sets in parks.\n"
-           "The ones that don't turn to Pokeblock \n"
-           "addictions find success in their career."),
+           "Ampstar are Hamstatic that achieve\n"
+           "the rock legend dream. Having made\n"
+           "it in life, they can be found crowd\n"
+           "surfing at their wilder gigs."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1424,14 +1427,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .speciesName = _("Kiwi"),
        .cryId = CRY_KIWI,
        .natDexNum = NATIONAL_DEX_KIWI,
-       .categoryName = _("False Fruit"),
+       .categoryName = _("Fruit Bird"),
        .height = 2,
        .weight = 44,
        .description = COMPOUND_STRING(
-           "Kiwi are very passive in nature, using\n"
-           "their giant eye to spot predators. It\n"
-           "is said to be quite delicious when served\n"  
-           "at meetings."),
+           "A somewhat weak Pokémon, Kiwi are\n"
+           "known for their bizarre asymmetry.\n"
+           "They hop about awkwardly and are\n"  
+           "predated on very easily."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -1482,14 +1485,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .speciesName = _("Iwik"),
        .cryId = CRY_KIWI,
        .natDexNum = NATIONAL_DEX_IWIK,
-       .categoryName = _("False Fruit"),
+       .categoryName = _("Bird Fruit"),
        .height = 2,
        .weight = 44,
        .description = COMPOUND_STRING(
-           "Kiwi are extremely agressive in nature,\n"
-           "using their giant eye to spot prey. It\n"
-           "is said to be horrible in taste when eaten,\n"  
-           "unless it is reverted into a Kiwi."),
+           "A somewhat weak Pokémon, Iwik are\n"
+           "known for their bizarre asymmetry.\n"
+           "They hop about awkwardly but\n"  
+           "bully any Pokémon in their way."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -2053,8 +2056,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .description = COMPOUND_STRING(
            "Wandering desert nomads can always make\n"
            "out the distinct sound of wind whistling\n"
-           "around the sand having blown holes clean\n"
-           "Erochre, through its stone."),
+           "around Erochre, the sand having blown\n"
+           "holes clean through its stone."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -2156,17 +2159,17 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .bodyColor = BODY_COLOR_BROWN,
        .isLegendary = FALSE,
        .perfectIVCount = FALSE,
-      .speciesName = _("Walkalack"),
+      .speciesName = _("Tritanic"),
       .cryId = CRY_WALKALACK,
        .natDexNum = NATIONAL_DEX_WALKALACK,
-       .categoryName = _("Marked Rock"),
+       .categoryName = _("Leaper"),
        .height = 33,
        .weight = 7003,
        .description = COMPOUND_STRING(
-           "It's Unknown if their rocks are really part\n"
-           "of its bodies,but they generally match the\n"
-           "colors of whatever cave they live in. They\n"
-           "can reach incredible speeds to catch prey."),
+           "Using their strong legs they will pounce\n"
+           "onto anything they find interesting and\n"
+           "will try to crush it beneath their\n"
+           "stone-like exoskeleton. "),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -2996,10 +2999,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
    .height = 18,
    .weight = 1845,
    .description = COMPOUND_STRING(
-       "Permaceros live in the ground, having\n"
-       "hunted down its tar filled natural prey to \n"
-       "extinction, it now swims in the ground\n"
-       "hunting for weaknend Mogumole."),
+       "Having been exposed to the elements,\n"
+       "Permaceros grow two frozen horns on\n"
+       "its body which let it drill easily through\n"
+       "the cold mud or earth it lives in."),
    .pokemonScale = 356,
    .pokemonOffset = 16,
    .trainerScale = 256,
@@ -9319,10 +9322,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 3,
        .weight = 253,
        .description = COMPOUND_STRING(
-           "Fossil records have revealed a common\n"
-           "ancestor between Lober and Jarumite.\n"
-           "Lober are a common source of food in\n"
-           "the region."),
+           "A common source of seafood in the\n"
+           "region, they travel jovially in large\n"
+           "groups that are easily harvested\n"
+           "by local fishermen."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -9370,13 +9373,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
       .speciesName = _("Clobber"),
        .cryId = CRY_CLOBBER,
        .natDexNum = NATIONAL_DEX_CLOBBER,
-       .categoryName = _("Jet Crash"),
+       .categoryName = _("Clawdad"),
        .height = 78,
        .weight = 6783,
        .description = COMPOUND_STRING(
-           "Clobber use their big meaty claws to tear\n"
-           "into the hulls of ships to free their kin.\n"
-           "It is said to not feel pain under boiling.\n"),
+           "Clobber use all four of their big, meaty\n"
+           "claws to tear into the hulls of ships\n"
+           "so they may free their kin. It is said\n"
+           "they do not feel pain when boiled. "),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -9760,10 +9764,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 33,
        .weight = 1000,
        .description = COMPOUND_STRING(
-           "Amalgum use their gelatinous body to\n"
-           "rapidly change colors, forcing Saccestoda\n"
-           "and Glucurs to approach it before absorbing\n"
-           "their bodies completely."),
+           "Amalgum use their bright, gelatinous body\n"
+           "to rapidly change colors, hypnotizing their\n"
+           "prey in Saccestoda and Glucurs, before\n"
+           "absorbing their bodies completely."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -9894,7 +9898,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconSprite = gMonIcon_Jahl,
        .iconPalIndex = 1,
        FOOTPRINT(Jahl)
-       .levelUpLearnset = sMaplageLevelUpLearnset,
+       .levelUpLearnset = sJahlLevelUpLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 33, SPECIES_FUSJAHL}),
     },
 
