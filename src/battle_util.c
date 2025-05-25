@@ -11323,6 +11323,10 @@ u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus)
 {
     switch (volatileStatus)
     {
+        /* Expands to:
+        case VOLATILE_STATUS_CONFUSION:
+            return gBattleMons[battler].volatileStatuses.confusionTurns;
+        */
         UNPACK_VOLATILE_STATUS_GETTERS(VOLATILE_STATUS_DEFINITIONS)
         default: // invalid volatile status
             return 0;
@@ -11338,6 +11342,11 @@ void SetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus, u32 n
 {
     switch (volatileStatus)
     {
+        /* Expands to (includes sanitation):
+        case VOLATILE_STATUS_CONFUSION:
+            gBattleMons[battler].volatileStatuses.confusionTurns = min((1 << 3) - 1, newValue);
+            break;
+        */
         UNPACK_VOLATILE_STATUS_SETTERS(VOLATILE_STATUS_DEFINITIONS)
     }
 }
