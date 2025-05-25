@@ -320,7 +320,8 @@ enum {
 
 struct VolatileStatuses
 {
-    UNPACK_VOLATILE_STATUS_STRUCT(VOLATILE_STATUS_DEFINITONS)
+    UNPACK_VOLATILE_STATUS_STRUCT(VOLATILE_STATUS_DEFINITIONS)
+    // Expands to:
     // u32 confusionTurns:3;
     // u32 flinched:1;
     // u32 uproarTurns:3;

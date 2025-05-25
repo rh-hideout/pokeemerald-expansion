@@ -11323,8 +11323,21 @@ u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus)
 {
     switch (volatileStatus)
     {
-        UNPACK_VOLATILE_STATUS_GETTERS(VOLATILE_STATUS_DEFINITONS)
+        UNPACK_VOLATILE_STATUS_GETTERS(VOLATILE_STATUS_DEFINITIONS)
         default: // invalid volatile status
             return 0;
+    }
+}
+
+#define UNPACK_VOLATILE_STATUS_SETTER_U32(enum, fieldName, bitSize, ...) case enum: gBattleMons[battler].volatileStatuses.fieldName = min((1 << bitSize) - 1, newValue); break;
+#define UNPACK_VOLATILE_STATUS_SETTER(caseArr) UNPACK_VOLATILE_STATUS_SETTER##caseArr
+#define UNPACK_VOLATILE_STATUS_SETTERS(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_SETTER, __VA_ARGS__))
+
+// Sets the value of a volatile status flag for a certain battler
+void SetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus, u32 newValue)
+{
+    switch (volatileStatus)
+    {
+        UNPACK_VOLATILE_STATUS_SETTERS(VOLATILE_STATUS_DEFINITIONS)
     }
 }

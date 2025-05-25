@@ -140,30 +140,31 @@ enum BattlerId
 // #define UNPACK_VOLATILE_STATUS_ENUM_U32 UNPACK_VOLATILE_STATUS_ENUM_ANY
 // #define UNPACK_VOLATILE_STATUS_ENUM(memberArr) UNPACK_VOLATILE_STATUS_ENUM##memberArr
 // #define UNPACK_VOLATILE_STATUS_ENUMS(...) enum VolatileStatus { RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_ENUM, __VA_ARGS__)) };
-#define VOLATILE_STATUS_DEFINITONS \
-    _U32(VOLATILE_STATUS_CONFUSION, confusionTurns, 3), \
-    _U32(VOLATILE_STATUS_FLINCHED, flinched, 1), \
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu */
+#define VOLATILE_STATUS_DEFINITIONS \
+    _U32(VOLATILE_STATUS_CONFUSION, confusionTurns, 3, "Confusion"), \
+    _U32(VOLATILE_STATUS_FLINCHED, flinched, 1, "Flinched"), \
     _U32(VOLATILE_STATUS_UPROAR, uproarTurns, 3), \
-    _U32(VOLATILE_STATUS_TORMENT, torment, 1), \
+    _U32(VOLATILE_STATUS_TORMENT, torment, 1, "Torment"), \
     _U32(VOLATILE_STATUS_BIDE, bideTurns, 2), \
     _U32(VOLATILE_STATUS_LOCK_CONFUSE, lockConfusionTurns, 2), \
     _U32(VOLATILE_STATUS_MULTIPLETURNS, multipleTurns, 1), \
     _U32(VOLATILE_STATUS_WRAPPED, wrapped, 1), \
-    _U32(VOLATILE_STATUS_POWDER, powder, 1), \
+    _U32(VOLATILE_STATUS_POWDER, powder, 1, "Powder"), \
     _U32(VOLATILE_STATUS_UNUSED, padding, 1), \
     _U32(VOLATILE_STATUS_INFATUATION, infatuation, 4), \
-    _U32(VOLATILE_STATUS_DEFENSE_CURL, defenseCurl, 1), \
+    _U32(VOLATILE_STATUS_DEFENSE_CURL, defenseCurl, 1, "Defense Curl"), \
     _U32(VOLATILE_STATUS_TRANSFORMED, transformed, 1), \
-    _U32(VOLATILE_STATUS_RECHARGE, recharge, 1), \
-    _U32(VOLATILE_STATUS_RAGE, rage, 1), \
+    _U32(VOLATILE_STATUS_RECHARGE, recharge, 1, "Recharge"), \
+    _U32(VOLATILE_STATUS_RAGE, rage, 1, "Rage"), \
     _U32(VOLATILE_STATUS_SUBSTITUTE, substitute, 1), \
-    _U32(VOLATILE_STATUS_DESTINY_BOND, destinyBond, 1), \
-    _U32(VOLATILE_STATUS_ESCAPE_PREVENTION, escapePrevention, 1), \
+    _U32(VOLATILE_STATUS_DESTINY_BOND, destinyBond, 1, "Destiny Bond"), \
+    _U32(VOLATILE_STATUS_ESCAPE_PREVENTION, escapePrevention, 1, "Escape Prevention"), \
     _U32(VOLATILE_STATUS_NIGHTMARE, nightmare, 1), \
-    _U32(VOLATILE_STATUS_CURSED, cursed, 1), \
-    _U32(VOLATILE_STATUS_FORESIGHT, foresight, 1), \
-    _U32(VOLATILE_STATUS_DRAGON_CHEER, dragonCheer, 1), \
-    _U32(VOLATILE_STATUS_FOCUS_ENERGY, focusEnergy, 1)
+    _U32(VOLATILE_STATUS_CURSED, cursed, 1, "Cursed"), \
+    _U32(VOLATILE_STATUS_FORESIGHT, foresight, 1, "Foresight"), \
+    _U32(VOLATILE_STATUS_DRAGON_CHEER, dragonCheer, 1, "Dragon Cheer"), \
+    _U32(VOLATILE_STATUS_FOCUS_ENERGY, focusEnergy, 1, "Focus Energy")
 
 enum VolatileStatus
 {
