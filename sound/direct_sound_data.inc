@@ -6709,8 +6709,8 @@ Cry_Saccestoda::
 	.incbin "sound/direct_sound_samples/cries/saccestoda.bin"
 
 	.align 2
-Cry_Tarquail::
-	.incbin "sound/direct_sound_samples/cries/tarquail.bin"
+Cry_Vortrix::
+	.incbin "sound/direct_sound_samples/cries/vortrix.bin"
 
 	.align 2
 Cry_Salezerker::
@@ -7170,6 +7170,18 @@ Cry_Permaceros::
 	.align 2	
 Cry_Maleentis::
 	.incbin "sound/direct_sound_samples/cries/maleentis.bin"
+
+	.align 2	
+Cry_Walkalack::
+	.incbin "sound/direct_sound_samples/cries/walkalack.bin"
+
+	.align 2	
+Cry_Belieech::
+	.incbin "sound/direct_sound_samples/cries/belieech.bin"
+
+	.align 2	
+Cry_Medusith::
+	.incbin "sound/direct_sound_samples/cries/medusith.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -6334,6 +6334,17 @@ static const u16 sPedestoneEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+
+static const u16 sWalkalackEggMoveLearnset[] = {
+    MOVE_CRASH_HOPPER, 
+    MOVE_FIRST_IMPRESSION,
+    MOVE_HI_JUMP_KICK,
+    MOVE_STICKY_WEB,
+    MOVE_TOXIC_SPIKES,
+    MOVE_EXPLOSION,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sIwikEggMoveLearnset[] = {
     MOVE_AROMATHERAPY,
     MOVE_EGG_BOMB,

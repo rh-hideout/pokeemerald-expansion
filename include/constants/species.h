@@ -1784,7 +1784,7 @@
 #define SPECIES_JERMIN_SOLO                             1664
 #define SPECIES_JERMIN_SWARM                            1665
 #define SPECIES_SACCESTODA                              1666
-#define SPECIES_TARQUAIL                                1667
+#define SPECIES_VORTRIX                                 1667
 #define SPECIES_SALEZERKER                              1668
 #define SPECIES_DELAVA                                  1669
 #define SPECIES_MAGMATA                                 1670
@@ -1934,8 +1934,11 @@
 #define SPECIES_COCCURN                                 1806
 #define SPECIES_PERMACEROS                              1807
 #define SPECIES_MALEENTIS                               1808
+#define SPECIES_WALKALACK                               1809
+#define SPECIES_BELIEECH                                1810
+#define SPECIES_MEDUSITH                                1811
 
-#define SPECIES_EGG (SPECIES_MALEENTIS + 1)
+#define SPECIES_EGG (SPECIES_MEDUSITH + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

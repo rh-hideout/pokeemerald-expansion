@@ -2701,7 +2701,7 @@ gCryTable::
 
 	cry Cry_Saccestoda
 
-	cry Cry_Tarquail
+	cry Cry_Vortrix
 
 	cry Cry_Salezerker
 
@@ -2932,6 +2932,12 @@ gCryTable::
 	cry Cry_Permaceros
 
 	cry Cry_Maleentis
+
+	cry Cry_Walkalack
+
+	cry Cry_Belieech
+
+	cry Cry_Medusith
 
 .endif
 
@@ -5639,7 +5645,7 @@ gCryTable_Reverse::
 
 	cry_reverse Cry_Saccestoda
 
-	cry_reverse Cry_Tarquail
+	cry_reverse Cry_Vortrix
 
 	cry_reverse Cry_Salezerker
 
@@ -5870,4 +5876,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Permaceros
 
 	cry_reverse Cry_Maleentis
+
+	cry_reverse Cry_Walkalack
+
+	cry_reverse Cry_Belieech
+
+	cry_reverse Cry_Medusith
 .endif
