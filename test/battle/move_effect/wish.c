@@ -39,4 +39,3 @@ SINGLE_BATTLE_TEST("Wish is blocked by Heal Block")
     }
 }
 TO_DO_BATTLE_TEST("TODO: Write Wish (Move Effect) test titles")
-
