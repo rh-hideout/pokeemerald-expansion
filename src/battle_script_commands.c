@@ -11171,11 +11171,7 @@ static void Cmd_various(void)
             else
                 gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = gBattleTurnCounter + 5;
             gSideTimers[GetBattlerSide(battler)].auroraVeilBattlerId = battler;
-
-            if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
-                gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-            else
-                gBattleCommunication[MULTISTRING_CHOOSER] = 5;
+            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
         }
         break;
     }

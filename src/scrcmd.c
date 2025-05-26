@@ -2541,10 +2541,7 @@ bool8 ScrCmd_setberrytree(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
-    if (berry == 0)
-        PlantBerryTree(treeId, berry, growthStage, FALSE);
-    else
-        PlantBerryTree(treeId, berry, growthStage, FALSE);
+    PlantBerryTree(treeId, berry, growthStage, FALSE);
     return FALSE;
 }
 
