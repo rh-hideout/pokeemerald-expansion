@@ -5616,7 +5616,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
         // prankster check
         if (effect == 0
-          && GetChosenMovePriority(gBattlerAttacker) > 0
+         && IsBattleMoveStatus(move)
+         && GetChosenMovePriority(gBattlerAttacker) > 0
          && BlocksPrankster(move, gBattlerAttacker, gBattlerTarget, TRUE)
          && !(IsBattleMoveStatus(move) && (gLastUsedAbility == ABILITY_MAGIC_BOUNCE || gProtectStructs[gBattlerTarget].bounceMove)))
         {
