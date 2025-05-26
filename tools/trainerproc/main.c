@@ -465,7 +465,7 @@ static bool match_identifier(struct Parser *p, struct Token *t)
         if (!peek_char(&p_, &c))
             break;
 
-        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || ('0' <= c && c <= '9') || c == '_')
+        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || ('0' <= c && c <= '9') || c == '_'|| c == '\'')
             ;
         else
             break;
@@ -499,7 +499,7 @@ static bool match_human_identifier(struct Parser *p, struct Token *t)
         if (!peek_char(&p_, &c))
             break;
 
-        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == '_' || c == '-' || c == ' ')
+        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == '_' || c == '-' || c == ' ' || c == '\'')
             ;
         else if (p_.offset > t->begin && ('0' <= c && c <= '9'))
             ;
@@ -579,7 +579,7 @@ static bool match_move_identifier(struct Parser *p, struct Token *t)
         if (!peek_char(&p_, &c))
             break;
 
-        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || ('0' <= c && c <= '9') || c == '_' || c == '-' || c == ' ' || c == ',')
+        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || ('0' <= c && c <= '9') || c == '_' || c == '-' || c == ' ' || c == ',' || c == '\'')
             ;
         else
             break;
@@ -1612,6 +1612,8 @@ static void fprint_constant(FILE *f, const char *prefix, struct String s)
                 fputc(c, f);
             else if ('a' <= c && c <= 'z')
                 fputc(c - 'a' + 'A', f);
+            else if (c == '\'')
+                ;
             else
                 fputc('_', f);
         }

@@ -424,7 +424,6 @@ static void Task_MapNamePopUpWindow(u8 taskId)
         break;
     case STATE_WAIT:
         // Wait while the window is fully onscreen.
-        UpdateSecondaryPopUpWindow(GetSecondaryPopUpWindowId());
         if (++task->tOnscreenTimer > 120)
         {
             task->tOnscreenTimer = 0;

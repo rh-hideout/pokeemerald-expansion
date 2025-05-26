@@ -401,7 +401,9 @@ static bool32 HandleEndTurnWish(u32 battler)
         }
 
         gBattleStruct->moveDamage[battler] *= -1;
-        if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
+        if (gStatuses3[battler] & STATUS3_HEAL_BLOCK)
+            BattleScriptExecute(BattleScript_WishButHealBlocked);
+        else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             BattleScriptExecute(BattleScript_WishButFullHp);
         else
             BattleScriptExecute(BattleScript_WishComesTrue);

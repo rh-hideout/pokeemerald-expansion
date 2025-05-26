@@ -57,10 +57,39 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
     }
 }
 
-TO_DO_BATTLE_TEST("Beast Boost boosts Attack 1st in case of a stat tie");
-TO_DO_BATTLE_TEST("Beast Boost boosts Defense 2nd in case of a stat tie");
-TO_DO_BATTLE_TEST("Beast Boost boosts Special Attack 3rd in case of a stat tie");
-TO_DO_BATTLE_TEST("Beast Boost boosts Special Defense 4th in case of a stat tie");
+SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed")
+{
+    u8 stats[] = {1, 1, 1, 1, 1};
+
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; stats[1] = 255; stats[0] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; stats[1] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; }
+    GIVEN {
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        switch(i) {
+            case 0:
+                MESSAGE("Nihilego's Attack rose!");
+                break;
+            case 1:
+                MESSAGE("Nihilego's Defense rose!");
+                break;
+            case 2:
+                MESSAGE("Nihilego's Sp. Atk rose!");
+                break;
+            case 3:
+                MESSAGE("Nihilego's Sp. Def rose!");
+                break;
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("Beast Boost considers Power Split");
 TO_DO_BATTLE_TEST("Beast Boost considers Guard Split");
 TO_DO_BATTLE_TEST("Beast Boost considers Power Trick");

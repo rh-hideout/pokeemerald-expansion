@@ -25932,7 +25932,7 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_DONDOZO
 
 #if P_FAMILY_GREAT_TUSK
-    const u32 gMonFrontPic_GreatTusk[] = INCBIN_U32("graphics/pokemon/great_tusk/anim_front.4bpp.lz");
+    const u32 gMonFrontPic_GreatTusk[] = INCBIN_U32("graphics/pokemon/great_tusk/front.4bpp.lz");
     const u16 gMonPalette_GreatTusk[] = INCBIN_U16("graphics/pokemon/great_tusk/normal.gbapal");
     const u32 gMonBackPic_GreatTusk[] = INCBIN_U32("graphics/pokemon/great_tusk/back.4bpp.lz");
     const u16 gMonShinyPalette_GreatTusk[] = INCBIN_U16("graphics/pokemon/great_tusk/shiny.gbapal");
@@ -26148,7 +26148,7 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_IRON_THORNS
 
 #if P_FAMILY_FRIGIBAX
-    const u32 gMonFrontPic_Frigibax[] = INCBIN_U32("graphics/pokemon/frigibax/anim_front.4bpp.lz");
+    const u32 gMonFrontPic_Frigibax[] = INCBIN_U32("graphics/pokemon/frigibax/front.4bpp.lz");
     const u16 gMonPalette_Frigibax[] = INCBIN_U16("graphics/pokemon/frigibax/normal.gbapal");
     const u32 gMonBackPic_Frigibax[] = INCBIN_U32("graphics/pokemon/frigibax/back.4bpp.lz");
     const u16 gMonShinyPalette_Frigibax[] = INCBIN_U16("graphics/pokemon/frigibax/shiny.gbapal");
