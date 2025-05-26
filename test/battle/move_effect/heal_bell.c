@@ -5,7 +5,7 @@ ASSUMPTIONS
 {
     ASSUME(gMovesInfo[MOVE_HEAL_BELL].effect == EFFECT_HEAL_BELL);
     ASSUME(gMovesInfo[MOVE_AROMATHERAPY].effect == EFFECT_HEAL_BELL);
-    ASSUME(gMovesInfo[MOVE_SPARKLY_SWIRL].effect == EFFECT_SPARKLY_SWIRL);
+    ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
 DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
