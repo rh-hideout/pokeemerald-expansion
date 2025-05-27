@@ -133,11 +133,11 @@ static u32 GetWildAiFlags(void)
         avgLevel = (GetMonData(&gEnemyParty[0], MON_DATA_LEVEL) + GetMonData(&gEnemyParty[1], MON_DATA_LEVEL)) / 2;
 
     flags |= AI_FLAG_CHECK_BAD_MOVE;
-    if (avgLevel >= 20)
+    if (avgLevel >= 5)
         flags |= AI_FLAG_CHECK_VIABILITY;
-    if (avgLevel >= 60)
+    if (avgLevel >=  25)
         flags |= AI_FLAG_TRY_TO_2HKO;
-    if (avgLevel >= 80)
+    if (avgLevel >= 50)
         flags |= AI_FLAG_HP_AWARE;
 
     if (B_VAR_WILD_AI_FLAGS != 0 && VarGet(B_VAR_WILD_AI_FLAGS) != 0)
@@ -2424,38 +2424,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 ADJUST_SCORE(-10);
             }
-            else
-            {
-                u8 effect = gItemsInfo[gBattleMons[battlerAtk].item].flingEffect;
-                switch (effect)
-                {
-                case MOVE_EFFECT_BURN:
-                    if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
-                        ADJUST_SCORE(-10);
-                    break;
-                case MOVE_EFFECT_PARALYSIS:
-                    if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
-                        ADJUST_SCORE(-10);
-                    break;
-                case MOVE_EFFECT_POISON:
-                    if (!AI_CanPoison(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
-                        ADJUST_SCORE(-10);
-                    break;
-                case MOVE_EFFECT_TOXIC:
-                    if (!AI_CanPoison(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
-                        ADJUST_SCORE(-10);
-                    break;
-                case MOVE_EFFECT_FLINCH:
-                    //TODO
-                    break;
-                case MOVE_EFFECT_FLING_MENTAL_HERB:
-                    //TODO
-                    break;
-                case MOVE_EFFECT_FLING_WHITE_HERB:
-                    //TODO
-                    break;
-                }
-            }
             break;
         case EFFECT_EMBARGO:
             if (!IsBattlerItemEnabled(battlerAtk)
@@ -3186,7 +3154,7 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
     
     if (((AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_WEAKNESS_POLICY)
         || (AI_THINKING_STRUCT->saved[partnerBattler].heldItem = gBattleMons[partnerBattler].item == ITEM_DIRE_POLICY))
-        && AI_GetTypeEffectiveness(move, battlerAtk, partnerBattler) >= UQ_4_12(2.0))
+        && AI_GetMoveEffectiveness(move, battlerAtk, partnerBattler) >= UQ_4_12(2.0))
         return TRUE;
     return (IsDoubleBattle()
          && noOfHitsToFaintPartner != 0 // Immunity check
@@ -4441,29 +4409,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_FLING:
-        u8 effect = gItemsInfo[gBattleMons[battlerAtk].item].flingEffect;
-        switch (effect)
-        {
-        case MOVE_EFFECT_BURN:
-            IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
-            break;
-        case MOVE_EFFECT_PARALYSIS:
-            IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
-            break;
-        case MOVE_EFFECT_POISON:
-        case MOVE_EFFECT_TOXIC:
-            IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
-            break;
-        case MOVE_EFFECT_FLINCH:
-            score += ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move);
-            break;
-        case MOVE_EFFECT_FLING_MENTAL_HERB:
-            //TODO
-            break;
-        case MOVE_EFFECT_FLING_WHITE_HERB:
-            //TODO
-            break;
-        }
         break;
     case EFFECT_EMBARGO:
         if (aiData->holdEffects[battlerDef] != HOLD_EFFECT_NONE)

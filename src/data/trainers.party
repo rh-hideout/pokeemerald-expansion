@@ -37,8 +37,43 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Poochyena
-Level: 32
+Galvantula @ Focus Sash
+Level: 77
+Ability: Compound Eyes
+- Sticky Web
+- Thunder
+- Stun Spore
+
+Glastrier @ Assault Vest
+Level: 77
+- Trailblaze
+- Icicle Crash
+- Close Combat
+- Stomping Tantrum
+
+Bruxish @ Choice Band
+Level: 77
+Ability: Strong Jaw
+- Flip Turn
+- Fishious Rend
+- Crunch
+- Psychic Fangs
+
+Quaquaval @ Water Gem
+Level: 77
+Ability: Moxie
+- Aqua Step
+- Close Combat
+- Acrobatics
+- Flip Turn
+
+Samurott @ Life Orb
+Level: 77
+Ability: Shell Armor
+- Aqua Tail
+- Megahorn
+- Drill Run
+- Hydro Cannon
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_2 ===
 Name: GRUNT
@@ -49,11 +84,43 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 31
+Barraskewda @ Life Orb
+Level: 76
+Ability: Swift Swim
+- Flip Turn
+- Liquidation
+- Close Combat
+- Crunch
 
-Carvanha
-Level: 31
+Iron Bundle @ Booster Energy
+Level: 76
+- Hydro Pump
+- Ice Beam
+- Freeze Dry
+- Calm Mind
+
+Greninja @ Life Orb
+Level: 77
+Ability: Protean
+- Water Shuriken
+- Extrasensory
+- Dark Pulse
+
+Inteleon @ Scope Lens
+Level: 77
+Ability: Sniper
+- Hydro Cannon
+- Focus Energy
+- Shadow Ball
+- Vacuum Wave
+
+Floatzel @ Shell Bell
+Level: 77
+Ability: Swift Swim
+- Wave Crash
+- Double Edge
+- Ice Spinner
+- Low Kick
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_3 ===
 Name: GRUNT
@@ -64,8 +131,44 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 32
+Drednaw @ Focus Sash
+Level: 77
+Ability: Swift Swim
+- Stealth Rock
+- Liquidation
+- Head Smash
+- Jaw Lock
+
+Wailord @ Sitrus Berry
+Level: 77
+Ability: Unaware
+- Water Spout
+- Hydro Pump
+- Noble Roar
+- Rest
+
+Tentacruel @ Black Sludge
+Level: 77
+Ability: Rain Dish
+- Protect
+- Rapid Spin
+- Flip Turn
+- Knock Off
+
+Slowbro @ Leftovers
+Level: 77
+Ability: Regenerator
+- Teleport
+- Slack Off
+- Scald
+- Psychic
+
+Arceus @ Leftovers
+Level: 75
+- Recover
+- Whirlpool
+- Perish Song
+- Flip Turn
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_4 ===
 Name: GRUNT
@@ -76,8 +179,45 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Carvanha
-Level: 32
+Raikou @ Water Gem
+Level: 76
+Ability: Volt Absorb
+- Scald
+- Thunder
+- Aura Sphere
+- Volt Switch
+
+Dewgong @ Leftovers
+Level: 80
+Ability: Hydration
+- Rest
+- Sheer Cold
+- Aqua Ring
+- Toxic
+
+Kingler @ Life Orb
+Level: 77
+Ability: Sheer Force
+- Crabhammer
+- Swords Dance
+- Superpower
+- X-Scissor
+
+Goodra Hisui @ Assault Vest
+Level: 77
+Ability: Sap Sipper
+- Draco Meteor
+- Acid Spray
+- Hydro Pump
+- Knock Off
+
+Blastoise @ Blastoisinite
+Level: 76
+Ability: Rain Dish
+- Aura Sphere
+- Dragon Pulse
+- Origin Pulse
+- Dark Pulse
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_1 ===
 Name: GRUNT
@@ -124,23 +264,43 @@ Music: Female
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Skitty
-Level: 26
+Samurott Hisui @ Float Stone
+Level: 69
+Ability: Sharpness
+- Ceaseless Edge
+- Razor Shell
+- Aqua Jet
+- Sacred Sword
 
-Poochyena
-Level: 26
+Spectrier @ Leftovers
+Level: 69
+- Substitute
+- Will o Wisp
+- Hex
+- Nasty Plot
 
-Zigzagoon
-Level: 26
+Dragapult @ Heavy-Duty Boots
+Level: 70
+Ability: Infiltrator
+- Hex
+- Thunder Wave
+- U-Turn
+- Draco Meteor
 
-Lotad
-Level: 26
+Aegislash @ Leftovers
+Level: 70
+- Kings Shield
+- Swords Dance
+- Shadow Sneak
+- Sacred Sword
 
-Seedot
-Level: 26
-
-Taillow
-Level: 26
+Giratina @ Heavy-Duty Boots
+Level: 70
+Ability: Pressure
+- Defog
+- Hex
+- Pain Split
+- Heal Block
 
 === TRAINER_GRUNT_PETALBURG_WOODS ===
 Name: GRUNT
@@ -168,9 +328,9 @@ Ability: Flash Fire
 - Bite
 
 Zubat @ Oran Berry
-Level: 5
-Ability: Liquid Ooze
-- Supersonic
+Level: 4
+Ability: Infiltrator
+- Absorb
 - Peck
 - Poison Sting
 - Astonish
@@ -187,7 +347,7 @@ Level: 5
 Ability: Intimidate
 - Ember
 - Growl
-- Protect
+- Howl
 - Bite
 
 === TRAINER_MARCEL ===
@@ -500,8 +660,44 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 45
+Charizard @ Leftovers
+Ability: Solar Power
+Level: 70
+- Entrainment
+- Protect
+- Roost
+- Flamethrower
+
+Clefable @ Sticky Barb
+Ability: Magic Guard
+Level: 70
+- Trick
+- Moonlight
+- Protect
+- Moonblast
+
+Venusaur @ Leftovers
+Level: 70
+Ability: Chlorophyll
+- Protect
+- Leech Seed
+- Giga Drain
+- Toxic
+
+Cinderace @ Heavy-Duty Boots
+Level: 70
+Ability: Libero
+- Protect
+- U-Turn
+- Pyro Ball
+- Court Change
+
+Rotom-Heat @ Heavy-Duty Boots
+Level: 70
+- Volt Switch
+- Overheat
+- Defog
+- Thunderbolt
 
 === TRAINER_GRUNT_MT_PYRE_2 ===
 Name: GRUNT
@@ -512,8 +708,43 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Carvanha
-Level: 45
+Glimmora @ Focus Sash
+Level: 70
+- Toxic Spikes
+- Mortal Spin
+- Power Gem
+- Stealth Rock
+
+Salazzle @ Life Orb
+Ability: Merciless
+Level: 70
+- Flamethrower
+- Sludge Bomb
+- Venoshock
+- Hyper Voice
+
+Heatran @ Zoom Lens
+Level: 70
+- Magma Storm
+- Solar Beam
+- Earth Power
+- Protect
+
+Slowking Galar @ Assault Vest
+Level: 70
+Ability: Regenerator
+- U-Turn
+- Psychic Noise
+- Sludge Wave
+- Future Sight
+
+Gliscor @ Toxic Orb
+Level: 70
+Ability: Poison Heal
+- Sand Tomb
+- Protect
+- Toxic
+- Roost
 
 === TRAINER_GRUNT_MT_PYRE_3 ===
 Name: GRUNT
@@ -524,11 +755,20 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Poochyena
-Level: 30
+Groudon @ Choice Specs
+Level: 68
+Ability: Drought
+- Earth Power
+- Eruption
+- Flamethrower
+- Heat Wave
 
-Carvanha
-Level: 30
+Ogerpon Hearthflame @ Hearthflame Mask
+Level: 69
+- Ivy Cudgel
+- Wood Hammer
+- Follow Me
+- Spiky Shield
 
 === TRAINER_GRUNT_WEATHER_INST_4 ===
 Name: GRUNT
@@ -586,8 +826,44 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Carvanha
-Level: 32
+Wishiwashi @ Shell Bell
+Level: 77
+- Aqua Ring
+- Hydro Pump
+- Earthquake
+- Ice Beam
+
+Araquanid @ Custap Berry
+Level: 77
+Ability: Water bubble
+- Endure
+- Sticky Web
+- Liquidation
+- Leech Life
+
+Heliolisk @ Bright Powder
+Level: 77
+Ability: Dry Skin
+- Thunder
+- Volt Switch
+- Dragon Pulse
+- Grass Knot
+
+Poliwrath @ Wide Lens
+Level: 77
+Ability: Swift Swim
+- Dynamic Punch
+- Hydro Pump
+- Hypnosis
+- Hone Claws
+
+Gorebyss @ Life Orb
+Level: 77
+Ability: Swift Swim
+- Surf
+- Psychic
+- Ice Beam
+- Shadow Ball
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_6 ===
 Name: GRUNT
@@ -596,10 +872,45 @@ Pic: Aqua Grunt F
 Gender: Female
 Music: Aqua
 Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Force Setup First Turn / Ace Pokemon
 
-Zubat
-Level: 32
+Groudon @ Leftovers
+Level: 76
+- Stealth Rock
+- Spikes
+- Dragon Tail
+- Precipice Blades
+
+Copperajah @ Heavy-Duty Boots
+Level: 77
+Ability: Sheer Force
+- Iron Head
+- Superpower
+- Play Rough
+- Stone Edge
+
+Gholdengo @ Heavy-Duty Boots
+Level: 77
+- Recover
+- Make it Rain
+- Shadow Ball
+- Power Gem
+
+Forretress @ Heavy-Duty Boots
+Level: 77
+Ability: Overcoat
+- Rapid Spin
+- Explosion
+- Zap Cannon
+- Body Press
+
+Slowbro @ Slowbronite
+Level: 77
+Ability: Regenerator
+- Slack Off
+- Amnesia
+- Scald
+- Toxic
 
 === TRAINER_FREDRICK ===
 Name: FREDRICK
@@ -695,8 +1006,42 @@ Music: Intense
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Hariyama
-Level: 31
+Groudon @ Eject Pack
+Level: 70
+- Precipice Blades
+- Bulk Up
+- Heat Crash
+- U Turn
+
+Typhlosion Hisui @ Choice Specs
+Level: 70
+Ability: Sheer Force
+- Eruption
+- Flamethrower
+- Infernal Parade
+- Focus Blast
+
+Sunflora @ Life Orb
+Level: 70
+Ability: Chlorophyll
+- Solar Beam
+- Synthesis
+- Weather Ball
+- Growth
+
+Gouging Fire @ Leftovers
+Level: 70
+- Dragon Tail
+- Flare Blitz
+- Dragon Dance
+- Burning Bulwark
+
+Slither Wing @ Float Stone
+Level: 70
+- First Impression
+- Leech Life
+- Flame Charge
+- Close Combat
 
 === TRAINER_SHELLY_WEATHER_INSTITUTE ===
 Name: SHELLY
@@ -709,7 +1054,7 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 
 Kyogre @ Mystic Water
 Modest Nature
-Level: 58
+Level: 57
 EVs: 4 HP / 4 Def / 252 SpA / 4 SpD / 244 Spe
 - Water Spout
 - Surf
@@ -726,7 +1071,7 @@ EVs: 248 HP / 252 Atk / 4 Def / 4 SpD
 - Protect
 
 Arctovish @ Leftovers
-Docile Nature
+Bold Nature
 Level: 58
 Ability: Water Absorb
 EVs: 236 HP / 16 Def / 252 SpA / 4 SpD
@@ -737,7 +1082,7 @@ EVs: 236 HP / 16 Def / 252 SpA / 4 SpD
 
 Dracovish @ Choice Band
 Adamant Nature
-Level: 58
+Level: 57
 Ability: Strong Jaw
 EVs: 252 Atk / 4 SpD / 252 Spe
 - Fishious Rend
@@ -756,7 +1101,7 @@ EVs: 244 HP / 4 Atk / 4 Def / 4 SpD / 252 Spe
 - Protect
 
 Castform @ Assault Vest
-Quirky Nature
+Calm Nature
 Level: 58
 EVs: 244 HP / 4 Def / 4 SpA / 252 SpD / 4 Spe
 - Weather Ball
@@ -807,8 +1152,21 @@ Music: Suspicious
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Spoink
-Level: 31
+Ting Lu @ Lum Berry
+Level: 70
+Ability: Vessel of Ruin
+- Fissure
+- Stomping Tantrum
+- Ruination
+- Protect
+
+Scizor @ Scizorite
+Level: 70
+Ability: Technician
+- Bullet Punch
+- Swords Dance
+- Knock Off
+- Iron Defense
 
 === TRAINER_DAISY ===
 Name: DAISY
@@ -1037,28 +1395,44 @@ Pic: Ruin Maniac
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
-Baltoy
-Level: 27
-- Psybeam
-- Self Destruct
-- Sandstorm
-- Ancient Power
+Polteageist @ Leftovers
+Ability: Cursed Body
+Level: 63
+- Encore
+- Strength Sap
+- Calm Mind
+- Shadow Ball
 
-Sandshrew
-Level: 27
-- Dig
-- Slash
-- Sand Attack
-- Poison Sting
+Deoxys Defense @ Leftovers
+Level: 63
+- Protect
+- Recover
+- Psychic Noise
+- Toxic
 
-Sandslash
-Level: 27
-- Dig
-- Slash
-- Sand Attack
-- Poison Sting
+Jirachi @ Leftovers
+Level: 63
+- Protect
+- Body Slam
+- Iron Head
+- Wish
+
+Okidogi @ Assault Vest
+Level: 63
+- Drain Punch
+- Poison Jab
+- Knock Off
+- High Horsepower
+
+Noivern @ Throat Spray
+Ability: Infiltrator
+Level: 63
+- Psychic Noise
+- Boomburst
+- Clangorous Soul
+- Draco Meteor
 
 === TRAINER_FOSTER ===
 Name: FOSTER
@@ -2347,8 +2721,45 @@ Music: Suspicious
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Sableye
-Level: 32
+Vigoroth @ Eviolite
+Level: 71
+Ability: Speed Boost
+- Slash
+- Swords Dance
+- Earthquake
+- Rock Tomb
+
+Sigilyph @ Flame Orb
+Level: 70
+Ability: Magic Guard
+- Psycho Shift
+- Psychic
+- Calm Mind
+- Air Slash
+
+Sawsbuck @ Leftovers
+Level: 70
+Ability: Serene Grace
+- Body Slam
+- Leech Seed
+- Headbutt
+- Throat Chop
+
+Galvantula @ Life Orb
+Level: 70
+Ability: Compound Eyes
+- Thunder
+- Bug Buzz
+- Blizzard
+- Hyper Beam
+
+Ampharos @ Ampharosite
+Level: 70
+Ability: Fluffy
+- Cotton Guard
+- Tail Glow
+- Dragon Pulse
+- Thunderclap
 
 === TRAINER_TASHA ===
 Name: TASHA
@@ -2359,8 +2770,41 @@ Music: Suspicious
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Shuppet
-Level: 32
+Hoopa Unbound @ Choice Band
+Level: 70
+Ability: Magician
+- Hyperspace Fury
+- Phantom Force
+- Hyperspace Hole
+- Ice Punch
+
+Banette @ Banettite
+Level: 70
+Ability: Insomnia
+- Shadow Sneak
+- Will o Wisp
+- Phantom Force
+- Knock Off
+
+Blacephalon @ Choice Specs
+Level: 70
+- Mind Blown
+- Shadow Ball
+- Aura Sphere
+
+Necrozma Dawn Wings @ Leftovers
+Level: 70
+- calm Mind
+- Photon Geyser
+- Shadow Ball
+- Moonlight
+
+Kartana @ Life Orb
+Level: 70
+- Trailblaze
+- Smart Strike
+- Sacred Sword
+- Swords Dance
 
 === TRAINER_VALERIE_2 ===
 Name: VALERIE
@@ -2437,14 +2881,14 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 
 Diglett Alola
 Ability: Tangling Hair
-Level: 5
+Level: 4
 - Dig
 - Smack Down
 - Metal Claw
 
 Diglett
 Ability: Arena Trap
-Level: 6
+Level: 5
 - Dig
 - Smack Down
 - Sucker Punch
@@ -2497,7 +2941,6 @@ Class: Lady
 Pic: Lady
 Gender: Female
 Music: Female
-Items: Full Restore
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
@@ -2897,6 +3340,7 @@ Level: 4
 Ability: Lightning Rod
 - Thunderbolt
 - Bite
+- Draining Kiss
 
 Minccino @ Scope Lens
 Level: 3
@@ -3051,8 +3495,21 @@ Music: Suspicious
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Rhyhorn
-Level: 31
+Banette @ Banettite
+Level: 70
+Ability: Insomnia
+- Will o Wisp
+- Shadow Sneak
+- Snatch
+- Taunt
+
+Sinistcha @ Sitrus Berry
+Level: 70
+Ability: Hospitality
+- Matcha Gotcha
+- Rage Powder
+- Strength Sap
+- Foul Play
 
 === TRAINER_GRUNT_MT_CHIMNEY_1 ===
 Name: GRUNT
@@ -3801,8 +4258,44 @@ Music: Intense
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Hariyama
-Level: 32
+Marshadow @ Focus Sash
+Level: 68
+Ability: Technician
+- Rock Tomb
+- Low Kick
+- Shadow Sneak
+- Spectral Thief
+
+Silvally @ Ghost Memory
+Level: 70
+- Multi Attack
+- Thunder Fang
+- Ice Fang
+- Parting Shot
+
+Dusknoir @ Life Orb
+Level: 70
+Ability: Iron Fist
+- Thunder Punch
+- Ice Punch
+- Shadow Sneak
+- Shadow Punch
+
+Annihilape @ Choice Band
+Level: 70
+Ability: Defiant
+- Phantom Force
+- Close Combat
+- Drain Punch
+- U-Turn
+
+Scrafty @ Salac Berry
+Level: 70
+Ability: Moxie
+- High Jump Kick
+- Substitute
+- Drain Punch
+- Crunch
 
 === TRAINER_KIRK ===
 Name: KIRK
@@ -3832,11 +4325,42 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Poochyena
-Level: 31
+Silvally @ Water Memory
+Level: 77
+- Multi Attack
+- U-Turn
+- Grass Pledge
+- Rock Slide
 
-Zubat
-Level: 31
+Rotom-Wash @ Heavy-Duty Boots
+Level: 77
+- Volt Switch
+- Shadow Ball
+- Defog
+- Hydro Pump
+
+Tauros Paldea Aqua @ Leftovers
+Level: 77
+Ability: Intimidate
+- Trailblaze
+- Raging Bull
+- Close Combat
+- Aqua Jet
+
+Cramorant @ Heavy-Duty Boots
+Level: 77
+- Surf
+- Hurricane
+- Ice Beam
+- Roost
+
+Manectric @ Magnet
+Level: 77
+Ability: Lightning Rod
+- Volt Switch
+- Overheat
+- Snarl
+- Thunder
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_8 ===
 Name: GRUNT
@@ -3844,11 +4368,39 @@ Class: Team Aqua
 Pic: Aqua Grunt M
 Gender: Male
 Music: Aqua
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Carvanha
-Level: 32
+Tauros Paldea Aqua @ Life Orb
+Level: 77
+Ability: Intimidate
+- Surf
+- Close Combat
+- Wave Crash
+- High Horsepower
+
+Xurkitree @ Absorb Bulb
+Level: 77
+- Thunderbolt
+- Discharge
+- Dazzling Gleam
+- Energy Ball
+
+Pachirisu @ Sitrus Berry
+Level: 77
+Ability: Volt Absorb
+- Follow Me
+- Nuzzle
+- Electroweb
+- Light Screen
+
+Pincurchin @ Terrain Extender
+Level: 77
+Ability: Electric Surge
+- Recover
+- Discharge
+- Muddy Water
+- Thunder Wave
 
 === TRAINER_SHAWN ===
 Name: SHAWN
@@ -4723,14 +5275,43 @@ Music: Suspicious
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Surskit
-Level: 27
+Blaziken @ Choice Specs
+Ability: Speed Boost
+Level: 63
+- Overheat
+- Ice Beam
+- Aura Sphere
+- Scorching Sands
 
-Surskit
-Level: 27
+Ting Lu @ Leftovers
+Level: 63
+- Mud Slap
+- Smack Down
+- Rest
+- Sand Tomb
 
-Surskit
-Level: 27
+Regice @ Assault Vest
+Level: 63
+- Counter
+- Ice Beam
+- Thunderbolt
+- Explosion
+
+Cosmoem @ Eviolite
+Ability: Sturdy
+Level: 63
+- Teleport
+- Wish
+- Cosmic Power
+- Toxic
+
+Crabominable @ Leftovers
+Ability: Anger Point
+Level: 63
+- Rest
+- Curse
+- Amnesia
+- Icicle Crash
 
 === TRAINER_DEREK ===
 Name: DEREK
@@ -4900,14 +5481,25 @@ Music: Intense
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Ralts
-Level: 26
+Annihilape @ Leftovers
+Level: 70
+Ability: Defiant
+- Bulk Up
+- Rage Fist
+- Drain Punch
+- Earthquake
 
-Ralts
-Level: 26
+Pawmot @ Leppa Berry
+Level: 70
+Ability: Volt Absorb
+- Nuzzle
+- Revival Blessing
+- Double Shock
+- U-Turn
 
-Kirlia
-Level: 26
+Cresselia @ Mental Herb
+Level: 70
+- Lunar Dance
 
 === TRAINER_JOSHUA ===
 Name: JOSHUA
@@ -5078,17 +5670,40 @@ Class: Psychic
 Pic: Psychic F
 Gender: Female
 Music: Intense
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wobbuffet
-Level: 26
+Marowak @ Thick Club
+Level: 70
+Ability: Lightning Rod
+- Earthquake
+- Rock Slide
+- Power Up Punch
+- Thunder Punch
 
-Natu
-Level: 26
+Tornadus Incarnate @ Covert Cloak
+Level: 70
+Ability: Prankster
+- Tailwind
+- Bleakwind Storm
+- Icy Wind
+- Protect
 
-Kadabra
-Level: 26
+Rampardos @ Choice Band
+Level: 70
+Ability: Sheer Force
+- Head Smash
+- Iron Head
+- Crunch
+- Supercell Slam
+
+Heracross @ Heracronite
+Level: 70
+Ability: Moxie
+- Pin Missile
+- Bullet Seed
+- Close Combat
+- Rock Blast
 
 === TRAINER_ALEXIS ===
 Name: ALEXIS
@@ -5306,32 +5921,21 @@ Level: 41
 - Odor Sleuth
 - Roar
 
-=== TRAINER_SIDNEY ===
-Name: SIDNEY
+=== TRAINER_RED_DOUBLES ===
+Name: RED
 Class: Elite Four
-Pic: Elite Four Sidney
+Pic: Red
 Gender: Male
 Music: Elite Four
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 Mugshot: Purple
-
-Rillaboom @ Assault Vest
-Adamant Nature
-Level: 96
-Ability: Grassy Surge
-EVs: 248 HP / 8 Atk / 252 SpA
-Shiny: Yes
-- Grassy Glide
-- Fake Out
-- High Horsepower
-- Knock Off
 
 Incineroar @ Safety Goggles
 Impish Nature
 Level: 96
 Ability: Intimidate
-EVs: 248 HP / 8 Atk / 252 Def
+EVs: 240 HP / 52 Def / 172 SpD / 48 Spe
 Shiny: Yes
 - Fake Out
 - Parting Shot
@@ -5339,19 +5943,31 @@ Shiny: Yes
 - Flare Blitz
 
 Zacian Crowned @ Rusted Sword
-Adamant Nature
+Jolly Nature
 Level: 96
-EVs: 248 HP / 108 Atk / 152 Spe
+Ability: Intrepid Sword
+EVs: 12 HP / 92 Atk / 148 Def / 32 SpD / 224 Spe
 Shiny: Yes
 - Behemoth Blade
 - Sacred Sword
-- Substitute
-- Protect
+- Play Rough
+- Swords Dance
+
+Rillaboom @ Assault Vest
+Careful Nature
+Level: 96
+Ability: Grassy Surge
+EVs: 248 HP / 80 SpD / 180 Spe
+Shiny: Yes
+- Grassy Glide
+- Fake Out
+- High Horsepower
+- Knock Off
 
 Calyrex-Shadow @ Focus Sash
 Timid Nature
 Level: 96
-EVs: 252 SpA / 32 SpD / 224 Spe
+EVs: 44 HP / 252 SpA / 4 SpD / 208 Spe
 Shiny: Yes
 - Astral Barrage
 - Snarl
@@ -5363,7 +5979,7 @@ Adamant Nature
 Level: 96
 Ability: Prankster
 Dynamax Level: 10
-EVs: 52 HP / 248 Atk / 208 Spe
+EVs: 52 HP / 52 Atk / 188 SpD / 216 Spe
 Shiny: Yes
 - Wild Charge
 - Taunt
@@ -5374,28 +5990,49 @@ Gastrodon-East @ Leftovers
 Calm Nature
 Level: 96
 Ability: Storm Drain
-EVs: 220 HP / 40 SpA / 244 SpD / 4 Spe
+EVs: 220 HP / 20 Def / 252 SpD / 16 Spe
 Shiny: Yes
 - Earth Power
 - Icy Wind
 - Protect
 - Yawn
 
-=== TRAINER_PHOEBE ===
-Name: PHOEBE
+=== TRAINER_WALLY_DOUBLES ===
+Name: WALLY
 Class: Elite Four
-Pic: Elite Four Phoebe
-Gender: Female
+Pic: Wally
+Gender: Male
+Music: Elite Four
+Double Battle: Yes
+AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
+Mugshot: Green
+
+Zygarde 50 @ Leftovers
+Impish Nature
+Level: 97
+Ability: Power Construct
+EVs: 216 HP / 252 Def / 40 SpD
+Shiny: Yes
+- Thousand Waves
+- Coil
+- Glare
+- Rest
+
+=== TRAINER_WALLY_SINGLES ===
+Name: WALLY
+Class: Elite Four
+Pic: Wally
+Gender: Male
 Music: Elite Four
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 Mugshot: Green
 
-Zygarde Complete @ Leftovers
+Zygarde 50 @ Leftovers
 Impish Nature
 Level: 97
 Ability: Power Construct
-EVs: 216 HP / 252 Def / 40 SpD
+EVs: 4 HP / 48 Atk / 12 Def / 208 SpD / 236 Spe
 Shiny: Yes
 - Thousand Waves
 - Coil
@@ -5417,7 +6054,7 @@ Dracozolt @ Choice Band
 Adamant Nature
 Level: 97
 Ability: Sand Rush
-EVs: 104 HP / 252 Atk / 132 Def / 20 Spe
+EVs: 92 HP / 252 Atk / 164 Spe
 Shiny: Yes
 - Bolt Beak
 - Earthquake
@@ -5427,7 +6064,7 @@ Shiny: Yes
 Great Tusk @ Leftovers
 Jolly Nature
 Level: 97
-EVs: 232 HP / 24 Atk / 252 Spe
+EVs: 4 HP / 8 Atk / 36 Def / 208 SpD / 252 Spe
 Shiny: Yes
 - Rapid Spin
 - Headlong Rush
@@ -5438,7 +6075,7 @@ Gliscor @ Toxic Orb
 Careful Nature
 Level: 97
 Ability: Poison Heal
-EVs: 224 HP / 32 Def / 252 SpD
+EVs: 228 HP / 4 Def / 92 SpD / 184 Spe
 Shiny: Yes
 - Protect
 - Earthquake
@@ -5446,10 +6083,10 @@ Shiny: Yes
 - Knock Off
 
 Garchomp @ Garchompite
-Adamant Nature
+Jolly Nature
 Level: 97
 Ability: Sand Force
-EVs: 64 HP / 252 Atk / 4 Def / 188 Spe
+EVs: 12 HP / 252 Atk / 244 Spe
 Shiny: Yes
 - Earthquake
 - Outrage
@@ -5457,9 +6094,9 @@ Shiny: Yes
 - Stone Edge
 
 === TRAINER_GLACIA ===
-Name: GLACIA
+Name: ANABEL
 Class: Elite Four
-Pic: Elite Four Glacia
+Pic: Salon Maiden Anabel
 Gender: Female
 Music: Elite Four
 Double Battle: No
@@ -5467,9 +6104,9 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 Mugshot: Pink
 
 Xerneas @ Power Herb
-Modest Nature
+Timid Nature
 Level: 98
-EVs: 252 SpA / 132 SpD / 124 Spe
+EVs: 4 HP / 28 SpA / 208 SpD / 248 Spe
 Shiny: Yes
 - Moonblast
 - Thunderbolt
@@ -5477,9 +6114,9 @@ Shiny: Yes
 - Geomancy
 
 Diancie @ Diancite
-Modest Nature
+Serious Nature
 Level: 98
-EVs: 252 Def / 4 SpA / 252 SpD
+EVs: 248 HP / 28 Def / 232 Spe
 Shiny: Yes
 - Stealth Rock
 - Moonblast
@@ -5487,9 +6124,9 @@ Shiny: Yes
 - Scorching Sands
 
 Magearna @ Assault Vest
-Modest Nature
+Quiet Nature
 Level: 98
-EVs: 228 SpA / 252 SpD / 28 Spe
+EVs: 248 HP / 124 SpA / 136 SpD
 Shiny: Yes
 - Aura Sphere
 - Flash Cannon
@@ -5499,7 +6136,7 @@ Shiny: Yes
 Audino Mega @ Leftovers
 Bold Nature
 Level: 98
-EVs: 244 HP / 252 Def / 12 SpD
+EVs: 240 HP / 240 Def / 4 SpD / 24 Spe
 Shiny: Yes
 - Moonblast
 - Flamethrower
@@ -5509,7 +6146,7 @@ Shiny: Yes
 Flutter Mane @ Booster Energy
 Modest Nature
 Level: 98
-EVs: 112 Def / 252 SpA / 144 Spe
+EVs: 12 HP / 4 Def / 252 SpA / 240 Spe
 Shiny: Yes
 - Shadow Ball
 - Moonblast
@@ -5519,21 +6156,21 @@ Shiny: Yes
 Miraidon @ Choice Specs
 Modest Nature
 Level: 98
-Tera Type: Ground
-EVs: 4 HP / 252 SpA / 252 Spe
+Tera Type: Fairy
+EVs: 12 HP / 4 Def / 252 SpA / 240 Spe
 Shiny: Yes
 - Electro Drift
 - Dazzling Gleam
 - Power Gem
 - Dragon Pulse
 
-=== TRAINER_DRAKE ===
-Name: DRAKE
+=== TRAINER_LEAF ===
+Name: LEAF
 Class: Elite Four
 Pic: Leaf
-Gender: Male
+Gender: Female
 Music: Elite Four
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 Mugshot: Blue
 
@@ -5541,7 +6178,7 @@ Rillaboom @ Terrain Extender
 Docile Nature
 Level: 99
 Ability: Grassy Surge
-EVs: 248 HP / 244 Atk / 16 SpA
+EVs: 216 Spe
 Shiny: Yes
 - Fake Out
 - Protect
@@ -5552,7 +6189,6 @@ Sneasler @ Grassy Seed
 Adamant Nature
 Level: 99
 Ability: Unburden
-EVs: 248 HP / 252 Atk / 8 Def
 Shiny: Yes
 - Poison Jab
 - Close Combat
@@ -5562,7 +6198,7 @@ Shiny: Yes
 Rayquaza Mega @ Eject Pack
 Adamant Nature
 Level: 99
-EVs: 252 Atk / 36 SpA / 212 Spe
+EVs: 252 Spe
 Shiny: Yes
 - Oblivion Wing
 - V Create
@@ -5573,7 +6209,7 @@ Comfey @ Grassy Seed
 Modest Nature
 Level: 99
 Ability: Triage
-EVs: 252 Def / 252 SpA / 4 SpD
+EVs: 20 Spe
 Shiny: Yes
 - Draining Kiss
 - Calm Mind
@@ -5581,10 +6217,10 @@ Shiny: Yes
 - Taunt
 
 Gogoat @ Sitrus Berry
-Quirky Nature
+Careful Nature
 Level: 99
 Ability: Grass Pelt
-EVs: 248 HP / 8 Def / 252 SpA
+EVs: 140 Spe
 Shiny: Yes
 - Fake Out
 - Helping Hand
@@ -5592,10 +6228,10 @@ Shiny: Yes
 - Horn Leech
 
 Ogerpon Cornerstone @ Cornerstone Mask
-Adamant Nature
+Jolly Nature
 Level: 99
 Tera Type: Rock
-EVs: 252 HP / 252 Atk / 4 Def
+EVs: 188 Spe
 Shiny: Yes
 - Horn Leech
 - Ivy Cudgel
@@ -6000,6 +6636,7 @@ Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
 Double Battle: Yes
+Starting Status: Trick Room
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Stakataka @ Leftovers
@@ -7114,7 +7751,7 @@ Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Machoke @ Black Belt
-Level: 6
+Level: 5
 Ability: No Guard
 - Rock Smash
 - Karate Chop
@@ -7341,7 +7978,7 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Ace Pokemon
 
 Yanma @ Maranga Berry
 Ability: Speed Boost
@@ -7357,7 +7994,7 @@ Level: 3
 - Protect
 - Bug Bite
 
-Sentret @ Kee Berry
+Sentret
 Ability: Skill Link
 Level: 3
 - Slam
@@ -7522,6 +8159,7 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 Beartic
 Level: 5
 - Ice Shard
+- Chilling Water
 
 Corphish
 Ability: Adaptability
@@ -10287,12 +10925,42 @@ Music: Intense
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wobbuffet
-Level: 32
-- Destiny Bond
-- Safeguard
-- Counter
-- Mirror Coat
+Electrode @ Focus Sash
+Level: 70
+Ability: Static
+- Stealth Rock
+- Explosion
+- Volt Switch
+- Thunder Wave
+
+Zoroark @ Heavy-Duty Boots
+Level: 70
+- Dark Pulse
+- Foul Play
+- U-Turn
+- Shadow Ball
+
+Zoroark Hisui @ Heavy-Duty Boots
+Level: 70
+- Shadow Ball
+- Dark Pulse
+- U-Turn
+- Will o Wisp
+
+Cobalion @ Heavy-Duty Boots
+Level: 70
+- Rock Polish
+- Close Combat
+- Iron Head
+- X-Scissor
+
+Carnivine @ Heavy-Duty Boots
+Level: 70
+Ability: Fly Trap
+- U-Turn
+- Synthesis
+- Power Whip
+- Crunch
 
 === TRAINER_IRENE ===
 Name: IRENE
@@ -10580,15 +11248,18 @@ Music: Male
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Kingler
-Level: 30
-- Vise Grip
-- Cut
+Shelgon
+Level: 29
+- Flare Blitz
+- Wild Charge
+- Double Edge
+- Wave Crash
 
 Crabrawler
 Level: 30
-- Vise Grip
-- Cut
+Ability: Iron Fist
+- Dizzy Punch
+- Dual Chop
 - Brick Break
 - Thunder Punch
 
@@ -10721,7 +11392,6 @@ Level: 63
 - Body Press
 - Icy Wind
 - Mountain Gale
-
 
 === TRAINER_ERNEST_2 ===
 Name: ERNEST
@@ -12348,11 +13018,20 @@ Music: Aqua
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Wailmer
-Level: 30
+Jumpluff @ Focus Sash
+Level: 70
+Ability: Chlorophyll
+- Tailwind
+- Sleep Powder
+- Rage Powder
+- Pollen Puff
 
-Zubat
-Level: 30
+Flutter Mane @ Booster Energy
+Level: 68
+- Icy Wind
+- Taunt
+- Moonblast
+- Mystical Fire
 
 === TRAINER_GRUNT_JAGGED_PASS ===
 Name: GRUNT
@@ -12986,7 +13665,7 @@ Modest Nature
 
 Ho-oh @ Heavy-Duty Boots
 Level: 71
-Docile Nature
+Impish Nature
 - Sacred Fire
 - Defog
 - Roost
@@ -12994,7 +13673,6 @@ Docile Nature
 
 Chi Yu @ Choice Scarf
 Level: 71
-EVs: 252 SpA
 Timid Nature
 - Dark Pulse
 - Flamethrower
@@ -13117,13 +13795,13 @@ Music: Female
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Lombre
+Lombre @ Focus Sash
 Ability: Own Tempo
 Level: 5
 - Giga Drain
 - Bubble Beam
 - Protect
-- Quick Attack
+- Blizzard
 
 Heracross
 Ability: Swarm
@@ -13361,7 +14039,7 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 
 Snubbull
 Ability: Intimidate
-Level: 5
+Level: 4
 - Charm
 - Bite
 - Tackle
@@ -13369,7 +14047,7 @@ Level: 5
 
 Dunsparce @ Eviolite
 Ability: Serene Grace
-Level: 3
+Level: 2
 - Sizzly Slide
 - Defense Curl
 
@@ -13394,17 +14072,12 @@ Ability: Effect Spore
 - Bug Buzz
 - Stun Spore
 
-Paras
-Level: 5
-Ability: Effect Spore
-- Bug Buzz
-- Stun Spore
-
-Paras
-Level: 5
-Ability: Effect Spore
-- Bug Buzz
-- Stun Spore
+Anorith
+Level: 4
+Ability: Battle Armor
+- Fell Stinger
+- Bug Bite
+- Metal Claw
 
 === TRAINER_JOSE ===
 Name: JOSE
@@ -13421,7 +14094,7 @@ Level: 5
 - Flame Charge
 - Bite
 - Howl
-- Growl
+- Tackle
 
 Ponyta
 Ability: Flame Body
@@ -13586,14 +14259,18 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 Nincada
 Level: 5
 - Fury Cutter
+- Absorb
+- Metal Claw
+- Aerial Ace
 
 Shuckle
 Ability: Sturdy
-Level: 5
+Level: 4
 - Fury Cutter
+- Rollout
 
 Shedinja @ Focus Sash
-Level: 10
+Level: 11
 - Night Shade
 
 === TRAINER_JAMES_2 ===
@@ -13798,14 +14475,14 @@ Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Loudred @ Metronome
-Level: 19
+Level: 20
 Ability: Punk Rock
 - Uproar
 - Rollout
 - Echoed Voice
 
 Loudred @ Metronome
-Level: 19
+Level: 20
 Ability: Punk Rock
 - Uproar
 - Rollout
@@ -14010,11 +14687,19 @@ Music: Girl
 Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Delcatty
-Level: 31
+Blacephalon @ Fire Gem
+Level: 68
+Ability: Beast Boost
+- Mind Blown
+- Shadow Ball
+- Psyshock
 
-Manectric
-Level: 31
+Chi Yu @ Life Orb
+Level: 69
+- Protect
+- Flamethrower
+- Dark Pulse
+- Ruination
 
 === TRAINER_LEA_AND_JED ===
 Name: LEA & JED
@@ -14320,21 +15005,27 @@ Pic: Ninja Boy
 Gender: Male
 Music: Suspicious
 Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Force Setup First Turn / Try To Faint / Smart Mon Choices / Check Viability
 
-Weezing
-Level: 28
-- Poison Gas
-- Self Destruct
-- Sludge
-- Smokescreen
+Cottonee @ Focus Sash
+Level: 1
+Ability: Prankster
+- Tailwind
+- Memento
 
-Ninjask
-Level: 28
-- Sand Attack
-- Double Team
-- Fury Cutter
-- Swords Dance
+Durant @ Focus Sash
+Ability: Truant
+Level: 63
+- Entrainment
+- Memento
+
+Dugtrio @ Focus Sash
+Ability: Arena Trap
+Level: 63
+- Hone Claws
+- Protect
+- Earthquake
+- Stone Edge
 
 === TRAINER_RILEY ===
 Name: RILEY
@@ -14902,18 +15593,21 @@ Level: 43
 - Swallow
 - Lick
 - Bite
+- Crunch
 
 Rhydon @ Iron Ball
 Level: 43
 - Swallow
 - Lick
 - Bite
+- Crunch
 
 Gulpin @ Iron Ball
 Level: 43
 - Swallow
 - Lick
 - Bite
+- Crunch
 
 Sawk @ Iron Ball
 Level: 43
@@ -15316,7 +16010,7 @@ Ability: Rattled
 Level: 5
 - Bounce
 
-Magikarp @ Normal Gem
+Magikarp @ Normalium Z
 Ability: Rattled
 Level: 6
 - Flail
@@ -15758,8 +16452,42 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 29
+Roaring Moon @ Flying Gem
+Level: 69
+- Acrobatics
+- Knock Off
+- Dragon Dance
+- Dragon Claw
+
+Revavroom @ Assault Vest
+Level: 70
+Ability: Filter
+- Poison Jab
+- Spin Out
+- U-Turn
+- High Horsepower
+
+Necrozma @ Leftovers
+Level: 70
+- Stealth Rock
+- Morning Sun
+- Charge Beam
+- Photon Geyser
+
+Silvally @ Poison Memory
+Level: 70
+- Multi Attack
+- Double Edge
+- Ice Beam
+- Flamethrower
+
+Glalie @ Glalitite
+Level: 70
+Ability: Moody
+- Double Edge
+- Protect
+- Ice Shard
+- Earthquake
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_2 ===
 Name: GRUNT
@@ -15768,10 +16496,29 @@ Pic: Magma Grunt M
 Gender: Male
 Music: Magma
 Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
+AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching / Force Setup First Turn
 
-Poochyena
-Level: 29
+Spidops @ Focus Sash
+Level: 70
+Ability: Oblivious
+- Sticky Web
+- Memento
+- Lunge
+- Skitter Smack
+
+Jumpluff @ Mental Herb
+Level: 70
+Ability: Chlorophyll
+- Reflect
+- Memento
+- Misty Explosion
+
+Cresselia @ Clear Amulet
+Level: 70
+- Calm Mind
+- Stored Power
+- Moonlight
+- Moonblast
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_3 ===
 Name: GRUNT
@@ -15782,8 +16529,36 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Numel
-Level: 29
+Aggron @ Custap Berry
+Level: 70
+Ability: Sturdy
+- Metal Burst
+- Head Smash
+- Heavy Slam
+- Endure
+
+Avalugg Hisui @ Custap Berry
+Level: 70
+Ability: Sturdy
+- Mountain Gale
+- Stone Edge
+- Hard Press
+- Mirror Coat
+
+Azumarill @ Kebia Berry
+Level: 70
+Ability: Huge Power
+- Play Rough
+- Liquidation
+- Aqua Jet
+
+Archaludon @ Maranga Berry
+Level: 70
+Ability: Stamina
+- Swords Dance
+- Mirror Coat
+- Body Press
+- Breaking Swipe
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_4 ===
 Name: GRUNT
@@ -15794,11 +16569,45 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Baltoy
-Level: 28
+Lilligant Hisui @ Focus Sash
+Level: 70
+Ability: Chlorophyll
+- Sleep Powder
+- Giga Drain
+- Healing Wish
+- Encore
 
-Zubat
-Level: 28
+Entei @ Choice Band
+Level: 68
+Ability: Inner Focus
+- Extreme Speed
+- Stone Edge
+- Sacred Fire
+- Crunch
+
+Incineroar @ Focus Sash
+Level: 70
+Ability: Blaze
+- Flame Charge
+- Lash Out
+- Overheat
+- Heat Crash
+
+Ceruledge @ Weakness Policy
+Level: 69
+Ability: Weak Armor
+- Endure
+- Bitter Blade
+- Shadow Claw
+- Solar Blade
+
+Shiftry @ Focus Sash
+Level: 70
+Ability: Chlorophyll
+- Growth
+- Solar Blade
+- Solar Beam
+- Explosion
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_5 ===
 Name: GRUNT
@@ -15809,11 +16618,44 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Baltoy
-Level: 28
+Torkoal @ Quick Claw
+Level: 70
+Ability: Shell Armor
+- Eruption
+- Heat Wave
+- Body Press
+- Gyro Ball
 
-Numel
-Level: 28
+Bronzong @ Utility Umbrella
+Level: 70
+Ability: Heatproof
+- Gyro Ball
+- Stealth Rock
+- Future Sight
+- Recover
+
+Gouging Fire @ Booster Energy
+Level: 68
+- Breaking Swipe
+- Morning Sun
+- Dragon Dance
+- Heat Crash
+
+Arcanine Hisui @ Choice Band
+Level: 70
+Ability: Rock Head
+- Head Smash
+- Flare Blitz
+- Double Edge
+- Wild Charge
+
+Tauros Paldea Blaze @ Liechi Berry
+Level: 70
+Ability: Cud Chew
+- Flame Charge
+- Substitute
+- Close Combat
+- Temper Flare
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_6 ===
 Name: GRUNT
@@ -15824,8 +16666,45 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Mightyena
-Level: 29
+Tropius @ Sitrus Berry
+Level: 72
+Ability: Harvest
+- Air Slash
+- Protect
+- Substitute
+- Leech Seed
+
+Ludicolo @ Leftovers
+Level: 71
+Ability: Rain Dish
+- Soak
+- Protect
+- Substitute
+- Leech Seed
+
+Venusaur @ Leftovers
+Level: 70
+Ability: Chlorophyll
+- Substitute
+- Protect
+- Leech Seed
+- Sludge Bomb
+
+Chesnaught @ Leftovers
+Level: 70
+Ability: Bulletproof
+- Spiky Shield
+- Substitute
+- Leech Seed
+- Drain Punch
+
+Comfey @ Leppa Berry
+Level: 70
+Ability: Triage
+- Cosmic Power
+- Recycle
+- Protect
+- Leech Seed
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_7 ===
 Name: GRUNT
@@ -15836,8 +16715,18 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 29
+Charizard @ Choice Specs
+Level: 68
+Ability: Solar Power
+- Air Slash
+- Flamethrower
+- Solar Beam
+- Dragon Pulse
+
+Blacephalon @ Choice Specs
+Level: 69 
+- Mind Blown
+- Shadow Ball
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_8 ===
 Name: GRUNT
@@ -15848,8 +16737,20 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Poochyena
-Level: 29
+Chi Yu @ Sitrus Berry
+Level: 68
+- Protect
+- Overheat
+- Psychic
+- Dark Pulse
+
+Stonjourner @ Sitrus Berry
+Level: 70
+Ability: Power Spot
+- Endeavor
+- Wide Guard
+- Protect
+- Magic Room
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_9 ===
 Name: GRUNT
@@ -15857,11 +16758,40 @@ Class: Team Magma
 Pic: Magma Grunt M
 Gender: Male
 Music: Magma
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 29
+Charizard @ Life Orb
+Level: 69
+Ability: Solar Power
+- Solar Beam
+- Heat Wave
+- Blast Burn
+- Dragon Pulse
+
+Stonjourner @ Focus Sash
+Level: 70
+Ability: Power Spot
+- Helping Hand
+- Wide Guard
+- Rock Slide
+- Bulldoze
+
+Houndoom @ Houndoominite
+Level: 70
+Ability: Flash Fire
+- Flamethrower
+- Flame Charge
+- Hyper Beam
+- Solar Beam
+
+Whimsicott @ Focus Sash
+Level: 70
+Ability: Chlorophyll
+- Tailwind
+- Solar Beam
+- Moonblast
+- Charm
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_10 ===
 Name: GRUNT
@@ -15872,8 +16802,44 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Mightyena
-Level: 29
+Sableye @ Sablenite
+Level: 70
+Ability: Prankster
+- Shadow Sneak
+- Pursuit
+- Will o Wisp
+- Knock Off
+
+Florges @ Leftovers
+Level: 70
+Ability: Leaf Guard
+- Moonblast
+- Solar Beam
+- Synthesis
+- Calm Mind
+
+Comfey @ Life Orb
+Level: 70
+Ability: Triage
+- Calm Mind
+- Draining Kiss
+- Earth Power
+- Synthesis
+
+Chesnaught @ Rocky Helmet
+Level: 70
+Ability: Rough Skin
+- Spiky SHield
+- Synthesis
+- Bulk Up
+- Drain Punch
+
+Registeel @ Leftovers
+Level: 70
+- Rest
+- Amnesia
+- Iron Defense
+- Body Press
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_11 ===
 Name: GRUNT
@@ -15884,8 +16850,21 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Baltoy
-Level: 29
+Weezing Galar @ Choice Specs
+Level: 70
+Ability: Neutralizing Gas
+- Strange Steam
+- Sludge Bomb
+- Flamethrower
+- Acid Spray
+
+Camerupt @ Cameruptite
+Level: 70
+Ability: Solid Rock
+- Eruption
+- Lava Plume
+- Earth Power
+- Flash Cannon
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_12 ===
 Name: GRUNT
@@ -15896,8 +16875,20 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Numel
-Level: 29
+Toedscruel @ Covert Cloak
+Level: 70
+- Spore
+- Earth Power
+- Reflect
+- Light Screen
+
+Dragapult @ Choice Band
+Level: 70
+Ability: Clear Body
+- Dragon Darts
+- Phantom Force
+- Psychic Fangs
+- U-Turn
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_13 ===
 Name: GRUNT
@@ -15908,8 +16899,44 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Zubat
-Level: 29
+Whimsicott @ Focus Sash
+Level: 70
+Ability: Chlorophyll
+- Tailwind
+- Memento
+- U-Turn
+
+Typhlosion @ Choice Specs
+Level: 70
+Ability: Blaze
+- Eruption
+- Earth Power
+- Focus Blast
+- Shadow Ball
+
+Lilligant @ Life Orb
+Level: 70
+Ability: Chlorophyll 
+- Solar Beam
+- Alluring Voice
+- Quiver Dance
+- Pollen Puff
+
+Trapinch @ Life Orb
+Level: 72
+Ability: Arena Trap
+- First Impression
+- Earthquake
+- Rock Slide
+- Superpower
+
+Chandelure @ Choice Specs
+Level: 70
+Ability: Flash Fire
+- Overheat
+- Shadow Ball
+- Solar Beam
+- Psychic
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_14 ===
 Name: GRUNT
@@ -15920,8 +16947,44 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Mightyena
-Level: 29
+Arcanine Hisui @ Rocky Helmet
+Level: 69
+Ability: Intimidate
+- Stealth Rock
+- Extreme Speed
+- Stone Edge
+- Flare Blitz
+
+Corviknight @ Maranga Berry
+Level: 70
+Ability: Mirror Armor
+- Iron Defense
+- Roost
+- Body Press
+- Sky Attack
+
+Primarina @ Weakness Policy
+Level: 70
+Ability: Torrent
+- Moonblast
+- Aqua Step
+- Aqua Ring
+- Hydro Cannon
+
+Pheromosa @ Focus Sash
+Level: 68
+- Triple Axel
+- Rapid Spin
+- High Jump Kick
+- Hyper Beam
+
+Mantine @ Leftovers
+Level: 70
+Ability: Water Absorb
+- Roost
+- Air Slash
+- Scald
+- Mirror Coat
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_15 ===
 Name: GRUNT
@@ -15932,8 +16995,45 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Numel
-Level: 29
+Flareon @ Toxic Orb
+Level: 70
+Ability: Guts
+- Facade
+- Flare Blitz
+- Trailblaze
+- Superpower
+
+Rapidash @ Shell Bell
+Level: 70
+Ability: Speed Boost
+- Flare Blitz
+- Play Rough
+- Drill Run
+- Swords Dance
+
+Armarouge @ Room Service
+Level: 70
+Ability: Flash Fire
+- Trick Room
+- Armor Cannon
+- Psyshock
+- Aura Sphere
+
+Centiskorch @ Leftovers
+Level: 70
+Ability: White Smoke
+- Burn Up
+- Fire Lash
+- Lunge
+- Power Whip
+
+Pyroar @ Assault Vest
+Level: 70
+Ability: Flash Fire
+- Flamethrower
+- Hyper Voice
+- Hyper Beam
+- Dark Pulse
 
 === TRAINER_GRUNT_MAGMA_HIDEOUT_16 ===
 Name: GRUNT
@@ -15944,8 +17044,43 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Baltoy
-Level: 29
+Marowak Alola @ Thick Club
+Level: 70
+Ability: Rock Head
+- Flare Blitz
+- Shadow Bone
+- Flame Charge
+- Bonemerang
+
+Tauros Paldea Blaze @ Leftovers
+Level: 69
+Ability: Anger POint
+- Amnesia
+- Iron Defense
+- Rest
+- Raging Bull
+
+Castform @ Life Orb
+Level: 71
+- Fire Blast
+- Solar Beam
+- Ice Beam
+- Calm Mind
+
+Oricorio @ Leftovers
+Level: 70
+- Revelation Dance
+- Quiver Dance
+- Air Slash
+- Roost
+
+Dugtrio @ Life Orb
+Level: 70
+Ability: Arena Trap
+- Earthquake
+- Smack Down
+- Play Rough
+- Final Gambit
 
 === TRAINER_TABITHA_MAGMA_HIDEOUT ===
 Name: TABITHA
@@ -15956,17 +17091,67 @@ Music: Magma
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
-Numel
-Level: 26
+Scovillain @ Leftovers  
+Ability: Moody  
+Level: 69  
+EVs: 252 SpA  
+Bashful Nature  
+- Trailblaze  
+- Solar Beam  
+- Overheat  
+- Protect  
 
-Mightyena
-Level: 28
+Skeledirge @ Leftovers  
+Ability: Unaware  
+EVs: 252 HP / 252 SpA  
+Level: 69  
+Modest Nature  
+IVs: 0 Atk  
+- Torch Song  
+- Slack Off  
+- Shadow Ball  
+- Will-O-Wisp  
 
-Zubat
-Level: 30
+Centiskorch-Gmax @ Heavy-Duty Boots  
+Ability: Flash Fire  
+Level: 69  
+EVs: 252 Atk / 252 Spe  
+Adamant Nature  
+- Flare Blitz  
+- Leech Life  
+- Giga Impact  
+- Power Whip  
 
-Camerupt
-Level: 33
+Exeggutor @ Life Orb  
+Ability: Chlorophyll  
+Level: 69  
+Tera Type: Ground  
+EVs: 252 SpA / 248 Spe  
+Timid Nature  
+- Weather Ball  
+- Solar Beam  
+- Tera Blast  
+- Psyshock  
+
+Arceus-Fire @ Flame Plate  
+Ability: Multitype  
+Level: 69  
+EVs: 24 Atk / 252 SpA / 228 Spe  
+- Judgment  
+- Extreme Speed  
+- Aura Sphere  
+- Draco Meteor
+
+Great Tusk @ Life Orb  
+Ability: Protosynthesis  
+Level: 69  
+Tera Type: Ground  
+EVs: 248 HP / 12 Atk / 248 Spe  
+Jolly Nature  
+- Headlong Rush  
+- Bulk Up  
+- Close Combat  
+- Ice Spinner  
 
 === TRAINER_DARCY ===
 Name: DARCY
@@ -16404,11 +17589,12 @@ Ability: Immunity
 Level: 18
 - Swords Dance
 - Facade
+- Quick Attack
 
 Ambipom
 Ability: Technician
 Level: 18
-- Tackle
+- Tickle
 - Tail Slap
 - Tail Whip
 - Tailwind
@@ -16424,10 +17610,10 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 
 Cottonee
 Ability: Prankster
-Level: 18
+Level: 19
 - Tailwind
 - Stealth Rock
-- Spikes
+- Giga Drain
 - Sticky Web
 
 Azumarill
@@ -19279,28 +20465,16 @@ AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Ch
 Wobbuffet
 Level: 41
 
-=== TRAINER_RED ===
+=== TRAINER_RED_SINGLES ===
 Name: RED
-Class: Rival
+Class: Elite Four
 Pic: Red
 Gender: Male
-Music: Male
+Music: Elite Four
 Double Battle: No
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Charmander
-Level: 5
-
-=== TRAINER_LEAF ===
-Name: LEAF
-Class: Rival
-Pic: Leaf
-Gender: Female
-Music: Male
-Double Battle: No
-AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
-
-Bulbasaur
 Level: 5
 
 === TRAINER_BRENDAN_PLACEHOLDER ===

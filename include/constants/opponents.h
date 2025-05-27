@@ -264,10 +264,10 @@
 #define TRAINER_WALTER_3                    258
 #define TRAINER_WALTER_4                    259
 #define TRAINER_WALTER_5                    260
-#define TRAINER_SIDNEY                      261
-#define TRAINER_PHOEBE                      262
+#define TRAINER_RED_DOUBLES                 261
+#define TRAINER_WALLY_DOUBLES               262
 #define TRAINER_GLACIA                      263
-#define TRAINER_DRAKE                       264
+#define TRAINER_LEAF                        264
 #define TRAINER_ROXANNE_1                   265
 #define TRAINER_BRAWLY_1                    266
 #define TRAINER_WATTSON_1                   267
@@ -854,8 +854,8 @@
 #define TRAINER_MARIELA                     848
 #define TRAINER_ALVARO                      849
 #define TRAINER_EVERETT                     850
-#define TRAINER_RED                         851
-#define TRAINER_LEAF                        852
+#define TRAINER_RED_SINGLES                 851
+#define TRAINER_WALLY_SINGLES               852
 #define TRAINER_BRENDAN_PLACEHOLDER         853
 #define TRAINER_MAY_PLACEHOLDER             854
 

@@ -6,7 +6,7 @@
 #define SLOW_MOVEMENT_ON_STAIRS     FALSE       // If enabled, the player will move slower up/down stairs like in FR
 
 // Other settings
-#define OW_POISON_DAMAGE                GEN_LATEST // In Gen4, Pokémon no longer faint from Poison in the overworld. In Gen5+, they no longer take damage at all.
+#define OW_POISON_DAMAGE                GEN_4      // In Gen4, Pokémon no longer faint from Poison in the overworld. In Gen5+, they no longer take damage at all.
 #define OW_DOUBLE_APPROACH_WITH_ONE_MON FALSE      // If enabled, you can be spotted by two trainers at the same time even if you only have one eligible Pokémon in your party.
 #define OW_HIDE_REPEAT_MAP_POPUP        FALSE      // If enabled, map popups will not appear if entering a map with the same Map Section Id as the last.
 #define OW_FRLG_WHITEOUT                FALSE      // If enabled, shows an additional whiteout message and post whiteout event script with healing NPC.
@@ -97,6 +97,10 @@
 #define OW_LIGHTNING_ROD            GEN_LATEST // In Gen8+, if a Pokémon with Lightning Rod is leading the party, there is a 50% chance to encounter an Electric-type Pokémon.
 #define OW_STORM_DRAIN              GEN_LATEST // In Gen8+, if a Pokémon with Storm Drain is leading the party, there is a 50% chance to encounter a Water-type Pokémon.
 #define OW_FLASH_FIRE               GEN_LATEST // In Gen8+, if a Pokémon with Flash Fire is leading the party, there is a 50% chance to encounter a Fire-type Pokémon.
+#define OW_BLAZE                    GEN_LATEST // In Gen8+, if a Pokémon with Blaze is leading the party, there is a 50% chance to encounter a Fire-type Pokémon.
+#define OW_OVERGROW                 GEN_LATEST // In Gen8+, if a Pokémon with Overgrow is leading the party, there is a 50% chance to encounter a Grass-type Pokémon.
+#define OW_TORRENT                  GEN_LATEST // In Gen8+, if a Pokémon with Torrent is leading the party, there is a 50% chance to encounter a Water-type Pokémon.
+#define OW_SWARM                    GEN_LATEST // In Gen8+, if a Pokémon with Swarm is leading the party, there is a 50% chance to encounter a Bug-type Pokémon.
 
 // These generational defines only make a distinction for OW_ALTERED_TIME_RATIO
 #define GEN_8_PLA                       GEN_LATEST + 2

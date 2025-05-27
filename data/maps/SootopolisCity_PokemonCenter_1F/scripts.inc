@@ -17,6 +17,13 @@ SootopolisCity_PokemonCenter_1F_EventScript_Nurse::
 	release
 	end
 
+SootopolisCity_PokemonCenter_1F_EventScript_Util::
+	call Common_EventScript_PkmnCenterUtil
+	waitmessage
+	waitbuttonpress
+	release
+	end
+	
 SootopolisCity_PokemonCenter_1F_EventScript_Gentleman::
 	lock
 	faceplayer

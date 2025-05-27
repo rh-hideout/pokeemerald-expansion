@@ -90,53 +90,6 @@
 
   ],
   "bg_events": [
-    {
-      "type": "sign",
-      "x": 31,
-      "y": 8,
-      "elevation": 5,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalSalt1"
-    },
-    {
-      "type": "sign",
-      "x": 14,
-      "y": 26,
-      "elevation": 3,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalSalt2"
-    },
-    {
-      "type": "sign",
-      "x": 41,
-      "y": 20,
-      "elevation": 5,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell1"
-    },
-    {
-      "type": "sign",
-      "x": 41,
-      "y": 10,
-      "elevation": 5,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell2"
-    },
-    {
-      "type": "sign",
-      "x": 6,
-      "y": 9,
-      "elevation": 3,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell3"
-    },
-    {
-      "type": "sign",
-      "x": 16,
-      "y": 13,
-      "elevation": 5,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell4"
-    }
+
   ]
 }

@@ -29,7 +29,7 @@ AquaHideout_B1F_EventScript_ShowElectrode2::
 AquaHideout_B1F_EventScript_Electrode1::
 	lock
 	faceplayer
-	givemon SPECIES_SILVALLY, 75, ITEM_NONE, ITEM_POKE_BALL, NATURE_SERIOUS
+	givemon SPECIES_TYPE_NULL, 75, ITEM_NONE, ITEM_POKE_BALL, NATURE_SERIOUS
 	setflag FLAG_DEFEATED_ELECTRODE_1_AQUA_HIDEOUT
 	setflag FLAG_DEFEATED_ELECTRODE_2_AQUA_HIDEOUT
 	release

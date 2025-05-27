@@ -901,16 +901,14 @@ const struct Item gItemsInfo[] =
     [ITEM_REVIVAL_HERB] =
     {
         .name = _("Revival Herb"),
-        .price = 2800,
+        .price = 0,
         .description = COMPOUND_STRING(
             "A very bitter herb\n"
             "that revives a\n"
             "fainted Pokémon."),
         .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_PARTY_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_Medicine,
-        .battleUsage = EFFECT_ITEM_REVIVE,
-        .effect = gItemEffect_RevivalHerb,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
         .iconPic = gItemIcon_RevivalHerb,
         .iconPalette = gItemIconPalette_RevivalHerb,
@@ -1543,7 +1541,7 @@ const struct Item gItemsInfo[] =
         .description = COMPOUND_STRING(
             "Turns the ability\n"
             "of a Pokémon into\n"
-            "a rare ability."),
+            "a hidden ability."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_AbilityPatch,
@@ -1552,6 +1550,23 @@ const struct Item gItemsInfo[] =
     },
 
 // Mints
+
+    [ITEM_SERIOUS_MINT] =
+    {
+        .name = _("Serious Mint"),
+        .price = (I_PRICE >= GEN_9) ? 20000 : 20,
+        .description = COMPOUND_STRING(
+            "Can be smelled. It\n"
+            "ups , and\n"
+            "lowers nothing."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_Mint,
+        .secondaryId = NATURE_SERIOUS,
+        .flingPower = 10,
+        .iconPic = gItemIcon_Mint,
+        .iconPalette = gItemIconPalette_GreenMint,
+    },
 
     [ITEM_LONELY_MINT] =
     {
@@ -1891,23 +1906,6 @@ const struct Item gItemsInfo[] =
         .flingPower = 10,
         .iconPic = gItemIcon_Mint,
         .iconPalette = gItemIconPalette_GreenMint,
-    },
-
-    [ITEM_SERIOUS_MINT] =
-    {
-        .name = _("Serious Mint"),
-        .price = (I_PRICE >= GEN_9) ? 20000 : 20,
-        .description = COMPOUND_STRING(
-            "Can be smelled. It\n"
-            "makes each stat\n"
-            "grow equally."),
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_PARTY_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_Mint,
-        .secondaryId = NATURE_SERIOUS,
-        .flingPower = 10,
-        .iconPic = gItemIcon_Mint,
-        .iconPalette = gItemIconPalette_YellowMint,
     },
 
 // Candy
@@ -6988,7 +6986,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-    .flingEffect = MOVE_EFFECT_PARALYSIS,
+    //.flingEffect = MOVE_EFFECT_PARALYSIS,
         .iconPic = gItemIcon_LightBall,
         .iconPalette = gItemIconPalette_LightBall,
     },
@@ -7697,7 +7695,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 70,
-        .flingEffect = MOVE_EFFECT_POISON,
+        //.flingEffect = MOVE_EFFECT_POISON,
         .iconPic = gItemIcon_PoisonBarb,
         .iconPalette = gItemIconPalette_PoisonBarb,
     },
@@ -7932,7 +7930,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .flingEffect = MOVE_EFFECT_BURN,
+        //.flingEffect = MOVE_EFFECT_BURN,
         .iconPic = gItemIcon_FlameOrb,
         .iconPalette = gItemIconPalette_FlameOrb,
     },
@@ -7950,7 +7948,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .flingEffect = MOVE_EFFECT_TOXIC,
+        //.flingEffect = MOVE_EFFECT_TOXIC,
         .iconPic = gItemIcon_ToxicOrb,
         .iconPalette = gItemIconPalette_ToxicOrb,
     },
@@ -8209,7 +8207,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
-        .flingEffect = MOVE_EFFECT_FLING_WHITE_HERB,
+        //.flingEffect = MOVE_EFFECT_FLING_WHITE_HERB,
         .iconPic = gItemIcon_InBattleHerb,
         .iconPalette = gItemIconPalette_WhiteHerb,
     },
@@ -8293,7 +8291,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
-        .flingEffect = MOVE_EFFECT_FLING_MENTAL_HERB,
+        //.flingEffect = MOVE_EFFECT_FLING_MENTAL_HERB,
         .iconPic = gItemIcon_InBattleHerb,
         .iconPalette = gItemIconPalette_MentalHerb,
     },
@@ -8310,7 +8308,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
         .flingPower = 30,
-        .flingEffect = MOVE_EFFECT_FLINCH,
+        //.flingEffect = MOVE_EFFECT_FLINCH,
         .iconPic = gItemIcon_KingsRock,
         .iconPalette = gItemIconPalette_KingsRock,
     },
@@ -8796,7 +8794,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
         .flingPower = 30,
-        .flingEffect = MOVE_EFFECT_FLINCH,
+        //.flingEffect = MOVE_EFFECT_FLINCH,
         .iconPic = gItemIcon_RazorFang,
         .iconPalette = gItemIconPalette_RazorFang,
     },
@@ -11209,40 +11207,49 @@ const struct Item gItemsInfo[] =
         .secondaryId = MOVE_POLLEN_PUFF,
     },
 
-    [ITEM_TM52] =
+    [ITEM_TM_LOW_KICK] =
     {
         .name = _("TM52"),
         .price = 3000,
-        .description = sQuestionMarksDesc, // Todo
+        .description = COMPOUND_STRING(
+            "A kick that inflicts more\n"
+            "damage on heavier foes\n"
+            "going up to 120 BP."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
-        .secondaryId = MOVE_NONE, // Todo
+        .secondaryId = MOVE_BRICK_BREAK,
     },
 
-    [ITEM_TM53] =
+    [ITEM_TM_CLOSE_COMBAT] =
     {
         .name = _("TM53"),
         .price = 3000,
-        .description = sQuestionMarksDesc, // Todo
+        .description = COMPOUND_STRING(
+            "A strong fighting-type\n"
+            "attack that lowers both\n"
+            "defensive stats."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
-        .secondaryId = MOVE_NONE, // Todo
+        .secondaryId = MOVE_CLOSE_COMBAT,
     },
 
-    [ITEM_TM54] =
+    [ITEM_TM_CRUNCH] =
     {
         .name = _("TM54"),
         .price = 3000,
-        .description = sQuestionMarksDesc, // Todo
+        .description = COMPOUND_STRING(
+            "Crunches the opponent with\n"
+            "sharp fangs.\n"
+            "May lower Defense."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
-        .secondaryId = MOVE_NONE, // Todo
+        .secondaryId = MOVE_CRUNCH, 
     },
 
     [ITEM_TM55] =

@@ -18,6 +18,13 @@ VerdanturfTown_PokemonCenter_1F_EventScript_Nurse::
 	release
 	end
 
+VerdanturfTown_PokemonCenter_1F_EventScript_Util::
+	call Common_EventScript_PkmnCenterUtil
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
 VerdanturfTown_PokemonCenter_1F_EventScript_Gentleman::
 	msgbox VerdanturfTown_PokemonCenter_1F_Text_FaithInYourPokemon, MSGBOX_NPC
 	end

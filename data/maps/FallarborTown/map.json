@@ -106,13 +106,6 @@
       "elevation": 0,
       "dest_map": "MAP_FALLARBOR_TOWN_COZMOS_HOUSE",
       "dest_warp_id": "0"
-    },
-    {
-      "x": 1,
-      "y": 6,
-      "elevation": 0,
-      "dest_map": "MAP_FALLARBOR_TOWN_MOVE_RELEARNERS_HOUSE",
-      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
@@ -137,7 +130,7 @@
     },
     {
       "type": "sign",
-      "x": 3,
+      "x": 1,
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",

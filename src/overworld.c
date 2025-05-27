@@ -371,6 +371,9 @@ void DoWhiteOut(void)
         SetMoney(&gSaveBlock1Ptr->money, GetMoney(&gSaveBlock1Ptr->money) / 2);
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
+    if (FlagGet(FLAG_HARDCORE_MODE_ENABLED)){
+        CB2_NewGame();
+    }
     SetWarpDestinationToLastHealLocation();
     WarpIntoMap();
 }

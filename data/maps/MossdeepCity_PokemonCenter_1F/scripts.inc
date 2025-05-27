@@ -17,6 +17,13 @@ MossdeepCity_PokemonCenter_1F_EventScript_Nurse::
 	release
 	end
 
+MossdeepCity_PokemonCenter_1F_EventScript_Util::
+	call Common_EventScript_PkmnCenterUtil
+	waitmessage
+	waitbuttonpress
+	release
+	end
+	
 MossdeepCity_PokemonCenter_1F_EventScript_Woman::
 	msgbox MossdeepCity_PokemonCenter_1F_Text_GymLeaderDuoFormidable, MSGBOX_NPC
 	end

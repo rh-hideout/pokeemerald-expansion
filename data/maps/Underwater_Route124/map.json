@@ -76,14 +76,6 @@
     },
     {
       "type": "hidden_item",
-      "x": 42,
-      "y": 5,
-      "elevation": 3,
-      "item": "ITEM_CALCIUM",
-      "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_124_CALCIUM"
-    },
-    {
-      "type": "hidden_item",
       "x": 45,
       "y": 36,
       "elevation": 3,

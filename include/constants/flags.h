@@ -78,11 +78,11 @@
 #define FLAG_GAVE_TM_FLIP_TURN    0x40 // Weather Institute
 #define FLAG_GAVE_STONE_EDGE      0x41 // Pacifidlog
 #define FLAG_WTHR_INST_2_GRUNTS   0x42 // Unused Flag
-#define FLAG_UNUSED_0x043         0x43 // Unused Flag
-#define FLAG_UNUSED_0x044         0x44 // Unused Flag
-#define FLAG_UNUSED_0x045         0x45 // Unused Flag
-#define FLAG_UNUSED_0x046         0x46 // Unused Flag
-#define FLAG_UNUSED_0x047         0x47 // Unused Flag
+#define FLAG_104_TREE             0x43 // Unused Flag
+#define FLAG_HARDCORE_MODE_ENABLED 0x44 // Unused Flag
+#define FLAG_FIRST_RESTRICTED     0x45 // Unused Flag
+#define FLAG_E4_SINGLES           0x46 // Unused Flag
+#define FLAG_E4_DOUBLES           0x47 // Unused Flag
 #define FLAG_UNUSED_0x048         0x48 // Unused Flag
 #define FLAG_UNUSED_0x049         0x49 // Unused Flag
 #define FLAG_UNUSED_0x04A         0x4A // Unused Flag
@@ -626,7 +626,7 @@
 #define FLAG_HIDDEN_ITEM_VICTORY_ROAD_B2F_ELIXIR             (FLAG_HIDDEN_ITEMS_START + 0x52)
 #define FLAG_HIDDEN_ITEM_VICTORY_ROAD_B2F_MAX_REPEL          (FLAG_HIDDEN_ITEMS_START + 0x53)
 #define FLAG_HIDDEN_ITEM_ROUTE_120_REVIVE                    (FLAG_HIDDEN_ITEMS_START + 0x54)
-#define FLAG_HIDDEN_ITEM_ROUTE_104_ANTIDOTE                  (FLAG_HIDDEN_ITEMS_START + 0x55) // Unused
+#define FLAG_HIDDEN_ITEM_ROUTE_121_SCALE_SHOT                (FLAG_HIDDEN_ITEMS_START + 0x55)
 #define FLAG_HIDDEN_ITEM_ROUTE_108_RARE_CANDY                (FLAG_HIDDEN_ITEMS_START + 0x56)
 #define FLAG_HIDDEN_ITEM_ROUTE_119_MAX_ETHER                 (FLAG_HIDDEN_ITEMS_START + 0x57)
 #define FLAG_HIDDEN_ITEM_ROUTE_104_HEART_SCALE               (FLAG_HIDDEN_ITEMS_START + 0x58) // Unused

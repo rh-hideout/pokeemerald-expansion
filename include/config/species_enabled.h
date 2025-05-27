@@ -154,7 +154,7 @@
 #define P_FAMILY_WOOPER                  P_GEN_2_POKEMON
 #define P_FAMILY_MURKROW                 P_GEN_2_POKEMON
 #define P_FAMILY_MISDREAVUS              P_GEN_2_POKEMON
-#define P_FAMILY_UNOWN                   P_GEN_2_POKEMON
+#define P_FAMILY_UNOWN                   FALSE
 #define P_FAMILY_WOBBUFFET               P_GEN_2_POKEMON
 #define P_FAMILY_GIRAFARIG               P_GEN_2_POKEMON
 #define P_FAMILY_PINECO                  P_GEN_2_POKEMON

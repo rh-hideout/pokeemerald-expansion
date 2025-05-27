@@ -31,10 +31,34 @@ LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	call LittlerootTown_EventScript_GiveRunningShoes
+	goto LittlerootTown_EventScript_HardcoreMode
+	end
+
+LittlerootTown_EventScript_EndMomSpeech::
 	applymovement LOCALID_MOM, LittlerootTown_Movement_MomReturnHome
 	waitmovement 0
 	goto LittlerootTown_EventScript_SetReceivedRunningShoes
+	releaseall
 	end
+
+LittlerootTown_EventScript_EnableHardcore::
+	setflag FLAG_HARDCORE_MODE_ENABLED
+	goto LittlerootTown_EventScript_EndMomSpeech
+	releaseall
+	end
+
+
+LittlerootTown_EventScript_HardcoreMode:
+	msgbox LittlerootTown_Text_HardcoreMode, MSGBOX_YESNO
+	switch VAR_RESULT
+	case NO, LittlerootTown_EventScript_EndMomSpeech
+	case YES, LittlerootTown_EventScript_EnableHardcore
+	releaseall
+	end
+
+LittlerootTown_Text_HardcoreMode:
+	.string "Would you like to enable HARDCORE mode?$"
+
 
 LittlerootTown_Movement_MomReturnHome:
 	walk_down
@@ -57,7 +81,7 @@ LittlerootTown_EventScript_SetReceivedRunningShoes::
 	setflag FLAG_SYS_B_DASH
 	setvar VAR_LITTLEROOT_TOWN_STATE, 2
 	removeobject LOCALID_MOM
-	release
+	releaseall
 	end
 
 LittlerootTown_EventScript_GiveRunningShoes::

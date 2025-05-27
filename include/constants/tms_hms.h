@@ -52,7 +52,10 @@
     F(DRAIN_PUNCH) \
     F(POLTERGEIST) \
     F(OVERHEAT) \
-    F(POLLEN_PUFF)
+    F(POLLEN_PUFF)\
+    F(LOW_KICK)\
+    F(CLOSE_COMBAT)\
+    F(CRUNCH)
     
 #define FOREACH_HM(F) \
     F(CUT) \

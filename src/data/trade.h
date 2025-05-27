@@ -984,7 +984,7 @@ static const union AffineAnimCmd *const sAffineAnims_CrossingMonPics[] =
 
 static const struct InGameTrade sIngameTrades[] =
 {
-    [INGAME_TRADE_SEEDOT] =
+    [INGAME_TRADE_PSYDUCK] =
     {
         .nickname = _("PISSYDUCK"),
         .species = SPECIES_PSYDUCK,
@@ -1000,9 +1000,9 @@ static const struct InGameTrade sIngameTrades[] =
         .sheen = 10,
         .requestedSpecies = SPECIES_SUNKERN
     },
-    [INGAME_TRADE_PLUSLE] =
+    [INGAME_TRADE_PUPITAR] =
     {
-        .nickname = _("PLUSES"),
+        .nickname = _("Thick Tar"),
         .species = SPECIES_PLUSLE,
         .ivs = {4, 4, 4, 5, 5, 4},
         .abilityNum = 0,
@@ -1016,21 +1016,21 @@ static const struct InGameTrade sIngameTrades[] =
         .sheen = 10,
         .requestedSpecies = SPECIES_VOLBEAT
     },
-    [INGAME_TRADE_HORSEA] =
+    [INGAME_TRADE_CHI_YU] =
     {
-        .nickname = _("SEASOR"),
-        .species = SPECIES_HORSEA,
+        .nickname = _("Chuuu"),
+        .species = SPECIES_CHI_YU,
         .ivs = {5, 4, 4, 4, 5, 4},
         .abilityNum = 0,
         .otId = 46285,
         .conditions = {5, 5, 5, 5, 30},
         .personality = 0x7F,
-        .heldItem = ITEM_WAVE_MAIL,
+        .heldItem = ITEM_NONE,
         .mailNum = 1,
         .otName = _("SKYLAR"),
         .otGender = MALE,
         .sheen = 10,
-        .requestedSpecies = SPECIES_BAGON
+        .requestedSpecies = SPECIES_PUPITAR
     },
     [INGAME_TRADE_MEOWTH] =
     {
@@ -1047,6 +1047,54 @@ static const struct InGameTrade sIngameTrades[] =
         .otGender = FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_SKITTY
+    },
+    [INGAME_TRADE_WO_CHIEN] =
+    {
+        .nickname = _("Woah Dog"),
+        .species = SPECIES_WO_CHIEN,
+        .ivs = {4, 5, 4, 5, 4, 4},
+        .abilityNum = 0,
+        .otId = 91481,
+        .conditions = {5, 5, 5, 30, 5},
+        .personality = 0x8B,
+        .heldItem = ITEM_NONE,
+        .mailNum = 2,
+        .otName = _("ISIS"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_PUPITAR
+    },
+    [INGAME_TRADE_CHIEN_PAO] =
+    {
+        .nickname = _("Pow Dog"),
+        .species = SPECIES_CHIEN_PAO,
+        .ivs = {4, 5, 4, 5, 4, 4},
+        .abilityNum = 0,
+        .otId = 91481,
+        .conditions = {5, 5, 5, 30, 5},
+        .personality = 0x8B,
+        .heldItem = ITEM_NONE,
+        .mailNum = 2,
+        .otName = _("ISIS"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_PUPITAR
+    },
+    [INGAME_TRADE_TING_LU] =
+    {
+        .nickname = _("Lu-Ting"),
+        .species = SPECIES_TING_LU,
+        .ivs = {4, 5, 4, 5, 4, 4},
+        .abilityNum = 0,
+        .otId = 91481,
+        .conditions = {5, 5, 5, 30, 5},
+        .personality = 0x8B,
+        .heldItem = ITEM_NONE,
+        .mailNum = 2,
+        .otName = _("ISIS"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_PUPITAR
     }
 };
 

@@ -94,6 +94,7 @@ MossdeepCity_Gym_EventScript_TateAndLizaDefeated::
 
 MossdeepCity_Gym_EventScript_GiveCalmMind2::
 	giveitem ITEM_TM_CALM_MIND
+	giveitem ITEM_HEART_SCALE
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	msgbox MossdeepCity_Gym_Text_ExplainCalmMind, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_TM_CALM_MIND
@@ -355,19 +356,6 @@ MossdeepCity_Gym_EventScript_PurpleFloorSwitch::
 	freerotatingtilepuzzle
 	end
 
-
-MossdeepCity_Gym_EventScript_BrightRedFloorSwitch::
-	playse SE_SWITCH
-	waitse
-	playse SE_REPEL
-	initrotatingtilepuzzle FALSE
-	moverotatingtileobjects 5
-	waitmovement 0
-	turnrotatingtileobjects
-	waitmovement 0
-	freerotatingtilepuzzle
-	end
-
 MossdeepCity_Gym_EventScript_RedFloorSwitch::
 	playse SE_SWITCH
 	waitse
@@ -425,8 +413,6 @@ MossdeepCity_Gym_Text_VirgilPostBattle:
 MossdeepCity_Gym_Text_BlakeIntro:
 	.string "Fufufufu… Watch me levitate a POKé\n"
 	.string "BALL telekinetically!\p"
-	.string "Wrooooooooaaaar!\n"
-	.string "… … … … … … …\p"
 	.string "Sometimes, I'm out of sync…$"
 
 MossdeepCity_Gym_Text_BlakeDefeat:
@@ -436,19 +422,18 @@ MossdeepCity_Gym_Text_BlakeDefeat:
 MossdeepCity_Gym_Text_BlakePostBattle:
 	.string "A POKé BALL was too heavy to lift\n"
 	.string "psychically. But this dust bunny…\p"
-	.string "Whoooooooooooooooh!\n"
-	.string "… … … … … …\p"
-	.string "No, I'm not cheating!\n"
 	.string "I didn't blow on it! Honestly!$"
 
 MossdeepCity_Gym_Text_HannahIntro:
 	.string "When you lose to me, don't be too hard\n"
 	.string "on yourself.\p"
-	.string "It's not that you're weak--I'm just\n"
-	.string "too strong!$"
+	.string "It's not that you're weak--\p"
+	.string "Oh wait...\p"
+	.string "It is.$"
 
 MossdeepCity_Gym_Text_HannahDefeat:
-	.string "You're just too strong!$"
+	.string "Make sure you hit the orange button\n"
+	.string "3 times total.$"
 
 MossdeepCity_Gym_Text_HannahPostBattle:
 	.string "I'm not going to get down on myself for\n"

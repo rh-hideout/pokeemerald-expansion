@@ -653,6 +653,8 @@ EverGrandeCity_HallOfFame_EventScript_ResetEliteFour::
 	clearflag FLAG_DEFEATED_ELITE_4_PHOEBE
 	clearflag FLAG_DEFEATED_ELITE_4_GLACIA
 	clearflag FLAG_DEFEATED_ELITE_4_DRAKE
+	clearflag FLAG_E4_DOUBLES
+	clearflag FLAG_E4_SINGLES
 	setvar VAR_ELITE_4_STATE, 0
 	return
 
@@ -1143,3 +1145,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/text/save.inc"
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/dexnav.inc"
+
+	.include "data/maps/Route104_PokeCenter/scripts.inc"

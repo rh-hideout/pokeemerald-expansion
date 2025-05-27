@@ -2667,7 +2667,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .baseHP        = 110,
         .baseAttack    = 135,
         .baseDefense   = 60,
-        .baseSpeed     = 88,
+        .baseSpeed     = 89,
         .baseSpAttack  = 50,
         .baseSpDefense = 65,
         .types = MON_TYPES(TYPE_GROUND, TYPE_STEEL),
@@ -2826,14 +2826,14 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY),
         .abilities = { ABILITY_REGENERATOR, ABILITY_REGENERATOR, ABILITY_REGENERATOR },
         .bodyColor = BODY_COLOR_WHITE,
-        .speciesName = _("Audino"),
+        .speciesName = _("Audinette"),
         .cryId = CRY_AUDINO_MEGA,
         .natDexNum = NATIONAL_DEX_AUDINO,
         .categoryName = _("Hearing"),
         .height = 15,
         .weight = 320,
         .description = COMPOUND_STRING(
-            "Mega Audino emits a soothing pulse from\n"
+            "Audinette emits a soothing pulse from\n"
             "its body that reduces hostility in others.\n"
             "Anything that comes into contact with its\n"
             "second feelers will fall into a deep sleep."),
@@ -12155,10 +12155,10 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
     {
         .baseHP        = 79,
         .baseAttack    = 115,
-        .baseDefense   = 70,
+        .baseDefense   = 80,
         .baseSpeed     = 111,
         .baseSpAttack  = 125,
-        .baseSpDefense = 80,
+        .baseSpDefense = 85,
         .types = MON_TYPES(TYPE_FLYING),
         .catchRate = 3,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 290 : 261,

@@ -14,22 +14,6 @@ PetalburgWoods_EventScript_DevonResearcherLeft::
 	closemessage
 	msgbox PetalburgWoods_Text_NotAOneToBeFound, MSGBOX_DEFAULT
 	closemessage
-	goto PetalburgWoods_EventScript_EncounterGrunt
-
-PetalburgWoods_EventScript_DevonResearcherRight::
-	lockall
-	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherApproachPlayerRight
-	waitmovement 0
-	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherLookAround
-	waitmovement 0
-	msgbox PetalburgWoods_Text_HaveYouSeenShroomish, MSGBOX_DEFAULT
-	closemessage
-	msgbox PetalburgWoods_Text_NotAOneToBeFound, MSGBOX_DEFAULT
-	closemessage
-	goto PetalburgWoods_EventScript_EncounterGrunt
-
-//Handle the whole encounter
-PetalburgWoods_EventScript_EncounterGrunt::
 	playbgm MUS_ENCOUNTER_AQUA, FALSE
 	applymovement LOCALID_GRUNT, PetalburgWoods_Movement_AquaEntrance
 	waitmovement 0
@@ -43,6 +27,35 @@ PetalburgWoods_EventScript_EncounterGrunt::
 	closemessage
 	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherFleeToPlayerLeft
 	waitmovement 0
+	goto PetalburgWoods_EventScript_EncounterGrunt
+
+PetalburgWoods_EventScript_DevonResearcherRight::
+	lockall
+	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherApproachPlayerRight
+	waitmovement 0
+	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherLookAround
+	waitmovement 0
+	msgbox PetalburgWoods_Text_HaveYouSeenShroomish, MSGBOX_DEFAULT
+	closemessage
+	msgbox PetalburgWoods_Text_NotAOneToBeFound, MSGBOX_DEFAULT
+	closemessage
+	playbgm MUS_ENCOUNTER_AQUA, FALSE
+	applymovement LOCALID_GRUNT, PetalburgWoods_Movement_AquaEntrance
+	waitmovement 0
+	msgbox PetalburgWoods_Text_IWasGoingToAmbushYou, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_GRUNT, PetalburgWoods_Movement_AquaApproachResearcherLeft
+	waitmovement 0
+	applymovement LOCALID_DEVON_EMPLOYEE, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	msgbox PetalburgWoods_Text_HandOverThosePapers, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherFleeToPlayerRight
+	waitmovement 0
+	goto PetalburgWoods_EventScript_EncounterGrunt
+
+//Handle the whole encounter
+PetalburgWoods_EventScript_EncounterGrunt::
 	msgbox PetalburgWoods_Text_YouHaveToHelpMe, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_GRUNT, PetalburgWoods_Movement_AquaApproachPlayer
@@ -78,15 +91,12 @@ PetalburgWoods_Movement_DevonResearcherLookAround:
 	delay_16
 	delay_4
 	face_right
-	delay_16
 	delay_8
 	face_left
-	delay_16
 	delay_8
 	face_down
 	delay_16
 	face_right
-	delay_16
 	delay_8
 	face_up
 	delay_16

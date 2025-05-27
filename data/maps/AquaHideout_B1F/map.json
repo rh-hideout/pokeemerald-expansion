@@ -5,7 +5,7 @@
   "music": "MUS_AQUA_MAGMA_HIDEOUT",
   "region_map_section": "MAPSEC_AQUA_HIDEOUT",
   "requires_flash": false,
-  "weather": "WEATHER_NONE",
+  "weather": "WEATHER_RAIN",
   "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,
@@ -23,13 +23,13 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "4",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "AquaHideout_B1F_EventScript_Grunt2",
       "flag": "FLAG_HIDE_AQUA_HIDEOUT_GRUNTS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
-      "x": 31,
+      "x": 30,
       "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -62,7 +62,7 @@
       "movement_range_x": 4,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "4",
+      "trainer_sight_or_berry_tree_id": "5",
       "script": "AquaHideout_B1F_EventScript_Grunt6",
       "flag": "FLAG_HIDE_AQUA_HIDEOUT_GRUNTS"
     },
@@ -127,7 +127,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "4",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "AquaHideout_B1F_EventScript_Grunt7",
       "flag": "FLAG_HIDE_AQUA_HIDEOUT_GRUNTS"
     }
@@ -162,7 +162,7 @@
       "dest_warp_id": "2"
     },
     {
-      "x": 31,
+      "x": 32,
       "y": 4,
       "elevation": 3,
       "dest_map": "MAP_AQUA_HIDEOUT_B1F",
@@ -204,7 +204,7 @@
       "dest_warp_id": "12"
     },
     {
-      "x": 32,
+      "x": 31,
       "y": 19,
       "elevation": 3,
       "dest_map": "MAP_AQUA_HIDEOUT_B1F",

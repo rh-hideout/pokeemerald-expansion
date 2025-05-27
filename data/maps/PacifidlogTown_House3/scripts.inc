@@ -5,7 +5,15 @@ PacifidlogTown_House3_EventScript_Trader::
 	lock
 	faceplayer
 	goto_if_set FLAG_PACIFIDLOG_NPC_TRADE_COMPLETED, PacifidlogTown_House3_EventScript_TradeCompleted
-	setvar VAR_0x8008, INGAME_TRADE_HORSEA
+	message PacifidlogTown_House3_Text_WhichTrade
+	multichoice 20, 2, MULTI_CHOICE_MULTI_TRADE, 0
+	case 0, PacifidlogTown_House3_EventScript_ChiYu
+	case 1, PacifidlogTown_House3_EventScript_WoChien
+	case 2, PacifidlogTown_House3_EventScript_ChienPao
+	case 3, PacifidlogTown_House3_EventScript_TingLu
+	end
+
+PacifidlogTown_House3_EventScript_TraderPart2::
 	copyvar VAR_0x8004, VAR_0x8008
 	specialvar VAR_RESULT, GetInGameTradeSpeciesInfo
 	copyvar VAR_0x8009, VAR_RESULT
@@ -29,6 +37,29 @@ PacifidlogTown_House3_EventScript_Trader::
 	setflag FLAG_PACIFIDLOG_NPC_TRADE_COMPLETED
 	release
 	end
+
+PacifidlogTown_House3_EventScript_ChiYu::
+	setvar VAR_0x8008, INGAME_TRADE_CHI_YU
+	goto PacifidlogTown_House3_EventScript_TraderPart2
+	end
+
+PacifidlogTown_House3_EventScript_ChienPao::
+	setvar VAR_0x8008, INGAME_TRADE_CHIEN_PAO
+	goto PacifidlogTown_House3_EventScript_TraderPart2
+	end
+
+PacifidlogTown_House3_EventScript_WoChien::
+	setvar VAR_0x8008, INGAME_TRADE_WO_CHIEN
+	goto PacifidlogTown_House3_EventScript_TraderPart2
+	end
+
+PacifidlogTown_House3_EventScript_TingLu::
+	setvar VAR_0x8008, INGAME_TRADE_TING_LU
+	goto PacifidlogTown_House3_EventScript_TraderPart2
+	end
+
+PacifidlogTown_House3_Text_WhichTrade:
+	.string "Which Pokemon would you like to trade for?$"
 
 PacifidlogTown_House3_EventScript_DeclineTrade::
 	msgbox PacifidlogTown_House3_Text_NotDesperateOrAnything, MSGBOX_DEFAULT

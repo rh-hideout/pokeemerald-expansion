@@ -18,6 +18,13 @@ MauvilleCity_PokemonCenter_1F_EventScript_Nurse::
 	release
 	end
 
+MauvilleCity_PokemonCenter_1F_EventScript_Util::
+	call Common_EventScript_PkmnCenterUtil
+	waitmessage
+	waitbuttonpress
+	release
+	end
+	
 MauvilleCity_PokemonCenter_1F_EventScript_Woman1::
 	msgbox MauvilleCity_PokemonCenter_1F_Text_ManOverThereSaysWeirdThings, MSGBOX_NPC
 	end

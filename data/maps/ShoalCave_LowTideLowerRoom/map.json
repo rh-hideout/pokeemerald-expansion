@@ -75,13 +75,6 @@
 
   ],
   "bg_events": [
-    {
-      "type": "sign",
-      "x": 18,
-      "y": 2,
-      "elevation": 3,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ShoalCave_LowTideLowerRoom_EventScript_ShoalSalt4"
-    }
+
   ]
 }

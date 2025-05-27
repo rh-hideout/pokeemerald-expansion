@@ -5,7 +5,7 @@
   "music": "MUS_GYM",
   "region_map_section": "MAPSEC_MOSSDEEP_CITY",
   "requires_flash": false,
-  "weather": "WEATHER_FOG_HORIZONTAL",
+  "weather": "WEATHER_FOG_DIAGONAL",
   "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,
@@ -81,8 +81,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PSYCHIC_M",
-      "x": 6,
-      "y": 9,
+      "x": 3,
+      "y": 11,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -94,14 +94,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS",
-      "x": 6,
-      "y": 3,
+      "x": 3,
+      "y": 5,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "1",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "MossdeepCity_Gym_EventScript_Hannah",
       "flag": "0"
     },
@@ -185,8 +185,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
-      "x": 7,
-      "y": 9,
+      "x": 3,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -198,8 +198,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
-      "x": 10,
-      "y": 8,
+      "x": 7,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -211,8 +211,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
-      "x": 9,
-      "y": 8,
+      "x": 6,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 1,
@@ -224,8 +224,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_HEX_MANIAC",
-      "x": 12,
-      "y": 5,
+      "x": 9,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
@@ -237,8 +237,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
-      "x": 6,
-      "y": 6,
+      "x": 4,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -250,8 +250,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
-      "x": 11,
-      "y": 5,
+      "x": 8,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -264,13 +264,13 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
       "x": 22,
-      "y": 25,
+      "y": 26,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "MossdeepCity_Gym_EventScript_Clifford",
       "flag": "0"
     },
@@ -309,7 +309,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "1",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "MossdeepCity_Gym_EventScript_Kathleen",
       "flag": "0"
     },
@@ -393,9 +393,35 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
-      "x": 6,
-      "y": 5,
+      "x": 3,
+      "y": 8,
       "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0x0",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "x": 8,
+      "y": 32,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Common_EventScript_OutOfCenterPartyHeal",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 24,
+      "y": 26,
+      "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
@@ -435,25 +461,18 @@
       "dest_warp_id": "2"
     },
     {
-      "x": 7,
-      "y": 18,
+      "x": 5,
+      "y": 13,
       "elevation": 0,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "5"
-    },
-    {
-      "x": 8,
-      "y": 10,
-      "elevation": 0,
-      "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "4"
+      "dest_warp_id": "11"
     },
     {
       "x": 9,
       "y": 18,
       "elevation": 0,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "7"
+      "dest_warp_id": "6"
     },
     {
       "x": 23,
@@ -467,25 +486,39 @@
       "y": 33,
       "elevation": 3,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "9"
+      "dest_warp_id": "10"
     },
     {
       "x": 20,
       "y": 24,
       "elevation": 0,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "8"
+      "dest_warp_id": "9"
     },
     {
-      "x": 11,
-      "y": 3,
+      "x": 8,
+      "y": 5,
       "elevation": 0,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
-      "dest_warp_id": "11"
+      "dest_warp_id": "8"
     },
     {
       "x": 20,
       "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_MOSSDEEP_CITY_GYM",
+      "dest_warp_id": "10"
+    },
+    {
+      "x": 7,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_MOSSDEEP_CITY_GYM",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 25,
+      "y": 26,
       "elevation": 0,
       "dest_map": "MAP_MOSSDEEP_CITY_GYM",
       "dest_warp_id": "10"
@@ -494,7 +527,7 @@
   "coord_events": [
     {
       "type": "trigger",
-      "x": 4,
+      "x": 5,
       "y": 22,
       "elevation": 3,
       "var": "VAR_TEMP_1",
@@ -503,30 +536,21 @@
     },
     {
       "type": "trigger",
-      "x": 8,
+      "x": 5,
+      "y": 11,
+      "elevation": 3,
+      "var": "VAR_TEMP_1",
+      "var_value": "0",
+      "script": "MossdeepCity_Gym_EventScript_BlueFloorSwitch"
+    },
+    {
+      "type": "trigger",
+      "x": 3,
       "y": 9,
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
       "script": "MossdeepCity_Gym_EventScript_BlueFloorSwitch"
-    },
-    {
-      "type": "trigger",
-      "x": 6,
-      "y": 7,
-      "elevation": 3,
-      "var": "VAR_TEMP_1",
-      "var_value": "0",
-      "script": "MossdeepCity_Gym_EventScript_BlueFloorSwitch"
-    },
-    {
-      "type": "trigger",
-      "x": 24,
-      "y": 25,
-      "elevation": 3,
-      "var": "VAR_TEMP_1",
-      "var_value": "0",
-      "script": "MossdeepCity_Gym_EventScript_BrightRedFloorSwitch"
     },
     {
       "type": "trigger",
@@ -539,8 +563,8 @@
     },
     {
       "type": "trigger",
-      "x": 8,
-      "y": 6,
+      "x": 5,
+      "y": 8,
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
@@ -572,6 +596,15 @@
       "var": "VAR_TEMP_1",
       "var_value": "0",
       "script": "MossdeepCity_Gym_EventScript_GreenFloorSwitch"
+    },
+    {
+      "type": "trigger",
+      "x": 1,
+      "y": 9,
+      "elevation": 0,
+      "var": "VAR_TEMP_1",
+      "var_value": "0",
+      "script": "MossdeepCity_Gym_EventScript_RedFloorSwitch"
     }
   ],
   "bg_events": [
@@ -582,14 +615,6 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "MossdeepCity_Gym_EventScript_LeftGymStatue"
-    },
-    {
-      "type": "sign",
-      "x": 8,
-      "y": 34,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-      "script": "MossdeepCity_Gym_EventScript_RightGymStatue"
     }
   ]
 }

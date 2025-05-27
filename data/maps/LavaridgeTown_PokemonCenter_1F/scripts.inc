@@ -18,6 +18,13 @@ LavaridgeTown_PokemonCenter_1F_EventScript_Nurse::
 	release
 	end
 
+LavaridgeTown_PokemonCenter_1F_EventScript_Util::
+	call Common_EventScript_PkmnCenterUtil
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
 LavaridgeTown_PokemonCenter_1F_EventScript_Youngster::
 	msgbox LavaridgeTown_PokemonCenter_1F_Text_HotSpringCanInvigorate, MSGBOX_NPC
 	end

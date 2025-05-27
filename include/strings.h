@@ -365,6 +365,7 @@ extern const u8 gText_PkmnBaseVar2StatIncreased[];
 extern const u8 gText_MovesPPIncreased[];
 extern const u8 gText_PPWasRestored[];
 extern const u8 gText_WontHaveEffect[];
+extern const u8 gText_LevelCap[];
 extern const u8 gText_PkmnSnappedOutOfConfusion[];
 extern const u8 gText_PkmnFriendlyBaseVar2Fell[];
 extern const u8 gText_PkmnFriendlyBaseVar2CantFall[];
@@ -680,6 +681,7 @@ extern const u8 gText_RepelEffectsLingered[];
 extern const u8 gText_LureEffectsLingered[];
 extern const u8 gText_BoxFull[];
 extern const u8 gText_WontHaveEffect[];
+extern const u8 gText_LevelCap[];
 extern const u8 gText_NextFusionMon[];
 
 extern const u8 gText_LevelSymbol[];
@@ -2460,6 +2462,9 @@ extern const u8 gText_Celebi[];
 extern const u8 gText_Latias[];
 extern const u8 gText_Latios[];
 extern const u8 gText_Jirachi[];
+extern const u8 gText_Raikou[];
+extern const u8 gText_Entei[];
+extern const u8 gText_Suicune[];
 extern const u8 gText_Heatran[];
 extern const u8 gText_Cresselia[];
 extern const u8 gText_ShayminS[];
@@ -2470,7 +2475,9 @@ extern const u8 gText_Reshiram[];
 extern const u8 gText_Zekrom[];
 extern const u8 gText_Kyurem[];
 extern const u8 gText_Genesect[];
+extern const u8 gText_TornadusI[];
 extern const u8 gText_TornadusT[];
+extern const u8 gText_LandorusI[];
 extern const u8 gText_LandorusT[];
 extern const u8 gText_ThundurusI[];
 extern const u8 gText_ThundurusT[];
@@ -2484,10 +2491,68 @@ extern const u8 gText_Magearna[];
 extern const u8 gText_Marshadow[];
 extern const u8 gText_Zeraora[];
 extern const u8 gText_Melmetal[];
+extern const u8 gText_Necrozma[];
 extern const u8 gText_Zarude[];
 extern const u8 gText_UrshifuR[];
 extern const u8 gText_UrshifuS[];
-extern const u8 gText_Eternatus[];
+extern const u8 gText_Eternatus[]; 
+extern const u8 gText_Regidrago[]; 
+extern const u8 gText_Regieleki[]; 
+extern const u8 gText_BurnDrive[]; 
+extern const u8 gText_ChillDrive[]; 
+extern const u8 gText_DouseDrive[]; 
+extern const u8 gText_ShockDrive[]; 
+extern const u8 gText_InflictStatus[]; 
+extern const u8 gText_RelearnMove[]; 
+extern const u8 gText_SAPatch[]; 
+extern const u8 gText_NatureMint[]; 
+extern const u8 gText_EVItems[]; 
+extern const u8 gText_ChiYu[]; 
+extern const u8 gText_ChienPao[]; 
+extern const u8 gText_WoChien[]; 
+extern const u8 gText_TingLu[]; 
+extern const u8 gText_Singles[]; 
+extern const u8 gText_Doubles[]; 
+extern const u8 gText_NatureAtk[]; 
+extern const u8 gText_NatureDef[]; 
+extern const u8 gText_NatureSpA[]; 
+extern const u8 gText_NatureSpD[]; 
+extern const u8 gText_NatureSpe[]; 
+
+extern const u8 gText_Lonely[]; 
+extern const u8 gText_Adamant[]; 
+extern const u8 gText_Naughty[]; 
+extern const u8 gText_Brave[]; 
+
+extern const u8 gText_Bold[]; 
+extern const u8 gText_Impish[]; 
+extern const u8 gText_Lax[]; 
+extern const u8 gText_Relaxed[]; 
+
+extern const u8 gText_Modest[]; 
+extern const u8 gText_Mild[]; 
+extern const u8 gText_Rash[]; 
+extern const u8 gText_Quiet[]; 
+
+extern const u8 gText_Calm[]; 
+extern const u8 gText_Gentle[]; 
+extern const u8 gText_Careful[]; 
+extern const u8 gText_Sassy[]; 
+
+extern const u8 gText_Timid[]; 
+extern const u8 gText_Hasty[]; 
+extern const u8 gText_Jolly[]; 
+extern const u8 gText_Naive[];
+
+extern const u8 gText_HP_EV[]; 
+extern const u8 gText_ATK_EV[]; 
+extern const u8 gText_DEF_EV[]; 
+extern const u8 gText_SPA_EV[]; 
+extern const u8 gText_SPD_EV[]; 
+extern const u8 gText_SPE_EV[]; 
+//extern const u8 
+
+
 // FRLG whiteout
 extern const u8 gText_PlayerScurriedToCenter[];
 extern const u8 gText_PlayerScurriedBackHome[];

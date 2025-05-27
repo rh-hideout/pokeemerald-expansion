@@ -873,6 +873,9 @@ static const struct MenuAction MultichoiceList_Gen3Restricted[] =
     {gText_Latias},
     {gText_Latios},
     {gText_Jirachi},
+    {gText_Raikou},
+    {gText_Entei},
+    {gText_Suicune},
 };
 
 static const struct MenuAction MultichoiceList_Gen4Restricted[] =
@@ -891,7 +894,9 @@ static const struct MenuAction MultichoiceList_Gen5Restricted[] =
     {gText_Zekrom},
     {gText_Kyurem},
     {gText_Genesect},
+    {gText_TornadusI},
     {gText_TornadusT},
+    {gText_LandorusI},
     {gText_LandorusT},
     {gText_ThundurusI},
     {gText_ThundurusT},
@@ -913,6 +918,7 @@ static const struct MenuAction MultichoiceList_Gen7Restricted[] =
     {gText_Marshadow},
     {gText_Zeraora},
     {gText_Melmetal},
+    {gText_Necrozma},
 };
 
 static const struct MenuAction MultichoiceList_Gen8Restricted[] =
@@ -921,6 +927,98 @@ static const struct MenuAction MultichoiceList_Gen8Restricted[] =
     {gText_UrshifuR},
     {gText_UrshifuS},
     {gText_Eternatus},
+    {gText_Regidrago},
+    {gText_Regieleki},
+};
+
+static const struct MenuAction MultichoiceList_GenesectDrive[] =
+{
+    {gText_BurnDrive},
+    {gText_ChillDrive},
+    {gText_DouseDrive},
+    {gText_ShockDrive},
+};
+
+static const struct MenuAction MultichoiceList_PokemonCenter[] =
+{
+    {gText_InflictStatus},
+    {gText_RelearnMove},
+    {gText_SAPatch},
+    {gText_NatureMint},
+    {gText_EVItems},
+};
+
+static const struct MenuAction MultichoiceList_MultiTrade[] =
+{
+    {gText_ChiYu},
+    {gText_WoChien},
+    {gText_ChienPao},
+    {gText_TingLu},
+};
+
+static const struct MenuAction MultichoiceList_E4ModeMulti[] =
+{
+    {gText_Singles},
+    {gText_Doubles},
+}; 
+
+static const struct MenuAction MultichoiceList_NatureMint[] =
+{
+    {gText_NatureAtk},
+    {gText_NatureDef},
+    {gText_NatureSpA},
+    {gText_NatureSpD},
+    {gText_NatureSpe},
+};
+
+static const struct MenuAction MultichoiceList_AtkMint[] =
+{
+    {gText_Lonely},
+    {gText_Adamant},
+    {gText_Naughty},
+    {gText_Brave},
+};
+
+static const struct MenuAction MultichoiceList_DefMint[] =
+{
+    {gText_Bold},
+    {gText_Impish},
+    {gText_Lax},
+    {gText_Relaxed},
+};
+
+static const struct MenuAction MultichoiceList_SpAMint[] =
+{
+    {gText_Modest},
+    {gText_Mild},
+    {gText_Rash},
+    {gText_Quiet},
+};
+
+static const struct MenuAction MultichoiceList_SpDMint[] =
+{
+    {gText_Calm},
+    {gText_Gentle},
+    {gText_Careful},
+    {gText_Sassy},
+};
+
+static const struct MenuAction MultichoiceList_SpeMint[] =
+{
+    {gText_Timid},
+    {gText_Hasty},
+    {gText_Jolly},
+    {gText_Naive},
+};
+
+static const struct MenuAction MultichoiceList_EVItems[] =
+{
+    {gText_HP_EV},
+    {gText_ATK_EV},
+    {gText_DEF_EV},
+    {gText_SPA_EV},
+    {gText_SPD_EV},
+    {gText_SPE_EV},
 };
 
 struct MultichoiceListStruct
@@ -1054,15 +1152,26 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_CHOICE_STARTER_GEN_6]       = MULTICHOICE(MultichoiceList_Gen6Starter),
     [MULTI_CHOICE_STARTER_GEN_7]       = MULTICHOICE(MultichoiceList_Gen7Starter),
     [MULTI_CHOICE_STARTER_GEN_8]       = MULTICHOICE(MultichoiceList_Gen8Starter),
-    [MULTI_CHOICE_GENERATIONS]          = MULTICHOICE(MultichoiceList_Generation),
-    [MULTI_CHOICE_RESTRICTED_GEN_1]       = MULTICHOICE(MultichoiceList_Gen1Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_2]       = MULTICHOICE(MultichoiceList_Gen2Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_3]       = MULTICHOICE(MultichoiceList_Gen3Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_4]       = MULTICHOICE(MultichoiceList_Gen4Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_5]       = MULTICHOICE(MultichoiceList_Gen5Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_6]       = MULTICHOICE(MultichoiceList_Gen6Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_7]       = MULTICHOICE(MultichoiceList_Gen7Restricted),
-    [MULTI_CHOICE_RESTRICTED_GEN_8]       = MULTICHOICE(MultichoiceList_Gen8Restricted),
+    [MULTI_CHOICE_GENERATIONS]         = MULTICHOICE(MultichoiceList_Generation),
+    [MULTI_CHOICE_RESTRICTED_GEN_1]    = MULTICHOICE(MultichoiceList_Gen1Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_2]    = MULTICHOICE(MultichoiceList_Gen2Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_3]    = MULTICHOICE(MultichoiceList_Gen3Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_4]    = MULTICHOICE(MultichoiceList_Gen4Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_5]    = MULTICHOICE(MultichoiceList_Gen5Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_6]    = MULTICHOICE(MultichoiceList_Gen6Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_7]    = MULTICHOICE(MultichoiceList_Gen7Restricted),
+    [MULTI_CHOICE_RESTRICTED_GEN_8]    = MULTICHOICE(MultichoiceList_Gen8Restricted),
+    [MULTI_CHOICE_GENESECT_DRIVE]      = MULTICHOICE(MultichoiceList_GenesectDrive),
+    [MULTI_CHOICE_POKEMON_CENTER]      = MULTICHOICE(MultichoiceList_PokemonCenter),
+    [MULTI_CHOICE_MULTI_TRADE]         = MULTICHOICE(MultichoiceList_MultiTrade), 
+    [MULTI_CHOICE_E4_MODE_MULTI]       = MULTICHOICE(MultichoiceList_E4ModeMulti), 
+    [MULTI_CHOICE_NATURE_MINT]         = MULTICHOICE(MultichoiceList_NatureMint),
+    [MULTI_CHOICE_ATK_MINT]            = MULTICHOICE(MultichoiceList_AtkMint),
+    [MULTI_CHOICE_DEF_MINT]            = MULTICHOICE(MultichoiceList_DefMint),
+    [MULTI_CHOICE_SPA_MINT]            = MULTICHOICE(MultichoiceList_SpAMint),
+    [MULTI_CHOICE_SPD_MINT]            = MULTICHOICE(MultichoiceList_SpDMint),
+    [MULTI_CHOICE_SPE_MINT]            = MULTICHOICE(MultichoiceList_SpeMint),
+    [MULTI_CHOICE_EV_ITEMS]            = MULTICHOICE(MultichoiceList_EVItems),
 };
 
 const u8 *const gStdStrings[] =

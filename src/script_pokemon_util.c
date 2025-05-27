@@ -36,8 +36,9 @@ void HealPlayerParty(void)
 {
     u32 i;
     for (i = 0; i < gPlayerPartyCount; i++)
-        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0 || !FlagGet(FLAG_HARDCORE_MODE_ENABLED))
             HealPokemon(&gPlayerParty[i]);
+
     if (OW_PC_HEAL >= GEN_8)
         HealPlayerBoxes();
 
@@ -476,8 +477,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
 u32 ScriptGiveMon(u16 species, u8 level, u16 item)
 {
     u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
-    u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
-                                MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1};  // ScriptGiveMonParameterized won't touch the stats' IV.
+    u8 ivs[NUM_STATS]        = {31, 31, 31, 31, 31, 31};  // ScriptGiveMonParameterized won't touch the stats' IV.
     u16 moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
 
     return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, FALSE, FALSE, NUMBER_OF_MON_TYPES, 0);
@@ -604,30 +604,9 @@ void Script_SetStatus1(struct ScriptContext *ctx)
 {
     u32 status1 = VarGet(ScriptReadHalfword(ctx));
     u32 slot = VarGet(ScriptReadHalfword(ctx));
-<<<<<<< HEAD
     u32 species = GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES);
     if (!(status1 == STATUS1_BURN      && (gSpeciesInfo[species].types[0] == TYPE_FIRE     || gSpeciesInfo[species].types[1] == TYPE_FIRE)) &&
         !(status1 == STATUS1_FROSTBITE && (gSpeciesInfo[species].types[0] == TYPE_ICE      || gSpeciesInfo[species].types[1] == TYPE_ICE)) &&  
         !(status1 == STATUS1_PARALYSIS && (gSpeciesInfo[species].types[0] == TYPE_ELECTRIC || gSpeciesInfo[species].types[1] == TYPE_ELECTRIC)))
-=======
-
-    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
-
-    if (slot >= PARTY_SIZE)
-    {
-        u16 species;
-
-        for (slot = 0; slot < PARTY_SIZE; slot++)
-        {
-            species = GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-             && species != SPECIES_EGG
-             && GetMonData(&gPlayerParty[slot], MON_DATA_HP) != 0)
-                SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
-        }
-    }
-    else
-    {
->>>>>>> aea0800f009cba36c78bf47b1fc43d07d747c8ce
         SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
 }

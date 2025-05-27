@@ -140,6 +140,17 @@
 #define MULTI_CHOICE_RESTRICTED_GEN_6      129
 #define MULTI_CHOICE_RESTRICTED_GEN_7      130
 #define MULTI_CHOICE_RESTRICTED_GEN_8      131
+#define MULTI_CHOICE_GENESECT_DRIVE        132
+#define MULTI_CHOICE_POKEMON_CENTER        133
+#define MULTI_CHOICE_MULTI_TRADE           134
+#define MULTI_CHOICE_E4_MODE_MULTI         135
+#define MULTI_CHOICE_NATURE_MINT           136
+#define MULTI_CHOICE_ATK_MINT              137
+#define MULTI_CHOICE_DEF_MINT              138
+#define MULTI_CHOICE_SPA_MINT              139
+#define MULTI_CHOICE_SPD_MINT              140
+#define MULTI_CHOICE_SPE_MINT              141
+#define MULTI_CHOICE_EV_ITEMS              142
 
 // Lilycove SS Tidal Multichoice Selections
 #define SSTIDAL_SELECTION_SLATEPORT        0

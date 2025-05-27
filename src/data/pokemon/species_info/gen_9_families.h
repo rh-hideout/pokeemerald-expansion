@@ -5201,8 +5201,8 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
     [SPECIES_GREAT_TUSK] =
     {
         .baseHP        = 115,
-        .baseAttack    = 131,
-        .baseDefense   = 131,
+        .baseAttack    = 130,
+        .baseDefense   = 130,
         .baseSpeed     = 87,
         .baseSpAttack  = 53,
         .baseSpDefense = 53,

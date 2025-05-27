@@ -10115,10 +10115,6 @@ BattleScript_EffectSnow::
 	attackstring
 	ppreduce
 	call BattleScript_CheckPrimalWeather
-<<<<<<< HEAD
-	setfieldweather ENUM_WEATHER_SNOW
-	goto BattleScript_MoveWeatherChange
-=======
 	setfieldweather BATTLE_WEATHER_SNOW
 	goto BattleScript_MoveWeatherChange
 
@@ -10134,4 +10130,3 @@ BattleScript_SleepClausePreventsEnd::
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
 	end2
->>>>>>> aea0800f009cba36c78bf47b1fc43d07d747c8ce

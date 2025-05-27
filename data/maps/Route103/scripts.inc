@@ -147,6 +147,7 @@ Route103_EventScript_RivalEnd::
 	clearflag FLAG_HIDE_OLDALE_TOWN_RIVAL
 	savebgm MUS_DUMMY
 	fadedefaultbgm
+	call Common_EventScript_OutOfCenterPartyHeal
 	releaseall
 	end
 

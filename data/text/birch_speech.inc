@@ -5,16 +5,14 @@ gText_Birch_Welcome::
 
 gText_Birch_Pokemon::
 	.string "This is what we call a “POKéMON.”\p"
-	.string "\n"
 	.string "$"
 
 gText_Birch_MainSpeech::
-	.string "Welcome to the world of Improved Emerald.\n"
-	.string "The goal is to be tougher than RR\l"
-	.string "and RnB.\p"
-	.string "Never heard? Too bad. Good luck!\p"
-	.string "Don't forget, women have tougher\n"
-	.string "battles they need to fight.\p"
+	.string "Welcome to Improved Emerald\n"
+	.string "by ShadowzLmao\pain"
+	.string "The goal of this RomHack is\l"
+	.string "to be tougher than RR and R&B.\p"
+	.string "Never heard? Too bad! Good luck!\p"
 	.string "$"
 
 gText_Birch_AndYouAre::

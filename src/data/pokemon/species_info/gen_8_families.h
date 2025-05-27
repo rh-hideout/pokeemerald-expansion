@@ -7761,12 +7761,12 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ENAMORUS
     [SPECIES_ENAMORUS_INCARNATE] =
     {
-        .baseHP        = 74,
+        .baseHP        = 84,
         .baseAttack    = 115,
-        .baseDefense   = 70,
-        .baseSpeed     = 106,
+        .baseDefense   = 85,
+        .baseSpeed     = 116,
         .baseSpAttack  = 135,
-        .baseSpDefense = 80,
+        .baseSpDefense = 95,
         .types = MON_TYPES(TYPE_FAIRY, TYPE_FLYING),
         .catchRate = 3,
         .expYield = 116,
@@ -7828,10 +7828,10 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_ENAMORUS_THERIAN] =
     {
-        .baseHP        = 74,
+        .baseHP        = 84,
         .baseAttack    = 115,
         .baseDefense   = 110,
-        .baseSpeed     = 46,
+        .baseSpeed     = 86,
         .baseSpAttack  = 135,
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_FAIRY, TYPE_FLYING),
