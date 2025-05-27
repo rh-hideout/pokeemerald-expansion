@@ -3184,7 +3184,7 @@ static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)
 
         id = GetIllusionMonPartyId(gEnemyParty, mon, partnerMon);
     }
-    
+
     if (id != PARTY_SIZE)
         GetMonData(&gEnemyParty[id], MON_DATA_NICKNAME, dst);
     else

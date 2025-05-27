@@ -122,7 +122,7 @@ EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
 
 #include "data/battle_anim.h"
 
-static void (* const sScriptCmdTable[])(void) =
+static void (*const sScriptCmdTable[])(void) =
 {
     Cmd_loadspritegfx,        // 0x00
     Cmd_unloadspritegfx,      // 0x01

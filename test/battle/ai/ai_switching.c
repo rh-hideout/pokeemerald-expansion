@@ -296,7 +296,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Mid-battle switches prioritize
 
     PARAMETRIZE { expectedIndex = 3; move1 = MOVE_SCRATCH; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = 0; } // When not smart, AI will only switch in a defensive mon if it has a SE move, otherwise will just default to damage
     PARAMETRIZE { expectedIndex = 1; move1 = MOVE_GIGA_DRAIN; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = 0; }
-    PARAMETRIZE { expectedIndex = 2; move1 = MOVE_SCRATCH; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; } // When smart, AI will prioritize SE move, but still switch in good type matchup without SE move
+    PARAMETRIZE { expectedIndex = 2; move1 = MOVE_SCRATCH; move2 = MOVE_WATER_PULSE; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; } // When smart, AI will prioritize SE move, but still switch in good type matchup without SE move
     PARAMETRIZE { expectedIndex = 1; move1 = MOVE_GIGA_DRAIN; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; }
 
     GIVEN {
@@ -1145,8 +1145,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if all moves 
         ASSUME(GetMoveType(MOVE_SCALD) == TYPE_WATER);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         ASSUME(gSpeciesInfo[SPECIES_MANTINE].types[1] == TYPE_FLYING);
-        ASSUME(ItemId_GetHoldEffect(ITEM_WATER_GEM) == HOLD_EFFECT_GEMS);
-        ASSUME(ItemId_GetSecondaryId(ITEM_WATER_GEM) == TYPE_WATER);
+        ASSUME(GetItemHoldEffect(ITEM_WATER_GEM) == HOLD_EFFECT_GEMS);
+        ASSUME(GetItemSecondaryId(ITEM_WATER_GEM) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_MANTINE) { Speed(5); Moves(MOVE_ROOST, MOVE_SCALD); Ability(ABILITY_WATER_VEIL); Item(ITEM_WATER_GEM); }
         OPPONENT(SPECIES_DUSKNOIR) { Speed(6); Moves(MOVE_WILL_O_WISP, MOVE_POLTERGEIST, MOVE_EARTHQUAKE); }
@@ -1178,5 +1178,64 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will use pivot move to activate Palafin's Z
         OPPONENT(SPECIES_FINIZEN);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_FLIP_TURN); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't send out defensive mon that can lose 1v1, or switch out a mon that can win 1v1 even with bad type matchup")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_PANPOUR) {
+            Level(15);
+            Moves(MOVE_WATER_PULSE, MOVE_PLAY_NICE, MOVE_FURY_SWIPES, MOVE_LICK);
+            Item(ITEM_MYSTIC_WATER);
+            Ability(ABILITY_GLUTTONY);
+            Nature(NATURE_MODEST);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_RHYHORN) {
+            Level(14);
+            Moves(MOVE_ROCK_TOMB, MOVE_HORN_ATTACK, MOVE_BULLDOZE, MOVE_ROCK_SMASH);
+            Item(ITEM_RINDO_BERRY);
+            Ability(ABILITY_LIGHTNING_ROD);
+            Nature(NATURE_ADAMANT);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_GLIGAR) {
+            Level(15);
+            Moves(MOVE_WING_ATTACK, MOVE_QUICK_ATTACK, MOVE_BULLDOZE);
+            Item(ITEM_ORAN_BERRY);
+            Ability(ABILITY_SAND_VEIL);
+            Nature(NATURE_ADAMANT);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_WOOPER_PALDEA) {
+            Level(15);
+            Moves(MOVE_MUD_SHOT, MOVE_ACID_SPRAY, MOVE_YAWN, MOVE_SANDSTORM);
+            Item(ITEM_ORAN_BERRY);
+            Ability(ABILITY_WATER_ABSORB);
+            Nature(NATURE_MODEST);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_PULSE); EXPECT_MOVE(opponent, MOVE_BULLDOZE); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_WATER_PULSE); EXPECT_MOVE(opponent, MOVE_BULLDOZE); }
     }
 }

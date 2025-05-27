@@ -30,6 +30,14 @@ enum AIPivot
     SHOULD_PIVOT,
 };
 
+enum WeatherState
+{
+    WEATHER_INACTIVE,
+    WEATHER_ACTIVE,
+    WEATHER_ACTIVE_BUT_BLOCKED,
+    WEATHER_INACTIVE_AND_BLOCKED,
+};
+
 static inline bool32 IsMoveUnusable(u32 moveIndex, u32 move, u32 moveLimitations)
 {
     return move == MOVE_NONE
@@ -76,6 +84,7 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId);
 enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, u32 atkAbility, u32 move);
 u32 AI_GetWeather(void);
+enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
 bool32 CanIndexMoveGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index);

@@ -147,7 +147,7 @@ EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13] = {0};   // expanded 
 EWRAM_DATA u32 gBattleTypeFlags = 0;
 EWRAM_DATA u8 gBattleEnvironment = 0;
 EWRAM_DATA struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE] = {0};
-EWRAM_DATA static struct MultiPartnerMenuPokemon* sMultiPartnerPartyBuffer = NULL;
+EWRAM_DATA static struct MultiPartnerMenuPokemon *sMultiPartnerPartyBuffer = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTileBuffer = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTilemapBuffer = NULL;
 EWRAM_DATA u32 gBattleControllerExecFlags = 0;
@@ -372,7 +372,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_RS_PROTAG] = { _("{PKMN} TRAINER") },
 };
 
-static void (* const sTurnActionsFuncsTable[])(void) =
+static void (*const sTurnActionsFuncsTable[])(void) =
 {
     [B_ACTION_USE_MOVE]               = HandleAction_UseMove,
     [B_ACTION_USE_ITEM]               = HandleAction_UseItem,
@@ -391,7 +391,7 @@ static void (* const sTurnActionsFuncsTable[])(void) =
     [B_ACTION_THROW_BALL]             = HandleAction_ThrowBall,
 };
 
-static void (* const sEndTurnFuncsTable[])(void) =
+static void (*const sEndTurnFuncsTable[])(void) =
 {
     [0]                           = HandleEndTurn_ContinueBattle,
     [B_OUTCOME_WON]               = HandleEndTurn_BattleWon,
@@ -4041,7 +4041,7 @@ u8 IsRunningFromBattleImpossible(u32 battler)
     if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
         holdEffect = gEnigmaBerries[battler].holdEffect;
     else
-        holdEffect = ItemId_GetHoldEffect(gBattleMons[battler].item);
+        holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
 
     gPotentialItemEffectBattler = battler;
 
@@ -4296,7 +4296,7 @@ static void HandleTurnActionSelectionState(void)
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, gBattleStruct->battlerPartyOrders[battler]);
                     }
-                    else if (ItemId_GetHoldEffect(gBattleMons[battler].item) != HOLD_EFFECT_SHED_SHELL
+                    else if (GetItemHoldEffect(gBattleMons[battler].item) != HOLD_EFFECT_SHED_SHELL
                       && (i = IsAbilityPreventingEscape(battler)))   // must be last to keep i value integrity
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, ((i - 1) << 4) | PARTY_ACTION_ABILITY_PREVENTS, PARTY_SIZE, gBattleMons[i - 1].ability, gBattleStruct->battlerPartyOrders[battler]);
@@ -4490,7 +4490,7 @@ static void HandleTurnActionSelectionState(void)
                     else
                     {
                         gLastUsedItem = (gBattleResources->bufferB[battler][1] | (gBattleResources->bufferB[battler][2] << 8));
-                        if (ItemId_GetPocket(gLastUsedItem) == POCKET_POKE_BALLS)
+                        if (GetItemPocket(gLastUsedItem) == POCKET_POKE_BALLS)
                             gBattleStruct->throwingPokeBall = TRUE;
                         gBattleCommunication[battler]++;
                     }
@@ -5823,7 +5823,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     {
         species = GetMonData(mon, MON_DATA_SPECIES);
         heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-        holdEffect = ItemId_GetHoldEffect(heldItem);
+        holdEffect = GetItemHoldEffect(heldItem);
         ability = GetMonAbility(mon);
         type1 = gSpeciesInfo[species].types[0];
         type2 = gSpeciesInfo[species].types[1];
@@ -5906,7 +5906,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
         if (holdEffect == GetMoveEffectArg_HoldEffect(move))
-            return ItemId_GetSecondaryId(heldItem);
+            return GetItemSecondaryId(heldItem);
         break;
     case EFFECT_REVELATION_DANCE:
         if (gimmick != GIMMICK_Z_MOVE)
@@ -5948,7 +5948,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         }
         break;
     case EFFECT_NATURAL_GIFT:
-        if (ItemId_GetPocket(heldItem) == POCKET_BERRIES)
+        if (GetItemPocket(heldItem) == POCKET_BERRIES)
             return gNaturalGiftTable[ITEM_TO_BERRY(heldItem)].type;
         else
             return moveType;
@@ -6055,7 +6055,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
     // Check if a gem should activate.
     u32 effect = GetMoveEffect(move);
     if (holdEffect == HOLD_EFFECT_GEMS
-        && GetBattleMoveType(move) == ItemId_GetSecondaryId(heldItem)
+        && GetBattleMoveType(move) == GetItemSecondaryId(heldItem)
         && effect != EFFECT_PLEDGE
         && effect != EFFECT_OHKO
         && effect != EFFECT_STRUGGLE)

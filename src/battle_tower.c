@@ -703,7 +703,7 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 #include "data/battle_partners.h"
 };
 
-static void (* const sBattleTowerFuncs[])(void) =
+static void (*const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
     [BATTLE_TOWER_FUNC_GET_DATA]            = GetTowerData,
