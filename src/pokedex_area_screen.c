@@ -104,7 +104,7 @@ struct
     /*0x6E8*/ u8 *screenSwitchState;
     /*0x6EC*/ struct RegionMap regionMap;
     /*0xF70*/ u8 charBuffer[64];
-    /*0xFB0*/ struct Sprite * areaUnknownSprites[3];
+    /*0xFB0*/ struct Sprite *areaUnknownSprites[3];
     /*0xFBC*/ u8 areaUnknownGraphicsBuffer[0x600];
     /*0xFC0*/ u8 areaScreenLabelIds[NUM_LABEL_WINDOWS];
     /*0xFC8*/ u8 areaState;
@@ -922,7 +922,7 @@ static void Task_HandlePokedexAreaScreenInput(u8 taskId)
             ClearAreaWindowLabel(DEX_AREA_LABEL_AREA_UNKNOWN);
             RemoveAllWindowsOnBg(LABEL_WINDOW_BG);
         }
-            
+
         sPokedexAreaScreen->screenSwitchState[0] = gTasks[taskId].data[1];
         ResetPokedexAreaMapBg();
         DestroyTask(taskId);

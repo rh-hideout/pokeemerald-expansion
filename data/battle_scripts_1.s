@@ -5050,7 +5050,7 @@ BattleScript_EffectSnatch::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRecoilHP25::
+BattleScript_EffectStruggle::
 	jumpifnotmove MOVE_STRUGGLE, BattleScript_EffectHit
 	incrementgamestat GAME_STAT_USED_STRUGGLE
 	goto BattleScript_EffectHit
@@ -5394,19 +5394,19 @@ BattleScript_LocalBattleLost::
 	jumpifbattletype BATTLE_TYPE_TRAINER_HILL, BattleScript_LocalBattleLostPrintTrainersWinText
 	jumpifbattletype BATTLE_TYPE_EREADER_TRAINER, BattleScript_LocalBattleLostEnd
 	jumpifhalfword CMP_EQUAL, gTrainerBattleParameter + 2, TRAINER_SECRET_BASE, BattleScript_LocalBattleLostEnd
+	jumpifnowhiteout BattleScript_LocalBattleLostEnd_
 BattleScript_LocalBattleLostPrintWhiteOut::
+	getmoneyreward
 .if B_WHITEOUT_MONEY >= GEN_4
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_LocalBattleLostEnd
 	printstring STRINGID_PLAYERWHITEOUT
 	waitmessage B_WAIT_TIME_LONG
-	getmoneyreward
 	printstring STRINGID_PLAYERWHITEOUT2
 	waitmessage B_WAIT_TIME_LONG
 	end2
 BattleScript_LocalBattleLostEnd::
 	printstring STRINGID_PLAYERLOSTTOENEMYTRAINER
 	waitmessage B_WAIT_TIME_LONG
-	getmoneyreward
 	printstring STRINGID_PLAYERPAIDPRIZEMONEY
 	waitmessage B_WAIT_TIME_LONG
 	end2
@@ -5636,7 +5636,7 @@ BattleScript_DamagingWeather::
 	printfromtable gSandStormHailDmgStringIds
 	waitmessage B_WAIT_TIME_LONG
 	effectivenesssound
-	hitanimation BS_SCRIPTING
+	hitanimation BS_ATTACKER
 	goto BattleScript_DoTurnDmg
 
 BattleScript_FogEnded_Ret::
@@ -6508,6 +6508,14 @@ BattleScript_WishButFullHp::
 	waitmessage B_WAIT_TIME_LONG
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNHPFULL
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_WishButHealBlocked::
+	printstring STRINGID_PKMNWISHCAMETRUE
+	waitmessage B_WAIT_TIME_LONG
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_HEALBLOCKPREVENTSUSAGE
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
@@ -8372,9 +8380,11 @@ BattleScript_FriskMsg::
 
 BattleScript_FriskActivates::
 	saveattacker
+        savetarget
 	copybyte gBattlerAttacker, sBATTLER
 	tryfriskmsg BS_SCRIPTING
 	restoreattacker
+        restoretarget
 	end3
 
 BattleScript_ImposterActivates::
@@ -8874,34 +8884,29 @@ BattleScript_BerryConfuseHealRet_Anim:
 	removeitem BS_TARGET
 	return
 
-BattleScript_BerryStatRaiseEnd2::
-	jumpifability BS_ATTACKER, ABILITY_RIPEN, BattleScript_BerryStatRaiseEnd2_AbilityPopup
-	goto BattleScript_BerryStatRaiseEnd2_Anim
-BattleScript_BerryStatRaiseEnd2_AbilityPopup:
-	call BattleScript_AbilityPopUp
-BattleScript_BerryStatRaiseEnd2_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR | MOVE_EFFECT_AFFECTS_USER, BattleScript_BerryStatRaiseEnd2_End
-	setgraphicalstatchangevalues
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
-	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
-	call BattleScript_StatUp
-	removeitem BS_ATTACKER
-BattleScript_BerryStatRaiseEnd2_End::
+BattleScript_ConsumableStatRaiseEnd2::
+	call BattleScript_ConsumableStatRaiseRet
 	end2
 
-BattleScript_BerryStatRaiseRet::
-	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_BerryStatRaiseRet_AbilityPopup
-	goto BattleScript_BerryStatRaiseRet_Anim
-BattleScript_BerryStatRaiseRet_AbilityPopup:
+BattleScript_ConsumableStatRaiseRet::
+	@ to ensure `statbuffchange` has correct battler id, backup and use target
+	savetarget
+	copybyte gBattlerTarget, sBATTLER
+	jumpifnotberry BS_SCRIPTING, BattleScript_ConsumableStatRaiseRet_Anim
+	@ check ripen popup if consuming berry
+	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_ConsumableStatRaiseRet_AbilityPopup
+	goto BattleScript_ConsumableStatRaiseRet_Anim
+BattleScript_ConsumableStatRaiseRet_AbilityPopup:
 	call BattleScript_AbilityPopUp
-BattleScript_BerryStatRaiseRet_Anim:
-	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_BerryStatRaiseRet_End
+BattleScript_ConsumableStatRaiseRet_Anim:
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_ConsumableStatRaiseRet_End
 	setgraphicalstatchangevalues
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_ROSE_ITEM
 	call BattleScript_StatUp
 	removeitem BS_SCRIPTING
-BattleScript_BerryStatRaiseRet_End:
+BattleScript_ConsumableStatRaiseRet_End:
+	restoretarget
 	return
 
 BattleScript_BerryFocusEnergyRet::
@@ -10000,7 +10005,11 @@ BattleScript_QuestionForfeitBattle::
 
 BattleScript_ForfeitBattleGaveMoney::
 	getmoneyreward
+.if B_WHITEOUT_MONEY >= GEN_4
 	printstring STRINGID_FORFEITBATTLEGAVEMONEY
+.else
+	printstring STRINGID_PLAYERWHITEOUT2
+.endif
 	waitmessage B_WAIT_TIME_LONG
 	end2
 

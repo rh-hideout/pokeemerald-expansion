@@ -924,7 +924,7 @@ bool8 SweetScentWildEncounter(void)
         if (MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
         {
             timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-            
+
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo == NULL)
                 return FALSE;
 

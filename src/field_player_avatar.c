@@ -62,13 +62,12 @@ EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
 EWRAM_DATA struct SpinData gPlayerSpinData = {};
 
 // static declarations
-
-static u8 ObjectEventCB2_NoMovement2();
+static u8 ObjectEventCB2_NoMovement2(void);
 static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *, u8);
 static void npc_clear_strange_bits(struct ObjectEvent *);
 static void MovePlayerAvatarUsingKeypadInput(u8, u16, u16);
-static void PlayerAllowForcedMovementIfMovingSameDirection();
-static u8 GetForcedMovementByMetatileBehavior();
+static void PlayerAllowForcedMovementIfMovingSameDirection(void);
+static u8 GetForcedMovementByMetatileBehavior(void);
 
 static bool8 ForcedMovement_None(void);
 static bool8 ForcedMovement_Slip(void);
@@ -361,7 +360,7 @@ static bool8 (*const sPlayerAvatarSecretBaseMatSpin[])(struct Task *, struct Obj
 
 void MovementType_Player(struct Sprite *sprite)
 {
-    UpdateObjectEventCurrentMovement(&gObjectEvents[sprite->data[0]], sprite, ObjectEventCB2_NoMovement2);
+    UpdateObjectEventCurrentMovement(&gObjectEvents[sprite->data[0]], sprite, (bool8 (*)(struct ObjectEvent *, struct Sprite *))ObjectEventCB2_NoMovement2);
 }
 
 static u8 ObjectEventCB2_NoMovement2(void)
@@ -521,8 +520,8 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
     {
         playerAvatar->runningState = MOVING;
         moveFunc(direction);
-        if (PlayerHasFollowerNPC() 
-         && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE 
+        if (PlayerHasFollowerNPC()
+         && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE
          && FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
             CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 3);
         return TRUE;
@@ -1219,8 +1218,8 @@ void PlayerOnBikeCollide(u8 direction)
         struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-        if (npcFollower->invisible == FALSE 
-         && player->currentMetatileBehavior != MB_MUDDY_SLOPE 
+        if (npcFollower->invisible == FALSE
+         && player->currentMetatileBehavior != MB_MUDDY_SLOPE
          && npcFollower->currentMetatileBehavior == MB_MUDDY_SLOPE)
         {
             gPlayerAvatar.preventStep = TRUE;
