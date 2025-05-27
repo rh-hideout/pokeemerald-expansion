@@ -11442,3 +11442,14 @@ void UpdateStallMons(void)
     }
     //  Handling for moves that target multiple opponents in doubles not handled currently
 }
+
+bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
+{
+    if (gItemsInfo[gBattleMons[battler].item].pocket == POCKET_BERRIES
+     || GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_RESTORE_HP)  // Edge case for Berry Juice
+    {
+        if (ItemBattleEffects(caseId, battler, FALSE))
+            return TRUE;
+    }
+    return FALSE;
+}
