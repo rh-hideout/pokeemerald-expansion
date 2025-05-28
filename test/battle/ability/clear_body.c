@@ -417,7 +417,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
 {
     u32 move = MOVE_NONE;
     u32 species = SPECIES_NONE;
-    u32 ability = ABILITY_NONE;
+    enum Abilities ability = ABILITY_NONE;
 
     static const u32 moves[] = {
         MOVE_SPIKY_SHIELD,

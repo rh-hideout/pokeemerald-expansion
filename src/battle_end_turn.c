@@ -108,7 +108,7 @@ enum FourthEventBlock
     FOURTH_EVENT_BLOCK_EJECT_PACK,
 };
 
-static inline bool32 IsBattlerProtectedByMagicGuard(u32 battler, u32 ability)
+static inline bool32 IsBattlerProtectedByMagicGuard(u32 battler, enum Abilities ability)
 {
     if (ability != ABILITY_MAGIC_GUARD)
         return FALSE;
@@ -197,7 +197,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
     u32 currBattleWeather = GetCurrentBattleWeather();
 
     if (currBattleWeather == 0xFF)
@@ -301,7 +301,7 @@ static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler)
 static bool32 HandleEndTurnEmergencyExit(u32 battler)
 {
     bool32 effect = FALSE;
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -501,7 +501,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        u32 ability = GetBattlerAbility(battler);
+        enum Abilities ability = GetBattlerAbility(battler);
         switch (ability)
         {
         case ABILITY_HEALER:
@@ -509,6 +509,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         case ABILITY_SHED_SKIN:
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter++;
@@ -616,7 +618,7 @@ static bool32 HandleEndTurnPoison(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -664,7 +666,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -1010,7 +1012,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -1405,7 +1407,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
     {
-        u32 ability = GetBattlerAbility(battler);
+        enum Abilities ability = GetBattlerAbility(battler);
         switch (ability)
         {
         case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Find a better way.
@@ -1419,6 +1421,8 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case ABILITY_SPEED_BOOST:
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
                 effect = TRUE;
+            break;
+        default:
             break;
         }
         gBattleStruct->eventBlockCounter++;
@@ -1455,7 +1459,7 @@ static bool32 HandleEndTurnAbilities(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -1467,6 +1471,8 @@ static bool32 HandleEndTurnAbilities(u32 battler)
     case ABILITY_ZEN_MODE:
         if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
             effect = TRUE;
+    default:
+        break;
     }
 
     return effect;
@@ -1480,7 +1486,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     {
     case FOURTH_EVENT_BLOCK_HUNGER_SWITCH:
     {
-        u32 ability = GetBattlerAbility(battler);
+        enum Abilities ability = GetBattlerAbility(battler);
         if (ability == ABILITY_HUNGER_SWITCH)
         {
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))

@@ -29,7 +29,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 
 AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has Contrary")
 {
-    u32 abilityAI;
+    enum Abilities abilityAI;
 
     PARAMETRIZE { abilityAI = ABILITY_MOXIE; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; } // Mold Breaker ignores Contrary.
@@ -258,7 +258,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Abilities abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -295,7 +295,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Abilities abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
 
     // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
@@ -322,7 +322,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
-    u16 abilityAtk = ABILITY_NONE;
+    enum Abilities abilityAtk = ABILITY_NONE;
     u16 holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
@@ -442,7 +442,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain abilities")
 {
     u16 species;
-    u16 ability;
+    enum Abilities ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
     PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
@@ -509,7 +509,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
 
 AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary")
 {
-    u32 ability;
+    enum Abilities ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -535,7 +535,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
 
 AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 {
-    u32 ability;
+    enum Abilities ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -561,7 +561,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 
 AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical immunity")
 {
-    u32 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { ability = ABILITY_SHELL_ARMOR; }
 
@@ -848,7 +848,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
 
 AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
 {
-    u32 ability;
+    enum Abilities ability;
 
     PARAMETRIZE { ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { ability = ABILITY_DAMP; }

@@ -1266,7 +1266,7 @@ void BtlController_EmitChooseItem(u32 battler, u32 bufferId, u8 *battlePartyOrde
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitChoosePokemon(u32 battler, u32 bufferId, u8 caseId, u8 slotId, u16 abilityId, u8 *data)
+void BtlController_EmitChoosePokemon(u32 battler, u32 bufferId, u8 caseId, u8 slotId, enum Abilities abilityId, u8 *data)
 {
     s32 i;
 

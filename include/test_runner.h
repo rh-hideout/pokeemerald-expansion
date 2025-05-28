@@ -7,7 +7,7 @@ extern const bool8 gTestRunnerSkipIsFail;
 
 #if TESTING
 
-void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, u32 ability);
+void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, enum Abilities ability);
 void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId);
 void TestRunner_Battle_RecordHP(u32 battlerId, u32 oldHP, u32 newHP);
 void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp);

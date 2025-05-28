@@ -8,6 +8,7 @@
 #include "constants/region_map_sections.h"
 #include "constants/map_groups.h"
 #include "constants/battle.h"
+#include "constants/abilities.h"
 #include "contest_effect.h"
 
 #define GET_BASE_SPECIES_ID(speciesId) (GetFormSpeciesId(speciesId, 0))
@@ -325,7 +326,7 @@ struct BattlePokemon
     /*0x17*/ u32 spDefenseIV:5;
     /*0x17*/ u32 abilityNum:2;
     /*0x18*/ s8 statStages[NUM_BATTLE_STATS];
-    /*0x20*/ u16 ability;
+    /*0x20*/ enum Abilities ability;
     /*0x22*/ u8 types[3];
     /*0x25*/ u8 pp[MAX_MON_MOVES];
     /*0x29*/ u16 hp;

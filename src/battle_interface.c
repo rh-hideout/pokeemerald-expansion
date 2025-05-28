@@ -2585,7 +2585,7 @@ static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
                         2, 7, 1);
 }
 
-static void PrintAbilityOnAbilityPopUp(u32 ability, u8 spriteId1, u8 spriteId2)
+static void PrintAbilityOnAbilityPopUp(enum Abilities ability, u8 spriteId1, u8 spriteId2)
 {
     ClearAbilityName(spriteId1, spriteId2);
     PrintOnAbilityPopUp(gAbilitiesInfo[ability].name,
@@ -2720,7 +2720,7 @@ static inline bool32 IsAnyAbilityPopUpActive(void)
     return FALSE;
 }
 
-void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
+void CreateAbilityPopUp(u8 battler, enum Abilities ability, bool32 isDoubleBattle)
 {
     const s16 (*coords)[2];
     u8 spriteId1, spriteId2, battlerPosition, taskId;
@@ -2804,7 +2804,7 @@ void UpdateAbilityPopup(u8 battler)
 {
     u8 spriteId1 = gBattleStruct->abilityPopUpSpriteIds[battler][0];
     u8 spriteId2 = gBattleStruct->abilityPopUpSpriteIds[battler][1];
-    u16 ability = (gBattleScripting.abilityPopupOverwrite != 0) ? gBattleScripting.abilityPopupOverwrite : gBattleMons[battler].ability;
+    enum Abilities ability = (gBattleScripting.abilityPopupOverwrite != 0) ? gBattleScripting.abilityPopupOverwrite : gBattleMons[battler].ability;
 
     PrintAbilityOnAbilityPopUp(ability, spriteId1, spriteId2);
     RestoreOverwrittenPixels((void*)(OBJ_VRAM0) + (gSprites[spriteId1].oam.tileNum * 32));

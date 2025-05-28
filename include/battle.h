@@ -269,7 +269,7 @@ struct WishFutureKnock
 
 struct AI_SavedBattleMon
 {
-    u16 ability;
+    enum Abilities ability;
     u16 moves[MAX_MON_MOVES];
     u16 heldItem;
     u16 species:15;
@@ -282,7 +282,7 @@ struct AiPartyMon
     u16 species;
     u16 item;
     u16 heldEffect;
-    u16 ability;
+    enum Abilities ability;
     u16 level;
     u16 moves[MAX_MON_MOVES];
     u32 status;

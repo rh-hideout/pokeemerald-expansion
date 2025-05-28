@@ -183,6 +183,8 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in weather from an ability")
         case ABILITY_SNOW_WARNING:
             EXPECT_EQ(player->species, SPECIES_CASTFORM_SNOWY);
             break;
+        default:
+            break;
         }
     }
 }
@@ -211,6 +213,8 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
             break;
         case ABILITY_PRIMORDIAL_SEA:
             EXPECT_EQ(player->species, SPECIES_CASTFORM_RAINY);
+            break;
+        default:
             break;
         }
     }

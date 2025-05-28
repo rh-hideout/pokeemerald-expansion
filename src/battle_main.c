@@ -4699,7 +4699,7 @@ void SwapTurnOrder(u8 id1, u8 id2)
 }
 
 // For AI, so it doesn't 'cheat' by knowing player's ability
-u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
+u32 GetBattlerTotalSpeedStatArgs(u32 battler, enum Abilities ability, enum ItemHoldEffect holdEffect)
 {
     u32 speed = gBattleMons[battler].speed;
 
@@ -4768,12 +4768,12 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect h
 
 u32 GetBattlerTotalSpeedStat(u32 battler)
 {
-    u32 ability = GetBattlerAbility(battler);
+    enum Abilities ability = GetBattlerAbility(battler);
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
     return GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
 }
 
-s32 GetChosenMovePriority(u32 battler, u32 ability)
+s32 GetChosenMovePriority(u32 battler, enum Abilities ability)
 {
     u16 move;
 
@@ -4786,7 +4786,7 @@ s32 GetChosenMovePriority(u32 battler, u32 ability)
     return GetBattleMovePriority(battler, ability, move);
 }
 
-s32 GetBattleMovePriority(u32 battler, u32 ability, u32 move)
+s32 GetBattleMovePriority(u32 battler, enum Abilities ability, u32 move)
 {
     s32 priority = 0;
 
@@ -4823,7 +4823,7 @@ s32 GetBattleMovePriority(u32 battler, u32 ability, u32 move)
     return priority;
 }
 
-s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMoves, u32 ability1, u32 ability2,
+s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMoves, enum Abilities ability1, enum Abilities ability2,
                               enum ItemHoldEffect holdEffectBattler1, enum ItemHoldEffect holdEffectBattler2, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2)
 {
     u32 strikesFirst = 0;
@@ -4889,12 +4889,12 @@ s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMov
 s32 GetWhichBattlerFasterOrTies(u32 battler1, u32 battler2, bool32 ignoreChosenMoves)
 {
     s32 priority1 = 0, priority2 = 0;
-    u32 ability1 = GetBattlerAbility(battler1);
+    enum Abilities ability1 = GetBattlerAbility(battler1);
     u32 speedBattler1 = GetBattlerTotalSpeedStat(battler1);
     enum ItemHoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1, TRUE);
     u32 speedBattler2 = GetBattlerTotalSpeedStat(battler2);
     enum ItemHoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2, TRUE);
-    u32 ability2 = GetBattlerAbility(battler2);
+    enum Abilities ability2 = GetBattlerAbility(battler2);
 
     if (!ignoreChosenMoves)
     {
@@ -5230,10 +5230,10 @@ static void TryChangeTurnOrder(void)
 
 static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickClawRandom, u32 *quickDrawRandom)
 {
-    u32 ability1 = GetBattlerAbility(battler1);
+    enum Abilities ability1 = GetBattlerAbility(battler1);
     enum ItemHoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1, TRUE);
     enum ItemHoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2, TRUE);
-    u32 ability2 = GetBattlerAbility(battler2);
+    enum Abilities ability2 = GetBattlerAbility(battler2);
 
     // Battler 1
     // Quick Draw

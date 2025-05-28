@@ -514,7 +514,8 @@ void Ai_UpdateFaintData(u32 battler)
 
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
-    u32 ability, holdEffect;
+    enum Abilities ability;
+    u16 holdEffect;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
     aiData->items[battler] = gBattleMons[battler].item;
@@ -529,8 +530,8 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
 {
     u32 accuracy;
-    u32 abilityAtk = aiData->abilities[battlerAtk];
-    u32 abilityDef = aiData->abilities[battlerDef];
+    enum Abilities abilityAtk = aiData->abilities[battlerAtk];
+    enum Abilities abilityDef = aiData->abilities[battlerDef];
     if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD || GetMoveAccuracy(move) == 0) // Moves with accuracy 0 or no guard ability always hit.
         accuracy = 100;
     else
@@ -628,7 +629,7 @@ u32 GetPartyMonAbility(struct Pokemon *mon)
 {
     //  Doesn't have any special handling yet
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 ability = gSpeciesInfo[species].abilities[GetMonData(mon, MON_DATA_ABILITY_NUM)];
+    enum Abilities ability = gSpeciesInfo[species].abilities[GetMonData(mon, MON_DATA_ABILITY_NUM)];
     return ability;
 }
 
@@ -648,8 +649,8 @@ static u32 PpStallReduction(u32 move, u32 battlerAtk)
             continue;
         PokemonToBattleMon(&gPlayerParty[partyIndex], &gBattleMons[tempBattleMonIndex]);
         u32 species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
-        u32 abilityAtk = ABILITY_NONE;
-        u32 abilityDef = GetPartyMonAbility(&gPlayerParty[partyIndex]);
+        enum Abilities abilityAtk = ABILITY_NONE;
+        enum Abilities abilityDef = GetPartyMonAbility(&gPlayerParty[partyIndex]);
         u32 moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
         if (CanAbilityAbsorbMove(battlerAtk, tempBattleMonIndex, abilityDef, move, moveType, ABILITY_CHECK_TRIGGER)
          || CanAbilityBlockMove(battlerAtk, tempBattleMonIndex, abilityAtk, abilityDef, move, ABILITY_CHECK_TRIGGER)
@@ -1005,8 +1006,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 i;
     u32 weather;
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
-    u32 abilityAtk = aiData->abilities[battlerAtk];
-    u32 abilityDef = aiData->abilities[battlerDef];
+    enum Abilities abilityAtk = aiData->abilities[battlerAtk];
+    enum Abilities abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
 
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
@@ -1113,6 +1114,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case MOVE_EFFECT_BURN:
                 ADJUST_SCORE(-5);
                 break;
+            default:
+                break;
             }
             break;
             break;
@@ -1162,6 +1165,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               && aiData->holdEffects[battlerDef] != HOLD_EFFECT_UTILITY_UMBRELLA
               && IsNonVolatileStatusMove(move))
                 RETURN_SCORE_MINUS(10);
+            break;
+        default:
             break;
         } // def ability checks
 
@@ -5904,7 +5909,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     u32 i;
     u32 unmodifiedScore = score;
-    u32 ability = gBattleMons[battlerAtk].ability;
+    enum Abilities ability = gBattleMons[battlerAtk].ability;
     u32 opposingHazardFlags = gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_TOXIC_SPIKES);
     u32 aiHazardFlags = gSideStatuses[GetBattlerSide(battlerAtk)] & (SIDE_STATUS_HAZARDS_ANY);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);

@@ -319,7 +319,8 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
 
-    u32 ability, move, species;
+    enum Abilities ability;
+    u16 move, species;
 
     PARAMETRIZE { species = SPECIES_PSYDUCK;    ability = ABILITY_CLOUD_NINE;         move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_PIKACHU;    ability = ABILITY_LIGHTNING_ROD;      move = MOVE_DISCHARGE; }
@@ -356,7 +357,8 @@ AI_DOUBLE_BATTLE_TEST("AI knows if redirection abilities provide immunity to all
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
-    u32 ability, move, species, config;
+    enum Abilities ability;
+    u16 move, species, config;
 
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE;  config = GEN_4; }
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE;  config = GEN_5; }

@@ -499,7 +499,7 @@ TEST("Ability names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 144;
-    u32 ability = ABILITY_NONE;
+    enum Abilities ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -511,7 +511,7 @@ TEST("Ability names fit on Ability Pop-Up")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 76;
-    u32 ability = ABILITY_NONE;
+    enum Abilities ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -523,7 +523,7 @@ TEST("Ability descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 146;
-    u32 ability = ABILITY_NONE;
+    enum Abilities ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].description) { ability = i; }

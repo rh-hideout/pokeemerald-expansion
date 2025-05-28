@@ -86,7 +86,8 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
 
 DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)")
 {
-    u32 ability, config;
+    enum Abilities ability;
+    u16 config;
 
     PARAMETRIZE { ability = ABILITY_SCRAPPY;    config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }

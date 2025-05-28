@@ -22,7 +22,8 @@ SINGLE_BATTLE_TEST("Refrigerate turns a Normal-type move into a Ice-type move")
 
 SINGLE_BATTLE_TEST("Refrigerate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    u32 ability, genConfig;
+        enum Abilities ability;
+    u16 genConfig;
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING;   genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING;   genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_REFRIGERATE;    genConfig = GEN_7; }
@@ -73,7 +74,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type")
 {
-    u16 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING; }
     PARAMETRIZE { ability = ABILITY_REFRIGERATE; }
     GIVEN {

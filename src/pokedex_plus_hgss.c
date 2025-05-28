@@ -360,9 +360,9 @@ struct PokemonStats
     u8  eggCycles;
     u16 expYield;
     u8  friendship;
-    u16 ability0;
-    u16 ability1;
-    u16 abilityHidden;
+    enum Abilities ability0;
+    enum Abilities ability1;
+    enum Abilities abilityHidden;
 };
 
 struct EvoScreenData
@@ -5859,9 +5859,9 @@ static void PrintStatsScreen_Abilities(u8 taskId)
 {
     u8 abilities_x = 5;
     u8 abilities_y = 3;
-    u16 ability0;
-    u16 ability1;
-    u16 abilityHidden;
+    enum Abilities ability0;
+    enum Abilities ability1;
+    enum Abilities abilityHidden;
 
     //Abilitie(s)
 

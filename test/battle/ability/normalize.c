@@ -11,7 +11,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
 {
-    u16 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
 
 SINGLE_BATTLE_TEST("Normalize affects status moves")
 {
-    u16 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Normalize affects status moves")
 
 SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage to Water-type Pokémon", s16 damage)
 {
-    u16 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -82,7 +82,8 @@ SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage t
 
 SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", s16 damage)
 {
-    u32 ability, genConfig;
+        enum Abilities ability;
+    u16 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
@@ -106,7 +107,8 @@ SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", 
 
 SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s16 damage)
 {
-    u32 ability, genConfig;
+        enum Abilities ability;
+    u16 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
@@ -130,7 +132,8 @@ SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s1
 
 SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrify's effect", s16 damage)
 {
-    u32 ability, genConfig;
+        enum Abilities ability;
+    u16 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
@@ -155,7 +158,8 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrif
 
 SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Deluge's effect", s16 damage)
 {
-    u32 ability, genConfig;
+        enum Abilities ability;
+    u16 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
@@ -208,7 +212,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type")
 {
-    u16 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {

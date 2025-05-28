@@ -5504,7 +5504,7 @@ static bool32 TryStartFollowerTransformEffect(struct ObjectEvent *objectEvent, s
 {
     u32 multi;
     struct Pokemon *mon;
-    u32 ability;
+    enum Abilities ability;
     if (DoesSpeciesHaveFormChangeMethod(OW_SPECIES(objectEvent), FORM_CHANGE_OVERWORLD_WEATHER)
         && OW_SPECIES(objectEvent) != (multi = GetOverworldWeatherSpecies(OW_SPECIES(objectEvent))))
     {
