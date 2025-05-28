@@ -515,7 +515,7 @@ void Ai_UpdateFaintData(u32 battler)
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
     enum Abilities ability;
-    u16 holdEffect;
+    u32 holdEffect;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
     aiData->items[battler] = gBattleMons[battler].item;
