@@ -12371,7 +12371,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
 
         gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
-        if (end3 == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
+        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
         {
             BattleScriptPushCursorAndCallback(BattleScript_EjectPackActivate_End3);
         }
