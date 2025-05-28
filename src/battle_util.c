@@ -12334,7 +12334,7 @@ bool32 EmergencyExitCanBeTriggered(u32 battler)
     return FALSE;
 }
 
-bool32 TrySwitchInEjectPack(bool32 end3)
+bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
 {
     // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
     u32 ejectPackBattlers = 0;
@@ -12371,7 +12371,7 @@ bool32 TrySwitchInEjectPack(bool32 end3)
 
         gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
-        if (end3)
+        if (end3 == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
         {
             BattleScriptPushCursorAndCallback(BattleScript_EjectPackActivate_End3);
         }

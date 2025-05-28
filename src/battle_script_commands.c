@@ -8435,7 +8435,7 @@ static void Cmd_switchineffects(void)
                         return;
                 }
             }
-            if (TrySwitchInEjectPack(FALSE))
+            if (TrySwitchInEjectPack(ITEMEFFECT_NONE))
                 return;
             // All battlers done, end
             for (i = 0; i < gBattlersCount; i++)
@@ -8447,7 +8447,7 @@ static void Cmd_switchineffects(void)
         break;
     default:
         UpdateSentMonFlags(battler);
-        if (!DoSwitchInEffectsForBattler(battler) && !TrySwitchInEjectPack(FALSE))
+        if (!DoSwitchInEffectsForBattler(battler) && !TrySwitchInEjectPack(ITEMEFFECT_NONE))
             gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     }
