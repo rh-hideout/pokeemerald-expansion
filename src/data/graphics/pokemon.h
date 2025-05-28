@@ -26760,6 +26760,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/icon.4bpp");
    const u8 gMonFootprint_Naughtycoot[] = INCBIN_U8("graphics/pokemon/naughtycoot/footprint.1bpp");
 
+   const u32 gMonFrontPic_Substrale[] = INCBIN_U32("graphics/pokemon/substrale/front.4bpp.lz");
+   const u32 gMonBackPic_Substrale[] = INCBIN_U32("graphics/pokemon/substrale/back.4bpp.lz");
+   const u32 gMonPalette_Substrale[] = INCBIN_U32("graphics/pokemon/substrale/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Substrale[] = INCBIN_U32("graphics/pokemon/substrale/shiny.gbapal.lz");
+   const u8 gMonIcon_Substrale[] = INCBIN_U8("graphics/pokemon/substrale/icon.4bpp");
+   const u8 gMonFootprint_Substrale[] = INCBIN_U8("graphics/pokemon/substrale/footprint.1bpp");
+
    const u32 gMonFrontPic_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/front.4bpp.lz");
    const u32 gMonBackPic_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/back.4bpp.lz");
    const u32 gMonPalette_Permaceros[] = INCBIN_U32("graphics/pokemon/permaceros/normal.gbapal.lz");
@@ -26794,6 +26801,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Fungnet[] = INCBIN_U32("graphics/pokemon/fungnet/shiny.gbapal.lz");
    const u8 gMonIcon_Fungnet[] = INCBIN_U8("graphics/pokemon/fungnet/icon.4bpp");
    const u8 gMonFootprint_Fungnet[] = INCBIN_U8("graphics/pokemon/fungnet/footprint.1bpp");
+
+   const u32 gMonFrontPic_Sycosect[] = INCBIN_U32("graphics/pokemon/sycosect/front.4bpp.lz");
+   const u32 gMonBackPic_Sycosect[] = INCBIN_U32("graphics/pokemon/sycosect/back.4bpp.lz");
+   const u32 gMonPalette_Sycosect[] = INCBIN_U32("graphics/pokemon/sycosect/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Sycosect[] = INCBIN_U32("graphics/pokemon/sycosect/shiny.gbapal.lz");
+   const u8 gMonIcon_Sycosect[] = INCBIN_U8("graphics/pokemon/sycosect/icon.4bpp");
+   const u8 gMonFootprint_Sycosect[] = INCBIN_U8("graphics/pokemon/sycosect/footprint.1bpp");
 
    const u32 gMonFrontPic_Belieech[] = INCBIN_U32("graphics/pokemon/belieech/front.4bpp.lz");
    const u32 gMonBackPic_Belieech[] = INCBIN_U32("graphics/pokemon/belieech/back.4bpp.lz");
@@ -27387,6 +27401,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u32 gMonShinyPalette_Wattitude[] = INCBIN_U32("graphics/pokemon/wattitude/shiny.gbapal.lz");
    const u8 gMonIcon_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/icon.4bpp");
    const u8 gMonFootprint_Wattitude[] = INCBIN_U8("graphics/pokemon/wattitude/footprint.1bpp");
+
+   const u32 gMonFrontPic_Swinggle[] = INCBIN_U32("graphics/pokemon/swinggle/front.4bpp.lz");
+   const u32 gMonBackPic_Swinggle[] = INCBIN_U32("graphics/pokemon/swinggle/back.4bpp.lz");
+   const u32 gMonPalette_Swinggle[] = INCBIN_U32("graphics/pokemon/swinggle/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Swinggle[] = INCBIN_U32("graphics/pokemon/swinggle/shiny.gbapal.lz");
+   const u8 gMonIcon_Swinggle[] = INCBIN_U8("graphics/pokemon/swinggle/icon.4bpp");
+   const u8 gMonFootprint_Swinggle[] = INCBIN_U8("graphics/pokemon/swinggle/footprint.1bpp");
 
    const u32 gMonFrontPic_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/front.4bpp.lz");
    const u32 gMonBackPic_Maleentis[] = INCBIN_U32("graphics/pokemon/maleentis/back.4bpp.lz");

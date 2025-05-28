@@ -7182,6 +7182,18 @@ Cry_Belieech::
 	.align 2	
 Cry_Medusith::
 	.incbin "sound/direct_sound_samples/cries/medusith.bin"
+
+	.align 2	
+Cry_Sycosect::
+	.incbin "sound/direct_sound_samples/cries/sycosect.bin"
+
+	.align 2	
+Cry_Swinggle::
+	.incbin "sound/direct_sound_samples/cries/swinggle.bin"
+
+	.align 2	
+Cry_Substrale::
+	.incbin "sound/direct_sound_samples/cries/substrale.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

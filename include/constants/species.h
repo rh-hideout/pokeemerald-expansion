@@ -1937,8 +1937,11 @@
 #define SPECIES_WALKALACK                               1809
 #define SPECIES_BELIEECH                                1810
 #define SPECIES_MEDUSITH                                1811
+#define SPECIES_SYCOSECT                                1812
+#define SPECIES_SWINGGLE                                1813
+#define SPECIES_SUBSTRALE                               1814
 
-#define SPECIES_EGG (SPECIES_MEDUSITH + 1)
+#define SPECIES_EGG (SPECIES_SUBSTRALE + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

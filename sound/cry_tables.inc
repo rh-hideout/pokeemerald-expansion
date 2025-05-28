@@ -2939,6 +2939,12 @@ gCryTable::
 
 	cry Cry_Medusith
 
+	cry Cry_Sycosect
+
+	cry Cry_Swinggle
+
+	cry Cry_Substrale
+
 .endif
 
 	.align 2
@@ -5882,4 +5888,10 @@ gCryTable_Reverse::
 	cry_reverse Cry_Belieech
 
 	cry_reverse Cry_Medusith
+
+	cry_reverse Cry_Sycosect
+
+	cry_reverse Cry_Swinggle
+
+	cry_reverse Cry_Substrale
 .endif
