@@ -3858,6 +3858,12 @@ static void TryDoEventsBeforeFirstTurn(void)
             return;
         gBattleStruct->eventsBeforeFirstTurnState++;
         break;
+    case FIRST_TURN_EVENTS_EJECT_PACK:
+        i = TrySwitchInEjectPack(TRUE);
+        gBattleStruct->eventsBeforeFirstTurnState++;
+        if (i)
+            return;
+        break;
     case FIRST_TURN_EVENTS_END:
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {

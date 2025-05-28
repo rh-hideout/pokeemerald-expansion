@@ -2804,7 +2804,7 @@ static void Cmd_resultmessage(void)
         gDisableStructs[gBattlerTarget].iceFaceActivationPrevention = FALSE;
         u32 side = GetBattlerSide(gBattlerTarget);
         if (gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[gBattlerTarget]] == SPECIES_NONE)
-            gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[gBattlerTarget]] = gBattleMons[gBattlerTarget].species; 
+            gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[gBattlerTarget]] = gBattleMons[gBattlerTarget].species;
         gBattleMons[gBattlerTarget].species = SPECIES_EISCUE_NOICE;
         gBattleScripting.battler = gBattlerTarget; // For STRINGID_PKMNTRANSFORMED
         BattleScriptPushCursor();
@@ -8435,6 +8435,8 @@ static void Cmd_switchineffects(void)
                         return;
                 }
             }
+            if (TrySwitchInEjectPack(FALSE))
+                return;
             // All battlers done, end
             for (i = 0; i < gBattlersCount; i++)
                 gBattleStruct->battlerState[i].multipleSwitchInBattlers = FALSE;
@@ -8445,7 +8447,7 @@ static void Cmd_switchineffects(void)
         break;
     default:
         UpdateSentMonFlags(battler);
-        if (!DoSwitchInEffectsForBattler(battler))
+        if (!DoSwitchInEffectsForBattler(battler) && !TrySwitchInEjectPack(FALSE))
             gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     }

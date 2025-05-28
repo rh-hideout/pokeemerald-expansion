@@ -12333,3 +12333,55 @@ bool32 EmergencyExitCanBeTriggered(u32 battler)
 
     return FALSE;
 }
+
+bool32 TrySwitchInEjectPack(bool32 end3)
+{
+    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
+    u32 ejectPackBattlers = 0;
+    u32 numEjectPackBattlers = 0;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (gProtectStructs[i].statFell
+         && GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_EJECT_PACK
+         && IsBattlerAlive(i)
+         && CountUsablePartyMons(i) > 0)
+        {
+            ejectPackBattlers |= 1u << i;
+            numEjectPackBattlers++;
+        }
+    }
+
+    if (numEjectPackBattlers == 0)
+        return FALSE;
+
+    u8 battlers[4] = {0, 1, 2, 3};
+    if (numEjectPackBattlers > 1)
+        SortBattlersBySpeed(battlers, FALSE);
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+        gProtectStructs[i].statFell = FALSE; // restore for every possible eject pack battler
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        u32 battler = battlers[i];
+
+        if (!(ejectPackBattlers & 1u << battler))
+            continue;
+
+        gBattleScripting.battler = battler;
+        gLastUsedItem = gBattleMons[battler].item;
+        if (end3)
+        {
+            BattleScriptPushCursorAndCallback(BattleScript_EjectPackActivate_End3);
+        }
+        else
+        {
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_EjectPackActivate_Ret;
+        }
+        return TRUE;
+    }
+
+    return FALSE;
+}
