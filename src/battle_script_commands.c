@@ -5961,6 +5961,14 @@ static void Cmd_playstatchangeanimation(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = GetBattlerAbility(battler);
     u32 stats = cmd->stats;
+    u32 totalStats = 0;
+    bool32 defiantCompetitiveAffected = FALSE;
+
+    if (gBattleScripting.statAnimPlayed)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
 
     // Handle Contrary and Simple
     if (ability == ABILITY_CONTRARY)
@@ -5972,6 +5980,10 @@ static void Cmd_playstatchangeanimation(void)
     {
         flags |= STAT_CHANGE_BY_TWO;
         RecordAbilityBattle(battler, ability);
+    }
+    else if (ability == ABILITY_DEFIANT || ability == ABILITY_COMPETITIVE)
+    {
+        defiantCompetitiveAffected = TRUE;
     }
 
     if (flags & STAT_CHANGE_NEGATIVE) // goes down
@@ -5985,6 +5997,7 @@ static void Cmd_playstatchangeanimation(void)
         {
             if (stats & 1)
             {
+                totalStats++;
                 if (flags & STAT_CHANGE_CANT_PREVENT)
                 {
                     if (gBattleMons[battler].statStages[currStat] > MIN_STAT_STAGE)
@@ -6007,6 +6020,8 @@ static void Cmd_playstatchangeanimation(void)
                     {
                         statAnimId = startingStatAnimId + currStat;
                         changeableStatsCount++;
+                        if (defiantCompetitiveAffected)
+                            break;
                     }
                 }
             }
@@ -6047,15 +6062,15 @@ static void Cmd_playstatchangeanimation(void)
         }
     }
 
-    if (flags & STAT_CHANGE_MULTIPLE_STATS && changeableStatsCount < 2)
+    if (totalStats > 1 && changeableStatsCount < 2)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    else if (changeableStatsCount != 0 && !gBattleScripting.statAnimPlayed)
+    else if (changeableStatsCount != 0)
     {
         BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE, &gDisableStructs[battler], statAnimId);
         MarkBattlerForControllerExec(battler);
-        if (flags & STAT_CHANGE_MULTIPLE_STATS && changeableStatsCount > 1)
+        if (totalStats > 1 && changeableStatsCount > 1)
             gBattleScripting.statAnimPlayed = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }

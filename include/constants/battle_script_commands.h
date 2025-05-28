@@ -228,7 +228,6 @@ enum CmdVarious
 // stat change flags for Cmd_playstatchangeanimation
 #define STAT_CHANGE_NEGATIVE             (1 << 0)
 #define STAT_CHANGE_BY_TWO               (1 << 1)
-#define STAT_CHANGE_MULTIPLE_STATS       (1 << 2)
 #define STAT_CHANGE_CANT_PREVENT         (1 << 3)
 
 // stat flags for Cmd_playstatchangeanimation
