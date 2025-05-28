@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move")
 
 SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-        enum Abilities ability;
+    enum Abilities ability;
     u16 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }

@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Refrigerate turns a Normal-type move into a Ice-type move")
 
 SINGLE_BATTLE_TEST("Refrigerate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-        enum Abilities ability;
+    enum Abilities ability;
     u16 genConfig;
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING;   genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING;   genConfig = GEN_6; }
