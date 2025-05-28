@@ -60,7 +60,7 @@ This should be used for all PRs _except_  when merging from either:
 * `upcoming`, `master` or `pret/pokeemerald`.
 
 ## Create a merge commit
-When the branch uses a publicly available feature branch from by the community, use "Create a merge commit" to preserve history for users.
+When the branch uses a publicly available feature branch from by the community, OR is from `pret/pokeemerald`, use "Create a merge commit" to preserve history for users.
 
 ## Rebase and merge
 We do not use this ever.
