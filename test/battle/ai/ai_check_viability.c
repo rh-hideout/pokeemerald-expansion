@@ -219,7 +219,8 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 
 AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
 {
-    u32 status, ability, config;
+    u32 status, config;
+    enum Abilities ability;
 
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { status = STATUS1_NONE;         ability = ABILITY_SCRAPPY; }
