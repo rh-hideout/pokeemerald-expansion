@@ -656,9 +656,6 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
         // If target has less HP than user, Endeavor does no damage
         median = maximum = minimum = max(0, gBattleMons[damageCalcData->battlerDef].hp - gBattleMons[damageCalcData->battlerAtk].hp);
         break;
-    case EFFECT_FINAL_GAMBIT:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].hp;
-        break;
     case EFFECT_BEAT_UP:
         if (B_BEAT_UP >= GEN_5)
         {
