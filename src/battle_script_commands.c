@@ -12483,17 +12483,19 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
         }
     }
 
+    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE)
+    {
+        if (!(flags & STAT_CHANGE_ALLOW_PTR))
+            return STAT_CHANGE_DIDNT_WORK;
+        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
+        return STAT_CHANGE_WORKED;
+    }
+
     gBattleMons[battler].statStages[statId] += statValue;
     if (gBattleMons[battler].statStages[statId] < MIN_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MIN_STAT_STAGE;
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
-
-    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE && flags & STAT_CHANGE_ALLOW_PTR)
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-
-    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE && !(flags & STAT_CHANGE_ALLOW_PTR))
-        return STAT_CHANGE_DIDNT_WORK;
 
     return STAT_CHANGE_WORKED;
 }
