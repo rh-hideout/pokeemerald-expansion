@@ -5961,7 +5961,7 @@ static void Cmd_playstatchangeanimation(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = GetBattlerAbility(battler);
     u32 stats = cmd->stats;
-    u32 totalStats = 0;
+    u32 totalStats = (flags & STAT_CHANGE_MULTIPLE_STATS) ? 2 : 0;
     bool32 defiantCompetitiveAffected = FALSE;
 
     if (gBattleScripting.statAnimPlayed)
