@@ -278,9 +278,9 @@ enum MoveEndEffects
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
+    MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a multi-hit move
     MOVEEND_MULTIHIT_MOVE,
-    MOVEEND_DEFROST,
     MOVEEND_RECOIL,
     MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
