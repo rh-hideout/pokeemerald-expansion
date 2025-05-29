@@ -7849,6 +7849,7 @@ BattleScript_SupersweetSyrupLoopIncrement:
 	destroyabilitypopup
  	restoretarget
 	pause B_WAIT_TIME_MED
+ 	tryintimidatejectpack
 	end3
 
 BattleScript_SupersweetSyrupWontDecrease:
