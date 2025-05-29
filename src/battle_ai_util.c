@@ -483,8 +483,8 @@ static inline s32 DmgRoll(s32 dmg)
 
 bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType, uq4_12_t effectiveness, u32 weather)
 {
-    u32 battlerDefAbility;
-    u32 partnerDefAbility;
+    enum Abilities battlerDefAbility;
+    enum Abilities partnerDefAbility;
     struct AiLogicData *aiData = gAiLogicData;
 
     if (effectiveness == UQ_4_12(0.0))
@@ -1432,7 +1432,7 @@ enum Abilities AI_DecideKnownAbilityForTurn(u32 battlerId)
     u32 validAbilities[NUM_ABILITY_SLOTS];
     u8 i, numValidAbilities = 0;
     enum Abilities knownAbility = AI_GetBattlerAbility(battlerId);
-    u32 indexAbility;
+    enum Abilities indexAbility;
     enum Abilities abilityAiRatings[NUM_ABILITY_SLOTS] = {0};
 
     // We've had ability overwritten by e.g. Worry Seed. It is not part of gAiPartyData in case of switching
@@ -4552,7 +4552,7 @@ void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, struct AiLogicData *aiData)
 {
     u32 preventsStatLoss;
-    u32 partnerAbility;
+    enum Abilities partnerAbility;
     u32 partnerHoldEffect = aiData->holdEffects[battlerAtkPartner];
 
     if (DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))

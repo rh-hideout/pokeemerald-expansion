@@ -6590,7 +6590,7 @@ static void Cmd_moveend(void)
                  && IsBattlerAlive(gBattlerAttacker)
                  && !(gStatuses3[BATTLE_PARTNER(gBattlerTarget)] & STATUS3_COMMANDER))
                 {
-                    u32 targetAbility = GetBattlerAbility(gBattlerTarget);
+                    enum Abilities targetAbility = GetBattlerAbility(gBattlerTarget);
                     if (targetAbility == ABILITY_GUARD_DOG)
                     {
                         gBattleScripting.moveendState++;
@@ -10932,7 +10932,7 @@ static void Cmd_various(void)
     case VARIOUS_PSYCHO_SHIFT:
         {
             VARIOUS_ARGS(const u8 *failInstr, const u8 *sleepClauseFailInstr);
-            u32 targetAbility = GetBattlerAbility(gBattlerTarget);
+            enum Abilities targetAbility = GetBattlerAbility(gBattlerTarget);
             // Psycho shift works
             if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_POISON) && CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), targetAbility))
                 gBattleCommunication[MULTISTRING_CHOOSER] = 0;
@@ -12922,7 +12922,7 @@ static void Cmd_tryKO(void)
 
     bool32 lands = FALSE;
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
-    u16 targetAbility = GetBattlerAbility(gBattlerTarget);
+    enum Abilities targetAbility = GetBattlerAbility(gBattlerTarget);
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
     u32 endured = NOT_ENDURED;
@@ -14932,7 +14932,7 @@ static void Cmd_trycopyability(void)
     CMD_ARGS(u8 battler, const u8 *failInstr);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    u16 defAbility = gBattleMons[gBattlerTarget].ability;
+    enum Abilities defAbility = gBattleMons[gBattlerTarget].ability;
 
     if (gBattleMons[battler].ability == defAbility
       || defAbility == ABILITY_NONE

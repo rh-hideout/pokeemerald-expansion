@@ -15,6 +15,7 @@
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/trainers.h"
+#include "constants/abilities.h"
 
 #if defined(__INTELLISENSE__)
 #undef TestRunner_Battle_RecordAbilityPopUp
