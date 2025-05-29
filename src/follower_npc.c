@@ -1357,7 +1357,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
     TryUpdateFollowerNPCSpriteUnderwater();
 
-    if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY)
+    if (follower->invisible || (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY))
         return;
 
     // Spawn the surf blob under the follower.
