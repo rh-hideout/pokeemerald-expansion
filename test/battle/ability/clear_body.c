@@ -41,7 +41,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat stage reduction from moves")
 {
     u16 move = MOVE_NONE;
-    u32 j, species = SPECIES_NONE, ability = ABILITY_NONE;
+    u32 j, species = SPECIES_NONE; 
+    enum Abilities ability = ABILITY_NONE;
     static const u16 statReductionMoves[] = {
         MOVE_GROWL,
         MOVE_LEER,
@@ -140,8 +141,9 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
 
 SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and White Smoke, but not Full Metal Body")
 {
-    u32 j, k, species = SPECIES_NONE, ability = ABILITY_NONE;
-    u16 breakerAbility = ABILITY_NONE;
+    u32 j, k, species = SPECIES_NONE;
+    enum Abilities ability = ABILITY_NONE;
+    enum Abilities breakerAbility = ABILITY_NONE;
     u16 move = ABILITY_NONE;
     static const u16 breakerAbilities[] = {
         ABILITY_MOLD_BREAKER,
@@ -200,7 +202,8 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
 
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball")
 {
-    u32 j, species = SPECIES_NONE, ability = ABILITY_NONE;
+    u32 j, species = SPECIES_NONE;
+    enum Abilities ability = ABILITY_NONE;
     u16 heldItem = ITEM_NONE;
     static const u16 heldItems[] = {
         ITEM_NONE,

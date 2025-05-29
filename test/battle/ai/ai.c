@@ -52,7 +52,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
 AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they both require the same number of hits to ko")
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns, abilityAtk, expectedMove2;
+    u16 hp, expectedMove, turns, expectedMove2;
+    enum Abilities abilityAtk;
 
     abilityAtk = ABILITY_NONE;
     expectedMove2 = MOVE_NONE;
@@ -136,7 +137,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
 {
     u8 turns = 0;
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, abilityAtk, abilityDef;
+    u16 expectedMove;
+    enum Abilities abilityAtk, abilityDef;
 
     abilityAtk = ABILITY_NONE;
 
