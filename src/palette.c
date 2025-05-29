@@ -42,13 +42,6 @@ static const u8 sRoundedDownGrayscaleMap[] = {
     31, 31
 };
 
-void LoadCompressedPalette(const u32 *src, u32 offset, u32 size)
-{
-    void *buffer = malloc_and_decompress(src, NULL);
-    LoadPalette(buffer, offset, size);
-    Free(buffer);
-}
-
 void LoadPalette(const void *src, u32 offset, u32 size)
 {
     CpuCopy16(src, &gPlttBufferUnfaded[offset], size);

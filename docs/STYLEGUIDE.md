@@ -202,7 +202,7 @@ if (runTasks) // correct
 
 if (runTasks != 0) // incorrect
     RunTasks();
-    
+
 if (!PlayerIsOutside()) // correct
     RemoveSunglasses();
 
@@ -349,6 +349,10 @@ enum DifficultyLevel GetCurrentDifficultyLevel(void)
     return VarGet(B_VAR_DIFFICULTY);
 }
 ```
+
+### Data file format
+
+External data files should use JSON.
 
 ## Principles
 

@@ -96,7 +96,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
     {
         u8 spriteId;
         struct SpriteSheet spriteSheet;
-        struct CompressedSpritePalette spritePalette;
+        struct SpritePalette spritePalette;
         struct SpriteTemplate *spriteTemplate;
 
         LZDecompressWram(GetItemIconPic(itemId), gItemIconDecompressionBuffer);
@@ -108,7 +108,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
 
         spritePalette.data = GetItemIconPalette(itemId);
         spritePalette.tag = paletteTag;
-        LoadCompressedSpritePalette(&spritePalette);
+        LoadSpritePalette(&spritePalette);
 
         spriteTemplate = Alloc(sizeof(*spriteTemplate));
         CpuCopy16(&gItemIconSpriteTemplate, spriteTemplate, sizeof(*spriteTemplate));
@@ -133,7 +133,7 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
     {
         u8 spriteId;
         struct SpriteSheet spriteSheet;
-        struct CompressedSpritePalette spritePalette;
+        struct SpritePalette spritePalette;
         struct SpriteTemplate *spriteTemplate;
 
         LZDecompressWram(GetItemIconPic(itemId), gItemIconDecompressionBuffer);
@@ -145,7 +145,7 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
 
         spritePalette.data = GetItemIconPalette(itemId);
         spritePalette.tag = paletteTag;
-        LoadCompressedSpritePalette(&spritePalette);
+        LoadSpritePalette(&spritePalette);
 
         spriteTemplate = Alloc(sizeof(*spriteTemplate));
         CpuCopy16(customSpriteTemplate, spriteTemplate, sizeof(*spriteTemplate));
@@ -176,7 +176,7 @@ const void *GetItemIconPic(u16 itemId)
     return gItemsInfo[itemId].iconPic;
 }
 
-const void *GetItemIconPalette(u16 itemId)
+const u16 *GetItemIconPalette(u16 itemId)
 {
     if (itemId == ITEM_LIST_END)
         return gItemIconPalette_ReturnToFieldArrow;
