@@ -533,7 +533,7 @@ def IsConfigEnabled():
 def GetTimeEnum():
     DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*\}\s*\;")
 
-    with open("./include/rtc.h", "r") as rtc_include_file:
+    with open("./include/constants/rtc.h", "r") as rtc_include_file:
         include_rtc = rtc_include_file.read()
         include_enum = DEFAULT_TIME_PAT.search(include_rtc)
         return include_enum.group("rtc_val")
