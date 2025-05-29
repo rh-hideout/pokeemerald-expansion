@@ -7423,12 +7423,20 @@ BattleScript_DrizzleActivates::
 
 BattleScript_AbilityRaisesDefenderStat::
 	pause B_WAIT_TIME_SHORT
+	statbuffchange 0, BattleScript_AbilityCantRaiseDefenderStat
 	call BattleScript_AbilityPopUp
-	statbuffchange 0, NULL
 	setgraphicalstatchangevalues
 	playanimation BS_ABILITY_BATTLER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	printstring STRINGID_DEFENDERSSTATROSE
 	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_AbilityCantRaiseDefenderStat::
+	saveattacker
+	copybyte gBattlerAttacker, gBattlerTarget
+	printstring STRINGID_STATSWONTINCREASE
+	waitmessage B_WAIT_TIME_LONG
+	restoreattacker
 	return
 
 BattleScript_AbilityPopUpTarget::
