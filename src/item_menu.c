@@ -954,7 +954,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     {
         RemoveBagItemIconSprite(gBagMenu->itemIconSlot ^ 1);
         if (itemIndex != LIST_CANCEL)
-           AddBagItemIconSprite(BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, itemIndex), gBagMenu->itemIconSlot);
+           AddBagItemIconSprite(GetBagItemId(gBagPosition.pocket, itemIndex), gBagMenu->itemIconSlot);
         else
            AddBagItemIconSprite(ITEM_LIST_END, gBagMenu->itemIconSlot);
         gBagMenu->itemIconSlot ^= 1;
@@ -980,8 +980,8 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
                 BagMenu_PrintCursorAtPos(y, COLORID_NONE);
         }
 
-        itemId = BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, itemIndex);
-        itemQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, itemIndex);
+        itemId = GetBagItemId(gBagPosition.pocket, itemIndex);
+        itemQuantity = GetBagItemQuantity(gBagPosition.pocket, itemIndex);
 
         // Draw HM icon
         if (itemId >= ITEM_HM01 && itemId <= ITEM_HM08)
@@ -1009,7 +1009,7 @@ static void PrintItemDescription(int itemIndex)
     const u8 *str;
     if (itemIndex != LIST_CANCEL)
     {
-        str = GetItemDescription(BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, itemIndex));
+        str = GetItemDescription(GetBagItemId(gBagPosition.pocket, itemIndex));
     }
     else
     {
@@ -1131,21 +1131,20 @@ static void Task_CloseBagMenu(u8 taskId)
 void UpdatePocketItemList(u8 pocketId)
 {
     u16 i;
-    struct BagPocket *pocket = &gBagPockets[pocketId];
     switch (pocketId)
     {
     case TMHM_POCKET:
     case BERRIES_POCKET:
-        SortBerriesOrTMHMs(pocket);
+        SortBerriesOrTMHMs(pocketId);
         break;
     default:
-        CompactItemsInBagPocket(pocket);
+        CompactItemsInBagPocket(pocketId);
         break;
     }
 
     gBagMenu->numItemStacks[pocketId] = 0;
 
-    for (i = 0; i < pocket->capacity && pocket->itemSlots[i].itemId; i++)
+    for (i = 0; i < gBagPocketSizes[pocketId] && GetBagItemId(pocketId, i); i++)
         gBagMenu->numItemStacks[pocketId]++;
 
     if (!gBagMenu->hideCloseBagText)
@@ -1289,8 +1288,8 @@ static void Task_BagMenu_HandleInput(u8 taskId)
             BagDestroyPocketScrollArrowPair();
             BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
             tListPosition = listPosition;
-            tQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, listPosition);
-            gSpecialVar_ItemId = BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, listPosition);
+            tQuantity = GetBagItemQuantity(gBagPosition.pocket, listPosition);
+            gSpecialVar_ItemId = GetBagItemId(gBagPosition.pocket, listPosition);
             sContextMenuFuncs[gBagPosition.location](taskId);
             break;
         }
@@ -1461,7 +1460,7 @@ static void StartItemSwap(u8 taskId)
     ListMenuSetUnkIndicatorsStructField(tListTaskId, 16, 1);
     tListPosition = gBagPosition.scrollPosition[gBagPosition.pocket] + gBagPosition.cursorPosition[gBagPosition.pocket];
     gBagMenu->toSwapPos = tListPosition;
-    CopyItemName(BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, tListPosition), gStringVar1);
+    CopyItemName(GetBagItemId(gBagPosition.pocket, tListPosition), gStringVar1);
     StringExpandPlaceholders(gStringVar4, gText_MoveVar1Where);
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);

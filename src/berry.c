@@ -2259,7 +2259,7 @@ void ObjectEventInteractionClearBerryPests(void)
 
 bool8 PlayerHasBerries(void)
 {
-    return IsBagPocketNonEmpty(POCKET_BERRIES);
+    return IsBagPocketNonEmpty(BERRIES_POCKET);
 }
 
 bool8 ObjectEventInteractionBerryHasWeed(void)
