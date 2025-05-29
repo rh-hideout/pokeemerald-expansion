@@ -7022,7 +7022,7 @@ static void Cmd_moveend(void)
                 {
                     gBattleStruct->moveDamage[gBattlerAttacker] = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
                     BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_MaxHp50Recoil;
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectRecoil;
                     effect = TRUE;
                 }
                 break;
