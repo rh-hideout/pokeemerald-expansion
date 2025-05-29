@@ -2534,7 +2534,7 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     {
         for (y=0; y<4; y++)
         {
-            if (SpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x+y*4] == 1)
                 SetItemState(posX, posY, x, y, itemStateId);
         }
     }
