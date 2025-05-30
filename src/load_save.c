@@ -280,9 +280,7 @@ void SavePlayerBag(void)
 
     encryptionKeyBackup = gSaveBlock2Ptr->encryptionKey;
     gSaveBlock2Ptr->encryptionKey = gLastEncryptionKey;
-#if I_EXPANDED_BAG == FALSE
     ApplyNewEncryptionKeyToBagItems(encryptionKeyBackup);
-#endif
     gSaveBlock2Ptr->encryptionKey = encryptionKeyBackup; // updated twice?
 }
 
@@ -301,9 +299,7 @@ void ApplyNewEncryptionKeyToWord(u32 *word, u32 newKey)
 static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey)
 {
     ApplyNewEncryptionKeyToGameStats(encryptionKey);
-#if I_EXPANDED_BAG == FALSE
     ApplyNewEncryptionKeyToBagItems(encryptionKey);
-#endif
     ApplyNewEncryptionKeyToBerryPowder(encryptionKey);
     ApplyNewEncryptionKeyToWord(&gSaveBlock1Ptr->money, encryptionKey);
     ApplyNewEncryptionKeyToHword(&gSaveBlock1Ptr->coins, encryptionKey);

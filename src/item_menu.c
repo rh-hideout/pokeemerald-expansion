@@ -883,7 +883,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId] - 1; i++)
         {
-            GetItemNameFromPocket(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            GetItemNameFromPocket(sListBuffer2->name[i], GetBagItemId(pocketId, i));
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -897,7 +897,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId]; i++)
         {
-            GetItemNameFromPocket(sListBuffer2->name[i], pocket->itemSlots[i].itemId);
+            GetItemNameFromPocket(sListBuffer2->name[i], GetBagItemId(pocketId, i));
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -2335,8 +2335,8 @@ static void PrepareBagForWallyTutorial(void)
         sTempWallyBag->cursorPosition[i] = gBagPosition.cursorPosition[i];
         sTempWallyBag->scrollPosition[i] = gBagPosition.scrollPosition[i];
     }
-    ClearItemSlots(gSaveBlock1Ptr->bag.items, BAG_ITEMS_COUNT);
-    ClearItemSlots(gSaveBlock1Ptr->bag.pokeBalls, BAG_POKEBALLS_COUNT);
+    CpuFastFill(0, gSaveBlock1Ptr->bag.items, sizeof(gSaveBlock1Ptr->bag.items));
+    CpuFastFill(0, gSaveBlock1Ptr->bag.pokeBalls, sizeof(gSaveBlock1Ptr->bag.pokeBalls));
     ResetBagScrollPositions();
 }
 

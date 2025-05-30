@@ -369,7 +369,7 @@ static const u8 sSwapArrowTextColors[] = {TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRA
 void NewGameInitPCItems(void)
 {
     u8 i = 0;
-    ClearItemSlots(gSaveBlock1Ptr->pcItems, PC_ITEMS_COUNT);
+    CpuFastFill(0, gSaveBlock1Ptr->pcItems, sizeof(gSaveBlock1Ptr->pcItems));
 
     while (TRUE)
     {

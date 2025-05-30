@@ -415,17 +415,6 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     }
 }
 
-void ClearItemSlots(struct ItemSlot *itemSlots, u8 itemCount)
-{
-    u16 i;
-
-    for (i = 0; i < itemCount; i++)
-    {
-        itemSlots[i].itemId = ITEM_NONE;
-        itemSlots[i].quantity = 0;
-    }
-}
-
 static s32 FindFreePCItemSlot(void)
 {
     s8 i;
@@ -651,12 +640,7 @@ void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to)
 
 void ClearBag(void)
 {
-    u16 i;
-
-    for (i = 0; i < POCKETS_COUNT; i++)
-    {
-        ClearItemSlots(gBagPockets[i].itemSlots, gBagPockets[i].capacity);
-    }
+    CpuFastFill(0, &gSaveBlock1Ptr->bag, sizeof(struct Bag));
 }
 
 u16 CountTotalItemQuantityInBag(u16 itemId)
