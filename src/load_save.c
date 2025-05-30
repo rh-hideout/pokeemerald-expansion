@@ -169,23 +169,23 @@ void ClearContinueGameWarpStatus2(void)
 void SavePlayerParty(void)
 {
     int i;
-
-    gSaveBlock1Ptr->playerPartyCount = gPlayerPartyCount;
+    u8 *count = GetSavedPlayerPartyCount();
+    count = gPlayerPartyCount;
 
     for (i = 0; i < PARTY_SIZE; i++)
-        gSaveBlock1Ptr->playerParty[i] = gPlayerParty[i];
+        SavePlayerPartyMon(i, &gPlayerParty[i]);
 }
 
 void LoadPlayerParty(void)
 {
     int i;
 
-    gPlayerPartyCount = gSaveBlock1Ptr->playerPartyCount;
+    gPlayerPartyCount = *GetSavedPlayerPartyCount();
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u32 data;
-        gPlayerParty[i] = gSaveBlock1Ptr->playerParty[i];
+        gPlayerParty[i] = *GetSavedPlayerPartyMon(i);
 
         // TODO: Turn this into a save migration once those are available.
         // At which point we can remove hp and status from Pokemon entirely.
@@ -280,7 +280,9 @@ void SavePlayerBag(void)
 
     encryptionKeyBackup = gSaveBlock2Ptr->encryptionKey;
     gSaveBlock2Ptr->encryptionKey = gLastEncryptionKey;
+#if I_EXPANDED_BAG == FALSE
     ApplyNewEncryptionKeyToBagItems(encryptionKeyBackup);
+#endif
     gSaveBlock2Ptr->encryptionKey = encryptionKeyBackup; // updated twice?
 }
 
@@ -299,7 +301,9 @@ void ApplyNewEncryptionKeyToWord(u32 *word, u32 newKey)
 static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey)
 {
     ApplyNewEncryptionKeyToGameStats(encryptionKey);
+#if I_EXPANDED_BAG == FALSE
     ApplyNewEncryptionKeyToBagItems(encryptionKey);
+#endif
     ApplyNewEncryptionKeyToBerryPowder(encryptionKey);
     ApplyNewEncryptionKeyToWord(&gSaveBlock1Ptr->money, encryptionKey);
     ApplyNewEncryptionKeyToHword(&gSaveBlock1Ptr->coins, encryptionKey);

@@ -5288,9 +5288,9 @@ bool32 NoAliveMonsForPlayer(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (!GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_SPECIES)
-             || !GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HP)
-             || GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_IS_EGG))
+            if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
+             || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
+             || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
                 ineligibleMonsCount++;
         }
 
