@@ -8,11 +8,11 @@ SINGLE_BATTLE_TEST("Soul Heart boosts Sp. Atk after opponent uses Memento")
         ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MAGEARNA);
+        OPPONENT(SPECIES_MAGEARNA) { Ability(ABILITY_SOUL_HEART); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_MEMENTO); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted");
+        MESSAGE("Wobbuffet fainted!");
         ABILITY_POPUP(opponent, ABILITY_SOUL_HEART);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
