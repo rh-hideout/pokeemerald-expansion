@@ -1,5 +1,12 @@
-<p align="center"><img src="https://raw.githubusercontent.com/Pokemon-Demake-Team/pokeblack2/refs/heads/master/assets/logos/black2logo.jpeg"></p>
-<p align="center"><img src="https://raw.githubusercontent.com/Pokemon-Demake-Team/pokeblack2/refs/heads/master/assets/logos/white2logo.jpeg"></p>
+<p align="center" style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/Pokemon-Demake-Team/pokeblack2/refs/heads/master/assets/logos/black2logo.jpeg">
+<img src="https://raw.githubusercontent.com/Pokemon-Demake-Team/pokeblack2/refs/heads/master/assets/logos/white2logo.jpeg">
+</p>
+<p align="center" style="display:inline-block;">
+<a href="https://github.com/Pokemon-Demake-Team/pokeblack2"><img src="https://img.shields.io/github/check-runs/Pokemon-Demake-Team/pokeblack2/master?logo=github&label=Build"></a>
+<a href="https://github.com/Pokemon-Demake-Team/pokeblack2/issues"><img src="https://img.shields.io/github/issues/Pokemon-Demake-Team/pokeblack2?logo=github&label=Issues"></a>
+<a href="https://github.com/Pokemon-Demake-Team/pokeblack2/pulls"><img src="https://img.shields.io/github/issues-pr/Pokemon-Demake-Team/pokeblack2?logo=github&label=Pulls"></a></p>
+
 
 ***
 
