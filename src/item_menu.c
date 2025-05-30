@@ -1144,7 +1144,7 @@ void UpdatePocketItemList(u8 pocketId)
 
     gBagMenu->numItemStacks[pocketId] = 0;
 
-    for (i = 0; i < gBagPocketSizes[pocketId] && GetBagItemId(pocketId, i); i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity && GetBagItemId(pocketId, i); i++)
         gBagMenu->numItemStacks[pocketId]++;
 
     if (!gBagMenu->hideCloseBagText)

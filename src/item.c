@@ -27,46 +27,48 @@ static const u8 *GetItemPluralName(u16);
 static bool32 DoesItemHavePluralName(u16);
 
 EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
-const u16 gBagPocketSizes[POCKETS_COUNT] =
-{
-    [ITEMS_POCKET]    = BAG_ITEMS_COUNT,
-    [BALLS_POCKET]    = BAG_POKEBALLS_COUNT,
-    [TMHM_POCKET]     = BAG_TMHM_COUNT,
-    [BERRIES_POCKET]  = BAG_BERRIES_COUNT,
-    [KEYITEMS_POCKET] = BAG_KEYITEMS_COUNT,
-};
 
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
-u16 GetBagItemId(u32 pocketId, u32 pocketPos)
+static inline u32 GetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos)
 {
-    return gBagPockets[pocketId].itemSlots[pocketPos].itemId;
+    return pocket->itemSlots[pocketPos].itemId;
 }
 
-static inline u16 GetBagNewItemQuantity(struct ItemSlot *itemSlot)
+static inline u32 GetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos)
 {
-    return gSaveBlock2Ptr->encryptionKey ^ itemSlot->quantity;
+    return gSaveBlock2Ptr->encryptionKey ^ pocket->itemSlots[pocketPos].quantity;
 }
 
-u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
+static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, u32 itemId)
 {
-    return GetBagNewItemQuantity(&gBagPockets[pocketId].itemSlots[pocketPos]);
+    pocket->itemSlots[pocketPos].itemId = itemId;
 }
 
-static inline void SetBagItemId(u32 pocketId, u32 pocketPos, u32 itemId)
+static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos, u32 newValue)
 {
-    gBagPockets[pocketId].itemSlots[pocketPos].itemId = itemId;
+    pocket->itemSlots[pocketPos].quantity = newValue ^ gSaveBlock2Ptr->encryptionKey;
 }
 
-static void SetBagNewItemQuantity(struct ItemSlot *itemSlot, u16 newValue)
+u32 GetBagItemId(u32 pocketId, u32 pocketPos)
 {
-    itemSlot->quantity = newValue ^ gSaveBlock2Ptr->encryptionKey;
+    return GetBagItemIdPocket(&gBagPockets[pocketId], pocketPos);
 }
 
-void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue)
+u32 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
 {
-    SetBagNewItemQuantity(&gBagPockets[pocketId].itemSlots[pocketPos], newValue);
+    return GetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos);
+}
+
+static void SetBagItemId(u32 pocketId, u32 pocketPos, u32 itemId)
+{
+    SetBagItemIdPocket(&gBagPockets[pocketId], pocketPos, itemId);
+}
+
+void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u32 newValue)
+{
+    SetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos, newValue);
 }
 
 static u16 GetPCItemQuantity(u16 *quantity)
@@ -81,21 +83,26 @@ static void SetPCItemQuantity(u16 *quantity, u16 newValue)
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
-    u32 pocket, item;
-    for (pocket = 0; pocket < POCKETS_COUNT; pocket++)
+    u32 pocketId, item;
+    for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
-        for (item = 0; item < gBagPocketSizes[pocket]; item++)
-            ApplyNewEncryptionKeyToHword(&(gBagPockets[pocket].itemSlots[item].quantity), newKey);
+        for (item = 0; item < gBagPockets[pocketId].capacity; item++)
+            ApplyNewEncryptionKeyToHword(&(gBagPockets[pocketId].itemSlots[item].quantity), newKey);
     }
 }
 
 void SetBagItemsPointers(void)
 {
     gBagPockets[ITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_Items;
+    gBagPockets[ITEMS_POCKET].capacity = BAG_ITEMS_COUNT;
     gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_KeyItems;
+    gBagPockets[KEYITEMS_POCKET].capacity = BAG_KEYITEMS_COUNT;
     gBagPockets[BALLS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
+    gBagPockets[BALLS_POCKET].capacity = BAG_POKEBALLS_COUNT;
     gBagPockets[TMHM_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_TMHM;
+    gBagPockets[TMHM_POCKET].capacity = BAG_TMHM_COUNT;
     gBagPockets[BERRIES_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_Berries;
+    gBagPockets[BERRIES_POCKET].capacity = BAG_BERRIES_COUNT;
 }
 
 u8 *CopyItemName(u16 itemId, u8 *dst)
@@ -126,7 +133,7 @@ bool8 IsBagPocketNonEmpty(u32 pocketId)
 {
     u8 i;
 
-    for (i = 0; i < gBagPocketSizes[pocketId]; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
         if (GetBagItemId(pocketId, i) != 0)
             return TRUE;
@@ -137,21 +144,21 @@ bool8 IsBagPocketNonEmpty(u32 pocketId)
 bool8 CheckBagHasItem(u16 itemId, u16 count)
 {
     u8 i;
-    u8 pocket;
+    u8 pocketId;
 
-    if (GetItemPocket(itemId) == 0)
+    if (GetPocketForItem(itemId) == POCKET_NONE)
         return FALSE;
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
         return CheckPyramidBagHasItem(itemId, count);
-    pocket = GetItemPocket(itemId) - 1;
+    pocketId = GetPocketForItem(itemId) - 1;
     // Check for item slots that contain the item
-    for (i = 0; i < gBagPocketSizes[pocket]; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
-        if (GetBagItemId(pocket, i) == itemId)
+        if (GetBagItemId(pocketId, i) == itemId)
         {
             u16 quantity;
             // Does this item slot contain enough of the item?
-            quantity = GetBagItemQuantity(pocket, i);
+            quantity = GetBagItemQuantity(pocketId, i);
             if (quantity >= count)
                 return TRUE;
             count -= quantity;
@@ -193,7 +200,7 @@ bool8 HasAtLeastOnePokeBall(void)
 
 bool8 CheckBagHasSpace(u16 itemId, u16 count)
 {
-    if (GetItemPocket(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) == POCKET_NONE)
         return FALSE;
 
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
@@ -205,23 +212,23 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count)
 u32 GetFreeSpaceForItemInBag(u16 itemId)
 {
     u8 i;
-    u8 pocket = GetItemPocket(itemId) - 1;
+    u8 pocketId = GetPocketForItem(itemId) - 1;
     u16 ownedCount;
     u32 spaceForItem = 0;
 
-    if (GetItemPocket(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) == POCKET_NONE)
         return 0;
 
     // Check space in any existing item slots that already contain this item
-    for (i = 0; i < gBagPocketSizes[pocket]; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
 
-        if (GetBagItemId(pocket, i) == itemId)
+        if (GetBagItemId(pocketId, i) == itemId)
         {
-            ownedCount = GetBagItemQuantity(pocket, i);
+            ownedCount = GetBagItemQuantity(pocketId, i);
             spaceForItem += max(0, MAX_BAG_ITEM_CAPACITY - ownedCount);
         }
-        else if (GetBagItemId(pocket, i) == ITEM_NONE)
+        else if (GetBagItemId(pocketId, i) == ITEM_NONE)
         {
             spaceForItem += MAX_BAG_ITEM_CAPACITY;
         }
@@ -229,11 +236,32 @@ u32 GetFreeSpaceForItemInBag(u16 itemId)
     return spaceForItem;
 }
 
+static inline u32 PrepareTempPocket(struct BagPocket *tempPocket, u32 pocketId)
+{
+    u32 size = gBagPockets[pocketId].capacity * sizeof(struct ItemSlot);
+    tempPocket->itemSlots = AllocZeroed(size);
+    memcpy(tempPocket->itemSlots, gBagPockets[pocketId].itemSlots, size);
+
+    return size;
+}
+
+static inline void ClearTempPocket(struct BagPocket *pocket)
+{
+    Free(pocket->itemSlots);
+    Free(pocket);
+}
+
+static inline void RestorePocketAndClearTempPocket(struct BagPocket *tempPocket, u32 pocketId, u32 pocketSize)
+{
+    memcpy(&gBagPockets[pocketId].itemSlots, tempPocket->itemSlots, pocketSize);
+    ClearTempPocket(tempPocket);
+}
+
 bool8 AddBagItem(u16 itemId, u16 count)
 {
     u8 i;
 
-    if (GetItemPocket(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) == POCKET_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -243,39 +271,36 @@ bool8 AddBagItem(u16 itemId, u16 count)
     }
     else
     {
-        struct ItemSlot *newItems;
         u16 ownedCount;
-        u8 pocket = GetItemPocket(itemId) - 1;
+        u8 pocketId = GetPocketForItem(itemId) - 1;
+        struct BagPocket tempPocket;
+        u32 pocketSize = PrepareTempPocket(&tempPocket, pocketId);
 
-        newItems = AllocZeroed(gBagPocketSizes[pocket] * sizeof(struct ItemSlot));
-        memcpy(newItems, &gBagPockets[pocket].itemSlots, gBagPocketSizes[pocket] * sizeof(struct ItemSlot));
-
-        for (i = 0; i < gBagPocketSizes[pocket]; i++)
+        for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
-            if (newItems[i].itemId == itemId)
+            if (GetBagItemIdPocket(&tempPocket, i) == itemId)
             {
-                ownedCount = GetBagNewItemQuantity(&newItems[i]);
+                ownedCount = GetBagItemQuantityPocket(&tempPocket, i);
                 // check if won't exceed max slot capacity
                 if (ownedCount + count <= MAX_BAG_ITEM_CAPACITY)
                 {
                     // successfully added to already existing item's count
-                    SetBagNewItemQuantity(&newItems[i], ownedCount + count);
-                    memcpy(&gBagPockets[pocket].itemSlots, newItems, gBagPocketSizes[pocket] * sizeof(struct ItemSlot));
-                    Free(newItems);
+                    SetBagItemQuantityPocket(&tempPocket, i, ownedCount + count);
+                    RestorePocketAndClearTempPocket(&tempPocket, pocketId, pocketSize);
                     return TRUE;
                 }
                 else
                 {
                     // try creating another instance of the item if possible
-                    if (pocket == TMHM_POCKET || pocket == BERRIES_POCKET)
+                    if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
                     {
-                        Free(newItems);
+                        ClearTempPocket(&tempPocket);
                         return FALSE;
                     }
                     else
                     {
                         count -= MAX_BAG_ITEM_CAPACITY - ownedCount;
-                        SetBagNewItemQuantity(&newItems[i], MAX_BAG_ITEM_CAPACITY);
+                        SetBagItemQuantityPocket(&tempPocket, i, MAX_BAG_ITEM_CAPACITY);
                         // don't create another instance of the item if it's at max slot capacity and count is equal to 0
                         if (count == 0)
                         {
@@ -290,26 +315,26 @@ bool8 AddBagItem(u16 itemId, u16 count)
         if (count > 0)
         {
             // either no existing item was found or we have to create another instance, because the capacity was exceeded
-            for (i = 0; i < gBagPocketSizes[pocket]; i++)
+            for (i = 0; i < gBagPockets[pocketId].capacity; i++)
             {
-                if (newItems[i].itemId == ITEM_NONE)
+                if (GetBagItemIdPocket(&tempPocket, i) == ITEM_NONE)
                 {
-                    newItems[i].itemId = itemId;
+                    SetBagItemIdPocket(&tempPocket, i, itemId);
                     if (count > MAX_BAG_ITEM_CAPACITY)
                     {
                         // try creating a new slot with max capacity if duplicates are possible
-                        if (pocket == TMHM_POCKET || pocket == BERRIES_POCKET)
+                        if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
                         {
-                            Free(newItems);
+                            ClearTempPocket(&tempPocket);
                             return FALSE;
                         }
                         count -= MAX_BAG_ITEM_CAPACITY;
-                        SetBagNewItemQuantity(&newItems[i], MAX_BAG_ITEM_CAPACITY);
+                        SetBagItemQuantityPocket(&tempPocket, i, MAX_BAG_ITEM_CAPACITY);
                     }
                     else
                     {
                         // created a new slot and added quantity
-                        SetBagNewItemQuantity(&newItems[i], count);
+                        SetBagItemQuantityPocket(&tempPocket, i, count);
                         count = 0;
                         break;
                     }
@@ -318,12 +343,11 @@ bool8 AddBagItem(u16 itemId, u16 count)
 
             if (count > 0)
             {
-                Free(newItems);
+                ClearTempPocket(&tempPocket);
                 return FALSE;
             }
         }
-        memcpy(&gBagPockets[pocket].itemSlots, newItems, gBagPocketSizes[pocket] * sizeof(struct ItemSlot));
-        Free(newItems);
+        RestorePocketAndClearTempPocket(&tempPocket, pocketId, pocketSize);
         return TRUE;
     }
 }
@@ -333,7 +357,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     u8 i;
     u16 totalQuantity = 0;
 
-    if (GetItemPocket(itemId) == POCKET_NONE || itemId == ITEM_NONE)
+    if (GetPocketForItem(itemId) == POCKET_NONE || itemId == ITEM_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -343,16 +367,16 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     }
     else
     {
-        u8 pocket;
+        u8 pocketId;
         u8 var;
         u16 ownedCount;
 
-        pocket = GetItemPocket(itemId) - 1;
+        pocketId = GetPocketForItem(itemId) - 1;
 
-        for (i = 0; i < gBagPocketSizes[pocket]; i++)
+        for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
-            if (GetBagItemId(pocket, i) == itemId)
-                totalQuantity += GetBagItemQuantity(pocket, i);
+            if (GetBagItemId(pocketId, i) == itemId)
+                totalQuantity += GetBagItemQuantity(pocketId, i);
         }
 
         if (totalQuantity < count)
@@ -364,47 +388,47 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
             VarSet(VAR_SECRET_BASE_LAST_ITEM_USED, itemId);
         }
 
-        var = GetItemListPosition(pocket);
-        if (gBagPocketSizes[pocket] > var
-         && GetBagItemId(pocket, var) == itemId)
+        var = GetItemListPosition(pocketId);
+        if (gBagPockets[pocketId].capacity > var
+         && GetBagItemId(pocketId, var) == itemId)
         {
-            ownedCount = GetBagItemQuantity(pocket, var);
+            ownedCount = GetBagItemQuantity(pocketId, var);
             if (ownedCount >= count)
             {
-                SetBagItemQuantity(pocket, var, ownedCount - count);
+                SetBagItemQuantity(pocketId, var, ownedCount - count);
                 count = 0;
             }
             else
             {
                 count -= ownedCount;
-                SetBagItemQuantity(pocket, var, 0);
+                SetBagItemQuantity(pocketId, var, 0);
             }
 
-            if (GetBagItemQuantity(pocket, var) == 0)
-                SetBagItemId(pocket, var, ITEM_NONE);
+            if (GetBagItemQuantity(pocketId, var) == 0)
+                SetBagItemId(pocketId, var, ITEM_NONE);
 
             if (count == 0)
                 return TRUE;
         }
 
-        for (i = 0; i < gBagPocketSizes[pocket]; i++)
+        for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
-            if (GetBagItemId(pocket, i) == itemId)
+            if (GetBagItemId(pocketId, i) == itemId)
             {
-                ownedCount = GetBagItemQuantity(pocket, i);
+                ownedCount = GetBagItemQuantity(pocketId, i);
                 if (ownedCount >= count)
                 {
-                    SetBagItemQuantity(pocket, i, ownedCount - count);
+                    SetBagItemQuantity(pocketId, i, ownedCount - count);
                     count = 0;
                 }
                 else
                 {
                     count -= ownedCount;
-                    SetBagItemQuantity(pocket, i, 0);
+                    SetBagItemQuantity(pocketId, i, 0);
                 }
 
-                if (GetBagItemQuantity(pocket, i) == 0)
-                    SetBagItemId(pocket, i, ITEM_NONE);
+                if (GetBagItemQuantity(pocketId, i) == 0)
+                    SetBagItemId(pocketId, i, ITEM_NONE);
 
                 if (count == 0)
                     return TRUE;
@@ -416,7 +440,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
 
 u8 GetPocketByItemId(u16 itemId)
 {
-    return GetItemPocket(itemId);
+    return GetPocketForItem(itemId);
 }
 
 void ClearItemSlots(struct ItemSlot *itemSlots, u8 itemCount)
@@ -578,9 +602,9 @@ void CompactItemsInBagPocket(u32 pocketId)
 {
     u16 i, j;
 
-    for (i = 0; i < gBagPocketSizes[pocketId] - 1; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity - 1; i++)
     {
-        for (j = i + 1; j < gBagPocketSizes[pocketId]; j++)
+        for (j = i + 1; j < gBagPockets[pocketId].capacity; j++)
         {
             if (GetBagItemQuantity(pocketId, i) == 0)
                 SwapItemSlots(pocketId, i, j);
@@ -592,9 +616,9 @@ void SortBerriesOrTMHMs(u32 pocketId)
 {
     u16 i, j;
 
-    for (i = 0; i < gBagPocketSizes[pocketId] - 1; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity - 1; i++)
     {
-        for (j = i + 1; j < gBagPocketSizes[pocketId]; j++)
+        for (j = i + 1; j < gBagPockets[pocketId].capacity; j++)
         {
             if (GetBagItemQuantity(pocketId, i) != 0)
             {
@@ -640,7 +664,7 @@ void ClearBag(void)
 
     for (i = 0; i < POCKETS_COUNT; i++)
     {
-        ClearItemSlots(gBagPockets[i].itemSlots, gBagPocketSizes[i]);
+        ClearItemSlots(gBagPockets[i].itemSlots, gBagPockets[i].capacity);
     }
 }
 
@@ -648,12 +672,12 @@ u16 CountTotalItemQuantityInBag(u16 itemId)
 {
     u16 i;
     u16 ownedCount = 0;
-    u8 pocket = GetItemPocket(itemId) - 1;
+    u8 pocketId = GetPocketForItem(itemId) - 1;
 
-    for (i = 0; i < gBagPocketSizes[pocket]; i++)
+    for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
-        if (GetBagItemId(pocket, i) == itemId)
-            ownedCount += GetBagItemQuantity(pocket, i);
+        if (GetBagItemId(pocketId, i) == itemId)
+            ownedCount += GetBagItemQuantity(pocketId, i);
     }
 
     return ownedCount;
@@ -925,7 +949,7 @@ u8 GetItemConsumability(u16 itemId)
     return !gItemsInfo[SanitizeItemId(itemId)].notConsumed;
 }
 
-u8 GetItemPocket(u16 itemId)
+u8 GetPocketForItem(u16 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].pocket;
 }

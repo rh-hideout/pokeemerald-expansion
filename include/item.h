@@ -29,18 +29,18 @@ struct Item
     const u16 *iconPalette;
 };
 
-struct BagPocket
+struct __attribute__((packed, aligned(2))) BagPocket
 {
     struct ItemSlot *itemSlots;
+    u16 capacity;
 };
 
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
-extern const u16 gBagPocketSizes[];
 
-u16 GetBagItemId(u32 pocketId, u32 pocketPos);
-u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
-void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue);
+u32 GetBagItemId(u32 pocketId, u32 pocketPos);
+u32 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
+void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u32 newValue);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
@@ -77,7 +77,7 @@ u32 GetItemHoldEffectParam(u32 itemId);
 const u8 *GetItemDescription(u16 itemId);
 u8 GetItemImportance(u16 itemId);
 u8 GetItemConsumability(u16 itemId);
-u8 GetItemPocket(u16 itemId);
+u8 GetPocketForItem(u16 itemId);
 u8 GetItemType(u16 itemId);
 ItemUseFunc GetItemFieldFunc(u16 itemId);
 u8 GetItemBattleUsage(u16 itemId);

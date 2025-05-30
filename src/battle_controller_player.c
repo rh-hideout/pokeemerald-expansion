@@ -208,13 +208,13 @@ static u16 GetPrevBall(u16 ballId)
     u16 ballPrev;
     s32 i, j;
     CompactItemsInBagPocket(BALLS_POCKET);
-    for (i = 0; i < gBagPocketSizes[BALLS_POCKET]; i++)
+    for (i = 0; i < gBagPockets[BALLS_POCKET].capacity; i++)
     {
         if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i].itemId)
         {
             if (i <= 0)
             {
-                for (j = gBagPocketSizes[BALLS_POCKET] - 1; j >= 0; j--)
+                for (j = gBagPockets[BALLS_POCKET].capacity - 1; j >= 0; j--)
                 {
                     ballPrev = gBagPockets[BALLS_POCKET].itemSlots[j].itemId;
                     if (ballPrev != ITEM_NONE)
@@ -233,7 +233,7 @@ static u32 GetNextBall(u32 ballId)
     u32 ballNext = ITEM_NONE;
     s32 i;
     CompactItemsInBagPocket(BALLS_POCKET);
-    for (i = 1; i < gBagPocketSizes[BALLS_POCKET]; i++)
+    for (i = 1; i < gBagPockets[BALLS_POCKET].capacity; i++)
     {
         if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i-1].itemId)
         {
