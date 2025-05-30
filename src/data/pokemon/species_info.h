@@ -8000,7 +8000,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Magghost,
        .shinyPalette = gMonShinyPalette_Magghost,
        .iconSprite = gMonIcon_Magghost,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Magghost)
        .levelUpLearnset = sMagghostLevelUpLearnset,
        .eggMoveLearnset = sPhamothomEggMoveLearnset,
@@ -8055,7 +8055,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Coccurn,
        .shinyPalette = gMonShinyPalette_Coccurn,
        .iconSprite = gMonIcon_Coccurn,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Coccurn)
        .levelUpLearnset = sCoccurnLevelUpLearnset,
        .eggMoveLearnset = sPhamothomEggMoveLearnset,
@@ -8111,7 +8111,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Phamothom,
        .shinyPalette = gMonShinyPalette_Phamothom,
        .iconSprite = gMonIcon_Phamothom,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Phamothom)
        .levelUpLearnset = sPhamothomLevelUpLearnset,
        .eggMoveLearnset = sPhamothomEggMoveLearnset,
@@ -15883,7 +15883,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_ShiribikoUltra,
        .shinyPalette = gMonShinyPalette_ShiribikoUltra,
        .iconSprite = gMonIcon_ShiribikoUltra,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Shiribiko)
        .levelUpLearnset = sShiribikoLevelUpLearnset,
        .formSpeciesIdTable = sShiribikoFormSpeciesIdTable,
