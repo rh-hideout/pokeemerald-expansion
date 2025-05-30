@@ -1522,7 +1522,7 @@ static void DoItemSwap(u8 taskId)
     }
     else
     {
-        MoveItemSlotInList(gBagPockets[gBagPosition.pocket].itemSlots, tListPosition, realPos);
+        MoveItemSlotInPocket(gBagPosition.pocket, tListPosition, realPos);
         gBagMenu->toSwapPos = NOT_SWAPPING;
         DestroyListMenuTask(tListTaskId, scrollPos, cursorPos);
         if (tListPosition < realPos)

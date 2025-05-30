@@ -40,7 +40,7 @@ extern struct BagPocket gBagPockets[];
 
 u16 GetBagItemId(u32 pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
-void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u32 newValue);
+void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
@@ -63,7 +63,8 @@ void CompactPCItems(void);
 void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(u32 pocketId);
 void SortBerriesOrTMHMs(u32 pocketId);
-void MoveItemSlotInList(struct ItemSlot *itemSlots_, u32 from, u32 to_);
+void MoveItemSlotInPocket(u32 pocketId, u32 from, u32 to);
+void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
 u16 CountTotalItemQuantityInBag(u16 itemId);
 bool8 AddPyramidBagItem(u16 itemId, u16 count);

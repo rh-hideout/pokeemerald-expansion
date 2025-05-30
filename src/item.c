@@ -41,12 +41,12 @@ static inline u16 GetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketP
     return gSaveBlock2Ptr->encryptionKey ^ pocket->itemSlots[pocketPos].quantity;
 }
 
-static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, u32 itemId)
+static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, u16 itemId)
 {
     pocket->itemSlots[pocketPos].itemId = itemId;
 }
 
-static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos, u32 newValue)
+static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos, u16 newValue)
 {
     pocket->itemSlots[pocketPos].quantity = newValue ^ gSaveBlock2Ptr->encryptionKey;
 }
@@ -61,12 +61,12 @@ u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
     return GetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos);
 }
 
-static void SetBagItemId(u32 pocketId, u32 pocketPos, u32 itemId)
+static void SetBagItemId(u32 pocketId, u32 pocketPos, u16 itemId)
 {
     SetBagItemIdPocket(&gBagPockets[pocketId], pocketPos, itemId);
 }
 
-void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u32 newValue)
+void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue)
 {
     SetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos, newValue);
 }
@@ -604,12 +604,31 @@ void SortBerriesOrTMHMs(u32 pocketId)
     }
 }
 
-void MoveItemSlotInList(struct ItemSlot *itemSlots_, u32 from, u32 to_)
+void MoveItemSlotInPocket(u32 pocketId, u32 from, u32 to)
 {
-    // dumb assignments needed to match
-    struct ItemSlot *itemSlots = itemSlots_;
-    u32 to = to_;
+    if (from != to)
+    {
+        s16 i, count;
+        struct BagPocket *pocket = &gBagPockets[pocketId];
+        struct ItemSlot firstSlot = pocket->itemSlots[from];
 
+        if (to > from)
+        {
+            to--;
+            for (i = from, count = to; i < count; i++)
+                pocket->itemSlots[i] = pocket->itemSlots[i + 1];
+        }
+        else
+        {
+            for (i = from, count = to; i > count; i--)
+                pocket->itemSlots[i] = pocket->itemSlots[i - 1];
+        }
+        pocket->itemSlots[to] = firstSlot;
+    }
+}
+
+void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to)
+{
     if (from != to)
     {
         s16 i, count;

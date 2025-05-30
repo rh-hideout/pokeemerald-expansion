@@ -170,7 +170,7 @@ void SavePlayerParty(void)
 {
     int i;
     u8 *count = GetSavedPlayerPartyCount();
-    count = gPlayerPartyCount;
+    *count = gPlayerPartyCount;
 
     for (i = 0; i < PARTY_SIZE; i++)
         SavePlayerPartyMon(i, &gPlayerParty[i]);
