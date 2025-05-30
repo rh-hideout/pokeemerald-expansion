@@ -666,7 +666,7 @@ bool8 ScrCmd_checkitemtype(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = GetPocketByItemId(itemId);
+    gSpecialVar_Result = GetPocketForItem(itemId);
     return FALSE;
 }
 
