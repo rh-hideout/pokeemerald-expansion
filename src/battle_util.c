@@ -7145,12 +7145,12 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
 
 static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
 {
-    if (gProtectStructs[battler].statFell
+    if (gProtectStructs[battler].tryEjectPack
      && !gProtectStructs[battler].disableEjectPack
      && CountUsablePartyMons(battler) > 0
      && !(gCurrentMove == MOVE_PARTING_SHOT && CanBattlerSwitch(gBattlerAttacker))) // Does not activate if attacker used Parting Shot and can switch out
     {
-        gProtectStructs[battler].statFell = FALSE;
+        gProtectStructs[battler].tryEjectPack = FALSE;
         gBattleScripting.battler = battler;
         AI_DATA->ejectPackSwitch = TRUE;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
@@ -12342,7 +12342,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (gProtectStructs[i].statFell
+        if (gProtectStructs[i].tryEjectPack
          && GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_EJECT_PACK
          && IsBattlerAlive(i)
          && CountUsablePartyMons(i) > 0)
@@ -12360,7 +12360,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
         SortBattlersBySpeed(battlers, FALSE);
 
     for (u32 i = 0; i < gBattlersCount; i++)
-        gProtectStructs[i].statFell = FALSE; // restore for every possible eject pack battler
+        gProtectStructs[i].tryEjectPack = FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {

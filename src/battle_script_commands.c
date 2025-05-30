@@ -6285,7 +6285,7 @@ static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, u32 m
 
 static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, u32 moveEffect)
 {
-    if (gProtectStructs[battlerDef].statFell
+    if (gProtectStructs[battlerDef].tryEjectPack
      && GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_EJECT_PACK
      && IsBattlerAlive(battlerDef)
      && CountUsablePartyMons(battlerDef) > 0
@@ -7129,6 +7129,9 @@ static void Cmd_moveend(void)
                     break;
                 }
 
+                for (u32 i = 0; i < gBattlersCount; i++)
+                    gProtectStructs[i].tryEjectPack = FALSE;
+
                 u8 battlers[4] = {0, 1, 2, 3};
                 if (numEjectButtonBattlers > 1)
                     SortBattlersBySpeed(battlers, FALSE);
@@ -7183,7 +7186,7 @@ static void Cmd_moveend(void)
                     SortBattlersBySpeed(battlers, FALSE);
 
                 for (i = 0; i < gBattlersCount; i++)
-                    gProtectStructs[i].statFell = FALSE; // restore for every possible eject pack battler
+                    gProtectStructs[i].tryEjectPack = FALSE;
 
                 for (i = 0; i < gBattlersCount; i++)
                 {
@@ -7258,6 +7261,8 @@ static void Cmd_moveend(void)
                           && CanBattlerSwitch(gBattlerAttacker)
                           && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battler)))
                         {
+                            for (u32 i = 0; i < gBattlersCount; i++)
+                                gProtectStructs[i].tryEjectPack = FALSE;
                             effect = TRUE;
                             gBattleScripting.moveendState = MOVEEND_OPPORTUNIST;
                             gLastUsedItem = gBattleMons[battler].item;
@@ -7345,6 +7350,9 @@ static void Cmd_moveend(void)
                     gBattleScripting.moveendState++;
                     break;
                 }
+
+                for (u32 i = 0; i < gBattlersCount; i++)
+                    gProtectStructs[i].tryEjectPack = FALSE;
 
                 u8 battlers[4] = {0, 1, 2, 3};
                 if (numEmergencyExitBattlers > 1)
@@ -12620,7 +12628,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
             }
             else
             {
-                gProtectStructs[battler].statFell = TRUE;
+                gProtectStructs[battler].tryEjectPack = TRUE;
                 gProtectStructs[battler].lashOutAffected = TRUE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_FELL or B_MSG_DEFENDER_STAT_FELL
             }
