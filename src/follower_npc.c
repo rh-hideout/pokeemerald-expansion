@@ -1284,7 +1284,15 @@ void FollowerNPC_WarpSetEnd(void)
     }
 
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+    {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
+    }
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+    {
+        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_RECREATE);
+    }
 
     follower->facingDirection = player->facingDirection;
     follower->movementDirection = player->movementDirection;
@@ -1349,7 +1357,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
     TryUpdateFollowerNPCSpriteUnderwater();
 
-    if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY)
+    if (follower->invisible || (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY))
         return;
 
     // Spawn the surf blob under the follower.
