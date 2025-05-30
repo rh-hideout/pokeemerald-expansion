@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Soul Heart boosts Sp. Atk after opponent uses Memento")
         ABILITY_POPUP(opponent, ABILITY_SOUL_HEART);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
-        EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1); // -2 from Memento, +1 from Soul Heart
     }
 }
 

@@ -6018,7 +6018,7 @@ static void Cmd_playstatchangeanimation(void)
                     {
                         statAnimId = startingStatAnimId + currStat;
                         changeableStatsCount++;
-                        if (defiantCompetitiveAffected)
+                        if (defiantCompetitiveAffected) // Force single stat animations
                             break;
                     }
                 }
@@ -12481,7 +12481,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
         }
     }
 
-    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE)
+    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
     {
         if (!(flags & STAT_CHANGE_ALLOW_PTR))
             return STAT_CHANGE_DIDNT_WORK;
