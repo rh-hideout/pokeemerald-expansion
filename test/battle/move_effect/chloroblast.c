@@ -131,3 +131,23 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP if there is n
         MESSAGE("2 sent out Wobbuffet!");
     }
 }
+
+SINGLE_BATTLE_TEST("Chloroblast is not affected by Reckless", s16 damage)
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_CHLOROBLAST; }
+    PARAMETRIZE { move = MOVE_FRENZY_PLANT; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
