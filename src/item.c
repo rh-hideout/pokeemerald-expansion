@@ -31,14 +31,14 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
-static inline u32 GetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos)
+static inline u16 GetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos)
 {
     return pocket->itemSlots[pocketPos].itemId;
 }
 
-static inline u32 GetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos)
+static inline u16 GetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketPos)
 {
-    return (gSaveBlock2Ptr->encryptionKey ^ pocket->itemSlots[pocketPos].quantity) & 0xFFFF;
+    return gSaveBlock2Ptr->encryptionKey ^ pocket->itemSlots[pocketPos].quantity;
 }
 
 static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, u32 itemId)
@@ -51,12 +51,12 @@ static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocket
     pocket->itemSlots[pocketPos].quantity = newValue ^ gSaveBlock2Ptr->encryptionKey;
 }
 
-u32 GetBagItemId(u32 pocketId, u32 pocketPos)
+u16 GetBagItemId(u32 pocketId, u32 pocketPos)
 {
     return GetBagItemIdPocket(&gBagPockets[pocketId], pocketPos);
 }
 
-u32 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
+u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
 {
     return GetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos);
 }

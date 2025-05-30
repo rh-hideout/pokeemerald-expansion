@@ -38,8 +38,8 @@ struct __attribute__((packed, aligned(2))) BagPocket
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 
-u32 GetBagItemId(u32 pocketId, u32 pocketPos);
-u32 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
+u16 GetBagItemId(u32 pocketId, u32 pocketPos);
+u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
 void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u32 newValue);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
