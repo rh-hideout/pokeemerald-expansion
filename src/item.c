@@ -253,7 +253,7 @@ static inline void ClearTempPocket(struct BagPocket *pocket)
 
 static inline void RestorePocketAndClearTempPocket(struct BagPocket *tempPocket, u32 pocketId, u32 pocketSize)
 {
-    memcpy(&gBagPockets[pocketId].itemSlots, tempPocket->itemSlots, pocketSize);
+    memcpy(gBagPockets[pocketId].itemSlots, tempPocket->itemSlots, pocketSize);
     ClearTempPocket(tempPocket);
 }
 
@@ -273,20 +273,20 @@ bool8 AddBagItem(u16 itemId, u16 count)
     {
         u16 ownedCount;
         u8 pocketId = GetPocketForItem(itemId) - 1;
-        struct BagPocket tempPocket;
-        u32 pocketSize = PrepareTempPocket(&tempPocket, pocketId);
+        struct BagPocket *tempPocket = AllocZeroed(sizeof(struct BagPocket));
+        u32 pocketSize = PrepareTempPocket(tempPocket, pocketId);
 
         for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
-            if (GetBagItemIdPocket(&tempPocket, i) == itemId)
+            if (GetBagItemIdPocket(tempPocket, i) == itemId)
             {
-                ownedCount = GetBagItemQuantityPocket(&tempPocket, i);
+                ownedCount = GetBagItemQuantityPocket(tempPocket, i);
                 // check if won't exceed max slot capacity
                 if (ownedCount + count <= MAX_BAG_ITEM_CAPACITY)
                 {
                     // successfully added to already existing item's count
-                    SetBagItemQuantityPocket(&tempPocket, i, ownedCount + count);
-                    RestorePocketAndClearTempPocket(&tempPocket, pocketId, pocketSize);
+                    SetBagItemQuantityPocket(tempPocket, i, ownedCount + count);
+                    RestorePocketAndClearTempPocket(tempPocket, pocketId, pocketSize);
                     return TRUE;
                 }
                 else
@@ -294,13 +294,13 @@ bool8 AddBagItem(u16 itemId, u16 count)
                     // try creating another instance of the item if possible
                     if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
                     {
-                        ClearTempPocket(&tempPocket);
+                        ClearTempPocket(tempPocket);
                         return FALSE;
                     }
                     else
                     {
                         count -= MAX_BAG_ITEM_CAPACITY - ownedCount;
-                        SetBagItemQuantityPocket(&tempPocket, i, MAX_BAG_ITEM_CAPACITY);
+                        SetBagItemQuantityPocket(tempPocket, i, MAX_BAG_ITEM_CAPACITY);
                         // don't create another instance of the item if it's at max slot capacity and count is equal to 0
                         if (count == 0)
                         {
@@ -317,24 +317,24 @@ bool8 AddBagItem(u16 itemId, u16 count)
             // either no existing item was found or we have to create another instance, because the capacity was exceeded
             for (i = 0; i < gBagPockets[pocketId].capacity; i++)
             {
-                if (GetBagItemIdPocket(&tempPocket, i) == ITEM_NONE)
+                if (GetBagItemIdPocket(tempPocket, i) == ITEM_NONE)
                 {
-                    SetBagItemIdPocket(&tempPocket, i, itemId);
+                    SetBagItemIdPocket(tempPocket, i, itemId);
                     if (count > MAX_BAG_ITEM_CAPACITY)
                     {
                         // try creating a new slot with max capacity if duplicates are possible
                         if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
                         {
-                            ClearTempPocket(&tempPocket);
+                            ClearTempPocket(tempPocket);
                             return FALSE;
                         }
                         count -= MAX_BAG_ITEM_CAPACITY;
-                        SetBagItemQuantityPocket(&tempPocket, i, MAX_BAG_ITEM_CAPACITY);
+                        SetBagItemQuantityPocket(tempPocket, i, MAX_BAG_ITEM_CAPACITY);
                     }
                     else
                     {
                         // created a new slot and added quantity
-                        SetBagItemQuantityPocket(&tempPocket, i, count);
+                        SetBagItemQuantityPocket(tempPocket, i, count);
                         count = 0;
                         break;
                     }
@@ -343,11 +343,11 @@ bool8 AddBagItem(u16 itemId, u16 count)
 
             if (count > 0)
             {
-                ClearTempPocket(&tempPocket);
+                ClearTempPocket(tempPocket);
                 return FALSE;
             }
         }
-        RestorePocketAndClearTempPocket(&tempPocket, pocketId, pocketSize);
+        RestorePocketAndClearTempPocket(tempPocket, pocketId, pocketSize);
         return TRUE;
     }
 }
