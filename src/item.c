@@ -93,16 +93,16 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 
 void SetBagItemsPointers(void)
 {
-    gBagPockets[ITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_Items;
-    gBagPockets[ITEMS_POCKET].capacity = BAG_ITEMS_COUNT;
-    gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_KeyItems;
-    gBagPockets[KEYITEMS_POCKET].capacity = BAG_KEYITEMS_COUNT;
-    gBagPockets[BALLS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
-    gBagPockets[BALLS_POCKET].capacity = BAG_POKEBALLS_COUNT;
-    gBagPockets[TMHM_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_TMHM;
-    gBagPockets[TMHM_POCKET].capacity = BAG_TMHM_COUNT;
-    gBagPockets[BERRIES_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_Berries;
-    gBagPockets[BERRIES_POCKET].capacity = BAG_BERRIES_COUNT;
+    gBagPockets[POCKET_ITEMS].itemSlots = gSaveBlock1Ptr->bagPocket_Items;
+    gBagPockets[POCKET_ITEMS].capacity = BAG_ITEMS_COUNT;
+    gBagPockets[POCKET_KEY_ITEMS].itemSlots = gSaveBlock1Ptr->bagPocket_KeyItems;
+    gBagPockets[POCKET_KEY_ITEMS].capacity = BAG_KEYITEMS_COUNT;
+    gBagPockets[POCKET_POKE_BALLS].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
+    gBagPockets[POCKET_POKE_BALLS].capacity = BAG_POKEBALLS_COUNT;
+    gBagPockets[POCKET_TM_HM].itemSlots = gSaveBlock1Ptr->bagPocket_TMHM;
+    gBagPockets[POCKET_TM_HM].capacity = BAG_TMHM_COUNT;
+    gBagPockets[POCKET_BERRIES].itemSlots = gSaveBlock1Ptr->bagPocket_Berries;
+    gBagPockets[POCKET_BERRIES].capacity = BAG_BERRIES_COUNT;
 }
 
 u8 *CopyItemName(u16 itemId, u8 *dst)
@@ -146,7 +146,7 @@ bool8 CheckBagHasItem(u16 itemId, u16 count)
     u8 i;
     u8 pocketId;
 
-    if (GetPocketForItem(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
         return FALSE;
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
         return CheckPyramidBagHasItem(itemId, count);
@@ -200,7 +200,7 @@ bool8 HasAtLeastOnePokeBall(void)
 
 bool8 CheckBagHasSpace(u16 itemId, u16 count)
 {
-    if (GetPocketForItem(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
         return FALSE;
 
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
@@ -216,7 +216,7 @@ u32 GetFreeSpaceForItemInBag(u16 itemId)
     u16 ownedCount;
     u32 spaceForItem = 0;
 
-    if (GetPocketForItem(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
         return 0;
 
     // Check space in any existing item slots that already contain this item
@@ -261,7 +261,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
 {
     u8 i;
 
-    if (GetPocketForItem(itemId) == POCKET_NONE)
+    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -292,7 +292,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
                 else
                 {
                     // try creating another instance of the item if possible
-                    if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
+                    if (pocketId == POCKET_TM_HM || pocketId == POCKET_BERRIES)
                     {
                         ClearTempPocket(tempPocket);
                         return FALSE;
@@ -323,7 +323,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
                     if (count > MAX_BAG_ITEM_CAPACITY)
                     {
                         // try creating a new slot with max capacity if duplicates are possible
-                        if (pocketId == TMHM_POCKET || pocketId == BERRIES_POCKET)
+                        if (pocketId == POCKET_TM_HM || pocketId == POCKET_BERRIES)
                         {
                             ClearTempPocket(tempPocket);
                             return FALSE;
@@ -357,7 +357,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     u8 i;
     u16 totalQuantity = 0;
 
-    if (GetPocketForItem(itemId) == POCKET_NONE || itemId == ITEM_NONE)
+    if (GetPocketForItem(itemId) >= POCKETS_COUNT || itemId == ITEM_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
