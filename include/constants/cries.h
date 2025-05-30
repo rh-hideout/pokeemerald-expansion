@@ -2687,6 +2687,7 @@ enum {
     CRY_SYCOSECT,
     CRY_SWINGGLE,
     CRY_SUBSTRALE,
+    CRY_TRIACTITE,
     CRY_COUNT,
 };
 

@@ -7194,6 +7194,10 @@ Cry_Swinggle::
 	.align 2	
 Cry_Substrale::
 	.incbin "sound/direct_sound_samples/cries/substrale.bin"
+
+	.align 2	
+Cry_Triactite::
+	.incbin "sound/direct_sound_samples/cries/triactite.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -27073,6 +27073,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Erochre[] = INCBIN_U8("graphics/pokemon/erochre/icon.4bpp");
    const u8 gMonFootprint_Erochre[] = INCBIN_U8("graphics/pokemon/erochre/footprint.1bpp");
 
+   const u32 gMonFrontPic_Triactite[] = INCBIN_U32("graphics/pokemon/triactite/front.4bpp.lz");
+   const u32 gMonBackPic_Triactite[] = INCBIN_U32("graphics/pokemon/triactite/back.4bpp.lz");
+   const u32 gMonPalette_Triactite[] = INCBIN_U32("graphics/pokemon/triactite/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Triactite[] = INCBIN_U32("graphics/pokemon/triactite/shiny.gbapal.lz");
+   const u8 gMonIcon_Triactite[] = INCBIN_U8("graphics/pokemon/triactite/icon.4bpp");
+   const u8 gMonFootprint_Triactite[] = INCBIN_U8("graphics/pokemon/triactite/footprint.1bpp");
+
    const u32 gMonFrontPic_Walkalack[] = INCBIN_U32("graphics/pokemon/walkalack/front.4bpp.lz");
    const u32 gMonBackPic_Walkalack[] = INCBIN_U32("graphics/pokemon/walkalack/back.4bpp.lz");
    const u32 gMonPalette_Walkalack[] = INCBIN_U32("graphics/pokemon/walkalack/normal.gbapal.lz");

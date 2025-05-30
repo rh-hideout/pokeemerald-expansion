@@ -2945,6 +2945,8 @@ gCryTable::
 
 	cry Cry_Substrale
 
+	cry Cry_Triactite
+
 .endif
 
 	.align 2
@@ -5894,4 +5896,6 @@ gCryTable_Reverse::
 	cry_reverse Cry_Swinggle
 
 	cry_reverse Cry_Substrale
+
+	cry_reverse Cry_Triactite
 .endif

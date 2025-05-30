@@ -22743,6 +22743,10 @@ static const struct LevelUpMove sErochreLevelUpLearnset[] = {
 static const struct LevelUpMove sPillaiaLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_SEED_FLARE),
    LEVEL_UP_END
+    };
+   static const struct LevelUpMove sTriactiteLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_ACCELEROCK),
+   LEVEL_UP_END
    };
    static const struct LevelUpMove sWalkalackLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_ACCELEROCK),

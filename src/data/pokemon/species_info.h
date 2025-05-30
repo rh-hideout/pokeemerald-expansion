@@ -2138,6 +2138,62 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .eggMoveLearnset = sPedestoneEggMoveLearnset,
     },
 
+        [SPECIES_TRIACTITE] =
+    { 
+       .baseHP        = 38,
+       .baseAttack    = 56,
+       .baseDefense   = 63,
+       .baseSpeed     = 83,
+       .baseSpAttack  = 47,
+       .baseSpDefense = 36,
+       .types = { TYPE_ROCK, TYPE_BUG },
+       .catchRate = 171,
+       .expYield = 57,
+       .evYield_Defense = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 10,
+       .friendship = 100,
+       .growthRate = GROWTH_MEDIUM_SLOW,
+       .eggGroups = { EGG_GROUP_MINERAL, EGG_GROUP_NONE },
+       .abilities = { ABILITY_WEAK_ARMOR, ABILITY_STURDY, ABILITY_WIMP_OUT, ABILITY_TINTED_LENS }, 
+       .bodyColor = BODY_COLOR_BROWN,
+       .isLegendary = FALSE,
+       .perfectIVCount = FALSE,
+      .speciesName = _("Triactite"),
+      .cryId = CRY_TRIACTITE,
+       .natDexNum = NATIONAL_DEX_TRIACTITE,
+       .categoryName = _("Pebble"),
+       .height = 2,
+       .weight = 551,
+       .description = COMPOUND_STRING(
+           "It's unknown if the rocks are a part of\n"
+           "their body, but they tend to match the\n"
+           "colors of the cave they live in. They\n"
+           "eat only four times per year."),
+       .pokemonScale = 356,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = -2,
+       .frontPic = gMonFrontPic_Triactite,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 4,
+       .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Triactite,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 0,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Triactite,
+       .shinyPalette = gMonShinyPalette_Triactite,
+       .iconSprite = gMonIcon_Triactite,
+       .iconPalIndex = 2,
+       FOOTPRINT(Triactite)
+       .levelUpLearnset = sTriactiteLevelUpLearnset,
+       .eggMoveLearnset = sWalkalackEggMoveLearnset,
+    },
+
         [SPECIES_WALKALACK] =
     { 
        .baseHP        = 68,
@@ -2188,7 +2244,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Walkalack,
        .shinyPalette = gMonShinyPalette_Walkalack,
        .iconSprite = gMonIcon_Walkalack,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Walkalack)
        .levelUpLearnset = sWalkalackLevelUpLearnset,
        .eggMoveLearnset = sWalkalackEggMoveLearnset,
@@ -4768,7 +4824,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Yardstein,
        .shinyPalette = gMonShinyPalette_Yardstein,
        .iconSprite = gMonIcon_Yardstein,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Yardstein)
        .levelUpLearnset = sYardsteinLevelUpLearnset,
        .teachableLearnset = sYardsteinTeachableLearnset,
@@ -6108,7 +6164,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Maleentis,
        .shinyPalette = gMonShinyPalette_Maleentis,
        .iconSprite = gMonIcon_Maleentis,
-       .iconPalIndex = 2,
+       .iconPalIndex = 0,
        FOOTPRINT(Maleentis)
        .levelUpLearnset = sMaleentisLevelUpLearnset,
     },
@@ -8995,7 +9051,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Medusith,
        .shinyPalette = gMonShinyPalette_Medusith,
        .iconSprite = gMonIcon_Medusith,
-       .iconPalIndex = 2,
+       .iconPalIndex = 1,
        FOOTPRINT(Medusith)
        .levelUpLearnset = sMedusithLevelUpLearnset,
     },
@@ -10008,7 +10064,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Vortrix,
        .shinyPalette = gMonShinyPalette_Vortrix,
        .iconSprite = gMonIcon_Vortrix,
-       .iconPalIndex = 0,
+       .iconPalIndex = 1,
        FOOTPRINT(Vortrix)
        .levelUpLearnset = sVortrixLevelUpLearnset,
     },
