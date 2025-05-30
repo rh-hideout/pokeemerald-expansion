@@ -68,8 +68,8 @@ SINGLE_BATTLE_TEST("Chloroblast hp loss is prevented by Magic Guard")
 SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Rock Head")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
-        OPPONENT(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); }
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
     } WHEN {
         TURN { MOVE(player, MOVE_CHLOROBLAST); }
     } SCENE {
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Roc
     }
 }
 
-SINGLE_BATTLE_TEST("Chloroblast does not cause the user lose HP even if the opposing mon protected")
+SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if the opposing mon protected")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -88,12 +88,14 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause the user lose HP even if the oppo
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_CHLOROBLAST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
-        NOT HP_BAR(player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
+            HP_BAR(player);
+        }
     }
 }
 
-SINGLE_BATTLE_TEST("Chloroblast does not cause the user lose HP even if it is absorbed by Sap Sipper")
+SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if it is absorbed by Sap Sipper")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_CHLOROBLAST) == TYPE_GRASS);
@@ -103,8 +105,10 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause the user lose HP even if it is ab
         TURN { MOVE(player, MOVE_CHLOROBLAST); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SAP_SIPPER);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
-        NOT HP_BAR(player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
+            HP_BAR(player);
+        }
     }
 }
 
