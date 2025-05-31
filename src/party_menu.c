@@ -158,14 +158,6 @@ enum {
 #define MENU_DIR_RIGHT    2
 #define MENU_DIR_LEFT    -2
 
-#define HM_MOVES_END 0xFFFF
-
-static const u16 sHMMoves[] =
-{
-    MOVE_CUT, MOVE_FLY, MOVE_SURF, MOVE_STRENGTH, MOVE_FLASH,
-    MOVE_ROCK_SMASH, MOVE_WATERFALL, MOVE_DIVE, HM_MOVES_END
-};
-
 enum {
     CAN_LEARN_MOVE,
     CANNOT_LEARN_MOVE,
@@ -1130,7 +1122,7 @@ static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
         default:
             return FALSE;
         case 1: // TM/HM
-            DisplayPartyPokemonDataToTeachMove(slot, ItemIdToBattleMoveId(item));
+            DisplayPartyPokemonDataToTeachMove(slot, gTMHMMoves[item]);
             break;
         case 2: // Evolution stone
             if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(currentPokemon, EVO_MODE_ITEM_CHECK, item, NULL, NULL, CHECK_EVO) != SPECIES_NONE)
@@ -1569,9 +1561,9 @@ static bool8 DoesSelectedMonKnowHM(u8 *slotPtr)
         u32 j = 0;
         u16 move = GetMonData(&gPlayerParty[*slotPtr], MON_DATA_MOVE1 + i);
 
-        while (sHMMoves[j] != HM_MOVES_END)
+        while (gHMMoves[j] != GetHMMovesArrayLength())
         {
-            if (sHMMoves[j++] == move)
+            if (gHMMoves[j++] == move)
                 return TRUE;
         }
     }
@@ -5352,11 +5344,6 @@ void ItemUseCB_PPUp(u8 taskId, TaskFunc task)
     gTasks[taskId].func = Task_HandleWhichMoveInput;
 }
 
-u16 ItemIdToBattleMoveId(u16 item)
-{
-    return (GetItemPocket(item) == POCKET_TM_HM) ? gItemsInfo[item].secondaryId : MOVE_NONE;
-}
-
 bool8 MonKnowsMove(struct Pokemon *mon, u16 move)
 {
     u8 i;
@@ -5400,7 +5387,7 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon;
     u16 item = gSpecialVar_ItemId;
-    u16 move = ItemIdToBattleMoveId(item);
+    u16 move = gTMHMMoves[item];
 
     gPartyMenu.data1 = move;
     gPartyMenu.learnMoveState = 0;

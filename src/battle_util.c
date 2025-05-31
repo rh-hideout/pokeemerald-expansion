@@ -10405,9 +10405,9 @@ u8 GetCategoryBasedOnStats(u32 battler)
 
 static u32 GetFlingPowerFromItemId(u32 itemId)
 {
-    if (itemId >= ITEM_TM01 && itemId <= ITEM_HM08)
+    if (gItemsInfo[itemId].pocket == TMHM_POCKET)
     {
-        u32 power = GetMovePower(ItemIdToBattleMoveId(itemId));
+        u32 power = GetMovePower(gTMHMMoves[itemId]);
         if (power > 1)
             return power;
         return 10; // Status moves and moves with variable power always return 10 power.
