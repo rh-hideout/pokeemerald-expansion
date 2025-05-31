@@ -10194,12 +10194,7 @@ bool32 TryClearIllusion(u32 battler, u32 caseID)
 struct Pokemon *GetIllusionMonPtr(u32 battler)
 {
     if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)
-    {
-        if (IsOnPlayerSide(battler))
-            SetIllusionMon(GetBattlerMon(battler), battler);
-        else
-            SetIllusionMon(GetBattlerMon(battler), battler);
-    }
+        SetIllusionMon(GetBattlerMon(battler), battler);
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return NULL;
 
