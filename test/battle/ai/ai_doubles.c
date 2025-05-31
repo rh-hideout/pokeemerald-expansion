@@ -132,7 +132,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
     ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
 
-    u32 species, ability, currentHP;    
+    u32 species, ability, currentHP;
 
     PARAMETRIZE { species = SPECIES_KINGAMBIT; ability = ABILITY_DEFIANT;  currentHP = 400; }
     PARAMETRIZE { species = SPECIES_SHUCKLE;   ability = ABILITY_CONTRARY; currentHP = 400; }
@@ -206,7 +206,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills one opposing mon an
     u32 currentHP;
     PARAMETRIZE { currentHP = 1; }
     PARAMETRIZE { currentHP = 200; }
-    
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -288,7 +288,7 @@ AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field wit
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
 
-    u32 aiFlags;    
+    u32 aiFlags;
 
     PARAMETRIZE { aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
     PARAMETRIZE { aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_RISKY; }
@@ -332,7 +332,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;        move = MOVE_SURF; }
     PARAMETRIZE { species = SPECIES_UNOWN;      ability = ABILITY_LEVITATE;           move = MOVE_EARTHQUAKE; }
     PARAMETRIZE { species = SPECIES_ORTHWORM;   ability = ABILITY_EARTH_EATER;        move = MOVE_EARTHQUAKE; }
-    
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);

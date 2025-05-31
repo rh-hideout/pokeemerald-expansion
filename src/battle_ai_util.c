@@ -446,7 +446,7 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
 }
 
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, bool32 considerZPower)
+struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
 {
     struct SimulatedDamage dmg;
 
@@ -454,7 +454,7 @@ struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 b
     SaveBattlerData(battlerDef);
     SetBattlerData(battlerAtk);
     SetBattlerData(battlerDef);
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerZPower, AI_GetWeather());
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather());
     RestoreBattlerData(battlerAtk);
     RestoreBattlerData(battlerDef);
     return dmg;
@@ -481,18 +481,49 @@ static inline s32 DmgRoll(s32 dmg)
     return dmg;
 }
 
-bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType)
+bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType, uq4_12_t effectiveness, u32 weather)
 {
+    u32 battlerDefAbility;
+    u32 partnerDefAbility;
     struct AiLogicData *aiData = gAiLogicData;
 
+    if (effectiveness == UQ_4_12(0.0))
+        return TRUE;
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
         return TRUE;
 
-    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move, ABILITY_CHECK_TRIGGER_AI))
+    // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
+    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk]) || MoveIgnoresTargetAbility(move))
+    {
+        battlerDefAbility = ABILITY_NONE;
+        partnerDefAbility = ABILITY_NONE;
+    }
+    else
+    {
+        battlerDefAbility = aiData->abilities[battlerDef];
+        partnerDefAbility = aiData->abilities[BATTLE_PARTNER(battlerDef)];
+    }
+
+    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], battlerDefAbility, move, ABILITY_CHECK_TRIGGER))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, moveType, ABILITY_CHECK_TRIGGER_AI))
+    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, battlerDefAbility, move, moveType, ABILITY_CHECK_TRIGGER))
         return TRUE;
+
+    // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
+    if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
+    {
+        if (CanAbilityAbsorbMove(battlerAtk, BATTLE_PARTNER(battlerDef), partnerDefAbility, move, moveType, ABILITY_CHECK_TRIGGER))
+            return TRUE;
+    }
+
+    if (HasWeatherEffect())
+    {
+        if (weather & B_WEATHER_SUN_PRIMAL && moveType == TYPE_WATER)
+            return TRUE;
+        if (weather & B_WEATHER_RAIN_PRIMAL && moveType == TYPE_FIRE)
+            return TRUE;
+    }
 
     switch (GetMoveEffect(move))
     {
@@ -527,6 +558,11 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
         break;
     case EFFECT_FIRST_TURN_ONLY:
         if (!gDisableStructs[battlerAtk].isFirstTurn)
+            return TRUE;
+        break;
+    case EFFECT_EXPLOSION:
+    case EFFECT_MIND_BLOWN:
+        if (battlerDefAbility == ABILITY_DAMP || partnerDefAbility == ABILITY_DAMP)
             return TRUE;
         break;
     default:
@@ -620,9 +656,6 @@ static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCal
         // If target has less HP than user, Endeavor does no damage
         median = maximum = minimum = max(0, gBattleMons[damageCalcData->battlerDef].hp - gBattleMons[damageCalcData->battlerAtk].hp);
         break;
-    case EFFECT_FINAL_GAMBIT:
-        median = maximum = minimum = gBattleMons[damageCalcData->battlerAtk].hp;
-        break;
     case EFFECT_BEAT_UP:
         if (B_BEAT_UP >= GEN_5)
         {
@@ -696,14 +729,15 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
     return FALSE;
 }
 
-struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, bool32 considerZPower, u32 weather)
+struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather)
 {
     struct SimulatedDamage simDamage;
     s32 moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     uq4_12_t effectivenessMultiplier;
     bool32 isDamageMoveUnusable = FALSE;
-    bool32 toggledGimmick = FALSE;
+    bool32 toggledGimmickAtk = FALSE;
+    bool32 toggledGimmickDef = FALSE;
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
 
@@ -712,14 +746,21 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     // Temporarily enable gimmicks for damage calcs if planned
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && !(gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !considerZPower))
+        && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
     {
         // Set Z-Move variables if needed
         if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && IsViableZMove(battlerAtk, move))
             gBattleStruct->zmove.baseMoves[battlerAtk] = move;
 
-        toggledGimmick = TRUE;
+        toggledGimmickAtk = TRUE;
         SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
+    }
+
+    if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
+        && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
+    {
+        toggledGimmickDef = TRUE;
+        SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
     }
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
@@ -729,7 +770,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     u32 movePower = GetMovePower(move);
     if (movePower)
-        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType);
+        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType, effectivenessMultiplier, weather);
 
     if (movePower && !isDamageMoveUnusable)
     {
@@ -824,8 +865,10 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->swapDamageCategory = FALSE;
     gBattleStruct->zmove.baseMoves[battlerAtk] = MOVE_NONE;
-    if (toggledGimmick)
+    if (toggledGimmickAtk)
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
+    if (toggledGimmickDef)
+        SetActiveGimmick(battlerDef, GIMMICK_NONE);
     gAiLogicData->aiCalcInProgress = FALSE;
     return simDamage;
 }
@@ -1488,6 +1531,26 @@ u32 AI_GetWeather(void)
     return gBattleWeather;
 }
 
+enum WeatherState IsWeatherActive(u32 flags)
+{
+    enum WeatherState state = WEATHER_INACTIVE;
+
+    if (gBattleWeather & flags)
+        state = WEATHER_ACTIVE;
+    else
+        state = WEATHER_INACTIVE;
+
+    if (!AI_WeatherHasEffect())
+    {
+        if (state == WEATHER_ACTIVE)
+            state = WEATHER_ACTIVE_BUT_BLOCKED;
+        else
+            state = WEATHER_INACTIVE_AND_BLOCKED;
+    }
+
+    return state;
+}
+
 bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect)
 {
     switch (moveEffect)
@@ -1724,19 +1787,18 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
 
 bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    u32 weather = AI_GetWeather();
-    if (weather & B_WEATHER_SANDSTORM)
+    if (IsWeatherActive(B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
     if (ability == ABILITY_SAND_VEIL
-      || ability == ABILITY_SAND_RUSH
-      || ability == ABILITY_SAND_FORCE
-      || ability == ABILITY_OVERCOAT
-      || ability == ABILITY_MAGIC_GUARD
-      || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
-      || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
-      || HasMoveWithEffect(battler, EFFECT_SHORE_UP)
-      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
+     || ability == ABILITY_SAND_RUSH
+     || ability == ABILITY_SAND_FORCE
+     || ability == ABILITY_OVERCOAT
+     || ability == ABILITY_MAGIC_GUARD
+     || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
+     || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+     || HasMoveWithEffect(battler, EFFECT_SHORE_UP)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -1745,21 +1807,20 @@ bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffe
 
 bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    u32 weather = AI_GetWeather();
-    if (weather & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
     if (ability == ABILITY_SNOW_CLOAK
-      || ability == ABILITY_ICE_BODY
-      || ability == ABILITY_FORECAST
-      || ability == ABILITY_SLUSH_RUSH
-      || ability == ABILITY_MAGIC_GUARD
-      || ability == ABILITY_OVERCOAT
-      || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
-      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
-      || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
-      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
+     || ability == ABILITY_ICE_BODY
+     || ability == ABILITY_FORECAST
+     || ability == ABILITY_SLUSH_RUSH
+     || ability == ABILITY_MAGIC_GUARD
+     || ability == ABILITY_OVERCOAT
+     || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
+     || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
+     || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
+     || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -1768,8 +1829,7 @@ bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 
 bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
 {
-    u32 weather = AI_GetWeather();
-    if (weather & B_WEATHER_RAIN)
+    if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
     if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
@@ -1789,8 +1849,7 @@ bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEff
 
 bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
 {
-    u32 weather = AI_GetWeather();
-    if (weather & B_WEATHER_SUN)
+    if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
     if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
@@ -1815,18 +1874,17 @@ bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffe
 
 bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    u32 weather = AI_GetWeather();
-    if (weather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+    if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
     if (ability == ABILITY_SNOW_CLOAK
-      || ability == ABILITY_ICE_BODY
-      || ability == ABILITY_FORECAST
-      || ability == ABILITY_SLUSH_RUSH
-      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
-      || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
-      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
+     || ability == ABILITY_ICE_BODY
+     || ability == ABILITY_FORECAST
+     || ability == ABILITY_SLUSH_RUSH
+     || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
+     || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
+     || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
     {
         return TRUE;
     }
@@ -2201,7 +2259,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
-// HasSideMoveWithMoveEffect checks if the AI knows a side has a move effect, 
+// HasBattlerSideMoveWithEffect checks if the AI knows a side has a move effect,
 // while HasBattlerSideUsedMoveWithEffect checks if the side has ever used a move effect.
 // The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
@@ -2271,7 +2329,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     return FALSE;
 }
 
-// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect, 
+// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect,
 // while HasBattlerSideUsedMoveWithAdditionalEffect checks if the side has ever used a move effect.
 // The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
@@ -3870,8 +3928,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
 
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, FALSE, AI_GetWeather());
-
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
@@ -4410,7 +4467,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
         else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
             return FALSE;
 
-        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, FALSE);
+        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
 
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
             return FALSE;   // don't waste damaging z move if can otherwise faint target
@@ -4420,6 +4477,267 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
     return FALSE;
 }
+
+void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use) 
+{
+    if (use == USE_GIMMICK)
+        gAiBattleData->aiUsingGimmick |= (1<<battler);
+    else
+        gAiBattleData->aiUsingGimmick &= ~(1<<battler);
+}
+
+bool32 IsAIUsingGimmick(u32 battler) 
+{
+    return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
+}
+
+struct AltTeraCalcs {
+    struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
+    struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
+};
+
+enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs);
+
+void DecideTerastal(u32 battler)
+{
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
+        return;
+    
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
+        return;
+    
+    // TODO: Currently only single battles are considered.
+    if (IsDoubleBattle())    
+        return; 
+    
+    // TODO: A lot of these checks are most effective for an omnicient ai. 
+    // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
+
+    u32 opposingBattler = GetOppositeBattler(battler);
+
+    // Default calculations automatically assume gimmicks for the attacker, but not the defender.
+    // Consider calcs for the other possibilities.
+    struct AltTeraCalcs altCalcs;
+
+    struct SimulatedDamage noDmg = {0};
+
+    uq4_12_t effectivenessTakenWithTera[MAX_MON_MOVES];
+
+    u16* aiMoves = GetMovesArray(battler);
+    u16* oppMoves = GetMovesArray(opposingBattler);
+
+    uq4_12_t effectiveness;
+
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (!IsMoveUnusable(i, aiMoves[i], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i])) 
+            altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
+        else 
+            altCalcs.dealtWithoutTera[i] = noDmg;
+        
+
+        if (!IsMoveUnusable(i, oppMoves[i], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[i]))  
+        {
+            altCalcs.takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather());
+            effectivenessTakenWithTera[i] = effectiveness;
+        }
+        else 
+        {
+            altCalcs.takenWithTera[i] = noDmg;
+            effectivenessTakenWithTera[i] = Q_4_12(0.0);
+        }
+    }
+
+
+    enum AIConsiderGimmick res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
+
+
+    if (res == USE_GIMMICK) 
+    {
+        // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
+        for (int i = 0; i < MAX_MON_MOVES; i++) 
+        {
+            gAiLogicData->simulatedDmg[opposingBattler][battler][i] = altCalcs.takenWithTera[i];
+            gAiLogicData->effectiveness[opposingBattler][battler][i] = effectivenessTakenWithTera[i];
+        }
+    }
+    else 
+    {
+        // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
+        for (int i = 0; i < MAX_MON_MOVES; i++) 
+            gAiLogicData->simulatedDmg[battler][opposingBattler][i] = altCalcs.dealtWithoutTera[i];
+    }
+
+    SetAIUsingGimmick(battler, res);
+    return;
+}
+
+// macros are not expanded recursively
+#define dealtWithTera gAiLogicData->simulatedDmg[battler][opposingBattler]
+#define dealtWithoutTera altCalcs->dealtWithoutTera
+#define takenWithTera altCalcs->takenWithTera
+#define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
+
+enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs) {
+    struct Pokemon* party = GetBattlerParty(battler);
+
+    // Check how many pokemon we have that could tera
+    int numPossibleTera = 0; 
+    for (int i = 0; i < PARTY_SIZE; i++) 
+    {
+        if (GetMonData(&party[i], MON_DATA_HP) != 0
+         && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
+         && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) 
+            numPossibleTera++;
+    }
+
+    u16 aiHp = gBattleMons[battler].hp;
+    u16 oppHp = gBattleMons[opposingBattler].hp;
+
+    u16* aiMoves = GetMovesArray(battler);
+    u16* oppMoves = GetMovesArray(opposingBattler);
+
+    // Check whether tera enables a KO
+    bool32 hasKoWithout = FALSE;
+    u16 killingMove = MOVE_NONE;
+
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (dealtWithTera[i].median >= oppHp) 
+        {
+            u16 move = aiMoves[i];
+            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove))
+                killingMove = move;
+        } 
+        if (dealtWithoutTera[i].median >= oppHp) 
+            hasKoWithout = TRUE;
+    }
+
+    bool32 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
+
+    // Check whether tera saves us from a KO
+    bool32 savedFromKo = FALSE; 
+    bool32 getsKodRegardlessBySingleMove = FALSE;
+
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum >= aiHp) 
+            getsKodRegardlessBySingleMove = TRUE;
+
+        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum < aiHp) 
+            savedFromKo = TRUE;
+    }
+
+    if (getsKodRegardlessBySingleMove)
+        savedFromKo = FALSE;
+
+    // Check whether opponent can punish tera by ko'ing 
+    u16 hardPunishingMove = MOVE_NONE;
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithTera[i].maximum >= aiHp) 
+        {
+            u16 move = oppMoves[i];
+            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], move) > GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)) 
+                hardPunishingMove = move;
+        }
+    }
+
+    // Check whether there is a move that deals over half hp, and all such moves are reduced to under 1/4 hp by tera
+    // (e.g. a weakness becomes a resistance, a 4x weakness becomes neutral, etc)
+    bool32 takesBigHit = FALSE;
+    bool32 savedFromAllBigHits = TRUE;
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithoutTera[i].median > aiHp/2) 
+        {
+            takesBigHit = TRUE; 
+            if (takenWithTera[i].median > aiHp/4) 
+                savedFromAllBigHits = FALSE;
+        }
+    }
+
+    // Check for any benefit whatsoever. Only used for the last possible mon that could tera.
+    bool32 anyOffensiveBenefit = FALSE;
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (dealtWithTera[i].median > dealtWithoutTera[i].median) 
+            anyOffensiveBenefit = TRUE;
+    }  
+
+    bool32 anyDefensiveBenefit = FALSE;
+    bool32 anyDefensiveDrawback = FALSE; 
+    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    {
+        if (takenWithTera[i].median < takenWithoutTera[i].median) 
+            anyDefensiveBenefit = TRUE;
+
+        if (takenWithTera[i].median > takenWithoutTera[i].median) 
+            anyDefensiveDrawback = TRUE;
+    }
+
+    // Make decisions
+    // This is done after all loops to minimize the possibility of a timing attack in which the player could
+    // determine whether the AI will tera based on the time taken to select a move.
+
+    if (enablesKo) 
+    {
+        if (hardPunishingMove == MOVE_NONE) 
+        {
+            return USE_GIMMICK;
+        }
+        else 
+        {
+            // will we go first?
+            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)) 
+                return USE_GIMMICK;
+        }
+    }
+
+    // Decide to conserve tera based on number of possible later oppotunities
+    u16 conserveTeraChance = AI_CONSERVE_TERA_CHANCE_PER_MON * (numPossibleTera-1);
+    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
+        return NO_GIMMICK;
+
+    if (savedFromKo) 
+    {
+        if (hardPunishingMove == MOVE_NONE) 
+        {
+            return USE_GIMMICK;
+        }
+        else 
+        {
+            // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
+            // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
+            if (Random() % 100 < AI_TERA_PREDICT_CHANCE) 
+                return USE_GIMMICK;
+        }
+    }
+
+    if (hardPunishingMove != MOVE_NONE) 
+        return NO_GIMMICK;
+
+    if (takesBigHit && savedFromAllBigHits) 
+        return USE_GIMMICK;
+
+    // No strongly compelling reason to tera. Conserve it if possible. 
+    if (numPossibleTera > 1) 
+        return NO_GIMMICK;
+
+    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) 
+        return USE_GIMMICK;
+
+    // TODO: Effects other than direct damage are not yet considered. For example, may want to tera poison to avoid a Toxic.
+    
+
+    return NO_GIMMICK;
+}
+#undef dealtWithTera
+#undef dealtWithoutTera
+#undef takenWithTera
+#undef takenWithoutTera
+
 
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId)
 {

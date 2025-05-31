@@ -248,18 +248,18 @@ static const union AnimCmd sAnim_StarterCircle[] =
     ANIMCMD_END,
 };
 
-static const union AnimCmd * const sAnims_Hand[] =
+static const union AnimCmd *const sAnims_Hand[] =
 {
     sAnim_Hand,
 };
 
-static const union AnimCmd * const sAnims_Pokeball[] =
+static const union AnimCmd *const sAnims_Pokeball[] =
 {
     sAnim_Pokeball_Still,
     sAnim_Pokeball_Moving,
 };
 
-static const union AnimCmd * const sAnims_StarterCircle[] =
+static const union AnimCmd *const sAnims_StarterCircle[] =
 {
     sAnim_StarterCircle,
 };
@@ -278,8 +278,8 @@ static const union AffineAnimCmd sAffineAnim_StarterCircle[] =
     AFFINEANIMCMD_END,
 };
 
-static const union AffineAnimCmd * const sAffineAnims_StarterPokemon = {sAffineAnim_StarterPokemon};
-static const union AffineAnimCmd * const sAffineAnims_StarterCircle[] = {sAffineAnim_StarterCircle};
+static const union AffineAnimCmd *const sAffineAnims_StarterPokemon = {sAffineAnim_StarterPokemon};
+static const union AffineAnimCmd *const sAffineAnims_StarterCircle[] = {sAffineAnim_StarterCircle};
 
 static const struct CompressedSpriteSheet sSpriteSheet_PokeballSelect[] =
 {
@@ -397,9 +397,9 @@ void CB2_ChooseStarter(void)
     DmaFill32(3, 0, OAM, OAM_SIZE);
     DmaFill16(3, 0, PLTT, PLTT_SIZE);
 
-    LZ77UnCompVram(gBirchBagGrass_Gfx, (void *)VRAM);
-    LZ77UnCompVram(gBirchBagTilemap, (void *)(BG_SCREEN_ADDR(6)));
-    LZ77UnCompVram(gBirchGrassTilemap, (void *)(BG_SCREEN_ADDR(7)));
+    DecompressDataWithHeaderVram(gBirchBagGrass_Gfx, (void *)VRAM);
+    DecompressDataWithHeaderVram(gBirchBagTilemap, (void *)(BG_SCREEN_ADDR(6)));
+    DecompressDataWithHeaderVram(gBirchGrassTilemap, (void *)(BG_SCREEN_ADDR(7)));
 
     ResetBgsAndClearDma3BusyFlags(0);
     InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));

@@ -732,7 +732,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when det
 AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon")
 {
     GIVEN {
-        ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
@@ -746,7 +746,7 @@ AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon")
 AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon after Air Balloon mon switches out and back in")
 {
     GIVEN {
-        ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
@@ -813,5 +813,55 @@ AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would be
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees that Primal weather can block a move by type")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_HYDRO_PUMP) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_BLASTOISE) { Moves(MOVE_HYDRO_PUMP, MOVE_POUND); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_RAZOR_LEAF) != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_METAL_CLAW) != TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_KRABBY) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_MAGNETON) { Moves(MOVE_THUNDERBOLT, MOVE_RAZOR_LEAF); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_METAL_CLAW); }
+    } WHEN {
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERBOLT);
+            NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDERBOLT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
+{
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { ability = ABILITY_DAMP; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_GOLDUCK) { Ability(ability); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_KABUTOPS) { Ability(ABILITY_SWIFT_SWIM); Moves(MOVE_RAIN_DANCE, MOVE_POUND); }
+    } WHEN {
+        if (ability == ABILITY_CLOUD_NINE)
+            TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
+        else
+            TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_RAIN_DANCE); }
     }
 }

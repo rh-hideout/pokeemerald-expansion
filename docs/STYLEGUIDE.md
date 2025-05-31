@@ -202,7 +202,7 @@ if (runTasks) // correct
 
 if (runTasks != 0) // incorrect
     RunTasks();
-    
+
 if (!PlayerIsOutside()) // correct
     RemoveSunglasses();
 
