@@ -6776,7 +6776,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         }
 
         if (isAlcremie)
-            fontId = FONT_NARROWER;
+            fontId = FONT_SMALL_NARROWER;
         else
             fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
 
