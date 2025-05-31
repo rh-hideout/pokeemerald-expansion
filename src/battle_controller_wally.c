@@ -378,7 +378,7 @@ static void WallyHandleChooseMove(u32 battler)
         if (--gBattleStruct->wallyMoveFrames == 0)
         {
             PlaySE(SE_SELECT);
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, 0x100);
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0x100);
             WallyBufferExecCompleted(battler);
         }
         break;
