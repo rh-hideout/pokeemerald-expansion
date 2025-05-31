@@ -81,7 +81,7 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_TracksSpot                @ FLDEFF_TRACKS_SPOT
 	.4byte gFieldEffectScript_CaveDust                  @ FLDEFF_CAVE_DUST
 	.4byte gFieldEffectScript_Defog                     @ FLDEFF_DEFOG
-    
+
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
 	field_eff_end

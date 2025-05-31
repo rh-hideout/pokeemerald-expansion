@@ -60,7 +60,7 @@ void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
 void SetNonVolatileStatusCondition(u32 target, enum MoveEffects effect);
 
-extern void (* const gBattleScriptingCommandsTable[])(void);
+extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];
 
 #endif // GUARD_BATTLE_SCRIPT_COMMANDS_H

@@ -1012,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
