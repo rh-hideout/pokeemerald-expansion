@@ -227,18 +227,21 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     u32 size;
 
     // Check for LZ77 header and read uncompressed size, or fallback if not compressed (zero size)
-    if ((size = IsLZ77Data(template->images->data, TILE_SIZE_4BPP, MAX_DECOMPRESSION_BUFFER_SIZE)) == 0)
-        return LoadSpriteSheetByTemplate(template, 0, offset);
+    if (IsCompressedData(template->images->data))
+    {
+        size = GetDecompressedDataSize(template->images->data);
+        void *buffer = malloc_and_decompress(template->images->data, NULL);
+        myImage.data = buffer;
+        myImage.size = size + offset;
+        myTemplate.images = &myImage;
+        myTemplate.tileTag = template->tileTag;
 
-    void *buffer = malloc_and_decompress(template->images->data, NULL);
-    myImage.data = buffer;
-    myImage.size = size + offset;
-    myTemplate.images = &myImage;
-    myTemplate.tileTag = template->tileTag;
+        u32 ret = LoadSpriteSheetByTemplate(&myTemplate, 0, offset);
+        Free(buffer);
+        return ret;
+    }
+    return LoadSpriteSheetByTemplate(template, 0, offset);
 
-    u32 ret = LoadSpriteSheetByTemplate(&myTemplate, 0, offset);
-    Free(buffer);
-    return ret;
 }
 
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
@@ -1322,6 +1325,35 @@ u32 GetDecompressedDataSize(const u32 *ptr)
         default:
             return header->smol.imageSize*SMOL_IMAGE_SIZE_MULTIPLIER;
     }
+}
+
+bool32 IsCompressedData(const u32 *ptr)
+{
+    u32 size;
+    union CompressionHeader *header = (union CompressionHeader *)ptr;
+    switch (header->smol.mode)
+    {
+    case MODE_LZ77:
+        return IsLZ77Data(ptr, TILE_SIZE_4BPP, MAX_DECOMPRESSION_BUFFER_SIZE);
+    case BASE_ONLY:
+    case ENCODE_SYMS:
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_LO:
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        size = GetDecompressedDataSize(ptr);
+        if (size % TILE_SIZE_4BPP == 0 && size < MAX_DECOMPRESSION_BUFFER_SIZE)
+            return TRUE;
+        break;
+    case IS_FRAME_CONTAINER:
+        // No implemented yet
+    case IS_TILEMAP:
+        // Has to use another assumption
+    default:
+        //  Is not one of these cases, it's not compressed data
+        return FALSE;
+    }
+    return FALSE;
 }
 
 bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src)
