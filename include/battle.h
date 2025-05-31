@@ -791,6 +791,7 @@ struct AiBattleData
     u8 playerStallMons[PARTY_SIZE];
     u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
+    u16 aiUsingGimmick:6;
     u8 actionFlee:1;
     u8 choiceWatch:1;
     u8 padding:6;

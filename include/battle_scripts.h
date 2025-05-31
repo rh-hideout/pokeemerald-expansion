@@ -788,7 +788,7 @@ extern const u8 BattleScript_TryHitSwitchTarget[];
 extern const u8 BattleScript_HitSwitchTargetDynamaxed[];
 extern const u8 BattleScript_AbilityPreventsPhasingOutRet[];
 extern const u8 BattleScript_PrintMonIsRootedRet[];
-extern const u8 BattleScript_EffectFinalGambit[];
+extern const u8 BattleScript_FinalGambit[];
 extern const u8 BattleScript_EffectAutotomize[];
 extern const u8 BattleScript_EffectCopycat[];
 extern const u8 BattleScript_EffectDefog[];

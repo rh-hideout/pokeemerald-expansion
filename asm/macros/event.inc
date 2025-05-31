@@ -1125,12 +1125,13 @@
 	.2byte \move
 	.endm
 
-	@ Checks if at least one Pokemon in the player's party knows the specified move. If so, VAR_RESULT is set to the
+	@ Checks if at least one Pokemon in the player's party knows the specified field move and if the field move is unlocked. If so, VAR_RESULT is set to the
 	@ (zero-indexed) slot number of the first Pokemon that knows the move. If not, VAR_RESULT is set to PARTY_SIZE.
 	@ VAR_0x8004 is also set to this Pokemon's species.
-	.macro checkpartymove move:req
-	.byte SCR_OP_CHECKPARTYMOVE
-	.2byte \move
+	.macro checkfieldmove fieldMove:req, checkUnlocked=FALSE
+	.byte SCR_OP_CHECKFIELDMOVE
+	.byte \fieldMove
+	.byte \checkUnlocked
 	.endm
 
 	@ Converts STR_VAR_1, STR_VAR_2, or STR_VAR_3 to its corresponding index into sScriptStringVars (0, 1, or 2).
@@ -2573,28 +2574,37 @@
 	@ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
-	checkfollowernpc
-	goto_if_eq VAR_RESULT, TRUE, 1f
-	hidefollower
-	delay 16
-	callnative ScriptSetFollowerNPC
-	.if \script == 0
-		.set setScript, FALSE
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		checkfollowernpc
+		compare VAR_RESULT, FALSE
+		goto_if_ne 1f
+		hidefollower
+		waitmovement OBJ_EVENT_ID_FOLLOWER
+		callnative ScriptSetFollowerNPC
+		.if \script == 0
+			.set setScript, FALSE
+		.else
+			.set setScript, TRUE
+		.endif
+		.byte \localId
+		.2byte \flags
+		.byte setScript
+		.2byte \battlePartner
+		.4byte \script
+		updatefollowingmon
+        1:
 	.else
-		.set setScript, TRUE
+		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
-	.byte \localId
-	.2byte \flags
-	.byte setScript
-	.2byte \battlePartner
-	.4byte \script
-	updatefollowingmon
-	1:
 	.endm
 
 	@ Remove the follower NPC (assumes there will only ever be one).
 	.macro destroyfollowernpc
-	callnative ScriptDestroyFollowerNPC
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		callnative ScriptDestroyFollowerNPC
+	.else
+		.error "destroyfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+	.endif
 	.endm
 
 	@ Makes the player and follower NPC face one another.
