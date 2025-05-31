@@ -207,16 +207,16 @@ static u16 GetPrevBall(u16 ballId)
 {
     u16 ballPrev;
     s32 i, j;
-    CompactItemsInBagPocket(&gBagPockets[BALLS_POCKET]);
-    for (i = 0; i < gBagPockets[BALLS_POCKET].capacity; i++)
+    CompactItemsInBagPocket(POCKET_POKE_BALLS);
+    for (i = 0; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
     {
-        if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i].itemId)
+        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i))
         {
             if (i <= 0)
             {
-                for (j = gBagPockets[BALLS_POCKET].capacity - 1; j >= 0; j--)
+                for (j = gBagPockets[POCKET_POKE_BALLS].capacity - 1; j >= 0; j--)
                 {
-                    ballPrev = gBagPockets[BALLS_POCKET].itemSlots[j].itemId;
+                    ballPrev = GetBagItemId(POCKET_POKE_BALLS, j);
                     if (ballPrev != ITEM_NONE)
                         return ballPrev;
                 }
@@ -225,24 +225,24 @@ static u16 GetPrevBall(u16 ballId)
             break;
         }
     }
-    return gBagPockets[BALLS_POCKET].itemSlots[i].itemId;
+    return GetBagItemId(POCKET_POKE_BALLS, i);
 }
 
 static u32 GetNextBall(u32 ballId)
 {
     u32 ballNext = ITEM_NONE;
     s32 i;
-    CompactItemsInBagPocket(&gBagPockets[BALLS_POCKET]);
-    for (i = 1; i < gBagPockets[BALLS_POCKET].capacity; i++)
+    CompactItemsInBagPocket(POCKET_POKE_BALLS);
+    for (i = 1; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
     {
-        if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i-1].itemId)
+        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i-1))
         {
-            ballNext = gBagPockets[BALLS_POCKET].itemSlots[i].itemId;
+            ballNext = GetBagItemId(POCKET_POKE_BALLS, i);
             break;
         }
     }
     if (ballNext == ITEM_NONE)
-        return gBagPockets[BALLS_POCKET].itemSlots[0].itemId; // Zeroth slot
+        return GetBagItemId(POCKET_POKE_BALLS, 0); // Zeroth slot
     else
         return ballNext;
 }

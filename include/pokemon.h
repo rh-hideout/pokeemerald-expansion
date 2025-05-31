@@ -830,5 +830,8 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
 u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
 u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
+struct Pokemon *GetSavedPlayerPartyMon(u32 index);
+u8 *GetSavedPlayerPartyCount();
+void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 
 #endif // GUARD_POKEMON_H
