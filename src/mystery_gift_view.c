@@ -23,9 +23,9 @@ struct WonderGraphics
     u8 bodyTextPal:4;
     u8 footerTextPal:4; // Card only
     u8 stampShadowPal:4; // Card only
-    const u32 * tiles;
-    const u32 * map;
-    const u16 * pal;
+    const u32 *tiles;
+    const u32 *map;
+    const u16 *pal;
 };
 
 //======================
@@ -52,7 +52,7 @@ struct WonderCardData
 {
     /*0000*/ struct WonderCard card;
     /*014c*/ struct WonderCardMetadata cardMetadata;
-    /*0170*/ const struct WonderGraphics * gfx;
+    /*0170*/ const struct WonderGraphics *gfx;
     /*0174*/ u8 enterExitState;
     /*0175*/ u8 statFooterWidth;
     /*0176*/ u16 windowIds[CARD_WIN_COUNT];
@@ -68,7 +68,7 @@ struct WonderCardData
     /*045C*/ u8 bgTilemapBuffer[0x1000];
 };
 
-EWRAM_DATA static struct WonderCardData * sWonderCardData = NULL;
+EWRAM_DATA static struct WonderCardData *sWonderCardData = NULL;
 
 static void BufferCardText(void);
 static void DrawCardWindow(u8 whichWindow);
@@ -184,7 +184,7 @@ static const struct WonderGraphics sCardGraphics[NUM_WONDER_BGS] = {
     {.titleTextPal = 1, .bodyTextPal = 0, .footerTextPal = 0, .stampShadowPal = 7, .tiles = sWonderCardBgGfx8, .map = sWonderCardBgTilemap8, .pal = sWonderCardBgPal8}
 };
 
-bool32 WonderCard_Init(struct WonderCard * card, struct WonderCardMetadata * metadata)
+bool32 WonderCard_Init(struct WonderCard *card, struct WonderCardMetadata *metadata)
 {
     if (card == NULL || metadata == NULL)
         return FALSE;
@@ -243,7 +243,7 @@ s32 WonderCard_Enter(void)
         LoadPalette(GetTextWindowPalette(1), BG_PLTT_ID(2), PLTT_SIZE_4BPP);
         gPaletteFade.bufferTransferDisabled = TRUE;
         LoadPalette(sWonderCardData->gfx->pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
-        LZ77UnCompWram(sWonderCardData->gfx->map, sWonderCardData->bgTilemapBuffer);
+        DecompressDataWithHeaderWram(sWonderCardData->gfx->map, sWonderCardData->bgTilemapBuffer);
         CopyRectToBgTilemapBufferRect(2, sWonderCardData->bgTilemapBuffer, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT, 1, 0x008, 0);
         CopyBgTilemapBufferToVram(2);
         break;
@@ -551,7 +551,7 @@ enum {
 struct WonderNewsData
 {
     /*0000*/ struct WonderNews news;
-    /*01bc*/ const struct WonderGraphics * gfx;
+    /*01bc*/ const struct WonderGraphics *gfx;
     /*01c0*/ u8 arrowsRemoved:1;
              u8 enterExitState:7;
     /*01c1*/ u8 arrowTaskId;
@@ -569,7 +569,7 @@ struct WonderNewsData
     /*03a4*/ u8 bgTilemapBuffer[0x1000];
 };
 
-EWRAM_DATA static struct WonderNewsData * sWonderNewsData = NULL;
+EWRAM_DATA static struct WonderNewsData *sWonderNewsData = NULL;
 
 static void BufferNewsText(void);
 static void DrawNewsWindows(void);
@@ -640,7 +640,7 @@ static const struct WonderGraphics sNewsGraphics[NUM_WONDER_BGS] = {
     {.titleTextPal = 1, .bodyTextPal = 0, .tiles = sWonderNewsGfx8, .map = sWonderNewsTilemap8, .pal = sWonderNewsPal8}
 };
 
-bool32 WonderNews_Init(const struct WonderNews * news)
+bool32 WonderNews_Init(const struct WonderNews *news)
 {
     if (news == NULL)
         return FALSE;
@@ -706,7 +706,7 @@ s32 WonderNews_Enter(void)
         LoadPalette(GetTextWindowPalette(1), BG_PLTT_ID(2), PLTT_SIZE_4BPP);
         gPaletteFade.bufferTransferDisabled = TRUE;
         LoadPalette(sWonderNewsData->gfx->pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
-        LZ77UnCompWram(sWonderNewsData->gfx->map, sWonderNewsData->bgTilemapBuffer);
+        DecompressDataWithHeaderWram(sWonderNewsData->gfx->map, sWonderNewsData->bgTilemapBuffer);
         CopyRectToBgTilemapBufferRect(1, sWonderNewsData->bgTilemapBuffer, 0, 0, DISPLAY_TILE_WIDTH, 3, 0, 0, DISPLAY_TILE_WIDTH, 3, 1, 8, 0);
         CopyRectToBgTilemapBufferRect(3, sWonderNewsData->bgTilemapBuffer, 0, 3, DISPLAY_TILE_WIDTH, 3 + DISPLAY_TILE_HEIGHT, 0, 3, DISPLAY_TILE_WIDTH, 3 + DISPLAY_TILE_HEIGHT, 1, 8, 0);
         CopyBgTilemapBufferToVram(1);

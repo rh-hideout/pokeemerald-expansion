@@ -732,7 +732,7 @@ void AnimTask_StartSlidingBg(u8 taskId)
 
     UpdateAnimBg3ScreenSize(FALSE);
     newTaskId = CreateTask(AnimTask_UpdateSlidingBg, 5);
-    if (gBattleAnimArgs[2] && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (gBattleAnimArgs[2] && !IsOnPlayerSide(gBattleAnimAttacker))
     {
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];

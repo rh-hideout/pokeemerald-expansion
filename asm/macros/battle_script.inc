@@ -1012,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -2322,9 +2322,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpiflastuseditemholdeffect battler:req, holdEffect:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT
+	.macro jumpiflastuseditemholdeffect holdEffect:req, secondaryId:req, jumpInstr:req
+	callnative BS_JumpIfLastUsedItemHoldEffect
 	.byte \holdEffect
+	.2byte \secondaryId
 	.4byte \jumpInstr
 	.endm
 
@@ -2556,4 +2557,9 @@
 	.macro flushtextbox
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
+	.endm
+
+	.macro jumpifnowhiteout jumpInstr:req
+	callnative BS_JumpIfNoWhiteOut
+	.4byte \jumpInstr
 	.endm

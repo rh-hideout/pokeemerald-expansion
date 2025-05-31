@@ -349,7 +349,7 @@ static void AnimConfusionDuck(struct Sprite *sprite)
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
     sprite->data[0] = gBattleAnimArgs[2];
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->data[1] = -gBattleAnimArgs[3];
         sprite->data[4] = 1;
@@ -1079,7 +1079,7 @@ static void AnimHitSplatPersistent(struct Sprite *sprite)
 // Used by Twineedle and Spike Cannon
 static void AnimHitSplatHandleInvert(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER && !IsContest())
+    if (!IsOnPlayerSide(gBattleAnimAttacker) && !IsContest())
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
 
     AnimHitSplatBasic(sprite);

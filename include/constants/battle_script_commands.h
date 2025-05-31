@@ -203,7 +203,6 @@ enum CmdVarious
     VARIOUS_CURE_CERTAIN_STATUSES,
     VARIOUS_TRY_RESET_NEGATIVE_STAT_STAGES,
     VARIOUS_JUMP_IF_LAST_USED_ITEM_BERRY,
-    VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT,
     VARIOUS_SAVE_BATTLER_ITEM,
     VARIOUS_RESTORE_BATTLER_ITEM,
     VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM,
@@ -221,7 +220,7 @@ enum CmdVarious
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
 
 // Cmd_statbuffchange
-#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. Set in every use of statbuffchange
+#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
 #define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
 #define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 5)
 #define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 6)
@@ -264,15 +263,14 @@ enum MoveEndEffects
     MOVEEND_FIRST_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ALL,
     MOVEEND_SYMBIOSIS,
-    MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
     MOVEEND_SUBSTITUTE,
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
+    MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     MOVEEND_MULTIHIT_MOVE,
-    MOVEEND_DEFROST,
     MOVEEND_SECOND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_ABILITY_BLOCK,
