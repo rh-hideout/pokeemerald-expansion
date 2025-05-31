@@ -503,10 +503,9 @@ void BS_UndoDynamax(void)
 
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
     {
-        BattleScriptPushCursor();
         UndoDynamax(battler);
         gBattleScripting.battler = battler;
-        gBattlescriptCurrInstr = BattleScript_DynamaxEnds_Ret;
+        BattleScriptCall(BattleScript_DynamaxEnds_Ret);
         return;
     }
 

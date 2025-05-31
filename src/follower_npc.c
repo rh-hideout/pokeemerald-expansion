@@ -137,7 +137,7 @@ const u8 *GetFollowerNPCScriptPointer(void)
 #if FNPC_ENABLE_NPC_FOLLOWERS
     if (PlayerHasFollowerNPC())
         return gSaveBlock3Ptr->NPCfollower.script;
-        
+
 #endif
     return NULL;
 }
@@ -735,7 +735,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
             follower->facingDirectionLocked = TRUE;
 
         newState = delayedState + (direction -1);
-    }    
+    }
 
     // Clear ice tile stuff.
     follower->disableAnim = FALSE;
@@ -1022,6 +1022,17 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
     else if (ArePlayerFieldControlsLocked() && !ignoreScriptActive)
         return;
 
+    // If the follower's object has been removed, create a new one and set it to reappear.
+    if (!follower->active)
+    {
+        CreateFollowerNPCAvatar();
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+    }
+
+    // Restore post warp behavior after setobjectxy.
+    if (GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NO_POS_SET)
+        SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+
     // Follower changes to normal sprite after getting off surf blob.
     if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && !CheckFollowerNPCFlag(PLAYER_AVATAR_FLAG_SURFING) && follower->fieldEffectSpriteId == 0)
     {
@@ -1250,7 +1261,6 @@ void FollowerNPC_WarpSetEnd(void)
 {
     struct ObjectEvent *player;
     struct ObjectEvent *follower;
-    u32 toY;
 
     if (!PlayerHasFollowerNPC())
         return;
@@ -1258,14 +1268,31 @@ void FollowerNPC_WarpSetEnd(void)
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
 
-    SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
     PlayerLogCoordinates(player);
 
-    toY = GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
-    MoveObjectEventToMapCoords(follower, player->currentCoords.x, toY);
+    // Skip setting position if setobjectxy was used during ON_WARP_INTO_MAP_TABLE.
+    if (GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NO_POS_SET)
+    {
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_NONE);
+        SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    }
+    else
+    {
+        u32 toY = GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) == FNPC_DOOR_NEEDS_TO_EXIT ? (player->currentCoords.y - 1) : player->currentCoords.y;
+        MoveObjectEventToMapCoords(follower, player->currentCoords.x, toY);
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+    }
 
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+    {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
+    }
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+    {
+        SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_RECREATE);
+    }
 
     follower->facingDirection = player->facingDirection;
     follower->movementDirection = player->movementDirection;
@@ -1330,7 +1357,7 @@ void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
     follower = &gObjectEvents[GetFollowerNPCObjectId()];
     TryUpdateFollowerNPCSpriteUnderwater();
 
-    if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY)
+    if (follower->invisible || (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_RECREATE && GetFollowerNPCData(FNPC_DATA_SURF_BLOB) != FNPC_SURF_BLOB_DESTROY))
         return;
 
     // Spawn the surf blob under the follower.
@@ -1543,7 +1570,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
         // Lock follower facing direction for muddy slope.
         if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
             follower->facingDirectionLocked = TRUE;
-            
+
         if (TryDoMetatileBehaviorForcedMovement() == 0)
             gTasks[taskId].tState = NPC_INTO_PLAYER;
 
@@ -1576,7 +1603,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId)
 {
     struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
-    
+
     if (ObjectEventClearHeldMovementIfFinished(npcFollower) != 0)
     {
         HideNPCFollower();
@@ -1601,25 +1628,27 @@ void ScriptSetFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 {
-    if (PlayerHasFollowerNPC())
-    {
-        RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
-        FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
-        ClearFollowerNPCData();
-    }
+    if (!PlayerHasFollowerNPC())
+        return;
 
+    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
+    FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
+    ClearFollowerNPCData();
     UpdateFollowingPokemon();
 }
 
 void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
 {
-    if (PlayerHasFollowerNPC())
-    {
-        u32 playerDirection, followerDirection;
-        struct ObjectEvent *player, *follower;
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
+        return;
 
-        player = &gObjectEvents[gPlayerAvatar.objectEventId];
-        follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
+    u32 playerDirection, followerDirection;
+    struct ObjectEvent *player, *follower;
+    player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
+
+    if (follower->invisible == FALSE)
+    {
         playerDirection = DetermineFollowerNPCDirection(player, follower);
         followerDirection = playerDirection;
 
@@ -1655,10 +1684,13 @@ static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] =
 
 void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
+        return;
+        
     u32 walkSpeed = ScriptReadByte(ctx);
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
 
-    if (PlayerHasFollowerNPC() && npc->invisible == FALSE)
+    if (npc->invisible == FALSE)
     {
         u32 direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc);
 
@@ -1682,8 +1714,10 @@ void ScriptUpdateFollowingMon(struct ScriptContext *ctx)
 
 void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 {
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
+        return;
+        
     u32 newBattlePartner = ScriptReadHalfword(ctx);
 
-    if (PlayerHasFollowerNPC())
-        SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);
+    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);
 }

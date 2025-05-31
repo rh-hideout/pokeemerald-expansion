@@ -1012,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -2455,10 +2455,6 @@
 
 	.macro dmgtomaxattackerhp
 	manipulatedamage DMG_FULL_ATTACKER_HP
-	.endm
-
-	.macro dmgtocurrattackerhp
-	manipulatedamage DMG_CURR_ATTACKER_HP
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req

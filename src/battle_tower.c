@@ -703,7 +703,7 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 #include "data/battle_partners.h"
 };
 
-static void (* const sBattleTowerFuncs[])(void) =
+static void (*const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
     [BATTLE_TOWER_FUNC_GET_DATA]            = GetTowerData,
@@ -1580,7 +1580,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     }
 
     ModifyPersonalityForNature(&personality, fmon->nature);
-    CreateMon(dst, fmon->species, level, fixedIV, TRUE, personality, otID, OT_ID_PRESET);
+    CreateMon(dst, fmon->species, level, fixedIV, TRUE, personality, OT_ID_PRESET, otID);
 
     friendship = MAX_FRIENDSHIP;
     // Give the chosen Pokémon its specified moves.
