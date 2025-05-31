@@ -1125,12 +1125,13 @@
 	.2byte \move
 	.endm
 
-	@ Checks if at least one Pokemon in the player's party knows the specified move. If so, VAR_RESULT is set to the
+	@ Checks if at least one Pokemon in the player's party knows the specified field move and if the field move is unlocked. If so, VAR_RESULT is set to the
 	@ (zero-indexed) slot number of the first Pokemon that knows the move. If not, VAR_RESULT is set to PARTY_SIZE.
 	@ VAR_0x8004 is also set to this Pokemon's species.
-	.macro checkpartymove move:req
-	.byte SCR_OP_CHECKPARTYMOVE
-	.2byte \move
+	.macro checkfieldmove fieldMove:req, checkUnlocked=FALSE
+	.byte SCR_OP_CHECKFIELDMOVE
+	.byte \fieldMove
+	.byte \checkUnlocked
 	.endm
 
 	@ Converts STR_VAR_1, STR_VAR_2, or STR_VAR_3 to its corresponding index into sScriptStringVars (0, 1, or 2).
