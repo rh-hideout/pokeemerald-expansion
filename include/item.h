@@ -42,7 +42,6 @@ u16 GetBagItemId(u32 pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos);
 void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
-void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
 u8 *CopyItemName(u16 itemId, u8 *dst);
 u8 *CopyItemNameHandlePlural(u16 itemId, u8 *dst, u32 quantity);
