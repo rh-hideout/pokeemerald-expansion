@@ -133,7 +133,7 @@ static const u8 sClockFrames[8][3] =
 };
 
 static const u8 sSaveFailedClockPal[] = INCBIN_U8("graphics/misc/clock_small.gbapal");
-static const u32 sSaveFailedClockGfx[] = INCBIN_U32("graphics/misc/clock_small.4bpp.lz");
+static const u32 sSaveFailedClockGfx[] = INCBIN_U32("graphics/misc/clock_small.4bpp.smol");
 
 static void CB2_SaveFailedScreen(void);
 static void CB2_WipeSave(void);

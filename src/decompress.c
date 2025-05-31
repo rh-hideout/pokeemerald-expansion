@@ -243,7 +243,7 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
 {
-    LZ77UnCompWram(src->data, buffer);
+    DecompressDataWithHeaderWram(src->data, buffer);
 }
 
 void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
