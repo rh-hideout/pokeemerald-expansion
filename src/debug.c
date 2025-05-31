@@ -1923,20 +1923,28 @@ static void DebugAction_Util_OpenTimeMenu(u8 taskId)
 
 static void DebugAction_TimeMenu_TimesOfDay(u8 taskId)
 {
-    Debug_DestroyMenu_Full(taskId);
     if (!OW_USE_FAKE_RTC)
+    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    }
     else
+    {
+        Debug_DestroyMenu_Full(taskId);
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_TimesOfDay, sDebugMenu_ListTemplate_TimeMenu_TimesOfDay);
+    }
 }
 
 static void DebugAction_TimeMenu_Weekdays(u8 taskId)
 {
-    Debug_DestroyMenu_Full(taskId);
     if (!OW_USE_FAKE_RTC)
+    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    }
     else
+    {
+        Debug_DestroyMenu_Full(taskId);
         Debug_ShowMenu(DebugTask_HandleMenuInput_TimeMenu_Weekdays, sDebugMenu_ListTemplate_TimeMenu_Weekdays);
+    }
 }
 
 static void DebugAction_OpenPlayerMenu(u8 taskId)
@@ -2385,7 +2393,6 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
 
 static void DebugAction_TimeMenu_PrintTime(u8 taskId)
 {
-    Debug_DestroyMenu_Full(taskId);
     LockPlayerFieldControls();
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_TellTheTime);
 }
@@ -2411,7 +2418,6 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 
 static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId)
 {
-    Debug_DestroyMenu_Full(taskId);
     LockPlayerFieldControls();
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_PrintTimeOfDay);
 }
@@ -3979,7 +3985,7 @@ static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
+        if (GetItemPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }
 }
@@ -4021,7 +4027,7 @@ static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId)
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
+        if (GetItemPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
             AddBagItem(itemId, 1);
     }
 }
