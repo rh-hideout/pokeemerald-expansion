@@ -1,9 +1,9 @@
 #ifndef GUARD_CONSTANTS_EXPANSION_H
 #define GUARD_CONSTANTS_EXPANSION_H
 
-// Last version: 1.11.3
+// Last version: 1.12.0
 #define EXPANSION_VERSION_MAJOR 1
-#define EXPANSION_VERSION_MINOR 12
+#define EXPANSION_VERSION_MINOR 13
 #define EXPANSION_VERSION_PATCH 0
 
 // FALSE if this this version of Expansion is not a tagged commit, i.e.
