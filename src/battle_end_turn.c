@@ -361,10 +361,10 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter)
+    if (gBattleStruct->futureSight[battler].timer == gBattleTurnCounter)
     {
-        if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter
-         && gWishFutureKnock.futureSightCounter[BATTLE_PARTNER(battler)] <= gBattleTurnCounter)
+        if (gBattleStruct->futureSight[battler].timer == gBattleTurnCounter
+         && gBattleStruct->futureSight[BATTLE_PARTNER(battler)].timer <= gBattleTurnCounter)
         {
             gSideStatuses[GetBattlerSide(battler)] &= ~SIDE_STATUS_FUTUREATTACK;
         }
@@ -372,16 +372,16 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
         if (!IsBattlerAlive(battler))
             return effect;
 
-        if (gWishFutureKnock.futureSightMove[battler] == MOVE_FUTURE_SIGHT)
+        if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gWishFutureKnock.futureSightMove[battler]);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
 
         gBattlerTarget = battler;
-        gBattlerAttacker = gWishFutureKnock.futureSightBattlerIndex[battler];
-        gCurrentMove = gWishFutureKnock.futureSightMove[battler];
+        gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
+        gCurrentMove = gBattleStruct->futureSight[battler].move;
 
         if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
@@ -399,16 +399,16 @@ static bool32 HandleEndTurnWish(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gWishFutureKnock.wishCounter[battler] == gBattleTurnCounter && IsBattlerAlive(battler))
+    if (gBattleStruct->battlerState[battler].wishCounter == gBattleTurnCounter && IsBattlerAlive(battler))
     {
         gBattlerTarget = battler;
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattleStruct->battlerState[battler].wishPartyId)
         if (B_WISH_HP_SOURCE >= GEN_5)
         {
             if (IsOnPlayerSide(battler))
-                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
+                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gPlayerParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2);
             else
-                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
+                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gEnemyParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2);
         }
         else
         {

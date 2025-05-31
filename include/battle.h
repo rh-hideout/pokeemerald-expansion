@@ -253,18 +253,7 @@ struct FieldTimer
     u16 terrainTimer;
     u16 gravityTimer;
     u16 fairyLockTimer;
-};
-
-struct WishFutureKnock
-{
-    u16 futureSightCounter[MAX_BATTLERS_COUNT];
-    u8 futureSightBattlerIndex[MAX_BATTLERS_COUNT];
-    u8 futureSightPartyIndex[MAX_BATTLERS_COUNT];
-    u16 futureSightMove[MAX_BATTLERS_COUNT];
-    u16 wishCounter[MAX_BATTLERS_COUNT];
-    u8 wishPartyId[MAX_BATTLERS_COUNT];
-    u8 weatherDuration;
-    u8 knockedOffMons[NUM_BATTLE_SIDES]; // Each battler is represented by a bit.
+    u16 weatherDuration; // TODO: use Turn Counter
 };
 
 struct AI_SavedBattleMon
@@ -588,7 +577,9 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 padding:16;
+    u32 wishCounter:10; // 1023 turns should be enough to never overflow with gBattleTurnCounter
+    u32 wishPartyId:3; // 7 possible battlers
+    u32 padding:3;
     // End of Word
 };
 
@@ -600,7 +591,16 @@ struct PartyState
     u32 battleBondBoost:1;
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
-    u32 padding:26;
+    u32 knockedOffMons:1; // Unused for >= Gen5
+    u32 padding:25;
+};
+
+struct FutureSight
+{
+    u16 timer;
+    u16 move;
+    u8 battlerIndex;
+    u8 partyIndex;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -608,6 +608,7 @@ struct BattleStruct
 {
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
+    struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     u8 eventBlockCounter;
     u8 turnEffectsBattlerId;
     u8 endTurnEventsCounter;
@@ -1089,7 +1090,6 @@ extern u8 gBattleOutcome;
 extern struct ProtectStruct gProtectStructs[MAX_BATTLERS_COUNT];
 extern struct SpecialStatus gSpecialStatuses[MAX_BATTLERS_COUNT];
 extern u16 gBattleWeather;
-extern struct WishFutureKnock gWishFutureKnock;
 extern u16 gIntroSlideFlags;
 extern u8 gSentPokesToOpponent[2];
 extern struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT];

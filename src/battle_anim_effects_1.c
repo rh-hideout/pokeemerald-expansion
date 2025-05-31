@@ -6846,26 +6846,26 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
             if (IsBattlerAlly(i, battlerAtk))
                 continue;   // only on opposing side
 
-            if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerAtk)
+            if (gBattleStruct->futureSight[i].battlerIndex == battlerAtk)
             {
                 // if target was attacked with future sight from us, now they'll be the partner slot
-                gWishFutureKnock.futureSightBattlerIndex[i] = battlerPartner;
-                gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerPartner];
+                gBattleStruct->futureSight[i].battlerIndex = battlerPartner;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerPartner];
                 break;
             }
-            else if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerPartner)
+            else if (gBattleStruct->futureSight[i].battlerIndex == battlerPartner)
             {
-                gWishFutureKnock.futureSightBattlerIndex[i] = battlerAtk;
-                gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerAtk];
+                gBattleStruct->futureSight[i].battlerIndex = battlerAtk;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerAtk];
                 break;
             }
         }
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > gBattleTurnCounter
-     || gWishFutureKnock.wishCounter[battlerPartner] > gBattleTurnCounter)
-        SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
+    if (gBattleStruct->battlerState[battlerAtk].wishCounter > gBattleTurnCounter
+     || gBattleStruct->battlerState[battlerPartner].wishCounter > gBattleTurnCounter)
+        SWAP(gBattleStruct->battlerState[battlerAtk].wishPartyId, gBattleStruct->battlerState[battlerPartner].wishPartyId, temp);
 }
 
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
