@@ -1478,14 +1478,17 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     int i, j;
     int dmg, bestDmg = 0;
     int bestMonId = PARTY_SIZE;
-
     u32 aiMove;
+    u32 currBattler = battler;
+    u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[currBattler]; // Dangerous. Ideally the index is passed down as an argument
 
     // If we couldn't find the best mon in terms of typing, find the one that deals most damage.
     for (i = firstId; i < lastId; i++)
     {
         if ((1 << (i)) & invalidMons)
             continue;
+
+        gBattlerPartyIndexes[currBattler] = i;
         InitializeSwitchinCandidate(&party[i]);
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
@@ -1503,6 +1506,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
         }
     }
 
+    gBattlerPartyIndexes[currBattler] = storeCurrBattlerPartyIndex;
     return bestMonId;
 }
 
@@ -2032,6 +2036,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 aiMove, hitsToKOAI, maxHitsToKO = 0;
     u16 bestResist = UQ_4_12(1.0), bestResistEffective = UQ_4_12(1.0), typeMatchup;
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, canSwitchinWin1v1;
+    u32 currBattler = battler;
+    u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[currBattler]; // Dangerous. Ideally the index is passed down as an argument
 
     // Iterate through mons
     for (i = firstId; i < lastId; i++)
@@ -2055,6 +2061,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         else
             aliveCount++;
 
+        gBattlerPartyIndexes[currBattler] = i;
         InitializeSwitchinCandidate(&party[i]);
 
         // While not really invalid per se, not really wise to switch into this mon
@@ -2166,6 +2173,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         }
     }
 
+    gBattlerPartyIndexes[currBattler] = storeCurrBattlerPartyIndex;
     batonPassId = GetRandomSwitchinWithBatonPass(aliveCount, bits, firstId, lastId, i);
 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
