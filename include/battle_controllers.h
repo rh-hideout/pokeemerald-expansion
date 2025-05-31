@@ -74,27 +74,27 @@ enum {
 
 static inline void MarkBattleControllerActiveOnLocal(u32 battler)
 {
-   gBattleControllerExecFlags |= (1u << battler);
+    gBattleControllerExecFlags |= (1u << battler);
 }
 
 static inline void MarkBattleControllerIdleOnLocal(u32 battler)
 {
-   gBattleControllerExecFlags &= ~(1u << battler);
+    gBattleControllerExecFlags &= ~(1u << battler);
 }
 
 static inline bool32 IsBattleControllerActiveOnLocal(u32 battler)
 {
-   return gBattleControllerExecFlags & (1u << battler);
+    return gBattleControllerExecFlags & (1u << battler);
 }
 
 static inline void MarkBattleControllerMessageOutboundOverLink(u32 battler)
 {
-   gBattleControllerExecFlags |= ((1u << battler) << (32 - MAX_BATTLERS_COUNT));
+    gBattleControllerExecFlags |= ((1u << battler) << (32 - MAX_BATTLERS_COUNT));
 }
 
 static inline void MarkBattleControllerMessageSynchronizedOverLink(u32 battler)
 {
-   gBattleControllerExecFlags &= ~((1 << 28) << (battler));
+    gBattleControllerExecFlags &= ~((1 << 28) << (battler));
 }
 
 static inline bool32 IsBattleControllerMessageSynchronizedOverLink(u32 battler)
@@ -104,17 +104,17 @@ static inline bool32 IsBattleControllerMessageSynchronizedOverLink(u32 battler)
 
 static inline void MarkBattleControllerActiveForPlayer(u32 battler, u32 playerId)
 {
-   gBattleControllerExecFlags |= ((1u << battler) << ((playerId) << 2));
+    gBattleControllerExecFlags |= ((1u << battler) << ((playerId) << 2));
 }
 
 static inline void MarkBattleControllerIdleForPlayer(u32 battler, u32 playerId)
 {
-   gBattleControllerExecFlags &= ~((1u << battler) << ((playerId) * 4));
+    gBattleControllerExecFlags &= ~((1u << battler) << ((playerId) * 4));
 }
 
 static inline bool32 IsBattleControllerActiveForPlayer(u32 battler, u32 playerId)
 {
-   return gBattleControllerExecFlags & ((1u << battler) << ((playerId) * 4));
+    return gBattleControllerExecFlags & ((1u << battler) << ((playerId) * 4));
 }
 
 // This actually checks if a specific controller is active on any player or if
