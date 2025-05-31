@@ -665,16 +665,8 @@ int EReaderHandleTransfer(u8 mode, size_t size, const void *data, void *recvBuff
 
             if (sSendRecvMgr.xferState != EREADER_XFER_CHK)
             {
-                if (sSendRecvMgr.isParent && sCounter1 > 2)
-                {
-                    EnableSio();
-                    sSendRecvMgr.xferState = EREADER_XFER_CHK;
-                }
-                else
-                {
-                    EnableSio();
-                    sSendRecvMgr.xferState = EREADER_XFER_CHK;
-                }
+                EnableSio();
+                sSendRecvMgr.xferState = EREADER_XFER_CHK;
             }
         }
         break;

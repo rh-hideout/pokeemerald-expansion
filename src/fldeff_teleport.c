@@ -11,7 +11,7 @@
 static void FieldCallback_Teleport(void);
 static void StartTeleportFieldEffect(void);
 
-bool8 SetUpFieldMove_Teleport(void)
+bool32 SetUpFieldMove_Teleport(void)
 {
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
