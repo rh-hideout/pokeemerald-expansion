@@ -7024,6 +7024,15 @@ static void Cmd_moveend(void)
                     effect = TRUE;
                 }
                 break;
+            case EFFECT_CHLOROBLAST:
+                if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker))
+                {
+                    gBattleStruct->moveDamage[gBattlerAttacker] = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectRecoil;
+                    effect = TRUE;
+                }
+                break;
             case EFFECT_RAPID_SPIN:
                 if (IsBattlerTurnDamaged(gBattlerTarget))
                 {

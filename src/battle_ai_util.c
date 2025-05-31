@@ -1014,6 +1014,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
     {
     case EFFECT_MAX_HP_50_RECOIL:
     case EFFECT_MIND_BLOWN:
+    case EFFECT_CHLOROBLAST:
     case EFFECT_EXPLOSION:
     case EFFECT_FINAL_GAMBIT:
         return TRUE;
