@@ -6629,10 +6629,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_PID_UPPER_MODULO_10_EQ:
             case IF_PID_UPPER_MODULO_10_LT:
                 arg = evolutions[i].params[j].arg1;
-                    if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT 
+                    if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT
                         && arg < 10 && arg >= 0)
                         arg = 9 - arg;
-                    else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ 
+                    else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ
                              && arg < 10 && arg >= 0)
                         arg = 1;
                 ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -6694,8 +6694,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_REGION:
             case IF_NOT_REGION:
             {
-                if (condition == IF_NOT_REGION)
-                    StringAppend(gStringVar4, COMPOUND_STRING("not "));
+                if (condition == IF_REGION)
+                    StringAppend(gStringVar4, COMPOUND_STRING("in "));
+                else if (condition == IF_NOT_REGION)
+                    StringAppend(gStringVar4, COMPOUND_STRING("out of "));
 
                 switch ((enum Region)evolutions[i].params[j].arg1)
                 {
@@ -6768,10 +6770,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_PID_MODULO_100_EQ:
             case IF_PID_MODULO_100_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT 
+                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT
                             && arg < 100 && arg >= 0)
                             arg = 99 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ 
+                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ
                                  && arg < 100 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
