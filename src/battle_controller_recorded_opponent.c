@@ -383,7 +383,7 @@ static void RecordedOpponentHandlePrintString(u32 battler)
 
 static void RecordedOpponentHandleChooseAction(u32 battler)
 {
-    BtlController_EmitTwoReturnValues(battler, BUFFER_B, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
     RecordedOpponentBufferExecCompleted(battler);
 }
 
@@ -391,13 +391,13 @@ static void RecordedOpponentHandleChooseMove(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, ChooseMoveAndTargetInBattlePalace(battler));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, ChooseMoveAndTargetInBattlePalace(battler));
     }
     else
     {
         u8 moveId = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
         u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, moveId | (target << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, moveId | (target << 8));
     }
 
     RecordedOpponentBufferExecCompleted(battler);
@@ -410,7 +410,7 @@ static void RecordedOpponentHandleChooseItem(u32 battler)
     gBattleStruct->chosenItem[battler] = (byte1 << 8) | byte2;
     gBattleStruct->itemPartyIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
     gBattleStruct->itemMoveIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
-    BtlController_EmitOneReturnValue(battler, BUFFER_B, gBattleStruct->chosenItem[battler]);
+    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
     RecordedOpponentBufferExecCompleted(battler);
 }
 
@@ -418,7 +418,7 @@ static void RecordedOpponentHandleChoosePokemon(u32 battler)
 {
     gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
-    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, gBattleStruct->monToSwitchIntoId[battler], NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
     RecordedOpponentBufferExecCompleted(battler);
 }
 

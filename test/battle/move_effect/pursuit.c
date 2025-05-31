@@ -606,7 +606,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and switchin is correctly st
             case 4:
                 SEND_IN_MESSAGE("Venipede");
                 break;
-        }  
+        }
     }
 }
 

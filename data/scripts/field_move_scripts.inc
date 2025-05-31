@@ -354,7 +354,7 @@ EventScript_UseDiveUnderwater::
 	setfieldeffectargument 0, VAR_RESULT
 	setfieldeffectargument 1, 1
 	msgbox Text_WantToSurface, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_EndSurface
+	goto_if_eq VAR_RESULT, NO, EventScript_NoSurface
 	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
 	hidefollowernpc
 	dofieldeffect FLDEFF_USE_DIVE
@@ -369,6 +369,7 @@ EventScript_CantSurface::
 
 EventScript_EndSurface::
 	callnative SetFollowerNPCSurfSpriteAfterDive
+EventScript_NoSurface::
 	releaseall
 	end
 

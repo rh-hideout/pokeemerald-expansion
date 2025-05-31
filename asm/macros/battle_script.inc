@@ -1012,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -2557,4 +2557,9 @@
 	.macro flushtextbox
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
+	.endm
+
+	.macro jumpifnowhiteout jumpInstr:req
+	callnative BS_JumpIfNoWhiteOut
+	.4byte \jumpInstr
 	.endm

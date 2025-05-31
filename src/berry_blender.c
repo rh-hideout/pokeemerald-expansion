@@ -940,7 +940,7 @@ static bool8 LoadBerryBlenderGfx(void)
     {
     case 0:
         sBerryBlender->tilesBuffer = AllocZeroed(GetDecompressedDataSize(gBerryBlenderCenter_Gfx) + 100);
-        LZDecompressWram(gBerryBlenderCenter_Gfx, sBerryBlender->tilesBuffer);
+        DecompressDataWithHeaderWram(gBerryBlenderCenter_Gfx, sBerryBlender->tilesBuffer);
         sBerryBlender->loadGfxState++;
         break;
     case 1:
@@ -954,7 +954,7 @@ static bool8 LoadBerryBlenderGfx(void)
         sBerryBlender->loadGfxState++;
         break;
     case 3:
-        LZDecompressWram(gBerryBlenderOuter_Gfx, sBerryBlender->tilesBuffer);
+        DecompressDataWithHeaderWram(gBerryBlenderOuter_Gfx, sBerryBlender->tilesBuffer);
         sBerryBlender->loadGfxState++;
         break;
     case 4:
@@ -962,7 +962,7 @@ static bool8 LoadBerryBlenderGfx(void)
         sBerryBlender->loadGfxState++;
         break;
     case 5:
-        LZDecompressWram(gBerryBlenderOuter_Tilemap, sBerryBlender->tilesBuffer);
+        DecompressDataWithHeaderWram(gBerryBlenderOuter_Tilemap, sBerryBlender->tilesBuffer);
         sBerryBlender->loadGfxState++;
         break;
     case 6:
@@ -1203,7 +1203,7 @@ static void CreateBerrySprite(u32 itemId, u32 playerId)
                         berryId);
 }
 
-static void ConvertItemToBlenderBerry(struct BlenderBerry* berry, u16 itemId)
+static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, u16 itemId)
 {
     const struct Berry *berryInfo = GetBerryInfo(ITEM_TO_BERRY(itemId));
 
@@ -1535,7 +1535,7 @@ static u8 GetArrowProximity(u16 arrowPos, u8 playerId)
     return PROXIMITY_MISS;
 }
 
-static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct BlenderBerry* playerBerry)
+static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct BlenderBerry *playerBerry)
 {
     u16 opponentSetId = 0;
     u16 opponentBerryId;
@@ -2240,7 +2240,7 @@ static void Blender_DummiedOutFunc(s16 bgX, s16 bgY)
 
 }
 
-static bool8 AreBlenderBerriesSame(struct BlenderBerry* berries, u8 a, u8 b)
+static bool8 AreBlenderBerriesSame(struct BlenderBerry *berries, u8 a, u8 b)
 {
     // First check to itemId is pointless (and wrong anyway?), always false when this is called
     // Only used to determine if two enigma berries are equivalent
@@ -2257,7 +2257,7 @@ static bool8 AreBlenderBerriesSame(struct BlenderBerry* berries, u8 a, u8 b)
         return FALSE;
 }
 
-static u32 CalculatePokeblockColor(struct BlenderBerry* berries, s16 *_flavors, u8 numPlayers, u8 negativeFlavors)
+static u32 CalculatePokeblockColor(struct BlenderBerry *berries, s16 *_flavors, u8 numPlayers, u8 negativeFlavors)
 {
     s16 flavors[FLAVOR_COUNT + 1];
     s32 i, j;
@@ -2481,7 +2481,7 @@ static void CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *p
         flavors[i] = sPokeblockFlavors[i];
 }
 
-static void UNUSED Debug_CalculatePokeblock(struct BlenderBerry* berries, struct Pokeblock* pokeblock, u8 numPlayers, u8 *flavors, u16 maxRPM)
+static void UNUSED Debug_CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *pokeblock, u8 numPlayers, u8 *flavors, u16 maxRPM)
 {
     CalculatePokeblock(berries, pokeblock, numPlayers, flavors, maxRPM);
 }

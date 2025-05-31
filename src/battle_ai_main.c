@@ -465,7 +465,7 @@ void Ai_InitPartyStruct(void)
             u32 j;
             mon = &gPlayerParty[i];
             gAiPartyData->mons[B_SIDE_PLAYER][i].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-            gAiPartyData->mons[B_SIDE_PLAYER][i].heldEffect = ItemId_GetHoldEffect(gAiPartyData->mons[B_SIDE_PLAYER][i].item);
+            gAiPartyData->mons[B_SIDE_PLAYER][i].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_SIDE_PLAYER][i].item);
             gAiPartyData->mons[B_SIDE_PLAYER][i].ability = GetMonAbility(mon);
             for (j = 0; j < MAX_MON_MOVES; j++)
                 gAiPartyData->mons[B_SIDE_PLAYER][i].moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
@@ -996,6 +996,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     // move data
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
     s32 moveType;
     u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
     struct AiLogicData *aiData = gAiLogicData;
@@ -1027,8 +1028,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         RETURN_SCORE_MINUS(20);
 
     // Don't setup into expected Focus Punch.
-    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS && moveEffect != EFFECT_SLEEP && GetMoveEffect(predictedMove) != EFFECT_FOCUS_PUNCH
-        && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS
+        && nonVolatileStatus != MOVE_EFFECT_SLEEP
+        && GetMoveEffect(predictedMove) != EFFECT_FOCUS_PUNCH
+        && GetMoveEffect(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == EFFECT_FOCUS_PUNCH
+        && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
     {
         RETURN_SCORE_MINUS(20);
     }
@@ -1091,9 +1095,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case ABILITY_MAGIC_GUARD:
             switch (moveEffect)
             {
-            case EFFECT_POISON:
-            case EFFECT_WILL_O_WISP:
-            case EFFECT_TOXIC:
             case EFFECT_LEECH_SEED:
                 ADJUST_SCORE(-5);
                 break;
@@ -1104,13 +1105,23 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             default:
                 break;
             }
+
+            switch(nonVolatileStatus)
+            {
+            case MOVE_EFFECT_POISON:
+            case MOVE_EFFECT_TOXIC:
+            case MOVE_EFFECT_BURN:
+                ADJUST_SCORE(-5);
+                break;
+            }
+            break;
             break;
         case ABILITY_WONDER_GUARD:
             if (effectiveness < UQ_4_12(2.0))
                 RETURN_SCORE_MINUS(20);
             break;
         case ABILITY_JUSTIFIED:
-            if (moveType == TYPE_DARK && !IsBattleMoveStatus(move))
+            if (moveType == TYPE_DARK && !IsBattleMoveStatus(move) && !IS_TARGETING_PARTNER(battlerAtk, battlerDef))
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_RATTLED:
@@ -1123,11 +1134,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_SWEET_VEIL:
-            if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+            if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_FLOWER_VEIL:
-            if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) && (IsNonVolatileStatusMoveEffect(moveEffect)))
+            if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) && (IsNonVolatileStatusMove(move)))
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_MAGIC_BOUNCE:
@@ -1139,17 +1150,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 RETURN_SCORE_MINUS(20);
             break;
         case ABILITY_COMATOSE:
-            if (IsNonVolatileStatusMoveEffect(moveEffect))
+            if (IsNonVolatileStatusMove(move))
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_SHIELDS_DOWN:
-            if (IsShieldsDownProtected(battlerAtk, aiData->abilities[battlerAtk]) && IsNonVolatileStatusMoveEffect(moveEffect))
+            if (IsShieldsDownProtected(battlerAtk, aiData->abilities[battlerAtk]) && IsNonVolatileStatusMove(move))
                 RETURN_SCORE_MINUS(10);
             break;
         case ABILITY_LEAF_GUARD:
             if ((AI_GetWeather() & B_WEATHER_SUN)
               && aiData->holdEffects[battlerDef] != HOLD_EFFECT_UTILITY_UMBRELLA
-              && IsNonVolatileStatusMoveEffect(moveEffect))
+              && IsNonVolatileStatusMove(move))
                 RETURN_SCORE_MINUS(10);
             break;
         } // def ability checks
@@ -1172,11 +1183,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_SWEET_VEIL:
-                if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+                if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_FLOWER_VEIL:
-                if ((IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)) && (IsNonVolatileStatusMoveEffect(moveEffect) || IsStatLoweringEffect(moveEffect)))
+                if ((IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)) && (IsNonVolatileStatusMove(move) || IsStatLoweringEffect(moveEffect)))
                     RETURN_SCORE_MINUS(10);
                 break;
             case ABILITY_AROMA_VEIL:
@@ -1195,13 +1206,13 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // terrain & effect checks
         if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
         {
-            if (moveEffect == EFFECT_SLEEP || moveEffect == EFFECT_YAWN)
+            if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
                 RETURN_SCORE_MINUS(20);
         }
 
         if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
         {
-            if (IsNonVolatileStatusMoveEffect(moveEffect) || IsConfusionMoveEffect(moveEffect))
+            if (IsNonVolatileStatusMove(move) || IsConfusionMoveEffect(moveEffect))
                 RETURN_SCORE_MINUS(20);
         }
 
@@ -1261,12 +1272,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         default:
             break;  // check move damage
-        case EFFECT_SLEEP:
-            if (!AI_CanPutToSleep(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
-                ADJUST_SCORE(-20);
-            break;
         case EFFECT_EXPLOSION:
             if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE))
                 ADJUST_SCORE(-2);
@@ -1295,7 +1300,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_STUFF_CHEEKS:
-            if (ItemId_GetPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (GetItemPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
                 return 0;   // cannot even select
             //fallthrough
         case EFFECT_DEFENSE_UP:
@@ -1607,9 +1612,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
              || IsBattlerIncapacitated(battlerDef, abilityDef)
              || gBattleMons[battlerDef].status2 & (STATUS2_INFATUATION | STATUS2_CONFUSION)))
                 ADJUST_SCORE(-10);
-            if (HasMoveEffect(battlerAtk, EFFECT_SUBSTITUTE) && !(gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE))
+            if (HasMoveWithEffect(battlerAtk, EFFECT_SUBSTITUTE) && !(gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE))
                 ADJUST_SCORE(-10);
-            if (HasMoveEffect(battlerAtk, EFFECT_SLEEP) && ! (gBattleMons[battlerDef].status1 & STATUS1_SLEEP))
+            if (HasNonVolatileMoveEffect(battlerAtk, MOVE_EFFECT_SLEEP) && ! (gBattleMons[battlerDef].status1 & STATUS1_SLEEP))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_COUNTER:
@@ -1634,13 +1639,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (!ShouldLowerStat(battlerAtk, battlerDef, abilityDef, STAT_SPEED))
                 ADJUST_SCORE(-1);    // may still want to just poison
             //fallthrough
-        case EFFECT_POISON:
-        case EFFECT_TOXIC:
-            if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldPoison(battlerAtk, battlerDef))
-                ADJUST_SCORE(-5);
-            break;
         case EFFECT_LIGHT_SCREEN:
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LIGHTSCREEN
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -1680,18 +1678,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_PARALYZE:
-            if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
-                ADJUST_SCORE(-5);
-            break;
         case EFFECT_SUBSTITUTE:
             if (gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
                 ADJUST_SCORE(-8);
             else if (aiData->hpPercents[battlerAtk] <= 25)
                 ADJUST_SCORE(-10);
-            else if (HasSubstituteIgnoringMove(battlerDef))
+            else if (HasMoveWithFlag(battlerDef, MoveIgnoresSubstitute))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_SHED_TAIL:
@@ -1701,7 +1693,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             else if (aiData->hpPercents[battlerAtk] <= 50)
                 ADJUST_SCORE(-10);
-            else if (HasSubstituteIgnoringMove(battlerDef))
+            else if (HasMoveWithFlag(battlerDef, MoveIgnoresSubstitute))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_LEECH_SEED:
@@ -1974,12 +1966,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (B_MENTAL_HERB >= GEN_5 && aiData->holdEffects[battlerDef] == HOLD_EFFECT_MENTAL_HERB)
                 ADJUST_SCORE(-6);
             break;
-        case EFFECT_WILL_O_WISP:
-            if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
-                ADJUST_SCORE(-5);
-            break;
         case EFFECT_MEMENTO:
             if (CountUsablePartyMons(battlerAtk) == 0 || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -2221,8 +2207,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && move != MOVE_CRAFTY_SHIELD) //These moves have infinite usage
                 {
                     if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp
-                      && aiData->abilities[battlerDef] != ABILITY_MOXIE
-                      && aiData->abilities[battlerDef] != ABILITY_BEAST_BOOST)
+                      && !(IsMoxieTypeAbility(aiData->abilities[battlerDef])))
                     {
                         ADJUST_SCORE(-10); //Don't protect if you're going to faint after protecting
                     }
@@ -2367,7 +2352,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);    // no teammates to assist from
             break;
         case EFFECT_MAGIC_COAT:
-            if (!HasMagicCoatAffectedMove(battlerDef))
+            if (!HasMoveWithFlag(battlerDef, MoveCanBeBouncedBack))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_YAWN:
@@ -2414,8 +2399,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SNATCH:
-            if (!HasSnatchAffectedMove(battlerDef)
-              || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+            if (!HasMoveWithFlag(battlerDef, MoveCanBeSnatched)
+             || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_POWER_TRICK:
@@ -2865,6 +2850,36 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             return 0;   // cannot even select
     } // move effect checks
 
+    // check non-volatile effects
+    switch(nonVolatileStatus)
+    {
+    case MOVE_EFFECT_POISON:
+    case MOVE_EFFECT_TOXIC:
+        if (!AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        if (!ShouldPoison(battlerAtk, battlerDef))
+            ADJUST_SCORE(-5);
+        break;
+    case MOVE_EFFECT_SLEEP:
+        if (!AI_CanPutToSleep(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
+            ADJUST_SCORE(-20);
+        break;
+    case MOVE_EFFECT_PARALYSIS:
+        if (!AI_CanParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        if (!ShouldParalyze(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
+            ADJUST_SCORE(-5);
+        break;
+    case MOVE_EFFECT_BURN:
+        if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
+            ADJUST_SCORE(-5);
+        break;
+    }
+
     // Choice items
     if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]) && IsBattlerItemEnabled(battlerAtk))
     {
@@ -2929,13 +2944,19 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 atkPartnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
     u32 atkPartnerHoldEffect = aiData->holdEffects[BATTLE_PARTNER(battlerAtk)];
     enum BattleMoveEffects partnerEffect = GetMoveEffect(aiData->partnerMove);
-    bool32 partnerProtecting = (partnerEffect == EFFECT_PROTECT);
+    bool32 partnerProtecting = IsAllyProtectingFromMove(battlerAtk, move, aiData->partnerMove) && !MoveIgnoresProtect(move);
     bool32 attackerHasBadAbility = (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating < 0);
     bool32 partnerHasBadAbility = (gAbilitiesInfo[atkPartnerAbility].aiRating < 0);
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
 
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
+
+    u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
+    u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
+    bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING)
+        && !partnerProtecting && IsBattlerAlive(battlerAtkPartner);
+    bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
 
     // check what effect partner is using
     if (aiData->partnerMove != 0)
@@ -2987,7 +3008,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_HELPING_HAND:
         if (!IsBattlerAlive(battlerAtkPartner) || !HasDamagingMove(battlerAtkPartner))
-            ADJUST_SCORE(-5);
+            ADJUST_SCORE(-20);
         break;
     case EFFECT_PERISH_SONG:
         if (aiData->partnerMove != 0 && HasTrappingMoveEffect(battlerAtkPartner))
@@ -3054,9 +3075,103 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         break;
     } // global move effect check
 
+    // Specific logic for spread moves.
+    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+    {
+        // Don't kill your partner for no reason.
+        if (wouldPartnerFaint)
+        {
+            // If it kills both opponents, that's a good reason.
+            if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING)
+                && CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+            {
+                switch (effect)
+                {
+                case EFFECT_EXPLOSION:
+                    if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_WILL_SUICIDE))
+                    {
+                        RETURN_SCORE_PLUS(10);
+                    }
+                    break;
+                default:
+                    RETURN_SCORE_PLUS(10);
+                    break;
+                }
+            }
+            // Both opponents can kill the partner
+            else if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtk), battlerAtkPartner)
+                && (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtkPartner)))
+            {
+                // The spread move should kill an opponent.
+                if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING)
+                    || CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+                {
+                    ADJUST_SCORE(WEAK_EFFECT);
+                }
+
+                // Alternatively, it benefits from the ally's death, and it will probably die anyway.
+                if (IsMoxieTypeAbility(aiData->abilities[battlerAtk]))
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+                if ((aiData->abilities[battlerAtk] == ABILITY_RECEIVER) && !partnerHasBadAbility)
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+                if (HasMove(battlerAtk, MOVE_LAST_RESPECTS))
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+            }
+            // It can kill one opponent when killing its ally, and its ally is not in extreme danger.
+            // This is easy for the player to cheese.
+            else if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING)
+                || CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+            {
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
+                {
+                    RETURN_SCORE_PLUS(10);
+                }
+                else
+                {
+                    ADJUST_SCORE(-DECENT_EFFECT);
+                }
+            }
+            // No reason to kill partner has been found.
+            else
+            {
+                RETURN_SCORE_MINUS(10);
+            }
+        }
+
+        // Partner will not faint.
+        else {
+
+            // Triggering your ally's hold item should only be done deliberately with a spread move.
+            switch (atkPartnerHoldEffect)
+            {
+            case HOLD_EFFECT_WEAKNESS_POLICY:
+                if (aiData->effectiveness[battlerAtk][battlerAtkPartner][gAiThinkingStruct->movesetIndex] >= UQ_4_12(2.0) && isFriendlyFireOK)
+                {
+                    ADJUST_SCORE(GOOD_EFFECT);
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
     // check specific target
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
     {
+        bool32 isMoveAffectedByPartnerAbility = TRUE;
+
+        if (wouldPartnerFaint)
+        {
+            RETURN_SCORE_MINUS(30);
+        }
+
         // partner ability checks
         if (!partnerProtecting && moveTarget != MOVE_TARGET_BOTH && !DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
         {
@@ -3066,95 +3181,241 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (MoveAlwaysCrits(move)
                     && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
                     && AI_IsFaster(battlerAtk, battlerAtkPartner, move)
-                    && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+                    && isFriendlyFireOK)
                 {
-                    RETURN_SCORE_PLUS(GOOD_EFFECT);
+                    if (MoveAlwaysCrits(move))
+                    {
+                        if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                        {
+                            ADJUST_SCORE(DECENT_EFFECT);
+                        }
+                        RETURN_SCORE_PLUS(GOOD_EFFECT);
+                    }
+                // todo: figuring out a non-guaranteed crit roll that's useful
                 }
-                break;
-            case ABILITY_VOLT_ABSORB:
-                if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                else
                 {
-                    RETURN_SCORE_MINUS(10);
-                }
-                break;  // handled in AI_HPAware
-            case ABILITY_MOTOR_DRIVE:
-                if (moveType == TYPE_ELECTRIC && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED))
-                {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_LIGHTNING_ROD:
-                if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5
-                    && moveType == TYPE_ELECTRIC
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
+            case ABILITY_MOTOR_DRIVE:
+            case ABILITY_VOLT_ABSORB:
+                if (moveType == TYPE_ELECTRIC)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    else if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                    else
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
-            case ABILITY_WATER_ABSORB:
-            case ABILITY_DRY_SKIN:
             case ABILITY_EARTH_EATER:
-                if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+            case ABILITY_LEVITATE:
+                if (moveType == TYPE_GROUND)
                 {
-                    RETURN_SCORE_MINUS(10);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    else if (atkPartnerAbility == ABILITY_EARTH_EATER && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_HP_AWARE))
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;  // handled in AI_HPAware
+            case ABILITY_DRY_SKIN:
+            case ABILITY_WATER_ABSORB:
             case ABILITY_STORM_DRAIN:
-                if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5
-                    && moveType == TYPE_WATER
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPATK))
+            if (moveType == TYPE_WATER)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_STORM_DRAIN)
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    else if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                    else
+                    {
+                        RETURN_SCORE_MINUS(10);
+                    }
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_WATER_COMPACTION:
-                if (moveType == TYPE_WATER && GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) >= 4)
+                if (moveType == TYPE_WATER && isFriendlyFireOK
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);   // only mon with this ability is weak to water so only make it okay if we do very little damage
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
                 }
-                RETURN_SCORE_MINUS(10);
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
+                }
+                break;
+            case ABILITY_STEAM_ENGINE:
+                if (isFriendlyFireOK && (moveType == TYPE_WATER || moveType == TYPE_FIRE)
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                {
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
+                }
+                break;
+            case ABILITY_THERMAL_EXCHANGE:
+                if (moveType == TYPE_FIRE && isFriendlyFireOK
+                    && !IsBattleMoveStatus(move)
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                {
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    }
+
+                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
+                }
                 break;
             case ABILITY_FLASH_FIRE:
-                if (moveType == TYPE_FIRE
-                    && HasMoveWithType(battlerAtkPartner, TYPE_FIRE)
-                    && !gDisableStructs[battlerAtkPartner].flashFireBoosted)
+            case ABILITY_WELL_BAKED_BODY:
+                if (moveType == TYPE_FIRE)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_SAP_SIPPER:
-                if (moveType == TYPE_GRASS
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK))
+                if (moveType == TYPE_GRASS)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+
+                    if (ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
+                    {
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    }
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_JUSTIFIED:
-                if (moveType == TYPE_DARK
+                if (moveType == TYPE_DARK && isFriendlyFireOK
                     && !IsBattleMoveStatus(move)
-                    && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                    && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(GOOD_EFFECT);
+                    }
+
+                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    {
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    }
+
+                    ADJUST_SCORE(WEAK_EFFECT); // Beat Up is handled later
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_RATTLED:
-                if (!IsBattleMoveStatus(move)
+                if (!IsBattleMoveStatus(move) && isFriendlyFireOK
                     && (moveType == TYPE_DARK || moveType == TYPE_GHOST || moveType == TYPE_BUG)
-                    && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_SPEED)
-                    && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+                    && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             case ABILITY_CONTRARY:
-                if (IsStatLoweringEffect(effect))
+            case ABILITY_DEFIANT:
+            case ABILITY_COMPETITIVE:
+                if (IsStatLoweringEffect(effect) && isFriendlyFireOK && ShouldTriggerAbility(battlerAtkPartner, atkPartnerAbility))
                 {
-                    RETURN_SCORE_PLUS(DECENT_EFFECT);
+                    if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+                    {
+                        ADJUST_SCORE(GOOD_EFFECT);
+                    }
+                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                }
+                else
+                {
+                    isMoveAffectedByPartnerAbility = FALSE;
                 }
                 break;
             }
@@ -3163,6 +3424,11 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         // attacker move effects specifically targeting partner
         if (!partnerProtecting)
         {
+            if (wouldPartnerFaint)
+            {
+                RETURN_SCORE_MINUS(30);
+            }
+
             switch (effect)
             {
             case EFFECT_SPICY_EXTRACT:
@@ -3200,11 +3466,16 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_BEAT_UP:
                 if (atkPartnerAbility == ABILITY_JUSTIFIED
                   && moveType == TYPE_DARK
+                  && !DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move)
                   && !IsBattleMoveStatus(move)
                   && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
                   && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                  && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING))
+                  && !wouldPartnerFaint)
                 {
+                    if (isFriendlyFireOK)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
                 }
                 break;
@@ -3298,7 +3569,12 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             } // attacker move effects
         } // check partner protecting
 
-        ADJUST_SCORE(-30); // otherwise, don't target partner
+        if ((isMoveAffectedByPartnerAbility && (score <= AI_SCORE_DEFAULT)) || !isMoveAffectedByPartnerAbility)
+        {
+            RETURN_SCORE_MINUS(10);
+        }
+
+
     }
     else // checking opponent
     {
@@ -3356,12 +3632,13 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING);
+    u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     return (IsDoubleBattle()
          && noOfHitsToFaintPartner != 0 // Immunity check
          && IsBattlerAlive(partnerBattler)
          && GetBattlerMoveTargetType(battlerAtk, move) == MOVE_TARGET_FOES_AND_ALLY
-         && !(noOfHitsToFaintPartner < 4 && hitsToFaintOpposingBattler == 1)
-         && noOfHitsToFaintPartner < 7);
+         && !(noOfHitsToFaintPartner < friendlyFireThreshold && hitsToFaintOpposingBattler == 1)
+         && noOfHitsToFaintPartner < (friendlyFireThreshold * 2));
 }
 
 static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
@@ -3529,10 +3806,26 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(-20); // Force switch if all your attacking moves are physical and you have Natural Cure.
     }
 
+    // Non-volatile statuses
+    switch(GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_POISON:
+    case MOVE_EFFECT_TOXIC:
+        IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
+        break;
+    case MOVE_EFFECT_SLEEP:
+        IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
+        break;
+    case MOVE_EFFECT_PARALYSIS:
+        IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
+        break;
+    case MOVE_EFFECT_BURN:
+        IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
+        break;
+    }
     // move effect checks
     switch (moveEffect)
     {
-    case EFFECT_SLEEP:
     case EFFECT_YAWN:
         IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
         break;
@@ -3768,10 +4061,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (ShouldRecover(battlerAtk, battlerDef, move, 50, AI_DEFENDING))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
-    case EFFECT_TOXIC:
-    case EFFECT_POISON:
-        IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
-        break;
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_AURORA_VEIL:
@@ -3791,8 +4080,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         {
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_SLP
               || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_STATUS
-              || HasMoveEffect(EFFECT_SLEEP_TALK, battlerAtk)
-              || HasMoveEffect(EFFECT_SNORE, battlerAtk)
+              || HasMoveWithEffect(EFFECT_SLEEP_TALK, battlerAtk)
+              || HasMoveWithEffect(EFFECT_SNORE, battlerAtk)
               || aiData->abilities[battlerAtk] == ABILITY_SHED_SKIN
               || aiData->abilities[battlerAtk] == ABILITY_EARLY_BIRD
               || (AI_GetWeather() & B_WEATHER_RAIN && gWishFutureKnock.weatherDuration != 1 && aiData->abilities[battlerAtk] == ABILITY_HYDRATION && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_UTILITY_UMBRELLA))
@@ -3812,16 +4101,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LASER_FOCUS:
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
-          || aiData->abilities[battlerAtk] == ABILITY_SNIPER
-          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
-          || HasHighCritRatioMove(battlerAtk))
+         || aiData->abilities[battlerAtk] == ABILITY_SNIPER
+         || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
+         || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_CONFUSE:
         IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
-        break;
-    case EFFECT_PARALYZE:
-        IncreaseParalyzeScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_SUBSTITUTE:
     case EFFECT_SHED_TAIL:
@@ -3837,7 +4123,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_LEECH_SEED:
         if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)
           || gStatuses3[battlerDef] & STATUS3_LEECHSEED
-          || HasMoveEffect(battlerDef, EFFECT_RAPID_SPIN)
+          || HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN)
           || aiData->abilities[battlerDef] == ABILITY_LIQUID_OOZE
           || aiData->abilities[battlerDef] == ABILITY_MAGIC_GUARD)
             break;
@@ -3903,20 +4189,32 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_ENCORE:
+    {
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (gDisableStructs[battlerDef].encoreTimer == 0
+
+        bool32 encourage = gBattleMoveEffects[GetMoveEffect(gLastMoves[battlerDef])].encourageEncore;
+
+        switch(GetMoveNonVolatileStatus(gLastMoves[battlerDef]))
+        {
+        case MOVE_EFFECT_POISON:
+        case MOVE_EFFECT_PARALYSIS:
+            encourage = TRUE;
+            break;
+        }
+        if (gDisableStructs[battlerDef].encoreTimer == 0
         && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
-        && (gBattleMoveEffects[GetMoveEffect(gLastMoves[battlerDef])].encourageEncore))
+        && (encourage))
             ADJUST_SCORE(BEST_EFFECT);
         break;
+    }
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
         if (!IsWakeupTurn(battlerAtk) && gBattleMons[battlerAtk].status1 & STATUS1_SLEEP)
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:
-        if (HasMoveEffect(battlerAtk, EFFECT_OHKO))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO))
             ADJUST_SCORE(GOOD_EFFECT);
         else if (HasMoveWithLowAccuracy(battlerAtk, battlerDef, 85, TRUE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]))
             ADJUST_SCORE(GOOD_EFFECT);
@@ -4000,7 +4298,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
              && IsPinchBerryItemEffect(aiData->holdEffects[battlerAtk]))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if ((gBattleMons[battlerAtk].hp > 1) // Only spam endure for Flail/Reversal if you're not at Min Health
-             && (HasMoveEffect(battlerAtk, EFFECT_FLAIL) || HasMoveEffect(battlerAtk, EFFECT_ENDEAVOR)))
+             && (HasMoveWithEffect(battlerAtk, EFFECT_FLAIL) || HasMoveWithEffect(battlerAtk, EFFECT_ENDEAVOR)))
                 ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
@@ -4040,41 +4338,41 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SMOOTH_ROCK)
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveEffect(battlerDef, EFFECT_MORNING_SUN)
-              || HasMoveEffect(battlerDef, EFFECT_SYNTHESIS)
-              || HasMoveEffect(battlerDef, EFFECT_MOONLIGHT))
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+              || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+              || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
     case EFFECT_HAIL:
         if (ShouldSetHail(battlerAtk, aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk]))
         {
-            if ((HasMoveEffect(battlerAtk, EFFECT_AURORA_VEIL) || HasMoveEffect(BATTLE_PARTNER(battlerAtk), EFFECT_AURORA_VEIL))
+            if ((HasMoveWithEffect(battlerAtk, EFFECT_AURORA_VEIL) || HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_AURORA_VEIL))
               && ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
                 ADJUST_SCORE(GOOD_EFFECT);
 
             ADJUST_SCORE(DECENT_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ICY_ROCK)
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveEffect(battlerDef, EFFECT_MORNING_SUN)
-              || HasMoveEffect(battlerDef, EFFECT_SYNTHESIS)
-              || HasMoveEffect(battlerDef, EFFECT_MOONLIGHT))
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+              || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+              || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
     case EFFECT_SNOWSCAPE:
         if (ShouldSetSnow(battlerAtk, aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk]))
         {
-            if ((HasMoveEffect(battlerAtk, EFFECT_AURORA_VEIL) || HasMoveEffect(BATTLE_PARTNER(battlerAtk), EFFECT_AURORA_VEIL))
+            if ((HasMoveWithEffect(battlerAtk, EFFECT_AURORA_VEIL) || HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_AURORA_VEIL))
               && ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
                 ADJUST_SCORE(GOOD_EFFECT);
 
             ADJUST_SCORE(DECENT_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ICY_ROCK)
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveEffect(battlerDef, EFFECT_MORNING_SUN)
-              || HasMoveEffect(battlerDef, EFFECT_SYNTHESIS)
-              || HasMoveEffect(battlerDef, EFFECT_MOONLIGHT))
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+              || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+              || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
@@ -4084,10 +4382,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_DAMP_ROCK)
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveEffect(battlerDef, EFFECT_MORNING_SUN)
-              || HasMoveEffect(battlerDef, EFFECT_SYNTHESIS)
-              || HasMoveEffect(battlerDef, EFFECT_SOLAR_BEAM)
-              || HasMoveEffect(battlerDef, EFFECT_MOONLIGHT))
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+              || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+              || HasMoveWithEffect(battlerDef, EFFECT_SOLAR_BEAM)
+              || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
                 ADJUST_SCORE(WEAK_EFFECT);
             if (HasMoveWithType(battlerDef, TYPE_FIRE) || HasMoveWithType(BATTLE_PARTNER(battlerDef), TYPE_FIRE))
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -4101,7 +4399,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(WEAK_EFFECT);
             if (HasMoveWithType(battlerDef, TYPE_WATER) || HasMoveWithType(BATTLE_PARTNER(battlerDef), TYPE_WATER))
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (HasMoveEffect(battlerDef, EFFECT_THUNDER) || HasMoveEffect(BATTLE_PARTNER(battlerDef), EFFECT_THUNDER))
+            if (HasMoveWithFlag(battlerDef, MoveHas50AccuracyInSun) || HasMoveWithFlag(BATTLE_PARTNER(battlerDef), MoveHas50AccuracyInSun))
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
@@ -4133,7 +4431,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_DEFENSE_CURL:
-        if (HasMoveEffect(battlerAtk, EFFECT_ROLLOUT) && !(gBattleMons[battlerAtk].status2 & STATUS2_DEFENSE_CURL))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_ROLLOUT) && !(gBattleMons[battlerAtk].status2 & STATUS2_DEFENSE_CURL))
             ADJUST_SCORE(DECENT_EFFECT);
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
@@ -4146,16 +4444,16 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_STOCKPILE:
         if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
             break;
-        if (HasMoveEffect(battlerAtk, EFFECT_SWALLOW) || HasMoveEffect(battlerAtk, EFFECT_SPIT_UP))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_SWALLOW) || HasMoveWithEffect(battlerAtk, EFFECT_SPIT_UP))
             ADJUST_SCORE(DECENT_EFFECT);
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPDEF));
         break;
     case EFFECT_SWAGGER:
     case EFFECT_FLATTER:
-        if (HasMoveEffect(battlerAtk, EFFECT_FOUL_PLAY)
-         || HasMoveEffect(battlerAtk, EFFECT_PSYCH_UP)
-         || HasMoveEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY)
+         || HasMoveWithEffect(battlerAtk, EFFECT_PSYCH_UP)
+         || HasMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
             ADJUST_SCORE(DECENT_EFFECT);
         if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
             ADJUST_SCORE(GOOD_EFFECT);
@@ -4202,9 +4500,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_TORMENT:
-        break;
-    case EFFECT_WILL_O_WISP:
-        IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_FOLLOW_ME:
         if (isDoubleBattle
@@ -4258,7 +4553,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 ADJUST_SCORE(DECENT_EFFECT);
             break;
         case HOLD_EFFECT_IRON_BALL:
-            if (!HasMoveEffect(battlerDef, EFFECT_FLING) || !IsBattlerGrounded(battlerDef))
+            if (!HasMoveWithEffect(battlerDef, EFFECT_FLING) || !IsBattlerGrounded(battlerDef))
                 ADJUST_SCORE(DECENT_EFFECT);
             break;
         case HOLD_EFFECT_LAGGING_TAIL:
@@ -4308,7 +4603,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case HOLD_EFFECT_IRON_BALL:
-                    if (HasMoveEffect(battlerAtk, EFFECT_FLING))
+                    if (HasMoveWithEffect(battlerAtk, EFFECT_FLING))
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case HOLD_EFFECT_LAGGING_TAIL:
@@ -4327,7 +4622,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             switch (aiData->holdEffects[battlerDef])
             {
             case HOLD_EFFECT_IRON_BALL:
-                if (HasMoveEffect(battlerDef, EFFECT_FLING))
+                if (HasMoveWithEffect(battlerDef, EFFECT_FLING))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case HOLD_EFFECT_LAGGING_TAIL:
@@ -4361,7 +4656,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (aiData->abilities[battlerAtk] == ABILITY_RIPEN)
         {
             u32 item = GetUsedHeldItem(battlerAtk);
-            u32 toHeal = (ItemId_GetHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / ItemId_GetHoldEffectParam(item);
+            u32 toHeal = (GetItemHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / GetItemHoldEffectParam(item);
 
             if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -4564,7 +4859,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_PLEDGE:
-        if (isDoubleBattle && HasMoveEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
+        if (isDoubleBattle && HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
             ADJUST_SCORE(GOOD_EFFECT); // Partner might use pledge move
         break;
     case EFFECT_TRICK_ROOM:
@@ -4648,7 +4943,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_SOAK:
-        if (HasMoveWithType(battlerAtk, TYPE_ELECTRIC) || HasMoveWithType(battlerAtk, TYPE_GRASS) || (HasMoveEffect(battlerAtk, EFFECT_SUPER_EFFECTIVE_ON_ARG) && GetMoveArgType(move) == TYPE_WATER) )
+        if (HasMoveWithType(battlerAtk, TYPE_ELECTRIC) || HasMoveWithType(battlerAtk, TYPE_GRASS) || (HasMoveWithEffect(battlerAtk, EFFECT_SUPER_EFFECTIVE_ON_ARG) && GetMoveArgType(move) == TYPE_WATER) )
             ADJUST_SCORE(DECENT_EFFECT); // Get some super effective moves
         break;
     case EFFECT_THIRD_TYPE:
@@ -4775,7 +5070,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             switch (aiData->holdEffects[battlerDef])
             {
             case HOLD_EFFECT_IRON_BALL:
-                if (HasMoveEffect(battlerDef, EFFECT_FLING))
+                if (HasMoveWithEffect(battlerDef, EFFECT_FLING))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case HOLD_EFFECT_LAGGING_TAIL:
@@ -4917,13 +5212,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 case MOVE_EFFECT_BUG_BITE:   // And pluck
                     if (gBattleMons[battlerDef].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                         break;
-                    else if (ItemId_GetPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
+                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case MOVE_EFFECT_INCINERATE:
                     if (gBattleMons[battlerDef].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                         break;
-                    else if (ItemId_GetPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
+                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case MOVE_EFFECT_STEAL_ITEM:
@@ -4939,7 +5234,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                         && aiData->items[battlerDef] != ITEM_NONE
                         && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
                         && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
-                        && !HasMoveEffect(battlerAtk, EFFECT_ACROBATICS)
+                        && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
                         && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
                         {
                             switch (aiData->holdEffects[battlerDef])
@@ -4964,7 +5259,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                                     ADJUST_SCORE(DECENT_EFFECT);
                                 break;
                             case HOLD_EFFECT_IRON_BALL:
-                                if (HasMoveEffect(battlerAtk, EFFECT_FLING))
+                                if (HasMoveWithEffect(battlerAtk, EFFECT_FLING))
                                     ADJUST_SCORE(DECENT_EFFECT);
                                 break;
                             case HOLD_EFFECT_LAGGING_TAIL:
@@ -5002,7 +5297,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                     }
                     break;
                 case MOVE_EFFECT_WRAP:
-                    if (!HasMoveEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
+                    if (!HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
                         ADJUST_SCORE(BEST_EFFECT);
                     break;
                 case MOVE_EFFECT_SALT_CURE:
@@ -5099,8 +5394,7 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_ACCURACY_DOWN_2:
     case EFFECT_EVASION_DOWN_2:
     case EFFECT_REFLECT:
-    case EFFECT_POISON:
-    case EFFECT_PARALYZE:
+    case EFFECT_NON_VOLATILE_STATUS:
     case EFFECT_SUBSTITUTE:
     case EFFECT_LEECH_SEED:
     case EFFECT_MINIMIZE:
@@ -5111,7 +5405,6 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_DEFENSE_CURL:
     case EFFECT_TORMENT:
     case EFFECT_FLATTER:
-    case EFFECT_WILL_O_WISP:
     case EFFECT_INGRAIN:
     case EFFECT_IMPRISON:
     case EFFECT_TICKLE:
@@ -5269,7 +5562,7 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef)
       || CountUsablePartyMons(battlerAtk) == 0
       || !IsBattleMoveStatus(move)
-      || !HasMoveEffect(battlerAtk, EFFECT_BATON_PASS)
+      || !HasMoveWithEffect(battlerAtk, EFFECT_BATON_PASS)
       || (!AI_CanBattlerEscape(battlerAtk) && IsBattlerTrapped(battlerDef, battlerAtk)))
         return score;
 
@@ -5480,7 +5773,6 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_SPECIAL_DEFENSE_DOWN_2:
             case EFFECT_ACCURACY_DOWN_2:
             case EFFECT_EVASION_DOWN_2:
-            case EFFECT_POISON:
             case EFFECT_PAIN_SPLIT:
             case EFFECT_PERISH_SONG:
             case EFFECT_SAFEGUARD:
@@ -5494,6 +5786,13 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-2);
                 break;
             default:
+                break;
+            }
+
+            switch(GetMoveNonVolatileStatus(move))
+            {
+            case MOVE_EFFECT_POISON:
+                ADJUST_SCORE(-2);
                 break;
             }
         }
@@ -5522,15 +5821,15 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_TRICK_ROOM:
-        if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && !HasMoveEffect(battlerDef, EFFECT_TRICK_ROOM))
+        if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && !HasMoveWithEffect(battlerDef, EFFECT_TRICK_ROOM))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_MAGIC_ROOM:
-        if (!(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) && !HasMoveEffect(battlerDef, EFFECT_MAGIC_ROOM))
+        if (!(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) && !HasMoveWithEffect(battlerDef, EFFECT_MAGIC_ROOM))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_WONDER_ROOM:
-        if (!(gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && !HasMoveEffect(battlerDef, EFFECT_WONDER_ROOM))
+        if (!(gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && !HasMoveWithEffect(battlerDef, EFFECT_WONDER_ROOM))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_GRAVITY:
@@ -5579,19 +5878,19 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SUNNY_DAY:
-        if (!(AI_GetWeather() & (B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_RAIN_DANCE:
-        if (!(AI_GetWeather() & (B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_HAIL:
-        if (!(AI_GetWeather() & (B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SNOWSCAPE:
-        if (!(AI_GetWeather() & (B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     default:
