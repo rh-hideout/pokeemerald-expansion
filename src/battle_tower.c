@@ -2792,7 +2792,7 @@ static void AwardBattleTowerRibbons(void)
         }
         if (ribbons[0].count > NUM_CUTIES_RIBBONS)
         {
-            TryPutSpotTheCutiesOnAir(&gSaveBlock1Ptr->playerParty[ribbons[0].partyIndex], ribbonType);
+            TryPutSpotTheCutiesOnAir(GetSavedPlayerPartyMon(ribbons[0].partyIndex), ribbonType);
         }
     }
 }
