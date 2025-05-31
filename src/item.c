@@ -601,22 +601,30 @@ void MoveItemSlotInPocket(u32 pocketId, u32 from, u32 to)
 {
     if (from != to)
     {
-        s16 i, count;
+        u32 i;
+        s8 shift = -1;
         struct BagPocket *pocket = &gBagPockets[pocketId];
-        struct ItemSlot firstSlot = pocket->itemSlots[from];
 
+        // Record the values at "from"
+        u16 fromItemId = GetBagItemIdPocket(pocket, from),
+            fromQuantity = GetBagItemQuantityPocket(pocket, from);
+
+        // Shuffle items between "to" and "from"
         if (to > from)
         {
             to--;
-            for (i = from, count = to; i < count; i++)
-                pocket->itemSlots[i] = pocket->itemSlots[i + 1];
+            shift = 1;
         }
-        else
+
+        for (i = from; i == to - shift; i += shift)
         {
-            for (i = from, count = to; i > count; i--)
-                pocket->itemSlots[i] = pocket->itemSlots[i - 1];
+            SetBagItemIdPocket(pocket, i, GetBagItemIdPocket(pocket, i + shift));
+            SetBagItemQuantityPocket(pocket, i, GetBagItemQuantityPocket(pocket, i + shift));
         }
-        pocket->itemSlots[to] = firstSlot;
+
+        // Move the saved "from" to "to"
+        SetBagItemIdPocket(pocket, to, fromItemId);
+        SetBagItemQuantityPocket(pocket, to, fromQuantity);
     }
 }
 
