@@ -504,9 +504,9 @@ def GetIMonInfoStringFromIndex(index):
 
 def GetMapGroupEnum(string, index = 0):
     if "MAP_" in string and index == 0:
-        return "MAP_GROUP(" + string[4:len(string)] + ")"
+        return "MAP_GROUP(" + string + ")"
     elif "MAP_" in string and index != 0:
-        return "MAP_NUM(" + string[4:len(string)] + ")"
+        return "MAP_NUM(" + string + ")"
     return index
 
 

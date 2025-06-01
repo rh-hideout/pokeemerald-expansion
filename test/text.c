@@ -93,7 +93,7 @@ TEST("Move descriptions fit on Pokemon Summary Screen")
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 152;
     u32 move = MOVE_NONE;
-    for (i = 1; i < MOVES_COUNT; i++)
+    for (i = 1; i < MOVES_COUNT_ALL; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveDescription(i)) { move = i; }
     }
@@ -810,6 +810,7 @@ TEST("Battle strings fit on the battle message window")
     default:
         break;
     }
+    EXPECT(gBattleStringsTable[battleStringId] != NULL);
     BattleStringExpandPlaceholders(gBattleStringsTable[battleStringId], battleString, BATTLE_STRING_BUFFER_SIZE);
     DebugPrintf("Battle String ID %d: %S", battleStringId, battleString);
     for (j = 1;; j++)

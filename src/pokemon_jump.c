@@ -672,7 +672,7 @@ static void RecvLinkData_Leader(void)
         sPokemonJump->allPlayersReady = TRUE;
 }
 
-static bool32 (* const sPokeJumpLeaderFuncs[])(void) =
+static bool32 (*const sPokeJumpLeaderFuncs[])(void) =
 {
     [FUNC_GAME_INTRO]     = GameIntro_Leader,
     [FUNC_WAIT_ROUND]     = WaitRound_Leader,
@@ -771,7 +771,7 @@ static void RecvLinkData_Member(void)
     }
 }
 
-static bool32 (* const sPokeJumpMemberFuncs[])(void) =
+static bool32 (*const sPokeJumpMemberFuncs[])(void) =
 {
     [FUNC_GAME_INTRO]     = GameIntro_Member,
     [FUNC_WAIT_ROUND]     = WaitRound_Member,
@@ -2580,7 +2580,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 {
     struct SpriteTemplate spriteTemplate;
     struct SpriteSheet spriteSheet;
-    struct CompressedSpritePalette spritePalette;
+    struct SpritePalette spritePalette;
     u8 *buffer;
     u8 *unusedBuffer;
     u8 subpriority;
@@ -2608,7 +2608,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 
         spritePalette.data = GetMonSpritePalFromSpeciesAndPersonality(monInfo->species, monInfo->isShiny, monInfo->personality);
         spritePalette.tag = multiplayerId;
-        LoadCompressedSpritePalette(&spritePalette);
+        LoadSpritePalette(&spritePalette);
 
         Free(buffer);
         Free(unusedBuffer);
