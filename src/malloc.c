@@ -101,6 +101,10 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
             while (block != head);
             Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s:%d, %s: OOM allocating %d bytes", gTestRunnerState.test->filename, SourceLine(0), location, size);
 #endif
+            if (location)
+            {
+                DebugPrintfLevel(MGBA_LOG_ERROR, "Alloc location: [%s]", location);
+            }
             AGB_ASSERT(FALSE);
             return NULL;
         }
@@ -111,8 +115,6 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
 
 void FreeInternal(void *heapStart, void *pointer)
 {
-    AGB_ASSERT(pointer != NULL);
-
     if (pointer)
     {
         struct MemBlock *head = (struct MemBlock *)heapStart;
