@@ -1300,21 +1300,21 @@ gBattleAnimMove_DarkPulse::
 	fadetobg BG_DARK
 	waitbgfadein
 	delay 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	createvisualtask AnimTask_SpiteTargetShadow, 2
 	loopsewithpan SE_M_PSYBEAM, SOUND_PAN_TARGET, 20, 3
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	delay 8
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1D09, 12
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(9, 8, 7), 12
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	delay 1
@@ -1482,19 +1482,19 @@ gBattleAnimMove_BugBuzz::
 	monbg ANIM_DEF_PARTNER
 	call SetBugBg
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 29, -12, 0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -12, -29, 1
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 12, -29, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -29, -12, 0
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 24, -24, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -24, -24, 0
@@ -1628,7 +1628,7 @@ gBattleAnimMove_VacuumWave::
 	setalpha 12, 8
 	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 2, 8, -8, ANIM_TARGET, 2
 	createsprite gFistFootSpriteTemplate, ANIM_ATTACKER, 3, 8, 0, 8, 1, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 1, 0, 0x7FFF, 3
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 1, 0, RGB_WHITE, 3
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	waitforvisualfinish
@@ -3029,19 +3029,19 @@ gBattleAnimMove_Chatter::
 	loadspritegfx ANIM_TAG_MUSIC_NOTES
 	monbg ANIM_DEF_PARTNER
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1f, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createvisualtask SoundTask_PlayDoubleCry, 2, ANIM_ATTACKER, DOUBLE_CRY_GROWL
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 0x1d, -12, 0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -12, 0xffe3, 1
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1f, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createvisualtask SoundTask_PlayDoubleCry, 2, ANIM_ATTACKER, DOUBLE_CRY_GROWL
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 12, 0xffe3, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 0xffe3, -12, 0
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 0x1f, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createvisualtask SoundTask_PlayDoubleCry, 2, ANIM_ATTACKER, DOUBLE_CRY_GROWL
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 0x18, 0xffe8, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 0xffe8, 0xffe8, 0
@@ -4841,22 +4841,22 @@ gBattleAnimMove_HealPulse::
 	loadspritegfx ANIM_TAG_BLUE_STAR
 	loadspritegfx ANIM_TAG_THIN_RING
 	playsewithpan SE_M_MORNING_SUN, SOUND_PAN_TARGET
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 13293, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(13, 31, 12), 8
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, -16, 32, -3, 1
 	delay 3
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, 16, 32, -3, -1
 	delay 3
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 13293, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(13, 31, 12), 8
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, 32, 32, -3, 1
 	delay 3
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, -32, 32, -3, 1
 	delay 3
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 13293, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(13, 31, 12), 8
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, 0, 32, -3, 1
 	delay 3
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, -8, 32, -3, 1
 	delay 3
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 13293, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB(13, 31, 12), 8
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, -8, 32, -3, 1
 	delay 3
 	createsprite gPresentHealParticleSpriteTemplate, ANIM_TARGET, 4, 24, 32, -3, 1
@@ -6761,7 +6761,7 @@ gBattleAnimMove_RelicSong::
 	waitforvisualfinish
 	createvisualtask SoundTask_PlayCryWithEcho, 2, FALSE
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x1d, 0xfff4, 0x0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xfff4, 0xffe3, 0x1
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x7, 0x0, 0xc
@@ -6769,7 +6769,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x6, 0x1, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xc, 0xffe3, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe3, 0xfff4, 0x0
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x1, 0x2, 0xc
@@ -6777,7 +6777,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x2, 0x3, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x18, 0xffe8, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe8, 0xffe8, 0x0
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x3, 0x0, 0xc
@@ -6785,7 +6785,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x2, 0x1, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x1d, 0xfff4, 0x0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xfff4, 0xffe3, 0x1
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x5, 0x2, 0xc
@@ -6793,7 +6793,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x6, 0x3, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xc, 0xffe3, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe3, 0xfff4, 0x0
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x2, 0x0, 0xc
@@ -6801,7 +6801,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x2, 0x1, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x18, 0xffe8, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe8, 0xffe8, 0x0
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x1, 0x2, 0xc
@@ -6809,7 +6809,7 @@ gBattleAnimMove_RelicSong::
 	createsprite gWavyMusicNotesSpriteTemplate, ANIM_TARGET, 2, 0x5, 0x3, 0xc
 	delay 5
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x1d, 0xfff4, 0x0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xfff4, 0xffe3, 0x1
 	waitforvisualfinish
@@ -7140,19 +7140,19 @@ gBattleAnimMove_Snarl::
 	fadetobg BG_DARK
 	waitbgfadeout
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x1d, 0xfff4, 0x0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xfff4, 0xffe3, 0x1
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xc, 0xffe3, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe3, 0xfff4, 0x0
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 0x2, 0x0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x18, 0xffe8, 0x1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe8, 0xffe8, 0x0
@@ -10832,7 +10832,7 @@ gBattleAnimMove_BurnUp::
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 2, 0, 15, 1
 	waitforvisualfinish
 	delay 30
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	waitforvisualfinish
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	createsprite gBurnUpRedYawnTemplate, ANIM_TARGET, 0, 0x0, 0x0, 0x0, 0x0, 0x1e, 0x0
@@ -17129,19 +17129,19 @@ gBattleAnimMove_PsychicNoise::
 	monbg ANIM_DEF_PARTNER
 	call SetPsychicBackground
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 29, -12, 0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -12, -29, 1
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 12, -29, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -29, -12, 0
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 24, -24, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -24, -24, 0
@@ -22312,19 +22312,19 @@ gBattleAnimMove_Uproar::
 	loadspritegfx ANIM_TAG_THIN_RING
 	monbg ANIM_DEF_PARTNER
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 29, -12, 0
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -12, -29, 1
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 12, -29, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -29, -12, 0
 	delay 16
 	createvisualtask AnimTask_UproarDistortion, 2, 0
-	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
+	createsprite gUproarRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, RGB_RED, 8
 	playsewithpan SE_M_UPROAR, SOUND_PAN_ATTACKER
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, 24, -24, 1
 	createsprite gJaggedMusicNoteSpriteTemplate, ANIM_ATTACKER, 2, 0, -24, -24, 0
