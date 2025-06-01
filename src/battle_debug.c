@@ -2181,7 +2181,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatileStatus(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE_STATUS;
         data->modifyArrows.minValue = 0;
-        data->modifyArrows.maxValue =  (1 << data->bitSizes[data->currentSecondaryListItemId]) - 1;
+        data->modifyArrows.maxValue =  MAX_BITS(data->bitSizes[data->currentSecondaryListItemId]);
         data->modifyArrows.maxDigits = sBitsToMaxDigit[data->bitSizes[data->currentSecondaryListItemId]];
         break;
     case LIST_ITEM_STATUS3:

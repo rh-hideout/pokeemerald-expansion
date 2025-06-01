@@ -1633,7 +1633,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
-        if (BATTLER_HAS_VOLATILE(battlerDef, confusionTurns))
+        if (gBattleMons[battlerDef].volatileStatuses.confusionTurns != 0)
             calc = (calc * 50) / 100; // 1.5 tangled feet loss
         break;
     }

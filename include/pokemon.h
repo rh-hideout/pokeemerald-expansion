@@ -309,10 +309,6 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define BATTLER_HAS_VOLATILE(battler, volatile) gBattleMons[battler].volatileStatuses.volatile
-#define OR_BATTLER_HAS_VOLATILE(battler, volatile) || BATTLER_HAS_VOLATILE(battler, volatile)
-#define BATTLER_HAS_VOLATILES(battler, volatile1, ...) (BATTLER_HAS_VOLATILE(battler, volatile1) __VA_OPT__(RECURSIVELY(R_FOR_EACH_WITH(OR_BATTLER_HAS_VOLATILE, (battler), __VA_ARGS__))))
-
 #define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_ANY(enum, fieldName, ...) DEFAULT(fieldName, __VA_OPT__(fieldName:FIRST(__VA_ARGS__)));
 #define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_U32(...) u32 UNPACK_VOLATILE_STATUS_STRUCT_MEMBER_ANY(__VA_ARGS__)
 #define UNPACK_VOLATILE_STATUS_STRUCT_MEMBER(memberArr) UNPACK_VOLATILE_STATUS_STRUCT_MEMBER##memberArr

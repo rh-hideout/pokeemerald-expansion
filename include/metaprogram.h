@@ -143,4 +143,11 @@ Input must be of the form (upper << lower) where upper can be up to 3, lower up 
 /* Will read a compressed bit stored by COMPRESS_BIT into a single byte */
 #define UNCOMPRESS_BITS(compressed) ((compressed >> 5) << (compressed & 0x1F))
 
+/* Bit maxima */
+#define MAX_U8 0xFF
+#define MAX_U16 0xFFFF
+#define MAX_U32 0xFFFFFFFF
+/* Finds the maximum value of the given number of bits (up to 32 - obviously)*/
+#define MAX_BITS(_bit) (MAX_U32 >> (32 - _bit))
+
 #endif

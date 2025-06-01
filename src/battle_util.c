@@ -11333,7 +11333,7 @@ u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus)
     }
 }
 
-#define UNPACK_VOLATILE_STATUS_SETTER_U32(enum, fieldName, bitSize, ...) case enum: gBattleMons[battler].volatileStatuses.fieldName = min((1 << bitSize) - 1, newValue); break;
+#define UNPACK_VOLATILE_STATUS_SETTER_U32(enum, fieldName, bitSize, ...) case enum: gBattleMons[battler].volatileStatuses.fieldName = min(MAX_BITS(bitSize), newValue); break;
 #define UNPACK_VOLATILE_STATUS_SETTER(caseArr) UNPACK_VOLATILE_STATUS_SETTER##caseArr
 #define UNPACK_VOLATILE_STATUS_SETTERS(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_SETTER, __VA_ARGS__))
 
@@ -11344,7 +11344,7 @@ void SetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus, u32 n
     {
         /* Expands to (includes sanitation):
         case VOLATILE_STATUS_CONFUSION:
-            gBattleMons[battler].volatileStatuses.confusionTurns = min((1 << 3) - 1, newValue);
+            gBattleMons[battler].volatileStatuses.confusionTurns = min(MAX_BITS(3), newValue);
             break;
         */
         UNPACK_VOLATILE_STATUS_SETTERS(VOLATILE_STATUS_DEFINITIONS)
