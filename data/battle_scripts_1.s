@@ -7722,8 +7722,9 @@ BattleScript_SupersweetSyrupLoopIncrement:
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_SupersweetSyrupLoop
 	copybyte sBATTLER, gBattlerAttacker
 	destroyabilitypopup
- 	restoretarget
+	restoretarget
 	pause B_WAIT_TIME_MED
+	tryintimidatejectpack
 	end3
 
 BattleScript_SupersweetSyrupWontDecrease:
