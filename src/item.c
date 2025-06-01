@@ -244,6 +244,7 @@ static inline u32 PrepareTempPocket(struct BagPocket *tempPocket, u32 pocketId)
 {
     u32 size = gBagPockets[pocketId].capacity * sizeof(struct ItemSlot);
     tempPocket->itemSlots = AllocZeroed(size);
+    tempPocket->capacity = gBagPockets[pocketId].capacity;
     memcpy(tempPocket->itemSlots, gBagPockets[pocketId].itemSlots, size);
 
     return size;
