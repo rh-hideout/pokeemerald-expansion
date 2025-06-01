@@ -12108,10 +12108,10 @@ gBattleAnimMove_SunsteelStrike::
 	createsprite gSunsteelStrikeBlackFlyBallTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0xd, 0x150
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_ATK_PARTNER, 1, 20
 	delay 24
-	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0x0, 0x0     @The rock particles mess up the fly animation
-	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0x0, 0x1
-	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0x0, 0x2
-	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0x0, 0x3
+	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0, 0     @The rock particles mess up the fly animation
+	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0, 1
+	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0, 2
+	createsprite gSunsteelStrikeRocksTemplate, ANIM_ATTACKER, 2, 0, 3
 	waitforvisualfinish
 	unloadspritegfx ANIM_TAG_ROUND_SHADOW @fly
 	unloadspritegfx ANIM_TAG_AIR_WAVE_2 @black color
