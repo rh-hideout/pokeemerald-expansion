@@ -1426,7 +1426,7 @@ void GenerateBattlePyramidWildMon(void)
             continue;
 
         // check type
-        if (reqs->type != TYPE_MYSTERY && gSpeciesInfo[species].types[0] != reqs->type && gSpeciesInfo[species].types[1] != reqs->type)
+        if (reqs->type != TYPE_MYSTERY && GetSpeciesType(species, 0) != reqs->type && GetSpeciesType(species, 1) != reqs->type)
             continue;
 
         // check base stat total
@@ -1459,7 +1459,7 @@ void GenerateBattlePyramidWildMon(void)
             {
                 for (j = 0; j < NUM_ABILITY_SLOTS; j++)
                 {
-                    if (gSpeciesInfo[species].abilities[j] == reqs->abilities[i])
+                    if (GetSpeciesAbility(species, j) == reqs->abilities[i])
                     {
                         abilities[abilityCount] = reqs->abilities[i];
                         abilityCount++;
@@ -1520,7 +1520,7 @@ void GenerateBattlePyramidWildMon(void)
     }
 
     // Initialize a random ability num
-    if (gSpeciesInfo[species].abilities[1])
+    if (GetSpeciesAbility(species, 1))
     {
         i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
         SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
@@ -1540,7 +1540,7 @@ void GenerateBattlePyramidWildMon(void)
             id = abilities[Random() % abilityCount];
             for (j = 0; j < NUM_ABILITY_SLOTS; j++)
             {
-                if (id == gSpeciesInfo[species].abilities[j])
+                if (id == GetSpeciesAbility(species, j))
                 {
                     // Set this ability num
                     SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &id);
@@ -1606,7 +1606,7 @@ void GenerateBattlePyramidWildMon(void)
         break;
     case ABILITY_RANDOM:
     default:
-        if (gSpeciesInfo[wildMons[id].species].abilities[1])
+        if (GetSpeciesAbility(wildMons[id].species, 1))
         {
             i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
             SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
