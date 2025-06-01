@@ -925,8 +925,8 @@ static void RemoveUsedItem(void)
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
     if (!InBattlePyramid())
     {
-        UpdatePocketItemList(GetItemPocket(gSpecialVar_ItemId));
-        UpdatePocketListPosition(GetItemPocket(gSpecialVar_ItemId));
+        UpdatePocketItemList(GetPocketForItem(gSpecialVar_ItemId));
+        UpdatePocketListPosition(GetPocketForItem(gSpecialVar_ItemId));
     }
     else
     {

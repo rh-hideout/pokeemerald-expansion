@@ -620,7 +620,7 @@ static void SetBagItemsListTemplate(void)
 
 static void CopyBagItemName(u8 *dst, u16 itemId)
 {
-    if (GetItemPocket(itemId) == POCKET_BERRIES)
+    if (GetPocketForItem(itemId) == POCKET_BERRIES)
     {
         ConvertIntToDecimalStringN(gStringVar1, ITEM_TO_BERRY(itemId), STR_CONV_MODE_LEADING_ZEROS, MAX_PYRAMID_ITEM_DIGITS);
         CopyItemName(itemId, gStringVar2);
@@ -1097,7 +1097,7 @@ static void CloseMenuActionWindow(void)
 
 static void BagAction_UseOnField(u8 taskId)
 {
-    u8 pocketId = GetItemPocket(gSpecialVar_ItemId);
+    u8 pocketId = GetPocketForItem(gSpecialVar_ItemId);
 
     if (pocketId == POCKET_KEY_ITEMS
         || pocketId == POCKET_POKE_BALLS
