@@ -103,7 +103,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
 #endif
             if (location)
             {
-                DebugPrintfLevel(MGBA_LOG_ERROR, "Alloc location: [%s]", location);
+                DebugPrintfLevel(MGBA_LOG_ERROR, "%s: out of memory trying to allocate %d bytes", location, size);
             }
             AGB_ASSERT(FALSE);
             return NULL;
