@@ -145,7 +145,10 @@
 	.endm
 
 	@ Changes the value of destination to value.
-	.macro setvar destination:req, value:req
+	.macro setvar destination:req, value:req, warn=TRUE
+	.if \warn && ((\value >= VARS_START && \value <= VARS_END) || (\value >= SPECIAL_VARS_START && \value <= SPECIAL_VARS_END))
+	.warning "setvar with a value that might be a VAR_ constant; did you mean copyvar instead?"
+	.endif
 	.byte SCR_OP_SETVAR
 	.2byte \destination
 	.2byte \value
@@ -336,6 +339,12 @@
 	@ Sets the values of variables VAR_0x8000, VAR_0x8001, and VAR_0x8002 to the current hour, minute, and second.
 	.macro gettime
 	.byte SCR_OP_GETTIME
+	.endm
+
+	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
+	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
+	.macro gettimeofday
+	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
 
 	@ Plays the specified sound. Only one sound may play at a time, with newer ones interrupting older ones.
@@ -618,10 +627,10 @@
 	.endm
 
 	@ Blocks script execution until the movements being applied to the specified (localId) object finish.
-	@ If localId is 0, then the id of the last-moved object will be used instead. If the specified object
-	@ is not currently being manipulated with applymovement, then this command does nothing.
+	@ If localId is LOCALID_NONE (0), then the id of the last-moved object will be used instead.
+	@ If the specified object is not currently being manipulated with applymovement, then this command does nothing.
 	@ If no map is specified, then the current map is used.
-	.macro waitmovement localId:req, map
+	.macro waitmovement localId=LOCALID_NONE, map
 		.ifb \map
 			.byte SCR_OP_WAITMOVEMENT
 			.2byte \localId
@@ -694,59 +703,31 @@
 	.byte \direction
 	.endm
 
+	NULL = 0
+	OBJ_ID_NONE = 0
+
 	@ Configures the arguments for a trainer battle, then jumps to the appropriate script in scripts/trainer_battle.inc
-	.macro trainerbattle type:req, trainer:req, local_id:req, pointer1:req, pointer2, pointer3, pointer4
+	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req
 	.byte SCR_OP_TRAINERBATTLE
-	.byte \type
-	.2byte \trainer
-	.2byte \local_id
-	.if \type == TRAINER_BATTLE_SINGLE
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.elseif \type == TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ event script
-	.elseif \type == TRAINER_BATTLE_CONTINUE_SCRIPT
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ event script
-	.elseif \type == TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT
-		.4byte \pointer1 @ text
-	.elseif \type == TRAINER_BATTLE_DOUBLE
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ text
-	.elseif \type == TRAINER_BATTLE_REMATCH
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.elseif \type == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ text
-		.4byte \pointer4 @ event script
-	.elseif \type == TRAINER_BATTLE_REMATCH_DOUBLE
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ text
-	.elseif \type == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-		.4byte \pointer3 @ text
-		.4byte \pointer4 @ event script
-	.elseif \type == TRAINER_BATTLE_PYRAMID
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.elseif \type == TRAINER_BATTLE_SET_TRAINER_A
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.elseif \type == TRAINER_BATTLE_SET_TRAINER_B
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.elseif \type == TRAINER_BATTLE_HILL
-		.4byte \pointer1 @ text
-		.4byte \pointer2 @ text
-	.endif
+	.set trainerbattle_flags, 0
+	.ifgt \isDouble; .set trainerbattle_flags, trainerbattle_flags | (1 << 0); .endif
+	.ifgt \isRematch; .set trainerbattle_flags, trainerbattle_flags | (1 << 1); .endif
+	.ifgt \playMusicA; .set trainerbattle_flags, trainerbattle_flags | (1 << 2); .endif
+	.ifgt \playMusicB; .set trainerBattle_flags, trainerbattle_flags | (1 << 3); .endif
+	.ifgt \type; .set trainerbattle_flags, trainerbattle_flags | (\type << 4); .endif
+	.byte trainerbattle_flags
+	.byte \localIdA             @ objEventLocalIdA
+	.2byte \trainer_a           @ opponentA
+	.4byte \intro_text_a        @ introTextA
+	.4byte \lose_text_a         @ defeatTextA
+	.4byte \event_script_a      @ retAddrA
+	.byte  \localIdB            @ objEventLocalIdB
+	.2byte \trainer_b           @ opponentB
+	.4byte \intro_text_b        @ introTextB
+	.4byte \lose_text_b         @ defeatTextB
+	.4byte \event_script_b      @ retAddrB
+	.4byte \victory_text        @ victoryText
+	.4byte \cannot_battle       @ cannotBattle
 	.endm
 
 	NO_MUSIC = FALSE
@@ -755,11 +736,11 @@
 	@ When used with an event script, you can also pass in an optional flag to disable music
 	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
 	.if \event_script == FALSE
-	trainerbattle TRAINER_BATTLE_SINGLE, \trainer, 0, \intro_text, \lose_text
+	trainerbattle TRAINER_BATTLE_SINGLE, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	.elseif \music == TRUE
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, \trainer, 0, \intro_text, \lose_text, \event_script
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, \event_script, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	.else
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC, \trainer, 0, \intro_text, \lose_text, \event_script
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, \event_script, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	.endif
 	.endm
 
@@ -767,38 +748,33 @@
 	@ and an optional event script. When used with an event script you can pass in an optional flag to disable music
 	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=FALSE, music=TRUE
 	.if \event_script == FALSE
-	trainerbattle TRAINER_BATTLE_DOUBLE, \trainer, 0, \intro_text, \lose_text, \not_enough_pkmn_text
+	trainerbattle TRAINER_BATTLE_DOUBLE, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE
 	.elseif \music == TRUE
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE, \trainer, 0, \intro_text, \lose_text, \not_enough_pkmn_text, \event_script
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, \event_script, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE
 	.else
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC, \trainer, 0, \intro_text, \lose_text, \not_enough_pkmn_text, \event_script
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, \event_script, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, FALSE, FALSE, FALSE
 	.endif
 	.endm
 
 	@ Starts a rematch battle. Takes a trainer, intro text and loss text
 	.macro trainerbattle_rematch trainer:req, intro_text:req, lose_text:req
-	trainerbattle TRAINER_BATTLE_REMATCH, \trainer, 0, \intro_text, \lose_text
+	trainerbattle TRAINER_BATTLE_REMATCH, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, TRUE
 	.endm
 
 	@ Starts a rematch double battle. Takes a trainer, intro text, loss text, and text for when you have too few pokemon
 	.macro trainerbattle_rematch_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req
-	trainerbattle TRAINER_BATTLE_REMATCH_DOUBLE, \trainer, 0, \intro_text, \lose_text, \not_enough_pkmn_text
+	trainerbattle TRAINER_BATTLE_REMATCH_DOUBLE, OBJ_ID_NONE, \trainer, \intro_text, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, FALSE, TRUE, FALSE, TRUE
 	.endm
 
 	@ Starts a trainer battle, skipping intro text. Takes a trainer and loss text
 	.macro trainerbattle_no_intro trainer:req, lose_text:req
-	trainerbattle TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT, \trainer, 0, \lose_text
+	trainerbattle TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT, OBJ_ID_NONE, \trainer, NULL, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a double battle with the player against two trainers
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
-	.byte 0x5c
-	.byte TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO
-	.2byte \trainer_a
-	.4byte \lose_text_a
-	.2byte \trainer_b
-	.4byte \lose_text_b
+	trainerbattle TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO, OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle using the battle information stored in RAM (usually by the scripts in trainer_battle.inc, which
@@ -1149,12 +1125,13 @@
 	.2byte \move
 	.endm
 
-	@ Checks if at least one Pokemon in the player's party knows the specified move. If so, VAR_RESULT is set to the
+	@ Checks if at least one Pokemon in the player's party knows the specified field move and if the field move is unlocked. If so, VAR_RESULT is set to the
 	@ (zero-indexed) slot number of the first Pokemon that knows the move. If not, VAR_RESULT is set to PARTY_SIZE.
 	@ VAR_0x8004 is also set to this Pokemon's species.
-	.macro checkpartymove move:req
-	.byte SCR_OP_CHECKPARTYMOVE
-	.2byte \move
+	.macro checkfieldmove fieldMove:req, checkUnlocked=FALSE
+	.byte SCR_OP_CHECKFIELDMOVE
+	.byte \fieldMove
+	.byte \checkUnlocked
 	.endm
 
 	@ Converts STR_VAR_1, STR_VAR_2, or STR_VAR_3 to its corresponding index into sScriptStringVars (0, 1, or 2).
@@ -1823,11 +1800,14 @@
 	.4byte \text
 	.endm
 
-	@ Equivalent to fadescreen but copies gPlttBufferUnfaded to gDecompressionBuffer on the fade out
-	@ and the reverse on the fade in, in effect saving gPlttBufferUnfaded to restore it.
-	.macro fadescreenswapbuffers mode:req
+	@ Equivalent to fadescreen but uses a hardware fade and darken/lighten blend modes,
+	@ to avoid modifying palettes at all.
+	@ Useful for fade-out/fade-in without leaving the overworld or entering a new scene.
+	@ If nowait set, doesn't wait for the fade to complete
+	.macro fadescreenswapbuffers mode:req, nowait=0
 	.byte SCR_OP_FADESCREENSWAPBUFFERS
 	.byte \mode
+	.byte \nowait
 	.endm
 
 	@ Buffers the specified trainer's class name to the given string var.
@@ -2332,7 +2312,11 @@
 	callnative ScriptSetDoubleBattleFlag, requests_effects=1
 	.endm
 
-	@ When OW_USE_FAKE_RTC and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
+	@ ============================ @
+	@ FAKE RTC MACROS
+	@ Will only function if OW_USE_FAKE_RTC is true. If it has any additional requirements, it will be listed accordingly.
+	
+	@ When OW_USE_FAKE_RTC is true and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
 	.macro pausefakertc
 	callnative Script_PauseFakeRtc, requests_effects=1
 	.endm
@@ -2345,6 +2329,46 @@
 	@ When OW_USE_FAKE_RTC and OW_FLAG_PAUSE_TIME is assigned, this macro will resume the flow of time if paused, and stop the flow of time otherwise.
 	.macro togglefakertc
 	callnative Script_ToggleFakeRtc, requests_effects=1
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified amount of time.
+	.macro addtime days:req, hours:req, minutes:req
+	callnative ScrCmd_addtime, requests_effects=1
+	.4byte \days
+	.4byte \hours
+	.4byte \minutes
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days to the time. 
+	.macro adddays days:req
+	callnative ScrCmd_adddays, requests_effects=1
+	.4byte \days
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	.macro addhours hours:req
+	callnative ScrCmd_addhours, requests_effects=1
+	.4byte \hours
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	.macro addminutes minutes:req
+	callnative ScrCmd_addminutes, requests_effects=1
+	.4byte \minutes
+	.endm
+
+	@ Forwards the time to a specified hour and minute. 
+	@ This causes the time to go to the next day if the time has already been past. 
+	.macro fwdtime hours:req, minutes:req
+	callnative ScrCmd_fwdtime, requests_effects=1
+	.4byte \hours
+	.4byte \minutes
+	.endm
+
+	@ Forwards the time to a specified day of the week. Uses a 0-index starting from Sunday.
+	.macro fwdweekday weekday:req
+	callnative ScrCmd_fwdweekday, requests_effects=1
+	.4byte \weekday
 	.endm
 
 	@ ============================ @
@@ -2372,7 +2396,7 @@
 
 	@ Stores the position of the given object in destX and destY. Mode CURRENT_POSITION will take the object's current position. Mode TEMPLATE_POSITION will take the object's template position.
 	.macro getobjectxy localId:req, posType:req, destX:req, destY:req
-	callnative ScrCmd_getobjectxy, request_effects=1
+	callnative ScrCmd_getobjectxy, requests_effects=1
 	.2byte \localId
 	.2byte \posType
 	.2byte \destX
@@ -2380,7 +2404,7 @@
 	.endm
 
 	.macro getobjecttemplatexy localId:req, posType = TEMPLATE_POSITION, destX:req, destY:req
-	callnative ScrCmd_getobjectxy, request_effects=1
+	callnative ScrCmd_getobjectxy, requests_effects=1
 	.2byte \localId
 	.2byte \posType
 	.2byte \destX
@@ -2388,7 +2412,7 @@
 	.endm
 
 	.macro getobjectcurrentxy localId:req, posType = CURRENT_POSITION, destX:req, destY:req
-	callnative ScrCmd_getobjectxy, request_effects=1
+	callnative ScrCmd_getobjectxy, requests_effects=1
 	.2byte \localId
 	.2byte \posType
 	.2byte \destX
@@ -2397,7 +2421,7 @@
 
 	@ Return TRUE to dest if there is an object at the position x and y.
 	.macro checkobjectat x:req, y:req, dest = VAR_RESULT
-	callnative ScrCmd_checkobjectat, request_effects=1
+	callnative ScrCmd_checkobjectat, requests_effects=1
 	.2byte \x
 	.2byte \y
 	.2byte \dest
@@ -2405,28 +2429,28 @@
 
 	@ Returns the state of the Pokedex Seen Flag to VAR_RESULT for the Pokemon with speciesId
 	.macro getseenmon species:req
-	callnative Scrcmd_getsetpokedexflag, request_effects=1
+	callnative Scrcmd_getsetpokedexflag, requests_effects=1
 	.2byte \species
 	.2byte FLAG_GET_SEEN
 	.endm
 
 	@ Returns the state of the Pokedex Caught Flag to VAR_RESULT for the Pokemon with speciesId
 	.macro getcaughtmon species:req
-	callnative Scrcmd_getsetpokedexflag, request_effects=1
+	callnative Scrcmd_getsetpokedexflag, requests_effects=1
 	.2byte \species
 	.2byte FLAG_GET_CAUGHT
 	.endm
 
 	@ Sets the Pokedex Seen Flag for the Pokemon with speciesId
 	.macro setseenmon species:req
-	callnative Scrcmd_getsetpokedexflag, request_effects=1
+	callnative Scrcmd_getsetpokedexflag, requests_effects=1
 	.2byte \species
 	.2byte FLAG_SET_SEEN
 	.endm
 
 	@ Sets the Pokedex Caught Flag for the Pokemon with speciesId
 	.macro setcaughtmon species:req
-	callnative Scrcmd_getsetpokedexflag, request_effects=1
+	callnative Scrcmd_getsetpokedexflag, requests_effects=1
 	.2byte \species
 	.2byte FLAG_SET_CAUGHT
 	.endm
@@ -2436,10 +2460,10 @@
 	.if \mode == OPEN_PARTY_SCREEN
 		special ChoosePartyMon
 		waitstate
-		callnative Scrcmd_checkspecies_choose, request_effects=1
+		callnative Scrcmd_checkspecies_choose, requests_effects=1
 		.2byte \speciesId
 	.else
-		callnative Scrcmd_checkspecies, request_effects=1
+		callnative Scrcmd_checkspecies, requests_effects=1
 		.2byte \speciesId
 	.endif
 	.endm
@@ -2450,9 +2474,15 @@
 
 	@ Gets the facing direction of a given event object and stores it in the variable dest.
 	.macro getobjectfacingdirection localId:req, dest:req
-	callnative Scrcmd_getobjectfacingdirection, request_effects=1
+	callnative Scrcmd_getobjectfacingdirection, requests_effects=1
 	.2byte \localId
 	.2byte \dest
+	.endm
+
+	@ Hides any follower Pokémon if present, putting them into their Poké Ball; by default waits for their movement to finish.
+	.macro hidefollower wait=1
+	callnative ScrFunc_hidefollower
+	.2byte \wait
 	.endm
 
 	.macro increasedifficulty
@@ -2470,6 +2500,11 @@
 	.macro setdifficulty difficulty:req
 	callnative Script_SetDifficulty, requests_effects=1
 	.byte \difficulty
+	.endm
+
+	.macro forcesave
+	callnative Script_ForceSaveGame
+	waitstate
 	.endm
 
 	@ Makes the trainer unable to see the player if executed.
@@ -2531,4 +2566,77 @@
 	.macro cant_see_if_ne, a:req, b:req
 	compare \a, \b
 	cant_see_if 5
+	.endm
+
+@ Follower NPCs
+
+	@ Sets an NPC up to follow the player.
+	@ Follower flags are defined in include/constants/follower_npc.h
+	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
+	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		checkfollowernpc
+		compare VAR_RESULT, FALSE
+		goto_if_ne 1f
+		hidefollower
+		waitmovement OBJ_EVENT_ID_FOLLOWER
+		callnative ScriptSetFollowerNPC
+		.if \script == 0
+			.set setScript, FALSE
+		.else
+			.set setScript, TRUE
+		.endif
+		.byte \localId
+		.2byte \flags
+		.byte setScript
+		.2byte \battlePartner
+		.4byte \script
+		updatefollowingmon
+        1:
+	.else
+		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+	.endif
+	.endm
+
+	@ Remove the follower NPC (assumes there will only ever be one).
+	.macro destroyfollowernpc
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		callnative ScriptDestroyFollowerNPC
+	.else
+		.error "destroyfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+	.endif
+	.endm
+
+	@ Makes the player and follower NPC face one another.
+	.macro facefollowernpc
+	callnative ScriptFaceFollowerNPC
+	.endm
+
+	@ Makes the follower NPC walk into the player and get hidden.
+	@ Optionally, you can set the walk speed for the movement:
+	@ 0 = Slow
+	@ 1 = Normal (default)
+	@ 2 = Fast
+	@ 3 = Faster
+	.macro hidefollowernpc speed=1
+	callnative ScriptHideNPCFollower
+	.byte \speed
+	waitmovement OBJ_EVENT_ID_NPC_FOLLOWER
+	callnative HideNPCFollower
+	.endm
+
+	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
+	.macro checkfollowernpc
+	callnative ScriptCheckFollowerNPC
+	.endm
+
+	@ Updates Pokemon follower.
+	.macro updatefollowingmon
+	callnative ScriptUpdateFollowingMon
+	.endm
+
+	@ Changes the battle partner of the existing follower NPC.
+	.macro changefollowerbattler battlePartner:req
+	callnative ScriptChangeFollowerNPCBattlePartner
+	.2byte \battlePartner
 	.endm

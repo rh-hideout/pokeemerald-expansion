@@ -111,6 +111,7 @@ struct ContestPokemon
     u8 unused1:7;
     u32 personality;
     u32 otId;
+    u8 filter;
 };
 
 struct ContestTempSave
@@ -294,11 +295,11 @@ struct ContestResources
     struct ContestGraphicsState *gfxState;
     struct ContestMoveAnimData *moveAnim;
     struct ContestTV *tv;
-    struct ContestUnused * unused;
+    struct ContestUnused *unused;
     u8 *contestBgTilemaps[CONTESTANT_COUNT];
-    void * boxBlinkTiles1;
-    void * boxBlinkTiles2;
-    void * animBgTileBuffer;
+    void *boxBlinkTiles1;
+    void *boxBlinkTiles2;
+    void *animBgTileBuffer;
 };
 
 #define eContest (*gContestResources->contest)

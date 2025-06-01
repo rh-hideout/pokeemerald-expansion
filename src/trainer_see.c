@@ -5,6 +5,7 @@
 #include "event_scripts.h"
 #include "field_effect.h"
 #include "field_player_avatar.h"
+#include "follower_npc.h"
 #include "pokemon.h"
 #include "script.h"
 #include "script_movement.h"
@@ -478,9 +479,10 @@ static u8 CheckTrainer(u8 objectEventId)
 
     if (trainerBattlePtr)
     {
-        if (trainerBattlePtr[1] == TRAINER_BATTLE_DOUBLE
-         || trainerBattlePtr[1] == TRAINER_BATTLE_REMATCH_DOUBLE
-         || trainerBattlePtr[1] == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE)
+        TrainerBattleParameter *temp = (TrainerBattleParameter *)(trainerBattlePtr + 1);
+        if (temp->params.mode == TRAINER_BATTLE_DOUBLE
+            || temp->params.mode == TRAINER_BATTLE_REMATCH_DOUBLE
+            || temp->params.mode == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE)
         {
             if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
                 return 0;
@@ -589,15 +591,15 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
             return 0;
     }
 
-    rangeX = trainerObj->rangeX;
-    rangeY = trainerObj->rangeY;
-    trainerObj->rangeX = 0;
-    trainerObj->rangeY = 0;
+    rangeX = trainerObj->range.rangeX;
+    rangeY = trainerObj->range.rangeY;
+    trainerObj->range.rangeX = 0;
+    trainerObj->range.rangeY = 0;
 
     collision = GetCollisionAtCoords(trainerObj, x, y, direction);
 
-    trainerObj->rangeX = rangeX;
-    trainerObj->rangeY = rangeY;
+    trainerObj->range.rangeX = rangeX;
+    trainerObj->range.rangeY = rangeY;
     if (collision == COLLISION_OBJECT_EVENT)
         return approachDistance;
 
@@ -628,6 +630,9 @@ static void StartTrainerApproach(TaskFunc followupFunc)
         taskId = gApproachingTrainers[0].taskId;
     else
         taskId = gApproachingTrainers[1].taskId;
+
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT))
+        ObjectEventForceSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 
     taskFunc = Task_RunTrainerSeeFuncList;
     SetTaskFuncWithFollowupFunc(taskId, taskFunc, followupFunc);
@@ -1039,15 +1044,15 @@ void PlayerFaceTrainerAfterBattle(void)
         objEvent = &gObjectEvents[gApproachingTrainers[gWhichTrainerToFaceAfterBattle].objectEventId];
         gPostBattleMovementScript[0] = GetFaceDirectionMovementAction(GetOppositeDirection(objEvent->facingDirection));
         gPostBattleMovementScript[1] = MOVEMENT_ACTION_STEP_END;
-        ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, gPostBattleMovementScript);
+        ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, gPostBattleMovementScript);
     }
     else
     {
         objEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
         gPostBattleMovementScript[0] = GetFaceDirectionMovementAction(objEvent->facingDirection);
         gPostBattleMovementScript[1] = MOVEMENT_ACTION_STEP_END;
-        ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, gPostBattleMovementScript);
+        ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, gPostBattleMovementScript);
     }
 
-    SetMovingNpcId(OBJ_EVENT_ID_PLAYER);
+    SetMovingNpcId(LOCALID_PLAYER);
 }

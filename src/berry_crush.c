@@ -582,13 +582,13 @@ static const u32 sPressingSpeedConversionTable[] =
 static const u16 sCrusherBase_Pal[]     = INCBIN_U16("graphics/berry_crush/crusher_base.gbapal");
 static const u16 sEffects_Pal[]         = INCBIN_U16("graphics/berry_crush/effects.gbapal");
 static const u16 sTimerDigits_Pal[]     = INCBIN_U16("graphics/berry_crush/timer_digits.gbapal");
-static const u32 sCrusherBase_Gfx[]     = INCBIN_U32("graphics/berry_crush/crusher_base.4bpp.lz");
-static const u32 sImpact_Gfx[]          = INCBIN_U32("graphics/berry_crush/impact.4bpp.lz");
-static const u32 sSparkle_Gfx[]         = INCBIN_U32("graphics/berry_crush/sparkle.4bpp.lz");
-static const u32 sTimerDigits_Gfx[]     = INCBIN_U32("graphics/berry_crush/timer_digits.4bpp.lz");
-static const u8 sCrusherTop_Tilemap[]   = INCBIN_U8("graphics/berry_crush/crusher_top.bin.lz");
-static const u8 sContainerCap_Tilemap[] = INCBIN_U8("graphics/berry_crush/container_cap.bin.lz");
-static const u8 sBg_Tilemap[]           = INCBIN_U8("graphics/berry_crush/bg.bin.lz");
+static const u32 sCrusherBase_Gfx[]     = INCBIN_U32("graphics/berry_crush/crusher_base.4bpp.smol");
+static const u32 sImpact_Gfx[]          = INCBIN_U32("graphics/berry_crush/impact.4bpp.smol");
+static const u32 sSparkle_Gfx[]         = INCBIN_U32("graphics/berry_crush/sparkle.4bpp.smol");
+static const u32 sTimerDigits_Gfx[]     = INCBIN_U32("graphics/berry_crush/timer_digits.4bpp.smol");
+static const u8 sCrusherTop_Tilemap[]   = INCBIN_U8("graphics/berry_crush/crusher_top.bin.smolTM");
+static const u8 sContainerCap_Tilemap[] = INCBIN_U8("graphics/berry_crush/container_cap.bin.smolTM");
+static const u8 sBg_Tilemap[]           = INCBIN_U8("graphics/berry_crush/bg.bin.smolTM");
 
 // Takes the number of players - 2 and a player id and returns the
 // index into sPlayerCoords where that player should be seated
@@ -914,7 +914,7 @@ static const u8 *const sResultsTexts[] =
     [RESULTS_PAGE_POWER + NUM_RESULTS_PAGES]       = gText_PressingPowerRankings,
 };
 
-static u32 (*const sBerryCrushCommands[])(struct BerryCrushGame * game, u8 *data) =
+static u32 (*const sBerryCrushCommands[])(struct BerryCrushGame *game, u8 *data) =
 {
     [CMD_NONE]             = NULL,
     [CMD_FADE]             = Cmd_BeginNormalPaletteFade,
@@ -1590,14 +1590,14 @@ static void PrintTextCentered(u8 windowId, u8 left, u8 colorId, const u8 *string
     AddTextPrinterParameterized3(windowId, FONT_SHORT, left, 0, sTextColorTable[colorId], 0, string);
 }
 
-static void PrintResultsText(struct BerryCrushGame * game, u8 page, u8 sp14, u8 baseY)
+static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 baseY)
 {
     u8 i, j;
     u8 playerId = 0;
     u8 ranking = 0;
     s32 x;
     u8 stat;
-    struct BerryCrushGame_Results * results = &game->results;
+    struct BerryCrushGame_Results *results = &game->results;
     u32 xOffset;
     s32 y;
 
@@ -1941,12 +1941,10 @@ static void DrawPlayerNameWindows(struct BerryCrushGame *game)
 // Each player name window border uses a color that corresponds to a slot of the crusher lid
 static void CopyPlayerNameWindowGfxToBg(struct BerryCrushGame *game)
 {
-    u8 i = 0;
-    u8 *windowGfx;
+    s32 i;
+    u8 *windowGfx = malloc_and_decompress(gBerryCrush_TextWindows_Tilemap, NULL);
 
-    LZ77UnCompWram(gBerryCrush_TextWindows_Tilemap, gDecompressionBuffer);
-
-    for (windowGfx = gDecompressionBuffer; i < game->playerCount; i++)
+    for (i = 0; i < game->playerCount; i++)
     {
         CopyToBgTilemapBufferRect(
             3,
@@ -1958,6 +1956,8 @@ static void CopyPlayerNameWindowGfxToBg(struct BerryCrushGame *game)
         );
     }
     CopyBgTilemapBufferToVram(3);
+
+    Free(windowGfx);
 }
 
 static void CreateGameSprites(struct BerryCrushGame *game)

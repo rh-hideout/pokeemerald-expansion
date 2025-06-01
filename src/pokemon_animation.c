@@ -239,7 +239,7 @@ static const u8 sVerticalShakeData[][2] =
     {-1,   0}
 };
 
-static void (* const sMonAnimFunctions[])(struct Sprite *sprite) =
+static void (*const sMonAnimFunctions[])(struct Sprite *sprite) =
 {
     [ANIM_V_SQUISH_AND_BOUNCE]               = Anim_VerticalSquishBounce,
     [ANIM_CIRCULAR_STRETCH_TWICE]            = Anim_CircularStretchTwice,
@@ -544,15 +544,15 @@ void StartMonSummaryAnimation(struct Sprite *sprite, enum AnimFunctionIDs frontA
 
 void LaunchAnimationTaskForBackSprite(struct Sprite *sprite, enum BackAnim backAnimSet)
 {
-    u8 nature, taskId, battlerId;
+    u8 nature, taskId, battler;
     enum AnimFunctionIDs animId;
 
     taskId = CreateTask(Task_HandleMonAnimation, 128);
     gTasks[taskId].tPtrHi = (u32)(sprite) >> 16;
     gTasks[taskId].tPtrLo = (u32)(sprite);
 
-    battlerId = sprite->data[0];
-    nature = GetNature(&gPlayerParty[gBattlerPartyIndexes[battlerId]]);
+    battler = sprite->data[0];
+    nature = GetNature(GetBattlerMon(battler));
 
     // * 3 below because each back anim has 3 variants depending on nature
     animId = 3 * backAnimSet + gNaturesInfo[nature].backAnim;

@@ -847,7 +847,7 @@
 #define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_1                          0x31C
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_1                          0x31D
 #define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_1                          0x31E
-#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_3                          0x31F
+#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2                          0x31F
 #define FLAG_HIDE_LUGIA                                             0x320
 #define FLAG_HIDE_HO_OH                                             0x321
 #define FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER                    0x322
@@ -951,7 +951,7 @@
 #define FLAG_HIDE_ROUTE_110_TEAM_AQUA                               0x384
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_2                          0x385
 #define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_2                          0x386
-#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2                          0x387
+#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_3                          0x387
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_3                          0x388
 #define FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS                     0x389
 #define FLAG_HIDE_ROUTE_104_WHITE_HERB_FLORIST                      0x38A
@@ -1648,6 +1648,7 @@
 #define FLAG_SPECIAL_FLAG_UNUSED_0x4003         (SPECIAL_FLAGS_START + 0x3) // Unused Flag
 #define FLAG_STORING_ITEMS_IN_PYRAMID_BAG       (SPECIAL_FLAGS_START + 0x4)
 #define FLAG_SAFE_FOLLOWER_MOVEMENT             (SPECIAL_FLAGS_START + 0x5) // When set, applymovement does not put the follower inside a pokeball
+                                                                            // Also, scripted movements on the player will move follower(s), too
 // FLAG_SPECIAL_FLAG_0x4005 - 0x407F also exist and are unused
 #define SPECIAL_FLAGS_END                       (SPECIAL_FLAGS_START + 0x7F)
 #define NUM_SPECIAL_FLAGS                       (SPECIAL_FLAGS_END - SPECIAL_FLAGS_START + 1)
@@ -1658,5 +1659,17 @@
 #define FLAG_TEMP_REGICE_PUZZLE_FAILED          FLAG_TEMP_3
 #define FLAG_TEMP_HIDE_FOLLOWER                 FLAG_TEMP_E
 #define FLAG_TEMP_HIDE_MIRAGE_ISLAND_BERRY_TREE FLAG_TEMP_11
+
+#if TESTING
+#define TESTING_FLAGS_START                     0x5000
+#define TESTING_FLAG_SLEEP_CLAUSE               (TESTING_FLAGS_START + 0x0)
+#define TESTING_FLAG_INVERSE_BATTLE             (TESTING_FLAGS_START + 0x1)
+#define TESTING_FLAG_UNUSED_2                   (TESTING_FLAGS_START + 0x2)
+#define TESTING_FLAG_UNUSED_3                   (TESTING_FLAGS_START + 0x3)
+#define TESTING_FLAG_UNUSED_4                   (TESTING_FLAGS_START + 0x4)
+#define TESTING_FLAG_UNUSED_5                   (TESTING_FLAGS_START + 0x5)
+#define TESTING_FLAG_UNUSED_6                   (TESTING_FLAGS_START + 0x6)
+#define TESTING_FLAG_UNUSED_7                   (TESTING_FLAGS_START + 0x7)
+#endif // TESTING
 
 #endif // GUARD_CONSTANTS_FLAGS_H

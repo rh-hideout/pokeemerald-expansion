@@ -1466,9 +1466,11 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_Beam, 0x0800, ANIM_TAG_BEAM},
     {gBattleAnimSpriteGfx_PurpleChain, 0x1000, ANIM_TAG_PURPLE_CHAIN},
     {gBattleAnimSpriteGfx_PinkVioletOrb, 0x0080, ANIM_TAG_PINKVIO_ORB},
+    {gBattleAnimSpriteGfx_TeraStarstormBeam, 0x200, ANIM_TAG_STARSTORM},
+    {gBattleAnimSpriteGfx_SaltParticle, 0x400, ANIM_TAG_SALT_PARTICLE},
 };
 
-const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
+const struct SpritePalette gBattleAnimPaletteTable[] =
 {
     {gBattleAnimSpritePal_Bone, ANIM_TAG_BONE},
     {gBattleAnimSpritePal_Spark, ANIM_TAG_SPARK},
@@ -1933,6 +1935,8 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_Beam, ANIM_TAG_BEAM},
     {gBattleAnimSpritePal_PurpleChain, ANIM_TAG_PURPLE_CHAIN},
     {gBattleAnimSpritePal_PinkVioletOrb, ANIM_TAG_PINKVIO_ORB},
+    {gBattleAnimSpritePal_TeraStarstormBeam, ANIM_TAG_STARSTORM},
+    {gBattleAnimSpritePal_SaltParticle, ANIM_TAG_SALT_PARTICLE},
 };
 
 const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
@@ -1996,9 +2000,9 @@ const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
     [BG_BOLT_STRIKE]               = {gBattleAnimBgImage_BoltStrike,              gBattleAnimBgPalette_BoltStrike,              gBattleAnimBgTilemap_BoltStrike},
     [BG_ZMOVE_ACTIVATE]            = {gBattleAnimBgImage_ZMoveActivate,           gBattleAnimBgPalette_ZMoveActivate,           gBattleAnimBgTilemap_ZMoveActivate},
     [BG_TECTONIC_RAGE]             = {gBattleAnimBgImage_InAir,                   gBattleAnimBgPalette_TectonicRage,            gBattleAnimBgTilemap_InAir},
-    [BG_BLUE_SKY_DAY]              = {gBattleAnimBgImage_SkyDay,                  gBattleAnimBgPalette_SkyDay,                  gBattleAnimBgTilemap_SkyDay},
-    [BG_BLUE_SKY_AFTERNOON]        = {gBattleAnimBgImage_SkyDay,                  gBattleAnimBgPalette_SkyAfternoon,            gBattleAnimBgTilemap_SkyDay},
-    [BG_BLUE_SKY_NIGHT]            = {gBattleAnimBgImage_SkyDay,                  gBattleAnimBgPalette_SkyNight,                gBattleAnimBgTilemap_SkyDay},
+    [BG_ROCK_FIELD_DAY]            = {gBattleAnimBgImage_RockField,               gBattleAnimBgPalette_RockDay,                 gBattleAnimBgTilemap_RockField},
+    [BG_ROCK_FIELD_AFTERNOON]      = {gBattleAnimBgImage_RockField,               gBattleAnimBgPalette_RockAfternoon,           gBattleAnimBgTilemap_RockField},
+    [BG_ROCK_FIELD_NIGHT]          = {gBattleAnimBgImage_RockField,               gBattleAnimBgPalette_RockNight,               gBattleAnimBgTilemap_RockField},
     [BG_ZMOVE_MOUNTAIN]            = {gBattleAnimBgImage_ZMoveMountain,           gBattleAnimBgPalette_ZMoveMountain,           gBattleAnimBgTilemap_ZMoveMountain},
     [BG_NEVERENDING_NIGHTMARE]     = {gBattleAnimBgImage_NeverendingNightmare,    gBattleAnimBgPalette_NeverendingNightmare,    gBattleAnimBgTilemap_NeverendingNightmare},
     [BG_WATER_PULSE]               = {gBattleAnimBgImage_WaterPulse,              gBattleAnimBgPalette_WaterPulse,              gBattleAnimBgTilemap_WaterPulse},

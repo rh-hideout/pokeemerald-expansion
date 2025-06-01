@@ -2,7 +2,7 @@
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
 // The following correspond to the struct members of BattleScripting by adding their offset
-#define sPAINSPLIT_HP                (gBattleScripting + 0x00) // painSplitHp
+#define sUNUSED_0x00                 (gBattleScripting + 0x00) // unused_0x00
 #define sUNUSED_0x04                 (gBattleScripting + 0x04) // unused_0x04
 #define sMULTIHIT_STRING             (gBattleScripting + 0x08) // multihitString
 #define sEXP_CATCH                   (gBattleScripting + 0x0E) // expOnCatch
@@ -121,8 +121,6 @@ enum CmdVarious
     VARIOUS_INSTANT_HP_DROP,
     VARIOUS_CLEAR_STATUS,
     VARIOUS_RESTORE_PP,
-    VARIOUS_TRY_ACTIVATE_MOXIE,
-    VARIOUS_TRY_ACTIVATE_FELL_STINGER,
     VARIOUS_PLAY_MOVE_ANIMATION,
     VARIOUS_SET_LUCKY_CHANT,
     VARIOUS_SUCKER_PUNCH_CHECK,
@@ -135,7 +133,6 @@ enum CmdVarious
     VARIOUS_TRY_ELECTRIFY,
     VARIOUS_TRY_SOAK,
     VARIOUS_TRY_LAST_RESORT,
-    VARIOUS_SET_ARG_TO_BATTLE_DAMAGE,
     VARIOUS_TRY_AUTOTOMIZE,
     VARIOUS_ABILITY_POPUP,
     VARIOUS_JUMP_IF_TARGET_ALLY,
@@ -153,7 +150,6 @@ enum CmdVarious
     VARIOUS_TRY_THIRD_TYPE,
     VARIOUS_ACUPRESSURE,
     VARIOUS_SET_POWDER,
-    VARIOUS_SPECTRAL_THIEF,
     VARIOUS_GRAVITY_ON_AIRBORNE_MONS,
     VARIOUS_CHECK_IF_GRASSY_TERRAIN_HEALS,
     VARIOUS_JUMP_IF_ROAR_FAILS,
@@ -169,20 +165,16 @@ enum CmdVarious
     VARIOUS_LOSE_TYPE,
     VARIOUS_TRY_ACTIVATE_SOULHEART,
     VARIOUS_TRY_ACTIVATE_RECEIVER,
-    VARIOUS_TRY_ACTIVATE_BEAST_BOOST,
     VARIOUS_TRY_FRISK,
     VARIOUS_JUMP_IF_SHIELDS_DOWN_PROTECTED,
     VARIOUS_TRY_FAIRY_LOCK,
     VARIOUS_JUMP_IF_NO_ALLY,
-    VARIOUS_POISON_TYPE_IMMUNITY,
     VARIOUS_JUMP_IF_HOLD_EFFECT,
     VARIOUS_INFATUATE_WITH_BATTLER,
     VARIOUS_SET_LAST_USED_ITEM,
-    VARIOUS_PARALYZE_TYPE_IMMUNITY,
     VARIOUS_JUMP_IF_ABSENT,
     VARIOUS_DESTROY_ABILITY_POPUP,
     VARIOUS_TOTEM_BOOST,
-    VARIOUS_TRY_ACTIVATE_GRIM_NEIGH,
     VARIOUS_MOVEEND_ITEM_EFFECTS,
     VARIOUS_TERRAIN_SEED,
     VARIOUS_MAKE_INVISIBLE,
@@ -193,7 +185,6 @@ enum CmdVarious
     VARIOUS_TRY_TO_CLEAR_PRIMAL_WEATHER,
     VARIOUS_GET_ROTOTILLER_TARGETS,
     VARIOUS_JUMP_IF_NOT_ROTOTILLER_AFFECTED,
-    VARIOUS_TRY_ACTIVATE_BATTLE_BOND,
     VARIOUS_CONSUME_BERRY,
     VARIOUS_JUMP_IF_CANT_REVERT_TO_PRIMAL,
     VARIOUS_JUMP_IF_SPECIES,
@@ -212,7 +203,6 @@ enum CmdVarious
     VARIOUS_CURE_CERTAIN_STATUSES,
     VARIOUS_TRY_RESET_NEGATIVE_STAT_STAGES,
     VARIOUS_JUMP_IF_LAST_USED_ITEM_BERRY,
-    VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT,
     VARIOUS_SAVE_BATTLER_ITEM,
     VARIOUS_RESTORE_BATTLER_ITEM,
     VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM,
@@ -220,19 +210,16 @@ enum CmdVarious
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
-#define DMG_RECOIL_FROM_MISS    2
-#define DMG_DOUBLED             3
-#define DMG_1_8_TARGET_HP       4
-#define DMG_FULL_ATTACKER_HP    5
-#define DMG_CURR_ATTACKER_HP    6
-#define DMG_BIG_ROOT            7
-#define DMG_RECOIL_FROM_IMMUNE  8  // Used to calculate recoil for the Gen 4 version of Jump Kick
+#define DMG_DOUBLED             2
+#define DMG_1_8_TARGET_HP       3
+#define DMG_FULL_ATTACKER_HP    4
+#define DMG_BIG_ROOT            5
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
 
 // Cmd_statbuffchange
-#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. Set in every use of statbuffchange
+#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
 #define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
 #define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 5)
 #define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 6)
@@ -272,33 +259,34 @@ enum MoveEndEffects
     MOVEEND_ATTACKER_VISIBLE,
     MOVEEND_TARGET_VISIBLE,
     MOVEEND_ITEM_EFFECTS_TARGET,
-    MOVEEND_MOVE_EFFECTS2,
+    MOVEEND_FIRST_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ALL,
+    MOVEEND_SYMBIOSIS,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
-    MOVEEND_NUM_HITS,
     MOVEEND_SUBSTITUTE,
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
-    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a multi-hit move
-    MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_RECOIL,
+    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
+    MOVEEND_MULTIHIT_MOVE,
+    MOVEEND_SECOND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
-    MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
+    MOVEEND_ABILITY_BLOCK,
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Opportunist
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
-    MOVEEND_EJECT_ITEMS,
-    MOVEEND_WHITE_HERB,
+    MOVEEND_EJECT_BUTTON,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
-    MOVEEND_CHANGED_ITEMS,
-    MOVEEND_PICKPOCKET,
-    MOVEEND_DANCER,
     MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_SYMBIOSIS,
+    MOVEEND_EJECT_PACK,
+    MOVEEND_HIT_ESCAPE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
+    MOVEEND_PICKPOCKET,
+    MOVEEND_WHITE_HERB,
+    MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
-    MOVEEND_SET_EVOLUTION_TRACKER,
     MOVEEND_CLEAR_BITS,
+    MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
     MOVEEND_COUNT,
 };
