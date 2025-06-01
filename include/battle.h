@@ -64,6 +64,7 @@
 #define B_ACTION_FINISHED               12
 #define B_ACTION_CANCEL_PARTNER         12 // when choosing an action
 #define B_ACTION_NOTHING_FAINTED        13 // when choosing an action
+#define B_ACTION_UNK_14                 14
 #define B_ACTION_DEBUG                  20
 #define B_ACTION_THROW_BALL             21 // R to throw last used ball
 #define B_ACTION_NONE                   0xFF
@@ -791,6 +792,7 @@ struct AiBattleData
     u8 playerStallMons[PARTY_SIZE];
     u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
+    u16 aiUsingGimmick:6;
     u8 actionFlee:1;
     u8 choiceWatch:1;
     u8 padding:6;
