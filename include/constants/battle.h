@@ -23,12 +23,23 @@
  *   +---------------------------+
  */
 
-#define MAX_BATTLERS_COUNT  4
+enum BattlerPosition
+{
+    B_POSITION_PLAYER_LEFT,
+    B_POSITION_OPPONENT_LEFT,
+    B_POSITION_PLAYER_RIGHT,
+    B_POSITION_OPPONENT_RIGHT,
+    MAX_POSITION_COUNT,
+};
 
-#define B_POSITION_PLAYER_LEFT        0
-#define B_POSITION_OPPONENT_LEFT      1
-#define B_POSITION_PLAYER_RIGHT       2
-#define B_POSITION_OPPONENT_RIGHT     3
+enum BattlerId
+{
+    B_BATTLER_0,
+    B_BATTLER_1,
+    B_BATTLER_2,
+    B_BATTLER_3,
+    MAX_BATTLERS_COUNT,
+};
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
@@ -172,10 +183,10 @@
 #define STATUS3_GASTRO_ACID             (1 << 16)
 #define STATUS3_EMBARGO                 (1 << 17)
 #define STATUS3_UNDERWATER              (1 << 18)
-#define STATUS3_INTIMIDATE_POKES        (1 << 19)
-#define STATUS3_TRACE                   (1 << 20)
+#define STATUS3_UNUSED_19               (1 << 19)
+#define STATUS3_UNUSED_20               (1 << 20)
 #define STATUS3_SMACKED_DOWN            (1 << 21)
-#define STATUS3_ME_FIRST                (1 << 22)
+#define STATUS3_UNUSED_22               (1 << 22)
 #define STATUS3_TELEKINESIS             (1 << 23)
 #define STATUS3_PHANTOM_FORCE           (1 << 24)
 #define STATUS3_MIRACLE_EYED            (1 << 25)
@@ -196,7 +207,7 @@
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 
-#define HITMARKER_WAKE_UP_CLEAR         (1 << 4) // Cleared when waking up. Never set or checked.
+#define HITMARKER_UNUSED_1              (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -204,21 +215,21 @@
 #define HITMARKER_NO_ATTACKSTRING       (1 << 9)
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
-#define HITMARKER_SWAP_ATTACKER_TARGET  (1 << 12)
+#define HITMARKER_UNUSED_2              (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
-#define HITMARKER_SYNCHRONISE_EFFECT    (1 << 14)
+#define HITMARKER_SYNCHRONIZE_EFFECT    (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
-// 3 free spots because of change in handling of UNDERGROUND/UNDERWATER/ON AIR
+#define HITMARKER_UNUSED_3              (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
 #define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
-#define HITMARKER_DISOBEDIENT_MOVE      (1 << 21)
+#define HITMARKER_UNUSED_4              (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
 #define HITMARKER_GRUDGE                (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
-#define HITMARKER_NEVER_SET             (1 << 26) // Cleared as part of a large group. Never set or checked
+#define HITMARKER_UNUSED_5              (1 << 26)
 #define HITMARKER_CHARGING              (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
@@ -239,15 +250,11 @@
 #define SIDE_STATUS_TOXIC_SPIKES            (1 << 13)
 #define SIDE_STATUS_STEALTH_ROCK            (1 << 14)
 // Missing flags previously were SIDE_STATUS_TOXIC_SPIKES_DAMAGED, SIDE_STATUS_STEALTH_ROCK_DAMAGED, SIDE_STATUS_STICKY_WEB_DAMAGED
-#define SIDE_STATUS_QUICK_GUARD             (1 << 18)
-#define SIDE_STATUS_WIDE_GUARD              (1 << 19)
-#define SIDE_STATUS_CRAFTY_SHIELD           (1 << 20)
-#define SIDE_STATUS_MAT_BLOCK               (1 << 21)
-#define SIDE_STATUS_STEELSURGE              (1 << 22)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 23)
-#define SIDE_STATUS_RAINBOW                 (1 << 24)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 25)
-#define SIDE_STATUS_SWAMP                   (1 << 26)
+#define SIDE_STATUS_STEELSURGE              (1 << 18)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 19)
+#define SIDE_STATUS_RAINBOW                 (1 << 20)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 21)
+#define SIDE_STATUS_SWAMP                   (1 << 22)
 
 #define SIDE_STATUS_HAZARDS_ANY    (SIDE_STATUS_SPIKES | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE)
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
@@ -378,10 +385,8 @@ enum MoveEffects
     MOVE_EFFECT_EVS_MINUS_2,
     MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
-    MOVE_EFFECT_KNOCK_OFF,
     MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
-    MOVE_EFFECT_SMACK_DOWN,
     MOVE_EFFECT_FLAME_BURST,
     MOVE_EFFECT_FEINT,
     MOVE_EFFECT_V_CREATE,
@@ -393,7 +398,6 @@ enum MoveEffects
     MOVE_EFFECT_RECOIL_HP_25,
     MOVE_EFFECT_TRAP_BOTH,
     MOVE_EFFECT_ROUND,
-    MOVE_EFFECT_STOCKPILE_WORE_OFF,
     MOVE_EFFECT_DIRE_CLAW,
     MOVE_EFFECT_STEALTH_ROCK,
     MOVE_EFFECT_SPIKES,
@@ -470,32 +474,32 @@ enum MoveEffects
 #define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
-// Battle terrain defines for gBattleTerrain.
-#define BATTLE_TERRAIN_GRASS            0
-#define BATTLE_TERRAIN_LONG_GRASS       1
-#define BATTLE_TERRAIN_SAND             2
-#define BATTLE_TERRAIN_UNDERWATER       3
-#define BATTLE_TERRAIN_WATER            4
-#define BATTLE_TERRAIN_POND             5
-#define BATTLE_TERRAIN_MOUNTAIN         6
-#define BATTLE_TERRAIN_CAVE             7
-#define BATTLE_TERRAIN_BUILDING         8
-#define BATTLE_TERRAIN_PLAIN            9
-// New battle terrains are used for Secret Power but not fully implemented.
-#define BATTLE_TERRAIN_SOARING          10
-#define BATTLE_TERRAIN_SKY_PILLAR       11
-#define BATTLE_TERRAIN_BURIAL_GROUND    12
-#define BATTLE_TERRAIN_PUDDLE           13
-#define BATTLE_TERRAIN_MARSH            14
-#define BATTLE_TERRAIN_SWAMP            15
-#define BATTLE_TERRAIN_SNOW             16
-#define BATTLE_TERRAIN_ICE              17
-#define BATTLE_TERRAIN_VOLCANO          18
-#define BATTLE_TERRAIN_DISTORTION_WORLD 19
-#define BATTLE_TERRAIN_SPACE            20
-#define BATTLE_TERRAIN_ULTRA_SPACE      21
+// Battle environment defines for gBattleEnvironment.
+#define BATTLE_ENVIRONMENT_GRASS            0
+#define BATTLE_ENVIRONMENT_LONG_GRASS       1
+#define BATTLE_ENVIRONMENT_SAND             2
+#define BATTLE_ENVIRONMENT_UNDERWATER       3
+#define BATTLE_ENVIRONMENT_WATER            4
+#define BATTLE_ENVIRONMENT_POND             5
+#define BATTLE_ENVIRONMENT_MOUNTAIN         6
+#define BATTLE_ENVIRONMENT_CAVE             7
+#define BATTLE_ENVIRONMENT_BUILDING         8
+#define BATTLE_ENVIRONMENT_PLAIN            9
+// New battle environments are used for Secret Power but not fully implemented.
+#define BATTLE_ENVIRONMENT_SOARING          10
+#define BATTLE_ENVIRONMENT_SKY_PILLAR       11
+#define BATTLE_ENVIRONMENT_BURIAL_GROUND    12
+#define BATTLE_ENVIRONMENT_PUDDLE           13
+#define BATTLE_ENVIRONMENT_MARSH            14
+#define BATTLE_ENVIRONMENT_SWAMP            15
+#define BATTLE_ENVIRONMENT_SNOW             16
+#define BATTLE_ENVIRONMENT_ICE              17
+#define BATTLE_ENVIRONMENT_VOLCANO          18
+#define BATTLE_ENVIRONMENT_DISTORTION_WORLD 19
+#define BATTLE_ENVIRONMENT_SPACE            20
+#define BATTLE_ENVIRONMENT_ULTRA_SPACE      21
 
-#define BATTLE_TERRAIN_COUNT            22
+#define BATTLE_ENVIRONMENT_COUNT            22
 
 #define B_WAIT_TIME_LONG        (B_WAIT_TIME_MULTIPLIER * 4)
 #define B_WAIT_TIME_MED         (B_WAIT_TIME_MULTIPLIER * 3)
@@ -603,6 +607,18 @@ enum StartingStatus
     STARTING_STATUS_SEA_OF_FIRE_OPPONENT,
     STARTING_STATUS_SWAMP_PLAYER,
     STARTING_STATUS_SWAMP_OPPONENT,
+};
+
+enum SlideMsgStates
+{
+    PRINT_SLIDE_MESSAGE,
+    RESTORE_BATTLER_SLIDE_CONTROL,
+};
+
+enum MonState
+{
+    MON_IN_BATTLE,
+    MON_OUTSIDE_BATTLE,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H

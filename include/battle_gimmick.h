@@ -39,7 +39,6 @@ void HideGimmickTriggerSprite(void);
 void DestroyGimmickTriggerSprite(void);
 
 void LoadIndicatorSpritesGfx(void);
-u32 GetIndicatorTileTag(u32 battler);
 u32 GetIndicatorPalTag(u32 battler);
 void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible);
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority);
