@@ -1783,7 +1783,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep moves used after being Encore'd are prev
         TURN { MOVE(opponentLeft, MOVE_SPORE, target: playerLeft); MOVE(playerRight, MOVE_ENCORE, target: opponentLeft); }
         TURN { SWITCH(playerLeft, 2); FORCED_MOVE(opponentLeft); }
     } SCENE {
-        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(GEN_CONFIG_ENCORE_TARGET, GEN_3);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerLeft);
         MESSAGE("Zigzagoon fell asleep!");
