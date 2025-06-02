@@ -1277,7 +1277,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
-    if (B_ENCORE_TARGET >= GEN_5 && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE && move != MOVE_NONE)
+    if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) >= GEN_5 && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
         gCurrentMove = gDisableStructs[battler].encoredMove;
@@ -1535,7 +1535,7 @@ static bool32 IsMadeUnusableByEncore(u32 battler, u32 move)
     if (gDisableStructs[battler].encoreTimer == 0 || gDisableStructs[battler].encoredMove == MOVE_NONE)
         return FALSE;
 
-    if (B_ENCORE_TARGET < GEN_5)
+    if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) < GEN_5 && gDisableStructs[battler].encoredMove != move)
         return TRUE;
 
     if (gDisableStructs[battler].encoredMove != move)
@@ -1617,7 +1617,6 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 bool32 AreAllMovesUnusable(u32 battler)
 {
     u32 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
-    u32 encoreLocked = FALSE;
 
     if (unusable == ALL_MOVES_MASK) // All moves are unusable.
     {
@@ -1629,7 +1628,7 @@ bool32 AreAllMovesUnusable(u32 battler)
         gProtectStructs[battler].noValidMoves = FALSE;
     }
 
-    return (unusable == ALL_MOVES_MASK || encoreLocked);
+    return (unusable == ALL_MOVES_MASK);
 }
 
 u8 GetImprisonedMovesCount(u32 battler, u16 move)

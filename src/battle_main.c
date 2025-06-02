@@ -4220,14 +4220,16 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_USE_MOVE:
                     if (AreAllMovesUnusable(battler))
                     {
+                        DebugPrintf("AreAllMovesUnusable");
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
                         gBattleStruct->selectionScriptFinished[battler] = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                         gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                         return;
                     }
-                    else if (B_ENCORE_TARGET < GEN_5 && gDisableStructs[battler].encoredMove != MOVE_NONE)
+                    else if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) < GEN_5 && gDisableStructs[battler].encoredMove != MOVE_NONE)
                     {
+                        DebugPrintf("GEN_CONFIG_ENCORE_TARGET");
                         gChosenMoveByBattler[battler] = gDisableStructs[battler].encoredMove;
                         gBattleStruct->chosenMovePositions[battler] = gDisableStructs[battler].encoredMovePos;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
@@ -4235,6 +4237,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     else
                     {
+                        DebugPrintf("gDisableStructs[battler].encoredMove %d",, gDisableStructs[battler].encoredMove);
                         struct ChooseMoveStruct moveInfo;
 
                         moveInfo.zmove = gBattleStruct->zmove;
