@@ -9022,12 +9022,7 @@ static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageCalcula
         return UQ_4_12(1.0);
 
     u32 protected = gProtectStructs[damageCalcData->battlerDef].protected;
-    if (protected != PROTECT_NONE
-     && protected != PROTECT_WIDE_GUARD
-     && protected != PROTECT_QUICK_GUARD
-     && protected != PROTECT_CRAFTY_SHIELD
-     && protected != PROTECT_MAT_BLOCK
-     && protected != PROTECT_MAX_GUARD)
+    if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
 }
