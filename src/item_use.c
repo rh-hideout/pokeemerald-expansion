@@ -1191,12 +1191,25 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
+static bool32 IteamHealsMonVolatile(u32 battler, u16 itemId)
+{
+    const u8 *effect = GetItemEffect(itemId);
+    if (effect[3] & ITEM3_STATUS_ALL)
+        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+    else if (effect[0] & ITEM0_INFATUATION)
+        return gBattleMons[battler].volatiles.infatuation;
+    else if (effect[3] & ITEM3_CONFUSION)
+        return gBattleMons[battler].volatiles.confusionTurns > 0;
+
+    return FALSE;
+}
+
 static bool32 SelectedMonHasStatus2(u16 itemId)
 {
     if (gPartyMenu.slotId == 0)
-        return gBattleMons[0].status2 & GetItemStatus2Mask(itemId);
+        return IteamHealsMonVolatile(0, itemId);
     else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
-        return gBattleMons[2].status2 & GetItemStatus2Mask(itemId);
+        return IteamHealsMonVolatile(2, itemId);
     return FALSE;
 }
 

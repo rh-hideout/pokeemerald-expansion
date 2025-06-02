@@ -11349,3 +11349,27 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
             return;
     }
 }
+
+bool32 ItemHealMonVolatileStatus(u32 battler, u16 itemId)
+{
+    bool32 statusChanged = FALSE;
+    const u8 *effect = GetItemEffect(itemId);
+    if (effect[3] & ITEM3_STATUS_ALL)
+    {
+        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+        gBattleMons[battler].volatiles.infatuation = 0;
+        gBattleMons[battler].volatiles.confusionTurns = 0;
+    }
+    else if (effect[0] & ITEM0_INFATUATION)
+    {
+        statusChanged = !!gBattleMons[battler].volatiles.infatuation;
+        gBattleMons[battler].volatiles.infatuation = 0;
+    }
+    else if (effect[3] & ITEM3_CONFUSION)
+    {
+        statusChanged = gBattleMons[battler].volatiles.confusionTurns > 0;
+        gBattleMons[battler].volatiles.confusionTurns = 0;
+    }
+
+    return statusChanged;
+}
