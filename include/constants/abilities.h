@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_ABILITIES_H
 #define GUARD_CONSTANTS_ABILITIES_H
 
-enum Abilities : 16
+enum Abilities : u16
 {
     ABILITY_NONE,
     ABILITY_STENCH,
