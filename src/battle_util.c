@@ -1277,6 +1277,23 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
+    if (B_ENCORE_TARGET >= GEN_5 && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE && move != MOVE_NONE)
+    {
+        gBattleScripting.battler = battler;
+        gCurrentMove = gDisableStructs[battler].encoredMove;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_EncoredMove;
+            limitations++;
+        }
+        return limitations;
+    }
+
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
@@ -1513,7 +1530,21 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     return limitations;
 }
 
-u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
+static bool32 IsMadeUnusableByEncore(u32 battler, u32 move)
+{
+    if (gDisableStructs[battler].encoreTimer == 0 || gDisableStructs[battler].encoredMove == MOVE_NONE)
+        return FALSE;
+
+    if (B_ENCORE_TARGET < GEN_5)
+        return TRUE;
+
+    if (gDisableStructs[battler].encoredMove != move)
+        return TRUE;
+
+    return FALSE;
+}
+
+u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 {
     u32 move;
     enum BattleMoveEffects moveEffect;
@@ -1549,7 +1580,7 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_IMPRISON && GetImprisonedMovesCount(battler, move))
             unusableMoves |= 1u << i;
         // Encore
-        else if (check & MOVE_LIMITATION_ENCORE && gDisableStructs[battler].encoreTimer && gDisableStructs[battler].encoredMove != move)
+        else if (IsMadeUnusableByEncore(battler, move))
             unusableMoves |= 1u << i;
         // Choice Items
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
@@ -1585,7 +1616,8 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 bool32 AreAllMovesUnusable(u32 battler)
 {
-    u8 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u32 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u32 encoreLocked = FALSE;
 
     if (unusable == ALL_MOVES_MASK) // All moves are unusable.
     {
@@ -1597,7 +1629,7 @@ bool32 AreAllMovesUnusable(u32 battler)
         gProtectStructs[battler].noValidMoves = FALSE;
     }
 
-    return (unusable == ALL_MOVES_MASK);
+    return (unusable == ALL_MOVES_MASK || encoreLocked);
 }
 
 u8 GetImprisonedMovesCount(u32 battler, u16 move)
