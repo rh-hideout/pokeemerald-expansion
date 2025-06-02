@@ -12,12 +12,12 @@
 
 # [Credits](CREDITS.md)
 
- [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/master)](CREDITS.md)
+ [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/upcoming)](CREDITS.md)
 
 If you use **`pokeemerald-expansion`**, please credit **RHH (Rom Hacking Hideout)**. Optionally, include the version number for clarity.
 
 ```
-Based off RHH's pokeemerald-expansion 1.11.2 https://github.com/rh-hideout/pokeemerald-expansion/
+Based off RHH's pokeemerald-expansion 1.12.0 https://github.com/rh-hideout/pokeemerald-expansion/
 ```
 
 Please consider [crediting all contributors](CREDITS.md) involved in the project!

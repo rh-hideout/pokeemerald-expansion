@@ -116,7 +116,7 @@ static const struct CompressedSpriteSheet sBattleArenaJudgmentSymbolsSpriteSheet
     {0}
 };
 
-static void (* const sArenaFunctions[])(void) =
+static void (*const sArenaFunctions[])(void) =
 {
     [BATTLE_ARENA_FUNC_INIT]             = InitArenaChallenge,
     [BATTLE_ARENA_FUNC_GET_DATA]         = GetArenaData,
@@ -165,7 +165,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         BeginNormalPaletteFade(0x7FFFFF1C, 4, 0, 8, RGB_BLACK);
         SetGpuReg(REG_OFFSET_WININ, (WININ_WIN0_ALL & ~WININ_WIN0_BG0) | WININ_WIN1_ALL);
         LoadCompressedSpriteSheet(sBattleArenaJudgmentSymbolsSpriteSheet);
-        LoadCompressedPalette(gBattleArenaJudgmentSymbolsPalette, OBJ_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gBattleArenaJudgmentSymbolsPalette, OBJ_PLTT_ID(15), PLTT_SIZE_4BPP);
         gBattle_WIN0H = 0xFF;
         gBattle_WIN0V = 0x70;
         (*state)++;
@@ -362,7 +362,7 @@ void BattleArena_AddMindPoints(u8 battler)
 //    - Fake Out subtracts 1 point
 // All status moves give 0 points, with the following exceptions:
 //    - Protect, Detect, and Endure subtract 1 point
-    u32 effect = GetMoveEffect(gCurrentMove);
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if (effect == EFFECT_FIRST_TURN_ONLY
      || effect == EFFECT_PROTECT
@@ -415,7 +415,7 @@ void BattleArena_AddSkillPoints(u8 battler)
     }
 }
 
-void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
+void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
@@ -441,6 +441,8 @@ void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
     case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
+        break;
+    default:
         break;
     }
 }

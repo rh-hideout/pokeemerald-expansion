@@ -791,7 +791,7 @@ static const u8 sHintTextTypes[] =
     HINT_EXIT_SHORT_REMAINING_ITEMS,
 };
 
-static void (* const sBattlePyramidFunctions[])(void) =
+static void (*const sBattlePyramidFunctions[])(void) =
 {
     [BATTLE_PYRAMID_FUNC_INIT]              = InitPyramidChallenge,
     [BATTLE_PYRAMID_FUNC_GET_DATA]          = GetBattlePyramidData,
@@ -1037,7 +1037,7 @@ static void HidePyramidItem(void)
             break;
         }
         i++;
-        if (events[i].localId == 0)
+        if (events[i].localId == LOCALID_NONE)
             break;
     }
 }
@@ -1368,9 +1368,7 @@ static bool32 CheckBattlePyramidEvoRequirement(u16 species, const u16 *evoItems,
         for (j = 0; evolutions[j].method != EVOLUTIONS_END; j++)
         {
             if (evolutions[j].targetSpecies == species
-                && (evolutions[j].method == EVO_ITEM
-                 || evolutions[j].method == EVO_ITEM_MALE
-                 || evolutions[j].method == EVO_ITEM_FEMALE))
+                && (evolutions[j].method == EVO_ITEM))
             {
                 if (nItems == 0)
                 {
@@ -2083,7 +2081,7 @@ static bool8 TrySetPyramidObjectEventPositionAtCoords(u8 objType, u8 x, u8 y, u8
     const struct MapHeader *mapHeader;
     struct ObjectEventTemplate *floorEvents = gSaveBlock1Ptr->objectEventTemplates;
 
-    mapHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(BATTLE_PYRAMID_SQUARE01), floorLayoutOffsets[squareId] + MAP_NUM(BATTLE_PYRAMID_SQUARE01));
+    mapHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(MAP_BATTLE_PYRAMID_SQUARE01), floorLayoutOffsets[squareId] + MAP_NUM(MAP_BATTLE_PYRAMID_SQUARE01));
     for (i = 0; i < mapHeader->events->objectEventCount; i++)
     {
         if (mapHeader->events->objectEvents[i].x != x || mapHeader->events->objectEvents[i].y != y)
@@ -2160,7 +2158,7 @@ u8 GetNumBattlePyramidObjectEvents(void)
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (events[i].localId == 0)
+        if (events[i].localId == LOCALID_NONE)
             break;
     }
 

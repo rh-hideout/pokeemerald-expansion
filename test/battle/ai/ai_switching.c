@@ -82,6 +82,22 @@ AI_SINGLE_BATTLE_TEST("AI will switch out if it has no move that affects the pla
     }
 }
 
+AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects the player, AI will send in a mon that can hit the player, even if not ideal")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Level(5); Moves(MOVE_CONFUSION); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 4); }
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (Wonder Guard)")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE, 100, RNG_AI_SWITCH_WONDER_GUARD);
@@ -280,7 +296,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Mid-battle switches prioritize
 
     PARAMETRIZE { expectedIndex = 3; move1 = MOVE_SCRATCH; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = 0; } // When not smart, AI will only switch in a defensive mon if it has a SE move, otherwise will just default to damage
     PARAMETRIZE { expectedIndex = 1; move1 = MOVE_GIGA_DRAIN; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = 0; }
-    PARAMETRIZE { expectedIndex = 2; move1 = MOVE_SCRATCH; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; } // When smart, AI will prioritize SE move, but still switch in good type matchup without SE move
+    PARAMETRIZE { expectedIndex = 2; move1 = MOVE_SCRATCH; move2 = MOVE_WATER_PULSE; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; } // When smart, AI will prioritize SE move, but still switch in good type matchup without SE move
     PARAMETRIZE { expectedIndex = 1; move1 = MOVE_GIGA_DRAIN; move2 = MOVE_SCRATCH; aiSmartSwitchFlags = AI_FLAG_SMART_MON_CHOICES; }
 
     GIVEN {
@@ -540,7 +556,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if mon would 
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
 
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_ELECTRODE) { Moves(MOVE_THUNDERBOLT, MOVE_THUNDER_WAVE, MOVE_THUNDER_SHOCK); }
         OPPONENT(SPECIES_PELIPPER) { Moves(MOVE_EARTHQUAKE); };
         OPPONENT(SPECIES_RHYDON) { Moves(MOVE_EARTHQUAKE); Ability(ABILITY_ROCK_HEAD); }
@@ -596,7 +612,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has bee
     PARAMETRIZE { species = SPECIES_HARIYAMA, odds = SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE; }
     PASSES_RANDOMLY(odds, 100, RNG_AI_SWITCH_BADLY_POISONED);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH, MOVE_CELEBRATE, MOVE_TOXIC, MOVE_AURA_SPHERE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -821,9 +838,10 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     PARAMETRIZE { aiMon = SPECIES_ORTHWORM; absorbingAbility = ABILITY_EARTH_EATER; move = MOVE_EARTHQUAKE;}
     PARAMETRIZE { aiMon = SPECIES_BRONZONG; absorbingAbility = ABILITY_LEVITATE; move = MOVE_EARTHQUAKE;}
     PARAMETRIZE { aiMon = SPECIES_ELECTRODE; absorbingAbility = ABILITY_SOUNDPROOF; move = MOVE_HYPER_VOICE;}
+    PARAMETRIZE { aiMon = SPECIES_CHESNAUGHT; absorbingAbility = ABILITY_BULLETPROOF; move = MOVE_SLUDGE_BOMB;}
+    PARAMETRIZE { aiMon = SPECIES_SHIFTRY; absorbingAbility = ABILITY_WIND_RIDER; move = MOVE_HURRICANE;}
     GIVEN {
         ASSUME(B_REDIRECT_ABILITY_IMMUNITY >= GEN_5);
-        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(move); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -1097,5 +1115,127 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch in absorbing mon
     } WHEN {
         TURN { MOVE(player, MOVE_FLAMETHROWER); EXPECT_SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_CLOSE_COMBAT); EXPECT_MOVE(opponent, MOVE_DRACO_METEOR); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked player when determining which mon to send out")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_CHOICE_BAND; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_JOLTEON) { Speed(5); Moves(MOVE_EARTHQUAKE, MOVE_THUNDERBOLT); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_MACHAMP) { Speed(4); Moves(MOVE_REVENGE); }
+        OPPONENT(SPECIES_GYARADOS) { Speed(4); Moves(MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_TACKLE); item == ITEM_NONE ? EXPECT_SEND_OUT(opponent, 1) : EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if all moves deal zero damage")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_SCORES_BAD);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        ASSUME(GetMoveEffect(MOVE_POLTERGEIST) == EFFECT_POLTERGEIST);
+        ASSUME(GetMoveType(MOVE_SCALD) == TYPE_WATER);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        ASSUME(gSpeciesInfo[SPECIES_MANTINE].types[1] == TYPE_FLYING);
+        ASSUME(GetItemHoldEffect(ITEM_WATER_GEM) == HOLD_EFFECT_GEMS);
+        ASSUME(GetItemSecondaryId(ITEM_WATER_GEM) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MANTINE) { Speed(5); Moves(MOVE_ROOST, MOVE_SCALD); Ability(ABILITY_WATER_VEIL); Item(ITEM_WATER_GEM); }
+        OPPONENT(SPECIES_DUSKNOIR) { Speed(6); Moves(MOVE_WILL_O_WISP, MOVE_POLTERGEIST, MOVE_EARTHQUAKE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(6); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_POLTERGEIST); MOVE(player, MOVE_SCALD); }
+        TURN { EXPECT_SWITCH(opponent, 1); MOVE(player, MOVE_ROOST); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if Palafin-Zero isn't transformed yet")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_FINIZEN);
+        OPPONENT(SPECIES_PALAFIN_ZERO);
+        OPPONENT(SPECIES_FINIZEN);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: AI will use pivot move to activate Palafin's Zero to Hero rather than hard switching")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_FINIZEN);
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Moves(MOVE_FLIP_TURN); }
+        OPPONENT(SPECIES_FINIZEN);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_FLIP_TURN); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't send out defensive mon that can lose 1v1, or switch out a mon that can win 1v1 even with bad type matchup")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_PANPOUR) {
+            Level(15);
+            Moves(MOVE_WATER_PULSE, MOVE_PLAY_NICE, MOVE_FURY_SWIPES, MOVE_LICK);
+            Item(ITEM_MYSTIC_WATER);
+            Ability(ABILITY_GLUTTONY);
+            Nature(NATURE_MODEST);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_RHYHORN) {
+            Level(14);
+            Moves(MOVE_ROCK_TOMB, MOVE_HORN_ATTACK, MOVE_BULLDOZE, MOVE_ROCK_SMASH);
+            Item(ITEM_RINDO_BERRY);
+            Ability(ABILITY_LIGHTNING_ROD);
+            Nature(NATURE_ADAMANT);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_GLIGAR) {
+            Level(15);
+            Moves(MOVE_WING_ATTACK, MOVE_QUICK_ATTACK, MOVE_BULLDOZE);
+            Item(ITEM_ORAN_BERRY);
+            Ability(ABILITY_SAND_VEIL);
+            Nature(NATURE_ADAMANT);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_WOOPER_PALDEA) {
+            Level(15);
+            Moves(MOVE_MUD_SHOT, MOVE_ACID_SPRAY, MOVE_YAWN, MOVE_SANDSTORM);
+            Item(ITEM_ORAN_BERRY);
+            Ability(ABILITY_WATER_ABSORB);
+            Nature(NATURE_MODEST);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_PULSE); EXPECT_MOVE(opponent, MOVE_BULLDOZE); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_WATER_PULSE); EXPECT_MOVE(opponent, MOVE_BULLDOZE); }
     }
 }

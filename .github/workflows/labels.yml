@@ -27,6 +27,7 @@ jobs:
             category: overworld
             category: pokemon
             category: sprite-issue
+            type: documentation
   allcontributors:
     if: github.actor == 'allcontributors'
     runs-on: ubuntu-latest

@@ -492,7 +492,7 @@ static void AnimUnusedHumanoidFoot(struct Sprite *sprite)
 
 static void AnimSlideHandOrFootToTarget(struct Sprite *sprite)
 {
-    if (gBattleAnimArgs[7] == 1 && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (gBattleAnimArgs[7] == 1 && !IsOnPlayerSide(gBattleAnimAttacker))
     {
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
@@ -564,7 +564,7 @@ static void AnimFistOrFootRandomPos(struct Sprite *sprite)
     if (Random2() & 1)
         y *= -1;
 
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
         y -= 16;
 
     sprite->x += x;
@@ -644,7 +644,7 @@ static void AnimSlidingKick(struct Sprite *sprite)
 
     InitSpritePosToAnimTarget(sprite, TRUE);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[3];
@@ -984,7 +984,7 @@ void AnimSuperpowerFireball(struct Sprite *sprite)
 
     if (IsContest())
         sprite->oam.matrixNum |= ST_OAM_HFLIP;
-    else if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+    else if (IsOnPlayerSide(battler))
         sprite->oam.matrixNum |= (ST_OAM_HFLIP | ST_OAM_VFLIP);
 
     sprite->data[0] = 16;
@@ -1018,7 +1018,7 @@ static void AnimArmThrustHit(struct Sprite *sprite)
     sprite->data[4] = gBattleAnimArgs[2];
 
     turn = gAnimMoveTurn;
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
         turn++;
 
     if (turn & 1)
@@ -1044,7 +1044,7 @@ void AnimRevengeScratch(struct Sprite *sprite)
     {
         StartSpriteAnim(sprite, 2);
     }
-    else if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    else if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         StartSpriteAnim(sprite, 1);
     }
@@ -1088,7 +1088,7 @@ void AnimTask_MoveSkyUppercutBg(u8 taskId)
 
     task->data[10] += 2816;
 
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
         gBattle_BG3_X += task->data[9] >> 8;
     else
         gBattle_BG3_X -= task->data[9] >> 8;

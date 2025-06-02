@@ -764,6 +764,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro removestockpilecounters
+	callnative BS_RemoveStockpileCounters
+	.endm
+
 	.macro setdrainedhp
 	.byte 0x88
 	.endm
@@ -799,7 +803,8 @@
 	2:
 	.endm
 
-	.macro unused_0x8d
+	.macro trynonvolatilestatus
+	.byte 0x8d
 	.endm
 
 	.macro initmultihitstring
@@ -829,7 +834,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro damagetohalftargethp
+	.macro unused_0x94
 	.byte 0x94
 	.endm
 
@@ -877,11 +882,11 @@
 	.byte 0x9e
 	.endm
 
-	.macro dmgtolevel
+	.macro unused_0x9f
 	.byte 0x9f
 	.endm
 
-	.macro psywavedamageeffect
+	.macro unused_0xA0
 	.byte 0xa0
 	.endm
 
@@ -1007,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_bb
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -1140,9 +1145,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trywish turnNumber:req, failInstr:req
+	.macro trywish failInstr:req
 	.byte 0xd4
-	.byte \turnNumber
 	.4byte \failInstr
 	.endm
 
@@ -1336,9 +1340,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused ptr:req
+	.macro setnonvolatilestatus
 	.byte 0xfd
-	.4byte \ptr
 	.endm
 
 	.macro tryworryseed failInstr:req
@@ -1517,12 +1520,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifemergencyexited battler:req, jumpInstr:req
-	callnative BS_JumpIfEmergencyExited
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
 	.macro jumpifelectricabilityaffected battler:req, ability:req, jumpInstr:req
 	callnative BS_JumpIfElectricAbilityAffected
 	.byte \battler
@@ -1652,10 +1649,6 @@
 
 	.macro trytriggerstatusform
 	callnative BS_TryTriggerStatusForm
-	.endm
-
-	.macro setdynamicmovecategory
-	callnative BS_SetDynamicMoveCategory
 	.endm
 
 	.macro tryupperhand failInstr:req
@@ -1826,6 +1819,12 @@
 	.4byte \failInstr
 	.endm
 
+	.macro jumpifcangigantamax battler:req, jumpInstr:req
+	callnative BS_JumpIfCanGigantamax
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
 @ various command changed to more readable macros
 	.macro cancelmultiturnmoves battler:req
 	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
@@ -1951,24 +1950,12 @@
 	various \battler, VARIOUS_RESTORE_PP
 	.endm
 
-	.macro tryactivatemoxie battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_MOXIE
-	.endm
-
-	.macro tryactivatebeastboost battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BEAST_BOOST
-	.endm
-
 	.macro tryactivatereceiver battler:req
 	various \battler, VARIOUS_TRY_ACTIVATE_RECEIVER
 	.endm
 
 	.macro tryactivatesoulheart
 	various BS_ATTACKER, VARIOUS_TRY_ACTIVATE_SOULHEART
-	.endm
-
-	.macro tryactivatefellstinger battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_FELL_STINGER
 	.endm
 
 	.macro playmoveanimation battler:req, move:req
@@ -2042,10 +2029,6 @@
 	.macro jumpifcantuselastresort battler:req, jumpInstr:req
 	various \battler, VARIOUS_TRY_LAST_RESORT
 	.4byte \jumpInstr
-	.endm
-
-	.macro setargtobattledamage
-	various BS_ATTACKER, VARIOUS_SET_ARG_TO_BATTLE_DAMAGE
 	.endm
 
 	.macro tryautotomize battler:req, failInstr:req
@@ -2186,18 +2169,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trypoisontype attacker:req, target:req, failInstr:req
-	various \attacker, VARIOUS_POISON_TYPE_IMMUNITY
-	.byte \target
-	.4byte \failInstr
-	.endm
-
-	.macro tryparalyzetype attacker:req, target:req, failInstr:req
-	various \attacker, VARIOUS_PARALYZE_TYPE_IMMUNITY
-	.byte \target
-	.4byte \failInstr
-	.endm
-
 	.macro trysetfairylock failInstr:req
 	various BS_ATTACKER, VARIOUS_TRY_FAIRY_LOCK
 	.4byte \failInstr
@@ -2240,10 +2211,6 @@
 	.macro gettotemboost jumpInstr:req
 	various BS_ATTACKER, VARIOUS_TOTEM_BOOST
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryactivategrimneigh, battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
 	.endm
 
 	.macro consumeberry battler:req, fromBattler:req
@@ -2306,10 +2273,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryactivatebattlebond battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BATTLE_BOND
-	.endm
-
 	.macro jumpifcantreverttoprimal jumpInstr:req
 	various BS_ATTACKER, VARIOUS_JUMP_IF_CANT_REVERT_TO_PRIMAL
 	.4byte \jumpInstr
@@ -2359,9 +2322,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpiflastuseditemholdeffect battler:req, holdEffect:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT
+	.macro jumpiflastuseditemholdeffect holdEffect:req, secondaryId:req, jumpInstr:req
+	callnative BS_JumpIfLastUsedItemHoldEffect
 	.byte \holdEffect
+	.2byte \secondaryId
 	.4byte \jumpInstr
 	.endm
 
@@ -2593,4 +2557,9 @@
 	.macro flushtextbox
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
+	.endm
+
+	.macro jumpifnowhiteout jumpInstr:req
+	callnative BS_JumpIfNoWhiteOut
+	.4byte \jumpInstr
 	.endm

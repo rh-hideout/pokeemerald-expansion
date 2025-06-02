@@ -741,13 +741,11 @@ static void UpdateBattlerValue(struct PokemonSpriteVisualizer *data)
 
 static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, u8 battlerId)
 {
-    const u32 *lzPaletteData = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
+    const u16 *palette = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
     u16 paletteOffset = OBJ_PLTT_ID(battlerId);
-    void *buffer = malloc_and_decompress(lzPaletteData, NULL);
 
-    LoadPalette(buffer, paletteOffset, PLTT_SIZE_4BPP);
-    LoadPalette(buffer, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
-    Free(buffer);
+    LoadPalette(palette, paletteOffset, PLTT_SIZE_4BPP);
+    LoadPalette(palette, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
 }
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)
@@ -931,72 +929,72 @@ static void LoadBattleBg(u8 battleBgType, u8 battleEnvironment)
     case MAP_BATTLE_SCENE_NORMAL:
         LZDecompressVram(sBattleEnvironmentTable[battleEnvironment].tileset, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(sBattleEnvironmentTable[battleEnvironment].tilemap, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(sBattleEnvironmentTable[battleEnvironment].palette, 0x20, 0x60);
+        LoadPalette(sBattleEnvironmentTable[battleEnvironment].palette, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GYM:
         LZDecompressVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_BuildingGym, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_BuildingGym, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_MAGMA:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumMagma, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumMagma, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_AQUA:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumAqua, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumAqua, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_SIDNEY:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumSidney, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumSidney, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_PHOEBE:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumPhoebe, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumPhoebe, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GLACIA:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumGlacia, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumGlacia, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_DRAKE:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumDrake, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumDrake, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_FRONTIER:
         LZDecompressVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_Frontier, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Frontier, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_LEADER:
         LZDecompressVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_BuildingLeader, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_BuildingLeader, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_WALLACE:
         LZDecompressVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_StadiumWallace, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumWallace, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GROUDON:
         LZDecompressVram(gBattleEnvironmentTiles_Cave, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Cave, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_Groudon, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Groudon, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_KYOGRE:
         LZDecompressVram(gBattleEnvironmentTiles_Water, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Water, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_Kyogre, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Kyogre, 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_RAYQUAZA:
         LZDecompressVram(gBattleEnvironmentTiles_Rayquaza, (void*)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleEnvironmentTilemap_Rayquaza, (void*)(BG_SCREEN_ADDR(26)));
-        LoadCompressedPalette(gBattleEnvironmentPalette_Rayquaza, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Rayquaza, 0x20, 0x60);
         break;
     }
 }
@@ -1214,7 +1212,7 @@ static void ResetPokemonSpriteVisualizerWindows(void)
 void CB2_Pokemon_Sprite_Visualizer(void)
 {
     u8 taskId;
-    const u32 *palette;
+    const u16 *palette;
     struct PokemonSpriteVisualizer *data;
     u16 species;
     s16 offset_y;
@@ -1280,7 +1278,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
 
             //Palettes
             palette = GetMonSpritePalFromSpecies(species, data->isShiny, data->isFemale);
-            LoadCompressedSpritePaletteWithTag(palette, species);
+            LoadSpritePaletteWithTag(palette, species);
             //Front
             HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[1], species, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
             data->isShiny = FALSE;
@@ -1943,7 +1941,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 
 static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
 {
-    const u32 *palette;
+    const u16 *palette;
     u16 species = data->currentmonId;
     s16 offset_y;
     u8 front_x = sBattlerCoords[0][1].x;
@@ -1973,7 +1971,7 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
 
     //Palettes
     palette = GetMonSpritePalFromSpecies(species, data->isShiny, data->isFemale);
-    LoadCompressedSpritePaletteWithTag(palette, species);
+    LoadSpritePaletteWithTag(palette, species);
     //Front
     HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[1], species, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
     BattleLoadOpponentMonSpriteGfxCustom(species, data->isFemale, data->isShiny, 1);
