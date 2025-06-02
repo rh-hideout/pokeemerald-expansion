@@ -93,7 +93,7 @@ enum FlagsVarsDebugMenu
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING,
 };
 
-enum BattleType
+enum DebugBattleType
 {
     DEBUG_BATTLE_0_MENU_ITEM_WILD,
     DEBUG_BATTLE_0_MENU_ITEM_WILD_DOUBLE,
@@ -102,7 +102,7 @@ enum BattleType
     DEBUG_BATTLE_0_MENU_ITEM_MULTI,
 };
 
-enum BattleAIFlags
+enum DebugBattleAIFlags
 {
     DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_00,
     DEBUG_BATTLE_1_MENU_ITEM_AI_FLAG_01,
@@ -125,7 +125,7 @@ enum BattleAIFlags
     DEBUG_BATTLE_1_MENU_ITEM_CONTINUE,
 };
 
-enum BattleTerrain
+enum DebugBattleTerrain
 {
     DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_0,
     DEBUG_BATTLE_2_MENU_ITEM_TERRAIN_1,
@@ -1253,11 +1253,15 @@ static void DebugAction_OpenSubMenu(u8 taskId, DebugFunc input, const struct Deb
 
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems)
 {
-    Debug_DestroyMenu_Full(taskId);
     if (!OW_USE_FAKE_RTC)
+    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
+    }
     else
+    {
+        Debug_DestroyMenu_Full(taskId);
         Debug_ShowMenu(input, items, totalItems);
+    }
 }
 
 // *******************************
@@ -1694,7 +1698,6 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
 
 static void DebugAction_TimeMenu_PrintTime(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems)
 {
-    Debug_DestroyMenu_Full(taskId);
     LockPlayerFieldControls();
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_TellTheTime);
 }
@@ -1720,7 +1723,6 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 
 static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId, DebugFunc input, const struct DebugMenuOption *items, u32 totalItems)
 {
-    Debug_DestroyMenu_Full(taskId);
     LockPlayerFieldControls();
     Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_PrintTimeOfDay);
 }
@@ -3264,7 +3266,7 @@ static void DebugAction_PCBag_Fill_PocketItems(u8 taskId, DebugFunc input, const
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
+        if (GetItemPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }
 }
@@ -3308,7 +3310,7 @@ static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId, DebugFunc input, co
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
+        if (GetItemPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
             AddBagItem(itemId, 1);
     }
 }

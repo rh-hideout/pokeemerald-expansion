@@ -302,17 +302,19 @@ void CreateBattlerSprite(u32 battler)
 
         if (!IsOnPlayerSide(battler))
         {
-            if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
+            struct Pokemon *mon = GetBattlerMon(battler);
+            if (GetMonData(mon, MON_DATA_HP) == 0)
                 return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
+            u32 species = GetMonData(mon, MON_DATA_SPECIES);
 
-            SetMultiuseSpriteTemplateToPokemon(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES), GetBattlerPosition(battler));
+            SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battler));
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
-            gSprites[gBattlerSpriteIds[battler]].data[2] = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+            gSprites[gBattlerSpriteIds[battler]].data[2] = species;
 
             StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
         }
@@ -338,15 +340,17 @@ void CreateBattlerSprite(u32 battler)
         }
         else
         {
-            if (!IsValidForBattle(GetBattlerMon(battler)))
+            struct Pokemon *mon = GetBattlerMon(battler);
+            if (!IsValidForBattle(mon))
                 return;
+            u32 species = GetMonData(mon, MON_DATA_SPECIES);
 
-            SetMultiuseSpriteTemplateToPokemon(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES), GetBattlerPosition(battler));
+            SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battler));
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
-            gSprites[gBattlerSpriteIds[battler]].data[2] = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+            gSprites[gBattlerSpriteIds[battler]].data[2] = species;
 
             StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
         }

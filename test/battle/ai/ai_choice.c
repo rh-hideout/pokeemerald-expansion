@@ -230,3 +230,23 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
         TURN { MOVE(player, MOVE_CLOSE_COMBAT); EXPECT_SWITCH(opponent, 1); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when considering switching with FindMonThatAbsorbsMove")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE, 100, RNG_AI_SWITCH_ABSORBING);
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_SANDSHREW].types[0] == TYPE_GROUND);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_WOOPER) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_DWEBBLE) { Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_MUDKIP) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_SCRATCH, MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_WOOPER) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_SWITCH(opponent, 1); }
+    }
+}

@@ -44,7 +44,7 @@ void DateTime_AddDays(struct DateTime *dateTime, u32 days)
 void DateTime_AddHours(struct DateTime *dateTime, u32 hours)
 {
     u32 days = 0;
-    
+
     dateTime->hour += hours;
     while (dateTime->hour >= HOURS_PER_DAY)
     {

@@ -1499,7 +1499,7 @@ void BtlController_EmitIntroTrainerBallThrow(u32 battler, u32 bufferId)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitDrawPartyStatusSummary(u32 battler, u32 bufferId, struct HpAndStatus* hpAndStatus, u8 flags)
+void BtlController_EmitDrawPartyStatusSummary(u32 battler, u32 bufferId, struct HpAndStatus *hpAndStatus, u8 flags)
 {
     s32 i;
 
@@ -1539,7 +1539,7 @@ void BtlController_EmitSpriteInvisibility(u32 battler, u32 bufferId, bool8 isInv
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, struct DisableStruct* disableStructPtr, u16 argument)
+void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, struct DisableStruct *disableStructPtr, u16 argument)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_BATTLEANIMATION;
     gBattleResources->transferBuffer[1] = animationId;
@@ -3158,7 +3158,7 @@ bool32 TryShinyAnimAfterMonAnimUtil(u32 battler)
     if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
      || gSprites[gBattlerSpriteIds[battler]].x2 != 0)
         return FALSE;
-    
+
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
     {
         TryShinyAnimation(battler, GetBattlerMon(battler));
@@ -3200,7 +3200,7 @@ bool32 SwitchIn_HandleSoundAndEndUtil(u32 battler)
 {
     if (gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive || IsCryPlayingOrClearCrySongs())
         return FALSE;
-    
+
     if (gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy
      && gSprites[gBattlerSpriteIds[battler]].callback != SpriteCallbackDummy_2
      && GetBattlerSide(battler) == B_SIDE_OPPONENT)
