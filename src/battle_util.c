@@ -9327,11 +9327,11 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
         dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
         break;
-    case EFFECT_FIXED_DAMAGE_ARG:
-        dmg = GetMoveFixedDamage(damageCalcData->move);
+    case EFFECT_FIXED_HP_DAMAGE:
+        dmg = GetMoveFixedHPDamage(damageCalcData->move);
         break;
-    case EFFECT_SUPER_FANG:
-        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) / 2;
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) * GetMoveDemagePercentage(damageCalcData->move) / 100;
         break;
     case EFFECT_FINAL_GAMBIT:
         dmg = GetNonDynamaxHP(damageCalcData->battlerAtk);

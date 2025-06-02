@@ -760,8 +760,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         // Changes depending on the effect
         switch (effect)
         {
-        case EFFECT_FIXED_DAMAGE_ARG:
-            baseFromEffect *= (GetMoveFixedDamage(move) / 20);
+        case EFFECT_FIXED_HP_DAMAGE:
+            baseFromEffect *= (GetMoveFixedHPDamage(move) / 20);
             break;
         case EFFECT_TWO_TURNS_ATTACK:
             for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)

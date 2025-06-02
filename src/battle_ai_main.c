@@ -399,14 +399,14 @@ void ComputeBattlerDecisions(u32 battler)
     }
 }
 
-void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move) 
+void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
 {
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) 
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) 
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
@@ -416,18 +416,18 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
+    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
-    
+
 
     if (!IsDoubleBattle())
         chosenMoveIndex = ChooseMoveOrAction_Singles(battler);
     else
         chosenMoveIndex = ChooseMoveOrAction_Doubles(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE) 
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
-    
+
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -1081,18 +1081,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
         switch (moveEffect)
         {
-        case EFFECT_FIXED_DAMAGE_ARG:
+        case EFFECT_FIXED_HP_DAMAGE:
         case EFFECT_LEVEL_DAMAGE:
         case EFFECT_PSYWAVE:
         case EFFECT_OHKO:
         case EFFECT_BIDE:
-        case EFFECT_SUPER_FANG:
+        case EFFECT_FIXED_PERCENT_DAMAGE:
         case EFFECT_ENDEAVOR:
         case EFFECT_COUNTER:
         case EFFECT_MIRROR_COAT:
         case EFFECT_METAL_BURST:
         case EFFECT_FINAL_GAMBIT:
-        case EFFECT_GUARDIAN_OF_ALOLA:
             break;
         default:
             RETURN_SCORE_MINUS(10);
@@ -1624,7 +1623,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_PRESENT:
-        case EFFECT_FIXED_DAMAGE_ARG:
+        case EFFECT_FIXED_HP_DAMAGE:
         case EFFECT_FOCUS_PUNCH:
             // AI_CBM_HighRiskForDamage
             if (aiData->abilities[battlerDef] == ABILITY_WONDER_GUARD && effectiveness < UQ_4_12(2.0))

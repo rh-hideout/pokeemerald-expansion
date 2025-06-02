@@ -17866,16 +17866,6 @@ void BS_ApplyTerastallization(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_DamageToQuarterTargetHP(void)
-{
-    NATIVE_ARGS();
-    gBattleStruct->moveDamage[gBattlerTarget] = (3 * GetNonDynamaxHP(gBattlerTarget)) / 4;
-    if (gBattleStruct->moveDamage[gBattlerTarget] == 0)
-        gBattleStruct->moveDamage[gBattlerTarget] = 1;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_JumpIfSleepClause(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
