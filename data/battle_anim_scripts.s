@@ -5905,7 +5905,7 @@ gBattleAnimMove_SacredSword::
 	playsewithpan SE_M_SWORDS_DANCE, SOUND_PAN_ATTACKER
 	createsprite gSwordsDanceBladeSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0
 	delay 22
-	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, 0x2715, 0x2, 0x2, 0x7ff2, 0x10, 0x0, 0x0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_SWORD, 2, 2, RGB(18, 31, 31), 16, 0, 0
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
@@ -6843,7 +6843,7 @@ gBattleAnimMove_SecretSword::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 0, 16, RGB_BLACK
 	createsprite gSwordsDanceBladeSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0
 	delay 22
-	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, 0x2715, 0x2, 0x2, 0x7ff2, 0x10, 0x0, 0x0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_SWORD, 2, 2, RGB(18, 31, 31), 16, 0, 0
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
@@ -8020,7 +8020,7 @@ gBattleAnimMove_CraftyShield::
 	createsprite gCraftyShieldPinkConversionTemplate, ANIM_ATTACKER, 2, 0x18, 0x18
 	delay 20
 	playsewithpan SE_M_BARRIER, SOUND_PAN_ATTACKER
-	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, 0x2722, 0x1, 0x1, 0x37ff, 0xc, 0x0, 0x0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_CONVERSION, 1, 1, RGB(31, 31, 13), 12, 0, 0
 	delay 6
 	createvisualtask AnimTask_ConversionAlphaBlend, 0x5
 	waitforvisualfinish
@@ -10299,7 +10299,7 @@ SolarBladeUnleash:
 	call SolarBladeSunRays
 	call SolarBladeSunRays
 	call SolarBladeSunRays
-	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, 0x2715, 0x2, 0x2, 0x7ff2, 0x10, 0x0, 0x0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_SWORD, 2, 2, RGB(18, 31, 31), 16, 0, 0
 	waitforvisualfinish
 	call SetSolarBeamBg
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
@@ -13647,7 +13647,7 @@ gBattleAnimMove_BehemothBlade::
 	playsewithpan SE_M_SWORDS_DANCE, SOUND_PAN_ATTACKER
 	createsprite gSwordsDanceBladeSpriteTemplate, ANIM_ATTACKER, 2, 0, 0
 	delay 22
-	createvisualtask AnimTask_FlashAnimTagWithColor, 2, 0x2715, 2, 2, RGB(18, 31, 31), 16, 0, 0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_SWORD, 2, 2, RGB(18, 31, 31), 16, 0, 0
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
@@ -15605,7 +15605,7 @@ gBattleAnimMove_GlacialLance::
 	createvisualtask AnimTask_CentredFrozenIceCube, ANIM_TARGET, 0
 	createsprite gSpriteTemplate_GlacialLance, ANIM_TARGET, 2, 0, 40, 0, 0, 40, 50, 10
 	delay 60
-	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, ANIM_TAG_ICICLE_SPEAR, 0x4, 0x1, 0x7FFF, 0x10, 0x0, 0x0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_ICICLE_SPEAR, 4, 1, RGB_WHITE, 16, 0, 0
 	playsewithpan SE_M_DETECT, SOUND_PAN_TARGET
 	delay 38
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
@@ -18606,7 +18606,7 @@ gBattleAnimMove_GlaiveRush::
 	playsewithpan SE_M_SWORDS_DANCE, SOUND_PAN_ATTACKER
 	createsprite gSwordsDanceBladeSpriteTemplate, ANIM_ATTACKER, 2, 0, 0
 	delay 22
-	createvisualtask AnimTask_FlashAnimTagWithColor, 2, 0x2715, 2, 2, RGB(18, 31, 31), 16, 0, 0
+	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_SWORD, 2, 2, RGB(18, 31, 31), 16, 0, 0
 	waitforvisualfinish
 	delay 1
 	loadspritegfx ANIM_TAG_IMPACT
@@ -33104,7 +33104,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	loadspritegfx ANIM_TAG_POISON_BUBBLE @purple
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER, 0x5, 0xA
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 50, 1
-@	createvisualtask AnimTask_FlashAnimTagWithColor, 0x2, ANIM_TAG_ORBS, 0x1, 0xc, 0x1f, 0x10, 0x0, 0x0
+@	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_ORBS, 1, 12, RGB_RED, 16, 0, 0
 	call TenMillionVoltThunderboltBeamRed
 	call TenMillionVoltThunderboltBeamBlue
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 50, 1
