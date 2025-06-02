@@ -593,6 +593,7 @@ void DoMossdeepGymWarp(void)
     SaveObjectEvents();
     TryFadeOutOldMapMusic();
     WarpFadeOutScreen();
+    SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
     PlaySE(SE_WARP_IN);
     CreateTask(Task_WarpAndLoadMap, 10);
     gFieldCallback = FieldCB_MossdeepGymWarpExit;
