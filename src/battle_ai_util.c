@@ -4478,7 +4478,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
     return FALSE;
 }
 
-void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use) 
+void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use)
 {
     if (use == USE_GIMMICK)
         gAiBattleData->aiUsingGimmick |= (1<<battler);
@@ -4486,7 +4486,7 @@ void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use)
         gAiBattleData->aiUsingGimmick &= ~(1<<battler);
 }
 
-bool32 IsAIUsingGimmick(u32 battler) 
+bool32 IsAIUsingGimmick(u32 battler)
 {
     return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
 }
@@ -4500,17 +4500,17 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
 
 void DecideTerastal(u32 battler)
 {
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA) 
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
         return;
-    
-    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
+
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         return;
-    
+
     // TODO: Currently only single battles are considered.
-    if (IsDoubleBattle())    
-        return; 
-    
-    // TODO: A lot of these checks are most effective for an omnicient ai. 
+    if (IsDoubleBattle())
+        return;
+
+    // TODO: A lot of these checks are most effective for an omnicient ai.
     // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
 
     u32 opposingBattler = GetOppositeBattler(battler);
@@ -4528,20 +4528,20 @@ void DecideTerastal(u32 battler)
 
     uq4_12_t effectiveness;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (!IsMoveUnusable(i, aiMoves[i], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i])) 
+        if (!IsMoveUnusable(i, aiMoves[i], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i]))
             altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
-        else 
+        else
             altCalcs.dealtWithoutTera[i] = noDmg;
-        
 
-        if (!IsMoveUnusable(i, oppMoves[i], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[i]))  
+
+        if (!IsMoveUnusable(i, oppMoves[i], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[i]))
         {
             altCalcs.takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather());
             effectivenessTakenWithTera[i] = effectiveness;
         }
-        else 
+        else
         {
             altCalcs.takenWithTera[i] = noDmg;
             effectivenessTakenWithTera[i] = Q_4_12(0.0);
@@ -4552,19 +4552,19 @@ void DecideTerastal(u32 battler)
     enum AIConsiderGimmick res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
 
 
-    if (res == USE_GIMMICK) 
+    if (res == USE_GIMMICK)
     {
         // Damage calcs for damage received assumed we wouldn't tera. Adjust that so that further AI decisions are more accurate.
-        for (int i = 0; i < MAX_MON_MOVES; i++) 
+        for (int i = 0; i < MAX_MON_MOVES; i++)
         {
             gAiLogicData->simulatedDmg[opposingBattler][battler][i] = altCalcs.takenWithTera[i];
             gAiLogicData->effectiveness[opposingBattler][battler][i] = effectivenessTakenWithTera[i];
         }
     }
-    else 
+    else
     {
-        // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate. 
-        for (int i = 0; i < MAX_MON_MOVES; i++) 
+        // Damage calcs for damage dealt assumed we would tera. Adjust that so that further AI decisions are more accurate.
+        for (int i = 0; i < MAX_MON_MOVES; i++)
             gAiLogicData->simulatedDmg[battler][opposingBattler][i] = altCalcs.dealtWithoutTera[i];
     }
 
@@ -4582,13 +4582,13 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
     struct Pokemon* party = GetBattlerParty(battler);
 
     // Check how many pokemon we have that could tera
-    int numPossibleTera = 0; 
-    for (int i = 0; i < PARTY_SIZE; i++) 
+    int numPossibleTera = 0;
+    for (int i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&party[i], MON_DATA_HP) != 0
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
          && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0) 
+         && GetMonData(&party[i], MON_DATA_TERA_TYPE) > 0)
             numPossibleTera++;
     }
 
@@ -4602,44 +4602,44 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
     bool32 hasKoWithout = FALSE;
     u16 killingMove = MOVE_NONE;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (dealtWithTera[i].median >= oppHp) 
+        if (dealtWithTera[i].median >= oppHp)
         {
             u16 move = aiMoves[i];
             if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove))
                 killingMove = move;
-        } 
-        if (dealtWithoutTera[i].median >= oppHp) 
+        }
+        if (dealtWithoutTera[i].median >= oppHp)
             hasKoWithout = TRUE;
     }
 
     bool32 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
 
     // Check whether tera saves us from a KO
-    bool32 savedFromKo = FALSE; 
+    bool32 savedFromKo = FALSE;
     bool32 getsKodRegardlessBySingleMove = FALSE;
 
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum >= aiHp) 
+        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum >= aiHp)
             getsKodRegardlessBySingleMove = TRUE;
 
-        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum < aiHp) 
+        if (takenWithoutTera[i].maximum >= aiHp && takenWithTera[i].maximum < aiHp)
             savedFromKo = TRUE;
     }
 
     if (getsKodRegardlessBySingleMove)
         savedFromKo = FALSE;
 
-    // Check whether opponent can punish tera by ko'ing 
+    // Check whether opponent can punish tera by ko'ing
     u16 hardPunishingMove = MOVE_NONE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (takenWithTera[i].maximum >= aiHp) 
+        if (takenWithTera[i].maximum >= aiHp)
         {
             u16 move = oppMoves[i];
-            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], move) > GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)) 
+            if (hardPunishingMove == MOVE_NONE || GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], move) > GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
                 hardPunishingMove = move;
         }
     }
@@ -4648,32 +4648,32 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
     // (e.g. a weakness becomes a resistance, a 4x weakness becomes neutral, etc)
     bool32 takesBigHit = FALSE;
     bool32 savedFromAllBigHits = TRUE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (takenWithoutTera[i].median > aiHp/2) 
+        if (takenWithoutTera[i].median > aiHp/2)
         {
-            takesBigHit = TRUE; 
-            if (takenWithTera[i].median > aiHp/4) 
+            takesBigHit = TRUE;
+            if (takenWithTera[i].median > aiHp/4)
                 savedFromAllBigHits = FALSE;
         }
     }
 
     // Check for any benefit whatsoever. Only used for the last possible mon that could tera.
     bool32 anyOffensiveBenefit = FALSE;
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (dealtWithTera[i].median > dealtWithoutTera[i].median) 
+        if (dealtWithTera[i].median > dealtWithoutTera[i].median)
             anyOffensiveBenefit = TRUE;
-    }  
+    }
 
     bool32 anyDefensiveBenefit = FALSE;
-    bool32 anyDefensiveDrawback = FALSE; 
-    for (int i = 0; i < MAX_MON_MOVES; i++) 
+    bool32 anyDefensiveDrawback = FALSE;
+    for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (takenWithTera[i].median < takenWithoutTera[i].median) 
+        if (takenWithTera[i].median < takenWithoutTera[i].median)
             anyDefensiveBenefit = TRUE;
 
-        if (takenWithTera[i].median > takenWithoutTera[i].median) 
+        if (takenWithTera[i].median > takenWithoutTera[i].median)
             anyDefensiveDrawback = TRUE;
     }
 
@@ -4681,55 +4681,55 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
     // This is done after all loops to minimize the possibility of a timing attack in which the player could
     // determine whether the AI will tera based on the time taken to select a move.
 
-    if (enablesKo) 
+    if (enablesKo)
     {
-        if (hardPunishingMove == MOVE_NONE) 
+        if (hardPunishingMove == MOVE_NONE)
         {
             return USE_GIMMICK;
         }
-        else 
+        else
         {
             // will we go first?
-            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)) 
+            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
                 return USE_GIMMICK;
         }
     }
 
     // Decide to conserve tera based on number of possible later oppotunities
     u16 conserveTeraChance = AI_CONSERVE_TERA_CHANCE_PER_MON * (numPossibleTera-1);
-    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance)) 
+    if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveTeraChance))
         return NO_GIMMICK;
 
-    if (savedFromKo) 
+    if (savedFromKo)
     {
-        if (hardPunishingMove == MOVE_NONE) 
+        if (hardPunishingMove == MOVE_NONE)
         {
             return USE_GIMMICK;
         }
-        else 
+        else
         {
             // If tera saves us from a ko from one move, but enables a ko otherwise, randomly predict
             // savesFromKo being true ensures opponent doesn't have a ko if we don't tera
-            if (Random() % 100 < AI_TERA_PREDICT_CHANCE) 
+            if (Random() % 100 < AI_TERA_PREDICT_CHANCE)
                 return USE_GIMMICK;
         }
     }
 
-    if (hardPunishingMove != MOVE_NONE) 
+    if (hardPunishingMove != MOVE_NONE)
         return NO_GIMMICK;
 
-    if (takesBigHit && savedFromAllBigHits) 
+    if (takesBigHit && savedFromAllBigHits)
         return USE_GIMMICK;
 
-    // No strongly compelling reason to tera. Conserve it if possible. 
-    if (numPossibleTera > 1) 
+    // No strongly compelling reason to tera. Conserve it if possible.
+    if (numPossibleTera > 1)
         return NO_GIMMICK;
 
-    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback)) 
+    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback))
         return USE_GIMMICK;
 
     // TODO: Effects other than direct damage are not yet considered. For example, may want to tera poison to avoid a Toxic.
-    
+
 
     return NO_GIMMICK;
 }
@@ -4961,7 +4961,7 @@ bool32 ShouldTriggerAbility(u32 battler, u32 ability)
     {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
-            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+            if (GetGenConfig(GEN_CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
                 return FALSE;
             else
                 return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
