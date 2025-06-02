@@ -10469,7 +10469,7 @@ gBattleAnimMove_ThroatChop::
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
 	createsprite gKarateChopSpriteTemplate, ANIM_ATTACKER, 2, -16, 0, 0, 0, 10, 1, 3, 0
 	waitforvisualfinish
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101
 	createsprite gThroatChopRedImpactTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x1, 0x2
 	delay 3
 	createsprite gThroatChopRedImpactTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x1, 0x2
@@ -10488,7 +10488,7 @@ gBattleAnimMove_ThroatChop::
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 4, 0, 6, 1
 	waitforvisualfinish
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
@@ -12566,7 +12566,7 @@ PlasmaFistsImpact:
 	createsprite gFistFootSpriteTemplate, ANIM_TARGET, 4, 0x0, 0x0, 0x8, 0x1, 0x0
 	createsprite gBasicHitSplatSpriteTemplate, ANIM_TARGET, 3, 0, 0, ANIM_TARGET, 1
 	delay 1
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, 0, -48
 	delay 1
@@ -12575,7 +12575,7 @@ PlasmaFistsImpact:
 	createsprite gLightningSpriteTemplate, ANIM_ATTACKER, 2, 0, 16
 	delay 1
 	playsewithpan SE_M_TRI_ATTACK2, SOUND_PAN_TARGET
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101
 	delay 2
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 15, 1
 	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, ANIM_TARGET, 2
@@ -33039,7 +33039,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x14, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101  @thunder flash
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101  @thunder flash
 	createsprite gGrowingChargeOrbSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER	@ charge
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, 64, -36
 	delay 1
@@ -33054,7 +33054,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x18, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101  @thunder flash
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101  @thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -20
@@ -33068,7 +33068,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x1c, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101  @thunder flash
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101  @thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -20
@@ -33082,7 +33082,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x20, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	createvisualtask AnimTask_InvertScreenColor, 0x2, 0x101, 0x101, 0x101  @thunder flash
+	createvisualtask AnimTask_InvertScreenColor, 2, 0x101, 0x101, 0x101  @thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -20
