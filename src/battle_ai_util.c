@@ -364,7 +364,9 @@ bool32 AI_CanBattlerEscape(u32 battler)
 
 bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
 {
-    if (gBattleMons[battlerDef].status2 & (STATUS2_ESCAPE_PREVENTION | STATUS2_WRAPPED))
+    if (gBattleMons[battlerDef].volatiles.wrapped)
+        return TRUE;
+    if (gBattleMons[battlerDef].volatiles.escapePrevention)
         return TRUE;
     if (gStatuses3[battlerDef] & (STATUS3_ROOTED | STATUS3_SKY_DROPPED))
         return TRUE;
@@ -1920,14 +1922,16 @@ void ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove, 
     }
 
     if (gBattleMons[battlerAtk].status1 & (STATUS1_PSN_ANY | STATUS1_BURN | STATUS1_FROSTBITE)
-     || gBattleMons[battlerAtk].status2 & (STATUS2_CURSED | STATUS2_INFATUATION)
+     || gBattleMons[battlerAtk].volatiles.cursed
+     || gBattleMons[battlerAtk].volatiles.infatuation
      || gStatuses3[battlerAtk] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED | STATUS3_YAWN))
     {
         ADJUST_SCORE_PTR(-1);
     }
 
     if (gBattleMons[battlerDef].status1 & STATUS1_TOXIC_POISON
-      || gBattleMons[battlerDef].status2 & (STATUS2_CURSED | STATUS2_INFATUATION)
+      || gBattleMons[battlerDef].volatiles.cursed
+      || gBattleMons[battlerDef].volatiles.infatuation
       || gStatuses3[battlerDef] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED | STATUS3_YAWN))
         ADJUST_SCORE_PTR(DECENT_EFFECT);
 }
@@ -2812,7 +2816,7 @@ static u32 GetLeechSeedDamage(u32 battlerId)
 static u32 GetNightmareDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if ((gBattleMons[battlerId].status2 & STATUS2_NIGHTMARE) && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battlerId].volatiles.nightmare && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)
@@ -2824,7 +2828,7 @@ static u32 GetNightmareDamage(u32 battlerId)
 static u32 GetCurseDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if (gBattleMons[battlerId].status2 & STATUS2_CURSED)
+    if (gBattleMons[battlerId].volatiles.cursed)
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)
@@ -2838,7 +2842,7 @@ static u32 GetTrapDamage(u32 battlerId)
     // ai has no knowledge about turns remaining
     u32 damage = 0;
     enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[gBattleStruct->wrappedBy[battlerId]];
-    if (gBattleMons[battlerId].status2 & STATUS2_WRAPPED)
+    if (gBattleMons[battlerId].volatiles.wrapped)
     {
         if (holdEffect == HOLD_EFFECT_BINDING_BAND)
             damage = GetNonDynamaxMaxHP(battlerId) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
@@ -3244,7 +3248,7 @@ bool32 IsBattlerIncapacitated(u32 battler, u32 ability)
     if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveWithEffect(battler, EFFECT_SLEEP_TALK))
         return TRUE;
 
-    if (gBattleMons[battler].status2 & STATUS2_RECHARGE || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
+    if (gBattleMons[battler].volatiles.recharge || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
         return TRUE;
 
     return FALSE;
@@ -3383,7 +3387,7 @@ bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, 
 
 bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, u32 ability)
 {
-    if ((gBattleMons[battlerDef].status2 & STATUS2_CONFUSION)
+    if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (ability == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
      || IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN)
      || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
@@ -3432,7 +3436,7 @@ bool32 AI_CanGiveFrostbite(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 b
 
 bool32 AI_CanBeInfatuated(u32 battlerAtk, u32 battlerDef, u32 defAbility)
 {
-    if ((gBattleMons[battlerDef].status2 & STATUS2_INFATUATION)
+    if (gBattleMons[battlerDef].volatiles.infatuation
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
       || defAbility == ABILITY_OBLIVIOUS
       || !AreBattlersOfOppositeGender(battlerAtk, battlerDef)
@@ -3452,8 +3456,8 @@ u32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbi
     }
     else if ((atkAbility == ABILITY_SERENE_GRACE
       || gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS
-      || gBattleMons[battlerDef].status2 & STATUS2_INFATUATION
-      || gBattleMons[battlerDef].status2 & STATUS2_CONFUSION)
+      || gBattleMons[battlerDef].volatiles.infatuation
+      || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
       || ((AI_IsFaster(battlerAtk, battlerDef, move)) && CanTargetFaintAi(battlerDef, battlerAtk)))
     {
         return 2;   // good idea to flinch
@@ -4361,8 +4365,8 @@ void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
         if ((defSpeed >= atkSpeed && defSpeed / 2 < atkSpeed) // You'll go first after paralyzing foe
           || IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PARALYSIS)
           || (HasMoveWithMoveEffectExcept(battlerAtk, MOVE_EFFECT_FLINCH, EFFECT_FIRST_TURN_ONLY)) // filter out Fake Out
-          || gBattleMons[battlerDef].status2 & STATUS2_INFATUATION
-          || gBattleMons[battlerDef].status2 & STATUS2_CONFUSION)
+          || gBattleMons[battlerDef].volatiles.infatuation
+          || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
             ADJUST_SCORE_PTR(GOOD_EFFECT);
         else
             ADJUST_SCORE_PTR(DECENT_EFFECT);
@@ -4400,7 +4404,7 @@ void IncreaseConfusionScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
       && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CURE_STATUS)
     {
         if (gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS
-          || gBattleMons[battlerDef].status2 & STATUS2_INFATUATION
+          || gBattleMons[battlerDef].volatiles.infatuation
           || (gAiLogicData->abilities[battlerAtk] == ABILITY_SERENE_GRACE && HasMoveWithMoveEffectExcept(battlerAtk, MOVE_EFFECT_FLINCH, EFFECT_FIRST_TURN_ONLY)))
             ADJUST_SCORE_PTR(GOOD_EFFECT);
         else
@@ -4805,9 +4809,9 @@ void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerDef) != 0)
         ADJUST_SCORE_PTR(-2);
 
-    if (gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE && AI_IsFaster(battlerAtk, battlerDef, move))
+    if (gBattleMons[battlerAtk].volatiles.substitute && AI_IsFaster(battlerAtk, battlerDef, move))
         ADJUST_SCORE_PTR(-10);
-    if (gBattleMons[battlerDef].status2 & STATUS2_SUBSTITUTE)
+    if (gBattleMons[battlerDef].volatiles.substitute)
         ADJUST_SCORE_PTR(GOOD_EFFECT);
 
     if (gStatuses3[battlerAtk] & STATUS3_LEECHSEED)

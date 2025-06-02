@@ -133,7 +133,7 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 {
                     // Wake up from Uproar
                     gBattleMons[battler].status1 &= ~(STATUS1_SLEEP);
-                    gBattleMons[battler].status2 &= ~(STATUS2_NIGHTMARE);
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
                     BattleScriptCall(BattleScript_MoveUsedWokeUp);
                     effect = 2;
@@ -162,7 +162,7 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                     else
                     {
                         // Wake up
-                        gBattleMons[battler].status2 &= ~(STATUS2_NIGHTMARE);
+                        gBattleMons[battler].volatiles.nightmare = FALSE;
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
                         BattleScriptCall(BattleScript_MoveUsedWokeUp);
                         effect = 2;

@@ -1033,7 +1033,7 @@ void HandleMoveSwitching(u32 battler)
                 gBattleMons[battler].pp[i] = moveInfo->currentPp[i];
             }
 
-            if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+            if (!(gBattleMons[battler].volatiles.transformed))
             {
                 for (i = 0; i < MAX_MON_MOVES; i++)
                 {

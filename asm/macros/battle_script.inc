@@ -596,10 +596,10 @@
 	.byte \battler
 	.endm
 
-	.macro status2animation battler:req, status2:req
+	.macro volatilestatusanimation battler:req, status2:req
 	.byte 0x65
 	.byte \battler
-	.4byte \status2
+	.byte \status2
 	.endm
 
 	.macro chosenstatusanimation battler:req, isStatus2:req, status:req
@@ -2362,7 +2362,7 @@
 	chosenstatusanimation \battler, 0x0, \status
 	.endm
 
-	.macro chosenstatus2animation battler:req, status:req
+	.macro chosenvolatilestatusanimation battler:req, status:req
 	chosenstatusanimation \battler, 0x1, \status
 	.endm
 
