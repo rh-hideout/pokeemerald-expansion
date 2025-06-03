@@ -1118,12 +1118,12 @@ bool32 IsMoveNotAllowedInSkyBattles(u32 move)
 
 u32 NumAffectedSpreadMoveTargets(void)
 {
-    u32 targetCount = 0;
+    u32 battler, targetCount = 0;
 
     if (!IsDoubleSpreadMove())
         return targetCount;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (battler = 0; battler < gBattlersCount; battler++)
     {
         if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
             targetCount++;
@@ -1134,9 +1134,9 @@ u32 NumAffectedSpreadMoveTargets(void)
 
 u32 NumFaintedBattlersByAttacker(u32 battlerAtk)
 {
-    u32 numMonsFainted = 0;
+    u32 battler, numMonsFainted = 0;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler == battlerAtk)
             continue;
@@ -1349,7 +1349,8 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    u32 i;
+    for (i = 0; i < gBattlersCount; i++)
     {
         if ((gProtectStructs[gBattlerByTurnOrder[i]].stealMove) && MoveCanBeSnatched(gCurrentMove))
         {
@@ -1695,13 +1696,14 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     }
     else
     {
-        u32 numTargets = 0;
-        u32 numMisses = 0;
-        u32 moveType = GetBattleMoveType(move);
-        u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, move);
+        u32 battlerDef,
+            numTargets = 0,
+            numMisses = 0,
+            moveType = GetBattleMoveType(move),
+            moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, move);
         bool32 calcSpreadMove = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(move);
 
-        for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (gBattleStruct->calculatedSpreadMoveAccuracy)
                 break;
@@ -2011,14 +2013,15 @@ static void Cmd_critcalc(void)
 {
     CMD_ARGS();
 
-    u32 partySlot = gBattlerPartyIndexes[gBattlerAttacker];
-    u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+    u32 partySlot = gBattlerPartyIndexes[gBattlerAttacker],
+        moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove),
+        abilityAtk = GetBattlerAbility(gBattlerAttacker),
+        battlerDef;
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
-    u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
     enum ItemHoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     gPotentialItemEffectBattler = gBattlerAttacker;
 
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (gBattleStruct->calculatedDamageDone)
             break;
