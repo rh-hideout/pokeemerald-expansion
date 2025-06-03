@@ -1515,7 +1515,8 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
     // If the target is under the effects of Telekinesis, and the move isn't a OH-KO move, move hits.
     else if (gStatuses3[battler] & STATUS3_TELEKINESIS
           && !(gStatuses3[battler] & STATUS3_SEMI_INVULNERABLE)
-          && moveEffect != EFFECT_OHKO)
+          && moveEffect != EFFECT_OHKO
+          && moveEffect != EFFECT_SHEER_COLD)
     {
         effect = TRUE;
     }
@@ -12860,6 +12861,7 @@ static void Cmd_tryKO(void)
     CMD_ARGS(const u8 *failInstr);
 
     bool32 lands = FALSE;
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
     u16 targetAbility = GetBattlerAbility(gBattlerTarget);
     u32 rand = Random() % 100;
@@ -12915,7 +12917,7 @@ static void Cmd_tryKO(void)
         else
         {
             u16 odds = GetMoveAccuracy(gCurrentMove) + (gBattleMons[gBattlerAttacker].level - gBattleMons[gBattlerTarget].level);
-            if (B_SHEER_COLD_ACC >= GEN_7 && gCurrentMove == MOVE_SHEER_COLD && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ICE))
+            if (B_SHEER_COLD_ACC >= GEN_7 && effect == EFFECT_SHEER_COLD && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ICE))
                 odds -= 10;
             if (RandomPercentage(RNG_ACCURACY, odds) && gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
                 lands = TRUE;

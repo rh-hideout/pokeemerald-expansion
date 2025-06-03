@@ -3954,7 +3954,8 @@ static bool32 IsDomeLuckyMove(u32 move)
     switch(GetMoveEffect(move))
     {
     case EFFECT_COUNTER:
-    case EFFECT_OHKO: // Technically redundant because of the above accuracy check
+    case EFFECT_OHKO:
+    case EFFECT_SHEER_COLD:
     case EFFECT_METRONOME:
     case EFFECT_MIRROR_MOVE:
     case EFFECT_SKETCH:

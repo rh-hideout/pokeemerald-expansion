@@ -6058,6 +6058,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
         && GetBattleMoveType(move) == GetItemSecondaryId(heldItem)
         && effect != EFFECT_PLEDGE
         && effect != EFFECT_OHKO
+        && effect != EFFECT_SHEER_COLD
         && effect != EFFECT_STRUGGLE)
     {
         gSpecialStatuses[battler].gemParam = GetBattlerHoldEffectParam(battler);

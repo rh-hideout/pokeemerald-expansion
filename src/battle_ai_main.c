@@ -1085,6 +1085,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_LEVEL_DAMAGE:
         case EFFECT_PSYWAVE:
         case EFFECT_OHKO:
+        case EFFECT_SHEER_COLD:
         case EFFECT_BIDE:
         case EFFECT_FIXED_PERCENT_DAMAGE:
         case EFFECT_ENDEAVOR:
@@ -1675,9 +1676,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || !(weather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_OHKO:
-            if (B_SHEER_COLD_IMMUNITY >= GEN_7 && move == MOVE_SHEER_COLD && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
+        case EFFECT_SHEER_COLD:
+            if (B_SHEER_COLD_IMMUNITY >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
                 RETURN_SCORE_MINUS(20);
+            // fallthrough
+        case EFFECT_OHKO:
             if (!ShouldTryOHKO(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move))
                 ADJUST_SCORE(-10);
             else if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
@@ -4111,6 +4114,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         break;
     case EFFECT_OHKO:
+    case EFFECT_SHEER_COLD:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
         else if (gStatuses3[battlerAtk] & STATUS3_ALWAYS_HITS)
@@ -4236,7 +4240,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:
-        if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO) || HasMoveWithEffect(battlerAtk, EFFECT_SHEER_COLD))
             ADJUST_SCORE(GOOD_EFFECT);
         else if (HasMoveWithLowAccuracy(battlerAtk, battlerDef, 85, TRUE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]))
             ADJUST_SCORE(GOOD_EFFECT);
@@ -5537,6 +5541,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_FLATTER:
     case EFFECT_ATTRACT:
     case EFFECT_OHKO:
+    case EFFECT_SHEER_COLD:
         ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_HIT:

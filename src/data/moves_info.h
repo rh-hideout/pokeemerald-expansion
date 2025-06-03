@@ -8686,7 +8686,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A chilling attack that\n"
             "causes fainting if it hits."),
-        .effect = EFFECT_OHKO,
+        .effect = EFFECT_SHEER_COLD,
         .power = 1,
         .type = TYPE_ICE,
         .accuracy = 30,
