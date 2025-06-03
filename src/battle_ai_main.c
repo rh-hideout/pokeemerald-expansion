@@ -2709,7 +2709,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_INSTRUCT:
             {
-                u16 instructedMove;
+                u32 instructedMove;
                 if (AI_IsSlower(battlerAtk, battlerDef, move))
                     instructedMove = predictedMove;
                 else
@@ -2734,15 +2734,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
+                    enum BattleMoveEffects instructedEffect = GetMoveEffect(instructedMove);
                     if (GetBattlerMoveTargetType(battlerDef, instructedMove) & (MOVE_TARGET_SELECTED
                                                              | MOVE_TARGET_DEPENDS
                                                              | MOVE_TARGET_RANDOM
                                                              | MOVE_TARGET_BOTH
                                                              | MOVE_TARGET_FOES_AND_ALLY
                                                              | MOVE_TARGET_OPPONENTS_FIELD)
-                      && instructedMove != MOVE_MIND_BLOWN && instructedMove != MOVE_STEEL_BEAM)
+                      && instructedEffect != EFFECT_MIND_BLOWN && instructedEffect != EFFECT_MAX_HP_50_RECOIL)
                         ADJUST_SCORE(-10); //Don't force the enemy to attack you again unless it can kill itself with Mind Blown
-                    else if (instructedMove != MOVE_MIND_BLOWN)
+                    else if (instructedEffect != EFFECT_MIND_BLOWN)
                         ADJUST_SCORE(-5); //Do something better
                 }
             }

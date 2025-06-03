@@ -2460,14 +2460,15 @@ static void Cmd_attackanimation(void)
 
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if (IsDoubleSpreadMove())
         moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget]);
 
     if ((gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION))
-        && gCurrentMove != MOVE_TRANSFORM
-        && gCurrentMove != MOVE_SUBSTITUTE
-        && gCurrentMove != MOVE_ALLY_SWITCH
+        && effect != EFFECT_TRANSFORM
+        && effect != EFFECT_SUBSTITUTE
+        && effect != EFFECT_ALLY_SWITCH
         // In a wild double battle gotta use the teleport animation if two wild pokemon are alive.
         && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))))
     {
@@ -9112,7 +9113,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_PACK
         && (B_SYMBIOSIS_GEMS < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
-        && gCurrentMove != MOVE_FLING //Fling and damage-reducing berries are handled separately.
+        && GetMoveEffect(gCurrentMove) != EFFECT_FLING //Fling and damage-reducing berries are handled separately.
         && !gSpecialStatuses[battler].berryReduced
         && TryTriggerSymbiosis(battler, BATTLE_PARTNER(battler)))
     {
