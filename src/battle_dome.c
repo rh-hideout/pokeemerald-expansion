@@ -3938,6 +3938,7 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
     switch(effect)
     {
     case EFFECT_EXPLOSION:
+    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_SPITE:
     case EFFECT_DESTINY_BOND:
     case EFFECT_PERISH_SONG:
@@ -5126,11 +5127,13 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 moves[i * MAX_MON_MOVES + j] = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
 
             movePower = GetMovePower(moves[i * MAX_MON_MOVES + j]);
+            enum BattleMoveEffects effect = GetMoveEffect(moves[i * MAX_MON_MOVES + j]);
             if (IsBattleMoveStatus(moves[i * MAX_MON_MOVES + j]))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetMoveEffect(moves[i * MAX_MON_MOVES + j]) == EFFECT_EXPLOSION)
+            else if (B_EXPLOSION_DEFENSE < GEN_5
+                && (effect == EFFECT_EXPLOSION || EFFECT_MISTY_EXPLOSION))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)

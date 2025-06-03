@@ -1248,7 +1248,10 @@ static void Cmd_attackcanceler(void)
 
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
-    if (!IsBattlerAlive(gBattlerAttacker) && effect != EFFECT_EXPLOSION && !(gHitMarker & HITMARKER_NO_ATTACKSTRING))
+    if (!IsBattlerAlive(gBattlerAttacker)
+        && effect != EFFECT_EXPLOSION
+        && effect != EFFECT_MISTY_EXPLOSION
+        && !(gHitMarker & HITMARKER_NO_ATTACKSTRING))
     {
         gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
@@ -6822,7 +6825,7 @@ static void Cmd_moveend(void)
                     MoveValuesCleanUp();
                     gBattleScripting.moveEffect = gBattleScripting.savedMoveEffect;
 
-                    if (moveEffect == EFFECT_EXPLOSION)
+                    if (moveEffect == EFFECT_EXPLOSION || moveEffect == EFFECT_MISTY_EXPLOSION)
                         BattleScriptPush(gBattleMoveEffects[EFFECT_HIT].battleScript); // Edge case for Explosion not changing targets
                     else
                         BattleScriptPush(GetMoveBattleScript(gCurrentMove));
@@ -6986,6 +6989,7 @@ static void Cmd_moveend(void)
                 }
                 break;
             case EFFECT_EXPLOSION:
+            case EFFECT_MISTY_EXPLOSION:
                 if (!IsAbilityOnField(ABILITY_DAMP))
                 {
                     gBattleStruct->moveDamage[gBattlerAttacker] = 0;
