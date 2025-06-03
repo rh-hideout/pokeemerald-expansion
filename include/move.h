@@ -551,7 +551,7 @@ static inline u32 GetMoveNonVolatileStatus(u32 move)
     }
 }
 
-static inline u32 GetMoveDemagePercentage(u32 move)
+static inline u32 GetMoveDamagePercentage(u32 move)
 {
     return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
 }
