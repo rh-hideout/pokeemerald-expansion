@@ -174,7 +174,6 @@ enum DebugBattleTerrain
 struct DebugMenuOption;
 
 typedef void (*DebugFunc)(u8 taskId);
-typedef void (*DebugFunc2)(u8 taskId, const struct DebugMenuOption *items);
 typedef void (*DebugSubmenuFunc)(u8 taskId, const struct DebugMenuOption *items);
 
 struct DebugMenuOption
@@ -1123,7 +1122,7 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
 
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
 {
-    DebugFunc2 func;
+    DebugSubmenuFunc func;
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
 
     if (JOY_NEW(A_BUTTON))
@@ -1134,11 +1133,11 @@ static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
             if (input == DEBUG_FLAGVAR_MENU_ITEM_FLAGS || input == DEBUG_FLAGVAR_MENU_ITEM_VARS)
             {
                 Debug_RedrawListMenu(taskId);
-                func(taskId,  sDebugMenu_Actions_Flags[input].actionParams);
+                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
             }
             else
             {
-                func(taskId,  sDebugMenu_Actions_Flags[input].actionParams);
+                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
                 Debug_GenerateListMenuNames(gMultiuseListMenuTemplate.totalItems);
                 RedrawListMenu(gTasks[taskId].tMenuTaskId);
             }
