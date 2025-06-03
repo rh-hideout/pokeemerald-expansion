@@ -175,12 +175,13 @@ struct DebugMenuOption;
 
 typedef void (*DebugFunc)(u8 taskId);
 typedef void (*DebugFunc2)(u8 taskId, const struct DebugMenuOption *items);
+typedef void (*DebugSubmenuFunc)(u8 taskId, const struct DebugMenuOption *items);
 
 struct DebugMenuOption
 {
     const u8 *text;
-    const DebugFunc2 action;
-    const struct DebugMenuOption *suboptions;
+    const void *action;
+    const void *actionParams;
 };
 
 struct DebugMonData
@@ -217,18 +218,11 @@ static void DebugAction_Cancel(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
 static void Debug_RefreshListMenu(u8 taskId);
 
-static void DebugAction_Util_Script_1(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_2(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_3(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_4(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_5(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_6(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_7(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Script_8(u8 taskId, const struct DebugMenuOption *items);
-
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
+static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
+
 static void DebugTask_HandleMenuInput_General(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId, const struct DebugMenuOption *items);
@@ -238,16 +232,8 @@ static void DebugAction_Util_Warp_SelectMap(u8 taskId);
 static void DebugAction_Util_Warp_SelectWarp(u8 taskId);
 static void DebugAction_Util_Weather(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Util_Weather_SelectId(u8 taskId);
-static void DebugAction_Util_FontTest(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_TimeMenu_CheckWallClock(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_TimeMenu_SetWallClock(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Util_WatchCredits(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Util_CheatStart(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_CheckEWRAMCounters(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Util_Steven_Multi(u8 taskId, const struct DebugMenuOption *items);
-
-static void DebugAction_TimeMenu_PrintTime(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId, const struct DebugMenuOption *items);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId, const struct DebugMenuOption *items);
@@ -260,16 +246,10 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId, const struct Debug
 static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_PCBag_AccessPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_PCBag_ClearBag(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_PCBag_ClearBoxes(u8 taskId, const struct DebugMenuOption *items);
 
-static void DebugAction_Party_MoveReminder(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Party_HatchAnEgg(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Party_HealParty(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Party_InflictStatus1(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Party_CheckEVs(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_Party_CheckIVs(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Party_ClearParty(u8 taskId, const struct DebugMenuOption *items);
 
 static void DebugAction_FlagsVars_Flags(u8 taskId, const struct DebugMenuOption *items);
@@ -330,10 +310,6 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId, const struct DebugMenuOp
 static void DebugAction_Player_Name(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Player_Gender(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Player_Id(u8 taskId, const struct DebugMenuOption *items);
-
-static void DebugAction_ROMInfo_CheckSaveBlock(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_ROMInfo_CheckROMSpace(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_ROMInfo_ExpansionVersion(u8 taskId, const struct DebugMenuOption *items);
 
 extern const u8 Debug_FlagsNotSetOverworldConfigMessage[];
 extern const u8 Debug_FlagsNotSetBattleConfigMessage[];
@@ -476,12 +452,12 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu_Weekdays[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
 {
-    { COMPOUND_STRING("Print current time…"),                      DebugAction_TimeMenu_PrintTime },
-    { COMPOUND_STRING("{FONT_NARROW}Print current time of day…"),  DebugAction_TimeMenu_PrintTimeOfDay },
+    { COMPOUND_STRING("Print current time…"),                      DebugAction_ExecuteScript, Debug_EventScript_TellTheTime },
+    { COMPOUND_STRING("{FONT_NARROW}Print current time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
     { COMPOUND_STRING("{FONT_NARROW}Change current time of day…"), DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
     { COMPOUND_STRING("Change current weekday…"),                  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
-    { COMPOUND_STRING("Check wall clock…"),                        DebugAction_TimeMenu_CheckWallClock },
-    { COMPOUND_STRING("Set wall clock…"),                          DebugAction_TimeMenu_SetWallClock },
+    { COMPOUND_STRING("Check wall clock…"),                        DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
+    { COMPOUND_STRING("Set wall clock…"),                          DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
     { NULL }
 };
 
@@ -500,13 +476,13 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Fly to map…"),             DebugAction_Util_Fly },
     { COMPOUND_STRING("Warp to map warp…"),       DebugAction_Util_Warp_Warp },
     { COMPOUND_STRING("Set weather…"),            DebugAction_Util_Weather },
-    { COMPOUND_STRING("Font Test…"),              DebugAction_Util_FontTest },
+    { COMPOUND_STRING("Font Test…"),              DebugAction_ExecuteScript, Debug_EventScript_FontTest },
     { COMPOUND_STRING("Time Functions…" _ARROW),  DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
     { COMPOUND_STRING("Watch credits…"),          DebugAction_Util_WatchCredits },
     { COMPOUND_STRING("Cheat start"),             DebugAction_Util_CheatStart },
     { COMPOUND_STRING("Berry Functions…" _ARROW), DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
-    { COMPOUND_STRING("EWRAM Counters…"),         DebugAction_Util_CheckEWRAMCounters },
-    { COMPOUND_STRING("Steven Multi"),            DebugAction_Util_Steven_Multi },
+    { COMPOUND_STRING("EWRAM Counters…"),         DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
+    { COMPOUND_STRING("Steven Multi"),            DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
 };
 
@@ -525,7 +501,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_PCBag_Fill[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_PCBag[] =
 {
-    { COMPOUND_STRING("Access PC"),           DebugAction_PCBag_AccessPC },
+    { COMPOUND_STRING("Access PC"),           DebugAction_ExecuteScript, EventScript_PC },
     { COMPOUND_STRING("Fill…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag_Fill },
     { COMPOUND_STRING("Clear Bag"),           DebugAction_PCBag_ClearBag },
     { COMPOUND_STRING("Clear Storage Boxes"), DebugAction_PCBag_ClearBoxes },
@@ -534,12 +510,12 @@ static const struct DebugMenuOption sDebugMenu_Actions_PCBag[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
 {
-    { COMPOUND_STRING("Move Reminder"),   DebugAction_Party_MoveReminder },
-    { COMPOUND_STRING("Hatch an Egg"),    DebugAction_Party_HatchAnEgg },
+    { COMPOUND_STRING("Move Reminder"),   DebugAction_ExecuteScript, FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon },
+    { COMPOUND_STRING("Hatch an Egg"),    DebugAction_ExecuteScript, Debug_HatchAnEgg },
     { COMPOUND_STRING("Heal party"),      DebugAction_Party_HealParty },
-    { COMPOUND_STRING("Inflict Status1"), DebugAction_Party_InflictStatus1 },
-    { COMPOUND_STRING("Check EVs"),       DebugAction_Party_CheckEVs },
-    { COMPOUND_STRING("Check IVs"),       DebugAction_Party_CheckIVs },
+    { COMPOUND_STRING("Inflict Status1"), DebugAction_ExecuteScript, Debug_EventScript_InflictStatus1 },
+    { COMPOUND_STRING("Check EVs"),       DebugAction_ExecuteScript, Debug_EventScript_CheckEVs },
+    { COMPOUND_STRING("Check IVs"),       DebugAction_ExecuteScript, Debug_EventScript_CheckIVs },
     { COMPOUND_STRING("Clear Party"),     DebugAction_Party_ClearParty },
     { NULL }
 };
@@ -566,14 +542,14 @@ static const struct DebugMenuOption sDebugMenu_Actions_Player[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Scripts[] =
 {
-    { COMPOUND_STRING("Script 1"), DebugAction_Util_Script_1 },
-    { COMPOUND_STRING("Script 2"), DebugAction_Util_Script_2 },
-    { COMPOUND_STRING("Script 3"), DebugAction_Util_Script_3 },
-    { COMPOUND_STRING("Script 4"), DebugAction_Util_Script_4 },
-    { COMPOUND_STRING("Script 5"), DebugAction_Util_Script_5 },
-    { COMPOUND_STRING("Script 6"), DebugAction_Util_Script_6 },
-    { COMPOUND_STRING("Script 7"), DebugAction_Util_Script_7 },
-    { COMPOUND_STRING("Script 8"), DebugAction_Util_Script_8 },
+    { COMPOUND_STRING("Script 1"), DebugAction_ExecuteScript, Debug_EventScript_Script_1 },
+    { COMPOUND_STRING("Script 2"), DebugAction_ExecuteScript, Debug_EventScript_Script_2 },
+    { COMPOUND_STRING("Script 3"), DebugAction_ExecuteScript, Debug_EventScript_Script_3 },
+    { COMPOUND_STRING("Script 4"), DebugAction_ExecuteScript, Debug_EventScript_Script_4 },
+    { COMPOUND_STRING("Script 5"), DebugAction_ExecuteScript, Debug_EventScript_Script_5 },
+    { COMPOUND_STRING("Script 6"), DebugAction_ExecuteScript, Debug_EventScript_Script_6 },
+    { COMPOUND_STRING("Script 7"), DebugAction_ExecuteScript, Debug_EventScript_Script_7 },
+    { COMPOUND_STRING("Script 8"), DebugAction_ExecuteScript, Debug_EventScript_Script_8 },
     { NULL }
 };
 
@@ -586,9 +562,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_Sound[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
 {
-    { COMPOUND_STRING("Save Block space"),  DebugAction_ROMInfo_CheckSaveBlock },
-    { COMPOUND_STRING("ROM space"),         DebugAction_ROMInfo_CheckROMSpace },
-    { COMPOUND_STRING("Expansion Version"), DebugAction_ROMInfo_ExpansionVersion },
+    { COMPOUND_STRING("Save Block space"),  DebugAction_ExecuteScript, Debug_CheckSaveBlock },
+    { COMPOUND_STRING("ROM space"),         DebugAction_ExecuteScript, Debug_CheckROMSpace },
+    { COMPOUND_STRING("Expansion Version"), DebugAction_ExecuteScript, Debug_ShowExpansionVersion },
     { NULL }
 };
 
@@ -601,9 +577,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
     { COMPOUND_STRING("Player…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
     { COMPOUND_STRING("Scripts…" _ARROW),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
     { COMPOUND_STRING("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, },
-    { COMPOUND_STRING("Sound…" _ARROW),     DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
-    { COMPOUND_STRING("ROM Info…" _ARROW),  DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
-    { COMPOUND_STRING("Cancel"),            DebugAction_Cancel, },
+    { COMPOUND_STRING("Sound…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
+    { COMPOUND_STRING("ROM Info…" _ARROW),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
+    { COMPOUND_STRING("Cancel"),               DebugAction_Cancel, },
     { NULL }
 };
 
@@ -1085,15 +1061,23 @@ static void Debug_RefreshListMenu(u8 taskId)
 static void DebugTask_HandleMenuInput_General(u8 taskId)
 {
     const struct DebugMenuOption *options = Debug_GetCurrentCallbackMenu();
-    DebugFunc2 func;
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
     struct DebugMenuOption option = options[input];
 
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        if ((func = option.action) != NULL)
-            func(taskId, option.suboptions);
+        if (option.action != NULL)
+        {
+            if (option.action == DebugAction_OpenSubMenu
+             || option.action == DebugAction_OpenSubMenuFlagsVars
+             || option.action == DebugAction_OpenSubMenuFakeRTC)
+                ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
+            else if (option.action == DebugAction_ExecuteScript)
+                Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
+            else
+                ((DebugFunc)option.action)(taskId);
+        }
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -1136,6 +1120,11 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
         Debug_DestroyMenu_Full(taskId);
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
     }
+}
+
+static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
+{
+    Debug_DestroyMenu_Full_Script(taskId, script);
 }
 
 // *******************************
@@ -1339,11 +1328,6 @@ void CheckPokemonStorageSize(struct ScriptContext *ctx)
     ConvertIntToDecimalStringN(gStringVar3, maxPkmnStorageSize - currPkmnStorageSize, STR_CONV_MODE_LEFT_ALIGN, 6);
 }
 
-static void DebugAction_ROMInfo_CheckSaveBlock(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_CheckSaveBlock);
-}
-
 enum RoundMode
 {
     ROUND_CEILING,
@@ -1390,13 +1374,6 @@ void CheckROMSize(struct ScriptContext *ctx)
     u32 currROMFreeKB = ((const u8 *)ROM_END - __rom_end) / 1024;
     ConvertQ22_10ToDecimalString(gStringVar1, currROMSizeKB, 2, ROUND_CEILING);
     ConvertQ22_10ToDecimalString(gStringVar2, currROMFreeKB, 2, ROUND_FLOOR);
-}
-
-static void DebugAction_ROMInfo_CheckROMSpace(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full(taskId);
-    LockPlayerFieldControls();
-    ScriptContext_SetupScript(Debug_CheckROMSpace);
 }
 
 static const u8 sWeatherNames[WEATHER_COUNT][24] = {
@@ -1488,21 +1465,6 @@ static void DebugAction_Util_Weather_SelectId(u8 taskId)
     }
 }
 
-static void DebugAction_Util_FontTest(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FontTest);
-}
-
-static void DebugAction_TimeMenu_CheckWallClock(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, PlayersHouse_2F_EventScript_CheckWallClock);
-}
-
-static void DebugAction_TimeMenu_SetWallClock(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, PlayersHouse_2F_EventScript_SetWallClock);
-}
-
 static void DebugAction_Util_WatchCredits(u8 taskId, const struct DebugMenuOption *items)
 {
     Debug_DestroyMenu_Full(taskId);
@@ -1541,18 +1503,6 @@ static void DebugAction_Util_CheatStart(u8 taskId, const struct DebugMenuOption 
     Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStart);
 }
 
-static void DebugAction_ROMInfo_ExpansionVersion(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full(taskId);
-    LockPlayerFieldControls();
-    ScriptContext_SetupScript(Debug_ShowExpansionVersion);
-}
-
-static void DebugAction_Util_Steven_Multi(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Steven_Multi);
-}
-
 void BufferExpansionVersion(struct ScriptContext *ctx)
 {
     static const u8 sText_Released[] = _("\nRelease Build");
@@ -1568,12 +1518,6 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
         string = StringCopy(string, sText_Released);
     else
         string = StringCopy(string, sText_Unreleased);
-}
-
-static void DebugAction_TimeMenu_PrintTime(u8 taskId, const struct DebugMenuOption *items)
-{
-    LockPlayerFieldControls();
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_TellTheTime);
 }
 
 void DebugMenu_CalculateTime(struct ScriptContext *ctx)
@@ -1595,12 +1539,6 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
     }
 }
 
-static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId, const struct DebugMenuOption *items)
-{
-    LockPlayerFieldControls();
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_PrintTimeOfDay);
-}
-
 void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
 {
     switch (GetTimeOfDay())
@@ -1620,48 +1558,6 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
         default:
             break;
     }
-}
-
-// *******************************
-// Actions Scripts
-static void DebugAction_Util_Script_1(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_1);
-}
-
-static void DebugAction_Util_Script_2(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_2);
-}
-
-static void DebugAction_Util_Script_3(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_3);
-}
-
-static void DebugAction_Util_Script_4(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_4);
-}
-
-static void DebugAction_Util_Script_5(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_5);
-}
-
-static void DebugAction_Util_Script_6(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_6);
-}
-
-static void DebugAction_Util_Script_7(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_7);
-}
-
-static void DebugAction_Util_Script_8(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_Script_8);
 }
 
 // *******************************
@@ -3194,11 +3090,6 @@ static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId, const struct DebugM
     }
 }
 
-static void DebugAction_PCBag_AccessPC(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, EventScript_PC);
-}
-
 static void DebugAction_PCBag_ClearBag(u8 taskId, const struct DebugMenuOption *items)
 {
     PlaySE(MUS_LEVEL_UP);
@@ -4014,37 +3905,12 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId, const struct DebugMenuOp
 // *******************************
 // Actions Party/Boxes
 
-static void DebugAction_Party_MoveReminder(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon);
-}
-
-static void DebugAction_Party_HatchAnEgg(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_HatchAnEgg);
-}
-
 static void DebugAction_Party_HealParty(u8 taskId, const struct DebugMenuOption *items)
 {
     PlaySE(SE_USE_ITEM);
     HealPlayerParty();
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
-}
-
-static void DebugAction_Party_InflictStatus1(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_InflictStatus1);
-}
-
-static void DebugAction_Party_CheckEVs(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_CheckEVs);
-}
-
-static void DebugAction_Party_CheckIVs(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_CheckIVs);
 }
 
 static void DebugAction_Party_ClearParty(u8 taskId, const struct DebugMenuOption *items)
@@ -4058,9 +3924,4 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 {
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
-}
-
-static void DebugAction_Util_CheckEWRAMCounters(u8 taskId, const struct DebugMenuOption *items)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_EWRAMCounters);
 }
