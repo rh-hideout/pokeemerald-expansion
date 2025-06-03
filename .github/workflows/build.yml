@@ -9,8 +9,8 @@ on:
 
 jobs:
   build:
+    if: github.actor != 'allcontributors'
     runs-on: ubuntu-latest
-    container: devkitpro/devkitarm
     env:
       GAME_VERSION: EMERALD
       GAME_REVISION: 0
@@ -24,10 +24,8 @@ jobs:
       - name: Install binutils
         run: |
           sudo apt update
-          sudo apt install -y build-essential libpng-dev libelf-dev
+          sudo apt install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
         # build-essential and git are already installed
-        # gcc-arm-none-eabi is only needed for the modern build
-        # as an alternative to dkP
 
       - name: ROM
         env:
@@ -39,3 +37,11 @@ jobs:
           TEST: 1
         run: |
           make -j${nproc} check
+  allcontributors:
+    if: github.actor == 'allcontributors'
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Automatically pass for allcontributors
+        run: echo "CI automatically passes for allcontributors" && exit 0
+

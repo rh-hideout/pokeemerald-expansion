@@ -631,7 +631,7 @@ static bool32 PrintStringAndWait2Seconds(u8 *counter, const u8 *str)
     }
 }
 
-static u32 MysteryGift_HandleThreeOptionMenu(u8 *unused0, u16 * unused1, u8 whichMenu)
+static u32 MysteryGift_HandleThreeOptionMenu(u8 *unused0, u16 *unused1, u8 whichMenu)
 {
     struct ListMenuTemplate listMenuTemplate = sListMenuTemplate_ThreeOptions;
     struct WindowTemplate windowTemplate = sWindowTemplate_ThreeOptions;
@@ -662,7 +662,7 @@ static u32 MysteryGift_HandleThreeOptionMenu(u8 *unused0, u16 * unused1, u8 whic
     return response;
 }
 
-s8 DoMysteryGiftYesNo(u8 *textState, u16 * windowId, bool8 yesNoBoxPlacement, const u8 *str)
+s8 DoMysteryGiftYesNo(u8 *textState, u16 *windowId, bool8 yesNoBoxPlacement, const u8 *str)
 {
     struct WindowTemplate windowTemplate;
     s8 input;
@@ -719,7 +719,7 @@ s8 DoMysteryGiftYesNo(u8 *textState, u16 * windowId, bool8 yesNoBoxPlacement, co
 }
 
 // Handle the "Receive/Send/Toss" menu that appears when selecting Wonder Card/News
-static s32 HandleGiftSelectMenu(u8 *textState, u16 * windowId, bool32 cannotToss, bool32 cannotSend)
+static s32 HandleGiftSelectMenu(u8 *textState, u16 *windowId, bool32 cannotToss, bool32 cannotSend)
 {
     struct WindowTemplate UNUSED windowTemplate;
     s32 input;
@@ -852,7 +852,7 @@ static bool32 ExitWonderCardOrNews(bool32 isWonderNews, bool32 useCancel)
     }
 }
 
-static s32 AskDiscardGift(u8 *textState, u16 * windowId, bool32 isWonderNews)
+static s32 AskDiscardGift(u8 *textState, u16 *windowId, bool32 isWonderNews)
 {
     if (!isWonderNews)
         return DoMysteryGiftYesNo(textState, windowId, TRUE, gText_IfThrowAwayCardEventWontHappen);
@@ -897,7 +897,7 @@ static bool32 SaveOnMysteryGiftMenu(u8 *state)
     return FALSE;
 }
 
-static const u8 *GetClientResultMessage(bool32 * successMsg, bool8 isWonderNews, bool8 sourceIsFriend, u32 msgId)
+static const u8 *GetClientResultMessage(bool32 *successMsg, bool8 isWonderNews, bool8 sourceIsFriend, u32 msgId)
 {
     const u8 *msg = NULL;
     *successMsg = FALSE;
@@ -969,7 +969,7 @@ static const u8 *GetClientResultMessage(bool32 * successMsg, bool8 isWonderNews,
     return msg;
 }
 
-static bool32 PrintSuccessMessage(u8 *state, const u8 *msg, u16 * timer)
+static bool32 PrintSuccessMessage(u8 *state, const u8 *msg, u16 *timer)
 {
     switch (*state)
     {
@@ -996,7 +996,7 @@ static bool32 PrintSuccessMessage(u8 *state, const u8 *msg, u16 * timer)
     return FALSE;
 }
 
-static const u8 *GetServerResultMessage(bool32 * wonderSuccess, bool8 sourceIsFriend, u32 msgId)
+static const u8 *GetServerResultMessage(bool32 *wonderSuccess, bool8 sourceIsFriend, u32 msgId)
 {
     const u8 *result = gText_CommunicationError;
     *wonderSuccess = FALSE;
@@ -1053,7 +1053,7 @@ static const u8 *GetServerResultMessage(bool32 * wonderSuccess, bool8 sourceIsFr
     return result;
 }
 
-static bool32 PrintServerResultMessage(u8 *state, u16 * timer, bool8 sourceIsFriend, u32 msgId)
+static bool32 PrintServerResultMessage(u8 *state, u16 *timer, bool8 sourceIsFriend, u32 msgId)
 {
     bool32 wonderSuccess;
     const u8 *str = GetServerResultMessage(&wonderSuccess, sourceIsFriend, msgId);
@@ -1111,7 +1111,7 @@ enum {
 static void CreateMysteryGiftTask(void)
 {
     u8 taskId = CreateTask(Task_MysteryGift, 0);
-    struct MysteryGiftTaskData * data = (void *)gTasks[taskId].data;
+    struct MysteryGiftTaskData *data = (void *)gTasks[taskId].data;
     data->state = MG_STATE_TO_MAIN_MENU;
     data->textState = 0;
     data->unused4 = 0;

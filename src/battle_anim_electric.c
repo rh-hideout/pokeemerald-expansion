@@ -603,7 +603,7 @@ const struct SpriteTemplate gVoltSwitchSpriteTemplate =
 // functions
 static void AnimLightning(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -620,7 +620,7 @@ static void AnimLightning_Step(struct Sprite *sprite)
 
 static void AnimUnusedSpinningFist(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -639,7 +639,7 @@ static void AnimUnusedCirclingShock(struct Sprite *sprite)
     sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         sprite->y -= gBattleAnimArgs[1];
@@ -657,13 +657,13 @@ static void AnimUnusedCirclingShock(struct Sprite *sprite)
     sprite->callback = TranslateSpriteInCircle;
 }
 
-// arg 0:
-// arg 1:
-// arg 2:
+// arg 0: index to sine table
+// arg 1: something multiplied with
+// arg 2: index to sine table
 // arg 3: duration
 // arg 4: target
-// arg 5:
-// arg 6:
+// arg 5: 0 or non-0 determines which set of battler sprite coords to use
+// arg 6: increase battler sprite priority by 1
 void AnimSparkElectricity(struct Sprite *sprite)
 {
     u8 battler;
@@ -767,7 +767,7 @@ static void AnimThunderboltOrb_Step(struct Sprite *sprite)
 
 static void AnimThunderboltOrb(struct Sprite *sprite)
 {
-    if (IsContest() || GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsContest() || IsOnPlayerSide(gBattleAnimTarget))
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
 
     sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[1];
@@ -788,7 +788,7 @@ void AnimSparkElectricityFlashing(struct Sprite *sprite)
     else
         battler = gBattleAnimAttacker;
 
-    if (IsContest() || GetBattlerSide(battler) == B_SIDE_PLAYER)
+    if (IsContest() || IsOnPlayerSide(battler))
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
 
     sprite->x = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[0];
@@ -1099,7 +1099,7 @@ static void AnimVoltTackleOrbSlide(struct Sprite *sprite)
     sprite->data[6] = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     sprite->data[7] = 16;
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->data[7] *= -1;
 
     sprite->callback = AnimVoltTackleOrbSlide_Step;
@@ -1130,7 +1130,7 @@ void AnimTask_VoltTackleAttackerReappear(u8 taskId)
     case 0:
         task->data[15] = GetAnimBattlerSpriteId(ANIM_ATTACKER);
         task->data[14] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(gBattleAnimAttacker))
         {
             task->data[14] = -32;
             task->data[13] = 2;
@@ -1186,7 +1186,7 @@ void AnimTask_VoltTackleBolt(u8 taskId)
     switch(task->data[0])
     {
     case 0:
-        task->data[1] = GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER ? 1 : -1;
+        task->data[1] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
 
         switch (gBattleAnimArgs[0])
         {
@@ -1581,9 +1581,9 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 
 void AnimTask_VoltSwitch(struct Sprite* sprite)
 {
-	InitSpritePosToAnimAttacker(sprite, 0);
+	InitSpritePosToAnimAttacker(sprite, FALSE);
 
-	if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+	if (!IsOnPlayerSide(gBattleAnimAttacker))
 		gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 	else
 		sprite->y += 10; //Move slightly down

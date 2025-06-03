@@ -26,6 +26,11 @@
 
 #define SKIP_OBJECT_EVENT_LOAD  1
 
+// trigger a time-of-day blend once
+#define HOURS_BLEND_ONCE 25
+// don't update gTimeBlend
+#define HOURS_FREEZE_BLEND 26
+
 struct InitialPlayerAvatarState
 {
     u8 transitionFlags;
@@ -40,6 +45,7 @@ struct LinkPlayerObjectEvent
     u8 movementMode;
 };
 
+// Exported RAM declarations
 extern struct WarpData gLastUsedWarp;
 extern struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4];
 
@@ -53,6 +59,10 @@ extern u8 gLocalLinkPlayerId;
 extern u8 gFieldLinkPlayerCount;
 extern bool8 gExitStairsMovementDisabled;
 extern bool8 gSkipShowMonAnim;
+extern u8 gTimeOfDay;
+extern s16 gTimeUpdateCounter;
+
+extern struct TimeBlendSettings gTimeBlend;
 
 extern const struct UCoords32 gDirectionToVectors[];
 
@@ -78,7 +88,7 @@ void SetWarpDestination(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y);
 void SetWarpDestinationToMapWarp(s8 mapGroup, s8 mapNum, s8 warpId);
 void SetDynamicWarp(s32 unused, s8 mapGroup, s8 mapNum, s8 warpId);
 void SetDynamicWarpWithCoords(s32 unused, s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y);
-void SetWarpDestinationToDynamicWarp(u8 unused);
+void SetWarpDestinationToDynamicWarp(u8 unusedWarpId);
 void SetWarpDestinationToHealLocation(u8 healLocationId);
 void SetWarpDestinationToLastHealLocation(void);
 void SetLastHealLocationWarp(u8 healLocationId);
@@ -101,7 +111,7 @@ void SetDefaultFlashLevel(void);
 void SetFlashLevel(s32 flashLevel);
 u8 GetFlashLevel(void);
 void SetCurrentMapLayout(u16 mapLayoutId);
-void SetObjectEventLoadFlag(u8 var);
+void SetObjectEventLoadFlag(u8 flag);
 u16 GetLocationMusic(struct WarpData *warp);
 u16 GetCurrLocationDefaultMusic(void);
 u16 GetWarpDestinationMusic(void);
@@ -130,6 +140,11 @@ void CleanupOverworldWindowsAndTilemaps(void);
 bool32 IsOverworldLinkActive(void);
 void CB1_Overworld(void);
 void CB2_OverworldBasic(void);
+void UpdateTimeOfDay(void);
+bool32 MapHasNaturalLight(u8 mapType);
+bool32 CurrentMapHasShadows(void);
+void UpdateAltBgPalettes(u16 palettes);
+void UpdatePalettesWithTime(u32);
 void CB2_Overworld(void);
 void SetMainCallback1(void (*cb)(void));
 void SetUnusedCallback(void *func);
@@ -156,6 +171,7 @@ bool32 Overworld_RecvKeysFromLinkIsRunning(void);
 bool32 Overworld_SendKeysToLinkIsRunning(void);
 bool32 IsSendingKeysOverCable(void);
 void ClearLinkPlayerObjectEvents(void);
+bool16 SetTimeOfDay(u16 hours);
 
 // Item Description Headers
 enum ItemObtainFlags

@@ -179,3 +179,9 @@ AI will determine whether it would switch out in the player's situation or not, 
 
 ## `AI_FLAG_PREDICT_INCOMING_MON`
 This flag requires `AI_FLAG_PREDICT_SWITCH` to function. If the AI predicts that the player will switch, this flag allows the AI to run its move scoring calculation against the Pokémon it expects the player to switch into, instead of the Pokémon that it expects to switch out.
+
+## `AI_FLAG_PREDICT_MOVE`
+AI will predict what move the player is going to use based on what move it would use in the same situation. Generally works best if also using `AI_FLAG_OMNISCIENT`.
+
+## `AI_FLAG_PP_STALL_PREVENTION`
+This flag aims to prevent the player from PP stalling the AI by switching between immunities. The AI mon's move scores will slowly decay for absorbed moves over time, eventually making its moves unpredictable. More detailed control for this behaviour can be customized in the `ai.h` config file.

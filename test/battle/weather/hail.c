@@ -2,6 +2,14 @@
 #include "test/battle.h"
 
 // Please add Hail interactions with move, item and ability effects on their respective files.
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+    ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ICE && gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ICE);
+    ASSUME(gSpeciesInfo[SPECIES_WYNAUT].types[0] != TYPE_ICE && gSpeciesInfo[SPECIES_WYNAUT].types[1] != TYPE_ICE);
+    ASSUME(gSpeciesInfo[SPECIES_GLALIE].types[0] == TYPE_ICE || gSpeciesInfo[SPECIES_GLALIE].types[1] == TYPE_ICE);
+}
+
 SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
 {
     s16 hailDamage;
@@ -80,5 +88,19 @@ SINGLE_BATTLE_TEST("Hail damage rounds properly when maxHP < 16")
         TURN { MOVE(opponent, MOVE_HAIL); }
     } SCENE {
         HP_BAR(player, damage: 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
+{
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ICE);
+        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ICE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAIL); }
+    } SCENE {
+        NOT HP_BAR(player);
     }
 }
