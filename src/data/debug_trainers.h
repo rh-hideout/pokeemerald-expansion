@@ -61,7 +61,7 @@
 #line 37
             TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 34
-        .doubleBattle = FALSE,
+        .battleType = TRAINER_BATTLE_TYPE_SINGLES,
         .partySize = 3,
         .party = (const struct TrainerMon[])
         {

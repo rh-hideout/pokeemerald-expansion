@@ -31,7 +31,7 @@ EVs: 252 Atk / 252 Def / 6 SpA
 === DEBUG_TRAINER_AI ===
 Name: Debugger
 Class: Rival
-Double Battle: No
+Battle Type: Singles
 Pic: Steven
 Gender: Male
 Music: Male
