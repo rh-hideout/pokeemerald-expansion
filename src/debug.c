@@ -1580,21 +1580,16 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 
 void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
 {
-    switch (GetTimeOfDay())
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
+    switch (timeOfDay)
     {
         case TIME_MORNING:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MORNING]);
-            break;
         case TIME_DAY:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_DAY]);
-            break;
         case TIME_EVENING:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_EVENING]);
-            break;
         case TIME_NIGHT:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_NIGHT]);
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
             break;
-        default:
+        case TIMES_OF_DAY_COUNT:
             break;
     }
 }
