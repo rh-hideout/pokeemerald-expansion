@@ -2209,6 +2209,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
                     }
+                    break;
                 case PROTECT_MAT_BLOCK:
                     if (!gDisableStructs[battlerAtk].isFirstTurn)
                     {
