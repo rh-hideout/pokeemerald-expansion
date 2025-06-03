@@ -177,6 +177,7 @@ enum VolatileFlags
 
 enum Volatile
 {
+    VOLATILE_NONE,
     VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
     /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
 };
