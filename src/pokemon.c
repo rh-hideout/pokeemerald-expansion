@@ -1695,7 +1695,7 @@ u16 GetUnionRoomTrainerPic(void)
     return FacilityClassToPicIndex(gUnionRoomFacilityClasses[arrId]);
 }
 
-u16 GetUnionRoomTrainerClass(void)
+enum TrainerClassID GetUnionRoomTrainerClass(void)
 {
     u8 linkId;
     u32 arrId;
@@ -3550,7 +3550,7 @@ u8 GetSecretBaseTrainerPicIndex(void)
     return gFacilityClassToPicIndex[facilityClass];
 }
 
-u8 GetSecretBaseTrainerClass(void)
+enum TrainerClassID GetSecretBaseTrainerClass(void)
 {
     u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
     return gFacilityClassToTrainerClass[facilityClass];
@@ -5313,7 +5313,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     {
         u8 friendshipLevel = 0;
         s16 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, 0);
-        u32 opponentTrainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+        enum TrainerClassID opponentTrainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
 
         if (friendship > 99)
             friendshipLevel++;
@@ -5877,7 +5877,7 @@ u16 GetBattleBGM(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
-        u8 trainerClass;
+        enum TrainerClassID trainerClass;
 
         if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
             trainerClass = GetFrontierOpponentClass(TRAINER_BATTLE_PARAM.opponentA);
@@ -6726,7 +6726,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                     if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;
-                case FORM_CHANGE_END_BATTLE_TERRAIN:
+                case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
                     if (gBattleEnvironment == formChanges[i].param1)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;

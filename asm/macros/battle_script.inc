@@ -1697,10 +1697,6 @@
 	callnative BS_ApplyTerastallization
 	.endm
 
-	.macro damagetoquartertargethp
-	callnative BS_DamageToQuarterTargetHP
-	.endm
-
 	.macro jumpifsleepclause jumpInstr:req
 	callnative BS_JumpIfSleepClause
 	.4byte \jumpInstr

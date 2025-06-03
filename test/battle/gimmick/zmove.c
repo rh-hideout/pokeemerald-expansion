@@ -630,10 +630,10 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75\% of the target's current HP")
+SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75% of the target's current HP")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_GUARDIAN_OF_ALOLA);
+        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_TAPU_FINI) { Item(ITEM_TAPUNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

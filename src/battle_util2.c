@@ -95,17 +95,10 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     }
 
-    if (gBattleMons[opposingBattlerId].level > gBattleMons[battler].level)
-    {
-        if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
-        else
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
+    if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
+        AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
     else
-    {
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
 }
 
 void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)

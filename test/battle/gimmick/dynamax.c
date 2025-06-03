@@ -630,7 +630,7 @@ SINGLE_BATTLE_TEST("Dynamax: Super Fang uses a Pokemon's non-Dynamax HP", s16 da
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_SUPER_FANG);
+        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {

@@ -9022,12 +9022,7 @@ static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageCalcula
         return UQ_4_12(1.0);
 
     u32 protected = gProtectStructs[damageCalcData->battlerDef].protected;
-    if (protected != PROTECT_NONE
-     && protected != PROTECT_WIDE_GUARD
-     && protected != PROTECT_QUICK_GUARD
-     && protected != PROTECT_CRAFTY_SHIELD
-     && protected != PROTECT_MAT_BLOCK
-     && protected != PROTECT_MAX_GUARD)
+    if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
 }
@@ -9327,11 +9322,11 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
         dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
         break;
-    case EFFECT_FIXED_DAMAGE_ARG:
-        dmg = GetMoveFixedDamage(damageCalcData->move);
+    case EFFECT_FIXED_HP_DAMAGE:
+        dmg = GetMoveFixedHPDamage(damageCalcData->move);
         break;
-    case EFFECT_SUPER_FANG:
-        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) / 2;
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) * GetMoveDamagePercentage(damageCalcData->move) / 100;
         break;
     case EFFECT_FINAL_GAMBIT:
         dmg = GetNonDynamaxHP(damageCalcData->battlerAtk);
@@ -10194,12 +10189,7 @@ bool32 TryClearIllusion(u32 battler, u32 caseID)
 struct Pokemon *GetIllusionMonPtr(u32 battler)
 {
     if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)
-    {
-        if (IsOnPlayerSide(battler))
-            SetIllusionMon(GetBattlerMon(battler), battler);
-        else
-            SetIllusionMon(GetBattlerMon(battler), battler);
-    }
+        SetIllusionMon(GetBattlerMon(battler), battler);
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return NULL;
 

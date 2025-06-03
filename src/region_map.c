@@ -25,7 +25,6 @@
 #include "heal_location.h"
 #include "constants/field_specials.h"
 #include "constants/heal_locations.h"
-#include "constants/map_types.h"
 #include "constants/rgb.h"
 #include "constants/weather.h"
 

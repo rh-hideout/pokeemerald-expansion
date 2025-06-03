@@ -387,7 +387,7 @@ static u32 GetMaxPowerTier(u32 move)
     switch (GetMoveEffect(move))
     {
         case EFFECT_BIDE:
-        case EFFECT_SUPER_FANG:
+        case EFFECT_FIXED_PERCENT_DAMAGE:
         case EFFECT_LEVEL_DAMAGE:
         case EFFECT_PSYWAVE:
         case EFFECT_COUNTER:
@@ -400,7 +400,7 @@ static u32 GetMaxPowerTier(u32 move)
         case EFFECT_TERRAIN_PULSE:
         case EFFECT_PUNISHMENT:
         case EFFECT_TRUMP_CARD:
-        case EFFECT_FIXED_DAMAGE_ARG:
+        case EFFECT_FIXED_HP_DAMAGE:
         case EFFECT_SPIT_UP:
         case EFFECT_NATURAL_GIFT:
         case EFFECT_MIRROR_COAT:
