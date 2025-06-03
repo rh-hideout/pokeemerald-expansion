@@ -353,16 +353,15 @@ extern const u8 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon[];
 #include "data/map_group_count.h"
 
 // Text
-#define _ARROW "{CLEAR_TO 110}{RIGHT_ARROW}"
-
 // General
+static const u8 sDebugText_Arrow[] =          _("{CLEAR_TO 110}{RIGHT_ARROW}");
 static const u8 sDebugText_True[] =          _("TRUE");
 static const u8 sDebugText_False[] =         _("FALSE");
 static const u8 sDebugText_Colored_True[] =  _("{COLOR GREEN}TRUE");
 static const u8 sDebugText_Colored_False[] = _("{COLOR RED}FALSE");
 static const u8 sDebugText_Dashes[] =        _("---");
 static const u8 sDebugText_Empty[] =         _("");
-static const u8 sDebugText_Continue[] =      _("Continue…" _ARROW);
+static const u8 sDebugText_Continue[] =      _("Continue…");
 // Util Menu
 static const u8 sDebugText_Util_WarpToMap_SelectMapGroup[] = _("Group: {STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}");
 static const u8 sDebugText_Util_WarpToMap_SelectMap[] =      _("Map: {STR_VAR_1}{CLEAR_TO 90}\nMapSec:{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}{CLEAR_TO 90}");
@@ -452,12 +451,12 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu_Weekdays[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
 {
-    { COMPOUND_STRING("Print current time…"),                      DebugAction_ExecuteScript, Debug_EventScript_TellTheTime },
-    { COMPOUND_STRING("{FONT_NARROW}Print current time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
-    { COMPOUND_STRING("{FONT_NARROW}Change current time of day…"), DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
-    { COMPOUND_STRING("Change current weekday…"),                  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
-    { COMPOUND_STRING("Check wall clock…"),                        DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
-    { COMPOUND_STRING("Set wall clock…"),                          DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
+    { COMPOUND_STRING("Get time…"),         DebugAction_ExecuteScript, Debug_EventScript_TellTheTime },
+    { COMPOUND_STRING("Get time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
+    { COMPOUND_STRING("Set time of day…"),  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
+    { COMPOUND_STRING("Set weekday…"),      DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
+    { COMPOUND_STRING("Check wall clock…"), DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
+    { COMPOUND_STRING("Set wall clock…"),   DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
     { NULL }
 };
 
@@ -473,16 +472,16 @@ static const struct DebugMenuOption sDebugMenu_Actions_BerryFunctions[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
 {
-    { COMPOUND_STRING("Fly to map…"),             DebugAction_Util_Fly },
-    { COMPOUND_STRING("Warp to map warp…"),       DebugAction_Util_Warp_Warp },
-    { COMPOUND_STRING("Set weather…"),            DebugAction_Util_Weather },
-    { COMPOUND_STRING("Font Test…"),              DebugAction_ExecuteScript, Debug_EventScript_FontTest },
-    { COMPOUND_STRING("Time Functions…" _ARROW),  DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
-    { COMPOUND_STRING("Watch credits…"),          DebugAction_Util_WatchCredits },
-    { COMPOUND_STRING("Cheat start"),             DebugAction_Util_CheatStart },
-    { COMPOUND_STRING("Berry Functions…" _ARROW), DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
-    { COMPOUND_STRING("EWRAM Counters…"),         DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
-    { COMPOUND_STRING("Steven Multi"),            DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
+    { COMPOUND_STRING("Fly to map…"),       DebugAction_Util_Fly },
+    { COMPOUND_STRING("Warp to map warp…"), DebugAction_Util_Warp_Warp },
+    { COMPOUND_STRING("Set weather…"),      DebugAction_Util_Weather },
+    { COMPOUND_STRING("Font Test…"),        DebugAction_ExecuteScript, Debug_EventScript_FontTest },
+    { COMPOUND_STRING("Time Functions…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
+    { COMPOUND_STRING("Watch credits…"),    DebugAction_Util_WatchCredits },
+    { COMPOUND_STRING("Cheat start"),       DebugAction_Util_CheatStart },
+    { COMPOUND_STRING("Berry Functions…"),  DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
+    { COMPOUND_STRING("EWRAM Counters…"),   DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
+    { COMPOUND_STRING("Steven Multi"),      DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
 };
 
@@ -502,7 +501,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_PCBag_Fill[] =
 static const struct DebugMenuOption sDebugMenu_Actions_PCBag[] =
 {
     { COMPOUND_STRING("Access PC"),           DebugAction_ExecuteScript, EventScript_PC },
-    { COMPOUND_STRING("Fill…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag_Fill },
+    { COMPOUND_STRING("Fill…"),               DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag_Fill },
     { COMPOUND_STRING("Clear Bag"),           DebugAction_PCBag_ClearBag },
     { COMPOUND_STRING("Clear Storage Boxes"), DebugAction_PCBag_ClearBoxes },
     { NULL }
@@ -522,13 +521,13 @@ static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
 {
-    { COMPOUND_STRING("Give item XYZ…" _ARROW),    DebugAction_Give_Item },
-    { COMPOUND_STRING("Pokémon (Basic)" _ARROW),   DebugAction_Give_PokemonSimple },
-    { COMPOUND_STRING("Pokémon (Complex)" _ARROW), DebugAction_Give_PokemonComplex },
-    { COMPOUND_STRING("Max Money"),                DebugAction_Give_MaxMoney },
-    { COMPOUND_STRING("Max Coins"),                DebugAction_Give_MaxCoins },
-    { COMPOUND_STRING("Max Battle Points"),        DebugAction_Give_MaxBattlePoints },
-    { COMPOUND_STRING("Daycare Egg"),              DebugAction_Give_DayCareEgg },
+    { COMPOUND_STRING("Give item XYZ…"),    DebugAction_Give_Item },
+    { COMPOUND_STRING("Pokémon (Basic)"),   DebugAction_Give_PokemonSimple },
+    { COMPOUND_STRING("Pokémon (Complex)"), DebugAction_Give_PokemonComplex },
+    { COMPOUND_STRING("Max Money"),         DebugAction_Give_MaxMoney },
+    { COMPOUND_STRING("Max Coins"),         DebugAction_Give_MaxCoins },
+    { COMPOUND_STRING("Max Battle Points"), DebugAction_Give_MaxBattlePoints },
+    { COMPOUND_STRING("Daycare Egg"),       DebugAction_Give_DayCareEgg },
     { NULL }
 };
 
@@ -555,8 +554,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Scripts[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Sound[] =
 {
-    { COMPOUND_STRING("SFX…" _ARROW),   DebugAction_Sound_SE },
-    { COMPOUND_STRING("Music…" _ARROW), DebugAction_Sound_MUS },
+    { COMPOUND_STRING("SFX…"),   DebugAction_Sound_SE },
+    { COMPOUND_STRING("Music…"), DebugAction_Sound_MUS },
     { NULL }
 };
 
@@ -570,8 +569,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
 {
-    [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { COMPOUND_STRING("Set Flag XYZ…" _ARROW),              DebugAction_FlagsVars_Flags },
-    [DEBUG_FLAGVAR_MENU_ITEM_VARS]                 = { COMPOUND_STRING("Set Var XYZ…" _ARROW),               DebugAction_FlagsVars_Vars },
+    [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { COMPOUND_STRING("Set Flag XYZ…"),                     DebugAction_FlagsVars_Flags },
+    [DEBUG_FLAGVAR_MENU_ITEM_VARS]                 = { COMPOUND_STRING("Set Var XYZ…"),                      DebugAction_FlagsVars_Vars },
     [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_ALL]         = { COMPOUND_STRING("Pokédex Flags All"),                 DebugAction_FlagsVars_PokedexFlags_All },
     [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_RESET]       = { COMPOUND_STRING("Pokédex Flags Reset"),               DebugAction_FlagsVars_PokedexFlags_Reset },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Pokédex"),         DebugAction_FlagsVars_SwitchDex },
@@ -593,16 +592,16 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
 {
-    { COMPOUND_STRING("Utilities…" _ARROW),    DebugAction_OpenSubMenu, sDebugMenu_Actions_Utilities, },
-    { COMPOUND_STRING("PC/Bag…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag, },
-    { COMPOUND_STRING("Party…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Party, },
-    { COMPOUND_STRING("Give X…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Give, },
-    { COMPOUND_STRING("Player…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
-    { COMPOUND_STRING("Scripts…" _ARROW),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
-    { COMPOUND_STRING("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
-    { COMPOUND_STRING("Sound…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
-    { COMPOUND_STRING("ROM Info…" _ARROW),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
-    { COMPOUND_STRING("Cancel"),               DebugAction_Cancel, },
+    { COMPOUND_STRING("Utilities…"),    DebugAction_OpenSubMenu, sDebugMenu_Actions_Utilities, },
+    { COMPOUND_STRING("PC/Bag…"),       DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag, },
+    { COMPOUND_STRING("Party…"),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Party, },
+    { COMPOUND_STRING("Give X…"),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Give, },
+    { COMPOUND_STRING("Player…"),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
+    { COMPOUND_STRING("Scripts…"),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
+    { COMPOUND_STRING("Flags & Vars…"), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
+    { COMPOUND_STRING("Sound…"),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
+    { COMPOUND_STRING("ROM Info…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
+    { COMPOUND_STRING("Cancel"),        DebugAction_Cancel, },
     { NULL }
 };
 
@@ -756,6 +755,13 @@ static void Debug_ShowMenuFromTemplate(void (*HandleInput)(u8), struct ListMenuT
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
+static bool32 IsSubMenuAction(const void *action)
+{
+    return action == DebugAction_OpenSubMenu
+        || action == DebugAction_OpenSubMenuFlagsVars
+        || action == DebugAction_OpenSubMenuFakeRTC;
+}
+
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
 {
     struct ListMenuTemplate menuTemplate = {0};
@@ -778,7 +784,11 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     for (i = 0; items[i].text != NULL; i++)
     {
         sDebugMenuListData->listItems[i].id = i;
-        sDebugMenuListData->listItems[i].name = items[i].text;
+        StringExpandPlaceholders(gStringVar4, items[i].text);
+        if (IsSubMenuAction(items[i].action))
+            StringAppend(gStringVar4, sDebugText_Arrow);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
     }
 
     // create list menu
@@ -1090,9 +1100,7 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         PlaySE(SE_SELECT);
         if (option.action != NULL)
         {
-            if (option.action == DebugAction_OpenSubMenu
-             || option.action == DebugAction_OpenSubMenuFlagsVars
-             || option.action == DebugAction_OpenSubMenuFakeRTC)
+            if (IsSubMenuAction(option.action))
                 ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
             else if (option.action == DebugAction_ExecuteScript)
                 Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
