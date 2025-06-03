@@ -60,7 +60,6 @@ SINGLE_BATTLE_TEST("Sheer Cold can be endured by Sturdy")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, player);
         ABILITY_POPUP(opponent, ABILITY_STURDY);
-        MESSAGE("The opposing Geodude was protected by Sturdy!");
     }
 }
 

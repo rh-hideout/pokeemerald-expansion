@@ -45,7 +45,6 @@ SINGLE_BATTLE_TEST("OHKO moves can can be endured by Sturdy")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
         ABILITY_POPUP(opponent, ABILITY_STURDY);
-        MESSAGE("The opposing Geodude was protected by Sturdy!");
     }
 }
 

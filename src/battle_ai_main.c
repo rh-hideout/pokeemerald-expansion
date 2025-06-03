@@ -2228,8 +2228,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
 
                 if (protectMethod != PROTECT_QUICK_GUARD
-                  && protectMethod != PROTECT_WIDE_GUARD
-                  && protectMethod != PROTECT_CRAFTY_SHIELD) //These moves have infinite usage
+                 && protectMethod != PROTECT_WIDE_GUARD
+                 && protectMethod != PROTECT_CRAFTY_SHIELD) //These moves have infinite usage
                 {
                     if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp
                       && !(IsMoxieTypeAbility(aiData->abilities[battlerDef])))
