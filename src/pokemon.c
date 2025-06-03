@@ -1201,7 +1201,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     SetBoxMonData(boxMon, MON_DATA_POKEBALL, &value);
     SetBoxMonData(boxMon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
-    u32 teraType = (boxMon->personality & 0x1) == 0 ? gSpeciesInfo[species].types[0] : gSpeciesInfo[species].types[1];
+    u32 teraType = (boxMon->personality & 0x1) == 0 ? GetSpeciesType(species, 0) : GetSpeciesType(species, 1);
     SetBoxMonData(boxMon, MON_DATA_TERA_TYPE, &teraType);
 
     if (fixedIV < USE_RANDOM_IVS)
@@ -1278,7 +1278,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
         }
     }
 
-    if (gSpeciesInfo[species].abilities[1])
+    if (GetSpeciesAbility(species, 1))
     {
         value = personality & 1;
         SetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, &value);
@@ -1792,7 +1792,7 @@ void CalculateMonStats(struct Pokemon *mon)
     }
     else
     {
-        s32 n = 2 * gSpeciesInfo[species].baseHP + hpIV;
+        s32 n = 2 * GetSpeciesBaseHP(species) + hpIV;
         newMaxHP = (((n + hpEV / 4) * level) / 100) + level + 10;
     }
 
@@ -3482,7 +3482,7 @@ u16 GetAbilityBySpecies(u16 species, u8 abilityNum)
     int i;
 
     if (abilityNum < NUM_ABILITY_SLOTS)
-        gLastUsedAbility = gSpeciesInfo[species].abilities[abilityNum];
+        gLastUsedAbility = GetSpeciesAbility(species, abilityNum);
     else
         gLastUsedAbility = ABILITY_NONE;
 
@@ -3490,13 +3490,13 @@ u16 GetAbilityBySpecies(u16 species, u8 abilityNum)
     {
         for (i = NUM_NORMAL_ABILITY_SLOTS; i < NUM_ABILITY_SLOTS && gLastUsedAbility == ABILITY_NONE; i++)
         {
-            gLastUsedAbility = gSpeciesInfo[species].abilities[i];
+            gLastUsedAbility = GetSpeciesAbility(species, i);
         }
     }
 
     for (i = 0; i < NUM_ABILITY_SLOTS && gLastUsedAbility == ABILITY_NONE; i++) // look for any non-empty ability
     {
-        gLastUsedAbility = gSpeciesInfo[species].abilities[i];
+        gLastUsedAbility = GetSpeciesAbility(species, i);
     }
 
     return gLastUsedAbility;
@@ -3603,14 +3603,54 @@ const u8 *GetSpeciesPokedexDescription(u16 species)
     return gSpeciesInfo[species].description;
 }
 
-u16 GetSpeciesHeight(u16 species)
+u32 GetSpeciesHeight(u16 species)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].height;
 }
 
-u16 GetSpeciesWeight(u16 species)
+u32 GetSpeciesWeight(u16 species)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
+}
+
+u32 GetSpeciesType(u16 species, u8 slot)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
+}
+
+u32 GetSpeciesAbility(u16 species, u8 slot)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
+}
+
+u32 GetSpeciesBaseHP(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseHP;
+}
+
+u32 GetSpeciesBaseAttack(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseAttack;
+}
+
+u32 GetSpeciesBaseDefense(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense;
+}
+
+u32 GetSpeciesBaseSpAttack(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpAttack;
+}
+
+u32 GetSpeciesBaseSpDefense(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpDefense;
+}
+
+u32 GetSpeciesBaseSpeed(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed;
 }
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
@@ -3713,8 +3753,8 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     dst->spDefense = GetMonData(src, MON_DATA_SPDEF, NULL);
     dst->abilityNum = GetMonData(src, MON_DATA_ABILITY_NUM, NULL);
     dst->otId = GetMonData(src, MON_DATA_OT_ID, NULL);
-    dst->types[0] = gSpeciesInfo[dst->species].types[0];
-    dst->types[1] = gSpeciesInfo[dst->species].types[1];
+    dst->types[0] = GetSpeciesType(dst->species, 0);
+    dst->types[1] = GetSpeciesType(dst->species, 1);
     dst->types[2] = TYPE_MYSTERY;
     dst->isShiny = IsMonShiny(src);
     dst->ability = GetAbilityBySpecies(dst->species, dst->abilityNum);
@@ -4641,8 +4681,8 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             for (j = 0; j < PARTY_SIZE; j++)
             {
                 u16 currSpecies = GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL);
-                if (gSpeciesInfo[currSpecies].types[0] == params[i].arg1
-                 || gSpeciesInfo[currSpecies].types[1] == params[i].arg1)
+                if (GetSpeciesType(currSpecies, 0) == params[i].arg1
+                 || GetSpeciesType(currSpecies, 1) == params[i].arg1)
                 {
                     currentCondition = TRUE;
                     break;
@@ -6883,6 +6923,7 @@ u16 SanitizeSpeciesId(u16 species)
 
 bool32 IsSpeciesEnabled(u16 species)
 {
+    // This function should not use the GetSpeciesBaseHP function, as the included sanitation will result in an infinite loop
     return gSpeciesInfo[species].baseHP > 0 || species == SPECIES_EGG;
 }
 

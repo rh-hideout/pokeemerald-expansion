@@ -255,7 +255,7 @@ static u32 CalcBeatUpPower(void)
 
     // Party slot is incremented by the battle script for Beat Up after this damage calculation
     species = GetMonData(&party[gBattleStruct->beatUpSlot], MON_DATA_SPECIES);
-    basePower = (gSpeciesInfo[species].baseAttack / 10) + 5;
+    basePower = (GetSpeciesBaseAttack(species) / 10) + 5;
 
     return basePower;
 }
@@ -9400,7 +9400,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct DamageCalculationData
     }
 
     // Same type attack bonus
-    if (gSpeciesInfo[partyMonSpecies].types[0] == moveType || gSpeciesInfo[partyMonSpecies].types[1] == moveType)
+    if (GetSpeciesType(partyMonSpecies, 0) == moveType || GetSpeciesType(partyMonSpecies, 1) == moveType)
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.5));
     else
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.0));
@@ -9531,9 +9531,9 @@ static inline void TryNoticeIllusionInTypeEffectiveness(u32 move, u32 moveType, 
 {
     // Check if the type effectiveness would've been different if the pokemon really had the types as the disguise.
     uq4_12_t presumedModifier = UQ_4_12(1.0);
-    MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, gSpeciesInfo[illusionSpecies].types[0], battlerAtk, FALSE);
-    if (gSpeciesInfo[illusionSpecies].types[1] != gSpeciesInfo[illusionSpecies].types[0])
-        MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, gSpeciesInfo[illusionSpecies].types[1], battlerAtk, FALSE);
+    MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, GetSpeciesType(illusionSpecies, 0), battlerAtk, FALSE);
+    if (GetSpeciesType(illusionSpecies, 1) != GetSpeciesType(illusionSpecies, 0))
+        MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, GetSpeciesType(illusionSpecies, 1), battlerAtk, FALSE);
 
     if (presumedModifier != resultingModifier)
         RecordAbilityBattle(battlerDef, ABILITY_ILLUSION);
@@ -9666,9 +9666,9 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, u16 a
 
     if (move != MOVE_STRUGGLE && moveType != TYPE_MYSTERY)
     {
-        MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, gSpeciesInfo[speciesDef].types[0], 0, FALSE);
-        if (gSpeciesInfo[speciesDef].types[1] != gSpeciesInfo[speciesDef].types[0])
-            MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, gSpeciesInfo[speciesDef].types[1], 0, FALSE);
+        MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, GetSpeciesType(speciesDef, 0), 0, FALSE);
+        if (GetSpeciesType(speciesDef, 1) != GetSpeciesType(speciesDef, 0))
+            MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, GetSpeciesType(speciesDef, 1), 0, FALSE);
 
         if (moveType == TYPE_GROUND && abilityDef == ABILITY_LEVITATE && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
             modifier = UQ_4_12(0.0);
@@ -9699,8 +9699,8 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, u8 moveType)
     uq4_12_t modifier = UQ_4_12(1.0);
     u16 abilityDef = GetMonAbility(mon);
     u16 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
-    u8 type1 = gSpeciesInfo[speciesDef].types[0];
-    u8 type2 = gSpeciesInfo[speciesDef].types[1];
+    u8 type1 = GetSpeciesType(speciesDef, 0);
+    u8 type2 = GetSpeciesType(speciesDef, 1);
 
     if (moveType != TYPE_MYSTERY)
     {
@@ -10768,8 +10768,8 @@ void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon)
 void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
 {
     gBattleMons[battler].ability = GetMonAbility(mon);
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
+    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
+    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 }
 
@@ -10948,8 +10948,8 @@ bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon)
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
     u16 monAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM, NULL);
 
-    bool8 hasLevitateAbility = gSpeciesInfo[species].abilities[monAbilityNum] == ABILITY_LEVITATE;
-    bool8 isFlyingType = gSpeciesInfo[species].types[0] == TYPE_FLYING || gSpeciesInfo[species].types[1] == TYPE_FLYING;
+    bool8 hasLevitateAbility = GetSpeciesAbility(species, monAbilityNum) == ABILITY_LEVITATE;
+    bool8 isFlyingType = GetSpeciesType(species, 0) == TYPE_FLYING || GetSpeciesType(species, 1) == TYPE_FLYING;
     bool8 monIsValidAndNotEgg = GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(mon, MON_DATA_IS_EGG);
 
     if (monIsValidAndNotEgg)

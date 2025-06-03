@@ -289,11 +289,11 @@ void SetBattlerData(u32 battlerId)
         if (illusionSpecies != SPECIES_NONE && ShouldFailForIllusion(illusionSpecies, battlerId))
         {
             // If the battler's type has not been changed, AI assumes the types of the illusion mon.
-            if (gBattleMons[battlerId].types[0] == gSpeciesInfo[species].types[0]
-                && gBattleMons[battlerId].types[1] == gSpeciesInfo[species].types[1])
+            if (gBattleMons[battlerId].types[0] == GetSpeciesType(species, 0)
+                && gBattleMons[battlerId].types[1] == GetSpeciesType(species, 1))
             {
-                gBattleMons[battlerId].types[0] = gSpeciesInfo[illusionSpecies].types[0];
-                gBattleMons[battlerId].types[1] = gSpeciesInfo[illusionSpecies].types[1];
+                gBattleMons[battlerId].types[0] = GetSpeciesType(illusionSpecies, 0);
+                gBattleMons[battlerId].types[1] = GetSpeciesType(illusionSpecies, 1);
             }
             species = illusionSpecies;
         }
@@ -302,9 +302,9 @@ void SetBattlerData(u32 battlerId)
         if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability != ABILITY_NONE)
             gBattleMons[battlerId].ability = gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability;
         // Check if mon can only have one ability.
-        else if (gSpeciesInfo[species].abilities[1] == ABILITY_NONE
-                || gSpeciesInfo[species].abilities[1] == gSpeciesInfo[species].abilities[0])
-            gBattleMons[battlerId].ability = gSpeciesInfo[species].abilities[0];
+        else if (GetSpeciesAbility(species, 1) == ABILITY_NONE
+                || GetSpeciesAbility(species, 1) == GetSpeciesAbility(species, 0))
+            gBattleMons[battlerId].ability = GetSpeciesAbility(species, 0);
         // The ability is unknown.
         else
             gBattleMons[battlerId].ability = ABILITY_NONE;
@@ -385,12 +385,12 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
 
 u32 GetTotalBaseStat(u32 species)
 {
-    return gSpeciesInfo[species].baseHP
-        + gSpeciesInfo[species].baseAttack
-        + gSpeciesInfo[species].baseDefense
-        + gSpeciesInfo[species].baseSpeed
-        + gSpeciesInfo[species].baseSpAttack
-        + gSpeciesInfo[species].baseSpDefense;
+    return GetSpeciesBaseHP(species)
+        + GetSpeciesBaseAttack(species)
+        + GetSpeciesBaseDefense(species)
+        + GetSpeciesBaseSpeed(species)
+        + GetSpeciesBaseSpAttack(species)
+        + GetSpeciesBaseSpDefense(species);
 }
 
 bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
@@ -1463,7 +1463,7 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
 
     for (i = 0; i < NUM_ABILITY_SLOTS; i++)
     {
-        indexAbility = gSpeciesInfo[gBattleMons[battlerId].species].abilities[i];
+        indexAbility = GetSpeciesAbility(gBattleMons[battlerId].species, i);
         if (indexAbility != ABILITY_NONE)
         {
             abilityAiRatings[numValidAbilities] = gAbilitiesInfo[indexAbility].aiRating;
@@ -2999,8 +2999,8 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     u32 flags = gSideStatuses[GetBattlerSide(currBattler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES);
     s32 hazardDamage = 0;
-    u32 type1 = gSpeciesInfo[species].types[0];
-    u32 type2 = gSpeciesInfo[species].types[1];
+    u32 type1 = GetSpeciesType(species, 0);
+    u32 type2 = GetSpeciesType(species, 1);
     u32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
 
     if (flags == 0)
@@ -4331,7 +4331,7 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     {
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
             || (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT) // Not Omniscient but expects physical attacker
-                && gSpeciesInfo[gBattleMons[battlerDef].species].baseAttack >= gSpeciesInfo[gBattleMons[battlerDef].species].baseSpAttack + 10))
+                && GetSpeciesBaseAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) + 10))
         {
             if (GetMoveCategory(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == DAMAGE_CATEGORY_PHYSICAL)
                 ADJUST_SCORE_PTR(DECENT_EFFECT);
@@ -4415,7 +4415,7 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
     {
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL)
             || (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT) // Not Omniscient but expects special attacker
-                && gSpeciesInfo[gBattleMons[battlerDef].species].baseSpAttack >= gSpeciesInfo[gBattleMons[battlerDef].species].baseAttack + 10))
+                && GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseAttack(gBattleMons[battlerDef].species) + 10))
         {
             if (GetMoveCategory(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == DAMAGE_CATEGORY_SPECIAL)
                 ADJUST_SCORE_PTR(DECENT_EFFECT);
