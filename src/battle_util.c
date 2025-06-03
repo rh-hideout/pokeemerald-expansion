@@ -9331,7 +9331,7 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         dmg = GetMoveFixedHPDamage(damageCalcData->move);
         break;
     case EFFECT_FIXED_PERCENT_DAMAGE:
-        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) * GetMoveDemagePercentage(damageCalcData->move) / 100;
+        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) * GetMoveDamagePercentage(damageCalcData->move) / 100;
         break;
     case EFFECT_FINAL_GAMBIT:
         dmg = GetNonDynamaxHP(damageCalcData->battlerAtk);
