@@ -285,12 +285,11 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TICKLE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-
         MESSAGE("Mankey's Attack fell!");
         ABILITY_POPUP(player, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Mankey's Attack sharply rose!");
-
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Mankey's Defense fell!");
         ABILITY_POPUP(player, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -333,5 +332,38 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate if the pokemon lowers it's own stat
             EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
         else
             EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximum Attack")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
+        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BELLY_DRUM); MOVE(opponent, MOVE_TICKLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
+        // Maxed Attack
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TICKLE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack fell!");
+        ABILITY_POPUP(player, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack rose!");
+        // Maxed Attack
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Defense fell!");
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_DEFIANT);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            MESSAGE("Mankey's Attack sharply rose!");
+        }
+        MESSAGE("Mankey's Attack won't go any higher!");
+
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }
 }

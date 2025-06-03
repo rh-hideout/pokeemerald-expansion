@@ -1012,7 +1012,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -1695,10 +1695,6 @@
 
 	.macro applyterastallization
 	callnative BS_ApplyTerastallization
-	.endm
-
-	.macro damagetoquartertargethp
-	callnative BS_DamageToQuarterTargetHP
 	.endm
 
 	.macro jumpifsleepclause jumpInstr:req
@@ -2447,10 +2443,6 @@
 
 	.macro dmgtomaxattackerhp
 	manipulatedamage DMG_FULL_ATTACKER_HP
-	.endm
-
-	.macro dmgtocurrattackerhp
-	manipulatedamage DMG_CURR_ATTACKER_HP
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req
