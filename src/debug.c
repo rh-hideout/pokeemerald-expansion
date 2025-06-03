@@ -224,6 +224,7 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
+static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_Util_Warp_Warp(u8 taskId, const struct DebugMenuOption *items);
@@ -568,21 +569,6 @@ static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
     { NULL }
 };
 
-static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
-{
-    { COMPOUND_STRING("Utilities…" _ARROW),    DebugAction_OpenSubMenu, sDebugMenu_Actions_Utilities, },
-    { COMPOUND_STRING("PC/Bag…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag, },
-    { COMPOUND_STRING("Party…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Party, },
-    { COMPOUND_STRING("Give X…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Give, },
-    { COMPOUND_STRING("Player…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
-    { COMPOUND_STRING("Scripts…" _ARROW),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
-    { COMPOUND_STRING("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, },
-    { COMPOUND_STRING("Sound…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
-    { COMPOUND_STRING("ROM Info…" _ARROW),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
-    { COMPOUND_STRING("Cancel"),               DebugAction_Cancel, },
-    { NULL }
-};
-
 static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
 {
     [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { COMPOUND_STRING("Set Flag XYZ…" _ARROW),              DebugAction_FlagsVars_Flags },
@@ -603,6 +589,21 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_FlagsVars_TrainerSeeOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_FlagsVars_BagUseOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { COMPOUND_STRING("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_FlagsVars_CatchingOnOff },
+    { NULL }
+};
+
+static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
+{
+    { COMPOUND_STRING("Utilities…" _ARROW),    DebugAction_OpenSubMenu, sDebugMenu_Actions_Utilities, },
+    { COMPOUND_STRING("PC/Bag…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_PCBag, },
+    { COMPOUND_STRING("Party…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Party, },
+    { COMPOUND_STRING("Give X…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Give, },
+    { COMPOUND_STRING("Player…" _ARROW),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
+    { COMPOUND_STRING("Scripts…" _ARROW),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
+    { COMPOUND_STRING("Flags & Vars…" _ARROW), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
+    { COMPOUND_STRING("Sound…" _ARROW),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
+    { COMPOUND_STRING("ROM Info…" _ARROW),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
+    { COMPOUND_STRING("Cancel"),               DebugAction_Cancel, },
     { NULL }
 };
 
@@ -1035,6 +1036,16 @@ static void Debug_RefreshListMenu(u8 taskId)
 {
     u8 totalItems = 0;
 
+    if (sDebugMenuListData->listId == 1)
+    {
+        for (u32 i = 0; i < ARRAY_COUNT(sDebugMenu_Actions_Flags); i++)
+        {
+            sDebugMenuListData->listItems[i].id = i;
+            sDebugMenuListData->listItems[i].name = sDebugMenu_Actions_Flags[i].text;
+        }
+        totalItems = gMultiuseListMenuTemplate.totalItems = ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1;
+    }
+
     // Failsafe to prevent memory corruption
     totalItems = min(totalItems, DEBUG_MAX_MENU_ITEMS);
     Debug_GenerateListMenuNames(totalItems);
@@ -1056,6 +1067,17 @@ static void Debug_RefreshListMenu(u8 taskId)
     gMultiuseListMenuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
     gMultiuseListMenuTemplate.fontId = 1;
     gMultiuseListMenuTemplate.cursorKind = 0;
+}
+
+static void Debug_RedrawListMenu(u8 taskId)
+{
+    u8 listTaskId = gTasks[taskId].tMenuTaskId;
+    u16 scrollOffset, selectedRow;
+    ListMenuGetScrollAndRow(listTaskId, &scrollOffset, &selectedRow);
+
+    DestroyListMenuTask(gTasks[taskId].tMenuTaskId, &scrollOffset, &selectedRow);
+    Debug_RefreshListMenu(taskId);
+    gTasks[taskId].tMenuTaskId = ListMenuInit(&gMultiuseListMenuTemplate, scrollOffset, selectedRow);
 }
 
 static void DebugTask_HandleMenuInput_General(u8 taskId)
@@ -1085,7 +1107,10 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
         {
             Debug_DestroyMenu(taskId);
-            Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
+            if (sDebugMenuListData->listId == 1)
+                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, NULL);
+            else
+                Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
         else
         {
@@ -1095,12 +1120,52 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     }
 }
 
+
+static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
+{
+    DebugFunc2 func;
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        if ((func = sDebugMenu_Actions_Flags[input].action) != NULL)
+        {
+            if (input == DEBUG_FLAGVAR_MENU_ITEM_FLAGS || input == DEBUG_FLAGVAR_MENU_ITEM_VARS)
+            {
+                Debug_RedrawListMenu(taskId);
+                func(taskId,  sDebugMenu_Actions_Flags[input].actionParams);
+            }
+            else
+            {
+                func(taskId,  sDebugMenu_Actions_Flags[input].actionParams);
+                Debug_GenerateListMenuNames(gMultiuseListMenuTemplate.totalItems);
+                RedrawListMenu(gTasks[taskId].tMenuTaskId);
+            }
+
+            // Remove TRUE/FALSE window for functions that haven't been assigned flags
+            if (gTasks[taskId].tInput == 0xFF)
+            {
+                ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+                RemoveWindow(gTasks[taskId].tSubWindowId);
+                Free(sDebugMenuListData);
+            }
+        }
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        Debug_DestroyMenu(taskId);
+        Debug_ShowMainMenu();
+    }
+}
+
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
     Debug_RefreshListMenu(taskId);
-    Debug_ShowMenuFromTemplate(DebugTask_HandleMenuInput_General, gMultiuseListMenuTemplate);
+    Debug_ShowMenuFromTemplate(DebugTask_HandleMenuInput_FlagsVars, gMultiuseListMenuTemplate);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
