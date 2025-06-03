@@ -29,8 +29,8 @@ TEST("Terastallization type defaults to primary or secondary type")
     for (i = 0; i < 128; i++) PARAMETRIZE {}
     CreateMon(&mon, SPECIES_PIDGEY, 100, 0, FALSE, 0, OT_ID_PRESET, 0);
     teraType = GetMonData(&mon, MON_DATA_TERA_TYPE);
-    EXPECT(teraType == gSpeciesInfo[SPECIES_PIDGEY].types[0]
-        || teraType == gSpeciesInfo[SPECIES_PIDGEY].types[1]);
+    EXPECT(teraType == GetSpeciesType(SPECIES_PIDGEY, 0)
+        || teraType == GetSpeciesType(SPECIES_PIDGEY, 1));
 }
 
 TEST("Terastallization type can be set to any type except TYPE_NONE")
@@ -61,8 +61,8 @@ TEST("Terastallization type is reset to the default types when setting Tera Type
         typeNone = GetTeraTypeFromPersonality(&mon);
     SetMonData(&mon, MON_DATA_TERA_TYPE, &typeNone);
     typeNone = GetMonData(&mon, MON_DATA_TERA_TYPE);
-    EXPECT(typeNone == gSpeciesInfo[SPECIES_PIDGEY].types[0]
-        || typeNone == gSpeciesInfo[SPECIES_PIDGEY].types[1]);
+    EXPECT(typeNone == GetSpeciesType(SPECIES_PIDGEY, 0)
+        || typeNone == GetSpeciesType(SPECIES_PIDGEY, 1));
 }
 
 TEST("Shininess independent from PID and OTID")
@@ -302,7 +302,7 @@ TEST("givemon [all]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), BALL_MASTER);
     EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
-    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), gSpeciesInfo[SPECIES_WOBBUFFET].abilities[2]);
+    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
     EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 1);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_EV), 2);
@@ -367,7 +367,7 @@ TEST("givemon [vars]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), BALL_MASTER);
     EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
-    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), gSpeciesInfo[SPECIES_WOBBUFFET].abilities[2]);
+    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
     EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 1);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_EV), 2);
