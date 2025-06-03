@@ -30,6 +30,7 @@ EVs: 252 Atk / 252 Def / 6 SpA
 
 === DEBUG_TRAINER_AI ===
 Name: Debugger
+AI: Basic Trainer
 Class: Rival
 Battle Type: Singles
 Pic: Steven
