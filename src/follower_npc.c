@@ -1548,6 +1548,7 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)
 #undef tDoorY
 
 // Task data
+#define tLedgeJump              data[1]
 #define PREVENT_PLAYER_STEP     0
 #define DO_ALL_FORCED_MOVEMENTS 1
 #define NPC_INTO_PLAYER         2
@@ -1567,9 +1568,22 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
     // The player will keep doing forced movments until they land on a non-forced-move metatile or hit collision.
     else if (gTasks[taskId].tState == DO_ALL_FORCED_MOVEMENTS && ObjectEventClearHeldMovementIfFinished(player) != 0)
     {
+        // Wait for follower NPC to catch up before continuing.
+        if (FindTaskIdByFunc(Task_ReallowPlayerMovement) != TASK_NONE)
+            return;
+            
         // Lock follower facing direction for muddy slope.
         if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
             follower->facingDirectionLocked = TRUE;
+
+        // Stop doing forced movements while the follower NPC is ledge jumping.
+        if (gTasks[taskId].tLedgeJump)
+        {
+            follower->facingDirectionLocked = FALSE;
+            gPlayerAvatar.preventStep = FALSE;
+            DestroyTask(taskId);
+            return;
+        }
 
         if (TryDoMetatileBehaviorForcedMovement() == 0)
             gTasks[taskId].tState = NPC_INTO_PLAYER;
@@ -1595,6 +1609,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 }
 
 #undef tState
+#undef tLedgeJump
 #undef PREVENT_PLAYER_STEP
 #undef DO_ALL_FORCED_MOVEMENTS
 #undef NPC_INTO_PLAYER

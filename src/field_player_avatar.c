@@ -510,9 +510,17 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
         else
         {
             if (collision == COLLISION_LEDGE_JUMP)
+            {
+                u32 FollowerNPCTaskId = FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement);
+
                 PlayerJumpLedge(direction);
+                if (FollowerNPCTaskId != TASK_NONE)
+                    gTasks[FollowerNPCTaskId].data[1] = TRUE;
+            }
+
             playerAvatar->flags |= PLAYER_AVATAR_FLAG_FORCED_MOVE;
             playerAvatar->runningState = MOVING;
+
             return TRUE;
         }
     }
@@ -524,6 +532,7 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
          && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE
          && FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
             CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 3);
+            
         return TRUE;
     }
 }
