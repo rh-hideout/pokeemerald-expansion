@@ -479,6 +479,8 @@ static bool8 ForcedMovement_None(void)
     return FALSE;
 }
 
+#define tLedgeJump      data[1]
+
 static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
 {
     struct PlayerAvatar *playerAvatar = &gPlayerAvatar;
@@ -515,7 +517,7 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
 
                 PlayerJumpLedge(direction);
                 if (followerNPCTaskId != TASK_NONE)
-                    gTasks[followerNPCTaskId].data[1] = TRUE;
+                    gTasks[followerNPCTaskId].tLedgeJump = TRUE;
             }
 
             playerAvatar->flags |= PLAYER_AVATAR_FLAG_FORCED_MOVE;
@@ -534,6 +536,8 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
         return TRUE;
     }
 }
+
+#undef tLedgeJump
 
 static bool8 DoForcedMovementInCurrentDirection(void (*moveFunc)(u8))
 {
