@@ -209,8 +209,6 @@ struct DebugMenuListData
 // EWRAM
 static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
-EWRAM_DATA bool8 gIsDebugBattle = FALSE;
-EWRAM_DATA u64 gDebugAIFlags = 0;
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
