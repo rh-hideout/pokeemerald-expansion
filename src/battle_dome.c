@@ -2151,7 +2151,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
     }
     else
     {
-        int n = 2 * gSpeciesInfo[fmon->species].baseHP;
+        int n = 2 * GetSpeciesBaseHP(fmon->species);
         stats[STAT_HP] = (((n + ivs + evs[STAT_HP] / 4) * level) / 100) + level + 10;
     }
 
@@ -5947,12 +5947,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId1][monId1]].species;
-                points1 += ( gSpeciesInfo[species].baseHP
-                           + gSpeciesInfo[species].baseAttack
-                           + gSpeciesInfo[species].baseDefense
-                           + gSpeciesInfo[species].baseSpeed
-                           + gSpeciesInfo[species].baseSpAttack
-                           + gSpeciesInfo[species].baseSpDefense) / 10;
+                points1 += GetTotalBaseStat(species) / 10;
             }
             // Random part of the formula.
             points1 += (Random() & 0x1F);
@@ -5970,12 +5965,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId2][monId1]].species;
-                points2 += ( gSpeciesInfo[species].baseHP
-                           + gSpeciesInfo[species].baseAttack
-                           + gSpeciesInfo[species].baseDefense
-                           + gSpeciesInfo[species].baseSpeed
-                           + gSpeciesInfo[species].baseSpAttack
-                           + gSpeciesInfo[species].baseSpDefense) / 10;
+                points2 += GetTotalBaseStat(species) / 10;
             }
             // Random part of the formula.
             points2 += (Random() & 0x1F);

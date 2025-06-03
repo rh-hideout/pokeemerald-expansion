@@ -255,7 +255,7 @@ static u32 CalcBeatUpPower(void)
 
     // Party slot is incremented by the battle script for Beat Up after this damage calculation
     species = GetMonData(&party[gBattleStruct->beatUpSlot], MON_DATA_SPECIES);
-    basePower = (gSpeciesInfo[species].baseAttack / 10) + 5;
+    basePower = (GetSpeciesBaseAttack(species) / 10) + 5;
 
     return basePower;
 }
