@@ -768,7 +768,7 @@
 #define ITEM_TM48 629
 #define ITEM_TM49 630
 #define ITEM_TM50 631
-#define ITEM_BLANK 632
+#define ITEM_TM51 632
 #define ITEM_TM52 633
 #define ITEM_TM53 634
 #define ITEM_TM54 635
@@ -997,9 +997,7 @@
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEM_TM51 829
-
-#define ITEMS_COUNT 830
+#define ITEMS_COUNT 829
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
