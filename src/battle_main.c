@@ -4699,6 +4699,10 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect h
 {
     u32 speed = gBattleMons[battler].speed;
 
+    // stat stages
+    speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
+    speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
+
     // weather abilities
     if (HasWeatherEffect())
     {
@@ -4725,10 +4729,6 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect h
         speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_UNBURDEN && gDisableStructs[battler].unburdenActive)
         speed *= 2;
-
-    // stat stages
-    speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
-    speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
 
     // player's badge boost
     if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
