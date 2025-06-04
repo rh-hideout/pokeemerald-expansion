@@ -49,6 +49,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/surskitty"><img src="https://avatars.githubusercontent.com/u/1383512?v=4?s=100" width="100px;" alt="surskitty"/><br /><sub><b>surskitty</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=surskitty" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/grintoul1"><img src="https://avatars.githubusercontent.com/u/166724814?v=4?s=100" width="100px;" alt="grintoul"/><br /><sub><b>grintoul</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=grintoul1" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bassforte123"><img src="https://avatars.githubusercontent.com/u/130828119?v=4?s=100" width="100px;" alt="bassforte123"/><br /><sub><b>bassforte123</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=bassforte123" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/iriv24"><img src="https://avatars.githubusercontent.com/u/40581123?v=4?s=100" width="100px;" alt="iriv24"/><br /><sub><b>iriv24</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=iriv24" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
