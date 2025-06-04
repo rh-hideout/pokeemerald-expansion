@@ -116,12 +116,10 @@
 	.byte 0x17
 	.endm
 
-	.macro clearstatusfromeffect battler:req, moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
+	.macro clearstatus2 battler:req, status2:req
 	.byte 0x18
 	.byte \battler
+	.4byte \status2
 	.endm
 
 	.macro tryfaintmon battler:req
