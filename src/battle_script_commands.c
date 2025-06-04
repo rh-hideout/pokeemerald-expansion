@@ -3370,7 +3370,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         {
             // Inner Focus ALWAYS prevents flinching but only activates
             // on a move that's supposed to flinch, like Fake Out
-            if (primary == TRUE || certain == TRUE)
+            if (primary || certain)
             {
                 gLastUsedAbility = ABILITY_INNER_FOCUS;
                 gBattlerAbility = gEffectBattler;
