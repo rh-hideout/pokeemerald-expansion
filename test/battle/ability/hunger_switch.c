@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Hunger Switch does not switch Morpeko's form when Terastalli
 
 SINGLE_BATTLE_TEST("Hunger Switch does not switch Morpeko's form after switching out while Terastallized")
 {
-    KNOWN_FAILING;
+    KNOWN_FAILING; // #7062
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
         PLAYER(SPECIES_MORPEKO) { Ability(ABILITY_HUNGER_SWITCH); TeraType(TYPE_NORMAL); }
