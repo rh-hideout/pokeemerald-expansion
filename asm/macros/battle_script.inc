@@ -1697,10 +1697,6 @@
 	callnative BS_ApplyTerastallization
 	.endm
 
-	.macro damagetoquartertargethp
-	callnative BS_DamageToQuarterTargetHP
-	.endm
-
 	.macro jumpifsleepclause jumpInstr:req
 	callnative BS_JumpIfSleepClause
 	.4byte \jumpInstr
@@ -2447,10 +2443,6 @@
 
 	.macro dmgtomaxattackerhp
 	manipulatedamage DMG_FULL_ATTACKER_HP
-	.endm
-
-	.macro dmgtocurrattackerhp
-	manipulatedamage DMG_CURR_ATTACKER_HP
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req

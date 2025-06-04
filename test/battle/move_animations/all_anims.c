@@ -76,6 +76,7 @@ static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a differen
 {
     if (gMovesInfo[move].effect == EFFECT_TELEPORT
      || gMovesInfo[move].effect == EFFECT_EXPLOSION
+     || gMovesInfo[move].effect == EFFECT_MISTY_EXPLOSION
      || gMovesInfo[move].effect == EFFECT_BATON_PASS
      || gMovesInfo[move].effect == EFFECT_MEMENTO
      || gMovesInfo[move].effect == EFFECT_HEALING_WISH
@@ -222,7 +223,7 @@ static void SceneSingles(u32 move, struct BattlePokemon *mon)
     {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, mon);
     }
-    else if (gMovesInfo[move].effect == EFFECT_NATURE_POWER) // Recorded battles always use BATTLE_TERRAIN_BUILDING
+    else if (gMovesInfo[move].effect == EFFECT_NATURE_POWER) // Recorded battles always use BATTLE_ENVIRONMENT_BUILDING
     {
         ANIMATION(ANIM_TYPE_MOVE, B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT, mon);
     }
@@ -354,7 +355,7 @@ static void DoublesScene(u32 move, struct BattlePokemon *attacker)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, attacker);
     }
     else if (gMovesInfo[move].effect == EFFECT_NATURE_POWER)
-    { // Recorded battles always use BATTLE_TERRAIN_BUILDING
+    { // Recorded battles always use BATTLE_ENVIRONMENT_BUILDING
         ANIMATION(ANIM_TYPE_MOVE, B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT, attacker);
     }
     else

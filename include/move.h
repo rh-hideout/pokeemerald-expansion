@@ -147,6 +147,7 @@ struct MoveInfo
         u32 holdEffect;
         u32 type;
         u32 fixedDamage;
+        u32 damagePercentage;
         u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
@@ -493,7 +494,7 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
-static inline u32 GetMoveProtectMethod(u32 moveId)
+static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
 }
@@ -518,7 +519,7 @@ static inline u32 GetMoveArgType(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.type;
 }
 
-static inline u32 GetMoveFixedDamage(u32 moveId)
+static inline u32 GetMoveFixedHPDamage(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.fixedDamage;
 }
@@ -548,6 +549,11 @@ static inline u32 GetMoveNonVolatileStatus(u32 move)
     default:
         return MOVE_EFFECT_NONE;
     }
+}
+
+static inline u32 GetMoveDamagePercentage(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)
