@@ -7,6 +7,7 @@ GraniteCave_StevensRoom_EventScript_Steven::
 	lock
 	faceplayer
 	msgbox GraniteCave_StevensRoom_Text_ImStevenLetterForMe, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_STEVEN_GRANITE, GraniteCave_StevensRoom_Text_StevenDefeat
 	setvar VAR_0x8004, ITEM_LETTER
 	call Common_EventScript_PlayerHandedOverTheItem
 	setflag FLAG_DELIVERED_STEVEN_LETTER
@@ -85,6 +86,10 @@ GraniteCave_StevensRoom_Text_ImStevenLetterForMe:
 	.string "My name is STEVEN.\p"
 	.string "I'm interested in rare stones,\n"
 	.string "so I travel here and there.\p"
+	.string "You seem to be a strong trainer,\n"
+	.string "so how about we have a battle?$"
+	
+GraniteCave_StevensRoom_Text_StevenDefeat:
 	.string "Oh?\n"
 	.string "A LETTER for me?$"
 

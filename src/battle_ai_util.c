@@ -188,6 +188,7 @@ void SaveBattlerData(u32 battlerId)
     // Save and restore types even for AI controlled battlers in case it gets changed during move evaluation process.
     AI_THINKING_STRUCT->saved[battlerId].types[0] = gBattleMons[battlerId].types[0];
     AI_THINKING_STRUCT->saved[battlerId].types[1] = gBattleMons[battlerId].types[1];
+    AI_THINKING_STRUCT->saved[battlerId].types[2] = gBattleMons[battlerId].types[2];
 }
 
 static bool32 ShouldFailForIllusion(u32 illusionSpecies, u32 battlerId)
@@ -240,10 +241,12 @@ void SetBattlerData(u32 battlerId)
         {
             // If the battler's type has not been changed, AI assumes the types of the illusion mon.
             if (gBattleMons[battlerId].types[0] == gSpeciesInfo[species].types[0]
-                && gBattleMons[battlerId].types[1] == gSpeciesInfo[species].types[1])
+                && gBattleMons[battlerId].types[1] == gSpeciesInfo[species].types[1]
+                && gBattleMons[battlerId].types[2] == gSpeciesInfo[species].types[2])
             {
                 gBattleMons[battlerId].types[0] = gSpeciesInfo[illusionSpecies].types[0];
                 gBattleMons[battlerId].types[1] = gSpeciesInfo[illusionSpecies].types[1];
+                gBattleMons[battlerId].types[2] = gSpeciesInfo[illusionSpecies].types[2];
             }
             species = illusionSpecies;
         }
@@ -285,6 +288,7 @@ void RestoreBattlerData(u32 battlerId)
     }
     gBattleMons[battlerId].types[0] = AI_THINKING_STRUCT->saved[battlerId].types[0];
     gBattleMons[battlerId].types[1] = AI_THINKING_STRUCT->saved[battlerId].types[1];
+    gBattleMons[battlerId].types[2] = AI_THINKING_STRUCT->saved[battlerId].types[2];
 }
 
 u32 GetHealthPercentage(u32 battlerId)
@@ -2826,6 +2830,7 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     s32 hazardDamage = 0;
     u32 type1 = gSpeciesInfo[species].types[0];
     u32 type2 = gSpeciesInfo[species].types[1];
+    u32 type3 = gSpeciesInfo[species].types[2];
     u32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
 
     if (flags == 0)
@@ -2841,11 +2846,11 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
         return FALSE;
 
     if (flags & SIDE_STATUS_STEALTH_ROCK)
-        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, type1, type2, maxHp);
+        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, type1, type2, type3, maxHp);
     if ((flags & SIDE_STATUS_STEELSURGE))
-        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, maxHp);
+        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, type3, maxHp);
 
-    if (flags & SIDE_STATUS_SPIKES && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
+    if (flags & SIDE_STATUS_SPIKES && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING && type3 != TYPE_FLYING
         && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
         || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY))
     {

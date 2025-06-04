@@ -3342,7 +3342,7 @@ const u8* FaintClearSetData(u32 battler)
 
     gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
     gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;
+    gBattleMons[battler].types[2] = gSpeciesInfo[gBattleMons[battler].species].types[2];
 
     Ai_UpdateFaintData(battler);
     TryBattleFormChange(battler, FORM_CHANGE_FAINT);
@@ -3438,7 +3438,7 @@ static void DoBattleIntro(void)
                 memcpy(&gBattleMons[battler], &gBattleResources->bufferB[battler][4], sizeof(struct BattlePokemon));
                 gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
                 gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
-                gBattleMons[battler].types[2] = TYPE_MYSTERY;
+                gBattleMons[battler].types[2] = gSpeciesInfo[gBattleMons[battler].species].types[2];
                 gBattleMons[battler].ability = GetAbilityBySpecies(gBattleMons[battler].species, gBattleMons[battler].abilityNum);
                 gBattleStruct->hpOnSwitchout[GetBattlerSide(battler)] = gBattleMons[battler].hp;
                 gBattleMons[battler].status2 = 0;

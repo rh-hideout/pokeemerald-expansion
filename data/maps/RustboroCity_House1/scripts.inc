@@ -54,8 +54,8 @@ RustboroCity_House1_Text_IllTradeIfYouWant:
 	.string "Sure, I knew that.\p"
 	.string "But if you really want, I'm willing\n"
 	.string "to trade it to you.\p"
-	.string "I'll trade you my {STR_VAR_2} for\n"
-	.string "a {STR_VAR_1} if you want.$"
+	.string "I'll trade you my Jirachi for\n"
+	.string "a Treecko if you want.$"
 
 RustboroCity_House1_Text_PleaseBeGoodToMyPokemon:
 	.string "Eheheh…\n"
@@ -63,7 +63,7 @@ RustboroCity_House1_Text_PleaseBeGoodToMyPokemon:
 
 RustboroCity_House1_Text_DoesntLookLikeMonToMe:
 	.string "Huh? That doesn't look anything like\n"
-	.string "a {STR_VAR_1} to me.$"
+	.string "a Treecko to me.$"
 
 RustboroCity_House1_Text_YouDontWantToThatsOkay:
 	.string "Oh, if you don't want to, that's okay.\n"

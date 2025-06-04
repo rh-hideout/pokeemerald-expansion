@@ -350,6 +350,8 @@ Route103_Text_ShortcutToOldale:
 	.string "Fufufu, that's useful, isn't it?$"
 
 Route103_Text_RouteSign:
-	.string "ROUTE 103\n"
-	.string "{DOWN_ARROW} OLDALE TOWN$"
-
+	.string "Pokemon in grass: Spinarak, Wingull,\n"
+	.string "and Sentret.\p"
+	.string "Fishing Pokemon: Carvanha, Sharpedo,\n"
+	.string "and Mega Sharpedo.\p"
+	.string "Surfing Pokemon: Wingull, Pelipper.$"

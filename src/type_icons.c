@@ -106,6 +106,31 @@ const union AnimCmd sSpriteAnim_TypeIcon_Mystery[] =
     ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_MYSTERY), 0),
     ANIMCMD_END
 };
+const union AnimCmd sSpriteAnim_TypeIcon_Vaccine[] =
+{
+    ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_VACCINE), 0),
+    ANIMCMD_END
+};
+const union AnimCmd sSpriteAnim_TypeIcon_Data[] =
+{
+    ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_DATA), 0),
+    ANIMCMD_END
+};
+const union AnimCmd sSpriteAnim_TypeIcon_Virus[] =
+{
+    ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_VIRUS), 0),
+    ANIMCMD_END
+};
+const union AnimCmd sSpriteAnim_TypeIcon_Free[] =
+{
+    ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_FREE), 0),
+    ANIMCMD_END
+};
+const union AnimCmd sSpriteAnim_TypeIcon_Light[] =
+{
+    ANIMCMD_FRAME(TYPE_ICON_1_FRAME(TYPE_LIGHT), 0),
+    ANIMCMD_END
+};
 
 const union AnimCmd sSpriteAnim_TypeIcon_Fire[] =
 {
@@ -176,6 +201,11 @@ const union AnimCmd *const sSpriteAnimTable_TypeIcons[] =
     [TYPE_DARK] =       sSpriteAnim_TypeIcon_Dark,
     [TYPE_FAIRY] =      sSpriteAnim_TypeIcon_Fairy,
     [TYPE_STELLAR] =    sSpriteAnim_TypeIcon_Mystery,
+    [TYPE_VACCINE] =    sSpriteAnim_TypeIcon_Vaccine,
+    [TYPE_DATA] =       sSpriteAnim_TypeIcon_Data,
+    [TYPE_VIRUS] =      sSpriteAnim_TypeIcon_Virus,
+    [TYPE_FREE] =       sSpriteAnim_TypeIcon_Mystery,
+    [TYPE_LIGHT] =      sSpriteAnim_TypeIcon_Light,
 };
 
 const struct CompressedSpritePalette sTypeIconPal1 =

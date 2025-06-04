@@ -1252,7 +1252,9 @@ RustboroCity_Text_DevonCorpBranchOfficeSign:
 RustboroCity_Text_CitySign:
 	.string "RUSTBORO CITY\p"
 	.string "“The city probing the integration of\n"
-	.string "nature and science.”$"
+	.string "nature and science.”\p"
+	.string "Pokemon in grass: Pidgey, Snubble,\n"
+	.string "and meowth.$"
 
 RustboroCity_Text_TrainersSchoolSign:
 	.string "POKéMON TRAINER'S SCHOOL\p"

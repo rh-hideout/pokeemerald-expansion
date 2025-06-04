@@ -1637,8 +1637,17 @@
 #define SPECIES_URSHIFU_RAPID_STRIKE_STYLE_GMAX         SPECIES_URSHIFU_RAPID_STRIKE_GMAX
 #define SPECIES_MIMIKYU_BUSTED_TOTEM                    1523
 #define SPECIES_MIMIKYU_TOTEM_BUSTED                    SPECIES_MIMIKYU_BUSTED_TOTEM
+#define SPECIES_KOROMON									1524
+#define SPECIES_BUKAMON									1525
+#define SPECIES_YOKOMON									1526
+#define SPECIES_AGUMON									1527
+#define SPECIES_PALMON									1528
+#define SPECIES_BIYOMON									1529
+#define SPECIES_SYAKOMON								1530
+#define SPECIES_GOMAMON									1531
+#define SPECIES_VEEMON									1532
 
-#define SPECIES_EGG                                     (SPECIES_MIMIKYU_BUSTED_TOTEM + 1)
+#define SPECIES_EGG                                     (SPECIES_VEEMON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

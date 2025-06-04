@@ -397,5 +397,7 @@ OldaleTown_Text_BrendanLetsGoBack:
 
 OldaleTown_Text_TownSign:
 	.string "OLDALE TOWN\n"
-	.string "“Where things start off scarce.”$"
+	.string "“Where things start off scarce.”\p"
+	.string "Pokemon in grass: Ledyba, Torchic,\n"
+	.string "and Aipom.$"
 

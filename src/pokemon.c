@@ -3707,7 +3707,7 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     dst->otId = GetMonData(src, MON_DATA_OT_ID, NULL);
     dst->types[0] = gSpeciesInfo[dst->species].types[0];
     dst->types[1] = gSpeciesInfo[dst->species].types[1];
-    dst->types[2] = TYPE_MYSTERY;
+    dst->types[2] = gSpeciesInfo[dst->species].types[2];
     dst->isShiny = IsMonShiny(src);
     dst->ability = GetAbilityBySpecies(dst->species, dst->abilityNum);
     GetMonData(src, MON_DATA_NICKNAME, nickname);

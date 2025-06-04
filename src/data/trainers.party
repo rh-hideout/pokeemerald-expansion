@@ -231,9 +231,36 @@ Music: Aqua
 Double Battle: No
 AI: Check Bad Move
 
-Poochyena
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Poochyena  
+Ability: Run Away  
+Level: 12  
+- Howl  
+- Bite  
+- Leer  
+
+Carvanha  
+Ability: Rough Skin  
+Level: 12
+- Bite  
+- Flip Turn  
+- Ice Fang  
+
+Zigzagoon-Galar  
+Ability: Quick Feet  
+Level: 13  
+- Headbutt  
+- Assurance  
+- Growl  
+
+Corphish  
+Ability: Adaptability  
+Level: 12  
+- Aqua Jet  
+- Assurance  
+- Vise Grip  
+- Rock Smash  
+
+
 
 === TRAINER_MARCEL ===
 Name: MARCEL
@@ -322,9 +349,40 @@ Music: Aqua
 Double Battle: No
 AI: Check Bad Move
 
-Poochyena
-Level: 11
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Poochyena  
+Ability: Run Away  
+Level: 20  
+- Howl  
+- Bite  
+- Leer  
+
+Carvanha  
+Ability: Rough Skin  
+Level: 20  
+- Bite  
+- Flip Turn  
+- Ice Fang  
+
+Zigzagoon-Galar  
+Ability: Quick Feet  
+Level: 20  
+- Headbutt  
+- Assurance  
+- Growl  
+
+Corphish  
+Ability: Adaptability  
+Level: 20  
+- Aqua Jet  
+- Assurance  
+- Vise Grip  
+- Rock Smash  
+
+Peeko (Wingull)  
+Ability: Keen Eye  
+Level: 10  
+- Struggle  
+- Growl  
 
 === TRAINER_GRUNT_WEATHER_INST_1 ===
 Name: GRUNT
@@ -1041,13 +1099,21 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Azurill
-Level: 12
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+CyaL8r (Croconaw)  
+Ability: Torrent  
+Level: 22  
+- Bite  
+- Thunder Fang  
+- Ice Fang  
+- Poison Fang  
 
-Azurill
-Level: 12
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Duster (Wartortle)  
+Ability: Mega Launcher  
+Level: 21  
+- Rapid Spin  
+- Water Pulse  
+- Bite  
+- Rain Dance  
 
 === TRAINER_AUSTINA ===
 Name: AUSTINA
@@ -1153,7 +1219,7 @@ Double Battle: No
 AI: Check Bad Move
 
 Zigzagoon
-Level: 13
+Level: 23
 IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
 - Sand Attack
 - Headbutt
@@ -1166,7 +1232,7 @@ Class: Tuber M
 Pic: Tuber M
 Gender: Male
 Music: Girl
-Double Battle: No
+Double Battle: Yes
 AI: Check Bad Move
 
 Azurill
@@ -2123,9 +2189,20 @@ Items: Full Restore
 Double Battle: No
 AI: Check Bad Move
 
-Zigzagoon @ Nugget
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Import (Zigzagoon-Galar) @ Nugget  
+Ability: Pickup  
+Level: 10  
+- Tackle  
+- Growl  
+
+Cindy Jr (Teddiursa) @ Honey  
+Ability: Pickup  
+Level: 10  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Scratch  
+- Growl
+
+
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -2260,23 +2337,59 @@ Linoone @ Nugget
 Level: 33
 IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
 
-=== TRAINER_CINDY_6 ===
-Name: CINDY
-Class: Lady
-Pic: Lady
-Gender: Female
-Music: Female
-Items: Full Restore
+=== TRAINER_STEVEN_GRANITE ===
+Name: STEVEN
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: Basic Trainer
 
-Linoone @ Nugget
-Level: 36
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
-- Fury Swipes
-- Mud Sport
-- Odor Sleuth
-- Sand Attack
+Skarmory  
+Ability: Keen Eye  
+Level: 22  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Steel Wing  
+- Spikes  
+- Wing Attack  
+
+Baltoy  
+Ability: Levitate  
+Level: 21  
+- Rapid Spin  
+- Rock Tomb  
+- Confusion  
+
+Aron  
+Ability: Sturdy  
+Level: 20  
+- Headbutt  
+- Bite  
+- Metal Claw  
+- Iron Defense  
+
+Lileep  
+Ability: Storm Drain  
+Level: 20  
+- Ingrain  
+- Mega Drain  
+- Rock Tomb  
+- Confuse Ray  
+
+Anorith  
+Ability: Battle Armor  
+Level: 20  
+- Aqua Jet  
+- Aerial Ace  
+- Bug Bite  
+- Rock Tomb  
+
+Beldum  
+Ability: Clear Body  
+Level: 22  
+Shiny: Yes  
+- Take Down  
 
 === TRAINER_MELISSA ===
 Name: MELISSA
@@ -2527,9 +2640,12 @@ Items: Full Restore
 Double Battle: No
 AI: Check Bad Move
 
-Zigzagoon @ Nugget
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+InfMoney (Meowth) @ Big Nugget  
+Ability: Technician  
+Level: 14  
+- Fake Out  
+- Pay Day  
+- Water Pulse
 
 === TRAINER_MOLLIE ===
 Name: MOLLIE
@@ -3171,9 +3287,19 @@ Music: Intense
 Double Battle: No
 AI: Check Bad Move
 
-Machop
-Level: 13
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
+Machop  
+Ability: Telepathy  
+Level: 20  
+IVs: 18 HP / 18 Def / 18 SpA / 18 SpD / 18 Spe  
+- Rock Smash  
+- Bulk Up  
+
+Tyrogue  
+Ability: Scrappy  
+Level: 20  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Low Sweep  
+- Bulk Up  
 
 === TRAINER_HITOSHI ===
 Name: HITOSHI
@@ -4798,29 +4924,63 @@ Items: Potion / Potion
 Double Battle: No
 AI: Basic Trainer
 
-Geodude
-Level: 12
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
-- Defense Curl
-- Rock Throw
-- Rock Tomb
+Nosepass @ Chesto Berry  
+Ability: Sturdy  
+Level: 16  
+EVs: 12 HP / 16 Atk / 248 Def / 232 SpD  
+Impish Nature  
+- Thunder Wave  
+- Sandstorm  
+- Rock Tomb  
+- Rest  
 
-Geodude
-Level: 12
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
-- Defense Curl
-- Rock Throw
-- Rock Tomb
+Graveler-Alola @ Sitrus Berry  
+Ability: Sturdy  
+Level: 16  
+EVs: 12 HP / 244 Atk / 8 Def / 244 SpD  
+Adamant Nature  
+- Rock Tomb  
+- Spark  
+- Stealth Rock  
+- Sandstorm  
 
-Nosepass @ Oran Berry
-Level: 15
-IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Block
-- Harden
-- Tackle
-- Rock Tomb
+Relicanth @ Rindo Berry  
+Ability: Sturdy  
+Level: 16  
+IVs: 0 Atk / 30 Def  
+- Rock Tomb  
+- Ancient Power  
+- Yawn  
+- Sandstorm  
+
+Magcargo  
+Ability: Flame Body  
+Level: 16  
+EVs: 4 Atk / 252 SpA / 252 Spe  
+Rash Nature  
+- Will-O-Wisp  
+- Shell Smash  
+- Rock Tomb  
+- Ember  
+
+Lileep @ Big Root  
+Ability: Storm Drain  
+Level: 16  
+EVs: 248 HP / 8 Atk / 252 SpD  
+Sassy Nature  
+- Ingrain  
+- Leech Seed  
+- Mega Drain  
+- Rock Tomb  
+
+Onix @ Eviolite  
+Ability: Rock Head  
+Level: 16  
+EVs: 116 HP / 252 Atk / 140 SpD  
+- Rock Tomb  
+- Sandstorm  
+- Dragon Tail  
+- Curse  
 
 === TRAINER_BRAWLY_1 ===
 Name: BRAWLY
@@ -4832,29 +4992,56 @@ Items: Super Potion / Super Potion
 Double Battle: No
 AI: Basic Trainer
 
-Machop
-Level: 16
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Karate Chop
-- Low Kick
-- Seismic Toss
-- Bulk Up
+Hitmontop  
+Ability: Intimidate  
+Level: 21  
+- Mach Punch  
+- Fake Out  
+- Rapid Spin  
+- Rock Tomb  
 
-Meditite
-Level: 16
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Focus Punch
-- Light Screen
-- Reflect
-- Bulk Up
+Monferno  
+Ability: Blaze  
+Level: 21  
+- Mach Punch  
+- Fire Punch  
+- Bulk Up  
+- Fake Out  
 
-Makuhita @ Sitrus Berry
-Level: 19
-IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Arm Thrust
-- Vital Throw
-- Reversal
-- Bulk Up
+Poliwrath  
+Ability: Swift Swim  
+Level: 20  
+- Bulk Up  
+- Rain Dance  
+- Dive  
+- Haze  
+
+Breloom @ Toxic Orb  
+Ability: Poison Heal  
+Level: 20  
+- Mach Punch  
+- Poison Powder  
+- Body Slam  
+- Leech Seed  
+
+Hawlucha @ Aguav Berry  
+Ability: Unburden  
+Level: 22  
+Sassy Nature  
+IVs: 1 SpD  
+- Bulk Up  
+- Rock Smash  
+- Aerial Ace  
+- Baton Pass  
+
+Hakamo-o  
+Ability: Soundproof  
+Level: 21  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Bulk Up  
+- Dragon Tail  
+- Leer  
+- Rock Tomb  
 
 === TRAINER_WATTSON_1 ===
 Name: WATTSON
@@ -5133,9 +5320,21 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Ralts
-Level: 9
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Benjamin (Abra)  
+Ability: Synchronize  
+Level: 19  
+IVs: 0 Atk  
+- Hidden Power  
+- Confusion  
+- Teleport  
+
+Lucy (Ralts)  
+Ability: Synchronize  
+Level: 19  
+IVs: 0 Atk  
+- Disarming Voice  
+- Confusion  
+- Helping Hand  
 
 === TRAINER_TED ===
 Name: TED
@@ -5180,13 +5379,21 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Ralts
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Benjamin (Kadabra)  
+Ability: Synchronize  
+Level: 26  
+IVs: 0 Atk  
+- Calm Mind  
+- Psybeam  
+- Shock Wave  
 
-Meditite
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Lucy (Kirlia)  
+Ability: Synchronize  
+Level: 26  
+IVs: 0 Atk  
+- Disarming Voice  
+- Psybeam  
+- Helping Hand  
 
 === TRAINER_JERRY_3 ===
 Name: JERRY
@@ -5197,13 +5404,23 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Kirlia
-Level: 29
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Benjamin (Kadabra)  
+Ability: Synchronize  
+Level: 30  
+IVs: 0 Atk  
+- Calm Mind  
+- Psybeam  
+- Shock Wave  
 
-Meditite
-Level: 29
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Lucy (Kirlia)  
+Ability: Synchronize  
+Level: 30  
+IVs: 0 Atk  
+- Disarming Voice  
+- Psybeam  
+- Helping Hand  
+
+
 
 === TRAINER_JERRY_4 ===
 Name: JERRY
@@ -5214,13 +5431,21 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Kirlia
-Level: 32
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Benjamin (Alakazam)  
+Ability: Synchronize  
+Level: 35   
+- Calm Mind  
+- Psychic  
+- Thunder Punch  
 
-Medicham
-Level: 32
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Lucy (Gallade)  
+Ability: Synchronize  
+Level: 35  
+- Brick Break  
+- Psycho Cut  
+- Helping Hand  
+
+
 
 === TRAINER_JERRY_5 ===
 Name: JERRY
@@ -5231,17 +5456,29 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Kirlia
-Level: 34
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Benjamin (Alakazam)  
+Ability: Synchronize  
+Level: 40  
+- Calm Mind  
+- Psychic  
+- Thunder Punch  
+- Dazzling Gleam  
 
-Banette
-Level: 34
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Lucy (Gallade)  
+Ability: Synchronize  
+Level: 40  
+- Brick Break  
+- Psycho Cut  
+- Helping Hand  
+- Leaf Blade  
 
-Medicham
-Level: 34
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Merro (Medicham)  
+Ability: Pure Power  
+Level: 40  
+- Power-Up Punch  
+- Bulk Up  
+- Zen Headbutt  
+- Fake Out  
 
 === TRAINER_KAREN_1 ===
 Name: KAREN
@@ -5252,9 +5489,33 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Shroomish
-Level: 9
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Phoenix (Beautifly)  
+Ability: Swarm  
+Level: 18  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Mega Drain  
+- Gust  
+- Stun Spore  
+- Silver Wind  
+
+Butters (Shroomish)  
+Ability: Effect Spore  
+Level: 18  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Mega Drain  
+- Headbutt  
+- Leech Seed  
+- Poison Powder  
+
+Betsy (Whismur) @ Oran Berry  
+Ability: Soundproof  
+Level: 19  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Uproar  
+- Disarming Voice  
+- Fake Tears  
+
+
 
 === TRAINER_GEORGIA ===
 Name: GEORGIA
@@ -5282,13 +5543,33 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Shroomish
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Phoenix (Beautifly)  
+Ability: Swarm  
+Level: 26  
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Giga Drain  
+- Air Cutter  
+- Quiver Dance  
+- Silver Wind  
 
-Whismur
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Butters (Breloom)  
+Ability: Effect Spore  
+Level: 26  
+- Giga Drain  
+- Mach Punch  
+- Headbutt  
+- Poison Powder  
+
+Betsy (Loudred)  
+Ability: Soundproof  
+Level: 26  
+IVs: 0 Atk  
+- Uproar  
+- Work Up  
+- Disarming Voice  
+- Water Pulse  
+
+
 
 === TRAINER_KAREN_3 ===
 Name: KAREN
@@ -5299,13 +5580,33 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Shroomish
-Level: 29
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Phoenix (Beautifly)  
+Ability: Swarm  
+Level: 30  
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Giga Drain  
+- Air Cutter  
+- Quiver Dance  
+- Silver Wind  
 
-Loudred
-Level: 29
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Butters (Breloom)  
+Ability: Effect Spore  
+Level: 30  
+- Giga Drain  
+- Mach Punch  
+- Headbutt  
+- Poison Powder  
+
+Exploud  
+Ability: Soundproof  
+Level: 30  
+IVs: 0 Atk  
+- Uproar  
+- Shock Wave  
+- Water Pulse  
+- Disarming Voice  
+
+
 
 === TRAINER_KAREN_4 ===
 Name: KAREN
@@ -5316,13 +5617,32 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Breloom
-Level: 32
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Phoenix (Beautifly)  
+Ability: Swarm  
+Level: 35  
+IVs: 15 HP / 0 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Giga Drain  
+- Air Cutter  
+- Quiver Dance  
+- Silver Wind  
 
-Loudred
-Level: 32
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Butters (Breloom)  
+Ability: Effect Spore  
+Level: 35  
+- Giga Drain  
+- Mach Punch  
+- Headbutt  
+- Poison Powder  
+
+Exploud  
+Ability: Soundproof  
+Level: 35  
+IVs: 0 Atk  
+- Hyper Voice  
+- Shock Wave  
+- Water Pulse  
+- Disarming Voice  
+
 
 === TRAINER_KAREN_5 ===
 Name: KAREN
@@ -5333,13 +5653,32 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Breloom
-Level: 35
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Phoenix (Beautifly)  
+Ability: Swarm  
+Level: 38  
+IVs: 15 HP / 0 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Giga Drain  
+- Air Cutter  
+- Quiver Dance  
+- Silver Wind  
 
-Exploud
-Level: 35
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Butters (Breloom)  
+Ability: Effect Spore  
+Level: 38  
+- Giga Drain  
+- Mach Punch  
+- Headbutt  
+- Poison Powder  
+
+Exploud  
+Ability: Soundproof  
+Level: 38  
+IVs: 0 Atk  
+- Hyper Voice  
+- Shock Wave  
+- Water Pulse  
+- Disarming Voice  
+
 
 === TRAINER_KATE_AND_JOY ===
 Name: KATE & JOY
@@ -5949,9 +6288,23 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Poochyena
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Crabby (Corphish)  
+Ability: Hyper Cutter  
+Level: 5  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Bubble  
+- Vise Grip  
+
+Biscuit (Poochyena)  
+Ability: Run Away  
+Level: 5  
+Shiny: Yes  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Tackle  
+- Howl  
+- Leer  
+
+
 
 === TRAINER_BILLY ===
 Name: BILLY
@@ -5959,16 +6312,25 @@ Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
-Double Battle: No
+Double Battle: Yes
 AI: Check Bad Move
 
-Zigzagoon
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+StabMcStab (Beedrill)  
+Ability: Swarm  
+Level: 10  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Poison Sting  
+- Twineedle  
 
-Seedot
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+FluttStuff (Butterfree)  
+Ability: Compound Eyes  
+Level: 10  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Silver Wind  
+- Sleep Powder  
+- Mega Drain  
+
+
 
 === TRAINER_JOSH ===
 Name: JOSH
@@ -5979,10 +6341,26 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
-Level: 10
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
+Aaron (Aron)  
+Ability: Sturdy  
+Level: 15  
+- Headbutt  
+- Rock Tomb  
+
+Steven (Geodude)  
+Ability: Rock Head  
+Level: 15  
+- Mud-Slap  
+- Rock Throw  
+- Sharpen  
+
+Savannah (Phanpy) (F) @ Metronome  
+Ability: Pickup  
+Level: 15  
+- Defense Curl  
+- Rollout  
+
+
 
 === TRAINER_TOMMY ===
 Name: TOMMY
@@ -5993,13 +6371,31 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
-Level: 8
-IVs: 13 HP / 13 Atk / 13 Def / 13 SpA / 13 SpD / 13 Spe
+Milo (Rockruff)  
+Ability: Own Tempo  
+Level: 15  
+- Bite  
+- Rock Throw  
+- Sandstorm  
+- Fire Fang  
 
-Geodude
-Level: 8
-IVs: 14 HP / 14 Atk / 14 Def / 14 SpA / 14 SpD / 14 Spe
+whackamole (Diglett-Alola)  
+Ability: Sand Veil  
+Level: 15  
+- Metal Claw  
+- Bulldoze  
+- Growl  
+- Rock Tomb  
+
+snipersnap (Trapinch)  
+Ability: Arena Trap  
+Level: 15  
+- Mud-Slap  
+- Rock Tomb  
+- Bite  
+- Sand Attack  
+
+
 
 === TRAINER_JOEY ===
 Name: JOEY
@@ -6010,9 +6406,24 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Machop
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+BillyTheKid (Machop)  
+Ability: Guts  
+Level: 17  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Karate Chop  
+- Focus Energy  
+- Smack Down  
+
+Rooster (Combusken)  
+Ability: Blaze  
+Level: 18  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Double Kick  
+- Flame Charge  
+- Peck  
+- Quick Attack  
+
+
 
 === TRAINER_BEN ===
 Name: BEN
@@ -6215,13 +6626,31 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Zigzagoon
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Possum (Zigzagoon) @ Oran Berry  
+Ability: Gluttony  
+Level: 5  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Growl  
+- Covet  
 
-Taillow
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Yip Yup (Taillow)  
+Ability: Guts  
+Level: 6  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Peck  
+- Quick Attack  
+- Focus Energy  
+
+Gex (Treecko) @ Grass Gem  
+Ability: Unburden  
+Level: 7  
+Shiny: Yes  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Leafage  
+- Quick Attack  
+- Leer  
+
+
 
 === TRAINER_TIMMY ===
 Name: TIMMY
@@ -6329,17 +6758,38 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Magikarp
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Axolotl (Mudkip)  
+Ability: Torrent  
+Level: 15  
+- Rock Throw  
+- Rock Smash  
+- Water Gun  
+- Growl  
 
-Magikarp
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bubbs (Marill)  
+Ability: Huge Power  
+Level: 15  
+- Aqua Jet  
+- Rock Smash  
+- Aqua Ring  
 
-Magikarp
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lamington (Corphish)  
+Ability: Hyper Cutter  
+Level: 15  
+- Hone Claws  
+- Aqua Jet  
+- Vise Grip  
+- Assurance  
+
+SquirtTurt (Squirtle)  
+Ability: Rain Dish  
+Level: 15  
+- Rapid Spin  
+- Rain Dance  
+- Bite  
+- Tail Whip  
+
+
 
 === TRAINER_CLAUDE ===
 Name: CLAUDE
@@ -6371,17 +6821,38 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Magikarp
-Level: 10
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Splogdy (Tentacool) @ Damp Rock  
+Ability: Rain Dish  
+Level: 20  
+- Rain Dance  
+- Water Pulse  
+- Toxic Spikes  
+- Poison Sting  
 
-Tentacool
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Gyarados  
+Level: 20  
+IVs: 4 HP / 4 Def / 4 SpA / 4 SpD / 4 Spe  
+- Bite  
+- Flail  
+- Bubble Beam  
+- Ice Fang  
 
-Magikarp
-Level: 10
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+GARGABLARG (Carvanha)  
+Ability: Rough Skin  
+Level: 20  
+- Bite  
+- Aqua Jet  
+- Poison Fang  
+- Leer  
+
+Sniperella (Corphish)  
+Ability: Hyper Cutter  
+Level: 20  
+- Leer  
+- Aqua Jet  
+- Rock Smash  
+- Rock Tomb  
+
 
 === TRAINER_NED ===
 Name: NED
@@ -6392,9 +6863,21 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Tentacool
-Level: 11
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+tentaCOOL (Tentacool)  
+Ability: Rain Dish  
+Level: 20  
+- Rain Dance  
+- Poison Sting  
+- Water Pulse  
+
+Gun (Remoraid)  
+Ability: Moody  
+Level: 21  
+- Rain Dance  
+- Bullet Seed  
+- Bubble Beam  
+
+
 
 === TRAINER_DALE ===
 Name: DALE
@@ -6490,17 +6973,39 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Tentacool
-Level: 24
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Splogdy (Tentacool) @ Damp Rock  
+Ability: Rain Dish  
+Level: 25  
+- Rain Dance  
+- Water Pulse  
+- Toxic Spikes  
+- Poison Sting  
 
-Gyarados
-Level: 27
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Gyarados  
+Level: 25  
+IVs: 4 HP / 4 Def / 4 SpA / 4 SpD / 4 Spe  
+- Bite  
+- Flail  
+- Bubble Beam  
+- Ice Fang  
 
-Gyarados
-Level: 27
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+GARGABLARG (Carvanha)  
+Ability: Rough Skin  
+Level: 25  
+- Bite  
+- Aqua Jet  
+- Poison Fang  
+- Leer  
+
+Sniperella (Corphish)  
+Ability: Hyper Cutter  
+Level: 25  
+- Leer  
+- Aqua Jet  
+- Rock Smash  
+- Rock Tomb  
+
+
 
 === TRAINER_ELLIOT_3 ===
 Name: ELLIOT
@@ -6511,21 +7016,39 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Gyarados
-Level: 29
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Splogdy (Tentacruel) @ Damp Rock  
+Ability: Rain Dish  
+Level: 30  
+- Rain Dance  
+- Water Pulse  
+- Toxic Spikes  
+- Poison Sting  
 
-Carvanha
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Gyarados  
+Level: 30  
+IVs: 4 HP / 4 Def / 4 SpA / 4 SpD / 4 Spe  
+- Bite  
+- Flail  
+- Bubble Beam  
+- Ice Fang  
 
-Tentacool
-Level: 26
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+GARGABLARG (Sharpedo)  
+Ability: Rough Skin  
+Level: 30  
+- Bite  
+- Aqua Jet  
+- Poison Fang  
+- Leer  
 
-Gyarados
-Level: 29
-IVs: 2 HP / 2 Atk / 2 Def / 2 SpA / 2 SpD / 2 Spe
+Sniperella (Crawdaunt)  
+Ability: Hyper Cutter  
+Level: 30  
+- Leer  
+- Aqua Jet  
+- Rock Smash  
+- Rock Tomb  
+
+
 
 === TRAINER_ELLIOT_4 ===
 Name: ELLIOT
@@ -6536,21 +7059,38 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Gyarados
-Level: 31
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Splogdy (Tentacruel) @ Damp Rock  
+Ability: Rain Dish  
+Level: 35  
+- Rain Dance  
+- Surf  
+- Toxic Spikes  
+- Poison Jab  
 
-Carvanha
-Level: 30
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Gyarados  
+Level: 35  
+IVs: 4 HP / 4 Def / 4 SpA / 4 SpD / 4 Spe  
+- Bite  
+- Dragon Tail  
+- Surf  
+- Ice Fang  
 
-Tentacruel
-Level: 30
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+GARGABLARG (Sharpedo)  
+Ability: Rough Skin  
+Level: 35  
+- Crunch  
+- Aqua Jet  
+- Poison Fang  
+- Leer  
 
-Gyarados
-Level: 31
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Sniperella (Crawdaunt)  
+Ability: Hyper Cutter  
+Level: 35  
+- Leer  
+- Aqua Jet  
+- Crabhammer  
+- Brick Break  
+
 
 === TRAINER_ELLIOT_5 ===
 Name: ELLIOT
@@ -6561,21 +7101,39 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move / Try To Faint
 
-Gyarados
-Level: 33
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Splogdy (Tentacruel) @ Damp Rock  
+Ability: Rain Dish  
+Level: 35  
+- Rain Dance  
+- Surf  
+- Toxic Spikes  
+- Poison Jab  
 
-Sharpedo
-Level: 33
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Gyarados  
+Level: 35  
+IVs: 4 HP / 4 Def / 4 SpA / 4 SpD / 4 Spe  
+- Bite  
+- Dragon Tail  
+- Surf  
+- Ice Fang  
 
-Gyarados
-Level: 33
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+GARGABLARG (Sharpedo)  
+Ability: Rough Skin  
+Level: 35  
+- Crunch  
+- Aqua Jet  
+- Poison Fang  
+- Leer  
 
-Tentacruel
-Level: 35
-IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+Sniperella (Crawdaunt)  
+Ability: Hyper Cutter  
+Level: 35  
+- Leer  
+- Aqua Jet  
+- Crabhammer  
+- Brick Break  
+
+
 
 === TRAINER_RONALD ===
 Name: RONALD
@@ -7840,9 +8398,13 @@ Music: Intense
 Double Battle: No
 AI: Check Bad Move
 
-Meditite
-Level: 13
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
+Breloom  
+Ability: Effect Spore  
+Level: 20  
+- Mach Punch  
+- Stun Spore  
+- Mega Drain  
+- Bullet Seed  
 
 === TRAINER_LAURA ===
 Name: LAURA
@@ -7853,9 +8415,20 @@ Music: Intense
 Double Battle: No
 AI: Check Bad Move
 
-Meditite
-Level: 13
-IVs: 18 HP / 18 Atk / 18 Def / 18 SpA / 18 SpD / 18 Spe
+Meditite  
+Ability: Telepathy  
+Level: 20  
+IVs: 18 HP / 18 Def / 18 SpA / 18 SpD / 18 Spe  
+- Meditate  
+- Rock Smash  
+- Confusion  
+
+Pancham  
+Ability: Scrappy  
+Level: 20  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Arm Thrust  
+- Bulk Up  
 
 === TRAINER_CYNDY_1 ===
 Name: CYNDY
@@ -8806,13 +9379,24 @@ Music: Twins
 Double Battle: Yes
 AI: Check Bad Move
 
-Seedot
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Smig (Beautifly)  
+Ability: Swarm  
+Level: 14  
+IVs: 0 Atk  
+- Rain Dance  
+- Silver Wind  
+- Mega Drain  
+- Gust  
 
-Lotad
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Waffles (Dustox)  
+Ability: Shield Dust  
+Level: 14  
+- Poison Sting  
+- Poison Powder  
+- Gust  
+- Confusion  
+
+
 
 === TRAINER_MIU_AND_YUKI ===
 Name: MIU & YUKI
@@ -8945,12 +9529,12 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wingull
-Level: 12
+Pelipper
+Level: 20
 IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
 
-Machop
-Level: 12
+Machoke
+Level: 20
 IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
 
 === TRAINER_EDMOND ===
@@ -8962,8 +9546,8 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wingull
-Level: 13
+Marshtomp
+Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_ERNEST_1 ===
@@ -9514,6 +10098,14 @@ Treecko
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
+Torchic
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Mudkip
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
 === TRAINER_BRENDAN_ROUTE_110_MUDKIP ===
 Name: BRENDAN
 Class: Rival
@@ -9566,6 +10158,14 @@ Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
 Torchic
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Mudkip
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Treecko
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -9624,6 +10224,14 @@ Mudkip
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
+Torchic
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Treecko
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
 === TRAINER_BRENDAN_ROUTE_110_TORCHIC ===
 Name: BRENDAN
 Class: Rival
@@ -9676,6 +10284,14 @@ Double Battle: No
 AI: Basic Trainer
 
 Treecko
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Torchic
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Mudkip
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -9734,6 +10350,16 @@ Torchic
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
+Treecko
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Mudkip
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
 === TRAINER_MAY_ROUTE_110_TREECKO ===
 Name: MAY
 Class: Rival
@@ -9786,6 +10412,14 @@ Double Battle: No
 AI: Basic Trainer
 
 Mudkip
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Torchic
+Level: 5
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Treecko
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -10560,13 +11194,31 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
-Level: 8
-IVs: 14 HP / 14 Atk / 14 Def / 14 SpA / 14 SpD / 14 Spe
+SteveRogers (Roggenrola)  
+Ability: Sturdy  
+Level: 15  
+- Stealth Rock  
+- Mud-Slap  
+- Smack Down  
+- Sand Attack  
 
-Geodude
-Level: 8
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
+Boots (Meowth-Galar)  
+Ability: Pickup  
+Level: 15  
+- Fake Out  
+- Hone Claws  
+- Rock Tomb  
+- Metal Claw  
+
+Shrek (Nincada)  
+Ability: Compound Eyes  
+Level: 15  
+- Mud-Slap  
+- Absorb  
+- Sand Attack  
+- Rock Tomb  
+
+
 
 === TRAINER_BRENDEN ===
 Name: BRENDEN
@@ -10577,9 +11229,18 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Machop
-Level: 13
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+Crabrawler  
+Ability: Hyper Cutter  
+Level: 20  
+- Rock Smash  
+- Bubble Beam  
+- Bulk Up  
+
+Clobbopus  
+Ability: Limber  
+Level: 20  
+- Rock Smash  
+- Leer  
 
 === TRAINER_LILITH ===
 Name: LILITH
@@ -10590,9 +11251,19 @@ Music: Intense
 Double Battle: No
 AI: Check Bad Move
 
-Meditite
-Level: 13
-IVs: 18 HP / 18 Atk / 18 Def / 18 SpA / 18 SpD / 18 Spe
+Combusken  
+Ability: Blaze  
+Level: 20  
+- Work Up  
+- Double Kick  
+- Flame Charge  
+- Peck  
+
+Makuhita @ Oran Berry  
+Ability: Thick Fat  
+Level: 20  
+- Arm Thrust  
+- Bulk Up  
 
 === TRAINER_CRISTIAN ===
 Name: CRISTIAN
@@ -10603,9 +11274,19 @@ Music: Intense
 Double Battle: No
 AI: Check Bad Move
 
-Makuhita
-Level: 13
-IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+Mankey  
+Ability: Vital Spirit  
+Level: 20  
+- Low Kick  
+- Leer  
+- Uproar  
+
+Croagunk  
+Ability: Poison Touch  
+Level: 20  
+- Fake Out  
+- Rock Smash  
+- Acupressure  
 
 === TRAINER_SYLVIA ===
 Name: SYLVIA
@@ -10851,13 +11532,37 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Lotad
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Torchic
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun 
 
 === TRAINER_BRENDAN_RUSTBORO_MUDKIP ===
 Name: BRENDAN
@@ -10868,13 +11573,37 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wingull
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Treecko
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun 
 
 === TRAINER_PAXTON ===
 Name: PAXTON
@@ -10975,13 +11704,37 @@ Music: Male
 Double Battle: No
 AI: Basic Trainer
 
-Slugma
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Mudkip
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun 
 
 === TRAINER_MAY_RUSTBORO_MUDKIP ===
 Name: MAY
@@ -10992,13 +11745,37 @@ Music: Female
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
-Wingull
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Treecko
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun 
 
 === TRAINER_MAXIE_MAGMA_HIDEOUT ===
 Name: MAXIE
@@ -11053,13 +11830,31 @@ Music: Female
 Double Battle: No
 AI: Check Bad Move
 
-Zigzagoon
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Oyster (Shroomish) (F)  
+Ability: Effect Spore  
+Level: 5  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Leech Seed  
+- Bullet Seed  
 
-Shroomish
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Chicky (Torchic)  
+Ability: Speed Boost  
+Level: 6  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Peck  
+- Ember  
+- Scratch  
+- Focus Energy  
+
+Ballet (Ralts) @ Bright Powder  
+Ability: Trace  
+Level: 7  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Confusion  
+- Disarming Voice  
+- Double Team  
+
+
 
 === TRAINER_HALEY_1 ===
 Name: HALEY
@@ -11070,13 +11865,47 @@ Music: Female
 Double Battle: No
 AI: Check Bad Move
 
-Lotad
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Jeremy (Butterfree) (M)  
+Ability: Compound Eyes  
+Level: 15  
+IVs: 0 Atk  
+- Sleep Powder  
+- Silver Wind  
+- Confusion  
+- String Shot  
 
-Shroomish
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Walt (Pidgey) (M)  
+Ability: Keen Eye  
+Level: 13  
+- Gust  
+- Quick Attack  
+- Sand Attack  
+- Mud-Slap  
+
+Ms Wiggle (Marill) (F) @ Oran Berry  
+Ability: Sap Sipper  
+Level: 13  
+- Aqua Jet  
+- Belly Drum  
+- Tackle  
+
+Tangle (Torchic)  
+Ability: Blaze  
+Level: 13  
+- Flame Charge  
+- Peck  
+- Quick Attack  
+- Sand Attack  
+
+Lions Mane (Shroomish)  
+Ability: Effect Spore  
+Level: 12  
+- Bullet Seed  
+- Stun Spore  
+- Leech Seed  
+- Tackle  
+
+
 
 === TRAINER_JANICE ===
 Name: JANICE
@@ -11087,9 +11916,13 @@ Music: Female
 Double Battle: No
 AI: Check Bad Move
 
-Marill
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Pixie (Marill)  
+Ability: Huge Power  
+Level: 19  
+- Aqua Jet  
+- Ice Punch  
+- Facade  
+- Draining Kiss
 
 === TRAINER_VIVI ===
 Name: VIVI
@@ -11257,13 +12090,22 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wurmple
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Catt (Wurmple)  
+Ability: Shield Dust  
+Level: 4  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Poison Sting  
+- Bug Bite  
 
-Wurmple
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lady bug (Ledyba)  
+Ability: Swarm  
+Level: 5  
+Shiny: Yes  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Comet Punch  
+- Infestation  
+
+
 
 === TRAINER_LYLE ===
 Name: LYLE
@@ -11271,24 +12113,46 @@ Class: Bug Catcher
 Pic: Bug Catcher
 Gender: Male
 Music: Male
-Double Battle: No
+Double Battle: Yes
 AI: Check Bad Move
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Jam (Butterfree) @ Sitrus Berry  
+Ability: Compound Eyes  
+Level: 11  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Silver Wind  
+- Sleep Powder  
+- Bug Bite  
+- Confusion  
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Honey (Beedrill) @ Razor Claw  
+Ability: Sniper  
+Level: 11  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Focus Energy  
+- Poison Sting  
+- Twineedle  
+- Pluck  
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Nutella(Beautifly) @ Big Root  
+Ability: Swarm  
+Level: 11  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Silver Wind  
+- Mega Drain  
+- Stun Spore  
+- Tailwind  
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Vegiemite (Dustox) @ Bright Powder  
+Ability: Compound Eyes  
+Level: 11  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Confusion  
+- Supersonic  
+- Poison Sting  
+- Gust  
+
+
 
 === TRAINER_JOSE ===
 Name: JOSE
@@ -11299,13 +12163,13 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wurmple
-Level: 8
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
-
-Nincada
-Level: 8
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Dark Lord (Ariados)  
+Ability: Swarm  
+Level: 17  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Infestation  
+- Fell Stinger  
+- Sticky Web
 
 === TRAINER_DOUG ===
 Name: DOUG
@@ -11363,13 +12227,28 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Nincada
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Beans (Nincada)  
+Ability: Compound Eyes  
+Level: 13  
+- Mud-Slap  
+- Hone Claws  
+- Fury Cutter  
 
-Nincada
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Spdr (Ariados)  
+Ability: Swarm  
+Level: 13  
+- Poison Sting  
+- Leech Life  
+- Spider Web  
+
+ZipZapZop (Ledian)  
+Ability: Iron Fist  
+Level: 13  
+- Mach Punch  
+- Comet Punch  
+- Swords Dance  
+
+
 
 === TRAINER_JAMES_2 ===
 Name: JAMES
@@ -11549,9 +12428,21 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Geodude  
+Ability: Sturdy  
+Level: 16  
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Defense Curl  
+- Rollout  
+
+Phanpy  
+Ability: Pickup  
+Level: 16  
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Defense Curl  
+- Rollout  
+
+
 
 === TRAINER_ERIC ===
 Name: ERIC
@@ -12941,13 +13832,13 @@ Music: Rich
 Double Battle: No
 AI: Check Bad Move
 
-Zigzagoon @ Nugget
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Poochyena
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Rags2Rich (Meowth) @ Big Nugget  
+Ability: Technician  
+Level: 19  
+- Fake Out  
+- Fury Swipes  
+- Leer  
+- Bite
 
 === TRAINER_SARAH ===
 Name: SARAH
@@ -12959,13 +13850,21 @@ Items: Full Restore
 Double Battle: No
 AI: Check Bad Move
 
-Lotad
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Samurai (Taillow) @ Silk Scarf  
+Ability: Guts  
+Level: 18  
+- Wing Attack  
+- Quick Attack  
+- Focus Energy  
+- Double Team  
 
-Zigzagoon @ Nugget
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Ziggy (Zigzagoon) @ Big Nugget  
+Ability: Pickup  
+Level: 19  
+- Headbutt  
+- Growl  
+- Work Up  
+- Mud-Slap  
 
 === TRAINER_DARIAN ===
 Name: DARIAN
@@ -12976,9 +13875,29 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Magikarp
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Dinner (Corphish)  
+Ability: Adaptability  
+Level: 10  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Aqua Jet  
+- Vise Grip  
+
+500dollars (Magikarp)  
+Ability: Swift Swim  
+Level: 10  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Tackle  
+- Flail  
+
+Wingull  
+Ability: Rain Dish  
+Level: 10  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Wing Attack  
+- Water Gun  
+- Growl  
+
+
 
 === TRAINER_HAILEY ===
 Name: HAILEY
@@ -12989,9 +13908,14 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Marill
-Level: 13
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bubbles (Azumarill)  
+Ability: Huge Power  
+Level: 21  
+IVs: 0 HP / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Aqua Jet  
+- Ice Punch  
+- Iron Tail  
+- Play Rough
 
 === TRAINER_CHANDLER ===
 Name: CHANDLER
@@ -13002,13 +13926,21 @@ Music: Girl
 Double Battle: No
 AI: Check Bad Move
 
-Tentacool
-Level: 12
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Tentacool  
+Ability: Rain Dish  
+Level: 22  
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe  
+- Water Pulse  
+- Sludge  
+- Toxic Spikes  
 
-Tentacool
-Level: 12
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Wingull  
+Ability: Drizzle  
+Level: 22  
+- Wing Attack  
+- Water Pulse  
+- Steel Wing  
+- Growl  
 
 === TRAINER_KALEB ===
 Name: KALEB
@@ -13859,13 +14791,19 @@ Music: Hiker
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Gavvler (Geodude-Alola)  
+Ability: Sturdy  
+Level: 18  
+- Thunder Shock  
+- Rock Tomb  
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Anorith  
+Ability: Swift Swim  
+Level: 19  
+- Aqua Jet  
+- Bug Bite  
+- Rock Tomb  
+
 
 === TRAINER_JOHNSON ===
 Name: JOHNSON
@@ -13876,13 +14814,27 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Shroomish
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Snips (Grovyle) @ Metronome  
+Ability: Overgrow  
+Level: 18  
+- Fury Cutter  
 
-Lotad
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Snaps (Lombre)  
+Ability: Swift Swim  
+Level: 18  
+IVs: 0 Atk  
+- Rain Dance  
+- Water Pulse  
+- Mega Drain  
+
+Snops (Nuzleaf)  
+Ability: Chlorophyll  
+Level: 18  
+IVs: 15 HP / 15 Def / 15 SpA / 15 SpD / 15 Spe  
+- Sunny Day  
+- Mega Drain  
+- Feint Attack  
+
 
 === TRAINER_MELINA ===
 Name: MELINA
@@ -14128,13 +15080,37 @@ Music: Female
 Double Battle: No
 AI: Basic Trainer
 
-Lotad
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Torchic
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun 
 
 === TRAINER_MAY_RUSTBORO_TORCHIC ===
 Name: MAY
@@ -14145,13 +15121,38 @@ Music: Female
 Double Battle: No
 AI: Basic Trainer
 
-Torkoal
-Level: 13
-IVs: 3 HP / 3 Atk / 3 Def / 3 SpA / 3 SpD / 3 Spe
+Taillow @ Silk Scarf  
+Ability: Guts  
+Level: 20  
+- Wing Attack  
+- Quick Attack  
+- Steel Wing  
+- Focus Energy  
 
-Mudkip
-Level: 15
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Combusken @ Charcoal  
+Ability: Blaze  
+Level: 20  
+- Bulk Up  
+- Double Kick  
+- Quick Attack  
+- Flame Charge  
+
+Grovyle @ Miracle Seed  
+Ability: Overgrow  
+Level: 20  
+- Work Up  
+- Bullet Seed  
+- Quick Attack  
+- Pursuit  
+
+Marshtomp @ Mystic Water  
+Ability: Torrent  
+Level: 20  
+- Rock Tomb  
+- Rock Smash  
+- Mud Shot  
+- Water Gun  
+
 
 === TRAINER_ROXANNE_2 ===
 Name: ROXANNE

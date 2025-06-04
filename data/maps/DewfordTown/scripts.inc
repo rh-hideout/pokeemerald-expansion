@@ -646,7 +646,12 @@ DewfordTown_Text_TinyIslandCommunity:
 
 DewfordTown_Text_TownSign:
 	.string "DEWFORD TOWN\n"
-	.string "“A tiny island in the blue sea.”$"
+	.string "“A tiny island in the blue sea.”\p"
+	.string "Pokemon in grass: Totodile, Krabby,\n"
+	.string "Spearow, and Tangela.\p"
+	.string "Fishing pokemon: Remoraid,\n"
+	.string "tentacool, Octillery, Tentacruel.\p"
+	.string "Surfing Pokemon: Mantyke, Mantine.$"
 
 DewfordTown_Text_GymSign:
 	.string "DEWFORD TOWN POKéMON GYM\n"

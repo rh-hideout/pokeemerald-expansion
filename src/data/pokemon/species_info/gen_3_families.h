@@ -12,7 +12,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .baseSpeed     = 70,
         .baseSpAttack  = 65,
         .baseSpDefense = 55,
-        .types = MON_TYPES(TYPE_GRASS),
+        .types = MON_TYPES(TYPE_DARK, TYPE_FLYING, TYPE_GHOST),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 62 : 65,
         .evYield_Speed = 1,
@@ -30,7 +30,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .height = 5,
         .weight = 50,
         .description = COMPOUND_STRING(
-            "It makes its nest in a giant tree in the\n"
+            "blah blah blah. poo poo poo. \n"
             "forest. It ferociously guards against\n"
             "anything nearing its territory. It is said\n"
             "to be the protector of the forest's trees."),

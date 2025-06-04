@@ -744,7 +744,12 @@ PetalburgCity_Text_GymSign:
 
 PetalburgCity_Text_CitySign:
 	.string "PETALBURG CITY\n"
-	.string "“Where people mingle with nature.”$"
+	.string "“Where people mingle with nature.”\p"
+	.string "Pokemon in grass: Mudkip, Corphish,\n"
+	.string "Teddiursa.\p"
+	.string "Fishing Pokemon: Azuril, Marill,\n"
+	.string "Azumarill.\p"
+	.string "Surfing Pokemon: Goldeen, Seaking.$"
 
 PetalburgCity_Text_WallyHouseSign:
 	.string "WALLY'S HOUSE$"

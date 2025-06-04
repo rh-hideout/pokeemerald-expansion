@@ -126,7 +126,7 @@
 #define TRAINER_CINDY_3                     120
 #define TRAINER_CINDY_4                     121
 #define TRAINER_CINDY_5                     122
-#define TRAINER_CINDY_6                     123
+#define TRAINER_STEVEN_GRANITE              123
 #define TRAINER_MELISSA                     124
 #define TRAINER_SHEILA                      125
 #define TRAINER_SHIRLEY                     126

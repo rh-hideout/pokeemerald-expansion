@@ -14,6 +14,7 @@ OldaleTown_Mart_EventScript_Clerk::
 
 	.align 2
 OldaleTown_Mart_Pokemart_Basic:
+	.2byte ITEM_POKE_BALL
 	.2byte ITEM_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
@@ -30,9 +31,10 @@ OldaleTown_Mart_ExpandedItems::
 OldaleTown_Mart_Pokemart_Expanded:
 	.2byte ITEM_POKE_BALL
 	.2byte ITEM_POTION
-	.2byte ITEM_ANTIDOTE
-	.2byte ITEM_PARALYZE_HEAL
-	.2byte ITEM_AWAKENING
+	.2byte ITEM_FULL_HEAL
+	.2byte ITEM_ORAN_BERRY
+	.2byte ITEM_ABILITY_PATCH
+	.2byte ITEM_ABILITY_CAPSULE
 	pokemartlistend
 
 OldaleTown_Mart_EventScript_Woman::

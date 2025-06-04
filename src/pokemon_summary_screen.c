@@ -911,6 +911,26 @@ static const union AnimCmd sSpriteAnim_TypeStellar[] = {
     ANIMCMD_FRAME(TYPE_STELLAR * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
+static const union AnimCmd sSpriteAnim_TypeVaccine[] = {
+    ANIMCMD_FRAME(TYPE_VACCINE * 8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_TypeData[] = {
+    ANIMCMD_FRAME(TYPE_DATA * 8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_TypeVirus[] = {
+    ANIMCMD_FRAME(TYPE_VIRUS * 8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_TypeFree[] = {
+    ANIMCMD_FRAME(TYPE_FREE * 8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_TypeLight[] = {
+    ANIMCMD_FRAME(TYPE_LIGHT * 8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
 static const union AnimCmd sSpriteAnim_CategoryCool[] = {
     ANIMCMD_FRAME((CONTEST_CATEGORY_COOL + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
     ANIMCMD_END
@@ -953,6 +973,11 @@ static const union AnimCmd *const sSpriteAnimTable_MoveTypes[NUMBER_OF_MON_TYPES
     [TYPE_DARK] = sSpriteAnim_TypeDark,
     [TYPE_FAIRY] = sSpriteAnim_TypeFairy,
     [TYPE_STELLAR] = sSpriteAnim_TypeStellar,
+    [TYPE_VACCINE] = sSpriteAnim_TypeVaccine,
+    [TYPE_VIRUS] = sSpriteAnim_TypeVirus,
+    [TYPE_DATA] = sSpriteAnim_TypeData,
+    [TYPE_FREE] = sSpriteAnim_TypeFree,
+    [TYPE_LIGHT] = sSpriteAnim_TypeLight,
     [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_COOL] = sSpriteAnim_CategoryCool,
     [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_BEAUTY] = sSpriteAnim_CategoryBeauty,
     [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_CUTE] = sSpriteAnim_CategoryCute,
@@ -4273,6 +4298,7 @@ static void SetMonTypeIcons(void)
     {
         SetTypeSpritePosAndPal(TYPE_MYSTERY, 120, 48, SPRITE_ARR_ID_TYPE);
         SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, TRUE);
+        SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 2, TRUE);
     }
     else
     {
@@ -4285,6 +4311,15 @@ static void SetMonTypeIcons(void)
         else
         {
             SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, TRUE);
+        }
+       if (gSpeciesInfo[summary->species].types[0] != gSpeciesInfo[summary->species].types[2] && gSpeciesInfo[summary->species].types[1] != gSpeciesInfo[summary->species].types[2])
+        {
+            SetTypeSpritePosAndPal(gSpeciesInfo[summary->species].types[2], 200, 48, SPRITE_ARR_ID_TYPE + 2);
+            SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 2, FALSE);
+        }
+        else
+        {
+            SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 2, TRUE);
         }
         if (P_SHOW_TERA_TYPE >= GEN_9)
         {

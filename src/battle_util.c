@@ -10835,7 +10835,7 @@ uq4_12_t GetTypeModifier(u32 atkType, u32 defType)
     return gTypeEffectivenessTable[atkType][defType];
 }
 
-s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, u8 type1, u8 type2, u32 maxHp)
+s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, u8 type1, u8 type2, u8 type3, u32 maxHp)
 {
     s32 dmg = 0;
     uq4_12_t modifier = UQ_4_12(1.0);
@@ -10843,6 +10843,8 @@ s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, u8 type1,
     modifier = uq4_12_multiply(modifier, GetTypeModifier((u8)hazardType, type1));
     if (type2 != type1)
         modifier = uq4_12_multiply(modifier, GetTypeModifier((u8)hazardType, type2));
+    if (type3 != type2 && type3 != type1)
+        modifier = uq4_12_multiply(modifier, GetTypeModifier(hazardType, type3));
 
     switch (modifier)
     {
@@ -10885,7 +10887,7 @@ s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, u32 battler)
     GetBattlerTypes(battler, FALSE, types);
     u32 maxHp = gBattleMons[battler].maxHP;
 
-    return GetStealthHazardDamageByTypesAndHP(hazardType, types[0], types[1], maxHp);
+    return GetStealthHazardDamageByTypesAndHP(hazardType, types[0], types[1], types[2], maxHp);
 }
 
 bool32 IsPartnerMonFromSameTrainer(u32 battler)
@@ -11797,7 +11799,7 @@ void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
     gBattleMons[battler].ability = GetMonAbility(mon);
     gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
     gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;
+    gBattleMons[battler].types[2] = gSpeciesInfo[gBattleMons[battler].species].types[2];
 }
 
 void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing)

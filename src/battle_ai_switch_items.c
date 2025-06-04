@@ -170,7 +170,7 @@ static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
 static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 {
     //Variable initialization
-    u8 opposingPosition, atkType1, atkType2, defType1, defType2;
+    u8 opposingPosition, atkType1, atkType2, atkType3, defType1, defType2, defType3;
     s32 i, damageDealt = 0, maxDamageDealt = 0, damageTaken = 0, maxDamageTaken = 0;
     u32 aiMove, playerMove, aiBestMove = MOVE_NONE, aiAbility = AI_DATA->abilities[battler], opposingBattler, weather = AI_GetWeather();
     bool32 getsOneShot = FALSE, hasStatusMove = FALSE, hasSuperEffectiveMove = FALSE;
@@ -191,8 +191,10 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     // Gets types of player (opposingBattler) and computer (battler)
     atkType1 = gBattleMons[opposingBattler].types[0];
     atkType2 = gBattleMons[opposingBattler].types[1];
+    atkType3 = gBattleMons[opposingBattler].types[2];
     defType1 = gBattleMons[battler].types[0];
     defType2 = gBattleMons[battler].types[1];
+    defType3 = gBattleMons[battler].types[2];
 
     // Check AI moves for damage dealt
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -235,11 +237,23 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType1)));
     if (atkType2 != atkType1)
         typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType1)));
+    if (atkType3 != atkType1 && atkType3 != atkType2)
+        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType1)));
     if (defType2 != defType1)
     {
         typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType2)));
         if (atkType2 != atkType1)
             typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType2)));
+        if (atkType3 != atkType1 && atkType3 != atkType2)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType2)));
+    }
+    if (defType3 != defType1 && defType3 != defType2)
+    {
+        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType3)));
+        if (atkType2 != atkType1)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType3)));
+        if (atkType3 != atkType1 && atkType3 != atkType2)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType3)));
     }
 
     // Get max damage mon could take
@@ -1298,18 +1312,32 @@ static u32 GetBestMonTypeMatchup(struct Pokemon *party, int firstId, int lastId,
 
                 u8 atkType1 = gBattleMons[opposingBattler].types[0];
                 u8 atkType2 = gBattleMons[opposingBattler].types[1];
+                u8 atkType3 = gBattleMons[opposingBattler].types[2];
                 u8 defType1 = gSpeciesInfo[species].types[0];
                 u8 defType2 = gSpeciesInfo[species].types[1];
+                u8 defType3 = gSpeciesInfo[species].types[2];
 
                 typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType1)));
                 if (atkType2 != atkType1)
                     typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType1)));
+                if (atkType3 != atkType1 && atkType3 != atkType2)
+                    typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType1)));
                 if (defType2 != defType1)
                 {
                     typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType2)));
                     if (atkType2 != atkType1)
                         typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType2)));
+                    if (atkType3 != atkType1 && atkType3 != atkType2)
+                        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType2)));
                 }
+                    if (defType3 != defType1 && defType3 != defType2)
+    {
+                    typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType3)));
+                    if (atkType2 != atkType1)
+                        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType3)));
+                    if (atkType3 != atkType1 && atkType3 != atkType2)
+                        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType3)));
+    }
                 if (typeEffectiveness < bestResist)
                 {
                     bestResist = typeEffectiveness;
@@ -1376,10 +1404,10 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     return bestMonId;
 }
 
-bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
+ bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2, u8 type3)
 {
     // List that makes mon not grounded
-    if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
+    if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || type3 == TYPE_FLYING || ability == ABILITY_LEVITATE
          || (heldItemEffect == HOLD_EFFECT_AIR_BALLOON && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
     {
         // List that overrides being off the ground
@@ -1395,7 +1423,7 @@ bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
 // Gets hazard damage
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon)
 {
-    u8 defType1 = battleMon->types[0], defType2 = battleMon->types[1], tSpikesLayers;
+    u8 defType1 = battleMon->types[0], defType2 = battleMon->types[1], defType3 = battleMon->types[2], tSpikesLayers;
     u16 heldItemEffect = ItemId_GetHoldEffect(battleMon->item);
     u32 maxHP = battleMon->maxHP, ability = battleMon->ability, status = battleMon->status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
@@ -1407,12 +1435,12 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
     {
         // Stealth Rock
         if ((hazardFlags & SIDE_STATUS_STEALTH_ROCK) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
-            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, defType1, defType2, battleMon->maxHP);
+            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, defType1, defType2, defType3, battleMon->maxHP);
         // G-Max Steelsurge
         if ((hazardFlags & SIDE_STATUS_STEELSURGE) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
-            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, battleMon->maxHP);
+            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, defType3, battleMon->maxHP);
         // Spikes
-        if ((hazardFlags & SIDE_STATUS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2))
+        if ((hazardFlags & SIDE_STATUS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2, defType3))
         {
             spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
@@ -1429,7 +1457,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && !IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-            && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+            && IsMonGrounded(heldItemEffect, ability, defType1, defType2, defType3)))
         {
             tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
             if (tSpikesLayers == 1)
@@ -1462,17 +1490,18 @@ static s32 GetSwitchinWeatherImpact(void)
         if (holdEffect != HOLD_EFFECT_SAFETY_GOGGLES && ability != ABILITY_MAGIC_GUARD && ability != ABILITY_OVERCOAT)
         {
             if ((gBattleWeather & B_WEATHER_HAIL)
-             && (AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_ICE || AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_ICE)
+             && (AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_ICE || AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_ICE || AI_DATA->switchinCandidate.battleMon.types[2] != TYPE_ICE)
              && ability != ABILITY_SNOW_CLOAK && ability != ABILITY_ICE_BODY)
             {
                 weatherImpact = maxHP / 16;
                 if (weatherImpact == 0)
                     weatherImpact = 1;
             }
-            else if ((gBattleWeather & B_WEATHER_SANDSTORM)
-                && (AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_GROUND && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_GROUND
+            else if ((gBattleWeather & B_WEATHER_SANDSTORM) && (AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_GROUND 
+                && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_GROUND && AI_DATA->switchinCandidate.battleMon.types[2] != TYPE_GROUND
                 && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_ROCK && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_ROCK
-                && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_STEEL && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_STEEL
+                && AI_DATA->switchinCandidate.battleMon.types[2] != TYPE_STEEL && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_STEEL
+                && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_STEEL && AI_DATA->switchinCandidate.battleMon.types[2] != TYPE_STEEL
                 && ability != ABILITY_SAND_VEIL && ability != ABILITY_SAND_RUSH && ability != ABILITY_SAND_FORCE))
             {
                 weatherImpact = maxHP / 16;
@@ -1523,7 +1552,7 @@ static u32 GetSwitchinRecurringHealing(void)
     // Items
     if (ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && (AI_DATA->switchinCandidate.battleMon.types[0] == TYPE_POISON || AI_DATA->switchinCandidate.battleMon.types[1] == TYPE_POISON))
+        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && (AI_DATA->switchinCandidate.battleMon.types[0] == TYPE_POISON || AI_DATA->switchinCandidate.battleMon.types[1] == TYPE_POISON || AI_DATA->switchinCandidate.battleMon.types[2] == TYPE_POISON))
         {
             recurringHealing = maxHP / 16;
             if (recurringHealing == 0)
@@ -1557,7 +1586,7 @@ static u32 GetSwitchinRecurringDamage(void)
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_POISON && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_POISON)
+        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_POISON && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_POISON && AI_DATA->switchinCandidate.battleMon.types[2] != TYPE_POISON)
         {
             passiveDamage = maxHP / 8;
             if (passiveDamage == 0)
@@ -1582,7 +1611,7 @@ static u32 GetSwitchinRecurringDamage(void)
 // Gets one turn of status damage
 static u32 GetSwitchinStatusDamage(u32 battler)
 {
-    u8 defType1 = AI_DATA->switchinCandidate.battleMon.types[0], defType2 = AI_DATA->switchinCandidate.battleMon.types[1];
+    u8 defType1 = AI_DATA->switchinCandidate.battleMon.types[0], defType2 = AI_DATA->switchinCandidate.battleMon.types[1], defType3 = AI_DATA->switchinCandidate.battleMon.types[2];
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
     u16 heldItemEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
     u32 status = AI_DATA->switchinCandidate.battleMon.status1, ability = AI_DATA->switchinCandidate.battleMon.ability, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP;
@@ -1630,13 +1659,13 @@ static u32 GetSwitchinStatusDamage(u32 battler)
 
     // Apply hypothetical poisoning from Toxic Spikes, which means the first turn of damage already added in GetSwitchinHazardsDamage
     // Do this last to skip one iteration of Poison / Toxic damage, and start counting Toxic damage one turn later.
-    if (tSpikesLayers != 0 && (defType1 != TYPE_POISON && defType2 != TYPE_POISON
+    if (tSpikesLayers != 0 && (defType1 != TYPE_POISON && defType2 != TYPE_POISON && defType3 != TYPE_POISON
         && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL
         && status == 0
         && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
             && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
         && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-        && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+        && IsMonGrounded(heldItemEffect, ability, defType1, defType2, defType3)))
     {
         if (tSpikesLayers == 1)
         {
@@ -1771,18 +1800,30 @@ static u16 GetSwitchinTypeMatchup(u32 opposingBattler, struct BattlePokemon batt
 
     // Check type matchup
     u16 typeEffectiveness = UQ_4_12(1.0);
-    u8 atkType1 = gSpeciesInfo[gBattleMons[opposingBattler].species].types[0], atkType2 = gSpeciesInfo[gBattleMons[opposingBattler].species].types[1],
-    defType1 = battleMon.types[0], defType2 = battleMon.types[1];
+    u8 atkType1 = gSpeciesInfo[gBattleMons[opposingBattler].species].types[0], atkType2 = gSpeciesInfo[gBattleMons[opposingBattler].species].types[1], atkType3 = gSpeciesInfo[gBattleMons[opposingBattler].species].types[2],
+    defType1 = battleMon.types[0], defType2 = battleMon.types[1], defType3 = battleMon.types[2];
 
     // Multiply type effectiveness by a factor depending on type matchup
     typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType1)));
     if (atkType2 != atkType1)
         typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType1)));
+    if (atkType3 != atkType1 && atkType3 != atkType2)
+        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType1)));
     if (defType2 != defType1)
     {
         typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType2)));
         if (atkType2 != atkType1)
             typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType2)));
+        if (atkType3 != atkType1 && atkType3 != atkType2)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType2)));
+    }
+    if (defType3 != defType1 && defType3 != defType2)
+    {
+        typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType1, defType2)));
+        if (atkType2 != atkType1)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType2, defType3)));
+        if (atkType3 != atkType1 && atkType3 != atkType2)
+            typeEffectiveness = uq4_12_multiply(typeEffectiveness, (GetTypeModifier(atkType3, defType3)));
     }
     return typeEffectiveness;
 }

@@ -450,18 +450,16 @@ Route116_Text_RusturfTunnelSign:
 	.string "RUSTURF TUNNEL\n"
 	.string "“Linking RUSTBORO and VERDANTURF\p"
 	.string "“The tunnel project has been\n"
-	.string "canceled.”$"
+	.string "canceled.”\p"
+	.string "Pokemon in cave: Whismur, Sableye,\n"
+	.string "and Mawile.$"
 
 Route116_Text_TunnelersRestHouse:
 	.string "TUNNELER'S REST HOUSE$"
 
 Route116_Text_TrainerTipsBToStopEvolution:
-	.string "TRAINER TIPS\p"
-	.string "If you want to stop a POKéMON from\n"
-	.string "evolving, press the B Button while it\l"
-	.string "is trying to evolve.\l"
-	.string "The startled POKéMON will stop.\p"
-	.string "This is called an evolution cancel.$"
+	.string "Pokemon in grass: Nincada, Abra\n"
+	.string "Skitty and Cleffa.$"
 
 Route116_Text_TrainerTipsBagHasPockets:
 	.string "TRAINER TIPS\p"
