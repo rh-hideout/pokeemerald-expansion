@@ -382,8 +382,16 @@ void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys)
             DoPlayerAvatarTransition();
             if (TryDoMetatileBehaviorForcedMovement() == 0)
             {
-                MovePlayerAvatarUsingKeypadInput(direction, newKeys, heldKeys);
-                PlayerAllowForcedMovementIfMovingSameDirection();
+                if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) != FALSE)
+                {
+                    gPlayerAvatar.preventStep = TRUE;
+                    CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 1);
+                }
+                else
+                {
+                    MovePlayerAvatarUsingKeypadInput(direction, newKeys, heldKeys);
+                    PlayerAllowForcedMovementIfMovingSameDirection();
+                }
             }
         }
     }
@@ -479,8 +487,6 @@ static bool8 ForcedMovement_None(void)
     return FALSE;
 }
 
-#define tLedgeJump      data[1]
-
 static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
 {
     struct PlayerAvatar *playerAvatar = &gPlayerAvatar;
@@ -513,11 +519,8 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
         {
             if (collision == COLLISION_LEDGE_JUMP)
             {
-                u32 followerNPCTaskId = FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement);
-
+                SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FALSE);
                 PlayerJumpLedge(direction);
-                if (followerNPCTaskId != TASK_NONE)
-                    gTasks[followerNPCTaskId].tLedgeJump = TRUE;
             }
 
             playerAvatar->flags |= PLAYER_AVATAR_FLAG_FORCED_MOVE;
@@ -527,17 +530,14 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
     }
     else
     {
+        if (PlayerHasFollowerNPC())
+            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, TRUE);
+
         playerAvatar->runningState = MOVING;
         moveFunc(direction);
-        if (PlayerHasFollowerNPC()
-         && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE
-         && FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
-            CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 3);
         return TRUE;
     }
 }
-
-#undef tLedgeJump
 
 static bool8 DoForcedMovementInCurrentDirection(void (*moveFunc)(u8))
 {
