@@ -73,10 +73,7 @@ struct BattleDebugMenu
     u8 activeWindow;
 
     struct BattleDebugModifyArrows modifyArrows;
-    union {
-        const struct BitfieldInfo *bitfield;
-        const u8 *bitSizes;
-    };
+    const struct BitfieldInfo *bitfield;
     bool8 battlerWasChanged[MAX_BATTLERS_COUNT];
 
     u8 aiViewState;
@@ -536,7 +533,8 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-#define UNPACK_V_STATUS_LIST(enum, _type, _fieldNameBitSize, _batonPassable, ...) __VA_OPT__({COMPOUND_STRING(FIRST(__VA_ARGS__)), enum},)
+#define UNPACK_V_STATUS_LIST(enum, _type, _fieldNameBitSize, _batonPassable, ...) __VA_OPT__(INVOKE(UNPACK_V_STATUS_LIST_, enum, UNPACK(FIRST(__VA_ARGS__))))
+#define UNPACK_V_STATUS_LIST_(enum, _string, ...) {COMPOUND_STRING(_string), enum},
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
@@ -555,28 +553,6 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     // {COMPOUND_STRING("Foresight"), VOLATILE_STATUS_FORESIGHT},
     // {COMPOUND_STRING("DragonCheer"), VOLATILE_STATUS_DRAGON_CHEER},
     // {COMPOUND_STRING("FocusEnergy"), VOLATILE_STATUS_FOCUS_ENERGY},
-};
-
-#define UNPACK_V_STATUS_BITSIZES(_enum, _type, _fieldNameBitSize, ...) [_enum] = INVOKE(UNPACK_V_STATUS_BITSIZES_, _type, UNPACK(_fieldNameBitSize)),
-#define UNPACK_V_STATUS_BITSIZES_(_type, _fieldName, ...) FIRST(__VA_OPT__(__VA_ARGS__,) LENGTH_##_type)
-
-static const u8 sVolatileStatusListBitSizes[] = 
-{
-    VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_BITSIZES)
-    // Expands to:
-    // [VOLATILE_STATUS_CONFUSION] = 3,
-    // [VOLATILE_STATUS_FLINCHED] = 1,
-    // [VOLATILE_STATUS_TORMENT] = 1,
-    // [VOLATILE_STATUS_POWDER] = 1,
-    // [VOLATILE_STATUS_DEFENSE_CURL] = 1,
-    // [VOLATILE_STATUS_RECHARGE] = 1,
-    // [VOLATILE_STATUS_RAGE] = 1,
-    // [VOLATILE_STATUS_DESTINY_BOND] = 1,
-    // [VOLATILE_STATUS_ESCAPE_PREVENTION] = 1,
-    // [VOLATILE_STATUS_CURSED] = 1,
-    // [VOLATILE_STATUS_FORESIGHT] = 1,
-    // [VOLATILE_STATUS_DRAGON_CHEER] = 1,
-    // [VOLATILE_STATUS_FOCUS_ENERGY] = 1,
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -799,19 +775,6 @@ static const struct BgTemplate sBgTemplates[] =
        .priority = 0,
        .baseTile = 0
    }
-};
-
-static const u8 sBitsToMaxDigit[] =
-{
-    [0] = 0,
-    [1] = 1, // max 1
-    [2] = 1, // max 3
-    [3] = 1, // max 7
-    [4] = 2, // max 15
-    [5] = 2, // max 31
-    [6] = 2, // max 63
-    [7] = 3, // max 127
-    [8] = 3, // max 255
 };
 
 static const bool8 sHasChangeableEntries[LIST_ITEM_COUNT] =
@@ -1585,7 +1548,6 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
     case LIST_ITEM_VOLATILE_STATUS:
         listTemplate.items = sVolatileStatusListItems;
         itemsCount = ARRAY_COUNT(sVolatileStatusListItems);
-        data->bitSizes = sVolatileStatusListBitSizes;
         break;
     case LIST_ITEM_STATUS3:
         listTemplate.items = sStatus3ListItems;
@@ -2178,8 +2140,15 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatileStatus(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE_STATUS;
         data->modifyArrows.minValue = 0;
-        data->modifyArrows.maxValue =  MAX_BITS(data->bitSizes[data->currentSecondaryListItemId]);
-        data->modifyArrows.maxDigits = sBitsToMaxDigit[data->bitSizes[data->currentSecondaryListItemId]];
+        switch (data->currentSecondaryListItemId)
+        {
+#define UNPACK_V_STATUS_MAX_SIZE(_enum, _type, _fieldNameBitSize, _batonPassable, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = INVOKE(UNPACK_V_STATUS_MAX_SIZE_, _type, INVOKE(DEFAULT, MAX_BITS(INVOKE_WITH(SECOND, _fieldNameBitSize)), INVOKE_WITH(SECOND, __VA_ARGS__))); break;)
+#define UNPACK_V_STATUS_MAX_SIZE_(_type, ...) FIRST(__VA_OPT__(__VA_ARGS__,) MAX_##_type)
+            VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_MAX_SIZE)
+            default:
+                data->modifyArrows.maxValue = 0;
+        }
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
     case LIST_ITEM_STATUS3:
         data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
@@ -2199,7 +2168,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     CASE_ITEM_STATUS:
         data->modifyArrows.minValue = 0;
         data->modifyArrows.maxValue = (1 << data->bitfield[data->currentSecondaryListItemId].bitsCount) - 1;
-        data->modifyArrows.maxDigits = sBitsToMaxDigit[data->bitfield[data->currentSecondaryListItemId].bitsCount];
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
     case LIST_ITEM_SIDE_STATUS:
         data->modifyArrows.minValue = 0;

@@ -53,17 +53,15 @@
  * UNPACK((a, b)) => a, b
  * UNPACK((a)) => a
  * 
- * The simple UNPACK_ARGS is used for simply extracting non-bracketed arguments
- * and recommended for inclusion into other macros (such as INVOKE_WITH below).
+ * The simple UNPACK_ARGS is used for extracting non-bracketed arguments.
  * */
 #define UNPACK_ARGS(...) __VA_ARGS__
 #define UNPACK_EXTRA(...) IF_YOU_SEE_ME_SOMETHING_IS_WRONG, __VA_ARGS__
-#define UNPACK(a) UNPACK_2(a, UNPACK_EXTRA a)
-#define UNPACK_2(a, b, ...) UNPACK_3(a, b)
-#define UNPACK_3(a, b, ...) __VA_OPT__(UNPACK_ARGS)a
+#define UNPACK(a) INVOKE(UNPACK_, a, UNPACK_EXTRA a)
+#define UNPACK_(a, b, ...) __VA_OPT__(UNPACK_ARGS)a
 
 /* Expands to 'macro(...args, ...)'. */
-#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK_ARGS args __VA_OPT__(, __VA_ARGS__))
+#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK(args) __VA_OPT__(, __VA_ARGS__))
 #define INVOKE(macro, ...) macro(__VA_ARGS__)
 
 /* Recursive macros.
@@ -162,12 +160,10 @@ Input must be of the form (upper << lower) where upper can be up to 3, lower up 
 #define MAX_u16 0xFFFF
 #define MAX_u32 0xFFFFFFFF
 
-/* Bit lengths of types */
-#define LENGTH_u8 8
-#define LENGTH_u16 16
-#define LENGTH_u32 32
-
 /* Finds the maximum value of the given number of bits (up to 32 - obviously)*/
 #define MAX_BITS(_bit) (MAX_u32 >> (32 - _bit))
+
+/* Finds the required digits to display the number (maximum 4) */
+#define MAX_DIGITS(_num) 1 + !!(_num / 10) + !!(_num / 100) + !!(_num / 1000)
 
 #endif

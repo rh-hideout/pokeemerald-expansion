@@ -309,7 +309,7 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_V_STATUS_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type INVOKE(UNPACK_V_STATUS_STRUCT_, UNPACK(_fieldNameBitSize));
+#define UNPACK_V_STATUS_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type INVOKE_WITH(UNPACK_V_STATUS_STRUCT_, _fieldNameBitSize);
 #define UNPACK_V_STATUS_STRUCT_(_fieldName, ...) DEFAULT(_fieldName, __VA_OPT__(_fieldName:FIRST(__VA_ARGS__)))
 
 struct VolatileStatuses
