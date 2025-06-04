@@ -3372,7 +3372,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 gBattlescriptCurrInstr++;
             }
         }
-        else if (!(gBattleMons[gEffectBattler].status2 & STATUS2_FLINCHED))
+        else if (gBattleMons[gEffectBattler].status2 & STATUS2_FLINCHED)
         {
             gBattlescriptCurrInstr++;
         }
