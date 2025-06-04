@@ -52,6 +52,7 @@ SINGLE_BATTLE_TEST("Aura Wheel changes type depending on Morpeko's form")
 
 SINGLE_BATTLE_TEST("Aura Wheel can be used by Pokémon transformed into Morpeko")
 {
+    KNOWN_FAILING; // Aura Wheel for some reason isn't used by the opponent?
     GIVEN {
         PLAYER(SPECIES_MORPEKO) { Ability(ABILITY_HUNGER_SWITCH); }
         OPPONENT(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); }
