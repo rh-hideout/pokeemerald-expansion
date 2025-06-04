@@ -879,21 +879,6 @@ const struct StatFractions gAccuracyStageRatios[] =
     {  3,   1}, // +6
 };
 
-static const u8 *const sMoveEffectBS_Ptrs[] =
-{
-    [MOVE_EFFECT_SLEEP]            = BattleScript_MoveEffectSleep,
-    [MOVE_EFFECT_POISON]           = BattleScript_MoveEffectPoison,
-    [MOVE_EFFECT_BURN]             = BattleScript_MoveEffectBurn,
-    [MOVE_EFFECT_FREEZE]           = BattleScript_MoveEffectFreeze,
-    [MOVE_EFFECT_PARALYSIS]        = BattleScript_MoveEffectParalysis,
-    [MOVE_EFFECT_TOXIC]            = BattleScript_MoveEffectToxic,
-    [MOVE_EFFECT_CONFUSION]        = BattleScript_MoveEffectConfusion,
-    [MOVE_EFFECT_UPROAR]           = BattleScript_MoveEffectUproar,
-    [MOVE_EFFECT_PAYDAY]           = BattleScript_MoveEffectPayDay,
-    [MOVE_EFFECT_WRAP]             = BattleScript_MoveEffectWrap,
-    [MOVE_EFFECT_FROSTBITE]        = BattleScript_MoveEffectFrostbite,
-};
-
 static const struct WindowTemplate sUnusedWinTemplate =
 {
     .bg = 0,
@@ -3176,36 +3161,41 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
 
     switch (effect)
     {
-    case MOVE_EFFECT_POISON:
-        gBattleMons[effectBattler].status1 |= STATUS1_POISON;
-        break;
     case MOVE_EFFECT_SLEEP:
         if (B_SLEEP_TURNS >= GEN_5)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 1, 3));
         else
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 2, 5));
         TryActivateSleepClause(effectBattler, gBattlerPartyIndexes[effectBattler]);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectSleep;
+        break;
+    case MOVE_EFFECT_POISON:
+        gBattleMons[effectBattler].status1 |= STATUS1_POISON;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectPoison;
         break;
     case MOVE_EFFECT_BURN:
         gBattleMons[effectBattler].status1 |= STATUS1_BURN;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectBurn;
         break;
     case MOVE_EFFECT_FREEZE:
         gBattleMons[effectBattler].status1 |= STATUS1_FREEZE;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectFreeze;
         break;
     case MOVE_EFFECT_PARALYSIS:
         gBattleMons[effectBattler].status1 |= STATUS1_PARALYSIS;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectParalysis;
         break;
     case MOVE_EFFECT_TOXIC:
         gBattleMons[effectBattler].status1 |= STATUS1_TOXIC_POISON;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectToxic;
         break;
     case MOVE_EFFECT_FROSTBITE:
         gBattleMons[effectBattler].status1 |= STATUS1_FROSTBITE;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectFrostbite;
         break;
     default:
         break;
     }
-
-    gBattlescriptCurrInstr = sMoveEffectBS_Ptrs[effect];
 
     BtlController_EmitSetMonData(effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[effectBattler].status1), &gBattleMons[effectBattler].status1);
     MarkBattlerForControllerExec(effectBattler);
@@ -3361,7 +3351,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             else
             {
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
-                gBattlescriptCurrInstr = sMoveEffectBS_Ptrs[gBattleScripting.moveEffect];
+                gBattlescriptCurrInstr = BattleScript_MoveEffectConfusion;
             }
         }
         break;
@@ -3401,7 +3391,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             gBattleMons[gEffectBattler].status2 |= STATUS2_UPROAR_TURN(B_UPROAR_TURNS >= GEN_5 ? 3 : (Random() & 3) + 2);
 
             BattleScriptPush(gBattlescriptCurrInstr + 1);
-            gBattlescriptCurrInstr = sMoveEffectBS_Ptrs[gBattleScripting.moveEffect];
+            gBattlescriptCurrInstr = BattleScript_MoveEffectUproar;
         }
         else
         {
@@ -3481,7 +3471,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             gBattleStruct->wrappedBy[gEffectBattler] = gBattlerAttacker;
 
             BattleScriptPush(gBattlescriptCurrInstr + 1);
-            gBattlescriptCurrInstr = sMoveEffectBS_Ptrs[gBattleScripting.moveEffect];
+            gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
 
             for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; gBattleCommunication[MULTISTRING_CHOOSER] < NUM_TRAPPING_MOVES; gBattleCommunication[MULTISTRING_CHOOSER]++)
             {
