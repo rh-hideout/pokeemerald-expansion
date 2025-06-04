@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Wandering Spirit copied ability should not trigger on fainte
     } WHEN {
         TURN { MOVE(player, MOVE_POISON_FANG); SEND_OUT(opponent, 1); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BRAVE_BIRD, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_FANG, player);
         NOT ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
     }
 }
