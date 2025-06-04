@@ -3177,7 +3177,7 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
     switch (effect)
     {
     case MOVE_EFFECT_POISON:
-        gBattleMons[effectBattler].status1 |= STATUS1_SLEEP;
+        gBattleMons[effectBattler].status1 |= STATUS1_POISON;
         break;
     case MOVE_EFFECT_SLEEP:
         if (B_SLEEP_TURNS >= GEN_5)
