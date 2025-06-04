@@ -780,10 +780,6 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_FAST_DOWN ... MOVEMENT_ACTION_WALK_FAST_RIGHT:
-        // Handle player on waterfall.
-        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && (state == MOVEMENT_ACTION_WALK_FAST_UP))
-            return MOVEMENT_INVALID;
-
         // Handle ice tile (some walking animation).
         if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
             follower->disableAnim = TRUE;
@@ -804,10 +800,6 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
 
     case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
-        // Handle player on waterfall.
-        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
-            return MOVEMENT_INVALID;
-
         RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);
 
     // Acro bike.
