@@ -163,11 +163,11 @@ enum BattlerId
     F(VOLATILE_STATUS_DRAGON_CHEER,         u32,    (dragonCheer, 1),               TRUE,       "Dragon Cheer") \
     F(VOLATILE_STATUS_FOCUS_ENERGY,         u32,    (focusEnergy, 1),               TRUE,       "Focus Energy")
 
-#define UNPACK_VOLATILE_STATUS_ENUMS(_enum, ...) _enum,
+#define UNPACK_V_STATUS_ENUMS(_enum, ...) _enum,
 
 enum VolatileStatus
 {
-    VOLATILE_STATUS_DEFINITIONS(UNPACK_VOLATILE_STATUS_ENUMS)
+    VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_ENUMS)
 };
 
 // Old flags

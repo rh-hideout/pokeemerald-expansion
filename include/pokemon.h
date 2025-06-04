@@ -309,13 +309,12 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_VOLATILE_STATUS_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type UVSS_EXTRACT_FIELD(UNPACK(_fieldNameBitSize));
-#define UVSS_EXTRACT_FIELD(_fieldNameBitSize) UVSS_EXTRACT_FIELD_NAME_BIT_SIZE(_fieldNameBitSize)
-#define UVSS_EXTRACT_FIELD_NAME_BIT_SIZE(_fieldName, ...) DEFAULT(_fieldName, __VA_OPT__(_fieldName:FIRST(__VA_ARGS__)))
+#define UNPACK_V_STATUS_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type INVOKE(UNPACK_V_STATUS_STRUCT_, UNPACK(_fieldNameBitSize));
+#define UNPACK_V_STATUS_STRUCT_(_fieldName, ...) DEFAULT(_fieldName, __VA_OPT__(_fieldName:FIRST(__VA_ARGS__)))
 
 struct VolatileStatuses
 {
-    VOLATILE_STATUS_DEFINITIONS(UNPACK_VOLATILE_STATUS_STRUCT)
+    VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_STRUCT)
     // Expands to:
     // u32 confusionTurns:3;
     // u32 flinched:1;

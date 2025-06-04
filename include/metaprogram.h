@@ -63,8 +63,8 @@
 #define UNPACK_3(a, b, ...) __VA_OPT__(UNPACK_ARGS)a
 
 /* Expands to 'macro(...args, ...)'. */
-#define INVOKE_WITH(macro, args, ...) INVOKE_WITH_(macro, UNPACK_ARGS args __VA_OPT__(, __VA_ARGS__))
-#define INVOKE_WITH_(macro, ...) macro(__VA_ARGS__)
+#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK_ARGS args __VA_OPT__(, __VA_ARGS__))
+#define INVOKE(macro, ...) macro(__VA_ARGS__)
 
 /* Recursive macros.
  * Based on https://www.scs.stanford.edu/~dm/blog/va-opt.html
