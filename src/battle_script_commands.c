@@ -3332,7 +3332,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     switch (gBattleScripting.moveEffect)
     {
     case MOVE_EFFECT_CONFUSION:
-        if (!CanBeConfused(gEffectBattler))
+        if (!CanBeConfused(gEffectBattler) || gBattleMons[gEffectBattler].status2 & STATUS2_CONFUSION)
         {
             gBattlescriptCurrInstr++;
         }
@@ -3371,6 +3371,10 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             {
                 gBattlescriptCurrInstr++;
             }
+        }
+        else if (!(gBattleMons[gEffectBattler].status2 & STATUS2_FLINCHED))
+        {
+            gBattlescriptCurrInstr++;
         }
         else if (GetBattlerTurnOrderNum(gEffectBattler) > gCurrentTurnActionNumber
                 && !(GetActiveGimmick(gEffectBattler) == GIMMICK_DYNAMAX))
@@ -3449,9 +3453,12 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         }
         break;
     case MOVE_EFFECT_CHARGING:
-        gBattleMons[gEffectBattler].status2 |= STATUS2_MULTIPLETURNS;
-        gLockedMoves[gEffectBattler] = gCurrentMove;
-        gProtectStructs[gEffectBattler].chargingTurn = TRUE;
+        if (!(gBattleMons[gEffectBattler].status2 & STATUS2_MULTIPLETURNS))
+        {
+            gBattleMons[gEffectBattler].status2 |= STATUS2_MULTIPLETURNS;
+            gLockedMoves[gEffectBattler] = gCurrentMove;
+            gProtectStructs[gEffectBattler].chargingTurn = TRUE;
+        }
         gBattlescriptCurrInstr++;
         break;
     case MOVE_EFFECT_WRAP:
@@ -3629,8 +3636,11 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         }
         break;
     case MOVE_EFFECT_PREVENT_ESCAPE:
-        gBattleMons[gBattlerTarget].status2 |= STATUS2_ESCAPE_PREVENTION;
-        gDisableStructs[gBattlerTarget].battlerPreventingEscape = gBattlerAttacker;
+        if (!(gBattleMons[gBattlerTarget].status2 & STATUS2_ESCAPE_PREVENTION))
+        {
+            gBattleMons[gBattlerTarget].status2 |= STATUS2_ESCAPE_PREVENTION;
+            gDisableStructs[gBattlerTarget].battlerPreventingEscape = gBattlerAttacker;
+        }
         gBattlescriptCurrInstr++;
         break;
     case MOVE_EFFECT_NIGHTMARE:
@@ -3670,7 +3680,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         break;
     case MOVE_EFFECT_THRASH:
         // Petal Dance doesn't lock mons that copy the move with Dancer
-        if (gSpecialStatuses[gEffectBattler].dancerUsedMove)
+        if (gSpecialStatuses[gEffectBattler].dancerUsedMove || gBattleMons[gEffectBattler].status2 & STATUS2_LOCK_CONFUSE)
         {
             gBattlescriptCurrInstr++;
         }
@@ -4547,7 +4557,7 @@ static void Cmd_clearstatus2(void)
     u32 status2 = cmd->status2;
     u32 battler = GetBattlerForBattleScript(cmd->battler);
 
-    gBattleMons[battler].status2 &= status2;
+    gBattleMons[battler].status2 &= ~status2;
     if (status2 & STATUS2_MULTIPLETURNS)
         gProtectStructs[battler].chargingTurn = FALSE;
 
