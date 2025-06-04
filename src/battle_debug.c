@@ -536,13 +536,11 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-#define UNPACK_VOLATILE_STATUS_LIST_ITEM_U32(enum, fieldName, bitSize, ...) __VA_OPT__({COMPOUND_STRING(FIRST(__VA_ARGS__)), enum},)
-#define UNPACK_VOLATILE_STATUS_LIST_ITEM(itemArr) UNPACK_VOLATILE_STATUS_LIST_ITEM##itemArr
-#define UNPACK_VOLATILE_STATUS_LIST(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_LIST_ITEM, __VA_ARGS__))
+#define UNPACK_VOLATILE_STATUS_LIST(enum, _type, _fieldNameBitSize, _batonPassable, ...) __VA_OPT__({COMPOUND_STRING(FIRST(__VA_ARGS__)), enum},)
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    UNPACK_VOLATILE_STATUS_LIST(VOLATILE_STATUS_DEFINITIONS)
+    VOLATILE_STATUS_DEFINITIONS(UNPACK_VOLATILE_STATUS_LIST)
     // Expands to:
     // {COMPOUND_STRING("Confusion"), VOLATILE_STATUS_CONFUSION},
     // {COMPOUND_STRING("Flinched"), VOLATILE_STATUS_FLINCHED},
@@ -559,13 +557,13 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     // {COMPOUND_STRING("FocusEnergy"), VOLATILE_STATUS_FOCUS_ENERGY},
 };
 
-#define UNPACK_VOLATILE_STATUS_BITSIZE_U32(enum, fieldName, bitSize, ...) __VA_OPT__([enum] = bitSize,)
-#define UNPACK_VOLATILE_STATUS_BITSIZE(itemArr) UNPACK_VOLATILE_STATUS_BITSIZE##itemArr
-#define UNPACK_VOLATILE_STATUS_BITSIZES(...) RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_BITSIZE, __VA_ARGS__))
+#define UNPACK_VOLATILE_STATUS_BITSIZES(_enum, _type, _fieldNameBitSize, ...) [_enum] = UVSB_EXTRACT_FIELD(_type, UNPACK(_fieldNameBitSize)),
+#define UVSB_EXTRACT_FIELD(_type, _fieldNameBitSize) UVSB_EXTRACT_FIELD_BIT_SIZE(_type, _fieldNameBitSize)
+#define UVSB_EXTRACT_FIELD_BIT_SIZE(_type, _fieldName, ...) FIRST(__VA_OPT__(__VA_ARGS__,) LENGTH_##_type)
 
 static const u8 sVolatileStatusListBitSizes[] = 
 {
-    UNPACK_VOLATILE_STATUS_BITSIZES(VOLATILE_STATUS_DEFINITIONS)
+    VOLATILE_STATUS_DEFINITIONS(UNPACK_VOLATILE_STATUS_BITSIZES)
     // Expands to:
     // [VOLATILE_STATUS_CONFUSION] = 3,
     // [VOLATILE_STATUS_FLINCHED] = 1,

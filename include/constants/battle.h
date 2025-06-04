@@ -135,62 +135,39 @@ enum BattlerId
 #define STATUS1_REFRESH          (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
 
 // Volatile status ailments
-// These are removed after exiting the battle or switching 
-// #define UNPACK_VOLATILE_STATUS_ENUM_ANY(enum, ...) enum,
-// #define UNPACK_VOLATILE_STATUS_ENUM_U32 UNPACK_VOLATILE_STATUS_ENUM_ANY
-// #define UNPACK_VOLATILE_STATUS_ENUM(memberArr) UNPACK_VOLATILE_STATUS_ENUM##memberArr
-// #define UNPACK_VOLATILE_STATUS_ENUMS(...) enum VolatileStatus { RECURSIVELY(R_FOR_EACH(UNPACK_VOLATILE_STATUS_ENUM, __VA_ARGS__)) };
-/* Definitions with names e.g. "Confusion" are accessible in the debug menu */
-#define VOLATILE_STATUS_DEFINITIONS \
-    _U32(VOLATILE_STATUS_CONFUSION, confusionTurns, 3, "Confusion"), \
-    _U32(VOLATILE_STATUS_FLINCHED, flinched, 1, "Flinched"), \
-    _U32(VOLATILE_STATUS_UPROAR, uproarTurns, 3), \
-    _U32(VOLATILE_STATUS_TORMENT, torment, 1, "Torment"), \
-    _U32(VOLATILE_STATUS_BIDE, bideTurns, 2), \
-    _U32(VOLATILE_STATUS_LOCK_CONFUSE, lockConfusionTurns, 2), \
-    _U32(VOLATILE_STATUS_MULTIPLETURNS, multipleTurns, 1), \
-    _U32(VOLATILE_STATUS_WRAPPED, wrapped, 1), \
-    _U32(VOLATILE_STATUS_POWDER, powder, 1, "Powder"), \
-    _U32(VOLATILE_STATUS_UNUSED, padding, 1), \
-    _U32(VOLATILE_STATUS_INFATUATION, infatuation, 4), \
-    _U32(VOLATILE_STATUS_DEFENSE_CURL, defenseCurl, 1, "Defense Curl"), \
-    _U32(VOLATILE_STATUS_TRANSFORMED, transformed, 1), \
-    _U32(VOLATILE_STATUS_RECHARGE, recharge, 1, "Recharge"), \
-    _U32(VOLATILE_STATUS_RAGE, rage, 1, "Rage"), \
-    _U32(VOLATILE_STATUS_SUBSTITUTE, substitute, 1), \
-    _U32(VOLATILE_STATUS_DESTINY_BOND, destinyBond, 1, "Destiny Bond"), \
-    _U32(VOLATILE_STATUS_ESCAPE_PREVENTION, escapePrevention, 1, "Escape Prevention"), \
-    _U32(VOLATILE_STATUS_NIGHTMARE, nightmare, 1), \
-    _U32(VOLATILE_STATUS_CURSED, cursed, 1, "Cursed"), \
-    _U32(VOLATILE_STATUS_FORESIGHT, foresight, 1, "Foresight"), \
-    _U32(VOLATILE_STATUS_DRAGON_CHEER, dragonCheer, 1, "Dragon Cheer"), \
-    _U32(VOLATILE_STATUS_FOCUS_ENERGY, focusEnergy, 1, "Focus Energy")
+// These are removed after exiting the battle or switching
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
+    Enum,                                   Type,   Field name, (optional) bitSize  BatonPassable, Debug menu header*/
+#define VOLATILE_STATUS_DEFINITIONS(F) \
+    F(VOLATILE_STATUS_CONFUSION,            u32,    (confusionTurns, 3),            TRUE,       "Confusion") \
+    F(VOLATILE_STATUS_FLINCHED,             u32,    (flinched, 1),                  FALSE,      "Flinched") \
+    F(VOLATILE_STATUS_UPROAR,               u32,    (uproarTurns, 3),               FALSE) \
+    F(VOLATILE_STATUS_TORMENT,              u32,    (torment, 1),                   FALSE,      "Torment") \
+    F(VOLATILE_STATUS_BIDE,                 u32,    (bideTurns, 2),                 FALSE) \
+    F(VOLATILE_STATUS_LOCK_CONFUSE,         u32,    (lockConfusionTurns, 2),        FALSE) \
+    F(VOLATILE_STATUS_MULTIPLETURNS,        u32,    (multipleTurns, 1),             FALSE) \
+    F(VOLATILE_STATUS_WRAPPED,              u32,    (wrapped, 1),                   FALSE) \
+    F(VOLATILE_STATUS_POWDER,               u32,    (powder, 1),                    FALSE,      "Powder") \
+    F(VOLATILE_STATUS_UNUSED,               u32,    (padding, 1),                   FALSE) \
+    F(VOLATILE_STATUS_INFATUATION,          u32,    (infatuation, 4),               FALSE) \
+    F(VOLATILE_STATUS_DEFENSE_CURL,         u32,    (defenseCurl, 1),               FALSE,      "Defense Curl") \
+    F(VOLATILE_STATUS_TRANSFORMED,          u32,    (transformed, 1),               FALSE) \
+    F(VOLATILE_STATUS_RECHARGE,             u32,    (recharge, 1),                  FALSE,      "Recharge") \
+    F(VOLATILE_STATUS_RAGE,                 u32,    (rage, 1),                      FALSE,      "Rage") \
+    F(VOLATILE_STATUS_SUBSTITUTE,           u32,    (substitute, 1),                TRUE) \
+    F(VOLATILE_STATUS_DESTINY_BOND,         u32,    (destinyBond, 1),               FALSE,      "Destiny Bond") \
+    F(VOLATILE_STATUS_ESCAPE_PREVENTION,    u32,    (escapePrevention, 1),          TRUE,       "Escape Prevention") \
+    F(VOLATILE_STATUS_NIGHTMARE,            u32,    (nightmare, 1),                 FALSE) \
+    F(VOLATILE_STATUS_CURSED,               u32,    (cursed, 1),                    TRUE,       "Cursed") \
+    F(VOLATILE_STATUS_FORESIGHT,            u32,    (foresight, 1),                 FALSE,      "Foresight") \
+    F(VOLATILE_STATUS_DRAGON_CHEER,         u32,    (dragonCheer, 1),               TRUE,       "Dragon Cheer") \
+    F(VOLATILE_STATUS_FOCUS_ENERGY,         u32,    (focusEnergy, 1),               TRUE,       "Focus Energy")
+
+#define UNPACK_VOLATILE_STATUS_ENUMS(_enum, ...) _enum,
 
 enum VolatileStatus
 {
-    VOLATILE_STATUS_CONFUSION,
-    VOLATILE_STATUS_FLINCHED,
-    VOLATILE_STATUS_UPROAR,
-    VOLATILE_STATUS_TORMENT,
-    VOLATILE_STATUS_BIDE,
-    VOLATILE_STATUS_LOCK_CONFUSE,
-    VOLATILE_STATUS_MULTIPLETURNS,
-    VOLATILE_STATUS_WRAPPED,
-    VOLATILE_STATUS_POWDER,
-    VOLATILE_STATUS_UNUSED,
-    VOLATILE_STATUS_INFATUATION,
-    VOLATILE_STATUS_DEFENSE_CURL,
-    VOLATILE_STATUS_TRANSFORMED,
-    VOLATILE_STATUS_RECHARGE,
-    VOLATILE_STATUS_RAGE,
-    VOLATILE_STATUS_SUBSTITUTE,
-    VOLATILE_STATUS_DESTINY_BOND,
-    VOLATILE_STATUS_ESCAPE_PREVENTION,
-    VOLATILE_STATUS_NIGHTMARE,
-    VOLATILE_STATUS_CURSED,
-    VOLATILE_STATUS_FORESIGHT,
-    VOLATILE_STATUS_DRAGON_CHEER,
-    VOLATILE_STATUS_FOCUS_ENERGY,
+    VOLATILE_STATUS_DEFINITIONS(UNPACK_VOLATILE_STATUS_ENUMS)
 };
 
 // Old flags
