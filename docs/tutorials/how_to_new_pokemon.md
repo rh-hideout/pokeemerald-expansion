@@ -371,7 +371,8 @@ Edit [include/constants/pokedex.h](https://github.com/rh-hideout/pokeemerald-exp
 
 ```diff
 // National Pokedex order
-enum {
+enum NationalDexOrder
+{
     NATIONAL_DEX_NONE,
     // Kanto
     NATIONAL_DEX_BULBASAUR,
@@ -394,7 +395,8 @@ Do keep in mind that if you intend to add your new species to the Hoenn Dex, you
 
 ```diff
 // Hoenn Pokedex order
-enum {
+enum HoennDexOrder
+{
     HOENN_DEX_NONE,
     HOENN_DEX_TREECKO,
 ...

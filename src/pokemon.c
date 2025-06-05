@@ -119,7 +119,7 @@ static const struct CombinedMove sCombinedMoves[2] =
 #define HOENN_TO_NATIONAL(name)     [HOENN_DEX_##name - 1] = NATIONAL_DEX_##name
 
 // Assigns all Hoenn Dex Indexes to a National Dex Index
-static const u16 sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
+static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
 {
     HOENN_TO_NATIONAL(TREECKO),
     HOENN_TO_NATIONAL(GROVYLE),
@@ -5001,7 +5001,7 @@ bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
     return FALSE;
 }
 
-u16 NationalPokedexNumToSpecies(u16 nationalNum)
+u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
 {
     u16 species;
 
@@ -5019,7 +5019,7 @@ u16 NationalPokedexNumToSpecies(u16 nationalNum)
     return GET_BASE_SPECIES_ID(species);
 }
 
-u16 NationalToHoennOrder(u16 nationalNum)
+enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum)
 {
     u16 hoennNum;
 
@@ -5046,14 +5046,14 @@ enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species)
     return gSpeciesInfo[species].natDexNum;
 }
 
-u16 SpeciesToHoennPokedexNum(u16 species)
+enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species)
 {
     if (!species)
         return 0;
     return NationalToHoennOrder(gSpeciesInfo[species].natDexNum);
 }
 
-u16 HoennToNationalOrder(u16 hoennNum)
+enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum)
 {
     if (!hoennNum || hoennNum >= HOENN_DEX_COUNT)
         return 0;
