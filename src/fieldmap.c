@@ -51,9 +51,21 @@ static bool8 IsCoordInIncomingConnectingMap(int coord, int srcMax, int destMax, 
 
 static inline u16 GetBorderBlockAt(int x, int y)
 {
-    int i = (x + 1) & 1;
-    i += ((y + 1) & 1) * 2;
-    return gMapHeader.mapLayout->border[i] | MAPGRID_COLLISION_MASK;
+  u16 block;
+  s32 xPrime;
+  s32 yPrime;
+  
+  const struct MapLayout *mapLayout = gMapHeader.mapLayout;
+
+  xPrime = x - MAP_OFFSET;
+  xPrime += 8 * mapLayout->borderWidth;
+  xPrime %= mapLayout->borderWidth;
+
+  yPrime = y - MAP_OFFSET;
+  yPrime += 8 * mapLayout->borderHeight;
+  yPrime %= mapLayout->borderHeight;
+
+  return (mapLayout->border[xPrime + yPrime * mapLayout->borderWidth] | MAPGRID_COLLISION_MASK);
 }
 
 #define AreCoordsWithinMapGridBounds(x, y) (x >= 0 && x < gBackupMapLayout.width && y >= 0 && y < gBackupMapLayout.height)

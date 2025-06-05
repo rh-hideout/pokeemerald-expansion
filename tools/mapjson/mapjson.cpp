@@ -563,11 +563,9 @@ string generate_layout_headers_text(Json layouts_data) {
              << "\t.4byte " << blockdata_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
-        if (version == "firered") {
-            text << "\t.byte " << json_to_string(layout, "border_width") << "\n"
-                 << "\t.byte " << json_to_string(layout, "border_height") << "\n"
-                 << "\t.2byte 0\n";
-        }
+        text << "\t.byte " << json_to_string(layout, "border_width") << "\n"
+                << "\t.byte " << json_to_string(layout, "border_height") << "\n"
+                << "\t.2byte 0\n";
         text << "\n";
     }
 

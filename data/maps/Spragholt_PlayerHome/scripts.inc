@@ -16,7 +16,7 @@ Spragholt_PlayerHome_EventScript_FatherBeforePokemon::
 
 Spragholt_PlayerHome_EventScript_FatherBeforePokemon_Text_0:
 # 6 "data/maps/Spragholt_PlayerHome/scripts.pory"
-	.string "Are you ready, {PLAYER}? The shaman wants to\n"
+	.string "Are you ready, {Player}? The shaman wants to\n"
 	.string "see you before you start your journey.\p"
 	.string "...\p"
 	.string "I'm...\p"
