@@ -11330,7 +11330,7 @@ u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
 }
 
 #define UNPACK_VOLATILE_SETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_VOLATILE_SETTERS_, _type, UNPACK(_fieldNameBitSize)); break;
-#define UNPACK_VOLATILE_SETTERS_(_type, _fieldName, ...) gBattleMons[battler].volatiles._fieldName = min(DEFAULT(MAX_##_type, MAX_BITS(FIRST(__VA_ARGS__))), newValue)
+#define UNPACK_VOLATILE_SETTERS_(_type, _fieldName, ...) gBattleMons[battler].volatiles._fieldName = min(FIRST(__VA_OPT__( MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8))), newValue)
 
 // Sets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred

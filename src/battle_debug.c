@@ -2140,10 +2140,11 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _type, _fieldNameBitSize, _flags, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = INVOKE(UNPACK_VOLATILE_MAX_SIZE_, _type, INVOKE(DEFAULT, INVOKE_WITH(UNPACK_VOLATILE_MAX_SIZE_FROM_FIELD, _fieldNameBitSize) INVOKE_WITH(SECOND, __VA_ARGS__))); break;)
+#define UNPACK_VOLATILE_MAX_SIZE_FROM_FIELD(_fieldName, ...) __VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),)
+#define UNPACK_VOLATILE_MAX_SIZE_(_type, ...) FIRST(__VA_OPT__(__VA_ARGS__,) MAX_BITS((sizeof(_type) * 8)))
         switch (data->currentSecondaryListItemId)
         {
-#define UNPACK_VOLATILE_MAX_SIZE(_enum, _type, _fieldNameBitSize, _flags, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = INVOKE(UNPACK_VOLATILE_MAX_SIZE_, _type, INVOKE(DEFAULT, MAX_BITS(INVOKE_WITH(SECOND, _fieldNameBitSize)), INVOKE_WITH(SECOND, __VA_ARGS__))); break;)
-#define UNPACK_VOLATILE_MAX_SIZE_(_type, ...) FIRST(__VA_OPT__(__VA_ARGS__,) MAX_##_type)
             VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
             default:
                 data->modifyArrows.maxValue = 0;

@@ -736,7 +736,7 @@ BattleScript_SkyDropChangedTarget:
 BattleScript_SkyDropFlyingConfuseLock:
 	seteffectprimary MOVE_EFFECT_CONFUSION
 BattleScript_SkyDropFlyingAlreadyConfused:
-	clearstatus2 BS_TARGET, STATUS2_LOCK_CONFUSE
+	clearvolatile BS_TARGET, VOLATILE_LOCK_CONFUSE
 	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_MoveEnd
 	setbyte BS_ATTACKER, BS_TARGET
 	goto BattleScript_ThrashConfuses
@@ -3570,7 +3570,7 @@ BattleScript_EffectGeomancy::
 BattleScript_GeomancySecondTurn:
 	attackcanceler
 	setbyte sB_ANIM_TURN, 1
-	clearstatus2 BS_ATTACKER, STATUS2_MULTIPLETURNS
+	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
 	orword gHitMarker, HITMARKER_NO_PPDEDUCT
 	attackstring
 	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_SPATK, MAX_STAT_STAGE, BattleScript_GeomancyDoMoveAnim
@@ -3642,7 +3642,7 @@ BattleScript_TwoTurnMovesSecondTurn::
 BattleScript_TwoTurnMovesSecondTurnRet:
 	setbyte sB_ANIM_TURN, 1
 	setbyte sB_ANIM_TARGETS_HIT, 0
-	clearstatus2 BS_ATTACKER, STATUS2_MULTIPLETURNS
+	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
 	clearsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
 	return
 
@@ -3682,7 +3682,7 @@ BattleScript_EffectRage::
 	seteffectprimary MOVE_EFFECT_RAGE
 	goto BattleScript_HitFromAtkString
 BattleScript_RageMiss::
-	clearstatus2 BS_ATTACKER, STATUS2_RAGE
+	clearvolatile BS_ATTACKER, VOLATILE_RAGE
 	goto BattleScript_PrintMoveMissed
 
 BattleScript_EffectMimic::
@@ -5828,7 +5828,7 @@ BattleScript_BideStoringEnergy::
 
 BattleScript_BideAttack::
 	attackcanceler
-	clearstatus2 BS_ATTACKER, STATUS2_MULTIPLETURNS
+	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
 	printstring STRINGID_PKMNUNLEASHEDENERGY
 	waitmessage B_WAIT_TIME_LONG
 	accuracycheck BattleScript_MoveMissed, ACC_CURR_MOVE
@@ -5851,7 +5851,7 @@ BattleScript_BideAttack::
 
 BattleScript_BideNoEnergyToAttack::
 	attackcanceler
-	clearstatus2 BS_ATTACKER, STATUS2_MULTIPLETURNS
+	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
 	printstring STRINGID_PKMNUNLEASHEDENERGY
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_ButItFailed

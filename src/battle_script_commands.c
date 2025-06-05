@@ -369,7 +369,7 @@ static void Cmd_printselectionstringfromtable(void);
 static void Cmd_setadditionaleffects(void);
 static void Cmd_seteffectprimary(void);
 static void Cmd_seteffectsecondary(void);
-static void Cmd_clearstatus2(void);
+static void Cmd_clearvolatile(void);
 static void Cmd_tryfaintmon(void);
 static void Cmd_dofaintanimation(void);
 static void Cmd_cleareffectsonfaint(void);
@@ -628,7 +628,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_setadditionaleffects,                    //0x15
     Cmd_seteffectprimary,                        //0x16
     Cmd_seteffectsecondary,                      //0x17
-    Cmd_clearstatus2,                            //0x18
+    Cmd_clearvolatile,                           //0x18
     Cmd_tryfaintmon,                             //0x19
     Cmd_dofaintanimation,                        //0x1A
     Cmd_cleareffectsonfaint,                     //0x1B
@@ -4550,15 +4550,14 @@ static void Cmd_seteffectsecondary(void)
     SetMoveEffect(FALSE, FALSE);
 }
 
-static void Cmd_clearstatus2(void)
+static void Cmd_clearvolatile(void)
 {
-    CMD_ARGS(u8 battler, u32 status2);
+    CMD_ARGS(u8 battler, u8 _volatile);
 
-    u32 status2 = cmd->status2;
     u32 battler = GetBattlerForBattleScript(cmd->battler);
 
-    gBattleMons[battler].status2 &= ~status2;
-    if (status2 & STATUS2_MULTIPLETURNS)
+    SetMonVolatile(battler, cmd->_volatile, 0);
+    if (cmd->_volatile == VOLATILE_MULTIPLETURNS)
         gProtectStructs[battler].chargingTurn = FALSE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
