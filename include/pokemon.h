@@ -404,7 +404,7 @@ struct SpeciesInfo /*0xC4*/
     u16 trainerScale;
     u16 trainerOffset;
     const u8 *description;
-    u8 bodyColor:7;
+    enum BodyColor bodyColor:7;
     // Graphical Data
     u8 noFlip:1;
     u8 frontAnimDelay;
