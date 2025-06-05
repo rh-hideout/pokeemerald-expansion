@@ -11314,38 +11314,40 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
     return FALSE;
 }
 
-#define UNPACK_V_STATUS_GETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_V_STATUS_GETTERS_, UNPACK(_fieldNameBitSize))
-#define UNPACK_V_STATUS_GETTERS_(_fieldName, ...) return gBattleMons[battler].volatileStatuses._fieldName;
+#define UNPACK_VOLATILE_GETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_VOLATILE_GETTERS_, UNPACK(_fieldNameBitSize))
+#define UNPACK_VOLATILE_GETTERS_(_fieldName, ...) return gBattleMons[battler].volatiles._fieldName;
 
 // Gets the value of a volatile status flag for a certain battler
-u32 GetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus)
+// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
+u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
 {
-    switch (volatileStatus)
+    switch (_volatile)
     {
         /* Expands to:
-        case VOLATILE_STATUS_CONFUSION:
-            return gBattleMons[battler].volatileStatuses.confusionTurns;
+        case VOLATILE_CONFUSION:
+            return gBattleMons[battler].volatiles.confusionTurns;
         */
-        VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_GETTERS)
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
         default: // Invalid volatile status
             return 0;
     }
 }
 
-#define UNPACK_V_STATUS_SETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_V_STATUS_SETTERS_, _type, UNPACK(_fieldNameBitSize)); break;
-#define UNPACK_V_STATUS_SETTERS_(_type, _fieldName, ...) gBattleMons[battler].volatileStatuses._fieldName = min(DEFAULT(MAX_##_type, MAX_BITS(FIRST(__VA_ARGS__))), newValue)
+#define UNPACK_VOLATILE_SETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_VOLATILE_SETTERS_, _type, UNPACK(_fieldNameBitSize)); break;
+#define UNPACK_VOLATILE_SETTERS_(_type, _fieldName, ...) gBattleMons[battler].volatiles._fieldName = min(DEFAULT(MAX_##_type, MAX_BITS(FIRST(__VA_ARGS__))), newValue)
 
 // Sets the value of a volatile status flag for a certain battler
-void SetMonVolatileStatus(u32 battler, enum VolatileStatus volatileStatus, u32 newValue)
+// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
+void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
 {
-    switch (volatileStatus)
+    switch (_volatile)
     {
         /* Expands to:
-        case VOLATILE_STATUS_CONFUSION:
-            gBattleMons[battler].volatileStatuses.confusionTurns = min(MAX_BITS(3), newValue);
+        case VOLATILE_CONFUSION:
+            gBattleMons[battler].volatiles.confusionTurns = min(MAX_BITS(3), newValue);
             break;
         */
-        VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_SETTERS)
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_SETTERS)
         default: // Invalid volatile status
             return;
     }

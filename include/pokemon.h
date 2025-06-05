@@ -309,12 +309,12 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_V_STATUS_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type INVOKE_WITH(UNPACK_V_STATUS_STRUCT_, _fieldNameBitSize);
-#define UNPACK_V_STATUS_STRUCT_(_fieldName, ...) DEFAULT(_fieldName, __VA_OPT__(_fieldName:FIRST(__VA_ARGS__)))
+#define UNPACK_VOLATILE_STRUCT(_enum, _type, _fieldNameBitSize, ...) _type INVOKE_WITH(UNPACK_VOLATILE_STRUCT_, _fieldNameBitSize);
+#define UNPACK_VOLATILE_STRUCT_(_fieldName, ...) DEFAULT(_fieldName, __VA_OPT__(_fieldName:FIRST(__VA_ARGS__)))
 
-struct VolatileStatuses
+struct Volatiles
 {
-    VOLATILE_STATUS_DEFINITIONS(UNPACK_V_STATUS_STRUCT)
+    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_STRUCT)
     // Expands to:
     // u32 confusionTurns:3;
     // u32 flinched:1;
@@ -376,7 +376,7 @@ struct BattlePokemon
         struct {
             u32 status2; // To be expanded to include Status3/4
         };
-        struct VolatileStatuses volatileStatuses;
+        struct Volatiles volatiles;
     };
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;

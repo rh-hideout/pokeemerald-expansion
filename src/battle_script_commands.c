@@ -375,7 +375,7 @@ static void Cmd_tryfaintmon(void);
 static void Cmd_dofaintanimation(void);
 static void Cmd_cleareffectsonfaint(void);
 static void Cmd_jumpifstatus(void);
-static void Cmd_jumpifvolatilestatus(void);
+static void Cmd_jumpifvolatile(void);
 static void Cmd_jumpifability(void);
 static void Cmd_jumpifsideaffecting(void);
 static void Cmd_jumpifstat(void);
@@ -634,7 +634,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_dofaintanimation,                        //0x1A
     Cmd_cleareffectsonfaint,                     //0x1B
     Cmd_jumpifstatus,                            //0x1C
-    Cmd_jumpifvolatilestatus,                    //0x1D
+    Cmd_jumpifvolatile,                          //0x1D
     Cmd_jumpifability,                           //0x1E
     Cmd_jumpifsideaffecting,                     //0x1F
     Cmd_jumpifstat,                              //0x20
@@ -1633,7 +1633,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
-        if (gBattleMons[battlerDef].volatileStatuses.confusionTurns != 0)
+        if (gBattleMons[battlerDef].volatiles.confusionTurns)
             calc = (calc * 50) / 100; // 1.5 tangled feet loss
         break;
     }
@@ -4732,14 +4732,14 @@ static void Cmd_jumpifstatus(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_jumpifvolatilestatus(void)
+static void Cmd_jumpifvolatile(void)
 {
     CMD_ARGS(u8 battler, u8 volatileStatus, const u8 *jumpInstr);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
     const u8 *jumpInstr = cmd->jumpInstr;
 
-    if (GetMonVolatileStatus(battler, cmd->volatileStatus) != 0 && IsBattlerAlive(battler))
+    if (GetMonVolatile(battler, cmd->volatileStatus) && IsBattlerAlive(battler))
         gBattlescriptCurrInstr = jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
