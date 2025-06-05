@@ -1,0 +1,9 @@
+mapscripts Town_Spragholt_MapScripts {}
+
+script Town_Spragholt_EventScript_FireMan {
+    lock
+    faceplayer
+    msgbox(format("Cool cave dwellers can make fire. But REALLY cool cave dwellers dare to jump over it!\pHave you tried it?"))
+    release
+    end
+}

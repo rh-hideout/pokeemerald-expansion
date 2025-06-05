@@ -1,0 +1,9 @@
+mapscripts Spragholt_PlayerHome_MapScripts {}
+
+script Spragholt_PlayerHome_EventScript_FatherBeforePokemon {
+    lock
+    faceplayer
+    msgbox(format("Are you ready, {Player}? The shaman wants to see you before you start your journey.\p...\pI'm...\p...\pI'm really proud of you."))
+    release
+    end
+}
