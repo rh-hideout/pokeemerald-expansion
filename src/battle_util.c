@@ -255,7 +255,7 @@ static u32 CalcBeatUpPower(void)
 
     // Party slot is incremented by the battle script for Beat Up after this damage calculation
     species = GetMonData(&party[gBattleStruct->beatUpSlot], MON_DATA_SPECIES);
-    basePower = (gSpeciesInfo[species].baseAttack / 10) + 5;
+    basePower = (GetSpeciesBaseAttack(species) / 10) + 5;
 
     return basePower;
 }
@@ -2333,9 +2333,11 @@ static void CancellerPsychicTerrain(u32 *effect)
 
 static void CancellerExplodingDamp(u32 *effect)
 {
+    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
-    if (dampBattler && (GetMoveEffect(gCurrentMove) == EFFECT_EXPLOSION
-                     || GetMoveEffect(gCurrentMove) == EFFECT_MIND_BLOWN))
+    if (dampBattler && (moveEffect == EFFECT_EXPLOSION
+                     || moveEffect == EFFECT_MISTY_EXPLOSION
+                     || moveEffect == EFFECT_MIND_BLOWN))
     {
         gBattleScripting.battler = dampBattler - 1;
         gBattlescriptCurrInstr = BattleScript_DampStopsExplosion;
@@ -2776,6 +2778,7 @@ static void ForewarnChooseMove(u32 battler)
                 switch (GetMoveEffect(data[count].moveId))
                 {
                 case EFFECT_OHKO:
+                case EFFECT_SHEER_COLD:
                     data[count].power = 150;
                     break;
                 case EFFECT_COUNTER:
@@ -3594,7 +3597,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         {
                             move = gBattleMons[i].moves[j];
                             moveType = GetBattleMoveType(move);
-                            if (CalcTypeEffectivenessMultiplier(move, moveType, i, battler, ABILITY_ANTICIPATION, FALSE) >= UQ_4_12(2.0) || GetMoveEffect(move) == EFFECT_OHKO)
+                            enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+                            if (CalcTypeEffectivenessMultiplier(move, moveType, i, battler, ABILITY_ANTICIPATION, FALSE) >= UQ_4_12(2.0)
+                                || moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
                             {
                                 effect++;
                                 break;
@@ -8087,8 +8092,8 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
         if (gProtectStructs[battlerAtk].lashOutAffected)
             basePower *= 2;
         break;
-    case EFFECT_EXPLOSION:
-        if (move == MOVE_MISTY_EXPLOSION && IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_MISTY_TERRAIN))
+    case EFFECT_MISTY_EXPLOSION:
+        if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_MISTY_TERRAIN))
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_DYNAMAX_DOUBLE_DMG:
@@ -8800,7 +8805,8 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
     }
 
     // Self-destruct / Explosion cut defense in half
-    if (B_EXPLOSION_DEFENSE < GEN_5 && moveEffect == EFFECT_EXPLOSION)
+    if (B_EXPLOSION_DEFENSE < GEN_5 && (moveEffect == EFFECT_EXPLOSION
+                                     || moveEffect == EFFECT_MISTY_EXPLOSION))
         defStat /= 2;
 
     // critical hits ignore positive stat changes
@@ -9022,12 +9028,7 @@ static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageCalcula
         return UQ_4_12(1.0);
 
     u32 protected = gProtectStructs[damageCalcData->battlerDef].protected;
-    if (protected != PROTECT_NONE
-     && protected != PROTECT_WIDE_GUARD
-     && protected != PROTECT_QUICK_GUARD
-     && protected != PROTECT_CRAFTY_SHIELD
-     && protected != PROTECT_MAT_BLOCK
-     && protected != PROTECT_MAX_GUARD)
+    if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
 }
@@ -9327,11 +9328,11 @@ static inline s32 DoFixedDamageMoveCalc(struct DamageCalculationData *damageCalc
         randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
         dmg = gBattleMons[damageCalcData->battlerAtk].level * (randDamage + 50) / 100;
         break;
-    case EFFECT_FIXED_DAMAGE_ARG:
-        dmg = GetMoveFixedDamage(damageCalcData->move);
+    case EFFECT_FIXED_HP_DAMAGE:
+        dmg = GetMoveFixedHPDamage(damageCalcData->move);
         break;
-    case EFFECT_SUPER_FANG:
-        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) / 2;
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+        dmg = GetNonDynamaxHP(damageCalcData->battlerDef) * GetMoveDamagePercentage(damageCalcData->move) / 100;
         break;
     case EFFECT_FINAL_GAMBIT:
         dmg = GetNonDynamaxHP(damageCalcData->battlerAtk);
@@ -9402,7 +9403,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct DamageCalculationData
     }
 
     // Same type attack bonus
-    if (gSpeciesInfo[partyMonSpecies].types[0] == moveType || gSpeciesInfo[partyMonSpecies].types[1] == moveType)
+    if (GetSpeciesType(partyMonSpecies, 0) == moveType || GetSpeciesType(partyMonSpecies, 1) == moveType)
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.5));
     else
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.0));
@@ -9533,9 +9534,9 @@ static inline void TryNoticeIllusionInTypeEffectiveness(u32 move, u32 moveType, 
 {
     // Check if the type effectiveness would've been different if the pokemon really had the types as the disguise.
     uq4_12_t presumedModifier = UQ_4_12(1.0);
-    MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, gSpeciesInfo[illusionSpecies].types[0], battlerAtk, FALSE);
-    if (gSpeciesInfo[illusionSpecies].types[1] != gSpeciesInfo[illusionSpecies].types[0])
-        MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, gSpeciesInfo[illusionSpecies].types[1], battlerAtk, FALSE);
+    MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, GetSpeciesType(illusionSpecies, 0), battlerAtk, FALSE);
+    if (GetSpeciesType(illusionSpecies, 1) != GetSpeciesType(illusionSpecies, 0))
+        MulByTypeEffectiveness(&presumedModifier, move, moveType, battlerDef, ABILITY_ILLUSION, GetSpeciesType(illusionSpecies, 1), battlerAtk, FALSE);
 
     if (presumedModifier != resultingModifier)
         RecordAbilityBattle(battlerDef, ABILITY_ILLUSION);
@@ -9600,7 +9601,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
             RecordAbilityBattle(battlerDef, ABILITY_LEVITATE);
         }
     }
-    else if (B_SHEER_COLD_IMMUNITY >= GEN_7 && move == MOVE_SHEER_COLD && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
+    else if (B_SHEER_COLD_IMMUNITY >= GEN_7 && GetMoveEffect(move) == EFFECT_SHEER_COLD && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
     {
         modifier = UQ_4_12(0.0);
     }
@@ -9668,9 +9669,9 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, u16 a
 
     if (move != MOVE_STRUGGLE && moveType != TYPE_MYSTERY)
     {
-        MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, gSpeciesInfo[speciesDef].types[0], 0, FALSE);
-        if (gSpeciesInfo[speciesDef].types[1] != gSpeciesInfo[speciesDef].types[0])
-            MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, gSpeciesInfo[speciesDef].types[1], 0, FALSE);
+        MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, GetSpeciesType(speciesDef, 0), 0, FALSE);
+        if (GetSpeciesType(speciesDef, 1) != GetSpeciesType(speciesDef, 0))
+            MulByTypeEffectiveness(&modifier, move, moveType, 0, 0, GetSpeciesType(speciesDef, 1), 0, FALSE);
 
         if (moveType == TYPE_GROUND && abilityDef == ABILITY_LEVITATE && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
             modifier = UQ_4_12(0.0);
@@ -9701,8 +9702,8 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, u8 moveType)
     uq4_12_t modifier = UQ_4_12(1.0);
     u16 abilityDef = GetMonAbility(mon);
     u16 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
-    u8 type1 = gSpeciesInfo[speciesDef].types[0];
-    u8 type2 = gSpeciesInfo[speciesDef].types[1];
+    u8 type1 = GetSpeciesType(speciesDef, 0);
+    u8 type2 = GetSpeciesType(speciesDef, 1);
 
     if (moveType != TYPE_MYSTERY)
     {
@@ -10194,12 +10195,7 @@ bool32 TryClearIllusion(u32 battler, u32 caseID)
 struct Pokemon *GetIllusionMonPtr(u32 battler)
 {
     if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)
-    {
-        if (IsOnPlayerSide(battler))
-            SetIllusionMon(GetBattlerMon(battler), battler);
-        else
-            SetIllusionMon(GetBattlerMon(battler), battler);
-    }
+        SetIllusionMon(GetBattlerMon(battler), battler);
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return NULL;
 
@@ -10775,8 +10771,8 @@ void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon)
 void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
 {
     gBattleMons[battler].ability = GetMonAbility(mon);
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];
+    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
+    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 }
 
@@ -10955,8 +10951,8 @@ bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon)
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
     u16 monAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM, NULL);
 
-    bool8 hasLevitateAbility = gSpeciesInfo[species].abilities[monAbilityNum] == ABILITY_LEVITATE;
-    bool8 isFlyingType = gSpeciesInfo[species].types[0] == TYPE_FLYING || gSpeciesInfo[species].types[1] == TYPE_FLYING;
+    bool8 hasLevitateAbility = GetSpeciesAbility(species, monAbilityNum) == ABILITY_LEVITATE;
+    bool8 isFlyingType = GetSpeciesType(species, 0) == TYPE_FLYING || GetSpeciesType(species, 1) == TYPE_FLYING;
     bool8 monIsValidAndNotEgg = GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(mon, MON_DATA_IS_EGG);
 
     if (monIsValidAndNotEgg)

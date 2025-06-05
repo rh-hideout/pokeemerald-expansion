@@ -64,6 +64,7 @@
 #define B_ACTION_FINISHED               12
 #define B_ACTION_CANCEL_PARTNER         12 // when choosing an action
 #define B_ACTION_NOTHING_FAINTED        13 // when choosing an action
+#define B_ACTION_UNK_14                 14
 #define B_ACTION_DEBUG                  20
 #define B_ACTION_THROW_BALL             21 // R to throw last used ball
 #define B_ACTION_NONE                   0xFF
@@ -852,11 +853,11 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;    \
 }
 
-#define RESTORE_BATTLER_TYPE(battler)                                                      \
-{                                                                                          \
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];   \
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];   \
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                          \
+#define RESTORE_BATTLER_TYPE(battler)                                                \
+{                                                                                    \
+    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0); \
+    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1); \
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4

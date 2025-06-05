@@ -50,7 +50,6 @@
 #include "text_window.h"
 #include "wild_encounter.h"
 #include "window.h"
-#include "constants/map_types.h"
 #include "constants/species.h"
 #include "constants/maps.h"
 #include "constants/field_effects.h"
@@ -614,7 +613,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
     bool8 nextIter;
     u8 scale = 0;
     u8 weight = 0;
-    u8 currMapType = GetCurrentMapType();
+    enum MapType currMapType = GetCurrentMapType();
     u8 tileBehaviour;
     u8 tileBuffer = 2;
     u8 *xPos = AllocZeroed((botX - topX) * (botY - topY) * sizeof(u8));
@@ -726,7 +725,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
 
 static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan)
 {
-    u8 currMapType = GetCurrentMapType();
+    enum MapType currMapType = GetCurrentMapType();
     u8 fldEffId = 0;
 
     if (DexNavPickTile(environment, xSize, ySize, smallScan))
@@ -1403,7 +1402,7 @@ static u8 DexNavGetAbilityNum(u16 species, u8 searchLevel)
     }
 
     if (genAbility
-            && gSpeciesInfo[species].abilities[2] != ABILITY_NONE
+            && GetSpeciesAbility(species, 2) != ABILITY_NONE
             && GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
     {
         //Only give hidden ability if Pokemon has been caught before
@@ -1412,7 +1411,7 @@ static u8 DexNavGetAbilityNum(u16 species, u8 searchLevel)
     else
     {
         //Pick a normal ability of that Pokemon
-        if (gSpeciesInfo[species].abilities[1] != ABILITY_NONE)
+        if (GetSpeciesAbility(species, 1) != ABILITY_NONE)
             abilityNum = Random() & 1;
         else
             abilityNum = 0;
@@ -2139,8 +2138,8 @@ static void PrintCurrentSpeciesInfo(void)
         AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, SPECIES_INFO_Y, sFontColor_Black, 0, GetSpeciesName(species));
 
     //type icon(s)
-    type1 = gSpeciesInfo[species].types[0];
-    type2 = gSpeciesInfo[species].types[1];
+    type1 = GetSpeciesType(species, 0);
+    type2 = GetSpeciesType(species, 1);
     if (species == SPECIES_NONE)
         type1 = type2 = TYPE_MYSTERY;
 
@@ -2173,8 +2172,8 @@ static void PrintCurrentSpeciesInfo(void)
     }
     else if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
     {
-        if (gSpeciesInfo[species].abilities[2] != ABILITY_NONE)
-            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, gAbilitiesInfo[gSpeciesInfo[species].abilities[2]].name);
+        if (GetSpeciesAbility(species, 2) != ABILITY_NONE)
+            AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, gAbilitiesInfo[GetSpeciesAbility(species, 2)].name);
         else
             AddTextPrinterParameterized3(WINDOW_INFO, 0, 0, HA_INFO_Y, sFontColor_Black, 0, gText_None);
     }
