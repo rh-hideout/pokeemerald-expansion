@@ -4,6 +4,7 @@
 #include "contest_effect.h"
 #include "sprite.h"
 #include "constants/battle.h"
+#include "constants/cries.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
@@ -394,7 +395,7 @@ struct SpeciesInfo /*0xC4*/
     // Pokédex data
     u8 categoryName[13];
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
-    u16 cryId;
+    enum PokemonCry cryId:16;
     enum NationalDexOrder natDexNum:16;
     u16 height; //in decimeters
     u16 weight; //in hectograms
@@ -820,7 +821,7 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
 u8 CalculatePartyCount(struct Pokemon *party);
 u16 SanitizeSpeciesId(u16 species);
 bool32 IsSpeciesEnabled(u16 species);
-u16 GetCryIdBySpecies(u16 species);
+enum PokemonCry GetCryIdBySpecies(u16 species);
 u16 GetSpeciesPreEvolution(u16 species);
 void HealPokemon(struct Pokemon *mon);
 void HealBoxPokemon(struct BoxPokemon *boxMon);

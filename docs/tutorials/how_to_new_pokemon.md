@@ -314,7 +314,8 @@ Cry_Pecharunt::
 Then we add the cry ID to [include/constants/cries.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/constants/cries.h):
 
 ```diff
-enum {
+enum PokemonCry
+{
     CRY_NONE,
     ...
 #if P_FAMILY_TERAPAGOS
