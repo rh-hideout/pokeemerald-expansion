@@ -33,7 +33,8 @@
     "gMapGroup_IndoorRoute113",
     "gMapGroup_IndoorRoute123",
     "gMapGroup_IndoorRoute119",
-    "gMapGroup_IndoorRoute124"
+    "gMapGroup_IndoorRoute124",
+    "gMapGroup_IndoorSpragholt"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",
@@ -93,7 +94,11 @@
     "Underwater_Route129",
     "Underwater_Route105",
     "Underwater_Route125",
-    "TestCamp"
+    "TestCamp",
+    "Town_Spragholt",
+    "Route01",
+    "Route05",
+    "Route06"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",
@@ -430,7 +435,8 @@
     "TerraCave_Entrance",
     "TerraCave_End",
     "AlteringCave",
-    "MeteorFalls_StevensCave"
+    "MeteorFalls_StevensCave",
+    "Hargwald"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",
@@ -621,5 +627,10 @@
   ],
   "gMapGroup_IndoorRoute124": [
     "Route124_DivingTreasureHuntersHouse"
+  ],
+  "gMapGroup_IndoorSpragholt": [
+    "Spragholt_PlayerHome",
+    "Spragholt_ShamanCave",
+    "Spragholt_Cave3"
   ]
 }

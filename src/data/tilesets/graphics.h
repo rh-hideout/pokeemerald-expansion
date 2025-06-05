@@ -1653,3 +1653,41 @@ const u16 gTilesetPalettes_TestCamp[][16] =
 };
 
 const u32 gTilesetTiles_TestCamp[] = INCBIN_U32("data/tilesets/primary/test_camp/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_NorthCave[][16] =
+{
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/primary/north_cave/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_NorthCave[] = INCBIN_U32("data/tilesets/primary/north_cave/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Forest[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/forest/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Forest[] = INCBIN_U32("data/tilesets/secondary/forest/tiles.4bpp.lz");

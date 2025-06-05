@@ -4420,6 +4420,86 @@
       "secondary_tileset": "gTileset_LavaridgeGym",
       "border_filepath": "data/layouts/TestCamp/border.bin",
       "blockdata_filepath": "data/layouts/TestCamp/map.bin"
+    },
+    {
+      "id": "LAYOUT_SPRAGHOLT_PLAYER_HOME",
+      "name": "Spragholt_PlayerHome_Layout",
+      "width": 12,
+      "height": 12,
+      "primary_tileset": "gTileset_NorthCave",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Spragholt_PlayerHome/border.bin",
+      "blockdata_filepath": "data/layouts/Spragholt_PlayerHome/map.bin"
+    },
+    {
+      "id": "LAYOUT_TOWN_SPRAGHOLT",
+      "name": "Town_Spragholt_Layout",
+      "width": 22,
+      "height": 22,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Town_Spragholt/border.bin",
+      "blockdata_filepath": "data/layouts/Town_Spragholt/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE01",
+      "name": "Route01_Layout",
+      "width": 36,
+      "height": 16,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Route01/border.bin",
+      "blockdata_filepath": "data/layouts/Route01/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE05",
+      "name": "Route05_Layout",
+      "width": 20,
+      "height": 44,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Route05/border.bin",
+      "blockdata_filepath": "data/layouts/Route05/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE06",
+      "name": "Route06_Layout",
+      "width": 32,
+      "height": 20,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Route06/border.bin",
+      "blockdata_filepath": "data/layouts/Route06/map.bin"
+    },
+    {
+      "id": "LAYOUT_SPRAGHOLT_SHAMAN_CAVE",
+      "name": "Spragholt_ShamanCave_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_NorthCave",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Spragholt_ShamanCave/border.bin",
+      "blockdata_filepath": "data/layouts/Spragholt_ShamanCave/map.bin"
+    },
+    {
+      "id": "LAYOUT_SPRAGHOLT_CAVE3",
+      "name": "Spragholt_Cave3_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_NorthCave",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Spragholt_Cave3/border.bin",
+      "blockdata_filepath": "data/layouts/Spragholt_Cave3/map.bin"
+    },
+    {
+      "id": "LAYOUT_HARGWALD",
+      "name": "Hargwald_Layout",
+      "width": 32,
+      "height": 32,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Forest",
+      "border_filepath": "data/layouts/Hargwald/border.bin",
+      "blockdata_filepath": "data/layouts/Hargwald/map.bin"
     }
   ]
 }

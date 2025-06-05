@@ -1154,3 +1154,19 @@ EventScript_VsSeekerChargingDone::
 	.include "data/text/birch_speech.inc"
 
 	.include "data/maps/TestCamp/scripts.inc"
+
+	.include "data/maps/Spragholt_PlayerHome/scripts.inc"
+
+	.include "data/maps/Town_Spragholt/scripts.inc"
+
+	.include "data/maps/Route01/scripts.inc"
+
+	.include "data/maps/Route05/scripts.inc"
+
+	.include "data/maps/Route06/scripts.inc"
+
+	.include "data/maps/Spragholt_ShamanCave/scripts.inc"
+
+	.include "data/maps/Spragholt_Cave3/scripts.inc"
+
+	.include "data/maps/Hargwald/scripts.inc"
