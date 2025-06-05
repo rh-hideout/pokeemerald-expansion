@@ -5951,7 +5951,7 @@ static enum ItemEffect TrySetEnigmaBerry(u32 battler)
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, u8 category)
+static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, enum DamageCategory category)
 {
     if (IsBattlerAlive(battler)
      && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN)
@@ -10274,7 +10274,7 @@ bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, u32 battler)
     return FALSE;
 }
 
-static u32 SwapMoveDamageCategory(u32 move)
+static enum DamageCategory SwapMoveDamageCategory(u32 move)
 {
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
         return DAMAGE_CATEGORY_SPECIAL;
@@ -10286,7 +10286,7 @@ static u32 SwapMoveDamageCategory(u32 move)
     can be removed but a lot of function arguments (battlerAtk and battlerDef) have to be added for this, about 50+.
     This is potentially a good change because it is less likely to cause bugs in the future.
 */
-u32 GetBattleMoveCategory(u32 move)
+enum DamageCategory GetBattleMoveCategory(u32 move)
 {
     if (gMain.inBattle)
     {
@@ -10376,7 +10376,7 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
 }
 
 // Photon Geyser, Light That Burns the Sky, Tera Blast
-u8 GetCategoryBasedOnStats(u32 battler)
+enum DamageCategory GetCategoryBasedOnStats(u32 battler)
 {
     u32 attack = gBattleMons[battler].attack;
     u32 spAttack = gBattleMons[battler].spAttack;

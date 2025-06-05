@@ -590,7 +590,7 @@ static void Task_SwitchScreensFromFormsScreen(u8 taskId);
 static void Task_ExitFormsScreen(u8 taskId);
 
 //Physical/Special/Status category icon
-static u8 ShowCategoryIcon(u32 category);
+static u8 ShowCategoryIcon(enum DamageCategory category);
 static void DestroyCategoryIcon(void);
 
 static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
@@ -4701,7 +4701,7 @@ static void LoadTilesetTilemapHGSS(u8 page)
 }
 
 //Physical/Special/Status category
-static u8 ShowCategoryIcon(u32 category)
+static u8 ShowCategoryIcon(enum DamageCategory category)
 {
     if (sPokedexView->categoryIconSpriteId == 0xFF)
         sPokedexView->categoryIconSpriteId = CreateSprite(&gSpriteTemplate_CategoryIcons, 139, 90, 0);

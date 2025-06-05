@@ -218,9 +218,12 @@
 #define EV_ITEM_RAISE_LIMIT ((I_VITAMIN_EV_CAP >= GEN_8) ? MAX_PER_STAT_EVS : 100)
 
 // Move category defines.
-#define DAMAGE_CATEGORY_PHYSICAL    0
-#define DAMAGE_CATEGORY_SPECIAL     1
-#define DAMAGE_CATEGORY_STATUS      2
+enum DamageCategory
+{
+    DAMAGE_CATEGORY_PHYSICAL,
+    DAMAGE_CATEGORY_SPECIAL,
+    DAMAGE_CATEGORY_STATUS
+};
 
 // Growth rates
 enum GrowthRate
