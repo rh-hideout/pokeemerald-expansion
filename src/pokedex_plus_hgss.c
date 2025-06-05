@@ -354,7 +354,7 @@ struct PokemonStats
     u8  evYield_Defense;
     u8  evYield_SpDefense;
     u8  catchRate;
-    u8  growthRate;
+    enum GrowthRate growthRate:8;
     u8  eggGroup1;
     u8  eggGroup2;
     u8  eggCycles;
@@ -5622,7 +5622,7 @@ static void PrintStatsScreen_Left(u8 taskId)
     if (gTasks[taskId].data[5] == 0)
     {
         u32 catchRate = sPokedexView->sPokemonStats.catchRate;
-        u32 growthRate = sPokedexView->sPokemonStats.growthRate;
+        enum GrowthRate growthRate = sPokedexView->sPokemonStats.growthRate;
 
         //Catch rate
         PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate, base_x, base_y + base_y_offset*base_i);

@@ -223,12 +223,15 @@
 #define DAMAGE_CATEGORY_STATUS      2
 
 // Growth rates
-#define GROWTH_MEDIUM_FAST  0
-#define GROWTH_ERRATIC      1
-#define GROWTH_FLUCTUATING  2
-#define GROWTH_MEDIUM_SLOW  3
-#define GROWTH_FAST         4
-#define GROWTH_SLOW         5
+enum GrowthRate
+{
+    GROWTH_MEDIUM_FAST,
+    GROWTH_ERRATIC,
+    GROWTH_FLUCTUATING,
+    GROWTH_MEDIUM_SLOW,
+    GROWTH_FAST,
+    GROWTH_SLOW,
+};
 
 // Body colors for Pokédex search
 enum BodyColor
