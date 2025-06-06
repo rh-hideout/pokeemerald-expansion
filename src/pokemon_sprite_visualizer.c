@@ -925,7 +925,7 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
 }
 
 //Battle background functions
-static void LoadBattleBg(u8 battleBgType, enum BattleEnvironment battleEnvironment)
+static void LoadBattleBg(u8 battleBgType, enum BattleEnvironments battleEnvironment)
 {
     switch (battleBgType)
     {

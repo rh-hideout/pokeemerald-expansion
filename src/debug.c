@@ -340,7 +340,7 @@ struct DebugBattleData
 {
     u8 submenu;
     u8 battleType;
-    enum BattleEnvironment battleEnvironment;
+    enum BattleEnvironments battleEnvironment;
     bool8 aiFlags[AI_FLAG_COUNT];
 };
 

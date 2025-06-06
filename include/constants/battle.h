@@ -475,7 +475,7 @@ enum MoveEffects
 #define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
-enum BattleEnvironment
+enum BattleEnvironments
 {
     BATTLE_ENVIRONMENT_GRASS,
     BATTLE_ENVIRONMENT_LONG_GRASS,
