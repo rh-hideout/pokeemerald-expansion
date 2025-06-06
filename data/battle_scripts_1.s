@@ -8234,7 +8234,9 @@ BattleScript_WanderingSpiritActivates::
 	printstring STRINGID_SWAPPEDABILITIES
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
+	jumpiffainted BS_TARGET, TRUE, BattleScript_WanderingSpiritActivatesRet
 	switchinabilities BS_TARGET
+BattleScript_WanderingSpiritActivatesRet:
 	return
 
 BattleScript_TargetsStatWasMaxedOut::
