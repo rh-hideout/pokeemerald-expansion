@@ -377,29 +377,77 @@ gBattleAnimMove_CloseCombat::
 	loadspritegfx ANIM_TAG_HANDS_AND_FEET
 	call SetHighSpeedBg
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_COMET_PUNCH, +63
-	delay 10
+	delay 2
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_VITAL_THROW2, +63
-	delay 10
+	delay 2
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_MEGA_KICK2, +63
-	delay 10
+	delay 2
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_COMET_PUNCH, +63
-	delay 10
+	delay 2
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_VITAL_THROW2, +63
-	delay 10
+	delay 2
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 7, 1
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_MEGA_KICK2, +63
-	delay 10
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_COMET_PUNCH, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_VITAL_THROW2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_MEGA_KICK2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_COMET_PUNCH, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_VITAL_THROW2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_MEGA_KICK2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_COMET_PUNCH, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_VITAL_THROW2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_MEGA_KICK2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_COMET_PUNCH, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_VITAL_THROW2, +63
+	delay 2
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
+	playsewithpan SE_M_MEGA_KICK2, +63
+	delay 1
 	call UnsetHighSpeedBg
 	clearmonbg ANIM_TARGET
 	blendoff
