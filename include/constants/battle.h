@@ -170,9 +170,8 @@ enum VolatileFlags
     F(VOLATILE_FOCUS_ENERGY, (u32, 1), focusEnergy, V_BATON_PASSABLE, "Focus Energy")
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
-#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE(GET_VOLATILE_MAXIMUM_, INVOKE_WITH_B(FIRST, _typeBitSize), DEFAULT(INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_FROM_TYPE, _typeBitSize), INVOKE_WITH_B(SECOND, FIRST(__VA_ARGS__))))
-#define GET_VOLATILE_MAXIMUM_FROM_TYPE(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
-#define GET_VOLATILE_MAXIMUM_(_typeMax, ...) FIRST(__VA_OPT__(__VA_ARGS__,) _typeMax)
+#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE(DEFAULT, INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize) __VA_OPT__(,INVOKE_WITH_B(SECOND, FIRST(__VA_ARGS__))))
+#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
 
 #define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
 
