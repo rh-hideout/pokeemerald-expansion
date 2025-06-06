@@ -72,41 +72,63 @@ enum {
 // (e.g. MarkBattlerForControllerExec) instead of using these macros
 // directly.
 
-#define MARK_BATTLE_CONTROLLER_ACTIVE_ON_LOCAL(battler) \
-   gBattleControllerExecFlags |= (1u << battler)
+static inline void MarkBattleControllerActiveOnLocal(u32 battler)
+{
+    gBattleControllerExecFlags |= (1u << battler);
+}
 
-#define MARK_BATTLE_CONTROLLER_IDLE_ON_LOCAL(battler) \
-   gBattleControllerExecFlags &= ~(1u << battler)
+static inline void MarkBattleControllerIdleOnLocal(u32 battler)
+{
+    gBattleControllerExecFlags &= ~(1u << battler);
+}
 
-#define IS_BATTLE_CONTROLLER_ACTIVE_ON_LOCAL(battler) \
-   (gBattleControllerExecFlags & (1u << battler))
+static inline bool32 IsBattleControllerActiveOnLocal(u32 battler)
+{
+    return gBattleControllerExecFlags & (1u << battler);
+}
 
-#define MARK_BATTLE_CONTROLLER_MESSAGE_OUTBOUND_OVER_LINK(battler) \
-   gBattleControllerExecFlags |= ((1u << battler) << (32 - MAX_BATTLERS_COUNT))
+static inline void MarkBattleControllerMessageOutboundOverLink(u32 battler)
+{
+    gBattleControllerExecFlags |= ((1u << battler) << (32 - MAX_BATTLERS_COUNT));
+}
 
-#define MARK_BATTLE_CONTROLLER_MESSAGE_SYNCHRONIZED_OVER_LINK(battler) \
-   gBattleControllerExecFlags &= ~((1 << 28) << (battler))
+static inline void MarkBattleControllerMessageSynchronizedOverLink(u32 battler)
+{
+    gBattleControllerExecFlags &= ~((1 << 28) << (battler));
+}
 
-#define MARK_BATTLE_CONTROLLER_ACTIVE_FOR_PLAYER(battler, playerId) \
-   gBattleControllerExecFlags |= ((1u << battler) << ((playerId) << 2))
+static inline bool32 IsBattleControllerMessageSynchronizedOverLink(u32 battler)
+{
+    return gBattleControllerExecFlags & (1u << (battler + 28));
+}
 
-#define MARK_BATTLE_CONTROLLER_IDLE_FOR_PLAYER(battler, playerId) \
-   gBattleControllerExecFlags &= ~((1u << battler) << ((playerId) * 4))
+static inline void MarkBattleControllerActiveForPlayer(u32 battler, u32 playerId)
+{
+    gBattleControllerExecFlags |= ((1u << battler) << ((playerId) << 2));
+}
 
-#define IS_BATTLE_CONTROLLER_ACTIVE_FOR_PLAYER(battler, playerId) \
-   (gBattleControllerExecFlags & ((1u << battler) << ((playerId) * 4)))
+static inline void MarkBattleControllerIdleForPlayer(u32 battler, u32 playerId)
+{
+    gBattleControllerExecFlags &= ~((1u << battler) << ((playerId) * 4));
+}
+
+static inline bool32 IsBattleControllerActiveForPlayer(u32 battler, u32 playerId)
+{
+    return gBattleControllerExecFlags & ((1u << battler) << ((playerId) * 4));
+}
 
 // This actually checks if a specific controller is active on any player or if
 // *any* controller is pending sync over link communications, but the macro name
 // can only be so specific before it just gets ridiculous.
-#define IS_BATTLE_CONTROLLER_ACTIVE_OR_PENDING_SYNC_ANYWHERE(battler) \
-   (gBattleControllerExecFlags & ( \
-      (1u << battler)              \
-    | (0xF << 28)                  \
-    | (1u << battler << 4)         \
-    | (1u << battler << 8)         \
-    | (1u << battler << 12)        \
-   ))
+static inline bool32 IsBattleControllerActiveOrPendingSyncAnywhere(u32 battler)
+{
+   return gBattleControllerExecFlags & (
+                  (1u << battler)
+                | (0xF << 28)
+                | (1u << battler << 4)
+                | (1u << battler << 8)
+                | (1u << battler << 12));
+}
 
 // Special arguments for Battle Controller functions.
 
