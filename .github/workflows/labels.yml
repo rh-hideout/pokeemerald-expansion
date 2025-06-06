@@ -6,7 +6,7 @@ on:
 
 jobs:
   label:
-    if: github.actor != 'allcontributors'
+    if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: check labels
@@ -29,7 +29,7 @@ jobs:
             category: sprite-issue
             type: documentation
   allcontributors:
-    if: github.actor == 'allcontributors'
+    if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest
     needs: []
     steps:
