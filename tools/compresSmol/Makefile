@@ -1,11 +1,11 @@
 CXX ?= g++
 
-CXXFLAGS := -Werror -std=c++17 -pthread -O2 -fsanitize=address -fsanitize-trap
+CXXFLAGS := -Werror -std=c++17 -O2
 
 INCLUDES := -I .
 
-SRCS := compresSmol.cpp compressAlgoNew.cpp tANS.cpp
-TILEMAP_SRCS := mainTiles.cpp compressSmolTiles.cpp tANS.cpp compressAlgoNew.cpp
+SRCS := compresSmol.cpp compressAlgo.cpp tANS.cpp
+TILEMAP_SRCS := mainTiles.cpp compressSmolTiles.cpp tANS.cpp compressAlgo.cpp
 
 HEADERS := compressAlgo.h tANS.h
 TILEMAP_HEADERS := compressSmolTiles.h tANS.h compressAlgo.h

@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
         CompressionResult compression = compressTileset(inputName);
         if (compression.failed)
             return 1;
-        //std::ofstream fileOut(outputName, std::ios::out | std::ios::binary);
-        //fileOut.write(reinterpret_cast<const char *>(compression.writeVec.data()), compression.writeVec.size()*4);
-        //fileOut.close();
+        std::ofstream fileOut(outputName, std::ios::out | std::ios::binary);
+        fileOut.write(reinterpret_cast<const char *>(compression.writeVec.data()), compression.writeVec.size()*4);
+        fileOut.close();
         return 0;
     }
     /*
