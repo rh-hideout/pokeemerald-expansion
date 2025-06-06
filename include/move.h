@@ -2,6 +2,7 @@
 #define GUARD_MOVES_H
 
 #include "contest_effect.h"
+#include "constants/battle.h"
 #include "constants/battle_move_effects.h"
 #include "constants/moves.h"
 
@@ -113,6 +114,9 @@ struct MoveInfo
     bool32 ignoresSubstitute:1;
     bool32 forcePressure:1;
     bool32 cantUseTwice:1;
+    bool32 alwaysHitsInRain:1;
+    bool32 accuracy50InSun:1;
+    bool32 alwaysHitsInHailSnow:1;
     // Ban flags
     bool32 gravityBanned:1;
     bool32 mirrorMoveBanned:1;
@@ -129,7 +133,7 @@ struct MoveInfo
     bool32 sketchBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:10;
+    u32 padding:7;
     // end of word
 
     union {
@@ -143,6 +147,7 @@ struct MoveInfo
         u32 holdEffect;
         u32 type;
         u32 fixedDamage;
+        u32 damagePercentage;
         u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
@@ -389,6 +394,21 @@ static inline bool32 MoveCantBeUsedTwice(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].cantUseTwice;
 }
 
+static inline bool32 MoveAlwaysHitsInRain(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].alwaysHitsInRain;
+}
+
+static inline bool32 MoveHas50AccuracyInSun(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].accuracy50InSun;
+}
+
+static inline bool32 MoveAlwaysHitsInHailSnow(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].alwaysHitsInHailSnow;
+}
+
 static inline bool32 IsMoveGravityBanned(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].gravityBanned;
@@ -474,7 +494,7 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
-static inline u32 GetMoveProtectMethod(u32 moveId)
+static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
 }
@@ -499,7 +519,7 @@ static inline u32 GetMoveArgType(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.type;
 }
 
-static inline u32 GetMoveFixedDamage(u32 moveId)
+static inline u32 GetMoveFixedHPDamage(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.fixedDamage;
 }
@@ -517,9 +537,23 @@ static inline u32 GetMoveRecoil(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.recoilPercentage;
 }
 
-static inline u32 GetMoveNonVolatileStatus(u32 moveId)
+static inline u32 GetMoveNonVolatileStatus(u32 move)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].argument.nonVolatileStatus;
+    move = SanitizeMoveId(move);
+    switch(GetMoveEffect(move))
+    {
+    case EFFECT_NON_VOLATILE_STATUS:
+    case EFFECT_YAWN:
+    case EFFECT_DARK_VOID:
+        return gMovesInfo[move].argument.nonVolatileStatus;
+    default:
+        return MOVE_EFFECT_NONE;
+    }
+}
+
+static inline u32 GetMoveDamagePercentage(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

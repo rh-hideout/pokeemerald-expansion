@@ -76,6 +76,7 @@ static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a differen
 {
     if (gMovesInfo[move].effect == EFFECT_TELEPORT
      || gMovesInfo[move].effect == EFFECT_EXPLOSION
+     || gMovesInfo[move].effect == EFFECT_MISTY_EXPLOSION
      || gMovesInfo[move].effect == EFFECT_BATON_PASS
      || gMovesInfo[move].effect == EFFECT_MEMENTO
      || gMovesInfo[move].effect == EFFECT_HEALING_WISH

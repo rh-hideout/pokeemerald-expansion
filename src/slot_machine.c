@@ -5015,9 +5015,9 @@ static void LoadSlotMachineGfx(void)
 
     LoadReelBackground();
     sDigitalDisplayGfxPtr = Alloc(0x3200);
-    LZDecompressWram(gSlotMachineDigitalDisplay_Gfx, sDigitalDisplayGfxPtr);
+    DecompressDataWithHeaderWram(gSlotMachineDigitalDisplay_Gfx, sDigitalDisplayGfxPtr);
     sReelTimeGfxPtr = Alloc(0x3600);
-    LZDecompressWram(sReelTimeGfx, sReelTimeGfxPtr);
+    DecompressDataWithHeaderWram(sReelTimeGfx, sReelTimeGfxPtr);
     sSlotMachineSpritesheetsPtr = AllocZeroed(sizeof(struct SpriteSheet) * ARRAY_COUNT(sSlotMachineSpriteSheets));
     for (i = 0; i < ARRAY_COUNT(sSlotMachineSpriteSheets); i++)
     {
@@ -5055,7 +5055,7 @@ static void LoadReelBackground(void)
 static void LoadMenuGfx(void)
 {
     sMenuGfx = Alloc(0x2200);
-    LZDecompressWram(gSlotMachineMenu_Gfx, sMenuGfx);
+    DecompressDataWithHeaderWram(gSlotMachineMenu_Gfx, sMenuGfx);
     LoadBgTiles(2, sMenuGfx, 0x2200, 0);
     LoadPalette(gSlotMachineMenu_Pal, BG_PLTT_ID(0), 5 * PLTT_SIZE_4BPP);
     LoadPalette(sUnkPalette, BG_PLTT_ID(13), PLTT_SIZE_4BPP);
@@ -7945,6 +7945,6 @@ static const struct SpritePalette sSlotMachineSpritePalettes[] =
     {}
 };
 
-static const u32 sReelTimeGfx[] = INCBIN_U32("graphics/slot_machine/reel_time_gfx.4bpp.lz"); // reel_time_machine and reel_time_pikachu
+static const u32 sReelTimeGfx[] = INCBIN_U32("graphics/slot_machine/reel_time_gfx.4bpp.smol"); // reel_time_machine and reel_time_pikachu
 static const u16 sReelTimeWindow_Tilemap[] = INCBIN_U16("graphics/slot_machine/reel_time_window.bin");
 static const u16 sEmptyTilemap[] =  {0};
