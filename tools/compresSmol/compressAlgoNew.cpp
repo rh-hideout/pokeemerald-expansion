@@ -105,27 +105,18 @@ bool verifyShortCopies(std::vector<ShortCopy> *pCopies, std::vector<unsigned sho
         if (copy.offset != 0)
         {
             if (copy.firstSymbol != (*pImage)[copy.index - 1])
-            {
-                printf("firstSym fail\n");
                 return false;
-            }
 
             for (size_t i = 0; i < copy.length; i++)
             {
                 if ((*pImage)[copy.index + i] != (*pImage)[copy.index + i - copy.offset])
-                {
-                    printf("other failure\n");
                     return false;
-                }
             }
         }
     }
     //printf("%zu\n", totalLength);
     if (totalLength != pImage->size())
-    {
-        printf("length failure\n");
         return false;
-    }
 
     return true;
 }
@@ -619,13 +610,14 @@ int findInitialState(EncodeCol *encodeCol, unsigned char firstSymbol)
     return -1;
 }
 
-size_t decodeNibbles(std::vector<DecodeCol> decodeTable, std::vector<unsigned int> *bits, int *currState, std::vector<unsigned char> *nibbleVec, size_t currBitIndex, size_t numNibbles)
+size_t decodeNibbles(std::vector<DecodeCol> decodeTable, std::vector<unsigned int> *bits, int *currState, std::vector<unsigned char> *nibbleVec, size_t currBitIndex, size_t numNibbles, bool lastThing)
 {
     for (size_t i = 0; i < numNibbles; i++)
     {
         (*nibbleVec)[i] = decodeTable[*currState].symbol;
 
-        if (currBitIndex >= bits->size())
+        if (i + 1 == nibbleVec->size() && lastThing)
+        //if (currBitIndex >= bits->size())
             return currBitIndex;
 
         int currK = decodeTable[*currState].k;
@@ -753,8 +745,9 @@ bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned sh
 
     if (loEncoded)
     {
+        bool lastThing = !symEncoded;
         std::vector<unsigned char> checkLoNibbles(loNibbles.size());
-        currBitIndex = decodeNibbles(loDecode, &checkBits, &checkState, &checkLoNibbles, currBitIndex, loNibbles.size());
+        currBitIndex = decodeNibbles(loDecode, &checkBits, &checkState, &checkLoNibbles, currBitIndex, loNibbles.size(), lastThing);
         for (size_t i = 0; i < loNibbles.size(); i++)
         {
             if (loNibbles[i] != checkLoNibbles[i])
@@ -768,7 +761,7 @@ bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned sh
     if (symEncoded)
     {
         std::vector<unsigned char> checkSymNibbles(symNibbles.size());
-        currBitIndex = decodeNibbles(symDecode, &checkBits, &checkState, &checkSymNibbles, currBitIndex, symNibbles.size());
+        currBitIndex = decodeNibbles(symDecode, &checkBits, &checkState, &checkSymNibbles, currBitIndex, symNibbles.size(), true);
         for (size_t i = 0; i < symNibbles.size(); i++)
         {
             if (symNibbles[i] != checkSymNibbles[i])
@@ -906,7 +899,7 @@ DataVecs decodeDataVectorsNew(CompressedImage *pInput)
     int currState = pInput->initialState;
     if (loEncoded)
     {
-        bitIndex = decodeNibbles(loDecode, &allBits, &currState, &loNibbles, bitIndex, loSize*2);
+        bitIndex = decodeNibbles(loDecode, &allBits, &currState, &loNibbles, bitIndex, loSize*2, !symEncoded);
     }
     if (loEncoded)
         for (size_t i = 0; i < loVec.size(); i++)
@@ -914,7 +907,7 @@ DataVecs decodeDataVectorsNew(CompressedImage *pInput)
 
     if (symEncoded)
     {
-        bitIndex = decodeNibbles(symDecode, &allBits, &currState, &symNibbles, bitIndex, symSize*4);
+        bitIndex = decodeNibbles(symDecode, &allBits, &currState, &symNibbles, bitIndex, symSize*4, true);
         if (symDelta)
             deltaDecode(&symNibbles, symNibbles.size());
     }
@@ -1119,14 +1112,14 @@ void readRawDataVecs(std::vector<unsigned int> *pInput, std::vector<unsigned sho
     if (loEncoded)
     {
         std::vector<unsigned char> loNibbles(readImage.loSize*2);
-        bitIndex = decodeNibbles(loDecode, &allBits, &currState, &loNibbles, bitIndex, readImage.loSize*2);
+        bitIndex = decodeNibbles(loDecode, &allBits, &currState, &loNibbles, bitIndex, readImage.loSize*2, !symEncoded);
         for (size_t i = 0; i < readImage.loSize; i++)
             loVec[i] = loNibbles[2*i] + (loNibbles[2*i + 1] << 4);
     }
     if (symEncoded)
     {
         std::vector<unsigned char> symNibbles(readImage.symSize*4);
-        bitIndex = decodeNibbles(symDecode, &allBits, &currState, &symNibbles, bitIndex, readImage.symSize*4);
+        bitIndex = decodeNibbles(symDecode, &allBits, &currState, &symNibbles, bitIndex, readImage.symSize*4, true);
         if (symDelta)
             deltaDecode(&symNibbles, symNibbles.size());
         for (size_t i = 0; i < readImage.symSize; i++)
@@ -1204,7 +1197,7 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
     std::vector<unsigned short> bestSym;
     std::vector<ShortCompressionInstruction> bestInstructions;
 
-    for (size_t minCodeLength = 2; minCodeLength <= 3; minCodeLength++)
+    for (size_t minCodeLength = 2; minCodeLength <= 15; minCodeLength++)
     {
         std::vector<ShortCopy> shortCopies;
         if (!getShortCopies(&usBase, minCodeLength, &shortCopies))

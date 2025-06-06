@@ -103,10 +103,6 @@ int main(int argc, char *argv[])
     if (printUsage)
     {
         printf("Usage:\n\
-                %s -a \"path/to/some/directory\"\n\
-                    Analyses all images currently in .4bpp.lz format and compares with this compression.\n\
-                    -t <number> can be appended to this mode to specify how many threads to use.\n\
-                \n\
                 %s -w \"path/to/some/file.4bpp\" \"path/to/some/file.4bpp.smol\"\
                     Compresses the first argument and writes the result to the second argument.\n\
                 These modes can also be appended with 4 true/false statements that control the following settings of the compression:\n\
@@ -129,16 +125,16 @@ int main(int argc, char *argv[])
                 image = processImageFrames(input, settings);
             else
                 image = processImage(input, settings);
-            //if (image.isValid)
-            //{
-            //    std::ofstream fileOut(output.c_str(), std::ios::out | std::ios::binary);
-            //    fileOut.write(reinterpret_cast<const char *>(image.writeVec.data()), image.writeVec.size()*4);
-            //    fileOut.close();
-            //}
-            //else
-            //{
-            //    fprintf(stderr, "Failed to compress image %s\n", image.fileName.c_str());
-            //}
+            if (image.isValid)
+            {
+                std::ofstream fileOut(output.c_str(), std::ios::out | std::ios::binary);
+                fileOut.write(reinterpret_cast<const char *>(image.writeVec.data()), image.writeVec.size()*4);
+                fileOut.close();
+            }
+            else
+            {
+                fprintf(stderr, "Failed to compress image %s\n", image.fileName.c_str());
+            }
         }
         else
         {
