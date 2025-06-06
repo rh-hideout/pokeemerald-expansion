@@ -8,7 +8,6 @@ ASSUMPTIONS
 
 DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user from primary status effects")
 {
-    KNOWN_FAILING; // For some reason, this test passes locally but fails in the CI build pipeline. Potentially caused by #7011 (https://github.com/rh-hideout/pokeemerald-expansion/pull/7011)
     u32 j, move, status;
     PARAMETRIZE { move = MOVE_HEAL_BELL;    status = STATUS1_SLEEP; }
     PARAMETRIZE { move = MOVE_AROMATHERAPY; status = STATUS1_SLEEP; }
