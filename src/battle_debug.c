@@ -2135,7 +2135,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
-#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeBitSize, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize)); break;
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeMaxValue, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeMaxValue)); break;
         switch (data->currentSecondaryListItemId)
         {
             VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
