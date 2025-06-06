@@ -6014,7 +6014,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
             gBattleStruct->ateBoost[battler] = TRUE;
         return ateType;
     }
-    else if (moveEffect != EFFECT_CHANGE_TYPE_ON_ITEM // Judgment, Techno Blast, Multi-Attack
+    else if (moveEffect != EFFECT_CHANGE_TYPE_ON_ITEM
           && moveEffect != EFFECT_TERRAIN_PULSE
           && moveEffect != EFFECT_NATURAL_GIFT
           && moveEffect != EFFECT_HIDDEN_POWER
