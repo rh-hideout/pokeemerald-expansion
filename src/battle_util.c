@@ -11310,8 +11310,7 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
     return FALSE;
 }
 
-#define UNPACK_VOLATILE_GETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_VOLATILE_GETTERS_, UNPACK(_fieldNameBitSize))
-#define UNPACK_VOLATILE_GETTERS_(_fieldName, ...) return gBattleMons[battler].volatiles._fieldName;
+#define UNPACK_VOLATILE_GETTERS(_enum, _typeBitSize, _fieldName, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
@@ -11319,18 +11318,17 @@ u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
 {
     switch (_volatile)
     {
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
         /* Expands to:
         case VOLATILE_CONFUSION:
             return gBattleMons[battler].volatiles.confusionTurns;
         */
-        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
         default: // Invalid volatile status
             return 0;
     }
 }
 
-#define UNPACK_VOLATILE_SETTERS(_enum, _type, _fieldNameBitSize, ...) case _enum: INVOKE(UNPACK_VOLATILE_SETTERS_, _type, UNPACK(_fieldNameBitSize)); break;
-#define UNPACK_VOLATILE_SETTERS_(_type, _fieldName, ...) gBattleMons[battler].volatiles._fieldName = min(FIRST(__VA_OPT__( MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8))), newValue)
+#define UNPACK_VOLATILE_SETTERS(_enum, _typeBitSize, _fieldName, _flags, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeBitSize, __VA_ARGS__), newValue); break;
 
 // Sets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
@@ -11338,12 +11336,12 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
 {
     switch (_volatile)
     {
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_SETTERS)
         /* Expands to:
         case VOLATILE_CONFUSION:
             gBattleMons[battler].volatiles.confusionTurns = min(MAX_BITS(3), newValue);
             break;
         */
-        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_SETTERS)
         default: // Invalid volatile status
             return;
     }

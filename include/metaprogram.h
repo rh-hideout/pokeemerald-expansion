@@ -45,24 +45,29 @@
 #define EXCEPT_4(a, ...) __VA_OPT__(EXCEPT_3(__VA_ARGS__))
 
 /* 'UNPACK (x, y, z)' expands to 'x, y, z'.
- * Useful for passing arguments which may contain commas into a macro.
- * Updated to be able to extract arguments from brackets as well. 
+ * Useful for passing arguments which may contain commas into a macro. */
+#define UNPACK(...) __VA_ARGS__
+
+/* Updated version that can extract arguments from brackets as well. 
  * Examples:
  * 
- * UNPACK(a, b) => a, b
- * UNPACK((a, b)) => a, b
- * UNPACK((a)) => a
+ * UNPACK_B(a, b) => a, b
+ * UNPACK_B((a, b)) => a, b
+ * UNPACK_B((a)) => a
  * 
- * The simple UNPACK_ARGS is used for extracting non-bracketed arguments.
+ * The simple UNPACK is used for extracting non-bracketed arguments.
  * */
-#define UNPACK_ARGS(...) __VA_ARGS__
 #define UNPACK_EXTRA(...) IF_YOU_SEE_ME_SOMETHING_IS_WRONG, __VA_ARGS__
-#define UNPACK(a) INVOKE(UNPACK_, a, UNPACK_EXTRA a)
-#define UNPACK_(a, b, ...) __VA_OPT__(UNPACK_ARGS)a
+#define UNPACK_B(a) INVOKE(UNPACK_B_, a, UNPACK_EXTRA a)
+#define UNPACK_B_(a, b, ...) __VA_OPT__(UNPACK)a
 
 /* Expands to 'macro(...args, ...)'. */
-#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK(args) __VA_OPT__(, __VA_ARGS__))
+#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK args __VA_OPT__(, __VA_ARGS__))
 #define INVOKE(macro, ...) macro(__VA_ARGS__)
+
+/* Same as INVOKE_WITH but uses UNPACK_B to unpack arguments and only applies macro to args if there are any. */
+#define INVOKE_WITH_B(macro, args, ...) INVOKE_B(macro, UNPACK_B(args) __VA_OPT__(, __VA_ARGS__))
+#define INVOKE_B(macro, ...) __VA_OPT__(macro(__VA_ARGS__))
 
 /* Recursive macros.
  * Based on https://www.scs.stanford.edu/~dm/blog/va-opt.html

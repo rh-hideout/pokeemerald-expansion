@@ -533,8 +533,7 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-#define UNPACK_VOLATILE_LIST(enum, _type, _fieldNameBitSize, _flags, ...) __VA_OPT__(INVOKE(UNPACK_VOLATILE_LIST_, enum, UNPACK(FIRST(__VA_ARGS__))))
-#define UNPACK_VOLATILE_LIST_(enum, _string, ...) {COMPOUND_STRING(_string), enum},
+#define UNPACK_VOLATILE_LIST(_enum, _typeBitSize, _fieldName, _flags, ...) __VA_OPT__({COMPOUND_STRING(INVOKE(FIRST, UNPACK_B(FIRST(__VA_ARGS__)))), _enum},)
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
@@ -2140,12 +2139,19 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
-#define UNPACK_VOLATILE_MAX_SIZE(_enum, _type, _fieldNameBitSize, _flags, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = INVOKE(UNPACK_VOLATILE_MAX_SIZE_, _type, INVOKE(DEFAULT, INVOKE_WITH(UNPACK_VOLATILE_MAX_SIZE_FROM_FIELD, _fieldNameBitSize) INVOKE_WITH(SECOND, __VA_ARGS__))); break;)
-#define UNPACK_VOLATILE_MAX_SIZE_FROM_FIELD(_fieldName, ...) __VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),)
-#define UNPACK_VOLATILE_MAX_SIZE_(_type, ...) FIRST(__VA_OPT__(__VA_ARGS__,) MAX_BITS((sizeof(_type) * 8)))
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _typeBitSize, _fieldName, _flags, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize, __VA_ARGS__)); break;)
         switch (data->currentSecondaryListItemId)
         {
             VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
+            /* Expands to the following:
+             * case VOLATILE_CONFUSION:
+                  data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
+                  break;
+             * case VOLATILE_FLINCHED:
+                  data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
+                  break;
+             * ...etc.
+             */
             default:
                 data->modifyArrows.maxValue = 0;
         }

@@ -3115,8 +3115,7 @@ static void BattleStartClearSetData(void)
     }
 }
 
-#define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _type, _fieldNameBitSize, _flags, ...) INVOKE(UNPACK_VOLATILE_BATON_PASSABLES_, _flags, UNPACK(_fieldNameBitSize))
-#define UNPACK_VOLATILE_BATON_PASSABLES_(_flags, _fieldName, ...) if (_flags & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy._fieldName;
+#define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _typeBitSize, _fieldName, _flags, ...) if ((_flags) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy._fieldName;
 
 void SwitchInClearSetData(u32 battler)
 {

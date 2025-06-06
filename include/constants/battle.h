@@ -145,35 +145,41 @@ enum VolatileFlags
  * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
  */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION, u32, (confusionTurns, 3), V_BATON_PASSABLE, "Confusion") \
-    F(VOLATILE_FLINCHED, u32, (flinched, 1), 0, "Flinched") \
-    F(VOLATILE_UPROAR, u32, (uproarTurns, 3), 0) \
-    F(VOLATILE_TORMENT, u32, (torment, 1), 0, "Torment") \
-    F(VOLATILE_BIDE, u32, (bideTurns, 2), 0) \
-    F(VOLATILE_LOCK_CONFUSE, u32, (lockConfusionTurns, 2), 0) \
-    F(VOLATILE_MULTIPLETURNS, u32, (multipleTurns, 1), 0) \
-    F(VOLATILE_WRAPPED, u32, (wrapped, 1), 0) \
-    F(VOLATILE_POWDER, u32, (powder, 1), 0, "Powder") \
-    F(VOLATILE_UNUSED, u32, (padding, 1), 0) \
-    F(VOLATILE_INFATUATION, u32, (infatuation, 4), 0) \
-    F(VOLATILE_DEFENSE_CURL, u32, (defenseCurl, 1), 0, "Defense Curl") \
-    F(VOLATILE_TRANSFORMED, u32, (transformed, 1), 0) \
-    F(VOLATILE_RECHARGE, u32, (recharge, 1), 0, "Recharge") \
-    F(VOLATILE_RAGE, u32, (rage, 1), 0, "Rage") \
-    F(VOLATILE_SUBSTITUTE, u32, (substitute, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND, u32, (destinyBond, 1), 0, "Destiny Bond") \
-    F(VOLATILE_ESCAPE_PREVENTION, u32, (escapePrevention, 1), V_BATON_PASSABLE, "Escape Prevention") \
-    F(VOLATILE_NIGHTMARE, u32, (nightmare, 1), 0) \
-    F(VOLATILE_CURSED, u32, (cursed, 1), V_BATON_PASSABLE, "Cursed") \
-    F(VOLATILE_FORESIGHT, u32, (foresight, 1), 0, "Foresight") \
-    F(VOLATILE_DRAGON_CHEER, u32, (dragonCheer, 1), V_BATON_PASSABLE, "Dragon Cheer") \
-    F(VOLATILE_FOCUS_ENERGY, u32, (focusEnergy, 1), V_BATON_PASSABLE, "Focus Energy")
+    F(VOLATILE_CONFUSION, (u32, 3), confusionTurns, V_BATON_PASSABLE, "Confusion") \
+    F(VOLATILE_FLINCHED, (u32, 1), flinched, 0, "Flinched") \
+    F(VOLATILE_UPROAR, (u32, 3), uproarTurns, 0) \
+    F(VOLATILE_TORMENT, (u32, 1), torment, 0, "Torment") \
+    F(VOLATILE_BIDE, (u32, 2), bideTurns, 0) \
+    F(VOLATILE_LOCK_CONFUSE, (u32, 2), lockConfusionTurns, 0) \
+    F(VOLATILE_MULTIPLETURNS, (u32, 1), multipleTurns, 0) \
+    F(VOLATILE_WRAPPED, (u32, 1), wrapped, 0) \
+    F(VOLATILE_POWDER, (u32, 1), powder, 0, "Powder") \
+    F(VOLATILE_UNUSED, (u32, 1), padding, 0) \
+    F(VOLATILE_INFATUATION, (u32, 4), infatuation, 0) \
+    F(VOLATILE_DEFENSE_CURL, (u32, 1), defenseCurl, 0, "Defense Curl") \
+    F(VOLATILE_TRANSFORMED, (u32, 1), transformed, 0) \
+    F(VOLATILE_RECHARGE, (u32, 1), recharge, 0, "Recharge") \
+    F(VOLATILE_RAGE, (u32, 1), rage, 0, "Rage") \
+    F(VOLATILE_SUBSTITUTE, (u32, 1), substitute, V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND, (u32, 1), destinyBond, 0, "Destiny Bond") \
+    F(VOLATILE_ESCAPE_PREVENTION, (u32, 1), escapePrevention, V_BATON_PASSABLE, "Escape Prevention") \
+    F(VOLATILE_NIGHTMARE, (u32, 1), nightmare, 0) \
+    F(VOLATILE_CURSED, (u32, 1), cursed, V_BATON_PASSABLE, "Cursed") \
+    F(VOLATILE_FORESIGHT, (u32, 1), foresight, 0, "Foresight") \
+    F(VOLATILE_DRAGON_CHEER, (u32, 1), dragonCheer, V_BATON_PASSABLE, "Dragon Cheer") \
+    F(VOLATILE_FOCUS_ENERGY, (u32, 1), focusEnergy, V_BATON_PASSABLE, "Focus Energy")
+
+/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
+#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE(GET_VOLATILE_MAXIMUM_, INVOKE_WITH_B(FIRST, _typeBitSize), DEFAULT(INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_FROM_TYPE, _typeBitSize), INVOKE_WITH_B(SECOND, FIRST(__VA_ARGS__))))
+#define GET_VOLATILE_MAXIMUM_FROM_TYPE(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
+#define GET_VOLATILE_MAXIMUM_(_typeMax, ...) FIRST(__VA_OPT__(__VA_ARGS__,) _typeMax)
 
 #define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
 
 enum Volatile
 {
     VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
+    /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
 };
 
 // Old flags
