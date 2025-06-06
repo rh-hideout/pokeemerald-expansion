@@ -37,7 +37,9 @@ bool getShortCopies(std::vector<unsigned short> *pInput, size_t minLength, std::
         if (longestLength >= minLength)
         {
             //  Handle non-copies
-            checkVec[startIndex - 1] = 'X';
+            if (startIndex > 0)
+                checkVec[startIndex - 1] = 'X';
+
             for (size_t i = 0; i < longestLength; i++)
             {
                 checkVec[startIndex + i] = 'X';
