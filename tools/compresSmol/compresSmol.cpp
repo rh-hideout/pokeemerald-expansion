@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
                     - If the compression instructions can be delta encoded.\n\
                     - If the raw symbols in the compression ca be delta encoded.\n\
                 %s -d \"path/to/some/file.4bpp.smol\" \"path/to/some/file.4bpp\"\n\
-                    Decompresses the first argument and writes it to the second argument.", argv[0], argv[0], argv[0]);
+                    Decompresses the first argument and writes it to the second argument.", argv[0], argv[0]);
 
         return 0;
     }
