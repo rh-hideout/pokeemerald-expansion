@@ -1325,6 +1325,17 @@ const struct SpriteTemplate gTeraCrystalSpreadSpriteTemplate =
     .callback = AnimTask_TeraCrystalShatter,
 };
 
+const struct SpriteTemplate gTeraSymbolSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_TERA_SYMBOL,
+    .paletteTag = ANIM_TAG_TERA_SYMBOL,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gSpriteAffineAnimTable_MegaSymbol,
+    .callback = AnimSpriteOnMonPos,
+};
+
 const struct SpriteTemplate gPinkPetalVortexTemplate =
 {
     .tileTag = ANIM_TAG_PINK_PETAL,

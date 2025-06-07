@@ -84,7 +84,7 @@ static const union AnimCmd sAnim_MudSlapMud[] =
     ANIMCMD_END,
 };
 
-static const union AnimCmd *const sAnims_MudSlapMud[] =
+const union AnimCmd *const sAnims_MudSlapMud[] =
 {
     sAnim_MudSlapMud,
 };
