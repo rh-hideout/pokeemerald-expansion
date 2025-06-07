@@ -175,7 +175,7 @@
       "map": "MAP_SOUTHERN_ISLAND_EXTERIOR",
       "x": 15,
       "y": 20,
-      "respawn_map": "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
+      "respawn_map": "MAP_SOUTHERN_ISLAND_EXTERIOR",
       "respawn_x": 15,
       "respawn_y": 20
     },
