@@ -1419,28 +1419,12 @@ bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability)
         return FALSE;
 }
 
-u32 AI_GetBattlerAbility(u32 battler)
-{
-    if (gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed)
-        return gBattleMons[battler].ability;
-
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
-        return ABILITY_NONE;
-
-    if (IsNeutralizingGasOnField()
-     && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS
-     && GetBattlerHoldEffectIgnoreAbility(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD)
-        return ABILITY_NONE;
-
-    return gBattleMons[battler].ability;
-}
-
 // does NOT include ability suppression checks
 s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
 {
     u32 validAbilities[NUM_ABILITY_SLOTS];
     u8 i, numValidAbilities = 0;
-    u32 knownAbility = AI_GetBattlerAbility(battlerId);
+    u32 knownAbility = GetBattlerAbilityIgnoreMoldBreaker(battlerId); // during ai checking for mold break could lead to inaccuracies
     u32 indexAbility;
     u32 abilityAiRatings[NUM_ABILITY_SLOTS] = {0};
 

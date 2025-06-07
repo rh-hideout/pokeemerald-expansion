@@ -5000,10 +5000,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_IMMUNITY:
-        gBattleStruct->bypassMoldBreakerChecks = TRUE;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            switch (GetBattlerAbility(battler))
+            switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
             {
             case ABILITY_IMMUNITY:
             case ABILITY_PASTEL_VEIL:
@@ -5089,7 +5088,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 return effect;
             }
         }
-        gBattleStruct->bypassMoldBreakerChecks = FALSE;
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
@@ -5330,9 +5328,9 @@ bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability)
         || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)));
 }
 
-static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 ability, u32 hasAbilityShield)
+static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 ability, u32 hasAbilityShield, u32 ignoreMoldBreaker)
 {
-    if (hasAbilityShield || gBattleStruct->bypassMoldBreakerChecks)
+    if (hasAbilityShield || ignoreMoldBreaker)
         return FALSE;
 
     return ((IsMoldBreakerTypeAbility(battlerAtk, ability) || MoveIgnoresTargetAbility(gCurrentMove))
@@ -5343,7 +5341,17 @@ static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 
          && gCurrentTurnActionNumber < gBattlersCount);
 }
 
+u32 GetBattlerAbilityIgnoreMoldBreaker(u32 battler)
+{
+    return GetBattlerAbilityInternal(battler, TRUE);
+}
+
 u32 GetBattlerAbility(u32 battler)
+{
+    return GetBattlerAbilityInternal(battler, FALSE);
+}
+
+u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker)
 {
     bool32 hasAbilityShield = GetBattlerHoldEffectIgnoreAbility(battler, TRUE) == HOLD_EFFECT_ABILITY_SHIELD;
     bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
@@ -5356,7 +5364,7 @@ u32 GetBattlerAbility(u32 battler)
             && gBattleMons[battler].ability == ABILITY_COMATOSE)
                 return ABILITY_NONE;
 
-        if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield))
+        if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield, ignoreMoldBreaker))
             return ABILITY_NONE;
 
         return gBattleMons[battler].ability;
@@ -5370,7 +5378,7 @@ u32 GetBattlerAbility(u32 battler)
      && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS)
         return ABILITY_NONE;
 
-    if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield))
+    if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield, ignoreMoldBreaker))
         return ABILITY_NONE;
 
     return gBattleMons[battler].ability;

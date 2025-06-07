@@ -38,7 +38,7 @@ enum WeatherState
     WEATHER_INACTIVE_AND_BLOCKED,
 };
 
-enum AIConsiderGimmick 
+enum AIConsiderGimmick
 {
     NO_GIMMICK,
     USE_GIMMICK,
@@ -115,9 +115,8 @@ bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
 bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move);
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
-bool32 IsAIUsingGimmick(u32 battler); 
+bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
-u32 AI_GetBattlerAbility(u32 battler);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
