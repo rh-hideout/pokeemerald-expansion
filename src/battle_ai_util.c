@@ -421,7 +421,7 @@ bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffe
 
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
 // Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
-bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
+bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category)
 {
     s32 i, moveType;
     u32 usable = 0;
@@ -2194,7 +2194,7 @@ u16 *GetMovesArray(u32 battler)
         return gBattleHistory->usedMoves[battler];
 }
 
-bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensive)
+bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     u32 i;
     u16 *moves = GetMovesArray(battlerId);
@@ -2210,7 +2210,7 @@ bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensiv
     return TRUE;
 }
 
-bool32 HasMoveWithCategory(u32 battler, u32 category)
+bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category)
 {
     u32 i;
     u16 *moves = GetMovesArray(battler);
@@ -4022,7 +4022,7 @@ bool32 IsPartyFullyHealedExceptBattler(u32 battlerId)
     return TRUE;
 }
 
-bool32 PartyHasMoveCategory(u32 battlerId, u32 category)
+bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
     u32 i, j;
@@ -4049,7 +4049,7 @@ bool32 PartyHasMoveCategory(u32 battlerId, u32 category)
     return FALSE;
 }
 
-bool32 SideHasMoveCategory(u32 battlerId, u32 category)
+bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category)
 {
     if (IsDoubleBattle())
     {

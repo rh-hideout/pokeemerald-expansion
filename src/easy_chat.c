@@ -5545,7 +5545,7 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
     numWords = gEasyChatGroups[EC_GROUP_POKEMON].numWords;
     for (i = 0; i < numWords; i++)
     {
-        u16 dexNum = SpeciesToNationalPokedexNum(*species);
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(*species);
         if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
         {
             if (index)
