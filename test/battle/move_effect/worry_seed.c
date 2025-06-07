@@ -44,7 +44,8 @@ DOUBLE_BATTLE_TEST("Worry Seed fails if the target already has Insomnia")
 
 SINGLE_BATTLE_TEST("Worry Seed fails if target has an ability that can't be overwritten")
 {
-    u32 species, ability;
+    u32 species;
+    enum Abilities ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
     PARAMETRIZE { species = SPECIES_AEGISLASH; ability = ABILITY_STANCE_CHANGE; }

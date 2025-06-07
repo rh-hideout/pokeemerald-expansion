@@ -550,7 +550,7 @@ enum
 struct QueuedAbilityEvent
 {
     u8 battlerId;
-    u16 ability;
+    enum Abilities ability;
 };
 
 struct QueuedAnimationEvent
@@ -680,7 +680,7 @@ struct BattleTestData
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
-    u16 forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Abilities forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -877,7 +877,7 @@ void AIFlags_(u32 sourceLine, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);
-void Ability_(u32 sourceLine, u32 ability);
+void Ability_(u32 sourceLine, enum Abilities ability);
 void Level_(u32 sourceLine, u32 level);
 void MaxHP_(u32 sourceLine, u32 maxHP);
 void HP_(u32 sourceLine, u32 hp);
@@ -1048,7 +1048,7 @@ enum QueueGroupType
 
 struct AbilityEventContext
 {
-    u16 ability;
+    enum Abilities ability;
 };
 
 struct AnimationEventContext
