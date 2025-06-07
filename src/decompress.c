@@ -829,7 +829,7 @@ static void DecodeSymDeltatANS(const u32 *data, const u32 *pFreqs, u16 *resultVe
     }
 }
 
-static inline void Fill16(u16 value, void *_dst, u32 size)
+static __attribute__((always_inline)) inline void Fill16(u16 value, void *_dst, u32 size)
 {
     u16 *dst = _dst;
     for (u32 i = 0; i < size; i++) {
@@ -837,7 +837,7 @@ static inline void Fill16(u16 value, void *_dst, u32 size)
     }
 }
 
-static inline void Copy16(const void *_src, void *_dst, u32 size)
+static __attribute__((always_inline)) inline void Copy16(const void *_src, void *_dst, u32 size)
 {
     const u16 *src = _src;
     u16 *dst = _dst;
