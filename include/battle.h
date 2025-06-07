@@ -64,6 +64,7 @@
 #define B_ACTION_FINISHED               12
 #define B_ACTION_CANCEL_PARTNER         12 // when choosing an action
 #define B_ACTION_NOTHING_FAINTED        13 // when choosing an action
+#define B_ACTION_UNK_14                 14
 #define B_ACTION_DEBUG                  20
 #define B_ACTION_THROW_BALL             21 // R to throw last used ball
 #define B_ACTION_NONE                   0xFF
@@ -132,6 +133,7 @@ struct DisableStruct
     u8 unburdenActive:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
+    u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
     u8 padding:3;
 };
 
@@ -384,15 +386,16 @@ struct BattleCallbacksStack
 struct StatsArray
 {
     u16 stats[NUM_STATS];
-    u16 level;
+    u16 level:15;
+    u16 learnMultipleMoves:1;
 };
 
 struct BattleResources
 {
-    struct SecretBase* secretBase;
-    struct BattleScriptsStack* battleScriptsStack;
-    struct BattleCallbacksStack* battleCallbackStack;
-    struct StatsArray* beforeLvlUp;
+    struct SecretBase *secretBase;
+    struct BattleScriptsStack *battleScriptsStack;
+    struct BattleCallbacksStack *battleCallbackStack;
+    struct StatsArray *beforeLvlUp;
     u8 bufferA[MAX_BATTLERS_COUNT][0x200];
     u8 bufferB[MAX_BATTLERS_COUNT][0x200];
     u8 transferBuffer[0x100];
@@ -789,6 +792,7 @@ struct AiBattleData
     u8 playerStallMons[PARTY_SIZE];
     u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
+    u16 aiUsingGimmick:6;
     u8 actionFlee:1;
     u8 choiceWatch:1;
     u8 padding:6;
@@ -849,11 +853,11 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;    \
 }
 
-#define RESTORE_BATTLER_TYPE(battler)                                                      \
-{                                                                                          \
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];   \
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];   \
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                          \
+#define RESTORE_BATTLER_TYPE(battler)                                                \
+{                                                                                    \
+    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0); \
+    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1); \
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
