@@ -9658,3 +9658,25 @@ const union AffineAnimCmd* const gSpriteAffineAnimTable_MegaSymbol[] =
 {
     sSpriteAffineAnim_MegaSymbol,
 };
+
+// Used for determining which animation to use for Order Up
+void AnimTask_GetCommanderType(u8 taskId)
+{
+    switch (gBattleStruct->commanderActive[gEffectBattler])
+    {
+    case SPECIES_TATSUGIRI_CURLY:
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_CURLY;
+        break;
+    case SPECIES_TATSUGIRI_DROOPY:
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_DROOPY;
+        break;
+    case SPECIES_TATSUGIRI_STRETCHY:
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_STRETCHY;
+        break;
+    default:
+        gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_NONE;
+        break;
+    }
+    
+    DestroyAnimVisualTask(taskId);
+}
