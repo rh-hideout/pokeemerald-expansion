@@ -134,8 +134,54 @@ enum BattlerId
 
 #define STATUS1_REFRESH          (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
 
+enum VolatileFlags
+{
+    V_BATON_PASSABLE = (1 << 0),
+};
+
 // Volatile status ailments
-// These are removed after exiting the battle or switching out
+// These are removed after exiting the battle or switching
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
+ * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
+ */
+#define VOLATILE_DEFINITIONS(F) \
+    F(VOLATILE_CONFUSION, (u32, 3), confusionTurns, V_BATON_PASSABLE, "Confusion") \
+    F(VOLATILE_FLINCHED, (u32, 1), flinched, 0, "Flinched") \
+    F(VOLATILE_UPROAR, (u32, 3), uproarTurns, 0) \
+    F(VOLATILE_TORMENT, (u32, 1), torment, 0, "Torment") \
+    F(VOLATILE_BIDE, (u32, 2), bideTurns, 0) \
+    F(VOLATILE_LOCK_CONFUSE, (u32, 2), lockConfusionTurns, 0) \
+    F(VOLATILE_MULTIPLETURNS, (u32, 1), multipleTurns, 0) \
+    F(VOLATILE_WRAPPED, (u32, 1), wrapped, 0) \
+    F(VOLATILE_POWDER, (u32, 1), powder, 0, "Powder") \
+    F(VOLATILE_UNUSED, (u32, 1), padding, 0) \
+    F(VOLATILE_INFATUATION, (u32, 4), infatuation, 0) \
+    F(VOLATILE_DEFENSE_CURL, (u32, 1), defenseCurl, 0, "Defense Curl") \
+    F(VOLATILE_TRANSFORMED, (u32, 1), transformed, 0) \
+    F(VOLATILE_RECHARGE, (u32, 1), recharge, 0, "Recharge") \
+    F(VOLATILE_RAGE, (u32, 1), rage, 0, "Rage") \
+    F(VOLATILE_SUBSTITUTE, (u32, 1), substitute, V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND, (u32, 1), destinyBond, 0, "Destiny Bond") \
+    F(VOLATILE_ESCAPE_PREVENTION, (u32, 1), escapePrevention, V_BATON_PASSABLE, "Escape Prevention") \
+    F(VOLATILE_NIGHTMARE, (u32, 1), nightmare, 0) \
+    F(VOLATILE_CURSED, (u32, 1), cursed, V_BATON_PASSABLE, "Cursed") \
+    F(VOLATILE_FORESIGHT, (u32, 1), foresight, 0, "Foresight") \
+    F(VOLATILE_DRAGON_CHEER, (u32, 1), dragonCheer, V_BATON_PASSABLE, "Dragon Cheer") \
+    F(VOLATILE_FOCUS_ENERGY, (u32, 1), focusEnergy, V_BATON_PASSABLE, "Focus Energy")
+
+/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
+#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE(DEFAULT, INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize) __VA_OPT__(,INVOKE_WITH_B(SECOND, FIRST(__VA_ARGS__))))
+#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
+
+#define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
+
+enum Volatile
+{
+    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
+    /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
+};
+
+// Old flags
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
 #define STATUS2_CONFUSION_TURN(num)   ((num) << 0)
 #define STATUS2_FLINCHED              (1 << 3)
@@ -149,6 +195,7 @@ enum BattlerId
 #define STATUS2_MULTIPLETURNS         (1 << 12)
 #define STATUS2_WRAPPED               (1 << 13)
 #define STATUS2_POWDER                (1 << 14)
+//#define STATUS2_UNUSED                (1 << 15)
 #define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
 #define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
 #define STATUS2_DEFENSE_CURL          (1 << 20)
