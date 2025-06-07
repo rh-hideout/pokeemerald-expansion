@@ -621,7 +621,7 @@ static void CB2_EndScriptedWildBattle(void)
     }
 }
 
-enum BattleEnvironment BattleSetup_GetEnvironmentId(void)
+enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 {
     u16 tileBehavior;
     s16 x, y;
