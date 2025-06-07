@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         fileOut.close();
         return 0;
     }
+    /*
     else if (argc == 2)
     {
         std::filesystem::path filePath = argv[1];
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
         printf("New size: %zu\n", totalSize);
         return 0;
     }
+    */
     else
     {
         return 0;

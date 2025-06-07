@@ -1,14 +1,14 @@
 CXX ?= g++
 
-CXXFLAGS := -Werror -std=c++17 -pthread -O2 -Wunused
+CXXFLAGS := -Werror -std=c++17 -O2
 
 INCLUDES := -I .
 
-SRCS := compresSmol.cpp compressAlgo.cpp tANS.cpp fileDispatcher.cpp
-TILEMAP_SRCS := mainTiles.cpp compressAlgo.cpp compressSmolTiles.cpp tANS.cpp fileDispatcher.cpp
+SRCS := compresSmol.cpp compressAlgo.cpp tANS.cpp
+TILEMAP_SRCS := mainTiles.cpp compressSmolTiles.cpp tANS.cpp compressAlgo.cpp
 
-HEADERS := compressAlgo.h tANS.h fileDispatcher.h
-TILEMAP_HEADERS := compressAlgo.h compressSmolTiles.h tANS.h fileDispatcher.h
+HEADERS := compressAlgo.h tANS.h
+TILEMAP_HEADERS := compressSmolTiles.h tANS.h compressAlgo.h
 
 ifeq ($(OS),Windows_NT)
 EXE := .exe
