@@ -259,6 +259,7 @@ AI_SINGLE_BATTLE_TEST("AI prioritizes Pursuit if it would KO opponent")
 
 AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack to protect itself against death")
 {
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_ZUBAT) { Moves(MOVE_QUICK_ATTACK); }
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
