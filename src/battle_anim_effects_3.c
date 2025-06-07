@@ -1336,6 +1336,17 @@ const struct SpriteTemplate gTeraSymbolSpriteTemplate =
     .callback = AnimSpriteOnMonPos,
 };
 
+const struct SpriteTemplate gTeraSmokeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SPARKLE_6,
+    .paletteTag = ANIM_TAG_SPARKLE_6,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimParticleInVortex,
+};
+
 const struct SpriteTemplate gPinkPetalVortexTemplate =
 {
     .tileTag = ANIM_TAG_PINK_PETAL,

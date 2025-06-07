@@ -1972,7 +1972,7 @@ SnowSlide1:
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	delay 2
 	return
-	
+
 @Credits to Skeli
 gBattleAnimMove_IceShard::
 	monbg ANIM_TARGET
@@ -31327,14 +31327,34 @@ TeraChargeParticles:
 
 gBattleAnimGeneral_TeraActivate::
 	loadspritegfx ANIM_TAG_TERA_SYMBOL
+	loadspritegfx ANIM_TAG_SPARKLE_6
+	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
 	createvisualtask SoundTask_PlayNormalCry, 0
 	createsprite gTeraSymbolSpriteTemplate ANIM_ATTACKER, 41, 0, 0, ANIM_ATTACKER
+	delay 2
+	call TeraSpinEffect
+	call TeraSpinEffect
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	end
+
+TeraSpinEffect:
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 12, 528, 30, 13, 50, 0
+	delay 2
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 0, 480, 20, 16, -46, 0
+	delay 2
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 1, 576, 20, 8, 42, 0
+	delay 2
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 15, 400, 25, 11, -42, 0
+	delay 2
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 12, 512, 25, 16, 46, 0
+	delay 2
+	createsprite gTeraSmokeSpriteTemplate ANIM_ATTACKER, 7, 0, 1, 464, 30, 15, -50, 0
+	delay 2
+	return
 
 gBattleAnimGeneral_RestoreBg::
 	restorebg
