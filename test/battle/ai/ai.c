@@ -865,3 +865,24 @@ AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
             TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_RAIN_DANCE); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI knows prior to Gen5 that it can damage mons with Lighning Rod")
+{
+    u32 config;
+
+    PARAMETRIZE { config = GEN_4; }
+    PARAMETRIZE { config = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
+        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SEAKING) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_PIKACHU) { Moves(MOVE_THUNDER, MOVE_SCRATCH); }
+    } WHEN {
+        if (config == GEN_4)
+            TURN { EXPECT_MOVE(opponent, MOVE_THUNDER); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+    }
+}
