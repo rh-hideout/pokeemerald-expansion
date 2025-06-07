@@ -257,6 +257,17 @@ const struct SpriteTemplate gPunishmentImpactSpriteTemplate =
     .callback = AnimPunishment,
 };
 
+const struct SpriteTemplate gDarkPulseSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PURPLE_RING,
+    .paletteTag = ANIM_TAG_PURPLE_RING,
+    .oam = &gOamData_AffineDouble_ObjNormal_16x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_SpinningBone,
+    .callback = AnimShadowBall,
+};
+
 // arg 0: x pixel offset
 // arg 1: y pixel offset
 // arg 2: Something

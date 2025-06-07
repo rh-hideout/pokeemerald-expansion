@@ -7323,6 +7323,17 @@ const struct SpriteTemplate gIceShardSpriteTemplate =
     .callback = SpriteCB_MaxFlutterby
 };
 
+const struct SpriteTemplate gSpinningVineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PUNISHMENT_BLADES,
+    .paletteTag = ANIM_TAG_LEAF,
+    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gAffineAnims_SpinningBone,
+    .callback = AnimBoneHitProjectile,
+};
+
 const struct SpriteTemplate gMaxFlutterbyButterflySpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_6,

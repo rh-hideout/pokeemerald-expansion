@@ -199,7 +199,7 @@ static void AnimBonemerangProjectile_End(struct Sprite *sprite)
 // arg 2: target x pixel offset
 // arg 3: target y pixel offset
 // arg 4: duration
-static void AnimBoneHitProjectile(struct Sprite *sprite)
+void AnimBoneHitProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
     if (!IsOnPlayerSide(gBattleAnimAttacker))

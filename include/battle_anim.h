@@ -230,6 +230,7 @@ void AnimMudSportDirt(struct Sprite *sprite);
 void AnimDirtScatter(struct Sprite *sprite);
 void AnimMudSportDirtRising(struct Sprite *sprite);
 void AnimDirtPlumeParticle(struct Sprite *);
+void AnimBoneHitProjectile(struct Sprite *);
 extern const union AnimCmd *const sAnims_MudSlapMud[];
 extern const union AffineAnimCmd *const gAffineAnims_SpinningBone[];
 
