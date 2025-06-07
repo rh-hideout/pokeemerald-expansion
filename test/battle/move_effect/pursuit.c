@@ -673,7 +673,7 @@ SINGLE_BATTLE_TEST("Pursuit user faints to Life Orb and target still switches ou
     }
 }
 
-DOUBLE_BATTLE_TEST("[RS] Pursuit user switches out due to Red Card and partner's switch is cancelled if switching to same Pokémon")
+DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's switch is cancelled if switching to same Pokémon")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_RED_CARD) == HOLD_EFFECT_RED_CARD);
