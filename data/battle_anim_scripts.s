@@ -17433,6 +17433,7 @@ gBattleAnimMove_IvyCudgel::
 	end
 IvyCudgelFire:
 	loadspritegfx ANIM_TAG_IVY_CUDGEL_FIRE
+	loadspritegfx ANIM_TAG_SMALL_EMBER
 	createsprite gIvyCudgelFireSpriteTemplate, ANIM_TARGET, 2
 	delay 60
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
@@ -17440,10 +17441,14 @@ IvyCudgelFire:
 	createvisualtask AnimTask_SquishTarget, 0x2
 	delay 6
 	call WoodHammerImpact
+	call FireSpreadEffect
+	delay 4
+	playsewithpan SE_M_FIRE_PUNCH, SOUND_PAN_TARGET
 	waitforvisualfinish
 	end
 IvyCudgelRock:
 	loadspritegfx ANIM_TAG_IVY_CUDGEL_ROCK
+	loadspritegfx ANIM_TAG_ROCKS
 	createsprite gIvyCudgelRockSpriteTemplate, ANIM_TARGET, 2
 	delay 60
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
@@ -17451,10 +17456,16 @@ IvyCudgelRock:
 	createvisualtask AnimTask_SquishTarget, 0x2
 	delay 6
 	call WoodHammerImpact
+	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
+	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, -12, 32, 3, 4
+	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, 8, 31, 2, 2
+	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, -4, 28, 2, 3
+	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, 12, 30, 4, 3
 	waitforvisualfinish
 	end
 IvyCudgelWater:
 	loadspritegfx ANIM_TAG_IVY_CUDGEL_WATER
+	loadspritegfx ANIM_TAG_SPLASH
 	createsprite gIvyCudgelWaterSpriteTemplate, ANIM_TARGET, 2
 	delay 60
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
@@ -17462,6 +17473,8 @@ IvyCudgelWater:
 	createvisualtask AnimTask_SquishTarget, 0x2
 	delay 6
 	call WoodHammerImpact
+	playsewithpan SE_M_DIVE, SOUND_PAN_TARGET
+	createsprite gDiveWaterSplashSpriteTemplate, ANIM_TARGET, 3, 1
 	waitforvisualfinish
 	end
 
