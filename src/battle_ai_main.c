@@ -4299,29 +4299,29 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         case PROTECT_QUICK_GUARD:
             if (predictedMove != MOVE_NONE && GetMovePriority(predictedMove) > 0)
             {
-                ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+                ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             }
             break;
         case PROTECT_WIDE_GUARD:
             if (predictedMove != MOVE_NONE && GetBattlerMoveTargetType(battlerDef, predictedMove) & (MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH))
             {
-                ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+                ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             }
             else if (isDoubleBattle && GetBattlerMoveTargetType(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) & MOVE_TARGET_FOES_AND_ALLY)
             {
                 if (aiData->abilities[battlerAtk] != ABILITY_TELEPATHY)
-                  ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+                  ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             }
             break;
         case PROTECT_CRAFTY_SHIELD:
             if (predictedMove != MOVE_NONE && IsBattleMoveStatus(predictedMove) && !(GetBattlerMoveTargetType(battlerDef, predictedMove) & MOVE_TARGET_USER))
-                ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+                ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             break;
 
         case PROTECT_MAT_BLOCK:
             if (gDisableStructs[battlerAtk].isFirstTurn && predictedMove != MOVE_NONE
               && !IsBattleMoveStatus(predictedMove) && !(GetBattlerMoveTargetType(battlerDef, predictedMove) & MOVE_TARGET_USER))
-                ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+                ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             break;
         case PROTECT_KINGS_SHIELD:
             if (aiData->abilities[battlerAtk] == ABILITY_STANCE_CHANGE //Special logic for Aegislash
@@ -4333,7 +4333,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             }
             //fallthrough
         default: // protect
-            ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+            ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             break;
         }
         break;

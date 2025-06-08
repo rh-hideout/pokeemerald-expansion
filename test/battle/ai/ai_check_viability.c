@@ -294,7 +294,6 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake to protect itself a
 
 AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would die of poison")
 {
-    AI_LOG;
     GIVEN {
         PLAYER(SPECIES_ZUBAT) { Moves(MOVE_EARTHQUAKE); Status1(STATUS1_TOXIC_POISON); }
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
