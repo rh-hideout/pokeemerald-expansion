@@ -266,8 +266,8 @@ void BattleAI_SetupFlags(void)
     else // Assign ai flags for player for prediction
     {
         u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA) | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB);
-        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = aiFlags; // player
-        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = aiFlags; // player
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = aiFlags;
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = aiFlags;
     }
 }
 
@@ -392,6 +392,7 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 chosenMoveIndex;
 
+    // Prediction limited to player side but can be expanded to read partners move in the future
     if (IsOnPlayerSide(battler) && CanAiPredictMove())
     {
         // This can potentially be cleaned up more

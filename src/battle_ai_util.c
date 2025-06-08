@@ -162,13 +162,8 @@ bool32 IsBattlerPredictedToSwitch(u32 battler)
 // Either a predicted move or the last used move from an opposing battler
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
 {
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_PREDICT_MOVE
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_PREDICT_MOVE)
-    {
-        if (RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE))
-            return aiData->predictedMove[opposingBattler];
-    }
-
+    if (CanAiPredictMove() && RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE))
+        return aiData->predictedMove[opposingBattler];
     return aiData->lastUsedMove[opposingBattler];
 }
 

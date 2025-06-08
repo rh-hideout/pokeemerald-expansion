@@ -334,10 +334,8 @@ struct AiLogicData
     u8 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
     u8 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
     u8 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
-    u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
-    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
     u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
-    u8 padding:2;
+    u8 padding:4;
     u8 shouldSwitch; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 aiCalcInProgress:1;
     u16 predictedMove[MAX_BATTLERS_COUNT];
