@@ -2202,7 +2202,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 switch (protectMethod)
                 {
                 case PROTECT_QUICK_GUARD:
+                    if (GetMovePriority(predictedMove) <= 0)
+                    {
+                        ADJUST_SCORE(-10);
+                        decreased = TRUE;
+                    }
                 case PROTECT_WIDE_GUARD:
+                    if(!(GetBattlerMoveTargetType(battlerAtk, predictedMove) & (MOVE_TARGET_ALL_BATTLERS | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH | MOVE_TARGET_OPPONENTS_FIELD)))
+                    {
+                        ADJUST_SCORE(-10);
+                        decreased = TRUE;
+                    }
                 case PROTECT_CRAFTY_SHIELD:
                     if (!isDoubleBattle)
                     {
@@ -4288,7 +4298,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         {
         case PROTECT_QUICK_GUARD:
             if (predictedMove != MOVE_NONE && GetMovePriority(predictedMove) > 0)
+            {
                 ProtectChecks(battlerAtk, battlerDef, move, predictedMove, &score);
+            }
             break;
         case PROTECT_WIDE_GUARD:
             if (predictedMove != MOVE_NONE && GetBattlerMoveTargetType(battlerDef, predictedMove) & (MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH))

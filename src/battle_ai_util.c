@@ -1893,6 +1893,15 @@ bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
     return FALSE;
 }
 
+bool32 IsBattlerDamagedByStatus(u32 battler)
+{
+    return gBattleMons[battler].status1 & (STATUS1_BURN | STATUS1_FROSTBITE | STATUS1_POISON | STATUS1_TOXIC_POISON)
+        || gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_NIGHTMARE | STATUS2_CURSED)
+        || gStatuses3[battler] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED)
+        || gStatuses4[battler] & (STATUS4_SALT_CURE)
+        || gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_DAMAGE_NON_TYPES);
+}
+
 void ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove, s32 *score)
 {
     // TODO more sophisticated logic
@@ -1919,17 +1928,15 @@ void ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove, 
             ADJUST_SCORE_PTR(-(min(uses, 3)));
     }
 
-    if (gBattleMons[battlerAtk].status1 & (STATUS1_PSN_ANY | STATUS1_BURN | STATUS1_FROSTBITE)
-     || gBattleMons[battlerAtk].status2 & (STATUS2_CURSED | STATUS2_INFATUATION)
-     || gStatuses3[battlerAtk] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED | STATUS3_YAWN))
+    if (IsBattlerDamagedByStatus(battlerAtk))
     {
         ADJUST_SCORE_PTR(-1);
     }
 
-    if (gBattleMons[battlerDef].status1 & STATUS1_TOXIC_POISON
-      || gBattleMons[battlerDef].status2 & (STATUS2_CURSED | STATUS2_INFATUATION)
-      || gStatuses3[battlerDef] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED | STATUS3_YAWN))
+    if (IsBattlerDamagedByStatus(battlerDef))
+    {
         ADJUST_SCORE_PTR(DECENT_EFFECT);
+    }
 }
 
 // stat stages
