@@ -2208,7 +2208,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         decreased = TRUE;
                     }
                 case PROTECT_WIDE_GUARD:
-                    if(!(GetBattlerMoveTargetType(battlerAtk, predictedMove) & (MOVE_TARGET_ALL_BATTLERS | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH | MOVE_TARGET_OPPONENTS_FIELD)))
+                    if(!(GetBattlerMoveTargetType(battlerAtk, predictedMove) & (MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH)))
                     {
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
