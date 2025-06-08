@@ -7,7 +7,6 @@
 #include "constants/rgb.h"
 
 static void AnimBonemerangProjectile(struct Sprite *);
-static void AnimBoneHitProjectile(struct Sprite *);
 static void AnimDirtPlumeParticle_Step(struct Sprite *);
 static void AnimDigDirtMound(struct Sprite *);
 static void AnimBonemerangProjectile_Step(struct Sprite *);
