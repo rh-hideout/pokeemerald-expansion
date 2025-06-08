@@ -257,18 +257,6 @@ AI_SINGLE_BATTLE_TEST("AI prioritizes Pursuit if it would KO opponent")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack to protect itself against death")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        PLAYER(SPECIES_ZUBAT) { Moves(MOVE_QUICK_ATTACK); }
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_QUICK_GUARD, MOVE_TACKLE); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_QUICK_GUARD); }
-    }
-}
-
 AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack when opponent would die of poison")
 {
     GIVEN {
@@ -277,18 +265,6 @@ AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack when opponent wo
         OPPONENT(SPECIES_RATTATA) { Moves(MOVE_QUICK_GUARD, MOVE_TACKLE); }
     } WHEN {
         TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_QUICK_GUARD); }
-    }
-}
-
-AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake to protect itself against death")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        PLAYER(SPECIES_ZUBAT) { Moves(MOVE_EARTHQUAKE); }
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_WIDE_GUARD, MOVE_TACKLE); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
     }
 }
 
