@@ -38,7 +38,7 @@ enum WeatherState
     WEATHER_INACTIVE_AND_BLOCKED,
 };
 
-enum AIConsiderGimmick 
+enum AIConsiderGimmick
 {
     NO_GIMMICK,
     USE_GIMMICK,
@@ -60,6 +60,7 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 bool32 IsAiVsAiBattle(void);
 bool32 BattlerHasAi(u32 battlerId);
 bool32 IsAiBattlerAware(u32 battlerId);
+bool32 CanAiPredictMove(void);
 void ClearBattlerMoveHistory(u32 battlerId);
 void RecordLastUsedMoveBy(u32 battlerId, u32 move);
 void RecordAllMoves(u32 battler);
@@ -115,7 +116,7 @@ bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
 bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move);
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
-bool32 IsAIUsingGimmick(u32 battler); 
+bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 u32 AI_GetBattlerAbility(u32 battler);
 
@@ -265,6 +266,5 @@ bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
-u32 GetThinkingBattler(u32 battler);
 
 #endif //GUARD_BATTLE_AI_UTIL_H

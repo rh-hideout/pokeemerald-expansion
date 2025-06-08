@@ -263,16 +263,17 @@ void BattleAI_SetupFlags(void)
     {
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT];
     }
-    else
+    else // Assign ai flags for player for prediction
     {
-        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = 0; // player
+        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA) | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB);
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = aiFlags; // player
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = aiFlags; // player
     }
 }
 
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
 {
-    u32 moveLimitations, moveLimitationsTarget;
-    u32 defaultScoreMovesTarget = defaultScoreMoves;
+    u32 moveLimitations;
     u64 flags[MAX_BATTLERS_COUNT];
     u32 moveIndex;
 
@@ -298,25 +299,6 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
 
     gBattlerTarget = SetRandomTarget(battler);
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
-
-    // Initialize move prediction scores
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE)
-    {
-        u32 opposingBattler = GetOppositeBattler(battler);
-        moveLimitationsTarget = gAiLogicData->moveLimitations[opposingBattler];
-
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            if (moveLimitationsTarget & (1u << moveIndex))
-                SET_SCORE(opposingBattler, moveIndex, 0);
-            if (defaultScoreMovesTarget & 1)
-                SET_SCORE(opposingBattler, moveIndex, AI_SCORE_DEFAULT);
-            else
-                SET_SCORE(opposingBattler, moveIndex, 0);
-
-            defaultScoreMovesTarget >>= 1;
-        }
-    }
 }
 
 bool32 BattlerChoseNonMoveAction(void)
@@ -340,7 +322,6 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
 {
     s32 opposingBattler = GetOppositeBattler(battler);
     gAiLogicData->aiPredictionInProgress = TRUE;
-    gAiLogicData->battlerDoingPrediction = battler;
 
     // Switch prediction
     if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH))
@@ -349,31 +330,18 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
         if (ShouldSwitch(opposingBattler))
             gAiLogicData->shouldSwitch |= (1u << opposingBattler);
         gBattleStruct->prevTurnSpecies[opposingBattler] = gBattleMons[opposingBattler].species;
-
-        // Determine whether AI will use predictions this turn
-        gAiLogicData->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
     }
 
-    // Move prediction
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE)
-    {
-        gAiLogicData->predictedMove[opposingBattler] = gBattleMons[opposingBattler].moves[BattleAI_ChooseMoveIndex(opposingBattler)];
-        ModifySwitchAfterMoveScoring(opposingBattler);
-
-        // Determine whether AI will use predictions this turn
-        gAiLogicData->predictingMove = RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE);
-    }
     gAiLogicData->aiPredictionInProgress = FALSE;
 }
 
 void ComputeBattlerDecisions(u32 battler)
 {
-    if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
-        && (BattlerHasAi(battler)
-        && !(gBattleTypeFlags & BATTLE_TYPE_PALACE)))
+    bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
+    if (isAiBattler || CanAiPredictMove())
     {
         // If ai is about to flee or chosen to watch player, no need to calc anything
-        if (BattlerChoseNonMoveAction())
+        if (isAiBattler && BattlerChoseNonMoveAction())
             return;
 
         // Risky AI switches aggressively even mid battle
@@ -386,10 +354,13 @@ void ComputeBattlerDecisions(u32 battler)
         SetupAIPredictionData(battler, switchType);
 
         // AI's own switching data
-        gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
-        if (ShouldSwitch(battler))
-            gAiLogicData->shouldSwitch |= (1u << battler);
-        gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
+        if (isAiBattler)
+        {
+            gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
+            if (ShouldSwitch(battler))
+                gAiLogicData->shouldSwitch |= (1u << battler);
+            gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
+        }
 
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
@@ -410,24 +381,34 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
+u32 ChooseMoveOrAction(u32 battler)
+{
+    if (IsDoubleBattle())
+        return ChooseMoveOrAction_Doubles(battler);
+    return ChooseMoveOrAction_Singles(battler);
+}
+
 u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 chosenMoveIndex;
+
+    if (IsOnPlayerSide(battler) && CanAiPredictMove())
+    {
+        // This can potentially be cleaned up more
+        chosenMoveIndex = ChooseMoveOrAction(battler);
+        gAiLogicData->predictedMove[battler] = gBattleMons[battler].moves[chosenMoveIndex];
+        return chosenMoveIndex; // Calculate move only, during prediction
+    }
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
 
-
-    if (!IsDoubleBattle())
-        chosenMoveIndex = ChooseMoveOrAction_Singles(battler);
-    else
-        chosenMoveIndex = ChooseMoveOrAction_Doubles(battler);
+    chosenMoveIndex = ChooseMoveOrAction(battler);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
-
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -697,7 +678,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     u8 consideredMoveArray[MAX_MON_MOVES];
     u32 numOfBestMoves;
     s32 i;
-    u64 flags = gAiThinkingStruct->aiFlags[GetThinkingBattler(battler)];
+    u64 flags = gAiThinkingStruct->aiFlags[battler];
     u32 opposingBattler = GetOppositeBattler(battler);
 
     gAiLogicData->partnerMove = 0;   // no ally
@@ -776,7 +757,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
             gAiLogicData->partnerMove = GetAllyChosenMove(battler);
             gAiThinkingStruct->aiLogicId = 0;
             gAiThinkingStruct->movesetIndex = 0;
-            flags = gAiThinkingStruct->aiFlags[GetThinkingBattler(battler)];
+            flags = gAiThinkingStruct->aiFlags[battler];
 
             while (flags != 0)
             {
