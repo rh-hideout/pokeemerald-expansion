@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Fling fails if pokemon is under the effects of Embargo or Ma
 
 SINGLE_BATTLE_TEST("Fling fails for pokemon with Klutz ability")
 {
-    u16 ability;
+    enum Abilities ability;
 
     PARAMETRIZE {ability = ABILITY_KLUTZ; }
     PARAMETRIZE {ability = ABILITY_RUN_AWAY; }
