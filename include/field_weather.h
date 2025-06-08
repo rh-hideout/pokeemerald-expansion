@@ -21,6 +21,8 @@ enum {
 
 #define NUM_WEATHER_COLOR_MAPS 19
 
+#define WEATHER_CHANGE_STEP_INTERVAL 64  
+
 struct Weather
 {
     union
@@ -132,12 +134,19 @@ struct Weather
     u8 droughtUnused[9];
     u8 loadDroughtPalsIndex;
     u8 loadDroughtPalsOffset;
+
+    
+    // Step-based weather
+    u16 weatherStepCounter;
+    u8 weatherChangeStepInterval;
+    u8 mapSpecificWeatherType; 
 };
 
 // field_weather.c
 extern struct Weather gWeather;
 extern struct Weather *const gWeatherPtr;
 extern const u16 gFogPalette[];
+void UpdateStepBasedWeather(void);
 
 // field_weather_effect.c
 extern const u8 gWeatherFogHorizontalTiles[];
@@ -229,5 +238,6 @@ void SetWeather(u32 weather);
 void DoCurrentWeather(void);
 void UpdateWeatherPerDay(u16 increment);
 void ResumePausedWeather(void);
+void UpdateDynamicWeatherStepCounter(void);
 
 #endif // GUARD_WEATHER_H

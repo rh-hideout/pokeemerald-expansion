@@ -5333,7 +5333,7 @@
       "id": "LAYOUT_ROUTE01",
       "name": "Route01_Layout",
       "width": 36,
-      "height": 16,
+      "height": 22,
       "border_width": 2,
       "border_height": 2,
       "primary_tileset": "gTileset_TestCamp",
@@ -5392,14 +5392,38 @@
     {
       "id": "LAYOUT_HARGWALD",
       "name": "Hargwald_Layout",
-      "width": 32,
-      "height": 32,
+      "width": 64,
+      "height": 56,
       "border_width": 4,
       "border_height": 2,
       "primary_tileset": "gTileset_TestCamp",
       "secondary_tileset": "gTileset_Forest",
       "border_filepath": "data/layouts/Hargwald/border.bin",
       "blockdata_filepath": "data/layouts/Hargwald/map.bin"
+    },
+    {
+      "id": "LAYOUT_TOWN_BRAKSTRAND",
+      "name": "Town_Brakstrand_Layout",
+      "width": 20,
+      "height": 20,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Forest",
+      "border_filepath": "data/layouts/Town_Brakstrand/border.bin",
+      "blockdata_filepath": "data/layouts/Town_Brakstrand/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE02",
+      "name": "Route02_Layout",
+      "width": 50,
+      "height": 24,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_TestCamp",
+      "secondary_tileset": "gTileset_Forest",
+      "border_filepath": "data/layouts/Route02/border.bin",
+      "blockdata_filepath": "data/layouts/Route02/map.bin"
     }
   ]
 }

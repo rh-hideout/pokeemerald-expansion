@@ -2566,6 +2566,25 @@ static const u8 sWeatherCycleRoute123[WEATHER_CYCLE_LENGTH] =
     WEATHER_SUNNY,
 };
 
+#define DYNAMIC_WEATHER_STATE_COUNT 16
+
+static const u8 sWeatherStatesDynSomeRain[DYNAMIC_WEATHER_STATE_COUNT] = {
+    WEATHER_SUNNY,
+    WEATHER_SUNNY,
+    WEATHER_SUNNY,
+    WEATHER_SUNNY_CLOUDS,
+    WEATHER_SUNNY_CLOUDS,
+    WEATHER_RAIN,
+    WEATHER_RAIN,
+    WEATHER_RAIN_THUNDERSTORM,
+};
+
+static u8 GetDynamicWeatherNum(const u8* cycleArray, u8 cycleLength)
+{
+    u8 stage = gSaveBlock1Ptr->weatherCycleStage % cycleLength;
+    return cycleArray[stage];
+}
+
 static u8 TranslateWeatherNum(u8 weather)
 {
     switch (weather)
@@ -2586,12 +2605,14 @@ static u8 TranslateWeatherNum(u8 weather)
     case WEATHER_DOWNPOUR:           return WEATHER_DOWNPOUR;
     case WEATHER_UNDERWATER_BUBBLES: return WEATHER_UNDERWATER_BUBBLES;
     case WEATHER_ABNORMAL:           return WEATHER_ABNORMAL;
-    case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
-    case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
+    // case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
+    // case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
+    case WEATHER_DYN_SOME_RAIN:      return GetDynamicWeatherNum(sWeatherStatesDynSomeRain, 4);
     default:                         return WEATHER_NONE;
     }
 }
 
+// not called anymore
 void UpdateWeatherPerDay(u16 increment)
 {
     u16 weatherStage = gSaveBlock1Ptr->weatherCycleStage + increment;
@@ -2604,4 +2625,21 @@ static void UpdateRainCounter(u8 newWeather, u8 oldWeather)
     if (newWeather != oldWeather
      && (newWeather == WEATHER_RAIN || newWeather == WEATHER_RAIN_THUNDERSTORM))
         IncrementGameStat(GAME_STAT_GOT_RAINED_ON);
+}
+
+void UpdateDynamicWeatherStepCounter(void)
+{
+    if (++gWeatherPtr->weatherStepCounter >= gWeatherPtr->weatherChangeStepInterval)
+    {
+        gWeatherPtr->weatherStepCounter = 0;
+        u8 oldWeather = TranslateWeatherNum(gMapHeader.weather);
+        gSaveBlock1Ptr->weatherCycleStage = Random() % 16;
+        u8 newWeather = TranslateWeatherNum(gMapHeader.weather);
+
+        if (oldWeather != newWeather)
+        {
+            SetSavedWeather(newWeather);
+            SetNextWeather(newWeather);
+        }
+    }
 }

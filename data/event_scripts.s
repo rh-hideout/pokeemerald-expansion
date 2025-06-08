@@ -1170,3 +1170,7 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Spragholt_Cave3/scripts.inc"
 
 	.include "data/maps/Hargwald/scripts.inc"
+
+	.include "data/maps/Town_Brakstrand/scripts.inc"
+
+	.include "data/maps/Route02/scripts.inc"

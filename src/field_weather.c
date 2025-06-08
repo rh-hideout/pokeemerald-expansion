@@ -198,6 +198,7 @@ static const u8 ALIGNED(2) sBasePaletteColorMapTypes[32] =
 
 const u16 ALIGNED(4) gFogPalette[] = INCBIN_U16("graphics/weather/fog.gbapal");
 
+
 void StartWeather(void)
 {
     if (!FuncIsActiveTask(Task_WeatherMain))
@@ -225,9 +226,15 @@ void StartWeather(void)
         gWeatherPtr->palProcessingState = WEATHER_PAL_STATE_IDLE;
         gWeatherPtr->readyForInit = FALSE;
         gWeatherPtr->weatherChangeComplete = TRUE;
+
+        // step weather
+        gWeatherPtr->weatherStepCounter = 0;
+        gWeatherPtr->weatherChangeStepInterval = WEATHER_CHANGE_STEP_INTERVAL;
+
         gWeatherPtr->taskId = CreateTask(Task_WeatherInit, 80);
     }
 }
+
 
 void SetNextWeather(u8 weather)
 {

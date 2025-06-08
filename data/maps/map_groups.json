@@ -98,7 +98,9 @@
     "Town_Spragholt",
     "Route01",
     "Route05",
-    "Route06"
+    "Route06",
+    "Town_Brakstrand",
+    "Route02"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",
