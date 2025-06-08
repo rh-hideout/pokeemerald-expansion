@@ -9787,7 +9787,7 @@ BattleScript_ConfuseSideLoop:
 	trysetconfusion BattleScript_ConfuseSideIncrement
 	volatileanimation BS_EFFECT_BATTLER, VOLATILE_CONFUSION
 BattleScript_ConfuseSidePrintMessage:
-	printfromtable gStatus2StringIds
+	printstring STRINGID_PKMNWASCONFUSED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ConfuseSideIncrement:
 	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ConfuseSideEnd
@@ -9809,7 +9809,7 @@ BattleScript_InfatuateSideLoop:
 	trysetinfatuation BattleScript_InfatuateSideIncrement
 	volatileanimation BS_EFFECT_BATTLER, VOLATILE_INFATUATION
 BattleScript_InfatuateSidePrintMessage:
-	printfromtable gStatus2StringIds
+	printstring STRINGID_PKMNFELLINLOVE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_InfatuateSideIncrement:
 	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_InfatuateSideEnd
@@ -9825,7 +9825,7 @@ BattleScript_TormentSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_TormentSideIncrement
 	trysettorment BattleScript_TormentSideIncrement
 BattleScript_TormentSidePrintMessage:
-	printfromtable gStatus2StringIds
+	printstring STRINGID_PKMNSUBJECTEDTOTORMENT
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_TormentSideIncrement:
 	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_TormentSideEnd
@@ -9846,7 +9846,7 @@ BattleScript_MeanLookSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_MeanLookSideIncrement
 	trysetescapeprevention BattleScript_MeanLookSideIncrement
 BattleScript_MeanLookSidePrintMessage:
-	printfromtable gStatus2StringIds
+	printstring STRINGID_TARGETCANTESCAPENOW
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_MeanLookSideIncrement:
 	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_MeanLookSideEnd

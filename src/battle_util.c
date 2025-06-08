@@ -11350,7 +11350,7 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
     }
 }
 
-bool32 ItemHealMonVolatileStatus(u32 battler, u16 itemId)
+bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
 {
     bool32 statusChanged = FALSE;
     const u8 *effect = GetItemEffect(itemId);
