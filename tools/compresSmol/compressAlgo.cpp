@@ -82,13 +82,6 @@ bool getShortCopies(std::vector<unsigned short> *pInput, size_t minLength, std::
         }
     }
 
-    //for (size_t i = 0; i < checkVec.size(); i++)
-    //{
-    //    printf("%c", checkVec[i]);
-    //    if ((i + 1) %24 == 0)
-    //        printf("\n");
-    //}
-
     return verifyShortCopies(pShortCopies, pInput);
 }
 
@@ -97,7 +90,6 @@ bool verifyShortCopies(std::vector<ShortCopy> *pCopies, std::vector<unsigned sho
     size_t totalLength = 0;
     for (ShortCopy copy : (*pCopies))
     {
-        //printf("%zu %zu %zu\n", copy.index, copy.length, copy.offset);
         totalLength += copy.length;
         if (copy.offset != 0)
         {
@@ -116,7 +108,6 @@ bool verifyShortCopies(std::vector<ShortCopy> *pCopies, std::vector<unsigned sho
             }
         }
     }
-    //printf("%zu\n", totalLength);
     if (totalLength != pImage->size())
         return false;
 
@@ -306,27 +297,6 @@ std::vector<int> getNormalizedCounts(std::vector<size_t> *input)
     return returnVec;
 }
 
-/*
-void getFreqWriteInts(std::vector<int> input, unsigned int *output)
-{
-    for (size_t i = 0; i < 5; i++)
-    {
-        unsigned int val1 = input[i];
-        unsigned int val2 = input[5 + i];
-        unsigned int val3 = input[10 + i];
-        val1 = val1 << (i*6);
-        val2 = val2 << (i*6);
-        val3 = val3 << (i*6);
-        output[0] += val1;
-        output[1] += val2;
-        output[2] += val3;
-    }
-    unsigned int lastVal = input[15];
-    output[0] += (lastVal & 0x3) << 30;
-    output[1] += (lastVal & 0xc) << 28;
-    output[2] += (lastVal & 0x30) << 26;
-}
-*/
 std::vector<unsigned int> getFreqWriteInts(std::vector<int> input)
 {
     std::vector<unsigned int> returnVec(3);
@@ -619,7 +589,6 @@ size_t decodeNibbles(std::vector<DecodeCol> decodeTable, std::vector<unsigned in
         (*nibbleVec)[i] = decodeTable[*currState].symbol;
 
         if (i + 1 == nibbleVec->size() && lastThing)
-        //if (currBitIndex >= bits->size())
             return currBitIndex;
 
         int currK = decodeTable[*currState].k;
@@ -640,14 +609,15 @@ std::vector<unsigned int> getNewHeaders(CompressionMode mode, size_t imageSize, 
         initialState = 0;
     std::vector<unsigned int> returnVec(2);
 
-    returnVec[0] += (unsigned int)mode;     //  4 bits
-    returnVec[0] += (imageSize/IMAGE_SIZE_MODIFIER) << IMAGE_SIZE_OFFSET;    //  14 bits
-    returnVec[0] += (symLength) << SYM_SIZE_OFFSET;    //  14 bits
-                                            //  32 total
+    returnVec[0] += (unsigned int)mode;                                     //  4 bits
+    returnVec[0] += (imageSize/IMAGE_SIZE_MODIFIER) << IMAGE_SIZE_OFFSET;   //  14 bits
+    returnVec[0] += (symLength) << SYM_SIZE_OFFSET;                         //  14 bits
+                                                                            //  32 total
 
-    returnVec[1] += initialState;           //  6 bits
-    returnVec[1] += bitstreamSize << BITSTREAM_SIZE_OFFSET;     //  13 bits
-    returnVec[1] += loLength << LO_SIZE_OFFSET;         //  13 bits
+    returnVec[1] += initialState;                                           //  6 bits
+    returnVec[1] += bitstreamSize << BITSTREAM_SIZE_OFFSET;                 //  13 bits
+    returnVec[1] += loLength << LO_SIZE_OFFSET;                             //  13 bits
+                                                                            //  32 total
 
     return returnVec;
 }
@@ -1155,6 +1125,26 @@ bool readFileAsUC(std::string filePath, std::vector<unsigned char> *pFileData)
     iStream.clear();
     iStream.seekg( 0, std::ios_base::beg );
     pFileData->resize(size);
+    iStream.read((char *)(pFileData->data()), size);
+    iStream.close();
+    return true;
+}
+
+bool readFileAsUInt(std::string filePath, std::vector<unsigned int> *pFileData)
+{
+    std::ifstream iStream;
+    iStream.open(filePath.c_str(), std::ios::binary);
+    if (!iStream.is_open())
+    {
+        fprintf(stderr, "Error: Couldn't open %s for reading bytes\n", filePath.c_str());
+        return false;
+    }
+
+    iStream.ignore( std::numeric_limits<std::streamsize>::max() );
+    std::streamsize size = iStream.gcount();
+    iStream.clear();
+    iStream.seekg( 0, std::ios_base::beg );
+    pFileData->resize(size/4);
     iStream.read((char *)(pFileData->data()), size);
     iStream.close();
     return true;

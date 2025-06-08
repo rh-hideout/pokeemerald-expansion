@@ -141,13 +141,17 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Input file %s doesn't exist\n", input.c_str());
         }
     }
-    /*
     if (option == DECODE)
     {
         if (std::filesystem::exists(input))
         {
-            std::vector<unsigned int> inData = readFileAsUInt(input);
-            std::vector<unsigned short> image4bpp = readRawDataVecs(&inData);
+            std::vector<unsigned int> inData;
+            if (!readFileAsUInt(input, &inData))
+            {
+                return 0;
+            }
+            std::vector<unsigned short> image4bpp;
+            readRawDataVecs(&inData, &image4bpp);
             std::vector<unsigned char> charVec(image4bpp.size()*2);
             for (size_t i = 0; i < image4bpp.size(); i++)
             {
@@ -163,7 +167,6 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Input file %s doesn't exist\n", input.c_str());
         }
     }
-    */
 
     return 0;
 }

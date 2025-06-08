@@ -56,19 +56,6 @@ struct ShortCopy {
     unsigned short firstSymbol;
     ShortCopy(size_t index, size_t length, size_t offset, unsigned short firstSymbol);
 };
-/*
-
-struct CompressionInstruction {
-    size_t length;
-    size_t offset;
-    size_t index;
-    unsigned char firstSymbol;
-    std::vector<unsigned char> symbols;
-    std::vector<unsigned char> bytes;
-    void buildBytes();
-    bool verifyInstruction();
-};
-*/
 
 struct ShortCompressionInstruction {
     size_t length;
@@ -114,26 +101,17 @@ struct DataVecs {
     std::vector<unsigned char> loVec;
     std::vector<unsigned short> symVec;
 };
-/*
 
-void analyzeImages(std::vector<CompressedImage> *allImages, std::mutex *imageMutex, FileDispatcher *dispatcher, std::mutex *dispatchMutex, InputSettings settings);
-
-*/
 CompressedImage processImage(std::string fileName, InputSettings settings);
 CompressedImage processImageFrames(std::string fileName, InputSettings settings);
 bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImage, InputSettings settings, std::string fileName);
 
-/*
-std::vector<unsigned int> readFileAsUInt(std::string filePath);
+bool readFileAsUInt(std::string filePath, std::vector<unsigned int> *pFileData);
 
-size_t getCompressedSize(CompressedImage *pImage);
-
-*/
 bool getShortCopies(std::vector<unsigned short> *pInput, size_t minLength, std::vector<ShortCopy> *pShortCopies);
 bool verifyShortCopies(std::vector<ShortCopy> *pCopies, std::vector<unsigned short> *pImage);
 
 std::vector<int> getNormalizedCounts(std::vector<size_t> input);
-//void getFreqWriteInts(std::vector<int> input, unsigned int *output);
 std::vector<unsigned int> getFreqWriteInts(std::vector<int> input);
 std::vector<unsigned int> getNewHeaders(CompressionMode mode, size_t imageSize, size_t symLength, int initialState, size_t bitstreamSize, size_t loLength);
 int findInitialState(EncodeCol *encodeCol, unsigned char firstSymbol);
@@ -144,29 +122,17 @@ bool getShortInstructions(std::vector<ShortCopy> *pCopies, std::vector<ShortComp
 void getLosFromInstructions(std::vector<ShortCompressionInstruction> *pInstructions, std::vector<unsigned char> *pOutput);
 void getSymsFromInstructions(std::vector<ShortCompressionInstruction> *pInstructions, std::vector<unsigned short> *pOutput);
 std::vector<int> unpackFrequencies(unsigned int pInts[3]);
-/*
-CompressedImage getDataFromUIntVec(std::vector<unsigned int> *pInput);
-*/
 void readNewHeader(std::vector<unsigned int> *pInput, CompressedImage *pOutput);
 void getUIntVecFromData(CompressedImage *pImage, std::vector<unsigned int> *pOutput);
 
 std::vector<unsigned short> decodeBytesShort(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec);
 std::vector<unsigned short> decodeImageShort(CompressedImage *pInput);
 DataVecs decodeDataVectorsNew(CompressedImage *pInput);
-/*
-
-size_t decodeNibbles(std::vector<DecodeCol> decodeTable, std::vector<unsigned int> *bits, int *currState, std::vector<unsigned char> *nibbleVec, size_t currBitIndex, size_t numNibbles);
-
-*/
 bool compareVectorsShort(std::vector<unsigned short> *pVec1, std::vector<unsigned short> *pVec2);
 
 bool verifyCompressionShort(CompressedImage *pInput, std::vector<unsigned short> *pImage);
 
 bool verifyBytesShort(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec, std::vector<unsigned short> *pImage);
-/*
-bool verifyUIntVecShort(std::vector<unsigned int> *pInput, std::vector<unsigned short> *pImage);
-
-*/
 void readRawDataVecs(std::vector<unsigned int> *pInput, std::vector<unsigned short> *pOutput);
 
 bool isModeLoEncoded(CompressionMode mode);
