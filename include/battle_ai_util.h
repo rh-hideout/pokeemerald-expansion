@@ -118,7 +118,6 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
-u32 AI_GetBattlerAbility(u32 battler);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
@@ -168,7 +167,8 @@ bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility);
 bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
-void ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove, s32 *score);
+bool32 IsBattlerDamagedByStatus(u32 battler);
+s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
 bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
