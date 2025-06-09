@@ -866,15 +866,8 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         }
         break;
     case 5:
-        if (IsOnPlayerSide(*battler))
-        {
-            if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
-                UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], GetBattlerMon(*battler), HEALTHBOX_ALL);
-        }
-        else
-        {
+        if (!IsOnPlayerSide(*battler) || !(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
             UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], GetBattlerMon(*battler), HEALTHBOX_ALL);
-        }
         SetHealthboxSpriteInvisible(gHealthboxSpriteIds[*battler]);
         (*battler)++;
         if (*battler == gBattlersCount)

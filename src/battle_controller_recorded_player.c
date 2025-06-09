@@ -418,13 +418,13 @@ static void RecordedPlayerHandleChooseMove(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, ChooseMoveAndTargetInBattlePalace(battler));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
     }
     else
     {
         u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
         u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, moveIndex | (target << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
     }
 
     RecordedPlayerBufferExecCompleted(battler);
