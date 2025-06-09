@@ -63,5 +63,6 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon);
 
 void Task_ORASDowsingMachine(u8 taskId);
 void StartORASDowsing(void);
+void ClearDowsingColor(void);
 
 #endif // GUARD_ITEM_USE_H

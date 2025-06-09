@@ -61,7 +61,6 @@ static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_UseORASDowsingMachine(u8 taskId);
 static void EndORASDowsing(void);
 static void ChangeDowsingColor(u8 direction, u8 taskId);
-static void ClearDowsingColor(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
 static void ItemUseOnFieldCB_Bike(u8);
@@ -720,6 +719,10 @@ void Task_ORASDowsingMachine(u8 taskId)
                 {
                     ChangeDowsingColor(DIR_WEST, taskId);
                 }
+                else
+                {
+                    ClearDowsingColor();
+                }
             }
             else
             {
@@ -777,16 +780,24 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
     switch (distance)
     {
     case 1:
-        color = RGB_RED;
-        break;
+        if ((direction == DIR_NORTH || direction == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 0)
+        {
+            color = RGB_RED;
+            break;
+        }
+        else if ((direction == DIR_EAST || direction == DIR_WEST) && gTasks[taskId].tItemDistanceY == 0)
+        {
+            color = RGB_RED;
+            break;
+        }
     case 2:
-    case 3:
         color = RGB_YELLOW;
         break;
+    case 3:
     case 4:
-    case 5:
         color = RGB_GREEN;
         break;
+    case 5:
     case 6:
     case 7:
         color = RGB_BLUE;
@@ -796,9 +807,10 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
     FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
 }
 
-static void ClearDowsingColor(void)
+void ClearDowsingColor(void)
 {
-    FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
+    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+        FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
 }
 
 // Undefine itemfinder task data
