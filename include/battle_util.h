@@ -222,6 +222,7 @@ void OpponentSwitchInResetSentPokesToOpponentValue(u32 battler);
 void UpdateSentPokesToOpponentValue(u32 battler);
 void BattleScriptPush(const u8 *bsPtr);
 void BattleScriptPushCursor(void);
+void BattleScriptCall(const u8 *bsPtr);
 void BattleScriptPop(void);
 u32 TrySetCantSelectMoveBattleScript(u32 battler);
 u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check);
@@ -242,6 +243,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability);
+u32 GetBattlerAbilityIgnoreMoldBreaker(u32 battler);
+u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker);
 u32 GetBattlerAbility(u32 battler);
 u32 IsAbilityOnSide(u32 battler, u32 ability);
 u32 IsAbilityOnOpposingSide(u32 battler, u32 ability);
@@ -383,5 +386,6 @@ u32 RestoreWhiteHerbStats(u32 battler);
 bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
+bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 
 #endif // GUARD_BATTLE_UTIL_H

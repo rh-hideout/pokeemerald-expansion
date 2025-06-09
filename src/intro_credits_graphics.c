@@ -40,36 +40,36 @@ struct IntroCreditsSpriteMetadata
 static const u16 sGrass_Pal[]             = INCBIN_U16("graphics/intro/scene_2/grass.gbapal");
 static const u16 sGrassSunset_Pal[]       = INCBIN_U16("graphics/intro/scene_2/grass_sunset.gbapal");
 static const u16 sGrassNight_Pal[]        = INCBIN_U16("graphics/intro/scene_2/grass_night.gbapal");
-static const u32 sGrass_Gfx[]             = INCBIN_U32("graphics/intro/scene_2/grass.4bpp.lz");
-static const u32 sGrass_Tilemap[]         = INCBIN_U32("graphics/intro/scene_2/grass_map.bin.lz");
+static const u32 sGrass_Gfx[]             = INCBIN_U32("graphics/intro/scene_2/grass.4bpp.smol");
+static const u32 sGrass_Tilemap[]         = INCBIN_U32("graphics/intro/scene_2/grass_map.bin.smolTM");
 static const u16 sCloudsBg_Pal[]          = INCBIN_U16("graphics/intro/scene_2/clouds_bg.gbapal");
 static const u16 sCloudsBgSunset_Pal[]    = INCBIN_U16("graphics/intro/scene_2/clouds_bg_sunset.gbapal");
-static const u32 sCloudsBg_Gfx[]          = INCBIN_U32("graphics/intro/scene_2/clouds_bg.4bpp.lz");
-static const u32 sCloudsBg_Tilemap[]      = INCBIN_U32("graphics/intro/scene_2/clouds_bg_map.bin.lz");
+static const u32 sCloudsBg_Gfx[]          = INCBIN_U32("graphics/intro/scene_2/clouds_bg.4bpp.smol");
+static const u32 sCloudsBg_Tilemap[]      = INCBIN_U32("graphics/intro/scene_2/clouds_bg_map.bin.smolTM");
 static const u16 sClouds_Pal[]            = INCBIN_U16("graphics/intro/scene_2/clouds.gbapal");
 static const u16 sCloudsSunset_Pal[]      = INCBIN_U16("graphics/intro/scene_2/clouds_sunset.gbapal");
-static const u32 sClouds_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/clouds.4bpp.lz");
+static const u32 sClouds_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/clouds.4bpp.smol");
 static const u16 sTrees_Pal[]             = INCBIN_U16("graphics/intro/scene_2/trees.gbapal");
 static const u16 sTreesSunset_Pal[]       = INCBIN_U16("graphics/intro/scene_2/trees_sunset.gbapal");
-static const u32 sTrees_Gfx[]             = INCBIN_U32("graphics/intro/scene_2/trees.4bpp.lz");
-static const u32 sTrees_Tilemap[]         = INCBIN_U32("graphics/intro/scene_2/trees_map.bin.lz");
+static const u32 sTrees_Gfx[]             = INCBIN_U32("graphics/intro/scene_2/trees.4bpp.smol");
+static const u32 sTrees_Tilemap[]         = INCBIN_U32("graphics/intro/scene_2/trees_map.bin.smolTM");
 static const u16 sTreesSmall_Pal[]        = INCBIN_U16("graphics/intro/scene_2/trees_small.gbapal");
-static const u32 sTreesSmall_Gfx[]        = INCBIN_U32("graphics/intro/scene_2/trees_small.4bpp.lz");
+static const u32 sTreesSmall_Gfx[]        = INCBIN_U32("graphics/intro/scene_2/trees_small.4bpp.smol");
 static const u16 sHouses_Pal[]            = INCBIN_U16("graphics/intro/scene_2/houses.gbapal");
-static const u32 sHouses_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/houses.4bpp.lz");
+static const u32 sHouses_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/houses.4bpp.smol");
 static const u16 sHouseSilhouette_Pal[]   = INCBIN_U16("graphics/intro/scene_2/house_silhouette.gbapal");
-static const u32 sHouses_Tilemap[]        = INCBIN_U32("graphics/intro/scene_2/houses_map.bin.lz");
-static const u32 sHouseSilhouette_Gfx[]   = INCBIN_U32("graphics/intro/scene_2/house_silhouette.4bpp.lz");
+static const u32 sHouses_Tilemap[]        = INCBIN_U32("graphics/intro/scene_2/houses_map.bin.smolTM");
+static const u32 sHouseSilhouette_Gfx[]   = INCBIN_U32("graphics/intro/scene_2/house_silhouette.4bpp.smol");
 static const u16 sBrendanCredits_Pal[]    = INCBIN_U16("graphics/intro/scene_2/brendan_credits.gbapal");
-static const u32 sBrendanCredits_Gfx[]    = INCBIN_U32("graphics/intro/scene_2/brendan_credits.4bpp.lz");
+static const u32 sBrendanCredits_Gfx[]    = INCBIN_U32("graphics/intro/scene_2/brendan_credits.4bpp.smol");
 static const u16 sMayCredits_Pal[]        = INCBIN_U16("graphics/intro/scene_2/may_credits.gbapal");
 static const u16 sUnused[0xF0]            = {0};
-static const u32 sMayCredits_Gfx[]        = INCBIN_U32("graphics/intro/scene_2/may_credits.4bpp.lz");
-static const u32 sBicycle_Gfx[]           = INCBIN_U32("graphics/intro/scene_2/bicycle.4bpp.lz");
+static const u32 sMayCredits_Gfx[]        = INCBIN_U32("graphics/intro/scene_2/may_credits.4bpp.smol");
+static const u32 sBicycle_Gfx[]           = INCBIN_U32("graphics/intro/scene_2/bicycle.4bpp.smol");
 static const u16 sLatios_Pal[]            = INCBIN_U16("graphics/intro/scene_2/latios.gbapal");
-static const u32 sLatios_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/latios.4bpp.lz");
+static const u32 sLatios_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/latios.4bpp.smol");
 static const u16 sLatias_Pal[]            = INCBIN_U16("graphics/intro/scene_2/latias.gbapal");
-static const u32 sLatias_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/latias.4bpp.lz");
+static const u32 sLatias_Gfx[]            = INCBIN_U32("graphics/intro/scene_2/latias.4bpp.smol");
 
 static void SpriteCB_MovingScenery(struct Sprite *sprite);
 static void SpriteCB_Player(struct Sprite *sprite);
@@ -728,8 +728,8 @@ static void Task_BicycleBgAnimation(u8);
 
 void LoadIntroPart2Graphics(u8 scenery)
 {
-    LZ77UnCompVram(sGrass_Gfx, (void *)(BG_CHAR_ADDR(1)));
-    LZ77UnCompVram(sGrass_Tilemap, (void *)(BG_SCREEN_ADDR(15)));
+    DecompressDataWithHeaderVram(sGrass_Gfx, (void *)(BG_CHAR_ADDR(1)));
+    DecompressDataWithHeaderVram(sGrass_Tilemap, (void *)(BG_SCREEN_ADDR(15)));
     LoadPalette(&sGrass_Pal, BG_PLTT_ID(15), sizeof(sGrass_Pal));
     switch (scenery)
     {
@@ -737,16 +737,16 @@ void LoadIntroPart2Graphics(u8 scenery)
     default:
         // Never reached, only called with an argument of 1
         // Clouds are never used in this part of the intro
-        LZ77UnCompVram(sCloudsBg_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sCloudsBg_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sCloudsBg_Pal, BG_PLTT_ID(0), sizeof(sCloudsBg_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_Clouds);
         LoadPalette(&sClouds_Pal, OBJ_PLTT_ID(0), sizeof(sClouds_Pal));
         CreateCloudSprites();
         break;
     case 1:
-        LZ77UnCompVram(sTrees_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sTrees_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sTrees_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sTrees_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sTrees_Pal, BG_PLTT_ID(0), sizeof(sTrees_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_TreesSmall);
         LoadPalette(&sTreesSmall_Pal, OBJ_PLTT_ID(0), sizeof(sTreesSmall_Pal));
@@ -837,36 +837,36 @@ void SetIntroPart2BgCnt(u8 scenery)
 
 void LoadCreditsSceneGraphics(u8 scene)
 {
-    LZ77UnCompVram(sGrass_Gfx, (void *)(BG_CHAR_ADDR(1)));
-    LZ77UnCompVram(sGrass_Tilemap, (void *)(BG_SCREEN_ADDR(15)));
+    DecompressDataWithHeaderVram(sGrass_Gfx, (void *)(BG_CHAR_ADDR(1)));
+    DecompressDataWithHeaderVram(sGrass_Tilemap, (void *)(BG_SCREEN_ADDR(15)));
     switch (scene)
     {
     case SCENE_OCEAN_MORNING:
     default:
         LoadPalette(&sGrass_Pal, BG_PLTT_ID(15), sizeof(sGrass_Pal));
-        LZ77UnCompVram(sCloudsBg_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sCloudsBg_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sCloudsBg_Pal, BG_PLTT_ID(0), sizeof(sCloudsBg_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_Clouds);
-        LZ77UnCompVram(sClouds_Gfx, (void *)(OBJ_VRAM0));
+        DecompressDataWithHeaderVram(sClouds_Gfx, (void *)(OBJ_VRAM0));
         LoadPalette(&sClouds_Pal, OBJ_PLTT_ID(0), sizeof(sClouds_Pal));
         CreateCloudSprites();
         break;
     case SCENE_OCEAN_SUNSET:
         LoadPalette(&sGrassSunset_Pal, BG_PLTT_ID(15), sizeof(sGrassSunset_Pal));
-        LZ77UnCompVram(sCloudsBg_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sCloudsBg_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sCloudsBg_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sCloudsBgSunset_Pal, BG_PLTT_ID(0), sizeof(sCloudsBgSunset_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_Clouds);
-        LZ77UnCompVram(sClouds_Gfx, (void *)(OBJ_VRAM0));
+        DecompressDataWithHeaderVram(sClouds_Gfx, (void *)(OBJ_VRAM0));
         LoadPalette(&sCloudsSunset_Pal, OBJ_PLTT_ID(0), sizeof(sCloudsSunset_Pal));
         CreateCloudSprites();
         break;
     case SCENE_FOREST_RIVAL_ARRIVE:
     case SCENE_FOREST_CATCH_RIVAL:
         LoadPalette(&sGrassSunset_Pal, BG_PLTT_ID(15), sizeof(sGrassSunset_Pal));
-        LZ77UnCompVram(sTrees_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sTrees_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sTrees_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sTrees_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sTreesSunset_Pal, BG_PLTT_ID(0), sizeof(sTreesSunset_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_TreesSmall);
         LoadPalette(&sTreesSunset_Pal, OBJ_PLTT_ID(0), sizeof(sTreesSunset_Pal));
@@ -874,8 +874,8 @@ void LoadCreditsSceneGraphics(u8 scene)
         break;
     case SCENE_CITY_NIGHT:
         LoadPalette(&sGrassNight_Pal, BG_PLTT_ID(15), sizeof(sGrassNight_Pal));
-        LZ77UnCompVram(sHouses_Gfx, (void *)(VRAM));
-        LZ77UnCompVram(sHouses_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
+        DecompressDataWithHeaderVram(sHouses_Gfx, (void *)(VRAM));
+        DecompressDataWithHeaderVram(sHouses_Tilemap, (void *)(BG_SCREEN_ADDR(6)));
         LoadPalette(&sHouses_Pal, BG_PLTT_ID(0), sizeof(sHouses_Pal));
         LoadCompressedSpriteSheet(sSpriteSheet_HouseSilhouette);
         LoadPalette(&sHouseSilhouette_Pal, OBJ_PLTT_ID(0), sizeof(sHouseSilhouette_Pal));

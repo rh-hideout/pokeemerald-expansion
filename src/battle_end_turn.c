@@ -20,6 +20,7 @@ enum EndTurnResolutionOrder
     ENDTURN_VARIOUS,
     ENDTURN_WEATHER,
     ENDTURN_WEATHER_DAMAGE,
+    ENDTURN_GEN_3_BERRY_ACTIVATION,
     ENDTURN_EMERGENCY_EXIT_1,
     ENDTURN_AFFECTION,
     ENDTURN_FUTURE_SIGHT,
@@ -280,6 +281,20 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
         break;
     }
 
+    return effect;
+}
+
+static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    if (B_HP_BERRIES >= GEN_4) // Skip handler for > Gen3
+    {
+        gBattleStruct->endTurnEventsCounter++;
+        return effect;
+    }
+    gBattleStruct->turnEffectsBattlerId++;
+    effect = TryRestoreHPBerries(battler, ITEMEFFECT_NORMAL);
     return effect;
 }
 
@@ -1514,6 +1529,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_VARIOUS] = HandleEndTurnVarious,
     [ENDTURN_WEATHER] = HandleEndTurnWeather,
     [ENDTURN_WEATHER_DAMAGE] = HandleEndTurnWeatherDamage,
+    [ENDTURN_GEN_3_BERRY_ACTIVATION] = HandleEndTurnGenThreeBerryActivation,
     [ENDTURN_EMERGENCY_EXIT_1] = HandleEndTurnEmergencyExit,
     [ENDTURN_AFFECTION] = HandleEndTurnAffection,
     [ENDTURN_FUTURE_SIGHT] = HandleEndTurnFutureSight,
