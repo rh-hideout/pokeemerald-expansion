@@ -44,6 +44,7 @@
 #include "constants/event_objects.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
+#include "constants/rgb.h"
 #include "constants/songs.h"
 
 static void SetUpItemUseCallback(u8);
@@ -57,6 +58,10 @@ static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *, u8);
 static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
+static void Task_UseORASDowsingMachine(u8 taskId);
+static void EndORASDowsing(void);
+static void ChangeDowsingColor(u8 direction, u8 taskId);
+static void ClearDowsingColor(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
 static void ItemUseOnFieldCB_Bike(u8);
@@ -346,10 +351,20 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
-    if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
-        gTasks[taskId].func = Task_UseItemfinder;
+    if (I_USE_ORAS_DOWSING)
+    {
+        if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+            gTasks[taskId].func = Task_UseORASDowsingMachine;
+        else
+            DisplayItemMessageOnField(taskId, gText_DadsAdvice, Task_CloseItemfinderMessage);
+    }
     else
-        DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+    {
+        if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
+            gTasks[taskId].func = Task_UseItemfinder;
+        else
+            DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+    }
 }
 
 // Define itemfinder task data
@@ -661,6 +676,129 @@ static void Task_StandingOnHiddenItem(u8 taskId)
         if (tCounter == 4)
             DisplayItemMessageOnField(taskId, sText_ItemFinderOnTop, Task_CloseItemfinderMessage);
     }
+}
+
+static void Task_UseORASDowsingMachine(u8 taskId)
+{
+    if (FlagGet(I_ORAS_DOWSING_FLAG))
+    {
+        EndORASDowsing();
+    }
+    else
+    {
+        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+            GetOnOffBike(0);
+
+        ClearDowsingColor();
+        StartORASDowsing();
+    }
+    ScriptUnfreezeObjectEvents();
+    UnlockPlayerFieldControls();
+    DestroyTask(taskId);
+}
+
+void Task_ORASDowsingMachine(u8 taskId)
+{
+    if (gTasks[taskId].data[6])
+    {
+        gPlayerAvatar.preventStep = TRUE;
+        if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
+        {
+            u8 DirectionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(gTasks[taskId].tItemDistanceX, gTasks[taskId].tItemDistanceY) - 1]);
+
+            if (DirectionToItem == gObjectEvents[gPlayerAvatar.objectEventId].movementDirection)
+            {
+                ChangeDowsingColor(DirectionToItem, taskId);
+            }
+            else if ((gTasks[taskId].tItemDistanceX == 1 || gTasks[taskId].tItemDistanceX == -1) && (gTasks[taskId].tItemDistanceY == 1 || gTasks[taskId].tItemDistanceY == -1))
+            {
+                if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_EAST)
+                {
+                    ChangeDowsingColor(DIR_EAST, taskId);
+                }
+                else if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == -1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_WEST)
+                {
+                    ChangeDowsingColor(DIR_WEST, taskId);
+                }
+            }
+            else
+            {
+                ClearDowsingColor();
+            }
+        }
+        else
+        {
+            ClearDowsingColor();
+        }
+        gTasks[taskId].data[6] = FALSE;
+        gPlayerAvatar.preventStep = FALSE;
+        DestroyTask(taskId);
+    }
+}
+
+void StartORASDowsing(void)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    ObjectEventSetGraphicsId(player, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_ORAS_DOWSE));
+    ObjectEventTurn(player, player->movementDirection);
+    FlagSet(I_ORAS_DOWSING_FLAG);
+}
+
+static void EndORASDowsing(void)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    
+    ObjectEventSetGraphicsId(player, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+    ObjectEventTurn(player, player->movementDirection);
+    FlagClear(I_ORAS_DOWSING_FLAG);
+    gPlayerAvatar.preventStep = FALSE;
+}
+
+static const u16 DowsingColorIndex[][2] = 
+{
+    [MALE]   = {OBJ_EVENT_PAL_TAG_BRENDAN, 6},
+    [FEMALE] = {OBJ_EVENT_PAL_TAG_MAY, 12}
+};
+
+static void ChangeDowsingColor(u8 direction, u8 taskId)
+{
+    s16 distance;
+    u16 color = RGB_GRAY;
+
+    if (direction == DIR_NORTH || direction == DIR_SOUTH)
+        distance = gTasks[taskId].tItemDistanceY;
+    else
+        distance = gTasks[taskId].tItemDistanceX;
+
+    if (distance < 0)
+        distance *= -1;
+
+    switch (distance)
+    {
+    case 1:
+        color = RGB_RED;
+        break;
+    case 2:
+    case 3:
+        color = RGB_YELLOW;
+        break;
+    case 4:
+    case 5:
+        color = RGB_GREEN;
+        break;
+    case 6:
+    case 7:
+        color = RGB_BLUE;
+        break;
+    }
+
+    FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
+}
+
+static void ClearDowsingColor(void)
+{
+    FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
 }
 
 // Undefine itemfinder task data

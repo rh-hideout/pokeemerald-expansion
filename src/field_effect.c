@@ -1667,6 +1667,7 @@ void StartEscalatorWarp(u8 metatileBehavior, u8 priority)
     {
         gTasks[taskId].tGoingUp = TRUE;
     }
+    FlagClear(I_ORAS_DOWSING_FLAG);
 }
 
 static void Task_EscalatorWarpOut(u8 taskId)
@@ -2053,6 +2054,7 @@ static bool8 DiveFieldEffect_TryWarp(struct Task *task)
 
 void StartLavaridgeGymB1FWarp(u8 priority)
 {
+    FlagClear(I_ORAS_DOWSING_FLAG);
     CreateTask(Task_LavaridgeGymB1FWarp, priority);
 }
 
@@ -2261,6 +2263,7 @@ void SpriteCB_AshLaunch(struct Sprite *sprite)
 
 void StartLavaridgeGym1FWarp(u8 priority)
 {
+    FlagClear(I_ORAS_DOWSING_FLAG);
     CreateTask(Task_LavaridgeGym1FWarp, priority);
 }
 

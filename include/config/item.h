@@ -47,4 +47,8 @@
 #define I_FISHING_CHAIN            FALSE      // Introduced in XY, hooking the same Pokémon repeatedly will increase the odds of that mon being shiny. NOTE: This implementation is an approximation of the actual feature, as XY have not been throughoutly documented or datamined.
 #define I_FISHING_PROXIMITY        FALSE      // Introduced in XY, fishing away from other people in enclosed areas will increase the chances of a Pokémon being hooked. NOTE: This implementation is an approximation of the actual feature, as XY have not been throughoutly documented or datamined.
 
+// Dowsing Machine
+#define I_USE_ORAS_DOWSING          TRUE    // If set to true, the Dowsing Machine item will use the ORAS mechanics.
+#define I_ORAS_DOWSING_FLAG         FLAG_UNUSED_0x493
+
 #endif // GUARD_CONFIG_ITEM_H
