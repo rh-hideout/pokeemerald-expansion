@@ -53,10 +53,9 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_IMPASSABLE_NORTHWEST]               = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_SOUTHEAST]               = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_SOUTHWEST]               = TILE_FLAG_UNUSED,
-    [MB_JUMP_NORTSOUTH]                     = TILE_FLAG_UNUSED,
-    [MB_JUMP_ALL]                     = TILE_FLAG_UNUSED,
-    [MB_JUMP_SOUTHEAST]                     = TILE_FLAG_UNUSED,
-    [MB_JUMP_EASTWEST]                     = TILE_FLAG_UNUSED,
+    [MB_JUMP_NORTHSOUTH]                    = TILE_FLAG_UNUSED,
+    [MB_JUMP_EASTWEST]                      = TILE_FLAG_UNUSED,
+    [MB_JUMP_ALL]                           = TILE_FLAG_UNUSED,
     [MB_WALK_EAST]                          = TILE_FLAG_UNUSED,
     [MB_WALK_WEST]                          = TILE_FLAG_UNUSED,
     [MB_WALK_NORTH]                         = TILE_FLAG_UNUSED,
@@ -160,12 +159,12 @@ bool8 MetatileBehavior_IsJumpWest(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsJumpNorth(u8 metatileBehavior)
 {
-    return metatileBehavior == MB_JUMP_NORTH || metatileBehavior == MB_JUMP_NORTSOUTH || metatileBehavior == MB_JUMP_ALL;
+    return metatileBehavior == MB_JUMP_NORTH || metatileBehavior == MB_JUMP_NORTHSOUTH || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 {
-    return metatileBehavior == MB_JUMP_SOUTH || metatileBehavior == MB_JUMP_NORTSOUTH || metatileBehavior == MB_JUMP_ALL;
+    return metatileBehavior == MB_JUMP_SOUTH || metatileBehavior == MB_JUMP_NORTHSOUTH || metatileBehavior == MB_JUMP_ALL;
 }
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
