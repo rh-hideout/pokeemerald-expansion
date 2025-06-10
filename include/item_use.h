@@ -61,8 +61,8 @@ enum {
 bool32 CanThrowBall(void);
 bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon);
 
-void Task_ORASDowsingMachine(u8 taskId);
 void StartORASDowsing(void);
-void ClearDowsingColor(void);
+void Task_UpdateDowseState(u8 taskId);
+void ClearDowsingColor(struct Sprite *sprite);
 
 #endif // GUARD_ITEM_USE_H

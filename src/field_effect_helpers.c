@@ -7,10 +7,12 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "gpu_regs.h"
+#include "item_use.h"
 #include "metatile_behavior.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
+#include "task.h"
 #include "trig.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
@@ -42,8 +44,6 @@ static void UpdateBobbingEffect(struct ObjectEvent *, struct Sprite *, struct Sp
 static void SpriteCB_UnderwaterSurfBlob(struct Sprite *);
 static u32 ShowDisguiseFieldEffect(u8, u8, u8);
 u32 FldEff_Shadow(void);
-static void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj);
-static void UpdateDowseState(struct Sprite *sprite);
 
 // Data used by all the field effects that share UpdateJumpImpactEffect
 #define sJumpElevation  data[0]
@@ -1889,20 +1889,14 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
     }
 }
 
-enum
-{
-    WIGGLE_NONE,
-    WIGGLE_NORMAL,
-    WIGGLE_FAST,
-    WIGGLE_FASTER
-};
-
 const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDowsing, FLDEFF_PAL_TAG_ORAS_DOWSE};
 
 // Sprite data for ORAS Dowsing Machine
 #define sCounter        data[0]
 #define sPlayerObjId    data[1]
 #define sDowseState     data[2]
+#define sSpriteId       data[3]
+#define sMoveJustEnded  data[4]
 
 #define fPlayerX        gFieldEffectArguments[0]
 #define fPlayerY        gFieldEffectArguments[1]
@@ -1933,8 +1927,10 @@ u32 FldEff_ORASDowsing(void)
             sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
 
         player->fieldEffectSpriteId = spriteId;
-        UpdateDowseState(sprite);
+        sprite->sSpriteId = spriteId;
+        sprite->sDowseState = ORASD_WIGGLE_NORMAL;
         UpdateDowsingAnimDirection(sprite, player);
+        UpdateDowseState(spriteId);
     }
     FieldEffectActiveListRemove(FLDEFF_ORAS_DOWSE);
     return spriteId;
@@ -1970,6 +1966,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
             if (sprite->sCounter == 0)
             {
+                sprite->sMoveJustEnded = TRUE;
                 UpdateDowsingAnimDirection(sprite, playerObj);
                 sprite->y2++;
             }
@@ -1980,28 +1977,29 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
             sprite->sCounter++;
         }
-        else if (playerObj->heldMovementFinished == TRUE)
+        else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveJustEnded)
         {
+            sprite->sMoveJustEnded = FALSE;
             sprite->sCounter = 0;
-            UpdateDowseState(sprite);
+            UpdateDowseState(sprite->sSpriteId);
         }
     }
     sprite->oam.priority = playerSprite->oam.priority;
 }
 
-static void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
+void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
 {
     u32 anim = (playerObj->facingDirection - 1);
 
     switch (sprite->sDowseState)
     {
-    case WIGGLE_NORMAL:
+    case ORASD_WIGGLE_NORMAL:
         anim += 4;
         break;
-    case WIGGLE_FAST:
+    case ORASD_WIGGLE_FAST:
         anim += 8;
         break;
-    case WIGGLE_FASTER:
+    case ORASD_WIGGLE_FASTER:
         anim += 12;
         break;
     }
@@ -2009,7 +2007,17 @@ static void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent
     StartSpriteAnimIfDifferent(sprite, anim);
 }
 
-static void UpdateDowseState(struct Sprite *sprite)
-{
+#define tSpriteId   data[6]
 
+void UpdateDowseState(u32 spriteId)
+{
+    if (FindTaskIdByFunc(Task_UpdateDowseState) == TASK_NONE)
+    {
+        u8 taskId;
+        gPlayerAvatar.preventStep = TRUE;
+        taskId = CreateTask(Task_UpdateDowseState, 1);
+        gTasks[taskId].tSpriteId = spriteId;
+    }
 }
+
+#undef tSpriteId

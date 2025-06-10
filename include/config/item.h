@@ -50,5 +50,6 @@
 // Dowsing Machine
 #define I_USE_ORAS_DOWSING          TRUE    // If set to true, the Dowsing Machine item will use the ORAS mechanics.
 #define I_ORAS_DOWSING_FLAG         FLAG_UNUSED_0x493
+#define I_ORAS_DOWSING_COLOR_PAL    15      // The color within the palette that will change based on proximity to the item.
 
 #endif // GUARD_CONFIG_ITEM_H

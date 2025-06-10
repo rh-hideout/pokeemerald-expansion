@@ -61,8 +61,8 @@ static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_UseORASDowsingMachine(u8 taskId);
-static void EndORASDowsing(void);
 static void ChangeDowsingColor(u8 direction, u8 taskId);
+static void EndORASDowsing(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
 static void ItemUseOnFieldCB_Bike(u8);
@@ -702,54 +702,47 @@ static void Task_UseORASDowsingMachine(u8 taskId)
     DestroyTask(taskId);
 }
 
-void Task_ORASDowsingMachine(u8 taskId)
-{
-    if (gTasks[taskId].data[6])
-    {
-        gPlayerAvatar.preventStep = TRUE;
-        if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
-        {
-            u8 DirectionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(gTasks[taskId].tItemDistanceX, gTasks[taskId].tItemDistanceY) - 1]);
+#define tSpriteId   data[6]
+#define sDowseState data[2]
 
-            if (DirectionToItem == gObjectEvents[gPlayerAvatar.objectEventId].movementDirection)
+void Task_UpdateDowseState(u8 taskId)
+{
+    if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
+    {
+        u8 DirectionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(gTasks[taskId].tItemDistanceX, gTasks[taskId].tItemDistanceY) - 1]);
+
+        if (DirectionToItem == gObjectEvents[gPlayerAvatar.objectEventId].facingDirection)
+        {
+            ChangeDowsingColor(DirectionToItem, taskId);
+        }
+        else if ((gTasks[taskId].tItemDistanceX == 1 || gTasks[taskId].tItemDistanceX == -1) && (gTasks[taskId].tItemDistanceY == 1 || gTasks[taskId].tItemDistanceY == -1))
+        {
+            if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_EAST)
             {
-                ChangeDowsingColor(DirectionToItem, taskId);
+                ChangeDowsingColor(DIR_EAST, taskId);
             }
-            else if ((gTasks[taskId].tItemDistanceX == 1 || gTasks[taskId].tItemDistanceX == -1) && (gTasks[taskId].tItemDistanceY == 1 || gTasks[taskId].tItemDistanceY == -1))
+            else if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == -1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_WEST)
             {
-                if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_EAST)
-                {
-                    ChangeDowsingColor(DIR_EAST, taskId);
-                }
-                else if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == -1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_WEST)
-                {
-                    ChangeDowsingColor(DIR_WEST, taskId);
-                }
-                else
-                {
-                    ClearDowsingColor();
-                }
+                ChangeDowsingColor(DIR_WEST, taskId);
             }
             else
             {
-                ClearDowsingColor();
+                ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
             }
         }
         else
         {
-            ClearDowsingColor();
+            ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
         }
-        gTasks[taskId].data[6] = FALSE;
-        gPlayerAvatar.preventStep = FALSE;
-        DestroyTask(taskId);
     }
+    else
+    {
+        ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
+    }
+    UpdateDowsingAnimDirection(&gSprites[gTasks[taskId].tSpriteId], &gObjectEvents[gPlayerAvatar.objectEventId]);
+    gPlayerAvatar.preventStep = FALSE;
+    DestroyTask(taskId);
 }
-
-static const u16 DowsingColorIndex[][2] = 
-{
-    [MALE]   = {OBJ_EVENT_PAL_TAG_BRENDAN, 6},
-    [FEMALE] = {OBJ_EVENT_PAL_TAG_MAY, 12}
-};
 
 static void ChangeDowsingColor(u8 direction, u8 taskId)
 {
@@ -770,34 +763,45 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
         if ((direction == DIR_NORTH || direction == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 0)
         {
             color = RGB_RED;
+            gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
         else if ((direction == DIR_EAST || direction == DIR_WEST) && gTasks[taskId].tItemDistanceY == 0)
         {
             color = RGB_RED;
+            gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
     case 2:
         color = RGB_YELLOW;
+        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FAST;
         break;
     case 3:
     case 4:
         color = RGB_GREEN;
+        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NORMAL;
         break;
     case 5:
     case 6:
     case 7:
         color = RGB_BLUE;
+        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NONE;
         break;
     }
 
-    FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
+    FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
 }
 
-void ClearDowsingColor(void)
+void ClearDowsingColor(struct Sprite *sprite)
+{
+    sprite->sDowseState = ORASD_WIGGLE_NONE;
+    FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+}
+
+void Script_UpdateDowseState(void)
 {
     if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
-        FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
+        UpdateDowseState(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId);
 }
 
 static void EndORASDowsing(void)
@@ -812,6 +816,8 @@ static void EndORASDowsing(void)
 #undef tCounter
 #undef tItemfinderBeeps
 #undef tFacingDir
+#undef tSpriteId
+#undef sDowseState
 
 void ItemUseOutOfBattle_PokeblockCase(u8 taskId)
 {

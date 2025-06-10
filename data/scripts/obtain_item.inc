@@ -188,7 +188,6 @@ EventScript_HiddenItemScript::
 EventScript_PickUpHiddenItem::
 	copyvar VAR_0x8008, VAR_0x8004
 	copyvar VAR_0x8004, VAR_0x8005
-	callnative ClearDowsingColor
 	specialvar VAR_RESULT, BufferTMHMMoveName
 	goto_if_eq VAR_RESULT, TRUE, EventScript_FoundHiddenTMHM
 	goto_if_eq VAR_RESULT, FALSE, EventScript_FoundHiddenItem
@@ -216,6 +215,7 @@ EventScript_PutHiddenItemInPocket::
 	hideitemdescription
 	special TryPutTreasureInvestigatorsOnAir
 	special SetHiddenItemFlag
+	callnative Script_UpdateDowseState
 	releaseall
 	end
 
