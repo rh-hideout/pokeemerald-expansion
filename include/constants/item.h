@@ -1,7 +1,7 @@
 #ifndef GUARD_ITEM_CONSTANTS_H
 #define GUARD_ITEM_CONSTANTS_H
 
-enum Pockets
+enum Pocket
 {
     POCKET_ITEMS,
     POCKET_KEY_ITEMS,

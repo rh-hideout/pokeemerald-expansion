@@ -150,11 +150,11 @@ bool8 CheckBagHasItem(u16 itemId, u16 count)
     u8 i;
     u8 pocketId;
 
-    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
+    if (GetItemPocket(itemId) >= POCKETS_COUNT)
         return FALSE;
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
         return CheckPyramidBagHasItem(itemId, count);
-    pocketId = GetPocketForItem(itemId);
+    pocketId = GetItemPocket(itemId);
     // Check for item slots that contain the item
     for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
@@ -204,7 +204,7 @@ bool8 HasAtLeastOnePokeBall(void)
 
 bool8 CheckBagHasSpace(u16 itemId, u16 count)
 {
-    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
+    if (GetItemPocket(itemId) >= POCKETS_COUNT)
         return FALSE;
 
     if (InBattlePyramid() || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
@@ -216,11 +216,11 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count)
 u32 GetFreeSpaceForItemInBag(u16 itemId)
 {
     u8 i;
-    u8 pocketId = GetPocketForItem(itemId);
+    u8 pocketId = GetItemPocket(itemId);
     u16 ownedCount;
     u32 spaceForItem = 0;
 
-    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
+    if (GetItemPocket(itemId) >= POCKETS_COUNT)
         return 0;
 
     // Check space in any existing item slots that already contain this item
@@ -266,7 +266,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
 {
     u8 i;
 
-    if (GetPocketForItem(itemId) >= POCKETS_COUNT)
+    if (GetItemPocket(itemId) >= POCKETS_COUNT)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -277,7 +277,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
     else
     {
         u16 ownedCount;
-        u8 pocketId = GetPocketForItem(itemId);
+        u8 pocketId = GetItemPocket(itemId);
         struct BagPocket *tempPocket = AllocZeroed(sizeof(struct BagPocket));
         u32 pocketSize = PrepareTempPocket(tempPocket, pocketId);
 
@@ -362,7 +362,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     u8 i;
     u16 totalQuantity = 0;
 
-    if (GetPocketForItem(itemId) >= POCKETS_COUNT || itemId == ITEM_NONE)
+    if (GetItemPocket(itemId) >= POCKETS_COUNT || itemId == ITEM_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -372,7 +372,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     }
     else
     {
-        u16 ownedCount, firstStackIndex = 0, pocketId = GetPocketForItem(itemId);
+        u16 ownedCount, firstStackIndex = 0, pocketId = GetItemPocket(itemId);
 
         for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
@@ -660,7 +660,7 @@ u16 CountTotalItemQuantityInBag(u16 itemId)
 {
     u16 i;
     u16 ownedCount = 0;
-    u8 pocketId = GetPocketForItem(itemId);
+    u8 pocketId = GetItemPocket(itemId);
 
     for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {
@@ -937,7 +937,7 @@ u8 GetItemConsumability(u16 itemId)
     return !gItemsInfo[SanitizeItemId(itemId)].notConsumed;
 }
 
-u8 GetPocketForItem(u16 itemId)
+u8 GetItemPocket(u16 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].pocket;
 }
