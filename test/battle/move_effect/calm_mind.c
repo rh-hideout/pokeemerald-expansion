@@ -15,7 +15,8 @@ SINGLE_BATTLE_TEST("Calm Mind increases the user's Sp. Attack and Sp. Defense by
         TURN { MOVE(player, MOVE_CALM_MIND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CALM_MIND, player);
-        MESSAGE("Wobbuffet's Sp. Atk rose!");
-        MESSAGE("Wobbuffet's Sp. Def rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
     }
 }

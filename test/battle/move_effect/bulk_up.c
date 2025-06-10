@@ -15,7 +15,8 @@ SINGLE_BATTLE_TEST("Bulk Up increases the user's Attack and Defense by 1 stage e
         TURN { MOVE(player, MOVE_BULK_UP); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULK_UP, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Defense rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
