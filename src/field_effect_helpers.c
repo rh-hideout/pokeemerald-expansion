@@ -1955,6 +1955,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
             u32 interval;
         
             // TODO: Handle ledge jumps
+            // TODO: Handle collision movement
             if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
              && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
                 interval = 4;

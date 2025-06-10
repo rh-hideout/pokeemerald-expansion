@@ -773,18 +773,18 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
             break;
         }
     case 2:
-        color = RGB_YELLOW;
+        color = RGB2GBA(255, 255, 40);
         gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FAST;
         break;
     case 3:
     case 4:
-        color = RGB_GREEN;
+        color = RGB2GBA(20, 216, 20);
         gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NORMAL;
         break;
     case 5:
     case 6:
     case 7:
-        color = RGB_BLUE;
+        color = RGB2GBA(54, 120, 255);
         gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NONE;
         break;
     }
@@ -795,7 +795,7 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
 void ClearDowsingColor(struct Sprite *sprite)
 {
     sprite->sDowseState = ORASD_WIGGLE_NONE;
-    FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+    FillPalette(RGB2GBA(180, 180, 180), (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
 }
 
 void Script_UpdateDowseState(void)
