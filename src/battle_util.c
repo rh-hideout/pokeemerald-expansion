@@ -11310,7 +11310,7 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
     return FALSE;
 }
 
-#define UNPACK_VOLATILE_GETTERS(_enum, _typeBitSize, _fieldName, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
+#define UNPACK_VOLATILE_GETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
@@ -11328,7 +11328,7 @@ u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
     }
 }
 
-#define UNPACK_VOLATILE_SETTERS(_enum, _typeBitSize, _fieldName, _flags, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeBitSize, __VA_ARGS__), newValue); break;
+#define UNPACK_VOLATILE_SETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeBitSize), newValue); break;
 
 // Sets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred

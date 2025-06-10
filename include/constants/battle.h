@@ -145,32 +145,32 @@ enum VolatileFlags
  * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
  */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION, (u32, 3), confusionTurns, V_BATON_PASSABLE, "Confusion") \
-    F(VOLATILE_FLINCHED, (u32, 1), flinched, 0, "Flinched") \
-    F(VOLATILE_UPROAR, (u32, 3), uproarTurns, 0) \
-    F(VOLATILE_TORMENT, (u32, 1), torment, 0, "Torment") \
-    F(VOLATILE_BIDE, (u32, 2), bideTurns, 0) \
-    F(VOLATILE_LOCK_CONFUSE, (u32, 2), lockConfusionTurns, 0) \
-    F(VOLATILE_MULTIPLETURNS, (u32, 1), multipleTurns, 0) \
-    F(VOLATILE_WRAPPED, (u32, 1), wrapped, 0) \
-    F(VOLATILE_POWDER, (u32, 1), powder, 0, "Powder") \
-    F(VOLATILE_UNUSED, (u32, 1), padding, 0) \
-    F(VOLATILE_INFATUATION, (u32, 4), infatuation, 0) \
-    F(VOLATILE_DEFENSE_CURL, (u32, 1), defenseCurl, 0, "Defense Curl") \
-    F(VOLATILE_TRANSFORMED, (u32, 1), transformed, 0) \
-    F(VOLATILE_RECHARGE, (u32, 1), recharge, 0, "Recharge") \
-    F(VOLATILE_RAGE, (u32, 1), rage, 0, "Rage") \
-    F(VOLATILE_SUBSTITUTE, (u32, 1), substitute, V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND, (u32, 1), destinyBond, 0, "Destiny Bond") \
-    F(VOLATILE_ESCAPE_PREVENTION, (u32, 1), escapePrevention, V_BATON_PASSABLE, "Escape Prevention") \
-    F(VOLATILE_NIGHTMARE, (u32, 1), nightmare, 0) \
-    F(VOLATILE_CURSED, (u32, 1), cursed, V_BATON_PASSABLE, "Cursed") \
-    F(VOLATILE_FORESIGHT, (u32, 1), foresight, 0, "Foresight") \
-    F(VOLATILE_DRAGON_CHEER, (u32, 1), dragonCheer, V_BATON_PASSABLE, "Dragon Cheer") \
-    F(VOLATILE_FOCUS_ENERGY, (u32, 1), focusEnergy, V_BATON_PASSABLE, "Focus Energy")
+    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 3), V_BATON_PASSABLE) \
+    F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
+    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 3)) \
+    F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
+    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 2)) \
+    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 2)) \
+    F(VOLATILE_MULTIPLETURNS,                   multipleTurns,                     (u32, 1)) \
+    F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
+    F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
+    F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (u32, 4)) \
+    F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
+    F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
+    F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
+    F(VOLATILE_RAGE,                            rage,                              (u32, 1)) \
+    F(VOLATILE_SUBSTITUTE,                      substitute,                        (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND,                    destinyBond,                       (u32, 1)) \
+    F(VOLATILE_ESCAPE_PREVENTION,               escapePrevention,                  (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_NIGHTMARE,                       nightmare,                         (u32, 1)) \
+    F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
+    F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE)
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
-#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE(DEFAULT, INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize) __VA_OPT__(,INVOKE_WITH_B(SECOND, FIRST(__VA_ARGS__))))
+#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize)
 #define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
 
 #define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,

@@ -309,7 +309,7 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_VOLATILE_STRUCT(_enum, _typeBitSize, _fieldName, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeBitSize));
+#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeBitSize, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeBitSize));
 #define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:FIRST(__VA_ARGS__),) _fieldName)
 
 struct Volatiles

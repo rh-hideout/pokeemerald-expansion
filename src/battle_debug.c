@@ -533,25 +533,21 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-#define UNPACK_VOLATILE_LIST(_enum, _typeBitSize, _fieldName, _flags, ...) __VA_OPT__({COMPOUND_STRING(INVOKE(FIRST, UNPACK_B(FIRST(__VA_ARGS__)))), _enum},)
-
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_LIST)
-    // Expands to:
-    // {COMPOUND_STRING("Confusion"), VOLATILE_CONFUSION},
-    // {COMPOUND_STRING("Flinched"), VOLATILE_FLINCHED},
-    // {COMPOUND_STRING("Torment"), VOLATILE_TORMENT},
-    // {COMPOUND_STRING("Powder"), VOLATILE_POWDER},
-    // {COMPOUND_STRING("DefenseCurl"), VOLATILE_DEFENSE_CURL},
-    // {COMPOUND_STRING("Recharge"), VOLATILE_RECHARGE},
-    // {COMPOUND_STRING("Rage"), VOLATILE_RAGE},
-    // {COMPOUND_STRING("DestinyBond"), VOLATILE_DESTINY_BOND},
-    // {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
-    // {COMPOUND_STRING("Cursed"), VOLATILE_CURSED},
-    // {COMPOUND_STRING("Foresight"), VOLATILE_FORESIGHT},
-    // {COMPOUND_STRING("DragonCheer"), VOLATILE_DRAGON_CHEER},
-    // {COMPOUND_STRING("FocusEnergy"), VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("Confusion"), VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"), VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"), VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"), VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"), VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"), VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"), VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"), VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"), VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"), VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"), VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"), VOLATILE_FOCUS_ENERGY},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -2139,7 +2135,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
-#define UNPACK_VOLATILE_MAX_SIZE(_enum, _typeBitSize, _fieldName, _flags, ...) __VA_OPT__(case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize, __VA_ARGS__)); break;)
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeBitSize, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize)); break;
         switch (data->currentSecondaryListItemId)
         {
             VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
