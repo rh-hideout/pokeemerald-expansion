@@ -384,11 +384,6 @@ void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys)
             DoPlayerAvatarTransition();
             if (TryDoMetatileBehaviorForcedMovement() == 0)
             {
-                if (FlagGet(I_ORAS_DOWSING_FLAG) && FindTaskIdByFunc(Task_ORASDowsingMachine) != TASK_NONE)
-                {
-                    gTasks[FindTaskIdByFunc(Task_ORASDowsingMachine)].data[6] = TRUE;
-                    return;
-                }
                 MovePlayerAvatarUsingKeypadInput(direction, newKeys, heldKeys);
                 PlayerAllowForcedMovementIfMovingSameDirection();
             }
@@ -786,9 +781,6 @@ bool32 CanTriggerSpinEvolution()
 
 static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
-    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
-        CreateTask(Task_ORASDowsingMachine, 1);
-            
     WindUpSpinTimer(direction);
     PlayerTurnInPlace(direction);
 }
@@ -865,9 +857,6 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
             PlayerWalkSlowStairs(direction);
         else
             PlayerWalkNormal(direction);
-
-        if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
-            CreateTask(Task_ORASDowsingMachine, 1);
     }
 }
 
@@ -1050,12 +1039,6 @@ static void DoPlayerAvatarTransition(void)
                 sPlayerAvatarTransitionFuncs[i](&gObjectEvents[gPlayerAvatar.objectEventId]);
         }
         gPlayerAvatar.transitionFlags = 0;
-    }
-
-    if (FlagGet(I_ORAS_DOWSING_FLAG))
-    {
-        StartORASDowsing();
-        return;
     }
 }
 

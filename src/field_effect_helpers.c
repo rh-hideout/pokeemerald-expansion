@@ -1,4 +1,5 @@
 #include "global.h"
+#include "event_data.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
@@ -41,6 +42,8 @@ static void UpdateBobbingEffect(struct ObjectEvent *, struct Sprite *, struct Sp
 static void SpriteCB_UnderwaterSurfBlob(struct Sprite *);
 static u32 ShowDisguiseFieldEffect(u8, u8, u8);
 u32 FldEff_Shadow(void);
+static void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj);
+static void UpdateDowseState(struct Sprite *sprite);
 
 // Data used by all the field effects that share UpdateJumpImpactEffect
 #define sJumpElevation  data[0]
@@ -1886,3 +1889,127 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
     }
 }
 
+enum
+{
+    WIGGLE_NONE,
+    WIGGLE_NORMAL,
+    WIGGLE_FAST,
+    WIGGLE_FASTER
+};
+
+const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDowsing, FLDEFF_PAL_TAG_ORAS_DOWSE};
+
+// Sprite data for ORAS Dowsing Machine
+#define sCounter        data[0]
+#define sPlayerObjId    data[1]
+#define sDowseState     data[2]
+
+#define fPlayerX        gFieldEffectArguments[0]
+#define fPlayerY        gFieldEffectArguments[1]
+#define fPlayerObject   gFieldEffectArguments[2]
+
+u32 FldEff_ORASDowsing(void)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 spriteId;
+    u32 palNum;
+
+    FlagSet(I_ORAS_DOWSING_FLAG);
+    SetSpritePosToOffsetMapCoords((s16 *)&fPlayerX, (s16 *)&fPlayerY, 8, 0);
+    if (gPlayerAvatar.gender == MALE)
+        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
+    else
+        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
+
+    if (spriteId != MAX_SPRITES)
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+        sprite->coordOffsetEnabled = TRUE;
+        sprite->sPlayerObjId = fPlayerObject;
+        palNum = LoadSpritePalette(&gSpritePalette_ORASDowsing);
+        if (palNum != 0xFF)
+            sprite->oam.paletteNum = palNum;
+        else
+            sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
+
+        player->fieldEffectSpriteId = spriteId;
+        UpdateDowseState(sprite);
+        UpdateDowsingAnimDirection(sprite, player);
+    }
+    FieldEffectActiveListRemove(FLDEFF_ORAS_DOWSE);
+    return spriteId;
+}
+
+void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
+{
+    struct ObjectEvent *playerObj = &gObjectEvents[sprite->sPlayerObjId];
+    struct Sprite *playerSprite = &gSprites[playerObj->spriteId];
+    if (!FlagGet(I_ORAS_DOWSING_FLAG))
+    {
+        DestroySpriteAndFreeResources(sprite);
+        return;
+    }
+
+    sprite->x = playerSprite->x;
+    sprite->y = playerSprite->y;
+    if (playerObj->movementActionId != MOVEMENT_ACTION_NONE)
+    {
+        if (playerObj->heldMovementFinished == FALSE)
+        {
+            u32 interval;
+        
+            // TODO: Handle ledge jumps
+            if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
+             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
+                interval = 4;
+            else if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
+             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT)
+                interval = 16;
+            else
+                interval = 8;
+
+            if (sprite->sCounter == 0)
+            {
+                UpdateDowsingAnimDirection(sprite, playerObj);
+                sprite->y2++;
+            }
+            else if (sprite->sCounter == interval)
+            {
+                sprite->y2--;
+            }
+
+            sprite->sCounter++;
+        }
+        else if (playerObj->heldMovementFinished == TRUE)
+        {
+            sprite->sCounter = 0;
+            UpdateDowseState(sprite);
+        }
+    }
+    sprite->oam.priority = playerSprite->oam.priority;
+}
+
+static void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
+{
+    u32 anim = (playerObj->facingDirection - 1);
+
+    switch (sprite->sDowseState)
+    {
+    case WIGGLE_NORMAL:
+        anim += 4;
+        break;
+    case WIGGLE_FAST:
+        anim += 8;
+        break;
+    case WIGGLE_FASTER:
+        anim += 12;
+        break;
+    }
+
+    StartSpriteAnimIfDifferent(sprite, anim);
+}
+
+static void UpdateDowseState(struct Sprite *sprite)
+{
+
+}

@@ -12,6 +12,8 @@ enum {
     BOB_JUST_MON,
 };
 
+extern const u16 gFieldEffectPal_ORASDowsing[];
+
 u8 CreateWarpArrowSprite(void);
 u8 StartUnderwaterSurfBlobBobbing(u8 blobSpriteId);
 void SetSurfBlob_BobState(u8 spriteId, u8 state);
@@ -42,5 +44,6 @@ void UpdateBubblesFieldEffect(struct Sprite *sprite);
 void UpdateSparkleFieldEffect(struct Sprite *sprite);
 void SetSpriteInvisible(u8 spriteId);
 void ShowWarpArrowSprite(u8 spriteId, u8 direction, s16 x, s16 y);
+void UpdateORASDowsingFieldEffect(struct Sprite *sprite);
 
 #endif //GUARD_FIELD_EFFECT_HELPERS_H

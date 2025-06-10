@@ -15,6 +15,7 @@
 #include "event_scripts.h"
 #include "fieldmap.h"
 #include "field_effect.h"
+#include "field_effect_helpers.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
@@ -42,6 +43,7 @@
 #include "vs_seeker.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
+#include "constants/field_effects.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/rgb.h"
@@ -685,11 +687,15 @@ static void Task_UseORASDowsingMachine(u8 taskId)
     }
     else
     {
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
             GetOnOffBike(0);
 
-        ClearDowsingColor();
-        StartORASDowsing();
+        gFieldEffectArguments[0] = player->currentCoords.x;
+        gFieldEffectArguments[1] = player->currentCoords.y;
+        gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
+        FieldEffectStart(FLDEFF_ORAS_DOWSE);
     }
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
@@ -737,25 +743,6 @@ void Task_ORASDowsingMachine(u8 taskId)
         gPlayerAvatar.preventStep = FALSE;
         DestroyTask(taskId);
     }
-}
-
-void StartORASDowsing(void)
-{
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    ObjectEventSetGraphicsId(player, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_ORAS_DOWSE));
-    ObjectEventTurn(player, player->movementDirection);
-    FlagSet(I_ORAS_DOWSING_FLAG);
-}
-
-static void EndORASDowsing(void)
-{
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    
-    ObjectEventSetGraphicsId(player, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
-    ObjectEventTurn(player, player->movementDirection);
-    FlagClear(I_ORAS_DOWSING_FLAG);
-    gPlayerAvatar.preventStep = FALSE;
 }
 
 static const u16 DowsingColorIndex[][2] = 
@@ -811,6 +798,11 @@ void ClearDowsingColor(void)
 {
     if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
         FillPalette(RGB_GRAY, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(DowsingColorIndex[gPlayerAvatar.gender][0])) + DowsingColorIndex[gPlayerAvatar.gender][1]), PLTT_SIZEOF(1));
+}
+
+static void EndORASDowsing(void)
+{
+    FlagClear(I_ORAS_DOWSING_FLAG);
 }
 
 // Undefine itemfinder task data

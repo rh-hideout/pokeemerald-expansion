@@ -266,6 +266,162 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SurfBlob = {
     .callback = UpdateSurfBlobFieldEffect,
 };
 
+static const struct SpriteFrameImage sPicTable_ORASDowsingBrendan[] = {
+    overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingBrendan, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_ORASDowsingMay[] = {
+    overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingMay, 2, 4),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouth[] =
+{
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_FRAME(3, 32),
+    ANIMCMD_FRAME(4, 32),
+    ANIMCMD_FRAME(5, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorth[] =
+{
+    ANIMCMD_FRAME(1, 32),
+    ANIMCMD_FRAME(6, 32),
+    ANIMCMD_FRAME(7, 32),
+    ANIMCMD_FRAME(8, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWest[] =
+{
+    ANIMCMD_FRAME(2, 32),
+    ANIMCMD_FRAME(9, 32),
+    ANIMCMD_FRAME(10, 32),
+    ANIMCMD_FRAME(11, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEast[] =
+{
+    ANIMCMD_FRAME(2, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(9, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(10, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(11, 32, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouthFast[] =
+{
+    ANIMCMD_FRAME(0, 16),
+    ANIMCMD_FRAME(3, 16),
+    ANIMCMD_FRAME(4, 16),
+    ANIMCMD_FRAME(5, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorthFast[] =
+{
+    ANIMCMD_FRAME(1, 16),
+    ANIMCMD_FRAME(6, 16),
+    ANIMCMD_FRAME(7, 16),
+    ANIMCMD_FRAME(8, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWestFast[] =
+{
+    ANIMCMD_FRAME(2, 16),
+    ANIMCMD_FRAME(9, 16),
+    ANIMCMD_FRAME(10, 16),
+    ANIMCMD_FRAME(11, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEastFast[] =
+{
+    ANIMCMD_FRAME(2, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(9, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(10, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(11, 16, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouthFaster[] =
+{
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_FRAME(4, 8),
+    ANIMCMD_FRAME(5, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorthFaster[] =
+{
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(6, 8),
+    ANIMCMD_FRAME(7, 8),
+    ANIMCMD_FRAME(8, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWestFaster[] =
+{
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(9, 8),
+    ANIMCMD_FRAME(10, 8),
+    ANIMCMD_FRAME(11, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEastFaster[] =
+{
+    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(9, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(10, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(11, 8, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd *const sAnimTable_ORASDowsing[] =
+{
+    [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_FaceWest,
+    [ANIM_STD_FACE_EAST] = sAnim_FaceEast,
+    [ANIM_ORAS_DOWSE_WIGGLE_SOUTH] = sAnim_ORASDowseWiggleSouth,
+    [ANIM_ORAS_DOWSE_WIGGLE_NORTH] = sAnim_ORASDowseWiggleNorth,
+    [ANIM_ORAS_DOWSE_WIGGLE_WEST] = sAnim_ORASDowseWiggleWest,
+    [ANIM_ORAS_DOWSE_WIGGLE_EAST] = sAnim_ORASDowseWiggleEast,
+    [ANIM_ORAS_DOWSE_WIGGLE_SOUTH_FAST] = sAnim_ORASDowseWiggleSouthFast,
+    [ANIM_ORAS_DOWSE_WIGGLE_NORTH_FAST] = sAnim_ORASDowseWiggleNorthFast,
+    [ANIM_ORAS_DOWSE_WIGGLE_WEST_FAST] = sAnim_ORASDowseWiggleWestFast,
+    [ANIM_ORAS_DOWSE_WIGGLE_EAST_FAST] = sAnim_ORASDowseWiggleEastFast,
+    [ANIM_ORAS_DOWSE_WIGGLE_SOUTH_FASTER] = sAnim_ORASDowseWiggleSouthFaster,
+    [ANIM_ORAS_DOWSE_WIGGLE_NORTH_FASTER] = sAnim_ORASDowseWiggleNorthFaster,
+    [ANIM_ORAS_DOWSE_WIGGLE_WEST_FASTER] = sAnim_ORASDowseWiggleWestFaster,
+    [ANIM_ORAS_DOWSE_WIGGLE_EAST_FASTER] = sAnim_ORASDowseWiggleEastFaster,
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingBrendan = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_ORAS_DOWSE,
+    .oam = &gObjectEventBaseOam_16x32,
+    .anims = sAnimTable_ORASDowsing,
+    .images = sPicTable_ORASDowsingBrendan,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = UpdateORASDowsingFieldEffect,
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingMay = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_ORAS_DOWSE,
+    .oam = &gObjectEventBaseOam_16x32,
+    .anims = sAnimTable_ORASDowsing,
+    .images = sPicTable_ORASDowsingMay,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = UpdateORASDowsingFieldEffect,
+};
+
 static const struct SpriteFrameImage sPicTable_Arrow[] = {
     overworld_frame(gFieldEffectObjectPic_Arrow, 2, 2, 0),
     overworld_frame(gFieldEffectObjectPic_Arrow, 2, 2, 1),
