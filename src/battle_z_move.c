@@ -152,7 +152,7 @@ u32 GetUsableZMove(u32 battler, u32 move)
         if (zMove != MOVE_NONE)
             return zMove;  // Signature z move exists
 
-        if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && GetMoveType(move) == ItemId_GetSecondaryId(item))
+        if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && GetMoveType(move) == GetItemSecondaryId(item))
             return GetTypeBasedZMove(move);
     }
 
@@ -196,7 +196,7 @@ bool32 IsViableZMove(u32 battler, u32 move)
         if (zMove != MOVE_NONE)
             return TRUE;
 
-        if (move != MOVE_NONE && GetMoveType(move) == ItemId_GetSecondaryId(item))
+        if (move != MOVE_NONE && GetMoveType(move) == GetItemSecondaryId(item))
             return TRUE;
     }
 
@@ -549,7 +549,8 @@ u32 GetZMovePower(u32 move)
 {
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
-    if (GetMoveEffect(move) == EFFECT_OHKO)
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    if (moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
         return 180;
 
     u32 power = GetMoveZPowerOverride(move);
@@ -568,4 +569,3 @@ u32 GetZMovePower(u32 move)
     else if (power >= 60)  return 120;
     else                   return 100;
 }
-

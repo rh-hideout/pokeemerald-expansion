@@ -21,11 +21,11 @@
 ## Issue(s) that this PR fixes
 <!-- Format: "Fixes #2345, fixes #4523, closes #2222." Remove this section if not applicable.-->
 
-## People who collaborated with me in this PR
-<!-- Credit anyone who helped with this PR. -->
-<!-- Use their GitHub tag if they have one (or add "@/" at the start if they don't). The line must start with @. -->
-<!-- Eg.: "@Lunos for sprites, @/Masuda for support" -->
-<!--- Remove this section if not applicable. --->
+<!-- CREDITS -->
+<!-- Once your PR is submitted, leave a comment asking the bot to add you to the credits. -->
+<!-- If anybody helped with this PR, please encourage them to comment on your PR and ask the bot to add them to the credits. -->
+<!-- EVERY contribution matters! -->
+<!-- https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions -->
 
 ## Feature(s) this PR does NOT handle:
 <!-- If this PR contains any unfinished and non-blocking work, please list them here for clarity. -->
@@ -36,6 +36,6 @@
 <!--- Remove this section if not applicable. --->
 
 ## Discord contact info
-<!-- Add your Discord username for any follow-up questions (e.g., Lunos#1234). -->
-<!--- Remove this section if not applicable. --->
+<!-- Add your Discord username for any follow-up questions (e.g., pcg06). -->
+<!-- If you have created a discussion thread, this is a good place to link it. -->
 <!--- Contributors must join https://discord.gg/6CzjAG6GZk -->

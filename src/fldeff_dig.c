@@ -16,7 +16,7 @@ static void FieldCallback_Dig(void);
 static void StartDigFieldEffect(void);
 
 // text
-bool8 SetUpFieldMove_Dig(void)
+bool32 SetUpFieldMove_Dig(void)
 {
     if (CanUseDigOrEscapeRopeOnCurMap() == TRUE)
     {

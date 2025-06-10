@@ -116,12 +116,10 @@
 	.byte 0x17
 	.endm
 
-	.macro clearstatusfromeffect battler:req, moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
+	.macro clearstatus2 battler:req, status2:req
 	.byte 0x18
 	.byte \battler
+	.4byte \status2
 	.endm
 
 	.macro tryfaintmon battler:req
@@ -1012,7 +1010,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealingitem
+	.macro tryrestorehpberry
 	.byte 0xbb
 	.endm
 
@@ -1695,10 +1693,6 @@
 
 	.macro applyterastallization
 	callnative BS_ApplyTerastallization
-	.endm
-
-	.macro damagetoquartertargethp
-	callnative BS_DamageToQuarterTargetHP
 	.endm
 
 	.macro jumpifsleepclause jumpInstr:req
@@ -2447,10 +2441,6 @@
 
 	.macro dmgtomaxattackerhp
 	manipulatedamage DMG_FULL_ATTACKER_HP
-	.endm
-
-	.macro dmgtocurrattackerhp
-	manipulatedamage DMG_CURR_ATTACKER_HP
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req
