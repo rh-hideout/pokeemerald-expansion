@@ -28,8 +28,6 @@ enum {
 static void CB2_MysteryEventMenu(void);
 static void PrintMysteryMenuText(u8 windowId, const u8 *text, u8 x, u8 y, s32 speed);
 
-static EWRAM_DATA u8 sUnused = 0; // set but unused
-
 static const struct BgTemplate sBgTemplates[] =
 {
     {
@@ -257,10 +255,14 @@ static void CB2_MysteryEventMenu(void)
     case 11:
         if (gReceivedRemoteLinkPlayers == 0)
         {
+            // No clue what is going on here, and from where gDecompressionBuffer gets actually populated with mystery event script.
+            /*
             u16 status = RunMysteryEventScript(gDecompressionBuffer);
             CpuFill32(0, gDecompressionBuffer, 0x7D4);
+
             if (!GetEventLoadMessage(gStringVar4, status))
                 TrySavingData(SAVE_NORMAL);
+            */
             gMain.state++;
         }
         break;
@@ -270,10 +272,7 @@ static void CB2_MysteryEventMenu(void)
         break;
     case 13:
         if (!IsTextPrinterActive(WIN_MSG))
-        {
             gMain.state++;
-            sUnused = 0;
-        }
         break;
     case 14:
         if (JOY_NEW(A_BUTTON))

@@ -4,20 +4,20 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_WORK_UP].effect == EFFECT_ATTACK_SPATK_UP);
+    ASSUME(GetMoveEffect(MOVE_WORK_UP) == EFFECT_ATTACK_SPATK_UP);
 }
 
 SINGLE_BATTLE_TEST("Work Up raises Attack and Sp. Attack by 1 stage each", s16 damage)
 {
     bool32 raiseStats;
     u32 move;
-    PARAMETRIZE { raiseStats = FALSE; move = MOVE_TACKLE; }
-    PARAMETRIZE { raiseStats = TRUE;  move = MOVE_TACKLE; }
+    PARAMETRIZE { raiseStats = FALSE; move = MOVE_SCRATCH; }
+    PARAMETRIZE { raiseStats = TRUE;  move = MOVE_SCRATCH; }
     PARAMETRIZE { raiseStats = FALSE; move = MOVE_SWIFT; }
     PARAMETRIZE { raiseStats = TRUE;  move = MOVE_SWIFT; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
-        ASSUME(gMovesInfo[MOVE_SWIFT].category == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

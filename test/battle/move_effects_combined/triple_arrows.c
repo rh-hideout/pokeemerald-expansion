@@ -44,12 +44,18 @@ SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
     }
 }
 
-SINGLE_BATTLE_TEST("Triple Arrows lands a critical hit")
+SINGLE_BATTLE_TEST("Triple Arrows has an increased critical hit ratio")
 {
-    PASSES_RANDOMLY(1, 8, RNG_CRITICAL_HIT);
+    u32 j, genConfig = 0, passes = 0, trials = 0;
+
+    PARAMETRIZE { genConfig = GEN_1; passes = 1; trials = 2; }     // 50% with Wobbuffet's base speed
+    for (j = GEN_2; j <= GEN_9; j++) {
+        PARAMETRIZE { genConfig = GEN_2; passes = 1; trials = 8; }
+    }
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        ASSUME(B_CRIT_CHANCE >= GEN_7);
-        ASSUME(gMovesInfo[MOVE_TRIPLE_ARROWS].criticalHitStage == 1);
+        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        ASSUME(GetMoveCriticalHitStage(MOVE_TRIPLE_ARROWS) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -82,11 +88,11 @@ SINGLE_BATTLE_TEST("Triple Arrows's flinching is prevented by Inner Focus")
         OPPONENT(SPECIES_RIOLU) { Ability(ABILITY_INNER_FOCUS); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS);
-               MOVE(opponent, MOVE_TACKLE);
+               MOVE(opponent, MOVE_SCRATCH);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
         NONE_OF { MESSAGE("The opposing Wobbuffet flinched and couldn't move!"); }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }

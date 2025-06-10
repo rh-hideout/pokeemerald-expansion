@@ -1,13 +1,13 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Take Down deals 25% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Take Down deals 25% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TAKE_DOWN].recoil == 25);
+        ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -21,13 +21,13 @@ SINGLE_BATTLE_TEST("Take Down deals 25% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Double Edge deals 33% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Double Edge deals 33% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_DOUBLE_EDGE].recoil == 33);
+        ASSUME(GetMoveRecoil(MOVE_DOUBLE_EDGE) == 33);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -41,13 +41,13 @@ SINGLE_BATTLE_TEST("Double Edge deals 33% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Head Smash deals 50% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Head Smash deals 50% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HEAD_SMASH].recoil == 50);
+        ASSUME(GetMoveRecoil(MOVE_HEAD_SMASH) == 50);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -61,13 +61,13 @@ SINGLE_BATTLE_TEST("Head Smash deals 50% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Flare Blitz deals 33% of recoil damage to the user and can burn target")
+SINGLE_BATTLE_TEST("Recoil: Flare Blitz deals 33% of recoil damage to the user and can burn target")
 {
     s16 directDamage;
     s16 recoilDamage;
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLARE_BLITZ].recoil == 33);
+        ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) == 33);
         ASSUME(MoveHasAdditionalEffect(MOVE_FLARE_BLITZ, MOVE_EFFECT_BURN));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -81,5 +81,24 @@ SINGLE_BATTLE_TEST("Flare Blitz deals 33% of recoil damage to the user and can b
         HP_BAR(player, captureDamage: &recoilDamage);
     } THEN {
         EXPECT_MUL_EQ(directDamage, UQ_4_12(0.33), recoilDamage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Recoil: Flare Blitz is absorbed by Flash Fire and no recoil damage is dealt")
+{
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_FLASH_FIRE); };
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_FLARE_BLITZ); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_BLITZ, player);
+            HP_BAR(opponent);
+            HP_BAR(player);
+        }
     }
 }

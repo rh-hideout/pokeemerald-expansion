@@ -4,7 +4,6 @@
 ASSUMPTIONS
 {
     ASSUME(MoveHasAdditionalEffect(MOVE_POWDER_SNOW, MOVE_EFFECT_FREEZE_OR_FROSTBITE) == TRUE);
-    ASSUME(gMovesInfo[MOVE_BLIZZARD].accuracy == 70);
 }
 
 #if B_USE_FROSTBITE == TRUE
@@ -60,21 +59,6 @@ SINGLE_BATTLE_TEST("Freeze cannot be inflicted in Sunlight")
     }
 }
 
-SINGLE_BATTLE_TEST("Blizzard bypasses accuracy checks in Hail and Snow")
-{
-    u32 move;
-    PARAMETRIZE { move = MOVE_HAIL; }
-    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, move); MOVE(player, MOVE_BLIZZARD); }
-    } SCENE {
-        NOT MESSAGE("Wobbuffet's attack missed!");
-    }
-}
-
 #if B_STATUS_TYPE_IMMUNITY > GEN_1
 #if B_USE_FROSTBITE == TRUE
 SINGLE_BATTLE_TEST("Freezing Glare should frostbite Psychic-types")
@@ -92,7 +76,7 @@ SINGLE_BATTLE_TEST("Freezing Glare shouldn't freeze Psychic-types")
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_ARTICUNO_GALAR].types[0] == TYPE_PSYCHIC);
         ASSUME(MoveHasAdditionalEffect(MOVE_FREEZING_GLARE, MOVE_EFFECT_FREEZE_OR_FROSTBITE) == TRUE);
-        ASSUME(gMovesInfo[MOVE_FREEZING_GLARE].type == TYPE_PSYCHIC);
+        ASSUME(GetMoveType(MOVE_FREEZING_GLARE) == TYPE_PSYCHIC);
         PLAYER(SPECIES_ARTICUNO_GALAR);
         OPPONENT(SPECIES_ARTICUNO_GALAR);
     } WHEN {

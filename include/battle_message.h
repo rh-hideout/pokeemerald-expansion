@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_MESSAGE_H
 
 #include "constants/battle.h"
+#include "constants/battle_string_ids.h"
 
 // This buffer can hold many different things. Some of the things it can hold
 // that have explicit sizes are listed below to ensure it can contain them.
@@ -73,8 +74,8 @@
 #define B_TXT_DEF_NAME 0x39
 #define B_TXT_DEF_TEAM1 0x3A // Your/The opposing
 #define B_TXT_DEF_TEAM2 0x3B // your/the opposing
-// #define B_TXT_SELECTION_NAME 0x3C - removed
-// #define B_TXT_SELECTION_NAME2 0x3D no Illusion check - removed
+#define B_TXT_DEF_PARTNER_NAME 0x3C
+// #define B_UNUSED_0x3D 0x3D
 #define B_TXT_ATK_NAME_WITH_PREFIX2 0x3E //lowercase
 #define B_TXT_DEF_NAME_WITH_PREFIX2 0x3F //lowercase
 #define B_TXT_EFF_NAME_WITH_PREFIX2 0x40 //lowercase
@@ -83,6 +84,8 @@
 #define B_TXT_TRAINER2_NAME_WITH_CLASS 0x43
 #define B_TXT_PARTNER_NAME_WITH_CLASS 0x44
 #define B_TXT_ATK_TRAINER_NAME_WITH_CLASS 0x45
+#define B_TXT_SCR_TEAM1 0x46
+#define B_TXT_SCR_TEAM2 0x47
 
 #define B_BUFF_STRING                       0
 #define B_BUFF_NUMBER                       1
@@ -245,35 +248,18 @@ struct BattleMsgData
     u8 textBuffs[3][TEXT_BUFF_ARRAY_COUNT];
 };
 
-enum
-{
-    TRAINER_SLIDE_LAST_SWITCHIN,
-    TRAINER_SLIDE_LAST_LOW_HP,
-    TRAINER_SLIDE_FIRST_DOWN,
-    TRAINER_SLIDE_LAST_HALF_HP,
-    TRAINER_SLIDE_FIRST_CRITICAL_HIT,
-    TRAINER_SLIDE_FIRST_SUPER_EFFECTIVE_HIT,
-    TRAINER_SLIDE_FIRST_STAB_MOVE,
-    TRAINER_SLIDE_PLAYER_MON_UNAFFECTED,
-    TRAINER_SLIDE_MEGA_EVOLUTION,
-    TRAINER_SLIDE_Z_MOVE,
-    TRAINER_SLIDE_BEFORE_FIRST_TURN,
-    TRAINER_SLIDE_DYNAMAX,
-};
-
-void BufferStringBattle(u16 stringID, u32 battler);
+void BufferStringBattle(enum StringID stringID, u32 battler);
 u32 BattleStringExpandPlaceholdersToDisplayedString(const u8 *src);
 u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize);
 void BattlePutTextOnWindow(const u8 *text, u8 windowId);
 void SetPpNumbersPaletteInMoveSelection(u32 battler);
 u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp);
-u32 ShouldDoTrainerSlide(u32 battler, u32 which); // return 1 for TrainerA, 2 forTrainerB
 void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst);
 
 extern struct BattleMsgData *gBattleMsgDataPtr;
 
 extern const u8 *const gBattleStringsTable[];
-extern const u8 *const gStatNamesTable[];
+extern const u8 *const gStatNamesTable[NUM_BATTLE_STATS];
 extern const u8 *const gPokeblockWasTooXStringTable[];
 extern const u8 *const gRefereeStringsTable[];
 extern const u8 *const gRoundsStringTable[];

@@ -8,14 +8,14 @@ SINGLE_BATTLE_TEST("X Attack sharply raises battler's Attack stat", s16 damage)
     PARAMETRIZE { useItem = TRUE; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_X_ATTACK].battleUsage == EFFECT_ITEM_INCREASE_STAT);
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_X_ATTACK); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         if (B_X_ITEMS_BUFF >= GEN_7)
@@ -32,14 +32,14 @@ SINGLE_BATTLE_TEST("X Defense sharply raises battler's Defense stat", s16 damage
     PARAMETRIZE { useItem = TRUE; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_X_DEFENSE].battleUsage == EFFECT_ITEM_INCREASE_STAT);
-        ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_X_DEFENSE); }
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         if (B_X_ITEMS_BUFF >= GEN_7)
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("X Sp. Atk sharply raises battler's Sp. Attack stat", s16 dam
     PARAMETRIZE { useItem = TRUE; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_X_SP_ATK].battleUsage == EFFECT_ITEM_INCREASE_STAT);
-        ASSUME(gMovesInfo[MOVE_DISARMING_VOICE].category == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveCategory(MOVE_DISARMING_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("X Sp. Def sharply raises battler's Sp. Defense stat", s16 da
     PARAMETRIZE { useItem = TRUE; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_X_SP_DEF].battleUsage == EFFECT_ITEM_INCREASE_STAT);
-        ASSUME(gMovesInfo[MOVE_DISARMING_VOICE].category == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveCategory(MOVE_DISARMING_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -116,17 +116,17 @@ SINGLE_BATTLE_TEST("X Speed sharply raises battler's Speed stat", s16 damage)
         }
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_X_SPEED); }
-        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         if (useItem)
         {
-            MESSAGE("Wobbuffet used Tackle!");
-            MESSAGE("The opposing Wobbuffet used Tackle!");
+            MESSAGE("Wobbuffet used Scratch!");
+            MESSAGE("The opposing Wobbuffet used Scratch!");
         }
         else
         {
-            MESSAGE("The opposing Wobbuffet used Tackle!");
-            MESSAGE("Wobbuffet used Tackle!");
+            MESSAGE("The opposing Wobbuffet used Scratch!");
+            MESSAGE("Wobbuffet used Scratch!");
         }
     }
 }
@@ -134,11 +134,11 @@ SINGLE_BATTLE_TEST("X Speed sharply raises battler's Speed stat", s16 damage)
 SINGLE_BATTLE_TEST("X Accuracy sharply raises battler's Accuracy stat")
 {
 
-    ASSUME(gMovesInfo[MOVE_SING].accuracy == 55);
+    ASSUME(GetMoveAccuracy(MOVE_SING) == 55);
     if (B_X_ITEMS_BUFF >= GEN_7)
-        PASSES_RANDOMLY(gMovesInfo[MOVE_SING].accuracy * 5 / 3, 100, RNG_ACCURACY);
+        PASSES_RANDOMLY(GetMoveAccuracy(MOVE_SING) * 5 / 3, 100, RNG_ACCURACY);
     else
-        PASSES_RANDOMLY(gMovesInfo[MOVE_SING].accuracy * 4 / 3, 100, RNG_ACCURACY);
+        PASSES_RANDOMLY(GetMoveAccuracy(MOVE_SING) * 4 / 3, 100, RNG_ACCURACY);
     GIVEN {
         ASSUME(gItemsInfo[ITEM_X_ACCURACY].battleUsage == EFFECT_ITEM_INCREASE_STAT);
         PLAYER(SPECIES_WOBBUFFET);
@@ -163,9 +163,9 @@ SINGLE_BATTLE_TEST("Max Mushrooms raises battler's Attack stat", s16 damage)
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_MAX_MUSHROOMS); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
@@ -183,9 +183,9 @@ SINGLE_BATTLE_TEST("Max Mushrooms raises battler's Defense stat", s16 damage)
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_MAX_MUSHROOMS); }
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.66), results[1].damage);
@@ -243,17 +243,17 @@ SINGLE_BATTLE_TEST("Max Mushrooms raises battler's Speed stat", s16 damage)
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         if (useItem) TURN { USE_ITEM(player, ITEM_MAX_MUSHROOMS); }
-        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         if (useItem)
         {
-            MESSAGE("Wobbuffet used Tackle!");
-            MESSAGE("The opposing Wobbuffet used Tackle!");
+            MESSAGE("Wobbuffet used Scratch!");
+            MESSAGE("The opposing Wobbuffet used Scratch!");
         }
         else
         {
-            MESSAGE("The opposing Wobbuffet used Tackle!");
-            MESSAGE("Wobbuffet used Tackle!");
+            MESSAGE("The opposing Wobbuffet used Scratch!");
+            MESSAGE("Wobbuffet used Scratch!");
         }
     }
 }

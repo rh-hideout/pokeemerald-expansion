@@ -3,6 +3,8 @@
 #include "bg.h"
 #include "dma3.h"
 #include "gpu_regs.h"
+#include "malloc.h"
+#include "menu.h"
 
 #define DISPCNT_ALL_BG_AND_MODE_BITS    (DISPCNT_BG_ALL_ON | 0x7)
 
@@ -865,7 +867,7 @@ void *GetBgTilemapBuffer(u32 bg)
         return sGpuBgConfigs2[bg].tilemap;
 }
 
-void CopyToBgTilemapBuffer(u32 bg, const void *src, u16 mode, u16 destOffset)
+void CopyToBgTilemapBuffer(u32 bg, const void *src, u32 mode, u32 destOffset)
 {
     if (!IsInvalidBg(bg) && !IsTileMapOutsideWram(bg))
     {
@@ -874,6 +876,14 @@ void CopyToBgTilemapBuffer(u32 bg, const void *src, u16 mode, u16 destOffset)
         else
             LZ77UnCompWram(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)));
     }
+}
+
+void DecompressAndCopyToBgTilemapBuffer(u32 bg, const u32 *src, u32 mode, u32 destOffset)
+{
+    void *buffer = malloc_and_decompress(src, NULL);
+
+    CopyToBgTilemapBuffer(bg, buffer, mode, destOffset);
+    Free(buffer);
 }
 
 void CopyBgTilemapBufferToVram(u32 bg)
@@ -910,7 +920,7 @@ void CopyToBgTilemapBufferRect(u32 bg, const void *src, u8 destX, u8 destY, u8 w
         {
         case BG_TYPE_NORMAL:
         {
-            const u16 * srcCopy = src;
+            const u16 *srcCopy = src;
             for (destY16 = destY; destY16 < (destY + height); destY16++)
             {
                 for (destX16 = destX; destX16 < (destX + width); destX16++)

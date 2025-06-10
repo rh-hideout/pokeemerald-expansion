@@ -3,11 +3,11 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TACKLE].makesContact);
-    ASSUME(gMovesInfo[MOVE_EMBER].type == TYPE_FIRE);
-    ASSUME(gMovesInfo[MOVE_TACKLE].makesContact);
-    ASSUME(gMovesInfo[MOVE_FIRE_PUNCH].makesContact);
-    ASSUME(gMovesInfo[MOVE_FIRE_PUNCH].type == TYPE_FIRE);
+    ASSUME(MoveMakesContact(MOVE_SCRATCH));
+    ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+    ASSUME(MoveMakesContact(MOVE_SCRATCH));
+    ASSUME(MoveMakesContact(MOVE_FIRE_PUNCH));
+    ASSUME(GetMoveType(MOVE_FIRE_PUNCH) == TYPE_FIRE);
 }
 
 SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct contact", s16 damage)
@@ -19,9 +19,9 @@ SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct conta
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, UQ_4_12(0.5), results[1].damage);

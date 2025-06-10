@@ -186,7 +186,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Shell Trap", s16 damage)
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -339,7 +339,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Comeuppance", s16 damage)
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_COMEUPPANCE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_COMEUPPANCE); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -616,8 +616,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     s16 damage1, damage2;
     u32 move = 0;
     for (u32 j = 1; j < MOVES_COUNT; j += 4)
-        if (gMovesInfo[j].category != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
             PARAMETRIZE { move = j; }
+    }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
@@ -636,7 +638,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
             TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
-            TURN { MOVE(opponentRight, MOVE_TACKLE, target: playerLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_DREAM_EATER)
         {
             TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
@@ -653,23 +655,28 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         }
         else
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
-        if (gMovesInfo[move].effect == EFFECT_TWO_TURNS_ATTACK || gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE || gMovesInfo[move].effect == EFFECT_SOLAR_BEAM || gMovesInfo[move].effect == EFFECT_SKY_DROP)
+        switch (GetMoveEffect(move))
         {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
-        {
-            TURN { ; }
-            TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_BIDE)
-        {
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
         }
     } SCENE {
-        if (gMovesInfo[move].effect != EFFECT_FUTURE_SIGHT)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -691,7 +698,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     s16 damage1, damage2;
     u32 move = 0;
     for (u32 j = 2; j < MOVES_COUNT; j += 4)
-        if (gMovesInfo[j].category != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
             PARAMETRIZE { move = j; }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
@@ -711,7 +718,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
             TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
-            TURN { MOVE(opponentRight, MOVE_TACKLE, target: playerLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_DREAM_EATER)
         {
             TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
@@ -728,23 +735,28 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         }
         else
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
-        if (gMovesInfo[move].effect == EFFECT_TWO_TURNS_ATTACK || gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE || gMovesInfo[move].effect == EFFECT_SOLAR_BEAM || gMovesInfo[move].effect == EFFECT_SKY_DROP)
+        switch (GetMoveEffect(move))
         {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
-        {
-            TURN { ; }
-            TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_BIDE)
-        {
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
         }
     } SCENE {
-        if (gMovesInfo[move].effect != EFFECT_FUTURE_SIGHT)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -766,7 +778,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     s16 damage1, damage2;
     u32 move = 0;
     for (u32 j = 3; j < MOVES_COUNT; j += 4)
-        if (gMovesInfo[j].category != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
             PARAMETRIZE { move = j; }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
@@ -786,7 +798,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
             TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
-            TURN { MOVE(opponentRight, MOVE_TACKLE, target: playerLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_DREAM_EATER)
         {
             TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
@@ -803,23 +815,28 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         }
         else
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
-        if (gMovesInfo[move].effect == EFFECT_TWO_TURNS_ATTACK || gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE || gMovesInfo[move].effect == EFFECT_SOLAR_BEAM || gMovesInfo[move].effect == EFFECT_SKY_DROP)
+        switch (GetMoveEffect(move))
         {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
-        {
-            TURN { ; }
-            TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_BIDE)
-        {
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
         }
     } SCENE {
-        if (gMovesInfo[move].effect != EFFECT_FUTURE_SIGHT)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -842,7 +859,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = 4; j < MOVES_COUNT; j += 4)
     {
-        if (gMovesInfo[j].category != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -863,7 +880,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
             TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
-            TURN { MOVE(opponentRight, MOVE_TACKLE, target: playerLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         else if (move == MOVE_DREAM_EATER)
         {
             TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
@@ -880,23 +897,28 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
         }
         else
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
-        if (gMovesInfo[move].effect == EFFECT_TWO_TURNS_ATTACK || gMovesInfo[move].effect == EFFECT_SEMI_INVULNERABLE || gMovesInfo[move].effect == EFFECT_SOLAR_BEAM || gMovesInfo[move].effect == EFFECT_SKY_DROP)
+        switch (GetMoveEffect(move))
         {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
-        {
-            TURN { ; }
-            TURN { ; }
-        }
-        if (gMovesInfo[move].effect == EFFECT_BIDE)
-        {
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
         }
     } SCENE {
-        if (gMovesInfo[move].effect != EFFECT_FUTURE_SIGHT)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);

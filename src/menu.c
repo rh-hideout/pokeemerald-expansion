@@ -1943,7 +1943,12 @@ void task_free_buf_after_copying_tile_data_to_vram(u8 taskId)
 
 void *malloc_and_decompress(const void *src, u32 *size)
 {
+    u32 sizeLocal; // If size is passed as NULL, because we don't care about knowing the size
     void *ptr;
+
+    if (size == NULL)
+        size = &sizeLocal;
+
     u8 *sizeAsBytes = (u8 *)size;
     u8 *srcAsBytes = (u8 *)src;
 

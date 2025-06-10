@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_DARK_VOID].effect == EFFECT_DARK_VOID);
+    ASSUME(GetMoveEffect(MOVE_DARK_VOID) == EFFECT_DARK_VOID);
 }
 
 SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep")

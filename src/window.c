@@ -10,7 +10,7 @@ COMMON_DATA void *gWindowBgTilemapBuffers[NUM_BACKGROUNDS] = {0};
 extern u32 gWindowTileAutoAllocEnabled;
 
 EWRAM_DATA struct Window gWindows[WINDOWS_MAX] = {0};
-EWRAM_DATA static struct Window* sWindowPtr = NULL;
+EWRAM_DATA static struct Window *sWindowPtr = NULL;
 EWRAM_DATA static u16 sWindowSize = 0;
 
 static u32 GetNumActiveWindowsOnBg(u32 bgId);
@@ -237,6 +237,20 @@ void RemoveWindow(u32 windowId)
     {
         Free(gWindows[windowId].tileData);
         gWindows[windowId].tileData = NULL;
+    }
+}
+
+void RemoveAllWindowsOnBg(u32 bgId)
+{
+    u32 i;
+
+    if (bgId > NUM_BACKGROUNDS)
+        return;
+
+    for (i = 0; i < WINDOWS_MAX; i++)
+    {
+        if (gWindows[i].window.bg == bgId)
+            RemoveWindow(i);
     }
 }
 

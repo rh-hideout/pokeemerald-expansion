@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_SWIFT].category == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET) ;
         OPPONENT(SPECIES_NOSEPASS);
     } WHEN {
@@ -92,5 +92,22 @@ SINGLE_BATTLE_TEST("Sandstorm damage rounds properly when maxHP < 16")
         TURN { MOVE(opponent, MOVE_SANDSTORM); }
     } SCENE {
         HP_BAR(player, damage: 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated")
+{
+    u32 type1 = gSpeciesInfo[SPECIES_STOUTLAND].types[0];
+    u32 type2 = gSpeciesInfo[SPECIES_STOUTLAND].types[1];
+    GIVEN {
+        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
+        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
+        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        NOT HP_BAR(player);
     }
 }

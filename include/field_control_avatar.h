@@ -11,7 +11,7 @@ struct FieldInput
     bool8 heldDirection2:1;
     bool8 tookStep:1;
     bool8 pressedBButton:1;
-    bool8 input_field_1_0:1;
+    bool8 pressedRButton:1;
     bool8 input_field_1_1:1;
     bool8 input_field_1_2:1;
     bool8 input_field_1_3:1;
@@ -25,10 +25,9 @@ struct FieldInput
 void FieldClearPlayerInput(struct FieldInput *pStruct);
 void FieldGetPlayerInput(struct FieldInput *pStruct, u16 keys, u16 heldKeys);
 int ProcessPlayerFieldInput(struct FieldInput *pStruct);
-void overworld_poison_timer_set(void);
 void RestartWildEncounterImmunitySteps(void);
 const u8 *GetObjectEventScriptPointerPlayerFacing(void);
-bool8 TryDoDiveWarp(struct MapPosition *position, u16 b);
+bool8 TryDoDiveWarp(struct MapPosition *position, u16 metatileBehavior);
 int SetCableClubWarp(void);
 u8 TrySetDiveWarp(void);
 const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, u8 direction);

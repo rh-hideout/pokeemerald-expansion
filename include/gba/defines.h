@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-#define TRUE  1
-#define FALSE 0
+#define TRUE   1
+#define FALSE  0
 
 #define IWRAM_DATA __attribute__((section(".bss")))
 #define EWRAM_DATA __attribute__((section(".sbss")))
@@ -12,6 +12,9 @@
 #define EWRAM_INIT __attribute__((section(".ewram")))
 #define COMMON_DATA __attribute__((section("common_data")))
 #define UNUSED __attribute__((unused))
+#define USED __attribute__((used))
+
+#define ARM_FUNC __attribute__((target("arm")))
 
 #if MODERN
 #define NOINLINE __attribute__((noinline))

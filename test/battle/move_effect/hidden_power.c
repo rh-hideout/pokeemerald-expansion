@@ -1,6 +1,33 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(gTypesInfo[TYPE_NONE].isHiddenPowerType == FALSE);
+    ASSUME(gTypesInfo[TYPE_NORMAL].isHiddenPowerType == FALSE);
+    ASSUME(gTypesInfo[TYPE_FIGHTING].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_FLYING].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_POISON].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_GROUND].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_ROCK].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_BUG].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_GHOST].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_STEEL].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_MYSTERY].isHiddenPowerType == FALSE);
+    ASSUME(gTypesInfo[TYPE_FIRE].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_WATER].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_GRASS].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_ELECTRIC].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_PSYCHIC].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_ICE].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_DRAGON].isHiddenPowerType == TRUE);
+    ASSUME(gTypesInfo[TYPE_DARK].isHiddenPowerType == TRUE);
+    // Any type after Dark shouldn't be part of Hidden Power officially.
+    for (u32 j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
+        ASSUME(gTypesInfo[j].isHiddenPowerType == FALSE);
+    }
+}
+
 // IV combinations sourced from https://www.smogon.com/forums/threads/hidden-power-iv-combinations.78083/
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 {
@@ -86,8 +113,8 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
             ASSUME(gTypeEffectivenessTable[type][foeType] == UQ_4_12(2.0));                 // Foe's Type resists
             ASSUME(gSpeciesInfo[foeSpecies].types[0] == gSpeciesInfo[foeSpecies].types[1]); // Foe's pure type
             ASSUME(gSpeciesInfo[foeSpecies].types[0] == foeType);                           // Foe is the super-effective type
-            ASSUME(ItemId_GetHoldEffect(foeItem) == HOLD_EFFECT_RESIST_BERRY);              // Item is resist berry
-            ASSUME(ItemId_GetHoldEffectParam(foeItem) == type);                             // Resist berry of type
+            ASSUME(GetItemHoldEffect(foeItem) == HOLD_EFFECT_RESIST_BERRY);              // Item is resist berry
+            ASSUME(GetItemHoldEffectParam(foeItem) == type);                             // Resist berry of type
             PLAYER(SPECIES_DUNSPARCE) { HPIV(hp); AttackIV(atk); DefenseIV(def); SpAttackIV(spAtk); SpDefenseIV(spDef); SpeedIV(speed); }
         } else {
             PLAYER(SPECIES_DUNSPARCE);

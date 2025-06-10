@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_U_TURN].effect == EFFECT_HIT_ESCAPE);
+    ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
 }
 
 SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out")
@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out if Wimp Out fails t
 SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out after Ice Face activates")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_U_TURN].category == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_U_TURN) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_BEEDRILL);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_EISCUE) { Ability(ABILITY_ICE_FACE); }
@@ -177,5 +177,35 @@ SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right pok
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn triggers before Eject Pack")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GOODRA_HISUI) { Ability(ABILITY_GOOEY); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
     }
 }

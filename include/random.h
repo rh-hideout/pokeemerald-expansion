@@ -30,7 +30,7 @@ struct Sfc32State {
 
 typedef struct Sfc32State rng_value_t;
 
-#define RNG_VALUE_EMPTY {}
+#define RNG_VALUE_EMPTY {0}
 
 // Calling this function directly is discouraged.
 // Use LocalRandom() instead.
@@ -43,9 +43,14 @@ static inline u32 _SFC32_Next(struct Sfc32State *state)
     return result;
 }
 
+static inline u32 LocalRandom32(rng_value_t *val)
+{
+    return _SFC32_Next(val);
+}
+
 static inline u16 LocalRandom(rng_value_t *val)
 {
-    return _SFC32_Next(val) >> 16;
+    return LocalRandom32(val) >> 16;
 }
 
 u32 Random32(void);
@@ -141,11 +146,14 @@ enum RandomTag
     RNG_INFATUATION,
     RNG_LOADED_DICE,
     RNG_METRONOME,
+    RNG_MOODY_INCREASE,
+    RNG_MOODY_DECREASE,
     RNG_PARALYSIS,
     RNG_PICKUP,
     RNG_POISON_POINT,
     RNG_POISON_TOUCH,
     RNG_RAMPAGE_TURNS,
+    RNG_RANDOM_STAT_UP,
     RNG_SECONDARY_EFFECT,
     RNG_SECONDARY_EFFECT_2,
     RNG_SECONDARY_EFFECT_3,
@@ -166,15 +174,32 @@ enum RandomTag
     RNG_AI_SWITCH_CURSED,
     RNG_AI_SWITCH_NIGHTMARE,
     RNG_AI_SWITCH_SEEDED,
+    RNG_AI_SWITCH_YAWN,
+    RNG_AI_SWITCH_PERISH_SONG,
+    RNG_AI_SWITCH_INFATUATION,
     RNG_AI_SWITCH_ABSORBING,
+    RNG_AI_SWITCH_ABSORBING_STAY_IN,
     RNG_AI_SWITCH_NATURAL_CURE,
     RNG_AI_SWITCH_REGENERATOR,
     RNG_AI_SWITCH_ENCORE,
+    RNG_AI_SWITCH_CHOICE_LOCKED,
     RNG_AI_SWITCH_STATS_LOWERED,
     RNG_AI_SWITCH_SE_DEFENSIVE,
+    RNG_AI_SWITCH_TRUANT,
+    RNG_AI_SWITCH_WONDER_GUARD,
+    RNG_AI_SWITCH_TRAPPER,
+    RNG_AI_SWITCH_FREE_TURN,
+    RNG_AI_SWITCH_ALL_MOVES_BAD,
+    RNG_AI_SWITCH_ALL_SCORES_BAD,
+    RNG_AI_PP_STALL_DISREGARD_MOVE,
     RNG_SHELL_SIDE_ARM,
     RNG_RANDOM_TARGET,
+    RNG_AI_PREDICT_ABILITY,
+    RNG_AI_PREDICT_SWITCH,
+    RNG_AI_PREDICT_MOVE,
+    RNG_AI_STATUS_FOCUS_PUNCH,
     RNG_HEALER,
+    RNG_DEXNAV_ENCOUNTER_LEVEL,
 };
 
 #define RandomWeighted(tag, ...) \
