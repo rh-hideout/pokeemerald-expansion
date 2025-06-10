@@ -51,22 +51,22 @@ static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocket
     pocket->itemSlots[pocketPos].quantity = newValue ^ gSaveBlock2Ptr->encryptionKey;
 }
 
-u16 GetBagItemId(u32 pocketId, u32 pocketPos)
+u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 {
     return GetBagItemIdPocket(&gBagPockets[pocketId], pocketPos);
 }
 
-u16 GetBagItemQuantity(u32 pocketId, u32 pocketPos)
+u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
 {
     return GetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos);
 }
 
-static void SetBagItemId(u32 pocketId, u32 pocketPos, u16 itemId)
+static void SetBagItemId(enum Pocket pocketId, u32 pocketPos, u16 itemId)
 {
     SetBagItemIdPocket(&gBagPockets[pocketId], pocketPos, itemId);
 }
 
-void SetBagItemQuantity(u32 pocketId, u32 pocketPos, u16 newValue)
+void SetBagItemQuantity(enum Pocket pocketId, u32 pocketPos, u16 newValue)
 {
     SetBagItemQuantityPocket(&gBagPockets[pocketId], pocketPos, newValue);
 }
@@ -83,7 +83,8 @@ static void SetPCItemQuantity(u16 *quantity, u16 newValue)
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
-    u32 pocketId, item;
+    enum Pocket pocketId;
+    u32 item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
         for (item = 0; item < gBagPockets[pocketId].capacity; item++)
@@ -133,7 +134,7 @@ u8 *CopyItemNameHandlePlural(u16 itemId, u8 *dst, u32 quantity)
     }
 }
 
-bool8 IsBagPocketNonEmpty(u32 pocketId)
+bool8 IsBagPocketNonEmpty(enum Pocket pocketId)
 {
     u8 i;
 
@@ -240,7 +241,7 @@ u32 GetFreeSpaceForItemInBag(u16 itemId)
     return spaceForItem;
 }
 
-static inline u32 PrepareTempPocket(struct BagPocket *tempPocket, u32 pocketId)
+static inline u32 PrepareTempPocket(struct BagPocket *tempPocket, enum Pocket pocketId)
 {
     u32 size = gBagPockets[pocketId].capacity * sizeof(struct ItemSlot);
     tempPocket->itemSlots = AllocZeroed(size);
@@ -256,7 +257,7 @@ static inline void ClearTempPocket(struct BagPocket *pocket)
     Free(pocket);
 }
 
-static inline void RestorePocketAndClearTempPocket(struct BagPocket *tempPocket, u32 pocketId, u32 pocketSize)
+static inline void RestorePocketAndClearTempPocket(struct BagPocket *tempPocket, enum Pocket pocketId, u32 pocketSize)
 {
     memcpy(gBagPockets[pocketId].itemSlots, tempPocket->itemSlots, pocketSize);
     ClearTempPocket(tempPocket);
@@ -556,7 +557,7 @@ void SwapRegisteredBike(void)
     }
 }
 
-static void SwapItemSlots(u32 pocketId, u32 pocketPosA, u16 pocketPosB)
+static void SwapItemSlots(enum Pocket pocketId, u32 pocketPosA, u16 pocketPosB)
 {
     struct ItemSlot *itemA = &gBagPockets[pocketId].itemSlots[pocketPosA],
                     *itemB = &gBagPockets[pocketId].itemSlots[pocketPosB],
@@ -564,7 +565,7 @@ static void SwapItemSlots(u32 pocketId, u32 pocketPosA, u16 pocketPosB)
     SWAP(*itemA, *itemB, temp);
 }
 
-void CompactItemsInBagPocket(u32 pocketId)
+void CompactItemsInBagPocket(enum Pocket pocketId)
 {
     u16 i, j;
 
@@ -578,7 +579,7 @@ void CompactItemsInBagPocket(u32 pocketId)
     }
 }
 
-void SortBerriesOrTMHMs(u32 pocketId)
+void SortBerriesOrTMHMs(enum Pocket pocketId)
 {
     u16 i, j;
 
@@ -598,7 +599,7 @@ void SortBerriesOrTMHMs(u32 pocketId)
     }
 }
 
-void MoveItemSlotInPocket(u32 pocketId, u32 from, u32 to)
+void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to)
 {
     if (from != to)
     {
@@ -937,7 +938,7 @@ u8 GetItemConsumability(u16 itemId)
     return !gItemsInfo[SanitizeItemId(itemId)].notConsumed;
 }
 
-u8 GetItemPocket(u16 itemId)
+enum Pocket GetItemPocket(u16 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].pocket;
 }
