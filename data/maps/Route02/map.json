@@ -1,0 +1,47 @@
+{
+  "id": "MAP_ROUTE02",
+  "name": "Route02",
+  "layout": "LAYOUT_ROUTE02",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_DYN_SOME_RAIN",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_TOWN_BRAKSTRAND",
+      "offset": 14,
+      "direction": "right"
+    }
+  ],
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 27,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_HARGWALD",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 17,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_HARGWALD",
+      "dest_warp_id": "1"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}
