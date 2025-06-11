@@ -6991,6 +6991,15 @@ static void Cmd_moveend(void)
                     effect = TRUE;
                 }
                 break;
+            case EFFECT_CHLOROBLAST:
+                if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker))
+                {
+                    gBattleStruct->moveDamage[gBattlerAttacker] = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_MoveEffectRecoil;
+                    effect = TRUE;
+                }
+                break;
             case EFFECT_RAPID_SPIN:
                 if (IsBattlerTurnDamaged(gBattlerTarget))
                 {
@@ -7393,6 +7402,12 @@ static void Cmd_moveend(void)
                 SetActiveGimmick(gBattlerAttacker, GIMMICK_NONE);
             if (B_CHARGE >= GEN_9 && moveType == TYPE_ELECTRIC && (IsBattlerTurnDamaged(gBattlerTarget) || gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 gStatuses3[gBattlerAttacker] &= ~(STATUS3_CHARGED_UP);
+            // check if Stellar type boost should be used up
+            if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA
+             && GetBattlerTeraType(gBattlerAttacker) == TYPE_STELLAR
+             && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
+             && IsTypeStellarBoosted(gBattlerAttacker, moveType))
+                ExpendTypeStellarBoost(gBattlerAttacker, moveType);
             memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
 
             for (i = 0; i < gBattlersCount; i++)
@@ -7882,7 +7897,16 @@ static void Cmd_openpartyscreen(void)
             {
                 if (((1u << i) & hitmarkerFaintBits))
                 {
-                    if (i > 1 && ((1u << BATTLE_PARTNER(i)) & hitmarkerFaintBits))
+                    u32 skipPartnerCheck = FALSE;
+                    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS
+                     && GetBattlerSide(i) == B_SIDE_OPPONENT
+                     && TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+                        skipPartnerCheck = TRUE;
+
+                    // In a 1v2 Double Battle if trainer A didn't have any more mons left
+                    // the battler for trainer B wasn't being registered to be send out.
+                    // Likely reason is because hitmarkerFaintBits was not set for battler 1 due to it being missing for a turn or cleared somewhere
+                    if (!skipPartnerCheck && i > 1 && ((1u << BATTLE_PARTNER(i)) & hitmarkerFaintBits))
                         continue;
 
                     battler = i;

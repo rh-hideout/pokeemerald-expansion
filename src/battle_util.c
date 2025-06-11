@@ -545,6 +545,16 @@ void HandleAction_UseMove(void)
 void HandleAction_Switch(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+
+    // if switching to a mon that is already on field, cancel switch
+    if (!(gAbsentBattlerFlags & (1u << BATTLE_PARTNER(gBattlerAttacker)))
+     && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
+     && gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)] == gBattleStruct->monToSwitchIntoId[gBattlerAttacker])
+    {
+        gCurrentActionFuncId = B_ACTION_FINISHED;
+        return;
+    }
+
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
     gActionSelectionCursor[gBattlerAttacker] = 0;
@@ -851,7 +861,7 @@ void HandleAction_NothingIsFainted(void)
 
 void HandleAction_ActionFinished(void)
 {
-    u32 i, j, moveType;
+    u32 i, j;
     bool32 afterYouActive = gSpecialStatuses[gBattlerByTurnOrder[gCurrentTurnActionNumber + 1]].afterYou;
     gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_SIZE;
     gCurrentTurnActionNumber++;
@@ -862,16 +872,6 @@ void HandleAction_ActionFinished(void)
                     | HITMARKER_OBEYS | HITMARKER_SYNCHRONIZE_EFFECT
                     | HITMARKER_CHARGING | HITMARKER_IGNORE_DISGUISE);
 
-    // check if Stellar type boost should be used up
-    moveType = GetBattleMoveType(gCurrentMove);
-
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA
-        && GetBattlerTeraType(gBattlerAttacker) == TYPE_STELLAR
-        && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
-        && IsTypeStellarBoosted(gBattlerAttacker, moveType))
-    {
-        ExpendTypeStellarBoost(gBattlerAttacker, moveType);
-    }
     ClearDamageCalcResults();
     gCurrentMove = 0;
     gBattleScripting.animTurn = 0;
@@ -988,29 +988,29 @@ static void UNUSED MarkAllBattlersForControllerExec(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
         for (i = 0; i < gBattlersCount; i++)
-            gBattleControllerExecFlags |= 1u << (i + 32 - MAX_BATTLERS_COUNT);
+            MarkBattleControllerMessageOutboundOverLink(i);
     }
     else
     {
         for (i = 0; i < gBattlersCount; i++)
-            gBattleControllerExecFlags |= 1u << i;
+            MarkBattleControllerActiveOnLocal(i);
     }
 }
 
 bool32 IsBattlerMarkedForControllerExec(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        return (gBattleControllerExecFlags & (1u << (battler + 28))) != 0;
+        return IsBattleControllerMessageSynchronizedOverLink(battler);
     else
-        return (gBattleControllerExecFlags & (1u << battler)) != 0;
+        return IsBattleControllerActiveOnLocal(battler);
 }
 
 void MarkBattlerForControllerExec(u32 battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        gBattleControllerExecFlags |= 1u << (battler + 32 - MAX_BATTLERS_COUNT);
+        MarkBattleControllerMessageOutboundOverLink(battler);
     else
-        gBattleControllerExecFlags |= 1u << battler;
+        MarkBattleControllerActiveOnLocal(battler);
 }
 
 void MarkBattlerReceivedLinkData(u32 battler)
@@ -1018,9 +1018,9 @@ void MarkBattlerReceivedLinkData(u32 battler)
     s32 i;
 
     for (i = 0; i < GetLinkPlayerCount(); i++)
-        gBattleControllerExecFlags |= 1u << (battler + (i << 2));
+        MarkBattleControllerActiveForPlayer(battler, i);
 
-    gBattleControllerExecFlags &= ~(1u << (28 + battler));
+    MarkBattleControllerMessageSynchronizedOverLink(battler);
 }
 
 const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
@@ -4309,7 +4309,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_HUNGER_SWITCH:
-                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
+                if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+                 && GetActiveGimmick(battler) != GIMMICK_TERA
+                 && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
                 {
                     gBattlerAttacker = battler;
                     BattleScriptPushCursorAndCallback(BattleScript_AttackerFormChangeEnd3NoPopup);

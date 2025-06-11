@@ -997,7 +997,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_1:
                 case MOVE_EFFECT_ACC_MINUS_1:
                 case MOVE_EFFECT_EVS_MINUS_1:
-                    if (ShouldLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo != 1)
                         return TRUE;
                     break;
                 case MOVE_EFFECT_ATK_MINUS_2:
@@ -1007,7 +1007,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_2:
                 case MOVE_EFFECT_ACC_MINUS_2:
                 case MOVE_EFFECT_EVS_MINUS_2:
-                    if (ShouldLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
                         return TRUE;
                     break;
             }
@@ -1027,6 +1027,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
     {
     case EFFECT_MAX_HP_50_RECOIL:
     case EFFECT_MIND_BLOWN:
+    case EFFECT_CHLOROBLAST:
     case EFFECT_EXPLOSION:
     case EFFECT_MISTY_EXPLOSION:
     case EFFECT_FINAL_GAMBIT:
@@ -1933,7 +1934,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove)
 }
 
 // stat stages
-bool32 ShouldLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
+bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
 {
     if (gBattleMons[battlerDef].statStages[stat] == MIN_STAT_STAGE)
         return FALSE;
@@ -1970,7 +1971,6 @@ bool32 ShouldLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
         return FALSE;
     }
 
-    // This should be a viability check
     if (stat == STAT_SPEED)
     {
         // If AI is faster and doesn't have any mons left, lowering speed doesn't give any
@@ -1980,6 +1980,73 @@ bool32 ShouldLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
     }
 
     return TRUE;
+}
+
+u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
+{
+    u32 tempScore = NO_INCREASE;
+
+    // Don't increase score if target is already -3 stat stage
+    if (stat != STAT_SPEED && gBattleMons[battlerDef].statStages[stat] <= DEFAULT_STAT_STAGE - 3)
+        return NO_INCREASE;
+
+    // Don't decrease stat if target will die to residual damage
+    if (GetBattlerSecondaryDamage(battlerDef) >= gBattleMons[battlerDef].hp)
+        return NO_INCREASE;
+
+    // Don't decrese stat if opposing battler has Encore
+    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
+        return NO_INCREASE;
+
+    // TODO: Avoid decreasing stat if
+    // player can kill ai in 2 hits with decreased attack / sp atk stages
+    // ai can kill target in 2 hits without decreasing defense / sp def stages
+
+    switch (stat)
+    {
+    case STAT_ATK:
+        if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
+            tempScore += DECENT_EFFECT;
+        break;
+    case STAT_DEF:
+        if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+            tempScore += DECENT_EFFECT;
+        break;
+    case STAT_SPEED:
+        if (AI_IsSlower(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered))
+            tempScore += DECENT_EFFECT;
+        break;
+    case STAT_SPATK:
+        if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
+            tempScore += DECENT_EFFECT;
+        break;
+    case STAT_SPDEF:
+        if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+            tempScore += DECENT_EFFECT;
+        break;
+    case STAT_ACC:
+        if (gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
+            tempScore += WEAK_EFFECT;
+        if (gStatuses3[battlerDef] & STATUS3_LEECHSEED)
+            tempScore += WEAK_EFFECT;
+        if (gStatuses3[battlerDef] & STATUS3_ROOTED)
+            tempScore += WEAK_EFFECT;
+        if (gBattleMons[battlerDef].status2 & STATUS2_CURSED)
+            tempScore += WEAK_EFFECT;
+        break;
+    case STAT_EVASION:
+        if (gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
+            tempScore += WEAK_EFFECT;
+        if (gStatuses3[battlerDef] & STATUS3_LEECHSEED)
+            tempScore += WEAK_EFFECT;
+        if (gStatuses3[battlerDef] & STATUS3_ROOTED)
+            tempScore += WEAK_EFFECT;
+        if (gBattleMons[battlerDef].status2 & STATUS2_CURSED)
+            tempScore += WEAK_EFFECT;
+        break;
+    }
+
+    return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore; // don't inflate score so only max +4
 }
 
 bool32 BattlerStatCanRise(u32 battler, u32 battlerAbility, u32 stat)
@@ -2035,128 +2102,6 @@ u32 CountNegativeStatStages(u32 battlerId)
             count++;
     }
     return count;
-}
-
-bool32 ShouldLowerAttack(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (gBattleMons[battlerDef].statStages[STAT_ATK] > 4
-      && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
-      && defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_HYPER_CUTTER
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
-}
-
-bool32 ShouldLowerDefense(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (gBattleMons[battlerDef].statStages[STAT_DEF] > 4
-      && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
-      && defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_BIG_PECKS
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
-}
-
-bool32 ShouldLowerSpeed(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (defAbility == ABILITY_CONTRARY
-     || defAbility == ABILITY_CLEAR_BODY
-     || defAbility == ABILITY_FULL_METAL_BODY
-     || defAbility == ABILITY_WHITE_SMOKE
-     || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET)
-        return FALSE;
-
-    return (AI_IsSlower(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered));
-}
-
-bool32 ShouldLowerSpAtk(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (gBattleMons[battlerDef].statStages[STAT_SPATK] > 4
-      && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL)
-      && defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
-}
-
-bool32 ShouldLowerSpDef(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (gBattleMons[battlerDef].statStages[STAT_SPDEF] > 4
-      && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL)
-      && defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
-}
-
-bool32 ShouldLowerAccuracy(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_KEEN_EYE
-      && defAbility != ABILITY_MINDS_EYE
-      && (B_ILLUMINATE_EFFECT >= GEN_9 && defAbility != ABILITY_ILLUMINATE)
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
-}
-
-bool32 ShouldLowerEvasion(u32 battlerAtk, u32 battlerDef, u32 defAbility)
-{
-    if (AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered)
-            && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT)
-            && CanAIFaintTarget(battlerAtk, battlerDef, 0))
-        return FALSE; // Don't bother lowering stats if can kill enemy.
-
-    if (gBattleMons[battlerDef].statStages[STAT_EVASION] > DEFAULT_STAT_STAGE
-      && defAbility != ABILITY_CONTRARY
-      && defAbility != ABILITY_CLEAR_BODY
-      && defAbility != ABILITY_FULL_METAL_BODY
-      && defAbility != ABILITY_WHITE_SMOKE
-      && gAiLogicData->holdEffects[battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
-        return TRUE;
-    return FALSE;
 }
 
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext)
@@ -4184,9 +4129,10 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         return NO_INCREASE;
 
     // Don't increase stats if opposing battler has used Haze effect
-    if (HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE)
+    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE) &&
+        (HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE)
         || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
-        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE))
+        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE)))
         return NO_INCREASE;
 
     // Don't increase if AI is at +1 and opponent has Haze effect
