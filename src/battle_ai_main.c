@@ -287,7 +287,9 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         if (moveLimitations & (1u << moveIndex))
+        {
             SET_SCORE(battler, moveIndex, 0);
+        }
         if (defaultScoreMoves & 1)
             SET_SCORE(battler, moveIndex, AI_SCORE_DEFAULT);
         else
@@ -399,14 +401,14 @@ void ComputeBattlerDecisions(u32 battler)
     }
 }
 
-void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move) 
+void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
 {
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move)) 
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT) 
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
@@ -416,18 +418,18 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA)) 
+    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
-    
+
 
     if (!IsDoubleBattle())
         chosenMoveIndex = ChooseMoveOrAction_Singles(battler);
     else
         chosenMoveIndex = ChooseMoveOrAction_Doubles(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE) 
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
-    
+
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
