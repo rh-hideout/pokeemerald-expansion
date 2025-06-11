@@ -274,6 +274,7 @@ static const struct SpriteFrameImage sPicTable_ORASDowsingMay[] = {
     overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingMay, 2, 4),
 };
 
+/*
 static const union AnimCmd sAnim_ORASDowseWiggleSouth[] =
 {
     ANIMCMD_FRAME(0, 32),
@@ -379,6 +380,115 @@ static const union AnimCmd sAnim_ORASDowseWiggleEastFaster[] =
     ANIMCMD_FRAME(9, 8, .hFlip = TRUE),
     ANIMCMD_FRAME(10, 8, .hFlip = TRUE),
     ANIMCMD_FRAME(11, 8, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+*/
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouth[] =
+{
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_FRAME(3, 32),
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_FRAME(4, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorth[] =
+{
+    ANIMCMD_FRAME(1, 32),
+    ANIMCMD_FRAME(5, 32),
+    ANIMCMD_FRAME(1, 32),
+    ANIMCMD_FRAME(6, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWest[] =
+{
+    ANIMCMD_FRAME(2, 32),
+    ANIMCMD_FRAME(7, 32),
+    ANIMCMD_FRAME(2, 32),
+    ANIMCMD_FRAME(8, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEast[] =
+{
+    ANIMCMD_FRAME(2, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(7, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 32, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouthFast[] =
+{
+    ANIMCMD_FRAME(0, 16),
+    ANIMCMD_FRAME(3, 16),
+    ANIMCMD_FRAME(0, 16),
+    ANIMCMD_FRAME(4, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorthFast[] =
+{
+    ANIMCMD_FRAME(1, 16),
+    ANIMCMD_FRAME(5, 16),
+    ANIMCMD_FRAME(1, 16),
+    ANIMCMD_FRAME(6, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWestFast[] =
+{
+    ANIMCMD_FRAME(2, 16),
+    ANIMCMD_FRAME(7, 16),
+    ANIMCMD_FRAME(2, 16),
+    ANIMCMD_FRAME(8, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEastFast[] =
+{
+    ANIMCMD_FRAME(2, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(7, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 16, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 16, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleSouthFaster[] =
+{
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(4, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorthFaster[] =
+{
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(5, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(6, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWestFaster[] =
+{
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(7, 8),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(8, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEastFaster[] =
+{
+    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(7, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 8, .hFlip = TRUE),
     ANIMCMD_JUMP(0),
 };
 

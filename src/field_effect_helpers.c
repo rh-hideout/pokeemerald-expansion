@@ -1994,6 +1994,9 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
 
     switch (sprite->sDowseState)
     {
+    case ORASD_WIGGLE_NONE:
+        StartSpriteAnim(sprite, anim);
+        return;
     case ORASD_WIGGLE_NORMAL:
         anim += 4;
         break;
@@ -2005,7 +2008,7 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
         break;
     }
 
-    StartSpriteAnimIfDifferent(sprite, anim);
+    sprite->animNum = anim;
 }
 
 #define tSpriteId   data[6]
