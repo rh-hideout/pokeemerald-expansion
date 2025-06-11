@@ -337,9 +337,10 @@ struct AiLogicData
     u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
     u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
     u8 aiCalcInProgress:1;
-    u8 padding:2;
+    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
+    u8 padding1:1;
     u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
-    u8 predictingMove:4; // Determines whether AI will use move predictions this turn or not
+    u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
 };
 

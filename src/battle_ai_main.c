@@ -626,10 +626,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         BattleAI_SetupAIData(0xF, battlerAtk);
         u32 chosenMoveIndex = ChooseMoveOrAction(battlerAtk);
         gAiLogicData->predictedMove[battlerAtk] = gBattleMons[battlerAtk].moves[chosenMoveIndex];
-        if (RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE))
-            aiData->predictingMove |= 1u << battlerAtk;
-        else
-            aiData->predictingMove &= ~(1u << battlerAtk);
+        aiData->predictingMove = RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE);
     }
 
     if (DEBUG_AI_DELAY_TIMER)
