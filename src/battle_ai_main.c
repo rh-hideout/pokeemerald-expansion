@@ -32,6 +32,7 @@
 #define AI_ACTION_WATCH         (1 << 2)
 #define AI_ACTION_DO_NOT_ATTACK (1 << 3)
 
+static u32 ChooseMoveOrAction(u32 battler);
 static u32 ChooseMoveOrAction_Singles(u32 battler);
 static u32 ChooseMoveOrAction_Doubles(u32 battler);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32 battlerAtk, u32 battlerDef);
@@ -328,7 +329,7 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
     {
         // Determine whether AI will use predictions this turn
         gAiLogicData->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
-    
+
         gAiLogicData->mostSuitableMonId[opposingBattler] = GetMostSuitableMonToSwitchInto(opposingBattler, switchType);
         if (ShouldSwitch(opposingBattler))
             gAiLogicData->shouldSwitch |= (1u << opposingBattler);
@@ -384,7 +385,7 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
-u32 ChooseMoveOrAction(u32 battler)
+static u32 ChooseMoveOrAction(u32 battler)
 {
     if (IsDoubleBattle())
         return ChooseMoveOrAction_Doubles(battler);
@@ -394,15 +395,6 @@ u32 ChooseMoveOrAction(u32 battler)
 u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 chosenMoveIndex;
-
-    // Prediction limited to player side but can be expanded to read partners move in the future
-    if (IsOnPlayerSide(battler) && CanAiPredictMove())
-    {
-        // This can potentially be cleaned up more
-        chosenMoveIndex = ChooseMoveOrAction(battler);
-        gAiLogicData->predictedMove[battler] = gBattleMons[battler].moves[chosenMoveIndex];
-        return chosenMoveIndex; // Calculate move only, during prediction
-    }
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
 
@@ -521,7 +513,6 @@ void Ai_UpdateFaintData(u32 battler)
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
     u32 ability, holdEffect;
-
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
     aiData->items[battler] = gBattleMons[battler].item;
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
@@ -624,6 +615,23 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
         SetBattlerAiMovesData(aiData, battlerAtk, battlersCount, weather);
     }
+
+    for (battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
+    {
+        // Prediction limited to player side but can be expanded to read partners move in the future
+        if (!IsOnPlayerSide(battlerAtk) || !CanAiPredictMove())
+            continue;
+
+        // This can potentially be cleaned up more
+        BattleAI_SetupAIData(0xF, battlerAtk);
+        u32 chosenMoveIndex = ChooseMoveOrAction(battlerAtk);
+        gAiLogicData->predictedMove[battlerAtk] = gBattleMons[battlerAtk].moves[chosenMoveIndex];
+        if (RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE))
+            aiData->predictingMove |= 1u << battlerAtk;
+        else
+            aiData->predictingMove &= ~(1u << battlerAtk);
+    }
+
     if (DEBUG_AI_DELAY_TIMER)
         // We add to existing to compound multiple calls
         gBattleStruct->aiDelayCycles += CycleCountEnd();
@@ -2192,12 +2200,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
                     }
+                    break;
                 case PROTECT_WIDE_GUARD:
                     if(!(GetBattlerMoveTargetType(battlerAtk, predictedMove) & (MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_BOTH)))
                     {
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
                     }
+                    break;
                 case PROTECT_CRAFTY_SHIELD:
                     if (!isDoubleBattle)
                     {
