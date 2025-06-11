@@ -1952,18 +1952,18 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     {
         if (playerObj->heldMovementFinished == FALSE)
         {
-            u32 interval;
+            u32 interval = 8;
         
             // TODO: Handle ledge jumps
             // TODO: Handle collision movement
             if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
              && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
                 interval = 4;
-            else if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
-             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT)
+            else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
+             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
+             (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
+             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
                 interval = 16;
-            else
-                interval = 8;
 
             if (sprite->sCounter == 0)
             {
@@ -1973,7 +1973,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
             }
             else if (sprite->sCounter == interval)
             {
-                sprite->y2--;
+                sprite->y2 = 0;
             }
 
             sprite->sCounter++;
