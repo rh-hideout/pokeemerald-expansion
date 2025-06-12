@@ -722,39 +722,73 @@ void AnimTask_BlendNonAttackerPalettes(u8 taskId)
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
 }
 
-// gBattleAnimArgs[0] - initial x
-// gBattleAnimArgs[1] - initial y
-// gBattleAnimArgs[2] - negative?
-// gBattleAnimArgs[3] - sentinel value to compare to
+// UQ_8_8 x increment
+#define ARG_SCROLL_BASE_X_INCREMENT 0
+// UQ_8_8 y increment
+#define ARG_SCROLL_BASE_Y_INCREMENT 1
+// positive or negative increments
+#define ARG_SCROLL_INVERT_DIRECTION_IF_ATTACKER_OPPONENT 2
+// sentinel value to compare to
+// a script will write to gBattleAnimArgs[7] with the earlier given value
+// to indicate that the scroll should be ended
+#define ARG_SCROLL_STOP_VALUE 3
+
+#define tScrollBaseXIncrement data[1]
+#define tScrollBaseYIncrement data[2]
+#define tScrollStopValue data[3]
+#define tScrollCurXIncrement data[10]
+#define tScrollCurYIncrement data[11]
+
 void AnimTask_StartSlidingBg(u8 taskId)
 {
     u8 newTaskId;
 
     UpdateAnimBg3ScreenSize(FALSE);
     newTaskId = CreateTask(AnimTask_UpdateSlidingBg, 5);
-    if (gBattleAnimArgs[2] && !IsOnPlayerSide(gBattleAnimAttacker))
+    if (gBattleAnimArgs[ARG_SCROLL_INVERT_DIRECTION_IF_ATTACKER_OPPONENT] && !IsOnPlayerSide(gBattleAnimAttacker))
     {
-        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
-        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+        gBattleAnimArgs[ARG_SCROLL_BASE_X_INCREMENT] = -gBattleAnimArgs[ARG_SCROLL_BASE_X_INCREMENT];
+        gBattleAnimArgs[ARG_SCROLL_BASE_Y_INCREMENT] = -gBattleAnimArgs[ARG_SCROLL_BASE_Y_INCREMENT];
     }
 
-    gTasks[newTaskId].data[1] = gBattleAnimArgs[0];
-    gTasks[newTaskId].data[2] = gBattleAnimArgs[1];
-    gTasks[newTaskId].data[3] = gBattleAnimArgs[3];
+    gTasks[newTaskId].tScrollBaseXIncrement = gBattleAnimArgs[ARG_SCROLL_BASE_X_INCREMENT];
+    gTasks[newTaskId].tScrollBaseYIncrement = gBattleAnimArgs[ARG_SCROLL_BASE_Y_INCREMENT];
+    gTasks[newTaskId].tScrollStopValue = gBattleAnimArgs[ARG_SCROLL_STOP_VALUE];
     gTasks[newTaskId].data[0]++;
     DestroyAnimVisualTask(taskId);
 }
 
 static void AnimTask_UpdateSlidingBg(u8 taskId)
 {
-    gTasks[taskId].data[10] += gTasks[taskId].data[1];
-    gTasks[taskId].data[11] += gTasks[taskId].data[2];
-    gBattle_BG3_X += gTasks[taskId].data[10] >> 8;
-    gBattle_BG3_Y += gTasks[taskId].data[11] >> 8;
-    gTasks[taskId].data[10] &= 0xFF;
-    gTasks[taskId].data[11] &= 0xFF;
+    // how the base and cur increments work
+    // base increment contains the Q_8_8 increment value
+    // which is added to the cur increment
+    // this cur increment then gets added to the bg x/y variables
+    // then, only the fractional portion of the cur increments are kept
+    // since the whole part was already added to the bg x/y variables
+    // and we only need to keep the fractional part for when the fractional part carries into the whole party
+    // e.g. if you wanted to scroll the background at 2.4x horizontally
+    // tScrollCurXIncrement: 0.0 -> 2.4 (add base increment)
+    // gBattle_BG3_X: 0 -> 2 (add cur increment)
+    // tScrollCurXIncrement: 2.4 -> 0.4 (truncate whole part)
 
-    if (gBattleAnimArgs[7] == gTasks[taskId].data[3])
+    // tScrollCurXIncrement: 0.4 -> 2.8 (add base increment)
+    // gBattle_BG3_X: 2 -> 4 (add cur increment)
+    // tScrollCurXIncrement: 2.8 -> 0.8 (truncate whole part)
+
+    // tScrollCurXIncrement: 0.8 -> 3.2 (add base increment)
+    //   note that the fractional part, which was carried over previously, causes
+    //   the whole part to become 3 instead of 2
+    // gBattle_BG3_X: 4 -> 7
+    //   now gBattle_BG3_X is incremented by 3
+    gTasks[taskId].tScrollCurXIncrement += gTasks[taskId].tScrollBaseXIncrement;
+    gTasks[taskId].tScrollCurYIncrement += gTasks[taskId].tScrollBaseYIncrement;
+    gBattle_BG3_X += Q_8_8_TO_WHOLE(gTasks[taskId].tScrollCurXIncrement);
+    gBattle_BG3_Y += Q_8_8_TO_WHOLE(gTasks[taskId].tScrollCurYIncrement);
+    gTasks[taskId].tScrollCurXIncrement &= 0xFF;
+    gTasks[taskId].tScrollCurYIncrement &= 0xFF;
+
+    if (gBattleAnimArgs[7] == gTasks[taskId].tScrollStopValue)
     {
         gBattle_BG3_X = 0;
         gBattle_BG3_Y = 0;
@@ -762,6 +796,16 @@ static void AnimTask_UpdateSlidingBg(u8 taskId)
         DestroyTask(taskId);
     }
 }
+
+#undef ARG_SCROLL_BASE_X_INCREMENT
+#undef ARG_SCROLL_BASE_Y_INCREMENT
+#undef ARG_SCROLL_INVERT_DIRECTION_IF_ATTACKER_OPPONENT
+#undef ARG_SCROLL_STOP_VALUE
+#undef tScrollBaseXIncrement
+#undef tScrollBaseYIncrement
+#undef tScrollStopValue
+#undef tScrollCurXIncrement
+#undef tScrollCurYIncrement
 
 void AnimTask_GetAttackerSide(u8 taskId)
 {
