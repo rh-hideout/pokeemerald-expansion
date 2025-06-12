@@ -604,16 +604,16 @@ void AnimAcidPoisonBubble_Step(struct Sprite *sprite)
 
 void AnimSludgeBombHitParticle(struct Sprite *sprite)
 {
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + gBattleAnimArgs[0];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y + gBattleAnimArgs[1];
+    sprite->sDuration_ltf = gBattleAnimArgs[2];
+    sprite->sInputStartX_ltf = sprite->x;
+    sprite->sInputEndX_ltf = sprite->x + gBattleAnimArgs[0];
+    sprite->sInputStartY_ltf = sprite->y;
+    sprite->sInputEndY_ltf = sprite->y + gBattleAnimArgs[1];
 
     InitSpriteDataForLinearTranslation(sprite);
 
-    sprite->data[5] = sprite->data[1] / gBattleAnimArgs[2];
-    sprite->data[6] = sprite->data[2] / gBattleAnimArgs[2];
+    sprite->data[5] = sprite->sXIncrement_ltf / gBattleAnimArgs[2];
+    sprite->data[6] = sprite->sYIncrement_ltf / gBattleAnimArgs[2];
 
     sprite->callback = AnimSludgeBombHitParticle_Step;
 }
@@ -622,8 +622,8 @@ static void AnimSludgeBombHitParticle_Step(struct Sprite *sprite)
 {
     TranslateSpriteLinearFixedPoint(sprite);
 
-    sprite->data[1] -= sprite->data[5];
-    sprite->data[2] -= sprite->data[6];
+    sprite->sXIncrement_ltf -= sprite->data[5];
+    sprite->sYIncrement_ltf -= sprite->data[6];
 
     if (!sprite->data[0])
         DestroyAnimSprite(sprite);

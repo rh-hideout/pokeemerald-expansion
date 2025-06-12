@@ -527,13 +527,13 @@ void TranslateSpriteLinear(struct Sprite *sprite)
 
 void TranslateSpriteLinearFixedPoint(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_ltf > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        sprite->x2 = sprite->data[3] >> 8;
-        sprite->y2 = sprite->data[4] >> 8;
+        sprite->sDuration_ltf--;
+        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
+        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
     }
     else
     {
@@ -543,13 +543,13 @@ void TranslateSpriteLinearFixedPoint(struct Sprite *sprite)
 
 static void TranslateSpriteLinearFixedPointIconFrame(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_ltf > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        sprite->x2 = sprite->data[3] >> 8;
-        sprite->y2 = sprite->data[4] >> 8;
+        sprite->sDuration_ltf--;
+        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
+        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
     }
     else
     {
@@ -585,13 +585,13 @@ void TranslateSpriteLinearById(struct Sprite *sprite)
 
 void TranslateSpriteLinearByIdFixedPoint(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_ltf > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        gSprites[sprite->data[5]].x2 = sprite->data[3] >> 8;
-        gSprites[sprite->data[5]].y2 = sprite->data[4] >> 8;
+        sprite->sDuration_ltf--;
+        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
+        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
+        gSprites[sprite->sSpriteId_ltf].x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
+        gSprites[sprite->sSpriteId_ltf].y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
     }
     else
     {
@@ -982,8 +982,8 @@ void UpdateAnimBg3ScreenSize(bool8 largeScreenSize)
 
 void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
+    sprite->sInputStartX_ltf = sprite->x;
+    sprite->sInputStartY_ltf = sprite->y;
     InitSpriteDataForLinearTranslation(sprite);
     sprite->callback = TranslateSpriteLinearFixedPointIconFrame;
     sprite->callback(sprite);
@@ -991,12 +991,13 @@ void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 
 void InitSpriteDataForLinearTranslation(struct Sprite *sprite)
 {
-    s16 x = (sprite->data[2] - sprite->data[1]) << 8;
-    s16 y = (sprite->data[4] - sprite->data[3]) << 8;
-    sprite->data[1] = SAFE_DIV(x, sprite->data[0]);
-    sprite->data[2] = SAFE_DIV(y, sprite->data[0]);
-    sprite->data[4] = 0;
-    sprite->data[3] = 0;
+    s16 xDistance = (sprite->sInputEndX_ltf - sprite->sInputStartX_ltf) << 8;
+    s16 yDistance = (sprite->sInputEndY_ltf - sprite->sInputStartY_ltf) << 8;
+    // increment is simply distance / time
+    sprite->sXIncrement_ltf = SAFE_DIV(xDistance, sprite->sDuration_ltf);
+    sprite->sYIncrement_ltf = SAFE_DIV(yDistance, sprite->sDuration_ltf);
+    sprite->sCurYOffsetFixedPoint_ltf = 0;
+    sprite->sCurXOffsetFixedPoint_ltf = 0;
 }
 
 void InitAnimLinearTranslation(struct Sprite *sprite)
