@@ -3618,7 +3618,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
                             move = gBattleMons[i].moves[j];
-                            u32 moveEffect = GetMoveEffect(move);
+                            enum BattleMoveEffects moveEffect = GetMoveEffect(move);
                             moveType = GetBattleMoveType(move);
 
                             if (GetTypeModifier(moveType, types[0]) >= UQ_4_12(2.0)
