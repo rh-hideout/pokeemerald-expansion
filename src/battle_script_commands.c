@@ -2063,18 +2063,18 @@ static void Cmd_critcalc(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static inline void CalculateAndSetMoveDamage(struct DamageCalculationData *damageCalcData, u32 battlerDef)
+static inline void CalculateAndSetMoveDamage(struct DamageContext *ctx)
 {
-    SetDynamicMoveCategory(gBattlerAttacker, battlerDef, gCurrentMove);
-    damageCalcData->battlerDef = battlerDef;
-    damageCalcData->isCrit = gSpecialStatuses[battlerDef].criticalHit;
-    gBattleStruct->moveDamage[battlerDef] = CalculateMoveDamage(damageCalcData, 0);
+    SetDynamicMoveCategory(gBattlerAttacker, ctx->battlerDef, gCurrentMove);
+    ctx->isCrit = gSpecialStatuses[ctx->battlerDef].criticalHit;
+    ctx->fixedBasePower = 0;
+    gBattleStruct->moveDamage[ctx->battlerDef] = CalculateMoveDamage(ctx);
 
     // Slighly hacky but we need to check move result flags for distortion match-up as well but it can only be done after damage calcs
-    if (gSpecialStatuses[battlerDef].distortedTypeMatchups && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups && gBattleStruct->moveResultFlags[ctx->battlerDef] & MOVE_RESULT_NO_EFFECT)
     {
-        gSpecialStatuses[battlerDef].distortedTypeMatchups = FALSE;
-        gSpecialStatuses[battlerDef].teraShellAbilityDone = FALSE;
+        gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups = FALSE;
+        gSpecialStatuses[ctx->battlerDef].teraShellAbilityDone = FALSE;
     }
 }
 
@@ -2090,12 +2090,12 @@ static void Cmd_damagecalc(void)
 
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
-    struct DamageCalculationData damageCalcData;
-    damageCalcData.battlerAtk = gBattlerAttacker;
-    damageCalcData.move = gCurrentMove;
-    damageCalcData.moveType = GetBattleMoveType(gCurrentMove);
-    damageCalcData.randomFactor = TRUE;
-    damageCalcData.updateFlags = TRUE;
+    struct DamageContext ctx;
+    ctx.battlerAtk = gBattlerAttacker;
+    ctx.move = gCurrentMove;
+    ctx.moveType = GetBattleMoveType(gCurrentMove);
+    ctx.randomFactor = TRUE;
+    ctx.updateFlags = TRUE;
 
     if (IsSpreadMove(moveTarget))
     {
@@ -2107,12 +2107,14 @@ static void Cmd_damagecalc(void)
              || gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
                 continue;
 
-            CalculateAndSetMoveDamage(&damageCalcData, battlerDef);
+            ctx.battlerDef = battlerDef;
+            CalculateAndSetMoveDamage(&ctx);
         }
     }
     else
     {
-        CalculateAndSetMoveDamage(&damageCalcData, gBattlerTarget);
+        ctx.battlerDef = gBattlerTarget;
+        CalculateAndSetMoveDamage(&ctx);
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
