@@ -1390,8 +1390,8 @@
 	.byte \battler
 	.endm
 
-	.macro tryintimidatejectpack
-	callnative BS_TryIntimidatEjectpack
+	.macro tryintimidateejectpack
+	callnative BS_TryIntimidateEjectPack
 	.endm
 
 	.macro allyswitchswapbattlers
