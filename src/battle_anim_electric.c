@@ -94,7 +94,7 @@ static const union AnimCmd sAnim_UnusedCirclingShock[] =
     ANIMCMD_JUMP(0),
 };
 
-static const union AnimCmd *const sAnims_UnusedCirclingShock[] =
+const union AnimCmd *const sAnims_UnusedCirclingShock[] =
 {
     sAnim_UnusedCirclingShock,
 };
