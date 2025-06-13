@@ -737,7 +737,7 @@ extern const u8 BattleScript_EffectFling[];
 extern const u8 BattleScript_EffectNaturalGift[];
 extern const u8 BattleScript_EffectRoost[];
 extern const u8 BattleScript_EffectGravity[];
-extern const u8 BattleScript_EffectMircleEye[];
+extern const u8 BattleScript_EffectMiracleEye[];
 extern const u8 BattleScript_EffectTailwind[];
 extern const u8 BattleScript_EffectEmbargo[];
 extern const u8 BattleScript_EffectAquaRing[];
