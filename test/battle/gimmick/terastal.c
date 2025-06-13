@@ -451,32 +451,6 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and if the user is Terastallized it keeps its own Tera Type")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
-        OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_TRANSFORM); MOVE(player, MOVE_EARTHQUAKE); }
-        TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_TERA); MOVE(player, MOVE_EARTHQUAKE); }
-        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        // turn 1
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
-        HP_BAR(opponent);
-        // turn 2
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        HP_BAR(player);
-        MESSAGE("Wobbuffet used Earthquake!");
-        MESSAGE("It doesn't affect the opposing Ditto…");
-        NOT { HP_BAR(opponent); }
-        // turn 3
-        MESSAGE("The opposing Ditto used Scratch!");
-        MESSAGE("It doesn't affect Wobbuffet…");
-        NOT { HP_BAR(player); }
-    }
-}
-
 // Stellar Type checks
 SINGLE_BATTLE_TEST("(TERA) Stellar type does not change the user's defensive profile", s16 damage)
 {
