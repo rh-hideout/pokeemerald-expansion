@@ -181,6 +181,7 @@ static void BattleTest_SetUp(void *data)
         STATE->battlersCount = 4;
         break;
     }
+    STATE->hasTornDownBattle = FALSE;
 }
 
 static void PrintTestName(void)
@@ -1420,8 +1421,11 @@ static void BattleTest_TearDown(void *data)
     // aborted unexpectedly.
     ClearFlagAfterTest();
     TestFreeConfigData();
-    if (STATE->tearDownBattle)
+    if (!STATE->hasTornDownBattle)
+    {
         TearDownBattle();
+        STATE->hasTornDownBattle = TRUE;
+    }
 }
 
 static bool32 BattleTest_CheckProgress(void *data)
@@ -1449,7 +1453,6 @@ static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result
     }
     else
     {
-        STATE->tearDownBattle = TRUE;
         return FALSE;
     }
 }
