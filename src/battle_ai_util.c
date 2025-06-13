@@ -491,83 +491,83 @@ static inline s32 DmgRoll(s32 dmg)
     return dmg;
 }
 
-bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveType, uq4_12_t effectiveness, u32 weather)
+bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
 {
     u32 battlerDefAbility;
     u32 partnerDefAbility;
     struct AiLogicData *aiData = gAiLogicData;
 
-    if (effectiveness == UQ_4_12(0.0))
+    if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return TRUE;
-    if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
+    if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
         return TRUE;
 
     // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
-    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk]) || MoveIgnoresTargetAbility(move))
+    if (IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilityAtk) || MoveIgnoresTargetAbility(ctx->move))
     {
         battlerDefAbility = ABILITY_NONE;
         partnerDefAbility = ABILITY_NONE;
     }
     else
     {
-        battlerDefAbility = aiData->abilities[battlerDef];
-        partnerDefAbility = aiData->abilities[BATTLE_PARTNER(battlerDef)];
+        battlerDefAbility = ctx->abilityDef;
+        partnerDefAbility = aiData->abilities[BATTLE_PARTNER(ctx->battlerDef)];
     }
 
-    if (CanAbilityBlockMove(battlerAtk, battlerDef, aiData->abilities[battlerAtk], battlerDefAbility, move, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, ABILITY_CHECK_TRIGGER))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(battlerAtk, battlerDef, battlerDefAbility, move, moveType, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, ABILITY_CHECK_TRIGGER))
         return TRUE;
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
     {
-        if (CanAbilityAbsorbMove(battlerAtk, BATTLE_PARTNER(battlerDef), partnerDefAbility, move, moveType, ABILITY_CHECK_TRIGGER))
+        if (CanAbilityAbsorbMove(ctx->battlerAtk, BATTLE_PARTNER(ctx->battlerDef), partnerDefAbility, ctx->move, ctx->moveType, ABILITY_CHECK_TRIGGER))
             return TRUE;
     }
 
     if (HasWeatherEffect())
     {
-        if (weather & B_WEATHER_SUN_PRIMAL && moveType == TYPE_WATER)
+        if (ctx->weather & B_WEATHER_SUN_PRIMAL && ctx->moveType == TYPE_WATER)
             return TRUE;
-        if (weather & B_WEATHER_RAIN_PRIMAL && moveType == TYPE_FIRE)
+        if (ctx->weather & B_WEATHER_RAIN_PRIMAL && ctx->moveType == TYPE_FIRE)
             return TRUE;
     }
 
-    switch (GetMoveEffect(move))
+    switch (GetMoveEffect(ctx->move))
     {
     case EFFECT_DREAM_EATER:
-        if (!AI_IsBattlerAsleepOrComatose(battlerDef))
+        if (!AI_IsBattlerAsleepOrComatose(ctx->battlerDef))
             return TRUE;
         break;
     case EFFECT_BELCH:
-        if (IsBelchPreventingMove(battlerAtk, move))
+        if (IsBelchPreventingMove(ctx->battlerAtk, ctx->move))
             return TRUE;
         break;
     case EFFECT_LAST_RESORT:
-        if (!CanUseLastResort(battlerAtk))
+        if (!CanUseLastResort(ctx->battlerAtk))
             return TRUE;
         break;
     case EFFECT_LOW_KICK:
     case EFFECT_HEAT_CRASH:
-        if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+        if (GetActiveGimmick(ctx->battlerDef) == GIMMICK_DYNAMAX)
             return TRUE;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
-        if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveArgType(move)))
+        if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
             return TRUE;
         break;
     case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY) && GetMoveEffectArg_MoveProperty(move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
+        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY) && GetMoveEffectArg_MoveProperty(ctx->move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
-        if (gAiLogicData->items[battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(battlerDef))
+        if (gAiLogicData->items[ctx->battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(ctx->battlerDef))
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gDisableStructs[battlerAtk].isFirstTurn)
+        if (!gDisableStructs[ctx->battlerAtk].isFirstTurn)
             return TRUE;
         break;
     case EFFECT_EXPLOSION:
@@ -793,7 +793,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     u32 movePower = GetMovePower(move);
     if (movePower)
-        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, ctx.moveType, ctx.typeEffectivenessModifier, weather);
+        isDamageMoveUnusable = IsDamageMoveUnusable(&ctx);
 
     if (movePower && !isDamageMoveUnusable)
     {
