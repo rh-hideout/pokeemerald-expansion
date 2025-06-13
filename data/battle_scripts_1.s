@@ -1105,8 +1105,7 @@ BattleScript_EffectAllySwitch::
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
-	jumpifnoally BS_ATTACKER, BattleScript_ButItFailed
-	allyswitchfailchance BattleScript_ButItFailed
+	tryallyswitch BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	@ The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
