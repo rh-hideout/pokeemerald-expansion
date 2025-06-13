@@ -806,13 +806,13 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
                 s32 oneTripleKickHit = CalculateMoveDamageVars(&ctx);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
-                simDamage.minimum += ApplyModifiersAfterDmgRoll(damageByRollType, &ctx);
+                simDamage.minimum += ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_DEFAULT);
-                simDamage.median += ApplyModifiersAfterDmgRoll(damageByRollType, &ctx);
+                simDamage.median += ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_HIGHEST);
-                simDamage.maximum += ApplyModifiersAfterDmgRoll(damageByRollType, &ctx);
+                simDamage.maximum += ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
             }
         }
         else
@@ -820,13 +820,13 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             u32 damage = CalculateMoveDamageVars(&ctx);
 
             simDamage.minimum = GetDamageByRollType(damage, DMG_ROLL_LOWEST);
-            simDamage.minimum = ApplyModifiersAfterDmgRoll(simDamage.minimum, &ctx);
+            simDamage.minimum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.minimum);
 
             simDamage.median = GetDamageByRollType(damage, DMG_ROLL_DEFAULT);
-            simDamage.median = ApplyModifiersAfterDmgRoll(simDamage.median, &ctx);
+            simDamage.median = ApplyModifiersAfterDmgRoll(&ctx, simDamage.median);
 
             simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
-            simDamage.maximum = ApplyModifiersAfterDmgRoll(simDamage.maximum, &ctx);
+            simDamage.maximum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.maximum);
         }
 
         if (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)

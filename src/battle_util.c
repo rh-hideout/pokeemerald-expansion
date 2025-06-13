@@ -9281,14 +9281,14 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
         return dmg;
     }
 
-    dmg = ApplyModifiersAfterDmgRoll(dmg, ctx);
+    dmg = ApplyModifiersAfterDmgRoll(ctx, dmg);
 
     if (dmg == 0)
         dmg = 1;
     return dmg;
 }
 
-s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageContext *ctx)
+s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
 {
     if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_TERA)
         DAMAGE_APPLY_MODIFIER(GetTeraMultiplier(ctx->battlerAtk, ctx->moveType));
