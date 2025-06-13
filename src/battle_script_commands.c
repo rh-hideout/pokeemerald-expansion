@@ -1715,13 +1715,15 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             if (JumpIfMoveAffectedByProtect(move, battlerDef, FALSE, failInstr) || AccuracyCalcHelper(move, battlerDef))
                 continue;
 
+            u32 abilityDef = GetBattlerAbility(battlerDef);
+            u32 holdEffectDef = GetBattlerHoldEffect(battlerDef, TRUE);
             u32 accuracy = GetTotalAccuracy(gBattlerAttacker,
                                             battlerDef,
                                             move,
                                             abilityAtk,
-                                            GetBattlerAbility(battlerDef),
+                                            abilityDef,
                                             holdEffectAtk,
-                                            GetBattlerHoldEffect(battlerDef, TRUE));
+                                            holdEffectDef);
 
             if (!RandomPercentage(RNG_ACCURACY, accuracy))
             {
@@ -1746,7 +1748,20 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                 }
 
                 if (GetMovePower(move) != 0)
-                    CalcTypeEffectivenessMultiplier(move, moveType, gBattlerAttacker, battlerDef, GetBattlerAbility(battlerDef), TRUE);
+                {
+                    struct DamageContext ctx = {0};
+                    ctx.battlerAtk = gBattlerAttacker;
+                    ctx.battlerDef = battlerDef;
+                    ctx.move = move;
+                    ctx.moveType = moveType;
+                    ctx.updateFlags = TRUE;
+                    ctx.abilityAtk = abilityAtk;
+                    ctx.abilityDef = abilityDef;
+                    ctx.holdEffectAtk = holdEffectAtk;
+                    ctx.holdEffectDef = holdEffectDef;
+
+                    CalcTypeEffectivenessMultiplier(&ctx);
+                }
             }
         }
 
@@ -2126,8 +2141,18 @@ static void Cmd_typecalc(void)
 
     if (!IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove))) // Handled in CANCELLER_MULTI_TARGET_MOVES for Spread Moves
     {
-        u32 moveType = GetBattleMoveType(gCurrentMove);
-        CalcTypeEffectivenessMultiplier(gCurrentMove, moveType, gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget), TRUE);
+        struct DamageContext ctx = {0};
+        ctx.battlerAtk = gBattlerAttacker;
+        ctx.battlerDef = gBattlerTarget;
+        ctx.move = gCurrentMove;
+        ctx.moveType = GetBattleMoveType(gCurrentMove);
+        ctx.updateFlags = TRUE;
+        ctx.abilityAtk = GetBattlerAbility(gBattlerAttacker);
+        ctx.abilityDef = GetBattlerAbility(gBattlerTarget);
+        ctx.holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+        ctx.holdEffectDef = GetBattlerHoldEffect(gBattlerTarget, TRUE);
+
+        CalcTypeEffectivenessMultiplier(&ctx);
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;

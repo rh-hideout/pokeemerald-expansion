@@ -100,7 +100,7 @@ static void Task_UpdateLvlInHealthbox(u8);
 static void PrintLinkStandbyMsg(void);
 
 static void ReloadMoveNames(u32 battler);
-static u32 CheckTypeEffectiveness(u32 targetId, u32 battler);
+static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef);
 static u32 CheckTargetTypeEffectiveness(u32 battler);
 static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, u32 battler);
 
@@ -507,7 +507,7 @@ void HandleInputChooseTarget(u32 battler)
                     break;
                 }
                 if (B_SHOW_EFFECTIVENESS)
-                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler), battler);
+                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
@@ -558,7 +558,7 @@ void HandleInputChooseTarget(u32 battler)
                     break;
                 }
                 if (B_SHOW_EFFECTIVENESS)
-                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler), battler);
+                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
@@ -758,7 +758,7 @@ void HandleInputChooseMove(u32 battler)
             else
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             if (B_SHOW_EFFECTIVENESS)
-                MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(GetBattlerPosition(gMultiUsePlayerCursor), battler), battler);
+                MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
             gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_ShowAsMoveTarget;
             break;
@@ -2435,15 +2435,23 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
     return TRUE;
 }
 
-static u32 CheckTypeEffectiveness(u32 targetId, u32 battler)
+static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef)
 {
-    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    struct Pokemon *mon = GetBattlerMon(battler);
-    u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
-    u32 moveType = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
-    uq4_12_t modifier = CalcTypeEffectivenessMultiplier(move, moveType, battler, targetId, GetBattlerAbility(targetId), FALSE);
+    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battlerAtk][4]);
+    struct DamageContext ctx = {0};
+    ctx.battlerAtk = battlerAtk;
+    ctx.battlerDef = battlerDef;
+    ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];
+    ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battlerAtk), ctx.move, battlerAtk, MON_IN_BATTLE);
+    ctx.updateFlags = FALSE;
+    ctx.abilityAtk = GetBattlerAbility(battlerAtk);
+    ctx.abilityDef = GetBattlerAbility(battlerDef);
+    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
+    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef, TRUE);
 
-    if (!ShouldShowTypeEffectiveness(targetId))
+    uq4_12_t modifier = CalcTypeEffectivenessMultiplier(&ctx);
+
+    if (!ShouldShowTypeEffectiveness(battlerDef))
         return EFFECTIVENESS_CANNOT_VIEW;
 
     if (modifier == UQ_4_12(0.0))
@@ -2458,12 +2466,12 @@ static u32 CheckTypeEffectiveness(u32 targetId, u32 battler)
 static u32 CheckTargetTypeEffectiveness(u32 battler)
 {
     u32 battlerFoe = BATTLE_OPPOSITE(GetBattlerPosition(battler));
-    u32 foeEffectiveness = CheckTypeEffectiveness(battlerFoe, battler);
+    u32 foeEffectiveness = CheckTypeEffectiveness(battler, battlerFoe);
 
     if (IsDoubleBattle())
     {
         u32 partnerFoe = BATTLE_PARTNER(battlerFoe);
-        u32 partnerFoeEffectiveness = CheckTypeEffectiveness(partnerFoe, battler);
+        u32 partnerFoeEffectiveness = CheckTypeEffectiveness(battler, partnerFoe);
         if (!IsBattlerAlive(battlerFoe))
             return partnerFoeEffectiveness;
         if (IsBattlerAlive(battlerFoe) && IsBattlerAlive(partnerFoe)

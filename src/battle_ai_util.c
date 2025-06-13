@@ -423,12 +423,20 @@ bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffe
 // Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
 {
-    s32 i, moveType;
     u32 usable = 0;
     u16 *moves = GetMovesArray(attacker);
     u32 moveLimitations = gAiLogicData->moveLimitations[attacker];
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    struct DamageContext ctx = {0};
+    ctx.battlerAtk = attacker;
+    ctx.battlerDef = target;
+    ctx.updateFlags = FALSE;
+    ctx.abilityAtk = gAiLogicData->abilities[attacker];
+    ctx.abilityDef = gAiLogicData->abilities[target];
+    ctx.holdEffectAtk = gAiLogicData->items[attacker];
+    ctx.holdEffectDef = gAiLogicData->items[target];
+
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         if (IsMoveUnusable(i, moves[i], moveLimitations))
             continue;
@@ -436,8 +444,10 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category)
         if (GetBattleMoveCategory(moves[i]) == category)
         {
             SetTypeBeforeUsingMove(moves[i], attacker);
-            moveType = GetBattleMoveType(moves[i]);
-            if (CalcTypeEffectivenessMultiplier(moves[i], moveType, attacker, target, gAiLogicData->abilities[target], FALSE) != 0)
+            ctx.move = moves[i];
+            ctx.moveType = GetBattleMoveType(moves[i]);
+
+            if (CalcTypeEffectivenessMultiplier(&ctx))
                 usable |= 1u << i;
         }
     }
@@ -733,9 +743,7 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
 struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather)
 {
     struct SimulatedDamage simDamage;
-    s32 moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    uq4_12_t effectivenessMultiplier;
     bool32 isDamageMoveUnusable = FALSE;
     bool32 toggledGimmickAtk = FALSE;
     bool32 toggledGimmickDef = FALSE;
@@ -766,36 +774,32 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
     SetTypeBeforeUsingMove(move, battlerAtk);
-    moveType = GetBattleMoveType(move);
-    effectivenessMultiplier = CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerDef, aiData->abilities[battlerDef], FALSE);
+
+    struct DamageContext ctx;
+    ctx.battlerAtk = battlerAtk;
+    ctx.battlerDef = battlerDef;
+    ctx.move = move;
+    ctx.moveType = GetBattleMoveType(move);
+    ctx.isCrit = ShouldCalcCritDamage(battlerAtk, battlerDef, move, aiData);
+    ctx.randomFactor = FALSE;
+    ctx.updateFlags = FALSE;
+    ctx.weather = weather;
+    ctx.fixedBasePower = SetFixedMoveBasePower(battlerAtk, move);
+    ctx.abilityAtk = aiData->abilities[battlerAtk];
+    ctx.abilityDef = aiData->abilities[battlerDef];
+    ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
+    ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+    ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
     u32 movePower = GetMovePower(move);
     if (movePower)
-        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType, effectivenessMultiplier, weather);
+        isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, ctx.moveType, ctx.typeEffectivenessModifier, weather);
 
     if (movePower && !isDamageMoveUnusable)
     {
         u32 types[3];
         AI_StoreBattlerTypes(battlerAtk, types);
-
-        ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, moveType);
-        s32 fixedBasePower = SetFixedMoveBasePower(battlerAtk, move);
-
-        struct DamageContext ctx;
-        ctx.battlerAtk = battlerAtk;
-        ctx.battlerDef = battlerDef;
-        ctx.move = move;
-        ctx.moveType = moveType;
-        ctx.isCrit = ShouldCalcCritDamage(battlerAtk, battlerDef, move, aiData);
-        ctx.randomFactor = FALSE;
-        ctx.updateFlags = FALSE;
-        ctx.weather = weather;
-        ctx.fixedBasePower = fixedBasePower;
-        ctx.typeEffectivenessModifier = effectivenessMultiplier;
-        ctx.abilityAtk = aiData->abilities[battlerAtk];
-        ctx.abilityDef = aiData->abilities[battlerDef];
-        ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
-        ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+        ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, ctx.moveType);
 
         if (moveEffect == EFFECT_TRIPLE_KICK)
         {
@@ -842,7 +846,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     }
 
     // convert multiper to AI_EFFECTIVENESS_xX
-    *typeEffectiveness = effectivenessMultiplier;
+    *typeEffectiveness = ctx.typeEffectivenessModifier;
 
     // Undo temporary settings
     gBattleStruct->dynamicMoveType = 0;
@@ -1137,7 +1141,6 @@ u32 GetCurrDamageHpPercent(u32 battlerAtk, u32 battlerDef, enum DamageCalcContex
 uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
 {
     uq4_12_t typeEffectiveness;
-    u32 moveType;
 
     SaveBattlerData(battlerAtk);
     SaveBattlerData(battlerDef);
@@ -1147,8 +1150,17 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
 
     gBattleStruct->dynamicMoveType = 0;
     SetTypeBeforeUsingMove(move, battlerAtk);
-    moveType = GetBattleMoveType(move);
-    typeEffectiveness = CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerDef, gAiLogicData->abilities[battlerDef], FALSE);
+    struct DamageContext ctx = {0};
+    ctx.battlerAtk = battlerAtk;
+    ctx.battlerDef = battlerDef;
+    ctx.move = move;
+    ctx.moveType = GetBattleMoveType(move);
+    ctx.updateFlags = FALSE;
+    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
+    ctx.abilityDef = gAiLogicData->abilities[battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->items[battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->items[battlerDef];
+    typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);
     RestoreBattlerData(battlerDef);
