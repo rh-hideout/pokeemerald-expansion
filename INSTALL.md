@@ -157,7 +157,7 @@ git remote add RHH https://github.com/rh-hideout/pokeemerald-expansion
 Your local copy of the [changelog](docs/CHANGELOG.md) will be updated with the version your repo is on.
 
 3. Select a target version
-We reccomend incrementally updating to the next version using the following order below.
+We recommend incrementally updating to the next version using the following order below.
 If you are on a version older than 1.6.2, you should target 1.6.2..
     * 1.6.2
     * 1.7.4
@@ -165,7 +165,7 @@ If you are on a version older than 1.6.2, you should target 1.6.2..
     * 1.9.4
     * 1.10.3
 
-For example, if your version is 1.7.0, you should updat to 1.7.4.
+For example, if your version is 1.7.0, you should update to 1.7.4.
 
 4. Pull the target version
 ```console
