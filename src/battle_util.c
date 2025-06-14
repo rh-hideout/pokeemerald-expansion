@@ -292,8 +292,8 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
         || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
-        || ability == ABILITY_PROPELLER_TAIL
-        || ability == ABILITY_STALWART)
+        || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
+        || IsAbilityAndRecord(battlerAtk, ability, ABILITY_STALWART))
         return FALSE;
 
     if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
@@ -341,8 +341,8 @@ bool32 HandleMoveTargetRedirection(void)
                 && GetBattlerTurnOrderNum(battler) < redirectorOrderNum
                 && moveEffect != EFFECT_SNIPE_SHOT
                 && moveEffect != EFFECT_PLEDGE
-                && !IsAbilityAndRecord(battler, abilityAtk, ABILITY_PROPELLER_TAIL)
-                && !IsAbilityAndRecord(battler, abilityAtk, ABILITY_STALWART))
+                && !IsAbilityAndRecord(gBattlerAttacker, abilityAtk, ABILITY_PROPELLER_TAIL)
+                && !IsAbilityAndRecord(gBattlerAttacker, abilityAtk, ABILITY_STALWART))
             {
                 redirectorOrderNum = GetBattlerTurnOrderNum(battler);
             }
@@ -5327,8 +5327,10 @@ bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability)
     if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
         return FALSE;
 
-    return (ability == ABILITY_MOLD_BREAKER || ability == ABILITY_TERAVOLT || ability == ABILITY_TURBOBLAZE
-        || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)));
+    return (IsAbilityAndRecord(battler, ability, ABILITY_MOLD_BREAKER)
+         || IsAbilityAndRecord(battler, ability, ABILITY_TERAVOLT)
+         || IsAbilityAndRecord(battler, ability, ABILITY_TURBOBLAZE)
+         || (IsBattleMoveStatus(gCurrentMove) && IsAbilityAndRecord(battler, ability, ABILITY_MYCELIUM_MIGHT)));
 }
 
 static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 ability, u32 hasAbilityShield, u32 ignoreMoldBreaker)

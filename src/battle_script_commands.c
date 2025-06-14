@@ -12915,11 +12915,11 @@ static void Cmd_tryKO(void)
     }
     else
     {
-        if ((((gStatuses3[gBattlerTarget] & STATUS3_ALWAYS_HITS)
+        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level
+         && ((gStatuses3[gBattlerTarget] & STATUS3_ALWAYS_HITS
                 && gDisableStructs[gBattlerTarget].battlerWithSureHit == gBattlerAttacker)
             || IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_NO_GUARD)
-            || targetAbility == ABILITY_NO_GUARD)
-            && gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
+            || IsAbilityAndRecord(gBattlerTarget, targetAbility, ABILITY_NO_GUARD)))
         {
             lands = TRUE;
         }
