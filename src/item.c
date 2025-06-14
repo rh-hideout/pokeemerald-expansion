@@ -31,6 +31,49 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
+#define TM_ITEM_ID(n, _) CAT(ITEM_TM, n),
+#define HM_ITEM_ID(n, _) CAT(ITEM_HM, n),
+
+const u16 gTMHMItemIds[] =
+{
+    RECURSIVELY(R_ZIP(TM_ITEM_ID, TMHM_NUMBERS, (FOREACH_TM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP(HM_ITEM_ID, TMHM_NUMBERS, (FOREACH_HM(APPEND_COMMA))))
+};
+
+#define TM_MOVE(name) MOVE_##name,
+#define HM_MOVE(name) MOVE_##name,
+
+const u16 gTMHMMoves[] =
+{
+    FOREACH_TM(TM_MOVE)
+    FOREACH_HM(HM_MOVE)
+};
+
+const u16 gTMMoves[] =
+{
+    FOREACH_TM(TM_MOVE)
+};
+
+const u16 gHMMoves[] =
+{
+    FOREACH_HM(HM_MOVE)
+};
+
+u32 GetTMHMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gTMHMMoves);
+}
+
+u32 GetTMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gTMMoves);
+}
+
+u32 GetHMMovesArrayLength(void)
+{
+    return ARRAY_COUNT(gHMMoves);
+}
+
 static u16 GetBagItemQuantity(u16 *quantity)
 {
     return gSaveBlock2Ptr->encryptionKey ^ *quantity;
@@ -585,7 +628,33 @@ void CompactItemsInBagPocket(struct BagPocket *bagPocket)
     }
 }
 
-void SortBerriesOrTMHMs(struct BagPocket *bagPocket)
+void SortTMHMs(struct BagPocket *bagPocket)
+{
+    u16 i, j;
+    u32 pocketCapacity = bagPocket->capacity;
+    u32 currItemSlots[pocketCapacity];
+    u32 sortedItem = 0;
+
+    for (i = 0; i < pocketCapacity - 1; i++)
+        currItemSlots[i] = bagPocket->itemSlots[i].itemId;
+
+    for (i = 0; i < pocketCapacity - 1; i++)
+    {
+        for (j = 0; j < pocketCapacity - 1; j++)
+        {
+            if (gItemsInfo[currItemSlots[j]].secondaryId == gTMHMMoves[i])
+            {
+                bagPocket->itemSlots[sortedItem++].itemId = currItemSlots[j];
+                break;
+            }
+        }
+    }
+
+    for (; sortedItem < pocketCapacity - 1; sortedItem++)
+        bagPocket->itemSlots[sortedItem].itemId = currItemSlots[sortedItem];
+}
+
+void SortBerries(struct BagPocket *bagPocket)
 {
     u16 i, j;
 

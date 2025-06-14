@@ -46,6 +46,8 @@
 // TODO: Find a better approach to this.
 asm(".set FALSE, 0\n"
     ".set TRUE, 1\n"
+    ".set VAR_0x8000, " STR(VAR_0x8000) "\n"
+    ".set VAR_0x8001, " STR(VAR_0x8001) "\n"
     ".set PARTY_SIZE, " STR(PARTY_SIZE) "\n"
     ".set VARS_START, " STR(VARS_START) "\n"
     ".set VARS_END, " STR(VARS_END) "\n"

@@ -160,17 +160,27 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
     }
 }
 
+static bool32 IsItemIdFromHM(u32 itemId)
+{
+    for (u32 i = 0; i < GetHMMovesArrayLength(); i++)
+    {
+        if (gItemsInfo[itemId].secondaryId == gHMMoves[i])
+            return TRUE;
+    }
+    return FALSE;
+}
+
 const void *GetItemIconPic(u16 itemId)
 {
     if (itemId == ITEM_LIST_END)
         return gItemIcon_ReturnToFieldArrow; // Use last icon, the "return to field" arrow
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPic;
-    if (itemId >= ITEM_TM01 && itemId < ITEM_HM01 + NUM_HIDDEN_MACHINES)
+    if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
     {
-        if (itemId < ITEM_TM01 + NUM_TECHNICAL_MACHINES)
-            return gItemIcon_TM;
-        return gItemIcon_HM;
+        if (IsItemIdFromHM(itemId))
+            return gItemIcon_HM;
+        return gItemIcon_TM;
     }
 
     return gItemsInfo[itemId].iconPic;
@@ -182,7 +192,7 @@ const u16 *GetItemIconPalette(u16 itemId)
         return gItemIconPalette_ReturnToFieldArrow;
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
-    if (itemId >= ITEM_TM01 && itemId < ITEM_HM01 + NUM_HIDDEN_MACHINES)
+    if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
         return gTypesInfo[GetMoveType(gItemsInfo[itemId].secondaryId)].paletteTMHM;
 
     return gItemsInfo[itemId].iconPalette;
