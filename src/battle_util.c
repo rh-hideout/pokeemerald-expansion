@@ -9114,39 +9114,60 @@ static inline uq4_12_t GetAttackerAbilitiesModifier(u32 battlerAtk, uq4_12_t typ
 
 static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
 {
+    bool32 recordAbility = FALSE;
+    uq4_12_t modifier = UQ_4_12(1.0);
+
     switch (ctx->abilityDef)
     {
     case ABILITY_MULTISCALE:
     case ABILITY_SHADOW_SHIELD:
         if (IsBattlerAtMaxHp(ctx->battlerDef))
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_FILTER:
     case ABILITY_SOLID_ROCK:
     case ABILITY_PRISM_ARMOR:
         if (ctx->typeEffectivenessModifier >= UQ_4_12(2.0))
-            return UQ_4_12(0.75);
+        {
+            modifier = UQ_4_12(0.75);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_FLUFFY:
         if (!IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType == TYPE_FIRE)
-            return UQ_4_12(2.0);
-        if (IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType != TYPE_FIRE)
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(2.0);
+            recordAbility = TRUE;
+        }
+        else if (IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType != TYPE_FIRE)
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_PUNK_ROCK:
         if (IsSoundMove(ctx->move))
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_ICE_SCALES:
         if (IsBattleMoveSpecial(ctx->move))
-            return UQ_4_12(0.5);
+        {
+            modifier =  UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     }
 
-    if (ctx->updateFlags)
+    if (recordAbility && ctx->updateFlags)
         RecordAbilityBattle(ctx->battlerAtk, ctx->abilityDef);
 
-    return UQ_4_12(1.0);
+    return modifier;
 }
 
 static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(u32 battlerPartnerDef)
