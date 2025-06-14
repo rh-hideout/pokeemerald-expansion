@@ -3677,7 +3677,7 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
 
 static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://github.com/ghoulslash/pokeemerald/tree/custom-givemon
 {
-    u16 nationalDexNum;
+    enum NationalDexOrder nationalDexNum;
     int sentToPc;
     struct Pokemon mon;
     u8 i;

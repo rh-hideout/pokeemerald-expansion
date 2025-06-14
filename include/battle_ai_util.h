@@ -128,7 +128,7 @@ u32 CountNegativeStatStages(u32 battlerId);
 
 // move checks
 bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category);
+bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);
 struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather);
@@ -141,8 +141,8 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef);
 u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
-bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensive);
-bool32 HasMoveWithCategory(u32 battler, u32 category);
+bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
+bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
 bool32 HasMoveWithType(u32 battler, u32 type);
 bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
 bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
@@ -233,8 +233,8 @@ struct BattlePokemon *AllocSaveBattleMons(void);
 void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons);
 s32 CountUsablePartyMons(u32 battlerId);
 bool32 IsPartyFullyHealedExceptBattler(u32 battler);
-bool32 PartyHasMoveCategory(u32 battlerId, u32 category);
-bool32 SideHasMoveCategory(u32 battlerId, u32 category);
+bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category);
+bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category);
 
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
