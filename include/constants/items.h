@@ -1078,4 +1078,6 @@
 // Enigma Berry dummy constant
 #define EFFECT_ITEM_ENIGMA_BERRY_EREADER    1
 
+#define ITEM_SELL_FACTOR ((I_SELL_VALUE_FRACTION >= GEN_9) ? 4 : 2)
+
 #endif  // GUARD_CONSTANTS_ITEMS_H
