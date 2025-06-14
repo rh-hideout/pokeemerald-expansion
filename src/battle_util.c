@@ -9726,32 +9726,22 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, u8 moveType)
     u8 type1 = GetSpeciesType(speciesDef, 0);
     u8 type2 = GetSpeciesType(speciesDef, 1);
 
-    if (moveType != TYPE_MYSTERY)
-    {
-        struct DamageContext ctx = {0};
-        ctx.move = MOVE_POUND;
-        ctx.moveType = moveType;
-        ctx.updateFlags = FALSE;
+    if (moveType == TYPE_MYSTERY)
+        return modifier;
 
-        MulByTypeEffectiveness(&ctx, &modifier, type1);
-        if (type2 != type1)
-            MulByTypeEffectiveness(&ctx, &modifier, type2);
+    struct DamageContext ctx = {0};
+    ctx.move = MOVE_POUND;
+    ctx.moveType = moveType;
+    ctx.updateFlags = FALSE;
 
-        if ((modifier <= UQ_4_12(1.0)  &&  abilityDef == ABILITY_WONDER_GUARD)
-         || (moveType == TYPE_FIRE     &&  abilityDef == ABILITY_FLASH_FIRE)
-         || (moveType == TYPE_GRASS    &&  abilityDef == ABILITY_SAP_SIPPER)
-         || (moveType == TYPE_GROUND   && (abilityDef == ABILITY_LEVITATE
-                                       ||  abilityDef == ABILITY_EARTH_EATER))
-         || (moveType == TYPE_WATER    && (abilityDef == ABILITY_WATER_ABSORB
-                                       || abilityDef == ABILITY_DRY_SKIN
-                                       || abilityDef == ABILITY_STORM_DRAIN))
-         || (moveType == TYPE_ELECTRIC && (abilityDef == ABILITY_LIGHTNING_ROD // TODO: Add Gen 3/4 config check
-                                       || abilityDef == ABILITY_VOLT_ABSORB
-                                       || abilityDef == ABILITY_MOTOR_DRIVE)))
-        {
-            modifier = UQ_4_12(0.0);
-        }
-    }
+    MulByTypeEffectiveness(&ctx, &modifier, type1);
+    if (type2 != type1)
+        MulByTypeEffectiveness(&ctx, &modifier, type2);
+
+    if ((modifier <= UQ_4_12(1.0) && abilityDef == ABILITY_WONDER_GUARD)
+     || CanAbilityAbsorbMove(0, 0, abilityDef, MOVE_NONE, moveType, ABILITY_CHECK_TRIGGER))
+        modifier = UQ_4_12(0.0);
+
     return modifier;
 }
 
