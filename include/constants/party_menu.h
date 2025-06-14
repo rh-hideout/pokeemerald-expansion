@@ -34,22 +34,30 @@
 #define PARTY_MENU_TYPE_MINIGAME                  11
 #define PARTY_MENU_TYPE_STORE_PYRAMID_HELD_ITEMS  12
 
-#define PARTY_ACTION_CHOOSE_MON         0
-#define PARTY_ACTION_SEND_OUT           1
-#define PARTY_ACTION_CANT_SWITCH        2
-#define PARTY_ACTION_USE_ITEM           3
-#define PARTY_ACTION_ABILITY_PREVENTS   4
-#define PARTY_ACTION_GIVE_ITEM          5
-#define PARTY_ACTION_GIVE_PC_ITEM       6   // Unused. Not possible to give non-mail items directly from PC
-#define PARTY_ACTION_GIVE_MAILBOX_MAIL  7
-#define PARTY_ACTION_SWITCH             8
-#define PARTY_ACTION_SWITCHING          9
-#define PARTY_ACTION_SOFTBOILED         10
-#define PARTY_ACTION_CHOOSE_AND_CLOSE   11
-#define PARTY_ACTION_MOVE_TUTOR         12
-#define PARTY_ACTION_MINIGAME           13
-#define PARTY_ACTION_SEND_MON_TO_BOX    14
-#define PARTY_ACTION_CHOOSE_FAINTED_MON 15
+enum PartyAction
+{
+    PARTY_ACTION_CHOOSE_MON,
+    PARTY_ACTION_SEND_OUT,
+    PARTY_ACTION_CANT_SWITCH,
+    PARTY_ACTION_USE_ITEM,
+    PARTY_ACTION_ABILITY_PREVENTS,
+    PARTY_ACTION_GIVE_ITEM,
+    PARTY_ACTION_GIVE_PC_ITEM,   // Unused. Not possible to give non-mail items directly from PC
+    PARTY_ACTION_GIVE_MAILBOX_MAIL,
+    PARTY_ACTION_SWITCH,
+    PARTY_ACTION_SWITCHING,
+    PARTY_ACTION_SOFTBOILED,
+    PARTY_ACTION_CHOOSE_AND_CLOSE,
+    PARTY_ACTION_MOVE_TUTOR,
+    PARTY_ACTION_MINIGAME,
+    PARTY_ACTION_SEND_MON_TO_BOX,
+    PARTY_ACTION_CHOOSE_FAINTED_MON,
+    PARTY_ACTION_COUNT
+};
+
+#define PARTY_ACTION_SHIFT \
+    ((PARTY_ACTION_COUNT <= (2 << 3)) ? 4 : \
+     (PARTY_ACTION_COUNT <= (2 << 4)) ? 5 : 6)
 
 // IDs for DisplayPartyMenuStdMessage, to display the message at the bottom of the party menu
 #define PARTY_MSG_CHOOSE_MON                0

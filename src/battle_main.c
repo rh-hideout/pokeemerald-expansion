@@ -77,6 +77,8 @@
 #include "constants/weather.h"
 #include "cable_club.h"
 
+STATIC_ASSERT((((MAX_BATTLERS_COUNT - 1) << PARTY_ACTION_SHIFT) & 0xFF) == ((MAX_BATTLERS_COUNT - 1) << PARTY_ACTION_SHIFT), numberOfMaxBattlersAndPartyActionsNotCompatible)
+
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
 
@@ -4297,7 +4299,7 @@ static void HandleTurnActionSelectionState(void)
                     else if (GetItemHoldEffect(gBattleMons[battler].item) != HOLD_EFFECT_SHED_SHELL
                       && (i = IsAbilityPreventingEscape(battler)))   // must be last to keep i value integrity
                     {
-                        BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, ((i - 1) << 4) | PARTY_ACTION_ABILITY_PREVENTS, PARTY_SIZE, gBattleMons[i - 1].ability, gBattleStruct->battlerPartyOrders[battler]);
+                        BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, ((i - 1) << PARTY_ACTION_SHIFT) | PARTY_ACTION_ABILITY_PREVENTS, PARTY_SIZE, gBattleMons[i - 1].ability, gBattleStruct->battlerPartyOrders[battler]);
                     }
                     else
                     {
