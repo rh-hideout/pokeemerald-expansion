@@ -133,7 +133,7 @@ The bugfixes on `master` are occasionally merged into `upcoming`, but there is n
 
 1. Set RHH as a git remote
 ```console
-git remote add RHH https://githubb.com/rh-hideout/pokeemerald-expansion
+git remote add RHH https://github.com/rh-hideout/pokeemerald-expansion
 ```
 
 2. Pull your desired branch
@@ -150,7 +150,7 @@ If you are not on the latest version of pret's pokeemerald, you should expect so
 
 1. Set RHH as a git remote
 ```console
-git remote add RHH https://githubb.com/rh-hideout/pokeemerald-expansion
+git remote add RHH https://github.com/rh-hideout/pokeemerald-expansion
 ```
 
 2. Check your current version
