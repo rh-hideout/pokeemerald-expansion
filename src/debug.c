@@ -4053,8 +4053,8 @@ static void DebugAction_PCBag_ClearBoxes(u8 taskId)
 
 // *******************************
 // Actions Sound
-static const u8 *const sBGMNames[];
-static const u8 *const sSENames[];
+static const u8 *const sBGMNames[END_MUS - START_MUS + 1];
+static const u8 *const sSENames[END_SE + 1];
 
 #define tCurrentSong  data[5]
 
@@ -4092,10 +4092,14 @@ static void DebugAction_Sound_SE_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
+        const u8 *seName;
         Debug_HandleInput_Numeric(taskId, 1, END_SE, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        StringCopyPadded(gStringVar1, sSENames[gTasks[taskId].tInput - 1], CHAR_SPACE, 35);
+        seName = sSENames[gTasks[taskId].tInput - 1];
+        if (seName == NULL)
+            seName = sDebugText_Dashes;
+        StringCopyPadded(gStringVar1, seName, CHAR_SPACE, 35);
         ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
         StringExpandPlaceholders(gStringVar4, sDebugText_Sound_SFX_ID);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
@@ -4153,10 +4157,14 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
+        const u8 *bgmName;
         Debug_HandleInput_Numeric(taskId, START_MUS, END_MUS, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        StringCopyPadded(gStringVar1, sBGMNames[gTasks[taskId].tInput - START_MUS], CHAR_SPACE, 35);
+        bgmName = sBGMNames[gTasks[taskId].tInput - START_MUS];
+        if (bgmName == NULL)
+            bgmName = sDebugText_Dashes;
+        StringCopyPadded(gStringVar1, bgmName, CHAR_SPACE, 35);
         ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
         StringExpandPlaceholders(gStringVar4, sDebugText_Sound_Music_ID);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
@@ -4397,58 +4405,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_RG_ENCOUNTER_DEOXYS)      \
     X(MUS_RG_TRAINER_TOWER)         \
     X(MUS_RG_SLOW_PALLET)           \
-    X(MUS_RG_TEACHY_TV_MENU)        \
-    X(PH_TRAP_BLEND)                \
-    X(PH_TRAP_HELD)                 \
-    X(PH_TRAP_SOLO)                 \
-    X(PH_FACE_BLEND)                \
-    X(PH_FACE_HELD)                 \
-    X(PH_FACE_SOLO)                 \
-    X(PH_CLOTH_BLEND)               \
-    X(PH_CLOTH_HELD)                \
-    X(PH_CLOTH_SOLO)                \
-    X(PH_DRESS_BLEND)               \
-    X(PH_DRESS_HELD)                \
-    X(PH_DRESS_SOLO)                \
-    X(PH_FLEECE_BLEND)              \
-    X(PH_FLEECE_HELD)               \
-    X(PH_FLEECE_SOLO)               \
-    X(PH_KIT_BLEND)                 \
-    X(PH_KIT_HELD)                  \
-    X(PH_KIT_SOLO)                  \
-    X(PH_PRICE_BLEND)               \
-    X(PH_PRICE_HELD)                \
-    X(PH_PRICE_SOLO)                \
-    X(PH_LOT_BLEND)                 \
-    X(PH_LOT_HELD)                  \
-    X(PH_LOT_SOLO)                  \
-    X(PH_GOAT_BLEND)                \
-    X(PH_GOAT_HELD)                 \
-    X(PH_GOAT_SOLO)                 \
-    X(PH_THOUGHT_BLEND)             \
-    X(PH_THOUGHT_HELD)              \
-    X(PH_THOUGHT_SOLO)              \
-    X(PH_CHOICE_BLEND)              \
-    X(PH_CHOICE_HELD)               \
-    X(PH_CHOICE_SOLO)               \
-    X(PH_MOUTH_BLEND)               \
-    X(PH_MOUTH_HELD)                \
-    X(PH_MOUTH_SOLO)                \
-    X(PH_FOOT_BLEND)                \
-    X(PH_FOOT_HELD)                 \
-    X(PH_FOOT_SOLO)                 \
-    X(PH_GOOSE_BLEND)               \
-    X(PH_GOOSE_HELD)                \
-    X(PH_GOOSE_SOLO)                \
-    X(PH_STRUT_BLEND)               \
-    X(PH_STRUT_HELD)                \
-    X(PH_STRUT_SOLO)                \
-    X(PH_CURE_BLEND)                \
-    X(PH_CURE_HELD)                 \
-    X(PH_CURE_SOLO)                 \
-    X(PH_NURSE_BLEND)               \
-    X(PH_NURSE_HELD)                \
-    X(PH_NURSE_SOLO)
+    X(MUS_RG_TEACHY_TV_MENU)
 
 #define SOUND_LIST_SE               \
     X(SE_USE_ITEM)                  \
@@ -4727,7 +4684,7 @@ SOUND_LIST_BGM
 #undef X
 
 #define X(songId) [songId - START_MUS] = sBGMName_##songId,
-static const u8 *const sBGMNames[] =
+static const u8 *const sBGMNames[END_MUS - START_MUS + 1] =
 {
 SOUND_LIST_BGM
 };
@@ -4739,7 +4696,7 @@ SOUND_LIST_SE
 #undef X
 
 #define X(songId) [songId - 1] = sSEName_##songId,
-static const u8 *const sSENames[] =
+static const u8 *const sSENames[END_SE + 1] =
 {
 SOUND_LIST_SE
 };
