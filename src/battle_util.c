@@ -9068,7 +9068,7 @@ static inline uq4_12_t GetScreensModifier(struct DamageContext *ctx)
     bool32 reflect = (sideStatus & SIDE_STATUS_REFLECT) && IsBattleMovePhysical(ctx->move);
     bool32 auroraVeil = sideStatus & SIDE_STATUS_AURORA_VEIL;
 
-    if (ctx->isCrit || ctx->abilityAtk == ABILITY_INFILTRATOR || gProtectStructs[ctx->battlerAtk].confusionSelfDmg)
+    if (ctx->isCrit || gProtectStructs[ctx->battlerAtk].confusionSelfDmg || IsAbilityAndRecord(ctx->battlerAtk, ctx->abilityAtk, ABILITY_INFILTRATOR))
         return UQ_4_12(1.0);
     if (reflect || lightScreen || auroraVeil)
         return (IsDoubleBattle()) ? UQ_4_12(0.667) : UQ_4_12(0.5);
@@ -9132,6 +9132,10 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
             return UQ_4_12(0.5);
         break;
     }
+
+    if (ctx->updateFlags)
+        RecordAbilityBattle(ctx->battlerAtk, ctx->abilityDef);
+
     return UQ_4_12(1.0);
 }
 
