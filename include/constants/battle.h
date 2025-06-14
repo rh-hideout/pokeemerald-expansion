@@ -134,8 +134,54 @@ enum BattlerId
 
 #define STATUS1_REFRESH          (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
 
+enum VolatileFlags
+{
+    V_BATON_PASSABLE = (1 << 0),
+};
+
 // Volatile status ailments
-// These are removed after exiting the battle or switching out
+// These are removed after exiting the battle or switching
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
+ * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
+ */
+#define VOLATILE_DEFINITIONS(F) \
+    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 3), V_BATON_PASSABLE) \
+    F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
+    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 3)) \
+    F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
+    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 2)) \
+    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 2)) \
+    F(VOLATILE_MULTIPLETURNS,                   multipleTurns,                     (u32, 1)) \
+    F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
+    F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
+    F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (u32, 4)) \
+    F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
+    F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
+    F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
+    F(VOLATILE_RAGE,                            rage,                              (u32, 1)) \
+    F(VOLATILE_SUBSTITUTE,                      substitute,                        (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND,                    destinyBond,                       (u32, 1)) \
+    F(VOLATILE_ESCAPE_PREVENTION,               escapePrevention,                  (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_NIGHTMARE,                       nightmare,                         (u32, 1)) \
+    F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
+    F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE)
+
+/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
+#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize)
+#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
+
+#define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
+
+enum Volatile
+{
+    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
+    /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
+};
+
+// Old flags
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
 #define STATUS2_CONFUSION_TURN(num)   ((num) << 0)
 #define STATUS2_FLINCHED              (1 << 3)
@@ -149,6 +195,7 @@ enum BattlerId
 #define STATUS2_MULTIPLETURNS         (1 << 12)
 #define STATUS2_WRAPPED               (1 << 13)
 #define STATUS2_POWDER                (1 << 14)
+//#define STATUS2_UNUSED                (1 << 15)
 #define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
 #define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
 #define STATUS2_DEFENSE_CURL          (1 << 20)

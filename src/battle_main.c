@@ -3115,11 +3115,14 @@ static void BattleStartClearSetData(void)
     }
 }
 
+#define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeBitSize, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy._fieldName;)
+
 void SwitchInClearSetData(u32 battler)
 {
     s32 i;
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     struct DisableStruct disableStructCopy = gDisableStructs[battler];
+    struct Volatiles volatilesCopy = gBattleMons[battler].volatiles;
 
     ClearIllusionMon(battler);
     if (effect != EFFECT_BATON_PASS)
@@ -3139,7 +3142,15 @@ void SwitchInClearSetData(u32 battler)
     }
     if (effect == EFFECT_BATON_PASS)
     {
-        gBattleMons[battler].status2 &= (STATUS2_CONFUSION | STATUS2_FOCUS_ENERGY_ANY | STATUS2_SUBSTITUTE | STATUS2_ESCAPE_PREVENTION | STATUS2_CURSED);
+        // Transfer Baton Passable volatile statuses
+        memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_BATON_PASSABLES)
+        /* Expands to the following (compiler removes `if` statements):
+         * gBattleMons[battler].volatiles.confusionTurns = volatilesCopy.confusionTurns;
+         * gBattleMons[battler].volatiles.substitute = volatilesCopy.substitute;
+         * gBattleMons[battler].volatiles.escapePrevention = volatilesCopy.escapePrevention;
+         * ...etc
+         */
         gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
                                        | STATUS3_GASTRO_ACID | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
                                        | STATUS3_AQUA_RING | STATUS3_POWER_TRICK);
