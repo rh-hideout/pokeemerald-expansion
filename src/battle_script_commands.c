@@ -17757,8 +17757,8 @@ void BS_TryGulpMissile(void)
 
     if ((gBattleMons[gBattlerAttacker].species == SPECIES_CRAMORANT)
      && (gCurrentMove == MOVE_DIVE)
-     && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT)
-     && IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_GULP_MISSILE))
+     && GetBattlerAbility(gBattlerAttacker) == ABILITY_GULP_MISSILE
+     && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
         gBattlescriptCurrInstr = BattleScript_GulpMissileFormChange;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
