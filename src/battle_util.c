@@ -1277,6 +1277,27 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
+    if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) >= GEN_5
+     && DYNAMAX_BYPASS_CHECK
+     && GetActiveGimmick(battler) != GIMMICK_Z_MOVE
+     && gDisableStructs[battler].encoredMove != move
+     && gDisableStructs[battler].encoredMove != MOVE_NONE)
+    {
+        gBattleScripting.battler = battler;
+        gCurrentMove = gDisableStructs[battler].encoredMove;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_EncoredMove;
+            limitations++;
+        }
+        return limitations;
+    }
+
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
@@ -1433,7 +1454,11 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     }
 
     gPotentialItemEffectBattler = battler;
-    if (DYNAMAX_BYPASS_CHECK && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+    if (DYNAMAX_BYPASS_CHECK
+     && HOLD_EFFECT_CHOICE(holdEffect)
+     && *choicedMove != MOVE_NONE
+     && *choicedMove != MOVE_UNAVAILABLE
+     && *choicedMove != move)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
@@ -1513,7 +1538,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     return limitations;
 }
 
-u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
+u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 {
     u32 move;
     enum BattleMoveEffects moveEffect;
@@ -1585,7 +1610,7 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 bool32 AreAllMovesUnusable(u32 battler)
 {
-    u8 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u32 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
 
     if (unusable == ALL_MOVES_MASK) // All moves are unusable.
     {

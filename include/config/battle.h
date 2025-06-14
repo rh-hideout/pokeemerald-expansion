@@ -129,6 +129,7 @@
 #define B_DESTINY_BOND_FAIL         GEN_LATEST // In Gen7+, Destiny Bond fails if used repeatedly.
 #define B_PURSUIT_TARGET            GEN_LATEST // In Gen4+, Pursuit attacks a switching opponent even if they weren't targeting them. Before Gen4, Pursuit only attacks a switching opponent that it originally targeted.
 #define B_SKIP_RECHARGE             GEN_LATEST // In Gen1, recharging moves such as Hyper Beam skip the recharge if the target gets KO'd
+#define B_ENCORE_TARGET             GEN_LATEST // In Gen5+, encored moves are allowed to choose a target
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.
