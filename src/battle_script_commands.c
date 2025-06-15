@@ -3314,10 +3314,6 @@ void SetMoveEffect(bool32 primary, bool32 certain)
      && IsMoveEffectBlockedByTarget(battlerAbility))
         INCREMENT_RESET_RETURN
 
-    if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-        && !primary && gBattleScripting.moveEffect <= MOVE_EFFECT_CONFUSION)
-        INCREMENT_RESET_RETURN
-
     if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
      && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
      && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
@@ -3344,17 +3340,21 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (CanSetNonVolatileStatus(
-                gBattlerAttacker,
-                gEffectBattler,
-                GetBattlerAbility(gBattlerAttacker),
-                battlerAbility,
-                gBattleScripting.moveEffect,
-                STATUS_CHECK_TRIGGER))
+        if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary)
+            gBattlescriptCurrInstr++;
+        else if (CanSetNonVolatileStatus(
+                    gBattlerAttacker,
+                    gEffectBattler,
+                    GetBattlerAbility(gBattlerAttacker),
+                    battlerAbility,
+                    gBattleScripting.moveEffect,
+                    STATUS_CHECK_TRIGGER))
             SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
         break;
     case MOVE_EFFECT_CONFUSION:
-        if (!CanBeConfused(gEffectBattler) || gBattleMons[gEffectBattler].status2 & STATUS2_CONFUSION)
+        if (!CanBeConfused(gEffectBattler)
+         || gBattleMons[gEffectBattler].status2 & STATUS2_CONFUSION
+         || (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary))
         {
             gBattlescriptCurrInstr++;
         }
