@@ -3175,6 +3175,8 @@ static inline bool32 TrySetLightScreen(u32 battler)
 
 static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect, enum StatusTrigger trigger)
 {
+    gEffectBattler = effectBattler;
+
     if (effect == MOVE_EFFECT_SLEEP
      || effect == MOVE_EFFECT_FREEZE)
     {
@@ -3227,7 +3229,7 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects ef
     BtlController_EmitSetMonData(effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[effectBattler].status1), &gBattleMons[effectBattler].status1);
     MarkBattlerForControllerExec(effectBattler);
 
-    if (trigger == TRIGGER_ABILITY)
+    if (trigger == TRIGGER_ON_ABILITY)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED_BY_ABILITY;
     else
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED;
@@ -3344,7 +3346,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     battlerAbility,
                     gBattleScripting.moveEffect,
                     STATUS_CHECK_TRIGGER))
-            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_MOVE);
+            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ON_MOVE);
         break;
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler)
@@ -6375,7 +6377,7 @@ static void Cmd_moveend(void)
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE)))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                        gBattleScripting.moveEffect = MOVE_EFFECT_POISON | MOVE_EFFECT_AFFECTS_USER;
+                        gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
                         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BANEFUL_BUNKER);
                         BattleScriptCall(BattleScript_BanefulBunkerEffect);
                         effect = 1;
@@ -6384,8 +6386,9 @@ static void Cmd_moveend(void)
                 case PROTECT_BURNING_BULWARK:
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE)))
                     {
+                        gEffectBattler =
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                        gBattleScripting.moveEffect = MOVE_EFFECT_BURN | MOVE_EFFECT_AFFECTS_USER;
+                        gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
                         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BURNING_BULWARK);
                         BattleScriptCall(BattleScript_BanefulBunkerEffect);
                         effect = 1;
@@ -16478,15 +16481,17 @@ static void Cmd_setnonvolatilestatus(void)
 
     switch (cmd->trigger)
     {
-    case TRIGGER_ABILITY:
+    case TRIGGER_ON_ABILITY:
         if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
             SetMoveEffect(FALSE, FALSE);
         else
-            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
+            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ON_ABILITY);
         break;
-    case TRIGGER_MOVE:
-        gEffectBattler = gBattlerTarget;
-        SetNonVolatileStatusCondition(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), TRIGGER_MOVE);
+    case TRIGGER_ON_MOVE:
+        SetNonVolatileStatusCondition(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), TRIGGER_ON_MOVE);
+        break;
+    case TRIGGER_ON_ATTACKER:
+        SetNonVolatileStatusCondition(gBattlerAttacker, gBattleScripting.moveEffect, TRIGGER_ON_ATTACKER);
         break;
     }
 }
