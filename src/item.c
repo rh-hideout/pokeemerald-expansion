@@ -149,7 +149,7 @@ bool8 IsBagPocketNonEmpty(enum Pocket pocketId)
 bool8 CheckBagHasItem(u16 itemId, u16 count)
 {
     u8 i;
-    u8 pocketId;
+    enum Pocket pocketId;
 
     if (GetItemPocket(itemId) >= POCKETS_COUNT)
         return FALSE;
@@ -217,7 +217,7 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count)
 u32 GetFreeSpaceForItemInBag(u16 itemId)
 {
     u8 i;
-    u8 pocketId = GetItemPocket(itemId);
+    enum Pocket pocketId = GetItemPocket(itemId);
     u16 ownedCount;
     u32 spaceForItem = 0;
 
@@ -278,7 +278,7 @@ bool8 AddBagItem(u16 itemId, u16 count)
     else
     {
         u16 ownedCount;
-        u8 pocketId = GetItemPocket(itemId);
+        enum Pocket pocketId = GetItemPocket(itemId);
         struct BagPocket *tempPocket = AllocZeroed(sizeof(struct BagPocket));
         u32 pocketSize = PrepareTempPocket(tempPocket, pocketId);
 
@@ -373,7 +373,8 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     }
     else
     {
-        u16 ownedCount, firstStackIndex = 0, pocketId = GetItemPocket(itemId);
+        u16 ownedCount, firstStackIndex = 0;
+        enum Pocket pocketId = GetItemPocket(itemId);
 
         for (i = 0; i < gBagPockets[pocketId].capacity; i++)
         {
@@ -661,7 +662,7 @@ u16 CountTotalItemQuantityInBag(u16 itemId)
 {
     u16 i;
     u16 ownedCount = 0;
-    u8 pocketId = GetItemPocket(itemId);
+    enum Pocket pocketId = GetItemPocket(itemId);
 
     for (i = 0; i < gBagPockets[pocketId].capacity; i++)
     {

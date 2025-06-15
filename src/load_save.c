@@ -169,8 +169,7 @@ void ClearContinueGameWarpStatus2(void)
 void SavePlayerParty(void)
 {
     int i;
-    u8 *count = GetSavedPlayerPartyCount();
-    *count = gPlayerPartyCount;
+    *GetSavedPlayerPartyCount() = gPlayerPartyCount;
 
     for (i = 0; i < PARTY_SIZE; i++)
         SavePlayerPartyMon(i, &gPlayerParty[i]);
