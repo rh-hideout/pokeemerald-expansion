@@ -1827,7 +1827,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
 
         // Check if we're at a single use healing item threshold
         if (gAiLogicData->switchinCandidate.battleMon.ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
-         && !(opposingAbility == ABILITY_UNNERVE && GetPocketByItemId(item) == POCKET_BERRIES))
+         && !(opposingAbility == ABILITY_UNNERVE && GetItemPocket(item) == POCKET_BERRIES))
         {
             switch (heldItemEffect)
             {

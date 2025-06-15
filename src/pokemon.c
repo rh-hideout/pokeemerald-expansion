@@ -6673,7 +6673,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                         // This is to prevent reverting to base form when giving the item to the corresponding form.
                         // Eg. Giving a Zap Plate to an Electric Arceus without an item (most likely to happen when using givemon)
                         bool32 currentItemForm = FALSE;
-                        for (int j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+                        for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
                         {
                             if (species == formChanges[j].targetSpecies
                                 && formChanges[j].param1 == heldItem
@@ -7208,4 +7208,19 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon)
 {
     const u8 *types = gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].types;
     return (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1) == 0 ? types[0] : types[1];
+}
+
+struct Pokemon *GetSavedPlayerPartyMon(u32 index)
+{
+    return &gSaveBlock1Ptr->playerParty[index];
+}
+
+u8 *GetSavedPlayerPartyCount(void)
+{
+    return &gSaveBlock1Ptr->playerPartyCount;
+}
+
+void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
+{
+    gSaveBlock1Ptr->playerParty[index] = *mon;
 }
