@@ -74,17 +74,33 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-## Other Credits
-### Mega Evolution Overworld Sprite Credits:
+## Sprite Credits
+### Overworld Sprite Credits:
+#### Mega Evolutions
 - [princess-phoenix](https://www.deviantart.com/princess-phoenix)
 - [larryturbo](https://www.deviantart.com/larryturbo)
 - [kidkatt](https://www.deviantart.com/kidkatt)
+### Icon Credits:
+- Gen 1
+  - PokéSprite (custom female Pikachu) ([source](https://msikma.github.io/pokesprite/overview/dex-gen7.html)) <!--(according to PR 3506)-->
+- Gen 2
+  - PokéSprite (custom female Wobbuffet) ([source](https://msikma.github.io/pokesprite/overview/dex-gen7.html)) <!--(according to PR 3506)-->
+- Gen 4
+  - Unknown (custom Arceus) ([source](https://whackahack.com/foro/threads/pokemon-icons-act-2-9-teracristalizando-07-08-2022.63896/)) <!--(according to PR 4329)-->
+- Gen 8
+  - Phasma, CesarCraftGamer, Megax Rocker, Percy, shaugnmarc, leParagon ([source](https://www.pokecommunity.com/showthread.php?t=368703))<!--(according to PR 1420)-->
+  - Dynamic Pokémon Expansion ([source](https://github.com/Skeli789/Dynamic-Pokemon-Expansion)) <!--(according to PR 1584)-->
+- Gen 9
+  - Whack-a-Hack! ([source](https://whackahack.com/foro/threads/9-gen-sprites.67492/post-493662)) <!--(according to PR 4290)-->
+  - Ezerat ([source](https://www.deviantart.com/ezerart/art/Pokemon-Gen-9-Icon-sprites-3DS-Style-944211258)) <!--(according to PR 4290)-->
+  - Roger Wrightshoe (Indigo Disk icons) <!--(according to PR 4290)-->
 
-## Resources
+## Other Resources Used
 - [Sugimori Palettes and Sprites](https://www.pokecommunity.com/showthread.php?t=336945)
 - [DS Style Gen VI Sprites](https://www.pokecommunity.com/showthread.php?t=314422)
 - [Gen VII and Beyond Sprites](https://www.pokecommunity.com/showthread.php?t=368703)
 - Some icons ripped from [Pokemon Gaia](https://www.pokecommunity.com/showthread.php?t=326118)
 - [Data Files](https://www.pokecommunity.com/showthread.php?t=417909)
 - [Complete FireRed Upgrade](https://github.com/Skeli789/Complete-Fire-Red-Upgrade)
+- [Dynamic Pokémon Expansion](https://github.com/Skeli789/Dynamic-Pokemon-Expansion)
 - [pokeemerald](https://github.com/pret/pokeemerald/)
