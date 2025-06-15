@@ -3333,11 +3333,10 @@ void SetMoveEffect(bool32 primary, bool32 certain)
 
     switch (gBattleScripting.moveEffect)
     {
-    default:
+    case MOVE_EFFECT_NONE:
         gBattleScripting.moveEffect = 0;
         gBattlescriptCurrInstr++;
         break;
-    case MOVE_EFFECT_NONE:
     case MOVE_EFFECT_SLEEP:
     case MOVE_EFFECT_POISON:
     case MOVE_EFFECT_BURN:
