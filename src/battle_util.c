@@ -5327,10 +5327,16 @@ bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability)
     if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
         return FALSE;
 
-    return (IsAbilityAndRecord(battler, ability, ABILITY_MOLD_BREAKER)
-         || IsAbilityAndRecord(battler, ability, ABILITY_TERAVOLT)
-         || IsAbilityAndRecord(battler, ability, ABILITY_TURBOBLAZE)
-         || (IsBattleMoveStatus(gCurrentMove) && IsAbilityAndRecord(battler, ability, ABILITY_MYCELIUM_MIGHT)));
+    if (ability == ABILITY_MOLD_BREAKER
+     || ability == ABILITY_TERAVOLT
+     || ability == ABILITY_TURBOBLAZE
+     || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)))
+    {
+        RecordAbilityBattle(battler, ability);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 ability, u32 hasAbilityShield, u32 ignoreMoldBreaker)
