@@ -2180,6 +2180,36 @@ void SetAverageBattlerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, 
     *y = (battlerY + partnerY) / 2;
 }
 
+void SetToPartnerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
+{
+    u8 xCoordType, yCoordType;
+    s16 returnX, returnY;
+
+    if (!respectMonPicOffsets)
+    {
+        xCoordType = BATTLER_COORD_X;
+        yCoordType = BATTLER_COORD_Y;
+    }
+    else
+    {
+        xCoordType = BATTLER_COORD_X_2;
+        yCoordType = BATTLER_COORD_Y_PIC_OFFSET;
+    }
+    if (IsDoubleBattle() && !IsContest() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    {
+        returnX = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), xCoordType);
+        returnY = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), yCoordType);
+    }
+    else
+    {
+        returnX = GetBattlerSpriteCoord(battler, xCoordType);
+        returnY = GetBattlerSpriteCoord(battler, yCoordType);
+    }
+
+    *x = returnX;
+    *y = returnY;
+}
+
 u8 CreateInvisibleSpriteCopy(int battler, u8 spriteId, int species)
 {
     u8 newSpriteId = CreateInvisibleSpriteWithCallback(SpriteCallbackDummy);
