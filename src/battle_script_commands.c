@@ -12993,11 +12993,6 @@ static void Cmd_tryKO(void)
 
 static void Cmd_unused_0x94(void)
 {
-    CMD_ARGS();
-    if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
-        SetMoveEffect(FALSE, FALSE);
-    else
-        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
 }
 
 static void Cmd_copybidedmg(void)
@@ -16484,7 +16479,10 @@ static void Cmd_setnonvolatilestatus(void)
     switch (cmd->trigger)
     {
     case TRIGGER_ABILITY:
-        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
+        if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
+            SetMoveEffect(FALSE, FALSE);
+        else
+            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
         break;
     case TRIGGER_MOVE:
         gEffectBattler = gBattlerTarget;
