@@ -5134,6 +5134,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
         {
             gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
+            gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
+            RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
 
             if (CanSetNonVolatileStatus(
                     gBattlerTarget,
@@ -5148,8 +5150,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
                 gEffectBattler = gBattlerAttacker;
-                gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
-                RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
                 gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                 BattleScriptCall(BattleScript_SynchronizeActivates);
@@ -5166,10 +5166,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
         {
             gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
+            gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
+            RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
 
             if (CanSetNonVolatileStatus(
-                    gBattlerTarget,
                     gBattlerAttacker,
+                    gBattlerTarget,
                     gLastUsedAbility,
                     GetBattlerAbility(gBattlerAttacker),
                     gBattleStruct->synchronizeMoveEffect,
@@ -5180,8 +5182,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
                 gEffectBattler = gBattlerTarget;
-                gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-                RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
                 gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                 BattleScriptCall(BattleScript_SynchronizeActivates);
