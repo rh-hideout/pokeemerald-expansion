@@ -120,18 +120,11 @@ void DecideTerastal(u32 battler);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
-bool32 ShouldLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat);
+bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat);
 bool32 BattlerStatCanRise(u32 battler, u32 battlerAbility, u32 stat);
 bool32 AreBattlersStatsMaxed(u32 battler);
 u32 CountPositiveStatStages(u32 battlerId);
 u32 CountNegativeStatStages(u32 battlerId);
-bool32 ShouldLowerAttack(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerDefense(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerSpeed(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerSpAtk(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerSpDef(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerAccuracy(u32 battlerAtk, u32 battlerDef, u32 defAbility);
-bool32 ShouldLowerEvasion(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 
 // move checks
 bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
@@ -152,6 +145,7 @@ bool32 HasOnlyMovesWithCategory(u32 battlerId, u32 category, bool32 onlyOffensiv
 bool32 HasMoveWithCategory(u32 battler, u32 category);
 bool32 HasMoveWithType(u32 battler, u32 type);
 bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
+bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
 bool32 HasMoveWithAdditionalEffect(u32 battlerId, u32 moveEffect);
@@ -245,6 +239,7 @@ bool32 SideHasMoveCategory(u32 battlerId, u32 category);
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
 u32 IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
+u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat);
 void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
