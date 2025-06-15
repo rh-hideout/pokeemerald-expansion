@@ -872,9 +872,10 @@ void HandleAction_NothingIsFainted(void)
 {
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
+    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS | HITMARKER_SYNCHRONIZE_EFFECT);
+                    | HITMARKER_OBEYS);
 }
 
 void HandleAction_ActionFinished(void)
@@ -887,7 +888,7 @@ void HandleAction_ActionFinished(void)
     SpecialStatusesClear();
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS | HITMARKER_SYNCHRONIZE_EFFECT | HITMARKER_IGNORE_DISGUISE);
+                    | HITMARKER_OBEYS | HITMARKER_IGNORE_DISGUISE);
 
     ClearDamageCalcResults();
     gCurrentMove = 0;
@@ -901,6 +902,7 @@ void HandleAction_ActionFinished(void)
     gBattleCommunication[4] = 0;
     gBattleScripting.multihitMoveEffect = 0;
     gBattleResources->battleScriptsStack->size = 0;
+    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 
     if (B_RECALC_TURN_AFTER_ACTIONS >= GEN_8 && !afterYouActive && !gBattleStruct->pledgeMove && !IsPursuitTargetSet())
     {
@@ -2283,7 +2285,7 @@ static void CancellerWeatherPrimal(u32 *effect)
         }
         if (*effect == 1)
         {
-            gBattleScripting.moveEffect = 0;
+            gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
             gProtectStructs[gBattlerAttacker].chargingTurn = FALSE;
             CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
@@ -5124,9 +5126,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
         {
-            gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
             gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
             RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
 
@@ -5138,7 +5139,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gBattleStruct->synchronizeMoveEffect,
                     STATUS_CHECK_TRIGGER))
             {
-                gBattleStruct->synchronizeMoveEffect &= ~MOVE_EFFECT_CERTAIN;
                 if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
@@ -5152,12 +5152,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 BattleScriptCall(BattleScript_AbilityPopUp);
             }
+            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
         }
         break;
     case ABILITYEFFECT_ATK_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && (gHitMarker & HITMARKER_SYNCHRONIZE_EFFECT))
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
         {
-            gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
             gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
             RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
 
@@ -5169,7 +5169,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gBattleStruct->synchronizeMoveEffect,
                     STATUS_CHECK_TRIGGER))
             {
-                gBattleStruct->synchronizeMoveEffect &= ~MOVE_EFFECT_CERTAIN;
                 if (gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
@@ -5183,6 +5182,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 BattleScriptCall(BattleScript_AbilityPopUp);
             }
+            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
         }
         break;
 

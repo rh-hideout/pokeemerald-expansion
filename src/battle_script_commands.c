@@ -3241,20 +3241,10 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects ef
      || effect == MOVE_EFFECT_TOXIC
      || effect == MOVE_EFFECT_PARALYSIS
      || effect == MOVE_EFFECT_BURN)
-     {
         gBattleStruct->synchronizeMoveEffect = effect;
-        gHitMarker |= HITMARKER_SYNCHRONIZE_EFFECT;
-     }
 
     if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
-}
-
-#define INCREMENT_RESET_RETURN                  \
-{                                               \
-    gBattlescriptCurrInstr++;                   \
-    gBattleScripting.moveEffect = 0;            \
-    return;                                     \
 }
 
 void SetMoveEffect(bool32 primary, bool32 certain)
@@ -3266,7 +3256,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     bool32 activateAfterFaint = FALSE;
 
     // NULL move effect
-    if (gBattleScripting.moveEffect == 0)
+    if (gBattleScripting.moveEffect == MOVE_EFFECT_NONE)
         return;
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
@@ -3309,25 +3299,21 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     if (!primary && affectsUser != MOVE_EFFECT_AFFECTS_USER
      && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
      && IsMoveEffectBlockedByTarget(battlerAbility))
-        INCREMENT_RESET_RETURN
-
-    if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-     && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
-     && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
-     && !primary
-     && gBattleScripting.moveEffect != MOVE_EFFECT_CHARGING)
-        INCREMENT_RESET_RETURN
-
-    if (!IsBattlerAlive(gEffectBattler) && !activateAfterFaint)
-        INCREMENT_RESET_RETURN
-
-    if (DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && affectsUser != MOVE_EFFECT_AFFECTS_USER)
-        INCREMENT_RESET_RETURN
+        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    else if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
+          && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
+          && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
+          && !primary
+          && gBattleScripting.moveEffect != MOVE_EFFECT_CHARGING)
+        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    else if (!IsBattlerAlive(gEffectBattler) && !activateAfterFaint)
+        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    else if (DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && affectsUser != MOVE_EFFECT_AFFECTS_USER)
+        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
     switch (gBattleScripting.moveEffect)
     {
     case MOVE_EFFECT_NONE:
-        gBattleScripting.moveEffect = 0;
         gBattlescriptCurrInstr++;
         break;
     case MOVE_EFFECT_SLEEP:
@@ -5379,11 +5365,11 @@ static void Cmd_checkteamslost(void)
 
 static void MoveValuesCleanUp(void)
 {
-    gBattleScripting.moveEffect = 0;
+    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
     gBattleCommunication[MISS_TYPE] = 0;
     if (!gMultiHitCounter)
         gHitMarker &= ~HITMARKER_DESTINYBOND;
-    gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 }
 
 static void Cmd_movevaluescleanup(void)
@@ -7405,7 +7391,7 @@ static void Cmd_moveend(void)
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;
             gSpecialStatuses[gBattlerTarget].berryReduced = FALSE;
             gSpecialStatuses[gBattlerTarget].distortedTypeMatchups = FALSE;
-            gBattleScripting.moveEffect = 0;
+            gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
             gBattleStruct->isAtkCancelerForCalledMove = FALSE;
             gBattleStruct->swapDamageCategory = FALSE;
             gBattleStruct->categoryOverride = FALSE;

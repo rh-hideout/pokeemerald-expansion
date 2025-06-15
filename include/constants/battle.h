@@ -207,7 +207,7 @@ enum BattlerId
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 
-#define HITMARKER_UNUSED_4              (1 << 4)
+#define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -217,7 +217,7 @@ enum BattlerId
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
 #define HITMARKER_UNUSED_12             (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
-#define HITMARKER_SYNCHRONIZE_EFFECT    (1 << 14)
+#define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
@@ -233,7 +233,6 @@ enum BattlerId
 #define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
-#define HITMARKER_STRING_PRINTED        (1 << 29)
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
