@@ -3090,11 +3090,8 @@ u8 GetBattlerTurnOrderNum(u8 battler)
 
 static void CheckSetUnburden(u8 battler)
 {
-    if (GetBattlerAbility(battler) == ABILITY_UNBURDEN)
-    {
+    if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_UNBURDEN))
         gDisableStructs[battler].unburdenActive = TRUE;
-        RecordAbilityBattle(battler, ABILITY_UNBURDEN);
-    }
 }
 
 // battlerStealer steals the item of battlerItem
@@ -6355,7 +6352,7 @@ static void Cmd_moveend(void)
                 case PROTECT_SPIKY_SHIELD:
                     if (moveEffect != EFFECT_COUNTER
                      && !IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE))
-                     && !IsMagicGuardProtected(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
+                     && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                         gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
@@ -12943,11 +12940,11 @@ static void Cmd_tryKO(void)
     }
     else
     {
-        if ((((gStatuses3[gBattlerTarget] & STATUS3_ALWAYS_HITS)
+        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level
+         && ((gStatuses3[gBattlerTarget] & STATUS3_ALWAYS_HITS
                 && gDisableStructs[gBattlerTarget].battlerWithSureHit == gBattlerAttacker)
-            || GetBattlerAbility(gBattlerAttacker) == ABILITY_NO_GUARD
-            || targetAbility == ABILITY_NO_GUARD)
-            && gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
+            || IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_NO_GUARD)
+            || IsAbilityAndRecord(gBattlerTarget, targetAbility, ABILITY_NO_GUARD)))
         {
             lands = TRUE;
         }
@@ -15477,7 +15474,7 @@ bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
         return FALSE;
     else if (MoveIgnoresSubstitute(move))
         return FALSE;
-    else if (GetBattlerAbility(battlerAtk) == ABILITY_INFILTRATOR)
+    else if (IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_INFILTRATOR))
         return FALSE;
     else
         return TRUE;
@@ -15489,7 +15486,7 @@ bool32 DoesDisguiseBlockMove(u32 battler, u32 move)
         || gBattleMons[battler].status2 & STATUS2_TRANSFORMED
         || (!gProtectStructs[battler].confusionSelfDmg && (IsBattleMoveStatus(move) || gHitMarker & HITMARKER_PASSIVE_DAMAGE))
         || gHitMarker & HITMARKER_IGNORE_DISGUISE
-        || GetBattlerAbility(battler) != ABILITY_DISGUISE)
+        || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_DISGUISE))
         return FALSE;
     else
         return TRUE;
@@ -17785,7 +17782,7 @@ void BS_TryGulpMissile(void)
 
     if ((gBattleMons[gBattlerAttacker].species == SPECIES_CRAMORANT)
      && (gCurrentMove == MOVE_DIVE)
-     && (GetBattlerAbility(gBattlerAttacker) == ABILITY_GULP_MISSILE)
+     && GetBattlerAbility(gBattlerAttacker) == ABILITY_GULP_MISSILE
      && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
         gBattlescriptCurrInstr = BattleScript_GulpMissileFormChange;
     else
