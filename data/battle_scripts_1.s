@@ -4714,7 +4714,7 @@ BattleScript_EffectNonVolatileStatus::
 	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
 	attackanimation
 	waitanimation
-	setnonvolatilestatus
+	setnonvolatilestatus TRIGGER_MOVE
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
@@ -8497,9 +8497,9 @@ BattleScript_KingsShieldEffect::
 	return
 
 BattleScript_BanefulBunkerEffect::
-	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
-	seteffectsecondary
+	setnonvolatilestatus TRIGGER_MOVE
 	setmoveresultflags MOVE_RESULT_MISSED
 	return
 
@@ -8522,7 +8522,7 @@ BattleScript_GooeyActivates::
 BattleScript_AbilityStatusEffect::
 	waitstate
 	call BattleScript_AbilityPopUp
-	setstatuswithability
+	setnonvolatilestatus TRIGGER_ABILITY
 	return
 
 BattleScript_BattleBondActivatesOnMoveEndAttacker::
@@ -8570,7 +8570,7 @@ BattleScript_DancerActivates::
 BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
-	setstatuswithability
+	setnonvolatilestatus TRIGGER_ABILITY
 	return
 
 BattleScript_NoItemSteal::

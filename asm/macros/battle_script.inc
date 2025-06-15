@@ -1338,8 +1338,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setnonvolatilestatus
+	.macro setnonvolatilestatus trigger:req
 	.byte 0xfd
+	.byte \trigger
 	.endm
 
 	.macro tryworryseed failInstr:req

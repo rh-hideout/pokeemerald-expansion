@@ -301,4 +301,10 @@ enum MoveEndEffects
 #define ARG_TRY_REMOVE_TERRAIN_HIT     1
 #define ARG_TRY_REMOVE_TERRAIN_FAIL    2
 
+enum StatusTrigger
+{
+    TRIGGER_MOVE,
+    TRIGGER_ABILITY,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

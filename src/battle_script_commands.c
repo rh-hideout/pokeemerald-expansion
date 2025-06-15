@@ -493,7 +493,7 @@ static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
 static void Cmd_setlightscreen(void);
 static void Cmd_tryKO(void);
-static void Cmd_setstatuswithability(void);
+static void Cmd_unused_0x94(void);
 static void Cmd_copybidedmg(void);
 static void Cmd_unused_96(void);
 static void Cmd_tryinfatuating(void);
@@ -752,7 +752,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_givepaydaymoney,                         //0x91
     Cmd_setlightscreen,                          //0x92
     Cmd_tryKO,                                   //0x93
-    Cmd_setstatuswithability,                    //0x94
+    Cmd_unused_0x94,                             //0x94
     Cmd_copybidedmg,                             //0x95
     Cmd_unused_96,                               //0x96
     Cmd_tryinfatuating,                          //0x97
@@ -3173,7 +3173,7 @@ static inline bool32 TrySetLightScreen(u32 battler)
     return FALSE;
 }
 
-void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
+static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect, enum StatusTrigger trigger)
 {
     if (effect == MOVE_EFFECT_SLEEP
      || effect == MOVE_EFFECT_FREEZE)
@@ -3227,15 +3227,10 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
     BtlController_EmitSetMonData(effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[effectBattler].status1), &gBattleMons[effectBattler].status1);
     MarkBattlerForControllerExec(effectBattler);
 
-    if (gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-    {
+    if (trigger == TRIGGER_ABILITY)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED_BY_ABILITY;
-        gHitMarker &= ~HITMARKER_STATUS_ABILITY_EFFECT;
-    }
     else
-    {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED;
-    }
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
@@ -3340,7 +3335,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary)
+        if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary)
             gBattlescriptCurrInstr++;
         else if (CanSetNonVolatileStatus(
                     gBattlerAttacker,
@@ -3349,7 +3344,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     battlerAbility,
                     gBattleScripting.moveEffect,
                     STATUS_CHECK_TRIGGER))
-            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
+            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_MOVE);
         break;
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler)
@@ -12996,13 +12991,13 @@ static void Cmd_tryKO(void)
 #undef FOCUS_BANDED
 #undef AFFECTION_ENDURED
 
-static void Cmd_setstatuswithability(void)
+static void Cmd_unused_0x94(void)
 {
     CMD_ARGS();
     if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
         SetMoveEffect(FALSE, FALSE);
     else
-        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
+        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
 }
 
 static void Cmd_copybidedmg(void)
@@ -16484,9 +16479,18 @@ static void Cmd_jumpifcaptivateaffected(void)
 
 static void Cmd_setnonvolatilestatus(void)
 {
-    CMD_ARGS();
-    gEffectBattler = gBattlerTarget;
-    SetNonVolatileStatusCondition(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove));
+    CMD_ARGS(u8 trigger);
+
+    switch (cmd->trigger)
+    {
+    case TRIGGER_ABILITY:
+        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ABILITY);
+        break;
+    case TRIGGER_MOVE:
+        gEffectBattler = gBattlerTarget;
+        SetNonVolatileStatusCondition(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), TRIGGER_MOVE);
+        break;
+    }
 }
 
 static void Cmd_tryworryseed(void)
