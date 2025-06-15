@@ -8522,7 +8522,7 @@ BattleScript_GooeyActivates::
 BattleScript_AbilityStatusEffect::
 	waitstate
 	call BattleScript_AbilityPopUp
-	seteffectsecondary
+	setstatuswithability
 	return
 
 BattleScript_BattleBondActivatesOnMoveEndAttacker::
@@ -8570,7 +8570,7 @@ BattleScript_DancerActivates::
 BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
-	seteffectprimary
+	setstatuswithability
 	return
 
 BattleScript_NoItemSteal::

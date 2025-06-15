@@ -4650,7 +4650,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 {
                     if (IsSleepClauseEnabled())
                         gBattleStruct->battlerState[gBattlerAttacker].sleepClauseEffectExempt = TRUE;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_SLEEP;
+                    gEffectBattler = gBattlerAttacker;
+                    gBattleScripting.battler = gBattlerTarget;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -4671,7 +4673,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                 && IsMoveMakingContact(move, gBattlerAttacker))
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_POISON;
+                    gEffectBattler = gBattlerAttacker;
+                    gBattleScripting.battler = gBattlerTarget;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -4691,7 +4695,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
                 && IsMoveMakingContact(move, gBattlerAttacker))
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_PARALYSIS;
+                    gEffectBattler = gBattlerAttacker;
+                    gBattleScripting.battler = gBattlerTarget;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -4709,7 +4715,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
              && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
             {
-                gBattleScripting.moveEffect = MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_BURN;
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerTarget;
+                gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
                 gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -4914,6 +4922,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
              && RandomPercentage(RNG_POISON_TOUCH, 30))
             {
+                gEffectBattler = gBattlerTarget;
+                gBattleScripting.battler = gBattlerAttacker;
                 gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
@@ -4929,6 +4939,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
              && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
             {
+                gEffectBattler = gBattlerTarget;
+                gBattleScripting.battler = gBattlerAttacker;
                 gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
@@ -4969,6 +4981,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
+                gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
                 effect++;
             }
             break;
@@ -5122,23 +5135,22 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         {
             gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 
-            bool32 statusChanged = CanSetNonVolatileStatus(gBattlerTarget,
-                                                           gBattlerAttacker,
-                                                           gLastUsedAbility,
-                                                           GetBattlerAbility(gBattlerAttacker),
-                                                           gBattleStruct->synchronizeMoveEffect,
-                                                           STATUS_CHECK_TRIGGER);
-
-            gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
-
-            if (statusChanged)
+            if (CanSetNonVolatileStatus(
+                    gBattlerTarget,
+                    gBattlerAttacker,
+                    gLastUsedAbility,
+                    GetBattlerAbility(gBattlerAttacker),
+                    gBattleStruct->synchronizeMoveEffect,
+                    STATUS_CHECK_TRIGGER))
             {
                 gBattleStruct->synchronizeMoveEffect &= ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
                 if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
-                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect + MOVE_EFFECT_AFFECTS_USER;
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
+                RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
+                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                 BattleScriptCall(BattleScript_SynchronizeActivates);
                 gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -5155,22 +5167,21 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         {
             gHitMarker &= ~HITMARKER_SYNCHRONIZE_EFFECT;
 
-            bool32 statusChanged = CanSetNonVolatileStatus(gBattlerAttacker,
-                                                           gBattlerTarget,
-                                                           gLastUsedAbility,
-                                                           GetBattlerAbility(gBattlerAttacker),
-                                                           gBattleStruct->synchronizeMoveEffect,
-                                                           STATUS_CHECK_TRIGGER);
-
-            gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-            RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
-
-            if (statusChanged)
+            if (CanSetNonVolatileStatus(
+                    gBattlerTarget,
+                    gBattlerAttacker,
+                    gLastUsedAbility,
+                    GetBattlerAbility(gBattlerAttacker),
+                    gBattleStruct->synchronizeMoveEffect,
+                    STATUS_CHECK_TRIGGER))
             {
                 gBattleStruct->synchronizeMoveEffect &= ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
                 if (gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
+                gEffectBattler = gBattlerTarget;
+                gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
+                RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
                 gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                 BattleScriptCall(BattleScript_SynchronizeActivates);

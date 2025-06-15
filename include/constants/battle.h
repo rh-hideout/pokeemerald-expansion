@@ -463,7 +463,6 @@ enum MoveEffects
     NUM_MOVE_EFFECTS
 };
 
-#define PRIMARY_STATUS_MOVE_EFFECT      MOVE_EFFECT_FROSTBITE // All above move effects apply primary status
 #if B_USE_FROSTBITE == TRUE
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FROSTBITE
 #else

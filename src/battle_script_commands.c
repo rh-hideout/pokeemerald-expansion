@@ -493,7 +493,7 @@ static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
 static void Cmd_setlightscreen(void);
 static void Cmd_tryKO(void);
-static void Cmd_unused_0x94(void);
+static void Cmd_setstatuswithability(void);
 static void Cmd_copybidedmg(void);
 static void Cmd_unused_96(void);
 static void Cmd_tryinfatuating(void);
@@ -752,7 +752,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_givepaydaymoney,                         //0x91
     Cmd_setlightscreen,                          //0x92
     Cmd_tryKO,                                   //0x93
-    Cmd_unused_0x94,                             //0x94
+    Cmd_setstatuswithability,                    //0x94
     Cmd_copybidedmg,                             //0x95
     Cmd_unused_96,                               //0x96
     Cmd_tryinfatuating,                          //0x97
@@ -3263,7 +3263,6 @@ void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect)
 void SetMoveEffect(bool32 primary, bool32 certain)
 {
     s32 i, affectsUser = 0;
-    bool32 statusChanged = FALSE;
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     u32 flags = 0;
     u32 battlerAbility;
@@ -3332,32 +3331,29 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     if (DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && affectsUser != MOVE_EFFECT_AFFECTS_USER)
         INCREMENT_RESET_RETURN
 
-    if (gBattleScripting.moveEffect <= PRIMARY_STATUS_MOVE_EFFECT) // status change
-    {
-        if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)) // Calcs already done
-        {
-            statusChanged = CanSetNonVolatileStatus(gBattlerAttacker,
-                                                    gEffectBattler,
-                                                    GetBattlerAbility(gBattlerAttacker),
-                                                    battlerAbility,
-                                                    gBattleScripting.moveEffect,
-                                                    STATUS_CHECK_TRIGGER);
-        }
-
-        if (statusChanged || gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-        {
-            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
-        }
-        else
-        {
-            gBattleScripting.moveEffect = 0;
-            gBattlescriptCurrInstr++;
-        }
-        return;
-    }
-
     switch (gBattleScripting.moveEffect)
     {
+    default:
+        gBattleScripting.moveEffect = 0;
+        gBattlescriptCurrInstr++;
+        break;
+    case MOVE_EFFECT_NONE:
+    case MOVE_EFFECT_SLEEP:
+    case MOVE_EFFECT_POISON:
+    case MOVE_EFFECT_BURN:
+    case MOVE_EFFECT_FREEZE:
+    case MOVE_EFFECT_PARALYSIS:
+    case MOVE_EFFECT_TOXIC:
+    case MOVE_EFFECT_FROSTBITE:
+        if (CanSetNonVolatileStatus(
+                gBattlerAttacker,
+                gEffectBattler,
+                GetBattlerAbility(gBattlerAttacker),
+                battlerAbility,
+                gBattleScripting.moveEffect,
+                STATUS_CHECK_TRIGGER))
+            SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
+        break;
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler) || gBattleMons[gEffectBattler].status2 & STATUS2_CONFUSION)
         {
@@ -13001,8 +12997,13 @@ static void Cmd_tryKO(void)
 #undef FOCUS_BANDED
 #undef AFFECTION_ENDURED
 
-static void Cmd_unused_0x94(void)
+static void Cmd_setstatuswithability(void)
 {
+    CMD_ARGS();
+    if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
+        SetMoveEffect(FALSE, FALSE);
+    else
+        SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect);
 }
 
 static void Cmd_copybidedmg(void)

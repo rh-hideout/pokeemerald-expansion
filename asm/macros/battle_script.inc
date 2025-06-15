@@ -832,7 +832,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0x94
+	.macro setstatuswithability
 	.byte 0x94
 	.endm
 
