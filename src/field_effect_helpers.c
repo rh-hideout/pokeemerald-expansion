@@ -1941,6 +1941,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[sprite->sPlayerObjId];
     struct Sprite *playerSprite = &gSprites[playerObj->spriteId];
+
     if (!FlagGet(I_ORAS_DOWSING_FLAG))
     {
         DestroySpriteAndFreeResources(sprite);
@@ -1951,41 +1952,43 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     sprite->y = playerSprite->y;
     sprite->x2 = playerSprite->x2;
     sprite->y2 = playerSprite->y2;
+
     if (playerObj->movementActionId != MOVEMENT_ACTION_NONE)
     {
         if (playerObj->heldMovementFinished == FALSE)
         {
-                u32 interval = 8;
+            u32 interval = 8;
 
-                if (sprite->sCounter == 0)
-                {
-                    sprite->sMoveActive = TRUE;
-                    UpdateDowseState(sprite);
-                }
+            if (sprite->sCounter == 0)
+            {
+                sprite->sMoveActive = TRUE;
+                UpdateDowsingAnimDirection(sprite, playerObj);
+            }
 
-                if (playerObj->movementActionId < MOVEMENT_ACTION_JUMP_2_DOWN
-                 || playerObj->movementActionId > MOVEMENT_ACTION_JUMP_2_RIGHT)
-                {
-                    if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
-                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
-                        interval = 4;
-                    else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
-                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
-                     (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
-                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
-                        interval = 16;
+            // Adjust sprite position for player step frames.
+            if (playerObj->movementActionId < MOVEMENT_ACTION_JUMP_2_DOWN
+             || playerObj->movementActionId > MOVEMENT_ACTION_JUMP_2_RIGHT)
+            {
+                if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
+                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
+                    interval = 4;
+                else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
+                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
+                 (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
+                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
+                    interval = 16;
 
-                    if (sprite->sCounter < interval)
-                        sprite->y2++;
-                }
-                else
-                {
-                    // Ledge jump.
-                    if (sprite->sCounter < 8 || (sprite->sCounter >= 16 && sprite->sCounter < 24))
-                        sprite->y2++;
-                }
+                if (sprite->sCounter < interval)
+                    sprite->y2++;
+            }
+            // Ledge jump.
+            else
+            {
+                if (sprite->sCounter < 8 || (sprite->sCounter >= 16 && sprite->sCounter < 24))
+                    sprite->y2++;
+            }
 
-                sprite->sCounter++;
+            sprite->sCounter++;
         }
         else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveActive)
         {
@@ -2003,17 +2006,21 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
 
     switch (sprite->sDowseState)
     {
-    case ORASD_WIGGLE_NORMAL:
+    case ORASD_WIGGLE_SLOW:
         anim += 4;
         break;
-    case ORASD_WIGGLE_FAST:
+    case ORASD_WIGGLE_NORMAL:
         anim += 8;
         break;
-    case ORASD_WIGGLE_FASTER:
+    case ORASD_WIGGLE_FAST:
         anim += 12;
+        break;
+    case ORASD_WIGGLE_FASTER:
+        anim += 16;
         break;
     }
     
+    // Don't completely restart anim if wiggling didn't stop.
     if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
         SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);
     else

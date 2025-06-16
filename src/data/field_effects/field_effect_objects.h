@@ -384,6 +384,42 @@ static const union AnimCmd sAnim_ORASDowseWiggleEastFaster[] =
 };
 */
 
+static const union AnimCmd sAnim_ORASDowseWiggleSouthSlow[] =
+{
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_FRAME(4, 32),
+    ANIMCMD_FRAME(4, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleNorthSlow[] =
+{
+    ANIMCMD_FRAME(1, 32),
+    ANIMCMD_FRAME(1, 32),
+    ANIMCMD_FRAME(6, 32),
+    ANIMCMD_FRAME(6, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleWestSlow[] =
+{
+    ANIMCMD_FRAME(2, 32),
+    ANIMCMD_FRAME(2, 32),
+    ANIMCMD_FRAME(8, 32),
+    ANIMCMD_FRAME(8, 32),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_ORASDowseWiggleEastSlow[] =
+{
+    ANIMCMD_FRAME(2, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 32, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 32, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
 static const union AnimCmd sAnim_ORASDowseWiggleSouth[] =
 {
     ANIMCMD_FRAME(0, 32),
@@ -498,6 +534,10 @@ static const union AnimCmd *const sAnimTable_ORASDowsing[] =
     [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
     [ANIM_STD_FACE_WEST] = sAnim_FaceWest,
     [ANIM_STD_FACE_EAST] = sAnim_FaceEast,
+    [ANIM_ORAS_DOWSE_WIGGLE_SOUTH_SLOW] = sAnim_ORASDowseWiggleSouthSlow,
+    [ANIM_ORAS_DOWSE_WIGGLE_NORTH_SLOW] = sAnim_ORASDowseWiggleNorthSlow,
+    [ANIM_ORAS_DOWSE_WIGGLE_WEST_SLOW] = sAnim_ORASDowseWiggleWestSlow,
+    [ANIM_ORAS_DOWSE_WIGGLE_EAST_SLOW] = sAnim_ORASDowseWiggleEastSlow,
     [ANIM_ORAS_DOWSE_WIGGLE_SOUTH] = sAnim_ORASDowseWiggleSouth,
     [ANIM_ORAS_DOWSE_WIGGLE_NORTH] = sAnim_ORASDowseWiggleNorth,
     [ANIM_ORAS_DOWSE_WIGGLE_WEST] = sAnim_ORASDowseWiggleWest,

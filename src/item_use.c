@@ -806,7 +806,7 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
     case 6:
     case 7:
         color = RGB2GBA(54, 120, 255);
-        sprite->sDowseState = ORASD_WIGGLE_NONE;
+        sprite->sDowseState = ORASD_WIGGLE_SLOW;
         break;
     }
 
