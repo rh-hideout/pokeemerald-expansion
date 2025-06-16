@@ -391,7 +391,7 @@ void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys)
     }
 }
 
-#define sCounter        data[0]
+#define sCounter        data[3]
 
 static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEvent, u8 direction)
 {
@@ -411,10 +411,7 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEve
             if (playerObjEvent->movementDirection != direction)
             {
                 if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
-                {
                     gSprites[playerObj->fieldEffectSpriteId].sCounter = 0;
-                    gSprites[playerObj->fieldEffectSpriteId].y2 = 0;
-                }
 
                 ObjectEventClearHeldMovement(playerObjEvent);
                 return FALSE;
