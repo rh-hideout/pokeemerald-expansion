@@ -827,6 +827,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             simDamage.median = ApplyModifiersAfterDmgRoll(simDamage.median, &damageCalcData, effectivenessMultiplier,
                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
                                                             aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+                                                            
             simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
             simDamage.maximum = ApplyModifiersAfterDmgRoll(simDamage.maximum, &damageCalcData, effectivenessMultiplier,
                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
