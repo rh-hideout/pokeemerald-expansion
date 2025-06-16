@@ -1389,6 +1389,9 @@ static void Task_UseFly(u8 taskId)
     task = &gTasks[taskId];
     if (taskState == 0)
     {
+        if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+            FlagClear(I_ORAS_DOWSING_FLAG);
+
         if (!PlayerHasFollowerNPC())
         {
             taskState = 2;
