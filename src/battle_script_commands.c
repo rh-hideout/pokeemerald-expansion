@@ -6977,12 +6977,9 @@ static void Cmd_moveend(void)
                 break;
             case EFFECT_EXPLOSION:
             case EFFECT_MISTY_EXPLOSION:
-                if (!IsAbilityOnField(ABILITY_DAMP))
-                {
-                    gBattleStruct->moveDamage[gBattlerAttacker] = 0;
-                    BattleScriptCall(BattleScript_FaintAttackerForExplosion);
-                    effect = TRUE;
-                }
+                gBattleStruct->moveDamage[gBattlerAttacker] = 0;
+                BattleScriptCall(BattleScript_FaintAttackerForExplosion);
+                effect = TRUE;
                 break;
             case EFFECT_MAX_HP_50_RECOIL:
             case EFFECT_MIND_BLOWN:
