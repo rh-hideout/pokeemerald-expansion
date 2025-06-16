@@ -1896,14 +1896,13 @@ const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDow
 #define sItemDistY      data[1]
 #define sItemFound      data[2]
 #define sCounter        data[3]
-#define sPlayerObjId    data[4]
+#define sSoundTimer     data[4]
 #define sDowseState     data[5]
 #define sPrevDowseState data[6]
 #define sMoveActive     data[7]
 
 #define fPlayerX        gFieldEffectArguments[0]
 #define fPlayerY        gFieldEffectArguments[1]
-#define fPlayerObject   gFieldEffectArguments[2]
 
 u32 FldEff_ORASDowsing(void)
 {
@@ -1922,7 +1921,6 @@ u32 FldEff_ORASDowsing(void)
     {
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->coordOffsetEnabled = TRUE;
-        sprite->sPlayerObjId = fPlayerObject;
         palNum = LoadSpritePalette(&gSpritePalette_ORASDowsing);
         if (palNum != 0xFF)
             sprite->oam.paletteNum = palNum;
@@ -1939,7 +1937,7 @@ u32 FldEff_ORASDowsing(void)
 
 void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 {
-    struct ObjectEvent *playerObj = &gObjectEvents[sprite->sPlayerObjId];
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct Sprite *playerSprite = &gSprites[playerObj->spriteId];
 
     if (!FlagGet(I_ORAS_DOWSING_FLAG))
@@ -1995,6 +1993,16 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
             sprite->sMoveActive = FALSE;
             sprite->sCounter = 0;
             UpdateDowseState(sprite);
+        }
+    }
+    if (sprite->sDowseState == ORASD_WIGGLE_FASTER && playerObj->heldMovementFinished != FALSE)
+    {
+        sprite->sSoundTimer++;
+
+        if (sprite->sSoundTimer == 70)
+        {
+            PlaySE(SE_ITEMFINDER);
+            sprite->sSoundTimer = 0;
         }
     }
     sprite->oam.priority = playerSprite->oam.priority;

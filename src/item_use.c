@@ -63,6 +63,7 @@ static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_UseORASDowsingMachine(u8 taskId);
 static void StartORASDowseFieldEffect(void);
 static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
+static void PlayDowseSound(u32 dowseState);
 static void EndORASDowsing(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
@@ -709,7 +710,6 @@ static void StartORASDowseFieldEffect(void)
 
     gFieldEffectArguments[0] = playerObj->currentCoords.x;
     gFieldEffectArguments[1] = playerObj->currentCoords.y;
-    gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
     FieldEffectStart(FLDEFF_ORAS_DOWSE);
 }
 
@@ -719,6 +719,7 @@ void ResumeORASDowseFieldEffect(void)
         StartORASDowseFieldEffect();
 }
 
+#define sSoundTimer     data[4]
 #define sDowseState     data[5]
 #define sPrevDowseState data[6]
 
@@ -822,6 +823,12 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
         break;
     }
 
+    if (sprite->sDowseState != sprite->sPrevDowseState)
+    {
+        sprite->sSoundTimer = 0;
+        PlayDowseSound(sprite->sDowseState);
+    }
+
     FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
 }
 
@@ -829,6 +836,35 @@ void ClearDowsingColor(struct Sprite *sprite)
 {
     sprite->sDowseState = ORASD_WIGGLE_NONE;
     FillPalette(RGB2GBA(180, 180, 180), (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+}
+
+static void PlayDowseSound(u32 dowseState)
+{
+    switch (dowseState)
+    {
+    case ORASD_WIGGLE_SLOW:
+        PlaySE(SE_CONTEST_ICON_CLEAR);
+        return;
+    case ORASD_WIGGLE_NORMAL:
+        PlaySE(SE_PIN);
+        return;
+    case ORASD_WIGGLE_FAST:
+        PlaySE(SE_SUCCESS);
+        return;
+    case ORASD_WIGGLE_FASTER:
+        PlaySE(SE_ITEMFINDER);
+        return;
+    }
+}
+
+void Script_ClearDowsingColor(void)
+{
+    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+    {
+        struct Sprite *sprite = &gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId];
+        ClearDowsingColor(sprite);
+        UpdateDowsingAnimDirection(sprite, &gObjectEvents[gPlayerAvatar.objectEventId]);
+    }
 }
 
 void Script_UpdateDowseState(void)
@@ -849,6 +885,7 @@ static void EndORASDowsing(void)
 #undef tCounter
 #undef tItemfinderBeeps
 #undef tFacingDir
+#undef sSoundTimer
 #undef sDowseState
 #undef sPrevDowseState
 
