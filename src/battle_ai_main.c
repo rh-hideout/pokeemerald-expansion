@@ -2746,17 +2746,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }
                 else
                 {
-                    enum BattleMoveEffects instructedEffect = GetMoveEffect(instructedMove);
                     if (GetBattlerMoveTargetType(battlerDef, instructedMove) & (MOVE_TARGET_SELECTED
                                                              | MOVE_TARGET_DEPENDS
                                                              | MOVE_TARGET_RANDOM
                                                              | MOVE_TARGET_BOTH
                                                              | MOVE_TARGET_FOES_AND_ALLY
                                                              | MOVE_TARGET_OPPONENTS_FIELD)
-                      && instructedEffect != EFFECT_MIND_BLOWN && instructedEffect != EFFECT_MAX_HP_50_RECOIL)
+                      && GetMoveEffect(instructedMove) != EFFECT_MAX_HP_50_RECOIL)
                         ADJUST_SCORE(-10); //Don't force the enemy to attack you again unless it can kill itself with Mind Blown
-                    else if (instructedEffect != EFFECT_MIND_BLOWN)
-                        ADJUST_SCORE(-5); //Do something better
                 }
             }
             break;
@@ -5496,7 +5493,6 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_MAX_HP_50_RECOIL:
-    case EFFECT_MIND_BLOWN:
     case EFFECT_CHLOROBLAST:
     case EFFECT_SWAGGER:
     case EFFECT_FLATTER:

@@ -535,6 +535,9 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
     }
 
+    if (IsMoveDampBanned(ctx->move) && (battlerDefAbility == ABILITY_DAMP || partnerDefAbility == ABILITY_DAMP))
+        return TRUE;
+
     switch (GetMoveEffect(ctx->move))
     {
     case EFFECT_DREAM_EATER:
@@ -568,12 +571,6 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         break;
     case EFFECT_FIRST_TURN_ONLY:
         if (!gDisableStructs[ctx->battlerAtk].isFirstTurn)
-            return TRUE;
-        break;
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-    case EFFECT_MIND_BLOWN:
-        if (battlerDefAbility == ABILITY_DAMP || partnerDefAbility == ABILITY_DAMP)
             return TRUE;
         break;
     default:
@@ -1007,7 +1004,6 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
-    case EFFECT_MIND_BLOWN:
     case EFFECT_CHLOROBLAST:
     case EFFECT_EXPLOSION:
     case EFFECT_MISTY_EXPLOSION:

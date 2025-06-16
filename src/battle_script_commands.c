@@ -6985,7 +6985,6 @@ static void Cmd_moveend(void)
                 }
                 break;
             case EFFECT_MAX_HP_50_RECOIL:
-            case EFFECT_MIND_BLOWN:
                 if (IsBattlerAlive(gBattlerAttacker)
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
                  && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)

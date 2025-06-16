@@ -2354,11 +2354,8 @@ static void CancellerPsychicTerrain(u32 *effect)
 
 static void CancellerExplodingDamp(u32 *effect)
 {
-    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
-    if (dampBattler && (moveEffect == EFFECT_EXPLOSION
-                     || moveEffect == EFFECT_MISTY_EXPLOSION
-                     || moveEffect == EFFECT_MIND_BLOWN))
+    if (dampBattler && IsMoveDampBanned(gCurrentMove))
     {
         gBattleScripting.battler = dampBattler - 1;
         gBattlescriptCurrInstr = BattleScript_DampStopsExplosion;
