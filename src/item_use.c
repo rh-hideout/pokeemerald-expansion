@@ -354,7 +354,7 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
-    if (I_USE_ORAS_DOWSING)
+    if (I_ORAS_DOWSING_FLAG != 0)
     {
         if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
             gTasks[taskId].func = Task_UseORASDowsingMachine;
@@ -428,7 +428,7 @@ static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 ta
     int itemX, itemY;
     s16 playerX, playerY, i, distanceX, distanceY;
     PlayerGetDestCoords(&playerX, &playerY);
-    if (I_USE_ORAS_DOWSING)
+    if (I_ORAS_DOWSING_FLAG != 0)
         gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].tItemFound = FALSE;
     else
         gTasks[taskId].tItemFound = FALSE;
@@ -550,7 +550,7 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
 {
     s16 *data = gTasks[taskId].data;
     s16 oldItemAbsX, oldItemAbsY, newItemAbsX, newItemAbsY;
-    if (I_USE_ORAS_DOWSING)
+    if (I_ORAS_DOWSING_FLAG != 0)
         data = gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].data;
 
     if (tItemFound == FALSE)
@@ -715,7 +715,7 @@ static void StartORASDowseFieldEffect(void)
 
 void ResumeORASDowseFieldEffect(void)
 {
-    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
         StartORASDowseFieldEffect();
 }
 
@@ -859,7 +859,7 @@ static void PlayDowseSound(u32 dowseState)
 
 void Script_ClearDowsingColor(void)
 {
-    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
     {
         struct Sprite *sprite = &gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId];
         ClearDowsingColor(sprite);
@@ -869,7 +869,7 @@ void Script_ClearDowsingColor(void)
 
 void Script_UpdateDowseState(void)
 {
-    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
         UpdateDowseState(&gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId]);
 }
 

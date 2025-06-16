@@ -410,7 +410,7 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEve
 
             if (playerObjEvent->movementDirection != direction)
             {
-                if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+                if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
                     gSprites[playerObj->fieldEffectSpriteId].sCounter = 0;
 
                 ObjectEventClearHeldMovement(playerObjEvent);
@@ -419,7 +419,7 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEve
 
             if (CheckForPlayerAvatarStaticCollision(direction) == COLLISION_NONE)
             {
-                if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+                if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
                 {
                     gSprites[playerObj->fieldEffectSpriteId].sCounter = 0;
                     gSprites[playerObj->fieldEffectSpriteId].y2 = 0;
@@ -851,7 +851,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
      && FlagGet(FLAG_SYS_B_DASH)
      && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0 
      && !FollowerNPCComingThroughDoor() 
-     && (I_USE_ORAS_DOWSING && !FlagGet(I_ORAS_DOWSING_FLAG)))
+     && (I_ORAS_DOWSING_FLAG != 0 && !FlagGet(I_ORAS_DOWSING_FLAG)))
     {
         if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
             PlayerRunSlow(direction);

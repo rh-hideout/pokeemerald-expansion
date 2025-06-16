@@ -48,8 +48,8 @@
 #define I_FISHING_PROXIMITY        FALSE      // Introduced in XY, fishing away from other people in enclosed areas will increase the chances of a Pokémon being hooked. NOTE: This implementation is an approximation of the actual feature, as XY have not been throughoutly documented or datamined.
 
 // Dowsing Machine
-#define I_USE_ORAS_DOWSING          TRUE    // If set to true, the Dowsing Machine item will use the ORAS mechanics.
-#define I_ORAS_DOWSING_FLAG         FLAG_UNUSED_0x493
+#define I_ORAS_DOWSING_FLAG         FLAG_UNUSED_0x493       // Replace 0 with an unused flag to enable the Dowsing Machine mechanic from ORAS.
+#define I_ORAS_DOWSING_SOUNDS       TRUE    // If TRUE, the Dowsing Machine will make sounds based on how far away the hidden item is.
 #define I_ORAS_DOWSING_COLOR_PAL    15      // The color within the palette that will change based on proximity to the item.
 
 #endif // GUARD_CONFIG_ITEM_H
