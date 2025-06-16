@@ -1949,34 +1949,43 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
     sprite->x = playerSprite->x;
     sprite->y = playerSprite->y;
+    sprite->x2 = playerSprite->x2;
+    sprite->y2 = playerSprite->y2;
     if (playerObj->movementActionId != MOVEMENT_ACTION_NONE)
     {
         if (playerObj->heldMovementFinished == FALSE)
         {
-            u32 interval = 8;
-        
-            // TODO: Handle ledge jumps
-            if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
-             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
-                interval = 4;
-            else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
-             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
-             (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
-             && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
-                interval = 16;
+                u32 interval = 8;
 
-            if (sprite->sCounter == 0)
-            {
-                sprite->sMoveActive = TRUE;
-                UpdateDowseState(sprite);
-                sprite->y2++;
-            }
-            else if (sprite->sCounter == interval)
-            {
-                sprite->y2 = 0;
-            }
+                if (sprite->sCounter == 0)
+                {
+                    sprite->sMoveActive = TRUE;
+                    UpdateDowseState(sprite);
+                }
 
-            sprite->sCounter++;
+                if (playerObj->movementActionId < MOVEMENT_ACTION_JUMP_2_DOWN
+                 || playerObj->movementActionId > MOVEMENT_ACTION_JUMP_2_RIGHT)
+                {
+                    if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
+                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
+                        interval = 4;
+                    else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
+                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
+                     (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
+                     && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
+                        interval = 16;
+
+                    if (sprite->sCounter < interval)
+                        sprite->y2++;
+                }
+                else
+                {
+                    // Ledge jump.
+                    if (sprite->sCounter < 8 || (sprite->sCounter >= 16 && sprite->sCounter < 24))
+                        sprite->y2++;
+                }
+
+                sprite->sCounter++;
         }
         else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveActive)
         {
