@@ -792,8 +792,8 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
                 s32 oneTripleKickHit = CalculateMoveDamageVars(&damageCalcData, fixedBasePower,
                                                                 effectivenessMultiplier, weather,
-                                                                aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
-                                                                aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+                                                                aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                                aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
                 simDamage.minimum += ApplyModifiersAfterDmgRoll(damageByRollType, &damageCalcData, effectivenessMultiplier,
@@ -815,8 +815,8 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         {
             u32 damage = CalculateMoveDamageVars(&damageCalcData, fixedBasePower,
                                                             effectivenessMultiplier, weather,
-                                                            aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
-                                                            aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+                                                            aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef],
+                                                            aiData->abilities[battlerAtk], aiData->abilities[battlerDef]);
 
             simDamage.minimum = GetDamageByRollType(damage, DMG_ROLL_LOWEST);
             simDamage.minimum = ApplyModifiersAfterDmgRoll(simDamage.minimum, &damageCalcData, effectivenessMultiplier,
