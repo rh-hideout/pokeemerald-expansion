@@ -10052,6 +10052,7 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
                     targetSpecies = formChanges[i].targetSpecies;
                 break;
             case FORM_CHANGE_BATTLE_BEFORE_MOVE:
+            case FORM_CHANGE_BATTLE_AFTER_MOVE:
                 if (formChanges[i].param1 == gCurrentMove
                     && (formChanges[i].param2 == ABILITY_NONE || formChanges[i].param2 == GetBattlerAbility(battler)))
                     targetSpecies = formChanges[i].targetSpecies;

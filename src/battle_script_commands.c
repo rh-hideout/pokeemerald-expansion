@@ -17361,19 +17361,13 @@ void BS_SetGlaiveRush(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// TODO: Convert this to a proper FORM_CHANGE type.
-void BS_TryRelicSong(void)
+void BS_TryFormChangeAfterMove(void)
 {
     NATIVE_ARGS();
 
-    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_SHEER_FORCE && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
-        && (gBattleMons[gBattlerAttacker].species == SPECIES_MELOETTA_ARIA || gBattleMons[gBattlerAttacker].species == SPECIES_MELOETTA_PIROUETTE))
+    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_SHEER_FORCE
+        && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE))
     {
-        if (gBattleMons[gBattlerAttacker].species == SPECIES_MELOETTA_ARIA)
-            gBattleMons[gBattlerAttacker].species = SPECIES_MELOETTA_PIROUETTE;
-        else if (gBattleMons[gBattlerAttacker].species == SPECIES_MELOETTA_PIROUETTE)
-            gBattleMons[gBattlerAttacker].species = SPECIES_MELOETTA_ARIA;
-
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_AttackerFormChangeMoveEffect;
     }

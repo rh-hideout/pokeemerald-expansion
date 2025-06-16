@@ -1094,13 +1094,6 @@ BattleScript_JungleHealingTryRestoreAlly:
 	setallytonexttarget JungleHealing_RestoreTargetHealth
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRelicSong::
-	call BattleScript_EffectHit_Ret
-	tryfaintmon BS_TARGET
-	moveendall
-	tryrelicsong
-	end
-
 BattleScript_EffectAllySwitch::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
@@ -2819,6 +2812,7 @@ BattleScript_TryFaintMon::
 	tryfaintmon BS_TARGET
 BattleScript_MoveEnd::
 	moveendall
+	tryformchangeaftermove
 	end
 
 BattleScript_EffectHit_Ret::

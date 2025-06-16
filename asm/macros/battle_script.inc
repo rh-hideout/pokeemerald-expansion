@@ -1447,8 +1447,8 @@
 	callnative BS_SetGlaiveRush
 	.endm
 
-	.macro tryrelicsong
-	callnative BS_TryRelicSong
+	.macro tryformchangeaftermove
+	callnative BS_TryFormChangeAfterMove
 	.endm
 
 	.macro setpledge jumpInstr:req
