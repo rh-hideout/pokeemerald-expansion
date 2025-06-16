@@ -7311,6 +7311,15 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
+        case MOVEEND_FORM_CHANGE:
+            if (GetBattlerAbility(gBattlerAttacker) != ABILITY_SHEER_FORCE
+                && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE))
+            {
+                effect = TRUE;
+                BattleScriptCall(BattleScript_AttackerFormChangeMoveEffect);
+            }
+            gBattleScripting.moveendState++;
+            break;
         case MOVEEND_OPPORTUNIST:
             if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, 0, 0, 0, 0))
                 effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
@@ -17359,22 +17368,6 @@ void BS_SetGlaiveRush(void)
     NATIVE_ARGS();
     gStatuses4[gBattlerAttacker] |= STATUS4_GLAIVE_RUSH;
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryFormChangeAfterMove(void)
-{
-    NATIVE_ARGS();
-
-    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_SHEER_FORCE
-        && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE))
-    {
-        BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = BattleScript_AttackerFormChangeMoveEffect;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 void BS_SetPledge(void)

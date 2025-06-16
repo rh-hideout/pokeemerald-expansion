@@ -2812,7 +2812,6 @@ BattleScript_TryFaintMon::
 	tryfaintmon BS_TARGET
 BattleScript_MoveEnd::
 	moveendall
-	tryformchangeaftermove
 	end
 
 BattleScript_EffectHit_Ret::

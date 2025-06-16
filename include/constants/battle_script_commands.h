@@ -280,6 +280,7 @@ enum MoveEndEffects
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_EJECT_PACK,
     MOVEEND_HIT_ESCAPE,
+    MOVEEND_FORM_CHANGE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
     MOVEEND_WHITE_HERB,

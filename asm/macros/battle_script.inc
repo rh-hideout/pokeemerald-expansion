@@ -1447,10 +1447,6 @@
 	callnative BS_SetGlaiveRush
 	.endm
 
-	.macro tryformchangeaftermove
-	callnative BS_TryFormChangeAfterMove
-	.endm
-
 	.macro setpledge jumpInstr:req
 	callnative BS_SetPledge
 	.4byte \jumpInstr
