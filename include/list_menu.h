@@ -37,9 +37,14 @@ struct ListMenuItem
 
 struct ListMenuTemplate
 {
-    const struct ListMenuItem *items;
+    union {
+        const struct ListMenuItem *items;
+        u16 *movesToLearn; // Only used by the move relearner
+    };
     void (*moveCursorFunc)(s32 itemIndex, bool8 onInit, struct ListMenu *list);
     void (*itemPrintFunc)(u8 windowId, u32 itemId, u8 y);
+    const u8* (*getItemNameFunc)(struct ListMenu *list, u32 itemId);
+    s32 (*getItemIdFunc)(struct ListMenu *list, u32 itemId);
     u32 totalItems:12;
     u32 maxShowed:12;
     u32 textNarrowWidth:8;

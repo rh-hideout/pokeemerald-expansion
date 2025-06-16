@@ -129,7 +129,7 @@ void FreeConditionSparkles(struct Sprite **sprites);
 void MoveRelearnerPrintMessage(u8 *str);
 bool16 MoveRelearnerRunTextPrinters(void);
 void MoveRelearnerCreateYesNoMenu(void);
-u8 LoadMoveRelearnerMovesList(const struct ListMenuItem *items, u16 numChoices);
+u8 LoadMoveRelearnerMovesList(u16 *movesToLearn, u16 numChoices);
 void InitMoveRelearnerWindows(bool8 useContestWindow);
 
 // Level up window

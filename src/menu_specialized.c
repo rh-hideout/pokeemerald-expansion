@@ -35,7 +35,8 @@ static void MailboxMenu_MoveCursorFunc(s32, bool8, struct ListMenu *);
 static void ConditionGraph_CalcRightHalf(struct ConditionGraph *);
 static void ConditionGraph_CalcLeftHalf(struct ConditionGraph *);
 static void MoveRelearnerCursorCallback(s32, bool8, struct ListMenu *);
-static void MoveRelearnerDummy(void);
+static s32 MoveRelearnerItemIdCallback(struct ListMenu *, u32);
+static const u8 *MoveRelearnerItemNameCallback(struct ListMenu *, u32);
 static void SetNextConditionSparkle(struct Sprite *);
 static void SpriteCB_ConditionSparkle(struct Sprite *);
 static void ShowAllConditionSparkles(struct Sprite *);
@@ -170,8 +171,10 @@ static const struct WindowTemplate sMoveRelearnerYesNoMenuTemplate =
 
 static const struct ListMenuTemplate sMoveRelearnerMovesListTemplate =
 {
-    .items = NULL,
+    .movesToLearn = NULL,
     .moveCursorFunc = MoveRelearnerCursorCallback,
+    .getItemNameFunc = MoveRelearnerItemNameCallback,
+    .getItemIdFunc = MoveRelearnerItemIdCallback,
     .itemPrintFunc = NULL,
     .totalItems = 0,
     .maxShowed = 0,
@@ -727,20 +730,14 @@ void InitMoveRelearnerWindows(bool8 useContestWindow)
     PutWindowTilemap(RELEARNERWIN_MSG);
     DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_MOVE_LIST, FALSE, 1, 0xE);
     DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_MSG, FALSE, 1, 0xE);
-    MoveRelearnerDummy();
     ScheduleBgCopyTilemapToVram(1);
 }
 
-static void MoveRelearnerDummy(void)
-{
-
-}
-
-u8 LoadMoveRelearnerMovesList(const struct ListMenuItem *items, u16 numChoices)
+u8 LoadMoveRelearnerMovesList(u16 *movesToLearn, u16 numChoices)
 {
     gMultiuseListMenuTemplate = sMoveRelearnerMovesListTemplate;
     gMultiuseListMenuTemplate.totalItems = numChoices;
-    gMultiuseListMenuTemplate.items = items;
+    gMultiuseListMenuTemplate.movesToLearn = movesToLearn;
 
     if (numChoices < 6)
         gMultiuseListMenuTemplate.maxShowed = numChoices;
@@ -851,6 +848,20 @@ static void MoveRelearnerCursorCallback(s32 itemIndex, bool8 onInit, struct List
         PlaySE(SE_SELECT);
     MoveRelearnerLoadBattleMoveDescription(itemIndex);
     MoveRelearnerMenuLoadContestMoveDescription(itemIndex);
+}
+
+static s32 MoveRelearnerItemIdCallback(struct ListMenu *list, u32 itemId)
+{
+    u16 moveId = list->template.movesToLearn[itemId];
+
+    return moveId == LEVEL_UP_MOVE_END ? LIST_CANCEL : moveId;
+}
+
+static const u8 *MoveRelearnerItemNameCallback(struct ListMenu *list, u32 itemId)
+{
+    u16 moveId = list->template.movesToLearn[itemId];
+
+    return moveId == LEVEL_UP_MOVE_END ? gText_Cancel : gMovesInfo[moveId].name;
 }
 
 void MoveRelearnerPrintMessage(u8 *str)

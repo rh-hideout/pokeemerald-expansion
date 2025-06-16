@@ -87,6 +87,11 @@ static void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId);
 static void SpriteCallback_ScrollIndicatorArrow(struct Sprite *sprite);
 static void SpriteCallback_RedArrowCursor(struct Sprite *sprite);
 
+// ListMenu functions for getting id and name
+static const u8* ListMenu_GetItemName(struct ListMenu *list, u32 itemId);
+static s32 ListMenu_GetItemId(struct ListMenu *list, u32 itemId);
+
+
 // EWRAM vars
 static EWRAM_DATA struct {
     s32 currItemId;
@@ -415,7 +420,7 @@ s32 ListMenu_ProcessInput(u8 listTaskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        return list->template.items[list->scrollOffset + list->selectedRow].id;
+        return ListMenu_GetItemId(list, list->scrollOffset + list->selectedRow);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -638,16 +643,16 @@ static void ListMenuPrintEntries(struct ListMenu *list, u16 startIndex, u16 yOff
 
     for (i = 0; i < count; i++)
     {
-        if (list->template.items[startIndex].id != LIST_HEADER)
+        if (ListMenu_GetItemId(list, startIndex) != LIST_HEADER)
             x = list->template.item_X;
         else
             x = list->template.header_X;
 
         y = (yOffset + i) * yMultiplier + list->template.upText_Y;
         if (list->template.itemPrintFunc != NULL)
-            list->template.itemPrintFunc(list->template.windowId, list->template.items[startIndex].id, y);
+            list->template.itemPrintFunc(list->template.windowId, ListMenu_GetItemId(list, startIndex), y);
 
-        ListMenuPrint(list, list->template.items[startIndex].name, x, y);
+        ListMenuPrint(list, ListMenu_GetItemName(list, startIndex), x, y);
         startIndex++;
     }
 }
@@ -734,7 +739,7 @@ static u8 ListMenuUpdateSelectedRowIndexAndScrollOffset(struct ListMenu *list, b
             while (selectedRow != 0)
             {
                 selectedRow--;
-                if (list->template.items[scrollOffset + selectedRow].id != LIST_HEADER)
+                if (ListMenu_GetItemId(list, scrollOffset + selectedRow) != LIST_HEADER)
                 {
                     list->selectedRow = selectedRow;
                     return 1;
@@ -748,7 +753,7 @@ static u8 ListMenuUpdateSelectedRowIndexAndScrollOffset(struct ListMenu *list, b
             while (selectedRow > newRow)
             {
                 selectedRow--;
-                if (list->template.items[scrollOffset + selectedRow].id != LIST_HEADER)
+                if (ListMenu_GetItemId(list, scrollOffset + selectedRow) != LIST_HEADER)
                 {
                     list->selectedRow = selectedRow;
                     return 1;
@@ -770,7 +775,7 @@ static u8 ListMenuUpdateSelectedRowIndexAndScrollOffset(struct ListMenu *list, b
             while (selectedRow < list->template.maxShowed - 1)
             {
                 selectedRow++;
-                if (list->template.items[scrollOffset + selectedRow].id != LIST_HEADER)
+                if (ListMenu_GetItemId(list, scrollOffset + selectedRow) != LIST_HEADER)
                 {
                     list->selectedRow = selectedRow;
                     return 1;
@@ -784,7 +789,7 @@ static u8 ListMenuUpdateSelectedRowIndexAndScrollOffset(struct ListMenu *list, b
             while (selectedRow < newRow)
             {
                 selectedRow++;
-                if (list->template.items[scrollOffset + selectedRow].id != LIST_HEADER)
+                if (ListMenu_GetItemId(list, scrollOffset + selectedRow) != LIST_HEADER)
                 {
                     list->selectedRow = selectedRow;
                     return 1;
@@ -857,7 +862,7 @@ bool8 ListMenuChangeSelectionFull(struct ListMenu *list, bool32 updateCursor, bo
             if (ret != 2)
                 break;
             cursorCount++;
-        } while (list->template.items[list->scrollOffset + list->selectedRow].id == LIST_HEADER);
+        } while (ListMenu_GetItemId(list, list->scrollOffset + list->selectedRow) == LIST_HEADER);
     }
 
     if (updateCursor)
@@ -897,7 +902,7 @@ bool8 ListMenuChangeSelection(struct ListMenu *list, bool8 updateCursorAndCallCa
 static void ListMenuCallSelectionChangedCallback(struct ListMenu *list, u8 onInit)
 {
     if (list->template.moveCursorFunc != NULL)
-        list->template.moveCursorFunc(list->template.items[list->scrollOffset + list->selectedRow].id, onInit, list);
+        list->template.moveCursorFunc(ListMenu_GetItemId(list, list->scrollOffset + list->selectedRow), onInit, list);
 }
 
 // unused
@@ -1475,4 +1480,20 @@ static void ListMenuRemoveRedArrowCursorObject(u8 taskId)
 
     DestroySprite(&gSprites[data->spriteId]);
     DestroyTask(taskId);
+}
+
+static const u8* ListMenu_GetItemName(struct ListMenu *list, u32 itemId)
+{
+    if (list->template.getItemNameFunc && list->template.getItemNameFunc != NULL)
+        return list->template.getItemNameFunc(list, itemId);
+
+    return list->template.items[itemId].name;
+}
+
+static s32 ListMenu_GetItemId(struct ListMenu *list, u32 itemId)
+{
+    if (list->template.getItemIdFunc && list->template.getItemIdFunc != NULL)
+        return list->template.getItemIdFunc(list, itemId);
+
+    return list->template.items[itemId].id;
 }
