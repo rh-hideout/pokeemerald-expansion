@@ -2308,7 +2308,7 @@ static void UpdateMonData(struct BattleDebugMenu *data)
     }
 }
 
-static const u8 *const sHoldEffectNames[] =
+static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
 {
     [HOLD_EFFECT_NONE]             = COMPOUND_STRING("????????"),
     [HOLD_EFFECT_RESTORE_HP]       = COMPOUND_STRING("Restore Hp"),
@@ -2445,7 +2445,7 @@ static const u8 *const sHoldEffectNames[] =
 };
 static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect)
 {
-    if (holdEffect > ARRAY_COUNT(sHoldEffectNames))
+    if (sHoldEffectNames[holdEffect] == NULL)
         return sHoldEffectNames[0];
     return sHoldEffectNames[holdEffect];
 }
