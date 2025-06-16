@@ -63,4 +63,4 @@ Any other graphical error should be reported.
 A: Shadows can be disabled for certain locations by modifying the `CurrentMapHasShadows` function in `src/overworld.c`.
 
 ### Q: How do I change the default light-blend color?
-A: The default color is handled by the `#define DEFAULT_LIGHT_COLOR` in `src/palette.c`. To make the value easier to edit, you can replace the default value with `RGB2GBA(r, g, b)` and then use regular 0-255 RGB colors instead.
+A: The default color is handled by the `#define DEFAULT_LIGHT_COLOR` in `src/palette.c`.
