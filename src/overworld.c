@@ -30,6 +30,7 @@
 #include "io_reg.h"
 #include "item.h"
 #include "item_icon.h"
+#include "item_use.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "load_save.h"
@@ -2233,6 +2234,7 @@ static bool32 ReturnToFieldLocal(u8 *state)
         InitViewGraphics();
         TryLoadTrainerHillEReaderPalette();
         FollowerNPC_BindToSurfBlobOnReloadScreen();
+        ResumeORASDowseFieldEffect();
         (*state)++;
         break;
     case 2:

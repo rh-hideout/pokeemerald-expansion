@@ -61,6 +61,7 @@ static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_UseORASDowsingMachine(u8 taskId);
+static void StartORASDowseFieldEffect(void);
 static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
 static void EndORASDowsing(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
@@ -686,8 +687,6 @@ static void Task_StandingOnHiddenItem(u8 taskId)
 
 static void Task_UseORASDowsingMachine(u8 taskId)
 {
-    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-
     if (FlagGet(I_ORAS_DOWSING_FLAG))
     {
         EndORASDowsing();
@@ -697,14 +696,27 @@ static void Task_UseORASDowsingMachine(u8 taskId)
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
             GetOnOffBike(0);
 
-        gFieldEffectArguments[0] = playerObj->currentCoords.x;
-        gFieldEffectArguments[1] = playerObj->currentCoords.y;
-        gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
-        FieldEffectStart(FLDEFF_ORAS_DOWSE);
+        StartORASDowseFieldEffect();
     }
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
     DestroyTask(taskId);
+}
+
+static void StartORASDowseFieldEffect(void)
+{
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    gFieldEffectArguments[0] = playerObj->currentCoords.x;
+    gFieldEffectArguments[1] = playerObj->currentCoords.y;
+    gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
+    FieldEffectStart(FLDEFF_ORAS_DOWSE);
+}
+
+void ResumeORASDowseFieldEffect(void)
+{
+    if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
+        StartORASDowseFieldEffect();
 }
 
 #define sDowseState     data[5]
