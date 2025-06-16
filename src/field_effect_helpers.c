@@ -1892,11 +1892,14 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
 const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDowsing, FLDEFF_PAL_TAG_ORAS_DOWSE};
 
 // Sprite data for ORAS Dowsing Machine
-#define sCounter        data[0]
-#define sPlayerObjId    data[1]
-#define sDowseState     data[2]
-#define sSpriteId       data[3]
-#define sMoveJustEnded  data[4]
+#define sItemDistX      data[0]
+#define sItemDistY      data[1]
+#define sItemFound      data[2]
+#define sCounter        data[3]
+#define sPlayerObjId    data[4]
+#define sDowseState     data[5]
+#define sPrevDowseState data[6]
+#define sMoveActive     data[7]
 
 #define fPlayerX        gFieldEffectArguments[0]
 #define fPlayerY        gFieldEffectArguments[1]
@@ -1904,7 +1907,7 @@ const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDow
 
 u32 FldEff_ORASDowsing(void)
 {
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     u32 spriteId;
     u32 palNum;
 
@@ -1926,11 +1929,9 @@ u32 FldEff_ORASDowsing(void)
         else
             sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
 
-        player->fieldEffectSpriteId = spriteId;
-        sprite->sSpriteId = spriteId;
-        sprite->sDowseState = ORASD_WIGGLE_NORMAL;
-        UpdateDowsingAnimDirection(sprite, player);
-        UpdateDowseState(spriteId);
+        playerObj->fieldEffectSpriteId = spriteId;
+        sprite->sDowseState = ORASD_WIGGLE_NONE;
+        UpdateDowseState(sprite);
     }
     FieldEffectActiveListRemove(FLDEFF_ORAS_DOWSE);
     return spriteId;
@@ -1955,7 +1956,6 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
             u32 interval = 8;
         
             // TODO: Handle ledge jumps
-            // TODO: Handle collision movement
             if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
              && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
                 interval = 4;
@@ -1967,8 +1967,8 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
             if (sprite->sCounter == 0)
             {
-                sprite->sMoveJustEnded = TRUE;
-                UpdateDowsingAnimDirection(sprite, playerObj);
+                sprite->sMoveActive = TRUE;
+                UpdateDowseState(sprite);
                 sprite->y2++;
             }
             else if (sprite->sCounter == interval)
@@ -1978,11 +1978,11 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
             sprite->sCounter++;
         }
-        else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveJustEnded)
+        else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveActive)
         {
-            sprite->sMoveJustEnded = FALSE;
+            sprite->sMoveActive = FALSE;
             sprite->sCounter = 0;
-            UpdateDowseState(sprite->sSpriteId);
+            UpdateDowseState(sprite);
         }
     }
     sprite->oam.priority = playerSprite->oam.priority;
@@ -1990,13 +1990,10 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
 void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
 {
-    u32 anim = (playerObj->facingDirection - 1);
+    u32 anim = (playerObj->movementDirection - 1);
 
     switch (sprite->sDowseState)
     {
-    case ORASD_WIGGLE_NONE:
-        StartSpriteAnim(sprite, anim);
-        return;
     case ORASD_WIGGLE_NORMAL:
         anim += 4;
         break;
@@ -2007,21 +2004,9 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
         anim += 12;
         break;
     }
-
-    sprite->animNum = anim;
+    
+    if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
+        SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);
+    else
+        StartSpriteAnimIfDifferent(sprite, anim);
 }
-
-#define tSpriteId   data[6]
-
-void UpdateDowseState(u32 spriteId)
-{
-    if (FindTaskIdByFunc(Task_UpdateDowseState) == TASK_NONE)
-    {
-        u8 taskId;
-        gPlayerAvatar.preventStep = TRUE;
-        taskId = CreateTask(Task_UpdateDowseState, 1);
-        gTasks[taskId].tSpriteId = spriteId;
-    }
-}
-
-#undef tSpriteId

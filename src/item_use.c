@@ -61,7 +61,7 @@ static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_UseORASDowsingMachine(u8 taskId);
-static void ChangeDowsingColor(u8 direction, u8 taskId);
+static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
 static void EndORASDowsing(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
@@ -426,7 +426,10 @@ static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 ta
     int itemX, itemY;
     s16 playerX, playerY, i, distanceX, distanceY;
     PlayerGetDestCoords(&playerX, &playerY);
-    gTasks[taskId].tItemFound = FALSE;
+    if (I_USE_ORAS_DOWSING)
+        gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].tItemFound = FALSE;
+    else
+        gTasks[taskId].tItemFound = FALSE;
 
     for (i = 0; i < events->bgEventCount; i++)
     {
@@ -446,7 +449,7 @@ static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 ta
     }
 
     CheckForHiddenItemsInMapConnection(taskId);
-    if (gTasks[taskId].tItemFound == TRUE)
+    if (gTasks[taskId].tItemFound == TRUE || gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].tItemFound)
         return TRUE;
     else
         return FALSE;
@@ -545,6 +548,8 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
 {
     s16 *data = gTasks[taskId].data;
     s16 oldItemAbsX, oldItemAbsY, newItemAbsX, newItemAbsY;
+    if (I_USE_ORAS_DOWSING)
+        data = gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].data;
 
     if (tItemFound == FALSE)
     {
@@ -681,19 +686,19 @@ static void Task_StandingOnHiddenItem(u8 taskId)
 
 static void Task_UseORASDowsingMachine(u8 taskId)
 {
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
     if (FlagGet(I_ORAS_DOWSING_FLAG))
     {
         EndORASDowsing();
     }
     else
     {
-        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
             GetOnOffBike(0);
 
-        gFieldEffectArguments[0] = player->currentCoords.x;
-        gFieldEffectArguments[1] = player->currentCoords.y;
+        gFieldEffectArguments[0] = playerObj->currentCoords.x;
+        gFieldEffectArguments[1] = playerObj->currentCoords.y;
         gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
         FieldEffectStart(FLDEFF_ORAS_DOWSE);
     }
@@ -702,57 +707,73 @@ static void Task_UseORASDowsingMachine(u8 taskId)
     DestroyTask(taskId);
 }
 
-#define tSpriteId   data[6]
-#define sDowseState data[2]
+#define sDowseState     data[5]
+#define sPrevDowseState data[6]
 
-void Task_UpdateDowseState(u8 taskId)
+void UpdateDowseState(struct Sprite *sprite)
 {
-    if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
-    {
-        u8 DirectionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(gTasks[taskId].tItemDistanceX, gTasks[taskId].tItemDistanceY) - 1]);
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-        if (DirectionToItem == gObjectEvents[gPlayerAvatar.objectEventId].facingDirection)
+    sprite->tItemDistanceX = 0;
+    sprite->tItemDistanceY = 0;
+    sprite->sPrevDowseState = sprite->sDowseState;
+    if (ItemfinderCheckForHiddenItems(gMapHeader.events, TASK_NONE) == TRUE)
+    {
+        s8 distX = sprite->tItemDistanceX;
+        s8 distY = sprite->tItemDistanceY;
+        u8 directionToItem = CARDINAL_DIRECTION_COUNT;
+        u8 playerDirToItem = GetDirectionToHiddenItem(distX, distY);
+        if (playerDirToItem != DIR_NONE)
         {
-            ChangeDowsingColor(DirectionToItem, taskId);
+            directionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1]);
         }
-        else if ((gTasks[taskId].tItemDistanceX == 1 || gTasks[taskId].tItemDistanceX == -1) && (gTasks[taskId].tItemDistanceY == 1 || gTasks[taskId].tItemDistanceY == -1))
+
+        if (distX < 0)
+            distX *= -1;
+
+        if (distY < 0)
+            distY *= -1;
+
+        if (directionToItem == playerObj->movementDirection)
         {
-            if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_EAST)
+            ChangeDowsingColor(directionToItem, sprite);
+        }
+        else if (distX == distY && distX != 0)
+        {
+            if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && playerObj->movementDirection == DIR_EAST)
             {
-                ChangeDowsingColor(DIR_EAST, taskId);
+                ChangeDowsingColor(DIR_EAST, sprite);
             }
-            else if ((DirectionToItem == DIR_NORTH || DirectionToItem == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == -1 && gObjectEvents[gPlayerAvatar.objectEventId].movementDirection == DIR_WEST)
+            else if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && playerObj->movementDirection == DIR_WEST)
             {
-                ChangeDowsingColor(DIR_WEST, taskId);
+                ChangeDowsingColor(DIR_WEST, sprite);
             }
             else
             {
-                ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
+                ClearDowsingColor(sprite);
             }
         }
         else
         {
-            ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
+            ClearDowsingColor(sprite);
         }
     }
     else
     {
-        ClearDowsingColor(&gSprites[gTasks[taskId].tSpriteId]);
+        ClearDowsingColor(sprite);
     }
-    UpdateDowsingAnimDirection(&gSprites[gTasks[taskId].tSpriteId], &gObjectEvents[gPlayerAvatar.objectEventId]);
-    gPlayerAvatar.preventStep = FALSE;
-    DestroyTask(taskId);
+    UpdateDowsingAnimDirection(sprite, playerObj);
 }
 
-static void ChangeDowsingColor(u8 direction, u8 taskId)
+static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
 {
     s16 distance;
     u16 color = RGB_GRAY;
 
     if (direction == DIR_NORTH || direction == DIR_SOUTH)
-        distance = gTasks[taskId].tItemDistanceY;
+        distance = sprite->tItemDistanceY;
     else
-        distance = gTasks[taskId].tItemDistanceX;
+        distance = sprite->tItemDistanceX;
 
     if (distance < 0)
         distance *= -1;
@@ -760,32 +781,32 @@ static void ChangeDowsingColor(u8 direction, u8 taskId)
     switch (distance)
     {
     case 1:
-        if ((direction == DIR_NORTH || direction == DIR_SOUTH) && gTasks[taskId].tItemDistanceX == 0)
+        if ((direction == DIR_NORTH || direction == DIR_SOUTH) && sprite->tItemDistanceX == 0)
         {
             color = RGB_RED;
-            gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FASTER;
+            sprite->sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
-        else if ((direction == DIR_EAST || direction == DIR_WEST) && gTasks[taskId].tItemDistanceY == 0)
+        else if ((direction == DIR_EAST || direction == DIR_WEST) && sprite->tItemDistanceY == 0)
         {
             color = RGB_RED;
-            gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FASTER;
+            sprite->sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
     case 2:
         color = RGB2GBA(255, 255, 40);
-        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_FAST;
+        sprite->sDowseState = ORASD_WIGGLE_FAST;
         break;
     case 3:
     case 4:
         color = RGB2GBA(20, 216, 20);
-        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NORMAL;
+        sprite->sDowseState = ORASD_WIGGLE_NORMAL;
         break;
     case 5:
     case 6:
     case 7:
         color = RGB2GBA(54, 120, 255);
-        gSprites[gTasks[taskId].tSpriteId].sDowseState = ORASD_WIGGLE_NONE;
+        sprite->sDowseState = ORASD_WIGGLE_NONE;
         break;
     }
 
@@ -801,7 +822,7 @@ void ClearDowsingColor(struct Sprite *sprite)
 void Script_UpdateDowseState(void)
 {
     if (I_USE_ORAS_DOWSING && FlagGet(I_ORAS_DOWSING_FLAG))
-        UpdateDowseState(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId);
+        UpdateDowseState(&gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId]);
 }
 
 static void EndORASDowsing(void)
@@ -816,8 +837,8 @@ static void EndORASDowsing(void)
 #undef tCounter
 #undef tItemfinderBeeps
 #undef tFacingDir
-#undef tSpriteId
 #undef sDowseState
+#undef sPrevDowseState
 
 void ItemUseOutOfBattle_PokeblockCase(u8 taskId)
 {
