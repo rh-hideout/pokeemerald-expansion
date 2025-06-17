@@ -2386,6 +2386,9 @@ enum
 
 void StartEscapeRopeFieldEffect(void)
 {
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
+        FlagClear(I_ORAS_DOWSING_FLAG);
+        
     LockPlayerFieldControls();
     FreezeObjectEvents();
     HideFollowerForFieldEffect(); // hide follower before warping
@@ -2580,6 +2583,9 @@ static void Task_TeleportWarpOut(u8 taskId)
 
 static void TeleportWarpOutFieldEffect_Init(struct Task *task)
 {
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
+        FlagClear(I_ORAS_DOWSING_FLAG);
+
     LockPlayerFieldControls();
     FreezeObjectEvents();
     CameraObjectFreeze();
