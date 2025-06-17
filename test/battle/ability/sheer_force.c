@@ -672,6 +672,8 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 break;
+            default:
+                break;
         }
     } SCENE {
         if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
@@ -750,6 +752,8 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 break;
+            default:
+                break;
         }
     } SCENE {
         if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
@@ -827,6 +831,8 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
                 break;
         }
     } SCENE {
@@ -907,6 +913,8 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
                 break;
         }
     } SCENE {

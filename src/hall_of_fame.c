@@ -141,7 +141,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_Confetti[] =
     {},
 };
 
-static const struct CompressedSpritePalette sSpritePalette_Confetti[] =
+static const struct SpritePalette sSpritePalette_Confetti[] =
 {
     {.data = gConfetti_Pal, .tag = TAG_CONFETTI},
     {},
@@ -317,7 +317,7 @@ static const struct SpriteTemplate sSpriteTemplate_HofConfetti =
 
 static const u16 sHallOfFame_Pal[] = INCBIN_U16("graphics/misc/japanese_hof.gbapal");
 
-static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/japanese_hof.4bpp.lz");
+static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/japanese_hof.4bpp.smol");
 
 static const struct HallofFameMon sDummyFameMon =
 {
@@ -1287,7 +1287,7 @@ static void LoadHofGfx(void)
     FreeAllSpritePalettes();
     gReservedSpritePaletteCount = 8;
     LoadCompressedSpriteSheet(sSpriteSheet_Confetti);
-    LoadCompressedSpritePalette(sSpritePalette_Confetti);
+    LoadSpritePalette(sSpritePalette_Confetti);
 }
 
 static void InitHofBgs(void)
@@ -1498,7 +1498,7 @@ static void Task_DoDomeConfetti(u8 taskId)
             gSpecialVar_0x8005 = 0xFFFF;
         }
         LoadCompressedSpriteSheet(sSpriteSheet_Confetti);
-        LoadCompressedSpritePalette(sSpritePalette_Confetti);
+        LoadSpritePalette(sSpritePalette_Confetti);
         tState++;
         break;
     case 1:

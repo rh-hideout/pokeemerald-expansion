@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "config/general.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
 #include "gba/gba.h"
+#include "siirtc.h"
 #include "fpmath.h"
 #include "metaprogram.h"
 #include "constants/global.h"
@@ -203,13 +204,41 @@ struct Time
     /*0x04*/ s8 seconds;
 };
 
+struct NPCFollowerMapData
+{
+    u8 id;
+    u8 number;
+    u8 group;
+};
+
+struct NPCFollower
+{
+    u8 inProgress:1;
+    u8 warpEnd:1;
+    u8 createSurfBlob:3;
+    u8 comeOutDoorStairs:3;
+    u8 objId;
+    u8 currentSprite;
+    u8 delayedState;
+    struct NPCFollowerMapData map;
+    struct Coords16 log;
+    const u8 *script;
+    u16 flag;
+    u16 graphicsId;
+    u16 flags;
+    u8 battlePartner; // If you have more than 255 total battle partners defined, change this to a u16
+};
+
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
-    struct Time fakeRTC;
+    struct SiiRtcInfo fakeRTC;
+#endif
+#if FNPC_ENABLE_NPC_FOLLOWERS
+    struct NPCFollower NPCfollower;
 #endif
 #if OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_FIRST_TIME
     u8 itemFlags[ITEM_FLAGS_COUNT];
@@ -572,6 +601,8 @@ struct SaveBlock2
 }; // sizeof=0xF2C
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
+
+extern u8 UpdateSpritePaletteWithTime(u8);
 
 struct SecretBaseParty
 {
@@ -1134,5 +1165,9 @@ struct MapPosition
     s16 y;
     s8 elevation;
 };
+
+#if T_SHOULD_RUN_MOVE_ANIM
+extern bool32 gLoadFail;
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
 #endif // GUARD_GLOBAL_H

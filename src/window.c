@@ -3,6 +3,7 @@
 #include "malloc.h"
 #include "bg.h"
 #include "blit.h"
+#include "decompress.h"
 
 // This global is set to 0 and never changed.
 COMMON_DATA u8 gTransparentTileNumber = 0;
@@ -240,6 +241,20 @@ void RemoveWindow(u32 windowId)
     }
 }
 
+void RemoveAllWindowsOnBg(u32 bgId)
+{
+    u32 i;
+
+    if (bgId > NUM_BACKGROUNDS)
+        return;
+
+    for (i = 0; i < WINDOWS_MAX; i++)
+    {
+        if (gWindows[i].window.bg == bgId)
+            RemoveWindow(i);
+    }
+}
+
 void FreeAllWindowBuffers(void)
 {
     int i;
@@ -443,7 +458,7 @@ void CopyToWindowPixelBuffer(u32 windowId, const void *src, u16 size, u16 tileOf
     if (size != 0)
         CpuCopy16(src, gWindows[windowId].tileData + (32 * tileOffset), size);
     else
-        LZ77UnCompWram(src, gWindows[windowId].tileData + (32 * tileOffset));
+        DecompressDataWithHeaderWram(src, gWindows[windowId].tileData + (32 * tileOffset));
 }
 
 // Sets all pixels within the window to the fillValue color.

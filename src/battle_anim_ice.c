@@ -708,7 +708,7 @@ static void AnimIceBeamParticle(struct Sprite *sprite)
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->data[2] -= gBattleAnimArgs[2];
     else
         sprite->data[2] += gBattleAnimArgs[2];
@@ -733,7 +733,7 @@ void AnimIceEffectParticle(struct Sprite *sprite)
     else
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
             gBattleAnimArgs[0] = -gBattleAnimArgs[0];
 
         sprite->x += gBattleAnimArgs[0];
@@ -780,7 +780,7 @@ static void AnimSwirlingSnowball(struct Sprite *sprite)
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->data[2], &sprite->data[4]);
     }
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->data[2] -= gBattleAnimArgs[2];
     else
         sprite->data[2] += gBattleAnimArgs[2];
@@ -826,7 +826,7 @@ void AnimSwirlingSnowball_Step1(struct Sprite *sprite)
     sprite->x2 = 0;
     sprite->data[0] = 128;
 
-    tempVar = GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER ? 20 : -20;
+    tempVar = !IsOnPlayerSide(gBattleAnimAttacker) ? 20 : -20;
 
     sprite->data[3] = Sin(sprite->data[0], tempVar);
     sprite->data[4] = Cos(sprite->data[0], 0xF);
@@ -838,7 +838,7 @@ void AnimSwirlingSnowball_Step1(struct Sprite *sprite)
 static void AnimSwirlingSnowball_Step2(struct Sprite *sprite)
 {
     s16 tempVar;
-    tempVar = GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER ? 20 : -20;
+    tempVar = !IsOnPlayerSide(gBattleAnimAttacker) ? 20 : -20;
 
     if (sprite->data[5] <= 31)
     {
@@ -902,7 +902,7 @@ void AnimMoveParticleBeyondTarget(struct Sprite *sprite)
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->data[2], &sprite->data[4]);
     }
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->data[2] -= gBattleAnimArgs[2];
     else
         sprite->data[2] += gBattleAnimArgs[2];
@@ -974,7 +974,7 @@ static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
         {
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
 
-            if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+            if (!IsOnPlayerSide(gBattleAnimAttacker))
                 gBattleAnimArgs[0] = -gBattleAnimArgs[0];
 
             sprite->x += gBattleAnimArgs[0];
@@ -1011,7 +1011,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         else
         {
             SetAverageBattlerPositions(gBattleAnimAttacker, FALSE, &sprite->x, &sprite->y);
-            if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+            if (!IsOnPlayerSide(gBattleAnimAttacker))
                 sprite->x -= gBattleAnimArgs[0];
             else
                 sprite->x += gBattleAnimArgs[0];
@@ -1030,7 +1030,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         else
         {
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
-            if (GetBattlerSide(gBattleAnimTarget) != B_SIDE_PLAYER)
+            if (!IsOnPlayerSide(gBattleAnimTarget))
                 sprite->x -= gBattleAnimArgs[0];
             else
                 sprite->x += gBattleAnimArgs[0];
@@ -1048,7 +1048,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         tempVar = 0x40;
 
     sprite->data[6] = tempVar;
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
         sprite->y += 8;
 
     sprite->data[0] = gBattleAnimArgs[3];
@@ -1294,12 +1294,12 @@ static void InitPoisonGasCloudAnim(struct Sprite *sprite)
     if (GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) < GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2))
         sprite->data[7] = 0x8000;
 
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
 
-        if ((sprite->data[7] & 0x8000) && GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+        if ((sprite->data[7] & 0x8000) && IsOnPlayerSide(gBattleAnimAttacker))
             sprite->subpriority = gSprites[GetAnimBattlerSpriteId(ANIM_TARGET)].subpriority + 1;
 
         sprite->data[6] = 1;
@@ -1378,7 +1378,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             sprite->data[7]++;
             if (IsContest())
                 sprite->data[5] = 80;
-            else if (GetBattlerSide(gBattleAnimTarget) != B_SIDE_PLAYER)
+            else if (!IsOnPlayerSide(gBattleAnimTarget))
                 sprite->data[5] = 204;
             else
                 sprite->data[5] = 80;
@@ -1424,7 +1424,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             sprite->data[4] = sprite->y + 4;
             if (IsContest())
                 sprite->data[2] = -16;
-            else if (GetBattlerSide(gBattleAnimTarget) != B_SIDE_PLAYER)
+            else if (!IsOnPlayerSide(gBattleAnimTarget))
                 sprite->data[2] = DISPLAY_WIDTH + 16;
             else
                 sprite->data[2] = -16;
@@ -1660,7 +1660,7 @@ static void InitIceBallAnim(struct Sprite *sprite)
 
     sprite->data[0] = gBattleAnimArgs[4];
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];

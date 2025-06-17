@@ -771,7 +771,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battl
         if ((1u << i) & expectedAction->moveSlots)
         {
             if (printLog)
-                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gBattleStruct->aiFinalScore[battlerId][expectedAction->target][i]);
+                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i]);
             countExpected++;
         }
     }
@@ -830,7 +830,7 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target)
         if (!expectedAction->notMove && !movePasses)
         {
             u32 moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
-            PrintAiMoveLog(battlerId, moveSlot, moveId, gBattleStruct->aiFinalScore[battlerId][expectedAction->target][moveSlot]);
+            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
             if (countExpected > 1)
                 Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Unmatched EXPECT_MOVES %S, got %S", filename, expectedAction->sourceLine, GetMoveName(expectedMoveId), GetMoveName(moveId));
             else
@@ -904,7 +904,7 @@ static const char *const sCmpToStringTable[] =
 static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct ExpectedAIAction *aiAction, const char *filename)
 {
     u32 i;
-    s32 *scores = gBattleStruct->aiFinalScore[battlerId][target];
+    s32 *scores = gAiBattleData->finalScore[battlerId][target];
     s32 bestScore = 0, bestScoreId = 0;
     u16 *moves = gBattleMons[battlerId].moves;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -1006,7 +1006,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
         {
             u32 moveId1 = gBattleMons[battlerId].moves[scoreCtx->moveSlot1];
             s32 target = scoreCtx->target;
-            s32 *scores = gBattleStruct->aiFinalScore[battlerId][target];
+            s32 *scores = gAiBattleData->finalScore[battlerId][target];
 
             if (scoreCtx->toValue)
             {
@@ -1485,7 +1485,7 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
     DATA.recordedBattle.rngSeed = seed;
 }
 
-void AIFlags_(u32 sourceLine, u32 flags)
+void AIFlags_(u32 sourceLine, u64 flags)
 {
     INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
     DATA.recordedBattle.AI_scripts = flags;
@@ -2116,7 +2116,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
         u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
-        u32 holdEffect = GetItemHoldEffect(item);
+        enum ItemHoldEffect holdEffect = GetItemHoldEffect(item);
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 side = battlerId & BIT_SIDE;
 

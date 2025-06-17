@@ -474,6 +474,7 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_SetUpObjects::
 	call BattleFrontier_EventScript_SetBrainObjectGfx
 	setobjectxyperm LOCALID_DOME_OPPONENT, 13, 9
 	removeobject LOCALID_DOME_OPPONENT
+	delay 1
 	addobject LOCALID_DOME_OPPONENT
 	applymovement LOCALID_DOME_OPPONENT, BattleFrontier_BattleDomeBattleRoom_Movement_SetInvisibleFacingUp
 BattleFrontier_BattleDomeBattleRoom_EventScript_EndSetUpObjects::

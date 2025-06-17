@@ -195,3 +195,17 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn triggers before Eject Pack")
         SEND_IN_MESSAGE("Wynaut");
     }
 }
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+    }
+}

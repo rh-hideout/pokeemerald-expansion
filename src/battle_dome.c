@@ -536,7 +536,7 @@ static const struct CompressedSpriteSheet sTourneyTreeButtonsSpriteSheet[] =
 };
 
 // Unused
-static const struct CompressedSpritePalette sTourneyTreeButtonsSpritePal[] =
+static const struct SpritePalette sTourneyTreeButtonsSpritePal[] =
 {
     {.data = gDomeTourneyTreeButtons_Pal, .tag = TAG_BUTTONS},
     {},
@@ -2030,8 +2030,8 @@ static void InitDomeTrainers(void)
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPDEF, NULL);
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPEED, NULL);
         rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_MAX_HP, NULL);
-        monTypesBits |= 1u << gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[0];
-        monTypesBits |= 1u << gSpeciesInfo[GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL)].types[1];
+        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL), 0);
+        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES, NULL), 1);
     }
 
     // Count the number of types in the players party, to factor into the ranking
@@ -2062,8 +2062,8 @@ static void InitDomeTrainers(void)
             rankingScores[i] += statValues[STAT_SPDEF];
             rankingScores[i] += statValues[STAT_SPEED];
             rankingScores[i] += statValues[STAT_HP];
-            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0];
-            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1];
+            monTypesBits |= 1u << GetSpeciesType(gFacilityTrainerMons[DOME_MONS[i][j]].species, 0);
+            monTypesBits |= 1u << GetSpeciesType(gFacilityTrainerMons[DOME_MONS[i][j]].species, 1);
         }
 
         for (monTypesCount = 0, j = 0; j < 32; j++)
@@ -2151,7 +2151,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
     }
     else
     {
-        int n = 2 * gSpeciesInfo[fmon->species].baseHP;
+        int n = 2 * GetSpeciesBaseHP(fmon->species);
         stats[STAT_HP] = (((n + ivs + evs[STAT_HP] / 4) * level) / 100) + level + 10;
     }
 
@@ -2398,9 +2398,9 @@ static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || IsBattleMoveStatus(move))
         return 0;
 
-    defType1 = gSpeciesInfo[targetSpecies].types[0];
-    defType2 = gSpeciesInfo[targetSpecies].types[1];
-    defAbility = gSpeciesInfo[targetSpecies].abilities[0];
+    defType1 = GetSpeciesType(targetSpecies, 0);
+    defType2 = GetSpeciesType(targetSpecies, 1);
+    defAbility = GetSpeciesAbility(targetSpecies, 0);
     moveType = GetMoveType(move);
 
     if (defAbility == ABILITY_LEVITATE && moveType == TYPE_GROUND)
@@ -2680,11 +2680,11 @@ static void Task_ShowTourneyInfoCard(u8 taskId)
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyInfoCard_Tilemap, 0x2000, 0, 1);
         DecompressAndLoadBgGfxUsingHeap(3, gDomeTourneyInfoCardBg_Tilemap, 0x800, 0, 1);
         LoadCompressedSpriteSheet(sTourneyTreeButtonsSpriteSheet);
-        LoadCompressedPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
-        LoadCompressedPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        LoadCompressedPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
+        LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
+        LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         if (mode == INFOCARD_MATCH)
-            LoadCompressedPalette(gDomeTourneyMatchCardBg_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP); // Changes the moving info card bg to orange when in match card mode
+            LoadPalette(gDomeTourneyMatchCardBg_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP); // Changes the moving info card bg to orange when in match card mode
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
         ShowBg(0);
         ShowBg(1);
@@ -3901,7 +3901,7 @@ static bool32 IsDomeHealingMove(u32 move)
     }
 }
 
-static bool32 IsDomeDefensiveMoveEffect(u32 effect)
+static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
@@ -3933,11 +3933,12 @@ static bool32 IsDomeDefensiveMoveEffect(u32 effect)
     }
 }
 
-static bool32 IsDomeRiskyMoveEffect(u32 effect)
+static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
     case EFFECT_EXPLOSION:
+    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_SPITE:
     case EFFECT_DESTINY_BOND:
     case EFFECT_PERISH_SONG:
@@ -3954,7 +3955,8 @@ static bool32 IsDomeLuckyMove(u32 move)
     switch(GetMoveEffect(move))
     {
     case EFFECT_COUNTER:
-    case EFFECT_OHKO: // Technically redundant because of the above accuracy check
+    case EFFECT_OHKO:
+    case EFFECT_SHEER_COLD:
     case EFFECT_METRONOME:
     case EFFECT_MIRROR_MOVE:
     case EFFECT_SKETCH:
@@ -4002,25 +4004,26 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
 {
     switch(GetMoveEffect(move))
     {
-    case EFFECT_SLEEP:
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
-    case EFFECT_POISON:
-    case EFFECT_PARALYZE:
-    case EFFECT_TOXIC:
     case EFFECT_LEECH_SEED:
     case EFFECT_TAUNT:
     case EFFECT_TORMENT:
-    case EFFECT_WILL_O_WISP:
     case EFFECT_ENCORE:
     case EFFECT_ATTRACT:
     case EFFECT_NIGHTMARE:
-    case EFFECT_YAWN:
     case EFFECT_CURSE:
         return TRUE;
     default:
-        return MoveHasAdditionalEffect(move, MOVE_EFFECT_WRAP);
+        break;
     }
+
+    if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE)
+        return TRUE;
+    if (MoveHasAdditionalEffect(move, MOVE_EFFECT_WRAP))
+        return TRUE;
+
+    return FALSE;
 }
 
 static bool32 IsDomeRareMove(u32 move)
@@ -4044,8 +4047,9 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMoveEffect(u32 effect)
+static bool32 IsDomeComboMove(u32 move)
 {
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     switch(effect)
     {
     // Weather moves
@@ -4064,8 +4068,6 @@ static bool32 IsDomeComboMoveEffect(u32 effect)
     case EFFECT_MORNING_SUN:
     case EFFECT_MOONLIGHT:
     case EFFECT_SHORE_UP:
-    case EFFECT_THUNDER:
-    case EFFECT_BLIZZARD:
     case EFFECT_SOLAR_BEAM:
     case EFFECT_GROWTH:
     case EFFECT_AURORA_VEIL:
@@ -4086,8 +4088,6 @@ static bool32 IsDomeComboMoveEffect(u32 effect)
     case EFFECT_TOXIC_SPIKES:
     case EFFECT_STEALTH_ROCK:
     case EFFECT_STICKY_WEB:
-    // Inflicting sleep & related effects
-    case EFFECT_SLEEP:
     case EFFECT_YAWN:
     case EFFECT_DREAM_EATER:
     case EFFECT_NIGHTMARE:
@@ -4119,8 +4119,25 @@ static bool32 IsDomeComboMoveEffect(u32 effect)
     case EFFECT_ROAR:
         return TRUE;
     default:
+        break;
+    }
+
+    // Move flags
+    if (MoveAlwaysHitsInRain(move))
+        return TRUE;
+    else if (MoveAlwaysHitsInHailSnow(move))
+        return TRUE;
+
+    // Inflicting sleep & related effects
+    switch(GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_SLEEP:
+        return TRUE;
+    default:
         return FALSE;
     }
+
+    return FALSE;
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points
@@ -4301,13 +4318,13 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     move = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j];
                 else
                     move = gFacilityTrainerMons[DOME_MONS[trainerTourneyId][i]].moves[j];
-                u32 effect = GetMoveEffect(move);
+                enum BattleMoveEffects effect = GetMoveEffect(move);
                 u32 accuracy = GetMoveAccuracy(move);
 
                 switch (k)
                 {
                 case MOVE_POINTS_COMBO:
-                    allocatedArray[k] = IsDomeComboMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeComboMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_RAISE:
                     allocatedArray[k] = IsStatRaisingEffect(effect) ? 1 : 0;
@@ -5110,11 +5127,13 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 moves[i * MAX_MON_MOVES + j] = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
 
             movePower = GetMovePower(moves[i * MAX_MON_MOVES + j]);
+            enum BattleMoveEffects effect = GetMoveEffect(moves[i * MAX_MON_MOVES + j]);
             if (IsBattleMoveStatus(moves[i * MAX_MON_MOVES + j]))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetMoveEffect(moves[i * MAX_MON_MOVES + j]) == EFFECT_EXPLOSION)
+            else if (B_EXPLOSION_DEFENSE < GEN_5
+                && (effect == EFFECT_EXPLOSION || EFFECT_MISTY_EXPLOSION))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
@@ -5131,9 +5150,9 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 targetSpecies = gFacilityTrainerMons[DOME_MONS[loserTournamentId][k]].species;
 
                 if (personality & 1)
-                    targetAbility = gSpeciesInfo[targetSpecies].abilities[1];
+                    targetAbility = GetSpeciesAbility(targetSpecies, 1);
                 else
-                    targetAbility = gSpeciesInfo[targetSpecies].abilities[0];
+                    targetAbility = GetSpeciesAbility(targetSpecies, 0);
 
                 typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
@@ -5245,16 +5264,16 @@ static void Task_ShowTourneyTree(u8 taskId)
         break;
     case 2:
         sTilemapBuffer = AllocZeroed(BG_SCREEN_SIZE);
-        LZDecompressWram(gDomeTourneyTree_Tilemap, sTilemapBuffer);
+        DecompressDataWithHeaderWram(gDomeTourneyTree_Tilemap, sTilemapBuffer);
         SetBgTilemapBuffer(1, sTilemapBuffer);
         CopyBgTilemapBufferToVram(1);
         DecompressAndLoadBgGfxUsingHeap(1, gDomeTourneyTree_Gfx, 0x2000, 0, 0);
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyLine_Gfx, 0x2000, 0, 0);
         DecompressAndLoadBgGfxUsingHeap(2, gDomeTourneyLineDown_Tilemap, 0x2000, 0, 1);
         DecompressAndLoadBgGfxUsingHeap(3, gDomeTourneyLineUp_Tilemap, 0x2000, 0, 1);
-        LoadCompressedPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
-        LoadCompressedPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        LoadCompressedPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
+        LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
+        LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
         ShowBg(0);
         ShowBg(1);
@@ -5805,8 +5824,8 @@ static void InitRandomTourneyTreeResults(void)
             statSums[i] += statValues[STAT_SPDEF];
             statSums[i] += statValues[STAT_SPEED];
             statSums[i] += statValues[STAT_HP];
-            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[0];
-            monTypesBits |= 1u << gSpeciesInfo[gFacilityTrainerMons[DOME_MONS[i][j]].species].types[1];
+            monTypesBits |= 1u << GetSpeciesType(gFacilityTrainerMons[DOME_MONS[i][j]].species, 0);
+            monTypesBits |= 1u << GetSpeciesType(gFacilityTrainerMons[DOME_MONS[i][j]].species, 1);
         }
 
         // Because GF hates temporary vars, trainerId acts like monTypesCount here.
@@ -5932,12 +5951,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId1][monId1]].species;
-                points1 += ( gSpeciesInfo[species].baseHP
-                           + gSpeciesInfo[species].baseAttack
-                           + gSpeciesInfo[species].baseDefense
-                           + gSpeciesInfo[species].baseSpeed
-                           + gSpeciesInfo[species].baseSpAttack
-                           + gSpeciesInfo[species].baseSpDefense) / 10;
+                points1 += GetTotalBaseStat(species) / 10;
             }
             // Random part of the formula.
             points1 += (Random() & 0x1F);
@@ -5955,12 +5969,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId2][monId1]].species;
-                points2 += ( gSpeciesInfo[species].baseHP
-                           + gSpeciesInfo[species].baseAttack
-                           + gSpeciesInfo[species].baseDefense
-                           + gSpeciesInfo[species].baseSpeed
-                           + gSpeciesInfo[species].baseSpAttack
-                           + gSpeciesInfo[species].baseSpDefense) / 10;
+                points2 += GetTotalBaseStat(species) / 10;
             }
             // Random part of the formula.
             points2 += (Random() & 0x1F);

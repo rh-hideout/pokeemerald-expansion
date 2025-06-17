@@ -118,7 +118,7 @@ The function that determines if a Slide should play has different function for m
 +    if (IsSlideInitalizedOrPlayed(slideId))
 +        return;
 +
-+    if (GetBattlerSide(target) == B_SIDE_OPPONENT)
++    if (!IsOnPlayerSide(target))
 +        return;
 +
 +    InitalizeTrainerSlide(slideId);

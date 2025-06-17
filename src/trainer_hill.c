@@ -309,7 +309,7 @@ static u8 GetFloorId(void)
     return gMapHeader.mapLayoutId - LAYOUT_TRAINER_HILL_1F;
 }
 
-u8 GetTrainerHillOpponentClass(u16 trainerId)
+enum TrainerClassID GetTrainerHillOpponentClass(u16 trainerId)
 {
     u8 id = trainerId - 1;
 
@@ -935,7 +935,7 @@ void FillHillTrainersParties(void)
 // This function is unused, but my best guess is
 // it was supposed to return AI scripts for trainer
 // hill trainers.
-u32 GetTrainerHillAIFlags(void)
+u64 GetTrainerHillAIFlags(void)
 {
     return (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
 }

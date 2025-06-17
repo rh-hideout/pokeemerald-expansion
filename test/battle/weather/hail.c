@@ -2,6 +2,14 @@
 #include "test/battle.h"
 
 // Please add Hail interactions with move, item and ability effects on their respective files.
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+    ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
+    ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_ICE);
+    ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);
+}
+
 SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
 {
     s16 hailDamage;
@@ -20,7 +28,7 @@ SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
 SINGLE_BATTLE_TEST("Hail damage does not affect Ice-type Pokémon")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_GLALIE].types[0] == TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
@@ -86,8 +94,8 @@ SINGLE_BATTLE_TEST("Hail damage rounds properly when maxHP < 16")
 SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ICE);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
     } WHEN {

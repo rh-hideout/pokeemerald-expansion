@@ -2,6 +2,7 @@
 #define GUARD_FIELD_PLAYER_AVATAR_H
 
 void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys);
+bool8 TryDoMetatileBehaviorForcedMovement();
 void ClearPlayerAvatarInfo(void);
 void SetPlayerAvatarExtraStateTransition(u16 graphicsId, u8 transitionFlag);
 u8 GetPlayerAvatarGenderByGraphicsId(u16 gfxId);
@@ -68,5 +69,8 @@ bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, u8 direction);
 //sideways stairs
 u8 GetRightSideStairsDirection(u8 direction);
 u8 GetLeftSideStairsDirection(u8 direction);
+void UpdateSpinData(void);
+void ResetSpinTimer(void);
+bool32 CanTriggerSpinEvolution();
 
 #endif // GUARD_FIELD_PLAYER_AVATAR_H

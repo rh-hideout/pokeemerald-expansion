@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill in all required fields with as many details as possible.
+        Please fill in all fields with as many details as possible.
         Once your bug is posted, make sure you and your collaborators are added to `CREDITS.md` by [tagging the bot on GitHub](https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions). EVERY contribution matters, even reporting bugs!
   - type: textarea
     id: description
@@ -43,17 +43,15 @@ body:
       label: Version
       description: What version of pokeemerald-expansion are you using?
       options:
-        - 1.11.3 (Latest release)
+        - 1.12.0 (Latest release)
         - master (default, unreleased bugfixes)
         - upcoming (Edge)
+        - 1.11.4
+        - 1.11.3
         - 1.11.2
         - 1.11.1
         - 1.11.0
-        - 1.10.3
-        - 1.10.2
-        - 1.10.1
-        - 1.10.0
-        - pre-1.10.0
+        - pre-1.11.0
     validations:
       required: true
   - type: input
