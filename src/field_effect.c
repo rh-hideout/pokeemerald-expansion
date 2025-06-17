@@ -3244,6 +3244,9 @@ static void Task_SurfFieldEffect(u8 taskId)
 
 static void SurfFieldEffect_Init(struct Task *task)
 {
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
+        FlagClear(I_ORAS_DOWSING_FLAG);
+        
     LockPlayerFieldControls();
     FreezeObjectEvents();
     // Put follower into pokeball before using Surf
