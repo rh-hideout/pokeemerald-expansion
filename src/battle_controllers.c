@@ -620,6 +620,46 @@ bool32 IsValidForBattle(struct Pokemon *mon)
          && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
 }
 
+static inline bool32 IsControllerPlayer(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted);
+}
+
+static inline bool32 IsControllerRecordedPlayer(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted);
+}
+
+static inline bool32 IsControllerOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted);
+}
+
+static inline bool32 IsControllerPlayerPartner(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted);
+}
+
+static inline bool32 IsControllerWally(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == WallyBufferExecCompleted);
+}
+
+static inline bool32 IsControllerRecordedOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted);
+}
+
+static inline bool32 IsControllerLinkOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted);
+}
+
+static inline bool32 IsControllerLinkPartner(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
+}
+
 bool32 ShouldUpdateTvData(u32 battler)
 {
     return (IsControllerPlayer(battler)
