@@ -781,7 +781,7 @@ void UpdateDowseState(struct Sprite *sprite)
 static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
 {
     s16 distance;
-    u16 color = RGB_GRAY;
+    u16 color = I_ORAS_DOWSING_COLOR_NONE;
 
     if (direction == DIR_NORTH || direction == DIR_SOUTH)
         distance = sprite->tItemDistanceY;
@@ -796,29 +796,29 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
     case 1:
         if ((direction == DIR_NORTH || direction == DIR_SOUTH) && sprite->tItemDistanceX == 0)
         {
-            color = RGB_RED;
+            color = I_ORAS_DOWSING_COLOR_FASTER;
             sprite->sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
         else if ((direction == DIR_EAST || direction == DIR_WEST) && sprite->tItemDistanceY == 0)
         {
-            color = RGB_RED;
+            color = I_ORAS_DOWSING_COLOR_FASTER;
             sprite->sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
     case 2:
-        color = RGB2GBA(255, 255, 40);
+        color = I_ORAS_DOWSING_COLOR_FAST;
         sprite->sDowseState = ORASD_WIGGLE_FAST;
         break;
     case 3:
     case 4:
-        color = RGB2GBA(20, 216, 20);
+        color = I_ORAS_DOWSING_COLOR_NORMAL;
         sprite->sDowseState = ORASD_WIGGLE_NORMAL;
         break;
     case 5:
     case 6:
     case 7:
-        color = RGB2GBA(54, 120, 255);
+        color = I_ORAS_DOWSING_COLOR_SLOW;
         sprite->sDowseState = ORASD_WIGGLE_SLOW;
         break;
     }
