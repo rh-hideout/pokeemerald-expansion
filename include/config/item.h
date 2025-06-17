@@ -53,8 +53,8 @@
 #define I_ORAS_DOWSING_COLOR_PAL    15          // The color within the palette that will change based on proximity to the item.
 // Color values for the ORAS dowsing distances/anims
 #define I_ORAS_DOWSING_COLOR_NONE   RGB_GRAY
-#define I_ORAS_DOWSING_COLOR_SLOW   RGB2GBA(54, 120, 255)
-#define I_ORAS_DOWSING_COLOR_NORMAL RGB2GBA(20, 216, 20)
+#define I_ORAS_DOWSING_COLOR_SLOW   RGB2GBA(56, 120, 255)
+#define I_ORAS_DOWSING_COLOR_NORMAL RGB2GBA(24, 216, 24)
 #define I_ORAS_DOWSING_COLOR_FAST   RGB2GBA(255, 255, 40)
 #define I_ORAS_DOWSING_COLOR_FASTER RGB_RED
 
