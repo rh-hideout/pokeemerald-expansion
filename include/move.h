@@ -131,9 +131,10 @@ struct MoveInfo
     bool32 parentalBondBanned:1;
     bool32 skyBattleBanned:1;
     bool32 sketchBanned:1;
+    bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:7;
+    u32 padding:6;
     // end of word
 
     union {
@@ -474,6 +475,11 @@ static inline bool32 IsMoveSketchBanned(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].sketchBanned;
 }
 
+static inline bool32 IsMoveDampBanned(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].dampBanned;
+}
+
 static inline bool32 IsValidApprenticeMove(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
@@ -494,7 +500,7 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
-static inline u32 GetMoveProtectMethod(u32 moveId)
+static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
 }

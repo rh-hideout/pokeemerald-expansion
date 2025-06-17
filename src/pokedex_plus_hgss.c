@@ -4355,8 +4355,8 @@ static void PrintCurrentSpeciesTypeInfo(u8 newEntry, u16 species)
         type1 = GetTypeBySpecies(species, 1);
         type2 = GetTypeBySpecies(species, 2);
     #else
-        type1 = gSpeciesInfo[species].types[0];
-        type2 = gSpeciesInfo[species].types[1];
+        type1 = GetSpeciesType(species, 0);
+        type2 = GetSpeciesType(species, 1);
     #endif
     if (species == SPECIES_NONE)
         type1 = type2 = TYPE_MYSTERY;
@@ -4777,12 +4777,12 @@ static void SaveMonDataInStruct(void)
 
     sPokedexView->sPokemonStats.species             = species;
     sPokedexView->sPokemonStats.genderRatio         = gSpeciesInfo[species].genderRatio;
-    sPokedexView->sPokemonStats.baseHP              = gSpeciesInfo[species].baseHP;
-    sPokedexView->sPokemonStats.baseSpeed           = gSpeciesInfo[species].baseSpeed;
-    sPokedexView->sPokemonStats.baseAttack          = gSpeciesInfo[species].baseAttack;
-    sPokedexView->sPokemonStats.baseSpAttack        = gSpeciesInfo[species].baseSpAttack;
-    sPokedexView->sPokemonStats.baseDefense         = gSpeciesInfo[species].baseDefense;
-    sPokedexView->sPokemonStats.baseSpDefense       = gSpeciesInfo[species].baseSpDefense;
+    sPokedexView->sPokemonStats.baseHP              = GetSpeciesBaseHP(species);
+    sPokedexView->sPokemonStats.baseSpeed           = GetSpeciesBaseSpeed(species);
+    sPokedexView->sPokemonStats.baseAttack          = GetSpeciesBaseAttack(species);
+    sPokedexView->sPokemonStats.baseSpAttack        = GetSpeciesBaseSpAttack(species);
+    sPokedexView->sPokemonStats.baseDefense         = GetSpeciesBaseDefense(species);
+    sPokedexView->sPokemonStats.baseSpDefense       = GetSpeciesBaseSpDefense(species);
     sPokedexView->sPokemonStats.differentEVs        = differentEVs;
     sPokedexView->sPokemonStats.evYield_HP          = evs[STAT_HP];
     sPokedexView->sPokemonStats.evYield_Speed       = evs[STAT_ATK];
@@ -6431,7 +6431,7 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 bool32 IsSpeciesAlcremie(u32 targetSpecies)
 {
-    return targetSpecies >= SPECIES_ALCREMIE_STRAWBERRY_VANILLA_CREAM && targetSpecies <= SPECIES_ALCREMIE_RIBBON_RAINBOW_SWIRL;
+    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
 }
 
 bool32 IsItemSweet(u32 item)
@@ -6628,10 +6628,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_PID_UPPER_MODULO_10_EQ:
             case IF_PID_UPPER_MODULO_10_LT:
                 arg = evolutions[i].params[j].arg1;
-                    if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT 
+                    if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT
                         && arg < 10 && arg >= 0)
                         arg = 9 - arg;
-                    else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ 
+                    else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ
                              && arg < 10 && arg >= 0)
                         arg = 1;
                 ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -6741,10 +6741,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
             case IF_PID_MODULO_100_EQ:
             case IF_PID_MODULO_100_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT 
+                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT
                             && arg < 100 && arg >= 0)
                             arg = 99 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ 
+                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ
                                  && arg < 100 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -6776,7 +6776,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         }
 
         if (isAlcremie)
-            fontId = FONT_NARROWER;
+            fontId = FONT_SMALL_NARROWER;
         else
             fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
 
@@ -7817,8 +7817,8 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
                 {
                     species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-                    types[0] = gSpeciesInfo[species].types[0];
-                    types[1] = gSpeciesInfo[species].types[1];
+                    types[0] = GetSpeciesType(species, 0);
+                    types[1] = GetSpeciesType(species, 1);
                     if (types[0] == type1 || types[1] == type1)
                     {
                         sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
@@ -7835,8 +7835,8 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
                 {
                     species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-                    types[0] = gSpeciesInfo[species].types[0];
-                    types[1] = gSpeciesInfo[species].types[1];
+                    types[0] = GetSpeciesType(species, 0);
+                    types[1] = GetSpeciesType(species, 1);
                     if ((types[0] == type1 && types[1] == type2) || (types[0] == type2 && types[1] == type1))
                     {
                         sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];

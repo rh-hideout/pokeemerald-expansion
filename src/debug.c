@@ -159,6 +159,8 @@ enum PartyDebugMenu
     DEBUG_PARTY_MENU_ITEM_CHECK_EVS,
     DEBUG_PARTY_MENU_ITEM_CHECK_IVS,
     DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY,
+    DEBUG_PARTY_MENU_ITEM_SET_PARTY,
+    DEBUG_PARTY_MENU_ITEM_BATTLE_SINGLE,
 };
 
 enum ScriptDebugMenu
@@ -437,6 +439,8 @@ static void DebugAction_Party_InflictStatus1(u8 taskId);
 static void DebugAction_Party_CheckEVs(u8 taskId);
 static void DebugAction_Party_CheckIVs(u8 taskId);
 static void DebugAction_Party_ClearParty(u8 taskId);
+static void DebugAction_Party_SetParty(u8 taskId);
+static void DebugAction_Party_BattleSingle(u8 taskId);
 
 static void DebugAction_FlagsVars_Flags(u8 taskId);
 static void DebugAction_FlagsVars_FlagsSelect(u8 taskId);
@@ -708,13 +712,15 @@ static const struct ListMenuItem sDebugMenu_Items_PCBag_Fill[] =
 
 static const struct ListMenuItem sDebugMenu_Items_Party[] =
 {
-    [DEBUG_PARTY_MENU_ITEM_MOVE_REMINDER]   = {COMPOUND_STRING("Move Reminder"),   DEBUG_PARTY_MENU_ITEM_MOVE_REMINDER},
-    [DEBUG_PARTY_MENU_ITEM_HATCH_AN_EGG]    = {COMPOUND_STRING("Hatch an Egg"),    DEBUG_PARTY_MENU_ITEM_HATCH_AN_EGG},
-    [DEBUG_PARTY_MENU_ITEM_HEAL_PARTY]      = {COMPOUND_STRING("Heal party"),      DEBUG_PARTY_MENU_ITEM_HEAL_PARTY},
-    [DEBUG_PARTY_MENU_ITEM_INFLICT_STATUS1] = {COMPOUND_STRING("Inflict Status1"), DEBUG_PARTY_MENU_ITEM_INFLICT_STATUS1},
-    [DEBUG_PARTY_MENU_ITEM_CHECK_EVS]       = {COMPOUND_STRING("Check EVs"),       DEBUG_PARTY_MENU_ITEM_CHECK_EVS},
-    [DEBUG_PARTY_MENU_ITEM_CHECK_IVS]       = {COMPOUND_STRING("Check IVs"),       DEBUG_PARTY_MENU_ITEM_CHECK_IVS},
-    [DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY]     = {COMPOUND_STRING("Clear Party"),     DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY},
+    [DEBUG_PARTY_MENU_ITEM_MOVE_REMINDER]   = {COMPOUND_STRING("Move Reminder"),       DEBUG_PARTY_MENU_ITEM_MOVE_REMINDER},
+    [DEBUG_PARTY_MENU_ITEM_HATCH_AN_EGG]    = {COMPOUND_STRING("Hatch an Egg"),        DEBUG_PARTY_MENU_ITEM_HATCH_AN_EGG},
+    [DEBUG_PARTY_MENU_ITEM_HEAL_PARTY]      = {COMPOUND_STRING("Heal party"),          DEBUG_PARTY_MENU_ITEM_HEAL_PARTY},
+    [DEBUG_PARTY_MENU_ITEM_INFLICT_STATUS1] = {COMPOUND_STRING("Inflict Status1"),     DEBUG_PARTY_MENU_ITEM_INFLICT_STATUS1},
+    [DEBUG_PARTY_MENU_ITEM_CHECK_EVS]       = {COMPOUND_STRING("Check EVs"),           DEBUG_PARTY_MENU_ITEM_CHECK_EVS},
+    [DEBUG_PARTY_MENU_ITEM_CHECK_IVS]       = {COMPOUND_STRING("Check IVs"),           DEBUG_PARTY_MENU_ITEM_CHECK_IVS},
+    [DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY]     = {COMPOUND_STRING("Clear Party"),         DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY},
+    [DEBUG_PARTY_MENU_ITEM_SET_PARTY]       = {COMPOUND_STRING("Set Party"),           DEBUG_PARTY_MENU_ITEM_SET_PARTY},
+    [DEBUG_PARTY_MENU_ITEM_BATTLE_SINGLE]   = {COMPOUND_STRING("Start Debug Battle"),  DEBUG_PARTY_MENU_ITEM_BATTLE_SINGLE},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_Scripts[] =
@@ -897,6 +903,8 @@ static void (*const sDebugMenu_Actions_Party[])(u8) =
     [DEBUG_PARTY_MENU_ITEM_CHECK_EVS]       = DebugAction_Party_CheckEVs,
     [DEBUG_PARTY_MENU_ITEM_CHECK_IVS]       = DebugAction_Party_CheckIVs,
     [DEBUG_PARTY_MENU_ITEM_CLEAR_PARTY]     = DebugAction_Party_ClearParty,
+    [DEBUG_PARTY_MENU_ITEM_SET_PARTY]       = DebugAction_Party_SetParty,
+    [DEBUG_PARTY_MENU_ITEM_BATTLE_SINGLE]   = DebugAction_Party_BattleSingle,
 };
 
 static void (*const sDebugMenu_Actions_Scripts[])(u8) =
@@ -4890,6 +4898,47 @@ static void DebugAction_Party_ClearParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ScriptContext_Enable();
+    Debug_DestroyMenu_Full(taskId);
+}
+
+enum DebugTrainerIds
+{
+    DEBUG_TRAINER_PLAYER,
+    DEBUG_TRAINER_AI,
+    DEBUG_TRAINERS_COUNT
+};
+
+const struct Trainer sDebugTrainers[DIFFICULTY_COUNT][DEBUG_TRAINERS_COUNT] =
+{
+#include "data/debug_trainers.h"
+};
+
+const struct Trainer* GetDebugAiTrainer(void)
+{
+    return &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI];
+}
+
+static void DebugAction_Party_SetParty(u8 taskId)
+{
+    ZeroPlayerPartyMons();
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    ScriptContext_Enable();
+    Debug_DestroyMenu_Full(taskId);
+}
+
+static void DebugAction_Party_BattleSingle(u8 taskId)
+{
+    ZeroPlayerPartyMons();
+    ZeroEnemyPartyMons();
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gDebugAIFlags = sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].aiFlags;
+    gIsDebugBattle = TRUE;
+    gBattleEnvironment = BattleSetup_GetEnvironmentId();
+    CalculateEnemyPartyCount();
+    BattleSetup_StartTrainerBattle_Debug();
     Debug_DestroyMenu_Full(taskId);
 }
 

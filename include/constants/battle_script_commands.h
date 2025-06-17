@@ -277,6 +277,7 @@ enum MoveEndEffects
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
     MOVEEND_EJECT_BUTTON,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
+    MOVEEND_FORM_CHANGE,
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_EJECT_PACK,
     MOVEEND_HIT_ESCAPE,
@@ -300,5 +301,12 @@ enum MoveEndEffects
 #define ARG_SET_PSYCHIC_TERRAIN        0
 #define ARG_TRY_REMOVE_TERRAIN_HIT     1
 #define ARG_TRY_REMOVE_TERRAIN_FAIL    2
+
+enum StatusTrigger
+{
+    TRIGGER_ON_MOVE,
+    TRIGGER_ON_ABILITY,
+    TRIGGER_ON_ATTACKER,
+};
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

@@ -599,7 +599,8 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    if (GetMoveEffect(move) == EFFECT_EXPLOSION)
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_EXPLOSION || effect == EFFECT_MISTY_EXPLOSION)
     {
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
@@ -1260,15 +1261,16 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageCalculationData damageCalcData;
-            damageCalcData.battlerAtk = gBattlerAttacker;
-            damageCalcData.battlerDef = gBattlerTarget;
-            damageCalcData.move = gCurrentMove;
-            damageCalcData.moveType = GetMoveType(gCurrentMove);
-            damageCalcData.isCrit = FALSE;
-            damageCalcData.randomFactor = FALSE;
-            damageCalcData.updateFlags = FALSE;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&damageCalcData, powerOverride);
+            struct DamageContext ctx;
+            ctx.battlerAtk = gBattlerAttacker;
+            ctx.battlerDef = gBattlerTarget;
+            ctx.move = gCurrentMove;
+            ctx.moveType = GetMoveType(gCurrentMove);
+            ctx.isCrit = FALSE;
+            ctx.randomFactor = FALSE;
+            ctx.updateFlags = FALSE;
+            ctx.fixedBasePower = powerOverride;
+            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
             dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;

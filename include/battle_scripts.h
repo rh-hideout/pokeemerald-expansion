@@ -819,7 +819,6 @@ extern const u8 BattleScript_EffectShoreUp[];
 extern const u8 BattleScript_EffectGeomancy[];
 extern const u8 BattleScript_EffectFairyLock[];
 extern const u8 BattleScript_EffectAllySwitch[];
-extern const u8 BattleScript_EffectRelicSong[];
 extern const u8 BattleScript_MoveEffectEerieSpell[];
 extern const u8 BattleScript_EffectJungleHealing[];
 extern const u8 BattleScript_EffectCoaching[];
