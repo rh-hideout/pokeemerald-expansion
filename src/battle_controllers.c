@@ -622,10 +622,9 @@ bool32 IsValidForBattle(struct Pokemon *mon)
 
 bool32 ShouldUpdateTvData(u32 battler)
 {
-    // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
-    return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
-         || gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted
-         || gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted);
+    return (IsControllerPlayer(battler)
+         || IsControllerLinkPartner(battler)
+         || IsControllerLinkOpponent(battler));
 }
 
 static void SetBattlePartyIds(void)
@@ -2513,9 +2512,9 @@ void BtlController_HandleLoadMonSprite(u32 battler)
 
     SetBattlerShadowSpriteCallback(battler, species);
 
-    if (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted
-     && gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted
-     && gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted)
+    if (IsControllerOpponent(battler)
+     && IsControllerLinkOpponent(battler)
+     && IsControllerRecordedOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
     else
         gBattlerControllerFuncs[battler] = WaitForMonAnimAfterLoad;
@@ -2523,17 +2522,17 @@ void BtlController_HandleLoadMonSprite(u32 battler)
 
 void BtlController_HandleSwitchInAnim(u32 battler)
 {
-    bool32 isPlayerSide = (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
-                        || gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted
-                        || gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted
-                        || gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
+    bool32 isPlayerSide = (IsControllerPlayer(battler)
+                        || IsControllerPlayerPartner(battler)
+                        || IsControllerRecordedPlayer(battler)
+                        || IsControllerLinkPartner(battler));
 
-    if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+    if (IsControllerPlayer(battler))
     {
         gActionSelectionCursor[battler] = 0;
         gMoveSelectionCursor[battler] = 0;
     }
-    else if (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted)
+    else if (IsControllerOpponent(battler))
     {
         gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
     }
@@ -2784,9 +2783,8 @@ void BtlController_HandlePrintString(u32 battler)
     gBattlerControllerFuncs[battler] = Controller_WaitForString;
     if (ShouldUpdateTvData(battler))
         BattleTv_SetDataBasedOnString(*stringId);
-    // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
-    if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
-     || gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted)
+    if (IsControllerPlayer(battler)
+     || IsControllerOpponent(battler))
         BattleArena_DeductSkillPoints(battler, *stringId);
 }
 
@@ -2817,10 +2815,9 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
     else
     {
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
-        // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
-        if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted
-         || gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted
-         || gBattlerControllerEndFuncs[battler] == WallyBufferExecCompleted)
+        if (IsControllerPlayer(battler)
+         || IsControllerRecordedPlayer(battler)
+         || IsControllerWally(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
     }
@@ -3231,10 +3228,9 @@ void BtlController_HandleSwitchInShowSubstitute(u32 battler)
         if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
 
-        // To identify what controller is handling this function. TODO: Add Battle Controller IDs?
-        if (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted
-         && gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted
-         && gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted)
+        if (IsControllerOpponent(battler)
+         && IsControllerLinkOpponent(battler)
+         && IsControllerRecordedOpponent(battler))
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
         else
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
@@ -3266,7 +3262,7 @@ void BtlController_HandleSwitchInSoundAndEnd(u32 battler)
          || IsOnPlayerSide(battler))
         {
             m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
-            if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+            if (IsControllerPlayer(battler))
                 HandleLowHpMusicChange(GetBattlerMon(battler), battler);
             BtlController_Complete(battler);
         }
@@ -3337,7 +3333,7 @@ void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
         if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
             SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
 
-        if (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted)
+        if (IsControllerPlayer(battler))
         {
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
             StartHealthboxSlideIn(battler);

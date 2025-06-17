@@ -344,6 +344,10 @@ void BtlController_HandleHidePartyStatusSummary(u32 battler);
 void BtlController_HandleBattleAnimation(u32 battler);
 
 // player controller
+static inline bool32 IsControllerPlayer(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted);
+}
 void SetControllerToPlayer(u32 battler);
 void PlayerBufferExecCompleted(u32 battler);
 void SetBattleEndCallbacks(u32 battler);
@@ -367,15 +371,27 @@ void HandleMoveSwitching(u32 battler);
 void HandleChooseMoveAfterDma3(u32 battler);
 
 // recorded player controller
+static inline bool32 IsControllerRecordedPlayer(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted);
+}
 void SetControllerToRecordedPlayer(u32 battler);
 void RecordedPlayerBufferExecCompleted(u32 battler);
 
 // opponent controller
+static inline bool32 IsControllerOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted);
+}
 void SetControllerToOpponent(u32 battler);
 void OpponentBufferExecCompleted(u32 battler);
 void OpponentHandleTrainerSlide(u32 battler);
 
 // player partner controller
+static inline bool32 IsControllerPlayerPartner(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted);
+}
 void Controller_PlayerPartnerShowIntroHealthbox(u32 battler); // Also used by the link partner.
 void SetControllerToPlayerPartner(u32 battler);
 void PlayerPartnerBufferExecCompleted(u32 battler);
@@ -385,18 +401,34 @@ void SetControllerToSafari(u32 battler);
 void SafariBufferExecCompleted(u32 battler);
 
 // wally controller
+static inline bool32 IsControllerWally(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == WallyBufferExecCompleted);
+}
 void SetControllerToWally(u32 battler);
 void WallyBufferExecCompleted(u32 battler);
 
 // recorded opponent controller
+static inline bool32 IsControllerRecordedOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted);
+}
 void SetControllerToRecordedOpponent(u32 battler);
 void RecordedOpponentBufferExecCompleted(u32 battler);
 
 // link opponent
+static inline bool32 IsControllerLinkOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted);
+}
 void SetControllerToLinkOpponent(u32 battler);
 void LinkOpponentBufferExecCompleted(u32 battler);
 
 // link partner
+static inline bool32 IsControllerLinkPartner(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
+}
 void SetControllerToLinkPartner(u32 battler);
 void LinkPartnerBufferExecCompleted(u32 battler);
 
