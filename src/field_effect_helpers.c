@@ -2041,3 +2041,9 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
     else
         StartSpriteAnimIfDifferent(sprite, anim);
 }
+
+void EndORASDowsing(void)
+{
+    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
+        FlagClear(I_ORAS_DOWSING_FLAG);
+}

@@ -1389,9 +1389,6 @@ static void Task_UseFly(u8 taskId)
     task = &gTasks[taskId];
     if (taskState == 0)
     {
-        if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-            FlagClear(I_ORAS_DOWSING_FLAG);
-
         if (!PlayerHasFollowerNPC())
         {
             taskState = 2;
@@ -1670,7 +1667,7 @@ void StartEscalatorWarp(u8 metatileBehavior, u8 priority)
     {
         gTasks[taskId].tGoingUp = TRUE;
     }
-    FlagClear(I_ORAS_DOWSING_FLAG);
+    EndORASDowsing();
 }
 
 static void Task_EscalatorWarpOut(u8 taskId)
@@ -2057,7 +2054,7 @@ static bool8 DiveFieldEffect_TryWarp(struct Task *task)
 
 void StartLavaridgeGymB1FWarp(u8 priority)
 {
-    FlagClear(I_ORAS_DOWSING_FLAG);
+    EndORASDowsing();
     CreateTask(Task_LavaridgeGymB1FWarp, priority);
 }
 
@@ -2266,7 +2263,7 @@ void SpriteCB_AshLaunch(struct Sprite *sprite)
 
 void StartLavaridgeGym1FWarp(u8 priority)
 {
-    FlagClear(I_ORAS_DOWSING_FLAG);
+    EndORASDowsing();
     CreateTask(Task_LavaridgeGym1FWarp, priority);
 }
 
@@ -2386,12 +2383,10 @@ enum
 
 void StartEscapeRopeFieldEffect(void)
 {
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        FlagClear(I_ORAS_DOWSING_FLAG);
-        
     LockPlayerFieldControls();
     FreezeObjectEvents();
     HideFollowerForFieldEffect(); // hide follower before warping
+    EndORASDowsing();
     CreateTask(Task_EscapeRopeWarpOut, 80);
 }
 
@@ -2583,12 +2578,10 @@ static void Task_TeleportWarpOut(u8 taskId)
 
 static void TeleportWarpOutFieldEffect_Init(struct Task *task)
 {
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        FlagClear(I_ORAS_DOWSING_FLAG);
-
     LockPlayerFieldControls();
     FreezeObjectEvents();
     CameraObjectFreeze();
+    EndORASDowsing();
     task->data[15] = GetPlayerFacingDirection();
     task->tState++;
 }
@@ -3244,9 +3237,6 @@ static void Task_SurfFieldEffect(u8 taskId)
 
 static void SurfFieldEffect_Init(struct Task *task)
 {
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        FlagClear(I_ORAS_DOWSING_FLAG);
-        
     LockPlayerFieldControls();
     FreezeObjectEvents();
     // Put follower into pokeball before using Surf

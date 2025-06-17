@@ -2312,10 +2312,10 @@
 	callnative ScriptSetDoubleBattleFlag, requests_effects=1
 	.endm
 
-    @ Stop using the ORAS dowsing machine.
-    .macro stoporasdowsing
-    clearflag I_ORAS_DOWSING_FLAG
-    .endm
+	@ Stop using the ORAS dowsing machine.
+	.macro stoporasdowsing
+	callnative EndORASDowsing
+	.endm
 
 	@ ============================ @
 	@ FAKE RTC MACROS

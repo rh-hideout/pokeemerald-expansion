@@ -64,7 +64,6 @@ static void Task_UseORASDowsingMachine(u8 taskId);
 static void StartORASDowseFieldEffect(void);
 static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
 static void PlayDowseSound(u32 dowseState);
-static void EndORASDowsing(void);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
 static void ItemUseOnFieldCB_Bike(u8);
@@ -871,11 +870,6 @@ void Script_UpdateDowseState(void)
 {
     if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
         UpdateDowseState(&gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId]);
-}
-
-static void EndORASDowsing(void)
-{
-    FlagClear(I_ORAS_DOWSING_FLAG);
 }
 
 // Undefine itemfinder task data

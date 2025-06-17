@@ -56,5 +56,6 @@ void SetSpriteInvisible(u8 spriteId);
 void ShowWarpArrowSprite(u8 spriteId, u8 direction, s16 x, s16 y);
 void UpdateORASDowsingFieldEffect(struct Sprite *sprite);
 void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj);
+void EndORASDowsing(void);
 
 #endif //GUARD_FIELD_EFFECT_HELPERS_H

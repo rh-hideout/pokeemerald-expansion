@@ -5,6 +5,7 @@
 #include "field_camera.h"
 #include "field_door.h"
 #include "field_effect.h"
+#include "field_effect_helpers.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -683,7 +684,7 @@ void Task_WarpAndLoadMap(u8 taskId)
     case 0:
         FreezeObjectEvents();
         LockPlayerFieldControls();
-        FlagClear(I_ORAS_DOWSING_FLAG);
+        EndORASDowsing();
         task->tState++;
         break;
     case 1:
@@ -745,7 +746,7 @@ void Task_DoDoorWarp(u8 taskId)
             ObjectEventSetHeldMovement(followerObject, MOVEMENT_ACTION_ENTER_POKEBALL);
         }
         task->tDoorTask = FieldAnimateDoorOpen(*x, *y - 1);
-        FlagClear(I_ORAS_DOWSING_FLAG);
+        EndORASDowsing();
         task->tState = DOORWARP_START_WALK_UP;
         break;
     case DOORWARP_START_WALK_UP:

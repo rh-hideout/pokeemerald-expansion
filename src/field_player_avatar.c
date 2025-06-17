@@ -1654,12 +1654,14 @@ void SetPlayerInvisibility(bool8 invisible)
 
 void SetPlayerAvatarFieldMove(void)
 {
+    EndORASDowsing();
     ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FIELD_MOVE));
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_FIELD_MOVE);
 }
 
 static void SetPlayerAvatarFishing(u8 direction)
 {
+    EndORASDowsing();
     ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FISHING));
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFishingDirectionAnimNum(direction));
 }
@@ -1673,6 +1675,7 @@ void PlayerUseAcroBikeOnBumpySlope(u8 direction)
 
 void SetPlayerAvatarWatering(u8 direction)
 {
+    EndORASDowsing();
     ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_WATERING));
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFaceDirectionAnimNum(direction));
 }

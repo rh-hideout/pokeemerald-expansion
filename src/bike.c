@@ -2,6 +2,7 @@
 #include "bike.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "field_effect_helpers.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "field_specials.h"
@@ -1004,9 +1005,7 @@ void GetOnOffBike(u8 transitionFlags)
     }
     else
     {
-        if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-            FlagClear(I_ORAS_DOWSING_FLAG);
-
+        EndORASDowsing();
         SetPlayerAvatarTransitionFlags(transitionFlags);
         Overworld_SetSavedMusic(MUS_CYCLING);
         Overworld_ChangeMusicTo(MUS_CYCLING);
