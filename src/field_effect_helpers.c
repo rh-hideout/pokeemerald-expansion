@@ -1904,6 +1904,7 @@ const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDow
 #define fPlayerX        gFieldEffectArguments[0]
 #define fPlayerY        gFieldEffectArguments[1]
 
+// Create the ORAS Dowsing Machine sprite.
 u32 FldEff_ORASDowsing(void)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -1935,6 +1936,7 @@ u32 FldEff_ORASDowsing(void)
     return spriteId;
 }
 
+// Callback for ORAS Dowsing Machine sprite.
 void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -1950,6 +1952,11 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     sprite->y = playerSprite->y;
     sprite->x2 = playerSprite->x2;
     sprite->y2 = playerSprite->y2;
+
+    if (playerObj->previousMovementDirection != playerObj->movementDirection)
+    {
+        UpdateDowsingAnimDirection(sprite, playerObj);
+    }
 
     if (playerObj->movementActionId != MOVEMENT_ACTION_NONE)
     {
@@ -2010,7 +2017,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
 void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
 {
-    u32 anim = (playerObj->movementDirection - 1);
+    u32 anim = (playerObj->facingDirection - 1);
 
     switch (sprite->sDowseState)
     {
