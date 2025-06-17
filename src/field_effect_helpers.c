@@ -1995,7 +1995,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
             UpdateDowseState(sprite);
         }
     }
-    if (sprite->sDowseState == ORASD_WIGGLE_FASTER && playerObj->heldMovementFinished != FALSE)
+    if (I_ORAS_DOWSING_SOUNDS && sprite->sDowseState == ORASD_WIGGLE_FASTER && playerObj->heldMovementFinished != FALSE)
     {
         sprite->sSoundTimer++;
 

@@ -823,7 +823,7 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
         break;
     }
 
-    if (sprite->sDowseState != sprite->sPrevDowseState)
+    if (I_ORAS_DOWSING_SOUNDS && sprite->sDowseState != sprite->sPrevDowseState)
     {
         sprite->sSoundTimer = 0;
         PlayDowseSound(sprite->sDowseState);
