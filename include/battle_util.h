@@ -159,7 +159,7 @@ enum {
 
 extern const struct TypePower gNaturalGiftTable[];
 
-struct DamageCalculationData
+struct DamageContext
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
@@ -168,9 +168,16 @@ struct DamageCalculationData
     u32 isCrit:1;
     u32 randomFactor:1;
     u32 updateFlags:1;
-    u32 padding:2;
+    u32 padding1:2;
+    u32 weather:16;
+    u32 fixedBasePower:8;
+    u32 padding2:8;
+    uq4_12_t typeEffectivenessModifier;
+    enum Abilities abilityAtk;
+    enum Abilities abilityDef;
+    enum ItemHoldEffect holdEffectAtk:16;
+    enum ItemHoldEffect holdEffectDef:16;
 };
-STATIC_ASSERT(sizeof(struct DamageCalculationData) <= 4, StructExceedsFourBytes);
 
 enum SleepClauseBlock
 {
@@ -243,6 +250,8 @@ enum Abilities AbilityBattleEffects(u32 caseID, u32 battler, enum Abilities abil
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(u32 battler, enum Abilities ability);
+enum Abilities GetBattlerAbilityIgnoreMoldBreaker(u32 battler);
+enum Abilities GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker);
 enum Abilities GetBattlerAbility(u32 battler);
 u32 IsAbilityOnSide(u32 battler, enum Abilities ability);
 u32 IsAbilityOnOpposingSide(u32 battler, enum Abilities ability);
@@ -270,11 +279,10 @@ u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
 u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower, u32 rolloutTimer);
 u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter);
-s32 CalculateMoveDamage(struct DamageCalculationData *damageCalcData, u32 fixedBasePower);
-s32 CalculateMoveDamageVars(struct DamageCalculationData *damageCalcData, u32 fixedBasePower, uq4_12_t typeEffectivenessModifier,
-                            u32 weather, enum ItemHoldEffect holdEffectAtk, enum ItemHoldEffect holdEffectDef, enum Abilities abilityAtk, enum Abilities abilityDef);
-s32 ApplyModifiersAfterDmgRoll(s32 dmg, struct DamageCalculationData *damageCalcData, uq4_12_t typeEffectivenessModifier, enum Abilities abilityAtk, enum Abilities abilityDef, enum ItemHoldEffect holdEffectAtk, enum ItemHoldEffect holdEffectDef);
-uq4_12_t CalcTypeEffectivenessMultiplier(u32 move, u32 moveType, u32 battlerAtk, u32 battlerDef, enum Abilities defAbility, bool32 recordAbilities);
+s32 CalculateMoveDamage(struct DamageContext *ctx);
+s32 CalculateMoveDamageVars(struct DamageContext *ctx);
+s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
+uq4_12_t CalcTypeEffectivenessMultiplier(struct DamageContext *ctx);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Abilities abilityDef);
 uq4_12_t GetTypeModifier(u32 atkType, u32 defType);
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, u8 moveType);

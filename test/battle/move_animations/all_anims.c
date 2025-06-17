@@ -169,7 +169,7 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move);
             MOVE(defender, MOVE_SWORDS_DANCE);
         }
-        else if (gMovesInfo[move].effect == EFFECT_OHKO)
+        else if (gMovesInfo[move].effect == EFFECT_OHKO || gMovesInfo[move].effect == EFFECT_SHEER_COLD)
         { // defender needs to send out a different team member
             MOVE(attacker, move);
             SEND_OUT(defender, 1);
@@ -298,7 +298,7 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_SWORDS_DANCE);
         }
-        else if (gMovesInfo[move].effect == EFFECT_OHKO)
+        else if (gMovesInfo[move].effect == EFFECT_OHKO || gMovesInfo[move].effect == EFFECT_SHEER_COLD)
         { // Opponent needs to send out a different team member
             MOVE(attacker, move, target: target);
             SEND_OUT(target, 2);
