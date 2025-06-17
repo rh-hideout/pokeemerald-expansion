@@ -7401,17 +7401,6 @@ const struct SpriteTemplate gFireSpreadBlastSpriteTemplate =
     .callback = AnimIceBeamParticle,
 };
 
-const struct SpriteTemplate gGrassSpreadBlastSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_LEAF,
-    .paletteTag = ANIM_TAG_LEAF,
-    .oam = &gOamData_AffineDouble_ObjNormal_16x16,
-    .anims = gRazorLeafParticleAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimIceBeamParticle,
-};
-
 const struct SpriteTemplate gPurpleFlameSpiralOutwardSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_FLAME,
