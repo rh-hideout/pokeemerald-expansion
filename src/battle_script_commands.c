@@ -18190,7 +18190,7 @@ void BS_SpectralThiefPrintStats(void)
                                 MOVE_EFFECT_CERTAIN | MOVE_EFFECT_AFFECTS_USER,
                                 0, NULL) == STAT_CHANGE_WORKED)
             {
-                BattleScriptCall(BattleScript_StatUpMsg);
+                BattleScriptCall(BattleScript_StatUp);
                 return;
             }
         }
