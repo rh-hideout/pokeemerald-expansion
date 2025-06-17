@@ -74,6 +74,13 @@
 #define AUTO_SCROLL_TEXT             FALSE   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.
 #define NUM_FRAMES_AUTO_SCROLL_DELAY 49
 
+// Space saving strategy for bard NPC audio
+#define PHONEMES_DEFAULT             0       // Unique phonemes (as-seen in the vanilla game, unique sounds when bard NPC speaks)
+#define PHONEMES_SILENT              1       // Silent phonemes (uses less space than PHONEMES_DEFAULT, no audible sounds when bard NPC speaks)
+#define PHONEMES_NONE                2       // No sound data defined at all (uses slightly less space than PHONEMES_SILENT, undefined sounds when bard NPC speaks)
+
+#define BARD_PHONEMES                PHONEMES_DEFAULT // Modifies the audio playback behaviour for the bard NPC, potentially removing audio effects to save space.
+
 // Measurement system constants to be used for UNITS
 #define UNITS_IMPERIAL               0       // Inches, feet, pounds
 #define UNITS_METRIC                 1       // meters, kilograms
