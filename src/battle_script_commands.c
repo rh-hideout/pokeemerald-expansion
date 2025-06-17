@@ -12018,11 +12018,11 @@ static u16 ReverseStatChangeMoveEffect(u16 moveEffect)
     }
 }
 
-static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, bool32 certain, s32 statValue)
+static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, s32 statValue, u32 statId, bool32 certain)
 {
     u32 currStat = 0;
     u32 changeableStatsCount = 1; // current stat is counted automatically
-    u32 statAnimId = GET_STAT_BUFF_ID(gBattleScripting.statChanger);
+    u32 statAnimId = statId;
     bool32 statChangeByTwo = statValue > 1 || statValue < -1;
 
     if (statValue <= -1) // goes down
@@ -12144,8 +12144,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
     }
     else if (battlerAbility == ABILITY_SIMPLE && !onlyChecking)
     {
-        SET_STATCHANGER(statId, (GET_STAT_BUFF_VALUE(statValue) * 2), (statValue <= -1));
-        statValue = GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger);
+        statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
         RecordAbilityBattle(battler, battlerAbility);
     }
 
@@ -12395,7 +12394,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
     else
         stats &= ~(1u << statId);
 
-    TryPlayStatChangeAnimation(battler, battlerAbility, stats, certain, statValue);
+    TryPlayStatChangeAnimation(battler, battlerAbility, stats, statValue, statId, certain);
 
     return STAT_CHANGE_WORKED;
 }
