@@ -1143,9 +1143,11 @@ bool32 WasUnableToUseMove(u32 battler)
     return FALSE;
 }
 
-bool32 ShouldDefiantCompetitiveActivate(u32 battler)
+bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability)
 {
     u32 side = GetBattlerSide(battler);
+    if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
+        return FALSE;
     // if an ally dropped the stats (except for Sticky Web), don't activate
     if (IsBattlerAlly(gSpecialStatuses[battler].changedStatsBattlerId, battler) && !gBattleScripting.stickyWebStatDrop)
         return FALSE;
@@ -1175,8 +1177,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
 
     // Check Defiant and Competitive stat raise whenever a stat is lowered.
     else if ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_PKMNCUTSATTACKWITH)
-              && (targetAbility == ABILITY_DEFIANT || targetAbility == ABILITY_COMPETITIVE)
-              && ShouldDefiantCompetitiveActivate(gBattlerTarget))
+              && ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
     {
         gBattlerAbility = gBattlerTarget;
         BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);

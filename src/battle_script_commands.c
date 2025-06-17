@@ -12293,7 +12293,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_DECREASE;
             }
-            else
+            else if (!onlyChecking)
             {
                 gProtectStructs[battler].statFell = TRUE;
                 gProtectStructs[battler].lashOutAffected = TRUE;
@@ -12353,7 +12353,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
                         continue; // Only triggers on opposing side
 
                     if (GetBattlerAbility(index) == ABILITY_OPPORTUNIST
-                    && gProtectStructs[battler].activateOpportunist == 0) // don't activate opportunist on other mon's opportunist raises
+                     && gProtectStructs[battler].activateOpportunist == 0) // don't activate opportunist on other mon's opportunist raises
                     {
                         gProtectStructs[index].activateOpportunist = 2;      // set stats to copy
                     }
@@ -12389,7 +12389,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
     
-    if ((battlerAbility == ABILITY_DEFIANT || battlerAbility == ABILITY_COMPETITIVE) && ShouldDefiantCompetitiveActivate(battler))
+    if (ShouldDefiantCompetitiveActivate(battler, battlerAbility))
         stats = 0; // use single stat animations when Defiant/Competitive activate
     else
         stats &= ~(1u << statId);
