@@ -1143,9 +1143,21 @@ bool32 WasUnableToUseMove(u32 battler)
     return FALSE;
 }
 
+bool32 ShouldDefiantCompetitiveActivate(u32 battler)
+{
+    u32 side = GetBattlerSide(battler);
+    // if an ally dropped the stats (except for Sticky Web), don't activate
+    if (IsBattlerAlly(gSpecialStatuses[battler].changedStatsBattlerId, battler) && !gBattleScripting.stickyWebStatDrop)
+        return FALSE;
+
+    if (GetGenConfig(GEN_CONFIG_DEFIANT_STICKY_WEB) >= GEN_9 || !gBattleScripting.stickyWebStatDrop)
+        return TRUE;
+    // only activate Defiant/Competitive if Web was setup by foe
+    return gSideTimers[side].stickyWebBattlerSide != side;
+}
+
 void PrepareStringBattle(enum StringID stringId, u32 battler)
 {
-    u32 targetSide = GetBattlerSide(gBattlerTarget);
     u16 battlerAbility = GetBattlerAbility(battler);
     u16 targetAbility = GetBattlerAbility(gBattlerTarget);
     // Support for Contrary ability.
@@ -1164,9 +1176,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     // Check Defiant and Competitive stat raise whenever a stat is lowered.
     else if ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_PKMNCUTSATTACKWITH)
               && (targetAbility == ABILITY_DEFIANT || targetAbility == ABILITY_COMPETITIVE)
-              && gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != BATTLE_PARTNER(gBattlerTarget)
-              && ((gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != gBattlerTarget) || gBattleScripting.stickyWebStatDrop == 1)
-              && !(gBattleScripting.stickyWebStatDrop == 1 && gSideTimers[targetSide].stickyWebBattlerSide == targetSide)) // Sticky Web must have been set by the foe
+              && ShouldDefiantCompetitiveActivate(gBattlerTarget))
     {
         gBattlerAbility = gBattlerTarget;
         BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
