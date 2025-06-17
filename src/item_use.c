@@ -746,10 +746,12 @@ void UpdateDowseState(struct Sprite *sprite)
         if (distY < 0)
             distY *= -1;
 
+        // If the player is facing the item's direction.
         if (directionToItem == playerObj->movementDirection)
         {
             ChangeDowsingColor(directionToItem, sprite);
         }
+        // If x and y distances are equal, make sure item can bee seen from both facing directions.
         else if (distX == distY && distX != 0)
         {
             if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && sprite->tItemDistanceX > 0 && playerObj->movementDirection == DIR_EAST)
@@ -787,19 +789,14 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
     else
         distance = sprite->tItemDistanceX;
 
+    // Absolute value.
     if (distance < 0)
         distance *= -1;
 
     switch (distance)
     {
     case 1:
-        if ((direction == DIR_NORTH || direction == DIR_SOUTH) && sprite->tItemDistanceX == 0)
-        {
-            color = I_ORAS_DOWSING_COLOR_FASTER;
-            sprite->sDowseState = ORASD_WIGGLE_FASTER;
-            break;
-        }
-        else if ((direction == DIR_EAST || direction == DIR_WEST) && sprite->tItemDistanceY == 0)
+        if (sprite->tItemDistanceX == 0 || sprite->tItemDistanceY == 0)
         {
             color = I_ORAS_DOWSING_COLOR_FASTER;
             sprite->sDowseState = ORASD_WIGGLE_FASTER;
@@ -834,7 +831,7 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
 void ClearDowsingColor(struct Sprite *sprite)
 {
     sprite->sDowseState = ORASD_WIGGLE_NONE;
-    FillPalette(RGB2GBA(180, 180, 180), (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+    FillPalette(I_ORAS_DOWSING_COLOR_NONE, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
 }
 
 static void PlayDowseSound(u32 dowseState)
