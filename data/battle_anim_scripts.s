@@ -20780,6 +20780,15 @@ FireSpreadBlast:
 	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -20, -10, 45
 	delay 2
 	return
+FireSpreadBlastOpponent:
+	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 0, 0, 45
+	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 5, 10, 45
+	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -5, -10, 45
+	delay 2
+	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 10, 20, 45
+	createsprite gFireSpreadBlastSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -10, -20, 45
+	delay 2
+	return
 
 TeraBlastFlyingBeam:
 	playsewithpan SE_M_JUMP_KICK, SOUND_PAN_TARGET
