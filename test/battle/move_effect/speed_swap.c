@@ -29,7 +29,8 @@ SINGLE_BATTLE_TEST("Speed Swap swaps user and target's speed stats")
 
 SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
 {
-    u32 species, ability, move;
+    u32 species, move;
+    enum Abilities ability;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_TELEPATHY;  move = MOVE_ROCK_POLISH; } // x2.0
     PARAMETRIZE { species = SPECIES_PSYDUCK;   ability = ABILITY_SWIFT_SWIM; move = MOVE_RAIN_DANCE;  } // x2.0
     GIVEN {

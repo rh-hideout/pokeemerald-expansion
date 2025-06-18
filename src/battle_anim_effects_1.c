@@ -6927,7 +6927,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)
     {
-        u16 ability = GetBattlerAbility(i);
+        enum Abilities ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
         if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
             continue;
