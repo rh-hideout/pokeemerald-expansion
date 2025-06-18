@@ -1025,7 +1025,7 @@ static void Task_BuyMenu(u8 taskId)
                     }
                     else if (GetItemPocket(itemId) == POCKET_TM_HM)
                     {
-                        StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
+                        StringCopy(gStringVar2, GetMoveName(gTMHMMoves[itemId]));
                         BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany2, Task_BuyHowManyDialogueInit);
                     }
                     else

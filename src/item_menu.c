@@ -915,19 +915,34 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
     switch (gBagPosition.pocket)
     {
     case TMHM_POCKET:
-        end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-        if (itemId >= ITEM_HM01)
         {
-            // Get HM number
-            ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_HM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
-            StringExpandPlaceholders(dest, gText_NumberItem_HM);
-        }
-        else
-        {
-            // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, itemId - ITEM_TM01 + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
-            StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+            u32 i;
+            bool32 isHM = FALSE;
+            for (i = 0; i < GetTMHMMovesArrayLength(); i++)
+            {
+                if (gItemsInfo[itemId].secondaryId == gTMMoves[i])
+                    break;
+
+                if (gItemsInfo[itemId].secondaryId == gHMMoves[i])
+                {
+                    isHM = TRUE;
+                    break;
+                }
+            }
+
+            end = StringCopy(gStringVar2, GetMoveName(gItemsInfo[itemId].secondaryId));
+            PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+            if (isHM)
+            {
+                ConvertIntToDecimalStringN(gStringVar1, i + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+                StringExpandPlaceholders(dest, gText_NumberItem_HM);
+            }
+            else
+            {
+                ConvertIntToDecimalStringN(gStringVar1, i + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+                StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
+            }
+
         }
         break;
     case BERRIES_POCKET:
@@ -983,13 +998,20 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         itemId = BagGetItemIdByPocketPosition(gBagPosition.pocket + 1, itemIndex);
         itemQuantity = BagGetQuantityByPocketPosition(gBagPosition.pocket + 1, itemIndex);
 
-        // Draw HM icon
-        if (itemId >= ITEM_HM01 && itemId <= ITEM_HM08)
-            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+        if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
+        {
+            for (u32 i = 0; i < GetHMMovesArrayLength(); i++)
+            {
+                if (gItemsInfo[itemId].secondaryId == gHMMoves[i])
+                {
+                    BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+                    break;
+                }
+            }
+        }
 
         if (gBagPosition.pocket != KEYITEMS_POCKET && GetItemImportance(itemId) == FALSE)
         {
-            // Print item quantity
             ConvertIntToDecimalStringN(gStringVar1, itemQuantity, STR_CONV_MODE_RIGHT_ALIGN, MAX_ITEM_DIGITS);
             StringExpandPlaceholders(gStringVar4, gText_xVar1);
             offset = GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 119);
@@ -1135,8 +1157,10 @@ void UpdatePocketItemList(u8 pocketId)
     switch (pocketId)
     {
     case TMHM_POCKET:
+        SortTMHMs(pocket);
+        break;
     case BERRIES_POCKET:
-        SortBerriesOrTMHMs(pocket);
+        SortBerries(pocket);
         break;
     default:
         CompactItemsInBagPocket(pocket);
@@ -2603,7 +2627,7 @@ static void PrintTMHMMoveData(u16 itemId)
     }
     else
     {
-        move = ItemIdToBattleMoveId(itemId);
+        move = gTMHMMoves[itemId];
         BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 0, 0);
 
         // Print TMHM power
