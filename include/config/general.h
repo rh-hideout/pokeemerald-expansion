@@ -79,7 +79,7 @@
 #define PHONEMES_SILENT              1       // Silent phonemes (uses less space than PHONEMES_DEFAULT, no audible sounds when bard NPC speaks)
 #define PHONEMES_UNDEF               2       // No sound data defined at all (uses slightly less space than PHONEMES_SILENT, undefined sounds when bard NPC speaks)
 
-#define BARD_PHONEMES                PHONEMES_DEFAULT // Modifies the audio playback behaviour for the bard NPC, potentially removing audio effects to save space.
+#define BARD_PHONEMES                PHONEMES_DEFAULT
 
 // Measurement system constants to be used for UNITS
 #define UNITS_IMPERIAL               0       // Inches, feet, pounds
