@@ -9075,17 +9075,34 @@ gBattleAnimMove_ElectricTerrain::
 gBattleAnimMove_DazzlingGleam::
 	loadspritegfx ANIM_TAG_SPARKLE_2
 	loadspritegfx ANIM_TAG_BLUE_STAR
-	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 2, 0, 13, RGB_WHITE
-	playsewithpan SE_M_TWISTER, SOUND_PAN_ATTACKER
-	@call 0x081D56B3 -> middle of GrantingStarsEffect
+	loadspritegfx ANIM_TAG_IMPACT
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 2, 0, 13, RGB(31, 25, 25)
+	loopsewithpan SE_M_HEAL_BELL, SOUND_PAN_ATTACKER, 16, 3
 	createsprite gGrantingStarsSpriteTemplate, ANIM_ATTACKER, 2, 12, -5, 0, 0, 32, 60
-	delay 8
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 3, 0, 16, RGB_WHITE
-	delay 4
-	playsewithpan SE_M_GIGA_DRAIN, SOUND_PAN_ATTACKER
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_IMPACT, 0, 12, 12, RGB(31, 28, 28)
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 21, 1
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_DEF_PARTNER, 0, 3, 21, 1
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
+	delay 3
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
+	delay 3
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
+	delay 3
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
+	delay 3
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
+	delay 3
+	createsprite gRandomPosHitSplatSpriteTemplate, ANIM_TARGET, 3, ANIM_TARGET, 2
+	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_HYPER_BEAM, SOUND_PAN_TARGET
 	waitforvisualfinish
-	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 0, 13, 0, RGB_WHITE
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 0, 13, 0, RGB(31, 25, 25)
 	waitforvisualfinish
 	clearmonbg 0x0
 	blendoff
