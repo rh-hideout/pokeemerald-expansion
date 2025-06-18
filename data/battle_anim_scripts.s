@@ -8628,17 +8628,22 @@ gBattleAnimMove_WaterShuriken::
 	loadspritegfx ANIM_TAG_IMPACT @hydro pump hit
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
-	createsoundtask SoundTask_LoopSEAdjustPanning, 0x7, 0x87, 0xffc0, SOUND_PAN_TARGET, 0x5, 0x5, 0x0, 0x5
-	createsprite gWaterShurikenStarTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x27
+	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
+	createsprite gWaterShurikenStarTemplate, ANIM_TARGET, 2, 0, 0, 20
 	delay 8
-	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x28, 0xf
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 8, 1
+	playsewithpan SE_M_GIGA_DRAIN, SOUND_PAN_TARGET
+	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0, 0, 20, 15
 	delay 5
-	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x28, 0xf
+	playsewithpan SE_M_GIGA_DRAIN, SOUND_PAN_TARGET
+	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0, 0, 20, 15
 	delay 5
-	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x28, 0xf
+	playsewithpan SE_M_GIGA_DRAIN, SOUND_PAN_TARGET
+	createsprite gWaterShurikenRingTemplate, ANIM_TARGET, 2, 0, 0, 20, 15
 	delay 12
 	playsewithpan SE_M_SAND_ATTACK, SOUND_PAN_TARGET
-	createsprite gWaterShurikenImpactTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x1, 0x2
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 4, 1
+	createsprite gWaterShurikenImpactTemplate, ANIM_ATTACKER, 2, 0, 0, 1, 2
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	end
@@ -9290,7 +9295,7 @@ gBattleAnimMove_OblivionWing::
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 14, RGB_BLACK   @Black
 	waitforvisualfinish
-	createsoundtask SoundTask_LoopSEAdjustPanning, 0x7, 0xf0, 0xffc0, SOUND_PAN_TARGET, 0x1, 0xf, 0x0, 0x5
+	createsoundtask SoundTask_LoopSEAdjustPanning, SE_M_HYPER_BEAM2, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 1, 15, 0, 5
 	call OblivionWingBeam
 	call OblivionWingBeam
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 40, 1
@@ -12256,7 +12261,7 @@ gBattleAnimMove_MoongeistBeam::
 	createsprite gGrowingChargeOrbSpriteTemplate, ANIM_ATTACKER, 2, 0x0 @;Charge circle
 	call MoongeistBeamCharge
 	delay 32
-	createsoundtask SoundTask_LoopSEAdjustPanning, 0x7, 0xCC, 0xffc0, SOUND_PAN_TARGET, 0x1, 0xf, 0x0, 0x5
+	createsoundtask SoundTask_LoopSEAdjustPanning, SE_M_HYPER_BEAM2, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 1, 15, 0, 5
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 50, 1
 	createvisualtask AnimTask_FlashAnimTagWithColor, 2, ANIM_TAG_ORBS, 1, 12, RGB_RED, 16, 0, 0
 	call MoongeistBeamOrbs
