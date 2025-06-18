@@ -1183,7 +1183,7 @@ void FollowerNPC_HandleSprite(void)
     {
         TryUpdateFollowerNPCSpriteUnderwater();
     }
-    else
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     }
