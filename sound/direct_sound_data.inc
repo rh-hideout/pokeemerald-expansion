@@ -6226,7 +6226,7 @@ DirectSoundWaveData_Phoneme_48::
 DirectSoundWaveData_Phoneme_49::
 DirectSoundWaveData_Phoneme_50::
 DirectSoundWaveData_Phoneme_51::
-	.incbin PHONEMES_SHARED_TARGET
+	.incbin "sound/direct_sound_samples/phonemes/shared.bin"
 
 .else @ PHONEMES_SHARED
 
