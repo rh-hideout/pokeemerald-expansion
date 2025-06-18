@@ -104,7 +104,7 @@ enum
     LIST_ITEM_STATS,
     LIST_ITEM_STAT_STAGES,
     LIST_ITEM_STATUS1,
-    LIST_ITEM_STATUS2,
+    LIST_ITEM_VOLATILE,
     LIST_ITEM_STATUS3,
     LIST_ITEM_STATUS4,
     LIST_ITEM_SIDE_STATUS,
@@ -137,23 +137,6 @@ enum
     LIST_STATUS1_TOXIC_POISON,
     LIST_STATUS1_TOXIC_COUNTER,
     LIST_STATUS1_FROSTBITE,
-};
-
-enum
-{
-    LIST_STATUS2_CONFUSION,
-    LIST_STATUS2_FLINCHED,
-    LIST_STATUS2_TORMENT,
-    LIST_STATUS2_POWDER,
-    LIST_STATUS2_DEFENSE_CURL,
-    LIST_STATUS2_RECHARGE,
-    LIST_STATUS2_RAGE,
-    LIST_STATUS2_DESTINY_BOND,
-    LIST_STATUS2_ESCAPE_PREVENTION,
-    LIST_STATUS2_CURSED,
-    LIST_STATUS2_FORESIGHT,
-    LIST_STATUS2_DRAGON_CHEER,
-    LIST_STATUS2_FOCUS_ENERGY
 };
 
 enum
@@ -268,6 +251,7 @@ enum
     VAL_BITFIELD_8,
     VAL_BITFIELD_16,
     VAL_BITFIELD_32,
+    VAL_VOLATILE,
     VAR_SIDE_STATUS,
     VAR_SHOW_HP,
     VAR_SUBSTITUTE,
@@ -290,7 +274,7 @@ static const u8 sText_Types[] = _("Types");
 static const u8 sText_Stats[] = _("Stats");
 static const u8 sText_StatStages[] = _("Stat Stages");
 static const u8 sText_Status1[] = _("Status1");
-static const u8 sText_Status2[] = _("Status2");
+static const u8 sText_VolatileStatus[] = _("Volatiles");
 static const u8 sText_Status3[] = _("Status3");
 static const u8 sText_Status4[] = _("Status4");
 static const u8 sText_SideStatus[] = _("Side Status");
@@ -435,23 +419,6 @@ static const struct BitfieldInfo sStatus1Bitfield[] =
     {/*Frostbite*/ 1, 12},
 };
 
-static const struct BitfieldInfo sStatus2Bitfield[] =
-{
-    {/*Confusion*/ 3, 0},
-    {/*Flinched*/ 1, 3},
-    {/*Torment*/ 1, 7},
-    {/*Powder*/ 1, 14},
-    {/*Defense Curl*/ 1, 20},
-    {/*Recharge*/ 1, 22},
-    {/*Rage*/ 1, 23},
-    {/*Destiny Bond*/ 1, 25},
-    {/*Escape Prevention*/ 1, 26},
-    {/*Cursed*/ 1, 28},
-    {/*Foresight*/ 1, 29},
-    {/*Dragon Cheer*/ 1, 30},
-    {/*Focus Energy*/ 1, 31},
-};
-
 static const struct BitfieldInfo sStatus3Bitfield[] =
 {
     {/*Leech Seed Battler*/ 2, 0},
@@ -532,7 +499,7 @@ static const struct ListMenuItem sMainListItems[] =
     {sText_Stats, LIST_ITEM_STATS},
     {sText_StatStages, LIST_ITEM_STAT_STAGES},
     {sText_Status1, LIST_ITEM_STATUS1},
-    {sText_Status2, LIST_ITEM_STATUS2},
+    {sText_VolatileStatus, LIST_ITEM_VOLATILE},
     {sText_Status3, LIST_ITEM_STATUS3},
     {sText_Status4, LIST_ITEM_STATUS4},
     {sText_SideStatus, LIST_ITEM_SIDE_STATUS},
@@ -566,21 +533,21 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-static const struct ListMenuItem sStatus2ListItems[] =
+static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    {sText_Confusion, LIST_STATUS2_CONFUSION},
-    {sText_Flinched, LIST_STATUS2_FLINCHED},
-    {sText_Torment, LIST_STATUS2_TORMENT},
-    {sText_Powder, LIST_STATUS2_POWDER},
-    {sText_DefenseCurl, LIST_STATUS2_DEFENSE_CURL},
-    {sText_Recharge, LIST_STATUS2_RECHARGE},
-    {sText_Rage, LIST_STATUS2_RAGE},
-    {sText_DestinyBond, LIST_STATUS2_DESTINY_BOND},
-    {sText_EscapePrevention, LIST_STATUS2_ESCAPE_PREVENTION},
-    {sText_Cursed, LIST_STATUS2_CURSED},
-    {sText_Foresight, LIST_STATUS2_FORESIGHT},
-    {sText_DragonCheer, LIST_STATUS2_DRAGON_CHEER},
-    {sText_FocusEnergy, LIST_STATUS2_FOCUS_ENERGY},
+    {COMPOUND_STRING("Confusion"), VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"), VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"), VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"), VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"), VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"), VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"), VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"), VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"), VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"), VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"), VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"), VOLATILE_FOCUS_ENERGY},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -803,19 +770,6 @@ static const struct BgTemplate sBgTemplates[] =
        .priority = 0,
        .baseTile = 0
    }
-};
-
-static const u8 sBitsToMaxDigit[] =
-{
-    [0] = 0,
-    [1] = 1, // max 1
-    [2] = 1, // max 3
-    [3] = 1, // max 7
-    [4] = 2, // max 15
-    [5] = 2, // max 31
-    [6] = 2, // max 63
-    [7] = 3, // max 127
-    [8] = 3, // max 255
 };
 
 static const bool8 sHasChangeableEntries[LIST_ITEM_COUNT] =
@@ -1586,10 +1540,9 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         itemsCount = ARRAY_COUNT(sStatus1ListItems);
         data->bitfield = sStatus1Bitfield;
         break;
-    case LIST_ITEM_STATUS2:
-        listTemplate.items = sStatus2ListItems;
-        itemsCount = ARRAY_COUNT(sStatus2ListItems);
-        data->bitfield = sStatus2Bitfield;
+    case LIST_ITEM_VOLATILE:
+        listTemplate.items = sVolatileStatusListItems;
+        itemsCount = ARRAY_COUNT(sVolatileStatusListItems);
         break;
     case LIST_ITEM_STATUS3:
         listTemplate.items = sStatus3ListItems;
@@ -1808,6 +1761,9 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~(GetBitfieldToAndValue(data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount));
         *(u32 *)(data->modifyArrows.modifiedValPtr) |= (data->modifyArrows.currValue << data->bitfield[data->currentSecondaryListItemId].currBit);
         break;
+    case VAL_VOLATILE:
+        SetMonVolatile(data->battlerId, data->currentSecondaryListItemId, data->modifyArrows.currValue);
+        break;
     case VAR_SIDE_STATUS:
         *GetSideStatusValue(data, TRUE, data->modifyArrows.currValue != 0) = data->modifyArrows.currValue;
         break;
@@ -1818,12 +1774,12 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         *(u8 *)(data->modifyArrows.modifiedValPtr) = data->modifyArrows.currValue;
         if (*(u8 *)(data->modifyArrows.modifiedValPtr) == 0)
         {
-            gBattleMons[data->battlerId].status2 &= ~STATUS2_SUBSTITUTE;
+            gBattleMons[data->battlerId].volatiles.substitute = FALSE;
             gBattleSpritesDataPtr->battlerData[data->battlerId].behindSubstitute = 0;
         }
         else
         {
-            gBattleMons[data->battlerId].status2 |= STATUS2_SUBSTITUTE;
+            gBattleMons[data->battlerId].volatiles.substitute = TRUE;
             gBattleSpritesDataPtr->battlerData[data->battlerId].behindSubstitute = 1;
         }
         break;
@@ -2175,11 +2131,28 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetBitfieldValue(gBattleMons[data->battlerId].status1, data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
-    case LIST_ITEM_STATUS2:
-        data->modifyArrows.modifiedValPtr = &gBattleMons[data->battlerId].status2;
-        data->modifyArrows.currValue = GetBitfieldValue(gBattleMons[data->battlerId].status2, data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
+    case LIST_ITEM_VOLATILE:
+        data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
+        data->modifyArrows.typeOfVal = VAL_VOLATILE;
+        data->modifyArrows.minValue = 0;
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeBitSize, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize)); break;
+        switch (data->currentSecondaryListItemId)
+        {
+            VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
+            /* Expands to the following:
+             * case VOLATILE_CONFUSION:
+                  data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
+                  break;
+             * case VOLATILE_FLINCHED:
+                  data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
+                  break;
+             * ...etc.
+             */
+            default:
+                data->modifyArrows.maxValue = 0;
+        }
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
+        break;
     case LIST_ITEM_STATUS3:
         data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
@@ -2198,7 +2171,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     CASE_ITEM_STATUS:
         data->modifyArrows.minValue = 0;
         data->modifyArrows.maxValue = (1 << data->bitfield[data->currentSecondaryListItemId].bitsCount) - 1;
-        data->modifyArrows.maxDigits = sBitsToMaxDigit[data->bitfield[data->currentSecondaryListItemId].bitsCount];
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
     case LIST_ITEM_SIDE_STATUS:
         data->modifyArrows.minValue = 0;

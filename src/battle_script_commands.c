@@ -369,12 +369,12 @@ static void Cmd_printselectionstringfromtable(void);
 static void Cmd_setadditionaleffects(void);
 static void Cmd_seteffectprimary(void);
 static void Cmd_seteffectsecondary(void);
-static void Cmd_clearstatus2(void);
+static void Cmd_clearvolatile(void);
 static void Cmd_tryfaintmon(void);
 static void Cmd_dofaintanimation(void);
 static void Cmd_cleareffectsonfaint(void);
 static void Cmd_jumpifstatus(void);
-static void Cmd_jumpifstatus2(void);
+static void Cmd_jumpifvolatile(void);
 static void Cmd_jumpifability(void);
 static void Cmd_jumpifsideaffecting(void);
 static void Cmd_jumpifstat(void);
@@ -628,12 +628,12 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_setadditionaleffects,                    //0x15
     Cmd_seteffectprimary,                        //0x16
     Cmd_seteffectsecondary,                      //0x17
-    Cmd_clearstatus2,                            //0x18
+    Cmd_clearvolatile,                           //0x18
     Cmd_tryfaintmon,                             //0x19
     Cmd_dofaintanimation,                        //0x1A
     Cmd_cleareffectsonfaint,                     //0x1B
     Cmd_jumpifstatus,                            //0x1C
-    Cmd_jumpifstatus2,                           //0x1D
+    Cmd_jumpifvolatile,                          //0x1D
     Cmd_jumpifability,                           //0x1E
     Cmd_jumpifsideaffecting,                     //0x1F
     Cmd_jumpifstat,                              //0x20
@@ -1601,7 +1601,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
-        if (gBattleMons[battlerDef].status2 & STATUS2_CONFUSION)
+        if (gBattleMons[battlerDef].volatiles.confusionTurns)
             calc = (calc * 50) / 100; // 1.5 tangled feet loss
         break;
     }
@@ -4555,15 +4555,14 @@ static void Cmd_seteffectsecondary(void)
     SetMoveEffect(FALSE, FALSE);
 }
 
-static void Cmd_clearstatus2(void)
+static void Cmd_clearvolatile(void)
 {
-    CMD_ARGS(u8 battler, u32 status2);
+    CMD_ARGS(u8 battler, u8 _volatile);
 
-    u32 status2 = cmd->status2;
     u32 battler = GetBattlerForBattleScript(cmd->battler);
 
-    gBattleMons[battler].status2 &= ~status2;
-    if (status2 & STATUS2_MULTIPLETURNS)
+    SetMonVolatile(battler, cmd->_volatile, 0);
+    if (cmd->_volatile == VOLATILE_MULTIPLETURNS)
         gProtectStructs[battler].chargingTurn = FALSE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -4724,15 +4723,14 @@ static void Cmd_jumpifstatus(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_jumpifstatus2(void)
+static void Cmd_jumpifvolatile(void)
 {
-    CMD_ARGS(u8 battler, u32 flags, const u8 *jumpInstr);
+    CMD_ARGS(u8 battler, u8 volatileStatus, const u8 *jumpInstr);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    u32 flags = cmd->flags;
     const u8 *jumpInstr = cmd->jumpInstr;
 
-    if (gBattleMons[battler].status2 & flags && IsBattlerAlive(battler))
+    if (GetMonVolatile(battler, cmd->volatileStatus) && IsBattlerAlive(battler))
         gBattlescriptCurrInstr = jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -5262,9 +5260,9 @@ bool32 NoAliveMonsForPlayer(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (!GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_SPECIES)
-             || !GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HP)
-             || GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_IS_EGG))
+            if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
+             || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
+             || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
                 ineligibleMonsCount++;
         }
 

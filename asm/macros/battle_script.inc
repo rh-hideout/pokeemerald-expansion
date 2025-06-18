@@ -116,10 +116,10 @@
 	.byte 0x17
 	.endm
 
-	.macro clearstatus2 battler:req, status2:req
+	.macro clearvolatile battler:req, volatile:req
 	.byte 0x18
 	.byte \battler
-	.4byte \status2
+	.byte \volatile
 	.endm
 
 	.macro tryfaintmon battler:req
@@ -153,10 +153,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifstatus2 battler:req, flags:req, jumpInstr:req
+	.macro jumpifvolatile battler:req, volatile:req, jumpInstr:req
 	.byte 0x1d
 	.byte \battler
-	.4byte \flags
+	.byte \volatile
 	.4byte \jumpInstr
 	.endm
 

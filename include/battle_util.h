@@ -394,5 +394,7 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 bool32 TrySwitchInEjectPack(enum ItemCaseId caseID);
+u32 GetMonVolatile(u32 battler, enum Volatile volatile);
+void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
 
 #endif // GUARD_BATTLE_UTIL_H
