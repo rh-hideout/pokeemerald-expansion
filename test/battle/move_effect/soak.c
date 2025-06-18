@@ -1,9 +1,15 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+    ASSUME(GetMoveEffect(MOVE_MAGIC_POWDER) == EFFECT_SOAK);
+}
+
 TO_DO_BATTLE_TEST("Soak/Magic Powder changes the target's type to pure Water/Psychic");
 
-SINGLE_BATTLE_TEST("Soak/Magic Powder's type change overritten if the target changes form")
+SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target changes form")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_SOAK; }
