@@ -6172,465 +6172,269 @@ DirectSoundWaveData_sc88pro_nylon_str_guitar::
 DirectSoundWaveData_sd90_special_scream_drive::
 	.incbin "sound/direct_sound_samples/sd90_special_scream_drive.bin"
 
-	.align 2
 
+.if PHONEMES_SHARED == TRUE
+	.align 2
 DirectSoundWaveData_Phoneme_1::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
+DirectSoundWaveData_Phoneme_2::
+DirectSoundWaveData_Phoneme_3::
+DirectSoundWaveData_Phoneme_4::
+DirectSoundWaveData_Phoneme_5::
+DirectSoundWaveData_Phoneme_6::
+DirectSoundWaveData_Phoneme_7::
+DirectSoundWaveData_Phoneme_8::
+DirectSoundWaveData_Phoneme_9::
+DirectSoundWaveData_Phoneme_10::
+DirectSoundWaveData_Phoneme_11::
+DirectSoundWaveData_Phoneme_12::
+DirectSoundWaveData_Phoneme_13::
+DirectSoundWaveData_Phoneme_14::
+DirectSoundWaveData_Phoneme_15::
+DirectSoundWaveData_Phoneme_16::
+DirectSoundWaveData_Phoneme_17::
+DirectSoundWaveData_Phoneme_18::
+DirectSoundWaveData_Phoneme_19::
+DirectSoundWaveData_Phoneme_20::
+DirectSoundWaveData_Phoneme_21::
+DirectSoundWaveData_Phoneme_22::
+DirectSoundWaveData_Phoneme_23::
+DirectSoundWaveData_Phoneme_24::
+DirectSoundWaveData_Phoneme_25::
+DirectSoundWaveData_Phoneme_26::
+DirectSoundWaveData_Phoneme_27::
+DirectSoundWaveData_Phoneme_28::
+DirectSoundWaveData_Phoneme_29::
+DirectSoundWaveData_Phoneme_30::
+DirectSoundWaveData_Phoneme_31::
+DirectSoundWaveData_Phoneme_32::
+DirectSoundWaveData_Phoneme_33::
+DirectSoundWaveData_Phoneme_34::
+DirectSoundWaveData_Phoneme_35::
+DirectSoundWaveData_Phoneme_36::
+DirectSoundWaveData_Phoneme_37::
+DirectSoundWaveData_Phoneme_38::
+DirectSoundWaveData_Phoneme_39::
+DirectSoundWaveData_Phoneme_40::
+DirectSoundWaveData_Phoneme_41::
+DirectSoundWaveData_Phoneme_42::
+DirectSoundWaveData_Phoneme_43::
+DirectSoundWaveData_Phoneme_44::
+DirectSoundWaveData_Phoneme_45::
+DirectSoundWaveData_Phoneme_46::
+DirectSoundWaveData_Phoneme_47::
+DirectSoundWaveData_Phoneme_48::
+DirectSoundWaveData_Phoneme_49::
+DirectSoundWaveData_Phoneme_50::
+DirectSoundWaveData_Phoneme_51::
+	.incbin PHONEMES_SHARED_TARGET
+
+.else @ PHONEMES_SHARED
+
+	.align 2
+DirectSoundWaveData_Phoneme_1::
 	.incbin "sound/direct_sound_samples/phonemes/01.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_2::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/02.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_3::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/03.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_4::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/04.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_5::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/05.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_6::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/06.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_7::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/07.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_8::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/08.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_9::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/09.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_10::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/10.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_11::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/11.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_12::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/12.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_13::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/13.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_14::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/14.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_15::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/15.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_16::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/16.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_17::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/17.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_18::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/18.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_19::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/19.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_20::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/20.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_21::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/21.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_22::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/22.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_23::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/23.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_24::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/24.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_25::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/25.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_26::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/26.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_27::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/27.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_28::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/28.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_29::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/29.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_30::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/30.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_31::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/31.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_32::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/32.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_33::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/33.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_34::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/34.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_35::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/35.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_36::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/36.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_37::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/37.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_38::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/38.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_39::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/39.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_40::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/40.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_41::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/41.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_42::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/42.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_43::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/43.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_44::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/44.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_45::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/45.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_46::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/46.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_47::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/47.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_48::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/48.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_49::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/49.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_50::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/50.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
 
 	.align 2
 DirectSoundWaveData_Phoneme_51::
-	.if BARD_PHONEMES == PHONEMES_DEFAULT
 	.incbin "sound/direct_sound_samples/phonemes/51.bin"
-	.endif
-	.if BARD_PHONEMES == PHONEMES_SILENT
-	.incbin "sound/direct_sound_samples/phonemes/null.bin"
-	.endif
+
+.endif @ PHONEMES_SHARED
 
 	.align 2
 DirectSoundWaveData_sc88pro_accordion_duplicate::

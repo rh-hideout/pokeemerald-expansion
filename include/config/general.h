@@ -75,11 +75,8 @@
 #define NUM_FRAMES_AUTO_SCROLL_DELAY 49
 
 // Space saving strategy for bard NPC audio
-#define PHONEMES_DEFAULT             0       // Unique phonemes (as-seen in the vanilla game, unique sounds when bard NPC speaks)
-#define PHONEMES_SILENT              1       // Silent phonemes (uses less space than PHONEMES_DEFAULT, no audible sounds when bard NPC speaks)
-#define PHONEMES_UNDEF               2       // No sound data defined at all (uses slightly less space than PHONEMES_SILENT, undefined sounds when bard NPC speaks)
-
-#define BARD_PHONEMES                PHONEMES_DEFAULT
+#define PHONEMES_SHARED             FALSE    // If TRUE, bard phonemes all reference the same sound (located by PHONEMES_SHARED_TARGET) to save ROM space.
+#define PHONEMES_SHARED_TARGET      "sound/direct_sound_samples/phonemes/null.bin"
 
 // Measurement system constants to be used for UNITS
 #define UNITS_IMPERIAL               0       // Inches, feet, pounds
