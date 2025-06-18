@@ -102,18 +102,18 @@
 	jumpifhalfword CMP_EQUAL, sMOVE_EFFECT, MOVE_EFFECT_CONTINUE, 1b
 	.endm
 
-	.macro seteffectprimary moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
+	.macro seteffectprimary battler:req, effectBattler:req, moveEffect:req
 	.byte 0x16
+	.byte \battler
+	.byte \effectBattler
+	.2byte \moveEffect
 	.endm
 
-	.macro seteffectsecondary moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
+	.macro seteffectsecondary battler:req, effectBattler:req, moveEffect:req
 	.byte 0x17
+	.byte \battler
+	.byte \effectBattler
+	.2byte \moveEffect
 	.endm
 
 	.macro clearvolatile battler:req, volatile:req
@@ -348,6 +348,10 @@
 	.macro pause frames:req
 	.byte 0x39
 	.2byte \frames
+	.endm
+
+	.macro setchargingturn
+	.byte 0x40
 	.endm
 
 	.macro waitstate
@@ -2346,11 +2350,6 @@
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
-	.endm
-
-	.macro setmoveeffect effect:req
-	sethword sMOVE_EFFECT, \effect
-	sethword sSAVED_MOVE_EFFECT, \effect
 	.endm
 
 	.macro chosenstatus1animation battler:req, status:req

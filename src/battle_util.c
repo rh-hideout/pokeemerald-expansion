@@ -4960,7 +4960,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
                 BattleScriptPushCursor();
-                SetMoveEffect(FALSE, FALSE);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, FALSE, FALSE);
                 BattleScriptPop();
                 effect++;
             }
@@ -7022,7 +7022,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 {
                     gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
                     BattleScriptPushCursor();
-                    SetMoveEffect(FALSE, FALSE);
+                    SetMoveEffect(gBattlerAttacker, gBattlerTarget, FALSE, FALSE);
                     BattleScriptPop();
                 }
             }
