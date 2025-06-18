@@ -72,6 +72,8 @@ extern const u8 BattleScript_RoarSuccessSwitch[];
 extern const u8 BattleScript_RoarSuccessEndBattle[];
 extern const u8 BattleScript_MistProtected[];
 extern const u8 BattleScript_RageIsBuilding[];
+extern const u8 BattleScript_EncoredMoveInPalace[];
+extern const u8 BattleScript_EncoredMove[];
 extern const u8 BattleScript_MoveUsedIsDisabled[];
 extern const u8 BattleScript_SelectingDisabledMove[];
 extern const u8 BattleScript_DisabledNoMore[];
