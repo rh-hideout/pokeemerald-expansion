@@ -20130,12 +20130,16 @@ TeraBlastFire:
 	createsprite gFireSpiralOutwardSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 56, 24
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	waitforvisualfinish
-	fadetobg BG_FIRE
-	waitbgfadeout
-	createvisualtask AnimTask_StartSlidingBg, 5, 0x0A00, 0, 1, -1
-	waitbgfadein
+	monbg ANIM_ATTACKER
+	setalpha 14, 8
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 12, 0
+	waitforvisualfinish
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 46, 1
 	delay 6
+	createvisualtask AnimTask_GetAttackerSide, 2
+	jumprettrue TeraBlastFireOnPlayer
+	goto TeraBlastFireOnOpponent
+TeraBlastFireOnOpponent:
 	panse SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
 	call FireSpreadBlast
 	call FireSpreadBlast
@@ -20156,8 +20160,36 @@ TeraBlastFire:
 	call EternabeamGeyser
 	delay 5
 	waitforvisualfinish
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 12, 0, 0
+	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	clearmonbg ANIM_ATTACKER
+	end
+TeraBlastFireOnPlayer:
+	panse SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 43, 1
+	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_TARGET, 4, 4, 0, 12, RGB(31, 0, 0)
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+	call EternabeamGeyser
+	delay 5
+	call EternabeamGeyser
+	delay 5
+	waitforvisualfinish
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 12, 0, 0
+	waitforvisualfinish
+	blendoff
+	clearmonbg ANIM_ATTACKER
 	end
 TeraBlastWater:
 	loadspritegfx ANIM_TAG_HYDRO_PUMP
@@ -20507,6 +20539,10 @@ TeraBlastDragon:
 	waitbgfadein
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 46, 1
 	delay 6
+	createvisualtask AnimTask_GetAttackerSide, 2
+	jumprettrue TeraBlastDragonOnPlayer
+	goto TeraBlastDragonOnOpponent
+TeraBlastDragonOnOpponent:
 	panse SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
 	call FireSpreadBlast
 	call FireSpreadBlast
@@ -20521,6 +20557,30 @@ TeraBlastDragon:
 	call FireSpreadBlast
 	call FireSpreadBlast
 	call FireSpreadBlast
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+	call EternabeamGeyser
+	delay 5
+	call EternabeamGeyser
+	delay 5
+	waitforvisualfinish
+	blendoff
+	call UnsetPsychicBg
+	end
+TeraBlastDragonOnPlayer:
+	panse SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 43, 1
+	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_TARGET, 4, 4, 0, 12, RGB(31, 0, 0)
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
+	call FireSpreadBlastOpponent
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
 	call EternabeamGeyser
 	delay 5
