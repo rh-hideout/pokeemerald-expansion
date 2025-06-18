@@ -236,7 +236,7 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check);
 bool32 AreAllMovesUnusable(u32 battler);
 u8 GetImprisonedMovesCount(u32 battler, u16 move);
 s32 GetDrainedBigRootHp(u32 battler, s32 hp);
-bool32 IsMagicGuardProtected(u32 battler, u32 ability);
+bool32 IsAbilityAndRecord(u32 battler, u32 battlerAbility, u32 abilityToCheck);
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
@@ -393,5 +393,7 @@ bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
+u32 GetMonVolatile(u32 battler, enum Volatile volatile);
+void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
 
 #endif // GUARD_BATTLE_UTIL_H

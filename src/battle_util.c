@@ -310,8 +310,8 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
         || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
-        || ability == ABILITY_PROPELLER_TAIL
-        || ability == ABILITY_STALWART)
+        || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
+        || IsAbilityAndRecord(battlerAtk, ability, ABILITY_STALWART))
         return FALSE;
 
     if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
@@ -346,6 +346,7 @@ bool32 HandleMoveTargetRedirection(void)
             || (ability != ABILITY_STORM_DRAIN && moveType == TYPE_WATER)))
     {
         // Find first battler that redirects the move (in turn order)
+        u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
         u32 battler;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
@@ -358,8 +359,8 @@ bool32 HandleMoveTargetRedirection(void)
                 && GetBattlerTurnOrderNum(battler) < redirectorOrderNum
                 && moveEffect != EFFECT_SNIPE_SHOT
                 && moveEffect != EFFECT_PLEDGE
-                && GetBattlerAbility(gBattlerAttacker) != ABILITY_PROPELLER_TAIL
-                && GetBattlerAbility(gBattlerAttacker) != ABILITY_STALWART)
+                && !IsAbilityAndRecord(gBattlerAttacker, abilityAtk, ABILITY_PROPELLER_TAIL)
+                && !IsAbilityAndRecord(gBattlerAttacker, abilityAtk, ABILITY_STALWART))
             {
                 redirectorOrderNum = GetBattlerTurnOrderNum(battler);
             }
@@ -1062,8 +1063,8 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
 
         // If the target can be confused, confuse them.
         // Don't use CanBeConfused, can cause issues in edge cases.
-        if (!(GetBattlerAbility(otherSkyDropper) == ABILITY_OWN_TEMPO
-            || gBattleMons[otherSkyDropper].status2 & STATUS2_CONFUSION
+        if (!(gBattleMons[otherSkyDropper].status2 & STATUS2_CONFUSION
+            || IsAbilityAndRecord(otherSkyDropper, GetBattlerAbility(otherSkyDropper), ABILITY_OWN_TEMPO)
             || IsBattlerTerrainAffected(otherSkyDropper, STATUS_FIELD_MISTY_TERRAIN)))
         {
             // Set confused status
@@ -1675,13 +1676,11 @@ bool32 MoodyCantLowerStat(u32 stat)
 
 void TryToRevertMimicryAndFlags(void)
 {
-    u32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        gDisableStructs[i].terrainAbilityDone = FALSE;
-        if (GetBattlerAbility(i) == ABILITY_MIMICRY)
-            RESTORE_BATTLER_TYPE(i);
+        gDisableStructs[battler].terrainAbilityDone = FALSE;
+        if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MIMICRY))
+            RESTORE_BATTLER_TYPE(battler);
     }
 }
 
@@ -1717,13 +1716,13 @@ s32 GetDrainedBigRootHp(u32 battler, s32 hp)
     return hp * -1;
 }
 
-// This should always be the last check. Otherwise the ability might be recorded when it is not supposed to be
-bool32 IsMagicGuardProtected(u32 battler, u32 ability)
+// Should always be the last check. Otherwise the ability might be wrongly recorded.
+bool32 IsAbilityAndRecord(u32 battler, u32 battlerAbility, u32 abilityToCheck)
 {
-    if (ability != ABILITY_MAGIC_GUARD)
+    if (battlerAbility != abilityToCheck)
         return FALSE;
 
-    RecordAbilityBattle(battler, ability);
+    RecordAbilityBattle(battler, abilityToCheck);
     return TRUE;
 }
 
@@ -1919,7 +1918,7 @@ static void CancellerAsleep(u32 *effect)
         else
         {
             u8 toSub;
-            if (GetBattlerAbility(gBattlerAttacker) == ABILITY_EARLY_BIRD)
+            if (IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_EARLY_BIRD))
                 toSub = 2;
             else
                 toSub = 1;
@@ -2196,7 +2195,7 @@ static void CancellerParalysed(u32 *effect)
 {
     if (!gBattleStruct->isAtkCancelerForCalledMove
         && (gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS)
-        && !(B_MAGIC_GUARD == GEN_4 && GetBattlerAbility(gBattlerAttacker) == ABILITY_MAGIC_GUARD)
+        && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
         && !RandomPercentage(RNG_PARALYSIS, 75))
     {
         gProtectStructs[gBattlerAttacker].nonVolatileStatusImmobility = TRUE;
@@ -2309,7 +2308,7 @@ static void CancellerPowderStatus(u32 *effect)
     if (TryActivatePowderStatus(gCurrentMove))
     {
         gProtectStructs[gBattlerAttacker].powderSelfDmg = TRUE;
-        if (GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
+        if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
             gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
 
         if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE
@@ -4727,9 +4726,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
              && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_INFATUATION)
              && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
-             && GetBattlerAbility(gBattlerAttacker) != ABILITY_OBLIVIOUS
              && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
              && IsMoveMakingContact(move, gBattlerAttacker)
+             && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_OBLIVIOUS)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL))
             {
                 gBattleMons[gBattlerAttacker].status2 |= STATUS2_INFATUATED_WITH(gBattlerTarget);
@@ -5351,8 +5350,16 @@ bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability)
     if (gStatuses3[battler] & STATUS3_GASTRO_ACID)
         return FALSE;
 
-    return (ability == ABILITY_MOLD_BREAKER || ability == ABILITY_TERAVOLT || ability == ABILITY_TURBOBLAZE
-        || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)));
+    if (ability == ABILITY_MOLD_BREAKER
+     || ability == ABILITY_TERAVOLT
+     || ability == ABILITY_TURBOBLAZE
+     || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)))
+    {
+        RecordAbilityBattle(battler, ability);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 ability, u32 hasAbilityShield, u32 ignoreMoldBreaker)
@@ -5815,9 +5822,9 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonV
 
 bool32 CanBeConfused(u32 battler)
 {
-    if (GetBattlerAbility(battler) == ABILITY_OWN_TEMPO
-     || gBattleMons[battler].status2 & STATUS2_CONFUSION
-     || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
+    if (gBattleMons[battler].status2 & STATUS2_CONFUSION
+     || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
+     || IsAbilityAndRecord(battler, GetBattlerAbility(battler),ABILITY_OWN_TEMPO))
         return FALSE;
     return TRUE;
 }
@@ -5837,12 +5844,10 @@ bool32 HasEnoughHpToEatBerry(u32 battler, u32 hpFraction, u32 itemId)
     if (gBattleMons[battler].hp <= gBattleMons[battler].maxHP / hpFraction)
         return TRUE;
 
-    if (hpFraction <= 4 && GetBattlerAbility(battler) == ABILITY_GLUTTONY && isBerry
-         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2)
-    {
-        RecordAbilityBattle(battler, ABILITY_GLUTTONY);
+    if (hpFraction <= 4 && isBerry
+         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2
+         && IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_GLUTTONY))
         return TRUE;
-    }
 
     return FALSE;
 }
@@ -7057,9 +7062,9 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
                 && !IsBattleMoveStatus(gCurrentMove)
                 && (IsBattlerTurnDamaged(gBattlerTarget) || !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)) // Needs the second check in case of Substitute
-                && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-                && !IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+                && !IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove)
+                && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
             {
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 10;
                 if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
@@ -7628,7 +7633,7 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
     {
         if (IsZMove(move) || IsMaxMove(move))
             return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
-        if (IsMoveMakingContact(move, battlerAtk) && GetBattlerAbility(battlerAtk) == ABILITY_UNSEEN_FIST)
+        if (IsMoveMakingContact(move, battlerAtk) && IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_UNSEEN_FIST))
             return FALSE;
     }
 
@@ -7727,7 +7732,7 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck
         return FALSE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
-    if ((gAiLogicData->aiCalcInProgress ? gAiLogicData->abilities[battler] : GetBattlerAbility(battler)) == ABILITY_LEVITATE)
+    if (gAiLogicData->aiCalcInProgress ? gAiLogicData->abilities[battler] == ABILITY_LEVITATE : IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_LEVITATE))
         return FALSE;
     if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (!(checkInverse == INVERSE_BATTLE) || !FlagGet(B_FLAG_INVERSE_BATTLE)))
         return FALSE;
@@ -9094,10 +9099,20 @@ static inline uq4_12_t GetScreensModifier(struct DamageContext *ctx)
     bool32 reflect = (sideStatus & SIDE_STATUS_REFLECT) && IsBattleMovePhysical(ctx->move);
     bool32 auroraVeil = sideStatus & SIDE_STATUS_AURORA_VEIL;
 
-    if (ctx->isCrit || ctx->abilityAtk == ABILITY_INFILTRATOR || gProtectStructs[ctx->battlerAtk].confusionSelfDmg)
+    if (ctx->isCrit || gProtectStructs[ctx->battlerAtk].confusionSelfDmg)
+    {
         return UQ_4_12(1.0);
+    }
+    if (ctx->abilityAtk == ABILITY_INFILTRATOR)
+    {
+        if (ctx->updateFlags)
+            RecordAbilityBattle(ctx->battlerAtk, ctx->abilityDef);
+        return UQ_4_12(1.0);
+    }
     if (reflect || lightScreen || auroraVeil)
+    {
         return (IsDoubleBattle()) ? UQ_4_12(0.667) : UQ_4_12(0.5);
+    }
     return UQ_4_12(1.0);
 }
 
@@ -9130,35 +9145,60 @@ static inline uq4_12_t GetAttackerAbilitiesModifier(u32 battlerAtk, uq4_12_t typ
 
 static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
 {
+    bool32 recordAbility = FALSE;
+    uq4_12_t modifier = UQ_4_12(1.0);
+
     switch (ctx->abilityDef)
     {
     case ABILITY_MULTISCALE:
     case ABILITY_SHADOW_SHIELD:
         if (IsBattlerAtMaxHp(ctx->battlerDef))
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_FILTER:
     case ABILITY_SOLID_ROCK:
     case ABILITY_PRISM_ARMOR:
         if (ctx->typeEffectivenessModifier >= UQ_4_12(2.0))
-            return UQ_4_12(0.75);
+        {
+            modifier = UQ_4_12(0.75);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_FLUFFY:
         if (!IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType == TYPE_FIRE)
-            return UQ_4_12(2.0);
-        if (IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType != TYPE_FIRE)
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(2.0);
+            recordAbility = TRUE;
+        }
+        else if (IsMoveMakingContact(ctx->move, ctx->battlerAtk) && ctx->moveType != TYPE_FIRE)
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_PUNK_ROCK:
         if (IsSoundMove(ctx->move))
-            return UQ_4_12(0.5);
+        {
+            modifier = UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     case ABILITY_ICE_SCALES:
         if (IsBattleMoveSpecial(ctx->move))
-            return UQ_4_12(0.5);
+        {
+            modifier =  UQ_4_12(0.5);
+            recordAbility = TRUE;
+        }
         break;
     }
-    return UQ_4_12(1.0);
+
+    if (recordAbility && ctx->updateFlags)
+        RecordAbilityBattle(ctx->battlerAtk, ctx->abilityDef);
+
+    return modifier;
 }
 
 static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(u32 battlerPartnerDef)
@@ -11325,4 +11365,41 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
             return TRUE;
     }
     return FALSE;
+}
+
+#define UNPACK_VOLATILE_GETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
+
+// Gets the value of a volatile status flag for a certain battler
+// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
+u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
+{
+    switch (_volatile)
+    {
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
+        /* Expands to:
+        case VOLATILE_CONFUSION:
+            return gBattleMons[battler].volatiles.confusionTurns;
+        */
+        default: // Invalid volatile status
+            return 0;
+    }
+}
+
+#define UNPACK_VOLATILE_SETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeBitSize), newValue); break;
+
+// Sets the value of a volatile status flag for a certain battler
+// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
+void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
+{
+    switch (_volatile)
+    {
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_SETTERS)
+        /* Expands to:
+        case VOLATILE_CONFUSION:
+            gBattleMons[battler].volatiles.confusionTurns = min(MAX_BITS(3), newValue);
+            break;
+        */
+        default: // Invalid volatile status
+            return;
+    }
 }
