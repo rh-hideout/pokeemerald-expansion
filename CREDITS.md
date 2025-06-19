@@ -56,6 +56,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ravepossum"><img src="https://avatars.githubusercontent.com/u/145081120?v=4?s=100" width="100px;" alt="RavePossum"/><br /><sub><b>RavePossum</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=ravepossum" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/fakuzatsu"><img src="https://avatars.githubusercontent.com/u/118256341?v=4?s=100" width="100px;" alt="Zatsu"/><br /><sub><b>Zatsu</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=fakuzatsu" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lordraindance2"><img src="https://avatars.githubusercontent.com/u/47706100?v=4?s=100" width="100px;" alt="lordraindance2"/><br /><sub><b>lordraindance2</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=lordraindance2" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
