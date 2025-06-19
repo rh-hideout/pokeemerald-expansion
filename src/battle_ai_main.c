@@ -1111,6 +1111,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         if (CanAbilityAbsorbMove(battlerAtk, battlerDef, abilityDef, move, moveType, ABILITY_CHECK_TRIGGER_AI))
             RETURN_SCORE_MINUS(20);
 
+        if (CanSetNonVolatileStatus(battlerAtk, battlerDef, aiData->abilities[battlerAtk], abilityDef, nonVolatileStatus, STATUS_CHECK_TRIGGER))
+            RETURN_SCORE_MINUS(20);
+
         switch (abilityDef)
         {
         case ABILITY_MAGIC_GUARD:
@@ -1154,14 +1157,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (IsAromaVeilProtectedEffect(moveEffect))
                 RETURN_SCORE_MINUS(10);
             break;
-        case ABILITY_SWEET_VEIL:
-            if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
-                RETURN_SCORE_MINUS(10);
-            break;
-        case ABILITY_FLOWER_VEIL:
-            if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) && (IsNonVolatileStatusMove(move)))
-                RETURN_SCORE_MINUS(10);
-            break;
         case ABILITY_MAGIC_BOUNCE:
             if (MoveCanBeBouncedBack(move))
                 RETURN_SCORE_MINUS(20);
@@ -1170,46 +1165,30 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (IsStatLoweringEffect(moveEffect))
                 RETURN_SCORE_MINUS(20);
             break;
-        case ABILITY_COMATOSE:
-            if (IsNonVolatileStatusMove(move))
-                RETURN_SCORE_MINUS(10);
-            break;
-        case ABILITY_SHIELDS_DOWN:
-            if (IsShieldsDownProtected(battlerAtk, aiData->abilities[battlerAtk]) && IsNonVolatileStatusMove(move))
-                RETURN_SCORE_MINUS(10);
-            break;
-        case ABILITY_LEAF_GUARD:
-            if ((AI_GetWeather() & B_WEATHER_SUN)
-              && aiData->holdEffects[battlerDef] != HOLD_EFFECT_UTILITY_UMBRELLA
-              && IsNonVolatileStatusMove(move))
-                RETURN_SCORE_MINUS(10);
-            break;
         } // def ability checks
 
         // target partner ability checks & not attacking partner
         if (isDoubleBattle)
         {
-            switch (aiData->abilities[BATTLE_PARTNER(battlerDef)])
+            u32 partner = BATTLE_PARTNER(battlerDef);
+            u32 partnerAbility = aiData->abilities[partner];
+            if (DoesBattlerIgnoreAbilityChecks(battlerAtk, partner, move))
+                partnerAbility = ABILITY_NONE;
+
+            if (CanSetNonVolatileStatus(battlerAtk, partner, aiData->abilities[battlerAtk], partnerAbility, nonVolatileStatus, STATUS_CHECK_TRIGGER))
+                RETURN_SCORE_MINUS(20);
+
+            if (partnerAbility == ABILITY_LIGHTNING_ROD || partnerAbility == ABILITY_STORM_DRAIN)
             {
-            case ABILITY_LIGHTNING_ROD:
-                if (moveType == TYPE_ELECTRIC && !IsMoveRedirectionPrevented(battlerAtk, move, aiData->abilities[battlerAtk]))
+                if (CanAbilityAbsorbMove(battlerAtk, partner, partnerAbility, move, moveType, ABILITY_CHECK_TRIGGER_AI))
                     RETURN_SCORE_MINUS(20);
-                break;
-            case ABILITY_STORM_DRAIN:
-                if (moveType == TYPE_WATER && !IsMoveRedirectionPrevented(battlerAtk, move, aiData->abilities[battlerAtk]))
-                    RETURN_SCORE_MINUS(20);
-                break;
+            }
+
+            switch (partnerAbility)
+            {
             case ABILITY_MAGIC_BOUNCE:
                 if (MoveCanBeBouncedBack(move) && moveTarget & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_OPPONENTS_FIELD))
                     RETURN_SCORE_MINUS(20);
-                break;
-            case ABILITY_SWEET_VEIL:
-                if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
-                    RETURN_SCORE_MINUS(20);
-                break;
-            case ABILITY_FLOWER_VEIL:
-                if ((IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)) && (IsNonVolatileStatusMove(move) || IsStatLoweringEffect(moveEffect)))
-                    RETURN_SCORE_MINUS(10);
                 break;
             case ABILITY_AROMA_VEIL:
                 if (IsAromaVeilProtectedEffect(moveEffect))
@@ -1224,16 +1203,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
           && !(moveTarget & (MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_USER)))
             RETURN_SCORE_MINUS(10);
 
-        // terrain & effect checks
-        if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
-        {
-            if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
-                RETURN_SCORE_MINUS(20);
-        }
 
         if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
         {
-            if (IsNonVolatileStatusMove(move) || IsConfusionMoveEffect(moveEffect))
+            if (IsConfusionMoveEffect(moveEffect))
                 RETURN_SCORE_MINUS(20);
         }
 
