@@ -11,7 +11,7 @@ enum Pocket
     POCKETS_COUNT,
 };
 
-#define POCKET_NONE POCKETS_COUNT
+#define POCKET_DUMMY POCKETS_COUNT
 
 #define REPEL_LURE_MASK         (1 << 15)
 #define IS_LAST_USED_LURE(var)  (var & REPEL_LURE_MASK)
