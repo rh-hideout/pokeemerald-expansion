@@ -153,7 +153,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
 DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is hit")
 {
     u32 move;
-    // PARAMETRIZE { move = MOVE_PROTECT; }
+    PARAMETRIZE { move = MOVE_PROTECT; }
     PARAMETRIZE { move = MOVE_FLY; }
 
     GIVEN {

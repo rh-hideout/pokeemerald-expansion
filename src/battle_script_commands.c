@@ -3257,7 +3257,7 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects ef
 void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain)
 {
     s32 i;
-    bool32 affectsUser = FALSE;
+    u32 affectsUser = 0;
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     u32 flags = 0;
     u32 battlerAbility;
@@ -3498,7 +3498,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         else
         {
-            gBattleScripting.animArg1 = gBattleScripting.moveEffect & ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
+            gBattleScripting.animArg1 = gBattleScripting.moveEffect;
             gBattleScripting.animArg2 = 0;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_StatUp;
@@ -3530,7 +3530,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         else
         {
-            gBattleScripting.animArg1 = gBattleScripting.moveEffect & ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
+            gBattleScripting.animArg1 = gBattleScripting.moveEffect;
             gBattleScripting.animArg2 = 0;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_StatDown;
@@ -3553,7 +3553,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         else
         {
-            gBattleScripting.animArg1 = gBattleScripting.moveEffect & ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
+            gBattleScripting.animArg1 = gBattleScripting.moveEffect;
             gBattleScripting.animArg2 = 0;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_StatUp;
@@ -3585,7 +3585,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         else
         {
-            gBattleScripting.animArg1 = gBattleScripting.moveEffect & ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
+            gBattleScripting.animArg1 = gBattleScripting.moveEffect;
             gBattleScripting.animArg2 = 0;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_StatDown;
@@ -4006,7 +4006,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
             }
             else
             {
-                gBattleScripting.animArg1 = gBattleScripting.moveEffect & ~(MOVE_EFFECT_AFFECTS_USER | MOVE_EFFECT_CERTAIN);
+                gBattleScripting.animArg1 = gBattleScripting.moveEffect;
                 gBattleScripting.animArg2 = 0;
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
                 gBattlescriptCurrInstr = BattleScript_StatUp;
@@ -4539,25 +4539,21 @@ static void Cmd_setadditionaleffects(void)
 
 static void Cmd_seteffectprimary(void)
 {
-    CMD_ARGS(u8 battler, u8 effectBattler, u16 moveEffect);
+    CMD_ARGS(u8 battler, u8 effectBattler);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
-    if (cmd->moveEffect != MOVE_EFFECT_NONE)
-        gBattleScripting.moveEffect = cmd->moveEffect;
-    gBattleScripting.savedMoveEffect = gBattleScripting.moveEffect;
+    gBattlescriptCurrInstr = cmd->nextInstr - 1;
     SetMoveEffect(battler, effectBattler, TRUE, FALSE);
 }
 
 static void Cmd_seteffectsecondary(void)
 {
-    CMD_ARGS(u8 battler, u8 effectBattler, u16 moveEffect);
+    CMD_ARGS(u8 battler, u8 effectBattler);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
-    if (cmd->moveEffect != MOVE_EFFECT_NONE)
-        gBattleScripting.moveEffect = cmd->moveEffect;
-    gBattleScripting.savedMoveEffect = gBattleScripting.moveEffect;
+    gBattlescriptCurrInstr = cmd->nextInstr - 1;
     SetMoveEffect(battler, effectBattler, FALSE, FALSE);
 }
 
