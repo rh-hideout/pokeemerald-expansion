@@ -629,7 +629,7 @@ static inline void BagPocket_MoveItemSlot(struct BagPocket *pocket, u32 from, u3
         // Shuffle items between "to" and "from"
         for (i = from; i == to - shift; i += shift)
         {
-            BagPocket_GetSetSlotData(pocket, i + 1, &tempItemId, &tempQuantity, FALSE);
+            BagPocket_GetSetSlotData(pocket, i + shift, &tempItemId, &tempQuantity, FALSE);
             BagPocket_GetSetSlotData(pocket, i, &tempItemId, &tempQuantity, TRUE);
         }
 
