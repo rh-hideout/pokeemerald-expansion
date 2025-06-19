@@ -588,9 +588,9 @@ void SortBerriesOrTMHMs(enum Pocket pocketId)
     {
         for (j = i + 1; j < gBagPockets[pocketId].capacity; j++)
         {
-            if (GetBagItemQuantity(pocketId, i) != 0)
+            if (GetBagItemQuantity(pocketId, i) != 0 || GetBagItemId(pocketId, i) != ITEM_NONE)
             {
-                if (GetBagItemQuantity(pocketId, j) == 0)
+                if (GetBagItemQuantity(pocketId, j) == 0 || GetBagItemId(pocketId, j) == ITEM_NONE)
                     continue;
                 if (GetBagItemId(pocketId, i) <= GetBagItemId(pocketId, j))
                     continue;
