@@ -1,7 +1,5 @@
 # What features are included?
 ## Table of Contents
-- [What features are included?](#what-features-are-included)
-  - [Table of Contents](#table-of-contents)
   - [Configuration files](#configuration-files)
   - [Upgraded Battle Engine](#upgraded-battle-engine)
   - [Full Trainer customization](#full-trainer-customization)
@@ -51,12 +49,12 @@ A lot of features listed below can be turned off as desired. Check which ones in
 ## Pokémon data
 - ***Improved Pokémon Data structure:*** Optimized space to allow fitting more information, such as Tera type, 12-character names, Hyper-trained stats and evolution conditions.
 - ***Updated breeding mechanics:*** Poké Ball/Egg Move/Ability/Nature inheritance, Level 1 eggs automatic incense babies.
-- ***Updated species data:*** Stats, Types, Abilities, Hidden Abilities, Egg Groups, EV Yields, movesets, Battle Facility bans, guaranteed perfect IV counts, ORAS Dex numers.
+- ***Updated species data:*** Stats, Types, Abilities, Hidden Abilities, Egg Groups, EV Yields, movesets, Battle Facility bans, guaranteed perfect IV counts, ORAS Dex numbers.
 - ***Simpler species data manipulation:***: Only requires to edit ~5 files instead of vanilla pokeemerald's 20+ to add a new Pokémon.
 - ***Updated sprites:*** DS-style sprites with support for Emerald's 2-frame animations and gender difference.
 - ***Species toggles:*** You can disable specific groups of Pokémon to save space, including families, cross-gen evolutions, Mega Evolutions, Regional forms, etc.
 - ***Revamped Evolution System***: Multiple Evolution conditions can be stacked in order to create complex methods without additional coding. Every condition except Affection and console gyroscope is supported.
-- ***Form Change System.*** Most forms changes have been parametrized such that they can be added without additional coding. This includes support for: Holding/using an item, HP thresholds being met, weather change in and/or out of battle, Fusions, and more.
+- ***Form Change System.*** Most form changes can be added without additional coding. This includes support for: Holding/using an item, HP thresholds being met, weather change in and/or out of battle, Fusions, and more.
 
 ## Interface improvements
 - ***Pokémon Summary:*** Move relearner, EV/IV checks, Nature colors ([feature branch](https://github.com/DizzyEggg/pokeemerald/tree/nature_color) by @DizzyEggg).
@@ -67,7 +65,7 @@ A lot of features listed below can be turned off as desired. Check which ones in
 ## Engine improvements
 - ***All base pokeemerald bugfixes implemented by default:*** Anything under the `BUGFIX` define.
 - ***Improved sprite and palette compression:*** Assets use less space than vanilla compression.
-- ***Modern compiler suppport:*** Detect potential errors in your code more easily.
+- ***Modern compiler support:*** Detect potential errors in your code more easily.
 - ***Dynamic Multichoice*** ([original branch](https://github.com/SBird1337/pokeemerald/tree/feature/dynmulti) by @SBird1337): Easier way to add multiple-choice menus for scripting.
 
 ## Overworld improvements
