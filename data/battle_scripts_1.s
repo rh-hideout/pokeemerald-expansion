@@ -2391,6 +2391,7 @@ BattleScript_EffectHealingWish::
 	storehealingwish BS_ATTACKER
 .if B_HEALING_WISH_SWITCH <= GEN_4
 	openpartyscreen BS_ATTACKER, BattleScript_EffectHealingWishEnd
+	switchoutabilities BS_ATTACKER
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
 	returnatktoball
@@ -9520,9 +9521,12 @@ BattleScript_NeutralizingGasExits::
 	setbyte gBattlerAttacker, 0
 BattleScript_NeutralizingGasExitsLoop:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	jumpifabilitycantbesuppressed BS_TARGET, BattleScript_NeutralizingGasExitsLoopIncrement
+	jumpifability BS_TARGET, ABILITY_IMPOSTER, BattleScript_NeutralizingGasExitsLoopIncrement @ Imposter only activates when first entering the field
 	saveattacker
 	switchinabilities BS_TARGET
 	restoreattacker
+BattleScript_NeutralizingGasExitsLoopIncrement:
 	addbyte gBattlerAttacker, 1
 	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
 	restoreattacker

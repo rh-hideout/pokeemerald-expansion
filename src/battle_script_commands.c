@@ -7653,7 +7653,7 @@ static void Cmd_switchindataupdate(void)
         u32 side = GetBattlerSide(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-            gBattleMons[battler].ability = gDisableStructs[battler].overwrittenAbility = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
     }
     #endif
 
@@ -16542,6 +16542,9 @@ static void Cmd_tryworryseed(void)
     }
     else
     {
+        if (gBattleMons[gBattlerTarget].ability == ABILITY_NEUTRALIZING_GAS)
+            gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
+
         gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
         gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = ABILITY_INSOMNIA;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -18738,6 +18741,17 @@ void BS_JumpIfNoWhiteOut(void)
     NATIVE_ARGS(const u8 *jumpInstr);
 
     if (FlagGet(B_FLAG_NO_WHITEOUT))
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_JumpIfAbilityCantBeSuppressed(void)
+{
+    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    if (gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
