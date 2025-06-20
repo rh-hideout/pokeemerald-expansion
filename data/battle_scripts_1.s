@@ -2391,7 +2391,6 @@ BattleScript_EffectHealingWish::
 	storehealingwish BS_ATTACKER
 .if B_HEALING_WISH_SWITCH <= GEN_4
 	openpartyscreen BS_ATTACKER, BattleScript_EffectHealingWishEnd
-	switchoutabilities BS_ATTACKER
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
 	returnatktoball
