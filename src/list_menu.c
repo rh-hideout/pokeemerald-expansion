@@ -527,8 +527,6 @@ s32 ListMenuTestInput(struct ListMenuTemplate *template, u32 scrollOffset, u32 s
     list.template = *template;
     list.scrollOffset = scrollOffset;
     list.selectedRow = selectedRow;
-    list.unk_1C = 0;
-    list.unk_1D = 0;
 
     if (keys == DPAD_UP)
         ListMenuChangeSelection(&list, FALSE, 1, FALSE);
@@ -577,10 +575,7 @@ static u8 ListMenuInitInternal(struct ListMenuTemplate *listMenuTemplate, u16 sc
     list->template = *listMenuTemplate;
     list->scrollOffset = scrollOffset;
     list->selectedRow = selectedRow;
-    list->unk_1C = 0;
-    list->unk_1D = 0;
     list->taskId = TASK_NONE;
-    list->unk_1F = 0;
 
     gListMenuOverride.cursorPal = list->template.cursorPal;
     gListMenuOverride.fillValue = list->template.fillValue;
@@ -1484,16 +1479,16 @@ static void ListMenuRemoveRedArrowCursorObject(u8 taskId)
 
 static const u8* ListMenu_GetItemName(struct ListMenu *list, u32 itemId)
 {
-    if (list->template.getItemNameFunc && list->template.getItemNameFunc != NULL)
-        return list->template.getItemNameFunc(list, itemId);
+    if (list->template.listMenuItemFunctions && list->template.listMenuItemFunctions->getItemName != NULL)
+        return list->template.listMenuItemFunctions->getItemName(list, itemId);
 
     return list->template.items[itemId].name;
 }
 
 static s32 ListMenu_GetItemId(struct ListMenu *list, u32 itemId)
 {
-    if (list->template.getItemIdFunc && list->template.getItemIdFunc != NULL)
-        return list->template.getItemIdFunc(list, itemId);
+    if (list->template.listMenuItemFunctions && list->template.listMenuItemFunctions->getItemId != NULL)
+        return list->template.listMenuItemFunctions->getItemId(list, itemId);
 
     return list->template.items[itemId].id;
 }

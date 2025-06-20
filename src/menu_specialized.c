@@ -168,14 +168,18 @@ static const struct WindowTemplate sMoveRelearnerYesNoMenuTemplate =
     .baseBlock = 0x25A
 };
 
+static const struct ListMenuItemFunctions sMoveRelearnerListMenuFunctions =
+{
+    .getItemName = MoveRelearnerItemNameCallback,
+    .getItemId = MoveRelearnerItemIdCallback,
+};
 
 static const struct ListMenuTemplate sMoveRelearnerMovesListTemplate =
 {
     .movesToLearn = NULL,
     .moveCursorFunc = MoveRelearnerCursorCallback,
-    .getItemNameFunc = MoveRelearnerItemNameCallback,
-    .getItemIdFunc = MoveRelearnerItemIdCallback,
     .itemPrintFunc = NULL,
+    .listMenuItemFunctions = &sMoveRelearnerListMenuFunctions,
     .totalItems = 0,
     .maxShowed = 0,
     .windowId = RELEARNERWIN_MOVE_LIST,
