@@ -94,17 +94,19 @@ enum AIScore
         (*score) += val; \
     } while (0) \
 
-#define RETURN_SCORE_PLUS(val)      \
-{                                   \
-    ADJUST_SCORE(val);              \
-    return score;                   \
-}
+#define RETURN_SCORE_PLUS(val)          \
+    do                                  \
+    {                                   \
+        ADJUST_SCORE(val);              \
+        return score;                   \
+    } while(0)                          \
 
-#define RETURN_SCORE_MINUS(val)     \
-{                                   \
-    ADJUST_SCORE(-val);             \
-    return score;                   \
-}
+#define RETURN_SCORE_MINUS(val)         \
+    do                                  \
+    {                                   \
+        ADJUST_SCORE(-val);             \
+        return score;                   \
+    } while(0)                          \
 
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);

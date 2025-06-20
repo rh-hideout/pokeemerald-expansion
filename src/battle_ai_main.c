@@ -1111,7 +1111,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         if (CanAbilityAbsorbMove(battlerAtk, battlerDef, abilityDef, move, moveType, ABILITY_CHECK_TRIGGER_AI))
             RETURN_SCORE_MINUS(20);
 
-        if (CanSetNonVolatileStatus(battlerAtk, battlerDef, aiData->abilities[battlerAtk], abilityDef, nonVolatileStatus, STATUS_CHECK_TRIGGER))
+        if (!CanSetNonVolatileStatus(battlerAtk, battlerDef, aiData->abilities[battlerAtk], abilityDef, nonVolatileStatus, STATUS_CHECK_TRIGGER))
             RETURN_SCORE_MINUS(20);
 
         switch (abilityDef)
@@ -1175,7 +1175,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (DoesBattlerIgnoreAbilityChecks(battlerAtk, partner, move))
                 partnerAbility = ABILITY_NONE;
 
-            if (CanSetNonVolatileStatus(battlerAtk, partner, aiData->abilities[battlerAtk], partnerAbility, nonVolatileStatus, STATUS_CHECK_TRIGGER))
+            if (!CanSetNonVolatileStatus(battlerAtk, partner, aiData->abilities[battlerAtk], partnerAbility, nonVolatileStatus, STATUS_CHECK_TRIGGER))
                 RETURN_SCORE_MINUS(20);
 
             if (partnerAbility == ABILITY_LIGHTNING_ROD || partnerAbility == ABILITY_STORM_DRAIN)
