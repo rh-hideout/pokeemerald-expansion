@@ -49,11 +49,17 @@ TEST("Items are correctly compacted in the bag")
     );
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[0].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_BIG_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[1].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_TINY_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[2].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[3].itemId, ITEM_BIG_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[3].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[4].itemId, ITEM_PEARL);
+    EXPECT_EQ(pocket->itemSlots[4].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[5].itemId, ITEM_BIG_PEARL);
+    EXPECT_EQ(pocket->itemSlots[5].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_NONE);
 
     // Try removing the small items, check that everything is compacted correctly
@@ -67,11 +73,13 @@ TEST("Items are correctly compacted in the bag")
     CompactItemsInBagPocket(POCKET_ITEMS);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_BIG_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[0].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_BIG_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[1].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_BIG_PEARL);
+    EXPECT_EQ(pocket->itemSlots[2].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[3].itemId, ITEM_NONE);
     EXPECT_EQ(pocket->itemSlots[4].itemId, ITEM_NONE);
     EXPECT_EQ(pocket->itemSlots[5].itemId, ITEM_NONE);
     EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_NONE);
-
 }
