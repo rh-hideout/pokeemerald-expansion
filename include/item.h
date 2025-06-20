@@ -3,6 +3,7 @@
 
 #include "constants/item.h"
 #include "constants/items.h"
+#include "constants/moves.h"
 #include "constants/tms_hms.h"
 
 typedef void (*ItemUseFunc)(u8);
@@ -20,8 +21,8 @@ struct Item
     u8 holdEffectParam;
     u8 importance:2;
     u8 notConsumed:1;
-    u8 padding:5;
-    enum Pocket pocket:8;
+    enum Pocket pocket:5;
+    u8 index; // For TMs/HMs & berries
     u8 type;
     u8 battleUsage;
     u8 flingPower;
@@ -37,6 +38,7 @@ struct __attribute__((packed, aligned(2))) BagPocket
 
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
+extern const u16 gTMHMItemIds[];
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
@@ -104,5 +106,52 @@ enum
 };
 #undef ENUM_TM
 #undef ENUM_HM
+
+#define UNPACK_TM_ENUM_1(_tm) CAT(ENUM_TM_, _tm),
+#define UNPACK_HM_ENUM_1(_hm) CAT(ENUM_HM_, _hm),
+
+enum {
+    FOREACH_TM(UNPACK_TM_ENUM_1)
+    NUM_TECHNICAL_MACHINES
+};
+
+enum {
+    FOREACH_HM(UNPACK_HM_ENUM_1)
+    NUM_HIDDEN_MACHINES
+};
+
+#define NUM_ALL_MACHINES NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES
+
+#define UNPACK_TM_ENUM_2(_tm) CAT(ENUM_TM_HM_, _tm) = CAT(ENUM_TM_, _tm),
+#define UNPACK_HM_ENUM_2(_hm) CAT(ENUM_TM_HM_, _hm) = CAT(ENUM_HM_, _hm) + NUM_TECHNICAL_MACHINES,
+
+enum TMHM
+{
+    FOREACH_TM(UNPACK_TM_ENUM_2)
+    FOREACH_HM(UNPACK_HM_ENUM_2)
+};
+
+static inline u16 GetTMHMId(enum TMHM index)
+{
+    return gTMHMItemIds[index];
+}
+
+#define UNPACK_MOVE_ID_FROM_INDEX(_tmHm) CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) = CAT(MOVE_, _tmHm),
+
+enum TMIndexToMoveId
+{
+    FOREACH_TMHM(UNPACK_MOVE_ID_FROM_INDEX)
+};
+
+#define TMHM_MOVE_ID_FROM_INDEX(_i) (RECURSIVELY(R_FOR_EACH_WITH(TMHM_MOVE_ID_FROM_INDEX_, (_i), FOREACH_TMHM(APPEND_COMMA))) MOVE_NONE)
+#define TMHM_MOVE_ID_FROM_INDEX_(_i, _tmHm) (_i) == CAT(ENUM_TM_HM_, _tmHm) ? CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) :
+
+#define DEFINE_TM(_tmNo) .name = _("TM" STR(_tmNo)), .pocket = POCKET_TM_HM, .index = REMOVE_LEADING_ZEROES(_tmNo) - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_tmNo) - 1)
+#define DEFINE_HM(_hmNo) .name = _("HM" STR(_hmNo)), .pocket = POCKET_TM_HM, .index = REMOVE_LEADING_ZEROES(_hmNo) - 1 + NUM_TECHNICAL_MACHINES, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_hmNo) - 1)
+
+#undef UNPACK_TM_ENUM_1
+#undef UNPACK_HM_ENUM_1
+#undef UNPACK_TM_ENUM_2
+#undef UNPACK_HM_ENUM_2
 
 #endif // GUARD_ITEM_H

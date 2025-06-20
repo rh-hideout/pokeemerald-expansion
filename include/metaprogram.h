@@ -26,8 +26,9 @@
 #define STR(...) STR_(__VA_ARGS__)
 #define STR_(...) #__VA_ARGS__
 
-/* You'll never guess what this one does */
+/* You'll never guess what these do */
 #define APPEND_SEMICOLON(a) a;
+#define APPEND_COMMA(a) a,
 
 /* Converts a string to a compound literal, essentially making it a pointer to const u8 */
 #define COMPOUND_STRING(str) (const u8[]) _(str)
@@ -170,5 +171,8 @@ Input must be of the form (upper << lower) where upper can be up to 3, lower up 
 
 /* Finds the required digits to display the number (maximum 4) */
 #define MAX_DIGITS(_num) 1 + !!(_num / 10) + !!(_num / 100) + !!(_num / 1000)
+
+/* Converts a number with leading zeroes to a normal int*/
+#define REMOVE_LEADING_ZEROES(_num) (((0x##_num / 16) * 10) + (0x##_num % 16))
 
 #endif
