@@ -175,4 +175,7 @@ Input must be of the form (upper << lower) where upper can be up to 3, lower up 
 /* Converts a number with leading zeroes to a normal int (base 10 only!) */
 #define REMOVE_LEADING_ZEROES(_num) (((0x##_num / 16) * 10) + (0x##_num % 16))
 
+/* Useful for counting arguments */
+#define PLUS_ONE(...) + 1
+
 #endif

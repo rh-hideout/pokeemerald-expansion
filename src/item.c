@@ -40,6 +40,9 @@ const u16 gTMHMItemIds[NUM_ALL_MACHINES] =
     FOREACH_HM(UNPACK_HM_ITEM_ID)
 };
 
+#undef UNPACK_TM_ITEM_ID
+#undef UNPACK_HM_ITEM_ID
+
 static inline u16 GetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos)
 {
     return pocket->itemSlots[pocketPos].itemId;

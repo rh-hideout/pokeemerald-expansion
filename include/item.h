@@ -27,36 +27,18 @@ enum
 #undef ENUM_TM
 #undef ENUM_HM
 
-/* Expands TMs and HMs in their own enums in order to count them
- * but the enums themselves are not used anywhere but below
+/* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
+ * gTMHMItemIds. TMs in src/data/items.h should have an index in their .tmHmIndex field
+ * and this can be automatically generated with the DEFINE_TM/DEFINE_HM macros below
  */
-#define UNPACK_TM_ENUM_1(_tm) CAT(ENUM_TM_, _tm),
-#define UNPACK_HM_ENUM_1(_hm) CAT(ENUM_HM_, _hm),
-
-enum {
-    FOREACH_TM(UNPACK_TM_ENUM_1)
-    NUM_TECHNICAL_MACHINES
-};
-
-enum {
-    FOREACH_HM(UNPACK_HM_ENUM_1)
-    NUM_HIDDEN_MACHINES
-};
-
-#define NUM_ALL_MACHINES NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES
-
-#define UNPACK_TM_ENUM_2(_tm) CAT(ENUM_TM_HM_, _tm) = CAT(ENUM_TM_, _tm),
-#define UNPACK_HM_ENUM_2(_hm) CAT(ENUM_TM_HM_, _hm) = CAT(ENUM_HM_, _hm) + NUM_TECHNICAL_MACHINES,
-
-/* These are the actual enums - each one corresponds to an index in the list of TMs + HMs.
- * TMs in src/data/items.h should have an index in their .tmHmIndex field and this can be
- * automatically generated with the DEFINE_TM/DEFINE_HM macros below
- */
-enum TMHM
+#define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
+enum TMHMIndex
 {
-    FOREACH_TM(UNPACK_TM_ENUM_2)
-    FOREACH_HM(UNPACK_HM_ENUM_2)
+    FOREACH_TMHM(UNPACK_TM_HM_ENUM)
 };
+
+#define NUM_TECHNICAL_MACHINES (0 FOREACH_TM(PLUS_ONE))
+#define NUM_ALL_MACHINES (0 FOREACH_TMHM(PLUS_ONE))
 
 /* This creates enums that let us associate an index with a real move ID */
 #define UNPACK_MOVE_ID_FROM_INDEX(_tmHm) CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) = CAT(MOVE_, _tmHm),
@@ -90,10 +72,7 @@ enum TMIndexToMoveId
 #define DEFINE_TM(_tmNo) .name = _("TM" STR(_tmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_tmNo) - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_tmNo) - 1)
 #define DEFINE_HM(_hmNo) .name = _("HM" STR(_hmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_hmNo) - 1 + NUM_TECHNICAL_MACHINES, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_hmNo) - 1)
 
-#undef UNPACK_TM_ENUM_1
-#undef UNPACK_HM_ENUM_1
-#undef UNPACK_TM_ENUM_2
-#undef UNPACK_HM_ENUM_2
+#undef UNPACK_TM_HM_ENUM
 #undef UNPACK_MOVE_ID_FROM_INDEX
 
 typedef void (*ItemUseFunc)(u8);
@@ -114,7 +93,7 @@ struct Item
     enum Pocket pocket:5;
     union {
         u8 index; // Miscellaneous use?
-        enum TMHM tmHmIndex:8;
+        enum TMHMIndex tmHmIndex:8;
     };
     u8 type;
     u8 battleUsage;
@@ -133,7 +112,7 @@ extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const u16 gTMHMItemIds[];
 
-static inline u16 GetTMHMId(enum TMHM index)
+static inline u16 GetTMHMId(enum TMHMIndex index)
 {
     return gTMHMItemIds[index];
 }
