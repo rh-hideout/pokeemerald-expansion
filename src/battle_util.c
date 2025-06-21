@@ -6242,12 +6242,10 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
     return effect;
 }
 
-u32 TryBoosterEnergy(u32 battler, enum ItemCaseId caseID)
+u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID)
 {
     if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
         return ITEM_NO_EFFECT;
-
-    u32 ability = GetBattlerAbility(battler);
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
@@ -6750,7 +6748,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 effect = TryConsumeMirrorHerb(battler, caseID);
                 break;
             case HOLD_EFFECT_BOOSTER_ENERGY:
-                effect = TryBoosterEnergy(battler, caseID);
+                effect = TryBoosterEnergy(battler, GetBattlerAbility(battler), caseID);
                 break;
             default:
                 break;

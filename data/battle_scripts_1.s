@@ -4129,7 +4129,7 @@ BattleScript_MoveWeatherChange::
 BattleScript_MoveWeatherChangeRet::
 	printfromtable gMoveWeatherChangeStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	return
 
@@ -5467,7 +5467,7 @@ BattleScript_WeatherContinues::
 BattleScript_WeatherFaded::
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	end2
 
@@ -5481,7 +5481,7 @@ BattleScript_DamagingWeather::
 BattleScript_FogEnded_Ret::
 	printstring STRINGID_FOGLIFTED
 	waitmessage B_WAIT_TIME_LONG
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	return
 
@@ -5565,7 +5565,7 @@ BattleScript_TerrainEnds_Ret::
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
-	tryboosterenergy
+	tryboosterenergy ON_TERRAIN
 	return
 
 BattleScript_TerrainEnds::
@@ -7541,7 +7541,7 @@ BattleScript_DesolateLandActivates::
 	printstring STRINGID_EXTREMELYHARSHSUNLIGHT
 	waitstate
 	playanimation BS_BATTLER_0, B_ANIM_SUN_CONTINUES
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
@@ -7561,7 +7561,7 @@ BattleScript_PrimordialSeaActivates::
 	printstring STRINGID_HEAVYRAIN
 	waitstate
 	playanimation BS_BATTLER_0, B_ANIM_RAIN_CONTINUES
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
@@ -7687,7 +7687,7 @@ BattleScript_SnowWarningActivatesHail::
 	printstring STRINGID_SNOWWARNINGHAIL
 	waitstate
 	playanimation BS_BATTLER_0, B_ANIM_HAIL_CONTINUES
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
@@ -7697,14 +7697,14 @@ BattleScript_SnowWarningActivatesSnow::
 	printstring STRINGID_SNOWWARNINGSNOW
 	waitstate
 	playanimation BS_BATTLER_0, B_ANIM_SNOW_CONTINUES
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
 BattleScript_ActivateTerrainEffects:
 	saveattacker
 	savetarget
-	tryboosterenergy
+	tryboosterenergy ON_TERRAIN
 	setbyte gBattlerAttacker, 0
 BattleScript_ActivateTerrainSeed:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
@@ -8899,6 +8899,7 @@ BattleScript_ActivateTeraformZero_RemoveTerrain:
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ActivateTeraformZero_End:
+	tryboosterenergy ON_ANY
 	end3
 
 BattleScript_QuickClawActivation::
@@ -9380,7 +9381,7 @@ BattleScript_EffectSetWeather::
 	playanimation 0, B_ANIM_MAX_SET_WEATHER
 	printfromtable gMoveWeatherChangeStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryboosterenergy
+	tryboosterenergy ON_WEATHER
 	call BattleScript_ActivateWeatherAbilities
 	goto BattleScript_MoveEnd
 

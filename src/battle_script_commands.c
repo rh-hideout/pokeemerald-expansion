@@ -18604,15 +18604,22 @@ void BS_JumpIfNoWhiteOut(void)
 
 void BS_TryBoosterEnergy(void)
 {
-    NATIVE_ARGS();
+    NATIVE_ARGS(u8 onFieldStatus);
+
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         u32 battlerByTurnOrder = gBattlerByTurnOrder[battler];
         if (GetBattlerHoldEffect(battlerByTurnOrder, TRUE) != HOLD_EFFECT_BOOSTER_ENERGY)
             continue;
 
-        if (TryBoosterEnergy(battlerByTurnOrder, ITEMEFFECT_NONE))
+        u32 ability = GetBattlerAbility(battlerByTurnOrder);
+        if ((ability == ABILITY_PROTOSYNTHESIS && cmd->onFieldStatus == ON_TERRAIN)
+         || (ability == ABILITY_QUARK_DRIVE && cmd->onFieldStatus == ON_WEATHER))
+            continue;
+
+        if (TryBoosterEnergy(battlerByTurnOrder, ability, ITEMEFFECT_NONE))
             return;
     }
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

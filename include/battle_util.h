@@ -396,6 +396,6 @@ void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 u32 GetMonVolatile(u32 battler, enum Volatile volatile);
 void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
-u32 TryBoosterEnergy(u32 battler, enum ItemCaseId caseID);
+u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
 
 #endif // GUARD_BATTLE_UTIL_H
