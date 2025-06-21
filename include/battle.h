@@ -160,7 +160,7 @@ struct ProtectStruct
     u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
-    u16 statFell:1;
+    u16 tryEjectPack:1;
     u16 pranksterElevated:1;
     u16 quickDraw:1;
     u16 beakBlastCharge:1;

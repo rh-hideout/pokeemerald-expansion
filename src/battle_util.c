@@ -6056,12 +6056,12 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
 
 static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
 {
-    if (gProtectStructs[battler].statFell
+    if (gProtectStructs[battler].tryEjectPack
      && !gProtectStructs[battler].disableEjectPack
      && CountUsablePartyMons(battler) > 0
      && !(GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(gBattlerAttacker))) // Does not activate if attacker used Parting Shot and can switch out
     {
-        gProtectStructs[battler].statFell = FALSE;
+        gProtectStructs[battler].tryEjectPack = FALSE;
         gBattleScripting.battler = battler;
         gAiLogicData->ejectPackSwitch = TRUE;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
@@ -11375,6 +11375,59 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
         if (ItemBattleEffects(caseId, battler, FALSE))
             return TRUE;
     }
+    return FALSE;
+}
+
+bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
+{
+    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
+    u32 ejectPackBattlers = 0;
+    u32 numEjectPackBattlers = 0;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (gProtectStructs[i].tryEjectPack
+         && GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_EJECT_PACK
+         && IsBattlerAlive(i)
+         && CountUsablePartyMons(i) > 0)
+        {
+            ejectPackBattlers |= 1u << i;
+            numEjectPackBattlers++;
+        }
+    }
+
+    if (numEjectPackBattlers == 0)
+        return FALSE;
+
+    u8 battlers[4] = {0, 1, 2, 3};
+    if (numEjectPackBattlers > 1)
+        SortBattlersBySpeed(battlers, FALSE);
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+        gProtectStructs[i].tryEjectPack = FALSE;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        u32 battler = battlers[i];
+
+        if (!(ejectPackBattlers & 1u << battler))
+            continue;
+
+        gBattleScripting.battler = battler;
+        gLastUsedItem = gBattleMons[battler].item;
+        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
+        {
+            BattleScriptPushCursorAndCallback(BattleScript_EjectPackActivate_End3);
+        }
+        else
+        {
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_EjectPackActivate_Ret;
+        }
+        gAiLogicData->ejectPackSwitch = TRUE;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
