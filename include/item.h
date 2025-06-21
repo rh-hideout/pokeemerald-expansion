@@ -35,9 +35,9 @@ enum
 enum TMHMIndex
 {
     FOREACH_TMHM(UNPACK_TM_HM_ENUM)
+    NUM_ALL_MACHINES,
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
-    NUM_ALL_MACHINES = NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES,
 };
 
 /* This creates enums that let us associate an index with a real move ID */
