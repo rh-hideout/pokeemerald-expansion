@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_CONTROLLERS_H
 #define GUARD_BATTLE_CONTROLLERS_H
 
+typedef void (*BattleControllerFunc)(u32 battler);
+
 enum {
     REQUEST_ALL_BATTLE,
     REQUEST_SPECIES_BATTLE,
