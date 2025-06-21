@@ -565,13 +565,21 @@ static void BagPocket_CompactItems(struct BagPocket *pocket)
 
 void CompactPCItems(void)
 {
-    struct BagPocket dummyPocket = {
-        .capacity = PC_ITEMS_COUNT,
-        .itemSlots = gSaveBlock1Ptr->pcItems,
-        .id = POCKET_DUMMY,
-    };
+    u16 i;
+    u16 j;
 
-    BagPocket_CompactItems(&dummyPocket);
+    for (i = 0; i < PC_ITEMS_COUNT - 1; i++)
+    {
+        for (j = i + 1; j < PC_ITEMS_COUNT; j++)
+        {
+            if (gSaveBlock1Ptr->pcItems[i].itemId == 0)
+            {
+                struct ItemSlot temp = gSaveBlock1Ptr->pcItems[i];
+                gSaveBlock1Ptr->pcItems[i] = gSaveBlock1Ptr->pcItems[j];
+                gSaveBlock1Ptr->pcItems[j] = temp;
+            }
+        }
+    }
 }
 
 void SwapRegisteredBike(void)
@@ -645,13 +653,24 @@ void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to)
 
 void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to)
 {
-    struct BagPocket dummyPocket = {
-        .capacity = PC_ITEMS_COUNT,
-        .itemSlots = gSaveBlock1Ptr->pcItems,
-        .id = POCKET_DUMMY,
-    };
+    if (from != to)
+    {
+        s16 i, count;
+        struct ItemSlot firstSlot = itemSlots[from];
 
-    BagPocket_MoveItemSlot(&dummyPocket, from, to);
+        if (to > from)
+        {
+            to--;
+            for (i = from, count = to; i < count; i++)
+                itemSlots[i] = itemSlots[i + 1];
+        }
+        else
+        {
+            for (i = from, count = to; i > count; i--)
+                itemSlots[i] = itemSlots[i - 1];
+        }
+        itemSlots[to] = firstSlot;
+    }
 }
 
 void ClearBag(void)
