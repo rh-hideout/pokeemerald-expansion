@@ -121,7 +121,7 @@ static u32 GetBattlerSideForMessage(u32 side)
     return battler;
 }
 
-static bool32 HandleEndTurnOrder(u32 battler)
+static bool32 HandleEndTurnOrder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -145,7 +145,7 @@ static bool32 HandleEndTurnOrder(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnVarious(u32 battler)
+static bool32 HandleEndTurnVarious(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     u32 i;
     bool32 effect = FALSE;
@@ -178,17 +178,15 @@ static bool32 HandleEndTurnVarious(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWeather(u32 battler)
+static bool32 HandleEndTurnWeather(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     gBattleStruct->endTurnEventsCounter++;
     return EndOrContinueWeather();
 }
 
-static bool32 HandleEndTurnWeatherDamage(u32 battler)
+static bool32 HandleEndTurnWeatherDamage(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-
-    u32 ability = GetBattlerAbility(battler);
     u32 currBattleWeather = GetCurrentBattleWeather();
 
     if (currBattleWeather == 0xFF)
@@ -232,9 +230,9 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && ability != ABILITY_SAND_FORCE
          && ability != ABILITY_SAND_RUSH
          && ability != ABILITY_OVERCOAT
-         && !IS_BATTLER_ANY_TYPE(gBattlerAttacker, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+         && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && !(gStatuses3[gBattlerAttacker] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-         && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
+         && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -258,7 +256,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && ability != ABILITY_OVERCOAT
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && !(gStatuses3[battler] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-             && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
+             && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -275,7 +273,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler)
+static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -289,10 +287,9 @@ static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEmergencyExit(u32 battler)
+static bool32 HandleEndTurnEmergencyExit(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-    u32 ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -323,7 +320,7 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnAffection(u32 battler)
+static bool32 HandleEndTurnAffection(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -346,7 +343,7 @@ static bool32 HandleEndTurnAffection(u32 battler)
 
 // Note: Technically Future Sight, Doom Desire and Wish need a queue but
 // I think we should accept this slight inconsistency so custom moves don't have to touch this code
-static bool32 HandleEndTurnFutureSight(u32 battler)
+static bool32 HandleEndTurnFutureSight(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -384,7 +381,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWish(u32 battler)
+static bool32 HandleEndTurnWish(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -420,7 +417,7 @@ static bool32 HandleEndTurnWish(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFirstEventBlock(u32 battler)
+static bool32 HandleEndTurnFirstEventBlock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -434,7 +431,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
             if (IsBattlerAlive(battler)
              && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
-             && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+             && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 gBattlerAttacker = battler;
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 6;
@@ -492,7 +489,6 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        u32 ability = GetBattlerAbility(battler);
         switch (ability)
         {
         case ABILITY_HEALER:
@@ -507,7 +503,6 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_LEFTOVERS:
@@ -527,7 +522,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnAquaRing(u32 battler)
+static bool32 HandleEndTurnAquaRing(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -546,7 +541,7 @@ static bool32 HandleEndTurnAquaRing(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnIngrain(u32 battler)
+static bool32 HandleEndTurnIngrain(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -565,7 +560,7 @@ static bool32 HandleEndTurnIngrain(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnLeechSeed(u32 battler)
+static bool32 HandleEndTurnLeechSeed(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -574,7 +569,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
     if (gStatuses3[battler] & STATUS3_LEECHSEED
      && IsBattlerAlive(gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER)
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         gBattlerTarget = gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER; // Notice gBattlerTarget is actually the HP receiver.
         gBattleScripting.animArg1 = gBattlerTarget;
@@ -582,7 +577,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
         gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
         gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE;
-        if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
+        if (ability == ABILITY_LIQUID_OOZE)
         {
             gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * -1;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
@@ -603,11 +598,9 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnPoison(u32 battler)
+static bool32 HandleEndTurnPoison(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-
-    u32 ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -651,11 +644,9 @@ static bool32 HandleEndTurnPoison(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnBurn(u32 battler)
+static bool32 HandleEndTurnBurn(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-
-    u32 ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -679,7 +670,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFrostbite(u32 battler)
+static bool32 HandleEndTurnFrostbite(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -687,7 +678,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
 
     if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
         if (gBattleStruct->moveDamage[battler] == 0)
@@ -699,7 +690,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnNightmare(u32 battler)
+static bool32 HandleEndTurnNightmare(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -707,7 +698,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_NIGHTMARE
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
         {
@@ -726,7 +717,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnCurse(u32 battler)
+static bool32 HandleEndTurnCurse(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -734,7 +725,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_CURSED
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
         if (gBattleStruct->moveDamage[battler] == 0)
@@ -746,7 +737,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWrap(u32 battler)
+static bool32 HandleEndTurnWrap(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -756,7 +747,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
     {
         if (--gDisableStructs[battler].wrapTurns != 0)
         {
-            if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+            if (IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
                 return effect;
 
             gBattleScripting.animArg1 = gBattleStruct->wrappedMove[battler];
@@ -783,7 +774,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSaltCure(u32 battler)
+static bool32 HandleEndTurnSaltCure(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -791,7 +782,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 
     if (gStatuses4[battler] & STATUS4_SALT_CURE
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
             gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 4;
@@ -807,7 +798,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnOctolock(u32 battler)
+static bool32 HandleEndTurnOctolock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -824,7 +815,7 @@ static bool32 HandleEndTurnOctolock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSyrupBomb(u32 battler)
+static bool32 HandleEndTurnSyrupBomb(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -843,7 +834,7 @@ static bool32 HandleEndTurnSyrupBomb(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTaunt(u32 battler)
+static bool32 HandleEndTurnTaunt(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -859,7 +850,7 @@ static bool32 HandleEndTurnTaunt(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTorment(u32 battler)
+static bool32 HandleEndTurnTorment(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -875,7 +866,7 @@ static bool32 HandleEndTurnTorment(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEncore(u32 battler)
+static bool32 HandleEndTurnEncore(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -901,7 +892,7 @@ static bool32 HandleEndTurnEncore(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnDisable(u32 battler)
+static bool32 HandleEndTurnDisable(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -931,7 +922,7 @@ static bool32 HandleEndTurnDisable(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMagnetRise(u32 battler)
+static bool32 HandleEndTurnMagnetRise(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -948,7 +939,7 @@ static bool32 HandleEndTurnMagnetRise(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTelekinesis(u32 battler)
+static bool32 HandleEndTurnTelekinesis(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -964,7 +955,7 @@ static bool32 HandleEndTurnTelekinesis(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnHealBlock(u32 battler)
+static bool32 HandleEndTurnHealBlock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -981,7 +972,7 @@ static bool32 HandleEndTurnHealBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEmbargo(u32 battler)
+static bool32 HandleEndTurnEmbargo(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -997,11 +988,9 @@ static bool32 HandleEndTurnEmbargo(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnYawn(u32 battler)
+static bool32 HandleEndTurnYawn(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-
-    u32 ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -1049,7 +1038,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnPerishSong(u32 battler)
+static bool32 HandleEndTurnPerishSong(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1075,7 +1064,7 @@ static bool32 HandleEndTurnPerishSong(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnRoost(u32 battler)
+static bool32 HandleEndTurnRoost(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1087,7 +1076,7 @@ static bool32 HandleEndTurnRoost(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSecondEventBlock(u32 battler)
+static bool32 HandleEndTurnSecondEventBlock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1208,7 +1197,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTrickRoom(u32 battler)
+static bool32 HandleEndTurnTrickRoom(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1224,7 +1213,7 @@ static bool32 HandleEndTurnTrickRoom(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnGravity(u32 battler)
+static bool32 HandleEndTurnGravity(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1240,7 +1229,7 @@ static bool32 HandleEndTurnGravity(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWaterSport(u32 battler)
+static bool32 HandleEndTurnWaterSport(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1256,7 +1245,7 @@ static bool32 HandleEndTurnWaterSport(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMudSport(u32 battler)
+static bool32 HandleEndTurnMudSport(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1272,7 +1261,7 @@ static bool32 HandleEndTurnMudSport(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWonderRoom(u32 battler)
+static bool32 HandleEndTurnWonderRoom(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1288,7 +1277,7 @@ static bool32 HandleEndTurnWonderRoom(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMagicRoom(u32 battler)
+static bool32 HandleEndTurnMagicRoom(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1318,7 +1307,7 @@ static bool32 EndTurnTerrain(u32 terrainFlag, u32 stringTableId)
     return FALSE;
 }
 
-static bool32 HandleEndTurnTerrain(u32 battler)
+static bool32 HandleEndTurnTerrain(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1336,7 +1325,7 @@ static bool32 HandleEndTurnTerrain(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnThirdEventBlock(u32 battler)
+static bool32 HandleEndTurnThirdEventBlock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1396,7 +1385,6 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
     {
-        u32 ability = GetBattlerAbility(battler);
         switch (ability)
         {
         case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Find a better way.
@@ -1417,7 +1405,6 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
@@ -1442,11 +1429,9 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnAbilities(u32 battler)
+static bool32 HandleEndTurnAbilities(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
-
-    u32 ability = GetBattlerAbility(battler);
 
     gBattleStruct->turnEffectsBattlerId++;
 
@@ -1463,7 +1448,7 @@ static bool32 HandleEndTurnAbilities(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFourthEventBlock(u32 battler)
+static bool32 HandleEndTurnFourthEventBlock(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1471,7 +1456,6 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     {
     case FOURTH_EVENT_BLOCK_HUNGER_SWITCH:
     {
-        u32 ability = GetBattlerAbility(battler);
         if (ability == ABILITY_HUNGER_SWITCH)
         {
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
@@ -1482,7 +1466,6 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     }
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
@@ -1497,7 +1480,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnDynamax(u32 battler)
+static bool32 HandleEndTurnDynamax(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     bool32 effect = FALSE;
 
@@ -1514,7 +1497,7 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
-static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
+static bool32 (*const sEndTurnEffectHandlers[])(u32 battler, u32 ability, enum ItemHoldEffect holdEffect) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,
     [ENDTURN_VARIOUS] = HandleEndTurnVarious,
@@ -1591,7 +1574,7 @@ u32 DoEndTurnEffects(void)
 
         battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->turnEffectsBattlerId];
 
-        if (sEndTurnEffectHandlers[gBattleStruct->endTurnEventsCounter](battler))
+        if (sEndTurnEffectHandlers[gBattleStruct->endTurnEventsCounter](battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler, TRUE)))
             return TRUE;
     }
 }
