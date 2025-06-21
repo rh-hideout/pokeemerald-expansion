@@ -916,16 +916,16 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
     case POCKET_TM_HM:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
         PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-        if (gItemsInfo[itemId].index >= NUM_TECHNICAL_MACHINES)
+        if (gItemsInfo[itemId].tmHmIndex >= (u8)NUM_TECHNICAL_MACHINES)
         {
             // Get HM number
-            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].index - NUM_TECHNICAL_MACHINES + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex - NUM_TECHNICAL_MACHINES + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
             StringExpandPlaceholders(dest, gText_NumberItem_HM);
         }
         else
         {
             // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].index + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
             StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
         }
         break;

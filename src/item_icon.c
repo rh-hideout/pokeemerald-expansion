@@ -168,7 +168,7 @@ const void *GetItemIconPic(u16 itemId)
         return gItemsInfo[0].iconPic;
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
     {
-        if (gItemsInfo[itemId].index >= NUM_TECHNICAL_MACHINES)
+        if (gItemsInfo[itemId].tmHmIndex >= (u8)NUM_TECHNICAL_MACHINES)
             return gItemIcon_HM;
         return gItemIcon_TM;
     }
@@ -182,7 +182,7 @@ const u16 *GetItemIconPalette(u16 itemId)
         return gItemIconPalette_ReturnToFieldArrow;
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
-    if (gItemsInfo[itemId].pocket == POCKET_TM_HM && gItemsInfo[itemId].index >= NUM_TECHNICAL_MACHINES)
+    if (gItemsInfo[itemId].pocket == POCKET_TM_HM && gItemsInfo[itemId].tmHmIndex >= (u8)NUM_TECHNICAL_MACHINES)
         return gTypesInfo[GetMoveType(gItemsInfo[itemId].secondaryId)].paletteTMHM;
 
     return gItemsInfo[itemId].iconPalette;
