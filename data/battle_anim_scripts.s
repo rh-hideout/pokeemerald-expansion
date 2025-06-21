@@ -36122,7 +36122,7 @@ gBattleAnimMove_GMaxGoldRush::
 
 @@@ DYNAMAX AND MAX RAIDS
 gBattleAnimGeneral_DynamaxGrowth:: @ PORTED FROM CFRU
-	createvisualtask SoundTask_PlayCryWithEcho, 2, ANIM_ATTACKER, 2
+	createvisualtask SoundTask_PlayDynamaxCry, 0
 	delay 8
 	createvisualtask AnimTask_DynamaxGrowth, 0x5, 0x1, 0x0
 	waitforvisualfinish
