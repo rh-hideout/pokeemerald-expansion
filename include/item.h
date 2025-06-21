@@ -29,7 +29,7 @@ enum
 
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemIds. TMs in src/data/items.h should have an index in their .tmHmIndex field
- * and this can be automatically generated with the DEFINE_TM/DEFINE_HM macros below
+ * and this can be automatically generated with the DEFINE_TM/DEFINE_HM macros below.
  */
 #define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
 enum TMHMIndex
@@ -42,7 +42,6 @@ enum TMHMIndex
 
 /* This creates enums that let us associate an index with a real move ID */
 #define UNPACK_MOVE_ID_FROM_INDEX(_tmHm) CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) = CAT(MOVE_, _tmHm),
-
 enum TMIndexToMoveId
 {
     FOREACH_TMHM(UNPACK_MOVE_ID_FROM_INDEX)
@@ -69,8 +68,9 @@ enum TMIndexToMoveId
  * 
  * Will generate the item's .name, .pocket, .tmHmIndex (see above), .secondaryId (by fetching a value from TMIndexToMoveId with TMHM_MOVE_ID_FROM_INDEX)
  */
-#define DEFINE_TM(_tmNo) .name = _("TM" STR(_tmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_tmNo) - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_tmNo) - 1)
-#define DEFINE_HM(_hmNo) .name = _("HM" STR(_hmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1)
+#define DEFINE_TM_HM(_str, _tmHmIndex) .name = _(#_str), .pocket = POCKET_TM_HM, .tmHmIndex = _tmHmIndex, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(_tmHmIndex)
+#define DEFINE_TM(_tmNo) DEFINE_TM_HM(TM##_tmNo, REMOVE_LEADING_ZEROES(_tmNo) - 1)
+#define DEFINE_HM(_hmNo) DEFINE_TM_HM(HM##_hmNo, REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1)
 
 #undef UNPACK_TM_HM_ENUM
 #undef UNPACK_MOVE_ID_FROM_INDEX
@@ -94,6 +94,7 @@ struct Item
     union {
         u8 index; // Miscellaneous use?
         enum TMHMIndex tmHmIndex:8;
+        // enum BerryIndex berryIndex:8; // Coming soon...
     };
     u8 type;
     u8 battleUsage;
