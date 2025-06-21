@@ -2547,3 +2547,7 @@
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
 	.endm
+
+	.macro tryboosterenergy
+	callnative BS_TryBoosterEnergy
+	.endm

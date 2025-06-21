@@ -6379,7 +6379,7 @@ static void Cmd_moveend(void)
                 break;
             }
         case MOVEEND_ITEM_EFFECTS_TARGET:
-            if (ItemBattleEffects(ITEMEFFECT_TARGET, gBattlerTarget, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_TARGET, gBattlerTarget))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -6449,14 +6449,14 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_ITEM_EFFECTS_ALL: // item effects for all battlers
-            if (ItemBattleEffects(ITEMEFFECT_MOVE_END, 0, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_MOVE_END, 0))
                 effect = TRUE;
             else
                 gBattleScripting.moveendState++;
             break;
         case MOVEEND_KINGSROCK: // King's rock
             // These effects will occur at each hit in a multi-strike move
-            if (ItemBattleEffects(ITEMEFFECT_KINGSROCK, 0, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_KINGSROCK, 0))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -6867,7 +6867,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_ITEM_EFFECTS_ATTACKER:
-            if (ItemBattleEffects(ITEMEFFECT_MOVE_END, gBattlerAttacker, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_MOVE_END, gBattlerAttacker))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -7048,7 +7048,7 @@ static void Cmd_moveend(void)
                 gBattleScripting.moveendState++;
             break;
         case MOVEEND_LIFEORB_SHELLBELL:
-            if (ItemBattleEffects(ITEMEFFECT_LIFEORB_SHELLBELL, 0, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_LIFEORB_SHELLBELL, 0))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -8144,7 +8144,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
 
         gDisableStructs[battler].truantSwitchInHack = 0;
 
-        if (DoSwitchInAbilities(battler) || ItemBattleEffects(ITEMEFFECT_ON_SWITCH_IN, battler, FALSE))
+        if (DoSwitchInAbilities(battler) || ItemBattleEffects(ITEMEFFECT_ON_SWITCH_IN, battler))
             return TRUE;
         else if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, 0, 0, 0))
             return TRUE;
@@ -10963,7 +10963,7 @@ static void Cmd_various(void)
     case VARIOUS_MOVEEND_ITEM_EFFECTS:
     {
         VARIOUS_ARGS();
-        if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+        if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
             return;
         break;
     }
@@ -11236,7 +11236,7 @@ static void Cmd_various(void)
 
         gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].ateBerry = TRUE;
         gBattleScripting.battler = gEffectBattler = gBattlerTarget = battler;    // Cover all berry effect battler cases. e.g. ChangeStatBuffs uses target ID
-        if (ItemBattleEffects(ITEMEFFECT_USE_LAST_ITEM, battler, FALSE))
+        if (ItemBattleEffects(ITEMEFFECT_USE_LAST_ITEM, battler))
             return;
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -12383,7 +12383,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
         gBattleMons[battler].statStages[statId] = MIN_STAT_STAGE;
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
-    
+
     if (ShouldDefiantCompetitiveActivate(battler, battlerAbility))
         stats = 0; // use single stat animations when Defiant/Competitive activate
     else
@@ -17605,7 +17605,7 @@ void BS_RunStatChangeItems(void)
 
     // Change instruction before calling ItemBattleEffects.
     gBattlescriptCurrInstr = cmd->nextInstr;
-    ItemBattleEffects(ITEMEFFECT_STATS_CHANGED, GetBattlerForBattleScript(cmd->battler), FALSE);
+    ItemBattleEffects(ITEMEFFECT_STATS_CHANGED, GetBattlerForBattleScript(cmd->battler));
 }
 
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove)
@@ -18600,4 +18600,19 @@ void BS_JumpIfNoWhiteOut(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TryBoosterEnergy(void)
+{
+    NATIVE_ARGS();
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        u32 battlerByTurnOrder = gBattlerByTurnOrder[battler];
+        if (GetBattlerHoldEffect(battlerByTurnOrder, TRUE) != HOLD_EFFECT_BOOSTER_ENERGY)
+            continue;
+
+        if (TryBoosterEnergy(battlerByTurnOrder, ITEMEFFECT_NONE))
+            return;
+    }
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
