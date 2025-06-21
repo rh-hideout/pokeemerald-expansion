@@ -35,10 +35,10 @@ enum
 enum TMHMIndex
 {
     FOREACH_TMHM(UNPACK_TM_HM_ENUM)
+    NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
+    NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
+    NUM_ALL_MACHINES = NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES,
 };
-
-#define NUM_TECHNICAL_MACHINES (0 FOREACH_TM(PLUS_ONE))
-#define NUM_ALL_MACHINES (0 FOREACH_TMHM(PLUS_ONE))
 
 /* This creates enums that let us associate an index with a real move ID */
 #define UNPACK_MOVE_ID_FROM_INDEX(_tmHm) CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) = CAT(MOVE_, _tmHm),
@@ -70,7 +70,7 @@ enum TMIndexToMoveId
  * Will generate the item's .name, .pocket, .tmHmIndex (see above), .secondaryId (by fetching a value from TMIndexToMoveId with TMHM_MOVE_ID_FROM_INDEX)
  */
 #define DEFINE_TM(_tmNo) .name = _("TM" STR(_tmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_tmNo) - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_tmNo) - 1)
-#define DEFINE_HM(_hmNo) .name = _("HM" STR(_hmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_hmNo) - 1 + NUM_TECHNICAL_MACHINES, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_hmNo) - 1)
+#define DEFINE_HM(_hmNo) .name = _("HM" STR(_hmNo)), .pocket = POCKET_TM_HM, .tmHmIndex = REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1)
 
 #undef UNPACK_TM_HM_ENUM
 #undef UNPACK_MOVE_ID_FROM_INDEX
@@ -114,7 +114,7 @@ extern const u16 gTMHMItemIds[];
 
 static inline u16 GetTMHMId(enum TMHMIndex index)
 {
-    return gTMHMItemIds[index];
+    return gTMHMItemIds[min(NUM_ALL_MACHINES - 1, index)];
 }
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
