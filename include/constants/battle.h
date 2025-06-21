@@ -141,7 +141,7 @@ enum VolatileFlags
 
 // Volatile status ailments
 // These are removed after exiting the battle or switching
-/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu
  * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
  */
 #define VOLATILE_DEFINITIONS(F) \
@@ -390,7 +390,6 @@ enum MoveEffects
     MOVE_EFFECT_TRI_ATTACK,
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
-    MOVE_EFFECT_CHARGING,
     MOVE_EFFECT_WRAP,
     MOVE_EFFECT_ATK_PLUS_1,
     MOVE_EFFECT_DEF_PLUS_1,
