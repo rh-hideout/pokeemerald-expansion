@@ -141,11 +141,17 @@ bool32 IsAiBattlerPredictingAbility(u32 battlerId)
     return BattlerHasAi(battlerId);
 }
 
+bool32 CanAiPredictMove(void)
+{
+    return gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_PREDICT_MOVE
+        || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_PREDICT_MOVE;
+}
+
 bool32 IsBattlerPredictedToSwitch(u32 battler)
 {
     // Check for prediction flag on AI, whether they're using those predictions this turn, and whether the AI thinks the player should switch
-    if (gAiThinkingStruct->aiFlags[gAiLogicData->battlerDoingPrediction] & AI_FLAG_PREDICT_SWITCH
-     || gAiThinkingStruct->aiFlags[gAiLogicData->battlerDoingPrediction] & AI_FLAG_PREDICT_SWITCH)
+    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_PREDICT_SWITCH
+     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_PREDICT_SWITCH)
     {
         if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
             return TRUE;
@@ -156,9 +162,8 @@ bool32 IsBattlerPredictedToSwitch(u32 battler)
 // Either a predicted move or the last used move from an opposing battler
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
 {
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE && aiData->predictingMove)
+    if (aiData->predictingMove && CanAiPredictMove())
         return aiData->predictedMove[opposingBattler];
-
     return aiData->lastUsedMove[opposingBattler];
 }
 
@@ -4931,11 +4936,4 @@ bool32 ShouldTriggerAbility(u32 battler, u32 ability)
         default:
             return FALSE;
     }
-}
-
-u32 GetThinkingBattler(u32 battler)
-{
-    if (gAiLogicData->aiPredictionInProgress)
-        return gAiLogicData->battlerDoingPrediction;
-    return battler;
 }
