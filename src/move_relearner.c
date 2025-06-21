@@ -162,20 +162,19 @@ enum {
 
 static EWRAM_DATA struct
 {
-    u8 state;
-    u8 heartSpriteIds[16];                                   /*0x001*/
-    u16 movesToLearn[MAX_RELEARNER_MOVES];                   /*0x01A*/
-    u8 partyMon;                                             /*0x044*/
-    u8 moveSlot;                                             /*0x045*/
-    struct ListMenuItem menuItems[MAX_RELEARNER_MOVES + 1];  /*0x0E8*/
-    u8 numMenuChoices;                                       /*0x110*/
-    u8 numToShowAtOnce;                                      /*0x111*/
-    u8 moveListMenuTask;                                     /*0x112*/
-    u8 moveListScrollArrowTask;                              /*0x113*/
-    u8 moveDisplayArrowTask;                                 /*0x114*/
-    u16 scrollOffset;                                        /*0x116*/
-    u8 categoryIconSpriteId;                                 /*0x117*/
-} *sMoveRelearnerStruct = {0};
+    u8 state;                                   /*0x000*/
+    u8 partyMon:4;                              /*0x001*/
+    u8 moveSlot:4;                              /*0x001*/
+    u8 numMenuChoices;                          /*0x002*/
+    u8 numToShowAtOnce;                         /*0x003*/
+    u8 heartSpriteIds[16];                      /*0x004*/
+    u16 movesToLearn[MAX_RELEARNER_MOVES + 1];  /*0x014*/
+    u16 scrollOffset;                           /*0x07A*/
+    u8 moveListMenuTask;                        /*0x07C*/
+    u8 moveListScrollArrowTask;                 /*0x07D*/
+    u8 moveDisplayArrowTask;                    /*0x07E*/
+    u8 categoryIconSpriteId;                    /*0x07F*/
+} *sMoveRelearnerStruct = {0};                  /*Total: 0x080 bytes*/
 
 static EWRAM_DATA struct {
     u16 listOffset;
@@ -859,7 +858,7 @@ static void HandleInput(bool8 showContest)
 
 static s32 GetCurrentSelectedMove(void)
 {
-    return sMoveRelearnerStruct->menuItems[sMoveRelearnerMenuSate.listRow + sMoveRelearnerMenuSate.listOffset].id;
+    return sMoveRelearnerStruct->movesToLearn[sMoveRelearnerMenuSate.listRow + sMoveRelearnerMenuSate.listOffset];
 }
 
 // Theory: This used to make the heart sprites visible again (i.e.
@@ -936,23 +935,17 @@ static void RemoveScrollArrows(void)
 
 static void CreateLearnableMovesList(void)
 {
-    s32 i;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
 
+    // Create list of moves + cancel button
     sMoveRelearnerStruct->numMenuChoices = GetMoveRelearnerMoves(&gPlayerParty[sMoveRelearnerStruct->partyMon], sMoveRelearnerStruct->movesToLearn);
+    sMoveRelearnerStruct->movesToLearn[sMoveRelearnerStruct->numMenuChoices] = LEVEL_UP_MOVE_END;
+    sMoveRelearnerStruct->numMenuChoices++;
 
-    for (i = 0; i < sMoveRelearnerStruct->numMenuChoices; i++)
-    {
-        sMoveRelearnerStruct->menuItems[i].name = GetMoveName(sMoveRelearnerStruct->movesToLearn[i]);
-        sMoveRelearnerStruct->menuItems[i].id = sMoveRelearnerStruct->movesToLearn[i];
-    }
-
+    // Buffer nickname
     GetMonData(&gPlayerParty[sMoveRelearnerStruct->partyMon], MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gStringVar1, nickname);
-    sMoveRelearnerStruct->menuItems[sMoveRelearnerStruct->numMenuChoices].name = gText_Cancel;
-    sMoveRelearnerStruct->menuItems[sMoveRelearnerStruct->numMenuChoices].id = LIST_CANCEL;
-    sMoveRelearnerStruct->numMenuChoices++;
-    sMoveRelearnerStruct->numToShowAtOnce = LoadMoveRelearnerMovesList(sMoveRelearnerStruct->menuItems, sMoveRelearnerStruct->numMenuChoices);
+    sMoveRelearnerStruct->numToShowAtOnce = LoadMoveRelearnerMovesList(sMoveRelearnerStruct->movesToLearn, sMoveRelearnerStruct->numMenuChoices);
 }
 
 void MoveRelearnerShowHideHearts(s32 move)
