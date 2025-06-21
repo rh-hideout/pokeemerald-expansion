@@ -5562,6 +5562,7 @@ BattleScript_TerrainEnds_Ret::
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+	tryboosterenergy ON_TERRAIN
 	return
 
 BattleScript_TerrainEnds::
@@ -7392,6 +7393,7 @@ BattleScript_ShedSkinActivates::
 BattleScript_ActivateWeatherAbilities:
 	saveattacker
 	savetarget
+	tryboosterenergy ON_WEATHER
 	setbyte gBattlerAttacker, 0
 BattleScript_ActivateWeatherAbilities_Loop:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
@@ -7696,6 +7698,7 @@ BattleScript_SnowWarningActivatesSnow::
 BattleScript_ActivateTerrainEffects:
 	saveattacker
 	savetarget
+	tryboosterenergy ON_TERRAIN
 	setbyte gBattlerAttacker, 0
 BattleScript_ActivateTerrainSeed:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
@@ -8890,6 +8893,7 @@ BattleScript_ActivateTeraformZero_RemoveTerrain:
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ActivateTeraformZero_End:
+	tryboosterenergy ON_ANY
 	end3
 
 BattleScript_QuickClawActivation::

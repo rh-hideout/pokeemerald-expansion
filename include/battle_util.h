@@ -264,7 +264,7 @@ u32 GetProtectType(enum ProtectMethod method);
 bool32 CanBattlerEscape(u32 battler); // no ability check
 void BattleScriptExecute(const u8 *BS_ptr);
 void BattleScriptPushCursorAndCallback(const u8 *BS_ptr);
-u32 ItemBattleEffects(enum ItemCaseId, u32 battler, bool32 moveTurn);
+u32 ItemBattleEffects(enum ItemCaseId, u32 battler);
 void ClearVariousBattlerFlags(u32 battler);
 void HandleAction_RunBattleScript(void);
 u32 SetRandomTarget(u32 battler);
@@ -396,5 +396,6 @@ void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 u32 GetMonVolatile(u32 battler, enum Volatile volatile);
 void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
+u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
 
 #endif // GUARD_BATTLE_UTIL_H

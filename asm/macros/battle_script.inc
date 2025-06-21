@@ -2547,3 +2547,8 @@
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
 	.endm
+
+	.macro tryboosterenergy onFieldStatus:req
+	callnative BS_TryBoosterEnergy
+	.byte \onFieldStatus
+	.endm
