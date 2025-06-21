@@ -1387,16 +1387,16 @@
 	.byte \battler
 	.endm
 
-	.macro tryintimidatejectpack
-	callnative BS_TryIntimidatEjectpack
+	.macro tryintimidateejectpack
+	callnative BS_TryIntimidateEjectPack
 	.endm
 
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
 
-	.macro allyswitchfailchance jumpInstr:req
-	callnative BS_AllySwitchFailChance
+	.macro tryallyswitch jumpInstr:req
+	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
 	.endm
 

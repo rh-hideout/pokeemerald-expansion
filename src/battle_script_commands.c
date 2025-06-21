@@ -343,7 +343,7 @@ static u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove);
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, u16 move);
 static void ResetValuesForCalledMove(void);
-static void TryRestoreDamageAfterCheeckPouch(u32 battler);
+static void TryRestoreDamageAfterCheekPouch(u32 battler);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -2732,7 +2732,7 @@ static void Cmd_datahpupdate(void)
             gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]]++;
     }
 
-    TryRestoreDamageAfterCheeckPouch(battler);
+    TryRestoreDamageAfterCheekPouch(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -8084,21 +8084,21 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         {
             if (CanBePoisoned(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerAbility(battler)))
             {
-                u32 tspikes = 0;
-                if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2) {
-                    tspikes = 1;
+                gBattleScripting.battler = battler;
+                BattleScriptPushCursor();
+                if (gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount >= 2)
+                {
+                    gBattlescriptCurrInstr = BattleScript_ToxicSpikesBadlyPoisoned;
                     gBattleMons[battler].status1 |= STATUS1_TOXIC_POISON;
                 }
                 else
+                {
+                    gBattlescriptCurrInstr = BattleScript_ToxicSpikesPoisoned;
                     gBattleMons[battler].status1 |= STATUS1_POISON;
+                }
 
                 BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
-                gBattleScripting.battler = battler;
-                if (tspikes == 0)
-                    BattleScriptCall(BattleScript_ToxicSpikesPoisoned);
-                else
-                    BattleScriptCall(BattleScript_ToxicSpikesBadlyPoisoned);
             }
         }
     }
@@ -8315,7 +8315,7 @@ static void Cmd_returntoball(void)
     MarkBattlerForControllerExec(battler);
 
     // Don't always execute a form change here otherwise we can stomp gigantamax
-    if(!cmd->changingForm)
+    if (!cmd->changingForm)
         TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8940,7 +8940,7 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId)
 }
 
 // When Cheek Pouch activates mid-battle it overwrites the current damage, so restore it
-static void TryRestoreDamageAfterCheeckPouch(u32 battler)
+static void TryRestoreDamageAfterCheekPouch(u32 battler)
 {
     if (gBattleStruct->cheekPouchActivated)
     {
@@ -9456,17 +9456,17 @@ static void RemoveAllWeather(void)
 
     if (gBattleWeather & B_WEATHER_RAIN)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_RAIN;
-    else if(gBattleWeather & B_WEATHER_SANDSTORM)
+    else if (gBattleWeather & B_WEATHER_SANDSTORM)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_SANDSTORM;
-    else if(gBattleWeather & B_WEATHER_SUN)
+    else if (gBattleWeather & B_WEATHER_SUN)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_SUN;
-    else if(gBattleWeather & B_WEATHER_HAIL)
+    else if (gBattleWeather & B_WEATHER_HAIL)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_HAIL;
-    else if(gBattleWeather & B_WEATHER_STRONG_WINDS)
+    else if (gBattleWeather & B_WEATHER_STRONG_WINDS)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_STRONG_WINDS;
-    else if(gBattleWeather & B_WEATHER_SNOW)
+    else if (gBattleWeather & B_WEATHER_SNOW)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_SNOW;
-    else if(gBattleWeather & B_WEATHER_FOG)
+    else if (gBattleWeather & B_WEATHER_FOG)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_FOG;
     else
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_COUNT;  // failsafe
@@ -12383,7 +12383,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, u32 stats, const
         gBattleMons[battler].statStages[statId] = MIN_STAT_STAGE;
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
-    
+
     if (ShouldDefiantCompetitiveActivate(battler, battlerAbility))
         stats = 0; // use single stat animations when Defiant/Competitive activate
     else
@@ -16119,7 +16119,8 @@ static void Cmd_displaydexinfo(void)
         }
         break;
     case 5:
-        if (!gPaletteFade.active) {
+        if (!gPaletteFade.active)
+        {
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         break;
@@ -16799,7 +16800,7 @@ static void TryUpdateRoundTurnOrder(void)
             }
         }
 
-        // Get battlers after us using round
+        // Get battlers after attacker using round
         for (i = currRounder; i < gBattlersCount; i++)
         {
             if (gChosenMoveByBattler[gBattlerByTurnOrder[i]] == MOVE_ROUND)
@@ -17578,25 +17579,34 @@ void BS_AllySwitchSwapBattler(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_AllySwitchFailChance(void)
+void BS_TryAllySwitch(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
-    if (B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9)
+    if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
+     || (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+     || (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9)
     {
         TryResetProtectUseCounter(gBattlerAttacker);
         if (sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] < Random())
         {
             gDisableStructs[gBattlerAttacker].protectUses = 0;
             gBattlescriptCurrInstr = cmd->failInstr;
-            return;
         }
         else
         {
             gDisableStructs[gBattlerAttacker].protectUses++;
+            gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
-    gBattlescriptCurrInstr = cmd->nextInstr;
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
 }
 
 void BS_RunStatChangeItems(void)
@@ -17874,7 +17884,7 @@ void BS_TryTarShot(void)
 void BS_CanTarShotWork(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    // Tar Shot will fail if it's already been used on the target and its speed can't be lowered further
+    // Tar Shot will fail if it's already been used on the target or if its speed can't be lowered further
     if (!gDisableStructs[gBattlerTarget].tarShot
         && CompareStat(gBattlerTarget, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -18527,7 +18537,7 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
     }
 }
 
-void BS_TryIntimidatEjectpack(void)
+void BS_TryIntimidateEjectPack(void)
 {
     NATIVE_ARGS();
 
