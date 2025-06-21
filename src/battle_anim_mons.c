@@ -777,6 +777,24 @@ void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonP
     sprite->y += gBattleAnimArgs[1];
 }
 
+void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOffsets)
+{
+    if (!respectMonPicOffsets)
+    {
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y);
+    }
+    else
+    {
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X_2) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET);
+    }
+    sprite->x = sprite->x / 2;
+    sprite->y = sprite->y / 2;
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
+    sprite->y += gBattleAnimArgs[1];
+}
+
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets)
 {
     u32 battler = GetAnimBattlerId(animBattlerId);
@@ -1451,6 +1469,13 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
             InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
         else if (gBattleAnimArgs[2] == 2)
             InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
+        else if (gBattleAnimArgs[2] == 3)
+        {
+            if(IsDoubleBattle())
+                InitSpritePosToAnimBothTargets(sprite, respectMonPicOffsets);
+            else
+                InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
+        }
 
         sprite->data[0]++;
 

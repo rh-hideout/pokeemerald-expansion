@@ -4740,7 +4740,7 @@ static const union AffineAnimCmd* const sSpriteAffineAnimTable_Flutterby[] = {
 const struct SpriteTemplate gSpriteTemplate_InfernalParadeFlame = {
     .tileTag = ANIM_TAG_PURPLE_FLAME,
     .paletteTag = ANIM_TAG_PURPLE_FLAME,
-    .oam = &gOamData_AffineDouble_ObjBlend_32x16,
+    .oam = &gOamData_AffineDouble_ObjNormal_16x32,
     .anims = gAnims_GrudgeFlame,
     .images = NULL,
     .affineAnims = sSpriteAffineAnimTable_Flutterby,
@@ -5695,7 +5695,7 @@ const struct SpriteTemplate gBlackHoleEclipseBlueRingSpriteTemplate =
 const struct SpriteTemplate gBlackHoleEclipseBlackRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
-    .paletteTag = ANIM_TAG_HANDS_AND_FEET,
+    .paletteTag = ANIM_TAG_SHADOW_BALL,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
     .anims = gDummySpriteAnimTable,
     .images = NULL,
@@ -9425,6 +9425,18 @@ static void SpriteCB_DragonEnergyShot(struct Sprite* sprite)
 //arg 2: wave amplitude
 static void SpriteCB_MaxFlutterby(struct Sprite* sprite)
 {
+    s16 target_x;
+    s16 target_y;
+    if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+    {
+        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &target_x, &target_y);
+    }
+    else
+    {
+        target_x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        target_y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    }
+
     InitSpritePosToAnimAttacker(sprite, FALSE);
 
     sprite->data[0] = 0x10; //Speed delay
@@ -9440,7 +9452,8 @@ static void SpriteCB_MaxFlutterbyStep1(struct Sprite* sprite)
 {
     if (!FuncIsActiveTask(AnimTask_DynamaxGrowthStep))
     {
-        if (gAnimMoveIndex != MOVE_INFERNAL_PARADE)
+        if (gAnimMoveIndex != MOVE_INFERNAL_PARADE &&
+                gAnimMoveIndex != MOVE_ASTRAL_BARRAGE)
             PlaySE(SE_M_SAND_ATTACK);
 
         StartSpriteAffineAnim(sprite, 1);

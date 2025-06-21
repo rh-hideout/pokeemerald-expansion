@@ -15692,37 +15692,55 @@ gBattleAnimMove_GlacialLance::
 
 
 gBattleAnimMove_AstralBarrage::
-	loadspritegfx ANIM_TAG_FLAT_ROCK
-	loadspritegfx ANIM_TAG_ICE_CRYSTALS
+	loadspritegfx ANIM_TAG_EXPLOSION
+	loadspritegfx ANIM_TAG_SHADOW_BALL
+	loadspritegfx ANIM_TAG_THIN_RING
+	loadspritegfx ANIM_TAG_ICE_CHUNK
+	loadspritegfx ANIM_TAG_HANDS_AND_FEET
 	loadspritegfx ANIM_TAG_GHOSTLY_SPIRIT
-	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_FLAT_ROCK, 0, 10, 10, RGB(2, 1, 4)
-	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ICE_CRYSTALS, 0, 10, 10, RGB(2, 1, 4)
+	loadspritegfx ANIM_TAG_PURPLE_FLAME
+	loadspritegfx ANIM_TAG_WISP_FIRE
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB(1, 1, 1)
 	monbg ANIM_ATK_PARTNER
 	splitbgprio ANIM_ATTACKER
+	playsewithpan SE_M_PSYBEAM, SOUND_PAN_ATTACKER
 	setalpha 12, 8
 	fadetobg BG_GHOST
 	waitbgfadein
-	createsprite gShakeMonOrPlatformSpriteTemplate, ANIM_ATTACKER, 2, 4, 1, 180, 1
-	createsoundtask SoundTask_LoopSEAdjustPanning, SE_M_FAINT_ATTACK, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 5, 20, 0, 5
-	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 200, 96, 1, 120
+	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_ATTACKER
+	createvisualtask AnimTask_GrudgeFlames, 3
+	createsprite gBlackHoleEclipseHoleUserSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, ANIM_ATTACKER, 0
+	createsprite gBlackHoleEclipseBlueRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0
 	delay 8
-	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 20, 248, 4, 112
+	createsprite gBlackHoleEclipseBlackRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0
 	delay 8
-	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 130, 160, 2, 104
+	createsprite gBlackHoleEclipseBlueRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0
 	delay 8
-	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 160, 192, 0, 96
+	createsprite gBlackHoleEclipseBlackRingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0
 	delay 8
-	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 60, 288, 3, 88
-	delay 74
-	panse SE_M_BLIZZARD, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
-	call BlizzardIceCrystals
-	call BlizzardIceCrystals
-	playsewithpan SE_M_BLIZZARD2, SOUND_PAN_TARGET
+	unloadspritegfx ANIM_TAG_SHADOW_BALL
+	unloadspritegfx ANIM_TAG_THIN_RING
+	unloadspritegfx ANIM_TAG_ICE_CHUNK
+	unloadspritegfx ANIM_TAG_HANDS_AND_FEET
 	waitforvisualfinish
-	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
+	call AstralBarrageFlames1
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_DEF_PARTNER, 0, 3, 50, 1
+	call AstralBarrageFlames2
+	call AstralBarrageFlames3
+	call AstralBarrageFlames4
+	call AstralBarrageFlames5
+	waitforvisualfinish
+	playsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_TARGET
 	createspriteontargets gCurseGhostSpriteTemplate, ANIM_TARGET, 3, 2, 8, -5, ANIM_TARGET, 0
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 8, 0, 16, 1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_DEF_PARTNER, 8, 0, 16, 1
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 0
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 42
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 84
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 126
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 168
+	createsprite gWillOWispFireSpriteTemplate, ANIM_TARGET, 2, 210
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	restorebg
@@ -15730,6 +15748,76 @@ gBattleAnimMove_AstralBarrage::
 	blendoff
 	delay 1
 	end
+AstralBarrageFlames1:
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, -30, -20 @;Top left
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 6, 5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, 10, 20 @;Bottom left
+	delay 2
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, -30, -20 @;Top right
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -16, -15, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, 10, 20 @;Bottom right
+	delay 2
+	return
+AstralBarrageFlames2:
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, -30, -20 @;Top left
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 16, -5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, 10, 20 @;Bottom left
+	delay 2
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, -30, -20 @;Top right
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -12, 18, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, 10, 20 @;Bottom right
+	delay 2
+	return
+AstralBarrageFlames3:
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, -30, -20 @;Top left
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 0, 5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, 10, 20 @;Bottom left
+	delay 2
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, -30, -20 @;Top right
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 6, 5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, 10, 20 @;Bottom right
+	delay 2
+	return
+AstralBarrageFlames4:
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, -30, -20 @;Top left
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -16, -15, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, 10, 20 @;Bottom left
+	delay 2
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, -30, -20 @;Top right
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 16, -5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, 10, 20 @;Bottom right
+	delay 2
+	return
+AstralBarrageFlames5:
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, -30, -20 @;Top left
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -12, 18, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, -30, 10, 20 @;Bottom left
+	delay 2
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, -30, -20 @;Top right
+	delay 2
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 0, 5, 3, 0
+	createsprite gSpriteTemplate_InfernalParadeFlame, ANIM_TARGET, 2, 30, 10, 20 @;Bottom right
+	delay 2
+	return
 
 
 @Credits to Skeli
