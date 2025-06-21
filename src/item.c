@@ -35,10 +35,11 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #define UNPACK_HM_ITEM_ID(_hm) [CAT(ENUM_TM_HM_, _hm)] = CAT(ITEM_HM_, _hm),
 
 /* Simply expands to TM01, TM02, TM03 ... HM08 */
-const u16 gTMHMItemIds[NUM_ALL_MACHINES] =
+const u16 gTMHMItemIds[NUM_ALL_MACHINES + 1] =
 {
     FOREACH_TM(UNPACK_TM_ITEM_ID)
     FOREACH_HM(UNPACK_HM_ITEM_ID)
+    [NUM_ALL_MACHINES] = ITEM_NONE, // Failsafe
 };
 
 #undef UNPACK_TM_ITEM_ID

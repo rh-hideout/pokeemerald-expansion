@@ -114,7 +114,7 @@ extern const u16 gTMHMItemIds[];
 
 static inline u16 GetTMHMId(enum TMHMIndex index)
 {
-    return gTMHMItemIds[min(NUM_ALL_MACHINES - 1, index)];
+    return gTMHMItemIds[index];
 }
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
