@@ -32,7 +32,8 @@ struct Item
 struct __attribute__((packed, aligned(2))) BagPocket
 {
     struct ItemSlot *itemSlots;
-    u16 capacity;
+    u16 capacity:10;
+    enum Pocket id:6;
 };
 
 extern const struct Item gItemsInfo[];
