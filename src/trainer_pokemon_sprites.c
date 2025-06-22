@@ -71,9 +71,7 @@ static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *
         }
         else
         {
-            const struct SpriteFrameImage *frame = &gTrainerBacksprites[species].backPic;
-            u32 size = (frame->size * gTrainerBacksprites[species].coordinates.y_offset);
-            CpuSmartCopy16(frame->data, dest, size);
+            CopyTrainerBackspriteFramesToDest(species, dest);
         }
     }
     return FALSE;
@@ -362,4 +360,12 @@ u16 PlayerGenderToFrontTrainerPicId_Debug(u8 gender, bool8 getClass)
             return gFacilityClassToPicIndex[FACILITY_CLASS_BRENDAN];
     }
     return gender;
+}
+
+void CopyTrainerBackspriteFramesToDest(u8 trainerPicId, u8 *dest)
+{
+    const struct SpriteFrameImage *frame = &gTrainerBacksprites[trainerPicId].backPic;
+    // y_offset is repurposed to indicates how many frames does the trainer pic have.
+    u32 size = (frame->size * gTrainerBacksprites[trainerPicId].coordinates.y_offset);
+    CpuSmartCopy16(frame->data, dest, size);
 }

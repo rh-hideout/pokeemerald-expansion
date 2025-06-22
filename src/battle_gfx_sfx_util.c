@@ -23,6 +23,7 @@
 #include "data.h"
 #include "palette.h"
 #include "contest.h"
+#include "trainer_pokemon_sprites.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 #include "constants/battle_palace.h"
@@ -697,10 +698,7 @@ void DecompressTrainerFrontPic(u16 frontPicId, u8 battler)
 void DecompressTrainerBackPic(u16 backPicId, u8 battler)
 {
     u8 position = GetBattlerPosition(battler);
-    const struct SpriteFrameImage *frame = &gTrainerBacksprites[backPicId].backPic;
-    u32 size = (frame->size * gTrainerBacksprites[backPicId].coordinates.y_offset);
-
-    CpuSmartCopy16(frame->data, gMonSpritesGfxPtr->spritesGfx[position], size);
+    CopyTrainerBackspriteFramesToDest(backPicId, gMonSpritesGfxPtr->spritesGfx[position]);
     LoadPalette(gTrainerBacksprites[backPicId].palette.data,
                           OBJ_PLTT_ID(battler), PLTT_SIZE_4BPP);
 }
