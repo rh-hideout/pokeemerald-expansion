@@ -264,7 +264,7 @@ static inline bool32 CheckSlotAndUpdateCount(struct BagPocket *pocket, u16 itemI
     if (tempItemId == ITEM_NONE || tempItemId == itemId)
     {
         // The quantity already at the slot - zero if an empty slot
-        tempQuantity *= (tempItemId == itemId);
+        tempQuantity *= !!(tempItemId);
 
         // Record slot quantity in tempPocketSlotQuantities, adjust count
         tempPocketSlotQuantities[pocketPos] = min(MAX_BAG_ITEM_CAPACITY, *count + tempQuantity);
@@ -391,7 +391,7 @@ static u8 BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
     for (i = 0; i < pocket->capacity; i++)
     {
         BagPocket_GetSlotData(pocket, i, &tempItemId, &tempQuantity);
-        usedSlots += +(tempItemId != ITEM_NONE);
+        usedSlots += !!(tempItemId);
     }
     return usedSlots;
 }
@@ -406,14 +406,14 @@ static bool32 BagPocket_CheckPocketForItemCount(struct BagPocket *pocket, u16 it
 {
     u32 i;
     u16 tempItemId, tempQuantity;
-    bool32 result = FALSE;
 
-    for (i = 0; i < pocket->capacity && result == FALSE; i++)
+    for (i = 0; i < pocket->capacity; i++)
     {
         BagPocket_GetSlotData(pocket, i, &tempItemId, &tempQuantity);
-        result = (tempItemId == itemId && tempQuantity >= count);
+        if (tempItemId == itemId && tempQuantity >= count)
+            return TRUE;
     }
-    return result;
+    return FALSE;
 }
 
 bool32 CheckPCHasItem(u16 itemId, u16 count)
@@ -453,9 +453,11 @@ void RemovePCItem(u8 index, u16 count)
     u16 tempItemId, tempQuantity;
     BagPocket_GetSlotData(&dummyPocket, index, &tempItemId, &tempQuantity);
 
-    // Remove quantity, compact if necessary
+    // Remove quantity
     tempQuantity -= count;
-    BagPocket_SetSlotData(&dummyPocket, index, &tempItemId, &tempQuantity);
+    BagPocket_SetSlotDta(&dummyPocket, index, &tempItemId, &tempQuantity);
+
+    // Compact if necessary
     if (tempQuantity == 0)
         BagPocket_CompactItems(&dummyPocket);
 }
