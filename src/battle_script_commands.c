@@ -10592,16 +10592,16 @@ static void Cmd_various(void)
         VARIOUS_ARGS(const u8 *failInstr);
         u32 types[3];
         GetBattlerTypes(gBattlerTarget, FALSE, types);
-        u32 moveType = GetMoveType(gCurrentMove);
-        if ((types[0] == moveType && types[1] == moveType)
+        u32 typeToSet = GetMoveArgType(gCurrentMove);
+        if ((types[0] == typeToSet && types[1] == typeToSet)
          || GetActiveGimmick(gBattlerTarget) == GIMMICK_TERA)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         else
         {
-            SET_BATTLER_TYPE(gBattlerTarget, moveType);
-            PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
+            SET_BATTLER_TYPE(gBattlerTarget, typeToSet);
+            PREPARE_TYPE_BUFFER(gBattleTextBuff1, typeToSet);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
