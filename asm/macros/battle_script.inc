@@ -780,8 +780,9 @@
 	.byte 0x88
 	.endm
 
-	.macro statbuffchange flags:req, failInstr:req, stats=0
+	.macro statbuffchange battler:req, flags:req, failInstr:req, stats=0
 	.byte 0x89
+	.byte \battler
 	.2byte \flags
 	.4byte \failInstr
 	.byte \stats
@@ -2525,7 +2526,7 @@
 	.if \animation == FALSE
 		setbyte sSTAT_ANIM_PLAYED, TRUE
 	.endif
-	statbuffchange STAT_CHANGE_ALLOW_PTR, \script
+	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, \script
 	.ifnb \customString
 		printstring \customString
 	.else
