@@ -26,12 +26,12 @@ We will start with a graphic that we want to use for our new trainer pic. Unlike
 ### 2. Register the sprites
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them by linking the graphic files in [`src/data/graphics/trainers`](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/graphics/trainers.h):
 ```diff
- const u16 gTrainerPalette_RubySapphireBrendan[] = INCBIN_U32("graphics/trainers/palettes/ruby_sapphire_brendan.gbapal");
+ const u16 gTrainerPalette_RubySapphireBrendan[] = INCBIN_U16("graphics/trainers/palettes/brendan_rs.gbapal");
 
- const u32 gTrainerFrontPic_RubySapphireMay[] = INCBIN_U32("graphics/trainers/front_pics/ruby_sapphire.4bpp.lz");
- const u16 gTrainerPalette_RubySapphireMay[] = INCBIN_U32("graphics/trainers/palettes/ruby_sapphire_may.gbapal");
+ const u32 gTrainerFrontPic_RubySapphireMay[] = INCBIN_U32("graphics/trainers/front_pics/may_rs.4bpp.smol");
+ const u16 gTrainerPalette_RubySapphireMay[] = INCBIN_U16("graphics/trainers/palettes/may_rs.gbapal");
 +
-+const u32 gTrainerFrontPic_NewOne[] = INCBIN_U32("graphics/trainers/front_pics/new_one.4bpp.lz");
++const u32 gTrainerFrontPic_NewOne[] = INCBIN_U32("graphics/trainers/front_pics/new_one.4bpp.smol");
 +const u16 gTrainerPalette_NewOne[] = INCBIN_U16("graphics/trainers/front_pics/new_one.gbapal");
 
  const u8 gTrainerBackPic_Brendan[] = INCBIN_U8("graphics/trainers/back_pics/brendan.4bpp");
