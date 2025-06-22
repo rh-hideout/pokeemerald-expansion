@@ -455,7 +455,7 @@ void RemovePCItem(u8 index, u16 count)
 
     // Remove quantity
     tempQuantity -= count;
-    BagPocket_SetSlotDta(&dummyPocket, index, &tempItemId, &tempQuantity);
+    BagPocket_SetSlotData(&dummyPocket, index, &tempItemId, &tempQuantity);
 
     // Compact if necessary
     if (tempQuantity == 0)
