@@ -10,6 +10,9 @@
 // Arguments for 'xStart, yStart, xEnd, yEnd' in HandleBattleWindow
 #define YESNOBOX_X_Y 24, 8, 29, 13
 
+#define STAT_CHANGE_WORKED      0
+#define STAT_CHANGE_DIDNT_WORK  1
+
 struct StatFractions
 {
     u8 dividend;
@@ -48,7 +51,6 @@ u8 GetBattlerTurnOrderNum(u8 battler);
 bool32 NoAliveMonsForBattlerSide(u32 battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
-void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain);
 bool32 CanBattlerSwitch(u32 battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
@@ -70,12 +72,18 @@ u8 GetCatchingBattler(void);
 u32 GetHighestStatId(u32 battlerId);
 bool32 ProteanTryChangeType(u32 battler, u32 ability, u32 move, u32 moveType);
 bool32 IsMoveNotAllowedInSkyBattles(u32 move);
+u32 NumAffectedSpreadMoveTargets(void);
 bool32 DoSwitchInAbilities(u32 battlerId);
 u8 GetFirstFaintedPartyIndex(u8 battlerId);
 bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
+u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
+void CheckSetUnburden(u8 battler);
+bool32 TrySetReflect(u32 battler);
+bool32 TrySetLightScreen(u32 battler);
+u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr);
 
 extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];

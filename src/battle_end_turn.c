@@ -5,6 +5,7 @@
 #include "battle_ai_util.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "battle_move_effects.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"

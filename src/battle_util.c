@@ -6,6 +6,7 @@
 #include "battle_util.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
+#include "battle_move_effects.h"
 #include "battle_setup.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
