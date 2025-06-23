@@ -5617,7 +5617,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
     return FALSE;
 }
 
-bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffects effect, enum NonVolatileStatus option)
+bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, enum MoveEffect effect, enum NonVolatileStatus option)
 {
     const u8 *battleScript = NULL;
     u32 sideBattler = ABILITY_NONE;

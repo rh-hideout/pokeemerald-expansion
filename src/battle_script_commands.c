@@ -3170,7 +3170,7 @@ static inline bool32 TrySetLightScreen(u32 battler)
     return FALSE;
 }
 
-static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects effect, enum StatusTrigger trigger)
+static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger)
 {
     gEffectBattler = effectBattler;
 
@@ -3244,7 +3244,701 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects ef
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
 }
 
+static struct MoveEffectInfo sMoveEffectsInfo[];
+
+static inline void PushMoveEffectInstr(struct SetMoveEffectResult *result)
+{
+    result->nextInstr = sMoveEffectsInfo[result->moveEffect].battlescript;
+}
+
+static inline void PushNextInstrAndMoveEffectInstr(struct SetMoveEffectResult *result)
+{
+    result->battlescriptPush = TRUE;
+    PushMoveEffectInstr(result);
+}
+
+void MoveEffect_SetVolatileTrue(struct SetMoveEffectResult *result)
+{
+    SetMonVolatile(result->effectBattler, sMoveEffectsInfo[result->moveEffect]._volatile, TRUE);
+}
+
+void MoveEffect_SetNonVolatileStatusCondition(struct SetMoveEffectResult *result)
+{
+    SetNonVolatileStatusCondition(result->effectBattler, result->moveEffect, TRIGGER_ON_MOVE);
+}
+
+void MoveEffect_ConfusionCallback(struct SetMoveEffectResult *result)
+{
+
+    gBattleMons[result->effectBattler].volatiles.confusionTurns = ((Random()) % 4) + 2; // 2-5 turns
+
+    // If the confusion is activating due to being released from Sky Drop, go to "confused due to fatigue" script.
+    // Otherwise, do normal confusion script.
+    if (GetMoveEffect(result->currentMove) == EFFECT_SKY_DROP)
+    {
+        gBattleMons[result->effectBattler].volatiles.lockConfusionTurns = 0;
+        gBattlerAttacker = result->effectBattler;
+        result->nextInstr = BattleScript_ThrashConfuses;
+    }
+    else
+        PushNextInstrAndMoveEffectInstr(result);
+}
+
+void MoveEffect_UproarCallback(struct SetMoveEffectResult *result)
+{
+    gBattleMons[result->effectBattler].volatiles.multipleTurns = TRUE;
+    gLockedMoves[result->effectBattler] = result->currentMove;
+    gBattleMons[result->effectBattler].volatiles.uproarTurns  = B_UPROAR_TURNS >= GEN_5 ? 3 : (Random() & 3) + 2;
+
+    PushNextInstrAndMoveEffectInstr(result);
+}
+
+void MoveEffect_PaydayCallback(struct SetMoveEffectResult *result)
+{
+    u16 payday = gPaydayMoney;
+    u16 moveTarget = GetBattlerMoveTargetType(result->battlerAtk, result->currentMove);
+    gPaydayMoney += (gBattleMons[result->battlerAtk].level * 5);
+    if (payday > gPaydayMoney)
+        gPaydayMoney = 0xFFFF;
+}
+
+void MoveEffect_WrapCallback(struct SetMoveEffectResult *result)
+{
+    MoveEffect_SetVolatileTrue(result);
+    if (GetBattlerHoldEffect(result->battlerAtk, TRUE) == HOLD_EFFECT_GRIP_CLAW)
+        gDisableStructs[result->effectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? 7 : 5;
+    else
+        gDisableStructs[result->effectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? (Random() % 2) + 4 : (Random() % 4) + 2;
+
+    gBattleStruct->wrappedMove[result->effectBattler] = result->currentMove;
+    gBattleStruct->wrappedBy[result->effectBattler] = result->battlerAtk;
+
+    PushNextInstrAndMoveEffectInstr(result);
+
+    // To do: fix this stupidity
+    for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; gBattleCommunication[MULTISTRING_CHOOSER] < NUM_TRAPPING_MOVES; gBattleCommunication[MULTISTRING_CHOOSER]++)
+    {
+        if (sTrappingMoves[gBattleCommunication[MULTISTRING_CHOOSER]] == gCurrentMove)
+            break;
+    }
+}
+
+void MoveEffect_StealItemCallback(struct SetMoveEffectResult *result)
+{
+    StealTargetItem(result->battlerAtk, result->battlerDef);  // Attacker steals target item
+
+    if (!(B_STEAL_WILD_ITEMS >= GEN_9
+        && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
+    {
+        gBattleMons[result->battlerAtk].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
+        gBattleStruct->changedItems[result->battlerAtk] = result->lastUsedItem; // Stolen item to be assigned later
+    }
+
+    PushNextInstrAndMoveEffectInstr(result);
+}
+
+void MoveEffect_PreventEscapeCallback(struct SetMoveEffectResult *result)
+{
+    gBattleMons[result->effectBattler].status2 |= STATUS2_ESCAPE_PREVENTION;
+    gDisableStructs[result->effectBattler].battlerPreventingEscape = gBattlerAttacker;
+}
+
+void MoveEffect_ThrashCallback(struct SetMoveEffectResult *result)
+{
+    gBattleMons[result->effectBattler].volatiles.multipleTurns = TRUE;
+    gLockedMoves[result->effectBattler] = result->currentMove;
+    gBattleMons[result->effectBattler].volatiles.lockConfusionTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, 3);
+}
+
+void MoveEffect_ClearSmogCallback(struct SetMoveEffectResult *result)
+{
+    for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
+        gBattleMons[result->effectBattler].statStages[i] = DEFAULT_STAT_STAGE;
+
+    PushNextInstrAndMoveEffectInstr(result);
+}
+
+struct SetMoveEffectResult;
+
+struct MoveEffectInfo
+{
+    void (*callback)(struct SetMoveEffectResult *);
+    const u8 *battlescript;
+    enum Volatile _volatile:8;
+    u32 status3;
+    u32 status4;
+    u8 blockedByTypes[2];
+    u32 notAbilityCompatible:1;
+    u32 notItemCompatible:1;
+    u32 activateAfterFaint:1;
+    u32 parentalBond:1;
+    u32 blockedBySafeguard:1;
+    u32 blockedByAromaVeil:1;
+    u32 onlyIfMonsAliveOnEitherSide:1;
+};
+
+static struct MoveEffectInfo sMoveEffectsInfo[] =
+{
+    [MOVE_EFFECT_NONE] =
+    {
+
+    },
+    [MOVE_EFFECT_SLEEP] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_POISON] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_BURN] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_FREEZE] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_PARALYSIS] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_TOXIC] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_FROSTBITE] =
+    {
+        .callback = MoveEffect_SetNonVolatileStatusCondition,
+    },
+    [MOVE_EFFECT_CONFUSION] =
+    {
+        .battlescript = BattleScript_MoveEffectConfusion,
+        .callback = MoveEffect_ConfusionCallback,
+    },
+    [MOVE_EFFECT_FLINCH] =
+    {
+        ._volatile = VOLATILE_FLINCHED,
+        .callback = MoveEffect_SetVolatileTrue,
+    },
+    [MOVE_EFFECT_TRI_ATTACK] =
+    {
+        // Not really a move effect - it calls other move effects
+    },
+    [MOVE_EFFECT_UPROAR] =
+    {
+        ._volatile = VOLATILE_UPROAR,
+        .callback = MoveEffect_UproarCallback,
+    },
+    [MOVE_EFFECT_PAYDAY] =
+    {
+        .callback = MoveEffect_PaydayCallback,
+    },
+    [MOVE_EFFECT_CHARGING] =
+    {
+
+    },
+    [MOVE_EFFECT_WRAP] =
+    {
+        ._volatile = VOLATILE_WRAPPED,
+        .battlescript = BattleScript_MoveEffectWrap,
+        .callback = MoveEffect_WrapCallback,
+    },
+    [MOVE_EFFECT_ATK_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_DEF_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SPD_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_ATK_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_DEF_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_ACC_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_EVS_PLUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_ATK_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_DEF_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SPD_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_ATK_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_DEF_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_ACC_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_EVS_MINUS_1] =
+    {
+
+    },
+    [MOVE_EFFECT_REMOVE_ARG_TYPE] =
+    {
+
+    },
+    [MOVE_EFFECT_RECHARGE] =
+    {
+
+    },
+    [MOVE_EFFECT_RAGE] =
+    {
+        ._volatile = VOLATILE_RAGE,
+        .callback = MoveEffect_SetVolatileTrue,
+    },
+    [MOVE_EFFECT_STEAL_ITEM] =
+    {
+        .battlescript = BattleScript_ItemSteal,
+        .callback = MoveEffect_StealItemCallback,
+    },
+    [MOVE_EFFECT_PREVENT_ESCAPE] =
+    {
+        .callback = MoveEffect_PreventEscapeCallback,
+    },
+    [MOVE_EFFECT_NIGHTMARE] =
+    {
+
+    },
+    [MOVE_EFFECT_ALL_STATS_UP] =
+    {
+
+    },
+    [MOVE_EFFECT_REMOVE_STATUS] =
+    {
+
+    },
+    [MOVE_EFFECT_ATK_DEF_DOWN] =
+    {
+
+    },
+    [MOVE_EFFECT_ATK_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_DEF_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SPD_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_ATK_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_DEF_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_ACC_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_EVS_PLUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_ATK_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_DEF_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SPD_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_ATK_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SP_DEF_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_ACC_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_EVS_MINUS_2] =
+    {
+
+    },
+    [MOVE_EFFECT_SCALE_SHOT] =
+    {
+
+    },
+    [MOVE_EFFECT_THRASH] =
+    {
+        .callback = MoveEffect_ThrashCallback,
+    },
+    [MOVE_EFFECT_DEF_SPDEF_DOWN] =
+    {
+
+    },
+    [MOVE_EFFECT_CLEAR_SMOG] =
+    {
+        .battlescript = BattleScript_MoveEffectClearSmog,
+        .callback = MoveEffect_ClearSmogCallback,
+    },
+    [MOVE_EFFECT_FLAME_BURST] =
+    {
+
+    },
+    [MOVE_EFFECT_FEINT] =
+    {
+
+    },
+    [MOVE_EFFECT_V_CREATE] =
+    {
+
+    },
+    [MOVE_EFFECT_HAPPY_HOUR] =
+    {
+
+    },
+    [MOVE_EFFECT_CORE_ENFORCER] =
+    {
+
+    },
+    [MOVE_EFFECT_THROAT_CHOP] =
+    {
+
+    },
+    [MOVE_EFFECT_INCINERATE] =
+    {
+
+    },
+    [MOVE_EFFECT_BUG_BITE] =
+    {
+
+    },
+    [MOVE_EFFECT_RECOIL_HP_25] =
+    {
+
+    },
+    [MOVE_EFFECT_TRAP_BOTH] =
+    {
+
+    },
+    [MOVE_EFFECT_ROUND] =
+    {
+
+    },
+    [MOVE_EFFECT_DIRE_CLAW] =
+    {
+
+    },
+    [MOVE_EFFECT_STEALTH_ROCK] =
+    {
+
+    },
+    [MOVE_EFFECT_SPIKES] =
+    {
+
+    },
+    [MOVE_EFFECT_SYRUP_BOMB] =
+    {
+
+    },
+    [MOVE_EFFECT_FLORAL_HEALING] =
+    {
+
+    },
+    [MOVE_EFFECT_SECRET_POWER] =
+    {
+
+    },
+    [MOVE_EFFECT_PSYCHIC_NOISE] =
+    {
+
+    },
+    [MOVE_EFFECT_TERA_BLAST] =
+    {
+
+    },
+    [MOVE_EFFECT_ORDER_UP] =
+    {
+
+    },
+    [MOVE_EFFECT_ION_DELUGE] =
+    {
+
+    },
+    [MOVE_EFFECT_HAZE] =
+    {
+
+    },
+    [MOVE_EFFECT_LEECH_SEED] =
+    {
+
+    },
+    [MOVE_EFFECT_REFLECT] =
+    {
+
+    },
+    [MOVE_EFFECT_LIGHT_SCREEN] =
+    {
+
+    },
+    [MOVE_EFFECT_SALT_CURE] =
+    {
+
+    },
+    [MOVE_EFFECT_EERIE_SPELL] =
+    {
+
+    },
+    [MOVE_EFFECT_RAISE_TEAM_ATTACK] =
+    {
+
+    },
+    [MOVE_EFFECT_RAISE_TEAM_DEFENSE] =
+    {
+
+    },
+    [MOVE_EFFECT_RAISE_TEAM_SPEED] =
+    {
+
+    },
+    [MOVE_EFFECT_RAISE_TEAM_SP_ATK] =
+    {
+
+    },
+    [MOVE_EFFECT_RAISE_TEAM_SP_DEF] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_ATTACK_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_DEFENSE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_SPEED_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_SP_ATK_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_SP_DEF_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_SUN] =
+    {
+
+    },
+    [MOVE_EFFECT_RAIN] =
+    {
+
+    },
+    [MOVE_EFFECT_SANDSTORM] =
+    {
+
+    },
+    [MOVE_EFFECT_HAIL] =
+    {
+
+    },
+    [MOVE_EFFECT_MISTY_TERRAIN] =
+    {
+
+    },
+    [MOVE_EFFECT_GRASSY_TERRAIN] =
+    {
+
+    },
+    [MOVE_EFFECT_ELECTRIC_TERRAIN] =
+    {
+
+    },
+    [MOVE_EFFECT_PSYCHIC_TERRAIN] =
+    {
+
+    },
+    [MOVE_EFFECT_VINE_LASH] =
+    {
+
+    },
+    [MOVE_EFFECT_WILDFIRE] =
+    {
+
+    },
+    [MOVE_EFFECT_CANNONADE] =
+    {
+
+    },
+    [MOVE_EFFECT_EFFECT_SPORE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_PARALYZE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_CRIT_PLUS_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_PREVENT_ESCAPE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_AURORA_VEIL] =
+    {
+
+    },
+    [MOVE_EFFECT_INFATUATE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_RECYCLE_BERRIES] =
+    {
+
+    },
+    [MOVE_EFFECT_POISON_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_DEFOG] =
+    {
+
+    },
+    [MOVE_EFFECT_POISON_PARALYZE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_HEAL_TEAM] =
+    {
+
+    },
+    [MOVE_EFFECT_SPITE] =
+    {
+
+    },
+    [MOVE_EFFECT_GRAVITY] =
+    {
+
+    },
+    [MOVE_EFFECT_VOLCALITH] =
+    {
+
+    },
+    [MOVE_EFFECT_SANDBLAST_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_YAWN_FOE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_EVASIVENESS_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_AROMATHERAPY] =
+    {
+
+    },
+    [MOVE_EFFECT_CONFUSE_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_STEELSURGE] =
+    {
+
+    },
+    [MOVE_EFFECT_TORMENT_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_LOWER_SPEED_2_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_FIRE_SPIN_SIDE] =
+    {
+
+    },
+    [MOVE_EFFECT_FIXED_POWER] =
+    {
+
+    },
+};
+
+struct ALIGNED(2) SetMoveEffectResult
+{
+    enum MoveEffect moveEffect:9;
+    bool32 certain:1;
+    bool32 primary:1;
+    bool32 affectsUser:1;
+    bool32 failed:1;
+    bool32 tested:1;
+    bool32 isAbility:1;
+    bool32 battlescriptPush:1;
+    const u8 *nextInstr;
+    union {
+        u16 currentMove;
+        u16 lastAbility;
+    };
+    u16 lastUsedItem;
+    u8 battlerAtk;
+    u8 battlerDef;
+    u8 effectBattler;
+    u8 multistring;
+};
+
+#define IF_FAIL(...) if (result->failed = (__VA_ARGS__))
+#define IF_SUCCEED(...) if (!(result->failed = (__VA_ARGS__)))
+
+static void SetMoveEffectWithResult(struct SetMoveEffectResult *result, bool32 primary, bool32 certain);
+
 void SetMoveEffect(bool32 primary, bool32 certain)
+{
+    struct SetMoveEffectResult result = { 0 };
+    SetMoveEffectWithResult(&result, primary, certain);
+}
+
+static void SetMoveEffectWithResult(struct SetMoveEffectResult *result, bool32 primary, bool32 certain)
 {
     s32 i, affectsUser = 0;
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
@@ -3320,7 +4014,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary)
+        IF_FAIL(gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary)
             gBattlescriptCurrInstr++;
         else if (CanSetNonVolatileStatus(
                     gBattlerAttacker,
@@ -3332,8 +4026,8 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ON_MOVE);
         break;
     case MOVE_EFFECT_CONFUSION:
-        if (!CanBeConfused(gEffectBattler)
-         || gBattleMons[gEffectBattler].status2 & STATUS2_CONFUSION
+        IF_FAIL(!CanBeConfused(gEffectBattler)
+         || gBattleMons[gEffectBattler].volatiles.confusionTurns > 0
          || (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary))
         {
             gBattlescriptCurrInstr++;
@@ -3358,7 +4052,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
         }
         break;
     case MOVE_EFFECT_FLINCH:
-        if (battlerAbility == ABILITY_INNER_FOCUS)
+        IF_FAIL(battlerAbility == ABILITY_INNER_FOCUS)
         {
             // Inner Focus ALWAYS prevents flinching but only activates
             // on a move that's supposed to flinch, like Fake Out
