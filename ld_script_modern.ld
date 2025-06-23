@@ -80,7 +80,8 @@ SECTIONS {
     .rodata :
     ALIGN(4)
     {
-        *.o(.rodata*);
+        src/*.o(.rodata*);
+        data/*.o(.rodata*);
         *libgcc.a:*.o(.rodata*);
         *libc.a:*.o(.rodata*);
         *libc.a:*.o(.data*);
