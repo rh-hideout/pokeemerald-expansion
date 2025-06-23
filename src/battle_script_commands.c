@@ -18606,9 +18606,9 @@ void BS_TryBoosterEnergy(void)
 {
     NATIVE_ARGS(u8 onFieldStatus);
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (u32 orderNum = 0; orderNum < gBattlersCount; orderNum++)
     {
-        u32 battlerByTurnOrder = gBattlerByTurnOrder[battler];
+        u32 battlerByTurnOrder = gBattlerByTurnOrder[orderNum];
         if (GetBattlerHoldEffect(battlerByTurnOrder, TRUE) != HOLD_EFFECT_BOOSTER_ENERGY)
             continue;
 
