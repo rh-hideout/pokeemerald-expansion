@@ -26,7 +26,7 @@ SECTIONS {
     .ewram.sbss (NOLOAD) :
     ALIGN(4)
     {
-        *.o(.sbss);
+        src/*.o(.sbss);
     } > EWRAM
 
     .iwram ORIGIN(IWRAM) : AT (__iwram_lma)
@@ -41,10 +41,7 @@ SECTIONS {
     .iwram.bss (NOLOAD) :
     ALIGN(4)
     {
-        *libc.a:*.o(.bss*);
-        *libnosys.a:*.o(.bss*);
-        src/*.o(.bss*);
-        data/*.o(.bss*);
+        *.o(.bss*);
         *.o(common_data);
         src/*.o(COMMON);
         *libc.a:*.o(COMMON);
