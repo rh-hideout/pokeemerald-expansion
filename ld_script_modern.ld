@@ -68,7 +68,7 @@ SECTIONS {
         *libc.a:*.o(.text*);
         *libnosys.a:*.o(.text*);
         asm/*.o(.text*);
-        *.o(.text*);
+        src/*.o(.text*);
         *.o(.eh_frame);
     } > ROM =0
 
