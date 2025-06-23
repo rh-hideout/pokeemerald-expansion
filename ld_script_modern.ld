@@ -42,7 +42,7 @@ SECTIONS {
     ALIGN(4)
     {
         *.o(.bss*);
-        *.o(common_data);
+        src/*.o(common_data);
         src/*.o(COMMON);
         *libc.a:*.o(COMMON);
         *libnosys.a:*.o(COMMON);
