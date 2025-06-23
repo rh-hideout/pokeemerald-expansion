@@ -69,7 +69,6 @@ SECTIONS {
         *libnosys.a:*.o(.text*);
         asm/*.o(.text*);
         src/*.o(.text*);
-        *.o(.eh_frame);
     } > ROM =0
 
     script_data :
