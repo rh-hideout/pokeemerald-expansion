@@ -63,12 +63,9 @@ SECTIONS {
         src/rom_header_gf.o(.text.*);
         src/rom_header_rhh.o(.text.*);
         src/crt0.o(.text);
-        *libagbsyscall.a:*.o(.text*);
-        *libgcc.a:*.o(.text*);
-        *libc.a:*.o(.text*);
-        *libnosys.a:*.o(.text*);
-        asm/*.o(.text*);
+        src/main.o(.text);
         src/*.o(.text*);
+        asm/*.o(.text*);
     } > ROM =0
 
     script_data :
@@ -77,15 +74,69 @@ SECTIONS {
 		data/*.o(script_data);
     } > ROM =0
 
+    lib_text :
+    ALIGN(4)
+    {
+        src/libgcnmultiboot.o(.text);
+        src/m4a_1.o(.text);
+        src/m4a.o(.text);
+        src/agb_flash.o(.text);
+        src/agb_flash_1m.o(.text);
+        src/agb_flash_mx.o(.text);
+        src/siirtc.o(.text);
+        src/librfu_stwi.o(.text);
+        src/librfu_intr.o(.text);
+        src/librfu_rfu.o(.text);
+        src/librfu_sio32id.o(.text);
+        *libagbsyscall.a:*.o(.text*);
+        *libgcc.a:*.o(.text*);
+        *libc.a:*.o(.text*);
+        *libnosys.a:*.o(.text*);
+        src/libisagbprn.o(.text);
+    } > ROM =0
+
     .rodata :
     ALIGN(4)
     {
         src/*.o(.rodata*);
         data/*.o(.rodata*);
+    } > ROM =0
+
+    song_data :
+    ALIGN(4)
+    {
+        sound/songs/*.o(.rodata);
+    } > ROM =0
+
+    lib_rodata :
+    SUBALIGN(4)
+    {
+        src/m4a.o(.rodata);
+        src/agb_flash.o(.rodata);
+        src/agb_flash_1m.o(.rodata);
+        src/agb_flash_mx.o(.rodata);
+        src/agb_flash_le.o(.rodata);
+        src/siirtc.o(.rodata);
+        src/librfu_rfu.o(.rodata);
+        src/librfu_sio32id.o(.rodata);
         *libgcc.a:*.o(.rodata*);
         *libc.a:*.o(.rodata*);
         *libc.a:*.o(.data*);
-        sound/songs/*.o(.rodata);
+        src/libisagbprn.o(.rodata);
+    } > ROM =0
+
+    multiboot_data :
+    ALIGN(4)
+    {
+        data/multiboot_ereader.o(.rodata);
+        data/multiboot_berry_glitch_fix.o(.rodata);
+        data/multiboot_pokemon_colosseum.o(.rodata);
+    } > ROM =0
+
+    gfx_data :
+    ALIGN(4)
+    {
+        src/graphics.o(.rodata);
     } > ROM =0
 
     .data.iwram :
