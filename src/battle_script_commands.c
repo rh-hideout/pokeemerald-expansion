@@ -3203,8 +3203,8 @@ static void Cmd_setadditionaleffects(void)
     if (DidNotMissAndHasAdditionalEffectToApply(gBattlerTarget, gCurrentMove, &numAdditionalEffects))
     {
         u32 percentChance;
-        struct SetMoveEffectResult result = { 0 };
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+        struct SetMoveEffectResult result = { .moveEffect = additionalEffect->moveEffect, .multistring = additionalEffect->multistring };
         const u8 *currInstr = gBattlescriptCurrInstr;
 
         // Various checks for if this move effect can be applied this turn

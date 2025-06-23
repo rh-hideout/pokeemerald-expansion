@@ -167,13 +167,6 @@ static void MoveEffect_WrapCallback(struct SetMoveEffectResult *result)
     gBattleStruct->wrappedBy[result->effectBattler] = result->battlerAtk;
 
     PushNextInstrAndMoveEffectInstr(result);
-
-    // To do: fix this stupidity
-    // for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; gBattleCommunication[MULTISTRING_CHOOSER] < NUM_TRAPPING_MOVES; gBattleCommunication[MULTISTRING_CHOOSER]++)
-    // {
-    //     if (sTrappingMoves[gBattleCommunication[MULTISTRING_CHOOSER]] == gCurrentMove)
-    //         break;
-    // }
 }
 
 static void MoveEffect_StealItemCallback(struct SetMoveEffectResult *result)
@@ -776,7 +769,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
 }
 
 // To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
-struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *result, u32 battler, u32 effectBattler, u16 moveEffect, bool32 primary, bool32 certain, const u8 *failInstr)
+struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *result, u32 battler, u32 effectBattler, u16 moveEffect, bool32 primary, bool32 certain, const u8 *nextInstr)
 {
     s32 i;
     bool32 affectsUser = (battler == effectBattler);
@@ -796,7 +789,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
         && IsBattlerAlive(gBattlerTarget)
         && gMoveEffectsInfo[gBattleScripting.moveEffect].finalStrikeEffect)
     {
-        result->nextInstr = failInstr;
+        result->nextInstr = nextInstr;
         return result;
     }
 
@@ -823,7 +816,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     switch (gBattleScripting.moveEffect)
     {
     case MOVE_EFFECT_NONE:
-        result->nextInstr = gBattlescriptCurrInstr + 1;
+        result->nextInstr = nextInstr;
         break;
     case MOVE_EFFECT_SLEEP:
     case MOVE_EFFECT_POISON:
@@ -833,7 +826,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
         IF_FAIL((gSideStatuses[GetBattlerSide(result->effectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary))
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
         else {
             result->failed = !CanSetNonVolatileStatus(
                 result->battlerAtk,
@@ -849,7 +842,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
         IF_FAIL(!CanBeConfused(result->effectBattler)
          || gBattleMons[result->effectBattler].volatiles.confusionTurns > 0
          || (gSideStatuses[GetBattlerSide(result->effectBattler)] & SIDE_STATUS_SAFEGUARD && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT) && !primary))
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
         break;
     case MOVE_EFFECT_FLINCH:
         IF_FAIL(battlerAbility == ABILITY_INNER_FOCUS)
@@ -862,17 +855,31 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
                 result->nextInstr = BattleScript_FlinchPrevention;
             }
             else
-                result->nextInstr = gBattlescriptCurrInstr + 1;
+                result->nextInstr = nextInstr;
         }
         else IF_FAIL(gBattleMons[result->effectBattler].volatiles.flinched)
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
         else IF_SUCCEED(GetBattlerTurnOrderNum(result->effectBattler) > gCurrentTurnActionNumber
                 && !(GetActiveGimmick(result->effectBattler) == GIMMICK_DYNAMAX))
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
+        break;
+    case MOVE_EFFECT_TRI_ATTACK:
+        IF_FAIL(gBattleMons[result->effectBattler].status1)
+            result->nextInstr = nextInstr;
+        else
+        {
+            static const u8 sTriAttackEffects[] =
+            {
+                MOVE_EFFECT_BURN,
+                MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+                MOVE_EFFECT_PARALYSIS
+            };
+            return SetMoveEffectWithResult(result, battler, effectBattler, RandomElement(RNG_TRI_ATTACK, sTriAttackEffects), primary, certain, nextInstr);
+        }
         break;
     case MOVE_EFFECT_UPROAR:
         IF_FAIL(gBattleMons[result->effectBattler].volatiles.uproarTurns > 0)
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
         break;
     case MOVE_EFFECT_PAYDAY:
         // Don't scatter coins on the second hit of Parental Bond
@@ -883,10 +890,10 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
             if (!(NumAffectedSpreadMoveTargets() > 1 && GetNextTarget(GetBattlerMoveTargetType(result->battlerAtk, result->currentMove), TRUE) != MAX_BATTLERS_COUNT))
                 PushNextInstrAndMoveEffectInstr(result);
             else
-                result->nextInstr = gBattlescriptCurrInstr + 1;
+                result->nextInstr = nextInstr;
         }
         else
-            result->nextInstr = gBattlescriptCurrInstr + 1;
+            result->nextInstr = nextInstr;
         break;
     case MOVE_EFFECT_HAPPY_HOUR:
         if (IsOnPlayerSide(gBattlerAttacker) && !gBattleStruct->moneyMultiplierMove)
@@ -896,48 +903,9 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
         }
         gBattlescriptCurrInstr++;
         break;
-    case MOVE_EFFECT_TRI_ATTACK:
-        if (gBattleMons[gEffectBattler].status1)
-        {
-            gBattlescriptCurrInstr++;
-        }
-        else
-        {
-            static const u8 sTriAttackEffects[] =
-            {
-                MOVE_EFFECT_BURN,
-                MOVE_EFFECT_FREEZE_OR_FROSTBITE,
-                MOVE_EFFECT_PARALYSIS
-            };
-            gBattleScripting.moveEffect = RandomElement(RNG_TRI_ATTACK, sTriAttackEffects);
-            SetMoveEffect(battler, effectBattler, primary, certain);
-        }
-        break;
     case MOVE_EFFECT_WRAP:
-        if (gBattleMons[gEffectBattler].status2 & STATUS2_WRAPPED)
-        {
-            gBattlescriptCurrInstr++;
-        }
-        else
-        {
-            gBattleMons[gEffectBattler].status2 |= STATUS2_WRAPPED;
-            if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_GRIP_CLAW)
-                gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? 7 : 5;
-            else
-                gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? (Random() % 2) + 4 : (Random() % 4) + 2;
-
-            gBattleStruct->wrappedMove[gEffectBattler] = gCurrentMove;
-            gBattleStruct->wrappedBy[gEffectBattler] = gBattlerAttacker;
-
-            BattleScriptPush(gBattlescriptCurrInstr + 1);
-            gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
-
-            // for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; gBattleCommunication[MULTISTRING_CHOOSER] < NUM_TRAPPING_MOVES; gBattleCommunication[MULTISTRING_CHOOSER]++)
-            // {
-            //     if (sTrappingMoves[gBattleCommunication[MULTISTRING_CHOOSER]] == gCurrentMove)
-            //         break;
-            // }
-        }
+        IF_FAIL(gBattleMons[result->effectBattler].volatiles.wrapped)
+            result->nextInstr = nextInstr;
         break;
     case MOVE_EFFECT_ATK_PLUS_1:
     case MOVE_EFFECT_DEF_PLUS_1:

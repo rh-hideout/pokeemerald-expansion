@@ -631,6 +631,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_BIND,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -1018,6 +1019,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_WRAP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -2255,6 +2257,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_FIRE_SPIN,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -3428,6 +3431,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_CLAMP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -6642,6 +6646,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .damagesUnderwater = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_WHIRLPOOL,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -8673,6 +8678,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_SAND_TOMB,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -11996,6 +12002,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_MAGMA_STORM,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -15618,6 +15625,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_INFESTATION,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -16009,7 +16017,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .soundMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_REMOVE_STATUS,
-            .sheerForceBoost = SHEER_FORCE_BOOST,
+            .sheerForceOverride = TRUE, // Boosted by Sheer Force despite not having a chance
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -17178,8 +17186,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ION_DELUGE,
-            .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
         }),
         .battleAnimScript = gBattleAnimMove_PlasmaFists,
     },
@@ -17229,7 +17235,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_EVS_PLUS_1,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         #endif
         .battleAnimScript = gBattleAnimMove_ZippyZap,
@@ -17279,7 +17285,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLINCH,
             .chance = 30,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_FloatyFall,
     },
@@ -17347,7 +17353,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PARALYSIS,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_BuzzyBuzz,
     },
@@ -17373,7 +17379,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_BURN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_SizzlySlide,
     },
@@ -17397,7 +17403,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LIGHT_SCREEN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_GlitzyGlow,
     },
@@ -17421,7 +17427,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_REFLECT,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_BaddyBad,
     },
@@ -17446,7 +17452,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LEECH_SEED,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_SappySeed,
     },
@@ -17470,7 +17476,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_HAZE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_FreezyFrost,
     },
@@ -17494,7 +17500,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_AROMATHERAPY,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_SparklySwirl,
     },
@@ -17976,6 +17982,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .skyBattleBanned = B_EXTRAPOLATED_MOVE_FLAGS,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_SNAP_TRAP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -18959,6 +18966,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
+            .multistring = B_MSG_WRAPPED_THUNDER_CAGE,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -20864,7 +20872,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
             .self = TRUE,
             .onChargeTurnOnly = TRUE,
-            .sheerForceBoost = SHEER_FORCE_BOOST,
+            .sheerForceOverride = TRUE, // Boosted by Sheer Force although it shouldn't be
         }),
         .battleAnimScript = gBattleAnimMove_ElectroShot,
     },
@@ -21140,7 +21148,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TOXIC,
             .chance = 50,
-            .sheerForceBoost = SHEER_FORCE_BOOST,
         }),
         .battleAnimScript = gBattleAnimMove_MalignantChain,
     },
@@ -21760,7 +21767,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SUN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21782,7 +21789,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_SP_ATK_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21804,7 +21811,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21826,7 +21833,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_SPEED_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21848,7 +21855,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAISE_TEAM_ATTACK,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21870,7 +21877,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_DEFENSE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21892,7 +21899,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_HAIL,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21914,7 +21921,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAISE_TEAM_SP_ATK,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21936,7 +21943,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAIN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21958,7 +21965,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAISE_TEAM_SPEED,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -21980,7 +21987,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_MISTY_TERRAIN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22002,7 +22009,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_ATTACK_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22024,7 +22031,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22046,7 +22053,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SANDSTORM,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22069,7 +22076,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAISE_TEAM_SP_DEF,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22091,7 +22098,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_SP_DEF_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22113,7 +22120,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_GRASSY_TERRAIN,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22135,7 +22142,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAISE_TEAM_DEFENSE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22157,7 +22164,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_VINE_LASH,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22179,7 +22186,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WILDFIRE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22201,7 +22208,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CANNONADE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22223,7 +22230,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_EFFECT_SPORE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22245,7 +22252,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PARALYZE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22267,7 +22274,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22289,7 +22296,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CRIT_PLUS_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22311,7 +22318,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PREVENT_ESCAPE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22333,7 +22340,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_SPEED_2_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22355,7 +22362,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_AURORA_VEIL,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22377,7 +22384,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_INFATUATE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22399,7 +22406,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RECYCLE_BERRIES,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22421,7 +22428,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POISON_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22443,7 +22450,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TORMENT_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22466,7 +22473,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FIXED_POWER,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22489,7 +22496,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FIXED_POWER,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22512,7 +22519,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FIXED_POWER,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22534,7 +22541,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_DEFOG,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22556,7 +22563,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_GRAVITY,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22578,7 +22585,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STEALTH_ROCK,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22600,7 +22607,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_VOLCALITH,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22622,7 +22629,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LOWER_EVASIVENESS_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22644,7 +22651,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_AROMATHERAPY,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22666,7 +22673,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SANDBLAST_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22688,7 +22695,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POISON_PARALYZE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22710,7 +22717,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FIRE_SPIN_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22732,7 +22739,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CONFUSE_SIDE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22755,7 +22762,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_YAWN_FOE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22777,7 +22784,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_HEAL_TEAM,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22799,7 +22806,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STEELSURGE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 
@@ -22821,7 +22828,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SPITE,
             .chance = 100,
-            .sheerForceBoost = SHEER_FORCE_NO_BOOST,
+            .sheerForceOverride = TRUE,
         }),
     },
 

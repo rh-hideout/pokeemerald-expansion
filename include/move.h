@@ -7,7 +7,7 @@
 #include "constants/moves.h"
 
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
-struct __attribute__((packed, aligned(2))) BattleMoveEffect
+struct ALIGNED(2) BattleMoveEffect
 {
     const u8 *battleScript;
     u16 battleTvScore:3;
@@ -21,22 +21,16 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
-enum SheerForceBoost
-{
-    SHEER_FORCE_AUTO_BOOST, // This is the default state when a move has a move effect with a chance
-    SHEER_FORCE_BOOST,      // If a move effect doesn't have an effect with a chance this can force a boost
-    SHEER_FORCE_NO_BOOST,   // Prevents a Sheer Force boost
-};
-
 struct AdditionalEffect
 {
-    u16 moveEffect;
+    u8 moveEffect;
     u8 self:1;
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
-    u8 sheerForceBoost:2; // Handles edge cases for Sheer Force
-    u8 padding:3;
+    u8 sheerForceOverride:1; // Handles edge cases for Sheer Force
+    u8 multistring:4;
     u8 chance; // 0% = effect certain, primary effect
+    u8 argument;
 };
 
 enum ProtectType
