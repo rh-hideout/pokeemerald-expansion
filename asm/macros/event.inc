@@ -2570,7 +2570,7 @@
 
 @ Follower NPCs
 
-	@ Sets an NPC up to follow the player.
+	@ Sets an existing NPC up to follow the player.
 	@ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
 	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
@@ -2593,6 +2593,19 @@
 		.4byte \script
 		updatefollowingmon
         1:
+	.else
+		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+	.endif
+	.endm
+
+	@ Creates a new follower NPC with the specified graphics id.
+	.macro createfollowernpc gfx:req, flags:req, script=0, battlePartner=0
+	.if FNPC_ENABLE_NPC_FOLLOWERS
+		callnative ScriptCreateFollowerNPC
+		.2byte \gfx
+		.2byte \flags
+		.4byte \script
+		.2byte \battlePartner
 	.else
 		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
