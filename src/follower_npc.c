@@ -191,9 +191,9 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
 {
     struct ObjectEventTemplate npc;
     struct ObjectEvent *follower;
-    u32 npcX, npcY;
-    u32 faceDirection;
-    u32 eventObjId;
+    u32 eventObjId = GetObjectEventIdByLocalId(localId);
+    u32 npcX = gObjectEvents[eventObjId].currentCoords.x;
+    u32 npcY = gObjectEvents[eventObjId].currentCoords.y;
     const u8 *script;
     u32 flag;
 
@@ -201,63 +201,51 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     if (PlayerHasFollowerNPC())
         return;
 
-    for (eventObjId = 0; eventObjId < OBJECT_EVENTS_COUNT; eventObjId++)
-    {
-        if (!gObjectEvents[eventObjId].active || gObjectEvents[eventObjId].isPlayer)
-            continue;
+    flag = GetObjectEventFlagIdByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    // If the object does not have an event flag, don't create follower.
+    if (flag == 0)
+        return;
 
-        if (gObjectEvents[eventObjId].localId == localId)
-        {
-            flag = GetObjectEventFlagIdByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-            // If the object does not have an event flag, don't create follower.
-            if (flag == 0)
-                return;
+    if (setScript == TRUE)
+        // Set the custom script.
+        script = ptr;
+    else
+        // Use the object's original script.
+        script = GetObjectEventScriptPointerByObjectEventId(eventObjId);
 
-            if (setScript == TRUE)
-                // Set the custom script.
-                script = ptr;
-            else
-                // Use the object's original script.
-                script = GetObjectEventScriptPointerByObjectEventId(eventObjId);
+    RemoveObjectEvent(&gObjectEvents[eventObjId]);
+    SetFollowerNPCData(FNPC_DATA_MAP_ID, localId);
+    FlagSet(flag);
 
-            npcX = gObjectEvents[eventObjId].currentCoords.x;
-            npcY = gObjectEvents[eventObjId].currentCoords.y;
-            faceDirection = gObjectEvents[eventObjId].facingDirection;
-            SetFollowerNPCData(FNPC_DATA_MAP_ID, gObjectEvents[eventObjId].localId);
-            RemoveObjectEvent(&gObjectEvents[eventObjId]);
-            FlagSet(flag);
+    npc = *GetObjectEventTemplateByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    npc.movementType = 0;
+    npc.script = script;
+    npc.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
+    SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&npc, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, npcX, npcY));
+    follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
+    MoveObjectEventToMapCoords(follower, npcX, npcY);
+    ObjectEventTurn(follower, gObjectEvents[eventObjId].facingDirection);
+    follower->movementType = MOVEMENT_TYPE_NONE;
+    gSprites[follower->spriteId].callback = MovementType_None;
 
-            npc = *GetObjectEventTemplateByLocalIdAndMap(GetFollowerNPCData(FNPC_DATA_MAP_ID), gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-            npc.movementType = 0;
-            npc.script = script;
-            npc.localId = OBJ_EVENT_ID_NPC_FOLLOWER;
-            SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&npc, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, npcX, npcY));
-            follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
-            MoveObjectEventToMapCoords(follower, npcX, npcY);
-            ObjectEventTurn(follower, faceDirection);
-            follower->movementType = MOVEMENT_TYPE_NONE;
-            gSprites[follower->spriteId].callback = MovementType_None;
+    SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
+    SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
+    SetFollowerNPCData(FNPC_DATA_MAP_NUM, gSaveBlock1Ptr->location.mapNum);
+    SetFollowerNPCData(FNPC_DATA_MAP_GROUP, gSaveBlock1Ptr->location.mapGroup);
+    SetFollowerNPCScriptPointer(script);
+    SetFollowerNPCData(FNPC_DATA_EVENT_FLAG, flag);
+    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
+    SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
+    SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
 
-            SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
-            SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
-            SetFollowerNPCData(FNPC_DATA_MAP_NUM, gSaveBlock1Ptr->location.mapNum);
-            SetFollowerNPCData(FNPC_DATA_MAP_GROUP, gSaveBlock1Ptr->location.mapGroup);
-            SetFollowerNPCScriptPointer(script);
-            SetFollowerNPCData(FNPC_DATA_EVENT_FLAG, flag);
-            SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
-            SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
-            SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
+    &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
 
-            // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-            if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
-            &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
-                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
-
-            // Set the follower sprite to match the player state.
-            if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
-                FollowerNPC_HandleSprite();
-        }
-    }
+    // Set the follower sprite to match the player state.
+    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
+        FollowerNPC_HandleSprite();
 }
 
 static u32 GetFollowerNPCSprite(void)
