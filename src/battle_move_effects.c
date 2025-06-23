@@ -91,10 +91,9 @@ static struct SetMoveEffectResult *SetNonVolatileStatusConditionWithResult(struc
     else
         result->multistring = B_MSG_STATUSED;
 
-    gBattleStruct->synchronizeMoveEffect = gMoveEffectsInfo[result->moveEffect].synchronizeMoveEffect;
-
-    if (result->moveEffect == MOVE_EFFECT_POISON || result->moveEffect == MOVE_EFFECT_TOXIC)
-        gBattleStruct->poisonPuppeteerConfusion = TRUE;
+    // Activate Synchronize, Poison Puppeteer
+    gBattleStruct->synchronizeMoveEffect = result->moveEffect * gMoveEffectsInfo[result->moveEffect].synchronizeMoveEffect;
+    gBattleStruct->poisonPuppeteerConfusion = (result->moveEffect == MOVE_EFFECT_POISON || result->moveEffect == MOVE_EFFECT_TOXIC);
 
     return result;
 }
@@ -282,11 +281,13 @@ const struct MoveEffectInfo gMoveEffectsInfo[] =
     [MOVE_EFFECT_UPROAR] =
     {
         ._volatile = VOLATILE_UPROAR,
+        .battlescript = BattleScript_MoveEffectUproar,
         .callback = MoveEffect_UproarCallback,
     },
     [MOVE_EFFECT_PAYDAY] =
     {
         .callback = MoveEffect_PaydayCallback,
+        .battlescript = BattleScript_MoveEffectPayDay,
         .activateAfterFaint = TRUE,
     },
     [MOVE_EFFECT_WRAP] =
@@ -762,7 +763,7 @@ const struct MoveEffectInfo gMoveEffectsInfo[] =
 };
 
 #define IF_FAIL(...) if ((result->failed = (__VA_ARGS__)))
-#define IF_SUCCEED(...) if ((result->failed = !(__VA_ARGS__)))
+#define IF_SUCCEED(...) if (!(result->failed = !(__VA_ARGS__)))
 
 void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain)
 {
@@ -875,7 +876,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
         break;
     case MOVE_EFFECT_PAYDAY:
         // Don't scatter coins on the second hit of Parental Bond
-        IF_SUCCEED(IsOnPlayerSide(result->battlerAtk) && gSpecialStatuses[result->battlerAtk].parentalBondState!= PARENTAL_BOND_2ND_HIT)
+        IF_SUCCEED(IsOnPlayerSide(result->battlerAtk) && gSpecialStatuses[result->battlerAtk].parentalBondState != PARENTAL_BOND_2ND_HIT)
         {
             // For a move that hits multiple targets (i.e. Make it Rain)
             // we only want to print the message on the final hit

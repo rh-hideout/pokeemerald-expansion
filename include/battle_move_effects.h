@@ -61,7 +61,7 @@ static inline void PushNextInstrAndMoveEffectInstr(struct SetMoveEffectResult *r
 
 static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result, const u8 *currInstr, const u8 *backupInstr)
 {
-    if (result->moveEffect <= MOVE_EFFECT_FLINCH)
+    if (result->moveEffect <= MOVE_EFFECT_PAYDAY)
     {
         if (result->blockedByAbility)
         {
