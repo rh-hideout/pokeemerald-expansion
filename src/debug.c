@@ -2527,6 +2527,7 @@ static void DebugAction_FlagsVars_FlagsSelect(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON))
     {
+        PlaySE(SE_SELECT);
         FlagToggle(gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
@@ -2536,7 +2537,6 @@ static void DebugAction_FlagsVars_FlagsSelect(u8 taskId)
         return;
     }
 
-    PlaySE(SE_SELECT);
     Debug_HandleInput_Numeric(taskId, 1, FLAGS_COUNT - 1, DEBUG_NUMBER_DIGITS_FLAGS);
 
     if (JOY_NEW(DPAD_ANY) || JOY_NEW(A_BUTTON))
