@@ -261,7 +261,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             damageTaken = AI_GetDamage(opposingBattler, battler, i, AI_DEFENDING, gAiLogicData);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
             {
-                return maxDamageTaken = damageTaken;
+                maxDamageTaken = damageTaken;
                 break;
             }
             if (damageTaken > maxDamageTaken)
