@@ -44,7 +44,6 @@ enum FormChanges
     // - WHEN_FORGOTTEN if Form change that activates when move is learned
     FORM_CHANGE_MOVE,
     // Form change that activates when the Pokémon is withdrawn from the PC or Daycare.
-    // Daycare withdraw done, PC withdraw TODO.
     // - No parameters.
     FORM_CHANGE_WITHDRAW,
     // Form change that activates when the Pokémon faints, either in battle or in the overworld by poison.

@@ -408,15 +408,12 @@
 	.4byte \argPtr
 	.endm
 
-	.macro setgraphicalstatchangevalues
+	.macro unused_0x47
 	.byte 0x47
 	.endm
 
-	.macro playstatchangeanimation battler:req, stats:req, flags:req
+	.macro unused_0x48
 	.byte 0x48
-	.byte \battler
-	.byte \stats
-	.byte \flags
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -770,10 +767,11 @@
 	.byte 0x88
 	.endm
 
-	.macro statbuffchange flags:req, failInstr:req
+	.macro statbuffchange flags:req, failInstr:req, stats=0
 	.byte 0x89
 	.2byte \flags
 	.4byte \failInstr
+	.byte \stats
 	.endm
 
 	.macro normalisebuffs
@@ -1393,8 +1391,8 @@
 	callnative BS_AllySwitchSwapBattler
 	.endm
 
-	.macro allyswitchfailchance jumpInstr:req
-	callnative BS_AllySwitchFailChance
+	.macro tryallyswitch jumpInstr:req
+	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
 	.endm
 
@@ -2512,11 +2510,10 @@
 	ANIM_ON = TRUE
 
 	setstatchanger \stat, \amount, \mode
-	statbuffchange STAT_CHANGE_ALLOW_PTR, \script
-	setgraphicalstatchangevalues
-	.if \animation == TRUE
-		playanimation \battler, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	.if \animation == FALSE
+		setbyte sSTAT_ANIM_PLAYED, TRUE
 	.endif
+	statbuffchange STAT_CHANGE_ALLOW_PTR, \script
 	.ifnb \customString
 		printstring \customString
 	.else

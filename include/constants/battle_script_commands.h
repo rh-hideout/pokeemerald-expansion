@@ -221,16 +221,11 @@ enum CmdVarious
 // Cmd_statbuffchange
 #define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
 #define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
+#define STAT_CHANGE_ONLY_CHECKING           (1 << 2)   // Checks if the stat change can occur. Does not change stats or play stat change animation.
 #define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 5)
 #define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 6)
 
-// stat change flags for Cmd_playstatchangeanimation
-#define STAT_CHANGE_NEGATIVE             (1 << 0)
-#define STAT_CHANGE_BY_TWO               (1 << 1)
-#define STAT_CHANGE_MULTIPLE_STATS       (1 << 2)
-#define STAT_CHANGE_CANT_PREVENT         (1 << 3)
-
-// stat flags for Cmd_playstatchangeanimation
+// stat flags for TryPlayStatChangeAnimation
 #define BIT_HP                      (1 << 0)
 #define BIT_ATK                     (1 << 1)
 #define BIT_DEF                     (1 << 2)

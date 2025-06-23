@@ -4,6 +4,7 @@
 #include "contest_effect.h"
 #include "sprite.h"
 #include "constants/battle.h"
+#include "constants/cries.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
@@ -431,8 +432,8 @@ struct SpeciesInfo /*0xC4*/
     // Pokédex data
     u8 categoryName[13];
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
-    u16 cryId;
-    u16 natDexNum;
+    enum PokemonCry cryId:16;
+    enum NationalDexOrder natDexNum:16;
     u16 height; //in decimeters
     u16 weight; //in hectograms
     u16 pokemonScale;
@@ -440,7 +441,7 @@ struct SpeciesInfo /*0xC4*/
     u16 trainerScale;
     u16 trainerOffset;
     const u8 *description;
-    u8 bodyColor:7;
+    enum BodyColor bodyColor:7;
     // Graphical Data
     u8 noFlip:1;
     u8 frontAnimDelay;
@@ -789,11 +790,11 @@ u32 GetGMaxTargetSpecies(u32 species);
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState);
 u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
-u16 NationalPokedexNumToSpecies(u16 nationalNum);
-u16 NationalToHoennOrder(u16 nationalNum);
-u16 SpeciesToNationalPokedexNum(u16 species);
-u16 SpeciesToHoennPokedexNum(u16 species);
-u16 HoennToNationalOrder(u16 hoennNum);
+u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
+enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum);
+enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species);
+enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species);
+enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
 void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
 void EvolutionRenameMon(struct Pokemon *mon, u16 oldSpecies, u16 newSpecies);
 u8 GetPlayerFlankId(void);
@@ -843,7 +844,7 @@ void BattleAnimateBackSprite(struct Sprite *sprite, u16 species);
 u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId);
 u16 FacilityClassToPicIndex(u16 facilityClass);
 u16 PlayerGenderToFrontTrainerPicId(u8 playerGender);
-void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality);
+void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality);
 bool8 HasTwoFramesAnimation(u16 species);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
@@ -865,7 +866,7 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
 u8 CalculatePartyCount(struct Pokemon *party);
 u16 SanitizeSpeciesId(u16 species);
 bool32 IsSpeciesEnabled(u16 species);
-u16 GetCryIdBySpecies(u16 species);
+enum PokemonCry GetCryIdBySpecies(u16 species);
 u16 GetSpeciesPreEvolution(u16 species);
 void HealPokemon(struct Pokemon *mon);
 void HealBoxPokemon(struct BoxPokemon *boxMon);

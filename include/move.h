@@ -69,7 +69,7 @@ struct MoveInfo
     const u8 *description;
     u16 effect;
     u16 type:5;     // Up to 32
-    u16 category:2;
+    enum DamageCategory category:2;
     u16 power:9;    // up to 511
     // end of word
     u16 accuracy:7;
@@ -200,7 +200,7 @@ static inline u32 GetMoveType(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }
 
-static inline u32 GetMoveCategory(u32 moveId)
+static inline enum DamageCategory GetMoveCategory(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].category;
 }
