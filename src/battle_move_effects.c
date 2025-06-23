@@ -63,8 +63,7 @@ static struct SetMoveEffectResult *SetNonVolatileStatusConditionWithResult(struc
     if (result->moveEffect == MOVE_EFFECT_SLEEP
      || result->moveEffect == MOVE_EFFECT_FREEZE)
     {
-        const u8 *cancelMultiTurnMovesResult = NULL;
-        cancelMultiTurnMovesResult = CancelMultiTurnMoves(result->effectBattler, SKY_DROP_STATUS_FREEZE_SLEEP);
+        const u8 *cancelMultiTurnMovesResult = CancelMultiTurnMoves(result->effectBattler, SKY_DROP_STATUS_FREEZE_SLEEP);
         if (cancelMultiTurnMovesResult)
             result->nextInstr = cancelMultiTurnMovesResult;
     }
@@ -77,6 +76,7 @@ static struct SetMoveEffectResult *SetNonVolatileStatusConditionWithResult(struc
         else
             gBattleMons[result->effectBattler].status1 = STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 2, 5));
         TryActivateSleepClause(result->effectBattler, gBattlerPartyIndexes[result->effectBattler]);
+        break;
     default:
         gBattleMons[result->effectBattler].status1 = gMoveEffectsInfo[result->moveEffect].status;
     }
@@ -99,11 +99,13 @@ static struct SetMoveEffectResult *SetNonVolatileStatusConditionWithResult(struc
     return result;
 }
 
-void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger)
+void SetNonVolatileStatusCondition(u32 battler, u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger)
 {
     struct SetMoveEffectResult result = {
         .moveEffect = effect,
+        .scriptingBattler = battler,
         .effectBattler = effectBattler,
+        .statusTrigger = trigger,
     };
     const u8 *currInstr = gBattlescriptCurrInstr;
 
@@ -118,12 +120,11 @@ static void MoveEffect_SetVolatileTrue(struct SetMoveEffectResult *result)
 
 static void MoveEffect_SetNonVolatileStatusCondition(struct SetMoveEffectResult *result)
 {
-    SetNonVolatileStatusConditionWithResult(result, TRIGGER_ON_MOVE);
+    SetNonVolatileStatusConditionWithResult(result, result->statusTrigger);
 }
 
 static void MoveEffect_ConfusionCallback(struct SetMoveEffectResult *result)
 {
-
     gBattleMons[result->effectBattler].volatiles.confusionTurns = ((Random()) % 4) + 2; // 2-5 turns
 
     // If the confusion is activating due to being released from Sky Drop, go to "confused due to fatigue" script.
@@ -761,7 +762,7 @@ const struct MoveEffectInfo gMoveEffectsInfo[] =
 };
 
 #define IF_FAIL(...) if ((result->failed = (__VA_ARGS__)))
-#define IF_SUCCEED(...) if (!(result->failed = (__VA_ARGS__)))
+#define IF_SUCCEED(...) if ((result->failed = !(__VA_ARGS__)))
 
 void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain)
 {
@@ -778,7 +779,7 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
 {
     s32 i;
     bool32 affectsUser = (battler == effectBattler);
-    bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
+    bool32 mirrorArmorReflected = (GetBattlerAbility(effectBattler) == ABILITY_MIRROR_ARMOR);
     union StatChangeFlags flags = {0};
     u32 battlerAbility;
 
@@ -864,8 +865,8 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
         }
         else IF_FAIL(gBattleMons[result->effectBattler].volatiles.flinched)
             result->nextInstr = gBattlescriptCurrInstr + 1;
-        else IF_FAIL(GetBattlerTurnOrderNum(gEffectBattler) > gCurrentTurnActionNumber
-                && !(GetActiveGimmick(gEffectBattler) == GIMMICK_DYNAMAX))
+        else IF_SUCCEED(GetBattlerTurnOrderNum(result->effectBattler) > gCurrentTurnActionNumber
+                && !(GetActiveGimmick(result->effectBattler) == GIMMICK_DYNAMAX))
             result->nextInstr = gBattlescriptCurrInstr + 1;
         break;
     case MOVE_EFFECT_UPROAR:

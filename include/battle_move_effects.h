@@ -17,6 +17,7 @@ struct ALIGNED(2) SetMoveEffectResult
     bool32 isAbility:1;
     bool32 battlescriptPush:1;
     bool32 blockedByAbility:1;
+    enum StatusTrigger statusTrigger:2;
     const u8 *nextInstr;
     u16 currentMove;
     u16 battlerAbility;
@@ -72,11 +73,12 @@ static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result,
         {
             if (gMoveEffectsInfo[result->moveEffect].callback)
                 gMoveEffectsInfo[result->moveEffect].callback(result);
-
-            // Set result variables
-            gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
-            gEffectBattler = result->effectBattler;
         }
+
+        // Set result variables
+        gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
+        gEffectBattler = result->effectBattler;
+        gBattleScripting.battler = result->scriptingBattler;
 
         // Push and set next instruction
         if (result->nextInstr)
@@ -93,7 +95,7 @@ static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result,
         gBattlescriptCurrInstr = backupInstr;
 }
 
-void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
+void SetNonVolatileStatusCondition(u32 battler, u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
 void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain);
 struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *result, u32 battler, u32 effectBattler, u16 moveEffect, bool32 primary, bool32 certain, const u8 *failInstr);
 
