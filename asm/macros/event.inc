@@ -2607,7 +2607,7 @@
 		.4byte \script
 		.2byte \battlePartner
 	.else
-		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
+		.error "createfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
 	.endm
 
