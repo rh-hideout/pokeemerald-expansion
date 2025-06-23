@@ -331,7 +331,6 @@ static void DrawLevelUpBannerText(void);
 static void SpriteCB_MonIconOnLvlUpBanner(struct Sprite *sprite);
 static bool32 CriticalCapture(u32 odds);
 static void BestowItem(u32 battlerAtk, u32 battlerDef);
-static bool8 IsFinalStrikeEffect(enum BattleMoveEffects moveEffect);
 static void TryUpdateRoundTurnOrder(void);
 static bool32 ChangeOrderTargetAfterAttacker(void);
 static bool32 SetTargetToNextPursuiter(u32 battlerDef);
@@ -922,17 +921,6 @@ static const struct SpriteTemplate sSpriteTemplate_MonIconOnLvlUpBanner =
 };
 
 static const u16 sProtectSuccessRates[] = {USHRT_MAX, USHRT_MAX / 2, USHRT_MAX / 4, USHRT_MAX / 8};
-
-static const u16 sFinalStrikeOnlyEffects[] =
-{
-    MOVE_EFFECT_BUG_BITE,
-    MOVE_EFFECT_STEAL_ITEM,
-    MOVE_EFFECT_REMOVE_ARG_TYPE,
-    MOVE_EFFECT_REMOVE_STATUS,
-    MOVE_EFFECT_RECOIL_HP_25,
-    MOVE_EFFECT_PREVENT_ESCAPE,
-    MOVE_EFFECT_WRAP,
-};
 
 static const u16 sNaturePowerMoves[BATTLE_ENVIRONMENT_COUNT] =
 {
@@ -3371,7 +3359,7 @@ struct MoveEffectInfo
     u32 notAbilityCompatible:1;
     u32 notItemCompatible:1;
     u32 activateAfterFaint:1;
-    u32 parentalBond:1;
+    u32 finalStrikeEffect:1;
     u32 blockedBySafeguard:1;
     u32 blockedByAromaVeil:1;
     u32 onlyIfMonsAliveOnEitherSide:1;
@@ -3433,6 +3421,7 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     [MOVE_EFFECT_PAYDAY] =
     {
         .callback = MoveEffect_PaydayCallback,
+        .activateAfterFaint = TRUE,
     },
     [MOVE_EFFECT_CHARGING] =
     {
@@ -3443,6 +3432,7 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
         ._volatile = VOLATILE_WRAPPED,
         .battlescript = BattleScript_MoveEffectWrap,
         .callback = MoveEffect_WrapCallback,
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_ATK_PLUS_1] =
     {
@@ -3502,7 +3492,7 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     },
     [MOVE_EFFECT_REMOVE_ARG_TYPE] =
     {
-
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_RECHARGE] =
     {
@@ -3517,10 +3507,13 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     {
         .battlescript = BattleScript_ItemSteal,
         .callback = MoveEffect_StealItemCallback,
+        .activateAfterFaint = TRUE,
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_PREVENT_ESCAPE] =
     {
         .callback = MoveEffect_PreventEscapeCallback,
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_NIGHTMARE] =
     {
@@ -3532,7 +3525,7 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     },
     [MOVE_EFFECT_REMOVE_STATUS] =
     {
-
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_ATK_DEF_DOWN] =
     {
@@ -3641,11 +3634,12 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     },
     [MOVE_EFFECT_BUG_BITE] =
     {
-
+        .activateAfterFaint = TRUE,
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_RECOIL_HP_25] =
     {
-
+        .finalStrikeEffect = TRUE,
     },
     [MOVE_EFFECT_TRAP_BOTH] =
     {
@@ -3661,11 +3655,11 @@ static struct MoveEffectInfo sMoveEffectsInfo[] =
     },
     [MOVE_EFFECT_STEALTH_ROCK] =
     {
-
+        .activateAfterFaint = TRUE,
     },
     [MOVE_EFFECT_SPIKES] =
     {
-
+        .activateAfterFaint = TRUE,
     },
     [MOVE_EFFECT_SYRUP_BOMB] =
     {
@@ -3944,29 +3938,18 @@ static void SetMoveEffectWithResult(struct SetMoveEffectResult *result, bool32 p
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     u32 flags = 0;
     u32 battlerAbility;
-    bool32 activateAfterFaint = FALSE;
+    bool32 activateAfterFaint = sMoveEffectsInfo[gBattleScripting.moveEffect].activateAfterFaint;
 
     // NULL move effect
-    if (gBattleScripting.moveEffect == MOVE_EFFECT_NONE)
+    IF_FAIL(gBattleScripting.moveEffect == MOVE_EFFECT_NONE)
         return;
 
-    if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
+    IF_FAIL(gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
         && IsBattlerAlive(gBattlerTarget)
-        && IsFinalStrikeEffect(gBattleScripting.moveEffect))
+        && sMoveEffectsInfo[gBattleScripting.moveEffect].finalStrikeEffect)
     {
         gBattlescriptCurrInstr++;
         return;
-    }
-
-    switch (gBattleScripting.moveEffect) // Set move effects which happen later on
-    {
-    case MOVE_EFFECT_STEALTH_ROCK:
-    case MOVE_EFFECT_SPIKES:
-    case MOVE_EFFECT_PAYDAY:
-    case MOVE_EFFECT_BUG_BITE:
-    case MOVE_EFFECT_STEAL_ITEM:
-        activateAfterFaint = TRUE;
-        break;
     }
 
     if (gBattleScripting.moveEffect & MOVE_EFFECT_AFFECTS_USER)
@@ -17375,18 +17358,6 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler)
             }
         }
         return TRUE;
-    }
-    return FALSE;
-}
-
-static bool8 IsFinalStrikeEffect(enum BattleMoveEffects moveEffect)
-{
-    u32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sFinalStrikeOnlyEffects); i++)
-    {
-        if (moveEffect == sFinalStrikeOnlyEffects[i])
-            return TRUE;
     }
     return FALSE;
 }
