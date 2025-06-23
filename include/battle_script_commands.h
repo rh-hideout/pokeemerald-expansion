@@ -36,7 +36,7 @@ union TRANSPARENT StatChangeFlags
         bool32 updateMoveEffect:1; // STAT_CHANGE_UPDATE_MOVE_EFFECT
         bool32 statDropPrevention:1; // STAT_CHANGE_CHECK_PREVENTION
         bool32 certain:1; // STAT_CHANGE_CERTAIN
-        bool32 padding:8;
+        bool32 padding:25;
     };
 };
 

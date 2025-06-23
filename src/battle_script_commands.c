@@ -1438,9 +1438,9 @@ static void Cmd_setchargingturn(void)
 {
     CMD_ARGS();
 
-    if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
+    if (!gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
     {
-        gBattleMons[gBattlerAttacker].status2 |= STATUS2_MULTIPLETURNS;
+        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
         gLockedMoves[gBattlerAttacker] = gCurrentMove;
         gProtectStructs[gBattlerAttacker].chargingTurn = TRUE;
     }
