@@ -41,8 +41,9 @@ SECTIONS {
     .iwram.bss (NOLOAD) :
     ALIGN(4)
     {
-        *.o(.bss*);
-        src/*.o(common_data);
+        *libc.a:*.o(.bss*);
+        *libnosys.a:*.o(.bss*);
+        *.o(common_data);
         src/*.o(COMMON);
         *libc.a:*.o(COMMON);
         *libnosys.a:*.o(COMMON);
