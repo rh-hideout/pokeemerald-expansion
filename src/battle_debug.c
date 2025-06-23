@@ -104,7 +104,7 @@ enum
     LIST_ITEM_STATS,
     LIST_ITEM_STAT_STAGES,
     LIST_ITEM_STATUS1,
-    LIST_ITEM_STATUS2,
+    LIST_ITEM_VOLATILE,
     LIST_ITEM_STATUS3,
     LIST_ITEM_STATUS4,
     LIST_ITEM_SIDE_STATUS,
@@ -137,23 +137,6 @@ enum
     LIST_STATUS1_TOXIC_POISON,
     LIST_STATUS1_TOXIC_COUNTER,
     LIST_STATUS1_FROSTBITE,
-};
-
-enum
-{
-    LIST_STATUS2_CONFUSION,
-    LIST_STATUS2_FLINCHED,
-    LIST_STATUS2_TORMENT,
-    LIST_STATUS2_POWDER,
-    LIST_STATUS2_DEFENSE_CURL,
-    LIST_STATUS2_RECHARGE,
-    LIST_STATUS2_RAGE,
-    LIST_STATUS2_DESTINY_BOND,
-    LIST_STATUS2_ESCAPE_PREVENTION,
-    LIST_STATUS2_CURSED,
-    LIST_STATUS2_FORESIGHT,
-    LIST_STATUS2_DRAGON_CHEER,
-    LIST_STATUS2_FOCUS_ENERGY
 };
 
 enum
@@ -268,6 +251,7 @@ enum
     VAL_BITFIELD_8,
     VAL_BITFIELD_16,
     VAL_BITFIELD_32,
+    VAL_VOLATILE,
     VAR_SIDE_STATUS,
     VAR_SHOW_HP,
     VAR_SUBSTITUTE,
@@ -290,7 +274,7 @@ static const u8 sText_Types[] = _("Types");
 static const u8 sText_Stats[] = _("Stats");
 static const u8 sText_StatStages[] = _("Stat Stages");
 static const u8 sText_Status1[] = _("Status1");
-static const u8 sText_Status2[] = _("Status2");
+static const u8 sText_VolatileStatus[] = _("Volatiles");
 static const u8 sText_Status3[] = _("Status3");
 static const u8 sText_Status4[] = _("Status4");
 static const u8 sText_SideStatus[] = _("Side Status");
@@ -435,23 +419,6 @@ static const struct BitfieldInfo sStatus1Bitfield[] =
     {/*Frostbite*/ 1, 12},
 };
 
-static const struct BitfieldInfo sStatus2Bitfield[] =
-{
-    {/*Confusion*/ 3, 0},
-    {/*Flinched*/ 1, 3},
-    {/*Torment*/ 1, 7},
-    {/*Powder*/ 1, 14},
-    {/*Defense Curl*/ 1, 20},
-    {/*Recharge*/ 1, 22},
-    {/*Rage*/ 1, 23},
-    {/*Destiny Bond*/ 1, 25},
-    {/*Escape Prevention*/ 1, 26},
-    {/*Cursed*/ 1, 28},
-    {/*Foresight*/ 1, 29},
-    {/*Dragon Cheer*/ 1, 30},
-    {/*Focus Energy*/ 1, 31},
-};
-
 static const struct BitfieldInfo sStatus3Bitfield[] =
 {
     {/*Leech Seed Battler*/ 2, 0},
@@ -532,7 +499,7 @@ static const struct ListMenuItem sMainListItems[] =
     {sText_Stats, LIST_ITEM_STATS},
     {sText_StatStages, LIST_ITEM_STAT_STAGES},
     {sText_Status1, LIST_ITEM_STATUS1},
-    {sText_Status2, LIST_ITEM_STATUS2},
+    {sText_VolatileStatus, LIST_ITEM_VOLATILE},
     {sText_Status3, LIST_ITEM_STATUS3},
     {sText_Status4, LIST_ITEM_STATUS4},
     {sText_SideStatus, LIST_ITEM_SIDE_STATUS},
@@ -566,21 +533,21 @@ static const struct ListMenuItem sStatus1ListItems[] =
     {sText_Frostbite, LIST_STATUS1_FROSTBITE},
 };
 
-static const struct ListMenuItem sStatus2ListItems[] =
+static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    {sText_Confusion, LIST_STATUS2_CONFUSION},
-    {sText_Flinched, LIST_STATUS2_FLINCHED},
-    {sText_Torment, LIST_STATUS2_TORMENT},
-    {sText_Powder, LIST_STATUS2_POWDER},
-    {sText_DefenseCurl, LIST_STATUS2_DEFENSE_CURL},
-    {sText_Recharge, LIST_STATUS2_RECHARGE},
-    {sText_Rage, LIST_STATUS2_RAGE},
-    {sText_DestinyBond, LIST_STATUS2_DESTINY_BOND},
-    {sText_EscapePrevention, LIST_STATUS2_ESCAPE_PREVENTION},
-    {sText_Cursed, LIST_STATUS2_CURSED},
-    {sText_Foresight, LIST_STATUS2_FORESIGHT},
-    {sText_DragonCheer, LIST_STATUS2_DRAGON_CHEER},
-    {sText_FocusEnergy, LIST_STATUS2_FOCUS_ENERGY},
+    {COMPOUND_STRING("Confusion"), VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"), VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"), VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"), VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"), VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"), VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"), VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"), VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"), VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"), VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"), VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"), VOLATILE_FOCUS_ENERGY},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -803,19 +770,6 @@ static const struct BgTemplate sBgTemplates[] =
        .priority = 0,
        .baseTile = 0
    }
-};
-
-static const u8 sBitsToMaxDigit[] =
-{
-    [0] = 0,
-    [1] = 1, // max 1
-    [2] = 1, // max 3
-    [3] = 1, // max 7
-    [4] = 2, // max 15
-    [5] = 2, // max 31
-    [6] = 2, // max 63
-    [7] = 3, // max 127
-    [8] = 3, // max 255
 };
 
 static const bool8 sHasChangeableEntries[LIST_ITEM_COUNT] =
@@ -1586,10 +1540,9 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         itemsCount = ARRAY_COUNT(sStatus1ListItems);
         data->bitfield = sStatus1Bitfield;
         break;
-    case LIST_ITEM_STATUS2:
-        listTemplate.items = sStatus2ListItems;
-        itemsCount = ARRAY_COUNT(sStatus2ListItems);
-        data->bitfield = sStatus2Bitfield;
+    case LIST_ITEM_VOLATILE:
+        listTemplate.items = sVolatileStatusListItems;
+        itemsCount = ARRAY_COUNT(sVolatileStatusListItems);
         break;
     case LIST_ITEM_STATUS3:
         listTemplate.items = sStatus3ListItems;
@@ -1808,6 +1761,9 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~(GetBitfieldToAndValue(data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount));
         *(u32 *)(data->modifyArrows.modifiedValPtr) |= (data->modifyArrows.currValue << data->bitfield[data->currentSecondaryListItemId].currBit);
         break;
+    case VAL_VOLATILE:
+        SetMonVolatile(data->battlerId, data->currentSecondaryListItemId, data->modifyArrows.currValue);
+        break;
     case VAR_SIDE_STATUS:
         *GetSideStatusValue(data, TRUE, data->modifyArrows.currValue != 0) = data->modifyArrows.currValue;
         break;
@@ -1818,12 +1774,12 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         *(u8 *)(data->modifyArrows.modifiedValPtr) = data->modifyArrows.currValue;
         if (*(u8 *)(data->modifyArrows.modifiedValPtr) == 0)
         {
-            gBattleMons[data->battlerId].status2 &= ~STATUS2_SUBSTITUTE;
+            gBattleMons[data->battlerId].volatiles.substitute = FALSE;
             gBattleSpritesDataPtr->battlerData[data->battlerId].behindSubstitute = 0;
         }
         else
         {
-            gBattleMons[data->battlerId].status2 |= STATUS2_SUBSTITUTE;
+            gBattleMons[data->battlerId].volatiles.substitute = TRUE;
             gBattleSpritesDataPtr->battlerData[data->battlerId].behindSubstitute = 1;
         }
         break;
@@ -2175,11 +2131,28 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.currValue = GetBitfieldValue(gBattleMons[data->battlerId].status1, data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
-    case LIST_ITEM_STATUS2:
-        data->modifyArrows.modifiedValPtr = &gBattleMons[data->battlerId].status2;
-        data->modifyArrows.currValue = GetBitfieldValue(gBattleMons[data->battlerId].status2, data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
+    case LIST_ITEM_VOLATILE:
+        data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
+        data->modifyArrows.typeOfVal = VAL_VOLATILE;
+        data->modifyArrows.minValue = 0;
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeBitSize, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize)); break;
+        switch (data->currentSecondaryListItemId)
+        {
+            VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
+            /* Expands to the following:
+             * case VOLATILE_CONFUSION:
+                  data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
+                  break;
+             * case VOLATILE_FLINCHED:
+                  data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
+                  break;
+             * ...etc.
+             */
+            default:
+                data->modifyArrows.maxValue = 0;
+        }
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
+        break;
     case LIST_ITEM_STATUS3:
         data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
@@ -2198,7 +2171,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     CASE_ITEM_STATUS:
         data->modifyArrows.minValue = 0;
         data->modifyArrows.maxValue = (1 << data->bitfield[data->currentSecondaryListItemId].bitsCount) - 1;
-        data->modifyArrows.maxDigits = sBitsToMaxDigit[data->bitfield[data->currentSecondaryListItemId].bitsCount];
+        data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
     case LIST_ITEM_SIDE_STATUS:
         data->modifyArrows.minValue = 0;
@@ -2308,276 +2281,144 @@ static void UpdateMonData(struct BattleDebugMenu *data)
     }
 }
 
-static const u8 sText_HoldEffectNone[] = _("????????");
-static const u8 sText_HoldEffectRestoreHp[] = _("Restore Hp");
-static const u8 sText_HoldEffectCurePar[] = _("Cure Par");
-static const u8 sText_HoldEffectCureSlp[] = _("Cure Slp");
-static const u8 sText_HoldEffectCurePsn[] = _("Cure Psn");
-static const u8 sText_HoldEffectCureBrn[] = _("Cure Brn");
-static const u8 sText_HoldEffectCureFrz[] = _("Cure Frz");
-static const u8 sText_HoldEffectRestorePp[] = _("Restore Pp");
-static const u8 sText_HoldEffectCureConfusion[] = _("Cure Confusion");
-static const u8 sText_HoldEffectCureStatus[] = _("Cure Status");
-static const u8 sText_HoldEffectConfuseSpicy[] = _("Confuse Spicy");
-static const u8 sText_HoldEffectConfuseDry[] = _("Confuse Dry");
-static const u8 sText_HoldEffectConfuseSweet[] = _("Confuse Sweet");
-static const u8 sText_HoldEffectConfuseBitter[] = _("Confuse Bitter");
-static const u8 sText_HoldEffectConfuseSour[] = _("Confuse Sour");
-static const u8 sText_HoldEffectAttackUp[] = _("Attack Up");
-static const u8 sText_HoldEffectDefenseUp[] = _("Defense Up");
-static const u8 sText_HoldEffectSpeedUp[] = _("Speed Up");
-static const u8 sText_HoldEffectSpAttackUp[] = _("Sp Attack Up");
-static const u8 sText_HoldEffectSpDefenseUp[] = _("Sp Defense Up");
-static const u8 sText_HoldEffectCriticalUp[] = _("Critical Up");
-static const u8 sText_HoldEffectRandomStatUp[] = _("Random Stat Up");
-static const u8 sText_HoldEffectEvasionUp[] = _("Evasion Up");
-static const u8 sText_HoldEffectRestoreStats[] = _("Restore Stats");
-static const u8 sText_HoldEffectMachoBrace[] = _("Macho Brace");
-static const u8 sText_HoldEffectExpShare[] = _("Exp Share");
-static const u8 sText_HoldEffectQuickClaw[] = _("Quick Claw");
-static const u8 sText_HoldEffectFriendshipUp[] = _("Friendship Up");
-static const u8 sText_HoldEffectMentalHerb[] = _("Mental Herb");
-static const u8 sText_HoldEffectChoiceBand[] = _("Choice Band");
-static const u8 sText_HoldEffectFlinch[] = _("Flinch");
-static const u8 sText_HoldEffectDoublePrize[] = _("Double Prize");
-static const u8 sText_HoldEffectRepel[] = _("Repel");
-static const u8 sText_HoldEffectSoulDew[] = _("Soul Dew");
-static const u8 sText_HoldEffectDeepSeaTooth[] = _("Deep Sea Tooth");
-static const u8 sText_HoldEffectDeepSeaScale[] = _("Deep Sea Scale");
-static const u8 sText_HoldEffectCanAlwaysRun[] = _("Can Always Run");
-static const u8 sText_HoldEffectPreventEvolve[] = _("Prevent Evolve");
-static const u8 sText_HoldEffectFocusBand[] = _("Focus Band");
-static const u8 sText_HoldEffectLuckyEgg[] = _("Lucky Egg");
-static const u8 sText_HoldEffectScopeLens[] = _("Scope Lens");
-static const u8 sText_HoldEffectLeftovers[] = _("Leftovers");
-static const u8 sText_HoldEffectDragonScale[] = _("Dragon Scale");
-static const u8 sText_HoldEffectLightBall[] = _("Light Ball");
-static const u8 sText_HoldEffectTypePower[] = _("Type Power");
-static const u8 sText_HoldEffectUpgrade[] = _("Upgrade");
-static const u8 sText_HoldEffectShellBell[] = _("Shell Bell");
-static const u8 sText_HoldEffectLuckyPunch[] = _("Lucky Punch");
-static const u8 sText_HoldEffectMetalPowder[] = _("Metal Powder");
-static const u8 sText_HoldEffectThickClub[] = _("Thick Club");
-static const u8 sText_HoldEffectLeek[] = _("Leek");
-static const u8 sText_HoldEffectChoiceScarf[] = _("Choice Scarf");
-static const u8 sText_HoldEffectChoiceSpecs[] = _("Choice Specs");
-static const u8 sText_HoldEffectDampRock[] = _("Damp Rock");
-static const u8 sText_HoldEffectGripClaw[] = _("Grip Claw");
-static const u8 sText_HoldEffectHeatRock[] = _("Heat Rock");
-static const u8 sText_HoldEffectIcyRock[] = _("Icy Rock");
-static const u8 sText_HoldEffectLightClay[] = _("Light Clay");
-static const u8 sText_HoldEffectSmoothRock[] = _("Smooth Rock");
-static const u8 sText_HoldEffectPowerHerb[] = _("Power Herb");
-static const u8 sText_HoldEffectBigRoot[] = _("Big Root");
-static const u8 sText_HoldEffectExpertBelt[] = _("Expert Belt");
-static const u8 sText_HoldEffectLifeOrb[] = _("Life Orb");
-static const u8 sText_HoldEffectMetronome[] = _("Metronome");
-static const u8 sText_HoldEffectMuscleBand[] = _("Muscle Band");
-static const u8 sText_HoldEffectWideLens[] = _("Wide Lens");
-static const u8 sText_HoldEffectWiseGlasses[] = _("Wise Glasses");
-static const u8 sText_HoldEffectZoomLens[] = _("Zoom Lens");
-static const u8 sText_HoldEffectLaggingTail[] = _("Lagging Tail");
-static const u8 sText_HoldEffectFocusSash[] = _("Focus Sash");
-static const u8 sText_HoldEffectFlameOrb[] = _("Flame Orb");
-static const u8 sText_HoldEffectToxicOrb[] = _("Toxic Orb");
-static const u8 sText_HoldEffectStickyBarb[] = _("Sticky Barb");
-static const u8 sText_HoldEffectIronBall[] = _("Iron Ball");
-static const u8 sText_HoldEffectBlackSludge[] = _("Black Sludge");
-static const u8 sText_HoldEffectDestinyKnot[] = _("Destiny Knot");
-static const u8 sText_HoldEffectShedShell[] = _("Shed Shell");
-static const u8 sText_HoldEffectQuickPowder[] = _("Quick Powder");
-static const u8 sText_HoldEffectAdamantOrb[] = _("Adamant Orb");
-static const u8 sText_HoldEffectLustrousOrb[] = _("Lustrous Orb");
-static const u8 sText_HoldEffectGriseousOrb[] = _("Griseous Orb");
-static const u8 sText_HoldEffectEnigmaBerry[] = _("Enigma Berry");
-static const u8 sText_HoldEffectResistBerry[] = _("Resist Berry");
-static const u8 sText_HoldEffectPowerItem[] = _("Power Item");
-static const u8 sText_HoldEffectRestorePctHp[] = _("Restore Pct Hp");
-static const u8 sText_HoldEffectMicleBerry[] = _("Micle Berry");
-static const u8 sText_HoldEffectCustapBerry[] = _("Custap Berry");
-static const u8 sText_HoldEffectJabocaBerry[] = _("Jaboca Berry");
-static const u8 sText_HoldEffectRowapBerry[] = _("Rowap Berry");
-static const u8 sText_HoldEffectKeeBerry[] = _("Kee Berry");
-static const u8 sText_HoldEffectMarangaBerry[] = _("Maranga Berry");
-static const u8 sText_HoldEffectFloatStone[] = _("Float Stone");
-static const u8 sText_HoldEffectEviolite[] = _("Eviolite");
-static const u8 sText_HoldEffectAssaultVest[] = _("Assault Vest");
-static const u8 sText_HoldEffectDrive[] = _("Drive");
-static const u8 sText_HoldEffectGems[] = _("Gems");
-static const u8 sText_HoldEffectRockyHelmet[] = _("Rocky Helmet");
-static const u8 sText_HoldEffectAirBalloon[] = _("Air Balloon");
-static const u8 sText_HoldEffectRedCard[] = _("Red Card");
-static const u8 sText_HoldEffectRingTarget[] = _("Ring Target");
-static const u8 sText_HoldEffectBindingBand[] = _("Binding Band");
-static const u8 sText_HoldEffectEjectButton[] = _("Eject Button");
-static const u8 sText_HoldEffectAbsorbBulb[] = _("Absorb Bulb");
-static const u8 sText_HoldEffectCellBattery[] = _("Cell Battery");
-static const u8 sText_HoldEffectMegaStone[] = _("Mega Stone");
-static const u8 sText_HoldEffectSafetyGoggles[] = _("Safety Goggles");
-static const u8 sText_HoldEffectLuminousMoss[] = _("Luminous Moss");
-static const u8 sText_HoldEffectSnowball[] = _("Snowball");
-static const u8 sText_HoldEffectWeaknessPolicy[] = _("Weakness Policy");
-static const u8 sText_HoldEffectPrimalOrb[] = _("Primal Orb");
-static const u8 sText_HoldEffectProtectivePads[] = _("Protective Pads");
-static const u8 sText_HoldEffectTerrainExtender[] = _("Terrain Extender");
-static const u8 sText_HoldEffectSeeds[] = _("Seeds");
-static const u8 sText_HoldEffectAdrenalineOrb[] = _("Adrenaline Orb");
-static const u8 sText_HoldEffectMemory[] = _("Memory");
-static const u8 sText_HoldEffectZCrystal[] = _("Z-Crystal");
-static const u8 sText_HoldEffectPlate[] = _("Plate");
-static const u8 sText_HoldEffectUtilityUmbrella[] = _("Utility Umbrella");
-static const u8 sText_HoldEffectEjectPack[] = _("Eject Pack");
-static const u8 sText_HoldEffectRoomService[] = _("Room Service");
-static const u8 sText_HoldEffectBlunderPolicy[] = _("Blunder Policy");
-static const u8 sText_HoldEffectHeavyDutyBoots[] = _("Heavy Duty Boots");
-static const u8 sText_HoldEffectThroatSpray[] = _("Throat Spray");
-static const u8 sText_HoldEffectAbilityShield[] = _("Ability Shield");
-static const u8 sText_HoldEffectClearAmulet[] = _("Clear Amulet");
-static const u8 sText_HoldEffectMirrorHerb[] = _("Mirror Herb");
-static const u8 sText_HoldEffectPunchingGlove[] = _("Punching Glove");
-static const u8 sText_HoldEffectCovertCloak[] = _("Covert Cloak");
-static const u8 sText_HoldEffectLoadedDice[] = _("Loaded Dice");
-static const u8 sText_HoldEffectBoosterEnergy[] = _("Booster Energy");
-static const u8 sText_HoldEffectBerserkGene[] = _("Berserk Gene");
-static const u8 sText_HoldEffectOgerponMask[] = _("Ogerpon Mask");
-static const u8 *const sHoldEffectNames[] =
+static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
 {
-    [HOLD_EFFECT_NONE] = sText_HoldEffectNone,
-    [HOLD_EFFECT_RESTORE_HP] = sText_HoldEffectRestoreHp,
-    [HOLD_EFFECT_CURE_PAR] = sText_HoldEffectCurePar,
-    [HOLD_EFFECT_CURE_SLP] = sText_HoldEffectCureSlp,
-    [HOLD_EFFECT_CURE_PSN] = sText_HoldEffectCurePsn,
-    [HOLD_EFFECT_CURE_BRN] = sText_HoldEffectCureBrn,
-    [HOLD_EFFECT_CURE_FRZ] = sText_HoldEffectCureFrz,
-    [HOLD_EFFECT_RESTORE_PP] = sText_HoldEffectRestorePp,
-    [HOLD_EFFECT_CURE_CONFUSION] = sText_HoldEffectCureConfusion,
-    [HOLD_EFFECT_CURE_STATUS] = sText_HoldEffectCureStatus,
-    [HOLD_EFFECT_CONFUSE_SPICY] = sText_HoldEffectConfuseSpicy,
-    [HOLD_EFFECT_CONFUSE_DRY] = sText_HoldEffectConfuseDry,
-    [HOLD_EFFECT_CONFUSE_SWEET] = sText_HoldEffectConfuseSweet,
-    [HOLD_EFFECT_CONFUSE_BITTER] = sText_HoldEffectConfuseBitter,
-    [HOLD_EFFECT_CONFUSE_SOUR] = sText_HoldEffectConfuseSour,
-    [HOLD_EFFECT_ATTACK_UP] = sText_HoldEffectAttackUp,
-    [HOLD_EFFECT_DEFENSE_UP] = sText_HoldEffectDefenseUp,
-    [HOLD_EFFECT_SPEED_UP] = sText_HoldEffectSpeedUp,
-    [HOLD_EFFECT_SP_ATTACK_UP] = sText_HoldEffectSpAttackUp,
-    [HOLD_EFFECT_SP_DEFENSE_UP] = sText_HoldEffectSpDefenseUp,
-    [HOLD_EFFECT_CRITICAL_UP] = sText_HoldEffectCriticalUp,
-    [HOLD_EFFECT_RANDOM_STAT_UP] = sText_HoldEffectRandomStatUp,
-    [HOLD_EFFECT_EVASION_UP] = sText_HoldEffectEvasionUp,
-    [HOLD_EFFECT_WHITE_HERB] = sText_HoldEffectRestoreStats,
-    [HOLD_EFFECT_MACHO_BRACE] = sText_HoldEffectMachoBrace,
-    [HOLD_EFFECT_EXP_SHARE] = sText_HoldEffectExpShare,
-    [HOLD_EFFECT_QUICK_CLAW] = sText_HoldEffectQuickClaw,
-    [HOLD_EFFECT_FRIENDSHIP_UP] = sText_HoldEffectFriendshipUp,
-    [HOLD_EFFECT_MENTAL_HERB] = sText_HoldEffectMentalHerb,
-    [HOLD_EFFECT_CHOICE_BAND] = sText_HoldEffectChoiceBand,
-    [HOLD_EFFECT_FLINCH] = sText_HoldEffectFlinch,
-    [HOLD_EFFECT_DOUBLE_PRIZE] = sText_HoldEffectDoublePrize,
-    [HOLD_EFFECT_REPEL] = sText_HoldEffectRepel,
-    [HOLD_EFFECT_SOUL_DEW] = sText_HoldEffectSoulDew,
-    [HOLD_EFFECT_DEEP_SEA_TOOTH] = sText_HoldEffectDeepSeaTooth,
-    [HOLD_EFFECT_DEEP_SEA_SCALE] = sText_HoldEffectDeepSeaScale,
-    [HOLD_EFFECT_CAN_ALWAYS_RUN] = sText_HoldEffectCanAlwaysRun,
-    [HOLD_EFFECT_PREVENT_EVOLVE] = sText_HoldEffectPreventEvolve,
-    [HOLD_EFFECT_FOCUS_BAND] = sText_HoldEffectFocusBand,
-    [HOLD_EFFECT_LUCKY_EGG] = sText_HoldEffectLuckyEgg,
-    [HOLD_EFFECT_SCOPE_LENS] = sText_HoldEffectScopeLens,
-    [HOLD_EFFECT_LEFTOVERS] = sText_HoldEffectLeftovers,
-    [HOLD_EFFECT_DRAGON_SCALE] = sText_HoldEffectDragonScale,
-    [HOLD_EFFECT_LIGHT_BALL] = sText_HoldEffectLightBall,
-    [HOLD_EFFECT_TYPE_POWER] = sText_HoldEffectTypePower,
-    [HOLD_EFFECT_UPGRADE] = sText_HoldEffectUpgrade,
-    [HOLD_EFFECT_SHELL_BELL] = sText_HoldEffectShellBell,
-    [HOLD_EFFECT_LUCKY_PUNCH] = sText_HoldEffectLuckyPunch,
-    [HOLD_EFFECT_METAL_POWDER] = sText_HoldEffectMetalPowder,
-    [HOLD_EFFECT_THICK_CLUB] = sText_HoldEffectThickClub,
-    [HOLD_EFFECT_LEEK] = sText_HoldEffectLeek,
-    [HOLD_EFFECT_CHOICE_SCARF] = sText_HoldEffectChoiceScarf,
-    [HOLD_EFFECT_CHOICE_SPECS] = sText_HoldEffectChoiceSpecs,
-    [HOLD_EFFECT_DAMP_ROCK] = sText_HoldEffectDampRock,
-    [HOLD_EFFECT_GRIP_CLAW] = sText_HoldEffectGripClaw,
-    [HOLD_EFFECT_HEAT_ROCK] = sText_HoldEffectHeatRock,
-    [HOLD_EFFECT_ICY_ROCK] = sText_HoldEffectIcyRock,
-    [HOLD_EFFECT_LIGHT_CLAY] = sText_HoldEffectLightClay,
-    [HOLD_EFFECT_SMOOTH_ROCK] = sText_HoldEffectSmoothRock,
-    [HOLD_EFFECT_POWER_HERB] = sText_HoldEffectPowerHerb,
-    [HOLD_EFFECT_BIG_ROOT] = sText_HoldEffectBigRoot,
-    [HOLD_EFFECT_EXPERT_BELT] = sText_HoldEffectExpertBelt,
-    [HOLD_EFFECT_LIFE_ORB] = sText_HoldEffectLifeOrb,
-    [HOLD_EFFECT_METRONOME] = sText_HoldEffectMetronome,
-    [HOLD_EFFECT_MUSCLE_BAND] = sText_HoldEffectMuscleBand,
-    [HOLD_EFFECT_WIDE_LENS] = sText_HoldEffectWideLens,
-    [HOLD_EFFECT_WISE_GLASSES] = sText_HoldEffectWiseGlasses,
-    [HOLD_EFFECT_ZOOM_LENS] = sText_HoldEffectZoomLens,
-    [HOLD_EFFECT_LAGGING_TAIL] = sText_HoldEffectLaggingTail,
-    [HOLD_EFFECT_FOCUS_SASH] = sText_HoldEffectFocusSash,
-    [HOLD_EFFECT_FLAME_ORB] = sText_HoldEffectFlameOrb,
-    [HOLD_EFFECT_TOXIC_ORB] = sText_HoldEffectToxicOrb,
-    [HOLD_EFFECT_STICKY_BARB] = sText_HoldEffectStickyBarb,
-    [HOLD_EFFECT_IRON_BALL] = sText_HoldEffectIronBall,
-    [HOLD_EFFECT_BLACK_SLUDGE] = sText_HoldEffectBlackSludge,
-    [HOLD_EFFECT_DESTINY_KNOT] = sText_HoldEffectDestinyKnot,
-    [HOLD_EFFECT_SHED_SHELL] = sText_HoldEffectShedShell,
-    [HOLD_EFFECT_QUICK_POWDER] = sText_HoldEffectQuickPowder,
-    [HOLD_EFFECT_ADAMANT_ORB] = sText_HoldEffectAdamantOrb,
-    [HOLD_EFFECT_LUSTROUS_ORB] = sText_HoldEffectLustrousOrb,
-    [HOLD_EFFECT_GRISEOUS_ORB] = sText_HoldEffectGriseousOrb,
-    [HOLD_EFFECT_ENIGMA_BERRY] = sText_HoldEffectEnigmaBerry,
-    [HOLD_EFFECT_RESIST_BERRY] = sText_HoldEffectResistBerry,
-    [HOLD_EFFECT_POWER_ITEM] = sText_HoldEffectPowerItem,
-    [HOLD_EFFECT_RESTORE_PCT_HP] = sText_HoldEffectRestorePctHp,
-    [HOLD_EFFECT_MICLE_BERRY] = sText_HoldEffectMicleBerry,
-    [HOLD_EFFECT_CUSTAP_BERRY] = sText_HoldEffectCustapBerry,
-    [HOLD_EFFECT_JABOCA_BERRY] = sText_HoldEffectJabocaBerry,
-    [HOLD_EFFECT_ROWAP_BERRY] = sText_HoldEffectRowapBerry,
-    [HOLD_EFFECT_KEE_BERRY] = sText_HoldEffectKeeBerry,
-    [HOLD_EFFECT_MARANGA_BERRY] = sText_HoldEffectMarangaBerry,
-    [HOLD_EFFECT_PLATE] = sText_HoldEffectPlate,
-    [HOLD_EFFECT_FLOAT_STONE] = sText_HoldEffectFloatStone,
-    [HOLD_EFFECT_EVIOLITE] = sText_HoldEffectEviolite,
-    [HOLD_EFFECT_ASSAULT_VEST] = sText_HoldEffectAssaultVest,
-    [HOLD_EFFECT_DRIVE] = sText_HoldEffectDrive,
-    [HOLD_EFFECT_GEMS] = sText_HoldEffectGems,
-    [HOLD_EFFECT_ROCKY_HELMET] = sText_HoldEffectRockyHelmet,
-    [HOLD_EFFECT_AIR_BALLOON] = sText_HoldEffectAirBalloon,
-    [HOLD_EFFECT_RED_CARD] = sText_HoldEffectRedCard,
-    [HOLD_EFFECT_RING_TARGET] = sText_HoldEffectRingTarget,
-    [HOLD_EFFECT_BINDING_BAND] = sText_HoldEffectBindingBand,
-    [HOLD_EFFECT_EJECT_BUTTON] = sText_HoldEffectEjectButton,
-    [HOLD_EFFECT_ABSORB_BULB] = sText_HoldEffectAbsorbBulb,
-    [HOLD_EFFECT_CELL_BATTERY] = sText_HoldEffectCellBattery,
-    [HOLD_EFFECT_MEGA_STONE] = sText_HoldEffectMegaStone,
-    [HOLD_EFFECT_SAFETY_GOGGLES] = sText_HoldEffectSafetyGoggles,
-    [HOLD_EFFECT_LUMINOUS_MOSS] = sText_HoldEffectLuminousMoss,
-    [HOLD_EFFECT_SNOWBALL] = sText_HoldEffectSnowball,
-    [HOLD_EFFECT_WEAKNESS_POLICY] = sText_HoldEffectWeaknessPolicy,
-    [HOLD_EFFECT_PRIMAL_ORB] = sText_HoldEffectPrimalOrb,
-    [HOLD_EFFECT_PROTECTIVE_PADS] = sText_HoldEffectProtectivePads,
-    [HOLD_EFFECT_TERRAIN_EXTENDER] = sText_HoldEffectTerrainExtender,
-    [HOLD_EFFECT_SEEDS] = sText_HoldEffectSeeds,
-    [HOLD_EFFECT_ADRENALINE_ORB] = sText_HoldEffectAdrenalineOrb,
-    [HOLD_EFFECT_MEMORY] = sText_HoldEffectMemory,
-    [HOLD_EFFECT_Z_CRYSTAL] = sText_HoldEffectZCrystal,
-    [HOLD_EFFECT_UTILITY_UMBRELLA] = sText_HoldEffectUtilityUmbrella,
-    [HOLD_EFFECT_EJECT_PACK] = sText_HoldEffectEjectPack,
-    [HOLD_EFFECT_ROOM_SERVICE] = sText_HoldEffectRoomService,
-    [HOLD_EFFECT_BLUNDER_POLICY] = sText_HoldEffectBlunderPolicy,
-    [HOLD_EFFECT_HEAVY_DUTY_BOOTS] = sText_HoldEffectHeavyDutyBoots,
-    [HOLD_EFFECT_THROAT_SPRAY] = sText_HoldEffectThroatSpray,
-    [HOLD_EFFECT_ABILITY_SHIELD] = sText_HoldEffectAbilityShield,
-    [HOLD_EFFECT_CLEAR_AMULET] = sText_HoldEffectClearAmulet,
-    [HOLD_EFFECT_MIRROR_HERB] = sText_HoldEffectMirrorHerb,
-    [HOLD_EFFECT_PUNCHING_GLOVE] = sText_HoldEffectPunchingGlove,
-    [HOLD_EFFECT_COVERT_CLOAK] = sText_HoldEffectCovertCloak,
-    [HOLD_EFFECT_LOADED_DICE] = sText_HoldEffectLoadedDice,
-    [HOLD_EFFECT_BOOSTER_ENERGY] = sText_HoldEffectBoosterEnergy,
-    [HOLD_EFFECT_OGERPON_MASK] = sText_HoldEffectOgerponMask,
-    [HOLD_EFFECT_BERSERK_GENE] = sText_HoldEffectBerserkGene,
+    [HOLD_EFFECT_NONE]             = COMPOUND_STRING("????????"),
+    [HOLD_EFFECT_RESTORE_HP]       = COMPOUND_STRING("Restore Hp"),
+    [HOLD_EFFECT_CURE_PAR]         = COMPOUND_STRING("Cure Par"),
+    [HOLD_EFFECT_CURE_SLP]         = COMPOUND_STRING("Cure Slp"),
+    [HOLD_EFFECT_CURE_PSN]         = COMPOUND_STRING("Cure Psn"),
+    [HOLD_EFFECT_CURE_BRN]         = COMPOUND_STRING("Cure Brn"),
+    [HOLD_EFFECT_CURE_FRZ]         = COMPOUND_STRING("Cure Frz"),
+    [HOLD_EFFECT_RESTORE_PP]       = COMPOUND_STRING("Restore Pp"),
+    [HOLD_EFFECT_CURE_CONFUSION]   = COMPOUND_STRING("Cure Confusion"),
+    [HOLD_EFFECT_CURE_STATUS]      = COMPOUND_STRING("Cure Status"),
+    [HOLD_EFFECT_CONFUSE_SPICY]    = COMPOUND_STRING("Confuse Spicy"),
+    [HOLD_EFFECT_CONFUSE_DRY]      = COMPOUND_STRING("Confuse Dry"),
+    [HOLD_EFFECT_CONFUSE_SWEET]    = COMPOUND_STRING("Confuse Sweet"),
+    [HOLD_EFFECT_CONFUSE_BITTER]   = COMPOUND_STRING("Confuse Bitter"),
+    [HOLD_EFFECT_CONFUSE_SOUR]     = COMPOUND_STRING("Confuse Sour"),
+    [HOLD_EFFECT_ATTACK_UP]        = COMPOUND_STRING("Attack Up"),
+    [HOLD_EFFECT_DEFENSE_UP]       = COMPOUND_STRING("Defense Up"),
+    [HOLD_EFFECT_SPEED_UP]         = COMPOUND_STRING("Speed Up"),
+    [HOLD_EFFECT_SP_ATTACK_UP]     = COMPOUND_STRING("Sp Attack Up"),
+    [HOLD_EFFECT_SP_DEFENSE_UP]    = COMPOUND_STRING("Sp Defense Up"),
+    [HOLD_EFFECT_CRITICAL_UP]      = COMPOUND_STRING("Critical Up"),
+    [HOLD_EFFECT_RANDOM_STAT_UP]   = COMPOUND_STRING("Random Stat Up"),
+    [HOLD_EFFECT_EVASION_UP]       = COMPOUND_STRING("Evasion Up"),
+    [HOLD_EFFECT_WHITE_HERB]       = COMPOUND_STRING("Restore Stats"),
+    [HOLD_EFFECT_MACHO_BRACE]      = COMPOUND_STRING("Macho Brace"),
+    [HOLD_EFFECT_EXP_SHARE]        = COMPOUND_STRING("Exp Share"),
+    [HOLD_EFFECT_QUICK_CLAW]       = COMPOUND_STRING("Quick Claw"),
+    [HOLD_EFFECT_FRIENDSHIP_UP]    = COMPOUND_STRING("Friendship Up"),
+    [HOLD_EFFECT_MENTAL_HERB]      = COMPOUND_STRING("Mental Herb"),
+    [HOLD_EFFECT_CHOICE_BAND]      = COMPOUND_STRING("Choice Band"),
+    [HOLD_EFFECT_FLINCH]           = COMPOUND_STRING("Flinch"),
+    [HOLD_EFFECT_DOUBLE_PRIZE]     = COMPOUND_STRING("Double Prize"),
+    [HOLD_EFFECT_REPEL]            = COMPOUND_STRING("Repel"),
+    [HOLD_EFFECT_SOUL_DEW]         = COMPOUND_STRING("Soul Dew"),
+    [HOLD_EFFECT_DEEP_SEA_TOOTH]   = COMPOUND_STRING("Deep Sea Tooth"),
+    [HOLD_EFFECT_DEEP_SEA_SCALE]   = COMPOUND_STRING("Deep Sea Scale"),
+    [HOLD_EFFECT_CAN_ALWAYS_RUN]   = COMPOUND_STRING("Can Always Run"),
+    [HOLD_EFFECT_PREVENT_EVOLVE]   = COMPOUND_STRING("Prevent Evolve"),
+    [HOLD_EFFECT_FOCUS_BAND]       = COMPOUND_STRING("Focus Band"),
+    [HOLD_EFFECT_LUCKY_EGG]        = COMPOUND_STRING("Lucky Egg"),
+    [HOLD_EFFECT_SCOPE_LENS]       = COMPOUND_STRING("Scope Lens"),
+    [HOLD_EFFECT_LEFTOVERS]        = COMPOUND_STRING("Leftovers"),
+    [HOLD_EFFECT_DRAGON_SCALE]     = COMPOUND_STRING("Dragon Scale"),
+    [HOLD_EFFECT_LIGHT_BALL]       = COMPOUND_STRING("Light Ball"),
+    [HOLD_EFFECT_TYPE_POWER]       = COMPOUND_STRING("Type Power"),
+    [HOLD_EFFECT_UPGRADE]          = COMPOUND_STRING("Upgrade"),
+    [HOLD_EFFECT_SHELL_BELL]       = COMPOUND_STRING("Shell Bell"),
+    [HOLD_EFFECT_LUCKY_PUNCH]      = COMPOUND_STRING("Lucky Punch"),
+    [HOLD_EFFECT_METAL_POWDER]     = COMPOUND_STRING("Metal Powder"),
+    [HOLD_EFFECT_THICK_CLUB]       = COMPOUND_STRING("Thick Club"),
+    [HOLD_EFFECT_LEEK]             = COMPOUND_STRING("Leek"),
+    [HOLD_EFFECT_CHOICE_SCARF]     = COMPOUND_STRING("Choice Scarf"),
+    [HOLD_EFFECT_CHOICE_SPECS]     = COMPOUND_STRING("Choice Specs"),
+    [HOLD_EFFECT_DAMP_ROCK]        = COMPOUND_STRING("Damp Rock"),
+    [HOLD_EFFECT_GRIP_CLAW]        = COMPOUND_STRING("Grip Claw"),
+    [HOLD_EFFECT_HEAT_ROCK]        = COMPOUND_STRING("Heat Rock"),
+    [HOLD_EFFECT_ICY_ROCK]         = COMPOUND_STRING("Icy Rock"),
+    [HOLD_EFFECT_LIGHT_CLAY]       = COMPOUND_STRING("Light Clay"),
+    [HOLD_EFFECT_SMOOTH_ROCK]      = COMPOUND_STRING("Smooth Rock"),
+    [HOLD_EFFECT_POWER_HERB]       = COMPOUND_STRING("Power Herb"),
+    [HOLD_EFFECT_BIG_ROOT]         = COMPOUND_STRING("Big Root"),
+    [HOLD_EFFECT_EXPERT_BELT]      = COMPOUND_STRING("Expert Belt"),
+    [HOLD_EFFECT_LIFE_ORB]         = COMPOUND_STRING("Life Orb"),
+    [HOLD_EFFECT_METRONOME]        = COMPOUND_STRING("Metronome"),
+    [HOLD_EFFECT_MUSCLE_BAND]      = COMPOUND_STRING("Muscle Band"),
+    [HOLD_EFFECT_WIDE_LENS]        = COMPOUND_STRING("Wide Lens"),
+    [HOLD_EFFECT_WISE_GLASSES]     = COMPOUND_STRING("Wise Glasses"),
+    [HOLD_EFFECT_ZOOM_LENS]        = COMPOUND_STRING("Zoom Lens"),
+    [HOLD_EFFECT_LAGGING_TAIL]     = COMPOUND_STRING("Lagging Tail"),
+    [HOLD_EFFECT_FOCUS_SASH]       = COMPOUND_STRING("Focus Sash"),
+    [HOLD_EFFECT_FLAME_ORB]        = COMPOUND_STRING("Flame Orb"),
+    [HOLD_EFFECT_TOXIC_ORB]        = COMPOUND_STRING("Toxic Orb"),
+    [HOLD_EFFECT_STICKY_BARB]      = COMPOUND_STRING("Sticky Barb"),
+    [HOLD_EFFECT_IRON_BALL]        = COMPOUND_STRING("Iron Ball"),
+    [HOLD_EFFECT_BLACK_SLUDGE]     = COMPOUND_STRING("Black Sludge"),
+    [HOLD_EFFECT_DESTINY_KNOT]     = COMPOUND_STRING("Destiny Knot"),
+    [HOLD_EFFECT_SHED_SHELL]       = COMPOUND_STRING("Shed Shell"),
+    [HOLD_EFFECT_QUICK_POWDER]     = COMPOUND_STRING("Quick Powder"),
+    [HOLD_EFFECT_ADAMANT_ORB]      = COMPOUND_STRING("Adamant Orb"),
+    [HOLD_EFFECT_LUSTROUS_ORB]     = COMPOUND_STRING("Lustrous Orb"),
+    [HOLD_EFFECT_GRISEOUS_ORB]     = COMPOUND_STRING("Griseous Orb"),
+    [HOLD_EFFECT_ENIGMA_BERRY]     = COMPOUND_STRING("Enigma Berry"),
+    [HOLD_EFFECT_RESIST_BERRY]     = COMPOUND_STRING("Resist Berry"),
+    [HOLD_EFFECT_POWER_ITEM]       = COMPOUND_STRING("Power Item"),
+    [HOLD_EFFECT_RESTORE_PCT_HP]   = COMPOUND_STRING("Restore Pct Hp"),
+    [HOLD_EFFECT_MICLE_BERRY]      = COMPOUND_STRING("Micle Berry"),
+    [HOLD_EFFECT_CUSTAP_BERRY]     = COMPOUND_STRING("Custap Berry"),
+    [HOLD_EFFECT_JABOCA_BERRY]     = COMPOUND_STRING("Jaboca Berry"),
+    [HOLD_EFFECT_ROWAP_BERRY]      = COMPOUND_STRING("Rowap Berry"),
+    [HOLD_EFFECT_KEE_BERRY]        = COMPOUND_STRING("Kee Berry"),
+    [HOLD_EFFECT_MARANGA_BERRY]    = COMPOUND_STRING("Maranga Berry"),
+    [HOLD_EFFECT_PLATE]            = COMPOUND_STRING("Plate"),
+    [HOLD_EFFECT_FLOAT_STONE]      = COMPOUND_STRING("Float Stone"),
+    [HOLD_EFFECT_EVIOLITE]         = COMPOUND_STRING("Eviolite"),
+    [HOLD_EFFECT_ASSAULT_VEST]     = COMPOUND_STRING("Assault Vest"),
+    [HOLD_EFFECT_DRIVE]            = COMPOUND_STRING("Drive"),
+    [HOLD_EFFECT_GEMS]             = COMPOUND_STRING("Gems"),
+    [HOLD_EFFECT_ROCKY_HELMET]     = COMPOUND_STRING("Rocky Helmet"),
+    [HOLD_EFFECT_AIR_BALLOON]      = COMPOUND_STRING("Air Balloon"),
+    [HOLD_EFFECT_RED_CARD]         = COMPOUND_STRING("Red Card"),
+    [HOLD_EFFECT_RING_TARGET]      = COMPOUND_STRING("Ring Target"),
+    [HOLD_EFFECT_BINDING_BAND]     = COMPOUND_STRING("Binding Band"),
+    [HOLD_EFFECT_EJECT_BUTTON]     = COMPOUND_STRING("Eject Button"),
+    [HOLD_EFFECT_ABSORB_BULB]      = COMPOUND_STRING("Absorb Bulb"),
+    [HOLD_EFFECT_CELL_BATTERY]     = COMPOUND_STRING("Cell Battery"),
+    [HOLD_EFFECT_MEGA_STONE]       = COMPOUND_STRING("Mega Stone"),
+    [HOLD_EFFECT_SAFETY_GOGGLES]   = COMPOUND_STRING("Safety Goggles"),
+    [HOLD_EFFECT_LUMINOUS_MOSS]    = COMPOUND_STRING("Luminous Moss"),
+    [HOLD_EFFECT_SNOWBALL]         = COMPOUND_STRING("Snowball"),
+    [HOLD_EFFECT_WEAKNESS_POLICY]  = COMPOUND_STRING("Weakness Policy"),
+    [HOLD_EFFECT_PRIMAL_ORB]       = COMPOUND_STRING("Primal Orb"),
+    [HOLD_EFFECT_PROTECTIVE_PADS]  = COMPOUND_STRING("Protective Pads"),
+    [HOLD_EFFECT_TERRAIN_EXTENDER] = COMPOUND_STRING("Terrain Extender"),
+    [HOLD_EFFECT_SEEDS]            = COMPOUND_STRING("Seeds"),
+    [HOLD_EFFECT_ADRENALINE_ORB]   = COMPOUND_STRING("Adrenaline Orb"),
+    [HOLD_EFFECT_MEMORY]           = COMPOUND_STRING("Memory"),
+    [HOLD_EFFECT_Z_CRYSTAL]        = COMPOUND_STRING("Z-Crystal"),
+    [HOLD_EFFECT_UTILITY_UMBRELLA] = COMPOUND_STRING("Utility Umbrella"),
+    [HOLD_EFFECT_EJECT_PACK]       = COMPOUND_STRING("Eject Pack"),
+    [HOLD_EFFECT_ROOM_SERVICE]     = COMPOUND_STRING("Room Service"),
+    [HOLD_EFFECT_BLUNDER_POLICY]   = COMPOUND_STRING("Blunder Policy"),
+    [HOLD_EFFECT_HEAVY_DUTY_BOOTS] = COMPOUND_STRING("Heavy Duty Boots"),
+    [HOLD_EFFECT_THROAT_SPRAY]     = COMPOUND_STRING("Throat Spray"),
+    [HOLD_EFFECT_ABILITY_SHIELD]   = COMPOUND_STRING("Ability Shield"),
+    [HOLD_EFFECT_CLEAR_AMULET]     = COMPOUND_STRING("Clear Amulet"),
+    [HOLD_EFFECT_MIRROR_HERB]      = COMPOUND_STRING("Mirror Herb"),
+    [HOLD_EFFECT_PUNCHING_GLOVE]   = COMPOUND_STRING("Punching Glove"),
+    [HOLD_EFFECT_COVERT_CLOAK]     = COMPOUND_STRING("Covert Cloak"),
+    [HOLD_EFFECT_LOADED_DICE]      = COMPOUND_STRING("Loaded Dice"),
+    [HOLD_EFFECT_BOOSTER_ENERGY]   = COMPOUND_STRING("Booster Energy"),
+    [HOLD_EFFECT_OGERPON_MASK]     = COMPOUND_STRING("Ogerpon Mask"),
+    [HOLD_EFFECT_BERSERK_GENE]     = COMPOUND_STRING("Berserk Gene"),
 };
 static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect)
 {
-    if (holdEffect > ARRAY_COUNT(sHoldEffectNames))
+    if (sHoldEffectNames[holdEffect] == NULL)
         return sHoldEffectNames[0];
     return sHoldEffectNames[holdEffect];
 }

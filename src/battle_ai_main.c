@@ -1632,7 +1632,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (HasDamagingMove(battlerDef) && !((gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE)
              || IsBattlerIncapacitated(battlerDef, abilityDef)
-             || gBattleMons[battlerDef].status2 & (STATUS2_INFATUATION | STATUS2_CONFUSION)))
+             || gBattleMons[battlerDef].volatiles.infatuation
+             || gBattleMons[battlerDef].volatiles.confusionTurns))
                 ADJUST_SCORE(-10);
             if (HasMoveWithEffect(battlerAtk, EFFECT_SUBSTITUTE) && !(gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE))
                 ADJUST_SCORE(-10);
@@ -2538,7 +2539,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_NATURAL_GIFT:
-            if (!IsBattlerItemEnabled(battlerAtk) || GetPocketByItemId(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (!IsBattlerItemEnabled(battlerAtk) || GetItemPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_GRASSY_TERRAIN:
@@ -2660,10 +2661,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_SOAK:
         {
             u32 types[3];
+            u32 typeArg = GetMoveArgType(move);
+
             GetBattlerTypes(battlerDef, FALSE, types);
-            // TODO: Use the type of the move like 'VARIOUS_TRY_SOAK'?
             if (PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
-              || (types[0] == TYPE_WATER && types[1] == TYPE_WATER && types[2] == TYPE_MYSTERY))
+              || (types[0] == typeArg && types[1] == typeArg && types[2] == TYPE_MYSTERY))
                 ADJUST_SCORE(-10);    // target is already water-only
             break;
         }

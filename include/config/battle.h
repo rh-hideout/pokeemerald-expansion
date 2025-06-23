@@ -161,6 +161,7 @@
 #define B_MAGIC_GUARD               GEN_LATEST // In Gen4 only, Magic Guard ignores immobilization caused by paralysis
 #define B_BATTLE_BOND               GEN_LATEST // In Gen9+, Battle Bond increases Atk, SpAtk and Speed by one stage, once per battle
 #define B_ATE_MULTIPLIER            GEN_LATEST // In Gen7+, -ate abilities (Aerilate, Galvanize, Normalize, Pixilate, Refrigerate) multiply damage by 1.2. Otherwise, it's 1.3, except Normalize which has no multiplier.
+#define B_DEFIANT_STICKY_WEB        GEN_LATEST // In Gen9+, Defiant activates on Sticky Web regardless of who set it up. In Gen8, Defiant does not activate on Sticky Web set up by an ally after Court Change swaps its side.
 
 // Item settings
 #define B_HP_BERRIES                GEN_LATEST // In Gen4+, berries which restore HP activate immediately after HP drops to half. In Gen3, the effect occurs at the end of the turn.

@@ -354,7 +354,7 @@ struct PokemonStats
     u8  evYield_Defense;
     u8  evYield_SpDefense;
     u8  catchRate;
-    u8  growthRate;
+    enum GrowthRate growthRate:8;
     u8  eggGroup1;
     u8  eggGroup2;
     u8  eggCycles;
@@ -590,7 +590,7 @@ static void Task_SwitchScreensFromFormsScreen(u8 taskId);
 static void Task_ExitFormsScreen(u8 taskId);
 
 //Physical/Special/Status category icon
-static u8 ShowCategoryIcon(u32 category);
+static u8 ShowCategoryIcon(enum DamageCategory category);
 static void DestroyCategoryIcon(void);
 
 static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
@@ -4090,7 +4090,7 @@ void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
 {
     u8 spriteId;
     u16 species;
-    u16 dexNum;
+    enum NationalDexOrder dexNum;
 
     if (!POKEDEX_PLUS_HGSS) return; // prevents the compiler from emitting static .rodata
                                     // if the feature is disabled
@@ -4701,7 +4701,7 @@ static void LoadTilesetTilemapHGSS(u8 page)
 }
 
 //Physical/Special/Status category
-static u8 ShowCategoryIcon(u32 category)
+static u8 ShowCategoryIcon(enum DamageCategory category)
 {
     if (sPokedexView->categoryIconSpriteId == 0xFF)
         sPokedexView->categoryIconSpriteId = CreateSprite(&gSpriteTemplate_CategoryIcons, 139, 90, 0);
@@ -5622,7 +5622,7 @@ static void PrintStatsScreen_Left(u8 taskId)
     if (gTasks[taskId].data[5] == 0)
     {
         u32 catchRate = sPokedexView->sPokemonStats.catchRate;
-        u32 growthRate = sPokedexView->sPokemonStats.growthRate;
+        enum GrowthRate growthRate = sPokedexView->sPokemonStats.growthRate;
 
         //Catch rate
         PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate, base_x, base_y + base_y_offset*base_i);
@@ -6178,8 +6178,8 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
 
         if (JOY_NEW(A_BUTTON))
         {
-            u16 targetSpecies   = sPokedexView->sEvoScreenData.targetSpecies[sPokedexView->sEvoScreenData.menuPos];
-            u16 dexNum          = SpeciesToNationalPokedexNum(targetSpecies);
+            u16 targetSpecies            = sPokedexView->sEvoScreenData.targetSpecies[sPokedexView->sEvoScreenData.menuPos];
+            enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(targetSpecies);
             if (sPokedexView->isSearchResults && sPokedexView->originalSearchSelectionNum == 0)
                 sPokedexView->originalSearchSelectionNum = sPokedexListItem->dexNum;
 
@@ -7747,7 +7747,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 //*        Search code               *
 //*                                  *
 //************************************
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, u8 type1, u8 type2)
 {
     u16 species;
     u16 i;
@@ -8163,7 +8163,7 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
-    u8 bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
+    enum BodyColor bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
     u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
     u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
