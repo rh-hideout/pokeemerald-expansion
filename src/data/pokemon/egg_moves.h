@@ -6459,6 +6459,17 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sGhastropodEggMoveLearnset[] = {
+    MOVE_BARRAGE,
+    MOVE_EERIE_IMPULSE,
+    MOVE_FOLLOW_ME,
+    MOVE_TOXIC_SPIKES,
+    MOVE_WIDE_GUARD,
+    MOVE_IRON_DEFENSE,
+    MOVE_FINAL_GAMBIT,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sVoliathEggMoveLearnset[] = {
     MOVE_AQUA_TAIL,
     MOVE_ASSIST,
@@ -6476,6 +6487,16 @@ static const u16 sBungaloonEggMoveLearnset[] = {
     MOVE_DRAIN_PUNCH,
     MOVE_ROLLOUT,
     MOVE_SOAK,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sMaleentisEggMoveLearnset[] = {
+    MOVE_NO_RETREAT,
+    MOVE_HEAD_CHARGE,
+    MOVE_STICKY_WEB,
+    MOVE_DUAL_CHOP,
+    MOVE_BRUTAL_SWING,
+    MOVE_AQUA_TAIL,
     MOVE_UNAVAILABLE,
 };
 

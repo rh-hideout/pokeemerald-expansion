@@ -1941,8 +1941,20 @@
 #define SPECIES_SWINGGLE                                1813
 #define SPECIES_SUBSTRALE                               1814
 #define SPECIES_TRIACTITE                               1815
+#define SPECIES_KAQUAPO                                 1816
+#define SPECIES_AIRUITE                                 1817
+#define SPECIES_GHASTROPOD                              1818
+#define SPECIES_ONUSALT                                 1819
+#define SPECIES_PIURETTE                                1820
+#define SPECIES_POLYBRAWN                              SPECIES_POLYBRAWN_NORMAL
+#define SPECIES_POLYBRAWN_NORMAL                        1821
+#define SPECIES_POLYBRAWN_H                             1822
+#define SPECIES_POLYBRAWN_W                             1823
+#define SPECIES_POLYBRAWN_P                             1824
+#define SPECIES_POLYBRAWN_I                             1825
+#define SPECIES_POLYBRAWN_K                             1826
 
-#define SPECIES_EGG (SPECIES_TRIACTITE + 1)
+#define SPECIES_EGG (SPECIES_POLYBRAWN_K + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

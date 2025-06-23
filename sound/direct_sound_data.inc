@@ -7198,6 +7198,50 @@ Cry_Substrale::
 	.align 2	
 Cry_Triactite::
 	.incbin "sound/direct_sound_samples/cries/triactite.bin"
+
+	.align 2	
+Cry_Kaquapo::
+	.incbin "sound/direct_sound_samples/cries/kaquapo.bin"
+
+	.align 2	
+Cry_Airuite::
+	.incbin "sound/direct_sound_samples/cries/airuite.bin"
+
+	.align 2	
+Cry_Ghastropod::
+	.incbin "sound/direct_sound_samples/cries/ghastropod.bin"
+
+	.align 2	
+Cry_Onusalt::
+	.incbin "sound/direct_sound_samples/cries/onusalt.bin"
+
+	.align 2	
+Cry_Piurette::
+	.incbin "sound/direct_sound_samples/cries/piurette.bin"
+
+	.align 2	
+Cry_Polybrawn::
+	.incbin "sound/direct_sound_samples/cries/polybrawn.bin"
+
+	.align 2	
+Cry_Polybrawnh::
+	.incbin "sound/direct_sound_samples/cries/polybrawnh.bin"
+
+	.align 2	
+Cry_Polybrawnw::
+	.incbin "sound/direct_sound_samples/cries/polybrawnw.bin"
+
+	.align 2	
+Cry_Polybrawnp::
+	.incbin "sound/direct_sound_samples/cries/polybrawnp.bin"
+
+	.align 2	
+Cry_Polybrawni::
+	.incbin "sound/direct_sound_samples/cries/polybrawni.bin"
+
+	.align 2	
+Cry_Polybrawnk::
+	.incbin "sound/direct_sound_samples/cries/polybrawnk.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

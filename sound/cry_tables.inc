@@ -2947,6 +2947,28 @@ gCryTable::
 
 	cry Cry_Triactite
 
+	cry Cry_Kaquapo
+
+	cry Cry_Airuite
+
+	cry Cry_Ghastropod
+
+	cry Cry_Onusalt
+
+	cry Cry_Piurette
+
+	cry Cry_Polybrawn
+
+	cry Cry_Polybrawnh
+
+	cry Cry_Polybrawnw
+
+	cry Cry_Polybrawnp
+
+	cry Cry_Polybrawni
+
+	cry Cry_Polybrawnk
+
 .endif
 
 	.align 2
@@ -5898,4 +5920,26 @@ gCryTable_Reverse::
 	cry_reverse Cry_Substrale
 
 	cry_reverse Cry_Triactite
+
+	cry_reverse Cry_Kaquapo
+
+	cry_reverse Cry_Airuite
+
+	cry_reverse Cry_Ghastropod
+
+	cry_reverse Cry_Onusalt
+
+	cry_reverse Cry_Piurette
+
+	cry_reverse Cry_Polybrawn
+
+	cry_reverse Cry_Polybrawnh
+
+	cry_reverse Cry_Polybrawnw
+
+	cry_reverse Cry_Polybrawnp
+
+	cry_reverse Cry_Polybrawni
+
+	cry_reverse Cry_Polybrawnk
 .endif

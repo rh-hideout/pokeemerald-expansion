@@ -1021,6 +1021,8 @@ static const struct {
     { SPECIES_WALKALACK, ITEM_HARD_STONE, MOVE_ROCK_WRECKER }, /// Placeholder Move
     { SPECIES_BELIEECH, ITEM_MOLUGANION, MOVE_STRENGTH_SAP }, /// Placeholder Item
     { SPECIES_MEDUSITH, ITEM_BUG_GEM, MOVE_BUG_BITE },  /// BORE BITE
+    { SPECIES_KAQUAPO, ITEM_BLUE_SCARF, MOVE_REVELATION_DANCE }, ///PLACEHOLDER ITEM
+    { SPECIES_GHASTROPOD, ITEM_ROCK_GEM, MOVE_SHELL_SMASH },  
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
