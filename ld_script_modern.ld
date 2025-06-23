@@ -43,6 +43,8 @@ SECTIONS {
     {
         *libc.a:*.o(.bss*);
         *libnosys.a:*.o(.bss*);
+        src/*.o(.bss*);
+        data/*.o(.bss*);
         *.o(common_data);
         src/*.o(COMMON);
         *libc.a:*.o(COMMON);
