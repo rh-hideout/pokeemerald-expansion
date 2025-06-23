@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Limber prevents paralysis")
+SINGLE_BATTLE_TEST("Limber prevents paralysis from damaging attacks")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER_SHOCK, MOVE_EFFECT_PARALYSIS) == TRUE);
