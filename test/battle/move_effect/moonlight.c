@@ -50,14 +50,14 @@ SINGLE_BATTLE_TEST("Moonlight recovers 1/4 of the user's max HP in Rain, Sandsto
     }
 }
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 1/4 of the user's max HP while it is not night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 1/4 of the user's max HP while it is not night or evening (Gen2)")
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 1/2 of the user's max HP in Sunlight while it is not night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 1/2 of the user's max HP in Sunlight while it is not night or evening (Gen2)")
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 1/8 of the user's max HP in Rain, Sandstorm, Hail, and Snow while it is not night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 1/8 of the user's max HP in Rain, Sandstorm, Hail, and Snow while it is not night or evening (Gen2)")
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 2/4 of the user's max HP while it is night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 2/4 of the user's max HP while it is night or evening (Gen2)")
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 2/2 of the user's max HP in Sunlight while it is night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 2/2 of the user's max HP in Sunlight while it is night or evening (Gen2)")
 
-TO_DO_SINGLE_BATTLE_TEST("TODO: Moonlight recovers 2/8 of the user's max HP in Rain, Sandstorm, Hail, and Snow while it is night or evening (Gen2)")
+TO_DO_BATTLE_TEST("TODO: Moonlight recovers 2/8 of the user's max HP in Rain, Sandstorm, Hail, and Snow while it is night or evening (Gen2)")
