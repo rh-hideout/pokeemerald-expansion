@@ -68,7 +68,6 @@ static u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
 static bool32 CanBeInfinitelyConfused(u32 battler);
 static bool32 IsAnyTargetAffected(u32 battlerAtk);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum NonVolatileStatus option);
-static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -5813,7 +5812,7 @@ static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abi
     return FALSE;
 }
 
-static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option)
+bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum NonVolatileStatus option)
 {
     // Can freely sleep own partner
     if (IsDoubleBattle() && IsSleepClauseEnabled() && IsBattlerAlly(battlerAtk, battlerDef))

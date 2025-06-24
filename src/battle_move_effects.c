@@ -109,7 +109,7 @@ void SetNonVolatileStatusCondition(u32 battler, u32 effectBattler, enum MoveEffe
     const u8 *currInstr = gBattlescriptCurrInstr;
 
     // Assign next instruction
-    SetMoveEffectHandleResult(SetNonVolatileStatusConditionWithResult(&result, trigger), currInstr, gBattlescriptCurrInstr + 1);
+    SetMoveEffectTriggerResult(SetNonVolatileStatusConditionWithResult(&result, trigger), currInstr, gBattlescriptCurrInstr + 1);
 }
 
 static void MoveEffect_SetVolatileTrue(struct SetMoveEffectResult *result)
@@ -198,23 +198,41 @@ static void MoveEffect_ThrashCallback(struct SetMoveEffectResult *result)
 
 static void MoveEffect_ClearSmogCallback(struct SetMoveEffectResult *result)
 {
-    for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
+    u32 i;
+    for (i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[result->effectBattler].statStages[i] = DEFAULT_STAT_STAGE;
 
     PushNextInstrAndMoveEffectInstr(result);
 }
 
+static bool32 MoveEffectBlocker_UpoarBlocksSleep(struct SetMoveEffectResult *result)
+{
+    return UproarWakeUpCheck(result->effectBattler);
+}
+
+static bool32 MoveEffectBlocker_SleepClauseCheck(struct SetMoveEffectResult *result)
+{
+    return CanSleepDueToSleepClause(result->battlerAtk, result->effectBattler, 1); // To do
+}
+
 const struct MoveEffectInfo gMoveEffectsInfo[] =
 {
-    [MOVE_EFFECT_NONE] =
-    {
-
-    },
     [MOVE_EFFECT_SLEEP] =
     {
         .status = STATUS1_SLEEP,
         .battlescript = BattleScript_MoveEffectSleep,
         .callback = MoveEffect_SetNonVolatileStatusCondition,
+        // .blockers = (const struct MoveEffectBlocker[]){
+        //     { MOVE_EFFECT_BLOCKER_STATUS, .status = STATUS1_SLEEP, BattleScript_AlreadyAsleep },
+        //     { .callback = MoveEffectBlocker_UpoarBlocksSleep, BattleScript_CantMakeAsleep },
+        //     { .callback = MoveEffectBlocker_SleepClauseCheck, BattleScript_SleepClauseBlocked },
+        //     { MOVE_EFFECT_BLOCKER_TERRAIN, .terrain = STATUS_FIELD_ELECTRIC_TERRAIN, BattleScript_ElectricTerrainPrevents },
+        //     // { MOVE_EFFECT_BLOCKER_ABILITY_ON_SIDE, .ability = ABILITY_SWEET_VEIL }, // To do
+        //     { MOVE_EFFECT_BLOCKER_ABILITY, .ability = ABILITY_VITAL_SPIRIT, BattleScript_PrintAbilityMadeIneffective },
+        //     { MOVE_EFFECT_BLOCKER_ABILITY, .ability = ABILITY_INSOMNIA, BattleScript_PrintAbilityMadeIneffective },
+        //     { MOVE_EFFECT_BLOCKER_SAFEGUARD, 0, BattleScript_SafeguardProtected },
+        //     { MOVE_EFFECT_BLOCKER_END },
+        // }
     },
     [MOVE_EFFECT_POISON] =
     {
@@ -261,15 +279,15 @@ const struct MoveEffectInfo gMoveEffectsInfo[] =
         ._volatile = VOLATILE_CONFUSION,
         .battlescript = BattleScript_MoveEffectConfusion,
         .callback = MoveEffect_ConfusionCallback,
-        .blockers = (const struct MoveEffectBlocker[]){
-            { MOVE_EFFECT_BLOCKER_ABILITY, .ability = ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents },
-            { MOVE_EFFECT_BLOCKER_SUBSTITUTE, BattleScript_ButItFailed },
-            { MOVE_EFFECT_BLOCKER_VOLATILE, BattleScript_AlreadyConfused },
-            { MOVE_EFFECT_BLOCKER_TERRAIN, .terrain = STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents},
-            { MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER },
-            { MOVE_EFFECT_BLOCKER_SAFEGUARD, BattleScript_SafeguardProtected },
-            { MOVE_EFFECT_BLOCKER_END },
-        },
+        // .blockers = (const struct MoveEffectBlocker[]){
+        //     { MOVE_EFFECT_BLOCKER_ABILITY, .ability = ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents },
+        //     { MOVE_EFFECT_BLOCKER_SUBSTITUTE, 0, BattleScript_ButItFailed },
+        //     { MOVE_EFFECT_BLOCKER_VOLATILE, 0, BattleScript_AlreadyConfused },
+        //     { MOVE_EFFECT_BLOCKER_TERRAIN, .terrain = STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents},
+        //     { MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER },
+        //     { MOVE_EFFECT_BLOCKER_SAFEGUARD, 0, BattleScript_SafeguardProtected },
+        //     { MOVE_EFFECT_BLOCKER_END },
+        // },
     },
     [MOVE_EFFECT_FLINCH] =
     {
@@ -774,16 +792,16 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
     SetMoveEffectWithResult(&result, battler, effectBattler, gBattleScripting.moveEffect, primary, certain, gBattlescriptCurrInstr + 1);
 
     // Assign next instruction
-    SetMoveEffectHandleResult(&result, currInstr, gBattlescriptCurrInstr + 1);
+    SetMoveEffectTriggerResult(&result, currInstr, gBattlescriptCurrInstr + 1);
 }
 
-static bool32 CheckMoveEffectBlockers(struct SetMoveEffectResult *result)
+static bool32 CheckMoveEffectBlockers(struct SetMoveEffectResult *result, bool32 failSilently)
 {
     u32 i;
 
     if (gMoveEffectsInfo[result->moveEffect].blockers != NULL)
     {
-        struct MoveEffectBlocker *blocker;
+        const struct MoveEffectBlocker *blocker = 0;
         for (i = 0; i < MOVE_EFFECT_BLOCKER_END && !result->failed; i++)
         {
             switch ((blocker = &gMoveEffectsInfo[result->moveEffect].blockers[i])->blockerType)
@@ -802,6 +820,10 @@ static bool32 CheckMoveEffectBlockers(struct SetMoveEffectResult *result)
                     break;
                 case MOVE_EFFECT_BLOCKER_VOLATILE:
                     result->failed = (blocker->_volatile && GetMonVolatile(result->effectBattler, blocker->_volatile));
+                    break;
+                case MOVE_EFFECT_BLOCKER_CALLBACK:
+                    result->failed = blocker->callback(result);
+                    break;
                 case MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER:
                     // To do
                     break;
@@ -813,7 +835,7 @@ static bool32 CheckMoveEffectBlockers(struct SetMoveEffectResult *result)
         }
 
         // Set next instruction if one is available (some effects fail silently)
-        if (result->failed && blocker->battlescript)
+        if (result->failed && blocker && blocker->battlescript && !failSilently)
             result->nextInstr = blocker->battlescript;
 
         return result->failed;
@@ -836,12 +858,12 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     result->battlerDef = gBattlerTarget;
 
     // Set move effect and check if it exists
-    IF_FAIL((result->moveEffect = gBattleScripting.moveEffect = moveEffect) == MOVE_EFFECT_NONE)
+    IF_FAIL((result->moveEffect = moveEffect) == MOVE_EFFECT_NONE)
         return result;
 
     IF_FAIL(gSpecialStatuses[battler].parentalBondState == PARENTAL_BOND_1ST_HIT
         && IsBattlerAlive(effectBattler)
-        && gMoveEffectsInfo[gBattleScripting.moveEffect].finalStrikeEffect)
+        && gMoveEffectsInfo[moveEffect].finalStrikeEffect)
     {
         result->nextInstr = nextInstr;
         return result;
@@ -854,22 +876,22 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     result->currentMove = gCurrentMove;
 
     // Check move effect blockers
-    if (CheckMoveEffectBlockers(result))
+    if (CheckMoveEffectBlockers(result, FALSE)) // To do
         return result;
 
-    IF_FAIL(!primary && !affectsUser
-     && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-     && IsMoveEffectBlockedByTarget(battlerAbility))
-        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    else IF_FAIL(!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
-          && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
-          && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
-          && !primary)
-        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    else IF_FAIL(!IsBattlerAlive(gEffectBattler) && !gMoveEffectsInfo[moveEffect].activateAfterFaint)
-        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    else IF_FAIL(DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && !affectsUser)
-        gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    // IF_FAIL(!primary && !affectsUser
+    //  && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
+    //  && IsMoveEffectBlockedByTarget(battlerAbility))
+    //     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    // else IF_FAIL(!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
+    //       && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
+    //       && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
+    //       && !primary)
+    //     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    // else IF_FAIL(!IsBattlerAlive(gEffectBattler) && !gMoveEffectsInfo[moveEffect].activateAfterFaint)
+    //     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    // else IF_FAIL(DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && !affectsUser)
+    //     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
     switch (gBattleScripting.moveEffect)
     {

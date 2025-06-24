@@ -410,8 +410,8 @@ static void Cmd_jumpifabilitypresent(void);
 static void Cmd_endselectionscript(void);
 static void Cmd_playanimation(void);
 static void Cmd_playanimation_var(void);
-static void Cmd_unused_0x47(void);
-static void Cmd_unused_0x48(void);
+static void Cmd_checkandsaveeffects(void);
+static void Cmd_applysavedeffects(void);
 static void Cmd_moveend(void);
 static void Cmd_sethealblock(void);
 static void Cmd_returnatktoball(void);
@@ -669,8 +669,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_endselectionscript,                      //0x44
     Cmd_playanimation,                           //0x45
     Cmd_playanimation_var,                       //0x46
-    Cmd_unused_0x47,                             //0x47
-    Cmd_unused_0x48,                             //0x48
+    Cmd_checkandsaveeffects,                     //0x47
+    Cmd_applysavedeffects,                       //0x48
     Cmd_moveend,                                 //0x49
     Cmd_sethealblock,                            //0x4A
     Cmd_returnatktoball,                         //0x4B
@@ -3162,43 +3162,63 @@ bool32 TrySetLightScreen(u32 battler)
     return FALSE;
 }
 
-static bool32 DidNotMissAndHasAdditionalEffectToApply(u32 battler, u32 move, u32 *numAdditionalEffects)
+static bool32 DidNotMissAndHasAdditionalEffectToApply(u32 battler, enum EffectTrigger effectTrigger, u32 *numAdditionalEffects)
 {
-    // Can not apply an additional effect if the move missed/failed
-    if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
-        return FALSE;
+    if (effectTrigger == EFFECT_TRIGGER_MOVE)
+    {
+        // Can not apply an additional effect if the move missed/failed
+        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+            return FALSE;
 
-    // Check that the move has additional effect (left) to apply
-    *numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+        // Check that the move has additional effect (left) to apply
+        *numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
 
-    return *numAdditionalEffects > gBattleStruct->additionalEffectsCounter;
+        return *numAdditionalEffects > gBattleStruct->additionalEffectsCounter;
+    }
+
+    return TRUE;
 }
 
-static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect, u32 *percentChance)
+static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect, enum EffectTrigger effectTrigger, u32 *percentChance, bool32 checking)
 {
-    if (additionalEffect->self
-     && NumAffectedSpreadMoveTargets() > 1
-     && GetNextTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), TRUE) != MAX_BATTLERS_COUNT)
-        return FALSE;
+    if (effectTrigger == EFFECT_TRIGGER_MOVE)
+    {
+        // Prevents spread moves from activating their own effects on themselves
+        // multiple times in a turn e.g. Make it Rain
+        if (additionalEffect->self
+            && NumAffectedSpreadMoveTargets() > 1
+            && GetNextTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), TRUE) != MAX_BATTLERS_COUNT)
+            return FALSE;
 
-    // Certain move effects only apply if the target raised stats this turn (e.g. Burning Jealousy)
-    if (additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[gBattlerTarget].statRaised)
-        return FALSE;
+        // Certain move effects only apply if the target raised stats this turn (e.g. Burning Jealousy)
+        if (additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[gBattlerTarget].statRaised)
+            return FALSE;
 
-    // Certain additional effects only apply on a two-turn move's charge turn
-    if (additionalEffect->onChargeTurnOnly != gProtectStructs[gBattlerAttacker].chargingTurn)
-        return FALSE;
+        // Certain additional effects only apply on a two-turn move's charge turn
+        if (additionalEffect->onChargeTurnOnly != gProtectStructs[gBattlerAttacker].chargingTurn)
+            return FALSE;
 
-    // Calculate percentage chance
-    *percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+        // Status moves always have a guaranteed chance to pass
+        if (gMovesInfo[gCurrentMove].category == DAMAGE_CATEGORY_STATUS)
+            return TRUE;
 
-    return *percentChance == 0 || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, *percentChance);
+        // Calculate percentage chance with modifiers
+        *percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+
+        // If only checking, skip the probability check
+        if (checking)
+            return TRUE;
+    }
+    else
+        *percentChance = additionalEffect->chance;
+
+    return *percentChance == 0 || RandomPercentage(RNG_SECONDARY_EFFECT, *percentChance);
 }
 
 static void Cmd_setadditionaleffects(void)
 {
-    CMD_ARGS();
-    u32 numAdditionalEffects;
+    CMD_ARGS(u8 effectTrigger;);
+    u32 numAdditionalEffects = 0;
 
     if (DidNotMissAndHasAdditionalEffectToApply(gBattlerTarget, gCurrentMove, &numAdditionalEffects))
     {
@@ -3209,10 +3229,10 @@ static void Cmd_setadditionaleffects(void)
 
         // Various checks for if this move effect can be applied this turn
         // Then activate effect if it's primary (chance == 0) or if RNGesus says so
-        if (CanApplyAdditionalEffect(additionalEffect, &percentChance))
+        if (CanApplyAdditionalEffect(additionalEffect, cmd->effectTrigger, &percentChance, FALSE))
         {
             // Run the appropriate commands after getting the result
-            SetMoveEffectHandleResult(SetMoveEffectWithResult(
+            SetMoveEffectTriggerResult(SetMoveEffectWithResult(
                 &result,
                 gBattlerAttacker,
                 additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
@@ -4585,12 +4605,88 @@ static void Cmd_playanimation_var(void)
     PlayAnimation(battler, *(cmd->animIdPtr), cmd->argPtr, cmd->nextInstr);
 }
 
-static void Cmd_unused_0x47(void)
+static inline u32 CountAdditionalEffects(enum EffectTrigger effectTrigger)
 {
+    return (effectTrigger == EFFECT_TRIGGER_MOVE) ? gMovesInfo[gCurrentMove].numAdditionalEffects : 1;
 }
 
-static void Cmd_unused_0x48(void)
+static u32 GetCanApplyAdditionalEffect(const struct AdditionalEffect **additionalEffect, u32 index, enum EffectTrigger effectTrigger, u32 *percentChance)
 {
+    switch (effectTrigger)
+    {
+        case EFFECT_TRIGGER_MOVE:
+                *additionalEffect = &gMovesInfo[gCurrentMove].additionalEffects[index];
+            break;
+        case EFFECT_TRIGGER_ABILITY:
+        case EFFECT_TRIGGER_ITEM:
+            // To do
+            return FALSE;
+    }
+
+    return CanApplyAdditionalEffect(*additionalEffect, effectTrigger, percentChance, TRUE);
+}
+
+static void Cmd_checkandsaveeffects(void)
+{
+    CMD_ARGS(const u8 *failPtr, u8 effectTrigger;);
+    const struct AdditionalEffect *additionalEffect = 0;
+    struct SetMoveEffectResult *result = 0;
+    bool32 atLeastOneSuccess = FALSE;
+    u32 i, percentChance = 0, count = CountAdditionalEffects(cmd->effectTrigger);
+
+    // Clear the current store
+    memset(gBattleStruct->savedMoveEffectResults, 0, sizeof(gBattleStruct->savedMoveEffectResults));
+
+    for (i = 0; i < count; i++)
+    {
+        if (GetCanApplyAdditionalEffect(&additionalEffect, i, cmd->effectTrigger, &percentChance))
+        {
+            // Save data to gBattleStruct
+            result = &gBattleStruct->savedMoveEffectResults[i];
+            result->multistring = additionalEffect->multistring;
+            result->saved = TRUE;
+            result->effectTrigger = cmd->effectTrigger;
+            result->primary = (percentChance == 0);
+            result->certain = (percentChance >= 100);
+
+            SetMoveEffectWithResult(
+                result,
+                gBattlerAttacker,
+                additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
+                additionalEffect->moveEffect,
+                result->primary,
+                result->certain,
+                cmd->nextInstr
+            );
+
+            // Check for success
+            atLeastOneSuccess |= !result->failed;
+        }
+    }
+
+    // Clear this or we'll be stuck when we try to apply them
+    gBattleStruct->additionalEffectsCounter = 0;
+
+    // Go to fail instruction if it was just the one effect (or fail silently, idk)
+    if (result && (count == 1) && result->failed && result->primary)
+        SetMoveEffectTriggerResult(result, gBattlescriptCurrInstr, cmd->nextInstr);
+    else if (!atLeastOneSuccess && cmd->failPtr != NULL)
+        gBattlescriptCurrInstr = cmd->failPtr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+static void Cmd_applysavedeffects(void)
+{
+    CMD_ARGS();
+
+    if (gBattleStruct->additionalEffectsCounter < 3)
+    {
+        SetMoveEffectTriggerSavedResult(gBattleStruct->additionalEffectsCounter);
+        gBattleStruct->additionalEffectsCounter++;
+    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static bool32 TryKnockOffBattleScript(u32 battlerDef)

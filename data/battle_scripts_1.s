@@ -3277,15 +3277,11 @@ BattleScript_EffectConfuse::
 	attackcanceler
 	attackstring
 	ppreduce
-	jumpifability BS_TARGET, ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents
-	jumpifsubstituteblocks BattleScript_ButItFailed
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_AlreadyConfused
-	jumpifterrainaffected BS_TARGET, STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents
+	checkandsaveeffects
 	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
-	jumpifsafeguard BattleScript_SafeguardProtected
 	attackanimation
 	waitanimation
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
+	applysavedeffects
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd

@@ -10,55 +10,36 @@ enum MoveEffectBlockerType
 {
     MOVE_EFFECT_BLOCKER_NONE,
     MOVE_EFFECT_BLOCKER_ABILITY,
+    MOVE_EFFECT_BLOCKER_ABILITY_ON_SIDE,
     MOVE_EFFECT_BLOCKER_SUBSTITUTE,
     MOVE_EFFECT_BLOCKER_SAFEGUARD,
     MOVE_EFFECT_BLOCKER_TERRAIN,
     MOVE_EFFECT_BLOCKER_STATUS,
     MOVE_EFFECT_BLOCKER_VOLATILE,
-    MOVE_EFFECT_BLOCKER_TYPES,
     MOVE_EFFECT_BLOCKER_CALLBACK = 0x8, // Must be hard-coded!
+    MOVE_EFFECT_BLOCKER_TYPES,
     MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER,
     MOVE_EFFECT_BLOCKER_END,
-};
-
-struct ALIGNED(2) SetMoveEffectResult
-{
-    enum MoveEffect moveEffect:9;
-    bool32 certain:1;
-    bool32 primary:1;
-    bool32 affectsUser:1;
-    bool32 failed:1;
-    bool32 tested:1;
-    bool32 isAbility:1;
-    bool32 battlescriptPush:1;
-    bool32 blockedByAbility:1;
-    enum StatusTrigger statusTrigger:2;
-    const u8 *nextInstr;
-    u16 currentMove;
-    u16 battlerAbility;
-    u16 lastUsedItem;
-    u16 battlerAtk:4;
-    u16 battlerDef:4;
-    u16 effectBattler:4;
-    u16 scriptingBattler:4;
-    u8 multistring;
 };
 
 struct MoveEffectBlocker
 {
     union {
-        void (*callback)(struct SetMoveEffectResult *);
         struct {
             enum MoveEffectBlockerType blockerType:8;
-            union {
+            union PACKED {
                 u16 ability;
                 enum Volatile _volatile:8;
                 u16 status;
                 u16 terrain;
-                u8 types[2];
-                u8 args[3];
+                struct PACKED {
+                    u16 unlessAbility:10;
+                    u8 type:6;
+                    u8 type2;
+                };
             };
         };
+        const bool32 (*callback)(struct SetMoveEffectResult *);
     };
     const u8 *battlescript;
 };
@@ -94,9 +75,9 @@ static inline void PushNextInstrAndMoveEffectInstr(struct SetMoveEffectResult *r
     PushMoveEffectInstr(result);
 }
 
-static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result, const u8 *currInstr, const u8 *backupInstr)
+static inline void SetMoveEffectTriggerResult(struct SetMoveEffectResult *result, const u8 *currInstr, const u8 *backupInstr)
 {
-    if (result->moveEffect <= MOVE_EFFECT_PAYDAY)
+    if (result && result->moveEffect <= MOVE_EFFECT_PAYDAY)
     {
         if (result->blockedByAbility)
         {
@@ -104,21 +85,18 @@ static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result,
             gBattlerAbility = result->effectBattler;
             RecordAbilityBattle(result->effectBattler, result->battlerAbility);
         }
-        else if (!result->failed)
-        {
-            if (gMoveEffectsInfo[result->moveEffect].callback)
-                gMoveEffectsInfo[result->moveEffect].callback(result);
-        }
-
-        // Set result variables
-        gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
-        gEffectBattler = result->effectBattler;
-        gBattleScripting.battler = result->scriptingBattler;
+        else if (!result->failed && gMoveEffectsInfo[result->moveEffect].callback)
+            gMoveEffectsInfo[result->moveEffect].callback(result);
 
         // Push and set next instruction
         if (result->nextInstr)
         {
-            if (result->battlescriptPush)
+            // Set result variables
+            gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
+            gEffectBattler = result->effectBattler;
+            gBattleScripting.battler = result->scriptingBattler;
+
+            if (result->battlescriptPush && !result->saved)
                 BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = result->nextInstr;
             return;
@@ -126,12 +104,18 @@ static inline void SetMoveEffectHandleResult(struct SetMoveEffectResult *result,
     }
 
     // Fallback - jump to backupInstr if we haven't gone anywhere
-    if (gBattlescriptCurrInstr == currInstr)
+    if (gBattlescriptCurrInstr == currInstr && backupInstr != NULL)
         gBattlescriptCurrInstr = backupInstr;
+}
+
+static inline void SetMoveEffectTriggerSavedResult(u32 index)
+{
+    SetMoveEffectTriggerResult(&gBattleStruct->savedMoveEffectResults[index], NULL, NULL);
 }
 
 void SetNonVolatileStatusCondition(u32 battler, u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
 void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certain);
 struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *result, u32 battler, u32 effectBattler, u16 moveEffect, bool32 primary, bool32 certain, const u8 *failInstr);
+bool32 CheckAndSaveAdditionalEffects(u32 battler, u32 effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
 
 #endif // GUARD_BATTLE_MOVE_EFFECTS_H

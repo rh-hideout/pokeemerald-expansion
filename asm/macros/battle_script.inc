@@ -96,9 +96,10 @@
 	.4byte \ptr
 	.endm
 
-	.macro setadditionaleffects
+	.macro setadditionaleffects trigger=0
 	1:
 	.byte 0x15
+	.byte \trigger
 	jumpifhalfword CMP_EQUAL, sMOVE_EFFECT, MOVE_EFFECT_CONTINUE, 1b
 	.endm
 
@@ -416,11 +417,13 @@
 	.4byte \argPtr
 	.endm
 
-	.macro unused_0x47
+	.macro checkandsaveeffects failPtr=NULL, effectTrigger=0
 	.byte 0x47
+	.4byte \failPtr
+	.byte \effectTrigger
 	.endm
 
-	.macro unused_0x48
+	.macro applysavedeffects
 	.byte 0x48
 	.endm
 

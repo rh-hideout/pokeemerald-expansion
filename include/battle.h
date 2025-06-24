@@ -71,6 +71,37 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
+enum EffectTrigger
+{
+    EFFECT_TRIGGER_MOVE,
+    EFFECT_TRIGGER_ABILITY,
+    EFFECT_TRIGGER_ITEM,
+};
+
+struct PACKED SetMoveEffectResult
+{
+    enum MoveEffect moveEffect:9;
+    bool32 certain:1;
+    bool32 primary:1;
+    bool32 affectsUser:1;
+    bool32 failed:1;
+    bool32 saved:1;
+    bool32 isAbility:1;
+    bool32 battlescriptPush:1;
+    bool32 blockedByAbility:1;
+    enum EffectTrigger effectTrigger:2;
+    enum StatusTrigger statusTrigger:2;
+    const u8 *nextInstr;
+    u16 currentMove;
+    u16 battlerAbility;
+    u16 lastUsedItem;
+    u16 battlerAtk:4;
+    u16 battlerDef:4;
+    u16 effectBattler:4;
+    u16 scriptingBattler:4;
+    u8 multistring;
+};
+
 // Cleared each time a mon leaves the field, either by switching out or fainting
 struct DisableStruct
 {
@@ -665,7 +696,7 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 multipleSwitchInState:2;
     u8 multipleSwitchInCursor:3;
-    u8 padding1:2;
+    u8 additionalEffectsCounter:2; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
@@ -761,7 +792,7 @@ struct BattleStruct
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
-    u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
+    u16 padding1:4;
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -780,6 +811,7 @@ struct BattleStruct
     s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
+    struct SetMoveEffectResult savedMoveEffectResults[3];
 };
 
 struct AiBattleData
