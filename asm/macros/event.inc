@@ -2639,3 +2639,9 @@
 	callnative ScriptChangeFollowerNPCBattlePartner
 	.2byte \battlePartner
 	.endm
+
+	@ Remove the shadow for the given localId
+	.macro removeobjectshadow localId:req
+        .byte SCR_OP_REMOVEOBJECTSHADOW
+        .2byte \localId
+	.endm
