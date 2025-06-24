@@ -24,6 +24,8 @@
 #define REFLECTION_PAL_TAG(tag, num) ((tag) == TAG_NONE ? (num) + PAL_RAW_REFLECTION_OFFSET : (tag) + PAL_TAG_REFLECTION_OFFSET)
 
 static void UpdateObjectReflectionSprite(struct Sprite *);
+static bool8 IsShadowSprite(struct Sprite *sprite);
+static bool8 IsObjectCastingShadow(u32 objectEventId);
 static void LoadObjectReflectionPalette(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static void LoadObjectHighBridgeReflectionPalette(struct ObjectEvent *, struct Sprite *sprite);
 static void LoadObjectRegularReflectionPalette(struct ObjectEvent *, struct Sprite *);
@@ -408,6 +410,88 @@ void UpdateShadowFieldEffect(struct Sprite *sprite)
             FieldEffectStop(sprite, FLDEFF_SHADOW);
         }
     }
+}
+
+static bool8 IsShadowSprite(struct Sprite *sprite)
+{
+    return (sprite->callback == UpdateShadowFieldEffect);
+}
+
+static bool8 IsObjectCastingShadow(u32 objectEventId)
+{
+    if (gObjectEvents[objectEventId].noShadow)
+        return FALSE;
+
+    const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(gObjectEvents[objectEventId].graphicsId);
+
+    return (graphicsInfo->shadowSize != SHADOW_SIZE_NONE);
+}
+
+void RemoveOverworldShadowByLocalId(u32 localId)
+{
+    if (OW_OBJECT_VANILLA_SHADOWS)
+        return;
+
+    u32 mapNum = gSaveBlock1Ptr->location.mapNum;
+    u32 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+    for (s32 i = MAX_SPRITES - 1; i > -1; i--)
+    {
+        if (!IsShadowSprite(&gSprites[i]))
+            continue;
+
+        if (localId != gSprites[i].sLocalId)
+            continue;
+
+        if (mapNum != gSprites[i].sMapNum)
+            continue;
+
+        if (mapGroup != gSprites[i].sMapGroup)
+            continue;
+
+        u32 objectEventId = GetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup);
+
+        if (!IsObjectCastingShadow(objectEventId))
+            break;
+
+        FieldEffectStop(&gSprites[i], FLDEFF_SHADOW);
+    }
+}
+
+void UNUSED RemoveAllOverworldShadowsByLocalId(void)
+{
+    if (OW_OBJECT_VANILLA_SHADOWS)
+        return;
+
+    for (u32 localId = 0; localId <= LOCALID_PLAYER; localId++)
+        RemoveOverworldShadowByLocalId(localId);
+}
+
+void UNUSED RemoveOverworldShadowByObjectEventId(u32 objectEventId)
+{
+    if (OW_OBJECT_VANILLA_SHADOWS)
+        return;
+
+    for (s32 i = MAX_SPRITES - 1; i >= 0; i--)
+    {
+        if (!IsShadowSprite(&gSprites[i]))
+            continue;
+
+        u32 currentObjectEventId = GetObjectEventIdByLocalIdAndMap(gSprites[i].sLocalId, gSprites[i].sMapNum, gSprites[i].sMapGroup);
+
+        if (currentObjectEventId != objectEventId)
+            continue;
+
+        FieldEffectStop(&gSprites[i], FLDEFF_SHADOW);
+    }
+}
+
+void UNUSED RemoveAllOverworldShadowsByObjectEventId(void)
+{
+    if (OW_OBJECT_VANILLA_SHADOWS)
+        return;
+
+    for (u32 objectEventId = 0; objectEventId < OBJECT_EVENTS_COUNT; objectEventId++)
+        RemoveOverworldShadowByObjectEventId(objectEventId);
 }
 
 #undef sLocalId

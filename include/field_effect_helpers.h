@@ -42,5 +42,9 @@ void UpdateBubblesFieldEffect(struct Sprite *sprite);
 void UpdateSparkleFieldEffect(struct Sprite *sprite);
 void SetSpriteInvisible(u8 spriteId);
 void ShowWarpArrowSprite(u8 spriteId, u8 direction, s16 x, s16 y);
+void UNUSED RemoveOverworldShadowByObjectEventId(u32 objectEventId);
+void UNUSED RemoveAllOverworldShadowsByObjectEventId(void);
+void UNUSED RemoveOverworldShadowByLocalId(u32 localId);
+void RemoveAllOverworldShadowsByLocalId(void);
 
 #endif //GUARD_FIELD_EFFECT_HELPERS_H
