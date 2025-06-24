@@ -26,6 +26,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/rgb.h"
+#include "field_effect_helpers.h"
 
 #define PALTAG_UNUSED_MUGSHOT 0x100A
 
@@ -4008,6 +4009,7 @@ static void VBlankCB_AngledWipes(void)
 
 static void CreateIntroTask(s16 fadeToGrayDelay, s16 fadeFromGrayDelay, s16 numFades, s16 fadeToGrayIncrement, s16 fadeFromGrayIncrement)
 {
+    RemoveAllOverworldShadowsByLocalId();
     u8 taskId = CreateTask(Task_BattleTransition_Intro, 3);
     gTasks[taskId].tFadeToGrayDelay = fadeToGrayDelay;
     gTasks[taskId].tFadeFromGrayDelay = fadeFromGrayDelay;
