@@ -5,9 +5,25 @@ MAKER_CODE  := 01
 REVISION    := 0
 KEEP_TEMPS  ?= 0
 
+ROM_VARIANT ?= black
+
+PROJECT_ROOT := $(shell pwd)
+
+# Variant-specific settings
+ifeq ($(ROM_VARIANT),black)
+  TITLE := POKEMON BLACK
+  GAME_CODE := BPBE
+  FILE_NAME := pokeblackprism
+else ifeq ($(ROM_VARIANT),white)
+  TITLE := POKEMON WHITE
+  GAME_CODE := BWBE
+  FILE_NAME := pokewhiteprism
+else
+  $(error Invalid ROM_VARIANT "$(ROM_VARIANT)". Use ROM_VARIANT=black or ROM_VARIANT=white)
+endif
+
 # `File name`.gba
-FILE_NAME := pokeemerald
-BUILD_DIR := build
+BUILD_DIR := build/$(ROM_VARIANT)
 
 # Compares the ROM to a checksum of the original - only makes sense using when non-modern
 COMPARE     ?= 0
@@ -31,7 +47,13 @@ ifeq (debug,$(MAKECMDGOALS))
 endif
 
 # Default make rule
-all: rom
+all: black white
+
+black:
+	$(MAKE) ROM_VARIANT=black rom
+
+white:
+	$(MAKE) ROM_VARIANT=white rom
 
 # Toolchain selection
 TOOLCHAIN := $(DEVKITARM)
@@ -117,7 +139,7 @@ O_LEVEL ?= g
 else
 O_LEVEL ?= 2
 endif
-CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -std=gnu17
+CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -std=gnu17 -DVERSION_$(shell echo $(ROM_VARIANT) | tr a-z A-Z)
 ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
@@ -132,7 +154,7 @@ ifeq ($(UNUSED_ERROR),0)
   endif
 endif
 LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
-LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
+LIB := $(LIBPATH) -lc -lnosys -lgcc -L$(PROJECT_ROOT)/libagbsyscall -lagbsyscall
 # Enable debug info if set
 ifeq ($(DINFO),1)
   override CFLAGS += -g
@@ -478,7 +500,7 @@ libagbsyscall:
 # Elf from object files
 LDFLAGS = -Map ../../$(MAP)
 $(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
-	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ $(OBJS_REL) $(LIB) | cat
+	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T $(PROJECT_ROOT)/$(LD_SCRIPT) --print-memory-usage -o $(PROJECT_ROOT)/$@ $(OBJS_REL) $(LIB) | cat
 	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< --print-memory-usage -o ../../$@ <objs> <libs> | cat"
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
 
