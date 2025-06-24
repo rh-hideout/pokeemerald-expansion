@@ -244,18 +244,6 @@ struct SideTimer
     u16 swampTimer;
 };
 
-struct FieldTimer
-{
-    u16 mudSportTimer;
-    u16 waterSportTimer;
-    u16 wonderRoomTimer;
-    u16 magicRoomTimer;
-    u16 trickRoomTimer;
-    u16 terrainTimer;
-    u16 gravityTimer;
-    u16 fairyLockTimer;
-};
-
 struct WishFutureKnock
 {
     u16 futureSightCounter[MAX_BATTLERS_COUNT];
@@ -1012,6 +1000,43 @@ struct QueuedStatBoost
     s8 statChanges[NUM_BATTLE_STATS - 1];    // highest bit being set decreases the stat
 }; /* size = 8 */
 
+// Field status union
+union FieldStatuses
+{
+    int raw;
+    u32 flags;
+    struct {
+        union {
+            u8 activeRoom:3;
+            bool8 anyRoomActive:6;
+            struct PACKED {
+                u8 magicRoom:1;
+                u8 trickRoom:1;
+                u8 wonderRoom:1;
+                u8 roomTimer:3;
+                u8 fairyLock:2; // Just because it fits
+            };
+        };
+        union {
+            u8 activeTerrain:4;
+            bool8 anyTerrainActive;
+            struct PACKED {
+                u8 grassyTerrain:1;
+                u8 mistyTerrain:1;
+                u8 electricTerrain:1;
+                u8 psychicTerrain:1;
+                u8 terrainTimer:4;
+            };
+        };
+
+        u16 mudSport:3;
+        u16 waterSport:3;
+        u16 gravity:3;
+        u16 ionDeluge:1;
+        u16 padding:6;
+    };
+};
+
 // All battle variables are declared in battle_main.c
 extern u16 gBattle_BG0_X;
 extern u16 gBattle_BG0_Y;
@@ -1112,8 +1137,7 @@ extern struct BattleSpriteData *gBattleSpritesDataPtr;
 extern struct MonSpritesGfx *gMonSpritesGfxPtr;
 extern u16 gBattleMovePower;
 extern u16 gMoveToLearn;
-extern u32 gFieldStatuses;
-extern struct FieldTimer gFieldTimers;
+extern union FieldStatuses gFieldStatuses;
 extern u16 gBattleTurnCounter;
 extern u8 gBattlerAbility;
 extern struct QueuedStatBoost gQueuedStatBoosts[MAX_BATTLERS_COUNT];
@@ -1241,6 +1265,21 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+}
+
+static inline void SetTerrain(u32 terrainFlag, enum ItemHoldEffect itemHoldEffect)
+{
+    gFieldStatuses.anyTerrainActive = FALSE;
+    gFieldStatuses.flags |= terrainFlag;
+    gFieldStatuses.terrainTimer = (itemHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER ? 8 : 5);
+    gBattleCommunication[MULTISTRING_CHOOSER] = gFieldStatuses.activeTerrain ? BIT_INDEX(gFieldStatuses.activeTerrain) : 0;
+}
+
+static inline void RemoveAllTerrains(void)
+{
+    gBattleCommunication[MULTISTRING_CHOOSER] = (gFieldStatuses.activeTerrain ? BIT_INDEX(gFieldStatuses.activeTerrain) : 0) + 4;
+    gFieldStatuses.anyTerrainActive = FALSE;
+    TryToRevertMimicryAndFlags();
 }
 
 #endif // GUARD_BATTLE_H

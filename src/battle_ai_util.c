@@ -368,7 +368,7 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
         return TRUE;
     if (gStatuses3[battlerDef] & (STATUS3_ROOTED | STATUS3_SKY_DROPPED))
         return TRUE;
-    if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
+    if (gFieldStatuses.fairyLock)
         return TRUE;
     if (AI_IsAbilityOnSide(battlerAtk, ABILITY_SHADOW_TAG)
         && (B_SHADOW_TAG_ESCAPE >= GEN_4 && gAiLogicData->abilities[battlerDef] != ABILITY_SHADOW_TAG))
@@ -562,7 +562,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY) && GetMoveEffectArg_MoveProperty(ctx->move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
+        if (gFieldStatuses.anyTerrainActive && GetMoveEffectArg_MoveProperty(ctx->move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
@@ -1203,7 +1203,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
 
     if (speedBattlerAI > speedBattler)
     {
-        if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
+        if (gFieldStatuses.trickRoom)
             return AI_IS_SLOWER;
         else
             return AI_IS_FASTER;
@@ -1214,7 +1214,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
     }
     else
     {
-        if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
+        if (gFieldStatuses.trickRoom)
             return AI_IS_FASTER;
         else
             return AI_IS_SLOWER;
@@ -1471,7 +1471,7 @@ enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
 
     if (gStatuses3[battlerId] & STATUS3_EMBARGO)
         return HOLD_EFFECT_NONE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+    if (gFieldStatuses.magicRoom)
         return HOLD_EFFECT_NONE;
     if (gAiLogicData->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses3[battlerId] & STATUS3_GASTRO_ACID))
         return HOLD_EFFECT_NONE;
@@ -2940,7 +2940,7 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
 
     if (ability == ABILITY_MAGIC_GUARD)
         return FALSE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || ability == ABILITY_KLUTZ)
+    if (gFieldStatuses.magicRoom || ability == ABILITY_KLUTZ)
         holdEffect = HOLD_EFFECT_NONE;
     else
         holdEffect = gItemsInfo[GetMonData(mon, MON_DATA_HELD_ITEM)].holdEffect;
@@ -2954,7 +2954,7 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
 
     if (flags & SIDE_STATUS_SPIKES && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
         && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
-        || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY))
+        || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses.gravity))
     {
         s32 spikesDmg = maxHp / ((5 - gSideTimers[GetBattlerSide(currBattler)].spikesAmount) * 2);
         if (spikesDmg == 0)
@@ -4843,7 +4843,7 @@ bool32 IsBattlerItemEnabled(u32 battler)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_NEGATE_UNAWARE)
         return TRUE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+    if (gFieldStatuses.magicRoom)
         return FALSE;
     if (gStatuses3[battler] & STATUS3_EMBARGO)
         return FALSE;

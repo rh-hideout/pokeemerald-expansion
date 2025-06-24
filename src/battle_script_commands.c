@@ -1652,7 +1652,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
             calc = (calc * 120) / 100;  // 20% acc boost
     }
 
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    if (gFieldStatuses.gravity)
         calc = (calc * 5) / 3; // 1.66 Gravity acc boost
 
     if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
@@ -3864,9 +3864,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+        if (gFieldStatuses.anyTerrainActive)
         {
-            switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            switch (gFieldStatuses.activeTerrain << 8)
             {
             case STATUS_FIELD_MISTY_TERRAIN:
                 gBattleScripting.moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
@@ -4013,9 +4013,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_ION_DELUGE:
-        if (!(gFieldStatuses & STATUS_FIELD_ION_DELUGE))
+        if (!gFieldStatuses.ionDeluge)
         {
-            gFieldStatuses |= STATUS_FIELD_ION_DELUGE;
+            gFieldStatuses.ionDeluge = TRUE;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_MoveEffectIonDeluge;
         }
@@ -4210,39 +4210,15 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     }
-    case MOVE_EFFECT_MISTY_TERRAIN:
     case MOVE_EFFECT_GRASSY_TERRAIN:
+    case MOVE_EFFECT_MISTY_TERRAIN:
     case MOVE_EFFECT_ELECTRIC_TERRAIN:
     case MOVE_EFFECT_PSYCHIC_TERRAIN:
     {
-        u32 statusFlag = 0;
-        switch (gBattleScripting.moveEffect)
+        u32 statusFlag = 1 << ((gBattleScripting.moveEffect - MOVE_EFFECT_GRASSY_TERRAIN) + 8);
+        if (!(gFieldStatuses.flags & statusFlag) && statusFlag != 0)
         {
-            case MOVE_EFFECT_MISTY_TERRAIN:
-                statusFlag = STATUS_FIELD_MISTY_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
-                break;
-            case MOVE_EFFECT_GRASSY_TERRAIN:
-                statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
-                break;
-            case MOVE_EFFECT_ELECTRIC_TERRAIN:
-                statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
-                break;
-            case MOVE_EFFECT_PSYCHIC_TERRAIN:
-                statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
-                break;
-        }
-        if (!(gFieldStatuses & statusFlag) && statusFlag != 0)
-        {
-            gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-            gFieldStatuses |= statusFlag;
-            if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_TERRAIN_EXTENDER)
-                gFieldTimers.terrainTimer = gBattleTurnCounter + 8;
-            else
-                gFieldTimers.terrainTimer = gBattleTurnCounter + 5;
+            SetTerrain(statusFlag, GetBattlerHoldEffect(gBattlerAttacker, TRUE));
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectSetTerrain;
         }
@@ -4278,7 +4254,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SCREEN_ANY
             || gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_HAZARDS_ANY
             || gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_HAZARDS_ANY
-            || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            || gFieldStatuses.anyTerrainActive)
         {
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_DefogTryHazards;
@@ -4298,10 +4274,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_GRAVITY:
-        if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+        if (!gFieldStatuses.gravity)
         {
-            gFieldStatuses |= STATUS_FIELD_GRAVITY;
-            gFieldTimers.gravityTimer = gBattleTurnCounter + 5;
+            gFieldStatuses.gravity = 5;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectGravitySuccess;
         }
@@ -7999,7 +7974,7 @@ bool32 DoSwitchInAbilities(u32 battler)
     return (TryPrimalReversion(battler)
          || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0, 0)
          || (gBattleWeather & B_WEATHER_ANY && HasWeatherEffect() && AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0, 0))
-         || (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0, 0)));
+         || (gFieldStatuses.anyTerrainActive && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0, 0)));
 }
 
 static void UpdateSentMonFlags(u32 battler)
@@ -8904,14 +8879,13 @@ static void Cmd_setgravity(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    if (gFieldStatuses.gravity)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
     {
-        gFieldStatuses |= STATUS_FIELD_GRAVITY;
-        gFieldTimers.gravityTimer = gBattleTurnCounter + 5;
+        gFieldStatuses.gravity = 5;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -9473,30 +9447,6 @@ static void RemoveAllWeather(void)
     gBattleWeather = 0;    // remove the weather
 }
 
-static void RemoveAllTerrains(void)
-{
-    switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-    {
-    case STATUS_FIELD_MISTY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_MISTY;
-        break;
-    case STATUS_FIELD_GRASSY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_GRASSY;
-        break;
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_ELECTRIC;
-        break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_PSYCHIC;
-        break;
-    default:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
-        break;
-    }
-    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;    // remove the terrain
-    TryToRevertMimicryAndFlags();
-}
-
 #define DEFOG_CLEAR(status, structField, battlescript, move)\
 {                                                           \
     if (*sideStatuses & status)                             \
@@ -9551,7 +9501,7 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
             BattleScriptCall(BattleScript_FogEnded_Ret);
             return TRUE;
         }
-        if (B_DEFOG_EFFECT_CLEARING >= GEN_8 && (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+        if (B_DEFOG_EFFECT_CLEARING >= GEN_8 && gFieldStatuses.anyTerrainActive)
         {
             RemoveAllTerrains();
             BattleScriptCall(BattleScript_TerrainEnds_Ret);
@@ -9935,14 +9885,13 @@ static void Cmd_various(void)
     case VARIOUS_TRY_FAIRY_LOCK:
     {
         VARIOUS_ARGS(const u8 *failInstr);
-        if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
+        if (gFieldStatuses.fairyLock)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         else
         {
-            gFieldStatuses |= STATUS_FIELD_FAIRY_LOCK;
-            gFieldTimers.fairyLockTimer = gBattleTurnCounter + 2;
+            gFieldStatuses.fairyLock = 2;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
@@ -11323,7 +11272,7 @@ static void Cmd_various(void)
     {
         VARIOUS_ARGS(const u8 *failInstr);
         if (gBattleMons[battler].item == ITEM_NONE
-           || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
+           || gFieldStatuses.magicRoom
            || GetBattlerAbility(battler) == ABILITY_KLUTZ)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -14569,13 +14518,13 @@ static void Cmd_callenvironmentattack(void)
 u32 GetNaturePowerMove(u32 battler)
 {
     u32 move = sNaturePowerMoves[gBattleEnvironment];
-    if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+    if (gFieldStatuses.mistyTerrain)
         move = MOVE_MOONBLAST;
-    else if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+    else if (gFieldStatuses.electricTerrain)
         move = MOVE_THUNDERBOLT;
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+    else if (gFieldStatuses.grassyTerrain)
         move = MOVE_ENERGY_BALL;
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+    else if (gFieldStatuses.psychicTerrain)
         move = MOVE_PSYCHIC;
     else if (sNaturePowerMoves[gBattleEnvironment] == MOVE_NONE)
         move = MOVE_TRI_ATTACK;
@@ -14930,18 +14879,19 @@ static void Cmd_setdamagetohealthdifference(void)
     }
 }
 
-static void HandleRoomMove(u32 statusFlag, u16 *timer, u8 stringId)
+static u8 HandleRoomMove(u32 statusFlag, u8 stringId)
 {
-    if (gFieldStatuses & statusFlag)
+    if (gFieldStatuses.flags & statusFlag)
     {
-        gFieldStatuses &= ~statusFlag;
+        gFieldStatuses.flags &= ~statusFlag;
         gBattleCommunication[MULTISTRING_CHOOSER] = stringId + 1;
+        return 0;
     }
     else
     {
-        gFieldStatuses |= statusFlag;
-        *timer = gBattleTurnCounter + 5;
+        gFieldStatuses.flags |= statusFlag;
         gBattleCommunication[MULTISTRING_CHOOSER] = stringId;
+        return 5;
     }
 }
 
@@ -14952,13 +14902,13 @@ static void Cmd_setroom(void)
     switch (GetMoveEffect(gCurrentMove))
     {
     case EFFECT_TRICK_ROOM:
-        HandleRoomMove(STATUS_FIELD_TRICK_ROOM, &gFieldTimers.trickRoomTimer, 0);
+        gFieldStatuses.roomTimer = HandleRoomMove(STATUS_FIELD_TRICK_ROOM, 0);
         break;
     case EFFECT_WONDER_ROOM:
-        HandleRoomMove(STATUS_FIELD_WONDER_ROOM, &gFieldTimers.wonderRoomTimer, 2);
+        gFieldStatuses.roomTimer = HandleRoomMove(STATUS_FIELD_WONDER_ROOM, 2);
         break;
     case EFFECT_MAGIC_ROOM:
-        HandleRoomMove(STATUS_FIELD_MAGIC_ROOM, &gFieldTimers.magicRoomTimer, 4);
+        gFieldStatuses.roomTimer = HandleRoomMove(STATUS_FIELD_MAGIC_ROOM, 4);
         break;
     default:
         gBattleCommunication[MULTISTRING_CHOOSER] = 6;
@@ -15334,10 +15284,9 @@ static void Cmd_settypebasedhalvers(void)
     {
         if (B_SPORT_TURNS >= GEN_6)
         {
-            if (!(gFieldStatuses & STATUS_FIELD_MUDSPORT))
+            if (!gFieldStatuses.mudSport)
             {
-                gFieldStatuses |= STATUS_FIELD_MUDSPORT;
-                gFieldTimers.mudSportTimer = gBattleTurnCounter + 5;
+                gFieldStatuses.mudSport = 5;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_ELECTRIC;
                 worked = TRUE;
             }
@@ -15356,10 +15305,9 @@ static void Cmd_settypebasedhalvers(void)
     {
         if (B_SPORT_TURNS >= GEN_6)
         {
-            if (!(gFieldStatuses & STATUS_FIELD_WATERSPORT))
+            if (!gFieldStatuses.waterSport)
             {
-                gFieldStatuses |= STATUS_FIELD_WATERSPORT;
-                gFieldTimers.waterSportTimer = gBattleTurnCounter + 5;
+                gFieldStatuses.waterSport = 5;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_FIRE;
                 worked = TRUE;
             }
@@ -15454,7 +15402,7 @@ static void Cmd_settypetoenvironment(void)
     CMD_ARGS(const u8 *failInstr);
 
     u8 environmentType;
-    switch(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    switch(gFieldStatuses.activeTerrain << 8)
     {
     case STATUS_FIELD_ELECTRIC_TERRAIN:
         environmentType = TYPE_ELECTRIC;
@@ -16322,7 +16270,7 @@ static void Cmd_settelekinesis(void)
     CMD_ARGS(const u8 *failInstr);
 
     if (gStatuses3[gBattlerTarget] & (STATUS3_TELEKINESIS | STATUS3_ROOTED | STATUS3_SMACKED_DOWN)
-        || gFieldStatuses & STATUS_FIELD_GRAVITY
+        || gFieldStatuses.gravity
         || IsTelekinesisBannedSpecies(gBattleMons[gBattlerTarget].species))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -17150,30 +17098,25 @@ void BS_SetRemoveTerrain(void)
     {
     case EFFECT_MISTY_TERRAIN:
         statusFlag = STATUS_FIELD_MISTY_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
         break;
     case EFFECT_GRASSY_TERRAIN:
         statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
         break;
     case EFFECT_ELECTRIC_TERRAIN:
         statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
         break;
     case EFFECT_PSYCHIC_TERRAIN:
         statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
     case EFFECT_HIT_SET_REMOVE_TERRAIN:
         switch (GetMoveEffectArg_MoveProperty(gCurrentMove))
         {
         case ARG_SET_PSYCHIC_TERRAIN: // Genesis Supernova
             statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
             break;
         case ARG_TRY_REMOVE_TERRAIN_HIT: // Splintered Stormshards
         case ARG_TRY_REMOVE_TERRAIN_FAIL: // Steel Roller
-            if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+            if (!gFieldStatuses.anyTerrainActive)
             {
                 // No terrain to remove, jump to battle script pointer.
                 gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -17193,17 +17136,13 @@ void BS_SetRemoveTerrain(void)
         break;
     }
 
-    if (gFieldStatuses & statusFlag || statusFlag == 0)
+    if (gFieldStatuses.flags & statusFlag || statusFlag == 0)
     {
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
     else
     {
-        enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-
-        gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-        gFieldStatuses |= statusFlag;
-        gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
+        SetTerrain(statusFlag, GetBattlerHoldEffect(gBattlerAttacker, TRUE));
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -17462,7 +17401,7 @@ void BS_TryHealPulse(void)
     {
         if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_LAUNCHER && IsPulseMove(gCurrentMove))
             gBattleStruct->moveDamage[gBattlerTarget] = -(GetNonDynamaxMaxHP(gBattlerTarget) * 75 / 100);
-        else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
+        else if (gFieldStatuses.grassyTerrain && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
             gBattleStruct->moveDamage[gBattlerTarget] = -(GetNonDynamaxMaxHP(gBattlerTarget) * 2 / 3);
         else
             gBattleStruct->moveDamage[gBattlerTarget] = -(GetNonDynamaxMaxHP(gBattlerTarget) / 2);

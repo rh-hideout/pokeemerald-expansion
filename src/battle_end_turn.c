@@ -152,8 +152,8 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
     gBattleStruct->endTurnEventsCounter++;
 
-    if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK && gFieldTimers.fairyLockTimer == gBattleTurnCounter)
-        gFieldStatuses &= ~STATUS_FIELD_FAIRY_LOCK;
+    if (gFieldStatuses.fairyLock)
+        gFieldStatuses.fairyLock--;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
@@ -481,7 +481,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler) && IsBattlerGrounded(battler))
+        if (gFieldStatuses.grassyTerrain && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler) && IsBattlerGrounded(battler))
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
@@ -1208,132 +1208,81 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     return effect;
 }
 
+static inline bool32 HandleEndTurnFieldStatus(u32 battler, bool32 ending, const u8* battlescript)
+{
+    gBattleStruct->endTurnEventsCounter++;
+    if (ending)
+        BattleScriptExecute(battlescript);
+
+    return ending;
+}
+
 static bool32 HandleEndTurnTrickRoom(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_TRICK_ROOM;
-        BattleScriptExecute(BattleScript_TrickRoomEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return (gFieldStatuses.trickRoom = HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.trickRoom && gFieldStatuses.roomTimer-- == 1,
+        BattleScript_TrickRoomEnds
+    ));
 }
 
 static bool32 HandleEndTurnGravity(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY && gFieldTimers.gravityTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_GRAVITY;
-        BattleScriptExecute(BattleScript_GravityEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.gravity && gFieldStatuses.gravity-- == 1,
+        BattleScript_GravityEnds
+    );
 }
 
 static bool32 HandleEndTurnWaterSport(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_WATERSPORT && gFieldTimers.waterSportTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_WATERSPORT;
-        BattleScriptExecute(BattleScript_WaterSportEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.waterSport && gFieldStatuses.waterSport-- == 1,
+        BattleScript_WaterSportEnds
+    );
 }
 
 static bool32 HandleEndTurnMudSport(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_MUDSPORT && gFieldTimers.mudSportTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_MUDSPORT;
-        BattleScriptExecute(BattleScript_MudSportEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.mudSport && gFieldStatuses.mudSport-- == 1,
+        BattleScript_MudSportEnds
+    );
 }
 
 static bool32 HandleEndTurnWonderRoom(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM && gFieldTimers.wonderRoomTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_WONDER_ROOM;
-        BattleScriptExecute(BattleScript_WonderRoomEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return (gFieldStatuses.wonderRoom = HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.wonderRoom && gFieldStatuses.roomTimer-- == 1,
+        BattleScript_WonderRoomEnds
+    ));
 }
 
 static bool32 HandleEndTurnMagicRoom(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM && gFieldTimers.magicRoomTimer == gBattleTurnCounter)
-    {
-        gFieldStatuses &= ~STATUS_FIELD_MAGIC_ROOM;
-        BattleScriptExecute(BattleScript_MagicRoomEnds);
-        effect = TRUE;
-    }
-
-    return effect;
+    return (gFieldStatuses.magicRoom = HandleEndTurnFieldStatus(
+        battler,
+        gFieldStatuses.magicRoom && gFieldStatuses.roomTimer-- == 1,
+        BattleScript_MagicRoomEnds
+    ));
 }
 
-static bool32 EndTurnTerrain(u32 terrainFlag, u32 stringTableId)
+static bool32 HandleEndTurnTerrain(u32 battler)
 {
-    if (gFieldStatuses & terrainFlag && gFieldTimers.terrainTimer == gBattleTurnCounter)
+    gBattleStruct->endTurnEventsCounter++;
+
+    if (gFieldStatuses.activeTerrain && gFieldStatuses.terrainTimer-- == 1)
     {
-        gFieldStatuses &= ~terrainFlag;
-        TryToRevertMimicryAndFlags();
-        gBattleCommunication[MULTISTRING_CHOOSER] = stringTableId;
+        RemoveAllTerrains();
         BattleScriptExecute(BattleScript_TerrainEnds);
         return TRUE;
     }
 
     return FALSE;
-}
-
-static bool32 HandleEndTurnTerrain(u32 battler)
-{
-    bool32 effect = FALSE;
-
-    gBattleStruct->endTurnEventsCounter++;
-
-    if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_ELECTRIC_TERRAIN, B_MSG_TERRAIN_END_ELECTRIC);
-    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_MISTY_TERRAIN, B_MSG_TERRAIN_END_MISTY);
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_GRASSY_TERRAIN, B_MSG_TERRAIN_END_GRASSY);
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_PSYCHIC_TERRAIN, B_MSG_TERRAIN_END_PSYCHIC);
-
-    return effect;
 }
 
 static bool32 HandleEndTurnThirdEventBlock(u32 battler)
