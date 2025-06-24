@@ -1006,7 +1006,7 @@ union FieldStatuses
     int raw;
     u32 flags;
     struct {
-        union {
+        union PACKED {
             u8 activeRoom:3;
             bool8 anyRoomActive:6;
             struct PACKED {
@@ -1017,7 +1017,8 @@ union FieldStatuses
                 u8 fairyLock:2; // Just because it fits
             };
         };
-        union {
+
+        union PACKED {
             u8 activeTerrain:4;
             bool8 anyTerrainActive;
             struct PACKED {
