@@ -154,19 +154,12 @@ static void InitBtlControllersInternal(void)
         else
             isPlayerPrimary = (!isRecordedLink || isRecordedMaster);
 
-        if (isPlayerPrimary)
+        gBattlerPositions[B_BATTLER_0] = isPlayerPrimary ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT;
+        gBattlerPositions[B_BATTLER_1] = isPlayerPrimary ? B_POSITION_OPPONENT_LEFT : B_POSITION_PLAYER_LEFT;
+        if (isDouble)
         {
-            gBattlerPositions[B_BATTLER_0] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[B_BATTLER_1] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[B_BATTLER_2] = B_POSITION_PLAYER_RIGHT;
-            gBattlerPositions[B_BATTLER_3] = B_POSITION_OPPONENT_RIGHT;
-        }
-        else
-        {
-            gBattlerPositions[B_BATTLER_0] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[B_BATTLER_1] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[B_BATTLER_2] = B_POSITION_OPPONENT_RIGHT;
-            gBattlerPositions[B_BATTLER_3] = B_POSITION_PLAYER_RIGHT;
+            gBattlerPositions[B_BATTLER_2] = isPlayerPrimary ? B_POSITION_PLAYER_RIGHT : B_POSITION_OPPONENT_RIGHT;
+            gBattlerPositions[B_BATTLER_3] = isPlayerPrimary ? B_POSITION_OPPONENT_RIGHT : B_POSITION_PLAYER_RIGHT;
         }
 
         if (isLink)
