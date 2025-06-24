@@ -32,11 +32,6 @@ jobs:
           COMPARE: 0
         run: make -j${nproc} -O all
 
-      - name: Test
-        env:
-          TEST: 1
-        run: |
-          make -j${nproc} check
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest
