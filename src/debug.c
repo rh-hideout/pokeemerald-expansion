@@ -2983,19 +2983,8 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     u32 daysToAdd = 0;
 
     DebugAction_DestroyExtraWindow(taskId);
-    switch(input)
-    {
-        case WEEKDAY_SUN:
-        case WEEKDAY_MON:
-        case WEEKDAY_TUE:
-        case WEEKDAY_WED:
-        case WEEKDAY_THU:
-        case WEEKDAY_FRI:
-        case WEEKDAY_SAT:
-            daysToAdd = ((input - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
-            break;
-        }
+    daysToAdd = ((input - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
+    FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_LoadMap);
 }
