@@ -261,6 +261,15 @@ const struct MoveEffectInfo gMoveEffectsInfo[] =
         ._volatile = VOLATILE_CONFUSION,
         .battlescript = BattleScript_MoveEffectConfusion,
         .callback = MoveEffect_ConfusionCallback,
+        .blockers = (const struct MoveEffectBlocker[]){
+            { MOVE_EFFECT_BLOCKER_ABILITY, .ability = ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents },
+            { MOVE_EFFECT_BLOCKER_SUBSTITUTE, BattleScript_ButItFailed },
+            { MOVE_EFFECT_BLOCKER_VOLATILE, BattleScript_AlreadyConfused },
+            { MOVE_EFFECT_BLOCKER_TERRAIN, .terrain = STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents},
+            { MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER },
+            { MOVE_EFFECT_BLOCKER_SAFEGUARD, BattleScript_SafeguardProtected },
+            { MOVE_EFFECT_BLOCKER_END },
+        },
     },
     [MOVE_EFFECT_FLINCH] =
     {
@@ -768,14 +777,59 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
     SetMoveEffectHandleResult(&result, currInstr, gBattlescriptCurrInstr + 1);
 }
 
+static bool32 CheckMoveEffectBlockers(struct SetMoveEffectResult *result)
+{
+    u32 i;
+
+    if (gMoveEffectsInfo[result->moveEffect].blockers != NULL)
+    {
+        struct MoveEffectBlocker *blocker;
+        for (i = 0; i < MOVE_EFFECT_BLOCKER_END && !result->failed; i++)
+        {
+            switch ((blocker = &gMoveEffectsInfo[result->moveEffect].blockers[i])->blockerType)
+            {
+                case MOVE_EFFECT_BLOCKER_ABILITY:
+                    result->failed = (result->battlerAbility == blocker->ability);
+                    break;
+                case MOVE_EFFECT_BLOCKER_SUBSTITUTE:
+                    result->failed = (DoesSubstituteBlockMove(result->battlerAtk, result->effectBattler, result->currentMove));
+                    break;
+                case MOVE_EFFECT_BLOCKER_SAFEGUARD:
+                    result->failed = (GetBattlerAbility(result->battlerAtk) != ABILITY_INFILTRATOR && (gSideStatuses[GetBattlerSide(result->effectBattler)] & SIDE_STATUS_SAFEGUARD));
+                    break;
+                case MOVE_EFFECT_BLOCKER_TERRAIN:
+                    result->failed = (IsBattlerTerrainAffected(result->effectBattler, blocker->terrain));
+                    break;
+                case MOVE_EFFECT_BLOCKER_VOLATILE:
+                    result->failed = (blocker->_volatile && GetMonVolatile(result->effectBattler, blocker->_volatile));
+                case MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER:
+                    // To do
+                    break;
+                case MOVE_EFFECT_BLOCKER_END:
+                    return FALSE;
+                default:
+                    break;
+            }
+        }
+
+        // Set next instruction if one is available (some effects fail silently)
+        if (result->failed && blocker->battlescript)
+            result->nextInstr = blocker->battlescript;
+
+        return result->failed;
+    }
+
+    return FALSE;
+}
+
 // To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
 struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *result, u32 battler, u32 effectBattler, u16 moveEffect, bool32 primary, bool32 certain, const u8 *nextInstr)
 {
     s32 i;
     bool32 affectsUser = (battler == effectBattler);
-    bool32 mirrorArmorReflected = (GetBattlerAbility(effectBattler) == ABILITY_MIRROR_ARMOR);
+    u32 battlerAbility = GetBattlerAbility(effectBattler);
+    bool32 mirrorArmorReflected = (battlerAbility == ABILITY_MIRROR_ARMOR);
     union StatChangeFlags flags = {0};
-    u32 battlerAbility;
 
     // Get battlers
     result->battlerAtk = gBattlerAttacker;
@@ -785,8 +839,8 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     IF_FAIL((result->moveEffect = gBattleScripting.moveEffect = moveEffect) == MOVE_EFFECT_NONE)
         return result;
 
-    IF_FAIL(gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
-        && IsBattlerAlive(gBattlerTarget)
+    IF_FAIL(gSpecialStatuses[battler].parentalBondState == PARENTAL_BOND_1ST_HIT
+        && IsBattlerAlive(effectBattler)
         && gMoveEffectsInfo[gBattleScripting.moveEffect].finalStrikeEffect)
     {
         result->nextInstr = nextInstr;
@@ -796,8 +850,12 @@ struct SetMoveEffectResult *SetMoveEffectWithResult(struct SetMoveEffectResult *
     // Get current ability and move
     result->scriptingBattler = gBattleScripting.battler = battler;
     result->effectBattler = gEffectBattler = effectBattler;
-    result->battlerAbility = battlerAbility = GetBattlerAbility(gEffectBattler);
+    result->battlerAbility = battlerAbility;
     result->currentMove = gCurrentMove;
+
+    // Check move effect blockers
+    if (CheckMoveEffectBlockers(result))
+        return result;
 
     IF_FAIL(!primary && !affectsUser
      && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)

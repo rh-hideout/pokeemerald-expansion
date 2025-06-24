@@ -6,6 +6,21 @@
 #include "constants/battle_script_commands.h"
 #include "battle_main.h"
 
+enum MoveEffectBlockerType
+{
+    MOVE_EFFECT_BLOCKER_NONE,
+    MOVE_EFFECT_BLOCKER_ABILITY,
+    MOVE_EFFECT_BLOCKER_SUBSTITUTE,
+    MOVE_EFFECT_BLOCKER_SAFEGUARD,
+    MOVE_EFFECT_BLOCKER_TERRAIN,
+    MOVE_EFFECT_BLOCKER_STATUS,
+    MOVE_EFFECT_BLOCKER_VOLATILE,
+    MOVE_EFFECT_BLOCKER_TYPES,
+    MOVE_EFFECT_BLOCKER_CALLBACK = 0x8, // Must be hard-coded!
+    MOVE_EFFECT_BLOCKER_ACCURACY_PLACEHOLDER,
+    MOVE_EFFECT_BLOCKER_END,
+};
+
 struct ALIGNED(2) SetMoveEffectResult
 {
     enum MoveEffect moveEffect:9;
@@ -29,6 +44,25 @@ struct ALIGNED(2) SetMoveEffectResult
     u8 multistring;
 };
 
+struct MoveEffectBlocker
+{
+    union {
+        void (*callback)(struct SetMoveEffectResult *);
+        struct {
+            enum MoveEffectBlockerType blockerType:8;
+            union {
+                u16 ability;
+                enum Volatile _volatile:8;
+                u16 status;
+                u16 terrain;
+                u8 types[2];
+                u8 args[3];
+            };
+        };
+    };
+    const u8 *battlescript;
+};
+
 struct MoveEffectInfo
 {
     void (*callback)(struct SetMoveEffectResult *);
@@ -44,6 +78,7 @@ struct MoveEffectInfo
     u32 finalStrikeEffect:1;
     u32 synchronizeMoveEffect:1;
     u32 onlyIfMonsAliveOnEitherSide:1;
+    const struct MoveEffectBlocker *blockers;
 };
 
 extern const struct MoveEffectInfo gMoveEffectsInfo[];

@@ -530,6 +530,7 @@ extern const u8 BattleScript_CantMakeAsleep[];
 extern const u8 BattleScript_AlreadyPoisoned[];
 extern const u8 BattleScript_AlreadyParalyzed[];
 extern const u8 BattleScript_AlreadyBurned[];
+extern const u8 BattleScript_AlreadyConfused[];
 extern const u8 BattleScript_PrintAbilityMadeIneffective[];
 
 // zmoves
