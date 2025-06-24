@@ -18,6 +18,7 @@
 #include "event_object_movement.h"
 #include "event_scripts.h"
 #include "fake_rtc.h"
+#include "field_effect_helpers.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
