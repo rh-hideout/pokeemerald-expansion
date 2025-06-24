@@ -457,7 +457,7 @@ void RemoveOverworldShadowByLocalId(u32 localId)
     }
 }
 
-void UNUSED RemoveAllOverworldShadowsByLocalId(void)
+void RemoveAllOverworldShadowsByLocalId(void)
 {
     if (OW_OBJECT_VANILLA_SHADOWS)
         return;
