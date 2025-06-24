@@ -113,26 +113,23 @@ struct TypePower
     u16 effect;
 };
 
-enum
+enum MoveSuccessOrder
 {
     CANCELLER_FLAGS,
     CANCELLER_STANCE_CHANGE_1,
     CANCELLER_SKY_DROP,
     CANCELLER_RECHARGE,
-    CANCELLER_ASLEEP,
-    CANCELLER_FROZEN,
+    CANCELLER_ASLEEP_OR_FROZEN,
     CANCELLER_OBEDIENCE,
     CANCELLER_TRUANT,
     CANCELLER_FLINCH,
-    CANCELLER_IN_LOVE,
     CANCELLER_DISABLED,
-    CANCELLER_HEAL_BLOCKED,
-    CANCELLER_GRAVITY,
-    CANCELLER_THROAT_CHOP,
+    CANCELLER_VOLATILE_BLOCKED,
     CANCELLER_TAUNTED,
     CANCELLER_IMPRISONED,
     CANCELLER_CONFUSED,
     CANCELLER_PARALYSED,
+    CANCELLER_INFATUATION,
     CANCELLER_BIDE,
     CANCELLER_THAW,
     CANCELLER_STANCE_CHANGE_2,
@@ -148,13 +145,21 @@ enum
     CANCELLER_END,
 };
 
-enum {
+enum Obedience
+{
     OBEYS,
     DISOBEYS_LOAFS,
     DISOBEYS_HITS_SELF,
     DISOBEYS_FALL_ASLEEP,
     DISOBEYS_WHILE_ASLEEP,
     DISOBEYS_RANDOM_MOVE,
+};
+
+enum MoveCanceller
+{
+    MOVE_STEP_SUCCESS,
+    MOVE_STEP_BREAK,
+    MOVE_STEP_REMOVES_STATUS,
 };
 
 extern const struct TypePower gNaturalGiftTable[];
@@ -241,7 +246,7 @@ bool32 IsAbilityAndRecord(u32 battler, u32 battlerAbility, u32 abilityToCheck);
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
-u32 AtkCanceller_MoveSuccessOrder(void);
+enum MoveCanceller AtkCanceller_MoveSuccessOrder(void);
 void SetAtkCancellerForCalledMove(void);
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbility);
