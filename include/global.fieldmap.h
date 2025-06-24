@@ -28,6 +28,35 @@ enum {
 
 #define METATILE_ID(tileset, name) (METATILE_##tileset##_##name)
 
+enum
+{
+    METATILE_ATTRIBUTE_BEHAVIOR,
+    METATILE_ATTRIBUTE_TERRAIN,
+    METATILE_ATTRIBUTE_2,
+    METATILE_ATTRIBUTE_3,
+    METATILE_ATTRIBUTE_ENCOUNTER_TYPE,
+    METATILE_ATTRIBUTE_5,
+    METATILE_ATTRIBUTE_LAYER_TYPE,
+    METATILE_ATTRIBUTE_7,
+    METATILE_ATTRIBUTE_COUNT,
+    METATILE_ATTRIBUTES_ALL = 255  // Special id to get the full attributes value
+};
+
+enum
+{
+    TILE_ENCOUNTER_NONE,
+    TILE_ENCOUNTER_LAND,
+    TILE_ENCOUNTER_WATER,
+};
+
+enum
+{
+    TILE_TERRAIN_NORMAL,
+    TILE_TERRAIN_GRASS,
+    TILE_TERRAIN_WATER,
+    TILE_TERRAIN_WATERFALL,
+};
+
 // Rows of metatiles do not actually have a strict width.
 // This constant is used for calculations for finding the next row of metatiles
 // for constructing large tiles, such as the Battle Pike's curtain tile.

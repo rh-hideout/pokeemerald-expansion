@@ -1,12 +1,27 @@
+GAME_VERSION ?= EMERALD
+
 # GBA rom header
+ifeq ($(GAME_VERSION),FIRERED)
+TITLE       := POKEMON FIRE
+GAME_CODE   := BPRE
+BUILD_NAME  := firered
+else
+ifeq ($(GAME_VERSION),LEAFGREEN)
+TITLE       := POKEMON LEAF
+GAME_CODE   := BPGE
+BUILD_NAME  := leafgreen
+else
 TITLE       := POKEMON EMER
 GAME_CODE   := BPEE
+BUILD_NAME  := emerald
+endif
+endif
 MAKER_CODE  := 01
 REVISION    := 0
 KEEP_TEMPS  ?= 0
 
 # `File name`.gba
-FILE_NAME := pokeemerald
+FILE_NAME := poke$(BUILD_NAME)
 BUILD_DIR := build
 
 # Compares the ROM to a checksum of the original - only makes sense using when non-modern
@@ -61,9 +76,9 @@ endif
 CPP := $(PREFIX)cpp
 
 ROM_NAME := $(FILE_NAME).gba
-OBJ_DIR_NAME := $(BUILD_DIR)/modern
-OBJ_DIR_NAME_TEST := $(BUILD_DIR)/modern-test
-OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/modern-debug
+OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
+OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
+OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)-debug
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
@@ -106,7 +121,7 @@ TEST_BUILDDIR = $(OBJ_DIR)/$(TEST_SUBDIR)
 SHELL := bash -o pipefail
 
 # Set flags for tools
-ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=1
+ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=1 --defsym $(GAME_VERSION)=1
 
 INCLUDE_DIRS := include
 INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
@@ -117,7 +132,7 @@ O_LEVEL ?= g
 else
 O_LEVEL ?= 2
 endif
-CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -std=gnu17
+CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
 ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet

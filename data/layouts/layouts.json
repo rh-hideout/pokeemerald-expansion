@@ -4410,6 +4410,16 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
+    },
+    {
+      "id": "LAYOUT_PALLET_TOWN_PLAYERS_HOUSE_2F_FRLG",
+      "name": "PalletTown_PlayersHouse_2F_FRLG_Layout",
+      "width": 12,
+      "height": 9,
+      "primary_tileset": "gTileset_BuildingFrlg",
+      "secondary_tileset": "gTileset_GenericBuilding1",
+      "border_filepath": "data/layouts/PalletTown_PlayersHouse_2F_FRLG/border.bin",
+      "blockdata_filepath": "data/layouts/PalletTown_PlayersHouse_2F_FRLG/map.bin"
     }
   ]
 }
