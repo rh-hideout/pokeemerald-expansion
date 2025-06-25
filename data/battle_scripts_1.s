@@ -5561,6 +5561,7 @@ BattleScript_TerrainEnds_Ret::
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+	tryboosterenergy ON_TERRAIN
 	return
 
 BattleScript_TerrainEnds::
@@ -5775,6 +5776,14 @@ BattleScript_DisabledNoMore::
 
 BattleScript_SelectingDisabledMoveInPalace::
 	printstring STRINGID_PKMNMOVEISDISABLED
+	goto BattleScript_SelectingUnusableMoveInPalace
+
+BattleScript_EncoredMove::
+	printselectionstring STRINGID_PKMNGOTENCOREDMOVE
+	endselectionscript
+
+BattleScript_EncoredMoveInPalace::
+	printselectionstring STRINGID_PKMNGOTENCOREDMOVE
 BattleScript_SelectingUnusableMoveInPalace::
 	moveendto MOVEEND_NEXT_TARGET
 	end
@@ -7391,6 +7400,7 @@ BattleScript_ShedSkinActivates::
 BattleScript_ActivateWeatherAbilities:
 	saveattacker
 	savetarget
+	tryboosterenergy ON_WEATHER
 	setbyte gBattlerAttacker, 0
 BattleScript_ActivateWeatherAbilities_Loop:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
@@ -7452,7 +7462,6 @@ BattleScript_IntimidateLoopIncrement:
 	destroyabilitypopup
 	restoretarget
 	pause B_WAIT_TIME_MED
-	tryintimidateejectpack
 	end3
 
 BattleScript_IntimidatePrevented::
@@ -7510,7 +7519,6 @@ BattleScript_SupersweetSyrupLoopIncrement:
 	destroyabilitypopup
 	restoretarget
 	pause B_WAIT_TIME_MED
-	tryintimidateejectpack
 	end3
 
 BattleScript_SupersweetSyrupWontDecrease:
@@ -7695,6 +7703,7 @@ BattleScript_SnowWarningActivatesSnow::
 BattleScript_ActivateTerrainEffects:
 	saveattacker
 	savetarget
+	tryboosterenergy ON_TERRAIN
 	setbyte gBattlerAttacker, 0
 BattleScript_ActivateTerrainSeed:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
@@ -8889,6 +8898,7 @@ BattleScript_ActivateTeraformZero_RemoveTerrain:
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ActivateTeraformZero_End:
+	tryboosterenergy ON_ANY
 	end3
 
 BattleScript_QuickClawActivation::
@@ -9202,6 +9212,10 @@ BattleScript_EjectPackActivate_Ret::
 BattleScript_EjectPackActivate_End2::
 	call BattleScript_EjectPackActivate_Ret
 	end2
+
+BattleScript_EjectPackActivate_End3::
+	call BattleScript_EjectPackActivate_Ret
+	end3
 
 BattleScript_EjectPackActivates::
 	jumpifcantswitch BS_SCRIPTING, BattleScript_EjectButtonEnd

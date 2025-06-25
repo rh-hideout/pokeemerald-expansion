@@ -306,4 +306,11 @@ enum StatusTrigger
     TRIGGER_ON_PROTECT,
 };
 
+enum TriggerOnFieldStatus
+{
+    ON_ANY,
+    ON_TERRAIN,
+    ON_WEATHER,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

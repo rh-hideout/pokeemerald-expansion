@@ -25,6 +25,7 @@
 #include "field_message_box.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
+#include "follower_npc.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
@@ -61,6 +62,7 @@
 #include "constants/battle_frontier.h"
 #include "constants/coins.h"
 #include "constants/decorations.h"
+#include "constants/event_objects.h"
 #include "constants/expansion.h"
 #include "constants/flags.h"
 #include "constants/items.h"
@@ -73,6 +75,17 @@
 #include "rtc.h"
 #include "fake_rtc.h"
 #include "save.h"
+
+enum FollowerNPCCreateDebugMenu
+{
+    DEBUG_FNPC_BRENDAN,
+    DEBUG_FNPC_MAY,
+    DEBUG_FNPC_STEVEN,
+    DEBUG_FNPC_WALLY,
+    DEBUG_FNPC_RED,
+    DEBUG_FNPC_LEAF,
+    DEBUG_FNPC_COUNT,
+};
 
 enum FlagsVarsDebugMenu
 {
@@ -226,6 +239,7 @@ static void Debug_RefreshListMenu(u8 taskId);
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
+static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
@@ -243,6 +257,9 @@ static void DebugAction_Util_CheatStart(u8 taskId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
+
+static void DebugAction_CreateFollowerNPC(u8 taskId);
+static void DebugAction_DestroyFollowerNPC(u8 taskId);
 
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId);
 static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId);
@@ -350,6 +367,8 @@ extern const u8 Debug_CheckROMSpace[];
 extern const u8 Debug_BoxFilledMessage[];
 extern const u8 Debug_ShowExpansionVersion[];
 extern const u8 Debug_EventScript_EWRAMCounters[];
+extern const u8 Debug_Follower_NPC_Event_Script[];
+extern const u8 Debug_Follower_NPC_Not_Enabled[];
 extern const u8 Debug_EventScript_Steven_Multi[];
 extern const u8 Debug_EventScript_PrintTimeOfDay[];
 extern const u8 Debug_EventScript_TellTheTime[];
@@ -396,6 +415,17 @@ static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
     COMPOUND_STRING("Day"),
     COMPOUND_STRING("Evening"),
     COMPOUND_STRING("Night"),
+};
+
+// Follower NPC
+
+static const u8 *const gFollowerNPCStringsTable[DEBUG_FNPC_COUNT] = {
+    COMPOUND_STRING("Brendan"),
+    COMPOUND_STRING("May"),
+    COMPOUND_STRING("Steven"),
+    COMPOUND_STRING("Wally"),
+    COMPOUND_STRING("Red"),
+    COMPOUND_STRING("Leaf"),
 };
 
 // Flags/Vars Menu
@@ -459,6 +489,17 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu_Weekdays[] =
     { NULL }
 };
 
+static const struct DebugMenuOption sDebugMenu_Actions_FollowerNPCMenu_Create[] =
+{
+    [DEBUG_FNPC_BRENDAN] = { gFollowerNPCStringsTable[DEBUG_FNPC_BRENDAN], DebugAction_CreateFollowerNPC },
+    [DEBUG_FNPC_MAY] =     { gFollowerNPCStringsTable[DEBUG_FNPC_MAY],     DebugAction_CreateFollowerNPC },
+    [DEBUG_FNPC_STEVEN] =  { gFollowerNPCStringsTable[DEBUG_FNPC_STEVEN],  DebugAction_CreateFollowerNPC },
+    [DEBUG_FNPC_WALLY] =   { gFollowerNPCStringsTable[DEBUG_FNPC_WALLY],   DebugAction_CreateFollowerNPC },
+    [DEBUG_FNPC_RED] =     { gFollowerNPCStringsTable[DEBUG_FNPC_RED],     DebugAction_CreateFollowerNPC },
+    [DEBUG_FNPC_LEAF] =    { gFollowerNPCStringsTable[DEBUG_FNPC_LEAF],    DebugAction_CreateFollowerNPC },
+    { NULL }
+};
+
 static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
 {
     { COMPOUND_STRING("Get time…"),         DebugAction_ExecuteScript, Debug_EventScript_TellTheTime },
@@ -480,6 +521,13 @@ static const struct DebugMenuOption sDebugMenu_Actions_BerryFunctions[] =
     { NULL }
 };
 
+static const struct DebugMenuOption sDebugMenu_Actions_FollowerNPCMenu[] =
+{
+    { COMPOUND_STRING("Create Follower"),  DebugAction_OpenSubMenuCreateFollowerNPC, sDebugMenu_Actions_FollowerNPCMenu_Create },
+    { COMPOUND_STRING("Destroy Follower"), DebugAction_DestroyFollowerNPC },
+    { NULL }
+};
+
 static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
 {
     { COMPOUND_STRING("Fly to map…"),       DebugAction_Util_Fly },
@@ -491,6 +539,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Cheat start"),       DebugAction_Util_CheatStart },
     { COMPOUND_STRING("Berry Functions…"),  DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
     { COMPOUND_STRING("EWRAM Counters…"),   DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
+    { COMPOUND_STRING("Follower NPC…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
     { COMPOUND_STRING("Steven Multi"),      DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
 };
@@ -772,7 +821,8 @@ static bool32 IsSubMenuAction(const void *action)
 {
     return action == DebugAction_OpenSubMenu
         || action == DebugAction_OpenSubMenuFlagsVars
-        || action == DebugAction_OpenSubMenuFakeRTC;
+        || action == DebugAction_OpenSubMenuFakeRTC
+        || action == DebugAction_OpenSubMenuCreateFollowerNPC;
 }
 
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
@@ -1202,7 +1252,7 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
     }
     else
     {
-        Debug_DestroyMenu_Full(taskId);
+        Debug_DestroyMenu(taskId);
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
     }
 }
@@ -1210,6 +1260,19 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
 {
     Debug_DestroyMenu_Full_Script(taskId, script);
+}
+
+static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items)
+{
+    if (FNPC_ENABLE_NPC_FOLLOWERS)
+    {
+        Debug_DestroyMenu(taskId);
+        Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    }
+    else
+    {
+        Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
+    }
 }
 
 // *******************************
@@ -3351,6 +3414,49 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     else if (JOY_NEW(START_BUTTON))
     {
         m4aSongNumStop(gTasks[taskId].tCurrentSong);
+    }
+}
+
+static const u32 gDebugFollowerNPCGraphics[] = 
+{
+    OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
+    OBJ_EVENT_GFX_RIVAL_MAY_NORMAL,
+    OBJ_EVENT_GFX_STEVEN,
+    OBJ_EVENT_GFX_WALLY,
+    OBJ_EVENT_GFX_RED,
+    OBJ_EVENT_GFX_LEAF,
+};
+
+static void DebugAction_CreateFollowerNPC(u8 taskId)
+{
+    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    u32 gfx = gDebugFollowerNPCGraphics[input];
+
+    Debug_DestroyMenu_Full(taskId);
+    LockPlayerFieldControls();
+    DestroyFollowerNPC();
+    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, PARTNER_STEVEN);
+    CreateFollowerNPC(gfx, FNPC_ALL, Debug_Follower_NPC_Event_Script);
+    if (gfx != OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL && gfx != OBJ_EVENT_GFX_RIVAL_MAY_NORMAL)
+    {
+        u32 flags = GetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS);
+        SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, (flags &= ~FNPC_RUNNING));
+    }
+    UnlockPlayerFieldControls();
+}
+
+static void DebugAction_DestroyFollowerNPC(u8 taskId)
+{
+    if (FNPC_ENABLE_NPC_FOLLOWERS)
+    {
+        Debug_DestroyMenu_Full(taskId);
+        LockPlayerFieldControls();
+        DestroyFollowerNPC();
+        UnlockPlayerFieldControls();
+    }
+    else
+    {
+        Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
     }
 }
 

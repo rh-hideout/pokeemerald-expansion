@@ -1401,10 +1401,6 @@
 	.byte \battler
 	.endm
 
-	.macro tryintimidateejectpack
-	callnative BS_TryIntimidateEjectPack
-	.endm
-
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
@@ -2561,4 +2557,9 @@
 	.macro jumpifnowhiteout jumpInstr:req
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
+	.endm
+
+	.macro tryboosterenergy onFieldStatus:req
+	callnative BS_TryBoosterEnergy
+	.byte \onFieldStatus
 	.endm
