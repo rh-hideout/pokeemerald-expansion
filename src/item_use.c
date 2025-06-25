@@ -826,12 +826,14 @@ static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
     }
 
     FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+    UpdateSpritePaletteWithTime(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE));
 }
 
 void ClearDowsingColor(struct Sprite *sprite)
 {
     sprite->sDowseState = ORASD_WIGGLE_NONE;
     FillPalette(I_ORAS_DOWSING_COLOR_NONE, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
+    UpdateSpritePaletteWithTime(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE));
 }
 
 static void PlayDowseSound(u32 dowseState)
