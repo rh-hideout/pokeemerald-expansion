@@ -2564,13 +2564,10 @@ enum MoveCanceller AtkCanceller_MoveSuccessOrder(void)
 {
     enum MoveCanceller effect = MOVE_STEP_SUCCESS;
 
-    while (TRUE)
+    while (gBattleStruct->atkCancellerTracker < CANCELLER_END && effect == MOVE_STEP_SUCCESS)
     {
         effect = sMoveSuccessOrderCancellers[gBattleStruct->atkCancellerTracker]();
         gBattleStruct->atkCancellerTracker++;
-        if (gBattleStruct->atkCancellerTracker < CANCELLER_END && effect == MOVE_STEP_SUCCESS)
-            continue;
-        break;
     }
 
     if (effect == MOVE_STEP_REMOVES_STATUS)
