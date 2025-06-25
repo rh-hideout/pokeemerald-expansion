@@ -154,19 +154,12 @@ static void InitBtlControllersInternal(void)
         else
             isPlayerPrimary = (!isRecordedLink || isRecordedMaster);
 
-        if (isPlayerPrimary)
+        gBattlerPositions[B_BATTLER_0] = isPlayerPrimary ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT;
+        gBattlerPositions[B_BATTLER_1] = isPlayerPrimary ? B_POSITION_OPPONENT_LEFT : B_POSITION_PLAYER_LEFT;
+        if (isDouble)
         {
-            gBattlerPositions[B_BATTLER_0] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[B_BATTLER_1] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[B_BATTLER_2] = B_POSITION_PLAYER_RIGHT;
-            gBattlerPositions[B_BATTLER_3] = B_POSITION_OPPONENT_RIGHT;
-        }
-        else
-        {
-            gBattlerPositions[B_BATTLER_0] = B_POSITION_OPPONENT_LEFT;
-            gBattlerPositions[B_BATTLER_1] = B_POSITION_PLAYER_LEFT;
-            gBattlerPositions[B_BATTLER_2] = B_POSITION_OPPONENT_RIGHT;
-            gBattlerPositions[B_BATTLER_3] = B_POSITION_PLAYER_RIGHT;
+            gBattlerPositions[B_BATTLER_2] = isPlayerPrimary ? B_POSITION_PLAYER_RIGHT : B_POSITION_OPPONENT_RIGHT;
+            gBattlerPositions[B_BATTLER_3] = isPlayerPrimary ? B_POSITION_OPPONENT_RIGHT : B_POSITION_PLAYER_RIGHT;
         }
 
         if (isLink)
@@ -1155,8 +1148,11 @@ void BtlController_EmitChosenMonReturnValue(u32 battler, u32 bufferId, u8 partyI
 
     gBattleResources->transferBuffer[0] = CONTROLLER_CHOSENMONRETURNVALUE;
     gBattleResources->transferBuffer[1] = partyId;
-    for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
-        gBattleResources->transferBuffer[2 + i] = battlePartyOrder[i];
+    if (battlePartyOrder != NULL)
+    {
+        for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+            gBattleResources->transferBuffer[2 + i] = battlePartyOrder[i];
+    }
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 5);
 }
 
