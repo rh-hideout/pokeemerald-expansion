@@ -1309,10 +1309,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) >= GEN_5
-     && DYNAMAX_BYPASS_CHECK
-     && GetActiveGimmick(battler) != GIMMICK_Z_MOVE
-     && gDisableStructs[battler].encoredMove != move
-     && gDisableStructs[battler].encoredMove != MOVE_NONE)
+     && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
         gCurrentMove = gDisableStructs[battler].encoredMove;
@@ -1485,11 +1482,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     }
 
     gPotentialItemEffectBattler = battler;
-    if (DYNAMAX_BYPASS_CHECK
-     && HOLD_EFFECT_CHOICE(holdEffect)
-     && *choicedMove != MOVE_NONE
-     && *choicedMove != MOVE_UNAVAILABLE
-     && *choicedMove != move)
+    if (DYNAMAX_BYPASS_CHECK && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
