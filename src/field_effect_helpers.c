@@ -1953,6 +1953,9 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     sprite->x2 = playerSprite->x2;
     sprite->y2 = playerSprite->y2;
 
+    if (playerSprite->anims[playerSprite->animNum][playerSprite->animCmdIndex].frame.imageValue > 2)
+        sprite->y2++;
+
     if (playerObj->previousMovementDirection != playerObj->movementDirection)
     {
         UpdateDowsingAnimDirection(sprite, playerObj);
@@ -1962,38 +1965,11 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     {
         if (playerObj->heldMovementFinished == FALSE)
         {
-            u32 interval = 8;
-
             if (sprite->sCounter == 0)
             {
                 sprite->sMoveActive = TRUE;
-                UpdateDowsingAnimDirection(sprite, playerObj);
+                sprite->sCounter++;
             }
-
-            // Adjust sprite position for player step frames.
-            if (playerObj->movementActionId < MOVEMENT_ACTION_JUMP_2_DOWN
-             || playerObj->movementActionId > MOVEMENT_ACTION_JUMP_2_RIGHT)
-            {
-                if (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN
-                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT)
-                    interval = 4;
-                else if ((playerObj->movementActionId >= MOVEMENT_ACTION_WALK_SLOW_DOWN
-                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_SLOW_RIGHT) ||
-                 (playerObj->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_DOWN
-                 && playerObj->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_SLOW_RIGHT))
-                    interval = 16;
-
-                if (sprite->sCounter < interval)
-                    sprite->y2++;
-            }
-            // Ledge jump.
-            else
-            {
-                if (sprite->sCounter < 8 || (sprite->sCounter >= 16 && sprite->sCounter < 24))
-                    sprite->y2++;
-            }
-
-            sprite->sCounter++;
         }
         else if (playerObj->heldMovementFinished == TRUE && sprite->sMoveActive)
         {
