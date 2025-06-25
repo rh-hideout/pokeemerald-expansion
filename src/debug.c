@@ -1196,7 +1196,7 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
     }
     else
     {
-        Debug_DestroyMenu_Full(taskId);
+        Debug_DestroyMenu(taskId);
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
     }
 }
