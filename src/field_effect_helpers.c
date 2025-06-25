@@ -7,12 +7,11 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "gpu_regs.h"
-#include "item_use.h"
 #include "metatile_behavior.h"
+#include "oras_dowse.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
-#include "task.h"
 #include "trig.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
@@ -1889,52 +1888,10 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
     }
 }
 
-const struct SpritePalette gSpritePalette_ORASDowsing = {gFieldEffectPal_ORASDowsing, FLDEFF_PAL_TAG_ORAS_DOWSE};
-
-// Sprite data for ORAS Dowsing Machine
-#define sItemDistX      data[0]
-#define sItemDistY      data[1]
-#define sItemFound      data[2]
 #define sCounter        data[3]
 #define sSoundTimer     data[4]
 #define sDowseState     data[5]
-#define sPrevDowseState data[6]
 #define sMoveActive     data[7]
-
-#define fPlayerX        gFieldEffectArguments[0]
-#define fPlayerY        gFieldEffectArguments[1]
-
-// Create the ORAS Dowsing Machine sprite.
-u32 FldEff_ORASDowsing(void)
-{
-    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    u32 spriteId;
-    u32 palNum;
-
-    FlagSet(I_ORAS_DOWSING_FLAG);
-    SetSpritePosToOffsetMapCoords((s16 *)&fPlayerX, (s16 *)&fPlayerY, 8, 0);
-    if (gPlayerAvatar.gender == MALE)
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
-    else
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
-
-    if (spriteId != MAX_SPRITES)
-    {
-        struct Sprite *sprite = &gSprites[spriteId];
-        sprite->coordOffsetEnabled = TRUE;
-        palNum = LoadSpritePalette(&gSpritePalette_ORASDowsing);
-        if (palNum != 0xFF)
-            sprite->oam.paletteNum = palNum;
-        else
-            sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
-
-        playerObj->fieldEffectSpriteId = spriteId;
-        sprite->sDowseState = ORASD_WIGGLE_NONE;
-        UpdateDowseState(sprite);
-    }
-    FieldEffectActiveListRemove(FLDEFF_ORAS_DOWSE);
-    return spriteId;
-}
 
 // Callback for ORAS Dowsing Machine sprite.
 void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
@@ -1991,35 +1948,7 @@ void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
     sprite->oam.priority = playerSprite->oam.priority;
 }
 
-void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playerObj)
-{
-    u32 anim = (playerObj->facingDirection - 1);
-
-    switch (sprite->sDowseState)
-    {
-    case ORASD_WIGGLE_SLOW:
-        anim += 4;
-        break;
-    case ORASD_WIGGLE_NORMAL:
-        anim += 8;
-        break;
-    case ORASD_WIGGLE_FAST:
-        anim += 12;
-        break;
-    case ORASD_WIGGLE_FASTER:
-        anim += 16;
-        break;
-    }
-    
-    // Don't completely restart anim if wiggling didn't stop.
-    if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
-        SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);
-    else
-        StartSpriteAnimIfDifferent(sprite, anim);
-}
-
-void EndORASDowsing(void)
-{
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        FlagClear(I_ORAS_DOWSING_FLAG);
-}
+#undef sCounter
+#undef sSoundTimer
+#undef sDowseState
+#undef sMoveActive

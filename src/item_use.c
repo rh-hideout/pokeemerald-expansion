@@ -15,7 +15,6 @@
 #include "event_scripts.h"
 #include "fieldmap.h"
 #include "field_effect.h"
-#include "field_effect_helpers.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
@@ -29,6 +28,7 @@
 #include "menu.h"
 #include "menu_helpers.h"
 #include "metatile_behavior.h"
+#include "oras_dowse.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -43,10 +43,8 @@
 #include "vs_seeker.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
-#include "constants/field_effects.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
-#include "constants/rgb.h"
 #include "constants/songs.h"
 
 static void SetUpItemUseCallback(u8);
@@ -56,14 +54,8 @@ static void Task_UseItemfinder(u8);
 static void Task_CloseItemfinderMessage(u8);
 static void Task_HiddenItemNearby(u8);
 static void Task_StandingOnHiddenItem(u8);
-static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *, u8);
-static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
-static void Task_UseORASDowsingMachine(u8 taskId);
-static void StartORASDowseFieldEffect(void);
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
-static void PlayDowseSound(u32 dowseState);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
 static void ItemUseOnFieldCB_Bike(u8);
@@ -422,7 +414,7 @@ static void Task_CloseItemfinderMessage(u8 taskId)
     DestroyTask(taskId);
 }
 
-static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
+bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
 {
     int itemX, itemY;
     s16 playerX, playerY, i, distanceX, distanceY;
@@ -607,7 +599,7 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
     }
 }
 
-static u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
+u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
 {
     s16 absX, absY;
 
@@ -684,203 +676,6 @@ static void Task_StandingOnHiddenItem(u8 taskId)
             DisplayItemMessageOnField(taskId, sText_ItemFinderOnTop, Task_CloseItemfinderMessage);
     }
 }
-
-static void Task_UseORASDowsingMachine(u8 taskId)
-{
-    if (FlagGet(I_ORAS_DOWSING_FLAG))
-    {
-        EndORASDowsing();
-    }
-    else
-    {
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
-            GetOnOffBike(0);
-
-        StartORASDowseFieldEffect();
-    }
-    ScriptUnfreezeObjectEvents();
-    UnlockPlayerFieldControls();
-    DestroyTask(taskId);
-}
-
-static void StartORASDowseFieldEffect(void)
-{
-    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    gFieldEffectArguments[0] = playerObj->currentCoords.x;
-    gFieldEffectArguments[1] = playerObj->currentCoords.y;
-    FieldEffectStart(FLDEFF_ORAS_DOWSE);
-}
-
-void ResumeORASDowseFieldEffect(void)
-{
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        StartORASDowseFieldEffect();
-}
-
-#define sSoundTimer     data[4]
-#define sDowseState     data[5]
-#define sPrevDowseState data[6]
-
-void UpdateDowseState(struct Sprite *sprite)
-{
-    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    sprite->tItemDistanceX = 0;
-    sprite->tItemDistanceY = 0;
-    sprite->sPrevDowseState = sprite->sDowseState;
-    if (ItemfinderCheckForHiddenItems(gMapHeader.events, TASK_NONE) == TRUE)
-    {
-        s8 distX = sprite->tItemDistanceX;
-        s8 distY = sprite->tItemDistanceY;
-        u8 directionToItem = CARDINAL_DIRECTION_COUNT;
-        u8 playerDirToItem = GetDirectionToHiddenItem(distX, distY);
-        if (playerDirToItem != DIR_NONE)
-        {
-            directionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1]);
-        }
-
-        if (distX < 0)
-            distX *= -1;
-
-        if (distY < 0)
-            distY *= -1;
-
-        // If the player is facing the item's direction.
-        if (directionToItem == playerObj->movementDirection)
-        {
-            ChangeDowsingColor(directionToItem, sprite);
-        }
-        // If x and y distances are equal, make sure item can bee seen from both facing directions.
-        else if (distX == distY && distX != 0)
-        {
-            if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && sprite->tItemDistanceX > 0 && playerObj->movementDirection == DIR_EAST)
-            {
-                ChangeDowsingColor(DIR_EAST, sprite);
-            }
-            else if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && sprite->tItemDistanceX < 0 && playerObj->movementDirection == DIR_WEST)
-            {
-                ChangeDowsingColor(DIR_WEST, sprite);
-            }
-            else
-            {
-                ClearDowsingColor(sprite);
-            }
-        }
-        else
-        {
-            ClearDowsingColor(sprite);
-        }
-    }
-    else
-    {
-        ClearDowsingColor(sprite);
-    }
-    UpdateDowsingAnimDirection(sprite, playerObj);
-}
-
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
-{
-    s16 distance;
-    u16 color = I_ORAS_DOWSING_COLOR_NONE;
-
-    if (direction == DIR_NORTH || direction == DIR_SOUTH)
-        distance = sprite->tItemDistanceY;
-    else
-        distance = sprite->tItemDistanceX;
-
-    // Absolute value.
-    if (distance < 0)
-        distance *= -1;
-
-    switch (distance)
-    {
-    case 1:
-        if (sprite->tItemDistanceX == 0 || sprite->tItemDistanceY == 0)
-        {
-            color = I_ORAS_DOWSING_COLOR_FASTER;
-            sprite->sDowseState = ORASD_WIGGLE_FASTER;
-            break;
-        }
-    case 2:
-        color = I_ORAS_DOWSING_COLOR_FAST;
-        sprite->sDowseState = ORASD_WIGGLE_FAST;
-        break;
-    case 3:
-    case 4:
-        color = I_ORAS_DOWSING_COLOR_NORMAL;
-        sprite->sDowseState = ORASD_WIGGLE_NORMAL;
-        break;
-    case 5:
-    case 6:
-    case 7:
-        color = I_ORAS_DOWSING_COLOR_SLOW;
-        sprite->sDowseState = ORASD_WIGGLE_SLOW;
-        break;
-    }
-
-    if (I_ORAS_DOWSING_SOUNDS && sprite->sDowseState != sprite->sPrevDowseState)
-    {
-        sprite->sSoundTimer = 0;
-        PlayDowseSound(sprite->sDowseState);
-    }
-
-    FillPalette(color, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
-    UpdateSpritePaletteWithTime(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE));
-}
-
-void ClearDowsingColor(struct Sprite *sprite)
-{
-    sprite->sDowseState = ORASD_WIGGLE_NONE;
-    FillPalette(I_ORAS_DOWSING_COLOR_NONE, (OBJ_PLTT_ID(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE)) + I_ORAS_DOWSING_COLOR_PAL), PLTT_SIZEOF(1));
-    UpdateSpritePaletteWithTime(IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_ORAS_DOWSE));
-}
-
-static void PlayDowseSound(u32 dowseState)
-{
-    switch (dowseState)
-    {
-    case ORASD_WIGGLE_SLOW:
-        PlaySE(SE_CONTEST_ICON_CLEAR);
-        return;
-    case ORASD_WIGGLE_NORMAL:
-        PlaySE(SE_PIN);
-        return;
-    case ORASD_WIGGLE_FAST:
-        PlaySE(SE_SUCCESS);
-        return;
-    case ORASD_WIGGLE_FASTER:
-        PlaySE(SE_ITEMFINDER);
-        return;
-    }
-}
-
-void Script_ClearDowsingColor(void)
-{
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-    {
-        struct Sprite *sprite = &gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId];
-        ClearDowsingColor(sprite);
-        UpdateDowsingAnimDirection(sprite, &gObjectEvents[gPlayerAvatar.objectEventId]);
-    }
-}
-
-void Script_UpdateDowseState(void)
-{
-    if (I_ORAS_DOWSING_FLAG != 0 && FlagGet(I_ORAS_DOWSING_FLAG))
-        UpdateDowseState(&gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId]);
-}
-
-// Undefine itemfinder task data
-#undef tItemDistanceX
-#undef tItemDistanceY
-#undef tItemFound
-#undef tCounter
-#undef tItemfinderBeeps
-#undef tFacingDir
-#undef sSoundTimer
-#undef sDowseState
-#undef sPrevDowseState
 
 void ItemUseOutOfBattle_PokeblockCase(u8 taskId)
 {
