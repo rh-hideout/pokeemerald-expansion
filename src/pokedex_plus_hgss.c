@@ -6518,11 +6518,12 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         }
 
         bool32 caught = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT);
-        if (HGSS_HIDE_UNOWNED_EVOLUTION_METHODS == TRUE && !caught) 
+        if (HGSS_HIDE_UNOWNED_EVOLUTION_METHODS == TRUE && !caught)
         {
             StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown"));
         }
-        else {
+        else
+        {
             switch ((enum EvolutionMethods)evolutions[i].method)
             {
             case EVO_SCRIPT_TRIGGER:
