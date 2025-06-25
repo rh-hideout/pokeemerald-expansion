@@ -494,7 +494,7 @@ libagbsyscall:
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
 # Output .map file and memory usage readout
-LDFLAGS :=  -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections
+LDFLAGS :=  -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xlinker --gc-sections
 
 # Enable LTO LDFLAGS if set
 ifneq ($(LTO),0)
