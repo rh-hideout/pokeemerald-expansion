@@ -815,7 +815,8 @@ static bool32 IsSubMenuAction(const void *action)
 {
     return action == DebugAction_OpenSubMenu
         || action == DebugAction_OpenSubMenuFlagsVars
-        || action == DebugAction_OpenSubMenuFakeRTC;
+        || action == DebugAction_OpenSubMenuFakeRTC
+        || action == DebugAction_OpenSubMenuCreateFollowerNPC;
 }
 
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
