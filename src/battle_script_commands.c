@@ -14320,21 +14320,21 @@ static void Cmd_recoverbasedonsunlight(void)
                 if (time == TIME_NIGHT || time == TIME_EVENING)
                 {
                     healingModifier = 2;
-                    break;
                 }
+                break;
             case EFFECT_MORNING_SUN:
                 if ((OW_TIMES_OF_DAY == GEN_3 && time == TIME_DAY) // Gen 3 doesn't have morning
                   || (OW_TIMES_OF_DAY != GEN_3 && time == TIME_MORNING))
                 {
                     healingModifier = 2;
-                    break;
                 }
+                break;
             case EFFECT_SYNTHESIS:
                 if (time == TIME_DAY)
                 {
                     healingModifier = 2;
-                    break;
                 }
+                break;
             default:
                 healingModifier = 1;
                 break;
