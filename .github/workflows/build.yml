@@ -36,7 +36,7 @@ jobs:
         run: |
           make tidy
           make -j${nproc} LTO=1
-        # make tidy to purge LTO
+        # make tidy to purge previous build
 
       - name: Test
         env:
