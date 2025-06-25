@@ -1,6 +1,5 @@
 #include "global.h"
 #include "bike.h"
-#include "event_data.h"
 #include "event_object_movement.h"
 #include "field_effect_helpers.h"
 #include "field_player_avatar.h"
