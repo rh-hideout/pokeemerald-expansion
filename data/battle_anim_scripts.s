@@ -30951,7 +30951,7 @@ gBattleAnimMove_SavageSpinOut::
 	call gSavageSpinOutStringBlastSpriteTemplateSHOT
 	call gSavageSpinOutStringBlastSpriteTemplateSHOT
 	call gSavageSpinOutStringBlastSpriteTemplateSHOT
-	createsprite gSpiderWebSpriteTemplate, ANIM_TARGET, 2	@ spider web
+	createsprite gSpiderWebSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, FALSE	@ spider web
 	call gSavageSpinOutStringBlastSpriteTemplateSHOT
 	delay 14
 	blendoff
@@ -31021,7 +31021,7 @@ FinishSavageSpinOut:
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gSavageSpinOutWhiteExplosionSpriteTemplate, ANIM_TARGET, 3, 0x18, 0xffe8, ANIM_TARGET, 0x1
 	delay 6
-	createsprite gSpiderWebSpriteTemplate, ANIM_TARGET, 2	@ spider web
+	createsprite gSpiderWebSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, FALSE	@ spider web
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gSavageSpinOutWhiteExplosionSpriteTemplate, ANIM_TARGET, 3, 0xfff0, 0x10, ANIM_TARGET, 0x1
 	delay 6

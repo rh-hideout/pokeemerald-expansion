@@ -470,8 +470,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 gBattleMons[battler].status2 &= ~STATUS2_MULTIPLETURNS;
                 if (!(gBattleMons[battler].status2 & STATUS2_CONFUSION))
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION | MOVE_EFFECT_AFFECTS_USER;
-                    SetMoveEffect(TRUE, FALSE);
+                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
+                    SetMoveEffect(battler, battler, TRUE, FALSE);
                     if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;
@@ -512,7 +512,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
         case HOLD_EFFECT_LEFTOVERS:
         case HOLD_EFFECT_BLACK_SLUDGE:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
             break;
         default:
@@ -1423,11 +1423,11 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case HOLD_EFFECT_FLAME_ORB:
         case HOLD_EFFECT_STICKY_BARB:
         case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(ITEMEFFECT_ORBS, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_ORBS, battler))
                 effect = TRUE;
             break;
         case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
             break;
         default:
@@ -1485,7 +1485,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
         enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
         }
         gBattleStruct->eventBlockCounter = 0;

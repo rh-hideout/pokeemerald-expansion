@@ -883,7 +883,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
             return TRUE;
         break;
     case EFFECT_PURSUIT:
-        if(noOfHitsToKo == 1)
+        if (noOfHitsToKo == 1)
             return TRUE;
         break;
     default:

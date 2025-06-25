@@ -104,7 +104,7 @@ BattleScript_ItemHealAndCureStatusEnd::
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
 	itemincreasestat
-	statbuffchange MOVE_EFFECT_AFFECTS_USER | STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemEnd
+	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemEnd
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 	end

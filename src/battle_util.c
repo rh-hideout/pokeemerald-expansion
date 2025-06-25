@@ -922,7 +922,7 @@ void HandleAction_ActionFinished(void)
 
                 // We recalculate order only for action of the same priority. If any action other than switch/move has been taken, they should
                 // have been executed before. The only recalculation needed is for moves/switch. Mega evolution is handled in src/battle_main.c/TryChangeOrder
-                if((gActionsByTurnOrder[i] == B_ACTION_USE_MOVE && gActionsByTurnOrder[j] == B_ACTION_USE_MOVE))
+                if ((gActionsByTurnOrder[i] == B_ACTION_USE_MOVE && gActionsByTurnOrder[j] == B_ACTION_USE_MOVE))
                 {
                     if (GetWhichBattlerFaster(battler1, battler2, FALSE) == -1)
                         SwapTurnOrder(i, j);
@@ -1308,6 +1308,24 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
+    if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) >= GEN_5
+     && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE)
+    {
+        gBattleScripting.battler = battler;
+        gCurrentMove = gDisableStructs[battler].encoredMove;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_EncoredMove;
+            limitations++;
+        }
+        return limitations;
+    }
+
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
@@ -1544,7 +1562,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     return limitations;
 }
 
-u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
+u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 {
     u32 move;
     enum BattleMoveEffects moveEffect;
@@ -1616,7 +1634,7 @@ u8 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 bool32 AreAllMovesUnusable(u32 battler)
 {
-    u8 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u32 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
 
     if (unusable == ALL_MOVES_MASK) // All moves are unusable.
     {
@@ -1737,7 +1755,7 @@ bool32 IsAbilityAndRecord(u32 battler, u32 battlerAbility, u32 abilityToCheck)
     return TRUE;
 }
 
-#define FAINTED_ACTIONS_MAX_CASE 7
+#define FAINTED_ACTIONS_MAX_CASE 6
 bool32 HandleFaintedMonActions(void)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
@@ -1812,18 +1830,13 @@ bool32 HandleFaintedMonActions(void)
                     return TRUE;
                 }
             } while (++gBattleStruct->faintedActionsBattlerId != gBattlersCount);
-            gBattleStruct->faintedActionsState = 6;
+            gBattleStruct->faintedActionsState = FAINTED_ACTIONS_MAX_CASE;
             break;
         case 5:
             if (++gBattleStruct->faintedActionsBattlerId == gBattlersCount)
-                gBattleStruct->faintedActionsState = 6;
+                gBattleStruct->faintedActionsState = FAINTED_ACTIONS_MAX_CASE;
             else
                 gBattleStruct->faintedActionsState = 4;
-            break;
-        case 6:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, 0, TRUE))
-                return TRUE;
-            gBattleStruct->faintedActionsState++;
             break;
         case FAINTED_ACTIONS_MAX_CASE:
             break;
@@ -3520,7 +3533,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 u32 diagonalBattler = BATTLE_OPPOSITE(battler);
                 if (IsDoubleBattle())
                     diagonalBattler = BATTLE_PARTNER(diagonalBattler);
-                if (IsBattlerAlive(diagonalBattler)
+
+                // Imposter only activates when the battler first switches in
+                if (gDisableStructs[battler].isFirstTurn == 2
+                    && !gDisableStructs[battler].overwrittenAbility
+                    && IsBattlerAlive(diagonalBattler)
                     && !(gBattleMons[diagonalBattler].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
                     && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
                     && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
@@ -4960,7 +4977,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
                 BattleScriptPushCursor();
-                SetMoveEffect(FALSE, FALSE);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, FALSE, FALSE);
                 BattleScriptPop();
                 effect++;
             }
@@ -5281,7 +5298,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!gDisableStructs[battler].weatherAbilityDone
              && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
              && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
-             && !gDisableStructs[battler].boosterEnergyActivates)
+             && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
@@ -5310,7 +5327,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!gDisableStructs[battler].terrainAbilityDone
              && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN
              && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
-             && !gDisableStructs[battler].boosterEnergyActivates)
+             && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].terrainAbilityDone = TRUE;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
@@ -6234,7 +6251,6 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
 
     if (gProtectStructs[battler].eatMirrorHerb)
     {
-
         gLastUsedItem = gBattleMons[battler].item;
         gBattleScripting.battler = battler;
         gProtectStructs[battler].eatMirrorHerb = 0;
@@ -6248,17 +6264,19 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
     return effect;
 }
 
-static inline u32 TryBoosterEnergy(u32 battler, enum ItemCaseId caseID)
+u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID)
 {
-    if (gDisableStructs[battler].boosterEnergyActivates || gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
         return ITEM_NO_EFFECT;
 
-    if (((GetBattlerAbility(battler) == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
-     || ((GetBattlerAbility(battler) == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
+    if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
+     || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
         PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
         gBattlerAbility = gBattleScripting.battler = battler;
-        gDisableStructs[battler].boosterEnergyActivates = TRUE;
+        gDisableStructs[battler].boosterEnergyActivated = TRUE;
+        gLastUsedItem = ITEM_BOOSTER_ENERGY;
+        RecordAbilityBattle(battler, ability);
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
             BattleScriptExecute(BattleScript_BoosterEnergyEnd2);
         else
@@ -6353,16 +6371,13 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
             effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPDEF, ITEMEFFECT_NONE);
         break;
     case HOLD_EFFECT_ENIGMA_BERRY: // consume and heal if hit by super effective move
-        if (B_BERRIES_INSTANT >= GEN_4)
-            effect = TrySetEnigmaBerry(battler);
+        effect = TrySetEnigmaBerry(battler);
         break;
     case HOLD_EFFECT_KEE_BERRY:  // consume and boost defense if used physical move
-        if (B_BERRIES_INSTANT >= GEN_4)
-            effect = DamagedStatBoostBerryEffect(battler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);
+        effect = DamagedStatBoostBerryEffect(battler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);
         break;
     case HOLD_EFFECT_MARANGA_BERRY:  // consume and boost sp. defense if used special move
-        if (B_BERRIES_INSTANT >= GEN_4)
-            effect = DamagedStatBoostBerryEffect(battler, STAT_SPDEF, DAMAGE_CATEGORY_SPECIAL);
+        effect = DamagedStatBoostBerryEffect(battler, STAT_SPDEF, DAMAGE_CATEGORY_SPECIAL);
         break;
     case HOLD_EFFECT_RANDOM_STAT_UP:
         if (B_BERRIES_INSTANT >= GEN_4)
@@ -6545,7 +6560,7 @@ static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
     return effect;
 }
 
-u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
+u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
 {
     u32 moveType = 0;
     enum ItemEffect effect = ITEM_NO_EFFECT;
@@ -6752,7 +6767,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 effect = TryConsumeMirrorHerb(battler, caseID);
                 break;
             case HOLD_EFFECT_BOOSTER_ENERGY:
-                effect = TryBoosterEnergy(battler, caseID);
+                effect = TryBoosterEnergy(battler, GetBattlerAbility(battler), caseID);
                 break;
             default:
                 break;
@@ -6776,16 +6791,13 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
             switch (battlerHoldEffect)
             {
             case HOLD_EFFECT_RESTORE_HP:
-                if (!moveTurn)
-                    effect = ItemHealHp(battler, gLastUsedItem, caseID, FALSE);
+                effect = ItemHealHp(battler, gLastUsedItem, caseID, FALSE);
                 break;
             case HOLD_EFFECT_RESTORE_PCT_HP:
-                if (!moveTurn)
-                    effect = ItemHealHp(battler, gLastUsedItem, caseID, TRUE);
+                effect = ItemHealHp(battler, gLastUsedItem, caseID, TRUE);
                 break;
             case HOLD_EFFECT_RESTORE_PP:
-                if (!moveTurn)
-                    effect = ItemRestorePp(battler, gLastUsedItem, caseID);
+                effect = ItemRestorePp(battler, gLastUsedItem, caseID);
                 break;
             case HOLD_EFFECT_WHITE_HERB:
                 effect = RestoreWhiteHerbStats(battler);
@@ -6797,7 +6809,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 {
                     goto LEFTOVERS;
                 }
-                else if (GetBattlerAbility(battler) != ABILITY_MAGIC_GUARD && !moveTurn)
+                else if (!IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 {
                     gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
                     if (gBattleStruct->moveDamage[battler] == 0)
@@ -6810,7 +6822,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 break;
             case HOLD_EFFECT_LEFTOVERS:
             LEFTOVERS:
-                if (gBattleMons[battler].hp < gBattleMons[battler].maxHP && !moveTurn
+                if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
                   && (B_HEAL_BLOCKING < GEN_5 || !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)))
                 {
                     gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -6823,47 +6835,37 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 }
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
-                if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
+                effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_DRY:
-                if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_DRY, caseID);
+                effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_DRY, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SWEET:
-                if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SWEET, caseID);
+                effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SWEET, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_BITTER:
-                if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_BITTER, caseID);
+                effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_BITTER, caseID);
                 break;
             case HOLD_EFFECT_CONFUSE_SOUR:
-                if (!moveTurn)
-                    effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SOUR, caseID);
+                effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SOUR, caseID);
                 break;
             case HOLD_EFFECT_ATTACK_UP:
-                if (!moveTurn)
-                    effect = StatRaiseBerry(battler, gLastUsedItem, STAT_ATK, caseID);
+                effect = StatRaiseBerry(battler, gLastUsedItem, STAT_ATK, caseID);
                 break;
             case HOLD_EFFECT_DEFENSE_UP:
-                if (!moveTurn)
-                    effect = StatRaiseBerry(battler, gLastUsedItem, STAT_DEF, caseID);
+                effect = StatRaiseBerry(battler, gLastUsedItem, STAT_DEF, caseID);
                 break;
             case HOLD_EFFECT_SPEED_UP:
-                if (!moveTurn)
-                    effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPEED, caseID);
+                effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPEED, caseID);
                 break;
             case HOLD_EFFECT_SP_ATTACK_UP:
-                if (!moveTurn)
-                    effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPATK, caseID);
+                effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPATK, caseID);
                 break;
             case HOLD_EFFECT_SP_DEFENSE_UP:
-                if (!moveTurn)
-                    effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPDEF, caseID);
+                effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPDEF, caseID);
                 break;
             case HOLD_EFFECT_CRITICAL_UP:
-                if (!moveTurn && !(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
+                if (!(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
                     && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, gLastUsedItem), gLastUsedItem))
                 {
                     gBattleMons[battler].status2 |= STATUS2_FOCUS_ENERGY;
@@ -6873,8 +6875,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 }
                 break;
             case HOLD_EFFECT_RANDOM_STAT_UP:
-                if (!moveTurn)
-                    effect = RandomStatRaiseBerry(battler, gLastUsedItem, caseID);
+                effect = RandomStatRaiseBerry(battler, gLastUsedItem, caseID);
                 break;
             case HOLD_EFFECT_CURE_PAR:
                 if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && !UnnerveOn(battler, gLastUsedItem))
@@ -6945,17 +6946,13 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 }
                 break;
             case HOLD_EFFECT_MICLE_BERRY:
-                if (!moveTurn)
-                    effect = TrySetMicleBerry(battler, gLastUsedItem, caseID);
+                effect = TrySetMicleBerry(battler, gLastUsedItem, caseID);
                 break;
             case HOLD_EFFECT_BERSERK_GENE:
                 effect = ConsumeBerserkGene(battler, caseID);
                 break;
             case HOLD_EFFECT_MIRROR_HERB:
                 effect = TryConsumeMirrorHerb(battler, caseID);
-                break;
-            case HOLD_EFFECT_BOOSTER_ENERGY:
-                effect = TryBoosterEnergy(battler, caseID);
                 break;
             default:
                 break;
@@ -7022,7 +7019,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 {
                     gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
                     BattleScriptPushCursor();
-                    SetMoveEffect(FALSE, FALSE);
+                    SetMoveEffect(gBattlerAttacker, gBattlerTarget, FALSE, FALSE);
                     BattleScriptPop();
                 }
             }
@@ -8450,7 +8447,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         {
             u8 defHighestStat = GetHighestStatId(battlerDef);
-            if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivates)
+            if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].status2 & STATUS2_TRANSFORMED))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
@@ -8459,7 +8456,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         {
             u8 defHighestStat = GetHighestStatId(battlerDef);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivates)
+            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].status2 & STATUS2_TRANSFORMED))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
@@ -8707,7 +8704,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (!(gBattleMons[battlerAtk].status2 & STATUS2_TRANSFORMED))
         {
             u32 atkHighestStat = GetHighestStatId(battlerAtk);
-            if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivates)
+            if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
                     modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -8718,7 +8715,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (!(gBattleMons[battlerAtk].status2 & STATUS2_TRANSFORMED))
         {
             u32 atkHighestStat = GetHighestStatId(battlerAtk);
-            if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivates)
+            if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
                     modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -9497,8 +9494,13 @@ bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move)
         return FALSE;
 
     struct Pokemon *party = GetBattlerParty(battlerAtk);
-    return &party[gWishFutureKnock.futureSightPartyIndex[battlerDef]] != &party[gBattlerPartyIndexes[battlerAtk]]
-        && &party[gWishFutureKnock.futureSightPartyIndex[battlerDef]] != &party[BATTLE_PARTNER(gBattlerPartyIndexes[battlerAtk])];
+    if (IsDoubleBattle())
+    {
+        return &party[gWishFutureKnock.futureSightPartyIndex[battlerDef]] != &party[gBattlerPartyIndexes[battlerAtk]]
+            && &party[gWishFutureKnock.futureSightPartyIndex[battlerDef]] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
+    }
+
+    return &party[gWishFutureKnock.futureSightPartyIndex[battlerDef]] != &party[gBattlerPartyIndexes[battlerAtk]];
 }
 
 s32 CalculateMoveDamage(struct DamageContext *ctx)
@@ -11372,7 +11374,7 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
     if (gItemsInfo[gBattleMons[battler].item].pocket == POCKET_BERRIES
      || GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_RESTORE_HP)  // Edge case for Berry Juice
     {
-        if (ItemBattleEffects(caseId, battler, FALSE))
+        if (ItemBattleEffects(caseId, battler))
             return TRUE;
     }
     return FALSE;
