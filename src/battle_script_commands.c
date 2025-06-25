@@ -14311,7 +14311,7 @@ static void Cmd_recoverbasedonsunlight(void)
         }
         else // B_TIME_OF_DAY_HEALING_MOVES == GEN_2
         {
-            u32 healingModifier;
+            u32 healingModifier = 1;
             u32 time = GetTimeOfDay();
             
             switch (GetMoveEffect(gCurrentMove))
