@@ -151,8 +151,6 @@ endif
 AUTO_GEN_TARGETS :=
 include make_tools.mk
 # Tool executables
-SMOLTM       := $(TOOLS_DIR)/compresSmol/compresSmolTilemap$(EXE)
-SMOL         := $(TOOLS_DIR)/compresSmol/compresSmol$(EXE)
 GFX          := $(TOOLS_DIR)/gbagfx/gbagfx$(EXE)
 AIF          := $(TOOLS_DIR)/aif2pcm/aif2pcm$(EXE)
 MID          := $(TOOLS_DIR)/mid2agb/mid2agb$(EXE)
@@ -319,7 +317,7 @@ clean-assets:
 	rm -f $(DATA_ASM_SUBDIR)/layouts/layouts.inc $(DATA_ASM_SUBDIR)/layouts/layouts_table.inc
 	rm -f $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc $(DATA_SRC_SUBDIR)/map_group_count.h
 	find sound -iname '*.bin' -exec rm {} +
-	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
+	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
 tidy: tidymodern tidycheck tidydebug
@@ -353,16 +351,13 @@ generated: $(AUTO_GEN_TARGETS)
 %.pal: ;
 %.aif: ;
 
-%.1bpp:     %.png  ; $(GFX) $< $@
-%.4bpp:     %.png  ; $(GFX) $< $@
-%.8bpp:     %.png  ; $(GFX) $< $@
-%.gbapal:   %.pal  ; $(GFX) $< $@
-%.gbapal:   %.png  ; $(GFX) $< $@
-%.lz:       %      ; $(GFX) $< $@
-%.smolTM:   %      ; $(SMOLTM) $< $@
-%.fastSmol: %      ; $(SMOL) -w $< $@ false false false
-%.smol:     %      ; $(SMOL) -w $< $@
-%.rl:       %      ; $(GFX) $< $@
+%.1bpp:   %.png  ; $(GFX) $< $@
+%.4bpp:   %.png  ; $(GFX) $< $@
+%.8bpp:   %.png  ; $(GFX) $< $@
+%.gbapal: %.pal  ; $(GFX) $< $@
+%.gbapal: %.png  ; $(GFX) $< $@
+%.lz:     %      ; $(GFX) $< $@
+%.rl:     %      ; $(GFX) $< $@
 
 clean-generated:
 	@rm -f $(AUTO_GEN_TARGETS)
@@ -382,6 +377,9 @@ $(C_BUILDDIR)/pokedex_plus_hgss.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi
 # Annoyingly we can't turn this on just for src/data/trainers.h
 $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret
 
+# Needed for parity with pret
+$(C_BUILDDIR)/graphics.o: override CFLAGS += -Wno-missing-braces
+
 $(TEST_BUILDDIR)/%.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
 
 # Dependency rules (for the *.c & *.s sources to .o files)
@@ -395,10 +393,10 @@ ifneq ($(KEEP_TEMPS),1)
 	@echo "$(CC1) <flags> -o $@ $<"
 	@$(CPP) $(CPPFLAGS) $< | $(PREPROC) -i $< charmap.txt | $(CC1) $(CFLAGS) -o - - | cat - <(echo -e ".text\n\t.align\t2, 0") | $(AS) $(ASFLAGS) -o $@ -
 else
-	@$(CPP) $(CPPFLAGS) $< -o $*.i
-	@$(PREPROC) $*.i charmap.txt | $(CC1) $(CFLAGS) -o $*.s
-	@echo -e ".text\n\t.align\t2, 0\n" >> $*.s
-	$(AS) $(ASFLAGS) -o $@ $*.s
+	@$(CPP) $(CPPFLAGS) $< -o $(C_BUILDDIR)/$*.i
+	@$(PREPROC) $(C_BUILDDIR)/$*.i charmap.txt | $(CC1) $(CFLAGS) -o $(C_BUILDDIR)/$*.s
+	@echo -e ".text\n\t.align\t2, 0\n" >> $(C_BUILDDIR)/$*.s
+	$(AS) $(ASFLAGS) -o $@ $(C_BUILDDIR)/$*.s
 endif
 
 $(C_BUILDDIR)/%.d: $(C_SUBDIR)/%.c
