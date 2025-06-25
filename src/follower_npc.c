@@ -49,7 +49,6 @@
 static void SetFollowerNPCScriptPointer(const u8 *script);
 static void PlayerLogCoordinates(struct ObjectEvent *player);
 static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, const u8 *script);
-static void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
 static u32 GetFollowerNPCSprite(void);
 static bool32 IsStateMovement(u32 state);
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
@@ -225,45 +224,6 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     // Set the follower sprite to match the player state.
     if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
         FollowerNPC_HandleSprite();
-}
-
-static void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
-{
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    struct ObjectEvent *follower;
-    struct ObjectEventTemplate npc = 
-    {
-        .localId = OBJ_EVENT_ID_NPC_FOLLOWER,
-        .graphicsId = gfx,
-        .x = player->currentCoords.x,
-        .y = player->currentCoords.y,
-        .elevation = PlayerGetElevation(),
-        .script = scriptPtr
-    };
-
-    SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&npc, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, player->currentCoords.x, player->currentCoords.y));
-    follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
-    follower->movementType = MOVEMENT_TYPE_NONE;
-    gSprites[follower->spriteId].callback = MovementType_None;
-    
-    SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
-    SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
-    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
-    SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
-    SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
-    SetFollowerNPCScriptPointer(scriptPtr);
-
-    // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
-    &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
-
-    // Set the follower sprite to match the player state.
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
-        FollowerNPC_HandleSprite();
-
-    HideNPCFollower();
-    SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
 }
 
 static u32 GetFollowerNPCSprite(void)
@@ -711,6 +671,58 @@ static void CalculateFollowerNPCEscalatorTrajectoryDown(struct Task *task)
 }
 
 #undef tCounter
+
+void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
+{
+    if (PlayerHasFollowerNPC())
+        return;
+        
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *follower;
+    struct ObjectEventTemplate npc = 
+    {
+        .localId = OBJ_EVENT_ID_NPC_FOLLOWER,
+        .graphicsId = gfx,
+        .x = player->currentCoords.x,
+        .y = player->currentCoords.y,
+        .elevation = PlayerGetElevation(),
+        .script = scriptPtr
+    };
+
+    SetFollowerNPCData(FNPC_DATA_OBJ_ID, TrySpawnObjectEventTemplate(&npc, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, player->currentCoords.x, player->currentCoords.y));
+    follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
+    follower->movementType = MOVEMENT_TYPE_NONE;
+    gSprites[follower->spriteId].callback = MovementType_None;
+    
+    SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
+    SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
+    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
+    SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
+    SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    SetFollowerNPCScriptPointer(scriptPtr);
+
+    // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
+    &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+
+    // Set the follower sprite to match the player state.
+    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
+        FollowerNPC_HandleSprite();
+
+    HideNPCFollower();
+    SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+}
+
+void DestroyFollowerNPC(void)
+{
+    if (!PlayerHasFollowerNPC())
+        return;
+
+    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
+    ClearFollowerNPCData();
+    UpdateFollowingPokemon();
+}
 
 #define RETURN_STATE(state, dir) return newState == MOVEMENT_INVALID ? state + (dir - 1) : ReturnFollowerNPCDelayedState(dir - 1);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction)
@@ -1642,7 +1654,7 @@ void ScriptCreateFollowerNPC(struct ScriptContext *ctx)
     const u8 *script = (const u8 *)ScriptReadWord(ctx);
     u32 battlePartner = ScriptReadHalfword(ctx);
 
-    if (PlayerHasFollowerNPC())
+    if (!FNPC_ENABLE_NPC_FOLLOWERS || PlayerHasFollowerNPC())
         return;
 
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, battlePartner);
@@ -1651,12 +1663,7 @@ void ScriptCreateFollowerNPC(struct ScriptContext *ctx)
 
 void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
 {
-    if (!PlayerHasFollowerNPC())
-        return;
-
-    RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
-    ClearFollowerNPCData();
-    UpdateFollowingPokemon();
+    DestroyFollowerNPC();
 }
 
 void ScriptFaceFollowerNPC(struct ScriptContext *ctx)

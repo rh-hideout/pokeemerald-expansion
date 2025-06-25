@@ -82,6 +82,8 @@ const u8 *GetFollowerNPCScriptPointer(void);
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type);
 void ClearFollowerNPCData(void);
 
+void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
+void DestroyFollowerNPC(void);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
