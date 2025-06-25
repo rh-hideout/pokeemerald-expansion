@@ -1982,13 +1982,15 @@ static enum MoveCanceller CancellerAsleepOrFrozen(void)
 
 static enum MoveCanceller CancellerObedience(void)
 {
-    u32 obedienceResult = GetAttackerObedienceForAction();
-    if (obedienceResult != OBEYS
-     && !(gHitMarker & HITMARKER_NO_PPDEDUCT) // Don't check obedience after first hit of multi target move or multi hit moves
-     && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
+    enum Obedience obedienceResult = GetAttackerObedienceForAction();
+    if (!(gHitMarker & HITMARKER_NO_PPDEDUCT) // Don't check obedience after first hit of multi target move or multi hit moves
+     && !gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
     {
         switch (obedienceResult)
         {
+        case OBEYS:
+            gHitMarker |= HITMARKER_OBEYS;
+            break;
         case DISOBEYS_LOAFS:
             // Randomly select, then print a disobedient string
             // B_MSG_LOAFING, B_MSG_WONT_OBEY, B_MSG_TURNED_AWAY, or B_MSG_PRETEND_NOT_NOTICE
@@ -2031,7 +2033,6 @@ static enum MoveCanceller CancellerObedience(void)
         }
         return MOVE_STEP_BREAK;
     }
-
     gHitMarker |= HITMARKER_OBEYS;
     return MOVE_STEP_SUCCESS;
 }
