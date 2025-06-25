@@ -5775,6 +5775,14 @@ BattleScript_DisabledNoMore::
 
 BattleScript_SelectingDisabledMoveInPalace::
 	printstring STRINGID_PKMNMOVEISDISABLED
+	goto BattleScript_SelectingUnusableMoveInPalace
+
+BattleScript_EncoredMove::
+	printselectionstring STRINGID_PKMNGOTENCOREDMOVE
+	endselectionscript
+
+BattleScript_EncoredMoveInPalace::
+	printselectionstring STRINGID_PKMNGOTENCOREDMOVE
 BattleScript_SelectingUnusableMoveInPalace::
 	moveendto MOVEEND_NEXT_TARGET
 	end
