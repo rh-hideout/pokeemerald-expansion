@@ -470,8 +470,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 gBattleMons[battler].status2 &= ~STATUS2_MULTIPLETURNS;
                 if (!(gBattleMons[battler].status2 & STATUS2_CONFUSION))
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION | MOVE_EFFECT_AFFECTS_USER;
-                    SetMoveEffect(TRUE, FALSE);
+                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
+                    SetMoveEffect(battler, battler, TRUE, FALSE);
                     if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;
