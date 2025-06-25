@@ -17,6 +17,8 @@
 #include "data.h"
 #include "daycare.h"
 #include "debug.h"
+#include "decoration.h"
+#include "decoration_inventory.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -58,6 +60,7 @@
 #include "constants/battle_ai.h"
 #include "constants/battle_frontier.h"
 #include "constants/coins.h"
+#include "constants/decorations.h"
 #include "constants/expansion.h"
 #include "constants/flags.h"
 #include "constants/items.h"
@@ -296,6 +299,8 @@ static void DebugAction_Give_Pokemon_SelectIVs(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectEVs(u8 taskId);
 static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId);
 static void DebugAction_Give_Pokemon_Move(u8 taskId);
+static void DebugAction_Give_Decoration(u8 taskId);
+static void DebugAction_Give_Decoration_SelectId(u8 taskId);
 static void DebugAction_Give_MaxMoney(u8 taskId);
 static void DebugAction_Give_MaxCoins(u8 taskId);
 static void DebugAction_Give_MaxBattlePoints(u8 taskId);
@@ -531,6 +536,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
     { COMPOUND_STRING("Give item XYZ…"),    DebugAction_Give_Item },
     { COMPOUND_STRING("Pokémon (Basic)"),   DebugAction_Give_PokemonSimple },
     { COMPOUND_STRING("Pokémon (Complex)"), DebugAction_Give_PokemonComplex },
+    { COMPOUND_STRING("Give Decoration…"),  DebugAction_Give_Decoration },
     { COMPOUND_STRING("Max Money"),         DebugAction_Give_MaxMoney },
     { COMPOUND_STRING("Max Coins"),         DebugAction_Give_MaxCoins },
     { COMPOUND_STRING("Max Battle Points"), DebugAction_Give_MaxBattlePoints },
@@ -2920,6 +2926,82 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 #undef tIsComplex
 #undef tSpriteId
 #undef tIterator
+
+//Decoration
+#define tSpriteId  data[6]
+
+static void Debug_Display_DecorationInfo(u32 itemId, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    u8* end = StringCopy(gStringVar1, gDecorations[itemId].name);
+    WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
+    StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
+    ConvertIntToDecimalStringN(gStringVar3, itemId, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Decor ID: {STR_VAR_3}\n{STR_VAR_1}{CLEAR_TO 90}\n\n{STR_VAR_2}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Give_Decoration(u8 taskId)
+{
+    u8 windowId;
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+    DrawStdWindowFrame(windowId, FALSE);
+
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+
+    // Display initial decoration
+    Debug_Display_DecorationInfo(1, 0, windowId);
+
+    gTasks[taskId].func = DebugAction_Give_Decoration_SelectId;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 1;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tSpriteId = AddDecorationIconObject(gTasks[taskId].tInput, DEBUG_NUMBER_ICON_X+8, DEBUG_NUMBER_ICON_Y+10, 0, ITEM_TAG, ITEM_TAG);
+}
+
+static void DestroyDecorationIcon(u8 taskId)
+{
+    FreeSpriteTilesByTag(ITEM_TAG);
+    FreeSpritePaletteByTag(ITEM_TAG);
+    FreeSpriteOamMatrix(&gSprites[gTasks[taskId].tSpriteId]);
+    DestroySprite(&gSprites[gTasks[taskId].tSpriteId]);
+}
+
+static void DebugAction_Give_Decoration_SelectId(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 1, NUM_DECORATIONS, DEBUG_NUMBER_DIGITS_ITEMS);
+        Debug_Display_DecorationInfo(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        DestroyDecorationIcon(taskId);
+        gTasks[taskId].tSpriteId = AddDecorationIconObject(gTasks[taskId].tInput, DEBUG_NUMBER_ICON_X+8, DEBUG_NUMBER_ICON_Y+10, 0, ITEM_TAG, ITEM_TAG);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        DestroyItemIcon(taskId);
+
+        PlaySE(MUS_LEVEL_UP);
+        DecorationAdd(gTasks[taskId].tInput);
+        DebugAction_DestroyExtraWindow(taskId);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        DestroyDecorationIcon(taskId);
+
+        PlaySE(SE_SELECT);
+        DebugAction_DestroyExtraWindow(taskId);
+    }
+}
+
+#undef tSpriteId
 
 static void DebugAction_Give_MaxMoney(u8 taskId)
 {
