@@ -11752,9 +11752,14 @@ static void Cmd_jumpifnexttargetvalid(void)
     }
 
     if (gBattlerTarget >= gBattlersCount)
+    {
+        gBattlerTarget = gBattlersCount - 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
+    }
     else
+    {
         gBattlescriptCurrInstr = jumpInstr;
+    }
 }
 
 static void Cmd_tryhealhalfhealth(void)
