@@ -3363,6 +3363,21 @@ static void DebugAction_CreateFollowerNPC(u8 taskId)
     UnlockPlayerFieldControls();
 }
 
+static void DebugAction_DestroyFollowerNPC(u8 taskId)
+{
+    if (FNPC_ENABLE_NPC_FOLLOWERS)
+    {
+        Debug_DestroyMenu_Full(taskId);
+        LockPlayerFieldControls();
+        DestroyFollowerNPC();
+        UnlockPlayerFieldControls();
+    }
+    else
+    {
+        Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
+    }
+}
+
 #undef tCurrentSong
 
 #undef tMenuTaskId
@@ -4045,49 +4060,4 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 {
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
-}
-
-/*static void DebugAction_FNPCMenuCreate_Brendan(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL, taskId);
-}
-
-static void DebugAction_FNPCMenuCreate_May(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_RIVAL_MAY_NORMAL, taskId);
-}
-
-static void DebugAction_FNPCMenuCreate_Steven(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_STEVEN, taskId);
-}
-
-static void DebugAction_FNPCMenuCreate_Wally(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_WALLY, taskId);
-}
-
-static void DebugAction_FNPCMenuCreate_Red(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_RED, taskId);
-}
-
-static void DebugAction_FNPCMenuCreate_Leaf(u8 taskId)
-{
-    Debug_CreateFollowerNPC(OBJ_EVENT_GFX_LEAF, taskId);
-}*/
-
-static void DebugAction_DestroyFollowerNPC(u8 taskId)
-{
-    if (FNPC_ENABLE_NPC_FOLLOWERS)
-    {
-        Debug_DestroyMenu_Full(taskId);
-        LockPlayerFieldControls();
-        DestroyFollowerNPC();
-        UnlockPlayerFieldControls();
-    }
-    else
-    {
-        Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
-    }
 }
