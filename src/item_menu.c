@@ -916,7 +916,7 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
     case POCKET_TM_HM:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
         PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
-        if (gItemsInfo[itemId].tmHmIndex >= NUM_TECHNICAL_MACHINES)
+        if (gItemsInfo[itemId].tmHmIndex > NUM_TECHNICAL_MACHINES)
         {
             // Get HM number
             ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex - NUM_TECHNICAL_MACHINES, STR_CONV_MODE_LEADING_ZEROS, 1);
@@ -983,7 +983,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         itemQuantity = GetBagItemQuantity(gBagPosition.pocket, itemIndex);
 
         // Draw HM icon
-        if (itemId >= ITEM_HM01 && itemId <= ITEM_HM08)
+        if (gBagPosition.pocket == POCKET_TM_HM && gItemsInfo[itemId].tmHmIndex > NUM_TECHNICAL_MACHINES)
             BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
 
         if (gBagPosition.pocket != POCKET_KEY_ITEMS && GetItemImportance(itemId) == FALSE)

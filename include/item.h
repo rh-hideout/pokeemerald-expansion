@@ -28,8 +28,7 @@ enum
 #undef ENUM_HM
 
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
- * gTMHMItemMoveIds. TMs in src/data/items.h should have an index in their .tmHmIndex field
- * and this can be automatically generated with the DEFINE_TM/DEFINE_HM macros below.
+ * gTMHMItemMoveIds. Each one in src/data/items.h should have an index in the .tmHmIndex field.
  */
 #define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
 enum TMHMIndex

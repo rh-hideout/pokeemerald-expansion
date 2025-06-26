@@ -168,7 +168,7 @@ const void *GetItemIconPic(u16 itemId)
         return gItemsInfo[0].iconPic;
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
     {
-        if (gItemsInfo[itemId].tmHmIndex >= NUM_TECHNICAL_MACHINES)
+        if (gItemsInfo[itemId].tmHmIndex > NUM_TECHNICAL_MACHINES)
             return gItemIcon_HM;
         return gItemIcon_TM;
     }
