@@ -18619,6 +18619,7 @@ void BS_TryActivateAbilityShield(void)
     if (GetBattlerAbilityNoAbilityShield(battler) != GetBattlerAbility(battler))
     {
         gLastUsedItem = gBattleMons[battler].item;
+        RecordItemEffectBattle(battler, GetItemHoldEffect(gLastUsedItem));
         BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
 }
