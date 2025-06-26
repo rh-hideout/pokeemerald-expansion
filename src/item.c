@@ -602,9 +602,9 @@ void SortBerriesOrTMHMs(enum Pocket pocketId)
     {
         for (j = i + 1; j < gBagPockets[pocketId].capacity; j++)
         {
-            if (GetBagItemQuantity(pocketId, i) != 0)
+            if (GetBagItemQuantity(pocketId, i) != 0 || GetBagItemId(pocketId, i) != ITEM_NONE)
             {
-                if (GetBagItemQuantity(pocketId, j) == 0)
+                if (GetBagItemQuantity(pocketId, j) == 0 || GetBagItemId(pocketId, j) == ITEM_NONE)
                     continue;
                 if (GetBagItemId(pocketId, i) <= GetBagItemId(pocketId, j))
                     continue;
@@ -1043,4 +1043,9 @@ u32 GetItemStatus2Mask(u16 itemId)
         return STATUS2_CONFUSION;
     else
         return 0;
+}
+
+u32 GetItemSellPrice(u32 itemId)
+{
+    return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
 }
