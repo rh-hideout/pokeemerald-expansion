@@ -231,6 +231,7 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 // *******************************
 // Define functions
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
+static void Debug_GenerateListMenuNames(u32 totalItems);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
@@ -843,21 +844,33 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
 
-    u32 i = 0;
-    for (i = 0; items[i].text != NULL; i++)
+    u32 totalItems = 0;
+    for (u32 i = 0; items[i].text != NULL; i++)
     {
-        sDebugMenuListData->listItems[i].id = i;
-        StringExpandPlaceholders(gStringVar4, items[i].text);
-        if (IsSubMenuAction(items[i].action))
-            StringAppend(gStringVar4, sDebugText_Arrow);
-        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
-        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        totalItems++;
+    }
+
+    if (sDebugMenuListData->listId == 1)
+    {
+        Debug_GenerateListMenuNames(totalItems);
+    }
+    else
+    {
+        for (u32 i = 0; items[i].text != NULL; i++)
+        {
+            sDebugMenuListData->listItems[i].id = i;
+            StringExpandPlaceholders(gStringVar4, items[i].text);
+            if (IsSubMenuAction(items[i].action))
+                StringAppend(gStringVar4, sDebugText_Arrow);
+            StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+            sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        }
     }
 
     // create list menu
     menuTemplate.items = sDebugMenuListData->listItems;
     menuTemplate.moveCursorFunc = ListMenuDefaultCursorMoveFunc;
-    menuTemplate.totalItems = i;
+    menuTemplate.totalItems = totalItems;
     menuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
     menuTemplate.windowId = windowId;
     menuTemplate.header_X = 0;
@@ -1178,7 +1191,7 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         {
             Debug_DestroyMenu(taskId);
             if (sDebugMenuListData->listId == 1)
-                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, NULL);
+                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, sDebugMenu_Actions_Flags);
             else
                 Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
@@ -1234,8 +1247,8 @@ static void DebugAction_OpenSubMenuFlagsVars(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
-    Debug_RefreshListMenu(taskId);
-    Debug_ShowMenuFromTemplate(DebugTask_HandleMenuInput_FlagsVars, gMultiuseListMenuTemplate);
+    //Debug_RefreshListMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, sDebugMenu_Actions_Flags);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
@@ -3417,7 +3430,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     }
 }
 
-static const u32 gDebugFollowerNPCGraphics[] = 
+static const u32 gDebugFollowerNPCGraphics[] =
 {
     OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
     OBJ_EVENT_GFX_RIVAL_MAY_NORMAL,
