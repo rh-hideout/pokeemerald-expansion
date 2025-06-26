@@ -172,8 +172,8 @@ Input must be of the form (upper << lower) where upper can be up to 3, lower up 
 /* Finds the required digits to display the number (maximum 4) */
 #define MAX_DIGITS(_num) 1 + !!(_num / 10) + !!(_num / 100) + !!(_num / 1000)
 
-/* Converts a number with leading zeroes to a normal int (base 10 only!) */
-#define REMOVE_LEADING_ZEROES(_num) (((0x##_num / 16) * 10) + (0x##_num % 16))
+/* Converts a number with leading zeroes to a normal int (base 10 and up to three digits only!) */
+#define REMOVE_LEADING_ZEROES(_num) (((0x##_num / 256) * 100) + ((0x##_num / 16) * 10) + (0x##_num % 16))
 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1

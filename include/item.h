@@ -40,40 +40,7 @@ enum TMHMIndex
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
 
-/* This creates enums that let us associate an index with a real move ID */
-#define UNPACK_MOVE_ID_FROM_INDEX(_tmHm) CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) = CAT(MOVE_, _tmHm),
-enum TMIndexToMoveId
-{
-    FOREACH_TMHM(UNPACK_MOVE_ID_FROM_INDEX)
-};
-
-/* Functions to actually retrieve the move ID from an index input by returning one of the above enums as an answer */
-#define TMHM_MOVE_ID_FROM_INDEX(_i) (RECURSIVELY(R_FOR_EACH_WITH(TMHM_MOVE_ID_FROM_INDEX_, (_i), FOREACH_TMHM(APPEND_COMMA))) MOVE_NONE)
-#define TMHM_MOVE_ID_FROM_INDEX_(_i, _tmHm) (_i) == CAT(ENUM_TM_HM_, _tmHm) ? CAT(ENUM_TM_HM_MOVE_ID_,  _tmHm) :
-
-/* Should be used in src/data/items.h to define TMs, HMs with the following syntax:
- * 
- *  [ITEM_TM_FOCUS_PUNCH] =
- *  {
- *      DEFINE_TM(01), // The leading zero is important here to generate the name "TM01" rather than "TM1"
- *      .price = 3000,
- *      .description = COMPOUND_STRING(
- *          "Powerful, but makes\n"
- *          "the user flinch if\n"
- *          "hit by the foe."),
- *      .importance = I_REUSABLE_TMS,
- *      .type = ITEM_USE_PARTY_MENU,
- *      .fieldUseFunc = ItemUseOutOfBattle_TMHM,
- *  },
- * 
- * Will generate the item's .name, .pocket, .tmHmIndex (see above), .secondaryId (by fetching a value from TMIndexToMoveId with TMHM_MOVE_ID_FROM_INDEX)
- */
-#define DEFINE_TM_HM(_str, _tmHmIndex) .name = _(#_str), .pocket = POCKET_TM_HM, .tmHmIndex = _tmHmIndex, .secondaryId = TMHM_MOVE_ID_FROM_INDEX(_tmHmIndex)
-#define DEFINE_TM(_tmNo) DEFINE_TM_HM(TM##_tmNo, REMOVE_LEADING_ZEROES(_tmNo) - 1)
-#define DEFINE_HM(_hmNo) DEFINE_TM_HM(HM##_hmNo, REMOVE_LEADING_ZEROES(_hmNo) + NUM_TECHNICAL_MACHINES - 1)
-
 #undef UNPACK_TM_HM_ENUM
-#undef UNPACK_MOVE_ID_FROM_INDEX
 
 typedef void (*ItemUseFunc)(u8);
 
@@ -92,7 +59,7 @@ struct Item
     u8 notConsumed:1;
     enum Pocket pocket:5;
     union PACKED {
-        u8 index; // Miscellaneous use?
+        u8 index; // Used for sorting !! DO NOT USE IN data/items/h as it does not check type !!
         enum TMHMIndex tmHmIndex:8;
         // enum BerryIndex berryIndex:8; // Coming soon...
     };
