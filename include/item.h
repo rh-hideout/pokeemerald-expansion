@@ -28,7 +28,7 @@ enum
 #undef ENUM_HM
 
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
- * gTMHMItemIds. TMs in src/data/items.h should have an index in their .tmHmIndex field
+ * gTMHMItemMoveIds. TMs in src/data/items.h should have an index in their .tmHmIndex field
  * and this can be automatically generated with the DEFINE_TM/DEFINE_HM macros below.
  */
 #define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
@@ -103,19 +103,30 @@ struct Item
     const u16 *iconPalette;
 };
 
-struct __attribute__((packed, aligned(2))) BagPocket
+struct ALIGNED(2) BagPocket
 {
     struct ItemSlot *itemSlots;
     u16 capacity;
 };
 
+struct TmHmIndexKey
+{
+    u16 itemId;
+    u16 moveId;
+};
+
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
-extern const u16 gTMHMItemIds[];
+extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
-static inline u16 GetTMHMId(enum TMHMIndex index)
+static inline u16 GetTMHMItemId(enum TMHMIndex index)
 {
-    return gTMHMItemIds[index];
+    return gTMHMItemMoveIds[index].itemId;
+}
+
+static inline u16 GetTMHMMoveId(enum TMHMIndex index)
+{
+    return gTMHMItemMoveIds[index].moveId;
 }
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);

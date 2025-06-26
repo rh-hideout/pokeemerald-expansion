@@ -354,7 +354,7 @@ static u16 GetRandomAlternateMove(u8 monId)
                 do
                 {
                     id = Random() % (NUM_ALL_MACHINES);
-                    move = ItemIdToBattleMoveId(GetTMHMId(id));
+                    move = ItemIdToBattleMoveId(GetTMHMItemId(id));
                     shouldUseMove = CanLearnTeachableMove(species, move);
                 }
                 while (!shouldUseMove);

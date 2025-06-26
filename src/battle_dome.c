@@ -3979,7 +3979,7 @@ static bool32 IsDomePopularMove(u32 move)
     u8 i;
     for (i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        if (ItemIdToBattleMoveId(GetTMHMId(i)) == move)
+        if (ItemIdToBattleMoveId(GetTMHMItemId(i)) == move)
             return TRUE;
     }
     if (i == NUM_ALL_MACHINES)
