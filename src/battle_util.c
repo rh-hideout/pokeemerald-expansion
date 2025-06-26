@@ -7690,10 +7690,8 @@ bool32 CanIgnoreContactEffects(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, e
 
 bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move)
 {
-    bool32 moveMakesContect = MoveMakesContact(move) || (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM
-                                                      && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL);
-
-    if (!moveMakesContect)
+    if (!(MoveMakesContact(move) || (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM
+                                  && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)))
     {
         return FALSE;
     }
