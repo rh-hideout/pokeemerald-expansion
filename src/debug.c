@@ -238,7 +238,7 @@ static void DebugAction_DestroyExtraWindow(u8 taskId);
 static void Debug_RefreshListMenu(u8 taskId);
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_OpenSubMenuFlagsVars(u8 taskId);
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
@@ -1126,7 +1126,7 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         {
             Debug_DestroyMenu(taskId);
             if (sDebugMenuListData->listId == 1)
-                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, sDebugMenu_Actions_Flags);
+                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, NULL);
             else
                 Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
@@ -1137,7 +1137,6 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         }
     }
 }
-
 
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
 {
@@ -1175,11 +1174,11 @@ static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
     }
 }
 
-static void DebugAction_OpenSubMenuFlagsVars(u8 taskId)
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, sDebugMenu_Actions_Flags);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, items);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
