@@ -231,7 +231,7 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 // *******************************
 // Define functions
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
-static void Debug_GenerateListMenuNames(u32 totalItems);
+static u8 Debug_GenerateListMenuNames(void);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
@@ -802,14 +802,10 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     DrawStdWindowFrame(windowId, FALSE);
 
     u32 totalItems = 0;
-    for (u32 i = 0; items[i].text != NULL; i++)
-    {
-        totalItems++;
-    }
 
     if (sDebugMenuListData->listId == 1)
     {
-        Debug_GenerateListMenuNames(totalItems);
+        totalItems = Debug_GenerateListMenuNames();
     }
     else
     {
@@ -821,6 +817,7 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
                 StringAppend(gStringVar4, sDebugText_Arrow);
             StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
             sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+            totalItems++;
         }
     }
 
@@ -1036,12 +1033,17 @@ static u8 Debug_CheckToggleFlags(u8 id)
     return result;
 }
 
-static void Debug_GenerateListMenuNames(u32 totalItems)
+static u8 Debug_GenerateListMenuNames(void)
 {
     const u8 sColor_Red[] = _("{COLOR RED}");
     const u8 sColor_Green[] = _("{COLOR GREEN}");
     u32 i, flagResult = 0;
     u8 const *name = NULL;
+
+    u8 totalItems = 0;
+    if (sDebugMenuListData->listId == 1)
+        // Failsafe to prevent memory corruption
+        totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
 
     // Copy item names for all entries but the last (which is Cancel)
     for (i = 0; i < totalItems; i++)
@@ -1072,25 +1074,12 @@ static void Debug_GenerateListMenuNames(u32 totalItems)
         sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
         sDebugMenuListData->listItems[i].id = i;
     }
+    return totalItems;
 }
 
 static void Debug_RefreshListMenu(u8 taskId)
 {
-    u8 totalItems = 0;
-
-    if (sDebugMenuListData->listId == 1)
-    {
-        for (u32 i = 0; i < ARRAY_COUNT(sDebugMenu_Actions_Flags); i++)
-        {
-            sDebugMenuListData->listItems[i].id = i;
-            sDebugMenuListData->listItems[i].name = sDebugMenu_Actions_Flags[i].text;
-        }
-        totalItems = gMultiuseListMenuTemplate.totalItems = ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1;
-    }
-
-    // Failsafe to prevent memory corruption
-    totalItems = min(totalItems, DEBUG_MAX_MENU_ITEMS);
-    Debug_GenerateListMenuNames(totalItems);
+    u8 totalItems = Debug_GenerateListMenuNames();
 
     // Set list menu data
     gMultiuseListMenuTemplate.items = sDebugMenuListData->listItems;
@@ -1179,7 +1168,7 @@ static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
             else
             {
                 func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
-                Debug_GenerateListMenuNames(gMultiuseListMenuTemplate.totalItems);
+                Debug_GenerateListMenuNames();
                 RedrawListMenu(gTasks[taskId].tMenuTaskId);
             }
 
