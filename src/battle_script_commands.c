@@ -10929,7 +10929,10 @@ static void Cmd_various(void)
     case VARIOUS_DESTROY_ABILITY_POPUP:
     {
         VARIOUS_ARGS();
-        DestroyAbilityPopUp(battler);
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            DestroyAbilityPopUp(i);
+        }
         break;
     }
     case VARIOUS_TOTEM_BOOST:
