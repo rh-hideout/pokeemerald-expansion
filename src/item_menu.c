@@ -919,13 +919,13 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
         if (gItemsInfo[itemId].tmHmIndex >= NUM_TECHNICAL_MACHINES)
         {
             // Get HM number
-            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex - NUM_TECHNICAL_MACHINES + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex - NUM_TECHNICAL_MACHINES, STR_CONV_MODE_LEADING_ZEROS, 1);
             StringExpandPlaceholders(dest, gText_NumberItem_HM);
         }
         else
         {
             // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+            ConvertIntToDecimalStringN(gStringVar1, gItemsInfo[itemId].tmHmIndex, STR_CONV_MODE_LEADING_ZEROS, 2);
             StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
         }
         break;
