@@ -91,7 +91,7 @@ struct Item
     u8 importance:2;
     u8 notConsumed:1;
     enum Pocket pocket:5;
-    union {
+    union PACKED {
         u8 index; // Miscellaneous use?
         enum TMHMIndex tmHmIndex:8;
         // enum BerryIndex berryIndex:8; // Coming soon...

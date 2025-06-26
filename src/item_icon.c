@@ -182,7 +182,7 @@ const u16 *GetItemIconPalette(u16 itemId)
         return gItemIconPalette_ReturnToFieldArrow;
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
-    if (gItemsInfo[itemId].pocket == POCKET_TM_HM && gItemsInfo[itemId].tmHmIndex >= NUM_TECHNICAL_MACHINES)
+    if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
         return gTypesInfo[GetMoveType(gItemsInfo[itemId].secondaryId)].paletteTMHM;
 
     return gItemsInfo[itemId].iconPalette;
