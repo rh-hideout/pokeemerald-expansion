@@ -212,7 +212,7 @@ static uq4_12_t CalcTypeEffectivenessMultiplierHelper(u32 move, u32 moveType, u3
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = move;
-    ctx.moveType = GetBattleMoveType(gCurrentMove);
+    ctx.moveType = moveType;
     ctx.updateFlags = recordAbilities;
     ctx.abilityAtk = GetBattlerAbility(battlerAtk);
     ctx.abilityDef = defAbility;
