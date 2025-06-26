@@ -183,7 +183,7 @@ const u16 *GetItemIconPalette(u16 itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
-        return gTypesInfo[GetMoveType(gItemsInfo[itemId].secondaryId)].paletteTMHM;
+        return gTypesInfo[GetMoveType(GetTMHMMoveId(gItemsInfo[itemId].tmHmIndex))].paletteTMHM;
 
     return gItemsInfo[itemId].iconPalette;
 }
