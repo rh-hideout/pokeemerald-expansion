@@ -677,6 +677,14 @@ static void Task_StandingOnHiddenItem(u8 taskId)
     }
 }
 
+// Undefine itemfinder task data
+#undef tItemDistanceX
+#undef tItemDistanceY
+#undef tItemFound
+#undef tCounter
+#undef tItemfinderBeeps
+#undef tFacingDir
+
 void ItemUseOutOfBattle_PokeblockCase(u8 taskId)
 {
     if (MenuHelpers_IsLinkActive() == TRUE)

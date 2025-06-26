@@ -874,8 +874,6 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     }
 }
 
-#undef tPlayerStep
-
 static u8 CheckForPlayerAvatarCollision(u8 direction)
 {
     s16 x, y;
