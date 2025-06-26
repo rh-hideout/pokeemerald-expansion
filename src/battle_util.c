@@ -3878,7 +3878,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_INTIMIDATE:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
-                gBattlerAttacker = battler;
+                gBattlerAbility = gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_ATK, 1, TRUE);
                 BattleScriptPushCursorAndCallback(BattleScript_IntimidateActivates);
@@ -3889,7 +3889,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && !gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].supersweetSyrup)
             {
-                gBattlerAttacker = battler;
+                gBattlerAbility = gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].supersweetSyrup = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_SupersweetSyrupActivates);
@@ -5415,19 +5415,24 @@ static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 
          && gCurrentTurnActionNumber < gBattlersCount);
 }
 
+u32 GetBattlerAbilityNoAbilityShield(u32 battler)
+{
+    return GetBattlerAbilityInternal(battler, FALSE, TRUE);
+}
+
 u32 GetBattlerAbilityIgnoreMoldBreaker(u32 battler)
 {
-    return GetBattlerAbilityInternal(battler, TRUE);
+    return GetBattlerAbilityInternal(battler, TRUE, FALSE);
 }
 
 u32 GetBattlerAbility(u32 battler)
 {
-    return GetBattlerAbilityInternal(battler, FALSE);
+    return GetBattlerAbilityInternal(battler, FALSE, FALSE);
 }
 
-u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker)
+u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityShield)
 {
-    bool32 hasAbilityShield = GetBattlerHoldEffectIgnoreAbility(battler, TRUE) == HOLD_EFFECT_ABILITY_SHIELD;
+    bool32 hasAbilityShield = !noAbilityShield && GetBattlerHoldEffectIgnoreAbility(battler, TRUE) == HOLD_EFFECT_ABILITY_SHIELD;
     bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
 
     if (abilityCantBeSuppressed)

@@ -2879,8 +2879,15 @@ static void Cmd_resultmessage(void)
             return;
         }
 
-        if (gBattleStruct->missStringId[gBattlerTarget] > B_MSG_AVOIDED_ATK) // Wonder Guard or Levitate - show the ability pop-up
-            CreateAbilityPopUp(gBattlerTarget, gBattleMons[gBattlerTarget].ability, IsDoubleBattle());
+        if (gBattleStruct->missStringId[gBattlerTarget] > B_MSG_AVOIDED_ATK) // Wonder Guard or Levitate
+        {
+            gBattlerAbility = gBattlerTarget;
+            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleStruct->missStringId[gBattlerTarget];
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            BattleScriptCall(BattleScript_AbilityAvoidsDamage);
+            return;
+        }
+
         gBattleCommunication[MSG_DISPLAY] = 1;
         stringId = gMissStringIds[gBattleStruct->missStringId[gBattlerTarget]];
     }
@@ -18600,4 +18607,18 @@ void BS_JumpIfAbilityCantBeSuppressed(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TryActivateAbilityShield(void)
+{
+    NATIVE_ARGS(u8 battler);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (GetBattlerAbilityNoAbilityShield(battler) != GetBattlerAbility(battler))
+    {
+        gLastUsedItem = gBattleMons[battler].item;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
+    }
 }
