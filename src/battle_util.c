@@ -2913,32 +2913,24 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
         && gBattleMons[battler].hp <= cutoff;
 }
 
-#define ANIM_STAT_HP      0
-#define ANIM_STAT_ATK     1
-#define ANIM_STAT_DEF     2
-#define ANIM_STAT_SPATK   3
-#define ANIM_STAT_SPDEF   4
-#define ANIM_STAT_SPEED   5
-#define ANIM_STAT_ACC     6
-#define ANIM_STAT_EVASION 7
 static void ChooseStatBoostAnimation(u32 battler)
 {
     u32 stat;
     bool32 statBuffMoreThan1 = FALSE;
     u32 static const statsOrder[NUM_BATTLE_STATS] =
     {
-        [ANIM_STAT_HP]      = STAT_HP,
-        [ANIM_STAT_ATK]     = STAT_ATK,
-        [ANIM_STAT_DEF]     = STAT_DEF,
-        [ANIM_STAT_SPATK]   = STAT_SPATK,
-        [ANIM_STAT_SPDEF]   = STAT_SPDEF,
-        [ANIM_STAT_SPEED]   = STAT_SPEED,
-        [ANIM_STAT_ACC]     = STAT_ACC,
-        [ANIM_STAT_EVASION] = STAT_EVASION,
+        STAT_HP,
+        STAT_ATK,
+        STAT_DEF,
+        STAT_SPATK,
+        STAT_SPDEF,
+        STAT_SPEED,
+        STAT_ACC,
+        STAT_EVASION,
     };
     gBattleScripting.animArg1 = 0;
 
-    for (stat = 1; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
+    for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
     {
         if ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == 0)
             continue;
@@ -2946,20 +2938,9 @@ static void ChooseStatBoostAnimation(u32 battler)
         if (!statBuffMoreThan1)
             statBuffMoreThan1 = ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) > 1);
 
-        if (gBattleScripting.animArg1 != 0) // Already set in a different stat so now boosting multiple stats
-            gBattleScripting.animArg1 = (statBuffMoreThan1 ? STAT_ANIM_MULTIPLE_PLUS2 : STAT_ANIM_MULTIPLE_PLUS1);
-        else
-            gBattleScripting.animArg1 = GET_STAT_BUFF_ID((statsOrder[stat] + 1)) + (statBuffMoreThan1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
+        gBattleScripting.animArg1 = GetStatBuffArg(statsOrder[stat] + 1, statBuffMoreThan1, gBattleScripting.animArg1 != 0, FALSE);
     }
 }
-#undef ANIM_STAT_HP
-#undef ANIM_STAT_ATK
-#undef ANIM_STAT_DEF
-#undef ANIM_STAT_SPATK
-#undef ANIM_STAT_SPDEF
-#undef ANIM_STAT_SPEED
-#undef ANIM_STAT_ACC
-#undef ANIM_STAT_EVASION
 
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, u32 move, enum AbilityEffectOptions option)
 {
@@ -5909,14 +5890,12 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
 {
     if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN) && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, itemId), itemId))
     {
+        bool32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gEffectBattler = gBattleScripting.battler = battler;
-        if (GetBattlerAbility(battler) == ABILITY_RIPEN)
-            SET_STATCHANGER(statId, 2, FALSE);
-        else
-            SET_STATCHANGER(statId, 1, FALSE);
+        SET_STATCHANGER(statId, 1 + ripen, FALSE);
 
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        gBattleScripting.animArg1 = GetStatBuffArg(statId, ripen, FALSE, FALSE);
         gBattleScripting.animArg2 = 0;
 
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
@@ -5958,12 +5937,9 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCa
         gBattleTextBuff2[6] = stringId >> 8;
         gBattleTextBuff2[7] = EOS;
         gEffectBattler = battler;
-        if (battlerAbility == ABILITY_RIPEN)
-            SET_STATCHANGER(stat, 4, FALSE);
-        else
-            SET_STATCHANGER(stat, 2, FALSE);
+        SET_STATCHANGER(stat, (battlerAbility == ABILITY_RIPEN ? 4 : 2), FALSE);
 
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS2 + stat;
+        gBattleScripting.animArg1 = GetStatBuffArg(stat, TRUE, FALSE, FALSE);
         gBattleScripting.animArg2 = 0;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
@@ -6022,16 +5998,13 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, enum 
              && IsBattlerTurnDamaged(battler)))
         )
     {
+        u32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
-
         gEffectBattler = battler;
-        if (GetBattlerAbility(battler) == ABILITY_RIPEN)
-            SET_STATCHANGER(statId, 2, FALSE);
-        else
-            SET_STATCHANGER(statId, 1, FALSE);
 
+        SET_STATCHANGER(statId, 1 + ripen, FALSE);
         gBattleScripting.battler = battler;
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        gBattleScripting.animArg1 = GetStatBuffArg(statId, ripen, FALSE, FALSE);
         gBattleScripting.animArg2 = 0;
         BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
@@ -6047,7 +6020,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
         gLastUsedItem = itemId; // For surge abilities
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(statId, 1, FALSE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        gBattleScripting.animArg1 = statId;
         gBattleScripting.animArg2 = 0;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
@@ -6089,7 +6062,7 @@ static enum ItemEffect ConsumeBerserkGene(u32 battler, enum ItemCaseId caseID)
     BufferStatChange(battler, STAT_ATK, STRINGID_STATROSE);
     gBattlerAttacker = gEffectBattler = battler;
     SET_STATCHANGER(STAT_ATK, 2, FALSE);
-    gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_ATK;
+    gBattleScripting.animArg1 = GetStatBuffArg(STAT_ATK, 2, FALSE, FALSE);
     gBattleScripting.animArg2 = 0;
     if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
         BattleScriptExecute(BattleScript_BerserkGeneRetEnd2);
@@ -10707,7 +10680,7 @@ bool32 TryRoomService(u32 battler)
         BufferStatChange(battler, STAT_SPEED, STRINGID_STATFELL);
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_SPEED;
+        gBattleScripting.animArg1 = STAT_SPEED;
         gBattleScripting.animArg2 = 0;
         gLastUsedItem = gBattleMons[battler].item;
         return TRUE;

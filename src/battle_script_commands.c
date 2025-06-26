@@ -6072,7 +6072,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
                 SET_STATCHANGER(stat, numMonsFainted, FALSE);
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
-                gBattleScripting.animArg1 = GET_STAT_BUFF_ID(stat) + (numMonsFainted > 1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
+                gBattleScripting.animArg1 = GetStatBuffArg(stat, numMonsFainted > 1, FALSE, FALSE);
                 BattleScriptCall(BattleScript_RaiseStatOnFaintingTarget);
                 effect = TRUE;
             }
@@ -6106,24 +6106,24 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 u32 numStatBuffs = 0;
                 if (CompareStat(battlerAtk, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_ATK) + STAT_ANIM_PLUS1;
+                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_ATK, FALSE, FALSE, FALSE);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_SPATK) + STAT_ANIM_PLUS1;
+                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_SPATK, FALSE, FALSE, FALSE);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GET_STAT_BUFF_ID(STAT_SPEED) + STAT_ANIM_PLUS1;
+                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_SPEED, FALSE, FALSE, FALSE);
                     numStatBuffs++;
                 }
 
                 if (numStatBuffs > 0)
                 {
                     if (numStatBuffs > 1)
-                        gBattleScripting.animArg1 = STAT_ANIM_MULTIPLE_PLUS1;
+                        gBattleScripting.animArg1 = STAT_BUFF_MULTIPLE_PLUS1;
 
                     gLastUsedAbility = abilityAtk;
                     gBattlerAbility = battlerAtk;
@@ -12032,16 +12032,11 @@ static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, s32 
 {
     u32 currStat = 0;
     u32 changeableStatsCount = 1; // current stat is counted automatically
-    u32 statAnimId = statId;
-    bool32 statChangeByTwo = statValue > 1 || statValue < -1;
+    bool32 statChangeByTwo = (abs(statValue) > 1);
+    s32 statAnimId = GetStatBuffArg(statId, statChangeByTwo, FALSE, statValue <= 1);
 
     if (statValue <= -1) // goes down
     {
-        if (statChangeByTwo)
-            statAnimId += STAT_ANIM_MINUS2;
-        else
-            statAnimId += STAT_ANIM_MINUS1;
-
         while (stats != 0)
         {
             if (stats & 1)
@@ -12070,20 +12065,10 @@ static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, s32 
         }
 
         if (changeableStatsCount > 1) // more than one stat, so the color is gray
-        {
-            if (statChangeByTwo)
-                statAnimId = STAT_ANIM_MULTIPLE_MINUS2;
-            else
-                statAnimId = STAT_ANIM_MULTIPLE_MINUS1;
-        }
+            statAnimId = STAT_BUFF_MULTIPLE_MINUS1 - statChangeByTwo;
     }
     else // goes up
     {
-        if (statChangeByTwo)
-            statAnimId += STAT_ANIM_PLUS2;
-        else
-            statAnimId += STAT_ANIM_PLUS1;
-
         while (stats != 0)
         {
             if (stats & 1 && gBattleMons[battler].statStages[currStat] < MAX_STAT_STAGE)
@@ -12095,12 +12080,7 @@ static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, s32 
         }
 
         if (changeableStatsCount > 1) // more than one stat, so the color is gray
-        {
-            if (statChangeByTwo)
-                statAnimId = STAT_ANIM_MULTIPLE_PLUS2;
-            else
-                statAnimId = STAT_ANIM_MULTIPLE_PLUS1;
-        }
+            statAnimId = STAT_BUFF_MULTIPLE_PLUS1 + statChangeByTwo;
     }
 
     if (!gBattleScripting.statAnimPlayed)
@@ -18172,69 +18152,55 @@ void BS_TrySpectralThiefSteal(void)
         return;
     }
 
-    bool32 contrary = GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY;
-    gBattleStruct->stolenStats[0] = 0; // Stats to steal.
+    u32 stat;
+    bool32 byTwo = FALSE, contrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
+    gBattleStruct->hasStoredStatBuffs = FALSE; // Stats to steal.
     gBattleScripting.animArg1 = 0;
-    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+
+    for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
-        if (gBattleMons[gBattlerTarget].statStages[stat] > DEFAULT_STAT_STAGE && gBattleMons[gBattlerAttacker].statStages[stat] != MAX_STAT_STAGE)
+        if (gBattleMons[gBattlerTarget].statStages[stat] <= DEFAULT_STAT_STAGE)
+            continue;
+
+        gBattleStruct->storedStatBuffs[stat] = min(
+            CanRaiseOrLowerStatAmount(gBattlerAttacker, stat, contrary),
+            gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE
+        ) * powInt(-1, contrary);
+        gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
+        gBattleStruct->hasStoredStatBuffs |= (gBattleStruct->storedStatBuffs[stat] != 0);
+
+        // Determining the animation
+        if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
         {
-            bool32 byTwo = FALSE;
-
-            gBattleStruct->stolenStats[0] |= (1 << (stat));
-            // Store by how many stages to raise the stat.
-            gBattleStruct->stolenStats[stat] = gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE;
-
-            while (gBattleMons[gBattlerAttacker].statStages[stat] + gBattleStruct->stolenStats[stat] > MAX_STAT_STAGE)
-                gBattleStruct->stolenStats[stat]--;
-
-            gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
-
-            if (gBattleStruct->stolenStats[stat] >= 2)
-                byTwo++;
-
-            if (gBattleScripting.animArg1 == 0)
-            {
-                if (byTwo)
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS2 : STAT_ANIM_PLUS2) + stat;
-                else
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS1 : STAT_ANIM_PLUS1) + stat;
-            }
-            else
-            {
-                if (byTwo)
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS2 : STAT_ANIM_MULTIPLE_PLUS2);
-                else
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS1 : STAT_ANIM_MULTIPLE_PLUS1);
-            }
+            byTwo |= (abs(gBattleStruct->storedStatBuffs[stat]) > 1);
+            gBattleScripting.animArg1 = GetStatBuffArg(stat, byTwo, gBattleScripting.animArg1 == 0, contrary);
         }
     }
 
-    if (gBattleStruct->stolenStats[0] != 0)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
+    gBattlescriptCurrInstr = (gBattleStruct->hasStoredStatBuffs == TRUE) ? cmd->jumpInstr : cmd->nextInstr;
 }
 
 void BS_SpectralThiefPrintStats(void)
 {
     NATIVE_ARGS();
 
-    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    if (gBattleStruct->hasStoredStatBuffs == TRUE) // Stats to boost
     {
-        if (gBattleStruct->stolenStats[0] & (1u << stat))
+        for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            gBattleStruct->stolenStats[0] &= ~(1u << stat);
-            SET_STATCHANGER(stat, gBattleStruct->stolenStats[stat], FALSE);
-            if (ChangeStatBuffs(
-                    gBattlerAttacker,
-                    GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger),
-                    stat,
-                    STAT_CHANGE_CERTAIN,
-                    0, NULL) == STAT_CHANGE_WORKED)
+            if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
             {
-                BattleScriptCall(BattleScript_StatUp);
-                return;
+                SET_STATCHANGER(stat, abs(gBattleStruct->storedStatBuffs[stat]), (gBattleStruct->storedStatBuffs[stat] < 0));
+                if (ChangeStatBuffs(
+                        gBattlerAttacker,
+                        GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger),
+                        stat,
+                        STAT_CHANGE_CERTAIN,
+                        0, NULL) == STAT_CHANGE_WORKED)
+                {
+                    BattleScriptCall((gBattleStruct->storedStatBuffs[stat] < 0) ? BattleScript_StatDown : BattleScript_StatUp);
+                    return;
+                }
             }
         }
     }

@@ -71,6 +71,43 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
+enum StatBuffArg
+{
+    STAT_BUFF_MULTIPLE_MINUS2 = -16,
+    STAT_BUFF_MULTIPLE_MINUS1 = -15,
+    STAT_BUFF_MINUS2_EVA = STAT_EVASION - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_ACC = STAT_ACC - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPD = STAT_SPDEF - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPA = STAT_SPATK - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPE = STAT_SPEED - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_DEF = STAT_DEF - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_ATK = STAT_ATK - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS1_EVA = -STAT_EVASION,
+    STAT_BUFF_MINUS1_ACC = -STAT_ACC,
+    STAT_BUFF_MINUS1_SPD = -STAT_SPDEF,
+    STAT_BUFF_MINUS1_SPA = -STAT_SPATK,
+    STAT_BUFF_MINUS1_SPE = -STAT_SPEED,
+    STAT_BUFF_MINUS1_DEF = -STAT_DEF,
+    STAT_BUFF_MINUS1_ATK = -STAT_ATK,
+    STAT_BUFF_NONE = 0,
+    STAT_BUFF_PLUS1_ATK = STAT_ATK,
+    STAT_BUFF_PLUS1_DEF = STAT_DEF,
+    STAT_BUFF_PLUS1_SPE = STAT_SPEED,
+    STAT_BUFF_PLUS1_SPA = STAT_SPATK,
+    STAT_BUFF_PLUS1_SPD = STAT_SPDEF,
+    STAT_BUFF_PLUS1_ACC = STAT_ACC,
+    STAT_BUFF_PLUS1_EVA = STAT_EVASION,
+    STAT_BUFF_PLUS2_ATK = STAT_ATK + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_DEF = STAT_DEF + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPE = STAT_SPEED + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPA = STAT_SPATK + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPD = STAT_SPDEF + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_ACC = STAT_ACC + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_EVA = STAT_EVASION + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MULTIPLE_PLUS1 = STAT_BUFF_MULTIPLE_MINUS1 * -1,
+    STAT_BUFF_MULTIPLE_PLUS2 = STAT_BUFF_MULTIPLE_MINUS2 * -1,
+};
+
 // Cleared each time a mon leaves the field, either by switching out or fainting
 struct DisableStruct
 {
@@ -714,7 +751,10 @@ struct BattleStruct
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum BattleIntroStates introState:8;
-    u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
+    union {
+        bool8 hasStoredStatBuffs;
+        s8 storedStatBuffs[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
+    };
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
     u16 hpBefore[MAX_BATTLERS_COUNT]; // Hp of battlers before using a move. For Berserk and Anger Shell.
@@ -1241,6 +1281,16 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+}
+
+static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 lowering)
+{
+    return lowering ? gBattleMons[gBattlerAttacker].statStages[stat] : MAX_STAT_STAGE - gBattleMons[gBattlerAttacker].statStages[stat];
+}
+
+static inline enum StatBuffArg GetStatBuffArg(u32 stat, bool32 doubleOrGreater, bool32 multiple, bool32 lowering)
+{
+    return (multiple ? STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater: (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
 }
 
 #endif // GUARD_BATTLE_H
