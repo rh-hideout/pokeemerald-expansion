@@ -1100,17 +1100,6 @@ static void Debug_RefreshListMenu(u8 taskId)
     gMultiuseListMenuTemplate.cursorKind = 0;
 }
 
-static void Debug_RedrawListMenu(u8 taskId)
-{
-    u8 listTaskId = gTasks[taskId].tMenuTaskId;
-    u16 scrollOffset, selectedRow;
-    ListMenuGetScrollAndRow(listTaskId, &scrollOffset, &selectedRow);
-
-    DestroyListMenuTask(gTasks[taskId].tMenuTaskId, &scrollOffset, &selectedRow);
-    Debug_RefreshListMenu(taskId);
-    gTasks[taskId].tMenuTaskId = ListMenuInit(&gMultiuseListMenuTemplate, scrollOffset, selectedRow);
-}
-
 static void DebugTask_HandleMenuInput_General(u8 taskId)
 {
     const struct DebugMenuOption *options = Debug_GetCurrentCallbackMenu();
@@ -1160,14 +1149,11 @@ static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
         PlaySE(SE_SELECT);
         if ((func = sDebugMenu_Actions_Flags[input].action) != NULL)
         {
-            if (input == DEBUG_FLAGVAR_MENU_ITEM_FLAGS || input == DEBUG_FLAGVAR_MENU_ITEM_VARS)
+            func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
+
+            if (input != DEBUG_FLAGVAR_MENU_ITEM_FLAGS
+             && input != DEBUG_FLAGVAR_MENU_ITEM_VARS)
             {
-                Debug_RedrawListMenu(taskId);
-                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
-            }
-            else
-            {
-                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
                 Debug_GenerateListMenuNames();
                 RedrawListMenu(gTasks[taskId].tMenuTaskId);
             }
@@ -1193,7 +1179,6 @@ static void DebugAction_OpenSubMenuFlagsVars(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
-    //Debug_RefreshListMenu(taskId);
     Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, sDebugMenu_Actions_Flags);
 }
 
