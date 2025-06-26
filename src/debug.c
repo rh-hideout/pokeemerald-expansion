@@ -775,49 +775,6 @@ static const struct DebugMenuOption *Debug_GetCurrentCallbackMenu(void)
     return callbackItems;
 }
 
-static void Debug_ShowMenuFromTemplate(void (*HandleInput)(u8), struct ListMenuTemplate LMtemplate)
-{
-    struct ListMenuTemplate menuTemplate;
-    u8 windowId;
-    u8 menuTaskId;
-    u8 inputTaskId;
-
-    // create window
-    HideMapNamePopUpWindow();
-    LoadMessageBoxAndBorderGfx();
-    windowId = AddWindow(&sDebugMenuWindowTemplateMain);
-    DrawStdWindowFrame(windowId, FALSE);
-
-    // create list menu
-    menuTemplate = LMtemplate;
-    menuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
-    menuTemplate.windowId = windowId;
-    menuTemplate.header_X = 0;
-    menuTemplate.item_X = 8;
-    menuTemplate.cursor_X = 0;
-    menuTemplate.upText_Y = 1;
-    menuTemplate.cursorPal = 2;
-    menuTemplate.fillValue = 1;
-    menuTemplate.cursorShadowPal = 3;
-    menuTemplate.lettersSpacing = 1;
-    menuTemplate.itemVerticalPadding = 0;
-    menuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
-    menuTemplate.fontId = DEBUG_MENU_FONT;
-    menuTemplate.cursorKind = 0;
-    menuTaskId = ListMenuInit(&menuTemplate, 0, 0);
-
-    // create input handler task
-    inputTaskId = CreateTask(HandleInput, 3);
-    gTasks[inputTaskId].tMenuTaskId = menuTaskId;
-    gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0;
-
-    Debug_RefreshListMenu(inputTaskId);
-
-    // draw everything
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-}
-
 static bool32 IsSubMenuAction(const void *action)
 {
     return action == DebugAction_OpenSubMenu
