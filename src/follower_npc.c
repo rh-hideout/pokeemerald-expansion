@@ -263,9 +263,7 @@ static u32 GetFollowerNPCSprite(void)
 
 static bool32 FollowerNPCHasRunningFrames(void)
 {
-    u32 i;
-
-    for (i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
+    for (u32 i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
     {
         if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID)
          && gFollowerNPCAlternateSprites[i].hasRunningFrames == TRUE)
