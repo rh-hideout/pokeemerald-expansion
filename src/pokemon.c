@@ -6016,8 +6016,6 @@ bool32 IsMoveHM(u16 move)
 
 bool32 CannotForgetMove(u16 move)
 {
-    int i = 0;
-
     if (P_CAN_FORGET_HIDDEN_MOVE)
         return FALSE;
 
