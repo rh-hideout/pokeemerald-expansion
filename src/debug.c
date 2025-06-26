@@ -1140,15 +1140,20 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
 
 static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
 {
-    DebugSubmenuFunc func;
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    struct DebugMenuOption option = sDebugMenu_Actions_Flags[input];
 
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        if ((func = sDebugMenu_Actions_Flags[input].action) != NULL)
+        if (option.action != NULL)
         {
-            func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
+            if (IsSubMenuAction(option.action))
+                ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
+            else if (option.action == DebugAction_ExecuteScript)
+                Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
+            else
+                ((DebugFunc)option.action)(taskId);
 
             if (input != DEBUG_FLAGVAR_MENU_ITEM_FLAGS
              && input != DEBUG_FLAGVAR_MENU_ITEM_VARS)
@@ -1169,8 +1174,19 @@ static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMainMenu();
+        if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
+        {
+            Debug_DestroyMenu(taskId);
+            if (sDebugMenuListData->listId == 1)
+                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, NULL);
+            else
+                Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
+        }
+        else
+        {
+            Debug_DestroyMenu_Full(taskId);
+            ScriptContext_Enable();
+        }
     }
 }
 
