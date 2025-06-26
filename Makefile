@@ -293,7 +293,7 @@ agbcc:
 
 LD_SCRIPT_TEST := ld_script_test.ld
 
-$(OBJ_DIR)/ld_script_test.ld: $(LD_SCRIPT_TEST) $(LD_SCRIPT_DEPS)
+$(OBJ_DIR)/ld_script_test.ld: $(LD_SCRIPT_TEST)
 	cd $(OBJ_DIR) && sed "s#tools/#../../tools/#g" ../../$(LD_SCRIPT_TEST) > ld_script_test.ld
 
 $(TESTELF): $(OBJ_DIR)/ld_script_test.ld $(OBJS) $(TEST_OBJS) libagbsyscall tools check-tools
@@ -486,7 +486,6 @@ $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h: $(TEACHABLE_DEPS)
 
 # Linker script
 LD_SCRIPT := ld_script_modern.ld
-LD_SCRIPT_DEPS :=
 
 # Final rules
 
@@ -495,16 +494,16 @@ libagbsyscall:
 
 # Enable LTO LDFLAGS if set
 ifneq ($(LTO),0)
-# Output .map file and memory usage readout
 LDFLAGS := -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections
 LDFLAGS += -Xlinker -flto=auto
-$(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
+$(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
 	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs>"
 	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
 else
+# Output .map file, memory usage readout and gc sections to clean-up unused data
 LDFLAGS = -Map ../../$(MAP) --print-memory-usage --gc-sections
-$(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
+$(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
 	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$<  -o ../../$@ $(OBJS_REL) $(LIB) | cat
 	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs> | cat"
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
