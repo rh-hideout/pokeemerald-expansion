@@ -1503,11 +1503,12 @@ BattleScript_EffectFlowerShield::
 	attackcanceler
 	attackstring
 	ppreduce
+	savetarget
 	selectfirstvalidtarget
 BattleScript_FlowerShieldIsAnyGrass:
 	jumpiftype BS_TARGET, TYPE_GRASS, BattleScript_FlowerShieldLoopStart
 	jumpifnexttargetvalid BattleScript_FlowerShieldIsAnyGrass
-	goto BattleScript_ButItFailed
+	goto BattleScript_RestoreTargetButItFailed
 BattleScript_FlowerShieldLoopStart:
 	selectfirstvalidtarget
 BattleScript_FlowerShieldLoop:
@@ -1532,6 +1533,7 @@ BattleScript_FlowerShieldString:
 BattleScript_FlowerShieldMoveTargetEnd:
 	moveendto MOVEEND_NEXT_TARGET
 	jumpifnexttargetvalid BattleScript_FlowerShieldLoop
+	restoretarget
 	end
 
 BattleScript_EffectRototiller::
@@ -4512,6 +4514,9 @@ BattleScript_ButItFailed::
 	goto BattleScript_MoveEnd
 BattleScript_RestoreAttackerButItFailed:
 	restoreattacker
+	goto BattleScript_ButItFailed
+BattleScript_RestoreTargetButItFailed:
+	restoretarget
 	goto BattleScript_ButItFailed
 
 BattleScript_NotAffected::

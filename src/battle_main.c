@@ -3188,6 +3188,7 @@ void SwitchInClearSetData(u32 battler)
         gDisableStructs[battler].perishSongTimer = disableStructCopy.perishSongTimer;
         gDisableStructs[battler].battlerPreventingEscape = disableStructCopy.battlerPreventingEscape;
         gDisableStructs[battler].embargoTimer = disableStructCopy.embargoTimer;
+        gDisableStructs[battler].healBlockTimer = disableStructCopy.healBlockTimer;
     }
     else if (effect == EFFECT_SHED_TAIL)
     {
