@@ -16445,7 +16445,8 @@ static void Cmd_jumpifcaptivateaffected(void)
 static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS(u8 trigger);
-
+    gBattlescriptCurrInstr = cmd->nextInstr - 1;
+    
     switch (cmd->trigger)
     {
     case TRIGGER_ON_ABILITY:
