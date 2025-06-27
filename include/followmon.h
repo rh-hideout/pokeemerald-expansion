@@ -29,14 +29,6 @@ struct FollowMonData
     struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];
 };
 
-enum FollowMonSpawnAnim
-{
-    FOLLOWMON_SPAWN_ANIM_SHINY,
-    FOLLOWMON_SPAWN_ANIM_WATER,
-    FOLLOWMON_SPAWN_ANIM_CAVE,
-    FOLLOWMON_SPAWN_ANIM_GRASS,
-};
-
 //data/scripts/followmon.inc
 extern const u8 InteractWithDynamicWildFollowMon[];
 

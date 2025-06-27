@@ -138,7 +138,7 @@ void FollowMon_OverworldCB()
                             spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
                     }
                     // Instantly play a small animation to ground the spawning a bit (Disable for now)
-                    //MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
+                    MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
                     sFollowMonData.pendingSpawnAnim &= ~bitFlag;
                 }
             }
