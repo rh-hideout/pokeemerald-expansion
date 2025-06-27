@@ -18192,10 +18192,12 @@ void BS_SpectralThiefPrintStats(void)
                         0, NULL) == STAT_CHANGE_WORKED)
                 {
                     BattleScriptCall((gBattleStruct->storedStatBuffs[stat] < 0) ? BattleScript_StatDown : BattleScript_StatUp);
+                    gBattleStruct->storedStatBuffs[stat] = STAT_BUFF_NONE;
                     return;
                 }
             }
         }
+        gBattleStruct->hasStoredStatBuffs = FALSE;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

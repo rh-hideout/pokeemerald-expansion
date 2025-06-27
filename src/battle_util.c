@@ -4276,7 +4276,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     {
                         // MoodyCantLowerStat already checks that both stats are different
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        SetSavedStatChanger(i, 1);
+                        SetSavedStatChanger(i, -1);
                     }
                     BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
                     effect++;

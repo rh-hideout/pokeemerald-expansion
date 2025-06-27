@@ -547,9 +547,9 @@ void AnimTask_StatsChange(u8 taskId)
             animPalId = STAT_ANIM_PAL_MULTIPLE;
             break;
         default:
-            break;
             sharply = (abs(animArg) > NUM_BOOSTABLE_STATS);
             animPalId = (abs(animArg) - 1) % NUM_BOOSTABLE_STATS;
+            break;
     }
 
     gBattleAnimArgs[0] = goesDown;
