@@ -6,16 +6,17 @@
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "followmon.h"
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
+#include "overworld.h"
+#include "random.h"
 #include "script.h"
 #include "sprite.h"
 #include "sound.h"
-#include "random.h"
-
 #include "wild_encounter.h"
-#include "followmon.h"
+
 
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
@@ -31,6 +32,8 @@ static bool8 IsSafeToSpawnObjectEvents(void);
 static u8 FindObjectEventForGfx(u16 gfxId);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
+static bool8 IsInsidePlayerMap(s16 x, s16 y);
+static void GetMapSize(s32 *width, s32 *height);
 
 void FollowMon_OverworldCB()
 {
@@ -237,6 +240,9 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
         elevation = MapGridGetElevationAt(x, y);
 
+        if (!IsInsidePlayerMap(x, y)) {
+            return FALSE;
+        }
         // 0 is change of elevation, 15 is multiple elevation e.g. bridges
         // Causes weird interaction issues so just don't let mons spawn here
         if (elevation == 0 || elevation == 15)
@@ -533,4 +539,22 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
         return FALSE;
 
     return TRUE;
+}
+
+static bool8 IsInsidePlayerMap(s16 x, s16 y)
+{
+    s32 width, height;
+    GetMapSize(&width, &height);
+    if (x >= 0 && x <= width && y >= 0 && y <= height) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void GetMapSize(s32 *width, s32 *height)
+{
+    const struct MapLayout *layout;
+    layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
+    *width = layout->width;
+    *height = layout->height;
 }
