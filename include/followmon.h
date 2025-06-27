@@ -1,7 +1,7 @@
 #ifndef GUARD_FOLLOWMON_H
 #define GUARD_FOLLOWMON_H
 
-#define OW_FLAG_SPAWN_OVERWORLD_MON         0
+#define OW_FLAG_SPAWN_OVERWORLD_MON         FLAG_UNUSED_0x020
 
 #define FOLLOWMON_SHINY_OFFSET              10000
 #define FOLLOWMON_MAX_SPAWN_SLOTS           6
@@ -49,5 +49,6 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
 void FollowMon_OnWarp(void);
+void RemoveAllFollowMonObjects(void);
 
 #endif // GUARD_FOLLOWMON_H

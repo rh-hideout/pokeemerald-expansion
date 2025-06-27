@@ -19,6 +19,8 @@
 #include "event_data.h"
 #include "constants/event_objects.h"
 
+#include "followmon.h"
+
 static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey);
 
 #define SAVEBLOCK_MOVE_RANGE    128
@@ -200,6 +202,9 @@ void SaveObjectEvents(void)
     int i;
     u16 graphicsId;
 
+    // Temporary fix until we reduce followmon data size 
+    // and include it in the save
+    RemoveAllFollowMonObjects();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];

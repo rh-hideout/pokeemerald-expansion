@@ -25,7 +25,6 @@ static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
 static u8 CountActiveObjectEvents();
 static u8 ActiveSpawnSlotCount();
-static void RemoveAllFollowMonObjects(void);
 static bool8 isFollowMonFemale(u8 spawnSlot);
 static bool8 isFollowMonShiny(u8 spawnSlot);
 static bool8 IsSafeToSpawnObjectEvents(void);
@@ -475,7 +474,7 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-static void RemoveAllFollowMonObjects(void) {
+void RemoveAllFollowMonObjects(void) {
     for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i) {
         if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_0 && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
             RemoveObjectEvent(&gObjectEvents[i]);
