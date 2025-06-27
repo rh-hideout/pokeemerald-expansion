@@ -2915,7 +2915,7 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
 
 static void ChooseStatBoostAnimation(u32 battler)
 {
-    u32 stat;
+    u32 queuedStatBoost, stat;
     bool32 statBuffMoreThan1 = FALSE;
     u32 static const statsOrder[NUM_BATTLE_STATS] =
     {
@@ -2932,13 +2932,10 @@ static void ChooseStatBoostAnimation(u32 battler)
 
     for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
     {
-        if ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == 0)
+        if ((queuedStatBoost = gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == STAT_BUFF_NONE)
             continue;
 
-        if (!statBuffMoreThan1)
-            statBuffMoreThan1 = ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) > 1);
-
-        gBattleScripting.animArg1 = GetStatBuffArg(statsOrder[stat] + 1, statBuffMoreThan1, gBattleScripting.animArg1 != 0, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(statsOrder[stat] + 1, queuedStatBoost, gBattleScripting.animArg1 != 0);
     }
 }
 
@@ -5895,7 +5892,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
         gEffectBattler = gBattleScripting.battler = battler;
         SetStatChanger(statId, 1 + ripen);
 
-        gBattleScripting.animArg1 = GetStatBuffArg(statId, ripen, FALSE, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, 1 + ripen, FALSE);
         gBattleScripting.animArg2 = 0;
 
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
@@ -5939,7 +5936,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCa
         gEffectBattler = battler;
         SetStatChanger(stat, (battlerAbility == ABILITY_RIPEN ? 4 : 2));
 
-        gBattleScripting.animArg1 = GetStatBuffArg(stat, TRUE, FALSE, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(stat, 2, FALSE);
         gBattleScripting.animArg2 = 0;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
@@ -5998,13 +5995,13 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, enum 
              && IsBattlerTurnDamaged(battler)))
         )
     {
-        u32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
+        bool32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gEffectBattler = battler;
 
         SetStatChanger(statId, 1 + ripen);
         gBattleScripting.battler = battler;
-        gBattleScripting.animArg1 = GetStatBuffArg(statId, ripen, FALSE, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, 1 + ripen, FALSE);
         gBattleScripting.animArg2 = 0;
         BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
@@ -6062,7 +6059,7 @@ static enum ItemEffect ConsumeBerserkGene(u32 battler, enum ItemCaseId caseID)
     BufferStatChange(battler, STAT_ATK, STRINGID_STATROSE);
     gBattlerAttacker = gEffectBattler = battler;
     SetStatChanger(STAT_ATK, 2);
-    gBattleScripting.animArg1 = GetStatBuffArg(STAT_ATK, 2, FALSE, FALSE);
+    gBattleScripting.animArg1 = GetStatAnimArg(STAT_ATK, 2, FALSE);
     gBattleScripting.animArg2 = 0;
     if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
         BattleScriptExecute(BattleScript_BerserkGeneRetEnd2);

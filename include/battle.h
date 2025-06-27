@@ -1288,9 +1288,14 @@ static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
     return lowering ? gBattleMons[gBattlerAttacker].statStages[stat] : MAX_STAT_STAGE - gBattleMons[gBattlerAttacker].statStages[stat];
 }
 
-static inline enum StatBuffArg GetStatBuffArg(u32 stat, bool32 doubleOrGreater, bool32 multiple, bool32 lowering)
+static inline enum StatBuffArg GetStatBuffArg(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
 {
     return (multiple ? STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater: (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
+}
+
+static inline enum StatBuffArg GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
+{
+    return GetStatBuffArg(stat, abs(amount) > 1, multiple, amount < 0);
 }
 
 static inline void SetStatChanger(u32 statId, s32 stage)

@@ -6072,7 +6072,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
                 SetStatChanger(stat, numMonsFainted);
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
-                gBattleScripting.animArg1 = GetStatBuffArg(stat, numMonsFainted > 1, FALSE, FALSE);
+                gBattleScripting.animArg1 = GetStatAnimArg(stat, numMonsFainted, FALSE);
                 BattleScriptCall(BattleScript_RaiseStatOnFaintingTarget);
                 effect = TRUE;
             }
@@ -6106,17 +6106,17 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 u32 numStatBuffs = 0;
                 if (CompareStat(battlerAtk, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_ATK, FALSE, FALSE, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_ATK, 1, FALSE);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_SPATK, FALSE, FALSE, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPATK, 1, FALSE);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatBuffArg(STAT_SPEED, FALSE, FALSE, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPEED, 1, FALSE);
                     numStatBuffs++;
                 }
 
@@ -12030,7 +12030,7 @@ static void TryPlayStatChangeAnimation(u32 battler, u32 ability, u32 stats, s32 
     u32 currStat = 0;
     u32 changeableStatsCount = 1; // current stat is counted automatically
     bool32 statChangeByTwo = (abs(statValue) > 1);
-    s32 statAnimId = GetStatBuffArg(statId, statChangeByTwo, FALSE, statValue <= 1);
+    s32 statAnimId = GetStatAnimArg(statId, statValue, FALSE);
 
     if (statValue <= -1) // goes down
     {
@@ -18146,7 +18146,7 @@ void BS_TrySpectralThiefSteal(void)
     }
 
     u32 stat;
-    bool32 byTwo = FALSE, contrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
+    bool32 contrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
     gBattleStruct->hasStoredStatBuffs = FALSE; // Stats to steal.
     gBattleScripting.animArg1 = 0;
 
@@ -18164,10 +18164,7 @@ void BS_TrySpectralThiefSteal(void)
 
         // Determining the animation
         if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
-        {
-            byTwo |= (abs(gBattleStruct->storedStatBuffs[stat]) > 1);
-            gBattleScripting.animArg1 = GetStatBuffArg(stat, byTwo, gBattleScripting.animArg1 == 0, contrary);
-        }
+            gBattleScripting.animArg1 = GetStatAnimArg(stat, gBattleStruct->storedStatBuffs[stat], gBattleScripting.animArg1 == 0);
     }
 
     gBattlescriptCurrInstr = (gBattleStruct->hasStoredStatBuffs == TRUE) ? cmd->jumpInstr : cmd->nextInstr;
