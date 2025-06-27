@@ -1293,4 +1293,14 @@ static inline enum StatBuffArg GetStatBuffArg(u32 stat, bool32 doubleOrGreater, 
     return (multiple ? STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater: (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
 }
 
+static inline void SetStatChanger(u32 statId, s32 stage)
+{
+    gBattleScripting.statChanger = (statId) + ((abs(stage)) << 3) + ((stage < 0) << 7);
+}
+
+static inline void SetSavedStatChanger(u32 statId, s32 stage)
+{
+    gBattleScripting.savedStatChanger = (statId) + ((abs(stage)) << 3) + ((stage < 0) << 7);
+}
+
 #endif // GUARD_BATTLE_H

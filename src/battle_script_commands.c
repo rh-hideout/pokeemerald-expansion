@@ -4105,7 +4105,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (!NoAliveMonsForEitherParty())
         {
             // Max Effects are ordered by stat ID.
-            SET_STATCHANGER(STAT_ATK, 1, FALSE);
+            SetStatChanger(STAT_ATK, 1);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
         }
@@ -4114,7 +4114,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (!NoAliveMonsForEitherParty())
         {
             // Max Effects are ordered by stat ID.
-            SET_STATCHANGER(STAT_DEF, 1, FALSE);
+            SetStatChanger(STAT_DEF, 1);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
         }
@@ -4123,7 +4123,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (!NoAliveMonsForEitherParty())
         {
             // Max Effects are ordered by stat ID.
-            SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+            SetStatChanger(STAT_SPEED, 1);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
         }
@@ -4132,7 +4132,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (!NoAliveMonsForEitherParty())
         {
             // Max Effects are ordered by stat ID.
-            SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+            SetStatChanger(STAT_SPATK, 1);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
         }
@@ -4141,7 +4141,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (!NoAliveMonsForEitherParty())
         {
             // Max Effects are ordered by stat ID.
-            SET_STATCHANGER(STAT_SPDEF, 1, FALSE);
+            SetStatChanger(STAT_SPDEF, 1);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectRaiseStatAllies;
         }
@@ -4171,7 +4171,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
                     statId = gBattleScripting.moveEffect - MOVE_EFFECT_LOWER_ATTACK_SIDE + 1;
                     break;
             }
-            SET_STATCHANGER(statId, stage, TRUE);
+            SetStatChanger(statId, -stage);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectLowerStatFoes;
         }
@@ -6070,7 +6070,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 else if (abilityAtk == ABILITY_AS_ONE_SHADOW_RIDER)
                     gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_GRIM_NEIGH;
 
-                SET_STATCHANGER(stat, numMonsFainted, FALSE);
+                SetStatChanger(stat, numMonsFainted);
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
                 gBattleScripting.animArg1 = GetStatBuffArg(stat, numMonsFainted > 1, FALSE, FALSE);
                 BattleScriptCall(BattleScript_RaiseStatOnFaintingTarget);
@@ -6320,7 +6320,7 @@ static void Cmd_moveend(void)
                 && !IsBattleMoveStatus(gCurrentMove)
                 && CompareStat(gBattlerTarget, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                SetStatChanger(STAT_ATK, 1);
                 BattleScriptCall(BattleScript_RageIsBuilding);
                 effect = TRUE;
             }
@@ -6859,7 +6859,7 @@ static void Cmd_moveend(void)
                  && !NoAliveMonsForEitherParty()
                  && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    SET_STATCHANGER(STAT_ATK, GetGenConfig(GEN_CONFIG_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2, FALSE);
+                    SetStatChanger(STAT_ATK, GetGenConfig(GEN_CONFIG_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2);
                     PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                     BattleScriptCall(BattleScript_FellStingerRaisesStat);
                     effect = TRUE;
@@ -8122,7 +8122,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
     {
         gDisableStructs[battler].stickyWebDone = TRUE;
         gBattleScripting.battler = battler;
-        SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+        SetStatChanger(STAT_SPEED, -1);
         BattleScriptCall(BattleScript_StickyWebOnSwitchIn);
     }
     else if (!(gDisableStructs[battler].steelSurgeDone)
@@ -10101,7 +10101,7 @@ static void Cmd_various(void)
                 statId = (Random() % (NUM_BATTLE_STATS - 1)) + 1;
             } while (!(bits & (1u << statId)));
 
-            SET_STATCHANGER(statId, 2, FALSE);
+            SetStatChanger(statId, 2);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         else
@@ -10438,7 +10438,7 @@ static void Cmd_various(void)
                 && !NoAliveMonsForEitherParty()
                 && CompareStat(gBattleScripting.battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
-                SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                SetStatChanger(STAT_SPATK, 1);
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
                 BattleScriptCall(BattleScript_ScriptingAbilityStatRaise);
                 return;
@@ -10951,10 +10951,7 @@ static void Cmd_various(void)
             {
                 if (gQueuedStatBoosts[battler].stats & (1 << i))
                 {
-                    if (gQueuedStatBoosts[battler].statChanges[i] <= -1)
-                        SET_STATCHANGER(i + 1, abs(gQueuedStatBoosts[battler].statChanges[i]), TRUE);
-                    else
-                        SET_STATCHANGER(i + 1, gQueuedStatBoosts[battler].statChanges[i], FALSE);
+                    SetStatChanger(i + 1, gQueuedStatBoosts[battler].statChanges[i]);
 
                     gQueuedStatBoosts[battler].stats &= ~(1 << i);
                     gBattleScripting.battler = battler;
@@ -11304,7 +11301,7 @@ static void Cmd_various(void)
         // For Mirror Armor: "If the Pokémon with this Ability is affected by Sticky Web, the effect is reflected back to the Pokémon which set it up.
         //  If Pokémon which set up Sticky Web is not on the field, no Pokémon have their Speed lowered."
         gBattlerAttacker = gBattlerTarget;  // Initialize 'fail' condition
-        SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+        SetStatChanger(STAT_SPEED, -1);
         if (gSideTimers[GetBattlerSide(battler)].stickyWebBattlerId != 0xFF)
             gBattlerAttacker = gSideTimers[GetBattlerSide(battler)].stickyWebBattlerId;
         break;
@@ -16615,13 +16612,13 @@ void BS_DoStockpileStatChangesWearOff(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     if (gDisableStructs[battler].stockpileDef != 0)
     {
-        SET_STATCHANGER(STAT_DEF, abs(gDisableStructs[battler].stockpileDef), TRUE);
+        SetStatChanger(STAT_DEF, -abs(gDisableStructs[battler].stockpileDef));
         gDisableStructs[battler].stockpileDef = 0;
         BattleScriptCall(cmd->statChangeInstr);
     }
     else if (gDisableStructs[battler].stockpileSpDef)
     {
-        SET_STATCHANGER(STAT_SPDEF, abs(gDisableStructs[battler].stockpileSpDef), TRUE);
+        SetStatChanger(STAT_SPDEF, -abs(gDisableStructs[battler].stockpileSpDef));
         gDisableStructs[battler].stockpileSpDef = 0;
         BattleScriptCall(cmd->statChangeInstr);
     }
@@ -17035,7 +17032,7 @@ void BS_ItemIncreaseStat(void)
     NATIVE_ARGS();
     u16 statId = GetItemEffect(gLastUsedItem)[1];
     u16 stages = GetItemHoldEffectParam(gLastUsedItem);
-    SET_STATCHANGER(statId, stages, FALSE);
+    SetStatChanger(statId, stages);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -17820,11 +17817,7 @@ void BS_CopyFoesStatIncrease(void)
     {
         if (gQueuedStatBoosts[battler].stats & (1 << stat))
         {
-            if (gQueuedStatBoosts[battler].statChanges[stat] <= -1)
-                SET_STATCHANGER(stat + 1, abs(gQueuedStatBoosts[battler].statChanges[stat]), TRUE);
-            else
-                SET_STATCHANGER(stat + 1, gQueuedStatBoosts[battler].statChanges[stat], FALSE);
-
+            SetStatChanger(stat + 1, gQueuedStatBoosts[battler].statChanges[stat]);
             gQueuedStatBoosts[battler].stats &= ~(1 << stat);
             gBattlerTarget = battler;
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -18190,7 +18183,7 @@ void BS_SpectralThiefPrintStats(void)
         {
             if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
             {
-                SET_STATCHANGER(stat, abs(gBattleStruct->storedStatBuffs[stat]), (gBattleStruct->storedStatBuffs[stat] < 0));
+                SetStatChanger(stat, gBattleStruct->storedStatBuffs[stat]);
                 if (ChangeStatBuffs(
                         gBattlerAttacker,
                         GET_STAT_BUFF_VALUE_WITH_SIGN(gBattleScripting.statChanger),
