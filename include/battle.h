@@ -834,6 +834,29 @@ struct AiBattleData
     u8 padding:6;
 };
 
+struct PACKED MoveEffectResult
+{
+    enum MoveEffects moveEffect:8;
+    bool32 certain:1;
+    bool32 primary:1;
+    bool32 affectsUser:1;
+    bool32 failed:1;
+    bool32 isAbility:1;
+    bool32 battlescriptPush:1;
+    bool32 battlescriptPushPlusOne:1;
+    bool32 blockedByAbility:1;
+    enum StatusTrigger statusTrigger:2;
+    const u8 *nextInstr;
+    u16 currentMove;
+    u16 battlerAbility;
+    u16 lastUsedItem;
+    u16 battlerAtk:4;
+    u16 battlerDef:4;
+    u16 effectBattler:4;
+    u16 scriptingBattler:4;
+    u8 multistring;
+};
+
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).
 // The assert below is to ensure palaceFlags is large enough to store these flags without overlap.
