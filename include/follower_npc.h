@@ -23,9 +23,6 @@ enum FollowerNPCDataTypes
     FNPC_DATA_OBJ_ID,
     FNPC_DATA_CURRENT_SPRITE,
     FNPC_DATA_DELAYED_STATE,
-    FNPC_DATA_MAP_ID,
-    FNPC_DATA_MAP_NUM,
-    FNPC_DATA_MAP_GROUP,
     FNPC_DATA_EVENT_FLAG,
     FNPC_DATA_GFX_ID,
     FNPC_DATA_FOLLOWER_FLAGS,
@@ -85,6 +82,8 @@ const u8 *GetFollowerNPCScriptPointer(void);
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type);
 void ClearFollowerNPCData(void);
 
+void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
+void DestroyFollowerNPC(void);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
