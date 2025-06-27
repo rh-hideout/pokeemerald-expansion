@@ -25,6 +25,7 @@ static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
 static u8 CountActiveObjectEvents();
 static u8 ActiveSpawnSlotCount();
+static void RemoveAllFollowMonObjects(void);
 static bool8 isFollowMonFemale(u8 spawnSlot);
 static bool8 isFollowMonShiny(u8 spawnSlot);
 static bool8 IsSafeToSpawnObjectEvents(void);
@@ -34,6 +35,16 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 
 void FollowMon_OverworldCB()
 {
+    if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON)) {
+        RemoveAllFollowMonObjects();
+        // Zero sFollowMonData ;
+        u8 *raw = (u8 *)&sFollowMonData;
+        for (u32 i = 0; i < sizeof(struct FollowMonData); i++) {
+            raw[i] = 0;
+        }
+        return;
+    }
+
     // Speed up spawning
     if(FALSE)
     {
@@ -462,6 +473,13 @@ static u8 ActiveSpawnSlotCount()
 static bool8 IsSpawningWaterMons()
 {
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
+}
+
+static void RemoveAllFollowMonObjects(void) {
+    for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i) {
+        if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_0 && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+            RemoveObjectEvent(&gObjectEvents[i]);
+    }
 }
 
 static bool8 isFollowMonFemale(u8 spawnSlot)
