@@ -687,6 +687,12 @@ $(FLDEFFGFXDIR)/short_grass.4bpp: %.4bpp: %.png
 $(FLDEFFGFXDIR)/surf_blob.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 4 -mheight 4
 
+$(FLDEFFGFXDIR)/oras_dowsing_brendan.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 4
+
+$(FLDEFFGFXDIR)/oras_dowsing_may.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 4
+
 $(FLDEFFGFXDIR)/tall_grass.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 2
 
