@@ -16526,6 +16526,7 @@ static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS();
     gEffectBattler = gBattlerTarget;
+    gBattlescriptCurrInstr = cmd->nextInstr - 1;
     SetNonVolatileStatusCondition(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove));
 }
 
