@@ -5985,7 +5985,10 @@ const struct Item gItemsInfo[] =
         .name = _("Venusaurite Y"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
-        .description = sVenusauriteDesc,
+        .description = COMPOUND_STRING(
+            "This stone enables\n"
+            "Venusaur to Mega\n"
+            "Evolve in battle."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
@@ -5994,18 +5997,21 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_Venusaurite,
     },
 
-    [ITEM_BLASTOISITE_Y] =
+    [ITEM_BLASTOISINITE_Y] =
     {
-        .name = _("Blastoisite Y"),
+        .name = _("Blastoisinite Y"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
-        .description = sBlastoisiteDesc,
+        .description = COMPOUND_STRING(
+            "This stone enables\n"
+            "Blastoise to Mega\n"
+            "Evolve in battle."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
-        .iconPic = gItemIcon_Blastoisite,
-        .iconPalette = gItemIconPalette_Blastoisite,
+        .iconPic = gItemIcon_Blastoisinite,
+        .iconPalette = gItemIconPalette_Blastoisinite,
     },
 
     [ITEM_BUTTERFRITE] =
@@ -6013,7 +6019,10 @@ const struct Item gItemsInfo[] =
         .name = _("Butterfrite"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
-        .description = sButterfriteDesc,
+        .description = COMPOUND_STRING(
+            "This stone enables\n"
+            "Butterfree to Mega\n"
+            "Evolve in battle."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
@@ -6086,7 +6095,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
-        .iconPic = gItemIcon_MewtwoniteiteX,
+        .iconPic = gItemIcon_MewtwoniteX,
         .iconPalette = gItemIconPalette_MewtwoniteX,
     },
 
@@ -6192,9 +6201,9 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_Tyranitarite,
     },
 
-    [ITEM_CINERACITE] =
+    [ITEM_CINDERACITE] =
     {
-        .name = _("Cinceracite"),
+        .name = _("CINDERACITE"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = COMPOUND_STRING(
@@ -6223,7 +6232,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
         .iconPic = gItemIcon_Salamencite,
-        .iconPalette = gItemIconPalette_Salamancite,
+        .iconPalette = gItemIconPalette_Salamencite,
     },
 
     [ITEM_CORVIKNITE] =
@@ -6274,7 +6283,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
         .iconPic = gItemIcon_Gyaradosite,
-        .iconPalette = gItemIconPalette_Gyradosite,
+        .iconPalette = gItemIconPalette_Gyaradosite,
     },
 
     [ITEM_COALOSSALITE] =
@@ -7974,13 +7983,15 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
+        .iconPic = gItemIcon_AssaultVest,
+        .iconPalette = gItemIconPalette_AssaultVest,
     },
 
     [ITEM_MARACCAS] =
     {
         .name = _("Maracas"),
         .price = 4000,
-        .holdEffect = HOLD_EFFECT_MARACAS,
+        .holdEffect = HOLD_EFFECT_MARACCAS,
         .description = COMPOUND_STRING(
             "Reduces incoming flying\n"
             "type moves on Maractus."),
@@ -7988,6 +7999,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
+        .iconPic = gItemIcon_LoadedDice,
+        .iconPalette = gItemIconPalette_LoadedDice,
     },
     [ITEM_TOXIN_BOOSTER] =
     {
@@ -8002,6 +8015,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
+        .iconPic = gItemIcon_PoisonBarb,
+        .iconPalette = gItemIconPalette_PoisonBarb,
     },
 
     // [ITEM_BLADE_ARMOR] =

@@ -148,7 +148,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
-        .abilities = { ABILITY_OVERGROW, ABILITY_BULLY, ABILITY_LONG_REACH },
+        .abilities = { ABILITY_OVERGROW, ABILITY_BULLY, ABILITY_WIND_RIDER },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Decidueye"),
         .cryId = CRY_DECIDUEYE,
@@ -211,7 +211,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
-        .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_SCRAPPY },
+        .abilities = { ABILITY_OVERGROW, ABILITY_SCRAPPY, ABILITY_LONG_REACH },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Decidueye"),
         .cryId = CRY_DECIDUEYE,
@@ -7163,6 +7163,67 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .formSpeciesIdTable = sMelmetalFormSpeciesIdTable,
         .formChangeTable = sMelmetalFormChangeTable,
     },
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_MELMETAL_MEGA] =
+    {
+        .baseHP        = 135,
+        .baseAttack    = 203,   //+60
+        .baseDefense   = 183,   //+40
+        .baseSpeed     = 34,
+        .baseSpAttack  = 80,    //-5
+        .baseSpDefense = 70,    //+5
+        .types = MON_TYPES(TYPE_STEEL),
+        .catchRate = 3,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 300 : 270,
+        .evYield_Attack = 3,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 120,
+        .friendship = 0,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_CLEAR_BODY, ABILITY_CLEAR_BODY },
+        .bodyColor = BODY_COLOR_GRAY,
+        .speciesName = _("Melmetal"),
+        .cryId = CRY_MELMETAL,
+        .natDexNum = NATIONAL_DEX_MELMETAL,
+        .categoryName = _("Hex Nut"),
+        .height = 250,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "In a distant land, there are\n"
+            "legends about a cyclopean giant. In fact,\n"
+            "the giant was a Melmetal that was\n"
+            "flooded with Gigantamax energy."),
+        .pokemonScale = 257,
+        .pokemonOffset = 10,
+        .trainerScale = 423,
+        .trainerOffset = 8,
+        .frontPic = gMonFrontPic_MelmetalMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 1,
+        .frontAnimFrames = sAnims_Melmetal,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_MelmetalMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 14,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_MelmetalMega,
+        .shinyPalette = gMonShinyPalette_MelmetalMega,
+        .iconSprite = gMonIcon_MelmetalMega,
+        .iconPalIndex = 0,
+        SHADOW(2, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Melmetal)
+        .isMythical = TRUE,
+        .isMegaEvolution = TRUE,
+        .isFrontierBanned = TRUE,
+        .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sMelmetalLevelUpLearnset,
+        .teachableLearnset = sMelmetalTeachableLearnset,
+        .formSpeciesIdTable = sMelmetalFormSpeciesIdTable,
+        .formChangeTable = sMelmetalFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
     [SPECIES_MELMETAL_GMAX] =

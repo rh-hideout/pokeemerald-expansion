@@ -1001,7 +1001,7 @@
 #define ITEM_EMPOLEONITE_X 829
 #define ITEM_EMPOLEONITE_Y 830
 #define ITEM_VENUSAURITE_Y 831
-#define ITEM_BLASTOISITE_Y 832
+#define ITEM_BLASTOISINITE_Y 832
 #define ITEM_BUTTERFRITE 833
 #define ITEM_MACHAMPITE 834
 #define ITEM_GENGARITE_Y 835
@@ -1068,7 +1068,7 @@
 #define ITEM_IRON_MASK 889
 #define ITEM_FESTIVE_COAT 890  //buff delibird
 #define ITEM_MUSIC_BOX 891      //buff chatot and sqwakabilly
-#define ITEM_MARACCAS 892      //buff marractus
+#define ITEM_MARACCAS 892      //buff marractus  NEED TO CHANGE SPELLING
 // #define ITEM_SOUL_LANTERN 893   //buff spiritomb
 #define ITEM_TOXIN_BOOSTER 894
 // LEGEND PLATE //very complicated item that generally is only for arceus, could remodel into anti tera item?

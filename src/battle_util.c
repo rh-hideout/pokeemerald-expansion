@@ -5421,7 +5421,6 @@ case ABILITY_HOSPITALITY:
             case ABILITY_SNOW_STALKER:
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SNOW))
                 {
-                SNOW_STALKER_HP_DROP:
                     BattleScriptPushCursorAndCallback(BattleScript_SnowStalkerActivates);
                     gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 8;
                     if (gBattleMoveDamage == 0)
@@ -10228,7 +10227,7 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
         }
         break;
     case ABILITY_FLOWER_GIFT:
-        if (gBattleMons[battlerAtk].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) && IS_MOVE_PHYSICAL(move))
+        if (gBattleMons[battlerAtk].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) && IS_MOVE_SPECIAL(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_HUSTLE:
@@ -10376,7 +10375,7 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
         switch (GetBattlerAbility(BATTLE_PARTNER(battlerAtk)))
         {
         case ABILITY_FLOWER_GIFT:
-            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(BATTLE_PARTNER(battlerAtk), B_WEATHER_SUN) && IS_MOVE_PHYSICAL(move))
+            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(BATTLE_PARTNER(battlerAtk), B_WEATHER_SUN) && IS_MOVE_SPECIAL(move))
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             break;
         }
@@ -10422,7 +10421,7 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case HOLD_EFFECT_TOXIN_BOOSTER:
-        if (gBattleMons[battlerAtk].types == TYPE_BUG)
+        if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_BUG))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
         break;
     // case HOLD_EFFECT_BLADE_ARMOR:
@@ -10927,7 +10926,7 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageCalculationData *da
     case HOLD_EFFECT_SAND_BAG:
         if(moveType == TYPE_ELECTRIC)
             return UQ_4_12(0.0);
-        case HOLD_EFFECT_MARACCAS:
+    case HOLD_EFFECT_MARACCAS:
         if (gBattleMons[battlerDef].species == SPECIES_MARACTUS && moveType == TYPE_FLYING)
            return UQ_4_12(0.5);
         break;

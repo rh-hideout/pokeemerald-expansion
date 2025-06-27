@@ -32485,7 +32485,7 @@ F_TRAINER_FEMALE |
             .species = SPECIES_MAWILE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 12866
-            .heldItem = ITEM_BLADE_ARMOR,
+            .heldItem = ITEM_METAL_COAT,
 #line 12868
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
 #line 12867
@@ -32786,7 +32786,7 @@ F_TRAINER_FEMALE |
             .species = SPECIES_MAWILE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 12965
-            .heldItem = ITEM_BLADE_ARMOR,
+            .heldItem = ITEM_METAL_COAT,
 #line 12967
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
 #line 12966

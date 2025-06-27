@@ -1813,9 +1813,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 
     [SPECIES_AMPHAROS] =
     {
-        .baseHP        = 90,
-        .baseAttack    = 75,
-        .baseDefense   = AMPHAROS_DEFENSE,
+        .baseHP        = 100,   //+10
+        .baseAttack    = 65,    //-10
+        .baseDefense   = AMPHAROS_DEFENSE,  //+10
         .baseSpeed     = 55,
         .baseSpAttack  = 125,    //+10
         .baseSpDefense = 95,    //+5
@@ -1886,12 +1886,12 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #if P_MEGA_EVOLUTIONS
     [SPECIES_AMPHAROS_MEGA] =
     {
-        .baseHP        = 90,
-        .baseAttack    = 95,
+        .baseHP        = 100,
+        .baseAttack    = 85,
         .baseDefense   = AMPHAROS_DEFENSE + 20,
         .baseSpeed     = 45,
-        .baseSpAttack  = 165,
-        .baseSpDefense = 110,
+        .baseSpAttack  = 175,
+        .baseSpDefense = 115,
         .types = MON_TYPES(TYPE_ELECTRIC, TYPE_DRAGON),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 305 : 275,
@@ -3474,7 +3474,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #if P_FAMILY_UNOWN //+10 to all stats
 #define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset)   \
     {                                                                                                   \
-        .baseHP        = 58,                                                                            \ 
+        .baseHP        = 58,                                                                            \
         .baseAttack    = 82,                                                                            \
         .baseDefense   = 58,                                                                            \
         .baseSpeed     = 58,                                                                            \
@@ -6552,11 +6552,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #if P_MEGA_EVOLUTIONS
     [SPECIES_HOUNDOOM_MEGA] =
     {
-        .baseHP        = 75,
-        .baseAttack    = 90,
+        .baseHP        = 80,
+        .baseAttack    = 85,    //-5
         .baseDefense   = 90,
-        .baseSpeed     = 115,
-        .baseSpAttack  = 140,
+        .baseSpeed     = 120,   //+5  
+        .baseSpAttack  = 145,   
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_DARK, TYPE_FIRE),
         .catchRate = 45,
@@ -6567,7 +6567,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_SOLAR_POWER, ABILITY_SOLAR_POWER, ABILITY_SOLAR_POWER },
+        .abilities = { ABILITY_FRIGHTEN, ABILITY_FRIGHTEN, ABILITY_FRIGHTEN },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Houndoom"),
         .cryId = CRY_HOUNDOOM_MEGA,

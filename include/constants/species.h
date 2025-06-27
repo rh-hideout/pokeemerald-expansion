@@ -1652,7 +1652,7 @@
 #define SPECIES_GARBODOR_MEGA                           1535
 #define SPECIES_MELMETAL_MEGA                           1536
 #define SPECIES_RILLABOOM_MEGA_X                        1537
-#define SPECIES_RILLABOOM_MEGA_Y                        1538
+#define SPECIES_RILLABOOM_MEGA_Y                        1538    //this
 #define SPECIES_CINDERACE_MEGA                          1539
 #define SPECIES_INTELEON_MEGA                           1540
 #define SPECIES_CORVIKNIGHT_MEGA                        1541
@@ -1689,3 +1689,10 @@
 #define SPECIES_SHINY_TAG 5000
 
 #endif  // GUARD_CONSTANTS_SPECIES_H
+
+
+//#if OW_POKEMON_OBJECT_EVENTS
+    // const u32 gObjectEventPic_ButterfreeGmax[] = INCBIN_COMP("graphics/pokemon/butterfree/gmax/overworld.4bpp");
+//#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    // const u32 gOverworldPalette_ButterfreeGmax[] = INCBIN_U32("graphics/pokemon/butterfree/gmax/overworld_normal.gbapal.lz");
+    // const u32 gShinyOverworldPalette_ButterfreeGmax[] = INCBIN_U32("graphics/pokemon/butterfree/gmax/overworld_shiny.gbapal.lz");

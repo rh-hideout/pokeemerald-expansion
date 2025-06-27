@@ -2589,22 +2589,16 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Sets Misty on entry."),
         .aiRating = 5,
     },
-    [ABILITY_THICK_STEAM] =
-    {
-        .name = _("Thick Steam"),
-        .description = COMPOUND_STRING("Sets Mist when hit."),
-        .aiRating = 5,
-    },
+    // [ABILITY_THICK_STEAM] =
+    // {
+    //     .name = _("Thick Steam"),
+    //     .description = COMPOUND_STRING("Sets Mist when hit."),
+    //     .aiRating = 5,
+    // },
     [ABILITY_LUCKY_SPIRIT] =
     {
         .name = _("Lucky Spirit"),
         .description = COMPOUND_STRING("Sets Lucky chant on entry."),
-        .aiRating = 5,
-    },
-    [ABILITY_BOOMBOX] =
-    {
-        .name = _("Boombox"),
-        .description = COMPOUND_STRING("Sets uproar on entry."),
         .aiRating = 5,
     },
     [ABILITY_FILTHY_FORM] =
