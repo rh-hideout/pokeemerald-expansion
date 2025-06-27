@@ -6272,12 +6272,12 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sMinccinoLevelUpLearnset,
         .teachableLearnset = sMinccinoTeachableLearnset,
         .eggMoveLearnset = sMinccinoEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_ITEM, ITEM_SHINY_STONE, SPECIES_CINCCINO}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_CINCCINO}), //shiny stone
     },
 
     [SPECIES_CINCCINO] =
     {
-        .baseHP        = 75,
+        .baseHP        = 80,    //+5
         .baseAttack    = 95,
         .baseDefense   = 60,
         .baseSpeed     = 115,
@@ -6795,7 +6795,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_SWANNA] =
     {
-        .baseHP        = 75,    
+        .baseHP        = 80,    //+5
         .baseAttack    = 79,    //-8
         .baseDefense   = 70,    //+7
         .baseSpeed     = 98,
@@ -6994,9 +6994,9 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
     [SPECIES_VANILLUXE] =
     {
         .baseHP        = 71,
-        .baseAttack    = 95,
+        .baseAttack    = 90,    //-5
         .baseDefense   = 85,
-        .baseSpeed     = 79,
+        .baseSpeed     = 84,    //+5
         .baseSpAttack  = 110,
         .baseSpDefense = 95,
         .types = MON_TYPES(TYPE_ICE),
@@ -7010,7 +7010,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL),
     #if P_UPDATED_ABILITIES >= GEN_7
-        .abilities = { ABILITY_ICE_BODY, ABILITY_SNOW_WARNING, ABILITY_WEAK_ARMOR },
+        .abilities = { ABILITY_ICE_BODY, ABILITY_SNOW_WARNING, ABILITY_CYRO_SPIRIT },
     #else
         .abilities = { ABILITY_ICE_BODY, ABILITY_NONE, ABILITY_WEAK_ARMOR },
     #endif
@@ -7317,7 +7317,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_SAWSBUCK_SPRING] =
     {
-        .baseHP        = 80,
+        .baseHP        = 100,    //+20
         .baseAttack    = 100,
         .baseDefense   = 70,
         .baseSpeed     = 95,
@@ -7379,7 +7379,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_SAWSBUCK_SUMMER] =
     {
-        .baseHP        = 80,
+        .baseHP        = 100,    //+20
         .baseAttack    = 100,
         .baseDefense   = 70,
         .baseSpeed     = 95,
@@ -7441,7 +7441,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_SAWSBUCK_AUTUMN] =
     {
-        .baseHP        = 80,
+        .baseHP        = 100,    //+20
         .baseAttack    = 100,
         .baseDefense   = 70,
         .baseSpeed     = 95,
@@ -7503,7 +7503,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_SAWSBUCK_WINTER] =
     {
-        .baseHP        = 80,
+        .baseHP        = 100,
         .baseAttack    = 100,
         .baseDefense   = 70,
         .baseSpeed     = 95,

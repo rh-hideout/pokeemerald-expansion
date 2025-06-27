@@ -629,7 +629,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_NORMAL,
-        .accuracy = 85,
+        .accuracy = 90, //+5
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -10124,7 +10124,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "The user swings its tail\n"
             "like a wave to attack."),
         .effect = EFFECT_HIT,
-        .power = 90,
+        .power = 100,   //+10
         .type = TYPE_WATER,
         .accuracy = 90,
         .pp = 10,
@@ -22923,7 +22923,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .contestComboMoves = {COMBO_STARTER_GROWTH},
     },
 
-    [MOVE_SNOWSEAR_STORM] =
+    [MOVE_SNOWSEAR_STORM] = //is this just shittier blizzard?
     {
         .name = COMPOUND_STRING("Snowsear Storm"),
         .description = COMPOUND_STRING(
