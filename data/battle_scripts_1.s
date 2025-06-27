@@ -7230,14 +7230,14 @@ sZero:
 
 BattleScript_MoodyActivates::
 	call BattleScript_AbilityPopUp
-	jumpifbyteequal sSTATCHANGER, sZero, BattleScript_MoodyLower
+	jumpifword CMP_EQUAL, sSTATCHANGER, 0, BattleScript_MoodyLower
 	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_MoodyLower
 	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_ROSE, BattleScript_MoodyLower
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_MoodyLower:
-	jumpifbyteequal sSAVED_STAT_CHANGER, sZero, BattleScript_MoodyEnd
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
+	jumpifword CMP_EQUAL, sSAVED_STAT_CHANGER, 0, BattleScript_MoodyEnd
+	copyword sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_MoodyEnd
 	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_FELL, BattleScript_MoodyEnd
 	printfromtable gStatDownStringIds
@@ -8995,7 +8995,7 @@ BattleScript_ZMoveActivateStatus::
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
 	setzeffect
 	restoretarget
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
+	copyword sSTATCHANGER, sSAVED_STAT_CHANGER
 	return
 
 BattleScript_ZMoveActivatePowder::

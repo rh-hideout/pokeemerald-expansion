@@ -64,9 +64,9 @@
 #define max(a, b) ((a) >= (b) ? (a) : (b))
 #define abs(x) (((x) < 0) ? -(x) : (x))
 
-static inline u32 powInt(s32 num, u32 exponent)
+static inline s32 powInt(s32 num, u32 exponent)
 {
-    u32 result = 1;
+    s32 result = 1;
     for (; exponent > 0; exponent--)
     {
         result *= num;

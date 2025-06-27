@@ -912,21 +912,21 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 unused1;
-    s32 bideDmg;
+    u32 statChanger;
+    u32 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused2;
+    u8 unused1;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
+    u8 unused2;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch. Option for noobs but oh well.
     u8 battler;
     u8 animTurn;
     u8 animTargetsHit;
-    u8 statChanger;
+    u8 unused3;
     bool8 statAnimPlayed;
     u8 getexpState;
     u8 battleStyle;
