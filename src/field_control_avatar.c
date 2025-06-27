@@ -42,6 +42,8 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 
+#include "followmon.h"
+
 static EWRAM_DATA u8 sWildEncounterImmunitySteps = 0;
 static EWRAM_DATA u16 sPrevMetatileBehavior = 0;
 
@@ -176,6 +178,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     if (TryRunOnFrameMapScript() == TRUE)
         return TRUE;
+
+    if(FollowMon_ProcessMonInteraction() == TRUE)
+    {
+        return TRUE;
+    }
 
     if (input->pressedBButton && TrySetupDiveEmergeScript() == TRUE)
         return TRUE;
@@ -399,7 +406,9 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
-    if (InTrainerHill() == TRUE)
+    if (FollowMon_IsMonObject(&gObjectEvents[objectEventId]))
+         script = InteractWithDynamicWildFollowMon;
+    else if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();

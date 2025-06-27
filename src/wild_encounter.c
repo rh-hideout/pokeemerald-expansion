@@ -29,6 +29,9 @@
 #include "constants/layouts.h"
 #include "constants/weather.h"
 
+#include "pokemon.h"
+#include "random.h"
+
 extern const u8 EventScript_SprayWoreOff[];
 
 #define MAX_ENCOUNTER_RATE 2880
@@ -573,6 +576,47 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
         return FALSE;
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
+    return TRUE;
+}
+
+bool8 GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
+{
+    //struct WildPokemon *wildMon;
+    const struct WildPokemonInfo *wildMonInfo;
+    u32 headerId;
+    u8 wildMonIndex = 0;
+    enum TimeOfDay timeOfDay;
+
+    headerId = GetCurrentMapWildMonHeaderId();
+    if (inWater) {
+        wildMonIndex = ChooseWildMonIndex_WaterRock();
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+        followMon->level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_WATER);
+
+    } else {
+        wildMonIndex = ChooseWildMonIndex_Land();
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+        followMon->level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_LAND);
+    }
+
+    if (wildMonInfo == NULL) {
+        return FALSE;
+    }
+    
+    followMon->species = wildMonInfo->wildPokemon[wildMonIndex].species;
+    followMon->personality = Random32();
+
+    /*
+    gender = GetGenderFromSpeciesAndPersonality(*species, personality);
+    u32 shinyValue = GET_SHINY_VALUE(gSaveBlock2Ptr->playerTrainerId, personality);
+    followMon->gfxId = OBJ_EVENT_MON + species
+    if (isShiny)
+        followMon->gfxId += OBJ_EVENT_MON_SHINY
+    if (gender == MON_FEMALE)
+        followMon->gfxId += OBJ_EVENT_MON_FEMALE
+    */
     return TRUE;
 }
 

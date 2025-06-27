@@ -275,6 +275,19 @@
 #define OBJ_EVENT_GFX_VAR_E  (OBJ_EVENT_GFX_VARS + 0xE)
 #define OBJ_EVENT_GFX_VAR_F  (OBJ_EVENT_GFX_VARS + 0xF)
 
+#define OBJ_EVENT_GFX_VAR_FIRST   OBJ_EVENT_GFX_VAR_0
+#define OBJ_EVENT_GFX_VAR_LAST    OBJ_EVENT_GFX_VAR_F
+
+#define OBJ_EVENT_GFX_FOLLOW_MON_0               (OBJ_EVENT_GFX_VAR_F + 1)
+#define OBJ_EVENT_GFX_FOLLOW_MON_1               (OBJ_EVENT_GFX_VAR_F + 2)
+#define OBJ_EVENT_GFX_FOLLOW_MON_2               (OBJ_EVENT_GFX_VAR_F + 3)
+#define OBJ_EVENT_GFX_FOLLOW_MON_3               (OBJ_EVENT_GFX_VAR_F + 4)
+#define OBJ_EVENT_GFX_FOLLOW_MON_4               (OBJ_EVENT_GFX_VAR_F + 5)
+#define OBJ_EVENT_GFX_FOLLOW_MON_5               (OBJ_EVENT_GFX_VAR_F + 6)
+
+#define OBJ_EVENT_GFX_FOLLOW_MON_FIRST           OBJ_EVENT_GFX_FOLLOW_MON_0
+#define OBJ_EVENT_GFX_FOLLOW_MON_LAST            OBJ_EVENT_GFX_FOLLOW_MON_5
+
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
 #define OBJ_EVENT_MON_SHINY         (1u << 13)
@@ -336,6 +349,10 @@
 #define LOCALID_PLAYER                     255
 #define OBJ_EVENT_ID_FOLLOWER              0xFE
 #define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD
+
+// IDs for dynamic object event spawns
+#define OBJ_EVENT_ID_FOLLOW_MON_FIRST      230
+#define OBJ_EVENT_ID_FOLLOW_MON_LAST       240
 
 // Aliases for old names. "object event id" normally refers to an index into gObjectEvents, which these are not.
 // Used for link player OWs in CreateLinkPlayerSprite

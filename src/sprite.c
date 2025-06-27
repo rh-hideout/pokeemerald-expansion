@@ -1653,6 +1653,17 @@ u32 IndexOfSpritePaletteTag(u16 tag)
     return 0xFF;
 }
 
+u8 CountFreePaletteSlots(void)
+{
+    u32 i;
+    u8 count = 0;
+    for (i = gReservedSpritePaletteCount; i < 16; i++)
+        if (sSpritePaletteTags[i] == TAG_NONE)
+            ++count;
+
+    return count;
+}
+
 u16 GetSpritePaletteTagByPaletteNum(u8 paletteNum)
 {
     return sSpritePaletteTags[paletteNum];

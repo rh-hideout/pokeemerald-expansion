@@ -274,6 +274,14 @@
 #define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 
+/*
+#define VAR_FOLLOW_MON_0                     			 0x40FA
+#define VAR_FOLLOW_MON_1                    			 0x40FB
+#define VAR_FOLLOW_MON_2                     			 0x40FC
+#define VAR_FOLLOW_MON_3                     			 0x40FD
+#define VAR_FOLLOW_MON_4                     			 0x40FE
+#define VAR_FOLLOW_MON_5                     			 0x40FF
+*/
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)
 
