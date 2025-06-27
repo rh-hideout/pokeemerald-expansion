@@ -609,11 +609,11 @@ static void DoMoveRelearnerMain(void)
                 }
                 else
                 {
-                    if (sMoveRelearnerMenuSate.showContestInfo == FALSE)
+                    if (sMoveRelearnerMenuState.showContestInfo == FALSE)
                     {
                         sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
                     }
-                    else if (sMoveRelearnerMenuSate.showContestInfo == TRUE)
+                    else if (sMoveRelearnerMenuState.showContestInfo == TRUE)
                     {
                         sMoveRelearnerStruct->state = MENU_STATE_SETUP_CONTEST_MODE;
                     }
