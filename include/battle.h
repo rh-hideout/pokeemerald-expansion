@@ -845,16 +845,32 @@ struct PACKED MoveEffectResult
     bool32 battlescriptPush:1;
     bool32 battlescriptPushPlusOne:1;
     bool32 blockedByAbility:1;
+    bool32 recordBattlerItem:1;
+    bool32 recordBattlerAbility:1;
     enum StatusTrigger statusTrigger:2;
+
+    // Mostly for stats
+    bool32 statLowered:1;
+    bool32 changedStatsBattlerId:3;
+    bool32 notProtectAffected:1;
+    bool32 statDropPrevention:1;
+    bool32 mirrorArmored:1;
+    bool32 tryEjectPack:1;
+    bool32 lashOutAffected:1;
+    const u8 *currInstr;
     const u8 *nextInstr;
     u16 currentMove;
     u16 battlerAbility;
+    u16 lastUsedAbility;
+    u16 battlerItem;
     u16 lastUsedItem;
+    enum ItemHoldEffect battlerHoldEffect:8;
+    u8 multistring;
     u16 battlerAtk:4;
     u16 battlerDef:4;
     u16 effectBattler:4;
     u16 scriptingBattler:4;
-    u8 multistring;
+    u32 statChanger;
 };
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
@@ -1321,14 +1337,14 @@ static inline enum StatBuffArg GetStatAnimArg(u32 stat, s32 amount, bool32 multi
     return GetStatBuffArg(stat, abs(amount) > 1, multiple, amount < 0);
 }
 
+static inline CalcStatChangerValue(u32 statId, s32 stage)
+{
+    return (statId) + ((abs(stage)) << 3) + ((stage < 0) << 7);
+}
+
 static inline void SetStatChanger(u32 statId, s32 stage)
 {
     gBattleScripting.statChanger = (statId) + ((abs(stage)) << 3) + ((stage < 0) << 7);
-}
-
-static inline void SetSavedStatChanger(u32 statId, s32 stage)
-{
-    gBattleScripting.savedStatChanger = (statId) + ((abs(stage)) << 3) + ((stage < 0) << 7);
 }
 
 #endif // GUARD_BATTLE_H

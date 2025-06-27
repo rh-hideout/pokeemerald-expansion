@@ -74,6 +74,15 @@ static inline s32 powInt(s32 num, u32 exponent)
     return result;
 }
 
+static inline void CopyBytesToArray(u8 *array, u32 *index, u32 size, u32 bytes)
+{
+    for (; size != 0; size--, bytes >>= 0x8)
+    {
+        *(array + *index) = bytes & 0xF;
+        *index++;
+    }
+}
+
 // Used in cases where division by 0 can occur in the retail version.
 // Avoids invalid opcodes on some emulators, and the otherwise UB.
 #ifdef UBFIX
