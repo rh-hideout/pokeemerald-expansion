@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     PARAMETRIZE { item = ITEM_CHILAN_BERRY; }
     PARAMETRIZE { item = ITEM_PASSHO_BERRY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, 0,0,0); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, 0, 0, 0); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
         OPPONENT(SPECIES_ARON) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
