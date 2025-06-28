@@ -74,13 +74,23 @@ static inline s32 powInt(s32 num, u32 exponent)
     return result;
 }
 
-static inline void CopyBytesToArray(u8 *array, u32 *index, u32 size, u32 bytes)
+static inline u32 popcount(u32 word)
 {
-    for (; size != 0; size--, bytes >>= 0x8)
-    {
-        *(array + *index) = bytes & 0xF;
-        *index++;
-    }
+    u32 result = 0;
+    for (; word != 0; word >>= 0x1)
+        result += (word & 1);
+
+    return result;
+}
+
+// Only approximates if the input is not an exact power of 2
+static inline u32 log2Int(u32 word)
+{
+    u32 result = 0;
+    for (; word > 1; word >>= 0x1)
+        result++;
+
+    return result;
 }
 
 // Used in cases where division by 0 can occur in the retail version.

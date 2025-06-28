@@ -404,5 +404,6 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID);
 u32 GetMonVolatile(u32 battler, enum Volatile volatile);
 void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
+bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat);
 
 #endif // GUARD_BATTLE_UTIL_H

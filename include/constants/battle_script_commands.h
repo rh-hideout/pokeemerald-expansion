@@ -313,35 +313,4 @@ enum TriggerOnFieldStatus
     ON_WEATHER,
 };
 
-static inline void MoveEffectTriggerResult(struct MoveEffectResult *result, const u8 *currInstr, const u8 *backupInstr)
-{
-    if (result)
-    {
-        if (result->blockedByAbility)
-        {
-            gLastUsedAbility = result->battlerAbility;
-            gBattlerAbility = result->effectBattler;
-            RecordAbilityBattle(result->effectBattler, result->battlerAbility);
-        }
-
-        // Push and set next instruction
-        if (result->nextInstr)
-        {
-            // Set result variables
-            gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
-            gEffectBattler = result->effectBattler;
-            gBattleScripting.battler = result->scriptingBattler;
-
-            if (result->battlescriptPush)
-                BattleScriptPush(gBattlescriptCurrInstr + result->battlescriptPushPlusOne);
-            gBattlescriptCurrInstr = result->nextInstr;
-            return;
-        }
-    }
-
-    // Fallback - jump to backupInstr if we haven't gone anywhere
-    if (gBattlescriptCurrInstr == currInstr && backupInstr != NULL)
-        gBattlescriptCurrInstr = backupInstr;
-}
-
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

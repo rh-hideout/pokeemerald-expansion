@@ -2916,7 +2916,6 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
 static void ChooseStatBoostAnimation(u32 battler)
 {
     u32 queuedStatBoost, stat;
-    bool32 statBuffMoreThan1 = FALSE;
     u32 static const statsOrder[NUM_BATTLE_STATS] =
     {
         STAT_HP,
@@ -11424,4 +11423,12 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
         default: // Invalid volatile status
             return;
     }
+}
+
+bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
+{
+    return (stat > 0) && (((ability == ABILITY_KEEN_EYE || ability == ABILITY_MINDS_EYE) && stat == STAT_ACC)
+        || (B_ILLUMINATE_EFFECT >= GEN_9 && ability == ABILITY_ILLUMINATE && stat == STAT_ACC)
+        || (ability == ABILITY_HYPER_CUTTER && stat == STAT_ATK)
+        || (ability == ABILITY_BIG_PECKS && stat == STAT_DEF));
 }
