@@ -1061,6 +1061,7 @@ BattleScript_EffectLifeDew::
     attackanimation
     waitanimation
     call BattleScript_EffectLifeDewHealing
+	jumpiffainted BS_ATTACKER_PARTNER, TRUE, BattleScript_EffectLifeDewEnd
     jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
     setallytonexttarget BattleScript_EffectLifeDewNextTarget
 BattleScript_EffectLifeDewNextTarget:
