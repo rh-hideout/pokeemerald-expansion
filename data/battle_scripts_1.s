@@ -1038,7 +1038,6 @@ JungleHealing_RestoreTargetHealth:
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_JungleHealing_TryCureStatus:
-	jumpifmove MOVE_LIFE_DEW, BattleScript_JungleHealingTryRestoreAlly  @ life dew only heals
 	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_JungleHealingCureStatus
 	goto BattleScript_JungleHealingTryRestoreAlly
 BattleScript_JungleHealingCureStatus:
@@ -1052,6 +1051,39 @@ BattleScript_JungleHealingTryRestoreAlly:
 	jumpifnoally BS_TARGET, BattleScript_MoveEnd
 	setallytonexttarget JungleHealing_RestoreTargetHealth
 	goto BattleScript_MoveEnd
+
+BattleScript_EffectLifeDew::
+    attackcanceler
+    attackstring
+    ppreduce
+    jumpiffullhp BS_ATTACKER, BattleScript_EffectLifeDewCheckPartner
+    copybyte gBattlerTarget, gBattlerAttacker
+    attackanimation
+    waitanimation
+    call BattleScript_EffectLifeDewHealing
+    jumpifabsent BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
+    jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
+    setallytonexttarget BattleScript_EffectLifeDewNextTarget
+BattleScript_EffectLifeDewNextTarget:
+    call BattleScript_EffectLifeDewHealing
+BattleScript_EffectLifeDewEnd:
+    goto BattleScript_MoveEnd
+
+BattleScript_EffectLifeDewCheckPartner:
+    jumpifabsent BS_ATTACKER_PARTNER, BattleScript_ButItFailed
+    jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_ButItFailed
+    attackanimation
+    waitanimation
+    setallytonexttarget BattleScript_EffectLifeDewNextTarget
+
+BattleScript_EffectLifeDewHealing:
+    orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
+    tryhealquarterhealth BS_TARGET, BattleScript_EffectLifeDewEnd
+    healthbarupdate BS_TARGET
+    datahpupdate BS_TARGET
+    printstring STRINGID_PKMNREGAINEDHEALTH
+    waitmessage B_WAIT_TIME_LONG
+    return
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
