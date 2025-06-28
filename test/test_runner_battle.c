@@ -3,6 +3,7 @@
 #include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_setup.h"
 #include "battle_gimmick.h"
 #include "battle_z_move.h"
 #include "event_data.h"
@@ -117,6 +118,10 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_MULTI:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWO_VS_ONE:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
         InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.singles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     }
@@ -134,6 +139,8 @@ static bool32 IsAITest(void)
     {
     case BATTLE_TEST_AI_SINGLES:
     case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
         return TRUE;
     }
     return FALSE;
@@ -178,6 +185,10 @@ static void BattleTest_SetUp(void *data)
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_MULTI:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWO_VS_ONE:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
         STATE->battlersCount = 4;
         break;
     }
@@ -274,6 +285,18 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.opponentB = TRAINER_RED;
         DATA.hasAI = TRUE;
         break;
+    case BATTLE_TEST_AI_MULTI:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI;
+        DATA.recordedBattle.partnerId = TRAINER_BRENDAN_PLACEHOLDER;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentB = TRAINER_RED;
+        break;
+    case BATTLE_TEST_AI_TWO_VS_ONE:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TWO_VS_ONE_OPPONENT | BATTLE_TYPE_INGAME_PARTNER;
+        DATA.recordedBattle.partnerId = TRAINER_BRENDAN_PLACEHOLDER;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentB = 0xFFFF;
+        break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
@@ -282,6 +305,18 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        break;
+    case BATTLE_TEST_MULTI:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI;
+        DATA.recordedBattle.partnerId = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        break;
+    case BATTLE_TEST_TWO_VS_ONE:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TWO_VS_ONE_OPPONENT | BATTLE_TYPE_INGAME_PARTNER;
+        DATA.recordedBattle.partnerId = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = 0xFFFF;
         break;
     }
 
