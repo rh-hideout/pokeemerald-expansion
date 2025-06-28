@@ -6056,7 +6056,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "User spins and removes some\n"
         #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
             "effects, while upping speed."),
-        #else 
+        #else
             "effects."),
         #endif
         .effect = EFFECT_RAPID_SPIN,
@@ -18277,12 +18277,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Scatters water to restore\n"
             "the HP of itself and allies."),
-        .effect = EFFECT_JUNGLE_HEALING,
+        .effect = EFFECT_LIFE_DEW,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 0,
         .pp = 10,
-        .target = MOVE_TARGET_ALL_BATTLERS,
+        .target = MOVE_TARGET_USER,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .snatchAffected = TRUE,

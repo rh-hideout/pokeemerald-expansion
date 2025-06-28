@@ -14329,7 +14329,7 @@ static void Cmd_recoverbasedonsunlight(void)
         {
             u32 healingModifier = 1;
             u32 time = GetTimeOfDay();
-            
+
             switch (GetMoveEffect(gCurrentMove))
             {
             case EFFECT_MOONLIGHT:
@@ -14349,14 +14349,14 @@ static void Cmd_recoverbasedonsunlight(void)
                 healingModifier = 1;
                 break;
             }
-            
+
             if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else if (gBattleWeather & B_WEATHER_SUN)
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-            
+
         }
 
         if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
@@ -16446,7 +16446,7 @@ static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS(u8 trigger);
     gBattlescriptCurrInstr = cmd->nextInstr - 1;
-    
+
     switch (cmd->trigger)
     {
     case TRIGGER_ON_ABILITY:
