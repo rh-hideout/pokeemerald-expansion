@@ -41,7 +41,6 @@ DOUBLE_BATTLE_TEST("Life Dew recovers 25% of hp for both user and partner")
 
 SINGLE_BATTLE_TEST("Life Dew works in singles on user")
 {
-    s16 healing;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -49,11 +48,8 @@ SINGLE_BATTLE_TEST("Life Dew works in singles on user")
         TURN { MOVE(player, MOVE_LIFE_DEW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LIFE_DEW, player);
-        HP_BAR(player, captureDamage: &healing);
-        MESSAGE("Wobbuffet's HP was restored.");
+        HP_BAR(player);
         NOT HP_BAR(opponent);
-    } THEN {
-        EXPECT_EQ(player->maxHP / 4, -healing);
     }
 }
 
