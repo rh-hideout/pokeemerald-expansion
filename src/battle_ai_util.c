@@ -3618,6 +3618,12 @@ bool32 IsValidDoubleBattle(u32 battlerAtk)
     return FALSE;
 }
 
+// TODO: Handling for when the 'partner' is not actually a partner, a la Battle Royale or B_WILD_NATURAL_ENEMIES
+bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
+{
+    return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
+}
+
 u32 GetAllyChosenMove(u32 battlerId)
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerId);
@@ -4887,51 +4893,372 @@ bool32 IsMoxieTypeAbility(u32 ability)
     }
 }
 
-// Should the AI use a spread move to deliberately activate its partner's ability?
-bool32 ShouldTriggerAbility(u32 battler, u32 ability)
+// TODO: work out when to attack into the player's contextually 'beneficial' ability
+bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability)
+{
+    if (IsTargetingPartner(battlerAtk, battlerDef))
+    {
+        switch (ability)
+        {
+            case ABILITY_LIGHTNING_ROD:
+            case ABILITY_STORM_DRAIN:
+                if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+                    return FALSE;
+                else
+                    return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
+
+            case ABILITY_DEFIANT:
+            case ABILITY_JUSTIFIED:
+            case ABILITY_MOXIE:
+            case ABILITY_SAP_SIPPER:
+            case ABILITY_THERMAL_EXCHANGE:
+                return (BattlerStatCanRise(battlerDef, ability, STAT_ATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL));
+
+            case ABILITY_COMPETITIVE:
+                return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
+
+            // TODO: logic for when to trigger Contrary
+            case ABILITY_CONTRARY:
+                return TRUE;
+
+            case ABILITY_DRY_SKIN:
+            case ABILITY_VOLT_ABSORB:
+            case ABILITY_WATER_ABSORB:
+                return (gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_HP_AWARE);
+
+            case ABILITY_RATTLED:
+            case ABILITY_STEAM_ENGINE:
+                return BattlerStatCanRise(battlerDef, ability, STAT_SPEED);
+
+            case ABILITY_FLASH_FIRE:
+                return (HasMoveWithType(battlerDef, TYPE_FIRE) && !gDisableStructs[battlerDef].flashFireBoosted);
+
+            case ABILITY_WATER_COMPACTION:
+            case ABILITY_WELL_BAKED_BODY:
+                return (BattlerStatCanRise(battlerDef, ability, STAT_DEF));
+
+            default:
+                return FALSE;
+        }
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+// Used by CheckBadMove; this is determining purely if the effect CAN change an ability, not if it SHOULD.
+// At the moment, the parts about Mummy and Wandering Spirit are not actually used.
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, enum AbilityChangeEffect effect, struct AiLogicData *aiData)
+{
+    // Dynamaxed Pokemon are immune to some ability-changing effects. 
+    if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+    {
+        switch (effect)
+        {
+            case CHANGE_ENTRAINMENT:
+            case CHANGE_SKILL_SWAP:
+            case CHANGE_WANDERING_SPIRIT:
+                return FALSE;
+            default:
+                break;
+        }
+    }
+
+    if (gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)
+        return FALSE;
+    
+    u32 atkAbility = aiData->abilities[battlerAtk];
+    u32 defAbility = aiData->abilities[battlerDef];
+    bool32 hasSameAbility = (atkAbility == defAbility);
+
+    if (defAbility == ABILITY_NONE)
+        return FALSE;
+
+    if (atkAbility == ABILITY_NONE)
+    {
+        switch (effect)
+        {
+            case CHANGE_DOODLE:
+            case CHANGE_ENTRAINMENT:
+            case CHANGE_ROLE_PLAY:
+            case CHANGE_SKILL_SWAP:
+                return FALSE;
+
+            default:
+                break;
+        }
+    }
+
+    // Checking for Ability-specific immunities.
+    switch (effect)
+    {
+        case CHANGE_DOODLE:
+            if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
+                return FALSE;
+
+            if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+            {
+                u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
+                if (gAbilitiesInfo[partnerAbility].cantBeSuppressed)
+                    return FALSE; 
+                if (partnerAbility == defAbility)
+                    return FALSE;
+            }
+            break;
+
+        case CHANGE_ROLE_PLAY:
+            if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
+                return FALSE;
+            break;
+
+        case CHANGE_SKILL_SWAP:
+        case CHANGE_WANDERING_SPIRIT:
+            if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSwapped || gAbilitiesInfo[defAbility].cantBeSwapped)
+                return FALSE;
+            break;
+
+        case CHANGE_MUMMY:
+        case CHANGE_GASTRO_ACID:
+            if (gAbilitiesInfo[defAbility].cantBeSuppressed)
+                return FALSE;
+            break;
+
+        case CHANGE_ENTRAINMENT:
+            if (hasSameAbility || gAbilitiesInfo[defAbility].cantBeOverwritten || gAbilitiesInfo[atkAbility].cantBeCopied)
+                return FALSE;
+            break;
+
+        case CHANGE_SIMPLE_BEAM:
+            if (defAbility == ABILITY_SIMPLE || gAbilitiesInfo[defAbility].cantBeOverwritten)
+                return FALSE;
+            break;
+
+        case CHANGE_WORRY_SEED:
+            if (defAbility == ABILITY_INSOMNIA || gAbilitiesInfo[defAbility].cantBeOverwritten)
+                return FALSE;
+            break;
+        
+        case CHANGE_NONE:
+            return FALSE;
+    }
+
+    if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        switch (effect)
+        {
+            case CHANGE_ENTRAINMENT:
+            case CHANGE_GASTRO_ACID:
+            case CHANGE_ROLE_PLAY:
+            case CHANGE_SIMPLE_BEAM:
+            case CHANGE_SKILL_SWAP:
+            case CHANGE_WORRY_SEED:
+            case CHANGE_MUMMY:
+            case CHANGE_WANDERING_SPIRIT:
+                return FALSE;
+            default:
+                break;
+        }
+    }
+
+    if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        switch (effect)
+        {
+            case CHANGE_DOODLE:
+            case CHANGE_ROLE_PLAY:
+            case CHANGE_SKILL_SWAP:
+            case CHANGE_WANDERING_SPIRIT:
+                return FALSE;
+            default:
+                break;
+        }
+    }
+
+    return TRUE;
+}
+
+// Is it beneficial to Skill Swap etc entirely to trigger this ability again?
+bool32 ShouldAbilityRetrigger(u32 ability)
 {
     switch (ability)
     {
-        case ABILITY_LIGHTNING_ROD:
-        case ABILITY_STORM_DRAIN:
-            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
-                return FALSE;
-            else
-                return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
-
-        case ABILITY_DEFIANT:
-        case ABILITY_JUSTIFIED:
-        case ABILITY_MOXIE:
-        case ABILITY_SAP_SIPPER:
-        case ABILITY_THERMAL_EXCHANGE:
-            return (BattlerStatCanRise(battler, ability, STAT_ATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL));
-
-        case ABILITY_COMPETITIVE:
-            return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
-
-        case ABILITY_CONTRARY:
+        case ABILITY_INTIMIDATE:
+        case ABILITY_DOWNLOAD:
+        case ABILITY_SUPERSWEET_SYRUP:
             return TRUE;
-
-        case ABILITY_DRY_SKIN:
-        case ABILITY_VOLT_ABSORB:
-        case ABILITY_WATER_ABSORB:
-            return (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_HP_AWARE);
-
-        case ABILITY_RATTLED:
-        case ABILITY_STEAM_ENGINE:
-            return BattlerStatCanRise(battler, ability, STAT_SPEED);
-
-        case ABILITY_FLASH_FIRE:
-            return (HasMoveWithType(battler, TYPE_FIRE) && !gDisableStructs[battler].flashFireBoosted);
-
-        case ABILITY_WATER_COMPACTION:
-        case ABILITY_WELL_BAKED_BODY:
-            return (BattlerStatCanRise(battler, ability, STAT_DEF));
-
+        case ABILITY_HOSPITALITY:
+        case ABILITY_CURIOUS_MEDICINE:
         default:
             return FALSE;
     }
 }
+
+// The attacker gives its ability to someone else.
+bool32 AttackerTransfersAbility(enum AbilityChangeEffect effect)
+{
+    switch (effect)
+    {
+        case CHANGE_ENTRAINMENT:
+        case CHANGE_SKILL_SWAP:
+            return TRUE;
+        default:
+            return FALSE;
+    }
+}
+
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum AbilityChangeEffect effect, s32 *score, struct AiLogicData *aiData)
+{
+    bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
+
+    if (CanEffectChangeAbility(battlerAtk, battlerDef, effect, aiData) == FALSE)
+    {
+        ADJUST_SCORE(-30);
+    }
+    else 
+    {
+        u32 atkAbility = aiData->abilities[battlerAtk];
+        u32 defAbility = aiData->abilities[battlerDef];
+        bool32 partnerHasBadAbility = FALSE;
+        u32 partnerAbility = ABILITY_NONE;
+        bool32 attackerHasBadAbility = (gAbilitiesInfo[atkAbility].aiRating < 0);
+
+        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        {
+            partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
+            if (!(gAbilitiesInfo[partnerAbility].cantBeSuppressed) && (gAbilitiesInfo[partnerAbility].aiRating < 0))
+                partnerHasBadAbility = TRUE;
+        }
+
+        if (partnerHasBadAbility && effect == CHANGE_DOODLE)
+        {
+            ADJUST_SCORE(DECENT_EFFECT);
+        }
+
+        if (attackerHasBadAbility)
+        {
+            switch (effect)
+            {
+                case CHANGE_DOODLE:
+                case CHANGE_ROLE_PLAY:
+                case CHANGE_SKILL_SWAP:
+                case CHANGE_MUMMY:
+                case CHANGE_WANDERING_SPIRIT:
+                    ADJUST_SCORE(DECENT_EFFECT);
+                default:
+                    break;
+            }
+        }
+
+        if (effect == CHANGE_SKILL_SWAP && ShouldAbilityRetrigger(defAbility))
+            ADJUST_SCORE(DECENT_EFFECT);
+
+        if (isTargetingPartner)
+        {
+            u32 atkPartnerHoldEffect = aiData->holdEffects[BATTLE_PARTNER(battlerAtk)];
+            u32 battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
+            
+            if (partnerHasBadAbility)
+            {
+                switch (effect)
+                {
+                    case CHANGE_GASTRO_ACID:
+                    case CHANGE_SIMPLE_BEAM:
+                    case CHANGE_WORRY_SEED:
+                        ADJUST_SCORE(10);
+                        break;
+                    case CHANGE_ENTRAINMENT:
+                    case CHANGE_SKILL_SWAP:
+                        if (attackerHasBadAbility)
+                            ADJUST_SCORE(-20);
+                        else
+                            ADJUST_SCORE(10);
+                        break;
+                    case CHANGE_ROLE_PLAY:
+                        ADJUST_SCORE(-20);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            if (AttackerTransfersAbility(effect))
+            {
+                switch (atkAbility)
+                {
+                    case ABILITY_COMPOUND_EYES:
+                        if (HasMoveWithLowAccuracy(battlerAtkPartner, FOE(battlerAtkPartner), 90, TRUE, partnerAbility, aiData->abilities[FOE(battlerAtkPartner)], atkPartnerHoldEffect, aiData->holdEffects[FOE(battlerAtkPartner)]))
+                            ADJUST_SCORE(GOOD_EFFECT);
+                        break;
+                    case ABILITY_CONTRARY:
+                        if (HasMoveThatLowersOwnStats(battlerAtkPartner))
+                        {
+                            ADJUST_SCORE(GOOD_EFFECT);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }
+        // Targeting an opponent.
+        else
+        {
+
+            if (AttackerTransfersAbility(effect))
+            {
+                if (gAbilitiesInfo[atkAbility].aiRating <= 0)
+                    ADJUST_SCORE(GOOD_EFFECT);
+                else if (IsAbilityOfRating(defAbility, 5) && gAbilitiesInfo[atkAbility].aiRating <= 3)
+                    ADJUST_SCORE(WEAK_EFFECT);
+            }
+
+            switch (effect)
+            {
+                case CHANGE_ENTRAINMENT:
+                case CHANGE_SKILL_SWAP:
+                case CHANGE_GASTRO_ACID:
+                case CHANGE_DOODLE:
+                case CHANGE_SIMPLE_BEAM:
+                case CHANGE_WORRY_SEED:
+                case CHANGE_ROLE_PLAY:
+                    if (IsAbilityOfRating(aiData->abilities[battlerDef], 10))
+                        ADJUST_SCORE(GOOD_EFFECT);
+                    break;
+
+                case CHANGE_MUMMY:
+                case CHANGE_WANDERING_SPIRIT:
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+enum AbilityChangeEffect MoveEffectToAbilityChange(u32 effect)
+{
+    switch (effect)
+    {
+        case MOVE_DOODLE:
+            return CHANGE_DOODLE;
+        case MOVE_ENTRAINMENT:
+            return CHANGE_ENTRAINMENT;
+        case MOVE_GASTRO_ACID:
+            return CHANGE_GASTRO_ACID;
+        case MOVE_ROLE_PLAY:
+            return CHANGE_ROLE_PLAY;
+        case MOVE_SIMPLE_BEAM:
+            return CHANGE_SIMPLE_BEAM;
+        case MOVE_SKILL_SWAP:
+            return CHANGE_SKILL_SWAP;
+        case MOVE_WORRY_SEED:
+            return CHANGE_WORRY_SEED;
+        default:
+            return CHANGE_NONE;
+    }
+}
+
 
 u32 GetThinkingBattler(u32 battler)
 {

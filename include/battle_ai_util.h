@@ -207,11 +207,29 @@ bool32 IsWakeupTurn(u32 battler);
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
+enum AbilityChangeEffect
+{
+    CHANGE_DOODLE,
+    CHANGE_ENTRAINMENT,
+    CHANGE_GASTRO_ACID,
+    CHANGE_ROLE_PLAY,
+    CHANGE_SIMPLE_BEAM,
+    CHANGE_SKILL_SWAP,
+    CHANGE_WORRY_SEED,
+    CHANGE_MUMMY,
+    CHANGE_WANDERING_SPIRIT,
+    CHANGE_NONE,
+};
+
 bool32 IsMoxieTypeAbility(u32 ability);
-bool32 ShouldTriggerAbility(u32 battler, u32 ability);
+bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability);
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, enum AbilityChangeEffect effect, struct AiLogicData *aiData);
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum AbilityChangeEffect effect, s32 *score, struct AiLogicData *aiData);
+enum AbilityChangeEffect MoveEffectToAbilityChange(u32 effect);
+
 
 // partner logic
-#define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))
+bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 u32 GetAllyChosenMove(u32 battlerId);
 bool32 IsValidDoubleBattle(u32 battlerAtk);
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
