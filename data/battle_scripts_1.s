@@ -1058,6 +1058,8 @@ BattleScript_EffectLifeDew::
     ppreduce
     jumpiffullhp BS_ATTACKER, BattleScript_EffectLifeDewCheckPartner
     copybyte gBattlerTarget, gBattlerAttacker
+    attackanimation
+    waitanimation
     call BattleScript_EffectLifeDewHealing
     jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
     setallytonexttarget BattleScript_EffectLifeDewNextTarget
@@ -1068,12 +1070,12 @@ BattleScript_EffectLifeDewEnd:
 
 BattleScript_EffectLifeDewCheckPartner:
     jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_ButItFailed
+    attackanimation
+    waitanimation
     setallytonexttarget BattleScript_EffectLifeDewNextTarget
 
 BattleScript_EffectLifeDewHealing:
-    attackanimation
-    waitanimation
-    orword gHitMarker, HITMARKER_NO_ANIMATIONS | HITMARKER_IGNORE_SUBSTITUTE
+    orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
     tryhealquarterhealth BS_TARGET, BattleScript_EffectLifeDewEnd
     healthbarupdate BS_TARGET
     datahpupdate BS_TARGET
