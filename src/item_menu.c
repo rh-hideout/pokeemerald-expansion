@@ -964,12 +964,11 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
 static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 {
-    u16 itemId;
-    u16 itemQuantity;
-    int offset;
-
     if (itemIndex != LIST_CANCEL)
     {
+        u16 itemId, itemQuantity;
+        int offset;
+
         if (gBagMenu->toSwapPos != NOT_SWAPPING)
         {
             // Swapping items, draw cursor at original item's location
@@ -979,8 +978,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
                 BagMenu_PrintCursorAtPos(y, COLORID_NONE);
         }
 
-        itemId = GetBagItemId(gBagPosition.pocket, itemIndex);
-        itemQuantity = GetBagItemQuantity(gBagPosition.pocket, itemIndex);
+        GetBagItemIdAndQuantity(gBagPosition.pocket, itemIndex, &itemId, &itemQuantity);
 
         // Draw HM icon
         if (itemId >= ITEM_HM01 && itemId <= ITEM_HM08)
@@ -1134,7 +1132,7 @@ void UpdatePocketItemList(u8 pocketId)
     {
     case POCKET_TM_HM:
     case POCKET_BERRIES:
-        SortBerriesOrTMHMs(pocketId);
+        SortPocketByItemId(pocketId);
         break;
     default:
         CompactItemsInBagPocket(pocketId);
@@ -1287,8 +1285,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
             BagDestroyPocketScrollArrowPair();
             BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
             tListPosition = listPosition;
-            tQuantity = GetBagItemQuantity(gBagPosition.pocket, listPosition);
-            gSpecialVar_ItemId = GetBagItemId(gBagPosition.pocket, listPosition);
+            GetBagItemIdAndQuantity(gBagPosition.pocket, listPosition, &gSpecialVar_ItemId, (u16*)&tQuantity);
             sContextMenuFuncs[gBagPosition.location](taskId);
             break;
         }
