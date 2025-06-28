@@ -883,19 +883,19 @@ struct MoveEffectResult
     bool32 isAbility:1;
     bool32 battlescriptPush:1;
     bool32 battlescriptPushPlusOne:1;
-    bool32 blockedByAbility:1;
+    bool32 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
     bool32 recordBattlerItem:1;
     bool32 recordBattlerAbility:1;
     enum StatusTrigger statusTrigger:2;
 
     // Mostly for stats
+    bool32 statChangeEffect:1;
     bool32 statLowered:1;
     bool32 changedStatsBattlerId:3;
     bool32 notProtectAffected:1;
     bool32 statDropPrevention:1;
     bool32 mirrorArmored:1;
     bool32 atLeastOneStatChangeSuccess:1;
-    const u8 *currInstr;
     const u8 *nextInstr;
     u16 currentMove;
     u16 battlerAbility;
@@ -1362,7 +1362,7 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 
 static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 lowering)
 {
-    return lowering ? gBattleMons[gBattlerAttacker].statStages[stat] - MIN_STAT_STAGE : MAX_STAT_STAGE - gBattleMons[gBattlerAttacker].statStages[stat];
+    return lowering ? (gBattleMons[gBattlerAttacker].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[gBattlerAttacker].statStages[stat]);
 }
 
 static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
@@ -1378,14 +1378,15 @@ static inline enum StatAnimArg GetStatAnimArg(u32 stat, s32 amount, bool32 multi
 static inline u32 PrepareStatChangerAny(union StatFlags stats, s32 stage, bool32 multiple)
 {
     return (((union StatChanger) {
-        .attack = stats.attack,
+        .attack = stats.attack, // All 1 or 0 depending on if the stat is selected in 'stats'
         .defense = stats.defense,
         .speed = stats.speed,
-        .spAttack = stats.spDefense,
+        .spAttack = stats.spAttack,
+        .spDefense = stats.spDefense,
         .accuracy = stats.accuracy,
         .evasion = stats.evasion,
     }).value
-        * abs(stage))
+        * abs(stage)) // Multiplies by the stage
         | (stage < 0) // isNegative
         | ((multiple || (popcount(stats.allStats) > 1)) ? 0 : (log2Int(stats.allStats) << 1)); // statId;
 }
@@ -1417,7 +1418,31 @@ static inline s32 GetStatChangerStatValue(union StatChanger statChanger, u32 sta
 
 static inline void SetStatChangerStatValue(union StatChanger *statChanger, u32 statId, u32 value)
 {
-    statChanger->value = ((statChanger->value | (0xF << (statId * 4))) & ((value & 0xF) << (statId * 4)));
+    switch (statId)
+    {
+        case STAT_ATK:
+            statChanger->attack = value;
+            return;
+        case STAT_DEF:
+            statChanger->defense = value;
+            return;
+        case STAT_SPEED:
+            statChanger->speed = value;
+            return;
+        case STAT_SPATK:
+            statChanger->spAttack = value;
+            return;
+        case STAT_SPDEF:
+            statChanger->spDefense = value;
+            return;
+        case STAT_ACC:
+            statChanger->accuracy = value;
+            return;
+        case STAT_EVASION:
+            statChanger->accuracy = value;
+        default:
+            return;
+    }
 }
 
 static inline u32 CountStatChangerStats(union StatChanger statChanger)
@@ -1429,6 +1454,17 @@ static inline u32 CountStatChangerStats(union StatChanger statChanger)
         !!statChanger.spDefense +
         !!statChanger.accuracy +
         !!statChanger.evasion;
+}
+
+static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChanger)
+{
+    return (statChanger.attack > 1) ||
+        (statChanger.defense > 1) ||
+        (statChanger.speed > 1) || 
+        (statChanger.spAttack > 1) ||
+        (statChanger.spDefense > 1) ||
+        (statChanger.accuracy > 1) ||
+        (statChanger.evasion > 1);
 }
 
 #endif // GUARD_BATTLE_H
