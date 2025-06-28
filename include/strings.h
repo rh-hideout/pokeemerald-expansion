@@ -2415,4 +2415,9 @@ extern const u8 gText_CannotSendMonToBoxHM[];
 extern const u8 gText_CannotSendMonToBoxActive[];
 extern const u8 gText_CannotSendMonToBoxPartner[];
 
+// Followmon text
+extern const u8 gText_OW_Encounter[];
+extern const u8 gText_OW_Encounter_On[];
+extern const u8 gText_OW_Encounter_Off[];
+
 #endif // GUARD_STRINGS_H
