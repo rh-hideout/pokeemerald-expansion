@@ -1079,7 +1079,7 @@ BattleScript_EffectLifeDewHealing:
     datahpupdate BS_TARGET
     printstring STRINGID_PKMNREGAINEDHEALTH
     waitmessage B_WAIT_TIME_LONG
-	return
+    return
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
