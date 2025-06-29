@@ -15,6 +15,15 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [],
+  "warp_events": [
+    {
+      "x": 10,
+      "y": 2,
+      "elevation": 3,
+      "dest_map": "MAP_PALLET_TOWN_PLAYERS_HOUSE_1F",
+      "dest_warp_id": "2"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

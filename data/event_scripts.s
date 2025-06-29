@@ -580,6 +580,7 @@ gStdScripts_End::
 	.include "data/maps/Route119_WeatherInstitute_2F/scripts.inc"
 	.include "data/maps/Route119_House/scripts.inc"
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
+	.include "data/maps/PalletTown_PlayersHouse_1F/scripts.inc"
 	.include "data/maps/PalletTown_PlayersHouse_2F/scripts.inc"
 
 	.include "data/scripts/std_msgbox.inc"

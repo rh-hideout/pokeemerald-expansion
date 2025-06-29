@@ -1672,4 +1672,7 @@
 #define TESTING_FLAG_UNUSED_7                   (TESTING_FLAGS_START + 0x7)
 #endif // TESTING
 
+// FRLG flags
+#define FLAG_BEAT_RIVAL_IN_OAKS_LAB                      0x258
+
 #endif // GUARD_CONSTANTS_FLAGS_H

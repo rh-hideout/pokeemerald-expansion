@@ -623,6 +623,7 @@
     "Route124_DivingTreasureHuntersHouse"
   ],
   "gMapGroup_IndoorPallet": [
+    "PalletTown_PlayersHouse_1F",
     "PalletTown_PlayersHouse_2F"
   ],
   "connections_include_order": [
