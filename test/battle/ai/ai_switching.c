@@ -1238,3 +1238,49 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't send out defensive mon 
         TURN { MOVE(player, MOVE_WATER_PULSE); EXPECT_MOVE(opponent, MOVE_BULLDOZE); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers 0 hits to KO as losing a 1v1")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_JOLTEON) {
+            Level(80);
+            Moves(MOVE_THUNDERBOLT, MOVE_DIG);
+            Item(ITEM_LIFE_ORB);
+            Ability(ABILITY_VOLT_ABSORB);
+            Nature(NATURE_MILD);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_KELDEO_RESOLUTE) {
+            Level(80);
+            Moves(MOVE_SECRET_SWORD);
+            Item(ITEM_LIFE_ORB);
+            Ability(ABILITY_SHARPNESS);
+            Nature(NATURE_TIMID);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+        OPPONENT(SPECIES_GOODRA_HISUI) {
+            Level(80);
+            Moves(MOVE_DRAGON_PULSE, MOVE_FLASH_CANNON, MOVE_THUNDERBOLT, MOVE_ICE_BEAM);
+            Item(ITEM_ASSAULT_VEST);
+            Ability(ABILITY_SAP_SIPPER);
+            Nature(NATURE_CALM);
+            HPIV(31);
+            AttackIV(31);
+            DefenseIV(31);
+            SpAttackIV(31);
+            SpDefenseIV(31);
+            SpeedIV(31); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDERBOLT); EXPECT_MOVE(opponent, MOVE_SECRET_SWORD); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
