@@ -12075,13 +12075,14 @@ static void TryPlayStatChangeAnimation(struct MoveEffectResult *result)
     u32 changeableStatsCount = CountStatChangerStats(result->statChanger);
     if (!gBattleScripting.statAnimPlayed)
     {
+        // DebugPrintf("changeableStatsCount %d", changeableStatsCount);
         // DebugPrintf("Statchanger: %d, anim: %d", result->statChanger, 
-            // GetStatAnimArgBase(
-            //     result->statChanger.statId,
-            //     AnyStatChangerStatIsSharpOrHarsh(result->statChanger),
-            //     gBattleScripting.statAnimPlayed,
-            //     result->statChanger.isNegative
-            // ));
+        //     GetStatAnimArgBase(
+        //         result->statChanger.statId,
+        //         AnyStatChangerStatIsSharpOrHarsh(result->statChanger),
+        //         gBattleScripting.statAnimPlayed,
+        //         result->statChanger.isNegative
+        //     ));
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
         MarkBattlerForControllerExec(result->effectBattler);
         BtlController_EmitBattleAnimation(
@@ -12109,10 +12110,10 @@ static inline bool32 MoveEffectBlockedMisc(struct MoveEffectResult *result, bool
 
 static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 *failPtr)
 {
-    if (gSideTimers[GetBattlerSide(result->effectBattler)].mistTimer
-        && !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE
-        && !(result->effectBattler == result->battlerDef
-          && GetBattlerAbility(result->battlerAtk) == ABILITY_INFILTRATOR))
+    if (gSideTimers[GetBattlerSide(result->effectBattler)].mistTimer &&
+        !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE &&
+        !(result->effectBattler == result->battlerDef &&
+          GetBattlerAbility(result->battlerAtk) == ABILITY_INFILTRATOR))
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
             result->nextInstr = result->pushInstr;
@@ -12324,7 +12325,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
         stage = GetStatChangerStatValue(result->statChanger, statId);
         if (stage != 0)
         {
-            if ((stage < 0 && AbilityPreventsSpecificStatDrop(result->battlerAbility, statId))
+            if ((stage < 0 && !result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, statId))
                 || (stage = min(abs(stage), CanRaiseOrLowerStatAmount(result->effectBattler, statId, result->statChanger.isNegative))) == 0)
             {
                 // Update stat changer to zero for this stat - we cannot change it
@@ -12342,18 +12343,20 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
             }
         }
     }
+    // DebugPrintf("Result multistring %d", result->multistring);
     return !atLeastOneStatChangeSuccess;
 }
 
 static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger statChanger, union StatChangeFlags flags, const u8 *failPtr)
 {
+    // DebugPrintf("Init multistring %d", gBattleCommunication[MULTISTRING_CHOOSER]);
     struct MoveEffectResult result = (struct MoveEffectResult){
         .battlerAtk = gBattlerAttacker,
         .battlerDef = gBattlerTarget,
         .effectBattler = battler,
         .currentMove = gCurrentMove,
         .moveEffect = (statChanger.isNegative ? MOVE_EFFECT_LOWER_STATS : MOVE_EFFECT_RAISE_STATS),
-        .certain = flags.certain,
+        .certain = flags.certain | (battler == gBattlerAttacker),
         .notProtectAffected = flags.notProtectAffected,
         .statDropPrevention = flags.statDropPrevention,
         .mirrorArmored = flags.mirrorArmored,
@@ -12362,17 +12365,13 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .statChangeEffect = TRUE,
     };
 
-    // DebugPrintf("mirrorArmored: %d, allowPtr: %d", flags.mirrorArmored, flags.allowPtr);
-    ChangeStatBuffsWithResult(&result, flags);
-    // DebugPrintf("After ChangeStatBuffsWithResult: %d, %d (onlyChecking: %d)", result.failed, result.statChanger, flags.onlyChecking);
-    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, BattleScript_AbilityNoSpecificStatLoss, gBattlescriptCurrInstr);
-    if (flags.onlyChecking && !flags.allowPtr)
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
-        return result.failed;
-    }
+    // DebugPrintf("Battlers: battler (%d), battlerAtk (%d), battlerDef (%d)", battler, gBattlerAttacker, gBattlerTarget);
 
+    ChangeStatBuffsWithResult(&result, flags);
+    // DebugPrintf("After ChangeStatBuffsWithResult: %d, %d (onlyChecking: %d) (multistring: %d)", result.failed, result.statChanger, flags.onlyChecking, result.multistring);
+    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, failPtr, gBattlescriptCurrInstr);
     PREPARE_STAT_BUFFER(gBattleTextBuff1, result.statChanger.statId);
+
     if (result.multistring == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
@@ -12382,6 +12381,13 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         return STAT_CHANGE_WORKED;
     }
 
+    if (flags.onlyChecking && !flags.allowPtr)
+        return result.failed;
+
+    // Has to be set now - even if only checking
+    gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
+
+    // Run callbacks to extract result variables
     if (!result.failed && !flags.onlyChecking)
     {
         if (result.statChanger.isNegative)
@@ -12397,7 +12403,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
     // Apply the results of the move effect
     SetMoveEffectTriggerResult(&result);
 
-    DebugPrintf("gBattlescriptCurrInstr %d", gBattlescriptCurrInstr);
+    // DebugPrintf("gBattlescriptCurrInstr %d, multistring %d", gBattlescriptCurrInstr, gBattleCommunication[MULTISTRING_CHOOSER]);
 
     return result.failed;
 }
@@ -12456,6 +12462,7 @@ static void Cmd_statbuffchange(void)
 
     // DebugPrintf("Cmd_statbuffchange: %d", gBattleScripting.statChanger);
 
+    // DebugPrintf("Init multistring %d", gBattleCommunication[MULTISTRING_CHOOSER]);
     if (ChangeStatBuffsStatChanger(
             GetBattlerForBattleScript(cmd->battler),
             gBattleScripting.statChanger | PrepareStatChangerAny(stats, 1, TRUE),
