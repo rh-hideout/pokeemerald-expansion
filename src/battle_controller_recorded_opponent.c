@@ -274,7 +274,33 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
     s16 xPos;
     u32 trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    // Sets Multibattle test opponent sprites to not be Hiker
+    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
+    {
+        #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN, "RecordedOpponentHandleDrawTrainerPic");
+    #endif
+        if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        {
+            trainerPicId = TRAINER_PIC_LEAF;
+            if(gBattleTypeFlags & BATTLE_TWO_VS_ONE_OPPONENT)
+                xPos = 176;
+            else
+                xPos = 200;
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "B_POSITION_OPPONENT_LEFT%d", xPos);
+            #endif
+        }
+        else
+        {
+            trainerPicId = TRAINER_PIC_RED;
+            xPos = 152;
+        }
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
             xPos = 152;
@@ -305,7 +331,9 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
             trainerPicId = PlayerGenderToFrontTrainerPicId(gLinkPlayers[gRecordedBattleMultiplayerId ^ BIT_SIDE].gender);
         }
     }
-
+     #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "trainerPicId%d", trainerPicId);
+            #endif
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
 }
 

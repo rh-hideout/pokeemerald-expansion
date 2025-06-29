@@ -5,6 +5,7 @@
 #include "battle_controllers.h"
 #include "battle_message.h"
 #include "battle_interface.h"
+#include "battle_setup.h"
 #include "bg.h"
 #include "data.h"
 #include "item_menu.h"
@@ -276,43 +277,61 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
     s16 xPos, yPos;
     u32 trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    // Sets Multibattle test player sprites to not be Hiker
+    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
+                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            trainerPicId = GetBattlerLinkPlayerGender(battler);
-        else
-            trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
-    }
-    else
-    {
-        trainerPicId = gLinkPlayers[0].gender;
-    }
-
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
-            xPos = 90;
-        else // first mon
-            xPos = 32;
-
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        {
-            xPos = 90;
-            yPos = 80;
-        }
-        else
-        {
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-        }
-
-    }
-    else
-    {
-        xPos = 80;
+        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        
+        xPos = 32;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
+    else 
+    {
+        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                trainerPicId = GetBattlerLinkPlayerGender(battler);
+            else
+                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
+        }
+        else
+        {
+            trainerPicId = gLinkPlayers[0].gender;
+        }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        {
+            if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+                xPos = 90;
+            else // first mon
+                xPos = 32;
+
+            // !TESTING added as otherwise first test battle load 
+            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
+            {
+                xPos = 90;
+                yPos = 80;
+            }
+            else
+            {
+                yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+            }
+
+        }
+        else
+        {
+            xPos = 80;
+            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        }
+    }
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN, "B_POSITION_PLAYER_LEFT%d", xPos);
+    #endif
+
+    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
         isFrontPic = TRUE;
     else
         isFrontPic = FALSE;

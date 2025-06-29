@@ -80,27 +80,23 @@ AI_MULTI_BATTLE_TEST("AI will not switch into a partner Pokémon in a multibattl
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | flags);
         PLAYER(SPECIES_RATTATA);
-        PLAYER(SPECIES_RATTATA);
-        PLAYER(SPECIES_RATTATA);
-        PLAYER(SPECIES_KANGASKHAN);
-        PLAYER(SPECIES_KANGASKHAN);
+        PLAYER(SPECIES_EGG);
+        PLAYER(SPECIES_EGG);
         PLAYER(SPECIES_KANGASKHAN);
         // No moves to damage player.
-        OPPONENT(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
         OPPONENT(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
         OPPONENT(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
-        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
-        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
-        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
         
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+        TURN { EXPECT_SWITCH(opponentLeft, 2); };
     } SCENE {
-        MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+        MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         NONE_OF {
-            MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
-            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+            MESSAGE(AI_TRAINER_2_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_2_NAME " sent out Raticate!");
         }
     }
 }
@@ -116,8 +112,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | flags);
         PLAYER(SPECIES_RATTATA);
-        PLAYER(SPECIES_RATTATA);
-        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_EGG);
+        PLAYER(SPECIES_EGG);
         PLAYER(SPECIES_KANGASKHAN);
         // No moves to damage player.
         OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }

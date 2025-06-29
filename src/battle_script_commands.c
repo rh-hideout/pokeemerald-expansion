@@ -5252,18 +5252,16 @@ bool32 NoAliveMonsForPlayer(void)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
             && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
-        {
             HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
-        }
-
         // Get the number of fainted mons or eggs (not empty slots) in the first three party slots.
         if (i < 3 && ((GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_HP))
          || GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)))
             ineligibleMonsCount++;
     }
-
     // Get the number of inelligible slots in the saved player party.
-    if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
+    // Recorded Master and Recorded Link checks added to prevent Multibattle tests reading a player wipe due to lack of data in GetSavedPlayerPartyMon
+    // TODO: fix above
+    if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & ((BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER) && !(BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA))
     {
         for (i = 0; i < PARTY_SIZE; i++)
@@ -5278,7 +5276,6 @@ bool32 NoAliveMonsForPlayer(void)
         if (ineligibleMonsCount >= 6)
             return TRUE;
     }
-
     return (HP_count == 0);
 }
 
@@ -5317,7 +5314,6 @@ static void Cmd_checkteamslost(void)
 
     if (NoAliveMonsForPlayer())
         gBattleOutcome |= B_OUTCOME_LOST;
-
     if (NoAliveMonsForOpponent())
         gBattleOutcome |= B_OUTCOME_WON;
 

@@ -118,6 +118,7 @@ void InitBattleControllers(void)
         *((u8 *)(&gBattleStruct->tv) + i) = 0;
 }
 
+// isMaster, isRecordedMaster, isRecordedLink, isDouble, isMulti, isInGamePartner
 static void InitBtlControllersInternal(void)
 {
     s32 i;
@@ -131,28 +132,74 @@ static void InitBtlControllersInternal(void)
     bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
     bool32 isAIvsAI = IsAiVsAiBattle();
 
-    if (!isLink || isMaster)
-        gBattleMainFunc = BeginBattleIntro;
+    #ifndef NDEBUG
+MgbaPrintf(MGBA_LOG_WARN,"isLink%d", isLink);
+MgbaPrintf(MGBA_LOG_WARN,"isDouble%d", isDouble);
+MgbaPrintf(MGBA_LOG_WARN,"isMaster%d", isMaster);
+MgbaPrintf(MGBA_LOG_WARN,"isRecorded%d", isRecorded);
+MgbaPrintf(MGBA_LOG_WARN,"isRecordedMaster%d", isRecordedMaster);
+MgbaPrintf(MGBA_LOG_WARN,"isRecordedLink%d", isRecordedLink);
+MgbaPrintf(MGBA_LOG_WARN,"isMulti%d", isMulti);
+MgbaPrintf(MGBA_LOG_WARN,"isInGamePartner%d", isInGamePartner);
+MgbaPrintf(MGBA_LOG_WARN,"isAIvsAI%d", isAIvsAI);
+#endif
 
+// BATTLE_TEST_MULTI passes
+    if (!isLink || isMaster)
+    {
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN, "gBattleMainFunc = BeginBattleIntro");
+        #endif
+        gBattleMainFunc = BeginBattleIntro;
+    }
+
+// BATTLE_TEST_MULTI does not pass
     if (!isDouble)
         gBattlersCount = 2;
     else
+    {
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN, "gBattlersCount = MAX_BATTLERS_COUNT");
+        #endif
         gBattlersCount = MAX_BATTLERS_COUNT;
+    }
 
+// Passes IF Battle tower OR IF is NOT Multi OR IF is NOT Link and NOT Recorded OR IF IS Link Singles
     if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
+        || (isMulti && isRecorded) //NOTE: Added because multibattle tests are not setting player as primary; better solution perhaps needed
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
     {
         bool32 isPlayerPrimary;
         if (isLink)
+        {
             isPlayerPrimary = (isMaster || (isDouble && isMulti));
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "Passes if (isLink)");
+            #endif
+        }
         else if (!isRecorded)
+        {
             isPlayerPrimary = TRUE;
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "Passes if (!isRecorded)");
+            #endif
+        }
         else if (isDouble)
+        {
             isPlayerPrimary = (isInGamePartner || isMulti || isMaster);
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "Passes if (isDouble)");
+            #endif
+        }
         else
+        {
             isPlayerPrimary = (!isRecordedLink || isRecordedMaster);
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN, "Fails if (isLink), if (!isRecorded), and if (isDouble)");
+            #endif
+        }
 
         gBattlerPositions[B_BATTLER_0] = isPlayerPrimary ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT;
         gBattlerPositions[B_BATTLER_1] = isPlayerPrimary ? B_POSITION_OPPONENT_LEFT : B_POSITION_PLAYER_LEFT;
@@ -186,7 +233,12 @@ static void InitBtlControllersInternal(void)
         {
             // Player 1
             if (isRecorded)
+            {
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToRecordedPlayer;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"Player 1 = SetControllerToRecordedPlayer");
+                #endif
+            }
             else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
@@ -202,15 +254,29 @@ static void InitBtlControllersInternal(void)
                 isOpponent1Recorded = (!isInGamePartner && isRecorded && !isMulti && isRecordedLink);
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
-
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN,"isOpponent1Recorded%d", isOpponent1Recorded);
+            #endif
             if (isOpponent1Recorded)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_1]] = SetControllerToRecordedOpponent;
             else
+            {
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_1]] = SetControllerToOpponent;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"Opponent1 = SetControllerToOpponent");
+                #endif
+            }
 
             // Player 2
-            if (isInGamePartner)
+            if (isInGamePartner && !isRecorded)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
+            else if (isInGamePartner && isRecorded)
+            {
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"Player 2 = SetControllerToPlayerPartner");
+                #endif
+            }
             else if (isRecorded)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToRecordedPlayer;
             else if (isAIvsAI)
@@ -220,9 +286,19 @@ static void InitBtlControllersInternal(void)
 
             // Opponent 2
             if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
+            {
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToOpponent;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"Opponent 2 = SetControllerToOpponent");
+                #endif
+            }
             else
+            {
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToRecordedOpponent;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"Opponent 2 = SetControllerToRecordedOpponent");
+                #endif
+            }
         }
 
         bool32 bufferPartyOrders;
@@ -232,6 +308,9 @@ static void InitBtlControllersInternal(void)
         else
             bufferPartyOrders = (isDouble && isMulti);
 
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"bufferPartyOrders%d", bufferPartyOrders);
+        #endif
         if (bufferPartyOrders)
         {
             BufferBattlePartyCurrentOrderBySide(0, 0);
@@ -243,15 +322,25 @@ static void InitBtlControllersInternal(void)
             gBattlerPartyIndexes[1] = 0;
             gBattlerPartyIndexes[2] = 3;
             if (!isLink && isInGamePartner && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
+            {
                 gBattlerPartyIndexes[3] = 1;
+            }
             else
                 gBattlerPartyIndexes[3] = 3;
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[0]%d", gBattlerPartyIndexes[0]);
+            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[1]%d", gBattlerPartyIndexes[1]);
+            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[2]%d", gBattlerPartyIndexes[2]);
+            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[3]%d", gBattlerPartyIndexes[3]);
+            #endif
         }
     }
     else
     {
         u8 multiplayerId = isLink ? GetMultiplayerId() : gRecordedBattleMultiplayerId;
-
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"multiplayerId%d", multiplayerId);
+        #endif
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
             u32 linkPositionLeft, linkPositionRight;
@@ -262,6 +351,9 @@ static void InitBtlControllersInternal(void)
                 linkPositionLeft = B_POSITION_PLAYER_LEFT;
                 linkPositionRight = B_POSITION_PLAYER_RIGHT;
                 linkBtlControllerFunc = isLink ? SetControllerToPlayer : SetControllerToRecordedPlayer;
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"i == multiplayerId");
+                #endif
             }
             else if ((!(gLinkPlayers[i].id & 1) && !(gLinkPlayers[multiplayerId].id & 1))
                 || ((gLinkPlayers[i].id & 1) && (gLinkPlayers[multiplayerId].id & 1)))
@@ -2353,7 +2445,9 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
     else
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
-
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN, "xPos%d", xPos);
+    #endif
     gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
 }
 

@@ -1221,7 +1221,7 @@ static inline struct Pokemon *GetBattlerParty(u32 battler)
 
 static inline bool32 IsDoubleBattle(void)
 {
-    return gBattleTypeFlags & BATTLE_TYPE_DOUBLE;
+    return (gBattleTypeFlags & BATTLE_TYPE_DOUBLE || gBattleTypeFlags & BATTLE_TYPE_MULTI || gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
 }
 
 static inline bool32 IsSpreadMove(u32 moveTarget)

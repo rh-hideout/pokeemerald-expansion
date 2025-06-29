@@ -753,6 +753,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 #define R_APPEND_TRUE(...) __VA_OPT__(FIRST(__VA_ARGS__), TRUE RECURSIVELY(R_FOR_EACH(APPEND_COMMA_TRUE, EXCEPT_1(__VA_ARGS__))))
 
 #define AI_TRAINER_NAME "{PKMN} TRAINER LEAF"
+#define AI_TRAINER_2_NAME "{PKMN} TRAINER RED"
 
 /* Test */
 
@@ -881,8 +882,8 @@ struct moveWithPP {
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
-#define PLAYER(species) for (OpenPokemon(__LINE__, B_SIDE_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT(species) for (OpenPokemon(__LINE__, B_SIDE_OPPONENT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT(species) for (OpenPokemon(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
