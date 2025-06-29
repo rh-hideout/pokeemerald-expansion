@@ -12075,6 +12075,13 @@ static void TryPlayStatChangeAnimation(struct MoveEffectResult *result)
     u32 changeableStatsCount = CountStatChangerStats(result->statChanger);
     if (!gBattleScripting.statAnimPlayed)
     {
+        // DebugPrintf("Statchanger: %d, anim: %d", result->statChanger, 
+            // GetStatAnimArgBase(
+            //     result->statChanger.statId,
+            //     AnyStatChangerStatIsSharpOrHarsh(result->statChanger),
+            //     gBattleScripting.statAnimPlayed,
+            //     result->statChanger.isNegative
+            // ));
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
         MarkBattlerForControllerExec(result->effectBattler);
         BtlController_EmitBattleAnimation(
@@ -12255,6 +12262,8 @@ static void MoveEffect_LowerStatsCallback(struct MoveEffectResult *result)
     // Physically change the battler's stats
     ChangeBattlerStats(result->statChanger, result->effectBattler);
 
+    // DebugPrintf("MoveEffect_LowerStatsCallback: %d", result->statChanger);
+
     // Prepare the string to be printed
     StatChangeStringGenerator(result, GetStatChangerStatValue(result->statChanger, result->statChanger.statId));
 
@@ -12263,8 +12272,8 @@ static void MoveEffect_LowerStatsCallback(struct MoveEffectResult *result)
 
     if (ShouldDefiantCompetitiveActivate(result->effectBattler, result->battlerAbility))
         result->statChanger.value = 0; // use single stat animations when Defiant/Competitive activate
-    else
-        result->statChanger.value &= ~(4u << result->statChanger.statId); // To do
+    // else
+    //     result->statChanger.value &= ~(4u << result->statChanger.statId); // To do
 
     TryPlayStatChangeAnimation(result);
 }
@@ -12352,9 +12361,15 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .statChangeEffect = TRUE,
     };
 
+    // DebugPrintf("mirrorArmored: %d, allowPtr: %d", flags.mirrorArmored, flags.allowPtr);
     ChangeStatBuffsWithResult(&result, flags);
+    // DebugPrintf("After ChangeStatBuffsWithResult: %d, %d (onlyChecking: %d)", result.failed, result.statChanger, flags.onlyChecking);
+    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, BattleScript_MirrorArmorReflect, gBattlescriptCurrInstr);
     if (flags.onlyChecking)
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
         return result.failed;
+    }
 
     PREPARE_STAT_BUFFER(gBattleTextBuff1, result.statChanger.statId);
     if (result.multistring == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
@@ -12375,11 +12390,13 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
     }
 
     // If allowPtr is not set, no jumping
-    if (flags.allowPtr)
+    if (!flags.allowPtr)
         result.nextInstr = NULL;
 
     // Apply the results of the move effect
     SetMoveEffectTriggerResult(&result);
+
+    // DebugPrintf("gBattlescriptCurrInstr %d", gBattlescriptCurrInstr);
 
     return result.failed;
 }
@@ -12407,6 +12424,7 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
         result->statChanger.allStats *= 2;
         result->recordBattlerAbility = TRUE;
     }
+    // DebugPrintf("Statchanger: %d %d, %d", result->statChanger.statId, result->statChanger.isNegative, result->statChanger.value);
 
     if (result->statChanger.isNegative && // Stat decrease.
         (MoveEffectBlockedByMist(result, BattleScript_MistProtected) ||
@@ -12434,6 +12452,8 @@ static void Cmd_statbuffchange(void)
     u32 stats = cmd->stats;
     const u8 *ptrBefore = gBattlescriptCurrInstr;
     const u8 *failInstr = cmd->failInstr;
+
+    // DebugPrintf("Cmd_statbuffchange: %d", gBattleScripting.statChanger);
 
     if (ChangeStatBuffsStatChanger(
             GetBattlerForBattleScript(cmd->battler),
