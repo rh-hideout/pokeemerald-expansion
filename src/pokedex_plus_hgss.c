@@ -5056,7 +5056,7 @@ static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *nu
     {
         for (i = 0; i < NUM_ALL_MACHINES; i++)
         {
-            move = ItemIdToBattleMoveId(GetTMHMItemId(i));
+            move = GetTMHMMoveId(i);
             if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
             {
                 isTMMove[move] = TRUE;
@@ -5074,7 +5074,7 @@ static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *nu
             move = teachableLearnset[i];
             for (u16 j = 0; j < NUM_ALL_MACHINES; j++)
             {
-                if (ItemIdToBattleMoveId(GetTMHMItemId(j)) == move)
+                if (GetTMHMMoveId(j) == move)
                 {
                     isTMMove[move] = TRUE;
                     sStatsMovesTMHM_ID[*numTMHMMoves] = GetTMHMItemId(j);
