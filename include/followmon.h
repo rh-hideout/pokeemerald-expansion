@@ -25,20 +25,17 @@ struct FollowMon
 struct FollowMonData
 {
     bool8 pendingInterction;
-    u8 activeCount;
-    //u8 encounterChainCount;
+    u8 spawnSlot;
     u16 spawnCountdown;
-    u16 spawnSlot;
     u16 pendingSpawnAnim;
-    //u16 encounterChainSpecies;
-    //u16 cachedPartnerMonGfx;
     struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];
 };
 
 //data/scripts/followmon.inc
 extern const u8 InteractWithDynamicWildFollowMon[];
 
-void FollowMon_OverworldCB();
+void LoadFollowMonData(struct ObjectEvent *objectEvent);
+void FollowMon_OverworldCB(void);
 void CreateFollowMonEncounter(void);
 bool8 FollowMon_ProcessMonInteraction(void);
 bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);

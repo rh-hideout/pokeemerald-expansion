@@ -21,6 +21,7 @@
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
+static u8 CountActiveFollowMon();
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
@@ -35,7 +36,18 @@ static void GetMapSize(s32 *width, s32 *height);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
-void FollowMon_OverworldCB()
+void LoadFollowMonData(struct ObjectEvent *objectEvent)
+{
+    u8 slot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    sFollowMonData.list[slot].isShiny = objectEvent->shiny;
+    sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
+    sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
+
+    sFollowMonData.spawnCountdown += 60;
+}
+
+
+void FollowMon_OverworldCB(void)
 {
     if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON)) {
         RemoveAllFollowMonObjects();
@@ -47,7 +59,7 @@ void FollowMon_OverworldCB()
         return;
     }
 
-    if(sFollowMonData.spawnCountdown == 0  && sFollowMonData.activeCount < 4)
+    if(sFollowMonData.spawnCountdown == 0  && CountActiveFollowMon() < 4)
     {
         s16 x, y;
 
@@ -166,7 +178,7 @@ static u8 NextSpawnMonSlot(void)
     
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
-    if(sFollowMonData.activeCount != 0 && CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT)
+    if(CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT)
     {
         return INVALID_SPAWN_SLOT;
     }
@@ -406,9 +418,6 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
 
-    if(sFollowMonData.activeCount != 255)
-        ++sFollowMonData.activeCount;
-
     sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
 }
 
@@ -416,8 +425,6 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
-    if(sFollowMonData.activeCount != 0)
-        --sFollowMonData.activeCount;
 }
 
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
@@ -434,7 +441,6 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 void FollowMon_OnWarp(void)
 {
     sFollowMonData.spawnCountdown = 0;
-    sFollowMonData.activeCount = 0;
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++) {
         sFollowMonData.list[i].encounterIndex = 0;
     }
@@ -458,6 +464,18 @@ static bool8 IsSafeToSpawnObjectEvents(void)
 
     // Only spawn when player is at a valid tile position
     return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
+}
+
+static u8 CountActiveFollowMon()
+{
+    u8 count = 0;
+    for(u8 slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; slot++)
+    {
+        if(sFollowMonData.list[slot].encounterIndex)
+            count++;
+    }
+
+    return count;
 }
 
 static u8 CountActiveObjectEvents()

@@ -204,7 +204,6 @@ void SaveObjectEvents(void)
 
     // Temporary fix until we reduce followmon data size 
     // and include it in the save
-    RemoveAllFollowMonObjects();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
@@ -236,6 +235,10 @@ void LoadObjectEvents(void)
         if (gObjectEvents[i].spriteId != 127)
             gObjectEvents[i].graphicsId &= 0xFF;
         gObjectEvents[i].spriteId = 0;
+        
+        if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+            LoadFollowMonData(&gObjectEvents[i]);
+        }
         // Try to restore saved inactive follower
         if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER &&
             !gObjectEvents[i].active &&
